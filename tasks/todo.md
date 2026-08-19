@@ -16,15 +16,20 @@ de los PDF que tienes descargados, así que los títulos son reales, pero hay
 huecos en la numeración (faltan el 5, 6, 9, 10, 11, 20, 22, 23 y 24). Confirmar
 si existen o si la asignatura salta esos números.
 
-**3 · Los seis prototipos que faltan.** `selector-fluido`,
-`prototipo-figura-fija`, `simulador-bombeo`, `ejercicio-guiado`,
-`demostracion-guiada`, `regiones-complejos` y `paleta-datos`. Sin ellos:
+**3 · ~~Los seis prototipos que faltan.~~ Resuelto.** Están los ocho en
+`referencia/`. Con ellos se cerraron tres cosas:
 
-- `base.css` está deliberadamente corto — se extrajo de dos ficheros, no de ocho
-- los seis colores de datos y los nueve acentos de asignatura los inventé yo,
-  verificados pero **provisionales**; los fijaba `paleta-datos.html`
-- la portada no tiene la lente tipográfica ni la transición FLIP de
-  `selector-fluido.html`
+- la paleta de datos y los nueve acentos ya son los de `paleta-datos.html` y
+  `selector-fluido.html`. Dos colores de datos en claro y cuatro en oscuro se
+  corrigieron: el prototipo decía sostenerse bajo daltonismo y midiendo ΔE no
+  era cierto. El porqué está en `tokens.css`, junto a cada valor
+- la portada se rehízo desde `selector-fluido.html`: lente tipográfica, FLIP y
+  paleta de comandos
+- `mapa-temario.html` se borró — era la versión superada de la portada
+
+Queda pendiente: `base.css` sigue extraído de dos prototipos, no de ocho. Los
+seis nuevos traen cajas, controles de rango y tablas que todavía no se han
+subido a la capa compartida. Se hará cuando un patrón real los pida, no antes.
 
 **4 · El formato de datos de `EjercicioGuiado`.** Es la decisión que determina
 si producir un tema es rellenar un YAML o programar. No se escribe hasta
@@ -49,9 +54,10 @@ simulador con física dentro: `PlanoComplejo` es geometría, no un modelo. En
 cuanto entre el simulador de bombeo, su caso con resultado conocido va antes que
 el componente.
 
-**8 · Paleta de comandos completa.** Ahora el buscador de la portada filtra
-temas y responde a `/`, flechas, Enter y Escape. Falta que busque **conceptos**
-dentro de los temas, que es lo que promete `CLAUDE.md` §05.
+**8 · Paleta de comandos completa.** Ya es una paleta de verdad: se abre con `/`
+o `⌘K`, tiene su propio índice construido en el build y responde a flechas,
+Enter y Escape. Falta que busque **conceptos** dentro de los temas —hoy el
+índice solo tiene asignaturas y títulos—, que es lo que promete `CLAUDE.md` §05.
 
 ---
 
