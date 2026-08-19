@@ -3,113 +3,29 @@
  * PATRÓN 1 · LECTURA — texto con una herramienta incrustada (CLAUDE.md §05).
  * Extraído de referencia/prototipo-tema.html.
  *
- * Todo lo que hay aquí aparece en un único prototipo, así que NO sube a
- * base.css: vive en el patrón. Cuando llegue el segundo prototipo que use
- * la misma rejilla, se extrae; antes no.
+ * Solo la COLUMNA DE PROSA: la rejilla de lectura con su margen de
+ * anotaciones, los estilos del MDX y el modo guiado / modo completo. El
+ * armazón de la página —índice lateral, titular y pestañas— vive en
+ * `ui/Tema.astro`, porque es el mismo lleve el tema el patrón que lleve.
  */
-import type { MarkdownHeading } from 'astro';
-
-interface Props {
-  eyebrow: string;
-  titulo: string;
-  descripcion: string;
-  headings: MarkdownHeading[];
-  fuente?: string;
-  competencias: string[];
-}
-
-const { eyebrow, titulo, descripcion, headings, fuente, competencias } = Astro.props;
-const indice = headings.filter((h) => h.depth === 2);
 ---
 
-<div class="shell">
-  <nav class="rail" aria-label="Índice del tema">
-    <h2 class="rotulo">En este tema</h2>
-    <ol>
-      {
-        indice.map((h) => (
-          <li>
-            <a href={`#${h.slug}`}>{h.text}</a>
-          </li>
-        ))
-      }
-    </ol>
-  </nav>
-
-  <div class="read" data-lectura>
-    <p class="rotulo rotulo--live eyebrow">{eyebrow}</p>
-    <h1>{titulo}</h1>
-    <p class="lede">{descripcion}</p>
-
-    <div class="modos no-imprimir" role="group" aria-label="Modo de lectura" data-modos hidden>
-      <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
-      <button type="button" data-modo="completo" aria-pressed="false">completo</button>
-      <span class="rotulo avance" data-avance></span>
-    </div>
-
-    <slot />
-
-    <nav class="pasos no-imprimir" data-pasos hidden aria-label="Navegación por apartados">
-      <button type="button" data-ir="-1">← anterior</button>
-      <button type="button" data-ir="1">siguiente →</button>
-    </nav>
-
-    <footer class="pie">
-      <p class="rotulo">
-        Entrena {competencias.join(' · ')}
-      </p>
-      {fuente && <p class="rotulo fuente">{fuente}</p>}
-    </footer>
+<div class="read" data-lectura>
+  <div class="modos no-imprimir" role="group" aria-label="Modo de lectura" data-modos hidden>
+    <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
+    <button type="button" data-modo="completo" aria-pressed="false">completo</button>
+    <span class="rotulo avance" data-avance></span>
   </div>
+
+  <slot />
+
+  <nav class="pasos no-imprimir" data-pasos hidden aria-label="Navegación por apartados">
+    <button type="button" data-ir="-1">← anterior</button>
+    <button type="button" data-ir="1">siguiente →</button>
+  </nav>
 </div>
 
 <style>
-  .shell {
-    display: grid;
-    grid-template-columns: var(--rail) minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 3.5rem);
-    max-width: 88rem;
-    margin: 0 auto;
-    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 6rem;
-  }
-
-  /* ── índice lateral ────────────────────────────────────────────── */
-  .rail {
-    position: sticky;
-    top: 4.2rem;
-    align-self: start;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
-    font-size: .82rem;
-  }
-
-  .rail h2 { margin-bottom: .9rem; }
-  .rail ol { list-style: none; counter-reset: s; }
-  .rail li { counter-increment: s; margin-bottom: .15rem; }
-
-  .rail a {
-    display: flex;
-    gap: .6rem;
-    padding: .35rem .5rem;
-    border-radius: 4px;
-    color: var(--graphite);
-    text-decoration: none;
-    line-height: 1.4;
-    transition: background .15s, color .15s;
-  }
-
-  .rail a::before {
-    content: counter(s, decimal-leading-zero);
-    font-family: var(--mono);
-    font-size: .7rem;
-    color: var(--faint);
-    padding-top: .1rem;
-  }
-
-  .rail a:hover { background: var(--live-soft); color: var(--ink); }
-  .rail a[aria-current='true'] { color: var(--live); font-weight: 500; }
-  .rail a[aria-current='true']::before { color: var(--live); }
-
   /* ── columna de lectura + margen de anotaciones ────────────────── */
   .read {
     display: grid;
@@ -126,8 +42,6 @@ const indice = headings.filter((h) => h.depth === 2);
   .read :global(.grupo) > :global(*) { grid-column: 1; }
 
   .read :global(aside) { grid-column: 2; }
-
-  .eyebrow { margin-bottom: .6rem; font-size: .72rem; letter-spacing: .11em; }
 
   /* ── prosa del MDX ─────────────────────────────────────────────── */
   .read :global(h2) {
@@ -236,17 +150,6 @@ const indice = headings.filter((h) => h.depth === 2);
   .pasos button:hover:not(:disabled) { border-color: var(--live); color: var(--live); }
   .pasos button:disabled { opacity: .4; cursor: default; }
 
-  .pie {
-    margin-top: 3.5rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--rule);
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-  }
-
-  .pie .fuente { margin-left: auto; text-transform: none; letter-spacing: .02em; }
-
   @media (max-width: 1080px) {
     .read { grid-template-columns: minmax(0, 1fr); }
     .read :global(aside) { grid-column: 1; max-width: var(--measure); }
@@ -255,18 +158,6 @@ const indice = headings.filter((h) => h.depth === 2);
       padding: .8rem 1rem;
       border-radius: 0 5px 5px 0;
     }
-  }
-
-  @media (max-width: 820px) {
-    .shell { grid-template-columns: 1fr; padding-top: 1.5rem; }
-    .rail {
-      position: static;
-      max-height: none;
-      padding-bottom: 1.2rem;
-      border-bottom: 1px solid var(--rule);
-    }
-    .rail ol { display: flex; gap: .3rem; overflow-x: auto; padding-bottom: .3rem; }
-    .rail a { white-space: nowrap; }
   }
 </style>
 
@@ -286,8 +177,8 @@ const indice = headings.filter((h) => h.depth === 2);
     let actual: HTMLElement | null = null;
 
     for (const hijo of hijos) {
-      // Los controles y el pie no pertenecen a ningún apartado.
-      if (hijo.matches('[data-modos], [data-pasos], .pie')) continue;
+      // Los controles no pertenecen a ningún apartado.
+      if (hijo.matches('[data-modos], [data-pasos]')) continue;
       if (hijo.tagName === 'H2') {
         actual = document.createElement('section');
         actual.className = 'grupo';

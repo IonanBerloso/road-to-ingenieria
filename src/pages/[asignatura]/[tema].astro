@@ -2,7 +2,9 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/ui/Cabecera.astro';
+import Tema from '../../components/ui/Tema.astro';
 import Lectura from '../../components/patrones/Lectura.astro';
+import EjercicioGuiado from '../../components/patrones/EjercicioGuiado.astro';
 
 /**
  * Una página por tema terminado. El cruce entre el catálogo y los temas
@@ -64,6 +66,13 @@ export async function getStaticPaths() {
 
 const { asignatura, entrada, ficha } = Astro.props;
 const { Content, headings } = await render(entrada);
+
+/** Los ejercicios del tema salen de su `ejercicios.yaml`, no del MDX: añadir
+ *  uno es escribir datos y aparece solo en la pestaña (§04). */
+const ficheroEjercicios = (await getCollection('ejercicios')).find(
+  (f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios`,
+);
+const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
 ---
 
 <Base
@@ -75,15 +84,22 @@ const { Content, headings } = await render(entrada);
   <Cabecera crumb={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`} />
 
   <main id="principal">
-    <Lectura
+    <Tema
       eyebrow={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`}
       titulo={entrada.data.titulo}
       descripcion={entrada.data.descripcion}
       headings={headings}
+      ejercicios={ejercicios.map((e) => ({ id: e.id, titulo: e.titulo }))}
       fuente={entrada.data.fuente}
       competencias={entrada.data.competencias}
     >
-      <Content />
-    </Lectura>
+      <Lectura slot="teoria">
+        <Content />
+      </Lectura>
+
+      <Fragment slot="ejercicios">
+        {ejercicios.map((e) => <EjercicioGuiado id={e.id} />)}
+      </Fragment>
+    </Tema>
   </main>
 </Base>
