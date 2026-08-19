@@ -1,0 +1,62 @@
+/* ══════════════════════════════════════════════════════════════════
+   IMPRESIÓN — el modo completo tiene que salir en papel (CLAUDE.md §11).
+   Nadie repasa la noche antes de un examen haciendo scroll.
+   Ningún prototipo traía hoja de impresión: esto se escribe desde el
+   requisito, no se extrae.
+   ══════════════════════════════════════════════════════════════════ */
+
+@media print {
+  /* Fuera todo lo que solo sirve en pantalla */
+  .top,
+  .saltar,
+  .rail,
+  .controls,
+  .buscador,
+  .barra,
+  .toggle,
+  .no-imprimir {
+    display: none !important;
+  }
+
+  /* Los valores de tinta para papel están en tokens.css: es el único
+     fichero donde puede aparecer un color literal. */
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  .shell,
+  .read,
+  .envoltorio {
+    display: block !important;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .read > aside {
+    max-width: none;
+    break-inside: avoid;
+  }
+
+  /* Nada de partir una idea entre dos páginas */
+  h1, h2, h3 { break-after: avoid; }
+  .formula, figure, table, .sim { break-inside: avoid; }
+
+  /* Los enlaces internos pierden el destino en papel: se escribe */
+  main a[href^="/"]::after {
+    content: " (" attr(href) ")";
+    font-family: var(--mono);
+    font-size: .8em;
+    color: var(--faint);
+  }
+
+  /* Los enlaces de navegación no se anotan */
+  nav a::after { content: none; }
+
+  @page {
+    margin: 18mm 16mm;
+  }
+}

@@ -1,0 +1,89 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import Lectura from '../../components/patrones/Lectura.astro';
+
+/**
+ * Una página por tema terminado. El cruce entre el catálogo y los temas
+ * escritos se comprueba aquí: si el catálogo dice `hecho: true` y no existe
+ * el index.mdx, **el build falla**. Los datos no se comprueban a ojo (§03).
+ */
+export async function getStaticPaths() {
+  const catalogo = await getCollection('catalogo');
+
+  /** Se piden solo las colecciones que hagan falta: pedir una vacía ensucia
+   *  la salida del build con avisos que no significan nada. */
+  const cache = new Map<string, CollectionEntry<'calculo' | 'fluidos'>[]>();
+  const coleccionDe = async (id: string) => {
+    if (!cache.has(id)) {
+      if (id !== 'calculo' && id !== 'fluidos') return null;
+      cache.set(id, await getCollection(id));
+    }
+    return cache.get(id) ?? null;
+  };
+
+  const rutas = [];
+
+  for (const asignatura of catalogo) {
+    const hechos = asignatura.data.temas.filter((t) => t.hecho);
+    if (hechos.length === 0) continue;
+
+    const coleccion = await coleccionDe(asignatura.id);
+    if (!coleccion || coleccion.length === 0) {
+      throw new Error(
+        `El catálogo de "${asignatura.id}" marca temas como hechos, pero no hay ` +
+          `colección src/content/${asignatura.id}/. O escribes los temas o pones hecho: false.`,
+      );
+    }
+
+    for (const tema of hechos) {
+      const entrada = coleccion.find((e) => e.id === tema.id || e.id.startsWith(`${tema.id}/`));
+      if (!entrada) {
+        throw new Error(
+          `El catálogo dice que "${asignatura.id} · ${tema.id}" está hecho, pero no existe ` +
+            `src/content/${asignatura.id}/${tema.id}/index.mdx.`,
+        );
+      }
+      if (entrada.data.tema !== tema.n) {
+        throw new Error(
+          `Descuadre en "${asignatura.id} · ${tema.id}": el catálogo dice tema ${tema.n} y ` +
+            `el index.mdx dice ${entrada.data.tema}.`,
+        );
+      }
+
+      rutas.push({
+        params: { asignatura: asignatura.id, tema: tema.id },
+        props: { asignatura, entrada, ficha: tema },
+      });
+    }
+  }
+
+  return rutas;
+}
+
+const { asignatura, entrada, ficha } = Astro.props;
+const { Content, headings } = await render(entrada);
+---
+
+<Base
+  titulo={`${entrada.data.titulo} — ${asignatura.data.nombre}`}
+  descripcion={entrada.data.descripcion}
+  acento={asignatura.data.acento}
+  crumb={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`}
+>
+  <Cabecera crumb={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`} />
+
+  <main id="principal">
+    <Lectura
+      eyebrow={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`}
+      titulo={entrada.data.titulo}
+      descripcion={entrada.data.descripcion}
+      headings={headings}
+      fuente={entrada.data.fuente}
+      competencias={entrada.data.competencias}
+    >
+      <Content />
+    </Lectura>
+  </main>
+</Base>

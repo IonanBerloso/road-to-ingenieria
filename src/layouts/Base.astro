@@ -1,0 +1,73 @@
+---
+/**
+ * El ÚNICO layout del repositorio (CLAUDE.md §03).
+ * No se crea un segundo. Si una vista necesita otra cosa, se le añade
+ * una prop aquí; duplicar el layout es cómo empezó el desastre anterior.
+ */
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/print.css';
+
+// Tipografías autoalojadas. Ni una petición a Google Fonts (§07).
+import '@fontsource-variable/fraunces';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+
+import { ruta } from '../lib/rutas';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  /** Token de acento de la asignatura, p. ej. "--a-calculo". Solo el marco. */
+  acento?: string;
+  crumb?: string;
+  /** Tamaño del titular; cada vista tiene el suyo. */
+  h1?: string;
+}
+
+const { titulo, descripcion, acento, h1 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const estilo = [
+  acento ? `--acento: var(${acento})` : '--acento: var(--live)',
+  h1 ? `--h1: ${h1}` : null,
+]
+  .filter(Boolean)
+  .join('; ');
+---
+
+<!doctype html>
+<html lang="es" data-theme="claro" style={estilo}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${ruta()}favicon.svg`} />
+    <meta name="color-scheme" content="light dark" />
+
+    <script is:inline>
+      // Antes del primer pintado, para que no haya destello al recargar.
+      try {
+        const guardado = localStorage.getItem('tema');
+        if (guardado === 'oscuro' || guardado === 'claro') {
+          document.documentElement.dataset.theme = guardado;
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.dataset.theme = 'oscuro';
+        }
+      } catch {}
+    </script>
+  </head>
+
+  <body>
+    <a class="saltar" href="#principal">Saltar al contenido</a>
+    <slot />
+  </body>
+</html>

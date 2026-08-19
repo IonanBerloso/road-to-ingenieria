@@ -1,0 +1,139 @@
+---
+asignatura: calculo
+tema: 1
+titulo: Números complejos
+descripcion: Forma binómica y polar, De Moivre, raíces y regiones del plano. Y por qué el argumento no es arctan(b/a).
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes de Cálculo 2024-2025 y 2025-2026 · UPV/EHU
+---
+
+import PlanoComplejo from '../../../components/sim/PlanoComplejo.astro';
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Un número complejo no tiene nada de imaginario. Es un par de números con una
+regla de multiplicar distinta de la habitual, y esa regla es toda la asignatura
+de este tema: **multiplicar por un complejo gira y escala**. Si te quedas con
+esa frase, la mitad de los ejercicios dejan de ser fórmulas que memorizar.
+
+## De dónde sale
+
+La ecuación $x^2 + 1 = 0$ no tiene solución entre los reales. Se podría dejar
+ahí, pero pasa algo raro: al resolver ecuaciones de tercer grado con soluciones
+reales aparecen raíces de negativos **en medio del cálculo** y desaparecen al
+final. Los números estaban haciendo falta aunque no se vieran en el resultado.
+
+Se define entonces $i$ con la única propiedad que importa:
+
+$$
+i^2 = -1
+$$
+
+Y a partir de ahí, todo lo demás sale solo. Un complejo es
+$z = a + bi$ con $a, b \in \mathbb{R}$. A $a$ se le llama parte real y a $b$
+parte imaginaria — ojo, **la parte imaginaria es $b$, no $bi$**.
+
+## Las dos formas, y por qué hacen falta las dos
+
+La forma binómica $z = a + bi$ es cómoda para sumar: sumas cada parte por su
+lado. Pero para multiplicar es un desastre, porque tienes que desarrollar el
+producto y acordarte de que $i^2 = -1$.
+
+La forma polar $z = r(\cos\theta + i\sin\theta) = r\,e^{i\theta}$ es al revés:
+sumar es incómodo, multiplicar es trivial. Con
+
+$$
+r = |z| = \sqrt{a^2+b^2}, \qquad \theta = \arg z
+$$
+
+el producto se convierte en: **multiplica los módulos, suma los argumentos**.
+
+<PlanoComplejo />
+
+Mueve el argumento y mira las dos columnas a la vez. Lo que estás viendo es que
+la forma binómica y la polar son el mismo punto: cambian las coordenadas con las
+que lo nombras, no el punto.
+
+## Multiplicar es girar y escalar
+
+Si $z = r\,e^{i\theta}$ y $w = s\,e^{i\varphi}$, entonces
+
+$$
+z \cdot w = rs\,e^{i(\theta + \varphi)}
+$$
+
+Multiplicar por $w$ hace dos cosas al mismo tiempo: **estira** el vector por un
+factor $s$ y lo **gira** un ángulo $\varphi$. Multiplicar por $i$ — que tiene
+módulo 1 y argumento $\pi/2$ — es exactamente girar un cuarto de vuelta. De ahí
+sale $i^2 = -1$ sin ninguna fórmula: dos cuartos de vuelta es media vuelta, y
+media vuelta convierte el 1 en el −1.
+
+La fórmula de De Moivre no es una fórmula nueva, es esta misma repetida $n$
+veces:
+
+$$
+\left(r\,e^{i\theta}\right)^n = r^n e^{in\theta}
+$$
+
+## El argumento y la trampa de arctan
+
+Aquí es donde se pierden los puntos. El argumento cumple
+$\tan\theta = b/a$, y de ahí sale la tentación de escribir
+$\theta = \arctan(b/a)$ y seguir.
+
+<ErrorTipico titulo="Error típico · calcular el argumento con arctan a secas">
+La función $\arctan$ devuelve siempre un ángulo entre $-\pi/2$ y $\pi/2$, es
+decir, **siempre te sitúa en el primer o el cuarto cuadrante**. Si tu número
+está a la izquierda del eje imaginario, el ángulo que obtienes está desviado
+exactamente $\pi$.
+
+Con $z = -1 - i$ la calculadora te da $\arctan(1) = \pi/4$, que es el argumento
+de $1 + i$: el número contrario. El módulo sale bien, el argumento sale girado
+media vuelta, y todo lo que venga después —potencias, raíces, regiones— sale mal
+sin que nada te avise.
+
+Regla práctica: **mira primero en qué cuadrante estás**, y solo después toca la
+calculadora. En la herramienta de arriba, lleva el punto a la izquierda del eje
+y compara las dos últimas celdas.
+</ErrorTipico>
+
+## Raíces n-ésimas: cuántas hay y por qué están repartidas
+
+Buscar $\sqrt[n]{z}$ es buscar los $w$ tales que $w^n = z$. En polar:
+
+$$
+w_k = \sqrt[n]{r}\;e^{i\left(\frac{\theta + 2k\pi}{n}\right)}, \qquad k = 0, 1, \dots, n-1
+$$
+
+Los $n$ resultados tienen **el mismo módulo** y sus argumentos van separados
+$2\pi/n$: quedan en los vértices de un polígono regular de $n$ lados inscrito en
+una circunferencia. Esa imagen es la comprobación más rápida que tienes: si
+resuelves unas raíces cúbicas y los tres resultados no están a 120° unos de
+otros, hay un error antes.
+
+<ErrorTipico titulo="Error típico · quedarse con una sola raíz">
+$\sqrt[3]{8}$ en los reales es 2, y punto. En los complejos son tres números, y
+2 es solo uno de ellos. Cuando el enunciado dice «halla las raíces cúbicas», las
+tres van en la respuesta, y COMP4 se evalúa sobre si has justificado que son
+todas.
+</ErrorTipico>
+
+## Regiones del plano
+
+Los enunciados de examen suelen pedir el conjunto de puntos que cumplen una
+condición: $|z - z_0| \le \rho$, $\operatorname{Re}(z) > 1$,
+$|z - 1| = |z + i|$. Conviene traducir antes de dibujar:
+
+- $|z - z_0|$ es **la distancia** de $z$ al punto $z_0$. Con un $\le$ es un
+  disco; con un $=$, una circunferencia.
+- $|z - p| = |z - q|$ son los puntos que equidistan de $p$ y de $q$: la
+  mediatriz del segmento.
+- Las condiciones sobre $\operatorname{Re}(z)$ o $\operatorname{Im}(z)$ son
+  semiplanos.
+
+Comprobar es fácil y casi nadie lo hace: **elige un punto que claramente esté
+dentro y sustitúyelo en la condición original**. Si no la cumple, la región está
+mal. Esa comprobación vale medio punto de COMP4 y cuesta veinte segundos.

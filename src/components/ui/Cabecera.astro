@@ -1,0 +1,52 @@
+---
+import { ruta } from '../../lib/rutas';
+
+interface Props {
+  /** Migas: de dónde viene esta página. Vacío en la portada. */
+  crumb?: string;
+}
+
+const { crumb } = Astro.props;
+---
+
+<header class="top">
+  <a class="brand" href={ruta()}>Road to <span>Ingeniería</span></a>
+  {crumb && <span class="rotulo crumb">{crumb}</span>}
+  <span class="spacer"></span>
+  <button class="toggle" type="button" data-tema aria-live="polite">tema</button>
+</header>
+
+<script is:inline>
+  (() => {
+    const boton = document.querySelector('[data-tema]');
+    if (!boton) return;
+    const pinta = () => {
+      const oscuro = document.documentElement.dataset.theme === 'oscuro';
+      boton.textContent = oscuro ? 'claro' : 'oscuro';
+      boton.setAttribute('aria-label', oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+    };
+    boton.addEventListener('click', () => {
+      const oscuro = document.documentElement.dataset.theme === 'oscuro';
+      document.documentElement.dataset.theme = oscuro ? 'claro' : 'oscuro';
+      try {
+        localStorage.setItem('tema', oscuro ? 'claro' : 'oscuro');
+      } catch {}
+      pinta();
+    });
+    pinta();
+  })();
+</script>
+
+<style>
+  .crumb {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .72rem;
+    letter-spacing: .08em;
+  }
+
+  @media (max-width: 820px) {
+    .crumb { display: none; }
+  }
+</style>

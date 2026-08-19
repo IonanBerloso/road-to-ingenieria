@@ -1,0 +1,57 @@
+name: Construir, verificar y publicar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Necesario para publicar en Pages desde Actions
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Una publicación a la vez; no se cancela una en curso
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Construir
+        run: npm run build
+
+      - name: Suelo de calidad
+        run: node scripts/verify.mjs
+
+      - name: Paleta
+        run: node scripts/check-color.mjs
+
+      - name: Tests
+        run: npm test
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    # Solo se publica si el trabajo anterior ha pasado entero
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

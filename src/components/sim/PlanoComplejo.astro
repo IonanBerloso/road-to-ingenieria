@@ -1,0 +1,258 @@
+---
+/**
+ * Herramienta incrustada del tema de complejos.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «¿Por qué multiplicar por un complejo gira y escala, y por qué el
+ *    argumento no es arctan(b/a) a secas?»
+ *
+ * Mueves módulo y argumento de z, y ves a la vez la forma binómica, la polar
+ * y el resultado de multiplicar por w. El cuadrante se marca en el propio
+ * plano: ahí es donde se ve que arctan pierde información.
+ *
+ * SVG a mano, sin librería de gráficas (§02). Todo el estilo, aquí dentro:
+ * este componente es el único sitio del repositorio donde aparece.
+ */
+---
+
+<figure class="sim" data-plano>
+  <figcaption class="sim-head">
+    <h3>El plano complejo</h3>
+    <span class="rotulo hint">mueve z y mira las dos formas a la vez</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 420 300" role="img" aria-labelledby="plano-titulo plano-desc">
+      <title id="plano-titulo">Plano complejo con el número z y el producto z por w</title>
+      <desc id="plano-desc">
+        Ejes real e imaginario. Un vector desde el origen representa z; otro,
+        más claro, representa el producto de z por w. Los valores exactos están
+        en la tabla que hay debajo.
+      </desc>
+
+      <line class="eje" x1="20" y1="150" x2="400" y2="150"></line>
+      <line class="eje" x1="210" y1="15" x2="210" y2="285"></line>
+      <text class="etiqueta" x="393" y="141">Re</text>
+      <text class="etiqueta" x="216" y="26">Im</text>
+
+      <circle class="guia" cx="210" cy="150" r="0" data-circulo></circle>
+      <line class="vector alt" x1="210" y1="150" x2="210" y2="150" data-producto></line>
+      <line class="vector" x1="210" y1="150" x2="210" y2="150" data-vector></line>
+      <path class="arco" d="" data-arco></path>
+      <circle class="punto" cx="210" cy="150" r="4" data-punto></circle>
+      <text class="marca" x="0" y="0" data-marca>z</text>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for="modulo">módulo |z| <output data-out-modulo>2,00</output></label>
+      <input id="modulo" type="range" min="0.2" max="4" step="0.05" value="2" data-modulo />
+    </div>
+    <div class="ctrl">
+      <label for="arg">argumento arg z <output data-out-arg>0,79 rad</output></label>
+      <input id="arg" type="range" min="-3.14" max="3.14" step="0.01" value="0.79" data-arg />
+    </div>
+    <div class="ctrl">
+      <label for="giro">multiplicar por w = 1∠θ <output data-out-giro>0,00 rad</output></label>
+      <input id="giro" type="range" min="-3.14" max="3.14" step="0.01" value="0" data-giro />
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">binómica</span>
+      <span class="v" data-binomica>1,41 + 1,41i</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">polar</span>
+      <span class="v" data-polar>2,00 ∠ 0,79</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">cuadrante</span>
+      <span class="v" data-cuadrante>I</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">arctan(b/a)</span>
+      <span class="v" data-arctan>0,79</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">z · w</span>
+      <span class="v" data-producto-txt>2,00 ∠ 0,79</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag">Aquí falla arctan</span>
+    <span>
+      El argumento real y <code>arctan(b/a)</code> se diferencian en π: la
+      calculadora no sabe en qué cuadrante estás. Es el error de la mitad de los
+      exámenes.
+    </span>
+  </p>
+</figure>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('[data-plano]');
+  if (raiz) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+    const ESCALA = 55; // píxeles por unidad
+    const CX = 210;
+    const CY = 150;
+
+    const sModulo = $<HTMLInputElement>('[data-modulo]');
+    const sArg = $<HTMLInputElement>('[data-arg]');
+    const sGiro = $<HTMLInputElement>('[data-giro]');
+
+    const num = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+
+    function pinta() {
+      const r = Number(sModulo.value);
+      const th = Number(sArg.value);
+      const gi = Number(sGiro.value);
+
+      const a = r * Math.cos(th);
+      const b = r * Math.sin(th);
+      const x = CX + a * ESCALA;
+      const y = CY - b * ESCALA;
+
+      const thp = th + gi;
+      const xp = CX + r * Math.cos(thp) * ESCALA;
+      const yp = CY - r * Math.sin(thp) * ESCALA;
+
+      $<SVGLineElement>('[data-vector]').setAttribute('x2', String(x));
+      $<SVGLineElement>('[data-vector]').setAttribute('y2', String(y));
+      $<SVGLineElement>('[data-producto]').setAttribute('x2', String(xp));
+      $<SVGLineElement>('[data-producto]').setAttribute('y2', String(yp));
+      $<SVGCircleElement>('[data-punto]').setAttribute('cx', String(x));
+      $<SVGCircleElement>('[data-punto]').setAttribute('cy', String(y));
+      $<SVGCircleElement>('[data-circulo]').setAttribute('r', String(r * ESCALA));
+
+      const marca = $<SVGTextElement>('[data-marca]');
+      marca.setAttribute('x', String(x + (a >= 0 ? 9 : -20)));
+      marca.setAttribute('y', String(y + (b >= 0 ? -9 : 18)));
+
+      const rr = Math.min(38, r * ESCALA * 0.5);
+      const ax = CX + rr;
+      const ay = CY;
+      const bx = CX + rr * Math.cos(th);
+      const by = CY - rr * Math.sin(th);
+      const barrido = th > 0 ? 0 : 1;
+      $<SVGPathElement>('[data-arco]').setAttribute(
+        'd',
+        `M ${ax} ${ay} A ${rr} ${rr} 0 0 ${barrido} ${bx} ${by}`,
+      );
+
+      $('[data-out-modulo]').textContent = num(r);
+      $('[data-out-arg]').textContent = `${num(th)} rad`;
+      $('[data-out-giro]').textContent = `${num(gi)} rad`;
+      $('[data-binomica]').textContent = `${num(a)} ${b < 0 ? '−' : '+'} ${num(Math.abs(b))}i`;
+      $('[data-polar]').textContent = `${num(r)} ∠ ${num(th)}`;
+      $('[data-producto-txt]').textContent = `${num(r)} ∠ ${num(Math.atan2(Math.sin(thp), Math.cos(thp)))}`;
+
+      const cuad = a >= 0 ? (b >= 0 ? 'I' : 'IV') : b >= 0 ? 'II' : 'III';
+      $('[data-cuadrante]').textContent = cuad;
+
+      const arctan = Math.atan(b / a);
+      $('[data-arctan]').textContent = num(arctan);
+      $<HTMLElement>('[data-alarma]').hidden = a >= 0;
+    }
+
+    for (const s of [sModulo, sArg, sGiro]) s.addEventListener('input', pinta);
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 { margin: 0; font-size: .9rem; font-weight: 600; }
+  .hint { font-size: .68rem; text-transform: none; letter-spacing: .02em; }
+
+  .stage {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .stage svg { display: block; width: 100%; height: auto; }
+
+  .eje { stroke: var(--faint); stroke-width: 1; }
+  .etiqueta { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+  .guia { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 4; }
+  .vector { stroke: var(--live); stroke-width: 2.5; stroke-linecap: round; }
+  .vector.alt { stroke: var(--alt); stroke-width: 2; stroke-dasharray: 5 4; }
+  .arco { fill: none; stroke: var(--live); stroke-width: 1.5; opacity: .7; }
+  .punto { fill: var(--live); }
+  .marca { fill: var(--ink); font-family: var(--mono); font-size: 13px; font-weight: 500; }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.1rem 1.5rem;
+    padding: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--graphite);
+    margin-bottom: .4rem;
+  }
+
+  .ctrl label output { color: var(--live); font-weight: 500; font-size: .82rem; }
+
+  input[type='range'] { width: 100%; accent-color: var(--live); cursor: pointer; }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell { background: var(--panel); padding: .75rem .9rem; }
+  .cell .k { display: block; margin-bottom: .2rem; font-size: .63rem; letter-spacing: .08em; }
+
+  .cell .v {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .alarma {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: .8rem 1.1rem;
+    background: var(--flag-soft);
+    border-top: 1px solid var(--flag);
+    color: var(--flag);
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+
+  .alarma code { font-family: var(--mono); font-size: .92em; }
+</style>

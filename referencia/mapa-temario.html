@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa del temario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5; --alt-soft:rgba(122,79,181,.08);
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8; --alt-soft:rgba(183,155,232,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms !important}}
+
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600}
+.brand span{color:var(--live)}
+.top .spacer{margin-left:auto}
+.toggle{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.toggle:hover{border-color:var(--live);color:var(--live)}
+
+.wrap{max-width:62rem;margin:0 auto;padding:clamp(2rem,5vw,3.2rem) clamp(1rem,4vw,2.5rem) 6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,5vw,2.9rem);
+  line-height:1.05;letter-spacing:-.025em;margin-bottom:.6rem}
+.lede{font-size:1.05rem;color:var(--graphite);max-width:54ch;margin-bottom:2rem}
+
+.search{position:relative;margin-bottom:.9rem}
+.search input{width:100%;font-family:var(--body);font-size:1.02rem;
+  padding:.85rem 1rem .85rem 2.6rem;border:1px solid var(--rule);border-radius:8px;
+  background:var(--panel);color:var(--ink)}
+.search input::placeholder{color:var(--faint)}
+.search svg{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:2}
+.search kbd{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:.68rem;color:var(--faint);
+  border:1px solid var(--rule);border-radius:4px;padding:.15rem .4rem}
+
+.bar{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.sorts{display:flex;gap:.25rem;background:var(--grid);padding:.22rem;border-radius:99px}
+.sorts button{font-family:var(--mono);font-size:.71rem;border:none;background:none;cursor:pointer;
+  color:var(--graphite);padding:.4rem .85rem;border-radius:99px}
+.sorts button[aria-pressed="true"]{background:var(--panel);color:var(--ink);font-weight:600;
+  box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.count{font-family:var(--mono);font-size:.7rem;color:var(--faint);margin-left:auto}
+
+.resume{display:none;align-items:center;gap:.75rem;background:var(--live-soft);
+  border:1px solid var(--live);border-radius:8px;padding:.75rem 1rem;margin-bottom:1.8rem;font-size:.9rem}
+.resume.on{display:flex}
+.resume b{font-family:var(--mono);font-size:.64rem;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--live);display:block;margin-bottom:.1rem}
+.resume .go{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--live);white-space:nowrap}
+
+/* curso */
+.curso-h{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--faint);margin:2.6rem 0 .9rem;font-weight:500}
+.curso-h:first-child{margin-top:0}
+
+/* asignatura */
+.asig{margin-bottom:1.9rem}
+.asig-h{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;
+  padding-bottom:.55rem;border-bottom:1px solid var(--rule)}
+.asig-h h2{font-family:var(--display);font-size:1.35rem;font-weight:600;letter-spacing:-.015em}
+.asig-h .st{font-family:var(--mono);font-size:.65rem;border:1px solid var(--rule);
+  border-radius:99px;padding:.12rem .6rem;color:var(--faint);white-space:nowrap}
+.asig[data-e="ok"] .asig-h .st{color:var(--live);border-color:var(--live)}
+.asig[data-e="obra"] .asig-h .st{color:var(--alt);border-color:var(--alt)}
+.asig-h .meta{margin-left:auto;font-family:var(--mono);font-size:.69rem;color:var(--faint)}
+.asig[data-e="prev"] .asig-h h2,.asig[data-e="prev"] .asig-h{color:var(--graphite)}
+.asig[data-e="prev"]{margin-bottom:1.1rem}
+
+.tema{display:grid;grid-template-columns:2.2rem 1fr auto;gap:.9rem;align-items:center;
+  padding:.7rem .6rem;border-radius:6px;cursor:pointer;
+  border-bottom:1px solid var(--rule);transition:background .14s}
+.tema:hover,.tema:focus-visible{background:var(--live-soft)}
+.tema.hide{display:none}
+.tema .n{font-family:var(--mono);font-size:.72rem;color:var(--faint);text-align:right}
+.tema .txt h3{font-size:.97rem;font-weight:500;margin-bottom:.1rem}
+.tema .txt p{font-size:.82rem;color:var(--graphite);line-height:1.4}
+.tema .right{display:flex;align-items:center;gap:.9rem}
+
+.peso{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.68rem;color:var(--faint)}
+.peso .track{width:52px;height:5px;background:var(--grid);border-radius:99px;overflow:hidden}
+.peso .fill{height:100%;background:var(--faint);border-radius:99px}
+.tema[data-alto="si"] .peso .fill{background:var(--flag)}
+.tema[data-alto="si"] .peso span{color:var(--flag);font-weight:600}
+
+.tipos{display:flex;gap:.28rem}
+.tipos i{width:7px;height:7px;border-radius:2px;background:var(--grid);display:block}
+.tipos i.on{background:var(--live)}
+.tipos i.sim.on{background:var(--alt)}
+
+.vacio{display:none;padding:2.2rem 1rem;text-align:center;color:var(--graphite);font-size:.95rem}
+.vacio.on{display:block}
+.vacio b{display:block;font-family:var(--display);font-size:1.15rem;color:var(--ink);margin-bottom:.3rem}
+
+.leyenda{display:flex;gap:1.4rem;flex-wrap:wrap;font-family:var(--mono);font-size:.7rem;
+  color:var(--faint);margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+.leyenda span{display:flex;align-items:center;gap:.4rem}
+.leyenda i{width:7px;height:7px;border-radius:2px;display:block}
+
+@media (max-width:680px){
+  .tema{grid-template-columns:1.8rem 1fr;gap:.6rem}
+  .tema .right{grid-column:2;justify-content:flex-start;margin-top:.35rem}
+  .search kbd{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand">EHU<span>·</span>LAB</span>
+  <span class="spacer"></span>
+  <button class="toggle" id="tema">Oscuro</button>
+</header>
+
+<div class="wrap">
+  <h1>Todo el temario, de un vistazo</h1>
+  <p class="lede">Sin menús ni clics de más. Busca lo que necesitas o mira dónde pesa el examen.</p>
+
+  <div class="search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input type="search" id="q" placeholder="bombeo, cavitación, Taylor, complejos…" aria-label="Buscar en el temario">
+    <kbd>/</kbd>
+  </div>
+
+  <div class="bar">
+    <div class="sorts" role="group" aria-label="Ordenar temario">
+      <button id="sT" aria-pressed="true">Orden del temario</button>
+      <button id="sP" aria-pressed="false">Peso en el examen</button>
+    </div>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="resume" id="resume">
+    <div><b>Seguir donde lo dejaste</b><span id="resumeTxt"></span></div>
+    <span class="go">continuar →</span>
+  </div>
+
+  <div id="lista"></div>
+
+  <div class="vacio" id="vacio">
+    <b>Nada por aquí</b>
+    Prueba con el nombre del concepto: «Bernoulli», «serie», «rozamiento».
+  </div>
+
+  <div class="leyenda">
+    <span><i style="background:var(--live)"></i>Teoría</span>
+    <span><i style="background:var(--alt)"></i>Simulador</span>
+    <span><i style="background:var(--live)"></i>Ejercicios guiados</span>
+    <span><i style="background:var(--flag)"></i>Peso alto en examen</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var t=$('tema');
+  t.onclick=function(){var o=document.documentElement.dataset.theme==='oscuro';
+    document.documentElement.dataset.theme=o?'claro':'oscuro';t.textContent=o?'Oscuro':'Claro';};
+
+  /* ── CATÁLOGO ──
+     estado: 'ok' disponible · 'obra' en construcción · 'prev' previsto
+     curso: revisar el reparto 1.º / 2.º contra el plan de estudios.  */
+  var CATALOGO=[
+   {asig:'Álgebra', curso:1, estado:'prev', k:'algebra matrices determinantes diagonalizacion espacios vectoriales'},
+   {asig:'Cálculo', curso:1, estado:'ok', temas:[
+    {n:1,t:'Números complejos',d:'Forma binómica y polar, De Moivre, raíces',p:8,c:[1,1,1],k:'complejos moivre argumento modulo raices euler'},
+    {n:2,t:'Sucesiones y series',d:'Convergencia, criterios de comparación y cociente',p:14,c:[1,0,1],k:'sucesiones series convergencia criterios leibniz'},
+    {n:3,t:'Límites y continuidad',d:'Indeterminaciones, asíntotas, Bolzano y Weierstrass',p:9,c:[1,1,1],k:'limites continuidad indeterminaciones asintotas bolzano'},
+    {n:4,t:'Derivada y aplicaciones',d:'Regla de la cadena, L\'Hôpital, optimización',p:12,c:[1,1,1],k:'derivada cadena hopital optimizacion extremos'},
+    {n:5,t:'Polinomio de Taylor',d:'Desarrollo, resto de Lagrange, acotación del error',p:16,c:[1,1,1],k:'taylor maclaurin resto lagrange aproximacion'},
+    {n:6,t:'Integral definida',d:'Riemann, teorema fundamental, cambio de variable y partes',p:13,c:[1,0,1],k:'integral riemann primitiva partes cambio variable'},
+    {n:7,t:'Integrales impropias',d:'Criterios de convergencia de primera y segunda especie',p:7,c:[1,0,1],k:'impropias convergencia especie'},
+    {n:8,t:'Aplicaciones de la integral',d:'Áreas, volúmenes de revolución, longitud de arco',p:9,c:[1,1,1],k:'areas volumenes revolucion longitud arco'},
+    {n:9,t:'Funciones de varias variables',d:'Derivadas parciales, gradiente, plano tangente',p:8,c:[1,1,0],k:'parciales gradiente plano tangente varias variables'},
+    {n:10,t:'Ecuaciones diferenciales',d:'Variables separables, lineales de primer orden',p:4,c:[1,0,1],k:'ecuaciones diferenciales separables lineales edo'}
+   ]},
+   {asig:'Expresión Gráfica', curso:1, estado:'prev', k:'expresion grafica dibujo tecnico vistas acotacion croquis'},
+   {asig:'Fundamentos Químicos de la Ingeniería', curso:1, estado:'prev', k:'quimica enlace estequiometria disoluciones termoquimica'},
+
+   {asig:'Mecánica de Fluidos', curso:2, estado:'ok', temas:[
+    {n:1,t:'Propiedades de los fluidos',d:'Densidad, viscosidad, compresibilidad, tensión superficial',p:10,c:[1,0,1],k:'densidad viscosidad compresibilidad capilaridad tension superficial'},
+    {n:2,t:'Hidrostática',d:'Presión, manómetros, prisma de presiones',p:15,c:[1,1,1],k:'hidrostatica presion manometro piezometrico'},
+    {n:3,t:'Fuerzas sobre superficies',d:'Superficies planas y curvas, centro de presiones',p:14,c:[1,1,1],k:'fuerzas superficies planas curvas empuje centro presiones'},
+    {n:4,t:'Flotación y estabilidad',d:'Empuje de Arquímedes, metacentro',p:5,c:[1,1,0],k:'flotacion arquimedes metacentro estabilidad'},
+    {n:5,t:'Continuidad y Bernoulli',d:'Conservación de masa y energía, Venturi',p:13,c:[1,1,1],k:'bernoulli continuidad venturi caudal'},
+    {n:6,t:'Cantidad de movimiento',d:'Fuerzas sobre codos, álabes y chorros',p:11,c:[1,1,1],k:'cantidad movimiento tcm codos alabes chorro empuje'},
+    {n:7,t:'Análisis dimensional',d:'Teorema Pi, semejanza, números adimensionales',p:6,c:[1,0,1],k:'analisis dimensional buckingham semejanza reynolds froude'},
+    {n:8,t:'Flujo en tuberías',d:'Darcy-Weisbach, Colebrook, Moody, Hazen-Williams',p:16,c:[1,1,1],k:'tuberias darcy colebrook moody hazen williams perdidas friccion'},
+    {n:9,t:'Bombeo e instalaciones',d:'Curva del sistema, punto de funcionamiento, cavitación y NPSH',p:18,c:[1,1,1],k:'bombeo bomba cavitacion npsh punto funcionamiento valvula impulsion aspiracion'},
+    {n:10,t:'Canales abiertos',d:'Manning, régimen crítico, resalto hidráulico',p:7,c:[1,1,1],k:'canales manning critico resalto lamina libre'}
+   ]},
+   {asig:'Mecánica Aplicada', curso:2, estado:'obra', k:'mecanica estatica rozamiento cables catenaria resistencia materiales solido rigido'},
+   {asig:'Ciencia de Materiales', curso:2, estado:'prev', k:'materiales diagrama fases hierro carbono tratamientos termicos ensayos'},
+   {asig:'Ingeniería Térmica', curso:2, estado:'prev', k:'termica termodinamica ciclos entropia carnot rankine transmision calor'},
+   {asig:'Sistemas de Producción y Fabricación', curso:2, estado:'prev', k:'sistemas produccion fabricacion cnc torneado fresado fundicion metrologia rectificado'}
+  ];
+
+  var lista=$('lista'), orden='temario';
+  var ETQ={ok:'Disponible',obra:'En construcción',prev:'Previsto'};
+
+  function pinta(){
+    lista.textContent='';
+    [1,2].forEach(function(cur){
+      var g=CATALOGO.filter(function(a){return a.curso===cur});
+      if(!g.length)return;
+      var h=document.createElement('p');h.className='curso-h';
+      h.textContent=cur+'.er curso'.replace('.er','.'+(cur===1?'er':'º'));
+      h.textContent=cur===1?'1.er curso':'2.º curso';
+      lista.appendChild(h);
+
+      g.forEach(function(a){
+        var sec=document.createElement('section');
+        sec.className='asig';sec.dataset.e=a.estado;
+        sec.dataset.k=(a.asig+' '+(a.k||'')).toLowerCase();
+        sec.innerHTML='<div class="asig-h"><h2>'+a.asig+'</h2>'+
+          '<span class="st">'+ETQ[a.estado]+'</span>'+
+          '<span class="meta">'+(a.temas?a.temas.length+' temas':'')+'</span></div>';
+
+        if(a.temas){
+          var temas=a.temas.slice();
+          if(orden==='peso') temas.sort(function(x,y){return y.p-x.p});
+          temas.forEach(function(tm){
+            var el=document.createElement('div');
+            el.className='tema';el.tabIndex=0;el.setAttribute('role','link');
+            el.dataset.k=(tm.t+' '+tm.d+' '+tm.k+' '+a.asig).toLowerCase();
+            el.dataset.alto=tm.p>=13?'si':'no';
+            el.dataset.nav=a.asig+' · T'+tm.n+' '+tm.t;
+            el.innerHTML=
+              '<span class="n">'+String(tm.n).padStart(2,'0')+'</span>'+
+              '<div class="txt"><h3>'+tm.t+'</h3><p>'+tm.d+'</p></div>'+
+              '<div class="right">'+
+                '<span class="peso"><span class="track"><span class="fill" style="width:'+(tm.p/18*100)+'%"></span></span>'+
+                '<span>'+tm.p+'%</span></span>'+
+                '<span class="tipos">'+
+                  '<i class="'+(tm.c[0]?'on':'')+'" title="Teoría"></i>'+
+                  '<i class="sim '+(tm.c[1]?'on':'')+'" title="Simulador"></i>'+
+                  '<i class="'+(tm.c[2]?'on':'')+'" title="Ejercicios"></i>'+
+                '</span>'+
+              '</div>';
+            sec.appendChild(el);
+          });
+        }
+        lista.appendChild(sec);
+      });
+    });
+  }
+
+  function filtra(){
+    var q=$('q').value.trim().toLowerCase(), vis=0, tot=0, asigVis=0;
+    document.querySelectorAll('.tema').forEach(function(el){
+      tot++;
+      var ok=!q||el.dataset.k.indexOf(q)>-1;
+      el.classList.toggle('hide',!ok); if(ok)vis++;
+    });
+    document.querySelectorAll('.asig').forEach(function(s){
+      var hijos=s.querySelectorAll('.tema').length,
+          vivos=s.querySelectorAll('.tema:not(.hide)').length,
+          propio=!q||s.dataset.k.indexOf(q)>-1;
+      var mostrar = hijos ? (vivos>0||propio) : propio;
+      if(mostrar&&propio&&hijos&&vivos===0){
+        s.querySelectorAll('.tema').forEach(function(e){e.classList.remove('hide')});
+        vis+=hijos;
+      }
+      s.style.display=mostrar?'':'none';
+      if(mostrar)asigVis++;
+    });
+    document.querySelectorAll('.curso-h').forEach(function(h){
+      var n=0,e=h.nextElementSibling;
+      while(e&&e.classList.contains('asig')){if(e.style.display!=='none')n++;e=e.nextElementSibling}
+      h.style.display=n?'':'none';
+    });
+    $('vacio').classList.toggle('on',asigVis===0);
+    $('count').textContent=q
+      ? asigVis+' asignaturas · '+vis+' temas'
+      : CATALOGO.filter(function(a){return a.temas}).length+' de '+CATALOGO.length+' asignaturas · '+tot+' temas';
+  }
+
+  lista.addEventListener('click',function(e){
+    var el=e.target.closest('.tema'); if(!el)return;
+    $('resumeTxt').textContent=el.dataset.nav;
+    $('resume').classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  lista.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    var el=e.target.closest('.tema'); if(!el)return;
+    e.preventDefault(); el.click();
+  });
+
+  $('q').addEventListener('input',filtra);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='/'&&document.activeElement!==$('q')){e.preventDefault();$('q').focus()}
+    if(e.key==='Escape'&&document.activeElement===$('q')){$('q').value='';filtra();$('q').blur()}
+  });
+  $('sT').onclick=function(){orden='temario';$('sT').setAttribute('aria-pressed','true');
+    $('sP').setAttribute('aria-pressed','false');pinta();filtra()};
+  $('sP').onclick=function(){orden='peso';$('sP').setAttribute('aria-pressed','true');
+    $('sT').setAttribute('aria-pressed','false');pinta();filtra()};
+
+  pinta();filtra();
+})();
+</script>
+</body>
+</html>
