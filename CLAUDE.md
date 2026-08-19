@@ -298,10 +298,20 @@ La universidad ha dado permiso para usar el material docente. Aun así:
 - Hay un límite que la universidad no puede levantar: las figuras que los
   profesores tienen escaneadas de manuales (Moody, tablas de propiedades,
   esquemas de Çengel, White o Askeland) siguen siendo de las editoriales.
-- Los enunciados de examen se **reescriben** y se cambian los números. Además
-  de resolver los derechos, impide que el alumno busque la solución hecha.
-- Se cita siempre la procedencia: «Adaptado del Ejercicio 2 · Extraordinario
-  junio 2025».
+- Los enunciados de examen se reproducen **tal cual**, sin cambiar los números.
+  El alumno estudia con el ejercicio que va a caer, no con una versión parecida;
+  y cuando compara con la solución oficial del boletín, los números tienen que
+  coincidir o la herramienta pierde toda la credibilidad.
+- Se cita siempre la procedencia exacta: «Ejercicio 1.1 · Problemas
+  complementarios, tema 1 · Cálculo, UPV/EHU (examen 2014/2015)».
+- Lo que sí es nuestro es **la resolución**: el desarrollo, los errores típicos
+  y el diagnóstico. Ahí está el valor, no en el enunciado.
+
+> Esta regla decía lo contrario hasta el 19 de agosto de 2026: reescribir los
+> enunciados y cambiar los números, para que no se pudiera buscar la solución
+> hecha. Se cambió a propósito. El precio asumido es que los ejercicios son
+> localizables; a cambio, lo que se estudia aquí es exactamente lo que se
+> examina.
 
 ### Estilo de la prosa
 
