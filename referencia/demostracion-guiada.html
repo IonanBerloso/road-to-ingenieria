@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demostración guiada · Sucesiones y límites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5; --alt-soft:rgba(122,79,181,.08);
+  --d1:#1268A8;
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8; --alt-soft:rgba(183,155,232,.12);
+  --d1:#6BB6E8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms !important}}
+
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600}
+.brand span{color:var(--live)}
+.crumb{font-family:var(--mono);font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.crumb b{color:var(--graphite)}
+.top .spacer{margin-left:auto}
+.toggle{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.toggle:hover{border-color:var(--live);color:var(--live)}
+
+.wrap{max-width:54rem;margin:0 auto;padding:clamp(2rem,5vw,3rem) clamp(1rem,4vw,2.5rem) 6rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--live);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.6vw,2.5rem);line-height:1.08;letter-spacing:-.022em;margin-bottom:.8rem}
+.lede{font-size:1.04rem;color:var(--graphite);margin-bottom:1.2rem}
+.src{font-family:var(--mono);font-size:.72rem;color:var(--faint);padding-left:.8rem;border-left:2px solid var(--rule);margin-bottom:2rem}
+p{margin-bottom:.9rem}
+.m{font-family:var(--mono);font-size:.9em;background:var(--live-soft);padding:.08em .35em;border-radius:3px;white-space:nowrap}
+strong{font-weight:600}
+
+.modes{display:flex;gap:.3rem;background:var(--grid);padding:.25rem;border-radius:99px;margin-bottom:.6rem;width:fit-content}
+.modes button{font-family:var(--mono);font-size:.74rem;border:none;background:none;cursor:pointer;
+  color:var(--graphite);padding:.45rem 1rem;border-radius:99px}
+.modes button[aria-pressed="true"]{background:var(--panel);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.modehint{font-family:var(--mono);font-size:.7rem;color:var(--faint);margin-bottom:1.6rem}
+
+.enun{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:1.15rem 1.3rem;margin-bottom:1rem}
+.enun h2{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);margin-bottom:.7rem;font-weight:500}
+.enun p{font-size:.96rem}
+.enun ol{margin:.6rem 0 0 1.2rem;font-size:.96rem}
+.enun li{margin-bottom:.25rem}
+
+.rubrica{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-bottom:2rem}
+.rb{background:var(--panel);padding:.75rem .9rem}
+.rb .k{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);display:block;margin-bottom:.15rem}
+.rb .v{font-family:var(--mono);font-size:1rem;font-weight:600}
+.rb .d{font-size:.79rem;color:var(--graphite);line-height:1.4;margin-top:.15rem}
+.rb.big .v{color:var(--flag)}
+
+.paso{background:var(--panel);border:1px solid var(--rule);border-radius:8px;margin-bottom:1rem;overflow:hidden}
+.paso.locked{opacity:.4;pointer-events:none}
+.paso.solved{border-color:var(--live)}
+.paso-h{display:flex;align-items:baseline;gap:.7rem;padding:.9rem 1.15rem .25rem}
+.paso-h .n{font-family:var(--mono);font-size:.67rem;color:var(--faint);letter-spacing:.08em}
+.paso-h h3{font-size:.97rem;font-weight:600;flex:1}
+.paso-h .comp{font-family:var(--mono);font-size:.62rem;border:1px solid var(--rule);
+  border-radius:99px;padding:.1rem .5rem;color:var(--faint);white-space:nowrap}
+.paso-h .tick{color:var(--live);display:none}
+.paso.solved .paso-h .tick{display:block}
+.paso-b{padding:0 1.15rem 1.15rem}
+.paso-b > p{font-size:.93rem;color:var(--graphite);margin-bottom:.85rem}
+
+.opts{display:flex;flex-direction:column;gap:.45rem}
+.opts button{font-family:var(--body);font-size:.9rem;text-align:left;cursor:pointer;
+  padding:.6rem .85rem;border:1px solid var(--rule);border-radius:6px;
+  background:var(--paper);color:var(--ink);line-height:1.45}
+.opts button:hover{border-color:var(--live)}
+.opts button.sel{border-color:var(--live);background:var(--live-soft)}
+.opts button.mal{border-color:var(--flag);background:var(--flag-soft)}
+
+/* explorador de sucesiones */
+.expl{display:grid;grid-template-columns:1fr 1.1fr;gap:1rem;align-items:start}
+.cands{display:flex;flex-direction:column;gap:.4rem}
+.cands button{font-family:var(--mono);font-size:.86rem;text-align:left;cursor:pointer;
+  padding:.5rem .75rem;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink)}
+.cands button:hover{border-color:var(--live)}
+.cands button[aria-pressed="true"]{border-color:var(--live);background:var(--live-soft);font-weight:600}
+.plot{background:var(--paper);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.plot svg{display:block;width:100%;height:auto}
+.chk2{display:flex;flex-direction:column;gap:.3rem;padding:.6rem .75rem;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:.73rem}
+.chk2 span{display:flex;gap:.45rem;align-items:center;color:var(--graphite)}
+.chk2 span.ok{color:var(--live)} .chk2 span.no{color:var(--flag)}
+
+/* constructor de demostración */
+.build{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.col h4{font-family:var(--mono);font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin-bottom:.5rem;font-weight:500}
+.pool,.proof{display:flex;flex-direction:column;gap:.4rem;min-height:4rem;
+  padding:.5rem;border:1px dashed var(--rule);border-radius:6px}
+.frag{font-size:.87rem;line-height:1.45;padding:.55rem .7rem;border:1px solid var(--rule);
+  border-radius:5px;background:var(--paper);cursor:pointer;text-align:left;font-family:var(--body);color:var(--ink)}
+.frag:hover{border-color:var(--live)}
+.proof .frag{background:var(--live-soft);border-color:var(--live)}
+.proof .frag.bad{background:var(--flag-soft);border-color:var(--flag)}
+.proof .frag::before{content:attr(data-i);font-family:var(--mono);font-size:.7rem;
+  color:var(--live);margin-right:.5rem;font-weight:600}
+.proof .frag.bad::before{color:var(--flag)}
+.vacia{font-family:var(--mono);font-size:.73rem;color:var(--faint);padding:.5rem;text-align:center}
+
+.acciones{display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap}
+.acciones button{font-family:var(--body);font-size:.86rem;font-weight:500;cursor:pointer;
+  padding:.5rem 1rem;border-radius:5px;border:1px solid var(--live);background:var(--live);color:#fff}
+.acciones button.ghost{background:none;color:var(--graphite);border-color:var(--rule)}
+.acciones button.ghost:hover{border-color:var(--live);color:var(--live)}
+
+.fb{margin-top:.85rem;padding:.8rem .95rem;border-radius:0 5px 5px 0;font-size:.89rem;display:none}
+.fb.on{display:block}
+.fb.bad{border-left:2px solid var(--flag);background:var(--flag-soft)}
+.fb.hint{border-left:2px solid var(--alt);background:var(--alt-soft)}
+.fb b{display:block;font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.09em;margin-bottom:.3rem}
+.fb.bad b{color:var(--flag)} .fb.hint b{color:var(--alt)}
+
+/* checklist COMP4 */
+.check{display:flex;flex-direction:column;gap:.5rem}
+.check label{display:flex;gap:.6rem;align-items:flex-start;font-size:.9rem;cursor:pointer;
+  padding:.5rem .7rem;border:1px solid var(--rule);border-radius:6px}
+.check input{margin-top:.28rem;accent-color:var(--live);flex-shrink:0}
+.check label:has(input:checked){border-color:var(--live);background:var(--live-soft)}
+
+.sol{display:none;margin-top:.9rem}
+.paso.solved .sol{display:block}
+.calc{font-family:var(--mono);font-size:.81rem;color:var(--graphite);background:var(--paper);
+  border:1px solid var(--rule);border-radius:5px;padding:.75rem .9rem;white-space:pre-wrap;line-height:1.8;overflow-x:auto}
+.calc em{color:var(--live);font-style:normal;font-weight:600}
+.verdict{font-size:.86rem;color:var(--graphite);margin-top:.55rem;padding-left:.7rem;border-left:2px solid var(--live)}
+
+.full .paso{opacity:1;pointer-events:auto}
+.full .opts,.full .acciones,.full .fb,.full .build,.full .expl,.full .check{display:none !important}
+.full .sol{display:block}
+.full .paso-h .tick{display:none}
+
+.flagbox{border-left:2px solid var(--flag);background:var(--flag-soft);padding:.75rem .95rem;
+  margin:1.4rem 0;font-size:.89rem;color:var(--graphite);border-radius:0 5px 5px 0}
+.flagbox b{display:block;font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:var(--flag);margin-bottom:.3rem}
+
+@media (max-width:760px){
+  .build,.expl{grid-template-columns:1fr}
+  .crumb{display:none}
+}
+@media print{
+  .top,.modes,.modehint,.opts,.acciones,.fb,.build,.expl,.check{display:none !important}
+  .sol{display:block !important}
+  body{background:#fff}
+  .paso{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand">EHU<span>·</span>LAB</span>
+  <span class="crumb">Cálculo <b>/</b> T2 <b>/</b> Sucesiones</span>
+  <span class="spacer"></span>
+  <button class="toggle" id="tema">Oscuro</button>
+</header>
+
+<div class="wrap" id="wrap">
+
+  <p class="eyebrow">Cálculo · Sucesiones · Demostración</p>
+  <h1>Cuando el límite toca la cota</h1>
+  <p class="lede">Este ejercicio vale 10 de 40 puntos y <strong>nueve de esos diez son demostración</strong>. No hay nada que calcular. Aquí se entrena eso.</p>
+  <p class="src">Adaptado del Ejercicio 3 · Primera evaluación · Cálculo · 20 de octubre de 2025 · Escuela de Ingeniería de Gipuzkoa</p>
+
+  <div class="modes" role="group" aria-label="Modo">
+    <button id="mGuia" aria-pressed="true">Guiado</button>
+    <button id="mFull" aria-pressed="false">Solución completa</button>
+  </div>
+  <p class="modehint" id="mhint">Cada paso entrena una competencia distinta de la rúbrica.</p>
+
+  <div class="enun">
+    <h2>Enunciado</h2>
+    <p>Sea <span class="m">{aₙ}</span> una sucesión convergente cuyo límite es <span class="m">L</span>. Supongamos que existe <span class="m">b ∈ ℝ</span> tal que <span class="m">aₙ &gt; b</span> para todo <span class="m">n ∈ ℕ</span>. Razonar formalmente si son ciertas estas afirmaciones:</p>
+    <ol>
+      <li>Es posible que <span class="m">L = b</span>.</li>
+      <li>Necesariamente <span class="m">L ≥ b</span>.</li>
+    </ol>
+  </div>
+
+  <div class="rubrica">
+    <div class="rb"><span class="k">COMP 1</span><span class="v">1 punto</span><span class="d">Reconocer los conceptos a aplicar</span></div>
+    <div class="rb big"><span class="k">COMP 4</span><span class="v">9 puntos</span><span class="d">La demostración</span></div>
+    <div class="rb"><span class="k">COMP 2</span><span class="v">0 puntos</span><span class="d">Aquí no hay cálculo</span></div>
+  </div>
+
+  <!-- 01 -->
+  <div class="paso" id="p0">
+    <div class="paso-h"><span class="n">01</span><h3>¿Qué concepto entra en juego?</h3>
+      <span class="comp">COMP 1</span><span class="tick">✓</span></div>
+    <div class="paso-b">
+      <p>Antes de escribir nada, identifica la herramienta. Es lo primero que puntúa la rúbrica.</p>
+      <div class="opts" id="o0">
+        <button data-v="0">El paso al límite conserva las desigualdades <strong>no estrictas</strong>, pero no las estrictas</button>
+        <button data-v="1">El criterio de comparación para series de términos positivos</button>
+        <button data-v="2">El teorema del sándwich</button>
+        <button data-v="3">Toda sucesión monótona y acotada converge</button>
+      </div>
+      <div class="fb" id="f0"></div>
+      <div class="sol">
+        <div class="calc">Concepto: <em>paso al límite en desigualdades</em>.
+
+Si aₙ ≥ c para todo n y aₙ → L, entonces L ≥ c.
+La desigualdad <em>estricta</em> NO se conserva:
+de aₙ > c NO se deduce L > c.</div>
+        <p class="verdict">Toda la dificultad del ejercicio está en esa distinción.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="paso locked" id="p1">
+    <div class="paso-h"><span class="n">02</span><h3>Construye el ejemplo que responde a la primera pregunta</h3>
+      <span class="comp">COMP 4</span><span class="tick">✓</span></div>
+    <div class="paso-b">
+      <p>Para afirmar que <em>es posible</em> que L = b basta exhibir una sucesión que lo cumpla. Toma <span class="m">b = 2</span> y prueba candidatas: la gráfica comprueba las dos condiciones por ti.</p>
+      <div class="expl">
+        <div class="cands" id="cands"></div>
+        <div class="plot">
+          <svg viewBox="0 0 340 220" role="img" aria-label="Gráfica de los primeros términos de la sucesión elegida frente a la cota b igual a 2."></svg>
+          <div class="chk2" id="chk2"></div>
+        </div>
+      </div>
+      <div class="acciones"><button id="okSeq">Usar esta sucesión</button></div>
+      <div class="fb" id="f1"></div>
+      <div class="sol">
+        <div class="calc">Contraejemplo: <em>aₙ = b + 1/n</em>
+
+  · aₙ > b para todo n  ✓  (1/n > 0 siempre)
+  · lím aₙ = b + 0 = b  ✓
+
+Luego <em>sí es posible que L = b</em>.
+Basta un solo ejemplo para probar una posibilidad.</div>
+        <p class="verdict">Todos los términos están estrictamente por encima de b y el límite aterriza justo en b.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="paso locked" id="p2">
+    <div class="paso-h"><span class="n">03</span><h3>Monta la demostración de que L ≥ b</h3>
+      <span class="comp">COMP 4</span><span class="tick">✓</span></div>
+    <div class="paso-b">
+      <p>Ordena los pasos por reducción al absurdo. <strong>Sobra una pieza</strong>: hay una que no debe entrar en la demostración.</p>
+      <div class="build">
+        <div class="col"><h4>Piezas disponibles</h4><div class="pool" id="pool"></div></div>
+        <div class="col"><h4>Tu demostración</h4><div class="proof" id="proof"><p class="vacia">Pulsa una pieza para añadirla</p></div></div>
+      </div>
+      <div class="acciones">
+        <button id="okProof">Comprobar</button>
+        <button class="ghost" id="reset">Vaciar</button>
+      </div>
+      <div class="fb" id="f2"></div>
+      <div class="sol">
+        <div class="calc">Supongamos, por reducción al absurdo, que <em>L &lt; b</em>.
+
+Tomamos ε = b − L > 0.
+
+Por definición de límite, existe N tal que
+|aₙ − L| &lt; ε para todo n > N.
+
+En particular aₙ &lt; L + ε = L + (b − L) = b
+para todo n > N.
+
+Esto contradice la hipótesis aₙ > b para todo n.
+
+Por tanto L &lt; b es imposible, luego <em>L ≥ b</em>.</div>
+        <p class="verdict">La pieza que sobraba afirmaba L &gt; b: es justo lo que el apartado anterior demuestra falso.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="paso locked" id="p3">
+    <div class="paso-h"><span class="n">04</span><h3>Los 2 puntos de explicación formal</h3>
+      <span class="comp">COMP 4</span><span class="tick">✓</span></div>
+    <div class="paso-b">
+      <p>La rúbrica premia enunciados, definiciones, gráficos aclaratorios e hipótesis. Repasa tu hoja antes de entregarla.</p>
+      <div class="check" id="check">
+        <label><input type="checkbox"> He <strong>enunciado</strong> la definición de límite que uso, con su ε y su N</label>
+        <label><input type="checkbox"> He dicho explícitamente que <strong>ε = b − L es positivo</strong>, y por qué</label>
+        <label><input type="checkbox"> He escrito qué <strong>hipótesis</strong> del enunciado contradice el absurdo</label>
+        <label><input type="checkbox"> He incluido un <strong>gráfico</strong> de la sucesión acercándose a b</label>
+        <label><input type="checkbox"> He respondido a las <strong>dos</strong> preguntas por separado, no solo a una</label>
+      </div>
+      <div class="acciones"><button id="okChk">Terminar</button></div>
+      <div class="fb" id="f3"></div>
+      <div class="sol">
+        <div class="calc">Los 2 puntos de COMP 4 no se ganan calculando:
+se ganan <em>escribiendo lo que estás usando</em>.
+
+Un desarrollo correcto sin definiciones ni
+justificación pierde esos 2 puntos de 10.</div>
+        <p class="verdict">Es el 20% del ejercicio, y es el más barato de conseguir.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flagbox">
+    <b>El error que cuesta el ejercicio</b>
+    Contestar que <span class="m">L &gt; b</span> porque <span class="m">aₙ &gt; b</span> para todo n. Al pasar al límite, la desigualdad estricta se <strong>relaja</strong> a no estricta. El apartado 1 existe precisamente para que veas que L puede valer exactamente b.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var t=$('tema');
+  t.onclick=function(){var o=document.documentElement.dataset.theme==='oscuro';
+    document.documentElement.dataset.theme=o?'claro':'oscuro';t.textContent=o?'Oscuro':'Claro';plot();};
+
+  var done=[false,false,false,false];
+  function fb(i,cls,tit,html){var e=$('f'+i);e.className='fb on '+cls;e.innerHTML='<b>'+tit+'</b>'+html}
+  function resolver(i){
+    done[i]=true;$('p'+i).classList.add('solved');
+    if(i<3){$('p'+(i+1)).classList.remove('locked');
+      $('p'+(i+1)).scrollIntoView({behavior:'smooth',block:'center'})}
+  }
+
+  /* ── 01 concepto ── */
+  var MAL0=[
+   '',
+   'El criterio de comparación es para <em>series</em>, no para sucesiones. Aquí no hay ninguna suma.',
+   'El sándwich necesita dos sucesiones que acoten por arriba y por abajo. Aquí solo tienes una cota inferior.',
+   'Ese teorema garantiza que el límite <em>existe</em>. El enunciado ya te dice que la sucesión converge: el problema no es si hay límite, es dónde está.'
+  ];
+  $('o0').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b||done[0])return;
+    var v=+b.dataset.v;
+    document.querySelectorAll('#o0 button').forEach(function(x){x.classList.remove('sel','mal')});
+    if(v===0){b.classList.add('sel');$('f0').className='fb';resolver(0)}
+    else{b.classList.add('mal');fb(0,'bad','No es esa',MAL0[v])}
+  });
+
+  /* ── 02 sucesiones ── */
+  var B=2;
+  var SEQ=[
+   {txt:'aₙ = 2 + 1/n',      f:function(n){return 2+1/n},      ok:true},
+   {txt:'aₙ = 2 + 1/n²',     f:function(n){return 2+1/(n*n)},  ok:true},
+   {txt:'aₙ = 2',            f:function(){return 2},           ok:false,
+    why:'Cumple el límite, pero no cumple aₙ <em>&gt;</em> b: los términos valen exactamente b, no son estrictamente mayores.'},
+   {txt:'aₙ = 3',            f:function(){return 3},           ok:false,
+    why:'Todos los términos superan b, pero el límite es 3, no 2. No sirve para probar que L puede valer b.'},
+   {txt:'aₙ = 2 − 1/n',      f:function(n){return 2-1/n},      ok:false,
+    why:'El límite sí es b, pero los términos quedan por <em>debajo</em> de b. Incumple la hipótesis del enunciado.'},
+   {txt:'aₙ = 2 + (−1)ⁿ/n',  f:function(n){return 2+Math.pow(-1,n)/n}, ok:false,
+    why:'Converge a b, pero los términos impares caen por debajo de b. La hipótesis pide todos por encima.'}
+  ];
+  var sel=0;
+
+  (function(){
+    var c=$('cands');
+    SEQ.forEach(function(s,i){
+      var b=document.createElement('button');
+      b.textContent=s.txt;b.setAttribute('aria-pressed',String(i===0));
+      b.onclick=function(){
+        if(done[1])return;
+        sel=i;
+        c.querySelectorAll('button').forEach(function(x,j){x.setAttribute('aria-pressed',String(j===i))});
+        plot();$('f1').className='fb';
+      };
+      c.appendChild(b);
+    });
+  })();
+
+  function plot(){
+    var s=SEQ[sel], svg=document.querySelector('.plot svg'), NS='http://www.w3.org/2000/svg';
+    svg.textContent='';
+    var W=340,H=220,L=32,R=12,T=14,Bo=28, N=18;
+    var vals=[];for(var n=1;n<=N;n++)vals.push(s.f(n));
+    var mn=Math.min(1.6,Math.min.apply(null,vals)-.25), mx=Math.max(3.2,Math.max.apply(null,vals)+.25);
+    var X=function(n){return L+(n-1)/(N-1)*(W-L-R)},
+        Y=function(v){return T+(mx-v)/(mx-mn)*(H-T-Bo)};
+    function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e}
+    for(var g=Math.ceil(mn*2)/2;g<=mx;g+=.5){
+      svg.appendChild(el('line',{x1:L,x2:W-R,y1:Y(g),y2:Y(g),stroke:'var(--grid)','stroke-width':1}));
+    }
+    svg.appendChild(el('line',{x1:L,x2:W-R,y1:Y(B),y2:Y(B),stroke:'var(--flag)','stroke-width':1.6,'stroke-dasharray':'5 4'}));
+    var lb=el('text',{x:W-R,y:Y(B)-6,'text-anchor':'end','font-family':'IBM Plex Mono, monospace','font-size':10,fill:'var(--flag)'});
+    lb.textContent='b = 2';svg.appendChild(lb);
+    svg.appendChild(el('line',{x1:L,x2:L,y1:T,y2:H-Bo,stroke:'var(--faint)','stroke-width':1.1}));
+    svg.appendChild(el('line',{x1:L,x2:W-R,y1:H-Bo,y2:H-Bo,stroke:'var(--faint)','stroke-width':1.1}));
+    var d='';
+    vals.forEach(function(v,i){d+=(i?' L':'M')+X(i+1)+','+Y(v)});
+    svg.appendChild(el('path',{d:d,fill:'none',stroke:'var(--d1)','stroke-width':1.2,opacity:.45}));
+    vals.forEach(function(v,i){
+      svg.appendChild(el('circle',{cx:X(i+1),cy:Y(v),r:3,
+        fill:v>B?'var(--d1)':'var(--flag)'}));
+    });
+    var tx=el('text',{x:(L+W-R)/2,y:H-8,'text-anchor':'middle','font-family':'IBM Plex Mono, monospace','font-size':10,fill:'var(--faint)'});
+    tx.textContent='n = 1 … 18';svg.appendChild(tx);
+
+    var todos=vals.every(function(v){return v>B});
+    var lim=Math.abs(s.f(4000)-B)<1e-3;
+    $('chk2').innerHTML=
+      '<span class="'+(todos?'ok':'no')+'">'+(todos?'✓':'✕')+' todos los términos cumplen aₙ > b</span>'+
+      '<span class="'+(lim?'ok':'no')+'">'+(lim?'✓':'✕')+' el límite vale exactamente b</span>';
+  }
+  plot();
+
+  $('okSeq').onclick=function(){
+    var s=SEQ[sel];
+    if(s.ok){$('f1').className='fb';resolver(1)}
+    else fb(1,'bad','Esa no vale',s.why);
+  };
+
+  /* ── 03 demostración ── */
+  var FRAG=[
+   {id:1,t:'Supongamos, por reducción al absurdo, que L < b.'},
+   {id:2,t:'Tomamos ε = b − L, que es estrictamente positivo.'},
+   {id:3,t:'Por definición de límite, existe N tal que |aₙ − L| < ε para todo n > N.'},
+   {id:4,t:'En particular aₙ < L + ε = b para todo n > N.'},
+   {id:5,t:'Esto contradice la hipótesis aₙ > b para todo n.'},
+   {id:6,t:'Por tanto L < b es imposible, luego L ≥ b.'},
+   {id:9,t:'Como aₙ > b para todo n, al pasar al límite se conserva la desigualdad estricta: L > b.',trampa:true}
+  ];
+  var ORDEN=[1,2,3,4,5,6], puesto=[];
+
+  function baraja(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x}return a}
+  var mezcla=baraja(FRAG);
+
+  function pinta(){
+    var pool=$('pool'), pr=$('proof');
+    pool.textContent='';pr.textContent='';
+    mezcla.forEach(function(f){
+      if(puesto.indexOf(f.id)>-1)return;
+      var b=document.createElement('button');
+      b.className='frag';b.textContent=f.t;
+      b.onclick=function(){if(done[2])return;puesto.push(f.id);pinta();$('f2').className='fb'};
+      pool.appendChild(b);
+    });
+    if(!pool.childNodes.length){var v=document.createElement('p');v.className='vacia';v.textContent='no queda ninguna';pool.appendChild(v)}
+    if(!puesto.length){var v2=document.createElement('p');v2.className='vacia';v2.textContent='Pulsa una pieza para añadirla';pr.appendChild(v2);return}
+    puesto.forEach(function(id,i){
+      var f=FRAG.filter(function(x){return x.id===id})[0];
+      var b=document.createElement('button');
+      b.className='frag';b.dataset.i=(i+1)+'.';b.textContent=f.t;
+      b.onclick=function(){if(done[2])return;puesto.splice(i,1);pinta();$('f2').className='fb'};
+      pr.appendChild(b);
+    });
+  }
+  pinta();
+
+  $('reset').onclick=function(){puesto=[];pinta();$('f2').className='fb'};
+  $('okProof').onclick=function(){
+    if(puesto.indexOf(9)>-1){
+      fb(2,'bad','Esa pieza no puede entrar',
+        'Has usado la que afirma que la desigualdad <em>estricta</em> se conserva en el límite. Es precisamente lo que el paso anterior demuestra falso: con aₙ = b + 1/n todos los términos superan b y sin embargo el límite es b. Quítala.');
+      return;
+    }
+    if(puesto.length<ORDEN.length){fb(2,'hint','Falta algo','Te faltan '+(ORDEN.length-puesto.length)+' piezas para que el argumento cierre.');return}
+    for(var i=0;i<ORDEN.length;i++){
+      if(puesto[i]!==ORDEN[i]){
+        fb(2,'bad','El orden se rompe en la posición '+(i+1),
+          'Hasta ahí va bien. Piensa qué hace falta tener ya escrito para que ese paso tenga sentido.');
+        return;
+      }
+    }
+    $('f2').className='fb';resolver(2);
+  };
+
+  /* ── 04 checklist ── */
+  $('okChk').onclick=function(){
+    var n=document.querySelectorAll('#check input:checked').length;
+    if(n<5){fb(3,'hint','Todavía no','Quedan '+(5-n)+' cosas sin marcar. Ninguna cuesta más de dos líneas, y valen 2 puntos sobre 10.');return}
+    $('f3').className='fb';resolver(3);
+  };
+
+  /* ── modos ── */
+  var wrap=$('wrap'), mg=$('mGuia'), mf=$('mFull');
+  function modo(full){
+    wrap.classList.toggle('full',full);
+    mg.setAttribute('aria-pressed',String(!full));
+    mf.setAttribute('aria-pressed',String(full));
+    $('mhint').textContent=full
+      ? 'Demostración completa, de un tirón. Se imprime bien.'
+      : 'Cada paso entrena una competencia distinta de la rúbrica.';
+    [0,1,2,3].forEach(function(i){
+      if(full)$('p'+i).classList.remove('locked');
+      else if(i>0&&!done[i-1])$('p'+i).classList.add('locked');
+    });
+  }
+  mg.onclick=function(){modo(false)};
+  mf.onclick=function(){modo(true)};
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Road to Ingeniería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5;
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --acento:var(--live);
+}
+[data-theme="oscuro"]{
+  --paper:#131619; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:focus-visible{outline:2px solid var(--acento);outline-offset:4px;border-radius:3px}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+/* ─────────── cabecera ─────────── */
+.top{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;align-items:center;gap:1rem;
+  padding:.85rem clamp(1rem,4vw,2.5rem);
+  background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(10px)}
+.brand{font-family:var(--display);font-size:1.02rem;font-weight:600;letter-spacing:-.01em}
+.brand span{color:var(--acento);transition:color .5s var(--ease)}
+.top .spacer{margin-left:auto}
+.mini{font-family:var(--mono);font-size:.7rem;color:var(--faint);
+  border:1px solid var(--rule);border-radius:99px;padding:.3rem .7rem;
+  display:flex;align-items:center;gap:.45rem;transition:border-color .2s,color .2s}
+.mini:hover{border-color:var(--acento);color:var(--acento)}
+.mini kbd{font-family:var(--mono);font-size:.66rem;opacity:.7}
+
+/* ─────────── escena ─────────── */
+#app{position:relative;min-height:100%;padding-top:3.5rem}
+
+/* ── A · lista ── */
+.hero{display:flex;flex-direction:column;
+  height:calc(100vh - 3.5rem);padding:0 clamp(1rem,4vw,3rem) 1rem;
+  transition:opacity .32s var(--ease),transform .42s var(--ease)}
+#app[data-view="detalle"] .hero{opacity:0;transform:translateY(-2.5rem);pointer-events:none;
+  position:absolute;inset:3.5rem 0 auto 0}
+
+.curso{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.13em;
+  color:var(--faint);padding:.7rem 0 .25rem;flex:0 0 auto}
+.list{display:flex;flex-direction:column;flex:1;min-height:0}
+
+.row{position:relative;display:flex;align-items:center;gap:clamp(.7rem,2vw,1.4rem);
+  flex:1 1 0;min-height:0;padding:0 .2rem;
+  border-top:1px solid var(--rule);
+  transition:flex-grow .42s var(--ease),opacity .28s var(--ease)}
+.list .row:last-child{border-bottom:1px solid var(--rule)}
+.row .n{font-family:var(--mono);font-size:.68rem;color:var(--acento);flex:0 0 auto;
+  opacity:.55;transition:opacity .3s}
+.row .nm{font-family:var(--display);font-weight:300;letter-spacing:-.03em;line-height:1;
+  font-size:clamp(1.15rem,3.6vh,2.6rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:font-variation-settings .42s var(--ease),font-weight .42s var(--ease)}
+.row .side{margin-left:auto;display:flex;align-items:center;gap:1rem;flex:0 0 auto}
+.row .bar{display:flex;gap:2px}
+.row .bar i{width:5px;height:16px;border-radius:1px;background:var(--grid);display:block;
+  transition:background .3s var(--ease)}
+.row .bar i.on{background:var(--acento);opacity:.75}
+.row .st{font-family:var(--mono);font-size:.63rem;color:var(--faint);white-space:nowrap}
+.row .go{font-family:var(--mono);font-size:.9rem;color:var(--acento);
+  opacity:0;transform:translateX(-6px);transition:all .3s var(--ease)}
+
+@media (hover:hover){
+  .list:hover .row{opacity:.38}
+  .list .row:hover{flex-grow:2.1;opacity:1}
+  .list .row:hover .nm{font-weight:500}
+  .list .row:hover .go{opacity:1;transform:none}
+  .list .row:hover .n{opacity:1}
+}
+.row:focus-visible{flex-grow:2.1;opacity:1}
+.row.prev .nm{color:var(--graphite)}
+
+/* ── B · detalle ── */
+.view{opacity:0;pointer-events:none;position:absolute;inset:3.5rem 0 auto 0;
+  padding:0 clamp(1rem,4vw,3rem) 5rem;
+  transform:translateY(1.5rem);
+  transition:opacity .38s var(--ease) .1s,transform .48s var(--ease) .1s}
+#app[data-view="detalle"] .view{opacity:1;pointer-events:auto;transform:none;position:relative}
+
+.chips{display:flex;gap:.3rem;overflow-x:auto;padding:.55rem 0 .8rem;
+  border-bottom:1px solid var(--rule);scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{font-family:var(--mono);font-size:.7rem;color:var(--faint);white-space:nowrap;
+  padding:.3rem .65rem;border-radius:99px;transition:color .2s,background .2s}
+.chip:hover{color:var(--ink);background:var(--grid)}
+.chip.act{color:var(--acento);background:var(--live-soft);font-weight:600}
+.volver{font-family:var(--mono);font-size:.7rem;color:var(--faint);
+  padding:.3rem .6rem .3rem 0;white-space:nowrap}
+.volver:hover{color:var(--acento)}
+
+.head{padding:1.8rem 0 .5rem;display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.head .n{font-family:var(--mono);font-size:.7rem;color:var(--acento);padding-bottom:.55rem}
+.head h1{font-family:var(--display);font-weight:500;letter-spacing:-.03em;line-height:1;
+  font-size:clamp(1.9rem,5.4vw,3.4rem);transform-origin:left top}
+.head .meta{margin-left:auto;font-family:var(--mono);font-size:.7rem;color:var(--faint);padding-bottom:.6rem}
+.regla{height:2px;background:var(--acento);opacity:.9;margin-bottom:1.6rem;
+  transform-origin:left;animation:crece .55s var(--ease) both}
+@keyframes crece{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.temas{max-width:62rem}
+.tema{display:grid;grid-template-columns:2.2rem 1fr auto;gap:.9rem;align-items:center;
+  padding:.72rem .5rem;border-bottom:1px solid var(--rule);cursor:pointer;border-radius:5px;
+  transition:background .15s;
+  animation:entra .4s var(--ease) both}
+@keyframes entra{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.tema:hover{background:var(--live-soft)}
+.tema .tn{font-family:var(--mono);font-size:.71rem;color:var(--faint);text-align:right}
+.tema h3{font-size:.96rem;font-weight:500;margin-bottom:.08rem}
+.tema p{font-size:.81rem;color:var(--graphite);line-height:1.4}
+.tema .right{display:flex;align-items:center;gap:.9rem}
+.peso{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.67rem;color:var(--faint)}
+.peso .tr{width:48px;height:5px;background:var(--grid);border-radius:99px;overflow:hidden}
+.peso .fi{height:100%;background:var(--faint);border-radius:99px}
+.tema[data-alto="si"] .peso .fi{background:var(--flag)}
+.tema[data-alto="si"] .peso span{color:var(--flag);font-weight:600}
+.tipos{display:flex;gap:.26rem}
+.tipos i{width:7px;height:7px;border-radius:2px;background:var(--grid);display:block}
+.tipos i.on{background:var(--live)}
+.tipos i.sim.on{background:var(--alt)}
+
+.pendiente{padding:2.6rem 0;max-width:44ch}
+.pendiente h4{font-family:var(--display);font-size:1.3rem;font-weight:500;margin-bottom:.5rem}
+.pendiente p{color:var(--graphite);font-size:.95rem}
+
+/* ─────────── paleta ─────────── */
+.pal{position:fixed;inset:0;z-index:60;display:none;
+  background:color-mix(in srgb,var(--ink) 26%,transparent);backdrop-filter:blur(3px);
+  padding:12vh 1rem 1rem;justify-content:center;align-items:flex-start}
+.pal.on{display:flex;animation:fade .18s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.palbox{width:min(38rem,100%);background:var(--panel);border:1px solid var(--rule);
+  border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.18);
+  animation:sube .26s var(--ease) both}
+@keyframes sube{from{opacity:0;transform:translateY(-10px) scale(.985)}to{opacity:1;transform:none}}
+.palbox input{width:100%;font-family:var(--body);font-size:1.05rem;padding:1rem 1.15rem;
+  border:none;border-bottom:1px solid var(--rule);background:none;color:var(--ink)}
+.palbox input::placeholder{color:var(--faint)}
+.res{max-height:min(52vh,26rem);overflow-y:auto;padding:.4rem}
+.res .grp{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--faint);padding:.6rem .8rem .3rem}
+.hit{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;
+  padding:.55rem .8rem;border-radius:6px;font-size:.92rem}
+.hit .k{font-family:var(--mono);font-size:.66rem;color:var(--faint);flex:0 0 auto}
+.hit .sub{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--faint);white-space:nowrap}
+.hit.cur{background:var(--live-soft)}
+.hit.cur .sub{color:var(--live)}
+.palpie{display:flex;gap:1.1rem;padding:.55rem .95rem;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:.65rem;color:var(--faint)}
+.nada{padding:1.6rem .9rem;text-align:center;color:var(--graphite);font-size:.9rem}
+
+@media (max-width:760px){
+  .hero{height:auto;padding-bottom:3rem}
+  .row{flex:0 0 auto;min-height:3.4rem}
+  .row .side .st{display:none}
+  .head .meta{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand">Road to<span> ·</span> Ingeniería</span>
+  <span class="spacer"></span>
+  <button class="mini" id="abrirPal">Buscar <kbd>/</kbd></button>
+  <button class="mini" id="tema">Oscuro</button>
+</header>
+
+<main id="app" data-view="lista">
+
+  <section class="hero" id="hero"></section>
+
+  <section class="view" id="view">
+    <div class="chips" id="chips"></div>
+    <div class="head">
+      <span class="n" id="vnum"></span>
+      <h1 id="vname"></h1>
+      <span class="meta" id="vmeta"></span>
+    </div>
+    <div class="regla" id="vregla"></div>
+    <div class="temas" id="temas"></div>
+  </section>
+
+</main>
+
+<div class="pal" id="pal">
+  <div class="palbox">
+    <input id="q" placeholder="Asignatura, tema o concepto…" aria-label="Buscar">
+    <div class="res" id="res"></div>
+    <div class="palpie"><span>↑↓ moverse</span><span>⏎ abrir</span><span>esc cerrar</span></div>
+  </div>
+</div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ══════ catálogo ══════ */
+var CAT=[
+ {n:'Álgebra',c:1,e:'prev',ac:'#6E4BB0',acD:'#B79BE8',
+  k:'matrices determinantes diagonalizacion espacios vectoriales'},
+ {n:'Cálculo',c:1,e:'ok',ac:'#0D6E6B',acD:'#4FD1C5',
+  k:'derivadas integrales limites series',
+  t:[
+   [1,'Números complejos','Forma binómica y polar, De Moivre, raíces',8,[1,1,1],'complejos moivre raices euler argumento'],
+   [2,'Sucesiones y series','Convergencia, criterios, series hipergeométricas',14,[1,0,1],'sucesiones series convergencia leibniz hipergeometrica'],
+   [3,'Límites y continuidad','Indeterminaciones, asíntotas, Bolzano',9,[1,1,1],'limites continuidad asintotas bolzano'],
+   [4,'Derivada y aplicaciones','Regla de la cadena, L\'Hôpital, optimización',12,[1,1,1],'derivada cadena hopital optimizacion'],
+   [5,'Polinomio de Taylor','Desarrollo, resto de Lagrange, error',16,[1,1,1],'taylor maclaurin lagrange aproximacion'],
+   [6,'Integral definida','Riemann, teorema fundamental, partes',13,[1,0,1],'integral riemann primitiva partes'],
+   [7,'Integrales impropias','Convergencia de primera y segunda especie',7,[1,0,1],'impropias convergencia especie'],
+   [8,'Aplicaciones de la integral','Áreas, volúmenes, longitud de arco',9,[1,1,1],'areas volumenes revolucion arco'],
+   [9,'Varias variables','Parciales, gradiente, plano tangente',8,[1,1,0],'parciales gradiente tangente'],
+   [10,'Ecuaciones diferenciales','Separables y lineales de primer orden',4,[1,0,1],'edo separables lineales']
+  ]},
+ {n:'Expresión Gráfica',c:1,e:'prev',ac:'#A85A12',acD:'#E8A356',
+  k:'dibujo tecnico vistas acotacion croquis normalizacion'},
+ {n:'Fundamentos Químicos de la Ingeniería',c:1,e:'prev',ac:'#2A7A3E',acD:'#5FC47E',
+  k:'quimica enlace estequiometria disoluciones termoquimica'},
+
+ {n:'Mecánica de Fluidos',c:2,e:'ok',ac:'#1B5FA8',acD:'#6BB6E8',
+  k:'hidraulica caudal presion',
+  t:[
+   [1,'Propiedades de los fluidos','Densidad, viscosidad, tensión superficial',10,[1,0,1],'densidad viscosidad capilaridad'],
+   [2,'Hidrostática','Presión, manómetros, prisma de presiones',15,[1,1,1],'hidrostatica manometro piezometrico'],
+   [3,'Fuerzas sobre superficies','Planas y curvas, centro de presiones',14,[1,1,1],'fuerzas superficies empuje centro presiones'],
+   [4,'Flotación y estabilidad','Arquímedes, metacentro',5,[1,1,0],'flotacion arquimedes metacentro'],
+   [5,'Continuidad y Bernoulli','Conservación de masa y energía, Venturi',13,[1,1,1],'bernoulli venturi continuidad caudal'],
+   [6,'Cantidad de movimiento','Fuerzas sobre codos, álabes y chorros',11,[1,1,1],'tcm codos alabes chorro'],
+   [7,'Análisis dimensional','Teorema Pi, semejanza, adimensionales',6,[1,0,1],'buckingham semejanza reynolds froude'],
+   [8,'Flujo en tuberías','Darcy, Colebrook, Moody, Hazen-Williams',16,[1,1,1],'tuberias moody colebrook hazen williams friccion'],
+   [9,'Bombeo e instalaciones','Punto de funcionamiento, cavitación, NPSH',18,[1,1,1],'bombeo bomba cavitacion npsh valvula impulsion'],
+   [10,'Canales abiertos','Manning, régimen crítico, resalto',7,[1,1,1],'canales manning resalto critico']
+  ]},
+ {n:'Mecánica Aplicada',c:2,e:'obra',ac:'#8A2F5C',acD:'#E58CC2',
+  k:'estatica rozamiento cables catenaria solido rigido'},
+ {n:'Ciencia de Materiales',c:2,e:'prev',ac:'#7A6A10',acD:'#D6C04C',
+  k:'diagrama fases hierro carbono tratamientos termicos ensayos'},
+ {n:'Ingeniería Térmica',c:2,e:'prev',ac:'#A83A22',acD:'#F09070',
+  k:'termodinamica ciclos entropia carnot rankine transmision calor'},
+ {n:'Sistemas de Producción y Fabricación',c:2,e:'prev',ac:'#4A5C6B',acD:'#94A6B6',
+  k:'cnc torneado fresado fundicion metrologia rectificado'}
+];
+var ETQ={ok:'Disponible',obra:'En construcción',prev:'Previsto'};
+var oscuro=function(){return document.documentElement.dataset.theme==='oscuro'};
+function acento(s){return oscuro()?s.acD:s.ac}
+
+/* ══════ lista ══════ */
+function pintaLista(){
+  var h=$('hero');h.textContent='';
+  [1,2].forEach(function(cur){
+    var t=document.createElement('p');t.className='curso';
+    t.textContent=(cur===1?'1.er':'2.º')+' curso';h.appendChild(t);
+    var L=document.createElement('div');L.className='list';
+    CAT.forEach(function(s,i){
+      if(s.c!==cur)return;
+      var hechos=s.t?s.t.filter(function(x){return x[4][0]}).length:0;
+      var tot=s.t?s.t.length:10;
+      var b='';for(var j=0;j<tot;j++)b+='<i class="'+(j<hechos?'on':'')+'"></i>';
+      var r=document.createElement('button');
+      r.className='row'+(s.e==='prev'?' prev':'');
+      r.style.setProperty('--acento',acento(s));
+      r.dataset.i=i;
+      r.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span>'+
+        '<span class="nm">'+s.n+'</span>'+
+        '<span class="side"><span class="bar">'+b+'</span>'+
+        '<span class="st">'+ETQ[s.e]+'</span><span class="go">→</span></span>';
+      r.onclick=function(){abrir(i,r.querySelector('.nm'))};
+      L.appendChild(r);
+    });
+    h.appendChild(L);
+  });
+}
+
+/* ══════ FLIP: el nombre viaja ══════ */
+function flip(desde,hasta){
+  if(RM||!desde)return;
+  var a=desde.getBoundingClientRect(), b=hasta.getBoundingClientRect();
+  if(!a.width||!b.width)return;
+  var k=a.height/b.height;
+  hasta.animate([
+    {transform:'translate('+(a.left-b.left)+'px,'+(a.top-b.top)+'px) scale('+k+')',opacity:.75},
+    {transform:'none',opacity:1}
+  ],{duration:560,easing:'cubic-bezier(.22,.61,.36,1)'});
+}
+
+/* ══════ detalle ══════ */
+var act=-1;
+function abrir(i,origen){
+  var s=CAT[i];act=i;
+  document.documentElement.style.setProperty('--acento',acento(s));
+  $('app').dataset.view='detalle';
+
+  $('vnum').textContent=String(i+1).padStart(2,'0');
+  $('vname').textContent=s.n;
+  $('vmeta').textContent=(s.t?s.t.length+' temas · ':'')+ETQ[s.e];
+
+  var ch=$('chips');ch.textContent='';
+  var vb=document.createElement('button');
+  vb.className='volver';vb.textContent='← todas';
+  vb.onclick=cerrar;ch.appendChild(vb);
+  CAT.forEach(function(x,j){
+    var c=document.createElement('button');
+    c.className='chip'+(j===i?' act':'');
+    c.textContent=x.n;
+    c.onclick=function(){if(j!==i)abrir(j,null)};
+    ch.appendChild(c);
+  });
+
+  var T=$('temas');T.textContent='';
+  if(s.t){
+    s.t.forEach(function(tm,j){
+      var d=document.createElement('div');
+      d.className='tema';d.dataset.alto=tm[3]>=13?'si':'no';
+      d.style.animationDelay=(RM?0:j*32)+'ms';
+      d.innerHTML='<span class="tn">'+String(tm[0]).padStart(2,'0')+'</span>'+
+        '<div><h3>'+tm[1]+'</h3><p>'+tm[2]+'</p></div>'+
+        '<div class="right"><span class="peso"><span class="tr"><span class="fi" style="width:'+(tm[3]/18*100)+'%"></span></span>'+
+        '<span>'+tm[3]+'%</span></span>'+
+        '<span class="tipos"><i class="'+(tm[4][0]?'on':'')+'"></i>'+
+        '<i class="sim '+(tm[4][1]?'on':'')+'"></i>'+
+        '<i class="'+(tm[4][2]?'on':'')+'"></i></span></div>';
+      T.appendChild(d);
+    });
+  } else {
+    T.innerHTML='<div class="pendiente"><h4>Todavía no</h4><p>'+
+      (s.e==='obra'
+        ? 'Se está construyendo ahora mismo. Los temas irán apareciendo aquí según se terminen.'
+        : 'Esta asignatura está en el plan, pero primero se terminan Cálculo y Mecánica de Fluidos.')+
+      '</p></div>';
+  }
+
+  var reg=$('vregla');reg.style.animation='none';void reg.offsetWidth;reg.style.animation='';
+  flip(origen,$('vname'));
+  window.scrollTo({top:0,behavior:RM?'auto':'smooth'});
+}
+
+function cerrar(){
+  $('app').dataset.view='lista';
+  act=-1;
+  document.documentElement.style.setProperty('--acento','var(--live)');
+}
+
+/* ══════ paleta ══════ */
+var IDX=[],cur=0;
+(function(){
+  CAT.forEach(function(s,i){
+    IDX.push({t:'a',n:s.n,sub:(s.c===1?'1.er':'2.º')+' curso',k:(s.n+' '+s.k).toLowerCase(),i:i});
+    if(s.t)s.t.forEach(function(tm){
+      IDX.push({t:'t',n:tm[1],sub:s.n,k:(tm[1]+' '+tm[2]+' '+tm[5]).toLowerCase(),i:i,tn:tm[0]});
+    });
+  });
+})();
+
+function pinta(){
+  var q=$('q').value.trim().toLowerCase();
+  var hits=q?IDX.filter(function(x){return x.k.indexOf(q)>-1}).slice(0,12):IDX.filter(function(x){return x.t==='a'});
+  var R=$('res');R.textContent='';
+  if(!hits.length){R.innerHTML='<p class="nada">Nada con «'+$('q').value+'»</p>';return}
+  if(cur>=hits.length)cur=0;
+  var g='';
+  hits.forEach(function(x,j){
+    var et=x.t==='a'?'Asignaturas':'Temas';
+    if(et!==g){g=et;var p=document.createElement('p');p.className='grp';p.textContent=et;R.appendChild(p)}
+    var b=document.createElement('button');
+    b.className='hit'+(j===cur?' cur':'');
+    b.innerHTML='<span class="k">'+(x.t==='a'?'##':'T'+String(x.tn).padStart(2,'0'))+'</span>'+
+      '<span>'+x.n+'</span><span class="sub">'+x.sub+'</span>';
+    b.onmouseenter=function(){cur=j;pinta()};
+    b.onclick=function(){ir(x)};
+    R.appendChild(b);
+  });
+  R.dataset.n=hits.length;
+  R._hits=hits;
+}
+function ir(x){cerrarPal();abrir(x.i,null)}
+function abrirPal(){$('pal').classList.add('on');$('q').value='';cur=0;pinta();$('q').focus()}
+function cerrarPal(){$('pal').classList.remove('on')}
+
+$('abrirPal').onclick=abrirPal;
+$('q').addEventListener('input',function(){cur=0;pinta()});
+$('pal').addEventListener('click',function(e){if(e.target===$('pal'))cerrarPal()});
+
+document.addEventListener('keydown',function(e){
+  var abierta=$('pal').classList.contains('on');
+  if(!abierta){
+    if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();abrirPal()}
+    if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();abrirPal()}
+    if(e.key==='Escape'&&$('app').dataset.view==='detalle')cerrar();
+    return;
+  }
+  var h=$('res')._hits||[];
+  if(e.key==='Escape'){cerrarPal()}
+  else if(e.key==='ArrowDown'){e.preventDefault();cur=(cur+1)%h.length;pinta()}
+  else if(e.key==='ArrowUp'){e.preventDefault();cur=(cur-1+h.length)%h.length;pinta()}
+  else if(e.key==='Enter'&&h[cur]){e.preventDefault();ir(h[cur])}
+});
+
+/* ══════ tema ══════ */
+$('tema').onclick=function(){
+  var o=oscuro();
+  document.documentElement.dataset.theme=o?'claro':'oscuro';
+  $('tema').textContent=o?'Oscuro':'Claro';
+  pintaLista();
+  if(act>=0)document.documentElement.style.setProperty('--acento',acento(CAT[act]));
+};
+
+pintaLista();
+})();
+</script>
+</body>
+</html>

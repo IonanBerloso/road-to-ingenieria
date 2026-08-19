@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bombeo a depósito presurizado — Mecánica de Fluidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2; --grid2:#F4F7F9;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5; --alt-soft:rgba(122,79,181,.08);
+  --water:#3E8FD0;
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --measure:64ch;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930; --grid2:#1E242A;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8; --alt-soft:rgba(183,155,232,.12);
+  --water:#5AA6E0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600;text-decoration:none;color:inherit}
+.brand span{color:var(--live)}
+.crumb{font-family:var(--mono);font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.crumb b{color:var(--graphite)}
+.top .spacer{margin-left:auto}
+.toggle{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.toggle:hover{border-color:var(--live);color:var(--live)}
+
+.wrap{max-width:74rem;margin:0 auto;padding:clamp(2rem,5vw,3.5rem) clamp(1rem,4vw,2.5rem) 6rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--live);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,5vw,3rem);line-height:1.06;letter-spacing:-.025em;margin-bottom:.8rem;max-width:20ch}
+.lede{font-size:1.1rem;color:var(--graphite);max-width:var(--measure);margin-bottom:.9rem}
+.src{font-family:var(--mono);font-size:.72rem;color:var(--faint);padding-left:.8rem;border-left:2px solid var(--rule);margin-bottom:2.5rem}
+h2{font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:-.015em;
+  margin:3rem 0 .8rem;padding-top:1.4rem;border-top:1px solid var(--rule)}
+p{margin-bottom:1rem;max-width:var(--measure)}
+.m{font-family:var(--mono);font-size:.88em;background:var(--live-soft);padding:.08em .35em;border-radius:3px;white-space:nowrap}
+strong{font-weight:600}
+
+/* ── simulador ── */
+.sim{margin:1.6rem 0;background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.simhead{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:.8rem 1.1rem;border-bottom:1px solid var(--rule)}
+.simhead h3{font-size:.9rem;font-weight:600}
+.simhead .hint{font-family:var(--mono);font-size:.7rem;color:var(--faint)}
+
+.viz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.viz > div{min-width:0}
+.esquema{border-right:1px solid var(--rule)}
+.esquema svg,.grafica svg{display:block;width:100%;height:auto}
+.paneltitle{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);padding:.55rem .9rem .1rem}
+
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:1rem 1.6rem;padding:1.1rem;border-top:1px solid var(--rule)}
+.ctrl label{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:.71rem;color:var(--graphite);margin-bottom:.35rem}
+.ctrl label output{color:var(--live);font-weight:600;font-size:.8rem}
+.ctrl .sub{font-family:var(--mono);font-size:.62rem;color:var(--faint);margin-top:.25rem;display:block}
+input[type=range]{width:100%;accent-color:var(--live);cursor:pointer}
+
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:1px;background:var(--rule);border-top:1px solid var(--rule)}
+.cell{background:var(--panel);padding:.7rem .85rem}
+.cell .k{font-family:var(--mono);font-size:.61rem;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);display:block;margin-bottom:.15rem}
+.cell .v{font-family:var(--mono);font-size:1.02rem;font-weight:500;font-variant-numeric:tabular-nums}
+.cell .v small{font-size:.62em;color:var(--graphite);font-weight:400;margin-left:.15em}
+.cell.warn .v{color:var(--flag)}
+
+.npsh{padding:.9rem 1.1rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:.7rem;color:var(--graphite)}
+.bar{position:relative;height:9px;background:var(--grid);border-radius:99px;margin:.4rem 0 .3rem;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;left:0;border-radius:99px;transition:width .25s}
+.bar .disp{background:var(--live);opacity:.55}
+.bar .req{background:var(--flag);height:100%;opacity:.85;width:3px;border-radius:0}
+.npshrow{display:flex;justify-content:space-between;gap:1rem}
+
+.alarm{display:none;gap:.6rem;padding:.8rem 1.1rem;background:var(--flag-soft);
+  border-top:1px solid var(--flag);color:var(--flag);font-size:.84rem;line-height:1.5}
+.alarm b{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.15rem}
+.sim[data-cav="si"] .alarm{display:flex}
+
+.reto{border:1px solid var(--live);background:var(--live-soft);border-radius:6px;
+  padding:1rem 1.15rem;margin:1.6rem 0;max-width:var(--measure)}
+.reto b{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:var(--live);display:block;margin-bottom:.4rem}
+.reto p{margin-bottom:.6rem;font-size:.94rem}
+.reto p:last-child{margin-bottom:0}
+.chk{font-family:var(--mono);font-size:.78rem;color:var(--faint);display:flex;align-items:center;gap:.5rem;margin-top:.7rem}
+.chk.ok{color:var(--live);font-weight:500}
+
+.flagbox{border-left:2px solid var(--flag);background:var(--flag-soft);padding:.75rem .95rem;
+  margin:1.4rem 0;font-size:.89rem;color:var(--graphite);border-radius:0 5px 5px 0;max-width:var(--measure)}
+.flagbox b{display:block;font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:var(--flag);margin-bottom:.3rem}
+
+@media (max-width:860px){
+  .viz{grid-template-columns:1fr}
+  .esquema{border-right:none;border-bottom:1px solid var(--rule)}
+  .crumb{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#">EHU<span>·</span>LAB</a>
+  <span class="crumb">Fluidos <b>/</b> Bombeo <b>/</b> Punto de funcionamiento</span>
+  <span class="spacer"></span>
+  <button class="toggle" id="tema">Oscuro</button>
+</header>
+
+<div class="wrap">
+
+  <p class="eyebrow">Mecánica de Fluidos · Instalaciones de bombeo</p>
+  <h1>Por qué cerrar una válvula sube la altura y baja el caudal</h1>
+  <p class="lede">La bomba no decide el caudal. Lo deciden la bomba y la instalación a la vez, y el punto donde se ponen de acuerdo se mueve cada vez que tocas algo. Aquí puedes tocarlo.</p>
+  <p class="src">Instalación adaptada del Ejercicio 2 · Extraordinario junio 2025 · Mecánica de Fluidos e Hidráulica · UPV/EHU</p>
+
+  <h2>La instalación</h2>
+  <p>Un depósito abierto a cota 30 m alimenta a otro <strong>presurizado</strong> a cota 17 m. Aunque el destino está 13 metros más abajo, el manómetro de arriba marca 1,96 bar — que son 20 mca de contrapresión. La altura estática neta es por tanto <span class="m">H<sub>est</sub> = −13 + 20 = 7 mca</span>: positiva. La bomba tiene que empujar cuesta arriba aunque el agua baje.</p>
+  <p>Aspiración de 250 mm y 200 m; impulsión de 300 mm y 406 m contando los codos. Todo hierro forjado, y una válvula de regulación en la impulsión.</p>
+
+  <div class="sim" id="sim" data-cav="no">
+    <div class="simhead">
+      <h3>Punto de funcionamiento</h3>
+      <span class="hint">Hazen-Williams · C = 120 · agua a 20 °C</span>
+    </div>
+
+    <div class="viz">
+      <div class="esquema">
+        <p class="paneltitle">Instalación</p>
+        <svg viewBox="0 0 400 300" role="img" aria-label="Esquema de la instalación: depósito de origen, bomba, válvula y depósito presurizado. El grosor del chorro representa el caudal.">
+          <!-- depósito origen -->
+          <path d="M20,90 L20,185 L120,185 L120,90" fill="none" stroke="var(--graphite)" stroke-width="2"/>
+          <rect x="22" y="105" width="96" height="79" fill="var(--water)" opacity=".22"/>
+          <line x1="22" y1="105" x2="118" y2="105" stroke="var(--water)" stroke-width="2"/>
+          <text x="24" y="99" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--faint)">z₁ = 30 m</text>
+
+          <!-- depósito presurizado -->
+          <path d="M290,150 L290,255 L380,255 L380,150 Z" fill="none" stroke="var(--graphite)" stroke-width="2"/>
+          <rect x="292" y="172" width="86" height="82" fill="var(--water)" opacity=".22"/>
+          <line x1="292" y1="172" x2="378" y2="172" stroke="var(--water)" stroke-width="2"/>
+          <text x="292" y="145" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--faint)">z₂ = 17 m</text>
+          <!-- manómetro -->
+          <circle id="mano" cx="335" cy="140" r="9" fill="none" stroke="var(--alt)" stroke-width="1.6"/>
+          <line id="aguja" x1="335" y1="140" x2="335" y2="133" stroke="var(--alt)" stroke-width="1.6"/>
+          <text id="manoLbl" x="348" y="143" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--alt)">1,96 bar</text>
+
+          <!-- conducciones -->
+          <path id="asp" d="M70,185 L70,232 L150,232" fill="none" stroke="var(--water)" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+          <path id="imp" d="M186,232 L335,232 L335,255" fill="none" stroke="var(--water)" stroke-width="8" stroke-linecap="round" opacity=".75"/>
+
+          <!-- bomba -->
+          <circle cx="168" cy="232" r="17" fill="var(--panel)" stroke="var(--live)" stroke-width="2"/>
+          <path id="rotor" d="M168,222 L176,236 L160,236 Z" fill="var(--live)"/>
+          <text x="152" y="268" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--live)">bomba · z = 27 m</text>
+
+          <!-- válvula -->
+          <g id="valv">
+            <line x1="262" y1="220" x2="262" y2="244" stroke="var(--graphite)" stroke-width="1.5"/>
+            <path id="vplate" d="M262,232 L262,232" stroke="var(--flag)" stroke-width="3.5" stroke-linecap="round"/>
+          </g>
+          <text x="240" y="212" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--graphite)">válvula</text>
+
+          <g id="drops"></g>
+        </svg>
+      </div>
+
+      <div class="grafica">
+        <p class="paneltitle">Curvas · milimetrado</p>
+        <svg viewBox="0 0 440 300" role="img" aria-label="Curva de la bomba y curva del sistema. El corte entre ambas es el punto de funcionamiento.">
+          <g id="mm"></g>
+          <g stroke="var(--faint)" stroke-width="1.2">
+            <line x1="52" y1="252" x2="424" y2="252"/>
+            <line x1="52" y1="20" x2="52" y2="252"/>
+          </g>
+          <g id="ticks" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--faint)"></g>
+          <text x="238" y="284" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--graphite)">Q (l/s)</text>
+          <text x="16" y="136" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--graphite)" transform="rotate(-90 16 136)">H (mca)</text>
+
+          <path id="cBomba" fill="none" stroke="var(--alt)" stroke-width="2.2"/>
+          <path id="cSisRef" fill="none" stroke="var(--faint)" stroke-width="1.4" stroke-dasharray="4 4" opacity=".65"/>
+          <path id="cSis" fill="none" stroke="var(--live)" stroke-width="2.2"/>
+          <line id="gd" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 3" opacity=".45"/>
+          <line id="gd2" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 3" opacity=".45"/>
+          <circle id="ptOp" r="6" fill="var(--ink)"/>
+          <circle id="ptRef" r="4" fill="none" stroke="var(--faint)" stroke-width="1.5"/>
+          <text id="lbBomba" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--alt)">bomba</text>
+          <text id="lbSis" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--live)">sistema</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="ctrl">
+        <label for="kv">Válvula de regulación <output id="okv">k = 6</output></label>
+        <input type="range" id="kv" min="0" max="250" step="1" value="6">
+        <span class="sub">0 = abierta del todo · 250 = casi cerrada</span>
+      </div>
+      <div class="ctrl">
+        <label for="pm">Manómetro del depósito <output id="opm">1,96 bar</output></label>
+        <input type="range" id="pm" min="0" max="300" step="2" value="196">
+        <span class="sub">contrapresión en el depósito de destino</span>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="cell"><span class="k">Caudal</span><span class="v" id="rQ">–<small>l/s</small></span></div>
+      <div class="cell"><span class="k">Altura Hm</span><span class="v" id="rH">–<small>mca</small></span></div>
+      <div class="cell"><span class="k">v impulsión</span><span class="v" id="rV">–<small>m/s</small></span></div>
+      <div class="cell"><span class="k">H estática</span><span class="v" id="rE">–<small>mca</small></span></div>
+      <div class="cell" id="cNP"><span class="k">NPSH disp</span><span class="v" id="rN">–<small>mca</small></span></div>
+    </div>
+
+    <div class="npsh">
+      <div class="npshrow"><span>Margen de aspiración</span><span id="npshTxt">–</span></div>
+      <div class="bar"><i class="disp" id="barD"></i><i class="req" id="barR"></i></div>
+      <div class="npshrow"><span>NPSH disponible</span><span>la marca roja es el NPSH requerido</span></div>
+    </div>
+
+    <div class="alarm" role="status">
+      <div>
+        <b>Cavitación en la aspiración</b>
+        El NPSH disponible ha caído por debajo del requerido: la presión a la entrada del rodete baja de la de vapor, el agua hierve en frío y las burbujas colapsan contra los álabes. La bomba pierde caudal, suena a grava y se destruye. En examen esto invalida el punto de funcionamiento.
+      </div>
+    </div>
+  </div>
+
+  <div class="reto">
+    <b>El apartado que cae en el examen</b>
+    <p>El enunciado pide: reduce la lectura del manómetro a la mitad —de 1,96 a 0,98 bar— y maniobra la válvula para <strong>mantener el mismo punto de funcionamiento</strong>. ¿Cuál es la nueva k? ¿Se abre o se cierra?</p>
+    <p>Hazlo aquí: baja el manómetro y luego mueve la válvula hasta recuperar los 70,5 l/s.</p>
+    <div class="chk" id="chk">◦ manómetro a 0,98 bar · caudal de vuelta en 70,5 l/s</div>
+  </div>
+
+  <h2>Lo que deberías haber visto</h2>
+  <p>Al bajar el manómetro, la curva del sistema <strong>baja entera</strong> —cambia la altura estática, no la forma— y el punto de funcionamiento se desliza hacia la derecha por la curva de la bomba: más caudal, menos altura. Para devolverlo a su sitio hay que <strong>cerrar</strong> la válvula, y mucho: de k = 6 a k ≈ 204.</p>
+  <p>Ese número sorprende hasta que miras la velocidad. Con 1 m/s en la impulsión, la altura cinética es de apenas 5 cm. Para generar 10 mca de pérdida con un término tan pequeño hace falta una k enorme. <strong>Estrangular una instalación lenta cuesta muchísimo</strong>, y esa es exactamente la razón por la que en la industria se regula con variador de frecuencia en vez de con válvula.</p>
+
+  <div class="flagbox">
+    <b>Error típico</b>
+    Tomar <span class="m">H<sub>est</sub> = z₂ − z₁ = −13 mca</span> y concluir que el agua va sola. La contrapresión del depósito presurizado entra en la altura estática igual que la cota. Olvidarla cambia el signo del problema entero.
+  </div>
+
+  <div class="flagbox">
+    <b>Error típico</b>
+    Meter los codos como pérdida local. Su longitud equivalente se suma a la longitud de tubería y va dentro de Hazen-Williams, no en el sumatorio de k·v²/2g. Contarlos dos veces es el fallo más común de este ejercicio.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('tema');
+  btn.onclick=function(){var o=root.dataset.theme==='oscuro';
+    root.dataset.theme=o?'claro':'oscuro';btn.textContent=o?'Oscuro':'Claro';};
+
+  var $=function(i){return document.getElementById(i)};
+  var NS='http://www.w3.org/2000/svg';
+
+  /* ── constantes reales del ejercicio ── */
+  var G=9.81, C=120,
+      Da=0.25, La=200, Di=0.30, Li=406,
+      Aa=Math.PI*Da*Da/4, Ai=Math.PI*Di*Di/4,
+      z1=30, z2=17, zb=27, PATM=10.34, PV=2;
+
+  function khw(L,D){return 10.67*L/(Math.pow(C,1.852)*Math.pow(D,4.87))}
+  function kloc(k,A){return k/(2*G*A*A)}
+  var KA=khw(La,Da), KI=khw(Li,Di),
+      KSAL=kloc(0.5,Aa), KENT=kloc(1,Ai);
+
+  /* bomba INP: H = H0 - a·Q²  ·  NPSHr creciente */
+  var H0=14.0, aB=619.8;
+  function Hbomba(Q){return H0-aB*Q*Q}
+  function NPSHreq(Q){return 1.2+300*Q*Q}
+
+  function Hest(pbar){return (z2-z1)+pbar*1e5/9800}
+  function Hsis(Q,k,pbar){
+    return Hest(pbar)+(KA+KI)*Math.pow(Q,1.852)+(KSAL+KENT+kloc(k,Ai))*Q*Q;
+  }
+  function punto(k,pbar){
+    var lo=0.0005, hi=0.30, m;
+    for(var i=0;i<70;i++){
+      m=(lo+hi)/2;
+      if(Hbomba(m)-Hsis(m,k,pbar)>0) lo=m; else hi=m;
+    }
+    return m;
+  }
+  function npshDisp(Q){
+    return PATM+(z1-zb)-(KA*Math.pow(Q,1.852)+KSAL*Q*Q)-PV;
+  }
+  function n(v,d){return v.toFixed(d).replace('.',',')}
+
+  /* ── ejes de la gráfica ── */
+  var QMAX=160, HMAX=20, X0=52, X1=424, Y0=252, Y1=20;
+  var gx=function(ql){return X0+(ql/QMAX)*(X1-X0)},
+      gy=function(h){return Y0-(h/HMAX)*(Y0-Y1)};
+
+  (function(){
+    var mm=$('mm'), t=$('ticks');
+    for(var q=0;q<=QMAX;q+=4){
+      var l=document.createElementNS(NS,'line');
+      l.setAttribute('x1',gx(q));l.setAttribute('x2',gx(q));
+      l.setAttribute('y1',Y1);l.setAttribute('y2',Y0);
+      l.setAttribute('stroke',q%20===0?'var(--grid)':'var(--grid2)');
+      l.setAttribute('stroke-width','1');mm.appendChild(l);
+      if(q%40===0){var x=document.createElementNS(NS,'text');
+        x.setAttribute('x',gx(q));x.setAttribute('y',Y0+15);x.setAttribute('text-anchor','middle');
+        x.textContent=q;t.appendChild(x);}
+    }
+    for(var h=0;h<=HMAX;h+=1){
+      var l2=document.createElementNS(NS,'line');
+      l2.setAttribute('y1',gy(h));l2.setAttribute('y2',gy(h));
+      l2.setAttribute('x1',X0);l2.setAttribute('x2',X1);
+      l2.setAttribute('stroke',h%5===0?'var(--grid)':'var(--grid2)');
+      l2.setAttribute('stroke-width','1');mm.appendChild(l2);
+      if(h%5===0){var y=document.createElementNS(NS,'text');
+        y.setAttribute('x',X0-8);y.setAttribute('y',gy(h)+3);y.setAttribute('text-anchor','end');
+        y.textContent=h;t.appendChild(y);}
+    }
+  })();
+
+  function curva(fn){
+    var d='';
+    for(var ql=0;ql<=QMAX;ql+=2){
+      var h=fn(ql/1000);
+      if(h<-1||h>HMAX+4){d+='';continue}
+      d+=(d?' L':'M')+gx(ql)+','+gy(Math.max(-0.5,Math.min(HMAX+2,h)));
+    }
+    return d;
+  }
+
+  /* gotas de caudal */
+  var drops=[],ND=14, gD=$('drops');
+  for(var i=0;i<ND;i++){
+    var c=document.createElementNS(NS,'circle');
+    c.setAttribute('r','2.2');c.setAttribute('fill','var(--water)');c.setAttribute('opacity','.9');
+    gD.appendChild(c);drops.push({t:i/ND});
+  }
+  var PATH=[[70,185],[70,232],[335,232],[335,255]];
+  function along(t){
+    var segs=[],tot=0;
+    for(var i=1;i<PATH.length;i++){
+      var d=Math.hypot(PATH[i][0]-PATH[i-1][0],PATH[i][1]-PATH[i-1][1]);
+      segs.push(d);tot+=d;
+    }
+    var x=t*tot;
+    for(var j=0;j<segs.length;j++){
+      if(x<=segs[j]){var f=x/segs[j];
+        return [PATH[j][0]+(PATH[j+1][0]-PATH[j][0])*f, PATH[j][1]+(PATH[j+1][1]-PATH[j][1])*f];}
+      x-=segs[j];
+    }
+    return PATH[PATH.length-1];
+  }
+
+  var kv=$('kv'), pm=$('pm'), Qref=null, speed=0;
+
+  function render(){
+    var k=+kv.value, pbar=+pm.value/100;
+    var Q=punto(k,pbar), H=Hbomba(Q), v=Q/Ai;
+    var nd=npshDisp(Q), nr=NPSHreq(Q), cav=nd<nr;
+
+    if(Qref===null && k===6 && pm.value==='196') Qref=Q;
+
+    $('okv').value='k = '+k;
+    $('opm').value=n(pbar,2)+' bar';
+    $('rQ').innerHTML=n(Q*1000,1)+'<small>l/s</small>';
+    $('rH').innerHTML=n(H,2)+'<small>mca</small>';
+    $('rV').innerHTML=n(v,2)+'<small>m/s</small>';
+    $('rE').innerHTML=n(Hest(pbar),1)+'<small>mca</small>';
+    $('rN').innerHTML=n(nd,2)+'<small>mca</small>';
+    $('cNP').classList.toggle('warn',cav);
+    $('sim').dataset.cav=cav?'si':'no';
+
+    $('cBomba').setAttribute('d',curva(Hbomba));
+    $('cSis').setAttribute('d',curva(function(q){return Hsis(q,k,pbar)}));
+    $('cSisRef').setAttribute('d',curva(function(q){return Hsis(q,6,1.96)}));
+    var px=gx(Q*1000), py=gy(H);
+    $('ptOp').setAttribute('cx',px);$('ptOp').setAttribute('cy',py);
+    $('gd').setAttribute('x1',X0);$('gd').setAttribute('y1',py);$('gd').setAttribute('x2',px);$('gd').setAttribute('y2',py);
+    $('gd2').setAttribute('x1',px);$('gd2').setAttribute('y1',py);$('gd2').setAttribute('x2',px);$('gd2').setAttribute('y2',Y0);
+    if(Qref){var rx=gx(Qref*1000);$('ptRef').setAttribute('cx',rx);$('ptRef').setAttribute('cy',gy(Hbomba(Qref)));}
+    $('lbBomba').setAttribute('x',gx(122));$('lbBomba').setAttribute('y',gy(Hbomba(0.122))-8);
+    $('lbSis').setAttribute('x',gx(126));$('lbSis').setAttribute('y',gy(Math.min(HMAX-1,Hsis(0.126,k,pbar)))+14);
+
+    /* NPSH */
+    var mx=12;
+    $('barD').style.width=Math.max(0,Math.min(100,nd/mx*100))+'%';
+    $('barR').style.left=Math.max(0,Math.min(100,nr/mx*100))+'%';
+    $('npshTxt').textContent=cav?'insuficiente':(n(nd-nr,2)+' mca de margen');
+    $('npshTxt').style.color=cav?'var(--flag)':'var(--live)';
+
+    /* esquema */
+    var w=Math.max(2.5,Math.min(12,v*8));
+    $('asp').setAttribute('stroke-width',w);$('imp').setAttribute('stroke-width',w);
+    $('asp').setAttribute('stroke',cav?'var(--flag)':'var(--water)');
+    var open=Math.max(0,1-k/250), half=11*open;
+    $('vplate').setAttribute('d','M262,'+(232-half)+' L262,'+(232+half));
+    $('vplate').setAttribute('stroke',k>120?'var(--flag)':'var(--graphite)');
+    var ang=(pbar/3)*270-135;
+    $('aguja').setAttribute('x2',335+7*Math.sin(ang*Math.PI/180));
+    $('aguja').setAttribute('y2',140-7*Math.cos(ang*Math.PI/180));
+    $('manoLbl').textContent=n(pbar,2)+' bar';
+    speed=v*0.0016;
+
+    /* reto */
+    var ok=Math.abs(pbar-0.98)<0.02 && Qref && Math.abs(Q-Qref)<0.0008;
+    $('chk').className='chk'+(ok?' ok':'');
+    $('chk').textContent=ok
+      ? '✓ conseguido con k = '+k+' · la válvula se ha cerrado'
+      : '◦ manómetro a 0,98 bar · caudal de vuelta en 70,5 l/s';
+  }
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){(function tick(){
+    for(var i=0;i<ND;i++){
+      drops[i].t+=speed; if(drops[i].t>1)drops[i].t-=1;
+      var p=along(drops[i].t);
+      gD.childNodes[i].setAttribute('cx',p[0]);
+      gD.childNodes[i].setAttribute('cy',p[1]);
+    }
+    var r=$('rotor'); r.setAttribute('transform','rotate('+(Date.now()*speed*90%360)+' 168 232)');
+    requestAnimationFrame(tick);
+  })();}
+
+  kv.oninput=render; pm.oninput=render; render();
+})();
+</script>
+</body>
+</html>

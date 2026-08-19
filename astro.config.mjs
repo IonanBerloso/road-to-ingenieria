@@ -8,13 +8,16 @@ import rehypeKatex from 'rehype-katex';
 /**
  * Road to Ingeniería — sitio estático para GitHub Pages.
  *
- * El repositorio es ionanberloso/2027, así que el sitio vive en
- * https://ionanberloso.github.io/2027 y `base` tiene que ser /2027.
- * Si algún día hay dominio propio, se cambian estas dos líneas y nada más.
+ * El repositorio es ionanberloso/road-to-ingenieria, así que el sitio vive en
+ * https://ionanberloso.github.io/road-to-ingenieria y `base` tiene que ser
+ * /road-to-ingenieria.
+ *
+ * Estas dos líneas son la ÚNICA declaración de la URL del sitio: scripts/verify.mjs
+ * las importa de aquí. Si algún día hay dominio propio, se cambian aquí y nada más.
  */
 export default defineConfig({
   site: 'https://ionanberloso.github.io',
-  base: '/2027',
+  base: '/road-to-ingenieria',
   trailingSlash: 'always',
 
   integrations: [mdx()],

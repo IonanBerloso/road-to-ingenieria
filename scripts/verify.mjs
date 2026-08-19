@@ -24,8 +24,12 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
-const BASE = '/2027';
-const ORIGEN = 'https://ionanberloso.github.io';
+/* La URL del sitio se declara UNA vez, en astro.config.mjs. Repetirla aquí
+ * sería el mismo error de siempre: dos fuentes de verdad que se separan el día
+ * que se renombra el repositorio. */
+const { default: astroConfig } = await import('../astro.config.mjs');
+const BASE = astroConfig.base.replace(/\/$/, '');
+const ORIGEN = astroConfig.site.replace(/\/$/, '');
 const SOLO_FUENTE = process.argv.includes('--solo-fuente');
 
 /* Los prototipos de referencia/ están fuera a propósito: son material de

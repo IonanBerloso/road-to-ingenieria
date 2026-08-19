@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regiones del plano complejo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5; --alt-soft:rgba(122,79,181,.08);
+  --d1:#1268A8; --d2:#D97A00;
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8; --alt-soft:rgba(183,155,232,.12);
+  --d1:#6BB6E8; --d2:#F2A44E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms !important}}
+
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600}
+.brand span{color:var(--live)}
+.crumb{font-family:var(--mono);font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.crumb b{color:var(--graphite)}
+.top .spacer{margin-left:auto}
+.toggle{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.toggle:hover{border-color:var(--live);color:var(--live)}
+
+.wrap{max-width:64rem;margin:0 auto;padding:clamp(2rem,5vw,3rem) clamp(1rem,4vw,2.5rem) 6rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--live);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.06;letter-spacing:-.025em;margin-bottom:.8rem}
+.lede{font-size:1.06rem;color:var(--graphite);max-width:60ch;margin-bottom:2rem}
+p{margin-bottom:.9rem;max-width:64ch}
+.m{font-family:var(--mono);font-size:.88em;background:var(--live-soft);padding:.08em .35em;border-radius:3px;white-space:nowrap}
+strong{font-weight:600}
+h2{font-family:var(--display);font-weight:600;font-size:1.4rem;letter-spacing:-.015em;margin:2.8rem 0 .8rem;padding-top:1.3rem;border-top:1px solid var(--rule)}
+
+/* ── entradas ── */
+.panelbox{background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-bottom:1.2rem}
+.conds{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.1rem}
+.cond label{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.7rem;
+  color:var(--graphite);margin-bottom:.4rem}
+.cond label i{width:9px;height:9px;border-radius:2px;display:block}
+.cond input{width:100%;font-family:var(--mono);font-size:.95rem;padding:.6rem .75rem;
+  border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink)}
+.cond input.err{border-color:var(--flag)}
+.msg{font-size:.76rem;color:var(--flag);margin-top:.35rem;min-height:1.1rem}
+
+.presets{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 1.1rem 1.1rem}
+.presets button{font-family:var(--mono);font-size:.71rem;cursor:pointer;
+  border:1px solid var(--rule);background:var(--paper);color:var(--graphite);
+  padding:.3rem .7rem;border-radius:99px}
+.presets button:hover{border-color:var(--live);color:var(--live)}
+.presets .lab{font-family:var(--mono);font-size:.68rem;color:var(--faint);align-self:center;margin-right:.2rem}
+
+.rango{display:flex;align-items:center;gap:.6rem;padding:.75rem 1.1rem;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:.7rem;color:var(--graphite)}
+.rango input{flex:1;accent-color:var(--live);max-width:220px}
+.rango output{color:var(--live);font-weight:600}
+
+/* ── paneles ── */
+.paneles{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin:1.4rem 0}
+.pane{background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.pane h3{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);font-weight:500;padding:.65rem .8rem .1rem;display:flex;align-items:center;gap:.4rem}
+.pane h3 i{width:9px;height:9px;border-radius:2px;display:block}
+.pane canvas{display:block;width:100%;height:auto}
+.pane .cap{font-family:var(--mono);font-size:.68rem;color:var(--graphite);padding:.5rem .8rem .7rem;
+  border-top:1px solid var(--rule);word-break:break-word;min-height:2.2rem}
+.pane.res{border-color:var(--live)}
+.pane.res h3{color:var(--live)}
+
+.flagbox{border-left:2px solid var(--flag);background:var(--flag-soft);padding:.75rem .95rem;
+  margin:1.4rem 0;font-size:.89rem;color:var(--graphite);border-radius:0 5px 5px 0;max-width:64ch}
+.flagbox b{display:block;font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:var(--flag);margin-bottom:.3rem}
+.sintaxis{font-family:var(--mono);font-size:.8rem;color:var(--graphite);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.9rem 1rem;line-height:1.9;max-width:64ch}
+.sintaxis b{color:var(--ink)}
+
+@media (max-width:820px){
+  .paneles{grid-template-columns:1fr}
+  .conds{grid-template-columns:1fr}
+  .crumb{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand">EHU<span>·</span>LAB</span>
+  <span class="crumb">Cálculo <b>/</b> T1 <b>/</b> Regiones</span>
+  <span class="spacer"></span>
+  <button class="toggle" id="tema">Oscuro</button>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Cálculo · Tema 1 · Números complejos</p>
+  <h1>Regiones del plano complejo</h1>
+  <p class="lede">Escribe una condición y mira qué zona del plano cumple. Escribe dos y mira dónde se cortan. Es el bloque de ejercicios donde la respuesta correcta es un dibujo — y el que más puntos se lleva.</p>
+
+  <div class="panelbox">
+    <div class="conds">
+      <div class="cond">
+        <label for="c1"><i style="background:var(--d1)"></i>Condición 1</label>
+        <input id="c1" value="|z-0.5i| >= 0.5" spellcheck="false">
+        <p class="msg" id="m1"></p>
+      </div>
+      <div class="cond">
+        <label for="c2"><i style="background:var(--d2)"></i>Condición 2</label>
+        <input id="c2" value="|z| <= 1" spellcheck="false">
+        <p class="msg" id="m2"></p>
+      </div>
+    </div>
+
+    <div class="presets">
+      <span class="lab">De la colección:</span>
+      <button data-a="|z-(0.5+i)| > 0.866" data-b="">1.19</button>
+      <button data-a="|z-0.5i| >= 0.5" data-b="|z| <= 1">1.20</button>
+      <button data-a="Re(z)^2/9 + Im(z)^2/25 < 1" data-b="pi/6 <= arg(z) <= pi/3" data-r="6">1.21</button>
+      <button data-a="|z-2| < 1" data-b="|z-1+i| < 1">1.22</button>
+      <button data-a="|z-1.5| = 0.5" data-b="Im(z) > 0">1.23</button>
+      <button data-a="Im(z) > Re(z)" data-b="Im(z) < -Re(z)^2/8 + 2" data-r="6">1.24</button>
+    </div>
+
+    <div class="rango">
+      <label for="rg">Rango del plano</label>
+      <input type="range" id="rg" min="2" max="8" step="1" value="3">
+      <output id="org">±3</output>
+    </div>
+  </div>
+
+  <div class="paneles">
+    <div class="pane">
+      <h3><i style="background:var(--d1)"></i>Condición 1</h3>
+      <canvas id="k1" width="380" height="380"></canvas>
+      <p class="cap" id="p1"></p>
+    </div>
+    <div class="pane">
+      <h3><i style="background:var(--d2)"></i>Condición 2</h3>
+      <canvas id="k2" width="380" height="380"></canvas>
+      <p class="cap" id="p2"></p>
+    </div>
+    <div class="pane res">
+      <h3>Las dos a la vez</h3>
+      <canvas id="k3" width="380" height="380"></canvas>
+      <p class="cap" id="p3">la región que pide el enunciado</p>
+    </div>
+  </div>
+
+  <h2>Cómo escribir las condiciones</h2>
+  <div class="sintaxis">
+<b>|z-1|</b> distancia de z al punto 1 · <b>|z-1-2i|</b> distancia a 1+2i<br>
+<b>Re(z)</b> parte real · <b>Im(z)</b> parte imaginaria · <b>arg(z)</b> argumento en radianes<br>
+<b>&lt; &gt; &lt;= &gt;= =</b> · doble desigualdad: <b>pi/6 &lt;= arg(z) &lt;= pi/3</b><br>
+<b>pi</b>, <b>e</b>, potencias con <b>^</b>, y multiplicación implícita: <b>2i</b>, <b>3z</b>
+  </div>
+
+  <div class="flagbox">
+    <b>Ojo con esto</b>
+    Prueba la 1.23: la condición lleva un <span class="m">=</span> en vez de una desigualdad, y la respuesta deja de ser una región para ser una <strong>curva</strong> — media circunferencia, no un disco. Confundir el borde con el interior es el fallo más caro de este bloque, porque cambia la naturaleza del conjunto.
+  </div>
+
+  <div class="flagbox">
+    <b>Y con los ángulos</b>
+    La colección mezcla grados sin símbolo (<span class="m">cos 25 + i sin 25</span>) con radianes (<span class="m">e^{iπ/6}</span>). Aquí <span class="m">arg(z)</span> siempre está en radianes y va de −π a π. Si el enunciado te da grados, conviértelos antes.
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var t=$('tema');
+  t.onclick=function(){var o=document.documentElement.dataset.theme==='oscuro';
+    document.documentElement.dataset.theme=o?'claro':'oscuro';t.textContent=o?'Oscuro':'Claro';
+    setTimeout(dibuja,30);};
+
+  /* ══ aritmética compleja ══ */
+  function C(a,b){return{re:a,im:b||0}}
+  function add(a,b){return C(a.re+b.re,a.im+b.im)}
+  function sub(a,b){return C(a.re-b.re,a.im-b.im)}
+  function mul(a,b){return C(a.re*b.re-a.im*b.im,a.re*b.im+a.im*b.re)}
+  function div(a,b){var d=b.re*b.re+b.im*b.im;
+    return C((a.re*b.re+a.im*b.im)/d,(a.im*b.re-a.re*b.im)/d)}
+  function pw(a,b){
+    if(Math.abs(b.im)<1e-12&&Math.abs(b.re-Math.round(b.re))<1e-12){
+      var n=Math.round(b.re),r=C(1,0),base=a,neg=n<0;n=Math.abs(n);
+      while(n){if(n&1)r=mul(r,base);base=mul(base,base);n>>=1}
+      return neg?div(C(1,0),r):r;
+    }
+    var m=Math.hypot(a.re,a.im),th=Math.atan2(a.im,a.re);
+    if(m===0)return C(0,0);
+    var lr=Math.log(m),nr=b.re*lr-b.im*th,ni=b.im*lr+b.re*th,em=Math.exp(nr);
+    return C(em*Math.cos(ni),em*Math.sin(ni));
+  }
+
+  /* ══ tokenizador ══ */
+  function tok(s){
+    var T=[],i=0;
+    while(i<s.length){
+      var c=s[i];
+      if(/\s/.test(c)){i++;continue}
+      if(/[0-9.]/.test(c)){var j=i;while(j<s.length&&/[0-9.]/.test(s[j]))j++;
+        T.push({t:'num',v:parseFloat(s.slice(i,j))});i=j;continue}
+      if(/[a-zA-Z]/.test(c)){var j2=i;while(j2<s.length&&/[a-zA-Z]/.test(s[j2]))j2++;
+        T.push({t:'id',v:s.slice(i,j2)});i=j2;continue}
+      if(c==='<'||c==='>'){
+        if(s[i+1]==='='){T.push({t:'cmp',v:c+'='});i+=2}
+        else{T.push({t:'cmp',v:c});i++}continue}
+      if(c==='='){T.push({t:'cmp',v:'='});i++;continue}
+      if('+-*/^()|'.indexOf(c)>-1){T.push({t:c});i++;continue}
+      throw new Error('no entiendo el carácter «'+c+'»');
+    }
+    return T;
+  }
+
+  /* ══ parser ══ */
+  function parser(T){
+    var p=0;
+    function pk(){return T[p]}
+    function eat(x){if(!T[p]||T[p].t!==x)throw new Error('falta «'+x+'»');return T[p++]}
+    function expr(){
+      var n=term();
+      while(pk()&&(pk().t==='+'||pk().t==='-')){var o=T[p++].t;n={o:o,a:n,b:term()}}
+      return n;
+    }
+    function term(){
+      var n=factor();
+      for(;;){
+        if(pk()&&(pk().t==='*'||pk().t==='/')){var o=T[p++].t;n={o:o,a:n,b:factor()};continue}
+        if(pk()&&(pk().t==='num'||pk().t==='id'||pk().t==='('||pk().t==='|')){
+          n={o:'*',a:n,b:factor()};continue}
+        break;
+      }
+      return n;
+    }
+    function factor(){
+      var n=unary();
+      if(pk()&&pk().t==='^'){p++;n={o:'^',a:n,b:factor()}}
+      return n;
+    }
+    function unary(){
+      if(pk()&&pk().t==='-'){p++;return{o:'neg',a:unary()}}
+      if(pk()&&pk().t==='+'){p++;return unary()}
+      return prim();
+    }
+    function prim(){
+      var k=pk();
+      if(!k)throw new Error('la expresión se corta');
+      if(k.t==='num'){p++;return{o:'n',v:k.v}}
+      if(k.t==='('){p++;var e=expr();eat(')');return e}
+      if(k.t==='|'){p++;var e2=expr();eat('|');return{o:'abs',a:e2}}
+      if(k.t==='id'){
+        var nm=k.v.toLowerCase();p++;
+        if(nm==='z')return{o:'z'};
+        if(nm==='i')return{o:'n',v:0,im:1};
+        if(nm==='pi')return{o:'n',v:Math.PI};
+        if(nm==='e'&&(!pk()||pk().t!=='('))return{o:'n',v:Math.E};
+        if(['re','im','arg','abs','conj','sqrt','exp','ln'].indexOf(nm)>-1){
+          eat('(');var a=expr();eat(')');return{o:nm,a:a};
+        }
+        throw new Error('no conozco «'+k.v+'»');
+      }
+      throw new Error('no esperaba eso aquí');
+    }
+    var lhs=expr();
+    if(!pk())throw new Error('falta una comparación: <, >, <=, >= o =');
+    var c1=eat('cmp').v, mid=expr(), c2=null, rhs=null;
+    if(pk()&&pk().t==='cmp'){c2=eat('cmp').v;rhs=expr()}
+    if(p<T.length)throw new Error('sobra algo al final');
+    return {lhs:lhs,c1:c1,mid:mid,c2:c2,rhs:rhs};
+  }
+
+  function ev(n,x,y){
+    switch(n.o){
+      case 'n':return C(n.v||0,n.im||0);
+      case 'z':return C(x,y);
+      case '+':return add(ev(n.a,x,y),ev(n.b,x,y));
+      case '-':return sub(ev(n.a,x,y),ev(n.b,x,y));
+      case '*':return mul(ev(n.a,x,y),ev(n.b,x,y));
+      case '/':return div(ev(n.a,x,y),ev(n.b,x,y));
+      case '^':return pw(ev(n.a,x,y),ev(n.b,x,y));
+      case 'neg':{var v=ev(n.a,x,y);return C(-v.re,-v.im)}
+      case 'abs':{var v2=ev(n.a,x,y);return C(Math.hypot(v2.re,v2.im),0)}
+      case 're':return C(ev(n.a,x,y).re,0);
+      case 'im':return C(ev(n.a,x,y).im,0);
+      case 'arg':{var v3=ev(n.a,x,y);return C(Math.atan2(v3.im,v3.re),0)}
+      case 'conj':{var v4=ev(n.a,x,y);return C(v4.re,-v4.im)}
+      case 'sqrt':return pw(ev(n.a,x,y),C(0.5,0));
+      case 'exp':return pw(C(Math.E,0),ev(n.a,x,y));
+      case 'ln':{var v5=ev(n.a,x,y);return C(Math.log(Math.hypot(v5.re,v5.im)),Math.atan2(v5.im,v5.re))}
+    }
+    throw new Error('nodo desconocido');
+  }
+
+  function cmp(a,op,b,eps){
+    switch(op){
+      case '<':return a<b; case '>':return a>b;
+      case '<=':return a<=b; case '>=':return a>=b;
+      case '=':return Math.abs(a-b)<eps;
+    }
+    return false;
+  }
+  function test(ast,x,y,eps){
+    var L=ev(ast.lhs,x,y).re, M=ev(ast.mid,x,y).re;
+    if(!cmp(L,ast.c1,M,eps))return false;
+    if(ast.c2!==null){var R=ev(ast.rhs,x,y).re;if(!cmp(M,ast.c2,R,eps))return false}
+    return true;
+  }
+
+  /* ══ dibujo ══ */
+  var A=null,B=null;
+  function css(v){return getComputedStyle(document.body).getPropertyValue(v).trim()}
+  function hex2rgb(h){h=h.replace('#','');
+    if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+
+  function pinta(cv,asts,cols){
+    var N=cv.width, R=+$('rg').value, ctx=cv.getContext('2d');
+    var img=ctx.createImageData(N,N), D=img.data;
+    var eps=2*R/N*1.6;
+    var rgb=cols.map(hex2rgb);
+    for(var py=0;py<N;py++){
+      var y=R-py*(2*R/N);
+      for(var px=0;px<N;px++){
+        var x=-R+px*(2*R/N), k=(py*N+px)*4, n=0, r=0,g=0,b=0;
+        for(var s=0;s<asts.length;s++){
+          if(!asts[s])continue;
+          var ok=false;
+          try{ok=test(asts[s],x,y,eps)}catch(e){ok=false}
+          if(ok){n++;r+=rgb[s][0];g+=rgb[s][1];b+=rgb[s][2]}
+        }
+        if(n){
+          var solape=(asts.filter(Boolean).length>1&&n===asts.filter(Boolean).length);
+          D[k]=r/n;D[k+1]=g/n;D[k+2]=b/n;
+          D[k+3]=solape?190:(asts.filter(Boolean).length>1?60:150);
+        }
+      }
+    }
+    ctx.putImageData(img,0,0);
+
+    /* ejes y retícula encima */
+    var gr=css('--grid'), fa=css('--faint');
+    ctx.lineWidth=1;
+    for(var u=-Math.floor(R);u<=Math.floor(R);u++){
+      if(u===0)continue;
+      var q=(u+R)/(2*R)*N;
+      ctx.strokeStyle=gr;
+      ctx.beginPath();ctx.moveTo(q,0);ctx.lineTo(q,N);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,q);ctx.lineTo(N,q);ctx.stroke();
+    }
+    ctx.strokeStyle=fa;ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(N/2,0);ctx.lineTo(N/2,N);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,N/2);ctx.lineTo(N,N/2);ctx.stroke();
+    ctx.fillStyle=fa;ctx.font='11px IBM Plex Mono, monospace';
+    ctx.fillText('Re',N-22,N/2-6);ctx.fillText('Im',N/2+6,14);
+  }
+
+  function compila(id,mid){
+    var s=$(id).value.trim();
+    $(mid).textContent='';$(id).classList.remove('err');
+    if(!s)return null;
+    try{return parser(tok(s))}
+    catch(e){$(mid).textContent=e.message;$(id).classList.add('err');return null}
+  }
+
+  function dibuja(){
+    A=compila('c1','m1'); B=compila('c2','m2');
+    var d1=css('--d1'), d2=css('--d2');
+    pinta($('k1'),[A],[d1]);
+    pinta($('k2'),[B],[d2]);
+    pinta($('k3'),[A,B],[d1,d2]);
+    $('p1').textContent=$('c1').value||'—';
+    $('p2').textContent=$('c2').value||'—';
+    $('p3').textContent=(A&&B)?'intersección de las dos':(A||B)?'solo hay una condición':'—';
+    $('org').value='±'+$('rg').value;
+  }
+
+  var tmr;
+  function pide(){clearTimeout(tmr);tmr=setTimeout(dibuja,120)}
+  $('c1').addEventListener('input',pide);
+  $('c2').addEventListener('input',pide);
+  $('rg').addEventListener('input',pide);
+
+  document.querySelectorAll('.presets button').forEach(function(b){
+    b.onclick=function(){
+      $('c1').value=b.dataset.a;
+      $('c2').value=b.dataset.b;
+      if(b.dataset.r)$('rg').value=b.dataset.r;
+      dibuja();
+    };
+  });
+
+  dibuja();
+})();
+</script>
+</body>
+</html>

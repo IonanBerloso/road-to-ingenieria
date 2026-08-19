@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Números complejos — Cálculo I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5;                 /* segundo objeto en escena */
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --measure:58ch;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+/* ─── cabecera ─── */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600;text-decoration:none;color:inherit}
+.brand span{color:var(--live)}
+.crumb{font-family:var(--mono);font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.crumb b{color:var(--graphite)}
+.top .spacer{margin-left:auto}
+.toggle{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.toggle:hover{border-color:var(--live);color:var(--live)}
+
+/* ─── portada ─── */
+.hero{max-width:70rem;margin:0 auto;padding:clamp(2.5rem,7vw,5rem) clamp(1rem,4vw,2.5rem) 1rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--live);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(2.1rem,6vw,3.6rem);line-height:1.04;letter-spacing:-.025em;margin-bottom:.9rem}
+.lede{font-size:1.13rem;color:var(--graphite);max-width:54ch}
+.scroll-cue{font-family:var(--mono);font-size:.7rem;color:var(--faint);margin-top:2.5rem;
+  text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:.5rem}
+.scroll-cue::after{content:'';width:1.6rem;height:1px;background:var(--faint)}
+
+/* ─── escenario: figura fija + texto que pasa ─── */
+.stage{display:grid;grid-template-columns:1fr minmax(0,var(--measure));
+  gap:clamp(1.5rem,5vw,4rem);max-width:70rem;margin:0 auto;
+  padding:0 clamp(1rem,4vw,2.5rem) 4rem;align-items:start}
+
+.figure{position:sticky;top:5rem;align-self:start}
+.plot{background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.plot svg{display:block;width:100%;height:auto}
+.figcap{font-family:var(--mono);font-size:.7rem;color:var(--faint);
+  padding:.6rem .9rem;border-top:1px solid var(--rule);min-height:2.3rem;
+  transition:color .3s}
+.panelctl{display:none;padding:.9rem 1rem;border-top:1px solid var(--rule);gap:1.1rem;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.panelctl.on{display:grid}
+.ctrl label{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:.7rem;color:var(--graphite);margin-bottom:.35rem}
+.ctrl label output{color:var(--live);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--live);cursor:pointer}
+
+/* ─── texto ─── */
+.steps section{min-height:82vh;display:flex;flex-direction:column;justify-content:center;
+  padding:2rem 0;scroll-margin-top:5rem}
+.steps section:last-child{min-height:auto;padding-bottom:4rem}
+.num{font-family:var(--mono);font-size:.7rem;color:var(--faint);letter-spacing:.1em;margin-bottom:.7rem}
+h2{font-family:var(--display);font-weight:600;font-size:1.75rem;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+p{margin-bottom:1rem}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+.m{font-family:var(--mono);font-size:.9em;background:var(--live-soft);
+  padding:.08em .35em;border-radius:3px;white-space:nowrap}
+.flagbox{border-left:2px solid var(--flag);background:var(--flag-soft);
+  padding:.75rem .95rem;margin-top:1.3rem;font-size:.88rem;color:var(--graphite);border-radius:0 5px 5px 0}
+.flagbox b{display:block;font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--flag);margin-bottom:.3rem}
+
+.outro{max-width:var(--measure);margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem) 6rem}
+.outro h2{padding-top:1.6rem;border-top:1px solid var(--rule)}
+
+/* ─── capas svg ─── */
+.layer{opacity:0;transition:opacity .4s ease}
+.layer.on{opacity:1}
+.mv{transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.pt{r:5}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
+
+@media (max-width:900px){
+  .stage{grid-template-columns:1fr;gap:0}
+  .figure{position:sticky;top:3.4rem;z-index:10;
+    background:var(--paper);padding-bottom:.6rem;margin-bottom:.5rem}
+  .plot{max-width:min(100%,320px);margin:0 auto}
+  .steps section{min-height:auto;padding:1.6rem 0 2.2rem}
+  .crumb{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#">EHU<span>·</span>LAB</a>
+  <span class="crumb">Cálculo I <b>/</b> T1 <b>/</b> Complejos</span>
+  <span class="spacer"></span>
+  <button class="toggle" id="tema">Oscuro</button>
+</header>
+
+<div class="hero">
+  <p class="eyebrow">Cálculo I · Tema 1</p>
+  <h1>Números complejos</h1>
+  <p class="lede">Te los van a presentar como una lista de reglas: conjugado, módulo, De Moivre. En realidad hay una sola idea, y es geométrica. Si la ves, no tienes que memorizar nada del resto.</p>
+  <p class="scroll-cue">Baja y mira el plano</p>
+</div>
+
+<div class="stage">
+
+  <!-- FIGURA FIJA -->
+  <div class="figure">
+    <div class="plot">
+      <svg viewBox="0 0 460 460" role="img" aria-label="Plano complejo interactivo. La figura cambia conforme avanzas por el texto.">
+        <g id="grid" stroke="var(--grid)" stroke-width="1"></g>
+        <g stroke="var(--faint)" stroke-width="1.2" opacity=".8">
+          <line x1="20" y1="230" x2="440" y2="230"/>
+          <line x1="230" y1="20" x2="230" y2="440"/>
+        </g>
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--faint)">
+          <text x="418" y="246">Re</text><text x="238" y="32">Im</text>
+        </g>
+
+        <!-- circunferencia unidad -->
+        <circle class="layer" id="lUnit" cx="230" cy="230" r="42" fill="none"
+                stroke="var(--faint)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- proyecciones cartesianas -->
+        <g class="layer" id="lProj" stroke="var(--live)" stroke-width="1.2" stroke-dasharray="4 4" opacity="0">
+          <line id="pjx" /><line id="pjy" />
+        </g>
+
+        <!-- polar: radio + arco -->
+        <g class="layer" id="lPolar">
+          <line id="ray" stroke="var(--live)" stroke-width="1.6"/>
+          <path id="arc" fill="none" stroke="var(--live)" stroke-width="1.6" opacity=".55"/>
+          <text id="argLbl" class="lbl" fill="var(--live)"></text>
+          <text id="modLbl" class="lbl" fill="var(--live)"></text>
+        </g>
+
+        <!-- suma -->
+        <g class="layer" id="lSum">
+          <path id="par" fill="var(--alt)" fill-opacity=".07" stroke="var(--alt)"
+                stroke-width="1" stroke-dasharray="4 4"/>
+          <circle id="ptSum" class="pt mv" fill="var(--alt)"/>
+          <text id="lblSum" class="lbl" fill="var(--alt)"></text>
+        </g>
+
+        <!-- producto -->
+        <g class="layer" id="lProd">
+          <line id="rayW" stroke="var(--alt)" stroke-width="1.4"/>
+          <line id="rayP" stroke="var(--alt)" stroke-width="1.6"/>
+          <circle id="ptW" class="pt mv" fill="var(--alt)"/>
+          <circle id="ptP" class="pt mv" fill="var(--alt)"/>
+          <text id="lblW" class="lbl" fill="var(--alt)"></text>
+          <text id="lblP" class="lbl" fill="var(--alt)"></text>
+        </g>
+
+        <!-- giros de i -->
+        <g class="layer" id="lI"></g>
+
+        <!-- raíces -->
+        <g class="layer" id="lRoots"></g>
+
+        <!-- z principal -->
+        <g class="layer" id="lZ">
+          <circle id="ptZ" class="pt mv" fill="var(--live)"/>
+          <text id="lblZ" class="lbl mv" fill="var(--live)"></text>
+        </g>
+      </svg>
+
+      <div class="figcap" id="cap">El plano complejo</div>
+
+      <div class="panelctl" id="ctlProd">
+        <div class="ctrl">
+          <label for="ang">giro de w <output id="oang">60°</output></label>
+          <input type="range" id="ang" min="0" max="360" step="1" value="60">
+        </div>
+        <div class="ctrl">
+          <label for="mod">|w| <output id="omod">1,4</output></label>
+          <input type="range" id="mod" min="4" max="20" step="1" value="14">
+        </div>
+      </div>
+
+      <div class="panelctl" id="ctlRoots">
+        <div class="ctrl">
+          <label for="n">raíces de la unidad <output id="on">n = 5</output></label>
+          <input type="range" id="n" min="2" max="12" step="1" value="5">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEXTO -->
+  <div class="steps">
+
+    <section data-scene="punto">
+      <p class="num">01</p>
+      <h2>Es un punto, no un monstruo</h2>
+      <p>Un número complejo <span class="m">z = a + bi</span> no tiene nada de imaginario en el sentido de irreal. Es simplemente <strong>un punto del plano</strong>: la parte real te da cuánto avanzas a la derecha, la parte imaginaria cuánto subes.</p>
+      <p>Ahí tienes <span class="m">z = 3 + 2i</span>. Tres a la derecha, dos hacia arriba. Nada más.</p>
+    </section>
+
+    <section data-scene="polar">
+      <p class="num">02</p>
+      <h2>Dos formas de señalar el mismo punto</h2>
+      <p>Puedes llegar a ese punto con coordenadas, o puedes decir: <strong>gira este ángulo y avanza esta distancia</strong>. La distancia al origen es el <em>módulo</em>, el ángulo es el <em>argumento</em>.</p>
+      <p>Es el mismo punto descrito de dos maneras. La cartesiana es cómoda para sumar; la polar, como vas a ver, lo cambia todo para multiplicar.</p>
+      <div class="flagbox">
+        <b>Error típico</b>
+        Calcular el argumento con <span class="m">arctan(b/a)</span> a secas. Esa función no distingue el segundo del cuarto cuadrante y te devuelve un ángulo equivocado en la mitad de los casos. Dibuja siempre el punto antes de dar el ángulo.
+      </div>
+    </section>
+
+    <section data-scene="suma">
+      <p class="num">03</p>
+      <h2>Sumar es desplazar</h2>
+      <p>Sumar dos complejos es exactamente sumar dos vectores: pones uno a continuación del otro. <span class="m">z + w</span> es la diagonal del paralelogramo.</p>
+      <p>Aquí no hay nada nuevo que aprender. Por eso la suma se hace en cartesiana y nadie le da importancia. Lo interesante viene ahora.</p>
+    </section>
+
+    <section data-scene="producto">
+      <p class="num">04</p>
+      <h2>Multiplicar es girar y escalar</h2>
+      <p>Esta es la idea del tema. Cuando multiplicas dos complejos, <strong>los ángulos se suman y las distancias se multiplican</strong>. Multiplicar por <span class="m">w</span> significa: gira lo que tengas el ángulo de <span class="m">w</span>, y estíralo tanto como mida <span class="m">w</span>.</p>
+      <p>Mueve el giro de <span class="m">w</span> con el deslizador y mira el producto. No se mueve de cualquier manera: gira. Multiplicar es una operación geométrica, y esa es la razón de que los complejos aparezcan en todo lo que rota u oscila — corriente alterna, vibraciones, señales.</p>
+    </section>
+
+    <section data-scene="i">
+      <p class="num">05</p>
+      <h2>Por eso i² = −1</h2>
+      <p>Con lo anterior en la cabeza, deja de ser un axioma raro. <span class="m">i</span> tiene módulo 1 y argumento 90°, así que multiplicar por <span class="m">i</span> es <strong>un cuarto de vuelta</strong>, sin estirar nada.</p>
+      <p>Empieza en el 1 y da dos cuartos de vuelta: acabas en el −1. Eso es todo lo que dice <span class="m">i² = −1</span>. Da otro cuarto y estás en <span class="m">−i</span>; uno más y has vuelto al 1. Ahí tienes el ciclo de las potencias de <span class="m">i</span>, que ya no hace falta memorizar.</p>
+    </section>
+
+    <section data-scene="raices">
+      <p class="num">06</p>
+      <h2>Las raíces se reparten un círculo</h2>
+      <p>Si multiplicar suma ángulos, elevar a la <span class="m">n</span> multiplica el ángulo por <span class="m">n</span>. Y sacar la raíz <span class="m">n</span>-ésima lo divide. Por eso las <span class="m">n</span> raíces de la unidad son <strong>n puntos repartidos a intervalos iguales sobre la circunferencia</strong>: cada una avanza una fracción exacta de vuelta.</p>
+      <p>Cambia la <span class="m">n</span> y míralo. La fórmula de De Moivre, que en los apuntes ocupa dos líneas de subíndices, es literalmente esta imagen.</p>
+      <div class="flagbox">
+        <b>Error típico</b>
+        Dar solo una raíz. Si te piden las raíces cúbicas, son tres, y valen los tres puntos. Perder los otros dos es el fallo más repetido de este tema en examen.
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="outro">
+  <h2>Cómo cae en examen</h2>
+  <p>Casi siempre en este orden: pasar de binómica a polar, operar en polar porque es más cómodo, y volver a binómica para dar el resultado. Si el enunciado pide potencias o raíces y sigues en cartesiana, te has metido en un callejón: cámbiate a polar en cuanto veas un exponente.</p>
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('tema');
+  btn.onclick=function(){var o=root.dataset.theme==='oscuro';
+    root.dataset.theme=o?'claro':'oscuro';btn.textContent=o?'Oscuro':'Claro';};
+
+  var NS='http://www.w3.org/2000/svg', CX=230, CY=230, U=42;
+  var X=function(r){return CX+r*U}, Y=function(i){return CY-i*U};
+
+  /* retícula */
+  var g=document.getElementById('grid');
+  for(var k=-4;k<=4;k++){
+    if(k===0)continue;
+    ['v','h'].forEach(function(o){
+      var l=document.createElementNS(NS,'line');
+      if(o==='v'){l.setAttribute('x1',X(k));l.setAttribute('x2',X(k));l.setAttribute('y1',20);l.setAttribute('y2',440);}
+      else{l.setAttribute('y1',Y(k));l.setAttribute('y2',Y(k));l.setAttribute('x1',20);l.setAttribute('x2',440);}
+      g.appendChild(l);
+    });
+  }
+
+  var Z={re:3,im:2}, W={re:1,im:1};
+  var $=function(id){return document.getElementById(id)};
+
+  function place(pt,lbl,re,im,text,dx,dy){
+    $(pt).setAttribute('cx',X(re));$(pt).setAttribute('cy',Y(im));
+    if(lbl){$(lbl).setAttribute('x',X(re)+(dx||10));$(lbl).setAttribute('y',Y(im)+(dy||-9));$(lbl).textContent=text;}
+  }
+  function line(id,x1,y1,x2,y2){
+    var e=$(id);e.setAttribute('x1',x1);e.setAttribute('y1',y1);e.setAttribute('x2',x2);e.setAttribute('y2',y2);
+  }
+  function num(v){return (Math.round(v*10)/10).toString().replace('.',',')}
+
+  /* ── estado base: z ── */
+  place('ptZ','lblZ',Z.re,Z.im,'z = 3 + 2i');
+  line('pjx',X(Z.re),Y(Z.im),X(Z.re),CY);
+  line('pjy',X(Z.re),Y(Z.im),CX,Y(Z.im));
+
+  /* polar */
+  (function(){
+    line('ray',CX,CY,X(Z.re),Y(Z.im));
+    var m=Math.hypot(Z.re,Z.im), a=Math.atan2(Z.im,Z.re), R=32;
+    $('arc').setAttribute('d','M'+(CX+R)+','+CY+' A'+R+','+R+' 0 0 0 '+
+      (CX+R*Math.cos(a))+','+(CY-R*Math.sin(a)));
+    $('argLbl').setAttribute('x',CX+R+8);$('argLbl').setAttribute('y',CY-12);
+    $('argLbl').textContent='θ ≈ 33,7°';
+    $('modLbl').setAttribute('x',X(Z.re/2)-46);$('modLbl').setAttribute('y',Y(Z.im/2)-8);
+    $('modLbl').textContent='|z| ≈ '+num(m);
+  })();
+
+  /* suma */
+  (function(){
+    var s={re:Z.re+W.re,im:Z.im+W.im};
+    $('par').setAttribute('d','M'+CX+','+CY+' L'+X(Z.re)+','+Y(Z.im)+
+      ' L'+X(s.re)+','+Y(s.im)+' L'+X(W.re)+','+Y(W.im)+' Z');
+    place('ptSum','lblSum',s.re,s.im,'z + w');
+  })();
+
+  /* producto (interactivo) */
+  var ang=$('ang'), mod=$('mod');
+  function prod(){
+    var t=+ang.value*Math.PI/180, m=+mod.value/10;
+    var w={re:m*Math.cos(t),im:m*Math.sin(t)};
+    var p={re:Z.re*w.re-Z.im*w.im, im:Z.re*w.im+Z.im*w.re};
+    var lim=4.6, sc=Math.min(1,lim/Math.max(Math.hypot(p.re,p.im),.001));
+    p={re:p.re*sc,im:p.im*sc};
+    line('rayW',CX,CY,X(w.re),Y(w.im));
+    line('rayP',CX,CY,X(p.re),Y(p.im));
+    place('ptW','lblW',w.re,w.im,'w');
+    place('ptP','lblP',p.re,p.im,'z · w');
+    $('oang').value=ang.value+'°';
+    $('omod').value=num(m);
+  }
+  ang.oninput=prod; mod.oninput=prod; prod();
+
+  /* giros de i */
+  (function(){
+    var L=$('lI'), pts=[[1,0,'1'],[0,1,'i'],[-1,0,'−1'],[0,-1,'−i']];
+    pts.forEach(function(p,idx){
+      var c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',X(p[0]));c.setAttribute('cy',Y(p[1]));c.setAttribute('r',5);
+      c.setAttribute('fill',idx===0?'var(--live)':'var(--alt)');
+      L.appendChild(c);
+      var t=document.createElementNS(NS,'text');
+      t.setAttribute('x',X(p[0])+10);t.setAttribute('y',Y(p[1])-9);
+      t.setAttribute('class','lbl');t.setAttribute('fill',idx===0?'var(--live)':'var(--alt)');
+      t.textContent=p[2];L.appendChild(t);
+      if(idx<3){
+        var a0=idx*Math.PI/2, a1=(idx+1)*Math.PI/2;
+        var p2=document.createElementNS(NS,'path');
+        p2.setAttribute('d','M'+X(Math.cos(a0))+','+Y(Math.sin(a0))+' A'+U+','+U+' 0 0 0 '+
+          X(Math.cos(a1))+','+Y(Math.sin(a1)));
+        p2.setAttribute('fill','none');p2.setAttribute('stroke','var(--alt)');
+        p2.setAttribute('stroke-width','1.6');p2.setAttribute('opacity','.6');
+        L.appendChild(p2);
+      }
+    });
+  })();
+
+  /* raíces */
+  var nS=$('n');
+  function roots(){
+    var L=$('lRoots'), n=+nS.value; L.textContent='';
+    var poly=document.createElementNS(NS,'polygon'), pts=[];
+    for(var k=0;k<n;k++){
+      var a=2*Math.PI*k/n, re=Math.cos(a)*2.4, im=Math.sin(a)*2.4;
+      pts.push(X(re)+','+Y(im));
+      var c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',X(re));c.setAttribute('cy',Y(im));c.setAttribute('r',5);
+      c.setAttribute('fill',k===0?'var(--live)':'var(--alt)');
+      L.appendChild(c);
+    }
+    poly.setAttribute('points',pts.join(' '));
+    poly.setAttribute('fill','var(--alt)');poly.setAttribute('fill-opacity','.06');
+    poly.setAttribute('stroke','var(--alt)');poly.setAttribute('stroke-width','1');
+    poly.setAttribute('stroke-dasharray','4 4');
+    L.insertBefore(poly,L.firstChild);
+    var c2=document.createElementNS(NS,'circle');
+    c2.setAttribute('cx',CX);c2.setAttribute('cy',CY);c2.setAttribute('r',2.4*U);
+    c2.setAttribute('fill','none');c2.setAttribute('stroke','var(--faint)');
+    c2.setAttribute('stroke-width','1');c2.setAttribute('stroke-dasharray','3 5');
+    L.insertBefore(c2,L.firstChild);
+    $('on').value='n = '+n;
+  }
+  nS.oninput=roots; roots();
+
+  /* ── orquestación por scroll ── */
+  var SC={
+    punto:   {on:['lZ','lProj'],                cap:'z = 3 + 2i · parte real y parte imaginaria'},
+    polar:   {on:['lZ','lPolar'],               cap:'El mismo punto en forma polar: módulo y argumento'},
+    suma:    {on:['lZ','lSum'],                 cap:'z + w · regla del paralelogramo'},
+    producto:{on:['lZ','lProd','lUnit'],ctl:'ctlProd', cap:'z · w · los ángulos se suman, los módulos se multiplican'},
+    i:       {on:['lI','lUnit'],                cap:'Multiplicar por i es un cuarto de vuelta'},
+    raices:  {on:['lRoots'],       ctl:'ctlRoots',    cap:'Raíces n-ésimas de la unidad'}
+  };
+  var ALL=['lZ','lProj','lPolar','lSum','lProd','lI','lRoots','lUnit'],
+      CTL=['ctlProd','ctlRoots'], cur='';
+
+  function scene(name){
+    if(name===cur)return; cur=name;
+    var s=SC[name]; if(!s)return;
+    ALL.forEach(function(id){$(id).classList.toggle('on',s.on.indexOf(id)>-1)});
+    CTL.forEach(function(id){$(id).classList.toggle('on',s.ctl===id)});
+    $('cap').textContent=s.cap;
+    if(name==='producto'){place('ptZ','lblZ',Z.re,Z.im,'z');}
+    else if(name==='punto'){place('ptZ','lblZ',Z.re,Z.im,'z = 3 + 2i');}
+    else {place('ptZ','lblZ',Z.re,Z.im,'z');}
+  }
+
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting)scene(e.target.dataset.scene)});
+  },{rootMargin:'-45% 0px -45% 0px'});
+  document.querySelectorAll('.steps section').forEach(function(s){obs.observe(s)});
+  scene('punto');
+})();
+</script>
+</body>
+</html>

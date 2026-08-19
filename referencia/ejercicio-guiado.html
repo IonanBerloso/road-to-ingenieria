@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ejercicio guiado · Bombeo a depósito presurizado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2;
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5; --alt-soft:rgba(122,79,181,.08);
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8; --alt-soft:rgba(183,155,232,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms !important}}
+
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600;text-decoration:none;color:inherit}
+.brand span{color:var(--live)}
+.crumb{font-family:var(--mono);font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.crumb b{color:var(--graphite)}
+.top .spacer{margin-left:auto}
+.toggle{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.toggle:hover{border-color:var(--live);color:var(--live)}
+
+.wrap{max-width:52rem;margin:0 auto;padding:clamp(2rem,5vw,3rem) clamp(1rem,4vw,2.5rem) 6rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--live);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.6vw,2.6rem);line-height:1.08;letter-spacing:-.022em;margin-bottom:.8rem}
+.lede{font-size:1.05rem;color:var(--graphite);margin-bottom:1.3rem}
+.src{font-family:var(--mono);font-size:.72rem;color:var(--faint);padding-left:.8rem;border-left:2px solid var(--rule)}
+p{margin-bottom:.9rem}
+.m{font-family:var(--mono);font-size:.88em;background:var(--live-soft);padding:.08em .35em;border-radius:3px;white-space:nowrap}
+strong{font-weight:600}
+
+.modes{display:flex;gap:.3rem;background:var(--grid);padding:.25rem;border-radius:99px;margin:2rem 0 .6rem;width:fit-content}
+.modes button{font-family:var(--mono);font-size:.74rem;border:none;background:none;cursor:pointer;
+  color:var(--graphite);padding:.45rem 1rem;border-radius:99px;transition:background .18s,color .18s}
+.modes button[aria-pressed="true"]{background:var(--panel);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.modehint{font-family:var(--mono);font-size:.7rem;color:var(--faint);margin-bottom:1.6rem}
+.pr{font-family:var(--mono);font-size:.7rem;background:none;border:1px solid var(--rule);color:var(--graphite);
+  padding:.3rem .7rem;border-radius:99px;cursor:pointer;margin-left:.5rem;display:none}
+.full .pr{display:inline-block}
+.pr:hover{border-color:var(--live);color:var(--live)}
+
+.enunciado{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:1.2rem 1.3rem;margin-bottom:1.8rem}
+.enunciado h2{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);margin-bottom:.7rem;font-weight:500}
+.enunciado p{font-size:.95rem;margin-bottom:.7rem}
+.datos{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem 1.2rem;
+  font-family:var(--mono);font-size:.74rem;color:var(--graphite);border-top:1px solid var(--rule);padding-top:.8rem;margin-top:.3rem}
+.datos b{color:var(--ink);font-weight:500}
+
+.prog{display:flex;align-items:center;gap:.6rem;margin-bottom:1.4rem;font-family:var(--mono);font-size:.7rem;color:var(--faint)}
+.dots{display:flex;gap:.3rem}
+.dot{width:26px;height:4px;border-radius:99px;background:var(--grid);transition:background .3s}
+.dot.done{background:var(--live)}
+.dot.now{background:var(--alt)}
+
+.paso{background:var(--panel);border:1px solid var(--rule);border-radius:8px;margin-bottom:1rem;overflow:hidden}
+.paso.locked{opacity:.4;pointer-events:none}
+.paso.solved{border-color:var(--live)}
+.paso-h{display:flex;align-items:baseline;gap:.7rem;padding:.9rem 1.15rem .3rem}
+.paso-h .n{font-family:var(--mono);font-size:.68rem;color:var(--faint);letter-spacing:.08em}
+.paso-h h3{font-size:.98rem;font-weight:600;flex:1}
+.paso-h .tick{color:var(--live);display:none}
+.paso.solved .paso-h .tick{display:block}
+.paso-b{padding:0 1.15rem 1.15rem}
+.paso-b > p{font-size:.93rem;color:var(--graphite);margin-bottom:.9rem}
+
+.answer{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap}
+.answer input{font-family:var(--mono);font-size:.95rem;width:8.5rem;padding:.5rem .7rem;
+  border:1px solid var(--rule);border-radius:5px;background:var(--paper);color:var(--ink)}
+.answer .u{font-family:var(--mono);font-size:.8rem;color:var(--faint)}
+.answer button{font-family:var(--body);font-size:.86rem;font-weight:500;cursor:pointer;
+  padding:.5rem 1rem;border-radius:5px;border:1px solid var(--live);background:var(--live);color:#fff}
+.answer button.ghost{background:none;color:var(--graphite);border-color:var(--rule)}
+.answer button.ghost:hover{border-color:var(--live);color:var(--live)}
+
+.fb{margin-top:.9rem;padding:.8rem .95rem;border-radius:0 5px 5px 0;font-size:.9rem;display:none}
+.fb.on{display:block}
+.fb.bad{border-left:2px solid var(--flag);background:var(--flag-soft)}
+.fb.hint{border-left:2px solid var(--alt);background:var(--alt-soft)}
+.fb b{display:block;font-family:var(--mono);font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;margin-bottom:.3rem}
+.fb.bad b{color:var(--flag)} .fb.hint b{color:var(--alt)}
+.fb em{font-style:normal;font-weight:600;color:var(--ink)}
+
+.calc{font-family:var(--mono);font-size:.82rem;color:var(--graphite);background:var(--paper);
+  border:1px solid var(--rule);border-radius:5px;padding:.75rem .9rem;margin-top:.8rem;
+  overflow-x:auto;white-space:pre-wrap;line-height:1.8}
+.calc em{color:var(--live);font-style:normal;font-weight:600}
+.verdict{font-size:.86rem;color:var(--graphite);margin-top:.6rem;padding-left:.7rem;border-left:2px solid var(--live)}
+
+.sol{display:none}
+.paso.solved .sol{display:block}
+.full .paso{opacity:1;pointer-events:auto}
+.full .answer,.full .fb,.full .prog{display:none !important}
+.full .sol{display:block}
+.full .paso-h .tick{display:none}
+
+.final{border:1px solid var(--live);background:var(--live-soft);border-radius:8px;padding:1.1rem 1.25rem;margin-top:1.6rem}
+.final b{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:var(--live);display:block;margin-bottom:.45rem}
+.final p{font-size:.94rem;margin-bottom:.5rem}
+.final p:last-child{margin-bottom:0}
+
+.flagbox{border-left:2px solid var(--flag);background:var(--flag-soft);padding:.75rem .95rem;
+  margin:1.4rem 0;font-size:.89rem;color:var(--graphite);border-radius:0 5px 5px 0}
+.flagbox b{display:block;font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:var(--flag);margin-bottom:.3rem}
+
+@media (max-width:640px){.crumb{display:none}.answer input{width:7rem}}
+@media print{
+  .top,.modes,.modehint,.prog,.answer,.fb{display:none !important}
+  body{background:#fff;color:#000}
+  .paso{break-inside:avoid;border:1px solid #ccc}
+  .sol{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#">EHU<span>·</span>LAB</a>
+  <span class="crumb">Fluidos <b>/</b> Bombeo <b>/</b> Ejercicio</span>
+  <span class="spacer"></span>
+  <button class="toggle" id="tema">Oscuro</button>
+</header>
+
+<div class="wrap" id="wrap">
+
+  <p class="eyebrow">Mecánica de Fluidos · Ejercicio 2</p>
+  <h1>Bombeo a depósito presurizado</h1>
+  <p class="lede">Cinco pasos. En modo guiado no verás la solución aunque falles: verás en qué paso te has ido y por qué.</p>
+  <p class="src">Adaptado del Ejercicio 2 · Extraordinario junio 2025 · Mecánica de Fluidos e Hidráulica · UPV/EHU</p>
+
+  <div class="modes" role="group" aria-label="Modo de visualización">
+    <button id="mGuia" aria-pressed="true">Guiado</button>
+    <button id="mFull" aria-pressed="false">Solución completa</button>
+  </div>
+  <p class="modehint"><span id="mhint">Responde cada paso para desbloquear el siguiente.</span><button class="pr" id="imprimir">Imprimir</button></p>
+
+  <div class="enunciado">
+    <h2>Enunciado</h2>
+    <p>Un depósito abierto a cota 30 m alimenta, mediante una bomba, a un depósito presurizado situado a cota 17 m cuyo manómetro superior marca 1,96 bar. La aspiración es de 250 mm y 200 m; la impulsión, de 300 mm y 400 m, con tres codos de radio medio (L<sub>eq</sub> = 2 m cada uno) y una válvula de regulación de k = 6. Todo el trazado es de hierro forjado. La salida del depósito de origen es de ángulos vivos (k = 0,5) y la entrada al de destino tiene k = 1.</p>
+    <p>La bomba responde a <span class="m">H = 14 − 620·Q²</span>, con Q en m³/s y H en mca.</p>
+    <div class="datos">
+      <div><b>z₁</b> = 30 m</div><div><b>z₂</b> = 17 m</div>
+      <div><b>z bomba</b> = 27 m</div><div><b>C</b><sub>HW</sub> = 120</div>
+      <div><b>p<sub>atm</sub></b> = 10,34 mca</div><div><b>p<sub>v</sub>/γ</b> = 2 mca</div>
+    </div>
+  </div>
+
+  <div class="prog" id="prog">
+    <span id="progTxt">Paso 1 de 5</span>
+    <span class="dots" id="dots"></span>
+  </div>
+
+  <div id="pasos"></div>
+
+  <div class="final">
+    <b>Resultado</b>
+    <p>Punto de funcionamiento: <strong>Q = 70,7 l/s</strong> con <strong>H<sub>m</sub> = 10,90 mca</strong>, lo que da exactamente 1,00 m/s en la impulsión — el criterio de selección que pedía el enunciado.</p>
+    <p>NPSH disponible 9,38 mca frente a 2,70 requeridos: <strong>no hay riesgo de cavitación</strong>, con 6,7 mca de margen.</p>
+    <p>Al reducir el manómetro a la mitad, la válvula debe <strong>cerrarse hasta k ≈ 202</strong> para mantener el caudal.</p>
+  </div>
+
+  <div class="flagbox">
+    <b>Lo que más se falla aquí</b>
+    Meter los codos como pérdida local. Su longitud equivalente se suma a la longitud de tubería y entra en Hazen-Williams; la válvula, en cambio, sí es local. Contarlos en los dos sitios infla las pérdidas y desplaza el punto de funcionamiento.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('tema');
+  btn.onclick=function(){var o=root.dataset.theme==='oscuro';
+    root.dataset.theme=o?'claro':'oscuro';btn.textContent=o?'Oscuro':'Claro';};
+  var $=function(i){return document.getElementById(i)};
+
+  var PASOS=[
+   {t:'Altura estática de la instalación',
+    q:'El destino está 13 m por debajo del origen, pero está presurizado a 1,96 bar. ¿Cuánto vale H<sub>est</sub>?',
+    u:'mca', sol:7, tol:.3,
+    dist:[
+      {v:-13,msg:'Has hecho solo <em>z₂ − z₁</em>. Falta la contrapresión: el manómetro del depósito de destino son 20 mca que la bomba también tiene que vencer. La presión entra en la altura estática igual que la cota.'},
+      {v:20,msg:'Esa es solo la contrapresión. Falta la diferencia de cotas, que aquí ayuda: son <em>−13 mca</em>.'},
+      {v:33,msg:'Has sumado los 13 m en vez de restarlos. El destino está más <em>bajo</em>, así que la cota juega a favor.'},
+      {v:13,msg:'Signo cambiado y sin contrapresión. Mira cuál de los dos depósitos está más alto.'}],
+    pista:'H<sub>est</sub> = (z₂ − z₁) + p<sub>man</sub>/γ. Y 1,96·10⁵ ÷ 9800 = 20 mca.',
+    sc:'H_est = (z₂ − z₁) + p/γ\n      = (17 − 30) + 1,96·10⁵ / 9800\n      = −13 + 20\n      = <em>7 mca</em>',
+    sv:'Positiva pese a que el agua baja 13 m: manda la presión del depósito.'},
+
+   {t:'Longitud de cálculo de la impulsión',
+    q:'La impulsión mide 400 m y lleva tres codos con L<sub>eq</sub> = 2 m cada uno, más una válvula de k = 6. ¿Qué longitud usas en Hazen-Williams?',
+    u:'m', sol:406, tol:1,
+    dist:[
+      {v:400,msg:'Has ignorado los codos. Su longitud equivalente se suma a la tubería: <em>3 × 2 = 6 m</em> más.'},
+      {v:416,msg:'Has metido también la válvula como longitud equivalente. La válvula te la dan como <em>k = 6</em>, así que va en pérdidas locales, no en la longitud.'},
+      {v:606,msg:'Has sumado la aspiración. Son dos tramos de diámetro distinto y se calculan por separado.'}],
+    pista:'Longitud equivalente se suma a L. Un coeficiente k va a k·v²/2g. No mezcles los dos.',
+    sc:'L_imp = 400 + 3 × 2 = <em>406 m</em>\n\nLa válvula (k = 6) NO entra aquí:\nva en las pérdidas locales.',
+    sv:'Codos por longitud equivalente, válvula por coeficiente k.'},
+
+   {t:'Punto de funcionamiento',
+    q:'Con K<sub>HW</sub> = 472,4 y K<sub>local</sub> = 82,0, la curva del sistema es H = 7 + 472,4·Q<sup>1,852</sup> + 82,0·Q². Córtala con la de la bomba. ¿Qué caudal sale?',
+    u:'l/s', sol:70.7, tol:2.5,
+    dist:[
+      {v:106,msg:'Has cortado la curva de la bomba con la altura estática sola, sin pérdidas. Eso da el caudal de una instalación sin rozamiento — siempre sale de más.'},
+      {v:150,msg:'Demasiado alto. Comprueba que metes Q en <em>m³/s</em> y no en l/s: son tres órdenes de magnitud en Q².'}],
+    pista:'Iguala 14 − 620·Q² a la curva del sistema y tantea. Empieza en Q = 0,07 m³/s.',
+    sc:'14 − 620·Q²  =  7 + 472,4·Q^1,852 + 82,0·Q²\n\nTanteando:\n  Q = 0,070 →  bomba 10,96 | sistema 10,83\n  Q = 0,071 →  bomba 10,88 | sistema 10,94\n\n  Q ≈ <em>0,0707 m³/s = 70,7 l/s</em>\n  H = <em>10,90 mca</em>\n  v_imp = 0,0707 / 0,0707 = <em>1,00 m/s</em>',
+    sv:'La velocidad de 1,00 m/s confirma que la bomba elegida es la correcta.'},
+
+   {t:'NPSH disponible',
+    q:'La bomba está a cota 27 m, tres metros por debajo de la superficie del depósito de origen. Las pérdidas en la aspiración a ese caudal son 1,96 mca. ¿Cuál es el NPSH disponible?',
+    u:'mca', sol:9.38, tol:.35,
+    dist:[
+      {v:11.38,msg:'Te has dejado la presión de vapor. El NPSH disponible mide el margen que te queda <em>por encima</em> de la presión a la que el agua hierve: los 2 mca hay que quitarlos.'},
+      {v:3.38,msg:'Has restado los 3 m de desnivel en vez de sumarlos. La bomba está por <em>debajo</em> del depósito, así que esa columna de agua ayuda: entra con signo positivo.'},
+      {v:-0.96,msg:'Has usado presión manométrica en la superficie libre. El depósito de origen está abierto: ahí actúa la atmosférica, <em>10,34 mca</em>.'}],
+    pista:'NPSH<sub>d</sub> = p<sub>atm</sub>/γ + (z₁ − z<sub>bomba</sub>) − h<sub>f,asp</sub> − p<sub>v</sub>/γ. Ojo al signo del segundo término.',
+    sc:'NPSH_d = p_atm/γ + (z₁ − z_bomba) − h_f,asp − p_v/γ\n       = 10,34 + (30 − 27) − 1,96 − 2\n       = <em>9,38 mca</em>\n\nNPSH requerido por la bomba ≈ 2,70 mca\nMargen = <em>6,68 mca</em>  →  no cavita.',
+    sv:'Bomba en carga: los 3 m de desnivel suman, no restan.'},
+
+   {t:'Nueva k de la válvula',
+    q:'Se reduce el manómetro a la mitad (de 20 a 10 mca) y hay que mantener el mismo caudal. Sabiendo que v²/2g en la impulsión vale 0,051 mca, ¿cuál es la nueva k de la válvula?',
+    u:'k', sol:202, tol:8,
+    dist:[
+      {v:196,msg:'Casi. Has calculado bien el <em>incremento</em> Δk = 196, pero se pide la k total: la válvula ya tenía 6.'},
+      {v:101,msg:'Has usado la velocidad de la aspiración. La válvula está en la <em>impulsión</em>, donde el diámetro es 300 mm y la velocidad 1,00 m/s.'},
+      {v:6,msg:'Si la válvula no se mueve, el caudal sube: al bajar la contrapresión la instalación ofrece menos resistencia. Hay que compensarlo.'}],
+    pista:'La válvula tiene que generar exactamente la pérdida que ha desaparecido: Δk · v²/2g = 10 mca.',
+    sc:'La contrapresión baja 10 mca, así que la válvula\ndebe aportar esos 10 mca de pérdida:\n\n  Δk · v²/2g = 10\n  Δk = 10 / 0,051 = 196\n\n  k_nueva = 6 + 196 = <em>202</em>\n\nLa válvula se <em>cierra</em>, y muchísimo.',
+    sv:'Con 1 m/s la altura cinética es de 5 cm: estrangular sale carísimo en k.'}
+  ];
+
+  var cont=$('pasos'), dots=$('dots');
+  PASOS.forEach(function(p,i){
+    var d=document.createElement('span');d.className='dot'+(i===0?' now':'');dots.appendChild(d);
+    var el=document.createElement('div');
+    el.className='paso'+(i===0?'':' locked');el.id='p'+i;
+    el.innerHTML=
+      '<div class="paso-h"><span class="n">'+String(i+1).padStart(2,'0')+'</span>'+
+      '<h3>'+p.t+'</h3><span class="tick">✓</span></div>'+
+      '<div class="paso-b"><p>'+p.q+'</p>'+
+      '<div class="answer">'+
+        '<input type="text" inputmode="decimal" id="in'+i+'" aria-label="Respuesta del paso '+(i+1)+'" placeholder="…">'+
+        '<span class="u">'+p.u+'</span>'+
+        '<button data-c="'+i+'">Comprobar</button>'+
+        '<button class="ghost" data-h="'+i+'">Pista</button>'+
+      '</div>'+
+      '<div class="fb" id="fb'+i+'"></div>'+
+      '<div class="sol"><div class="calc">'+p.sc+'</div><p class="verdict">'+p.sv+'</p></div>'+
+      '</div>';
+    cont.appendChild(el);
+  });
+
+  var tries=PASOS.map(function(){return 0}), done=PASOS.map(function(){return false});
+
+  function parseN(s){
+    s=(s||'').trim().replace(',','.').replace(/\s/g,'');
+    var v=parseFloat(s); return isNaN(v)?null:v;
+  }
+  function fb(i,cls,title,html){
+    var e=$('fb'+i);e.className='fb on '+cls;e.innerHTML='<b>'+title+'</b>'+html;
+  }
+  function avanzar(i){
+    done[i]=true;
+    $('p'+i).classList.add('solved');
+    dots.childNodes[i].className='dot done';
+    if(i+1<PASOS.length){
+      $('p'+(i+1)).classList.remove('locked');
+      dots.childNodes[i+1].className='dot now';
+      $('progTxt').textContent='Paso '+(i+2)+' de '+PASOS.length;
+      $('p'+(i+1)).scrollIntoView({behavior:'smooth',block:'center'});
+    } else $('progTxt').textContent='Ejercicio completo';
+  }
+
+  cont.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.h!==undefined){var j=+b.dataset.h;fb(j,'hint','Pista',PASOS[j].pista);return}
+    if(b.dataset.c===undefined)return;
+
+    var i=+b.dataset.c, p=PASOS[i], v=parseN($('in'+i).value);
+    if(v===null){fb(i,'bad','Sin respuesta','Escribe un número antes de comprobar.');return}
+    tries[i]++;
+
+    if(Math.abs(v-p.sol)<=p.tol){$('fb'+i).className='fb';avanzar(i);return}
+
+    var hit=null;
+    p.dist.forEach(function(d){
+      var t=Math.max(Math.abs(d.v)*0.04,0.6);
+      if(Math.abs(v-d.v)<=t) hit=d;
+    });
+    if(hit) fb(i,'bad','Sé lo que ha pasado',hit.msg);
+    else if(tries[i]===1) fb(i,'bad','No es correcto','Ese número no sale de ninguna vía razonable. Revisa las unidades antes de rehacer el cálculo.');
+    else if(tries[i]===2) fb(i,'hint','Pista',p.pista);
+    else {fb(i,'hint','Vamos juntos','Mira el desarrollo y sigue con el paso siguiente.');avanzar(i)}
+  });
+
+  cont.addEventListener('keydown',function(e){
+    if(e.key!=='Enter')return;
+    var inp=e.target.closest('input'); if(!inp)return;
+    cont.querySelector('button[data-c="'+inp.id.replace('in','')+'"]').click();
+  });
+
+  var wrap=$('wrap'), mg=$('mGuia'), mf=$('mFull');
+  function modo(full){
+    wrap.classList.toggle('full',full);
+    mg.setAttribute('aria-pressed',String(!full));
+    mf.setAttribute('aria-pressed',String(full));
+    $('mhint').textContent=full
+      ? 'Resolución completa de un tirón. Se imprime bien y sirve para explicárselo a alguien.'
+      : 'Responde cada paso para desbloquear el siguiente.';
+    PASOS.forEach(function(_,i){
+      if(full) $('p'+i).classList.remove('locked');
+      else if(i>0 && !done[i-1]) $('p'+i).classList.add('locked');
+    });
+  }
+  mg.onclick=function(){modo(false)};
+  mf.onclick=function(){modo(true)};
+  $('imprimir').onclick=function(){window.print()};
+  $('progTxt').textContent='Paso 1 de '+PASOS.length;
+})();
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ Piloto: **Cálculo** (1.º) y **Mecánica de Fluidos** (2.º).
 
 ```bash
 npm install
-npm run dev          # http://localhost:4321/2027/
+npm run dev          # http://localhost:4321/road-to-ingenieria/
 ```
 
 ## Comandos
@@ -49,10 +49,10 @@ falta, con su porqué, está en [`tasks/todo.md`](tasks/todo.md).
 ## Despliegue
 
 GitHub Actions construye, pasa `verify.mjs`, pasa los tests y solo entonces
-publica en GitHub Pages: **https://ionanberloso.github.io/2027/**
+publica en GitHub Pages: **https://ionanberloso.github.io/road-to-ingenieria/**
 
-Para que funcione hay que activar Pages en el repositorio con
-*Settings → Pages → Source: **GitHub Actions***.
+La URL del sitio se declara una sola vez, en `astro.config.mjs` (`site` + `base`);
+`verify.mjs` la importa de ahí. Para cambiar de dominio se tocan esas dos líneas.
 
 ## Derechos
 

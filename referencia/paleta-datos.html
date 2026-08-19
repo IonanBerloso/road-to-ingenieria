@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paleta de datos · sistema de diseño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ── interfaz ── */
+  --paper:#FBFBF9; --panel:#FFFFFF;
+  --ink:#15181C; --graphite:#5F6771; --faint:#8A929C;
+  --rule:#E3E7EA; --grid:#EBEFF2; --grid2:#F4F7F9;
+  /* ── semánticos · NUNCA en gráficas ── */
+  --live:#0D6E6B; --live-soft:rgba(13,110,107,.09);
+  --flag:#B93A2B; --flag-soft:rgba(185,58,43,.07);
+  --alt:#7A4FB5; --alt-soft:rgba(122,79,181,.08);
+  /* ── datos · SOLO en gráficas ── */
+  --d1:#1268A8;  /* azul     */
+  --d2:#D97A00;  /* naranja  */
+  --d3:#07684A;  /* verde    */
+  --d4:#A63D77;  /* magenta  */
+  --d5:#7C6A0A;  /* oro      */
+  --d6:#4A5C6B;  /* pizarra  */
+  --display:'Fraunces',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+[data-theme="oscuro"]{
+  --paper:#14171A; --panel:#1B1F23;
+  --ink:#E8ECEF; --graphite:#A2ACB6; --faint:#7B858F;
+  --rule:#2A3037; --grid:#232930; --grid2:#1E242A;
+  --live:#4FD1C5; --live-soft:rgba(79,209,197,.12);
+  --flag:#F98071; --flag-soft:rgba(249,128,113,.10);
+  --alt:#B79BE8; --alt-soft:rgba(183,155,232,.12);
+  --d1:#6BB6E8; --d2:#F2A44E; --d3:#43C696;
+  --d4:#E58CC2; --d5:#D6C04C; --d6:#94A6B6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--live);outline-offset:3px}
+
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  padding:.7rem clamp(1rem,4vw,2.5rem);background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.brand{font-family:var(--display);font-size:1.05rem;font-weight:600}
+.brand span{color:var(--live)}
+.top .spacer{margin-left:auto}
+.btn{font-family:var(--mono);font-size:.72rem;background:none;border:1px solid var(--rule);
+  color:var(--graphite);padding:.35rem .7rem;border-radius:99px;cursor:pointer}
+.btn:hover{border-color:var(--live);color:var(--live)}
+.btn[aria-pressed="true"]{background:var(--live);border-color:var(--live);color:#fff}
+
+.wrap{max-width:60rem;margin:0 auto;padding:clamp(2rem,5vw,3rem) clamp(1rem,4vw,2.5rem) 6rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--live);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.6rem}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.6vw,2.6rem);line-height:1.08;letter-spacing:-.022em;margin-bottom:.8rem}
+.lede{font-size:1.05rem;color:var(--graphite);max-width:58ch;margin-bottom:2rem}
+h2{font-family:var(--display);font-weight:600;font-size:1.45rem;letter-spacing:-.015em;
+  margin:3rem 0 .8rem;padding-top:1.4rem;border-top:1px solid var(--rule)}
+p{margin-bottom:.9rem;max-width:62ch}
+.m{font-family:var(--mono);font-size:.88em;background:var(--live-soft);padding:.08em .35em;border-radius:3px}
+
+/* simulación */
+.sim-wrap{filter:none}
+body[data-cvd="deuter"] .sim-wrap{filter:url(#deuter)}
+body[data-cvd="protan"] .sim-wrap{filter:url(#protan)}
+body[data-cvd="tritan"] .sim-wrap{filter:url(#tritan)}
+body[data-cvd="gris"]   .sim-wrap{filter:grayscale(1)}
+
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem;margin:1.4rem 0}
+.sw{background:var(--panel);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.sw .chip{height:56px}
+.sw .meta{padding:.5rem .65rem;font-family:var(--mono);font-size:.68rem;color:var(--graphite)}
+.sw .meta b{display:block;color:var(--ink);font-size:.74rem;font-weight:600;margin-bottom:.1rem}
+
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:8px;margin:1.4rem 0;overflow:hidden}
+.card h3{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);font-weight:500;padding:.8rem 1rem .2rem}
+.card svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem 1.1rem;padding:.3rem 1rem 1rem;
+  font-family:var(--mono);font-size:.71rem;color:var(--graphite)}
+.legend span{display:flex;align-items:center;gap:.4rem}
+.legend i{width:14px;height:3px;border-radius:99px;display:block}
+
+.rules{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:1.1rem 1.3rem;margin:1.4rem 0}
+.rules li{margin:0 0 .6rem 1.1rem;font-size:.93rem}
+.rules li:last-child{margin-bottom:0}
+.rules code{font-family:var(--mono);font-size:.85em;background:var(--grid);padding:.1em .35em;border-radius:3px}
+
+.flagbox{border-left:2px solid var(--flag);background:var(--flag-soft);padding:.75rem .95rem;
+  margin:1.3rem 0;font-size:.89rem;color:var(--graphite);border-radius:0 5px 5px 0;max-width:62ch}
+.flagbox b{display:block;font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:var(--flag);margin-bottom:.3rem}
+</style>
+</head>
+<body data-cvd="no">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="deuter"><feColorMatrix type="matrix" values="
+    0.625 0.375 0     0 0
+    0.700 0.300 0     0 0
+    0     0.300 0.700 0 0
+    0     0     0     1 0"/></filter>
+  <filter id="protan"><feColorMatrix type="matrix" values="
+    0.567 0.433 0     0 0
+    0.558 0.442 0     0 0
+    0     0.242 0.758 0 0
+    0     0     0     1 0"/></filter>
+  <filter id="tritan"><feColorMatrix type="matrix" values="
+    0.950 0.050 0     0 0
+    0     0.433 0.567 0 0
+    0     0.475 0.525 0 0
+    0     0     0     1 0"/></filter>
+</defs></svg>
+
+<header class="top">
+  <span class="brand">EHU<span>·</span>LAB</span>
+  <span class="spacer"></span>
+  <button class="btn" data-cvd="no" aria-pressed="true">Normal</button>
+  <button class="btn" data-cvd="deuter" aria-pressed="false">Deuteranopía</button>
+  <button class="btn" data-cvd="protan" aria-pressed="false">Protanopía</button>
+  <button class="btn" data-cvd="tritan" aria-pressed="false">Tritanopía</button>
+  <button class="btn" data-cvd="gris" aria-pressed="false">Grises</button>
+  <button class="btn" id="tema">Oscuro</button>
+</header>
+
+<div class="wrap">
+  <p class="eyebrow">Sistema de diseño · capa de datos</p>
+  <h1>Paleta de datos</h1>
+  <p class="lede">Seis colores para series de gráficas, separados de los tres colores semánticos de la interfaz. Cambia el simulador de arriba y comprueba que las series siguen distinguiéndose.</p>
+
+  <h2>Por qué separada</h2>
+  <p>Los tres colores de la interfaz ya significan algo: <span class="m">verde</span> es lo que se toca o se comprueba, <span class="m">rojo</span> es lo que te suspende, <span class="m">violeta</span> es el segundo objeto de una escena. Si esos mismos colores aparecen como series de una gráfica, el código se rompe: el alumno no sabe si el rojo es un error o es la curva del sistema.</p>
+  <p>Por eso la paleta de datos es un espacio de nombres aparte, de <span class="m">--d1</span> a <span class="m">--d6</span>, y no se solapa con ninguno de los tres semánticos.</p>
+
+  <div class="sim-wrap">
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:var(--d1)"></div><div class="meta"><b>--d1</b>azul</div></div>
+      <div class="sw"><div class="chip" style="background:var(--d2)"></div><div class="meta"><b>--d2</b>naranja</div></div>
+      <div class="sw"><div class="chip" style="background:var(--d3)"></div><div class="meta"><b>--d3</b>verde</div></div>
+      <div class="sw"><div class="chip" style="background:var(--d4)"></div><div class="meta"><b>--d4</b>magenta</div></div>
+      <div class="sw"><div class="chip" style="background:var(--d5)"></div><div class="meta"><b>--d5</b>oro</div></div>
+      <div class="sw"><div class="chip" style="background:var(--d6)"></div><div class="meta"><b>--d6</b>pizarra</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Curvas · seis series</h3>
+      <svg viewBox="0 0 640 260" role="img" aria-label="Seis curvas de ejemplo dibujadas con la paleta de datos.">
+        <g id="gridL"></g>
+        <g stroke="var(--faint)" stroke-width="1.1">
+          <line x1="46" y1="222" x2="620" y2="222"/><line x1="46" y1="18" x2="46" y2="222"/>
+        </g>
+        <g id="curvas" fill="none" stroke-width="2.4"></g>
+        <g id="marcas"></g>
+      </svg>
+      <div class="legend">
+        <span><i style="background:var(--d1)"></i>Serie A</span>
+        <span><i style="background:var(--d2)"></i>Serie B</span>
+        <span><i style="background:var(--d3)"></i>Serie C</span>
+        <span><i style="background:var(--d4)"></i>Serie D</span>
+        <span><i style="background:var(--d5)"></i>Serie E</span>
+        <span><i style="background:var(--d6)"></i>Serie F</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Barras agrupadas</h3>
+      <svg viewBox="0 0 640 200" role="img" aria-label="Barras agrupadas con la paleta de datos.">
+        <g id="barras"></g>
+        <line x1="46" y1="170" x2="620" y2="170" stroke="var(--faint)" stroke-width="1.1"/>
+      </svg>
+    </div>
+  </div>
+
+  <h2>La regla que importa</h2>
+  <p>Son seis y no ocho a propósito. <strong>Si una gráfica necesita más de seis series, la gráfica está mal planteada</strong>: ningún alumno distingue ocho colores mientras además intenta entender el contenido. La solución no es añadir un séptimo color, es partirla en varias pequeñas o resaltar una serie y dejar el resto en gris.</p>
+
+  <div class="rules">
+    <ul>
+      <li>Los semánticos (<code>--live</code>, <code>--flag</code>, <code>--alt</code>) <strong>nunca</strong> se usan como serie de datos.</li>
+      <li>Los de datos (<code>--d1</code>…<code>--d6</code>) <strong>nunca</strong> se usan en la interfaz.</li>
+      <li>El orden importa: se usan siempre en secuencia desde <code>--d1</code>. Con dos series se usan d1 y d2, no d1 y d4.</li>
+      <li>El color nunca es el único distintivo: cada serie lleva además etiqueta directa o marcador de forma distinta.</li>
+      <li>Máximo seis series por gráfica. Más que eso, se parte.</li>
+    </ul>
+  </div>
+
+  <div class="flagbox">
+    <b>Comprueba esto tú mismo</b>
+    Dale a «Deuteranopía» arriba y luego a «Grises». Las curvas siguen separándose porque los seis colores no solo cambian de tono, cambian de luminosidad. Ese es el motivo de que estos seis y no otros: en una promoción de ingeniería vas a tener siete u ocho alumnos de cada cien que no distinguen rojo de verde.
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)}, NS='http://www.w3.org/2000/svg';
+  var t=document.getElementById('tema');
+  t.onclick=function(){var o=document.documentElement.dataset.theme==='oscuro';
+    document.documentElement.dataset.theme=o?'claro':'oscuro';t.textContent=o?'Oscuro':'Claro';};
+
+  document.querySelectorAll('.btn[data-cvd]').forEach(function(b){
+    b.onclick=function(){
+      document.body.dataset.cvd=b.dataset.cvd;
+      document.querySelectorAll('.btn[data-cvd]').forEach(function(x){
+        x.setAttribute('aria-pressed',String(x===b));});
+    };
+  });
+
+  /* retícula */
+  var gl=$('gridL');
+  for(var i=0;i<=8;i++){
+    var l=document.createElementNS(NS,'line');
+    var y=18+i*(222-18)/8;
+    l.setAttribute('x1',46);l.setAttribute('x2',620);l.setAttribute('y1',y);l.setAttribute('y2',y);
+    l.setAttribute('stroke','var(--grid)');l.setAttribute('stroke-width','1');gl.appendChild(l);
+  }
+
+  /* curvas */
+  var C=$('curvas'), M=$('marcas');
+  var defs=[
+    {c:'--d1',f:function(x){return 0.85-0.55*Math.pow(x,1.6)}},
+    {c:'--d2',f:function(x){return 0.15+0.70*Math.pow(x,0.7)}},
+    {c:'--d3',f:function(x){return 0.50+0.34*Math.sin(x*3.1)}},
+    {c:'--d4',f:function(x){return 0.30+0.42*x}},
+    {c:'--d5',f:function(x){return 0.72-0.30*Math.sin(x*2.2)}},
+    {c:'--d6',f:function(x){return 0.10+0.24*x+0.10*Math.sin(x*6)}}
+  ];
+  var shapes=['circle','square','tri','diamond','plus','cross'];
+  defs.forEach(function(d,k){
+    var p=document.createElementNS(NS,'path'), s='';
+    for(var i=0;i<=60;i++){
+      var x=i/60, X=46+x*574, Y=222-d.f(x)*204;
+      s+=(i?' L':'M')+X.toFixed(1)+','+Y.toFixed(1);
+    }
+    p.setAttribute('d',s);p.setAttribute('stroke','var('+d.c+')');C.appendChild(p);
+
+    /* marcador de forma: el color nunca es el único distintivo */
+    for(var j=1;j<=4;j++){
+      var x2=j/5, X2=46+x2*574, Y2=222-d.f(x2)*204, e;
+      if(shapes[k]==='circle'){e=document.createElementNS(NS,'circle');
+        e.setAttribute('cx',X2);e.setAttribute('cy',Y2);e.setAttribute('r',3.6);}
+      else if(shapes[k]==='square'){e=document.createElementNS(NS,'rect');
+        e.setAttribute('x',X2-3.2);e.setAttribute('y',Y2-3.2);e.setAttribute('width',6.4);e.setAttribute('height',6.4);}
+      else if(shapes[k]==='tri'){e=document.createElementNS(NS,'polygon');
+        e.setAttribute('points',(X2)+','+(Y2-4)+' '+(X2+4)+','+(Y2+3)+' '+(X2-4)+','+(Y2+3));}
+      else if(shapes[k]==='diamond'){e=document.createElementNS(NS,'polygon');
+        e.setAttribute('points',(X2)+','+(Y2-4.4)+' '+(X2+4)+','+Y2+' '+(X2)+','+(Y2+4.4)+' '+(X2-4)+','+Y2);}
+      else {e=document.createElementNS(NS,'path');
+        e.setAttribute('d',shapes[k]==='plus'
+          ? 'M'+(X2-4)+','+Y2+'H'+(X2+4)+'M'+X2+','+(Y2-4)+'V'+(Y2+4)
+          : 'M'+(X2-3.4)+','+(Y2-3.4)+'L'+(X2+3.4)+','+(Y2+3.4)+'M'+(X2+3.4)+','+(Y2-3.4)+'L'+(X2-3.4)+','+(Y2+3.4));
+        e.setAttribute('stroke','var('+d.c+')');e.setAttribute('stroke-width','2');}
+      if(shapes[k]!=='plus'&&shapes[k]!=='cross'){
+        e.setAttribute('fill','var('+d.c+')');
+      } else e.setAttribute('fill','none');
+      M.appendChild(e);
+    }
+  });
+
+  /* barras */
+  var B=$('barras'), grupos=5, series=4;
+  for(var g=0;g<grupos;g++){
+    for(var s=0;s<series;s++){
+      var w=20, x=70+g*112+s*(w+3);
+      var h=30+((g*7+s*23)%9)*13;
+      var r=document.createElementNS(NS,'rect');
+      r.setAttribute('x',x);r.setAttribute('y',170-h);
+      r.setAttribute('width',w);r.setAttribute('height',h);
+      r.setAttribute('fill','var(--d'+(s+1)+')');r.setAttribute('rx','2');
+      B.appendChild(r);
+    }
+  }
+})();
+</script>
+</body>
+</html>
