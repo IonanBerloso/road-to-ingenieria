@@ -57,7 +57,114 @@ const catalogo = defineCollection({
     }),
 });
 
-/** Los temas escritos. Uno por carpeta: index.mdx + (más adelante) ejercicios.yaml */
+/* ═══════════════════════════════════════════════════════════════════
+   Los ejercicios, como DATOS (CLAUDE.md §04)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/** Una respuesta equivocada concreta, con el razonamiento que la produce.
+ *  Nunca «incorrecto»: el mensaje tiene que decir QUÉ ha pasado (§05). */
+const distractor = z.object({
+  valor: z.string().min(1),
+  mensaje: z.string().min(30, 'un distractor sin explicación es un «incorrecto» disfrazado'),
+});
+
+/** COMP1 · reconocer qué herramienta pide el enunciado, antes de calcular. */
+const pasoReconocer = z.object({
+  tipo: z.literal('reconocer'),
+  pregunta: z.string().min(10),
+  opciones: z
+    .array(
+      z.object({
+        texto: z.string().min(3),
+        correcta: z.boolean().default(false),
+        mensaje: z.string().min(20),
+      }),
+    )
+    .min(3),
+});
+
+/** COMP2 · el cálculo. La respuesta puede ser un complejo o un número real. */
+const pasoCalcular = z.object({
+  tipo: z.literal('calcular'),
+  titulo: z.string().min(3),
+  pregunta: z.string().min(10),
+  respuesta: z.object({
+    tipo: z.enum(['complejo', 'numero']),
+    valor: z.string().min(1),
+    tolerancia: z.number().positive().default(0.001),
+    /** Qué forma se espera; se muestra junto al campo para no adivinar. */
+    formato: z.string().optional(),
+  }),
+  distractores: z.array(distractor).min(1, 'sin distractores esto no diagnostica nada'),
+  pista: z.string().min(10),
+  desarrollo: z.string().min(20),
+  veredicto: z.string().optional(),
+});
+
+/** COMP4 · la justificación formal. Ordenar el argumento con UNA pieza trampa
+ *  que encarna el error típico y no debe entrar (§05, patrón 5). */
+const pasoJustificar = z.object({
+  tipo: z.literal('justificar'),
+  pregunta: z.string().min(10),
+  piezas: z
+    .array(
+      z.object({
+        texto: z.string().min(5),
+        /** La pieza envenenada. Va exactamente una por paso. */
+        trampa: z.boolean().default(false),
+        /** Por qué esta pieza no entra. Obligatorio en la trampa. */
+        mensaje: z.string().optional(),
+      }),
+    )
+    .min(3)
+    .refine((ps) => ps.filter((p) => p.trampa).length === 1, {
+      message: 'un paso de justificación lleva exactamente una pieza trampa',
+    })
+    .refine((ps) => ps.every((p) => !p.trampa || p.mensaje), {
+      message: 'la pieza trampa tiene que explicar por qué no entra',
+    }),
+  veredicto: z.string().optional(),
+});
+
+const paso = z.discriminatedUnion('tipo', [pasoReconocer, pasoCalcular, pasoJustificar]);
+
+const ejercicio = z
+  .object({
+    id: z.string().regex(/^[a-z0-9-]+$/, 'en minúscula, sin acentos, con guiones'),
+    titulo: z.string().min(5),
+    /** Procedencia obligatoria: el material es adaptado, no propio (§08). */
+    fuente: z.string().min(10),
+    enunciado: z.string().min(20),
+    /** Qué se pide exactamente, y en qué forma. */
+    pide: z.string().min(5),
+    pasos: z.array(paso).min(2),
+    /** La resolución de examen final: hipótesis, pasos sin saltos, comprobación
+     *  y resultado. Es lo que se ve en modo completo y lo que se imprime. */
+    resolucion: z.string().min(100),
+  })
+  .refine((e) => e.pasos.some((p) => p.tipo === 'reconocer'), {
+    message: 'falta el paso de COMP1: un ejercicio que solo calcula entrena la parte que menos se falla (§09)',
+  })
+  .refine((e) => e.pasos.some((p) => p.tipo === 'calcular'), {
+    message: 'falta el paso de COMP2',
+  })
+  .refine((e) => e.pasos.some((p) => p.tipo === 'justificar'), {
+    message: 'falta el paso de COMP4, que vale entre 2 y 9 puntos (§09)',
+  });
+
+/** Un `ejercicios.yaml` por tema, junto a su `index.mdx`.
+ *  El nivel superior es un objeto y no una lista porque el cargador de Astro
+ *  trata cada fichero como una entrada. */
+const ejercicios = defineCollection({
+  loader: glob({ pattern: '**/ejercicios.yaml', base: './src/content' }),
+  schema: z
+    .object({ ejercicios: z.array(ejercicio).min(1) })
+    .refine((f) => new Set(f.ejercicios.map((e) => e.id)).size === f.ejercicios.length, {
+      message: 'hay dos ejercicios con el mismo id',
+    }),
+});
+
+/** Los temas escritos. Uno por carpeta: index.mdx + ejercicios.yaml */
 const temaEscrito = z.object({
   asignatura: z.string().min(3),
   tema: z.number().int().min(1).max(40),
@@ -80,4 +187,4 @@ const fluidos = defineCollection({
   schema: temaEscrito,
 });
 
-export const collections = { catalogo, calculo, fluidos };
+export const collections = { catalogo, calculo, fluidos, ejercicios };

@@ -1,0 +1,867 @@
+---
+/**
+ * PATRÓN 3 · EJERCICIO GUIADO (CLAUDE.md §05).
+ * Portado de referencia/ejercicio-guiado.html.
+ *
+ * Este componente es GENÉRICO y se escribe una sola vez: lee el ejercicio de
+ * `ejercicios.yaml` y monta la interacción. Si para añadir un ejercicio hay que
+ * tocar este fichero, algo está mal diseñado — vuelve atrás y generalízalo (§04).
+ *
+ * Diagnostica el error concreto: nunca dice «incorrecto» a secas. A los dos
+ * intentos aparece la pista; al tercero se abre el desarrollo y se avanza,
+ * porque dejar a alguien atascado a las dos de la mañana no enseña nada.
+ *
+ * Entrena las tres competencias de §09, no solo el número: reconocer (COMP1),
+ * calcular (COMP2) y justificar (COMP4).
+ */
+import { getCollection } from 'astro:content';
+import { mate } from '../../lib/markdown.mjs';
+
+interface Props {
+  /** `id` del ejercicio dentro de algún ejercicios.yaml. */
+  id: string;
+}
+
+const { id } = Astro.props;
+
+const ficheros = await getCollection('ejercicios');
+const ejercicio = ficheros.flatMap((f) => f.data.ejercicios).find((e) => e.id === id);
+
+if (!ejercicio) {
+  throw new Error(
+    `No existe el ejercicio "${id}". Búscalo en algún src/content/**/ejercicios.yaml ` +
+      `o corrige el id del componente.`,
+  );
+}
+
+/** Barajado estable: el orden de las piezas no puede cambiar entre builds, o
+ *  cada despliegue generaría un diff distinto sin que nadie haya tocado nada. */
+function baraja<T>(items: T[], semilla: string): T[] {
+  let s = [...semilla].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+  const siguiente = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+  const copia = items.map((v, i) => ({ v, i }));
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(siguiente() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia.map((c) => c.v);
+}
+
+const COMPETENCIA = { reconocer: 'COMP1', calcular: 'COMP2', justificar: 'COMP4' } as const;
+
+/* Todo el texto del YAML pasa por el mismo procesador que el MDX, así que las
+   fórmulas salen en MathML generado en el build (§07). */
+const enunciadoHtml = await mate(ejercicio.enunciado);
+const pideHtml = await mate(ejercicio.pide);
+const resolucionHtml = await mate(ejercicio.resolucion);
+
+const pasos = await Promise.all(
+  ejercicio.pasos.map(async (paso, i) => {
+    const comun = {
+      i,
+      tipo: paso.tipo,
+      competencia: COMPETENCIA[paso.tipo],
+      preguntaHtml: await mate(paso.pregunta),
+    };
+
+    if (paso.tipo === 'reconocer') {
+      const mezcladas = baraja(
+        paso.opciones.map((o, k) => ({ ...o, k })),
+        `${ejercicio.id}-${i}`,
+      );
+      return {
+        ...comun,
+        titulo: 'Reconocer el camino',
+        opciones: await Promise.all(
+          mezcladas.map(async (o) => ({
+            textoHtml: await mate(o.texto),
+            mensajeHtml: await mate(o.mensaje),
+            correcta: o.correcta,
+          })),
+        ),
+      };
+    }
+
+    if (paso.tipo === 'calcular') {
+      return {
+        ...comun,
+        titulo: paso.titulo,
+        respuesta: paso.respuesta,
+        distractores: await Promise.all(
+          paso.distractores.map(async (d) => ({
+            valor: d.valor,
+            mensajeHtml: await mate(d.mensaje),
+          })),
+        ),
+        pistaHtml: await mate(paso.pista),
+        desarrolloHtml: await mate(paso.desarrollo),
+        veredictoHtml: await mate(paso.veredicto),
+      };
+    }
+
+    // justificar
+    const mezcladas = baraja(
+      paso.piezas.map((p, k) => ({ ...p, k })),
+      `${ejercicio.id}-${i}`,
+    );
+    return {
+      ...comun,
+      titulo: 'Justificar el argumento',
+      piezas: await Promise.all(
+        mezcladas.map(async (p) => ({
+          textoHtml: await mate(p.texto),
+          mensajeHtml: await mate(p.mensaje),
+          trampa: p.trampa,
+          /** Posición en el razonamiento correcto; -1 si es la trampa. */
+          orden: p.trampa ? -1 : p.k,
+        })),
+      ),
+      veredictoHtml: await mate(paso.veredicto),
+    };
+  }),
+);
+
+/** Lo que necesita el navegador para corregir. Los mensajes NO van aquí:
+ *  ya están en el DOM, renderizados en el build. */
+const datos = pasos.map((p) => {
+  if (p.tipo === 'reconocer') {
+    return { tipo: p.tipo, correcta: p.opciones!.findIndex((o) => o.correcta) };
+  }
+  if (p.tipo === 'calcular') {
+    return {
+      tipo: p.tipo,
+      respuesta: p.respuesta,
+      distractores: p.distractores!.map((d) => d.valor),
+    };
+  }
+  return {
+    tipo: p.tipo,
+    // Orden correcto expresado sobre las posiciones ya barajadas.
+    orden: p.piezas!.map((pieza, k) => ({ k, orden: pieza.orden }))
+      .filter((x) => x.orden >= 0)
+      .sort((a, b) => a.orden - b.orden)
+      .map((x) => x.k),
+    trampa: p.piezas!.findIndex((pieza) => pieza.trampa),
+  };
+});
+
+const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
+---
+
+<section class="ejercicio" data-ejercicio aria-labelledby={`ej-${ejercicio.id}`}>
+  <header class="ej-cab">
+    <p class="rotulo rotulo--live">Ejercicio guiado · {ejercicio.pasos.length} pasos</p>
+    <h3 id={`ej-${ejercicio.id}`}>{ejercicio.titulo}</h3>
+    <p class="fuente rotulo">{ejercicio.fuente}</p>
+  </header>
+
+  <div class="modos no-imprimir" role="group" aria-label="Modo del ejercicio">
+    <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
+    <button type="button" data-modo="completo" aria-pressed="false">resolución completa</button>
+    <span class="rotulo avance" data-avance>paso 1 de {total}</span>
+  </div>
+
+  <p class="modo-pista rotulo" data-modo-pista>
+    En modo guiado no verás la solución aunque falles: verás en qué paso te has ido y por qué.
+  </p>
+
+  <div class="enunciado">
+    <p class="rotulo">Enunciado</p>
+    <div class="prosa" set:html={enunciadoHtml} />
+    <div class="prosa pide" set:html={pideHtml} />
+  </div>
+
+  <ol class="pasos">
+    {
+      pasos.map((paso) => (
+        <li
+          class:list={['paso', { bloqueado: paso.i > 0 }]}
+          data-paso={paso.i}
+          data-tipo={paso.tipo}
+        >
+          <div class="paso-cab">
+            <span class="rotulo n">{String(paso.i + 1).padStart(2, '0')}</span>
+            <h4>{paso.titulo}</h4>
+            <span class="rotulo comp">{paso.competencia}</span>
+            <span class="tick" aria-hidden="true">✓</span>
+          </div>
+
+          <div class="paso-cuerpo">
+            <div class="prosa" set:html={paso.preguntaHtml} />
+
+            {paso.tipo === 'reconocer' && (
+              <ul class="opciones no-imprimir">
+                {paso.opciones!.map((o, k) => (
+                  <li>
+                    <button type="button" class="opcion" data-opcion={k}>
+                      <span class="prosa" set:html={o.textoHtml} />
+                    </button>
+                    <div class="msg" data-msg-opcion={k} hidden set:html={o.mensajeHtml} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {paso.tipo === 'calcular' && (
+              <>
+                <div class="respuesta no-imprimir">
+                  <label class="solo-lectores" for={`in-${ejercicio.id}-${paso.i}`}>
+                    Tu respuesta al paso {paso.i + 1}
+                  </label>
+                  <input
+                    id={`in-${ejercicio.id}-${paso.i}`}
+                    type="text"
+                    inputmode="text"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="…"
+                  />
+                  {paso.respuesta!.formato && (
+                    <span class="formato rotulo">{paso.respuesta!.formato}</span>
+                  )}
+                  <button type="button" class="comprobar" data-comprobar>
+                    Comprobar
+                  </button>
+                  <button type="button" class="fantasma" data-pedir-pista>
+                    Pista
+                  </button>
+                </div>
+
+                {paso.distractores!.map((d, k) => (
+                  <div class="msg" data-msg-distractor={k} hidden set:html={d.mensajeHtml} />
+                ))}
+                <div class="msg" data-msg-pista hidden set:html={paso.pistaHtml} />
+
+                <div class="solucion" hidden>
+                  <p class="rotulo">Desarrollo</p>
+                  <div class="prosa" set:html={paso.desarrolloHtml} />
+                  {paso.veredictoHtml && (
+                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                  )}
+                </div>
+              </>
+            )}
+
+            {paso.tipo === 'justificar' && (
+              <>
+                <ol class="montaje no-imprimir" data-montaje aria-live="polite">
+                  <li class="vacio">Ve eligiendo las piezas en orden.</li>
+                </ol>
+
+                <ul class="piezas no-imprimir">
+                  {paso.piezas!.map((pieza, k) => (
+                    <li>
+                      <button type="button" class="pieza" data-pieza={k}>
+                        <span class="prosa" set:html={pieza.textoHtml} />
+                      </button>
+                      {pieza.trampa && (
+                        <div class="msg" data-msg-trampa hidden set:html={pieza.mensajeHtml} />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+
+                <div class="solucion" hidden>
+                  <p class="rotulo">El razonamiento, en orden</p>
+                  <ol class="orden-bueno">
+                    {paso
+                      .piezas!.filter((pieza) => !pieza.trampa)
+                      .sort((a, b) => a.orden - b.orden)
+                      .map((pieza) => (
+                        <li class="prosa" set:html={pieza.textoHtml} />
+                      ))}
+                  </ol>
+                  {paso.veredictoHtml && (
+                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                  )}
+                </div>
+              </>
+            )}
+
+            <div class="fb" data-fb hidden aria-live="polite"></div>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="resolucion" data-resolucion hidden>
+    <p class="rotulo rotulo--live">Resolución completa</p>
+    <div class="prosa" set:html={resolucionHtml} />
+  </div>
+
+  <script type="application/json" data-datos set:html={JSON.stringify(datos)} />
+</section>
+
+<script>
+  import { comparaComplejo, leeComplejo } from '../../lib/complejo';
+
+  type Respuesta = { tipo: 'complejo' | 'numero'; valor: string; tolerancia: number };
+  type Dato =
+    | { tipo: 'reconocer'; correcta: number }
+    | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[] }
+    | { tipo: 'justificar'; orden: number[]; trampa: number };
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-ejercicio]')) {
+    montar(raiz);
+  }
+
+  function montar(raiz: HTMLElement) {
+    const datos: Dato[] = JSON.parse(
+      raiz.querySelector<HTMLElement>('[data-datos]')?.textContent ?? '[]',
+    );
+    const pasos = [...raiz.querySelectorAll<HTMLElement>('[data-paso]')];
+    const avance = raiz.querySelector<HTMLElement>('[data-avance]')!;
+    const resolucion = raiz.querySelector<HTMLElement>('[data-resolucion]')!;
+    const modoPista = raiz.querySelector<HTMLElement>('[data-modo-pista]')!;
+
+    const intentos = pasos.map(() => 0);
+    const resueltos = pasos.map(() => false);
+    let modo: 'guiado' | 'completo' = 'guiado';
+
+    /* ── utilidades ───────────────────────────────────────────────── */
+
+    const fb = (paso: HTMLElement, clase: string, titulo: string, cuerpo: string) => {
+      const caja = paso.querySelector<HTMLElement>('[data-fb]')!;
+      caja.className = `fb ${clase}`;
+      caja.innerHTML = `<p class="rotulo">${titulo}</p>${cuerpo}`;
+      caja.hidden = false;
+    };
+
+    const limpiaFb = (paso: HTMLElement) => {
+      const caja = paso.querySelector<HTMLElement>('[data-fb]')!;
+      caja.hidden = true;
+      caja.innerHTML = '';
+    };
+
+    const html = (paso: HTMLElement, selector: string) =>
+      paso.querySelector<HTMLElement>(selector)?.innerHTML ?? '';
+
+    function resuelve(i: number) {
+      resueltos[i] = true;
+      pasos[i].classList.add('resuelto');
+      pasos[i].querySelector<HTMLElement>('.solucion')?.removeAttribute('hidden');
+
+      const siguiente = pasos[i + 1];
+      if (siguiente) {
+        siguiente.classList.remove('bloqueado');
+        if (modo === 'guiado') siguiente.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        resolucion.hidden = false;
+      }
+      pinta();
+    }
+
+    function pinta() {
+      const hechos = resueltos.filter(Boolean).length;
+      avance.textContent =
+        modo === 'completo'
+          ? `${pasos.length} pasos`
+          : hechos === pasos.length
+            ? 'ejercicio completo'
+            : `paso ${hechos + 1} de ${pasos.length}`;
+    }
+
+    /* ── COMP1 · reconocer ────────────────────────────────────────── */
+
+    pasos.forEach((paso, i) => {
+      const dato = datos[i];
+      if (dato.tipo !== 'reconocer') return;
+
+      for (const boton of paso.querySelectorAll<HTMLButtonElement>('[data-opcion]')) {
+        boton.addEventListener('click', () => {
+          if (resueltos[i]) return;
+          const k = Number(boton.dataset.opcion);
+          const mensaje = html(paso, `[data-msg-opcion="${k}"]`);
+
+          if (k === dato.correcta) {
+            boton.classList.add('acertada');
+            fb(paso, 'bien', 'Ese es el camino', mensaje);
+            resuelve(i);
+          } else {
+            boton.classList.add('fallada');
+            boton.disabled = true;
+            intentos[i]++;
+            fb(paso, 'mal', 'Por ahí no', mensaje);
+          }
+        });
+      }
+    });
+
+    /* ── COMP2 · calcular ─────────────────────────────────────────── */
+
+    pasos.forEach((paso, i) => {
+      const dato = datos[i];
+      if (dato.tipo !== 'calcular') return;
+
+      const campo = paso.querySelector<HTMLInputElement>('input')!;
+      const { respuesta, distractores } = dato;
+
+      /** Distancia tolerante: los distractores se reconocen con más holgura que
+       *  la respuesta buena, porque lo que importa es identificar el
+       *  razonamiento, no el redondeo. */
+      const coincide = (escrito: string, objetivo: string, tolerancia: number) => {
+        if (respuesta.tipo === 'complejo') {
+          const a = leeComplejo(escrito);
+          const b = leeComplejo(objetivo);
+          return a && b ? comparaComplejo(a, b, tolerancia) : false;
+        }
+        const a = leeComplejo(escrito);
+        const b = leeComplejo(objetivo);
+        if (!a || !b || a.im !== 0) return false;
+        return Math.abs(a.re - b.re) <= tolerancia;
+      };
+
+      const holgura = (objetivo: string) => {
+        const v = leeComplejo(objetivo);
+        const escala = v ? Math.max(Math.abs(v.re), Math.abs(v.im)) : 1;
+        return Math.max(escala * 0.02, respuesta.tolerancia);
+      };
+
+      function comprueba() {
+        if (resueltos[i]) return;
+        const escrito = campo.value;
+
+        if (!leeComplejo(escrito)) {
+          fb(
+            paso,
+            'mal',
+            'No he entendido la respuesta',
+            '<p>Escríbela en forma binómica, por ejemplo <code>-3+2i</code>. ' +
+              'Valen las comas decimales y expresiones como <code>√2/2</code>.</p>',
+          );
+          return;
+        }
+
+        intentos[i]++;
+
+        if (coincide(escrito, respuesta.valor, respuesta.tolerancia)) {
+          limpiaFb(paso);
+          campo.disabled = true;
+          resuelve(i);
+          return;
+        }
+
+        const k = distractores.findIndex((d) => coincide(escrito, d, holgura(d)));
+        if (k >= 0) {
+          fb(paso, 'mal', 'Sé lo que ha pasado', html(paso, `[data-msg-distractor="${k}"]`));
+          return;
+        }
+
+        if (intentos[i] === 1) {
+          fb(
+            paso,
+            'mal',
+            'No es correcto',
+            '<p>Ese número no sale de ninguna vía razonable. Revisa el paso anterior antes de rehacer el cálculo.</p>',
+          );
+        } else if (intentos[i] === 2) {
+          fb(paso, 'pista', 'Pista', html(paso, '[data-msg-pista]'));
+        } else {
+          fb(
+            paso,
+            'pista',
+            'Vamos juntos',
+            '<p>Mira el desarrollo, entiéndelo y sigue con el paso siguiente.</p>',
+          );
+          resuelve(i);
+        }
+      }
+
+      paso.querySelector('[data-comprobar]')?.addEventListener('click', comprueba);
+      paso.querySelector('[data-pedir-pista]')?.addEventListener('click', () => {
+        fb(paso, 'pista', 'Pista', html(paso, '[data-msg-pista]'));
+      });
+      campo.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          comprueba();
+        }
+      });
+    });
+
+    /* ── COMP4 · justificar ───────────────────────────────────────── */
+
+    pasos.forEach((paso, i) => {
+      const dato = datos[i];
+      if (dato.tipo !== 'justificar') return;
+
+      const montaje = paso.querySelector<HTMLElement>('[data-montaje]')!;
+      const botones = [...paso.querySelectorAll<HTMLButtonElement>('[data-pieza]')];
+      let puestas = 0;
+
+      const dibujaMontaje = () => {
+        montaje.textContent = '';
+        if (!puestas) {
+          const li = document.createElement('li');
+          li.className = 'vacio';
+          li.textContent = 'Ve eligiendo las piezas en orden.';
+          montaje.appendChild(li);
+          return;
+        }
+        for (let p = 0; p < puestas; p++) {
+          const li = document.createElement('li');
+          li.innerHTML = botones[dato.orden[p]].innerHTML;
+          montaje.appendChild(li);
+        }
+      };
+
+      for (const boton of botones) {
+        boton.addEventListener('click', () => {
+          if (resueltos[i]) return;
+          const k = Number(boton.dataset.pieza);
+
+          if (k === dato.trampa) {
+            intentos[i]++;
+            boton.classList.add('fallada');
+            fb(paso, 'mal', 'Esa pieza no entra', html(paso, '[data-msg-trampa]'));
+            return;
+          }
+
+          if (k !== dato.orden[puestas]) {
+            intentos[i]++;
+            fb(
+              paso,
+              'mal',
+              'Esa no es la que sigue',
+              '<p>La pieza es válida, pero no en este punto del razonamiento. ' +
+                '¿Qué hay que haber establecido antes para poder afirmarla?</p>',
+            );
+            return;
+          }
+
+          boton.disabled = true;
+          boton.classList.add('puesta');
+          puestas++;
+          dibujaMontaje();
+          limpiaFb(paso);
+
+          if (puestas === dato.orden.length) {
+            fb(paso, 'bien', 'Razonamiento completo', '');
+            resuelve(i);
+          }
+        });
+      }
+    });
+
+    /* ── modo guiado / completo ───────────────────────────────────── */
+
+    const botonesModo = [...raiz.querySelectorAll<HTMLButtonElement>('[data-modo]')];
+
+    function cambiaModo(nuevo: 'guiado' | 'completo') {
+      modo = nuevo;
+      raiz.dataset.modo = modo;
+      for (const b of botonesModo) b.setAttribute('aria-pressed', String(b.dataset.modo === modo));
+
+      const completo = modo === 'completo';
+      resolucion.hidden = !completo && !resueltos.every(Boolean);
+      modoPista.textContent = completo
+        ? 'Resolución completa de un tirón. Se imprime bien y sirve para explicárselo a alguien.'
+        : 'En modo guiado no verás la solución aunque falles: verás en qué paso te has ido y por qué.';
+
+      pasos.forEach((paso, i) => {
+        paso.classList.toggle('bloqueado', !completo && i > 0 && !resueltos[i - 1]);
+        const solucion = paso.querySelector<HTMLElement>('.solucion');
+        if (solucion) solucion.hidden = !completo && !resueltos[i];
+      });
+      pinta();
+    }
+
+    for (const b of botonesModo) {
+      b.addEventListener('click', () => cambiaModo(b.dataset.modo as 'guiado' | 'completo'));
+    }
+
+    // Al imprimir, siempre la resolución entera: nadie repasa la noche antes
+    // haciendo clic (§11).
+    window.addEventListener('beforeprint', () => {
+      resolucion.hidden = false;
+      for (const s of raiz.querySelectorAll<HTMLElement>('.solucion')) s.hidden = false;
+    });
+    window.addEventListener('afterprint', () => cambiaModo(modo));
+
+    pinta();
+  }
+</script>
+
+<style>
+  .ejercicio {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.4rem clamp(1rem, 3vw, 1.6rem) 1.6rem;
+    margin: 2.5rem 0;
+    background: var(--panel);
+  }
+
+  .ej-cab h3 {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -.015em;
+    margin: .2rem 0 .3rem;
+  }
+
+  .fuente {
+    text-transform: none;
+    letter-spacing: .01em;
+    font-size: .68rem;
+    line-height: 1.5;
+  }
+
+  /* ── modos ─────────────────────────────────────────────────────── */
+  .modos {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    flex-wrap: wrap;
+    margin: 1.2rem 0 .5rem;
+  }
+
+  .modos button {
+    font-family: var(--mono);
+    font-size: .71rem;
+    border: 1px solid var(--rule);
+    background: none;
+    color: var(--graphite);
+    padding: .35rem .85rem;
+    border-radius: 99px;
+    cursor: pointer;
+  }
+
+  .modos button[aria-pressed='true'] { border-color: var(--live); color: var(--live); font-weight: 600; }
+  .modos .avance { margin-left: auto; font-size: .66rem; }
+
+  .modo-pista {
+    text-transform: none;
+    letter-spacing: .01em;
+    font-size: .74rem;
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── enunciado ─────────────────────────────────────────────────── */
+  .enunciado {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1.6rem;
+    background: var(--paper);
+  }
+
+  .enunciado .rotulo { margin-bottom: .5rem; }
+  .pide { font-weight: 500; margin-top: .6rem; }
+
+  /* ── pasos ─────────────────────────────────────────────────────── */
+  .pasos { list-style: none; }
+
+  .paso {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    margin-bottom: .9rem;
+    overflow: hidden;
+    transition: opacity .25s, border-color .25s;
+  }
+
+  .paso.bloqueado { opacity: .38; pointer-events: none; }
+  .paso.resuelto { border-color: var(--live); }
+
+  .paso-cab {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    padding: .8rem 1rem .2rem;
+  }
+
+  .paso-cab h4 { font-size: .96rem; font-weight: 600; flex: 1; }
+  .paso-cab .n { font-size: .66rem; }
+  .paso-cab .comp { font-size: .62rem; color: var(--alt); }
+  .paso-cab .tick { color: var(--live); visibility: hidden; }
+  .paso.resuelto .tick { visibility: visible; }
+
+  .paso-cuerpo { padding: 0 1rem 1rem; }
+
+  /* ── opciones (COMP1) ──────────────────────────────────────────── */
+  .opciones { list-style: none; display: grid; gap: .4rem; margin-top: .8rem; }
+
+  .opcion {
+    width: 100%;
+    text-align: left;
+    font-family: var(--body);
+    font-size: .9rem;
+    color: inherit;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    padding: .6rem .8rem;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+
+  .opcion:hover:not(:disabled) { border-color: var(--live); }
+  .opcion.acertada { border-color: var(--live); background: var(--live-soft); }
+  .opcion.fallada { border-color: var(--flag); background: var(--flag-soft); opacity: .75; }
+
+  /* ── respuesta (COMP2) ─────────────────────────────────────────── */
+  .respuesta {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: .9rem;
+  }
+
+  .respuesta input {
+    font-family: var(--mono);
+    font-size: .95rem;
+    width: 10rem;
+    max-width: 100%;
+    padding: .5rem .7rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .respuesta input:disabled { border-color: var(--live); color: var(--live); }
+
+  .formato { text-transform: none; letter-spacing: .01em; font-size: .68rem; }
+
+  .comprobar {
+    font-family: var(--body);
+    font-size: .86rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--live);
+    background: var(--live);
+    color: var(--paper);
+  }
+
+  .fantasma {
+    font-family: var(--body);
+    font-size: .86rem;
+    cursor: pointer;
+    padding: .5rem .9rem;
+    border-radius: 5px;
+    border: 1px solid var(--rule);
+    background: none;
+    color: var(--graphite);
+  }
+
+  .fantasma:hover { border-color: var(--alt); color: var(--alt); }
+
+  /* ── piezas (COMP4) ────────────────────────────────────────────── */
+  .montaje {
+    margin: .9rem 0;
+    padding-left: 1.2rem;
+    font-size: .88rem;
+  }
+
+  .montaje li { margin-bottom: .3rem; }
+  .montaje .vacio { list-style: none; margin-left: -1.2rem; color: var(--faint); font-size: .8rem; }
+
+  .piezas { list-style: none; display: grid; gap: .4rem; }
+
+  .pieza {
+    width: 100%;
+    text-align: left;
+    font-family: var(--body);
+    font-size: .88rem;
+    color: inherit;
+    background: var(--paper);
+    border: 1px dashed var(--rule);
+    border-radius: 5px;
+    padding: .55rem .8rem;
+    cursor: pointer;
+    transition: border-color .15s, opacity .15s;
+  }
+
+  .pieza:hover:not(:disabled) { border-color: var(--live); }
+  .pieza.puesta { opacity: .45; border-style: solid; }
+  .pieza.fallada { border-color: var(--flag); background: var(--flag-soft); }
+
+  .orden-bueno { margin: .6rem 0 0 1.2rem; font-size: .88rem; }
+  .orden-bueno li { margin-bottom: .35rem; }
+
+  /* ── respuesta del sistema ─────────────────────────────────────── */
+  .fb {
+    margin-top: .9rem;
+    padding: .75rem .9rem;
+    border-radius: 0 5px 5px 0;
+    font-size: .89rem;
+  }
+
+  .fb .rotulo { font-size: .63rem; margin-bottom: .25rem; }
+  .fb.mal { border-left: 2px solid var(--flag); background: var(--flag-soft); }
+  .fb.mal .rotulo { color: var(--flag); }
+  .fb.pista { border-left: 2px solid var(--alt); background: var(--alt-soft); }
+  .fb.pista .rotulo { color: var(--alt); }
+  .fb.bien { border-left: 2px solid var(--live); background: var(--live-soft); }
+  .fb.bien .rotulo { color: var(--live); }
+
+  .solucion {
+    margin-top: .9rem;
+    padding-top: .8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .solucion > .rotulo { margin-bottom: .5rem; }
+
+  .veredicto {
+    margin-top: .7rem;
+    padding-left: .8rem;
+    border-left: 2px solid var(--live);
+    font-size: .86rem;
+    color: var(--graphite);
+  }
+
+  .resolucion {
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .resolucion > .rotulo { margin-bottom: .8rem; }
+
+  /* ── prosa que viene del YAML ──────────────────────────────────── */
+  .prosa :global(p) { margin-bottom: .7rem; }
+  .prosa :global(p:last-child) { margin-bottom: 0; }
+  .prosa :global(strong) { font-weight: 600; }
+  .prosa :global(ul) { margin: .5rem 0 .7rem 1.1rem; }
+  .prosa :global(li) { margin-bottom: .3rem; }
+
+  .prosa :global(h3) {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 1.6rem 0 .6rem;
+  }
+
+  .prosa :global(code) {
+    font-family: var(--mono);
+    font-size: .88em;
+    background: var(--grid);
+    padding: .1em .35em;
+    border-radius: 3px;
+  }
+
+  .prosa :global(span.katex:has(math[display='block'])) {
+    display: block;
+    margin: 1rem 0;
+    padding: .8rem 1rem;
+    background: var(--paper);
+    border-left: 2px solid var(--rule);
+    overflow-x: auto;
+  }
+
+  .prosa :global(math) { font-family: var(--body); }
+  .prosa :global(math[display='block']) { display: block; font-size: 1.15rem; }
+
+  /* ── impresión: la resolución entera, sin controles (§11) ──────── */
+  @media print {
+    .no-imprimir { display: none !important; }
+    .ejercicio { border: none; padding: 0; background: none; }
+    .paso { opacity: 1 !important; break-inside: avoid; }
+    .paso.bloqueado { opacity: 1 !important; }
+    .fb { display: none !important; }
+  }
+</style>

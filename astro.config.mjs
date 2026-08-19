@@ -1,9 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import { unified } from '@astrojs/markdown-remark';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
+import { procesador } from './src/lib/markdown.mjs';
 
 /**
  * Road to Ingeniería — sitio estático para GitHub Pages.
@@ -23,12 +21,9 @@ export default defineConfig({
   integrations: [mdx()],
 
   markdown: {
-    // MathML generado en el build: sin JavaScript en cliente, imprimible,
-    // legible por lectores de pantalla y funciona sin conexión (CLAUDE.md §07).
-    processor: unified({
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [[rehypeKatex, { output: 'mathml' }]],
-    }),
+    // La tubería vive en src/lib/markdown.mjs porque los ejercicios en YAML
+    // tienen que renderizar exactamente igual que el MDX (CLAUDE.md §07).
+    processor: procesador(),
   },
 
   build: {
