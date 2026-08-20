@@ -1,0 +1,143 @@
+---
+asignatura: calculo
+tema: 2
+titulo: Sucesiones
+descripcion: Convergencia, monotonía y acotación. Y por qué los cien primeros términos no deciden nada.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes de Cálculo · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Una sucesión es una lista infinita de números con un orden. Nada más. Lo que la
+hace interesante —y lo que se examina— es una sola pregunta: **¿hacia dónde va?**
+
+Y hay una idea que atraviesa el tema entero y que decide la mitad de los
+ejercicios: **el final de la lista no depende del principio**. Puedes cambiar
+los mil primeros términos por lo que quieras y el límite no se entera.
+
+## Qué significa exactamente converger
+
+La definición formal parece una fórmula que memorizar y no lo es. Dice esto:
+
+$$
+\lim_{n\to\infty} a_n = L
+\iff
+\forall \varepsilon > 0 \;\; \exists\, m \in \mathbb{N} : \;
+n > m \Rightarrow |a_n - L| < \varepsilon
+$$
+
+Léelo como un juego entre dos. Tú eliges un margen $\varepsilon$, tan pequeño
+como quieras. Yo tengo que responderte con un momento $m$ a partir del cual
+**todos** los términos están a menos de $\varepsilon$ del límite. Si puedo
+hacerlo siempre, sea cual sea tu margen, la sucesión converge.
+
+Dos detalles que son los que se puntúan:
+
+- **El $m$ depende de $\varepsilon$.** Cuanto más apretado sea el margen, más
+  tarde empezará a cumplirse. Escribir un $m$ que no dependa de $\varepsilon$
+  es no haber entendido la definición.
+- **«Todos» los términos a partir de $m$**, no «alguno». Una sucesión que se
+  acerca y se aleja, aunque pase muy cerca infinitas veces, no converge.
+
+<ErrorTipico titulo="Error típico · mirar los primeros términos">
+Ante una sucesión definida a trozos —«$n^3$ si $n<1000$, y $1-\frac1n$ a partir
+de ahí»— la tentación es calcular $a_1, a_2, a_3$ y concluir que crece sin
+límite.
+
+Pero la convergencia **solo mira la cola**. Da igual lo que hagan los mil
+primeros términos: si a partir de un momento la sucesión se comporta como
+$1-\frac1n$, converge a 1.
+
+Los exámenes usan esto a propósito. Cuando veas un $n<100$ o un $n<1000$ en la
+definición, el enunciado te está tendiendo la mano: esa parte no decide la
+convergencia. Lo que sí puede decidir es la **monotonía** y la **acotación**,
+que miran la sucesión entera.
+</ErrorTipico>
+
+## Creciente, decreciente, acotada
+
+Tres definiciones cortas que hay que saber escribir, porque los exámenes las
+piden literalmente:
+
+- **Creciente:** $a_{n+1} > a_n$ para todo $n \in \mathbb{N}$.
+- **Acotada:** existen $p, q \in \mathbb{R}$ con $p \le a_n \le q$ para todo $n$.
+- **Divergente hacia $-\infty$:** para todo $M \in \mathbb{R}$ existe $n_0$ tal
+  que $a_n < M$ para todo $n > n_0$.
+
+Fíjate en el «para todo $n$» de las dos primeras. Ahí está la diferencia con la
+convergencia, que solo pide «a partir de un momento». Por eso una sucesión
+definida a trozos puede ser **convergente y no monótona a la vez**: el salto
+entre los dos trozos rompe la monotonía pero no toca el límite.
+
+<ErrorTipico titulo="Error típico · confundir «no creciente» con «decreciente»">
+Que una sucesión no sea creciente no la hace decreciente. Puede no ser ninguna
+de las dos cosas: basta con que suba en un sitio y baje en otro.
+
+Cuando un examen pregunta por el crecimiento de una sucesión a trozos, la
+respuesta correcta suele ser precisamente esa: **ni creciente ni decreciente**.
+Y hay que justificarlo enseñando dos parejas de términos consecutivos, una que
+suba y otra que baje.
+</ErrorTipico>
+
+## Monótona y acotada implica convergente
+
+Es el teorema con más rentabilidad del tema. Si una sucesión crece y está
+acotada por arriba, converge; y su límite es el supremo del conjunto de sus
+términos.
+
+La utilidad práctica: **te da la convergencia sin calcular el límite**. En un
+ejercicio donde el término general es incómodo, demostrar que crece y que no
+pasa de cierto valor ya cierra la respuesta.
+
+Ojo al sentido de la implicación: convergente **no** implica monótona. La
+sucesión $\frac{(-1)^n}{n}$ converge a 0 y va saltando de signo en signo.
+
+## El límite, si existe, es único
+
+Parece obvio y es un ejercicio de examen recurrente. La demostración es un
+razonamiento por reducción al absurdo que conviene tener escrito:
+
+Si hubiera dos límites distintos $L_1 \neq L_2$, tomando
+$\varepsilon = \frac{|L_1-L_2|}{2}$ los términos tendrían que estar, a partir de
+un momento, a la vez a menos de $\varepsilon$ de los dos. Pero esas dos
+condiciones son incompatibles, porque los entornos son disjuntos. Contradicción.
+
+El truco —elegir $\varepsilon$ como la mitad de la distancia entre los dos
+candidatos— es el mismo que aparece en media docena de demostraciones del tema.
+
+## Series: sumar infinitos términos
+
+Una serie $\sum a_n$ es el límite de sus **sumas parciales**. Converge cuando ese
+límite existe.
+
+De ahí sale la condición necesaria más usada: si $\sum a_n$ converge, entonces
+$a_n \to 0$. En contrapositivo, que es como se usa: **si el término general no
+tiende a cero, la serie no converge**, y eso cierra el ejercicio en una línea.
+
+<ErrorTipico titulo="Error típico · creer que el recíproco también vale">
+Que $a_n \to 0$ **no** garantiza que la serie converja. El contraejemplo clásico
+es la serie armónica $\sum \frac1n$: su término general tiende a cero y la suma
+crece sin límite.
+
+La condición sirve para **descartar**, nunca para confirmar.
+</ErrorTipico>
+
+La serie geométrica es la que hay que tener en la punta de los dedos:
+
+$$
+\sum_{n=0}^{\infty} r^{n} = \frac{1}{1-r} \qquad \text{si } |r| < 1
+$$
+
+Y si la suma no empieza en $n=0$ sino en $n=k$, basta sacar factor común:
+
+$$
+\sum_{n=k}^{\infty} r^{n} = \frac{r^{k}}{1-r}
+$$
+
+Eso resuelve de un plumazo los problemas de «un móvil que recorre cada vez una
+fracción de lo anterior»: son geométricas disfrazadas.

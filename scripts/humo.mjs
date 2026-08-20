@@ -84,6 +84,9 @@ async function main() {
 
   comprueba(rutas.length > 0, `hay páginas de tema que comprobar (${rutas.length})`);
 
+  /** Recuento global de trazos: ver el comentario de más abajo. */
+  const medidos = { raiz: 0, barra: 0 };
+
   for (const ruta of rutas) {
     console.log(`\n${ruta}`);
     await pagina.goto(`http://localhost:${PUERTO}${ruta}`, { waitUntil: 'networkidle' });
@@ -145,16 +148,21 @@ async function main() {
       return medidas;
     });
 
+    /* El recuento se acumula para todo el sitio y se comprueba al final. Un
+       tema puede no tener ninguna raíz —sucesiones, por ejemplo— y eso no es
+       un fallo; lo que sería un fallo es que NINGUNA página tuviera, porque
+       entonces la comprobación estaría pasando en vacío. */
     for (const [cual, nombre, minimo] of [
       ['raiz', 'las raíces dibujan su radical', 4],
       ['barra', 'los conjugados dibujan su barra', 0.4],
     ]) {
       const medidas = trazos[cual];
+      medidos[cual] += medidas.length;
       const mudas = medidas.filter((m) => m.grosor < minimo);
-      comprueba(medidas.length > 0, `hay ${cual === 'raiz' ? 'raíces' : 'barras'} que medir (${medidas.length})`);
+      if (medidas.length === 0) continue;
       comprueba(
         mudas.length === 0,
-        nombre,
+        `${nombre} (${medidas.length})`,
         mudas.length ? `«${mudas[0].texto}» tiene el trazo a ${mudas[0].grosor} px` : '',
       );
     }
@@ -305,6 +313,12 @@ async function main() {
     }
   }
 
+  console.log('');
+  comprueba(
+    medidos.raiz > 0 && medidos.barra > 0,
+    `en todo el sitio hay raíces (${medidos.raiz}) y barras (${medidos.barra}) que medir`,
+    'sin ninguna, la comprobación de trazos estaría pasando en vacío',
+  );
   comprueba(
     erroresConsola.length === 0,
     'cero errores de JavaScript en consola',
