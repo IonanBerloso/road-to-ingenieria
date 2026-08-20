@@ -1,0 +1,149 @@
+---
+asignatura: calculo
+tema: 5
+titulo: Integración
+descripcion: Valor medio, teorema fundamental, integrales impropias y aplicaciones. Y por qué integrar y derivar son la misma cosa al revés.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 5 y de los boletines de Integración · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Una integral definida es **un número**: el área con signo bajo una curva. Una
+integral indefinida es **una familia de funciones**. Y el teorema fundamental
+del cálculo dice que las dos cosas están conectadas, aunque no lo parezca.
+
+Ese teorema es la bisagra del tema, y de casi todo el curso: convierte el
+problema de sumar infinitas cosas pequeñas en el de encontrar una primitiva.
+
+## El valor medio es una altura
+
+$$
+\overline{f} = \frac{1}{b-a}\int_a^b f(x)\,dx
+$$
+
+Es la altura que tendría un rectángulo de base $b-a$ con la misma área que la
+función. El **teorema de la media** dice que si $f$ es continua en $[a,b]$, esa
+altura **se alcanza**: existe $c \in (a,b)$ con $f(c) = \overline{f}$.
+
+La hipótesis de continuidad no es un adorno. Una función a trozos con un salto
+puede tener valor medio $2$ y no valer nunca 2, porque se salta ese valor.
+
+<ErrorTipico titulo="Error típico · aplicar el teorema sin comprobar la continuidad">
+Si $f$ tiene un salto, el valor medio existe igual —la integral se calcula sin
+problema— pero **no tiene por qué alcanzarse**. El teorema garantiza el punto
+$c$ solo para funciones continuas.
+</ErrorTipico>
+
+## El teorema fundamental, en sus dos mitades
+
+**Primera parte.** Si $f$ es continua, la función integral
+
+$$
+F(x) = \int_a^x f(t)\,dt
+$$
+
+es derivable y $F'(x) = f(x)$. Integrar y luego derivar deja la función como
+estaba.
+
+**Segunda parte, la regla de Barrow.** Si $G$ es una primitiva de $f$,
+
+$$
+\int_a^b f(x)\,dx = G(b)-G(a)
+$$
+
+La primera dice **por qué** existe una primitiva; la segunda, **cómo** usarla.
+
+Y de la primera sale la herramienta que más se pregunta: derivar una función
+integral **sin calcularla**. Con límites que son funciones de $x$, la regla de
+la cadena da
+
+$$
+\frac{d}{dx}\int_{u(x)}^{v(x)} f(t)\,dt = f\big(v(x)\big)v'(x)-f\big(u(x)\big)u'(x)
+$$
+
+<ErrorTipico titulo="Error típico · olvidar la derivada del límite">
+En $H(x) = \int_1^{x^{3}} t^{2}\,dt$ la respuesta no es $x^{2}$: es
+$\left(x^{3}\right)^{2}\cdot 3x^{2} = 3x^{8}$. El límite superior es una
+función de $x$, y la cadena cobra su peaje.
+</ErrorTipico>
+
+## Impropias: dos formas de romperse
+
+Una integral es **impropia** cuando el intervalo es infinito —tipo 1— o cuando
+la función se va a infinito dentro del intervalo —tipo 2—. En los dos casos la
+receta es la misma: **sustituir el punto conflictivo por un límite**.
+
+$$
+\int_a^{\infty} f = \lim_{t\to\infty}\int_a^{t} f,
+\qquad
+\int_a^b f = \lim_{t\to c^{-}}\int_a^{t} f + \lim_{s\to c^{+}}\int_s^{b} f
+$$
+
+Las de tipo 2 son las traicioneras, porque **no se ven**. En
+$\int_{-1}^{1}\frac{dx}{x}$ nada avisa de que hay un problema en 0, y aplicar
+Barrow a ciegas da $\ln1-\ln1 = 0$: un número perfectamente creíble y
+completamente falso.
+
+Y los dos límites hay que tomarlos **por separado**. Si se toman a la vez,
+haciéndolos tender juntos, se obtiene el **valor principal de Cauchy**, que no
+es lo mismo que la integral: puede existir cuando la integral diverge.
+
+<ErrorTipico titulo="Error típico · aplicar Barrow sobre una discontinuidad">
+Antes de integrar, mirar si el integrando explota dentro del intervalo. Si lo
+hace, hay que partir y tomar límites; si no, Barrow da un número inventado.
+</ErrorTipico>
+
+## Áreas y volúmenes: el mismo esquema
+
+$$
+A = \int_a^b \big[f(x)-g(x)\big]\,dx
+$$
+
+con $f$ **por encima** de $g$. Si las curvas se cruzan, hay que partir el
+intervalo en los cortes y cambiar el orden en cada trozo — o integrar el valor
+absoluto, que es lo mismo dicho de otra manera.
+
+Para volúmenes de revolución alrededor de $OX$, con **discos**:
+
+$$
+V = \pi\int_a^b f(x)^{2}\,dx
+$$
+
+y si hay hueco, **arandelas**: $\pi\int\left(R^{2}-r^{2}\right)$. El cuadrado es
+lo que hace que estos volúmenes no se puedan restar como se restan las áreas:
+$\left(R-r\right)^{2} \neq R^{2}-r^{2}$.
+
+Al girar alrededor de un eje que **no** es $OX$, como $y=1$, los radios se miden
+desde ese eje: $R = f(x)-1$.
+
+## Longitud de arco
+
+$$
+L = \int_a^b \sqrt{1+f'(x)^{2}}\,dx
+$$
+
+Es Pitágoras aplicado a un trozo infinitesimal de curva. Casi siempre produce
+integrales incómodas, y por eso los ejercicios están elegidos para que salgan:
+las que llevan $\sqrt{1+t^{2}}$ acaban en un argumento del seno hiperbólico.
+
+## Los cuatro métodos, y cuándo usar cada uno
+
+| método | cuándo |
+|---|---|
+| **inmediata** | se reconoce $\int u'\,g(u)$: hay una función y su derivada |
+| **por partes** | producto de dos familias distintas, o una función sola sin primitiva evidente |
+| **racionales** | cociente de polinomios: descomponer en fracciones simples |
+| **cambio de variable** | irracionales y trigonométricas: hacer desaparecer la raíz o el ángulo |
+
+Para **por partes**, la regla mnemotécnica de qué llamar $u$: **ALPES** —
+Arcos, Logaritmos, Potencias, Exponenciales, Senos. El que aparezca antes en esa
+lista es $u$.
+
+Y una advertencia sobre las racionales: **antes de descomponer, comprobar el
+grado**. Si el numerador tiene grado mayor o igual que el denominador, hay que
+dividir primero. Saltarse ese paso es el fallo más común del bloque.
