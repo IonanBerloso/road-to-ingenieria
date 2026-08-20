@@ -294,7 +294,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 </section>
 
 <script>
-  import { comparaComplejo, leeComplejo } from '../../lib/complejo';
+  import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from '../../lib/complejo';
 
   type Respuesta = { tipo: 'complejo' | 'numero'; valor: string; tolerancia: number };
   type Dato =
@@ -401,6 +401,11 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
        *  la respuesta buena, porque lo que importa es identificar el
        *  razonamiento, no el redondeo. */
       const coincide = (escrito: string, objetivo: string, tolerancia: number) => {
+        if (respuesta.tipo === 'conjunto') {
+          const a = leeConjunto(escrito);
+          const b = leeConjunto(objetivo);
+          return a && b ? comparaConjunto(a, b, tolerancia).igual : false;
+        }
         if (respuesta.tipo === 'complejo') {
           const a = leeComplejo(escrito);
           const b = leeComplejo(objetivo);
@@ -413,22 +418,39 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       };
 
       const holgura = (objetivo: string) => {
+        if (respuesta.tipo === 'conjunto') return respuesta.tolerancia;
         const v = leeComplejo(objetivo);
         const escala = v ? Math.max(Math.abs(v.re), Math.abs(v.im)) : 1;
         return Math.max(escala * 0.02, respuesta.tolerancia);
+      };
+
+      /** Se lee según el tipo: una lista de soluciones no es un solo número. */
+      const legible = (texto: string) =>
+        respuesta.tipo === 'conjunto' ? leeConjunto(texto) : leeComplejo(texto);
+
+      /** Cuántas soluciones faltan o sobran. Sirve para diagnosticar el error
+       *  más típico del tema —dar solo la raíz principal— sin necesidad de
+       *  declararlo como distractor en cada ejercicio. */
+      const balance = (escrito: string) => {
+        const a = leeConjunto(escrito);
+        const b = leeConjunto(respuesta.valor);
+        return a && b ? comparaConjunto(a, b, respuesta.tolerancia) : null;
       };
 
       function comprueba() {
         if (resueltos[i]) return;
         const escrito = campo.value;
 
-        if (!leeComplejo(escrito)) {
+        if (!legible(escrito)) {
           fb(
             paso,
             'mal',
             'No he entendido la respuesta',
-            '<p>Escríbela en forma binómica, por ejemplo <code>-3+2i</code>. ' +
-              'Valen las comas decimales y expresiones como <code>√2/2</code>.</p>',
+            respuesta.tipo === 'conjunto'
+              ? '<p>Escribe <strong>todas</strong> las soluciones separadas por comas, ' +
+                  'por ejemplo <code>1, -1+i, -1-i</code>.</p>'
+              : '<p>Escríbela en forma binómica, por ejemplo <code>-3+2i</code>. ' +
+                  'Valen las comas decimales y expresiones como <code>√2/2</code>.</p>',
           );
           return;
         }
@@ -445,6 +467,24 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         const k = distractores.findIndex((d) => coincide(escrito, d, holgura(d)));
         if (k >= 0) {
           fb(paso, 'mal', 'Sé lo que ha pasado', html(paso, `[data-msg-distractor="${k}"]`));
+          return;
+        }
+
+        /* Contar cuántas soluciones faltan es un diagnóstico en sí mismo, y
+           uno que no hace falta declarar ejercicio por ejercicio: quien da dos
+           de las tres raíces no se ha equivocado calculando, se ha equivocado
+           creyendo que había menos. */
+        const cuenta = respuesta.tipo === 'conjunto' ? balance(escrito) : null;
+        if (cuenta && cuenta.faltan > 0 && cuenta.sobran === 0) {
+          fb(
+            paso,
+            'mal',
+            'Están bien, pero no están todas',
+            `<p>Las que has escrito son correctas y te ${
+              cuenta.faltan === 1 ? 'falta una' : `faltan ${cuenta.faltan}`
+            }. Una ecuación de grado n tiene n soluciones en los complejos, y ` +
+              'todas cuentan en la respuesta.</p>',
+          );
           return;
         }
 

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { comparaComplejo, escribeComplejo, leeComplejo } from '../src/lib/complejo';
+import {
+  comparaComplejo,
+  comparaConjunto,
+  escribeComplejo,
+  leeComplejo,
+  leeConjunto,
+} from '../src/lib/complejo';
 
 /**
  * El alumno escribe a mano, en el móvil, con prisa y la noche antes del examen.
@@ -79,5 +85,54 @@ describe('escribeComplejo', () => {
     expect(escribeComplejo({ re: 3, im: 0 })).toBe('3');
     expect(escribeComplejo({ re: 0, im: 0 })).toBe('0');
     expect(escribeComplejo({ re: 1, im: 2 })).toBe('1 + 2i');
+  });
+});
+
+describe('leeConjunto y comparaConjunto', () => {
+  const tres = [
+    { re: 0, im: 0 },
+    { re: 1, im: 0 },
+    { re: -0.5, im: 0.866 },
+  ];
+
+  it('lee una lista separada por comas', () => {
+    expect(leeConjunto('0, 1, -0.5+0.866i')).toEqual(tres);
+  });
+
+  it('acepta el punto y coma, que es lo que sale al copiar de un examen', () => {
+    expect(leeConjunto('0; 1; -0.5+0.866i')).toEqual(tres);
+  });
+
+  it('rechaza la lista entera si una sola solucion no se entiende', () => {
+    expect(leeConjunto('0, 1, no se')).toBeNull();
+    expect(leeConjunto('')).toBeNull();
+    expect(leeConjunto('  ,  ')).toBeNull();
+  });
+
+  it('no le importa el orden: un conjunto no lo tiene', () => {
+    const revuelto = leeConjunto('-0.5+0.866i, 0, 1')!;
+    expect(comparaConjunto(revuelto, tres, 0.01).igual).toBe(true);
+  });
+
+  it('distingue faltar de sobrar, que es lo que permite diagnosticar', () => {
+    const soloUna = comparaConjunto([{ re: 1, im: 0 }], tres, 0.01);
+    expect(soloUna.igual).toBe(false);
+    expect(soloUna.faltan).toBe(2);
+    expect(soloUna.sobran).toBe(0);
+
+    const deMas = comparaConjunto([...tres, { re: 7, im: 7 }], tres, 0.01);
+    expect(deMas.faltan).toBe(0);
+    expect(deMas.sobran).toBe(1);
+  });
+
+  it('no da por buena una solucion repetida en lugar de dos distintas', () => {
+    const repetida = comparaConjunto(
+      [{ re: 1, im: 0 }, { re: 1, im: 0 }, { re: 0, im: 0 }],
+      tres,
+      0.01,
+    );
+    expect(repetida.igual).toBe(false);
+    expect(repetida.faltan).toBe(1);
+    expect(repetida.sobran).toBe(1);
   });
 });

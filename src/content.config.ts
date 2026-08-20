@@ -89,7 +89,7 @@ const pasoCalcular = z.object({
   titulo: z.string().min(3),
   pregunta: z.string().min(10),
   respuesta: z.object({
-    tipo: z.enum(['complejo', 'numero']),
+    tipo: z.enum(['complejo', 'numero', 'conjunto']),
     valor: z.string().min(1),
     tolerancia: z.number().positive().default(0.001),
     /** Qué forma se espera; se muestra junto al campo para no adivinar.
