@@ -131,7 +131,39 @@ const pasoJustificar = z.object({
   veredicto: z.string().optional(),
 });
 
-const paso = z.discriminatedUnion('tipo', [pasoReconocer, pasoCalcular, pasoJustificar]);
+/** PATRÓN 4 · VERIFICADOR (§05). El alumno escribe su condición simplificada y
+ *  la figura comprueba si define **la misma región** que la del enunciado.
+ *
+ *  Aquí no se guarda ninguna «respuesta correcta», y eso es lo importante: se
+ *  comparan dos conjuntos de puntos, así que vale cualquier forma equivalente
+ *  de escribir la región. Un examen debería premiar exactamente eso. */
+const pasoVerificar = z.object({
+  tipo: z.literal('verificar'),
+  pregunta: z.string().min(10),
+  /** La condición del enunciado, en función de `z`. Es la verdad de referencia. */
+  condicion: z.string().min(3),
+  /** Trozo de plano que se dibuja y sobre el que se comparan las dos regiones. */
+  ventana: z
+    .object({
+      x: z.tuple([z.number(), z.number()]),
+      y: z.tuple([z.number(), z.number()]),
+    })
+    .default({ x: [-4, 4], y: [-4, 4] }),
+  formato: z
+    .string()
+    .refine((s) => !s.includes('$'), 'el formato es texto plano, sin LaTeX')
+    .optional(),
+  pista: z.string().min(10),
+  desarrollo: z.string().min(20),
+  veredicto: z.string().optional(),
+});
+
+const paso = z.discriminatedUnion('tipo', [
+  pasoReconocer,
+  pasoCalcular,
+  pasoJustificar,
+  pasoVerificar,
+]);
 
 const ejercicio = z
   .object({
@@ -153,8 +185,8 @@ const ejercicio = z
   .refine((e) => e.pasos.some((p) => p.tipo === 'reconocer'), {
     message: 'falta el paso de COMP1: un ejercicio que solo calcula entrena la parte que menos se falla (§09)',
   })
-  .refine((e) => e.pasos.some((p) => p.tipo === 'calcular'), {
-    message: 'falta el paso de COMP2',
+  .refine((e) => e.pasos.some((p) => p.tipo === 'calcular' || p.tipo === 'verificar'), {
+    message: 'falta el paso de COMP2: uno de cálculo o uno de verificación de región',
   })
   .refine((e) => e.pasos.some((p) => p.tipo === 'justificar'), {
     message: 'falta el paso de COMP4, que vale entre 2 y 9 puntos (§09)',
