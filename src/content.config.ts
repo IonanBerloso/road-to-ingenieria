@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { comparaComplejo, leeComplejo, leeConjunto } from './lib/complejo';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -104,7 +105,43 @@ const pasoCalcular = z.object({
   pista: z.string().min(10),
   desarrollo: z.string().min(20),
   veredicto: z.string().optional(),
-});
+})
+  /* Un distractor cuyo valor no se puede leer nunca se dispara: el alumno
+     escribe justo ese error y recibe «no he entendido la respuesta» en vez del
+     diagnóstico que había escrito para él. Pasó con un «infinito» puesto como
+     distractor de una respuesta numérica. Se caza en el build, no en el
+     navegador. */
+  .refine((p) => leeComplejo(p.respuesta.valor) !== null || p.respuesta.tipo === 'conjunto', {
+    message: 'la respuesta correcta no se puede leer con el formato declarado',
+  })
+  .refine(
+    (p) =>
+      p.distractores.every((d) =>
+        p.respuesta.tipo === 'conjunto' ? leeConjunto(d.valor) : leeComplejo(d.valor),
+      ),
+    {
+      message:
+        'hay un distractor que el lector de respuestas no sabe interpretar, así que nunca se dispararía',
+    },
+  )
+  /* Y un distractor demasiado parecido a la respuesta buena se da por bueno.
+     Pasó con un 0,995 puesto frente a una respuesta de 1 con tolerancia 0,01:
+     el alumno escribía el error y el sistema le decía que había acertado. */
+  .refine(
+    (p) => {
+      if (p.respuesta.tipo === 'conjunto') return true;
+      const buena = leeComplejo(p.respuesta.valor);
+      if (!buena) return true; // ya lo caza la regla anterior
+      return p.distractores.every((d) => {
+        const mala = leeComplejo(d.valor);
+        return !mala || !comparaComplejo(mala, buena, p.respuesta.tolerancia);
+      });
+    },
+    {
+      message:
+        'hay un distractor dentro de la tolerancia de la respuesta correcta: se daría por bueno',
+    },
+  );
 
 /** COMP4 · la justificación formal. Ordenar el argumento con UNA pieza trampa
  *  que encarna el error típico y no debe entrar (§05, patrón 5). */
