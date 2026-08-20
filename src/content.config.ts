@@ -139,7 +139,10 @@ const ejercicio = z
     titulo: z.string().min(5),
     /** Procedencia obligatoria: el material es adaptado, no propio (§08). */
     fuente: z.string().min(10),
-    enunciado: z.string().min(20),
+    /** Un enunciado puede ser legitimamente corto: «$z^3 = -|z|$» son
+     *  trece caracteres y es un enunciado completo. El minimo solo esta para
+     *  cazar un campo vacio o un marcador de posicion. */
+    enunciado: z.string().min(10),
     /** Qué se pide exactamente, y en qué forma. */
     pide: z.string().min(5),
     pasos: z.array(paso).min(2),
