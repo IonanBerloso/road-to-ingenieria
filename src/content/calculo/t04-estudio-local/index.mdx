@@ -1,0 +1,130 @@
+---
+asignatura: calculo
+tema: 4
+titulo: Estudio local
+descripcion: Rolle y el valor medio, el polinomio de Taylor y la optimización. Tres formas de mirar una función de cerca.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 4 y del boletín «Estudio local. Problemas» · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El tema se llama «estudio local» y el adjetivo es literal: todo lo que hay aquí
+consiste en mirar una función **cerca de un punto** y deducir cosas de lo que se
+ve ahí.
+
+Los teoremas del valor medio dicen que la derivada tiene que tomar cierto valor
+en algún sitio. El polinomio de Taylor sustituye la función por un polinomio que
+se le parece mucho **cerca de un punto**. Y la optimización busca dónde la
+derivada se anula, que es donde la función deja de crecer.
+
+## Rolle y Lagrange son el mismo teorema
+
+El **teorema de Lagrange** —o del valor medio— dice: si $f$ es continua en
+$[a,b]$ y derivable en $(a,b)$, entonces existe $c \in (a,b)$ con
+
+$$
+f'(c) = \frac{f(b)-f(a)}{b-a}
+$$
+
+En palabras: en algún punto la pendiente instantánea coincide con la pendiente
+media. Si un coche recorre 100 km en una hora, en algún instante su velocímetro
+marcó exactamente 100 km/h.
+
+El **teorema de Rolle** es el caso particular en que $f(a) = f(b)$: entonces la
+pendiente media es 0 y existe $c$ con $f'(c) = 0$. Si sales y vuelves al mismo
+sitio, en algún momento te paraste.
+
+Las dos hipótesis son distintas y hay que comprobarlas por separado:
+**continuidad en el cerrado** y **derivabilidad en el abierto**. La segunda es
+más débil a propósito: permite tangentes verticales en los extremos.
+
+<ErrorTipico titulo="Error típico · no comprobar las hipótesis">
+$f(x) = \left|x\right|$ en $[-1,1]$ cumple $f(-1)=f(1)$ y su derivada no se
+anula en ningún punto. No contradice a Rolle: es que no es derivable en 0. Los
+teoremas sin hipótesis son falsos.
+</ErrorTipico>
+
+## El polinomio de Taylor es la mejor imitación local
+
+Alrededor de $a$, el polinomio de grado $n$ que más se parece a $f$ es
+
+$$
+P_n(x) = f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^{2}+\dots
++\frac{f^{(n)}(a)}{n!}(x-a)^{n}
+$$
+
+Está construido para que **él y la función coincidan en el punto y en las $n$
+primeras derivadas**. De ahí sale todo lo demás.
+
+El caso $n=1$ ya se conoce: es la recta tangente, es decir el diferencial del
+tema anterior. Taylor solo continúa la idea con más términos.
+
+## El resto es la parte que se suele olvidar, y es la que se pregunta
+
+$$
+f(x) = P_n(x) + R_n(x),
+\qquad
+R_n(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-a)^{n+1}
+$$
+
+con $\xi$ entre $a$ y $x$. Ese $\xi$ no se conoce —y no hace falta—: lo que se
+hace es **acotarlo**, sustituyendo $f^{(n+1)}(\xi)$ por su valor máximo posible.
+
+Ese es el mecanismo de los dos ejercicios típicos:
+
+- «calcular con Taylor y **estimar el error**» → se acota $R_n$;
+- «**cuántos términos** hacen falta para una precisión dada» → se impone
+  $\left|R_n\right| < \varepsilon$ y se despeja $n$.
+
+<ErrorTipico titulo="Error típico · dar el valor sin el error">
+Un polinomio de Taylor sin cota del resto es un número sin garantía: no se sabe
+cuántas cifras son de fiar. En un examen, el resto suele valer tantos puntos
+como el cálculo.
+</ErrorTipico>
+
+## Ocho desarrollos que conviene tener memorizados
+
+Casi todas las series de potencias que se piden salen de estas, componiendo o
+derivando:
+
+$$
+e^{x} = \sum_{n\ge0}\frac{x^{n}}{n!}, \qquad
+\mathrm{sen}\,x = \sum_{n\ge0}\frac{(-1)^{n}x^{2n+1}}{(2n+1)!}, \qquad
+\cos x = \sum_{n\ge0}\frac{(-1)^{n}x^{2n}}{(2n)!}
+$$
+
+$$
+\ln(1+x) = \sum_{n\ge1}\frac{(-1)^{n+1}x^{n}}{n}, \qquad
+\frac{1}{1-x} = \sum_{n\ge0}x^{n}
+$$
+
+Las tres primeras convergen para todo $x$; las dos últimas, solo para
+$\left|x\right|<1$. **El radio de convergencia forma parte de la respuesta.**
+
+## Optimizar es traducir, no derivar
+
+Los problemas de máximos y mínimos se fallan antes de derivar. El método es
+siempre el mismo y el orden importa:
+
+1. **Nombrar** las variables y dibujar.
+2. Escribir la **función objetivo**, lo que hay que hacer máximo o mínimo.
+3. Escribir la **restricción**, que liga las variables.
+4. Usar la restricción para dejar el objetivo **con una sola variable**.
+5. Derivar, igualar a cero y resolver.
+6. **Comprobar que es máximo o mínimo**, y no un punto de inflexión.
+7. Comprobar que la solución tiene sentido físico.
+
+Los pasos 1 a 4 son el ejercicio. El 5 es mecánico. Y los pasos 6 y 7 son los
+que separan una respuesta completa de una a medias.
+
+<ErrorTipico titulo="Error típico · quedarse en «la derivada se anula aquí»">
+Que $f'(c)=0$ solo dice que hay un punto crítico. Puede ser máximo, mínimo o
+inflexión. Hay que decidirlo, con el signo de $f''$ o con el de $f'$ a los dos
+lados. Y hay que mirar además los **extremos del intervalo**, donde la derivada
+no tiene por qué anularse.
+</ErrorTipico>
