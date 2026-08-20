@@ -25,6 +25,17 @@ npm run dev          # http://localhost:4321/road-to-ingenieria/
 | `npm test` | tests unitarios y de física de los simuladores |
 | `npm run humo` | abre el sitio en Chromium y comprueba que funciona, no solo que está |
 | `npm run suelo` | los cinco seguidos, que es lo que corre CI |
+| `npm run diario` | arma el PDF del diario del proyecto desde `diario/*.md` |
+
+## El diario
+
+`diario/` lleva un registro por día de qué se hizo, qué se rompió y qué se
+decidió — la parte que el historial de git no cuenta. Se escribe en Markdown,
+un fichero por día, y **eso es el original**: se versiona y se lee en GitHub.
+
+`npm run diario` lo arma en un PDF con la tipografía del proyecto. Ese PDF es un
+artefacto de build y no se versiona (`CLAUDE.md` §12). Con `-- --vistazo` deja
+además un PNG de la portada para revisar el diseño sin abrirlo.
 
 `npm run verify -- --solo-fuente` comprueba solo `src/`, sin necesidad de build.
 
