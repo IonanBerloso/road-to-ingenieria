@@ -274,8 +274,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     aria-label="Plano complejo con la región del enunciado sombreada. Al comprobar se superpone la región que has escrito."
                   />
                   <p class="leyenda-region rotulo">
-                    <span class="marca marca-enunciado" aria-hidden="true" /> la del enunciado
-                    <span class="marca marca-tuya" aria-hidden="true" /> la tuya
+                    <span class="marca marca-falta" aria-hidden="true" /> te falta
+                    <span class="marca marca-coincide" aria-hidden="true" /> coincide
+                    <span class="marca marca-sobra" aria-hidden="true" /> te sobra
                   </p>
                 </div>
 
@@ -616,8 +617,14 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         const ctx = lienzo.getContext('2d')!;
         const { width: an, height: al } = lienzo;
         const img = ctx.createImageData(an, al);
-        const enunciado = tinta(color('--live'));
-        const tuya = tinta(color('--alt'));
+
+        /* Tres colores con significado, no tres colores a secas (§06):
+             · la región del enunciado, en el color de «esto se comprueba»;
+             · lo que coincide, el mismo color pero sólido;
+             · lo que sobra, en el color de «esto te suspende», porque es el
+               error que hay que ver de un vistazo. */
+        const suya = tinta(color('--live'));
+        const sobra = tinta(color('--flag'));
 
         for (let px = 0; px < an; px++) {
           const x = ventana.x[0] + ((ventana.x[1] - ventana.x[0]) * px) / an;
@@ -629,11 +636,12 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             const enTuya = propuesta ? cumple(propuesta, x, y) : false;
             if (!enRef && !enTuya) continue;
 
-            const c = enTuya ? tuya : enunciado;
+            const c = enTuya && !enRef ? sobra : suya;
             img.data[k] = c[0];
             img.data[k + 1] = c[1];
             img.data[k + 2] = c[2];
-            img.data[k + 3] = enRef && enTuya ? 190 : 110;
+            // Coincide: sólido. Solo el enunciado: pálido, «esto te falta».
+            img.data[k + 3] = enRef && enTuya ? 165 : enRef ? 55 : 130;
           }
         }
 
@@ -1040,8 +1048,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   }
 
   .marca { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
-  .marca-enunciado { background: var(--live); }
-  .marca-tuya { background: var(--alt); margin-left: .7rem; }
+  .marca-falta { background: var(--live); opacity: .35; }
+  .marca-coincide { background: var(--live); margin-left: .7rem; }
+  .marca-sobra { background: var(--flag); margin-left: .7rem; }
 
   .respuesta input.ancho { width: 16rem; font-size: .88rem; }
 

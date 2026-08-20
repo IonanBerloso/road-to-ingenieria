@@ -236,6 +236,38 @@ async function main() {
         const mudos = [];
         let probados = 0;
 
+        /* Los pasos de verificación no llevan distractores: el diagnóstico sale
+           de comparar dos regiones. Se comprueban de otra manera —una condición
+           imposible tiene que recibir diagnóstico, y la propia condición del
+           enunciado tiene que darse por buena—, que es el equivalente. */
+        for (let i = 0; i < datos.length; i++) {
+          if (datos[i].tipo !== 'verificar') continue;
+          const paso = raiz.querySelector(`[data-paso="${i}"]`);
+          paso.classList.remove('bloqueado');
+          const campo = paso.querySelector('input');
+          const boton = paso.querySelector('[data-comprobar]');
+
+          campo.value = 'x > 99999';
+          boton.click();
+          await espera(120);
+          probados++;
+          const dicho = (paso.querySelector('[data-fb]').textContent ?? '').trim();
+          if (!/región/i.test(dicho) || dicho.length < 60) {
+            mudos.push(`región vacía (paso ${i + 1}): «${dicho.slice(0, 40)}»`);
+          }
+
+          /* La condición del enunciado, escrita tal cual, tiene que valer: es
+             trivialmente la misma región que ella misma. Si esto falla, algo
+             se ha roto en el intérprete o en la comparación. */
+          campo.value = datos[i].condicion;
+          boton.click();
+          await espera(150);
+          probados++;
+          if (!paso.classList.contains('resuelto')) {
+            mudos.push(`la condición del enunciado no se acepta (paso ${i + 1})`);
+          }
+        }
+
         for (let i = 0; i < datos.length; i++) {
           if (datos[i].tipo !== 'calcular') continue;
           const paso = raiz.querySelector(`[data-paso="${i}"]`);
@@ -263,7 +295,7 @@ async function main() {
 
       comprueba(
         prueba.probados > 0,
-        `«${prueba.titulo}»: hay distractores que probar (${prueba.probados})`,
+        `«${prueba.titulo}»: hay respuestas que probar (${prueba.probados})`,
       );
       comprueba(
         prueba.mudos.length === 0,
