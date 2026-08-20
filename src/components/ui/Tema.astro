@@ -32,7 +32,7 @@ const { eyebrow, titulo, descripcion, headings, ejercicios, fuente, competencias
 const indice = headings.filter((h) => h.depth === 2);
 ---
 
-<div class="shell" data-tema>
+<div class="shell" data-armazon>
   <nav class="rail" aria-label="Índice del tema">
     <div class="rail-bloque" data-de="teoria">
       <h2 class="rotulo">En este tema</h2>
@@ -67,10 +67,13 @@ const indice = headings.filter((h) => h.depth === 2);
     <p class="lede">{descripcion}</p>
 
     <nav class="pestanas" aria-label="Secciones del tema">
-      <a href="#teoria" data-ir="teoria" aria-current="page">
+      {/* `data-pestana` y no `data-ir`: los botones «anterior / siguiente» de
+          la lectura ya usan `data-ir`, y con el mismo atributo el manejador de
+          las pestañas se enganchaba también a ellos. */}
+      <a href="#teoria" data-pestana="teoria" aria-current="page">
         Teoría
       </a>
-      <a href="#ejercicios" data-ir="ejercicios">
+      <a href="#ejercicios" data-pestana="ejercicios">
         Ejercicios
         <span class="cuenta">{ejercicios.length}</span>
       </a>
@@ -102,15 +105,15 @@ const indice = headings.filter((h) => h.depth === 2);
 <script>
   /* Sin JavaScript esto ya funciona: manda `:target`. Lo que añade el script es
      no saltar el scroll al cambiar de pestaña y marcar cuál está activa. */
-  const shell = document.querySelector<HTMLElement>('[data-tema]');
+  const shell = document.querySelector<HTMLElement>('[data-armazon]');
 
   if (shell) {
-    const enlaces = [...shell.querySelectorAll<HTMLAnchorElement>('[data-ir]')];
+    const enlaces = [...shell.querySelectorAll<HTMLAnchorElement>('[data-pestana]')];
 
     function abre(cual: string, empujarHistorial: boolean) {
       shell!.dataset.panel = cual;
       for (const a of enlaces) {
-        if (a.dataset.ir === cual) a.setAttribute('aria-current', 'page');
+        if (a.dataset.pestana === cual) a.setAttribute('aria-current', 'page');
         else a.removeAttribute('aria-current');
       }
       if (empujarHistorial) history.replaceState(null, '', `#${cual}`);
@@ -119,7 +122,7 @@ const indice = headings.filter((h) => h.depth === 2);
     for (const a of enlaces) {
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        abre(a.dataset.ir!, true);
+        abre(a.dataset.pestana!, true);
       });
     }
 

@@ -92,8 +92,13 @@ const pasoCalcular = z.object({
     tipo: z.enum(['complejo', 'numero']),
     valor: z.string().min(1),
     tolerancia: z.number().positive().default(0.001),
-    /** Qué forma se espera; se muestra junto al campo para no adivinar. */
-    formato: z.string().optional(),
+    /** Qué forma se espera; se muestra junto al campo para no adivinar.
+     *  Texto plano: va en un rótulo, no pasa por el procesador de Markdown,
+     *  así que un `$a+bi$` aquí se vería con los dólares y todo. */
+    formato: z
+      .string()
+      .refine((s) => !s.includes('$'), 'el formato es texto plano, sin LaTeX')
+      .optional(),
   }),
   distractores: z.array(distractor).min(1, 'sin distractores esto no diagnostica nada'),
   pista: z.string().min(10),
