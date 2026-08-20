@@ -41,6 +41,24 @@ jobs:
       - name: Tests
         run: npm test
 
+      # El navegador se cachea entre despliegues: descargarlo cada vez
+      # costaría más que todo lo demás junto.
+      - name: Caché del navegador
+        id: cache-navegador
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Instalar Chromium
+        if: steps.cache-navegador.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      # Lo que verify.mjs no puede ver: que las fórmulas se dibujen y que
+      # los componentes respondan de verdad.
+      - name: Navegador
+        run: npm run humo
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

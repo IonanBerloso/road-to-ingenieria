@@ -70,10 +70,14 @@ muestra en tres niveles y nunca como porcentaje. Implementé los tres niveles
 pesos medidos sobre exámenes reales contados, esto hay que revisarlo — y
 entonces se cambia `CLAUDE.md`, no se ignora.
 
-**10 · `verify.mjs` no abre un navegador.** El foco visible se comprueba de
-forma indirecta (que nadie apague el `outline`) y los 360 px buscando anchos
-fijos. Las dos cosas piden un navegador de verdad. Cuando haya tests de
-interfaz, se mueven allí y la comprobación pasa a ser real.
+**10 · ~~`verify.mjs` no abre un navegador.~~ Resuelto a medias.** Ya existe
+`scripts/humo.mjs`, que abre el sitio en Chromium y corre en CI. Cubre lo que se
+rompió de verdad: raíces que no se dibujan, pestañas que no responden,
+diagnóstico de errores.
+
+Sigue sin cubrir el foco visible y los 360 px, que se comprueban de forma
+indirecta leyendo el CSS. Se moverán a `humo.mjs` cuando alguno de los dos falle
+de verdad — la regla de ese fichero es no añadir comprobaciones por si acaso.
 
 **11 · `referencia/` está fuera de `verify.mjs`.** Los prototipos llevan su CSS
 inline y su propio `:root`, que es justo lo que la regla prohíbe. Se ignoran a

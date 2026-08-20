@@ -365,7 +365,12 @@ simulación.
 
 ## 11 // Suelo de calidad
 
-`scripts/verify.mjs` corre en CI y bloquea el despliegue. Comprueba:
+Son dos guardianes y comprueban cosas distintas. Los dos corren en CI y
+bloquean el despliegue.
+
+### `scripts/verify.mjs` — lee el HTML publicado
+
+Comprueba:
 
 - Un solo `:root{}` en todo el repositorio.
 - Cero colores literales fuera de `tokens.css`.
@@ -379,6 +384,29 @@ simulación.
 - Toda página de contenido con **modo guiado y modo completo**. Nadie repasa la
   noche antes de un examen haciendo scroll por una narración; el modo completo
   se imprime bien y sirve para explicárselo a alguien.
+
+### `scripts/humo.mjs` — abre el sitio en un navegador
+
+Leer el HTML demuestra que algo **está**, no que **funcione**. El 19 de agosto
+de 2026 se colaron tres fallos invisibles a `verify.mjs`: una raíz cuadrada con
+MathML correcto que el navegador no dibujaba —el enunciado decía −3/2 donde
+debía decir −√3/2—, unas pestañas que no enganchaban sus manejadores porque dos
+componentes usaban el mismo `data-tema`, y un `data-ir` compartido que habría
+ocultado los dos paneles.
+
+Comprueba, en Chromium y sobre cada página de tema:
+
+- Las raíces **dibujan su radical**, no solo su contenido.
+- Cambiar de pestaña abre el panel **y marca cuál está activa**.
+- Los controles de la lectura no tocan las pestañas.
+- Una respuesta equivocada recibe **un diagnóstico**, no un «incorrecto».
+- Cero errores de JavaScript en consola.
+
+**Regla de este fichero: no se añade una comprobación por si acaso.** Se añade
+cuando algo se ha roto de verdad, y el comentario dice qué se rompió. Y toda
+comprobación nueva se valida al revés: se reintroduce el fallo y se confirma que
+el guardián se pone rojo. Una comprobación que no falla cuando el fallo existe es
+peor que no tenerla, porque da confianza falsa.
 
 ---
 

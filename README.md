@@ -22,8 +22,9 @@ npm run dev          # http://localhost:4321/road-to-ingenieria/
 | `npm run build` | construye el sitio en `dist/` |
 | `npm run verify` | el suelo de calidad de la sección 11 de `CLAUDE.md` |
 | `npm run color` | verifica la paleta: contraste, deuteranopía, protanopía, grises |
-| `npm test` | tests de física de los simuladores |
-| `npm run suelo` | los cuatro seguidos, que es lo que corre CI |
+| `npm test` | tests unitarios y de física de los simuladores |
+| `npm run humo` | abre el sitio en Chromium y comprueba que funciona, no solo que está |
+| `npm run suelo` | los cinco seguidos, que es lo que corre CI |
 
 `npm run verify -- --solo-fuente` comprueba solo `src/`, sin necesidad de build.
 
