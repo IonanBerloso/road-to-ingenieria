@@ -63,12 +63,15 @@ const NOMBRE_CONV: Record<string, string> = {
   extraordinaria: 'Convocatoria extraordinaria',
 };
 
-/** Qué temas entran en cada una. Lo dice el propio examen con sus ejercicios,
- *  pero decirlo en la lista ahorra abrir tres para encontrar el que toca. */
-const ALCANCE_CONV: Record<string, string> = {
-  primera: 'temas 1–2',
-  segunda: 'temas 3–5',
-  tercera: 'temas 1–5',
+/** Qué temas entran en cada evaluación y cuánto pesa en la nota final.
+ *
+ *  No es una estimación: sale de la guía docente 2025/26 de la asignatura,
+ *  que lo dice examen por examen. El tercero vale casi tanto como los otros
+ *  dos juntos, y eso conviene que se vea antes de abrirlo. */
+const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
+  primera: { temas: 'temas 1–2', peso: '10 %' },
+  segunda: { temas: 'temas 3–4', peso: '10 %' },
+  tercera: { temas: 'temas 1–5', peso: '17,5 %' },
 };
 ---
 
@@ -112,9 +115,14 @@ const ALCANCE_CONV: Record<string, string> = {
                       {NOMBRE_CONV[ex.data.convocatoria]}
                       {
                         ALCANCE_CONV[ex.data.convocatoria] && (
-                          <span class="alcance rotulo">
-                            {ALCANCE_CONV[ex.data.convocatoria]}
-                          </span>
+                          <>
+                            <span class="alcance rotulo">
+                              {ALCANCE_CONV[ex.data.convocatoria].temas}
+                            </span>
+                            <span class="alcance rotulo">
+                              {ALCANCE_CONV[ex.data.convocatoria].peso} de la nota
+                            </span>
+                          </>
                         )
                       }
                     </span>
