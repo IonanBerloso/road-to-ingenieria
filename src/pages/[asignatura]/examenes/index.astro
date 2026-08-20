@@ -5,23 +5,27 @@ import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
 import { SUFIJO_CONV } from '../../../content.config';
 
-/** El orden en que se hacen dentro de un curso. */
-const ORDEN_CONV = [
-  'primera',
-  'segunda',
-  'tercera',
-  'cuarta',
-  'quinta',
-  'ordinaria',
-  'extraordinaria',
-];
-
 /**
  * El índice de exámenes de una asignatura. Solo existe si esa asignatura tiene
  * alguno escrito: una página vacía diciendo «todavía no hay nada» no vale de
  * nada y además habría que enlazarla desde la portada.
  */
 export async function getStaticPaths() {
+  /* Ojo: Astro extrae esta función a su propio módulo, así que **no ve** las
+     constantes del frontmatter. Tiene que vivir aquí dentro. El fallo estuvo
+     latente desde que la ruta pasó a ser curso + convocatoria: mientras no
+     hubo dos exámenes del mismo curso, este segundo criterio de orden no
+     llegaba a evaluarse nunca. */
+  const ORDEN_CONV = [
+    'primera',
+    'segunda',
+    'tercera',
+    'cuarta',
+    'quinta',
+    'ordinaria',
+    'extraordinaria',
+  ];
+
   const examenes = await getCollection('examen');
   const catalogo = await getCollection('catalogo');
 
