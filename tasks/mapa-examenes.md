@@ -19,6 +19,29 @@ Los exámenes escritos son el 75 % de la nota (37,5 % por cuatrimestre). Con
 
 ---
 
+## Primera evaluación · los once años
+
+**39 ejercicios**, temas 1 y 2. No hace falta releer los PDF: están escritos en
+el repositorio con sus competencias declaradas, extraídas del propio examen y
+validadas por el esquema, que exige que sumen 10.
+
+| | puntos | porcentaje |
+|---|---|---|
+| COMP1 · reconocer | 44 | 11 % |
+| COMP2 · calcular | 156 | **40 %** |
+| COMP4 · explicación formal | 190 | **49 %** |
+
+**Once de los 39 ejercicios tienen COMP2 = 0.** Son ejercicios enteros de diez
+puntos en los que no hay que hacer una sola cuenta: el 28 %.
+
+El más repetido de todo el corpus es el mismo argumento una y otra vez —que una
+desigualdad entre términos sobrevive al paso al límite—, con distintos
+disfraces: términos no negativos, no positivos, dos sucesiones ordenadas, una
+cota estricta que no se hereda. Aparece en 2016-17, 2017-18, 2018-19, 2019-20,
+2022-23, 2023-24, 2024-25 y 2025-26: **ocho de once años**.
+
+---
+
 ## Segunda evaluación · los once años
 
 Leídos los once, de 2015-2016 a 2025-2026. **42 ejercicios.**
@@ -129,6 +152,22 @@ Y el reparto no es uniforme: depende del tipo de ejercicio.
 | D · demostrar | 0–3 | **5–10** |
 
 Un ejercicio de 2019-20 tenía **COMP4 = 10 y COMP2 = 0**.
+
+### Las dos evaluaciones juntas
+
+81 ejercicios, 810 puntos:
+
+| | puntos | porcentaje |
+|---|---|---|
+| COMP1 · reconocer | 90 | 11,1 % |
+| COMP2 · calcular | 367 | 45,3 % |
+| COMP4 · explicación formal | 353 | **43,6 %** |
+
+**COMP1 + COMP4 = 54,7 %.** Más de la mitad de la nota del cuatrimestre no es
+calcular. Y el peso se reparte distinto según el examen: en la primera
+evaluación —complejos y sucesiones— COMP4 llega al 49 %, porque las series y
+los límites se examinan demostrando; en la segunda baja al 39 %, porque la
+optimización y las tasas de cambio sí son cuenta.
 
 ---
 
