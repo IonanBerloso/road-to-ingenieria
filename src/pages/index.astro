@@ -16,6 +16,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { ruta } from '../lib/rutas';
+import { SUFIJO_CONV } from '../content.config';
 
 const asignaturas = (await getCollection('catalogo')).sort(
   (a, b) => a.data.curso - b.data.curso || a.data.orden - b.data.orden,
@@ -39,14 +40,44 @@ const hechos = (a: (typeof asignaturas)[number]) => a.data.temas.filter((t) => t
 /** Los exámenes de cada asignatura, del más reciente al más antiguo. El panel
  *  solo se dibuja donde hay alguno: una caja vacía prometiendo exámenes es
  *  peor que no tenerla. */
-const examenesPorAsignatura = new Map<string, { curso: string }[]>();
+const ORDEN_CONV = [
+  'primera',
+  'segunda',
+  'tercera',
+  'cuarta',
+  'quinta',
+  'ordinaria',
+  'extraordinaria',
+];
+const ABREV_CONV: Record<string, string> = {
+  primera: '1.ª ev.',
+  segunda: '2.ª ev.',
+  tercera: '3.ª ev.',
+  cuarta: '4.ª ev.',
+  quinta: '5.ª ev.',
+  ordinaria: 'ordinaria',
+  extraordinaria: 'extraord.',
+};
+
+const examenesPorAsignatura = new Map<
+  string,
+  { curso: string; conv: string; slug: string }[]
+>();
 for (const ex of await getCollection('examen')) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
-  lista.push({ curso: ex.data.curso });
+  lista.push({
+    curso: ex.data.curso,
+    conv: ex.data.convocatoria,
+    slug: `${ex.data.curso}-${SUFIJO_CONV[ex.data.convocatoria]}`,
+  });
   examenesPorAsignatura.set(ex.data.asignatura, lista);
 }
 for (const lista of examenesPorAsignatura.values()) {
-  lista.sort((a, b) => b.curso.localeCompare(a.curso));
+  lista.sort(
+    (a, b) =>
+      b.curso.localeCompare(a.curso) ||
+      ORDEN_CONV.indexOf(a.conv) - ORDEN_CONV.indexOf(b.conv),
+  );
 }
 
 /** El índice de la paleta de comandos se arma aquí, no en el cliente:
@@ -219,8 +250,9 @@ const indice = asignaturas.flatMap((a, i) => [
                     .slice(0, 4)
                     .map((ex) => (
                       <li>
-                        <a href={ruta(`${a.id}/examenes/${ex.curso}`)}>
+                        <a href={ruta(`${a.id}/examenes/${ex.slug}`)}>
                           <span>{ex.curso}</span>
+                          <span class="ex-conv">{ABREV_CONV[ex.conv]}</span>
                           <span class="ex-go" aria-hidden="true">
                             →
                           </span>
@@ -754,6 +786,8 @@ const indice = asignaturas.flatMap((a, i) => [
   }
 
   .ex-lista a:hover { background: var(--live-soft); color: var(--live); }
+
+  .ex-conv { margin-left: auto; margin-right: .4rem; color: var(--faint); font-size: .72rem; }
 
   .ex-go { color: var(--faint); transition: transform .15s; }
   .ex-lista a:hover .ex-go { color: var(--live); transform: translateX(2px); }

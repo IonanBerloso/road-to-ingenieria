@@ -3,6 +3,18 @@ import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
+import { SUFIJO_CONV } from '../../../content.config';
+
+/** El orden en que se hacen dentro de un curso. */
+const ORDEN_CONV = [
+  'primera',
+  'segunda',
+  'tercera',
+  'cuarta',
+  'quinta',
+  'ordinaria',
+  'extraordinaria',
+];
 
 /**
  * El índice de exámenes de una asignatura. Solo existe si esa asignatura tiene
@@ -26,8 +38,14 @@ export async function getStaticPaths() {
       throw new Error(`Hay exámenes de "${id}", que no está en el catálogo.`);
     }
     /* Del más reciente al más antiguo: es el orden en que sirven para
-       estudiar, porque el examen que viene se parece al del año pasado. */
-    lista.sort((a, b) => b.data.curso.localeCompare(a.data.curso));
+       estudiar, porque el examen que viene se parece al del año pasado. Y
+       dentro de un mismo curso, por convocatoria, que es el orden en que se
+       hacen: primera en octubre, segunda en diciembre, tercera en enero. */
+    lista.sort(
+      (a, b) =>
+        b.data.curso.localeCompare(a.data.curso) ||
+        ORDEN_CONV.indexOf(a.data.convocatoria) - ORDEN_CONV.indexOf(b.data.convocatoria),
+    );
     return { params: { asignatura: id }, props: { asignatura, lista } };
   });
 }
@@ -38,8 +56,19 @@ const crumb = `${asignatura.data.nombre} · exámenes`;
 const NOMBRE_CONV: Record<string, string> = {
   primera: 'Primera evaluación',
   segunda: 'Segunda evaluación',
-  final: 'Examen final',
-  extraordinaria: 'Extraordinaria',
+  tercera: 'Tercera evaluación',
+  cuarta: 'Cuarta evaluación',
+  quinta: 'Quinta evaluación',
+  ordinaria: 'Convocatoria ordinaria',
+  extraordinaria: 'Convocatoria extraordinaria',
+};
+
+/** Qué temas entran en cada una. Lo dice el propio examen con sus ejercicios,
+ *  pero decirlo en la lista ahorra abrir tres para encontrar el que toca. */
+const ALCANCE_CONV: Record<string, string> = {
+  primera: 'temas 1–2',
+  segunda: 'temas 3–5',
+  tercera: 'temas 1–5',
 };
 ---
 
@@ -71,10 +100,24 @@ const NOMBRE_CONV: Record<string, string> = {
             const puntos = ex.data.ejercicios.length * 10;
             return (
               <li>
-                <a class="ex" href={ruta(`${asignatura.id}/examenes/${ex.data.curso}`)}>
+                <a
+                  class="ex"
+                  href={ruta(
+                    `${asignatura.id}/examenes/${ex.data.curso}-${SUFIJO_CONV[ex.data.convocatoria]}`,
+                  )}
+                >
                   <span class="curso">{ex.data.curso}</span>
                   <span class="txt">
-                    <span class="conv">{NOMBRE_CONV[ex.data.convocatoria]}</span>
+                    <span class="conv">
+                      {NOMBRE_CONV[ex.data.convocatoria]}
+                      {
+                        ALCANCE_CONV[ex.data.convocatoria] && (
+                          <span class="alcance rotulo">
+                            {ALCANCE_CONV[ex.data.convocatoria]}
+                          </span>
+                        )
+                      }
+                    </span>
                     <span class="fecha">{ex.data.fecha}</span>
                   </span>
                   <span class="der">
@@ -155,7 +198,16 @@ const NOMBRE_CONV: Record<string, string> = {
   }
 
   .txt { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
-  .conv { font-size: .95rem; }
+  .conv { font-size: .95rem; display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+
+  .alcance {
+    font-size: .68rem;
+    color: var(--faint);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: .05rem .3rem;
+  }
+
   .fecha { font-size: .8rem; color: var(--graphite); }
 
   .der { display: flex; align-items: center; gap: 1rem; }

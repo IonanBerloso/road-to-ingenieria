@@ -5,6 +5,7 @@ import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import Examen from '../../../components/ui/Examen.astro';
 import { archivo } from '../../../lib/rutas';
+import { SUFIJO_CONV } from '../../../content.config';
 
 /**
  * Una página por convocatoria. Un examen cruza temas, así que no cabe dentro
@@ -21,7 +22,23 @@ export async function getStaticPaths() {
   const ficheros = await getCollection('ejercicios');
 
   return examenes.map((ex) => {
-    const { asignatura: idAsig, curso, pdf } = ex.data;
+    const { asignatura: idAsig, curso, convocatoria, pdf } = ex.data;
+
+    /* La carpeta ES la URL. Un curso tiene hasta siete exámenes —cinco
+       evaluaciones y dos convocatorias—, así que el curso solo ya no
+       identifica a ninguno. Se comprueba aquí que la carpeta diga lo mismo
+       que el fichero: si alguien copia una carpeta para hacer la siguiente y
+       se olvida de cambiar la convocatoria dentro, el build lo caza. */
+    /* El id es «calculo/examenes/2015-2016-1ev/examen»: la carpeta es el
+       penúltimo segmento, porque el último es el nombre del fichero. */
+    const carpeta = ex.id.split('/').at(-2) ?? '';
+    const esperado = `${curso}-${SUFIJO_CONV[convocatoria]}`;
+    if (carpeta !== esperado) {
+      throw new Error(
+        `El examen de la carpeta "${carpeta}" declara curso ${curso} y convocatoria ` +
+          `"${convocatoria}", así que la carpeta debería llamarse "${esperado}".`,
+      );
+    }
 
     const asignatura = catalogo.find((a) => a.id === idAsig);
     if (!asignatura) {
@@ -77,7 +94,7 @@ export async function getStaticPaths() {
     });
 
     return {
-      params: { asignatura: idAsig, examen: curso },
+      params: { asignatura: idAsig, examen: carpeta },
       props: { asignatura, examen: ex, ejercicios, pdfKb: kb },
     };
   });
@@ -88,7 +105,10 @@ const { asignatura, examen, ejercicios, pdfKb } = Astro.props;
 const NOMBRE_CONV: Record<string, string> = {
   primera: 'primera evaluación',
   segunda: 'segunda evaluación',
-  final: 'examen final',
+  tercera: 'tercera evaluación',
+  cuarta: 'cuarta evaluación',
+  quinta: 'quinta evaluación',
+  ordinaria: 'convocatoria ordinaria',
   extraordinaria: 'convocatoria extraordinaria',
 };
 
@@ -99,7 +119,7 @@ const pdf = archivo(`examenes/${asignatura.id}/${examen.data.pdf}`);
 ---
 
 <Base
-  titulo={`${titulo} — ${asignatura.data.nombre}`}
+  titulo={`${titulo} · ${conv} — ${asignatura.data.nombre}`}
   descripcion={`Los ${ejercicios.length} ejercicios de la ${conv} de ${asignatura.data.nombre} del curso ${examen.data.curso}, resueltos enteros y con el reparto de puntos del examen.`}
   acento={asignatura.data.acento}
   crumb={crumb}

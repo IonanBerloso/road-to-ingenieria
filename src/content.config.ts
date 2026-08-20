@@ -339,9 +339,25 @@ const examen = defineCollection({
   schema: z
     .object({
       asignatura: z.string().min(3),
-      /** «2025-2026». Es también el nombre de la carpeta y de la URL. */
+      /** «2025-2026». Junto con la convocatoria forma la carpeta y la URL.
+       *
+       *  Hasta el 20 de agosto de 2026 el curso **era** la URL, a secas. Dejó
+       *  de valer al llegar la segunda y la tercera evaluación: hay tres
+       *  exámenes por curso y tres páginas no caben en una ruta. Ahora la
+       *  carpeta es `2024-2025-2ev` y `SUFIJO_CONV` comprueba que el nombre
+       *  case con lo que declara el fichero. */
       curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'),
-      convocatoria: z.enum(['primera', 'segunda', 'final', 'extraordinaria']),
+      /** Las cinco evaluaciones del curso más las dos convocatorias oficiales.
+       *  Los nombres son los que imprime la propia cabecera del examen. */
+      convocatoria: z.enum([
+        'primera',
+        'segunda',
+        'tercera',
+        'cuarta',
+        'quinta',
+        'ordinaria',
+        'extraordinaria',
+      ]),
       /** Tal como viene impresa en la cabecera del examen. */
       fecha: z.string().min(8),
       /** Nombre del PDF dentro de `public/examenes/<asignatura>/`.
@@ -362,6 +378,20 @@ const examen = defineCollection({
       message: 'el examen repite un ejercicio',
     }),
 });
+
+/** El trozo de URL que identifica a cada convocatoria.
+ *
+ *  Vive aquí y no en la página porque la carpeta del examen **es** la URL, y
+ *  la comprobación de que las dos cosas casan se hace al generar la ruta. */
+export const SUFIJO_CONV: Record<string, string> = {
+  primera: '1ev',
+  segunda: '2ev',
+  tercera: '3ev',
+  cuarta: '4ev',
+  quinta: '5ev',
+  ordinaria: 'ord',
+  extraordinaria: 'ext',
+};
 
 const calculo = defineCollection({
   loader: glob({ pattern: '**/index.mdx', base: './src/content/calculo' }),
