@@ -1,0 +1,205 @@
+---
+asignatura: calculo
+tema: 3
+titulo: Funciones reales de variable real
+descripcion: Dominio, rango e inversa. Límites, continuidad y derivadas. Y por qué casi todo el tema es una misma pregunta.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 3 y de los problemas complementarios · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Este tema parece cinco temas distintos —dominios, inversas, límites, derivadas,
+problemas de velocidades— y por debajo hay **una sola pregunta repetida**: qué
+le pasa a la función *cerca* de un punto.
+
+El dominio pregunta si ahí hay función. El límite, si se acerca a algo. La
+continuidad, si ese algo es lo que vale. La derivada, a qué ritmo cambia. Y las
+aplicaciones son esa misma derivada leída como velocidad.
+
+## El dominio se busca prohibiendo
+
+El dominio no se calcula: se **descarta**. Se recorre la fórmula buscando las
+tres operaciones que no siempre se pueden hacer:
+
+- **dividir** entre cero,
+- sacar una **raíz de índice par** de un número negativo,
+- meter un número no positivo en un **logaritmo**.
+
+Y hay una cuarta que casi nadie mira: $\arcsin$ y $\arccos$ solo aceptan
+argumentos en $[-1,1]$. En $f(x) = 3\arcsin(2x)$ eso obliga a
+$-1 \le 2x \le 1$, es decir $x \in \left[-\frac12,\frac12\right]$, y ese
+$\frac12$ no está escrito en ninguna parte de la fórmula.
+
+El **rango** es otra cosa y se busca al revés: no prohibiendo, sino viendo hasta
+dónde llega. Para eso suele bastar reconocer la forma de la función —una
+parábola tiene vértice, un seno oscila entre $-1$ y 1, un valor absoluto tiene
+suelo— y componer.
+
+<ErrorTipico titulo="Error típico · buscar el dominio solo en las raíces y las fracciones">
+Las funciones trigonométricas inversas restringen sin avisar. Si en la fórmula
+aparece $\arcsin$ o $\arccos$, el dominio nunca es todo $\mathbb{R}$, por muy
+limpio que parezca el resto.
+</ErrorTipico>
+
+## La inversa existe cuando no hay empates
+
+Una función tiene inversa en un dominio si es **inyectiva** ahí: si no hay dos
+valores distintos de $x$ con la misma imagen. Y esa condición no es de la
+fórmula, es **del dominio en el que se mira**.
+
+$f(x) = x^{2}$ no tiene inversa en $\mathbb{R}$, porque $2$ y $-2$ empatan. En
+$(-\infty,0]$ sí la tiene, y es $f^{-1}(x) = -\sqrt{1+x}$ — con el signo menos,
+porque la inversa tiene que devolver valores del dominio de partida, y ahí todos
+son negativos.
+
+Ese signo es la mitad de los errores del tema. La receta —despejar $x$ y cambiar
+los nombres— no lo decide: lo decide mirar de dónde venían los valores.
+
+Y hay una comprobación que cuesta diez segundos y caza casi todo:
+
+$$
+\text{dominio de } f^{-1} = \text{rango de } f
+$$
+
+Si sale un dominio que no coincide con el rango que se calculó antes, hay un
+error en uno de los dos.
+
+<ErrorTipico titulo="Error típico · quedarse con la raíz positiva por costumbre">
+Al despejar de $y = x^{2}-1$ sale $x = \pm\sqrt{1+y}$, y hay que elegir. Si el
+dominio era $(-\infty,0]$, la inversa es la **negativa**. Escribir
+$+\sqrt{1+x}$ da una función que no devuelve al punto de partida.
+</ErrorTipico>
+
+## Un límite no existe si dos caminos discrepan
+
+La definición de límite exige que la función se acerque al **mismo** valor por
+todos lados. Así que para demostrar que un límite **no** existe basta encontrar
+dos formas de acercarse que den cosas distintas.
+
+La herramienta es la caracterización por sucesiones: si $x_n \to a$ entonces
+$f(x_n)$ tiene que tender al límite, sea cual sea la sucesión. Con
+$f(x) = \cos\frac{\pi}{x}$ en $x=0$:
+
+$$
+a_n = \frac{1}{2n} \;\Longrightarrow\; f(a_n) = \cos(2\pi n) = 1
+$$
+
+$$
+b_n = \frac{2}{2n+1} \;\Longrightarrow\; f(b_n) = \cos\frac{(2n+1)\pi}{2} = 0
+$$
+
+Las dos sucesiones tienden a 0 y las imágenes tienden a cosas distintas. **El
+límite no existe**, y queda demostrado sin dibujar nada.
+
+Esa es la ventaja del método: un dibujo sugiere, dos sucesiones demuestran.
+
+## Continuidad es una igualdad de tres cosas
+
+$$
+f \text{ continua en } a \iff
+\exists f(a) \;\wedge\;
+\exists \lim_{x\to a} f(x) \;\wedge\;
+\lim_{x\to a} f(x) = f(a)
+$$
+
+Hay valor, hay límite, y coinciden. Las tres condiciones, en ese orden.
+
+En las funciones a trozos las tres se juegan siempre en el mismo sitio: **el
+punto de empalme**. Dentro de cada trozo la función suele ser continua por ser
+un polinomio o algo conocido, así que el ejercicio se reduce a igualar los
+límites laterales en la frontera.
+
+## Bolzano no encuentra la raíz, garantiza que existe
+
+Si $f$ es continua en $[a,b]$ y $f(a)$ y $f(b)$ tienen **signos distintos**,
+entonces hay al menos un $c$ en $(a,b)$ con $f(c)=0$.
+
+Es un teorema de existencia: dice que la hay, no dónde. Para $y(x) = xe^{x}-1$:
+
+$$
+y(0) = -1 < 0, \qquad y(1) = e-1 \approx 1{,}72 > 0
+$$
+
+Luego hay una raíz en $(0,1)$. Y para saber que es **la única**, hace falta otro
+argumento: $y'(x) = e^{x}(1+x) > 0$ para $x>0$, así que la función es
+estrictamente creciente y no puede cortar el eje dos veces.
+
+<ErrorTipico titulo="Error típico · confundir existencia con unicidad">
+Bolzano garantiza «al menos una». Que sea **exactamente una** hay que probarlo
+aparte, casi siempre viendo que la derivada no cambia de signo.
+</ErrorTipico>
+
+## La derivada es un límite, y a veces hay que calcularlo como tal
+
+$$
+f'(a) = \lim_{h\to0}\frac{f(a+h)-f(a)}{h}
+$$
+
+Casi siempre se usan las reglas y no la definición. Pero hay dos situaciones en
+las que la definición es obligatoria: cuando el enunciado dice «por
+definición», y cuando la función **está definida a trozos** y el punto es el
+empalme.
+
+En ese segundo caso hay que calcular las dos derivadas laterales y exigir que
+coincidan. Y ojo con el atajo tentador: derivar cada trozo y comparar las
+fórmulas **no** es lo mismo, porque una función puede tener las dos derivadas
+laterales distintas aunque sea continua — ahí hay un pico.
+
+## Derivar sin despejar
+
+Hay dos situaciones donde no se puede aislar $y$, y las dos tienen su regla:
+
+**Implícita.** Se deriva la ecuación entera respecto de $x$ tratando $y$ como
+función de $x$ —cada vez que se deriva una $y$ aparece un $y'$ por la regla de
+la cadena— y luego se despeja $y'$.
+
+**Paramétrica.** Con $x=x(t)$ e $y=y(t)$:
+
+$$
+\frac{dy}{dx} = \frac{dy/dt}{dx/dt}
+$$
+
+que es la regla de la cadena leída al revés. Un detalle que decide ejercicios:
+si un mismo punto se alcanza con **dos valores distintos del parámetro**, la
+curva pasa dos veces por ahí y hay **dos** tangentes.
+
+## La derivada como velocidad
+
+Los problemas de razones de cambio son todos el mismo: hay una relación
+geométrica entre magnitudes, se **deriva respecto del tiempo**, y se sustituye
+el instante.
+
+Lo que se falla no es la derivada, es el orden. Primero se escribe la relación
+en general —con las magnitudes como funciones del tiempo—, se deriva, y **solo
+al final** se meten los números del instante concreto. Sustituir antes congela
+lo que debía variar y la derivada sale cero.
+
+<ErrorTipico titulo="Error típico · sustituir los datos antes de derivar">
+Si en $d^{2} = x^{2}+9$ se pone $x=4$ antes de derivar, queda $d^{2}=25$, una
+constante, y su derivada es 0. Hay que derivar primero, $2d\,d' = 2x\,x'$, y
+sustituir después.
+</ErrorTipico>
+
+## El diferencial: la recta tangente como calculadora
+
+Cerca de un punto, la función y su recta tangente casi no se distinguen:
+
+$$
+f(a+h) \approx f(a) + f'(a)\,h
+$$
+
+Con eso se aproximan valores sin calculadora. Para $\sqrt{27}$ se toma $a=25$,
+que tiene raíz exacta, y $h=2$:
+
+$$
+\sqrt{27} \approx 5 + \frac{1}{2\cdot5}\cdot 2 = \frac{26}{5} = 5{,}2
+$$
+
+Lo importante es elegir bien el punto de apoyo: **el más cercano donde la
+función se sepa de memoria**. Y para ángulos, pasarlos a radianes antes, porque
+la fórmula de la derivada del seno solo vale ahí.
