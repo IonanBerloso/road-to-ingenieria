@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { comparaComplejo, leeComplejo, leeConjunto } from './lib/complejo';
+import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from './lib/complejo';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -140,6 +140,25 @@ const pasoCalcular = z.object({
     {
       message:
         'hay un distractor dentro de la tolerancia de la respuesta correcta: se daría por bueno',
+    },
+  )
+  /* Lo mismo para los conjuntos, donde el parecido es más traicionero: un
+     conjunto no tiene orden, así que «-2, -3» y «-3, -2» son la MISMA
+     respuesta. Si lo que se pide es un par ordenado, `conjunto` no es el tipo
+     adecuado y hay que partirlo en dos preguntas. */
+  .refine(
+    (p) => {
+      if (p.respuesta.tipo !== 'conjunto') return true;
+      const buena = leeConjunto(p.respuesta.valor);
+      if (!buena) return true;
+      return p.distractores.every((d) => {
+        const mala = leeConjunto(d.valor);
+        return !mala || !comparaConjunto(mala, buena, p.respuesta.tolerancia).igual;
+      });
+    },
+    {
+      message:
+        'hay un distractor que es el mismo conjunto que la respuesta: recuerda que el orden no cuenta',
     },
   );
 
