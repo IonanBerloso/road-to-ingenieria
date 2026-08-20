@@ -1,0 +1,119 @@
+---
+import { statSync } from 'node:fs';
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecera from '../../../components/ui/Cabecera.astro';
+import Examen from '../../../components/ui/Examen.astro';
+import { archivo } from '../../../lib/rutas';
+
+/**
+ * Una página por convocatoria. Un examen cruza temas, así que no cabe dentro
+ * de la página de un tema: vive en su propia área (§08, nota del 20 de agosto
+ * de 2026).
+ *
+ * Aquí se cruzan tres fuentes —el `examen.yaml`, el `ejercicios.yaml` de al
+ * lado y el catálogo— y **cualquier descuadre entre ellas rompe el build**. Es
+ * la misma regla de `[tema].astro`: los datos no se comprueban a ojo (§03).
+ */
+export async function getStaticPaths() {
+  const examenes = await getCollection('examen');
+  const catalogo = await getCollection('catalogo');
+  const ficheros = await getCollection('ejercicios');
+
+  return examenes.map((ex) => {
+    const { asignatura: idAsig, curso, pdf } = ex.data;
+
+    const asignatura = catalogo.find((a) => a.id === idAsig);
+    if (!asignatura) {
+      throw new Error(
+        `El examen "${curso}" dice ser de "${idAsig}", que no está en el catálogo.`,
+      );
+    }
+
+    /* El PDF tiene que existir de verdad. Sin esta comprobación el enlace se
+       publica roto y no se nota hasta que alguien lo pulsa, que es justo el
+       momento en el que la herramienta pierde credibilidad. */
+    const enDisco = `public/examenes/${idAsig}/${pdf}`;
+    let kb = 0;
+    try {
+      kb = Math.round(statSync(enDisco).size / 1024);
+    } catch {
+      throw new Error(
+        `El examen "${idAsig} · ${curso}" enlaza "${pdf}", que no está en ${enDisco}.`,
+      );
+    }
+
+    const ejercicios = ex.data.ejercicios.map((ref) => {
+      const dato = ficheros.flatMap((f) => f.data.ejercicios).find((e) => e.id === ref.id);
+      if (!dato) {
+        throw new Error(
+          `El examen "${idAsig} · ${curso}" nombra el ejercicio "${ref.id}", que no ` +
+            `existe en ningún ejercicios.yaml.`,
+        );
+      }
+      if (!dato.puntos) {
+        throw new Error(
+          `El ejercicio de examen "${ref.id}" no declara sus puntos. El examen los ` +
+            `imprime en la hoja, así que aquí son obligatorios.`,
+        );
+      }
+
+      const tema = asignatura.data.temas.find((t) => t.id === ref.tema);
+      if (!tema) {
+        throw new Error(
+          `El ejercicio "${ref.id}" dice ser del tema "${ref.tema}", que no está en el ` +
+            `temario de "${idAsig}".`,
+        );
+      }
+
+      return {
+        id: dato.id,
+        titulo: dato.titulo,
+        enunciado: dato.enunciado,
+        pide: dato.pide,
+        tema: tema.titulo,
+        puntos: dato.puntos,
+      };
+    });
+
+    return {
+      params: { asignatura: idAsig, examen: curso },
+      props: { asignatura, examen: ex, ejercicios, pdfKb: kb },
+    };
+  });
+}
+
+const { asignatura, examen, ejercicios, pdfKb } = Astro.props;
+
+const NOMBRE_CONV: Record<string, string> = {
+  primera: 'primera evaluación',
+  segunda: 'segunda evaluación',
+  final: 'examen final',
+  extraordinaria: 'convocatoria extraordinaria',
+};
+
+const conv = NOMBRE_CONV[examen.data.convocatoria];
+const crumb = `${asignatura.data.nombre} · exámenes`;
+const titulo = `Examen ${examen.data.curso}`;
+const pdf = archivo(`examenes/${asignatura.id}/${examen.data.pdf}`);
+---
+
+<Base
+  titulo={`${titulo} — ${asignatura.data.nombre}`}
+  descripcion={`Los ${ejercicios.length} ejercicios de la ${conv} de ${asignatura.data.nombre} del curso ${examen.data.curso}, resueltos enteros y con el reparto de puntos del examen.`}
+  acento={asignatura.data.acento}
+  crumb={crumb}
+>
+  <Cabecera crumb={crumb} />
+
+  <main id="principal">
+    <Examen
+      eyebrow={`${asignatura.data.nombre} · ${conv}`}
+      titulo={titulo}
+      fecha={examen.data.fecha}
+      pdf={pdf}
+      pdfKb={pdfKb}
+      ejercicios={ejercicios}
+    />
+  </main>
+</Base>

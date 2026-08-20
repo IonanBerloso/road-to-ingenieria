@@ -74,15 +74,23 @@ async function main() {
   });
 
   /* Se recorre cada página de contenido, no solo una: el día que haya veinte
-     temas, el fallo aparecerá en el que nadie miró. */
+     temas, el fallo aparecerá en el que nadie miró.
+
+     Las páginas de examen entran desde el 20 de agosto de 2026, y no es un
+     añadido cosmético: al crearlas, sus ejercicios quedaron fuera del filtro
+     `/tNN-` y durante un rato el suelo dio verde sin haber probado **ni un
+     solo distractor de examen**. Eso es exactamente la confianza falsa que
+     §11 prohíbe. El índice `/examenes/` no entra: no tiene ejercicios. */
   const paginas = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
     [...html.matchAll(/href="([^"]+)"/g)]
       .map((m) => m[1])
-      .filter((h) => h.startsWith(BASE) && /\/[a-z]+\/t\d{2}-/.test(h)),
+      .filter(
+        (h) => h.startsWith(BASE) && /\/[a-z]+\/(t\d{2}-|examenes\/\d{4}-\d{4})/.test(h),
+      ),
   );
   const rutas = [...new Set(paginas)];
 
-  comprueba(rutas.length > 0, `hay páginas de tema que comprobar (${rutas.length})`);
+  comprueba(rutas.length > 0, `hay páginas de contenido que comprobar (${rutas.length})`);
 
   /** Recuento global de trazos: ver el comentario de más abajo. */
   const medidos = { raiz: 0, barra: 0 };
@@ -180,10 +188,26 @@ async function main() {
 
     /* 2 · Las pestañas cambian de panel Y marcan cuál está activa.
        Con `:target` el panel cambia aunque el JavaScript no se haya
-       enganchado; lo que delata el fallo es el marcador. */
-    const pestanas = await pagina.$$('[data-pestana]');
-    if (pestanas.length) {
-      await pagina.click('[data-pestana="ejercicios"]');
+       enganchado; lo que delata el fallo es el marcador.
+
+       Los nombres de las pestañas NO se escriben aquí. Un tema tiene
+       «teoría / ejercicios» y un examen «examen / resoluciones», y hasta el 20
+       de agosto de 2026 este guardián buscaba los del tema a pelo: al aparecer
+       los exámenes se quedó esperando un `data-pestana="ejercicios"` que en
+       esa página no existe. Se busca por lo que la pestaña CONTIENE, que es lo
+       que de verdad importa, y así el guardián sobrevive a la siguiente
+       plantilla que se invente. */
+    const nombres = await pagina.evaluate(() => {
+      const enlaces = [...document.querySelectorAll('.pestanas a[data-pestana]')];
+      const conEjercicios = enlaces.find((a) =>
+        document.getElementById(a.dataset.pestana)?.querySelector('[data-ejercicio]'),
+      );
+      const otra = enlaces.find((a) => a !== conEjercicios);
+      return { ejercicios: conEjercicios?.dataset.pestana, otra: otra?.dataset.pestana };
+    });
+
+    if (nombres.ejercicios) {
+      await pagina.click(`[data-pestana="${nombres.ejercicios}"]`);
       await pagina.waitForTimeout(200);
 
       const estado = await pagina.evaluate(() => ({
@@ -191,15 +215,18 @@ async function main() {
         activa: document.querySelector('.pestanas a[aria-current="page"]')?.dataset.pestana,
       }));
 
-      comprueba(estado.panel === 'ejercicios', 'la pestaña de ejercicios abre su panel');
       comprueba(
-        estado.activa === 'ejercicios',
+        estado.panel === nombres.ejercicios,
+        `la pestaña «${nombres.ejercicios}» abre su panel`,
+      );
+      comprueba(
+        estado.activa === nombres.ejercicios,
         'la pestaña abierta es la que aparece marcada',
         `marcada: ${estado.activa ?? 'ninguna'} — el manejador no se ha enganchado`,
       );
 
       /* 3 · Los controles de la lectura no tocan las pestañas. */
-      await pagina.click('[data-pestana="teoria"]');
+      await pagina.click(`[data-pestana="${nombres.otra}"]`);
       await pagina.waitForTimeout(200);
       const siguiente = await pagina.$('[data-pasos]:not([hidden]) [data-ir="1"]');
       if (siguiente && (await siguiente.isVisible())) {
@@ -209,7 +236,7 @@ async function main() {
           () => document.querySelector('[data-armazon]')?.dataset.panel,
         );
         comprueba(
-          panel === 'teoria',
+          panel === nombres.otra,
           'avanzar de apartado no cambia de pestaña',
           `el panel pasó a "${panel}"`,
         );
@@ -223,7 +250,9 @@ async function main() {
        Se recorren TODOS los ejercicios de la página, no el primero: el día
        que haya diez, el fallo estará en el que nadie miró. */
     const cuantos = (await pagina.$$('[data-ejercicio]')).length;
-    if (cuantos) await pagina.click('[data-pestana="ejercicios"]');
+    if (cuantos && nombres.ejercicios) {
+      await pagina.click(`[data-pestana="${nombres.ejercicios}"]`);
+    }
 
     for (let n = 0; n < cuantos; n++) {
       await pagina.waitForTimeout(200);

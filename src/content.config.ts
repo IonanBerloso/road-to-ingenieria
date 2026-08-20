@@ -221,12 +221,32 @@ const paso = z.discriminatedUnion('tipo', [
   pasoVerificar,
 ]);
 
+/** El reparto de puntos que el propio examen declara, por competencia.
+ *
+ *  Esto no existía con los boletines: allí el peso lo estimábamos nosotros y
+ *  por eso §10 obliga a los tres niveles en vez de a un porcentaje. Un examen
+ *  sí lo dice —«COMP 2: 7 puntos por el cálculo»—, así que aquí el número es
+ *  un dato, no una estimación, y se puede mostrar tal cual.
+ *
+ *  Es opcional: los ejercicios de boletín no lo llevan. */
+const puntos = z
+  .object({
+    comp1: z.number().min(0).max(10).default(0),
+    comp2: z.number().min(0).max(10).default(0),
+    comp4: z.number().min(0).max(10).default(0),
+  })
+  .refine((p) => p.comp1 + p.comp2 + p.comp4 === 10, {
+    message: 'los puntos de un ejercicio de examen tienen que sumar 10',
+  });
+
 const ejercicio = z
   .object({
     id: z.string().regex(/^[a-z0-9-]+$/, 'en minúscula, sin acentos, con guiones'),
     titulo: z.string().min(5),
     /** Procedencia obligatoria: el material es adaptado, no propio (§08). */
     fuente: z.string().min(10),
+    /** Solo en los ejercicios de examen: el reparto oficial de los 10 puntos. */
+    puntos: puntos.optional(),
     /** Un enunciado puede ser legitimamente corto: «$z^3 = -|z|$» son
      *  trece caracteres y es un enunciado completo. El minimo solo esta para
      *  cazar un campo vacio o un marcador de posicion. */
@@ -273,6 +293,48 @@ const temaEscrito = z.object({
   fuente: z.string().optional(),
 });
 
+/* ═══════════════════════════════════════════════════════════════════
+   Los exámenes (CLAUDE.md §08, nota del 20 de agosto de 2026)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/** Un `examen.yaml` por convocatoria, junto a su `ejercicios.yaml`.
+ *
+ *  Un examen **cruza temas** —el de 2025-2026 tiene dos ejercicios de
+ *  complejos, uno de sucesiones y uno de series—, así que no puede vivir
+ *  dentro de la página de un tema. De ahí que sea su propia colección.
+ *
+ *  Los ejercicios NO se repiten aquí: viven en el `ejercicios.yaml` de al
+ *  lado, que la colección `ejercicios` ya carga a cualquier profundidad. Este
+ *  fichero solo dice cuáles son, en qué orden y de qué tema es cada uno. */
+const examen = defineCollection({
+  loader: glob({ pattern: '**/examen.yaml', base: './src/content' }),
+  schema: z
+    .object({
+      asignatura: z.string().min(3),
+      /** «2025-2026». Es también el nombre de la carpeta y de la URL. */
+      curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'),
+      convocatoria: z.enum(['primera', 'segunda', 'final', 'extraordinaria']),
+      /** Tal como viene impresa en la cabecera del examen. */
+      fecha: z.string().min(8),
+      /** Nombre del PDF dentro de `public/examenes/<asignatura>/`.
+       *  Que el fichero exista de verdad se comprueba al generar la ruta. */
+      pdf: z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones'),
+      ejercicios: z
+        .array(
+          z.object({
+            /** Id de un ejercicio del `ejercicios.yaml` de al lado. */
+            id: z.string().regex(/^[a-z0-9-]+$/),
+            /** El tema del temario al que pertenece, para poder decirlo. */
+            tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
+          }),
+        )
+        .min(1),
+    })
+    .refine((e) => new Set(e.ejercicios.map((x) => x.id)).size === e.ejercicios.length, {
+      message: 'el examen repite un ejercicio',
+    }),
+});
+
 const calculo = defineCollection({
   loader: glob({ pattern: '**/index.mdx', base: './src/content/calculo' }),
   schema: temaEscrito,
@@ -283,4 +345,4 @@ const fluidos = defineCollection({
   schema: temaEscrito,
 });
 
-export const collections = { catalogo, calculo, fluidos, ejercicios };
+export const collections = { catalogo, calculo, fluidos, ejercicios, examen };

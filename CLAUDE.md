@@ -310,10 +310,14 @@ semántica estricta de arriba.
 La universidad ha dado permiso para usar el material docente. Aun así:
 
 - **No entra material de terceros en el repositorio.** Ni diapositivas, ni
-  colecciones escaneadas, ni exámenes en PDF.
+  colecciones escaneadas, ni figuras sacadas de manuales.
+- **Sí entran los enunciados de examen originales**, en `public/examenes/`,
+  para poder enlazarlos desde su resolución. Son documentos de la propia
+  escuela y están cubiertos por el permiso; ver la nota de abajo.
 - Hay un límite que la universidad no puede levantar: las figuras que los
   profesores tienen escaneadas de manuales (Moody, tablas de propiedades,
   esquemas de Çengel, White o Askeland) siguen siendo de las editoriales.
+  **Esas se redibujan**, nunca se recortan del PDF.
 - Los enunciados de examen se reproducen **tal cual**, sin cambiar los números.
   El alumno estudia con el ejercicio que va a caer, no con una versión parecida;
   y cuando compara con la solución oficial del boletín, los números tienen que
@@ -328,6 +332,20 @@ La universidad ha dado permiso para usar el material docente. Aun así:
 > hecha. Se cambió a propósito. El precio asumido es que los ejercicios son
 > localizables; a cambio, lo que se estudia aquí es exactamente lo que se
 > examina.
+
+> Y hasta el 20 de agosto de 2026 la primera regla prohibía expresamente los
+> «exámenes en PDF». Se cambió al construir el apartado de exámenes, porque la
+> prohibición mezclaba dos cosas distintas. Una figura escaneada de Çengel es
+> de su editorial y no hay permiso que la libere; un examen de la Escuela de
+> Ingeniería de Gipuzkoa es de la propia escuela, y para eso está el permiso.
+> El motivo de conservar el original es de fondo: una resolución que no se
+> puede contrastar con el enunciado que la generó pide un acto de fe, y el
+> proyecto entero existe para lo contrario. Lo que **no** cambia es que las
+> figuras de terceros no entran: si un enunciado trae una, se redibuja en SVG.
+
+> Consecuencia práctica: `public/examenes/` es la **única** carpeta del
+> repositorio donde entra un PDF ajeno, y solo si es un enunciado oficial
+> citado por una resolución nuestra. Cualquier otro binario sigue vetado (§12).
 
 ### Estilo de la prosa
 
@@ -423,6 +441,14 @@ cuando algo se ha roto de verdad, y el comentario dice qué se rompió. Y toda
 comprobación nueva se valida al revés: se reintroduce el fallo y se confirma que
 el guardián se pone rojo. Una comprobación que no falla cuando el fallo existe es
 peor que no tenerla, porque da confianza falsa.
+
+**Y se retira cuando su motivo desaparece**, con la misma exigencia de prueba
+con la que se añadió: se mide, se escribe la medición en el propio fichero y se
+deja dicha la fecha. Un guardián que salta cuando el fallo ya no existe empuja a
+escribir peor para contentarlo, y enseña a saltarse los guardianes — que es el
+daño de verdad. Pasó el 20 de agosto de 2026 con la regla de `\overline`: se
+escribió cuando la salida era MathML y la fuente del sistema no estiraba la
+barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 %.
 
 ---
 

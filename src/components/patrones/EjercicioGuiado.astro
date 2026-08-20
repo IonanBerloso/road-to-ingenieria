@@ -25,14 +25,36 @@ interface Props {
 const { id } = Astro.props;
 
 const ficheros = await getCollection('ejercicios');
-const ejercicio = ficheros.flatMap((f) => f.data.ejercicios).find((e) => e.id === id);
 
-if (!ejercicio) {
+/* El id se busca entre TODOS los ficheros, así que tiene que ser único en todo
+   el repositorio y no solo dentro del suyo —de esto último ya se encarga el
+   esquema—. Hasta hoy la unicidad global salía gratis porque había un fichero
+   por tema y los ids llevaban el nombre del tema dentro. Con los exámenes pasan
+   a ser catorce ficheros, y dos ejercicios llamados igual en dos de ellos se
+   resolverían al primero **en silencio**: la página del examen enseñaría la
+   resolución de otro ejercicio sin que nada fallara.
+   Se caza aquí, en el build, y no en verify.mjs, porque para cuando hay HTML el
+   ejercicio equivocado ya está escrito y parece correcto. */
+const encontrados = ficheros.flatMap((f) =>
+  f.data.ejercicios.filter((e) => e.id === id).map((e) => ({ e, en: f.id })),
+);
+
+if (encontrados.length === 0) {
   throw new Error(
     `No existe el ejercicio "${id}". Búscalo en algún src/content/**/ejercicios.yaml ` +
       `o corrige el id del componente.`,
   );
 }
+
+if (encontrados.length > 1) {
+  throw new Error(
+    `El id "${id}" está repetido en ${encontrados.length} ficheros: ` +
+      `${encontrados.map((x) => x.en).join(', ')}. Los ids son únicos en todo el ` +
+      `repositorio, porque el componente los busca en todos los ejercicios.yaml a la vez.`,
+  );
+}
+
+const ejercicio = encontrados[0].e;
 
 /** Barajado estable: el orden de las piezas no puede cambiar entre builds, o
  *  cada despliegue generaría un diff distinto sin que nadie haya tocado nada. */

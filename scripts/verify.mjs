@@ -116,24 +116,34 @@ console.log('\nTokens');
 /* ═══════════════════════════════════════════════════════════════════
    2 bis · LaTeX que no se dibuja
    ═══════════════════════════════════════════════════════════════════
-   Dos comandos que se escriben igual de bien y se dibujan mal:
+   `\bar{z}` usa un acento que muchas fuentes matemáticas no traen, y la barra
+   desaparece sin aviso. Con `\overline` sí se dibuja.
 
-   · `\bar{z}` usa un acento que muchas fuentes matemáticas no traen, y la
-     barra desaparece sin aviso. Con `\overline` sí se dibuja.
-   · `\overline{...}` sobre algo ANCHO tampoco vale: Chromium no estira la
-     barra, así que en `\overline{z^{n}}` cae solo encima del exponente, y
-     sobre una fracción se monta encima del signo. La barra va sobre un
-     símbolo suelto: `\left(\overline{z}\right)^{n}`, que además es la
-     igualdad que se está enseñando.
+   Pasó el 20 de agosto de 2026 en el ejercicio 1.2.
 
-   Pasó el 20 de agosto de 2026 en el ejercicio 1.2. */
+   ── Aquí había una segunda regla, retirada el 20 de agosto de 2026 ──
+
+   Prohibía `\overline{...}` sobre cualquier cosa que no fuera un símbolo
+   suelto, porque «Chromium no estira la barra». Era cierto **con la salida
+   MathML pura**, donde el dibujo lo hacía la fuente del sistema. Dejó de serlo
+   ese mismo día, al pasar a `htmlAndMathml` (§07): KaTeX ya no delega, dibuja
+   la barra como el borde de un `<span>` que él mismo dimensiona.
+
+   La regla sobrevivió a su motivo y empezó a estorbar: bloqueaba
+   `\overline{z_2}`, que es la notación del enunciado del ejercicio 2 del examen
+   2025-2026, y empujaba a escribirlo peor. Antes de quitarla se midió la
+   cobertura real de la barra en Chromium, sobre nuestra propia tubería:
+
+     subíndice 100 % · exponente 100 % · suma 100 % · producto 100 %
+     fracción  100 % · raíz      100 % · símbolo suelto 100 %
+
+   Los seis casos que la regla prohibía se dibujan enteros. Un guardián que no
+   se pone rojo cuando el fallo existe es peor que no tenerlo (§11), y uno que
+   se pone rojo cuando el fallo YA NO existe es exactamente el mismo problema
+   visto del revés: enseña a desconfiar de los guardianes. */
 {
   const prohibido = [
     [/\\bar\s*\{|\\bar\s+[a-zA-Z]/g, 'usa \\overline{...}: \\bar no dibuja la barra en todas las fuentes'],
-    [
-      /\\overline\{[^{}]*[\^_+\-\\][^{}]*\}|\\overline\{[^{}]*\{/g,
-      'la barra solo sobre un símbolo suelto: Chromium no la estira sobre expresiones',
-    ],
   ];
   const pegas = [];
 

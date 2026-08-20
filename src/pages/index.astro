@@ -36,6 +36,19 @@ const ANCHO_PESO = { alto: '100%', medio: '62%', bajo: '30%' } as const;
 
 const hechos = (a: (typeof asignaturas)[number]) => a.data.temas.filter((t) => t.hecho).length;
 
+/** Los exámenes de cada asignatura, del más reciente al más antiguo. El panel
+ *  solo se dibuja donde hay alguno: una caja vacía prometiendo exámenes es
+ *  peor que no tenerla. */
+const examenesPorAsignatura = new Map<string, { curso: string }[]>();
+for (const ex of await getCollection('examen')) {
+  const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
+  lista.push({ curso: ex.data.curso });
+  examenesPorAsignatura.set(ex.data.asignatura, lista);
+}
+for (const lista of examenesPorAsignatura.values()) {
+  lista.sort((a, b) => b.curso.localeCompare(a.curso));
+}
+
 /** El índice de la paleta de comandos se arma aquí, no en el cliente:
  *  buscar tiene que funcionar con la primera pulsación, sin recorrer el DOM. */
 const indice = asignaturas.flatMap((a, i) => [
@@ -149,6 +162,7 @@ const indice = asignaturas.flatMap((a, i) => [
           )}
 
           {a.data.temas.length > 0 ? (
+            <div class="cuerpo">
             <ul class="temas">
               {a.data.temas.map((t, j) => {
                 const enlace = t.hecho ? ruta(`${a.id}/${t.id}`) : null;
@@ -190,6 +204,38 @@ const indice = asignaturas.flatMap((a, i) => [
                 );
               })}
             </ul>
+
+            {examenesPorAsignatura.has(a.id) && (
+              <aside class="examenes">
+                <p class="rotulo ex-tit">Exámenes</p>
+                <p class="ex-sub">
+                  {examenesPorAsignatura.get(a.id)!.length === 1
+                    ? 'Una convocatoria, con su enunciado original y resuelta entera.'
+                    : `${examenesPorAsignatura.get(a.id)!.length} convocatorias, con su enunciado original y resueltas enteras.`}
+                </p>
+                <ul class="ex-lista">
+                  {examenesPorAsignatura
+                    .get(a.id)!
+                    .slice(0, 4)
+                    .map((ex) => (
+                      <li>
+                        <a href={ruta(`${a.id}/examenes/${ex.curso}`)}>
+                          <span>{ex.curso}</span>
+                          <span class="ex-go" aria-hidden="true">
+                            →
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                </ul>
+                <a class="ex-todos" href={ruta(`${a.id}/examenes`)}>
+                  {examenesPorAsignatura.get(a.id)!.length === 1
+                    ? 'Ir al examen →'
+                    : `Ver los ${examenesPorAsignatura.get(a.id)!.length} →`}
+                </a>
+              </aside>
+            )}
+            </div>
           ) : (
             <div class="pendiente">
               <p class="p-tit">Todavía no</p>
@@ -659,7 +705,75 @@ const indice = asignaturas.flatMap((a, i) => [
   }
 
   /* ── temas ─────────────────────────────────────────────────────── */
-  .temas { list-style: none; max-width: 62rem; }
+  /* La lista de temas y, a su derecha, el panel de exámenes. Antes `.temas`
+     era una columna suelta; ahora comparte fila con el panel, que en móvil
+     cae debajo. */
+  .cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 62rem) minmax(13rem, 17rem);
+    gap: clamp(1.2rem, 3vw, 2.5rem);
+    align-items: start;
+  }
+
+  .temas { list-style: none; }
+
+  /* ── panel de exámenes ─────────────────────────────────────────── */
+  .examenes {
+    position: sticky;
+    top: 4.2rem;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    animation: entra-fila .4s var(--ease) both;
+    animation-delay: 160ms;
+  }
+
+  .ex-tit { color: var(--acento); margin-bottom: .5rem; }
+
+  .ex-sub {
+    font-size: .78rem;
+    line-height: 1.45;
+    color: var(--graphite);
+    margin-bottom: .9rem;
+  }
+
+  .ex-lista { list-style: none; }
+
+  .ex-lista a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem .4rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }
+
+  .ex-lista a:hover { background: var(--live-soft); color: var(--live); }
+
+  .ex-go { color: var(--faint); transition: transform .15s; }
+  .ex-lista a:hover .ex-go { color: var(--live); transform: translateX(2px); }
+
+  .ex-todos {
+    display: inline-block;
+    margin-top: .7rem;
+    padding: .3rem .4rem;
+    font-family: var(--mono);
+    font-size: .74rem;
+    color: var(--live);
+    text-decoration: none;
+  }
+
+  .ex-todos:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .cuerpo { grid-template-columns: 1fr; }
+    .examenes { position: static; }
+  }
 
   .temas li { animation: entra-fila .4s var(--ease) both; animation-delay: calc(var(--i) * 32ms); }
 

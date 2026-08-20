@@ -1,0 +1,191 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecera from '../../../components/ui/Cabecera.astro';
+import { ruta, archivo } from '../../../lib/rutas';
+
+/**
+ * El índice de exámenes de una asignatura. Solo existe si esa asignatura tiene
+ * alguno escrito: una página vacía diciendo «todavía no hay nada» no vale de
+ * nada y además habría que enlazarla desde la portada.
+ */
+export async function getStaticPaths() {
+  const examenes = await getCollection('examen');
+  const catalogo = await getCollection('catalogo');
+
+  const porAsignatura = new Map<string, typeof examenes>();
+  for (const ex of examenes) {
+    const lista = porAsignatura.get(ex.data.asignatura) ?? [];
+    lista.push(ex);
+    porAsignatura.set(ex.data.asignatura, lista);
+  }
+
+  return [...porAsignatura].map(([id, lista]) => {
+    const asignatura = catalogo.find((a) => a.id === id);
+    if (!asignatura) {
+      throw new Error(`Hay exámenes de "${id}", que no está en el catálogo.`);
+    }
+    /* Del más reciente al más antiguo: es el orden en que sirven para
+       estudiar, porque el examen que viene se parece al del año pasado. */
+    lista.sort((a, b) => b.data.curso.localeCompare(a.data.curso));
+    return { params: { asignatura: id }, props: { asignatura, lista } };
+  });
+}
+
+const { asignatura, lista } = Astro.props;
+const crumb = `${asignatura.data.nombre} · exámenes`;
+
+const NOMBRE_CONV: Record<string, string> = {
+  primera: 'Primera evaluación',
+  segunda: 'Segunda evaluación',
+  final: 'Examen final',
+  extraordinaria: 'Extraordinaria',
+};
+---
+
+<Base
+  titulo={`Exámenes — ${asignatura.data.nombre}`}
+  descripcion={`Los exámenes de ${asignatura.data.nombre} resueltos enteros, con el enunciado original y el reparto de puntos por competencia.`}
+  acento={asignatura.data.acento}
+  crumb={crumb}
+>
+  <Cabecera crumb={crumb} />
+
+  <main id="principal">
+    <div class="shell">
+      <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre}</p>
+      <h1>Exámenes</h1>
+      <p class="lede">
+        Los de verdad, con su enunciado original en PDF. Cada uno abre en
+        blanco para que te lo hagas antes de mirar nada.
+      </p>
+
+      <p class="aviso rotulo">
+        Los exámenes no publican solución: las resoluciones son propuesta
+        nuestra y están pendientes de revisión.
+      </p>
+
+      <ol class="lista">
+        {
+          lista.map((ex) => {
+            const puntos = ex.data.ejercicios.length * 10;
+            return (
+              <li>
+                <a class="ex" href={ruta(`${asignatura.id}/examenes/${ex.data.curso}`)}>
+                  <span class="curso">{ex.data.curso}</span>
+                  <span class="txt">
+                    <span class="conv">{NOMBRE_CONV[ex.data.convocatoria]}</span>
+                    <span class="fecha">{ex.data.fecha}</span>
+                  </span>
+                  <span class="der">
+                    <span class="rotulo pts">
+                      {ex.data.ejercicios.length} ejercicios · {puntos} puntos
+                    </span>
+                    <span class="go" aria-hidden="true">→</span>
+                  </span>
+                </a>
+                <a
+                  class="pdf rotulo"
+                  href={archivo(`examenes/${asignatura.id}/${ex.data.pdf}`)}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  ↓ PDF original
+                </a>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .shell {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2.5rem) 6rem;
+  }
+
+  .eyebrow { margin-bottom: .6rem; font-size: .72rem; letter-spacing: .11em; }
+  .lede { max-width: var(--measure); }
+
+  .aviso {
+    margin: 1.8rem 0 2.4rem;
+    padding: .6rem .8rem;
+    border-left: 2px solid var(--flag);
+    background: var(--flag-soft);
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: .01em;
+    max-width: var(--measure);
+  }
+
+  .lista { list-style: none; }
+
+  .lista li {
+    display: flex;
+    align-items: stretch;
+    gap: .5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .lista li:last-child { border-bottom: 1px solid var(--rule); }
+
+  .ex {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1rem .6rem;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background .15s;
+  }
+
+  .ex:hover { background: var(--live-soft); }
+
+  .curso {
+    font-family: var(--mono);
+    font-size: .92rem;
+    color: var(--acento);
+    font-weight: 600;
+  }
+
+  .txt { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+  .conv { font-size: .95rem; }
+  .fecha { font-size: .8rem; color: var(--graphite); }
+
+  .der { display: flex; align-items: center; gap: 1rem; }
+  .pts { color: var(--faint); white-space: nowrap; }
+
+  .go {
+    font-family: var(--mono);
+    color: var(--faint);
+    transition: transform .15s, color .15s;
+  }
+
+  .ex:hover .go { color: var(--live); transform: translateX(3px); }
+
+  .pdf {
+    display: flex;
+    align-items: center;
+    padding: 0 .9rem;
+    color: var(--graphite);
+    text-decoration: none;
+    white-space: nowrap;
+    border-left: 1px solid var(--rule);
+    transition: color .15s, background .15s;
+  }
+
+  .pdf:hover { color: var(--live); background: var(--live-soft); }
+
+  @media (max-width: 640px) {
+    .lista li { flex-direction: column; gap: 0; padding-bottom: .6rem; }
+    .ex { grid-template-columns: 4.5rem minmax(0, 1fr); gap: .8rem; }
+    .der { grid-column: 1 / -1; }
+    .pdf { border-left: none; padding: .3rem .6rem; }
+  }
+</style>

@@ -7,3 +7,14 @@ export function ruta(camino = ''): string {
   const completo = `${BASE}/${limpio}`.replace(/\/{2,}/g, '/');
   return completo.endsWith('/') ? completo : `${completo}/`;
 }
+
+/** Lo mismo, pero para un fichero de `public/`: **sin** barra final.
+ *
+ *  `ruta()` la añade siempre porque todas las páginas del sitio son
+ *  directorios. Un PDF no lo es, y con la barra el servidor devuelve un 404
+ *  que en local no se ve porque el servidor de desarrollo es más indulgente
+ *  que GitHub Pages. */
+export function archivo(camino: string): string {
+  const limpio = camino.replace(/^\/+/, '');
+  return `${BASE}/${limpio}`.replace(/\/{2,}/g, '/');
+}
