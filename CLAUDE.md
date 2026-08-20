@@ -277,13 +277,29 @@ semántica estricta de arriba.
 
 ## 07 // Matemáticas
 
-- Se escriben en LaTeX dentro del MDX.
-- `remark-math` + `rehype-katex` con **salida MathML**, generada en el build.
-- **Prohibido KaTeX o MathJax en tiempo de ejecución.** MathML nativo no
-  necesita JavaScript, se imprime bien, lo leen los lectores de pantalla y
-  funciona sin conexión.
+- Se escriben en LaTeX, en el MDX del tema y en su `ejercicios.yaml`. Los dos
+  pasan por el **mismo** procesador, declarado una sola vez en
+  `src/lib/markdown.mjs`.
+- `remark-math` + `rehype-katex` con salida **`htmlAndMathml`**, generada en el
+  build: KaTeX dibuja la fórmula con sus propias fuentes y deja detrás el
+  MathML, oculto, para los lectores de pantalla.
+- **Prohibido KaTeX o MathJax en tiempo de ejecución.** Aquí KaTeX corre en el
+  build; al navegador no llega ni una línea de JavaScript de matemáticas.
+- **Una sola versión de KaTeX.** Suena a detalle y no lo es (§01): había dos
+  —la de la raíz y la anidada bajo `rehype-katex`—, las clases habían cambiado
+  de nombre entre ellas, y el CSS no casaba con el HTML que se generaba. Si
+  `npm ls katex` devuelve más de una, eso es el fallo.
 - **Cero CDN** en todo el sitio. Criterio de aceptación: desconecta la red,
   recarga, y todo se ve igual — tipografías incluidas.
+
+> Hasta el 20 de agosto de 2026 la salida era **MathML puro**, por ser nativo y
+> no necesitar CSS. Se cambió porque MathML delega el dibujo en la fuente
+> matemática de cada máquina, y eso rompía fórmulas sin avisar: con las fuentes
+> del sistema desaparecía la barra del conjugado —`z̄` se leía como `z`, justo
+> lo contrario— y con STIX Two Math autoalojada desde `@fontsource`, que viene
+> subdividida, desaparecían los radicales. Una fórmula que se dibuja distinta en
+> cada ordenador no es un asunto de estética. El precio son 118 ficheros de
+> fuente de KaTeX en el sitio; el navegador solo descarga los que usa.
 
 ---
 

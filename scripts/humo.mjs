@@ -90,47 +90,74 @@ async function main() {
     await pagina.waitForTimeout(300);
 
     /* 1 · Los signos que se estiran se DIBUJAN, no solo existen en el DOM.
-       Que un <msqrt> tenga caja no basta: sin una fuente con tabla MATH el
-       navegador coloca el contenido y se come el radical, y la caja mide
-       exactamente lo que el contenido. Con radical sobran entre 8 y 14 px;
-       sin él, 0 clavado. Se exige un margen de 4 px, que separa los dos
-       casos sin depender de la fuente concreta del sistema.
+       Las fórmulas las dibuja KaTeX en el build, con sus propias fuentes: la
+       raíz es un `.sqrt` con su `.sqrt-sign`, y la barra del conjugado un
+       `.overline` con su `.overline-line`. Si la caja de esos trazos mide
+       cero, la fórmula que ve el alumno es otra: `√3` se convierte en `3` y
+       `z̄` en `z`, que es justo lo contrario de lo que dice.
+
+       Las dos cosas fallaron de verdad con la salida MathML pura, cada una con
+       una fuente distinta. Por eso se miden las dos.
 
        Se mide con TODO desplegado. En modo guiado casi nada está visible, y
-       una comprobación que no encuentra raíces pasa en vacío: eso es un
+       una comprobación que no encuentra fórmulas pasa en vacío: eso es un
        guardián de mentira. */
     await pagina.evaluate(() => {
       for (const b of document.querySelectorAll('[data-modo="completo"]')) b.click();
     });
     await pagina.waitForTimeout(200);
 
-    const raices = await pagina.evaluate(() => {
-      const medidas = [];
+    const trazos = await pagina.evaluate(() => {
+      const medidas = { raiz: [], barra: [] };
+
+      /* Se destapa TODO lo oculto —desarrollos, mensajes de error, la
+         resolución completa—: una fórmula rota dentro de un bloque que hoy
+         está plegado sigue estando rota cuando el alumno lo abra. */
+      const tapados = [...document.querySelectorAll('[hidden]')];
+      for (const e of tapados) e.hidden = false;
+
       for (const panel of document.querySelectorAll('.panel')) {
         panel.style.display = 'block'; // ver los dos paneles a la vez, solo para medir
-        for (const e of panel.querySelectorAll('msqrt')) {
-          const propio = e.getBoundingClientRect();
-          if (!propio.width) continue;
-          const hijo = e.firstElementChild?.getBoundingClientRect();
-          medidas.push({
+        /* El radical es un <svg> dentro del `.sqrt`, y la barra del conjugado
+           es el borde inferior de un `.overline-line`. No son texto: si el CSS
+           de KaTeX no llega, los dos se quedan a cero y la fórmula cambia de
+           significado sin que nada falle. */
+        for (const e of panel.querySelectorAll('.sqrt')) {
+          if (!e.getBoundingClientRect().width) continue;
+          const svg = e.querySelector('svg')?.getBoundingClientRect();
+          medidas.raiz.push({
             texto: e.textContent.trim().slice(0, 8),
-            sobrante: hijo ? propio.width - hijo.width : Infinity,
+            grosor: svg ? svg.width : 0,
+          });
+        }
+
+        for (const e of panel.querySelectorAll('.overline-line')) {
+          if (!e.getBoundingClientRect().width) continue;
+          medidas.barra.push({
+            texto: e.closest('.overline')?.textContent.trim().slice(0, 8) ?? '',
+            grosor: parseFloat(getComputedStyle(e).borderBottomWidth) || 0,
           });
         }
         panel.style.display = '';
       }
+
+      for (const e of tapados) e.hidden = true;
       return medidas;
     });
 
-    const mudas = raices.filter((m) => m.sobrante < 4);
-    comprueba(raices.length > 0, `hay raíces que medir (${raices.length})`);
-    comprueba(
-      mudas.length === 0,
-      'las raíces dibujan su radical, no solo el contenido',
-      mudas.length
-        ? `√${mudas[0].texto} ocupa lo mismo que su contenido — falta una fuente con tabla MATH`
-        : '',
-    );
+    for (const [cual, nombre, minimo] of [
+      ['raiz', 'las raíces dibujan su radical', 4],
+      ['barra', 'los conjugados dibujan su barra', 0.4],
+    ]) {
+      const medidas = trazos[cual];
+      const mudas = medidas.filter((m) => m.grosor < minimo);
+      comprueba(medidas.length > 0, `hay ${cual === 'raiz' ? 'raíces' : 'barras'} que medir (${medidas.length})`);
+      comprueba(
+        mudas.length === 0,
+        nombre,
+        mudas.length ? `«${mudas[0].texto}» tiene el trazo a ${mudas[0].grosor} px` : '',
+      );
+    }
 
     /* La lectura recuerda el modo en localStorage, así que hay que borrarlo
        antes de recargar: si no, el resto de comprobaciones se harían sobre una
@@ -181,49 +208,68 @@ async function main() {
       }
     }
 
-    /* 4 · El ejercicio guiado diagnostica el error concreto.
+    /* 4 · Cada ejercicio guiado diagnostica el error concreto.
        Se escribe un distractor declarado en el YAML y se exige que la
-       respuesta NO sea el mensaje genérico (§05: nunca «incorrecto»). */
-    const ejercicio = await pagina.$('[data-ejercicio]');
-    if (ejercicio) {
-      await pagina.click('[data-pestana="ejercicios"]');
+       respuesta NO sea el mensaje genérico (§05: nunca «incorrecto»).
+
+       Se recorren TODOS los ejercicios de la página, no el primero: el día
+       que haya diez, el fallo estará en el que nadie miró. */
+    const cuantos = (await pagina.$$('[data-ejercicio]')).length;
+    if (cuantos) await pagina.click('[data-pestana="ejercicios"]');
+
+    for (let n = 0; n < cuantos; n++) {
       await pagina.waitForTimeout(200);
 
-      const diagnostico = await pagina.evaluate(async () => {
-        const raiz = document.querySelector('[data-ejercicio]');
+      /* Se prueban TODOS los distractores declarados, no uno de muestra. Un
+         distractor cuyo valor el lector de respuestas no sepa interpretar
+         —una raíz mal escrita, un signo raro— nunca se dispararía, y el
+         alumno recibiría «no es correcto» donde había un diagnóstico escrito.
+         Eso no se ve leyendo el YAML. */
+      const prueba = await pagina.evaluate(async (n) => {
+        const raiz = document.querySelectorAll('[data-ejercicio]')[n];
+        const titulo = raiz.querySelector('h3')?.textContent.trim() ?? `ejercicio ${n + 1}`;
         const datos = JSON.parse(raiz.querySelector('[data-datos]').textContent);
+        const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 
-        // Se desbloquean los pasos poniéndose en modo completo.
-        raiz.querySelector('[data-modo="completo"]').click();
-        await new Promise((r) => setTimeout(r, 50));
-        raiz.querySelector('[data-modo="guiado"]').click();
-        await new Promise((r) => setTimeout(r, 50));
+        for (const paso of raiz.querySelectorAll('[data-paso]')) paso.classList.remove('bloqueado');
 
-        const i = datos.findIndex((d) => d.tipo === 'calcular' && d.distractores.length);
-        if (i < 0) return { hay: false };
+        const mudos = [];
+        let probados = 0;
 
-        const paso = raiz.querySelector(`[data-paso="${i}"]`);
-        paso.classList.remove('bloqueado');
-        paso.querySelector('input').value = datos[i].distractores[0];
-        paso.querySelector('[data-comprobar]').click();
-        await new Promise((r) => setTimeout(r, 100));
+        for (let i = 0; i < datos.length; i++) {
+          if (datos[i].tipo !== 'calcular') continue;
+          const paso = raiz.querySelector(`[data-paso="${i}"]`);
 
-        const fb = paso.querySelector('[data-fb]');
-        return {
-          hay: true,
-          visible: !fb.hidden,
-          texto: (fb.textContent ?? '').trim(),
-        };
-      });
+          for (let k = 0; k < datos[i].distractores.length; k++) {
+            const esperado = paso
+              .querySelector(`[data-msg-distractor="${k}"]`)
+              .textContent.trim()
+              .slice(0, 40);
 
-      if (diagnostico.hay) {
-        comprueba(diagnostico.visible, 'una respuesta equivocada recibe respuesta del sistema');
-        comprueba(
-          !/no es correcto|incorrecto/i.test(diagnostico.texto) && diagnostico.texto.length > 80,
-          'el fallo se diagnostica en vez de decir «incorrecto»',
-          diagnostico.texto.slice(0, 90),
-        );
-      }
+            paso.querySelector('input').value = datos[i].distractores[k];
+            paso.querySelector('[data-comprobar]').click();
+            await espera(60);
+            probados++;
+
+            const dicho = (paso.querySelector('[data-fb]').textContent ?? '').trim();
+            if (!dicho.includes(esperado)) {
+              mudos.push(`${datos[i].distractores[k]} (paso ${i + 1})`);
+            }
+          }
+        }
+
+        return { titulo, probados, mudos };
+      }, n);
+
+      comprueba(
+        prueba.probados > 0,
+        `«${prueba.titulo}»: hay distractores que probar (${prueba.probados})`,
+      );
+      comprueba(
+        prueba.mudos.length === 0,
+        `«${prueba.titulo}»: cada respuesta equivocada recibe su diagnóstico`,
+        prueba.mudos.length ? `sin diagnosticar: ${prueba.mudos.join(', ')}` : '',
+      );
     }
   }
 

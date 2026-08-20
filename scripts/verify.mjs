@@ -114,6 +114,41 @@ console.log('\nTokens');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   2 bis · LaTeX que no se dibuja
+   ═══════════════════════════════════════════════════════════════════
+   Dos comandos que se escriben igual de bien y se dibujan mal:
+
+   · `\bar{z}` usa un acento que muchas fuentes matemáticas no traen, y la
+     barra desaparece sin aviso. Con `\overline` sí se dibuja.
+   · `\overline{...}` sobre algo ANCHO tampoco vale: Chromium no estira la
+     barra, así que en `\overline{z^{n}}` cae solo encima del exponente, y
+     sobre una fracción se monta encima del signo. La barra va sobre un
+     símbolo suelto: `\left(\overline{z}\right)^{n}`, que además es la
+     igualdad que se está enseñando.
+
+   Pasó el 20 de agosto de 2026 en el ejercicio 1.2. */
+{
+  const prohibido = [
+    [/\\bar\s*\{|\\bar\s+[a-zA-Z]/g, 'usa \\overline{...}: \\bar no dibuja la barra en todas las fuentes'],
+    [
+      /\\overline\{[^{}]*[\^_+\-\\][^{}]*\}|\\overline\{[^{}]*\{/g,
+      'la barra solo sobre un símbolo suelto: Chromium no la estira sobre expresiones',
+    ],
+  ];
+  const pegas = [];
+
+  for (const f of archivos(SRC, ['.mdx', '.yaml', '.astro'])) {
+    const texto = leer(f);
+    for (const [patron, porque] of prohibido) {
+      for (const m of texto.match(patron) ?? []) pegas.push(`${rel(f)}: «${m.trim()}» — ${porque}`);
+    }
+  }
+
+  if (pegas.length === 0) ok('ningún comando LaTeX de los que no se dibujan');
+  else fallo('LaTeX que el navegador no dibuja', pegas.slice(0, 8).join('\n    '));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    3 · Foco visible: nadie apaga el outline
    ═══════════════════════════════════════════════════════════════════ */
 console.log('\nAccesibilidad de la fuente');

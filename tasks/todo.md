@@ -83,6 +83,13 @@ de verdad — la regla de ese fichero es no añadir comprobaciones por si acaso.
 inline y su propio `:root`, que es justo lo que la regla prohíbe. Se ignoran a
 propósito y está dicho en el README. Si algún día se publican, deja de valer.
 
+**11 bis · El sitio pesa 2,5 MB, y 1,1 MB son fuentes de KaTeX.** Al pasar a
+salida `htmlAndMathml` (§07) entraron 118 ficheros de fuente: cada familia en
+woff2, woff y ttf. El navegador solo descarga los woff2 que la página usa, así
+que el coste real por visita es pequeño, pero el repositorio y el despliegue
+cargan con todo. Se puede recortar copiando solo los woff2 y reescribiendo el
+`@font-face`. No es urgente; queda escrito para que no se descubra por sorpresa.
+
 **12 · Astro 7 movió la configuración de Markdown.** `markdown.remarkPlugins`
 está deprecado; se usa `processor: unified({...})` de `@astrojs/markdown-remark`.
 Anotado porque cualquier ejemplo que encuentres por internet usará la forma
