@@ -142,6 +142,34 @@ const pasoCalcular = z.object({
         'hay un distractor dentro de la tolerancia de la respuesta correcta: se daría por bueno',
     },
   )
+  /* Y dos distractores demasiado parecidos ENTRE SÍ tampoco valen, aunque los
+     dos estén lejos de la respuesta correcta: el componente busca el primero
+     que encaje, así que el segundo nunca se dispara y su mensaje es letra
+     muerta. Pasó el 20 de agosto de 2026 con «2» y «1,9975» en un ejercicio
+     cuya respuesta era 361: la holgura sale de la tolerancia de la respuesta
+     —aquí 0,5— y a esa escala los dos distractores son el mismo número.
+     La holgura se replica tal como la calcula EjercicioGuiado. */
+  .refine(
+    (p) => {
+      if (p.respuesta.tipo === 'conjunto') return true;
+      const leidos = p.distractores.map((d) => leeComplejo(d.valor));
+      const holgura = (v: { re: number; im: number } | null) =>
+        Math.max((v ? Math.max(Math.abs(v.re), Math.abs(v.im)) : 1) * 0.02, p.respuesta.tolerancia);
+      for (let i = 0; i < leidos.length; i++) {
+        for (let j = i + 1; j < leidos.length; j++) {
+          const a = leidos[i];
+          const b = leidos[j];
+          if (!a || !b) continue;
+          if (comparaComplejo(a, b, Math.max(holgura(a), holgura(b)))) return false;
+        }
+      }
+      return true;
+    },
+    {
+      message:
+        'hay dos distractores que se confunden entre sí: solo saltaría el primero y el otro nunca diagnosticaría nada',
+    },
+  )
   /* Lo mismo para los conjuntos, donde el parecido es más traicionero: un
      conjunto no tiene orden, así que «-2, -3» y «-3, -2» son la MISMA
      respuesta. Si lo que se pide es un par ordenado, `conjunto` no es el tipo
