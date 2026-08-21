@@ -258,6 +258,7 @@ if (SOLO_FUENTE) {
   const rotos = [];
   const sinViewport = [];
   const sinModos = [];
+  const latexCrudo = [];
 
   for (const f of paginas) {
     const html = leer(f);
@@ -290,6 +291,34 @@ if (SOLO_FUENTE) {
     /* modo guiado y modo completo en páginas de contenido */
     const esContenido = /data-lectura/.test(html);
     if (esContenido && !/data-modo="guiado"/.test(html)) sinModos.push(nombre);
+
+    /* LaTeX que se ha quedado sin procesar.
+       Añadida el 21 de agosto de 2026, después de encontrar DOCE fórmulas
+       publicadas como texto crudo —«$\left», «z\right|=1$»— repartidas por
+       ocho páginas. Tres causas distintas, todas invisibles al build:
+
+         · una barra de valor absoluto dentro de una celda de tabla. El `|`
+           parte la celda, la fila pasa a tener más columnas que la cabecera y
+           Markdown descarta las sobrantes en silencio. Se arregla escribiendo
+           \lvert y \rvert, que no llevan barra literal.
+         · una fórmula en línea partida por un salto de renglón cuya
+           continuación empieza por `- ` o `> `: Markdown la lee como viñeta o
+           como cita y descoloca el emparejamiento de los dólares.
+         · un `titulo:` de paso con matemáticas dentro. Los títulos se pintan
+           como texto plano, no pasan por mate(), así que el LaTeX sale tal
+           cual.
+
+       El texto publicado no tiene ningún motivo para contener un `$`: aquí no
+       se habla de dólares. Si aparece uno, es una fórmula que no se ha
+       dibujado. Se mira el texto sin el MathML ni la anotación de KaTeX, que
+       sí guardan el LaTeX de origen a propósito. */
+    const visible = html
+      .replace(/<math[\s\S]*?<\/math>/g, '')
+      .replace(/<script[\s\S]*?<\/script>/g, '')
+      .replace(/<[^>]+>/g, ' ');
+    for (const m of visible.matchAll(/.{0,45}\$.{0,45}/g)) {
+      latexCrudo.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
+    }
 
     /* enlaces internos */
     for (const m of html.matchAll(/href="([^"#][^"]*)"/g)) {
@@ -326,6 +355,7 @@ if (SOLO_FUENTE) {
   grupo(imgSinAlt, 'alt en toda imagen', 'imágenes sin alt');
   grupo(sinModos, 'modo guiado y modo completo en las páginas de contenido', 'páginas sin los dos modos');
   grupo(rotos, 'cero enlaces internos rotos', 'enlaces que no llevan a ninguna parte');
+  grupo(latexCrudo, 'cero fórmulas sin dibujar en el texto publicado', 'LaTeX que ha salido como texto');
 
   /* prefers-reduced-motion en el CSS publicado */
   const hojas = [...archivos(DIST, ['.css'])];
