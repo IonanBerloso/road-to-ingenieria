@@ -17,12 +17,9 @@
  */
 import { mate } from '../../lib/markdown.mjs';
 import EjercicioGuiado from '../patrones/EjercicioGuiado.astro';
+import Reparto, { type Puntos } from './Reparto.astro';
 
-export interface Puntos {
-  comp1: number;
-  comp2: number;
-  comp4: number;
-}
+export type { Puntos };
 
 export interface EjercicioDeExamen {
   id: string;
@@ -63,12 +60,6 @@ const hoja = await Promise.all(
   })),
 );
 
-/** «COMP 2: 7 puntos por el cálculo», tal como lo reparte el examen. */
-const DESGLOSE: [keyof Puntos, string, string][] = [
-  ['comp1', 'COMP 1', 'reconocer'],
-  ['comp2', 'COMP 2', 'calcular'],
-  ['comp4', 'COMP 4', 'justificar'],
-];
 ---
 
 <div class="shell" data-armazon>
@@ -130,21 +121,7 @@ const DESGLOSE: [keyof Puntos, string, string][] = [
               <div class="prosa" set:html={e.enunciadoHtml} />
               <div class="prosa pide" set:html={e.pideHtml} />
 
-              {e.puntos && (
-                <ul class="desglose">
-                  {DESGLOSE.filter(([k]) => e.puntos![k] > 0).map(([k, nombre, verbo]) => (
-                    <li>
-                      <span class="d-n rotulo">{nombre}</span>
-                      <span class="d-barra" aria-hidden="true">
-                        <span class="d-relleno" style={`width:${e.puntos![k] * 10}%`} />
-                      </span>
-                      <span class="d-pts">
-                        {e.puntos![k]} {e.puntos![k] === 1 ? 'punto' : 'puntos'} por {verbo}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {e.puntos && <Reparto puntos={e.puntos} />}
 
               <p class="p-ir no-imprimir">
                 <a href={`#ej-${e.id}`} data-pestana="resoluciones">Ver la resolución →</a>
@@ -385,34 +362,7 @@ const DESGLOSE: [keyof Puntos, string, string][] = [
 
   .pide { color: var(--graphite); margin-top: .5rem; }
 
-  /* ── el reparto de puntos ──────────────────────────────────────── */
-  .desglose {
-    list-style: none;
-    margin-top: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: .3rem;
-  }
-
-  .desglose li {
-    display: grid;
-    grid-template-columns: 4.2rem 5rem 1fr;
-    align-items: center;
-    gap: .7rem;
-    font-size: .78rem;
-  }
-
-  .d-n { color: var(--graphite); }
-
-  .d-barra {
-    height: 5px;
-    background: var(--grid);
-    border-radius: 99px;
-    overflow: hidden;
-  }
-
-  .d-relleno { display: block; height: 100%; background: var(--acento); }
-  .d-pts { color: var(--graphite); }
+  /* El reparto de puntos vive en `ui/Reparto.astro`, con su propio CSS. */
 
   .p-ir { margin-top: 1.2rem; }
 
@@ -457,8 +407,6 @@ const DESGLOSE: [keyof Puntos, string, string][] = [
     .rail ol { display: flex; gap: .3rem; overflow-x: auto; padding-bottom: .3rem; }
     .rail ol a { white-space: nowrap; }
     .pdf { margin-top: 1rem; }
-
-    .desglose li { grid-template-columns: 4.2rem 3rem 1fr; }
   }
 
   @media print {

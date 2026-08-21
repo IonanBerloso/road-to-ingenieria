@@ -1,0 +1,87 @@
+---
+/**
+ * El reparto de puntos por competencia de un ejercicio de examen, tal como lo
+ * imprime la propia hoja: «COMP 2: 7 puntos por el cálculo».
+ *
+ * Vivía dentro de `ui/Examen.astro`, que era su único usuario. Se saca aquí al
+ * aparecer el segundo —`EjercicioGuiado`, que lo enseña en su cabecera— porque
+ * copiarlo habría sido duplicar a la vez la tabla de nombres, el marcado y las
+ * cinco reglas de CSS de la barra (§01).
+ *
+ * Solo se pinta lo que el examen puntúa: una competencia con cero puntos no
+ * aparece. Eso hace visible de un vistazo el caso interesante, el de los
+ * ejercicios donde COMP 2 vale cero y no hay una sola cuenta que hacer (§09).
+ */
+export interface Puntos {
+  comp1: number;
+  comp2: number;
+  comp4: number;
+}
+
+interface Props {
+  puntos: Puntos;
+  /** Etiqueta del grupo para los lectores de pantalla. */
+  rotulo?: string;
+}
+
+const { puntos, rotulo = 'Reparto de puntos por competencia' } = Astro.props;
+
+/** El verbo es el que usa la propia hoja de examen al desglosar la nota. */
+const DESGLOSE: [keyof Puntos, string, string][] = [
+  ['comp1', 'COMP 1', 'reconocer'],
+  ['comp2', 'COMP 2', 'calcular'],
+  ['comp4', 'COMP 4', 'justificar'],
+];
+
+const filas = DESGLOSE.filter(([k]) => puntos[k] > 0);
+---
+
+<ul class="desglose" aria-label={rotulo}>
+  {
+    filas.map(([k, nombre, verbo]) => (
+      <li>
+        <span class="d-n rotulo">{nombre}</span>
+        <span class="d-barra" aria-hidden="true">
+          <span class="d-relleno" style={`width:${puntos[k] * 10}%`} />
+        </span>
+        <span class="d-pts">
+          {puntos[k]} {puntos[k] === 1 ? 'punto' : 'puntos'} por {verbo}
+        </span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .desglose {
+    list-style: none;
+    margin-top: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+
+  .desglose li {
+    display: grid;
+    grid-template-columns: 4.2rem 5rem 1fr;
+    align-items: center;
+    gap: .7rem;
+    font-size: .78rem;
+  }
+
+  .d-n { color: var(--graphite); }
+
+  .d-barra {
+    height: 5px;
+    background: var(--grid);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .d-relleno { display: block; height: 100%; background: var(--acento); }
+  .d-pts { color: var(--graphite); }
+
+  @media (max-width: 40rem) {
+    .desglose li { grid-template-columns: 4.2rem 3rem 1fr; }
+  }
+</style>
