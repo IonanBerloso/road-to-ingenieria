@@ -371,9 +371,26 @@ todo componente de ejercicios:
 | **COMP 2** | el cálculo | 6–7 puntos |
 | **COMP 4** | explicación formal: enunciados, definiciones, gráficos, hipótesis | 2–9 puntos |
 
-**Entre el 30 y el 40 % de la nota no es calcular.** Hay ejercicios enteros
-—como el de sucesiones del parcial del 20 de octubre de 2025— donde COMP 2 vale
-cero y nueve de los diez puntos son demostración.
+**La mitad de la nota no es calcular.** Hay ejercicios enteros —como el de
+sucesiones del parcial del 20 de octubre de 2025, o los tres «enunciar y
+demostrar Barrow» de 2019, 2020 y 2021— donde COMP 2 vale cero y los diez
+puntos son demostración.
+
+> Esta sección decía «entre el 30 y el 40 %» hasta el 21 de agosto de 2026. Se
+> corrigió al terminar el corpus del primer cuatrimestre y poder **medirlo** en
+> vez de estimarlo: sumando el reparto oficial impreso en los 143 ejercicios de
+> los 33 exámenes —once cursos por tres evaluaciones, 1440 puntos— sale
+>
+> | | puntos | del total |
+> |---|---|---|
+> | COMP 1 | 147 | **10,2 %** |
+> | COMP 2 | 727 | **50,5 %** |
+> | COMP 4 | 566 | **39,3 %** |
+>
+> Es decir, **el 49,5 % de la nota no es cálculo**. La estimación anterior se
+> quedaba diez puntos corta, y venía de haber mirado solo los primeros
+> exámenes. El dato se recalcula cuando entren exámenes nuevos (§10: los datos
+> que se publican como ciertos tienen que serlo).
 
 Todo ejercicio guiado entrena las tres: una pregunta de reconocimiento antes
 del cálculo, y una comprobación de justificación formal después. **Un componente
