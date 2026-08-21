@@ -259,12 +259,23 @@ const paso = z.discriminatedUnion('tipo', [
  *  Es opcional: los ejercicios de boletín no lo llevan. */
 const puntos = z
   .object({
-    comp1: z.number().min(0).max(10).default(0),
-    comp2: z.number().min(0).max(10).default(0),
-    comp4: z.number().min(0).max(10).default(0),
+    comp1: z.number().min(0).max(20).default(0),
+    comp2: z.number().min(0).max(20).default(0),
+    comp4: z.number().min(0).max(20).default(0),
   })
-  .refine((p) => p.comp1 + p.comp2 + p.comp4 === 10, {
-    message: 'los puntos de un ejercicio de examen tienen que sumar 10',
+  /* Casi todos los ejercicios valen 10, pero no todos: el del dron de la
+     segunda evaluación de 2017-2018 vale **20 de los 40** del examen, y su
+     reparto impreso es COMP1 6, COMP2 4, COMP4 10. Hasta el 22 de agosto de
+     2026 esta comprobación exigía que sumaran exactamente 10, y eso obligaba
+     a dividir el reparto real entre dos — es decir, a publicar un dato falso
+     para contentar al guardián, justo lo que §11 dice que no hay que hacer.
+     Ahora se admite cualquier múltiplo de 10, que es lo que la escuela usa. */
+  .refine((p) => {
+    const total = p.comp1 + p.comp2 + p.comp4;
+    return total > 0 && total % 10 === 0;
+  }, {
+    message:
+      'los puntos de un ejercicio de examen tienen que sumar un múltiplo de 10 (casi siempre 10; el del dron de 2017-2018 vale 20)',
   });
 
 const ejercicio = z
@@ -273,7 +284,7 @@ const ejercicio = z
     titulo: z.string().min(5),
     /** Procedencia obligatoria: el material es adaptado, no propio (§08). */
     fuente: z.string().min(10),
-    /** Solo en los ejercicios de examen: el reparto oficial de los 10 puntos. */
+    /** Solo en los ejercicios de examen: el reparto oficial de puntos. */
     puntos: puntos.optional(),
     /** Un enunciado puede ser legitimamente corto: «$z^3 = -|z|$» son
      *  trece caracteres y es un enunciado completo. El minimo solo esta para
