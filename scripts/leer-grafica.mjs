@@ -9,10 +9,21 @@ import { readFileSync } from 'node:fs';
  * altura. Una línea punteada vertical no la tiene —sus vecinas son blancas— y
  * un rótulo tampoco, porque es corto.
  *
- * Uso: node medir-grafica.mjs <png> <py_y1> <py_y0> <py_ym1> <px_x0> <px_xref> <xref>
+ * Uso: node leer-grafica.mjs <png> <py_y1> <py_y0> <py_ym1> <px_x0> <px_xref>
+ *                            <xref> [x_desde x_hasta paso]
+ *
+ * Los tres últimos son opcionales y solo afectan al muestreo del final. Se
+ * añadieron el 21 de agosto de 2026: el script se escribió para una gráfica
+ * concreta —la de la serie de 2024-2025— con el rango incrustado, y al llegar
+ * la segunda gráfica que había que medir tocaba o copiarlo o generalizarlo.
+ * La regla 0 dice cuál de las dos (§01).
  */
-const [png, PY1, PY0, PYm1, PX0, PXREF, XREF] = process.argv.slice(2);
+const [png, PY1, PY0, PYm1, PX0, PXREF, XREF, DESDE, HASTA, PASO] =
+  process.argv.slice(2);
 const py1 = +PY1, py0 = +PY0, pym1 = +PYm1, px0 = +PX0, pxref = +PXREF, xref = +XREF;
+const desde = DESDE === undefined ? -0.275 : +DESDE;
+const hasta = HASTA === undefined ? 0.5 : +HASTA;
+const paso = PASO === undefined ? 0.025 : +PASO;
 const UY = ((py0 - py1) + (pym1 - py0)) / 2;
 const UX = (pxref - px0) / xref;
 
@@ -98,9 +109,10 @@ for (let i = 1; i < curva.length; i++) {
 
 console.log('\nmuestreo:');
 let linea = '';
-for (let xq = -0.275; xq <= 0.5001; xq += 0.025) {
+const cerca = paso / 4;
+for (let xq = desde; xq <= hasta + paso / 1000; xq += paso) {
   const c = curva.reduce((a, b) => (Math.abs(b.x - xq) < Math.abs(a.x - xq) ? b : a));
-  linea += Math.abs(c.x - xq) < 0.006 ? `${f(xq, 3)}:${f(c.y, 2)}  ` : `${f(xq, 3)}:—  `;
+  linea += Math.abs(c.x - xq) < cerca ? `${f(xq, 3)}:${f(c.y, 2)}  ` : `${f(xq, 3)}:—  `;
   if (linea.length > 70) { console.log('  ' + linea); linea = ''; }
 }
 if (linea) console.log('  ' + linea);
