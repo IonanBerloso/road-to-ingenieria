@@ -2,7 +2,7 @@
 asignatura: calculo
 tema: 1
 titulo: Números complejos
-descripcion: Forma binómica y polar, De Moivre, raíces y regiones del plano. Y por qué el argumento no es arctan(b/a).
+descripcion: Polar, conjugado, De Moivre y raíces; lugares geométricos —Apolonio, arco capaz, elipse—; exponencial y logaritmo complejos. Y por qué el seno no está acotado.
 patron: lectura
 competencias:
   - COMP1
@@ -100,6 +100,57 @@ calculadora. En la herramienta de arriba, lleva el punto a la izquierda del eje
 y compara las dos últimas celdas.
 </ErrorTipico>
 
+## El conjugado, que hace casi todo el trabajo
+
+El conjugado de $z = a + bi$ es $\overline{z} = a - bi$: el mismo punto
+reflejado en el eje real. Suena a definición menor y es la herramienta más
+rentable del tema, porque **al multiplicar un complejo por su conjugado
+desaparece la $i$**:
+
+$$
+z\,\overline{z} = (a+bi)(a-bi) = a^{2}+b^{2} = |z|^{2}
+$$
+
+De ahí sale cómo se divide. No hay una regla nueva: se multiplica arriba y
+abajo por el conjugado del denominador, y el denominador se vuelve real.
+
+$$
+\frac{2+i}{3-i}
+= \frac{(2+i)(3+i)}{(3-i)(3+i)}
+= \frac{6+2i+3i-1}{9+1}
+= \frac{5+5i}{10}
+= \frac12+\frac12 i
+$$
+
+Las otras tres propiedades que se usan en examen, y que conviene reconocer al
+vuelo cuando aparecen escondidas en un enunciado:
+
+- $z+\overline{z} = 2\,\mathrm{Re}(z)$ y $z-\overline{z} = 2i\,\mathrm{Im}(z)$.
+  Cuando veas $\frac{z+\overline{z}}{2}$ en una condición, es la parte real
+  disfrazada.
+- El conjugado entra y sale de productos y cocientes:
+  $\overline{zw} = \overline{z}\,\overline{w}$. Por eso
+  $\left|\overline{z}+\overline{w}\right| = \left|z+w\right|$ — reflejar no
+  cambia distancias.
+- Y la que más rinde: **si $|z| = 1$, entonces $\overline{z} = 1/z$**.
+
+Esa última convierte ecuaciones que parecen imposibles en ecuaciones normales.
+$z^{4}\overline{z}\,i + 1 = 0$ parece de grado cinco; tomando módulos sale
+$|z| = 1$, y entonces $\overline z = 1/z$ deja $z^{3} = i$, que es de grado
+tres. **El conjugado resta un grado, no lo suma.**
+
+<ErrorTipico titulo="Error típico · confundir el conjugado con el opuesto">
+$\overline{z}$ refleja en el eje real y cambia el signo de la parte
+imaginaria: $\overline{-1-i} = -1+i$. El opuesto $-z$ gira media vuelta y cambia
+**los dos** signos: $-(-1-i) = 1+i$. Son puntos distintos salvo que $z$ sea
+imaginario puro.
+
+La consecuencia práctica está en el argumento:
+$\arg\overline{z} = -\arg z$, mientras que $\arg(-z) = \arg z + \pi$. Un
+ejercicio de regiones que confunda los dos te sale reflejado donde debía salir
+girado, y el dibujo parece razonable — que es lo peor que puede pasar.
+</ErrorTipico>
+
 ## Raíces n-ésimas: cuántas hay y por qué están repartidas
 
 Buscar $\sqrt[n]{z}$ es buscar los $w$ tales que $w^n = z$. En polar:
@@ -121,19 +172,452 @@ tres van en la respuesta, y COMP4 se evalúa sobre si has justificado que son
 todas.
 </ErrorTipico>
 
-## Regiones del plano
+## Lugares geométricos: traducir la condición a una distancia
 
-Los enunciados de examen suelen pedir el conjunto de puntos que cumplen una
-condición: $|z - z_0| \le \rho$, $\operatorname{Re}(z) > 1$,
-$|z - 1| = |z + i|$. Conviene traducir antes de dibujar:
+Este es **el ejercicio que ha caído los once años**, y casi siempre es el
+primero del examen. El enunciado da una o dos condiciones sobre $z$ y pide el
+conjunto de puntos que las cumplen, dibujado. Nunca se resuelve despejando a lo
+bruto: se resuelve **leyendo cada trozo como una frase sobre distancias o
+ángulos**.
 
-- $|z - z_0|$ es **la distancia** de $z$ al punto $z_0$. Con un $\le$ es un
-  disco; con un $=$, una circunferencia.
+Las cuatro traducciones básicas, que hay que reconocer sin pensar:
+
+- $|z - z_0|$ es **la distancia** de $z$ al punto $z_0$. Con un $=$ es una
+  circunferencia; con un $\le$, un disco.
 - $|z - p| = |z - q|$ son los puntos que equidistan de $p$ y de $q$: la
-  mediatriz del segmento.
+  **mediatriz** del segmento que los une.
 - Las condiciones sobre $\operatorname{Re}(z)$ o $\operatorname{Im}(z)$ son
-  semiplanos.
+  **semiplanos**. Y ojo, que vienen disfrazadas: $\frac{z+\overline{z}}{2}$ es
+  $\operatorname{Re}(z)$, y $z - \overline{z} \ge 2i$ es $\operatorname{Im}(z)
+  \ge 1$.
+- $\arg(z - z_0) = \theta$ es una **semirrecta** que sale de $z_0$ — sale, no
+  pasa: el punto $z_0$ no está.
 
-Comprobar es fácil y casi nadie lo hace: **elige un punto que claramente esté
-dentro y sustitúyelo en la condición original**. Si no la cumple, la región está
-mal. Esa comprobación vale medio punto de COMP4 y cuesta veinte segundos.
+Dos rutinas que aparecen en casi todos y que se puntúan aparte del dibujo.
+Primero, **si hay un denominador, hay un punto excluido**: en
+$\arg\frac{z-1}{z+i}$ hay que decir en voz alta que $z \neq -i$, y el dibujo
+lleva ese punto hueco. Segundo, **el borde depende del signo**: con $<$ va
+discontinuo, con $\le$ va continuo, y con dos condiciones a la vez la región es
+la intersección.
+
+Y la comprobación que casi nadie hace: **elige un punto que claramente esté
+dentro y sustitúyelo en la condición original**. Si no la cumple, la región
+está mal. Cuesta veinte segundos y vale puntos de COMP4.
+
+### Apolonio: cuando las dos distancias no van al mismo peso
+
+Si la condición es $|z - a| = |z - b|$ sale la mediatriz. Pero en cuanto una de
+las dos distancias lleva un factor delante,
+
+$$
+|z - a| = k\,|z - b|, \qquad k \neq 1,
+$$
+
+**deja de ser una recta y pasa a ser una circunferencia**. Es la circunferencia
+de Apolonio, y ha caído en 2019-2020, 2021-2022, 2023-2024 y 2025-2026.
+
+No hay que recordar dónde está el centro: sale solo al escribir $z = x + iy$,
+elevar los dos lados al cuadrado y completar cuadrados. Con $|z| = 2|z - 3|$:
+
+$$
+x^{2}+y^{2} = 4\left[(x-3)^{2}+y^{2}\right]
+\;\Longrightarrow\;
+x^{2}+y^{2}-8x+12 = 0
+\;\Longrightarrow\;
+(x-4)^{2}+y^{2} = 4
+$$
+
+Centro en $4$ y radio $2$. Fíjate en dónde ha quedado: **no está en el punto
+medio de $0$ y $3$**, sino desplazada hacia el punto del que se está el doble
+de lejos.
+
+<figure class="figura-examen">
+<svg viewBox="-60 -120 340 240" role="img" width="340" height="240"
+     aria-labelledby="t1apo-t t1apo-d">
+  <title id="t1apo-t">La circunferencia de Apolonio de |z| = 2|z − 3|</title>
+  <desc id="t1apo-d">Sobre el eje real están marcados el origen y el punto 3.
+  El lugar geométrico es una circunferencia de centro 4 y radio 2, que no
+  encierra a ninguno de los dos puntos y queda a la derecha de ambos.</desc>
+  <g stroke="var(--graphite)" stroke-width="1.2" fill="none">
+    <path d="M-50 0 L272 0 M0 -110 L0 110"></path>
+  </g>
+  <g stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3" fill="none">
+    <path d="M160 -95 L160 95"></path>
+  </g>
+  <circle cx="160" cy="0" r="80" fill="none" stroke="var(--live)"
+          stroke-width="2.6"></circle>
+  <g fill="var(--ink)">
+    <circle cx="0" cy="0" r="4"></circle>
+    <circle cx="120" cy="0" r="4"></circle>
+  </g>
+  <g fill="var(--live)">
+    <circle cx="160" cy="0" r="3"></circle>
+  </g>
+  <g fill="var(--graphite)" font-size="13" font-family="var(--mono)">
+    <text x="-14" y="22">0</text>
+    <text x="112" y="22">3</text>
+    <text x="154" y="22">4</text>
+    <text x="168" y="-42">r = 2</text>
+  </g>
+</svg>
+<figcaption>
+Los puntos de la circunferencia están al doble de distancia de 3 que del
+origen. El punto 2 la cumple —dista 2 del origen y 1 del 3— y el punto 6
+también, con 6 y 3.
+</figcaption>
+</figure>
+
+### El arco capaz, y cuándo se rompe en una semirrecta
+
+La otra familia no habla de distancias sino de **ángulos**. La condición
+
+$$
+\arg\frac{z-a}{z-b} = \theta
+$$
+
+dice que el segmento que une $a$ con $b$ **se ve desde $z$ bajo el ángulo
+$\theta$**, y el conjunto de puntos desde los que un segmento se ve siempre
+igual es un arco de circunferencia que pasa por $a$ y por $b$: el arco capaz.
+Ha caído en 2017-2018, 2020-2021, 2022-2023 y 2023-2024.
+
+Lo que decide la nota no es reconocerlo, es **quedarse con el arco correcto**.
+El argumento tiene signo, así que de las dos mitades en que $a$ y $b$ parten la
+circunferencia solo vale una: la del lado donde el giro de $z-b$ a $z-a$ va en
+el sentido que pide $\theta$. Y los extremos $a$ y $b$ nunca entran, porque en
+ellos el cociente no está definido.
+
+<figure class="figura-examen">
+<svg viewBox="-130 -130 260 250" role="img" width="260" height="250"
+     aria-labelledby="t1arc-t t1arc-d">
+  <title id="t1arc-t">El arco capaz de 90 grados sobre el segmento de −1 a
+  1</title>
+  <desc id="t1arc-d">Una circunferencia de radio 1 centrada en el origen. La
+  mitad de arriba está dibujada con trazo grueso y es el lugar geométrico; la
+  de abajo va punteada y queda fuera. Los puntos menos uno y uno se marcan
+  huecos porque están excluidos. Desde un punto del arco salen dos segmentos
+  hacia ellos que forman un ángulo recto.</desc>
+  <g stroke="var(--graphite)" stroke-width="1.2" fill="none">
+    <path d="M-120 0 L120 0 M0 -120 L0 110"></path>
+  </g>
+  <path d="M-80 0 A80 80 0 0 0 80 0" fill="none" stroke="var(--rule)"
+        stroke-width="1.6" stroke-dasharray="4 4"></path>
+  <path d="M-80 0 A80 80 0 0 1 80 0" fill="none" stroke="var(--live)"
+        stroke-width="2.8"></path>
+  <g stroke="var(--alt)" stroke-width="1.6" fill="none">
+    <path d="M0 -80 L80 0 M0 -80 L-80 0"></path>
+    <path d="M9.9 -70.1 L0 -60.2 L-9.9 -70.1"></path>
+  </g>
+  <g fill="var(--paper)" stroke="var(--ink)" stroke-width="1.8">
+    <circle cx="-80" cy="0" r="4.5"></circle>
+    <circle cx="80" cy="0" r="4.5"></circle>
+  </g>
+  <g fill="var(--graphite)" font-size="13" font-family="var(--mono)">
+    <text x="-96" y="21">−1</text>
+    <text x="74" y="21">1</text>
+    <text x="10" y="-86">z</text>
+  </g>
+</svg>
+<figcaption>
+Desde cualquier punto del arco grueso, el segmento de −1 a 1 se ve bajo 90°.
+Desde el arco punteado también se ve bajo 90°, pero con el signo contrario, y
+por eso queda fuera.
+</figcaption>
+</figure>
+
+Hay un caso límite que en los últimos cursos aparece más que el arco entero:
+cuando $\theta$ vale $0$ o $\pi$, el «arco» se estira hasta convertirse en una
+**recta**, porque ver el segmento bajo un ángulo nulo o llano es estar alineado
+con $a$ y $b$. Con $\theta = \pi$ te quedas con el trozo **entre** los dos
+puntos; con $\theta = 0$, con las dos semirrectas de fuera. La misma
+degeneración explica $\arg\frac{1}{z-a} = \theta$, que es simplemente
+$\arg(z-a) = -\theta$: una semirrecta desde $a$.
+
+### La elipse, y la hipérbola que nunca cae
+
+Si en vez de igualar o dividir las dos distancias las **sumas**,
+
+$$
+|z - a| + |z - b| = c,
+$$
+
+el lugar es una **elipse** de focos $a$ y $b$. Es la definición de elipse tal
+cual, y por eso no hace falta desarrollar nada: se identifican los focos, se
+comprueba que $c$ es mayor que la distancia entre ellos —si no, no hay solución—
+y se dibuja. Con $|z-3| + |z+3| = 10$ los focos están en $\pm3$, el semieje
+mayor es $5$ y el menor sale de $\sqrt{5^{2}-3^{2}} = 4$.
+
+<figure class="figura-examen">
+<svg viewBox="-180 -150 360 300" role="img" width="360" height="300"
+     aria-labelledby="t1eli-t t1eli-d">
+  <title id="t1eli-t">La elipse de focos −3 y 3 con suma de distancias
+  10</title>
+  <desc id="t1eli-d">Una elipse centrada en el origen, más ancha que alta, con
+  los focos marcados sobre el eje real en menos tres y tres. Desde el punto más
+  alto de la elipse salen dos segmentos hacia los focos, de cinco unidades cada
+  uno.</desc>
+  <g stroke="var(--graphite)" stroke-width="1.2" fill="none">
+    <path d="M-170 0 L170 0 M0 -140 L0 140"></path>
+  </g>
+  <ellipse cx="0" cy="0" rx="150" ry="120" fill="none" stroke="var(--live)"
+           stroke-width="2.6"></ellipse>
+  <g stroke="var(--alt)" stroke-width="1.6" fill="none">
+    <path d="M0 -120 L-90 0 M0 -120 L90 0"></path>
+  </g>
+  <g fill="var(--ink)">
+    <circle cx="-90" cy="0" r="4"></circle>
+    <circle cx="90" cy="0" r="4"></circle>
+  </g>
+  <g fill="var(--graphite)" font-size="13" font-family="var(--mono)">
+    <text x="-106" y="21">−3</text>
+    <text x="84" y="21">3</text>
+    <text x="-70" y="-68">5</text>
+    <text x="56" y="-68">5</text>
+    <text x="8" y="-126">4</text>
+  </g>
+</svg>
+<figcaption>
+Desde el punto más alto las dos distancias valen 5 y suman 10, que es la
+condición. Ese punto es el que da el semieje menor: 4, por Pitágoras.
+</figcaption>
+</figure>
+
+La **diferencia** de distancias daría una hipérbola, y conviene saberlo por una
+razón práctica: aparece como respuesta plausible en los ejercicios de opción
+múltiple, pero **en once años no se ha pedido ni una vez**. Si te sale una
+hipérbola, revisa el signo antes que el dibujo.
+
+### La parábola, que sale de mezclar un módulo con una coordenada
+
+La tercera cónica llega por otro camino. Cuando la condición **no** compara dos
+distancias entre sí sino una distancia con una coordenada, del tipo
+$|z| + \operatorname{Im}(z) < c$, lo que hay detrás es la definición de
+parábola: los puntos que equidistan de un foco y de una recta. Cayó en
+2024-2025 y se resuelve despejando y elevando al cuadrado una sola vez, que es
+donde está la gracia — **el módulo se va y no queda ninguna raíz**:
+
+$$
+\sqrt{x^{2}+y^{2}} < c - y
+\;\Longrightarrow\;
+x^{2}+y^{2} < c^{2}-2cy+y^{2}
+\;\Longrightarrow\;
+y < \frac{c^{2}-x^{2}}{2c}
+$$
+
+Una parábola abierta hacia abajo, con el vértice en $c/2$. Cuidado con un paso
+que se salta casi todo el mundo: para elevar al cuadrado hace falta que
+$c - y$ sea positivo, así que **la condición $y < c$ va incorporada** y hay que
+decirlo.
+
+### Cuando la condición viene sobre un cociente
+
+La variante que más se repite en la última década no es ninguna de las
+anteriores: es una condición sobre la parte real o imaginaria de **algo con
+$z$ en el denominador**, del tipo $\operatorname{Re}(1/(z-i)) > 1$. Parece otra
+cosa y no lo es. Se racionaliza con el conjugado —de ahí que el conjugado sea
+la herramienta transversal del tema—, se separa la parte real, y lo que queda
+es una desigualdad en $x$ e $y$ que al completar cuadrados resulta ser un
+disco.
+
+Con $\operatorname{Re}\!\left(\frac{1}{z}\right) > 1$ y $z = x+iy$:
+
+$$
+\frac{1}{z} = \frac{\overline{z}}{|z|^{2}} = \frac{x - iy}{x^{2}+y^{2}}
+\;\Longrightarrow\;
+\frac{x}{x^{2}+y^{2}} > 1
+\;\Longrightarrow\;
+\left(x-\tfrac12\right)^{2}+y^{2} < \tfrac14
+$$
+
+El disco abierto de centro $\frac12$ y radio $\frac12$ — **sin el origen**, que
+ya estaba excluido desde el principio porque ahí no se puede dividir. Ese punto
+hueco es exactamente el medio punto que se pierde.
+
+<ErrorTipico titulo="Error típico · dibujar la región y olvidar lo que no está">
+Los tres descuidos que se repiten, en orden de frecuencia: **el punto excluido**
+cuando había un denominador; **el borde**, que va discontinuo con $<$ y continuo
+con $\le$; y **el arco de más** en los ejercicios de argumento, quedándose con
+la circunferencia entera en vez de con la mitad que cumple el signo.
+
+Los tres tienen la misma cura, y es la del principio del apartado: coger un
+punto concreto del trozo dudoso y sustituirlo en la condición **original**, no
+en la que has deducido. Si el origen está en tu disco, mételo en
+$\operatorname{Re}(1/z) > 1$ y verás que ni siquiera se puede evaluar.
+</ErrorTipico>
+
+## Cuando la variable sube al exponente
+
+Hasta aquí $z$ ha estado siempre en la base. Queda la otra mitad del tema: qué
+pasa cuando la variable se mete **dentro** de una exponencial, un logaritmo o
+un seno. Es la parte que más sorprende, porque tres cosas que en los reales son
+verdades firmes dejan de serlo: el logaritmo pasa a tener infinitos valores, el
+seno deja de estar acotado, y el logaritmo de un número negativo pasa a existir.
+
+### Euler: la forma polar y la exponencial son la misma
+
+La definición que lo ordena todo es
+
+$$
+e^{i\theta} = \cos\theta + i\,\mathrm{sen}\,\theta,
+$$
+
+y con ella la forma polar $r(\cos\theta + i\,\mathrm{sen}\,\theta)$ se escribe
+$r\,e^{i\theta}$. **No son dos notaciones que haya que traducir: son la misma
+cosa.** La ventaja de la exponencial es que las reglas de siempre valen tal
+cual — multiplicar suma exponentes, que es justo «los módulos se multiplican y
+los argumentos se suman», y De Moivre queda en $(re^{i\theta})^n =
+r^ne^{in\theta}$ sin nada que memorizar.
+
+Para un $z$ cualquiera, $e^{z} = e^{x+iy} = e^{x}e^{iy}$: el módulo es $e^{x}$
+y el argumento es $y$. De ahí sale que **$e^{z}$ nunca vale cero** —su módulo
+es una exponencial real— y que es **periódica de periodo $2\pi i$**, porque
+sumarle $2\pi i$ a $z$ no cambia el punto. Esa periodicidad es la causa de todo
+lo que viene después.
+
+### El logaritmo, que da infinitos valores
+
+Si $e^{z}$ repite valores cada $2\pi i$, su inversa no puede devolver uno solo.
+Despejando $e^{w} = z$ sale
+
+$$
+\ln z = \ln|z| + i\,(\arg z + 2k\pi), \qquad k \in \mathbb{Z}.
+$$
+
+Son **infinitos valores alineados verticalmente**, separados $2\pi$ entre sí.
+Al que corresponde $k=0$ con el argumento principal se le llama valor principal,
+y es el que se da cuando el enunciado pide «el» logaritmo, pero un ejercicio que
+solo escriba ese pierde los puntos de COMP4: la respuesta completa lleva el
+$2k\pi$.
+
+Y desaparece la restricción de los reales. $\ln(-1)$ existe: $|-1| = 1$ y
+$\arg(-1) = \pi$, así que $\ln(-1) = i\pi + 2k\pi i$. Comprobación en una línea:
+$e^{i\pi} = -1$.
+
+Esto es lo que resuelve las ecuaciones del tipo $e^{f(z)} = w$, que han caído en
+2015-2016, 2017-2018 y 2020-2021. **Nunca tienen una solución: tienen una fila
+infinita de ellas**, y decir cuántas y dónde están es parte de la respuesta.
+
+### Seno y coseno, definidos con exponenciales
+
+Despejando $\cos\theta$ y $\mathrm{sen}\,\theta$ de la fórmula de Euler y de su
+versión con $-\theta$ salen las definiciones que valen para todo complejo:
+
+$$
+\cos z = \frac{e^{iz}+e^{-iz}}{2}, \qquad
+\mathrm{sen}\,z = \frac{e^{iz}-e^{-iz}}{2i}
+$$
+
+Con esto, las identidades de bachillerato siguen valiendo —$\mathrm{sen}^2z +
+\cos^2z = 1$, la del seno de una suma, la del ángulo doble— y **la forma de
+demostrarlas en examen es sustituir la definición y operar con exponenciales**,
+no invocar la identidad real. Es un tipo de ejercicio fijo: cayó en 2016-2017,
+2019-2020 y 2022-2023.
+
+Lo que **no** sobrevive es la acotación. En los reales el seno vive entre $-1$ y
+$1$; en los complejos no tiene techo. Con $z = iy$ la definición da
+
+$$
+\mathrm{sen}(iy) = \frac{e^{-y}-e^{y}}{2i} = i\,\mathrm{sh}\,y,
+$$
+
+y $\mathrm{sh}$ crece sin límite: $|\mathrm{sen}(10i)|$ pasa de once mil. Por eso
+una ecuación como $\cos z = 5$, que en los reales no tiene solución, **en los
+complejos sí la tiene**, y se resuelve con el cambio $t = e^{iz}$, que la
+convierte en una ecuación de segundo grado en $t$.
+
+### Las hiperbólicas son las mismas, giradas
+
+$\mathrm{ch}\,y = \frac{e^{y}+e^{-y}}{2}$ y $\mathrm{sh}\,y =
+\frac{e^{y}-e^{-y}}{2}$ tienen la misma forma que el seno y el coseno complejos
+sin la $i$. De ahí el puente que se usa constantemente al separar parte real e
+imaginaria:
+
+$$
+\cos(iy) = \mathrm{ch}\,y, \qquad \mathrm{sen}(iy) = i\,\mathrm{sh}\,y
+$$
+
+Nunca son el objetivo del ejercicio; aparecen siempre a mitad de camino, cuando
+desarrollas $\mathrm{sen}(x+iy)$ y te encuentras con senos y cosenos de un
+imaginario puro. Basta con reconocerlas.
+
+<ErrorTipico titulo="Error típico · dar por hecho que el seno complejo está acotado">
+Ante $\cos z = 5$ la reacción automática es escribir «no tiene solución, porque
+el coseno está entre $-1$ y $1$». En $\mathbb{R}$ sería correcto. En
+$\mathbb{C}$ es el error que anula el ejercicio entero, y el enunciado está
+puesto exactamente para provocarlo.
+
+La cota $|\cos z| \le 1$ **es un teorema sobre los reales**, no una propiedad de
+la función. Al extender la definición con exponenciales, lo que se conserva son
+las identidades algebraicas —$\mathrm{sen}^2+\cos^2=1$ entre ellas— y lo que se
+pierde es la acotación. De hecho las dos cosas conviven sin contradicción:
+$\mathrm{sen}^2z+\cos^2z=1$ con números complejos no obliga a que ninguno de los
+dos sea pequeño, porque un cuadrado complejo puede ser negativo.
+</ErrorTipico>
+
+## Lo que hay que llevar sabido
+
+Todo lo de abajo está explicado más arriba, con su porqué. **Esto no es la
+fuente: es la relectura de la última hora**, para el rato antes de entrar. Si
+alguna línea no te dice nada, el sitio donde entenderla es el apartado
+correspondiente, no esta lista.
+
+**Las formas y el paso entre ellas**
+
+$$
+z = a+bi = r(\cos\theta + i\,\mathrm{sen}\,\theta) = r\,e^{i\theta},
+\qquad r = \sqrt{a^{2}+b^{2}},
+\qquad \tan\theta = \frac{b}{a}
+$$
+
+Y el argumento, **siempre mirando primero el cuadrante**.
+
+**Producto, potencia y raíces**
+
+$$
+z_1z_2 = r_1r_2\,e^{i(\theta_1+\theta_2)},
+\qquad
+z^{n} = r^{n}e^{in\theta},
+\qquad
+w_k = \sqrt[n]{r}\;e^{i\left(\frac{\theta+2k\pi}{n}\right)},\; k=0,\dots,n-1
+$$
+
+**El conjugado**
+
+$$
+z\,\overline{z} = |z|^{2},
+\qquad
+z+\overline{z} = 2\operatorname{Re}(z),
+\qquad
+z-\overline{z} = 2i\operatorname{Im}(z),
+\qquad
+|z|=1 \Rightarrow \overline{z} = \frac1z
+$$
+
+**Exponencial, logaritmo y trigonométricas**
+
+$$
+e^{i\theta} = \cos\theta + i\,\mathrm{sen}\,\theta,
+\qquad
+\ln z = \ln|z| + i(\arg z + 2k\pi)
+$$
+
+$$
+\cos z = \frac{e^{iz}+e^{-iz}}{2},
+\qquad
+\mathrm{sen}\,z = \frac{e^{iz}-e^{-iz}}{2i},
+\qquad
+\mathrm{sen}(iy) = i\,\mathrm{sh}\,y
+$$
+
+**Las cinco traducciones de lugar geométrico**
+
+| la condición dice | el dibujo es |
+|---|---|
+| $\lvert z-z_0\rvert = \rho$ | circunferencia de centro $z_0$ y radio $\rho$ |
+| $\lvert z-p\rvert = \lvert z-q\rvert$ | mediatriz del segmento $pq$ |
+| $\lvert z-a\rvert = k\lvert z-b\rvert$, $k\neq1$ | circunferencia de Apolonio |
+| $\arg\frac{z-a}{z-b} = \theta$ | arco capaz sobre $ab$ (solo una mitad) |
+| $\lvert z-a\rvert + \lvert z-b\rvert = c$ | elipse de focos $a$ y $b$ |
+
+Y las tres cosas que se olvidan al dibujar: **el punto excluido** si había
+denominador, **el borde** abierto o cerrado según el signo, y **comprobar con
+un punto** en la condición original.
