@@ -94,3 +94,36 @@ cargan con todo. Se puede recortar copiando solo los woff2 y reescribiendo el
 está deprecado; se usa `processor: unified({...})` de `@astrojs/markdown-remark`.
 Anotado porque cualquier ejemplo que encuentres por internet usará la forma
 vieja.
+
+**13 · `ui/Tema.astro` y `ui/Examen.astro` son gemelos.** Misma rejilla
+`.shell` con `var(--rail)`, mismo rail sticky, mismas `.pestanas` con
+`aria-current`, mismo doble mecanismo `:target` + `data-panel`, y sus dos
+`<script>` son el mismo algoritmo escrito dos veces. Piden un
+`ui/Armazon.astro`.
+
+No se hizo al añadir la ruta de estudio porque la ruta **no necesita ese
+armazón**: nace de `patrones/Lectura.astro`, que trae su propia rejilla y sus
+modos, así que no copia nada y no empeora la duplicación. Pero la deuda sigue
+ahí, y el día que haga falta una cuarta página con pestañas hay que pagarla
+antes, no después.
+
+**14 · Los mapas de convocatoria están repartidos por tres ficheros.**
+`NOMBRE_CONV` en `[examen].astro` y en `examenes/index.astro`; `ORDEN_CONV` en
+`examenes/index.astro` y en `index.astro`; `ABREV_CONV` en `index.astro`. Piden
+un `src/lib/convocatorias.ts` junto a `SUFIJO_CONV`. Bonus: eso arregla de paso
+el apaño de `examenes/index.astro`, que tuvo que meter `ORDEN_CONV` **dentro**
+de `getStaticPaths` porque no ve el frontmatter — un import sí se ve.
+
+**15 · El filtro de páginas de `humo.mjs` enumera formas de URL.** Va por la
+tercera: `/tNN-`, luego `examenes/AAAA-AAAA`, y ahora `preparar/`. Cada vez que
+aparece un tipo de página con ejercicios dentro hay que acordarse de tocarlo, y
+las dos veces anteriores nadie se acordó hasta que se buscó a propósito. La
+regla duradera sería «toda página enlazada desde la portada que contenga un
+`[data-ejercicio]`». Se cambia la próxima vez que falle.
+
+**16 · `ALCANCE_CONV` y la ruta declaran los mismos temas.**
+`examenes/index.astro` codifica «1.ª ev = temas 1–2, 10 % de la nota» y
+`preparar/calculo-1ev.yaml` vuelve a declarar `temas: [t01, t02]`. Es una
+segunda fuente de verdad de verdad, pero unificarla acopla el índice de
+exámenes a la colección `preparar`. Se deja escrito y se decide cuando haya
+rutas de las otras dos evaluaciones.
