@@ -128,7 +128,11 @@ segunda fuente de verdad de verdad, pero unificarla acopla el índice de
 exámenes a la colección `preparar`. Se deja escrito y se decide cuando haya
 rutas de las otras dos evaluaciones.
 
-**17 · `PlanoComplejo` no admite una segunda instancia.** Su `<script>` usa
+**17 · ~~`PlanoComplejo` no admite una segunda instancia.~~** Resuelto el 23 de
+agosto de 2026: lleva un `id` por instancia y el script recorre todas.
+Comprobado en el navegador con dos planos, que mover uno no toca al otro. Las
+tres figuras de lugares geométricos siguen siendo SVG estático porque el
+verificador cubre ya esa necesidad mejor. Decía: Su `<script>` usa
 `document.querySelector` contra ids fijos —`plano-titulo`, `modulo`, `arg`,
 `giro`—, así que dos en la misma página se pelean por los mismos nodos. Se topó
 al escribir los lugares geométricos del tema 1: las tres figuras de Apolonio,
@@ -159,3 +163,21 @@ veintinueve destinos con el mismo nombre. La cura barata es prefijar los ids de
 los encabezados de cada resolución con el id del ejercicio, en el mismo sitio
 donde ya se prefijan los `ej-…`. Se anota, no se arregla ahora: es
 preexistente y ortogonal a la ruta de estudio.
+
+**20 · La gramática de condiciones tiene «y» pero no «o».** `src/lib/regiones.ts`
+entiende `&` y la palabra `and`, y nada más. Se topó al aplicar el patrón
+verificador a los lugares geométricos: el apartado a) de
+`ex2223-1-recta-y-conjunto-vacio` es la recta `y = x - 1` **menos** el segmento
+central, o sea la unión de dos semirrectas, y sin unión no hay forma de que el
+alumno la escriba. Es el único de los veintidós ejercicios de región que se ha
+quedado sin verificador. Añadir `|` chocaría con el módulo, así que el token
+tendría que ser `or` o `;`. No se hace hasta que un segundo ejercicio lo pida:
+uno solo no justifica tocar la gramática.
+
+**21 · `data-ejercicio` es un atributo sin valor.** Para localizar un ejercicio
+concreto en la página hay que ir por su ancla `#ej-<id>`, que sí lleva el id.
+Costó un rato de depuración al probar los verificadores en el navegador, porque
+`[data-ejercicio="<id>"]` no casa con nada y el selector cae silenciosamente al
+primer ejercicio de la página. Poner el id como valor del atributo es un cambio
+de una línea y haría que `humo.mjs` y cualquier prueba futura puedan apuntar a
+un ejercicio sin adivinar la estructura del DOM.
