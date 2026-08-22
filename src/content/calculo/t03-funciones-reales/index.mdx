@@ -2,7 +2,7 @@
 asignatura: calculo
 tema: 3
 titulo: Funciones reales de variable real
-descripcion: Dominio, rango e inversa. Límites, continuidad y derivadas. Y por qué casi todo el tema es una misma pregunta.
+descripcion: Dominio, inversa, límites y continuidad. Bolzano, Weierstrass y el punto fijo. Derivadas, implícitas, razones de cambio y el diferencial.
 patron: lectura
 competencias:
   - COMP1
@@ -134,6 +134,60 @@ Bolzano garantiza «al menos una». Que sea **exactamente una** hay que probarlo
 aparte, casi siempre viendo que la derivada no cambia de signo.
 </ErrorTipico>
 
+### El punto fijo, que es Bolzano disfrazado
+
+Un enunciado que ha caído tres veces —2015-2016 y 2017-2018, y en una de ellas
+valía ocho de los diez puntos— dice esto: si $f$ es continua en $[a,b]$ y
+**no se sale del intervalo**, es decir $f(x) \in [a,b]$ para todo $x$, entonces
+hay un punto que se queda quieto: existe $c$ con $f(c) = c$.
+
+Parece que hace falta un teorema nuevo y no lo hace. Todo el ejercicio está en
+**construir la función auxiliar**
+
+$$
+g(x) = f(x) - x,
+$$
+
+que es continua por ser diferencia de continuas, y aplicarle Bolzano. Como $f$
+no se sale, $f(a) \ge a$ y $f(b) \le b$, luego $g(a) \ge 0$ y $g(b) \le 0$:
+signos opuestos. Existe $c$ con $g(c) = 0$, que es lo mismo que $f(c) = c$.
+
+**Ese paso de restar la $x$ es lo que se puntúa.** Nadie lo ve la primera vez, y
+una vez visto se reutiliza: cuando un enunciado pide demostrar que dos funciones
+se cortan, o que una ecuación tiene solución, casi siempre lo que hay que hacer
+es pasarlo todo a un lado y llamarlo $g$.
+
+<ErrorTipico titulo="Error típico · exigir desigualdades estrictas donde no las hay">
+Aquí salen $g(a) \ge 0$ y $g(b) \le 0$, con igualdad posible, y Bolzano en su
+forma estricta pide signos **distintos**. No es un agujero: si $g(a) = 0$
+entonces $a$ ya es el punto fijo y hemos terminado, y lo mismo con $b$. Los dos
+casos se despachan en una línea antes de aplicar el teorema.
+
+Escribirla cuesta diez segundos y es exactamente el tipo de detalle por el que
+COMP4 baja de nota una demostración que por lo demás está bien.
+</ErrorTipico>
+
+## Weierstrass: en un intervalo cerrado el máximo se alcanza
+
+Si $f$ es continua en un intervalo **cerrado y acotado** $[a,b]$, entonces $f$
+alcanza en él un máximo y un mínimo absolutos: existen $x_1, x_2$ del intervalo
+con $f(x_1) \le f(x) \le f(x_2)$ para todo $x$.
+
+Suena a que no dice nada y es el permiso que hace legal media asignatura.
+**Cuando un problema de optimización empieza por «halla el máximo», alguien
+tiene que haber garantizado antes que ese máximo existe**, y ese alguien es
+Weierstrass. Sin él, buscar dónde se anula la derivada podría no llevar a nada.
+
+Las dos hipótesis se caen con dos ejemplos de una línea:
+
+- **Cerrado.** $f(x) = x$ en el intervalo abierto $(0,1)$ es continua y no tiene
+  máximo: se acerca a 1 sin llegar nunca.
+- **Acotado.** $f(x) = 1/x$ en $(0,1]$ es continua en su intervalo y se dispara.
+
+Aparece en siete de los once cursos, y casi nunca como pregunta principal: sale
+como **la primera frase de la respuesta** a un problema de máximos, o como la
+hipótesis que un enunciado quita a propósito para ver si te das cuenta.
+
 ## La derivada es un límite, y a veces hay que calcularlo como tal
 
 $$
@@ -203,3 +257,53 @@ $$
 Lo importante es elegir bien el punto de apoyo: **el más cercano donde la
 función se sepa de memoria**. Y para ángulos, pasarlos a radianes antes, porque
 la fórmula de la derivada del seno solo vale ahí.
+
+## Lo que hay que llevar sabido
+
+Todo lo de abajo está explicado más arriba, con su porqué. **Esto no es la
+fuente: es la relectura de la última hora.** Si una línea no te dice nada, el
+sitio donde entenderla es su apartado.
+
+**Continuidad en un punto: tres cosas, en este orden**
+
+$$
+\exists\, f(a),
+\qquad
+\exists \lim_{x\to a} f(x),
+\qquad
+\lim_{x\to a} f(x) = f(a)
+$$
+
+En las funciones a trozos las tres se juegan en el punto de empalme, y el
+límite existe solo si los dos laterales coinciden.
+
+**Los tres teoremas de continuidad, con sus hipótesis**
+
+| teorema | hipótesis | conclusión |
+|---|---|---|
+| **Bolzano** | $f$ continua en $[a,b]$, $f(a)$ y $f(b)$ de signo distinto | existe $c$ con $f(c)=0$ |
+| **Weierstrass** | $f$ continua en $[a,b]$ cerrado y acotado | $f$ alcanza máximo y mínimo absolutos |
+| **Punto fijo** | $f$ continua en $[a,b]$ y $f([a,b]) \subseteq [a,b]$ | existe $c$ con $f(c)=c$ |
+
+El del punto fijo se demuestra siempre igual: aplicar Bolzano a
+$g(x) = f(x)-x$. Y Bolzano da existencia, nunca unicidad — para eso hace falta
+el signo constante de la derivada.
+
+**Derivada**
+
+$$
+f'(a) = \lim_{h\to0}\frac{f(a+h)-f(a)}{h},
+\qquad
+\frac{dy}{dx} = \frac{dy/dt}{dx/dt},
+\qquad
+f(a+h) \approx f(a) + f'(a)\,h
+$$
+
+La primera es obligatoria cuando el enunciado dice «por definición» y cuando el
+punto es un empalme de una función a trozos. En implícitas, se deriva la
+ecuación entera y cada $y$ derivada deja un $y'$.
+
+**Y el orden que decide los problemas de razones de cambio**
+
+Escribir la relación **en general**, derivar respecto del tiempo, y solo
+entonces sustituir los datos del instante. Al revés, la derivada sale cero.
