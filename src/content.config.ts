@@ -307,6 +307,21 @@ const ejercicio = z
     message: 'falta el paso de COMP4, que vale entre 2 y 9 puntos (§09)',
   });
 
+/** Las cinco evaluaciones del curso más las dos convocatorias oficiales. Los
+ *  nombres son los que imprime la propia cabecera del examen.
+ *
+ *  Se declara una sola vez: lo usan `examen` y `preparar`, y dos listas de los
+ *  mismos siete valores serían la misma duplicación que dos `:root{}` (§01). */
+const convocatoria = z.enum([
+  'primera',
+  'segunda',
+  'tercera',
+  'cuarta',
+  'quinta',
+  'ordinaria',
+  'extraordinaria',
+]);
+
 /** Un `ejercicios.yaml` por tema, junto a su `index.mdx`.
  *  El nivel superior es un objeto y no una lista porque el cargador de Astro
  *  trata cada fichero como una entrada. */
@@ -358,17 +373,7 @@ const examen = defineCollection({
        *  carpeta es `2024-2025-2ev` y `SUFIJO_CONV` comprueba que el nombre
        *  case con lo que declara el fichero. */
       curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'),
-      /** Las cinco evaluaciones del curso más las dos convocatorias oficiales.
-       *  Los nombres son los que imprime la propia cabecera del examen. */
-      convocatoria: z.enum([
-        'primera',
-        'segunda',
-        'tercera',
-        'cuarta',
-        'quinta',
-        'ordinaria',
-        'extraordinaria',
-      ]),
+      convocatoria,
       /** Tal como viene impresa en la cabecera del examen. */
       fecha: z.string().min(8),
       /** Nombre del PDF dentro de `public/examenes/<asignatura>/`.
@@ -404,6 +409,136 @@ export const SUFIJO_CONV: Record<string, string> = {
   extraordinaria: 'ext',
 };
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Rutas de estudio
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/** A qué apunta un bloque de la ruta.
+ *
+ *  Unión discriminada y no una cadena suelta: si esto fuera texto libre, el
+ *  día que alguien escriba una URL a mano nadie se enteraría hasta que el
+ *  enlace ya estuviera roto en producción. Así, cada forma de referencia tiene
+ *  su validación y su resolución.
+ *
+ *  **Nunca se copia aquí lo que se referencia**: ni el enunciado, ni la
+ *  fuente, ni los puntos. Todo eso vive en `ejercicios.yaml` y la página lo
+ *  resuelve por `id`. Cualquier cosa que la ruta reescriba sería una segunda
+ *  fuente de verdad que acabaría separándose (§01, §08). */
+const referencia = z.discriminatedUnion('tipo', [
+  z.object({
+    tipo: z.literal('ejercicio'),
+    id: z.string().regex(/^[a-z0-9-]+$/),
+    /** `true` incrusta el ejercicio guiado entero; `false` solo lo enlaza.
+     *  El defecto es enlazar: cuarenta ejercicios incrustados son una página
+     *  que nadie descarga. */
+    incrustado: z.boolean().default(false),
+    /** Comentario nuestro sobre por qué está aquí. **Nunca** un resumen del
+     *  enunciado, que se reproduce tal cual y en su sitio (§08). */
+    nota: z.string().min(10).optional(),
+  }),
+  z.object({
+    tipo: z.literal('teoria'),
+    tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
+    /** Slug del `<h2>` al que se salta. Lleva acentos: el generador de MDX no
+     *  los quita, así que «Raíces n-ésimas…» produce
+     *  `raíces-n-ésimas-cuántas-hay…`. Copiarlo a ojo del título es la forma
+     *  segura de equivocarse, por eso se comprueba al generar la ruta:
+     *  `verify.mjs` parte los href por `#` y **no valida fragmentos**, así que
+     *  un apartado mal escrito pasaría el suelo en verde y dejaría al alumno
+     *  en la cabecera de la página. */
+    apartado: z
+      .string()
+      .regex(/^[a-z0-9áéíóúüñ-]+$/, 'slug de encabezado, en minúscula y con sus acentos')
+      .optional(),
+    nota: z.string().min(10).optional(),
+  }),
+  z.object({
+    tipo: z.literal('examen'),
+    curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'),
+    convocatoria,
+    nota: z.string().min(10).optional(),
+  }),
+]);
+
+/** Un bloque es **un hueco del examen**, no un apartado del temario. Esa es la
+ *  diferencia entre una ruta de estudio y un índice. */
+const bloque = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  titulo: z.string().min(5),
+  /** Qué pide el examen, con las palabras del examen. */
+  pide: z.string().min(10),
+  /** Por qué este bloque existe y va donde va. Sale de contar los exámenes,
+   *  no de una impresión. */
+  porque: z.string().min(40),
+  /** La parte de la medición que **no** se puede derivar de los datos. Que dos
+   *  enunciados distintos sean «la misma propiedad» es una lectura humana, así
+   *  que se declara y se dice de dónde sale (§10). Los porcentajes por
+   *  competencia NO van aquí: se calculan al generar la página. */
+  invariante: z
+    .object({
+      anios: z.number().int().min(1),
+      fuente: z.string().min(10),
+    })
+    .optional(),
+  material: z.array(referencia).min(1),
+  /** Lo que el examen pide y el sitio todavía **no** enseña. Se publica tal
+   *  cual: prometer material que no existe es peor que enseñar el hueco. */
+  falta: z.array(z.string().min(20)).default([]),
+});
+
+/** Una ruta de estudio por evaluación.
+ *
+ *  Se llama `preparar` —carpeta, colección y URL— y no `rutas`, porque
+ *  `src/lib/rutas.ts` ya construye URLs y la página de la ruta va a importar
+ *  `ruta()`. Este repositorio ya se quemó una vez con un homónimo: «tema»
+ *  significaba dos cosas y el armazón enganchaba sus manejadores al botón
+ *  equivocado (ver `ui/Cabecera.astro`). Una palabra, un significado.
+ *
+ *  La carpeta es plana, como `catalogo/`. Bajo `content/calculo/` caería
+ *  dentro del territorio de los globs `**​/ejercicios.yaml` y `**​/examen.yaml`
+ *  e invitaría a poner ejercicios al lado — y una ruta **no posee** ejercicios,
+ *  los referencia.
+ *
+ *  Fíjate en lo que no tiene: ni fecha, ni semanas, ni horas. El plan se mide
+ *  en bloques y en criterio de dominio, no en calendario. */
+const preparar = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/preparar' }),
+  schema: z
+    .object({
+      asignatura: z.string().min(3),
+      evaluacion: convocatoria,
+      titulo: z.string().min(5),
+      lede: z.string().min(40).max(400),
+      /** Los temas que entran. Se cruzan con el catálogo al generar la ruta:
+       *  una ruta no puede mandarte a un tema que no está escrito. */
+      temas: z.array(z.string().regex(/^t\d{2}-[a-z0-9-]+$/)).min(1),
+      /** Cuántas convocatorias se han leído para escribir esto. */
+      medidoSobre: z.number().int().min(1),
+      /** Por qué los bloques van en este orden y no en el del temario. */
+      criterioDeOrden: z.string().min(30),
+      bloques: z.array(bloque).min(1),
+    })
+    .refine((r) => new Set(r.bloques.map((b) => b.id)).size === r.bloques.length, {
+      message: 'hay dos bloques con el mismo id',
+    })
+    /* Dos veces el mismo ejercicio incrustado produce dos `<h3 id="ej-…">`
+       iguales: el índice llevaría siempre al primero y `humo.mjs` probaría el
+       mismo dos veces creyendo que son dos distintos. */
+    .refine(
+      (r) => {
+        const ids = r.bloques.flatMap((b) =>
+          b.material.filter((m) => m.tipo === 'ejercicio' && m.incrustado).map((m) => m.id),
+        );
+        return new Set(ids).size === ids.length;
+      },
+      { message: 'el mismo ejercicio incrustado dos veces duplica su id en el DOM' },
+    )
+    .refine(
+      (r) => r.bloques.every((b) => !b.invariante || b.invariante.anios <= r.medidoSobre),
+      { message: 'un bloque no puede aparecer en más años de los que se han contado' },
+    ),
+});
+
 const calculo = defineCollection({
   loader: glob({ pattern: '**/index.mdx', base: './src/content/calculo' }),
   schema: temaEscrito,
@@ -414,4 +549,4 @@ const fluidos = defineCollection({
   schema: temaEscrito,
 });
 
-export const collections = { catalogo, calculo, fluidos, ejercicios, examen };
+export const collections = { catalogo, calculo, fluidos, ejercicios, examen, preparar };

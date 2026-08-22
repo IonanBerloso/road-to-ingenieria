@@ -72,6 +72,29 @@ for (const ex of await getCollection('examen')) {
   });
   examenesPorAsignatura.set(ex.data.asignatura, lista);
 }
+
+/** Las rutas de estudio, para poder ofrecerlas antes que los exámenes sueltos:
+ *  quien llega a esta pantalla no sabe todavía por dónde empezar.
+ *
+ *  Este enlace no es solo navegación. `humo.mjs` descubre las páginas que
+ *  tiene que probar **leyendo la portada**, así que sin él la ruta se
+ *  quedaría sin comprobar y el suelo daría verde igual. */
+const rutasPorAsignatura = new Map<string, { titulo: string; sufijo: string }[]>();
+const rutasIndice = new Map<string, { titulo: string; sufijo: string; bloques: string }[]>();
+for (const r of await getCollection('preparar')) {
+  const sufijo = SUFIJO_CONV[r.data.evaluacion];
+  const lista = rutasPorAsignatura.get(r.data.asignatura) ?? [];
+  lista.push({ titulo: r.data.titulo, sufijo });
+  rutasPorAsignatura.set(r.data.asignatura, lista);
+
+  const idx = rutasIndice.get(r.data.asignatura) ?? [];
+  idx.push({
+    titulo: r.data.titulo,
+    sufijo,
+    bloques: r.data.bloques.map((b) => b.titulo).join(' '),
+  });
+  rutasIndice.set(r.data.asignatura, idx);
+}
 for (const lista of examenesPorAsignatura.values()) {
   lista.sort(
     (a, b) =>
@@ -99,6 +122,17 @@ const indice = asignaturas.flatMap((a, i) => [
     destino: t.hecho ? ruta(`${a.id}/${t.id}`) : `#${a.id}`,
     orden: i,
     n: t.n,
+  })),
+  /* Las rutas de estudio son lo más buscable del sitio: «regiones»,
+     «demostración», «series» son las palabras con las que un alumno llega.
+     Por eso la clave incluye los títulos de sus bloques (§05). */
+  ...(rutasIndice.get(a.id) ?? []).map((r) => ({
+    tipo: 'r' as const,
+    nombre: r.titulo,
+    sub: `${a.data.nombre} · ruta de estudio`,
+    clave: `${r.titulo} ${r.bloques} ${a.data.nombre} preparar ruta estudio`.toLowerCase(),
+    destino: ruta(`${a.id}/preparar/${r.sufijo}`),
+    orden: i,
   })),
 ]);
 ---
@@ -238,6 +272,14 @@ const indice = asignaturas.flatMap((a, i) => [
 
             {examenesPorAsignatura.has(a.id) && (
               <aside class="examenes">
+                {rutasPorAsignatura.has(a.id) &&
+                  rutasPorAsignatura.get(a.id)!.map((r) => (
+                    <a class="ex-ruta" href={ruta(`${a.id}/preparar/${r.sufijo}`)}>
+                      <span class="rotulo">Por dónde empezar</span>
+                      <span class="ex-ruta-t">{r.titulo} →</span>
+                    </a>
+                  ))}
+
                 <p class="rotulo ex-tit">Exámenes</p>
                 <p class="ex-sub">
                   {examenesPorAsignatura.get(a.id)!.length === 1
@@ -424,7 +466,8 @@ const indice = asignaturas.flatMap((a, i) => [
     let grupo = '';
 
     visibles.forEach((x, j) => {
-      const cual = x.tipo === 'a' ? 'Asignaturas' : 'Temas';
+      const cual =
+        x.tipo === 'a' ? 'Asignaturas' : x.tipo === 'r' ? 'Rutas de estudio' : 'Temas';
       if (cual !== grupo) {
         grupo = cual;
         const t = document.createElement('p');
@@ -438,7 +481,11 @@ const indice = asignaturas.flatMap((a, i) => [
       b.className = j === cursor ? 'hit cur' : 'hit';
       b.innerHTML =
         `<span class="k"></span><span class="nb"></span><span class="sb"></span>`;
-      b.querySelector('.k')!.textContent = x.tipo === 'a' ? '##' : `T${String(x.n).padStart(2, '0')}`;
+      /* La insignia: `##` para una asignatura, `→` para una ruta y el número
+         del tema para todo lo demás. Sin la rama de `r` saldría `TUndefined`,
+         porque una ruta no tiene `n`. */
+      b.querySelector('.k')!.textContent =
+        x.tipo === 'a' ? '##' : x.tipo === 'r' ? '→' : `T${String(x.n).padStart(2, '0')}`;
       b.querySelector('.nb')!.textContent = x.nombre;
       b.querySelector('.sb')!.textContent = x.sub;
       b.addEventListener('mouseenter', () => {
@@ -791,6 +838,23 @@ const indice = asignaturas.flatMap((a, i) => [
 
   .ex-go { color: var(--faint); transition: transform .15s; }
   .ex-lista a:hover .ex-go { color: var(--live); transform: translateX(2px); }
+
+  /* La ruta de estudio va antes que la lista de exámenes: quien llega aquí
+     todavía no sabe cuál abrir. */
+  .ex-ruta {
+    display: block;
+    margin-bottom: 1.1rem;
+    padding: .6rem .7rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--acento);
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ex-ruta:hover { border-color: var(--live); border-left-color: var(--live); }
+  .ex-ruta .rotulo { display: block; color: var(--graphite); margin-bottom: .15rem; }
+  .ex-ruta-t { font-size: .84rem; font-weight: 600; }
 
   .ex-todos {
     display: inline-block;

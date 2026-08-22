@@ -28,6 +28,7 @@ export async function getStaticPaths() {
 
   const examenes = await getCollection('examen');
   const catalogo = await getCollection('catalogo');
+  const rutas = await getCollection('preparar');
 
   const porAsignatura = new Map<string, typeof examenes>();
   for (const ex of examenes) {
@@ -50,11 +51,26 @@ export async function getStaticPaths() {
         b.data.curso.localeCompare(a.data.curso) ||
         ORDEN_CONV.indexOf(a.data.convocatoria) - ORDEN_CONV.indexOf(b.data.convocatoria),
     );
-    return { params: { asignatura: id }, props: { asignatura, lista } };
+    /* Las rutas de estudio de esta asignatura, en el mismo orden de
+       convocatoria que los exámenes. Puede no haber ninguna: la sección de
+       exámenes existe desde antes y no depende de ellas. */
+    const suyas = rutas
+      .filter((r) => r.data.asignatura === id)
+      .sort(
+        (a, b) =>
+          ORDEN_CONV.indexOf(a.data.evaluacion) - ORDEN_CONV.indexOf(b.data.evaluacion),
+      )
+      .map((r) => ({
+        titulo: r.data.titulo,
+        lede: r.data.lede,
+        sufijo: SUFIJO_CONV[r.data.evaluacion],
+      }));
+
+    return { params: { asignatura: id }, props: { asignatura, lista, rutas: suyas } };
   });
 }
 
-const { asignatura, lista } = Astro.props;
+const { asignatura, lista, rutas } = Astro.props;
 const crumb = `${asignatura.data.nombre} · exámenes`;
 
 const NOMBRE_CONV: Record<string, string> = {
@@ -100,6 +116,21 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
         Los exámenes no publican solución: las resoluciones son propuesta
         nuestra y están pendientes de revisión.
       </p>
+
+      {
+        rutas.length > 0 && (
+          <nav class="rutas" aria-label="Rutas de estudio">
+            <p class="rotulo">Antes de empezar</p>
+            {rutas.map((r) => (
+              <a href={ruta(`${asignatura.id}/preparar/${r.sufijo}/`)} class="r">
+                <span class="r-t">{r.titulo}</span>
+                <span class="r-d">{r.lede}</span>
+                <span class="r-ir rotulo" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </nav>
+        )
+      }
 
       <ol class="lista">
         {
@@ -165,6 +196,33 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
 
   .eyebrow { margin-bottom: .6rem; font-size: .72rem; letter-spacing: .11em; }
   .lede { max-width: var(--measure); }
+
+  /* ── rutas de estudio ──────────────────────────────────────────── */
+  .rutas {
+    max-width: var(--measure);
+    margin: 0 0 2.4rem;
+  }
+
+  .rutas > .rotulo { margin-bottom: .6rem; color: var(--graphite); }
+
+  .r {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .2rem .9rem;
+    padding: .9rem 1rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--acento);
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .r + .r { margin-top: .5rem; }
+  .r:hover { border-color: var(--live); border-left-color: var(--live); }
+
+  .r-t { font-weight: 600; }
+  .r-d { grid-column: 1; font-size: .85rem; color: var(--graphite); }
+  .r-ir { grid-row: 1 / span 2; align-self: center; color: var(--acento); }
 
   .aviso {
     margin: 1.8rem 0 2.4rem;

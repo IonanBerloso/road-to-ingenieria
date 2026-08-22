@@ -81,11 +81,20 @@ async function main() {
      `/tNN-` y durante un rato el suelo dio verde sin haber probado **ni un
      solo distractor de examen**. Eso es exactamente la confianza falsa que
      §11 prohíbe. El índice `/examenes/` no entra: no tiene ejercicios. */
+  /* Las rutas de estudio entran desde el 22 de agosto de 2026, y por el mismo
+     motivo que entraron las de examen: incrustan ejercicios guiados, así que
+     fuera del filtro sus distractores no se probarían y el suelo seguiría
+     dando verde. Es la segunda vez que pasa lo mismo, y por eso está apuntado
+     en `tasks/todo.md` que este filtro debería dejar de enumerar formas de URL
+     y pasar a ser «toda página enlazada desde la portada con un
+     [data-ejercicio] dentro». */
   const paginas = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
     [...html.matchAll(/href="([^"]+)"/g)]
       .map((m) => m[1])
       .filter(
-        (h) => h.startsWith(BASE) && /\/[a-z]+\/(t\d{2}-|examenes\/\d{4}-\d{4})/.test(h),
+        (h) =>
+          h.startsWith(BASE) &&
+          /\/[a-z]+\/(t\d{2}-|examenes\/\d{4}-\d{4}|preparar\/)/.test(h),
       ),
   );
   const rutas = [...new Set(paginas)];
