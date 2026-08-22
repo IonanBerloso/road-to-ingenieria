@@ -127,3 +127,35 @@ regla duradera sería «toda página enlazada desde la portada que contenga un
 segunda fuente de verdad de verdad, pero unificarla acopla el índice de
 exámenes a la colección `preparar`. Se deja escrito y se decide cuando haya
 rutas de las otras dos evaluaciones.
+
+**17 · `PlanoComplejo` no admite una segunda instancia.** Su `<script>` usa
+`document.querySelector` contra ids fijos —`plano-titulo`, `modulo`, `arg`,
+`giro`—, así que dos en la misma página se pelean por los mismos nodos. Se topó
+al escribir los lugares geométricos del tema 1: las tres figuras de Apolonio,
+arco capaz y elipse **son SVG estático** por esto, cuando la herramienta
+interactiva habría enseñado más —ver cómo la circunferencia de Apolonio se
+desplaza al mover `k` es justo la intuición que falta—. La cura es la de
+siempre: raíz por componente y `querySelector` acotado a ella, como ya hacen
+los ejercicios guiados. Se paga cuando un tema necesite dos planos.
+
+**18 · El formulario duplica hechos que ya están en la prosa.** Los dos
+apartados «Lo que hay que llevar sabido» reescriben definiciones y fórmulas que
+están explicadas más arriba en el mismo fichero, a propósito: son para releer
+la última hora y tienen que caber en papel. El riesgo es real y conocido —si un
+día se corrige la teoría y no el formulario, el formulario miente— y está
+declarado en el `falta[]` del bloque. No hay guardián que lo compruebe y no se
+escribe uno todavía (§11: se añaden cuando algo se rompe de verdad). Si llega a
+pasar una vez, la comprobación es viable: las fórmulas del formulario son un
+subconjunto literal de las de los apartados.
+
+**19 · Las resoluciones repiten ids de encabezado dentro de una misma página.**
+Medido en `/calculo/t01-complejos/`: `resultado` aparece 29 veces,
+`6--comprobación` 13, `5--comprobación` 12, y ocho más. Salen de los `##` que
+llevan dentro los `resolucion` de `ejercicios.yaml`, que se renderizan todos en
+el mismo documento. No lo cazó `verify.mjs` —comprueba enlaces internos rotos,
+no ids repetidos— y no rompe nada visible hoy: nadie enlaza a `#resultado`. Lo
+que sí hace es que un lector de pantalla con navegación por encabezados vea
+veintinueve destinos con el mismo nombre. La cura barata es prefijar los ids de
+los encabezados de cada resolución con el id del ejercicio, en el mismo sitio
+donde ya se prefijan los `ej-…`. Se anota, no se arregla ahora: es
+preexistente y ortogonal a la ruta de estudio.

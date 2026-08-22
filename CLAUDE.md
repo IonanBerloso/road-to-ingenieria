@@ -82,6 +82,9 @@ src/
         ejercicios.yaml    los ejercicios como DATOS
     fluidos/
       t09-bombeo/
+    preparar/              una ruta de estudio por evaluación (§14).
+                           Solo YAML: no enseña nada nuevo, ordena lo que
+                           ya está y dice por qué en ese orden.
   components/
     patrones/              Lectura · FiguraFija · EjercicioGuiado
                            Verificador · Demostracion
@@ -499,3 +502,95 @@ barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 
 - Este fichero funciona como restricción, no como decoración. **La primera
   excepción «solo por esta vez» es la que abre la puerta a las setenta y
   nueve.** Si una regla estorba, se discute y se cambia aquí — no se ignora.
+
+---
+
+## 14 // Cómo se produce una ruta de estudio
+
+Hermana del §04. Un tema responde «¿qué es esto?»; una ruta responde **«¿por
+dónde empiezo y cómo sé que he terminado?»**. Son preguntas distintas y por eso
+la ruta es un artefacto propio y no un índice del tema.
+
+Una ruta vive en `src/content/preparar/<asignatura>-<evaluacion>.yaml` y es
+**un solo fichero de datos**. La página se genera con el patrón `Lectura`; no
+hay componente propio ni plantilla que copiar. Lo primero que hay que entender
+es esto:
+
+> **Una ruta no contiene contenido. Contiene referencias y razones.**
+
+Si al escribir una ruta te ves explicando algo, para: ese algo va en la prosa
+del tema, y la ruta lo enlaza. La única excepción declarada es el bloque del
+formulario, que sí duplica hechos a propósito y lo dice en su propio `falta[]`.
+
+### De qué se compone
+
+Una ruta son cuatro campos de cabecera y una lista de bloques:
+
+- `lede` y `criterioDeOrden` — por qué los bloques van en ese orden y no en el
+  del temario. Se escribe una vez y explica la ruta entera.
+- `medidoSobre` — cuántas convocatorias se han leído. Es la base de todos los
+  recuentos y el esquema comprueba que ningún bloque diga haber caído en más
+  años de los que se han contado.
+- `bloques[]`.
+
+Y un bloque son seis cosas:
+
+| campo | qué es |
+|---|---|
+| `pide` | qué pide el examen, **con las palabras del examen** |
+| `porque` | por qué este bloque existe y va donde va, con el recuento |
+| `invariante` | la lectura humana que no se deriva de los datos, y su fuente |
+| `dominio` | cómo sabes que has terminado |
+| `material[]` | referencias a teoría, ejercicios y exámenes, por `id` |
+| `falta[]` | lo que el examen pide y el sitio todavía no enseña |
+
+`dominio` es el campo que separa una guía de una lista de enlaces. Se escribe
+en segunda persona y describe **lo que tienes que ser capaz de hacer**, no lo
+que tienes que haber leído: «dividir dos complejos y pasarlos a polar en menos
+de un minuto acertando el cuadrante a la primera». Una lista se acaba; un
+bloque se domina.
+
+### Cómo se decide un bloque
+
+Contando exámenes, nunca por intuición ni por el peso que el temario le dé.
+El procedimiento es literal: se leen las convocatorias publicadas, se agrupa
+por **hueco** —el sitio que ese ejercicio ocupa en el examen— y se ordena por
+lo que rinde. Que dos enunciados distintos sean «la misma propiedad con otro
+disfraz» es una lectura humana: se declara en `invariante` y se dice de dónde
+sale (§10).
+
+Un hueco no es un apartado del temario. «Regiones del plano complejo» es un
+hueco porque cae los once años en el mismo sitio; «números complejos» no lo es.
+
+### El orden
+
+Suelo → los huecos ordenados por rendimiento → simulacros → formulario.
+
+El **suelo** es el bloque que no se examina solo y sin el cual los demás no se
+terminan a tiempo. No da puntos y va primero. El **formulario** es lo que hay
+que llevar en la cabeza; va el último porque es repaso, no aprendizaje.
+
+### Qué se calcula y qué no
+
+Los porcentajes por competencia y el peso de la evaluación **se calculan en el
+build** sobre los exámenes de la colección. Nunca se escriben en el YAML: sería
+una cuarta fuente de verdad que envejece sola. Lo mismo con las URL, que salen
+de los `id`.
+
+Y una consecuencia del enlace por `id`: si la ruta apunta a un apartado de
+teoría, el build comprueba el anclaje contra los encabezados reales del `.mdx`.
+Renombrar un apartado **rompe el build**, que es exactamente lo que se quiere.
+
+### Una ruta está terminada cuando
+
+- Los bloques son **huecos del examen, medidos**, no apartados del temario.
+- Cada bloque dice **por qué** existe, con el recuento y su fuente.
+- Cada bloque tiene **criterio de dominio**, en segunda persona.
+- **Toda herramienta que el examen usa está presentada en la prosa del tema**,
+  no solo dentro de la resolución de un ejercicio. Esta es la que más cuesta y
+  la que decide si la ruta sirve a alguien que llega de cero: se comprueba
+  contando apariciones, no leyendo por encima.
+- Lo que falta está en `falta[]`, **no callado**. Un hueco declarado es
+  información; un hueco escondido es una promesa incumplida.
+- Los porcentajes se calculan, nunca se declaran.
+- `npm run suelo` en verde, con la ruta entre las páginas que `humo.mjs` abre.
