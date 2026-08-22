@@ -515,6 +515,11 @@ const bloque = z.object({
       fuente: z.string().min(10),
     })
     .optional(),
+  /** Cómo sabes que has terminado este bloque. Es lo que separa una ruta de
+   *  estudio de una lista de enlaces: una lista se acaba, un bloque se domina.
+   *  Obligatorio, y en segunda persona: describe lo que tienes que ser capaz
+   *  de hacer, no lo que tienes que haber leído. */
+  dominio: z.string().min(20),
   material: z.array(referencia).min(1),
   /** Lo que el examen pide y el sitio todavía **no** enseña. Se publica tal
    *  cual: prometer material que no existe es peor que enseñar el hueco. */
