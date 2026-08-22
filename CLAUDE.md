@@ -399,6 +399,31 @@ Todo ejercicio guiado entrena las tres: una pregunta de reconocimiento antes
 del cálculo, y una comprobación de justificación formal después. **Un componente
 que solo verifica un número entrena la parte que menos se falla.**
 
+### En el examen no se puede usar calculadora
+
+Lo dijo el alumno el 23 de agosto de 2026, y cambia cómo se escribe un paso de
+cálculo. La consecuencia no es cosmética: **la respuesta de un ejercicio no
+puede exigir un decimal que solo sale con una máquina**. Si un área vale
+$(e^{2}-1)/2$, pedir «cuatro decimales» es pedir algo que en el aula no se
+puede hacer.
+
+Se midió al descubrirlo: de las 380 respuestas numéricas del corpus, **128
+tenían tres decimales o más** y 87 sitios lo pedían con todas las letras.
+
+Las dos reglas que quedan:
+
+- **La forma exacta siempre vale.** El lector de respuestas evalúa expresiones
+  —`pi/4`, `(e^2-1)/2`, `sqrt(3)/2`, `2+3i`— además de decimales, y el valor
+  guardado puede seguir siendo el decimal: se comparan números, no cadenas.
+- **Un enunciado nunca ordena dar decimales.** Se escribe «en forma exacta, o
+  con cuatro decimales», en ese orden, porque ese es el orden en que el alumno
+  los va a tener.
+
+Y en la prosa, cuidado con dar por hecha la calculadora. El error del argumento
+con `arctan` no es un despiste de máquina: es que $\arctan(1) = \pi/4$ tanto si
+vienes del primer cuadrante como del tercero, y esa información no la pone
+nadie por ti.
+
 ---
 
 ## 10 // Física y datos

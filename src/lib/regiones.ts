@@ -478,3 +478,33 @@ export function mismaRegion(
   const margen = Math.max(6, Math.round(total * 0.001));
   return { iguales: sobra + falta <= margen, sobra, falta, total };
 }
+
+/**
+ * Evalúa una expresión numérica cerrada —sin `z`, `x` ni `y`— y devuelve su
+ * valor complejo, o `null` si no se entiende.
+ *
+ * Existe por una razón concreta: **en el examen no se puede usar
+ * calculadora**. Un área que vale exactamente $(e^{2}-1)/2$ no se puede
+ * escribir con cuatro decimales en el aula, así que la forma exacta tiene que
+ * valer como respuesta. Con esto, `pi/4`, `(e^2-1)/2`, `sqrt(3)/2` y
+ * `2+3i` se leen igual de bien que `0,7854`.
+ *
+ * Reutiliza el analizador de condiciones en vez de duplicarlo: se le añade
+ * `= 0` a la expresión y se evalúa el lado izquierdo (§01).
+ */
+export function evaluaNumero(texto: string): Complejo | null {
+  const limpio = (texto ?? '').trim();
+  if (!limpio) return null;
+  /* Una respuesta con variable libre no es un número: `x^2` no vale como
+     respuesta a «¿cuánto mide el área?», y evaluarla en cero daría un 0
+     silencioso, que es peor que no entenderla. */
+  if (/(^|[^a-z])[zxy]([^a-z]|$)/i.test(limpio)) return null;
+  try {
+    const cs = analiza(`${limpio} = 0`);
+    if (cs.length !== 1) return null;
+    const v = valor(cs[0].izq, 0, 0);
+    return Number.isFinite(v.re) && Number.isFinite(v.im) ? v : null;
+  } catch {
+    return null;
+  }
+}

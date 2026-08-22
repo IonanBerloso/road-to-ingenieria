@@ -449,7 +449,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
 <script>
   import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from '../../lib/complejo';
-  import { analiza, cumple, mismaRegion } from '../../lib/regiones';
+  import { analiza, cumple, evaluaNumero, mismaRegion } from '../../lib/regiones';
 
   type Respuesta = { tipo: 'complejo' | 'numero'; valor: string; tolerancia: number };
   type Dato =
@@ -563,26 +563,32 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           return a && b ? comparaConjunto(a, b, tolerancia).igual : false;
         }
         if (respuesta.tipo === 'complejo') {
-          const a = leeComplejo(escrito);
-          const b = leeComplejo(objetivo);
+          const a = lee(escrito);
+          const b = lee(objetivo);
           return a && b ? comparaComplejo(a, b, tolerancia) : false;
         }
-        const a = leeComplejo(escrito);
-        const b = leeComplejo(objetivo);
-        if (!a || !b || a.im !== 0) return false;
+        const a = lee(escrito);
+        const b = lee(objetivo);
+        if (!a || !b || Math.abs(a.im) > 1e-9) return false;
         return Math.abs(a.re - b.re) <= tolerancia;
       };
 
+      /* En el examen no se puede usar calculadora, así que una respuesta
+         exacta —`pi/4`, `(e^2-1)/2`, `sqrt(3)/2`— tiene que valer igual que
+         su decimal. Primero se prueba el lector binómico, que es el que
+         entiende `-16-16i`; si no lo reconoce, se evalúa como expresión. */
+      const lee = (texto: string) => leeComplejo(texto) ?? evaluaNumero(texto);
+
       const holgura = (objetivo: string) => {
         if (respuesta.tipo === 'conjunto') return respuesta.tolerancia;
-        const v = leeComplejo(objetivo);
+        const v = lee(objetivo);
         const escala = v ? Math.max(Math.abs(v.re), Math.abs(v.im)) : 1;
         return Math.max(escala * 0.02, respuesta.tolerancia);
       };
 
       /** Se lee según el tipo: una lista de soluciones no es un solo número. */
       const legible = (texto: string) =>
-        respuesta.tipo === 'conjunto' ? leeConjunto(texto) : leeComplejo(texto);
+        respuesta.tipo === 'conjunto' ? leeConjunto(texto) : lee(texto);
 
       /** Cuántas soluciones faltan o sobran. Sirve para diagnosticar el error
        *  más típico del tema —dar solo la raíz principal— sin necesidad de
@@ -606,7 +612,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
               ? '<p>Escribe <strong>todas</strong> las soluciones separadas por comas, ' +
                   'por ejemplo <code>1, -1+i, -1-i</code>.</p>'
               : '<p>Escríbela en forma binómica, por ejemplo <code>-3+2i</code>. ' +
-                  'Valen las comas decimales y expresiones como <code>√2/2</code>.</p>',
+                  'Valen las comas decimales y la forma exacta: <code>√2/2</code>, ' +
+                  '<code>pi/4</code>, <code>(e^2-1)/2</code>.</p>',
           );
           return;
         }
