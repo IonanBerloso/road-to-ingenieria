@@ -16,6 +16,7 @@
  */
 import { getCollection } from 'astro:content';
 import { mate } from '../../lib/markdown.mjs';
+import Reparto from '../ui/Reparto.astro';
 
 interface Props {
   /** `id` del ejercicio dentro de algún ejercicios.yaml. */
@@ -74,6 +75,7 @@ const COMPETENCIA = {
   calcular: 'COMP2',
   justificar: 'COMP4',
   verificar: 'COMP2 · COMP4',
+  redactar: 'COMP4',
 } as const;
 
 /* Todo el texto del YAML pasa por el mismo procesador que el MDX, así que las
@@ -84,6 +86,25 @@ const resolucionHtml = await mate(ejercicio.resolucion);
 
 const pasos = await Promise.all(
   ejercicio.pasos.map(async (paso, i) => {
+    /* `redactar` es el único que no lleva `pregunta`: lo que pide no es una
+       respuesta sino un folio escrito, así que su campo se llama `consigna`. */
+    if (paso.tipo === 'redactar') {
+      return {
+        i,
+        tipo: paso.tipo,
+        competencia: COMPETENCIA[paso.tipo],
+        titulo: 'Redactar la demostración',
+        preguntaHtml: await mate(paso.consigna),
+        rubrica: await Promise.all(
+          paso.rubrica.map(async (r) => ({
+            puntoHtml: await mate(r.punto),
+            porqueHtml: await mate(r.porque),
+          })),
+        ),
+        veredictoHtml: await mate(paso.veredicto),
+      };
+    }
+
     const comun = {
       i,
       tipo: paso.tipo,
@@ -177,6 +198,11 @@ const datos = pasos.map((p) => {
   if (p.tipo === 'verificar') {
     return { tipo: p.tipo, condicion: p.condicion, ventana: p.ventana };
   }
+  /* `redactar` no se corrige: el navegador solo tiene que dejar pasar al
+     siguiente paso cuando el alumno diga que ya lo ha escrito. */
+  if (p.tipo === 'redactar') {
+    return { tipo: p.tipo };
+  }
   return {
     tipo: p.tipo,
     // Orden correcto expresado sobre las posiciones ya barajadas.
@@ -196,6 +222,11 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     <p class="rotulo rotulo--live">Ejercicio guiado · {ejercicio.pasos.length} pasos</p>
     <h3 id={`ej-${ejercicio.id}`}>{ejercicio.titulo}</h3>
     <p class="fuente rotulo">{ejercicio.fuente}</p>
+
+    {/* Solo los de examen traen reparto. Verlo antes de empezar cambia cómo
+        se aborda el ejercicio: si COMP2 vale cero, no hay nada que calcular
+        y toda la nota está en cómo se escribe (§09). */}
+    {ejercicio.puntos && <Reparto puntos={ejercicio.puntos} />}
   </header>
 
   <div class="modos no-imprimir" role="group" aria-label="Modo del ejercicio">
@@ -363,6 +394,36 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                       .map((pieza) => (
                         <li class="prosa" set:html={pieza.textoHtml} />
                       ))}
+                  </ol>
+                  {paso.veredictoHtml && (
+                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                  )}
+                </div>
+              </>
+            )}
+
+            {paso.tipo === 'redactar' && (
+              <>
+                <p class="papel no-imprimir">
+                  <span class="papel-i" aria-hidden="true">✎</span>
+                  Escríbela en papel antes de seguir. Aquí no hay hueco donde
+                  teclearla a propósito: lo que corrige el examen es tu folio,
+                  y compararlo es más útil que rellenar una casilla.
+                </p>
+
+                <button type="button" class="ya no-imprimir" data-ya>
+                  Ya la he escrito · ver la rúbrica
+                </button>
+
+                <div class="rubrica" data-rubrica hidden>
+                  <p class="rotulo">Lo que se puntúa</p>
+                  <ol>
+                    {paso.rubrica!.map((r) => (
+                      <li>
+                        <div class="prosa r-punto" set:html={r.puntoHtml} />
+                        <div class="prosa r-porque" set:html={r.porqueHtml} />
+                      </li>
+                    ))}
                   </ol>
                   {paso.veredictoHtml && (
                     <div class="prosa veredicto" set:html={paso.veredictoHtml} />
@@ -841,6 +902,34 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       }
     });
 
+    /* ── COMP4 · redactar ─────────────────────────────────────────────
+       No hay nada que corregir: el sitio es estático y lo que se evalúa está
+       en un folio. Lo único que hace el botón es descubrir la rúbrica y dar
+       el paso por hecho. Es deliberado que no se pueda «acertar»: la
+       comparación la haces tú, y fingir una corrección automática sería
+       mentir sobre lo que esta herramienta puede hacer. */
+
+    pasos.forEach((paso, i) => {
+      if (datos[i].tipo !== 'redactar') return;
+
+      const boton = paso.querySelector<HTMLButtonElement>('[data-ya]');
+      const rubrica = paso.querySelector<HTMLElement>('[data-rubrica]');
+      if (!boton || !rubrica) return;
+
+      boton.addEventListener('click', () => {
+        rubrica.hidden = false;
+        boton.disabled = true;
+        fb(
+          paso,
+          'bien',
+          'Ahora compárala',
+          '<p>Punto por punto. Lo que falte en tu folio es lo que el corrector ' +
+            'no va a encontrar.</p>',
+        );
+        resuelve(i);
+      });
+    });
+
     /* ── modo guiado / completo ───────────────────────────────────── */
 
     const botonesModo = [...raiz.querySelectorAll<HTMLButtonElement>('[data-modo]')];
@@ -1132,6 +1221,50 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   }
 
   .solucion > .rotulo { margin-bottom: .5rem; }
+
+  /* ── COMP4 · redactar ──────────────────────────────────────────── */
+  .papel {
+    display: flex;
+    gap: .7rem;
+    margin: .8rem 0;
+    padding: .7rem .9rem;
+    background: var(--panel);
+    border-radius: 5px;
+    font-size: .88rem;
+  }
+
+  .papel-i { color: var(--live); }
+
+  .ya {
+    font-family: var(--mono);
+    font-size: .76rem;
+    padding: .45rem .8rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: none;
+    color: var(--live);
+    cursor: pointer;
+  }
+
+  .ya:hover:not(:disabled) { border-color: var(--live); }
+  .ya:disabled { opacity: .4; cursor: default; }
+
+  .rubrica {
+    margin-top: .9rem;
+    padding-top: .8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .rubrica > .rotulo { margin-bottom: .6rem; }
+  .rubrica ol { margin: 0 0 0 1.1rem; }
+  .rubrica li { margin-bottom: .8rem; }
+  .r-punto { font-weight: 600; }
+
+  .r-porque {
+    margin-top: .2rem;
+    font-size: .86rem;
+    color: var(--graphite);
+  }
 
   .veredicto {
     margin-top: .7rem;

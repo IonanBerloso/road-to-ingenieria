@@ -242,11 +242,46 @@ const pasoVerificar = z.object({
   veredicto: z.string().optional(),
 });
 
+/** REDACTAR — escribir la demostración en papel y contrastarla con la rúbrica.
+ *
+ *  Por qué hace falta un tipo más. Medido sobre las once primeras
+ *  evaluaciones, el **48,7 %** de la nota es COMP4: explicación formal. Y lo
+ *  que el sitio entrena hoy es otra cosa. `justificar` da las piezas del
+ *  argumento hechas y pide ordenarlas: eso enseña a **reconocer** un
+ *  razonamiento correcto, que no es lo que corrige el examen. El examen
+ *  corrige lo que tú escribes.
+ *
+ *  Y aquí está el límite honesto: el sitio es estático y §02 prohíbe backend,
+ *  así que **no se puede corregir texto libre**. Este paso no lo finge. Hace
+ *  lo que hace un corrector cuando reparte la nota: enseñar la rúbrica. Tú
+ *  escribes en papel, la despliegas y te comparas punto por punto.
+ *
+ *  No es un sexto patrón (§05): es un tipo de paso dentro del Ejercicio
+ *  guiado, como `verificar`. */
+const pasoRedactar = z.object({
+  tipo: z.literal('redactar'),
+  /** Qué hay que escribir, exactamente. */
+  consigna: z.string().min(20),
+  /** Los puntos que un corrector busca, en el orden en que se escriben.
+   *  Cada uno dice **qué** se mira y **por qué** cuenta: una rúbrica que solo
+   *  enumera se lee como una lista de manías. */
+  rubrica: z
+    .array(
+      z.object({
+        punto: z.string().min(10),
+        porque: z.string().min(20),
+      }),
+    )
+    .min(3),
+  veredicto: z.string().optional(),
+});
+
 const paso = z.discriminatedUnion('tipo', [
   pasoReconocer,
   pasoCalcular,
   pasoJustificar,
   pasoVerificar,
+  pasoRedactar,
 ]);
 
 /** El reparto de puntos que el propio examen declara, por competencia.
