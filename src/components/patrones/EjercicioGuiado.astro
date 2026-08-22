@@ -709,14 +709,21 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         const suya = tinta(color('--live'));
         const sobra = tinta(color('--flag'));
 
+        /* Igual que en mismaRegion: la banda de una igualdad se mide en
+           píxeles, no en unidades del enunciado. Si no, una curva se dibuja
+           más gruesa donde la expresión varía despacio, o no se dibuja. */
+        const epsPixel =
+          0.7 *
+          Math.max((ventana.x[1] - ventana.x[0]) / an, (ventana.y[1] - ventana.y[0]) / al);
+
         for (let px = 0; px < an; px++) {
           const x = ventana.x[0] + ((ventana.x[1] - ventana.x[0]) * px) / an;
           for (let py = 0; py < al; py++) {
             const y = ventana.y[1] - ((ventana.y[1] - ventana.y[0]) * py) / al;
             const k = (py * an + px) * 4;
 
-            const enRef = cumple(referencia, x, y);
-            const enTuya = propuesta ? cumple(propuesta, x, y) : false;
+            const enRef = cumple(referencia, x, y, epsPixel);
+            const enTuya = propuesta ? cumple(propuesta, x, y, epsPixel) : false;
             if (!enRef && !enTuya) continue;
 
             const c = enTuya && !enRef ? sobra : suya;

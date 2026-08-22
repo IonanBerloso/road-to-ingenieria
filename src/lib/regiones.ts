@@ -337,6 +337,41 @@ const compara = (a: number, op: string, b: number, eps: number) => {
   return false;
 };
 
+/**
+ * Distancia aproximada del punto (x, y) a la curva «izq = der», medida **en el
+ * plano** y no en el valor de la expresión.
+ *
+ * Es la corrección que hace utilizable el patrón con igualdades. Comparando
+ * `|izq - der| < eps` a secas, la banda que se dibuja es más ancha allí donde
+ * la expresión varía despacio, y sobre todo **cambia si multiplicas la ecuación
+ * por dos**. Medido el 23 de agosto de 2026: la elipse escrita como suma de
+ * distancias daba 104 puntos y la misma elipse en forma canónica 208, así que
+ * `mismaRegion` declaraba distintas dos formas equivalentes de la misma curva.
+ *
+ * Dividiendo entre el módulo del gradiente, la banda pasa a tener una anchura
+ * geométrica fija: es la linealización |d| / |∇d|, que es la distancia a la
+ * curva de nivel. Cualquier forma equivalente da la misma banda.
+ */
+function distanciaACurva(
+  izq: Nodo,
+  der: Nodo,
+  x: number,
+  y: number,
+): number {
+  const d = (px: number, py: number) => valor(izq, px, py).re - valor(der, px, py).re;
+  const aqui = d(x, y);
+  if (!Number.isFinite(aqui)) return Infinity;
+  const h = 1e-5;
+  const gx = (d(x + h, y) - d(x - h, y)) / (2 * h);
+  const gy = (d(x, y + h) - d(x, y - h)) / (2 * h);
+  const g = Math.hypot(gx, gy);
+  /* Sin gradiente no hay curva: es una identidad entre constantes, como
+     `2^-1 = 0.5`, que se cumple en todo el plano o en ninguna parte. Ahí la
+     normalización no significa nada y se compara el valor, como antes. */
+  if (!Number.isFinite(g) || g < 1e-12) return Math.abs(aqui);
+  return Math.abs(aqui) / g;
+}
+
 /** ¿Cumple el punto (x, y) la condición? */
 export function cumple(cs: Condicion[], x: number, y: number, eps = 0.04): boolean {
   return cs.every((c) => cumpleUna(c, x, y, eps));
@@ -346,11 +381,15 @@ function cumpleUna(c: Condicion, x: number, y: number, eps: number): boolean {
   const izq = valor(c.izq, x, y).re;
   const centro = valor(c.centro, x, y).re;
   if (!Number.isFinite(izq) || !Number.isFinite(centro)) return false;
-  if (!compara(izq, c.op1, centro, eps)) return false;
+  if (c.op1 === '=') {
+    if (distanciaACurva(c.izq, c.centro, x, y) >= eps) return false;
+  } else if (!compara(izq, c.op1, centro, eps)) return false;
   if (c.op2 && c.der) {
     const der = valor(c.der, x, y).re;
     if (!Number.isFinite(der)) return false;
-    if (!compara(centro, c.op2, der, eps)) return false;
+    if (c.op2 === '=') {
+      if (distanciaACurva(c.centro, c.der, x, y) >= eps) return false;
+    } else if (!compara(centro, c.op2, der, eps)) return false;
   }
   return true;
 }
@@ -363,10 +402,18 @@ export interface Ventana {
 /**
  * Compara dos condiciones muestreando una rejilla: ¿definen la misma región?
  *
- * No se exige coincidencia perfecta. Los puntos del borde caen de un lado o de
- * otro según el redondeo, y una desigualdad estricta y una no estricta definen
- * regiones que solo se diferencian en el borde — que en un examen es la misma
- * respuesta. Se admite hasta un 1 % de discrepancia.
+ * No se exige coincidencia celda a celda. Un punto de una cuenta como
+ * emparejado si la otra tiene **alguna** marca en las ocho celdas de alrededor.
+ * Esa holgura de una celda es lo que hace utilizable la comparación con curvas:
+ * dos formas equivalentes de la misma circunferencia rasterizan bandas que se
+ * pisan pero no coinciden exactamente, y sin la holgura el desacuerdo llegaba
+ * al 19 % de los puntos —medido el 23 de agosto de 2026 sobre la Apolonio de
+ * 2021-2022— mientras que media circunferencia de más solo costaba el 0,4 %
+ * del total. Es decir: sin holgura el umbral tenía que caer entre 52 y 54
+ * puntos de 14 400, y cualquier calibrado así es mentira.
+ *
+ * Con la holgura, el temblor del borde desaparece y lo que sobrevive es lo que
+ * de verdad sobra o falta.
  */
 export function mismaRegion(
   a: Condicion[],
@@ -374,22 +421,60 @@ export function mismaRegion(
   ventana: Ventana,
   lado = 90,
 ): { iguales: boolean; sobra: number; falta: number; total: number } {
-  let sobra = 0; // puntos que cumple B y no A
-  let falta = 0; // puntos que cumple A y no B
-  let total = 0;
+  /* La tolerancia de las igualdades se ata al paso de la rejilla. Con un valor
+     fijo la banda puede salir más fina que la separación entre muestras, y
+     entonces una recta vertical se cuela entre dos columnas y no se dibuja ni
+     un punto de ella. Medido con `arg(1/(z-2-3i)) = pi/2`: cero puntos de
+     40 000. Con la banda a ras del paso, la curva siempre se muestrea. */
+  const paso = Math.max(
+    (ventana.x[1] - ventana.x[0]) / lado,
+    (ventana.y[1] - ventana.y[0]) / lado,
+  );
+  const eps = 0.7 * paso;
 
+  const gA: boolean[] = new Array(lado * lado).fill(false);
+  const gB: boolean[] = new Array(lado * lado).fill(false);
   for (let i = 0; i < lado; i++) {
     const x = ventana.x[0] + ((ventana.x[1] - ventana.x[0]) * (i + 0.5)) / lado;
     for (let j = 0; j < lado; j++) {
       const y = ventana.y[0] + ((ventana.y[1] - ventana.y[0]) * (j + 0.5)) / lado;
-      total++;
-      const enA = cumple(a, x, y);
-      const enB = cumple(b, x, y);
-      if (enA && !enB) falta++;
-      else if (enB && !enA) sobra++;
+      const k = i * lado + j;
+      gA[k] = cumple(a, x, y, eps);
+      gB[k] = cumple(b, x, y, eps);
     }
   }
 
-  const margen = Math.max(3, Math.round(total * 0.01));
+  /** ¿Hay marca en la celda o en alguna de sus vecinas? */
+  const cerca = (g: boolean[], i: number, j: number) => {
+    for (let di = -1; di <= 1; di++) {
+      const ii = i + di;
+      if (ii < 0 || ii >= lado) continue;
+      for (let dj = -1; dj <= 1; dj++) {
+        const jj = j + dj;
+        if (jj < 0 || jj >= lado) continue;
+        if (g[ii * lado + jj]) return true;
+      }
+    }
+    return false;
+  };
+
+  let sobra = 0; // marcado en B y sin nada de A al lado
+  let falta = 0; // marcado en A y sin nada de B al lado
+  const total = lado * lado;
+  for (let i = 0; i < lado; i++) {
+    for (let j = 0; j < lado; j++) {
+      const k = i * lado + j;
+      if (gA[k] && !cerca(gB, i, j)) falta++;
+      else if (gB[k] && !cerca(gA, i, j)) sobra++;
+    }
+  }
+
+  /* Con la holgura de una celda, el desacuerdo de una respuesta correcta cae a
+     casi cero, así que el margen puede ser mucho más estrecho que antes — y
+     tiene que serlo. Medido sobre seis casos el 23 de agosto de 2026: las
+     respuestas correctas desacuerdan en 0, 0, 4, 0, 0 y 0 puntos de 14 400, y
+     las equivocadas en 50, 328, 457, 60, 118 y 488. El 1 % de antes valía 144
+     y habría dado por buena media circunferencia de más. */
+  const margen = Math.max(6, Math.round(total * 0.001));
   return { iguales: sobra + falta <= margen, sobra, falta, total };
 }
