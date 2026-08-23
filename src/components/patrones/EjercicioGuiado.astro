@@ -217,7 +217,7 @@ const datos = pasos.map((p) => {
 const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 ---
 
-<section class="ejercicio" data-ejercicio aria-labelledby={`ej-${ejercicio.id}`}>
+<section class="ejercicio" data-ejercicio={ejercicio.id} aria-labelledby={`ej-${ejercicio.id}`}>
   <header class="ej-cab">
     <p class="rotulo rotulo--live">Ejercicio guiado · {ejercicio.pasos.length} pasos</p>
     <h3 id={`ej-${ejercicio.id}`}>{ejercicio.titulo}</h3>
@@ -458,6 +458,27 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     | { tipo: 'justificar'; orden: number[]; trampa: number }
     | { tipo: 'verificar'; condicion: string; ventana: { x: [number, number]; y: [number, number] } };
 
+  /** Deja constancia de que este ejercicio está hecho.
+   *
+   *  En el navegador del alumno y en ningún sitio más: el sitio es estático y
+   *  no tiene cuentas (§00). Mismo patrón que el modo de lectura y el tema
+   *  claro/oscuro, que ya guardan aquí — `try/catch` vacío incluido, porque en
+   *  navegación privada `localStorage` puede lanzar al escribir y eso no puede
+   *  tumbar un ejercicio.
+   *
+   *  Se avisa además con un evento, para que la ruta de estudio pueda pintar
+   *  su progreso sin volver a leer el almacenamiento. */
+  function anota(id: string | undefined) {
+    if (!id) return;
+    try {
+      const hechos = JSON.parse(localStorage.getItem('rti:hechos') ?? '{}');
+      if (hechos[id]) return;
+      hechos[id] = true;
+      localStorage.setItem('rti:hechos', JSON.stringify(hechos));
+    } catch {}
+    document.dispatchEvent(new CustomEvent('rti:hecho', { detail: { id } }));
+  }
+
   for (const raiz of document.querySelectorAll<HTMLElement>('[data-ejercicio]')) {
     montar(raiz);
   }
@@ -516,6 +537,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           : hechos === pasos.length
             ? 'ejercicio completo'
             : `paso ${hechos + 1} de ${pasos.length}`;
+      if (hechos === pasos.length) anota(raiz.dataset.ejercicio);
     }
 
     /* ── COMP1 · reconocer ────────────────────────────────────────── */

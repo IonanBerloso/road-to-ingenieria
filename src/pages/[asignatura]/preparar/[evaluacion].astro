@@ -39,7 +39,12 @@ export async function getStaticPaths() {
      caza ids repetidos entre ficheros distintos. */
   const porId = new Map<
     string,
-    { titulo: string; puntos?: { comp1: number; comp2: number; comp4: number }; pagina: string }
+    {
+      titulo: string;
+      puntos?: { comp1: number; comp2: number; comp4: number };
+      pagina: string;
+      nivel?: 'ejemplo' | 'practica' | 'examen';
+    }
   >();
   for (const f of ficheros) {
     /* El id del fichero **es** la página donde vive el ejercicio:
@@ -55,7 +60,7 @@ export async function getStaticPaths() {
             `repositorio porque las rutas y los exámenes los referencian a ciegas.`,
         );
       }
-      porId.set(e.id, { titulo: e.titulo, puntos: e.puntos, pagina });
+      porId.set(e.id, { titulo: e.titulo, puntos: e.puntos, pagina, nivel: e.nivel });
     }
   }
 
@@ -94,10 +99,36 @@ export async function getStaticPaths() {
       }
     }
 
+    /** Un ejercicio de un escalón, resuelto contra la colección.
+     *
+     *  El `nivel` se deduce cuando el YAML no lo dice: con reparto oficial de
+     *  puntos es de examen; sin él, práctica de boletín. Así los 245
+     *  ejercicios ya escritos no hay que tocarlos uno a uno. */
+    const resuelveEjercicio = (bid: string, x: { id: string; incrustado: boolean; nota?: string }) => {
+      const e = porId.get(x.id);
+      if (!e) {
+        throw new Error(
+          `La ruta "${r.id}.yaml", bloque "${bid}", referencia el ejercicio ` +
+            `"${x.id}", que no existe en ningún ejercicios.yaml.`,
+        );
+      }
+      return {
+        ...x,
+        titulo: e.titulo,
+        puntos: e.puntos,
+        pagina: e.pagina,
+        nivel: e.nivel ?? (e.puntos ? 'examen' : 'practica'),
+      };
+    };
+
     /* Cada referencia se resuelve aquí, para que la plantilla no busque nada. */
     const bloquesResueltos = bloques.map((b) => ({
       ...b,
-      material: b.material.map((m) => {
+      escalones: (b.escalones ?? []).map((es) => ({
+        ...es,
+        ejercicios: es.ejercicios.map((x) => resuelveEjercicio(b.id, x)),
+      })),
+      material: (b.material ?? []).map((m) => {
         if (m.tipo === 'ejercicio') {
           const e = porId.get(m.id);
           if (!e) {
@@ -165,8 +196,12 @@ for (const t of d.temas) {
   for (const h of dos) tituloApartado.set(`${t}#${h.slug}`, h.text);
 }
 for (const b of bloques) {
-  for (const m of b.material) {
-    if (m.tipo !== 'teoria' || !m.apartado) continue;
+  const enlaces = [
+    ...b.material.filter((m) => m.tipo === 'teoria' && m.apartado),
+    ...b.escalones.flatMap((es) => (es.teoria ? [es.teoria] : [])),
+  ] as Array<{ tema: string; apartado?: string }>;
+  for (const m of enlaces) {
+    if (!m.apartado) continue;
     const slugs = slugsPorTema.get(m.tema) ?? [];
     if (!slugs.includes(m.apartado)) {
       throw new Error(
@@ -244,6 +279,22 @@ const bloquesHtml = await Promise.all(
     material: await Promise.all(
       b.material.map(async (m) => ({ ...m, notaHtml: m.nota ? await mate(m.nota) : null })),
     ),
+    escalones: await Promise.all(
+      b.escalones.map(async (es) => ({
+        ...es,
+        aprendesHtml: await mate(es.aprendes),
+        dominioHtml: await mate(es.dominio),
+        teoria: es.teoria
+          ? { ...es.teoria, notaHtml: es.teoria.nota ? await mate(es.teoria.nota) : null }
+          : null,
+        ejercicios: await Promise.all(
+          es.ejercicios.map(async (x) => ({
+            ...x,
+            notaHtml: x.nota ? await mate(x.nota) : null,
+          })),
+        ),
+      })),
+    ),
   })),
 );
 
@@ -320,6 +371,75 @@ const crumb = `${asignatura.data.nombre} · preparar`;
               </aside>
             )}
 
+            {b.escalones.map((es, k) => (
+              <section class="escalon" data-escalon={es.id} data-total={es.ejercicios.length}>
+                <div class="e-cab">
+                  <span class="e-n rotulo" aria-hidden="true">{String(k + 1).padStart(2, '0')}</span>
+                  <h3 id={`esc-${es.id}`}>{es.titulo}</h3>
+                  <span class="e-cuenta rotulo" data-cuenta hidden />
+                </div>
+
+                <div class="prosa e-aprendes" set:html={es.aprendesHtml} />
+
+                {es.teoria && (
+                  <a class="e-leer" href={hrefTeoria(es.teoria.tema, es.teoria.apartado)}>
+                    <span class="m-k rotulo">leer</span>
+                    <span class="m-t">
+                      {tituloApartado.get(`${es.teoria.tema}#${es.teoria.apartado}`)}
+                    </span>
+                  </a>
+                )}
+                {es.teoria?.notaHtml && (
+                  <div class="prosa m-nota" set:html={es.teoria.notaHtml} />
+                )}
+
+                <ol class="material e-lista">
+                  {es.ejercicios.map((x) => (
+                    <li class={`m m--ejercicio m--${x.nivel}`} data-ej={x.id}>
+                      <a
+                        href={x.incrustado ? `#ej-${x.id}` : `${ruta(x.pagina)}#ej-${x.id}`}
+                        class="m-ej"
+                      >
+                        <span class="m-k rotulo">
+                          {x.nivel === 'ejemplo'
+                            ? 'ejemplo'
+                            : x.nivel === 'examen'
+                              ? 'examen'
+                              : 'práctica'}
+                        </span>
+                        <span class="m-t">{x.titulo}</span>
+                        <span class="m-tick" data-tick aria-hidden="true">✓</span>
+                      </a>
+                      {x.notaHtml && <div class="prosa m-nota" set:html={x.notaHtml} />}
+                    </li>
+                  ))}
+                </ol>
+
+                {es.ejercicios
+                  .filter((x) => x.incrustado)
+                  .map((x) => <EjercicioGuiado id={x.id} />)}
+
+                <div class="e-dominio">
+                  <p class="rotulo">Lo tienes cuando</p>
+                  <div class="prosa" set:html={es.dominioHtml} />
+                </div>
+              </section>
+            ))}
+
+            {b.escalones.length > 0 && (
+              <aside class="nota progreso no-imprimir" data-progreso hidden>
+                <p class="rotulo">Tu avance</p>
+                <p>
+                  Lo que vas resolviendo se marca aquí y se recuerda al volver.
+                  Se guarda <strong>solo en este navegador</strong>: no es una
+                  cuenta, no sale de tu ordenador, y desaparece si borras los
+                  datos del sitio.
+                </p>
+                <button type="button" class="fantasma" data-borrar>Borrar mi avance</button>
+              </aside>
+            )}
+
+            {b.material.length > 0 && (
             <ol class="material">
               {b.material.map((m) => (
                 <li class={`m m--${m.tipo}`}>
@@ -356,6 +476,7 @@ const crumb = `${asignatura.data.nombre} · preparar`;
                 </li>
               ))}
             </ol>
+            )}
 
             {b.material
               .filter((m) => m.tipo === 'ejercicio' && m.incrustado)
@@ -366,6 +487,61 @@ const crumb = `${asignatura.data.nombre} · preparar`;
     </Lectura>
   </main>
 </Base>
+
+<script>
+  /* Las marcas de aprendizaje.
+   *
+   * Lo escribe `EjercicioGuiado` al completar un ejercicio, y aquí solo se
+   * lee y se pinta. Todo lo que sigue es decorativo por diseño: sin
+   * JavaScript, o con el almacenamiento bloqueado, la página se lee entera y
+   * lo único que falta son las palomitas. Por eso el aviso nace `hidden` y
+   * solo aparece si de verdad hay algo que contar. */
+  const escalones = [...document.querySelectorAll<HTMLElement>('[data-escalon]')];
+
+  if (escalones.length) {
+    const aviso = document.querySelector<HTMLElement>('[data-progreso]');
+
+    const lee = (): Record<string, boolean> => {
+      try {
+        return JSON.parse(localStorage.getItem('rti:hechos') ?? '{}');
+      } catch {
+        return {};
+      }
+    };
+
+    function pinta() {
+      const hechos = lee();
+      for (const es of escalones) {
+        const filas = [...es.querySelectorAll<HTMLElement>('[data-ej]')];
+        let n = 0;
+        for (const fila of filas) {
+          const hecho = Boolean(hechos[fila.dataset.ej!]);
+          fila.classList.toggle('m--hecho', hecho);
+          if (hecho) n++;
+        }
+        const cuenta = es.querySelector<HTMLElement>('[data-cuenta]');
+        if (cuenta) {
+          cuenta.hidden = false;
+          cuenta.textContent = n === filas.length ? 'escalón completo' : `${n} de ${filas.length}`;
+          cuenta.classList.toggle('e-cuenta--lleno', n === filas.length);
+        }
+        es.classList.toggle('escalon--hecho', n === filas.length && filas.length > 0);
+      }
+      if (aviso) aviso.hidden = false;
+    }
+
+    pinta();
+    /* Un ejercicio incrustado en esta misma página se marca en el momento. */
+    document.addEventListener('rti:hecho', pinta);
+
+    document.querySelector<HTMLButtonElement>('[data-borrar]')?.addEventListener('click', () => {
+      try {
+        localStorage.removeItem('rti:hechos');
+      } catch {}
+      pinta();
+    });
+  }
+</script>
 
 <style>
   .envoltorio {
@@ -440,9 +616,103 @@ const crumb = `${asignatura.data.nombre} · preparar`;
     color: var(--graphite);
   }
 
+  /* ── el escalón ────────────────────────────────────────────────────
+     Una tarjeta por herramienta, con su escalera dentro. La diferencia
+     visual con la lista plana de antes es deliberada: allí teoría y
+     ejercicios eran filas idénticas, y aquí se ve de un vistazo dónde
+     empieza cada cosa y dónde acaba. */
+  .escalon {
+    margin: 1.6rem 0;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+
+  .e-cab {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr auto;
+    align-items: baseline;
+    gap: .6rem;
+  }
+
+  .e-n { color: var(--acento); }
+  .e-cab h3 { margin: 0; font-size: 1rem; }
+  .e-cuenta { color: var(--graphite); white-space: nowrap; }
+
+  .e-aprendes {
+    margin: .5rem 0 0 2.8rem;
+    color: var(--graphite);
+  }
+
+  .e-leer {
+    display: grid;
+    grid-template-columns: 4.6rem 1fr;
+    align-items: baseline;
+    gap: .8rem;
+    margin: .9rem 0 0;
+    padding: .5rem .7rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .e-leer:hover { border-color: var(--live); }
+  .e-leer .m-k { color: var(--live); }
+
+  .e-lista { margin-top: .9rem; }
+
+  /* El nivel se lee en el rótulo, y además con el color: el ejemplo es
+     nuestro y se toca, la práctica y el examen son material ajeno. */
+  .m--ejemplo .m-k { color: var(--live); }
+  .m--examen .m-k { color: var(--graphite); }
+
+  /* La palomita del progreso. Nace oculta: sin JavaScript no hay
+     progreso que enseñar, y una casilla vacía que nunca se marca es
+     peor que no tenerla. */
+  .m-tick {
+    color: var(--live);
+    visibility: hidden;
+    font-size: .9rem;
+  }
+
+  .m--hecho .m-tick { visibility: visible; }
+  .m--hecho .m-t { color: var(--graphite); }
+  .m--hecho a { border-color: var(--live); }
+
+  .e-dominio {
+    margin: 1rem 0 0;
+    padding-top: .8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .e-dominio .rotulo { margin: 0 0 .2rem; color: var(--live); }
+  .e-dominio .prosa { font-size: .92rem; }
+
+  .e-cuenta--lleno { color: var(--live); }
+  .escalon--hecho { border-color: var(--live); }
+
+  .progreso button {
+    margin-top: .6rem;
+    font: inherit;
+    font-size: .8rem;
+    padding: .3rem .6rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: none;
+    color: var(--graphite);
+    cursor: pointer;
+  }
+
+  .progreso button:hover { border-color: var(--flag); color: var(--flag); }
+
   @media (max-width: 40rem) {
     .m a { grid-template-columns: 4.2rem 1fr; }
     .m-pts { grid-column: 2; }
     .m-nota { margin-left: 0; }
+    .escalon { padding: .9rem .8rem 1rem; }
+    .e-aprendes { margin-left: 0; }
+    .e-leer { grid-template-columns: 4.2rem 1fr; }
   }
 </style>

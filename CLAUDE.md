@@ -329,6 +329,23 @@ La universidad ha dado permiso para usar el material docente. Aun así:
   complementarios, tema 1 · Cálculo, UPV/EHU (examen 2014/2015)».
 - Lo que sí es nuestro es **la resolución**: el desarrollo, los errores típicos
   y el diagnóstico. Ahí está el valor, no en el enunciado.
+- Y desde el 23 de agosto de 2026, también son nuestros los **ejemplos
+  introductorios**: ejercicios cortos que escribimos para que alguien pueda
+  entrar de cero. Llevan `nivel: ejemplo` y su `fuente` lo dice con todas las
+  letras — «Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+  boletín» —, así que nunca se pueden confundir con lo que va a caer.
+
+> Esa última regla es nueva y contradice en parte lo de arriba, así que se
+> justifica. Se midió la dificultad del corpus y **no había por dónde entrar**:
+> en el bloque de lugares geométricos iba de 1,5 a 4,5 sobre 5 con la moda en
+> 3,5, el único abordable sin saber el tema estaba enterrado el décimo de
+> diecisiete, y las cuatro traducciones básicas que la propia prosa enumera no
+> tenían ni un ejercicio propio. Un sitio hecho para el que está atascado que
+> solo ofrece ejercicios de examen no sirve al que todavía no ha empezado.
+>
+> Lo que **no** cambia: un enunciado de examen se reproduce tal cual y no se
+> inventa. Un ejemplo introductorio no es un enunciado de examen, y por eso
+> tiene que ir marcado en el dato, no solo en la intención.
 
 > Esta regla decía lo contrario hasta el 19 de agosto de 2026: reescribir los
 > enunciados y cambiar los números, para que no se pudiera buscar la solución
@@ -605,6 +622,29 @@ de los `id`.
 Y una consecuencia del enlace por `id`: si la ruta apunta a un apartado de
 teoría, el build comprueba el anclaje contra los encabezados reales del `.mdx`.
 Renombrar un apartado **rompe el build**, que es exactamente lo que se quiere.
+
+### El escalón
+
+Un bloque no es una lista de enlaces: es una secuencia de **escalones**, y un
+escalón es **una herramienta con su escalera**. Lleva cuatro cosas, y las
+cuatro son obligatorias:
+
+| campo | qué es |
+|---|---|
+| `aprendes` | qué vas a saber **hacer** al acabarlo, en segunda persona |
+| `teoria` | dónde se explica, enlazado al apartado exacto |
+| `ejercicios` | de `ejemplo` a `practica` a `examen`, en ese orden |
+| `dominio` | cómo sabes que este escalón está cerrado |
+
+> Nace el 23 de agosto de 2026 de una crítica del alumno: «lo que has hecho es
+> mandar con un enlace directo a la teoría, y con eso no hacemos que nadie
+> aprenda nada». Tenía razón. Un bloque era una pila plana de una decena de
+> filas donde «leer» y «hacer» eran visualmente lo mismo, el `dominio` se
+> validaba y se tiraba sin pintarlo, y el primer ejercicio de cualquier bloque
+> ya era de nivel examen.
+
+La regla que lo resume: **si el primer ejercicio de un escalón no lo puede
+hacer alguien que acaba de leer la teoría, falta un ejemplo delante.**
 
 ### Una ruta está terminada cuando
 

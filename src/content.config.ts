@@ -317,8 +317,24 @@ const ejercicio = z
   .object({
     id: z.string().regex(/^[a-z0-9-]+$/, 'en minúscula, sin acentos, con guiones'),
     titulo: z.string().min(5),
-    /** Procedencia obligatoria: el material es adaptado, no propio (§08). */
+    /** Procedencia obligatoria (§08). Casi siempre es material adaptado; los
+     *  ejemplos introductorios son nuestros y lo dicen en la propia cadena. */
     fuente: z.string().min(10),
+    /** En qué escalón de la progresión entra.
+     *
+     *  Hasta el 23 de agosto de 2026 no existía ningún dato de dificultad en
+     *  todo el corpus, y se notaba: en el bloque de regiones la dificultad
+     *  estimada iba de 1,5 a 4,5 con la moda en 3,5, el único abordable de
+     *  cero estaba enterrado el décimo de diecisiete, y las cuatro
+     *  traducciones básicas que la prosa enumera no tenían **ni un ejercicio
+     *  propio**. Sin este campo no se puede expresar una escalera.
+     *
+     *  · `ejemplo`  — nuestro, corto, una sola idea, para empezar de cero.
+     *  · `practica` — del boletín: el mismo tipo, ya con dificultad real.
+     *  · `examen`   — tal como cayó.
+     *
+     *  Si falta se deduce: con `puntos` es de examen, sin ellos es práctica. */
+    nivel: z.enum(['ejemplo', 'practica', 'examen']).optional(),
     /** Solo en los ejercicios de examen: el reparto oficial de puntos. */
     puntos: puntos.optional(),
     /** Un enunciado puede ser legitimamente corto: «$z^3 = -|z|$» son
@@ -495,6 +511,48 @@ const referencia = z.discriminatedUnion('tipo', [
   }),
 ]);
 
+/** Un escalón es **una herramienta con su escalera**: qué vas a saber hacer,
+ *  dónde se explica, y los ejercicios ordenados de fácil a examen.
+ *
+ *  Nace el 23 de agosto de 2026 de una crítica del alumno: «lo que has hecho
+ *  es mandar con un enlace directo a la teoría, y con eso no aprende nadie».
+ *  Tenía razón, y por partida doble. Un bloque era una pila plana de una
+ *  decena de filas que mezclaba enlaces «leer» con enlaces a ejercicios, sin
+ *  jerarquía; y el primer ejercicio de cualquier bloque ya era de nivel
+ *  examen, así que quien llegaba sin saber el tema no tenía por dónde entrar.
+ *
+ *  La diferencia con `material` no es de presentación: un escalón **obliga**
+ *  a declarar qué se aprende y cómo se sabe que está aprendido. */
+const escalon = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  titulo: z.string().min(5),
+  /** Qué vas a saber hacer al acabarlo, en segunda persona y en una frase.
+   *  No es un resumen del apartado de teoría: es la capacidad. */
+  aprendes: z.string().min(20),
+  /** Dónde se explica. Opcional porque hay escalones que son solo práctica. */
+  teoria: z
+    .object({
+      tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
+      apartado: z
+        .string()
+        .regex(/^[a-z0-9áéíóúüñ-]+$/, 'slug de encabezado, en minúscula y con sus acentos'),
+      nota: z.string().min(10).optional(),
+    })
+    .optional(),
+  ejercicios: z
+    .array(
+      z.object({
+        id: z.string().regex(/^[a-z0-9-]+$/),
+        incrustado: z.boolean().default(false),
+        nota: z.string().min(10).optional(),
+      }),
+    )
+    .min(1),
+  /** El criterio de cierre de **este** escalón, no del bloque entero. Y este
+   *  sí se pinta: el `dominio` del bloque se validaba y se tiraba. */
+  dominio: z.string().min(20),
+});
+
 /** Un bloque es **un hueco del examen**, no un apartado del temario. Esa es la
  *  diferencia entre una ruta de estudio y un índice. */
 const bloque = z.object({
@@ -520,10 +578,18 @@ const bloque = z.object({
    *  Obligatorio, y en segunda persona: describe lo que tienes que ser capaz
    *  de hacer, no lo que tienes que haber leído. */
   dominio: z.string().min(20),
-  material: z.array(referencia).min(1),
+  /** La forma vieja: una pila plana de referencias.
+   *
+   *  Sigue valiendo, y por eso es opcional en vez de estar borrada: los
+   *  bloques que todavía no se han convertido a escalones funcionan tal cual.
+   *  Un bloque tiene que traer `material` o `escalones`, nunca los dos. */
+  material: z.array(referencia).min(1).optional(),
+  escalones: z.array(escalon).min(1).optional(),
   /** Lo que el examen pide y el sitio todavía **no** enseña. Se publica tal
    *  cual: prometer material que no existe es peor que enseñar el hueco. */
   falta: z.array(z.string().min(20)).default([]),
+}).refine((b) => Boolean(b.material) !== Boolean(b.escalones), {
+  message: 'un bloque lleva `material` o `escalones`, uno de los dos y no los dos',
 });
 
 /** Una ruta de estudio por evaluación.
@@ -566,9 +632,14 @@ const preparar = defineCollection({
        mismo dos veces creyendo que son dos distintos. */
     .refine(
       (r) => {
-        const ids = r.bloques.flatMap((b) =>
-          b.material.filter((m) => m.tipo === 'ejercicio' && m.incrustado).map((m) => m.id),
-        );
+        const ids = r.bloques.flatMap((b) => [
+          ...(b.material ?? [])
+            .filter((m) => m.tipo === 'ejercicio' && m.incrustado)
+            .map((m) => m.id),
+          ...(b.escalones ?? []).flatMap((e) =>
+            e.ejercicios.filter((x) => x.incrustado).map((x) => x.id),
+          ),
+        ]);
         return new Set(ids).size === ids.length;
       },
       { message: 'el mismo ejercicio incrustado dos veces duplica su id en el DOM' },

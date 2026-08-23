@@ -174,10 +174,20 @@ quedado sin verificador. Añadir `|` chocaría con el módulo, así que el token
 tendría que ser `or` o `;`. No se hace hasta que un segundo ejercicio lo pida:
 uno solo no justifica tocar la gramática.
 
-**21 · `data-ejercicio` es un atributo sin valor.** Para localizar un ejercicio
+**21 · ~~`data-ejercicio` es un atributo sin valor.~~** Resuelto el 23 de agosto
+de 2026: lleva el id, y de paso es lo que permite anotar el progreso. Decía: Para localizar un ejercicio
 concreto en la página hay que ir por su ancla `#ej-<id>`, que sí lleva el id.
 Costó un rato de depuración al probar los verificadores en el navegador, porque
 `[data-ejercicio="<id>"]` no casa con nada y el selector cae silenciosamente al
 primer ejercicio de la página. Poner el id como valor del atributo es un cambio
 de una línea y haría que `humo.mjs` y cualquier prueba futura puedan apuntar a
 un ejercicio sin adivinar la estructura del DOM.
+
+**22 · Veintitrés bloques siguen con la forma vieja.** El 23 de agosto de 2026
+se introdujo el escalón —`aprendes`, teoría, ejercicios de ejemplo a examen, y
+`dominio` visible— y se convirtió **solo** el bloque «El suelo» de la primera
+evaluación, a propósito: era la plantilla que había que ver funcionando antes
+de repetirla. El esquema acepta `material` o `escalones`, así que los otros
+veintitrés siguen en pie sin tocarlos. La conversión pendiente son 43 apartados
+de teoría, y cada uno necesita mirar si hay un ejercicio por el que se pueda
+entrar o si hay que escribirlo: en complejos hubo que escribir seis.
