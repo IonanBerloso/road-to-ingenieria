@@ -191,3 +191,28 @@ de repetirla. El esquema acepta `material` o `escalones`, así que los otros
 veintitrés siguen en pie sin tocarlos. La conversión pendiente son 43 apartados
 de teoría, y cada uno necesita mirar si hay un ejercicio por el que se pueda
 entrar o si hay que escribirlo: en complejos hubo que escribir seis.
+
+**23 · Las rutas de 2.ª y 3.ª evaluación siguen en lista plana.** El 23 de
+agosto de 2026 se cerró la primera entera: 21 escalones en cinco bloques, con
+doce ejemplos introductorios detrás. Quedan 17 bloques por convertir —8 de la
+segunda y 9 de la tercera—, que son unos 35 escalones. El coste real no es
+convertir el YAML: es que cada escalón necesita un ejercicio por el que se
+pueda entrar, y el más simple de cada tema ya es de nivel boletín. En complejos
+hicieron falta ocho ejemplos nuevos y en sucesiones cuatro; para los temas 3, 4
+y 5 no hay ninguno todavía.
+
+**24 · Los temas 3 y 4 siguen casi sin figuras.** Tras esta tanda: t01 tres,
+t02 tres, t03 **cero**, t04 una, t05 cuatro. Continuidad, Bolzano, Weierstrass
+y las razones de cambio son conceptos que se explican dibujando, y hoy se
+explican con párrafos. Es el mismo hueco que tenía integración antes de que se
+le pusieran cuatro.
+
+**25 · Tres de los seis patrones no tienen componente.** `figura-fija`,
+`verificador` y `demostracion` viven en `referencia/` como prototipos HTML sin
+portar, y §03 dibuja un árbol de ficheros que promete `FiguraFija.astro`,
+`Verificador.astro` y `Demostracion.astro`, que no existen. Lo que sí existe
+son los pasos `verificar` y `justificar` dentro de `EjercicioGuiado`, que el
+propio esquema clasifica como pasos y no como patrones. El 23 de agosto de
+2026 el catálogo dejó de encender esas casillas, así que ya no se publica nada
+falso; lo que queda es decidir si los tres patrones se construyen o si §05 se
+reescribe para describir lo que el proyecto hace de verdad.
