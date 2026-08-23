@@ -192,7 +192,11 @@ veintitrés siguen en pie sin tocarlos. La conversión pendiente son 43 apartado
 de teoría, y cada uno necesita mirar si hay un ejercicio por el que se pueda
 entrar o si hay que escribirlo: en complejos hubo que escribir seis.
 
-**23 · Las rutas de 2.ª y 3.ª evaluación siguen en lista plana.** El 23 de
+**23 · ~~Las rutas de 2.ª y 3.ª evaluación siguen en lista plana.~~** Resuelto el
+23 de agosto de 2026: las tres rutas están en escalones, 56 en total, con 22
+ejemplos de entrada detrás. Los siete bloques que siguen planos —los tres de
+exámenes enteros, los tres de formulario y el de complejos extintos— lo están a
+propósito: no enseñan una herramienta. Decía: El 23 de
 agosto de 2026 se cerró la primera entera: 21 escalones en cinco bloques, con
 doce ejemplos introductorios detrás. Quedan 17 bloques por convertir —8 de la
 segunda y 9 de la tercera—, que son unos 35 escalones. El coste real no es
@@ -201,7 +205,10 @@ pueda entrar, y el más simple de cada tema ya es de nivel boletín. En complejo
 hicieron falta ocho ejemplos nuevos y en sucesiones cuatro; para los temas 3, 4
 y 5 no hay ninguno todavía.
 
-**24 · Los temas 3 y 4 siguen casi sin figuras.** Tras esta tanda: t01 tres,
+**24 · ~~Los temas 3 y 4 siguen casi sin figuras.~~** A medias. El tema 3 pasó de
+cero a tres el 23 de agosto de 2026; el tema 4 sigue con una sola, y le vendrían
+bien dos: el polinomio de Taylor pegándose a la curva, y la tabla de signos de
+las dos derivadas. Decía: Tras esta tanda: t01 tres,
 t02 tres, t03 **cero**, t04 una, t05 cuatro. Continuidad, Bolzano, Weierstrass
 y las razones de cambio son conceptos que se explican dibujando, y hoy se
 explican con párrafos. Es el mismo hueco que tenía integración antes de que se
