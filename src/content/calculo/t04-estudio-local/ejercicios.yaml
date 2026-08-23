@@ -1,4 +1,589 @@
 ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 4. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-punto-critico-clasificado
+    titulo: Un punto crítico, y decidir qué es
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Para $f(x) = x^{3} - 3x$, encontrar sus puntos críticos y clasificarlos.
+    pide: Los puntos donde la derivada se anula y qué es cada uno.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Si $f'(c) = 0$, ¿qué se puede afirmar del punto $c$?
+        opciones:
+          - texto: Que es candidato a extremo, pero hay que decidirlo aparte
+            correcta: true
+            mensaje: |
+              Eso es. Fermat dice «extremo implica derivada nula», y el
+              recíproco es falso. Por eso se llaman **críticos** y no
+              «extremos»: son candidatos.
+          - texto: Que hay un máximo o un mínimo
+            mensaje: |
+              No necesariamente. En $f(x) = x^{3}$ la derivada se anula en el
+              origen y ahí no hay ni máximo ni mínimo, solo una inflexión con
+              tangente horizontal.
+          - texto: Que la función vale cero en $c$
+            mensaje: |
+              Eso sería $f(c) = 0$, otra cosa. Aquí lo que se anula es la
+              **derivada**: la tangente es horizontal, pero la función puede
+              valer lo que sea.
+      - tipo: calcular
+        titulo: El punto crítico positivo
+        pregunta: |
+          Resolviendo $f'(x) = 3x^{2} - 3 = 0$, ¿cuál es la solución positiva?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Parece que has despejado mal: de $3x^{2} = 3$ sale $x^{2} = 1$, no
+              $x^{2} = 3$. El 3 se cancela.
+          - valor: '1.7320508'
+            mensaje: |
+              Has sacado la raíz de 3. Divide primero entre 3 los dos lados y
+              verás que queda $x^{2}=1$.
+        pista: |
+          $3x^{2} = 3$, así que $x^{2} = 1$.
+        desarrollo: |
+          $$
+          f'(x) = 3x^{2}-3 = 0
+          \;\Longrightarrow\;
+          x^{2} = 1
+          \;\Longrightarrow\;
+          x = \pm 1
+          $$
+
+          Hay dos puntos críticos, $x = -1$ y $x = 1$.
+      - tipo: calcular
+        titulo: Clasificarlo
+        pregunta: |
+          Con $f''(x) = 6x$, ¿cuánto vale $f''(1)$?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              $f''(x) = 6x$, así que en $x=1$ vale 6, no 0. Se anula en el
+              origen, que no es un punto crítico de esta función.
+          - valor: '3'
+            mensaje: |
+              3 es el coeficiente de la primera derivada. La segunda derivada de
+              $x^{3}-3x$ es $6x$: al derivar $3x^{2}$ el 2 baja y multiplica.
+        pista: |
+          Sustituye $x=1$ en $6x$. Y fíjate en el signo, que es lo que decide.
+        desarrollo: |
+          $$
+          f''(1) = 6 > 0
+          $$
+
+          Con la segunda derivada **positiva**, la curva abre hacia arriba en
+          ese punto: es un **mínimo**. Por simetría, $f''(-1) = -6 < 0$ y allí
+          hay un máximo.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: $f'(x) = 3x^{2}-3$ se anula en $x = \pm 1$.
+          - texto: $f''(x) = 6x$, y $f''(1) = 6 > 0$, luego en $x=1$ hay un mínimo.
+          - texto: $f''(-1) = -6 < 0$, luego en $x=-1$ hay un máximo.
+          - texto: Son extremos **relativos** y no absolutos, porque la función no está acotada.
+          - texto: Como la derivada se anula en dos puntos, los dos son mínimos.
+            trampa: true
+            mensaje: |
+              Anularse no dice de qué tipo es. Lo decide el signo de la segunda
+              derivada, y aquí sale opuesto en cada punto: uno es máximo y el
+              otro mínimo.
+    resolucion: |
+      **Los candidatos.** Se buscan donde la derivada se anula, que es lo que
+      Fermat autoriza:
+
+      $$
+      f'(x) = 3x^{2}-3 = 0 \;\Longrightarrow\; x = \pm 1
+      $$
+
+      **Clasificarlos** con el signo de la segunda derivada, $f''(x) = 6x$:
+
+      | punto | $f''$ | qué es |
+      |---|---|---|
+      | $x=-1$ | $-6 < 0$ | máximo relativo |
+      | $x=1$ | $6 > 0$ | mínimo relativo |
+
+      **El detalle que se pierde.** Son extremos **relativos**. La función es
+      una cúbica y no está acotada, así que no tiene máximo ni mínimo
+      absolutos. Si el enunciado pidiera absolutos sobre un intervalo cerrado,
+      habría que evaluar también en los bordes.
+
+      **Y si $f''(c)$ saliera cero**, el criterio no diría nada y habría que
+      mirar el signo de $f'$ a los dos lados del punto.
+
+  - id: ej-lagrange-basico
+    titulo: El teorema del valor medio, aplicado
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Comprobar que $f(x) = x^{2}$ cumple las hipótesis del teorema de Lagrange
+      en $[0,2]$ y encontrar el punto $c$ que el teorema garantiza.
+    pide: La comprobación de las hipótesis y el valor de c.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué dos hipótesis pide el teorema de Lagrange, y en qué intervalos?
+        opciones:
+          - texto: Continua en el cerrado y derivable en el abierto
+            correcta: true
+            mensaje: |
+              Eso es, y la diferencia entre los dos intervalos **no es un
+              descuido del enunciado**: es a propósito, para permitir tangentes
+              verticales en los extremos.
+          - texto: Continua y derivable, las dos en el cerrado
+            mensaje: |
+              La derivabilidad se pide solo en el abierto, que es más débil. Con
+              tu versión, funciones como $\sqrt{x}$ en $[0,1]$ quedarían fuera
+              sin motivo.
+          - texto: Que la función valga lo mismo en los dos extremos
+            mensaje: |
+              Esa es la hipótesis extra de **Rolle**, que es el caso particular
+              de Lagrange cuando la pendiente media vale cero.
+      - tipo: calcular
+        titulo: La pendiente media
+        pregunta: |
+          ¿Cuánto vale $\dfrac{f(2)-f(0)}{2-0}$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '4'
+            mensaje: |
+              4 es $f(2)$, el numerador. Falta dividir entre la longitud del
+              intervalo, que es 2.
+          - valor: '1'
+            mensaje: |
+              Parece que has dividido 2 entre 2. El numerador es
+              $f(2)-f(0) = 4-0 = 4$.
+        pista: |
+          $f(2) = 4$ y $f(0) = 0$. Divide la diferencia entre 2.
+        desarrollo: |
+          $$
+          \frac{f(2)-f(0)}{2-0} = \frac{4-0}{2} = 2
+          $$
+
+          Es la pendiente de la recta que une los dos extremos de la curva.
+      - tipo: calcular
+        titulo: El punto que el teorema garantiza
+        pregunta: |
+          Resolviendo $f'(c) = 2$, con $f'(x) = 2x$, ¿cuánto vale $c$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 es la pendiente media, no el punto. De $2c = 2$ hay que despejar
+              $c$.
+          - valor: '0'
+            mensaje: |
+              Con $c=0$ la derivada valdría 0, no 2. Y además el teorema
+              garantiza un punto en el **abierto**, así que los extremos no
+              cuentan.
+        pista: |
+          $2c = 2$.
+        desarrollo: |
+          $$
+          f'(c) = 2c = 2 \;\Longrightarrow\; c = 1
+          $$
+
+          Y $1$ está en el intervalo abierto $(0,2)$, como el teorema promete.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza sobra.
+        piezas:
+          - texto: $f(x)=x^{2}$ es un polinomio, luego continua en $[0,2]$ y derivable en $(0,2)$.
+          - texto: La pendiente media vale $\frac{4-0}{2} = 2$.
+          - texto: Lagrange garantiza un $c \in (0,2)$ con $f'(c) = 2$.
+          - texto: Resolviendo $2c = 2$ sale $c = 1$, que efectivamente está dentro.
+          - texto: El teorema dice que ese $c$ es el punto medio del intervalo.
+            trampa: true
+            mensaje: |
+              Coincide aquí por casualidad, porque la parábola es simétrica. El
+              teorema **no dice dónde** está el punto: solo que existe. Con otra
+              función cae en otro sitio.
+    resolucion: |
+      **Las hipótesis.** $f$ es un polinomio, así que es continua en el cerrado
+      $[0,2]$ y derivable en el abierto $(0,2)$. Las dos se comprueban por
+      separado y las dos hacen falta.
+
+      **La pendiente media**, que es lo que el teorema iguala:
+
+      $$
+      \frac{f(2)-f(0)}{2-0} = \frac{4-0}{2} = 2
+      $$
+
+      **El punto.** El teorema garantiza que existe $c \in (0,2)$ con
+      $f'(c) = 2$. Como $f'(x) = 2x$:
+
+      $$
+      2c = 2 \;\Longrightarrow\; c = 1
+      $$
+
+      **Qué significa.** En $x=1$ la tangente a la parábola tiene la misma
+      pendiente que la recta que une $(0,0)$ con $(2,4)$. Si un coche recorre
+      100 km en una hora, en algún instante su velocímetro marcó 100 km/h: es
+      el mismo enunciado.
+
+  - id: ej-taylor-orden-dos
+    titulo: Un polinomio de Taylor de orden 2
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el polinomio de Maclaurin de orden 2 de $f(x) = e^{x}$ y usarlo
+      para aproximar $e^{0{,}1}$.
+    pide: El polinomio y el valor aproximado.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué quiere decir que el polinomio sea «de Maclaurin»?
+        opciones:
+          - texto: Que está centrado en $a = 0$
+            correcta: true
+            mensaje: |
+              Eso es. No es un concepto nuevo: es Taylor alrededor del origen.
+              Cinco de los once cursos lo llaman así en el enunciado.
+          - texto: Que tiene grado 2
+            mensaje: |
+              El grado lo fija el «de orden 2», no el nombre. Maclaurin se
+              refiere al punto donde se centra, que es el cero.
+          - texto: Que usa las derivadas segundas
+            mensaje: |
+              Usa las derivadas hasta el orden que se pida, sí, pero eso es
+              cierto para cualquier Taylor. Lo que Maclaurin añade es dónde se
+              evalúan: en el cero.
+      - tipo: calcular
+        titulo: El coeficiente de x²
+        pregunta: |
+          En $P_2(x) = f(0) + f'(0)x + \dfrac{f''(0)}{2!}x^{2}$, ¿cuánto vale el
+          coeficiente de $x^{2}$?
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.001
+          formato: en forma exacta, o con dos decimales
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $f''(0) = 1$, sí, pero falta dividir entre $2! = 2$. El factorial
+              del denominador es lo que hace que el polinomio se ajuste.
+          - valor: '2'
+            mensaje: |
+              Has multiplicado por el factorial en vez de dividir. En la fórmula
+              el $k!$ va debajo.
+        pista: |
+          Todas las derivadas de $e^{x}$ son $e^{x}$, y en cero valen 1. Divide
+          entre $2!$.
+        desarrollo: |
+          Como $f(x) = f'(x) = f''(x) = e^{x}$, en el cero las tres valen 1:
+
+          $$
+          P_2(x) = 1 + x + \frac{1}{2}x^{2}
+          $$
+      - tipo: calcular
+        titulo: La aproximación
+        pregunta: |
+          Sustituyendo $x = 0{,}1$, ¿cuánto vale $P_2(0{,}1)$?
+        respuesta:
+          tipo: numero
+          valor: '1.105'
+          tolerancia: 0.0005
+          formato: en forma exacta, o con tres decimales
+        distractores:
+          - valor: '1.1'
+            mensaje: |
+              Te has quedado en el polinomio de orden 1, $1+x$. Falta el término
+              cuadrático, que aporta 0,005.
+          - valor: '1.15'
+            mensaje: |
+              Parece que no has elevado al cuadrado. Has sumado la mitad
+              de $0{,}1$, que es $0{,}05$, pero el término lleva $x^{2}$: el
+              sumando correcto es $0{,}005$, diez veces menos.
+        pista: |
+          $1 + 0{,}1 + \frac12(0{,}1)^{2}$.
+        desarrollo: |
+          $$
+          P_2(0{,}1) = 1 + 0{,}1 + \frac{1}{2}(0{,}01) = 1{,}105
+          $$
+
+          El valor real es $e^{0{,}1} = 1{,}10517\ldots$, así que el error está
+          en la cuarta cifra. Con dos términos más ya no se distinguiría.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: Todas las derivadas de $e^{x}$ son $e^{x}$, y en 0 valen 1.
+          - texto: Luego $P_2(x) = 1 + x + \frac{x^{2}}{2}$.
+          - texto: Sustituyendo $x = 0{,}1$ sale $1{,}105$.
+          - texto: Es una aproximación, así que la respuesta completa lleva una cota del error.
+          - texto: Como el polinomio es exacto en $x=0$, lo es en todo el intervalo.
+            trampa: true
+            mensaje: |
+              Coincide con la función en el punto y en sus dos primeras
+              derivadas, y **solo ahí** es exacto. Cuanto más te alejas, más se
+              separan: por eso Taylor es una aproximación **local**.
+    resolucion: |
+      **El polinomio.** Maclaurin es Taylor centrado en $a=0$:
+
+      $$
+      P_n(x) = f(0)+f'(0)x+\frac{f''(0)}{2!}x^{2}+\cdots
+      $$
+
+      Para $f(x) = e^{x}$ todas las derivadas son $e^{x}$, y en el cero valen 1.
+      Con $n=2$:
+
+      $$
+      P_2(x) = 1 + x + \frac{x^{2}}{2}
+      $$
+
+      **La aproximación.**
+
+      $$
+      e^{0{,}1} \approx P_2(0{,}1) = 1 + 0{,}1 + 0{,}005 = 1{,}105
+      $$
+
+      **Lo que falta para que valga los puntos.** Un valor aproximado sin cota
+      del error es un número sin garantía. El resto de Lagrange es
+
+      $$
+      R_2 = \frac{f'''(\xi)}{3!}x^{3} = \frac{e^{\xi}}{6}(0{,}1)^{3}
+      $$
+
+      con $\xi$ entre 0 y 0,1. Acotando $e^{\xi} < e^{0{,}1} < 1{,}2$:
+
+      $$
+      \left|R_2\right| < \frac{1{,}2}{6}\cdot 0{,}001 = 0{,}0002
+      $$
+
+      Así que las tres primeras cifras son de fiar, y eso es lo que hay que
+      escribir.
+
+  - id: ej-optimizar-rectangulo
+    titulo: Optimizar, con la restricción a la vista
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Con 20 metros de valla se quiere cercar un rectángulo. ¿Qué dimensiones
+      dan el área máxima?
+    pide: Las dimensiones del rectángulo de área máxima.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En un problema de optimización, ¿qué es la «función objetivo»?
+        opciones:
+          - texto: Lo que hay que hacer máximo o mínimo, aquí el área
+            correcta: true
+            mensaje: |
+              Eso es. Y la otra ecuación, la que liga las variables, es la
+              **restricción**. Distinguirlas es la mitad del ejercicio.
+          - texto: La que relaciona las dos variables entre sí
+            mensaje: |
+              Esa es la restricción. La objetivo es la que se quiere optimizar:
+              aquí, el área.
+          - texto: La derivada que hay que igualar a cero
+            mensaje: |
+              Derivar viene después, y es lo mecánico. La función objetivo es lo
+              que se deriva, y hay que escribirla antes.
+      - tipo: calcular
+        titulo: El objetivo con una sola variable
+        pregunta: |
+          Con perímetro $2x+2y=20$, se despeja $y = 10-x$ y el área queda
+          $A(x) = x(10-x)$. ¿En qué valor de $x$ se anula $A'(x)$?
+        respuesta:
+          tipo: numero
+          valor: '5'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '10'
+            mensaje: |
+              10 es la suma de los dos lados, no cada uno. De
+              $A'(x) = 10-2x = 0$ sale $x = 5$.
+          - valor: '20'
+            mensaje: |
+              20 es el perímetro entero. Cada lado mide bastante menos.
+          - valor: '2.5'
+            mensaje: |
+              Parece que has dividido dos veces. De $10 = 2x$ sale $x=5$, no
+              $2{,}5$.
+        pista: |
+          Desarrolla $A(x) = 10x - x^{2}$ y deriva.
+        desarrollo: |
+          $$
+          A(x) = x(10-x) = 10x - x^{2}
+          \;\Longrightarrow\;
+          A'(x) = 10-2x = 0
+          \;\Longrightarrow\;
+          x = 5
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta completa. Una pieza no debe entrar.
+        piezas:
+          - texto: Objetivo, el área $A = xy$; restricción, el perímetro $2x+2y=20$.
+          - texto: De la restricción, $y = 10-x$, y el objetivo queda $A(x)=10x-x^{2}$.
+          - texto: El intervalo es $0 < x < 10$, porque los lados son positivos.
+          - texto: $A'(x)=10-2x$ se anula en $x=5$, y $A''=-2<0$, luego es máximo.
+          - texto: Con $x=5$ sale $y=5$, un cuadrado de 25 m².
+          - texto: Basta con encontrar dónde se anula la derivada.
+            trampa: true
+            mensaje: |
+              No basta: eso solo da un candidato. Falta comprobar que es máximo
+              y no mínimo, y que la solución tiene sentido — un lado no puede
+              ser negativo. Son los dos pasos que separan una respuesta
+              completa de una a medias.
+    resolucion: |
+      **Nombrar y dibujar.** Lados $x$ e $y$, los dos positivos.
+
+      **Objetivo**, lo que se quiere máximo:
+
+      $$
+      A = xy
+      $$
+
+      **Restricción**, lo que liga las variables:
+
+      $$
+      2x + 2y = 20 \;\Longrightarrow\; y = 10 - x
+      $$
+
+      **Una sola variable**, sustituyendo:
+
+      $$
+      A(x) = x(10-x) = 10x - x^{2}, \qquad 0 < x < 10
+      $$
+
+      Ese intervalo hay que escribirlo: sale de que los dos lados son
+      positivos, y es el que permite hablar de extremos absolutos.
+
+      **Derivar y resolver.**
+
+      $$
+      A'(x) = 10 - 2x = 0 \;\Longrightarrow\; x = 5
+      $$
+
+      **Comprobar que es máximo.** $A''(x) = -2 < 0$, así que sí.
+
+      **Y que tiene sentido.** Con $x=5$ sale $y = 5$: un cuadrado de lado 5 y
+      área 25 m². Los dos lados son positivos y suman el perímetro pedido.
+
+      **El resultado general**, que conviene reconocer: de todos los
+      rectángulos con el mismo perímetro, el de área máxima es el cuadrado.
+
+  - id: ej-leer-grafica-derivada
+    titulo: Lo dibujado es la derivada, no la función
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      La gráfica de $f'$ es una recta que pasa por el origen con pendiente
+      positiva, es decir $f'(x) = x$. Decir dónde crece $f$, dónde tiene
+      extremos y cómo se curva.
+    pide: Los intervalos de crecimiento, los extremos y la concavidad de f.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Lo dibujado corta el eje en $x=0$. ¿Qué significa eso para $f$?
+        opciones:
+          - texto: Que $f$ tiene ahí un punto crítico
+            correcta: true
+            mensaje: |
+              Eso es. Que la curva **dibujada** valga cero significa que la
+              derivada se anula, y eso es un punto crítico de la función que no
+              ves.
+          - texto: Que $f$ vale cero en el origen
+            mensaje: |
+              Eso sería si lo dibujado fuera $f$. Es $f'$, así que lo que se
+              anula es la pendiente, no el valor.
+          - texto: Que $f$ no está definida en el origen
+            mensaje: |
+              Nada de eso. La derivada existe y vale cero, que es una situación
+              perfectamente normal: tangente horizontal.
+      - tipo: calcular
+        titulo: Dónde decrece
+        pregunta: |
+          $f$ decrece donde $f'$ es negativa. Con $f'(x) = x$, ¿cuál es el
+          mayor valor de $x$ en el que $f$ decrece?
+        respuesta:
+          tipo: numero
+          valor: '0'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              En $x=1$ la derivada vale 1, que es positiva: ahí la función
+              **crece**. Decrece mientras $x$ sea negativa.
+          - valor: '-1'
+            mensaje: |
+              En $x=-1$ sí decrece, pero no es el mayor: sigue decreciendo hasta
+              llegar al cero, donde la derivada se anula.
+        pista: |
+          $f'(x) = x < 0$ exactamente cuando $x < 0$.
+        desarrollo: |
+          $$
+          f'(x) = x < 0 \;\Longleftrightarrow\; x < 0
+          $$
+
+          Así que $f$ decrece en $(-\infty, 0)$ y crece en $(0,\infty)$. El
+          punto de corte, $x=0$, es la frontera.
+      - tipo: justificar
+        pregunta: |
+          Ordena la lectura completa. Una pieza es falsa.
+        piezas:
+          - texto: Lo dibujado es $f'$, así que su altura es la pendiente de $f$.
+          - texto: Con $f' < 0$ para $x<0$ y $f' > 0$ para $x>0$, la función decrece y luego crece.
+          - texto: En $x=0$ la derivada pasa de negativa a positiva, luego hay un **mínimo** de $f$.
+          - texto: La curva dibujada sube siempre, luego $f'' > 0$ y $f$ es convexa en todo $\mathbb{R}$.
+          - texto: Como lo dibujado tiene un cero en el origen, $f$ vale cero ahí.
+            trampa: true
+            mensaje: |
+              Ese es **el** error del ejercicio. Un cero de la curva dibujada es
+              un cero de la derivada, no de la función. El valor de $f$ en el
+              origen no se puede saber con esta información: falta una
+              constante.
+    resolucion: |
+      **Antes de contestar nada**, escribir en el margen qué es cada cosa: lo
+      dibujado es $f'$; lo que preguntan es sobre $f$. Treinta segundos que
+      valen seis o siete puntos.
+
+      **Crecimiento**, que lo da el signo de lo dibujado:
+
+      $$
+      f'(x) = x
+      \quad\Rightarrow\quad
+      f \text{ decrece en } (-\infty,0), \quad f \text{ crece en } (0,\infty)
+      $$
+
+      **Extremos**, que están donde la curva dibujada corta el eje. En $x=0$
+      pasa de negativa a positiva, así que $f$ tiene ahí un **mínimo**.
+
+      **Curvatura**, que la da si la curva dibujada sube o baja. Aquí sube
+      siempre, luego $f'' > 0$ y $f$ es **convexa** en todo $\mathbb{R}$. Y como
+      $f''$ no cambia de signo, no hay puntos de inflexión.
+
+      **Lo que no se puede saber.** Cuánto vale $f$ en cualquier punto. La
+      gráfica de la derivada determina la función salvo una constante: todas las
+      $f(x) = \frac{x^{2}}{2} + C$ tienen esta misma derivada.
+
   - id: teorema-de-lagrange
     titulo: Tres funciones y una pendiente media
     fuente: >-

@@ -1,4 +1,473 @@
 ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 5. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-derivar-funcion-integral
+    titulo: Derivar una integral sin calcularla
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Para $F(x) = \displaystyle\int_1^{x} t^{3}\,dt$, calcular $F'(x)$ sin
+      resolver la integral.
+    pide: La derivada de la función integral.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué parte del teorema fundamental se usa aquí?
+        opciones:
+          - texto: La primera, que dice que derivar una función integral devuelve el integrando
+            correcta: true
+            mensaje: |
+              Eso es. La primera parte dice que si $F(x)=\int_a^x f$, entonces
+              $F'(x)=f(x)$. Integrar y luego derivar deja la función como
+              estaba.
+          - texto: La segunda, la regla de Barrow
+            mensaje: |
+              Barrow sirve para **calcular** una integral definida usando una
+              primitiva. Aquí no queremos calcularla: queremos derivarla, que es
+              la primera parte.
+          - texto: Ninguna, hay que integrar primero y luego derivar
+            mensaje: |
+              Se puede hacer así y sale lo mismo, pero es el camino largo. El
+              teorema existe justo para ahorrarlo, y en los casos donde la
+              primitiva no se conoce es el único camino.
+      - tipo: calcular
+        titulo: La derivada
+        pregunta: |
+          ¿Cuánto vale $F'(2)$?
+        respuesta:
+          tipo: numero
+          valor: '8'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3.75'
+            mensaje: |
+              Eso es $F(2)$, el valor de la integral: $\frac{2^{4}-1}{4}$. La
+              pregunta es por la **derivada**, que es mucho más simple.
+          - valor: '12'
+            mensaje: |
+              12 es la derivada del integrando, $3t^{2}$ en $t=2$. El teorema no
+              deriva el integrando: lo devuelve tal cual, evaluado en $x$.
+          - valor: '1'
+            mensaje: |
+              1 es el límite inferior. Ese extremo es constante y no interviene
+              en la derivada: solo aporta si también dependiera de $x$.
+        pista: |
+          $F'(x) = f(x)$, donde $f$ es el integrando. Sustituye $x=2$ en
+          $t^{3}$.
+        desarrollo: |
+          Por la primera parte del teorema fundamental,
+
+          $$
+          F'(x) = x^{3}
+          \;\Longrightarrow\;
+          F'(2) = 8
+          $$
+
+          **Comprobación por el camino largo.** La primitiva es
+          $\frac{t^{4}}{4}$, así que $F(x) = \frac{x^{4}-1}{4}$, y derivando
+          sale $x^{3}$. Lo mismo, con más trabajo.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: El integrando $t^{3}$ es continuo, que es la hipótesis del teorema.
+          - texto: El límite inferior es constante y el superior es $x$.
+          - texto: Por la primera parte del teorema fundamental, $F'(x) = x^{3}$.
+          - texto: Luego $F'(2) = 8$.
+          - texto: Como el límite inferior es 1, hay que restar $1^{3}$ al resultado.
+            trampa: true
+            mensaje: |
+              El límite inferior **no aparece** en la derivada. Solo aportaría si
+              también dependiera de $x$, y entonces se restaría su contribución
+              con su propia derivada. Aquí es una constante.
+    resolucion: |
+      **La hipótesis.** El integrando $t^{3}$ es continuo en todo $\mathbb{R}$,
+      que es lo único que el teorema pide.
+
+      **La primera parte del teorema fundamental** dice que si
+
+      $$
+      F(x) = \int_a^{x} f(t)\,dt
+      $$
+
+      con $f$ continua, entonces $F$ es derivable y $F'(x) = f(x)$. Es decir:
+      derivar deshace integrar.
+
+      $$
+      F'(x) = x^{3}, \qquad F'(2) = 8
+      $$
+
+      **Y el caso general**, que es como se pregunta en examen: si los dos
+      límites dependen de $x$, la regla de la cadena cobra su peaje en cada uno,
+
+      $$
+      \frac{d}{dx}\int_{u(x)}^{v(x)} f = f\big(v(x)\big)v'(x) - f\big(u(x)\big)u'(x)
+      $$
+
+      Aquí $u(x)=1$ es constante, así que su término desaparece.
+
+  - id: ej-area-entre-curvas
+    titulo: El área entre dos curvas
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el área encerrada entre las curvas $y = x$ e $y = x^{2}$.
+    pide: Los puntos de corte y el área.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es el primer paso antes de plantear la integral?
+        opciones:
+          - texto: Encontrar los cortes, que son los límites de integración
+            correcta: true
+            mensaje: |
+              Eso es. Y de paso decidir cuál va por encima en ese tramo, porque
+              el integrando es «la de arriba menos la de abajo».
+          - texto: Integrar las dos curvas por separado y restar
+            mensaje: |
+              Sale lo mismo, pero hay que saber entre qué límites, así que los
+              cortes hacen falta igual. Y restar integrales solo vale si la
+              relación arriba-abajo no cambia en el intervalo.
+          - texto: Derivar las dos para ver dónde se cruzan
+            mensaje: |
+              Derivar dice dónde crecen, no dónde se cortan. Los cortes salen de
+              igualar las dos expresiones.
+      - tipo: calcular
+        titulo: El corte distinto de cero
+        pregunta: |
+          Igualando $x = x^{2}$, ¿cuál es la solución distinta de cero?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Con $x=2$ sale $2 \neq 4$: no es un corte. De $x^{2}-x=0$ se saca
+              factor común $x$ y queda $x(x-1)=0$.
+          - valor: '-1'
+            mensaje: |
+              Con $x=-1$ sale $-1 \neq 1$. El signo importa: la parábola solo
+              alcanza a la recta en el primer cuadrante.
+        pista: |
+          $x^{2}-x = 0$. Saca factor común.
+        desarrollo: |
+          $$
+          x = x^{2}
+          \;\Longrightarrow\;
+          x^{2}-x = 0
+          \;\Longrightarrow\;
+          x(x-1) = 0
+          $$
+
+          Los cortes son $x=0$ y $x=1$, y esos son los límites de integración.
+      - tipo: calcular
+        titulo: El área
+        pregunta: |
+          ¿Cuánto vale $\displaystyle\int_0^{1}\left(x - x^{2}\right)dx$?
+        respuesta:
+          tipo: numero
+          valor: '0.1666667'
+          tolerancia: 0.0005
+          formato: en forma exacta, o con cuatro decimales
+        distractores:
+          - valor: '-0.1666667'
+            mensaje: |
+              Has puesto la parábola encima de la recta. Entre 0 y 1 es al
+              revés: $x > x^{2}$, así que el integrando es $x - x^{2}$ y el área
+              sale positiva.
+          - valor: '0.8333333'
+            mensaje: |
+              Parece que has integrado $1 - (x-x^{2})$ o algo similar. El área
+              entre las dos curvas es solo la diferencia entre ellas.
+          - valor: '0.5'
+            mensaje: |
+              0,5 es el área bajo la recta sola, el triángulo. Falta descontar
+              lo que hay bajo la parábola.
+        pista: |
+          Las primitivas son $\frac{x^{2}}{2}$ y $\frac{x^{3}}{3}$. Resta y
+          evalúa entre 0 y 1.
+        desarrollo: |
+          $$
+          \int_0^{1}\left(x-x^{2}\right)dx
+          = \left[\frac{x^{2}}{2}-\frac{x^{3}}{3}\right]_0^{1}
+          = \frac12 - \frac13 = \frac16
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: Los cortes son $x=0$ y $x=1$, y son los límites de integración.
+          - texto: Entre 0 y 1 la recta va por encima de la parábola.
+          - texto: El área es $\int_0^1 (x - x^{2})\,dx$.
+          - texto: Vale $\frac12-\frac13 = \frac16$.
+          - texto: Como el integrando es una resta, el área puede salir negativa.
+            trampa: true
+            mensaje: |
+              Si sale negativa es que has puesto las curvas al revés, no que el
+              área lo sea. El área es una magnitud positiva: la resta se hace
+              siempre «la de arriba menos la de abajo», y si cambian de posición
+              hay que partir el intervalo.
+    resolucion: |
+      **Los cortes**, que son los límites de integración:
+
+      $$
+      x = x^{2} \;\Longrightarrow\; x(x-1)=0 \;\Longrightarrow\; x=0,\ x=1
+      $$
+
+      **Quién va arriba.** Basta probar un punto de dentro: en $x=\frac12$ la
+      recta vale $0{,}5$ y la parábola $0{,}25$, así que **la recta va por
+      encima**. Esa comprobación cuesta cinco segundos y decide el signo.
+
+      **El área.**
+
+      $$
+      A = \int_0^{1}\left(x - x^{2}\right)dx
+      = \left[\frac{x^{2}}{2}-\frac{x^{3}}{3}\right]_0^{1}
+      = \frac{1}{2}-\frac{1}{3} = \frac{1}{6}
+      $$
+
+      **Si las curvas se cruzaran más veces**, habría que partir el intervalo en
+      los cortes y cambiar el orden de la resta en cada trozo — o integrar el
+      valor absoluto de la diferencia, que es lo mismo dicho de otra manera.
+
+  - id: ej-volumen-por-discos
+    titulo: Un volumen de revolución por discos
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el volumen que genera la región bajo $y = x$ entre $x=0$ y $x=1$
+      al girar alrededor del eje $OX$.
+    pide: El volumen del sólido de revolución.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El eje de giro es horizontal. ¿Qué método corresponde?
+        opciones:
+          - texto: Discos, con cortes perpendiculares al eje
+            correcta: true
+            mensaje: |
+              Eso es. Los discos exigen que los cortes sean perpendiculares al
+              eje de giro, así que integrar en $x$ solo vale para ejes
+              horizontales. Aquí lo es.
+          - texto: Capas cilíndricas
+            mensaje: |
+              Las capas se usan cuando el eje es **vertical** y no se puede
+              despejar. Aquí el eje es $OX$ y la función ya está en la forma
+              buena.
+          - texto: Longitud de arco
+            mensaje: |
+              Eso mide la curva, no el volumen que engendra. Aquí se pide el
+              sólido.
+      - tipo: calcular
+        titulo: El volumen
+        pregunta: |
+          ¿Cuánto vale $\pi\displaystyle\int_0^{1} x^{2}\,dx$?
+        respuesta:
+          tipo: numero
+          valor: '1.0471976'
+          tolerancia: 0.0005
+          formato: en forma exacta, o con cuatro decimales
+        distractores:
+          - valor: '0.3333333'
+            mensaje: |
+              Te has dejado el $\pi$. La fórmula de los discos lleva $\pi$
+              delante, porque el área de cada disco es $\pi r^{2}$.
+          - valor: '1.5707963'
+            mensaje: |
+              Parece que has integrado $x$ en vez de $x^{2}$. El radio se eleva
+              al cuadrado antes de integrar.
+          - valor: '3.1415927'
+            mensaje: |
+              Ese es $\pi$ a secas. Falta multiplicarlo por el valor de la
+              integral, que es $\frac13$.
+        pista: |
+          La primitiva de $x^{2}$ es $\frac{x^{3}}{3}$. Evalúa y multiplica por
+          $\pi$.
+        desarrollo: |
+          $$
+          V = \pi\int_0^{1} x^{2}\,dx
+          = \pi\left[\frac{x^{3}}{3}\right]_0^{1}
+          = \frac{\pi}{3} \approx 1{,}0472
+          $$
+
+          Y tiene sentido: el sólido es un cono de radio 1 y altura 1, cuyo
+          volumen es $\frac{1}{3}\pi r^{2}h = \frac{\pi}{3}$. Cuadra.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: El eje de giro es horizontal, así que valen los discos.
+          - texto: Cada corte perpendicular al eje es un disco de radio $f(x) = x$.
+          - texto: El volumen es $\pi\int_0^1 x^{2}dx = \frac{\pi}{3}$.
+          - texto: El sólido es un cono, y la fórmula clásica da lo mismo.
+          - texto: El radio se suma a lo largo del intervalo para dar el volumen.
+            trampa: true
+            mensaje: |
+              No se suma el radio: se suman las **áreas** de los discos, y el
+              área de un disco lleva el radio al cuadrado y por $\pi$. Es la
+              diferencia entre integrar $f$ e integrar $\pi f^{2}$.
+    resolucion: |
+      **Elegir el método.** El eje de giro es $OX$, que es horizontal, así que
+      los cortes perpendiculares a él son verticales y cada uno engendra un
+      **disco**. Se integra en $x$.
+
+      **La fórmula.** Cada disco tiene radio $f(x)$ y área $\pi f(x)^{2}$:
+
+      $$
+      V = \pi\int_a^b f(x)^{2}\,dx = \pi\int_0^{1} x^{2}\,dx
+      $$
+
+      **El cálculo.**
+
+      $$
+      V = \pi\left[\frac{x^{3}}{3}\right]_0^{1} = \frac{\pi}{3}
+      $$
+
+      **La comprobación que conviene hacer siempre.** El sólido es un cono de
+      radio 1 y altura 1. La fórmula clásica da
+      $\frac{1}{3}\pi r^{2} h = \frac{\pi}{3}$. Coincide, y esa coincidencia es
+      justamente de dónde sale la fórmula clásica.
+
+  - id: ej-impropia-que-converge
+    titulo: Una integral impropia de primer tipo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Estudiar si converge, y calcularla si converge,
+      $$
+      \int_1^{\infty}\frac{dx}{x^{2}}
+      $$
+    pide: Si converge y cuánto vale.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué esta integral es impropia?
+        opciones:
+          - texto: Porque el intervalo de integración es infinito
+            correcta: true
+            mensaje: |
+              Eso es: impropia de **primer tipo**. La receta es sustituir el
+              infinito por un límite y calcular la integral normal hasta un $t$
+              que después se hace crecer.
+          - texto: Porque el integrando se va a infinito dentro del intervalo
+            mensaje: |
+              Eso sería de segundo tipo, y aquí no pasa: en $[1,\infty)$ la
+              función $1/x^{2}$ es perfectamente finita. El problema está en el
+              extremo superior del intervalo, no en el integrando.
+          - texto: Porque el integrando no tiene primitiva elemental
+            mensaje: |
+              Sí la tiene: $-1/x$. Lo que la hace impropia es el intervalo, no
+              la dificultad de integrar.
+      - tipo: calcular
+        titulo: La integral hasta un extremo finito
+        pregunta: |
+          ¿Cuánto vale $\displaystyle\int_1^{t}\frac{dx}{x^{2}}$, en función de
+          $t$? Evalúalo para $t = 10$.
+        respuesta:
+          tipo: numero
+          valor: '0.9'
+          tolerancia: 0.001
+          formato: en forma exacta, o con dos decimales
+        distractores:
+          - valor: '1.1'
+            mensaje: |
+              Signo cambiado al evaluar. La primitiva es $-\frac1x$, así que
+              queda $-\frac{1}{10}-(-1) = 1 - \frac{1}{10}$.
+          - valor: '0.1'
+            mensaje: |
+              Ese es el valor de $\frac{1}{t}$, el término que se resta. Falta el
+              1 que viene del límite inferior.
+        pista: |
+          La primitiva de $x^{-2}$ es $-x^{-1}$. Evalúa entre 1 y 10.
+        desarrollo: |
+          $$
+          \int_1^{t}\frac{dx}{x^{2}}
+          = \left[-\frac{1}{x}\right]_1^{t}
+          = 1 - \frac{1}{t}
+          $$
+
+          Con $t=10$ sale $0{,}9$. Y se ve hacia dónde va la cosa cuando $t$
+          crece.
+      - tipo: calcular
+        titulo: El límite
+        pregunta: |
+          Haciendo $t \to \infty$, ¿cuánto vale la integral impropia?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Lo que tiende a cero es $\frac{1}{t}$, que es lo que **se resta**.
+              Lo que queda es el 1.
+          - valor: '0.9'
+            mensaje: |
+              Ese era el valor para $t=10$. El límite es a dónde va cuando $t$
+              crece sin parar, y se acerca a 1 sin llegar.
+        pista: |
+          $\lim_{t\to\infty}\left(1-\frac1t\right)$.
+        desarrollo: |
+          $$
+          \int_1^{\infty}\frac{dx}{x^{2}}
+          = \lim_{t\to\infty}\left(1-\frac{1}{t}\right) = 1
+          $$
+
+          Converge, y vale 1. Un recinto de longitud infinita con área finita:
+          no es contradictorio, porque la altura se va a cero lo bastante
+          deprisa.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: Es impropia de primer tipo, porque el intervalo no está acotado.
+          - texto: Se sustituye el infinito por un extremo finito $t$ y se toma el límite.
+          - texto: $\int_1^t x^{-2}dx = 1 - \frac1t$.
+          - texto: El límite cuando $t\to\infty$ vale 1, luego converge.
+          - texto: Se puede aplicar Barrow directamente con el infinito como extremo.
+            trampa: true
+            mensaje: |
+              El infinito no es un número y no se puede sustituir en una
+              primitiva. Escribir $\left[-\frac1x\right]_1^{\infty}$ es un abuso
+              de notación que en un examen cuesta puntos: la definición pasa por
+              el límite.
+    resolucion: |
+      **Por qué es impropia.** El intervalo $[1,\infty)$ no está acotado: es una
+      impropia de **primer tipo**. El integrando, en cambio, se porta bien en
+      todo el intervalo.
+
+      **La receta.** Se sustituye el extremo problemático por una letra y se
+      toma el límite al final:
+
+      $$
+      \int_1^{\infty}\frac{dx}{x^{2}}
+      = \lim_{t\to\infty}\int_1^{t}\frac{dx}{x^{2}}
+      $$
+
+      **La integral finita.**
+
+      $$
+      \int_1^{t}\frac{dx}{x^{2}} = \left[-\frac{1}{x}\right]_1^{t} = 1-\frac{1}{t}
+      $$
+
+      **El límite.**
+
+      $$
+      \lim_{t\to\infty}\left(1-\frac{1}{t}\right) = 1
+      $$
+
+      La integral **converge** y vale 1.
+
+      **El contraste que conviene tener presente.** Con $\frac{1}{x}$ en vez de
+      $\frac{1}{x^{2}}$, la misma cuenta da $\ln t$, que se va a infinito: esa
+      diverge. El exponente decide, y por poco.
+
   - id: teorema-de-la-media
     titulo: Seis veces el teorema de la media, y dos que no valen
     fuente: >-

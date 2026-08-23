@@ -1,4 +1,578 @@
 ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 3.
+  #
+  # Nuestros, no de examen ni del boletín, y su `fuente` lo dice. Mismo
+  # criterio que en complejos y sucesiones: una sola idea, números que salen a
+  # mano, tres o cuatro pasos.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-dominio-con-arcoseno
+    titulo: Un dominio con una restricción que no se ve
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar el dominio de $f(x) = \arcsin(2x)$.
+    pide: El intervalo de valores de x para los que la función existe.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué operación de esta fórmula puede fallar?
+        opciones:
+          - texto: El arcoseno, que solo acepta argumentos entre −1 y 1
+            correcta: true
+            mensaje: |
+              Eso es, y es **la prohibición que casi nadie mira**. Se buscan
+              divisiones entre cero, raíces pares y logaritmos, y se olvida que
+              el arcoseno y el arcocoseno también restringen.
+          - texto: Ninguna, es un polinomio
+            mensaje: |
+              El $2x$ de dentro sí es un polinomio y no da problemas. El
+              problema es la función que lo envuelve: $\arcsin$ no acepta
+              cualquier número.
+          - texto: La multiplicación por 2
+            mensaje: |
+              Multiplicar siempre se puede. Lo que restringe es el arcoseno, y
+              el 2 lo único que hace es cambiar dónde queda el límite.
+      - tipo: calcular
+        titulo: El extremo derecho
+        pregunta: |
+          De $-1 \le 2x \le 1$, ¿cuál es el mayor valor que puede tomar $x$?
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.001
+          formato: en forma exacta, o con dos decimales
+        distractores:
+          - valor: '1'
+            mensaje: |
+              1 es la cota del **argumento**, no de $x$. El argumento es $2x$,
+              así que hay que dividir entre 2 para saber hasta dónde llega $x$.
+          - valor: '2'
+            mensaje: |
+              Has multiplicado en vez de dividir. Si $2x \le 1$, entonces $x$ es
+              como mucho la mitad de 1, no el doble.
+        pista: |
+          Resuelve $2x \le 1$. El 2 pasa dividiendo.
+        desarrollo: |
+          $$
+          -1 \le 2x \le 1
+          \;\Longleftrightarrow\;
+          -\frac12 \le x \le \frac12
+          $$
+
+          El mayor valor es $\frac12$. Fíjate en que ese número **no aparece en
+          ninguna parte de la fórmula**: sale de la restricción del arcoseno.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: $\arcsin$ solo está definido para argumentos en $[-1,1]$.
+          - texto: Aquí el argumento es $2x$, luego se exige $-1 \le 2x \le 1$.
+          - texto: Dividiendo entre 2, el dominio es $\left[-\frac12,\frac12\right]$.
+          - texto: Los extremos entran, porque $\arcsin(\pm1)$ sí existe.
+          - texto: Como no hay denominadores ni raíces, el dominio es todo $\mathbb{R}$.
+            trampa: true
+            mensaje: |
+              Ese es exactamente el razonamiento que falla. Divisiones, raíces y
+              logaritmos son tres prohibiciones, pero **no son las únicas**: las
+              trigonométricas inversas también restringen, y sin avisar.
+    resolucion: |
+      **El dominio no se calcula: se descarta.** Se recorre la fórmula buscando
+      lo que no siempre se puede hacer.
+
+      Aquí no hay denominadores, ni raíces de índice par, ni logaritmos. Pero
+      hay un **arcoseno**, y el arcoseno solo acepta argumentos entre $-1$ y
+      $1$. Como el argumento es $2x$:
+
+      $$
+      -1 \le 2x \le 1
+      \;\Longrightarrow\;
+      -\frac12 \le x \le \frac12
+      $$
+
+      $$
+      \operatorname{Dom} f = \left[-\tfrac12, \tfrac12\right]
+      $$
+
+      **Comprobación.** Con $x = \frac12$ queda $\arcsin(1) = \frac{\pi}{2}$,
+      que existe. Con $x = 1$ quedaría $\arcsin(2)$, que no.
+
+  - id: ej-inversa-con-signo
+    titulo: Una inversa, y el signo que hay que elegir
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar la inversa de $f(x) = x^{2}$ definida en $(-\infty, 0]$.
+    pide: La fórmula de la inversa, con el signo correcto.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué el enunciado se molesta en decir el dominio?
+        opciones:
+          - texto: Porque en todo $\mathbb{R}$ la función no sería inyectiva y no habría inversa
+            correcta: true
+            mensaje: |
+              Exacto. $2$ y $-2$ tienen la misma imagen, así que en $\mathbb{R}$
+              no hay inversa. Restringiendo el dominio se elimina el empate. **La
+              inversa depende del dominio, no de la fórmula.**
+          - texto: Para que la inversa dé números positivos
+            mensaje: |
+              Al revés: como el dominio de partida son los negativos, la inversa
+              tiene que **devolver** negativos. Ese es justo el detalle del
+              signo.
+          - texto: Es un dato de más, no cambia nada
+            mensaje: |
+              Cambia todo. Sin restringir el dominio no hay inversa en absoluto,
+              y con otro dominio la inversa sería otra fórmula.
+      - tipo: calcular
+        titulo: Un valor de comprobación
+        pregunta: |
+          Si $f^{-1}$ es la inversa, ¿cuánto vale $f^{-1}(9)$?
+        respuesta:
+          tipo: numero
+          valor: '-3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              $3$ también cumple $3^{2}=9$, pero **no está en el dominio de
+              partida**, que son los negativos. La inversa tiene que devolverte
+              al sitio de donde saliste.
+          - valor: '81'
+            mensaje: |
+              Has elevado al cuadrado en vez de sacar la raíz. La inversa
+              deshace lo que la función hace.
+        pista: |
+          Busca el número **del dominio** $(-\infty,0]$ cuyo cuadrado es 9.
+        desarrollo: |
+          $$
+          f(x) = 9 \;\Longleftrightarrow\; x^{2} = 9 \;\Longleftrightarrow\; x = \pm 3
+          $$
+
+          De los dos, solo $-3$ está en $(-\infty, 0]$. Luego
+          $f^{-1}(9) = -3$, y eso ya te dice que la inversa lleva el signo
+          menos delante de la raíz.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza sobra.
+        piezas:
+          - texto: En $(-\infty,0]$ la función es inyectiva, así que tiene inversa.
+          - texto: De $y = x^{2}$ se despeja $x = \pm\sqrt{y}$.
+          - texto: Como el dominio de partida son los negativos, se toma la raíz negativa.
+          - texto: $f^{-1}(x) = -\sqrt{x}$, definida para $x \ge 0$.
+          - texto: Al despejar siempre se toma la raíz positiva, que es la principal.
+            trampa: true
+            mensaje: |
+              Esa costumbre es la que hace fallar el ejercicio. La raíz
+              principal es positiva **como convenio de notación**, pero la
+              inversa tiene que devolver valores del dominio de partida, y aquí
+              son negativos.
+    resolucion: |
+      **Por qué hay inversa.** En todo $\mathbb{R}$ no la habría: $2$ y $-2$
+      empatan. Restringido a $(-\infty,0]$ no hay dos valores con la misma
+      imagen, así que sí.
+
+      **Despejar.** De $y = x^{2}$ sale $x = \pm\sqrt{y}$, y hay que **elegir**.
+      Como todos los valores del dominio de partida son negativos o cero, la
+      inversa tiene que devolver negativos:
+
+      $$
+      f^{-1}(x) = -\sqrt{x}
+      $$
+
+      **El dominio de la inversa** es el rango de $f$, que aquí es $[0,\infty)$.
+      Esa igualdad es la comprobación que caza casi todos los errores: si el
+      dominio que te sale no coincide con el rango que calculaste, algo falla.
+
+      **Comprobación.** $f^{-1}(9) = -3$, y $f(-3) = 9$. Vuelve al punto de
+      partida, que es lo que una inversa tiene que hacer.
+
+  - id: ej-continuidad-parametro
+    titulo: Un parámetro que pega dos trozos
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar el valor de $k$ para que la función
+      $$
+      f(x) = \begin{cases} x + k & x < 2 \\[4pt] x^{2} & x \ge 2 \end{cases}
+      $$
+      sea continua en todo $\mathbb{R}$.
+    pide: El valor de k.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Dónde puede fallar la continuidad de esta función?
+        opciones:
+          - texto: Solo en $x = 2$, el punto de empalme
+            correcta: true
+            mensaje: |
+              Eso es. Dentro de cada trozo son un polinomio y una parábola, que
+              son continuas siempre. **Toda la pregunta se juega en la
+              frontera**, y por eso este tipo de ejercicio se resuelve en tres
+              líneas.
+          - texto: En todos los puntos, hay que comprobarlos uno a uno
+            mensaje: |
+              No hace falta: los polinomios son continuos en todo su dominio, y
+              cada trozo lo es. Lo único que hay que comprobar es dónde se pegan.
+          - texto: En $x = 0$, donde la función cambia de signo
+            mensaje: |
+              Cambiar de signo no rompe la continuidad. Lo que la puede romper
+              es un salto, y aquí el único sitio donde podría haberlo es donde
+              cambia la definición.
+      - tipo: calcular
+        titulo: El límite por la derecha
+        pregunta: |
+          ¿Cuánto vale $\lim_{x\to 2^{+}} f(x)$?
+        respuesta:
+          tipo: numero
+          valor: '4'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 es el valor de $x$, no el de la función. Por la derecha manda la
+              rama $x^{2}$, así que hay que elevar al cuadrado.
+          - valor: '0'
+            mensaje: |
+              Parece que has usado la rama de la izquierda con $k=0$. Por la
+              derecha, con $x \ge 2$, la función vale $x^{2}$.
+        pista: |
+          Por la derecha de 2 la función es $x^{2}$. Sustituye.
+        desarrollo: |
+          $$
+          \lim_{x\to 2^{+}} f(x) = 2^{2} = 4
+          $$
+      - tipo: calcular
+        titulo: El parámetro
+        pregunta: |
+          Igualando los dos límites laterales, ¿cuánto vale $k$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '4'
+            mensaje: |
+              4 es el valor común de los dos límites, no el parámetro. De
+              $2 + k = 4$ hay que despejar $k$.
+          - valor: '-2'
+            mensaje: |
+              Signo cambiado al despejar: de $2+k=4$ sale $k = 4-2$, positivo.
+          - valor: '6'
+            mensaje: |
+              Has sumado en vez de restar. La ecuación es $2+k=4$, así que
+              $k = 4-2$.
+        pista: |
+          Por la izquierda el límite es $2+k$. Iguálalo a 4 y despeja.
+        desarrollo: |
+          $$
+          \lim_{x\to 2^{-}} f(x) = 2 + k,
+          \qquad
+          \lim_{x\to 2^{+}} f(x) = 4
+          $$
+
+          Para que haya límite los dos tienen que coincidir, y además valer lo
+          que vale la función en el punto, que es $f(2) = 4$:
+
+          $$
+          2 + k = 4 \;\Longrightarrow\; k = 2
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: Cada trozo es un polinomio, luego solo puede fallar en $x=2$.
+          - texto: Por la izquierda el límite vale $2+k$; por la derecha, 4.
+          - texto: Además $f(2) = 4$, porque el 2 pertenece a la segunda rama.
+          - texto: Igualando las tres cosas, $k = 2$.
+          - texto: Basta con que los dos límites laterales coincidan.
+            trampa: true
+            mensaje: |
+              No basta: la continuidad son **tres** condiciones, y la tercera es
+              que ese límite valga lo mismo que la función en el punto. Aquí
+              coinciden, pero podrían no hacerlo, y entonces habría una
+              discontinuidad evitable.
+    resolucion: |
+      **Dónde mirar.** Dentro de cada trozo la función es un polinomio, y los
+      polinomios son continuos siempre. La única frontera es $x = 2$.
+
+      **Las tres condiciones.** Existe $f(2) = 2^{2} = 4$, porque el 2
+      pertenece a la segunda rama. Y los límites laterales:
+
+      $$
+      \lim_{x\to 2^{-}} f(x) = 2+k,
+      \qquad
+      \lim_{x\to 2^{+}} f(x) = 4
+      $$
+
+      Para que la función sea continua hacen falta las tres a la vez:
+
+      $$
+      2 + k = 4 = f(2)
+      \;\Longrightarrow\;
+      k = 2
+      $$
+
+      **Comprobación.** Con $k=2$, por la izquierda la función se acerca a
+      $2+2=4$ y por la derecha a $4$, que es lo que vale. No hay salto.
+
+  - id: ej-bolzano-una-raiz
+    titulo: Bolzano, y por qué la raíz existe
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Demostrar que la ecuación $x^{3} + x - 1 = 0$ tiene una solución en el
+      intervalo $[0,1]$.
+    pide: La comprobación de las hipótesis y la conclusión.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué garantiza el teorema de Bolzano?
+        opciones:
+          - texto: Que existe al menos una raíz, pero no dice dónde
+            correcta: true
+            mensaje: |
+              Eso es. Es un teorema de **existencia**: te asegura que la hay,
+              no te la calcula. Si el enunciado pide además que sea única, hace
+              falta un argumento aparte.
+          - texto: Que existe exactamente una raíz
+            mensaje: |
+              La unicidad es otra cosa y hay que demostrarla aparte, casi
+              siempre viendo que la derivada no cambia de signo. Bolzano solo
+              da «al menos una».
+          - texto: El valor aproximado de la raíz
+            mensaje: |
+              Bolzano no calcula nada. Te dice que en ese intervalo hay un
+              corte con el eje, y nada más.
+      - tipo: calcular
+        titulo: El extremo izquierdo
+        pregunta: |
+          Con $f(x) = x^{3}+x-1$, ¿cuánto vale $f(0)$?
+        respuesta:
+          tipo: numero
+          valor: '-1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Signo cambiado. Con $x=0$ los dos primeros términos se anulan y
+              queda el $-1$ suelto.
+          - valor: '0'
+            mensaje: |
+              Se anulan $x^{3}$ y $x$, pero el término independiente $-1$ sigue
+              ahí.
+        pista: |
+          Sustituye $x=0$ en los tres términos.
+        desarrollo: |
+          $$
+          f(0) = 0^{3}+0-1 = -1 < 0
+          $$
+      - tipo: calcular
+        titulo: El extremo derecho
+        pregunta: |
+          ¿Y cuánto vale $f(1)$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Ese es $f(0)$. Con $x=1$ los dos primeros términos valen 1 cada
+              uno, y suman 2 antes de restar el 1.
+          - valor: '3'
+            mensaje: |
+              Has sumado el $-1$ como si fuera $+1$: $1+1-1 = 1$.
+        pista: |
+          $1^{3} + 1 - 1$.
+        desarrollo: |
+          $$
+          f(1) = 1 + 1 - 1 = 1 > 0
+          $$
+
+          Los dos valores tienen signos distintos, que es exactamente lo que
+          Bolzano necesita.
+      - tipo: justificar
+        pregunta: |
+          Ordena la demostración. Una pieza no debe entrar.
+        piezas:
+          - texto: $f(x) = x^{3}+x-1$ es un polinomio, luego es continua en $[0,1]$.
+          - texto: $f(0) = -1 < 0$ y $f(1) = 1 > 0$, signos distintos.
+          - texto: Por Bolzano existe $c \in (0,1)$ con $f(c) = 0$.
+          - texto: Ese $c$ es la solución de la ecuación que se pedía.
+          - texto: Como la función cambia de signo, la raíz está en el punto medio.
+            trampa: true
+            mensaje: |
+              Bolzano no dice dónde está. El punto medio es solo una
+              aproximación posible, y aquí ni siquiera es la buena: la raíz
+              está cerca de 0,68.
+    resolucion: |
+      **Nombrar la función.** Se pasa todo a un lado y se le llama $f$:
+
+      $$
+      f(x) = x^{3}+x-1
+      $$
+
+      Resolver la ecuación es encontrar un cero de $f$.
+
+      **Comprobar las hipótesis.** $f$ es un polinomio, luego es continua en
+      $[0,1]$ — y en todas partes.
+
+      **Los signos en los extremos.**
+
+      $$
+      f(0) = -1 < 0, \qquad f(1) = 1 > 0
+      $$
+
+      **La conclusión.** Por el teorema de Bolzano existe al menos un
+      $c \in (0,1)$ con $f(c) = 0$, es decir, la ecuación tiene solución en ese
+      intervalo.
+
+      **Si además pidieran unicidad**, haría falta otro argumento:
+      $f'(x) = 3x^{2}+1 > 0$ siempre, así que la función es estrictamente
+      creciente y no puede cortar el eje dos veces.
+
+  - id: ej-velocidades-relacionadas
+    titulo: Dos magnitudes que cambian a la vez
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Un cuadrado crece de forma que su lado aumenta a razón de 2 cm/s.
+      ¿A qué velocidad crece su área en el instante en que el lado mide 5 cm?
+    pide: La velocidad de crecimiento del área, en cm²/s.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es el primer paso?
+        opciones:
+          - texto: Escribir la relación entre las magnitudes en general, sin sustituir nada
+            correcta: true
+            mensaje: |
+              Eso es, y es **lo único que se falla** en estos problemas. Primero
+              la relación general, luego derivar, y los números al final.
+          - texto: Sustituir el lado por 5 y luego derivar
+            mensaje: |
+              Ese es exactamente el error. Si sustituyes antes, el área se
+              convierte en la constante 25 y su derivada es cero. Congelas justo
+              lo que tenía que variar.
+          - texto: Calcular el área en ese instante
+            mensaje: |
+              El área en ese instante es un dato intermedio útil, pero no
+              contesta a la pregunta: se pregunta a qué **velocidad** cambia,
+              que es una derivada.
+      - tipo: calcular
+        titulo: La derivada de la relación
+        pregunta: |
+          De $A = L^{2}$, derivando respecto del tiempo sale
+          $A' = k \cdot L \cdot L'$. ¿Cuánto vale $k$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Falta el factor que baja del exponente. Al derivar $L^{2}$
+              respecto del tiempo, la regla de la cadena da $2L\,L'$.
+          - valor: '0.5'
+            mensaje: |
+              Has invertido el exponente. Derivar un cuadrado **multiplica** por
+              2, no divide.
+        pista: |
+          Regla de la cadena: la derivada de $L^{2}$ respecto del tiempo es
+          $2L$ por la derivada de $L$.
+        desarrollo: |
+          $$
+          A = L^{2}
+          \;\Longrightarrow\;
+          \frac{dA}{dt} = 2L\,\frac{dL}{dt}
+          $$
+
+          El $2L$ viene de derivar el cuadrado, y el $\frac{dL}{dt}$ de la
+          regla de la cadena, porque $L$ depende del tiempo.
+      - tipo: calcular
+        titulo: El resultado
+        pregunta: |
+          Ahora sí, sustituye $L = 5$ y $L' = 2$. ¿Cuánto vale $A'$, en cm²/s?
+        respuesta:
+          tipo: numero
+          valor: '20'
+          tolerancia: 0.001
+          formato: un número, en centímetros cuadrados por segundo
+        distractores:
+          - valor: '10'
+            mensaje: |
+              Te has dejado un factor: son $2 \cdot 5 \cdot 2$, tres números,
+              no dos.
+          - valor: '25'
+            mensaje: |
+              25 es el **área** en ese instante, no su velocidad de cambio. La
+              pregunta es a qué ritmo crece.
+          - valor: '4'
+            mensaje: |
+              Parece que has elevado la velocidad del lado al cuadrado. Las
+              velocidades no se elevan: entran en la fórmula tal cual.
+        pista: |
+          $A' = 2 \cdot L \cdot L'$, con $L=5$ y $L'=2$.
+        desarrollo: |
+          $$
+          \frac{dA}{dt} = 2 \cdot 5 \cdot 2 = 20 \ \text{cm}^{2}/\text{s}
+          $$
+
+          Y fíjate en que el resultado depende de $L$: cuando el cuadrado sea
+          más grande, el área crecerá más deprisa aunque el lado siga creciendo
+          igual de rápido.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: La relación entre las magnitudes es $A = L^{2}$, con las dos dependiendo del tiempo.
+          - texto: Derivando respecto de $t$, $\frac{dA}{dt} = 2L\frac{dL}{dt}$.
+          - texto: En el instante pedido, $L = 5$ y $\frac{dL}{dt} = 2$.
+          - texto: Luego $\frac{dA}{dt} = 20$ cm² por segundo.
+          - texto: Como el lado crece a ritmo constante, el área también.
+            trampa: true
+            mensaje: |
+              No: el ritmo del área depende de $L$, que va cambiando. Con el
+              lado a 10 cm, el área crecería a 40 cm²/s con la misma velocidad
+              de lado. Es el mismo motivo por el que hay que derivar antes de
+              sustituir.
+    resolucion: |
+      **El orden es todo.** Primero la relación en general, después derivar, y
+      los números del instante concreto **al final**.
+
+      **La relación.** El área de un cuadrado de lado $L$ es
+
+      $$
+      A = L^{2}
+      $$
+
+      y aquí las dos son funciones del tiempo, aunque no se escriba.
+
+      **Derivar respecto del tiempo**, con la regla de la cadena:
+
+      $$
+      \frac{dA}{dt} = 2L\,\frac{dL}{dt}
+      $$
+
+      **Ahora los datos.** En ese instante $L = 5$ cm y
+      $\frac{dL}{dt} = 2$ cm/s:
+
+      $$
+      \frac{dA}{dt} = 2 \cdot 5 \cdot 2 = 20 \ \text{cm}^{2}/\text{s}
+      $$
+
+      **Por qué no se puede sustituir antes.** Si pones $L=5$ en $A = L^{2}$
+      obtienes $A = 25$, una constante, y su derivada es cero. Habrías
+      congelado la magnitud que precisamente estaba cambiando.
+
   - id: dominio-y-rango
     titulo: Seis dominios y seis rangos
     fuente: >-
