@@ -244,8 +244,45 @@
         if (guardado === 'completo') modo = 'completo';
       } catch {}
 
+      /* Si llegas con un ancla, abre EL apartado del ancla, no el primero.
+         Hasta el 23 de agosto de 2026 no lo hacía: una ruta de estudio te
+         enlazaba «Las dos formas», el id existía y el navegador lo encontraba,
+         pero su grupo estaba `hidden` por el modo guiado — así que aterrizabas
+         en «De dónde sale» y el apartado que habías pedido era invisible. El
+         href se arregló el mismo día; esto era la otra mitad del fallo, y la
+         que de verdad dejaba al alumno perdido. */
+      function abreElAncla() {
+        const destino = decodeURIComponent(location.hash.slice(1));
+        if (!destino) return false;
+        const k = grupos.findIndex(
+          (g) => g.id === destino || !!g.querySelector(`#${CSS.escape(destino)}`),
+        );
+        if (k < 0) return false;
+        i = k;
+        return true;
+      }
+      const conAncla = abreElAncla();
+
       modos.hidden = false;
       pinta();
+
+      /* El navegador ya intentó saltar al ancla mientras el grupo estaba
+         oculto, y un elemento sin caja no se puede desplazar. Ahora que está
+         visible, se salta a mano. */
+      if (conAncla) {
+        const destino = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        destino?.scrollIntoView({ block: 'start' });
+      }
+
+      /* Y lo mismo si el ancla cambia sin recargar, que es lo que pasa al
+         pulsar en el índice lateral de la propia página. */
+      window.addEventListener('hashchange', () => {
+        if (!abreElAncla()) return;
+        pinta();
+        document
+          .getElementById(decodeURIComponent(location.hash.slice(1)))
+          ?.scrollIntoView({ block: 'start' });
+      });
     }
   }
 

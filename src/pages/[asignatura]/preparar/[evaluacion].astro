@@ -150,11 +150,19 @@ const d = laRuta.data;
    reales, y el build falla si alguno no está. */
 const coleccion = await getCollection(asignatura.id as 'calculo' | 'fluidos');
 const slugsPorTema = new Map<string, string[]>();
+/* El título de verdad del apartado, indexado por «tema#slug».
+   Hasta el 23 de agosto de 2026 el enlace mostraba el slug con los guiones
+   cambiados por espacios —«las dos formas y por qué hacen falta las dos»—, en
+   minúsculas y sin puntuación. El título ya estaba aquí; solo había que no
+   tirarlo. */
+const tituloApartado = new Map<string, string>();
 for (const t of d.temas) {
   const entrada = coleccion.find((e) => e.id === t || e.id.startsWith(`${t}/`));
   if (!entrada) throw new Error(`No existe el index.mdx de "${t}".`);
   const { headings } = await render(entrada);
-  slugsPorTema.set(t, headings.filter((h) => h.depth === 2).map((h) => h.slug));
+  const dos = headings.filter((h) => h.depth === 2);
+  slugsPorTema.set(t, dos.map((h) => h.slug));
+  for (const h of dos) tituloApartado.set(`${t}#${h.slug}`, h.text);
 }
 for (const b of bloques) {
   for (const m of b.material) {
@@ -169,6 +177,18 @@ for (const b of bloques) {
     }
   }
 }
+
+/** El href de un apartado de teoría.
+ *
+ *  `ruta()` añade siempre una barra final porque todas las páginas del sitio
+ *  son directorios, así que el ancla **no puede ir dentro**: producía
+ *  `…/t01-complejos/#las-dos-formas…/`, un fragmento que no existe, y el
+ *  alumno caía en la cabecera del tema en vez de en el apartado. Estuvo así
+ *  hasta el 23 de agosto de 2026 y afectaba a los 58 enlaces de teoría de las
+ *  tres rutas. Se construye como ya se hacía con los ejercicios: la página por
+ *  `ruta()`, y el ancla concatenada después. */
+const hrefTeoria = (tema: string, apartado?: string) =>
+  `${ruta(`${asignatura.id}/${tema}/`)}${apartado ? `#${apartado}` : ''}`;
 
 /* ── el reparto de competencias, calculado ───────────────────────────────
    Sobre **todos** los exámenes de esta convocatoria, no sobre los ejercicios
@@ -304,9 +324,12 @@ const crumb = `${asignatura.data.nombre} · preparar`;
               {b.material.map((m) => (
                 <li class={`m m--${m.tipo}`}>
                   {m.tipo === 'teoria' && (
-                    <a href={ruta(`${asignatura.id}/${m.tema}/#${m.apartado ?? ''}`)}>
+                    <a href={hrefTeoria(m.tema, m.apartado)}>
                       <span class="m-k rotulo">leer</span>
-                      <span class="m-t">{m.apartado ? m.apartado.replace(/-/g, ' ') : m.tituloTema}</span>
+                      <span class="m-t">
+                        {(m.apartado && tituloApartado.get(`${m.tema}#${m.apartado}`)) ||
+                          m.tituloTema}
+                      </span>
                     </a>
                   )}
 
