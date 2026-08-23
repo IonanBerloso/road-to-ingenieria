@@ -1,4 +1,535 @@
 ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 2.
+  #
+  # Nuestros, no de examen ni del boletín, y su `fuente` lo dice. Existen
+  # porque el ejercicio más simple del boletín de sucesiones ya son tres pasos
+  # de nivel examen, así que no había por dónde entrar.
+  #
+  # Mismo criterio que en complejos: una sola idea, números que salen a mano,
+  # tres o cuatro pasos. En cuanto uno necesita dos herramientas, ya lo cubre
+  # el boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-definicion-de-limite
+    titulo: Leer la definición de límite en un caso concreto
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Para la sucesión $a_n = \dfrac{1}{n}$, que converge a $0$, encontrar un
+      $m$ que sirva en la definición de límite cuando $\varepsilon = 0{,}01$.
+    pide: El menor m natural a partir del cual todos los términos distan de 0 menos de 0,01.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En la definición de límite, ¿quién elige primero, $\varepsilon$ o $m$?
+        opciones:
+          - texto: Primero se da el $\varepsilon$, y después se busca un $m$ que le sirva
+            correcta: true
+            mensaje: |
+              Eso es, y por eso **$m$ depende de $\varepsilon$**. Cuanto más
+              apretado sea el margen que te pidan, más tarde empezará a
+              cumplirse. Un $m$ que no dependa de $\varepsilon$ es señal de que
+              la definición no se ha entendido.
+          - texto: Primero se fija $m$ y luego se mira qué $\varepsilon$ sale
+            mensaje: |
+              Al revés. Si eliges tú el $m$, siempre puedes hacer trampa
+              tomándolo enorme. La definición te obliga a responder a
+              **cualquier** margen que te pongan, por pequeño que sea.
+          - texto: Los dos a la vez, porque están relacionados
+            mensaje: |
+              Están relacionados, pero el orden importa y es lo que se corrige.
+              El cuantificador es «para todo $\varepsilon$ existe un $m$», y
+              cambiarlo de orden dice algo distinto y falso.
+      - tipo: calcular
+        titulo: La desigualdad que hay que resolver
+        pregunta: |
+          $\left|a_n - 0\right| < 0{,}01$ es $\dfrac{1}{n} < 0{,}01$. ¿A partir
+          de qué valor de $n$ se cumple? Da el menor natural que la cumple.
+        respuesta:
+          tipo: numero
+          valor: '101'
+          tolerancia: 0.5
+          formato: un número natural
+        distractores:
+          - valor: '100'
+            mensaje: |
+              Con $n = 100$ sale $\frac{1}{100} = 0{,}01$ exactamente, y la
+              desigualdad es **estricta**: hace falta que sea menor, no igual.
+              El primero que la cumple es el siguiente.
+          - valor: '0.01'
+            mensaje: |
+              Eso es el $\varepsilon$, no el término. $n$ es el número de orden
+              de la sucesión: un natural, no un margen.
+          - valor: '10'
+            mensaje: |
+              Parece que has resuelto $\frac{1}{n} < 0{,}1$. El margen es diez
+              veces más pequeño, así que hay que ir diez veces más lejos.
+        pista: |
+          Invierte la desigualdad: $\frac1n < 0{,}01$ equivale a $n > 100$.
+          Ojo a si el 100 entra o no.
+        desarrollo: |
+          $$
+          \frac{1}{n} < 0{,}01
+          \;\Longleftrightarrow\;
+          n > \frac{1}{0{,}01} = 100
+          $$
+
+          El menor natural estrictamente mayor que 100 es **101**. Con $n=100$
+          se tendría igualdad, y la definición pide desigualdad estricta.
+      - tipo: calcular
+        titulo: Y con un margen diez veces menor
+        pregunta: |
+          Si ahora te piden $\varepsilon = 0{,}001$, ¿cuál es el menor $n$ que
+          sirve?
+        respuesta:
+          tipo: numero
+          valor: '1001'
+          tolerancia: 0.5
+          formato: un número natural
+        distractores:
+          - valor: '1000'
+            mensaje: |
+              Mismo detalle que antes: con $n = 1000$ sale igualdad, no
+              desigualdad estricta. Hay que pasarse uno.
+          - valor: '101'
+            mensaje: |
+              Ese era el $m$ del margen anterior. Al apretar el margen, el
+              momento a partir del cual se cumple **se va más lejos**: esa
+              dependencia es justo lo que la definición captura.
+        pista: |
+          El mismo despeje con el nuevo margen. Y fíjate en cómo cambia el
+          resultado al dividir el $\varepsilon$ entre diez.
+        desarrollo: |
+          $$
+          \frac{1}{n} < 0{,}001 \;\Longleftrightarrow\; n > 1000
+          \;\Longrightarrow\; m = 1001
+          $$
+
+          Diez veces más pequeño el margen, diez veces más lejos el momento.
+          **Ahí se ve que $m$ es función de $\varepsilon$**, que es lo único
+          que la definición exige.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta formal. Una pieza no debe entrar.
+        piezas:
+          - texto: Sea $\varepsilon > 0$ cualquiera.
+          - texto: $\left|a_n - 0\right| = \frac1n$, porque todos los términos son positivos.
+          - texto: $\frac1n < \varepsilon$ equivale a $n > \frac{1}{\varepsilon}$.
+          - texto: Basta tomar $m$ como el primer natural mayor que $\frac{1}{\varepsilon}$.
+          - texto: Como el resultado depende de $\varepsilon$, la sucesión no converge.
+            trampa: true
+            mensaje: |
+              Es al revés: **que $m$ dependa de $\varepsilon$ es lo normal y lo
+              exigido**. Lo que sería sospechoso es un $m$ que valiera para
+              todos los márgenes a la vez.
+    resolucion: |
+      La definición dice: para todo $\varepsilon>0$ existe un $m$ tal que, para
+      todo $n>m$, se cumple $\left|a_n - L\right| < \varepsilon$. Aquí $L = 0$.
+
+      **Con $\varepsilon = 0{,}01$.** Como todos los términos son positivos,
+      $\left|a_n - 0\right| = \frac1n$, y
+
+      $$
+      \frac1n < 0{,}01 \;\Longleftrightarrow\; n > 100
+      $$
+
+      así que sirve $m = 100$: a partir de $n = 101$ todos los términos están a
+      menos de una centésima del cero.
+
+      **Con $\varepsilon = 0{,}001$**, el mismo despeje da $n > 1000$.
+
+      **Lo que hay que llevarse.** En general, dado cualquier $\varepsilon>0$
+      basta tomar $m > \frac{1}{\varepsilon}$. Ese «basta tomar» es la
+      demostración entera: no hay que encontrar el mejor $m$, solo **uno** que
+      sirva.
+
+  - id: ej-signo-en-el-limite
+    titulo: Por qué el límite de términos positivos no tiene por qué ser positivo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Se sabe que $a_n > 0$ para todo $n$ y que $a_n \to L$. Decidir si se puede
+      afirmar que $L > 0$, y en caso contrario dar un contraejemplo.
+    pide: Si la conclusión es L > 0 o L ≥ 0, con un contraejemplo que lo justifique.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué se puede afirmar del límite?
+        opciones:
+          - texto: Que $L \ge 0$, pero no que sea estrictamente positivo
+            correcta: true
+            mensaje: |
+              Exacto, y es **el punto que el examen puntúa año tras año**. El
+              paso al límite conserva las desigualdades anchas, no las
+              estrictas.
+          - texto: Que $L > 0$, porque todos los términos lo son
+            mensaje: |
+              Es la respuesta intuitiva y es falsa. Una sucesión de términos
+              estrictamente positivos puede acercarse al cero tanto como quiera
+              sin llegar nunca, y el límite entonces vale exactamente cero.
+          - texto: Que no se puede decir nada del signo de $L$
+            mensaje: |
+              Sí se puede decir algo: negativo no puede ser. Si lo fuera, a
+              partir de un momento los términos tendrían que estar cerca de él
+              y serían negativos, contra la hipótesis.
+      - tipo: calcular
+        titulo: El contraejemplo
+        pregunta: |
+          Toma $a_n = \dfrac{1}{n}$, que cumple $a_n > 0$ para todo $n$.
+          ¿Cuánto vale su límite?
+        respuesta:
+          tipo: numero
+          valor: '0'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              1 es el **primer término**, $a_1$. El límite mira a dónde va la
+              sucesión cuando $n$ crece, no por dónde empieza.
+          - valor: '0.01'
+            mensaje: |
+              Ningún número positivo puede ser el límite: por pequeño que lo
+              elijas, la sucesión acaba pasando por debajo. Con 0,01, a partir
+              del término 101 ya está por debajo. El único candidato es el cero.
+        pista: |
+          Los términos son $1, \frac12, \frac13, \frac14, \ldots$ ¿Hacia dónde
+          van?
+        desarrollo: |
+          Los términos decrecen y se acercan al cero tanto como se quiera:
+
+          $$
+          \lim_{n\to\infty}\frac{1}{n} = 0
+          $$
+
+          Y sin embargo **todos** son estrictamente positivos. Esa es toda la
+          contradicción con «$L>0$»: la desigualdad estricta se pierde por el
+          camino.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento completo. Una pieza es falsa.
+        piezas:
+          - texto: Supón que fuera $L < 0$, y toma $\varepsilon = \left|L\right|$.
+          - texto: Existiría un $m$ con $\left|a_n-L\right| < \left|L\right|$ para todo $n>m$.
+          - texto: Eso daría $a_n < L + \left|L\right| = 0$, contra la hipótesis $a_n>0$.
+          - texto: Luego $L \ge 0$; y $a_n = \frac1n$ enseña que la igualdad puede darse.
+          - texto: Como ningún término vale cero, el límite tampoco puede valer cero.
+            trampa: true
+            mensaje: |
+              El límite **no es un término de la sucesión**: es el valor al que
+              se acercan, y no tiene por qué alcanzarse nunca. Confundir las dos
+              cosas es lo que hace creer que la conclusión es estricta.
+    resolucion: |
+      **La conclusión correcta es $L \ge 0$.**
+
+      **Que negativo no puede ser** se demuestra por reducción al absurdo, con
+      la plantilla del tema. Supón $L<0$ y toma $\varepsilon = \left|L\right|$,
+      que es positivo. Por definición de límite existe $m$ tal que para todo
+      $n>m$
+
+      $$
+      \left|a_n - L\right| < \left|L\right|
+      \;\Longrightarrow\;
+      a_n < L + \left|L\right| = 0
+      $$
+
+      es decir, infinitos términos serían negativos. Contradice la hipótesis.
+
+      **Que positivo tampoco tiene por qué ser** se ve con un contraejemplo, y
+      basta uno: $a_n = \frac1n$ cumple $a_n>0$ para todo $n$ y su límite es
+      $0$.
+
+      **El detalle que decide la nota.** La elección de $\varepsilon$ no es
+      libre: se toma exactamente $\left|L\right|$, la distancia de $L$ a la
+      frontera que se quiere cruzar. Con un $\varepsilon$ cualquiera no sale
+      nada.
+
+  - id: ej-suma-geometrica
+    titulo: Sumar una serie geométrica
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular la suma de la serie
+      $$
+      \sum_{n=0}^{\infty}\left(\frac{1}{2}\right)^{n}
+      = 1+\frac12+\frac14+\frac18+\cdots
+      $$
+    pide: La suma, y por qué la serie converge.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué esta serie converge?
+        opciones:
+          - texto: Porque es geométrica de razón $\frac12$, y $\left|r\right|<1$
+            correcta: true
+            mensaje: |
+              Eso es. Cada término es el anterior por una razón fija, y mientras
+              esa razón sea menor que 1 en valor absoluto, la suma es finita.
+          - texto: Porque los términos tienden a cero
+            mensaje: |
+              Eso es **necesario pero no suficiente**, y es el error más
+              repetido del bloque. Los términos de $\sum\frac1n$ también tienden
+              a cero y esa serie no converge.
+          - texto: Porque tiene infinitos términos
+            mensaje: |
+              Tener infinitos términos es lo que hace que la pregunta sea
+              interesante, no lo que la contesta. Hay series de infinitos
+              términos que suman un número y otras que no.
+      - tipo: calcular
+        titulo: La razón
+        pregunta: |
+          ¿Cuánto vale la razón $r$, es decir, por cuánto se multiplica cada
+          término para obtener el siguiente?
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.001
+          formato: en forma exacta, o con dos decimales
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 es lo que crece el **denominador**, pero el término se hace más
+              pequeño: se multiplica por $\frac12$, no por 2. Si la razón fuera
+              2 la serie se dispararía.
+          - valor: '1'
+            mensaje: |
+              Con razón 1 todos los términos serían iguales y la suma no podría
+              ser finita. Aquí cada uno es la mitad del anterior.
+        pista: |
+          Divide un término entre el anterior: $\frac{1/4}{1/2}$.
+        desarrollo: |
+          $$
+          r = \frac{a_{n+1}}{a_n} = \frac{1/4}{1/2} = \frac12
+          $$
+
+          Y como $\left|r\right| = \frac12 < 1$, la serie converge.
+      - tipo: calcular
+        titulo: La suma
+        pregunta: |
+          Con $\displaystyle\sum_{n=0}^{\infty} r^{n} = \frac{1}{1-r}$,
+          ¿cuánto suma la serie?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Has dado la razón, no la suma. Sustituye $r=\frac12$ en
+              $\frac{1}{1-r}$.
+          - valor: '1.5'
+            mensaje: |
+              Parece que has sumado solo los dos primeros términos,
+              $1+\frac12$. La serie sigue, y lo que queda por sumar completa
+              exactamente hasta 2.
+          - valor: '1'
+            mensaje: |
+              1 es el primer término. La fórmula da la suma de todos:
+              $\frac{1}{1-1/2}$.
+        pista: |
+          $\frac{1}{1-\frac12}$. Cuidado con el denominador.
+        desarrollo: |
+          $$
+          \sum_{n=0}^{\infty}\left(\frac12\right)^{n}
+          = \frac{1}{1-\frac12}
+          = \frac{1}{\frac12}
+          = 2
+          $$
+
+          Tiene sentido geométrico: si avanzas 1, luego medio, luego un cuarto…
+          nunca pasas de 2, y te acercas tanto como quieras.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza sobra.
+        piezas:
+          - texto: La serie es geométrica, con $r = \frac12$.
+          - texto: Como $\left|r\right| < 1$, converge.
+          - texto: Su suma vale $\frac{1}{1-r} = \frac{1}{1/2} = 2$.
+          - texto: Empieza en $n=0$, así que la fórmula se aplica tal cual.
+          - texto: Al tender los términos a cero, la serie converge.
+            trampa: true
+            mensaje: |
+              Ese razonamiento no vale, aunque la conclusión aquí sea cierta.
+              La condición del término general sirve para **descartar**, nunca
+              para confirmar: la armónica lo cumple y diverge.
+    resolucion: |
+      **Reconocerla.** Cada término es el anterior multiplicado por $\frac12$,
+      así que es una serie geométrica de razón $r = \frac12$.
+
+      **Que converge** se sigue de $\left|r\right| < 1$. Ojo con el argumento:
+      no es que los términos tiendan a cero —eso lo cumple también la armónica,
+      que diverge—, es que la razón es menor que 1.
+
+      **La suma.** Empezando en $n=0$,
+
+      $$
+      \sum_{n=0}^{\infty} r^{n} = \frac{1}{1-r}
+      = \frac{1}{1-\frac12} = 2
+      $$
+
+      **De dónde sale la fórmula**, por si la piden demostrada. La suma parcial
+      es $S_N = 1+r+\cdots+r^{N}$; multiplicándola por $r$ y restando se
+      cancela casi todo y queda $S_N = \frac{1-r^{N+1}}{1-r}$. Si
+      $\left|r\right|<1$, el $r^{N+1}$ se va a cero y sobrevive
+      $\frac{1}{1-r}$.
+
+      **Comprobación.** Los primeros términos suman $1$, $1{,}5$, $1{,}75$,
+      $1{,}875$… acercándose a 2 sin pasarse. Cuadra.
+
+  - id: ej-telescopica-que-se-cancela
+    titulo: Una serie telescópica, término a término
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular
+      $$
+      \sum_{n=1}^{\infty}\frac{1}{n(n+1)}
+      $$
+    pide: La descomposición en fracciones simples y la suma.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué señal indica que esta serie es telescópica?
+        opciones:
+          - texto: Que el denominador se factoriza en dos términos consecutivos
+            correcta: true
+            mensaje: |
+              Esa es la señal: $n(n+1)$, o $(2n-1)(2n+1)$. Al descomponer en
+              fracciones simples, lo que resta un sumando se lo suma el
+              siguiente y casi todo se cancela.
+          - texto: Que los términos tienden a cero
+            mensaje: |
+              Eso lo cumple casi cualquier serie convergente, y también la
+              armónica, que no converge. No distingue nada.
+          - texto: Que hay una $n$ en el numerador
+            mensaje: |
+              No la hay: el numerador es 1. Y una $n$ en el numerador apuntaría
+              más bien a la serie aritmético-geométrica, que es otra cosa.
+      - tipo: calcular
+        titulo: La descomposición
+        pregunta: |
+          Se escribe $\dfrac{1}{n(n+1)} = \dfrac{A}{n} + \dfrac{B}{n+1}$.
+          ¿Cuánto vale $A$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Ese es el valor de $B$. Con $n=0$ en $1 = A(n+1)+Bn$ sale
+              directamente $A=1$; el signo negativo le toca al otro.
+          - valor: '0.5'
+            mensaje: |
+              Parece que has repartido el 1 a partes iguales. No se reparte: se
+              resuelve. Multiplica por $n(n+1)$ y da valores.
+        pista: |
+          Multiplica los dos lados por $n(n+1)$ y queda $1 = A(n+1) + Bn$.
+          Ahora dale a $n$ el valor que anula uno de los dos.
+        desarrollo: |
+          Multiplicando por $n(n+1)$:
+
+          $$
+          1 = A(n+1) + Bn
+          $$
+
+          Con $n = 0$ queda $1 = A$. Con $n = -1$ queda $1 = -B$, es decir
+          $B = -1$. Por tanto
+
+          $$
+          \frac{1}{n(n+1)} = \frac1n - \frac{1}{n+1}
+          $$
+      - tipo: calcular
+        titulo: La suma
+        pregunta: |
+          Escribiendo los primeros sumandos de
+          $\left(\frac11-\frac12\right)+\left(\frac12-\frac13\right)+\cdots$,
+          ¿cuánto vale la suma total?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Se cancela **casi** todo, pero no todo: el primer $\frac11$ no
+              tiene con quién cancelarse, porque nada viene antes de él.
+          - valor: '0.5'
+            mensaje: |
+              Parece que te has quedado en la primera suma parcial,
+              $1-\frac12$. La serie sigue y el término que resta se va a cero.
+          - valor: '2'
+            mensaje: |
+              2 es la suma de la geométrica de razón un medio, no de esta.
+              Aquí lo único que sobrevive a la cancelación es el 1 del
+              principio.
+        pista: |
+          Escribe cuatro sumandos completos y tacha lo que se repite con signo
+          opuesto. ¿Qué queda en las dos puntas?
+        desarrollo: |
+          La suma parcial hasta $N$ es
+
+          $$
+          S_N = \left(\frac11-\frac12\right)+\left(\frac12-\frac13\right)
+          +\cdots+\left(\frac1N-\frac{1}{N+1}\right)
+          = 1 - \frac{1}{N+1}
+          $$
+
+          Todo lo de en medio se cancela por parejas. Y al crecer $N$:
+
+          $$
+          \lim_{N\to\infty}\left(1-\frac{1}{N+1}\right) = 1
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el desarrollo. Una pieza es falsa.
+        piezas:
+          - texto: El denominador $n(n+1)$ son dos factores consecutivos, así que se descompone.
+          - texto: $\frac{1}{n(n+1)} = \frac1n - \frac{1}{n+1}$.
+          - texto: En la suma parcial se cancela todo menos el primer y el último término.
+          - texto: $S_N = 1 - \frac{1}{N+1} \to 1$, luego la serie suma 1.
+          - texto: Como todos los términos se cancelan, la suma es cero.
+            trampa: true
+            mensaje: |
+              No se cancelan **todos**: los extremos quedan descolgados, porque
+              al primero no le precede nadie y al último no le sigue nadie. Ese
+              resto es exactamente la suma.
+    resolucion: |
+      **Reconocerla.** El denominador es un producto de dos enteros
+      consecutivos, que es la señal de una telescópica.
+
+      **Descomponer en fracciones simples.** Con
+      $\frac{1}{n(n+1)} = \frac{A}{n}+\frac{B}{n+1}$ y multiplicando por
+      $n(n+1)$ queda $1 = A(n+1)+Bn$. Dando $n=0$ sale $A=1$ y dando $n=-1$
+      sale $B=-1$:
+
+      $$
+      \frac{1}{n(n+1)} = \frac{1}{n} - \frac{1}{n+1}
+      $$
+
+      **La suma parcial.** Escribiendo los sumandos en fila se ve la
+      cancelación:
+
+      $$
+      S_N = \left(1-\frac12\right)+\left(\frac12-\frac13\right)+\cdots
+      +\left(\frac1N-\frac{1}{N+1}\right) = 1-\frac{1}{N+1}
+      $$
+
+      **El límite.**
+
+      $$
+      \sum_{n=1}^{\infty}\frac{1}{n(n+1)} = \lim_{N\to\infty}\left(1-\frac{1}{N+1}\right) = 1
+      $$
+
+      **El consejo práctico.** Escribe siempre tres o cuatro sumandos
+      desarrollados antes de decidir qué sobrevive. Con tres factores en el
+      denominador no queda un término en cada punta, quedan dos, y ahí es
+      donde se falla.
+
   - id: creciente-con-limite-cero
     titulo: Una sucesión creciente que tiende a cero
     fuente: >-

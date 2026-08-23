@@ -191,7 +191,13 @@ for (const t of d.temas) {
   const entrada = coleccion.find((e) => e.id === t || e.id.startsWith(`${t}/`));
   if (!entrada) throw new Error(`No existe el index.mdx de "${t}".`);
   const { headings } = await render(entrada);
-  const dos = headings.filter((h) => h.depth === 2);
+  /* Nivel 2 **y 3**. Los `###` son la granularidad que un escalón necesita:
+     «Lugares geométricos» es un apartado de diecisiete ejercicios, pero
+     dentro tiene Apolonio, el arco capaz, la elipse y la parábola, que son
+     cuatro herramientas distintas y cuatro escalones distintos. Enlazarlos
+     funciona porque `Lectura` abre el grupo que **contiene** el ancla, no
+     solo el que la encabeza. */
+  const dos = headings.filter((h) => h.depth === 2 || h.depth === 3);
   slugsPorTema.set(t, dos.map((h) => h.slug));
   for (const h of dos) tituloApartado.set(`${t}#${h.slug}`, h.text);
 }
