@@ -205,10 +205,8 @@ pueda entrar, y el más simple de cada tema ya es de nivel boletín. En complejo
 hicieron falta ocho ejemplos nuevos y en sucesiones cuatro; para los temas 3, 4
 y 5 no hay ninguno todavía.
 
-**24 · ~~Los temas 3 y 4 siguen casi sin figuras.~~** A medias. El tema 3 pasó de
-cero a tres el 23 de agosto de 2026; el tema 4 sigue con una sola, y le vendrían
-bien dos: el polinomio de Taylor pegándose a la curva, y la tabla de signos de
-las dos derivadas. Decía: Tras esta tanda: t01 tres,
+**24 · ~~Los temas 3 y 4 siguen casi sin figuras.~~** Resuelto el 23 de agosto de
+2026: los cinco temas tienen ya entre tres y cuatro. Decía: Tras esta tanda: t01 tres,
 t02 tres, t03 **cero**, t04 una, t05 cuatro. Continuidad, Bolzano, Weierstrass
 y las razones de cambio son conceptos que se explican dibujando, y hoy se
 explican con párrafos. Es el mismo hueco que tenía integración antes de que se
