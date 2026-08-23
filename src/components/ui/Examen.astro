@@ -51,12 +51,17 @@ const total = ejercicios.reduce(
 
 /** Los enunciados se dibujan aquí, en la hoja, además de dentro de cada
  *  ejercicio guiado. No es duplicar por descuido: la hoja tiene que poder
- *  imprimirse y leerse como el papel original, sin botones ni pasos. */
+ *  imprimirse y leerse como el papel original, sin botones ni pasos.
+ *
+ *  Y por eso el prefijo de ids es `hoja-` y no el del ejercicio: los dos
+ *  renderizados conviven en la misma página, así que las figuras SVG que
+ *  traiga un enunciado tendrían el mismo `id` dos veces. Eran 62 de los 309
+ *  ids repetidos que se midieron el 23 de agosto de 2026. */
 const hoja = await Promise.all(
   ejercicios.map(async (e) => ({
     ...e,
-    enunciadoHtml: await mate(e.enunciado),
-    pideHtml: await mate(e.pide),
+    enunciadoHtml: await mate(e.enunciado, `hoja-${e.id}`),
+    pideHtml: await mate(e.pide, `hoja-${e.id}`),
   })),
 );
 

@@ -80,9 +80,16 @@ const COMPETENCIA = {
 
 /* Todo el texto del YAML pasa por el mismo procesador que el MDX, así que las
    fórmulas salen en MathML generado en el build (§07). */
-const enunciadoHtml = await mate(ejercicio.enunciado);
-const pideHtml = await mate(ejercicio.pide);
-const resolucionHtml = await mate(ejercicio.resolucion);
+/* Prefijo único de esta instancia. Sin él, las treinta resoluciones que
+   titulan un apartado «Resultado» producen treinta id="resultado" en la misma
+   página; y en un examen, cuyo enunciado se dibuja dos veces, los ids de sus
+   figuras SVG salían duplicados. El id de ejercicio ya está validado como
+   único en todo el repositorio, unas líneas más arriba. */
+const PREFIJO = `ej-${ejercicio.id}`;
+
+const enunciadoHtml = await mate(ejercicio.enunciado, PREFIJO);
+const pideHtml = await mate(ejercicio.pide, PREFIJO);
+const resolucionHtml = await mate(ejercicio.resolucion, PREFIJO);
 
 const pasos = await Promise.all(
   ejercicio.pasos.map(async (paso, i) => {
@@ -94,14 +101,14 @@ const pasos = await Promise.all(
         tipo: paso.tipo,
         competencia: COMPETENCIA[paso.tipo],
         titulo: 'Redactar la demostración',
-        preguntaHtml: await mate(paso.consigna),
+        preguntaHtml: await mate(paso.consigna, PREFIJO),
         rubrica: await Promise.all(
           paso.rubrica.map(async (r) => ({
-            puntoHtml: await mate(r.punto),
-            porqueHtml: await mate(r.porque),
+            puntoHtml: await mate(r.punto, PREFIJO),
+            porqueHtml: await mate(r.porque, PREFIJO),
           })),
         ),
-        veredictoHtml: await mate(paso.veredicto),
+        veredictoHtml: await mate(paso.veredicto, PREFIJO),
       };
     }
 
@@ -109,7 +116,7 @@ const pasos = await Promise.all(
       i,
       tipo: paso.tipo,
       competencia: COMPETENCIA[paso.tipo],
-      preguntaHtml: await mate(paso.pregunta),
+      preguntaHtml: await mate(paso.pregunta, PREFIJO),
     };
 
     if (paso.tipo === 'reconocer') {
@@ -122,8 +129,8 @@ const pasos = await Promise.all(
         titulo: 'Reconocer el camino',
         opciones: await Promise.all(
           mezcladas.map(async (o) => ({
-            textoHtml: await mate(o.texto),
-            mensajeHtml: await mate(o.mensaje),
+            textoHtml: await mate(o.texto, PREFIJO),
+            mensajeHtml: await mate(o.mensaje, PREFIJO),
             correcta: o.correcta,
           })),
         ),
@@ -138,12 +145,12 @@ const pasos = await Promise.all(
         distractores: await Promise.all(
           paso.distractores.map(async (d) => ({
             valor: d.valor,
-            mensajeHtml: await mate(d.mensaje),
+            mensajeHtml: await mate(d.mensaje, PREFIJO),
           })),
         ),
-        pistaHtml: await mate(paso.pista),
-        desarrolloHtml: await mate(paso.desarrollo),
-        veredictoHtml: await mate(paso.veredicto),
+        pistaHtml: await mate(paso.pista, PREFIJO),
+        desarrolloHtml: await mate(paso.desarrollo, PREFIJO),
+        veredictoHtml: await mate(paso.veredicto, PREFIJO),
       };
     }
 
@@ -154,9 +161,9 @@ const pasos = await Promise.all(
         condicion: paso.condicion,
         ventana: paso.ventana,
         formato: paso.formato,
-        pistaHtml: await mate(paso.pista),
-        desarrolloHtml: await mate(paso.desarrollo),
-        veredictoHtml: await mate(paso.veredicto),
+        pistaHtml: await mate(paso.pista, PREFIJO),
+        desarrolloHtml: await mate(paso.desarrollo, PREFIJO),
+        veredictoHtml: await mate(paso.veredicto, PREFIJO),
       };
     }
 
@@ -170,14 +177,14 @@ const pasos = await Promise.all(
       titulo: 'Justificar el argumento',
       piezas: await Promise.all(
         mezcladas.map(async (p) => ({
-          textoHtml: await mate(p.texto),
-          mensajeHtml: await mate(p.mensaje),
+          textoHtml: await mate(p.texto, PREFIJO),
+          mensajeHtml: await mate(p.mensaje, PREFIJO),
           trampa: p.trampa,
           /** Posición en el razonamiento correcto; -1 si es la trampa. */
           orden: p.trampa ? -1 : p.k,
         })),
       ),
-      veredictoHtml: await mate(paso.veredicto),
+      veredictoHtml: await mate(paso.veredicto, PREFIJO),
     };
   }),
 );

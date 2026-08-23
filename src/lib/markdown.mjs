@@ -35,12 +35,43 @@ let renderizador;
  * HTML con MathML. Los ejercicios son DATOS (§04): su prosa no pasa por el
  * pipeline de MDX, así que la pasamos por aquí.
  *
+ * ## El prefijo, y por qué hace falta
+ *
+ * Astro inyecta `rehypeHeadingIds` en toda tubería de Markdown, aunque no
+ * aparezca arriba, y ese plugin crea **un `github-slugger` nuevo por cada
+ * llamada a `render()`**. Como aquí se renderiza un campo por llamada, cada
+ * campo empieza a numerar desde cero: las treinta resoluciones que titulan un
+ * apartado «Resultado» producen treinta `id="resultado"` en la misma página.
+ * Medido el 23 de agosto de 2026: **309 ids repetidos en el sitio**, 66 solo
+ * en la página de complejos. No los enlaza nadie, pero un lector de pantalla
+ * que navegue por encabezados ve veintinueve destinos con el mismo nombre.
+ *
+ * La segunda causa es distinta y el prefijo la arregla igual: en las páginas
+ * de examen el mismo enunciado se dibuja dos veces —en la hoja y dentro del
+ * ejercicio guiado—, así que los ids de sus figuras SVG salían por duplicado.
+ *
+ * Se prefijan los `id`, y con ellos las referencias que los usan
+ * (`aria-labelledby` y los `href="#…"` internos), o el prefijo rompería lo que
+ * viene a arreglar.
+ *
  * @param {string | undefined} texto
+ * @param {string} [prefijo] Identificador único del contenedor, sin guion final.
  * @returns {Promise<string>} HTML listo para `set:html`
  */
-export async function mate(texto) {
+export async function mate(texto, prefijo) {
   if (!texto) return '';
   renderizador ??= await procesador().createRenderer({});
   const { code } = await renderizador.render(texto);
-  return code;
+  return prefijo ? prefija(code, prefijo) : code;
+}
+
+/** Antepone `prefijo-` a todo id del HTML y a todo lo que apunte a un id. */
+function prefija(html, prefijo) {
+  return html
+    .replace(/\sid="([^"]+)"/g, (_, id) => ` id="${prefijo}-${id}"`)
+    .replace(
+      /\saria-labelledby="([^"]+)"/g,
+      (_, v) => ` aria-labelledby="${v.split(/\s+/).filter(Boolean).map((x) => `${prefijo}-${x}`).join(' ')}"`,
+    )
+    .replace(/\shref="#([^"]+)"/g, (_, id) => ` href="#${prefijo}-${id}"`);
 }
