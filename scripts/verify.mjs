@@ -303,17 +303,33 @@ console.log('\nContenido');
 
    Solo mira valores en línea: un bloque `|` o `>-` puede llevar dos puntos
    sin problema, y de hecho los lleva por todas partes.
+
+   Y eso hay que **seguirlo línea a línea**, no basta con mirar cómo empieza
+   la línea que se está examinando. Corregido el 25 de agosto de 2026: dentro
+   de la resolución de 2020-2021-3ev hay una frase que continúa de renglón
+   con «general: en el óptimo … la proporción siempre es 1 : 2.», y el
+   guardián la leía como una clave `general` con un «: » dentro. Prosa
+   correcta, fichero que parsea, guardián en rojo. Ahora se lleva la cuenta
+   de en qué bloque `|` o `>` se está: todo lo que vaya más sangrado que su
+   clave es texto, no YAML.
    ═══════════════════════════════════════════════════════════════════ */
 {
   const pegas = [];
   for (const f of archivos(join(SRC, 'content'), ['.yaml'])) {
     const lineas = leer(f).split('\n');
+    let bloque = -1; // sangría de la clave cuyo bloque estamos atravesando
     for (const [i, linea] of lineas.entries()) {
+      const sangria = linea.search(/\S/);
+      if (sangria === -1) continue; // línea en blanco: el bloque sigue
+      if (bloque >= 0 && sangria > bloque) continue; // dentro del bloque: es texto
+      bloque = -1;
+
       // `clave: valor` en línea, sin comillas ni bloque, con otro «: » dentro
-      const m = linea.match(/^(\s*)(-\s+)?([a-zA-Zñáéíóú_]+):\s+(.+)$/);
+      const m = linea.match(/^(\s*)(-\s+)?([a-zA-Zñáéíóú_]+):\s*(.*)$/);
       if (!m) continue;
       const valor = m[4].trim();
-      if (/^['"|>&*]/.test(valor)) continue; // ya entrecomillado o bloque
+      if (/^[|>]/.test(valor)) { bloque = sangria; continue; } // abre bloque
+      if (valor === '' || /^['"&*]/.test(valor)) continue; // vacío o entrecomillado
       if (/: /.test(valor)) {
         pegas.push(`${rel(f)}:${i + 1} → ${linea.trim().slice(0, 62)}`);
       }
@@ -487,6 +503,8 @@ if (SOLO_FUENTE) {
   const sinViewport = [];
   const sinModos = [];
   const latexCrudo = [];
+  const svgComoTexto = [];
+  const refsRotas = [];
 
   for (const f of paginas) {
     const html = leer(f);
@@ -548,6 +566,60 @@ if (SOLO_FUENTE) {
       latexCrudo.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
     }
 
+    /* una figura que se ha publicado partida.
+       Añadida el 25 de agosto de 2026, y es la que más ha rendido de todo el
+       fichero. Una figura incrustada en un `ejercicios.yaml` es HTML crudo
+       dentro de Markdown, y **una línea en blanco cierra un bloque de HTML
+       crudo**: el `<svg>` se cierra solo en el primer renglón vacío y todo lo
+       que venía detrás queda fuera de él. Un `<path>` fuera de un `<svg>` no
+       es nada — el navegador lo tira y solo queda el texto de las etiquetas—;
+       y si además va sangrado cuatro espacios, se publica como bloque de
+       código, con el marcado a la vista.
+
+       Al mirarlo salieron **52 de las 105 figuras de examen del sitio**, unas
+       en blanco y otras como código. Build, esquema, consola y este mismo
+       fichero, todos en verde: el HTML es válido, solo que no dibuja. La causa
+       se arregló en `markdown.mjs`, que es donde tocaba (Regla 0); esto es lo
+       que impide que vuelva por otro camino.
+
+       Se comprueban los dos síntomas, que son el mismo fallo con dos caras. */
+    for (const m of html.matchAll(/<figure[^>]*>([\s\S]*?)<\/figure>/g)) {
+      const fuera = m[1]
+        .replace(/<svg[\s\S]*?<\/svg>/g, '')
+        .match(/<(path|circle|rect|line|polygon|polyline|ellipse|g|use|text)[\s>]/);
+      if (fuera) svgComoTexto.push(`${nombre} → «${fuera[1]}» fuera de todo <svg>`);
+    }
+    for (const m of html.matchAll(/<pre[^>]*>([\s\S]*?)<\/pre>/g)) {
+      const dentro = m[1].replace(/<[^>]*>/g, '');
+      if (!/&#x3C;(svg|g |path|circle|rect|text |use |defs|line |polygon)/.test(dentro)) continue;
+      svgComoTexto.push(`${nombre} → como bloque de código: …${dentro.replace(/\s+/g, ' ').trim().slice(0, 48)}…`);
+    }
+
+    /* referencias internas que no apuntan a nada.
+       Añadida el 25 de agosto de 2026, y es la comprobación que faltaba
+       debajo de la de arriba. Un `url(#loQueSea)` que no encuentra su id no
+       es un error: el navegador lo ignora y sigue. Así que el recorte de una
+       gráfica desaparece, el relleno se sale del marco, y build, esquema y
+       consola no dicen nada.
+
+       Salieron tres exámenes ya publicados: 2019-2020-3ev perdía un recorte y
+       un `pattern`, 2020-2021-3ev un recorte, y 2025-2026-4ev otro. La causa
+       era común y estaba en la capa compartida —`mate()` prefijaba los `id`
+       sin reescribir los `url(#…)`—, así que se arregló allí; esto es lo que
+       impide que vuelva a pasar por otro sitio.
+
+       Se ignoran los ids que no declara la página: `#` a secas y los destinos
+       de un enlace a otra página, que ya los mira la comprobación de enlaces
+       rotos. */
+    {
+      const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+      const refs = [...html.matchAll(/(?:url\(#|\sxlink:href="#|\shref="#)([^)"]+)/g)].map((m) => m[1]);
+      for (const r of new Set(refs)) {
+        if (!r || ids.has(r)) continue;
+        refsRotas.push(`${nombre} → #${r}`);
+      }
+    }
+
     /* enlaces internos */
     for (const m of html.matchAll(/href="([^"#][^"]*)"/g)) {
       const href = m[1];
@@ -584,6 +656,16 @@ if (SOLO_FUENTE) {
   grupo(sinModos, 'modo guiado y modo completo en las páginas de contenido', 'páginas sin los dos modos');
   grupo(rotos, 'cero enlaces internos rotos', 'enlaces que no llevan a ninguna parte');
   grupo(latexCrudo, 'cero fórmulas sin dibujar en el texto publicado', 'LaTeX que ha salido como texto');
+  grupo(
+    refsRotas,
+    'toda referencia interna (#id, url(#id)) apunta a algo que existe',
+    'referencias a un id que no está en la página: el navegador las ignora en silencio',
+  );
+  grupo(
+    svgComoTexto,
+    'toda figura se publica entera dentro de su <svg>',
+    'figuras partidas al publicarse: una línea en blanco dentro del <svg> cierra el bloque de HTML crudo y lo de detrás se pierde',
+  );
 
   /* prefers-reduced-motion en el CSS publicado */
   const hojas = [...archivos(DIST, ['.css'])];
