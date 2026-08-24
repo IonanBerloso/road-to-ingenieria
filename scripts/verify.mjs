@@ -237,6 +237,45 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Un «: » sin comillas dentro de un valor YAML
+
+   Rompe el fichero, y el error que da apunta a otra línea. Ha pasado cuatro
+   veces el 24 de agosto de 2026 —en una ruta, en un título de escalón y en
+   dos textos de opción— y siempre igual: se escribe un título natural como
+   «No: en el borde vale 4» y YAML lo lee como una clave.
+
+   El build ya lo caza, sí. Pero lo caza **después** de escribir el fichero
+   entero y señalando una línea equivocada, y eso son cinco minutos cada vez.
+   Este chequeo lo encuentra en el sitio exacto y dice cómo se arregla.
+
+   Solo mira valores en línea: un bloque `|` o `>-` puede llevar dos puntos
+   sin problema, y de hecho los lleva por todas partes.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const pegas = [];
+  for (const f of archivos(join(SRC, 'content'), ['.yaml'])) {
+    const lineas = leer(f).split('\n');
+    for (const [i, linea] of lineas.entries()) {
+      // `clave: valor` en línea, sin comillas ni bloque, con otro «: » dentro
+      const m = linea.match(/^(\s*)(-\s+)?([a-zA-Zñáéíóú_]+):\s+(.+)$/);
+      if (!m) continue;
+      const valor = m[4].trim();
+      if (/^['"|>&*]/.test(valor)) continue; // ya entrecomillado o bloque
+      if (/: /.test(valor)) {
+        pegas.push(`${rel(f)}:${i + 1} → ${linea.trim().slice(0, 62)}`);
+      }
+    }
+  }
+
+  if (pegas.length === 0) ok('ningún «: » sin comillas dentro de un valor YAML');
+  else
+    fallo(
+      'Un «: » dentro de un valor YAML necesita comillas, o el fichero no parsea',
+      pegas.slice(0, 6).join('\n    '),
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Un apóstrofo suelto en el texto de una opción o de una pieza
 
    Se añade el 24 de agosto de 2026, después de romperse dos veces el mismo
