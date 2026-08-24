@@ -232,3 +232,49 @@ propio esquema clasifica como pasos y no como patrones. El 23 de agosto de
 2026 el catálogo dejó de encender esas casillas, así que ya no se publica nada
 falso; lo que queda es decidir si los tres patrones se construyen o si §05 se
 reescribe para describir lo que el proyecto hace de verdad.
+---
+
+## Auditoría de Cálculo · 24 de agosto de 2026
+
+Hecha al terminar los once temas, buscando lo que le falta a un alumno para
+aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
+son las que impiden aprobar; las otras son mejoras.
+
+**26 · Los 52 exámenes del segundo cuatrimestre sin transcribir.** Es la deuda
+más grande del proyecto y la que más se nota: 15 de cuarta evaluación, 13 de
+quinta, 11 ordinarias y 11 extraordinarias. Las tres primeras evaluaciones
+tienen sus once exámenes cada una y se puede hacer un simulacro entero; en el
+segundo cuatrimestre no se puede hacer ninguno. Las rutas 4ev, 5ev y ord lo
+declaran en `falta[]`, así que es un hueco dicho, no escondido — pero un
+alumno que llega a mayo no tiene con qué medirse.
+
+**27 · Los temas 8 a 11 tienen cuatro ejercicios cada uno.** El tema 1 tiene
+37 y el 5 tiene 30. Cuatro alcanzan para presentar la herramienta y no para
+coger soltura, y en Laplace y Fourier eso es grave porque son técnicas que se
+automatizan repitiendo. El boletín de complementarios tiene material de sobra
+—el tema 9 solo trae diecinueve ejercicios— y viene con soluciones.
+
+**28 · El bloque de síntesis de la ordinaria no tiene ejercicio propio.** El
+segundo parcial trae siempre un ejercicio que encadena gradiente, ecuación
+diferencial, parametrización y trabajo. La ruta lo describe y enlaza tres
+repasos sueltos, pero **lo que se evalúa es la costura**, no cada pieza. Hace
+falta escribir uno que recorra la cadena entera.
+
+**29 · Las EDOs de segundo orden se quedan sin práctica.** Coeficientes
+indeterminados y variación de parámetros caen los dos —2025-2026 pedía
+resolver una con segundo miembro que obliga a variación de parámetros— y no
+hay ni un ejercicio guiado de ninguna de las dos.
+
+**30 · «Cuarta evaluación» no ha significado siempre lo mismo.** La de
+2015-2016 dice «PRIMER CUATRIMESTRAL (solo para alumnos con el primer
+cuatrimestral suspendido)» y pregunta complejos y sucesiones. Las rutas del
+segundo cuatrimestre están medidas solo sobre los años verificados uno a uno
+—cinco la cuarta, tres la quinta, dos la ordinaria— y no sobre once. Para
+subir esos números hay que leer año por año dónde está la frontera, y
+mientras tanto contar once sería mentir.
+
+**31 · El campo `invariante.fuente` se publica como texto plano.** No pasa por
+el procesador de Markdown, así que el LaTeX sale crudo. Lo caza el guardián de
+fórmulas sin dibujar, pero es una asimetría que no está documentada en §14:
+todos los demás campos largos de una ruta sí se procesan. O se procesa también
+este, o §14 lo dice.
