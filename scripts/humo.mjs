@@ -351,6 +351,55 @@ async function main() {
     }
   }
 
+  /* ── 360 px con las resoluciones abiertas ─────────────────────────
+     Se añade el 24 de agosto de 2026, después de encontrar el fallo. Las
+     páginas de examen desbordaban a lo ancho en un móvil —651 px de scroll
+     en un viewport de 360— pero **solo al abrir una resolución**, porque es
+     entonces cuando entran las fórmulas en bloque de KaTeX.
+
+     Por eso no lo cazaba nadie: `verify.mjs` comprueba los 360 px leyendo el
+     CSS en busca de anchos fijos (y aquí no había ninguno), y este fichero
+     abría las páginas pero nunca desplegaba las resoluciones. Llevaba roto
+     desde que existe el apartado de exámenes, en las 33 páginas.
+
+     La causa era una regla responsive que sustituía `minmax(0, 1fr)` por
+     `1fr` a secas y con eso devolvía a la columna su `min-width: auto`. */
+  {
+    const deExamen = rutas.filter((u) => u.includes('/examenes/'));
+    const pagina = await navegador.newPage();
+    await pagina.setViewportSize({ width: 360, height: 900 });
+    const desbordan = [];
+
+    for (const url of deExamen.slice(0, 6)) {
+      // el fragmento activa la pestaña; sin él los botones están ocultos
+      await pagina.goto(`http://localhost:${PUERTO}${url}#resoluciones`, { waitUntil: 'load' });
+      await pagina.waitForTimeout(200);
+      for (const caja of await pagina.$$('[data-ejercicio]')) {
+        for (const b of await caja.$$('button')) {
+          if (!/resoluci/i.test((await b.innerText()) ?? '')) continue;
+          // si uno no se deja pulsar no se para el guardián: se sigue con el resto
+          await b.click({ timeout: 2000 }).catch(() => {});
+          break;
+        }
+      }
+      await pagina.waitForTimeout(250);
+      const ancho = await pagina.evaluate(() => ({
+        scroll: document.documentElement.scrollWidth,
+        visible: window.innerWidth,
+      }));
+      if (ancho.scroll > ancho.visible + 1) {
+        desbordan.push(`${url.split('/').filter(Boolean).pop()} → ${ancho.scroll}px`);
+      }
+    }
+    await pagina.close();
+
+    comprueba(
+      desbordan.length === 0,
+      `a 360 px, las resoluciones de examen abiertas no desbordan (${Math.min(6, deExamen.length)} páginas)`,
+      desbordan.join(', '),
+    );
+  }
+
   console.log('');
   comprueba(
     medidos.raiz > 0 && medidos.barra > 0,
