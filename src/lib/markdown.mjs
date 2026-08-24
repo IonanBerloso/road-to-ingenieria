@@ -51,8 +51,16 @@ let renderizador;
  * ejercicio guiado—, así que los ids de sus figuras SVG salían por duplicado.
  *
  * Se prefijan los `id`, y con ellos las referencias que los usan
- * (`aria-labelledby` y los `href="#…"` internos), o el prefijo rompería lo que
- * viene a arreglar.
+ * (`aria-labelledby`, los `href="#…"` internos y los `url(#…)` de SVG), o el
+ * prefijo rompería lo que viene a arreglar.
+ *
+ * Los `url(#…)` faltaban, y se añaden el 25 de agosto de 2026. Es la forma en
+ * que un SVG apunta a un `clipPath`, a un `pattern` o a un degradado suyo, y
+ * al renombrarse el id sin renombrar la referencia el recorte deja de
+ * aplicarse: el relleno se sale del marco de la gráfica. Estaba pasando en
+ * tres exámenes publicados —2019-2020-3ev, 2020-2021-3ev y 2025-2026-4ev— con
+ * el build en verde, porque un `url(#…)` que no apunta a nada no es un error
+ * de HTML: simplemente no hace nada.
  *
  * @param {string | undefined} texto
  * @param {string} [prefijo] Identificador único del contenedor, sin guion final.
@@ -61,9 +69,36 @@ let renderizador;
 export async function mate(texto, prefijo) {
   if (!texto) return '';
   renderizador ??= await procesador().createRenderer({});
-  const { code } = await renderizador.render(texto);
+  const { code } = await renderizador.render(pegaElSvg(texto));
   return prefijo ? prefija(code, prefijo) : code;
 }
+
+/**
+ * Quita las líneas en blanco de dentro de un `<svg>`.
+ *
+ * En Markdown, **una línea en blanco cierra un bloque de HTML crudo**. Un SVG
+ * escrito con sus grupos separados por un renglón —que es como se escribe un
+ * SVG legible— deja de ser un bloque y pasa a ser varios: el analizador cierra
+ * el `<svg>` por su cuenta en el primer hueco, y todo lo que venía detrás
+ * queda **fuera** de él. Un `<path>` fuera de un `<svg>` no es nada: el
+ * navegador lo tira y solo sobrevive el texto de las etiquetas. Si además la
+ * línea siguiente va sangrada cuatro espacios, el trozo se publica como
+ * bloque de código, con el marcado a la vista.
+ *
+ * Medido el 25 de agosto de 2026, al mirar por qué el sombreado de una figura
+ * nueva se salía de su marco: **52 de las 105 figuras de examen del sitio
+ * estaban rotas así**, algunas desde el día que se transcribieron. El build,
+ * el esquema, `verify.mjs` y la consola del navegador, todos en verde: el HTML
+ * resultante es válido, solo que no dibuja nada.
+ *
+ * Se arregla aquí y no en los 52 ficheros a propósito (Regla 0). El script que
+ * recorriera los 52 sería la prueba de que el problema no está en ellos: nadie
+ * que escriba una figura tiene por qué saber que un renglón en blanco se la
+ * come. Los ficheros se quedan legibles y es la tubería la que se ocupa.
+ */
+const pegaElSvg = (texto) =>
+  texto.replace(/<svg\b[\s\S]*?<\/svg>/g, (bloque) =>
+    bloque.split('\n').filter((l) => l.trim()).join('\n'));
 
 /** Antepone `prefijo-` a todo id del HTML y a todo lo que apunte a un id. */
 function prefija(html, prefijo) {
@@ -73,5 +108,6 @@ function prefija(html, prefijo) {
       /\saria-labelledby="([^"]+)"/g,
       (_, v) => ` aria-labelledby="${v.split(/\s+/).filter(Boolean).map((x) => `${prefijo}-${x}`).join(' ')}"`,
     )
-    .replace(/\shref="#([^"]+)"/g, (_, id) => ` href="#${prefijo}-${id}"`);
+    .replace(/\shref="#([^"]+)"/g, (_, id) => ` href="#${prefijo}-${id}"`)
+    .replace(/url\(#([^)"']+)\)/g, (_, id) => `url(#${prefijo}-${id})`);
 }
