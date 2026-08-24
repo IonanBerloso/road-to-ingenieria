@@ -304,13 +304,28 @@ const puntos = z
      2026 esta comprobación exigía que sumaran exactamente 10, y eso obligaba
      a dividir el reparto real entre dos — es decir, a publicar un dato falso
      para contentar al guardián, justo lo que §11 dice que no hay que hacer.
-     Ahora se admite cualquier múltiplo de 10, que es lo que la escuela usa. */
+     Ahora se admite cualquier múltiplo de 10, que es lo que la escuela usa.
+
+     ── Y el 24 de agosto de 2026 hubo que bajar a múltiplos de 5 ──
+
+     Al transcribir la cuarta evaluación de 2018-2019 apareció un ejercicio de
+     **5 puntos sobre 25**, y el guardián lo rechazaba. Antes de tocarlo se
+     midió, que es lo que §11 pide: extrayendo el texto de los 50 exámenes del
+     segundo cuatrimestre salen 267 repartos impresos, y este es el reparto:
+
+       10/40 ×128 · 10/30 ×72 · 10/50 ×40 · 10/20 ×18 · 10/60 ×6
+       10/25 ×2  ·  5/25 ×1
+
+     O sea que la regla acertaba **266 veces de 267**. No estaba mal: estaba
+     incompleta. Se baja a múltiplos de 5, que sigue cazando un 7 o un 12 —los
+     errores de transcripción que importan— y deja de obligar a falsear el
+     único ejercicio que vale 5. */
   .refine((p) => {
     const total = p.comp1 + p.comp2 + p.comp4;
-    return total > 0 && total % 10 === 0;
+    return total > 0 && total % 5 === 0;
   }, {
     message:
-      'los puntos de un ejercicio de examen tienen que sumar un múltiplo de 10 (casi siempre 10; el del dron de 2017-2018 vale 20)',
+      'los puntos de un ejercicio de examen tienen que sumar un múltiplo de 5 (266 de 267 valen 10; el del dron de 2017-2018 vale 20 y uno de 2018-2019 vale 5)',
   });
 
 const ejercicio = z
