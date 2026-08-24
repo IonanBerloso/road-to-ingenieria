@@ -152,7 +152,10 @@ escribe uno todavía (§11: se añaden cuando algo se rompe de verdad). Si llega
 pasar una vez, la comprobación es viable: las fórmulas del formulario son un
 subconjunto literal de las de los apartados.
 
-**19 · Las resoluciones repiten ids de encabezado dentro de una misma página.**
+**19 · ~~Las resoluciones repiten ids de encabezado dentro de una misma página.~~**
+Resuelto el 23 de agosto de 2026 prefijando los ids con el id del ejercicio en
+`mate()`, la capa compartida: de 309 duplicados a 0, sin tocar ni un fichero de
+contenido. Decía:
 Medido en `/calculo/t01-complejos/`: `resultado` aparece 29 veces,
 `6--comprobación` 13, `5--comprobación` 12, y ocho más. Salen de los `##` que
 llevan dentro los `resolucion` de `ejercicios.yaml`, que se renderizan todos en
@@ -183,7 +186,9 @@ primer ejercicio de la página. Poner el id como valor del atributo es un cambio
 de una línea y haría que `humo.mjs` y cualquier prueba futura puedan apuntar a
 un ejercicio sin adivinar la estructura del DOM.
 
-**22 · Veintitrés bloques siguen con la forma vieja.** El 23 de agosto de 2026
+**22 · ~~Veintitrés bloques siguen con la forma vieja.~~** Resuelto el 23 de
+agosto de 2026 junto con la deuda 23: los 24 bloques están convertidos o son
+planos a propósito. Decía: El 23 de agosto de 2026
 se introdujo el escalón —`aprendes`, teoría, ejercicios de ejemplo a examen, y
 `dominio` visible— y se convirtió **solo** el bloque «El suelo» de la primera
 evaluación, a propósito: era la plantilla que había que ver funcionando antes
