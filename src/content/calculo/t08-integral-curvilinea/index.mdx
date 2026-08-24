@@ -1,0 +1,227 @@
+---
+asignatura: calculo
+tema: 8
+titulo: Integral curvilínea
+descripcion: Parametrizar curvas, trabajo de un campo, campos conservativos y función potencial, teorema de Green. Y cuál de los tres caminos elegir.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 8 y de los boletines de Integral curvilínea · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+En el tema 5 integrabas a lo largo de un segmento del eje $x$. En el 7, sobre
+una región o un sólido. Ahora integras **a lo largo de una curva** — que puede
+serpentear por el plano o por el espacio.
+
+El caso que da nombre a todo esto es el **trabajo**: una fuerza empuja un objeto
+por un camino, y quieres saber cuánta energía ha costado. La fuerza cambia de un
+punto a otro, y el camino no es recto. Eso es una integral curvilínea.
+
+$$
+\int_C P\,dx + Q\,dy
+$$
+
+Y aquí está lo que de verdad evalúa el examen. **Ese número se puede calcular de
+tres maneras distintas**, y las tres dan lo mismo cuando las tres valen. Elegir
+bien es la diferencia entre cinco líneas y media hora:
+
+| camino | cuándo vale | qué cuesta |
+|---|---|---|
+| **Parametrizar** e integrar | siempre | largo, y hay que parametrizar |
+| **Función potencial**, $F(B)-F(A)$ | solo si el campo es conservativo | cortísimo |
+| **Green** | solo si la curva es **cerrada** | convierte la línea en una integral doble |
+
+Por eso el primer paso de cualquier ejercicio de este tema no es calcular: es
+**mirar el campo y mirar la curva** para decidir por dónde vas.
+
+## Parametrizar: describir la curva con un solo parámetro
+
+Una curva en el plano es un recorrido, y describirla es decir dónde estás en
+cada instante:
+
+$$
+\vec r(t) = \bigl(x(t),\, y(t)\bigr),
+\qquad t\in[a,b]
+$$
+
+Las tres que salen siempre:
+
+| curva | parametrización | rango |
+|---|---|---|
+| segmento de $A$ a $B$ | $\vec r(t) = A + t(B-A)$ | $t\in[0,1]$ |
+| circunferencia de radio $R$ | $(R\cos t,\; R\,\text{sen}\,t)$ | $t\in[0,2\pi]$ |
+| gráfica $y=f(x)$ | $(t,\; f(t))$ | $t$ en el rango de $x$ |
+
+La tercera es la que se olvida y la que más ahorra: si la curva es «$y=x^{3}$
+desde $(0,0)$ hasta $(2,8)$», **la propia $x$ sirve de parámetro** y no hay nada
+que inventar.
+
+<ErrorTipico titulo="Parametrizar sin mirar el sentido del recorrido">
+La integral curvilínea **cambia de signo** si recorres la curva al revés. No es
+un detalle: es la diferencia entre que el trabajo sea $+12$ o $-12$.
+
+El enunciado siempre dice el sentido — «desde $A$ hasta $B$», o una flecha en el
+dibujo, o «recorrida en sentido antihorario». Y hay que comprobar que tu
+parametrización empieza donde debe: sustituye $t=a$ y mira si sale el punto de
+salida. Si sale el de llegada, has parametrizado al revés.
+</ErrorTipico>
+
+Con la curva parametrizada, todo se sustituye y queda una integral de una sola
+variable, que es lo que sabes hacer desde el tema 5:
+
+$$
+\int_C P\,dx+Q\,dy
+= \int_{a}^{b}\Bigl[P\bigl(x(t),y(t)\bigr)\,x'(t) + Q\bigl(x(t),y(t)\bigr)\,y'(t)\Bigr]dt
+$$
+
+## El atajo grande: campos conservativos
+
+Un campo $\vec V = (P,Q)$ es **conservativo** si existe una función $F$ —el
+**potencial**— cuyo gradiente es el campo: $\nabla F = \vec V$.
+
+Y cuando eso pasa, ocurre algo casi increíble:
+
+$$
+\int_C \vec V \cdot d\vec r = F(B) - F(A)
+$$
+
+**La integral no depende del camino.** Da igual si vas en línea recta, dando un
+rodeo o en espiral: solo cuentan los dos extremos. Es el teorema fundamental del
+cálculo, subido a las curvas.
+
+<figure class="figura-examen">
+  <svg viewBox="-30 -15 450 205" role="img" aria-labelledby="t8conT t8conD">
+    <title id="t8conT">Tres caminos entre los mismos dos puntos</title>
+    <desc id="t8conD">Dos puntos A y B unidos por tres trayectorias distintas: un segmento recto, un arco por arriba y un camino quebrado por abajo. Si el campo es conservativo las tres integrales valen lo mismo.</desc>
+
+    <path d="M40 120 Q150 10 260 120" fill="none" stroke="var(--alt)" stroke-width="2.2"></path>
+    <line x1="40" y1="120" x2="260" y2="120" stroke="var(--live)" stroke-width="2.2"></line>
+    <path d="M40 120 L100 165 L200 165 L260 120" fill="none" stroke="var(--d2)" stroke-width="2.2"></path>
+
+    <circle cx="40" cy="120" r="4.2" fill="var(--ink)"></circle>
+    <circle cx="260" cy="120" r="4.2" fill="var(--ink)"></circle>
+    <text x="28" y="112" font-size="13" fill="var(--ink)" font-family="var(--mono)">A</text>
+    <text x="266" y="112" font-size="13" fill="var(--ink)" font-family="var(--mono)">B</text>
+
+    <text x="143" y="56" font-size="10.5" fill="var(--alt)" font-family="var(--mono)">C₂</text>
+    <text x="140" y="113" font-size="10.5" fill="var(--live)" font-family="var(--mono)">C₁</text>
+    <text x="143" y="181" font-size="10.5" fill="var(--d2)" font-family="var(--mono)">C₃</text>
+
+    <text x="300" y="70" font-size="13" fill="var(--flag)" font-family="var(--mono)">F(B) − F(A)</text>
+    <text x="300" y="92" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">los tres, si el</text>
+    <text x="300" y="107" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">campo es</text>
+    <text x="300" y="122" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">conservativo</text>
+  </svg>
+  <figcaption>
+    Un enunciado que pide «el trabajo a lo largo de <code>C₁</code>,
+    <code>C₂</code> y <code>C₃</code>» casi nunca quiere tres cuentas. Quiere
+    que <strong>compruebes que el campo es conservativo y contestes las tres de
+    una vez</strong> — y que lo digas.
+  </figcaption>
+</figure>
+
+### Cómo se comprueba, y cómo se encuentra el potencial
+
+**Comprobar** es una sola igualdad:
+
+$$
+\frac{\partial P}{\partial y} = \frac{\partial Q}{\partial x}
+$$
+
+En tres variables son tres igualdades, o equivalentemente que el rotacional sea
+nulo. Es rápido y hay que hacerlo **siempre antes de decidir el camino**.
+
+**Encontrar el potencial** es integrar y ajustar:
+
+1. Integra $P$ respecto de $x$. Sale $F$ más una constante que **puede depender
+   de $y$**: escribe $+\,g(y)$, no $+\,C$.
+2. Deriva lo obtenido respecto de $y$ e iguálalo a $Q$.
+3. De ahí despejas $g'(y)$, integras, y ya tienes $F$.
+
+<ErrorTipico titulo="Poner + C en vez de + g(y)">
+Al integrar $P$ respecto de $x$, lo que se ha mantenido constante es **la $y$
+entera**, no un número. Así que la «constante de integración» es cualquier
+función de $y$.
+
+Si escribes $+C$ te falta un trozo del potencial, y como la constante se cancela
+al hacer $F(B)-F(A)$, **el resultado puede salirte casi bien** y no notarlo.
+Es el error silencioso del tema.
+</ErrorTipico>
+
+## Green: cuando la curva se cierra
+
+Si $C$ es una curva **cerrada** que rodea una región $D$, el teorema de Green
+cambia la integral de línea por una integral doble sobre lo de dentro:
+
+$$
+\oint_C P\,dx + Q\,dy
+= \iint_D\left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) dA
+$$
+
+Y compensa casi siempre, porque el borde de una región suele tener tres o cuatro
+tramos —y habría que parametrizar cada uno— mientras que la integral doble es
+una sola cuenta sobre el tema 7.
+
+Tres condiciones que hay que decir en voz alta, porque son COMP4:
+
+- La curva es **cerrada**.
+- Se recorre en **sentido antihorario** (positivo). Si el enunciado la da al
+  revés, se aplica Green y se cambia el signo.
+- $P$ y $Q$ tienen derivadas parciales continuas **en toda la región**, agujeros
+  incluidos. Un campo que se rompe en el origen invalida Green si el origen está
+  dentro.
+
+> **El detalle que conecta los dos atajos.** Si el campo es conservativo,
+> $\partial Q/\partial x - \partial P/\partial y = 0$, así que **toda integral
+> sobre una curva cerrada vale cero**. Los dos teoremas dicen lo mismo desde dos
+> sitios, y saber eso convierte un ejercicio de «calcula sobre esta
+> circunferencia entera» en escribir un cero justificado.
+
+## La otra integral curvilínea: respecto de la longitud de arco
+
+Hay una segunda especie, y se distingue por el diferencial: $d\ell$ en vez de
+$dx$ y $dy$.
+
+$$
+\int_C f\,d\ell = \int_a^b f\bigl(x(t),y(t)\bigr)\,\lVert \vec r\,'(t)\rVert\,dt,
+\qquad
+\lVert \vec r\,'(t)\rVert = \sqrt{x'(t)^{2}+y'(t)^{2}}
+$$
+
+Sirve para la **masa de un alambre** cuando la densidad cambia de un punto a
+otro, y para la longitud de la curva si $f=1$.
+
+Las dos diferencias con la anterior, que es lo que hay que tener claro:
+
+- Lleva un **módulo**, con su raíz. La otra no.
+- **No depende del sentido** del recorrido. La masa de un cable es la misma se
+  mida de un extremo o del otro; el trabajo, no.
+
+## Lo que hay que llevar sabido
+
+**El orden en que se mira un ejercicio de este tema:**
+
+1. ¿La curva es **cerrada**? → mira Green.
+2. ¿El campo es **conservativo** ($P_y = Q_x$)? → función potencial, y si además
+   es cerrada, la integral vale **cero**.
+3. Si no → parametriza, y cuidado con el sentido.
+
+| pregunta | qué hacer |
+|---|---|
+| «trabajo por tres caminos distintos» | comprueba $P_y = Q_x$; casi seguro que es conservativo |
+| «$\oint$» sobre una curva cerrada | Green, o cero si es conservativo |
+| «masa de un alambre» | $\int f\,d\ell$, con el módulo |
+| «longitud de la curva» | $\int d\ell$ |
+| «desde $A$ hasta $B$» | el sentido importa: comprueba que $t=a$ da $A$ |
+
+Y las tres frases de COMP4:
+
+- **Conservativo significa que la integral no depende del camino**, y eso se
+  demuestra exhibiendo el potencial.
+- **Green necesita la curva cerrada, el sentido positivo y las parciales
+  continuas dentro**, agujeros incluidos.
+- **La integral de un campo conservativo sobre cualquier curva cerrada es cero.**

@@ -1,0 +1,521 @@
+ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 8. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-parametrizar-un-segmento
+    titulo: Parametrizar un segmento, con su sentido
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Parametrizar el segmento que va desde $A(1,2)$ hasta $B(3,6)$, y comprobar
+      que el sentido es el correcto.
+    pide: La parametrización del segmento de A a B.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es la forma estándar de parametrizar el segmento de $A$ a $B$?
+        opciones:
+          - texto: r(t) = A + t(B − A), con t entre 0 y 1
+            correcta: true
+            mensaje: |
+              Sí. En $t=0$ estás en $A$ y en $t=1$ en $B$, así que el sentido
+              queda garantizado por construcción.
+          - texto: r(t) = B + t(A − B), con t entre 0 y 1
+            mensaje: |
+              Eso recorre el segmento **al revés**, de $B$ a $A$, y en una
+              integral curvilínea de un campo eso cambia el signo del resultado.
+          - texto: r(t) = (t, t), con t entre A y B
+            mensaje: |
+              Eso solo sirve para la recta $y=x$. Aquí la recta que une $A$ y $B$
+              no es esa, y además $A$ y $B$ son puntos, no números.
+      - tipo: calcular
+        titulo: La primera componente
+        pregunta: |
+          Con $\vec r(t) = (1,2) + t\,(2,4)$, ¿cuánto vale $x(t)$ en $t = 0{,}5$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              3 es $x$ en $t=1$, o sea en el punto $B$. En la mitad del recorrido
+              vale $1 + 0{,}5\cdot 2 = 2$.
+          - valor: '1'
+            mensaje: |
+              1 es $x$ en $t=0$, en el punto $A$. En $t=0{,}5$ ya te has movido
+              media unidad de las dos que hay que avanzar en $x$.
+        pista: |
+          $x(t) = 1 + 2t$. Sustituye t = 0,5.
+        desarrollo: |
+          $$
+          B - A = (3,6)-(1,2) = (2,4)
+          \qquad\Longrightarrow\qquad
+          \vec r(t) = (1+2t,\; 2+4t)
+          $$
+
+          En $t=0{,}5$: $x = 1+1 = 2$, $y = 2+2 = 4$. El punto medio del
+          segmento, como tiene que ser.
+      - tipo: justificar
+        pregunta: |
+          Ordena la comprobación. Una pieza es falsa.
+        piezas:
+          - texto: '$\vec r(t) = (1+2t,\;2+4t)$ con $t\in[0,1]$.'
+          - texto: 'En $t=0$ sale $(1,2) = A$, que es el punto de salida. ✓'
+          - texto: 'En $t=1$ sale $(3,6) = B$, el de llegada. ✓'
+          - texto: 'Las derivadas valen $\frac{dx}{dt}=2$ y $\frac{dy}{dt}=4$, constantes, como corresponde a una recta.'
+          - texto: 'Como el parámetro va de 0 a 1, el segmento mide 1 de longitud.'
+            trampa: true
+            mensaje: |
+              El rango del parámetro no es la longitud. El segmento mide
+              $\lVert B-A\rVert = \sqrt{4+16} = \sqrt{20}$. El parámetro es solo
+              una forma de recorrerlo, y podría ir de 0 a 1 o de 0 a 100.
+    resolucion: |
+      **La fórmula, y por qué funciona.** Un segmento de $A$ a $B$ se recorre
+      partiendo de $A$ y avanzando una fracción $t$ del vector que lleva a $B$:
+
+      $$
+      \vec r(t) = A + t\,(B-A),
+      \qquad t\in[0,1]
+      $$
+
+      Con $A(1,2)$ y $B(3,6)$:
+
+      $$
+      \vec r(t) = (1,2) + t\,(2,4) = (1+2t,\; 2+4t)
+      $$
+
+      **La comprobación del sentido**, que es lo que hay que hacer siempre:
+
+      | $t$ | punto |
+      |---|---|
+      | $0$ | $(1,2) = A$ ✓ |
+      | $1$ | $(3,6) = B$ ✓ |
+
+      Sale $A$ al principio y $B$ al final, así que el recorrido va en el sentido
+      que pide el enunciado. **Si saliera al revés, la integral curvilínea de un
+      campo tendría el signo cambiado** — y eso convierte un trabajo de $+12$ en
+      un $-12$, que no es un error pequeño.
+
+      > Las derivadas, que hacen falta enseguida: $x'(t)=2$ e $y'(t)=4$. Al ser
+      > una recta son constantes, y eso hace que el módulo
+      > $\lVert\vec r\,'\rVert = \sqrt{20}$ salga de la integral.
+
+  - id: ej-conservativo-o-no
+    titulo: Comprobar si un campo es conservativo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Determinar cuál de estos dos campos es conservativo:
+
+      $$
+      \vec V = (2xy,\; x^{2})
+      \qquad\text{y}\qquad
+      \vec W = (y,\; 2x)
+      $$
+    pide: Cuál de los dos campos es conservativo, y por qué.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué igualdad hay que comprobar para saber si $(P,Q)$ es conservativo
+          en el plano?
+        opciones:
+          - texto: Que la derivada de P respecto de y coincida con la de Q respecto de x
+            correcta: true
+            mensaje: |
+              Eso es. Sale de que, si hubiera potencial, esas dos serían las
+              derivadas cruzadas del mismo $F$ — y Schwarz obliga a que
+              coincidan.
+          - texto: Que P y Q sean iguales
+            mensaje: |
+              Eso no tiene nada que ver. $(2xy, x^{2})$ tiene componentes
+              distintas y sí es conservativo.
+          - texto: Que las dos parciales respecto de x coincidan
+            mensaje: |
+              La comprobación es **cruzada**: $P$ se deriva respecto de $y$ y $Q$
+              respecto de $x$. Comparar dos derivadas respecto de la misma
+              variable no dice nada.
+      - tipo: calcular
+        titulo: La derivada cruzada del primero
+        pregunta: |
+          Para $\vec V = (2xy,\,x^{2})$, ¿cuánto vale $\partial P/\partial y$?
+          Evalúalo en $x = 3$.
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Parece que has derivado como si el coeficiente fuera 1. $P = 2xy$,
+              y su derivada respecto de $y$ es $2x$, que en $x=3$ vale 6.
+          - valor: '9'
+            mensaje: |
+              9 es $x^{2}$ evaluado en 3, o sea $Q$ mismo. Lo que se pide es la
+              derivada de $P$ respecto de $y$.
+        pista: |
+          Deriva $2xy$ respecto de y tratando x como constante. Y sustituye x=3.
+        desarrollo: |
+          $$
+          \frac{\partial P}{\partial y} = \frac{\partial}{\partial y}(2xy) = 2x
+          \qquad\Longrightarrow\qquad
+          \text{en } x=3: \; 6
+          $$
+
+          Y $\partial Q/\partial x = \partial(x^{2})/\partial x = 2x$, que también
+          vale 6. **Coinciden**, así que $\vec V$ es conservativo.
+      - tipo: justificar
+        pregunta: |
+          Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: 'Para $\vec V$: $P_y = 2x$ y $Q_x = 2x$, coinciden, luego es conservativo.'
+          - texto: 'Su potencial es $F = x^{2}y$, y en efecto $\nabla F = (2xy,\,x^{2})$.'
+          - texto: 'Para $\vec W$: $P_y = 1$ y $Q_x = 2$, no coinciden.'
+          - texto: 'Luego $\vec W$ no es conservativo, y su integral sí depende del camino.'
+
+          - texto: 'Como $\vec W$ no es conservativo, su integral sobre una curva cerrada no puede calcularse.'
+            trampa: true
+            mensaje: |
+              Sí puede: se calcula parametrizando, o con Green si la curva es
+              cerrada. Lo que pierdes al no ser conservativo es el **atajo** de
+              $F(B)-F(A)$, no la posibilidad de calcularla.
+    resolucion: |
+      **La comprobación es una sola igualdad**, y hay que hacerla antes de
+      decidir cómo se ataca cualquier ejercicio del tema.
+
+      $$
+      \vec V = (P,Q) \text{ es conservativo}
+      \iff
+      \frac{\partial P}{\partial y} = \frac{\partial Q}{\partial x}
+      $$
+
+      **El primero, $\vec V = (2xy,\;x^{2})$:**
+
+      $$
+      P_y = 2x,
+      \qquad
+      Q_x = 2x
+      \qquad\Longrightarrow\qquad
+      \text{coinciden: es conservativo}
+      $$
+
+      Y se puede exhibir el potencial, que es la prueba definitiva:
+      $F(x,y) = x^{2}y$, porque $\nabla F = (2xy,\,x^{2})$. ✓
+
+      **El segundo, $\vec W = (y,\;2x)$:**
+
+      $$
+      P_y = 1,
+      \qquad
+      Q_x = 2
+      \qquad\Longrightarrow\qquad
+      1 \neq 2: \text{ no es conservativo}
+      $$
+
+      **Qué significa la diferencia.** Con $\vec V$, la integral entre dos puntos
+      solo depende de los extremos y sobre cualquier curva cerrada vale cero. Con
+      $\vec W$ hay que parametrizar el camino concreto, y dos caminos distintos
+      entre los mismos puntos pueden dar números distintos.
+
+      > Fíjate en lo poco que se parecen los dos campos y lo mucho que cambia la
+      > estrategia. **Por eso la comprobación va primero y cuesta diez segundos.**
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Del boletín de problemas complementarios del tema 8.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: tres-caminos-mismo-trabajo
+    titulo: Tres curvas, y el atajo que las contesta todas
+    fuente: Ejercicio 8.8 · Problemas complementarios, tema 8 · Cálculo, UPV/EHU (2015/2016 5E)
+    nivel: examen
+    enunciado: |
+      Calcular el valor de
+      $I = \int_C (6xy^{2}-y^{3})\,dx + (6x^{2}y-3xy^{2})\,dy$
+      para cada una de las siguientes curvas $C$:
+
+      a) $C$ es el segmento de recta $AB$, con $A(1,2)$ y $B(3,4)$.
+      b) $C$ es el arco de circunferencia de centro $(2,3)$ que pasa por los
+      puntos $A(1,2)$ y $B(3,4)$.
+      c) $C$ es toda la circunferencia del apartado anterior.
+    pide: El valor de la integral en las tres curvas.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado pide la misma integral sobre tres curvas distintas. ¿Qué
+          sugiere eso antes de calcular nada?
+        opciones:
+          - texto: Que conviene comprobar si el campo es conservativo
+            correcta: true
+            mensaje: |
+              Exacto. Un enunciado con tres caminos entre los mismos puntos casi
+              siempre está pidiendo que descubras que da igual el camino. Y el
+              apartado c) —la curva cerrada— lo confirma.
+          - texto: Que hay que parametrizar las tres y hacer tres integrales
+            mensaje: |
+              Se puede, y el arco de circunferencia sale largo. Pero si el campo
+              es conservativo las tres se contestan de golpe, y eso es lo que el
+              ejercicio evalúa.
+          - texto: Que las tres darán resultados distintos
+            mensaje: |
+              Es lo que se comprueba, no lo que se supone. Y aquí resulta que
+              a) y b) coinciden, precisamente porque el campo es conservativo.
+      - tipo: calcular
+        titulo: La comprobación
+        pregunta: |
+          Con $P = 6xy^{2}-y^{3}$, $\partial P/\partial y = 12xy - 3y^{2}$.
+          ¿Cuánto vale en el punto $(1,2)$?
+        respuesta:
+          tipo: numero
+          valor: '12'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '24'
+            mensaje: |
+              Parece que te has dejado el término $-3y^{2}$, que en $(1,2)$ resta
+              12. $12\cdot 1\cdot 2 = 24$, y $24-12 = 12$.
+          - valor: '0'
+            mensaje: |
+              0 saldría si los dos términos se cancelaran, y no lo hacen aquí:
+              $24 - 12 = 12$.
+        pista: |
+          $12(1)(2) - 3(2)^2 = 24 - 12$.
+        desarrollo: |
+          $$
+          P_y = 12xy-3y^{2}
+          \qquad\Longrightarrow\qquad
+          P_y(1,2) = 24-12 = 12
+          $$
+
+          Y $Q = 6x^{2}y-3xy^{2}$ da $Q_x = 12xy-3y^{2}$, **la misma expresión**.
+          El campo es conservativo.
+      - tipo: calcular
+        titulo: El valor en el punto B
+        pregunta: |
+          El potencial es $F(x,y) = 3x^{2}y^{2}-xy^{3}$. ¿Cuánto vale $F(3,4)$?
+        respuesta:
+          tipo: numero
+          valor: '240'
+          tolerancia: 0.01
+          formato: un número
+        distractores:
+          - valor: '432'
+            mensaje: |
+              432 es solo el primer término, $3\cdot 9\cdot 16$. Falta restarle
+              $xy^{3} = 3\cdot 64 = 192$.
+          - valor: '624'
+            mensaje: |
+              Has sumado los dos términos en vez de restar. El potencial es
+              $3x^{2}y^{2} - xy^{3}$, con signo menos.
+        pista: |
+          $3(9)(16) - 3(64) = 432 - 192$.
+        desarrollo: |
+          $$
+          F(3,4) = 3\cdot 3^{2}\cdot 4^{2} - 3\cdot 4^{3}
+          = 432 - 192 = 240
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta completa. Una pieza es falsa.
+        piezas:
+          - texto: '$P_y = Q_x = 12xy-3y^{2}$, luego el campo es conservativo.'
+          - texto: 'El potencial es $F(x,y)=3x^{2}y^{2}-xy^{3}$, y se comprueba derivando.'
+          - texto: 'a) y b) valen lo mismo, $F(B)-F(A) = 240-4 = 236$, porque la integral no depende del camino.'
+          - texto: 'c) Sobre la circunferencia entera vale 0, porque es una curva cerrada y el campo es conservativo.'
+          - texto: 'c) Sobre la circunferencia entera vale el doble que en el arco, porque se recorre dos veces.'
+            trampa: true
+            mensaje: |
+              Una curva cerrada empieza y acaba en el mismo punto, así que
+              $F(B)-F(A) = F(A)-F(A) = 0$. No se recorre dos veces nada: se da
+              una vuelta y se vuelve al principio.
+    resolucion: |
+      **Los tres apartados son el mismo ejercicio**, y verlo es la mitad de la
+      nota.
+
+      **Paso 1 — ¿es conservativo?**
+
+      $$
+      P = 6xy^{2}-y^{3}
+      \;\Longrightarrow\;
+      P_y = 12xy-3y^{2}
+      $$
+
+      $$
+      Q = 6x^{2}y-3xy^{2}
+      \;\Longrightarrow\;
+      Q_x = 12xy-3y^{2}
+      $$
+
+      Coinciden. **El campo es conservativo**, y con eso los tres apartados se
+      resuelven sin parametrizar ni una curva.
+
+      **Paso 2 — el potencial.** Integrando $P$ respecto de $x$:
+
+      $$
+      F = 3x^{2}y^{2}-xy^{3} + g(y)
+      $$
+
+      Derivando respecto de $y$ e igualando a $Q$:
+
+      $$
+      6x^{2}y-3xy^{2}+g'(y) = 6x^{2}y-3xy^{2}
+      \;\Longrightarrow\;
+      g'(y)=0
+      $$
+
+      Así que $F(x,y) = 3x^{2}y^{2}-xy^{3}$, tomando la constante nula.
+
+      **Paso 3 — los tres apartados.**
+
+      | | curva | valor |
+      |---|---|---|
+      | a) | segmento $AB$ | $F(3,4)-F(1,2) = 240-4 = 236$ |
+      | b) | arco de circunferencia de $A$ a $B$ | **236**, el mismo |
+      | c) | circunferencia entera | **0** |
+
+      **a) y b) coinciden** porque la integral de un campo conservativo solo
+      depende de los extremos, y los dos caminos van de $A$ a $B$.
+
+      **c) vale cero** porque la curva es cerrada: sale y llega al mismo punto,
+      así que $F(A)-F(A)=0$.
+
+      > **Lo que este ejercicio evalúa no es integrar.** Parametrizar el arco de
+      > circunferencia y sustituirlo en ese campo de tercer grado es un cuarto de
+      > hora de cuentas que no hacen falta. Evalúa si compruebas
+      > $P_y = Q_x$ antes de empezar.
+
+  - id: green-en-un-recinto-cerrado
+    titulo: Green, y el trabajo a lo largo de un contorno
+    fuente: Ejercicio 8.9 · Problemas complementarios, tema 8 · Cálculo, UPV/EHU (2014/2015 7E)
+    nivel: examen
+    enunciado: |
+      a) Calcular el trabajo realizado por el campo vectorial
+      $V(x,y) = (3x^{2}+y^{2},\; 2xy)$ desde el punto $A$ hasta el punto $B$ a lo
+      largo de cada una de las trayectorias $C_1$, $C_2$ y $C_3$.
+
+      b) Aplicando el teorema de Green, calcular el trabajo realizado por el
+      campo vectorial $W(x,y) = (x-y^{3},\; x^{3}+y)$ a lo largo del contorno del
+      recinto encerrado por las curvas $C_1$ y $C_3$.
+    pide: El trabajo por los tres caminos, y el del contorno cerrado con Green.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En el apartado b) el enunciado **ordena** usar Green. ¿Qué tres
+          condiciones hay que comprobar antes de aplicarlo?
+        opciones:
+          - texto: Curva cerrada, sentido antihorario, y parciales continuas en toda la región
+            correcta: true
+            mensaje: |
+              Esas tres, y decirlas puntúa en COMP4 aunque el enunciado no las
+              pida explícitamente. La tercera es la que se olvida.
+          - texto: Que el campo sea conservativo
+            mensaje: |
+              Justo al revés: si el campo fuera conservativo la integral sobre
+              una curva cerrada valdría cero y Green sobraría. Green sirve
+              precisamente cuando **no** lo es.
+          - texto: Que la región sea un círculo
+            mensaje: |
+              Green vale para cualquier región razonable con borde cerrado, no
+              solo para círculos.
+      - tipo: calcular
+        titulo: El integrando de Green
+        pregunta: |
+          Para $W = (x-y^{3},\; x^{3}+y)$, ¿cuánto vale
+          $\partial Q/\partial x - \partial P/\partial y$ en el punto $(1,1)$?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              0 saldría si el campo fuera conservativo, y no lo es:
+              $Q_x = 3x^{2}$ y $P_y = -3y^{2}$, que en $(1,1)$ dan $3-(-3)=6$.
+          - valor: '3'
+            mensaje: |
+              Parece que te has quedado solo con $Q_x = 3$. Falta restar
+              $P_y = -3$, y restar un negativo suma.
+        pista: |
+          $Q_x = 3x^2$ y $P_y = -3y^2$. La resta es $3 - (-3)$.
+        desarrollo: |
+          $$
+          Q_x = 3x^{2},
+          \qquad
+          P_y = -3y^{2}
+          $$
+
+          $$
+          Q_x - P_y = 3x^{2}+3y^{2}
+          \qquad\Longrightarrow\qquad
+          \text{en }(1,1):\; 6
+          $$
+
+          Fíjate en lo que ha aparecido: $3(x^{2}+y^{2})$, que en polares es
+          $3\rho^{2}$. **Green ha convertido un problema de curvas en una
+          integral doble que pide polares.**
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento del apartado a). Una pieza es falsa.
+        piezas:
+          - texto: 'Para $V=(3x^{2}+y^{2},\,2xy)$: $P_y = 2y$ y $Q_x = 2y$, coinciden.'
+          - texto: 'Luego $V$ es conservativo y las tres trayectorias dan el mismo trabajo.'
+          - texto: 'Su potencial es $F = x^{3}+xy^{2}$, y basta evaluar $F(B)-F(A)$.'
+          - texto: 'Por eso el apartado a) se contesta una sola vez, no tres.'
+          - texto: 'Y como $V$ es conservativo, también se puede aplicar Green a $V$ para el apartado b).'
+            trampa: true
+            mensaje: |
+              El apartado b) usa **otro campo**, $W$, no $V$. Y ahí está la
+              gracia del ejercicio: el primero es conservativo y el segundo no,
+              y por eso a cada uno le toca una herramienta distinta.
+    resolucion: |
+      **El ejercicio enfrenta los dos atajos**, uno en cada apartado, y con dos
+      campos distintos a propósito.
+
+      **a) El campo $V$ es conservativo.**
+
+      $$
+      P_y = \frac{\partial}{\partial y}(3x^{2}+y^{2}) = 2y,
+      \qquad
+      Q_x = \frac{\partial}{\partial x}(2xy) = 2y
+      $$
+
+      Coinciden, luego existe potencial. Integrando $P$ en $x$:
+
+      $$
+      F = x^{3}+xy^{2}+g(y),
+      \qquad
+      F_y = 2xy + g'(y) = 2xy
+      \;\Longrightarrow\;
+      g'(y)=0
+      $$
+
+      $$
+      F(x,y) = x^{3}+xy^{2}
+      $$
+
+      **Las tres trayectorias dan el mismo trabajo**, $F(B)-F(A)$, y eso es la
+      respuesta completa del apartado. No hay que parametrizar ninguna.
+
+      **b) El campo $W$ no es conservativo**, y por eso toca Green.
+
+      $$
+      Q_x - P_y = 3x^{2} - (-3y^{2}) = 3(x^{2}+y^{2})
+      $$
+
+      $$
+      \oint_C W\cdot d\vec r = \iint_D 3(x^{2}+y^{2})\,dA
+      $$
+
+      Y esa integral doble, con un $x^{2}+y^{2}$ dentro y un recinto limitado por
+      un arco, **pide polares** (tema 7): pasa a $3\rho^{2}$ con jacobiano
+      $\rho$, o sea $3\rho^{3}$.
+
+      > **La lección de los dos apartados juntos.** Ante una integral curvilínea
+      > hay que preguntarse dos cosas en este orden: ¿es conservativo? y ¿está
+      > cerrada la curva? La primera respuesta afirmativa te ahorra el trabajo
+      > entero; la segunda te lo cambia por una integral doble. Solo si las dos
+      > fallan hay que parametrizar.
