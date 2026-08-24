@@ -237,6 +237,84 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   El ejemplo de ejercicio de CLAUDE.md §04 tiene que compilar
+
+   Se añade el 24 de agosto de 2026, después de romperse de verdad y dos
+   veces seguidas. El ejemplo llevaba meses inventado y no acertaba **un
+   solo campo** del esquema: sin `ejercicios:`, sin `tipo` en los pasos, y
+   con `competencia`, `unidad` y `solucion`, que no existen. Al reescribirlo
+   copiándolo del corpus se coló la segunda: un `: ` sin comillas dentro de
+   una pieza, que es la trampa que el propio §17 documenta.
+
+   Por qué merece un guardián y no una nota. La documentación se copia. Un
+   ejemplo que no compila no cuesta un build fallido: enseña que el fichero
+   de reglas miente, y a partir de ahí no se lee ninguna. Y a esto lo va a
+   leer cada vez más alguien que no puede preguntar si el ejemplo va en
+   serio.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const md = leer(join(ROOT, 'CLAUDE.md'));
+  const bloque = md.match(/```yaml\n([\s\S]*?)```/);
+  const problemas = [];
+
+  if (!bloque) {
+    problemas.push('CLAUDE.md §04 ya no tiene un ejemplo de ejercicio en YAML');
+  } else {
+    try {
+      // Las elipsis del ejemplo van en comentario, para que siga siendo YAML.
+      const { load: parse } = await import('js-yaml');
+      const datos = parse(bloque[1]);
+      const e = datos?.ejercicios?.[0];
+      if (!e) throw new Error('el bloque no define ejercicios[0]');
+
+      const exige = (c, m) => c || problemas.push(m);
+      exige(/^[a-z0-9-]+$/.test(e.id ?? ''), 'id: en minúscula, sin acentos');
+      exige((e.titulo ?? '').length >= 5, 'titulo: mínimo 5 caracteres');
+      exige((e.fuente ?? '').length >= 10, 'fuente: mínimo 10 — y §08 exige que diga de dónde sale');
+      exige((e.enunciado ?? '').length >= 10, 'enunciado: mínimo 10');
+      exige((e.pide ?? '').length >= 5, 'pide: mínimo 5');
+      exige((e.pasos ?? []).length >= 2, 'pasos: mínimo 2');
+
+      // Las tres competencias de §09, metidas en el esquema.
+      const tipos = new Set((e.pasos ?? []).map((p) => p.tipo));
+      exige(tipos.has('reconocer'), 'falta un paso `reconocer` (COMP1)');
+      exige(tipos.has('calcular') || tipos.has('verificar'), 'falta un paso `calcular` o `verificar` (COMP2)');
+      exige(tipos.has('justificar'), 'falta un paso `justificar` (COMP4)');
+
+      for (const p of e.pasos ?? []) {
+        if (p.tipo === 'reconocer') {
+          exige((p.opciones ?? []).length >= 3, 'un `reconocer` lleva 3 opciones como mínimo');
+          exige((p.opciones ?? []).filter((o) => o.correcta).length === 1, 'exactamente una opción correcta');
+          exige((p.opciones ?? []).every((o) => (o.mensaje ?? '').trim().length >= 20), 'cada opción explica por qué, en 20 caracteres o más');
+        }
+        if (p.tipo === 'calcular') {
+          exige(['numero', 'complejo', 'conjunto'].includes(p.respuesta?.tipo), 'respuesta.tipo desconocido');
+          exige((p.distractores ?? []).length >= 1, 'sin distractores esto no diagnostica nada');
+          exige(!(p.respuesta?.formato ?? '').includes('$'), 'el formato es texto plano, sin LaTeX');
+          exige((p.pista ?? '').trim().length >= 10, 'pista: mínimo 10');
+          exige((p.desarrollo ?? '').trim().length >= 20, 'desarrollo: mínimo 20');
+          const tol = p.respuesta?.tolerancia ?? 0.001;
+          for (const d of p.distractores ?? []) {
+            const lejos = Math.abs(parseFloat(d.valor) - parseFloat(p.respuesta?.valor)) > tol;
+            exige(lejos, `el distractor ${d.valor} cae dentro de la tolerancia: se daría por bueno`);
+          }
+        }
+        if (p.tipo === 'justificar') {
+          exige((p.piezas ?? []).length >= 3, 'un `justificar` lleva 3 piezas como mínimo');
+          exige((p.piezas ?? []).filter((x) => x.trampa).length === 1, 'exactamente una pieza trampa');
+          exige((p.piezas ?? []).every((x) => !x.trampa || x.mensaje), 'la pieza trampa explica por qué no entra');
+        }
+      }
+    } catch (err) {
+      problemas.push(`el YAML no se puede leer — ${err.message}`);
+    }
+  }
+
+  if (problemas.length === 0) ok('el ejemplo de ejercicio de CLAUDE.md §04 pasa el esquema');
+  else fallo('El ejemplo de CLAUDE.md §04 no compila, y la documentación se copia', problemas.join('\n    '));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Comprobaciones sobre el sitio construido
    ═══════════════════════════════════════════════════════════════════ */
 if (SOLO_FUENTE) {

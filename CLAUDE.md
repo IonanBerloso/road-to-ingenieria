@@ -63,46 +63,87 @@ Con tres límites estrictos:
 - **Cada dependencia nueva se justifica en el commit.** Esto lo mantiene una
   persona durante años.
 
-Dependencias previstas y suficientes: `astro`, `@astrojs/mdx`, `remark-math`,
-`rehype-katex`, `@fontsource-variable/fraunces`, `@fontsource/ibm-plex-sans`,
-`@fontsource/ibm-plex-mono`, `vitest`.
+Las dependencias, todas, y por qué está cada una:
+
+| paquete | para qué | quién la exige |
+|---|---|---|
+| `astro` · `@astrojs/mdx` | el sitio y la prosa | §02 |
+| `remark-math` · `rehype-katex` · `katex` | las fórmulas, dibujadas en el build | §07 |
+| `@fontsource-variable/fraunces` · `@fontsource/ibm-plex-sans` · `@fontsource/ibm-plex-mono` | las tres familias, autoalojadas | §06 |
+| `vitest` | los tests | §11 |
+| `playwright` (solo desarrollo) | `humo.mjs`, y ver lo que se dibuja | §11, §16 |
+| `js-yaml` (solo desarrollo) | que el ejemplo de §04 compile de verdad | §11 |
+
+Y nada más. Si `npm ls --depth=0` devuelve algo que no está en esta tabla, o
+sobra el paquete o falta la fila: las dos cosas son un fallo.
+
+> Esta lista decía «dependencias previstas y suficientes» y se quedó sin
+> actualizar dos veces. Faltaban `katex` —que §07 nombra tres veces y llegó
+> como dependencia directa al fijar la versión única— y `playwright`, del que
+> depende la mitad del suelo de calidad. Una lista de dependencias que no es la
+> lista de dependencias incumple §10 dentro del propio fichero de reglas.
 
 ---
 
 ## 03 // Estructura
 
+Esto es el repositorio tal como está, no como se planeó. Si al leerlo no
+coincide con lo que ves, **manda lo que ves** y se corrige aquí.
+
 ```
 src/
-  content.config.ts        colecciones con esquema Zod
+  content.config.ts        colecciones con esquema Zod. El fichero más
+                           importante del repo: es donde un dato malo
+                           rompe el build en vez de llegar a un alumno.
   content/
-    catalogo/              una entrada por asignatura
+    catalogo/              una entrada .json por asignatura (las nueve)
     calculo/
       t01-complejos/
         index.mdx          la prosa del tema
         ejercicios.yaml    los ejercicios como DATOS
-    fluidos/
-      t09-bombeo/
+      examenes/
+        2024-2025-1ev/     examen.yaml (reparto) + ejercicios.yaml
+    fluidos/               todavía solo un README
     preparar/              una ruta de estudio por evaluación (§14).
                            Solo YAML: no enseña nada nuevo, ordena lo que
                            ya está y dice por qué en ese orden.
   components/
-    patrones/              Lectura · FiguraFija · EjercicioGuiado
-                           Verificador · Demostracion
-    sim/                   simuladores concretos por tema
-    ui/                    cabecera, paleta de comandos, cajas
+    patrones/              Lectura · EjercicioGuiado · ErrorTipico
+    sim/                   PlanoComplejo — simuladores concretos por tema
+    ui/                    Cabecera · Tema · Examen · Reparto
   layouts/
     Base.astro             el ÚNICO layout
+  lib/                     markdown.mjs (el procesador, §07) · rutas.ts
+                           complejo.ts y regiones.ts (lectores de respuesta)
   styles/
     tokens.css             el ÚNICO :root del repositorio
-    base.css
-    print.css
-  pages/
+    base.css · print.css
+  pages/                   index + [asignatura]/[tema] · examenes · preparar
 scripts/
-  verify.mjs               el suelo de calidad, en CI
+  verify.mjs               lee el HTML publicado (§11)
+  humo.mjs                 lo abre en Chromium (§11)
+  check-color.mjs          contraste y daltonismo
+  leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
+  diario.mjs               el diario en PDF
 tests/
-  fisica/                  casos con resultado conocido
+  *.test.ts                los lectores de respuesta, con vitest
+  fisica/                  casos con resultado conocido — VACÍO todavía:
+                           no hay simulador de física que lo pida (§10)
+public/
+  examenes/calculo/        los 33 enunciados originales en PDF. La ÚNICA
+                           carpeta del repo donde entra un PDF ajeno (§08)
+docs/ · tasks/ · referencia/ · diario/
 CLAUDE.md
 ```
+
+**De los cinco patrones de §05, solo tres son un componente**, y no es un
+descuido: ve a §05, que explica dónde vive cada uno.
+
+> El árbol de arriba prometía `FiguraFija`, `Verificador` y `Demostracion`
+> como ficheros, y no existían. Dos de los tres no faltan —viven dentro de
+> `EjercicioGuiado`—, pero el árbol no lo decía y §05 tampoco. Corregido el 24
+> de agosto de 2026, al preparar este fichero para que lo ejecute alguien que
+> no puede preguntar.
 
 Toda página nace de un patrón de `components/patrones/`. **Nunca copiando otra
 página existente**: así es como se propagan las variantes.
@@ -128,6 +169,10 @@ tres. **Un tema no se programa: se rellena.**
 
 Un tema nuevo son dos ficheros:
 
+Los dos ejemplos de abajo están **copiados del repositorio**, no escritos para
+la ocasión. Si los copias, compilan. La autoridad sobre el formato es siempre
+`content.config.ts`, que además lleva comentado el motivo de cada regla rara.
+
 **`index.mdx`** — la prosa, con componentes incrustados donde hagan falta:
 
 ```mdx
@@ -137,39 +182,119 @@ tema: 1
 titulo: Números complejos
 descripcion: Forma binómica y polar, De Moivre, raíces
 peso: 8
-patron: figura-fija
+patron: lectura
 ---
 
 Un número complejo no tiene nada de imaginario...
 
-<Verificador tipo="regiones" preset="1.20" />
-
-<ErrorTipico titulo="Error típico">
-Calcular el argumento con `arctan(b/a)` a secas...
+<ErrorTipico titulo="El argumento con arctan a secas">
+`arctan(1)` vale π/4 tanto si vienes del primer cuadrante como del tercero...
 </ErrorTipico>
 ```
 
-**`ejercicios.yaml`** — los ejercicios como datos, nunca como código:
+**`ejercicios.yaml`** — los ejercicios como datos, nunca como código. Un
+ejercicio tiene cabecera y una lista de `pasos`, y **cada paso declara su
+`tipo`**:
 
 ```yaml
-- id: bombeo-2025
-  fuente: Extraordinario junio 2025 · Ejercicio 2
-  pasos:
-    - titulo: Altura estática de la instalación
-      competencia: COMP2
-      pregunta: ¿Cuánto vale H_est?
-      unidad: mca
-      solucion: 7
-      tolerancia: 0.3
-      distractores:
-        - valor: -13
-          mensaje: Has hecho solo z₂ − z₁. Falta la contrapresión...
-        - valor: 33
-          mensaje: Has sumado los 13 m en vez de restarlos...
-      pista: H_est = (z₂ − z₁) + p/γ
-      desarrollo: |
-        H_est = (17 − 30) + 1,96·10⁵ / 9800 = 7 mca
+ejercicios:
+  - id: ej-punto-critico-clasificado
+    titulo: Un punto crítico, y decidir qué es
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo          # ejemplo | practica | examen
+    enunciado: |
+      Para $f(x) = x^{3} - 3x$, encontrar sus puntos críticos y clasificarlos.
+    pide: Los puntos donde la derivada se anula y qué es cada uno.
+    pasos:
+      - tipo: reconocer     # COMP1 — antes de calcular nada
+        pregunta: |
+          Si $f'(c) = 0$, ¿qué se puede afirmar del punto $c$?
+        opciones:
+          - texto: Que es candidato a extremo, pero hay que decidirlo aparte
+            correcta: true
+            mensaje: |
+              Eso es. Fermat dice «extremo implica derivada nula», y el
+              recíproco es falso.
+          - texto: Que hay un máximo o un mínimo
+            mensaje: |
+              No necesariamente. En $f(x) = x^{3}$ la derivada se anula en el
+              origen y ahí no hay ni máximo ni mínimo.
+          - texto: Que la función vale cero en $c$
+            mensaje: |
+              Eso sería $f(c) = 0$, otra cosa. Aquí lo que se anula es la
+              **derivada**: la tangente es horizontal.
+
+      - tipo: calcular      # COMP2
+        titulo: El punto crítico positivo
+        pregunta: |
+          Resolviendo $f'(x) = 3x^{2} - 3 = 0$, ¿cuál es la solución positiva?
+        respuesta:
+          tipo: numero      # numero | complejo | conjunto
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número       # texto plano, sin LaTeX
+        distractores:               # al menos uno, y son errores REALES
+          - valor: '1.7320508'
+            mensaje: |
+              Has sacado la raíz de 3. Divide primero entre 3 los dos lados.
+        pista: |
+          $3x^{2} = 3$, así que $x^{2} = 1$.
+        desarrollo: |
+          $$ f'(x) = 3x^{2}-3 = 0 \;\Longrightarrow\; x = \pm 1 $$
+
+      - tipo: justificar    # COMP4 — ordenar el argumento
+        pregunta: Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: $f''(x) = 6x$, y $f''(1) > 0$, luego en $x=1$ hay un mínimo.
+          # ojo al `: ` de dentro — obliga a comillas o rompe el YAML (§17)
+          - texto: 'Son extremos **relativos**: la función no está acotada.'
+          - texto: Como la derivada se anula en dos puntos, los dos son mínimos.
+            trampa: true            # exactamente una por paso
+            mensaje: |
+              Anularse no dice de qué tipo es. Lo decide el signo de $f''$.
+    resolucion: |
+      **Los candidatos.** Se buscan donde la derivada se anula...
+      # …recortado aquí: el esquema exige 100 caracteres como mínimo.
 ```
+
+**Tres reglas que el esquema impone y que no se ven leyendo el ejemplo.** Todo
+ejercicio necesita, sí o sí:
+
+- un paso **`reconocer`** — COMP1 antes de tocar números,
+- un paso **`calcular`** o **`verificar`** — COMP2,
+- un paso **`justificar`** — COMP4.
+
+No es burocracia: es §09 metida en el esquema. Un ejercicio que solo comprueba
+un número entrena la parte que menos se falla, y el build lo rechaza por eso.
+
+Y los mínimos, que se olvidan: `fuente` ≥ 10 caracteres, `enunciado` ≥ 10,
+`resolucion` ≥ 100, al menos 2 pasos, al menos 3 `opciones` en un `reconocer`
+con `mensaje` ≥ 20 en cada una, al menos 1 distractor en un `calcular` y
+exactamente 1 pieza `trampa` en un `justificar`.
+
+Los cinco tipos de paso, y qué competencia entrena cada uno:
+
+| `tipo` | qué hace | competencia | usos en el corpus |
+|---|---|---|---|
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 272 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 458 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 270 |
+| `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 21 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
+
+`redactar` se ha usado **una vez de 1.022 pasos**. Está construido y razonado
+en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
+pide, no porque esté en la tabla.
+
+> Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
+> MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
+> `<Verificador>` que no existe. El de YAML no acertaba **un solo campo**: le
+> faltaba el envoltorio `ejercicios:`, ponía `competencia` y `unidad` y
+> `solucion` en el paso —tres campos que el esquema no tiene— y omitía `tipo`,
+> que es lo primero que se lee. Un ejemplo de documentación que no compila es
+> peor que no tener ejemplo: se copia, falla, y enseña que el fichero miente.
+> Corregido el 24 de agosto de 2026 copiando del corpus. **Regla nueva: los
+> ejemplos de este fichero se copian del repositorio, nunca se escriben aquí.**
 
 **El componente `EjercicioGuiado` es genérico y se escribe una sola vez.** Lee
 el YAML y monta la interacción. Si para añadir un ejercicio hay que tocar
@@ -193,6 +318,27 @@ existe**. Todo lo demás es prosa y datos.
 
 Todo el contenido cae en uno de estos cinco. Si algo no encaja, es señal de que
 hay que pensarlo mejor, no de que haga falta un sexto.
+
+**Un patrón no es un fichero.** Es una forma de presentar contenido, y tres de
+los cinco viven dentro de `EjercicioGuiado` como tipos de paso en vez de como
+componente propio. Eso no es deuda: es §13 funcionando —el framework se destila
+del contenido— y por eso la tabla va aquí antes que los patrones:
+
+| patrón | dónde vive de verdad | usos |
+|---|---|---|
+| **1 · Lectura** | `patrones/Lectura.astro` | los 5 temas |
+| **2 · Figura fija** | **no construido** | 0 |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 270 ejercicios |
+| **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 21 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 270 |
+| (*simulador*) | `sim/`, cuando el tema lo pide | 1 |
+
+Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
+ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
+antes, porque un patrón diseñado en el vacío sale mal (§13).
+
+Y el `simulador` del esquema no es un sexto patrón: es la puerta que §04 deja
+abierta para escribir código cuando un tema necesita algo que no existe.
 
 **1 · Lectura.** Texto con una herramienta incrustada. Para contenido que se
 sostiene solo y la figura apoya.
@@ -527,8 +673,47 @@ barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 
 
 ## 13 // Cómo trabajar aquí
 
-- **Plan Mode primero.** Escribe `tasks/todo.md`, espera visto bueno, y solo
-  entonces crea ficheros.
+- **Plan primero.** Escribe `tasks/todo.md` antes de crear ficheros. Si hay
+  alguien a quien preguntar, espera el visto bueno; si no lo hay, lee el
+  apartado siguiente.
+
+### Cuando no hay nadie a quien preguntar
+
+Este fichero se escribió suponiendo una conversación. Cada vez más no la hay:
+se entrega el objetivo y el repositorio, y se ejecuta solo. Entonces la
+pregunta «¿pregunto o sigo?» no se puede dejar al criterio del momento.
+
+**Decide tú, sin preguntar, y déjalo escrito en el commit:** cómo se ordena un
+bloque, qué ejercicio va primero, cómo se redacta un distractor, qué figura
+hace falta, cómo se llama un apartado, si un ejercicio necesita un ejemplo
+delante. Todo eso es trabajo, no política. Equivocarse ahí es barato: se ve al
+mirar el resultado y se cambia.
+
+**Para y pregunta —o si no puedes, PARA y escríbelo en `falta[]` o en
+`tasks/todo.md` en vez de resolverlo— solo en estos cinco casos:**
+
+1. **No tienes el dato y lo ibas a estimar.** Un porcentaje, un recuento de
+   convocatorias, un peso. §10: se publica medido o no se publica. Un número
+   inventado con dos decimales es la mentira más creíble que puede producir
+   este proyecto.
+2. **Ibas a escribir un enunciado que no has leído.** §08. Si el PDF no está o
+   no se lee, el ejercicio no existe todavía. **Inventarlo es el peor fallo
+   posible aquí** y es también el más cómodo: sale plausible, encaja, y nadie
+   lo nota hasta que un alumno compara con el boletín y el sitio pierde toda
+   su credibilidad de golpe.
+3. **Una regla de este fichero te estorba.** No la ignores «solo por esta vez»
+   —§13 último punto—. Anótala como conflicto y sigue por otro lado.
+4. **Ibas a tocar la capa compartida para arreglar un caso.** `tokens.css`,
+   `Base.astro`, `markdown.mjs`, `content.config.ts`. Un cambio ahí afecta a
+   todo; si el motivo es un solo contenido, el fallo está en el contenido.
+5. **Un hecho del mundo que el repositorio no contiene.** Si en el examen se
+   puede usar calculadora, cuántas convocatorias hay al año, si un profesor
+   reparte formulario. Se pregunta o se anota como supuesto **declarado**,
+   nunca como hecho.
+
+La asimetría es a propósito: **decidir de más es recuperable, publicar un dato
+falso no.** Un sitio con el orden de los bloques mal se arregla en una tarde;
+un sitio con un enunciado inventado hay que auditarlo entero.
 - **El framework se destila del contenido, nunca al revés.** Los dos primeros
   temas de cada asignatura se escriben completos antes de extraer ninguna
   abstracción. El patrón «verificador» apareció así: construyendo contenido
@@ -659,3 +844,139 @@ hacer alguien que acaba de leer la teoría, falta un ejemplo delante.**
   información; un hueco escondido es una promesa incumplida.
 - Los porcentajes se calculan, nunca se declaran.
 - `npm run suelo` en verde, con la ruta entre las páginas que `humo.mjs` abre.
+
+---
+
+## 15 // Una asignatura está terminada cuando
+
+§04 dice cuándo está terminado un tema y §14 cuándo lo está una ruta. Falta el
+nivel de arriba, que es el que se entrega.
+
+- **Los temas del catálogo son el temario oficial**, no una lista plausible.
+  Con su fuente. Si no la tienes, el catálogo dice `prev` y no finge.
+- **Todas las convocatorias publicadas están transcritas**, con su reparto por
+  competencia y su PDF original en `public/examenes/<asignatura>/`.
+- **Una ruta por evaluación**, cumpliendo §14 entera.
+- **Todo tema que una ruta enlaza tiene prosa**, no solo ejercicios. Enlazar a
+  un tema vacío es la forma más silenciosa de romper una ruta.
+- **Cada tema tiene al menos un ejemplo introductorio propio** (§08) y al menos
+  una figura que responde a una pregunta (§13).
+- **`tests/fisica/` tiene un caso por simulador**, si hay simuladores (§10).
+- **`falta[]` dice lo que no está.** Una asignatura terminada con huecos
+  declarados es un producto honesto; una sin huecos declarados es sospechosa.
+- `npm run suelo` en verde con todas sus páginas dentro.
+
+### Cuánto es «una asignatura», medido
+
+Cálculo es la referencia. Cinco temas dan **12.644 palabras de prosa, 127
+ejercicios de tema, 33 exámenes con 143 ejercicios, 56 escalones en 3 rutas y
+16 figuras.** Sirve para dimensionar, no como cuota: un tema que necesita
+ocho figuras lleva ocho.
+
+---
+
+## 16 // Cómo se comprueba lo que acabas de hacer
+
+La sección que más rinde de este fichero, y la última en escribirse.
+
+El suelo de calidad (§11) demuestra que el sitio **no está roto**. No demuestra
+que esté **bien**. La diferencia se midió en la tanda del 23 de agosto de 2026,
+cinco fallos reales:
+
+| lo que se rompió | ¿lo cazó un guardián? |
+|---|---|
+| distractores demasiado juntos, y uno dentro de la tolerancia | **sí**, el esquema |
+| **58 enlaces de teoría rotos** | no — build verde, `verify.mjs` verde |
+| una curva subiendo con la etiqueta «$f' < 0$» | no |
+| etiquetas cortadas en cuatro figuras | no |
+| un párrafo reescrito dos veces sobre sí mismo | no |
+
+**Cuatro de cinco.** El build en verde no es una comprobación: es la ausencia
+de una. Así que después de construir, y antes de dar nada por hecho:
+
+1. **Míralo.** Levanta `npm run dev` y abre la página. Si has dibujado una
+   figura, **haz una captura y ábrela**: en claro, en oscuro y a 360 px. Una
+   etiqueta cortada o una curva con el signo cambiado no las ve ningún
+   guardián, y las dos han pasado. `scripts/leer-grafica.mjs` ayuda cuando no
+   puedes mirar, pero no sustituye a mirar.
+2. **Pulsa lo que has enlazado.** No compruebes que el `href` existe:
+   comprueba que **llega**. Los 58 enlaces rotos tenían destino válido y
+   apuntaban a un elemento oculto, así que el navegador no se movía.
+3. **Relee lo que acabas de escribir**, sobre todo si lo has generado con una
+   sustitución. El párrafo duplicado decía «en forma exacta o en forma exacta
+   o con cuatro decimales» y venía de una regla que casó dentro de su propio
+   resultado.
+4. **Cuenta antes y después.** Al reorganizar contenido, compara los conjuntos
+   de `id` contra `git show HEAD:<fichero>`. Es la única forma de saber que no
+   has perdido un ejercicio por el camino; se hizo en las tres rutas y por eso
+   se sabe que no se perdió ninguno.
+5. **Prueba una respuesta equivocada.** Un ejercicio nuevo no está probado
+   hasta que has escrito el error y has visto salir **su** diagnóstico. Que
+   acepte la buena no dice nada: los distractores son la mitad del producto.
+6. **Y solo entonces** `npm run suelo`.
+
+> Si no puedes hacer el punto 1 —sin navegador, sin capturas—, dilo en el
+> commit. Un contenido visual sin mirar no es contenido terminado, es contenido
+> propuesto, y hay que decirlo con esa palabra.
+
+---
+
+## 17 // Trampas conocidas
+
+Cosas que ya han costado horas. No son opiniones.
+
+- **No escribas LaTeX a través del shell.** Ni heredocs, ni `node -e`, ni
+  `sed`. Las barras se comen: `\\frac` llega como `\frac`, y `\f` se convierte
+  en un carácter de avance de página **invisible** que rompe el YAML y no se
+  ve al leer el fichero. Usa las herramientas de edición de ficheros. Pasó tres
+  veces en un día.
+- **Un `: ` sin comillas dentro de un valor YAML rompe el fichero**, y el error
+  que da apunta a otra línea. Ojo con los apóstrofos de `f'`, que confunden a
+  cualquier comprobador hecho con `grep`.
+- **`dist/` abierto con `file://` no tiene CSS.** Las variables salen vacías y
+  parece que los SVG no se dibujan. Levanta un servidor.
+- **Los ids de encabezado se generan por `render()`, no por documento.** Astro
+  instancia el slugger en cada llamada, así que dos resoluciones con un `##
+  Resultado` producen dos `id="resultado"` en la misma página. Se prefijan en
+  `mate()`; si añades una salida de Markdown nueva, pásale su prefijo.
+- **En modo guiado, un enlace a un apartado que no es el visible no navega.**
+  El destino existe pero está oculto. Lo resuelve `abreElAncla()` en
+  `Lectura.astro`; si escribes otro componente con secciones, tenlo en cuenta.
+- **El esquema no tiene `unidad`.** Cálculo nunca la necesitó. Fluidos la
+  necesita en su primer ejercicio, y el ejemplo de §04 de este fichero la usó
+  durante meses sin que existiera. Añadirla es tocar la capa compartida: se
+  hace una vez, bien, cuando entre la primera asignatura con unidades — no con
+  un apaño en el contenido.
+
+---
+
+## 18 // Las decisiones que ya se dieron la vuelta
+
+Siete reglas de este proyecto se escribieron con total confianza y estaban mal.
+Van juntas aquí porque el patrón solo se ve cuando se miran a la vez; cada una
+está razonada en su sección.
+
+| § | decía | dice ahora | qué costó averiguarlo |
+|---|---|---|---|
+| 08 | reescribir los enunciados y cambiar los números | **verbatim, sin tocar un dígito** | el alumno no puede contrastar con el boletín |
+| 08 | prohibido meter exámenes en PDF | **entran los oficiales**, son la fuente | una resolución sin su enunciado pide un acto de fe |
+| 08 | nada de material propio | **ejemplos introductorios, marcados en el dato** | medir el corpus: no había por dónde entrar |
+| 07 | MathML puro, que es nativo | **KaTeX dibujado en el build** | la fórmula salía distinta en cada ordenador |
+| 09 | «entre el 30 y el 40 %» no es cálculo | **49,5 %**, contado sobre 1.440 puntos | la estimación se quedaba diez puntos corta |
+| 14 | un bloque es una lista de material | **el escalón**, con su escalera | «con eso no hacemos que nadie aprenda nada» |
+| 09 | (no se contemplaba) | **en el examen no hay calculadora** | lo dijo el alumno; 128 respuestas a revisar |
+
+**Lo que tienen en común.** Ninguna era un descuido. Las siete optimizaban algo
+razonable —evitar problemas de derechos, usar el estándar nativo, ser breve, no
+duplicar— y en las siete el coste lo pagaba el alumno en un sitio donde no se
+veía desde dentro del fichero.
+
+De las siete, **dos salieron de medir** y cinco de mirar el resultado o de
+saber algo del mundo que no está en el repositorio. Por eso §16 existe, y por
+eso §13 manda declarar los supuestos en vez de resolverlos.
+
+La regla que se saca, y es la más difícil de aplicar sobre uno mismo:
+
+> Cuando una decisión te parezca obviamente correcta y puedas argumentarla bien,
+> comprueba **a quién le sale gratis**. Si la comodidad es tuya y el coste es
+> del alumno, es una de estas siete con otra cara.
