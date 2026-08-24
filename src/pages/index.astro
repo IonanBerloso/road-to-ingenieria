@@ -16,7 +16,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { ruta } from '../lib/rutas';
-import { SUFIJO_CONV } from '../content.config';
+import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV } from '../content.config';
 
 const asignaturas = (await getCollection('catalogo')).sort(
   (a, b) => a.data.curso - b.data.curso || a.data.orden - b.data.orden,
@@ -40,24 +40,9 @@ const hechos = (a: (typeof asignaturas)[number]) => a.data.temas.filter((t) => t
 /** Los exámenes de cada asignatura, del más reciente al más antiguo. El panel
  *  solo se dibuja donde hay alguno: una caja vacía prometiendo exámenes es
  *  peor que no tenerla. */
-const ORDEN_CONV = [
-  'primera',
-  'segunda',
-  'tercera',
-  'cuarta',
-  'quinta',
-  'ordinaria',
-  'extraordinaria',
-];
-const ABREV_CONV: Record<string, string> = {
-  primera: '1.ª ev.',
-  segunda: '2.ª ev.',
-  tercera: '3.ª ev.',
-  cuarta: '4.ª ev.',
-  quinta: '5.ª ev.',
-  ordinaria: 'ordinaria',
-  extraordinaria: 'extraord.',
-};
+const ABREV_CONV: Record<string, string> = Object.fromEntries(
+  Object.entries(CONVOCATORIAS).map(([k, v]) => [k, v.corta]),
+);
 
 const examenesPorAsignatura = new Map<
   string,

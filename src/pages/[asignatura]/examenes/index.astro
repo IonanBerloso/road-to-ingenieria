@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
-import { SUFIJO_CONV } from '../../../content.config';
+import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV } from '../../../content.config';
 
 /**
  * El índice de exámenes de una asignatura. Solo existe si esa asignatura tiene
@@ -16,16 +16,6 @@ export async function getStaticPaths() {
      latente desde que la ruta pasó a ser curso + convocatoria: mientras no
      hubo dos exámenes del mismo curso, este segundo criterio de orden no
      llegaba a evaluarse nunca. */
-  const ORDEN_CONV = [
-    'primera',
-    'segunda',
-    'tercera',
-    'cuarta',
-    'quinta',
-    'ordinaria',
-    'extraordinaria',
-  ];
-
   const examenes = await getCollection('examen');
   const catalogo = await getCollection('catalogo');
   const rutas = await getCollection('preparar');
@@ -73,15 +63,11 @@ export async function getStaticPaths() {
 const { asignatura, lista, rutas } = Astro.props;
 const crumb = `${asignatura.data.nombre} · exámenes`;
 
-const NOMBRE_CONV: Record<string, string> = {
-  primera: 'Primera evaluación',
-  segunda: 'Segunda evaluación',
-  tercera: 'Tercera evaluación',
-  cuarta: 'Cuarta evaluación',
-  quinta: 'Quinta evaluación',
-  ordinaria: 'Convocatoria ordinaria',
-  extraordinaria: 'Convocatoria extraordinaria',
-};
+/* Los nombres salen de CONVOCATORIAS, en minúscula; aquí encabezan un grupo,
+   así que se capitaliza la primera letra al pintarlos. */
+const NOMBRE_CONV: Record<string, string> = Object.fromEntries(
+  Object.entries(CONVOCATORIAS).map(([k, v]) => [k, v.larga[0].toUpperCase() + v.larga.slice(1)]),
+);
 
 /** Qué temas entran en cada evaluación y cuánto pesa en la nota final.
  *

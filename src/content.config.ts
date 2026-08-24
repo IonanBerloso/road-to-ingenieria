@@ -373,20 +373,41 @@ const ejercicio = z
     message: 'falta el paso de COMP4, que vale entre 2 y 9 puntos (§09)',
   });
 
-/** Las cinco evaluaciones del curso más las dos convocatorias oficiales. Los
- *  nombres son los que imprime la propia cabecera del examen.
+/** Las convocatorias del curso, **en orden**, con todo lo que hay que saber de
+ *  cada una: el trozo de URL que la identifica, cómo se abrevia en la portada
+ *  y cómo se nombra en una frase.
  *
- *  Se declara una sola vez: lo usan `examen` y `preparar`, y dos listas de los
- *  mismos siete valores serían la misma duplicación que dos `:root{}` (§01). */
-const convocatoria = z.enum([
-  'primera',
-  'segunda',
-  'tercera',
-  'cuarta',
-  'quinta',
-  'ordinaria',
-  'extraordinaria',
-]);
+ *  Una sola tabla, y las páginas leen de ella. Hasta el 25 de agosto de 2026
+ *  esto vivía repartido en **seis listas dentro de cuatro ficheros** —el enum,
+ *  `SUFIJO_CONV`, dos órdenes y tres juegos de etiquetas—, así que añadir una
+ *  convocatoria era editar seis sitios y olvidarse de alguno. Es la Regla 0
+ *  con otra cara: la lista duplicada de siempre.
+ *
+ *  Los nombres son los que imprime la propia cabecera del examen. `recuperacion`
+ *  entra aquí el 25 de agosto de 2026, al transcribir los cuadernillos de la
+ *  cuarta evaluación: hasta 2020-2021 llevan dentro un segundo examen marcado
+ *  «PRIMER CUATRIMESTRAL (sólo para alumnos con el primer cuatrimestral
+ *  suspendido)», que es de los temas 1–5 y no de los 6 y 7. Va antes de
+ *  `cuarta` porque cuando tiene fecha propia es anterior: en 2017-2018, el 12
+ *  de febrero frente al 12 de marzo.
+ *
+ *  El nombre largo va en minúscula: quien lo pinta como título lo capitaliza,
+ *  y así no hacen falta dos columnas que digan lo mismo. */
+export const CONVOCATORIAS = {
+  primera: { url: '1ev', corta: '1.ª ev.', larga: 'primera evaluación' },
+  segunda: { url: '2ev', corta: '2.ª ev.', larga: 'segunda evaluación' },
+  tercera: { url: '3ev', corta: '3.ª ev.', larga: 'tercera evaluación' },
+  recuperacion: { url: 'rec', corta: 'recup.', larga: 'recuperación del primer cuatrimestre' },
+  cuarta: { url: '4ev', corta: '4.ª ev.', larga: 'cuarta evaluación' },
+  quinta: { url: '5ev', corta: '5.ª ev.', larga: 'quinta evaluación' },
+  ordinaria: { url: 'ord', corta: 'ordinaria', larga: 'convocatoria ordinaria' },
+  extraordinaria: { url: 'ext', corta: 'extraord.', larga: 'convocatoria extraordinaria' },
+} as const;
+
+/** Las claves de la tabla, en su orden. Es el orden en que se listan. */
+export const ORDEN_CONV = Object.keys(CONVOCATORIAS) as (keyof typeof CONVOCATORIAS)[];
+
+const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
 
 /** Un `ejercicios.yaml` por tema, junto a su `index.mdx`.
  *  El nivel superior es un objeto y no una lista porque el cargador de Astro
@@ -465,15 +486,9 @@ const examen = defineCollection({
  *
  *  Vive aquí y no en la página porque la carpeta del examen **es** la URL, y
  *  la comprobación de que las dos cosas casan se hace al generar la ruta. */
-export const SUFIJO_CONV: Record<string, string> = {
-  primera: '1ev',
-  segunda: '2ev',
-  tercera: '3ev',
-  cuarta: '4ev',
-  quinta: '5ev',
-  ordinaria: 'ord',
-  extraordinaria: 'ext',
-};
+export const SUFIJO_CONV: Record<string, string> = Object.fromEntries(
+  Object.entries(CONVOCATORIAS).map(([k, v]) => [k, v.url]),
+);
 
 /* ═══════════════════════════════════════════════════════════════════════
    Rutas de estudio
