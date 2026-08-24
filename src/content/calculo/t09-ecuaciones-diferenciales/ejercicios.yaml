@@ -1,0 +1,485 @@
+ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 9. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-separable-basica
+    titulo: La primera EDO, separando variables
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Resolver la ecuación diferencial $y' = 2xy$ con la condición inicial
+      $y(0)=5$.
+    pide: La solución particular que cumple la condición inicial.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué tipo de EDO es $y' = 2xy$?
+        opciones:
+          - texto: Separable, porque se pueden juntar las y a un lado y las x al otro
+            correcta: true
+            mensaje: |
+              Sí. Escribiendo $dy/y = 2x\,dx$ cada lado tiene una sola variable,
+              y eso es todo lo que se necesita.
+          - texto: Lineal de la forma y' + p(x)y = q(x)
+            mensaje: |
+              También lo es, con $p=-2x$ y $q=0$ — pero el árbol se recorre de
+              arriba abajo y **separable va antes**, porque es más barata. Las
+              dos dan lo mismo; una cuesta la mitad.
+          - texto: De segundo orden
+            mensaje: |
+              Solo aparece $y'$, la primera derivada. El orden de una EDO es el
+              de la derivada más alta que contiene.
+      - tipo: calcular
+        titulo: La constante de la condición inicial
+        pregunta: |
+          La solución general es $y = Ke^{x^{2}}$. Con $y(0)=5$, ¿cuánto vale $K$?
+        respuesta:
+          tipo: numero
+          valor: '5'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Parece que has despejado como si $y(0)$ valiera 1. La condición
+              dice $y(0)=5$, y como $e^{0}=1$, sale $K = 5$.
+          - valor: '0'
+            mensaje: |
+              Con $K=0$ la solución sería la función nula, que no cumple
+              $y(0)=5$. Sustituye $x=0$ en $Ke^{x^{2}}$ y verás que queda $K$.
+        pista: |
+          Sustituye x=0. Como $e^{0}=1$, queda $y(0) = K$.
+        desarrollo: |
+          $$
+          y(0) = Ke^{0} = K = 5
+          \qquad\Longrightarrow\qquad
+          y = 5e^{x^{2}}
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'Se separan las variables: $\frac{dy}{y} = 2x\,dx$.'
+          - texto: 'Integrando los dos lados: $\ln|y| = x^{2} + C$.'
+          - texto: 'Despejando, $y = Ke^{x^{2}}$, donde $K = e^{C}$ es una constante nueva.'
+          - texto: 'Con $y(0)=5$ sale $K=5$, luego $y = 5e^{x^{2}}$.'
+          - texto: 'Despejando de $\ln|y| = x^{2}+C$ sale $y = e^{x^{2}} + C$.'
+            trampa: true
+            mensaje: |
+              La constante estaba **dentro** del logaritmo, así que al aplicar la
+              exponencial se convierte en un **factor**, no en un sumando:
+              $e^{x^{2}+C} = e^{C}e^{x^{2}}$. Escribirla sumando da una función
+              completamente distinta que ni siquiera resuelve la EDO.
+    resolucion: |
+      **Clasificar primero.** Es separable, que es la casilla más barata del
+      árbol.
+
+      **Separar:**
+
+      $$
+      \frac{dy}{dx} = 2xy
+      \qquad\Longrightarrow\qquad
+      \frac{dy}{y} = 2x\,dx
+      $$
+
+      **Integrar los dos lados:**
+
+      $$
+      \ln|y| = x^{2} + C
+      $$
+
+      **Despejar**, y aquí está el paso que se falla. Aplicando la exponencial a
+      los dos lados:
+
+      $$
+      |y| = e^{x^{2}+C} = e^{C}\,e^{x^{2}}
+      \qquad\Longrightarrow\qquad
+      y = K e^{x^{2}}
+      $$
+
+      La constante **multiplica**, no suma, porque venía de dentro del logaritmo.
+
+      **La condición inicial:** $y(0) = K = 5$, así que
+
+      $$
+      \boxed{\;y = 5e^{x^{2}}\;}
+      $$
+
+      **La comprobación**, que cuesta diez segundos y conviene hacer siempre:
+      derivando, $y' = 5\cdot 2x\,e^{x^{2}} = 2x\,(5e^{x^{2}}) = 2xy$. ✓ Y
+      $y(0)=5$. ✓
+
+  - id: ej-clasificar-cuatro-edos
+    titulo: Clasificar antes de resolver
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Clasificar estas cuatro ecuaciones diferenciales y decir qué método
+      resuelve cada una:
+
+      a) $y' = \dfrac{y}{x} - \dfrac{x}{y}$
+      b) $y' - 2y = x$
+      c) $2xy\,dx + (x^{2}+3y^{2})\,dy = 0$
+      d) $y' = -xe^{y}$
+    pide: El tipo de cada EDO y su método.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué se clasifica antes de intentar resolver?
+        opciones:
+          - texto: Porque cada tipo tiene su método y no hay uno universal
+            correcta: true
+            mensaje: |
+              Exacto. Y equivocarse al clasificar no da un resultado erróneo: da
+              un callejón sin salida, que en un examen es peor.
+          - texto: Porque el enunciado siempre dice de qué tipo es
+            mensaje: |
+              A veces lo dice —«resolver las siguientes EDOs exactas»— pero en un
+              examen normal no, y menos en un problema aplicado donde la EDO la
+              escribes tú.
+          - texto: Porque solo las separables tienen solución
+            mensaje: |
+              Todas las de este tema tienen solución. Lo que cambia es el camino
+              para llegar a ella.
+      - tipo: calcular
+        titulo: La comprobación de exactitud
+        pregunta: |
+          Para la c), con $P = 2xy$ y $Q = x^{2}+3y^{2}$, ¿cuánto vale
+          $\partial P/\partial y$ en el punto $(2,1)$?
+        respuesta:
+          tipo: numero
+          valor: '4'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Parece que has derivado como si $P$ fuera $xy$. Con el 2 delante,
+              $P_y = 2x$, que en $x=2$ vale 4.
+          - valor: '7'
+            mensaje: |
+              7 es $Q$ evaluado en $(2,1)$: $4+3$. Lo que se pide es la derivada
+              de $P$ respecto de $y$.
+        pista: |
+          $P = 2xy$, así que $P_y = 2x$. Sustituye x=2.
+        desarrollo: |
+          $$
+          P_y = \frac{\partial}{\partial y}(2xy) = 2x
+          \qquad\Longrightarrow\qquad
+          P_y(2,1) = 4
+          $$
+
+          Y $Q_x = \partial(x^{2}+3y^{2})/\partial x = 2x$, que también vale 4.
+          **Coinciden: la EDO es exacta.**
+      - tipo: justificar
+        pregunta: |
+          Ordena la clasificación. Una pieza es falsa.
+        piezas:
+          - texto: 'a) Todo depende de $y/x$, luego es **homogénea**: cambio $u=y/x$.'
+          - texto: 'b) Tiene la forma $y^{\prime}+p(x)y=q(x)$ con $p=-2$, luego es **lineal**.'
+          - texto: 'c) $P_y = Q_x = 2x$, luego es **exacta**: se busca el potencial.'
+          - texto: 'd) Se separa como $e^{-y}dy = -x\,dx$, luego es **separable**.'
+          - texto: 'a) También es separable, porque tiene una $y$ y una $x$ en cada término.'
+            trampa: true
+            mensaje: |
+              Tener las dos letras no basta: separable significa poder dejar
+              **todas** las $y$ a un lado y **todas** las $x$ al otro. En
+              $y/x - x/y$ eso no se puede: las dos variables están mezcladas en
+              los dos términos. Por eso hace falta el cambio $u=y/x$.
+    resolucion: |
+      **Las cuatro casillas del árbol, una por ecuación.** Es el ejercicio de
+      COMP1 del tema.
+
+      | | ecuación | tipo | método |
+      |---|---|---|---|
+      | a) | $y' = \frac{y}{x}-\frac{x}{y}$ | **homogénea** | cambio $u = y/x$ |
+      | b) | $y' - 2y = x$ | **lineal** | factor $\mu = e^{-2x}$ |
+      | c) | $2xy\,dx+(x^{2}+3y^{2})dy = 0$ | **exacta** | busca el potencial $F$ |
+      | d) | $y' = -xe^{y}$ | **separable** | $e^{-y}dy = -x\,dx$ |
+
+      **Cómo se reconoce cada una en dos segundos:**
+
+      - **a)** Todos los términos dependen del cociente $y/x$. Y **no** es
+        separable, aunque lo parezca: las dos variables están enredadas en los
+        dos sumandos.
+      - **b)** Está literalmente en la forma $y' + p(x)y = q(x)$, con $p=-2$ y
+        $q=x$.
+      - **c)** Viene escrita como $P\,dx + Q\,dy = 0$, que es la forma en que se
+        presentan las exactas. Se comprueba $P_y = Q_x = 2x$. ✓
+      - **d)** La $x$ y la $y$ aparecen en factores separados, así que basta
+        pasar la exponencial dividiendo.
+
+      > **El orden del árbol importa.** La b) también podría atacarse como
+      > separable si $q$ fuera cero, y la c) es a la vez exacta y no separable.
+      > La regla es recorrer el árbol de arriba abajo y **parar en el primer sí**,
+      > porque los métodos de arriba son más baratos.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Del boletín de problemas complementarios del tema 9.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: estudio-cualitativo-sin-resolver
+    titulo: Estudiar la solución sin resolver la ecuación
+    fuente: Ejercicio 9.1 · Problemas complementarios, tema 9 · Cálculo, UPV/EHU (2016/2017 4E AT)
+    nivel: examen
+    enunciado: |
+      Sea $y(x)$ la solución de la EDO $y' = -xy$.
+
+      a) Sin resolver la EDO, estudiar los intervalos de
+      crecimiento/decrecimiento y concavidad/convexidad de la función $y$.
+      b) Calcular el polinomio de Taylor de orden 2 de la función $y(x)$ en el
+      punto $a=0$, sabiendo que $y(0)=3$.
+      c) Resolver la EDO con la condición inicial $y(0)=3$ y verificar los
+      resultados obtenidos en el apartado a).
+    pide: El estudio cualitativo, el Taylor de orden 2 y la comprobación.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Sin resolver la EDO, estudiar el crecimiento». ¿De dónde sale la
+          información?
+        opciones:
+          - texto: De la propia ecuación, que ya da y' en función de x e y
+            correcta: true
+            mensaje: |
+              Justo. La EDO **es** la fórmula de $y'$. Para el crecimiento no
+              hace falta nada más que estudiar el signo de $-xy$.
+          - texto: Hay que resolverla primero aunque el enunciado diga que no
+            mensaje: |
+              No hace falta, y el enunciado lo prohíbe expresamente. Además la
+              gracia del ejercicio es que muchas EDOs reales no se pueden
+              resolver y aun así hay que saber cómo se comportan.
+          - texto: De la condición inicial
+            mensaje: |
+              La condición inicial hace falta para el apartado b), pero el signo
+              de $y'$ se estudia sin ella.
+      - tipo: calcular
+        titulo: La segunda derivada
+        pregunta: |
+          Derivando $y' = -xy$ respecto de $x$ y sustituyendo, sale
+          $y'' = y(x^{2}-1)$. ¿Cuánto vale $y''(0)$ si $y(0)=3$?
+        respuesta:
+          tipo: numero
+          valor: '-3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Signo cambiado. En $x=0$, el factor $x^{2}-1$ vale $-1$, así que
+              $y''(0) = 3\cdot(-1) = -3$.
+          - valor: '0'
+            mensaje: |
+              0 es el valor de $y'(0)$, no de $y''(0)$. La primera derivada se
+              anula en el origen; la segunda no.
+        pista: |
+          Sustituye x=0 y y=3 en $y(x^2-1)$. El paréntesis vale −1.
+        desarrollo: |
+          $$
+          y'' = \frac{d}{dx}(-xy) = -y - x\,y' = -y - x(-xy) = y(x^{2}-1)
+          $$
+
+          $$
+          y''(0) = 3\,(0-1) = -3
+          $$
+
+          Negativa, así que en el origen la solución es **cóncava** — coincide
+          con que $y(0)=3$ es un máximo.
+      - tipo: justificar
+        pregunta: |
+          Ordena el estudio del apartado a), suponiendo $y>0$. Una pieza es falsa.
+        piezas:
+          - texto: '$y^{\prime} = -xy$, y con $y>0$ el signo lo decide $-x$.'
+          - texto: 'Luego $y$ **crece** para $x<0$ y **decrece** para $x>0$.'
+          - texto: 'En $x=0$ hay un máximo, porque la derivada cambia de $+$ a $-$.'
+          - texto: '$y^{\prime\prime} = y(x^{2}-1)$ es negativa entre $-1$ y $1$, y positiva fuera.'
+          - texto: 'Como $y^{\prime} = -xy$ depende de $y$, el crecimiento no se puede estudiar sin resolver.'
+            trampa: true
+            mensaje: |
+              Sí se puede: basta con saber el **signo** de $y$, que la condición
+              inicial $y(0)=3>0$ garantiza. No hace falta la fórmula de $y$, solo
+              si es positiva o negativa.
+    resolucion: |
+      **a) El estudio cualitativo.** La condición inicial $y(0)=3>0$ garantiza
+      que la solución es positiva —una solución de esta EDO no puede cruzar el
+      eje—, así que en $y' = -xy$ el signo lo pone $-x$:
+
+      | intervalo | signo de $y'$ | comportamiento |
+      |---|---|---|
+      | $x<0$ | $+$ | **crece** |
+      | $x>0$ | $-$ | **decrece** |
+
+      Y en $x=0$ hay un **máximo**.
+
+      Para la concavidad se deriva la ecuación:
+
+      $$
+      y'' = -y - x\,y' = -y -x(-xy) = y\,(x^{2}-1)
+      $$
+
+      Con $y>0$, el signo es el de $x^{2}-1$:
+
+      | intervalo | $y''$ | |
+      |---|---|---|
+      | $x<-1$ | $+$ | convexa |
+      | $-1<x<1$ | $-$ | **cóncava** |
+      | $x>1$ | $+$ | convexa |
+
+      Hay **inflexiones en $x=\pm 1$**.
+
+      **b) El Taylor de orden 2 en $a=0$.** Ya tenemos todo:
+
+      $$
+      y(0)=3,
+      \qquad
+      y'(0) = -0\cdot 3 = 0,
+      \qquad
+      y''(0) = 3(0-1) = -3
+      $$
+
+      $$
+      P_2(x) = 3 + 0\cdot x - \frac{3}{2}x^{2} = 3 - \frac{3}{2}x^{2}
+      $$
+
+      **c) Resolviendo de verdad**, que es separable:
+
+      $$
+      \frac{dy}{y} = -x\,dx
+      \;\Longrightarrow\;
+      \ln|y| = -\frac{x^{2}}{2}+C
+      \;\Longrightarrow\;
+      y = Ke^{-x^{2}/2}
+      $$
+
+      Con $y(0)=3$: $\;y = 3e^{-x^{2}/2}$.
+
+      **Y ahora la verificación**, que es la parte que da la nota de COMP4. Es
+      una campana de Gauss centrada en 0: crece a la izquierda, decrece a la
+      derecha, máximo en el origen y **puntos de inflexión en $x=\pm 1$**.
+      Coincide con todo lo del apartado a), obtenido sin resolver nada.
+
+      > **Por qué este ejercicio cae tanto.** La inmensa mayoría de las
+      > ecuaciones diferenciales reales no tienen solución en fórmula, y aun así
+      > hay que saber si la solución crece, si se estabiliza o si se dispara.
+      > El apartado a) entrena eso; el c) demuestra que funciona.
+
+  - id: embalse-y-largo-plazo
+    titulo: El embalse, y qué pasa a largo plazo
+    fuente: Ejercicio 9.14 · Problemas complementarios, tema 9 · Cálculo, UPV/EHU (2020/2021 7E)
+    nivel: examen
+    enunciado: |
+      Un embalse recibe una cantidad de agua de lluvia de 1000 litros al mes. Por
+      otra parte, el agua se evapora con una tasa del 5 % mensual. Sabiendo que
+      la cantidad de agua $C(t)$ del embalse en función del tiempo $t$ (medido en
+      meses) satisface la EDO
+
+      $$
+      C'(t) = 1000 - 0{,}05\,C(t)
+      $$
+
+      a) Calcular la solución general de la EDO anterior.
+      b) ¿Qué sucederá a largo plazo?
+    pide: La solución general y el comportamiento asintótico.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué tipo de EDO es $C' = 1000 - 0{,}05C$?
+        opciones:
+          - texto: Lineal de primer orden, y también separable
+            correcta: true
+            mensaje: |
+              Las dos cosas, y por eso admite dos caminos. Reescrita como
+              $C' + 0{,}05C = 1000$ es lineal de libro; y como
+              $dC/(1000-0{,}05C) = dt$ es separable. La separable sale antes.
+          - texto: De segundo orden, porque hay una tasa
+            mensaje: |
+              «Tasa» significa derivada primera. Solo aparece $C'$, así que es de
+              primer orden.
+          - texto: Homogénea
+            mensaje: |
+              Homogénea significa que todo depende del cociente de las variables,
+              y aquí hay un término constante de 1000 que lo impide.
+      - tipo: calcular
+        titulo: El nivel de equilibrio
+        pregunta: |
+          A largo plazo el embalse se estabiliza donde $C' = 0$. ¿Cuántos litros
+          son?
+        respuesta:
+          tipo: numero
+          valor: '20000'
+          tolerancia: 0.1
+          formato: un número, en litros
+        distractores:
+          - valor: '1000'
+            mensaje: |
+              1000 es lo que entra cada mes, no el nivel de equilibrio. El
+              equilibrio llega cuando lo que se evapora iguala a lo que entra:
+              $0{,}05C = 1000$.
+          - valor: '50'
+            mensaje: |
+              Parece que has multiplicado en vez de dividir. De
+              $1000 = 0{,}05C$ sale $C = 1000/0{,}05$, no $1000\cdot 0{,}05$.
+        pista: |
+          Resuelve $1000 - 0,05C = 0$. Divide 1000 entre 0,05.
+        desarrollo: |
+          $$
+          1000 - 0{,}05\,C = 0
+          \qquad\Longrightarrow\qquad
+          C = \frac{1000}{0{,}05} = 20\,000 \text{ litros}
+          $$
+
+          Y fíjate en que esto **no ha necesitado resolver la EDO**: el
+          equilibrio se lee directamente en la ecuación.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'Separando: $\frac{dC}{1000-0{,}05C} = dt$.'
+          - texto: 'Integrando y despejando sale $C(t) = 20000 + Ke^{-0{,}05t}$.'
+          - texto: 'Como el exponente es negativo, el término con $K$ tiende a cero.'
+          - texto: 'b) A largo plazo el embalse se estabiliza en 20 000 litros, venga del nivel que venga.'
+          - texto: 'b) A largo plazo el embalse crece sin límite, porque sigue entrando agua todos los meses.'
+            trampa: true
+            mensaje: |
+              Entra agua, sí, pero la evaporación **crece con lo que hay**:
+              cuanto más lleno, más se evapora. En 20 000 litros la evaporación
+              iguala exactamente a la lluvia y el nivel se estanca. Es lo que
+              distingue un crecimiento lineal de uno con realimentación.
+    resolucion: |
+      **a) La solución general.** Es separable, que es el camino corto:
+
+      $$
+      \frac{dC}{1000-0{,}05C} = dt
+      $$
+
+      Integrando el lado izquierdo (con el $-0{,}05$ que sale del cambio):
+
+      $$
+      -\frac{1}{0{,}05}\ln|1000-0{,}05C| = t + C_1
+      $$
+
+      Despejando:
+
+      $$
+      \boxed{\;C(t) = 20\,000 + K e^{-0{,}05\,t}\;}
+      $$
+
+      **La forma de la solución ya cuenta la historia**: un valor fijo más algo
+      que se desvanece.
+
+      **b) A largo plazo.** Como el exponente es negativo, $e^{-0{,}05t}\to 0$
+      cuando $t\to\infty$, así que
+
+      $$
+      \lim_{t\to\infty} C(t) = 20\,000 \text{ litros}
+      $$
+
+      **El embalse se estabiliza en 20 000 litros**, y —esto es lo importante—
+      **da igual con cuánta agua empiece**. Si empieza con menos, sube hasta ahí;
+      si empieza con más, baja hasta ahí. La constante $K$ solo dice desde dónde
+      vienes, no adónde vas.
+
+      > **El atajo que conviene tener a mano.** El nivel de equilibrio se saca
+      > sin resolver nada: es donde $C'=0$, o sea $1000 = 0{,}05C$. Contestar el
+      > apartado b) directamente así es correcto y completo — y si además el
+      > apartado a) confirma el mismo número, tienes la comprobación gratis.

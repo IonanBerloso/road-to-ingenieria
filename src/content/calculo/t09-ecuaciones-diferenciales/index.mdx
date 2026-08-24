@@ -1,0 +1,297 @@
+---
+asignatura: calculo
+tema: 9
+titulo: Ecuaciones diferenciales
+descripcion: Clasificar antes de resolver, EDOs de primer y segundo orden, estudio cualitativo sin resolver, y cómo se traduce un enunciado en una ecuación.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 9 y de los boletines de Ecuaciones diferenciales · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Una ecuación normal tiene por incógnita un número. Una **ecuación diferencial**
+tiene por incógnita **una función**, y lo que se conoce es una relación entre esa
+función y sus derivadas.
+
+$$
+y' = -0{,}05\,y + 1000
+$$
+
+Eso no pregunta cuánto vale $y$. Pregunta **qué función** cumple que su ritmo de
+cambio sea ese. Y aparece en cuanto un enunciado dice «la tasa de crecimiento es
+proporcional a…», que es como se describe medio mundo físico: un embalse que
+recibe lluvia y se evapora, una barra que se calienta, una epidemia, un
+paracaidista frenado por el aire.
+
+Este tema tiene dos partes que se evalúan por separado y conviene no mezclar:
+
+- **Resolver una EDO que te dan.** Es mecánico, y todo el trabajo está en
+  **clasificarla bien**, porque cada tipo tiene su método.
+- **Escribir la EDO a partir de un enunciado en palabras.** Es lo que de verdad
+  distingue, y es donde está COMP4.
+
+## Lo primero es clasificar, y eso decide todo
+
+No hay un método universal. Hay cinco tipos de EDO de primer orden y cada uno
+tiene el suyo, así que **antes de tocar nada hay que decidir cuál es**.
+
+El orden en que se mira no es arbitrario: se prueba lo barato primero.
+
+<figure class="figura-examen">
+  <svg viewBox="-20 -18 490 296" role="img" aria-labelledby="t9claT t9claD">
+    <title id="t9claT">Árbol de decisión para clasificar una EDO de primer orden</title>
+    <desc id="t9claD">Cinco preguntas en cascada. Si se pueden separar las variables es separable. Si no, se mira si es homogénea, luego si es exacta, luego si admite factor integrante, y por último si es lineal.</desc>
+
+    <g font-family="var(--mono)" font-size="10.5">
+      <rect x="0" y="0" width="228" height="30" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4"></rect>
+      <text x="10" y="13" fill="var(--ink)">¿Se separan las variables?</text>
+      <text x="10" y="25" fill="var(--live)">SEPARABLE — integra los dos lados</text>
+
+      <rect x="0" y="52" width="228" height="30" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4"></rect>
+      <text x="10" y="65" fill="var(--ink)">¿Todo depende de y/x?</text>
+      <text x="10" y="77" fill="var(--live)">HOMOGÉNEA — cambia u = y/x</text>
+
+      <rect x="0" y="104" width="228" height="30" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4"></rect>
+      <text x="10" y="117" fill="var(--ink)">¿Py = Qx ?</text>
+      <text x="10" y="129" fill="var(--live)">EXACTA — busca el potencial</text>
+
+      <rect x="0" y="156" width="228" height="30" fill="var(--alt-soft)" stroke="var(--alt)" stroke-width="1.4"></rect>
+      <text x="10" y="169" fill="var(--ink)">¿Te dan un g(x,y)?</text>
+      <text x="10" y="181" fill="var(--alt)">FACTOR INTEGRANTE — multiplica</text>
+
+      <rect x="0" y="208" width="228" height="30" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4"></rect>
+      <text x="10" y="221" fill="var(--ink)">¿Es y' + p(x)y = q(x) ?</text>
+      <text x="10" y="233" fill="var(--live)">LINEAL — factor e^∫p</text>
+
+      <path d="M114 30 L114 52 M114 82 L114 104 M114 134 L114 156 M114 186 L114 208" stroke="var(--faint)" stroke-width="1.2" stroke-dasharray="3 3"></path>
+      <text x="120" y="45" fill="var(--faint)" font-size="9">no</text>
+      <text x="120" y="97" fill="var(--faint)" font-size="9">no</text>
+      <text x="120" y="149" fill="var(--faint)" font-size="9">no</text>
+      <text x="120" y="201" fill="var(--faint)" font-size="9">no</text>
+
+      <text x="256" y="14" fill="var(--graphite)">Se prueba en este orden</text>
+      <text x="256" y="30" fill="var(--graphite)">porque el de arriba es</text>
+      <text x="256" y="46" fill="var(--graphite)">siempre más barato.</text>
+
+      <text x="256" y="80" fill="var(--ink)">Y una misma EDO puede</text>
+      <text x="256" y="96" fill="var(--ink)">caer en dos casillas:</text>
+      <text x="256" y="112" fill="var(--flag)">se usa la primera.</text>
+
+      <text x="256" y="150" fill="var(--graphite)">El factor integrante casi</text>
+      <text x="256" y="166" fill="var(--graphite)">siempre te lo dan hecho</text>
+      <text x="256" y="182" fill="var(--graphite)">en el enunciado: si ves</text>
+      <text x="256" y="198" fill="var(--graphite)">un g(x,y) suelto, es eso.</text>
+    </g>
+  </svg>
+  <figcaption>
+    El árbol se recorre de arriba abajo y se para en el primer sí.
+    <strong>Clasificar mal no da un resultado equivocado: da un callejón sin
+    salida</strong>, y ahí se pierde el tiempo del examen.
+  </figcaption>
+</figure>
+
+### Separables
+
+La más fácil y la más frecuente. Si consigues poner todas las $y$ a un lado y
+todas las $x$ al otro, se integran los dos lados y ya está:
+
+$$
+y' = -xy
+\;\Longrightarrow\;
+\frac{dy}{y} = -x\,dx
+\;\Longrightarrow\;
+\ln|y| = -\frac{x^{2}}{2}+C
+\;\Longrightarrow\;
+y = K e^{-x^{2}/2}
+$$
+
+<ErrorTipico titulo="Perder la constante, o ponerla en el sitio equivocado">
+Dos cosas que cuestan puntos y son la misma:
+
+**La constante va al integrar, no al final.** Si escribes $\ln|y| = -x^{2}/2$ y
+luego «le sumas la $C$» a la solución ya despejada, sale $y = e^{-x^{2}/2}+C$,
+que es otra función distinta. La constante entra dentro de la exponencial y sale
+como **factor**: $y = Ke^{-x^{2}/2}$.
+
+**Y la solución constante puede perderse.** Al dividir entre $y$ para separar,
+estás suponiendo $y\neq 0$. Si $y=0$ también resuelve la EDO —y aquí lo hace—,
+es una solución más. En los enunciados con condición inicial no suele importar,
+pero decirlo suma.
+</ErrorTipico>
+
+### Homogéneas
+
+Si al escribir la EDO todo se puede expresar en función del cociente $y/x$, el
+cambio $u = y/x$ —o sea $y = ux$, $y' = u'x+u$— la convierte en separable.
+
+La señal para reconocerla: numerador y denominador tienen **todos sus términos
+del mismo grado**. En $y' = \frac{2xy}{3x^{2}-y^{2}}$, arriba grado 2 y abajo
+grado 2. Homogénea.
+
+### Exactas, y el factor integrante
+
+Escrita como $P\,dx + Q\,dy = 0$, la EDO es **exacta** si
+
+$$
+\frac{\partial P}{\partial y} = \frac{\partial Q}{\partial x}
+$$
+
+y entonces se resuelve **exactamente igual que un campo conservativo del tema
+8**: se busca la función $F$ con $\nabla F = (P,Q)$, y la solución es
+$F(x,y)=C$.
+
+> No es un parecido: es el mismo teorema. Una EDO exacta es un campo
+> conservativo, y las curvas solución son sus **curvas de nivel**. Si has
+> entendido el tema 8, este apartado ya lo sabes.
+
+Y si no es exacta, a veces se arregla multiplicando toda la ecuación por un
+**factor integrante** $g(x,y)$. En el examen **casi siempre te lo dan**: si el
+enunciado incluye un $g(x,y)$ que parece sobrar, es la pista de que la EDO no es
+exacta y hay que multiplicar antes de nada.
+
+### Lineales
+
+Las de la forma
+
+$$
+y' + p(x)\,y = q(x)
+$$
+
+Se multiplican por el factor $\mu = e^{\int p\,dx}$, que convierte el lado
+izquierdo en la derivada de un producto:
+
+$$
+(\mu y)' = \mu q
+\qquad\Longrightarrow\qquad
+y = \frac{1}{\mu}\int \mu\,q\,dx
+$$
+
+Es el método que resuelve casi todos los problemas aplicados, porque «tasa de
+cambio proporcional a lo que hay, más una aportación constante» es exactamente
+una EDO lineal.
+
+## Segundo orden: dos piezas que se suman
+
+Para $y'' + a y' + b y = f(x)$ con coeficientes constantes, la solución tiene
+**siempre** dos partes:
+
+$$
+y = y_h + y_p
+$$
+
+**La homogénea $y_h$** sale de la ecuación característica $r^{2}+ar+b=0$:
+
+| raíces | solución homogénea |
+|---|---|
+| dos reales distintas $r_1, r_2$ | $C_1e^{r_1x} + C_2e^{r_2x}$ |
+| una real doble $r$ | $(C_1 + C_2x)\,e^{rx}$ |
+| complejas $\alpha\pm\beta i$ | $e^{\alpha x}(C_1\cos\beta x + C_2\,\text{sen}\,\beta x)$ |
+
+**La particular $y_p$** se busca «pareciéndose» a $f(x)$: si $f$ es un polinomio,
+se prueba un polinomio del mismo grado; si es $e^{kx}$, se prueba $Ae^{kx}$; si
+es seno o coseno, se prueba $A\cos + B\,\text{sen}$ — **las dos, aunque solo
+aparezca una**.
+
+<ErrorTipico titulo="Probar una particular que ya está en la homogénea">
+Si $f(x) = e^{3x}$ y resulta que $r=3$ es raíz de la característica, probar
+$Ae^{3x}$ no puede funcionar: esa función ya resuelve la ecuación homogénea, así
+que al sustituirla sale $0 = e^{3x}$, un absurdo.
+
+**La cura es multiplicar por $x$**: se prueba $Axe^{3x}$, y si la raíz era doble,
+$Ax^{2}e^{3x}$.
+
+Es el fallo más común del bloque y se detecta antes de calcular nada: **compara
+siempre las raíces de la característica con lo que hay en $f(x)$.**
+</ErrorTipico>
+
+## Estudiar la solución sin resolverla
+
+Este bloque cae solo, y es el que más desconcierta porque parece que falta un
+dato. No falta: **la propia EDO dice cómo crece la solución.**
+
+$$
+y' = -xy,
+\qquad y(0)=3
+$$
+
+No hace falta resolverla para saber dónde crece $y$. **La EDO ya te da $y'$**:
+basta estudiar el signo de $-xy$. Y para la concavidad, se deriva la ecuación:
+
+$$
+y'' = \frac{d}{dx}(-xy) = -y - x\,y' = -y - x(-xy) = y(x^{2}-1)
+$$
+
+que también sale en función de $x$ e $y$, sin haber resuelto nada.
+
+**Y para el polinomio de Taylor en $a=0$**, que es la otra mitad de este
+ejercicio, tampoco: con $y(0)=3$ dado,
+
+$$
+y'(0) = -0\cdot 3 = 0,
+\qquad
+y''(0) = 3(0-1) = -3
+$$
+
+$$
+P_2(x) = 3 + 0\cdot x - \frac{3}{2}x^{2}
+$$
+
+> **Por qué esta pregunta existe.** Casi ninguna EDO real se puede resolver con
+> fórmula, y sin embargo se necesita saber cómo se comporta la solución. Este
+> ejercicio entrena exactamente eso: sacarle información a una ecuación que no
+> sabes resolver. Y de paso reutiliza Taylor, del tema 4.
+
+## Traducir un enunciado en una ecuación
+
+La otra mitad del tema, y la que más se falla. Los enunciados siempre dicen lo
+mismo con distintas palabras, y el diccionario es corto:
+
+| lo que dice el enunciado | lo que se escribe |
+|---|---|
+| «la tasa de cambio de $y$» | $y'$ o $\dfrac{dy}{dt}$ |
+| «proporcional a $A$» | $= k\,A$ |
+| «proporcional al producto de $A$ y $B$» | $= k\,A\,B$ |
+| «recibe 400 al mes» | $+\,400$ |
+| «pierde el 2 % de lo que hay» | $-\,0{,}02\,N$ |
+| «la diferencia con la temperatura ambiente» | $(T - T_{\text{amb}})$ |
+| «al principio había…» | la condición inicial |
+
+Con eso, «un almacén retira el 2 % de sus libros y recibe 400 nuevos» es
+
+$$
+N'(t) = 400 - 0{,}02\,N(t)
+$$
+
+y ya está planteado. **Ese paso es el que puntúa**; resolverla después es una
+lineal de las de siempre.
+
+Y casi todos estos problemas acaban preguntando **«¿qué pasa a largo plazo?»**.
+No hace falta resolver para contestar: el equilibrio está donde $y'=0$. Aquí,
+$400 = 0{,}02N$, o sea $N = 20\,000$ libros. La solución tiende a ese valor
+venga de donde venga.
+
+## Lo que hay que llevar sabido
+
+| pregunta | qué hacer |
+|---|---|
+| «resolver la EDO» | clasifica primero, con el árbol |
+| ves un $g(x,y)$ en el enunciado | es un factor integrante: multiplica |
+| «sin resolver la EDO, estudiar…» | el signo de $y'$ sale de la propia ecuación |
+| «polinomio de Taylor de la solución» | deriva la EDO, evalúa en el punto |
+| «$y'' + ay' + by = f$» | característica, y particular parecida a $f$ |
+| la particular ya está en la homogénea | multiplica por $x$ |
+| «tasa proporcional a…» | traduce con el diccionario |
+| «¿qué pasa a largo plazo?» | resuelve $y'=0$ |
+
+Y las tres frases de COMP4:
+
+- **La constante entra al integrar**, y en las separables suele salir como
+  factor, no como sumando.
+- **Una EDO exacta es un campo conservativo**, y sus soluciones son las curvas
+  de nivel del potencial.
+- **El signo de $y'$ se lee en la propia ecuación**: no hace falta resolverla
+  para saber dónde crece la solución.
