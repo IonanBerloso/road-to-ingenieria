@@ -1,0 +1,487 @@
+ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 10. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-transformada-con-la-tabla
+    titulo: La primera transformada, con la tabla
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular la transformada de Laplace de $f(t) = 3 + 2t - e^{4t}$.
+    pide: La transformada F(s).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué se puede transformar cada sumando por separado?
+        opciones:
+          - texto: Porque la transformada es lineal
+            correcta: true
+            mensaje: |
+              Eso es. $\mathcal{L}$ es una integral, y las integrales respetan
+              sumas y constantes. Por eso la tabla basta para casi todo.
+          - texto: Porque los tres sumandos son independientes
+            mensaje: |
+              La razón de fondo es la linealidad de la integral, no que los
+              términos sean «independientes» — eso no es una propiedad de la
+              transformada.
+          - texto: No se puede; hay que aplicar la definición al conjunto
+            mensaje: |
+              Se puede, y es lo que se hace siempre. Aplicar la definición
+              —integrar de 0 a infinito— solo se hace cuando el enunciado lo
+              exige expresamente.
+      - tipo: calcular
+        titulo: La transformada del término lineal
+        pregunta: |
+          Con $\mathcal{L}\{t^{n}\} = n!/s^{n+1}$, ¿cuánto vale el numerador de
+          $\mathcal{L}\{2t\}$, si el denominador es $s^{2}$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Te has dejado el coeficiente 2 que multiplica a la $t$. Con $n=1$
+              sale $1!/s^{2} = 1/s^{2}$, y por el 2 queda $2/s^{2}$.
+          - valor: '4'
+            mensaje: |
+              Parece que has multiplicado el 2 del enunciado por otro 2. Con
+              $n=1$, el factorial vale 1, así que el numerador es solo el 2 del
+              coeficiente.
+        pista: |
+          Con n=1, $1!/s^2 = 1/s^2$. Multiplícalo por el coeficiente 2.
+        desarrollo: |
+          $$
+          \mathcal{L}\{2t\} = 2\cdot\frac{1!}{s^{2}} = \frac{2}{s^{2}}
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'Por linealidad, se transforma cada sumando por separado.'
+          - texto: '$\mathcal{L}\{3\} = 3/s$, porque $\mathcal{L}\{1\}=1/s$.'
+          - texto: '$\mathcal{L}\{2t\} = 2/s^{2}$.'
+          - texto: '$\mathcal{L}\{e^{4t}\} = 1/(s-4)$, con el signo cambiado en el denominador.'
+          - texto: '$\mathcal{L}\{e^{4t}\} = 1/(s+4)$, porque la definición lleva $e^{-st}$.'
+            trampa: true
+            mensaje: |
+              El signo va al revés. La tabla dice
+              $\mathcal{L}\{e^{at}\} = 1/(s-a)$, así que con $a=4$ sale
+              $1/(s-4)$. Es un signo que se confunde precisamente por lo que
+              dice la pieza — pero al integrar $e^{4t}e^{-st}$ queda
+              $e^{-(s-4)t}$, y de ahí el $s-4$.
+    resolucion: |
+      **La linealidad hace todo el trabajo.** La transformada es una integral, y
+      las integrales reparten sumas y sacan constantes:
+
+      $$
+      \mathcal{L}\{3 + 2t - e^{4t}\}
+      = 3\,\mathcal{L}\{1\} + 2\,\mathcal{L}\{t\} - \mathcal{L}\{e^{4t}\}
+      $$
+
+      **Cada trozo, de la tabla:**
+
+      | término | transformada |
+      |---|---|
+      | $3$ | $3/s$ |
+      | $2t$ | $2/s^{2}$ |
+      | $e^{4t}$ | $1/(s-4)$ |
+
+      $$
+      \boxed{\;F(s) = \frac{3}{s} + \frac{2}{s^{2}} - \frac{1}{s-4}\;}
+      $$
+
+      **El signo del denominador**, que es lo único con trampa aquí. La
+      definición lleva $e^{-st}$, y al multiplicar por $e^{4t}$ el exponente
+      queda $-(s-4)t$: por eso sale $s-4$ y no $s+4$. Si te sale con el signo
+      cambiado, la antitransformada te dará $e^{-4t}$, que crece o decrece justo
+      al revés.
+
+  - id: ej-inversa-fracciones-simples
+    titulo: Volver, descomponiendo en fracciones simples
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular la transformada inversa de $F(s) = \dfrac{3s}{s^{2}-s-6}$.
+    pide: La función f(t) cuya transformada es F(s).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es el primer paso para antitransformar un cociente de polinomios?
+        opciones:
+          - texto: Factorizar el denominador y descomponer en fracciones simples
+            correcta: true
+            mensaje: |
+              Sí. La tabla solo tiene entradas sencillas, así que hay que partir
+              la fracción hasta que cada trozo se reconozca.
+          - texto: Derivar el numerador
+            mensaje: |
+              Eso no tiene nada que ver. Antitransformar no es derivar: es
+              reconocer la fracción en la tabla, y para eso hay que romperla en
+              trozos reconocibles.
+          - texto: Aplicar la definición de la transformada inversa
+            mensaje: |
+              Existe una fórmula integral para la inversa, pero es una integral
+              en el plano complejo que no se usa en este curso. En la práctica
+              se antitransforma por reconocimiento.
+      - tipo: calcular
+        titulo: La raíz positiva del denominador
+        pregunta: |
+          ¿Cuál es la raíz positiva de $s^{2}-s-6=0$?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 no es raíz: $4-2-6 = -4 \neq 0$. La otra raíz es $-2$, negativa.
+          - valor: '6'
+            mensaje: |
+              6 es el término independiente con el signo cambiado, no una raíz.
+              Factoriza: $(s-3)(s+2)$.
+        pista: |
+          Busca dos números que multiplicados den −6 y sumados den −1.
+        desarrollo: |
+          $$
+          s^{2}-s-6 = (s-3)(s+2)
+          $$
+
+          Las raíces son $3$ y $-2$. Al ser **reales y distintas**, la
+          antitransformada serán dos exponenciales.
+      - tipo: calcular
+        titulo: El coeficiente de la primera fracción
+        pregunta: |
+          En $\dfrac{3s}{(s-3)(s+2)} = \dfrac{A}{s-3}+\dfrac{B}{s+2}$, ¿cuánto
+          vale $A$?
+        respuesta:
+          tipo: numero
+          valor: '1.8'
+          tolerancia: 0.01
+          formato: en forma exacta (9/5) o con un decimal
+        distractores:
+          - valor: '3'
+            mensaje: |
+              3 es el coeficiente del numerador original, no el de la fracción
+              simple. Con el método de cubrir: $A = 3\cdot 3/(3+2) = 9/5$.
+          - valor: '1.2'
+            mensaje: |
+              $1{,}2$ es $B$, el coeficiente de la otra fracción:
+              $3(-2)/(-2-3) = 6/5$. Cuidado con cuál es cuál.
+        pista: |
+          Multiplica por (s−3) y evalúa en s=3: sale $3(3)/(3+2)$.
+        desarrollo: |
+          Con el método de cubrir, multiplicando por $(s-3)$ y evaluando en
+          $s=3$:
+
+          $$
+          A = \frac{3s}{s+2}\bigg|_{s=3} = \frac{9}{5} = 1{,}8
+          $$
+
+          Y análogamente $B = \dfrac{3s}{s-3}\bigg|_{s=-2} = \dfrac{-6}{-5} = \dfrac{6}{5} = 1{,}2$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'El denominador factoriza como $(s-3)(s+2)$.'
+          - texto: 'Se descompone en $\frac{9/5}{s-3}+\frac{6/5}{s+2}$.'
+          - texto: 'Cada trozo se reconoce en la tabla como una exponencial.'
+          - texto: 'Luego $f(t) = \frac{9}{5}e^{3t}+\frac{6}{5}e^{-2t}$.'
+          - texto: 'Como los dos coeficientes son positivos, la función es creciente en todo t.'
+            trampa: true
+            mensaje: |
+              El signo de los coeficientes no decide el crecimiento: lo decide el
+              exponente. Aquí el término $e^{-2t}$ decrece, aunque su coeficiente
+              sea positivo. La suma acaba creciendo por culpa del $e^{3t}$, pero
+              no por lo que dice la pieza.
+    resolucion: |
+      **Factorizar el denominador**, que es siempre lo primero:
+
+      $$
+      s^{2}-s-6 = (s-3)(s+2)
+      $$
+
+      Raíces reales y distintas, así que la respuesta serán dos exponenciales.
+
+      **Descomponer:**
+
+      $$
+      \frac{3s}{(s-3)(s+2)} = \frac{A}{s-3}+\frac{B}{s+2}
+      $$
+
+      Con el método de cubrir —multiplicar por un factor y evaluar en su raíz—:
+
+      $$
+      A = \frac{3s}{s+2}\bigg|_{s=3} = \frac{9}{5},
+      \qquad
+      B = \frac{3s}{s-3}\bigg|_{s=-2} = \frac{6}{5}
+      $$
+
+      **Antitransformar cada trozo** con $\mathcal{L}^{-1}\{1/(s-a)\} = e^{at}$:
+
+      $$
+      \boxed{\;f(t) = \frac{9}{5}e^{3t} + \frac{6}{5}e^{-2t}\;}
+      $$
+
+      **La comprobación que cuesta nada:** en $t=0$ la función vale
+      $9/5+6/5 = 3$. Y por otro lado, el teorema del valor inicial dice que
+      $f(0) = \lim_{s\to\infty} sF(s) = \lim 3s^{2}/(s^{2}-s-6) = 3$. ✓ Coincide.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Del boletín de problemas complementarios del tema 10.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: sistema-de-edos-con-laplace
+    titulo: Un sistema de dos EDOs, resuelto con Laplace
+    fuente: Ejercicio 10.10a · Problemas complementarios, tema 10 · Cálculo, UPV/EHU (2016/2017 7E)
+    nivel: examen
+    enunciado: |
+      Utilizando la transformada de Laplace resolver el sistema de EDOs
+
+      $$
+      \begin{cases}
+      x' + y = 2\\
+      y' + x = t
+      \end{cases}
+      \qquad x(0)=1,\; y(0)=0
+      $$
+    pide: Las funciones x(t) e y(t).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿En qué se convierte un sistema de dos EDOs al transformarlo?
+        opciones:
+          - texto: En un sistema lineal de dos ecuaciones con incógnitas X(s) e Y(s)
+            correcta: true
+            mensaje: |
+              Exacto, y ahí está la ventaja: se resuelve por reducción, como
+              cualquier sistema de bachillerato. Sin Laplace habría que derivar
+              una ecuación y sustituir en la otra.
+          - texto: En una sola EDO de segundo orden
+            mensaje: |
+              Eso es lo que sale si atacas el sistema **sin** Laplace, derivando
+              y sustituyendo. Es un camino válido y más largo, y no es lo que
+              pide el enunciado.
+          - texto: En dos ecuaciones independientes
+            mensaje: |
+              No se desacoplan: la $X$ y la $Y$ siguen apareciendo en las dos
+              ecuaciones. Lo que cambia es que ahora son incógnitas algebraicas.
+      - tipo: calcular
+        titulo: El término independiente de la primera ecuación
+        pregunta: |
+          Transformando $x'+y=2$ con $x(0)=1$, queda $sX - 1 + Y = 2/s$.
+          ¿Cuánto vale el lado derecho si lo pasamos todo junto, es decir
+          $sX+Y = 2/s + 1$, evaluado en $s=2$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              1 es solo el término que viene de la condición inicial. Falta
+              sumarle $2/s$, que en $s=2$ vale 1.
+          - valor: '3'
+            mensaje: |
+              Parece que has usado $2/s$ como si valiera 2. En $s=2$ ese término
+              vale $2/2 = 1$, y sumado al 1 de la condición inicial da 2.
+        pista: |
+          $2/2 + 1$.
+        desarrollo: |
+          $$
+          \mathcal{L}\{x'\} = sX - x(0) = sX - 1
+          $$
+
+          $$
+          sX - 1 + Y = \frac{2}{s}
+          \qquad\Longrightarrow\qquad
+          sX + Y = \frac{2}{s}+1
+          $$
+
+          En $s=2$ el lado derecho vale $1+1 = 2$. **Fíjate en que la condición
+          inicial ya está dentro**: no habrá que ajustarla al final.
+      - tipo: justificar
+        pregunta: |
+          Ordena el procedimiento. Una pieza es falsa.
+        piezas:
+          - texto: 'Se transforman las dos ecuaciones, metiendo las condiciones iniciales.'
+          - texto: 'Queda el sistema $sX+Y = 2/s+1$ y $X+sY = 1/s^{2}$.'
+          - texto: 'Se resuelve por reducción, despejando $X(s)$ e $Y(s)$.'
+          - texto: 'Se antitransforma cada una por fracciones simples.'
+          - texto: 'Al final hay que imponer $x(0)=1$ e $y(0)=0$ para fijar las constantes.'
+            trampa: true
+            mensaje: |
+              Ya están impuestas. Las condiciones iniciales entraron en el primer
+              paso, al transformar las derivadas, y por eso lo que sale es
+              directamente la solución particular. No queda ninguna constante
+              libre que ajustar — esa es la ventaja del método.
+    resolucion: |
+      **Transformar las dos ecuaciones**, con las condiciones iniciales dentro:
+
+      $$
+      \mathcal{L}\{x'\} = sX - x(0) = sX-1,
+      \qquad
+      \mathcal{L}\{y'\} = sY - y(0) = sY
+      $$
+
+      $$
+      \begin{cases}
+      sX - 1 + Y = \dfrac{2}{s}\\[6pt]
+      sY + X = \dfrac{1}{s^{2}}
+      \end{cases}
+      \qquad\Longrightarrow\qquad
+      \begin{cases}
+      sX + Y = \dfrac{2}{s}+1\\[6pt]
+      X + sY = \dfrac{1}{s^{2}}
+      \end{cases}
+      $$
+
+      **Ya no hay derivadas.** Es un sistema lineal de dos ecuaciones con dos
+      incógnitas, $X(s)$ e $Y(s)$, y se resuelve por reducción.
+
+      Multiplicando la segunda por $s$ y restando:
+
+      $$
+      (s^{2}-1)\,Y = \frac{1}{s} - \frac{2}{s} - 1
+      \qquad\Longrightarrow\qquad
+      Y(s) = \frac{-1/s - 1}{s^{2}-1}
+      $$
+
+      Y de ahí $X(s)$ sustituyendo. **El último paso es antitransformar las dos**
+      por fracciones simples, con $s^{2}-1 = (s-1)(s+1)$.
+
+      > **Lo que este ejercicio evalúa** no es el álgebra del sistema, que es de
+      > bachillerato. Es reconocer que un sistema acoplado de ecuaciones
+      > diferenciales se desacopla al transformarlo — y que las condiciones
+      > iniciales viajan dentro y no hay que volver a por ellas.
+
+  - id: ecuacion-integral-convolucion
+    titulo: Una ecuación integral, y la convolución
+    fuente: Ejercicio 10.12d · Problemas complementarios, tema 10 · Cálculo, UPV/EHU (2015/2016 7E)
+    nivel: examen
+    enunciado: |
+      Utilizando la transformada de Laplace, resolver la ecuación integral
+
+      $$
+      y(t) = t + \int_{0}^{t}\text{sen}(t-u)\,y(u)\,du
+      $$
+    pide: La función y(t).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La integral $\int_0^t \text{sen}(t-u)\,y(u)\,du$ tiene una forma
+          reconocible. ¿Cuál?
+        opciones:
+          - texto: Es una convolución de sen t con y(t)
+            correcta: true
+            mensaje: |
+              Sí, y esa es toda la clave. Los límites de 0 a $t$ y el argumento
+              $(t-u)$ junto a $u$ son la firma de una convolución, aunque el
+              enunciado nunca use la palabra.
+          - texto: Es una integral por partes disfrazada
+            mensaje: |
+              No se puede integrar por partes: la incógnita $y$ está **dentro**
+              de la integral, así que no hay nada que integrar todavía.
+          - texto: Es la definición de la transformada de Laplace
+            mensaje: |
+              La definición va de 0 a infinito y lleva $e^{-st}$. Esta va de 0 a
+              $t$ y lleva un seno: es otra cosa.
+      - tipo: calcular
+        titulo: Despejar la transformada
+        pregunta: |
+          La ecuación transformada es $Y = \frac{1}{s^{2}} + \frac{1}{s^{2}+1}Y$.
+          Al despejar sale $Y = \frac{s^{2}+1}{s^{4}}$. ¿Cuánto vale $Y$ en
+          $s = 1$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Parece que has evaluado solo el $s^{2}$ del numerador. En $s=1$ el
+              numerador es $1+1=2$ y el denominador es 1.
+          - valor: '0.5'
+            mensaje: |
+              Has dado la vuelta a la fracción. Es $(s^{2}+1)/s^{4}$, no al
+              revés.
+        pista: |
+          $(1+1)/1$.
+        desarrollo: |
+          $$
+          Y\left(1 - \frac{1}{s^{2}+1}\right) = \frac{1}{s^{2}}
+          \;\Longrightarrow\;
+          Y\cdot\frac{s^{2}}{s^{2}+1} = \frac{1}{s^{2}}
+          \;\Longrightarrow\;
+          Y = \frac{s^{2}+1}{s^{4}}
+          $$
+
+          En $s=1$ vale $2/1 = 2$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'La integral es una convolución, así que su transformada es el producto.'
+          - texto: '$\mathcal{L}\{\text{sen}\,t\} = \frac{1}{s^{2}+1}$ y $\mathcal{L}\{t\} = \frac{1}{s^{2}}$.'
+          - texto: 'La ecuación transformada queda $Y = \frac{1}{s^{2}} + \frac{1}{s^{2}+1}Y$.'
+          - texto: 'Despejando, $Y = \frac{s^{2}+1}{s^{4}} = \frac{1}{s^{2}}+\frac{1}{s^{4}}$.'
+          - texto: 'Antitransformando sale $y(t) = t + t^{3}$.'
+            trampa: true
+            mensaje: |
+              Falta el factorial. $\mathcal{L}\{t^{n}\} = n!/s^{n+1}$, así que
+              $1/s^{4}$ corresponde a $t^{3}/3!= t^{3}/6$, no a $t^{3}$. La
+              respuesta correcta es $y(t) = t + t^{3}/6$.
+    resolucion: |
+      **Reconocer la convolución** es el ejercicio entero. La integral
+
+      $$
+      \int_{0}^{t}\text{sen}(t-u)\,y(u)\,du
+      $$
+
+      es $(\text{sen}\,t) * y(t)$, y la propiedad clave dice que la transformada
+      de una convolución es el **producto** de las transformadas.
+
+      **Transformando toda la ecuación:**
+
+      $$
+      Y(s) = \frac{1}{s^{2}} + \frac{1}{s^{2}+1}\,Y(s)
+      $$
+
+      Y aquí ha pasado lo importante: **la incógnita ha salido de la integral**.
+      Ahora es una ecuación algebraica.
+
+      **Despejando:**
+
+      $$
+      Y\left(1-\frac{1}{s^{2}+1}\right) = \frac{1}{s^{2}}
+      \;\Longrightarrow\;
+      Y\cdot\frac{s^{2}}{s^{2}+1} = \frac{1}{s^{2}}
+      \;\Longrightarrow\;
+      Y = \frac{s^{2}+1}{s^{4}} = \frac{1}{s^{2}}+\frac{1}{s^{4}}
+      $$
+
+      **Antitransformando**, con cuidado con los factoriales:
+
+      $$
+      \mathcal{L}^{-1}\left\{\frac{1}{s^{2}}\right\} = t,
+      \qquad
+      \mathcal{L}^{-1}\left\{\frac{1}{s^{4}}\right\} = \frac{t^{3}}{3!} = \frac{t^{3}}{6}
+      $$
+
+      $$
+      \boxed{\;y(t) = t + \frac{t^{3}}{6}\;}
+      $$
+
+      **La comprobación**, que aquí sale barata: sustituyendo en la ecuación
+      original, con $y(0)=0$, los dos lados coinciden. Y hay un control más
+      rápido: en $t=0$ la integral vale 0, así que la ecuación exige $y(0)=0$.
+      Nuestra solución cumple. ✓
+
+      > **El factorial de la tabla es el error silencioso del tema.**
+      > $1/s^{4}$ no es $t^{3}$: es $t^{3}/6$. Y como la forma de la respuesta
+      > parece correcta, se cuela con facilidad.

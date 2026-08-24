@@ -1,0 +1,228 @@
+---
+asignatura: calculo
+tema: 10
+titulo: Transformada de Laplace
+descripcion: El rodeo que convierte una ecuación diferencial en una ecuación algebraica. Transformada, inversa por fracciones simples, sistemas y ecuaciones integrales.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 10 y de los boletines de Transformada de Laplace · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+En el tema 9 cada tipo de ecuación diferencial tenía su método, y acertar el
+método era medio ejercicio. La transformada de Laplace propone otra cosa: **un
+solo procedimiento para todas**, a cambio de dar un rodeo.
+
+$$
+\mathcal{L}\{f(t)\} = F(s) = \int_{0}^{\infty} f(t)\,e^{-st}\,dt
+$$
+
+La definición asusta y casi nunca se usa. Lo que importa es lo que **hace**:
+convierte derivar en multiplicar.
+
+$$
+\mathcal{L}\{y'\} = sY - y(0)
+\qquad
+\mathcal{L}\{y''\} = s^{2}Y - s\,y(0) - y'(0)
+$$
+
+Y eso lo cambia todo. Una ecuación diferencial en $t$ se convierte en una
+**ecuación algebraica** en $s$: se despeja $Y$ como se despeja una $x$ de
+bachillerato, y luego se vuelve.
+
+## El rodeo, que es la idea entera
+
+<figure class="figura-examen">
+  <svg viewBox="-20 -25 460 210" role="img" aria-labelledby="t10rodT t10rodD">
+    <title id="t10rodT">El rodeo por el dominio de s</title>
+    <desc id="t10rodD">Un diagrama en cuatro esquinas. Arriba a la izquierda, la ecuación diferencial; abajo a la izquierda, su solución. El camino directo entre ambas es difícil. El rodeo va hacia arriba a la derecha con la transformada, se resuelve algebraicamente, y baja con la transformada inversa.</desc>
+
+    <g font-family="var(--mono)" font-size="10.5">
+      <rect x="0" y="0" width="150" height="34" fill="var(--panel)" stroke="var(--rule)" stroke-width="1.4"></rect>
+      <text x="10" y="15" fill="var(--ink)">EDO en t</text>
+      <text x="10" y="28" fill="var(--faint)">y'' + 2y' + y = f(t)</text>
+
+      <rect x="248" y="0" width="150" height="34" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4"></rect>
+      <text x="258" y="15" fill="var(--ink)">ecuación en s</text>
+      <text x="258" y="28" fill="var(--live)">(s²+2s+1)Y = F(s)+…</text>
+
+      <rect x="248" y="126" width="150" height="34" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4"></rect>
+      <text x="258" y="141" fill="var(--ink)">Y(s) despejada</text>
+      <text x="258" y="154" fill="var(--live)">álgebra, nada más</text>
+
+      <rect x="0" y="126" width="150" height="34" fill="var(--panel)" stroke="var(--rule)" stroke-width="1.4"></rect>
+      <text x="10" y="141" fill="var(--ink)">la solución y(t)</text>
+      <text x="10" y="154" fill="var(--faint)">con y(0) ya dentro</text>
+
+      <defs>
+        <marker id="t10f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--live)"></path>
+        </marker>
+        <marker id="t10x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--faint)"></path>
+        </marker>
+      </defs>
+
+      <line x1="152" y1="17" x2="244" y2="17" stroke="var(--live)" stroke-width="2" marker-end="url(#t10f)"></line>
+      <line x1="323" y1="36" x2="323" y2="122" stroke="var(--live)" stroke-width="2" marker-end="url(#t10f)"></line>
+      <line x1="246" y1="143" x2="154" y2="143" stroke="var(--live)" stroke-width="2" marker-end="url(#t10f)"></line>
+      <line x1="75" y1="36" x2="75" y2="122" stroke="var(--faint)" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#t10x)"></line>
+
+      <text x="160" y="10" fill="var(--live)">transformar</text>
+      <text x="330" y="84" fill="var(--live)">despejar Y</text>
+      <text x="160" y="160" fill="var(--live)">antitransformar</text>
+      <text x="-14" y="84" fill="var(--faint)" transform="rotate(-90 -14 84)">el camino difícil</text>
+    </g>
+  </svg>
+  <figcaption>
+    Tres pasos fáciles en vez de uno difícil. Y el rodeo trae una ventaja que no
+    es obvia: <strong>las condiciones iniciales entran en la primera flecha</strong>,
+    así que al final no hay que ajustar ninguna constante.
+  </figcaption>
+</figure>
+
+Esa última frase es lo que hace a Laplace especialmente cómodo. En el tema 9
+resolvías la general, salían dos constantes y luego había que imponer
+$y(0)$ e $y'(0)$ resolviendo un sistema. Aquí **las condiciones iniciales están
+metidas desde el primer paso** y lo que sale ya es la solución particular.
+
+## La tabla, que es lo que de verdad se usa
+
+La definición se usa una vez, para demostrar dos o tres casos. Luego se trabaja
+con la tabla y con dos propiedades.
+
+| $f(t)$ | $F(s)$ |
+|---|---|
+| $1$ | $\dfrac{1}{s}$ |
+| $t^{n}$ | $\dfrac{n!}{s^{n+1}}$ |
+| $e^{at}$ | $\dfrac{1}{s-a}$ |
+| $\text{sen}\,at$ | $\dfrac{a}{s^{2}+a^{2}}$ |
+| $\cos at$ | $\dfrac{s}{s^{2}+a^{2}}$ |
+
+**Y las dos propiedades que resuelven casi todo lo demás:**
+
+- **Traslación en $s$:** multiplicar por $e^{at}$ en $t$ es desplazar la $s$.
+  $\mathcal{L}\{e^{at}f(t)\} = F(s-a)$. Así, $e^{-2t}\text{sen}\,3t$ no necesita
+  entrada propia: se coge la del seno y se cambia $s$ por $s+2$.
+- **Traslación en $t$:** retrasar la función es multiplicar por una exponencial.
+  $\mathcal{L}\{f(t-a)\,u(t-a)\} = e^{-as}F(s)$. Es la que aparece cuando el
+  enunciado define la función a trozos, con un 0 al principio.
+
+<ErrorTipico titulo="Ver un e⁻ᵃˢ y no reconocer un retraso">
+Cuando en la transformada inversa aparece un factor $e^{-2s}$, **no se toca**: no
+es parte de la fracción y no entra en las fracciones simples.
+
+Lo que dice es que la respuesta está **retrasada dos unidades**: se
+antitransforma el resto como si el factor no estuviera, y al final se sustituye
+$t$ por $t-2$ y se multiplica por el escalón $u(t-2)$.
+
+Meterlo en las fracciones simples es el error que más descoloca del tema, porque
+produce un sinsentido algebraico sin avisar.
+</ErrorTipico>
+
+## Volver: la inversa por fracciones simples
+
+Al despejar $Y(s)$ casi siempre queda un cociente de polinomios, y la técnica
+para deshacerlo es la de siempre: **descomponer en fracciones simples** hasta
+reconocer cada trozo en la tabla.
+
+$$
+Y(s) = \frac{3s}{s^{2}-s-6}
+= \frac{3s}{(s-3)(s+2)}
+= \frac{A}{s-3}+\frac{B}{s+2}
+\;\longrightarrow\;
+Ae^{3t}+Be^{-2t}
+$$
+
+Los tres casos que salen, y qué hay que reconocer en cada uno:
+
+| denominador | qué sale |
+|---|---|
+| raíces reales distintas | exponenciales |
+| raíz real doble | $e^{at}$ y $t\,e^{at}$ |
+| **no factoriza** ($s^{2}+2s+5$) | senos y cosenos |
+
+El tercero es el que se atasca. **Un denominador de segundo grado sin raíces
+reales no se factoriza: se completa el cuadrado.**
+
+$$
+\frac{2s+2}{s^{2}+2s+5} = \frac{2(s+1)}{(s+1)^{2}+4}
+\;\longrightarrow\;
+2e^{-t}\cos 2t
+$$
+
+Reconocer ahí la forma «coseno trasladado» es lo que separa el ejercicio hecho
+del ejercicio atascado.
+
+## Para qué compensa de verdad
+
+Laplace no se usa para resolver una separable, que sale antes a mano. Se usa en
+tres sitios donde los métodos del tema 9 se atascan, y esos tres son los que
+caen:
+
+**1 · Sistemas de ecuaciones diferenciales.** Dos funciones incógnita
+entrelazadas:
+
+$$
+\begin{cases} x' + y = 2\\ y' + x = t \end{cases}
+$$
+
+Al transformar se convierte en un **sistema lineal de dos ecuaciones con dos
+incógnitas $X(s)$ e $Y(s)$**, que se resuelve por reducción como cualquier
+sistema. Sin Laplace hay que derivar y sustituir, y es mucho más largo.
+
+**2 · Segundos miembros a trozos.** Una fuerza que se enciende en $t=2$ y antes
+no existe. En el tema 9 habría que resolver por tramos y pegar; aquí es un factor
+$e^{-2s}$ y ya está.
+
+**3 · Ecuaciones integrales**, donde la incógnita está dentro de una integral:
+
+$$
+y(t) = t + \int_{0}^{t}\text{sen}(t-u)\,y(u)\,du
+$$
+
+Esa integral es una **convolución**, y Laplace la convierte en un producto:
+
+$$
+\mathcal{L}\{f*g\} = F(s)\cdot G(s)
+$$
+
+Así que la ecuación pasa a ser $Y = \frac{1}{s^{2}} + \frac{1}{s^{2}+1}Y$, se
+despeja $Y$ y se vuelve. **Sin Laplace no hay forma razonable de atacarla**, y
+por eso este tipo de ejercicio aparece siempre que aparece Laplace.
+
+<ErrorTipico titulo="Intentar la convolución sin reconocerla">
+La señal es una integral de $0$ a $t$ donde el integrando lleva $(t-u)$ y $u$ en
+factores separados. Eso **es** una convolución, aunque el enunciado no use la
+palabra.
+
+Si intentas integrar eso directamente te bloqueas, porque la incógnita $y$ está
+dentro de la integral. El movimiento correcto es transformar toda la ecuación y
+usar que la transformada de una convolución es el producto de las
+transformadas.
+</ErrorTipico>
+
+## Lo que hay que llevar sabido
+
+| lo que ves | qué significa |
+|---|---|
+| $y''$, $y'$ | $s^{2}Y - sy(0)-y'(0)$, $\;sY-y(0)$ |
+| un sistema de dos EDOs | sistema lineal en $X(s)$, $Y(s)$ |
+| $\int_0^t f(t-u)g(u)\,du$ | convolución → producto $F\cdot G$ |
+| $e^{-as}$ en la inversa | retraso: $f(t-a)\,u(t-a)$ |
+| $e^{at}$ multiplicando | traslación en $s$: $F(s-a)$ |
+| denominador que no factoriza | completa el cuadrado → seno o coseno |
+| $\dfrac{1}{(s-a)^{2}}$ | $t\,e^{at}$ |
+
+Y las tres frases de COMP4:
+
+- **La transformada convierte derivar en multiplicar por $s$**, y por eso una
+  ecuación diferencial se vuelve algebraica.
+- **Las condiciones iniciales entran al transformar**, no al final: lo que sale
+  ya es la solución particular.
+- **La transformada de una convolución es el producto de las transformadas**, y
+  eso es lo que hace resolubles las ecuaciones integrales.

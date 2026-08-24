@@ -1,0 +1,516 @@
+ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 11. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-paridad-antes-de-integrar
+    titulo: La paridad, que ahorra la mitad del trabajo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Decidir, sin calcular ninguna integral, qué coeficientes de Fourier se
+      anulan para cada una de estas funciones periódicas de periodo $2\pi$:
+
+      a) $f(t) = t^{2}$ en $(-\pi,\pi)$
+      b) $g(t) = t^{3}$ en $(-\pi,\pi)$
+    pide: Qué coeficientes son nulos en cada caso, y por qué.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cómo se comprueba si una función es par o impar?
+        opciones:
+          - texto: Sustituyendo t por −t y comparando con la función original
+            correcta: true
+            mensaje: |
+              Sí. Si sale la misma, es par; si sale la opuesta, es impar; y si no
+              sale ninguna de las dos, no tiene simetría y hay que calcular todos
+              los coeficientes.
+          - texto: Mirando si la gráfica pasa por el origen
+            mensaje: |
+              Pasar por el origen es necesario para ser impar, pero no
+              suficiente: $f(t)=t^{2}$ pasa por el origen y es par.
+          - texto: Viendo si el exponente es par o impar
+            mensaje: |
+              Funciona para potencias sueltas, pero no en general: $\cos t$ es par
+              y no tiene exponente, y $t^{2}+t$ no es ni par ni impar.
+      - tipo: calcular
+        titulo: El valor de la función reflejada
+        pregunta: |
+          Para $g(t)=t^{3}$, ¿cuánto vale $g(-2)$?
+        respuesta:
+          tipo: numero
+          valor: '-8'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '8'
+            mensaje: |
+              Un cubo conserva el signo: $(-2)^{3} = -8$, no $+8$. Es un cuadrado
+              el que lo pierde.
+          - valor: '-6'
+            mensaje: |
+              $-6$ sería $3\cdot(-2)$. Elevar al cubo es multiplicar por sí mismo
+              tres veces: $(-2)(-2)(-2) = -8$.
+        pista: |
+          $(-2)^3 = (-2)(-2)(-2)$. Tres factores negativos.
+        desarrollo: |
+          $$
+          g(-2) = (-2)^{3} = -8 = -g(2)
+          $$
+
+          Como $g(-t) = -g(t)$ para todo $t$, la función es **impar**.
+      - tipo: justificar
+        pregunta: |
+          Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: 'a) $f(-t)=(-t)^{2}=t^{2}=f(t)$, luego $f$ es **par**.'
+          - texto: 'Por tanto todos los $b_n$ valen 0 y la serie es de cosenos.'
+          - texto: 'b) $g(-t)=(-t)^{3}=-t^{3}=-g(t)$, luego $g$ es **impar**.'
+          - texto: 'Por tanto todos los $a_n$ valen 0, incluido $a_0$, y la serie es de senos.'
+          - texto: 'Como las dos son potencias, las dos tienen los mismos coeficientes nulos.'
+            trampa: true
+            mensaje: |
+              Son casos opuestos precisamente por el exponente: el cuadrado es par
+              y el cubo impar. Una da serie de cosenos y la otra de senos, y no
+              comparten ni un coeficiente nulo.
+    resolucion: |
+      **Mirar la paridad es el primer movimiento del tema**, y cuesta una
+      sustitución.
+
+      **a) $f(t)=t^{2}$.**
+
+      $$
+      f(-t) = (-t)^{2} = t^{2} = f(t)
+      \qquad\Longrightarrow\qquad
+      \textbf{par}
+      $$
+
+      El producto de una función par por un seno (impar) es impar, y una función
+      impar integrada sobre un intervalo simétrico da cero. Así que
+
+      $$
+      b_n = 0 \text{ para todo } n
+      $$
+
+      y la serie es **solo de cosenos**.
+
+      **b) $g(t)=t^{3}$.**
+
+      $$
+      g(-t) = (-t)^{3} = -t^{3} = -g(t)
+      \qquad\Longrightarrow\qquad
+      \textbf{impar}
+      $$
+
+      Ahora se anulan los otros:
+
+      $$
+      a_n = 0 \text{ para todo } n,
+      \qquad\text{y también } a_0 = 0
+      $$
+
+      y la serie es **solo de senos**.
+
+      > **Lo que se ahorra.** En cada caso desaparece la mitad de las integrales,
+      > y no son integrales cortas: llevan integración por partes dos veces. Y
+      > escribir «como $f$ es par, $b_n=0$ para todo $n$» **es una respuesta
+      > completa**: no hay que demostrarlo cada vez.
+
+  - id: ej-dirichlet-en-el-salto
+    titulo: A qué converge la serie en un salto
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea $f(t)$ la función periódica de periodo 2 definida por $f(t) = -1$ si
+      $-1<t<0$ y $f(t)=1$ si $0<t<1$. Calcular el valor de su serie de Fourier
+      $S(t)$ en $t=0$ y en $t=0{,}5$.
+    pide: Los valores S(0) y S(0,5).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué dice el teorema de Dirichlet en un punto donde la función salta?
+        opciones:
+          - texto: Que la serie converge a la media de los dos límites laterales
+            correcta: true
+            mensaje: |
+              Exacto. La serie no elige un lado: se queda exactamente en medio,
+              y eso pasa aunque la función esté definida en ese punto con otro
+              valor.
+          - texto: Que la serie converge al valor de la función en ese punto
+            mensaje: |
+              Solo donde $f$ es continua. En un salto la serie hace otra cosa, y
+              es justo lo que el examen pregunta.
+          - texto: Que la serie no converge en ese punto
+            mensaje: |
+              Sí converge — ese es el contenido del teorema. Lo que no hace es
+              converger a uno de los dos valores laterales.
+      - tipo: calcular
+        titulo: El valor en el salto
+        pregunta: |
+          En $t=0$ la función pasa de $-1$ a $1$. ¿Cuánto vale $S(0)$?
+        respuesta:
+          tipo: numero
+          valor: '0'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              1 es el límite por la derecha. La serie no toma ese lado: toma la
+              media de los dos, $(-1+1)/2 = 0$.
+          - valor: '-1'
+            mensaje: |
+              $-1$ es el límite por la izquierda, el otro lado del salto. La
+              serie se queda en el punto medio.
+        pista: |
+          La media de −1 y 1.
+        desarrollo: |
+          $$
+          S(0) = \frac{f(0^-)+f(0^+)}{2} = \frac{-1+1}{2} = 0
+          $$
+
+          Y fíjate en que la función **ni siquiera está definida** en $t=0$ según
+          el enunciado. Da igual: la serie sí vale algo ahí, y vale 0.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'En $t=0$ hay un salto: por la izquierda $-1$, por la derecha $1$.'
+          - texto: 'Dirichlet dice que $S(0)$ es la media, o sea 0.'
+          - texto: 'En $t=0{,}5$ la función es continua y vale 1.'
+          - texto: 'Luego $S(0{,}5) = 1$, porque en los puntos de continuidad serie y función coinciden.'
+          - texto: 'Como $f$ no está definida en $t=0$, la serie tampoco lo está.'
+            trampa: true
+            mensaje: |
+              La serie está definida en todos los puntos: es una suma de senos y
+              cosenos, que existen siempre. Que la función tenga un hueco no le
+              impide a la serie tomar un valor ahí — y ese valor es la media de
+              los laterales.
+    resolucion: |
+      **Dos puntos, dos situaciones distintas**, y el ejercicio existe para que
+      se vea la diferencia.
+
+      **En $t=0$ hay un salto.** Los límites laterales son
+
+      $$
+      f(0^-) = -1,
+      \qquad
+      f(0^+) = 1
+      $$
+
+      y el teorema de Dirichlet da
+
+      $$
+      S(0) = \frac{-1+1}{2} = 0
+      $$
+
+      **En $t=0{,}5$ la función es continua**, y vale 1. Ahí serie y función
+      coinciden:
+
+      $$
+      S(0{,}5) = 1
+      $$
+
+      **La observación que puntúa.** La función **no está definida** en $t=0$: el
+      enunciado la define en $(-1,0)$ y en $(0,1)$, dejando el punto fuera. Y sin
+      embargo la serie sí vale algo ahí. La serie de Fourier es una suma de senos
+      y cosenos, funciones continuas todas: existe en todos los puntos aunque la
+      función original tenga huecos.
+
+      > Esta es exactamente la función «onda cuadrada», y es el ejemplo de
+      > libro del tema. Su serie es
+      > $S(t) = \frac{4}{\pi}\left(\text{sen}\,\pi t + \frac{1}{3}\text{sen}\,3\pi t + \cdots\right)$,
+      > y en $t=0$ todos los senos valen 0: la serie da 0 término a término, sin
+      > necesidad de Dirichlet. **Las dos vías coinciden**, que es la
+      > comprobación.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Del boletín de problemas complementarios del tema 11.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: serie-de-f-igual-t
+    titulo: La serie de f(t)=t, y una suma numérica de regalo
+    fuente: Ejercicio 11.5 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2015/2016 6E)
+    nivel: examen
+    enunciado: |
+      Sea $f(t)$ la función periódica de periodo $2\pi$ definida por $f(t) = t$
+      para $-\pi < t < \pi$.
+
+      a) Dibujar $f(t)$.
+      b) Obtener su serie de Fourier $S(t)$.
+      c) Calcular $S(0)$, $S\left(\frac{121\pi}{2}\right)$ y $S(2001\pi)$.
+      d) Obtener la suma de la serie
+      $\displaystyle\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{2n-1}$.
+    pide: El dibujo, la serie, tres valores y la suma numérica.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $f(t)=t$ en $(-\pi,\pi)$. ¿Qué se puede decir antes de integrar?
+        opciones:
+          - texto: Es impar, así que todos los coeficientes de coseno se anulan
+            correcta: true
+            mensaje: |
+              Sí, y eso elimina la mitad del trabajo. La serie será solo de
+              senos, y ni siquiera hay que calcular $a_0$.
+          - texto: Es par, así que la serie será de cosenos
+            mensaje: |
+              $f(-t) = -t = -f(t)$: es **impar**, no par. La serie será de senos.
+          - texto: No tiene simetría y hay que calcular todos los coeficientes
+            mensaje: |
+              Sí la tiene: la identidad es la función impar por excelencia. Fíjate
+              en la gráfica — es simétrica respecto del origen.
+      - tipo: calcular
+        titulo: El valor en el salto
+        pregunta: |
+          En $t=\pi$ la función salta de $\pi$ (por la izquierda) a $-\pi$ (por
+          la derecha, ya en el periodo siguiente). ¿Cuánto vale $S(\pi)$?
+        respuesta:
+          tipo: numero
+          valor: '0'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3.1416'
+            mensaje: |
+              $\pi$ es el límite por la izquierda. Dirichlet toma la media de los
+              dos laterales, que son $\pi$ y $-\pi$.
+          - valor: '6.2832'
+            mensaje: |
+              $2\pi$ es la suma de los dos laterales sin dividir. La media exige
+              dividir entre 2, y además los signos son opuestos.
+        pista: |
+          La media de π y −π.
+        desarrollo: |
+          $$
+          S(\pi) = \frac{\pi + (-\pi)}{2} = 0
+          $$
+
+          Y esto es lo que hace falta para el apartado c): $2001\pi$ es un
+          múltiplo impar de $\pi$, así que cae exactamente en un salto.
+      - tipo: calcular
+        titulo: Reducir el argumento grande
+        pregunta: |
+          $S$ tiene periodo $2\pi$. ¿A qué punto del intervalo $(-\pi,\pi]$
+          equivale $\frac{121\pi}{2}$? Da la respuesta como múltiplo de $\pi$,
+          es decir, el número que multiplica a $\pi$.
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.01
+          formato: en forma exacta (1/2) o con un decimal
+        distractores:
+          - valor: '60.5'
+            mensaje: |
+              $60{,}5$ es el múltiplo original, sin reducir. Hay que restarle
+              múltiplos de 2 hasta caer en el intervalo básico: $60{,}5 - 60 = 0{,}5$.
+          - valor: '1.5'
+            mensaje: |
+              Te has pasado o te has quedado corto al restar. $60{,}5$ menos 60
+              —o sea 30 periodos completos— da $0{,}5$, que ya está dentro.
+        pista: |
+          121/2 = 60,5. Réstale múltiplos de 2 hasta quedar entre −1 y 1.
+        desarrollo: |
+          $$
+          \frac{121\pi}{2} = 60{,}5\,\pi = 0{,}5\,\pi + 60\pi = \frac{\pi}{2}+30\cdot 2\pi
+          $$
+
+          Treinta periodos completos, así que
+          $S\left(\frac{121\pi}{2}\right) = S\left(\frac{\pi}{2}\right)$. Y ahí
+          la función es continua, luego vale $\pi/2$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'a) La gráfica es una diente de sierra: rectas de pendiente 1 que saltan en los múltiplos impares de $\pi$.'
+          - texto: 'b) Como $f$ es impar, $a_n=0$ y la serie es $S(t)=\sum \frac{2(-1)^{n+1}}{n}\,\text{sen}\,nt$.'
+          - texto: 'c) $S(0)=0$ por continuidad, $S(121\pi/2)=\pi/2$ tras reducir, y $S(2001\pi)=0$ por ser un salto.'
+          - texto: 'd) Evaluando la serie en $t=\pi/2$ se obtiene la suma pedida.'
+          - texto: 'c) $S(2001\pi) = \pi$, porque es el valor de la función justo antes del salto.'
+            trampa: true
+            mensaje: |
+              En un salto la serie **no** toma el valor de un lado. $2001$ es
+              impar, así que $2001\pi$ es un punto de discontinuidad, y Dirichlet
+              da la media: $(\pi + (-\pi))/2 = 0$.
+    resolucion: |
+      **a) La gráfica** es una **diente de sierra**: en cada periodo, la recta
+      $y=t$ subiendo de $-\pi$ a $\pi$, y después un salto vertical de vuelta
+      abajo. Los saltos están en los múltiplos impares de $\pi$.
+
+      **b) La serie.** Como $f$ es **impar**, todos los $a_n$ se anulan —y $a_0$
+      también— sin calcular nada. Solo quedan los senos:
+
+      $$
+      b_n = \frac{2}{\pi}\int_{0}^{\pi} t\,\text{sen}\,nt\,dt
+      = \frac{2(-1)^{n+1}}{n}
+      $$
+
+      $$
+      S(t) = \sum_{n=1}^{\infty}\frac{2(-1)^{n+1}}{n}\,\text{sen}\,nt
+      = 2\left(\text{sen}\,t - \frac{\text{sen}\,2t}{2} + \frac{\text{sen}\,3t}{3} - \cdots\right)
+      $$
+
+      **c) Los tres valores**, y cada uno ilustra una cosa distinta:
+
+      | punto | situación | valor |
+      |---|---|---|
+      | $t=0$ | continuidad, $f(0)=0$ | $S(0)=0$ |
+      | $t=\frac{121\pi}{2}$ | $=\frac{\pi}{2}+30\cdot 2\pi$, continuidad | $S = \frac{\pi}{2}$ |
+      | $t=2001\pi$ | múltiplo **impar** de $\pi$: salto | $S = 0$ |
+
+      **d) La suma de la serie**, que es el remate. Evaluando la serie en
+      $t = \pi/2$, donde $f$ es continua y vale $\pi/2$:
+
+      $$
+      \frac{\pi}{2} = 2\left(\text{sen}\,\frac{\pi}{2} - \frac{\text{sen}\,\pi}{2} + \frac{\text{sen}\,\frac{3\pi}{2}}{3} - \cdots\right)
+      $$
+
+      Los senos de los múltiplos pares de $\pi/2$ se anulan y los impares valen
+      $1,-1,1,-1,\dots$, así que queda
+
+      $$
+      \frac{\pi}{2} = 2\left(1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7}+\cdots\right)
+      $$
+
+      $$
+      \boxed{\;\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{2n-1} = \frac{\pi}{4}\;}
+      $$
+
+      > **Esto es lo que hace especial al tema.** Esa suma no se puede calcular
+      > con nada del tema 2: los criterios de convergencia dicen que converge,
+      > pero no a cuánto. Fourier da el valor exacto, y de propina. El truco está
+      > en **elegir el punto donde evaluar**: $\pi/2$ mata los términos pares y
+      > deja justo la serie que se pide.
+
+  - id: extension-par-de-t
+    titulo: La extensión par, y una serie de cuadrados
+    fuente: Ejercicio 11.8 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2017/2018 6E)
+    nivel: examen
+    enunciado: |
+      Sea la función $f(t) = t$ donde $0 \le t < \pi$.
+
+      a) Obtener la extensión par de la función $f(t)$.
+      b) Representar gráficamente la función extendida.
+      c) Obtener la serie de Fourier $S(t)$ de la función $f(t)$.
+      d) Calcular los valores de $S(t)$ y $f(t)$ en los puntos $t=0$ y $t=\pi$.
+      e) Calcular la suma de la serie
+      $\displaystyle\sum_{n=1}^{\infty}\frac{1}{(2n-1)^{2}}$.
+    pide: La extensión par, su serie, los valores pedidos y la suma.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La función solo está dada en $[0,\pi)$. ¿Qué es «extenderla de forma
+          par»?
+        opciones:
+          - texto: Definirla en (−π,0) como el reflejo especular, f(−t)=f(t)
+            correcta: true
+            mensaje: |
+              Eso es. Se copia el trozo dado y se refleja como en un espejo, y la
+              función resultante es par: su serie será solo de cosenos.
+          - texto: Definirla en (−π,0) con el signo cambiado
+            mensaje: |
+              Eso es la extensión **impar**, que también existe y da una serie de
+              senos. El enunciado pide la par.
+          - texto: Repetirla con periodo π
+            mensaje: |
+              Repetir es lo que se hace después, para hacerla periódica. Extender
+              es decidir qué vale en la otra mitad del periodo.
+      - tipo: calcular
+        titulo: El valor de la extensión a la izquierda
+        pregunta: |
+          Si la extensión es par, ¿cuánto vale la función extendida en
+          $t = -2$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '-2'
+            mensaje: |
+              Ese sería el valor de la extensión **impar**. En la par el reflejo
+              conserva la altura: $f(-2)=f(2)=2$.
+          - valor: '0'
+            mensaje: |
+              La función no vale cero fuera de $[0,\pi)$: se extiende, no se
+              anula. En $t=-2$ la extensión par vale lo mismo que en $t=2$.
+        pista: |
+          Par significa $f(-t)=f(t)$. Y $f(2)=2$.
+        desarrollo: |
+          $$
+          f_{\text{par}}(-2) = f(2) = 2
+          $$
+
+          La extensión par de $f(t)=t$ es $f(t) = |t|$ en $(-\pi,\pi)$: una **uve**
+          con el vértice en el origen.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'a) La extensión par es $|t|$ en $(-\pi,\pi)$, extendida con periodo $2\pi$.'
+          - texto: 'b) La gráfica es una sucesión de uves, continua en todas partes.'
+          - texto: 'c) Al ser par, $b_n=0$ y la serie es de cosenos, con $a_0/2 = \pi/2$.'
+          - texto: 'd) Como la extensión es continua, $S(0)=f(0)=0$ y $S(\pi)=f(\pi)=\pi$.'
+          - texto: 'd) En $t=\pi$ hay un salto, así que $S(\pi)=0$ por Dirichlet.'
+            trampa: true
+            mensaje: |
+              Aquí **no** hay salto. La extensión par de $t$ es $|t|$, y en $\pi$
+              vale $\pi$ tanto por la izquierda como por la derecha (donde
+              empieza el periodo siguiente bajando desde $\pi$). Es continua, y
+              por eso serie y función coinciden. Esa es justamente la diferencia
+              con el ejercicio de la diente de sierra.
+    resolucion: |
+      **a) y b) La extensión par.** Se refleja el trozo dado como en un espejo:
+
+      $$
+      f_{\text{par}}(t) = |t|,
+      \qquad t\in(-\pi,\pi)
+      $$
+
+      Repetida con periodo $2\pi$, la gráfica es una **sucesión de uves** con los
+      vértices en los múltiplos pares de $\pi$ y los picos en los impares. Y —esto
+      importa para el apartado d)— **es continua en todas partes**, incluidos los
+      picos.
+
+      **c) La serie.** Al ser par, $b_n = 0$ y solo hay cosenos:
+
+      $$
+      \frac{a_0}{2} = \frac{1}{\pi}\int_{0}^{\pi} t\,dt = \frac{\pi}{2},
+      \qquad
+      a_n = \frac{2}{\pi}\int_{0}^{\pi} t\cos nt\,dt = \frac{2\,((-1)^{n}-1)}{\pi n^{2}}
+      $$
+
+      Ese numerador vale $0$ si $n$ es par y $-4$ si es impar, así que **solo
+      sobreviven los impares**:
+
+      $$
+      S(t) = \frac{\pi}{2} - \frac{4}{\pi}\sum_{n=1}^{\infty}\frac{\cos\bigl((2n-1)t\bigr)}{(2n-1)^{2}}
+      $$
+
+      **d) Los valores.** La extensión es continua, así que serie y función
+      coinciden en los dos puntos:
+
+      $$
+      S(0)=f(0)=0,
+      \qquad
+      S(\pi)=f(\pi)=\pi
+      $$
+
+      > **Compáralo con la diente de sierra.** Allí la extensión tenía saltos y
+      > Dirichlet daba la media; aquí la extensión par los ha eliminado. **La
+      > misma función de partida, extendida de dos maneras, da comportamientos
+      > distintos en los bordes** — y el enunciado pide los dos valores
+      > precisamente para ver si lo has notado.
+
+      **e) La suma.** Evaluando la serie en $t=0$, donde $S(0)=0$ y todos los
+      cosenos valen 1:
+
+      $$
+      0 = \frac{\pi}{2} - \frac{4}{\pi}\sum_{n=1}^{\infty}\frac{1}{(2n-1)^{2}}
+      $$
+
+      $$
+      \boxed{\;\sum_{n=1}^{\infty}\frac{1}{(2n-1)^{2}} = \frac{\pi^{2}}{8}\;}
+      $$
+
+      Y aquí el punto elegido es el más cómodo posible: en $t=0$ todos los
+      cosenos valen 1 y la serie se queda desnuda.
