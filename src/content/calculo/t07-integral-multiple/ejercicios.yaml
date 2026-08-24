@@ -1,0 +1,748 @@
+ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 7. Nuestros, no de examen ni del boletín.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-doble-sobre-rectangulo
+    titulo: La primera integral doble, sobre un rectángulo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular $\displaystyle\int_{0}^{2}\!\!\int_{0}^{1} (x+y)\,dy\,dx$.
+    pide: El valor de la integral doble.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En $\int_{0}^{2}\!\int_{0}^{1} (x+y)\,dy\,dx$, ¿cuál se integra primero
+          y respecto de qué variable?
+        opciones:
+          - texto: La de dentro, respecto de y, entre 0 y 1
+            correcta: true
+            mensaje: |
+              Eso es. Se lee de dentro hacia fuera, y el diferencial que está
+              pegado a la función dice cuál es la variable: aquí $dy$.
+          - texto: La de fuera, respecto de x, entre 0 y 2
+            mensaje: |
+              Al revés. La de fuera se hace la última, cuando ya no queda $y$.
+              El orden lo marcan los diferenciales, de dentro hacia fuera.
+          - texto: Da igual el orden, porque el recinto es un rectángulo
+            mensaje: |
+              El **resultado** sí da igual sobre un rectángulo con límites
+              constantes, y eso es cierto. Pero el orden de ejecución lo fija la
+              notación: primero $dy$, después $dx$.
+      - tipo: calcular
+        titulo: La integral de dentro
+        pregunta: |
+          ¿Cuánto vale $\int_{0}^{1}(x+y)\,dy$, tratando $x$ como constante?
+          Escribe el resultado evaluado en $x=1$.
+        respuesta:
+          tipo: numero
+          valor: '1.5'
+          tolerancia: 0.01
+          formato: en forma exacta (3/2) o con un decimal
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Te has dejado el término $1/2$ que viene de integrar la $y$. La
+              primitiva es $xy + y^{2}/2$, y en $y=1$ vale $x + 1/2$.
+          - valor: '2'
+            mensaje: |
+              Parece que has integrado la $x$ también. Con $dy$, la $x$ es
+              constante: $\int x\,dy = xy$, no $x^{2}/2$.
+        pista: |
+          La primitiva respecto de y es $xy + y^{2}/2$. Evalúala en 1 y en 0, con x=1.
+        desarrollo: |
+          $$
+          \int_{0}^{1}(x+y)\,dy = \Bigl[xy + \tfrac{y^{2}}{2}\Bigr]_{0}^{1}
+          = x + \tfrac{1}{2}
+          $$
+
+          En $x=1$ eso vale $3/2$. Fíjate en que **el resultado todavía depende
+          de $x$**: es lo normal, porque queda una integral por hacer.
+      - tipo: calcular
+        titulo: La integral de fuera
+        pregunta: |
+          ¿Cuánto vale $\int_{0}^{2}\left(x+\frac{1}{2}\right)dx$?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Te has dejado el término $1/2$, que integrado entre 0 y 2 aporta 1.
+              $\int_0^2 x\,dx = 2$, y hay que sumarle ese 1.
+          - valor: '4.5'
+            mensaje: |
+              Parece que has usado $3/2$ como si fuera constante:
+              $\int_0^2 (3/2)dx = 3$... pero además has sumado la $x$. El
+              integrando es $x+1/2$, no $x+3/2$.
+        pista: |
+          $\int_0^2 x\,dx = 2$ y $\int_0^2 (1/2)dx = 1$.
+        desarrollo: |
+          $$
+          \int_{0}^{2}\left(x+\tfrac{1}{2}\right)dx
+          = \Bigl[\tfrac{x^{2}}{2} + \tfrac{x}{2}\Bigr]_{0}^{2}
+          = 2 + 1 = 3
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Se integra de dentro hacia fuera; primero respecto de $y$, con la $x$ congelada.
+          - texto: 'Sale $x + 1/2$, que todavía depende de $x$: queda una integral.'
+          - texto: Integrando eso entre 0 y 2 sale 3.
+          - texto: 'Sobre un rectángulo con límites constantes, el otro orden daría lo mismo.'
+          - texto: 'Como el resultado de la primera integral depende de $x$, hay un error de planteamiento.'
+            trampa: true
+            mensaje: |
+              Es justo lo esperable. Después de integrar en $y$ la variable $y$
+              desaparece, pero la $x$ sigue ahí hasta que se integra en el paso
+              siguiente. Lo que sería un error es que quedara una $y$.
+    resolucion: |
+      **Una integral doble se hace por dentro.** No hay técnica nueva: son dos
+      integrales de una variable, encadenadas.
+
+      **Primera, en $y$**, con la $x$ como si fuera un número:
+
+      $$
+      \int_{0}^{1}(x+y)\,dy = \Bigl[xy + \tfrac{y^{2}}{2}\Bigr]_{0}^{1}
+      = x + \tfrac{1}{2}
+      $$
+
+      **Segunda, en $x$**, ya sobre una función de una sola variable:
+
+      $$
+      \int_{0}^{2}\left(x+\tfrac{1}{2}\right)dx = 2 + 1 = 3
+      $$
+
+      **Por qué este caso es el fácil.** Los cuatro límites son números, así que
+      el recinto es un rectángulo y el orden da igual. En cuanto el recinto deja
+      de ser un rectángulo, los límites de dentro llevan la otra variable y el
+      orden **sí** importa — que es de lo que va el resto del tema.
+
+  - id: ej-recinto-y-limites
+    titulo: Leer los límites de un recinto dibujado
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea $D$ el triángulo limitado por las rectas $y=0$, $x=2$ e $y=x$.
+      Escribir $\iint_D f\,dA$ con el orden $dy\,dx$.
+    pide: Los límites de integración en el orden dy dx.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Con el orden $dy\,dx$, ¿qué representan los límites de la integral
+          **interior**?
+        opciones:
+          - texto: Por dónde entra y por dónde sale una recta vertical fijada en un x
+            correcta: true
+            mensaje: |
+              Exacto. Te quedas en un $x$, subes en vertical, y anotas la curva
+              por la que entras y la curva por la que sales.
+          - texto: El rango total de valores que toma y en toda la región
+            mensaje: |
+              Eso valdría solo si la región fuera un rectángulo. En general la
+              altura de la región cambia con $x$, y por eso los límites de dentro
+              dependen de $x$.
+          - texto: Los valores extremos de x
+            mensaje: |
+              Esos son los límites de **fuera**. Los de dentro, con orden
+              $dy\,dx$, van en $y$.
+      - tipo: calcular
+        titulo: El límite superior interior
+        pregunta: |
+          Fijado un $x$ entre 0 y 2, la vertical entra por $y=0$. ¿Por dónde
+          sale, evaluado en $x=1{,}5$?
+        respuesta:
+          tipo: numero
+          valor: '1.5'
+          tolerancia: 0.01
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 es el límite de la $x$, no la altura del triángulo en ese punto.
+              La tapa superior es la recta $y=x$, así que en $x=1{,}5$ la altura
+              es $1{,}5$.
+          - valor: '0'
+            mensaje: |
+              Por $y=0$ es por donde **entra** la vertical, no por donde sale.
+              Sale por la recta inclinada $y=x$.
+        pista: |
+          La tapa de arriba es la recta y=x. Sustituye x=1,5.
+        desarrollo: |
+          La región está entre $y=0$ (abajo) e $y=x$ (arriba), así que
+
+          $$
+          \int_{0}^{2}\!\!\int_{0}^{x} f(x,y)\,dy\,dx
+          $$
+
+          En $x=1{,}5$ la vertical va de $y=0$ a $y=1{,}5$.
+      - tipo: justificar
+        pregunta: |
+          Ordena el planteamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'El triángulo tiene vértices $(0,0)$, $(2,0)$ y $(2,2)$.'
+          - texto: 'Con orden $dy\,dx$, fijas $x$ y subes: entras por $y=0$ y sales por $y=x$.'
+          - texto: 'La vertical corta al triángulo para $x$ entre 0 y 2.'
+          - texto: 'Luego la integral es $\int_{0}^{2}\int_{0}^{x} f\,dy\,dx$.'
+          - texto: 'Con el otro orden saldría $\int_{0}^{x}\int_{0}^{2} f\,dx\,dy$.'
+            trampa: true
+            mensaje: |
+              Ha quedado una $x$ en el límite **exterior**, y eso es imposible:
+              el resultado no puede depender de una variable ya integrada. El
+              orden correcto es $\int_{0}^{2}\int_{y}^{2} f\,dx\,dy$.
+    resolucion: |
+      **Dibujar primero.** El triángulo tiene vértices $(0,0)$, $(2,0)$ y
+      $(2,2)$: la hipotenusa es la recta $y=x$ y el lado derecho es $x=2$.
+
+      **La pregunta del orden $dy\,dx$:** me quedo en un $x$ y subo.
+
+      - **Entro** por $y=0$, el eje horizontal.
+      - **Salgo** por $y=x$, la hipotenusa.
+      - Y eso pasa para $x$ entre $0$ y $2$.
+
+      $$
+      \iint_D f\,dA = \int_{0}^{2}\!\!\int_{0}^{x} f(x,y)\,dy\,dx
+      $$
+
+      **El control de siempre**: el límite interior lleva una $x$ — correcto,
+      porque la altura del triángulo cambia con $x$. Los exteriores son números
+      — correcto.
+
+      > **Y con el otro orden, para practicar la vista:** fijas un $y$ y vas
+      > hacia la derecha. Entras por la hipotenusa, $x=y$, y sales por $x=2$;
+      > y eso pasa para $y$ entre 0 y 2. Sale
+      > $\int_{0}^{2}\int_{y}^{2} f\,dx\,dy$. Mismo recinto, otra lectura.
+
+  - id: ej-polares-primera
+    titulo: La primera integral en polares, y el jacobiano
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el área del círculo de radio 3 centrado en el origen mediante una
+      integral doble en coordenadas polares.
+    pide: El área del círculo, calculada con la integral.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Al cambiar a polares, ¿en qué se convierte el diferencial de área?
+        opciones:
+          - texto: En ρ·dρ·dθ, con el factor ρ del jacobiano
+            correcta: true
+            mensaje: |
+              Sí, y ese $\rho$ no es decoración: dos trocitos con el mismo
+              $d\rho$ y el mismo $d\theta$ tienen áreas distintas según lo lejos
+              que estén del centro.
+          - texto: En dρ·dθ, sin ningún factor extra
+            mensaje: |
+              Ese es el error número uno del tema. Sin el $\rho$, el área de este
+              círculo saldría $6\pi$ — que es su **perímetro**, no su área.
+          - texto: En ρ²·dρ·dθ
+            mensaje: |
+              El $\rho^{2}$ aparece en las esféricas, no en las polares. En el
+              plano el factor es $\rho$ a la primera.
+      - tipo: calcular
+        titulo: La integral en el radio
+        pregunta: |
+          ¿Cuánto vale $\int_{0}^{3}\rho\,d\rho$?
+        respuesta:
+          tipo: numero
+          valor: '4.5'
+          tolerancia: 0.01
+          formato: en forma exacta (9/2) o con un decimal
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Eso sería $\int_0^3 d\rho$, sin el jacobiano. Con el $\rho$ la
+              primitiva es $\rho^{2}/2$, que en 3 vale $9/2$.
+          - valor: '9'
+            mensaje: |
+              9 es $3^{2}$. Falta dividir entre 2, que viene de la primitiva
+              $\rho^{2}/2$.
+        pista: |
+          La primitiva de ρ es ρ²/2. Evalúala en 3.
+        desarrollo: |
+          $$
+          \int_{0}^{3}\rho\,d\rho = \Bigl[\tfrac{\rho^{2}}{2}\Bigr]_{0}^{3}
+          = \tfrac{9}{2}
+          $$
+      - tipo: calcular
+        titulo: El área total
+        pregunta: |
+          Multiplicando por la integral en el ángulo, $\int_0^{2\pi}d\theta = 2\pi$,
+          ¿cuánto vale el área?
+        respuesta:
+          tipo: numero
+          valor: '28.274'
+          tolerancia: 0.02
+          formato: en forma exacta (9pi) o con tres decimales
+        distractores:
+          - valor: '18.85'
+            mensaje: |
+              Eso es $6\pi$, el **perímetro** de la circunferencia de radio 3.
+              Sale justo cuando te dejas el jacobiano: es la señal de ese error.
+          - valor: '14.137'
+            mensaje: |
+              Eso es $9\pi/2$: te has dejado el 2 del $2\pi$ del ángulo. La
+              vuelta completa son $2\pi$ radianes, no $\pi$.
+        pista: |
+          $(9/2)\cdot 2\pi$. El 2 se cancela con el denominador.
+        desarrollo: |
+          $$
+          A = \int_{0}^{2\pi}\!\!\int_{0}^{3}\rho\,d\rho\,d\theta
+          = \frac{9}{2}\cdot 2\pi = 9\pi \approx 28{,}27
+          $$
+
+          Y coincide con $\pi R^{2} = \pi\cdot 9$. **Esa coincidencia es la
+          comprobación**: si no cuadrara, el jacobiano estaría mal.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'En polares el círculo de radio 3 es el rectángulo $\rho\in[0,3]$, $\theta\in[0,2\pi]$.'
+          - texto: 'El área es $\iint dA$, y en polares $dA = \rho\,d\rho\,d\theta$.'
+          - texto: 'La integral se separa porque los límites son constantes y el integrando también.'
+          - texto: 'Sale $(9/2)(2\pi) = 9\pi$, que coincide con $\pi R^{2}$.'
+          - texto: 'Si se olvidara el jacobiano saldría $9\pi/2$, que es la mitad del área.'
+            trampa: true
+            mensaje: |
+              Sin el jacobiano saldría $\int_0^{2\pi}\int_0^3 d\rho\,d\theta =
+              3\cdot 2\pi = 6\pi$, que **no** es la mitad de $9\pi$: es el
+              perímetro. Y esa es justo la pista que delata el error — sale una
+              longitud donde debía salir un área.
+    resolucion: |
+      **En polares el círculo deja de tener forma.** Lo que en cartesianas exige
+      límites con raíces, aquí son dos pares de números:
+
+      $$
+      \rho\in[0,3],
+      \qquad
+      \theta\in[0,2\pi]
+      $$
+
+      **El área**, sin olvidar el jacobiano:
+
+      $$
+      A = \int_{0}^{2\pi}\!\!\int_{0}^{3}\rho\,d\rho\,d\theta
+      = \int_{0}^{2\pi}\Bigl[\tfrac{\rho^{2}}{2}\Bigr]_{0}^{3} d\theta
+      = \int_{0}^{2\pi}\tfrac{9}{2}\,d\theta
+      = 9\pi
+      $$
+
+      **La comprobación que hay que hacer siempre.** El área de un círculo de
+      radio 3 es $\pi R^{2} = 9\pi$. ✓
+
+      Y si el jacobiano se hubiera perdido:
+
+      $$
+      \int_{0}^{2\pi}\!\!\int_{0}^{3} d\rho\,d\theta = 3\cdot 2\pi = 6\pi
+      $$
+
+      que es la **longitud** de la circunferencia. Cuando una cuenta de áreas te
+      devuelve algo que se parece a un perímetro, el jacobiano se ha quedado por
+      el camino.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Del boletín de problemas complementarios del tema 7.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: invertir-el-orden
+    titulo: Invertir el orden de integración
+    fuente: Ejercicio 7.3 · Problemas complementarios, tema 7 · Cálculo, UPV/EHU (2017/2018 5E)
+    nivel: examen
+    enunciado: |
+      Sea la integral $\displaystyle\int_{0}^{1}\!\!\int_{\sqrt{y}}^{3-2y} dx\,dy$.
+      Representar gráficamente el recinto de integración, invertir el orden de
+      integración y calcular la integral en el nuevo orden obtenido.
+    pide: El dibujo del recinto, la integral con el orden invertido y su valor.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Los límites dados son $x$ desde $\sqrt{y}$ hasta $3-2y$, con $y$ de 0 a
+          1. ¿Qué describe eso?
+        opciones:
+          - texto: Tiras horizontales que entran por la parábola y salen por la recta
+            correcta: true
+            mensaje: |
+              Eso es. Con $dx$ dentro, te quedas en un $y$ y te mueves en
+              horizontal: entras por $x=\sqrt{y}$ y sales por $x=3-2y$.
+          - texto: Tiras verticales entre dos curvas
+            mensaje: |
+              Las tiras verticales corresponden a $dy$ dentro. Aquí el
+              diferencial interior es $dx$, así que las tiras son horizontales.
+          - texto: Un rectángulo, porque los límites de y son números
+            mensaje: |
+              Los de $y$ sí son números, pero los de $x$ llevan $y$ dentro: por
+              eso el recinto tiene lados curvos y no es un rectángulo.
+      - tipo: calcular
+        titulo: Dónde se cortan las dos curvas
+        pregunta: |
+          $x=\sqrt{y}$ es $y=x^{2}$, y $x=3-2y$ es $y=(3-x)/2$. ¿Para qué valor
+          positivo de $x$ se cortan?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1.5'
+            mensaje: |
+              $1{,}5$ es donde la recta corta al eje $x$ (con $y=0$), no donde
+              corta a la parábola.
+          - valor: '3'
+            mensaje: |
+              3 sale de $3-2y$ con $y=0$ en la forma original. El corte con la
+              parábola se obtiene igualando $x^{2} = (3-x)/2$.
+        pista: |
+          Iguala $x^{2} = (3-x)/2$, o sea $2x^{2}+x-3=0$. Una raíz es positiva.
+        desarrollo: |
+          $$
+          x^{2} = \frac{3-x}{2}
+          \;\Longrightarrow\;
+          2x^{2}+x-3 = 0
+          \;\Longrightarrow\;
+          (2x+3)(x-1)=0
+          $$
+
+          La raíz positiva es $x=1$, y ahí $y=1$. El punto de corte es $(1,1)$,
+          que es justo la esquina superior del recinto.
+      - tipo: justificar
+        pregunta: |
+          Ordena la inversión del orden. Una pieza es falsa.
+        piezas:
+          - texto: 'El recinto va de $y=0$ a $y=1$, entre la parábola $x=\sqrt{y}$ y la recta $x=3-2y$.'
+          - texto: 'En el nuevo orden hay que partirlo en dos, porque la tapa de arriba cambia en $x=1$.'
+          - texto: 'Para $x$ de 0 a 1, la vertical va de $y=0$ a la parábola $y=x^{2}$.'
+          - texto: 'Para $x$ de 1 a 3, la vertical va de $y=0$ a la recta $y=(3-x)/2$.'
+          - texto: 'Al invertir el orden basta con escribir $\int_{\sqrt y}^{3-2y}\int_0^1 dy\,dx$.'
+            trampa: true
+            mensaje: |
+              Han quedado dos $y$ en el límite exterior. Invertir el orden no es
+              intercambiar los límites de sitio: hay que releer el dibujo con la
+              otra pregunta, y aquí eso además obliga a partir el recinto en dos.
+    resolucion: |
+      **El dibujo primero**, que es lo que pide el enunciado y lo que hace
+      posible el resto.
+
+      El recinto está entre $y=0$ e $y=1$. Su borde izquierdo es la parábola
+      $x=\sqrt{y}$ (o sea $y=x^{2}$) y el derecho la recta $x=3-2y$.
+
+      Los tres vértices salen de cortar:
+
+      | corte | punto |
+      |---|---|
+      | parábola con recta | $(1,1)$ |
+      | parábola con $y=0$ | $(0,0)$ |
+      | recta con $y=0$ | $(3,0)$ |
+
+      **Invertir el orden obliga a partir el recinto**, y esa es la dificultad
+      real del ejercicio. Barriendo en vertical, la tapa de arriba **no es la
+      misma** a la izquierda y a la derecha de $x=1$:
+
+      $$
+      \int_{0}^{1}\!\!\int_{0}^{x^{2}} dy\,dx
+      \;+\;
+      \int_{1}^{3}\!\!\int_{0}^{(3-x)/2} dy\,dx
+      $$
+
+      **Calculando:**
+
+      $$
+      \int_{0}^{1} x^{2}\,dx = \frac{1}{3},
+      \qquad
+      \int_{1}^{3}\frac{3-x}{2}\,dx
+      = \frac{1}{2}\Bigl[3x - \tfrac{x^{2}}{2}\Bigr]_{1}^{3}
+      = \frac{1}{2}\cdot 2 = 1
+      $$
+
+      $$
+      \boxed{\;\int_{0}^{1}\!\!\int_{\sqrt y}^{3-2y} dx\,dy = \frac{1}{3}+1 = \frac{4}{3}\;}
+      $$
+
+      > **Que haya que partir el recinto es la señal de que el orden original
+      > era el bueno.** Cuando un enunciado te hace invertir hacia el orden
+      > incómodo, lo que está evaluando es si sabes leer el dibujo — no si sabes
+      > integrar.
+
+  - id: solido-con-tres-ordenes
+    titulo: Un sólido, y la misma integral en tres órdenes
+    fuente: Ejercicio 7.6 · Problemas complementarios, tema 7 · Cálculo, UPV/EHU (2014/2015 4E)
+    nivel: examen
+    enunciado: |
+      Considerar el sólido $R$ delimitado por las condiciones $z \le 5-2y$,
+      $0\le x\le 4$, $0\le y\le 2$ y $z\ge 0$. Se pide:
+
+      a) Representar gráficamente el sólido.
+      b) Expresar (sin hacer el cálculo) la integral $\iiint_R dx\,dy\,dz$ en los
+      órdenes $dz\,dx\,dy$, $dy\,dx\,dz$ y $dx\,dy\,dz$.
+      c) Calcular el valor de $V$ empleando alguno de los órdenes obtenidos.
+    pide: El dibujo, la integral en tres órdenes y el volumen.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado pide expresar la integral en tres órdenes **sin
+          calcularla**. ¿Qué se está evaluando?
+        opciones:
+          - texto: Saber leer el sólido y traducirlo a límites, que es lo que puntúa en COMP4
+            correcta: true
+            mensaje: |
+              Exacto. El apartado b) es explícitamente «sin hacer el cálculo»:
+              lo que se corrige es el planteamiento. En esta evaluación COMP4
+              vale la mitad de la nota del ejercicio.
+          - texto: La rapidez de cálculo
+            mensaje: |
+              Al contrario: el enunciado prohíbe calcular en ese apartado. Lo que
+              se mide es si entiendes la geometría, no si integras deprisa.
+          - texto: Que te sepas de memoria las fórmulas del volumen
+            mensaje: |
+              No hay fórmula que memorizar: el volumen es $\iiint dV$ y todo el
+              trabajo está en los límites, que salen del dibujo.
+      - tipo: calcular
+        titulo: La altura del sólido en y = 0
+        pregunta: |
+          La tapa superior es el plano $z = 5-2y$. ¿Qué altura tiene el sólido
+          en $y=0$?
+        respuesta:
+          tipo: numero
+          valor: '5'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              1 es la altura en $y=2$, el otro extremo: $5-2(2)=1$. En $y=0$ el
+              término $-2y$ no resta nada.
+          - valor: '3'
+            mensaje: |
+              3 sería la altura en $y=1$, en el centro. La pregunta es en $y=0$.
+        pista: |
+          Sustituye y=0 en 5-2y.
+        desarrollo: |
+          $$
+          z = 5-2(0) = 5
+          $$
+
+          Y en $y=2$ la altura es $5-4=1$. El sólido es un **prisma de sección
+          trapecial**: la tapa baja de 5 a 1 al avanzar en $y$, y nunca llega a
+          cero dentro del recinto.
+      - tipo: calcular
+        titulo: El volumen
+        pregunta: |
+          Integrando, $V = \int_0^2\!\int_0^4\!\int_0^{5-2y} dz\,dx\,dy$.
+          ¿Cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '24'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '40'
+            mensaje: |
+              40 es $4\times 2\times 5$: la caja completa con altura constante 5.
+              Pero la tapa es inclinada, así que el volumen es menor.
+          - valor: '12'
+            mensaje: |
+              Parece que has usado solo la altura media de una de las mitades.
+              El área del trapecio de sección es $(5+1)/2\times 2 = 6$, y por los
+              4 de anchura sale 24.
+        pista: |
+          La sección en el plano YZ es un trapecio de bases 5 y 1 y altura 2. Multiplica su área por 4.
+        desarrollo: |
+          $$
+          V = \int_0^2\!\!\int_0^4 (5-2y)\,dx\,dy
+          = 4\int_0^2 (5-2y)\,dy
+          = 4\bigl[5y-y^{2}\bigr]_0^2
+          = 4(10-4) = 24
+          $$
+
+          **Comprobación geométrica**: la sección es un trapecio de bases 5 y 1 y
+          altura 2, de área $(5+1)/2\cdot 2 = 6$; por la longitud 4 en $x$ da 24. ✓
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta del apartado b). Una pieza es falsa.
+        piezas:
+          - texto: 'En el orden $dz\,dx\,dy$: $z$ de 0 a $5-2y$, $x$ de 0 a 4, $y$ de 0 a 2.'
+          - texto: 'En el orden $dx\,dy\,dz$ la $x$ es libre de 0 a 4, porque nada la liga a las otras.'
+          - texto: 'En ese mismo orden hay que partir en $z=1$, porque por debajo de 1 la $y$ recorre todo $[0,2]$.'
+          - texto: 'Y por encima de $z=1$, la $y$ solo llega hasta $(5-z)/2$.'
+          - texto: 'Los tres órdenes dan integrales distintas, así que el volumen depende del orden elegido.'
+            trampa: true
+            mensaje: |
+              Las **integrales** se escriben distinto, pero el **volumen** es el
+              mismo: es una propiedad del sólido, no del orden en que lo barras.
+              Que salga lo mismo por los tres caminos es la comprobación de que
+              los tres están bien planteados.
+    resolucion: |
+      **a) El sólido.** Una caja de base $4\times 2$ en el plano $XY$, con suelo
+      en $z=0$ y **tapa inclinada** $z=5-2y$. Como la tapa baja de 5 (en $y=0$)
+      a 1 (en $y=2$) y nunca cruza el suelo, el sólido es un prisma de sección
+      trapecial tumbado en la dirección $x$.
+
+      **b) Los tres órdenes.** El de $x$ es siempre libre, porque ninguna
+      condición liga la $x$ a las demás.
+
+      $$
+      \int_{0}^{2}\!\!\int_{0}^{4}\!\!\int_{0}^{5-2y} dz\,dx\,dy
+      $$
+
+      $$
+      \int_{0}^{5}\!\!\int_{0}^{4}\!\!\int_{0}^{\min(2,\,(5-z)/2)} dy\,dx\,dz
+      $$
+
+      que **hay que partir en $z=1$**, porque por debajo de esa altura la $y$
+      recorre el intervalo entero:
+
+      $$
+      \int_{0}^{1}\!\!\int_{0}^{4}\!\!\int_{0}^{2} dy\,dx\,dz
+      \;+\;
+      \int_{1}^{5}\!\!\int_{0}^{4}\!\!\int_{0}^{(5-z)/2} dy\,dx\,dz
+      $$
+
+      Y el tercero, $dx\,dy\,dz$, con la misma partición en $z=1$ y la $x$ de 0
+      a 4 en los dos trozos.
+
+      **c) El volumen**, por el primero, que es el cómodo:
+
+      $$
+      V = 4\int_{0}^{2}(5-2y)\,dy = 4(10-4) = 24
+      $$
+
+      > **La lección del ejercicio** está en el apartado b): un orden lleva a una
+      > integral y otro obliga a **partir el sólido en dos**. Elegir bien no es
+      > estética, es la diferencia entre una integral y tres.
+
+  - id: centro-de-gravedad-elipse
+    titulo: El centro de gravedad de un cuarto de elipse
+    fuente: Ejercicio 7.20 · Problemas complementarios, tema 7 · Cálculo, UPV/EHU (2017/2018 4E)
+    nivel: examen
+    enunciado: |
+      Sea $D$ el recinto delimitado por las condiciones
+      $\dfrac{x^{2}}{4}+y^{2}\le 1$, $x\ge 0$ e $y\ge 0$. Calcular las
+      coordenadas del centro de gravedad del recinto $D$, suponiendo que la
+      densidad en cada punto es $k$.
+    pide: Las coordenadas del centro de gravedad.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El recinto es un cuarto de elipse de semiejes 2 y 1. ¿Qué cambio de
+          variable lo convierte en algo cómodo?
+        opciones:
+          - texto: Polares generalizadas, con x = 2ρcosθ e y = ρsenθ
+            correcta: true
+            mensaje: |
+              Sí. Con los semiejes metidos en el cambio, la elipse pasa a ser
+              $\rho\le 1$, y el jacobiano es $J = ab\rho = 2\rho$.
+          - texto: Polares normales, con x = ρcosθ e y = ρsenθ
+            mensaje: |
+              Las normales convierten circunferencias en rectas, no elipses. Aquí
+              dejarían la condición como
+              $\rho^{2}(\cos^{2}\theta/4 + \text{sen}^{2}\theta)\le 1$, que no
+              simplifica nada.
+          - texto: Ninguno; se hace mejor en cartesianas
+            mensaje: |
+              En cartesianas el límite en $y$ es $\sqrt{1-x^{2}/4}$, con raíz. Se
+              puede, pero los momentos salen mucho más largos.
+      - tipo: calcular
+        titulo: La masa del recinto
+        pregunta: |
+          El área de un cuarto de elipse de semiejes 2 y 1 es $\pi ab/4$. Con
+          densidad constante $k$, ¿cuánto vale la masa dividida entre $k$?
+        respuesta:
+          tipo: numero
+          valor: '1.5708'
+          tolerancia: 0.01
+          formato: en forma exacta (pi/2) o con cuatro decimales
+        distractores:
+          - valor: '6.2832'
+            mensaje: |
+              Eso es $2\pi$, el área de la elipse **entera** ($\pi ab$ con $a=2$,
+              $b=1$) multiplicada por... no: $\pi ab = 2\pi$ es la elipse entera.
+              El enunciado pide solo un cuarto.
+          - valor: '3.1416'
+            mensaje: |
+              $\pi$ sería la mitad de la elipse. El recinto tiene además $x\ge 0$
+              **e** $y\ge 0$, así que es un cuarto.
+        pista: |
+          $\pi ab/4$ con a=2 y b=1. Eso es $2\pi/4$.
+        desarrollo: |
+          $$
+          M = k\cdot \frac{\pi a b}{4} = k\cdot\frac{\pi\cdot 2\cdot 1}{4}
+          = \frac{\pi k}{2}
+          $$
+
+          Dividido entre $k$, $\pi/2 \approx 1{,}571$.
+      - tipo: justificar
+        pregunta: |
+          Ordena el planteamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'Con $x=2\rho\cos\theta$, $y=\rho\,\text{sen}\,\theta$, el recinto es $\rho\in[0,1]$, $\theta\in[0,\pi/2]$.'
+          - texto: 'El jacobiano de las polares generalizadas es $J = ab\rho = 2\rho$.'
+          - texto: 'La masa es $M = k\iint 2\rho\,d\rho\,d\theta = k\pi/2$.'
+          - texto: 'Y $\overline{x} = \frac{1}{M}\iint x\,k\,dA$, con $x = 2\rho\cos\theta$ dentro.'
+          - texto: 'Como la densidad es constante, por simetría el centro de gravedad está en el origen.'
+            trampa: true
+            mensaje: |
+              El recinto es solo un **cuarto** de elipse, en el primer cuadrante:
+              no es simétrico respecto del origen. Si fuera la elipse entera, sí
+              estaría en el centro; aquí el centro de gravedad cae dentro del
+              cuarto, con las dos coordenadas positivas.
+    resolucion: |
+      **La densidad es constante**, así que $k$ se simplifica y el centro de
+      gravedad es puramente geométrico — el **centroide**. Conviene decirlo,
+      porque ahorra arrastrar la $k$ por todas las cuentas.
+
+      **El cambio.** Polares generalizadas con $a=2$, $b=1$:
+
+      $$
+      x = 2\rho\cos\theta,
+      \qquad
+      y = \rho\,\text{sen}\,\theta,
+      \qquad
+      J = 2\rho
+      $$
+
+      El recinto pasa a ser $\rho\in[0,1]$, $\theta\in[0,\pi/2]$ — un rectángulo.
+
+      **La masa:**
+
+      $$
+      M = k\int_{0}^{\pi/2}\!\!\int_{0}^{1} 2\rho\,d\rho\,d\theta
+      = k\cdot 2\cdot\tfrac{1}{2}\cdot\tfrac{\pi}{2} = \frac{\pi k}{2}
+      $$
+
+      **El momento respecto de $YZ$:**
+
+      $$
+      \iint_D x\,k\,dA
+      = k\int_{0}^{\pi/2}\!\!\int_{0}^{1} (2\rho\cos\theta)(2\rho)\,d\rho\,d\theta
+      = 4k\int_{0}^{\pi/2}\!\!\cos\theta\,d\theta\int_{0}^{1}\!\rho^{2}d\rho
+      = \frac{4k}{3}
+      $$
+
+      $$
+      \overline{x} = \frac{4k/3}{\pi k/2} = \frac{8}{3\pi} \approx 0{,}849
+      $$
+
+      **Y el otro, con $y = \rho\,\text{sen}\,\theta$:**
+
+      $$
+      \iint_D y\,k\,dA
+      = k\int_{0}^{\pi/2}\!\!\int_{0}^{1}(\rho\,\text{sen}\,\theta)(2\rho)\,d\rho\,d\theta
+      = \frac{2k}{3}
+      \qquad\Longrightarrow\qquad
+      \overline{y} = \frac{4}{3\pi} \approx 0{,}424
+      $$
+
+      $$
+      \boxed{\;G = \left(\frac{8}{3\pi},\ \frac{4}{3\pi}\right)\;}
+      $$
+
+      **La comprobación de sentido común**, que vale un punto de COMP4: el
+      recinto ocupa $x\in[0,2]$ e $y\in[0,1]$, y el centro sale en
+      $(0{,}85;\,0{,}42)$ — dentro, y algo por debajo del centro geométrico de
+      la caja, que es donde tiene que estar porque la elipse se estrecha al
+      subir. Y fíjate en que $\overline{x} = 2\overline{y}$: es la misma proporción que
+      entre los semiejes, y no es casualidad.

@@ -1,0 +1,290 @@
+---
+asignatura: calculo
+tema: 7
+titulo: Integral múltiple
+descripcion: Integral doble y triple, el recinto que manda, cambiar el orden de integración, polares, cilíndricas y esféricas. Volumen, masa y centro de gravedad.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 7 y de los boletines de Integral múltiple · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+En el tema 5 integrabas entre dos números y salía un área. Ahora integras sobre
+una **región del plano** y sale un volumen, o sobre un **trozo del espacio** y
+sale una masa. La idea de fondo no cambia: sumar infinitos trocitos.
+
+Lo que cambia —y es todo lo que cambia— es que **ya no basta con dos números
+como límites**. Antes, «de $a$ a $b$» describía el dominio entero. Ahora el
+dominio es una región con forma, y traducir esa forma a límites de integración
+es el ejercicio.
+
+Por eso este tema se falla antes de integrar. Mira el reparto de puntos de una
+cuarta evaluación cualquiera: **COMP2 cinco puntos, COMP4 cinco puntos**. La
+mitad de la nota no es calcular la integral: es dibujar el recinto, elegir las
+coordenadas y escribir los límites bien.
+
+## El recinto manda, y hay que dibujarlo
+
+La pregunta que resuelve el ejercicio no es «¿cómo integro esto?». Es:
+
+> **Si me quedo quieto en un $x$ cualquiera y subo en vertical, ¿por dónde
+> entro en la región y por dónde salgo?**
+
+Eso son los límites de la integral de dentro. Y los de la de fuera son el rango
+de $x$ para el que esa vertical toca la región.
+
+$$
+\iint_D f(x,y)\,dA
+= \int_{a}^{b}\!\!\left(\int_{y_{\text{abajo}}(x)}^{y_{\text{arriba}}(x)} f(x,y)\,dy\right) dx
+$$
+
+Fíjate en la asimetría, porque es la fuente de la mitad de los errores:
+
+- Los límites **de dentro pueden llevar la otra variable**. Son curvas.
+- Los límites **de fuera son siempre números**. Si te sale una $x$ en el límite
+  exterior, algo va mal.
+
+<ErrorTipico titulo="Escribir los límites sin haber dibujado la región">
+Es el error que más puntos cuesta del tema, y no es pereza: es que sin dibujo no
+hay forma de saber cuál curva es la de arriba y cuál la de abajo.
+
+Con $y \ge x^{3}$ y $x+y\le 2$, ¿quién queda encima? Depende del trozo. Y si
+además el enunciado dice $x\ge 0$, la región puede estar partida en dos. Todo
+eso se ve en tres segundos dibujando y no se ve de ninguna manera mirando las
+desigualdades.
+
+**El dibujo no es el borrador del ejercicio: es parte de la respuesta**, y el
+enunciado lo pide con esas palabras — «representar gráficamente el recinto de
+integración».
+</ErrorTipico>
+
+## Cambiar el orden de integración
+
+El ejercicio que más cae del bloque, y el que mejor separa a quien ha entendido
+el tema de quien se sabe las fórmulas.
+
+Te dan una integral ya escrita, con sus límites, y te piden **la misma integral
+con $dx\,dy$ en vez de $dy\,dx$**. No es un capricho: muchas veces la integral
+original es imposible de resolver y la cambiada sale en dos líneas.
+
+Y el procedimiento **no se puede hacer con álgebra**. Son tres pasos y el de en
+medio es dibujar:
+
+1. Lees los límites que te dan y **dibujas la región** que describen.
+2. Miras el mismo dibujo con la otra pregunta: quieto en un $y$, ¿por dónde
+   entro y por dónde salgo moviéndome en horizontal?
+3. Escribes los límites nuevos.
+
+<figure class="figura-examen">
+  <svg viewBox="-40 -30 470 240" role="img" aria-labelledby="t7ordT t7ordD">
+    <title id="t7ordT">La misma región barrida en vertical y en horizontal</title>
+    <desc id="t7ordD">La misma región triangular curva dibujada dos veces. A la izquierda se barre con tiras verticales, de la curva de abajo a la de arriba, y el orden es dy dx. A la derecha se barre con tiras horizontales, de izquierda a derecha, y el orden es dx dy.</desc>
+
+    <text x="0" y="-12" font-size="11" fill="var(--live)" font-family="var(--mono)">TIRAS VERTICALES → dy dx</text>
+    <text x="245" y="-12" font-size="11" fill="var(--alt)" font-family="var(--mono)">TIRAS HORIZONTALES → dx dy</text>
+
+    <g>
+      <line x1="0" y1="150" x2="180" y2="150" stroke="var(--rule)" stroke-width="1.2"></line>
+      <line x1="10" y1="160" x2="10" y2="10" stroke="var(--rule)" stroke-width="1.2"></line>
+      <path d="M10 150 L130 150 L130 30 Z" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.8"></path>
+      <line x1="34" y1="150" x2="34" y2="126" stroke="var(--live)" stroke-width="1.4"></line>
+      <line x1="58" y1="150" x2="58" y2="102" stroke="var(--live)" stroke-width="1.4"></line>
+      <line x1="82" y1="150" x2="82" y2="78" stroke="var(--live)" stroke-width="1.4"></line>
+      <line x1="106" y1="150" x2="106" y2="54" stroke="var(--live)" stroke-width="1.4"></line>
+      <text x="4" y="164" font-size="10" fill="var(--faint)" font-family="var(--mono)">0</text>
+      <text x="126" y="164" font-size="10" fill="var(--faint)" font-family="var(--mono)">2</text>
+      <text x="136" y="28" font-size="10" fill="var(--faint)" font-family="var(--mono)">y=x</text>
+      <text x="0" y="192" font-size="10.5" fill="var(--live)" font-family="var(--mono)">y va de 0 a x</text>
+      <text x="0" y="207" font-size="10.5" fill="var(--live)" font-family="var(--mono)">x va de 0 a 2</text>
+    </g>
+
+    <g>
+      <line x1="245" y1="150" x2="425" y2="150" stroke="var(--rule)" stroke-width="1.2"></line>
+      <line x1="255" y1="160" x2="255" y2="10" stroke="var(--rule)" stroke-width="1.2"></line>
+      <path d="M255 150 L375 150 L375 30 Z" fill="var(--alt-soft)" stroke="var(--alt)" stroke-width="1.8"></path>
+      <line x1="303" y1="126" x2="375" y2="126" stroke="var(--alt)" stroke-width="1.4"></line>
+      <line x1="327" y1="102" x2="375" y2="102" stroke="var(--alt)" stroke-width="1.4"></line>
+      <line x1="351" y1="78" x2="375" y2="78" stroke="var(--alt)" stroke-width="1.4"></line>
+      <line x1="279" y1="150" x2="375" y2="150" stroke="var(--alt)" stroke-width="1.4"></line>
+      <text x="249" y="164" font-size="10" fill="var(--faint)" font-family="var(--mono)">0</text>
+      <text x="371" y="164" font-size="10" fill="var(--faint)" font-family="var(--mono)">2</text>
+      <text x="240" y="34" font-size="10" fill="var(--faint)" font-family="var(--mono)">2</text>
+      <text x="245" y="192" font-size="10.5" fill="var(--alt)" font-family="var(--mono)">x va de y a 2</text>
+      <text x="245" y="207" font-size="10.5" fill="var(--alt)" font-family="var(--mono)">y va de 0 a 2</text>
+    </g>
+  </svg>
+  <figcaption>
+    La región es la misma; lo que cambia es la pregunta que le haces. A la
+    izquierda te quedas en un <code>x</code> y subes; a la derecha te quedas en
+    un <code>y</code> y vas hacia la derecha. <strong>El límite de dentro
+    siempre lleva la otra letra; el de fuera siempre son números.</strong>
+  </figcaption>
+</figure>
+
+<ErrorTipico titulo="Cambiar el orden intercambiando los límites tal cual">
+Ver $\int_0^2\!\int_0^x f\,dy\,dx$ y escribir $\int_0^x\!\int_0^2 f\,dx\,dy$ es
+el error clásico, y se detecta solo: **ha quedado una $x$ en el límite
+exterior**, y el resultado de una integral definida no puede depender de la
+variable que acabas de integrar.
+
+Ese control cuesta un vistazo y caza el fallo entero. Si en la integral de fuera
+aparece una letra, vuelve al dibujo.
+</ErrorTipico>
+
+## Cuando el recinto es redondo: polares
+
+Si la región es un círculo, una corona, un sector o cualquier cosa con simetría
+alrededor del origen, en cartesianas los límites salen con raíces
+—$y$ va de $-\sqrt{1-x^{2}}$ a $\sqrt{1-x^{2}}$— y la integral se atasca.
+
+En polares esa misma región es un rectángulo:
+
+$$
+x = \rho\cos\theta,
+\qquad
+y = \rho\,\text{sen}\,\theta,
+\qquad
+dA = \rho\,d\rho\,d\theta
+$$
+
+Un círculo de radio 2 pasa de aquellas raíces a $\rho\in[0,2]$,
+$\theta\in[0,2\pi]$. Dos pares de números.
+
+<figure class="figura-examen">
+  <svg viewBox="-40 -10 460 210" role="img" aria-labelledby="t7polT t7polD">
+    <title id="t7polT">Por qué el jacobiano de las polares es rho</title>
+    <desc id="t7polD">Dos trocitos de corona circular a distinta distancia del centro, ambos con el mismo incremento de ángulo y de radio. El de fuera es visiblemente más ancho que el de dentro, porque su arco es más largo.</desc>
+
+    <line x1="-16" y1="150" x2="152" y2="150" stroke="var(--rule)" stroke-width="1.1"></line>
+    <line x1="10" y1="175" x2="10" y2="55" stroke="var(--rule)" stroke-width="1.1"></line>
+
+    <path d="M55 150 A45 45 0 0 0 41.8 118.2 L31.9 128.1 A31 31 0 0 1 41 150 Z" fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.6"></path>
+    <path d="M120 150 A110 110 0 0 0 87.8 72.2 L77.9 82.1 A96 96 0 0 1 106 150 Z" fill="var(--alt-soft)" stroke="var(--alt)" stroke-width="1.6"></path>
+
+    <circle cx="10" cy="150" r="2.6" fill="var(--ink)"></circle>
+
+    <text x="24" y="170" font-size="10" fill="var(--live)" font-family="var(--mono)">ρ pequeño</text>
+    <text x="90" y="170" font-size="10" fill="var(--alt)" font-family="var(--mono)">ρ grande</text>
+
+    <text x="205" y="46" font-size="11.5" fill="var(--ink)" font-family="var(--mono)">mismo dρ, mismo dθ</text>
+    <text x="205" y="70" font-size="11.5" fill="var(--ink)" font-family="var(--mono)">y sin embargo</text>
+    <text x="205" y="94" font-size="11.5" fill="var(--ink)" font-family="var(--mono)">áreas distintas</text>
+    <text x="205" y="128" font-size="12" fill="var(--flag)" font-family="var(--mono)">dA = ρ · dρ · dθ</text>
+    <text x="205" y="152" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">el arco mide ρ·dθ,</text>
+    <text x="205" y="167" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">y crece con el radio</text>
+  </svg>
+  <figcaption>
+    El <strong>ρ</strong> del jacobiano no es una constante que se memoriza: es
+    la razón por la que dos trocitos con el mismo <code>dρ</code> y el mismo
+    <code>dθ</code> no tienen la misma área. El de fuera abarca más porque su
+    arco es más largo.
+  </figcaption>
+</figure>
+
+<ErrorTipico titulo="Olvidar el ρ del jacobiano">
+El fallo número uno de todo el tema. Se escribe $\rho\,d\rho\,d\theta$ en el
+enunciado, se copia bien la primera vez, y a la tercera integral desaparece.
+
+Hay dos formas de cazarlo sin repasar la cuenta entera:
+
+- **Las unidades no cuadran.** $d\rho\,d\theta$ es una longitud por un ángulo,
+  que no es un área. Hace falta otra longitud, y esa es $\rho$.
+- **La comprobación de un caso conocido.** El área de un círculo de radio $R$
+  con jacobiano es $\int_0^{2\pi}\!\int_0^R \rho\,d\rho\,d\theta = \pi R^{2}$.
+  Sin el $\rho$ saldría $2\pi R$, que es la longitud de la circunferencia. Si en
+  un examen te sale una longitud donde esperabas un área, te has dejado el
+  jacobiano.
+</ErrorTipico>
+
+### Polares generalizadas, para las elipses
+
+Si el recinto es una elipse $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}\le 1$, las
+polares normales no la simplifican. Las **generalizadas** sí:
+
+$$
+x = a\rho\cos\theta,
+\qquad
+y = b\rho\,\text{sen}\,\theta,
+\qquad
+J = ab\rho
+$$
+
+y la elipse se convierte en $\rho\le 1$. El jacobiano se lleva las dos
+constantes, y de ahí sale la fórmula del área de la elipse, $\pi ab$, sin
+buscarla en ningún sitio.
+
+## Integrales triples, y qué coordenadas elegir
+
+El salto a tres variables no trae ninguna idea nueva: se integra de dentro
+hacia fuera, y **los límites de la primera pueden llevar las otras dos**.
+
+Lo que sí hay que decidir es en qué coordenadas. Y se decide **mirando el
+sólido, no la función**:
+
+| el sólido tiene… | coordenadas | jacobiano |
+|---|---|---|
+| caras planas, cajas, tetraedros | cartesianas | $1$ |
+| un eje de simetría: cilindros, conos, paraboloides | **cilíndricas** | $\rho$ |
+| simetría alrededor de un punto: esferas, casquetes | **esféricas** | $r^{2}\text{sen}\,\varphi$ |
+
+Las **cilíndricas** son las polares del plano $XY$ con la $z$ intacta: sirven
+cuando cortando en horizontal siempre sale un círculo. Las **esféricas** son
+para cuando lo que manda es la distancia al origen.
+
+<ErrorTipico titulo="Elegir las coordenadas por la función y no por el sólido">
+Ver un $x^{2}+y^{2}$ en el integrando invita a irse a polares, y a veces es la
+elección buena. Pero la que decide es **la forma del recinto**: una integral con
+$x^{2}+y^{2}$ sobre un cuadrado se hace mejor en cartesianas, y una integral de
+una constante sobre un cono se hace en cilíndricas aunque el integrando sea un 1.
+
+La regla operativa: **las coordenadas buenas son las que convierten el recinto
+en un rectángulo de límites constantes.** Si después de cambiar sigues teniendo
+raíces en los límites, has elegido mal.
+</ErrorTipico>
+
+## Para qué sirve todo esto
+
+Las aplicaciones son cuatro y comparten esqueleto. Cambia lo que va dentro de la
+integral, no la integral.
+
+| lo que se pide | qué se integra |
+|---|---|
+| **área** de una región plana | $\iint_D dA$ |
+| **volumen** de un sólido | $\iiint_R dV$, o $\iint_D (z_{\text{arriba}} - z_{\text{abajo}})\,dA$ |
+| **masa**, con densidad $\delta$ | $\iiint_R \delta\,dV$ |
+| **centro de gravedad** | $\overline{x} = \dfrac{1}{M}\iiint_R x\,\delta\,dV$, y lo mismo con $y$ y $z$ |
+
+El **centro de gravedad** es el que más cae y el que peor se plantea. Son cuatro
+integrales, no una: la masa y un momento por cada coordenada. Y todas sobre el
+mismo recinto y con los mismos límites, así que el trabajo de dibujar se hace
+**una** vez.
+
+> **Y hay un atajo que da puntos: la simetría.** Si el sólido y la densidad son
+> simétricos respecto de un plano, el centro de gravedad está en ese plano y esa
+> coordenada sale sin integrar. Decirlo con esa frase —«por simetría respecto
+> del plano $YZ$, $\overline{x}=0$»— es una respuesta completa y correcta, y ahorra
+> una integral entera. En un examen sin calculadora, eso vale mucho.
+
+## Lo que hay que llevar sabido
+
+| pregunta | qué hacer |
+|---|---|
+| «representar el recinto» | dibújalo antes de escribir nada |
+| «invertir el orden de integración» | dibujo → nueva pregunta → nuevos límites |
+| límite exterior con una letra | error seguro, vuelve al dibujo |
+| recinto redondo | polares, y **no olvides el $\rho$** |
+| recinto elíptico | polares generalizadas, $J = ab\rho$ |
+| sólido con eje de simetría | cilíndricas, $J = \rho$ |
+| sólido con centro | esféricas, $J = r^{2}\text{sen}\,\varphi$ |
+| centro de gravedad | cuatro integrales, y mira la simetría primero |
+
+Y las tres frases de COMP4 que puntúan aunque no se pidan:
+
+- **Los límites de fuera son números; los de dentro pueden llevar variables.**
+- **El jacobiano no es un adorno: corrige cuánto se deforma el área al cambiar
+  de coordenadas.**
+- **Las coordenadas se eligen por la forma del recinto, no por el integrando.**
