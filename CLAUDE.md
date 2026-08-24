@@ -10,13 +10,37 @@ Plataforma de estudio **gratuita** para alumnos de 1.º y 2.º de la Escuela de
 Ingeniería de Gipuzkoa (UPV/EHU). Sitio estático en GitHub Pages: sin backend,
 sin cuentas de usuario, sin base de datos. Solo en castellano.
 
-**Piloto: Cálculo (1.º) y Mecánica de Fluidos (2.º).** Se eligieron porque
-tensionan el sistema en direcciones opuestas — una es abstracta y vive de
-gráficas, la otra es física y vive de esquemas de instalación. Si el diseño
-aguanta las dos, aguanta el resto sin rediseñarlo.
+**El plazo es septiembre de 2027**, y no es una línea de meta: es el arranque de
+un curso. Quien entre entonces se topa con el tema 1 de todo, no con el 11 de
+nada. El objetivo, por tanto, no es «terminarlo» sino **ir un cuatrimestre por
+delante de quien lo usa**. Eso decide el orden más de lo que lo decide el
+temario.
 
-No se abre una asignatura nueva hasta que las dos del piloto están terminadas.
-**Pocas excelentes antes que muchas a medias.**
+**El orden: Cálculo entera, luego Álgebra.** Y sigue en pie lo único que
+importaba de la regla vieja: **pocas excelentes antes que muchas a medias.** No
+se abre una asignatura hasta que la anterior está terminada según §15.
+
+> Hasta el 24 de agosto de 2026 esta sección decía **«Piloto: Cálculo y Mecánica
+> de Fluidos»**, elegidas porque tensionan el sistema en direcciones opuestas —
+> una abstracta y de gráficas, la otra física y de esquemas de instalación—, y
+> prohibía abrir nada más hasta cerrar las dos. Se cambia por dos motivos y
+> conviene que los dos queden dichos.
+>
+> El primero es que **el piloto ya ha rendido su diagnóstico sin escribir una
+> línea de Fluidos**: sabemos exactamente dónde se rompe la capa compartida
+> —`unidad` no existe en el esquema, la tolerancia es absoluta donde debería ser
+> relativa, y `EjercicioGuiado` importa los lectores de complejos directamente—.
+> Eso era lo que la segunda asignatura tenía que averiguar, y ya está averiguado.
+>
+> El segundo es de coste, y salió al medir el temario real: **Fluidos son 25
+> temas**, la asignatura más cara de las nueve. Aprender sobre la más cara es
+> justo al revés. Álgebra son cinco bloques y ocho exámenes, rompe la misma capa
+> compartida por otro sitio —una **matriz** no es un número ni un conjunto de
+> puntos— y se termina en semanas. Fluidos entra después, ya con el lector de
+> respuestas separado del componente.
+>
+> Lo que **no** cambia: la segunda asignatura sigue eligiéndose porque tensiona
+> el sistema por un sitio distinto, no porque toque en el temario.
 
 ### Qué hace distinto a este proyecto
 
