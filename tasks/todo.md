@@ -248,19 +248,26 @@ segundo cuatrimestre no se puede hacer ninguno. Las rutas 4ev, 5ev y ord lo
 declaran en `falta[]`, así que es un hueco dicho, no escondido — pero un
 alumno que llega a mayo no tiene con qué medirse.
 
-**27 · Los temas 8 a 11 tienen cuatro ejercicios cada uno.** El tema 1 tiene
+**27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
+de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
+12/8/8/8/8, con las respuestas contrastadas contra las soluciones oficiales del
+boletín. Decía: El tema 1 tiene
 37 y el 5 tiene 30. Cuatro alcanzan para presentar la herramienta y no para
 coger soltura, y en Laplace y Fourier eso es grave porque son técnicas que se
 automatizan repitiendo. El boletín de complementarios tiene material de sobra
 —el tema 9 solo trae diecinueve ejercicios— y viene con soluciones.
 
-**28 · El bloque de síntesis de la ordinaria no tiene ejercicio propio.** El
+**28 · ~~El bloque de síntesis de la ordinaria no tiene ejercicio propio.~~**
+Resuelto el 24 de agosto de 2026 con  (ejercicio 10.16,
+2023/2024 6E), que recorre la cadena entera: gradiente → EDO → curva → punto
+final. Falta enlazarlo desde el bloque de síntesis de la ruta. Decía: El
 segundo parcial trae siempre un ejercicio que encadena gradiente, ecuación
 diferencial, parametrización y trabajo. La ruta lo describe y enlaza tres
 repasos sueltos, pero **lo que se evalúa es la costura**, no cada pieza. Hace
 falta escribir uno que recorra la cadena entera.
 
-**29 · Las EDOs de segundo orden se quedan sin práctica.** Coeficientes
+**29 · ~~Las EDOs de segundo orden se quedan sin práctica.~~** Resuelto el 24 de
+agosto de 2026: dos ejercicios, y uno es el caso de resonancia. Decía: Coeficientes
 indeterminados y variación de parámetros caen los dos —2025-2026 pedía
 resolver una con segundo miembro que obliga a variación de parámetros— y no
 hay ni un ejercicio guiado de ninguna de las dos.

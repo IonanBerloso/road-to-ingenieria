@@ -514,3 +514,449 @@ ejercicios:
 
       Y aquí el punto elegido es el más cómodo posible: en $t=0$ todos los
       cosenos valen 1 y la serie se queda desnuda.
+
+  - id: dirichlet-en-cinco-puntos
+    titulo: Cinco puntos, y hay que decidir uno a uno
+    fuente: Ejercicio 11.2a · Problemas complementarios, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Sea $f(t) = t$ para $-1 < t < 1$, extendida con periodo $T=2$, y sea
+      $S(t)$ su serie de Fourier. Calcular $S(0)$, $S(0{,}5)$, $S(1)$, $S(2)$ y
+      $S(3{,}5)$.
+    pide: Los cinco valores de la serie.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de evaluar en cada punto, ¿qué hay que decidir?
+        opciones:
+          - texto: Si ese punto es de continuidad o de salto, después de reducirlo al periodo
+            correcta: true
+            mensaje: |
+              Los dos pasos, y en ese orden. Primero se reduce al intervalo
+              básico, y allí se mira si la función es continua o salta.
+          - texto: Calcular la serie completa y sumarla numéricamente
+            mensaje: |
+              No hace falta y sería inviable a mano. Dirichlet contesta con la
+              función, sin tocar la serie.
+          - texto: Nada; la serie vale siempre lo mismo que la función
+            mensaje: |
+              Solo en los puntos de continuidad. En los saltos vale la media de
+              los laterales, y este ejercicio tiene tres puntos así.
+      - tipo: calcular
+        titulo: Un punto de continuidad
+        pregunta: |
+          En $t=0{,}5$ la función es continua. ¿Cuánto vale $S(0{,}5)$?
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.01
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              0 es el valor en los saltos. En $0{,}5$ la función es continua y
+              vale $t$, o sea $0{,}5$.
+          - valor: '1'
+            mensaje: |
+              1 sería el extremo del intervalo. En $t=0{,}5$ la recta $y=t$ vale
+              exactamente $0{,}5$.
+        pista: |
+          Continuidad: serie y función coinciden, y f(t)=t.
+        desarrollo: |
+          $$
+          S(0{,}5) = f(0{,}5) = 0{,}5
+          $$
+      - tipo: calcular
+        titulo: Un punto de salto lejano
+        pregunta: |
+          $t=3{,}5$ se reduce restando periodos: $3{,}5 - 2 = 1{,}5$, y
+          $1{,}5 - 2 = -0{,}5$. ¿Cuánto vale $S(3{,}5)$?
+        respuesta:
+          tipo: numero
+          valor: '-0.5'
+          tolerancia: 0.01
+          formato: un número
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Signo cambiado. Al reducir, $3{,}5$ cae en $-0{,}5$, donde la recta
+              $y=t$ es negativa.
+          - valor: '1.5'
+            mensaje: |
+              $1{,}5$ es el resultado intermedio de restar **un** periodo, y
+              todavía está fuera del intervalo $(-1,1)$. Hay que restar otro.
+        pista: |
+          Resta 2 dos veces: 3,5 → 1,5 → −0,5. Y ahí f(t)=t.
+        desarrollo: |
+          $$
+          3{,}5 - 2\cdot 2 = -0{,}5 \in (-1,1)
+          $$
+
+          Punto de continuidad, así que $S(3{,}5) = f(-0{,}5) = -0{,}5$.
+      - tipo: justificar
+        pregunta: |
+          Ordena los cinco valores. Una pieza es falsa.
+        piezas:
+          - texto: '$S(0)=0$ y $S(0{,}5)=0{,}5$, los dos por continuidad.'
+          - texto: '$S(1)=0$, porque en $t=1$ hay un salto de 1 a $-1$ y la media es 0.'
+          - texto: '$S(2)=0$, porque $2$ se reduce a $0$, que es continuo y vale 0.'
+          - texto: '$S(3{,}5) = -0{,}5$, reduciendo dos periodos.'
+          - texto: '$S(2)=2$, porque la función vale $t$ y en $t=2$ eso da 2.'
+            trampa: true
+            mensaje: |
+              La fórmula $f(t)=t$ solo vale en $(-1,1)$. Fuera de ahí la función
+              se **repite**, no sigue creciendo. Aplicar la fórmula fuera de su
+              intervalo es el error más frecuente con funciones periódicas.
+    resolucion: |
+      **El procedimiento es el mismo cinco veces:** reducir al periodo básico y
+      decidir si allí hay salto.
+
+      La función es la **diente de sierra**: la recta $y=t$ entre $-1$ y $1$,
+      repetida cada 2. Los saltos están en los enteros impares.
+
+      | punto | reducido | situación | $S$ |
+      |---|---|---|---|
+      | $0$ | $0$ | continuidad | $0$ |
+      | $0{,}5$ | $0{,}5$ | continuidad | $0{,}5$ |
+      | $1$ | $1$ | **salto** de $1$ a $-1$ | $0$ |
+      | $2$ | $0$ | continuidad | $0$ |
+      | $3{,}5$ | $-0{,}5$ | continuidad | $-0{,}5$ |
+
+      > **El error que este ejercicio caza** es aplicar $f(t)=t$ fuera de
+      > $(-1,1)$ y contestar $S(2)=2$ o $S(3{,}5)=3{,}5$. La fórmula describe
+      > **un** periodo; la función se repite, y la serie con ella. Reducir
+      > primero no es un paso opcional.
+
+  - id: cuando-la-funcion-ni-existe
+    titulo: Donde la función no está definida y la serie sí
+    fuente: Ejercicio 11.6 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2016/2017 6E)
+    nivel: examen
+    enunciado: |
+      Sea la función periódica de periodo $2\pi$ dada por $f(t) = -t$ con
+      $t \in (-\pi, \pi)$.
+
+      a) Dibujar $f(t)$.
+      b) Calcular la serie de Fourier $S(t)$ de la función.
+      c) Calcular $S(0)$, $f(0)$, $S(101\pi)$ y $f(101\pi)$.
+      d) Calcular el valor de la suma
+      $B = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdots$
+    pide: La serie, los cuatro valores y la suma B.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El apartado c) pide $S$ y $f$ en los mismos dos puntos. ¿Qué está
+          anunciando?
+        opciones:
+          - texto: Que en alguno de ellos los dos valores no coinciden
+            correcta: true
+            mensaje: |
+              Siempre. Cuando un enunciado pide los dos valores en el mismo
+              punto es porque hay un salto — o algo más raro, como aquí.
+          - texto: Que hay que comprobar que la serie converge
+            mensaje: |
+              La convergencia la garantiza Dirichlet sin comprobar nada. Lo que
+              se pregunta es a **qué** converge.
+          - texto: Que los dos valen siempre lo mismo
+            mensaje: |
+              Entonces no tendría sentido preguntar los dos. La gracia del
+              apartado es justamente que en $101\pi$ pasa algo peculiar.
+      - tipo: calcular
+        titulo: Reducir el argumento grande
+        pregunta: |
+          $101\pi$ se reduce restando múltiplos de $2\pi$. ¿A qué punto del
+          intervalo $[-\pi,\pi]$ equivale? Da el número que multiplica a $\pi$.
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '101'
+            mensaje: |
+              101 es el múltiplo sin reducir. Restando 50 periodos completos
+              —o sea $100\pi$— queda $\pi$.
+          - valor: '0'
+            mensaje: |
+              0 saldría si 101 fuera par. Al ser **impar**, $101\pi$ cae en el
+              extremo $\pi$, que es justo donde está el salto.
+        pista: |
+          101 es impar. Resta 100π, que son 50 periodos.
+        desarrollo: |
+          $$
+          101\pi - 50\cdot 2\pi = \pi
+          $$
+
+          Y $\pi$ es precisamente donde la diente de sierra salta.
+      - tipo: justificar
+        pregunta: |
+          Ordena el apartado c). Una pieza es falsa.
+        piezas:
+          - texto: 'En $t=0$ la función es continua, así que $S(0)=f(0)=0$.'
+          - texto: '$101\pi$ se reduce a $\pi$, que es un punto de salto.'
+          - texto: 'Por Dirichlet, $S(101\pi)$ es la media de los laterales $-\pi$ y $\pi$, o sea 0.'
+          - texto: 'Pero $f(101\pi)$ **no está definida**, porque el enunciado define $f$ solo en el intervalo abierto.'
+          - texto: '$f(101\pi) = -\pi$, el valor por la izquierda.'
+            trampa: true
+            mensaje: |
+              El enunciado define $f(t)=-t$ en el intervalo **abierto**
+              $(-\pi,\pi)$: los extremos quedan fuera. Así que en $\pi$ —y por
+              periodicidad en $101\pi$— la función no tiene valor. Elegir uno de
+              los dos laterales es inventárselo.
+    resolucion: |
+      **La respuesta del apartado c) tiene una asimetría que es todo el
+      ejercicio.**
+
+      **b) La serie.** $f(t)=-t$ es **impar**, así que solo hay senos:
+
+      $$
+      S(t) = 2\sum_{k=1}^{\infty}\frac{(-1)^{k}}{k}\,\text{sen}(kt)
+      $$
+
+      **c) Los cuatro valores:**
+
+      | | valor | por qué |
+      |---|---|---|
+      | $S(0)$ | $0$ | continuidad |
+      | $f(0)$ | $0$ | $f(0) = -0$ |
+      | $S(101\pi)$ | $0$ | se reduce a $\pi$, salto, media de $-\pi$ y $\pi$ |
+      | $f(101\pi)$ | **no definida** | el enunciado define $f$ en el **abierto** |
+
+      **Esa última fila es la que se falla.** La función se da en $(-\pi,\pi)$,
+      abierto: los extremos no tienen valor. La **serie** en cambio existe en
+      todos los puntos —es una suma de senos, que están definidos siempre— y
+      allí vale 0.
+
+      **d) La suma.** Evaluando la serie en $t=\pi/2$, donde $f$ es continua y
+      vale $-\pi/2$, los senos de los pares se anulan y los impares alternan:
+
+      $$
+      -\frac{\pi}{2} = -2\left(1-\frac13+\frac15-\cdots\right)
+      \qquad\Longrightarrow\qquad
+      \boxed{\;B = \frac{\pi}{4}\;}
+      $$
+
+      > **Que una función no esté definida en un punto y su serie sí** no es una
+      > rareza de examen: es lo normal. La serie de Fourier es una suma de senos
+      > y cosenos, funciones continuas todas, y existe en todo $\mathbb{R}$
+      > aunque la función original tenga huecos o saltos.
+
+  - id: la-que-no-tiene-saltos
+    titulo: Una serie que coincide con la función en todas partes
+    fuente: Ejercicio 11.7 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2014/2015 6E)
+    nivel: examen
+    enunciado: |
+      Dada la función periódica $f(t)$ de periodo $\pi$ definida por
+      $f(t) = |t|$ en $\left(-\frac{\pi}{2},\frac{\pi}{2}\right)$, se pide:
+
+      a) Desarrollar la función en serie de Fourier.
+      b) Estudiar la convergencia de la serie $S(t)$ obtenida.
+    pide: La serie de Fourier y su convergencia.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La gráfica es una sucesión de uves pegadas. ¿Qué tiene de especial
+          frente a la diente de sierra?
+        opciones:
+          - texto: Que es continua en todas partes, aunque tenga picos
+            correcta: true
+            mensaje: |
+              Eso es. Un pico no es un salto: la función no da un brinco, solo
+              cambia de pendiente. Y donde no hay salto, serie y función
+              coinciden **en todos** los puntos.
+          - texto: Que no es periódica
+            mensaje: |
+              Sí lo es, con periodo $\pi$. Lo que la distingue de la diente de
+              sierra es que al repetirse los trozos encajan sin dar un salto.
+          - texto: Que su serie no converge
+            mensaje: |
+              Converge, y mejor que la de la diente de sierra: al ser continua
+              converge a la función en todos los puntos sin excepción.
+      - tipo: calcular
+        titulo: El término constante
+        pregunta: |
+          El valor medio de $|t|$ sobre un periodo es $\frac{a_0}{2}$. Para
+          $|t|$ en $(-\pi/2,\pi/2)$ ese valor es $\pi/4$. ¿Cuánto vale con
+          cuatro decimales?
+        respuesta:
+          tipo: numero
+          valor: '0.7854'
+          tolerancia: 0.01
+          formato: en forma exacta (pi/4) o con cuatro decimales
+        distractores:
+          - valor: '1.5708'
+            mensaje: |
+              $\pi/2$ es el **máximo** de la función, no su media. La media de
+              una uve que sube de 0 a $\pi/2$ es la mitad de eso.
+          - valor: '3.1416'
+            mensaje: |
+              $\pi$ es el periodo. El valor medio de la función es otra cosa.
+        pista: |
+          π/4, con pi = 3,14159...
+        desarrollo: |
+          La función va de 0 en el centro a $\pi/2$ en los bordes, linealmente.
+          Su media es la mitad del máximo:
+
+          $$
+          \frac{a_0}{2} = \frac{\pi}{4} \approx 0{,}785
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: '$|t|$ es **par**, así que $b_n=0$ y la serie es de cosenos.'
+          - texto: 'El término constante es el valor medio, $\pi/4$.'
+          - texto: 'Solo sobreviven los armónicos impares, y la serie es $S(t)=\frac{\pi}{4}+\frac{2}{\pi}\sum\frac{\cos[2(2k+1)t]}{(2k+1)^{2}}$.'
+          - texto: 'b) La función es continua en todo $\mathbb{R}$, así que $S(t)=f(t)$ para todo $t$.'
+          - texto: 'b) En los picos hay que aplicar Dirichlet, porque la función no es derivable ahí.'
+            trampa: true
+            mensaje: |
+              Dirichlet habla de **saltos**, no de picos. En un pico la función
+              es continua —los dos límites laterales coinciden— aunque no sea
+              derivable. La media de dos valores iguales es ese mismo valor, así
+              que la serie coincide con la función también ahí.
+    resolucion: |
+      **a) La serie.** La función es **par**, así que $b_n = 0$ y solo hay
+      cosenos. Con periodo $\pi$, la frecuencia base es $2$:
+
+      $$
+      S(t) = \frac{\pi}{4} + \frac{2}{\pi}\sum_{k=0}^{\infty}\frac{\cos\bigl[2(2k+1)t\bigr]}{(2k+1)^{2}}
+      $$
+
+      Los armónicos pares se anulan, como suele pasar con las funciones
+      triangulares.
+
+      **b) La convergencia**, que es el apartado interesante:
+
+      $$
+      S(t) = f(t) \qquad \text{para todo } t
+      $$
+
+      **Sin excepciones.** Y conviene decir por qué: la extensión periódica de
+      $|t|$ es **continua en todo $\mathbb{R}$**. Tiene picos —no es derivable
+      en ellos— pero no da ningún salto, y Dirichlet solo se desvía de la
+      función donde hay salto.
+
+      > **Compáralo con la diente de sierra.** Aquella salta en cada periodo y
+      > su serie se queda a media altura en cada salto. Esta no salta nunca, y
+      > su serie la reproduce entera.
+      >
+      > Y hay una consecuencia práctica: **los coeficientes de esta decrecen
+      > como $1/n^{2}$** y los de la diente de sierra como $1/n$. Cuanto más
+      > suave la función, más rápido se apagan sus armónicos y menos términos
+      > hacen falta para aproximarla bien.
+
+  - id: ampliacion-impar-de-una-recta
+    titulo: La ampliación impar, y el signo de la suma
+    fuente: Ejercicio 11.9 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2019/2020 6E)
+    nivel: examen
+    enunciado: |
+      Sea $f(t) = 2\pi - t$ la función definida en el intervalo $(0,\pi)$.
+
+      a) Obtener la ampliación impar y periódica de la función $f(t)$.
+      b) Obtener la serie de Fourier $S(t)$.
+      c) Calcular los valores de $S(t)$ y $f(t)$ en los puntos $t=0$ y
+      $t=\frac{\pi}{2}$.
+      d) Calcular la suma de la serie
+      $\displaystyle\sum_{n=0}^{\infty}\frac{(-1)^{n+1}}{2n+1}$.
+    pide: La ampliación, la serie, los valores y la suma.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cómo se construye la ampliación **impar** de una función dada en
+          $(0,\pi)$?
+        opciones:
+          - texto: Se define en (−π,0) como −f(−t)
+            correcta: true
+            mensaje: |
+              Eso es: se refleja y se le cambia el signo, de modo que la gráfica
+              queda simétrica respecto del origen. La serie será solo de senos.
+          - texto: Se define en (−π,0) como f(−t)
+            mensaje: |
+              Esa es la ampliación **par**, que da serie de cosenos. La impar
+              lleva además el cambio de signo.
+          - texto: Se pone a cero fuera de (0,π)
+            mensaje: |
+              Eso no es ampliar, es truncar — y la función resultante no sería
+              ni par ni impar, así que no ahorraría ningún coeficiente.
+      - tipo: calcular
+        titulo: El valor en el punto medio
+        pregunta: |
+          En $t=\pi/2$ la función es continua. ¿Cuánto vale $f(\pi/2)$ si
+          $f(t) = 2\pi - t$?
+        respuesta:
+          tipo: numero
+          valor: '4.7124'
+          tolerancia: 0.02
+          formato: en forma exacta (3pi/2) o con cuatro decimales
+        distractores:
+          - valor: '1.5708'
+            mensaje: |
+              $\pi/2$ es el punto donde se evalúa, no el valor. Hay que
+              sustituirlo en $2\pi - t$.
+          - valor: '6.2832'
+            mensaje: |
+              $2\pi$ es el valor en $t=0$, el extremo del intervalo. En el punto
+              medio ya se ha restado $\pi/2$.
+        pista: |
+          $2\pi - \pi/2 = 3\pi/2$.
+        desarrollo: |
+          $$
+          f\left(\tfrac{\pi}{2}\right) = 2\pi - \tfrac{\pi}{2} = \tfrac{3\pi}{2} \approx 4{,}712
+          $$
+
+          Y como ahí es continua, $S(\pi/2)$ vale lo mismo.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'a) La ampliación impar es $2\pi-t$ en $(0,\pi)$ y $-2\pi-t$ en $(-\pi,0)$.'
+          - texto: 'b) Al ser impar, $a_n=0$ y la serie es $S(t)=\sum \frac{4-2(-1)^{k}}{k}\,\text{sen}(kt)$.'
+          - texto: 'c) En $\pi/2$ hay continuidad, así que $S=f=3\pi/2$.'
+          - texto: 'c) En $t=0$ la serie vale 0, pero $f(0)$ **no está definida**: el intervalo dado es abierto.'
+          - texto: 'c) En $t=0$ la serie vale $2\pi$, porque es el límite de $f$ por la derecha.'
+            trampa: true
+            mensaje: |
+              En una ampliación impar, $t=0$ es siempre un salto salvo que la
+              función tienda a cero. Aquí el límite por la derecha es $2\pi$ y
+              por la izquierda $-2\pi$, así que la media —y por tanto $S(0)$— es
+              **0**, no $2\pi$.
+    resolucion: |
+      **a) La ampliación impar.** Se refleja cambiando el signo:
+
+      $$
+      f_{\text{imp}}(t) = \begin{cases}
+      2\pi - t & 0<t<\pi\\[4pt]
+      -2\pi - t & -\pi<t<0
+      \end{cases}
+      $$
+
+      **b) La serie.** Al ser impar, todos los $a_n$ se anulan:
+
+      $$
+      S(t) = \sum_{k=1}^{\infty}\frac{4-2(-1)^{k}}{k}\,\text{sen}(kt)
+      $$
+
+      **c) Los valores**, y aquí está la gracia:
+
+      | punto | $S$ | $f$ |
+      |---|---|---|
+      | $t=0$ | $0$ (salto de $-2\pi$ a $2\pi$) | **no definida** |
+      | $t=\pi/2$ | $3\pi/2$ | $3\pi/2$ |
+
+      **El origen es un salto**, y uno grande: la ampliación impar salta de
+      $-2\pi$ a $2\pi$. La media es 0 — que es siempre el valor de una serie de
+      senos en el origen, porque todos los senos se anulan ahí.
+
+      **d) La suma.** Evaluando en $t=\pi/2$, donde los senos de índice par se
+      anulan y los impares alternan:
+
+      $$
+      \frac{3\pi}{2} = \text{(la serie con solo términos impares)}
+      \qquad\Longrightarrow\qquad
+      \boxed{\;\sum_{n=0}^{\infty}\frac{(-1)^{n+1}}{2n+1} = -\frac{\pi}{4}\;}
+      $$
+
+      > **Fíjate en el signo.** La suma sale $-\pi/4$ y no $+\pi/4$, porque el
+      > exponente es $n+1$ y no $n-1$: la serie empieza restando. Es el mismo
+      > número de siempre con el signo cambiado, y confundirlo es tirar el
+      > apartado entero después de haberlo hecho bien.

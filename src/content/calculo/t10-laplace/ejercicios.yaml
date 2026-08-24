@@ -485,3 +485,533 @@ ejercicios:
       > **El factorial de la tabla es el error silencioso del tema.**
       > $1/s^{4}$ no es $t^{3}$: es $t^{3}/6$. Y como la forma de la respuesta
       > parece correcta, se cuela con facilidad.
+
+  - id: retraso-en-el-tiempo
+    titulo: Un retraso escondido en una exponencial
+    fuente: Ejercicio 10.7a · Problemas complementarios, tema 10 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Utilizando la propiedad de traslación del tiempo, calcular la
+      transformada inversa de Laplace de
+
+      $$
+      F(s) = \frac{2(s-1)\,e^{-2s}}{s^{2}-2s+2}
+      $$
+    pide: La función f(t), definida a trozos.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué se hace con el factor $e^{-2s}$?
+        opciones:
+          - texto: Se aparta; indica un retraso de 2 unidades en la respuesta
+            correcta: true
+            mensaje: |
+              Eso es. Se antitransforma el resto como si no estuviera, y al
+              final se sustituye $t$ por $t-2$ y se multiplica por el escalón.
+          - texto: Se descompone en fracciones simples junto con el resto
+            mensaje: |
+              No es parte de la fracción: es un factor exponencial en $s$. Meterlo
+              en las fracciones simples produce un sinsentido algebraico sin
+              avisar, y es el error que más descoloca del tema.
+          - texto: Se antitransforma como e^{-2t}
+            mensaje: |
+              Cuidado: $e^{-2s}$ vive en el dominio de $s$, no en el de $t$. Una
+              exponencial **en $s$** significa retraso; una exponencial en $t$ es
+              otra cosa.
+      - tipo: calcular
+        titulo: Completar el cuadrado
+        pregunta: |
+          El denominador $s^{2}-2s+2$ no factoriza. Escrito como
+          $(s-a)^{2}+b^{2}$, ¿cuánto vale $a$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 es el coeficiente del término lineal con el signo cambiado, pero
+              hay que repartirlo: $s^{2}-2s = (s-1)^{2}-1$, así que $a=1$.
+          - valor: '-1'
+            mensaje: |
+              Signo cambiado. Completando, $s^{2}-2s+2 = (s-1)^{2}+1$, con
+              $a = +1$.
+        pista: |
+          $s^2-2s+2 = (s-1)^2 + 1$. Compara con $(s-a)^2+b^2$.
+        desarrollo: |
+          $$
+          s^{2}-2s+2 = (s-1)^{2}+1
+          \qquad\Longrightarrow\qquad
+          a = 1,\; b = 1
+          $$
+
+          Con eso, $\dfrac{2(s-1)}{(s-1)^{2}+1}$ es un **coseno trasladado**:
+          $2e^{t}\cos t$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'Se aparta el factor $e^{-2s}$, que solo indica un retraso.'
+          - texto: 'El resto, $\dfrac{2(s-1)}{(s-1)^{2}+1}$, es la transformada de $2e^{t}\cos t$.'
+          - texto: 'El retraso convierte eso en $2e^{t-2}\cos(t-2)$, válido a partir de $t=2$.'
+          - texto: 'Antes de $t=2$ la función vale 0, porque el escalón todavía no se ha encendido.'
+          - texto: 'El factor $e^{-2s}$ multiplica la respuesta por $e^{-2}$.'
+            trampa: true
+            mensaje: |
+              No es un factor multiplicativo: es un **desplazamiento**. La
+              propiedad dice que $e^{-as}F(s)$ corresponde a $f(t-a)u(t-a)$, o
+              sea la misma función corrida hacia la derecha, no escalada.
+    resolucion: |
+      **Tres piezas, y hay que separarlas antes de tocar nada.**
+
+      **1 · El retraso.** El factor $e^{-2s}$ no entra en las fracciones
+      simples. Se aparta y se recupera al final.
+
+      **2 · Completar el cuadrado**, porque el denominador no factoriza:
+
+      $$
+      s^{2}-2s+2 = (s-1)^{2}+1
+      $$
+
+      $$
+      \frac{2(s-1)}{(s-1)^{2}+1}
+      \;\longrightarrow\;
+      2e^{t}\cos t
+      $$
+
+      El $(s-1)$ arriba y abajo es la firma del **coseno trasladado en $s$**: la
+      traslación $s\to s-1$ equivale a multiplicar por $e^{t}$.
+
+      **3 · Aplicar el retraso.** Se sustituye $t$ por $t-2$:
+
+      $$
+      \boxed{\;
+      f(t) = \begin{cases}
+      0 & t < 2\\[4pt]
+      2e^{t-2}\cos(t-2) & t \ge 2
+      \end{cases}\;}
+      $$
+
+      > **La respuesta es una función a trozos, y hay que escribirla así.** Dar
+      > solo $2e^{t-2}\cos(t-2)$ deja fuera la mitad: la función no existe antes
+      > de $t=2$, y eso es justo lo que el factor exponencial estaba diciendo.
+
+  - id: sistema-que-sale-en-espiral
+    titulo: Un sistema cuya solución gira
+    fuente: Ejercicio 10.10c · Problemas complementarios, tema 10 · Cálculo, UPV/EHU (2018/2019 7E)
+    nivel: examen
+    enunciado: |
+      Utilizando la transformada de Laplace resolver el sistema
+
+      $$
+      \begin{cases}
+      x' = x + 2y\\
+      y' = -2x + y
+      \end{cases}
+      \qquad x(0)=1,\; y(0)=0
+      $$
+    pide: Las funciones x(t) e y(t).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Los coeficientes cruzados son $+2$ y $-2$, opuestos. ¿Qué suele
+          anunciar eso?
+        opciones:
+          - texto: Que la solución llevará senos y cosenos, o sea que girará
+            correcta: true
+            mensaje: |
+              Sí. Esa antisimetría produce raíces complejas al resolver, y las
+              raíces complejas son senos y cosenos. La trayectoria en el plano
+              será una espiral.
+          - texto: Que el sistema no tiene solución
+            mensaje: |
+              La tiene, y es única con esas condiciones iniciales. Lo que
+              anuncian los signos opuestos es la **forma** de la solución, no su
+              existencia.
+          - texto: Que las dos funciones son iguales
+            mensaje: |
+              Serían iguales con coeficientes simétricos y las mismas
+              condiciones. Aquí las condiciones ya son distintas —$x(0)=1$ e
+              $y(0)=0$— y los signos cruzados son opuestos.
+      - tipo: calcular
+        titulo: El valor inicial de x
+        pregunta: |
+          La solución resulta ser $x(t) = e^{t}\cos 2t$ e
+          $y(t) = e^{t}\,\text{sen}\,2t$. Comprobando, ¿cuánto vale $x(0)$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              0 es $y(0)$, la otra condición. En $t=0$ tanto la exponencial como
+              el coseno valen 1, así que $x(0)=1$.
+          - valor: '2'
+            mensaje: |
+              2 es el coeficiente de dentro del coseno, no el valor de la
+              función. En $t=0$ el coseno vale 1.
+        pista: |
+          $e^{0}\cos 0 = 1\cdot 1$.
+        desarrollo: |
+          $$
+          x(0) = e^{0}\cos 0 = 1,
+          \qquad
+          y(0) = e^{0}\,\text{sen}\,0 = 0
+          $$
+
+          **Las dos condiciones iniciales se cumplen.** Comprobar esto cuesta
+          cinco segundos y es lo primero que hay que hacer con cualquier
+          solución de un problema con condiciones iniciales.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'Transformando: $sX-1 = X+2Y$ y $sY-0 = -2X+Y$.'
+          - texto: 'Reordenando queda el sistema lineal $(s-1)X - 2Y = 1$ y $2X + (s-1)Y = 0$.'
+          - texto: 'Resolviéndolo, $X = \dfrac{s-1}{(s-1)^{2}+4}$ e $Y = \dfrac{-2}{(s-1)^{2}+4}$.'
+          - texto: 'Antitransformando sale $x = e^{t}\cos 2t$ e $y = e^{t}\,\text{sen}\,2t$.'
+          - texto: 'Como el denominador es $(s-1)^{2}+4$, la solución decrece con el tiempo.'
+            trampa: true
+            mensaje: |
+              El $(s-1)$ significa una traslación que produce el factor $e^{+t}$,
+              que **crece**. Si decreciera sería $(s+1)$. La solución es una
+              espiral que se aleja del origen, no una que se acerca.
+    resolucion: |
+      **Transformar las dos ecuaciones**, metiendo las condiciones iniciales:
+
+      $$
+      \begin{cases}
+      sX - 1 = X + 2Y\\
+      sY - 0 = -2X + Y
+      \end{cases}
+      \qquad\Longrightarrow\qquad
+      \begin{cases}
+      (s-1)X - 2Y = 1\\
+      2X + (s-1)Y = 0
+      \end{cases}
+      $$
+
+      **Ya no hay derivadas.** Es un sistema lineal con determinante
+      $(s-1)^{2}+4$, y resolviéndolo:
+
+      $$
+      X(s) = \frac{s-1}{(s-1)^{2}+4},
+      \qquad
+      Y(s) = \frac{-2}{(s-1)^{2}+4}
+      $$
+
+      **Antitransformando.** El $(s-1)$ es traslación en $s$, o sea un factor
+      $e^{t}$; y el 4 del denominador es $2^{2}$, o sea frecuencia 2:
+
+      $$
+      \boxed{\;x(t) = e^{t}\cos 2t,
+      \qquad
+      y(t) = e^{t}\,\text{sen}\,2t\;}
+      $$
+
+      **La comprobación:** $x(0)=1$ e $y(0)=0$. ✓
+
+      > **Lo que dice la forma de la respuesta.** $x^{2}+y^{2} = e^{2t}$, así
+      > que el punto $(x,y)$ gira alrededor del origen alejándose: una espiral
+      > que se abre. Los signos cruzados opuestos del sistema eran la pista, y
+      > reconocerlos antes de calcular te dice qué esperar.
+
+  - id: ecuacion-integral-que-da-un-seno
+    titulo: Una ecuación integral cuya solución es un seno
+    fuente: Ejercicio 10.12e · Problemas complementarios, tema 10 · Cálculo, UPV/EHU (2017/2018 6E)
+    nivel: examen
+    enunciado: |
+      Utilizando la transformada de Laplace, resolver la ecuación integral
+
+      $$
+      y(t) + \int_{0}^{t}(t-z)\,y(z)\,dz = t
+      $$
+    pide: La función y(t).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es la transformada de la convolución $\int_0^t (t-z)\,y(z)\,dz$?
+        opciones:
+          - texto: El producto de la transformada de t por la de y, o sea Y/s²
+            correcta: true
+            mensaje: |
+              Sí. La convolución de $t$ con $y$ transforma en
+              $\frac{1}{s^{2}}\cdot Y(s)$. Ahí está toda la gracia: la integral
+              se convierte en un producto.
+          - texto: La transformada de t menos la de y
+            mensaje: |
+              La convolución no es una resta aunque lleve un $(t-z)$ dentro. El
+              $(t-z)$ es el argumento de la primera función, no una diferencia
+              de funciones.
+          - texto: No tiene transformada conocida
+            mensaje: |
+              Sí la tiene, y es la propiedad que hace resolubles estas
+              ecuaciones. Sin ella no habría forma de sacar la $y$ de dentro de
+              la integral.
+      - tipo: calcular
+        titulo: Despejar Y
+        pregunta: |
+          La ecuación transformada es $Y + \frac{Y}{s^{2}} = \frac{1}{s^{2}}$.
+          Despejando sale $Y = \frac{1}{s^{2}+1}$. ¿Cuánto vale $Y$ en $s=1$?
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.01
+          formato: en forma exacta (1/2) o con un decimal
+        distractores:
+          - valor: '1'
+            mensaje: |
+              1 es el numerador. En $s=1$ el denominador vale $1+1=2$, así que
+              sale $1/2$.
+          - valor: '2'
+            mensaje: |
+              Has dado la vuelta a la fracción. Es $1/(s^{2}+1)$, no
+              $(s^{2}+1)/1$.
+        pista: |
+          $1/(1+1)$.
+        desarrollo: |
+          $$
+          Y\left(1+\frac{1}{s^{2}}\right) = \frac{1}{s^{2}}
+          \;\Longrightarrow\;
+          Y\cdot\frac{s^{2}+1}{s^{2}} = \frac{1}{s^{2}}
+          \;\Longrightarrow\;
+          Y = \frac{1}{s^{2}+1}
+          $$
+
+          Y esa fracción es una entrada directa de la tabla.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'La integral es la convolución de $t$ con $y$, así que transforma en $Y/s^{2}$.'
+          - texto: 'La ecuación transformada queda $Y + Y/s^{2} = 1/s^{2}$.'
+          - texto: 'Despejando, $Y = \dfrac{1}{s^{2}+1}$.'
+          - texto: 'Esa es la transformada del seno, luego $y(t) = \text{sen}\,t$.'
+          - texto: 'Como el segundo miembro era $t$, la solución también tiene que ser un polinomio.'
+            trampa: true
+            mensaje: |
+              No hay ninguna razón para eso. La convolución mezcla la incógnita
+              consigo misma a través de la integral, y el resultado puede ser de
+              otra familia. Aquí un segundo miembro polinómico produce un seno —
+              y comprobarlo sustituyendo lo confirma.
+    resolucion: |
+      **Reconocer la convolución** es todo el ejercicio. La integral
+
+      $$
+      \int_{0}^{t}(t-z)\,y(z)\,dz
+      $$
+
+      es $t * y(t)$: el argumento $(t-z)$ junto a $z$, con límites de 0 a $t$,
+      es la firma.
+
+      **Transformando**, con $\mathcal{L}\{t\} = 1/s^{2}$:
+
+      $$
+      Y(s) + \frac{1}{s^{2}}\,Y(s) = \frac{1}{s^{2}}
+      $$
+
+      **La incógnita ha salido de la integral.** Despejando:
+
+      $$
+      Y\cdot\frac{s^{2}+1}{s^{2}} = \frac{1}{s^{2}}
+      \qquad\Longrightarrow\qquad
+      Y(s) = \frac{1}{s^{2}+1}
+      $$
+
+      **Antitransformando**, que es una entrada de tabla:
+
+      $$
+      \boxed{\;y(t) = \text{sen}\,t\;}
+      $$
+
+      **La comprobación**, que aquí sale redonda. Sustituyendo en la ecuación
+      original, $\int_0^t (t-z)\,\text{sen}\,z\,dz = t - \text{sen}\,t$, así que
+
+      $$
+      \text{sen}\,t + \bigl(t-\text{sen}\,t\bigr) = t \quad ✓
+      $$
+
+      > **Fíjate en lo que ha pasado.** Un segundo miembro polinómico —una
+      > simple $t$— ha producido una solución trigonométrica. Es lo normal en
+      > estas ecuaciones: la convolución realimenta la incógnita consigo misma,
+      > y eso genera oscilación. Esperar que la solución «se parezca» al segundo
+      > miembro es una intuición del tema 9 que aquí no vale.
+
+  - id: la-bola-que-rueda
+    titulo: La bola que rueda por la superficie
+    fuente: Ejercicio 10.16 · Problemas complementarios, tema 10 · Cálculo, UPV/EHU (2023/2024 6E)
+    nivel: examen
+    enunciado: |
+      Considerar la superficie definida por la función
+      $f(x,y) = 5 - \dfrac{x^{2}}{2} - y^{2}$. Se suelta una bola en el punto
+      $P\left(1,1,\frac{7}{2}\right)$ y rueda por la superficie hasta terminar
+      en algún punto $S$ del plano horizontal $XY$. La bola no está sometida a
+      ninguna otra fuerza más que a la de la gravedad. Se pide:
+
+      a) Plantear la ecuación diferencial y la condición inicial que debe
+      cumplir la trayectoria de la bola.
+      b) Resolver dicha ecuación.
+      c) Determinar el punto $S$.
+    pide: La EDO de la trayectoria, su solución y el punto final.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Rueda por la superficie sometida solo a la gravedad». ¿Qué dirección
+          sigue su proyección en el plano $XY$?
+        opciones:
+          - texto: La de máxima pendiente de bajada, o sea la del gradiente cambiado de signo
+            correcta: true
+            mensaje: |
+              Exacto. Es la primera pregunta del tema 6, aplicada: la bola baja
+              por donde más pende, y esa es la dirección de $-\nabla f$.
+          - texto: La tangente a la curva de nivel
+            mensaje: |
+              Por ahí la altura **no cambia**: la bola no bajaría nada. Sería la
+              trayectoria de una bola sobre una ladera perfectamente horizontal.
+          - texto: Una recta hacia el origen
+            mensaje: |
+              Solo si la superficie fuera simétrica en las dos variables. Aquí
+              los coeficientes de $x^{2}$ y de $y^{2}$ son distintos, así que la
+              bola se desvía.
+      - tipo: calcular
+        titulo: La constante de la trayectoria
+        pregunta: |
+          La EDO sale $\dfrac{dy}{dx} = \dfrac{2y}{x}$, cuya solución general es
+          $y = Kx^{2}$. Con la bola soltada en $(1,1)$, ¿cuánto vale $K$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              2 es el coeficiente que aparece en la ecuación, no la constante.
+              Sustituyendo $(1,1)$ en $y=Kx^{2}$ sale $1 = K\cdot 1$.
+          - valor: '3.5'
+            mensaje: |
+              $7/2$ es la **altura** del punto de partida, la coordenada $z$. La
+              trayectoria vive en el plano $XY$ y solo usa $x$ e $y$.
+        pista: |
+          Sustituye x=1, y=1 en $y = Kx^2$.
+        desarrollo: |
+          $$
+          1 = K\cdot 1^{2} \qquad\Longrightarrow\qquad K = 1
+          $$
+
+          La trayectoria en el plano es la **parábola $y = x^{2}$**.
+      - tipo: calcular
+        titulo: Dónde toca el suelo
+        pregunta: |
+          La bola para donde la superficie corta al plano $z=0$. Sustituyendo
+          $y=x^{2}$ en $5 - \frac{x^{2}}{2} - y^{2} = 0$ sale $x^{2}=2$.
+          ¿Cuánto vale la coordenada $y$ del punto $S$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1.4142'
+            mensaje: |
+              $\sqrt2$ es la coordenada $x$. La $y$ sale de la trayectoria:
+              $y = x^{2} = 2$.
+          - valor: '5'
+            mensaje: |
+              5 es la altura de la superficie en el origen, su punto más alto.
+              No tiene que ver con dónde toca el suelo.
+        pista: |
+          $y = x^2$, y $x^2 = 2$.
+        desarrollo: |
+          Con $y=x^{2}$, la condición $z=0$ es
+
+          $$
+          5 - \frac{x^{2}}{2} - x^{4} = 0
+          $$
+
+          Llamando $u=x^{2}$: $u^{2} + \frac{u}{2} - 5 = 0$, cuya raíz positiva
+          es $u=2$. Así que $x=\sqrt2$ e $y = x^{2} = 2$.
+
+          $$
+          S = \left(\sqrt2,\; 2,\; 0\right)
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución completa. Una pieza es falsa.
+        piezas:
+          - texto: 'a) La bola sigue $-\nabla f = (x,\,2y)$, así que $\dfrac{dy}{dx} = \dfrac{2y}{x}$, con $y(1)=1$.'
+          - texto: 'b) Es separable: $\dfrac{dy}{y} = \dfrac{2\,dx}{x}$, y sale $y = Kx^{2}$.'
+          - texto: 'La condición inicial da $K=1$, luego la trayectoria es $y=x^{2}$.'
+          - texto: 'c) Sustituyendo en $z=0$ sale $x=\sqrt2$, y por tanto $S=(\sqrt2,\,2,\,0)$.'
+          - texto: 'a) La condición inicial es $z(1)=7/2$, la altura del punto de partida.'
+            trampa: true
+            mensaje: |
+              La ecuación diferencial es de la **trayectoria en el plano $XY$**,
+              así que su condición inicial relaciona $x$ con $y$: es $y(1)=1$.
+              La altura $7/2$ es un dato coherente —se comprueba que $P$ está en
+              la superficie— pero no es la condición de la EDO.
+    resolucion: |
+      **Este es el ejercicio que cruza tres temas**, y por eso cae en la
+      convocatoria ordinaria y no en un parcial: ningún parcial puede pedirlo
+      porque solo entran dos temas.
+
+      **a) Plantear la EDO.** La bola baja por la dirección de máxima pendiente,
+      que es $-\nabla f$ (tema 6):
+
+      $$
+      \nabla f = \left(-x,\; -2y\right)
+      \qquad\Longrightarrow\qquad
+      -\nabla f = (x,\; 2y)
+      $$
+
+      La trayectoria en el plano es tangente a esa dirección en cada punto, así
+      que
+
+      $$
+      \frac{dy}{dx} = \frac{2y}{x},
+      \qquad y(1) = 1
+      $$
+
+      **Y conviene comprobar que $P$ está en la superficie**, que es gratis:
+      $f(1,1) = 5 - \frac12 - 1 = \frac72$. ✓ Coincide con la $z$ del enunciado.
+
+      **b) Resolver** (tema 9): es separable.
+
+      $$
+      \frac{dy}{y} = \frac{2\,dx}{x}
+      \;\Longrightarrow\;
+      \ln|y| = 2\ln|x| + C
+      \;\Longrightarrow\;
+      y = Kx^{2}
+      $$
+
+      Con $y(1)=1$ sale $K=1$:
+
+      $$
+      y = x^{2}
+      $$
+
+      **c) El punto final.** La bola para al llegar al plano $z=0$. Sustituyendo
+      la trayectoria en la superficie:
+
+      $$
+      5 - \frac{x^{2}}{2} - (x^{2})^{2} = 0
+      \;\Longrightarrow\;
+      u^{2}+\frac{u}{2}-5 = 0 \;\; (u=x^{2})
+      \;\Longrightarrow\;
+      u = 2
+      $$
+
+      $$
+      \boxed{\;S = \left(\sqrt2,\; 2,\; 0\right)\;}
+      $$
+
+      > **La costura es lo que se evalúa.** Cada apartado por separado es un
+      > ejercicio corto de un tema que ya sabes: el a) es el gradiente del tema
+      > 6, el b) una separable del tema 9, y el c) sustituir. Lo difícil —y lo
+      > que puntúa— es ver que el gradiente **produce** una ecuación diferencial,
+      > y que su solución es una curva del plano que hay que meter otra vez en
+      > la superficie.
