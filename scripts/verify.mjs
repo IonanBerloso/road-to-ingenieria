@@ -237,6 +237,59 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Un símbolo que KaTeX no sabe dibujar, dentro de una fórmula
+
+   Pasó el 24 de agosto de 2026: un «✗» metido dentro de un bloque `$$…$$`
+   para marcar un caso descartado. Fuera de la fórmula se ve perfectamente;
+   dentro, KaTeX no tiene métrica para él y lo deja sin dibujar.
+
+   El build lo dice —«Unrecognized Unicode character»— pero solo como
+   **aviso**, en medio de doscientas líneas de salida, y no para el
+   despliegue. Es decir: exactamente la clase de fallo que se publica.
+
+   La lista es corta a propósito: solo los que se han usado de verdad y
+   KaTeX rechaza. El «✓» sí lo dibuja, y el «°» también; no se prohíbe lo
+   que funciona.
+
+   Ojo al emparejado de los `$`. La primera versión de esta comprobación usaba
+   `\$[^$\n]+\$` para las fórmulas en línea, y eso **se salta** las que ocupan
+   dos líneas — que las hay. Al saltárselas, el `$` de cierre quedaba libre y
+   se emparejaba con el de la fórmula siguiente, metiendo dentro el texto
+   normal que hubiera en medio. Dio un falso positivo a la primera, y un
+   guardián que salta sin fallo es tan malo como uno que no salta (§11).
+   Ahora se quitan primero los bloques `$$…$$` y después se emparejan los `$`
+   en orden, permitiendo saltos de línea dentro.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const SIN_METRICA = /[✗✘✔☑☒]/;
+  const pegas = [];
+
+  for (const f of archivos(join(SRC, 'content'), ['.yaml', '.mdx'])) {
+    const texto = leer(f);
+    const mira = (trozo, desde) => {
+      const malos = [...new Set(trozo.match(new RegExp(SIN_METRICA, 'g')) ?? [])];
+      if (!malos.length) return;
+      pegas.push(`${rel(f)}:${texto.slice(0, desde).split('\n').length} → ${malos.join(' ')}`);
+    };
+
+    // 1 · los bloques, y se sustituyen por espacios para no desemparejar nada
+    let resto = texto;
+    for (const m of texto.matchAll(/\$\$([\s\S]*?)\$\$/g)) mira(m[1], m.index);
+    resto = texto.replace(/\$\$[\s\S]*?\$\$/g, (b) => ' '.repeat(b.length));
+
+    // 2 · las de línea, emparejando los `$` en orden y admitiendo saltos
+    for (const m of resto.matchAll(/\$([^$]+)\$/g)) mira(m[1], m.index);
+  }
+
+  if (pegas.length === 0) ok('ningún símbolo sin métrica dentro de una fórmula');
+  else
+    fallo(
+      'KaTeX no sabe dibujar ese símbolo dentro de $…$: sácalo fuera de la fórmula',
+      pegas.slice(0, 6).join('\n    '),
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Un «: » sin comillas dentro de un valor YAML
 
    Rompe el fichero, y el error que da apunta a otra línea. Ha pasado cuatro
