@@ -1,0 +1,345 @@
+---
+asignatura: calculo
+tema: 6
+titulo: Funciones reales de varias variables reales
+descripcion: Dominio y curvas de nivel, límites por caminos, derivadas parciales, plano tangente y el gradiente. Las tres preguntas que el examen hace siempre.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del capítulo 6 y de los boletines de Funciones de varias variables · Cálculo, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Hasta aquí una función tomaba un número y devolvía otro. Ahora toma **dos** y
+devuelve uno: $z = f(x,y)$. Y eso, que parece un detalle de notación, cambia la
+pregunta central del tema.
+
+Con una variable solo podías moverte en dos sentidos: adelante y atrás. La
+derivada era **un** número porque solo había **una** forma de moverse. Con dos
+variables puedes salir de un punto en infinitas direcciones, y la función puede
+crecer en unas y decrecer en otras. Así que ya no basta con «¿cuánto cambia?».
+Hay que decir **cuánto cambia y hacia dónde vas**.
+
+Todo el tema gira alrededor de esa frase. Y el examen, mirado de cerca, hace
+siempre las mismas tres preguntas con distinto disfraz: hacia dónde crece más
+rápido, hacia dónde no cambia, y cuánto cambia si voy hacia allá. Las tres las
+contesta el mismo objeto, el **gradiente**, y por eso este tema es en el fondo
+un solo concepto con cuatro nombres.
+
+## Una función de dos variables es un paisaje
+
+La forma útil de imaginarla: $f(x,y)$ es la **altura** del terreno en el punto
+$(x,y)$ del mapa. No es una analogía cómoda, es literalmente cómo la plantean
+los enunciados — la altura de una montaña, la temperatura de una placa, la
+concentración de un gas.
+
+Y hay una consecuencia que conviene coger pronto: **una superficie en el espacio
+no se dibuja bien en un papel, pero su mapa sí.** Un montañero no lleva una
+maqueta del monte; lleva un mapa con curvas de nivel. Nosotros hacemos lo mismo.
+
+### Las curvas de nivel son la función vista desde arriba
+
+Una **curva de nivel** es el conjunto de puntos donde la función vale lo mismo:
+
+$$
+f(x,y) = k
+$$
+
+Es decir: cortas el paisaje con un plano horizontal a altura $k$ y miras el
+borde. En un mapa topográfico son las líneas cerradas que rodean la cima; en un
+mapa del tiempo, las isobaras.
+
+Lo importante para el examen es que **una curva de nivel es una ecuación en $x$
+e $y$ sin $z$**. Si te dan la función y te piden la curva de nivel que pasa por
+un punto, el procedimiento entero es: evalúa la función en el punto para saber
+cuánto vale $k$, e iguala.
+
+<figure class="figura-examen">
+  <svg viewBox="-30 -20 470 260" role="img" aria-labelledby="t6nivT t6nivD">
+    <title id="t6nivT">Curvas de nivel de una superficie con forma de cuenco</title>
+    <desc id="t6nivD">A la izquierda, un cuenco visto en perspectiva con tres cortes horizontales. A la derecha, esos tres cortes vistos desde arriba: tres circunferencias concéntricas. Donde el terreno es más empinado las curvas se juntan.</desc>
+
+    <text x="0" y="-4" font-size="11" fill="var(--graphite)" font-family="var(--mono)">EL PAISAJE</text>
+    <text x="250" y="-4" font-size="11" fill="var(--graphite)" font-family="var(--mono)">SU MAPA</text>
+
+    <path d="M20 150 Q90 -90 160 150" fill="none" stroke="var(--ink)" stroke-width="2"></path>
+    <ellipse cx="90" cy="150" rx="70" ry="14" fill="none" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="3 3"></ellipse>
+    <ellipse cx="90" cy="110" rx="57.2" ry="11.4" fill="none" stroke="var(--live)" stroke-width="1.6"></ellipse>
+    <ellipse cx="90" cy="75" rx="42.9" ry="8.6" fill="none" stroke="var(--live)" stroke-width="1.6"></ellipse>
+    <ellipse cx="90" cy="45" rx="24.7" ry="4.9" fill="none" stroke="var(--live)" stroke-width="1.6"></ellipse>
+    <text x="153" y="114" font-size="10" fill="var(--live)" font-family="var(--mono)">k=1</text>
+    <text x="139" y="79" font-size="10" fill="var(--live)" font-family="var(--mono)">k=4</text>
+    <text x="121" y="49" font-size="10" fill="var(--live)" font-family="var(--mono)">k=8</text>
+
+    <line x1="252" y1="100" x2="398" y2="100" stroke="var(--rule)" stroke-width="1"></line>
+    <line x1="325" y1="27" x2="325" y2="173" stroke="var(--rule)" stroke-width="1"></line>
+    <circle cx="325" cy="100" r="51" fill="none" stroke="var(--live)" stroke-width="1.6"></circle>
+    <circle cx="325" cy="100" r="39" fill="none" stroke="var(--live)" stroke-width="1.6"></circle>
+    <circle cx="325" cy="100" r="22" fill="none" stroke="var(--live)" stroke-width="1.6"></circle>
+    <circle cx="325" cy="100" r="2.6" fill="var(--flag)"></circle>
+    <text x="330" y="46" font-size="10" fill="var(--live)" font-family="var(--mono)">k=1</text>
+    <text x="330" y="58" font-size="10" fill="var(--live)" font-family="var(--mono)">k=4</text>
+    <text x="330" y="75" font-size="10" fill="var(--live)" font-family="var(--mono)">k=8</text>
+
+    <text x="252" y="200" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">juntas = empinado</text>
+    <text x="252" y="216" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">separadas = llano</text>
+  </svg>
+  <figcaption>
+    El mapa no pierde información: con las curvas etiquetadas puedes reconstruir
+    el paisaje. Y trae algo que la perspectiva esconde — <strong>cuánto se
+    juntan las curvas te dice cómo de empinado está</strong>. Esa lectura es la
+    que el examen pide una y otra vez.
+  </figcaption>
+</figure>
+
+El dominio se busca igual que en el tema 3, prohibiendo: raíces pares con el
+radicando negativo, denominadores nulos, logaritmos de algo que no sea positivo
+y argumentos de arcoseno fuera de $[-1,1]$. La diferencia es que ahora el
+resultado **no es un intervalo, es una región del plano** — y hay que dibujarla.
+
+<ErrorTipico titulo="Dar el dominio con una desigualdad y no dibujarlo">
+El enunciado dice «calcular **y dibujar** los dominios». El dibujo no es
+decoración: es la mitad de la respuesta, y en el reparto por competencias cae
+en COMP4, que en esta evaluación vale entre 2 y 5 puntos de cada 10.
+
+Y hay un detalle que se pierde siempre: si el dominio es $x+y \ge 0$, la recta
+$x+y=0$ **entra**, y se dibuja continua. Si fuera $x+y>0$, se dibuja a trazos.
+Esa distinción se corrige.
+</ErrorTipico>
+
+## El límite: ahora importa por dónde te acerques
+
+Con una variable, acercarse a un punto solo se podía hacer por la izquierda o
+por la derecha. Por eso bastaba comprobar dos límites laterales.
+
+En el plano puedes acercarte al origen **por infinitos caminos**: por el eje
+$x$, por el eje $y$, por cualquier recta $y=mx$, por una parábola $y=mx^2$, en
+espiral. Y la definición exige que **por todos** el límite valga lo mismo.
+
+Eso hace que la pregunta cambie de signo. Demostrar que un límite **existe** es
+difícil, porque habría que comprobar infinitos caminos. Demostrar que **no
+existe** es fácil: basta encontrar dos por los que salga distinto.
+
+> Es la misma idea que en el tema 2 con las dos subsucesiones que discrepan.
+> Allí negabas una convergencia partiendo la sucesión en dos; aquí niegas un
+> límite acercándote por dos caminos. La estructura lógica es idéntica, y por
+> eso el examen la reutiliza.
+
+**El truco estándar es acercarse por rectas $y = mx$.** Sustituyes, simplificas,
+y miras qué queda:
+
+$$
+\lim_{(x,y)\to(0,0)} \frac{xy}{x^{2}+y^{2}}
+\quad\text{por } y = mx: \quad
+\frac{x\cdot mx}{x^{2}+m^{2}x^{2}} = \frac{m}{1+m^{2}}
+$$
+
+Si en el resultado **queda la $m$**, has terminado: el valor depende de la recta
+por la que vengas, así que el límite no existe. Y para escribirlo del todo,
+elige dos valores concretos — con $m=0$ sale $0$, con $m=1$ sale $1/2$ — porque
+un tribunal quiere ver dos números distintos, no una fórmula con parámetro.
+
+<ErrorTipico titulo="Creer que si sale lo mismo por todas las rectas, el límite existe">
+No lo demuestra. Las rectas son infinitas, pero no son todos los caminos.
+
+El contraejemplo clásico es $\dfrac{x^{2}y}{x^{4}+y^{2}}$: por cualquier recta
+$y=mx$ el límite sale $0$, y sin embargo por la parábola $y=x^{2}$ sale $1/2$.
+Así que las rectas sirven para **negar**, nunca para afirmar. Si has probado
+tres rectas y coinciden, lo único que sabes es que todavía no has encontrado el
+contraejemplo.
+</ErrorTipico>
+
+## Las derivadas parciales: mirar en una sola dirección
+
+Derivar parcialmente respecto de $x$ es preguntarse cómo cambia la función **si
+te mueves solo hacia el este**, con la $y$ congelada:
+
+$$
+\frac{\partial f}{\partial x} = f_x
+\qquad\text{se deriva tratando } y \text{ como si fuera un número.}
+$$
+
+Operativamente no hay nada nuevo: son las reglas de derivación del tema 3 con
+una letra que hace de constante. Si $f(x,y) = x^{3}y^{2}$, entonces
+$f_x = 3x^{2}y^{2}$ — el $y^{2}$ se queda quieto, como se quedaría un $7$.
+
+Las **de segundo orden** se obtienen derivando otra vez, y hay cuatro:
+
+$$
+f_{xx},\qquad f_{yy},\qquad f_{xy},\qquad f_{yx}
+$$
+
+y en la práctica las dos cruzadas coinciden. Eso es el **teorema de Schwarz**, y
+tiene una hipótesis que conviene decir en voz alta porque puntúa en COMP4: vale
+**si las derivadas cruzadas son continuas**. No es una identidad gratuita, es un
+teorema con condiciones.
+
+Una comprobación que sale gratis: si calculas $f_{xy}$ y $f_{yx}$ por separado y
+no coinciden, en una función normal de examen **te has equivocado en una de las
+dos**. Es el único autocontrol barato del tema.
+
+## El gradiente contesta las tres preguntas
+
+Aquí está el tema entero. El **gradiente** es el vector que junta las dos
+derivadas parciales:
+
+$$
+\nabla f(x,y) = \bigl(f_x,\; f_y\bigr)
+$$
+
+Parece un simple envoltorio, y no lo es: colocarlas juntas como vector convierte
+dos números sueltos en **una flecha sobre el mapa**, y esa flecha contesta las
+tres cosas que el examen pregunta.
+
+<figure class="figura-examen">
+  <svg viewBox="-40 -10 420 250" role="img" aria-labelledby="t6graT t6graD">
+    <title id="t6graT">El gradiente sobre un mapa de curvas de nivel</title>
+    <desc id="t6graD">Un punto P sobre una curva de nivel. Desde P salen tres flechas: el gradiente, perpendicular a la curva y apuntando hacia los valores altos; la tangente a la curva, en la dirección donde la función no cambia; y una dirección cualquiera, intermedia.</desc>
+
+    <path d="M-28 108 L252 178" fill="none" stroke="var(--rule)" stroke-width="1.4"></path>
+    <path d="M-20 75 L260 145" fill="none" stroke="var(--live)" stroke-width="2.2"></path>
+    <path d="M-12 42 L268 112" fill="none" stroke="var(--rule)" stroke-width="1.4"></path>
+    <path d="M-4 9 L276 79" fill="none" stroke="var(--rule)" stroke-width="1.4"></path>
+    <text x="258" y="184" font-size="10" fill="var(--faint)" font-family="var(--mono)">k=6</text>
+    <text x="266" y="151" font-size="10" fill="var(--live)" font-family="var(--mono)">k=7</text>
+    <text x="274" y="118" font-size="10" fill="var(--faint)" font-family="var(--mono)">k=8</text>
+    <text x="282" y="85" font-size="10" fill="var(--faint)" font-family="var(--mono)">k=9</text>
+
+    <defs>
+      <marker id="t6f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="var(--flag)"></path>
+      </marker>
+      <marker id="t6a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="var(--alt)"></path>
+      </marker>
+      <marker id="t6g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="var(--graphite)"></path>
+      </marker>
+    </defs>
+
+    <path d="M120 110 L132.6 113.2 L135.8 100.5 L123.2 97.4 Z" fill="none" stroke="var(--faint)" stroke-width="1.1"></path>
+
+    <line x1="120" y1="110" x2="141" y2="26" stroke="var(--flag)" stroke-width="2.6" marker-end="url(#t6f)"></line>
+    <line x1="120" y1="110" x2="204" y2="131" stroke="var(--graphite)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#t6g)"></line>
+    <line x1="120" y1="110" x2="193" y2="66" stroke="var(--alt)" stroke-width="2.2" marker-end="url(#t6a)"></line>
+    <circle cx="120" cy="110" r="3.6" fill="var(--ink)"></circle>
+    <text x="103" y="124" font-size="12" fill="var(--ink)" font-family="var(--mono)">P</text>
+
+    <text x="122" y="18" font-size="10.5" fill="var(--flag)" font-family="var(--mono)">∇f — sube lo más rápido</text>
+    <text x="199" y="62" font-size="10.5" fill="var(--alt)" font-family="var(--mono)">u — sube algo</text>
+    <text x="128" y="170" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">tangente — no cambia</text>
+
+    <text x="-24" y="216" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">el gradiente es PERPENDICULAR a la curva de nivel</text>
+  </svg>
+  <figcaption>
+    Las tres direcciones que el examen pregunta, sobre el mismo punto. El ángulo
+    recto marcado no es un adorno: es el hecho del que salen las otras dos
+    respuestas.
+  </figcaption>
+</figure>
+
+**Pregunta 1 · ¿Hacia dónde crece más rápido?** Hacia $\nabla f$. Y la velocidad
+con la que crece es su módulo, $\lVert \nabla f \rVert$. Si te preguntan por la
+dirección de **máximo descenso** —enfriarse cuanto antes, escabullirse del gas—
+es $-\nabla f$, la misma flecha del revés.
+
+**Pregunta 2 · ¿Hacia dónde no cambia?** Perpendicular a $\nabla f$, que es
+justo la dirección **tangente a la curva de nivel**. Tiene sentido: la curva de
+nivel es, por definición, por donde la altura no cambia.
+
+Y de ahí sale un hecho que se usa constantemente: **el gradiente es
+perpendicular a la curva de nivel que pasa por el punto.** Si el gradiente es
+$(3,-5)$, la dirección de cambio nulo es $(5,3)$ — se cambian de sitio y se le
+da la vuelta a un signo.
+
+**Pregunta 3 · ¿Cuánto cambia si voy hacia $\vec{v}$?** Es la **derivada
+direccional**, y es el producto escalar del gradiente por el vector director,
+pero **normalizado**:
+
+$$
+D_{\vec u} f = \nabla f \cdot \vec u,
+\qquad \vec u = \frac{\vec v}{\lVert \vec v \rVert}
+$$
+
+<ErrorTipico titulo="Hacer el producto escalar sin normalizar el vector">
+Es el error más caro del tema y el más fácil de cometer, porque el resultado
+sale un número perfectamente creíble.
+
+Si te piden la derivada direccional siguiendo $\vec v = (4,3)$, ese vector mide
+$5$. Usarlo tal cual multiplica la respuesta por $5$. La derivada direccional
+mide **cuánto cambia la función por cada metro que avanzas**, así que el vector
+tiene que medir exactamente un metro; si no, estás midiendo el cambio de cinco
+pasos y llamándolo el de uno.
+
+Y cuidado con la variante: cuando el enunciado dice «nos dirigimos **desde $P$
+hasta $Q$**», el vector no te lo dan hecho. Es $\vec{PQ} = Q - P$, y **después**
+se normaliza. Restar al revés te da el signo cambiado, que es la diferencia
+entre calentarse y enfriarse.
+</ErrorTipico>
+
+### Y al revés: deducir el gradiente a partir de datos
+
+La versión que más cae no es «calcula el gradiente de esta fórmula». Es la
+inversa: te dan dos derivadas direccionales, o el valor máximo de cambio y una
+dirección, y **el gradiente es la incógnita**.
+
+Funciona porque $\nabla f = (a,b)$ son dos números, así que **dos datos bastan**
+para plantear un sistema de dos ecuaciones. Cada derivada direccional que te dan
+es una ecuación $\nabla f \cdot \vec u = \text{dato}$.
+
+Y hay dos atajos que ahorran el sistema entero:
+
+- Si te dicen que **el valor máximo de cambio es $m$**, eso es
+  $\lVert \nabla f \rVert = m$.
+- Si te dicen **en qué dirección se da ese máximo**, esa es la dirección del
+  gradiente. Junto con el módulo, el gradiente queda determinado: es
+  $m \cdot \vec u$.
+
+## El plano tangente, y aproximar sin calculadora
+
+Con una variable, la recta tangente era la mejor aproximación lineal cerca del
+punto. Con dos, lo es el **plano tangente**:
+
+$$
+z = f(a,b) + f_x(a,b)\,(x-a) + f_y(a,b)\,(y-b)
+$$
+
+Léelo como lo que es: partes de la altura en el punto y le sumas lo que subes al
+moverte en $x$ más lo que subes al moverte en $y$. No hay nada que memorizar
+aparte de esa frase.
+
+Sirve para **aproximar valores**, que es la segunda mitad del ejercicio típico:
+$f(1{,}1;\,1{,}9)$ no se puede calcular a mano, pero el plano tangente en
+$(1,2)$ sí, y da una respuesta con dos decimales sin tocar una calculadora — que
+en este examen no la hay.
+
+Si la superficie viene **implícita**, $F(x,y,z)=0$, el plano tangente sale del
+gradiente de las tres variables: el vector $\nabla F = (F_x, F_y, F_z)$ es
+perpendicular a la superficie, y un plano se escribe con un punto y una
+perpendicular. Es la misma idea de antes subida una dimensión — el gradiente
+sigue siendo lo perpendicular al conjunto de nivel.
+
+## Lo que hay que llevar sabido
+
+Cabe en media cara y contesta casi todo el examen.
+
+| pregunta del enunciado | lo que hay que hacer |
+|---|---|
+| «curva de nivel que pasa por $P$» | evalúa $k=f(P)$, escribe $f(x,y)=k$ |
+| «dirección de máximo crecimiento» | $\nabla f$ |
+| «para enfriarse lo antes posible» | $-\nabla f$ |
+| «dirección en que no cambia» | perpendicular a $\nabla f$: cambia el orden y un signo |
+| «velocidad de cambio hacia $\vec v$» | $\nabla f \cdot \vec v/\lVert\vec v\rVert$ |
+| «valor máximo de cambio» | $\lVert \nabla f \rVert$ |
+| «desde $P$ hasta $Q$» | $\vec v = Q-P$, y luego normaliza |
+| «aproximar $f$ cerca de $P$» | plano tangente en $P$ |
+| «demostrar que no existe el límite» | dos caminos con resultados distintos |
+
+Y las tres frases que valen puntos de COMP4 aunque no se pidan explícitamente:
+
+- **El gradiente es perpendicular a la curva de nivel.**
+- **Schwarz necesita que las derivadas cruzadas sean continuas.**
+- **Que el límite coincida por todas las rectas no demuestra que exista.**

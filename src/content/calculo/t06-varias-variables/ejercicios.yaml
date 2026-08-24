@@ -1,0 +1,1489 @@
+ejercicios:
+  # ═══════════════════════════════════════════════════════════════════
+  # Ejemplos introductorios del tema 6. Nuestros, no de examen ni del boletín.
+  # El boletín de este tema empieza directamente en «calcula las derivadas
+  # parciales de estas seis funciones», y el examen pregunta otra cosa: el
+  # gradiente aplicado. Estos cuatro son el puente.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: ej-curva-de-nivel-basica
+    titulo: La curva de nivel que pasa por un punto
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Para $f(x,y) = x^{2} + y$, encontrar la ecuación de la curva de nivel que
+      pasa por el punto $P(-1,1)$.
+    pide: La ecuación de la curva de nivel por P.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué es una curva de nivel de $f(x,y)$?
+        opciones:
+          - texto: El conjunto de puntos donde la función vale una constante
+            correcta: true
+            mensaje: |
+              Eso es. Cortas el paisaje con un plano horizontal y te quedas con
+              el borde: una ecuación en $x$ e $y$, **sin** $z$.
+          - texto: La gráfica de la función en tres dimensiones
+            mensaje: |
+              Esa es la superficie entera. La curva de nivel es solo un corte
+              suyo a una altura fija, y vive en el plano.
+          - texto: La recta tangente a la superficie en un punto
+            mensaje: |
+              Eso es otra cosa, y además con dos variables la tangente es un
+              plano, no una recta. Una curva de nivel no toca la superficie:
+              es su sombra a una altura.
+      - tipo: calcular
+        titulo: El valor de la constante
+        pregunta: |
+          ¿Cuánto vale $k = f(-1,1)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Parece que has hecho $(-1)^{2}$ como $-1$. Un cuadrado nunca es
+              negativo: $(-1)^{2} = 1$, y $1+1=2$.
+          - valor: '-1'
+            mensaje: |
+              Has sustituido la $x$ pero no has elevado al cuadrado. La función
+              es $x^{2}+y$, no $x+y$.
+        pista: |
+          Sustituye $x=-1$ e $y=1$ en $x^{2}+y$. Cuidado con el cuadrado.
+        desarrollo: |
+          $$
+          k = f(-1,1) = (-1)^{2} + 1 = 1 + 1 = 2
+          $$
+
+          La curva de nivel que buscamos es la de altura $2$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: Se evalúa la función en el punto, y sale $k = 2$.
+          - texto: La curva de nivel es $x^{2} + y = 2$.
+          - texto: 'Despejada, es la parábola $y = 2 - x^{2}$: una parábola hacia abajo.'
+          - texto: Es una ecuación en $x$ e $y$ sin $z$, porque vive en el plano del mapa.
+          - texto: Como el punto tiene $y=1$, la curva de nivel es la recta $y=1$.
+            trampa: true
+            mensaje: |
+              La curva de nivel no es una de las coordenadas del punto: es el
+              conjunto entero de puntos que comparten altura con él. Aquí es
+              una parábola, y el punto $P$ es solo uno de sus infinitos puntos.
+    resolucion: |
+      **El procedimiento entero son dos pasos**, y el primero es el que se
+      olvida: hay que saber a qué altura estamos antes de poder escribir la
+      curva.
+
+      **Paso 1 — la altura.** Se evalúa la función en el punto:
+
+      $$
+      k = f(-1,1) = (-1)^{2} + 1 = 2
+      $$
+
+      **Paso 2 — la ecuación.** Se iguala la función a esa altura:
+
+      $$
+      x^{2} + y = 2
+      \qquad\Longleftrightarrow\qquad
+      y = 2 - x^{2}
+      $$
+
+      Es una parábola con las ramas hacia abajo y vértice en $(0,2)$. Y una
+      comprobación que cuesta cinco segundos: $P(-1,1)$ tiene que estar en
+      ella, y en efecto $2-(-1)^{2} = 1$. ✓
+
+  - id: ej-parcial-con-y-congelada
+    titulo: Una derivada parcial, con la otra variable congelada
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular $f_x$ y $f_y$ para $f(x,y) = x^{3}y^{2} + 4y$.
+    pide: Las dos derivadas parciales de primer orden.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Al derivar respecto de $x$, ¿qué se hace con la $y$?
+        opciones:
+          - texto: Se trata como si fuera un número cualquiera
+            correcta: true
+            mensaje: |
+              Exacto. Derivar parcialmente respecto de $x$ es preguntarse cómo
+              cambia la función moviéndote solo hacia el este, con la $y$
+              congelada. La $y$ se comporta como un $7$.
+          - texto: Se deriva también, aplicando la regla del producto
+            mensaje: |
+              Eso sería derivar respecto de las dos a la vez, que no es lo que
+              significa $\partial/\partial x$. La regla del producto se usa si
+              hay dos factores **que dependen de $x$**.
+          - texto: Se sustituye por cero
+            mensaje: |
+              Cuidado: eso es lo que le pasa a la **derivada** de una constante,
+              no a la constante. Si $y$ es como un $7$, entonces $x^{3}y^{2}$ es
+              como $49x^{3}$, y su derivada no es cero.
+      - tipo: calcular
+        titulo: Evaluar la parcial respecto de x
+        pregunta: |
+          Con $f_x = 3x^{2}y^{2}$, ¿cuánto vale $f_x(1,2)$?
+        respuesta:
+          tipo: numero
+          valor: '12'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '6'
+            mensaje: |
+              Parece que has puesto $y$ en vez de $y^{2}$: sería
+              $3\cdot 1\cdot 2 = 6$. El exponente del $y^{2}$ no se toca al
+              derivar respecto de $x$.
+          - valor: '24'
+            mensaje: |
+              Has derivado de más. $f_x = 3x^{2}y^{2}$, y en $(1,2)$ eso es
+              $3\cdot 1\cdot 4 = 12$. Un $24$ sale de duplicar en algún sitio.
+        pista: |
+          Sustituye $x=1$ e $y=2$ en $3x^{2}y^{2}$. El $y^{2}$ vale 4.
+        desarrollo: |
+          $$
+          f_x(1,2) = 3\cdot 1^{2}\cdot 2^{2} = 3\cdot 4 = 12
+          $$
+      - tipo: calcular
+        titulo: Y la parcial respecto de y
+        pregunta: |
+          ¿Cuánto vale $f_y(1,2)$, sabiendo que $f_y = 2x^{3}y + 4$?
+        respuesta:
+          tipo: numero
+          valor: '8'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '4'
+            mensaje: |
+              Te has dejado el término $2x^{3}y$, que en $(1,2)$ vale 4. El $+4y$
+              aporta su 4, pero no es lo único.
+          - valor: '12'
+            mensaje: |
+              Parece que has derivado $4y$ como $4y$ en vez de como $4$. La
+              derivada de $4y$ respecto de $y$ es la constante 4.
+        pista: |
+          $2x^{3}y$ en $(1,2)$ vale 4, y hay que sumarle el 4 del último término.
+        desarrollo: |
+          $$
+          f_y(1,2) = 2\cdot 1^{3}\cdot 2 + 4 = 4 + 4 = 8
+          $$
+
+          Fíjate en la asimetría: al derivar respecto de $y$, el término $4y$
+          sí aporta; al derivar respecto de $x$ desaparece, porque para la $x$
+          es una constante.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Para $f_x$, la $y$ se congela; $x^{3}y^{2}$ deriva a $3x^{2}y^{2}$.
+          - texto: El término $4y$ es constante para la $x$, así que desaparece en $f_x$.
+          - texto: Para $f_y$, la $x$ se congela; $x^{3}y^{2}$ deriva a $2x^{3}y$.
+          - texto: Y el término $4y$ sí aporta en $f_y$, con su 4.
+          - texto: Como hay un producto $x^{3}y^{2}$, hace falta la regla del producto en las dos.
+            trampa: true
+            mensaje: |
+              No hace falta. La regla del producto se usa cuando **los dos**
+              factores dependen de la variable respecto de la que derivas. Aquí,
+              al derivar en $x$, el factor $y^{2}$ es constante: es un producto
+              por un número, no un producto de dos funciones.
+    resolucion: |
+      **La única idea del ejercicio**: derivar parcialmente no es una regla
+      nueva. Son las reglas de siempre con una letra haciendo de número.
+
+      $$
+      f(x,y) = x^{3}y^{2} + 4y
+      $$
+
+      **Respecto de $x$** (la $y$ es un número):
+
+      $$
+      f_x = 3x^{2}y^{2} + 0 = 3x^{2}y^{2}
+      $$
+
+      El $4y$ se va porque, mirado desde la $x$, es una constante.
+
+      **Respecto de $y$** (la $x$ es un número):
+
+      $$
+      f_y = 2x^{3}y + 4
+      $$
+
+      **Evaluadas en $(1,2)$:** $f_x = 12$ y $f_y = 8$. Puestas juntas forman el
+      gradiente, $\nabla f(1,2) = (12,8)$ — que es de lo que va el resto del
+      tema.
+
+  - id: ej-gradiente-tres-preguntas
+    titulo: El gradiente contesta tres preguntas de golpe
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea $f(x,y) = x^{2} + y^{2}$, y el punto $P(3,4)$. Calcular el gradiente
+      en $P$, la velocidad máxima de cambio, y una dirección en la que la
+      función no cambie.
+    pide: El gradiente, su módulo y una dirección de cambio nulo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué dirección indica el vector gradiente en un punto?
+        opciones:
+          - texto: Aquella en la que la función crece más rápido
+            correcta: true
+            mensaje: |
+              Sí. Y su módulo dice **cuánto** crece: es la velocidad de ese
+              crecimiento máximo.
+          - texto: Aquella en la que la función no cambia
+            mensaje: |
+              Justo la perpendicular. La dirección de cambio nulo es la tangente
+              a la curva de nivel, y el gradiente es perpendicular a ella.
+          - texto: La tangente a la superficie en el punto
+            mensaje: |
+              La tangente a la superficie es un **plano**, no un vector. El
+              gradiente vive en el plano del mapa, no en el espacio.
+      - tipo: calcular
+        titulo: El módulo del gradiente
+        pregunta: |
+          Con $\nabla f(3,4) = (6,8)$, ¿cuánto vale la velocidad máxima de
+          cambio en $P$?
+        respuesta:
+          tipo: numero
+          valor: '10'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '14'
+            mensaje: |
+              Has sumado las componentes. El módulo no es $6+8$: es
+              $\sqrt{6^{2}+8^{2}}$, que sale 10.
+          - valor: '48'
+            mensaje: |
+              Eso es el producto de las componentes. El módulo de un vector es
+              la raíz de la suma de sus cuadrados.
+        pista: |
+          El módulo de $(6,8)$ es $\sqrt{36+64}$. Es el triángulo 3-4-5 escalado.
+        desarrollo: |
+          $$
+          \lVert \nabla f(3,4)\rVert = \sqrt{6^{2}+8^{2}} = \sqrt{100} = 10
+          $$
+
+          Sale exacto porque $(6,8)$ es el triángulo $3\text{-}4\text{-}5$
+          multiplicado por 2. En un examen sin calculadora, los números están
+          elegidos para que salga así.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta completa. Una pieza es falsa.
+        piezas:
+          - texto: $f_x = 2x$ y $f_y = 2y$, luego $\nabla f(3,4) = (6,8)$.
+          - texto: La velocidad máxima de cambio es $\lVert\nabla f\rVert = 10$.
+          - texto: 'Una dirección de cambio nulo es la perpendicular: $(-8,6)$, o su opuesta $(8,-6)$.'
+          - texto: Esa perpendicular es tangente a la curva de nivel, que aquí es la circunferencia $x^{2}+y^{2}=25$.
+          - texto: La dirección de cambio nulo es $(-6,-8)$, el gradiente cambiado de signo.
+            trampa: true
+            mensaje: |
+              $-\nabla f$ es la dirección de **máximo descenso**, no la de cambio
+              nulo. Por ahí la función cambia todo lo que puede, solo que hacia
+              abajo. La de cambio nulo es la **perpendicular**.
+    resolucion: |
+      **Las tres preguntas, y las tres las contesta el mismo vector.**
+
+      **El gradiente.** $f_x = 2x$, $f_y = 2y$, así que
+
+      $$
+      \nabla f(3,4) = (6,8)
+      $$
+
+      **La velocidad máxima de cambio** es su módulo:
+
+      $$
+      \lVert \nabla f \rVert = \sqrt{36+64} = 10
+      $$
+
+      **La dirección de cambio nulo** es cualquiera perpendicular al gradiente.
+      Para obtener una perpendicular a $(a,b)$ basta con **cambiar el orden y
+      un signo**: $(-b,a)$. Aquí, $(-8,6)$.
+
+      **Por qué tiene sentido.** Las curvas de nivel de $x^{2}+y^{2}$ son
+      circunferencias centradas en el origen. En $P(3,4)$ pasa la de radio 5, y
+      el gradiente $(6,8)$ apunta justo hacia afuera, en la dirección radial —
+      que es, en efecto, perpendicular a la circunferencia. La geometría
+      confirma la cuenta.
+
+  - id: ej-direccional-sin-normalizar
+    titulo: La derivada direccional, y el vector que hay que normalizar
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sabiendo que $\nabla f(P) = (3,4)$, calcular la derivada direccional de
+      $f$ en $P$ siguiendo la dirección del vector $\vec v = (4,3)$.
+    pide: La derivada direccional en la dirección de v.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de hacer el producto escalar con el gradiente, ¿qué hay que
+          hacerle al vector $\vec v$?
+        opciones:
+          - texto: Normalizarlo, para que tenga módulo 1
+            correcta: true
+            mensaje: |
+              Exacto, y no es un formalismo. La derivada direccional mide cuánto
+              cambia la función **por cada unidad que avanzas**. Si el vector
+              mide 5, estarías midiendo cinco pasos y llamándolo uno.
+          - texto: Nada, se usa tal cual
+            mensaje: |
+              Ese es el error más caro del tema, y el más difícil de detectar
+              porque el resultado sale creíble. Aquí $\vec v$ mide 5, así que la
+              respuesta saldría cinco veces más grande de lo que debe.
+          - texto: Hacerlo perpendicular al gradiente
+            mensaje: |
+              No: la dirección la elige el enunciado y no se toca. La
+              perpendicular al gradiente es otra cosa — la dirección en la que
+              la función no cambia.
+      - tipo: calcular
+        titulo: El módulo del vector dirección
+        pregunta: |
+          ¿Cuánto mide $\vec v = (4,3)$?
+        respuesta:
+          tipo: numero
+          valor: '5'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '7'
+            mensaje: |
+              Has sumado las componentes. El módulo es $\sqrt{4^{2}+3^{2}}$,
+              no $4+3$.
+          - valor: '25'
+            mensaje: |
+              Eso es $4^{2}+3^{2}$, la suma de los cuadrados. Falta la raíz.
+        pista: |
+          $\sqrt{16+9}$. Otra vez el triángulo 3-4-5.
+        desarrollo: |
+          $$
+          \lVert \vec v\rVert = \sqrt{16+9} = 5
+          \qquad\Longrightarrow\qquad
+          \vec u = \left(\tfrac{4}{5}, \tfrac{3}{5}\right)
+          $$
+      - tipo: calcular
+        titulo: La derivada direccional
+        pregunta: |
+          ¿Cuánto vale $D_{\vec u} f(P) = (3,4)\cdot\left(\frac{4}{5},\frac{3}{5}\right)$?
+        respuesta:
+          tipo: numero
+          valor: '4.8'
+          tolerancia: 0.01
+          formato: en forma exacta (24/5) o con dos decimales
+        distractores:
+          - valor: '24'
+            mensaje: |
+              Ese es el producto escalar **sin normalizar**: $(3,4)\cdot(4,3)=24$.
+              Es exactamente el error del enunciado: falta dividir entre el
+              módulo, que es 5.
+          - valor: '5'
+            mensaje: |
+              5 es el módulo del gradiente, y también el de $\vec v$. La derivada
+              direccional es otra cosa: el producto escalar del gradiente por el
+              vector **unitario**.
+        pista: |
+          $(3\cdot 4 + 4\cdot 3)/5$. El numerador es 24.
+        desarrollo: |
+          $$
+          D_{\vec u} f(P) = (3,4)\cdot\left(\tfrac{4}{5},\tfrac{3}{5}\right)
+          = \frac{12}{5} + \frac{12}{5} = \frac{24}{5} = 4{,}8
+          $$
+
+          Y una comprobación que siempre vale la pena: la derivada direccional
+          **nunca puede pasar del módulo del gradiente**, que aquí es 5. Sale
+          $4{,}8 < 5$, así que es plausible. Si te hubiera salido 24, ese solo
+          control ya delataba el fallo.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: El vector $\vec v=(4,3)$ mide 5, así que $\vec u = (4/5,\,3/5)$.
+          - texto: $D_{\vec u} f = \nabla f \cdot \vec u = 24/5 = 4{,}8$.
+          - texto: 'Es positiva, así que en esa dirección la función crece.'
+          - texto: Y es menor que $\lVert\nabla f\rVert = 5$, como tiene que ser.
+          - texto: Como $\vec v$ y $\nabla f$ tienen las mismas componentes cambiadas de orden, la derivada direccional es la máxima posible.
+            trampa: true
+            mensaje: |
+              Al revés: la máxima se da cuando $\vec v$ apunta **en la misma
+              dirección** que el gradiente, no cuando tiene sus componentes
+              intercambiadas. Aquí $(4,3)$ y $(3,4)$ forman un ángulo pequeño
+              pero no nulo, y por eso sale $4{,}8$ y no 5.
+    resolucion: |
+      **El error que este ejercicio existe para cazar** es hacer
+      $\nabla f \cdot \vec v$ sin normalizar, y sale $24$: cinco veces la
+      respuesta.
+
+      **Normalizar.**
+
+      $$
+      \lVert\vec v\rVert = \sqrt{4^{2}+3^{2}} = 5,
+      \qquad
+      \vec u = \left(\tfrac{4}{5},\tfrac{3}{5}\right)
+      $$
+
+      **El producto escalar.**
+
+      $$
+      D_{\vec u} f(P) = (3,4)\cdot\left(\tfrac{4}{5},\tfrac{3}{5}\right)
+      = \frac{12+12}{5} = \frac{24}{5} = 4{,}8
+      $$
+
+      **El control que lo delata.** La derivada direccional está siempre entre
+      $-\lVert\nabla f\rVert$ y $+\lVert\nabla f\rVert$, porque
+      $D_{\vec u}f = \lVert\nabla f\rVert\cos\theta$. Aquí eso es el intervalo
+      $[-5,5]$, y $24$ se sale con mucho. **Comprobar esa cota cuesta un segundo
+      y caza el error más frecuente del tema.**
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Del boletín de problemas complementarios del tema 6.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: limite-por-caminos
+    titulo: Un límite que no existe, y cómo se demuestra
+    fuente: Ejercicio 6.4 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2017/2018 4E)
+    nivel: examen
+    enunciado: |
+      Estudiar el límite de la función $f(x,y) = \dfrac{xy}{x^{2}+y^{2}}$ en el
+      punto $(0,0)$.
+    pide: Si el límite existe, y la justificación.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Para **negar** que un límite en dos variables existe, ¿qué basta?
+        opciones:
+          - texto: Encontrar dos caminos por los que salga distinto
+            correcta: true
+            mensaje: |
+              Eso es. La definición exige que salga lo mismo por todos los
+              caminos, así que dos que discrepen la rompen. Es la misma
+              estructura que las dos subsucesiones del tema 2.
+          - texto: Comprobar que por todas las rectas sale lo mismo
+            mensaje: |
+              Eso no demuestra nada en ningún sentido. Si coinciden, solo sabes
+              que no has encontrado todavía el contraejemplo — puede estar en
+              una parábola.
+          - texto: Ver que la función no está definida en el punto
+            mensaje: |
+              No estar definida es lo normal en estos ejercicios y no impide que
+              el límite exista. El límite habla de lo que pasa **cerca** del
+              punto, no en el punto.
+      - tipo: calcular
+        titulo: Por la recta y = mx
+        pregunta: |
+          Sustituyendo $y = mx$ y simplificando, el límite queda
+          $\dfrac{m}{1+m^{2}}$. ¿Cuánto vale para $m = 1$?
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.01
+          formato: en forma exacta (1/2) o con dos decimales
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Has puesto el numerador pero no has dividido: con $m=1$ el
+              denominador es $1+1=2$, así que sale $1/2$.
+          - valor: '2'
+            mensaje: |
+              Parece que has dado la vuelta a la fracción. Es
+              $m/(1+m^{2}) = 1/2$, no $2$.
+        pista: |
+          Sustituye $m=1$ en $m/(1+m^{2})$. El denominador vale 2.
+        desarrollo: |
+          $$
+          \frac{m}{1+m^{2}}\Big|_{m=1} = \frac{1}{2}
+          $$
+
+          Y por el eje $x$, que es $m=0$, sale $0$. **Dos caminos, dos valores.**
+      - tipo: justificar
+        pregunta: |
+          Ordena la demostración. Una pieza es falsa.
+        piezas:
+          - texto: 'Nos acercamos por rectas $y = mx$ y sustituimos: $\dfrac{x\cdot mx}{x^{2}+m^{2}x^{2}}$.'
+
+          - texto: Simplificando el $x^{2}$ queda $\dfrac{m}{1+m^{2}}$, que no depende de $x$.
+          - texto: 'Con $m=0$ el límite vale $0$; con $m=1$ vale $1/2$.'
+          - texto: Dos caminos dan valores distintos, luego el límite no existe.
+          - texto: Como el valor depende de $m$, el límite existe y vale $m/(1+m^{2})$.
+            trampa: true
+            mensaje: |
+              Que dependa de $m$ es exactamente lo que **impide** que exista. Un
+              límite es un número, no una función del camino por el que llegas.
+              Si cada dirección da un valor distinto, no hay un valor al que la
+              función se aproxime.
+    resolucion: |
+      **Se acerca uno por rectas**, que es el camino estándar:
+
+      $$
+      \lim_{\substack{(x,y)\to(0,0)\\ y=mx}} \frac{xy}{x^{2}+y^{2}}
+      = \lim_{x\to 0}\frac{x\cdot mx}{x^{2}+m^{2}x^{2}}
+      = \lim_{x\to 0}\frac{m x^{2}}{x^{2}(1+m^{2})}
+      = \frac{m}{1+m^{2}}
+      $$
+
+      **Queda la $m$, y eso ya es la respuesta.** El valor depende de la recta
+      por la que llegues, así que no hay un único número al que la función se
+      aproxime.
+
+      **Para escribirlo del todo hacen falta dos números concretos**, no una
+      fórmula con parámetro:
+
+      | camino | valor |
+      |---|---|
+      | $y = 0$ (el eje $x$, $m=0$) | $0$ |
+      | $y = x$ ($m=1$) | $1/2$ |
+
+      Como $0 \neq 1/2$, **el límite no existe**.
+
+      > **Y al revés no vale.** Si al sustituir $y=mx$ se hubiera ido la $m$ y
+      > hubiera salido siempre $0$, no habríamos demostrado nada: quedaría
+      > probar que también sale $0$ por cualquier otro camino, y para eso las
+      > rectas no bastan.
+
+  - id: monte-con-dos-direccionales
+    titulo: Deducir el gradiente a partir de dos direccionales
+    fuente: Ejercicio 6.9 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2015/2016 5E)
+    nivel: examen
+    enunciado: |
+      La altura de un monte se define mediante la función $F(x,y)$. Si nos
+      colocamos en el punto $(1,2)$ y nos dirigimos hacia el punto $(2,2)$, la
+      derivada direccional es $2$. En cambio, si nos dirigimos hacia el punto
+      $(1,1)$, la derivada direccional es $-2$.
+
+      a) Calcular el vector gradiente en el punto $(1,2)$ e interpretar su
+      significado.
+      b) Calcular la derivada direccional en el punto $(1,2)$ siguiendo la
+      dirección del vector $(4,3)$.
+    pide: El gradiente en (1,2) y la derivada direccional hacia (4,3).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El gradiente es $\nabla F = (a,b)$, dos incógnitas. ¿Por qué bastan
+          los dos datos del enunciado?
+        opciones:
+          - texto: Porque cada derivada direccional da una ecuación lineal en a y b
+            correcta: true
+            mensaje: |
+              Eso es. $\nabla F\cdot\vec u = \text{dato}$ es una ecuación, y con
+              dos direcciones distintas salen dos ecuaciones con dos incógnitas.
+          - texto: Porque el gradiente siempre se puede deducir de una sola derivada direccional
+            mensaje: |
+              No: una sola ecuación con dos incógnitas deja infinitas
+              soluciones. Hacen falta dos direcciones **no paralelas**.
+          - texto: Porque las dos direcciones son perpendiculares y eso da el módulo
+            mensaje: |
+              Que sean perpendiculares ayuda a que las cuentas salgan limpias,
+              pero lo que resuelve el problema es tener dos ecuaciones. Con dos
+              direcciones oblicuas también saldría.
+      - tipo: calcular
+        titulo: La primera componente
+        pregunta: |
+          El vector de $(1,2)$ a $(2,2)$ es $(1,0)$, que ya es unitario. Si
+          $\nabla F\cdot(1,0) = 2$, ¿cuánto vale $F_x(1,2)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '-2'
+            mensaje: |
+              Ese es el otro dato, el de la dirección hacia $(1,1)$. Hacia
+              $(2,2)$ la derivada direccional vale $+2$.
+          - valor: '1'
+            mensaje: |
+              1 es la componente del vector dirección, no el valor de la
+              derivada. El producto escalar $(a,b)\cdot(1,0)$ vale $a$, y eso
+              es lo que el enunciado iguala a 2.
+        pista: |
+          $(a,b)\cdot(1,0) = a$. Y el enunciado dice que eso vale 2.
+        desarrollo: |
+          El vector de $(1,2)$ a $(2,2)$ es $(2,2)-(1,2) = (1,0)$, de módulo 1.
+
+          $$
+          \nabla F\cdot(1,0) = a = 2
+          $$
+      - tipo: calcular
+        titulo: La segunda componente
+        pregunta: |
+          El vector de $(1,2)$ a $(1,1)$ es $(0,-1)$, también unitario. Si
+          $\nabla F\cdot(0,-1) = -2$, ¿cuánto vale $F_y(1,2)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '-2'
+            mensaje: |
+              Cuidado con el signo. $(a,b)\cdot(0,-1) = -b$, y eso vale $-2$;
+              luego $b = +2$. Los dos signos negativos se cancelan.
+          - valor: '0'
+            mensaje: |
+              La primera componente del vector es 0, pero eso no anula $b$:
+              el producto escalar $(a,b)\cdot(0,-1)$ vale $-b$, no $0$.
+        pista: |
+          $(a,b)\cdot(0,-1) = -b = -2$. Despeja b, con cuidado con los signos.
+        desarrollo: |
+          El vector de $(1,2)$ a $(1,1)$ es $(1,1)-(1,2) = (0,-1)$.
+
+          $$
+          \nabla F\cdot(0,-1) = -b = -2
+          \qquad\Longrightarrow\qquad
+          b = 2
+          $$
+
+          Así que $\nabla F(1,2) = (2,2)$.
+      - tipo: calcular
+        titulo: La derivada direccional pedida
+        pregunta: |
+          Con $\nabla F(1,2) = (2,2)$ y $\vec v = (4,3)$ (que mide 5), ¿cuánto
+          vale la derivada direccional?
+        respuesta:
+          tipo: numero
+          valor: '2.8'
+          tolerancia: 0.01
+          formato: en forma exacta (14/5) o con dos decimales
+        distractores:
+          - valor: '14'
+            mensaje: |
+              Falta normalizar. $(2,2)\cdot(4,3) = 14$, pero hay que dividir
+              entre el módulo de $\vec v$, que es 5.
+          - valor: '4'
+            mensaje: |
+              4 es la primera componente de $\vec v$. La derivada direccional es
+              el producto escalar del gradiente por el vector unitario.
+        pista: |
+          $(2,2)\cdot(4,3) = 14$, y hay que dividirlo entre 5.
+        desarrollo: |
+          $$
+          D_{\vec u}F(1,2) = (2,2)\cdot\left(\tfrac{4}{5},\tfrac{3}{5}\right)
+          = \frac{8+6}{5} = \frac{14}{5} = 2{,}8
+          $$
+
+          Y el control de siempre: $\lVert\nabla F\rVert = 2\sqrt2 \approx 2{,}83$,
+          así que $2{,}8$ está justo por debajo. Coherente — la dirección $(4,3)$
+          está casi alineada con el gradiente $(2,2)$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la interpretación del apartado a). Una pieza es falsa.
+        piezas:
+          - texto: $\nabla F(1,2) = (2,2)$ apunta hacia el nordeste, en la bisectriz del primer cuadrante.
+          - texto: Es la dirección en la que el monte sube más deprisa desde ese punto.
+          - texto: 'Su módulo, $2\sqrt2$, es esa pendiente máxima: unos 2,83 metros por metro avanzado.'
+          - texto: La curva de nivel que pasa por $(1,2)$ es perpendicular a él en ese punto.
+          - texto: Como sus dos componentes son iguales, el punto $(1,2)$ es una cima del monte.
+            trampa: true
+            mensaje: |
+              Una cima exige gradiente **nulo**, no gradiente con componentes
+              iguales. Aquí el gradiente vale $(2,2)\neq(0,0)$, así que desde
+              ese punto todavía se sube: no es una cima.
+    resolucion: |
+      **La clave es leer bien las direcciones.** El enunciado no da vectores:
+      da puntos de destino. El vector es siempre **destino menos origen**.
+
+      | vamos hacia | vector | ¿unitario? |
+      |---|---|---|
+      | $(2,2)$ | $(2,2)-(1,2) = (1,0)$ | sí, mide 1 |
+      | $(1,1)$ | $(1,1)-(1,2) = (0,-1)$ | sí, mide 1 |
+
+      Que los dos salgan ya unitarios es una suerte del enunciado, y conviene
+      **comprobarlo** en vez de darlo por hecho.
+
+      **El sistema.** Con $\nabla F(1,2) = (a,b)$:
+
+      $$
+      \begin{cases}
+      (a,b)\cdot(1,0) = a = 2\\[2pt]
+      (a,b)\cdot(0,-1) = -b = -2
+      \end{cases}
+      \qquad\Longrightarrow\qquad
+      \nabla F(1,2) = (2,2)
+      $$
+
+      **a) La interpretación**, que es donde está COMP4. El gradiente $(2,2)$
+      apunta en la dirección de máxima pendiente de subida, hacia el nordeste.
+      Su módulo, $2\sqrt2 \approx 2{,}83$, es esa pendiente máxima. Y la curva
+      de nivel por $(1,2)$ le es perpendicular.
+
+      **b) La derivada direccional** hacia $\vec v = (4,3)$, normalizando:
+
+      $$
+      D_{\vec u}F = (2,2)\cdot\left(\tfrac{4}{5},\tfrac{3}{5}\right)
+      = \frac{14}{5} = 2{,}8
+      $$
+
+  - id: banista-en-el-lago
+    titulo: Hacia dónde nadar para calentarse
+    fuente: Ejercicio 6.10 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2017/2018 7E)
+    nivel: examen
+    enunciado: |
+      La temperatura de la superficie de un lago se define mediante la función
+      $T(x,y) = y^{2}x + x^{2}\ln x$, donde $x$ e $y$ se miden en metros y la
+      temperatura en °C.
+
+      a) Un bañista está en el punto $(1,3)$ y nota que se está quedando frío.
+      ¿En qué dirección deberá nadar para calentarse lo más rápidamente posible?
+      b) Si nadase hacia el punto $P(5,5)$, ¿se enfriaría o calentaría?, ¿a qué
+      velocidad?
+    pide: La dirección de máximo calentamiento y la velocidad hacia P(5,5).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Calentarse lo más rápidamente posible». ¿Qué se pide?
+        opciones:
+          - texto: La dirección del gradiente de T
+            correcta: true
+            mensaje: |
+              Sí. Máximo crecimiento de la temperatura es exactamente la
+              dirección de $\nabla T$. Si pidiera enfriarse, sería $-\nabla T$.
+          - texto: La dirección perpendicular al gradiente
+            mensaje: |
+              Por ahí la temperatura **no cambia**: nadaría siguiendo una
+              isoterma y se quedaría igual de frío.
+          - texto: El punto donde la temperatura es máxima
+            mensaje: |
+              Eso es otra pregunta. Aquí no se busca un destino, sino hacia
+              dónde salir desde donde está.
+      - tipo: calcular
+        titulo: La componente en x del gradiente
+        pregunta: |
+          Con $T_x = y^{2} + 2x\ln x + x$, ¿cuánto vale $T_x(1,3)$? Recuerda que
+          $\ln 1 = 0$.
+        respuesta:
+          tipo: numero
+          valor: '10'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '9'
+            mensaje: |
+              Te has dejado el término $+x$, que en $x=1$ aporta 1. Al derivar
+              $x^{2}\ln x$ por partes salen **dos** términos: $2x\ln x$ y $x$.
+          - valor: '11'
+            mensaje: |
+              Parece que has contado el $2x\ln x$ como si valiera 2. En $x=1$
+              ese término es $2\cdot 1\cdot \ln 1 = 0$, porque $\ln 1 = 0$.
+        pista: |
+          En $x=1$, el término con logaritmo se anula. Quedan $y^{2}$ y $x$.
+        desarrollo: |
+          $$
+          T_x = y^{2} + 2x\ln x + x
+          \qquad\Longrightarrow\qquad
+          T_x(1,3) = 9 + 0 + 1 = 10
+          $$
+
+          El $2x\ln x$ desaparece porque $\ln 1 = 0$. Los números del enunciado
+          están elegidos justo para eso: sin calculadora, el punto $(1,3)$ es el
+          único donde esto sale a mano.
+      - tipo: calcular
+        titulo: La velocidad hacia P(5,5)
+        pregunta: |
+          Con $\nabla T(1,3) = (10,6)$ y el vector hacia $P(5,5)$, que es
+          $(4,2)$ de módulo $2\sqrt5$, ¿cuánto vale la derivada direccional?
+        respuesta:
+          tipo: numero
+          valor: '11.628'
+          tolerancia: 0.02
+          formato: en forma exacta (52/√20) o con tres decimales
+        distractores:
+          - valor: '52'
+            mensaje: |
+              Es el producto escalar sin normalizar: $(10,6)\cdot(4,2)=52$.
+              Falta dividir entre el módulo del vector dirección.
+          - valor: '5.2'
+            mensaje: |
+              Parece que has dividido entre 10 en vez de entre
+              $2\sqrt5 \approx 4{,}47$.
+        pista: |
+          $52$ dividido entre $\sqrt{20}$. Y $\sqrt{20} = 2\sqrt5 \approx 4{,}472$.
+        desarrollo: |
+          $$
+          D_{\vec u}T = \frac{(10,6)\cdot(4,2)}{\lVert(4,2)\rVert}
+          = \frac{40+12}{\sqrt{20}}
+          = \frac{52}{2\sqrt5}
+          = \frac{26}{\sqrt5} \approx 11{,}63
+          $$
+
+          **Sale positivo, así que se calentaría.** Y es menor que
+          $\lVert\nabla T\rVert = \sqrt{136}\approx 11{,}66$, casi igual: la
+          dirección $(4,2)$ está casi alineada con el gradiente $(10,6)$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'a) La dirección de máximo calentamiento es $\nabla T(1,3) = (10,6)$.'
+          - texto: 'b) El vector hacia $P$ es $(5,5)-(1,3) = (4,2)$, y hay que normalizarlo.'
+          - texto: 'La derivada direccional sale $52/\sqrt{20}\approx 11{,}63 > 0$: se calentaría.'
+          - texto: El signo positivo es lo que contesta «se enfría o se calienta», y hay que decirlo.
+          - texto: 'Como el bañista está frío, el gradiente tiene que apuntar hacia el origen.'
+            trampa: true
+            mensaje: |
+              El gradiente no sabe nada de cómo se siente el bañista: sale de
+              derivar la función. Que esté frío es el contexto que justifica la
+              pregunta, no un dato que restrinja el resultado.
+    resolucion: |
+      **a) La dirección para calentarse cuanto antes** es la del gradiente.
+
+      $$
+      T(x,y) = y^{2}x + x^{2}\ln x
+      $$
+
+      $$
+      T_x = y^{2} + 2x\ln x + x,
+      \qquad
+      T_y = 2xy
+      $$
+
+      En $(1,3)$, aprovechando que $\ln 1 = 0$:
+
+      $$
+      \nabla T(1,3) = (9+0+1,\; 6) = (10,6)
+      $$
+
+      Debe nadar en la dirección $(10,6)$ — o, simplificando, $(5,3)$.
+
+      **b) Hacia $P(5,5)$.** El vector es $\vec v = (5,5)-(1,3) = (4,2)$, con
+      $\lVert\vec v\rVert = \sqrt{20} = 2\sqrt5$.
+
+      $$
+      D_{\vec u}T(1,3) = \frac{(10,6)\cdot(4,2)}{\sqrt{20}}
+      = \frac{52}{\sqrt{20}} \approx 11{,}63\ \text{°C/m}
+      $$
+
+      **Positivo, luego se calentaría**, a razón de unos 11,6 °C por metro.
+
+      > **La respuesta a «¿se enfriaría o calentaría?» es el signo**, y hay que
+      > escribirla con esas palabras. Dar solo el número deja sin contestar la
+      > mitad de la pregunta, y esa mitad es COMP4.
+
+  - id: cucaracha-y-el-gas
+    titulo: Escabullirse de una concentración tóxica
+    fuente: Ejercicio 6.14 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2019/2020 3E)
+    nivel: examen
+    enunciado: |
+      Una cucaracha al verse en un ambiente tóxico cargado de AJT químico decide
+      moverse en una dirección en que la concentración de AJT disminuya con la
+      mayor rapidez. Si se encuentra en el punto $P(1,0)$ y la concentración de
+      AJT viene dada por la expresión
+
+      $$
+      f(x,y) = e^{-(x-1)^{2}-(y-1)^{2}}
+      $$
+
+      a) ¿Hacia dónde debe escabullirse?
+      b) ¿Cuál es la ecuación de la curva que tendría que seguir la cucaracha
+      para que la concentración de AJT del ambiente no cambiara? Dibujar dicha
+      curva.
+      c) ¿Cuál es el punto de mayor concentración de AJT?
+    pide: La dirección de máximo descenso, la curva de nivel por P y el máximo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Que la concentración disminuya con la mayor rapidez». ¿Qué se pide?
+        opciones:
+          - texto: El gradiente cambiado de signo
+            correcta: true
+            mensaje: |
+              Sí. $-\nabla f$ es la dirección de máximo descenso: la misma
+              flecha del gradiente, del revés.
+          - texto: El gradiente
+            mensaje: |
+              Ese apunta hacia donde la concentración **aumenta** más deprisa,
+              que es justo lo contrario de lo que quiere la cucaracha.
+          - texto: Una dirección perpendicular al gradiente
+            mensaje: |
+              Por ahí la concentración no cambiaría en absoluto. Es lo que pide
+              el apartado b), no el a).
+      - tipo: calcular
+        titulo: La segunda componente del gradiente en P
+        pregunta: |
+          Con $f_y = -2(y-1)\,e^{-(x-1)^{2}-(y-1)^{2}}$, ¿cuánto vale $f_y(1,0)$?
+          Ten en cuenta que en $P$ el exponente vale $-1$.
+        respuesta:
+          tipo: numero
+          valor: '0.7358'
+          tolerancia: 0.01
+          formato: en forma exacta (2/e) o con cuatro decimales
+        distractores:
+          - valor: '-0.7358'
+            mensaje: |
+              Cuidado con el doble signo. $-2(y-1)$ en $y=0$ es
+              $-2(-1) = +2$, positivo. Los dos negativos se cancelan.
+          - valor: '2'
+            mensaje: |
+              Ese es el factor $-2(y-1)$, pero falta multiplicarlo por la
+              exponencial, que en $P$ vale $e^{-1}$.
+        pista: |
+          $-2(0-1) = 2$, y la exponencial en P vale $e^{-1}$. Así que $2/e$.
+        desarrollo: |
+          En $P(1,0)$ el exponente es $-(1-1)^{2}-(0-1)^{2} = -1$, así que la
+          exponencial vale $e^{-1}$.
+
+          $$
+          f_y(1,0) = -2(0-1)\,e^{-1} = \frac{2}{e} \approx 0{,}7358
+          $$
+
+          Y $f_x(1,0) = -2(1-1)e^{-1} = 0$. El gradiente es $(0,\,2/e)$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta completa. Una pieza es falsa.
+        piezas:
+          - texto: 'En $P(1,0)$ el gradiente vale $\nabla f = (0,\,2/e)$.'
+          - texto: 'a) Se escabulle en la dirección opuesta: $(0,\,-2/e)$, es decir, hacia abajo.'
+          - texto: 'b) La curva de cambio nulo es la de nivel por $P$: $(x-1)^{2}+(y-1)^{2} = 1$.'
+          - texto: 'c) El máximo está donde el exponente se anula, en el punto $(1,1)$.'
+          - texto: 'c) El máximo está donde el gradiente es máximo, o sea en $P(1,0)$.'
+            trampa: true
+            mensaje: |
+              Al revés: en un máximo el gradiente **se anula**, no se hace
+              grande. Un gradiente grande significa que la función todavía sube
+              deprisa por ahí, así que $P$ no puede ser el máximo.
+    resolucion: |
+      **Las tres preguntas son las tres del gradiente**, en el mismo orden en
+      que aparecen en la prosa del tema.
+
+      Las parciales, aplicando la regla de la cadena a la exponencial:
+
+      $$
+      f_x = -2(x-1)\,e^{-(x-1)^{2}-(y-1)^{2}},
+      \qquad
+      f_y = -2(y-1)\,e^{-(x-1)^{2}-(y-1)^{2}}
+      $$
+
+      En $P(1,0)$ el exponente vale $-1$:
+
+      $$
+      \nabla f(1,0) = \left(0,\ \tfrac{2}{e}\right)
+      $$
+
+      **a)** La dirección de máximo descenso es $-\nabla f = (0,\,-2/e)$: la
+      cucaracha debe moverse **hacia abajo**, en el sentido negativo del eje $y$.
+
+      **b)** La curva por la que la concentración no cambia es la curva de nivel
+      que pasa por $P$. Su altura es $k = f(1,0) = e^{-1}$, así que
+
+      $$
+      e^{-(x-1)^{2}-(y-1)^{2}} = e^{-1}
+      \;\Longleftrightarrow\;
+      (x-1)^{2}+(y-1)^{2} = 1
+      $$
+
+      Una **circunferencia de centro $(1,1)$ y radio 1**. Y hay que dibujarla:
+      el enunciado lo pide con todas las letras.
+
+      **c)** La exponencial es tanto mayor cuanto **menos negativo** sea el
+      exponente, y el exponente $-(x-1)^{2}-(y-1)^{2}$ alcanza su máximo —cero—
+      en $(1,1)$. Ahí la concentración vale $e^{0} = 1$, el máximo.
+
+      > Fíjate en que el máximo, $(1,1)$, es justo el centro de la
+      > circunferencia del apartado b). No es casualidad: las curvas de nivel de
+      > esta función son circunferencias concéntricas alrededor del pico, y el
+      > gradiente en cualquier punto apunta hacia el centro.
+
+  - id: placa-con-dos-ritmos
+    titulo: Dos ritmos de cambio, y las tres preguntas del gradiente
+    fuente: Ejercicio 6.17 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2019/2020 AT)
+    nivel: examen
+    enunciado: |
+      La temperatura de una placa metálica en cada uno de sus puntos $(x,y)$
+      viene dada por la función $T(x,y)$, donde $x$ e $y$ se miden en metros y
+      la temperatura $T$ en °C. Se conoce:
+
+      (i) El ritmo de cambio de la temperatura en un punto $P$ siguiendo la
+      dirección $v_1 = (1,-1)$ es de $2\sqrt2$ °C/m.
+
+      (ii) El ritmo de cambio de la temperatura en un punto $P$ siguiendo la
+      dirección $v_2 = (1,2)$ es de $3\sqrt5$ °C/m.
+
+      Se pide: a) en qué dirección cambia más rápidamente $T$; b) el valor de
+      ese cambio máximo; c) en qué dirección no cambia la temperatura.
+    pide: El gradiente, su módulo y la dirección de cambio nulo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Los vectores $v_1=(1,-1)$ y $v_2=(1,2)$ **no** son unitarios. ¿Qué
+          implica eso al plantear las ecuaciones?
+        opciones:
+          - texto: Que hay que dividir cada producto escalar entre el módulo de su vector
+            correcta: true
+            mensaje: |
+              Exacto. Cada ecuación es
+              $\nabla T\cdot \vec v/\lVert\vec v\rVert = \text{dato}$. Aquí los
+              módulos son $\sqrt2$ y $\sqrt5$, y por eso los datos vienen con
+              esas mismas raíces: para que el sistema salga limpio.
+          - texto: Que los datos del enunciado están mal
+            mensaje: |
+              Están bien. El enunciado da direcciones, no vectores unitarios, y
+              normalizar es trabajo nuestro. De hecho las raíces de los datos
+              son la pista de que hay que hacerlo.
+          - texto: Que hay que usarlos tal cual, porque solo importa la dirección
+            mensaje: |
+              La dirección es lo que importa, sí, pero la derivada direccional
+              mide el cambio **por metro**. Sin normalizar, cada ecuación estaría
+              escalada por un factor distinto y el sistema daría otro gradiente.
+      - tipo: calcular
+        titulo: La primera componente del gradiente
+        pregunta: |
+          El sistema que sale es $a-b=4$ y $a+2b=15$. ¿Cuánto vale $a$?
+        respuesta:
+          tipo: numero
+          valor: '7.6667'
+          tolerancia: 0.01
+          formato: en forma exacta (23/3) o con cuatro decimales
+        distractores:
+          - valor: '4'
+            mensaje: |
+              4 es el término independiente de la primera ecuación, no la
+              solución. Hay que resolver el sistema entero.
+          - valor: '19'
+            mensaje: |
+              Parece que has sumado las dos ecuaciones sin más: eso da
+              $2a+b=19$, que todavía tiene dos incógnitas.
+        pista: |
+          Resta la primera de la segunda para eliminar la a, saca b, y sustituye.
+        desarrollo: |
+          Restando la primera de la segunda:
+
+          $$
+          (a+2b)-(a-b) = 15-4
+          \;\Longrightarrow\;
+          3b = 11
+          \;\Longrightarrow\;
+          b = \tfrac{11}{3}
+          $$
+
+          Y sustituyendo en la primera:
+
+          $$
+          a = 4 + b = 4 + \tfrac{11}{3} = \tfrac{23}{3} \approx 7{,}67
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'Cada dato da una ecuación: $\nabla T\cdot \vec v_i/\lVert\vec v_i\rVert$ igual al ritmo dado.'
+          - texto: 'Con $\lVert v_1\rVert=\sqrt2$ y ritmo $2\sqrt2$, la primera ecuación es $a-b=4$.'
+          - texto: 'Con $\lVert v_2\rVert=\sqrt5$ y ritmo $3\sqrt5$, la segunda es $a+2b=15$.'
+          - texto: 'Resolviendo, $\nabla T(P) = (23/3,\,11/3)$, y ese vector contesta a) y b).'
+          - texto: 'c) La dirección de cambio nulo es $(-23/3,\,-11/3)$.'
+            trampa: true
+            mensaje: |
+              Ese es el gradiente cambiado de signo, o sea la dirección de
+              máximo **descenso**. La de cambio nulo es la perpendicular: se
+              cambian de orden las componentes y se le da la vuelta a un signo,
+              $(-11,23)$ salvo factor.
+    resolucion: |
+      **El ejercicio es un sistema disfrazado.** El gradiente $\nabla T(P)=(a,b)$
+      son dos incógnitas, y cada ritmo de cambio es una ecuación.
+
+      **Primera ecuación.** $\vec v_1 = (1,-1)$ tiene módulo $\sqrt2$:
+
+      $$
+      \frac{(a,b)\cdot(1,-1)}{\sqrt2} = 2\sqrt2
+      \;\Longrightarrow\;
+      a-b = 2\cdot 2 = 4
+      $$
+
+      **Segunda ecuación.** $\vec v_2 = (1,2)$ tiene módulo $\sqrt5$:
+
+      $$
+      \frac{(a,b)\cdot(1,2)}{\sqrt5} = 3\sqrt5
+      \;\Longrightarrow\;
+      a+2b = 3\cdot 5 = 15
+      $$
+
+      **Resolviendo:** $3b = 11$, luego $b = 11/3$ y $a = 23/3$.
+
+      $$
+      \nabla T(P) = \left(\tfrac{23}{3},\ \tfrac{11}{3}\right)
+      $$
+
+      **a)** En esa dirección cambia más rápido.
+
+      **b)** El valor del cambio máximo es su módulo:
+
+      $$
+      \lVert\nabla T\rVert = \frac{1}{3}\sqrt{23^{2}+11^{2}}
+      = \frac{\sqrt{650}}{3} = \frac{5\sqrt{26}}{3}\ \text{°C/m}
+      $$
+
+      **c)** No cambia en la dirección perpendicular: $(-11,\,23)$, o cualquier
+      múltiplo suyo.
+
+      > **Por qué los datos traen raíces.** $2\sqrt2$ y $3\sqrt5$ parecen números
+      > incómodos y son justo lo contrario: al dividir entre los módulos
+      > $\sqrt2$ y $\sqrt5$ las raíces se cancelan y el sistema queda con
+      > enteros. Es la firma de un enunciado escrito para hacerse sin
+      > calculadora.
+
+  - id: perpendicular-a-la-curva-de-nivel
+    titulo: Un vector unitario perpendicular a la curva de nivel
+    fuente: Ejercicio 6.12 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2018/2019 4E)
+    nivel: examen
+    enunciado: |
+      Sea la función $f(x,y) = x^{2}y^{2} + 2y + 2$. Calcular un vector unitario
+      perpendicular a la curva de nivel $f(x,y) = 2$ en el punto $(0,0)$.
+    pide: Un vector unitario perpendicular a la curva de nivel en el origen.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué objeto es siempre perpendicular a una curva de nivel?
+        opciones:
+          - texto: El vector gradiente en ese punto
+            correcta: true
+            mensaje: |
+              Ese es el hecho central del tema. Por eso el ejercicio, que parece
+              de geometría, se resuelve derivando.
+          - texto: La tangente a la curva de nivel
+            mensaje: |
+              La tangente es lo **paralelo** a la curva, no lo perpendicular. Es
+              la dirección en la que la función no cambia.
+          - texto: El vector de posición del punto
+            mensaje: |
+              Solo coincide en casos particulares, como las circunferencias
+              centradas en el origen. En general no tiene nada que ver.
+      - tipo: calcular
+        titulo: La componente en y del gradiente
+        pregunta: |
+          Con $f_y = 2x^{2}y + 2$, ¿cuánto vale $f_y(0,0)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              El término $2x^{2}y$ sí se anula en el origen, pero queda el $+2$
+              que viene de derivar $2y$. No todo se va.
+          - valor: '4'
+            mensaje: |
+              Parece que has contado dos veces el 2. Solo el término $2y$ de la
+              función aporta, y aporta 2.
+        pista: |
+          En el origen, $2x^{2}y$ vale 0. Queda solo la constante.
+        desarrollo: |
+          $$
+          f_y(0,0) = 2\cdot 0^{2}\cdot 0 + 2 = 2
+          $$
+
+          Y $f_x = 2xy^{2}$, que en el origen vale 0. Así que
+          $\nabla f(0,0) = (0,2)$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: El gradiente es siempre perpendicular a la curva de nivel, así que basta calcularlo.
+          - texto: '$f_x = 2xy^{2}$ y $f_y = 2x^{2}y+2$, luego $\nabla f(0,0) = (0,2)$.'
+          - texto: 'Su módulo es 2, así que el unitario es $(0,1)$.'
+          - texto: 'También vale $(0,-1)$: el enunciado pide **un** vector, y hay dos perpendiculares unitarios.'
+          - texto: 'Como el punto es el origen, el vector perpendicular es $(0,0)$.'
+            trampa: true
+            mensaje: |
+              $(0,0)$ no es un vector unitario ni tiene dirección: no puede ser
+              perpendicular a nada. Que el punto sea el origen no dice nada
+              sobre el gradiente en él.
+    resolucion: |
+      **El ejercicio es una frase disfrazada de cuenta**: el gradiente es
+      perpendicular a la curva de nivel. En cuanto reconoces eso, lo que queda
+      es derivar y normalizar.
+
+      $$
+      f(x,y) = x^{2}y^{2}+2y+2
+      \qquad
+      f_x = 2xy^{2},
+      \qquad
+      f_y = 2x^{2}y+2
+      $$
+
+      En el origen:
+
+      $$
+      \nabla f(0,0) = (0,\,2)
+      $$
+
+      **Normalizando**, como pide el enunciado:
+
+      $$
+      \vec u = \frac{(0,2)}{2} = (0,1)
+      $$
+
+      **Y una comprobación que conviene escribir.** La curva de nivel
+      $f(x,y)=2$ es $x^{2}y^{2}+2y = 0$, que cerca del origen se comporta como
+      $y = 0$: el eje horizontal. Un vector perpendicular al eje horizontal es,
+      en efecto, el vertical $(0,1)$. ✓
+
+      > El enunciado dice «**un** vector unitario», en singular indefinido, y es
+      > deliberado: hay dos, $(0,1)$ y $(0,-1)$. Cualquiera de los dos vale, y
+      > decirlo suma en COMP4.
+
+  - id: maximo-paralelo-al-eje
+    titulo: Deducir dos parámetros de la dirección del máximo
+    fuente: Ejercicio 6.13 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU (2019/2020 3E AT)
+    nivel: examen
+    enunciado: |
+      Sea la función $f(x,y) = axy^{2} + bxy$, donde $a$ y $b$ son constantes
+      reales. En el punto $P(1,2)$ la derivada direccional tiene un valor máximo
+      cuando se sigue una dirección paralela al eje OX; este valor máximo es 8.
+      Calcular los valores de $a$ y $b$.
+    pide: Los valores de las constantes a y b.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «La derivada direccional tiene su valor máximo siguiendo una dirección
+          paralela al eje OX». ¿Qué información da eso sobre el gradiente?
+        opciones:
+          - texto: Que el gradiente es paralelo al eje OX, luego su componente y es nula
+            correcta: true
+            mensaje: |
+              Eso es. El máximo se da siempre en la dirección del gradiente, así
+              que si el máximo está en la dirección de OX, el gradiente apunta
+              en esa dirección: $f_y(P) = 0$.
+          - texto: Que la derivada parcial respecto de x es nula
+            mensaje: |
+              Justo la otra. Si $f_x$ fuera nula, el gradiente sería vertical y
+              el máximo se daría en la dirección de OY, no de OX.
+          - texto: Que el punto P es un extremo de la función
+            mensaje: |
+              Un extremo tendría gradiente **nulo**, y entonces no habría
+              «dirección de máximo cambio» ni valdría 8. Aquí el gradiente es
+              no nulo y horizontal.
+      - tipo: calcular
+        titulo: La ecuación que sale del máximo
+        pregunta: |
+          Si el gradiente es horizontal y su módulo vale 8, ¿cuánto vale
+          $f_x(1,2)$ en valor absoluto?
+        respuesta:
+          tipo: numero
+          valor: '8'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              La que se anula es $f_y$, no $f_x$. Si las dos fueran cero el
+              gradiente sería nulo y no habría cambio máximo de 8.
+          - valor: '4'
+            mensaje: |
+              Parece que has repartido el 8 entre las dos componentes. Con
+              $f_y=0$, todo el módulo está en $f_x$.
+        pista: |
+          Si el gradiente es $(f_x, 0)$, su módulo es $|f_x|$.
+        desarrollo: |
+          Con $f_y(1,2)=0$, el gradiente es $\nabla f = (f_x,0)$ y su módulo es
+          $|f_x|$. Como el valor máximo de cambio es ese módulo:
+
+          $$
+          |f_x(1,2)| = 8
+          $$
+
+          De ahí salen los dos signos que tiene la solución.
+      - tipo: justificar
+        pregunta: |
+          Ordena el planteamiento. Una pieza es falsa.
+        piezas:
+          - texto: '$f_x = ay^{2}+by$ y $f_y = 2axy + bx$.'
+          - texto: 'En $P(1,2)$: $f_x = 4a+2b$ y $f_y = 4a+b$.'
+          - texto: 'Máximo paralelo a OX significa $f_y(1,2)=0$, o sea $4a+b=0$.'
+          - texto: 'Y el valor máximo 8 da $|4a+2b| = 8$.'
+          - texto: 'Como el valor máximo es 8, hay que imponer $f_x = 8$ y $f_y = 8$.'
+            trampa: true
+            mensaje: |
+              El valor máximo es el **módulo** del gradiente, no el valor de cada
+              componente. Y aquí precisamente $f_y$ vale cero: si valiera 8 el
+              gradiente no sería paralelo a OX.
+    resolucion: |
+      **Dos condiciones, dos incógnitas.** El enunciado esconde dos ecuaciones y
+      hay que saber leerlas.
+
+      Las parciales:
+
+      $$
+      f_x = ay^{2}+by,
+      \qquad
+      f_y = 2axy + bx
+      $$
+
+      Evaluadas en $P(1,2)$:
+
+      $$
+      f_x(1,2) = 4a+2b,
+      \qquad
+      f_y(1,2) = 4a+b
+      $$
+
+      **Condición 1 — el máximo es paralelo a OX.** La dirección de máximo
+      cambio es siempre la del gradiente. Si esa dirección es horizontal,
+      entonces la componente vertical se anula:
+
+      $$
+      f_y(1,2) = 4a+b = 0
+      \qquad\Longrightarrow\qquad
+      b = -4a
+      $$
+
+      **Condición 2 — ese máximo vale 8.** El valor máximo de la derivada
+      direccional es el módulo del gradiente, que aquí es $|f_x|$:
+
+      $$
+      |4a+2b| = 8
+      $$
+
+      Sustituyendo $b=-4a$:
+
+      $$
+      |4a-8a| = |-4a| = 4|a| = 8
+      \qquad\Longrightarrow\qquad
+      |a| = 2
+      $$
+
+      **Solución:** $a = 2,\ b = -8$ **o bien** $a = -2,\ b = 8$.
+
+      > **Las dos soluciones son correctas y hay que darlas.** El enunciado fija
+      > la *recta* en que se da el máximo, no el sentido: el gradiente puede
+      > apuntar hacia el este o hacia el oeste, y las dos opciones cumplen todo
+      > lo pedido. Quedarse con una sola pierde puntos.
+
+  - id: aproximar-con-la-diferencial
+    titulo: Aproximar un valor con el plano tangente
+    fuente: Ejercicios 6.5 y 6.6 · Problemas complementarios, tema 6 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Sea $f(x,y) = x^{2}+y^{2}-2xy+2y-2$.
+
+      a) Obtener la ecuación del plano tangente a la superficie $z = f(x,y)$ en
+      el punto $P(1,2,3)$.
+      b) Utilizando la diferencial, aproximar el valor de $f(1{,}1;\,1{,}9)$.
+    pide: El plano tangente en P y la aproximación de f(1,1; 1,9).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Para qué sirve el plano tangente al aproximar?
+        opciones:
+          - texto: Sustituye a la superficie cerca del punto, y es fácil de evaluar
+            correcta: true
+            mensaje: |
+              Sí. Es la versión de dos variables de la recta tangente: cerca del
+              punto de apoyo, plano y superficie casi coinciden, y el plano se
+              evalúa con sumas y productos.
+          - texto: Da el valor exacto de la función en cualquier punto
+            mensaje: |
+              Solo en el punto de apoyo. Cuanto más te alejas, más se separan —
+              es la misma limitación que tenía Taylor en el tema 4.
+          - texto: Indica la dirección de máximo crecimiento
+            mensaje: |
+              Esa es la del gradiente. El plano tangente es otra cosa, aunque se
+              construya con las mismas derivadas parciales.
+      - tipo: calcular
+        titulo: La parcial respecto de x en P
+        pregunta: |
+          Con $f_x = 2x-2y$, ¿cuánto vale $f_x(1,2)$?
+        respuesta:
+          tipo: numero
+          valor: '-2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Signo cambiado. $2\cdot 1 - 2\cdot 2 = 2-4 = -2$.
+          - valor: '6'
+            mensaje: |
+              Parece que has sumado en vez de restar. El término $-2xy$ aporta
+              $-2y$ a la derivada en $x$, con signo negativo.
+        pista: |
+          $2(1) - 2(2)$. Ojo al signo.
+        desarrollo: |
+          $$
+          f_x(1,2) = 2(1)-2(2) = -2
+          $$
+
+          Y $f_y = 2y-2x+2$, que en $(1,2)$ vale $4-2+2 = 4$.
+      - tipo: calcular
+        titulo: La aproximación
+        pregunta: |
+          Con el plano $z = 3 - 2(x-1) + 4(y-2)$, ¿cuánto vale la aproximación
+          de $f(1{,}1;\,1{,}9)$?
+        respuesta:
+          tipo: numero
+          valor: '2.4'
+          tolerancia: 0.01
+          formato: con un decimal
+        distractores:
+          - valor: '3.6'
+            mensaje: |
+              Parece que has cambiado los signos de los incrementos.
+              $x-1 = +0{,}1$ pero $y-2 = -0{,}1$, así que un término suma y el
+              otro resta.
+          - valor: '3'
+            mensaje: |
+              3 es $f(1,2)$, el valor en el punto de apoyo. Falta corregirlo con
+              los dos incrementos.
+        pista: |
+          $3 - 2(0{,}1) + 4(-0{,}1)$. Fíjate en que el segundo incremento es negativo.
+        desarrollo: |
+          $$
+          z = 3 - 2(1{,}1-1) + 4(1{,}9-2)
+          = 3 - 2(0{,}1) + 4(-0{,}1)
+          = 3 - 0{,}2 - 0{,}4 = 2{,}4
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'El plano tangente es $z = f(a,b) + f_x(a,b)(x-a) + f_y(a,b)(y-b)$.'
+          - texto: 'Aquí $f(1,2)=3$, $f_x(1,2)=-2$ y $f_y(1,2)=4$.'
+          - texto: 'Luego el plano es $z = 3 -2(x-1) + 4(y-2)$.'
+          - texto: 'Evaluándolo en $(1{,}1;\,1{,}9)$ sale $2{,}4$, la aproximación pedida.'
+          - texto: 'Como el plano es tangente, $2{,}4$ es el valor exacto de $f(1{,}1;\,1{,}9)$.'
+            trampa: true
+            mensaje: |
+              Es una **aproximación**, no el valor exacto. El plano y la
+              superficie solo coinciden exactamente en el punto de apoyo
+              $(1,2)$; en cualquier otro hay error, aunque sea pequeño.
+    resolucion: |
+      **a) El plano tangente.** La fórmula se lee como una frase: partes de la
+      altura en el punto y le sumas lo que subes al moverte en cada dirección.
+
+      $$
+      z = f(a,b) + f_x(a,b)\,(x-a) + f_y(a,b)\,(y-b)
+      $$
+
+      Con $f(x,y) = x^{2}+y^{2}-2xy+2y-2$:
+
+      $$
+      f_x = 2x-2y,
+      \qquad
+      f_y = 2y-2x+2
+      $$
+
+      En $(1,2)$: $f_x = -2$, $f_y = 4$, y $f(1,2) = 1+4-4+4-2 = 3$ — que
+      concuerda con la $z=3$ que da el enunciado. **Conviene comprobarlo**: si
+      no cuadrara, el punto no estaría en la superficie y el ejercicio no
+      tendría sentido.
+
+      $$
+      \boxed{z = 3 - 2(x-1) + 4(y-2)}
+      $$
+
+      **b) La aproximación.** Se evalúa el plano donde no sabemos evaluar la
+      superficie:
+
+      $$
+      f(1{,}1;\,1{,}9) \approx 3 - 2(0{,}1) + 4(-0{,}1) = 2{,}4
+      $$
+
+      **El detalle que se falla**: el segundo incremento es **negativo**, porque
+      $1{,}9$ está por debajo de $2$. Tratar los dos como positivos da $3{,}6$,
+      que es el distractor de este ejercicio.
+
+      > Sin calculadora, el valor exacto sería $f(1{,}1;\,1{,}9) = 2{,}41$. El
+      > plano da $2{,}4$ con un error de una centésima moviéndote una décima en
+      > cada eje: eso es lo que significa que la aproximación sea **local**.
