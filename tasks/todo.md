@@ -219,8 +219,8 @@ le pusieran cuatro.
 
 **25 · ~~Tres de los seis patrones no tienen componente.~~** Resuelto el 24 de
 agosto de 2026, y sin escribir código: no faltaban, estaban mal documentados.
-«Verificador» y «Demostración» viven dentro de  como los tipos
-de paso  (21 usos) y  (270), que es §13 funcionando —el
+«Verificador» y «Demostración» viven dentro de `EjercicioGuiado` como los tipos
+de paso `verificar` (21 usos) y `justificar` (270), que es §13 funcionando —el
 framework se destila del contenido—. Solo **Figura fija** está sin construir, y
 sigue sin construirse a propósito: ningún tema lo ha pedido. §03 y §05 ya lo
 dicen. Decía: `figura-fija`,
