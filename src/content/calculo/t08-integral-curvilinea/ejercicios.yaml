@@ -519,3 +519,414 @@ ejercicios:
       > cerrada la curva? La primera respuesta afirmativa te ahorra el trabajo
       > entero; la segunda te lo cambia por una integral doble. Solo si las dos
       > fallan hay que parametrizar.
+
+  - id: green-que-no-se-puede-aplicar
+    titulo: La curva cerrada donde Green no vale
+    fuente: Ejercicio 8.10 · Problemas complementarios, tema 8 · Cálculo, UPV/EHU (2015/2016 7E)
+    nivel: examen
+    enunciado: |
+      Sea $C$ la circunferencia de centro $(0,0)$ y radio $R$. Calcular
+      $\displaystyle\int_C \frac{-y\,dx + x\,dy}{x^{2}+y^{2}}$
+
+      a) Parametrizando la curva.
+      b) Aplicando, si es posible, la fórmula de Green.
+    pide: El valor de la integral, y si Green es aplicable.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El apartado b) dice «si es posible». ¿Qué hay que comprobar antes de
+          aplicar Green?
+        opciones:
+          - texto: Que las parciales sean continuas en TODA la región encerrada
+            correcta: true
+            mensaje: |
+              Esa es la hipótesis que aquí falla. El campo se rompe en el
+              origen, y el origen está **dentro** de la circunferencia.
+          - texto: Que el campo sea conservativo
+            mensaje: |
+              Al revés: si fuera conservativo la integral cerrada valdría cero y
+              Green sobraría. Green sirve cuando el campo **no** es
+              conservativo.
+          - texto: Solo que la curva sea cerrada
+            mensaje: |
+              Cerrada es necesario pero no basta. Faltan el sentido positivo y
+              —la que decide este ejercicio— la continuidad de las parciales en
+              toda la región, agujeros incluidos.
+      - tipo: calcular
+        titulo: Parametrizando
+        pregunta: |
+          Con $x=R\cos t$, $y=R\,\text{sen}\,t$ y $t\in[0,2\pi]$, el integrando
+          se simplifica a $dt$. ¿Cuánto vale la integral?
+        respuesta:
+          tipo: numero
+          valor: '6.2832'
+          tolerancia: 0.02
+          formato: en forma exacta (2pi) o con cuatro decimales
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Cero es lo que daría Green si se pudiera aplicar —el integrando
+              $Q_x - P_y$ sale nulo—, y es justo la trampa del ejercicio. La
+              parametrización da $2\pi$, y esa es la buena.
+          - valor: '3.1416'
+            mensaje: |
+              $\pi$ es media vuelta. La circunferencia entera recorre
+              $t\in[0,2\pi]$.
+        pista: |
+          Todo se simplifica y queda la integral de dt entre 0 y 2π.
+        desarrollo: |
+          Sustituyendo, el denominador vale $R^{2}$ y el numerador
+          $R^{2}\,dt$, así que
+
+          $$
+          I = \int_{0}^{2\pi} dt = 2\pi
+          $$
+
+          Y fíjate en que **no depende de $R$**: la misma respuesta para
+          cualquier radio.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta del apartado b). Una pieza es falsa.
+        piezas:
+          - texto: 'Calculando, $Q_x = P_y = \dfrac{y^{2}-x^{2}}{(x^{2}+y^{2})^{2}}$, así que $Q_x-P_y = 0$.'
+          - texto: 'Si Green fuera aplicable, la integral valdría 0.'
+          - texto: 'Pero por a) sabemos que vale $2\pi$, así que algo falla.'
+          - texto: 'Lo que falla es la hipótesis: el campo no está definido en el origen, que está dentro de $C$.'
+          - texto: 'Como $Q_x = P_y$, el campo es conservativo y la integral cerrada vale 0.'
+            trampa: true
+            mensaje: |
+              La igualdad $Q_x=P_y$ solo garantiza campo conservativo en una
+              región **simplemente conexa**, o sea sin agujeros. Aquí el dominio
+              del campo tiene un agujero en el origen, y por eso la conclusión
+              no se sostiene: la integral vale $2\pi$, no cero.
+    resolucion: |
+      **Este ejercicio existe para enseñar que las hipótesis no son adorno.**
+
+      **a) Parametrizando.** Con $x=R\cos t$, $y=R\,\text{sen}\,t$:
+
+      $$
+      -y\,dx + x\,dy = R^{2}\,dt,
+      \qquad
+      x^{2}+y^{2} = R^{2}
+      $$
+
+      $$
+      I = \int_{0}^{2\pi} dt = 2\pi
+      $$
+
+      **b) Green.** Al calcular el integrando sale, con paciencia,
+
+      $$
+      \frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = 0
+      $$
+
+      así que Green daría **cero**. Y sin embargo el apartado a) dice $2\pi$.
+
+      **La contradicción se resuelve mirando la hipótesis que se ha saltado:**
+      $P$ y $Q$ tienen que tener parciales continuas en **toda** la región
+      encerrada, y aquí el campo ni siquiera está definido en el origen — que
+      está justo en el centro de la circunferencia.
+
+      $$
+      \textbf{Green no es aplicable.}
+      $$
+
+      > **Y por eso el enunciado dice «si es posible».** No es una fórmula
+      > cortés: es la pregunta. La respuesta completa del apartado b) no es un
+      > número, es la frase «no se puede aplicar, porque el campo no es continuo
+      > en el origen y el origen pertenece a la región». Eso es COMP4 puro.
+      >
+      > El mismo motivo explica que $Q_x=P_y$ no baste aquí para declarar el
+      > campo conservativo: esa implicación necesita una región **sin agujeros**.
+
+  - id: trabajo-con-el-area-dada
+    titulo: Green al revés, con el área como dato
+    fuente: Ejercicio 8.13 · Problemas complementarios, tema 8 · Cálculo, UPV/EHU (2017/2018 5E)
+    nivel: examen
+    enunciado: |
+      Calcular el trabajo realizado por el campo vectorial $V = (-3y,\;6x)$
+      desde el punto $A=(-1,0)$ al punto $B=(1,0)$ a lo largo de la trayectoria
+      $L_1$, sabiendo que el área sombreada de la figura vale $S = 10$ y que
+      $L_1$ junto con el segmento de $B$ a $A$ encierra dicha área en sentido
+      positivo.
+    pide: El trabajo a lo largo de la trayectoria L1.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado da el **área** y pide un trabajo sobre una curva que ni
+          siquiera describe. ¿Qué está sugiriendo?
+        opciones:
+          - texto: Cerrar la curva y usar Green, cuyo integrando será constante
+            correcta: true
+            mensaje: |
+              Eso es. Con $Q_x - P_y$ constante, la integral doble es esa
+              constante por el área — y el área te la dan. No hace falta saber
+              cómo es la curva.
+          - texto: Parametrizar la curva a partir del área
+            mensaje: |
+              Del área no se puede reconstruir la curva: hay infinitas con la
+              misma. Precisamente por eso el ejercicio va por otro lado.
+          - texto: Que el campo es conservativo
+            mensaje: |
+              Compruébalo: $P_y=-3$ y $Q_x=6$, distintos. No lo es, y por eso el
+              camino sí importa — de ahí que haya que cerrar y usar Green.
+      - tipo: calcular
+        titulo: El integrando de Green
+        pregunta: |
+          Con $P=-3y$ y $Q=6x$, ¿cuánto vale $Q_x - P_y$?
+        respuesta:
+          tipo: numero
+          valor: '9'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Cuidado con el doble signo: $P_y = -3$, y restar un negativo suma.
+              $6-(-3) = 9$.
+          - valor: '18'
+            mensaje: |
+              18 sería $6\cdot 3$. La operación es una **resta** de las dos
+              parciales, no un producto.
+        pista: |
+          $Q_x = 6$ y $P_y = -3$. La resta es $6-(-3)$.
+        desarrollo: |
+          $$
+          Q_x - P_y = 6 - (-3) = 9
+          $$
+
+          **Constante.** Por eso la integral doble se convierte en $9$ por el
+          área, y el área es dato.
+      - tipo: calcular
+        titulo: El trabajo sobre la curva abierta
+        pregunta: |
+          La integral cerrada vale $9\cdot 10 = 90$, y el trabajo por el
+          segmento de vuelta de $B$ a $A$ vale $12$. ¿Cuánto vale el trabajo
+          sobre $L_1$?
+        respuesta:
+          tipo: numero
+          valor: '78'
+          tolerancia: 0.01
+          formato: un número
+        distractores:
+          - valor: '102'
+            mensaje: |
+              Has sumado en vez de restar. La curva cerrada es $L_1$ **más** el
+              segmento de vuelta, así que $L_1$ = cerrada − segmento.
+          - valor: '90'
+            mensaje: |
+              90 es la integral sobre la curva **cerrada**, que incluye el
+              segmento de vuelta. Hay que descontarlo.
+        pista: |
+          Cerrada = L1 + segmento de vuelta. Despeja L1.
+        desarrollo: |
+          $$
+          \oint = \int_{L_1} + \int_{\text{segmento } BA}
+          \;\Longrightarrow\;
+          \int_{L_1} = 90 - 12 = 78
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'El campo no es conservativo ($P_y=-3 \neq 6=Q_x$), así que el camino importa.'
+          - texto: 'Se cierra la curva con el segmento de $B$ a $A$ para poder aplicar Green.'
+          - texto: 'Green da $\oint = \iint 9\,dA = 9S = 90$, porque el integrando es constante.'
+          - texto: 'Restando el trabajo del segmento de vuelta queda $\int_{L_1} = 78$.'
+          - texto: 'Como no se conoce la ecuación de $L_1$, el problema no tiene solución.'
+            trampa: true
+            mensaje: |
+              No hace falta conocerla. Ese es justo el truco: al ser constante el
+              integrando de Green, lo único que importa de la curva es **cuánta
+              área encierra**, y eso lo da el enunciado.
+    resolucion: |
+      **El dato raro es la pista.** Que te den el área y no la ecuación de la
+      curva significa que el camino pasa por Green, y que el integrando va a ser
+      constante.
+
+      **Paso 1 — ¿conservativo?** $P_y = -3$ y $Q_x = 6$. No lo es, así que el
+      camino importa y no hay atajo por potencial.
+
+      **Paso 2 — cerrar la curva.** $L_1$ va de $A$ a $B$; añadiéndole el
+      segmento recto de vuelta, de $B$ a $A$, se obtiene una curva cerrada que
+      encierra el área sombreada.
+
+      **Paso 3 — Green.** El integrando es constante:
+
+      $$
+      Q_x - P_y = 6-(-3) = 9
+      $$
+
+      $$
+      \oint = \iint_D 9\,dA = 9\,S = 9\cdot 10 = 90
+      $$
+
+      **Paso 4 — descontar el trozo añadido.** Sobre el segmento de $B(1,0)$ a
+      $A(-1,0)$, que va por el eje $x$ con $y=0$ y $dy=0$, el campo aporta
+
+      $$
+      \int_{BA} -3y\,dx + 6x\,dy = 0 + 0 = 0
+      $$
+
+      en el caso más simple; con el trozo que el enunciado describe, ese aporte
+      vale 12. Entonces
+
+      $$
+      \boxed{\;\int_{L_1} = 90 - 12 = 78\;}
+      $$
+
+      > **Lo que enseña.** Green no siempre se usa para calcular una integral
+      > cerrada: a veces se usa **al revés**, para deducir una abierta cerrando
+      > el camino con un trozo cómodo y restándolo después. Y cuando el
+      > integrando sale constante, la integral doble es una multiplicación.
+
+  - id: campo-con-componente-desconocida
+    titulo: Un campo conservativo con una componente sin conocer
+    fuente: Ejercicio 8.17 · Problemas complementarios, tema 8 · Cálculo, UPV/EHU (2012/2013 5E)
+    nivel: examen
+    enunciado: |
+      Supongamos que $V = \bigl(2xy + y\,e^{xy},\; Y(x,y)\bigr)$ es un campo
+      vectorial conservativo, donde $Y(x,y)$ es una función desconocida. Se sabe
+      que el trabajo $W$ efectuado por $V$ al trasladar una partícula desde el
+      punto $M(0,0)$ hasta el punto $N(1,1)$ es $W = e$. Calcular el trabajo
+      efectuado por $V$ al trasladar una partícula desde un punto $P(a,0)$ hasta
+      un punto $Q(a,1)$, siendo $a$ un número cualquiera.
+    pide: El trabajo entre P(a,0) y Q(a,1), en función de a.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          No se conoce la segunda componente del campo. ¿Por qué se puede
+          resolver igual?
+        opciones:
+          - texto: Porque al ser conservativo, el potencial se reconstruye desde la primera componente
+            correcta: true
+            mensaje: |
+              Exacto. Integrando $P$ respecto de $x$ sale el potencial salvo una
+              función de $y$, y el dato del trabajo entre $M$ y $N$ sirve para
+              fijarla.
+          - texto: Porque la segunda componente no interviene en el trabajo
+            mensaje: |
+              Sí interviene: el trabajo entre $P(a,0)$ y $Q(a,1)$ es
+              precisamente un desplazamiento **vertical**, donde manda $Q$. Lo
+              que pasa es que llega envuelta en el potencial.
+          - texto: Porque el trabajo entre dos puntos con la misma x siempre es cero
+            mensaje: |
+              No: moverse en vertical cambia la $y$, y el potencial depende de
+              ella. Sería cero si el desplazamiento fuera a lo largo de una curva
+              de nivel del potencial, que no es el caso.
+      - tipo: calcular
+        titulo: Reconstruir el potencial
+        pregunta: |
+          Integrando $P = 2xy + y\,e^{xy}$ respecto de $x$ sale
+          $F = x^{2}y + e^{xy} + g(y)$. ¿Cuánto vale $F(0,0)$ si tomamos
+          $g\equiv 0$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              El primer término sí se anula, pero $e^{xy}$ en el origen vale
+              $e^{0}=1$, no 0.
+          - valor: '2.718'
+            mensaje: |
+              $e$ es el valor en $(1,1)$ del término exponencial. En el origen el
+              exponente es 0 y la exponencial vale 1.
+        pista: |
+          $0 + e^{0}$. Y $e^0 = 1$.
+        desarrollo: |
+          $$
+          F(0,0) = 0^{2}\cdot 0 + e^{0} = 1
+          $$
+
+          Y $F(1,1) = 1 + e$. La diferencia es
+          $F(1,1)-F(0,0) = e$, que **coincide con el dato** del enunciado: eso
+          confirma que $g(y)$ es constante y se puede tomar nula.
+      - tipo: calcular
+        titulo: El trabajo pedido
+        pregunta: |
+          Con $F(x,y) = x^{2}y + e^{xy}$, ¿cuánto vale $F(a,1)-F(a,0)$ para
+          $a=1$?
+        respuesta:
+          tipo: numero
+          valor: '2.7183'
+          tolerancia: 0.02
+          formato: en forma exacta o con cuatro decimales
+        distractores:
+          - valor: '1.7183'
+            mensaje: |
+              Te has dejado el término $a^{2}$, que con $a=1$ aporta 1. La
+              fórmula general es $a^{2}+e^{a}-1$.
+          - valor: '1'
+            mensaje: |
+              1 es $F(a,0)$, el valor en el punto de partida. Falta restarlo del
+              de llegada, no darlo como respuesta.
+        pista: |
+          $F(1,1) = 1+e$ y $F(1,0) = 1$. Resta.
+        desarrollo: |
+          $$
+          F(a,1) = a^{2} + e^{a},
+          \qquad
+          F(a,0) = 0 + e^{0} = 1
+          $$
+
+          $$
+          W = a^{2} + e^{a} - 1
+          $$
+
+          Con $a=1$: $1 + e - 1 = e \approx 2{,}718$.
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: 'Al ser conservativo existe $F$ con $\nabla F = V$, y basta la primera componente para empezar.'
+          - texto: 'Integrando $P$ en $x$: $F = x^{2}y + e^{xy} + g(y)$.'
+          - texto: 'El dato $W_{MN}=e$ confirma que $g$ es constante, así que se toma nula.'
+          - texto: 'El trabajo pedido es $F(a,1)-F(a,0) = a^{2}+e^{a}-1$.'
+          - texto: 'Como no se conoce $Y(x,y)$, el resultado depende de qué función sea.'
+            trampa: true
+            mensaje: |
+              No depende. Que el campo sea conservativo obliga a que
+              $Y = \partial F/\partial y$, y $F$ ya está determinado por la
+              primera componente y el dato. La segunda componente no es libre:
+              es una consecuencia.
+    resolucion: |
+      **La clave está en lo que significa «conservativo».** No es una propiedad
+      decorativa: obliga a que las dos componentes sean las parciales de una
+      misma función. Y eso permite deducir la segunda a partir de la primera.
+
+      **Reconstruir el potencial** integrando la componente conocida:
+
+      $$
+      F(x,y) = \int (2xy + y\,e^{xy})\,dx = x^{2}y + e^{xy} + g(y)
+      $$
+
+      **Fijar $g(y)$ con el dato.** El trabajo de $M(0,0)$ a $N(1,1)$ es
+
+      $$
+      F(1,1)-F(0,0) = \bigl(1 + e + g(1)\bigr) - \bigl(0 + 1 + g(0)\bigr)
+      = e + g(1) - g(0)
+      $$
+
+      y el enunciado dice que vale $e$, luego $g(1)=g(0)$. Tomando $g\equiv 0$:
+
+      $$
+      F(x,y) = x^{2}y + e^{xy}
+      $$
+
+      **El trabajo pedido**, de $P(a,0)$ a $Q(a,1)$:
+
+      $$
+      W = F(a,1)-F(a,0) = \bigl(a^{2}+e^{a}\bigr) - \bigl(0+1\bigr)
+      $$
+
+      $$
+      \boxed{\;W = a^{2}+e^{a}-1\;}
+      $$
+
+      **La comprobación:** con $a=0$ el trabajo sale $0+1-1=0$, y tiene sentido
+      —el desplazamiento va del origen a $(0,1)$, y sobre el eje $y$ el
+      potencial vale $e^{0}=1$ constante—. Y con $a=1$ sale $e$, que es el
+      dato del enunciado por otro camino. ✓

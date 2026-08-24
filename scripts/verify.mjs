@@ -237,6 +237,64 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Un apóstrofo suelto en el texto de una opción o de una pieza
+
+   Se añade el 24 de agosto de 2026, después de romperse dos veces el mismo
+   día. El procesador convierte el apóstrofo recto en comilla tipográfica
+   (U+2019), así que `y'` se publica como `y’` — que para una derivada es
+   tipográficamente falso: se lee «y comilla», no «y prima».
+
+   Y tiene una segunda consecuencia peor, que es la que lo delató: el texto
+   publicado deja de coincidir con el del YAML, así que cualquier prueba que
+   busque la opción correcta por su texto no la encuentra. Las dos veces se
+   descubrió así, recorriendo los ejercicios en el navegador.
+
+   Dentro de $...$ no pasa nada, porque ahí manda KaTeX y `y'` se dibuja con
+   una prima de verdad. La regla es solo para el texto plano.
+
+   Y no vale con buscar «letra seguida de apóstrofo»: eso marca **d'Alembert**
+   y **L'Hôpital**, donde la comilla curva es justo lo correcto. Lo que
+   distingue a una derivada es que después del apóstrofo NO viene una letra:
+   `y' = kT` sí, `d'Alembert` no.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const { load } = await import('js-yaml');
+  const SIN_MATE = /\$[^$]*\$/g;
+  const SUELTO = /[a-zA-Z]['’](?![a-zA-Zà-öø-ÿ])/;
+  const pegas = [];
+
+  for (const f of archivos(join(SRC, 'content'), ['.yaml'])) {
+    if (!f.endsWith('ejercicios.yaml')) continue;
+    let datos;
+    try {
+      datos = load(leer(f));
+    } catch {
+      continue; // un YAML roto ya lo caza el build, no es cosa de aquí
+    }
+    for (const ej of datos?.ejercicios ?? []) {
+      for (const paso of ej.pasos ?? []) {
+        const textos = [
+          ...(paso.opciones ?? []).map((o) => o.texto),
+          ...(paso.piezas ?? []).map((z) => z.texto),
+        ];
+        for (const t of textos) {
+          if (SUELTO.test(String(t).replace(SIN_MATE, ''))) {
+            pegas.push(`${rel(f)} · ${ej.id}: «${String(t).slice(0, 56)}…»`);
+          }
+        }
+      }
+    }
+  }
+
+  if (pegas.length === 0) ok('ningún apóstrofo suelto en opciones ni piezas');
+  else
+    fallo(
+      'Un apóstrofo fuera de $…$ se publica como comilla curva: usa \\prime o escríbelo con palabras',
+      pegas.slice(0, 8).join('\n    '),
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    El ejemplo de ejercicio de CLAUDE.md §04 tiene que compilar
 
    Se añade el 24 de agosto de 2026, después de romperse de verdad y dos
