@@ -243,25 +243,33 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes del segundo cuatrimestre sin transcribir: quedan 37 de 52.**
-Sigue siendo la deuda más grande del proyecto. Recuento al 25 de agosto de
-2026, medido sobre los PDF del volcado de eGela:
+**26 · Los exámenes globales sin transcribir: quedan 24 de 52.** Sigue siendo
+la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
+entero: la evaluación continua está cerrada. Recuento al 25 de agosto de 2026,
+segunda medición del día, sobre los PDF del volcado de eGela:
 
 | convocatoria | en el volcado | transcritas | faltan |
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
-| 5.ª evaluación | 13 | 0 | 13 |
+| 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | 0 | 11 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
-Los quince cuadernillos de cuarta evaluación están hechos, y son diecisiete
-convocatorias en el sitio porque dos de ellos traen dentro las dos partes: once
-cuartas evaluaciones y seis recuperaciones del primer cuatrimestre. Con eso se
-puede hacer un simulacro entero de la cuarta; de la quinta, la ordinaria y la
-extraordinaria todavía no. Las rutas 5ev y ord lo declaran en `falta[]`, así
-que es un hueco dicho, no escondido — pero un alumno que llega a mayo sigue sin
-tener con qué medirse.
+Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
+treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
+partes: once cuartas y seis recuperaciones, diez quintas y cinco
+recuperaciones. Con eso se puede hacer un simulacro entero de la cuarta y de la
+quinta; de la ordinaria y la extraordinaria todavía no.
+
+**Lo que este hueco bloquea, dicho con precisión:** los temas 10 y 11 tienen
+cero ejercicios de examen y no pueden tener otra cosa, porque **Laplace y
+Fourier no caen en ninguna evaluación continua**: solo en las globales. No es
+que falte transcribirlos, es que no existen todavía en el corpus. Hasta que
+entren las once ordinarias no se pueden ni auditar esos dos temas.
+
+**Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
+byte a byte contra el volcado. Lo que queda es leerlos y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -316,3 +324,18 @@ el procesador de Markdown, así que el LaTeX sale crudo. Lo caza el guardián de
 fórmulas sin dibujar, pero es una asimetría que no está documentada en §14:
 todos los demás campos largos de una ruta sí se procesan. O se procesa también
 este, o §14 lo dice.
+
+**32 · Dos ejercicios están duplicados en el corpus.**
+`paracaidista-y-velocidad-limite` y `barra-que-se-calienta`, en el
+`ejercicios.yaml` del tema 9, son los mismos problemas que la quinta evaluación
+de 2016-2017 y la de 2017-2018, transcritas el 25 de agosto de 2026 desde su
+PDF original. No es un error: el boletín de complementarios los recoge
+etiquetados con el examen del que salen, y las dos fuentes son legítimas. Pero
+un alumno que las haga las dos hace el mismo problema dos veces creyendo que
+son distintos, y los recuentos de «ejercicios propios del tema» están inflados
+en dos.
+
+La ruta de la quinta enlaza solo la versión de examen y lo declara en su
+`falta[]`. Lo que hay que decidir en la auditoría es si los del boletín se
+retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
+otros temas: se ha comprobado el 9 y no los demás.
