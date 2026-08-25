@@ -301,7 +301,13 @@ febrero frente al 12 de marzo, por ejemplo—. De 2019-2020 el volcado trae
 **solo** la recuperación, del 24 de febrero de 2020; si aquel año hubo examen
 de los temas 6 y 7, no está en el material que tenemos, y así se declara.
 
-La recuperación es ahora una convocatoria propia (`recuperacion`, URL `rec`) y
+Corregido el 26 de agosto de 2026, al abrir los cuadernillos de la quinta: **la
+recuperación no es una, son dos**. Cada curso hasta 2020-2021 tuvo dos
+sesiones, una con la cuarta evaluación y otra con la quinta, así que la
+convocatoria única `recuperacion` de ayer se parte en `recuperacion-cuarta`
+(URL `4ev-rec`) y `recuperacion-quinta` (URL `5ev-rec`).
+
+Cada recuperación es ahora una convocatoria propia y
 `calculo-4ev.yaml` está medida sobre las once cuartas evaluaciones de verdad.
 Lo que queda de esta deuda es solo lo que se dice en la 31 y en la 26.
 

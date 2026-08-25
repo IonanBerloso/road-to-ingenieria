@@ -383,13 +383,21 @@ const ejercicio = z
  *  convocatoria era editar seis sitios y olvidarse de alguno. Es la Regla 0
  *  con otra cara: la lista duplicada de siempre.
  *
- *  Los nombres son los que imprime la propia cabecera del examen. `recuperacion`
- *  entra aquí el 25 de agosto de 2026, al transcribir los cuadernillos de la
- *  cuarta evaluación: hasta 2020-2021 llevan dentro un segundo examen marcado
- *  «PRIMER CUATRIMESTRAL (sólo para alumnos con el primer cuatrimestral
- *  suspendido)», que es de los temas 1–5 y no de los 6 y 7. Va antes de
- *  `cuarta` porque cuando tiene fecha propia es anterior: en 2017-2018, el 12
- *  de febrero frente al 12 de marzo.
+ *  Los nombres son los que imprime la propia cabecera del examen.
+ *
+ *  **Las dos recuperaciones.** Hasta 2020-2021, los cuadernillos de la cuarta
+ *  y de la quinta evaluación llevan **cada uno** dentro un segundo examen
+ *  marcado «PRIMER CUATRIMESTRAL (sólo para alumnos con el primer
+ *  cuatrimestral suspendido)»: uno en febrero o marzo y otro en abril o mayo.
+ *  Son de los temas 1–5, no de los del cuatrimestre que les da nombre.
+ *
+ *  El 25 de agosto de 2026 entró una sola fila, `recuperacion`, con URL `rec`,
+ *  porque solo se habían leído los cuadernillos de la cuarta. Al abrir los de
+ *  la quinta apareció la segunda, y con ella el choque: `2017-2018-rec` ya no
+ *  identificaba a ninguna de las dos. Se parte en dos filas y la URL dice de
+ *  qué cuadernillo salió cada una, que es el dato que permite encontrar el
+ *  PDF. Cada una va **antes** de su evaluación, porque cuando tienen fechas
+ *  distintas la recuperación es la primera.
  *
  *  El nombre largo va en minúscula: quien lo pinta como título lo capitaliza,
  *  y así no hacen falta dos columnas que digan lo mismo. */
@@ -397,8 +405,17 @@ export const CONVOCATORIAS = {
   primera: { url: '1ev', corta: '1.ª ev.', larga: 'primera evaluación' },
   segunda: { url: '2ev', corta: '2.ª ev.', larga: 'segunda evaluación' },
   tercera: { url: '3ev', corta: '3.ª ev.', larga: 'tercera evaluación' },
-  recuperacion: { url: 'rec', corta: 'recup.', larga: 'recuperación del primer cuatrimestre' },
+  'recuperacion-cuarta': {
+    url: '4ev-rec',
+    corta: 'recup. 4.ª',
+    larga: 'recuperación del primer cuatrimestre, con la 4.ª evaluación',
+  },
   cuarta: { url: '4ev', corta: '4.ª ev.', larga: 'cuarta evaluación' },
+  'recuperacion-quinta': {
+    url: '5ev-rec',
+    corta: 'recup. 5.ª',
+    larga: 'recuperación del primer cuatrimestre, con la 5.ª evaluación',
+  },
   quinta: { url: '5ev', corta: '5.ª ev.', larga: 'quinta evaluación' },
   ordinaria: { url: 'ord', corta: 'ordinaria', larga: 'convocatoria ordinaria' },
   extraordinaria: { url: 'ext', corta: 'extraord.', larga: 'convocatoria extraordinaria' },
