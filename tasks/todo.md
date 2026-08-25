@@ -243,33 +243,35 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 24 de 52.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 20 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
-entero: la evaluación continua está cerrada. Recuento al 25 de agosto de 2026,
-segunda medición del día, sobre los PDF del volcado de eGela:
+entero: la evaluación continua está cerrada y las ordinarias han empezado.
+Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 
 | convocatoria | en el volcado | transcritas | faltan |
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | 0 | 11 |
+| ordinaria | 11 | **4** | 7 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
 partes: once cuartas y seis recuperaciones, diez quintas y cinco
-recuperaciones. Con eso se puede hacer un simulacro entero de la cuarta y de la
-quinta; de la ordinaria y la extraordinaria todavía no.
+recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024 y
+2022-2023.
 
 **Lo que este hueco bloquea, dicho con precisión:** los temas 10 y 11 tienen
-cero ejercicios de examen y no pueden tener otra cosa, porque **Laplace y
-Fourier no caen en ninguna evaluación continua**: solo en las globales. No es
-que falte transcribirlos, es que no existen todavía en el corpus. Hasta que
-entren las once ordinarias no se pueden ni auditar esos dos temas.
+**cuatro ejercicios de examen cada uno**, uno por ordinaria transcrita, y no
+pueden tener más de once, porque **Laplace y Fourier no caen en ninguna
+evaluación continua**: solo en las globales. Cada ordinaria nueva les añade
+exactamente uno. Hasta que estén las once no se pueden auditar esos dos temas,
+ni decidir qué prosa les falta: hacerlo ahora sería escribir el tema a partir
+de cuatro convocatorias de once.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leerlos y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 20 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -339,3 +341,27 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 `falta[]`. Lo que hay que decidir en la auditoría es si los del boletín se
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
+
+**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay cuatro.**
+`calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
+convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
+a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
+bloque («cae los dos años», «los dos lo piden») se quedan cortos.
+
+No se corrige a trozos. Se rehace la ruta entera cuando estén las once
+ordinarias, igual que se hizo con la quinta el 25 de agosto de 2026: volver a
+medirla sobre cuatro para volver a medirla sobre once es trabajo tirado. Lo que
+sí hay que vigilar mientras tanto es que ningún bloque nuevo afirme haber caído
+en más años de los declarados, que es justo lo que el esquema comprueba.
+
+**34 · La medición de `docs/como-vamos.md` se quedó atrás dos commits.** Se
+regeneró el 25 de agosto de 2026 con una sola ordinaria transcrita y no se tocó
+al entrar las de 2024-2025 y 2023-2024: publicaba «66 de 89 convocatorias» y
+«243 ejercicios» cuando ya eran 68 y 260. Corregido el 26 de agosto de 2026.
+
+No es una deuda de contenido, es de procedimiento, y por eso se anota: §10 dice
+que un dato publicado tiene que ser cierto, y un fichero que se regenera «cada
+varias tandas» lo incumple por construcción. **La regla que queda: la medición
+se regenera en el mismo commit que la cambia.** Si eso resulta caro, lo que hay
+que hacer es generar el fichero con `mide.mjs` en vez de escribirlo a mano — no
+regenerarlo menos.
