@@ -11,12 +11,12 @@ cuando cambien los números.
 
 ## En una frase
 
-**El segundo cuatrimestre ya no es un agujero, pero los temas 10 y 11 siguen
-sin un solo examen.** Las cinco evaluaciones continuas están transcritas
-enteras —65 convocatorias, 235 ejercicios— y con ellas los temas 8 y 9 han
-pasado de 1 y 0 ejercicios de examen a 13 y 17. Lo que falta son las 24
-convocatorias globales: once ordinarias, once extraordinarias y los dos
-parciales de 2019-2020. Son las únicas donde caen Laplace y Fourier.
+**La evaluación continua está cerrada, y las globales acaban de empezar.** Las
+cinco evaluaciones están transcritas enteras —65 convocatorias— y con ellas los
+temas 8 y 9 han pasado de 1 y 0 ejercicios de examen a 13 y 17. Con la primera
+ordinaria son 66 convocatorias y 243 ejercicios, y Laplace y Fourier estrenan
+el suyo: **uno cada uno**, porque solo caen en las globales. Faltan 23: diez
+ordinarias, once extraordinarias y los dos parciales de 2019-2020.
 
 ---
 
@@ -24,24 +24,25 @@ parciales de 2019-2020. Son las únicas donde caen Laplace y Fourier.
 
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2 885 | 3 | 37 | 8 | **51** |
+| t01 complejos | 2 885 | 3 | 37 | 8 | **52** |
 | t02 sucesiones | 2 035 | 3 | 19 | 4 | **31** |
 | t03 funciones reales | 1 779 | 3 | 23 | 5 | 19 |
-| t04 estudio local | 2 036 | 3 | 18 | 5 | **45** |
-| t05 integración | 1 925 | 4 | 30 | 4 | 26 |
-| t06 varias variables | 1 797 | 2 | 12 | 4 | 13 |
-| t07 integral múltiple | 1 422 | 2 | 10 | 3 | 20 |
+| t04 estudio local | 2 036 | 3 | 18 | 5 | **47** |
+| t05 integración | 1 925 | 4 | 30 | 4 | 27 |
+| t06 varias variables | 1 797 | 2 | 12 | 4 | 14 |
+| t07 integral múltiple | 1 422 | 2 | 10 | 3 | 21 |
 | t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 13 |
 | t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | 17 |
-| t10 Laplace | 872 | 1 | 8 | 2 | **0** |
-| t11 Fourier | 888 | 1 | 8 | 2 | **0** |
-| **total** | **17 999** | **24** | **179** | **41** | **235** |
+| t10 Laplace | 872 | 1 | 8 | 2 | **1** |
+| t11 Fourier | 888 | 1 | 8 | 2 | **1** |
+| **total** | **17 999** | **24** | **179** | **41** | **243** |
 
 La frontera ya no está en el tema 8: está en el 10. Los temas 8 y 9 tienen
 ahora treinta ejercicios de examen entre los dos, y eso ha permitido rehacer su
-ruta contando en vez de estimando. Los temas 10 y 11 siguen con la mitad de
-prosa, una figura y ningún examen, y la razón es la misma de siempre: **solo
-caen en las convocatorias globales**, que son justamente las que faltan.
+ruta contando en vez de estimando. Los temas 10 y 11 tienen **uno cada uno**,
+los dos de la ordinaria de 2025-2026, y siguen con la mitad de prosa y una
+figura: **solo caen en las convocatorias globales**, y de esas hay una hecha de
+veintitrés.
 
 ## Exámenes
 
@@ -52,10 +53,10 @@ caen en las convocatorias globales**, que son justamente las que faltan.
 | 3.ª evaluación | 11 | **11** | 0 |
 | 4.ª evaluación (15 cuadernillos) | 15 | **17** | 0 |
 | 5.ª evaluación (13 cuadernillos) | 13 | **15** | 0 |
-| ordinaria | 11 | 0 | **11** |
+| ordinaria | 11 | **1** | **10** |
 | extraordinaria | 11 | 0 | **11** |
 | ord.-extraord. 2019-2020, 2 parciales | 2 | 0 | **2** |
-| **total** | **85** | **65** | **24** |
+| **total** | **85** | **66** | **23** |
 
 Los quince cuadernillos de cuarta evaluación dan diecisiete convocatorias y los
 trece de la quinta dan quince, porque algunos traen dentro las dos partes: la
@@ -64,10 +65,10 @@ once cuartas más seis recuperaciones, y diez quintas más cinco recuperaciones.
 La quinta de 2019-2020 no se celebró.
 
 **Los 85 PDF están ya en `public/examenes/calculo/`**, copiados y verificados
-byte a byte contra el original. Lo que falta es transcribir 24.
+byte a byte contra el original. Lo que falta es transcribir 23.
 
-Sobre los 2 355 puntos repartidos de los 65 exámenes: **COMP1 10,2 % · COMP2
-52,8 % · COMP4 37,0 %**. Es decir, **el 47,2 % de la nota de Cálculo no es
+Sobre los 2 435 puntos repartidos de los 66 exámenes: **COMP1 10,1 % · COMP2
+53,2 % · COMP4 36,7 %**. Es decir, **el 46,8 % de la nota de Cálculo no es
 calcular**. El dato baja algo respecto de la medición anterior —era 49,5 %
 sobre 33 exámenes— porque las quintas evaluaciones cargan más COMP2 que la
 media: en ellas el cálculo pesa siete de cada diez puntos.
@@ -101,12 +102,12 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 22 huecos |
 | `npm run suelo` en verde | ✅ |
-| **todas las convocatorias publicadas transcritas** | ❌ **65 de 89** |
+| **todas las convocatorias publicadas transcritas** | ❌ **66 de 89** |
 
 Dos criterios abiertos, y el grande es el mismo de siempre.
 
-> El «65 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
-> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 24
+> El «66 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
+> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 23
 > que faltan, ninguna es doble.
 
 ## Las otras ocho asignaturas
@@ -119,13 +120,13 @@ la anterior.
 
 # El plan
 
-## Lo siguiente: las once ordinarias
+## Lo siguiente: las diez ordinarias que faltan
 
 Es lo primero por la misma razón que lo fue la quinta: **es lo único que da de
-comer a los temas 10 y 11**, que hoy tienen cero ejercicios de examen. La
-transformada de Laplace y las series de Fourier no aparecen en ninguna
-evaluación continua; solo en las globales. Mientras no estén, esos dos temas no
-se pueden ni auditar: no hay con qué medirlos.
+comer a los temas 10 y 11**. La transformada de Laplace y las series de Fourier
+no aparecen en ninguna evaluación continua; solo en las globales. La de
+2025-2026 ya está hecha y ha dejado un ejercicio en cada uno de los dos; con
+solo eso no se puede auditar nada todavía.
 
 Y de paso sube la ruta `ord` de «medida sobre 2» a «medida sobre 11».
 
@@ -160,7 +161,7 @@ Lo aprendido hoy y que conviene no volver a tropezar:
 
 | | trabajo | qué desbloquea |
 |---|---|---|
-| 1 | **11 ordinarias** | los temas 10 y 11, y la ruta `ord` |
+| 1 | **10 ordinarias** (la de 2025-2026 ya está) | los temas 10 y 11, y la ruta `ord` |
 | 2 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
 | 3 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
 | 4 | **Engordar los temas 10 y 11** con lo que digan sus exámenes | |
