@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 20 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 19 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -252,26 +252,27 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | **4** | 7 |
+| ordinaria | 11 | **5** | 6 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
 partes: once cuartas y seis recuperaciones, diez quintas y cinco
-recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024 y
-2022-2023.
+recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024,
+2022-2023 y 2021-2022.
 
-**Lo que este hueco bloquea, dicho con precisión:** los temas 10 y 11 tienen
-**cuatro ejercicios de examen cada uno**, uno por ordinaria transcrita, y no
-pueden tener más de once, porque **Laplace y Fourier no caen en ninguna
-evaluación continua**: solo en las globales. Cada ordinaria nueva les añade
-exactamente uno. Hasta que estén las once no se pueden auditar esos dos temas,
-ni decidir qué prosa les falta: hacerlo ahora sería escribir el tema a partir
-de cuatro convocatorias de once.
+**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **seis**
+ejercicios de examen y el 11 tiene **cinco**, y no pueden tener muchos más,
+porque **Laplace y Fourier no caen en ninguna evaluación continua**: solo en
+las globales. Cada ordinaria nueva les añade uno, salvo la de 2021-2022, que
+trajo dos de Laplace —uno de técnica y otro aplicado— y ninguno de más de
+Fourier. Hasta que estén las once no se pueden auditar esos dos temas ni
+decidir qué prosa les falta: hacerlo ahora sería escribir el tema con media
+muestra.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 20 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 19 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -342,7 +343,7 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
 
-**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay cuatro.**
+**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay cinco.**
 `calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
 convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
 a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
@@ -365,3 +366,45 @@ varias tandas» lo incumple por construcción. **La regla que queda: la medició
 se regenera en el mismo commit que la cambia.** Si eso resulta caro, lo que hay
 que hacer es generar el fichero con `mide.mjs` en vez de escribirlo a mano — no
 regenerarlo menos.
+
+**35 · Los profesores repiten ejercicios entre convocatorias, y hay que decidir
+qué hace el sitio con eso.** Saltó al transcribir la ordinaria de 2021-2022: su
+ejercicio 2 y el 2 de la de 2023-2024 son el mismo —mismo enunciado, misma
+figura, mismas cinco afirmaciones y mismo reparto 1/7/2—, y se comprobó página
+a página en los dos PDF antes de escribirlo.
+
+Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
+ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
+el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
+Sobre los **278 ejercicios de examen** (20 con enunciado demasiado corto para
+comparar, 253 distintos entre los 258 comparados):
+
+| grupo | convocatorias | qué es |
+|---|---|---|
+| 3 veces | 2018-2019-3ev · 2019-2020-3ev · 2020-2021-3ev | enunciar y demostrar Barrow |
+| 3 veces | 2019-2020-2ev · 2022-2023-1ev · 2023-2024-1ev | el paso al límite conserva el ≤ |
+| 2 veces | 2021-2022-ord · 2023-2024-ord | las cinco afirmaciones sobre dos gráficas |
+
+Ocho instancias de tres problemas. **No es una anomalía: es cómo funciona esta
+asignatura**, y de hecho `CLAUDE.md` §09 ya citaba los tres Barrow sin sacar la
+consecuencia. Repetir un ejercicio tres años seguidos es la mejor señal de que
+va a caer, y eso es exactamente lo que una ruta de estudio debería decir en voz
+alta.
+
+Dos avisos sobre el detector, medidos al escribirlo:
+
+- tirar todas las macros de LaTeX **junta enunciados contrarios**: `\ge` y `\le`
+  desaparecen los dos, y el «límite no negativo» de 2016-2017 salía gemelo del
+  «no positivo» de 2017-2018. Los comparadores se traducen antes de limpiar;
+- una diferencia de puro marcado los separa: `c\,(x-4)^2` y
+  `c\left(x-4\right)^2` son el mismo enunciado y el detector no los veía. Se
+  alineó el marcado de los dos, pero conviene recordarlo antes de fiarse de un
+  «cero repetidos».
+
+Lo que queda por decidir, y es de la auditoría:
+
+- si la ruta `ord` enlaza los dos gemelos o solo uno, y si el hecho de que se
+  repitan se **publica** como dato de peso;
+- qué significa el recuento «ejercicios de examen» de `docs/como-vamos.md`: hoy
+  cuenta instancias, no problemas distintos, y la diferencia es de cinco;
+- volver a pasar el detector después de cada tanda de convocatorias nuevas.

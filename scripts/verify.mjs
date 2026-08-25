@@ -280,8 +280,30 @@ console.log('\nContenido');
      Y por eso el `%` va aparte, con un «no precedido de barra»: `\%` es el
      escape correcto y el corpus ya lo usa bien en tres sitios. Sin esa
      salvedad el guardián los marcaba a los tres — y un guardián que salta
-     sobre lo que está bien escrito enseña a ignorarlo (§11). */
-  const SIN_METRICA = /(?<!\\)%|[✘☒€‰✗✔☑µÅ∅ħ]/;
+     sobre lo que está bien escrito enseña a ignorarlo (§11).
+
+     **Segunda ampliación, también medida, el 26 de agosto de 2026.** Al
+     construir la ordinaria de 2021-2022 el build escupió dos avisos de KaTeX
+     por una raya larga dentro de `$…$`: había escrito `pequeño$—$vale` y
+     `siguiente$—3!$` queriendo un guion de inciso, y lo que se publicaba era
+     una fórmula cuyo único contenido era la raya. Los dos estaban ya
+     **commiteados y subidos**, que es lo que hace que esto sea un fallo real y
+     no una precaución.
+
+     Se midió la familia entera de rayas y comillas con `strict: 'warn'`:
+
+       rechazados  — (2014) – (2013) ‐ (2010) « » “ ” y el espacio duro (00A0)
+       se dibujan  − (2212, el signo menos de verdad) … (2026)
+
+     El espacio duro entra en la lista porque es invisible: se cuela al copiar
+     de un PDF y no hay forma de verlo leyendo el fichero.
+
+     Al medir el corpus con la lista nueva salió **una** aparición viva, un
+     `\text{— fuera del dominio}` en la segunda evaluación de 2021-2022. Se
+     reescribió como `\text{(fuera del dominio)}`, así que el guardián nace en
+     cero. No se hace excepción con `\text{}`: KaTeX avisa igual ahí dentro, y
+     la prosa larga dentro de una fórmula casi siempre está mejor fuera. */
+  const SIN_METRICA = /(?<!\\)%|[✘☒€‰✗✔☑µÅ∅ħ—–‐«»“” ]/;
   const pegas = [];
 
   for (const f of archivos(join(SRC, 'content'), ['.yaml', '.mdx'])) {
