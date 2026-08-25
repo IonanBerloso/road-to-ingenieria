@@ -261,7 +261,27 @@ console.log('\nContenido');
    en orden, permitiendo saltos de línea dentro.
    ═══════════════════════════════════════════════════════════════════ */
 {
-  const SIN_METRICA = /[✗✘✔☑☒]/;
+  /* La lista se amplía solo con lo que se ha visto rechazar, y el 26 de agosto
+     de 2026 se **midió entera** en vez de ampliarla por parecido. El motivo
+     fue el `€`: apareció escrito como `\text{€}` en el plan de ahorro de
+     2023-2024 y KaTeX lo rechazó — ni siquiera dentro de `\text{}`, porque la
+     fuente no lo trae. Se escribe «euros» y ya está.
+
+     Al medir salieron seis más de los que había, entre ellos dos que estaban a
+     punto de colarse por analogía y **sí se dibujan**: `£` y `¥`. Pasando
+     dieciocho símbolos por `katex.renderToString` con `strict: 'error'`:
+
+       rechazados  ✘ ☒ € % ‰ ✗ ✔ ☑ µ Å ∅ ħ
+       se dibujan  £ ¥ ° ✓ × · − ± Ω ← → ⇒ ⇔ ∀ ∃
+
+     Ojo con dos de la lista mala, que son los que más probable es escribir sin
+     pensar: el `%` se escribe `\%`, y la micra `\mu`.
+
+     Y por eso el `%` va aparte, con un «no precedido de barra»: `\%` es el
+     escape correcto y el corpus ya lo usa bien en tres sitios. Sin esa
+     salvedad el guardián los marcaba a los tres — y un guardián que salta
+     sobre lo que está bien escrito enseña a ignorarlo (§11). */
+  const SIN_METRICA = /(?<!\\)%|[✘☒€‰✗✔☑µÅ∅ħ]/;
   const pegas = [];
 
   for (const f of archivos(join(SRC, 'content'), ['.yaml', '.mdx'])) {
