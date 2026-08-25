@@ -107,12 +107,15 @@ modos, así que no copia nada y no empeora la duplicación. Pero la deuda sigue
 ahí, y el día que haga falta una cuarta página con pestañas hay que pagarla
 antes, no después.
 
-**14 · Los mapas de convocatoria están repartidos por tres ficheros.**
-`NOMBRE_CONV` en `[examen].astro` y en `examenes/index.astro`; `ORDEN_CONV` en
-`examenes/index.astro` y en `index.astro`; `ABREV_CONV` en `index.astro`. Piden
-un `src/lib/convocatorias.ts` junto a `SUFIJO_CONV`. Bonus: eso arregla de paso
-el apaño de `examenes/index.astro`, que tuvo que meter `ORDEN_CONV` **dentro**
-de `getStaticPaths` porque no ve el frontmatter — un import sí se ve.
+**14 · ~~Los mapas de convocatoria están repartidos por tres ficheros.~~**
+**Resuelto el 25 de agosto de 2026.** Eran seis listas en cuatro ficheros, no
+tres: el enum y `SUFIJO_CONV` en `content.config.ts`, orden y abreviatura en la
+portada, orden y nombre largo en el índice de exámenes, y otro nombre largo —el
+mismo en minúscula— en la página de un examen. Ahora hay una tabla
+`CONVOCATORIAS` en `content.config.ts` con la URL, la abreviatura y el nombre
+largo de cada una, en orden; el enum, `SUFIJO_CONV` y `ORDEN_CONV` se derivan de
+ella y las tres páginas la importan. Se hizo al necesitar una convocatoria
+nueva —`recuperacion`—, que ahora es una fila.
 
 **15 · El filtro de páginas de `humo.mjs` enumera formas de URL.** Va por la
 tercera: `/tNN-`, luego `examenes/AAAA-AAAA`, y ahora `preparar/`. Cada vez que
@@ -240,13 +243,25 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los 52 exámenes del segundo cuatrimestre sin transcribir.** Es la deuda
-más grande del proyecto y la que más se nota: 15 de cuarta evaluación, 13 de
-quinta, 11 ordinarias y 11 extraordinarias. Las tres primeras evaluaciones
-tienen sus once exámenes cada una y se puede hacer un simulacro entero; en el
-segundo cuatrimestre no se puede hacer ninguno. Las rutas 4ev, 5ev y ord lo
-declaran en `falta[]`, así que es un hueco dicho, no escondido — pero un
-alumno que llega a mayo no tiene con qué medirse.
+**26 · Los exámenes del segundo cuatrimestre sin transcribir: quedan 37 de 52.**
+Sigue siendo la deuda más grande del proyecto. Recuento al 25 de agosto de
+2026, medido sobre los PDF del volcado de eGela:
+
+| convocatoria | en el volcado | transcritas | faltan |
+|---|---|---|---|
+| 4.ª evaluación | 15 | **15** | 0 |
+| 5.ª evaluación | 13 | 0 | 13 |
+| ordinaria | 11 | 0 | 11 |
+| extraordinaria | 11 | 0 | 11 |
+| ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
+
+Los quince cuadernillos de cuarta evaluación están hechos, y son diecisiete
+convocatorias en el sitio porque dos de ellos traen dentro las dos partes: once
+cuartas evaluaciones y seis recuperaciones del primer cuatrimestre. Con eso se
+puede hacer un simulacro entero de la cuarta; de la quinta, la ordinaria y la
+extraordinaria todavía no. Las rutas 5ev y ord lo declaran en `falta[]`, así
+que es un hueco dicho, no escondido — pero un alumno que llega a mayo sigue sin
+tener con qué medirse.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -272,13 +287,23 @@ indeterminados y variación de parámetros caen los dos —2025-2026 pedía
 resolver una con segundo miembro que obliga a variación de parámetros— y no
 hay ni un ejercicio guiado de ninguna de las dos.
 
-**30 · «Cuarta evaluación» no ha significado siempre lo mismo.** La de
-2015-2016 dice «PRIMER CUATRIMESTRAL (solo para alumnos con el primer
-cuatrimestral suspendido)» y pregunta complejos y sucesiones. Las rutas del
-segundo cuatrimestre están medidas solo sobre los años verificados uno a uno
-—cinco la cuarta, tres la quinta, dos la ordinaria— y no sobre once. Para
-subir esos números hay que leer año por año dónde está la frontera, y
-mientras tanto contar once sería mentir.
+**30 · ~~«Cuarta evaluación» no ha significado siempre lo mismo.~~**
+**Resuelto el 25 de agosto de 2026, leyendo los quince cuadernillos.** La
+frontera está donde el propio examen la imprime: hasta 2020-2021, el
+cuadernillo de la cuarta evaluación trae **dos** exámenes, uno marcado «PRIMER
+CUATRIMESTRAL (sólo para alumnos con el primer cuatrimestral suspendido)» —de
+los temas 1 y 2— y otro «SEGUNDO CUATRIMESTRAL», de los temas 6 y 7. De
+2021-2022 en adelante solo queda el segundo.
+
+En 2015-2016 y 2016-2017 las dos partes comparten cuadernillo y fecha; en
+2017-2018, 2018-2019 y 2020-2021 son dos exámenes con fecha propia —12 de
+febrero frente al 12 de marzo, por ejemplo—. De 2019-2020 el volcado trae
+**solo** la recuperación, del 24 de febrero de 2020; si aquel año hubo examen
+de los temas 6 y 7, no está en el material que tenemos, y así se declara.
+
+La recuperación es ahora una convocatoria propia (`recuperacion`, URL `rec`) y
+`calculo-4ev.yaml` está medida sobre las once cuartas evaluaciones de verdad.
+Lo que queda de esta deuda es solo lo que se dice en la 31 y en la 26.
 
 **31 · El campo `invariante.fuente` se publica como texto plano.** No pasa por
 el procesador de Markdown, así que el LaTeX sale crudo. Lo caza el guardián de
