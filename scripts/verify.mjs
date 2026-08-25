@@ -423,6 +423,46 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   LaTeX dentro de un <figure>, que no lo procesa nadie
+
+   Se añade el 25 de agosto de 2026, después de publicarlo de verdad. El pie
+   de la figura del ejercicio 2 de la quinta de 2017-2018 decía «los puntos
+   $A$ y $B$» y salió en la página con los dólares puestos.
+
+   El motivo es de Markdown, no del proyecto: un `<figure>` abre un bloque de
+   HTML en bruto, y dentro de un bloque en bruto no se procesa nada — ni
+   negritas, ni enlaces, ni `remark-math`. El SVG se dibuja porque es HTML;
+   el `$A$` del pie no, porque es Markdown.
+
+   Ni el esquema ni el build lo ven: es texto válido en un sitio válido. Se
+   descubrió mirando la captura (§16, punto 1). De las 83 figuras del corpus
+   solo esta lo tenía, así que el guardián nace midiendo cero y su trabajo es
+   que siga en cero.
+
+   El interior del `<svg>` se excluye a propósito: ahí no hay Markdown de
+   ninguna manera, y un `$` en una etiqueta de dinero sería legítimo.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const pegas = [];
+  for (const f of archivos(join(SRC, 'content'), ['.yaml', '.mdx'])) {
+    const texto = leer(f);
+    const figuras = texto.match(/<figure\b[\s\S]*?<\/figure>/g) ?? [];
+    for (const fig of figuras) {
+      const sinSvg = fig.replace(/<svg[\s\S]*?<\/svg>/g, '');
+      const dolares = sinSvg.match(/\$[^$\n]+\$/g);
+      if (dolares) pegas.push(`${rel(f)} → ${dolares.slice(0, 3).join(' · ')}`);
+    }
+  }
+
+  if (pegas.length === 0) ok('ningún LaTeX sin procesar dentro de un <figure>');
+  else
+    fallo(
+      'Dentro de un <figure> Markdown no procesa nada: el $…$ del pie se publica con los dólares',
+      pegas.slice(0, 8).join('\n    '),
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    El ejemplo de ejercicio de CLAUDE.md §04 tiene que compilar
 
    Se añade el 24 de agosto de 2026, después de romperse de verdad y dos
