@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 11 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 10 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **2** | 9 |
+| extraordinaria | 11 | **3** | 8 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 11 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 10 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **341 ejercicios de examen** (24 con enunciado demasiado corto para
-comparar, 308 distintos entre los 317 comparados):
+Sobre los **349 ejercicios de examen** (25 con enunciado demasiado corto para
+comparar, 315 distintos entre los 324 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -957,6 +957,48 @@ El segundo es de un píxel y no se ve, pero es la misma causa.
 Los dos arreglados ensanchando el `viewBox`, y las veintiuna páginas en verde.
 La validación al revés que pide §11 no hizo falta inventarla: **el guardián
 nació rojo**, sobre dos fallos reales, y se puso verde al arreglarlos.
+
+---
+
+**Y al día siguiente resultó que el guardián medía en vacío.** Se descubrió al
+transcribir la extraordinaria de 2022-2023: una etiqueta se salía del viewBox
+—«x», dieciocho píxeles por la derecha—, se veía en la captura, y el guardián
+daba verde. Medido sobre una página de examen: **32 SVG, 38 etiquetas, cero
+cajas medibles**.
+
+El motivo es que `getBBox()` de un elemento dentro de algo con
+`display: none` devuelve todo ceros, y el filtro de anchura cero se las comía
+todas. En las páginas de tema bastaba con pulsar «completo» y por eso el
+guardián parecía funcionar el día que se escribió; en las de examen las figuras
+viven dentro de resoluciones que arrancan plegadas.
+
+Tres cosas cambiaron:
+
+- **se destapa la página entera antes de medir** —quitando `hidden` y forzando
+  el `display` de todo lo que esté a `none`— y se devuelve a su sitio después;
+- **destapar y medir van en dos pasos** con una espera en medio: en el mismo
+  `evaluate` el navegador seguía devolviendo ceros, hace falta un reflujo;
+- y se añade **un recuento con su propia comprobación**: si una página tiene
+  figuras con etiquetas y no se mide ninguna, eso es un fallo. Es la misma
+  defensa que ya tenían las raíces y las barras, y que a este guardián le
+  faltaba.
+
+Con el guardián arreglado, el barrido de las 79 páginas de examen, los 11 temas
+y las 6 rutas encontró **seis figuras más recortadas**, todas de meses atrás:
+
+| dónde | qué sobraba |
+|---|---|
+| 2015-2016-ord, el sólido con tapa esférica | «x» 22 px por la derecha, y la etiqueta de la esfera 4,4 por la izquierda |
+| 2015-2016-ord, los lugares geométricos | «a) circunferencia» 1,1 px |
+| 2016-2017-ord, la parábola y su tangente | «x» 3 px y «y» 2,8 px |
+| 2021-2022-2ev, el cartón y la caja | «24» 9,1 px por abajo |
+| 2021-2022-4ev, la pieza con rectángulo | el pie, 15,2 px por la derecha |
+| 2025-2026-ord, el valor medio | «Y» 1 px por arriba |
+
+Las seis arregladas. Y la lección, que es la de §11 llevada un paso más allá:
+**no basta con que un guardián nazca rojo. Hay que comprobar además que sigue
+midiendo algo en todas las páginas donde debería.** Un guardián que se pone
+verde porque no encuentra nada que medir es indistinguible de uno que funciona.
 
 ---
 

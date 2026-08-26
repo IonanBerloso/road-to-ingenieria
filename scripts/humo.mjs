@@ -102,7 +102,7 @@ async function main() {
   comprueba(rutas.length > 0, `hay páginas de contenido que comprobar (${rutas.length})`);
 
   /** Recuento global de trazos: ver el comentario de más abajo. */
-  const medidos = { raiz: 0, barra: 0 };
+  const medidos = { raiz: 0, barra: 0, etiqueta: 0 };
 
   for (const ruta of rutas) {
     console.log(`\n${ruta}`);
@@ -196,10 +196,40 @@ async function main() {
        aquí y no en `verify.mjs`: la caja de un texto SVG solo la sabe el
        navegador, que es quien elige la fuente y la mide.
 
-       Se mide con todo desplegado, igual que los trazos, porque casi todas las
-       figuras de examen viven dentro de una resolución cerrada. */
-    const cortados = await pagina.evaluate(() => {
+       Y hay que **destapar la página entera** antes de medir, no basta con el
+       modo completo. Medido el 26 de agosto de 2026 sobre una página de examen:
+       32 SVG, 38 etiquetas, y en modo completo el navegador devolvía **cero**
+       cajas medibles, porque `getBBox()` de un elemento dentro de algo con
+       `display: none` da todo ceros y el filtro de anchura cero se las comía
+       todas. Con la página destapada, esas mismas 38 se miden y dos estaban
+       fuera. En las páginas de tema el modo completo sí bastaba, y por eso el
+       guardián parecía funcionar el día que se escribió.
+
+       De ahí el recuento: si en una página con figuras no se mide **ninguna**
+       etiqueta, el guardián está pasando en vacío y eso también es un fallo. */
+    /* Destapar y medir van en DOS pasos con una espera en medio, y no es
+       cosmético: haciéndolo en el mismo `evaluate` el navegador devolvía cero
+       cajas en las páginas de examen. Necesita un reflujo entre una cosa y la
+       otra. */
+    await pagina.evaluate(() => {
+      window.__tapados = [];
+      for (const e of document.querySelectorAll('[hidden]')) {
+        e.removeAttribute('hidden');
+        window.__tapados.push([e, 'hidden']);
+      }
+      for (const e of document.querySelectorAll('body *')) {
+        if (getComputedStyle(e).display === 'none') {
+          e.style.display = 'block';
+          window.__tapados.push([e, 'display']);
+        }
+      }
+    });
+    await pagina.waitForTimeout(400);
+
+    const recorte = await pagina.evaluate(() => {
+      const tapados = window.__tapados ?? [];
       const fuera = [];
+      let medidas = 0;
       for (const svg of document.querySelectorAll('svg[viewBox]')) {
         const [vx, vy, vw, vh] = svg.getAttribute('viewBox').split(/[\s,]+/).map(Number);
         for (const t of svg.querySelectorAll('text')) {
@@ -210,6 +240,7 @@ async function main() {
             continue;
           }
           if (!b.width) continue;
+          medidas++;
           const holgura = 0.5;
           if (
             b.x < vx - holgura ||
@@ -221,13 +252,32 @@ async function main() {
           }
         }
       }
-      return fuera;
+
+      for (const [e, que] of tapados) {
+        if (que === 'hidden') e.hidden = true;
+        else e.style.display = '';
+      }
+      /* Solo cuentan como figura los SVG que llevan alguna etiqueta dentro:
+         KaTeX dibuja cada radical con su propio <svg viewBox>, y esos no tienen
+         texto ninguno. Sin este filtro, una ruta con sesenta radicales parecía
+         tener sesenta figuras sin medir. */
+      const svgs = [...document.querySelectorAll('svg[viewBox]')]
+        .filter((s) => s.querySelector('text')).length;
+      return { fuera, medidas, svgs };
     });
+    medidos.etiqueta += recorte.medidas;
     comprueba(
-      cortados.length === 0,
-      'ninguna etiqueta se sale de su viewBox',
-      cortados.length ? `recortadas: ${cortados.slice(0, 3).join(' · ')}` : '',
+      recorte.fuera.length === 0,
+      `ninguna etiqueta se sale de su viewBox (${recorte.medidas})`,
+      recorte.fuera.length ? `recortadas: ${recorte.fuera.slice(0, 3).join(' · ')}` : '',
     );
+    if (recorte.svgs > 0) {
+      comprueba(
+        recorte.medidas > 0,
+        'las etiquetas de las figuras se han podido medir',
+        `hay ${recorte.svgs} figuras y ninguna etiqueta medible: el guardián estaría pasando en vacío`,
+      );
+    }
 
     /* La lectura recuerda el modo en localStorage, así que hay que borrarlo
        antes de recargar: si no, el resto de comprobaciones se harían sobre una
