@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 14 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 13 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -252,7 +252,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | **10** | 1 |
+| ordinaria | 11 | **11** | 0 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
@@ -260,20 +260,24 @@ Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
 partes: once cuartas y seis recuperaciones, diez quintas y cinco
 recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024,
-2022-2023, 2021-2022, 2020-2021, 2018-2019, 2017-2018, 2016-2017 y 2015-2016;
-falta solo la de 2013-2014.
+2022-2023, 2021-2022, 2020-2021, 2018-2019, 2017-2018, 2016-2017, 2015-2016 y
+2013-2014: **las once**. Cerradas el 26 de agosto de 2026. Ojo con la última:
+el cuadernillo no se llama «convocatoria ordinaria» sino **SEXTA EVALUACIÓN**,
+y la escuela firma todavía como Donostiako Eskola Politeknikoa. Se archiva como
+ordinaria porque es la que hace ese papel, y el comentario del `examen.yaml` lo
+dice.
 
-**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **once**
-ejercicios de examen y el 11 tiene **diez**, y no pueden tener muchos más,
-porque **Laplace y Fourier no caen en ninguna evaluación continua**: solo en
-las globales. Cada ordinaria nueva les añade uno, salvo la de 2021-2022, que
-trajo dos de Laplace —uno de técnica y otro aplicado— y ninguno de más de
-Fourier. Hasta que estén las once no se pueden auditar esos dos temas ni
-decidir qué prosa les falta: hacerlo ahora sería escribir el tema con media
-muestra.
+**Lo que este hueco bloqueaba ya no lo bloquea.** El tema 10 tiene **doce**
+ejercicios de examen y el 11 tiene **diez**, y esa es toda la muestra que las
+ordinarias pueden dar, porque **Laplace y Fourier no caen en ninguna evaluación
+continua**: solo en las globales. Cada ordinaria añadió uno, salvo la de
+2021-2022, que trajo dos de Laplace —uno de técnica y otro aplicado— y la de
+2013-2014, que trajo Laplace y nada de Fourier. Con las once cerradas, auditar
+esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
+bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 14 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 13 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -676,7 +680,7 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
 
-**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay diez.**
+**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay once.**
 `calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
 convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
 a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
@@ -684,9 +688,12 @@ bloque («cae los dos años», «los dos lo piden») se quedan cortos.
 
 No se corrige a trozos. Se rehace la ruta entera cuando estén las once
 ordinarias, igual que se hizo con la quinta el 25 de agosto de 2026: volver a
-medirla sobre cuatro para volver a medirla sobre once es trabajo tirado. Lo que
-sí hay que vigilar mientras tanto es que ningún bloque nuevo afirme haber caído
-en más años de los declarados, que es justo lo que el esquema comprueba.
+medirla sobre cuatro para volver a medirla sobre once es trabajo tirado.
+
+**La condición se cumplió el 26 de agosto de 2026**: las once están
+transcritas, así que esta deuda deja de estar bloqueada y pasa a ser lo primero
+del plan. Rehacerla es medir los once exámenes por hueco —igual que se hizo con
+la quinta—, no retocar `medidoSobre`.
 
 **34 · La medición de `docs/como-vamos.md` se quedó atrás dos commits.** Se
 regeneró el 25 de agosto de 2026 con una sola ordinaria transcrita y no se tocó
@@ -709,8 +716,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **315 ejercicios de examen** (22 con enunciado demasiado corto para
-comparar, 287 distintos entre los 293 comparados):
+Sobre los **321 ejercicios de examen** (22 con enunciado demasiado corto para
+comparar, 293 distintos entre los 299 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -719,8 +726,19 @@ comparar, 287 distintos entre los 293 comparados):
 | 2 veces | 2021-2022-ord · 2023-2024-ord | las cinco afirmaciones sobre dos gráficas |
 | 2 veces | 2017-2018-ord · 2022-2023-ord | la espiral y el campo que mide un área |
 
-Diez instancias de cuatro problemas. **No es una anomalía: es cómo funciona esta
-asignatura**, y de hecho `CLAUDE.md` §09 ya citaba los tres Barrow sin sacar la
+Diez instancias de cuatro problemas — y **el detector se queda corto**. Al
+transcribir 2013-2014 apareció un quinto caso que no puede ver: su ejercicio 3
+y el 1 del segundo parcial de 2021-2022 plantean **el mismo sólido** —dentro del
+paraboloide `x²+y² ≤ z` y del cono `x²+y² ≤ (z−6)²`, con `z ≤ 6`— ocho años
+después, pero uno pide dibujarlo y hallar el área y el otro añade el centro de
+gravedad, así que los enunciados difieren y la normalización no los junta.
+
+Es un límite real del método, no un fallo a corregir: comparar enunciados
+encuentra los ejercicios **copiados**, no los que reutilizan el mismo objeto con
+otra pregunta. Los segundos son igual de útiles para estudiar y solo salen
+leyendo. Los dos que se conocen están dichos en el `fuente` de cada ejercicio.
+
+**No es una anomalía: es cómo funciona esta asignatura**, y de hecho `CLAUDE.md` §09 ya citaba los tres Barrow sin sacar la
 consecuencia. Repetir un ejercicio tres años seguidos es la mejor señal de que
 va a caer, y eso es exactamente lo que una ruta de estudio debería decir en voz
 alta.

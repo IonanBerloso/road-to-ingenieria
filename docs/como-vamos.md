@@ -16,10 +16,11 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Diez de las once ordinarias están hechas, y los temas 10 y 11 ya tienen
-corpus con el que trabajar.** Van 75 convocatorias de 89 y 315 ejercicios de
-examen. Laplace llega a **once** ejercicios y Fourier a **diez**. Faltan 14
-convocatorias: **una** ordinaria, once extraordinarias y los dos parciales de
+**Las once ordinarias están hechas.** Es el primer bloque de convocatorias
+globales completo, y con él los temas 10 y 11 tienen ya toda la muestra que van
+a tener: Laplace llega a **doce** ejercicios y Fourier a **diez**, y no habrá
+más salvo lo que traigan las extraordinarias. Van 76 convocatorias de 89 y 321
+ejercicios de examen. Faltan 13: once extraordinarias y los dos parciales de
 2019-2020.
 
 ---
@@ -28,35 +29,45 @@ convocatorias: **una** ordinaria, once extraordinarias y los dos parciales de
 
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2 885 | 3 | 37 | 8 | **61** |
+| t01 complejos | 2 885 | 3 | 37 | 8 | **62** |
 | t02 sucesiones | 2 035 | 3 | 19 | 4 | 31 |
 | t03 funciones reales | 1 779 | 3 | 23 | 5 | 21 |
-| t04 estudio local | 2 036 | 3 | 18 | 5 | **62** |
-| t05 integración | 1 925 | 4 | 30 | 4 | 34 |
+| t04 estudio local | 2 036 | 3 | 18 | 5 | **63** |
+| t05 integración | 1 925 | 4 | 30 | 4 | 35 |
 | t06 varias variables | 1 797 | 2 | 12 | 4 | 17 |
-| t07 integral múltiple | 1 422 | 2 | 10 | 3 | 29 |
-| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 16 |
+| t07 integral múltiple | 1 422 | 2 | 10 | 3 | 30 |
+| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 17 |
 | t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | 23 |
-| t10 Laplace | 872 | 1 | 8 | 2 | **11** |
+| t10 Laplace | 872 | 1 | 8 | 2 | **12** |
 | t11 Fourier | 888 | 1 | 8 | 2 | **10** |
-| **total** | **17 999** | **24** | **179** | **41** | **315** |
+| **total** | **17 999** | **24** | **179** | **41** | **321** |
 
-En todo el corpus: **494 ejercicios y 1 898 pasos**.
+En todo el corpus: **500 ejercicios y 1 922 pasos**.
 
-Los temas 10 y 11 siguen siendo la frontera, pero ya no están en cero. Su prosa
-—872 y 888 palabras— es la mitad que la de los primeros temas y tienen una
-figura cada uno; engordarlos sigue esperando a las once ordinarias, porque
-escribir el tema a partir de la mitad de sus exámenes es decidir el contenido
-con media muestra.
+Los temas 10 y 11 siguen siendo la frontera, y hoy **deja de haber excusa**: su
+prosa —872 y 888 palabras— es la mitad que la de los primeros temas y tienen
+una figura cada uno, pero ya no esperan a nada. Doce ejercicios de Laplace y
+diez de Fourier son toda la muestra que las ordinarias pueden dar; lo que
+añadan las extraordinarias será más de lo mismo, no otra cosa. Engordarlos pasa
+a ser trabajo pendiente, no bloqueado.
 
 La columna «fig.» cuenta solo las figuras de la prosa de los temas. Las de los
-enunciados y las resoluciones de examen van aparte, y en estas siete ordinarias
-han sido treinta y cuatro: seis en 2022-2023, cuatro en 2021-2022, cinco en
-2020-2021, tres en 2018-2019, cinco en 2017-2018, seis en 2016-2017 y cinco en
-2015-2016. Veinticinco de las treinta y cuatro **son nuestras**, y veintiuna
-viven en la **resolución** y no en el enunciado: son los apartados donde el
-propio examen dice «dibujar» o «representar», y ahí la figura no ilustra la
-respuesta — es la respuesta.
+enunciados y las resoluciones de examen van aparte, y en estas ocho ordinarias
+han sido treinta y ocho: seis en 2022-2023, cuatro en 2021-2022, cinco en
+2020-2021, tres en 2018-2019, cinco en 2017-2018, seis en 2016-2017, cinco en
+2015-2016 y cuatro en 2013-2014. Veintisiete de las treinta y ocho **son
+nuestras**, y veintitrés viven en la **resolución** y no en el enunciado: son los
+apartados donde el propio examen dice «dibujar» o «representar», y ahí la figura
+no ilustra la respuesta — es la respuesta.
+
+El primer ejercicio de 2013-2014 obligó a partir una figura en dos, y la regla
+que sale de ahí merece quedar escrita. El examen trae un rectángulo sombreado y
+pide «representar gráficamente» lo que sale de transformarlo cuatro veces. La
+primera versión dibujaba las cuatro regiones en el enunciado, con un pie
+diciendo cuál venía del examen — y eso es **resolver el ejercicio por el
+alumno**. Se separó: el enunciado se queda con el rectángulo redibujado y las
+cuatro regiones se van a la resolución. **Cuando el enunciado dice «dibujar»,
+el dibujo es la respuesta y no puede estar arriba.**
 
 ## Exámenes
 
@@ -67,10 +78,10 @@ respuesta — es la respuesta.
 | 3.ª evaluación | 11 | **11** | 0 |
 | 4.ª evaluación (15 cuadernillos) | 15 | **17** | 0 |
 | 5.ª evaluación (13 cuadernillos) | 13 | **15** | 0 |
-| ordinaria | 11 | **10** | **1** |
+| ordinaria | 11 | **11** | 0 |
 | extraordinaria | 11 | 0 | **11** |
 | ord.-extraord. 2019-2020, 2 parciales | 2 | 0 | **2** |
-| **total** | **85** | **75** | **14** |
+| **total** | **85** | **76** | **13** |
 
 Los quince cuadernillos de cuarta evaluación dan diecisiete convocatorias y los
 trece de la quinta dan quince, porque algunos traen dentro las dos partes: la
@@ -79,18 +90,25 @@ once cuartas más seis recuperaciones, y diez quintas más cinco recuperaciones.
 La quinta de 2019-2020 no se celebró.
 
 **Los 85 PDF están ya en `public/examenes/calculo/`**, copiados y verificados
-byte a byte contra el original. Lo que falta es transcribir 14.
+byte a byte contra el original. Lo que falta es transcribir 13.
 
-Sobre los 3 155 puntos repartidos de los 75 exámenes: **COMP1 9,4 % · COMP2
-55,8 % · COMP4 34,8 %**. Es decir, **el 44,2 % de la nota de Cálculo no es
+Sobre los 3 215 puntos repartidos de los 76 exámenes: **COMP1 9,5 % · COMP2
+55,7 % · COMP4 34,8 %**. Es decir, **el 44,3 % de la nota de Cálculo no es
 calcular**. La cifra venía bajando según entraban globales —49,5 % sobre 33,
-46,8 % sobre 66, 43,6 % sobre 73— y ha vuelto a subir dos veces seguidas: las
+46,8 % sobre 66, 43,6 % sobre 73— y lleva tres mediciones subiendo: las
 ordinarias más antiguas cargan mucho más COMP4. La de 2016-2017 trae dos
-ejercicios con COMP2 = 0 y la de 2015-2016 tiene uno con **cuatro puntos de
-COMP1**, el máximo del corpus— y el motivo es estable: las convocatorias
-largas reparten siete u ocho puntos de cálculo de cada diez en casi todos sus
-ejercicios, mientras que en la evaluación continua hay ejercicios enteros de
-solo demostrar.
+ejercicios con COMP2 = 0, la de 2015-2016 tiene uno con **cuatro puntos de
+COMP1** —el máximo del corpus— y la de 2013-2014 dedica cuatro de sus diez
+puntos a «enunciar y demostrar el teorema fundamental». El motivo es estable:
+las convocatorias largas reparten siete u ocho puntos de cálculo de cada diez en
+casi todos sus ejercicios, mientras que en las globales antiguas hay ejercicios
+enteros de solo demostrar.
+
+Con las once cerradas se puede además decir algo que antes era una impresión:
+**la nota de una ordinaria no se reparte como la de una evaluación continua.**
+Las globales son más cortas —la de 2013-2014 son seis ejercicios y sesenta
+puntos, el examen más corto del corpus— y compensan pidiendo la teoría en voz
+alta.
 
 ## Rutas de estudio
 
@@ -103,10 +121,11 @@ solo demostrar.
 | 5.ª evaluación | 3 | 12 | 10 | 6 |
 | ordinaria | 3 | 7 | **2** | 4 |
 
-La de la ordinaria dice estar medida sobre 2 convocatorias y ya hay 10
+La de la ordinaria dice estar medida sobre 2 convocatorias y ya hay **11**
 transcritas. No es un dato falso —se midió sobre 2 cuando se escribió—, pero es
-el que peor envejece del sitio, y está anotado como deuda 33: se rehace entera
-cuando estén las once, igual que se hizo con la quinta.
+el que peor envejece del sitio, y está anotado como deuda 33. Hoy **deja de
+estar bloqueada**: la condición que se puso para rehacerla era tener las once
+ordinarias, y ya están.
 
 Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 
@@ -122,10 +141,10 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 22 huecos |
 | `npm run suelo` en verde | ✅ |
-| **todas las convocatorias publicadas transcritas** | ❌ **75 de 89** |
+| **todas las convocatorias publicadas transcritas** | ❌ **76 de 89** |
 
-> El «75 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
-> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 14
+> El «76 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
+> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 13
 > que faltan, ninguna es doble.
 
 ## Las otras ocho asignaturas
@@ -138,13 +157,17 @@ la anterior.
 
 # El plan
 
-## Lo siguiente: la ordinaria que falta, y después las extraordinarias
+## Lo siguiente: las once extraordinarias
 
-Es lo primero por la misma razón que lo fue la quinta: **es lo único que da de
-comer a los temas 10 y 11**. La transformada de Laplace y las series de Fourier
-no aparecen en ninguna evaluación continua.
+Las ordinarias se cerraron el 26 de agosto de 2026. Lo que queda de la deuda 26
+son las once extraordinarias y los dos parciales de 2019-2020, y ya no bloquean
+ningún tema: **la muestra de Laplace y Fourier está completa**. Se transcriben
+porque §15 exige todas las convocatorias publicadas, no porque falte contenido
+que solo ellas puedan dar.
 
-Y de paso sube la ruta `ord` de «medida sobre 2» a «medida sobre 11».
+Antes que ellas hay dos cosas que ya se pueden hacer y llevaban meses esperando
+a este momento: **rehacer `calculo-ord.yaml` sobre las once** (deuda 33) y
+**engordar los temas 10 y 11** con lo que digan sus doce y diez ejercicios.
 
 El trabajo por examen, ya rodado:
 
@@ -161,7 +184,7 @@ El trabajo por examen, ya rodado:
 6. `node scripts/verify.mjs --solo-fuente` **antes** de `npm run build`,
    recorrer los ejercicios en el navegador con `probar.mjs`, y `npm run suelo`.
 
-Lo aprendido en estas siete ordinarias, que conviene no volver a tropezar:
+Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 
 - **el cálculo analítico también se equivoca.** El volumen del sólido de
   Viviani salió 38,58 por integración numérica y 19,29 por la fórmula cerrada
@@ -183,19 +206,30 @@ Lo aprendido en estas siete ordinarias, que conviene no volver a tropezar:
   duro, que es invisible al leer el fichero—;
 - una etiqueta con `paint-order: stroke` y `stroke: var(--paper)` resuelve casi
   todas las colisiones entre rótulos y curvas, y funciona igual en claro y en
-  oscuro.
+  oscuro;
+- **el signo del enunciado se lee en la página renderizada, no en el volcado de
+  texto.** El ejercicio de Laplace de 2013-2014 es `x'' − x + 2 = 0`, y del
+  `pdftotext` había salido como `x'' + x = 2`. Son dos problemas distintos:
+  con el más, senos; con el menos, exponenciales. Se cazó al mirar la imagen de
+  la página antes de escribir, que es el paso 2 de la lista de arriba y existe
+  exactamente para esto.
 
 ## Los días siguientes
 
 | | trabajo | qué desbloquea |
 |---|---|---|
-| 1 | **1 ordinaria** (falta 2013-2014) | los temas 10 y 11, y la ruta `ord` |
-| 2 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
-| 3 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
-| 4 | **Engordar los temas 10 y 11** con lo que digan sus exámenes | |
+| 1 | **Rehacer `calculo-ord.yaml`** sobre las once ordinarias | cierra la deuda 33 |
+| 2 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
+| 3 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
+| 4 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
 | 5 | **Enganchar las cinco recuperaciones de la quinta** a las rutas de 1.ª, 2.ª y 3.ª: son catorce ejercicios de primer cuatrimestre que hoy no enlaza nadie | |
 | 6 | **Auditoría de Cálculo entera** y cierre según §15 | |
 | 7 | **Abrir Álgebra** | |
+
+El orden cambia hoy: hasta esta mañana las extraordinarias iban las primeras
+porque las ordinarias estaban a medias y todo lo demás dependía de ellas. Ya no.
+Las dos primeras filas son trabajo que llevaba semanas esperando permiso, y
+hacerlo ahora es más barato que hacerlo después de otras once transcripciones.
 
 Cuando entre Álgebra habrá que separar el lector de respuestas de
 `EjercicioGuiado`: una **matriz** no es un número ni un conjunto de puntos, y
@@ -207,19 +241,23 @@ va antes que Fluidos, que son 25 temas y la asignatura más cara de las nueve.
 Están todas en `tasks/todo.md` con su número. Las que siguen vivas y merecen
 una línea:
 
-- **26** — las 14 convocatorias globales que faltan. Es el plan de arriba.
+- **26** — las 13 convocatorias globales que faltan: once extraordinarias y los
+  dos parciales de 2019-2020. Ya no bloquean ningún tema.
 - **31** — `invariante.fuente` se publica como texto plano, sin pasar por el
   procesador, así que el LaTeX sale crudo. O se procesa, o §14 lo dice.
 - **32** — dos ejercicios del tema 9 duplican problemas que ahora también están
   transcritos como examen.
-- **33** — la ruta `ord` dice «medida sobre 2» con diez ordinarias hechas.
-  Se rehace cuando estén las once.
+- **33** — la ruta `ord` dice «medida sobre 2» con **once** ordinarias hechas.
+  Se puso como condición tener las once; ya están, así que pasa a ser lo
+  primero del plan.
 - **34** — esta medición se quedó atrás dos commits. Corregido, y de ahí sale la
   regla del encabezado.
 - **35** — **los profesores repiten ejercicios entre convocatorias.** Medido
-  sobre los 315: cuatro problemas aparecen diez veces, y el cuarto ha salido
-  hoy —la espiral de 2017-2018 es la misma que la de 2022-2023, cinco años
-  después—. Que un ejercicio se repita es la mejor señal de que va a caer, y hoy
+  sobre los 321: cuatro problemas aparecen diez veces con el enunciado idéntico.
+  Y hay un quinto que el detector **no** puede ver: el sólido del ejercicio 3
+  de 2013-2014 es el mismo que el del 1 de 2021-2022 —paraboloide rematado en
+  cono, ocho años después— pero cada uno pregunta cosas distintas y el enunciado
+  cambia. Que un ejercicio se repita es la mejor señal de que va a caer, y hoy
   el sitio no lo dice en ninguna parte.
 - **36** — el seno se escribe de dos maneras en el corpus: 511 veces en
   castellano y **88 en inglés**, repartidas por 8 ficheros. Los exámenes
