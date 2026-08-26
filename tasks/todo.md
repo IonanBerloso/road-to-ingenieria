@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 12 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 11 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **1** | 10 |
+| extraordinaria | 11 | **2** | 9 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 12 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 11 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **331 ejercicios de examen** (23 con enunciado demasiado corto para
-comparar, 300 distintos entre los 308 comparados):
+Sobre los **341 ejercicios de examen** (24 con enunciado demasiado corto para
+comparar, 308 distintos entre los 317 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -750,17 +750,20 @@ comparar, 300 distintos entre los 308 comparados):
 | 2 veces | 2017-2018-ord · 2022-2023-ord | la espiral y el campo que mide un área |
 | 2 veces | **2023-2024-2ev · 2024-2025-ext** | el alambre, el cuadrado y el triángulo |
 | 2 veces | **2022-2023-3ev · 2024-2025-ext** | el sector de 45° que gira alrededor de OX |
+| 2 veces | **2020-2021-3ev · 2023-2024-ext** | el McLaurin de la integral de e a la z al cuadrado |
 
-Catorce instancias de seis problemas — y **el detector se queda corto**.
+Dieciséis instancias de siete problemas — y **el detector se queda corto**.
 
-Las dos últimas filas entraron el 26 de agosto de 2026 con la primera
-extraordinaria, y cambian lo que se sabía: hasta entonces todos los repetidos
+Las tres últimas filas entraron el 26 de agosto de 2026 con las dos primeras
+extraordinarias, y cambian lo que se sabía: hasta entonces todos los repetidos
 estaban dentro del mismo tipo de convocatoria —tres terceras evaluaciones, dos
-ordinarias—. Estos dos son una **global reutilizando un parcial de otro año**:
-el alambre venía de la segunda evaluación de 2023-2024 y el sector de la
-tercera de 2022-2023. Para una ruta de estudio eso importa más que lo anterior,
-porque significa que preparar la extraordinaria pasa por repasar los parciales
-de años previos y no solo las globales. Al
+ordinarias—. Las tres nuevas son **globales reutilizando parciales de otros
+años**: el alambre venía de la segunda evaluación de 2023-2024, el sector de la
+tercera de 2022-2023 y el McLaurin de la tercera de 2020-2021. Y el ritmo
+asusta: **dos de cada diez ejercicios de extraordinaria son copia**, medido
+sobre las dos únicas transcritas. Para una ruta de estudio eso importa más que
+todo lo anterior, porque significa que preparar la extraordinaria pasa por
+repasar los parciales de años previos y no solo las globales. Al
 transcribir 2013-2014 apareció un quinto caso que no puede ver: su ejercicio 3
 y el 1 del segundo parcial de 2021-2022 plantean **el mismo sólido** —dentro del
 paraboloide `x²+y² ≤ z` y del cono `x²+y² ≤ (z−6)²`, con `z ≤ 6`— ocho años
