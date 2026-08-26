@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 9 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 8 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **4** | 7 |
+| extraordinaria | 11 | **5** | 6 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 9 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 8 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **357 ejercicios de examen** (25 con enunciado demasiado corto para
-comparar, 322 distintos entre los 332 comparados):
+Sobre los **365 ejercicios de examen** (25 con enunciado demasiado corto para
+comparar, 330 distintos entre los 340 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -753,7 +753,14 @@ comparar, 322 distintos entre los 332 comparados):
 | 2 veces | **2020-2021-3ev · 2023-2024-ext** | el McLaurin de la integral de e a la z al cuadrado |
 | 2 veces | **2021-2022-ext · 2023-2024-ext** | la curvilínea con el área de diez, misma figura |
 
-Dieciocho instancias de ocho problemas — y **el detector se queda corto**.
+Dieciocho instancias de ocho problemas — y **el detector se queda corto**, con
+una prueba nueva del 26 de agosto de 2026: el ejercicio 3 del primer
+cuatrimestral de **2020-2021-ext** es palabra por palabra el apartado a) del
+ejercicio 3 de **2021-2022-ext** —el McLaurin de orden 2 de la integral de
+(1+sen t)/(2+t²)—, y el detector no lo ve porque el de 2021-2022 lleva pegado un
+apartado b) sobre un elipsoide. Comparar enunciados completos no encuentra un
+enunciado que está **dentro** de otro. Son diecinueve instancias, entonces, y de
+nueve problemas.
 
 Las tres últimas filas entraron el 26 de agosto de 2026 con las dos primeras
 extraordinarias, y cambian lo que se sabía: hasta entonces todos los repetidos
