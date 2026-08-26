@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 7 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 6 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **6** | 5 |
+| extraordinaria | 11 | **7** | 4 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 7 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 6 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **373 ejercicios de examen** (26 con enunciado demasiado corto para
-comparar, 337 distintos entre los 347 comparados):
+Sobre los **381 ejercicios de examen** (26 con enunciado demasiado corto para
+comparar, 344 distintos entre los 355 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -751,37 +751,65 @@ comparar, 337 distintos entre los 347 comparados):
 | 2 veces | **2023-2024-2ev · 2024-2025-ext** | el alambre, el cuadrado y el triángulo |
 | 2 veces | **2022-2023-3ev · 2024-2025-ext** | el sector de 45° que gira alrededor de OX |
 | 2 veces | **2020-2021-3ev · 2023-2024-ext** | el McLaurin de la integral de e a la z al cuadrado |
-| 2 veces | **2021-2022-ext · 2023-2024-ext** | la curvilínea con el área de diez, misma figura |
+| 2 veces | **2018-2019-3ev · 2021-2022-ext** | la ecuación con el conjugado, tres soluciones en triángulo |
+| 2 veces | **2017-2018-ext · 2023-2024-ext** | el cuadrado de la derivada leído en el dibujo, misma figura |
 
-Dieciocho instancias de ocho problemas — y **el detector se queda corto**, con
-una prueba nueva del 26 de agosto de 2026: el ejercicio 3 del primer
-cuatrimestral de **2020-2021-ext** es palabra por palabra el apartado a) del
-ejercicio 3 de **2021-2022-ext** —el McLaurin de orden 2 de la integral de
-(1+sen t)/(2+t²)—, y el detector no lo ve porque el de 2021-2022 lleva pegado un
-apartado b) sobre un elipsoide. Comparar enunciados completos no encuentra un
-enunciado que está **dentro** de otro. Son diecinueve instancias, entonces, y de
-nueve problemas.
+Veinte instancias de nueve problemas. **Y el detector se queda corto**, con dos
+pruebas medidas el 26 de agosto de 2026:
 
-Las tres últimas filas entraron el 26 de agosto de 2026 con las dos primeras
-extraordinarias, y cambian lo que se sabía: hasta entonces todos los repetidos
-estaban dentro del mismo tipo de convocatoria —tres terceras evaluaciones, dos
-ordinarias—. Las tres nuevas son **globales reutilizando parciales de otros
-años**: el alambre venía de la segunda evaluación de 2023-2024, el sector de la
-tercera de 2022-2023 y el McLaurin de la tercera de 2020-2021. Y el ritmo
-asusta: **dos de cada diez ejercicios de extraordinaria son copia**, medido
-sobre las dos únicas transcritas. Para una ruta de estudio eso importa más que
-todo lo anterior, porque significa que preparar la extraordinaria pasa por
-repasar los parciales de años previos y no solo las globales. Al
-transcribir 2013-2014 apareció un quinto caso que no puede ver: su ejercicio 3
-y el 1 del segundo parcial de 2021-2022 plantean **el mismo sólido** —dentro del
-paraboloide `x²+y² ≤ z` y del cono `x²+y² ≤ (z−6)²`, con `z ≤ 6`— ocho años
-después, pero uno pide dibujarlo y hallar el área y el otro añade el centro de
-gravedad, así que los enunciados difieren y la normalización no los junta.
+- El ejercicio 3 del primer cuatrimestral de **2020-2021-ext** es palabra por
+  palabra el apartado a) del ejercicio 3 de **2021-2022-ext** —el McLaurin de
+  orden 2 de la integral de (1+sen t)/(2+t²)—, y no aparece porque el de
+  2021-2022 lleva pegado un apartado b) sobre un elipsoide. Comparar enunciados
+  completos no encuentra un enunciado que está **dentro** de otro.
+- El ejercicio 1 del segundo cuatrimestral de **2021-2022-ext** es el mismo que
+  el 2 del segundo parcial de **2023-2024-ext** —la curvilínea con el área de
+  diez, con la misma figura—, y tampoco aparece: uno de los dos enunciados lleva
+  la figura incrustada y el otro no, y eso basta para que las cadenas no casen.
+  Esta fila **estaba en la tabla de arriba y era un error**: se anotó a mano al
+  transcribir 2021-2022 y se dio por hecho que el detector también la veía. No la
+  ve.
+
+Con esos dos, **veinticuatro instancias de once problemas**, y el número real
+seguirá siendo mayor: solo se detecta lo que coincide carácter a carácter.
+
+Y hay un patrón que ya no parece casualidad: de los nueve grupos que el detector
+sí ve, **cinco tienen una extraordinaria dentro**, y en cuatro de ellos la
+extraordinaria reutiliza un parcial de un año anterior. Las convocatorias
+globales son el sitio donde se recicla.
+
+Las filas con extraordinaria dentro entraron entre el 25 y el 26 de agosto de
+2026, según se iban transcribiendo, y cambian lo que se sabía: hasta entonces
+todos los repetidos estaban dentro del mismo tipo de convocatoria —tres terceras
+evaluaciones, dos ordinarias—. **Cuatro de las cinco son globales reutilizando un
+parcial de un año anterior**: el alambre venía de la segunda evaluación de
+2023-2024, el sector de la tercera de 2022-2023, el McLaurin de la tercera de
+2020-2021 y la ecuación con el conjugado de la tercera de 2018-2019. La quinta es
+extraordinaria contra extraordinaria: el cuadrado de la derivada, de 2017-2018 a
+2023-2024, seis años después y con la misma figura.
+
+Para una ruta de estudio eso importa más que todo lo anterior, porque significa
+que preparar la extraordinaria pasa por repasar **los parciales de años previos**
+y no solo las globales.
+
+Y hay un tercer nivel que el detector no puede ver ni con enunciados exactos: el
+mismo **objeto** con otra pregunta. El sólido «dentro del paraboloide `x²+y² ≤ z`
+y del cono `x²+y² ≤ (z−k)²`, con `z ≤ k`» ha caído **tres veces** con tres
+preguntas distintas y dos valores de `k`:
+
+| convocatoria | `k` | qué pide |
+|---|---|---|
+| 2013-2014-ord, ej. 6 | 6 | dibujarlo y hallar el área de su superficie |
+| 2021-2022-ord, ej. 5 | 6 | lo mismo, ocho años después |
+| **2017-2018-ext, ej. 2 del 2.º** | **2** | el área **y** el centro de gravedad |
+
+Los enunciados difieren y la normalización no los junta, pero para quien estudia
+son el mismo ejercicio con otro número.
 
 Es un límite real del método, no un fallo a corregir: comparar enunciados
 encuentra los ejercicios **copiados**, no los que reutilizan el mismo objeto con
 otra pregunta. Los segundos son igual de útiles para estudiar y solo salen
-leyendo. Los dos que se conocen están dichos en el `fuente` de cada ejercicio.
+leyendo. Los tres que se conocen están dichos en el `fuente` de cada ejercicio.
 
 **No es una anomalía: es cómo funciona esta asignatura**, y de hecho `CLAUDE.md` §09 ya citaba los tres Barrow sin sacar la
 consecuencia. Repetir un ejercicio tres años seguidos es la mejor señal de que
