@@ -119,13 +119,29 @@ alta.
 | 3.ª evaluación | 9 | 18 | 11 | 3 |
 | 4.ª evaluación | 3 | 10 | 11 | 3 |
 | 5.ª evaluación | 3 | 12 | 10 | 6 |
-| ordinaria | 3 | 7 | **2** | 4 |
+| ordinaria | **8** | **16** | **11** | **7** |
 
-La de la ordinaria dice estar medida sobre 2 convocatorias y ya hay **11**
-transcritas. No es un dato falso —se midió sobre 2 cuando se escribió—, pero es
-el que peor envejece del sitio, y está anotado como deuda 33. Hoy **deja de
-estar bloqueada**: la condición que se puso para rehacerla era tener las once
-ordinarias, y ya están.
+**La de la ordinaria se rehizo el 26 de agosto de 2026**, el mismo día que se
+cerró la última convocatoria que le faltaba. Decía estar medida sobre 2 y ahora
+lo está sobre 11, y no fue retocar el número: se volvieron a contar los
+cuarenta y cinco ejercicios de los segundos parciales, uno a uno, y de ahí
+salieron dos bloques que no existían —el sólido de revolución, que cae en diez
+de los once años, y el suelo de dibujar— y la partición del antiguo bloque de
+«síntesis» en dos, porque medido sobre once no es un hueco sino dos.
+
+Lo que la medición enseñó, y no se veía con dos convocatorias:
+
+- **el núcleo del segundo parcial son tres ejercicios y caen juntos nueve de
+  cada once años**: Laplace —los once—, el sólido —diez— y Fourier —diez—;
+- **veinte de los cuarenta y cinco ejercicios piden dibujar, y trece lo piden
+  en el apartado a)**. Eso convierte «dibujar» en el suelo de la ruta, en el
+  sentido literal de §14: no se examina solo y sin él los demás no se terminan;
+- **la EDO suelta se ha ido**. Cayó seis veces entre 2015-2016 y 2022-2023 y
+  ninguna desde entonces: su sitio lo ocupan ahora los ejercicios que cruzan
+  temas, que son los tres últimos años seguidos;
+- y el hueco que la ruta declara y antes nadie había visto: **el área de una
+  superficie curva no está en la prosa del tema 7** —la palabra «superficie» no
+  aparece ni una vez en su `index.mdx`— y cae en cuatro de los diez sólidos.
 
 Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 
@@ -139,7 +155,7 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 | cada tema con al menos una figura | ✅ 24 |
 | una ruta por evaluación | ⚠️ 6 de 7 — falta la extraordinaria |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
-| `falta[]` dice lo que no está | ✅ 22 huecos |
+| `falta[]` dice lo que no está | ✅ 25 huecos |
 | `npm run suelo` en verde | ✅ |
 | **todas las convocatorias publicadas transcritas** | ❌ **76 de 89** |
 
@@ -165,9 +181,13 @@ ningún tema: **la muestra de Laplace y Fourier está completa**. Se transcriben
 porque §15 exige todas las convocatorias publicadas, no porque falte contenido
 que solo ellas puedan dar.
 
-Antes que ellas hay dos cosas que ya se pueden hacer y llevaban meses esperando
-a este momento: **rehacer `calculo-ord.yaml` sobre las once** (deuda 33) y
-**engordar los temas 10 y 11** con lo que digan sus doce y diez ejercicios.
+La ruta `calculo-ord.yaml` —la deuda 33, la que llevaba meses esperando a este
+momento— se rehizo el mismo día, y de rehacerla salieron dos deudas nuevas que
+van antes que las extraordinarias porque las dos son huecos de contenido y no
+de transcripción: **el área de una superficie en el tema 7** (deuda 37) y **la
+ruta de la 4.ª evaluación, que no enlaza ni un ejercicio de examen** (deuda 38).
+Después, **engordar los temas 10 y 11** con lo que digan sus doce y diez
+ejercicios.
 
 El trabajo por examen, ya rodado:
 
@@ -218,13 +238,14 @@ Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 
 | | trabajo | qué desbloquea |
 |---|---|---|
-| 1 | **Rehacer `calculo-ord.yaml`** sobre las once ordinarias | cierra la deuda 33 |
-| 2 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
-| 3 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
-| 4 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
-| 5 | **Enganchar las cinco recuperaciones de la quinta** a las rutas de 1.ª, 2.ª y 3.ª: son catorce ejercicios de primer cuatrimestre que hoy no enlaza nadie | |
-| 6 | **Auditoría de Cálculo entera** y cierre según §15 | |
-| 7 | **Abrir Álgebra** | |
+| 1 | ~~Rehacer `calculo-ord.yaml`~~ | **hecho el 26 de agosto de 2026** |
+| 2 | **El área de una superficie en el tema 7**, y la ruta `4ev` sin un solo ejercicio de examen | las dos deudas que salieron de rehacer la ruta |
+| 3 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
+| 4 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
+| 5 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
+| 6 | **Enganchar las cinco recuperaciones de la quinta** a las rutas de 1.ª, 2.ª y 3.ª: son catorce ejercicios de primer cuatrimestre que hoy no enlaza nadie | |
+| 7 | **Auditoría de Cálculo entera** y cierre según §15 | |
+| 8 | **Abrir Álgebra** | |
 
 El orden cambia hoy: hasta esta mañana las extraordinarias iban las primeras
 porque las ordinarias estaban a medias y todo lo demás dependía de ellas. Ya no.
@@ -247,9 +268,15 @@ una línea:
   procesador, así que el LaTeX sale crudo. O se procesa, o §14 lo dice.
 - **32** — dos ejercicios del tema 9 duplican problemas que ahora también están
   transcritos como examen.
-- **33** — la ruta `ord` dice «medida sobre 2» con **once** ordinarias hechas.
-  Se puso como condición tener las once; ya están, así que pasa a ser lo
-  primero del plan.
+- **33** — ~~la ruta `ord` dice «medida sobre 2»~~. **Cerrada** el 26 de agosto
+  de 2026: rehecha sobre las once, con ocho bloques y dieciséis escalones.
+- **37** — **el área de una superficie curva no está en la prosa del tema 7**, y
+  cae en cuatro de los diez sólidos de las ordinarias. Salió al rehacer la ruta.
+- **38** — **la ruta de la 4.ª evaluación no enlaza ni un ejercicio de examen de
+  su convocatoria.** Estaba escondido detrás de un fallo de la capa compartida
+  que hacía que cinco de las seis rutas dijeran «te lleva por 0 ejercicios»
+  siendo falso; arreglado el contador, cuatro pasaron a decir la verdad y la
+  4.ª siguió diciendo cero — porque en su caso el cero era cierto.
 - **34** — esta medición se quedó atrás dos commits. Corregido, y de ahí sale la
   regla del encabezado.
 - **35** — **los profesores repiten ejercicios entre convocatorias.** Medido

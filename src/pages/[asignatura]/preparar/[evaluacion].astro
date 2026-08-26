@@ -266,9 +266,20 @@ const total = suma.comp1 + suma.comp2 + suma.comp4;
 const pct = (n: number) => ((100 * n) / total).toFixed(1).replace('.', ',');
 
 /** Cuántos de esos ejercicios están en la ruta, para poder decirlo sin
- *  presumir de cubrirlos todos. */
+ *  presumir de cubrirlos todos.
+ *
+ *  Los ejercicios viven en DOS sitios desde que existe el escalón: en el
+ *  `material` plano del bloque y en el `ejercicios` de cada escalón. Esta
+ *  cuenta solo miraba el primero, y por eso cinco de las seis rutas publicaban
+ *  «te lleva por 0 de esos N» siendo falso — las cinco que ya estaban
+ *  convertidas a escalones. Medido el 26 de agosto de 2026: 1.ª, 3.ª, 4.ª, 5.ª
+ *  y ordinaria decían cero; la 2.ª decía seis porque conserva un bloque con
+ *  `material`. Es §10 incumplido en la capa compartida, no en el contenido. */
 const citados = new Set(
-  bloques.flatMap((b) => b.material.filter((m) => m.tipo === 'ejercicio').map((m) => m.id)),
+  bloques.flatMap((b) => [
+    ...b.material.filter((m) => m.tipo === 'ejercicio').map((m) => m.id),
+    ...b.escalones.flatMap((es) => es.ejercicios.map((x) => x.id)),
+  ]),
 );
 const deExamenCitados = deLaConvocatoria
   .flatMap((ex) => ex.data.ejercicios.map((e) => e.id))

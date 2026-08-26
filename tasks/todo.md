@@ -680,7 +680,8 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
 
-**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay once.**
+**33 · ~~La ruta de la ordinaria dice «medida sobre 2».~~** Resuelta el 26 de
+agosto de 2026, el mismo día que se cerró la última ordinaria. Lo que había:
 `calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
 convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
 a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
@@ -690,10 +691,32 @@ No se corrige a trozos. Se rehace la ruta entera cuando estén las once
 ordinarias, igual que se hizo con la quinta el 25 de agosto de 2026: volver a
 medirla sobre cuatro para volver a medirla sobre once es trabajo tirado.
 
-**La condición se cumplió el 26 de agosto de 2026**: las once están
-transcritas, así que esta deuda deja de estar bloqueada y pasa a ser lo primero
-del plan. Rehacerla es medir los once exámenes por hueco —igual que se hizo con
-la quinta—, no retocar `medidoSobre`.
+**Y se hizo así, no retocando `medidoSobre`.** Se volvieron a contar los
+cuarenta y cinco ejercicios de los segundos parciales de las once ordinarias,
+uno a uno, y la ruta pasó de 3 bloques y 7 escalones a **8 y 16**. Lo que la
+medición cambió, que es más de lo que se esperaba:
+
+| antes, sobre 2 | ahora, sobre 11 |
+|---|---|
+| tres bloques: Fourier, Laplace y «síntesis» | ocho |
+| ningún bloque de integral múltiple | **el sólido, que cae 10 de 11 años** |
+| ningún suelo | **dibujar**: 20 de los 45 lo piden, 13 en el apartado a) |
+| «síntesis» como un hueco | dos: la EDO suelta y el ejercicio que cruza temas |
+| Fourier el primero | Laplace el primero: cae los once años, Fourier diez |
+
+Tres hallazgos que solo aparecen al contar once:
+
+- **el núcleo son tres y caen juntos nueve de cada once años**: Laplace, el
+  sólido y Fourier;
+- **la EDO suelta se ha ido.** Seis veces entre 2015-2016 y 2022-2023, y
+  ninguna desde entonces: su sitio lo ocupan los ejercicios que cruzan temas,
+  tres años seguidos ya;
+- y el que duele: **el área de una superficie curva no está en la prosa del
+  tema 7** y cae en cuatro de los diez sólidos. Es la deuda 37.
+
+Y una regla que conviene dejar escrita, porque es la segunda vez que pasa:
+**medir sobre dos convocatorias no es medir, es mirar.** Con dos, «síntesis»
+parecía un hueco y la integral múltiple no parecía nada. Con once, es al revés.
 
 **34 · La medición de `docs/como-vamos.md` se quedó atrás dos commits.** Se
 regeneró el 25 de agosto de 2026 con una sola ordinaria transcrita y no se tocó
@@ -794,3 +817,54 @@ ficheros, nunca por el shell**: el primer intento de hoy usó un heredoc, el
 shell se comió una barra de cada par, la expresión regular pasó a casar
 « in» —espacio más ene— y convirtió «la integral» en algo que rompió el YAML.
 Es §17 en estado puro, y el fichero hubo que recuperarlo de git.
+
+---
+
+**37 · El área de una superficie curva no está en la prosa del tema 7.** Medido
+el 26 de agosto de 2026 al rehacer la ruta de la ordinaria: la palabra
+«superficie» **no aparece ni una vez** en
+`src/content/calculo/t07-integral-multiple/index.mdx`, y el apartado «para qué
+sirve todo esto» enumera cuatro aplicaciones —área plana, volumen, masa y centro
+de gravedad— sin la quinta.
+
+Y la quinta cae. Cuatro de los diez ejercicios de integral múltiple de las once
+ordinarias piden el área de la superficie del sólido: 2013-2014, 2015-2016,
+2016-2017 y 2021-2022. Hoy la fórmula solo se puede aprender leyendo la
+resolución de uno de esos cuatro, que es exactamente lo que §14 dice que no
+vale: «toda herramienta que el examen usa está presentada en la prosa del tema,
+no solo dentro de la resolución de un ejercicio».
+
+Lo que hace falta: un apartado en el tema 7 con la integral de superficie de una
+gráfica y de un cuerpo de revolución, su figura, y un ejemplo introductorio
+—porque los tres que tiene el tema son integrales dobles planas y no sirven de
+escalón de entrada—. Está declarado en el `falta[]` del bloque `solidos` de la
+ruta, así que no es una promesa incumplida; es un hueco dicho en voz alta.
+
+---
+
+**38 · La ruta de la 4.ª evaluación no enlaza ni un solo ejercicio de examen de
+su convocatoria.** Sus tres bloques y diez escalones mandan a la prosa de los
+temas y a los ejercicios propios, y a ninguna de las once cuartas evaluaciones
+transcritas.
+
+Salió a la luz arreglando otra cosa, y esa parte merece contarse. La página de
+la ruta publica «esta ruta te lleva por N de esos M ejercicios», y el contador
+solo miraba el `material` plano del bloque, nunca el `ejercicios` de cada
+escalón. Como cinco de las seis rutas ya estaban convertidas a escalones, cinco
+publicaban **«0 de esos N» siendo falso** — §10 incumplido en la capa
+compartida, no en el contenido. Arreglado el contador en
+`[asignatura]/preparar/[evaluacion].astro`, las cifras quedaron así:
+
+| ruta | antes | ahora |
+|---|---|---|
+| 1.ª | 0 de 39 | **39 de 39** |
+| 2.ª | 6 de 42 | **42 de 42** |
+| 3.ª | 0 de 62 | **60 de 62** |
+| 4.ª | 0 de 29 | **0 de 29** |
+| 5.ª | 0 de 32 | **32 de 32** |
+| ordinaria | 0 de 86 | **25 de 86** (45 son del segundo parcial, que es lo que prepara) |
+
+La 4.ª siguió diciendo cero **porque en su caso el cero era cierto**, y eso es
+lo que hay que arreglar ahora. Es la lección de §16 en su forma más limpia: un
+dato falso escondía un hueco real, y hasta que el dato no dijo la verdad el
+hueco no se vio.
