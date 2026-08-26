@@ -981,6 +981,18 @@ Cosas que ya han costado horas. No son opiniones.
   durante meses sin que existiera. Añadirla es tocar la capa compartida: se
   hace una vez, bien, cuando entre la primera asignatura con unidades — no con
   un apaño en el contenido.
+- **`pdftotext` sin `-enc UTF-8` se come los signos.** Los exámenes escritos con
+  el editor de ecuaciones de Word ponen el menos, el ≤ y el ∈ en fuente
+  **Symbol**, y con la codificación por defecto salen como un espacio: el
+  volcado dice `|z| = |1  z|` y no hay forma de saber si era suma o resta. Con
+  `-enc UTF-8` aparece `1 − z`. Pasó el 26 de agosto de 2026 en la
+  extraordinaria de 2017-2018, donde las dos lecturas daban respuestas
+  distintas y las dos eran plausibles. Y renderizar la página **no** lo
+  arregla: si la máquina no tiene la fuente Symbol, `pdftoppm` tampoco dibuja
+  el signo, y encima avisa con un `Syntax Error: No display font for 'Symbol'`
+  que es fácil dar por ruido. **Regla: el volcado de un examen se hace siempre
+  con `pdftotext -enc UTF-8 -layout`, y la imagen se usa para la disposición,
+  no para los signos.**
 
 ---
 

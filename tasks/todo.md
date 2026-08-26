@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 6 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 5 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **7** | 4 |
+| extraordinaria | 11 | **8** | 3 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 6 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 5 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **381 ejercicios de examen** (26 con enunciado demasiado corto para
-comparar, 344 distintos entre los 355 comparados):
+Sobre los **389 ejercicios de examen** (28 con enunciado demasiado corto para
+comparar, 349 distintos entre los 361 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -752,9 +752,10 @@ comparar, 344 distintos entre los 355 comparados):
 | 2 veces | **2022-2023-3ev · 2024-2025-ext** | el sector de 45° que gira alrededor de OX |
 | 2 veces | **2020-2021-3ev · 2023-2024-ext** | el McLaurin de la integral de e a la z al cuadrado |
 | 2 veces | **2018-2019-3ev · 2021-2022-ext** | la ecuación con el conjugado, tres soluciones en triángulo |
+| 2 veces | **2016-2017-ext · 2021-2022-ext** | la curvilínea con el área de diez, misma figura |
 | 2 veces | **2017-2018-ext · 2023-2024-ext** | el cuadrado de la derivada leído en el dibujo, misma figura |
 
-Veinte instancias de nueve problemas. **Y el detector se queda corto**, con dos
+Veintidós instancias de diez problemas. **Y el detector se queda corto**, con dos
 pruebas medidas el 26 de agosto de 2026:
 
 - El ejercicio 3 del primer cuatrimestral de **2020-2021-ext** es palabra por
@@ -762,19 +763,17 @@ pruebas medidas el 26 de agosto de 2026:
   orden 2 de la integral de (1+sen t)/(2+t²)—, y no aparece porque el de
   2021-2022 lleva pegado un apartado b) sobre un elipsoide. Comparar enunciados
   completos no encuentra un enunciado que está **dentro** de otro.
-- El ejercicio 1 del segundo cuatrimestral de **2021-2022-ext** es el mismo que
-  el 2 del segundo parcial de **2023-2024-ext** —la curvilínea con el área de
-  diez, con la misma figura—, y tampoco aparece: uno de los dos enunciados lleva
-  la figura incrustada y el otro no, y eso basta para que las cadenas no casen.
-  Esta fila **estaba en la tabla de arriba y era un error**: se anotó a mano al
-  transcribir 2021-2022 y se dio por hecho que el detector también la veía. No la
-  ve.
+- La curvilínea con el área de diez ha caído **tres** veces —2016-2017-ext,
+  2021-2022-ext y 2023-2024-ext, con la misma figura y el mismo A = 10— y el
+  detector solo agrupa las dos primeras. La de 2023-2024 añade cinco palabras al
+  enunciado, «desde el punto (−2,0) hasta el punto (2,0)», y con eso las cadenas
+  ya no casan. Cinco palabras bastan para partir un grupo en dos.
 
-Con esos dos, **veinticuatro instancias de once problemas**, y el número real
+Con esos dos, **veinticinco instancias de once problemas**, y el número real
 seguirá siendo mayor: solo se detecta lo que coincide carácter a carácter.
 
-Y hay un patrón que ya no parece casualidad: de los nueve grupos que el detector
-sí ve, **cinco tienen una extraordinaria dentro**, y en cuatro de ellos la
+Y hay un patrón que ya no parece casualidad: de los diez grupos que el detector
+sí ve, **seis tienen una extraordinaria dentro**, y en cuatro de ellos la
 extraordinaria reutiliza un parcial de un año anterior. Las convocatorias
 globales son el sitio donde se recicla.
 
