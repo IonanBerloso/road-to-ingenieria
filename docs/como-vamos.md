@@ -246,9 +246,11 @@ Lo que la medición enseñó, y no se veía con dos convocatorias:
   «superficie» no aparecía ni una vez en su `index.mdx`— y cae en cuatro de los
   diez sólidos. Ahora tiene apartado propio, figura y ejemplo de entrada.
 
-Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe. Ahora
-está medida sobre las once, y lo primero que se ve es que **el formato no es uno
-solo**:
+**Y la ruta de la extraordinaria ya existe.** Escrita el 26 de agosto de 2026,
+sobre las once convocatorias y no sobre una muestra: **doce bloques y veintitrés
+escalones**, la más grande de las siete. Y no es la de la ordinaria con otro
+nombre, porque el examen tampoco lo es — lo primero que se ve al medirlo es que
+**el formato no es uno solo**:
 
 | formato | ejerc. | convocatorias |
 |---|---|---|
@@ -307,6 +309,55 @@ pide exactamente lo mismo, con las mismas palabras y solo el reparto de puntos
 cambiado. Quien se presenta a la extraordinaria debería empezar por sus propios
 exámenes de ese curso.
 
+## La ruta de la extraordinaria, y por qué no es la de la ordinaria
+
+Escrita el 26 de agosto de 2026, en cuanto se cerró el corpus. Es la séptima y
+la más grande: **doce bloques, veintitrés escalones, 38 de los 91 ejercicios**.
+
+Lo que la hace distinta no es una decisión de estilo, es el examen: **la
+extraordinaria no es un examen, son dos**, con su hoja y su nota cada uno, y
+quien aprobó un cuatrimestre por evaluación continua solo hace el otro. Está
+impreso en tres de los once cuadernillos —2012-2013, 2013-2014 y 2016-2017— con
+todas las letras: «sólo para alumnos con el primer cuatrimestral suspendido».
+Así que la ruta va partida en dos mitades y lo dice desde la primera línea: lo
+más probable es que solo necesites una.
+
+La medición que ordena los bloques, sobre las once convocatorias:
+
+| hueco | ejercicios | de 11 convocatorias |
+|---|---|---|
+| **dibujar algo** (el suelo, en los dos cuatrimestrales) | 40 de 91 | **11** |
+| complejos · 1.º cuatrimestral | 11 | **11** |
+| ecuaciones diferenciales · 2.º | 11 | **11** |
+| Laplace · 2.º | 10 | 10 |
+| el sólido y su centro · 2.º | 9 | 9 |
+| optimizar · 1.º | 11 | 8 |
+| integral curvilínea · 2.º | 8 | 8 |
+| Fourier · 2.º | 6 | 6 |
+| la integral que no se sabe hacer · 1.º | 5 | 5 |
+
+Tres cosas que solo se ven con las once delante, y que ninguna otra ruta puede
+decir:
+
+- **Complejos y EDO caen los once años, uno cada uno**, y siempre en el mismo
+  sitio del cuadernillo. No hay otro par de huecos así en toda la asignatura.
+- **Cinco de los diez ejercicios de Laplace son sistemas** de dos ecuaciones
+  acopladas, y **cuatro de los nueve sólidos son un cilindro dentro de una
+  esfera**. Cambian los números, no el procedimiento: media hora bien invertida
+  cubre cuatro años.
+- **El hueco que está creciendo** es «la integral que no se sabe hacer»: cinco
+  ejercicios, uno por año desde 2020-2021, y ninguno antes. Es el que mejor
+  separa a quien entendió el teorema fundamental de quien se lo sabe.
+
+Y un detalle de método que conviene dejar escrito: los 81 enlaces de teoría de
+la ruta se comprobaron **abriendo cada uno y buscando el id en la página de
+destino**, no leyendo el href. `verify.mjs` parte los enlaces por `#` y no
+valida fragmentos —lo dice el propio esquema—, así que un apartado mal escrito
+habría pasado el suelo en verde y dejado al alumno en la cabecera de la página.
+Es el fallo de §16.2, el de los 58 enlaces rotos, y esta vez se buscó antes de
+que apareciera. De paso se pasaron por el mismo comprobador las otras seis
+rutas: 496 enlaces con ancla, cero rotos.
+
 ## Contra el criterio de «asignatura terminada» (§15)
 
 | criterio | |
@@ -315,7 +366,7 @@ exámenes de ese curso.
 | todo tema enlazado por una ruta tiene prosa | ✅ |
 | cada tema con ejemplo introductorio propio | ✅ 44 |
 | cada tema con al menos una figura | ✅ 27 |
-| una ruta por evaluación | ⚠️ 6 de 7 — falta la extraordinaria |
+| una ruta por evaluación | ✅ **7 de 7** |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 25 huecos |
 | `npm run suelo` en verde | ✅ |
@@ -451,16 +502,16 @@ Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 | 2 | ~~El área de una superficie en el tema 7~~ · ~~la ruta `4ev` sin ejercicios de examen~~ | las dos, hechas el mismo día |
 | 3 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
 | 4 | ~~Las 11 extraordinarias + el cuadernillo de 2019-2020~~ | **hecho el 26 de agosto de 2026: cierra la deuda 26** |
-| 5 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
+| 5 | ~~Ruta de la extraordinaria~~ | **hecha el 26 de agosto de 2026: 12 bloques, 23 escalones** |
 | 6 | **Enganchar las cinco recuperaciones de la quinta** a las rutas de 1.ª, 2.ª y 3.ª: son catorce ejercicios de primer cuatrimestre que hoy no enlaza nadie | |
 | 7 | **Auditoría de Cálculo entera** y cierre según §15 | |
 | 8 | **Abrir Álgebra** | |
 
-**Lo primero de la lista es ahora la fila 5.** Con el corpus de exámenes
-cerrado, la ruta de la extraordinaria se puede escribir sobre las once, no sobre
-una muestra, y las tres filas siguientes son ya trabajo de cierre de la
-asignatura y no de recogida de material. El orden de arriba refleja eso: hasta
-hoy todo dependía de terminar de leer exámenes.
+**Lo primero de la lista es ahora la fila 6.** Con el corpus cerrado y las
+siete rutas escritas, lo que queda de Cálculo es trabajo de cierre —enganchar
+las recuperaciones de la quinta, auditar la asignatura entera contra §15— y no
+de recogida de material. La tabla de §15 de más arriba ya solo tiene casillas
+verdes: es la primera vez.
 
 Cuando entre Álgebra habrá que separar el lector de respuestas de
 `EjercicioGuiado`: una **matriz** no es un número ni un conjunto de puntos, y

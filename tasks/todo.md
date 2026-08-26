@@ -896,3 +896,30 @@ salidas posibles, y las dos son decisión de diseño, no de contenido:
 
 Mientras tanto, la `fuente` de cada ejercicio dice de qué cuatrimestral sale,
 que es lo único que hoy permite encontrar el fichero.
+
+**44 · ~~Faltaba la ruta de la extraordinaria.~~ Cerrada el 26 de agosto de
+2026**, el mismo día que se cerró el corpus, y en ese orden a propósito: §14
+manda decidir los bloques contando exámenes, y hasta esa mañana faltaban
+convocatorias por leer.
+
+Doce bloques y veintitrés escalones sobre las once convocatorias y sus noventa y
+un ejercicios: la ruta más grande de las siete. Enlaza 38 de los 91.
+
+La decisión de diseño que la separa de la ordinaria, y que sale del documento y
+no de una preferencia: **la extraordinaria son dos exámenes**, uno por
+cuatrimestral, con su hoja y su nota, y quien aprobó un cuatrimestre por
+evaluación continua solo hace el otro. Está impreso en tres de los once
+cuadernillos. Así que la ruta va partida en dos mitades y avisa desde la primera
+línea de que probablemente solo se necesita una — mientras que la de la
+ordinaria cubre solo el segundo parcial y remite a las de 1.ª, 2.ª y 3.ª para el
+primero.
+
+**Los 81 enlaces de teoría se comprobaron abriendo cada uno**, no leyendo el
+href: `verify.mjs` parte los enlaces por `#` y **no valida fragmentos**, así
+que un apartado mal escrito habría pasado el suelo en verde. El comprobador está
+en el scratchpad —abre la ruta, saca los `a[href*="#"]`, carga cada destino y
+busca el id— y de paso se pasó por las otras seis: 496 enlaces con ancla, cero
+rotos. **Eso es un guardián que debería estar en `verify.mjs` y no lo está**, y
+queda dicho aquí porque §11 pide que una comprobación nueva se añada cuando algo
+se ha roto de verdad: se rompió el 23 de agosto, con 58 enlaces, y lo que se
+arregló entonces fue el contenido, no el guardián.
