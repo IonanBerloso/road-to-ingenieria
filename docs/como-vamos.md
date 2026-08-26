@@ -16,11 +16,11 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Las once ordinarias están hechas, y van tres extraordinarias.** Es el primer bloque de convocatorias
+**Las once ordinarias están hechas, y van cuatro extraordinarias.** Es el primer bloque de convocatorias
 globales completo, y con él los temas 10 y 11 tienen ya toda la muestra que van
 a tener: Laplace llega a **doce** ejercicios y Fourier a **diez**, y no habrá
-más salvo lo que traigan las extraordinarias. Van 79 convocatorias de 89 y 349
-ejercicios de examen. Faltan 10: ocho extraordinarias y los dos parciales de
+más salvo lo que traigan las extraordinarias. Van 80 convocatorias de 89 y 357
+ejercicios de examen. Faltan 9: siete extraordinarias y los dos parciales de
 2019-2020.
 
 ---
@@ -29,20 +29,20 @@ ejercicios de examen. Faltan 10: ocho extraordinarias y los dos parciales de
 
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2 885 | 3 | 37 | 8 | **65** |
+| t01 complejos | 2 885 | 3 | 37 | 8 | **66** |
 | t02 sucesiones | 2 035 | 3 | 19 | 4 | 31 |
 | t03 funciones reales | 1 779 | 3 | 23 | 5 | 21 |
-| t04 estudio local | 2 036 | 3 | 18 | 5 | **70** |
+| t04 estudio local | 2 036 | 3 | 18 | 5 | **73** |
 | t05 integración | 1 925 | 4 | 30 | 4 | 39 |
 | t06 varias variables | 1 797 | 2 | 12 | 4 | 17 |
 | t07 integral múltiple | 1 865 | 3 | 11 | 4 | 33 |
-| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 19 |
-| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | 26 |
-| t10 Laplace | **1 605** | **2** | **9** | **3** | **15** |
-| t11 Fourier | **1 668** | **2** | **9** | **3** | **13** |
-| **total** | **19 955** | **27** | **182** | **44** | **349** |
+| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 20 |
+| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | 27 |
+| t10 Laplace | **1 605** | **2** | **9** | **3** | **16** |
+| t11 Fourier | **1 668** | **2** | **9** | **3** | **14** |
+| **total** | **19 955** | **27** | **182** | **44** | **357** |
 
-En todo el corpus: **531 ejercicios y 2 046 pasos**.
+En todo el corpus: **539 ejercicios y 2 078 pasos**.
 
 El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
 figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
@@ -108,9 +108,9 @@ el dibujo es la respuesta y no puede estar arriba.**
 | 4.ª evaluación (15 cuadernillos) | 15 | **17** | 0 |
 | 5.ª evaluación (13 cuadernillos) | 13 | **15** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **3** | **8** |
+| extraordinaria | 11 | **4** | **7** |
 | ord.-extraord. 2019-2020, 2 parciales | 2 | 0 | **2** |
-| **total** | **85** | **79** | **10** |
+| **total** | **85** | **80** | **9** |
 
 Los quince cuadernillos de cuarta evaluación dan diecisiete convocatorias y los
 trece de la quinta dan quince, porque algunos traen dentro las dos partes: la
@@ -119,10 +119,10 @@ once cuartas más seis recuperaciones, y diez quintas más cinco recuperaciones.
 La quinta de 2019-2020 no se celebró.
 
 **Los 85 PDF están ya en `public/examenes/calculo/`**, copiados y verificados
-byte a byte contra el original. Lo que falta es transcribir 10.
+byte a byte contra el original. Lo que falta es transcribir 9.
 
-Sobre los 3 495 puntos repartidos de los 79 exámenes: **COMP1 9,1 % · COMP2
-56,6 % · COMP4 34,3 %**. Es decir, **el 43,4 % de la nota de Cálculo no es
+Sobre los 3 575 puntos repartidos de los 80 exámenes: **COMP1 9,0 % · COMP2
+56,9 % · COMP4 34,1 %**. Es decir, **el 43,1 % de la nota de Cálculo no es
 calcular**. La cifra venía bajando según entraban globales —49,5 % sobre 33,
 46,8 % sobre 66, 43,6 % sobre 73— y lleva tres mediciones subiendo: las
 ordinarias más antiguas cargan mucho más COMP4. La de 2016-2017 trae dos
@@ -187,11 +187,11 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 25 huecos |
 | `npm run suelo` en verde | ✅ |
-| **todas las convocatorias publicadas transcritas** | ❌ **79 de 89** |
+| **todas las convocatorias publicadas transcritas** | ❌ **80 de 89** |
 
-> El «79 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
-> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 10
-> que faltan, ninguna es doble.
+> El «80 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
+> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 9 que
+> faltan, ninguna es doble.
 
 ## Las otras ocho asignaturas
 
@@ -234,9 +234,17 @@ primera ya está: **2024-2025**, y trae dos cosas que no se sabían.
 
 La primera es de formato: **la extraordinaria cambió de tamaño en 2023-2024**.
 Las de 2023-2024 y 2024-2025 tienen diez ejercicios y cien puntos, cinco por
-parcial —el examen más largo del corpus—; la de 2022-2023 tiene **ocho y
-ochenta**, cuatro por parcial. Y con cuatro huecos por parcial se quedan fuera
-temas enteros: en 2022-2023 no hay ni integral curvilínea ni varias variables.
+parcial —el examen más largo del corpus—; las de 2021-2022 y 2022-2023 tienen
+**ocho y ochenta**, cuatro por parcial. Y con cuatro huecos por parcial se
+quedan fuera temas enteros: en 2022-2023 no hay ni integral curvilínea ni
+varias variables.
+
+Y la de 2021-2022 trae una tercera hoja que no habíamos visto antes: además de
+los dos cuatrimestrales, el cuadernillo incluye un **examen global de seis
+ejercicios y sesenta puntos** para quien se examina de la asignatura entera. Sus
+seis son copia literal de seis de los ocho anteriores —se quedan fuera el
+pórtico y Fourier—, así que se transcriben los ocho y el global se documenta en
+el comentario en vez de duplicarlo.
 
 Y la segunda cambia lo que sabíamos de las repeticiones. **La extraordinaria
 reutiliza exámenes de evaluación continua de otros años**, y con dos
