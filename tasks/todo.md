@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 16 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 15 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -252,7 +252,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | **8** | 3 |
+| ordinaria | 11 | **9** | 2 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
@@ -260,11 +260,11 @@ Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
 partes: once cuartas y seis recuperaciones, diez quintas y cinco
 recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024,
-2022-2023, 2021-2022, 2020-2021, 2018-2019 y 2017-2018; faltan 2016-2017,
+2022-2023, 2021-2022, 2020-2021, 2018-2019, 2017-2018 y 2016-2017; faltan
 2015-2016 y 2013-2014.
 
-**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **nueve**
-ejercicios de examen y el 11 tiene **ocho**, y no pueden tener muchos más,
+**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **diez**
+ejercicios de examen y el 11 tiene **nueve**, y no pueden tener muchos más,
 porque **Laplace y Fourier no caen en ninguna evaluación continua**: solo en
 las globales. Cada ordinaria nueva les añade uno, salvo la de 2021-2022, que
 trajo dos de Laplace —uno de técnica y otro aplicado— y ninguno de más de
@@ -273,7 +273,7 @@ decidir qué prosa les falta: hacerlo ahora sería escribir el tema con media
 muestra.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 16 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 15 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -676,7 +676,7 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
 
-**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay ocho.**
+**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay nueve.**
 `calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
 convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
 a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
@@ -709,8 +709,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **301 ejercicios de examen** (22 con enunciado demasiado corto para
-comparar, 273 distintos entre los 279 comparados):
+Sobre los **308 ejercicios de examen** (22 con enunciado demasiado corto para
+comparar, 280 distintos entre los 286 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
