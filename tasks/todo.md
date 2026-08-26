@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 3 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 2 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **10** | 1 |
+| extraordinaria | 11 | **11** | 0 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 3 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 2 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -330,331 +330,7 @@ Lo que queda de esta deuda es solo lo que se dice en la 31 y en la 26.
 **31 · Hay campos que se publican como texto plano y no lo dice ninguna regla.**
 `invariante.fuente` en las rutas y `fuente` en los ejercicios no pasan por el
 procesador de Markdown, así que si llevan LaTeX sale crudo. Lo caza el guardián
-de fórmulas sin dibujar —el 26 de agosto de 2026 saltó por un `$xsin x# Qué queda
-
-Sesión 1 cerrada: cimientos + una página de contenido real. Esto es lo
-siguiente, en el orden en que conviene hacerlo.
-
----
-
-## Bloqueado, esperándote a ti
-
-**1 · El temario oficial de Cálculo.** Los diez temas del catálogo los puse a
-ojo. Están marcados `temarioOficial: false` y `verify.mjs` avisa en cada
-ejecución. Sustituirlos antes de que se conviertan en carpetas.
-
-**2 · El temario completo de Fluidos.** Los dieciséis temas del catálogo salen
-de los PDF que tienes descargados, así que los títulos son reales, pero hay
-huecos en la numeración (faltan el 5, 6, 9, 10, 11, 20, 22, 23 y 24). Confirmar
-si existen o si la asignatura salta esos números.
-
-**3 · ~~Los seis prototipos que faltan.~~ Resuelto.** Están los ocho en
-`referencia/`. Con ellos se cerraron tres cosas:
-
-- la paleta de datos y los nueve acentos ya son los de `paleta-datos.html` y
-  `selector-fluido.html`. Dos colores de datos en claro y cuatro en oscuro se
-  corrigieron: el prototipo decía sostenerse bajo daltonismo y midiendo ΔE no
-  era cierto. El porqué está en `tokens.css`, junto a cada valor
-- la portada se rehízo desde `selector-fluido.html`: lente tipográfica, FLIP y
-  paleta de comandos
-- `mapa-temario.html` se borró — era la versión superada de la portada
-
-Queda pendiente: `base.css` sigue extraído de dos prototipos, no de ocho. Los
-seis nuevos traen cajas, controles de rango y tablas que todavía no se han
-subido a la capa compartida. Se hará cuando un patrón real los pida, no antes.
-
-**4 · El formato de datos de `EjercicioGuiado`.** Es la decisión que determina
-si producir un tema es rellenar un YAML o programar. No se escribe hasta
-haberlo discutido. Es lo siguiente en la lista después de esto.
-
----
-
-## Lo siguiente que se construye
-
-**5 · Patrón Figura Fija.** El tema de complejos pide este patrón, no Lectura.
-Ahora mismo usa Lectura porque no había prototipo. Cuando aparezca, se extrae
-el patrón y se pasa `t01-complejos` a él.
-
-**6 · El segundo tema de cada asignatura, escrito entero.** `CLAUDE.md` §13:
-el framework se destila del contenido. Dos temas completos por asignatura antes
-de abstraer nada más. Los candidatos naturales son `calculo/t02-sucesiones`
-(donde COMP2 vale cero y casi todo es demostración) y `fluidos/t25-bombeo`
-(donde hay simulador y datos reales de examen).
-
-**7 · Tests de física.** `tests/fisica/` está vacío porque todavía no hay
-simulador con física dentro: `PlanoComplejo` es geometría, no un modelo. En
-cuanto entre el simulador de bombeo, su caso con resultado conocido va antes que
-el componente.
-
-**8 · Paleta de comandos completa.** Ya es una paleta de verdad: se abre con `/`
-o `⌘K`, tiene su propio índice construido en el build y responde a flechas,
-Enter y Escape. Falta que busque **conceptos** dentro de los temas —hoy el
-índice solo tiene asignaturas y títulos—, que es lo que promete `CLAUDE.md` §05.
-
----
-
-## Deudas conocidas, escritas para que no se olviden
-
-**9 · `peso` tiene dos definiciones enfrentadas en `CLAUDE.md`.** El ejemplo de
-frontmatter de §04 usa `peso: 8` —un número— y §10 dice que un dato estimado se
-muestra en tres niveles y nunca como porcentaje. Implementé los tres niveles
-(`alto`/`medio`/`bajo`) porque el dato *es* estimado. Si en algún momento hay
-pesos medidos sobre exámenes reales contados, esto hay que revisarlo — y
-entonces se cambia `CLAUDE.md`, no se ignora.
-
-**10 · ~~`verify.mjs` no abre un navegador.~~ Resuelto a medias.** Ya existe
-`scripts/humo.mjs`, que abre el sitio en Chromium y corre en CI. Cubre lo que se
-rompió de verdad: raíces que no se dibujan, pestañas que no responden,
-diagnóstico de errores.
-
-Sigue sin cubrir el foco visible y los 360 px, que se comprueban de forma
-indirecta leyendo el CSS. Se moverán a `humo.mjs` cuando alguno de los dos falle
-de verdad — la regla de ese fichero es no añadir comprobaciones por si acaso.
-
-**11 · `referencia/` está fuera de `verify.mjs`.** Los prototipos llevan su CSS
-inline y su propio `:root`, que es justo lo que la regla prohíbe. Se ignoran a
-propósito y está dicho en el README. Si algún día se publican, deja de valer.
-
-**11 bis · El sitio pesa 2,5 MB, y 1,1 MB son fuentes de KaTeX.** Al pasar a
-salida `htmlAndMathml` (§07) entraron 118 ficheros de fuente: cada familia en
-woff2, woff y ttf. El navegador solo descarga los woff2 que la página usa, así
-que el coste real por visita es pequeño, pero el repositorio y el despliegue
-cargan con todo. Se puede recortar copiando solo los woff2 y reescribiendo el
-`@font-face`. No es urgente; queda escrito para que no se descubra por sorpresa.
-
-**12 · Astro 7 movió la configuración de Markdown.** `markdown.remarkPlugins`
-está deprecado; se usa `processor: unified({...})` de `@astrojs/markdown-remark`.
-Anotado porque cualquier ejemplo que encuentres por internet usará la forma
-vieja.
-
-**13 · `ui/Tema.astro` y `ui/Examen.astro` son gemelos.** Misma rejilla
-`.shell` con `var(--rail)`, mismo rail sticky, mismas `.pestanas` con
-`aria-current`, mismo doble mecanismo `:target` + `data-panel`, y sus dos
-`<script>` son el mismo algoritmo escrito dos veces. Piden un
-`ui/Armazon.astro`.
-
-No se hizo al añadir la ruta de estudio porque la ruta **no necesita ese
-armazón**: nace de `patrones/Lectura.astro`, que trae su propia rejilla y sus
-modos, así que no copia nada y no empeora la duplicación. Pero la deuda sigue
-ahí, y el día que haga falta una cuarta página con pestañas hay que pagarla
-antes, no después.
-
-**14 · ~~Los mapas de convocatoria están repartidos por tres ficheros.~~**
-**Resuelto el 25 de agosto de 2026.** Eran seis listas en cuatro ficheros, no
-tres: el enum y `SUFIJO_CONV` en `content.config.ts`, orden y abreviatura en la
-portada, orden y nombre largo en el índice de exámenes, y otro nombre largo —el
-mismo en minúscula— en la página de un examen. Ahora hay una tabla
-`CONVOCATORIAS` en `content.config.ts` con la URL, la abreviatura y el nombre
-largo de cada una, en orden; el enum, `SUFIJO_CONV` y `ORDEN_CONV` se derivan de
-ella y las tres páginas la importan. Se hizo al necesitar una convocatoria
-nueva —`recuperacion`—, que ahora es una fila.
-
-**15 · El filtro de páginas de `humo.mjs` enumera formas de URL.** Va por la
-tercera: `/tNN-`, luego `examenes/AAAA-AAAA`, y ahora `preparar/`. Cada vez que
-aparece un tipo de página con ejercicios dentro hay que acordarse de tocarlo, y
-las dos veces anteriores nadie se acordó hasta que se buscó a propósito. La
-regla duradera sería «toda página enlazada desde la portada que contenga un
-`[data-ejercicio]`». Se cambia la próxima vez que falle.
-
-**16 · `ALCANCE_CONV` y la ruta declaran los mismos temas.**
-`examenes/index.astro` codifica «1.ª ev = temas 1–2, 10 % de la nota» y
-`preparar/calculo-1ev.yaml` vuelve a declarar `temas: [t01, t02]`. Es una
-segunda fuente de verdad de verdad, pero unificarla acopla el índice de
-exámenes a la colección `preparar`. Se deja escrito y se decide cuando haya
-rutas de las otras dos evaluaciones.
-
-**17 · ~~`PlanoComplejo` no admite una segunda instancia.~~** Resuelto el 23 de
-agosto de 2026: lleva un `id` por instancia y el script recorre todas.
-Comprobado en el navegador con dos planos, que mover uno no toca al otro. Las
-tres figuras de lugares geométricos siguen siendo SVG estático porque el
-verificador cubre ya esa necesidad mejor. Decía: Su `<script>` usa
-`document.querySelector` contra ids fijos —`plano-titulo`, `modulo`, `arg`,
-`giro`—, así que dos en la misma página se pelean por los mismos nodos. Se topó
-al escribir los lugares geométricos del tema 1: las tres figuras de Apolonio,
-arco capaz y elipse **son SVG estático** por esto, cuando la herramienta
-interactiva habría enseñado más —ver cómo la circunferencia de Apolonio se
-desplaza al mover `k` es justo la intuición que falta—. La cura es la de
-siempre: raíz por componente y `querySelector` acotado a ella, como ya hacen
-los ejercicios guiados. Se paga cuando un tema necesite dos planos.
-
-**18 · El formulario duplica hechos que ya están en la prosa.** Los dos
-apartados «Lo que hay que llevar sabido» reescriben definiciones y fórmulas que
-están explicadas más arriba en el mismo fichero, a propósito: son para releer
-la última hora y tienen que caber en papel. El riesgo es real y conocido —si un
-día se corrige la teoría y no el formulario, el formulario miente— y está
-declarado en el `falta[]` del bloque. No hay guardián que lo compruebe y no se
-escribe uno todavía (§11: se añaden cuando algo se rompe de verdad). Si llega a
-pasar una vez, la comprobación es viable: las fórmulas del formulario son un
-subconjunto literal de las de los apartados.
-
-**19 · ~~Las resoluciones repiten ids de encabezado dentro de una misma página.~~**
-Resuelto el 23 de agosto de 2026 prefijando los ids con el id del ejercicio en
-`mate()`, la capa compartida: de 309 duplicados a 0, sin tocar ni un fichero de
-contenido. Decía:
-Medido en `/calculo/t01-complejos/`: `resultado` aparece 29 veces,
-`6--comprobación` 13, `5--comprobación` 12, y ocho más. Salen de los `##` que
-llevan dentro los `resolucion` de `ejercicios.yaml`, que se renderizan todos en
-el mismo documento. No lo cazó `verify.mjs` —comprueba enlaces internos rotos,
-no ids repetidos— y no rompe nada visible hoy: nadie enlaza a `#resultado`. Lo
-que sí hace es que un lector de pantalla con navegación por encabezados vea
-veintinueve destinos con el mismo nombre. La cura barata es prefijar los ids de
-los encabezados de cada resolución con el id del ejercicio, en el mismo sitio
-donde ya se prefijan los `ej-…`. Se anota, no se arregla ahora: es
-preexistente y ortogonal a la ruta de estudio.
-
-**20 · La gramática de condiciones tiene «y» pero no «o».** `src/lib/regiones.ts`
-entiende `&` y la palabra `and`, y nada más. Se topó al aplicar el patrón
-verificador a los lugares geométricos: el apartado a) de
-`ex2223-1-recta-y-conjunto-vacio` es la recta `y = x - 1` **menos** el segmento
-central, o sea la unión de dos semirrectas, y sin unión no hay forma de que el
-alumno la escriba. Es el único de los veintidós ejercicios de región que se ha
-quedado sin verificador. Añadir `|` chocaría con el módulo, así que el token
-tendría que ser `or` o `;`. No se hace hasta que un segundo ejercicio lo pida:
-uno solo no justifica tocar la gramática.
-
-**21 · ~~`data-ejercicio` es un atributo sin valor.~~** Resuelto el 23 de agosto
-de 2026: lleva el id, y de paso es lo que permite anotar el progreso. Decía: Para localizar un ejercicio
-concreto en la página hay que ir por su ancla `#ej-<id>`, que sí lleva el id.
-Costó un rato de depuración al probar los verificadores en el navegador, porque
-`[data-ejercicio="<id>"]` no casa con nada y el selector cae silenciosamente al
-primer ejercicio de la página. Poner el id como valor del atributo es un cambio
-de una línea y haría que `humo.mjs` y cualquier prueba futura puedan apuntar a
-un ejercicio sin adivinar la estructura del DOM.
-
-**22 · ~~Veintitrés bloques siguen con la forma vieja.~~** Resuelto el 23 de
-agosto de 2026 junto con la deuda 23: los 24 bloques están convertidos o son
-planos a propósito. Decía: El 23 de agosto de 2026
-se introdujo el escalón —`aprendes`, teoría, ejercicios de ejemplo a examen, y
-`dominio` visible— y se convirtió **solo** el bloque «El suelo» de la primera
-evaluación, a propósito: era la plantilla que había que ver funcionando antes
-de repetirla. El esquema acepta `material` o `escalones`, así que los otros
-veintitrés siguen en pie sin tocarlos. La conversión pendiente son 43 apartados
-de teoría, y cada uno necesita mirar si hay un ejercicio por el que se pueda
-entrar o si hay que escribirlo: en complejos hubo que escribir seis.
-
-**23 · ~~Las rutas de 2.ª y 3.ª evaluación siguen en lista plana.~~** Resuelto el
-23 de agosto de 2026: las tres rutas están en escalones, 56 en total, con 22
-ejemplos de entrada detrás. Los siete bloques que siguen planos —los tres de
-exámenes enteros, los tres de formulario y el de complejos extintos— lo están a
-propósito: no enseñan una herramienta. Decía: El 23 de
-agosto de 2026 se cerró la primera entera: 21 escalones en cinco bloques, con
-doce ejemplos introductorios detrás. Quedan 17 bloques por convertir —8 de la
-segunda y 9 de la tercera—, que son unos 35 escalones. El coste real no es
-convertir el YAML: es que cada escalón necesita un ejercicio por el que se
-pueda entrar, y el más simple de cada tema ya es de nivel boletín. En complejos
-hicieron falta ocho ejemplos nuevos y en sucesiones cuatro; para los temas 3, 4
-y 5 no hay ninguno todavía.
-
-**24 · ~~Los temas 3 y 4 siguen casi sin figuras.~~** Resuelto el 23 de agosto de
-2026: los cinco temas tienen ya entre tres y cuatro. Decía: Tras esta tanda: t01 tres,
-t02 tres, t03 **cero**, t04 una, t05 cuatro. Continuidad, Bolzano, Weierstrass
-y las razones de cambio son conceptos que se explican dibujando, y hoy se
-explican con párrafos. Es el mismo hueco que tenía integración antes de que se
-le pusieran cuatro.
-
-**25 · ~~Tres de los seis patrones no tienen componente.~~** Resuelto el 24 de
-agosto de 2026, y sin escribir código: no faltaban, estaban mal documentados.
-«Verificador» y «Demostración» viven dentro de `EjercicioGuiado` como los tipos
-de paso `verificar` (21 usos) y `justificar` (270), que es §13 funcionando —el
-framework se destila del contenido—. Solo **Figura fija** está sin construir, y
-sigue sin construirse a propósito: ningún tema lo ha pedido. §03 y §05 ya lo
-dicen. Decía: `figura-fija`,
-`verificador` y `demostracion` viven en `referencia/` como prototipos HTML sin
-portar, y §03 dibuja un árbol de ficheros que promete `FiguraFija.astro`,
-`Verificador.astro` y `Demostracion.astro`, que no existen. Lo que sí existe
-son los pasos `verificar` y `justificar` dentro de `EjercicioGuiado`, que el
-propio esquema clasifica como pasos y no como patrones. El 23 de agosto de
-2026 el catálogo dejó de encender esas casillas, así que ya no se publica nada
-falso; lo que queda es decidir si los tres patrones se construyen o si §05 se
-reescribe para describir lo que el proyecto hace de verdad.
----
-
-## Auditoría de Cálculo · 24 de agosto de 2026
-
-Hecha al terminar los once temas, buscando lo que le falta a un alumno para
-aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
-son las que impiden aprobar; las otras son mejoras.
-
-**26 · Los exámenes globales sin transcribir: quedan 17 de 24.** Sigue siendo
-la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
-entero: la evaluación continua está cerrada y las ordinarias han empezado.
-Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
-
-| convocatoria | en el volcado | transcritas | faltan |
-|---|---|---|---|
-| 4.ª evaluación | 15 | **15** | 0 |
-| 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | **7** | 4 |
-| extraordinaria | 11 | 0 | 11 |
-| ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
-
-Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
-treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
-partes: once cuartas y seis recuperaciones, diez quintas y cinco
-recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024,
-2022-2023, 2021-2022, 2020-2021 y 2018-2019.
-
-**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **ocho**
-ejercicios de examen y el 11 tiene **siete**, y no pueden tener muchos más,
-porque **Laplace y Fourier no caen en ninguna evaluación continua**: solo en
-las globales. Cada ordinaria nueva les añade uno, salvo la de 2021-2022, que
-trajo dos de Laplace —uno de técnica y otro aplicado— y ninguno de más de
-Fourier. Hasta que estén las once no se pueden auditar esos dos temas ni
-decidir qué prosa les falta: hacerlo ahora sería escribir el tema con media
-muestra.
-
-**Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 17 y escribirlos.
-
-**27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
-de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
-12/8/8/8/8, con las respuestas contrastadas contra las soluciones oficiales del
-boletín. Decía: El tema 1 tiene
-37 y el 5 tiene 30. Cuatro alcanzan para presentar la herramienta y no para
-coger soltura, y en Laplace y Fourier eso es grave porque son técnicas que se
-automatizan repitiendo. El boletín de complementarios tiene material de sobra
-—el tema 9 solo trae diecinueve ejercicios— y viene con soluciones.
-
-**28 · ~~El bloque de síntesis de la ordinaria no tiene ejercicio propio.~~**
-Resuelto el 24 de agosto de 2026 con  (ejercicio 10.16,
-2023/2024 6E), que recorre la cadena entera: gradiente → EDO → curva → punto
-final. Falta enlazarlo desde el bloque de síntesis de la ruta. Decía: El
-segundo parcial trae siempre un ejercicio que encadena gradiente, ecuación
-diferencial, parametrización y trabajo. La ruta lo describe y enlaza tres
-repasos sueltos, pero **lo que se evalúa es la costura**, no cada pieza. Hace
-falta escribir uno que recorra la cadena entera.
-
-**29 · ~~Las EDOs de segundo orden se quedan sin práctica.~~** Resuelto el 24 de
-agosto de 2026: dos ejercicios, y uno es el caso de resonancia. Decía: Coeficientes
-indeterminados y variación de parámetros caen los dos —2025-2026 pedía
-resolver una con segundo miembro que obliga a variación de parámetros— y no
-hay ni un ejercicio guiado de ninguna de las dos.
-
-**30 · ~~«Cuarta evaluación» no ha significado siempre lo mismo.~~**
-**Resuelto el 25 de agosto de 2026, leyendo los quince cuadernillos.** La
-frontera está donde el propio examen la imprime: hasta 2020-2021, el
-cuadernillo de la cuarta evaluación trae **dos** exámenes, uno marcado «PRIMER
-CUATRIMESTRAL (sólo para alumnos con el primer cuatrimestral suspendido)» —de
-los temas 1 y 2— y otro «SEGUNDO CUATRIMESTRAL», de los temas 6 y 7. De
-2021-2022 en adelante solo queda el segundo.
-
-En 2015-2016 y 2016-2017 las dos partes comparten cuadernillo y fecha; en
-2017-2018, 2018-2019 y 2020-2021 son dos exámenes con fecha propia —12 de
-febrero frente al 12 de marzo, por ejemplo—. De 2019-2020 el volcado trae
-**solo** la recuperación, del 24 de febrero de 2020; si aquel año hubo examen
-de los temas 6 y 7, no está en el material que tenemos, y así se declara.
-
-Corregido el 26 de agosto de 2026, al abrir los cuadernillos de la quinta: **la
-recuperación no es una, son dos**. Cada curso hasta 2020-2021 tuvo dos
-sesiones, una con la cuarta evaluación y otra con la quinta, así que la
-convocatoria única `recuperacion` de ayer se parte en `recuperacion-cuarta`
-(URL `4ev-rec`) y `recuperacion-quinta` (URL `5ev-rec`).
-
-Cada recuperación es ahora una convocatoria propia y
-`calculo-4ev.yaml` está medida sobre las once cuartas evaluaciones de verdad.
-Lo que queda de esta deuda es solo lo que se dice en la 31 y en la 26.
-
-
+de fórmulas sin dibujar —el 26 de agosto de 2026 saltó por un `$x\sin x$`
 metido en la `fuente` del ejercicio 3 de la ordinaria de 2018-2019, y bien
 saltó—, pero es una asimetría que no está documentada: todos los demás campos
 largos sí se procesan.
@@ -739,8 +415,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **404 ejercicios de examen** (28 con enunciado demasiado corto para
-comparar, 361 distintos entre los 376 comparados):
+Sobre los **412 ejercicios de examen** (30 con enunciado demasiado corto para
+comparar, 367 distintos entre los 382 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -772,13 +448,23 @@ dos pruebas medidas el 26 de agosto de 2026:
   enunciado, «desde el punto (−2,0) hasta el punto (2,0)», y con eso las cadenas
   ya no casan. Cinco palabras bastan para partir un grupo en dos.
 
-Con esos dos, **treinta y una instancias de quince problemas**, y el número real
-seguirá siendo mayor: solo se detecta lo que coincide carácter a carácter.
+- El ejercicio 3 del primer cuatrimestral de **2012-2013-ext** es «enunciar y
+  demostrar el teorema del valor medio (Lagrange)», y el 3 de **2015-2016-ext**
+  es «enunciar y demostrar el Teorema de Lagrange (teorema del valor medio)». El
+  mismo ejercicio con las dos mitades del nombre cambiadas de orden, tres años
+  después. No lo agrupa nadie: son diez palabras, por debajo del umbral con el
+  que el detector descarta enunciados demasiado cortos. **Los enunciados de
+  demostración son justo los que el detector no puede ver**, porque son los más
+  cortos del corpus.
 
-Y hay un patrón que ya no parece casualidad: de los doce grupos que el detector
-sí ve, **ocho tienen una extraordinaria dentro**. En cinco de ellos la
-extraordinaria reutiliza un parcial y en dos repite otra extraordinaria. Las
-convocatorias globales son el sitio donde se recicla.
+Con esos tres, **treinta y tres instancias de dieciséis problemas**, y el número
+real seguirá siendo mayor: solo se detecta lo que coincide carácter a carácter.
+
+Y hay un patrón que ya no parece casualidad: de los trece grupos que el detector
+sí ve, **nueve tienen una extraordinaria dentro**. En cinco la extraordinaria
+reutiliza un parcial, en tres repite otra extraordinaria, y en el restante
+—2013-2014— repite la ordinaria de su propio curso. Las convocatorias globales
+son el sitio donde se recicla.
 
 Y el patrón que apareció el 26 de agosto de 2026 al transcribir las dos
 extraordinarias más antiguas: **repiten exámenes del propio curso**.
@@ -1127,3 +813,37 @@ coordenadas locales, y solo el `rotate` lo mete dentro. El guardián lo da por
 bueno hoy y **no se sabe si es por acierto o por casualidad**. Mientras no se
 arregle, esos seis sitios están sin comprobar: las figuras se han mirado a ojo y
 se ven bien, que es lo único que se puede afirmar de ellas.
+
+**42 · ~~`tasks/todo.md` llevaba veintiún commits partido en dos.~~ Reparada el
+26 de agosto de 2026**, el mismo día que se cerró la última extraordinaria.
+
+Lo que había: el fichero eran **1 140 líneas y contenía dos veces las deudas 1 a
+30**, una encima de otra. La copia de arriba era la buena y estaba **cortada a
+media frase** —dentro de la propia deuda 31, justo donde el texto llevaba un
+`$x\sin x$`—; la de abajo era la versión anterior entera, con recuentos
+viejos: decía «quedan 17 de 24 exámenes globales» cuando quedaban 2, y
+«extraordinaria 11 · 0 transcritas» cuando estaban las once.
+
+De dónde salió, buscado commit a commit: apareció en `16fc833`, la ordinaria de
+2018-2019. Antes eran 411 líneas; después, 743 = 332 + 411. Es decir, el script
+que la actualizó escribió las primeras 332 líneas de la versión nueva y **le
+pegó detrás el fichero viejo completo**. Veintiún commits después seguía igual, y
+nadie lo vio porque `verify.mjs` no lee `tasks/` y porque cada edición
+posterior usaba `replace()`, que sustituye la **primera** aparición: todas
+caían en la copia de arriba y la de abajo se quedaba fósil, publicando números
+falsos.
+
+El corte está exactamente donde había LaTeX, así que es §17 otra vez: **una
+sustitución con `$` y barra invertida dentro del texto de reemplazo**. En
+`String.prototype.replace`, `$` en la cadena de reemplazo es un carácter
+especial —`$&`, `$1`, `$'`—, y `$'` significa «todo lo que va después del
+trozo sustituido». Eso explica el fichero entero pegado detrás.
+
+La reparación: se conservan las 333 líneas nuevas, se restaura la frase cortada
+—la propia deuda dice más abajo que la fórmula era «x·sen x»—, se empalma con la
+continuación que había quedado huérfana, y se borran las 324 líneas de la copia
+vieja. Quedan 816 líneas, 41 deudas, una sola de cada.
+
+Lo que queda por hacer, y no es de esta deuda: **nada comprueba `docs/` ni
+`tasks/`**. Un fichero de prosa duplicado no rompe el build. Si vuelve a pasar,
+se sabrá igual de tarde.

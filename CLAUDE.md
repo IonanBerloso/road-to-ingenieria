@@ -976,6 +976,19 @@ Cosas que ya han costado horas. No son opiniones.
   el navegador, comprueba que el servidor ya sirve lo que acabas de escribir**:
   un `curl` a la página y un `grep` de algo que solo esté en la versión nueva.
   Si no está, se mata el proceso del puerto 4321 y se levanta otra vez.
+- **`replace()` con un `$` en el texto de reemplazo se traga el fichero.** En
+  `String.prototype.replace`, el `$` de la cadena de reemplazo es un carácter
+  especial: `$&` es lo sustituido, `$1` un grupo, y **`$'` es todo lo que va
+  detrás**. Como aquí casi todo el texto lleva LaTeX entre dólares, un
+  reemplazo que contenga `$'`, `$&` o `$1` inserta trozos del propio fichero sin
+  avisar. Pasó en `tasks/todo.md`: quedó cortado a media frase, en el sitio
+  exacto donde había un `$x\sin x$`, con la versión anterior entera pegada
+  detrás, y así estuvo **veintiún commits** publicando recuentos viejos. Nadie
+  lo vio porque `verify.mjs` no lee `docs/` ni `tasks/`. **Regla: para insertar
+  texto literal se usa la función de reemplazo —`(...) => nuevo`— o se parte y
+  se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
+  cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
+  después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
 - **El esquema no tiene `unidad`.** Cálculo nunca la necesitó. Fluidos la
   necesita en su primer ejercicio, y el ejemplo de §04 de este fichero la usó
   durante meses sin que existiera. Añadirla es tocar la capa compartida: se
