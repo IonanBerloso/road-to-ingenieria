@@ -132,8 +132,9 @@ ejercicios de examen, no de mirar el temario:
   en 2024-2025 valía $4$, y copiar la fórmula de memoria estropea la serie
   entera sin que nada avise.
 
-Con los dos, los temas del segundo cuatrimestre dejan de tener un flaco claro:
-el más corto pasa a ser el 8, con 1 119 palabras.
+Con los dos, los temas del segundo cuatrimestre dejaron de tener un flaco claro.
+Y después de la auditoría de §15 el más corto sigue siendo el 8, ahora con
+**1 208 palabras** — que es el único que se queda por debajo de mil quinientas.
 
 La columna «fig.» cuenta solo las figuras de la prosa de los temas. Las de los
 enunciados y las resoluciones de examen van aparte, y en estas ocho ordinarias
@@ -423,6 +424,39 @@ $t^{2}$ en $t=pi$ para $pi^{2}/6$—. Y una cuarta fila decía que la armónica
 alternada sale de una serie de Fourier: sale del desarrollo de $ln(1+x)$, que
 es del tema 4. Las dos habrían sido plausibles y las dos eran mentira.
 
+## Lo que la tanda de hoy metió en el suelo de calidad
+
+Tres comprobadores nacieron en el scratchpad esta tanda, y la pregunta de §11 es
+cuáles merecen quedarse. La respuesta no fue «los tres».
+
+**Dentro, el de las anclas.** `verify.mjs` partía los enlaces por `#` y tiraba
+el fragmento: un enlace con destino válido y ancla inventada pasaba en verde y
+dejaba al lector en la cabecera de la página. Pasó de verdad el 23 de agosto,
+con 58 enlaces de teoría. Ahora se comprueba que el id existe en la página de
+destino: **602 anclas entre páginas, todas aterrizan**.
+
+Y se validó al revés, como manda §11 — y menos mal, porque **la primera versión
+no saltaba**. Se rompió un ancla a propósito en el HTML publicado y el guardián
+siguió verde: usaba `candidatos.find(existsSync)`, que devuelve el
+**directorio** `dist/calculo/t01-complejos` porque existe, y con esa clave el
+mapa de ids no encontraba nada y se saltaba la comprobación en silencio. Un
+guardián que no falla cuando el fallo existe es peor que no tenerlo.
+
+**Dentro, el de las convocatorias huérfanas.** Un ejercicio de examen puede
+estar transcrito, publicado y correcto, y no tener ninguna ruta que lleve a él.
+Pasó hoy mismo con los catorce de las recuperaciones de la quinta. El guardián
+no exige que todos estén enlazados —una ruta es una selección— sino que
+**ninguna convocatoria entera se quede fuera**, que eso ya no es selección sino
+descuido. Y se estrenó encontrando tres: 2013-2014-ext, 2017-2018-ord y
+2019-2020-ord, las tres sin un solo ejercicio en ninguna ruta. Enganchadas.
+
+**Fuera, la auditoría de herramientas.** Es la que encontró los catorce huecos
+de prosa, y aun así no entra, porque de sus veintiún hallazgos **dos eran
+falsos**: «punto medio» casi siempre es el punto medio de un segmento, y
+«delta» casi siempre es un incremento. Un guardián que grita sin fallo enseña a
+saltarse los guardianes, que es el daño de verdad (§11). Se queda como
+auditoría periódica, que se pasa a mano y se lee con criterio.
+
 ## Contra el criterio de «asignatura terminada» (§15)
 
 | criterio | |
@@ -430,7 +464,7 @@ es del tema 4. Las dos habrían sido plausibles y las dos eran mentira.
 | temas del temario oficial, con fuente | ✅ 11/11 |
 | todo tema enlazado por una ruta tiene prosa | ✅ |
 | **toda herramienta que el examen usa, presentada en la prosa** | ✅ **auditado el 26 de agosto de 2026, catorce huecos cerrados** |
-| **todo ejercicio de examen enlazado o declarado** | ✅ 303 enlazados, el resto declarado |
+| **todo ejercicio de examen enlazado o declarado** | ✅ **314 enlazados**, y ninguna convocatoria fuera |
 | cada tema con ejemplo introductorio propio | ✅ 44 |
 | cada tema con al menos una figura | ✅ 27 |
 | una ruta por evaluación | ✅ **7 de 7** |
@@ -571,8 +605,8 @@ Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 | 4 | ~~Las 11 extraordinarias + el cuadernillo de 2019-2020~~ | **hecho el 26 de agosto de 2026: cierra la deuda 26** |
 | 5 | ~~Ruta de la extraordinaria~~ | **hecha el 26 de agosto de 2026: 12 bloques, 23 escalones** |
 | 6 | ~~Enganchar las cinco recuperaciones de la quinta~~ | **hecho el 26 de agosto de 2026: los catorce, en 1.ª y 2.ª** |
-| 7 | **Auditoría de Cálculo entera** y cierre según §15 | |
-| 8 | **Abrir Álgebra** | |
+| 7 | ~~Auditoría de Cálculo entera y cierre según §15~~ | **hecha el 26 de agosto de 2026** |
+| 8 | **Abrir Álgebra** | ⛔ **bloqueado: no hay material en el repositorio** |
 
 **Lo primero de la lista es ahora la fila 7, la auditoría.** Con el corpus
 cerrado, las siete rutas escritas y las recuperaciones enganchadas, lo que queda

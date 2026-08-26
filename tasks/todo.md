@@ -7,6 +7,13 @@ siguiente, en el orden en que conviene hacerlo.
 
 ## Bloqueado, esperándote a ti
 
+> **Lo primero, al 26 de agosto de 2026: Cálculo está cerrada contra §15 y la
+> siguiente asignatura no se puede abrir.** Álgebra no tiene ni temario oficial
+> ni un solo PDF en el repositorio, y §15 prohíbe inventar una lista plausible.
+> Hacen falta **dos cosas tuyas**: el temario oficial con su fuente, y el
+> volcado de eGela de sus convocatorias. Está escrito entero en la deuda 48, al
+> final de este fichero.
+
 **1 · El temario oficial de Cálculo.** Los diez temas del catálogo los puse a
 ojo. Están marcados `temarioOficial: false` y `verify.mjs` avisa en cada
 ejecución. Sustituirlos antes de que se conviertan en carpetas.
@@ -1000,3 +1007,73 @@ falte una palabra del profesor que una nuestra.
 El auditor está en el scratchpad y **también debería estar en `verify.mjs`**,
 como los de las deudas 44 y 45. Son ya tres comprobadores que existen y no
 guardan nada: eso, junto, es la deuda que queda abierta de esta tanda.
+
+**47 · ~~Tres comprobadores que vivían en el scratchpad.~~ Resueltos dos de
+tres el 26 de agosto de 2026, y el tercero rechazado a propósito.**
+
+Las deudas 44, 45 y 46 dejaron cada una un comprobador fuera del repositorio.
+La pregunta de §11 no es «¿se pueden automatizar?» sino «¿merecen quedarse?», y
+la respuesta fue distinta para cada uno.
+
+**Dentro · las anclas entre páginas.** `verify.mjs` partía los `href` por
+`#` y tiraba el fragmento, así que un enlace con destino válido y ancla
+inventada pasaba en verde. Ahora se comprueba que el id existe en la página de
+destino: **602 anclas, todas aterrizan**.
+
+Y aquí está lo que hay que recordar: **la primera versión no saltaba**. Al
+validarla al revés —romper un ancla a mano en el HTML publicado y esperar que se
+pusiera roja— siguió verde. El motivo era `candidatos.find(existsSync)`, que
+devuelve el **directorio** `dist/calculo/t01-complejos` porque existe, y con
+esa clave el mapa de ids no encontraba nada y la comprobación se saltaba en
+silencio. Si no se hubiera validado al revés, hoy habría en el suelo un guardián
+que solo sirve para dar confianza. Está escrito en el propio comentario del
+código.
+
+**Dentro · las convocatorias huérfanas.** No exige que todos los ejercicios
+estén enlazados —una ruta es una selección— sino que **ninguna convocatoria
+entera se quede sin una sola ruta que lleve a ella**. Se estrenó encontrando
+tres: 2013-2014-ext, 2017-2018-ord y 2019-2020-ord, sin un solo ejercicio en
+ninguna de las siete rutas. Enganchadas en el mismo commit; ahora 88 de 88.
+
+**Fuera · la auditoría de herramientas.** Es la que más ha rendido —catorce
+huecos de prosa— y aun así **no entra**. De sus veintiún hallazgos, dos eran
+falsos, y no por un bug: porque «punto medio» y «delta» significan cosas
+distintas en sitios distintos y un buscador de subcadenas no lo sabe. Un
+guardián que grita sin fallo enseña a saltarse los guardianes, y ese es el daño
+de verdad (§11). Se queda como **auditoría periódica**, que se pasa a mano
+cuando entra material nuevo y se lee con criterio. El script está en el
+scratchpad de la sesión del 26 de agosto de 2026 y su lista de términos está
+transcrita en `docs/como-vamos.md`.
+
+---
+
+**48 · Álgebra no se puede abrir: no hay material.**
+
+§00 dice que después de Cálculo va Álgebra, y Cálculo ya cumple §15 entera. Pero
+en el repositorio **no hay nada de Álgebra**: `catalogo/algebra.json` tiene
+`temarioOficial: false` y `temas: []`, y `public/examenes/` solo tiene la
+carpeta de Cálculo.
+
+Y §15 no deja fingir: «los temas del catálogo son el temario oficial, no una
+lista plausible. Con su fuente. Si no la tienes, el catálogo dice `prev` y no
+finge». §13 lo repite por el otro lado: inventar un enunciado que no se ha leído
+es el peor fallo posible aquí, y es el más cómodo, porque sale plausible.
+
+Así que esto no es trabajo pendiente: es un **bloqueo**, y lo que hace falta es
+material que no está en el repositorio.
+
+| qué hace falta | para qué |
+|---|---|
+| el temario oficial de Álgebra, con su fuente | poner `temarioOficial: true` y llenar `temas[]` |
+| el volcado de eGela de sus convocatorias, en PDF | transcribir exámenes, que es de donde salen las rutas |
+
+Mientras no estén las dos cosas, el catálogo se queda en `prev` —que es lo
+correcto y lo que ya dice— y no se escribe ni un tema. Con ellas, el camino es
+el mismo que se ha recorrido con Cálculo, y ahora está documentado de principio
+a fin.
+
+**Y una cosa que sí se puede adelantar sin material**, si hiciera falta llenar
+el hueco: separar el lector de respuestas de `EjercicioGuiado`. Una **matriz**
+no es un número ni un conjunto de puntos, y es por donde Álgebra va a tensionar
+el sistema — está dicho en §00 y en la deuda de arquitectura correspondiente.
+Eso es refactor de la capa compartida y se puede hacer sin un solo enunciado.

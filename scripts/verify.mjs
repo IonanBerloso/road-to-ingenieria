@@ -237,6 +237,56 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Un ejercicio de examen que no enlaza ninguna ruta y que nadie declara
+
+   §14 dice que lo que falta va en `falta[]` y no callado, y §15 lo repite
+   para la asignatura entera. Pero «no enlazado» no se veía por ninguna
+   parte: un ejercicio transcrito, publicado y correcto puede quedarse sin
+   que ninguna ruta lleve a él, y entonces existe en el sitio sin que haya
+   forma de llegar estudiando.
+
+   Pasó el 26 de agosto de 2026 con **los catorce ejercicios de las cinco
+   recuperaciones de la quinta evaluación**: llevaban días publicados y
+   ninguna de las siete rutas los enlazaba. Se encontró cruzando ids a mano,
+   no aquí.
+
+   Esto no exige que TODOS estén enlazados —una ruta es una selección, y las
+   de las globales enlazan menos de la mitad a propósito—. Lo que exige es
+   que **cada convocatoria tenga al menos un ejercicio enlazado por alguna
+   ruta**: una convocatoria entera fuera del alcance de las rutas es un
+   descuido, no una selección. */
+{
+  const dirPreparar = join(SRC, 'content', 'preparar');
+  const dirExamenes = join(SRC, 'content', 'calculo', 'examenes');
+  if (existsSync(dirPreparar) && existsSync(dirExamenes)) {
+    const enlazados = new Set();
+    for (const f of archivos(dirPreparar, ['.yaml'])) {
+      for (const m of leer(f).matchAll(/id:\s*(ex[a-z0-9-]+)/g)) enlazados.add(m[1]);
+    }
+    const sueltas = [];
+    let convocatorias = 0;
+    let conAlguno = 0;
+    for (const d of readdirSync(dirExamenes)) {
+      const yamlExamen = join(dirExamenes, d, 'examen.yaml');
+      if (!existsSync(yamlExamen)) continue;
+      convocatorias++;
+      const ids = [...leer(yamlExamen).matchAll(/id:\s*(ex[a-z0-9-]+)/g)].map((m) => m[1]);
+      const n = ids.filter((x) => enlazados.has(x)).length;
+      if (n > 0) conAlguno++;
+      else sueltas.push(`${d} — sus ${ids.length} ejercicios no los enlaza ninguna ruta`);
+    }
+    if (sueltas.length === 0) {
+      ok(`toda convocatoria tiene ejercicios en alguna ruta: ${conAlguno} de ${convocatorias}`);
+    } else {
+      fallo(
+        'Hay convocatorias enteras a las que ninguna ruta lleva',
+        `${sueltas.length} de ${convocatorias}:\n    ${sueltas.slice(0, 10).join('\n    ')}`,
+      );
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Un símbolo que KaTeX no sabe dibujar, dentro de una fórmula
 
    Pasó el 24 de agosto de 2026: un «✗» metido dentro de un bloque `$$…$$`
@@ -587,6 +637,11 @@ if (SOLO_FUENTE) {
   const latexCrudo = [];
   const svgComoTexto = [];
   const refsRotas = [];
+  /* Anclas a OTRA página: se apuntan aquí y se resuelven al final, cuando ya
+     se han leído todas las páginas y se sabe qué ids declara cada una. */
+  const anclasFuera = [];
+  const anclasRotas = [];
+  const idsPorPagina = new Map();
 
   for (const f of paginas) {
     const html = leer(f);
@@ -695,6 +750,7 @@ if (SOLO_FUENTE) {
        rotos. */
     {
       const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+      idsPorPagina.set(f, ids);
       const refs = [...html.matchAll(/(?:url\(#|\sxlink:href="#|\shref="#)([^)"]+)/g)].map((m) => m[1]);
       for (const r of new Set(refs)) {
         if (!r || ids.has(r)) continue;
@@ -711,14 +767,47 @@ if (SOLO_FUENTE) {
         continue;
       }
       const limpio = href.split('#')[0].split('?')[0];
+      const fragmento = href.includes('#') ? href.slice(href.indexOf('#') + 1) : '';
       const destino = limpio.slice(BASE.length);
       const candidatos = [
         join(DIST, destino),
         join(DIST, destino, 'index.html'),
         join(DIST, `${destino.replace(/\/$/, '')}.html`),
       ];
-      if (!candidatos.some(existsSync)) rotos.push(`${nombre} → ${href}`);
+      if (!candidatos.some(existsSync)) { rotos.push(`${nombre} → ${href}`); continue; }
+      /* Para el ancla hace falta **el fichero HTML**, no el directorio: la
+         primera vez que se escribió esto se usó `candidatos.find(existsSync)`,
+         que devuelve el directorio `dist/calculo/t01-complejos` porque existe,
+         y con esa clave el mapa de ids no encontraba nada y la comprobación se
+         saltaba en silencio. Se cazó rompiendo un ancla a propósito y viendo
+         que el guardián seguía verde (§11). */
+      if (fragmento) {
+        const conHtml = candidatos.filter((c) => c.endsWith('.html')).find(existsSync);
+        if (conHtml) anclasFuera.push({ nombre, href, destino: conHtml, fragmento });
+      }
     }
+  }
+
+  /* Que el ancla LLEGUE, no solo que el fichero exista.
+
+     Hasta el 26 de agosto de 2026 esta comprobación partía el href por `#` y
+     tiraba el fragmento: un enlace a `…/t01-complejos/#apartado-inventado`
+     pasaba en verde y dejaba al lector en la cabecera de la página, sin que
+     nada avisara. No es hipotético: el 23 de agosto se publicaron **58 enlaces
+     de teoría rotos** exactamente así, con destino válido y ancla que no
+     existía, y se encontraron mirando, no aquí.
+
+     Las rutas de estudio son el sitio donde más duele, porque su campo
+     `apartado` es un slug copiado a mano del título de un encabezado —con sus
+     acentos— y equivocarse en una tilde no rompe nada visible. Las siete rutas
+     tienen 591 enlaces con ancla entre las siete. */
+  for (const a of anclasFuera) {
+    const ids = idsPorPagina.get(a.destino);
+    if (!ids) continue;                       // la página no se leyó: ya lo dice `rotos`
+    let frag = a.fragmento;
+    try { frag = decodeURIComponent(frag); } catch { /* se deja como viene */ }
+    if (ids.has(frag) || ids.has(a.fragmento)) continue;
+    anclasRotas.push(`${a.nombre} → ${a.href}`);
   }
 
   const grupo = (coleccion, regla, detalle) => {
@@ -737,6 +826,11 @@ if (SOLO_FUENTE) {
   grupo(imgSinAlt, 'alt en toda imagen', 'imágenes sin alt');
   grupo(sinModos, 'modo guiado y modo completo en las páginas de contenido', 'páginas sin los dos modos');
   grupo(rotos, 'cero enlaces internos rotos', 'enlaces que no llevan a ninguna parte');
+  grupo(
+    anclasRotas,
+    `toda ancla a otra página aterriza en un id que existe (${anclasFuera.length})`,
+    'enlaces cuyo destino existe pero cuyo #ancla no: el navegador se queda en la cabecera',
+  );
   grupo(latexCrudo, 'cero fórmulas sin dibujar en el texto publicado', 'LaTeX que ha salido como texto');
   grupo(
     refsRotas,
