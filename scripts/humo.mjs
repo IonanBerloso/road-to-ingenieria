@@ -184,6 +184,51 @@ async function main() {
       );
     }
 
+    /* 1 bis · Ninguna etiqueta de una figura se sale de su viewBox.
+       Se añade el 26 de agosto de 2026, y no por si acaso: ha pasado tres
+       veces y las tres solo se cazaron mirando una captura. «y = 8x − 4» se
+       publicó como «y = 8x» en la ordinaria de 2016-2017, «t (s)» como «t (»
+       en la de 2015-2016, y el pie «la misma idea, con el coseno dentro» de la
+       figura del escalón del tema 10 se cortaba por la derecha.
+
+       Un `<text>` fuera del viewBox no rompe nada: el navegador lo recorta y
+       la página sigue en verde. Por eso hacía falta medirlo, y por eso se mide
+       aquí y no en `verify.mjs`: la caja de un texto SVG solo la sabe el
+       navegador, que es quien elige la fuente y la mide.
+
+       Se mide con todo desplegado, igual que los trazos, porque casi todas las
+       figuras de examen viven dentro de una resolución cerrada. */
+    const cortados = await pagina.evaluate(() => {
+      const fuera = [];
+      for (const svg of document.querySelectorAll('svg[viewBox]')) {
+        const [vx, vy, vw, vh] = svg.getAttribute('viewBox').split(/[\s,]+/).map(Number);
+        for (const t of svg.querySelectorAll('text')) {
+          let b;
+          try {
+            b = t.getBBox();
+          } catch {
+            continue;
+          }
+          if (!b.width) continue;
+          const holgura = 0.5;
+          if (
+            b.x < vx - holgura ||
+            b.x + b.width > vx + vw + holgura ||
+            b.y < vy - holgura ||
+            b.y + b.height > vy + vh + holgura
+          ) {
+            fuera.push(`«${t.textContent.trim().slice(0, 30)}» en ${svg.getAttribute('aria-labelledby') ?? '?'}`);
+          }
+        }
+      }
+      return fuera;
+    });
+    comprueba(
+      cortados.length === 0,
+      'ninguna etiqueta se sale de su viewBox',
+      cortados.length ? `recortadas: ${cortados.slice(0, 3).join(' · ')}` : '',
+    );
+
     /* La lectura recuerda el modo en localStorage, así que hay que borrarlo
        antes de recargar: si no, el resto de comprobaciones se harían sobre una
        página en modo completo, que no es el estado en el que llega el alumno. */

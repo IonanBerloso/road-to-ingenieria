@@ -38,18 +38,29 @@ ejercicios de examen. Faltan 13: once extraordinarias y los dos parciales de
 | t07 integral múltiple | 1 865 | 3 | 11 | 4 | 30 |
 | t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 17 |
 | t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | 23 |
-| t10 Laplace | 872 | 1 | 8 | 2 | **12** |
+| t10 Laplace | **1 605** | **2** | **9** | **3** | **12** |
 | t11 Fourier | 888 | 1 | 8 | 2 | **10** |
-| **total** | **18 442** | **25** | **180** | **42** | **321** |
+| **total** | **19 175** | **26** | **181** | **43** | **321** |
 
-En todo el corpus: **501 ejercicios y 1 926 pasos**.
+En todo el corpus: **502 ejercicios y 1 930 pasos**.
 
-Los temas 10 y 11 siguen siendo la frontera, y hoy **deja de haber excusa**: su
-prosa —872 y 888 palabras— es la mitad que la de los primeros temas y tienen
-una figura cada uno, pero ya no esperan a nada. Doce ejercicios de Laplace y
-diez de Fourier son toda la muestra que las ordinarias pueden dar; lo que
-añadan las extraordinarias será más de lo mismo, no otra cosa. Engordarlos pasa
-a ser trabajo pendiente, no bloqueado.
+El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
+figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
+sus doce ejercicios de examen, y eran tres huecos de verdad:
+
+- **la función escalón no estaba definida.** Aparecía en la tabla y en un error
+  típico, y nunca se decía qué es. Sin ella no se puede escribir «la fuerza
+  empieza en el segundo dos», que es lo que piden 2020-2021 y 2023-2024. Ahora
+  tiene apartado, figura y ejemplo introductorio;
+- **derivar la transformada** —$\mathcal{L}\{t f\}=-F'(s)$— no estaba, y es lo
+  único que resuelve una ecuación con coeficientes variables. Cayó en 2025-2026;
+- **usar la definición para calcular una integral impropia** tampoco. La prosa
+  decía que la definición «casi nunca se usa», y hay una excepción que cayó en
+  2015-2016: $\int_0^\infty t^{17}e^{-5t}dt$ es $17!/5^{18}$ y se contesta en
+  una línea.
+
+El tema 11 sigue en 888 palabras y una figura, y es ahora el más flaco del
+sitio. Es lo siguiente.
 
 La columna «fig.» cuenta solo las figuras de la prosa de los temas. Las de los
 enunciados y las resoluciones de examen van aparte, y en estas ocho ordinarias
@@ -119,7 +130,7 @@ alta.
 | 3.ª evaluación | 9 | 18 | 11 | 3 |
 | 4.ª evaluación | 3 | **12** | 11 | **4** |
 | 5.ª evaluación | 3 | 12 | 10 | 6 |
-| ordinaria | **8** | **17** | **11** | **6** |
+| ordinaria | **8** | **18** | **11** | **6** |
 
 **La de la ordinaria se rehizo el 26 de agosto de 2026**, el mismo día que se
 cerró la última convocatoria que le faltaba. Decía estar medida sobre 2 y ahora
@@ -152,8 +163,8 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 |---|---|
 | temas del temario oficial, con fuente | ✅ 11/11 |
 | todo tema enlazado por una ruta tiene prosa | ✅ |
-| cada tema con ejemplo introductorio propio | ✅ 42 |
-| cada tema con al menos una figura | ✅ 25 |
+| cada tema con ejemplo introductorio propio | ✅ 43 |
+| cada tema con al menos una figura | ✅ 26 |
 | una ruta por evaluación | ⚠️ 6 de 7 — falta la extraordinaria |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 25 huecos |
@@ -271,7 +282,7 @@ una línea:
 - **32** — dos ejercicios del tema 9 duplican problemas que ahora también están
   transcritos como examen.
 - **33** — ~~la ruta `ord` dice «medida sobre 2»~~. **Cerrada** el 26 de agosto
-  de 2026: rehecha sobre las once, con ocho bloques y diecisiete escalones.
+  de 2026: rehecha sobre las once, con ocho bloques y dieciocho escalones.
 - **37** — ~~el área de una superficie curva no está en la prosa del tema 7~~.
   **Cerrada** el 26 de agosto de 2026: apartado nuevo con la fórmula, la figura
   de por qué lleva una raíz, el atajo de los cuerpos de revolución y un ejemplo
@@ -293,6 +304,11 @@ una línea:
 - **36** — el seno se escribe de dos maneras en el corpus: 511 veces en
   castellano y **88 en inglés**, repartidas por 8 ficheros. Los exámenes
   imprimen «sen», así que las inglesas incumplen §08 en lo tipográfico.
+- **39** — ~~tres etiquetas de figura se publicaban recortadas~~. **Cerrada** el
+  26 de agosto de 2026, y con guardián: `humo.mjs` mide ahora la caja de cada
+  `<text>` contra el `viewBox` de su SVG. Nació rojo sobre dos fallos que nadie
+  había visto —«f(b) > 0» publicado como «f(b) >» en el tema 3— y se puso verde
+  al arreglarlos.
 - **2** — el temario de Fluidos está en el catálogo sin fuente verificada.
 - **5** — el patrón «figura fija» sigue sin construir, a propósito: ningún
   contenido lo ha pedido todavía.

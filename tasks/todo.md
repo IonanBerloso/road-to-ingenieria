@@ -911,3 +911,35 @@ Los 48 enlaces de la ruta pulsados en el navegador: los 48 llegan a un destino
 visible. Y de comprobarlo salió una trampa nueva para §17 — la primera medición
 dio 18 de 18 en verde **con la página vieja**, porque el servidor de desarrollo
 no se había enterado de que el YAML había cambiado.
+
+---
+
+**39 · ~~Tres etiquetas de figura se publicaban recortadas.~~** Resuelta el 26
+de agosto de 2026, y lo que importa aquí es **cómo se encontraron**.
+
+Un `<text>` colocado fuera del `viewBox` de su SVG no rompe nada: el navegador
+lo recorta y la página sigue en verde. Es un fallo mudo, y ya había pasado dos
+veces —«y = 8x − 4» publicado como «y = 8x» en la ordinaria de 2016-2017, y
+«t (s)» como «t (» en la de 2015-2016—, las dos veces cazado mirando una
+captura a ojo.
+
+A la tercera se midió. El pie de la figura del escalón del tema 10 se cortaba
+por la derecha, y en vez de arreglarlo y seguir, se escribió la comprobación:
+`humo.mjs` recorre ahora todos los `<svg[viewBox]>` de cada página, con el modo
+completo abierto, pide el `getBBox()` de cada `<text>` y compara con el
+`viewBox`. Va en el navegador y no en `verify.mjs` porque la caja de un texto
+SVG solo la sabe quien elige la fuente y la mide.
+
+**Y en su primera ejecución encontró dos que nadie había visto:**
+
+| dónde | qué se publicaba | cuánto sobraba |
+|---|---|---|
+| tema 3, figura de Bolzano | «f(b) > 0» salía como «f(b) >» | 17,6 px por la derecha |
+| tema 5, figura de capas y discos | «eje de giro», dos veces | 1,0 px por arriba |
+
+El primero es exactamente el mismo fallo de siempre y llevaba meses publicado.
+El segundo es de un píxel y no se ve, pero es la misma causa.
+
+Los dos arreglados ensanchando el `viewBox`, y las veintiuna páginas en verde.
+La validación al revés que pide §11 no hizo falta inventarla: **el guardián
+nació rojo**, sobre dos fallos reales, y se puso verde al arreglarlos.

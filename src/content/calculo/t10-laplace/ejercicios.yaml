@@ -230,6 +230,164 @@ ejercicios:
       $9/5+6/5 = 3$. Y por otro lado, el teorema del valor inicial dice que
       $f(0) = \lim_{s\to\infty} sF(s) = \lim 3s^{2}/(s^{2}-s-6) = 3$. ✓ Coincide.
 
+  - id: ej-escalon-y-retraso
+    titulo: Escribir con el escalón una función que empieza tarde
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Escribir con la función escalón, y transformar,
+      $$
+      f(t)=
+      \begin{cases}
+      0 & t<3\\
+      \left(t-3\right)^{2} & t\ge3
+      \end{cases}
+      $$
+    pide: La función en una sola fórmula, y su transformada.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Para qué sirve multiplicar por $u(t-3)$?
+        opciones:
+          - texto: >-
+              Para apagar la función hasta el instante $3$ y dejarla encendida
+              a partir de ahí, todo en una sola fórmula
+            correcta: true
+            mensaje: |
+              Eso es. El escalón no calcula: **traduce**. Una definición a
+              trozos se convierte en un producto, y un producto sí tiene
+              transformada de una línea.
+          - texto: Para desplazar la gráfica tres unidades a la derecha
+            mensaje: |
+              Eso lo hace el $(t-3)$ de dentro, no el escalón. El escalón solo
+              decide **desde cuándo** existe la función; el desplazamiento es
+              cosa del argumento. En este enunciado están las dos cosas, y por
+              eso encaja tan bien con la fórmula del retraso.
+          - texto: >-
+              Para que la transformada exista, porque si no la integral diverge
+            mensaje: |
+              La transformada de $t^{2}$ existe perfectamente y vale
+              $2/s^{3}$. El escalón no arregla ninguna convergencia: solo
+              escribe a trozos en una línea.
+
+      - tipo: calcular
+        titulo: El retraso
+        pregunta: |
+          La transformada es $e^{-as}\cdot\dfrac{n!}{s^{n+1}}$. ¿Cuánto vale
+          $a$?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              El $2$ es el exponente del cuadrado, no el retraso. El retraso es
+              el número que aparece **dentro del escalón**, $u(t-3)$.
+          - valor: '-3'
+            mensaje: |
+              Signo. La regla es
+              $\mathcal{L}\{f(t-a)u(t-a)\}=e^{-as}F(s)$ con $a=3$: el menos ya
+              está puesto en el exponente, no hay que ponerlo dos veces.
+          - valor: '0'
+            mensaje: |
+              Si $a$ fuera cero no habría retraso y la función empezaría en el
+              origen. Aquí no existe hasta el segundo $3$.
+        pista: |
+          Es el número que aparece dentro del escalón.
+        desarrollo: |
+          $$
+          f(t)=\left(t-3\right)^{2}u(t-3)
+          \;\Longrightarrow\;
+          a=3
+          $$
+
+      - tipo: calcular
+        titulo: El numerador
+        pregunta: |
+          En $e^{-3s}\cdot\dfrac{n!}{s^{n+1}}$ con $n=2$, ¿cuánto vale el
+          numerador $n!$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ sería el numerador si la tabla dijera $1/s^{n+1}$, y no lo
+              dice: $\mathcal{L}\{t^{n}\}=n!/s^{n+1}$. Con $n=2$, $2!=2$.
+          - valor: '6'
+            mensaje: |
+              $6=3!$, y el $3$ de aquí es el retraso, no el exponente. El
+              exponente es el $2$ del cuadrado.
+          - valor: '4'
+            mensaje: |
+              $4$ sería $2^{2}$. El factorial de $2$ es $2\cdot1=2$.
+        pista: |
+          $\mathcal{L}\{t^{2}\}=\dfrac{2!}{s^{3}}$.
+        desarrollo: |
+          $$
+          \mathcal{L}\left\{\left(t-3\right)^{2}u(t-3)\right\}
+          =e^{-3s}\cdot\frac{2}{s^{3}}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La función vale cero hasta $t=3$, así que se escribe multiplicando
+              por el escalón: $f(t)=\left(t-3\right)^{2}u(t-3)$.
+          - texto: >-
+              Tiene exactamente la forma $g(t-a)\,u(t-a)$ con $g(t)=t^{2}$ y
+              $a=3$, así que se le puede aplicar la traslación en $t$.
+          - texto: >-
+              Como $\mathcal{L}\{t^{2}\}=2/s^{3}$, la transformada es
+              $e^{-3s}\cdot 2/s^{3}$.
+          - texto: >-
+              Si el enunciado hubiera dicho $t^{2}$ en vez de
+              $\left(t-3\right)^{2}$, la respuesta sería la misma con el mismo
+              factor $e^{-3s}$.
+            trampa: true
+            mensaje: |
+              No: $t^{2}u(t-3)$ **no** tiene la forma $g(t-a)u(t-a)$, porque el
+              argumento de dentro no está retrasado. Habría que reescribirlo
+              como $\bigl((t-3)+3\bigr)^{2}$ y desarrollar el cuadrado, lo que
+              da tres términos y tres transformadas. Mirar si el argumento
+              lleva el mismo retraso que el escalón es lo primero que hay que
+              comprobar.
+    resolucion: |
+      **En una sola fórmula.** El escalón $u(t-3)$ vale cero hasta el segundo
+      $3$ y uno a partir de ahí, así que multiplicar por él apaga lo que haya
+      delante:
+
+      $$
+      f(t)=\left(t-3\right)^{2}u(t-3)
+      $$
+
+      Y eso ya no es una definición a trozos: es un producto, que sí se puede
+      transformar de un tirón.
+
+      **La transformada.** La regla del retraso dice
+      $\mathcal{L}\{g(t-a)\,u(t-a)\}=e^{-as}G(s)$. Aquí $g(t)=t^{2}$ y $a=3$:
+
+      $$
+      \mathcal{L}\{f\}=e^{-3s}\cdot\frac{2!}{s^{3}}=\frac{2\,e^{-3s}}{s^{3}}
+      $$
+
+      **Lo que hay que comprobar antes de aplicar la regla**, y es lo único con
+      trampa: que el argumento de dentro lleve **el mismo** retraso que el
+      escalón. Aquí sí, $(t-3)$ y $u(t-3)$. Si el enunciado hubiera escrito
+      $t^{2}u(t-3)$, la regla no valdría tal cual y habría que reescribir
+      $t^{2}=\bigl((t-3)+3\bigr)^{2}=(t-3)^{2}+6(t-3)+9$, transformar los tres
+      sumandos y sacar el $e^{-3s}$ factor común. Es más largo, pero se puede.
+
+      **Y al revés.** Cuando en una antitransformada aparezca un $e^{-3s}$, se
+      aparta, se antitransforma el resto, y al final se sustituye $t$ por $t-3$
+      y se multiplica por $u(t-3)$. El factor exponencial nunca entra en las
+      fracciones simples.
+
   # ═══════════════════════════════════════════════════════════════════
   # Del boletín de problemas complementarios del tema 10.
   # ═══════════════════════════════════════════════════════════════════
