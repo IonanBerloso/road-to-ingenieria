@@ -707,4 +707,13 @@ const fluidos = defineCollection({
   schema: temaEscrito,
 });
 
-export const collections = { catalogo, calculo, fluidos, ejercicios, examen, preparar };
+/* Álgebra entra el 26 de agosto de 2026, cuando Cálculo cumple §15 entera.
+   Una colección por asignatura y no un glob sobre `content/` porque cada una
+   tiene su carpeta y Astro necesita saber la base; es el mismo patrón que
+   `fluidos` y se añade una línea por asignatura, que es el precio correcto. */
+const algebra = defineCollection({
+  loader: glob({ pattern: '**/index.mdx', base: './src/content/algebra' }),
+  schema: temaEscrito,
+});
+
+export const collections = { catalogo, calculo, fluidos, algebra, ejercicios, examen, preparar };

@@ -257,8 +257,7 @@ console.log('\nContenido');
    descuido, no una selección. */
 {
   const dirPreparar = join(SRC, 'content', 'preparar');
-  const dirExamenes = join(SRC, 'content', 'calculo', 'examenes');
-  if (existsSync(dirPreparar) && existsSync(dirExamenes)) {
+  if (existsSync(dirPreparar)) {
     const enlazados = new Set();
     for (const f of archivos(dirPreparar, ['.yaml'])) {
       for (const m of leer(f).matchAll(/id:\s*(ex[a-z0-9-]+)/g)) enlazados.add(m[1]);
@@ -266,17 +265,32 @@ console.log('\nContenido');
     const sueltas = [];
     let convocatorias = 0;
     let conAlguno = 0;
-    for (const d of readdirSync(dirExamenes)) {
-      const yamlExamen = join(dirExamenes, d, 'examen.yaml');
-      if (!existsSync(yamlExamen)) continue;
-      convocatorias++;
-      const ids = [...leer(yamlExamen).matchAll(/id:\s*(ex[a-z0-9-]+)/g)].map((m) => m[1]);
-      const n = ids.filter((x) => enlazados.has(x)).length;
-      if (n > 0) conAlguno++;
-      else sueltas.push(`${d} — sus ${ids.length} ejercicios no los enlaza ninguna ruta`);
+    let sinRuta = 0;
+    /* Una asignatura por carpeta: se recorren todas las que tengan `examenes/`
+       en vez de mirar solo Cálculo. La primera versión, del 26 de agosto de
+       2026, tenía `calculo` escrito a fuego y habría dejado a Álgebra fuera del
+       guardián el mismo día que entró. */
+    for (const asignatura of readdirSync(join(SRC, 'content'))) {
+      const dirExamenes = join(SRC, 'content', asignatura, 'examenes');
+      if (!existsSync(dirExamenes)) continue;
+      /* Una asignatura sin ninguna ruta todavía no incumple nada: está a medio
+         empezar, y §14 dice que la ruta se escribe cuando hay exámenes que
+         contar. Se cuenta aparte y se dice, en vez de ponerse rojo. */
+      const tieneRuta = [...archivos(dirPreparar, ['.yaml'])]
+        .some((f) => leer(f).includes(`asignatura: ${asignatura}`));
+      for (const d of readdirSync(dirExamenes)) {
+        const yamlExamen = join(dirExamenes, d, 'examen.yaml');
+        if (!existsSync(yamlExamen)) continue;
+        if (!tieneRuta) { sinRuta++; continue; }
+        convocatorias++;
+        const ids = [...leer(yamlExamen).matchAll(/id:\s*(ex[a-z0-9-]+)/g)].map((m) => m[1]);
+        if (ids.some((x) => enlazados.has(x))) conAlguno++;
+        else sueltas.push(`${asignatura}/${d} — sus ${ids.length} ejercicios no los enlaza ninguna ruta`);
+      }
     }
+    const cola = sinRuta ? ` (${sinRuta} más en asignaturas que aún no tienen ruta)` : '';
     if (sueltas.length === 0) {
-      ok(`toda convocatoria tiene ejercicios en alguna ruta: ${conAlguno} de ${convocatorias}`);
+      ok(`toda convocatoria tiene ejercicios en alguna ruta: ${conAlguno} de ${convocatorias}${cola}`);
     } else {
       fallo(
         'Hay convocatorias enteras a las que ninguna ruta lleva',

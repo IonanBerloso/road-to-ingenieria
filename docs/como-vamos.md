@@ -479,10 +479,68 @@ auditoría periódica, que se pasa a mano y se lee con criterio.
 > mayo-junio de 2020 está partido en **dos** ficheros que son un solo examen, lo
 > que resta 1. Total: 88, y las 88 están.
 
-## Las otras ocho asignaturas
+## Álgebra, abierta el 26 de agosto de 2026
+
+Se abre el mismo día que Cálculo cumple §15 entera, que es lo que §00 exige. El
+material apareció completo: **ocho exámenes, la teoría de los siete temas y los
+boletines de problemas**.
+
+**El temario es oficial y con fuente**, no puesto a ojo: las transparencias del
+Departamento de Matemática Aplicada numeran los temas en su portada —Matrices el
+3, Determinantes el 4, Sistemas el 5, Euclídeos el 6, Diagonalización el 7— y el
+orden de los ocho exámenes fija los dos primeros: el ejercicio 1 es siempre
+espacios vectoriales y el 2, aplicaciones lineales.
+
+| n | tema | peso |
+|---|---|---|
+| 1 | Espacios vectoriales | alto |
+| 2 | Aplicaciones lineales | alto |
+| 3 | Matrices | medio |
+| 4 | Determinantes | medio |
+| 5 | Sistemas de ecuaciones lineales | medio |
+| 6 | Espacios vectoriales euclídeos | alto |
+| 7 | Diagonalización de matrices cuadradas | alto |
+
+**Y no es Cálculo con otros números.** Medido sobre los ocho PDF, antes de
+transcribir ninguno:
+
+| | Cálculo | Álgebra |
+|---|---|---|
+| convocatorias en el volcado | 88 | **8** |
+| cursos | 11 | **4** (2021-22 a 2024-25) |
+| tipos de convocatoria | 9, con parciales y recuperaciones | **2**: ordinaria y extraordinaria |
+| reparto por competencia impreso | en los 425 ejercicios | **en ninguno** |
+| estructura del ejercicio | variable | fija: **(a) demostrar + (b) calcular** |
+
+Las tres últimas filas cambian el trabajo, y conviene tenerlas dichas antes de
+empezar:
+
+- **No hay parciales.** Las rutas de Álgebra se medirán sobre ocho
+  convocatorias, no sobre ochenta y ocho, y eso hay que declararlo en
+  `medidoSobre` — que para eso existe el campo.
+- **No hay reparto de puntos.** El campo `puntos` ya era opcional en el
+  esquema, así que no rompe nada; pero la ruta de Álgebra **no podrá publicar
+  porcentajes por competencia**, y decirlo es mejor que estimarlos.
+- **La mitad de cada ejercicio es una demostración.** «Definir $S+T$ y demostrar
+  que es un subespacio», «demostrar que $f$ es inyectiva si y solo si el núcleo
+  es el cero», «demostrar la invariancia del polinomio característico». En
+  Cálculo el paso `justificar` era el complemento del cálculo; aquí es la
+  mitad del ejercicio.
+
+**Lo que ha costado de capa compartida, de momento: dos líneas.** Una colección
+`algebra` en `content.config.ts`, igual que `fluidos`, y generalizar el
+guardián de convocatorias huérfanas que se escribió esa misma mañana con
+`calculo` escrito a fuego — habría dejado a Álgebra fuera del suelo el mismo
+día que entró.
+
+Lo que sí va a costar está anunciado desde §00 y es la deuda 4: **el lector de
+respuestas**. Una matriz no es un número ni un conjunto de puntos, y una base
+tampoco. Se decidirá con el primer examen delante y no antes, que es §13.
+
+## Las otras siete asignaturas
 
 Cero contenido. Fluidos tiene los 16 temas en el catálogo y un README; las
-otras siete están como `prev`. Es §00 funcionando: no se abre una hasta cerrar
+otras seis están como `prev`. Es §00 funcionando: no se abre una hasta cerrar
 la anterior.
 
 ---
