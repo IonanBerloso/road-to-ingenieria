@@ -859,8 +859,9 @@ esférico. Falta un escalón intermedio con un cuerpo curvado sencillo.
 
 ---
 
-**38 · La ruta de la 4.ª evaluación no enlaza ni un solo ejercicio de examen de
-su convocatoria.** Sus tres bloques y diez escalones mandan a la prosa de los
+**38 · ~~La ruta de la 4.ª evaluación no enlaza ni un solo ejercicio de examen
+de su convocatoria.~~** Resuelta el 26 de agosto de 2026, el mismo día que se
+abrió. Lo que había: Sus tres bloques y diez escalones mandan a la prosa de los
 temas y a los ejercicios propios, y a ninguna de las once cuartas evaluaciones
 transcritas.
 
@@ -881,7 +882,32 @@ compartida, no en el contenido. Arreglado el contador en
 | 5.ª | 0 de 32 | **32 de 32** |
 | ordinaria | 0 de 86 | **25 de 86** (45 son del segundo parcial, que es lo que prepara) |
 
-La 4.ª siguió diciendo cero **porque en su caso el cero era cierto**, y eso es
-lo que hay que arreglar ahora. Es la lección de §16 en su forma más limpia: un
-dato falso escondía un hueco real, y hasta que el dato no dijo la verdad el
-hueco no se vio.
+La 4.ª siguió diciendo cero **porque en su caso el cero era cierto**. Es la
+lección de §16 en su forma más limpia: un dato falso escondía un hueco real, y
+hasta que el dato no dijo la verdad el hueco no se vio.
+
+**Lo arreglado.** Se mapearon los veintinueve ejercicios de las once cuartas
+evaluaciones —diez de varias variables, dieciocho de integral múltiple y uno de
+curvilínea— y se colgaron los veintiocho de los temas 6 y 7 de los escalones que
+les tocan. La ruta pasa de 10 escalones a 12, porque la medición pidió dos que
+no existían:
+
+- **«plantear sin calcular, y leer un sólido dentro de su integral»** — cuatro
+  de los dieciocho: 2016-2017 pide el mismo volumen planteado en cilíndricas y
+  en esféricas sin calcular ninguno; 2023-2024 dice literalmente «plantear
+  (funciones y límites de integración)»; y 2022-2023 y 2025-2026 hacen el camino
+  inverso, dan la integral y piden dibujar el sólido. Es una destreza propia y
+  no tenía sitio;
+- **«el área de la superficie»** — tres de los dieciocho: 2015-2016, 2017-2018 y
+  2024-2025. O sea que la deuda 37 no era solo de las ordinarias: **siete
+  ejercicios en total pedían un área de superficie que el tema no explicaba**.
+
+El que queda fuera es el ejercicio 3 de 2020-2021, que calcula un área con una
+integral curvilínea. Es del tema 8, que no entra en esta evaluación, y cayó aquí
+una sola vez en once años. Está declarado en el `falta[]` del bloque, con el
+recuento «veintiocho de veintinueve» dicho en voz alta.
+
+Los 48 enlaces de la ruta pulsados en el navegador: los 48 llegan a un destino
+visible. Y de comprobarlo salió una trampa nueva para §17 — la primera medición
+dio 18 de 18 en verde **con la página vieja**, porque el servidor de desarrollo
+no se había enterado de que el YAML había cambiado.

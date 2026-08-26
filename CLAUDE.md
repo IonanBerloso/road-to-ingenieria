@@ -966,6 +966,16 @@ Cosas que ya han costado horas. No son opiniones.
 - **En modo guiado, un enlace a un apartado que no es el visible no navega.**
   El destino existe pero está oculto. Lo resuelve `abreElAncla()` en
   `Lectura.astro`; si escribes otro componente con secciones, tenlo en cuenta.
+- **El servidor de desarrollo sirve colecciones de contenido viejas.** Si un
+  `.yaml` de `src/content/` lo escribe otro proceso —un script del scratchpad,
+  un `git checkout`— el vigilante de Astro puede no enterarse, y `npm run dev`
+  sigue devolviendo la versión anterior sin avisar de nada. El 26 de agosto de
+  2026 costó una medición falsa: la ruta de la 4.ª evaluación se comprobó en el
+  navegador con 48 enlaces nuevos ya escritos, y el navegador informó de 18
+  —los de antes— con todo en verde. **Antes de creerte cualquier medición sobre
+  el navegador, comprueba que el servidor ya sirve lo que acabas de escribir**:
+  un `curl` a la página y un `grep` de algo que solo esté en la versión nueva.
+  Si no está, se mata el proceso del puerto 4321 y se levanta otra vez.
 - **El esquema no tiene `unidad`.** Cálculo nunca la necesitó. Fluidos la
   necesita en su primer ejercicio, y el ejemplo de §04 de este fichero la usó
   durante meses sin que existiera. Añadirla es tocar la capa compartida: se

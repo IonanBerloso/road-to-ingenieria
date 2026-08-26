@@ -117,7 +117,7 @@ alta.
 | 1.ª evaluación | 7 | 21 | 11 convocatorias | 4 |
 | 2.ª evaluación | 8 | 17 | 11 | 2 |
 | 3.ª evaluación | 9 | 18 | 11 | 3 |
-| 4.ª evaluación | 3 | 10 | 11 | 3 |
+| 4.ª evaluación | 3 | **12** | 11 | **4** |
 | 5.ª evaluación | 3 | 12 | 10 | 6 |
 | ordinaria | **8** | **17** | **11** | **6** |
 
@@ -156,7 +156,7 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 | cada tema con al menos una figura | ✅ 25 |
 | una ruta por evaluación | ⚠️ 6 de 7 — falta la extraordinaria |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
-| `falta[]` dice lo que no está | ✅ 24 huecos |
+| `falta[]` dice lo que no está | ✅ 25 huecos |
 | `npm run suelo` en verde | ✅ |
 | **todas las convocatorias publicadas transcritas** | ❌ **76 de 89** |
 
@@ -183,13 +183,13 @@ porque §15 exige todas las convocatorias publicadas, no porque falte contenido
 que solo ellas puedan dar.
 
 La ruta `calculo-ord.yaml` —la deuda 33, la que llevaba meses esperando a este
-momento— se rehizo el mismo día, y de rehacerla salieron dos deudas nuevas.
-La 37, **el área de una superficie en el tema 7**, se cerró en el acto: el tema
-tiene ya su apartado, su figura y su ejemplo de entrada. Queda la 38, **la ruta
-de la 4.ª evaluación, que no enlaza ni un ejercicio de examen de su
-convocatoria**, y va antes que las extraordinarias porque es un hueco de
-contenido y no de transcripción. Después, **engordar los temas 10 y 11** con lo
-que digan sus doce y diez ejercicios.
+momento— se rehizo el mismo día, y de rehacerla salieron dos deudas nuevas que
+se cerraron las dos en la misma tanda: la **37**, el área de una superficie en
+el tema 7, que ya tiene apartado, figura y ejemplo de entrada; y la **38**, la
+ruta de la 4.ª evaluación, que no enlazaba ni un ejercicio de examen de su
+propia convocatoria y ahora enlaza veintiocho de veintinueve. Lo siguiente es
+**engordar los temas 10 y 11** con lo que digan sus doce y diez ejercicios, y
+después las extraordinarias.
 
 El trabajo por examen, ya rodado:
 
@@ -241,7 +241,7 @@ Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 | | trabajo | qué desbloquea |
 |---|---|---|
 | 1 | ~~Rehacer `calculo-ord.yaml`~~ | **hecho el 26 de agosto de 2026** |
-| 2 | ~~El área de una superficie en el tema 7~~ · **la ruta `4ev` sin un solo ejercicio de examen** | la primera, hecha el mismo día; la segunda, deuda 38 |
+| 2 | ~~El área de una superficie en el tema 7~~ · ~~la ruta `4ev` sin ejercicios de examen~~ | las dos, hechas el mismo día |
 | 3 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
 | 4 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
 | 5 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
@@ -276,11 +276,11 @@ una línea:
   **Cerrada** el 26 de agosto de 2026: apartado nuevo con la fórmula, la figura
   de por qué lleva una raíz, el atajo de los cuerpos de revolución y un ejemplo
   introductorio que se resuelve sin integrar.
-- **38** — **la ruta de la 4.ª evaluación no enlaza ni un ejercicio de examen de
-  su convocatoria.** Estaba escondido detrás de un fallo de la capa compartida
-  que hacía que cinco de las seis rutas dijeran «te lleva por 0 ejercicios»
-  siendo falso; arreglado el contador, cuatro pasaron a decir la verdad y la
-  4.ª siguió diciendo cero — porque en su caso el cero era cierto.
+- **38** — ~~la ruta de la 4.ª evaluación no enlaza ni un ejercicio de examen de
+  su convocatoria~~. **Cerrada** el 26 de agosto de 2026: los veintiocho de los
+  veintinueve que son de los temas 6 y 7 cuelgan ya de sus escalones, y hay dos
+  escalones nuevos que la medición pedía —«plantear sin calcular» y «el área de
+  la superficie»—. El que falta es de integral curvilínea y está declarado.
 - **34** — esta medición se quedó atrás dos commits. Corregido, y de ahí sale la
   regla del encabezado.
 - **35** — **los profesores repiten ejercicios entre convocatorias.** Medido
