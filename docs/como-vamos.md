@@ -39,10 +39,10 @@ ejercicios de examen. Faltan 13: once extraordinarias y los dos parciales de
 | t08 integral curvilínea | 1 119 | 1 | 7 | 2 | 17 |
 | t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | 23 |
 | t10 Laplace | **1 605** | **2** | **9** | **3** | **12** |
-| t11 Fourier | 888 | 1 | 8 | 2 | **10** |
-| **total** | **19 175** | **26** | **181** | **43** | **321** |
+| t11 Fourier | **1 668** | **2** | **9** | **3** | **10** |
+| **total** | **19 955** | **27** | **182** | **44** | **321** |
 
-En todo el corpus: **502 ejercicios y 1 930 pasos**.
+En todo el corpus: **503 ejercicios y 1 934 pasos**.
 
 El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
 figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
@@ -59,8 +59,26 @@ sus doce ejercicios de examen, y eran tres huecos de verdad:
   2015-2016: $\int_0^\infty t^{17}e^{-5t}dt$ es $17!/5^{18}$ y se contesta en
   una línea.
 
-El tema 11 sigue en 888 palabras y una figura, y es ahora el más flaco del
-sitio. Es lo siguiente.
+El tema 11 recibió el mismo tratamiento el mismo día: de 888 a **1 668
+palabras** y de una figura a dos, y otra vez lo añadido salió de contar sus diez
+ejercicios de examen, no de mirar el temario:
+
+- **la ampliación par e impar no tenía apartado**, y es el apartado a) de cuatro
+  de los diez —«obtener la ampliación impar y periódica de f(t)», y dibujarla—.
+  Solo estaba como dos filas del formulario. Ahora tiene apartado, figura con
+  las dos ampliaciones de la misma media función, y ejemplo introductorio;
+- **reducir un argumento grande al periodo** se despachaba en una frase, y lo
+  piden ocho de los diez. Ahora es un subapartado con los cinco puntos reales de
+  2023-2024 y 2024-2025 reducidos uno a uno — incluido el de $T=4$, donde la
+  reducción no entiende de $\pi$;
+- **el cálculo de los coeficientes** no estaba hecho ni una vez. Ahora está el
+  caso de siempre entero, con las dos simplificaciones que salen al evaluar
+  —$\operatorname{sen}(n\pi)=0$ y $\cos(n\pi)=(-1)^{n}$— y el aviso del periodo:
+  en 2024-2025 valía $4$, y copiar la fórmula de memoria estropea la serie
+  entera sin que nada avise.
+
+Con los dos, los temas del segundo cuatrimestre dejan de tener un flaco claro:
+el más corto pasa a ser el 8, con 1 119 palabras.
 
 La columna «fig.» cuenta solo las figuras de la prosa de los temas. Las de los
 enunciados y las resoluciones de examen van aparte, y en estas ocho ordinarias
@@ -130,7 +148,7 @@ alta.
 | 3.ª evaluación | 9 | 18 | 11 | 3 |
 | 4.ª evaluación | 3 | **12** | 11 | **4** |
 | 5.ª evaluación | 3 | 12 | 10 | 6 |
-| ordinaria | **8** | **18** | **11** | **6** |
+| ordinaria | **8** | **19** | **11** | **6** |
 
 **La de la ordinaria se rehizo el 26 de agosto de 2026**, el mismo día que se
 cerró la última convocatoria que le faltaba. Decía estar medida sobre 2 y ahora
@@ -163,8 +181,8 @@ Y falta la ruta de la extraordinaria, que §15 pide y todavía no existe.
 |---|---|
 | temas del temario oficial, con fuente | ✅ 11/11 |
 | todo tema enlazado por una ruta tiene prosa | ✅ |
-| cada tema con ejemplo introductorio propio | ✅ 43 |
-| cada tema con al menos una figura | ✅ 26 |
+| cada tema con ejemplo introductorio propio | ✅ 44 |
+| cada tema con al menos una figura | ✅ 27 |
 | una ruta por evaluación | ⚠️ 6 de 7 — falta la extraordinaria |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 25 huecos |
@@ -193,14 +211,25 @@ ningún tema: **la muestra de Laplace y Fourier está completa**. Se transcriben
 porque §15 exige todas las convocatorias publicadas, no porque falte contenido
 que solo ellas puedan dar.
 
-La ruta `calculo-ord.yaml` —la deuda 33, la que llevaba meses esperando a este
-momento— se rehizo el mismo día, y de rehacerla salieron dos deudas nuevas que
-se cerraron las dos en la misma tanda: la **37**, el área de una superficie en
-el tema 7, que ya tiene apartado, figura y ejemplo de entrada; y la **38**, la
-ruta de la 4.ª evaluación, que no enlazaba ni un ejercicio de examen de su
-propia convocatoria y ahora enlaza veintiocho de veintinueve. Lo siguiente es
-**engordar los temas 10 y 11** con lo que digan sus doce y diez ejercicios, y
-después las extraordinarias.
+Todo lo que las ordinarias bloqueaban se hizo el mismo día, y conviene ver la
+cadena entera porque es la mejor prueba de que medir rinde:
+
+1. se cerró la última ordinaria, la de 2013-2014;
+2. con las once, se rehízo `calculo-ord.yaml` sobre 45 ejercicios en vez de
+   sobre 2 —**deuda 33**—, y aparecieron dos bloques que no existían;
+3. rehacerla destapó que **el área de una superficie no estaba en el tema 7**
+   —deuda 37—, y arreglarlo destapó que tampoco lo estaba para la 4.ª
+   evaluación: siete ejercicios en total la pedían;
+4. arreglar el contador de la página de rutas destapó que **la ruta de la 4.ª
+   no enlazaba ni un examen de su convocatoria** —deuda 38—, escondido detrás
+   de un «0 de 29» que era falso en cinco rutas de seis;
+5. y con las once ordinarias leídas se pudieron **engordar los temas 10 y 11**,
+   los dos más flacos, con lo que dicen sus doce y diez ejercicios.
+
+Ninguna de esas cinco cosas estaba en el plan de por la mañana. Las cinco
+salieron de contar.
+
+Lo que queda por delante son las once extraordinarias, y no bloquean nada.
 
 El trabajo por examen, ya rodado:
 
@@ -282,7 +311,7 @@ una línea:
 - **32** — dos ejercicios del tema 9 duplican problemas que ahora también están
   transcritos como examen.
 - **33** — ~~la ruta `ord` dice «medida sobre 2»~~. **Cerrada** el 26 de agosto
-  de 2026: rehecha sobre las once, con ocho bloques y dieciocho escalones.
+  de 2026: rehecha sobre las once, con ocho bloques y diecinueve escalones.
 - **37** — ~~el área de una superficie curva no está en la prosa del tema 7~~.
   **Cerrada** el 26 de agosto de 2026: apartado nuevo con la fórmula, la figura
   de por qué lleva una raíz, el atajo de los cuerpos de revolución y un ejemplo

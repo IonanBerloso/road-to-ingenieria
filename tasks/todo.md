@@ -943,3 +943,39 @@ El segundo es de un píxel y no se ve, pero es la misma causa.
 Los dos arreglados ensanchando el `viewBox`, y las veintiuna páginas en verde.
 La validación al revés que pide §11 no hizo falta inventarla: **el guardián
 nació rojo**, sobre dos fallos reales, y se puso verde al arreglarlos.
+
+---
+
+**40 · ~~Los temas 10 y 11 tenían la mitad de prosa que los demás.~~** Resuelta
+el 26 de agosto de 2026, el mismo día que se cerró la última ordinaria — que era
+la condición: **Laplace y Fourier no caen en ninguna evaluación continua**, así
+que hasta tener las once globales no había muestra con la que decidir qué les
+faltaba.
+
+Con la muestra completa —doce ejercicios de Laplace y diez de Fourier— se
+contaron los apartados uno a uno, y salieron seis huecos, tres por tema. El 10
+pasa de 872 a 1 605 palabras y el 11 de 888 a 1 668; los dos, de una figura a
+dos.
+
+| tema | lo que faltaba | cuántos exámenes lo piden |
+|---|---|---|
+| 10 | **la función escalón**, usada en la tabla y nunca definida | 2 de 12 |
+| 10 | **derivar la transformada**, para coeficientes variables | 1 de 12 |
+| 10 | **la definición leída al revés**, para integrales impropias | 1 de 12 |
+| 11 | **la ampliación par e impar**, que es el apartado a) | 4 de 10 |
+| 11 | **reducir un argumento grande al periodo** | 8 de 10 |
+| 11 | **el cálculo de los coeficientes**, hecho una vez entero | 9 de 10 |
+
+Los dos últimos son los que más duelen: los pedían ocho y nueve de cada diez
+exámenes, y la prosa despachaba el primero en una frase y no hacía el segundo ni
+una vez. **Un tema puede tener todos los conceptos y aun así no enseñar a hacer
+el ejercicio.**
+
+Todo comprobado por dos caminos antes de escribirlo, incluidas las cinco
+reducciones al periodo de 2023-2024 y 2024-2025 y la solución `y = e^{2t}` de la
+ecuación con coeficientes variables.
+
+**Lo que queda dicho**, para no dar la cosa por más cerrada de lo que está: los
+dos temas siguen sin ejercicio propio para los apartados nuevos salvo dos
+ejemplos introductorios —el del escalón y el de ampliar y reducir—. Y el tema
+más flaco del sitio pasa a ser el 8, con 1 119 palabras y una figura.
