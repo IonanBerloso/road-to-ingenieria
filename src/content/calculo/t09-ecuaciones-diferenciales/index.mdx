@@ -196,6 +196,12 @@ se prueba un polinomio del mismo grado; si es $e^{kx}$, se prueba $Ae^{kx}$; si
 es seno o coseno, se prueba $A\cos + B\,\text{sen}$ — **las dos, aunque solo
 aparezca una**.
 
+Ese método tiene nombre y conviene saberlo, porque los enunciados lo usan: se
+llama **método de los coeficientes indeterminados**, y los coeficientes que se
+determinan son esas $A$ y $B$ que se prueban. Solo funciona cuando $f(x)$ es de
+la familia corta —polinomio, exponencial, seno, coseno, y productos de esas—,
+que es justamente la que cae en el examen.
+
 <ErrorTipico titulo="Probar una particular que ya está en la homogénea">
 Si $f(x) = e^{3x}$ y resulta que $r=3$ es raíz de la característica, probar
 $Ae^{3x}$ no puede funcionar: esa función ya resuelve la ecuación homogénea, así
@@ -206,7 +212,59 @@ $Ax^{2}e^{3x}$.
 
 Es el fallo más común del bloque y se detecta antes de calcular nada: **compara
 siempre las raíces de la característica con lo que hay en $f(x)$.**
+
+A esta situación se la llama **resonancia** —se dice que el segundo miembro
+**resuena** con la homogénea—, y es la palabra que usan las resoluciones y los
+libros. El nombre viene de la física: si el segundo miembro
+empuja al sistema **con su propia frecuencia**, la respuesta no se queda
+acotada. Con $y''+9y = 3\cos 3x$, la homogénea ya oscila a frecuencia $3$ y el
+empujón llega también a frecuencia $3$: la particular sale
+$\frac{x}{2}\,\text{sen}\,3x$, y ese factor $x$ **crece sin límite** aunque la
+fuerza esté acotada entre $-3$ y $3$. Es lo que hace vibrar un puente al paso
+acompasado de la gente.
 </ErrorTipico>
+
+### Cuando los coeficientes indeterminados no valen: variación de constantes
+
+Si $f(x)$ no es de esa familia corta —un $\dfrac{1}{\cos x}$, un $\ln x$, un
+$\tan x$— no hay nada «parecido» que probar, y el método anterior no arranca.
+Entonces se usa **la variación de las constantes**: se parte de la homogénea
+
+$$
+y_h = C_1 y_1 + C_2 y_2
+$$
+
+y se dejan **variar** las constantes, es decir, se busca la particular como
+
+$$
+y_p = u_1(x)\,y_1 + u_2(x)\,y_2
+$$
+
+con $u_1$ y $u_2$ funciones por determinar. Imponiendo la condición auxiliar
+$u_1'y_1 + u_2'y_2 = 0$ —que es lo que hace que el sistema quede de primer
+orden— las derivadas salen de
+
+$$
+\begin{cases}
+u_1'\,y_1 + u_2'\,y_2 = 0\\[2pt]
+u_1'\,y_1' + u_2'\,y_2' = f(x)
+\end{cases}
+$$
+
+y de ahí, integrando, $u_1$ y $u_2$. El determinante del sistema es el
+**wronskiano** $W = y_1y_2' - y_1'y_2$, que no se anula precisamente porque
+$y_1$ e $y_2$ son independientes.
+
+**Cuándo usar cada uno**, que es lo único que hay que decidir en el examen:
+
+| $f(x)$ es… | método |
+|---|---|
+| polinomio, $e^{kx}$, $\cos$, $\text{sen}$, o producto de ellos | coeficientes indeterminados |
+| cualquier otra cosa | variación de las constantes |
+
+En la práctica casi todos los exámenes caen en la primera fila. La segunda está
+aquí porque cuando cae, quien solo conoce el método de probar se queda sin
+empezar.
 
 ## Estudiar la solución sin resolverla
 
@@ -274,6 +332,35 @@ No hace falta resolver para contestar: el equilibrio está donde $y'=0$. Aquí,
 $400 = 0{,}02N$, o sea $N = 20\,000$ libros. La solución tiende a ese valor
 venga de donde venga.
 
+**Los tres modelos que caen con nombre propio**, y conviene reconocerlos por el
+enunciado antes de plantear nada:
+
+| enunciado | ecuación | cómo se llama |
+|---|---|---|
+| «proporcional a la diferencia con la temperatura ambiente» | $T' = -k\,(T - T_{\text{amb}})$ | **ley de enfriamiento de Newton** |
+| «proporcional al producto de los contagiados y los no contagiados» | $P' = k\,P\,(M - P)$ | **ecuación logística** |
+| «proporcional a lo que hay» | $y' = k\,y$ | crecimiento o desintegración exponencial |
+
+Las dos primeras son lineales solo en apariencia: la de Newton **sí** es lineal
+—y también separable—, y la **logística no lo es**, pero es separable y se
+integra descomponiendo en fracciones simples, con el truco de que las dos partes
+suman $M$:
+
+$$
+\frac{1}{P(M-P)} = \frac{1}{M}\left(\frac{1}{P} + \frac{1}{M-P}\right)
+$$
+
+Su solución tiene siempre la misma forma, y merece la pena reconocerla:
+
+$$
+P(t) = \frac{M}{1 + A\,e^{-kMt}}
+$$
+
+Una **ese** que sale despacio, acelera hasta la mitad de la población —ahí está
+su punto de inflexión— y luego frena acercándose a $M$ **sin llegar nunca**. Por
+eso los enunciados preguntan «cuándo se contagia el 90 %» y no «cuándo se
+contagian todos»: la segunda pregunta no tiene respuesta.
+
 ## Lo que hay que llevar sabido
 
 | pregunta | qué hacer |
@@ -283,8 +370,11 @@ venga de donde venga.
 | «sin resolver la EDO, estudiar…» | el signo de $y'$ sale de la propia ecuación |
 | «polinomio de Taylor de la solución» | deriva la EDO, evalúa en el punto |
 | «$y'' + ay' + by = f$» | característica, y particular parecida a $f$ |
-| la particular ya está en la homogénea | multiplica por $x$ |
+| la particular ya está en la homogénea | hay **resonancia**: multiplica por $x$ |
+| $f(x)$ no es polinomio, exponencial ni trigonométrica | **variación de las constantes** |
 | «tasa proporcional a…» | traduce con el diccionario |
+| «la diferencia con la temperatura ambiente» | **ley de Newton**, $T'=-k(T-T_{\text{amb}})$ |
+| «proporcional al producto de contagiados y sanos» | **logística**, y la solución es una ese |
 | «¿qué pasa a largo plazo?» | resuelve $y'=0$ |
 
 Y las tres frases de COMP4:

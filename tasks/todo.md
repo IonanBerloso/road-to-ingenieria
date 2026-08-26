@@ -952,3 +952,51 @@ El comprobador está en el scratchpad: cruza los `id` que aparecen en
 `src/content/preparar/*.yaml` con los de todos los `examen.yaml`. **Eso es
 otro guardián que debería vivir en `verify.mjs`** —junto con el de las anclas
 de la deuda 44— y hoy no vive.
+
+**46 · ~~Catorce herramientas que el examen usa y la prosa no presentaba.~~
+Cerrada el 26 de agosto de 2026**, en la auditoría de §15.
+
+§15 pide que toda herramienta que el examen usa esté en la prosa del tema, y
+dice cómo se comprueba: **contando apariciones**. Se contó. El procedimiento y
+la lista completa están en `docs/como-vamos.md`; aquí queda lo que hay que
+recordar para la próxima vez.
+
+**Las tres que eran huecos de verdad**, no de vocabulario:
+
+- **La integración numérica no existía en el tema 5.** Ni punto medio, ni
+  trapecio, ni Simpson: la palabra «numérica» no aparecía. Y el examen de junio
+  de 2013 pide literalmente «aproximar la integral empleando la regla del punto
+  medio usando cuatro subintervalos». Ahora hay apartado propio, con la
+  comparación de errores —el punto medio se equivoca la mitad que el trapecio, y
+  con signo contrario— y con el cambio de variable que acota un intervalo
+  infinito, que es el paso previo obligatorio.
+- **La variación de las constantes no estaba en el tema 9.** El método de
+  coeficientes indeterminados sí, sin su nombre; el otro, ni descrito ni
+  nombrado. Cinco ejercicios lo usan.
+- **La regla de la cadena no aparecía ni una vez en el tema 6.** Es la
+  herramienta que convierte «la temperatura depende del sitio y el sitio del
+  tiempo» en una cuenta, y sin ella la derivación implícita queda como una
+  fórmula caída del cielo.
+
+**Y once que eran de vocabulario**, que no es menos grave de lo que parece: un
+alumno que lee en una resolución «hay resonancia» y busca la palabra en su tema
+no la encontraba. Concavidad —que ocho enunciados dicen con esas letras—,
+circulación, resonancia, resto de Lagrange, Leibniz, coeficientes
+indeterminados, momento de inercia, espectro, diferencial total, L'Hôpital y
+Darboux.
+
+**Lo que el auditor enseñó sobre sí mismo, y es la parte que hay que conservar.**
+La primera pasada dio veintiuna herramientas ausentes y **dos eran falsas**:
+
+- «punto medio» salía en cuarenta exámenes, y en treinta y nueve era el punto
+  medio de un segmento;
+- «delta» salía en cinco, y en los cinco era `Delta`, un incremento.
+
+Un buscador de subcadenas no distingue significados. **Regla: una auditoría
+automática se verifica a mano antes de publicar su recuento**, y se distingue si
+el término lo dice el enunciado o solo nuestra resolución — no es lo mismo que
+falte una palabra del profesor que una nuestra.
+
+El auditor está en el scratchpad y **también debería estar en `verify.mjs`**,
+como los de las deudas 44 y 45. Son ya tres comprobadores que existen y no
+guardan nada: eso, junto, es la deuda que queda abierta de esta tanda.

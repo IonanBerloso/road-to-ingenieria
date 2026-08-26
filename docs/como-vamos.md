@@ -82,18 +82,22 @@ valorará la presentación».
 |---|---|---|---|---|---|
 | t01 complejos | 2 885 | 3 | 37 | 8 | **74** |
 | t02 sucesiones | 2 035 | 3 | 19 | 4 | **32** |
-| t03 funciones reales | 1 779 | 3 | 23 | 5 | 21 |
-| t04 estudio local | 2 036 | 3 | 18 | 5 | **85** |
-| t05 integración | 1 925 | 4 | 30 | 4 | **49** |
-| t06 varias variables | 1 797 | 2 | 12 | 4 | **20** |
-| t07 integral múltiple | 1 865 | 3 | 11 | 4 | **41** |
-| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | **26** |
-| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | **36** |
-| t10 Laplace | **1 605** | **2** | **9** | **3** | **24** |
-| t11 Fourier | **1 668** | **2** | **9** | **3** | **17** |
-| **total** | **19 955** | **27** | **182** | **44** | **425** |
+| t03 funciones reales | **2 017** | 3 | 23 | 5 | 21 |
+| t04 estudio local | **2 281** | 3 | 18 | 5 | **85** |
+| t05 integración | **2 251** | 4 | 30 | 4 | **49** |
+| t06 varias variables | **2 071** | 2 | 12 | 4 | **20** |
+| t07 integral múltiple | **1 932** | 3 | 11 | 4 | **41** |
+| t08 integral curvilínea | **1 208** | 1 | 7 | 2 | **26** |
+| t09 ecuaciones diferenciales | **1 800** | 1 | 7 | 2 | **36** |
+| t10 Laplace | **1 617** | **2** | **9** | **3** | **24** |
+| t11 Fourier | **2 012** | **2** | **9** | **3** | **17** |
+| **total** | **22 109** | **27** | **182** | **44** | **425** |
 
 En todo el corpus: **607 ejercicios y 2 349 pasos**.
+
+> La prosa sube de 19 955 a 22 109 palabras el 26 de agosto de 2026, y no por
+> engordar: son los catorce huecos que destapó la auditoría de §15, contados y
+> cerrados. Está explicado más abajo, en su propio apartado.
 
 El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
 figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
@@ -358,12 +362,75 @@ Es el fallo de §16.2, el de los 58 enlaces rotos, y esta vez se buscó antes de
 que apareciera. De paso se pasaron por el mismo comprobador las otras seis
 rutas: 496 enlaces con ancla, cero rotos.
 
+## La auditoría de §15, y las diecinueve herramientas que faltaban
+
+Hecha el 26 de agosto de 2026, en cuanto se cerró el corpus y se escribió la
+séptima ruta. §15 pide que **toda herramienta que el examen usa esté presentada
+en la prosa del tema**, y añade cómo se comprueba: «contando apariciones, no
+leyendo por encima». Eso es lo que se hizo.
+
+**El método.** Para cada tema, se cogieron los términos que nombran una
+herramienta concreta —no «integral» ni «función», que no dicen nada—, se buscó
+cuáles aparecen en sus ejercicios de examen, y de esos, cuáles **no aparecen ni
+una vez** en su `index.mdx`. Es el mismo procedimiento con el que apareció la
+deuda 37, cuando la palabra «superficie» no salía en el tema 7.
+
+Y se distinguió una cosa que cambia mucho la gravedad: si el término lo dice
+**el enunciado del examen** —la voz del profesor— o solo nuestra resolución.
+
+**Lo que salió**, y hubo que afinarlo dos veces porque la primera pasada mentía:
+
+| tema | lo que faltaba | usos en examen |
+|---|---|---|
+| t04 | **«concavidad»**, la palabra exacta que usan ocho enunciados | 15 |
+| t08 | **«circulación»**, el otro nombre de la integral de línea | 15 |
+| t09 | **«resonancia»**, y el verbo «resuena» | 14 |
+| t04 | **«resto de Lagrange»**: la fórmula estaba, el nombre no | 11 |
+| t11 | **la serie de Leibniz**, que remata nueve ejercicios | 9 |
+| t09 | **«coeficientes indeterminados»**: el método sin su nombre | 8 |
+| t09 | **la variación de las constantes**, que no estaba en absoluto | 5 |
+| t05 | **la integración numérica entera** — punto medio, trapecio, Simpson | 6 |
+| t06 | **la regla de la cadena**, que no aparecía ni una vez | 2 |
+| t03 | **Darboux**, que un examen pide enunciar y demostrar, 0/0/10 | 1 |
+| t07 | **el momento de inercia** | 1 |
+| t11 | **el espectro** | 1 |
+| t06 | **la diferencial total** | 2 |
+| t04 | **L'Hôpital** | 1 |
+
+**Dos falsos positivos, y los dos enseñan algo sobre el propio auditor.** El
+primero: «punto medio» aparecía en cuarenta exámenes, y en treinta y nueve es el
+punto medio de un segmento, no la regla de cuadratura. El segundo: «delta»
+aparecía en cinco, y en los cinco es $Delta$, un incremento, no la delta de
+Dirac. Un buscador de subcadenas no distingue significados, y publicar «faltan
+seis herramientas» cuando falta una es exactamente lo que §10 prohíbe. Por eso
+la lista de arriba está contada con términos precisos y verificada uno a uno.
+
+**Lo que se escribió.** Los catorce huecos, cerrados el mismo día: la prosa de
+Cálculo pasa de **19 955 a 22 109 palabras**, un 11 % más, sin que haya crecido
+ningún tema por gusto. Los tres que más suben son los tres que más les faltaba:
+
+| tema | antes | ahora | qué se le añadió |
+|---|---|---|---|
+| t09 EDO | 1 241 | **1 800** | resonancia con su nombre, los dos métodos de la particular, y los tres modelos con nombre propio |
+| t11 Fourier | 1 668 | **2 012** | Leibniz y las otras dos sumas, con la función que produce cada una, y el espectro |
+| t05 integración | 1 925 | **2 251** | un apartado nuevo de cuadratura, con la comparación de errores y el cambio que acota el intervalo |
+
+Las tres sumas de Fourier y las tres reglas de cuadratura **se comprobaron
+numéricamente antes de publicarlas**, y menos mal: la primera versión de la
+tabla de series decía que $sum 1/n^{2}$ sale de la ampliación par de $t$
+evaluada en el origen, y es falso —de ahí sale $pi^{2}/8$, y hace falta
+$t^{2}$ en $t=pi$ para $pi^{2}/6$—. Y una cuarta fila decía que la armónica
+alternada sale de una serie de Fourier: sale del desarrollo de $ln(1+x)$, que
+es del tema 4. Las dos habrían sido plausibles y las dos eran mentira.
+
 ## Contra el criterio de «asignatura terminada» (§15)
 
 | criterio | |
 |---|---|
 | temas del temario oficial, con fuente | ✅ 11/11 |
 | todo tema enlazado por una ruta tiene prosa | ✅ |
+| **toda herramienta que el examen usa, presentada en la prosa** | ✅ **auditado el 26 de agosto de 2026, catorce huecos cerrados** |
+| **todo ejercicio de examen enlazado o declarado** | ✅ 303 enlazados, el resto declarado |
 | cada tema con ejemplo introductorio propio | ✅ 44 |
 | cada tema con al menos una figura | ✅ 27 |
 | una ruta por evaluación | ✅ **7 de 7** |
