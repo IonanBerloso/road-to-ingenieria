@@ -345,6 +345,164 @@ ejercicios:
       devuelve algo que se parece a un perímetro, el jacobiano se ha quedado por
       el camino.
 
+  - id: ej-area-de-un-plano-inclinado
+    titulo: La primera área de una superficie, sin integrar nada
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el área del trozo del plano $z=2x+2y+1$ que queda justo encima
+      del rectángulo $D=[0,2]\times[0,1]$ del plano $XY$.
+    pide: El área de ese trozo de plano.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué el área de ese trozo de plano no es la del rectángulo?
+        opciones:
+          - texto: >-
+              Porque el plano está inclinado, y un trozo inclinado abarca más
+              que su sombra
+            correcta: true
+            mensaje: |
+              Eso es. El rectángulo es la **sombra**, y la superficie que la
+              proyecta es más grande. Cuánto más grande lo dice el factor
+              $1/\cos\gamma$, que es exactamente la raíz de la fórmula.
+          - texto: Porque un plano es infinito y el rectángulo no
+            mensaje: |
+              El plano entero sí es infinito, pero aquí no se pide el plano: se
+              pide **el trozo que está encima de $D$**, que es acotado. Lo que
+              hace que su área no sea $2$ es la inclinación, no el tamaño.
+          - texto: >-
+              Porque hay que sumarle el $1$ del término independiente
+            mensaje: |
+              El $1$ solo sube el plano sin inclinarlo, y subir una superficie
+              no le cambia el área. Lo que decide son las **pendientes**, o sea
+              las derivadas parciales.
+
+      - tipo: calcular
+        titulo: El factor de la raíz
+        pregunta: |
+          ¿Cuánto vale $\sqrt{1+z_{x}^{2}+z_{y}^{2}}$ para este plano?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '9'
+            mensaje: |
+              $1+4+4=9$ es lo que hay **dentro** de la raíz. Falta sacarla:
+              $\sqrt{9}=3$.
+          - valor: '5'
+            mensaje: |
+              Parece que has sumado las derivadas sin elevarlas al cuadrado:
+              $1+2+2$. La fórmula lleva los cuadrados, y por eso el signo de la
+              pendiente da igual.
+          - valor: '2.2360680'
+            mensaje: |
+              $\sqrt5$ sale de usar solo una de las dos parciales. El plano se
+              inclina en las dos direcciones y las dos cuentan.
+        pista: |
+          Las dos pendientes valen $2$, así que dentro de la raíz hay
+          $1+2^{2}+2^{2}$.
+        desarrollo: |
+          $$
+          z_{x}=2,\qquad z_{y}=2
+          \;\Longrightarrow\;
+          \sqrt{1+2^{2}+2^{2}}=\sqrt{9}=3
+          $$
+
+          Y aquí está la gracia de que sea un **plano**: el factor es una
+          constante, no depende del punto. Por eso este ejemplo no exige
+          integrar nada.
+
+      - tipo: calcular
+        titulo: El área
+        pregunta: |
+          ¿Cuánto vale el área de ese trozo de plano?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              $2$ es el área del rectángulo, o sea la de la **sombra**. Falta
+              multiplicar por el factor de la inclinación.
+          - valor: '3'
+            mensaje: |
+              $3$ es el factor, no el área. Hay que multiplicarlo por el área
+              del recinto sobre el que se levanta la superficie.
+          - valor: '18'
+            mensaje: |
+              $18=9\cdot 2$: te has dejado la raíz. Dentro de la raíz hay $9$,
+              pero lo que multiplica es $3$.
+        pista: |
+          El factor es constante, así que sale fuera de la integral y lo que
+          queda dentro es $\iint_{D}dA$, que es el área de $D$.
+        desarrollo: |
+          $$
+          S=\iint_{D}3\,dA=3\iint_{D}dA=3\cdot\text{área}(D)=3\cdot 2=6
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El área de una superficie $z=f(x,y)$ sobre un recinto $D$ es
+              $\iint_{D}\sqrt{1+z_{x}^{2}+z_{y}^{2}}\,dA$, y la raíz es el
+              factor $1/\cos\gamma$ que corrige la inclinación.
+          - texto: >-
+              Aquí $z_{x}=z_{y}=2$, así que la raíz vale $3$ **en todos los
+              puntos**: es una constante y sale fuera de la integral.
+          - texto: >-
+              Lo que queda dentro es $\iint_{D}dA$, el área del rectángulo, que
+              vale $2$. El área buscada es $3\cdot 2=6$.
+          - texto: >-
+              Como el plano lleva un $+1$, el trozo está una unidad más alto y
+              por eso su área es mayor que la del rectángulo.
+            trampa: true
+            mensaje: |
+              Subir una superficie no le cambia el área: el plano $z=2x+2y+1$ y
+              el plano $z=2x+2y$ son el mismo plano trasladado, y los dos dan
+              $6$. El término independiente no aparece en la fórmula porque su
+              derivada es cero. Lo que agranda el área es la **pendiente**.
+    resolucion: |
+      **La idea.** El rectángulo $D$ es la sombra que proyecta el trozo de
+      plano. Como el plano está inclinado, la pieza real es mayor que su sombra,
+      y el factor entre las dos es $1/\cos\gamma$ — que es lo que la fórmula
+      escribe como una raíz:
+
+      $$
+      S=\iint_{D}\sqrt{1+z_{x}^{2}+z_{y}^{2}}\;dA
+      $$
+
+      **La cuenta.** Con $z=2x+2y+1$ las dos pendientes valen $2$:
+
+      $$
+      \sqrt{1+2^{2}+2^{2}}=\sqrt{9}=3
+      $$
+
+      Es **constante**, porque un plano se inclina igual en todos sus puntos.
+      Sale fuera de la integral y deja dentro el área de $D$:
+
+      $$
+      S=3\iint_{D}dA=3\cdot(2\cdot 1)=\boxed{\;6\;}
+      $$
+
+      **Por qué este ejemplo va el primero.** Porque es el único caso en que la
+      fórmula del área de una superficie no exige integrar: el factor es una
+      constante y todo se reduce a una multiplicación. En cuanto la superficie
+      se curva —un paraboloide, una esfera— el factor depende del punto y hay
+      que integrarlo de verdad, casi siempre en polares. Pero la idea es la
+      misma, y aquí se ve sin que la cuenta la tape.
+
+      **La comprobación que conviene hacerse.** El área ha salido tres veces la
+      de la sombra, y eso encaja: el plano sube dos unidades por cada una que
+      avanza en $x$ y otras dos en $y$, así que está muy empinado. Si te sale un
+      área **menor** que la del recinto, el error es seguro — la raíz nunca vale
+      menos de $1$, porque el $1$ de dentro ya está.
+
   # ═══════════════════════════════════════════════════════════════════
   # Del boletín de problemas complementarios del tema 7.
   # ═══════════════════════════════════════════════════════════════════

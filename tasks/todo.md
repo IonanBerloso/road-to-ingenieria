@@ -820,7 +820,9 @@ Es §17 en estado puro, y el fichero hubo que recuperarlo de git.
 
 ---
 
-**37 · El área de una superficie curva no está en la prosa del tema 7.** Medido
+**37 · ~~El área de una superficie curva no está en la prosa del tema 7.~~**
+Resuelta el 26 de agosto de 2026, el mismo día que se abrió. Lo que había,
+medido
 el 26 de agosto de 2026 al rehacer la ruta de la ordinaria: la palabra
 «superficie» **no aparece ni una vez** en
 `src/content/calculo/t07-integral-multiple/index.mdx`, y el apartado «para qué
@@ -834,11 +836,26 @@ resolución de uno de esos cuatro, que es exactamente lo que §14 dice que no
 vale: «toda herramienta que el examen usa está presentada en la prosa del tema,
 no solo dentro de la resolución de un ejercicio».
 
-Lo que hace falta: un apartado en el tema 7 con la integral de superficie de una
-gráfica y de un cuerpo de revolución, su figura, y un ejemplo introductorio
-—porque los tres que tiene el tema son integrales dobles planas y no sirven de
-escalón de entrada—. Está declarado en el `falta[]` del bloque `solidos` de la
-ruta, así que no es una promesa incumplida; es un hueco dicho en voz alta.
+**Lo que se ha escrito**, en el mismo commit que abrió la deuda:
+
+- el apartado **«El área de una superficie, que no es el área de su sombra»**,
+  con la fórmula de la integral doble, el atajo de los cuerpos de revolución
+  —`2π∫r ds`—, el caso del paraboloide hasta el radio 2 hecho entero, y un
+  error típico sobre confundir el área con el volumen;
+- una **figura** que responde a la pregunta que §13 exige: por qué la fórmula
+  lleva una raíz. De perfil, un trozo de superficie inclinado sobre su sombra,
+  con el ángulo repetido entre la normal y la vertical;
+- el ejemplo introductorio **`ej-area-de-un-plano-inclinado`**: el área del
+  trozo del plano z = 2x + 2y + 1 sobre el rectángulo [0,2]×[0,1]. Sale 6, y la
+  gracia es que el factor de la raíz vale 3 en todos los puntos, así que no hay
+  que integrar nada. Es el único caso en que la fórmula se ve sin que la cuenta
+  la tape;
+- y la quinta fila en las dos tablas del tema, la de aplicaciones y la del
+  formulario.
+
+Lo que queda dicho en el `falta[]` de la ruta: entre ese ejemplo y el examen de
+2015-2016 hay un salto, porque el ejemplo es un plano y el examen un casquete
+esférico. Falta un escalón intermedio con un cuerpo curvado sencillo.
 
 ---
 

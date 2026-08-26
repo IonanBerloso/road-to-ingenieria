@@ -2,7 +2,7 @@
 asignatura: calculo
 tema: 7
 titulo: Integral múltiple
-descripcion: Integral doble y triple, el recinto que manda, cambiar el orden de integración, polares, cilíndricas y esféricas. Volumen, masa y centro de gravedad.
+descripcion: Integral doble y triple, el recinto que manda, cambiar el orden de integración, polares, cilíndricas y esféricas. Volumen, masa, centro de gravedad y área de una superficie.
 patron: lectura
 competencias:
   - COMP1
@@ -246,9 +246,113 @@ en un rectángulo de límites constantes.** Si después de cambiar sigues tenien
 raíces en los límites, has elegido mal.
 </ErrorTipico>
 
+## El área de una superficie, que no es el área de su sombra
+
+Hay una pregunta que las cuatro secciones anteriores no contestan y que cae en
+cuatro de cada diez ejercicios de sólido de la convocatoria ordinaria:
+**«calcular el área de su superficie»**. No es el área de una región del plano
+ni el volumen del cuerpo: es cuánta chapa haría falta para construirlo.
+
+Y la trampa está en que la superficie **no vive en el plano**. Está inclinada, y
+un trozo inclinado abarca más que su sombra:
+
+$$
+dS = \frac{dA}{\cos\gamma}
+$$
+
+donde $\gamma$ es el ángulo entre la superficie y la horizontal. Cuanto más
+empinada, más superficie sobre el mismo suelo. Y ese $1/\cos\gamma$ es lo que se
+puede escribir con las derivadas parciales:
+
+$$
+\boxed{\;S=\iint_{D}\sqrt{1+\left(\dfrac{\partial z}{\partial x}\right)^{2}+
+\left(\dfrac{\partial z}{\partial y}\right)^{2}}\;dA\;}
+$$
+
+<figure class="figura-examen">
+  <svg viewBox="0 0 470 200" role="img" aria-labelledby="t7supT t7supD">
+    <title id="t7supT">Por que el area de una superficie lleva una raiz</title>
+    <desc id="t7supD">Vista de perfil. Un trozo de superficie inclinado se proyecta sobre un trozo de suelo horizontal mas corto. El angulo entre los dos es el mismo que entre la normal a la superficie y la vertical.</desc>
+
+    <line x1="30" y1="160" x2="240" y2="160" stroke="var(--rule)" stroke-width="1.1"></line>
+
+    <line x1="60" y1="120" x2="60" y2="160" stroke="var(--graphite)" stroke-width="1" stroke-dasharray="4 3"></line>
+    <line x1="200" y1="50" x2="200" y2="160" stroke="var(--graphite)" stroke-width="1" stroke-dasharray="4 3"></line>
+
+    <line x1="60" y1="160" x2="200" y2="160" stroke="var(--alt)" stroke-width="3.4"></line>
+    <line x1="60" y1="120" x2="200" y2="50" stroke="var(--live)" stroke-width="3.4"></line>
+
+    <line x1="60" y1="120" x2="102" y2="120" stroke="var(--graphite)" stroke-width="1"></line>
+    <path d="M94 120 A34 34 0 0 0 90.4 104.8" fill="none" stroke="var(--graphite)" stroke-width="1.2"></path>
+    <text x="98" y="114" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">γ</text>
+
+    <line x1="130" y1="85" x2="130" y2="25" stroke="var(--graphite)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+    <line x1="130" y1="85" x2="103" y2="31" stroke="var(--flag)" stroke-width="2"></line>
+    <path d="M130 55 A30 30 0 0 0 116.6 58.2" fill="none" stroke="var(--graphite)" stroke-width="1.2"></path>
+    <text x="134" y="46" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">γ</text>
+    <text x="60" y="28" font-size="10.5" fill="var(--flag)" font-family="var(--mono)">normal</text>
+
+    <text x="120" y="178" font-size="11.5" fill="var(--alt)" font-family="var(--mono)">dA</text>
+    <text x="158" y="58" font-size="11.5" fill="var(--live)" font-family="var(--mono)">dS</text>
+
+    <text x="268" y="56" font-size="12" fill="var(--ink)" font-family="var(--mono)">el mismo suelo,</text>
+    <text x="268" y="76" font-size="12" fill="var(--ink)" font-family="var(--mono)">más superficie</text>
+    <text x="268" y="106" font-size="12.5" fill="var(--flag)" font-family="var(--mono)">dS = dA / cos γ</text>
+    <text x="268" y="134" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">y 1/cos γ es la raíz,</text>
+    <text x="268" y="149" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">porque el ángulo de la</text>
+    <text x="268" y="164" font-size="10.5" fill="var(--graphite)" font-family="var(--mono)">normal es el mismo</text>
+  </svg>
+  <figcaption>
+    De perfil. El trozo de superficie <strong>dS</strong> se apoya sobre una
+    sombra <strong>dA</strong> más corta, y el factor entre los dos es
+    <code>1/cos γ</code>. El ángulo que separa la superficie de la horizontal es
+    exactamente el que separa su normal de la vertical, y por eso la raíz se
+    puede escribir con las derivadas parciales.
+  </figcaption>
+</figure>
+
+**La versión que de verdad se usa en el examen.** Casi todos los sólidos que
+caen son de revolución, y para esos hay un atajo que evita la integral doble.
+Si el cuerpo se genera girando la curva $r=g(z)$ alrededor del eje $Z$, cada
+rebanada aporta una circunferencia de longitud $2\pi r$ multiplicada por el
+trocito de curva $ds$:
+
+$$
+S=\int 2\pi r\,ds=2\pi\int_{z_{1}}^{z_{2}}g(z)\sqrt{1+g'(z)^{2}}\;dz
+$$
+
+Es la misma idea con una variable menos. Y si la superficie es un **cono**, ni
+eso hace falta: su área lateral es $\pi R g$, con $g$ la generatriz.
+
+**Un caso que conviene tener hecho**, porque es el que más se repite: el
+paraboloide $z=x^{2}+y^{2}$ hasta el radio $2$. Con $z_{x}=2x$ y $z_{y}=2y$,
+
+$$
+S=\iint_{D}\sqrt{1+4x^{2}+4y^{2}}\;dA
+=\int_{0}^{2\pi}\!\!\int_{0}^{2}\sqrt{1+4\rho^{2}}\;\rho\,d\rho\,d\theta
+=\frac{\pi\left(17\sqrt{17}-1\right)}{6}\approx36{,}18
+$$
+
+Fíjate en que el $\rho$ del jacobiano es justo lo que hace que la raíz se
+integre sola: sin él, esa integral no tendría primitiva elemental.
+
+<ErrorTipico titulo="Calcular el volumen cuando piden el área">
+Son dos preguntas distintas sobre el mismo dibujo, y el enunciado las mezcla a
+propósito: «dibujar el sólido y calcular el área de su superficie». Quien lee en
+diagonal integra $dV$ y entrega un volumen.
+
+Dos señales para no caer:
+
+- **el área de una superficie es una integral doble, nunca triple.** Si has
+  escrito tres signos de integral, estás calculando otra cosa.
+- **hay que sumar todas las caras.** Un cuerpo formado por un paraboloide y un
+  cono tiene dos superficies, y el área es la suma. Y si tiene una tapa plana,
+  la tapa también cuenta — a menos que el enunciado diga «superficie lateral».
+</ErrorTipico>
+
 ## Para qué sirve todo esto
 
-Las aplicaciones son cuatro y comparten esqueleto. Cambia lo que va dentro de la
+Las aplicaciones son cinco y comparten esqueleto. Cambia lo que va dentro de la
 integral, no la integral.
 
 | lo que se pide | qué se integra |
@@ -257,6 +361,7 @@ integral, no la integral.
 | **volumen** de un sólido | $\iiint_R dV$, o $\iint_D (z_{\text{arriba}} - z_{\text{abajo}})\,dA$ |
 | **masa**, con densidad $\delta$ | $\iiint_R \delta\,dV$ |
 | **centro de gravedad** | $\overline{x} = \dfrac{1}{M}\iiint_R x\,\delta\,dV$, y lo mismo con $y$ y $z$ |
+| **área de una superficie** | $\iint_D \sqrt{1+z_x^{2}+z_y^{2}}\;dA$, o $2\pi\int r\,ds$ si es de revolución |
 
 El **centro de gravedad** es el que más cae y el que peor se plantea. Son cuatro
 integrales, no una: la masa y un momento por cada coordenada. Y todas sobre el
@@ -281,6 +386,7 @@ mismo recinto y con los mismos límites, así que el trabajo de dibujar se hace
 | sólido con eje de simetría | cilíndricas, $J = \rho$ |
 | sólido con centro | esféricas, $J = r^{2}\text{sen}\,\varphi$ |
 | centro de gravedad | cuatro integrales, y mira la simetría primero |
+| «área de su superficie» | integral **doble**, con la raíz, y suma todas las caras |
 
 Y las tres frases de COMP4 que puntúan aunque no se pidan:
 
