@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 17 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 16 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -252,7 +252,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | **7** | 4 |
+| ordinaria | 11 | **8** | 3 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
@@ -260,10 +260,11 @@ Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
 partes: once cuartas y seis recuperaciones, diez quintas y cinco
 recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024,
-2022-2023, 2021-2022, 2020-2021 y 2018-2019.
+2022-2023, 2021-2022, 2020-2021, 2018-2019 y 2017-2018; faltan 2016-2017,
+2015-2016 y 2013-2014.
 
-**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **ocho**
-ejercicios de examen y el 11 tiene **siete**, y no pueden tener muchos más,
+**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **nueve**
+ejercicios de examen y el 11 tiene **ocho**, y no pueden tener muchos más,
 porque **Laplace y Fourier no caen en ninguna evaluación continua**: solo en
 las globales. Cada ordinaria nueva les añade uno, salvo la de 2021-2022, que
 trajo dos de Laplace —uno de técnica y otro aplicado— y ninguno de más de
@@ -272,7 +273,7 @@ decidir qué prosa les falta: hacerlo ahora sería escribir el tema con media
 muestra.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 17 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 16 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -675,7 +676,7 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
 
-**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay siete.**
+**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay ocho.**
 `calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
 convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
 a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
@@ -708,16 +709,17 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **294 ejercicios de examen** (22 con enunciado demasiado corto para
-comparar, 267 distintos entre los 272 comparados):
+Sobre los **301 ejercicios de examen** (22 con enunciado demasiado corto para
+comparar, 273 distintos entre los 279 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
 | 3 veces | 2018-2019-3ev · 2019-2020-3ev · 2020-2021-3ev | enunciar y demostrar Barrow |
 | 3 veces | 2019-2020-2ev · 2022-2023-1ev · 2023-2024-1ev | el paso al límite conserva el ≤ |
 | 2 veces | 2021-2022-ord · 2023-2024-ord | las cinco afirmaciones sobre dos gráficas |
+| 2 veces | 2017-2018-ord · 2022-2023-ord | la espiral y el campo que mide un área |
 
-Ocho instancias de tres problemas. **No es una anomalía: es cómo funciona esta
+Diez instancias de cuatro problemas. **No es una anomalía: es cómo funciona esta
 asignatura**, y de hecho `CLAUDE.md` §09 ya citaba los tres Barrow sin sacar la
 consecuencia. Repetir un ejercicio tres años seguidos es la mejor señal de que
 va a caer, y eso es exactamente lo que una ruta de estudio debería decir en voz
@@ -741,3 +743,36 @@ Lo que queda por decidir, y es de la auditoría:
   cuenta instancias, no problemas distintos, y la diferencia es de cinco (tres
   problemas que aparecen ocho veces);
 - volver a pasar el detector después de cada tanda de convocatorias nuevas.
+
+**36 · El seno se escribe de dos maneras en el corpus.** Medido el 26 de agosto
+de 2026: **511** apariciones de la macro castellana y **88** de la inglesa,
+repartidas por 8 ficheros. La inglesa se dibuja «sin» y los exámenes imprimen
+«sen», así que es un incumplimiento tipográfico de §08 — pequeño, pero visible
+para cualquier alumno.
+
+Salió al comparar dos ejercicios gemelos: la espiral de 2017-2018 y la de
+2022-2023 son literalmente el mismo enunciado, y el detector de repetidos no
+las emparejaba porque una decía `\sin` y la otra `\operatorname{sen}`.
+Se alinearon las dos —y de paso los ocho `\sin` que se habían colado hoy en
+la ordinaria de 2018-2019—, y con eso el detector ya las ve.
+
+Quedan 88 en estos ficheros:
+
+| fichero | veces |
+|---|---|
+| `examenes/2022-2023-ord` | 38 |
+| `examenes/2021-2022-ord` | 26 |
+| `examenes/2023-2024-3ev` | 9 |
+| `t01-complejos/ejercicios.yaml` | 7 |
+| `examenes/2021-2022-3ev` | 3 |
+| `examenes/2024-2025-3ev` | 3 |
+| `examenes/2022-2023-3ev` | 1 |
+| `t01-complejos/index.mdx` | 1 |
+
+No se arregla de golpe con un script y se dice por qué: la sustitución hay que
+mirarla fichero a fichero, porque en la prosa de los temas puede haber alguna
+mención deliberada a la notación inglesa. Y sobre todo, **con herramienta de
+ficheros, nunca por el shell**: el primer intento de hoy usó un heredoc, el
+shell se comió una barra de cada par, la expresión regular pasó a casar
+« in» —espacio más ene— y convirtió «la integral» en algo que rompió el YAML.
+Es §17 en estado puro, y el fichero hubo que recuperarlo de git.
