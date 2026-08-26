@@ -503,15 +503,23 @@ Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 | 3 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
 | 4 | ~~Las 11 extraordinarias + el cuadernillo de 2019-2020~~ | **hecho el 26 de agosto de 2026: cierra la deuda 26** |
 | 5 | ~~Ruta de la extraordinaria~~ | **hecha el 26 de agosto de 2026: 12 bloques, 23 escalones** |
-| 6 | **Enganchar las cinco recuperaciones de la quinta** a las rutas de 1.ª, 2.ª y 3.ª: son catorce ejercicios de primer cuatrimestre que hoy no enlaza nadie | |
+| 6 | ~~Enganchar las cinco recuperaciones de la quinta~~ | **hecho el 26 de agosto de 2026: los catorce, en 1.ª y 2.ª** |
 | 7 | **Auditoría de Cálculo entera** y cierre según §15 | |
 | 8 | **Abrir Álgebra** | |
 
-**Lo primero de la lista es ahora la fila 6.** Con el corpus cerrado y las
-siete rutas escritas, lo que queda de Cálculo es trabajo de cierre —enganchar
-las recuperaciones de la quinta, auditar la asignatura entera contra §15— y no
-de recogida de material. La tabla de §15 de más arriba ya solo tiene casillas
-verdes: es la primera vez.
+**Lo primero de la lista es ahora la fila 7, la auditoría.** Con el corpus
+cerrado, las siete rutas escritas y las recuperaciones enganchadas, lo que queda
+de Cálculo es trabajo de cierre y no de recogida de material. La tabla de §15 de
+más arriba ya solo tiene casillas verdes: es la primera vez.
+
+Y queda medido qué enlaza cada ruta y qué no. De los **425 ejercicios de
+examen**, las siete rutas llevan a **303**; los 122 que quedan son 71 de las
+ordinarias y 53 de las extraordinarias —cada ruta enlaza una selección y lo dice
+en su propia cabecera—, más tres que son de temas que su ruta no cubre y que
+están declarados en el `falta[]` de la ruta correspondiente: dos ejercicios de
+varias variables en terceras evaluaciones y uno de integral curvilínea en una
+cuarta. **Ninguno se queda sin enlazar por descuido**, que era lo que había que
+comprobar.
 
 Cuando entre Álgebra habrá que separar el lector de respuestas de
 `EjercicioGuiado`: una **matriz** no es un número ni un conjunto de puntos, y

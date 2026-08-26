@@ -923,3 +923,32 @@ rotos. **Eso es un guardián que debería estar en `verify.mjs` y no lo está**,
 queda dicho aquí porque §11 pide que una comprobación nueva se añada cuando algo
 se ha roto de verdad: se rompió el 23 de agosto, con 58 enlaces, y lo que se
 arregló entonces fue el contenido, no el guardián.
+
+**45 · ~~Catorce ejercicios de recuperación que no enlazaba ninguna ruta.~~
+Cerrada el 26 de agosto de 2026.**
+
+Lo que había: las cinco recuperaciones de la quinta evaluación —los exámenes que
+hasta 2020-2021 venían **dentro** del cuadernillo de la quinta, marcados «sólo
+para alumnos con el primer cuatrimestral suspendido»— preguntan temas 1 a 4, o
+sea materia de la primera y la segunda evaluación. Sus catorce ejercicios
+estaban transcritos y publicados, pero **ninguna de las siete rutas los
+enlazaba**: existían en el sitio y no había forma de llegar a ellos estudiando.
+
+Repartidos por escalón según lo que entrenan, no según de qué examen salen:
+
+| ruta | escalón | ejercicios |
+|---|---|---|
+| 1.ª | cociente · ecuaciones-con-conjugado · la-definicion | 3 |
+| 2.ª | inversa · bolzano · implicitas · el-polinomio · los-desarrollos · plantear · leer-la-grafica | 11 |
+
+Y de paso quedó medido lo que enlaza cada ruta, que es el dato que hacía falta
+para poder afirmar que no falta nadie: de los **425 ejercicios de examen**, las
+siete rutas llevan a **303**. Los 122 restantes son 71 de las ordinarias y 53 de
+las extraordinarias —selección declarada en la cabecera de cada ruta— y tres de
+temas que su ruta no cubre, ya declarados en el `falta[]` correspondiente: dos
+de varias variables en terceras evaluaciones y uno de curvilínea en una cuarta.
+
+El comprobador está en el scratchpad: cruza los `id` que aparecen en
+`src/content/preparar/*.yaml` con los de todos los `examen.yaml`. **Eso es
+otro guardián que debería vivir en `verify.mjs`** —junto con el de las anclas
+de la deuda 44— y hoy no vive.
