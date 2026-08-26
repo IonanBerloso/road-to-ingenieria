@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 8 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 7 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **5** | 6 |
+| extraordinaria | 11 | **6** | 5 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 8 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 7 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **365 ejercicios de examen** (25 con enunciado demasiado corto para
-comparar, 330 distintos entre los 340 comparados):
+Sobre los **373 ejercicios de examen** (26 con enunciado demasiado corto para
+comparar, 337 distintos entre los 347 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -1043,3 +1043,44 @@ ecuación con coeficientes variables.
 dos temas siguen sin ejercicio propio para los apartados nuevos salvo dos
 ejemplos introductorios —el del escalón y el de ampliar y reducir—. Y el tema
 más flaco del sitio pasa a ser el 8, con 1 119 palabras y una figura.
+
+**41 · El guardián del `viewBox` no ve a través de un `transform`.** Descubierta
+el 26 de agosto de 2026, construyendo la figura de los seis mapas de curvas de
+nivel de 2018-2019.
+
+La primera versión colocaba cada uno de los seis paneles con un
+`<g transform="translate(dx dy)">`, que es la forma natural de repetir un dibujo
+seis veces. `humo.mjs` la declaró rota: siete etiquetas fuera del `viewBox`,
+todas «20 px por arriba». Ninguna lo estaba.
+
+El motivo es que `getBBox()` devuelve la caja en el **sistema de coordenadas
+local** del elemento, sin aplicar los `transform` de sus padres, y el guardián la
+compara con el `viewBox` de la raíz. Con un `translate` de por medio compara dos
+sistemas distintos.
+
+La figura se rehízo con coordenadas absolutas y sin `transform`, que además deja
+el SVG más plano y más fácil de leer. Se elige esa salida y no tocar el guardián
+por §13.4: cambiar la capa compartida para acomodar un contenido concreto es
+justo lo que la regla prohíbe, y el arreglo de verdad —`getScreenCTM()`, o
+comparar contra la caja del `<svg>` en píxeles de pantalla— hay que hacerlo una
+vez, bien, y validarlo al revés como pide §11.
+
+**Lo incómodo, y por eso queda escrito.** El fallo de la figura nueva era un
+falso **positivo**, que es la dirección segura. Pero la misma ceguera da falsos
+**negativos**, y ya hay contenido publicado donde puede estar dándolos: en las
+179 figuras del contenido de Cálculo quedan **diez** `transform`, contados el 26
+de agosto de 2026:
+
+| dónde | qué |
+|---|---|
+| `t03-funciones-reales` | 2 `translate` que colocan dos paneles |
+| `t05-integracion` | 3 `translate`, dos de panel y uno de un dibujo suelto |
+| `t10-laplace` | 1 `rotate` sobre un `<text>` escrito en `x="-14"` |
+| `2025-2026-2ev` | 4 `rotate` sobre cuadraditos sin texto |
+
+Los cuatro últimos no llevan texto y dan igual. Los seis primeros sí, y el de
+`t10` es el caso de libro: su rótulo vive en `x = -14`, fuera del `viewBox` en
+coordenadas locales, y solo el `rotate` lo mete dentro. El guardián lo da por
+bueno hoy y **no se sabe si es por acierto o por casualidad**. Mientras no se
+arregle, esos seis sitios están sin comprobar: las figuras se han mirado a ojo y
+se ven bien, que es lo único que se puede afirmar de ellas.
