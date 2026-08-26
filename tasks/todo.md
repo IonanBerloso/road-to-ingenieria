@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 19 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 18 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -252,7 +252,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 |---|---|---|---|
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
-| ordinaria | 11 | **5** | 6 |
+| ordinaria | 11 | **6** | 5 |
 | extraordinaria | 11 | 0 | 11 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
@@ -260,10 +260,10 @@ Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
 partes: once cuartas y seis recuperaciones, diez quintas y cinco
 recuperaciones. Las ordinarias hechas son 2025-2026, 2024-2025, 2023-2024,
-2022-2023 y 2021-2022.
+2022-2023, 2021-2022 y 2020-2021.
 
-**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **seis**
-ejercicios de examen y el 11 tiene **cinco**, y no pueden tener muchos más,
+**Lo que este hueco bloquea, dicho con precisión:** el tema 10 tiene **siete**
+ejercicios de examen y el 11 tiene **seis**, y no pueden tener muchos más,
 porque **Laplace y Fourier no caen en ninguna evaluación continua**: solo en
 las globales. Cada ordinaria nueva les añade uno, salvo la de 2021-2022, que
 trajo dos de Laplace —uno de técnica y otro aplicado— y ninguno de más de
@@ -272,7 +272,7 @@ decidir qué prosa les falta: hacerlo ahora sería escribir el tema con media
 muestra.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 19 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 18 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -343,7 +343,7 @@ La ruta de la quinta enlaza solo la versión de examen y lo declara en su
 retiran o se marcan como «el mismo que…». Y hay que buscar si pasa lo mismo en
 otros temas: se ha comprobado el 9 y no los demás.
 
-**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay cinco.**
+**33 · La ruta de la ordinaria dice «medida sobre 2» y ya hay seis.**
 `calculo-ord.yaml` declara `medidoSobre: 2` porque se escribió con dos
 convocatorias leídas. No es un dato falso —dice lo que se midió— pero envejece
 a la vista de cualquiera que cuente los exámenes publicados, y sus recuentos de
@@ -376,8 +376,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **278 ejercicios de examen** (20 con enunciado demasiado corto para
-comparar, 253 distintos entre los 258 comparados):
+Sobre los **286 ejercicios de examen** (21 con enunciado demasiado corto para
+comparar, 260 distintos entre los 265 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -406,5 +406,6 @@ Lo que queda por decidir, y es de la auditoría:
 - si la ruta `ord` enlaza los dos gemelos o solo uno, y si el hecho de que se
   repitan se **publica** como dato de peso;
 - qué significa el recuento «ejercicios de examen» de `docs/como-vamos.md`: hoy
-  cuenta instancias, no problemas distintos, y la diferencia es de cinco;
+  cuenta instancias, no problemas distintos, y la diferencia es de cinco (tres
+  problemas que aparecen ocho veces);
 - volver a pasar el detector después de cada tanda de convocatorias nuevas.
