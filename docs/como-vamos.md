@@ -16,18 +16,18 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Las once ordinarias están hechas, y van nueve extraordinarias.** Es el primer
+**Las once ordinarias están hechas, y van diez extraordinarias.** Es el primer
 bloque de convocatorias globales completo, y las extraordinarias están dando lo
 que se esperaba de ellas para el final del temario: **complejos, estudio local,
-EDO y Laplace caen en las nueve**. Laplace va ya por **veintiuno** ejercicios
-de examen. Van 85 convocatorias de 89 y 396 ejercicios de examen. Faltan 4: dos
-extraordinarias y los dos parciales de 2019-2020.
+y EDO caen en las diez**, y Laplace en nueve. Van 86 convocatorias de 89 y 404
+ejercicios de examen. Faltan 3: una extraordinaria y los dos parciales de
+2019-2020.
 
 Las cuatro últimas rompen cosas que parecían fijas. La de 2018-2019 trae uno de
-los **dos únicos ejercicios de las nueve con cero puntos de cálculo**: cuatro de
+los **dos únicos ejercicios de las diez con cero puntos de cálculo**: cuatro de
 COMP 1 y seis de COMP 4 por emparejar seis mapas de curvas de nivel con seis
 pares de derivadas parciales. Su figura, redibujada en SVG, es la más cargada de
-las **196** del contenido de Cálculo: seis paneles y **68 rótulos**, casi el
+las **202** del contenido de Cálculo: seis paneles y **68 rótulos**, casi el
 doble que la siguiente, que tiene 36. Y va en el enunciado, no en la resolución,
 porque sin ella el enunciado no se puede ni leer.
 
@@ -39,13 +39,14 @@ demostraciones.
 Y las dos más antiguas rompen el reparto: **los dos cuatrimestrales no valen lo
 mismo**. En 2017-2018 son tres ejercicios y treinta puntos el primero, cinco y
 cincuenta el segundo; en 2015-2016, tres y treinta contra cuatro y cuarenta, que
-dan **siete ejercicios en total**, el examen más corto de las nueve.
+dan **siete ejercicios en total**, el examen más corto de las diez.
 
-Y la de 2016-2017 aclara por escrito algo que se daba por supuesto: su primer
-cuatrimestral lleva impreso **«sólo para alumnos con el primer cuatrimestral
-suspendido»**. La extraordinaria no es un examen único que haya que aprobar
-entero: se presenta por partes, y quien aprobó un cuatrimestre por evaluación
-continua solo hace el otro. Eso cambia cómo se estudia, y por eso importa.
+Y dos de ellas —2013-2014 y 2016-2017— aclaran por escrito algo que se daba por
+supuesto: su primer cuatrimestral lleva impreso **«sólo para alumnos con el
+primer cuatrimestral suspendido»**. La extraordinaria no es un examen único que
+haya que aprobar entero: se presenta por partes, y quien aprobó un cuatrimestre
+por evaluación continua solo hace el otro. Eso cambia cómo se estudia, y por eso
+importa.
 
 Las tres imprimen además en la cabecera la **norma que hasta ahora era palabra
 del alumno**: «no está permitido el uso de calculadora en el examen». §09 la
@@ -59,20 +60,20 @@ del reparto: «se valorará la presentación».
 
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2 885 | 3 | 37 | 8 | **71** |
+| t01 complejos | 2 885 | 3 | 37 | 8 | **72** |
 | t02 sucesiones | 2 035 | 3 | 19 | 4 | **32** |
 | t03 funciones reales | 1 779 | 3 | 23 | 5 | 21 |
-| t04 estudio local | 2 036 | 3 | 18 | 5 | **81** |
-| t05 integración | 1 925 | 4 | 30 | 4 | **43** |
-| t06 varias variables | 1 797 | 2 | 12 | 4 | **19** |
-| t07 integral múltiple | 1 865 | 3 | 11 | 4 | **37** |
+| t04 estudio local | 2 036 | 3 | 18 | 5 | **82** |
+| t05 integración | 1 925 | 4 | 30 | 4 | **45** |
+| t06 varias variables | 1 797 | 2 | 12 | 4 | **20** |
+| t07 integral múltiple | 1 865 | 3 | 11 | 4 | **38** |
 | t08 integral curvilínea | 1 119 | 1 | 7 | 2 | **24** |
-| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | **32** |
+| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | **33** |
 | t10 Laplace | **1 605** | **2** | **9** | **3** | **21** |
-| t11 Fourier | **1 668** | **2** | **9** | **3** | **15** |
-| **total** | **19 955** | **27** | **182** | **44** | **396** |
+| t11 Fourier | **1 668** | **2** | **9** | **3** | **16** |
+| **total** | **19 955** | **27** | **182** | **44** | **404** |
 
-En todo el corpus: **578 ejercicios y 2 234 pasos**.
+En todo el corpus: **586 ejercicios y 2 266 pasos**.
 
 El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
 figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
@@ -138,9 +139,9 @@ el dibujo es la respuesta y no puede estar arriba.**
 | 4.ª evaluación (15 cuadernillos) | 15 | **17** | 0 |
 | 5.ª evaluación (13 cuadernillos) | 13 | **15** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **9** | **2** |
+| extraordinaria | 11 | **10** | **1** |
 | ord.-extraord. 2019-2020, 2 parciales | 2 | 0 | **2** |
-| **total** | **85** | **85** | **4** |
+| **total** | **85** | **86** | **3** |
 
 Los quince cuadernillos de cuarta evaluación dan diecisiete convocatorias y los
 trece de la quinta dan quince, porque algunos traen dentro las dos partes: la
@@ -149,13 +150,13 @@ once cuartas más seis recuperaciones, y diez quintas más cinco recuperaciones.
 La quinta de 2019-2020 no se celebró.
 
 **Los 85 PDF están ya en `public/examenes/calculo/`**, copiados y verificados
-byte a byte contra el original. Lo que falta es transcribir 4.
+byte a byte contra el original. Lo que falta es transcribir 3.
 
-Sobre los 3 965 puntos repartidos de los 85 exámenes: **COMP1 8,9 % · COMP2
-57,2 % · COMP4 33,9 %**. Es decir, **el 42,8 % de la nota de Cálculo no es
+Sobre los 4 045 puntos repartidos de los 86 exámenes: **COMP1 9,1 % · COMP2
+57,0 % · COMP4 33,9 %**. Es decir, **el 43,0 % de la nota de Cálculo no es
 calcular**.
 
-Y con nueve extraordinarias dentro ya se puede desglosar, que es más útil que el
+Y con diez extraordinarias dentro ya se puede desglosar, que es más útil que el
 total. La cifra global venía bajando —49,5 % sobre 33 exámenes, 46,8 % sobre 66,
 43,6 % sobre 73—, luego subió tres mediciones seguidas y ahora vuelve a bajar.
 El vaivén no es de fechas: es de **qué tipo de convocatoria entra cada vez**.
@@ -164,7 +165,7 @@ El vaivén no es de fechas: es de **qué tipo de convocatoria entra cada vez**.
 |---|---|---|---|---|---|---|
 | evaluación continua | 65 | 2 355 | 10,2 % | 52,8 % | 37,0 % | **47,2 %** |
 | ordinaria | 11 | 860 | 7,7 % | 63,7 % | 28,6 % | **36,3 %** |
-| extraordinaria | 9 | 750 | 6,4 % | 63,6 % | 30,0 % | **36,4 %** |
+| extraordinaria | 10 | 830 | 7,6 % | 62,2 % | 30,2 % | **37,8 %** |
 
 **Cuanto más global es el examen, más se parece a calcular.** La diferencia entre
 los extremos es de quince puntos porcentuales, y dentro de la continua es todavía
@@ -227,14 +228,15 @@ formato no es uno solo**:
 
 | formato | ejerc. | convocatorias |
 |---|---|---|
-| 4 + 4, 40 + 40 puntos | 8 | 2016-2017, 2018-2019, 2020-2021, 2021-2022, 2022-2023 |
+| 4 + 4, 40 + 40 puntos | 8 | 2013-2014, 2016-2017, 2018-2019, 2020-2021, 2021-2022, 2022-2023 |
 | 5 + 5, 50 + 50 | 10 | 2023-2024, 2024-2025 |
 | **3 + 5, 30 + 50** | 8 | 2017-2018 |
 | **3 + 4, 30 + 40** | **7** | 2015-2016 |
 
-El salto a diez ejercicios llega en 2023-2024 y se mantiene. Y las dos más
-antiguas son las raras: **los dos cuatrimestrales no valen lo mismo**, y la de
-2015-2016 es además la más corta del corpus con siete ejercicios.
+El salto a diez ejercicios llega en 2023-2024 y se mantiene. El formato de ocho
+es el dominante y el más antiguo. Y las dos raras son consecutivas, 2015-2016 y
+2017-2018: **los dos cuatrimestrales no valen lo mismo**, y la de 2015-2016 es
+además la más corta del corpus con siete ejercicios.
 
 **Y lo más importante para quien la va a hacer**, impreso en la cabecera de
 2016-2017: los dos cuatrimestrales se presentan **por separado**. Quien aprobó
@@ -245,26 +247,39 @@ Con cuatro huecos por parcial se quedan fuera temas enteros, y cuáles se quedan
 fuera cambia cada año — por eso la ruta de la extraordinaria no puede ser la de
 la ordinaria con otro nombre.
 
-Lo que **sí** se repite. Contado sobre las nueve transcritas:
+Lo que **sí** se repite. Contado sobre las diez transcritas:
 
-| tema | de 9 |
+| tema | de 10 |
 |---|---|
-| complejos · estudio local · EDO · Laplace | **9** |
-| integración · integral múltiple · integral curvilínea | 7 |
-| Fourier | 5 |
-| varias variables | 2 |
+| complejos · estudio local · EDO | **10** |
+| Laplace | 9 |
+| integración · integral múltiple | 8 |
+| integral curvilínea | 7 |
+| Fourier | 6 |
+| varias variables | 3 |
 | sucesiones | **1** |
 | funciones reales | **0** |
 
-Cuatro temas caen **siempre**, y son el esqueleto de la ruta que falta. En el
-otro extremo, el tema 3 no ha caído nunca en una extraordinaria y el 2 una sola
-vez: quien se juega el curso aquí puede repartir su tiempo con esos datos.
+Tres temas caen **siempre** y Laplace se salta uno solo: ese es el esqueleto de
+la ruta que falta. En el otro extremo, el tema 3 no ha caído nunca en una
+extraordinaria y el 2 una sola vez: quien se juega el curso aquí puede repartir
+su tiempo con esos datos.
 
-Y hay un hallazgo que cambia cómo hay que preparar esta convocatoria. El
-ejercicio 2 de 2015-2016-ext es **copia literal del ejercicio 2 de la tercera
-evaluación de ese mismo curso**, cinco meses antes, con la misma figura. No es
-que la extraordinaria recicle de otros años: recicla del año en curso. Quien
-suspendió ese parcial en enero se encontró el mismo ejercicio en junio.
+Y hay un hallazgo que cambia cómo hay que preparar esta convocatoria: **la
+extraordinaria repite exámenes del propio curso**, no solo de años anteriores.
+Dos casos medidos, y los dos aparecieron al transcribir las convocatorias más
+antiguas:
+
+| curso | de dónde sale | cuánto antes |
+|---|---|---|
+| 2015-2016 | el ejercicio 2 de la **tercera evaluación**, con la misma figura | cinco meses |
+| 2013-2014 | el ejercicio 2 de la **sexta evaluación** —la global de mayo— | **un mes** |
+
+El de 2013-2014 es el que más dice: el 19 de mayo se pide enunciar y demostrar
+el teorema fundamental y aplicarlo a la campana de Gauss, y el 18 de junio se
+pide exactamente lo mismo, con las mismas palabras y solo el reparto de puntos
+cambiado. Quien se presenta a la extraordinaria debería empezar por sus propios
+exámenes de ese curso.
 
 ## Contra el criterio de «asignatura terminada» (§15)
 
@@ -278,10 +293,10 @@ suspendió ese parcial en enero se encontró el mismo ejercicio en junio.
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 25 huecos |
 | `npm run suelo` en verde | ✅ |
-| **todas las convocatorias publicadas transcritas** | ❌ **85 de 89** |
+| **todas las convocatorias publicadas transcritas** | ❌ **86 de 89** |
 
-> El «85 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
-> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 4 que
+> El «86 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
+> contienen, porque cuatro cuadernillos traen dos exámenes dentro. De las 3 que
 > faltan, ninguna es doble.
 
 ## Las otras ocho asignaturas

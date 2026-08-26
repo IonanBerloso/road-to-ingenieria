@@ -243,7 +243,7 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 4 de 24.** Sigue siendo
+**26 · Los exámenes globales sin transcribir: quedan 3 de 24.** Sigue siendo
 la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
 entero: la evaluación continua está cerrada y las ordinarias han empezado.
 Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
@@ -253,7 +253,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 4.ª evaluación | 15 | **15** | 0 |
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **9** | 2 |
+| extraordinaria | 11 | **10** | 1 |
 | ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
@@ -277,7 +277,7 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 4 y escribirlos.
+byte a byte contra el volcado. Lo que queda es leer 3 y escribirlos.
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -739,8 +739,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **396 ejercicios de examen** (28 con enunciado demasiado corto para
-comparar, 354 distintos entre los 368 comparados):
+Sobre los **404 ejercicios de examen** (28 con enunciado demasiado corto para
+comparar, 361 distintos entre los 376 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -754,10 +754,11 @@ comparar, 354 distintos entre los 368 comparados):
 | 2 veces | **2018-2019-3ev · 2021-2022-ext** | la ecuación con el conjugado, tres soluciones en triángulo |
 | 2 veces | **2016-2017-ext · 2021-2022-ext** | la curvilínea con el área de diez, misma figura |
 | 2 veces | **2015-2016-3ev · 2015-2016-ext** | la función valor medio, el MISMO curso |
+| 2 veces | **2013-2014-ord · 2013-2014-ext** | Barrow y la campana, el MISMO curso, un mes después |
 | 2 veces | **2015-2016-ext · 2022-2023-ext** | la ecuación integral con la convolución del seno |
 | 2 veces | **2017-2018-ext · 2023-2024-ext** | el cuadrado de la derivada leído en el dibujo, misma figura |
 
-Veintiséis instancias de doce problemas. **Y el detector se queda corto**, con
+Veintiocho instancias de trece problemas. **Y el detector se queda corto**, con
 dos pruebas medidas el 26 de agosto de 2026:
 
 - El ejercicio 3 del primer cuatrimestral de **2020-2021-ext** es palabra por
@@ -771,7 +772,7 @@ dos pruebas medidas el 26 de agosto de 2026:
   enunciado, «desde el punto (−2,0) hasta el punto (2,0)», y con eso las cadenas
   ya no casan. Cinco palabras bastan para partir un grupo en dos.
 
-Con esos dos, **veintinueve instancias de trece problemas**, y el número real
+Con esos dos, **treinta y una instancias de quince problemas**, y el número real
 seguirá siendo mayor: solo se detecta lo que coincide carácter a carácter.
 
 Y hay un patrón que ya no parece casualidad: de los doce grupos que el detector
@@ -779,12 +780,18 @@ sí ve, **ocho tienen una extraordinaria dentro**. En cinco de ellos la
 extraordinaria reutiliza un parcial y en dos repite otra extraordinaria. Las
 convocatorias globales son el sitio donde se recicla.
 
-Y el caso extremo, que apareció el 26 de agosto de 2026 al transcribir
-2015-2016: el ejercicio 2 de esa extraordinaria es **copia literal del ejercicio
-2 de la tercera evaluación de ese mismo curso**, del 13 de enero, con la misma
-figura. Cinco meses de diferencia. Para una ruta de la extraordinaria eso es lo
-primero que hay que decir: **antes de estudiar nada, mira los parciales de tu
-propio año**.
+Y el patrón que apareció el 26 de agosto de 2026 al transcribir las dos
+extraordinarias más antiguas: **repiten exámenes del propio curso**.
+
+| curso | de dónde sale | cuánto antes |
+|---|---|---|
+| 2015-2016 | el ejercicio 2 de la tercera evaluación, misma figura | cinco meses |
+| 2013-2014 | el ejercicio 2 de la sexta evaluación —la global de mayo— | **un mes** |
+
+El de 2013-2014 es el más descarado: mismo enunciado, mismas palabras, y solo
+cambia el reparto de puntos —1/5/4 en mayo, 1/4/5 en junio—. Para una ruta de la
+extraordinaria eso es lo primero que hay que decir: **antes de estudiar nada,
+mira tus propios exámenes de este curso**.
 
 Las filas con extraordinaria dentro entraron entre el 25 y el 26 de agosto de
 2026, según se iban transcribiendo, y cambian lo que se sabía: hasta entonces
