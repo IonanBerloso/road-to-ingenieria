@@ -243,10 +243,10 @@ Hecha al terminar los once temas, buscando lo que le falta a un alumno para
 aprobar y no lo que le falta al sitio para estar completo. Las tres primeras
 son las que impiden aprobar; las otras son mejoras.
 
-**26 · Los exámenes globales sin transcribir: quedan 2 de 24.** Sigue siendo
-la deuda más grande del proyecto, pero ya no es la del segundo cuatrimestre
-entero: la evaluación continua está cerrada y las ordinarias han empezado.
-Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
+**26 · ~~Los exámenes globales sin transcribir.~~ Resuelta el 26 de agosto de
+2026.** Era la deuda más grande del proyecto y ya no queda nada de ella:
+**los 85 cuadernillos del volcado de eGela están transcritos**, y con ellos las
+88 convocatorias que contienen.
 
 | convocatoria | en el volcado | transcritas | faltan |
 |---|---|---|---|
@@ -254,7 +254,7 @@ Recuento al 26 de agosto de 2026, sobre los PDF del volcado de eGela:
 | 5.ª evaluación | 13 | **13** | 0 |
 | ordinaria | 11 | **11** | 0 |
 | extraordinaria | 11 | **11** | 0 |
-| ordinaria-extraordinaria 2019-2020, dos parciales | 2 | 0 | 2 |
+| ordinaria-extraordinaria 2019-2020 | 2 ficheros | **1 convocatoria** | 0 |
 
 Los quince cuadernillos de cuarta y los trece de quinta están hechos, y dan
 treinta y dos convocatorias en el sitio porque algunos traen dentro las dos
@@ -277,7 +277,22 @@ esos dos temas y decidir qué prosa les falta pasa a ser trabajo pendiente, no
 bloqueado. Lo que aporten las once extraordinarias será más de lo mismo.
 
 **Los 85 PDF están ya copiados** en `public/examenes/calculo/`, verificados
-byte a byte contra el volcado. Lo que queda es leer 2 y escribirlos.
+byte a byte contra el volcado, y los 85 leídos y escritos.
+
+**El último cambió la cuenta, y conviene dejarlo dicho.** Los ficheros
+`2019-2020-ord-ext-p1` y `-p2` se contaban como dos convocatorias pendientes.
+Al abrirlos resultaron ser **una**: la cabecera dice «CONVOCATORIAS ORDINARIA Y
+EXTRAORDINARIA · mayo y junio 2020» y los dos ficheros son el primer y el segundo
+cuatrimestral del mismo examen. Un solo juego de trece enunciados para las dos
+convocatorias del curso del confinamiento. Se archiva como `2019-2020-ord`, con
+el motivo escrito en su `examen.yaml`, y **2019-2020 no tiene extraordinaria
+propia**: no es un hueco, es que no existe. Por eso el total del corpus es 88 y
+no 89, y este documento decía 89 desde el 25 de agosto.
+
+Con esto **el corpus de exámenes de Cálculo está cerrado**: 425 ejercicios de
+examen, 4 255 puntos repartidos, ninguna convocatoria por leer. Todo lo que se
+mida a partir de ahora sobre exámenes es definitivo, no provisional — y eso
+cambia el estatuto de las rutas: ya no hay «medido sobre lo que llevamos».
 
 **27 · ~~Los temas 8 a 11 tienen cuatro ejercicios cada uno.~~** Resuelto el 24
 de agosto de 2026: los cinco temas del segundo cuatrimestre pasan de 6/4/4/4/4 a
@@ -415,8 +430,8 @@ a página en los dos PDF antes de escribirlo.
 Se detectó por casualidad, al reconocer la figura, así que en vez de dejarlo
 ahí se midió el corpus entero con `scratchpad/busca-gemelos.mjs`, que normaliza
 el enunciado —fuera figuras, macros de LaTeX, espacios y puntuación— y agrupa.
-Sobre los **412 ejercicios de examen** (30 con enunciado demasiado corto para
-comparar, 367 distintos entre los 382 comparados):
+Sobre los **425 ejercicios de examen**, que ya son todos (31 con enunciado
+demasiado corto para comparar, 378 distintos entre los 394 comparados):
 
 | grupo | convocatorias | qué es |
 |---|---|---|
@@ -433,8 +448,9 @@ comparar, 367 distintos entre los 382 comparados):
 | 2 veces | **2013-2014-ord · 2013-2014-ext** | Barrow y la campana, el MISMO curso, un mes después |
 | 2 veces | **2015-2016-ext · 2022-2023-ext** | la ecuación integral con la convolución del seno |
 | 2 veces | **2017-2018-ext · 2023-2024-ext** | el cuadrado de la derivada leído en el dibujo, misma figura |
+| 2 veces | **2019-2020-ord · 2020-2021-1ev** | el arco capaz con el conjugado, del examen global al parcial siguiente |
 
-Veintiocho instancias de trece problemas. **Y el detector se queda corto**, con
+Treinta instancias de catorce problemas. **Y el detector se queda corto**, con
 dos pruebas medidas el 26 de agosto de 2026:
 
 - El ejercicio 3 del primer cuatrimestral de **2020-2021-ext** es palabra por
@@ -457,14 +473,24 @@ dos pruebas medidas el 26 de agosto de 2026:
   demostración son justo los que el detector no puede ver**, porque son los más
   cortos del corpus.
 
-Con esos tres, **treinta y tres instancias de dieciséis problemas**, y el número
-real seguirá siendo mayor: solo se detecta lo que coincide carácter a carácter.
+Con esos tres, **treinta y cinco instancias de diecisiete problemas**, y el
+número real seguirá siendo mayor: solo se detecta lo que coincide carácter a
+carácter.
 
-Y hay un patrón que ya no parece casualidad: de los trece grupos que el detector
-sí ve, **nueve tienen una extraordinaria dentro**. En cinco la extraordinaria
-reutiliza un parcial, en tres repite otra extraordinaria, y en el restante
-—2013-2014— repite la ordinaria de su propio curso. Las convocatorias globales
-son el sitio donde se recicla.
+Y el último grupo, el que entró con la última convocatoria, es el que más dice
+para quien prepara la primera evaluación: el **ejercicio 1** del examen global de
+mayo-junio de 2020 —el arco capaz de $-\pi/4$ sobre el segmento de $-3i$ a $3i$—
+reapareció como **ejercicio 1** de la primera evaluación del 19 de octubre de
+2020, palabra por palabra y con el mismo reparto 1/6/3. Cinco meses, y de un
+examen global al primer parcial del curso siguiente. Hasta ahora el reciclaje
+medido iba del parcial a la global; este va al revés.
+
+Y hay un patrón que ya no parece casualidad: de los catorce grupos que el
+detector sí ve, **diez tienen una convocatoria global dentro**. En cinco la
+extraordinaria reutiliza un parcial, en tres repite otra extraordinaria, en uno
+—2013-2014— repite la ordinaria de su propio curso, y en el último la global
+alimenta al parcial del curso siguiente. Las convocatorias globales son el sitio
+donde se recicla, en los dos sentidos.
 
 Y el patrón que apareció el 26 de agosto de 2026 al transcribir las dos
 extraordinarias más antiguas: **repiten exámenes del propio curso**.
@@ -847,3 +873,26 @@ vieja. Quedan 816 líneas, 41 deudas, una sola de cada.
 Lo que queda por hacer, y no es de esta deuda: **nada comprueba `docs/` ni
 `tasks/`**. Un fichero de prosa duplicado no rompe el build. Si vuelve a pasar,
 se sabrá igual de tarde.
+
+**43 · El esquema admite un PDF por convocatoria, y hay una que trae dos.**
+Descubierta el 26 de agosto de 2026, al transcribir la última.
+
+`2019-2020-ord` sale de **dos** ficheros —`2019-2020-ord-ext-p1.pdf` y
+`-p2.pdf`, el primer y el segundo cuatrimestral del mismo examen— y el campo
+`pdf` del esquema es una cadena, no una lista. La convocatoria cita el primero,
+así que **los ocho ejercicios del segundo cuatrimestral se publican sin enlace a
+su enunciado original**. Medido: de los 85 PDF de `public/examenes/calculo/`,
+hay exactamente **uno** que ninguna convocatoria cita, y es ese.
+
+No se arregla tocando `content.config.ts` por un caso: eso es §13.4. Las dos
+salidas posibles, y las dos son decisión de diseño, no de contenido:
+
+- que `pdf` admita una lista, y la ficha del examen enlace los cuadernillos que
+  haga falta — es la que resuelve el problema de verdad, y solo hay un caso que
+  lo pida;
+- o partir la convocatoria en dos, una por cuatrimestral, lo que obligaría a
+  inventar una clave de convocatoria nueva y a publicar como dos exámenes lo que
+  la cabecera llama uno.
+
+Mientras tanto, la `fuente` de cada ejercicio dice de qué cuatrimestral sale,
+que es lo único que hoy permite encontrar el fichero.

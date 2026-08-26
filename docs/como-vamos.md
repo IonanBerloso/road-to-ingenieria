@@ -16,24 +16,43 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Las once ordinarias y las once extraordinarias están hechas.** Los dos
-bloques de convocatorias globales, completos, y las extraordinarias dan lo que se
-esperaba de ellas para el final del temario: **complejos, estudio local y EDO
-caen en las once**, y Laplace en diez. Van 87 convocatorias de 89 y 412
-ejercicios de examen. Faltan 2: los dos parciales de 2019-2020.
+**El corpus de exámenes de Cálculo está completo: 88 convocatorias de 88.**
+Once cursos, todas las evaluaciones publicadas, las doce ordinarias y las once
+extraordinarias: **425 ejercicios de examen**, con su reparto por competencia
+transcrito del propio cuadernillo. No queda ninguno por leer.
 
-Las últimas rompen cosas que parecían fijas. La de 2018-2019 trae uno de los
-**tres ejercicios de las once con cero puntos de cálculo**: cuatro de COMP 1 y
-seis de COMP 4 por emparejar seis mapas de curvas de nivel con seis pares de
-derivadas parciales. Su figura, redibujada en SVG, es la más cargada de las
-**208** del contenido de Cálculo: seis paneles y **68 rótulos**, casi el doble
-que la siguiente, que tiene 36. Y va en el enunciado, no en la resolución, porque
-sin ella el enunciado no se puede ni leer.
+El «88 de 88» sustituye al «de 89» que decía este documento hasta el 26 de agosto
+de 2026, y el cambio hay que explicarlo porque **no es que falte uno**: es que
+uno no existía. Los dos últimos PDF, `2019-2020-ord-ext-p1` y `-p2`, se
+contaban como dos convocatorias y resultaron ser **una sola**: su cabecera dice
+«CONVOCATORIAS ORDINARIA Y EXTRAORDINARIA · mayo y junio 2020» y los dos ficheros
+son el primer y el segundo cuatrimestral del mismo examen, el del confinamiento.
+Un solo juego de enunciados para las dos convocatorias de aquel año.
+
+La cuenta, medida: 85 PDF, más 4 cuadernillos que llevan dos convocatorias dentro
+—las cuartas y quintas de 2015-2016 y 2016-2017, con su recuperación—, menos ese
+cuadernillo partido en dos ficheros: 85 + 4 − 1 = **88**.
+
+**Y el último es el examen más largo del corpus**: trece ejercicios y 130
+puntos, cinco y cincuenta el primer cuatrimestral y ocho y ochenta el segundo.
+Trae además el ejercicio que mejor resume de qué va COMP 4 en esta asignatura: la
+figura muestra las gráficas de $y$ y de $y'$ **sin decir cuál es cuál**, y hay que
+decidirlo antes de poder hacer nada. Se decide con un solo detalle del dibujo —una
+curva corta al eje justo debajo del máximo de la otra— y a partir de ahí todo el
+estudio de $h=e^{-4x}y^{4}$ se lee sobre la figura, sin conocer $y$.
+
+Las extraordinarias rompieron cosas que parecían fijas. La de 2018-2019 trae uno
+de los **tres ejercicios de las once con cero puntos de cálculo**: cuatro de
+COMP 1 y seis de COMP 4 por emparejar seis mapas de curvas de nivel con seis pares
+de derivadas parciales. Su figura, redibujada en SVG, es la más cargada de las
+**216** del contenido de Cálculo: seis paneles y **68 rótulos**, casi el doble que
+la siguiente, que tiene 36. Y va en el enunciado, no en la resolución, porque sin
+ella el enunciado no se puede ni leer.
 
 Los otros dos van más lejos: **cero de COMP 1, cero de COMP 2 y diez de COMP 4**,
 por demostrar el teorema de Fermat en 2016-2017 y el de Lagrange en 2012-2013. Es
-el reparto más extremo que existe, y en todo el corpus solo lo tienen doce
-ejercicios de 412 — todos ellos demostraciones.
+el reparto más extremo que existe, y en todo el corpus solo lo tienen 24
+ejercicios de 425 — todos ellos demostraciones.
 
 Y dos rompen el reparto entre cuatrimestrales: **los dos no valen lo mismo**. En
 2017-2018 son tres ejercicios y treinta puntos el primero, cinco y cincuenta el
@@ -61,20 +80,20 @@ valorará la presentación».
 
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2 885 | 3 | 37 | 8 | **73** |
+| t01 complejos | 2 885 | 3 | 37 | 8 | **74** |
 | t02 sucesiones | 2 035 | 3 | 19 | 4 | **32** |
 | t03 funciones reales | 1 779 | 3 | 23 | 5 | 21 |
-| t04 estudio local | 2 036 | 3 | 18 | 5 | **83** |
-| t05 integración | 1 925 | 4 | 30 | 4 | **47** |
+| t04 estudio local | 2 036 | 3 | 18 | 5 | **85** |
+| t05 integración | 1 925 | 4 | 30 | 4 | **49** |
 | t06 varias variables | 1 797 | 2 | 12 | 4 | **20** |
-| t07 integral múltiple | 1 865 | 3 | 11 | 4 | **39** |
-| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | **25** |
-| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | **34** |
-| t10 Laplace | **1 605** | **2** | **9** | **3** | **22** |
-| t11 Fourier | **1 668** | **2** | **9** | **3** | **16** |
-| **total** | **19 955** | **27** | **182** | **44** | **412** |
+| t07 integral múltiple | 1 865 | 3 | 11 | 4 | **41** |
+| t08 integral curvilínea | 1 119 | 1 | 7 | 2 | **26** |
+| t09 ecuaciones diferenciales | 1 241 | 1 | 7 | 2 | **36** |
+| t10 Laplace | **1 605** | **2** | **9** | **3** | **24** |
+| t11 Fourier | **1 668** | **2** | **9** | **3** | **17** |
+| **total** | **19 955** | **27** | **182** | **44** | **425** |
 
-En todo el corpus: **594 ejercicios y 2 297 pasos**.
+En todo el corpus: **607 ejercicios y 2 349 pasos**.
 
 El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
 figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
@@ -139,10 +158,9 @@ el dibujo es la respuesta y no puede estar arriba.**
 | 3.ª evaluación | 11 | **11** | 0 |
 | 4.ª evaluación (15 cuadernillos) | 15 | **17** | 0 |
 | 5.ª evaluación (13 cuadernillos) | 13 | **15** | 0 |
-| ordinaria | 11 | **11** | 0 |
-| extraordinaria | 11 | **11** | **0** |
-| ord.-extraord. 2019-2020, 2 parciales | 2 | 0 | **2** |
-| **total** | **85** | **87** | **2** |
+| ordinaria | 12 | **12** | 0 |
+| extraordinaria | 11 | **11** | 0 |
+| **total** | **85** | **88** | **0** |
 
 Los quince cuadernillos de cuarta evaluación dan diecisiete convocatorias y los
 trece de la quinta dan quince, porque algunos traen dentro las dos partes: la
@@ -150,12 +168,16 @@ recuperación del primer cuatrimestre y la evaluación de verdad. Desglosado:
 once cuartas más seis recuperaciones, y diez quintas más cinco recuperaciones.
 La quinta de 2019-2020 no se celebró.
 
-**Los 85 PDF están ya en `public/examenes/calculo/`**, copiados y verificados
-byte a byte contra el original. Lo que falta es transcribir 2.
+Las doce ordinarias son once cursos más el cuadernillo doble de 2019-2020, que
+sirvió para la ordinaria y para la extraordinaria de aquel año y se archiva como
+ordinaria porque es la primera de las dos que se celebró.
 
-Sobre los 4 125 puntos repartidos de los 87 exámenes: **COMP1 9,1 % · COMP2
-56,9 % · COMP4 34,0 %**. Es decir, **el 43,1 % de la nota de Cálculo no es
-calcular**.
+**Los 85 PDF están ya en `public/examenes/calculo/`**, copiados y verificados
+byte a byte contra el original, y **los 85 están transcritos**.
+
+Sobre los 4 255 puntos repartidos de los 88 exámenes —y ya no van a cambiar,
+porque no queda examen por transcribir—: **COMP1 9,0 % · COMP2 57,3 % · COMP4
+33,7 %**. Es decir, **el 42,7 % de la nota de Cálculo no es calcular**.
 
 Y con los dos bloques globales completos ya se puede desglosar, que es más útil
 que el total. La cifra global venía bajando —49,5 % sobre 33 exámenes, 46,8 %
@@ -166,7 +188,7 @@ entra cada vez**.
 | bloque | exámenes | puntos | COMP1 | COMP2 | COMP4 | no es cálculo |
 |---|---|---|---|---|---|---|
 | evaluación continua | 65 | 2 355 | 10,2 % | 52,8 % | 37,0 % | **47,2 %** |
-| ordinaria | 11 | 860 | 7,7 % | 63,7 % | 28,6 % | **36,3 %** |
+| ordinaria | 12 | 990 | 7,6 % | 64,5 % | 27,9 % | **35,5 %** |
 | extraordinaria | 11 | 910 | 7,7 % | 61,1 % | 31,2 % | **38,9 %** |
 
 **Cuanto más global es el examen, más se parece a calcular.** Entre los tres
@@ -297,11 +319,13 @@ exámenes de ese curso.
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
 | `falta[]` dice lo que no está | ✅ 25 huecos |
 | `npm run suelo` en verde | ✅ |
-| **todas las convocatorias publicadas transcritas** | ❌ **87 de 89** |
+| **todas las convocatorias publicadas transcritas** | ✅ **88 de 88** |
 
-> El «87 de 89» merece explicación: 85 son los PDF y 89 las convocatorias que
-> contienen, porque cuatro cuadernillos traen dos exámenes dentro. Las 2 que
-> faltan son los dos parciales de 2019-2020, y ninguna es doble.
+> El «88 de 88» merece explicación, porque durante meses este documento dijo
+> «de 89». 85 son los PDF; cuatro cuadernillos traen **dos** convocatorias
+> dentro —la evaluación y su recuperación—, lo que suma 89; y el cuadernillo de
+> mayo-junio de 2020 está partido en **dos** ficheros que son un solo examen, lo
+> que resta 1. Total: 88, y las 88 están.
 
 ## Las otras ocho asignaturas
 
@@ -426,16 +450,17 @@ Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
 | 1 | ~~Rehacer `calculo-ord.yaml`~~ | **hecho el 26 de agosto de 2026** |
 | 2 | ~~El área de una superficie en el tema 7~~ · ~~la ruta `4ev` sin ejercicios de examen~~ | las dos, hechas el mismo día |
 | 3 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
-| 4 | **11 extraordinarias** + los 2 parciales de 2019-2020 | cierra la deuda 26 |
+| 4 | ~~Las 11 extraordinarias + el cuadernillo de 2019-2020~~ | **hecho el 26 de agosto de 2026: cierra la deuda 26** |
 | 5 | **Ruta de la extraordinaria**, que todavía no existe | §15 pide una por evaluación |
 | 6 | **Enganchar las cinco recuperaciones de la quinta** a las rutas de 1.ª, 2.ª y 3.ª: son catorce ejercicios de primer cuatrimestre que hoy no enlaza nadie | |
 | 7 | **Auditoría de Cálculo entera** y cierre según §15 | |
 | 8 | **Abrir Álgebra** | |
 
-El orden cambia hoy: hasta esta mañana las extraordinarias iban las primeras
-porque las ordinarias estaban a medias y todo lo demás dependía de ellas. Ya no.
-Las dos primeras filas son trabajo que llevaba semanas esperando permiso, y
-hacerlo ahora es más barato que hacerlo después de otras once transcripciones.
+**Lo primero de la lista es ahora la fila 5.** Con el corpus de exámenes
+cerrado, la ruta de la extraordinaria se puede escribir sobre las once, no sobre
+una muestra, y las tres filas siguientes son ya trabajo de cierre de la
+asignatura y no de recogida de material. El orden de arriba refleja eso: hasta
+hoy todo dependía de terminar de leer exámenes.
 
 Cuando entre Álgebra habrá que separar el lector de respuestas de
 `EjercicioGuiado`: una **matriz** no es un número ni un conjunto de puntos, y
@@ -447,8 +472,12 @@ va antes que Fluidos, que son 25 temas y la asignatura más cara de las nueve.
 Están todas en `tasks/todo.md` con su número. Las que siguen vivas y merecen
 una línea:
 
-- **26** — las 2 convocatorias que faltan: los dos parciales de 2019-2020. Ya
-  no bloquean ningún tema.
+- **26** — ~~las convocatorias sin transcribir~~. **Cerrada** el 26 de agosto
+  de 2026: los 85 cuadernillos leídos y las 88 convocatorias escritas.
+- **43** — el esquema admite un PDF por convocatoria y el cuadernillo doble de
+  2019-2020 son dos, así que los ocho ejercicios de su segundo cuatrimestral se
+  publican sin enlace a su enunciado original. Es el único PDF del repositorio
+  que ninguna convocatoria cita.
 - **31** — `invariante.fuente` se publica como texto plano, sin pasar por el
   procesador, así que el LaTeX sale crudo. O se procesa, o §14 lo dice.
 - **32** — dos ejercicios del tema 9 duplican problemas que ahora también están
