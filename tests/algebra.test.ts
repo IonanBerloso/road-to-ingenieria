@@ -155,3 +155,33 @@ describe('comparaMatriz · el error clásico es darla traspuesta', () => {
     expect(r.tamanoDistinto).toBe(true);
   });
 });
+
+/* La raíz en el DENOMINADOR entró con Álgebra: una base ortonormal se escribe
+   así de forma natural, y el esquema rechazó una respuesta correcta por no
+   saber leerla. Va aquí y no en complejo.test.ts porque es Álgebra quien lo
+   necesita, aunque el arreglo esté en el lector de complejos. */
+describe('la raíz en el denominador, que las bases ortonormales piden', () => {
+  it('lee 1/√2, 2/√10 y sus equivalentes', () => {
+    const v = leeVector('(1/√2, 2/√10, 0)');
+    expect(v).not.toBeNull();
+    expect(v![0].re).toBeCloseTo(1 / Math.SQRT2, 10);
+    expect(v![1].re).toBeCloseTo(2 / Math.sqrt(10), 10);
+  });
+
+  it('la forma racionalizada da lo mismo, que es lo que importa', () => {
+    const a = leeVector('(1/√10, 2/√10, 0)');
+    const b = leeVector('(√10/10, √10/5, 0)');
+    expect(comparaVector(a!, b!, 1e-9).igual).toBe(true);
+  });
+
+  it('acepta sqrt() además del símbolo, que es lo que se teclea', () => {
+    const v = leeVector('(1/sqrt(2), 0, -1/sqrt(2))');
+    expect(v).not.toBeNull();
+    expect(v![2].re).toBeCloseTo(-1 / Math.SQRT2, 10);
+  });
+
+  it('sigue rechazando lo que no es un número', () => {
+    expect(leeVector('(1/√0, 1, 1)')).toBeNull();
+    expect(leeVector('(1/√, 1, 1)')).toBeNull();
+  });
+});

@@ -16,8 +16,16 @@ export interface Complejo {
   im: number;
 }
 
-/** Un coeficiente tal y como se escribe: `16`, `√2`, `16√2`, `√3/2`, `1/2`, `.5` */
-const COEFICIENTE = /^(\d*\.?\d*)(?:(?:√|sqrt\()(\d+\.?\d*)\)?)?(?:\/(\d+\.?\d*))?$/;
+/** Un coeficiente tal y como se escribe: `16`, `√2`, `16√2`, `√3/2`, `1/2`,
+ *  `.5`, y también con la raíz en el **denominador**: `1/√2`, `2/√10`.
+ *
+ *  Esa última forma entró el 26 de agosto de 2026, con Álgebra. En Cálculo no
+ *  hizo falta nunca porque las respuestas salen racionalizadas; en Álgebra, en
+ *  cambio, **una base ortonormal se escribe así de forma natural** —los
+ *  vectores son $(1,2,0)/\sqrt{10}$— y el esquema rechazó una respuesta
+ *  correcta por no saber leerla. Se caza en el build, que para eso está. */
+const COEFICIENTE =
+  /^(\d*\.?\d*)(?:(?:√|sqrt\()(\d+\.?\d*)\)?)?(?:\/(?:(?:√|sqrt\()(\d+\.?\d*)\)?|(\d+\.?\d*)))?$/;
 
 /** Normaliza lo que el teclado del alumno produce y lo que produce copiar del PDF. */
 function normaliza(entrada: string): string {
@@ -36,13 +44,17 @@ function valor(texto: string): number | null {
   const m = COEFICIENTE.exec(texto);
   if (!m) return null;
 
-  const [, entero, raiz, divisor] = m;
+  const [, entero, raiz, raizAbajo, divisor] = m;
   if (entero === '' && raiz === undefined) return null;
 
   let n = entero === '' || entero === '.' ? 1 : Number(entero);
   if (Number.isNaN(n)) return null;
   if (raiz !== undefined) n *= Math.sqrt(Number(raiz));
-  if (divisor !== undefined) {
+  if (raizAbajo !== undefined) {
+    const d = Math.sqrt(Number(raizAbajo));
+    if (d === 0) return null;
+    n /= d;
+  } else if (divisor !== undefined) {
     const d = Number(divisor);
     if (d === 0) return null;
     n /= d;
