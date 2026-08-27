@@ -208,7 +208,18 @@ for (const b of bloques) {
   ] as Array<{ tema: string; apartado?: string }>;
   for (const m of enlaces) {
     if (!m.apartado) continue;
-    const slugs = slugsPorTema.get(m.tema) ?? [];
+    /* Los dos fallos son distintos y hasta ahora daban el mismo mensaje: si el
+       tema no está en `temas[]` no hay anclas que listar, y el error decía
+       «no existe. Los que hay son:» seguido de nada. Costó una vuelta el 28 de
+       agosto de 2026 al enlazar sucesiones desde la extraordinaria. */
+    const slugs = slugsPorTema.get(m.tema);
+    if (!slugs) {
+      throw new Error(
+        `La ruta "${laRuta.id}.yaml", bloque "${b.id}", enlaza el apartado ` +
+          `"#${m.apartado}" de ${m.tema}, pero ese tema no está en su lista ` +
+          `"temas". Añádelo ahí primero.`,
+      );
+    }
     if (!slugs.includes(m.apartado)) {
       throw new Error(
         `La ruta "${laRuta.id}.yaml", bloque "${b.id}", enlaza el apartado ` +

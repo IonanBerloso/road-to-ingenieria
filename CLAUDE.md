@@ -989,6 +989,22 @@ Cosas que ya han costado horas. No son opiniones.
   se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
   cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
   después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
+- **Insertar delante de un elemento de lista YAML deja su campo huérfano.** Si
+  un elemento es `- id: X` seguido de su `nota:`, y sustituyes solo la línea
+  `- id: X` por «`- id: X` + tu nota + tu elemento nuevo», la `nota` original
+  queda pegada al **último** elemento insertado, que ya tiene la suya: clave
+  duplicada. Pasó tres veces el 28 de agosto de 2026. `js-yaml` lo caza —el
+  build falla con «duplicated mapping key» y la línea exacta—, pero se tarda
+  menos en evitarlo: **para insertar antes de un elemento, ancla la sustitución
+  en el elemento anterior completo, con su `nota`, no en la línea del `- id:`.**
+- **Un id de ejercicio inventado suena igual que uno real.** Los ids llevan el
+  curso, la convocatoria y el número, así que `ex2021-ext-3-el-polinomio-de-taylor`
+  parece correcto y el real era `ex2021-ext-3-el-mclaurin-de-una-integral-sin-primitiva`.
+  Si el ejercicio ya está enlazado desde otra ruta no aparece en la lista de
+  sueltos, y es justo entonces cuando se tiende a escribirlo de memoria. **El
+  id se copia del `ejercicios.yaml`, siempre.** El build lo caza —«referencia el
+  ejercicio X, que no existe»—, pero una ruta enlazando el ejercicio equivocado
+  **no lo caza nadie**, y eso es §13 caso 2.
 - **El esquema no tiene `unidad`.** Cálculo nunca la necesitó. Fluidos la
   necesita en su primer ejercicio, y el ejemplo de §04 de este fichero la usó
   durante meses sin que existiera. Añadirla es tocar la capa compartida: se

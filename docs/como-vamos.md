@@ -25,6 +25,11 @@ no cuenta ninguna suelta.
 siete temas, dos rutas. Su auditoría §15 está más abajo, con las once filas
 medidas.
 
+**Cálculo se cerró el 28 de agosto de 2026**, un día después que Álgebra
+aunque llevara meses abierta. Lo que faltaba no era material: era que las rutas
+de la ordinaria y de la extraordinaria solo preparaban **la mitad** de su
+examen. Está contado abajo, en la nota de la tabla de §15.
+
 ---
 
 **El corpus de exámenes de Cálculo está completo: 88 convocatorias de 88.**
@@ -475,15 +480,27 @@ auditoría periódica, que se pasa a mano y se lee con criterio.
 | temas del temario oficial, con fuente | ✅ 11/11 |
 | todo tema enlazado por una ruta tiene prosa | ✅ |
 | **toda herramienta que el examen usa, presentada en la prosa** | ✅ **auditado el 26 de agosto de 2026, catorce huecos cerrados** |
-| **todo ejercicio de examen enlazado o declarado** | ✅ **314 enlazados**, y ninguna convocatoria fuera |
+| **todo ejercicio de examen enlazado** | ✅ **425 de 425**, cerrado el 28 de agosto de 2026 |
+| **todo ejercicio de tema enlazado** | ✅ **182 de 182**, el mismo día |
 | cada tema con ejemplo introductorio propio | ✅ 44 |
 | cada tema con al menos una figura | ✅ 27 |
-| una ruta por evaluación | ✅ **7 de 7** |
+| una ruta por evaluación | ✅ **7 rutas para los 9 tipos de convocatoria** |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
-| `falta[]` dice lo que no está | ✅ 25 huecos |
+| `falta[]` dice lo que no está | ✅ 30 huecos |
 | `npm run suelo` en verde | ✅ |
 | **todas las convocatorias publicadas transcritas** | ✅ **88 de 88** |
 
+> **Dos de estas filas estuvieron en verde antes de tiempo, y hay que decirlo.**
+> Hasta el 28 de agosto de 2026 la tabla decía «314 enlazados» y «una ruta por
+> evaluación ✅ 7 de 7», y las dos afirmaciones eran optimistas. El 7 de 7
+> contaba rutas, no las nueve convocatorias que hay que preparar. Y de los 425
+> ejercicios de examen había **116 sin enlazar desde ninguna ruta**, casi todos
+> por la misma causa: la ordinaria y la extraordinaria son **dos parciales el
+> mismo día**, y las dos rutas globales solo cubrían el segundo. Se midió, se
+> escribió la mitad que faltaba —**once bloques y treinta y tres escalones
+> nuevos** entre las dos— y hoy la cifra es 425 de 425 y 182 de 182, contadas
+> por el guion de auditoría, no a ojo.
+>
 > El «88 de 88» merece explicación, porque durante meses este documento dijo
 > «de 89». 85 son los PDF; cuatro cuadernillos traen **dos** convocatorias
 > dentro —la evaluación y su recuperación—, lo que suma 89; y el cuadernillo de
