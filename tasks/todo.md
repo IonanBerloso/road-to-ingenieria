@@ -1163,11 +1163,11 @@ apaño en el contenido.
 extraordinaria de 2024-2025. Veintiocho ejercicios. Con el lector ya hecho,
 esta fase es transcripción y comprobación numérica, que es trabajo conocido.
 
-**Van cuatro de los siete**, al 27 de agosto de 2026: la extraordinaria de
-2024-2025, las dos de 2023-2024 y la ordinaria de 2022-2023. Con las cinco
-convocatorias que hay ya en el repositorio, **20 ejercicios y 84 pasos**.
+**Van cinco de los siete**, al 27 de agosto de 2026: la extraordinaria de
+2024-2025, y 2023-2024 y 2022-2023 enteras. Con las seis convocatorias que hay
+ya en el repositorio, **24 ejercicios y 102 pasos**.
 
-Quedan tres: la extraordinaria de 2022-2023 y las dos de 2021-2022.
+Quedan dos: la ordinaria y la extraordinaria de 2021-2022.
 
 Dos cosas que la fase ha ido enseñando y conviene no perder:
 

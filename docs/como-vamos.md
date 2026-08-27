@@ -505,15 +505,15 @@ espacios vectoriales y el 2, aplicaciones lineales.
 
 | | hecho | de |
 |---|---|---|
-| convocatorias transcritas | **5** | 8 |
-| ejercicios de examen | **20** | 32 |
-| pasos guiados | **84** | — |
+| convocatorias transcritas | **6** | 8 |
+| ejercicios de examen | **24** | 32 |
+| pasos guiados | **102** | — |
 
-Los cinco son 2024-2025 entera, 2023-2024 entera y la ordinaria de 2022-2023.
-Quedan la extraordinaria de 2022-2023 y las dos de 2021-2022. Los 84 pasos se
-reparten en 20 `reconocer`, 44 `calcular` y 20 `justificar`: uno de
-reconocimiento y uno de justificación por ejercicio, que es lo que el esquema
-exige, y el cálculo repartido según lo que pida cada apartado.
+Las seis son 2024-2025 entera, 2023-2024 entera y 2022-2023 entera. Quedan las
+dos de 2021-2022. Los 102 pasos se reparten en 24 `reconocer`, 54 `calcular` y
+24 `justificar`: uno de reconocimiento y uno de justificación por ejercicio,
+que es lo que el esquema exige, y el cálculo repartido según lo que pida cada
+apartado.
 
 **Y no es Cálculo con otros números.** Medido sobre los ocho PDF, antes de
 transcribir ninguno:
