@@ -1233,7 +1233,16 @@ que responda a una pregunta (§13) y ejercicios del boletín.
      camino difícil» en Laplace, y el guardián no las veía porque vivían
      dentro de un `translate`. Corregido componiendo con la matriz del `<svg>`,
      y validado al revés.
-- **Fase 6 · temas 6 y 7**, euclídeos y diagonalización, que cierran el examen.
+- **~~Fase 6 · temas 6 y 7~~**, euclídeos y diagonalización, que cierran el
+  examen. **TERMINADA el 27 de agosto de 2026.** Con ella, **los siete temas de
+  Álgebra están escritos**: 13.343 palabras de prosa, 9 figuras, 35 ejercicios
+  —19 de ellos ejemplos de entrada nuestros— y 142 pasos guiados.
+
+  Y volvió a saltar la trampa de §17 del `: ` sin comillas, esta vez en un
+  `titulo` —«Para qué sirve: una potencia grande…»—. El build **sí** la caza,
+  con un error que apunta a la línea correcta; el aviso queda porque es la
+  segunda vez en el proyecto y seguirá pasando cada vez que un título lleve dos
+  puntos.
 
 **Lo que la fase 4 ha enseñado, y que las dos siguientes heredan:**
 

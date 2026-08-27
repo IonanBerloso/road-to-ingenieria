@@ -1,0 +1,340 @@
+---
+asignatura: algebra
+tema: 6
+titulo: Espacios vectoriales euclídeos
+descripcion: Producto escalar, norma y Gram-Schmidt. Y por qué el producto escalar del examen casi nunca es el de siempre.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes y del boletín de problemas de Álgebra · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Hasta aquí un espacio vectorial no tenía ni longitudes ni ángulos: se podía
+sumar y escalar, y nada más. **El producto escalar es lo que los añade.** Con
+él aparecen la norma, la perpendicularidad y la posibilidad de proyectar, y con
+eso el álgebra empieza a parecerse a la geometría.
+
+Y hay una idea que decide la mitad de los ejercicios de este tema: **el producto
+escalar no es uno solo**. El usual —sumar los productos de las coordenadas— es
+solo un ejemplo. El examen define otros, y con ellos cambian las longitudes,
+los ángulos y hasta qué vectores son perpendiculares.
+
+Este tema ocupa el hueco del ejercicio 3 en **4 de las 8 convocatorias**, y en
+ellas casi siempre pide lo mismo: una demostración de teoría —desigualdad
+triangular, Pitágoras, Cauchy-Schwarz— y **una base ortonormal por
+Gram-Schmidt**.
+
+## Qué tiene que cumplir para ser producto escalar
+
+Una aplicación $\left\langle\cdot,\cdot\right\rangle:V\times V\to\mathbb{R}$
+es un **producto escalar** si cumple tres cosas:
+
+| propiedad | qué dice |
+|---|---|
+| **bilineal** | es lineal en cada argumento por separado |
+| **simétrica** | $\left\langle\overline{x},\overline{y}\right\rangle=\left\langle\overline{y},\overline{x}\right\rangle$ |
+| **definida positiva** | $\left\langle\overline{x},\overline{x}\right\rangle>0$ para todo $\overline{x}\neq\overline{0}$ |
+
+Un espacio vectorial con un producto escalar es un **espacio euclídeo**.
+
+**Y las tres se comprueban en ese orden, porque las dos primeras son baratas y
+la tercera es la que cuesta.** Cuando el producto viene dado por una matriz,
+
+$$
+\left\langle\overline{x},\overline{y}\right\rangle
+=\overline{x}^{T}A\,\overline{y}
+$$
+
+las dos primeras se leen de la matriz:
+
+- **bilineal**: automático, siempre que sea de esta forma;
+- **simétrica**: $\iff$ $A$ es simétrica;
+- **definida positiva**: $\iff$ todos los menores principales de $A$ son
+  positivos.
+
+Ese último criterio es el que resuelve los ejercicios con parámetro. Para
+$A=\begin{pmatrix}1&1\\1&12\end{pmatrix}$: el primer menor vale $1>0$ y el
+determinante $11>0$, luego sí lo es.
+
+<ErrorTipico titulo="Olvidar la definida positiva">
+Es la que se salta, y es la única que puede fallar cuando la matriz ya es
+simétrica. Un ejemplo que lo deja claro:
+$\left\langle\overline{x},\overline{y}\right\rangle=x_{1}y_{1}-x_{2}y_{2}$ es
+bilineal y simétrica, y **no** es producto escalar: con
+$\overline{x}=\left(0,1\right)$ da $-1$.
+
+Y sin definida positiva no hay norma, porque
+$\left\|\overline{x}\right\|=\sqrt{\left\langle\overline{x},
+\overline{x}\right\rangle}$ necesita que el radicando no sea negativo. Todo el
+tema se cae detrás.
+</ErrorTipico>
+
+## Norma, y las desigualdades que caen
+
+$$
+\left\|\overline{x}\right\|
+=\sqrt{\left\langle\overline{x},\overline{x}\right\rangle}
+$$
+
+Y dos desigualdades que el examen pide demostrar, en ese orden porque la segunda
+sale de la primera:
+
+**Cauchy-Schwarz.**
+
+$$
+\left|\left\langle\overline{x},\overline{y}\right\rangle\right|
+\leq\left\|\overline{x}\right\|\left\|\overline{y}\right\|
+$$
+
+**Desigualdad triangular (Minkowski).**
+
+$$
+\left\|\overline{x}+\overline{y}\right\|
+\leq\left\|\overline{x}\right\|+\left\|\overline{y}\right\|
+$$
+
+**Y la demostración de la segunda es siempre la misma receta**, que conviene
+tener aprendida porque sirve para casi todo el tema: **desarrollar el cuadrado**.
+
+$$
+\left\|\overline{x}+\overline{y}\right\|^{2}
+=\left\|\overline{x}\right\|^{2}
++2\left\langle\overline{x},\overline{y}\right\rangle
++\left\|\overline{y}\right\|^{2}
+$$
+
+Acotando el término central con Cauchy-Schwarz, el miembro derecho queda
+$\left(\left\|\overline{x}\right\|+\left\|\overline{y}\right\|\right)^{2}$, y
+como las normas no son negativas se toma raíz cuadrada.
+
+**Ese mismo desarrollo demuestra dos cosas más** que también caen:
+
+| se pide | qué sale al desarrollar |
+|---|---|
+| **Pitágoras** | la igualdad equivale a $\left\langle\overline{x},\overline{y}\right\rangle=0$ |
+| **identidad de polarización** | $\left\langle\overline{x},\overline{y}\right\rangle=\tfrac{1}{4}\left\|\overline{x}+\overline{y}\right\|^{2}-\tfrac{1}{4}\left\|\overline{x}-\overline{y}\right\|^{2}$ |
+
+La segunda dice algo bonito: **la norma determina el producto escalar**. Si sabes
+medir longitudes, ya sabes medir ángulos.
+
+<ErrorTipico titulo="Confundir los dos casos de igualdad">
+En Cauchy-Schwarz, la igualdad se alcanza cuando los vectores son
+**proporcionales**. En Pitágoras, cuando son **ortogonales**. Son los dos casos
+extremos del mismo desarrollo y se confunden con facilidad.
+
+La regla mnemotécnica: si el término cruzado
+$\left\langle\overline{x},\overline{y}\right\rangle$ es **lo más grande
+posible**, es Cauchy-Schwarz; si es **cero**, es Pitágoras.
+</ErrorTipico>
+
+## Ortogonalidad, y la que sale gratis
+
+$$
+\overline{x}\perp\overline{y}
+\iff
+\left\langle\overline{x},\overline{y}\right\rangle=0
+$$
+
+Y un teorema que ahorra trabajo constantemente:
+
+> **Una familia ortogonal de vectores no nulos es siempre libre.**
+
+Se demuestra en tres líneas: si
+$\sum\alpha_{i}\overline{v}_{i}=\overline{0}$, se multiplica escalarmente por
+$\overline{v}_{j}$ y todos los términos se anulan salvo el $j$-ésimo, que deja
+$\alpha_{j}\left\|\overline{v}_{j}\right\|^{2}=0$ y por tanto $\alpha_{j}=0$.
+
+**Lo útil es la consecuencia:** en cuanto tienes $n$ vectores ortogonales no
+nulos en un espacio de dimensión $n$, ya tienes una base. No hay que comprobar
+la independencia aparte.
+
+### Con base ortonormal, todo es más barato
+
+Si $B=\left\{\overline{e}_{1},\dots,\overline{e}_{n}\right\}$ es ortonormal:
+
+$$
+\overline{x}=\sum_{i}\left\langle\overline{x},\overline{e}_{i}\right\rangle
+\overline{e}_{i},
+\qquad
+\left\langle\overline{x},\overline{y}\right\rangle=\sum_{i}x_{i}y_{i},
+\qquad
+\left\|\overline{x}\right\|^{2}=\sum_{i}x_{i}^{2}
+$$
+
+Las coordenadas **se leen con un producto escalar** en vez de resolver un
+sistema, y el producto escalar recupera la forma usual. Por eso merece la pena
+ortonormalizar antes de calcular nada.
+
+## Gram-Schmidt
+
+El método para convertir cualquier base en una ortonormal. Se toma el primer
+vector y se normaliza; y a cada siguiente **se le resta lo que ya está cubierto
+por los anteriores**:
+
+$$
+\overline{w}_{k}=\overline{v}_{k}
+-\sum_{i<k}\left\langle\overline{v}_{k},\overline{u}_{i}\right\rangle
+\overline{u}_{i},
+\qquad
+\overline{u}_{k}=\frac{\overline{w}_{k}}{\left\|\overline{w}_{k}\right\|}
+$$
+
+<figure class="figura-examen">
+<svg viewBox="-24 -150 420 214" role="img" width="420" height="214"
+     aria-labelledby="alg6gs-t alg6gs-d">
+  <title id="alg6gs-t">Gram-Schmidt: al segundo vector se le resta su
+  proyección sobre el primero</title>
+  <desc id="alg6gs-d">Dos vectores que salen del mismo origen. El primero,
+  horizontal, es el ya normalizado. El segundo apunta hacia arriba y a la
+  derecha. Desde su punta baja una línea de puntos perpendicular al primer
+  vector; el pie de esa perpendicular marca la proyección. La diferencia entre
+  el segundo vector y esa proyección es un tercer vector, dibujado vertical,
+  que es perpendicular al primero y es el que Gram-Schmidt se queda.</desc>
+
+  <defs>
+    <marker id="alg6f" viewBox="0 0 9 9" refX="7" refY="4.5" markerWidth="6.5"
+            markerHeight="6.5" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 z" fill="context-stroke"></path>
+    </marker>
+  </defs>
+
+  <g stroke="var(--rule)" stroke-width="1" fill="none">
+    <path d="M-10 0 L340 0 M20 -130 L20 22"></path>
+  </g>
+
+  <g stroke="var(--live)" stroke-width="2.4" fill="none"
+     marker-end="url(#alg6f)">
+    <path d="M20 0 L130 0"></path>
+  </g>
+  <g stroke="var(--graphite)" stroke-width="2.4" fill="none"
+     marker-end="url(#alg6f)">
+    <path d="M20 0 L230 -100"></path>
+  </g>
+  <g stroke="var(--alt)" stroke-width="2.4" fill="none"
+     marker-end="url(#alg6f)">
+    <path d="M230 0 L230 -96"></path>
+  </g>
+  <g stroke="var(--faint)" stroke-width="1.3" stroke-dasharray="4 3" fill="none">
+    <path d="M20 0 L230 0"></path>
+  </g>
+  <g stroke="var(--flag)" stroke-width="2.4" fill="none"
+     marker-end="url(#alg6f)">
+    <path d="M20 6 L226 6"></path>
+  </g>
+
+  <g fill="none" stroke="var(--faint)" stroke-width="1.1">
+    <path d="M218 0 L218 -12 L230 -12"></path>
+  </g>
+
+  <g font-family="var(--mono)" font-size="11.5">
+    <text x="76" y="-10" fill="var(--live)" text-anchor="middle">u₁</text>
+    <text x="120" y="-62" fill="var(--graphite)" text-anchor="middle">v₂</text>
+    <text x="120" y="26" fill="var(--flag)" text-anchor="middle">la proyección</text>
+    <text x="242" y="-56" fill="var(--alt)" text-anchor="start">w₂ = v₂ − proyección</text>
+  </g>
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--faint)">
+    <text x="120" y="44" text-anchor="middle">⟨v₂, u₁⟩ · u₁</text>
+    <text x="242" y="-38" text-anchor="start">perpendicular a u₁</text>
+  </g>
+</svg>
+<figcaption>
+Lo que se resta es exactamente la sombra del segundo vector sobre el primero. Lo
+que queda no tiene nada en la dirección de u₁ — y por eso es perpendicular a él.
+</figcaption>
+</figure>
+
+**Los tres errores que se cometen**, y los tres cuestan el apartado entero:
+
+1. **Restar la proyección sobre el vector sin normalizar.** La fórmula de
+   arriba usa los $\overline{u}_{i}$ **ya unitarios**. Si usas los originales,
+   hay que dividir por $\left\|\overline{v}_{i}\right\|^{2}$.
+2. **Normalizar con la norma usual cuando el producto es otro.** Ver abajo.
+3. **No comprobar al final.** Cuesta tres productos escalares y caza todo.
+
+<ErrorTipico titulo="Normalizar con la raíz de la suma de cuadrados">
+Es el error caro de este tema, y aparece en cuanto el enunciado define un
+producto escalar distinto del usual. La ordinaria de 2021-2022 define
+
+$$
+\left\langle\overline{x},\overline{y}\right\rangle
+=x_{1}y_{1}-x_{1}y_{2}-x_{2}y_{1}+2x_{2}y_{2}+2x_{3}y_{3}
+$$
+
+y con él el vector $\left(1,1,0\right)$ tiene norma **$1$**: $1-1-1+2=1$. Con la
+norma de siempre valdría $\sqrt{2}$.
+
+Gram-Schmidt funciona igual con cualquier producto escalar —solo necesita
+bilinealidad, simetría y definida positiva—, pero **hay que usar el del
+enunciado en todos los pasos**: en la proyección y en la normalización.
+
+Una señal de que vas bien: en estos ejercicios las normas suelen salir enteras.
+Si te salen raíces feas, revisa qué producto estás usando.
+</ErrorTipico>
+
+### Completar a base de todo el espacio
+
+Cuando el enunciado pide ortonormalizar un subespacio y **después** completar
+hasta el espacio entero, hay dos caminos:
+
+| camino | cuándo |
+|---|---|
+| el **producto vectorial** de los dos que tienes | solo con el producto escalar **usual** en $\mathbb{R}^{3}$ |
+| imponer las **ecuaciones de ortogonalidad** | siempre |
+
+El segundo es más largo de escribir y es el único que vale cuando el producto
+escalar es otro. Y no es tan largo: son dos ecuaciones lineales, y muchas veces
+una de las dos se simplifica sola.
+
+## El complemento ortogonal
+
+$$
+S^{\perp}=\left\{\overline{x}\in V\;/\;
+\left\langle\overline{x},\overline{y}\right\rangle=0
+\ \ \forall\,\overline{y}\in S\right\}
+$$
+
+Es subespacio, y cumple $\dim S+\dim S^{\perp}=\dim V$ y
+$V=S\oplus S^{\perp}$. Con eso, **todo vector se parte de forma única** en su
+parte dentro de $S$ y su parte perpendicular:
+
+$$
+\overline{x}=\underbrace{\overline{p}}_{\in S}
++\underbrace{\overline{x}-\overline{p}}_{\in S^{\perp}}
+$$
+
+Y para calcular $\overline{p}$ —la **proyección ortogonal**— basta tener una
+base **ortonormal** de $S$:
+
+$$
+\overline{p}=\sum_{i}\left\langle\overline{x},\overline{u}_{i}\right\rangle
+\overline{u}_{i}
+$$
+
+Que es, otra vez, la misma cuenta de Gram-Schmidt.
+
+## Lo que hay que llevar sabido
+
+1. Producto escalar = **bilineal + simétrica + definida positiva**. Las tres, y
+   la tercera es la que falla.
+2. Con matriz: simétrica $\iff$ $A$ simétrica; definida positiva $\iff$ menores
+   principales todos positivos.
+3. Sin definida positiva no hay norma, y sin norma no hay nada.
+4. La receta de casi todas las demostraciones del tema: **desarrollar
+   $\left\|\overline{x}+\overline{y}\right\|^{2}$**.
+5. Cauchy-Schwarz: igualdad si **proporcionales**. Pitágoras: igualdad si
+   **ortogonales**.
+6. **Ortogonal y no nulos $\Rightarrow$ libre.** Ahorra comprobar la
+   independencia.
+7. Con base ortonormal, las coordenadas se leen con un producto escalar.
+8. Gram-Schmidt: al $k$-ésimo se le resta su proyección sobre **todos** los
+   anteriores ya normalizados.
+9. **Usa el producto escalar del enunciado**, también al normalizar. Si el
+   enunciado define uno raro, el usual está prohibido.
+10. Completar a base del espacio: producto vectorial solo con el producto usual;
+    con cualquier otro, ecuaciones de ortogonalidad.
+11. $\dim S+\dim S^{\perp}=\dim V$, y la proyección se calcula con una base
+    ortonormal de $S$.

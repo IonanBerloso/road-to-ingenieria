@@ -535,7 +535,7 @@ asociada está en todas partes— pero nunca como el ejercicio. Eso no significa
 que no haya que escribirlos; significa que en la ruta van como **suelo** y no
 como bloques de rendimiento, que es exactamente la distinción que §14 hace.
 
-### Los temas escritos: 5 de 7
+### Los siete temas escritos: 7 de 7
 
 Contado sobre los ficheros, el 27 de agosto de 2026:
 
@@ -546,7 +546,15 @@ Contado sobre los ficheros, el 27 de agosto de 2026:
 | 3 · matrices | **1.750** | 1 | 4 | 2 | 16 |
 | 4 · determinantes | **1.676** | 1 | 5 | 3 | 20 |
 | 5 · sistemas lineales | **1.497** | 1 | 4 | 2 | 18 |
-| **total** | **10.116** | **7** | **25** | **13** | **99** |
+| 6 · espacios euclídeos | **1.604** | 1 | 5 | 3 | 22 |
+| 7 · diagonalización | **1.623** | 1 | 5 | 3 | 21 |
+| **total** | **13.343** | **9** | **35** | **19** | **142** |
+
+**El reparto de longitudes no es casual y conviene que quede dicho:** los temas
+1 y 2 son los largos porque ocupan un hueco del examen **cada uno de los ocho
+años**; los temas 3 y 5 son los cortos porque **no ocupan ninguno**; y el 4, el
+6 y el 7 quedan en medio. Escribir tres mil palabras sobre un tema que no se
+examina solo sería gastar el tiempo del alumno donde no rinde.
 
 > **Dos veces he publicado un recuento estimado en un mensaje de commit, y las
 > dos estaba mal.** El tema 2 salió como «2.900 palabras» siendo 2.255, y los

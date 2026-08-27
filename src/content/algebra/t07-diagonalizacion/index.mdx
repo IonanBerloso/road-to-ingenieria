@@ -1,0 +1,335 @@
+---
+asignatura: algebra
+tema: 7
+titulo: Diagonalización de matrices cuadradas
+descripcion: Autovalores, autovectores y las dos multiplicidades. Y por qué el polinomio característico no decide.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes y del boletín de problemas de Álgebra · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Diagonalizar una matriz es encontrar una base en la que se convierta en
+diagonal. Y en una base así, todo lo que la matriz hace se vuelve trivial:
+multiplicar es multiplicar cada coordenada por su número, y elevar a la
+potencia $n$ es elevar $n$ cada número de la diagonal.
+
+$$
+A=PDP^{-1}
+\;\Longrightarrow\;
+A^{n}=PD^{n}P^{-1}
+$$
+
+Este tema **ocupa el hueco del ejercicio 4 las ocho veces**, sin una sola
+excepción. Es el más previsible del examen, y siempre pide lo mismo: una
+demostración de teoría y **estudiar si una matriz diagonaliza**, muchas veces
+con un parámetro dentro.
+
+## Autovalores y autovectores
+
+$$
+A\overline{x}=\lambda\overline{x},
+\qquad
+\overline{x}\neq\overline{0}
+$$
+
+La condición $\overline{x}\neq\overline{0}$ no es un adorno: sin ella todo
+escalar sería autovalor, porque $A\overline{0}=\lambda\overline{0}$ siempre.
+
+Reescribiendo, $\left(A-\lambda I\right)\overline{x}=\overline{0}$ tiene
+solución no trivial, y eso es exactamente
+
+$$
+\det\left(A-\lambda I\right)=0
+$$
+
+el **polinomio característico**. Sus raíces son los autovalores.
+
+### Leerlo sin desarrollarlo
+
+Para una matriz de orden $3$, los tres coeficientes salen de tres números que
+se leen de la matriz:
+
+$$
+p\left(\lambda\right)=-\lambda^{3}
++\left(\operatorname{traza}A\right)\lambda^{2}
+-\left(\textstyle\sum\text{menores principales}\right)\lambda
++\det A
+$$
+
+y con eso salen dos comprobaciones **gratis** que hay que hacer siempre:
+
+$$
+\sum\lambda_{i}=\operatorname{traza}A,
+\qquad
+\prod\lambda_{i}=\det A
+$$
+
+**Y hay atajos que ahorran el desarrollo entero.** Si te fijas antes de
+calcular:
+
+| lo que ves | lo que sabes |
+|---|---|
+| dos filas iguales o proporcionales | $\lambda=0$ es autovalor |
+| todas las filas suman lo mismo, $s$ | $\left(1,1,\dots,1\right)$ es autovector de $\lambda=s$ |
+| matriz triangular | los autovalores son la diagonal |
+
+La segunda es la que más rinde y casi nadie usa. Con
+$G=\begin{pmatrix}3&1&1\\1&3&1\\1&1&3\end{pmatrix}$, las tres filas suman $5$,
+así que $\lambda=5$ con autovector $\left(1,1,1\right)$ — sin desarrollar nada.
+
+### El subespacio propio
+
+$$
+V\left(\lambda\right)=\operatorname{Ker}\left(A-\lambda I\right)
+$$
+
+Es un **subespacio**, y calcularlo es resolver un sistema homogéneo. Todo lo
+del [tema 5](/road-to-ingenieria/algebra/t05-sistemas-lineales/) se aplica tal
+cual.
+
+Y dos propiedades que caen como demostración:
+
+- Subespacios propios de autovalores distintos se cortan solo en el
+  $\overline{0}$.
+- **Autovectores de autovalores distintos son linealmente independientes.**
+
+## Las dos multiplicidades, que es todo el tema
+
+Para cada autovalor $\lambda$ hay dos números, y la diagonalización depende de
+si coinciden:
+
+| | qué es | cómo se calcula |
+|---|---|---|
+| **algebraica** $m_{a}$ | cuántas veces es raíz del polinomio | factorizando |
+| **geométrica** $m_{g}$ | $\dim V\left(\lambda\right)$ | $n-\operatorname{rg}\left(A-\lambda I\right)$ |
+
+Y siempre se cumple $1\leq m_{g}\leq m_{a}$.
+
+> $A$ **es diagonalizable** $\iff$ para **todo** autovalor, $m_{g}=m_{a}$.
+
+Con dos consecuencias que se usan constantemente:
+
+- Si los $n$ autovalores son **distintos**, diagonaliza seguro. No hay que
+  comprobar nada más.
+- Los autovalores **simples** nunca dan problema: su $m_{a}$ vale $1$ y su
+  $m_{g}$ también, porque $m_{g}\geq1$ siempre. **Todo se juega en los
+  repetidos.**
+
+<figure class="figura-examen">
+<svg viewBox="-18 -168 452 230" role="img" width="452" height="230"
+     aria-labelledby="alg7mu-t alg7mu-d">
+  <title id="alg7mu-t">Dos matrices con el mismo polinomio característico, y
+  solo una diagonaliza</title>
+  <desc id="alg7mu-d">Dos columnas paralelas. Las dos parten del mismo
+  polinomio característico, con un autovalor simple y otro doble. En la
+  columna de la izquierda, el autovalor doble aporta dos direcciones propias,
+  las multiplicidades coinciden y la matriz diagonaliza. En la de la derecha,
+  el autovalor doble aporta solo una dirección, falta una, y la matriz no
+  diagonaliza.</desc>
+
+  <g fill="none" stroke="var(--graphite)" stroke-width="1.4">
+    <rect x="88" y="-158" width="256" height="28" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="11.5" fill="var(--ink)"
+     text-anchor="middle">
+    <text x="216" y="-139">mismo p(λ): λ simple y μ DOBLE</text>
+  </g>
+
+  <g stroke="var(--graphite)" stroke-width="1.3" fill="none">
+    <path d="M216 -130 L216 -118 M110 -118 L322 -118
+             M110 -118 L110 -104 M322 -118 L322 -104"></path>
+  </g>
+
+  <g fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4">
+    <rect x="8" y="-100" width="204" height="34" rx="4"></rect>
+  </g>
+  <g fill="var(--flag-soft)" stroke="var(--flag)" stroke-width="1.4">
+    <rect x="228" y="-100" width="204" height="34" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="11" text-anchor="middle">
+    <text x="110" y="-79" fill="var(--live)">rg(A − μI) = n − 2</text>
+    <text x="330" y="-79" fill="var(--flag)">rg(A − μI) = n − 1</text>
+  </g>
+
+  <g font-family="var(--mono)" font-size="11" text-anchor="middle">
+    <text x="110" y="-48" fill="var(--graphite)">mg(μ) = 2 = ma(μ)</text>
+    <text x="330" y="-48" fill="var(--graphite)">mg(μ) = 1 &lt; 2 = ma(μ)</text>
+  </g>
+
+  <g stroke="var(--live)" stroke-width="1.3" fill="none">
+    <path d="M110 -40 L110 -28"></path>
+  </g>
+  <g stroke="var(--flag)" stroke-width="1.3" fill="none">
+    <path d="M330 -40 L330 -28"></path>
+  </g>
+
+  <g fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.6">
+    <rect x="24" y="-24" width="172" height="42" rx="4"></rect>
+  </g>
+  <g fill="var(--flag-soft)" stroke="var(--flag)" stroke-width="1.6">
+    <rect x="244" y="-24" width="172" height="42" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="11.5" text-anchor="middle">
+    <text x="110" y="-7" fill="var(--live)">DIAGONALIZA</text>
+    <text x="110" y="9" fill="var(--live)">hay base de autovectores</text>
+    <text x="330" y="-7" fill="var(--flag)">NO DIAGONALIZA</text>
+    <text x="330" y="9" fill="var(--flag)">falta una dirección</text>
+  </g>
+
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--faint)"
+     text-anchor="middle">
+    <text x="216" y="44">el polinomio no distingue estos dos casos:</text>
+    <text x="216" y="58">hay que calcular el rango</text>
+  </g>
+</svg>
+<figcaption>
+El polinomio característico da los autovalores y su multiplicidad algebraica, y
+ahí se acaba lo que sabe. La geométrica es un rango, y hay que calcularlo
+aparte: es exactamente lo que separa las dos columnas.
+</figcaption>
+</figure>
+
+<ErrorTipico titulo="Creer que el polinomio característico decide">
+No decide. Dice qué autovalores hay y con qué multiplicidad **algebraica**; lo
+que falta —la geométrica— es un rango que hay que calcular aparte.
+
+La ordinaria de 2022-2023 lo pone en el enunciado: da **dos matrices con el
+mismo polinomio característico** y pregunta si diagonalizan. Una sí y la otra
+no. Es la forma más limpia de aprender esto, y viene servida en el examen.
+
+El caso mínimo cabe en dos por dos:
+$\begin{pmatrix}2&0\\0&2\end{pmatrix}$ y
+$\begin{pmatrix}2&1\\0&2\end{pmatrix}$ tienen el mismo polinomio
+$\left(\lambda-2\right)^{2}$. La primera **ya es** diagonal; la segunda no
+diagonaliza nunca.
+</ErrorTipico>
+
+<ErrorTipico titulo="Deducir el rango de la multiplicidad de la raíz">
+Que una raíz sea doble no dice cuánto vale el rango de $A-\lambda I$, ni cuánto
+baja la dimensión. Son cosas de naturaleza distinta: una cuenta factores de un
+polinomio y la otra cuenta direcciones de un subespacio.
+
+La única relación que hay es la desigualdad $1\leq m_{g}\leq m_{a}$. Todo lo
+demás hay que mirarlo **en la matriz**.
+</ErrorTipico>
+
+## Cómo se hace, en orden
+
+Y el orden importa, porque es lo que hace corto un ejercicio con parámetro:
+
+1. **Polinomio característico**, con los atajos de arriba si los hay.
+2. **Factorizar** y ver las multiplicidades algebraicas.
+3. **Si todas son $1$: diagonaliza**, y ya está. No se calcula ningún rango.
+4. **Solo para los repetidos**, calcular
+   $m_{g}=n-\operatorname{rg}\left(A-\lambda I\right)$ y comparar.
+5. Si diagonaliza, los **autovectores** por columnas dan $P$, y los autovalores
+   **en el mismo orden** dan $D$.
+
+$$
+P^{-1}AP=D
+$$
+
+**El orden de las columnas de $P$ y el de la diagonal de $D$ tienen que
+coincidir.** Cambiarlos está bien siempre que se cambien los dos a la vez.
+
+### Con parámetro
+
+El mismo guion, y evita abrir casos a ciegas:
+
+1. Factoriza el polinomio **en función del parámetro**.
+2. Busca para qué valores **coinciden dos autovalores**. Suelen ser dos o tres
+   ecuaciones de primer grado.
+3. **Solo en esos valores** calcula el rango.
+
+Para cualquier otro valor hay $n$ autovalores distintos y diagonaliza. Es una
+línea que cubre casi todos los casos.
+
+## Matrices simétricas: el caso regalado
+
+Si $A$ es **real y simétrica**, pasan tres cosas a la vez:
+
+1. Todos sus autovalores son **reales**.
+2. Autovectores de autovalores distintos son **ortogonales**, sin hacer nada.
+3. **Siempre diagonaliza**, y con una base ortonormal.
+
+La tercera es la que ahorra el ejercicio entero: en cuanto ves que la matriz es
+simétrica, la respuesta a «¿diagonaliza?» es **sí** sin calcular ningún rango.
+
+Y la matriz de paso se puede tomar **ortogonal**, con lo que
+
+$$
+P^{-1}=P^{T}
+\;\Longrightarrow\;
+D=P^{T}AP
+$$
+
+que ahorra invertir una matriz. Para conseguirla basta normalizar los
+autovectores — y, **si algún autovalor es múltiple**, ortogonalizar dentro de su
+subespacio propio con Gram-Schmidt.
+
+<ErrorTipico titulo="Dar P ortogonal sin normalizar, o sin ortogonalizar dentro del subespacio">
+Son los dos descuidos del apartado, y los dos rompen $P^{-1}=P^{T}$.
+
+**El primero**: los autovectores salen ortogonales entre autovalores distintos,
+pero no unitarios. Hay que dividir cada uno por su norma.
+
+**El segundo, más sutil**: dentro del subespacio propio de un autovalor
+**repetido**, la ortogonalidad **no** sale sola. En
+$\begin{pmatrix}3&1&1\\1&3&1\\1&1&3\end{pmatrix}$, el autovalor $2$ tiene el
+plano $x+y+z=0$ como subespacio propio, y la base obvia
+$\left\{\left(1,-1,0\right),\left(1,0,-1\right)\right\}$ **no** es ortogonal:
+su producto escalar vale $1$. Hay que aplicar Gram-Schmidt ahí dentro.
+
+Entre autovalores distintos, en cambio, la ortogonalidad es gratis por el
+teorema.
+</ErrorTipico>
+
+## Para qué sirve: potencias
+
+$$
+A^{n}=PD^{n}P^{-1}
+$$
+
+y $D^{n}$ es la diagonal con cada entrada elevada a $n$. Con eso, calcular
+$A^{100}$ pasa de cien productos de matrices a **una potencia de números**.
+
+Con $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$, cuyos autovalores son $3$ y $1$:
+
+$$
+A^{n}=\frac{1}{2}\begin{pmatrix}3^{n}+1&3^{n}-1\\3^{n}-1&3^{n}+1\end{pmatrix}
+$$
+
+que para $n=2$ da $\begin{pmatrix}5&4\\4&5\end{pmatrix}$, y se puede comprobar
+multiplicando.
+
+**Y ese es el motivo por el que el tema existe.** Diagonalizar no es un fin: es
+cambiar a la base donde la matriz no hace nada complicado.
+
+## Lo que hay que llevar sabido
+
+1. $\det\left(A-\lambda I\right)=0$ da los autovalores. La condición
+   $\overline{x}\neq\overline{0}$ es parte de la definición.
+2. Comprobaciones gratis: los autovalores **suman la traza** y **multiplican el
+   determinante**.
+3. Atajos: filas proporcionales $\Rightarrow$ $\lambda=0$; filas que suman lo
+   mismo $\Rightarrow$ ese valor es autovalor con $\left(1,\dots,1\right)$;
+   triangular $\Rightarrow$ la diagonal.
+4. $V\left(\lambda\right)=\operatorname{Ker}\left(A-\lambda I\right)$: es
+   resolver un homogéneo.
+5. Diagonaliza $\iff$ $m_{g}=m_{a}$ **para todo** autovalor.
+6. $n$ autovalores distintos $\Rightarrow$ diagonaliza. Y los **simples** nunca
+   dan problema.
+7. **El polinomio característico NO decide.** La geométrica es un rango.
+8. La multiplicidad de la raíz no dice nada sobre el rango. Solo
+   $1\leq m_{g}\leq m_{a}$.
+9. **Simétrica real $\Rightarrow$ diagonaliza siempre**, con base ortonormal y
+   $P^{-1}=P^{T}$.
+10. En un autovalor **repetido** de una simétrica, hay que ortogonalizar dentro
+    de su subespacio propio: eso no sale solo.
+11. $P$ y $D$ en el **mismo orden**.
+12. $A^{n}=PD^{n}P^{-1}$: para eso sirve todo esto.
