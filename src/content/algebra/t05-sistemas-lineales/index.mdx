@@ -1,0 +1,259 @@
+---
+asignatura: algebra
+tema: 5
+titulo: Sistemas de ecuaciones lineales
+descripcion: Rouché-Fröbenius, Gauss y Cramer. El tema que no cae solo y que hace falta en los cuatro ejercicios.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes y del boletín de problemas de Álgebra · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+**Este tema tampoco cae solo.** Igual que el de matrices, ninguno de los 32
+ejercicios de las ocho convocatorias es «un ejercicio de sistemas». Y sin
+embargo lo estás resolviendo todo el rato sin llamarlo así:
+
+| cuando el examen pide | lo que haces es |
+|---|---|
+| una base del **núcleo** de $f$ | resolver $A\overline{x}=\overline{0}$ |
+| las **coordenadas** en una base nueva | resolver $P\overline{y}=\overline{x}$ |
+| la **intersección** de dos subespacios | resolver el sistema de sus ecuaciones |
+| un **vector propio** de $\lambda$ | resolver $\left(A-\lambda I\right)\overline{x}=\overline{0}$ |
+
+Cuatro de los cuatro huecos del examen. Este tema es el que decide si esas
+cuentas salen deprisa o se comen el tiempo de los otros ejercicios.
+
+## Qué es, y cómo se escribe
+
+Un sistema de $m$ ecuaciones y $n$ incógnitas se escribe en forma matricial
+
+$$
+A\cdot X=B
+$$
+
+con $A$ la **matriz de coeficientes** —de orden $m\times n$—, $X$ la columna de
+incógnitas y $B$ la de términos independientes. Y hay una matriz más, que es la
+que lo decide todo:
+
+$$
+\left(A\mid B\right)
+\qquad\text{la matriz \textbf{ampliada}}
+$$
+
+**Homogéneo** significa que $B$ es toda ceros. Y eso cambia el problema por
+completo, como se ve enseguida.
+
+## Rouché-Fröbenius: la clasificación en dos comparaciones
+
+$$
+r\left(A\right)\leq r\left(A\mid B\right)
+$$
+
+siempre, porque añadir una columna no puede bajar el rango. Y con esas dos
+cifras más el número de incógnitas, el sistema queda clasificado:
+
+<figure class="figura-examen">
+<svg viewBox="-16 -172 456 234" role="img" width="456" height="234"
+     aria-labelledby="alg5rf-t alg5rf-d">
+  <title id="alg5rf-t">El árbol de decisión de Rouché-Fröbenius</title>
+  <desc id="alg5rf-d">Un esquema de decisión con dos preguntas encadenadas. La
+  primera compara el rango de la matriz de coeficientes con el de la matriz
+  ampliada: si son distintos el sistema es incompatible y no tiene solución. Si
+  son iguales el sistema es compatible, y entonces la segunda pregunta compara
+  ese rango con el número de incógnitas: si coinciden hay una sola solución y
+  el sistema es compatible determinado; si el rango es menor hay infinitas
+  soluciones y el sistema es compatible indeterminado, con tantos parámetros
+  libres como diga la diferencia.</desc>
+
+  <g fill="none" stroke="var(--graphite)" stroke-width="1.4">
+    <rect x="128" y="-158" width="176" height="30" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="12" fill="var(--ink)"
+     text-anchor="middle">
+    <text x="216" y="-138">r(A)  vs  r(A|B)</text>
+  </g>
+
+  <g stroke="var(--graphite)" stroke-width="1.3" fill="none">
+    <path d="M216 -128 L216 -114 M76 -114 L356 -114 M76 -114 L76 -98
+             M356 -114 L356 -98"></path>
+  </g>
+  <g font-family="var(--mono)" font-size="10.5" text-anchor="middle">
+    <text x="126" y="-102" fill="var(--flag)">distintos</text>
+    <text x="300" y="-102" fill="var(--live)">iguales</text>
+  </g>
+
+  <g fill="var(--flag-soft)" stroke="var(--flag)" stroke-width="1.4">
+    <rect x="8" y="-92" width="136" height="42" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="11.5" text-anchor="middle"
+     fill="var(--flag)">
+    <text x="76" y="-74">INCOMPATIBLE</text>
+    <text x="76" y="-58">sin solución</text>
+  </g>
+
+  <g fill="none" stroke="var(--live)" stroke-width="1.4">
+    <rect x="272" y="-92" width="160" height="30" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="12" fill="var(--ink)"
+     text-anchor="middle">
+    <text x="352" y="-72">r  vs  n</text>
+  </g>
+
+  <g stroke="var(--live)" stroke-width="1.3" fill="none">
+    <path d="M352 -62 L352 -48 M216 -48 L420 -48 M216 -48 L216 -32
+             M420 -48 L420 -32"></path>
+  </g>
+  <g font-family="var(--mono)" font-size="10.5" text-anchor="middle"
+     fill="var(--live)">
+    <text x="258" y="-36">r = n</text>
+    <text x="392" y="-36">r &lt; n</text>
+  </g>
+
+  <g fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4">
+    <rect x="150" y="-26" width="132" height="44" rx="4"></rect>
+    <rect x="296" y="-26" width="136" height="44" rx="4"></rect>
+  </g>
+  <g font-family="var(--mono)" font-size="11.5" text-anchor="middle"
+     fill="var(--live)">
+    <text x="216" y="-8">DETERMINADO</text>
+    <text x="216" y="8">una solución</text>
+    <text x="364" y="-8">INDETERMINADO</text>
+    <text x="364" y="8">n − r parámetros</text>
+  </g>
+
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--faint)">
+    <text x="0" y="40" text-anchor="start">n = número de incógnitas</text>
+    <text x="0" y="54" text-anchor="start">r = el rango común, cuando los dos coinciden</text>
+  </g>
+</svg>
+<figcaption>
+Dos comparaciones y ya está clasificado. La primera decide si hay solución; la
+segunda, cuántas. Y el número de parámetros libres no hay que buscarlo: es
+n − r.
+</figcaption>
+</figure>
+
+**Lo que hace útil el teorema no es clasificar, es que da el número de
+parámetros gratis.** Si un sistema de $4$ incógnitas tiene rango $2$, sabes
+antes de despejar nada que la solución va a depender de **dos** parámetros — y
+por tanto que el subespacio que buscas tiene dimensión $2$.
+
+## Los sistemas homogéneos son otro problema
+
+Cuando $B=\overline{0}$, la columna añadida es de ceros y **no puede subir el
+rango**. Por tanto:
+
+$$
+r\left(A\right)=r\left(A\mid\overline{0}\right)\text{ siempre}
+\;\Longrightarrow\;
+\textbf{un sistema homogéneo nunca es incompatible}
+$$
+
+Siempre tiene al menos la solución trivial $\overline{x}=\overline{0}$. La
+pregunta con un homogéneo no es «¿tiene solución?» sino **«¿tiene alguna
+además de la trivial?»**, y eso lo decide la segunda comparación:
+
+| | |
+|---|---|
+| $r\left(A\right)=n$ | solo la trivial |
+| $r\left(A\right)<n$ | infinitas, con $n-r$ parámetros |
+
+Y hay algo más, que es lo que conecta este tema con el 1 y el 2:
+
+> **El conjunto de soluciones de un sistema homogéneo es un subespacio
+> vectorial.** El de uno no homogéneo, no.
+
+Es exactamente el núcleo de la aplicación lineal de matriz $A$. Por eso una
+condición «igualada a cero» define un subespacio y una con término independiente
+no: el segundo sistema no tiene al $\overline{0}$ entre sus soluciones.
+
+<ErrorTipico titulo="Decir que un homogéneo es incompatible">
+No puede serlo. Si al discutir un sistema homogéneo te sale «incompatible», hay
+un error de cuenta en alguna parte: el $\overline{0}$ siempre lo cumple.
+
+El error suele venir de arrastrar mal una columna de ceros al escalonar, o de
+aplicar Rouché sin darse cuenta de que la ampliada tiene una columna nula.
+</ErrorTipico>
+
+## Resolverlo: Gauss casi siempre, Cramer casi nunca
+
+**Gauss** es el método general y el único que sirve cuando la matriz no es
+cuadrada. Se escalona la **ampliada** —todas las operaciones sobre las filas
+enteras, término independiente incluido— y al final se despeja de abajo arriba.
+
+Al escalonar aparecen los tres casos a la vista:
+
+- una fila $\left(0\;0\;\cdots\;0\mid c\right)$ con $c\neq0$: **incompatible**;
+- una fila entera de ceros: sobra una ecuación, y el rango baja;
+- tantos pivotes como incógnitas: **determinado**.
+
+**Cramer** solo vale si el sistema es cuadrado **y** $\det A\neq0$. Entonces
+
+$$
+x_{i}=\frac{\det A_{i}}{\det A}
+$$
+
+donde $A_{i}$ es $A$ con la columna $i$ sustituida por $B$.
+
+Es elegante y casi nunca compensa: para un sistema $3\times3$ son **cuatro**
+determinantes de orden $3$, frente a un escalonado que se hace en seis restas.
+Merece la pena cuando solo te piden **una** de las incógnitas, porque entonces
+son dos determinantes y no hay que resolver el sistema entero.
+
+<ErrorTipico titulo="Escalonar la matriz de coeficientes y olvidar B">
+Las operaciones de fila hay que hacerlas sobre la **fila completa de la
+ampliada**. Si restas dos filas en $A$ y no restas los términos independientes
+correspondientes, el sistema que queda ya no es equivalente al de partida — y la
+solución que salga no será solución de nada.
+
+La forma de no olvidarlo es dibujar la barra vertical y trabajar siempre con
+$\left(A\mid B\right)$ entera, nunca con las dos mitades por separado.
+</ErrorTipico>
+
+## Con parámetro: el guion, siempre el mismo
+
+Es lo que pide el boletín, y es el mismo guion que el rango con parámetro del
+[tema 4](/road-to-ingenieria/algebra/t04-determinantes/):
+
+1. **Calcula $\det A$ en función del parámetro** —si el sistema es cuadrado— o
+   el determinante de la mayor submatriz cuadrada.
+2. **Donde no se anule**, el rango es máximo y el sistema es **determinado**. Un
+   solo caso cubre casi todos los valores.
+3. **Solo en los valores que lo anulan**, compara $r\left(A\right)$ con
+   $r\left(A\mid B\right)$ para separar incompatible de indeterminado.
+
+**El orden importa.** Ir al revés —abrir un caso por cada valor sospechoso— es
+lo que hace que estos ejercicios parezcan largos, y no lo son: son un caso
+general y dos o tres excepciones.
+
+Y un aviso que vale para todo el tema: **si el sistema no es cuadrado no hay
+determinante de $A$ que valga**, y hay que ir directamente a comparar rangos.
+Ahí Gauss sobre la ampliada es el camino corto, porque da los dos rangos a la
+vez.
+
+## Lo que hay que llevar sabido
+
+1. $r\left(A\right)\leq r\left(A\mid B\right)$ **siempre**. Y la primera
+   comparación decide si hay solución.
+2. Rouché: distintos $\Rightarrow$ incompatible; iguales y $=n$ $\Rightarrow$
+   una solución; iguales y $<n$ $\Rightarrow$ infinitas, con $n-r$ parámetros.
+3. El número de parámetros es $n-r$. No hay que contarlo despejando.
+4. **Un homogéneo nunca es incompatible.** La pregunta es si tiene algo más que
+   la trivial.
+5. Las soluciones de un homogéneo forman **subespacio**; las de uno no
+   homogéneo, no. Ese es el motivo de fondo de que las ecuaciones de un
+   subespacio vayan igualadas a cero.
+6. El homogéneo $A\overline{x}=\overline{0}$ **es** el núcleo de la aplicación
+   de matriz $A$.
+7. Gauss se hace sobre la **ampliada**, con el término independiente dentro de
+   la fila.
+8. Al escalonar, una fila $\left(0\cdots0\mid c\right)$ con $c\neq0$ es
+   incompatible; una fila de ceros solo dice que sobraba una ecuación.
+9. Cramer solo si es cuadrado y $\det A\neq0$. Compensa cuando piden **una**
+   incógnita.
+10. Con parámetro: **primero el determinante**, y solo se abren casos donde se
+    anula.

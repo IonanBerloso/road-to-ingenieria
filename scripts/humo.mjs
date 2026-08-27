@@ -184,12 +184,27 @@ async function main() {
       );
     }
 
-    /* 1 bis · Ninguna etiqueta de una figura se sale de su viewBox.
+    /* 1 bis · Nada de una figura se sale de su viewBox.
        Se añade el 26 de agosto de 2026, y no por si acaso: ha pasado tres
        veces y las tres solo se cazaron mirando una captura. «y = 8x − 4» se
        publicó como «y = 8x» en la ordinaria de 2016-2017, «t (s)» como «t (»
        en la de 2015-2016, y el pie «la misma idea, con el coseno dentro» de la
        figura del escalón del tema 10 se cortaba por la derecha.
+
+       El 27 de agosto de 2026 se amplía de `text` a `rect`, `circle` y `line`,
+       y también por un fallo real: el árbol de Rouché del tema 5 de Álgebra
+       tenía dos rectángulos que se salían 8 px por la derecha. Las etiquetas
+       de dentro sí cabían, así que el guardián pasaba en verde mientras las
+       cajas se veían cortadas. Se cazó mirando la captura, otra vez.
+
+       **`path` se queda fuera a propósito**, y conviene que quede dicho para
+       que nadie lo «arregle»: KaTeX dibuja cada radical y cada delimitador
+       estirable con su propio `<svg viewBox="0 0 400000 …">` y un `<path>` que
+       se sale por diseño. Medido sobre nueve páginas de tema antes de ampliar
+       el guardián: con `rect`, `circle` y `line` salen **cero** falsos
+       positivos; añadiendo `path` salen once, y los once son de KaTeX. Un
+       guardián que da la alarma once veces de once en falso enseña a ignorar
+       los guardianes, que es el daño de verdad (§11).
 
        Un `<text>` fuera del viewBox no rompe nada: el navegador lo recorta y
        la página sigue en verde. Por eso hacía falta medirlo, y por eso se mide
@@ -232,7 +247,19 @@ async function main() {
       let medidas = 0;
       for (const svg of document.querySelectorAll('svg[viewBox]')) {
         const [vx, vy, vw, vh] = svg.getAttribute('viewBox').split(/[\s,]+/).map(Number);
-        for (const t of svg.querySelectorAll('text')) {
+        /* `getBBox()` devuelve la caja en el espacio del PROPIO elemento, sin
+           las transformaciones de sus antepasados. Un `<circle cx="0" cy="0"
+           r="58">` dentro de un `<g transform="translate(255 -55)">` declara
+           una caja de −58 a 58 y está dibujado de 197 a 313.
+
+           Sin corregir esto el guardián daba un falso positivo en la arandela
+           del tema 5 de Cálculo el mismo día que se amplió — y, peor, tenía el
+           fallo simétrico: algo genuinamente fuera dentro de un grupo
+           trasladado habría pasado en verde. La corrección compone la matriz
+           del elemento con la inversa de la del `<svg>`, que es lo que lleva
+           del espacio del elemento al del viewBox. */
+        const raiz = svg.getScreenCTM();
+        for (const t of svg.querySelectorAll('text, rect, circle, line')) {
           let b;
           try {
             b = t.getBBox();
@@ -240,6 +267,30 @@ async function main() {
             continue;
           }
           if (!b.width) continue;
+          if (raiz) {
+            const m = t.getScreenCTM();
+            if (m) {
+              const aVB = raiz.inverse().multiply(m);
+              const xs = [];
+              const ys = [];
+              for (const [px, py] of [
+                [b.x, b.y],
+                [b.x + b.width, b.y],
+                [b.x, b.y + b.height],
+                [b.x + b.width, b.y + b.height],
+              ]) {
+                const p = new DOMPoint(px, py).matrixTransform(aVB);
+                xs.push(p.x);
+                ys.push(p.y);
+              }
+              b = {
+                x: Math.min(...xs),
+                y: Math.min(...ys),
+                width: Math.max(...xs) - Math.min(...xs),
+                height: Math.max(...ys) - Math.min(...ys),
+              };
+            }
+          }
           medidas++;
           const holgura = 0.5;
           if (
@@ -248,7 +299,13 @@ async function main() {
             b.y < vy - holgura ||
             b.y + b.height > vy + vh + holgura
           ) {
-            fuera.push(`«${t.textContent.trim().slice(0, 30)}» en ${svg.getAttribute('aria-labelledby') ?? '?'}`);
+            /* Un `text` se nombra por lo que dice; una caja, por su etiqueta y
+               su posición, que es lo único que la identifica al ir a buscarla. */
+            const quien =
+              t.tagName === 'text'
+                ? `«${t.textContent.trim().slice(0, 30)}»`
+                : `<${t.tagName} en x=${Math.round(b.x)} y=${Math.round(b.y)}>`;
+            fuera.push(`${quien} en ${svg.getAttribute('aria-labelledby') ?? '?'}`);
           }
         }
       }
@@ -268,7 +325,7 @@ async function main() {
     medidos.etiqueta += recorte.medidas;
     comprueba(
       recorte.fuera.length === 0,
-      `ninguna etiqueta se sale de su viewBox (${recorte.medidas})`,
+      `nada se sale de su viewBox: ni etiquetas ni cajas (${recorte.medidas})`,
       recorte.fuera.length ? `recortadas: ${recorte.fuera.slice(0, 3).join(' · ')}` : '',
     );
     if (recorte.svgs > 0) {

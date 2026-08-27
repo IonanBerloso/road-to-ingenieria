@@ -1215,8 +1215,24 @@ que responda a una pregunta (§13) y ejercicios del boletín.
   1 y 2 de los ocho exámenes, sin excepción. 5.193 palabras de prosa entre los
   dos, 4 figuras, 12 ejercicios —6 de ellos ejemplos de entrada nuestros— y 45
   pasos guiados. Las cifras exactas por tema están en `docs/como-vamos.md`.
-- **Fase 5 · temas 3, 4 y 5**, matrices, determinantes y sistemas. Son el
-  aparato de cálculo que los otros cuatro usan.
+- **~~Fase 5 · temas 3, 4 y 5~~**, matrices, determinantes y sistemas.
+  **TERMINADA el 27 de agosto de 2026.** Son el aparato de cálculo que los
+  otros cuatro usan. Los tres son más cortos a propósito: ni el 3 ni el 5
+  ocupan un hueco del examen, y el 4 solo la mitad de los suyos. Las cifras,
+  medidas, en `docs/como-vamos.md`.
+
+  Y dejó **el guardián de figuras arreglado por dos sitios**, los dos
+  encontrados mirando capturas:
+  1. Solo miraba los `<text>`, así que dos rectángulos del árbol de Rouché se
+     salían 8 px y el suelo daba verde. Ampliado a `rect`, `circle` y `line`;
+     `path` se queda fuera a propósito, y el motivo está medido en el código.
+  2. Usaba `getBBox()` a secas, que **ignora las transformaciones de los
+     antepasados**. Eso daba un falso positivo —la arandela del tema 5 de
+     Cálculo— y, peor, el falso negativo simétrico: había **dos** etiquetas de
+     Cálculo recortadas desde hacía semanas, «no llega» en Weierstrass y «el
+     camino difícil» en Laplace, y el guardián no las veía porque vivían
+     dentro de un `translate`. Corregido componiendo con la matriz del `<svg>`,
+     y validado al revés.
 - **Fase 6 · temas 6 y 7**, euclídeos y diagonalización, que cierran el examen.
 
 **Lo que la fase 4 ha enseñado, y que las dos siguientes heredan:**
@@ -1241,6 +1257,15 @@ que responda a una pregunta (§13) y ejercicios del boletín.
   encima se lleva lo contrario de lo que hay que aprender. Rehecha con un caso
   real. **Regla: una figura de este sitio nunca representa algo falso, ni
   aunque lo confiese.**
+- **Ningún recuento entra en un mensaje de commit sin haber LEÍDO antes la
+  salida del comando que lo cuenta.** Ha pasado **dos veces** el mismo día: el
+  tema 2 se publicó como «2.900 palabras» siendo 2.255, y los temas 3 y 4 como
+  «1.234 y 1.322» siendo 1.750 y 1.676. Las dos veces el `wc` estaba en el
+  mismo comando que el commit, y las dos veces escribí el mensaje antes de ver
+  el resultado. **Medir y escribir en el mismo comando no es medir: es
+  adivinar y comprobar después, cuando ya está empujado.** Si al redactar el
+  mensaje no tienes el número delante, no lo pongas — enlaza a
+  `docs/como-vamos.md`, que sí se mide.
 
 ## Fase 7 · Las dos rutas
 

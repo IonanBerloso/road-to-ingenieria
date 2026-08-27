@@ -1,0 +1,954 @@
+ejercicios:
+  # ── Los dos primeros son NUESTROS (§08). El boletín de sistemas empieza
+  #    directamente por una discusión con DOS parámetros: sin haber aplicado
+  #    antes Rouché sobre números concretos, no hay por dónde entrar.
+  - id: ejalg5-rouche-en-dos-comparaciones
+    titulo: Clasificar un sistema en dos comparaciones
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Clasificar y resolver el sistema
+
+      $$
+      \begin{cases}
+      x+y+z=6\\
+      x-y+2z=5\\
+      2x\phantom{{}+y}+3z=11
+      \end{cases}
+      $$
+    pide: La clasificación por Rouché, y la solución.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de escalonar: la tercera ecuación es la suma de las dos
+          primeras. ¿Qué significa eso?
+        opciones:
+          - texto: >-
+              Que sobra: aporta rango $0$ tanto a $A$ como a la ampliada, así
+              que el sistema es **compatible** y su rango es como mucho $2$
+            correcta: true
+            mensaje: |
+              Exacto, y esa lectura resuelve medio ejercicio sin cuentas. Que la
+              tercera fila de la **ampliada** sea suma de las otras dos
+              garantiza que los dos rangos coinciden: no puede ser
+              incompatible.
+          - texto: >-
+              Que el sistema es incompatible, porque hay una ecuación repetida
+            mensaje: |
+              Es al revés: una ecuación que se deduce de las otras nunca puede
+              contradecirlas. Lo que produce la incompatibilidad es una
+              ecuación que **choca** con las demás, como
+              $2x+3z=12$ en lugar de $11$.
+          - texto: >-
+              Que hay que quitarla y quedarse con dos ecuaciones y dos
+              incógnitas
+            mensaje: |
+              Quitarla sí, pero siguen siendo **tres** incógnitas: $x$, $y$ y
+              $z$. Con dos ecuaciones y tres incógnitas queda un parámetro
+              libre.
+          - texto: >-
+              Que el sistema tiene solución única
+            mensaje: |
+              Con rango $2$ y tres incógnitas, la solución no puede ser única:
+              hay $3-2=1$ parámetro libre y por tanto infinitas soluciones.
+
+      - tipo: calcular
+        titulo: El rango de la matriz de coeficientes
+        pregunta: |
+          ¿Cuánto vale $r\left(A\right)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '3'
+            mensaje: |
+              $3$ exigiría que las tres filas fuesen independientes, y la
+              tercera es la suma de las dos primeras:
+              $\left(1,1,1\right)+\left(1,-1,2\right)=\left(2,0,3\right)$.
+          - valor: '1'
+            mensaje: |
+              $1$ dejaría las tres filas proporcionales.
+              $\left(1,1,1\right)$ y $\left(1,-1,2\right)$ no lo son.
+          - valor: '0'
+            mensaje: |
+              El rango solo vale $0$ si la matriz es toda ceros.
+        pista: |
+          Suma las dos primeras filas y compárala con la tercera.
+        desarrollo: |
+          $$
+          \left(1,1,1\right)+\left(1,-1,2\right)=\left(2,0,3\right)
+          $$
+
+          que es exactamente la tercera fila. Así que solo dos son
+          independientes:
+
+          $$
+          r\left(A\right)=2
+          $$
+
+          Y en la **ampliada** pasa lo mismo, porque los términos independientes
+          también encajan: $6+5=11$. Luego
+          $r\left(A\mid B\right)=2$ también.
+
+      - tipo: calcular
+        titulo: Cuántos parámetros tendrá la solución
+        pregunta: |
+          Con $r\left(A\right)=r\left(A\mid B\right)=2$ y tres incógnitas,
+          ¿de cuántos parámetros depende la solución?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '0'
+            mensaje: |
+              $0$ parámetros es solución única, y eso exige
+              $r=n=3$. Aquí el rango es $2$.
+          - valor: '2'
+            mensaje: |
+              $2$ es el rango, no el número de parámetros. La fórmula es
+              $n-r=3-2=1$.
+          - valor: '3'
+            mensaje: |
+              $3$ es el número de incógnitas. Si los tres fueran libres, el
+              sistema no diría nada.
+        pista: |
+          El número de parámetros libres es $n-r$, con $n$ las incógnitas.
+        desarrollo: |
+          $$
+          n-r=3-2=1
+          $$
+
+          **Un parámetro**, y eso se sabe antes de despejar nada. Es la parte
+          del teorema que más rinde: no solo clasifica, también dice de qué
+          tamaño va a ser la respuesta.
+
+      - tipo: calcular
+        titulo: La solución con z = 1
+        pregunta: |
+          Tomando $z=1$ como parámetro, ¿cuál es la solución
+          $\left(x,y,z\right)$?
+        respuesta:
+          tipo: vector
+          valor: '(4, 1, 1)'
+          tolerancia: 0.001
+          formato: tres coordenadas entre paréntesis, separadas por comas
+        distractores:
+          - valor: '(1, 4, 1)'
+            mensaje: |
+              Las dos primeras cambiadas. Comprueba con la segunda ecuación:
+              $1-4+2=-1$, y debería dar $5$.
+          - valor: '(4, 2, 1)'
+            mensaje: |
+              La segunda. De $x+y=5$ y $x-y=3$ sale $y=1$, no $2$. Comprueba con
+              la primera: $4+2+1=7\neq6$.
+          - valor: '(3, 2, 1)'
+            mensaje: |
+              La primera. De la segunda ecuación,
+              $x-y+2=5$, y con la primera $x+y=5$: sumando, $2x=8$ y $x=4$.
+        pista: |
+          Con $z=1$, las dos primeras ecuaciones quedan $x+y=5$ y $x-y=3$.
+        desarrollo: |
+          Con $z=1$:
+
+          $$
+          x+y=5,\qquad x-y=3
+          $$
+
+          Sumando, $2x=8$ y $x=4$; restando, $2y=2$ e $y=1$.
+
+          $$
+          \left(x,y,z\right)=\left(4,1,1\right)
+          $$
+
+          Y la solución general, con $z=t$:
+
+          $$
+          \left(x,y,z\right)
+          =\left(\tfrac{11-3t}{2},\;\tfrac{1+t}{2},\;t\right)
+          $$
+
+          Con $t=1$ sale $\left(4,1,1\right)$ ✓.
+
+      - tipo: justificar
+        pregunta: Ordena la clasificación. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La tercera fila de la ampliada es la suma de las dos primeras,
+              términos independientes incluidos.
+          - texto: >-
+              Por tanto $r\left(A\right)=r\left(A\mid B\right)=2$, y el sistema
+              es **compatible**.
+          - texto: >-
+              Como ese rango es menor que las tres incógnitas, el sistema es
+              **indeterminado**, con $3-2=1$ parámetro.
+          - texto: >-
+              Fijando $z$ como parámetro, las dos primeras ecuaciones dan $x$ e
+              $y$ en función de él.
+          - texto: >-
+              Y como hay infinitas soluciones, el conjunto de soluciones es un
+              subespacio vectorial de $\mathbb{R}^{3}$.
+            trampa: true
+            mensaje: |
+              Solo lo es si el sistema es **homogéneo**, y este no lo es: sus
+              términos independientes son $6$, $5$ y $11$. La prueba es
+              inmediata: $\left(0,0,0\right)$ no cumple la primera ecuación, y
+              todo subespacio contiene al vector nulo. Lo que sí es subespacio
+              es el conjunto de soluciones del **homogéneo asociado**, y las
+              soluciones de este sistema son una traslación de él.
+    resolucion: |
+      **La lectura que resuelve medio ejercicio.** Antes de escalonar conviene
+      mirar si alguna ecuación se deduce de las otras, y aquí salta a la vista:
+
+      $$
+      \left(1,1,1\mid6\right)+\left(1,-1,2\mid5\right)
+      =\left(2,0,3\mid11\right)
+      $$
+
+      **La tercera fila de la ampliada entera** —términos independientes
+      incluidos— es la suma de las dos primeras. Eso garantiza dos cosas de
+      golpe: que los dos rangos coinciden, y que valen $2$.
+
+      **Rouché, en dos comparaciones.**
+
+      | comparación | resultado |
+      |---|---|
+      | $r\left(A\right)=r\left(A\mid B\right)$ | **compatible** |
+      | $r=2<3=n$ | **indeterminado**, con $3-2=1$ parámetro |
+
+      **Y la solución.** Con $z=t$:
+
+      $$
+      \boxed{\;\left(x,y,z\right)
+      =\left(\tfrac{11-3t}{2},\;\tfrac{1+t}{2},\;t\right)\;}
+      $$
+
+      que con $t=1$ da $\left(4,1,1\right)$.
+
+      **El detalle que decide entre compatible e incompatible.** Si la tercera
+      ecuación fuese $2x+3z=12$ en lugar de $11$, la matriz $A$ tendría el mismo
+      rango $2$ pero la ampliada subiría a $3$: sería **incompatible**. La
+      diferencia entre las dos situaciones está entera en el término
+      independiente, y por eso Rouché mira las dos matrices y no solo una.
+
+  - id: ejalg5-un-homogeneo-nunca-es-incompatible
+    titulo: Por qué un sistema homogéneo siempre tiene solución
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea el sistema homogéneo
+
+      $$
+      \begin{cases}
+      x+2y-z=0\\
+      2x+y+z=0
+      \end{cases}
+      $$
+
+      a) Clasificarlo sin escalonar, razonando por qué.
+
+      b) Resolverlo, y decir qué es geométricamente el conjunto de sus
+      soluciones.
+    pide: La clasificación razonada, la solución, y qué es el conjunto solución.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué un sistema homogéneo nunca puede ser incompatible?
+        opciones:
+          - texto: >-
+              Porque la columna de términos independientes es de ceros y no
+              puede subir el rango: siempre
+              $r\left(A\right)=r\left(A\mid B\right)$
+            correcta: true
+            mensaje: |
+              Exacto, y es la demostración corta. Dicho de otra forma aún más
+              directa: $\overline{x}=\overline{0}$ **siempre** cumple todas las
+              ecuaciones, así que solución hay seguro.
+          - texto: >-
+              Porque tiene menos ecuaciones que incógnitas
+            mensaje: |
+              Eso pasa en este ejemplo, pero no es el motivo: un homogéneo con
+              cien ecuaciones y dos incógnitas también es compatible. Lo que lo
+              garantiza es la columna de ceros.
+          - texto: >-
+              Porque el determinante de $A$ es cero
+            mensaje: |
+              $A$ aquí ni siquiera es cuadrada, así que no tiene determinante. Y
+              aunque lo tuviera, su valor decide entre solución única e
+              infinitas, no si hay solución.
+          - texto: >-
+              Porque los sistemas con dos ecuaciones siempre tienen solución
+            mensaje: |
+              No es cierto: $x+y=1$ junto con $x+y=2$ son dos ecuaciones sin
+              ninguna solución. Lo que salva a este es ser homogéneo.
+
+      - tipo: calcular
+        titulo: La dimensión del conjunto de soluciones
+        pregunta: |
+          ¿De cuántos parámetros depende la solución?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '2'
+            mensaje: |
+              $2$ saldría si el rango fuese $1$, es decir, si las dos ecuaciones
+              fuesen proporcionales. $\left(1,2,-1\right)$ y
+              $\left(2,1,1\right)$ no lo son: el rango es $2$ y quedan $3-2=1$
+              parámetros.
+          - valor: '0'
+            mensaje: |
+              $0$ parámetros es solo la solución trivial, y eso exige rango $3$.
+              Con dos ecuaciones el rango no pasa de $2$.
+          - valor: '3'
+            mensaje: |
+              $3$ dejaría todas las incógnitas libres, o sea que las ecuaciones
+              no dirían nada. No es el caso.
+        pista: |
+          Rango $2$ y tres incógnitas. Aplica $n-r$.
+        desarrollo: |
+          Las dos filas no son proporcionales, luego $r\left(A\right)=2$, y en un
+          homogéneo la ampliada tiene el mismo rango. Con $n=3$:
+
+          $$
+          n-r=3-2=1
+          $$
+
+          **Un parámetro.** Y como el sistema es homogéneo, eso significa que el
+          conjunto de soluciones es un subespacio de **dimensión $1$**: una
+          recta que pasa por el origen.
+
+      - tipo: calcular
+        titulo: El generador de la recta
+        pregunta: |
+          ¿Cuál es el vector que genera el conjunto de soluciones, con la
+          tercera coordenada igual a $1$?
+        respuesta:
+          tipo: vector
+          valor: '(-1, 1, 1)'
+          tolerancia: 0.001
+          formato: tres coordenadas entre paréntesis, separadas por comas
+        distractores:
+          - valor: '(1, 1, 1)'
+            mensaje: |
+              Comprueba con la primera ecuación: $1+2-1=2\neq0$. De las dos
+              ecuaciones sale $x=-z$, así que con $z=1$ la primera coordenada es
+              $-1$.
+          - valor: '(-1, -1, 1)'
+            mensaje: |
+              La segunda coordenada. Restando el doble de la primera ecuación a
+              la segunda sale $-3y+3z=0$, o sea $y=z=1$, positiva.
+          - valor: '(0, 0, 0)'
+            mensaje: |
+              El vector nulo siempre es solución de un homogéneo, pero no genera
+              nada: un generador tiene que ser distinto de cero. La recta la
+              genera cualquiera de sus vectores no nulos.
+        pista: |
+          Resta el doble de la primera ecuación a la segunda: se va la $x$ y
+          queda una relación entre $y$ y $z$.
+        desarrollo: |
+          $$
+          \left(2x+y+z\right)-2\left(x+2y-z\right)=-3y+3z=0
+          \;\Longrightarrow\;
+          y=z
+          $$
+
+          y sustituyendo en la primera:
+          $x+2z-z=0$, luego $x=-z$. Con $z=1$:
+
+          $$
+          \boxed{\;\left(-1,1,1\right)\;}
+          $$
+
+          Y se comprueba en las dos:
+          $-1+2-1=0$ ✓ y $-2+1+1=0$ ✓.
+
+      - tipo: justificar
+        pregunta: >-
+          Ordena el razonamiento sobre el conjunto de soluciones. Una pieza es
+          falsa.
+        piezas:
+          - texto: >-
+              La columna de términos independientes es de ceros, así que
+              $r\left(A\right)=r\left(A\mid B\right)$ y el sistema es
+              compatible.
+          - texto: >-
+              El rango vale $2$ y hay tres incógnitas, luego la solución depende
+              de $3-2=1$ parámetro.
+          - texto: >-
+              Resolviendo sale $x=-z$ e $y=z$, así que el conjunto solución es
+              $L\left(\left\{\left(-1,1,1\right)\right\}\right)$.
+          - texto: >-
+              Y ese conjunto es un **subespacio vectorial** de $\mathbb{R}^{3}$,
+              de dimensión $1$: precisamente el núcleo de la aplicación lineal
+              de matriz $A$.
+          - texto: >-
+              Como el sistema tiene infinitas soluciones, su matriz de
+              coeficientes no puede tener rango máximo.
+            trampa: true
+            mensaje: |
+              «Rango máximo» de una matriz $2\times3$ es $2$, y **es justo el
+              que tiene**: las dos filas son independientes. Lo que hace que
+              haya infinitas soluciones no es que el rango sea pequeño en
+              términos absolutos, sino que sea **menor que el número de
+              incógnitas**. Con dos ecuaciones y tres incógnitas, eso es
+              inevitable por muchas ecuaciones independientes que haya.
+    resolucion: |
+      **a) Compatible, y sin escalonar nada.** Dos argumentos, y los dos valen:
+
+      - La columna de términos independientes es de ceros, así que no puede
+        subir el rango: $r\left(A\right)=r\left(A\mid B\right)$ siempre.
+      - Más directo todavía: $\overline{x}=\overline{0}$ cumple las dos
+        ecuaciones. Solución hay seguro.
+
+      **Un sistema homogéneo nunca es incompatible.** Si al discutir uno te sale
+      «incompatible», hay un error de cuenta.
+
+      Y como el rango vale $2$ —las dos filas no son proporcionales— frente a
+      $n=3$ incógnitas:
+
+      $$
+      \boxed{\;\text{compatible indeterminado, con }3-2=1\text{ parámetro}\;}
+      $$
+
+      **b) La solución.** Restando el doble de la primera a la segunda se va la
+      $x$:
+
+      $$
+      -3y+3z=0\;\Longrightarrow\;y=z,
+      \qquad\text{y de la primera}\quad x=-z
+      $$
+
+      $$
+      \boxed{\;\left\{\left(-t,t,t\right)\;/\;t\in\mathbb{R}\right\}
+      =L\left(\left\{\left(-1,1,1\right)\right\}\right)\;}
+      $$
+
+      **Geométricamente es una recta que pasa por el origen**, y eso no es una
+      casualidad de este ejemplo: **el conjunto de soluciones de un homogéneo es
+      siempre un subespacio vectorial**. Contiene al $\overline{0}$ y es cerrado
+      para combinaciones lineales, porque si dos vectores anulan $A\overline{x}$
+      cualquier combinación suya también.
+
+      **Y es exactamente el núcleo** de la aplicación lineal de matriz $A$. Ese
+      es el puente entre este tema y el 2: cada vez que el examen pide una base
+      de $\operatorname{Ker}f$, lo que está pidiendo es resolver un homogéneo.
+
+      **Lo que no es subespacio** es el conjunto de soluciones de un sistema con
+      términos independientes no nulos: ahí el $\overline{0}$ se queda fuera, y
+      lo que queda es una **variedad afín** — el subespacio del homogéneo
+      asociado, trasladado.
+
+  # ── Y estos dos son del boletín oficial, reproducidos tal cual (§08).
+  - id: ejalg5-bol51-dos-parametros-y-tres-casos
+    titulo: Dos parámetros, y solo tres casos que abrir
+    fuente: >-
+      Ejercicio 5.1 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Discute y resuelve el siguiente sistema en función de los parámetros $a$ y
+      $b$:
+
+      $$
+      \begin{cases}
+      x+2y+z=2\\
+      x+y+2z=3\\
+      x+3y+az=1\\
+      x+2y+z=b
+      \end{cases}
+      $$
+    pide: La discusión según a y b, y la solución donde exista.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La primera y la cuarta ecuación tienen el **mismo** miembro
+          izquierdo. ¿Qué se saca de ahí antes de tocar el parámetro $a$?
+        opciones:
+          - texto: >-
+              Que si $b\neq2$ el sistema es incompatible, sea cual sea $a$: dos
+              ecuaciones idénticas por la izquierda no pueden dar resultados
+              distintos
+            correcta: true
+            mensaje: |
+              Exacto, y eso parte el ejercicio en dos de un plumazo. Con
+              $b\neq2$ ya no hay nada que discutir; el parámetro $a$ solo
+              interviene en la otra rama.
+          - texto: >-
+              Que sobra una ecuación siempre
+            mensaje: |
+              Solo sobra si $b=2$. Si $b\neq2$ no sobra: **contradice** a la
+              primera, y eso es justo lo que hace incompatible al sistema.
+          - texto: >-
+              Que el sistema es de Cramer
+            mensaje: |
+              Un sistema de Cramer tiene tantas ecuaciones como incógnitas y
+              matriz inversible. Aquí hay cuatro ecuaciones y tres incógnitas,
+              así que $A$ ni siquiera es cuadrada.
+          - texto: >-
+              Que $b$ tiene que valer $1$
+            mensaje: |
+              El $1$ es el término independiente de la **tercera** ecuación, que
+              tiene otro miembro izquierdo. La que se repite es la primera, con
+              término independiente $2$.
+
+      - tipo: calcular
+        titulo: El valor de b que salva el sistema
+        pregunta: |
+          ¿Para qué valor de $b$ puede el sistema ser compatible?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ es el término independiente de la tercera ecuación, cuyo
+              miembro izquierdo es $x+3y+az$, distinto del de la cuarta. La que
+              se repite es la primera, con un $2$.
+          - valor: '3'
+            mensaje: |
+              $3$ es el de la segunda ecuación,
+              $x+y+2z=3$. Tampoco tiene el mismo miembro izquierdo que la
+              cuarta.
+          - valor: '0'
+            mensaje: |
+              Con $b=0$ la cuarta ecuación diría $x+2y+z=0$ y la primera
+              $x+2y+z=2$: imposible a la vez.
+        pista: |
+          Compara la cuarta ecuación con la primera. Sus miembros izquierdos son
+          iguales.
+        desarrollo: |
+          La primera y la cuarta ecuación son
+
+          $$
+          x+2y+z=2,
+          \qquad
+          x+2y+z=b
+          $$
+
+          y las dos solo pueden cumplirse a la vez si $b=2$.
+
+          $$
+          b\neq2
+          \;\Longrightarrow\;
+          \textbf{incompatible, sea cual sea }a
+          $$
+
+          Con $b=2$ la cuarta es la primera repetida y se puede tachar: queda un
+          sistema de tres ecuaciones y tres incógnitas.
+
+      - tipo: calcular
+        titulo: El determinante del sistema que queda
+        pregunta: |
+          Con $b=2$, el sistema se reduce a las tres primeras ecuaciones. Para
+          $a=5$, ¿cuánto vale el determinante de su matriz de coeficientes?
+        respuesta:
+          tipo: numero
+          valor: '-5'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '5'
+            mensaje: |
+              El signo. Desarrollando
+              $\begin{vmatrix}1&2&1\\1&1&2\\1&3&a\end{vmatrix}$ sale $-a$, no
+              $+a$: con $a=5$ vale $-5$.
+          - valor: '0'
+            mensaje: |
+              Solo se anula en $a=0$. El determinante vale $-a$.
+          - valor: '-1'
+            mensaje: |
+              $-1$ sería el determinante con $a=1$. Con $a=5$ vale $-5$.
+        pista: |
+          Resta la primera fila a las otras dos y desarrolla. El determinante
+          sale $-a$.
+        desarrollo: |
+          $$
+          \begin{vmatrix}1&2&1\\1&1&2\\1&3&a\end{vmatrix}
+          =\begin{vmatrix}1&2&1\\0&-1&1\\0&1&a-1\end{vmatrix}
+          =-\left(a-1\right)-1=-a
+          $$
+
+          Con $a=5$: $-5$.
+
+          $$
+          \det=0\iff a=0
+          $$
+
+          así que para $a\neq0$ el sistema reducido es de **Cramer**:
+          compatible determinado.
+
+      - tipo: calcular
+        titulo: La solución, que no depende de a
+        pregunta: |
+          Con $b=2$ y $a\neq0$, ¿cuál es la solución
+          $\left(x,y,z\right)$?
+        respuesta:
+          tipo: vector
+          valor: '(4, -1, 0)'
+          tolerancia: 0.001
+          formato: tres coordenadas entre paréntesis, separadas por comas
+        distractores:
+          - valor: '(2, 3, 1)'
+            mensaje: |
+              Esos son los términos independientes de las tres ecuaciones, no la
+              solución. Comprueba: $2+6+1=9\neq2$.
+          - valor: '(4, 1, 0)'
+            mensaje: |
+              El signo de la segunda. Comprueba con la primera ecuación:
+              $4+2+0=6$, y debería dar $2$. Con $y=-1$ sale $4-2+0=2$ ✓.
+          - valor: '(4, -1, 1)'
+            mensaje: |
+              La tercera. De las dos primeras ecuaciones sale $z=1+y=0$.
+              Comprueba: con $z=1$ la primera daría $4-2+1=3\neq2$.
+        pista: |
+          Restando la primera ecuación a la segunda sale $-y+z=1$. Y a la
+          tercera, $y+\left(a-1\right)z=-1$.
+        desarrollo: |
+          Restando la primera ecuación a las otras dos:
+
+          $$
+          -y+z=1,
+          \qquad
+          y+\left(a-1\right)z=-1
+          $$
+
+          Sumando las dos: $az=0$, y como $a\neq0$, **$z=0$**. Entonces
+          $y=-1$ y, de la primera, $x=2-2y-z=4$.
+
+          $$
+          \boxed{\;\left(4,-1,0\right)\;}
+          $$
+
+          **Y no depende de $a$**, lo cual es una comprobación gratis: al
+          sustituir en la tercera ecuación,
+          $4+3\left(-1\right)+a\cdot0=1$ se cumple para cualquier $a$ porque el
+          coeficiente de $a$ va multiplicado por $z=0$.
+
+      - tipo: justificar
+        pregunta: Ordena la discusión completa. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La primera y la cuarta ecuación tienen el mismo miembro
+              izquierdo, así que si $b\neq2$ el sistema es incompatible sea cual
+              sea $a$.
+          - texto: >-
+              Con $b=2$ la cuarta es la primera repetida y se tacha: quedan tres
+              ecuaciones y tres incógnitas.
+          - texto: >-
+              El determinante de ese sistema vale $-a$, así que para $a\neq0$ es
+              de Cramer: compatible determinado, con solución
+              $\left(4,-1,0\right)$.
+          - texto: >-
+              Para $a=0$ el determinante se anula, y hay que comparar los rangos
+              de $A$ y de la ampliada: los dos valen $2$, luego es compatible
+              indeterminado con un parámetro.
+          - texto: >-
+              Y como con $a=0$ el determinante se anula, el sistema pasa a ser
+              incompatible.
+            trampa: true
+            mensaje: |
+              Determinante nulo **no** significa incompatible: significa que no
+              hay solución **única**, y a partir de ahí caben las dos cosas. Es
+              Rouché quien decide, comparando $r\left(A\right)$ con
+              $r\left(A\mid B\right)$; aquí los dos valen $2$ y el sistema es
+              compatible indeterminado. Confundir «no determinado» con
+              «incompatible» es el error más caro de este tipo de ejercicio,
+              porque se come el caso más interesante.
+    resolucion: |
+      **Primero $b$, que parte el ejercicio en dos sin tocar $a$.** La primera y
+      la cuarta ecuación tienen el mismo miembro izquierdo:
+
+      $$
+      x+2y+z=2
+      \qquad\text{y}\qquad
+      x+2y+z=b
+      $$
+
+      $$
+      \boxed{\;b\neq2\;\Longrightarrow\;\text{INCOMPATIBLE, sea cual sea }a\;}
+      $$
+
+      Con $b=2$ la cuarta ecuación es la primera repetida y se tacha. Quedan
+      tres ecuaciones y tres incógnitas, y ahora sí entra $a$.
+
+      **El determinante decide.**
+
+      $$
+      \begin{vmatrix}1&2&1\\1&1&2\\1&3&a\end{vmatrix}=-a
+      $$
+
+      **Caso $a\neq0$ (y $b=2$): sistema de Cramer.** Determinante no nulo,
+      luego compatible determinado:
+
+      $$
+      \boxed{\;\left(x,y,z\right)=\left(4,-1,0\right)\;}
+      $$
+
+      Y esa solución **no depende de $a$**, porque el único sitio donde aparece
+      el parámetro va multiplicado por $z=0$. Es una comprobación que sale
+      gratis.
+
+      **Caso $a=0$ (y $b=2$).** El determinante se anula, pero eso **no**
+      significa incompatible: significa que hay que mirar los rangos. Restando
+      la primera fila a las otras dos, la ampliada queda
+
+      $$
+      \left(\begin{array}{ccc|c}
+      1&2&1&2\\
+      0&-1&1&1\\
+      0&1&-1&-1
+      \end{array}\right)
+      $$
+
+      y la tercera fila es la opuesta de la segunda, **también en el término
+      independiente**. Luego
+      $r\left(A\right)=r\left(A\mid B\right)=2<3$:
+
+      $$
+      \boxed{\;a=0,\;b=2\;\Longrightarrow\;\text{compatible indeterminado, }
+      1\text{ parámetro}\;}
+      $$
+
+      con solución $\left(1-3t,\;t,\;1+t\right)$, que para $t=-1$ recupera
+      $\left(4,-1,0\right)$.
+
+      **El resumen, que es lo que se entrega:**
+
+      | | $b\neq2$ | $b=2$, $a\neq0$ | $b=2$, $a=0$ |
+      |---|---|---|---|
+      | | incompatible | determinado | indeterminado |
+
+      Tres casos, no diez. El guion —primero lo que no depende del parámetro,
+      luego el determinante, y solo donde se anula, los rangos— es el que evita
+      abrirlos a ciegas.
+
+  - id: ejalg5-bol54-el-nucleo-es-un-sistema-homogeneo
+    titulo: Un núcleo que es un sistema homogéneo con parámetro
+    fuente: >-
+      Ejercicio 5.4 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Se define la siguiente aplicación lineal:
+
+      $$
+      f:\mathbb{R}^{3}\longrightarrow\mathbb{R}^{3},
+      \qquad
+      \left(x,y,z\right)\longmapsto
+      \left(kx+y+z,\;x+ky+z,\;x+y+kz\right)
+      $$
+
+      1. Matriz asociada a $f$.
+
+      2. Halla el núcleo de la aplicación, $\ker f$, y estudia su dimensión
+      según los valores de $k$.
+    pide: La matriz asociada, y la dimensión del núcleo según el parámetro.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Calcular $\ker f$ es resolver un sistema. ¿Cuál, y de qué tipo?
+        opciones:
+          - texto: >-
+              El sistema **homogéneo** $A\overline{x}=\overline{0}$, que por
+              serlo nunca es incompatible
+            correcta: true
+            mensaje: |
+              Exacto, y ese es el puente entre este tema y el de aplicaciones
+              lineales: **todo núcleo es un sistema homogéneo**. Y como los
+              homogéneos siempre tienen al menos la solución trivial, la
+              pregunta no es si hay solución sino si hay alguna más.
+          - texto: >-
+              El sistema $A\overline{x}=\overline{x}$
+            mensaje: |
+              Ese es el que da los vectores propios de autovalor $1$, que es
+              otra cosa. El núcleo son los vectores cuya imagen es el vector
+              **nulo**.
+          - texto: >-
+              Un sistema con términos independientes que dependen de $k$
+            mensaje: |
+              El parámetro está en la matriz de coeficientes, no en los términos
+              independientes: esos son ceros. Por eso el sistema es homogéneo
+              para cualquier $k$.
+          - texto: >-
+              No es un sistema: el núcleo se calcula con la matriz inversa
+            mensaje: |
+              Si la inversa existe, el núcleo es trivial y no hace falta
+              calcularla. Y cuando el núcleo es interesante —dimensión mayor que
+              cero— es precisamente porque la inversa **no** existe.
+
+      - tipo: calcular
+        titulo: El determinante en función del parámetro
+        pregunta: |
+          Para $k=2$, ¿cuánto vale el determinante de la matriz asociada?
+        respuesta:
+          tipo: numero
+          valor: '4'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Solo se anula en $k=1$ y $k=-2$. El determinante sale
+              $\left(k-1\right)^{2}\left(k+2\right)$, y con $k=2$ vale
+              $1\cdot4=4$.
+          - valor: '8'
+            mensaje: |
+              $8$ es $k^{3}$. El determinante completo es
+              $k^{3}-3k+2$, que con $k=2$ da $8-6+2=4$.
+          - valor: '2'
+            mensaje: |
+              $2$ es el valor con $k=0$:
+              $\left(0-1\right)^{2}\left(0+2\right)=2$. Con $k=2$ sale $4$.
+        pista: |
+          Suma las tres columnas a la primera: queda $k+2$ en toda la primera
+          columna, y se puede sacar factor común.
+        desarrollo: |
+          El truco que hace corto este determinante: **las tres filas suman lo
+          mismo**. Sumando las columnas segunda y tercera a la primera, esta
+          queda constante e igual a $k+2$:
+
+          $$
+          \det A=\left(k+2\right)
+          \begin{vmatrix}1&1&1\\1&k&1\\1&1&k\end{vmatrix}
+          =\left(k+2\right)\left(k-1\right)^{2}
+          $$
+
+          Con $k=2$: $4\cdot1=4$.
+
+          Y ese último determinante es exactamente el del ejemplo de entrada del
+          [tema 4](/road-to-ingenieria/algebra/t04-determinantes/), que vale
+          $\left(k-1\right)^{2}$.
+
+      - tipo: calcular
+        titulo: La dimensión del núcleo en el caso doble
+        pregunta: |
+          Para $k=1$, ¿cuánto vale $\dim\ker f$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ es lo que sale para $k=-2$. Con $k=1$ la matriz es **toda
+              unos**: su rango es $1$, así que el núcleo tiene dimensión
+              $3-1=2$.
+          - valor: '0'
+            mensaje: |
+              $0$ sería núcleo trivial, y eso solo pasa cuando el determinante
+              no se anula. En $k=1$ sí se anula.
+          - valor: '3'
+            mensaje: |
+              $3$ exigiría que la matriz fuese nula, y con $k=1$ es toda unos,
+              no toda ceros.
+        pista: |
+          Sustituye $k=1$ en la matriz y mira cuántas filas distintas quedan.
+        desarrollo: |
+          Con $k=1$:
+
+          $$
+          A=\begin{pmatrix}1&1&1\\1&1&1\\1&1&1\end{pmatrix}
+          $$
+
+          Las tres filas son iguales, así que $r\left(A\right)=1$ y
+
+          $$
+          \dim\ker f=3-1=2
+          $$
+
+          El núcleo es el plano $x+y+z=0$, con base
+          $\left\{\left(1,0,-1\right),\left(0,1,-1\right)\right\}$.
+
+          Y con $k=-2$ pasa otra cosa: la matriz es
+          $\begin{pmatrix}-2&1&1\\1&-2&1\\1&1&-2\end{pmatrix}$, cuyas filas
+          suman cero pero no son proporcionales. Rango $2$, y
+          $\dim\ker f=1$.
+
+      - tipo: justificar
+        pregunta: Ordena la discusión según k. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $\ker f$ es el conjunto de soluciones del sistema homogéneo
+              $A\overline{x}=\overline{0}$, y por tanto un subespacio.
+          - texto: >-
+              $\det A=\left(k-1\right)^{2}\left(k+2\right)$, que se anula solo
+              en $k=1$ y en $k=-2$.
+          - texto: >-
+              Para todo $k$ distinto de esos dos, el rango es $3$ y el núcleo es
+              trivial: $\dim\ker f=0$.
+          - texto: >-
+              En $k=1$ la matriz es toda unos, con rango $1$, así que
+              $\dim\ker f=2$; y en $k=-2$ el rango es $2$ y
+              $\dim\ker f=1$.
+          - texto: >-
+              Como $k=1$ es raíz doble del determinante, en ese valor la
+              dimensión del núcleo vale $2$.
+            trampa: true
+            mensaje: |
+              La multiplicidad de la raíz **no** dice cuánto vale la dimensión
+              del núcleo: hay que mirar la matriz. Aquí coinciden por
+              casualidad de los números; el propio ejercicio da el
+              contraejemplo del razonamiento, porque en $k=-2$ la raíz es
+              simple y la dimensión vale $1$ **por cómo es la matriz**, no por
+              el exponente. Este mismo error aparece en diagonalización, donde
+              se llama confundir multiplicidad algebraica con geométrica.
+    resolucion: |
+      **1. La matriz.** Cada fila son los coeficientes de una coordenada de la
+      imagen:
+
+      $$
+      \boxed{\;A=\begin{pmatrix}k&1&1\\1&k&1\\1&1&k\end{pmatrix}\;}
+      $$
+
+      **2. El núcleo es un sistema homogéneo**, y ese es el punto del ejercicio.
+      Calcular $\ker f$ es resolver $A\overline{x}=\overline{0}$, que por ser
+      homogéneo **nunca es incompatible**: la pregunta no es si hay solución
+      sino cuántas.
+
+      **El determinante, con el atajo que la matriz regala.** Las tres filas
+      suman lo mismo, así que sumando las columnas segunda y tercera a la
+      primera queda una columna constante:
+
+      $$
+      \det A=\left(k+2\right)\left(k-1\right)^{2}
+      $$
+
+      **La discusión, en tres casos.**
+
+      | $k$ | $r\left(A\right)$ | $\dim\ker f$ | qué es el núcleo |
+      |---|---|---|---|
+      | $k\neq1,-2$ | $3$ | $0$ | solo el $\overline{0}$ |
+      | $k=1$ | $1$ | $2$ | el plano $x+y+z=0$ |
+      | $k=-2$ | $2$ | $1$ | la recta $L\left(\left\{\left(1,1,1\right)\right\}\right)$ |
+
+      Con $k=1$ la matriz es toda unos y el sistema se reduce a la única
+      ecuación $x+y+z=0$. Con $k=-2$ las tres filas suman cero pero no son
+      proporcionales, así que el rango es $2$ y queda una recta — la de los
+      vectores con las tres coordenadas iguales, que es lo que anula
+      $-2x+y+z$ cuando $x=y=z$.
+
+      **Y una advertencia que el propio ejercicio ilustra:** que $k=1$ sea raíz
+      **doble** del determinante no es lo que hace que el núcleo tenga dimensión
+      $2$. En $k=-2$ la raíz es simple y la dimensión es $1$, pero eso también
+      hay que mirarlo en la matriz. La multiplicidad de la raíz y la dimensión
+      del núcleo son cosas distintas, y confundirlas es el error que reaparece
+      —con otro nombre— en diagonalización.

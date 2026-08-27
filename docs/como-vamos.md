@@ -535,28 +535,45 @@ asociada está en todas partes— pero nunca como el ejercicio. Eso no significa
 que no haya que escribirlos; significa que en la ruta van como **suelo** y no
 como bloques de rendimiento, que es exactamente la distinción que §14 hace.
 
-### Los temas escritos: 2 de 7
+### Los temas escritos: 5 de 7
 
-| | tema 1 | tema 2 |
-|---|---|---|
-| | espacios vectoriales | aplicaciones lineales |
-| palabras de prosa | **2.938** | **2.255** |
-| figuras | 2 | 2 |
-| ejercicios | 6 | 6 |
-| de ellos, ejemplos propios (§08) | 3 | 3 |
-| pasos guiados | 22 | 23 |
+Contado sobre los ficheros, el 27 de agosto de 2026:
 
-> El commit que publicó el tema 2 dijo «2.900 palabras» y son **2.255**. El
-> número salió de una estimación al escribir el mensaje, no de contar, y es
-> justo lo que §13.1 prohíbe. Queda corregido aquí, que es donde se publica de
-> verdad; el mensaje de commit no se reescribe porque reescribir historia ya
-> empujada cuesta más de lo que arregla, y la corrección tiene que quedar
-> **visible**, no borrada.
+| tema | palabras | figuras | ejercicios | de ellos propios | pasos |
+|---|---|---|---|---|---|
+| 1 · espacios vectoriales | **2.938** | 2 | 6 | 3 | 22 |
+| 2 · aplicaciones lineales | **2.255** | 2 | 6 | 3 | 23 |
+| 3 · matrices | **1.750** | 1 | 4 | 2 | 16 |
+| 4 · determinantes | **1.676** | 1 | 5 | 3 | 20 |
+| 5 · sistemas lineales | **1.497** | 1 | 4 | 2 | 18 |
+| **total** | **10.116** | **7** | **25** | **13** | **99** |
 
-Los seis ejercicios de cada tema son **tres ejemplos de entrada nuestros** —que
-existen porque el boletín y el examen empiezan los dos por encima del nivel de
-quien acaba de leer la teoría— y **tres del boletín oficial**, reproducidos
+> **Dos veces he publicado un recuento estimado en un mensaje de commit, y las
+> dos estaba mal.** El tema 2 salió como «2.900 palabras» siendo 2.255, y los
+> temas 3 y 4 como «1.234 y 1.322» siendo 1.750 y 1.676. El motivo es siempre
+> el mismo: escribir el mensaje **antes** de mirar la medición, aunque la
+> medición fuese en el mismo comando.
+>
+> La regla que queda, y va en `tasks/todo.md` para que no se pierda: **ningún
+> recuento entra en un mensaje de commit sin haber leído antes la salida del
+> comando que lo cuenta.** Si al escribir el mensaje no tienes el número
+> delante, no lo pongas: enlaza a este documento, que sí se mide.
+>
+> Los mensajes de commit no se reescriben —reescribir historia ya empujada
+> cuesta más de lo que arregla— y la corrección tiene que quedar **visible**,
+> no borrada.
+
+Los ejercicios de cada tema son **ejemplos de entrada nuestros** —que existen
+porque el boletín y el examen empiezan los dos por encima del nivel de quien
+acaba de leer la teoría— y **ejercicios del boletín oficial**, reproducidos
 verbatim.
+
+**Los temas 3 y 4 son más cortos a propósito**, y no por falta de material:
+ninguno de los dos ocupa un hueco del examen por sí mismo. El 3 es el suelo
+—operaciones, traspuesta, las dos matrices especiales— y el 4 trae las dos
+herramientas que sí caen, la inversa y el rango. Escribir tres mil palabras
+sobre un tema que no se examina solo sería gastar el tiempo del alumno donde no
+rinde.
 
 **Un hallazgo del tema 2 que conviene no perder:** la hoja de teoría de
 aplicaciones lineales **no define la matriz asociada**. Sus seis apartados son
