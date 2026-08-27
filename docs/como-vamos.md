@@ -527,15 +527,43 @@ empezar:
   Cálculo el paso `justificar` era el complemento del cálculo; aquí es la
   mitad del ejercicio.
 
-**Lo que ha costado de capa compartida, de momento: dos líneas.** Una colección
-`algebra` en `content.config.ts`, igual que `fluidos`, y generalizar el
-guardián de convocatorias huérfanas que se escribió esa misma mañana con
-`calculo` escrito a fuego — habría dejado a Álgebra fuera del suelo el mismo
-día que entró.
+**Lo que ha costado de capa compartida, con el primer examen ya escrito.** Más
+de lo que parecía al abrirla, y todo por el mismo motivo: el repositorio daba
+por supuestas cosas que solo eran ciertas de Cálculo.
 
-Lo que sí va a costar está anunciado desde §00 y es la deuda 4: **el lector de
-respuestas**. Una matriz no es un número ni un conjunto de puntos, y una base
-tampoco. Se decidirá con el primer examen delante y no antes, que es §13.
+| dónde | qué | por qué |
+|---|---|---|
+| `content.config.ts` | la colección `algebra`, y dos tipos de respuesta más | una línea, igual que `fluidos` |
+| `verify.mjs` | el guardián de convocatorias huérfanas, generalizado | tenía `calculo` escrito a fuego, y habría dejado a Álgebra fuera del suelo el mismo día que entró |
+| `lib/algebra.ts` + tests | el lector de vectores y matrices, la deuda 4 | 23 tests nuevos |
+| `EjercicioGuiado.astro` | los dos tipos nuevos y sus diagnósticos | el orden cambiado y la matriz traspuesta |
+| `[examen].astro` | el reparto de puntos deja de ser obligatorio | ver abajo |
+| `ui/Examen.astro` | ya no imprime «0 puntos» cuando no hay reparto | §10 |
+
+**Las dos últimas filas son la lección de la tanda.** Este documento decía, el
+mismo día, que el campo `puntos` era opcional en el esquema «así que no rompe
+nada». Era verdad del esquema y **falso del sitio**: la página del examen tenía
+un guardián propio que abortaba el build con «el examen los imprime en la hoja,
+así que aquí son obligatorios». Ese motivo, escrito cuando solo existía Cálculo,
+dejó de ser cierto en cuanto entró una asignatura cuyos cuadernillos no los
+imprimen.
+
+La regla nueva protege lo mismo con un supuesto más flojo: **dentro de un
+examen, o los declaran todos o no los declara ninguno**. Sigue cazando el fallo
+de verdad —transcribir un examen y olvidarse de los puntos de un ejercicio— y ya
+no exige un dato que la hoja no publica. Y la cabecera de la ficha, que decía
+«0 puntos», ahora no dice nada: cero no es lo mismo que «no se publica».
+
+**El lector de respuestas, que §00 llevaba meses anunciando.** Se decidió con el
+examen delante y no antes (§13), y lo que hacía falta eran dos tipos:
+
+- **`vector`**, que compara **con el orden puesto**. Con `conjunto` la
+  respuesta $(0,-3,0,0)$ se habría dado por buena frente a $(0,0,-3,0)$, y en
+  una base el orden es la respuesta. Cuando los números están bien y el orden
+  mal, lo dice con esas palabras.
+- **`matriz`**, que reconoce **la traspuesta** y la señala como tal: es el
+  error clásico de la matriz asociada, porque las coordenadas de cada imagen van
+  en columna.
 
 ## Las otras siete asignaturas
 

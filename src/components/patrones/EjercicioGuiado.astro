@@ -701,19 +701,24 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           const a = leeVector(escrito);
           const b = leeVector(respuesta.valor);
           const r = a && b ? comparaVector(a, b, respuesta.tolerancia) : null;
+          /* Estos mensajes se construyen en JavaScript y NO pasan por el
+             procesador de fórmulas, así que van sin LaTeX: un «$n$» aquí se
+             publicaría con los dólares y todo. Es la deuda 31 asomando por
+             otro sitio, y no lo caza ningún guardián porque el texto no existe
+             hasta que el alumno se equivoca. */
           if (r && r.longitudDistinta) {
             fb(paso, 'mal', 'Faltan o sobran coordenadas',
               `<p>La respuesta tiene <strong>${b!.length}</strong> coordenadas y has escrito ` +
-                `${a!.length}. En una base de $n$ vectores, un vector tiene exactamente $n$ ` +
-                'coordenadas — una por cada vector de la base, y las que valen cero también.</p>');
+                `${a!.length}. Un vector tiene exactamente una coordenada por cada vector de ` +
+                'la base — y las que valen cero también se escriben.</p>');
             return;
           }
           if (r && r.soloOrden) {
             fb(paso, 'mal', 'Los números están bien; el orden, no',
               '<p>Son exactamente las coordenadas correctas, pero cambiadas de sitio. ' +
-                'En una base <strong>el orden es parte de la respuesta</strong>: la coordenada ' +
-                '$i$-ésima es la que multiplica al vector $i$-ésimo de la base, y la base te ' +
-                'la han dado escrita en un orden concreto.</p>');
+                'En una base <strong>el orden es parte de la respuesta</strong>: cada ' +
+                'coordenada multiplica al vector de la base que ocupa su mismo puesto, y la ' +
+                'base te la han dado escrita en un orden concreto.</p>');
             return;
           }
         }
