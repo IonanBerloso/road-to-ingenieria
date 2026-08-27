@@ -1078,6 +1078,40 @@ no es un número ni un conjunto de puntos, y es por donde Álgebra va a tensiona
 el sistema — está dicho en §00 y en la deuda de arquitectura correspondiente.
 Eso es refactor de la capa compartida y se puede hacer sin un solo enunciado.
 
+**48 · ~~Empujé con el suelo en rojo.~~ Arreglado el 27 de agosto de 2026, y la
+parte que importa no es el arreglo.**
+
+Al publicar la extraordinaria de 2023-2024 de Álgebra, `npm run suelo` imprimió
+
+```
+✗ a 360 px, las resoluciones de examen abiertas no desbordan (6 páginas)
+  2023-2024-ext → 423px
+1 fallo(s) en navegador. El despliegue se queda parado.
+```
+
+y **empujé igualmente**. No fue que el guardián fallara: funcionó, dijo
+exactamente qué página y cuántos píxeles, y yo leí la salida por encima
+buscando la palabra «verde» en vez de la palabra «fallo». El commit `8c3fb2f`
+salió con el suelo rojo. §12 dice que el despliegue va detrás de `verify.mjs`,
+y aquí el orden se saltó a mano.
+
+**Regla que queda: el suelo no se lee en diagonal.** Antes de un commit se
+comprueba que aparecen las dos líneas —`Suelo de calidad: en verde.` **y**
+`Navegador: en verde.`—, y si falta una, no hay commit. Ausencia de «verde» no
+es lo mismo que presencia de «rojo», y buscar solo lo segundo es lo que pasó.
+
+Lo que había debajo, ya que estaba: **ninguna fórmula de bloque del sitio podía
+desplazarse**. No hay una sola regla de `overflow` en `src/styles/`, así que una
+fórmula ancha empujaba el documento entero de lado. En Cálculo no había saltado
+nunca porque ninguna llegaba a 360 px; Álgebra escribe matrices y lo choca a la
+primera. Se arregla en `base.css` —capa compartida, y a propósito: no es un
+contenido, es todo el que venga— con `overflow-x: auto` sobre `.katex-display`,
+más el `overflow-y: hidden` que evita que el navegador recorte los límites por
+arriba. Y en el contenido, la fórmula del conjunto de traza nula pasa de línea a
+bloque, porque una fórmula **en línea** no se desplaza por mucha regla que haya.
+
+Medido: el documento pasa de 426 px de ancho a 360 clavados.
+
 ---
 
 # Álgebra · el plan, en ocho fases
