@@ -704,6 +704,20 @@ const preparar = defineCollection({
     .object({
       asignatura: z.string().min(3),
       evaluacion: convocatoria,
+      /** Otras convocatorias que esta misma ruta prepara.
+       *
+       *  Existe porque §15 pide «una ruta por evaluación» y Cálculo tiene
+       *  **nueve** tipos de convocatoria y siete rutas. Las dos que faltaban
+       *  son las recuperaciones, y escribirles ruta propia habría sido
+       *  duplicar: medido sobre el corpus, los 17 ejercicios de la
+       *  `recuperacion-cuarta` son **todos** de los temas 1 y 2 —la primera
+       *  evaluación entera— y los 14 de la `recuperacion-quinta` caen todos
+       *  dentro de los temas 1 a 4, que cubre la tercera.
+       *
+       *  Se declara aquí, en el dato, y no en un comentario, por dos motivos:
+       *  para que la página del examen pueda enlazar a su ruta, y para que la
+       *  auditoría de §15 lo pueda comprobar sola. */
+      tambienPrepara: z.array(convocatoria).default([]),
       titulo: z.string().min(5),
       lede: z.string().min(40).max(400),
       /** Los temas que entran. Se cruzan con el catálogo al generar la ruta:

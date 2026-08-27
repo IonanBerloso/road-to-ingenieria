@@ -39,10 +39,13 @@ interface Props {
    *  uno; el examen de mayo-junio de 2020 son dos, y entonces cada uno trae su
    *  `etiqueta` para poder distinguirlos. */
   pdfs: { href: string; kb: number; etiqueta: string | null }[];
+  /** La ruta de estudio que prepara esta convocatoria, si la hay. Sale de
+   *  `evaluacion` o de `tambienPrepara` en el YAML de la ruta. */
+  ruta: { href: string; titulo: string } | null;
   ejercicios: EjercicioDeExamen[];
 }
 
-const { eyebrow, titulo, fecha, pdfs, ejercicios } = Astro.props;
+const { eyebrow, titulo, fecha, pdfs, ruta, ejercicios } = Astro.props;
 
 const total = ejercicios.reduce(
   (s, e) => s + (e.puntos ? e.puntos.comp1 + e.puntos.comp2 + e.puntos.comp4 : 0),
@@ -92,6 +95,18 @@ const hoja = await Promise.all(
           </span>
         </a>
       ))
+    }
+
+    {
+      ruta && (
+        <a class="pdf pdf--ruta" href={ruta.href}>
+          <span class="pdf-icono" aria-hidden="true">→</span>
+          <span class="pdf-txt">
+            <span class="pdf-tit">{ruta.titulo}</span>
+            <span class="pdf-meta">la ruta de estudio de esta convocatoria</span>
+          </span>
+        </a>
+      )
     }
   </nav>
 
@@ -255,6 +270,12 @@ const hoja = await Promise.all(
   .rail ol a:hover { background: var(--live-soft); color: var(--ink); }
 
   /* ── el enlace al PDF ──────────────────────────────────────────── */
+  /* Un examen puede traer más de un cuadernillo, y detrás va el enlace a su
+     ruta de estudio. Como pueden ser tres cajas seguidas, la separación
+     grande va solo antes de la primera: `margin-top` en todas dejaba un hueco
+     desigual entre hermanas. */
+  .pdf + .pdf { margin-top: .5rem; }
+
   .pdf {
     display: flex;
     gap: .7rem;
@@ -269,6 +290,11 @@ const hoja = await Promise.all(
   }
 
   .pdf:hover { border-color: var(--live); background: var(--live-soft); }
+
+  /* La ruta no es una descarga: es navegación dentro del sitio, y se distingue
+     con el acento en vez de con el peso del borde. */
+  .pdf--ruta { border-color: var(--live-soft); }
+  .pdf--ruta .pdf-icono, .pdf--ruta .pdf-tit { color: var(--live); }
 
   .pdf-icono {
     font-family: var(--mono);

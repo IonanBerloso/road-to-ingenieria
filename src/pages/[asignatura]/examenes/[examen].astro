@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import Examen from '../../../components/ui/Examen.astro';
-import { archivo } from '../../../lib/rutas';
+import { archivo, ruta } from '../../../lib/rutas';
 import { SUFIJO_CONV, CONVOCATORIAS } from '../../../content.config';
 
 /**
@@ -20,6 +20,7 @@ export async function getStaticPaths() {
   const examenes = await getCollection('examen');
   const catalogo = await getCollection('catalogo');
   const ficheros = await getCollection('ejercicios');
+  const rutas = await getCollection('preparar');
 
   return examenes.map((ex) => {
     const { asignatura: idAsig, curso, convocatoria, pdf } = ex.data;
@@ -120,14 +121,35 @@ export async function getStaticPaths() {
       };
     });
 
+    /* La ruta que prepara esta convocatoria.
+     *
+     *  Hasta el 28 de agosto de 2026 la página de un examen no enlazaba a
+     *  ninguna: las siete rutas estaban listadas juntas en el índice, y desde
+     *  un examen concreto no había forma de llegar a la suya. Se ve peor en
+     *  las dos recuperaciones, cuyo nombre no coincide con el de ninguna ruta.
+     *  Por eso una ruta puede declarar `tambienPrepara`. */
+    const suRuta = rutas.find(
+      (r) =>
+        r.data.asignatura === idAsig &&
+        (r.data.evaluacion === convocatoria || r.data.tambienPrepara.includes(convocatoria)),
+    );
+
     return {
       params: { asignatura: idAsig, examen: carpeta },
-      props: { asignatura, examen: ex, ejercicios, cuadernillos },
+      props: {
+        asignatura,
+        examen: ex,
+        ejercicios,
+        cuadernillos,
+        ruta: suRuta
+          ? { sufijo: CONVOCATORIAS[suRuta.data.evaluacion].url, titulo: suRuta.data.titulo }
+          : null,
+      },
     };
   });
 }
 
-const { asignatura, examen, ejercicios, cuadernillos } = Astro.props;
+const { asignatura, examen, ejercicios, cuadernillos, ruta: suRuta } = Astro.props;
 
 const conv = CONVOCATORIAS[examen.data.convocatoria as keyof typeof CONVOCATORIAS].larga;
 const crumb = `${asignatura.data.nombre} · exámenes`;
@@ -160,6 +182,7 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
       titulo={titulo}
       fecha={examen.data.fecha}
       pdfs={pdfs}
+      ruta={suRuta ? { href: ruta(`${asignatura.id}/preparar/${suRuta.sufijo}/`), titulo: suRuta.titulo } : null}
       ejercicios={ejercicios}
     />
   </main>
