@@ -1157,19 +1157,27 @@ Va en `src/lib/`, con sus tests en `tests/` como los de complejos y regiones,
 y toca la capa compartida: es §13.4, y se hace **una vez y bien**, no con un
 apaño en el contenido.
 
-## Fase 3 · Los siete exámenes que quedan
+## ~~Fase 3 · Los siete exámenes que quedan~~ · TERMINADA el 27 de agosto de 2026
 
 2021-2022, 2022-2023 y 2023-2024, ordinaria y extraordinaria, más la
 extraordinaria de 2024-2025. Veintiocho ejercicios. Con el lector ya hecho,
-esta fase es transcripción y comprobación numérica, que es trabajo conocido.
+esta fase era transcripción y comprobación numérica, que es trabajo conocido.
 
-**Van cinco de los siete**, al 27 de agosto de 2026: la extraordinaria de
-2024-2025, y 2023-2024 y 2022-2023 enteras. Con las seis convocatorias que hay
-ya en el repositorio, **24 ejercicios y 102 pasos**.
+**Están los ocho.** 32 ejercicios y 140 pasos: 32 `reconocer`, 76 `calcular` y
+32 `justificar`. El guardián de convocatorias huérfanas de `verify.mjs` ya las
+ve las ocho, y las cuenta aparte porque Álgebra todavía no tiene ruta.
 
-Quedan dos: la ordinaria y la extraordinaria de 2021-2022.
+**Lo que la fase ha medido, y que la fase 7 no tendrá que estimar:** tres de
+los cuatro huecos del examen son fijos las ocho veces —el 1 es espacios
+vectoriales, el 2 aplicaciones lineales, el 4 diagonalización— y solo el 3
+rota, entre euclídeos (4 veces), matrices (2) y determinantes (2).
 
-Dos cosas que la fase ha ido enseñando y conviene no perder:
+**Y el tema 5 no ocupa ningún hueco: cero de treinta y dos.** Los sistemas
+aparecen dentro de casi todos los ejercicios —un núcleo es un sistema— pero
+nunca como el ejercicio. En la ruta eso lo coloca como **suelo**, no como
+bloque de rendimiento.
+
+Tres cosas que la fase ha ido enseñando y conviene no perder:
 
 - **Las tablas de la resolución no admiten `\left|`.** La barra parte la celda
   antes de que KaTeX vea nada, y el build **no lo caza** porque el YAML y el
@@ -1179,7 +1187,15 @@ Dos cosas que la fase ha ido enseñando y conviene no perder:
   notación natural es justo esa.
 - **Los enunciados vienen en castellano y euskera en el mismo cuadernillo.** Es
   el mismo examen dos veces; se transcribe una, desde la versión castellana, y
-  el `examen.yaml` lo deja dicho para que nadie los cuente como dos.
+  el `examen.yaml` lo deja dicho para que nadie los cuente como dos. Ojo al
+  orden: en 2021-2022 el euskera va **primero**, y de 2022-2023 en adelante,
+  segundo.
+- **Los enunciados se repiten entre convocatorias más de lo que parecía.** El
+  4a, «el polinomio característico no varía al cambiar de base», sale **tres
+  veces** de ocho; «la expresión de una combinación lineal es única», dos; y el
+  2a de la extraordinaria de 2021-2022 es literalmente el de la de 2022-2023.
+  Está anotado en cada `fuente`, y para la ruta es información de primera: un
+  enunciado que sale tres veces de ocho es un bloque, no una anécdota.
 
 ## Fases 4, 5 y 6 · Los siete temas
 

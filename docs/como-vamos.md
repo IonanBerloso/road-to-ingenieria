@@ -501,19 +501,30 @@ espacios vectoriales y el 2, aplicaciones lineales.
 | 6 | Espacios vectoriales euclídeos | alto |
 | 7 | Diagonalización de matrices cuadradas | alto |
 
-**Dónde va la transcripción**, contado sobre `src/content/algebra/examenes/`:
+**El corpus de exámenes de Álgebra está completo: 8 convocatorias de 8.**
+Cuatro cursos, ordinaria y extraordinaria de cada uno, **32 ejercicios y 140
+pasos guiados** —32 `reconocer`, 76 `calcular` y 32 `justificar`—. No queda
+ninguno por leer, y `verify.mjs` lo confirma desde su propio guardián.
 
-| | hecho | de |
+**Y aquí hay un dato que decide las fases siguientes:** contando el tema que
+ocupa cada hueco del examen, los ocho cuadernillos se reparten así.
+
+| hueco | tema | veces |
 |---|---|---|
-| convocatorias transcritas | **6** | 8 |
-| ejercicios de examen | **24** | 32 |
-| pasos guiados | **102** | — |
+| ejercicio 1 | espacios vectoriales | **8 de 8** |
+| ejercicio 2 | aplicaciones lineales | **8 de 8** |
+| ejercicio 3 | euclídeos $4$ · matrices $2$ · determinantes $2$ | 8 |
+| ejercicio 4 | diagonalización | **8 de 8** |
 
-Las seis son 2024-2025 entera, 2023-2024 entera y 2022-2023 entera. Quedan las
-dos de 2021-2022. Los 102 pasos se reparten en 24 `reconocer`, 54 `calcular` y
-24 `justificar`: uno de reconocimiento y uno de justificación por ejercicio,
-que es lo que el esquema exige, y el cálculo repartido según lo que pida cada
-apartado.
+Tres huecos son **fijos las ocho veces**, y el tercero es el único que rota. La
+consecuencia para §14 es directa: la ruta de Álgebra tiene tres bloques
+obvios y uno mixto, y no hace falta estimar nada.
+
+**Y el tema 5, sistemas de ecuaciones lineales, no ocupa ni un solo hueco.**
+Cero de treinta y dos. Aparece dentro de otros ejercicios —todo núcleo es un
+sistema— pero nunca como el ejercicio. Eso no significa que no haya que
+escribirlo; significa que en la ruta va como **suelo** y no como bloque de
+rendimiento, que es exactamente la distinción que §14 hace.
 
 **Y no es Cálculo con otros números.** Medido sobre los ocho PDF, antes de
 transcribir ninguno:
