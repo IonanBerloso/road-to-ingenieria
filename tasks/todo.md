@@ -1313,7 +1313,43 @@ aquí hay una diferencia con Cálculo que ya se sabe: **los exámenes no publica
 puntos**, así que la ruta no podrá calcular porcentajes por competencia. Se
 declara, no se estima.
 
-## Fase 8 · Auditoría §15 y cierre
+## ~~Fase 8 · Auditoría §15 y cierre~~ · TERMINADA el 27 de agosto de 2026
+
+**Álgebra cumple §15 entera y está en el catálogo como `ok`.** Es la segunda
+asignatura terminada. Las once filas, medidas con un script sobre los ficheros
+y no leídas por encima, están en `docs/como-vamos.md`.
+
+La auditoría encontró **tres ejercicios sin enlazar desde ninguna ruta** —dos
+del examen y uno nuestro—, que es exactamente el tipo de hueco que solo aparece
+contando. Colocados en su escalón.
+
+**Y una fila que Álgebra no puede cumplir, y no es un hueco nuestro:** §15 pide
+transcribir cada convocatoria «con su reparto por competencia», y **ninguno de
+los ocho cuadernillos lo publica**. Está declarado en los ocho `examen.yaml`, la
+ficha no imprime «0 puntos» y las rutas no publican porcentajes. §10: un dato
+que no existe no se estima. Si algún día §15 se reescribe, esa fila debería
+decir «con su reparto por competencia **cuando el cuadernillo lo publique**».
+
+**El script de auditoría vive en el scratchpad y no en el repositorio**, igual
+que los tres de la deuda 47. Van cuatro. La pregunta de §11 no es «¿se puede
+automatizar?» sino «¿merece quedarse?», y este mide cosas que solo cambian al
+cerrar una asignatura: correrlo en cada build sería ruido. Pero la próxima vez
+que se cierre una asignatura habrá que reescribirlo, y eso es una deuda.
+
+---
+
+## Lo siguiente, ya sin Álgebra
+
+Con Cálculo y Álgebra cerradas, §00 dice que toca la tercera. Y el criterio de
+§00 no es «la que toque en el temario» sino **la que tensione el sistema por un
+sitio distinto**. Lo que está dicho y medido:
+
+- **Fluidos son 25 temas**, la asignatura más cara de las nueve, y tensiona por
+  las **unidades** —que el esquema todavía no tiene— y por las **figuras de
+  terceros**, que hay que redibujar.
+- El **lector de respuestas sigue dentro de `EjercicioGuiado`**. Álgebra lo
+  estiró con `vector` y `matriz`; una asignatura con unidades lo va a romper por
+  otro sitio, y esa es la deuda de arquitectura que sigue abierta.
 
 La misma que cerró Cálculo: contar qué herramienta usa el examen y no está en
 la prosa, comprobar que ninguna convocatoria se queda sin ruta, y pasar la

@@ -1,4 +1,4 @@
-# Cómo vamos · 26 de agosto de 2026
+# Cómo vamos · 27 de agosto de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -15,6 +15,17 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 ---
 
 ## En una frase
+
+**Dos asignaturas terminadas de nueve: Cálculo y Álgebra.** Las dos cumplen §15
+entera y las dos están en el catálogo como `ok`. Entre las dos, **96
+convocatorias transcritas de 96**, y el guardián de convocatorias huérfanas ya
+no cuenta ninguna suelta.
+
+Álgebra se abrió el 26 de agosto de 2026 y se cerró el 27: ocho convocatorias,
+siete temas, dos rutas. Su auditoría §15 está más abajo, con las once filas
+medidas.
+
+---
 
 **El corpus de exámenes de Cálculo está completo: 88 convocatorias de 88.**
 Once cursos, todas las evaluaciones publicadas, las doce ordinarias y las once
@@ -479,7 +490,41 @@ auditoría periódica, que se pasa a mano y se lee con criterio.
 > mayo-junio de 2020 está partido en **dos** ficheros que son un solo examen, lo
 > que resta 1. Total: 88, y las 88 están.
 
-## Álgebra, abierta el 26 de agosto de 2026
+## Álgebra, abierta el 26 y cerrada el 27 de agosto de 2026
+
+**Álgebra cumple §15 entera.** Está en el catálogo como `ok`, y esa es la
+segunda asignatura terminada del proyecto. La auditoría, ejecutada sobre los
+ficheros y no leída por encima:
+
+| §15 pide | |
+|---|---|
+| los temas del catálogo son el temario oficial, con su fuente | ✅ **7**, `temarioOficial: true` |
+| todas las convocatorias publicadas transcritas, con su PDF | ✅ **8 de 8**, y ningún PDF sin transcribir |
+| una ruta por evaluación | ✅ **2 de 2** |
+| todo tema que una ruta enlaza tiene prosa | ✅ **7 de 7** |
+| cada tema con ejemplo introductorio propio y una figura | ✅ **7 de 7** |
+| `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
+| `falta[]` dice lo que no está | ✅ **12 huecos** declarados |
+| toda herramienta que el examen usa, presentada en la prosa | ✅ **48 de 48** |
+| todo ejercicio de examen, enlazado desde una ruta | ✅ **32 de 32** |
+| todo ejercicio de tema, enlazado desde una ruta | ✅ **35 de 35** |
+| `npm run suelo` en verde | ✅ las dos líneas, cero fallos |
+
+> **El reparto por competencia es la única fila que Álgebra no puede cumplir, y
+> no es un hueco nuestro:** §15 pide transcribir cada convocatoria «con su
+> reparto por competencia», y **ninguno de los ocho cuadernillos lo publica**.
+> Está declarado en los ocho `examen.yaml`, la ficha del examen no imprime «0
+> puntos» y las rutas no publican porcentajes. Es §10 funcionando: un dato que
+> no existe no se estima.
+
+Las tres últimas filas —las herramientas, y los ejercicios enlazados— salieron
+de la auditoría de Cálculo del 24 de agosto y son las que más cuestan. La de
+las herramientas se comprueba **contando apariciones** sobre las 48 que los
+treinta y dos enunciados nombran, y la lista está escrita a mano leyendo los
+enunciados: un buscador de subcadenas no distingue significados, que es la
+lección de la deuda 46.
+
+## Álgebra, cómo se construyó
 
 Se abre el mismo día que Cálculo cumple §15 entera, que es lo que §00 exige. El
 material apareció completo: **ocho exámenes, la teoría de los siete temas y los
