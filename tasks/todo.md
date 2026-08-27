@@ -1163,6 +1163,24 @@ apaño en el contenido.
 extraordinaria de 2024-2025. Veintiocho ejercicios. Con el lector ya hecho,
 esta fase es transcripción y comprobación numérica, que es trabajo conocido.
 
+**Van cuatro de los siete**, al 27 de agosto de 2026: la extraordinaria de
+2024-2025, las dos de 2023-2024 y la ordinaria de 2022-2023. Con las cinco
+convocatorias que hay ya en el repositorio, **20 ejercicios y 84 pasos**.
+
+Quedan tres: la extraordinaria de 2022-2023 y las dos de 2021-2022.
+
+Dos cosas que la fase ha ido enseñando y conviene no perder:
+
+- **Las tablas de la resolución no admiten `\left|`.** La barra parte la celda
+  antes de que KaTeX vea nada, y el build **no lo caza** porque el YAML y el
+  esquema son válidos: sale una tabla con columnas de más y nadie avisa. Se
+  escribe `\lvert` y `\rvert`, que no llevan el carácter dentro. Salió en el
+  ejercicio 3 de la ordinaria de 2022-2023, que pide cinco determinantes y la
+  notación natural es justo esa.
+- **Los enunciados vienen en castellano y euskera en el mismo cuadernillo.** Es
+  el mismo examen dos veces; se transcribe una, desde la versión castellana, y
+  el `examen.yaml` lo deja dicho para que nadie los cuente como dos.
+
 ## Fases 4, 5 y 6 · Los siete temas
 
 La fase más grande, y por eso va partida en tres. Cada tema necesita prosa que
