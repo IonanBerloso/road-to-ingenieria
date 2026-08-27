@@ -1,0 +1,281 @@
+---
+asignatura: algebra
+tema: 4
+titulo: Determinantes
+descripcion: El determinante, la matriz inversa y el rango. Y por qué casi nunca hay que desarrollarlo entero.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes y del boletín de problemas de Álgebra · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El determinante es **un número que se le asigna a una matriz cuadrada** y que
+contesta de golpe varias preguntas que sin él costarían un sistema entero:
+
+- ¿Es inversible? Sí exactamente cuando $\det A\neq0$.
+- ¿Son independientes estos $n$ vectores? Sí exactamente cuando el determinante
+  de la matriz que forman no es nulo.
+- ¿Es este endomorfismo biyectivo? Lo mismo.
+- ¿Cuál es el rango? El orden de la mayor submatriz con determinante no nulo.
+
+Y este tema trae además **la matriz inversa** y **el rango**, que mucha gente
+busca en el tema de Matrices y no están ahí: son los apartados 4 y 5 de este.
+
+Ocupa el hueco del ejercicio 3 en **4 de las 8 convocatorias** —las otras cuatro
+son euclídeos—, y siempre de la misma forma: una matriz con un parámetro, «¿para
+qué valores existe la inversa?», y calcularla para uno concreto.
+
+## Las propiedades, que son el ejercicio
+
+Casi nunca hay que desarrollar un determinante entero. Lo que se examina es
+**usar las propiedades para no tener que hacerlo**, y estas son las que rinden:
+
+| propiedad | qué dice |
+|---|---|
+| $\det\left(A^{T}\right)=\det A$ | trasponer no lo cambia |
+| $\det\left(AB\right)=\det A\cdot\det B$ | es multiplicativo |
+| $\det\left(\lambda A\right)=\lambda^{n}\det A$ | el escalar sale **de cada fila** |
+| $\det\left(A^{-1}\right)=1/\det A$ | sale de $AA^{-1}=I$ |
+| fila de ceros | el determinante es $0$ |
+| dos filas iguales o proporcionales | el determinante es $0$ |
+| intercambiar dos filas | cambia de **signo** |
+| sumar a una fila un múltiplo de otra | **no lo cambia** |
+
+Las dos últimas son las que hacen posible el método de Gauss: se puede triangular
+sumando múltiplos de filas sin tocar el valor, y cada intercambio se paga con un
+signo.
+
+**La tercera es la que más se falla**, y cae literalmente: la ordinaria de
+2022-2023 pide $\left\lvert 2B\right\rvert$ con $B$ de orden $3$ y
+$\left\lvert B\right\rvert=12$. La respuesta es $2^{3}\cdot12=96$, no $24$.
+
+<ErrorTipico titulo="Sacar el escalar una sola vez">
+$\det\left(\lambda A\right)$ **no** es $\lambda\det A$. El determinante es lineal
+**en cada fila por separado**, así que multiplicar la matriz entera por $\lambda$
+multiplica el determinante por $\lambda^{n}$, con $n$ el orden.
+
+La forma de no olvidarlo es hacerlo despacio: se saca el $\lambda$ de la primera
+fila, luego de la segunda, luego de la tercera. ¿Cuántos han salido?
+</ErrorTipico>
+
+Y una que **no** está en la lista, porque es falsa y todo el mundo la usa alguna
+vez:
+
+$$
+\det\left(A+B\right)\neq\det A+\det B
+$$
+
+El determinante es multiplicativo, **no** aditivo. Contraejemplo en dos
+segundos: con $A=B=I$ de orden $2$, la izquierda vale $4$ y la derecha $2$.
+
+## Calcularlo: tres caminos y cuándo usar cada uno
+
+**1 · Orden 2 y 3, de memoria.** En orden $2$, $ad-bc$. En orden $3$, la regla
+de Sarrus. Más allá de $3$, Sarrus **no existe** y aplicarla es un error
+frecuente.
+
+**2 · Por adjuntos.** Se elige la fila o columna con más ceros y se desarrolla:
+
+$$
+\det A=\sum_{j=1}^{n}a_{ij}A_{ij},
+\qquad
+A_{ij}=\left(-1\right)^{i+j}\alpha_{ij}
+$$
+
+donde $\alpha_{ij}$ es el menor complementario —el determinante que queda al
+quitar la fila $i$ y la columna $j$— y $A_{ij}$ es el **adjunto**, que es lo
+mismo con el signo del tablero de ajedrez.
+
+**Elegir bien la fila es la mitad del trabajo.** Si una fila tiene tres ceros y
+un uno, el determinante de orden $4$ se convierte en uno de orden $3$ de un
+plumazo.
+
+**3 · Por Gauss.** Se triangula sumando múltiplos de filas —que no cambia el
+valor— y al final el determinante es **el producto de la diagonal**. Cada
+intercambio de filas cambia el signo, y hay que anotarlo.
+
+<ErrorTipico titulo="Dividir una fila y olvidar el factor">
+En el método de Gauss se puede sumar a una fila un múltiplo de otra sin tocar el
+determinante. Pero **dividir** una fila entre un número sí lo cambia: lo divide
+entre ese número.
+
+Si divides para conseguir un $1$ en la diagonal, tienes que multiplicar el
+resultado final por ese mismo número. La forma segura de evitarlo es no dividir
+nunca: solo restar múltiplos.
+</ErrorTipico>
+
+## La matriz inversa
+
+$$
+A\text{ es inversible}\iff\det A\neq0
+$$
+
+Y cuando existe, hay dos formas de calcularla. Las dos aparecen en el examen y
+conviene saber cuándo elige cada una.
+
+### Por la adjunta
+
+$$
+A^{-1}=\frac{1}{\det A}\left(A^{*}\right)^{T}
+$$
+
+donde $A^{*}$ es la **matriz adjunta**: la que tiene en cada posición el adjunto
+del elemento correspondiente. Ojo a las dos operaciones que van después: se
+**traspone** y se divide por el determinante.
+
+Cuesta $n^{2}$ determinantes de orden $n-1$. Para orden $3$ son nueve
+determinantes de orden $2$: perfectamente asumible. Para orden $4$ son dieciséis
+de orden $3$, y eso ya es demasiado en un examen.
+
+### Por Gauss-Jordan
+
+Se escribe $\left(A\mid I\right)$ y se hacen operaciones de fila hasta que la
+izquierda sea $I$. Lo que quede a la derecha es $A^{-1}$.
+
+**Para orden $4$ es el único camino razonable**, y es el que piden las dos
+extraordinarias que traen una inversa de ese tamaño.
+
+<figure class="figura-examen">
+<svg viewBox="-16 -150 430 208" role="img" width="430" height="208"
+     aria-labelledby="alg4gj-t alg4gj-d">
+  <title id="alg4gj-t">Gauss-Jordan: la identidad viaja de la derecha a la
+  izquierda y la inversa aparece a la derecha</title>
+  <desc id="alg4gj-d">Dos bloques dibujados uno encima de otro. En el de
+  arriba, a la izquierda está la matriz A y a la derecha la identidad,
+  separadas por una línea vertical. Una flecha baja hasta el bloque de abajo,
+  donde a la izquierda está la identidad y a la derecha la matriz inversa de A.
+  Un rótulo dice que entre los dos bloques solo se han hecho operaciones de
+  fila.</desc>
+
+  <g fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4">
+    <rect x="30" y="-134" width="120" height="46"></rect>
+    <rect x="182" y="-52" width="120" height="46"></rect>
+  </g>
+  <g fill="none" stroke="var(--rule)" stroke-width="1.4">
+    <rect x="182" y="-134" width="120" height="46"></rect>
+    <rect x="30" y="-52" width="120" height="46"></rect>
+  </g>
+  <g stroke="var(--graphite)" stroke-width="1.6" fill="none">
+    <path d="M166 -138 L166 -84"></path>
+    <path d="M166 -56 L166 -2"></path>
+  </g>
+
+  <g font-family="var(--mono)" font-size="15" text-anchor="middle">
+    <text x="90" y="-105" fill="var(--live)">A</text>
+    <text x="242" y="-105" fill="var(--faint)">I</text>
+    <text x="90" y="-23" fill="var(--faint)">I</text>
+    <text x="242" y="-23" fill="var(--live)">A⁻¹</text>
+  </g>
+
+  <g stroke="var(--alt)" stroke-width="1.8" fill="none"
+     marker-end="url(#alg4a)">
+    <path d="M330 -104 L346 -104 L346 -30 L312 -30"></path>
+  </g>
+  <defs>
+    <marker id="alg4a" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6"
+            markerHeight="6" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--alt)"></path>
+    </marker>
+  </defs>
+
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--alt)"
+     text-anchor="middle">
+    <text x="166" y="-68">solo operaciones de fila</text>
+  </g>
+  <g font-family="var(--mono)" font-size="11" fill="var(--faint)"
+     text-anchor="middle">
+    <text x="166" y="26">cuando la izquierda llega a I,</text>
+    <text x="166" y="42">la derecha ya es la inversa</text>
+  </g>
+</svg>
+<figcaption>
+Funciona porque cada operación de fila es multiplicar por la izquierda por una
+matriz inversible: al llegar a la identidad, lo acumulado a la derecha es
+exactamente el producto que lleva A hasta I, o sea su inversa.
+</figcaption>
+</figure>
+
+**Y la comprobación no es opcional.** En una inversa de orden $4$ hay dieciséis
+entradas y cualquiera puede llevarse un signo. Multiplicar $AA^{-1}$ cuesta menos
+que revisarla entrada a entrada — y hay que hacerlo **por los dos lados** cuando
+el ejercicio es de teoría, aunque para matrices cuadradas uno de los dos basta.
+
+### Las tres propiedades que caen
+
+$$
+\left(AB\right)^{-1}=B^{-1}A^{-1},
+\qquad
+\left(A^{T}\right)^{-1}=\left(A^{-1}\right)^{T},
+\qquad
+\det\left(A^{-1}\right)=\frac{1}{\det A}
+$$
+
+La primera **invierte el orden**, y es la que el examen pide demostrar. La
+demostración es exhibir la candidata y comprobar los dos lados:
+
+$$
+\left(AB\right)\left(B^{-1}A^{-1}\right)=A\left(BB^{-1}\right)A^{-1}=AA^{-1}=I
+$$
+
+## El rango
+
+$$
+r\left(A\right)=\text{orden de la mayor submatriz de determinante no nulo}
+$$
+
+y equivale a **el número de filas —o de columnas— linealmente
+independientes**. Las dos definiciones son la misma y conviene tener las dos,
+porque cada una es cómoda en un sitio:
+
+| si te dan | usa |
+|---|---|
+| una matriz numérica | **Gauss**: escalona y cuenta filas no nulas |
+| una matriz **con parámetro** | **determinantes**: mira dónde se anulan |
+
+Con parámetro, el procedimiento es siempre el mismo y evita discutir casos a
+ciegas:
+
+1. Calcula el determinante de la matriz entera, en función del parámetro.
+2. Los valores que **no** lo anulan dan rango máximo. Ahí se acabó.
+3. Solo para los valores que lo anulan, se busca una submatriz menor con
+   determinante no nulo.
+
+**El rango es lo que conecta este tema con todos los demás:** es la dimensión de
+la imagen de una aplicación lineal, es el número de vectores independientes de
+una familia, y es lo que decide si un sistema tiene solución.
+
+<ErrorTipico titulo="Discutir todos los casos del parámetro">
+Cuando una matriz lleva un parámetro, la tentación es abrir un caso por cada
+valor posible. No hace falta: **casi todos los valores dan el mismo rango**.
+
+El determinante hace el trabajo de separar los casos. Se anula en dos o tres
+valores concretos, y solo esos hay que estudiar aparte. Todo lo demás cae en
+«rango máximo» de un plumazo.
+
+Es lo que piden las dos extraordinarias que traen una matriz con parámetro: «¿para
+qué valor existe la inversa?». La respuesta correcta es «para todos menos dos»,
+aunque la pregunta esté en singular.
+</ErrorTipico>
+
+## Lo que hay que llevar sabido
+
+1. $\det A\neq0$ **es** inversible, **es** rango máximo, **es** filas
+   independientes. Las tres cosas son la misma.
+2. $\det\left(\lambda A\right)=\lambda^{n}\det A$. El escalar sale de **cada**
+   fila.
+3. $\det\left(A+B\right)\neq\det A+\det B$. Contraejemplo: $A=B=I$.
+4. $\det\left(A^{T}\right)=\det A$, y por eso todo lo que vale para filas vale
+   para columnas.
+5. Sumar a una fila un múltiplo de otra **no cambia** el determinante;
+   intercambiar dos filas le cambia el **signo**; dividir una fila lo **divide**.
+6. Sarrus solo existe en orden $3$.
+7. Por adjuntos, elige la fila con más ceros. Es la mitad del trabajo.
+8. $A^{-1}=\frac{1}{\det A}\left(A^{*}\right)^{T}$: adjunta, **traspuesta**, y
+   dividida.
+9. Orden $4$: Gauss-Jordan, no adjunta.
+10. $\left(AB\right)^{-1}=B^{-1}A^{-1}$: el orden **se invierte**.
+11. Con parámetro: primero el determinante, y solo se abren casos donde se anula.

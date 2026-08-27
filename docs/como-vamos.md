@@ -513,18 +513,27 @@ ocupa cada hueco del examen, los ocho cuadernillos se reparten así.
 |---|---|---|
 | ejercicio 1 | espacios vectoriales | **8 de 8** |
 | ejercicio 2 | aplicaciones lineales | **8 de 8** |
-| ejercicio 3 | euclídeos $4$ · matrices $2$ · determinantes $2$ | 8 |
+| ejercicio 3 | euclídeos **4** · determinantes **4** | 8 |
 | ejercicio 4 | diagonalización | **8 de 8** |
 
-Tres huecos son **fijos las ocho veces**, y el tercero es el único que rota. La
-consecuencia para §14 es directa: la ruta de Álgebra tiene tres bloques
-obvios y uno mixto, y no hace falta estimar nada.
+Tres huecos son **fijos las ocho veces**, y el tercero es el único que rota, y
+solo entre dos temas. La consecuencia para §14 es directa: la ruta de Álgebra
+tiene tres bloques obvios y uno partido en dos, y no hace falta estimar nada.
 
-**Y el tema 5, sistemas de ecuaciones lineales, no ocupa ni un solo hueco.**
-Cero de treinta y dos. Aparece dentro de otros ejercicios —todo núcleo es un
-sistema— pero nunca como el ejercicio. Eso no significa que no haya que
-escribirlo; significa que en la ruta va como **suelo** y no como bloque de
-rendimiento, que es exactamente la distinción que §14 hace.
+> El reparto del hueco 3 decía «euclídeos 4 · matrices 2 · determinantes 2»
+> hasta el 27 de agosto de 2026, y era falso. Los dos ejercicios etiquetados
+> como matrices son inversas de matrices con un parámetro, y **el temario
+> oficial pone la matriz inversa y el rango en el tema de Determinantes**: son
+> sus apartados 4 y 5. La hoja de Matrices no menciona ninguna de las dos.
+> Salió al leer el temario para escribir el tema 3, y está corregido en los dos
+> `examen.yaml` con el motivo escrito.
+
+**Y hay dos temas que no ocupan NI UN SOLO hueco: el 3, matrices, y el 5,
+sistemas de ecuaciones lineales.** Cero de treinta y dos cada uno. Los dos
+aparecen dentro de otros ejercicios —todo núcleo es un sistema, y la matriz
+asociada está en todas partes— pero nunca como el ejercicio. Eso no significa
+que no haya que escribirlos; significa que en la ruta van como **suelo** y no
+como bloques de rendimiento, que es exactamente la distinción que §14 hace.
 
 ### Los temas escritos: 2 de 7
 

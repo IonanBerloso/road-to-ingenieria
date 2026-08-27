@@ -1,0 +1,896 @@
+ejercicios:
+  # ── Los dos primeros son NUESTROS (§08). El boletín de matrices empieza
+  #    directamente por descomponer una 4×4 y por potencias con senos y
+  #    cosenos: no hay por dónde entrar sin haber multiplicado antes dos
+  #    matrices pequeñas a mano.
+  - id: ejalg3-el-producto-no-conmuta
+    titulo: Los mismos dos factores, y dos resultados distintos
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sean
+
+      $$
+      A=\begin{pmatrix}1&0\\-1&1\end{pmatrix},
+      \qquad
+      B=\begin{pmatrix}1&1\\1&0\end{pmatrix}
+      $$
+
+      a) Calcular $AB$ y $BA$.
+
+      b) A la vista del resultado, ¿se puede deducir de $AX=AY$ que $X=Y$?
+    pide: Los dos productos, y qué se puede concluir de una igualdad de productos.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Para calcular la entrada $\left(2,1\right)$ del producto $AB$, ¿qué
+          hay que combinar?
+        opciones:
+          - texto: >-
+              La **fila** $2$ de $A$ con la **columna** $1$ de $B$
+            correcta: true
+            mensaje: |
+              Eso es, y ese orden —fila del primero, columna del segundo— es lo
+              que explica por qué el producto no conmuta: cambiar el orden de
+              los factores cambia qué se combina con qué.
+          - texto: >-
+              La entrada $\left(2,1\right)$ de $A$ con la $\left(2,1\right)$ de
+              $B$
+            mensaje: |
+              Eso sería multiplicar entrada a entrada, que es lo que se hace con
+              la **suma** y con el producto por un escalar, pero no con el
+              producto de matrices.
+          - texto: >-
+              La columna $2$ de $A$ con la fila $1$ de $B$
+            mensaje: |
+              El orden está cambiado: se toma la **fila** del factor de la
+              izquierda y la **columna** del de la derecha. Así encajan las
+              dimensiones.
+          - texto: >-
+              Las dos diagonales
+            mensaje: |
+              Las diagonales no intervienen en el producto general: solo en
+              casos particulares, como cuando las dos matrices son diagonales.
+
+      - tipo: calcular
+        titulo: El primer producto
+        pregunta: |
+          ¿Cuánto vale $AB$? Escribe las filas separadas por punto y coma.
+        respuesta:
+          tipo: matriz
+          valor: '[1, 1; 0, -1]'
+          tolerancia: 0.001
+          formato: dos filas de dos números, con punto y coma entre filas
+        distractores:
+          - valor: '[0, 1; 1, 0]'
+            mensaje: |
+              Ese es $BA$, el producto en el otro orden. Que salgan distintos es
+              justo lo que el ejercicio quiere enseñar, pero el apartado pide
+              $AB$.
+          - valor: '[1, 0; -1, 0]'
+            mensaje: |
+              Has multiplicado entrada a entrada. El producto de matrices
+              combina **filas con columnas**: la entrada
+              $\left(1,1\right)$ es $1\cdot1+0\cdot1=1$, y la
+              $\left(1,2\right)$ es $1\cdot1+0\cdot0=1$.
+          - valor: '[1, 1; -1, -1]'
+            mensaje: |
+              La entrada $\left(2,1\right)$: fila $2$ de $A$ es
+              $\left(-1,1\right)$ y columna $1$ de $B$ es
+              $\left(1,1\right)$, así que vale $-1+1=0$.
+        pista: |
+          Cada entrada $\left(i,j\right)$ es la fila $i$ de $A$ multiplicada
+          término a término por la columna $j$ de $B$, y sumada.
+        desarrollo: |
+          $$
+          AB=\begin{pmatrix}1&0\\-1&1\end{pmatrix}
+          \begin{pmatrix}1&1\\1&0\end{pmatrix}
+          =\begin{pmatrix}
+          1\cdot1+0\cdot1 & 1\cdot1+0\cdot0\\
+          -1\cdot1+1\cdot1 & -1\cdot1+1\cdot0
+          \end{pmatrix}
+          =\begin{pmatrix}1&1\\0&-1\end{pmatrix}
+          $$
+
+      - tipo: calcular
+        titulo: Y el mismo producto al revés
+        pregunta: |
+          ¿Cuánto vale $BA$?
+        respuesta:
+          tipo: matriz
+          valor: '[0, 1; 1, 0]'
+          tolerancia: 0.001
+          formato: dos filas de dos números, con punto y coma entre filas
+        distractores:
+          - valor: '[1, 1; 0, -1]'
+            mensaje: |
+              Ese es $AB$, el del apartado anterior. Los dos son distintos, y
+              esa es la respuesta del ejercicio: el producto **no conmuta**.
+          - valor: '[0, 1; -1, 0]'
+            mensaje: |
+              La entrada $\left(2,1\right)$: fila $2$ de $B$ es
+              $\left(1,0\right)$ y columna $1$ de $A$ es
+              $\left(1,-1\right)$, así que vale $1\cdot1+0\cdot\left(-1\right)
+              =1$, positiva.
+          - valor: '[1, 0; 0, 1]'
+            mensaje: |
+              La identidad saldría si $B$ fuese la inversa de $A$, y no lo es:
+              $\det A=1$ y $\det B=-1$, así que su producto tiene determinante
+              $-1$ y no puede ser $I$.
+        pista: |
+          Ahora la fila la pone $B$ y la columna la pone $A$. Es literalmente la
+          misma cuenta con los papeles cambiados.
+        desarrollo: |
+          $$
+          BA=\begin{pmatrix}1&1\\1&0\end{pmatrix}
+          \begin{pmatrix}1&0\\-1&1\end{pmatrix}
+          =\begin{pmatrix}
+          1-1 & 0+1\\
+          1+0 & 0+0
+          \end{pmatrix}
+          =\begin{pmatrix}0&1\\1&0\end{pmatrix}
+          $$
+
+          $$
+          AB=\begin{pmatrix}1&1\\0&-1\end{pmatrix}
+          \;\neq\;
+          \begin{pmatrix}0&1\\1&0\end{pmatrix}=BA
+          $$
+
+          Los dos factores son los mismos y el resultado es otro. Este par sale
+          de la propia hoja de teoría de la asignatura, y vale la pena
+          memorizarlo: sirve para tumbar cualquier razonamiento que dé por
+          hecho que se puede reordenar un producto.
+
+      - tipo: justificar
+        pregunta: >-
+          Ordena lo que se puede y no se puede concluir. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $AB$ y $BA$ salen distintos, luego el producto de matrices **no
+              es conmutativo**.
+          - texto: >-
+              De $AX=AY$ se sigue $A\left(X-Y\right)=0$, por la distributiva.
+          - texto: >-
+              Pero un producto de matrices puede ser nulo sin que ningún factor
+              lo sea: hay **divisores de cero**.
+          - texto: >-
+              Así que $X-Y$ no tiene por qué ser la matriz nula, y no se puede
+              simplificar. Solo si $A$ es inversible se puede multiplicar por
+              $A^{-1}$ y concluir $X=Y$.
+          - texto: >-
+              Y como $AB\neq BA$, la matriz $A$ de este ejercicio no es
+              inversible.
+            trampa: true
+            mensaje: |
+              No conmutar y no ser inversible son cosas distintas y sin
+              relación. Esta $A$ **sí** es inversible: su determinante vale $1$.
+              Lo que ocurre es que casi ninguna pareja de matrices conmuta, y
+              eso les pasa también a las inversibles. La pieza mezcla dos
+              propiedades que van por caminos separados.
+    resolucion: |
+      **a) Los dos productos.**
+
+      $$
+      AB=\begin{pmatrix}1&1\\0&-1\end{pmatrix},
+      \qquad
+      BA=\begin{pmatrix}0&1\\1&0\end{pmatrix}
+      $$
+
+      **El producto de matrices no es conmutativo**, y este par —que sale de la
+      propia hoja de teoría— es el contraejemplo más barato que hay. Conviene
+      llevarlo aprendido.
+
+      **b) No, no se puede simplificar.** El razonamiento entero:
+
+      $$
+      AX=AY
+      \;\Longrightarrow\;
+      A\left(X-Y\right)=0
+      $$
+
+      y ahí se acaba, porque **hay divisores de cero**:
+
+      $$
+      \begin{pmatrix}1&1\\1&1\end{pmatrix}
+      \begin{pmatrix}1&-1\\-1&1\end{pmatrix}
+      =\begin{pmatrix}0&0\\0&0\end{pmatrix}
+      $$
+
+      con los dos factores no nulos. Así que de $A\left(X-Y\right)=0$ no se
+      sigue $X=Y$.
+
+      **La excepción, y la única:** si $A$ es inversible, se multiplica por
+      $A^{-1}$ por la izquierda y sí sale $X=Y$. Y hay que decir «por la
+      izquierda», porque el lado importa.
+
+      $$
+      \boxed{\;AB\neq BA;\quad\text{de }AX=AY\text{ NO se sigue }X=Y\;}
+      $$
+
+      **Por qué esto vale puntos.** La extraordinaria de 2021-2022 da la
+      ecuación $\left(I+A+A^{2}+A^{3}\right)\left(I-A\right)=0$ y lo único
+      correcto que se puede concluir es $A^{4}=I$. Escribir «luego uno de los
+      dos factores es la matriz nula» es exactamente el error que este ejemplo
+      previene — y además es falso, porque $A^{4}=I$ demuestra que $A$ no es
+      nula.
+
+  - id: ejalg3-cayley-hamilton-baja-la-potencia
+    titulo: Bajar el grado de una potencia sin multiplicar
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea $A=\begin{pmatrix}3&1\\2&2\end{pmatrix}$.
+
+      a) Encontrar dos números $m$ y $n$ tales que $A^{2}+mA+nI=0$, **sin
+      calcular $A^{2}$**.
+
+      b) Usar esa relación para escribir $A^{3}$ como $\alpha A+\beta I$.
+    pide: Los dos coeficientes, y la reducción de A³.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿De dónde salen $m$ y $n$ sin multiplicar nada?
+        opciones:
+          - texto: >-
+              De la traza y el determinante: toda matriz de orden $2$ cumple
+              $A^{2}-\left(\operatorname{traza}A\right)A
+              +\left(\det A\right)I=0$
+            correcta: true
+            mensaje: |
+              Exacto. Es el teorema de Cayley-Hamilton: toda matriz cuadrada
+              anula su propio polinomio característico, y en orden $2$ ese
+              polinomio es
+              $\lambda^{2}-\left(\operatorname{traza}A\right)\lambda+\det A$.
+              Los dos coeficientes se **leen** de la matriz.
+          - texto: >-
+              De multiplicar $A$ por sí misma y comparar entrada a entrada
+            mensaje: |
+              Funciona, pero es justo lo que el enunciado prohíbe. Y en orden
+              $3$ o $4$ deja de ser viable en un examen.
+          - texto: >-
+              De los autovalores, que hay que calcular primero
+            mensaje: |
+              No hace falta calcularlos: la traza es su suma y el determinante
+              su producto, y esas dos cosas se leen directamente de la matriz
+              sin resolver ninguna ecuación.
+          - texto: >-
+              De la diagonal, elevándola al cuadrado
+            mensaje: |
+              Elevar la diagonal al cuadrado solo vale si la matriz **es**
+              diagonal, y esta no lo es: tiene un $1$ y un $2$ fuera.
+
+      - tipo: calcular
+        titulo: El coeficiente que acompaña a A
+        pregunta: |
+          ¿Cuánto vale $m$ en $A^{2}+mA+nI=0$?
+        respuesta:
+          tipo: numero
+          valor: '-5'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '5'
+            mensaje: |
+              El signo. La relación es
+              $A^{2}-\left(\operatorname{traza}A\right)A+\left(\det A\right)I=0$,
+              con la traza **restando**. Como aquí está escrita con un $+m$, el
+              coeficiente es $m=-\operatorname{traza}A=-5$.
+          - valor: '-4'
+            mensaje: |
+              $4$ es el determinante, no la traza. La traza es la suma de la
+              diagonal: $3+2=5$.
+          - valor: '-6'
+            mensaje: |
+              $6$ es el producto de la diagonal, $3\cdot2$, que no es ni la
+              traza ni el determinante. El determinante resta el producto de la
+              otra diagonal: $6-2=4$.
+        pista: |
+          La traza es la suma de la diagonal. Y en la relación va con signo
+          menos.
+        desarrollo: |
+          $$
+          \operatorname{traza}A=3+2=5,
+          \qquad
+          \det A=3\cdot2-1\cdot2=4
+          $$
+
+          $$
+          A^{2}-5A+4I=0
+          \;\Longrightarrow\;
+          m=-5,\qquad n=4
+          $$
+
+          Y se puede comprobar, que es lo que convierte una fórmula recordada en
+          una fórmula sabida:
+
+          $$
+          A^{2}=\begin{pmatrix}11&5\\10&6\end{pmatrix},
+          \qquad
+          5A=\begin{pmatrix}15&5\\10&10\end{pmatrix},
+          \qquad
+          4I=\begin{pmatrix}4&0\\0&4\end{pmatrix}
+          $$
+
+          y $11-15+4=0$, $5-5+0=0$, $10-10+0=0$, $6-10+4=0$. ✓
+
+      - tipo: calcular
+        titulo: El coeficiente de A en A³
+        pregunta: |
+          Usando $A^{2}=5A-4I$, se escribe
+          $A^{3}=\alpha A+\beta I$. ¿Cuánto vale $\alpha$?
+        respuesta:
+          tipo: numero
+          valor: '21'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '25'
+            mensaje: |
+              $25$ es $5^{2}$: sale de olvidar el $-4I$ al sustituir.
+              $A^{3}=A\cdot A^{2}=5A^{2}-4A$, y en $5A^{2}$ hay que volver a
+              sustituir: $5\left(5A-4I\right)=25A-20I$. Restando el $4A$ quedan
+              $21$.
+          - valor: '20'
+            mensaje: |
+              $20$ es el coeficiente de $I$ con el signo cambiado. El de $A$ es
+              $25-4=21$.
+          - valor: '-20'
+            mensaje: |
+              Ese es $\beta$, el que acompaña a la identidad. El paso pide
+              $\alpha$, el de $A$.
+        pista: |
+          $A^{3}=A\cdot A^{2}=A\left(5A-4I\right)=5A^{2}-4A$, y vuelve a
+          sustituir $A^{2}$.
+        desarrollo: |
+          $$
+          A^{3}=A\cdot A^{2}=A\left(5A-4I\right)=5A^{2}-4A
+          $$
+
+          y sustituyendo otra vez:
+
+          $$
+          =5\left(5A-4I\right)-4A=25A-20I-4A=21A-20I
+          $$
+
+          $$
+          \boxed{\;A^{3}=21A-20I\;}
+          $$
+
+          **Y esto es lo que se gana:** cualquier potencia, por grande que sea,
+          se reduce a $\alpha A+\beta I$. $A^{100}$ deja de dar miedo, porque no
+          hay que multiplicar cien veces: hay que sustituir cien veces una
+          relación de dos términos, y eso se puede hacer con una recurrencia.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El polinomio característico de una matriz de orden $2$ es
+              $\lambda^{2}-\left(\operatorname{traza}A\right)\lambda+\det A$.
+          - texto: >-
+              Por Cayley-Hamilton, la matriz anula su propio polinomio
+              característico: $A^{2}-5A+4I=0$.
+          - texto: >-
+              De ahí $A^{2}=5A-4I$, que permite bajar el grado de cualquier
+              potencia.
+          - texto: >-
+              Aplicándolo dos veces sale $A^{3}=21A-20I$.
+          - texto: >-
+              Y como $A$ anula ese polinomio, $A$ es la matriz nula o la
+              identidad.
+            trampa: true
+            mensaje: |
+              Anular un polinomio no obliga a nada de eso: con números, $x^{2}
+              -5x+4=0$ tiene por soluciones $1$ y $4$, y con matrices el
+              conjunto de las que lo anulan es mucho más grande. Esta $A$ no es
+              ni nula ni la identidad, y aun así lo cumple. El error de fondo es
+              el mismo del ejemplo anterior: llevar a las matrices reglas que
+              solo valen para los números.
+    resolucion: |
+      **a) Los coeficientes se leen, no se calculan.** El teorema de
+      Cayley-Hamilton dice que toda matriz cuadrada anula su propio polinomio
+      característico. En orden $2$ ese polinomio es
+
+      $$
+      p\left(\lambda\right)=\lambda^{2}
+      -\left(\operatorname{traza}A\right)\lambda+\det A
+      $$
+
+      así que basta leer la traza y el determinante de la matriz:
+
+      $$
+      \operatorname{traza}A=5,
+      \qquad
+      \det A=4
+      \;\Longrightarrow\;
+      \boxed{\;A^{2}-5A+4I=0,\quad m=-5,\;n=4\;}
+      $$
+
+      **b) Y con eso se baja cualquier potencia.**
+
+      $$
+      A^{2}=5A-4I
+      $$
+
+      $$
+      A^{3}=A\cdot A^{2}=5A^{2}-4A=5\left(5A-4I\right)-4A
+      =\boxed{\;21A-20I\;}
+      $$
+
+      El truco es siempre el mismo: **cada vez que aparece un $A^{2}$, se
+      sustituye**. Con eso todas las potencias caen en el mismo plano
+      $\left\{\alpha A+\beta I\right\}$, y calcular $A^{n}$ pasa de ser $n$
+      multiplicaciones de matrices a ser una recurrencia de dos números.
+
+      **Dónde vale puntos.** El boletín pide exactamente esto para
+      $\begin{pmatrix}2&1\\2&3\end{pmatrix}$ —donde salen $m=-5$ y $n=4$
+      también, por casualidad de los números— y no dice de dónde salen. Y la
+      extraordinaria de 2021-2022 da $A^{4}=I$ y pregunta por las inversas de
+      $A$, $A^{2}$ y $A^{3}$: la misma idea, resolver con una relación en vez de
+      con cuentas.
+
+  # ── Y estos dos son del boletín oficial, reproducidos tal cual (§08).
+  - id: ejalg3-bol31-simetrica-mas-antisimetrica
+    titulo: Partir una matriz en su mitad simétrica y su mitad antisimétrica
+    fuente: >-
+      Ejercicio 3.1 · Boletín de problemas, Matrices · Álgebra, Escuela de
+      Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Sea
+
+      $$
+      M=\begin{pmatrix}
+      2&1&3&4\\
+      4&2&1&3\\
+      3&1&6&6\\
+      1&1&3&4
+      \end{pmatrix}
+      $$
+
+      Expresa la matriz $M$ como suma de una matriz simétrica y otra
+      antisimétrica.
+    pide: Las dos matrices en que se parte M.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cómo se construye la parte simétrica de una matriz cualquiera?
+        opciones:
+          - texto: >-
+              Promediando la matriz con su traspuesta:
+              $\tfrac{1}{2}\left(M+M^{T}\right)$
+            correcta: true
+            mensaje: |
+              Eso es, y se comprueba en una línea: al trasponer esa expresión,
+              $M$ y $M^{T}$ intercambian sus papeles y la suma no cambia. La
+              parte antisimétrica es la misma receta con un menos:
+              $\tfrac{1}{2}\left(M-M^{T}\right)$.
+          - texto: >-
+              Copiando el triángulo superior en el inferior
+            mensaje: |
+              Eso da **una** matriz simétrica, pero no la que sirve: al restarla
+              de $M$ no queda una antisimétrica. La descomposición tiene que
+              cumplir las dos cosas a la vez, y solo el promedio lo consigue.
+          - texto: >-
+              Poniendo a cero todo lo que está fuera de la diagonal
+            mensaje: |
+              Eso da una matriz diagonal, que es simétrica pero pierde
+              demasiada información: lo que sobra no sería antisimétrico.
+          - texto: >-
+              Elevando la matriz al cuadrado
+            mensaje: |
+              $M^{2}$ no tiene por qué ser simétrica. La simetría no se consigue
+              multiplicando: se consigue promediando con la traspuesta.
+
+      - tipo: calcular
+        titulo: Una entrada de la parte simétrica
+        pregunta: |
+          ¿Cuánto vale la entrada $\left(1,2\right)$ de la parte simétrica?
+        respuesta:
+          tipo: numero
+          valor: '2.5'
+          tolerancia: 0.001
+          formato: un número; vale la fracción
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ es la entrada $\left(1,2\right)$ de $M$ sin promediar. Hay que
+              hacer la media con la simétrica de $M$, que es la
+              $\left(2,1\right)$ y vale $4$: $\left(1+4\right)/2=2{,}5$.
+          - valor: '4'
+            mensaje: |
+              $4$ es la entrada $\left(2,1\right)$ de $M$. La parte simétrica
+              pone en las dos posiciones **la media** de las dos.
+          - valor: '5'
+            mensaje: |
+              $5$ es la suma $1+4$, sin dividir entre dos. El factor
+              $\tfrac{1}{2}$ es lo que hace que las dos partes sumen $M$ y no
+              $2M$.
+        pista: |
+          La entrada $\left(1,2\right)$ de $\tfrac{1}{2}\left(M+M^{T}\right)$ es
+          la media de $m_{12}$ y $m_{21}$.
+        desarrollo: |
+          $$
+          \left[\tfrac{1}{2}\left(M+M^{T}\right)\right]_{12}
+          =\frac{m_{12}+m_{21}}{2}=\frac{1+4}{2}=\frac{5}{2}
+          $$
+
+          Y la regla general, que ahorra escribir la traspuesta entera: **la
+          parte simétrica pone en las dos posiciones cruzadas su media, y la
+          antisimétrica pone media diferencia con signos opuestos**.
+
+      - tipo: calcular
+        titulo: Y la misma entrada de la parte antisimétrica
+        pregunta: |
+          ¿Cuánto vale la entrada $\left(1,2\right)$ de la parte
+          antisimétrica?
+        respuesta:
+          tipo: numero
+          valor: '-1.5'
+          tolerancia: 0.001
+          formato: un número; vale la fracción
+        distractores:
+          - valor: '1.5'
+            mensaje: |
+              El signo. La entrada es
+              $\left(m_{12}-m_{21}\right)/2=\left(1-4\right)/2=-1{,}5$. El
+              $+1{,}5$ va en la posición $\left(2,1\right)$, que es la
+              cruzada.
+          - valor: '-3'
+            mensaje: |
+              $-3$ es la diferencia $1-4$ sin dividir entre dos.
+          - valor: '2.5'
+            mensaje: |
+              $2{,}5$ es la entrada de la parte **simétrica**. Las dos tienen
+              que sumar $m_{12}=1$, y $2{,}5+\left(-1{,}5\right)=1$ ✓.
+        pista: |
+          Es media diferencia, no media suma. Y comprueba que las dos partes
+          suman la entrada original.
+        desarrollo: |
+          $$
+          \left[\tfrac{1}{2}\left(M-M^{T}\right)\right]_{12}
+          =\frac{1-4}{2}=-\frac{3}{2}
+          $$
+
+          Y la comprobación que hay que hacer siempre:
+          $2{,}5+\left(-1{,}5\right)=1=m_{12}$ ✓.
+
+          Las dos matrices completas:
+
+          $$
+          S=\begin{pmatrix}
+          2&\tfrac{5}{2}&3&\tfrac{5}{2}\\
+          \tfrac{5}{2}&2&1&2\\
+          3&1&6&\tfrac{9}{2}\\
+          \tfrac{5}{2}&2&\tfrac{9}{2}&4
+          \end{pmatrix},
+          \qquad
+          A=\begin{pmatrix}
+          0&-\tfrac{3}{2}&0&\tfrac{3}{2}\\
+          \tfrac{3}{2}&0&0&1\\
+          0&0&0&\tfrac{3}{2}\\
+          -\tfrac{3}{2}&-1&-\tfrac{3}{2}&0
+          \end{pmatrix}
+          $$
+
+          Y dos comprobaciones que salen gratis: **la diagonal de $S$ es la de
+          $M$** —porque promediar un número consigo mismo lo deja igual— y **la
+          diagonal de $A$ es nula**, como en toda antisimétrica.
+
+      - tipo: justificar
+        pregunta: Ordena la demostración de que la descomposición existe y es única. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Se define
+              $S=\tfrac{1}{2}\left(M+M^{T}\right)$ y
+              $A=\tfrac{1}{2}\left(M-M^{T}\right)$.
+          - texto: >-
+              $S$ es simétrica: al trasponerla, $M$ y $M^{T}$ se intercambian y
+              la suma no cambia. $A$ es antisimétrica por el mismo motivo, con
+              el signo al revés.
+          - texto: >-
+              Y $S+A=M$, porque los términos con $M^{T}$ se cancelan.
+          - texto: >-
+              La descomposición es única porque una matriz simétrica y
+              antisimétrica a la vez cumple $M=-M$, luego es la nula.
+          - texto: >-
+              Y como la diagonal de $A$ es nula, la diagonal de $S$ es el doble
+              de la de $M$.
+            trampa: true
+            mensaje: |
+              Es el doble solo si se olvida el $\tfrac{1}{2}$. La entrada
+              $\left(i,i\right)$ de $S$ es
+              $\left(m_{ii}+m_{ii}\right)/2=m_{ii}$: **la diagonal de $S$ es
+              exactamente la de $M$**, ni más ni menos. Y tiene que serlo, o
+              $S+A$ no daría $M$ en la diagonal.
+    resolucion: |
+      **La receta, y por qué funciona.**
+
+      $$
+      M=\underbrace{\tfrac{1}{2}\left(M+M^{T}\right)}_{S}
+      +\underbrace{\tfrac{1}{2}\left(M-M^{T}\right)}_{A}
+      $$
+
+      $S$ es simétrica porque al trasponerla los dos sumandos se intercambian y
+      la suma es la misma; $A$ es antisimétrica porque al trasponerla la resta
+      cambia de signo. Y sumadas dan $M$, que es lo que se pedía.
+
+      **En la práctica no hace falta escribir $M^{T}$.** Basta esta lectura:
+
+      | posición | parte simétrica | parte antisimétrica |
+      |---|---|---|
+      | $\left(i,j\right)$ | $\dfrac{m_{ij}+m_{ji}}{2}$ | $\dfrac{m_{ij}-m_{ji}}{2}$ |
+      | $\left(i,i\right)$ | $m_{ii}$ | $0$ |
+
+      Y con eso:
+
+      $$
+      \boxed{\;S=\begin{pmatrix}
+      2&\tfrac{5}{2}&3&\tfrac{5}{2}\\
+      \tfrac{5}{2}&2&1&2\\
+      3&1&6&\tfrac{9}{2}\\
+      \tfrac{5}{2}&2&\tfrac{9}{2}&4
+      \end{pmatrix}\;}
+      $$
+
+      $$
+      \boxed{\;A=\begin{pmatrix}
+      0&-\tfrac{3}{2}&0&\tfrac{3}{2}\\
+      \tfrac{3}{2}&0&0&1\\
+      0&0&0&\tfrac{3}{2}\\
+      -\tfrac{3}{2}&-1&-\tfrac{3}{2}&0
+      \end{pmatrix}\;}
+      $$
+
+      **Dos comprobaciones que cazan casi cualquier error:** la diagonal de $S$
+      tiene que ser la de $M$, y la de $A$ tiene que ser toda ceros.
+
+      **Y por qué esto es un ejercicio y no una curiosidad.** Lo que demuestra
+      es que las simétricas y las antisimétricas **llenan entre las dos** el
+      espacio de las matrices cuadradas, y que solo comparten la nula. Es decir:
+      $\mathcal{M}\left(n\times n\right)=U\oplus V$. La ordinaria de 2021-2022
+      pregunta exactamente eso, en el ejercicio 1, y pide las dimensiones.
+
+  - id: ejalg3-bol310-matriz-asociada-de-una-formula
+    titulo: De la fórmula a la matriz, y de la matriz al núcleo
+    fuente: >-
+      Ejercicio 3.10 · Boletín de problemas, Matrices · Álgebra, Escuela de
+      Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Sea la aplicación
+      $f:\mathbb{R}^{4}\rightarrow\mathbb{R}^{4}$ definida por
+
+      $$
+      f\left(x_{1},x_{2},x_{3},x_{4}\right)
+      =\left(x_{1}+x_{4},\;x_{1}+x_{2},\;x_{2}+x_{3},\;x_{3}+x_{4}\right)
+      $$
+
+      1. Comprobar que es lineal.
+
+      2. Hallar el núcleo y la imagen (base y dimensión).
+
+      3. Encontrar la matriz asociada a la aplicación lineal en la base
+      canónica.
+    pide: La comprobación, el núcleo y la imagen, y la matriz asociada.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Cada coordenada de la imagen suma dos variables. ¿Qué se puede decir
+          ya de la matriz?
+        opciones:
+          - texto: >-
+              Que cada **fila** tendrá exactamente dos unos y dos ceros, porque
+              cada fila son los coeficientes de una coordenada de la imagen
+            correcta: true
+            mensaje: |
+              Eso es. Las filas leen las coordenadas de la salida y las columnas
+              las de la entrada. Aquí la primera fila es
+              $\left(1,0,0,1\right)$: los coeficientes de
+              $x_{1}+x_{4}$.
+          - texto: >-
+              Que cada **columna** tendrá dos unos, porque cada variable aparece
+              dos veces
+            mensaje: |
+              Resulta que también es cierto en este caso concreto —cada variable
+              aparece en dos coordenadas—, pero no es lo que decide la
+              estructura: las columnas son las imágenes de la base, y aquí
+              coinciden por casualidad de la simetría del enunciado.
+          - texto: >-
+              Que la matriz es simétrica
+            mensaje: |
+              No lo es. La entrada $\left(1,4\right)$ vale $1$ —la $x_{4}$
+              aparece en la primera coordenada— y la $\left(4,1\right)$ vale
+              $0$ —la $x_{1}$ no aparece en la cuarta—.
+          - texto: >-
+              Que la aplicación es biyectiva
+            mensaje: |
+              No se puede saber de ahí, y de hecho no lo es: el determinante de
+              esta matriz vale $0$ y su núcleo tiene dimensión $1$.
+
+      - tipo: calcular
+        titulo: La matriz asociada
+        pregunta: |
+          La matriz de $f$ en la base canónica. Escribe las filas separadas por
+          punto y coma.
+        respuesta:
+          tipo: matriz
+          valor: '[1, 0, 0, 1; 1, 1, 0, 0; 0, 1, 1, 0; 0, 0, 1, 1]'
+          tolerancia: 0.001
+          formato: cuatro filas de cuatro números, con punto y coma entre filas
+        distractores:
+          - valor: '[1, 1, 0, 0; 0, 1, 1, 0; 0, 0, 1, 1; 1, 0, 0, 1]'
+            mensaje: |
+              Es la **traspuesta**. Comprueba con
+              $f\left(1,0,0,0\right)$: el enunciado dice
+              $\left(1,1,0,0\right)$, y con esta matriz saldría
+              $\left(1,0,0,1\right)$.
+          - valor: '[1, 0, 0, 1; 1, 1, 0, 0; 0, 1, 1, 0; 1, 0, 1, 1]'
+            mensaje: |
+              La cuarta fila: la cuarta coordenada es $x_{3}+x_{4}$, así que sus
+              coeficientes son $\left(0,0,1,1\right)$. La $x_{1}$ no aparece
+              ahí.
+          - valor: '[1, 0, 0, 1; 1, 1, 0, 0; 0, 1, 1, 0; 0, 0, 1, -1]'
+            mensaje: |
+              Todos los coeficientes son $+1$: en la fórmula solo hay sumas, sin
+              ningún signo menos.
+        pista: |
+          Cada fila son los coeficientes de una coordenada de la imagen, en el
+          orden $x_{1},x_{2},x_{3},x_{4}$. La primera coordenada es
+          $x_{1}+x_{4}$.
+        desarrollo: |
+          $$
+          A=\begin{pmatrix}
+          1&0&0&1\\
+          1&1&0&0\\
+          0&1&1&0\\
+          0&0&1&1
+          \end{pmatrix}
+          $$
+
+          Y se comprueba con la base canónica:
+          $A\left(1,0,0,0\right)^{T}=\left(1,1,0,0\right)^{T}$, que es lo que
+          da la fórmula.
+
+      - tipo: calcular
+        titulo: El generador del núcleo
+        pregunta: |
+          El núcleo es una recta. ¿Cuál es su generador, con primera coordenada
+          $1$?
+        respuesta:
+          tipo: vector
+          valor: '(1, -1, 1, -1)'
+          tolerancia: 0.001
+          formato: cuatro coordenadas entre paréntesis, separadas por comas
+        distractores:
+          - valor: '(1, 1, 1, 1)'
+            mensaje: |
+              Comprueba con la primera ecuación:
+              $x_{1}+x_{4}=1+1=2\neq0$. Las cuatro ecuaciones son sumas
+              igualadas a cero, así que las coordenadas tienen que **alternar**
+              el signo.
+          - valor: '(1, -1, -1, 1)'
+            mensaje: |
+              La tercera. De $x_{2}+x_{3}=0$ sale $x_{3}=-x_{2}=+1$, no $-1$.
+              Con tu vector, la segunda ecuación daría $1-1=0$ pero la tercera
+              $-1-1=-2\neq0$.
+          - valor: '(1, -1, 1, 1)'
+            mensaje: |
+              La cuarta. De $x_{1}+x_{4}=0$ sale $x_{4}=-1$. Con $+1$, la
+              primera ecuación daría $2\neq0$.
+        pista: |
+          Las cuatro ecuaciones son $x_{1}+x_{4}=0$, $x_{1}+x_{2}=0$,
+          $x_{2}+x_{3}=0$ y $x_{3}+x_{4}=0$. Empieza por $x_{1}=1$ y ve
+          encadenando.
+        desarrollo: |
+          Encadenando desde $x_{1}=1$:
+
+          $$
+          x_{2}=-x_{1}=-1,
+          \qquad
+          x_{3}=-x_{2}=1,
+          \qquad
+          x_{4}=-x_{3}=-1
+          $$
+
+          y la primera ecuación cierra el círculo: $x_{1}+x_{4}=1-1=0$ ✓. Esa
+          última comprobación no es un trámite: es la que decide que el sistema
+          tenga solución no nula.
+
+          $$
+          \boxed{\;\operatorname{Ker}f
+          =L\left(\left\{\left(1,-1,1,-1\right)\right\}\right),\quad\dim=1\;}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el cálculo del núcleo y la imagen. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Las cuatro ecuaciones del núcleo encadenan los signos:
+              $x_{2}=-x_{1}$, $x_{3}=-x_{2}$, $x_{4}=-x_{3}$.
+          - texto: >-
+              Y la primera, $x_{1}+x_{4}=0$, se cumple sola con esos valores,
+              así que el sistema es compatible indeterminado.
+          - texto: >-
+              El núcleo es la recta generada por
+              $\left(1,-1,1,-1\right)$, de dimensión $1$.
+          - texto: >-
+              Por la fórmula de las dimensiones,
+              $\dim\operatorname{Im}f=4-1=3$, y una base son tres columnas
+              independientes cualesquiera de $A$.
+          - texto: >-
+              Y como el núcleo tiene dimensión $1$, el determinante de $A$ vale
+              $1$.
+            trampa: true
+            mensaje: |
+              Es al revés: un núcleo no nulo obliga a que el determinante sea
+              **cero**, porque si no lo fuera la matriz sería inversible y la
+              única solución de $A\overline{x}=\overline{0}$ sería la trivial.
+              Aquí $\det A=0$. La pieza confunde la dimensión del núcleo con el
+              valor del determinante, que son cosas de naturaleza distinta: una
+              cuenta direcciones y el otro es un número.
+    resolucion: |
+      **1. Es lineal**, y se ve sin escribir nada: **cada coordenada de la
+      imagen es una suma de variables, sin términos independientes ni
+      productos**. Esa es exactamente la forma de una aplicación lineal. Si hay
+      que demostrarlo formalmente, se desarrolla
+      $f\left(\alpha\overline{u}+\beta\overline{v}\right)$ y se separan los dos
+      sumandos.
+
+      **3. La matriz** —conviene hacerla antes que el apartado 2, porque el
+      núcleo y la imagen salen de ella—:
+
+      $$
+      \boxed{\;A=\begin{pmatrix}
+      1&0&0&1\\
+      1&1&0&0\\
+      0&1&1&0\\
+      0&0&1&1
+      \end{pmatrix}\;}
+      $$
+
+      Cada **fila** son los coeficientes de una coordenada de la imagen.
+
+      **2. El núcleo: una cadena de signos.** Las cuatro ecuaciones son
+
+      $$
+      x_{1}+x_{4}=0,\quad x_{1}+x_{2}=0,\quad
+      x_{2}+x_{3}=0,\quad x_{3}+x_{4}=0
+      $$
+
+      Las tres últimas encadenan $x_{2}=-x_{1}$, $x_{3}=-x_{2}=x_{1}$,
+      $x_{4}=-x_{3}=-x_{1}$; y la primera **se cumple sola**. Que se cumpla
+      sola es lo que hace que el núcleo no sea trivial:
+
+      $$
+      \boxed{\;\operatorname{Ker}f
+      =L\left(\left\{\left(1,-1,1,-1\right)\right\}\right),\quad\dim=1\;}
+      $$
+
+      **La imagen**, por la fórmula de las dimensiones:
+
+      $$
+      \dim\operatorname{Im}f=4-1=3
+      $$
+
+      Basta con tres columnas independientes. Las tres primeras lo son —la
+      cuarta es $c_{1}-c_{2}+c_{3}$—, así que
+
+      $$
+      \boxed{\;\operatorname{Im}f
+      =L\left(\left\{\left(1,1,0,0\right),\left(0,1,1,0\right),
+      \left(0,0,1,1\right)\right\}\right),\quad\dim=3\;}
+      $$
+
+      **Y la clasificación**, que el enunciado no pide pero se sigue sola: es un
+      endomorfismo con núcleo no nulo, así que **ni inyectivo ni sobreyectivo**,
+      y $\det A=0$.

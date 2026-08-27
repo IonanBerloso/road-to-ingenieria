@@ -1,0 +1,1038 @@
+ejercicios:
+  # ── Los tres primeros son NUESTROS (§08). El boletín de determinantes empieza
+  #    por un Vandermonde y sigue con determinantes de orden n con parámetros:
+  #    no hay por dónde entrar sin haber usado antes las propiedades sobre
+  #    números concretos.
+  - id: ejalg4-las-propiedades-antes-que-la-cuenta
+    titulo: Cinco determinantes sin desarrollar ninguno
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sean $A$ y $B$ dos matrices cuadradas de orden $3$ con
+      $\det A=3$ y $\det B=-2$. Calcular, **sin conocer las matrices**:
+
+      $$
+      \det\left(AB\right),
+      \quad
+      \det\left(2A\right),
+      \quad
+      \det\left(A^{T}B\right),
+      \quad
+      \det\left(A^{-1}\right),
+      \quad
+      \det\left(A^{3}\right)
+      $$
+    pide: Los cinco valores, usando solo propiedades.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          De los cinco, ¿cuál es el único que depende del **orden** de las
+          matrices y no solo de sus determinantes?
+        opciones:
+          - texto: >-
+              $\det\left(2A\right)$, porque el $2$ sale de cada una de las tres
+              filas y queda $2^{3}$
+            correcta: true
+            mensaje: |
+              Exacto, y es el que más se falla. El determinante es lineal en
+              **cada fila por separado**, así que multiplicar la matriz entera
+              por $2$ multiplica el determinante por $2^{n}$. Aquí $n=3$, luego
+              $2^{3}\cdot3=24$.
+          - texto: >-
+              $\det\left(A^{3}\right)$, porque el exponente depende del orden
+            mensaje: |
+              $\det\left(A^{3}\right)=\left(\det A\right)^{3}$, y el orden de
+              la matriz no interviene: sale de aplicar tres veces que el
+              determinante es multiplicativo.
+          - texto: >-
+              $\det\left(A^{T}B\right)$, porque trasponer reordena las filas
+            mensaje: |
+              Trasponer no cambia el determinante en ningún orden:
+              $\det\left(A^{T}\right)=\det A$. Es la propiedad que permite
+              hacer con columnas todo lo que se hace con filas.
+          - texto: >-
+              $\det\left(A^{-1}\right)$, porque invertir depende de la
+              dimensión
+            mensaje: |
+              $\det\left(A^{-1}\right)=1/\det A$ sea cual sea el orden. Sale de
+              $AA^{-1}=I$ tomando determinantes.
+
+      - tipo: calcular
+        titulo: El del escalar
+        pregunta: |
+          ¿Cuánto vale $\det\left(2A\right)$?
+        respuesta:
+          tipo: numero
+          valor: '24'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '6'
+            mensaje: |
+              $6$ es $2\cdot3$: has sacado el $2$ una sola vez. Hay **tres**
+              filas multiplicadas por $2$, así que el factor es $2^{3}=8$.
+          - valor: '9'
+            mensaje: |
+              $9$ es $3^{2}$, que no pinta nada aquí. El factor que sale fuera
+              es $2^{3}$, y multiplica al determinante.
+          - valor: '18'
+            mensaje: |
+              $18$ sale de $6\cdot3$, como si el factor fuese $2\cdot3$ en vez
+              de $2^{3}$. El exponente es el orden de la matriz, no un
+              producto.
+        pista: |
+          Saca el $2$ de la primera fila, luego de la segunda, luego de la
+          tercera. ¿Cuántos $2$ han salido?
+        desarrollo: |
+          $$
+          \det\left(2A\right)=2^{3}\det A=8\cdot3=24
+          $$
+
+          En general, $\det\left(\lambda A\right)=\lambda^{n}\det A$ con $n$ el
+          orden. Los otros cuatro salen de propiedades directas:
+
+          | pedido | propiedad | valor |
+          |---|---|---|
+          | $\det\left(AB\right)$ | multiplicativo | $3\cdot\left(-2\right)=-6$ |
+          | $\det\left(A^{T}B\right)$ | trasponer no cambia | $-6$ |
+          | $\det\left(A^{-1}\right)$ | $1/\det A$ | $1/3$ |
+          | $\det\left(A^{3}\right)$ | multiplicativo, tres veces | $27$ |
+
+      - tipo: calcular
+        titulo: El de la potencia
+        pregunta: |
+          ¿Cuánto vale $\det\left(A^{3}\right)$?
+        respuesta:
+          tipo: numero
+          valor: '27'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '9'
+            mensaje: |
+              $9$ es $\left(\det A\right)^{2}$: has aplicado la propiedad una
+              vez de menos. $A^{3}=A\cdot A\cdot A$, así que el determinante se
+              multiplica **tres** veces.
+          - valor: '3'
+            mensaje: |
+              $3$ es $\det A$ sin elevar. Elevar la matriz al cubo eleva su
+              determinante al cubo.
+          - valor: '81'
+            mensaje: |
+              $81$ es $3^{4}$: una potencia de más. Cuenta los factores:
+              $A\cdot A\cdot A$ son tres.
+        pista: |
+          Aplica $\det\left(XY\right)=\det X\cdot\det Y$ dos veces seguidas.
+        desarrollo: |
+          $$
+          \det\left(A^{3}\right)=\det A\cdot\det A\cdot\det A
+          =3^{3}=27
+          $$
+
+          Y merece la pena ver la diferencia con el anterior, porque los dos
+          son «elevar» y no se comportan igual:
+
+          $$
+          \det\left(\lambda A\right)=\lambda^{n}\det A
+          \qquad\text{frente a}\qquad
+          \det\left(A^{k}\right)=\left(\det A\right)^{k}
+          $$
+
+          En el primero el exponente lo pone **el orden de la matriz**; en el
+          segundo, **la potencia**.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento de los cinco. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El determinante es multiplicativo, así que
+              $\det\left(AB\right)=3\cdot\left(-2\right)=-6$.
+          - texto: >-
+              Trasponer no cambia el determinante, luego
+              $\det\left(A^{T}B\right)$ vale lo mismo: $-6$.
+          - texto: >-
+              De $AA^{-1}=I$ y $\det I=1$ sale
+              $\det\left(A^{-1}\right)=1/3$.
+          - texto: >-
+              El determinante es lineal en cada fila, así que
+              $\det\left(2A\right)=2^{3}\cdot3=24$; y aplicando la
+              multiplicatividad tres veces, $\det\left(A^{3}\right)=27$.
+          - texto: >-
+              Y por la misma linealidad,
+              $\det\left(A+B\right)=\det A+\det B=1$.
+            trampa: true
+            mensaje: |
+              La linealidad del determinante es **en cada fila por separado**,
+              no en la matriz entera: sumar dos matrices cambia todas las filas
+              a la vez y la propiedad no se aplica. El determinante es
+              multiplicativo pero **no aditivo**, y el contraejemplo cabe en dos
+              segundos: con $A=B=I$ de orden $2$, la izquierda vale $\det
+              2I=4$ y la derecha $1+1=2$.
+    resolucion: |
+      **Los cinco salen de propiedades, y ninguno de desarrollar nada.**
+
+      | pedido | propiedad | valor |
+      |---|---|---|
+      | $\det\left(AB\right)$ | el determinante es multiplicativo | $-6$ |
+      | $\det\left(2A\right)$ | $\det\left(\lambda A\right)=\lambda^{n}\det A$, con $n=3$ | $8\cdot3=24$ |
+      | $\det\left(A^{T}B\right)$ | trasponer no lo cambia | $-6$ |
+      | $\det\left(A^{-1}\right)$ | de $AA^{-1}=I$ | $1/3$ |
+      | $\det\left(A^{3}\right)$ | multiplicativo, tres veces | $27$ |
+
+      **El único con trampa es el segundo**, y por eso cae: el factor sale de
+      **cada fila**, y hay tres. La ordinaria de 2022-2023 lo pregunta tal cual,
+      con $\left\lvert 2B\right\rvert$ y $B$ de orden $3$.
+
+      **La confusión entre los dos «elevar»**, que conviene tener separada:
+
+      $$
+      \det\left(\lambda A\right)=\lambda^{n}\det A
+      \qquad\text{el exponente lo pone el ORDEN}
+      $$
+
+      $$
+      \det\left(A^{k}\right)=\left(\det A\right)^{k}
+      \qquad\text{el exponente lo pone la POTENCIA}
+      $$
+
+      **Y lo que no se puede hacer:**
+      $\det\left(A+B\right)\neq\det A+\det B$. El determinante es multiplicativo,
+      no aditivo.
+
+  - id: ejalg4-una-fila-con-ceros-vale-mas-que-sarrus
+    titulo: Una fila con tres ceros, y un orden 4 que se hace en una línea
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular
+
+      $$
+      \det A=\begin{vmatrix}
+      2&1&0&3\\
+      0&0&1&0\\
+      1&4&2&1\\
+      3&0&1&2
+      \end{vmatrix}
+      $$
+    pide: El valor del determinante, con el desarrollo más corto.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué fila o columna conviene desarrollar?
+        opciones:
+          - texto: >-
+              Por la segunda fila, que tiene tres ceros: el desarrollo se reduce
+              a **un solo** determinante de orden $3$
+            correcta: true
+            mensaje: |
+              Eso es. El desarrollo por adjuntos suma un término por cada
+              entrada, y las entradas nulas no aportan nada. Con tres ceros, de
+              los cuatro sumandos solo sobrevive uno.
+          - texto: >-
+              Por la primera fila, que es la que dice la fórmula
+            mensaje: |
+              La fórmula vale para **cualquier** fila o columna, y eso es
+              precisamente lo que hay que aprovechar. Desarrollar por la
+              primera aquí obligaría a calcular tres determinantes de orden $3$
+              en vez de uno.
+          - texto: >-
+              Por la regla de Sarrus, extendida a orden $4$
+            mensaje: |
+              **Sarrus solo existe en orden $3$.** Aplicarla en orden $4$ da un
+              número que no es el determinante, y es un error clásico.
+          - texto: >-
+              Por la diagonal, multiplicando sus cuatro entradas
+            mensaje: |
+              El determinante es el producto de la diagonal **solo si la matriz
+              es triangular**, y esta no lo es: tiene entradas no nulas por
+              encima y por debajo.
+
+      - tipo: calcular
+        titulo: El menor que queda
+        pregunta: |
+          Al desarrollar por la segunda fila, el único término no nulo lleva el
+          menor que sale de quitar la fila $2$ y la columna $3$. ¿Cuánto vale
+          ese determinante de orden $3$?
+        respuesta:
+          tipo: numero
+          valor: '-19'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '19'
+            mensaje: |
+              El signo del **menor** es $-19$; el $+19$ es el resultado final,
+              después de aplicar el $\left(-1\right)^{2+3}$. Cuidado con
+              adelantar el signo.
+          - valor: '-16'
+            mensaje: |
+              Revisa el segundo sumando de Sarrus. El determinante de
+              $\begin{vmatrix}2&1&3\\1&4&1\\3&0&2\end{vmatrix}$ desarrollado por
+              la primera fila es
+              $2\cdot8-1\cdot\left(-1\right)+3\cdot\left(-12\right)$.
+          - valor: '-37'
+            mensaje: |
+              El signo del segundo término: en el desarrollo por adjuntos de la
+              primera fila, el segundo va **restando** y su menor vale
+              $1\cdot2-1\cdot3=-1$, así que aporta $+1$.
+        pista: |
+          El menor es
+          $\begin{vmatrix}2&1&3\\1&4&1\\3&0&2\end{vmatrix}$. Ahí sí vale
+          Sarrus, o desarrollo por la tercera fila, que tiene un cero.
+        desarrollo: |
+          Quitando la fila $2$ y la columna $3$:
+
+          $$
+          \alpha_{23}=\begin{vmatrix}2&1&3\\1&4&1\\3&0&2\end{vmatrix}
+          =2\left(8-0\right)-1\left(2-3\right)+3\left(0-12\right)
+          =16+1-36=-19
+          $$
+
+          Y como en orden $3$ sí vale Sarrus, se puede comprobar por el otro
+          camino:
+          $\left(16+3+0\right)-\left(36+0+2\right)=19-38=-19$ ✓.
+
+      - tipo: calcular
+        titulo: El determinante, con su signo
+        pregunta: |
+          ¿Cuánto vale $\det A$?
+        respuesta:
+          tipo: numero
+          valor: '19'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '-19'
+            mensaje: |
+              Te falta el signo del adjunto. La entrada no nula está en la
+              posición $\left(2,3\right)$, y $\left(-1\right)^{2+3}=-1$: el
+              menor $-19$ se convierte en $+19$.
+          - valor: '0'
+            mensaje: |
+              El determinante no es cero: no hay ninguna fila nula ni dos filas
+              proporcionales. La fila con tres ceros **sí** tiene un $1$, y eso
+              basta.
+          - valor: '38'
+            mensaje: |
+              $38$ es el doble. Al desarrollar por la segunda fila hay un solo
+              sumando, con coeficiente $1$: no se multiplica por nada más.
+        pista: |
+          El adjunto lleva el signo
+          $\left(-1\right)^{i+j}$, con $i=2$ y $j=3$.
+        desarrollo: |
+          $$
+          \det A=a_{23}\cdot A_{23}
+          =1\cdot\left(-1\right)^{2+3}\cdot\left(-19\right)
+          =-1\cdot\left(-19\right)=19
+          $$
+
+          Un determinante de orden $4$ resuelto con **un** determinante de orden
+          $3$. Desarrollar por la primera fila habría exigido tres.
+
+          **La regla que se saca:** antes de empezar, mira dónde hay ceros. Y si
+          no los hay, fabrícalos: sumar a una fila un múltiplo de otra no cambia
+          el determinante, y con eso casi siempre se puede conseguir una fila
+          con tres ceros.
+
+      - tipo: justificar
+        pregunta: Ordena el cálculo. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El desarrollo por adjuntos vale para cualquier fila o columna, así
+              que se elige la que tenga más ceros: la segunda.
+          - texto: >-
+              De los cuatro sumandos, tres se anulan y solo queda el de la
+              entrada $\left(2,3\right)$, que vale $1$.
+          - texto: >-
+              Su menor complementario, quitando la fila $2$ y la columna $3$,
+              vale $-19$.
+          - texto: >-
+              El adjunto lleva el signo $\left(-1\right)^{2+3}=-1$, así que
+              $\det A=-\left(-19\right)=19$.
+          - texto: >-
+              Y como la matriz tiene una fila con tres ceros, su determinante
+              tenía que salir cero.
+            trampa: true
+            mensaje: |
+              Lo que anula el determinante es una fila **entera** de ceros, no
+              una con tres. Aquí la segunda fila tiene un $1$, y con eso basta
+              para que el determinante no sea nulo. Confundir «casi todo ceros»
+              con «todo ceros» es el error que la pieza representa, y es
+              tentador porque el resto del razonamiento está bien.
+    resolucion: |
+      **La decisión que resuelve el ejercicio se toma antes de calcular nada:
+      por dónde desarrollar.** La segunda fila es
+      $\left(0,0,1,0\right)$, así que de los cuatro sumandos del desarrollo tres
+      son cero.
+
+      $$
+      \det A=a_{23}\cdot\left(-1\right)^{2+3}\cdot\alpha_{23}
+      $$
+
+      con
+
+      $$
+      \alpha_{23}=\begin{vmatrix}2&1&3\\1&4&1\\3&0&2\end{vmatrix}=-19
+      $$
+
+      $$
+      \boxed{\;\det A=1\cdot\left(-1\right)\cdot\left(-19\right)=19\;}
+      $$
+
+      **Un orden $4$ resuelto con un solo orden $3$.** Por la primera fila
+      habrían hecho falta tres, y por Sarrus —que en orden $4$ **no existe**—
+      habría salido un número equivocado.
+
+      **Y si no hubiera ceros, se fabrican.** Sumar a una fila un múltiplo de
+      otra no cambia el determinante, así que siempre se puede conseguir una
+      fila con tres ceros antes de desarrollar. Es la mitad del método de Gauss,
+      usada a mano.
+
+  - id: ejalg4-el-rango-con-un-parametro-dentro
+    titulo: Un parámetro, y solo un valor que estropea el rango
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      Estudiar el rango de
+
+      $$
+      A=\begin{pmatrix}1&1&1\\1&a&1\\1&1&a\end{pmatrix}
+      $$
+
+      según los valores del parámetro $a\in\mathbb{R}$.
+    pide: El rango para cada valor del parámetro.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por dónde se empieza a discutir el rango de una matriz con
+          parámetro?
+        opciones:
+          - texto: >-
+              Por el determinante de la matriz entera: donde **no** se anule, el
+              rango es máximo, y solo hay que estudiar aparte los valores que lo
+              anulan
+            correcta: true
+            mensaje: |
+              Exacto, y ese orden es lo que evita abrir casos a ciegas. El
+              determinante separa los casos él solo: se anula en unos pocos
+              valores, y todo lo demás cae de golpe en «rango máximo».
+          - texto: >-
+              Escalonando por Gauss, como si no hubiera parámetro
+            mensaje: |
+              Con parámetro es peligroso: al escalonar hay que dividir entre
+              expresiones como $a-1$, y eso obliga a suponer que no son cero
+              **sin haberlo dicho**. Es de donde salen la mitad de los errores
+              de este tipo de ejercicio.
+          - texto: >-
+              Probando valores concretos del parámetro
+            mensaje: |
+              Probar da pistas pero no demuestra nada: hay infinitos valores. El
+              determinante los cubre todos de una vez.
+          - texto: >-
+              Buscando una submatriz $2\times2$ con determinante no nulo
+            mensaje: |
+              Eso da una cota **inferior** —el rango es al menos $2$— y hace
+              falta después, en los casos conflictivos. Pero primero conviene
+              saber si el rango es $3$, que se decide con un solo determinante.
+
+      - tipo: calcular
+        titulo: El determinante en función del parámetro
+        pregunta: |
+          Para $a=3$, ¿cuánto vale $\det A$?
+        respuesta:
+          tipo: numero
+          valor: '4'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Solo se anula en $a=1$. El determinante sale
+              $\left(a-1\right)^{2}$, y con $a=3$ vale $2^{2}=4$.
+          - valor: '9'
+            mensaje: |
+              $9$ es $a^{2}$. Desarrolla con cuidado: sale
+              $a^{2}-2a+1$, que con $a=3$ da $9-6+1=4$.
+          - valor: '2'
+            mensaje: |
+              $2$ es $a-1$, sin elevar al cuadrado. El determinante es
+              $\left(a-1\right)^{2}$: la raíz es **doble**.
+        pista: |
+          Resta la primera fila a las otras dos: quedan
+          $\left(0,a-1,0\right)$ y $\left(0,0,a-1\right)$, y el determinante se
+          lee casi solo.
+        desarrollo: |
+          Restando la primera fila a las otras dos —lo que **no** cambia el
+          determinante—:
+
+          $$
+          \begin{vmatrix}1&1&1\\1&a&1\\1&1&a\end{vmatrix}
+          =\begin{vmatrix}1&1&1\\0&a-1&0\\0&0&a-1\end{vmatrix}
+          =\left(a-1\right)^{2}
+          $$
+
+          Es triangular, así que el determinante es el producto de la diagonal.
+          Con $a=3$: $\left(3-1\right)^{2}=4$.
+
+      - tipo: calcular
+        titulo: El valor que lo estropea
+        pregunta: |
+          ¿Para qué valores de $a$ se anula el determinante?
+        respuesta:
+          tipo: conjunto
+          valor: '1'
+          tolerancia: 0.001
+          formato: los valores separados por comas
+        distractores:
+          - valor: '1, -1'
+            mensaje: |
+              $\left(a-1\right)^{2}=0$ tiene una sola raíz, **doble**: $a=1$. El
+              $-1$ saldría de $a^{2}-1$, que no es este determinante.
+          - valor: '0'
+            mensaje: |
+              Con $a=0$ el determinante vale
+              $\left(0-1\right)^{2}=1$, que no es cero.
+          - valor: '2'
+            mensaje: |
+              Con $a=2$ el determinante vale $1$. Resuelve
+              $\left(a-1\right)^{2}=0$.
+        pista: |
+          $\left(a-1\right)^{2}=0$. Es una raíz doble: un solo valor.
+        desarrollo: |
+          $$
+          \det A=\left(a-1\right)^{2}=0
+          \;\Longleftrightarrow\;
+          a=1
+          $$
+
+          Así que **para todo $a\neq1$ el rango es $3$**, y solo queda estudiar
+          el caso $a=1$. Con ese valor:
+
+          $$
+          A=\begin{pmatrix}1&1&1\\1&1&1\\1&1&1\end{pmatrix}
+          $$
+
+          Las tres filas son iguales, así que el rango es $1$ — no $2$, que es
+          lo que se suele contestar por inercia cuando el determinante se anula.
+
+      - tipo: justificar
+        pregunta: Ordena la discusión del rango. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Restando la primera fila a las otras dos, el determinante queda
+              $\left(a-1\right)^{2}$.
+          - texto: >-
+              Si $a\neq1$, el determinante no es nulo y el rango vale $3$: el
+              máximo posible.
+          - texto: >-
+              Si $a=1$, la matriz tiene sus tres filas iguales a
+              $\left(1,1,1\right)$.
+          - texto: >-
+              Y entonces el rango vale $1$, porque solo hay una fila
+              independiente.
+          - texto: >-
+              Como $\left(a-1\right)^{2}$ tiene una raíz doble, en $a=1$ el
+              rango baja dos unidades y por eso vale $1$.
+            trampa: true
+            mensaje: |
+              La multiplicidad de la raíz **no** dice cuánto baja el rango: son
+              cosas sin relación. El rango vale $1$ porque las tres filas
+              resultan iguales, y eso hay que mirarlo en la matriz, no en el
+              exponente. Un determinante con raíz doble puede perfectamente
+              dejar rango $2$ en ese valor; aquí baja a $1$ por cómo es la
+              matriz concreta.
+    resolucion: |
+      **El determinante hace el trabajo de separar los casos.** Restando la
+      primera fila a las otras dos —operación que no cambia el valor— la matriz
+      queda triangular:
+
+      $$
+      \det A=\begin{vmatrix}1&1&1\\0&a-1&0\\0&0&a-1\end{vmatrix}
+      =\left(a-1\right)^{2}
+      $$
+
+      **Caso general: $a\neq1$.** El determinante no es nulo, luego
+
+      $$
+      \boxed{\;r\left(A\right)=3\;}
+      $$
+
+      y con eso está cubierta la inmensa mayoría de los valores. **No hay que
+      abrir un caso por cada número**: hay que abrir uno solo, el que anula el
+      determinante.
+
+      **Caso conflictivo: $a=1$.**
+
+      $$
+      A=\begin{pmatrix}1&1&1\\1&1&1\\1&1&1\end{pmatrix}
+      \;\Longrightarrow\;
+      \boxed{\;r\left(A\right)=1\;}
+      $$
+
+      Las tres filas son la misma, así que solo hay una independiente.
+
+      **Y aquí está el error que este ejemplo previene:** cuando el determinante
+      de orden $3$ se anula, la respuesta automática es «rango $2$». No es
+      automática. Hay que **mirar la matriz** en ese valor y buscar una submatriz
+      $2\times2$ con determinante no nulo; si no la hay, el rango es menor.
+      Aquí todas las submatrices $2\times2$ salen nulas.
+
+  # ── Y estos dos son del boletín oficial, reproducidos tal cual (§08).
+  - id: ejalg4-bol46-un-determinante-por-gauss
+    titulo: Un orden 4 por Gauss, y la comprobación por otro camino
+    fuente: >-
+      Ejercicio 4.6 · Boletín de problemas, Determinantes · Álgebra, Escuela de
+      Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Calcula el siguiente determinante mediante el método de Gauss y comprueba
+      el resultado mediante otro método:
+
+      $$
+      \begin{vmatrix}
+      1&2&3&4\\
+      1&3&3&10\\
+      1&4&10&20\\
+      1&5&15&25
+      \end{vmatrix}
+      $$
+    pide: El valor del determinante, por Gauss y comprobado por otro camino.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La primera columna es toda unos. ¿Qué operación conviene hacer
+          primero, y por qué no cambia el determinante?
+        opciones:
+          - texto: >-
+              Restar la primera fila a las otras tres: sumar a una fila un
+              múltiplo de otra no cambia el determinante
+            correcta: true
+            mensaje: |
+              Eso es, y con una sola tanda de restas quedan tres ceros bajo el
+              primer pivote. Es la operación más rentable del método y la única
+              que se puede hacer sin pagar nada.
+          - texto: >-
+              Dividir cada fila por su primer elemento
+            mensaje: |
+              Dividir una fila **sí** cambia el determinante: lo divide entre
+              ese número. Aquí además no haría falta, porque los primeros
+              elementos ya son unos.
+          - texto: >-
+              Intercambiar la primera y la última fila
+            mensaje: |
+              Se puede, pero cambia el **signo** del determinante y aquí no
+              aporta nada: la primera fila ya tiene un $1$ en la posición del
+              pivote.
+          - texto: >-
+              Sumar todas las filas y ponerlas en la primera
+            mensaje: |
+              Eso sí cambia el determinante, porque sustituye una fila por algo
+              que no es «ella más un múltiplo de otra». La operación permitida
+              suma **una** fila, no todas.
+
+      - tipo: calcular
+        titulo: La matriz después de la primera tanda
+        pregunta: |
+          Restando la primera fila a las otras tres, ¿qué queda en la segunda
+          fila?
+        respuesta:
+          tipo: vector
+          valor: '(0, 1, 0, 6)'
+          tolerancia: 0.001
+          formato: cuatro números entre paréntesis, separados por comas
+        distractores:
+          - valor: '(0, 1, 0, 14)'
+            mensaje: |
+              La última: $10-4=6$, no $14$. Estás sumando en vez de restar.
+          - valor: '(0, 5, 6, 14)'
+            mensaje: |
+              Has sumado las dos filas en vez de restarlas. La operación es
+              $F_{2}-F_{1}$.
+          - valor: '(1, 3, 3, 10)'
+            mensaje: |
+              Esa es la segunda fila sin tocar. Hay que restarle la primera,
+              $\left(1,2,3,4\right)$.
+        pista: |
+          $F_{2}-F_{1}=\left(1-1,\;3-2,\;3-3,\;10-4\right)$.
+        desarrollo: |
+          $$
+          \begin{vmatrix}
+          1&2&3&4\\
+          1&3&3&10\\
+          1&4&10&20\\
+          1&5&15&25
+          \end{vmatrix}
+          =\begin{vmatrix}
+          1&2&3&4\\
+          0&1&0&6\\
+          0&2&7&16\\
+          0&3&12&21
+          \end{vmatrix}
+          $$
+
+          Tres ceros en la primera columna con una sola tanda de restas, y el
+          valor intacto.
+
+      - tipo: calcular
+        titulo: El determinante
+        pregunta: |
+          ¿Cuánto vale el determinante?
+        respuesta:
+          tipo: numero
+          valor: '-27'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '27'
+            mensaje: |
+              El signo. Al terminar de triangular, el último pivote sale
+              negativo. Comprueba: tras la segunda tanda, la diagonal queda
+              $1$, $1$, $7$ y un valor negativo.
+          - valor: '0'
+            mensaje: |
+              No se anula: al escalonar no aparece ninguna fila nula, así que el
+              rango es $4$ y el determinante no puede ser cero.
+          - valor: '-9'
+            mensaje: |
+              Revisa la última tanda. La cuarta fila, tras restar tres veces la
+              segunda y luego el múltiplo adecuado de la tercera, no llega a
+              $-9$.
+        pista: |
+          Sigue escalonando y multiplica la diagonal. No hace falta dividir por
+          nada en ningún momento.
+        desarrollo: |
+          Segunda tanda, restando múltiplos de la segunda fila:
+
+          $$
+          \begin{vmatrix}
+          1&2&3&4\\
+          0&1&0&6\\
+          0&0&7&4\\
+          0&0&12&3
+          \end{vmatrix}
+          $$
+
+          Y la tercera, restando $\tfrac{12}{7}$ veces la tercera fila a la
+          cuarta:
+
+          $$
+          3-\tfrac{12}{7}\cdot4=3-\tfrac{48}{7}=-\tfrac{27}{7}
+          $$
+
+          $$
+          \det=1\cdot1\cdot7\cdot\left(-\tfrac{27}{7}\right)=-27
+          $$
+
+          **La comprobación que pide el enunciado**, por otro camino: se
+          desarrolla el determinante escalonado de la segunda tanda por la
+          primera columna dos veces y queda
+
+          $$
+          \begin{vmatrix}7&4\\12&3\end{vmatrix}=21-48=-27
+          $$
+
+          Los dos caminos dan lo mismo, y ese es el punto del ejercicio: en un
+          examen sin calculadora, **una cuenta larga sin comprobar no vale
+          nada**.
+
+      - tipo: justificar
+        pregunta: Ordena el método de Gauss. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Sumar a una fila un múltiplo de otra no cambia el determinante, y
+              con eso se consiguen ceros bajo la diagonal.
+          - texto: >-
+              Intercambiar dos filas sí lo cambia: le da la vuelta al signo, y
+              hay que anotarlo.
+          - texto: >-
+              Cuando la matriz queda triangular, el determinante es el producto
+              de su diagonal.
+          - texto: >-
+              Aquí no hace falta ningún intercambio, así que el resultado es
+              directamente el producto: $-27$.
+          - texto: >-
+              Y como todas las operaciones han sido restas, el determinante de
+              la matriz escalonada es el mismo que el de la original **aunque se
+              divida alguna fila**.
+            trampa: true
+            mensaje: |
+              Dividir una fila **sí** cambia el determinante: lo divide entre
+              ese número. Es la excepción que hay que tener presente, porque el
+              método de Gauss tal como suele explicarse empieza dividiendo para
+              conseguir un $1$ en el pivote. Si divides, tienes que multiplicar
+              el resultado final por el mismo factor. Lo más seguro es **no
+              dividir nunca** y limitarse a restar múltiplos, que es lo que se
+              ha hecho aquí.
+    resolucion: |
+      **Por Gauss, sin dividir nunca.** La primera columna es toda unos, así que
+      una sola tanda de restas deja tres ceros:
+
+      $$
+      \begin{vmatrix}
+      1&2&3&4\\0&1&0&6\\0&2&7&16\\0&3&12&21
+      \end{vmatrix}
+      \;\longrightarrow\;
+      \begin{vmatrix}
+      1&2&3&4\\0&1&0&6\\0&0&7&4\\0&0&12&3
+      \end{vmatrix}
+      $$
+
+      y del bloque $2\times2$ de abajo a la derecha sale todo:
+
+      $$
+      \det=1\cdot1\cdot\begin{vmatrix}7&4\\12&3\end{vmatrix}
+      =21-48=\boxed{\;-27\;}
+      $$
+
+      **La comprobación por otro camino**, que es la mitad del enunciado. Se
+      puede desarrollar la matriz escalonada por adjuntos de la primera columna
+      —cada vez queda un orden menos— y se llega al mismo bloque $2\times2$.
+      Los dos caminos coinciden.
+
+      **Por qué el enunciado insiste en comprobar.** Un determinante de orden
+      $4$ son unas veinte operaciones, y en un examen sin calculadora la
+      probabilidad de equivocarse en alguna es alta. Comprobar por un segundo
+      camino cuesta un tercio de lo que ha costado el primero y caza casi todos
+      los errores.
+
+      **Y una advertencia sobre el método tal como suele explicarse:** el primer
+      paso «se divide toda una fila por el valor del primer elemento para
+      conseguir un $1$» **cambia el determinante**. Si lo haces, hay que
+      multiplicar al final por ese factor. Aquí no hizo falta porque la primera
+      columna ya era de unos, y en general es más seguro no dividir nunca.
+
+  - id: ejalg4-bol414-una-inversa-de-orden-4
+    titulo: Una inversa de orden 4, y por qué la adjunta no es el camino
+    fuente: >-
+      Ejercicio 4.14 · Boletín de problemas, Determinantes · Álgebra, Escuela de
+      Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Halla la inversa de
+
+      $$
+      A=\begin{pmatrix}
+      1&-1&2&1\\
+      -2&3&-4&1\\
+      5&-8&11&-4\\
+      -2&3&-4&2
+      \end{pmatrix}
+      $$
+    pide: La matriz inversa.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Para una matriz de orden $4$, ¿qué método conviene?
+        opciones:
+          - texto: >-
+              Gauss-Jordan sobre $\left(A\mid I\right)$: la adjunta exigiría
+              **dieciséis** determinantes de orden $3$
+            correcta: true
+            mensaje: |
+              Eso es. La fórmula de la adjunta es correcta y en orden $3$ es
+              perfectamente viable —nueve determinantes de orden $2$—, pero en
+              orden $4$ son dieciséis de orden $3$: unas cien operaciones, y sin
+              calculadora.
+          - texto: >-
+              La fórmula
+              $A^{-1}=\frac{1}{\det A}\left(A^{*}\right)^{T}$, que es la que da
+              la teoría
+            mensaje: |
+              Es correcta, y hay que saberla porque el examen la pregunta. Pero
+              como **método de cálculo** en orden $4$ es inviable en un examen:
+              son dieciséis determinantes de orden $3$.
+          - texto: >-
+              Sarrus, extendida a orden $4$
+            mensaje: |
+              Sarrus solo existe en orden $3$, y además sirve para calcular
+              determinantes, no inversas.
+          - texto: >-
+              Resolver cuatro sistemas, uno por cada columna de la inversa
+            mensaje: |
+              Es correcto conceptualmente —cada columna de $A^{-1}$ resuelve
+              $A\overline{x}=\overline{e}_{i}$— y es exactamente lo que
+              Gauss-Jordan hace con los cuatro a la vez. Por separado cuesta
+              cuatro veces más.
+
+      - tipo: calcular
+        titulo: El determinante, que decide si existe
+        pregunta: |
+          ¿Cuánto vale $\det A$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Si fuese cero la inversa no existiría y el ejercicio no tendría
+              respuesta. Escalona: no aparece ninguna fila nula.
+          - valor: '-1'
+            mensaje: |
+              El signo. Escalonando sin intercambiar filas —que aquí no hace
+              falta, porque el primer pivote ya es $1$— la diagonal sale toda
+              positiva.
+          - valor: '2'
+            mensaje: |
+              Revisa la última fila del escalonado. La cuarta fila menos la
+              segunda es $\left(0,0,0,1\right)$, que aporta un $1$ a la
+              diagonal, no un $2$.
+        pista: |
+          Fíjate en que la cuarta fila y la segunda casi coinciden. Réstalas.
+        desarrollo: |
+          El atajo está a la vista: **la cuarta fila y la segunda solo se
+          diferencian en la última entrada**.
+
+          $$
+          F_{4}-F_{2}=\left(0,0,0,1\right)
+          $$
+
+          Con esa fila, el determinante se desarrolla por su única entrada no
+          nula y baja a orden $3$ de un golpe:
+
+          $$
+          \det A=1\cdot\left(-1\right)^{4+4}
+          \begin{vmatrix}1&-1&2\\-2&3&-4\\5&-8&11\end{vmatrix}
+          $$
+
+          y ese vale
+          $1\left(33-32\right)+1\left(-22+20\right)+2\left(16-15\right)
+          =1-2+2=1$.
+
+          $$
+          \det A=1\neq0
+          $$
+
+          Que valga exactamente $1$ es una buena señal: **la inversa va a salir
+          con entradas enteras**, porque no hay que dividir por nada.
+
+      - tipo: calcular
+        titulo: La primera fila de la inversa
+        pregunta: |
+          ¿Cuál es la primera fila de $A^{-1}$?
+        respuesta:
+          tipo: vector
+          valor: '(1, -1, -2, -4)'
+          tolerancia: 0.001
+          formato: cuatro números entre paréntesis, separados por comas
+        distractores:
+          - valor: '(1, -1, 2, 1)'
+            mensaje: |
+              Esa es la primera fila de $A$, no de su inversa. Invertir no deja
+              ninguna fila igual salvo por casualidad.
+          - valor: '(-1, 1, 2, 4)'
+            mensaje: |
+              Los cuatro signos. Suele salir de usar $\det A=-1$; el
+              determinante vale $+1$.
+          - valor: '(1, -1, -2, 4)'
+            mensaje: |
+              La última entrada es $-4$. Comprueba multiplicando la primera fila
+              de tu candidata por la última columna de $A$, que es
+              $\left(1,1,-4,2\right)$: tiene que dar $0$, y con $+4$ sale
+              $1-1+8+8=16$.
+        pista: |
+          Monta $\left(A\mid I\right)$ y haz Gauss-Jordan. Empieza restando
+          múltiplos de la primera fila, y aprovecha que
+          $F_{4}-F_{2}=\left(0,0,0,1\right)$.
+        desarrollo: |
+          Por Gauss-Jordan sobre $\left(A\mid I\right)$:
+
+          $$
+          A^{-1}=\begin{pmatrix}
+          1&-1&-2&-4\\
+          2&4&0&-3\\
+          1&3&1&0\\
+          0&-1&0&1
+          \end{pmatrix}
+          $$
+
+          Todas las entradas son enteras, que es lo que anunciaba
+          $\det A=1$.
+
+          Y la comprobación, que en orden $4$ **no es opcional**: son dieciséis
+          entradas y cualquiera puede llevarse un signo.
+
+          $$
+          AA^{-1}=I
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el método. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La inversa existe si y solo si $\det A\neq0$, así que lo primero
+              es calcular el determinante: vale $1$.
+          - texto: >-
+              Se escribe $\left(A\mid I\right)$ y se hacen operaciones de fila
+              sobre las ocho columnas a la vez.
+          - texto: >-
+              Cuando la mitad izquierda llega a la identidad, la derecha es
+              $A^{-1}$: cada operación de fila es multiplicar por la izquierda
+              por una matriz inversible, y lo acumulado es el producto que lleva
+              $A$ hasta $I$.
+          - texto: >-
+              Se comprueba multiplicando $AA^{-1}$, que tiene que dar la
+              identidad.
+          - texto: >-
+              Y como el determinante vale $1$, la inversa coincide con la
+              traspuesta.
+            trampa: true
+            mensaje: |
+              Que la inversa sea la traspuesta es propio de las matrices
+              **ortogonales**, y esas cumplen $AA^{T}=I$ — una condición mucho
+              más fuerte que tener determinante $1$. Aquí no se cumple:
+              basta mirar que $A^{-1}$ y $A^{T}$ no se parecen en nada. Lo que
+              sí dice $\det A=1$ es que la inversa tendrá entradas enteras,
+              porque no hay que dividir por nada.
+    resolucion: |
+      **Primero el determinante, con el atajo que la matriz regala.** La cuarta
+      fila y la segunda solo se diferencian en la última entrada, así que
+
+      $$
+      F_{4}-F_{2}=\left(0,0,0,1\right)
+      $$
+
+      y con esa fila el orden $4$ baja a orden $3$ de un golpe:
+
+      $$
+      \det A=\begin{vmatrix}1&-1&2\\-2&3&-4\\5&-8&11\end{vmatrix}=1
+      $$
+
+      **Existe, y va a salir entera.** Un determinante $\pm1$ garantiza que la
+      inversa tiene todas sus entradas enteras, porque el único denominador
+      posible es el propio determinante.
+
+      **Por Gauss-Jordan**, que en orden $4$ es el único camino razonable:
+
+      $$
+      \boxed{\;A^{-1}=\begin{pmatrix}
+      1&-1&-2&-4\\
+      2&4&0&-3\\
+      1&3&1&0\\
+      0&-1&0&1
+      \end{pmatrix}\;}
+      $$
+
+      **Y la comprobación, que no es un trámite.** Son dieciséis entradas, cada
+      una salida de una cadena de operaciones de fila. Multiplicar $AA^{-1}$
+      cuesta dieciséis productos escalares y caza cualquier signo perdido; a
+      mano, revisar el proceso paso a paso cuesta mucho más y caza menos.
+
+      **Por qué no la adjunta.** La fórmula
+      $A^{-1}=\frac{1}{\det A}\left(A^{*}\right)^{T}$ es correcta y hay que
+      sabérsela —el examen la pregunta como teoría—, pero como método de
+      cálculo en orden $4$ exige **dieciséis determinantes de orden $3$**. En
+      orden $3$ sí compensa: son nueve de orden $2$, y muchas veces sale antes
+      que Gauss-Jordan.

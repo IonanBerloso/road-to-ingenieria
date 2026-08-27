@@ -1170,12 +1170,19 @@ ve las ocho, y las cuenta aparte porque Álgebra todavía no tiene ruta.
 **Lo que la fase ha medido, y que la fase 7 no tendrá que estimar:** tres de
 los cuatro huecos del examen son fijos las ocho veces —el 1 es espacios
 vectoriales, el 2 aplicaciones lineales, el 4 diagonalización— y solo el 3
-rota, entre euclídeos (4 veces), matrices (2) y determinantes (2).
+rota, entre euclídeos (4 veces) y determinantes (4).
 
-**Y el tema 5 no ocupa ningún hueco: cero de treinta y dos.** Los sistemas
-aparecen dentro de casi todos los ejercicios —un núcleo es un sistema— pero
-nunca como el ejercicio. En la ruta eso lo coloca como **suelo**, no como
-bloque de rendimiento.
+> Esa última cifra decía «euclídeos 4, matrices 2, determinantes 2» hasta el 27
+> de agosto de 2026, y era falsa: los dos ejercicios que había etiquetado como
+> matrices son **inversas de matrices con parámetro**, y el temario oficial
+> pone la inversa y el rango en Determinantes, apartados 4 y 5. La hoja de
+> Matrices no las menciona. Salió al leer el temario para escribir el tema 3.
+
+**Y hay DOS temas que no ocupan ningún hueco: el 3 y el 5.** Cero de treinta y
+dos cada uno. Las matrices y los sistemas aparecen dentro de casi todos los
+ejercicios —un núcleo es un sistema, la matriz asociada está en todas partes—
+pero nunca como el ejercicio. En la ruta eso los coloca como **suelo**, no como
+bloques de rendimiento.
 
 Tres cosas que la fase ha ido enseñando y conviene no perder:
 
