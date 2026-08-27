@@ -1,0 +1,431 @@
+---
+asignatura: algebra
+tema: 2
+titulo: Aplicaciones lineales
+descripcion: Núcleo, imagen y matriz asociada. Y por qué las imágenes van en columnas y no en filas.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes y del boletín de problemas de Álgebra · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Una aplicación lineal es una función entre espacios vectoriales que **respeta
+las dos operaciones**: sumar y luego aplicar da lo mismo que aplicar y luego
+sumar, y escalar y luego aplicar da lo mismo que aplicar y luego escalar.
+
+$$
+f\left(\overline{x}+\overline{y}\right)
+=f\left(\overline{x}\right)+f\left(\overline{y}\right),
+\qquad
+f\left(\alpha\cdot\overline{x}\right)
+=\alpha\cdot f\left(\overline{x}\right)
+$$
+
+Y eso, que suena a poco, lo determina **todo**: si sabes lo que $f$ hace sobre
+una base, sabes lo que hace sobre cualquier vector. De ahí sale la matriz, y de
+la matriz sale el resto del tema.
+
+Este ejercicio es el segundo del examen las ocho veces, y siempre pide lo mismo:
+**la matriz asociada** —**8 de 8**—, **bases y dimensiones del núcleo y la
+imagen** —**8 de 8**— y **clasificar la aplicación** —**7 de 8**—, más una
+demostración de teoría en **7 de 8**. Es el ejercicio más previsible de todo el
+examen.
+
+## ¿Es lineal? La comprobación de tres segundos
+
+Igual que en el tema anterior había que mirar si el cero estaba dentro, aquí hay
+un atajo equivalente:
+
+$$
+f\text{ lineal}\;\Longrightarrow\;f\left(\overline{0}\right)=\overline{0}
+$$
+
+Sale de tomar $\alpha=0$ en la segunda condición. Así que **si al sustituir el
+cero no sale el cero, no es lineal y se acabó**. Eso liquida de un vistazo
+cualquier aplicación con un término independiente:
+
+$$
+h\left(x,y,z\right)=\left(x-1,\;y,\;z-2y\right)
+\;\Longrightarrow\;
+h\left(0,0,0\right)=\left(-1,0,0\right)\neq\overline{0}
+$$
+
+El otro caso que aparece es el de **variables multiplicadas entre sí** o
+elevadas al cuadrado. Ahí el cero sí sale bien y hay que dar un contraejemplo con
+números concretos:
+
+$$
+h\left(x,y\right)=\left(xy,\;x\right):
+\qquad
+2\cdot h\left(1,1\right)=\left(2,2\right),
+\qquad
+h\left(2,2\right)=\left(4,2\right)
+$$
+
+Las dos deberían coincidir y no coinciden. Un solo contraejemplo cierra el
+apartado.
+
+<ErrorTipico titulo="Comprobar la linealidad «en general» y no cerrar">
+Cuando la respuesta es **sí**, hay que escribir las dos condiciones con
+$\overline{x}$, $\overline{y}$ y $\alpha$ genéricos y desarrollarlas. No basta
+con probar con dos vectores concretos: que funcione con $\left(1,0\right)$ y
+$\left(0,1\right)$ no demuestra nada.
+
+Cuando la respuesta es **no**, es al revés: basta **un** contraejemplo con
+números. Escribir la comprobación general para acabar diciendo «luego no se
+cumple» es tiempo tirado.
+</ErrorTipico>
+
+## La matriz asociada, y por qué las imágenes van en columnas
+
+Aquí hay algo que conviene saber antes de estudiar, porque explica una
+sensación de estar perdido que no es culpa tuya: **la hoja de teoría de
+aplicaciones lineales no define la matriz asociada.** Sus seis apartados son
+conceptos básicos, definición y propiedades, núcleo, imagen, dimensiones y
+existencia. La matriz asociada está en la hoja de **Matrices**, en su apartado
+3.2. Y el ejercicio 2 del examen la pide las ocho veces.
+
+La construcción es esta. Si $B=\left\{\overline{e}_{1},\dots,
+\overline{e}_{n}\right\}$ es base del espacio de partida y $B'$ del de llegada,
+la matriz de $f$ tiene por **columnas las coordenadas en $B'$ de las imágenes de
+los vectores de $B$**:
+
+$$
+A=\Big(\;f\left(\overline{e}_{1}\right)\Big|_{B'}
+\;\Big|\;f\left(\overline{e}_{2}\right)\Big|_{B'}
+\;\Big|\;\cdots\;\Big|\;f\left(\overline{e}_{n}\right)\Big|_{B'}\;\Big)
+$$
+
+<figure class="figura-examen">
+<svg viewBox="-20 -132 440 200" role="img" width="440" height="200"
+     aria-labelledby="alg2col-t alg2col-d">
+  <title id="alg2col-t">Cada columna de la matriz es la imagen de un vector de
+  la base de partida</title>
+  <desc id="alg2col-d">Una matriz de tres filas y cuatro columnas. Encima de
+  cada columna hay una etiqueta que dice de qué vector de la base es imagen: la
+  primera columna es la imagen del primer vector de la base, la segunda del
+  segundo, y así. Una flecha a la izquierda indica que las tres filas
+  corresponden a los tres vectores de la base del espacio de llegada. Debajo,
+  el producto de la matriz por un vector columna de cuatro coordenadas da un
+  vector de tres.</desc>
+
+  <g stroke="var(--live)" stroke-width="1.6" fill="none">
+    <path d="M96 -84 L88 -84 L88 -6 L96 -6"></path>
+    <path d="M300 -84 L308 -84 L308 -6 L300 -6"></path>
+  </g>
+
+  <g stroke="var(--live-soft)" stroke-width="0" fill="var(--live-soft)">
+    <rect x="98" y="-84" width="48" height="78"></rect>
+  </g>
+
+  <g font-family="var(--mono)" font-size="13" fill="var(--ink)"
+     text-anchor="middle">
+    <text x="122" y="-64">1</text><text x="174" y="-64">2</text>
+    <text x="226" y="-64">3</text><text x="278" y="-64">1</text>
+    <text x="122" y="-38">1</text><text x="174" y="-38">1</text>
+    <text x="226" y="-38">1</text><text x="278" y="-38">0</text>
+    <text x="122" y="-12">−4</text><text x="174" y="-12">−2</text>
+    <text x="226" y="-12">0</text><text x="278" y="-12">2</text>
+  </g>
+
+  <g stroke="var(--alt)" stroke-width="1.2" fill="none">
+    <path d="M122 -92 L122 -100 M174 -92 L174 -100
+             M226 -92 L226 -100 M278 -92 L278 -100"></path>
+  </g>
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--alt)"
+     text-anchor="middle">
+    <text x="122" y="-106">f(e₁)</text><text x="174" y="-106">f(e₂)</text>
+    <text x="226" y="-106">f(e₃)</text><text x="278" y="-106">f(e₄)</text>
+  </g>
+
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--live)"
+     text-anchor="end">
+    <text x="80" y="-60">u₁</text>
+    <text x="80" y="-34">u₂</text>
+    <text x="80" y="-8">u₃</text>
+  </g>
+
+  <g font-family="var(--mono)" font-size="11" fill="var(--faint)">
+    <text x="180" y="30" text-anchor="middle">4 columnas · dim del espacio de partida</text>
+    <text x="330" y="-58" text-anchor="start">3 filas</text>
+    <text x="330" y="-42" text-anchor="start">dim del</text>
+    <text x="330" y="-26" text-anchor="start">espacio de</text>
+    <text x="330" y="-10" text-anchor="start">llegada</text>
+  </g>
+  <g font-family="var(--mono)" font-size="11.5" fill="var(--live)">
+    <text x="180" y="52" text-anchor="middle">la columna sombreada es f(e₁)</text>
+  </g>
+</svg>
+<figcaption>
+Las imágenes van en columna y no en fila por un motivo mecánico: así el producto
+A·x recorre las columnas con los coeficientes de x, que es exactamente escribir
+f(x) como combinación de las imágenes.
+</figcaption>
+</figure>
+
+**Y esa es la respuesta a «¿por qué columnas?»**: porque al multiplicar
+$A\overline{x}$, cada coordenada de $\overline{x}$ multiplica a una **columna**
+entera. Poner las imágenes en fila da una matriz traspuesta que no reproduce
+$f$.
+
+<ErrorTipico titulo="Escribir la matriz traspuesta">
+Es el error más repetido del ejercicio 2, y no salta solo: la matriz traspuesta
+tiene el mismo tamaño cuando es cuadrada, el mismo rango, y hasta el mismo
+determinante. Puede llegar hasta el final sin que nada chirríe.
+
+La comprobación cuesta tres multiplicaciones y hay que hacerla siempre:
+**sustituye los datos del enunciado**. Si el enunciado dice
+$f\left(0,1,0\right)=\left(0,1,1\right)$, entonces
+$A\left(0,1,0\right)^{T}$ tiene que dar $\left(0,1,1\right)$ exactamente. Si no
+lo da, la has traspuesto.
+</ErrorTipico>
+
+### Cuando los datos vienen cruzados
+
+El examen casi nunca te da directamente las imágenes de la base canónica. Te da
+tres cosas mezcladas y hay que despejarlas:
+
+$$
+f\left(1,1,0\right)=\left(2,0,1\right),
+\quad
+f\left(0,2,-1\right)=\left(0,2,-3\right),
+\quad
+f\left(1,2,0\right)=\left(3,-1,3\right)
+$$
+
+El procedimiento es siempre el mismo, y hay un paso previo que no se puede
+saltar:
+
+1. **Comprobar que los vectores de partida forman base.** Si no lo forman, los
+   datos o son insuficientes o son contradictorios. Un determinante.
+2. Combinar los datos para llegar a $f\left(\overline{e}_{1}\right)$,
+   $f\left(\overline{e}_{2}\right)$, … Se buscan restas:
+   $\left(1,2,0\right)-\left(1,1,0\right)=\left(0,1,0\right)$, así que
+   $f\left(0,1,0\right)$ sale restando las dos imágenes.
+3. Poner las imágenes en columna.
+4. **Comprobar contra los datos originales.**
+
+Y hay una variante que aparece y despista: en lugar de una tercera imagen, el
+enunciado da el **núcleo**. Eso también es un dato de imagen —lo que está en el
+núcleo va al $\overline{0}$— y se usa igual.
+
+$$
+\operatorname{Ker}\left(f\right)
+=\left\{\left(x,y,z\right)\;/\;x=y,\;z=0\right\}
+=L\left(\left\{\left(1,1,0\right)\right\}\right)
+\;\Longrightarrow\;
+f\left(1,1,0\right)=\overline{0}
+$$
+
+## El núcleo: qué es y qué decide
+
+$$
+\operatorname{Ker}\left(f\right)
+=\left\{\overline{x}\in V\;/\;f\left(\overline{x}\right)=\overline{0}\right\}
+$$
+
+Es **subespacio de $V$**, y la demostración es de una línea: contiene al
+$\overline{0}$ porque $f\left(\overline{0}\right)=\overline{0}$, y si dos
+vectores van a cero, cualquier combinación suya también, por linealidad. Esa
+demostración cae tal cual.
+
+Y lo que hace importante al núcleo es este teorema:
+
+$$
+f\text{ inyectiva}
+\iff
+\operatorname{Ker}\left(f\right)=\left\{\overline{0}\right\}
+$$
+
+**Se demuestra restando**, igual que la unicidad de las coordenadas del tema 1.
+Si $f\left(\overline{x}\right)=f\left(\overline{y}\right)$, la linealidad da
+$f\left(\overline{x}-\overline{y}\right)=\overline{0}$, así que
+$\overline{x}-\overline{y}$ está en el núcleo; si el núcleo solo tiene al cero,
+$\overline{x}=\overline{y}$.
+
+**En la práctica**, calcular el núcleo es resolver $A\overline{x}=\overline{0}$.
+Y hay un atajo que ahorra el sistema: **cada relación entre columnas es un
+vector del núcleo, escrito directamente**. Si la tercera columna es
+$-c_{1}+3c_{2}$, entonces $-c_{1}+3c_{2}-c_{3}=\overline{0}$ y el vector
+$\left(-1,3,-1\right)$ está en el núcleo.
+
+## La imagen: la generan las columnas
+
+$$
+\operatorname{Im}\left(f\right)
+=\left\{f\left(\overline{x}\right)\;/\;\overline{x}\in V\right\}
+$$
+
+Es subespacio del espacio de llegada, y el teorema que lo hace calculable es
+este: **si $\left\{\overline{u}_{i}\right\}$ genera $V$, entonces
+$\left\{f\left(\overline{u}_{i}\right)\right\}$ genera
+$\operatorname{Im}f$**. Aplicado a la base canónica:
+
+> La imagen está generada por **las columnas de la matriz**. Su dimensión es el
+> **rango**.
+
+Así que para dar una base de la imagen no hay que resolver nada: se escogen
+tantas columnas independientes como diga el rango y se acabó. Elegir las que
+parezcan más cómodas es legítimo; cualquier elección de columnas independientes
+es una base válida.
+
+## La fórmula de las dimensiones, y lo que decide antes de calcular
+
+$$
+\dim V=\dim\operatorname{Ker}\left(f\right)
++\dim\operatorname{Im}\left(f\right)
+$$
+
+<figure class="figura-examen">
+<svg viewBox="-20 -128 440 208" role="img" width="440" height="208"
+     aria-labelledby="alg2dim-t alg2dim-d">
+  <title id="alg2dim-t">El espacio de partida se reparte entre el núcleo y lo
+  que llega a la imagen</title>
+  <desc id="alg2dim-d">Dos barras horizontales dibujadas a la misma escala, una
+  unidad por dimensión. La de arriba representa el espacio de partida, de
+  dimensión cuatro, partida en dos trozos iguales: uno de dimensión dos marcado
+  como núcleo, y otro de dimensión dos que es lo que sí llega. La de abajo
+  representa el espacio de llegada, de dimensión tres, y dentro de ella hay un
+  trozo sombreado de dimensión dos que es la imagen, más un hueco de dimensión
+  uno que la imagen no alcanza. Una flecha va del trozo no nulo de la primera
+  barra al trozo sombreado de la segunda; otra, de puntos, va del núcleo a un
+  punto marcado como cero.</desc>
+
+  <g stroke="var(--rule)" stroke-width="1.4" fill="none">
+    <path d="M20 -110 L340 -110 L340 -78 L20 -78 Z"></path>
+    <path d="M20 -14 L260 -14 L260 18 L20 18 Z"></path>
+  </g>
+
+  <g fill="var(--flag-soft)" stroke="var(--flag)" stroke-width="1.4">
+    <rect x="20" y="-110" width="160" height="32"></rect>
+  </g>
+  <g fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.4">
+    <rect x="20" y="-14" width="160" height="32"></rect>
+  </g>
+
+  <g stroke="var(--live)" stroke-width="1.6" fill="none"
+     marker-end="url(#alg2p)">
+    <path d="M258 -74 L150 -22"></path>
+  </g>
+  <g stroke="var(--flag)" stroke-width="1.4" stroke-dasharray="4 3" fill="none"
+     marker-end="url(#alg2f)">
+    <path d="M100 -74 L100 -26"></path>
+  </g>
+  <defs>
+    <marker id="alg2p" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6"
+            markerHeight="6" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--live)"></path>
+    </marker>
+    <marker id="alg2f" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6"
+            markerHeight="6" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--flag)"></path>
+    </marker>
+  </defs>
+  <g fill="var(--flag)">
+    <circle cx="100" cy="-20" r="3.4"></circle>
+  </g>
+
+  <g font-family="var(--mono)" font-size="11" text-anchor="middle">
+    <text x="100" y="-90" fill="var(--flag)">Ker · 2</text>
+    <text x="260" y="-90" fill="var(--graphite)">lo que sí llega · 2</text>
+    <text x="100" y="6" fill="var(--live)">Im · 2</text>
+    <text x="112" y="-18" fill="var(--flag)" text-anchor="start">0</text>
+  </g>
+  <g font-family="var(--mono)" font-size="10" fill="var(--faint)"
+     text-anchor="middle">
+    <text x="220" y="6">no llega</text>
+  </g>
+  <g font-family="var(--mono)" font-size="10.5" fill="var(--faint)">
+    <text x="346" y="-90" text-anchor="start">V · dim 4</text>
+    <text x="266" y="-2" text-anchor="start">W</text>
+    <text x="266" y="14" text-anchor="start">dim 3</text>
+  </g>
+  <g font-family="var(--mono)" font-size="12.5" fill="var(--ink)">
+    <text x="180" y="54" text-anchor="middle">2 + 2 = 4</text>
+  </g>
+</svg>
+<figcaption>
+Todo lo que cae en el núcleo se aplasta contra el cero, y lo que sobra es
+exactamente lo que llega a la imagen: por eso las dos dimensiones suman la del
+espacio de partida. Y como la imagen se queda corta dentro de W, esta f no es
+sobreyectiva; como el núcleo no es nulo, tampoco es inyectiva.
+</figcaption>
+</figure>
+
+Esta fórmula es la que más rinde del tema, porque **decide cosas antes de
+calcular nada**:
+
+| lo que se sabe | lo que se sigue |
+|---|---|
+| $\dim V>\dim W$ | $f$ **no puede** ser inyectiva |
+| $\dim V<\dim W$ | $f$ **no puede** ser sobreyectiva |
+| $f$ endomorfismo | inyectiva $\iff$ sobreyectiva $\iff$ biyectiva |
+
+La tercera fila es la que más se usa y la que más se falla: **en un
+endomorfismo las dos propiedades van siempre juntas**. Si el núcleo no es nulo,
+la imagen pierde exactamente esas dimensiones y ya no puede llenar el espacio de
+llegada, que tiene la misma dimensión que el de partida. Así que basta comprobar
+una: si $\det A=0$, no es ni lo uno ni lo otro.
+
+Y al revés: para una $f:\mathbb{R}^{4}\to\mathbb{R}^{3}$, la inyectividad está
+descartada **antes de leer los datos**.
+
+## Clasificar: los cinco nombres
+
+| nombre | qué es |
+|---|---|
+| **monomorfismo** | lineal e inyectiva |
+| **epimorfismo** | lineal y sobreyectiva |
+| **isomorfismo** | lineal y biyectiva |
+| **endomorfismo** | lineal de un espacio **en sí mismo** |
+| **automorfismo** | endomorfismo biyectivo |
+
+Los dos últimos hablan de **dónde** va la aplicación; los tres primeros, de
+**cómo** es. Una misma $f$ puede ser endomorfismo y monomorfismo a la vez, y
+entonces es automorfismo.
+
+En términos de rango, con $r=\dim\operatorname{Im}f$:
+
+$$
+f\text{ inyectiva}\iff r=\dim V,
+\qquad
+f\text{ sobreyectiva}\iff r=\dim W
+$$
+
+## Los dos teoremas de libre y ligado
+
+Aparecen en las demostraciones del examen y se confunden entre sí, así que van
+juntos y con la dirección marcada:
+
+| hipótesis | conclusión | ¿hace falta inyectividad? |
+|---|---|---|
+| $\left\{\overline{u}_{i}\right\}$ **ligado** | $\left\{f\left(\overline{u}_{i}\right)\right\}$ ligado | **no** |
+| $\left\{f\left(\overline{u}_{i}\right)\right\}$ **libre** | $\left\{\overline{u}_{i}\right\}$ libre | **no** |
+| $\left\{\overline{u}_{i}\right\}$ **libre** y $f$ inyectiva | $\left\{f\left(\overline{u}_{i}\right)\right\}$ libre | **sí** |
+
+La tercera es la que cae, y la inyectividad es justo el paso que no se puede
+saltar. El contraejemplo cabe en una línea: **la aplicación nula es lineal** y
+manda cualquier familia libre a
+$\left\{\overline{0},\dots,\overline{0}\right\}$, que es lo menos libre que hay.
+
+## Lo que hay que llevar sabido
+
+1. ¿Es lineal? Si $f\left(\overline{0}\right)\neq\overline{0}$, **no**, y se
+   acabó. Si hay variables multiplicadas, un contraejemplo con números.
+2. La matriz lleva las imágenes **en columnas**. Y se comprueba sustituyendo los
+   datos del enunciado.
+3. La hoja de teoría de este tema **no** define la matriz asociada: está en la
+   de Matrices, apartado 3.2.
+4. Si el enunciado da el núcleo, eso es un dato de imagen más: lo que está en el
+   núcleo va al $\overline{0}$.
+5. $\operatorname{Ker}f$ es subespacio, y se demuestra en una línea con la
+   linealidad.
+6. Inyectiva $\iff$ núcleo nulo. Se demuestra restando.
+7. La imagen la generan **las columnas**; su dimensión es el rango.
+8. $\dim V=\dim\operatorname{Ker}+\dim\operatorname{Im}$, siempre.
+9. En un **endomorfismo**, inyectiva $\iff$ sobreyectiva $\iff$ $\det A\neq0$.
+10. Cada relación entre columnas es un vector del núcleo, escrito directamente.
