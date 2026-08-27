@@ -526,6 +526,36 @@ sistema— pero nunca como el ejercicio. Eso no significa que no haya que
 escribirlo; significa que en la ruta va como **suelo** y no como bloque de
 rendimiento, que es exactamente la distinción que §14 hace.
 
+### Los temas escritos: 2 de 7
+
+| | tema 1 | tema 2 |
+|---|---|---|
+| | espacios vectoriales | aplicaciones lineales |
+| palabras de prosa | **2.938** | **2.255** |
+| figuras | 2 | 2 |
+| ejercicios | 6 | 6 |
+| de ellos, ejemplos propios (§08) | 3 | 3 |
+| pasos guiados | 22 | 23 |
+
+> El commit que publicó el tema 2 dijo «2.900 palabras» y son **2.255**. El
+> número salió de una estimación al escribir el mensaje, no de contar, y es
+> justo lo que §13.1 prohíbe. Queda corregido aquí, que es donde se publica de
+> verdad; el mensaje de commit no se reescribe porque reescribir historia ya
+> empujada cuesta más de lo que arregla, y la corrección tiene que quedar
+> **visible**, no borrada.
+
+Los seis ejercicios de cada tema son **tres ejemplos de entrada nuestros** —que
+existen porque el boletín y el examen empiezan los dos por encima del nivel de
+quien acaba de leer la teoría— y **tres del boletín oficial**, reproducidos
+verbatim.
+
+**Un hallazgo del tema 2 que conviene no perder:** la hoja de teoría de
+aplicaciones lineales **no define la matriz asociada**. Sus seis apartados son
+conceptos básicos, definición y propiedades, núcleo, imagen, dimensiones y
+existencia. La matriz asociada está en la hoja de **Matrices**, apartado 3.2 —
+y el ejercicio 2 del examen la pide las ocho veces. Está dicho en la prosa,
+porque explica una sensación de estar perdido que no es culpa del alumno.
+
 **Y no es Cálculo con otros números.** Medido sobre los ocho PDF, antes de
 transcribir ninguno:
 

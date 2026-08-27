@@ -1203,11 +1203,37 @@ La fase más grande, y por eso va partida en tres. Cada tema necesita prosa que
 responda a preguntas, ejemplos introductorios propios (§08), al menos una figura
 que responda a una pregunta (§13) y ejercicios del boletín.
 
-- **Fase 4 · temas 1 y 2**, espacios vectoriales y aplicaciones lineales. Van
-  primero porque son los ejercicios 1 y 2 de los ocho exámenes, sin excepción.
+- **~~Fase 4 · temas 1 y 2~~**, espacios vectoriales y aplicaciones lineales.
+  **TERMINADA el 27 de agosto de 2026.** Iban primero porque son los ejercicios
+  1 y 2 de los ocho exámenes, sin excepción. 5.193 palabras de prosa entre los
+  dos, 4 figuras, 12 ejercicios —6 de ellos ejemplos de entrada nuestros— y 45
+  pasos guiados. Las cifras exactas por tema están en `docs/como-vamos.md`.
 - **Fase 5 · temas 3, 4 y 5**, matrices, determinantes y sistemas. Son el
   aparato de cálculo que los otros cuatro usan.
 - **Fase 6 · temas 6 y 7**, euclídeos y diagonalización, que cierran el examen.
+
+**Lo que la fase 4 ha enseñado, y que las dos siguientes heredan:**
+
+- **La ruta `[tema].astro` llevaba `calculo` y `fluidos` escritos a fuego.** Con
+  un tema de Álgebra escrito, el build **no falló**: se saltó la asignatura en
+  silencio y la página no se publicó. Es la misma forma exacta del fallo que
+  tenía el guardián de convocatorias huérfanas de `verify.mjs`, y van dos. La
+  lección no es «arregla el `if`»: es que **una lista de asignaturas escrita
+  dentro de una condición no falla, se salta**. Cuando aparezca una tercera,
+  buscarla por ahí.
+- **`base.css` no decía nada sobre las tablas**, y el sitio llevaba cinco temas
+  y ochenta y ocho exámenes usándolas. Se descubrió mirando una captura, no con
+  un guardián.
+- **Los boletines caen en la trampa de §17**: están compuestos con el editor de
+  ecuaciones de Word, y `pdftotext` se come flechas, igualdades y pertenencias.
+  Los enunciados del boletín se leen de la página renderizada, como los
+  exámenes.
+- **Una figura que enseña un caso imposible «a propósito» es una trampa, no una
+  lección.** Escribí la del teorema de las dimensiones representando algo que no
+  puede pasar, con el pie diciendo «el dibujo miente». Quien pasa la vista por
+  encima se lleva lo contrario de lo que hay que aprender. Rehecha con un caso
+  real. **Regla: una figura de este sitio nunca representa algo falso, ni
+  aunque lo confiese.**
 
 ## Fase 7 · Las dos rutas
 
