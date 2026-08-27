@@ -15,11 +15,24 @@ export async function getStaticPaths() {
   const catalogo = await getCollection('catalogo');
 
   /** Se piden solo las colecciones que hagan falta: pedir una vacía ensucia
-   *  la salida del build con avisos que no significan nada. */
-  const cache = new Map<string, CollectionEntry<'calculo' | 'fluidos'>[]>();
+   *  la salida del build con avisos que no significan nada.
+   *
+   *  La lista va aquí, en una constante con nombre, y no dispersa en un `if`.
+   *  Cuando solo existían `calculo` y `fluidos` estaba escrita como
+   *  `id !== 'calculo' && id !== 'fluidos'`, y al escribir el primer tema de
+   *  Álgebra el build **no falló**: se saltó la asignatura entera en silencio
+   *  y la página no se publicó. Es la misma forma exacta del fallo que tenía
+   *  el guardián de convocatorias huérfanas de `verify.mjs`, y por eso se
+   *  arregla aquí arriba y no con un `||` más (§01). */
+  const CON_TEMAS = ['calculo', 'fluidos', 'algebra'] as const;
+  type ConTemas = (typeof CON_TEMAS)[number];
+  const tieneTemas = (id: string): id is ConTemas =>
+    (CON_TEMAS as readonly string[]).includes(id);
+
+  const cache = new Map<string, CollectionEntry<ConTemas>[]>();
   const coleccionDe = async (id: string) => {
     if (!cache.has(id)) {
-      if (id !== 'calculo' && id !== 'fluidos') return null;
+      if (!tieneTemas(id)) return null;
       cache.set(id, await getCollection(id));
     }
     return cache.get(id) ?? null;
@@ -30,6 +43,14 @@ export async function getStaticPaths() {
   for (const asignatura of catalogo) {
     const hechos = asignatura.data.temas.filter((t) => t.hecho);
     if (hechos.length === 0) continue;
+
+    if (!tieneTemas(asignatura.id)) {
+      throw new Error(
+        `El catálogo de "${asignatura.id}" marca temas como hechos, pero esa asignatura ` +
+          `no está en CON_TEMAS, unas líneas más arriba de este fichero. Añádela ahí y ` +
+          `declara su colección en content.config.ts, o pon hecho: false.`,
+      );
+    }
 
     const coleccion = await coleccionDe(asignatura.id);
     if (!coleccion || coleccion.length === 0) {

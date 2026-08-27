@@ -1,0 +1,501 @@
+---
+asignatura: algebra
+tema: 1
+titulo: Espacios vectoriales
+descripcion: Subespacios, bases y coordenadas. Y por qué lo primero que se mira siempre es si el cero está dentro.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado de exámenes y del boletín de problemas de Álgebra · UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Un espacio vectorial no es una lista de flechas. Es un conjunto donde puedes
+hacer dos cosas —**sumar** dos elementos y **multiplicar uno por un número**— y
+donde esas dos operaciones se portan bien. Nada más. Los elementos pueden ser
+flechas, pero también polinomios, matrices o funciones, y el tema entero
+consiste en darse cuenta de que da igual lo que sean.
+
+Y hay una pregunta que decide la mitad de los ejercicios del examen: **¿esto que
+me han dado es un subespacio?** De las ocho convocatorias publicadas de esta
+asignatura, **siete** te piden demostrar que algo lo es. Vale la pena aprender a
+contestarla en diez segundos cuando la respuesta es «no», y en tres líneas
+cuando es «sí».
+
+## Qué es un espacio vectorial, y por qué la definición es tan larga
+
+Un espacio vectorial sobre $K$ —donde $K$ es $\mathbb{R}$ o $\mathbb{C}$— es un
+conjunto $V$ con dos operaciones:
+
+- una **interna**, la suma, que a dos elementos de $V$ les asigna otro de $V$;
+- una **externa**, el producto por escalar, que a un número de $K$ y un elemento
+  de $V$ les asigna otro de $V$.
+
+Y ocho propiedades que tienen que cumplirse. Cinco para la suma —asociativa,
+conmutativa, neutro, simétrico, y que el resultado se quede dentro— y tres para
+el producto, más la que las mezcla:
+
+$$
+\alpha\cdot\left(\overline{x}+\overline{y}\right)
+=\alpha\cdot\overline{x}+\alpha\cdot\overline{y}
+\qquad
+\left(\alpha+\beta\right)\cdot\overline{x}
+=\alpha\cdot\overline{x}+\beta\cdot\overline{x}
+$$
+
+$$
+\alpha\cdot\left(\beta\cdot\overline{x}\right)
+=\left(\alpha\beta\right)\cdot\overline{x}
+\qquad
+1\cdot\overline{x}=\overline{x}
+$$
+
+**La lista es larga porque es una lista de comprobaciones**, y así es como se
+usa. Cuando el examen te da un conjunto con operaciones raras —«en
+$\mathbb{R}\times\mathbb{R}$ definimos $\alpha\cdot\left(x,y\right)
+=\left(\alpha^{2}x,\alpha^{2}y\right)$»— no te está pidiendo que entiendas nada
+profundo: te está pidiendo que recorras la lista hasta encontrar la que falla.
+
+Y casi siempre falla una de estas dos:
+
+| propiedad | cómo se rompe |
+|---|---|
+| $1\cdot\overline{x}=\overline{x}$ | el producto «pierde» el vector |
+| $\left(\alpha+\beta\right)\overline{x}=\alpha\overline{x}+\beta\overline{x}$ | el escalar entra elevado al cuadrado, o cambiado de sitio |
+
+Con $\alpha\cdot\left(x,y\right)=\left(\alpha^{2}x,\alpha^{2}y\right)$, por
+ejemplo, la última se cumple —$1^{2}=1$— pero la distributiva no:
+$\left(\alpha+\beta\right)^{2}$ no es $\alpha^{2}+\beta^{2}$. Un contraejemplo
+con $\alpha=\beta=1$ lo liquida en una línea.
+
+<ErrorTipico titulo="Comprobar las ocho propiedades una por una">
+Cuando la respuesta es «no es espacio vectorial», **basta con una**. Encuentra
+la que falla, escribe un contraejemplo con números concretos y termina. Recorrer
+las ocho cuando ya has visto que la segunda se rompe no da más puntos y te come
+el tiempo de los otros tres ejercicios.
+
+Cuando la respuesta es «sí lo es», entonces sí hay que recorrerlas — pero en el
+examen de esta asignatura eso casi nunca pasa con operaciones inventadas: pasa
+con subespacios, y ahí hay un atajo que veremos ahora mismo.
+</ErrorTipico>
+
+Los ejemplos que vas a usar todo el curso son cuatro, y conviene tenerlos en la
+cabeza desde el principio porque el examen los mezcla:
+
+| espacio | quiénes son sus vectores | dimensión |
+|---|---|---|
+| $\mathbb{R}^{n}$ | listas de $n$ números | $n$ |
+| $\mathcal{M}_{m\times n}\left(\mathbb{R}\right)$ | matrices | $m\cdot n$ |
+| $P_{n}$ | polinomios de grado $\leq n$ | $n+1$ |
+| funciones de $\mathbb{R}$ en $\mathbb{R}$ | funciones | infinita |
+
+## Subespacio: la comprobación que cabe en tres líneas
+
+Un subespacio de $V$ es un subconjunto $S$ que, con las mismas operaciones,
+vuelve a ser espacio vectorial. Dicho así parece que hay que comprobar las ocho
+propiedades otra vez, y **no hace falta ninguna**: las hereda todas de $V$. Lo
+único que puede fallar es que al operar te salgas de $S$.
+
+De ahí el teorema que se usa siempre:
+
+$$
+S\subset V\text{ es subespacio}
+\iff
+\begin{cases}
+\;\forall\,\overline{x},\overline{y}\in S:\;
+\overline{x}+\overline{y}\in S\\[4pt]
+\;\forall\,\alpha\in K,\;\forall\,\overline{x}\in S:\;
+\alpha\cdot\overline{x}\in S
+\end{cases}
+$$
+
+y $S$ tiene que ser **no vacío**. Las dos condiciones se pueden juntar en una
+sola, que es como se escribe en el examen para ahorrar espacio:
+
+$$
+\forall\,\alpha,\beta\in K,\;\forall\,\overline{x},\overline{y}\in S:\quad
+\alpha\overline{x}+\beta\overline{y}\in S
+$$
+
+### Y antes de eso, diez segundos: ¿está el cero?
+
+Todo subespacio contiene al vector nulo. Es consecuencia inmediata de la segunda
+condición con $\alpha=0$. Así que **lo primero que se mira, siempre, es si el
+cero está dentro**, porque cuando no lo está el ejercicio se acaba ahí.
+
+<figure class="figura-examen">
+<svg viewBox="-20 -142 420 226" role="img" width="420" height="226"
+     aria-labelledby="alg1sub-t alg1sub-d">
+  <title id="alg1sub-t">Una recta que pasa por el origen es subespacio; una
+  paralela que no pasa, no</title>
+  <desc id="alg1sub-d">Dos dibujos con los mismos ejes y dos rectas paralelas.
+  En el de la izquierda la recta pasa por el origen: se marcan dos de sus
+  puntos y su suma, y la suma cae sobre la misma recta. En el de la derecha la
+  recta es paralela pero no pasa por el origen: se marcan otros dos puntos
+  suyos y su suma, y la suma queda por encima de la recta, fuera de ella. El
+  origen tampoco pertenece a esa segunda recta.</desc>
+
+  <g stroke="var(--rule)" stroke-width="1" fill="none">
+    <path d="M10 -118 L10 32 M-8 10 L176 10"></path>
+    <path d="M230 -118 L230 32 M212 10 L396 10"></path>
+  </g>
+
+  <g stroke="var(--live)" stroke-width="2" fill="none">
+    <path d="M-10 20 L168 -69"></path>
+  </g>
+  <g fill="var(--live)">
+    <circle cx="10" cy="10" r="4"></circle>
+    <circle cx="50" cy="-10" r="3.6"></circle>
+    <circle cx="90" cy="-30" r="3.6"></circle>
+  </g>
+  <g fill="var(--alt)">
+    <circle cx="130" cy="-50" r="5"></circle>
+  </g>
+
+  <g stroke="var(--flag)" stroke-width="2" fill="none">
+    <path d="M212 -11 L390 -100"></path>
+  </g>
+  <g fill="var(--flag)">
+    <circle cx="270" cy="-40" r="3.6"></circle>
+    <circle cx="310" cy="-60" r="3.6"></circle>
+  </g>
+  <g stroke="var(--alt)" stroke-width="1.3" stroke-dasharray="3 3" fill="none">
+    <path d="M350 -80 L350 -108"></path>
+  </g>
+  <g fill="var(--alt)">
+    <circle cx="350" cy="-110" r="5"></circle>
+  </g>
+  <g fill="none" stroke="var(--faint)" stroke-width="1.2" stroke-dasharray="3 3">
+    <circle cx="230" cy="10" r="6"></circle>
+  </g>
+
+  <g font-size="11.5" font-family="var(--mono)">
+    <text x="10" y="-128" fill="var(--live)" text-anchor="start">sí es subespacio</text>
+    <text x="230" y="-128" fill="var(--flag)" text-anchor="start">no lo es</text>
+    <text x="136" y="-44" fill="var(--alt)" text-anchor="start">suma</text>
+    <text x="342" y="-108" fill="var(--alt)" text-anchor="end">suma</text>
+    <text x="342" y="-86" fill="var(--faint)" text-anchor="end">se sale</text>
+    <text x="240" y="28" fill="var(--faint)" text-anchor="start">el 0 no está</text>
+  </g>
+</svg>
+<figcaption>
+La única diferencia entre las dos rectas es un desplazamiento. Y basta: a la
+izquierda la suma de dos puntos vuelve a caer sobre la recta; a la derecha se
+sale por arriba, porque al sumar los dos vectores se suman también las dos
+«alturas».
+</figcaption>
+</figure>
+
+Con esto, media docena de casos del boletín se resuelven de un vistazo:
+
+| conjunto | ¿subespacio? | por qué |
+|---|---|---|
+| $\left\{\left(x,y,z\right)/x+y+z=0\right\}$ | **sí** | ecuación homogénea |
+| $\left\{\left(x,y,z,t\right)/x+2y=7\right\}$ | **no** | el $7$ deja fuera al cero |
+| $\left\{\left(x,y,2\right)/x,y\in\mathbb{R}\right\}$ | **no** | la tercera coordenada nunca es $0$ |
+| $\left\{\left(a,b,a,b\right)/a,b\in\mathbb{Z}\right\}$ | **no** | $\mathbb{Z}$ no es cuerpo: $\tfrac{1}{2}\cdot\left(1,1,1,1\right)$ se sale |
+| $\left\{\left(x,y,z\right)/x^{2}+y^{2}+z^{2}\geq1\right\}$ | **no** | el cero no cumple la desigualdad |
+
+**La regla que resume la tabla:** un conjunto definido por **ecuaciones lineales
+igualadas a cero** es subespacio, y cualquier otra cosa —un término
+independiente, un cuadrado, una desigualdad, una restricción sobre a qué
+conjunto de números pertenecen los parámetros— casi seguro que no.
+
+<ErrorTipico titulo="«Los parámetros son enteros, pero la suma también lo es»">
+Es verdad que la suma de dos vectores de coordenadas enteras vuelve a tener
+coordenadas enteras. Pero un subespacio tiene que aguantar el producto por
+**cualquier** escalar del cuerpo, y el cuerpo aquí es $\mathbb{R}$: multiplicar
+por $\tfrac{1}{2}$ te saca del conjunto.
+
+Este error aparece en el boletín dos veces seguidas —con $\mathbb{Z}$ y con
+$\mathbb{Q}$— porque es cómodo de cometer: la propiedad que falla es la de la
+operación externa, y es en la que menos se piensa.
+</ErrorTipico>
+
+## Generar: qué significa $L\left(G\right)$
+
+Dado un puñado de vectores $G=\left\{\overline{u}_{1},\dots,\overline{u}_{n}
+\right\}$, su **clausura lineal** $L\left(G\right)$ es el conjunto de todas sus
+combinaciones lineales:
+
+$$
+L\left(G\right)=\left\{\alpha_{1}\overline{u}_{1}
++\alpha_{2}\overline{u}_{2}+\dots+\alpha_{n}\overline{u}_{n}
+\;/\;\alpha_{i}\in K\right\}
+$$
+
+Y aquí hay un atajo que ahorra media demostración en el examen: **$L\left(G\right)$
+es siempre subespacio**, sea cual sea $G$. Así que si consigues escribir tu
+conjunto como un generado, ya está demostrado que es subespacio y no hay nada
+que comprobar.
+
+Es exactamente lo que se hace con los subespacios de matrices, que caen en
+**cinco** de las ocho convocatorias:
+
+$$
+S=\left\{A\in\mathcal{M}_{2\times2}\left(\mathbb{R}\right)
+\;/\;\operatorname{traza}\left(A\right)=0\right\}
+=\left\{\begin{pmatrix}a&b\\c&-a\end{pmatrix}\right\}
+$$
+
+$$
+=L\left(\left\{
+\begin{pmatrix}1&0\\0&-1\end{pmatrix},
+\begin{pmatrix}0&1\\0&0\end{pmatrix},
+\begin{pmatrix}0&0\\1&0\end{pmatrix}\right\}\right)
+$$
+
+Una sola línea, y de regalo salen la base y la dimensión, que es justo lo que el
+enunciado pide a continuación.
+
+**El procedimiento, en tres pasos.** Sirve para matrices, para polinomios y para
+$\mathbb{R}^{n}$ dado por ecuaciones:
+
+1. Escribe el elemento genérico del conjunto, con parámetros libres.
+2. Sepáralo como suma de «parámetro × algo».
+3. Esos «algos» son la base. Cuántos hay es la dimensión.
+
+## Libre, ligado, y qué se está preguntando de verdad
+
+Una familia $\left\{\overline{u}_{1},\dots,\overline{u}_{n}\right\}$ es **libre**
+si la única forma de que una combinación suya dé el vector nulo es que todos los
+coeficientes sean cero:
+
+$$
+\alpha_{1}\overline{u}_{1}+\dots+\alpha_{n}\overline{u}_{n}=\overline{0}
+\;\Longrightarrow\;
+\alpha_{1}=\dots=\alpha_{n}=0
+$$
+
+Si hay otra forma —con algún coeficiente distinto de cero— la familia es
+**ligada**.
+
+Esa definición se recuerda mal porque se recuerda como una fórmula. Lo que dice
+en castellano es: **ninguno de estos vectores sobra**. Y el teorema que lo
+traduce lo dice todavía más claro:
+
+> Una familia es ligada si y solo si **alguno** de sus vectores es combinación
+> lineal de los demás.
+
+<ErrorTipico titulo="Confundir «libre» con «base»">
+Una familia libre garantiza que lo que se escriba con ella se escribe de **una
+sola manera**. No garantiza que se pueda escribir todo.
+
+Para ser base hacen falta las dos cosas: **libre** y **sistema generador**. En
+$\mathbb{R}^{3}$, la familia $\left\{\left(1,0,0\right)\right\}$ es libre y solo
+genera una recta.
+
+La confusión aparece en el examen con esta forma exacta: se demuestra la
+unicidad de la expresión —que cae en **tres** de las ocho convocatorias— y se
+concluye «luego es base». No: se concluye «luego los coeficientes son únicos».
+</ErrorTipico>
+
+Cuatro propiedades que se usan sin pensar y conviene tener a mano:
+
+1. En una familia libre **ningún vector es el nulo**. Si lo fuera,
+   $1\cdot\overline{0}=\overline{0}$ ya sería una combinación no trivial.
+2. Un solo vector no nulo forma familia libre.
+3. Si a una familia ligada le añades vectores, sigue ligada.
+4. Todo subconjunto de una familia libre es libre.
+
+### El teorema fundamental, y para qué sirve
+
+Si $F$ es sistema generador de $V$ con $n$ vectores y $G$ es libre con $m$,
+entonces $m\leq n$. Y además puedes **cambiar** los vectores de $G$ por $m$ de
+los de $F$ y seguir generando.
+
+Suena abstracto y tiene una consecuencia muy concreta: **en un espacio de
+dimensión $n$, más de $n$ vectores están siempre ligados**. Cuando el examen te
+da cuatro vectores en $\mathbb{R}^{3}$ y pregunta si son independientes, la
+respuesta es «no» antes de escribir nada.
+
+## Base, dimensión y coordenadas
+
+Una **base** es una familia que es libre y sistema generador a la vez. Todas las
+bases de un mismo espacio tienen el mismo número de vectores, y ese número es la
+**dimensión**.
+
+Y de ahí sale el teorema del que cuelga todo lo demás:
+
+$$
+\forall\,\overline{x}\in V\;\;
+\exists\,!\;\left(\alpha_{1},\dots,\alpha_{n}\right)\in K^{n}\;/\;
+\overline{x}=\alpha_{1}\overline{e}_{1}+\dots+\alpha_{n}\overline{e}_{n}
+$$
+
+Esos $\alpha_{i}$ son las **coordenadas de $\overline{x}$ en la base $B$**, y el
+«$\exists\,!$» —existe **y es único**— es lo que hace que trabajar con
+coordenadas tenga sentido. Se pide en **seis** de las ocho convocatorias.
+
+**La unicidad se demuestra restando**, y es una demostración de cuatro líneas que
+cae tal cual:
+
+$$
+\overline{x}=\sum\alpha_{i}\overline{e}_{i}=\sum\beta_{i}\overline{e}_{i}
+\;\Longrightarrow\;
+\sum\left(\alpha_{i}-\beta_{i}\right)\overline{e}_{i}=\overline{0}
+\;\Longrightarrow\;
+\alpha_{i}=\beta_{i}
+$$
+
+El último paso es la definición de libre. Todo el peso lo lleva ahí, y por eso
+la hipótesis que se usa **no** es «$B$ es base», sino solo «$B$ es libre».
+
+### Completar una base
+
+Otro clásico: te dan una familia libre de $m$ vectores en un espacio de
+dimensión $n$, y te piden completarla hasta base. Siempre se puede, y el método
+que menos falla es el más tonto:
+
+> Añade vectores de la base canónica, uno a uno, y quédate con los que aumentan
+> el rango.
+
+Con un ejemplo: si tienes $\left\{\left(1,0,0,0\right),\left(2,1,1,0\right),
+\left(0,0,1,0\right)\right\}$ en $\mathbb{R}^{4}$, los tres tienen la cuarta
+coordenada nula, así que el que falta tiene que sacarte de ahí:
+$\left(0,0,0,1\right)$ y listo. **Mirar qué le falta a la familia es más rápido
+que calcular rangos**, y en el examen esa lectura suele estar a la vista.
+
+### Cambiar de base, y en qué sentido va cada cosa
+
+Esta es la parte que más se falla del tema, y no por difícil: por confundir el
+sentido. Si $P$ es la matriz que tiene por **columnas las coordenadas de los
+vectores de $B'$ escritos en $B$**, entonces
+
+| de dónde a dónde | qué se hace | coste |
+|---|---|---|
+| de $B'$ a $B$ | multiplicar por $P$ | inmediato |
+| de $B$ a $B'$ | resolver $P\overline{y}=\overline{x}$ | un sistema |
+
+El sentido barato es el que va **hacia la base vieja**, porque las columnas de
+$P$ ya están escritas en ella. El otro exige resolver.
+
+<ErrorTipico titulo="Multiplicar por P cuando había que resolver">
+Si te piden «las coordenadas de $\overline{x}$ en la base nueva» y $\overline{x}$
+te lo dan en la vieja, multiplicar por $P$ da un vector perfectamente
+presentable y **equivocado**.
+
+La comprobación cuesta diez segundos y la deberías hacer siempre: sustituye tu
+resultado en la combinación lineal y mira si sale el vector de partida. Si
+$\overline{x}\big|_{B'}=\left(-3,-5,2,2\right)$, entonces
+$-3\overline{v}_{1}-5\overline{v}_{2}+2\overline{v}_{3}+2\overline{v}_{4}$ tiene
+que dar exactamente $\overline{x}$.
+</ErrorTipico>
+
+## Suma e intersección: por qué $2+2$ no da $4$
+
+Dados dos subespacios $S$ y $T$ de $V$:
+
+- su **intersección** $S\cap T$ es siempre subespacio;
+- su **suma** $S+T=\left\{\overline{x}_{1}+\overline{x}_{2}\;/\;
+  \overline{x}_{1}\in S,\;\overline{x}_{2}\in T\right\}$ también.
+
+La **unión**, en cambio, casi nunca lo es, y merece la pena tener el
+contraejemplo memorizado porque cae como pieza trampa: en $\mathbb{R}^{2}$, la
+unión de los dos ejes contiene a $\left(1,0\right)$ y a $\left(0,1\right)$ pero
+no a su suma.
+
+Y la fórmula que ordena el apartado, que es **la de Grassmann**:
+
+$$
+\dim\left(S+T\right)=\dim S+\dim T-\dim\left(S\cap T\right)
+$$
+
+<figure class="figura-examen">
+<svg viewBox="-20 -140 442 220" role="img" width="442" height="220"
+     aria-labelledby="alg1gr-t alg1gr-d">
+  <title id="alg1gr-t">Dos planos distintos que pasan por el origen se cortan en
+  una recta</title>
+  <desc id="alg1gr-d">Dos paralelogramos que representan dos planos de un
+  espacio de tres dimensiones. Los dos pasan por el origen y se cruzan; su
+  intersección es la recta marcada en el centro. Cada plano tiene dimensión
+  dos, la recta común tiene dimensión uno, y la suma de los dos planos llena
+  todo el espacio, de dimensión tres.</desc>
+
+  <g fill="var(--live-soft)" stroke="var(--live)" stroke-width="1.6">
+    <path d="M40 -30 L200 -110 L340 -46 L180 34 Z"></path>
+  </g>
+  <g fill="var(--alt-soft)" stroke="var(--alt)" stroke-width="1.6">
+    <path d="M110 -116 L280 -104 L272 -4 L102 -16 Z"></path>
+  </g>
+
+  <g stroke="var(--flag)" stroke-width="2.6" fill="none">
+    <path d="M108 -22 L276 -94"></path>
+  </g>
+  <g fill="var(--ink)">
+    <circle cx="192" cy="-58" r="3.6"></circle>
+  </g>
+
+  <g font-size="11.5" font-family="var(--mono)">
+    <text x="348" y="-40" fill="var(--live)" text-anchor="start">S · dim 2</text>
+    <text x="288" y="-112" fill="var(--alt)" text-anchor="start">T · dim 2</text>
+    <text x="196" y="-120" fill="var(--flag)" text-anchor="middle">S ∩ T · dim 1</text>
+    <text x="184" y="-62" fill="var(--faint)" text-anchor="end">0</text>
+  </g>
+  <g font-size="12.5" font-family="var(--mono)" fill="var(--ink)">
+    <text x="200" y="62" text-anchor="middle">2 + 2 − 1 = 3</text>
+  </g>
+</svg>
+<figcaption>
+Los dos planos comparten una recta entera. Si se sumaran las dimensiones a lo
+bruto saldría 4, y en un espacio de dimensión 3 eso es imposible: lo compartido
+se cuenta dos veces y hay que restarlo una.
+</figcaption>
+</figure>
+
+**Y hay un reparto de tareas que conviene tener claro antes de empezar**, porque
+decide cuánto tiempo cuesta el apartado:
+
+| se pide | forma cómoda | qué se hace |
+|---|---|---|
+| $S+T$ | **generadores** de los dos | se juntan y se descarta lo que sobra |
+| $S\cap T$ | **ecuaciones** de los dos | se juntan las ecuaciones |
+
+Si te dan uno por generadores y otro por ecuaciones —que es el caso más
+frecuente en el examen— **ya están en las formas que hacen falta**: no hay que
+convertir nada. Para la suma se usan los generadores del primero más los del
+segundo; para la intersección, se imponen las ecuaciones del segundo a los
+vectores del primero.
+
+Y cuando los dos vienen por generadores, la intersección se plantea igualando
+dos combinaciones genéricas, una de cada uno, y comparando coeficientes. Sale un
+sistema, pero es el único camino.
+
+### Grassmann como comprobación
+
+Aunque no te la pidan, calcula las cuatro dimensiones y comprueba que la fórmula
+cuadra. Es gratis y caza el error más común del apartado: haber perdido una
+dimensión al descartar generadores.
+
+Y sirve también al revés. En la ordinaria de 2021-2022 el examen da
+$\dim S=2$ y $\dim T=7$ dentro de $\mathbb{R}^{10}$ y pregunta **qué dimensiones
+son posibles**. Grassmann fija la relación, la intersección está dentro de $S$
+—así que va de $0$ a $2$— y la suma cabe en $\mathbb{R}^{10}$:
+
+| $\dim\left(S\cap T\right)$ | $\dim\left(S+T\right)$ |
+|---|---|
+| $0$ | $9$ |
+| $1$ | $8$ |
+| $2$ | $7$ |
+
+## Lo que hay que llevar sabido
+
+Sin calculadora, sin formulario y en el orden en que se usa:
+
+1. **¿Está el cero?** Si no, no es subespacio y se acabó.
+2. Subespacio $\iff$ cerrado para la suma y para el producto por escalar. Dos
+   comprobaciones, no ocho.
+3. $L\left(G\right)$ **siempre** es subespacio: escribir algo como generado es
+   demostrarlo.
+4. Elemento genérico → separar en parámetros → esa es la base, y contarla es la
+   dimensión.
+5. Libre $\ne$ base. Libre da **unicidad**; base necesita además **generar**.
+6. Más de $n$ vectores en dimensión $n$ están siempre ligados.
+7. Coordenadas: existen y son **únicas**, y eso se demuestra restando.
+8. De la base nueva a la vieja se **multiplica**; al revés se **resuelve**.
+9. Grassmann: $\dim\left(S+T\right)=\dim S+\dim T-\dim\left(S\cap T\right)$.
+10. La unión de subespacios **casi nunca** es subespacio. Los dos ejes de
+    $\mathbb{R}^{2}$.
