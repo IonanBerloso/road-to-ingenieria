@@ -35,14 +35,14 @@ interface Props {
   eyebrow: string;
   titulo: string;
   fecha: string;
-  /** Href al PDF original, ya pasado por `archivo()`. */
-  pdf: string;
-  /** Tamaño del PDF en KB, para que el enlace diga lo que va a descargar. */
-  pdfKb: number;
+  /** Los cuadernillos originales, ya pasados por `archivo()`. Casi siempre es
+   *  uno; el examen de mayo-junio de 2020 son dos, y entonces cada uno trae su
+   *  `etiqueta` para poder distinguirlos. */
+  pdfs: { href: string; kb: number; etiqueta: string | null }[];
   ejercicios: EjercicioDeExamen[];
 }
 
-const { eyebrow, titulo, fecha, pdf, pdfKb, ejercicios } = Astro.props;
+const { eyebrow, titulo, fecha, pdfs, ejercicios } = Astro.props;
 
 const total = ejercicios.reduce(
   (s, e) => s + (e.puntos ? e.puntos.comp1 + e.puntos.comp2 + e.puntos.comp4 : 0),
@@ -80,13 +80,19 @@ const hoja = await Promise.all(
       }
     </ol>
 
-    <a class="pdf" href={pdf} target="_blank" rel="noopener">
-      <span class="pdf-icono" aria-hidden="true">↓</span>
-      <span class="pdf-txt">
-        <span class="pdf-tit">Enunciado original</span>
-        <span class="pdf-meta">PDF · {pdfKb} KB · se abre en otra pestaña</span>
-      </span>
-    </a>
+    {
+      pdfs.map((p) => (
+        <a class="pdf" href={p.href} target="_blank" rel="noopener">
+          <span class="pdf-icono" aria-hidden="true">↓</span>
+          <span class="pdf-txt">
+            <span class="pdf-tit">
+              Enunciado original{p.etiqueta ? ` · ${p.etiqueta}` : ''}
+            </span>
+            <span class="pdf-meta">PDF · {p.kb} KB · se abre en otra pestaña</span>
+          </span>
+        </a>
+      ))
+    }
   </nav>
 
   <div class="col">

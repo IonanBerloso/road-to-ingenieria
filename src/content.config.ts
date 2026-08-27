@@ -501,9 +501,23 @@ const examen = defineCollection({
       convocatoria,
       /** Tal como viene impresa en la cabecera del examen. */
       fecha: z.string().min(8),
-      /** Nombre del PDF dentro de `public/examenes/<asignatura>/`.
-       *  Que el fichero exista de verdad se comprueba al generar la ruta. */
-      pdf: z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones'),
+      /** Nombre del PDF dentro de `public/examenes/<asignatura>/`, o **la
+       *  lista** cuando el examen viene en más de un cuadernillo.
+       *  Que los ficheros existan de verdad se comprueba al generar la ruta.
+       *
+       *  Admitir una lista entra el 28 de agosto de 2026, y no es una
+       *  comodidad: era un supuesto falso metido en el modelo de datos. El
+       *  examen de mayo-junio de 2020 —el del confinamiento— son **dos**
+       *  cuadernillos, el primer y el segundo cuatrimestral, y este campo solo
+       *  dejaba enlazar uno. Resultado: los ocho ejercicios del segundo se
+       *  publicaban con su resolución y **sin un enunciado original que
+       *  contrastar**, que es justo lo que §08 existe para impedir. Lo
+       *  encontró la auditoría de §15, contando qué PDF de `public/` no
+       *  enlazaba nadie. */
+      pdf: z.union([
+        z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones'),
+        z.array(z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones')).min(1),
+      ]),
       ejercicios: z
         .array(
           z.object({

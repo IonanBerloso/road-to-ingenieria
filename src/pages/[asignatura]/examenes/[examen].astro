@@ -49,16 +49,21 @@ export async function getStaticPaths() {
 
     /* El PDF tiene que existir de verdad. Sin esta comprobación el enlace se
        publica roto y no se nota hasta que alguien lo pulsa, que es justo el
-       momento en el que la herramienta pierde credibilidad. */
-    const enDisco = `public/examenes/${idAsig}/${pdf}`;
-    let kb = 0;
-    try {
-      kb = Math.round(statSync(enDisco).size / 1024);
-    } catch {
-      throw new Error(
-        `El examen "${idAsig} · ${curso}" enlaza "${pdf}", que no está en ${enDisco}.`,
-      );
-    }
+       momento en el que la herramienta pierde credibilidad.
+
+       Un examen puede venir en más de un cuadernillo —el de mayo-junio de 2020
+       son dos—, así que se comprueban todos y se mide el tamaño de cada uno. */
+    const listaPdf = Array.isArray(pdf) ? pdf : [pdf];
+    const cuadernillos = listaPdf.map((nombre) => {
+      const enDisco = `public/examenes/${idAsig}/${nombre}`;
+      try {
+        return { nombre, kb: Math.round(statSync(enDisco).size / 1024) };
+      } catch {
+        throw new Error(
+          `El examen "${idAsig} · ${curso}" enlaza "${nombre}", que no está en ${enDisco}.`,
+        );
+      }
+    });
 
     const datos = ex.data.ejercicios.map((ref) => {
       const dato = ficheros.flatMap((f) => f.data.ejercicios).find((e) => e.id === ref.id);
@@ -117,17 +122,26 @@ export async function getStaticPaths() {
 
     return {
       params: { asignatura: idAsig, examen: carpeta },
-      props: { asignatura, examen: ex, ejercicios, pdfKb: kb },
+      props: { asignatura, examen: ex, ejercicios, cuadernillos },
     };
   });
 }
 
-const { asignatura, examen, ejercicios, pdfKb } = Astro.props;
+const { asignatura, examen, ejercicios, cuadernillos } = Astro.props;
 
 const conv = CONVOCATORIAS[examen.data.convocatoria as keyof typeof CONVOCATORIAS].larga;
 const crumb = `${asignatura.data.nombre} · exámenes`;
 const titulo = `Examen ${examen.data.curso}`;
-const pdf = archivo(`examenes/${asignatura.id}/${examen.data.pdf}`);
+
+/* Casi todos los exámenes son un cuadernillo; el de mayo-junio de 2020 son dos.
+   Se les da nombre —«1.er cuatrimestral», «2.º»— solo cuando hay más de uno:
+   poner «cuadernillo 1 de 1» en los otros 95 sería ruido. */
+const NOMBRES = ['1.er cuatrimestral', '2.º cuatrimestral', '3.er cuadernillo'];
+const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => ({
+  href: archivo(`examenes/${asignatura.id}/${c.nombre}`),
+  kb: c.kb,
+  etiqueta: cuadernillos.length > 1 ? (NOMBRES[i] ?? `cuadernillo ${i + 1}`) : null,
+}));
 ---
 
 <Base
@@ -145,8 +159,7 @@ const pdf = archivo(`examenes/${asignatura.id}/${examen.data.pdf}`);
       eyebrow={`${asignatura.data.nombre} · ${conv}`}
       titulo={titulo}
       fecha={examen.data.fecha}
-      pdf={pdf}
-      pdfKb={pdfKb}
+      pdfs={pdfs}
       ejercicios={ejercicios}
     />
   </main>

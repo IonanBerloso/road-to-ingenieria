@@ -156,14 +156,20 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                     <span class="go" aria-hidden="true">→</span>
                   </span>
                 </a>
-                <a
-                  class="pdf rotulo"
-                  href={archivo(`examenes/${asignatura.id}/${ex.data.pdf}`)}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  ↓ PDF original
-                </a>
+                {/* Casi todos los exámenes son un cuadernillo; el de
+                    mayo-junio de 2020 son dos y hay que enlazar los dos, o el
+                    segundo cuatrimestral se queda sin enunciado que
+                    contrastar (§08). */}
+                {(Array.isArray(ex.data.pdf) ? ex.data.pdf : [ex.data.pdf]).map((f, i, todos) => (
+                  <a
+                    class="pdf rotulo"
+                    href={archivo(`examenes/${asignatura.id}/${f}`)}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    ↓ PDF original{todos.length > 1 ? ` (${i + 1}/${todos.length})` : ''}
+                  </a>
+                ))}
               </li>
             );
           })
