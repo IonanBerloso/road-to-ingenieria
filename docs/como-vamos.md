@@ -556,6 +556,30 @@ años**; los temas 3 y 5 son los cortos porque **no ocupan ninguno**; y el 4, el
 6 y el 7 quedan en medio. Escribir tres mil palabras sobre un tema que no se
 examina solo sería gastar el tiempo del alumno donde no rinde.
 
+### Las dos rutas
+
+| | ordinaria | extraordinaria |
+|---|---|---|
+| bloques | 6 | 6 |
+| escalones | 17 | 17 |
+| huecos declarados en `falta[]` | 6 | 6 |
+| `medidoSobre` | 8 | 8 |
+
+**Las dos rutas se diferencian en un bloque y solo en uno**, y ese hecho está
+medido, no supuesto: el hueco 3 del examen es de **espacios euclídeos en las
+cuatro ordinarias** y de **determinantes en las cuatro extraordinarias**. No
+rota entre los dos temas: está partido por convocatoria, sin una excepción en
+las ocho leídas.
+
+Los otros tres huecos son idénticos en las dos —espacios vectoriales,
+aplicaciones lineales y diagonalización, ocho de ocho cada uno—, así que los
+bloques correspondientes comparten estructura y cambian solo los ejercicios de
+examen que enlazan.
+
+**Y el guardián de convocatorias huérfanas de `verify.mjs` pasa por primera vez
+a `96 de 96`**: hasta ahora decía «88 de 88, y 8 más en asignaturas que aún no
+tienen ruta». Ya no hay ninguna suelta.
+
 > **Dos veces he publicado un recuento estimado en un mensaje de commit, y las
 > dos estaba mal.** El tema 2 salió como «2.900 palabras» siendo 2.255, y los
 > temas 3 y 4 como «1.234 y 1.322» siendo 1.750 y 1.676. El motivo es siempre

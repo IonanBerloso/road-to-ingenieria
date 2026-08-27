@@ -564,10 +564,19 @@ const referencia = z.discriminatedUnion('tipo', [
      *  segura de equivocarse, por eso se comprueba al generar la ruta:
      *  `verify.mjs` parte los href por `#` y **no valida fragmentos**, así que
      *  un apartado mal escrito pasaría el suelo en verde y dejaría al alumno
-     *  en la cabecera de la página. */
+     *  en la cabecera de la página.
+     *
+     *  La `ö` entra el 27 de agosto de 2026, con la ruta de Álgebra. El teorema
+     *  se llama **Rouché-Fröbenius** —así lo escribe la hoja de teoría oficial
+     *  del Departamento— y su apartado produce un slug con diéresis. La
+     *  alternativa era escribir el nombre mal para que pasara el esquema, que
+     *  es exactamente «escribir peor para contentar a un guardián» (§11). La
+     *  clase de caracteres enumera acentos porque el slugger de Astro no los
+     *  quita; que enumerara solo los castellanos era un supuesto, no una
+     *  decisión. */
     apartado: z
       .string()
-      .regex(/^[a-z0-9áéíóúüñ-]+$/, 'slug de encabezado, en minúscula y con sus acentos')
+      .regex(/^[a-z0-9áéíóúüñö-]+$/, 'slug de encabezado, en minúscula y con sus acentos')
       .optional(),
     nota: z.string().min(10).optional(),
   }),
@@ -603,7 +612,7 @@ const escalon = z.object({
       tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
       apartado: z
         .string()
-        .regex(/^[a-z0-9áéíóúüñ-]+$/, 'slug de encabezado, en minúscula y con sus acentos'),
+        .regex(/^[a-z0-9áéíóúüñö-]+$/, 'slug de encabezado, en minúscula y con sus acentos'),
       nota: z.string().min(10).optional(),
     })
     .optional(),

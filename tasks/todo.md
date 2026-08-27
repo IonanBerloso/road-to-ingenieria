@@ -1276,6 +1276,36 @@ que responda a una pregunta (§13) y ejercicios del boletín.
   mensaje no tienes el número delante, no lo pongas — enlaza a
   `docs/como-vamos.md`, que sí se mide.
 
+## ~~Fase 7 · Las dos rutas~~ · TERMINADA el 27 de agosto de 2026
+
+Dos rutas, 6 bloques y 17 escalones cada una, `medidoSobre: 8`, y sin un solo
+porcentaje por competencia porque el examen no publica reparto de puntos.
+
+**El hallazgo que las ordena, y que no era evidente antes de contar:** el hueco
+3 del examen **no rota** entre euclídeos y determinantes. Está **partido por
+convocatoria**: euclídeos en las cuatro ordinarias, determinantes en las cuatro
+extraordinarias, sin una excepción. Los otros tres huecos son idénticos en las
+ocho. Así que las dos rutas se diferencian en **un bloque y solo uno**, y eso es
+un dato, no una decisión de diseño.
+
+Lo que dejó por el camino:
+
+- **El esquema no admitía la `ö` de Rouché-Fröbenius.** La alternativa era
+  escribir el nombre mal para que pasara, que es «escribir peor para contentar a
+  un guardián» (§11). Ampliada la clase de caracteres del slug, con el motivo en
+  el propio `content.config.ts`.
+- **Dos encabezados del tema 1 llevaban LaTeX y producían slugs sucios** —
+  `generar-qué-significa-lglleftgrightlg` y
+  `suma-e-intersección-por-qué-222222-no-da-444`—. Reescritos en palabras. Es la
+  trampa de §17 que el plan viejo ya había anotado para Cálculo.
+- **La trampa del `: ` sin comillas, por tercera vez el mismo día**, ahora en el
+  título de un escalón.
+- **Comprobado que las 97 anclas de teoría ATERRIZAN**, no solo que existan
+  (§16.2): 50 en la ordinaria y 47 en la extraordinaria. La sonda tuvo dos
+  rondas de falsos negativos antes de dar el número bueno —desplazamiento suave
+  la primera, y navegar entre dos fragmentos de la misma página sin recargar la
+  segunda—, y las dos veces el fallo estaba en la sonda y no en el sitio.
+
 ## Fase 7 · Las dos rutas
 
 Ordinaria y extraordinaria, medidas sobre ocho convocatorias y diciéndolo. Y
