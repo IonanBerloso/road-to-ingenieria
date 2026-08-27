@@ -1077,3 +1077,86 @@ el hueco: separar el lector de respuestas de `EjercicioGuiado`. Una **matriz**
 no es un número ni un conjunto de puntos, y es por donde Álgebra va a tensionar
 el sistema — está dicho en §00 y en la deuda de arquitectura correspondiente.
 Eso es refactor de la capa compartida y se puede hacer sin un solo enunciado.
+
+---
+
+# Álgebra · el plan, en ocho fases
+
+Escrito el 26 de agosto de 2026, con el material medido y antes de crear ningún
+fichero de contenido (§13). Las fases van en este orden por dos reglas de
+`CLAUDE.md`, y ninguna de las dos es el orden del temario:
+
+- **§13 · empieza por el caso difícil.** El primer examen entero va antes que
+  nada, porque es el que dice qué necesita el lector de respuestas. Un
+  componente probado primero con el ejercicio cómodo genera la abstracción
+  equivocada.
+- **§13 · el framework se destila del contenido.** El lector de matrices no se
+  diseña en el vacío: se diseña con cuatro ejercicios reales delante.
+
+**La escala, medida sobre el material y no estimada:**
+
+| | Álgebra | Cálculo, para comparar |
+|---|---|---|
+| ejercicios de examen | **32** (8 exámenes × 4) | 425 |
+| ejercicios de boletín disponibles | **212** en 7 boletines | — |
+| páginas de teoría | **141** | — |
+| temas | **7** | 11 |
+| rutas que pide §15 | **2** | 7 |
+
+## Fase 1 · El primer examen, entero
+
+La ordinaria de 2024-2025. Cuatro ejercicios, y el primero es el caso difícil
+que §13 pide coger antes que ninguno: «definir $S+T$ y demostrar que es
+subespacio», y después una base de $mathbb{R}^4$ con un parámetro dentro.
+
+**Lo que esta fase tiene que producir además del examen:** la lista de qué
+tipos de respuesta hace falta saber leer. Hoy el esquema tiene `numero`,
+`complejo` y `conjunto`, y ninguno vale para una base.
+
+## Fase 2 · El lector de respuestas (deuda 4)
+
+Lo que la fase 1 haya destapado. Previsiblemente: una **base** —un conjunto de
+vectores, donde el orden no importa y dos bases distintas del mismo subespacio
+son las dos correctas—, una **matriz**, y un **subespacio** dado por ecuaciones.
+
+Va en `src/lib/`, con sus tests en `tests/` como los de complejos y regiones,
+y toca la capa compartida: es §13.4, y se hace **una vez y bien**, no con un
+apaño en el contenido.
+
+## Fase 3 · Los siete exámenes que quedan
+
+2021-2022, 2022-2023 y 2023-2024, ordinaria y extraordinaria, más la
+extraordinaria de 2024-2025. Veintiocho ejercicios. Con el lector ya hecho,
+esta fase es transcripción y comprobación numérica, que es trabajo conocido.
+
+## Fases 4, 5 y 6 · Los siete temas
+
+La fase más grande, y por eso va partida en tres. Cada tema necesita prosa que
+responda a preguntas, ejemplos introductorios propios (§08), al menos una figura
+que responda a una pregunta (§13) y ejercicios del boletín.
+
+- **Fase 4 · temas 1 y 2**, espacios vectoriales y aplicaciones lineales. Van
+  primero porque son los ejercicios 1 y 2 de los ocho exámenes, sin excepción.
+- **Fase 5 · temas 3, 4 y 5**, matrices, determinantes y sistemas. Son el
+  aparato de cálculo que los otros cuatro usan.
+- **Fase 6 · temas 6 y 7**, euclídeos y diagonalización, que cierran el examen.
+
+## Fase 7 · Las dos rutas
+
+Ordinaria y extraordinaria, medidas sobre ocho convocatorias y diciéndolo. Y
+aquí hay una diferencia con Cálculo que ya se sabe: **los exámenes no publican
+puntos**, así que la ruta no podrá calcular porcentajes por competencia. Se
+declara, no se estima.
+
+## Fase 8 · Auditoría §15 y cierre
+
+La misma que cerró Cálculo: contar qué herramienta usa el examen y no está en
+la prosa, comprobar que ninguna convocatoria se queda sin ruta, y pasar la
+tabla de §15 entera.
+
+**Lo que NO está en el plan, y hay que decirlo:** Álgebra tiene solo cuatro
+cursos de exámenes y ningún parcial. Las rutas se medirán sobre ocho
+convocatorias en vez de sobre ochenta y ocho, y eso limita lo que se puede
+afirmar sobre «qué cae siempre». Con ocho, un hueco que aparece en seis puede
+ser una costumbre o puede ser casualidad, y la ruta tendrá que decirlo con esas
+palabras.

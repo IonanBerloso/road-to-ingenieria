@@ -456,6 +456,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
 <script>
   import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from '../../lib/complejo';
+  import { comparaMatriz, comparaVector, leeMatriz, leeVector } from '../../lib/algebra';
   import { analiza, cumple, evaluaNumero, mismaRegion } from '../../lib/regiones';
 
   type Respuesta = { tipo: 'complejo' | 'numero'; valor: string; tolerancia: number };
@@ -591,6 +592,16 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           const b = leeConjunto(objetivo);
           return a && b ? comparaConjunto(a, b, tolerancia).igual : false;
         }
+        if (respuesta.tipo === 'vector') {
+          const a = leeVector(escrito);
+          const b = leeVector(objetivo);
+          return a && b ? comparaVector(a, b, tolerancia).igual : false;
+        }
+        if (respuesta.tipo === 'matriz') {
+          const a = leeMatriz(escrito);
+          const b = leeMatriz(objetivo);
+          return a && b ? comparaMatriz(a, b, tolerancia).igual : false;
+        }
         if (respuesta.tipo === 'complejo') {
           const a = lee(escrito);
           const b = lee(objetivo);
@@ -610,14 +621,22 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       const holgura = (objetivo: string) => {
         if (respuesta.tipo === 'conjunto') return respuesta.tolerancia;
+        /* Un vector o una matriz no tienen «escala» única —cada entrada tiene
+           la suya—, así que la holgura del 2 % no se puede calcular sobre el
+           conjunto. Se usa la tolerancia declarada, y ya. */
+        if (respuesta.tipo === 'vector' || respuesta.tipo === 'matriz') return respuesta.tolerancia;
         const v = lee(objetivo);
         const escala = v ? Math.max(Math.abs(v.re), Math.abs(v.im)) : 1;
         return Math.max(escala * 0.02, respuesta.tolerancia);
       };
 
       /** Se lee según el tipo: una lista de soluciones no es un solo número. */
-      const legible = (texto: string) =>
-        respuesta.tipo === 'conjunto' ? leeConjunto(texto) : lee(texto);
+      const legible = (texto: string) => {
+        if (respuesta.tipo === 'conjunto') return leeConjunto(texto);
+        if (respuesta.tipo === 'vector') return leeVector(texto);
+        if (respuesta.tipo === 'matriz') return leeMatriz(texto);
+        return lee(texto);
+      };
 
       /** Cuántas soluciones faltan o sobran. Sirve para diagnosticar el error
        *  más típico del tema —dar solo la raíz principal— sin necesidad de
@@ -640,9 +659,17 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             respuesta.tipo === 'conjunto'
               ? '<p>Escribe <strong>todas</strong> las soluciones separadas por comas, ' +
                   'por ejemplo <code>1, -1+i, -1-i</code>.</p>'
-              : '<p>Escríbela en forma binómica, por ejemplo <code>-3+2i</code>. ' +
-                  'Valen las comas decimales y la forma exacta: <code>√2/2</code>, ' +
-                  '<code>pi/4</code>, <code>(e^2-1)/2</code>.</p>',
+              : respuesta.tipo === 'vector'
+                ? '<p>Escribe las coordenadas <strong>en orden</strong> y separadas por ' +
+                    'comas, por ejemplo <code>(0, 0, -3, 0)</code>. Valen las raíces y las ' +
+                    'fracciones: <code>(√6/2, 0, -1/3)</code>. Si necesitas comas decimales, ' +
+                    'separa con punto y coma: <code>(2,5; 1)</code>.</p>'
+                : respuesta.tipo === 'matriz'
+                  ? '<p>Las filas se separan con punto y coma y las columnas con comas, ' +
+                      'por ejemplo <code>[1,0,-1; 2,4,0; 0,-2,2]</code>.</p>'
+                  : '<p>Escríbela en forma binómica, por ejemplo <code>-3+2i</code>. ' +
+                      'Valen las comas decimales y la forma exacta: <code>√2/2</code>, ' +
+                      '<code>pi/4</code>, <code>(e^2-1)/2</code>.</p>',
           );
           return;
         }
@@ -666,6 +693,51 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
            uno que no hace falta declarar ejercicio por ejercicio: quien da dos
            de las tres raíces no se ha equivocado calculando, se ha equivocado
            creyendo que había menos. */
+        /* Y dos diagnósticos que el lector de Álgebra sabe dar solo, sin que
+           haya que declararlos como distractor en cada ejercicio: las
+           coordenadas correctas en otro orden, y la matriz traspuesta. Los dos
+           son errores de método, no de cuenta, y el mensaje tiene que decirlo. */
+        if (respuesta.tipo === 'vector') {
+          const a = leeVector(escrito);
+          const b = leeVector(respuesta.valor);
+          const r = a && b ? comparaVector(a, b, respuesta.tolerancia) : null;
+          if (r && r.longitudDistinta) {
+            fb(paso, 'mal', 'Faltan o sobran coordenadas',
+              `<p>La respuesta tiene <strong>${b!.length}</strong> coordenadas y has escrito ` +
+                `${a!.length}. En una base de $n$ vectores, un vector tiene exactamente $n$ ` +
+                'coordenadas — una por cada vector de la base, y las que valen cero también.</p>');
+            return;
+          }
+          if (r && r.soloOrden) {
+            fb(paso, 'mal', 'Los números están bien; el orden, no',
+              '<p>Son exactamente las coordenadas correctas, pero cambiadas de sitio. ' +
+                'En una base <strong>el orden es parte de la respuesta</strong>: la coordenada ' +
+                '$i$-ésima es la que multiplica al vector $i$-ésimo de la base, y la base te ' +
+                'la han dado escrita en un orden concreto.</p>');
+            return;
+          }
+        }
+        if (respuesta.tipo === 'matriz') {
+          const a = leeMatriz(escrito);
+          const b = leeMatriz(respuesta.valor);
+          const r = a && b ? comparaMatriz(a, b, respuesta.tolerancia) : null;
+          if (r && r.esLaTraspuesta) {
+            fb(paso, 'mal', 'Es la traspuesta',
+              '<p>Los números son los correctos, pero están puestos del revés. Las ' +
+                'coordenadas de la imagen de cada vector van en <strong>columna</strong>, no ' +
+                'en fila: así la matriz multiplica por la derecha al vector de coordenadas y ' +
+                'las dimensiones encajan.</p>');
+            return;
+          }
+          if (r && r.tamanoDistinto) {
+            fb(paso, 'mal', 'El tamaño no es el que debe',
+              `<p>La matriz asociada tiene tantas filas como vectores hay en la base de ` +
+                'llegada y tantas columnas como vectores hay en la de salida. Cuenta los dos ' +
+                'antes de calcular nada.</p>');
+            return;
+          }
+        }
+
         const cuenta = respuesta.tipo === 'conjunto' ? balance(escrito) : null;
         if (cuenta && cuenta.faltan > 0 && cuenta.sobran === 0) {
           fb(

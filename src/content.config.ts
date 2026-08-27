@@ -1,12 +1,28 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from './lib/complejo';
+import { leeMatriz, leeVector } from './lib/algebra';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
    los tres niveles o si un identificador no tiene la forma esperada,
    EL BUILD FALLA. Los datos no se comprueban a ojo (CLAUDE.md §03).
    ═══════════════════════════════════════════════════════════════════ */
+
+/** El lector que le toca a cada tipo de respuesta.
+ *
+ *  Existe para que las comprobaciones del esquema no tengan que enumerar los
+ *  tipos una por una. Antes de Álgebra eran dos y se escribía a mano
+ *  —`tipo === 'conjunto' ? leeConjunto : leeComplejo`—; con cinco eso son
+ *  cuatro sitios que hay que acordarse de tocar a la vez, y olvidarse de uno
+ *  no rompe nada visible: simplemente deja pasar un distractor ilegible, que
+ *  es el fallo que estas reglas existen para cazar. */
+const lector = (tipo: string): ((s: string) => unknown | null) => {
+  if (tipo === 'conjunto') return leeConjunto;
+  if (tipo === 'vector') return leeVector;
+  if (tipo === 'matriz') return leeMatriz;
+  return leeComplejo;
+};
 
 /** Peso de un tema en el examen. Tres niveles, nunca un porcentaje:
  *  el dato es estimado y un 12,5 % sería una precisión falsa (§10). */
@@ -90,7 +106,12 @@ const pasoCalcular = z.object({
   titulo: z.string().min(3),
   pregunta: z.string().min(10),
   respuesta: z.object({
-    tipo: z.enum(['complejo', 'numero', 'conjunto']),
+    /* `vector` y `matriz` entran el 26 de agosto de 2026 con Álgebra, y no
+       antes: los pidió la ordinaria de 2024-2025, que remata dos ejercicios
+       con unas coordenadas y con una matriz asociada. `conjunto` no vale para
+       ninguna de las dos —compara sin orden—, y en una base el orden ES la
+       respuesta. */
+    tipo: z.enum(['complejo', 'numero', 'conjunto', 'vector', 'matriz']),
     valor: z.string().min(1),
     tolerancia: z.number().positive().default(0.001),
     /** Qué forma se espera; se muestra junto al campo para no adivinar.
@@ -111,13 +132,13 @@ const pasoCalcular = z.object({
      diagnóstico que había escrito para él. Pasó con un «infinito» puesto como
      distractor de una respuesta numérica. Se caza en el build, no en el
      navegador. */
-  .refine((p) => leeComplejo(p.respuesta.valor) !== null || p.respuesta.tipo === 'conjunto', {
+  .refine((p) => lector(p.respuesta.tipo)(p.respuesta.valor) !== null, {
     message: 'la respuesta correcta no se puede leer con el formato declarado',
   })
   .refine(
     (p) =>
       p.distractores.every((d) =>
-        p.respuesta.tipo === 'conjunto' ? leeConjunto(d.valor) : leeComplejo(d.valor),
+        lector(p.respuesta.tipo)(d.valor) !== null,
       ),
     {
       message:
@@ -129,7 +150,7 @@ const pasoCalcular = z.object({
      el alumno escribía el error y el sistema le decía que había acertado. */
   .refine(
     (p) => {
-      if (p.respuesta.tipo === 'conjunto') return true;
+      if (p.respuesta.tipo !== 'numero' && p.respuesta.tipo !== 'complejo') return true;
       const buena = leeComplejo(p.respuesta.valor);
       if (!buena) return true; // ya lo caza la regla anterior
       return p.distractores.every((d) => {
