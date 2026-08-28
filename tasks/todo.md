@@ -1361,3 +1361,142 @@ convocatorias en vez de sobre ochenta y ocho, y eso limita lo que se puede
 afirmar sobre «qué cae siempre». Con ocho, un hueco que aparece en seis puede
 ser una costumbre o puede ser casualidad, y la ruta tendrá que decirlo con esas
 palabras.
+
+---
+
+# La auditoría completa de Cálculo · 28 de agosto de 2026
+
+Hecha el mismo día de cerrar la asignatura, y **después** de que §15 diera sus
+once filas en verde. Ese es el punto: §15 en verde no dice que esté bien, dice
+que no está roto. Lo que sigue son las nueve cosas que encontró una auditoría
+que no se limita a esas once filas, ordenadas por lo que le cuestan a quien
+estudia.
+
+## Lo que se arregló el mismo día
+
+**Cinco datos publicados que no eran ciertos.** Los cinco se corrigieron en el
+sitio, contando sobre el corpus, y cada uno lleva su nota diciendo qué decía
+antes:
+
+| dónde | decía | dice |
+|---|---|---|
+| `4ev` · bloque `gradiente` | cae en **11** de 11 cursos | **10**: 2020-2021 no lleva varias variables, y su propio `fuente` ya lo decía |
+| `ord` · bloque `edo` | **seis** convocatorias | **siete**: se dejaba fuera 2019-2020, que trae dos |
+| `ord` · bloque `cruce` | **siete** ejercicios en **seis** convocatorias | **nueve** en nueve; faltaban el gradiente implícito de 2020-2021 y el integrando constante de 2019-2020 |
+| `ord` · `lede` | los dos parciales, «cuarenta puntos cada uno» | entre 30 y 50; solo 3 de 12 cursos son 40+40 |
+| `5ev` | la quinta de 2019-2020 «no se celebró» | no lo sabemos: es una lectura de las fechas, y ahora lo dice así |
+
+Los tres primeros tienen la **misma causa** que los 116 ejercicios sin enlazar:
+se contó a ojo sobre una lista incompleta. La lección no es «revisar mejor», es
+que **todo recuento publicado tiene que salir de un guion que lea el corpus**.
+
+**Dos herramientas que el examen usa con un nombre y la prosa con otro.**
+`variación de parámetros` (la prosa decía solo «variación de las constantes») y
+`centroide` (t07 decía solo «centro de gravedad»). Las dos, nombradas ahora en
+su apartado.
+
+**El criterio del cociente, que no estaba en ninguna prosa.** Lo usan cinco
+convocatorias. Y el agujero era peor de lo que parecía: t04 decía «**el radio de
+convergencia forma parte de la respuesta**» y el sitio **no enseñaba a
+calcular ninguno**. Escrito ahora en t04, con su error típico —el caso $L=1$, que
+es justo lo que pasa en los extremos— y enlazado desde t02.
+
+## Lo que queda, medido y sin arreglar
+
+### 1 · 417 de 425 resoluciones de examen están sin contrastar
+
+El 98 %. Sus `fuente` lo dicen una por una —«el examen no publica solución: la
+resolución es propuesta nuestra, pendiente de revisión»—, así que es honesto,
+no oculto. Pero es **el mayor riesgo del proyecto** y no tiene plan.
+
+Solo 8 se pueden contrastar hoy, porque coinciden con ejercicios del boletín que
+sí publica solución. Una de ellas encontró **una errata en la hoja oficial**, lo
+que da la medida de por qué esto importa.
+
+Lo que hace falta no es más contenido: es un procedimiento de verificación.
+
+### 2 · 66 de 156 escalones arrancan en un ejercicio de examen
+
+El 42 %. Es literalmente la crítica que creó el escalón el 23 de agosto —«el
+primer ejercicio de cualquier bloque ya era de nivel examen»— y sigue viva en
+cuatro de cada diez, ahora dentro de la forma nueva. Por tema:
+
+| tema | escalones | sin rampa | ejemplos propios | ejercicios propios / de examen | figuras |
+|---|---|---|---|---|---|
+| t09 ecuaciones diferenciales | 13 | **9 (69 %)** | 2 | 7 / 36 | 1 |
+| t10 laplace | 9 | **6 (67 %)** | 3 | 9 / 24 | 2 |
+| t08 integral curvilínea | 9 | **5 (56 %)** | 2 | 7 / 26 | 1 |
+| t07 integral múltiple | 16 | 8 (50 %) | 4 | 11 / 41 | 3 |
+| t04 estudio local | 25 | **12** | 5 | 18 / 85 | 3 |
+| t01 complejos | 24 | 5 (21 %) | 8 | 37 / 74 | 3 |
+
+Las dos lecturas, y son distintas:
+
+- **t08, t09 y t10 son el agujero de fondo.** Son los tres temas más flacos del
+  corpus —t08 tiene 1.516 palabras, la mitad que cualquier otro— y a la vez los
+  que peor rampa tienen. t08 es un tema **geométrico** con **una** figura.
+- **t04 es el caso caro.** No es el más flaco en porcentaje, pero **vale el
+  20,2 % de la nota**, más que ningún otro, y tiene 12 escalones sin rampa y
+  solo 18 ejercicios propios para 85 de examen. Es donde un ejemplo de entrada
+  rinde más.
+
+La regla de §14 no admite matices: si el primer ejercicio de un escalón no lo
+puede hacer alguien que acaba de leer la teoría, **falta un ejemplo delante**.
+Faltan 66.
+
+### 3 · 32 pasos piden decimales sin ofrecer la forma exacta
+
+§09 dice que un enunciado nunca ordena dar decimales: se escribe «en forma
+exacta, o con cuatro decimales», en ese orden, porque en el examen no hay
+calculadora. Treinta y dos pasos dicen «Da cuatro decimales» y su `formato` dice
+solo «un número». Varios piden decimales de respuestas que son $\pi$, $\ln 2$ o
+$\pi/4$.
+
+Y hay algo más de fondo, que es §01: **la instrucción de formato está duplicada
+en dos sitios** —dentro de la `pregunta` y en el campo `formato`— y por eso se
+desincroniza. El arreglo bueno no es tocar 32 preguntas: es que la instrucción
+viva **solo** en `formato`, que es el campo que existe para eso, y quitarla de
+la prosa de la pregunta.
+
+### 4 · El navegador solo abre 8 de las 96 páginas de examen
+
+`humo.mjs` abre las 35 páginas que enlaza la portada: los 18 temas, las 9 rutas
+y **8 exámenes**. Los otros 88 solo los mira `verify.mjs`, que lee el HTML. §11
+existe porque eso no basta: los tres fallos de agosto —la raíz sin radical, las
+pestañas sin manejador— eran invisibles al HTML.
+
+Es la superficie más grande del sitio y la menos comprobada.
+
+### 5 · Ocho escalones con un solo ejercicio
+
+`2ev/derivada-aplicada/diferencial` · `5ev/curvilinea/escalar` ·
+`5ev/edos/cualitativo` · `5ev/formato-antiguo/gradiente-en-la-quinta` ·
+`ext/los-teoremas/fermat` · `ext/los-teoremas/definiciones-de-sucesiones` ·
+`ext/laplace/el-arranque-retrasado` · `ext/el-gradiente/leer-un-mapa-de-niveles`.
+
+Un escalón con un ejercicio no es una escalera. La ruta de la quinta ya lo
+declara para uno de ellos, con estas palabras: «Quien llegue sin haberla visto
+empieza por arriba».
+
+### 6 · 46 de 62 bloques no declaran nada en `falta[]`
+
+§14 dice que un hueco declarado es información y uno escondido es una promesa
+incumplida. Tres cuartas partes de los bloques no declaran ninguno. No significa
+que no tengan —el punto 2 demuestra que sí—, significa que no se ha mirado.
+
+## Lo que se comprobó y está bien
+
+Para que la lista de arriba se pueda leer en proporción:
+
+- **Ningún `anios` declarado es imposible** contra el corpus, después de las
+  correcciones. El guion que lo comprueba queda escrito.
+- **Cero enunciados duplicados por accidente.** Los cinco pares que aparecen
+  están documentados: o son el mismo ejercicio del boletín que cayó en examen
+  —y su `fuente` lo dice— o es el mismo enunciado repetido en tres años, que es
+  §08 funcionando.
+- **Cero ejercicios sin distractor** y **cero resoluciones cortas**: la más
+  breve de las 425 pasa de 400 caracteres.
+- **Los repartos por competencia cuadran** con lo impreso en cada cuadernillo,
+  incluidos los tres de 90 puntos y el de 130, que están explicados en el
+  comentario de su `examen.yaml`.
+- **42,7 % de la nota no es cálculo**, contado sobre 4.255 puntos.
