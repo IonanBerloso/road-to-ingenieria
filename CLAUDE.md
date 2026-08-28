@@ -154,8 +154,9 @@ tests/
   fisica/                  casos con resultado conocido — VACÍO todavía:
                            no hay simulador de física que lo pida (§10)
 public/
-  examenes/calculo/        los 33 enunciados originales en PDF. La ÚNICA
-                           carpeta del repo donde entra un PDF ajeno (§08)
+  examenes/<asignatura>/   los enunciados originales en PDF —85 de cálculo y
+                           8 de álgebra. La ÚNICA carpeta del repo donde entra
+                           un PDF ajeno (§08)
 docs/ · tasks/ · referencia/ · diario/
 CLAUDE.md
 ```
@@ -300,15 +301,22 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 272 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 458 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 270 |
-| `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 21 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 681 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.250 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 674 |
+| `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
 
-`redactar` se ha usado **una vez de 1.022 pasos**. Está construido y razonado
+`redactar` se ha usado **una vez de 2.631 pasos**. Está construido y razonado
 en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
 pide, no porque esté en la tabla.
+
+> Las cifras de esta tabla y las de §05 y §15 se quedaron en el corpus de
+> agosto y estuvieron desfasadas hasta el 28 de agosto de 2026: decían 1.022
+> pasos cuando eran 2.631, y 270 ejercicios cuando eran 674. **Regla que sale
+> de ahí: un número de este fichero se recalcula al cerrar cada asignatura, no
+> cuando alguien se acuerda.** El guion está en el scratchpad y son veinte
+> líneas: recorre las colecciones y cuenta.
 
 > Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
 > MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
@@ -350,11 +358,11 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 
 | patrón | dónde vive de verdad | usos |
 |---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 5 temas |
+| **1 · Lectura** | `patrones/Lectura.astro` | los 18 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 270 ejercicios |
-| **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 21 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 270 |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 674 ejercicios |
+| **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 674 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 1 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -561,26 +569,32 @@ todo componente de ejercicios:
 | **COMP 2** | el cálculo | 6–7 puntos |
 | **COMP 4** | explicación formal: enunciados, definiciones, gráficos, hipótesis | 2–9 puntos |
 
-**La mitad de la nota no es calcular.** Hay ejercicios enteros —como el de
-sucesiones del parcial del 20 de octubre de 2025, o los tres «enunciar y
+**Cuatro de cada diez puntos no son calcular.** Hay ejercicios enteros —como el
+de sucesiones del parcial del 20 de octubre de 2025, o los tres «enunciar y
 demostrar Barrow» de 2019, 2020 y 2021— donde COMP 2 vale cero y los diez
 puntos son demostración.
 
-> Esta sección decía «entre el 30 y el 40 %» hasta el 21 de agosto de 2026. Se
-> corrigió al terminar el corpus del primer cuatrimestre y poder **medirlo** en
-> vez de estimarlo: sumando el reparto oficial impreso en los 143 ejercicios de
-> los 33 exámenes —once cursos por tres evaluaciones, 1440 puntos— sale
+> Esta sección decía «entre el 30 y el 40 %» hasta el 21 de agosto de 2026 y
+> **49,5 %** hasta el 28. Las dos veces por lo mismo: se midió sobre el corpus
+> que había en ese momento y no se volvió a mirar. Sobre las **88
+> convocatorias completas**, que son 4.255 puntos con su tema y su reparto:
 >
 > | | puntos | del total |
 > |---|---|---|
-> | COMP 1 | 147 | **10,2 %** |
-> | COMP 2 | 727 | **50,5 %** |
-> | COMP 4 | 566 | **39,3 %** |
+> | COMP 1 | 384,5 | **9,0 %** |
+> | COMP 2 | 2.438 | **57,3 %** |
+> | COMP 4 | 1.432,5 | **33,7 %** |
 >
-> Es decir, **el 49,5 % de la nota no es cálculo**. La estimación anterior se
-> quedaba diez puntos corta, y venía de haber mirado solo los primeros
-> exámenes. El dato se recalcula cuando entren exámenes nuevos (§10: los datos
-> que se publican como ciertos tienen que serlo).
+> Es decir **42,7 %**, no 49,5. La tesis no cambia —la parte que no es cálculo
+> sigue siendo enorme y sigue siendo la que peor se prepara— pero el número
+> concreto se movió casi siete puntos al pasar de 33 exámenes a 88, y estuvo
+> publicado mal durante una semana.
+>
+> **La regla que sale de haberlo tenido mal dos veces:** este número no se
+> recalcula «cuando entren exámenes nuevos», porque eso deja la decisión al
+> criterio de alguien que está haciendo otra cosa. Se recalcula **al cerrar una
+> asignatura**, junto con las cifras de §04, §05 y §15, y se comprueba que la
+> tabla de aquí y lo que digan `docs/` y `tasks/` dicen lo mismo.
 
 Todo ejercicio guiado entrena las tres: una pregunta de reconocimiento antes
 del cálculo, y una comprobación de justificación formal después. **Un componente
@@ -892,10 +906,15 @@ nivel de arriba, que es el que se entrega.
 
 ### Cuánto es «una asignatura», medido
 
-Cálculo es la referencia. Cinco temas dan **12.644 palabras de prosa, 127
-ejercicios de tema, 33 exámenes con 143 ejercicios, 56 escalones en 3 rutas y
-16 figuras.** Sirve para dimensionar, no como cuota: un tema que necesita
-ocho figuras lleva ocho.
+Cálculo es la referencia, y ya está cerrada entera. Once temas dan **31.382
+palabras de prosa, 182 ejercicios de tema, 88 convocatorias con 425 ejercicios,
+156 escalones en 7 rutas y 27 figuras.** Sirve para dimensionar, no como cuota:
+un tema que necesita ocho figuras lleva ocho.
+
+> Esta cifra decía «cinco temas, 12.644 palabras, 127 ejercicios, 33 exámenes,
+> 56 escalones» hasta el 28 de agosto de 2026, es decir la mitad de la
+> asignatura contada cuando iba por la mitad. Quien la leyera para dimensionar
+> un trabajo se habría quedado corto por más del doble.
 
 ---
 
@@ -989,6 +1008,23 @@ Cosas que ya han costado horas. No son opiniones.
   se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
   cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
   después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
+- **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
+  Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
+  decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro
+  decimales"` devuelve cero. El 28 de agosto de 2026 eso hizo que una auditoría
+  concluyera «cero enunciados ordenan dar decimales» cuando eran 32. **Regla:
+  para contar cualquier cosa dentro del contenido se carga el YAML y se busca
+  sobre la cadena ya parseada, nunca con `grep` sobre el fichero.** Vale igual
+  para los decimales, que van en LaTeX: `0{,}42865` no lo encuentra un `grep`
+  de `0,42865`.
+- **Una anchura de texto medida en el navegador no es reproducible entre
+  máquinas.** La misma etiqueta SVG midió 285 unidades con la tipografía del
+  sitio cargada y 315 en otro entorno, y en el segundo se salía del `viewBox` y
+  en el primero no. Si `humo.mjs` da verde y alguien aporta una captura donde
+  el texto se corta, no se están contradiciendo: están midiendo con fuentes
+  distintas. **Regla: al informar de un desbordamiento de texto se dice con qué
+  familia se midió**, y al dejar margen en un `viewBox` se cuenta con que la
+  fuente puede no haber cargado todavía.
 - **Insertar delante de un elemento de lista YAML deja su campo huérfano.** Si
   un elemento es `- id: X` seguido de su `nota:`, y sustituyes solo la línea
   `- id: X` por «`- id: X` + tu nota + tu elemento nuevo», la `nota` original

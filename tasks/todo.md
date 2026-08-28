@@ -1500,3 +1500,95 @@ Para que la lista de arriba se pueda leer en proporción:
   incluidos los tres de 90 puntos y el de 130, que están explicados en el
   comentario de su `examen.yaml`.
 - **42,7 % de la nota no es cálculo**, contado sobre 4.255 puntos.
+
+---
+
+# Careo de dos auditorías · 28 de agosto de 2026
+
+El mismo día se pasaron **dos** auditorías a Cálculo, hechas por separado. Una
+—la de arriba— miró la estructura: recuentos, enlaces, rampas, terminología,
+integridad. La otra recalculó **las matemáticas** con SymPy sobre los 182
+ejercicios de tema y 162 de examen. Conviene dejar por escrito qué encontró
+cada una y qué pasó al comprobarlas, porque la lección no está en ninguna de
+las dos por separado.
+
+## Lo primero, y es lo importante
+
+**La auditoría estructural no comprobó ni una cuenta.** Ese es su fallo de
+diseño, no un descuido: miró si los datos cuadran entre sí y nunca si son
+verdad. Por eso pasó por encima de ocho ejercicios que enseñan algo falso, que
+es exactamente la clase que §13 caso 2 llama «el peor fallo posible».
+
+Peor todavía: el 27 de agosto **se enlazó `sistema-que-sale-en-espiral` en la
+ruta de la ordinaria sin comprobar su resultado**, y tiene el signo cambiado en
+tres sitios. Enlazar es publicar.
+
+## Lo confirmado, comprobándolo a mano
+
+| | qué | cómo se comprobó |
+|---|---|---|
+| **B3** | `sistema-que-sale-en-espiral` da $y=+e^{t}\operatorname{sen}2t$ y es $-$ | El propio ejercicio saca $Y=\frac{-2}{(s-1)^2+4}$; sustituyendo en $y'=-2x+y$, el signo positivo no la cumple |
+| **B5** | Apolonio con la relación invertida | $\lvert z\rvert=2\lvert z-3\rvert$ es el doble de lejos del origen que de 3; la frase siguiente ya lo decía: «dista 2 del origen y 1 del 3» |
+| **B6** | contraejemplo del satélite | $10=9+a^2\Rightarrow a=\pm1$: dos tangentes, y el punto está fuera |
+| **B8** | dos valores que su desarrollo desmiente | $y(1)=0{,}4286498$ y $f(1)=0{,}1870027$, calculados |
+| **M1** | el peso del catálogo invierte la escala | t03 (4,9 %) y t06 (4,6 %) en «alto», t10 (5,6 %) en «medio» |
+| **D1** | 101 ejercicios sin `nivel` | exactamente 29+15+18+13+26, todos en t01–t05 |
+| **M2** | los recuentos de CLAUDE.md | 5 temas → 11, 12.644 palabras → 31.382, 1.022 pasos → 2.631 |
+
+Y un tercer error en la figura de Apolonio que no vio ninguna de las dos: el
+`<desc>` decía que la circunferencia «no encierra a ninguno de los dos puntos»
+y con centro 4 y radio 2 **encierra el 3**. Eso es lo que oye quien usa lector
+de pantalla.
+
+## Lo que no se sostuvo
+
+- **«`npm run suelo` está en rojo».** No lo está. Cuatro ejecuciones el mismo
+  día, la última capturada entera: las dos líneas en verde, cero `✗`, exit 0.
+  Medida directa de esa etiqueta en el navegador: arranca en 25 y acaba en
+  **310,2** dentro de un viewBox de 330; sin la tipografía del sitio, 286. La
+  captura que aporta es real, así que en su entorno el texto se renderizó ~10 %
+  más ancho. **Lección: una medida de anchura de texto no es reproducible entre
+  entornos, y un informe que la use tiene que decir con qué fuente midió.**
+- **«Cero enunciados ordenan dar decimales sin ofrecer la forma exacta».** Hay
+  32. Se le escapan porque la frase va **partida entre dos líneas** dentro del
+  bloque YAML: un `grep` por líneas no la encuentra y sobre el YAML parseado
+  aparece 32 veces. Trampa nueva, anotada en §17.
+- **«Rechaza al alumno que teclee bien 0,4286».** No: la diferencia era 0,0003
+  y la tolerancia 0,001. El defecto era real —el ejercicio se contradecía a sí
+  mismo— pero no suspendía a nadie.
+
+## Lo que se intentó automatizar y no se pudo
+
+Se probaron **dos** guardianes para la clase «un número mal dentro de una
+resolución», y los dos se descartaron por §11 —un guardián ruidoso enseña a
+saltarse los guardianes—:
+
+1. *¿El `valor` aparece en su propio `desarrollo`?* 323 pasos comparables, **26
+   marcados y casi todos falsos**: el desarrollo escribe pasos intermedios, no
+   el resultado.
+2. *¿Cuadran las cuentas que el desarrollo escribe?* Solo **10** patrones
+   comparables en 674 ejercicios, y **8 falsos** porque la expresión regular
+   cruza líneas y bloques `$$`.
+
+**Conclusión: esta clase no es barata de mecanizar con texto.** Lo que la caza
+es recalcular simbólicamente, que es lo que hizo la otra auditoría. Si esto se
+quiere como guardián, el trabajo es exportar las respuestas a un recálculo
+—SymPy o equivalente— y no buscar patrones en la prosa.
+
+## Lo que queda abierto de la auditoría matemática
+
+Sin verificar aún, por orden de lo que cuestan:
+
+- **B2** el signo de la serie de Fourier en `la-que-no-tiene-saltos`, en dos
+  sitios.
+- **B4** el épsilon rechazado en `limite-de-no-negativos` y
+  `signos-infinitos-limite-cero`, que contradice la prosa del propio tema.
+- **B7** una comprobación alternativa que integra sobre un recinto vacío.
+- **G1** ~20 distractores cuyo mensaje describe un error que no da ese número.
+- **G2** dos ejercicios `nivel: examen` que no resuelven lo que piden.
+- **G3** una pieza marcada `trampa: true` que es verdadera.
+- **S3** las páginas de tema tardan 16,4 s en ser interactivas en un móvil de
+  gama media. Ningún guardián mide el peso, y t01 son 5,8 MB de HTML y 151.846
+  nodos.
+- Y las **64 convocatorias parciales** que esa auditoría no recalculó. Con su
+  ritmo —8 errores en 162 ejercicios— caben del orden de una docena más.
