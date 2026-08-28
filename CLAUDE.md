@@ -682,6 +682,54 @@ Comprueba, en Chromium y sobre cada página de tema:
 - Una respuesta equivocada recibe **un diagnóstico**, no un «incorrecto».
 - Cero errores de JavaScript en consola.
 
+### `npm run peso` — cuánto tarda una página en un móvil
+
+Tampoco es un guardián: el número depende de la máquina y tardaría demasiado
+en cada build. Se toma al cerrar una asignatura, como `recalcula`.
+
+Existe porque nada medía el peso y creció sin que nadie mirase. Y la lección
+de la primera medición vale más que el guion: **el tamaño del HTML explica
+menos de lo que parece**. El tema 5 pesa 7,2 MB y tardaba 2,6 s; el tema 1 pesa
+5,8 MB y tardaba **5,9 s**. La diferencia no era el peso, eran doce lienzos del
+paso `verificar` pintándose al cargar —360.000 píxeles cada uno—. Pasados a
+tiempo muerto, 2,3 s.
+
+**Antes de culpar al peso, mira qué se ejecuta al cargar.**
+
+### `npm run recalcula` — comprueba que las cuentas salen
+
+**No es un guardián: no entra en `npm run suelo` y no bloquea nada.** Se pasa
+al **cerrar una asignatura**, junto con el recuento de las cifras de §04, §05,
+§09 y §15.
+
+Existe porque el 28 de agosto de 2026 una auditoría que recalculaba las
+matemáticas encontró **ocho ejercicios que enseñaban algo falso** con los dos
+guardianes en verde y §15 cumplida. El signo de una antitransformada, la
+relación de distancias de Apolonio invertida, un contraejemplo que no era
+contraejemplo. Ninguno de esos fallos rompe nada: el sitio funciona
+perfectamente enseñando algo que no es verdad.
+
+Comprueba solo **lo que el propio contenido ya afirma**, nunca algo inventado:
+
+- cada «expresión $\approx$ decimal» de una resolución o un desarrollo,
+- cada forma exacta que un `formato` declara entre paréntesis, contra su
+  `valor`,
+- que un `formato` que promete «un número entero» guarde un entero.
+
+Lo que no sabe evaluar lo declara **saltado**, y no lo cuenta como fallo.
+
+> **Su límite, dicho aquí para que nadie lea mal su verde.** Solo alcanza a las
+> respuestas escritas como decimal. **Álgebra queda entera fuera**: sus
+> resultados son objetos exactos —vectores, matrices— y sus ejercicios de
+> determinantes usan propiedades, no matrices escritas. Cero desajustes en
+> Álgebra significa «no hay nada que este guion sepa mirar», no «está
+> comprobada». Ahí la verificación sigue siendo leer las matemáticas.
+
+Antes de escribirlo se intentaron dos guardianes de texto y los dos se
+descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusión,
+que vale para la próxima vez: **esta clase de fallo no se caza con patrones en
+la prosa, se caza evaluando.**
+
 **Regla de este fichero: no se añade una comprobación por si acaso.** Se añade
 cuando algo se ha roto de verdad, y el comentario dice qué se rompió. Y toda
 comprobación nueva se valida al revés: se reintroduce el fallo y se confirma que
@@ -1008,6 +1056,14 @@ Cosas que ya han costado horas. No son opiniones.
   se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
   cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
   después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
+- **Un `IntersectionObserver` no sirve para diferir trabajo en modo guiado.**
+  Los paneles cerrados están en `display: none`, no intersecan nunca, y lo que
+  cuelgue del observador **no se ejecuta jamás**. Pasó el 28 de agosto de 2026
+  al diferir el pintado de los lienzos del paso `verificar`: la página cargaba
+  el doble de rápido y los seis lienzos se quedaban en blanco. Lo que sí vale
+  es `requestIdleCallback`, que no depende de la visibilidad. **Regla: al
+  diferir cualquier cosa, comprueba después que llega a ejecutarse** — que la
+  página vaya más rápido puede significar que ya no hace su trabajo.
 - **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
   Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
   decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro

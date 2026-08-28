@@ -875,7 +875,20 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         ctx.stroke();
       }
 
-      pinta(null);
+      /* Pintar cuesta 360.000 evaluaciones por lienzo, y el tema 1 tiene doce:
+         cuatro millones de puntos antes de que el alumno vea nada. Medido el
+         28 de agosto de 2026 en Chromium a 390 px con la CPU frenada ×4, eso
+         eran 5,9 s hasta que la página respondía, contra 2,6 s del tema 5 —que
+         pesa MÁS y no tiene lienzos—. Así que se pinta cuando el lienzo se ve,
+         no cuando la página carga. */
+      let pintado = false;
+      const pintaUnaVez = () => { if (!pintado) { pintado = true; pinta(null); } };
+      /* En tiempo muerto y no al cargar. No sirve un IntersectionObserver: en
+         modo guiado los lienzos viven dentro de paneles ocultos, no intersecan
+         nunca y se quedarían en blanco. El escalonado evita que los doce caigan
+         en el mismo hueco de inactividad. */
+      const enCuanto = window.requestIdleCallback ?? ((f: () => void) => setTimeout(f, 200));
+      enCuanto(() => pintaUnaVez(), { timeout: 3000 } as IdleRequestOptions);
 
       function comprueba() {
         if (resueltos[i]) return;

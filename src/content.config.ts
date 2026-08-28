@@ -369,8 +369,13 @@ const ejercicio = z
      *  · `practica` — del boletín: el mismo tipo, ya con dificultad real.
      *  · `examen`   — tal como cayó.
      *
-     *  Si falta se deduce: con `puntos` es de examen, sin ellos es práctica. */
-    nivel: z.enum(['ejemplo', 'practica', 'examen']).optional(),
+     *  Era `.optional()` y se dedujo «con puntos es de examen, sin ellos es
+     *  práctica». Esa deducción escondió el problema: el 28 de agosto de 2026
+     *  había **244 ejercicios sin el campo** —101 de tema y 143 de examen—, y
+     *  con ellos no se podía ni ordenar ni comprobar la escalera de §14, que
+     *  es justo donde vive el peor problema pedagógico del sitio. Ahora es
+     *  obligatorio: un ejercicio nuevo sin `nivel` rompe el build. */
+    nivel: z.enum(['ejemplo', 'practica', 'examen']),
     /** Solo en los ejercicios de examen: el reparto oficial de puntos. */
     puntos: puntos.optional(),
     /** Un enunciado puede ser legitimamente corto: «$z^3 = -|z|$» son

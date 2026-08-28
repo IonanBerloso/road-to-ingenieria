@@ -345,18 +345,22 @@ ejercicios:
               $41\pi$ es un múltiplo **impar** de $\pi$, así que al reducir cae
               en $\pi$, que es uno de esos saltos, y allí $S=0$.
           - texto: >-
-              Como $F$ es impar, la serie tiene solo senos, y por eso $S$ se
-              anula en todos los múltiplos de $\pi$ sin necesidad de mirar los
-              saltos.
+              Y hay un atajo que confirma el resultado: como $F$ es impar la
+              serie es $S(t)=\sum b_n\operatorname{sen}(nt)$, y
+              $\operatorname{sen}(nk\pi)=0$ para todo entero, así que $S$ se
+              anula en **todos** los múltiplos de $\pi$.
+          - texto: >-
+              Como al reducir $41\pi$ queda $\pi$ y ahí la función vale
+              $F(\pi)=\pi$, la serie vale $S(41\pi)=\pi$.
             trampa: true
             mensaje: |
-              La conclusión es cierta aquí y el razonamiento no. Que la serie
-              sea de senos hace que $S(0)=0$ y $S(k\pi)=0$ **para esta
-              función**, sí — pero solo porque $\operatorname{sen}(nk\pi)=0$.
-              En una ampliación impar con un salto **dentro** del intervalo,
-              por ejemplo en $\pi/2$, el mismo argumento no diría nada. La
-              regla que siempre vale es la de Dirichlet: mirar los dos límites
-              laterales.
+              Ese es **el** error de este tema: confundir $S$ con $F$ en un
+              punto de salto. La serie no converge al valor que le asignes a la
+              función, sino a la **media de los dos límites laterales**. Aquí
+              son $+\pi$ por la izquierda y $-\pi$ por la derecha, así que
+              $S(\pi)=0$, no $\pi$. Que $F(\pi)$ valga $\pi$, o $-\pi$, o
+              cualquier otra cosa, no cambia la serie: un punto suelto no altera
+              las integrales de los coeficientes.
     resolucion: |
       **a) Los dos lados de $\pi$.** Dentro del intervalo $F(t)=t$, así que
       acercándose a $\pi$ por la izquierda la función sube hasta $\pi$:
@@ -406,7 +410,7 @@ ejercicios:
   - id: serie-de-f-igual-t
     titulo: La serie de f(t)=t, y una suma numérica de regalo
     fuente: Ejercicio 11.5 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2015/2016 6E)
-    nivel: examen
+    nivel: practica
     enunciado: |
       Sea $f(t)$ la función periódica de periodo $2\pi$ definida por $f(t) = t$
       para $-\pi < t < \pi$.
@@ -559,7 +563,7 @@ ejercicios:
   - id: extension-par-de-t
     titulo: La extensión par, y una serie de cuadrados
     fuente: Ejercicio 11.8 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2017/2018 6E)
-    nivel: examen
+    nivel: practica
     enunciado: |
       Sea la función $f(t) = t$ donde $0 \le t < \pi$.
 
@@ -805,7 +809,7 @@ ejercicios:
   - id: cuando-la-funcion-ni-existe
     titulo: Donde la función no está definida y la serie sí
     fuente: Ejercicio 11.6 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2016/2017 6E)
-    nivel: examen
+    nivel: practica
     enunciado: |
       Sea la función periódica de periodo $2\pi$ dada por $f(t) = -t$ con
       $t \in (-\pi, \pi)$.
@@ -918,7 +922,7 @@ ejercicios:
   - id: la-que-no-tiene-saltos
     titulo: Una serie que coincide con la función en todas partes
     fuente: Ejercicio 11.7 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2014/2015 6E)
-    nivel: examen
+    nivel: practica
     enunciado: |
       Dada la función periódica $f(t)$ de periodo $\pi$ definida por
       $f(t) = |t|$ en $\left(-\frac{\pi}{2},\frac{\pi}{2}\right)$, se pide:
@@ -980,7 +984,7 @@ ejercicios:
         piezas:
           - texto: '$|t|$ es **par**, así que $b_n=0$ y la serie es de cosenos.'
           - texto: 'El término constante es el valor medio, $\pi/4$.'
-          - texto: 'Solo sobreviven los armónicos impares, y la serie es $S(t)=\frac{\pi}{4}+\frac{2}{\pi}\sum\frac{\cos[2(2k+1)t]}{(2k+1)^{2}}$.'
+          - texto: 'Solo sobreviven los armónicos impares, y la serie es $S(t)=\frac{\pi}{4}-\frac{2}{\pi}\sum\frac{\cos[2(2k+1)t]}{(2k+1)^{2}}$.'
           - texto: 'b) La función es continua en todo $\mathbb{R}$, así que $S(t)=f(t)$ para todo $t$.'
           - texto: 'b) En los picos hay que aplicar Dirichlet, porque la función no es derivable ahí.'
             trampa: true
@@ -994,11 +998,25 @@ ejercicios:
       cosenos. Con periodo $\pi$, la frecuencia base es $2$:
 
       $$
-      S(t) = \frac{\pi}{4} + \frac{2}{\pi}\sum_{k=0}^{\infty}\frac{\cos\bigl[2(2k+1)t\bigr]}{(2k+1)^{2}}
+      a_n = \frac{4}{\pi}\int_{0}^{\pi/2} t\cos 2nt\,dt
+      = \frac{(-1)^{n}-1}{\pi n^{2}}
+      $$
+
+      que vale $0$ si $n$ es par y $-\dfrac{2}{\pi n^{2}}$ si es impar. **El
+      signo es negativo**, y de ahí:
+
+      $$
+      S(t) = \frac{\pi}{4} - \frac{2}{\pi}\sum_{k=0}^{\infty}\frac{\cos\bigl[2(2k+1)t\bigr]}{(2k+1)^{2}}
       $$
 
       Los armónicos pares se anulan, como suele pasar con las funciones
       triangulares.
+
+      > **La comprobación que decide el signo.** En $t=0$ la función vale $0$, y
+      > como es continua la serie tiene que valer $0$ también. Con el menos:
+      > $\frac{\pi}{4}-\frac{2}{\pi}\cdot\frac{\pi^{2}}{8}=0$ ✓ Con el más
+      > saldría $\frac{\pi}{2}$, que no es el valor de $f$ en ningún punto. Y de
+      > paso ese cálculo regala $\sum\frac{1}{(2k+1)^{2}}=\frac{\pi^{2}}{8}$.
 
       **b) La convergencia**, que es el apartado interesante:
 
@@ -1023,7 +1041,7 @@ ejercicios:
   - id: ampliacion-impar-de-una-recta
     titulo: La ampliación impar, y el signo de la suma
     fuente: Ejercicio 11.9 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU (2019/2020 6E)
-    nivel: examen
+    nivel: practica
     enunciado: |
       Sea $f(t) = 2\pi - t$ la función definida en el intervalo $(0,\pi)$.
 

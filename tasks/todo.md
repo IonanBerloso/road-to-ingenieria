@@ -1415,34 +1415,42 @@ que da la medida de por qué esto importa.
 
 Lo que hace falta no es más contenido: es un procedimiento de verificación.
 
-### 2 · 66 de 156 escalones arrancan en un ejercicio de examen
+### 2 · 42 de 156 escalones arrancan en un ejercicio de examen
 
-El 42 %. Es literalmente la crítica que creó el escalón el 23 de agosto —«el
-primer ejercicio de cualquier bloque ya era de nivel examen»— y sigue viva en
-cuatro de cada diez, ahora dentro de la forma nueva. Por tema:
+> **Esta sección decía 66 y el reparto por tema estaba al revés.** La primera
+> medición se hizo con el campo `nivel` incompleto: 244 ejercicios no lo
+> llevaban, y 34 del boletín estaban etiquetados `examen` cuando son
+> `practica`. Con el campo completo —hecho el 28 de agosto de 2026— el número
+> baja a **42 de 156 (27 %)** y, sobre todo, **señala a otros temas**. Se deja
+> escrito porque la lección es la de siempre: un recuento sobre datos
+> incompletos no es un recuento, es una impresión con cifras.
 
-| tema | escalones | sin rampa | ejemplos propios | ejercicios propios / de examen | figuras |
+El 27 %. Es la crítica que creó el escalón el 23 de agosto —«el primer
+ejercicio de cualquier bloque ya era de nivel examen»— viva todavía en uno de
+cada cuatro. Por tema, medido con el campo ya completo:
+
+| tema | escalones | sin rampa | ejemplos propios | ejercicios propios / de examen | % de la nota |
 |---|---|---|---|---|---|
-| t09 ecuaciones diferenciales | 13 | **9 (69 %)** | 2 | 7 / 36 | 1 |
-| t10 laplace | 9 | **6 (67 %)** | 3 | 9 / 24 | 2 |
-| t08 integral curvilínea | 9 | **5 (56 %)** | 2 | 7 / 26 | 1 |
-| t07 integral múltiple | 16 | 8 (50 %) | 4 | 11 / 41 | 3 |
-| t04 estudio local | 25 | **12** | 5 | 18 / 85 | 3 |
-| t01 complejos | 24 | 5 (21 %) | 8 | 37 / 74 | 3 |
+| t04 estudio local | 25 | **12 (48 %)** | 5 | 18 / 85 | **20,2** |
+| t03 funciones reales | 14 | **6 (43 %)** | 5 | 23 / 21 | 4,9 |
+| t05 integración | 17 | **7 (41 %)** | 4 | 30 / 49 | 11,5 |
+| t06 varias variables | 12 | 3 (25 %) | 4 | 12 / 20 | 4,6 |
+| t01 complejos | 24 | 5 (21 %) | 8 | 37 / 74 | 17,4 |
+| t08 · t09 · t10 | 31 | 2 cada uno | 2 · 2 · 3 | — | 20,2 |
+| t11 fourier | 8 | **0** | 3 | 9 / 17 | 4,0 |
 
-Las dos lecturas, y son distintas:
+Y la conclusión se da la vuelta: **el agujero está en el primer cuatrimestre,
+no en el segundo.** t04 concentra 12 de los 42 y es el tema que **más vale de
+la asignatura**; con t03 y t05 suman 25 de 42. Los tres temas flacos —t08, t09,
+t10— tienen dos cada uno, y Fourier ninguno.
 
-- **t08, t09 y t10 son el agujero de fondo.** Son los tres temas más flacos del
-  corpus —t08 tiene 1.516 palabras, la mitad que cualquier otro— y a la vez los
-  que peor rampa tienen. t08 es un tema **geométrico** con **una** figura.
-- **t04 es el caso caro.** No es el más flaco en porcentaje, pero **vale el
-  20,2 % de la nota**, más que ningún otro, y tiene 12 escalones sin rampa y
-  solo 18 ejercicios propios para 85 de examen. Es donde un ejemplo de entrada
-  rinde más.
+**Y hay que decir de dónde salen.** De los 42, unos 28 están en los bloques del
+primer parcial de la ordinaria y la extraordinaria, **escritos el 27 de agosto
+de 2026**: se enlazaron ejercicios de examen sin poner un ejemplo delante. No
+es deuda heredada, es deuda del día anterior.
 
 La regla de §14 no admite matices: si el primer ejercicio de un escalón no lo
 puede hacer alguien que acaba de leer la teoría, **falta un ejemplo delante**.
-Faltan 66.
 
 ### 3 · 32 pasos piden decimales sin ofrecer la forma exacta
 
@@ -1592,3 +1600,106 @@ Sin verificar aún, por orden de lo que cuestan:
   nodos.
 - Y las **64 convocatorias parciales** que esa auditoría no recalculó. Con su
   ritmo —8 errores en 162 ejercicios— caben del orden de una docena más.
+
+---
+
+# Las cuatro fases · 28 de agosto de 2026
+
+Ejecutadas seguidas, después del careo de las dos auditorías. Lo que sigue es
+qué quedó hecho y qué no, con las cifras medidas y no estimadas.
+
+## Fase 1 · los hallazgos matemáticos abiertos
+
+Los seis, verificados a mano antes de tocarlos:
+
+| | qué era | cómo se arregló |
+|---|---|---|
+| **B2** | el signo de la serie de Fourier de `la-que-no-tiene-saltos`, en dos sitios | $a_n=\frac{(-1)^n-1}{\pi n^2}$ es negativo para $n$ impar. Corregido, y añadida la comprobación que lo decide: en $t=0$ con el signo malo sale $\pi/2$ donde $f$ vale 0 |
+| **B4** | el épsilon rechazado con un motivo falso, en dos ejercicios | La pregunta admitía **infinitas** respuestas y el propio ejercicio lo confesaba en otro distractor. Reescrita como «el mayor que sirve», con distractores que sí son errores |
+| **B7** | una comprobación que integraba sobre un recinto vacío | Para $x>\sqrt2$ el recinto no existe. Una sola integral, y dicho por qué se para ahí |
+| **G1** | distractores cuyo mensaje describe un error que no da ese número | Los seis nombrados, recalculados y reasignados. Dos cambiaron de valor porque el número no lo producía ningún error real |
+| **G2** | dos ejercicios `nivel: examen` sin resolver | El de Laplace, resuelto entero —$x=t+e^{t}$, $y=1-e^{t}$, comprobado en las dos ecuaciones—. El de Green **no se puede**: su figura no la tenemos, y eso pasa de hueco callado a hueco declarado |
+| **G3** | una pieza `trampa: true` que era verdadera | $S(k\pi)=\sum b_n\operatorname{sen}(nk\pi)=0$ es válido. Sustituida por la trampa real del tema: confundir $S$ con $F$ en un salto |
+
+## Fase 2 · `npm run recalcula`
+
+No hay Python en la máquina, y traer una dependencia habría sido lo fácil. Se
+usó lo que el repositorio ya tiene: un evaluador propio de LaTeX, 160 líneas,
+sin dependencias nuevas.
+
+Comprueba solo lo que el corpus **ya afirma**: cada «expresión $\approx$
+decimal», cada forma exacta declarada en un `formato`, y que un formato que
+promete entero guarde un entero. Lo que no sabe evaluar lo declara saltado.
+
+**Encontró ocho errores más** en Cálculo, todos de redondeo o de cifra
+equivocada en el último dígito, más uno de fondo: un `\boxed` que llamaba
+«$\sqrt[3]{0{,}9}$» a lo que era el valor del **polinomio**, con la raíz
+verdadera escrita treinta líneas más abajo.
+
+Validado al revés: se le inyectó un error y se puso rojo.
+
+> **Su límite, y hay que repetirlo:** solo alcanza a las respuestas escritas
+> como decimal. **Álgebra queda entera fuera** —sus resultados son objetos
+> exactos y sus determinantes usan propiedades, no matrices escritas—. Cero
+> desajustes ahí significa «no hay nada que mirar», no «está comprobada».
+
+## Fase 3 · la rampa, y el campo que la escondía
+
+Lo primero fue descubrir que **la medición anterior estaba mal**. Con `nivel`
+completo —244 ejercicios lo tenían vacío y 34 del boletín decían `examen`— el
+recuento pasó de 66 a 42, y señaló a otros temas: t04, t03 y t05, no t08/t09/t10.
+
+Después, el trabajo:
+
+- `nivel` es **obligatorio** en el esquema. Un ejercicio nuevo sin él rompe el
+  build, y la escalera de §14 vuelve a ser comprobable.
+- **42 → 0 escalones arrancan en un ejercicio de examen.** No hizo falta
+  escribir ejemplos nuevos: los 44 que ya existían no estaban enlazados desde
+  los escalones que los necesitaban. Era un problema de enlace, no de contenido.
+- **4 → 0 escalones con los ejercicios fuera de orden.**
+- **32 → 0 pasos que ordenan decimales.** Y el arreglo fue §01: la instrucción
+  estaba duplicada en la `pregunta` y en el `formato`, y ahora vive solo donde
+  le toca.
+
+## Fase 4 · el peso, que no era el peso
+
+La auditoría matemática decía 16,4 s en el tema 1. **No reprodujo**: medido
+aquí, 5,9 s. Pero el hallazgo de fondo apareció al medir bien:
+
+| página | HTML | nodos | antes | ahora |
+|---|---|---|---|---|
+| t01 complejos | 5,8 MB | 151.892 | **5,9 s** | **2,3 s** |
+| t05 integración | 7,2 MB | 196.764 | 2,6 s | 2,1 s |
+| ruta ordinaria | 3,0 MB | 77.412 | 2,5 s | 2,4 s |
+| portada | 0,1 MB | 1.274 | 0,1 s | 0,1 s |
+
+**El tema 5 pesa más que el tema 1 y tardaba menos de la mitad.** Así que no
+era el peso: eran **doce lienzos del paso `verificar` pintándose al cargar**, a
+360.000 píxeles cada uno — cuatro millones de evaluaciones antes de que el
+alumno viera nada. t01 es el único tema con `verificar`.
+
+Se pasaron a tiempo muerto. Y de paso quedó un aviso escrito en el código:
+**un `IntersectionObserver` no vale aquí**, porque en modo guiado los lienzos
+viven en paneles ocultos, no intersecan nunca y se quedarían en blanco. Se
+probó, se comprobó que los seis lienzos quedaban vacíos, y se cambió.
+
+`npm run peso` queda como medida —no como guardián— para tomarla al cerrar
+cada asignatura.
+
+Y t08, que era un tema geométrico con **una** figura, tiene ahora dos: la
+segunda muestra qué intercambia Green, con el borde tramo a tramo a un lado y
+la región al otro.
+
+## Lo que sigue abierto
+
+- **417 de 425 resoluciones de examen sin contrastar.** `recalcula` comprueba
+  aritmética, no razonamiento: que una cuenta cuadre no dice que el método sea
+  el correcto. Sigue siendo el mayor riesgo del proyecto.
+- **Las 64 convocatorias parciales** que la auditoría matemática no recalculó a
+  mano. `recalcula` ya pasa por ellas, pero solo por sus decimales.
+- **Álgebra sin verificar**, y sin herramienta que la verifique.
+- **t08 y t09 siguen siendo los temas más flacos**: 1.516 y 2.440 palabras, y
+  dos ejemplos de entrada cada uno.
+- **La fase 5** —abrir la tercera asignatura— con sus tres condiciones: el
+  temario de Fluidos (16 contra 25), `unidad` en el esquema, y el lector de
+  respuestas fuera de `EjercicioGuiado`.
