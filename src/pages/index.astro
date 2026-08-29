@@ -23,7 +23,9 @@ const asignaturas = (await getCollection('catalogo')).sort(
 );
 
 const cursos = [1, 2] as const;
-const ETIQUETA = { ok: 'Disponible', obra: 'En construcción', prev: 'Previsto' } as const;
+/* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
+ * jerga de obra. «Entera» solo lo dice el catálogo, nunca esta página. */
+const ETIQUETA = { ok: 'entera', obra: 'la estamos escribiendo', prev: 'aún no' } as const;
 const NOMBRE_PATRON: Record<string, string> = {
   lectura: 'lectura',
   'figura-fija': 'figura fija',
@@ -120,54 +122,125 @@ const indice = asignaturas.flatMap((a, i) => [
     orden: i,
   })),
 ]);
+
+/* ── los números del héroe salen de las colecciones, no de la prosa ──
+ * §10: un dato publicado tiene que ser verdad. Si mañana entra un examen
+ * más, esta cifra cambia sola; escrita a mano, mentiría en una semana. */
+const totalExamenes = [...examenesPorAsignatura.values()].reduce((n, l) => n + l.length, 0);
+
+/* Los dos accesos directos del héroe: las asignaturas terminadas, la de más
+ * exámenes primero. La portada no supone itinerario (brief Pizarra): son
+ * puertas, no un orden. */
+const enteras = asignaturas
+  .filter((a) => a.data.estado === 'ok')
+  .sort(
+    (a, b) =>
+      (examenesPorAsignatura.get(b.id)?.length ?? 0) -
+      (examenesPorAsignatura.get(a.id)?.length ?? 0),
+  );
 ---
 
 <Base
-  titulo="Road to Ingeniería — mapa del temario"
-  descripcion="Plataforma de estudio gratuita para 1.º y 2.º de la Escuela de Ingeniería de Gipuzkoa (UPV/EHU). Cálculo y Mecánica de Fluidos, tema a tema."
+  titulo="Road to Ingeniería — la clase donde te dicen dónde te equivocas"
+  descripcion={`Plataforma de estudio gratuita para 1.º y 2.º de la Escuela de Ingeniería de Gipuzkoa (UPV/EHU). ${totalExamenes} exámenes de verdad resueltos paso a paso, con cada error típico nombrado.`}
 >
-  <Cabecera>
+  <Cabecera crumb="— Escuela de Ingeniería de Gipuzkoa · UPV/EHU">
     <button class="mini" type="button" data-abre-paleta>
       Buscar <kbd>/</kbd>
     </button>
   </Cabecera>
 
   <main id="principal" class="escena" data-vista="lista">
-    <!-- ── A · la lista ──────────────────────────────────────────── -->
-    <section class="hero" aria-label="Asignaturas">
-      <h1 class="titulo-lista">Mapa del temario</h1>
+    <!-- ── A · la pizarra ────────────────────────────────────────────
+         La portada del rediseño Pizarra (brief agosto 2026): héroe con el
+         subrayado de tiza que se dibuja UNA vez, la figura tocable de la
+         tangente, el temario escrito en la pizarra y la repisa. Nada se
+         mueve mientras se lee; reduced-motion lo deja todo ya dibujado. -->
+    <section class="hero" aria-label="Portada">
+      <div class="heroe">
+        <div class="mensaje">
+          <h1 class="titular apar">
+            La clase donde por fin te dicen{' '}
+            <span class="frase-tiza">
+              dónde te equivocas
+              <svg class="sub" height="12" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+                <path class="traza-sub" d="M 4 8 C 80 3 220 3 296 7" fill="none" stroke-width="3" stroke-linecap="round" />
+              </svg>
+            </span>
+          </h1>
+          <p class="entradilla apar">
+            Los apuntes dan el enunciado y la respuesta final. Aquí está todo lo
+            de en medio: {totalExamenes} exámenes de verdad resueltos paso a
+            paso, con cada error típico nombrado.
+          </p>
+          <p class="ctas apar">
+            {enteras.map((a, i) => (
+              <a
+                class:list={['cta', i === 0 ? 'llena' : 'borde']}
+                href={`#${a.id}`}
+                data-fila={a.id}
+              >
+                Entrar a {a.data.nombre} →
+              </a>
+            ))}
+          </p>
+          <p class="mano gratis apar">gratis para siempre · sin cuentas · sin anuncios</p>
+        </div>
 
-      {
-        cursos.map((curso) => (
-          <>
-            <p class="rotulo curso-h">{curso === 1 ? '1.er' : '2.º'} curso</p>
-            <div class="lista">
+        <!-- la figura de tiza: se dibuja una vez y luego SE TOCA.
+             Decorativa para el lector de pantalla; el juego es del puntero. -->
+        <div class="figura" aria-hidden="true">
+          <svg id="fig-piz" viewBox="0 0 400 300" data-figura-tiza>
+            <line x1="34" y1="258" x2="380" y2="258" class="eje" />
+            <line x1="48" y1="34" x2="48" y2="270" class="eje" />
+            <path id="curva-piz" class="traza-curva" d="M 48 240 C 128 240 128 84 210 84 C 288 84 280 196 372 154" fill="none" stroke-width="3" stroke-linecap="round" />
+            <line id="tang-piz" class="tangente" x1="0" y1="0" x2="0" y2="0" stroke-width="2.5" stroke-dasharray="7 7" opacity="0" />
+            <circle id="punto-piz" class="punto-tiza" r="6.5" cx="210" cy="84" />
+            <text x="66" y="56" class="mano nota">la tangente te sigue —</text>
+            <text x="66" y="80" class="mano nota">prueba a arrastrar el punto</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- el temario, escrito en la pizarra. Cada fila es un ancla al
+           detalle: sin JavaScript la abre `:target`, como siempre. -->
+      <div class="temario">
+        {
+          cursos.map((curso) => (
+            <div class="columna">
+              <p class="mano curso-h">{curso === 1 ? '1.er' : '2.º'} curso</p>
               {asignaturas
                 .filter((a) => a.data.curso === curso)
-                .map((a, i) => (
+                .map((a) => (
                   <a
                     class:list={['fila', { prev: a.data.estado === 'prev' }]}
                     href={`#${a.id}`}
                     style={`--acento: var(${a.data.acento})`}
                     data-fila={a.id}
                   >
-                    <span class="n">{String(a.data.orden).padStart(2, '0')}</span>
+                    <span class="mano pn">{String(a.data.orden).padStart(2, '0')}</span>
                     <span class="nm" data-nombre>{a.data.nombre}</span>
-                    <span class="lado">
-                      <span class="barra" aria-hidden="true">
-                        {Array.from({ length: Math.max(a.data.temas.length, 10) }, (_, j) => (
-                          <i class:list={{ on: j < hechos(a) }} />
-                        ))}
-                      </span>
-                      <span class="st">{ETIQUETA[a.data.estado]}</span>
-                      <span class="go" aria-hidden="true">→</span>
+                    <span class:list={['mano', 'ps', a.data.estado]}>
+                      {a.data.estado === 'ok'
+                        ? `${a.data.temas.length} temas · ${examenesPorAsignatura.get(a.id)?.length ?? 0} exámenes — entera`
+                        : a.data.estado === 'obra' && hechos(a) > 0
+                          ? `${hechos(a)} de ${a.data.temas.length} temas — ${ETIQUETA.obra}`
+                          : ETIQUETA[a.data.estado]}
                     </span>
                   </a>
                 ))}
             </div>
-          </>
-        ))
-      }
+          ))
+        }
+      </div>
+
+      <!-- la repisa -->
+      <div class="repisa" role="presentation">
+        <span class="tiza-barra t-blanca"></span>
+        <span class="tiza-barra t-amarilla"></span>
+        <span class="tiza-barra t-menta"></span>
+        <span class="lema">se abre una asignatura cuando la anterior está terminada — pocas excelentes antes que muchas a medias</span>
+      </div>
     </section>
 
     <!-- ── B · el detalle, uno por asignatura ─────────────────────
@@ -421,6 +494,76 @@ const indice = asignaturas.flatMap((a, i) => [
   // Entrar con el enlace ya puesto (o recargar) tiene que dejar la misma vista.
   if (location.hash.length > 1) abre(location.hash.slice(1), null);
 
+  /* ── la figura tocable ─────────────────────────────────────────────
+     Un punto amarillo arrastrable por la curva; la tangente le sigue.
+     El movimiento es bajo demanda (brief Pizarra): nada se mueve solo.
+     Con reduced-motion la curva aparece ya dibujada y el punto queda
+     quieto — pero sigue siendo arrastrable. */
+  {
+    const svg = document.querySelector<SVGSVGElement>('[data-figura-tiza]');
+    const path = document.querySelector<SVGPathElement>('#curva-piz');
+    const punto = document.querySelector<SVGCircleElement>('#punto-piz');
+    const tang = document.querySelector<SVGLineElement>('#tang-piz');
+    if (svg && path && punto && tang) {
+      const L = path.getTotalLength();
+      let s = L * 0.44;
+      let arrastra = false;
+
+      const pinta = () => {
+        const p = path.getPointAtLength(s);
+        const a = path.getPointAtLength(Math.max(0, s - 2));
+        const b = path.getPointAtLength(Math.min(L, s + 2));
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const n = Math.hypot(dx, dy) || 1;
+        const ux = dx / n;
+        const uy = dy / n;
+        const e = 52;
+        punto.setAttribute('cx', String(p.x));
+        punto.setAttribute('cy', String(p.y));
+        tang.setAttribute('x1', String(p.x - ux * e));
+        tang.setAttribute('y1', String(p.y - uy * e));
+        tang.setAttribute('x2', String(p.x + ux * e));
+        tang.setAttribute('y2', String(p.y + uy * e));
+        tang.setAttribute('opacity', '0.9');
+      };
+
+      const acerca = (ev: PointerEvent) => {
+        const m = svg.getScreenCTM();
+        if (!m) return;
+        const c = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
+        let mejor = s;
+        let md = Infinity;
+        for (let i = 0; i <= 90; i++) {
+          const q = path.getPointAtLength((L * i) / 90);
+          const d = (q.x - c.x) * (q.x - c.x) + (q.y - c.y) * (q.y - c.y);
+          if (d < md) {
+            md = d;
+            mejor = (L * i) / 90;
+          }
+        }
+        s = mejor;
+        pinta();
+      };
+
+      svg.addEventListener('pointerdown', (ev) => {
+        arrastra = true;
+        svg.setPointerCapture(ev.pointerId);
+        acerca(ev);
+      });
+      svg.addEventListener('pointermove', (ev) => {
+        if (arrastra) acerca(ev);
+      });
+      svg.addEventListener('pointerup', () => {
+        arrastra = false;
+      });
+
+      /* La tangente aparece cuando la curva ha terminado de dibujarse;
+         si no hay animación, ahora mismo. */
+      setTimeout(pinta, reducido ? 0 : 2100);
+    }
+  }
+
   /* ── paleta de comandos ────────────────────────────────────────── */
   type Entrada = {
     tipo: 'a' | 't';
@@ -442,6 +585,18 @@ const indice = asignaturas.flatMap((a, i) => [
   let cursor = 0;
   let ultimoFoco: HTMLElement | null = null;
 
+  /* El CSS de esta página tiene ámbito de Astro: solo viste a los elementos
+     que llevan el atributo data-astro-cid-*. Los nodos que crea este script
+     nacen sin él y saldrían en crudo — se les estampa el de la paleta. */
+  const ambito = paleta.getAttributeNames().find((n) => n.startsWith('data-astro-cid'));
+  function conAmbito<T extends HTMLElement>(el: T): T {
+    if (ambito) {
+      el.setAttribute(ambito, '');
+      for (const hijo of el.querySelectorAll('*')) hijo.setAttribute(ambito, '');
+    }
+    return el;
+  }
+
   function pinta() {
     const q = campo.value.trim().toLowerCase();
     visibles = q ? indice.filter((x) => x.clave.includes(q)).slice(0, 12) : indice.filter((x) => x.tipo === 'a');
@@ -451,7 +606,7 @@ const indice = asignaturas.flatMap((a, i) => [
       const p = document.createElement('p');
       p.className = 'nada';
       p.textContent = `Nada con «${campo.value}». Prueba con el número del tema o con una palabra del enunciado.`;
-      panel.appendChild(p);
+      panel.appendChild(conAmbito(p));
       return;
     }
 
@@ -466,7 +621,7 @@ const indice = asignaturas.flatMap((a, i) => [
         const t = document.createElement('p');
         t.className = 'rotulo grp';
         t.textContent = cual;
-        panel.appendChild(t);
+        panel.appendChild(conAmbito(t));
       }
 
       const b = document.createElement('button');
@@ -486,7 +641,7 @@ const indice = asignaturas.flatMap((a, i) => [
         pinta();
       });
       b.addEventListener('click', () => ve(x));
-      panel.appendChild(b);
+      panel.appendChild(conAmbito(b));
     });
   }
 
@@ -559,116 +714,274 @@ const indice = asignaturas.flatMap((a, i) => [
 <style>
   /* ── escena ──────────────────────────────────────────────────────
      Dos vistas en la misma página. Con JavaScript manda `data-vista`;
-     sin él manda `:target`, y por eso las dos condiciones van juntas. */
+     sin él manda `:target`, y por eso las dos condiciones van juntas.
+
+     La página ENTERA es pizarra (brief Pizarra): el fondo vive en el body
+     y una capa fija lleva el gradiente, el polvo de tiza y la viñeta. El
+     detalle B se recolorea remapeando los tokens neutros a tiza — una
+     regla, no doscientas. */
+  :global(body) { background: var(--piz-medio); }
+
   .escena {
     position: relative;
     padding: 0 clamp(1rem, 4vw, 3rem);
+
+    /* el remapeo: todo lo que dentro de la escena pedía papel habla tiza.
+       El `color` hay que REDECLARARLO: el body lo calcula con la tinta
+       original y los hijos heredan el valor calculado, no la variable —
+       sin esta línea todo lo que no declara color sale oscuro. */
+    color: var(--ink);
+    --ink: var(--tiza);
+    --graphite: var(--tiza-suave);
+    --faint: var(--tiza-apagada);
+    --rule: var(--tiza-raya);
+    --grid: var(--tiza-velo);
+    --panel: var(--tiza-panel);
+    --live: var(--tiza-amarilla);
+    --live-soft: var(--tiza-velo);
+    --flag: var(--tiza-flag);
+    --flag-soft: var(--tiza-velo);
+    --alt: var(--tiza-menta);
+    --alt-soft: var(--tiza-velo);
   }
 
-  /* ── A · lista ─────────────────────────────────────────────────── */
+  .escena::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(var(--tiza-polvo-1) 1px, transparent 1px) 0 0 / 7px 9px,
+      radial-gradient(var(--tiza-polvo-2) 1px, transparent 1px) 5px 7px / 13px 15px,
+      var(--pizarra);
+    box-shadow: var(--piz-vineta);
+  }
+
+  /* Los acentos oscuros de asignatura no se leen sobre pizarra: dentro de
+     la escena el acento es siempre la tiza amarilla. `!important` porque
+     el valor original va en el atributo style (lo necesita el script). */
+  .escena .detalle,
+  .escena .fila { --acento: var(--tiza-amarilla) !important; }
+
+  /* La barra superior, en pizarra. Es CSS de página: las interiores no
+     cambian hasta la fase 2 del brief. */
+  :global(.top) {
+    background: color-mix(in srgb, var(--piz-medio) 82%, transparent);
+    border-bottom-color: var(--tiza-raya);
+  }
+
+  :global(.top .brand) { color: var(--tiza); }
+  :global(.top .brand span) { color: var(--tiza-amarilla); }
+
+  /* la escuela, como apunte de tiza al lado del wordmark */
+  :global(.top .crumb) {
+    font-family: var(--mano);
+    font-size: 1.05rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--tiza-apagada);
+  }
+
+  /* la portada es pizarra en los dos temas: aquí el conmutador no dice nada */
+  :global(.top .toggle) { display: none; }
+
+  /* ── A · la pizarra ────────────────────────────────────────────── */
   .hero {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 8rem);
-    padding-bottom: 1rem;
+    min-height: calc(100vh - 4rem);
     transition: opacity .32s var(--ease), transform .42s var(--ease);
   }
 
-  .titulo-lista {
-    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
-    font-weight: 500;
-    letter-spacing: -.01em;
-    color: var(--graphite);
-    padding: 1.4rem 0 .2rem;
-    margin: 0;
-    flex: 0 0 auto;
+  .mano { font-family: var(--mano); }
+
+  .heroe {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    padding-top: clamp(1.2rem, 4vh, 2.8rem);
   }
 
-  .curso-h { padding: .9rem 0 .25rem; flex: 0 0 auto; }
+  .mensaje { max-width: 40rem; }
 
-  .lista { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .titular {
+    font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -.015em;
+    line-height: 1.12;
+    color: var(--tiza);
+    margin: 0 0 1.1rem;
+  }
+
+  .frase-tiza {
+    font-family: var(--mano);
+    font-weight: 700;
+    font-size: 1.15em;
+    color: var(--tiza-amarilla);
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .sub { position: absolute; left: 0; bottom: -8px; width: 100%; }
+  .traza-sub { stroke: var(--tiza-amarilla); opacity: .9; }
+
+  .entradilla {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--tiza-suave);
+    max-width: 33rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .ctas { display: flex; flex-wrap: wrap; gap: .65rem; margin: 0; }
+
+  .cta {
+    font-size: .95rem;
+    font-weight: 700;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background .15s, border-color .15s;
+  }
+
+  .cta.llena {
+    color: var(--piz-medio);
+    background: var(--tiza-amarilla);
+    padding: .8rem 1.4rem;
+    box-shadow: var(--piz-sombra-cta);
+  }
+
+  .cta.llena:hover { background: var(--tiza-amarilla-hover); }
+
+  .cta.borde {
+    color: var(--tiza);
+    border: 1.5px solid var(--tiza-borde);
+    padding: .72rem 1.3rem;
+  }
+
+  .cta.borde:hover, .cta.borde:focus-visible { border-color: var(--tiza); }
+
+  .gratis { font-size: 1.2rem; color: var(--tiza-apagada); margin: .9rem 0 0; }
+
+  /* ── la figura tocable ─────────────────────────────────────────── */
+  .figura {
+    margin-left: auto;
+    flex: 0 1 400px;
+    min-width: 250px;
+  }
+
+  .figura svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .figura svg:active { cursor: grabbing; }
+  .eje { stroke: var(--tiza-borde); stroke-width: 2; }
+  .traza-curva { stroke: var(--tiza); }
+  .tangente { stroke: var(--tiza-amarilla); }
+  .punto-tiza { fill: var(--tiza-amarilla); }
+  .nota { font-size: 21px; fill: var(--tiza-suave); }
+
+  /* ── el temario ────────────────────────────────────────────────── */
+  .temario {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(2rem, 5vw, 4rem);
+    padding: 1.8rem 0 2.4rem;
+  }
+
+  .curso-h {
+    font-size: 1.5rem;
+    color: var(--tiza-amarilla);
+    margin: 0 0 .2rem;
+  }
 
   .fila {
-    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: .55rem .35rem;
+    border-bottom: 1px dashed var(--tiza-raya);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background .15s;
+  }
+
+  .columna .fila:last-child { border-bottom-color: transparent; }
+  .fila:hover, .fila:focus-visible { background: var(--tiza-velo); }
+
+  .fila .pn { font-size: 1.25rem; color: var(--tiza-amarilla); min-width: 2.1rem; }
+
+  /* El nombre es el objeto que viaja al titular del detalle (FLIP). */
+  .fila .nm {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+    color: var(--tiza);
+  }
+
+  .fila.prev .nm { font-weight: 400; color: var(--tiza-apagada); }
+
+  .fila .ps {
+    margin-left: auto;
+    font-size: 1.1rem;
+    color: var(--tiza-apagada);
+    text-align: right;
+  }
+
+  .fila .ps.ok { color: var(--tiza-menta); }
+  .fila .ps.obra { color: var(--tiza-amarilla); }
+
+  /* ── la repisa ─────────────────────────────────────────────────── */
+  .repisa {
+    margin: auto calc(-1 * clamp(1rem, 4vw, 3rem)) 0;
+    min-height: 44px;
     display: flex;
     align-items: center;
-    gap: clamp(.7rem, 2vw, 1.4rem);
-    flex: 1 1 0;
-    min-height: 3.1rem;
-    padding: 0 .2rem;
-    border-top: 1px solid var(--rule);
-    text-decoration: none;
-    transition: flex-grow .42s var(--ease), opacity .28s var(--ease);
+    gap: 1.25rem;
+    padding: .5rem clamp(1rem, 4vw, 3rem);
+    background: var(--repisa);
+    box-shadow: var(--repisa-sombra);
   }
 
-  .lista .fila:last-child { border-bottom: 1px solid var(--rule); }
+  .tiza-barra { height: 12px; border-radius: 3px; box-shadow: var(--shadow-1); flex: 0 0 auto; }
+  .t-blanca { width: 72px; background: var(--tiza); }
+  .t-amarilla { width: 44px; background: var(--tiza-amarilla); }
+  .t-menta { width: 30px; background: var(--tiza-menta); }
+  .lema { margin-left: auto; font-size: .78rem; color: var(--tiza-suave); text-align: right; }
 
-  .fila .n {
-    font-family: var(--mono);
-    font-size: .68rem;
-    color: var(--acento);
-    opacity: .55;
-    flex: 0 0 auto;
-    transition: opacity .3s var(--ease);
+  /* ── el movimiento se ve UNA vez, y solo si el sistema lo permite ──
+     El estado por defecto es «ya dibujado»: con reduced-motion no hay
+     animación que correr y nada se queda invisible (§17: un forwards
+     apagado deja el elemento en su estado inicial). */
+  @media (prefers-reduced-motion: no-preference) {
+    .apar { opacity: 0; animation: apar .8s var(--ease) forwards; }
+    .entradilla.apar { animation-delay: .2s; }
+    .ctas.apar { animation-delay: .35s; }
+    .gratis.apar { animation-delay: .5s; }
+
+    .traza-curva {
+      stroke-dasharray: 560;
+      stroke-dashoffset: 560;
+      animation: traza 1.6s ease-out .4s forwards;
+    }
+
+    .traza-sub {
+      stroke-dasharray: 320;
+      stroke-dashoffset: 320;
+      animation: traza 1.1s ease-out 1.1s forwards;
+    }
   }
 
-  /* El nombre es el objeto que viaja al titular: mismo tipo, misma letra,
-     solo cambia de tamaño y de sitio. */
-  .fila .nm {
-    font-family: var(--display);
-    font-weight: 300;
-    letter-spacing: -.03em;
-    line-height: 1;
-    font-size: clamp(1.15rem, 3.4vh, 2.5rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: font-weight .42s var(--ease);
+  @keyframes apar {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
   }
 
-  .fila .lado { margin-left: auto; display: flex; align-items: center; gap: 1rem; flex: 0 0 auto; }
-
-  .barra { display: flex; gap: 2px; }
-
-  .barra i {
-    width: 5px;
-    height: 16px;
-    border-radius: 1px;
-    background: var(--grid);
-    display: block;
-    transition: background .3s var(--ease);
-  }
-
-  .barra i.on { background: var(--acento); opacity: .75; }
-
-  .fila .st {
-    font-family: var(--mono);
-    font-size: .63rem;
-    color: var(--faint);
-    white-space: nowrap;
-  }
-
-  .fila .go {
-    font-family: var(--mono);
-    font-size: .9rem;
-    color: var(--acento);
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity .3s var(--ease), transform .3s var(--ease);
-  }
-
-  /* La lente: la fila señalada crece y las demás se comprimen. Solo donde
-     hay puntero de verdad; en táctil no existe el estado intermedio. */
-  @media (hover: hover) {
-    .lista:hover .fila { opacity: .38; }
-    .lista .fila:hover { flex-grow: 2.1; opacity: 1; }
-    .lista .fila:hover .nm { font-weight: 500; }
-    .lista .fila:hover .go { opacity: 1; transform: none; }
-    .lista .fila:hover .n { opacity: 1; }
-  }
-
-  .fila:focus-visible { flex-grow: 2.1; opacity: 1; }
-  .fila.prev .nm { color: var(--graphite); }
+  @keyframes traza { to { stroke-dashoffset: 0; } }
 
   /* ── B · detalle ───────────────────────────────────────────────── */
   .detalle {
@@ -1035,15 +1348,28 @@ const indice = asignaturas.flatMap((a, i) => [
   .nada { padding: 1.6rem .9rem; text-align: center; color: var(--graphite); font-size: .9rem; }
 
   /* ── pantallas estrechas ───────────────────────────────────────── */
-  @media (max-width: 760px) {
-    .hero { min-height: 0; }
-    .fila { flex: 0 0 auto; min-height: 3.4rem; }
-    .fila .st { display: none; }
-    .cab .meta { display: none; }
+  @media (max-width: 900px) {
+    .heroe { flex-direction: column; }
+    .figura { margin: 0 auto; width: min(400px, 100%); flex: 0 0 auto; }
   }
 
-  @media (max-width: 420px) {
-    .barra { display: none; }
+  @media (max-width: 760px) {
+    .hero { min-height: 0; }
+    .temario { grid-template-columns: 1fr; gap: 0; }
+    .columna + .columna .curso-h { margin-top: 1.2rem; }
+    .cab .meta { display: none; }
+
+    /* la repisa se parte: las tizas arriba y el lema debajo, a lo ancho */
+    .repisa { flex-wrap: wrap; row-gap: .15rem; padding-top: .7rem; padding-bottom: .7rem; }
+    .lema { text-align: left; margin-left: 0; flex-basis: 100%; }
+  }
+
+  @media (max-width: 480px) {
+    /* el estado baja a su propia línea, alineado con el nombre; el nombre
+       largo envuelve dentro de su hueco, no debajo del número */
+    .fila { flex-wrap: wrap; row-gap: 0; }
+    .fila .nm { flex: 1 1 0; min-width: 0; }
+    .fila .ps { flex-basis: 100%; margin-left: 3.1rem; text-align: left; font-size: 1rem; }
     .der { gap: .5rem; }
   }
 </style>

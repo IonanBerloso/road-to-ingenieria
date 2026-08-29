@@ -1820,3 +1820,68 @@ docena larga.
 **Cálculo está lista para no tocarse más y pasar a la siguiente.** Lo que queda
 no se cierra escribiendo: se cierra leyendo las matemáticas de 416
 resoluciones, y eso es una tarea distinta que conviene no disfrazar de fase.
+
+---
+
+# Rediseño «Pizarra» — fase 1 (29 de agosto de 2026)
+
+El brief llegó de la sesión de Cowork (`redisenopizarrabrief.md`, Descargas) con
+la decisión ya tomada: mundo Pizarra, elegido por Ionan entre cuatro. Esta fase
+cubre tokens, fuentes y la portada. **El interior NO se toca hasta que Ionan
+vea la portada** (regla 5 del brief).
+
+## Hecho
+
+- [x] Rama `rediseno-pizarra` (las 10 transcripciones de Álgebra quedaron
+      commiteadas en `main` antes de abrirla).
+- [x] Fuentes: Karla (400/500/600/700/800) + Caveat (500/700) reemplazan a
+      Fraunces + IBM Plex Sans. Plex Mono se queda (datos y etiquetas; el
+      brief no lo tocaba). El 600 no estaba en el brief pero 20 componentes
+      lo usan y sin él Karla lo sintetizaría.
+- [x] `tokens.css`: sección pizarra completa. **La tiza apagada subió de
+      .55 a .62**: sobre el punto claro del gradiente (#1D463A) la del mockup
+      daba 4.02 de contraste y 4.5 es el listón; a .62 da 4.7. Todos los
+      demás pares pasan sobrados (tiza 9.3, amarilla 7.5, menta 7.5).
+- [x] Bloque de impresión: la pizarra en papel es tinta sobre blanco — los
+      navegadores tiran los fondos al imprimir y la tiza desaparecería.
+- [x] CLAUDE.md §02 (tabla de dependencias) y §06 (reescrito entero:
+      tipografía, superficies pizarra/papel, la regla del movimiento).
+- [x] Portada nueva: héroe con subrayado que se dibuja una vez, figura
+      tocable (punto arrastrable + tangente), temario en dos columnas con
+      estados honestos del catálogo, repisa con el lema.
+- [x] Los números del héroe se calculan de las colecciones (96 exámenes hoy),
+      nunca escritos a mano (§10).
+
+## Decisiones tomadas al implementar (el brief las dejaba abiertas)
+
+- **El detalle B adopta pizarra**, no papel: el brief dice «la portada
+  entera» y un salto oscuro→claro dentro de la misma página desorienta.
+  Se recoloreó remapeando los tokens neutros a tiza dentro de `.escena`
+  (una regla, no doscientas). El acento de asignatura dentro de la escena
+  es siempre tiza amarilla: los acentos oscuros no se leen sobre pizarra.
+- **El FLIP se queda** (el nombre viajando no cansa; lo dice el brief).
+- **El conmutador claro/oscuro se oculta solo en la portada**: la pizarra
+  es igual en los dos temas y ahí el botón no diría nada. Las interiores
+  lo conservan hasta la fase 2.
+- **El estado por defecto de toda animación es «ya dibujado»**: la animación
+  solo existe dentro de `prefers-reduced-motion: no-preference`. Con
+  movimiento reducido el subrayado y la curva aparecen dibujados — un
+  `forwards` apagado dejaría el trazo invisible para siempre (§17).
+- El wordmark pasa a Caveat también en las páginas interiores (identidad),
+  pero nada más de la barra interior cambia hasta la fase 2.
+
+## Pendiente (fase 2, tras el visto bueno)
+
+- [ ] Interior: papel cálido (#F8F5EC …), barra superior pizarra,
+      ErrorTipico y diagnósticos como recuadros de pizarra, mini-pizarras
+      para figuras. Replantear ahí el toggle claro/oscuro.
+- [ ] Migrar los acentos de asignatura al mundo nuevo (hoy siguen los de la
+      paleta vieja; en la portada ya no se ven).
+- [ ] Decidir si `--live`/`--flag`/`--alt` cambian a los verdes/rojos del
+      papel cálido del brief (§3) o se quedan.
+
+## Además, arreglado de paso
+
+- 111 `\bar{}` → `\overline{}` en las transcripciones de Álgebra (t05/t06):
+  el guardián de verify los cazó. Y un `$…$` partido en tres líneas en el
+  enunciado de 6.7 que remark-math no cruzaba.

@@ -93,7 +93,7 @@ Las dependencias, todas, y por qué está cada una:
 |---|---|---|
 | `astro` · `@astrojs/mdx` | el sitio y la prosa | §02 |
 | `remark-math` · `rehype-katex` · `katex` | las fórmulas, dibujadas en el build | §07 |
-| `@fontsource-variable/fraunces` · `@fontsource/ibm-plex-sans` · `@fontsource/ibm-plex-mono` | las tres familias, autoalojadas | §06 |
+| `@fontsource/karla` · `@fontsource/caveat` · `@fontsource/ibm-plex-mono` | las tres familias, autoalojadas | §06 |
 | `vitest` | los tests | §11 |
 | `playwright` (solo desarrollo) | `humo.mjs`, y ver lo que se dibuja | §11, §16 |
 | `js-yaml` (solo desarrollo) | que el ejemplo de §04 compile de verdad | §11 |
@@ -416,11 +416,37 @@ movimiento contesta de dónde ha salido algo y dónde se ha ido lo otro.
 
 ## 06 // Diseño
 
+> Rediseño «Pizarra» (agosto 2026, brief aprobado por Ionan tras comparar
+> cuatro mundos visuales). Identidad: pizarra verde con tiza. Lectura larga:
+> papel cálido. La vara de medir la puso él: «lo futurista impresiona el
+> primer día y cansa la vista a la semana» — calidez antes que espectáculo.
+
 ### Tipografía
 
-Fraunces para títulos, IBM Plex Sans para el cuerpo, IBM Plex Mono para datos,
-unidades y etiquetas. Tres roles, tres familias, sin excepciones. Autoalojadas
-vía `@fontsource`.
+Karla para interfaz y cuerpo (400/500/600/700/800; el display es la misma
+familia en 800). Caveat **solo** para anotaciones manuscritas —rótulos de
+tiza, apuntes al margen, estados— nunca cuerpo de texto ni párrafos.
+IBM Plex Mono para datos, unidades y etiquetas. Las fórmulas no cambian:
+KaTeX en el build con sus propias fuentes (§07). Autoalojadas vía
+`@fontsource`.
+
+> Hasta agosto de 2026 eran Fraunces + IBM Plex Sans. Se sustituyeron con el
+> rediseño Pizarra; si un componente aún pide un peso que Karla no tiene
+> importado, el peso se añade en `Base.astro`, no se aproxima con otro.
+
+### La pizarra y el papel
+
+- **Pizarra** (tokens `--piz-*`, `--tiza*`, `--repisa`): la portada entera,
+  la barra superior de las páginas interiores, los recuadros de ErrorTipico,
+  los diagnósticos del ejercicio guiado y las figuras enmarcadas como
+  mini-pizarra. Es oscura por naturaleza: mismos valores en los dos temas.
+- **Papel cálido**: todo donde se lee o se trabaja durante horas — prosa,
+  ejercicios, exámenes, rutas. Motivo: fatiga visual e impresión (§11).
+- **El movimiento se ve una vez** (entrada, `forwards`, nunca `infinite`) **o
+  bajo demanda** (hover, arrastrar). Mientras se lee, nada se mueve.
+  `prefers-reduced-motion` lo apaga todo.
+- Nada de cuenta atrás al examen, nada de memoria de progreso en la portada,
+  y la portada no supone itinerario: cada alumno entra a lo suyo.
 
 ### Color
 
