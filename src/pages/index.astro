@@ -26,16 +26,27 @@ const cursos = [1, 2] as const;
 /* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
  * jerga de obra. «Entera» solo lo dice el catálogo, nunca esta página. */
 const ETIQUETA = { ok: 'entera', obra: 'la estamos escribiendo', prev: 'aún no' } as const;
-const NOMBRE_PATRON: Record<string, string> = {
-  lectura: 'lectura',
-  'figura-fija': 'figura fija',
-  ejercicio: 'ejercicio guiado',
-  verificador: 'verificador',
-  demostracion: 'demostración',
-  simulador: 'simulador',
+
+/* El detalle (brief §5b): el rótulo de tiza de la banda dice qué es esta
+ * asignatura, con el estado en las palabras de la pizarra. */
+const FRASE_ESTADO = {
+  ok: 'asignatura entera',
+  obra: 'la estamos escribiendo',
+  prev: 'aún no',
+} as const;
+
+/* Las etiquetas cortas de los botones de ruta. Presentación, no dato:
+ * el título completo («Preparar la primera evaluación») no cabe en la
+ * retícula de la caja de pizarra. */
+const NOMBRE_RUTA: Record<string, string> = {
+  '1ev': '1.ª evaluación',
+  '2ev': '2.ª evaluación',
+  '3ev': '3.ª evaluación',
+  '4ev': '4.ª evaluación',
+  '5ev': '5.ª evaluación',
+  ord: 'Ordinaria',
+  ext: 'Extraordinaria',
 };
-const ORDEN_PATRONES = ['lectura', 'figura-fija', 'ejercicio', 'verificador', 'demostracion', 'simulador'];
-const ANCHO_PESO = { alto: '100%', medio: '62%', bajo: '30%' } as const;
 
 const hechos = (a: (typeof asignaturas)[number]) => a.data.temas.filter((t) => t.hecho).length;
 
@@ -66,12 +77,12 @@ for (const ex of await getCollection('examen')) {
  *  Este enlace no es solo navegación. `humo.mjs` descubre las páginas que
  *  tiene que probar **leyendo la portada**, así que sin él la ruta se
  *  quedaría sin comprobar y el suelo daría verde igual. */
-const rutasPorAsignatura = new Map<string, { titulo: string; sufijo: string }[]>();
+const rutasPorAsignatura = new Map<string, { titulo: string; sufijo: string; conv: string }[]>();
 const rutasIndice = new Map<string, { titulo: string; sufijo: string; bloques: string }[]>();
 for (const r of await getCollection('preparar')) {
   const sufijo = SUFIJO_CONV[r.data.evaluacion];
   const lista = rutasPorAsignatura.get(r.data.asignatura) ?? [];
-  lista.push({ titulo: r.data.titulo, sufijo });
+  lista.push({ titulo: r.data.titulo, sufijo, conv: r.data.evaluacion });
   rutasPorAsignatura.set(r.data.asignatura, lista);
 
   const idx = rutasIndice.get(r.data.asignatura) ?? [];
@@ -81,6 +92,11 @@ for (const r of await getCollection('preparar')) {
     bloques: r.data.bloques.map((b) => b.titulo).join(' '),
   });
   rutasIndice.set(r.data.asignatura, idx);
+}
+/* Los botones de la caja de rutas salen en el orden del curso, no en el
+ * orden en que el glob encontró los ficheros. */
+for (const lista of rutasPorAsignatura.values()) {
+  lista.sort((a, b) => ORDEN_CONV.indexOf(a.conv) - ORDEN_CONV.indexOf(b.conv));
 }
 for (const lista of examenesPorAsignatura.values()) {
   lista.sort(
@@ -254,30 +270,51 @@ const enteras = asignaturas
           style={`--acento: var(${a.data.acento})`}
           aria-labelledby={`h-${a.id}`}
         >
-          <nav class="chips" aria-label="Cambiar de asignatura">
-            <a class="volver" href="#principal">← todas</a>
-            {asignaturas.map((x) => (
-              <a class:list={['chip', { act: x.id === a.id }]} href={`#${x.id}`}>
-                {x.data.nombre}
-              </a>
-            ))}
-          </nav>
+          {/* ── la banda de pizarra: la identidad (brief §5b) ── */}
+          <div class="banda">
+            <nav class="chips" aria-label="Cambiar de asignatura">
+              <a class="volver" href="#principal">← todas</a>
+              {asignaturas.map((x) => (
+                <a class:list={['chip', { act: x.id === a.id }]} href={`#${x.id}`}>
+                  {x.data.nombre}
+                </a>
+              ))}
+            </nav>
 
-          <div class="cab">
-            <span class="n">{String(a.data.orden).padStart(2, '0')}</span>
-            {/* tabindex -1: al abrir el detalle el foco aterriza aquí, para que
-                el lector de pantalla anuncie dónde ha ido a parar. No lleva
-                outline:none — si llegas por teclado, tienes que verlo. */}
-            <h2 id={`h-${a.id}`} class="nombre" data-destino tabindex="-1">
-              {a.data.nombre}
-            </h2>
-            <span class="meta">
-              {a.data.temas.length > 0 && `${a.data.temas.length} temas · `}
-              {ETIQUETA[a.data.estado]}
-            </span>
+            <div class="b-cuerpo">
+              <div class="b-izq">
+                <p class="mano b-kicker">
+                  {String(a.data.orden).padStart(2, '0')} ·{' '}
+                  {a.data.curso === 1 ? '1.er curso' : '2.º curso'} ·{' '}
+                  {FRASE_ESTADO[a.data.estado]}
+                </p>
+                {/* tabindex -1: al abrir el detalle el foco aterriza aquí, para
+                    que el lector de pantalla anuncie dónde ha ido a parar. No
+                    lleva outline:none — si llegas por teclado, tienes que verlo. */}
+                <h2 id={`h-${a.id}`} class="nombre" data-destino tabindex="-1">
+                  {a.data.nombre}
+                </h2>
+                {a.data.descripcion && <p class="b-desc">{a.data.descripcion}</p>}
+              </div>
+
+              <div class="b-der">
+                {a.data.temas.length > 0 && (
+                  <p class="mano b-meta">
+                    {a.data.temas.length} temas
+                    {examenesPorAsignatura.has(a.id) &&
+                      ` · ${examenesPorAsignatura.get(a.id)!.length} convocatorias resueltas enteras`}
+                  </p>
+                )}
+                {rutasPorAsignatura.has(a.id) && (
+                  <a class="b-cta" href={`#${a.id}-rutas`}>
+                    Por dónde empezar: elige tu evaluación ↓
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
-          <div class="regla"></div>
 
+          {/* ── el cuerpo, en papel ── */}
           {!a.data.temarioOficial && a.data.temas.length > 0 && (
             <p class="aviso">
               Temario provisional: hay que sustituirlo por el oficial de la asignatura.
@@ -286,95 +323,97 @@ const enteras = asignaturas
 
           {a.data.temas.length > 0 ? (
             <div class="cuerpo">
-            <ul class="temas">
-              {a.data.temas.map((t, j) => {
-                const enlace = t.hecho ? ruta(`${a.id}/${t.id}`) : null;
-                const Etiqueta = enlace ? 'a' : 'div';
-                return (
-                  <li style={`--i: ${j}`}>
-                    <Etiqueta
-                      class="tema"
-                      data-peso={t.peso}
-                      {...(enlace ? { href: enlace } : { 'aria-disabled': 'true' })}
-                    >
-                      <span class="tn">{String(t.n).padStart(2, '0')}</span>
-                      <span class="txt">
-                        <span class="t-tit">{t.titulo}</span>
-                        <span class="t-desc">{t.descripcion}</span>
-                      </span>
-                      <span class="der">
-                        <span class="peso">
-                          <span class="rotulo">{t.peso}</span>
-                          <span class="pista" aria-hidden="true">
-                            <span class="relleno" style={`width:${ANCHO_PESO[t.peso]}`} />
+              <div class="temario-col">
+                <p class="rotulo t-rotulo">El temario, tema a tema</p>
+                <ul class="temas">
+                  {a.data.temas.map((t, j) => {
+                    const enlace = t.hecho ? ruta(`${a.id}/${t.id}`) : null;
+                    const Etiqueta = enlace ? 'a' : 'div';
+                    return (
+                      <li style={`--i: ${j}`}>
+                        <Etiqueta
+                          class="tema"
+                          data-peso={t.peso}
+                          {...(enlace ? { href: enlace } : { 'aria-disabled': 'true' })}
+                        >
+                          <span class="mano tn">{String(t.n).padStart(2, '0')}</span>
+                          <span class="t-tit">{t.titulo}</span>
+                          <span class="t-der">
+                            {/* Los seis puntitos de patrones se fueron con el
+                                rediseño: una etiqueta solo donde informa. */}
+                            {t.patrones.includes('simulador' as never) && (
+                              <span class="mano t-sim">con simulador</span>
+                            )}
+                            <span class:list={['pesop', t.peso]}>peso {t.peso}</span>
                           </span>
-                        </span>
-                        {/* Los seis patrones del tema, uno por casilla. El
-                            `title` es lo único que un usuario vidente tiene
-                            para saber qué significan: sin él son seis
-                            cuadrados de 7 px sin leyenda en ninguna parte,
-                            y solo un lector de pantalla se enteraba. */}
-                        <span class="tipos">
-                          {ORDEN_PATRONES.map((p) => (
-                            <span
-                              class:list={['punto', { on: t.patrones.includes(p as never) }]}
-                              data-p={p}
-                              title={`${NOMBRE_PATRON[p]}: ${
-                                t.patrones.includes(p as never) ? 'sí' : 'no'
-                              }`}
-                            >
-                              <span class="solo-lectores">
-                                {t.patrones.includes(p as never) ? NOMBRE_PATRON[p] : ''}
-                              </span>
-                            </span>
-                          ))}
-                        </span>
-                      </span>
-                    </Etiqueta>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {examenesPorAsignatura.has(a.id) && (
-              <aside class="examenes">
-                {rutasPorAsignatura.has(a.id) &&
-                  rutasPorAsignatura.get(a.id)!.map((r) => (
-                    <a class="ex-ruta" href={ruta(`${a.id}/preparar/${r.sufijo}`)}>
-                      <span class="rotulo">Por dónde empezar</span>
-                      <span class="ex-ruta-t">{r.titulo} →</span>
-                    </a>
-                  ))}
-
-                <p class="rotulo ex-tit">Exámenes</p>
-                <p class="ex-sub">
-                  {examenesPorAsignatura.get(a.id)!.length === 1
-                    ? 'Una convocatoria, con su enunciado original y resuelta entera.'
-                    : `${examenesPorAsignatura.get(a.id)!.length} convocatorias, con su enunciado original y resueltas enteras.`}
-                </p>
-                <ul class="ex-lista">
-                  {examenesPorAsignatura
-                    .get(a.id)!
-                    .slice(0, 4)
-                    .map((ex) => (
-                      <li>
-                        <a href={ruta(`${a.id}/examenes/${ex.slug}`)}>
-                          <span>{ex.curso}</span>
-                          <span class="ex-conv">{ABREV_CONV[ex.conv]}</span>
-                          <span class="ex-go" aria-hidden="true">
-                            →
-                          </span>
-                        </a>
+                        </Etiqueta>
                       </li>
-                    ))}
+                    );
+                  })}
                 </ul>
-                <a class="ex-todos" href={ruta(`${a.id}/examenes`)}>
-                  {examenesPorAsignatura.get(a.id)!.length === 1
-                    ? 'Ir al examen →'
-                    : `Ver los ${examenesPorAsignatura.get(a.id)!.length} →`}
-                </a>
+              </div>
+
+              <aside class="carril">
+                {rutasPorAsignatura.has(a.id) && (
+                  <div class="rc" id={`${a.id}-rutas`}>
+                    <p class="mano rc-tit">Por dónde empezar</p>
+                    <p class="rc-sub">
+                      No empieces por el tema 1: cada evaluación tiene su ruta,
+                      con lo que cae ordenado por lo que rinde.
+                    </p>
+                    <div class="rc-grid">
+                      {rutasPorAsignatura.get(a.id)!.map((r, i) => (
+                        <a
+                          class:list={['rc-btn', { dest: i === 0 }]}
+                          href={ruta(`${a.id}/preparar/${r.sufijo}`)}
+                          title={r.titulo}
+                        >
+                          {NOMBRE_RUTA[r.sufijo] ?? r.titulo}
+                          {i === 0 && ' →'}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {examenesPorAsignatura.has(a.id) && (
+                  <div class="ex-caja">
+                    <p class="rotulo ex-tit">Exámenes</p>
+                    <p class="ex-sub">
+                      {examenesPorAsignatura.get(a.id)!.length === 1
+                        ? 'Una convocatoria, con su enunciado original en PDF y resuelta entera.'
+                        : `${examenesPorAsignatura.get(a.id)!.length} convocatorias, con su enunciado original en PDF y resueltas enteras.`}
+                    </p>
+                    <ul class="ex-lista">
+                      {examenesPorAsignatura
+                        .get(a.id)!
+                        .slice(0, 4)
+                        .map((ex) => (
+                          <li>
+                            <a href={ruta(`${a.id}/examenes/${ex.slug}`)}>
+                              <span>{ex.curso}</span>
+                              <span class="ex-conv">{ABREV_CONV[ex.conv]}</span>
+                              <span class="ex-go" aria-hidden="true">
+                                →
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                    <a class="ex-todos" href={ruta(`${a.id}/examenes`)}>
+                      {examenesPorAsignatura.get(a.id)!.length === 1
+                        ? 'Ir al examen →'
+                        : `Ver las ${examenesPorAsignatura.get(a.id)!.length} convocatorias →`}
+                    </a>
+                  </div>
+                )}
+
+                {a.data.temas.some((t) => t.peso === 'alto') && (
+                  <p class="mano nota-rojo">
+                    el rojo de «peso alto» significa: esto decide notas
+                  </p>
+                )}
               </aside>
-            )}
             </div>
           ) : (
             <div class="pendiente">
@@ -382,7 +421,7 @@ const enteras = asignaturas
               <p>
                 {a.data.estado === 'obra'
                   ? 'Se está construyendo ahora mismo. Los temas irán apareciendo aquí según se terminen.'
-                  : 'Esta asignatura está en el plan, pero primero se terminan Cálculo y Mecánica de Fluidos.'}
+                  : 'Esta asignatura está en el plan, pero primero se terminan Cálculo y Álgebra.'}
               </p>
             </div>
           )}
@@ -430,7 +469,6 @@ const enteras = asignaturas
     document.documentElement.style.setProperty('--acento', seccion.style.getPropertyValue('--acento'));
 
     viaja(origen, seccion.querySelector<HTMLElement>('[data-destino]'));
-    reinicia(seccion.querySelector<HTMLElement>('.regla'));
     window.scrollTo({ top: 0, behavior: reducido ? 'auto' : 'smooth' });
     seccion.querySelector<HTMLElement>('[data-destino]')?.focus({ preventScroll: true });
   }
@@ -492,7 +530,11 @@ const enteras = asignaturas
   }
 
   // Entrar con el enlace ya puesto (o recargar) tiene que dejar la misma vista.
-  if (location.hash.length > 1) abre(location.hash.slice(1), null);
+  // Un ancla interior del detalle (#calculo-rutas) abre su asignatura.
+  if (location.hash.length > 1) {
+    const id = location.hash.slice(1);
+    abre(detalles.has(id) ? id : id.replace(/-rutas$/, ''), null);
+  }
 
   /* ── la figura tocable ─────────────────────────────────────────────
      Un punto amarillo arrastrable por la curva; la tangente le sigue.
@@ -724,12 +766,18 @@ const enteras = asignaturas
 
   .escena {
     position: relative;
-    padding: 0 clamp(1rem, 4vw, 3rem);
+    --pad: clamp(1rem, 4vw, 3rem);
+    padding: 0 var(--pad);
+  }
 
-    /* el remapeo: todo lo que dentro de la escena pedía papel habla tiza.
-       El `color` hay que REDECLARARLO: el body lo calcula con la tinta
-       original y los hijos heredan el valor calculado, no la variable —
-       sin esta línea todo lo que no declara color sale oscuro. */
+  /* El remapeo vive SOLO en las superficies de pizarra: el héroe y la
+     banda del detalle. Desde el brief §5b el cuerpo del detalle es papel,
+     así que remapear la escena entera pintaría tiza sobre claro.
+     El `color` hay que REDECLARARLO: el body lo calcula con la tinta y
+     los hijos heredan el valor calculado, no la variable — sin esa línea
+     todo lo que no declara color sale oscuro sobre la pizarra. */
+  .hero,
+  .banda {
     color: var(--ink);
     --ink: var(--tiza);
     --graphite: var(--tiza-suave);
@@ -759,9 +807,9 @@ const enteras = asignaturas
   }
 
   /* Los acentos oscuros de asignatura no se leen sobre pizarra: dentro de
-     la escena el acento es siempre la tiza amarilla. `!important` porque
-     el valor original va en el atributo style (lo necesita el script). */
-  .escena .detalle,
+     las superficies de tiza el acento es siempre la amarilla. `!important`
+     porque el valor original va en el atributo style de la sección. */
+  .escena .banda,
   .escena .fila { --acento: var(--tiza-amarilla) !important; }
 
   /* La barra superior, en pizarra. Es CSS de página: las interiores no
@@ -983,20 +1031,86 @@ const enteras = asignaturas
 
   @keyframes traza { to { stroke-dashoffset: 0; } }
 
-  /* ── B · detalle ───────────────────────────────────────────────── */
+  /* ── B · detalle (brief §5b) ─────────────────────────────────────
+     Banda de pizarra con la identidad; el cuerpo, en papel. La sección
+     sangra hacia fuera del padding de la escena para que las dos
+     superficies lleguen al borde, y cada franja repone el padding. */
   .detalle {
     display: none;
-    padding-bottom: 5rem;
+    margin: 0 calc(-1 * var(--pad));
+    min-height: 100vh;
+    background: var(--paper);
+    padding-bottom: 4rem;
     animation: entra-vista .38s var(--ease) both;
   }
 
+  /* `:has(:target)` cubre el ancla interior (#calculo-rutas): sin
+     JavaScript, pulsar el CTA de la banda no puede cerrar el detalle. */
   .detalle:target,
+  .detalle:has(:target),
   .detalle.activa { display: block; }
+
+  .banda {
+    background:
+      radial-gradient(var(--tiza-polvo-1) 1px, transparent 1px) 0 0 / 7px 9px,
+      radial-gradient(ellipse at 25% 15%, var(--piz-claro), var(--piz-medio) 65%);
+    box-shadow: var(--piz-vineta-banda);
+    padding: 0 var(--pad) 1.6rem;
+  }
+
+  .b-cuerpo {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    flex-wrap: wrap;
+    padding-top: 1.3rem;
+  }
+
+  .b-kicker {
+    font-size: 1.25rem;
+    color: var(--tiza-amarilla);
+    margin: 0 0 .1rem;
+  }
+
+  .b-desc {
+    font-size: .93rem;
+    line-height: 1.5;
+    color: var(--tiza-suave);
+    max-width: 36rem;
+    margin: .5rem 0 0;
+  }
+
+  .b-der {
+    margin-left: auto;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .65rem;
+  }
+
+  .b-meta { font-size: 1.2rem; color: var(--tiza-apagada); margin: 0; }
+
+  .b-cta {
+    display: inline-block;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--piz-medio);
+    background: var(--tiza-amarilla);
+    border-radius: 10px;
+    padding: .65rem 1.15rem;
+    box-shadow: var(--piz-sombra-cta);
+    text-decoration: none;
+    transition: background .2s, transform .15s;
+  }
+
+  .b-cta:hover { background: var(--tiza-amarilla-hover); transform: translateY(-1px); }
 
   /* Con JavaScript la clase manda; sin él, el ancla. En los dos casos la
      lista se retira en vez de quedarse debajo empujando. */
   .escena[data-vista='detalle'] .hero,
-  .escena:has(.detalle:target) .hero {
+  .escena:has(.detalle:target) .hero,
+  .escena:has(.detalle :target) .hero {
     display: none;
   }
 
@@ -1033,50 +1147,14 @@ const enteras = asignaturas
   .volver { padding-left: 0; }
   .volver:hover { color: var(--acento); }
 
-  .cab {
-    padding: 1.8rem 0 .5rem;
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .cab .n {
-    font-family: var(--mono);
-    font-size: .7rem;
-    color: var(--acento);
-    padding-bottom: .55rem;
-  }
-
   .nombre {
     font-family: var(--display);
-    font-weight: 500;
-    letter-spacing: -.03em;
+    font-weight: 800;
+    letter-spacing: -.02em;
     line-height: 1;
-    font-size: clamp(1.9rem, 5.4vw, 3.4rem);
+    font-size: clamp(2.1rem, 5.4vw, 3.2rem);
+    color: var(--tiza);
     transform-origin: left top;
-  }
-
-  .cab .meta {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: .7rem;
-    color: var(--faint);
-    padding-bottom: .6rem;
-  }
-
-  .regla {
-    height: 2px;
-    background: var(--acento);
-    opacity: .9;
-    margin-bottom: 1.6rem;
-    transform-origin: left;
-    animation: crece .55s var(--ease) both;
-  }
-
-  @keyframes crece {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
   }
 
   .aviso {
@@ -1085,99 +1163,22 @@ const enteras = asignaturas
     background: var(--flag-soft);
     border-left: 2px solid var(--flag);
     padding: .4rem .7rem;
-    margin-bottom: 1rem;
+    margin: 1rem var(--pad) 0;
     max-width: 62rem;
   }
 
-  /* ── temas ─────────────────────────────────────────────────────── */
-  /* La lista de temas y, a su derecha, el panel de exámenes. Antes `.temas`
-     era una columna suelta; ahora comparte fila con el panel, que en móvil
-     cae debajo. */
+  /* ── el cuerpo: temario a la izquierda, carril a la derecha ────── */
   .cuerpo {
     display: grid;
-    grid-template-columns: minmax(0, 62rem) minmax(13rem, 17rem);
-    gap: clamp(1.2rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 25rem);
+    gap: clamp(1.4rem, 3vw, 2.75rem);
     align-items: start;
+    padding: 1.4rem var(--pad) 0;
   }
+
+  .t-rotulo { color: var(--faint); margin-bottom: .5rem; }
 
   .temas { list-style: none; }
-
-  /* ── panel de exámenes ─────────────────────────────────────────── */
-  .examenes {
-    position: sticky;
-    top: 4.2rem;
-    padding: 1rem 1.1rem 1.1rem;
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    animation: entra-fila .4s var(--ease) both;
-    animation-delay: 160ms;
-  }
-
-  .ex-tit { color: var(--acento); margin-bottom: .5rem; }
-
-  .ex-sub {
-    font-size: .78rem;
-    line-height: 1.45;
-    color: var(--graphite);
-    margin-bottom: .9rem;
-  }
-
-  .ex-lista { list-style: none; }
-
-  .ex-lista a {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: .5rem;
-    padding: .35rem .4rem;
-    border-radius: 4px;
-    font-family: var(--mono);
-    font-size: .8rem;
-    color: var(--ink);
-    text-decoration: none;
-    transition: background .15s, color .15s;
-  }
-
-  .ex-lista a:hover { background: var(--live-soft); color: var(--live); }
-
-  .ex-conv { margin-left: auto; margin-right: .4rem; color: var(--faint); font-size: .72rem; }
-
-  .ex-go { color: var(--faint); transition: transform .15s; }
-  .ex-lista a:hover .ex-go { color: var(--live); transform: translateX(2px); }
-
-  /* La ruta de estudio va antes que la lista de exámenes: quien llega aquí
-     todavía no sabe cuál abrir. */
-  .ex-ruta {
-    display: block;
-    margin-bottom: 1.1rem;
-    padding: .6rem .7rem;
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--acento);
-    border-radius: 5px;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .ex-ruta:hover { border-color: var(--live); border-left-color: var(--live); }
-  .ex-ruta .rotulo { display: block; color: var(--graphite); margin-bottom: .15rem; }
-  .ex-ruta-t { font-size: .84rem; font-weight: 600; }
-
-  .ex-todos {
-    display: inline-block;
-    margin-top: .7rem;
-    padding: .3rem .4rem;
-    font-family: var(--mono);
-    font-size: .74rem;
-    color: var(--live);
-    text-decoration: none;
-  }
-
-  .ex-todos:hover { text-decoration: underline; }
-
-  @media (max-width: 900px) {
-    .cuerpo { grid-template-columns: 1fr; }
-    .examenes { position: static; }
-  }
 
   .temas li { animation: entra-fila .4s var(--ease) both; animation-delay: calc(var(--i) * 32ms); }
 
@@ -1188,51 +1189,181 @@ const enteras = asignaturas
 
   .tema {
     display: grid;
-    grid-template-columns: 2.2rem 1fr auto;
+    grid-template-columns: 2.4rem minmax(0, 1fr) auto;
     gap: .9rem;
     align-items: center;
-    padding: .72rem .5rem;
+    padding: .62rem .65rem;
     border-bottom: 1px solid var(--rule);
-    border-radius: 5px;
+    border-radius: 8px;
     text-decoration: none;
-    transition: background .15s;
+    color: inherit;
+    transition: background .15s, box-shadow .15s;
   }
 
-  a.tema:hover, a.tema:focus-visible { background: var(--live-soft); }
-  .tema[aria-disabled='true'] { opacity: .62; }
+  a.tema:hover,
+  a.tema:focus-visible {
+    background: var(--panel);
+    box-shadow: var(--shadow-1);
+  }
 
-  .tn { font-family: var(--mono); font-size: .71rem; color: var(--faint); text-align: right; }
+  .tema[aria-disabled='true'] { opacity: .6; }
 
-  .txt { display: block; min-width: 0; }
-  .t-tit { display: block; font-size: .96rem; font-weight: 500; }
-  .t-desc { display: block; font-size: .81rem; color: var(--graphite); line-height: 1.4; }
+  .tn { font-size: 1.2rem; color: var(--live); text-align: right; line-height: 1; }
 
-  .der { display: flex; align-items: center; gap: .9rem; }
+  .t-tit { font-size: .97rem; font-weight: 700; line-height: 1.25; }
 
-  .peso { display: flex; align-items: center; gap: .45rem; }
-  .peso .rotulo { font-size: .63rem; }
+  .t-der { display: flex; align-items: center; gap: .6rem; }
 
-  .pista {
-    width: 48px;
-    height: 5px;
-    background: var(--grid);
+  .t-sim { font-size: 1rem; color: var(--live); }
+
+  /* Las tres pastillas: el rojo SOLO en «alto» (§5b). */
+  .pesop {
+    font-family: var(--mono);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
     border-radius: 99px;
-    overflow: hidden;
-    display: block;
+    padding: .22rem .7rem;
+    white-space: nowrap;
   }
 
-  .relleno { height: 100%; background: var(--faint); border-radius: 99px; display: block; }
+  .pesop.alto { color: var(--panel); background: var(--flag); }
+  .pesop.medio { color: var(--peso-medio-tinta); background: var(--peso-medio-fondo); }
+  .pesop.bajo { color: var(--faint); background: var(--peso-bajo-fondo); }
 
-  .tema[data-peso='alto'] .relleno { background: var(--flag); }
-  .tema[data-peso='alto'] .rotulo { color: var(--flag); font-weight: 600; }
+  /* ── el carril derecho ─────────────────────────────────────────── */
+  .carril {
+    position: sticky;
+    top: 4.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: entra-fila .4s var(--ease) both;
+    animation-delay: 160ms;
+  }
 
-  .tipos { display: flex; gap: .26rem; }
+  /* la caja de pizarra: las rutas son la puerta de estudio */
+  .rc {
+    background:
+      radial-gradient(var(--tiza-polvo-1) 1px, transparent 1px) 0 0 / 7px 9px,
+      radial-gradient(ellipse at 30% 20%, var(--piz-claro), var(--piz-medio) 75%);
+    border-radius: 12px;
+    padding: 1rem 1.15rem .9rem;
+    box-shadow: var(--piz-vineta-caja), var(--shadow-1);
+    scroll-margin-top: 5rem;
+  }
 
-  .punto { width: 7px; height: 7px; border-radius: 2px; background: var(--grid); display: block; }
-  .punto.on { background: var(--live); }
-  .punto.on[data-p='simulador'] { background: var(--alt); }
+  .rc-tit { font-size: 1.5rem; color: var(--tiza-amarilla); margin: 0 0 .1rem; }
 
-  .pendiente { padding: 2.6rem 0; max-width: 44ch; }
+  .rc-sub {
+    font-size: .8rem;
+    line-height: 1.5;
+    color: var(--tiza-suave);
+    margin: 0 0 .8rem;
+  }
+
+  .rc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .4rem;
+  }
+
+  .rc-btn {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--tiza);
+    border: 1.5px solid var(--tiza-borde);
+    border-radius: 8px;
+    padding: .42rem .5rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+
+  .rc-btn:hover { background: var(--tiza-velo); border-color: var(--tiza); }
+
+  .rc-btn.dest {
+    color: var(--piz-medio);
+    background: var(--tiza-amarilla);
+    border-color: var(--tiza-amarilla);
+  }
+
+  .rc-btn.dest:hover { background: var(--tiza-amarilla-hover); }
+
+  /* la única impar (extraordinaria) ocupa la fila entera */
+  .rc-btn:last-child:nth-child(odd) { grid-column: span 2; }
+
+  /* ── la tarjeta de exámenes, en papel ──────────────────────────── */
+  .ex-caja {
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.15rem .9rem;
+    box-shadow: var(--shadow-1);
+  }
+
+  .ex-tit { color: var(--live); margin-bottom: .35rem; }
+
+  .ex-sub {
+    font-size: .78rem;
+    line-height: 1.5;
+    color: var(--graphite);
+    margin-bottom: .7rem;
+  }
+
+  .ex-lista { list-style: none; }
+
+  .ex-lista a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem .5rem;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }
+
+  .ex-lista li:first-child a { background: var(--grid); }
+
+  .ex-lista a:hover { background: var(--live-soft); color: var(--live); }
+
+  .ex-conv { margin-left: auto; margin-right: .4rem; color: var(--faint); font-size: .72rem; }
+
+  .ex-go { color: var(--faint); transition: transform .15s; }
+  .ex-lista a:hover .ex-go { color: var(--live); transform: translateX(2px); }
+
+  .ex-todos {
+    display: inline-block;
+    margin-top: .6rem;
+    padding: .3rem .5rem;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--live);
+    text-decoration: none;
+  }
+
+  .ex-todos:hover { color: var(--live-hover); text-decoration: underline; }
+
+  /* la leyenda del rojo, como apunte al margen */
+  .nota-rojo {
+    font-size: 1.05rem;
+    color: var(--faint);
+    text-align: center;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .cuerpo { grid-template-columns: 1fr; }
+    .carril { position: static; }
+    .b-der { margin-left: 0; text-align: left; align-items: flex-start; }
+  }
+
+  .pendiente { padding: 2.6rem var(--pad); max-width: 60ch; }
   .pendiente .p-tit {
     font-family: var(--display);
     font-size: 1.3rem;

@@ -1885,3 +1885,27 @@ vea la portada** (regla 5 del brief).
 - 111 `\bar{}` → `\overline{}` en las transcripciones de Álgebra (t05/t06):
   el guardián de verify los cazó. Y un `$…$` partido en tres líneas en el
   enunciado de 6.7 que remark-math no cruzaba.
+
+## §5b — el detalle de asignatura (mismo día, brief actualizado)
+
+Ionan actualizó el brief con el tablero «Después · detalle de Cálculo»,
+aprobado. Lo implementado, y las decisiones que el brief dejaba abiertas:
+
+- **Banda de pizarra + cuerpo en papel.** El remapeo de tokens dejó de vivir
+  en `.escena` entera y pasó a las dos superficies de tiza (héroe y banda):
+  el cuerpo del detalle es papel de verdad, no pizarra reteñida.
+- **Los tokens de papel ya son los del brief §3** (fondo #F8F5EC, tinta
+  #2B2A24, verde #1C6E51, rojo #C6503C). Dos colores de datos tuvieron que
+  moverse para que `check-color` siguiera en verde sobre el papel cálido:
+  `--d2` a #CE7400 (contraste) y `--d5` de oro a oliva #6A701A (protanopía
+  y escala de grises, no había hueco de luminancia donde estaba).
+- La lista de temas va **sin descripción** (decisión explícita de Ionan) y
+  los seis puntitos de patrones se fueron: queda una etiqueta Caveat
+  «con simulador» solo donde informa.
+- **La destacada de la caja de rutas es la primera evaluación**: el brief
+  dejaba elegir y prohibía la cuenta atrás; quien llega sin contexto empieza
+  por ahí. Cambiarla es tocar un índice, no una regla.
+- El CTA de la banda ancla a `#<asignatura>-rutas`. Sin JavaScript ese hash
+  dejaba de casar con `.detalle:target` y **cerraba el detalle**: se cubrió
+  con `.detalle:has(:target)` y el enrutador aprende a abrir la asignatura
+  madre si el hash llega con `-rutas`.
