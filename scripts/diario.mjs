@@ -55,11 +55,14 @@ function fuente(ruta, familia, peso) {
     src:url(data:font/woff2;base64,${datos}) format('woff2')}`;
 }
 
+/* Las familias del rediseño Pizarra (§06): Karla para todo, Caveat para
+ * anotaciones. Fraunces e IBM Plex Sans salieron del repo con él. */
 const fuentes = [
-  fuente('@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2', 'IBM Plex Sans', 400),
-  fuente('@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2', 'IBM Plex Sans', 600),
+  fuente('@fontsource/karla/files/karla-latin-400-normal.woff2', 'Karla', 400),
+  fuente('@fontsource/karla/files/karla-latin-600-normal.woff2', 'Karla', 600),
+  fuente('@fontsource/karla/files/karla-latin-800-normal.woff2', 'Karla', 800),
+  fuente('@fontsource/caveat/files/caveat-latin-700-normal.woff2', 'Caveat', 700),
   fuente('@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2', 'IBM Plex Mono', 400),
-  fuente('@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2', 'Fraunces Variable', '100 900'),
 ].join('\n');
 
 const html = `<!doctype html>
