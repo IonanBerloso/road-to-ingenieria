@@ -952,3 +952,938 @@ ejercicios:
       hay que mirarlo en la matriz. La multiplicidad de la raíz y la dimensión
       del núcleo son cosas distintas, y confundirlas es el error que reaparece
       —con otro nombre— en diagonalización.
+
+  - id: ejalg5-bol52-tres-valores-que-rompen-el-sistema
+    titulo: Un parámetro, y los tres valores que lo rompen
+    fuente: >-
+      Ejercicio 5.2 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Discute el sistema en función de $\alpha$.
+
+      $$
+      \left.
+      \begin{array}{rcl}
+      (2\alpha+2)x + \alpha y + 2z &=& 2\alpha-2\\
+      2x + (2-\alpha)y &=& 0\\
+      (\alpha+1)x + (\alpha+1)z &=& \alpha-1
+      \end{array}
+      \right\}
+      $$
+    pide: La discusión del sistema según los valores de α.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por dónde se empieza a discutir un sistema cuadrado con un parámetro?
+        opciones:
+          - texto: >-
+              Por el **determinante de la matriz de coeficientes**: donde no se
+              anula, el sistema es compatible determinado y no hay nada más que
+              discutir
+            correcta: true
+            mensaje: |
+              Eso es. El determinante parte el problema en dos: el caso general
+              —que se despacha en una línea— y los pocos valores donde se anula,
+              que son los únicos que hay que mirar uno a uno.
+          - texto: Resolviendo por Gauss desde el principio
+            mensaje: |
+              Con un parámetro dentro, Gauss obliga a ir preguntándose en cada
+              paso si el pivote es cero. El determinante da esos casos de golpe
+              y ahorra el rodeo.
+          - texto: Sustituyendo valores concretos de $\alpha$ hasta ver el patrón
+            mensaje: |
+              Probar valores puede orientar, pero no demuestra nada: una
+              discusión tiene que cubrir **todos** los $\alpha$, y para eso hace
+              falta el determinante.
+
+      - tipo: calcular
+        titulo: Uno de los valores críticos
+        pregunta: |
+          El determinante de la matriz de coeficientes es
+          $2\alpha(\alpha+1)(1-\alpha)$. ¿Cuál es su raíz **positiva**?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '0'
+            mensaje: |
+              $0$ también anula el determinante, pero no es positivo. Las tres
+              raíces son $-1$, $0$ y $1$.
+          - valor: '-1'
+            mensaje: |
+              $-1$ es raíz, sí, pero negativa. La pregunta pide la positiva.
+          - valor: '2'
+            mensaje: |
+              En $\alpha=2$ el determinante vale $2\cdot2\cdot3\cdot(-1)=-12$,
+              distinto de cero: ahí el sistema es compatible determinado.
+        pista: |
+          Iguala a cero cada factor de $2\alpha(\alpha+1)(1-\alpha)$.
+        desarrollo: |
+          $$
+          \left|A\right| = 2\alpha(\alpha+1)(1-\alpha) = 0
+          \;\Longleftrightarrow\;
+          \alpha \in \left\{-1,\;0,\;1\right\}
+          $$
+
+          Fuera de esos tres valores el sistema es **compatible determinado**,
+          con solución única.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la discusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Se calcula $\left|A\right| = 2\alpha(\alpha+1)(1-\alpha)$,
+              sacando factor común $(\alpha+1)$ para no desarrollar del todo.
+          - texto: >-
+              Si $\alpha \notin\{-1,0,1\}$ el determinante no es cero, el rango
+              es 3 y el sistema es **compatible determinado**.
+          - texto: >-
+              En cada uno de los tres valores críticos hay que sustituir y
+              comparar el rango de $A$ con el de la ampliada.
+          - texto: >-
+              En $\alpha=1$ el sistema queda con la tercera ecuación
+              $2x+2z=0$ y el término independiente $2\alpha-2$ se anula, así que
+              hay que mirar si el rango baja o no.
+          - texto: >-
+              Como el determinante se anula en tres puntos, en esos tres el
+              sistema es incompatible.
+            trampa: true
+            mensaje: |
+              Determinante cero solo dice que **no** es compatible determinado.
+              A partir de ahí puede ser incompatible o compatible
+              **indeterminado**, y lo decide comparar el rango de $A$ con el de
+              la ampliada. Dar por hecho «incompatible» se salta la mitad de la
+              discusión, que es justo la que puntúa.
+
+    resolucion: |
+      **El determinante primero**, y sacando factor común para no desarrollar
+      un polinomio de grado 3 a lo bruto:
+
+      $$
+      \left|A\right| =
+      \begin{vmatrix}
+      2\alpha+2 & \alpha & 2\\
+      2 & 2-\alpha & 0\\
+      \alpha+1 & 0 & \alpha+1
+      \end{vmatrix}
+      = 2\alpha(\alpha+1)(1-\alpha)
+      $$
+
+      **El caso general.** Si $\alpha\neq -1$, $\alpha\neq 0$ y $\alpha\neq 1$,
+      el determinante no se anula: $\operatorname{rg}(A)=3$ y el sistema es
+      **compatible determinado**. Una sola solución, y se puede dar por Cramer.
+
+      **Los tres casos críticos**, que es donde está el ejercicio. En cada uno
+      se sustituye y se comparan los dos rangos:
+
+      | $\alpha$ | qué pasa con la matriz |
+      |---|---|
+      | $-1$ | la tercera fila se anula entera y el término independiente vale $-2$ |
+      | $0$ | la segunda columna y el término independiente cambian de forma |
+      | $1$ | los términos independientes primero y tercero se anulan |
+
+      Y en cada uno se aplica **Rouché-Fröbenius**: si los dos rangos coinciden
+      y valen el número de incógnitas, determinado; si coinciden y valen menos,
+      **indeterminado**, con tantos parámetros como incógnitas menos rango; y si
+      no coinciden, **incompatible**.
+
+      > **Lo que este ejercicio entrena, y por qué el determinante va primero.**
+      > Un sistema con parámetro no se resuelve: se **discute**. Y discutir es
+      > partir la recta real en trozos y decir qué pasa en cada uno. El
+      > determinante hace esa partición de golpe, y deja un caso general que
+      > ocupa una línea y unos pocos casos aislados. Empezar por Gauss obliga a
+      > preguntarse en cada pivote si se anula, y eso es la misma discusión pero
+      > desordenada.
+
+  - id: ejalg5-bol53-resolver-en-forma-matricial
+    titulo: El mismo sistema, escrito y resuelto con matrices
+    fuente: >-
+      Ejercicio 5.3 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Resuelve en forma matricial:
+
+      $$
+      \left.
+      \begin{array}{rcl}
+      x + 2z &=& 1\\
+      -x + y + z &=& -2\\
+      y + z &=& 3
+      \end{array}
+      \right\}
+      $$
+    pide: La solución del sistema, resuelto en forma matricial.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Resolver en forma matricial» significa escribirlo como $AX=B$ y
+          despejar. ¿Qué hace falta para poder hacerlo?
+        opciones:
+          - texto: >-
+              Que $A$ sea **invertible**, o sea que su determinante no sea cero
+            correcta: true
+            mensaje: |
+              Exacto. La solución es $X = A^{-1}B$, y eso solo existe si $A$
+              tiene inversa. Por eso el método vale para sistemas cuadrados y
+              compatibles determinados, y no para los demás.
+          - texto: Que el sistema tenga tantas ecuaciones como incógnitas
+            mensaje: |
+              Es necesario para que $A$ sea cuadrada, pero no basta: una matriz
+              cuadrada con determinante cero no tiene inversa y el método no
+              arranca.
+          - texto: Que los términos independientes no sean nulos
+            mensaje: |
+              Da igual lo que valgan. Con $B=\bar{0}$ el método también
+              funciona, y da la única solución posible: la trivial.
+
+      - tipo: calcular
+        titulo: El determinante de la matriz
+        pregunta: |
+          Para
+          $A=\begin{pmatrix}1&0&2\\-1&1&1\\0&1&1\end{pmatrix}$,
+          ¿cuánto vale $\left|A\right|$?
+        respuesta:
+          tipo: numero
+          valor: '-2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Signo cambiado. Desarrollando por la primera fila:
+              $1\cdot(1-1) - 0 + 2\cdot(-1-0) = -2$.
+          - valor: '0'
+            mensaje: |
+              Si fuera cero la matriz no tendría inversa y el método pedido no
+              se podría aplicar. Repasa el desarrollo: el término que sobrevive
+              es el $2\cdot(-1)$.
+          - valor: '1'
+            mensaje: |
+              $1$ es el primer sumando del desarrollo antes de multiplicar por
+              el menor, que aquí vale cero. Falta el término de la tercera
+              columna.
+        pista: |
+          Desarrolla por la primera fila: el término central se anula porque
+          $a_{12}=0$.
+        desarrollo: |
+          $$
+          \left|A\right|
+          = 1\begin{vmatrix}1&1\\1&1\end{vmatrix}
+          - 0 + 2\begin{vmatrix}-1&1\\0&1\end{vmatrix}
+          = 1\cdot 0 + 2\cdot(-1) = -2
+          $$
+
+          Distinto de cero, así que $A$ es invertible y el sistema tiene
+          solución única.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El sistema se escribe $AX=B$ con
+              $A=\begin{pmatrix}1&0&2\\-1&1&1\\0&1&1\end{pmatrix}$,
+              $X=\begin{pmatrix}x\\y\\z\end{pmatrix}$ y
+              $B=\begin{pmatrix}1\\-2\\3\end{pmatrix}$.
+          - texto: >-
+              $\left|A\right| = -2 \neq 0$, luego $A$ es invertible.
+          - texto: >-
+              Entonces $X = A^{-1}B$, y basta calcular la inversa y multiplicar.
+          - texto: >-
+              Sale $x=5$, $y=5$, $z=-2$, y se comprueba sustituyendo en las tres
+              ecuaciones.
+          - texto: >-
+              Como $AX=B$, también es cierto que $X = B\,A^{-1}$.
+            trampa: true
+            mensaje: |
+              El producto de matrices **no conmuta**, así que el lado por el que
+              se multiplica importa. De $AX=B$ se pasa a $A^{-1}AX=A^{-1}B$, o
+              sea $X=A^{-1}B$, multiplicando por la izquierda en los dos lados.
+              $B\,A^{-1}$ ni siquiera se puede calcular aquí: $B$ es $3\times1$
+              y $A^{-1}$ es $3\times3$.
+
+    resolucion: |
+      **Escribirlo como producto**, que es lo que pide el enunciado:
+
+      $$
+      \underbrace{\begin{pmatrix}1&0&2\\-1&1&1\\0&1&1\end{pmatrix}}_{A}
+      \begin{pmatrix}x\\y\\z\end{pmatrix}
+      = \begin{pmatrix}1\\-2\\3\end{pmatrix}
+      $$
+
+      **Comprobar que se puede despejar.** $\left|A\right| = -2 \neq 0$, así que
+      $A$ tiene inversa y
+
+      $$
+      X = A^{-1}B
+      $$
+
+      **La inversa**, por la adjunta traspuesta dividida entre el determinante:
+
+      $$
+      A^{-1} = \frac{1}{-2}
+      \begin{pmatrix}0&2&-2\\1&1&-3\\-1&-1&1\end{pmatrix}
+      $$
+
+      Y multiplicando por $B$:
+
+      $$
+      \boxed{\;x = 5,\qquad y = 5,\qquad z = -2\;}
+      $$
+
+      **La comprobación**, que en este método es especialmente barata porque ya
+      tienes las tres ecuaciones delante:
+
+      $$
+      5 + 2(-2) = 1\;\checkmark
+      \qquad
+      -5+5+(-2) = -2\;\checkmark
+      \qquad
+      5+(-2) = 3\;\checkmark
+      $$
+
+      > **Cuándo compensa este método y cuándo no.** Calcular una inversa
+      > $3\times3$ cuesta nueve menores; Gauss resuelve el mismo sistema en tres
+      > operaciones de fila. Así que para **un** sistema, Gauss gana. La inversa
+      > compensa cuando hay que resolver **varios** sistemas con la misma matriz
+      > y distintos términos independientes: la inversa se calcula una vez y
+      > cada solución es una multiplicación.
+
+  - id: ejalg5-bol55-cuatro-ecuaciones-y-tres-incognitas
+    titulo: Cuatro ecuaciones para tres incógnitas
+    fuente: >-
+      Ejercicio 5.5 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Estudia la compatibilidad del sistema, y resuélvelo si es compatible:
+
+      $$
+      \left.
+      \begin{array}{rcl}
+      x + 2y + 5z &=& 20\\
+      2x + 3y + 2z &=& 2\\
+      2x + y + z &=& 7\\
+      x + y + z &=& -1
+      \end{array}
+      \right\}
+      $$
+    pide: Si el sistema es compatible y, en su caso, su solución.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Hay **cuatro** ecuaciones y **tres** incógnitas. ¿Qué se puede
+          anticipar de eso?
+        opciones:
+          - texto: >-
+              Nada seguro, pero es el caso donde la incompatibilidad es más
+              probable: sobra una ecuación y tiene que ser compatible con las
+              demás
+            correcta: true
+            mensaje: |
+              Bien dicho. Que sobren ecuaciones no impide que haya solución —si
+              la cuarta es combinación de las otras, no estorba—, pero es
+              justamente donde conviene comprobar antes de ponerse a resolver.
+          - texto: Que seguro que es incompatible
+            mensaje: |
+              No. Si la cuarta ecuación fuera, por ejemplo, la suma de las dos
+              primeras, no aportaría nada y el sistema sería perfectamente
+              compatible. Hay que mirarlo.
+          - texto: Que hay infinitas soluciones
+            mensaje: |
+              Las infinitas soluciones aparecen cuando **faltan** ecuaciones
+              —rango menor que el número de incógnitas—, no cuando sobran.
+
+      - tipo: calcular
+        titulo: El rango de la matriz de coeficientes
+        pregunta: |
+          El determinante formado por las **tres primeras** filas vale $-15$.
+          ¿Cuánto vale entonces $\operatorname{rg}(A)$?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '4'
+            mensaje: |
+              El rango no puede pasar del número de **columnas**, que aquí son
+              3. Cuatro filas no dan rango 4 si solo hay tres incógnitas.
+          - valor: '2'
+            mensaje: |
+              Con un menor de orden 3 distinto de cero, el rango es al menos 3.
+              Un $-15$ ya lo garantiza.
+          - valor: '-15'
+            mensaje: |
+              $-15$ es el determinante, no el rango. El rango es el **orden**
+              del mayor menor no nulo, o sea 3.
+        pista: |
+          Un menor de orden 3 no nulo garantiza rango 3, y no puede ser mayor
+          porque solo hay tres columnas.
+        desarrollo: |
+          $$
+          \begin{vmatrix}1&2&5\\2&3&2\\2&1&1\end{vmatrix} = -15 \neq 0
+          \qquad\Longrightarrow\qquad
+          \operatorname{rg}(A) = 3
+          $$
+
+          Y como $A$ tiene tres columnas, ese es el máximo posible.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena el estudio. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El menor de las tres primeras filas vale $-15\neq0$, luego
+              $\operatorname{rg}(A)=3$.
+          - texto: >-
+              Resolviendo esas tres ecuaciones sale
+              $x=\frac{17}{5}$, $y=-\frac{26}{5}$, $z=\frac{27}{5}$.
+          - texto: >-
+              Sustituyendo en la cuarta:
+              $\frac{17}{5}-\frac{26}{5}+\frac{27}{5} = \frac{18}{5}$, y el
+              enunciado pide $-1$.
+          - texto: >-
+              Luego la cuarta ecuación **no** es compatible con las otras tres:
+              $\operatorname{rg}(A^{*}) = 4 > 3 = \operatorname{rg}(A)$ y el
+              sistema es **incompatible**.
+          - texto: >-
+              Como el sistema es incompatible, las tres primeras ecuaciones
+              tampoco tienen solución.
+            trampa: true
+            mensaje: |
+              Las tres primeras sí la tienen, y única: es la que acabamos de
+              calcular. Lo que no hay es una solución que cumpla **las cuatro**
+              a la vez. Un sistema incompatible puede tener subsistemas
+              perfectamente compatibles, y de hecho es lo normal.
+
+    resolucion: |
+      **Rouché-Fröbenius, en dos pasos.**
+
+      **1 · El rango de $A$.** El menor formado por las tres primeras filas
+
+      $$
+      \begin{vmatrix}1&2&5\\2&3&2\\2&1&1\end{vmatrix} = -15 \neq 0
+      $$
+
+      así que $\operatorname{rg}(A) = 3$, el máximo posible con tres columnas.
+
+      **2 · El rango de la ampliada.** Con rango 3 en $A$, las tres primeras
+      ecuaciones tienen solución única. Resolviéndolas:
+
+      $$
+      x = \frac{17}{5},\qquad y = -\frac{26}{5},\qquad z = \frac{27}{5}
+      $$
+
+      Y ahora la prueba de fuego: ¿cumple la cuarta?
+
+      $$
+      x+y+z = \frac{17-26+27}{5} = \frac{18}{5} \neq -1
+      $$
+
+      No. Así que la cuarta ecuación **no** es combinación lineal de las otras
+      tres, y al añadirla el rango sube:
+
+      $$
+      \operatorname{rg}(A^{*}) = 4 \;>\; 3 = \operatorname{rg}(A)
+      $$
+
+      $$
+      \boxed{\;\text{Sistema incompatible: no tiene solución.}\;}
+      $$
+
+      **Y el enunciado ya lo avisaba** con «resuélvelo **si** es compatible». Ese
+      «si» condicional es la pista de que la respuesta puede ser que no.
+
+      > **La forma rápida de hacerlo, y por qué funciona.** No hace falta
+      > calcular el determinante $4\times4$ de la ampliada: basta resolver el
+      > subsistema de rango máximo y **sustituir en la ecuación que sobra**. Si
+      > cuadra, el sistema es compatible y esa era la solución; si no cuadra, es
+      > incompatible y ya está. Un determinante de orden 4 son cuatro menores de
+      > orden 3; esto es una suma.
+
+  - id: ejalg5-bol56-los-tres-casos-de-la-discusion
+    titulo: Los tres casos de una discusión, uno de cada tipo
+    fuente: >-
+      Ejercicio 5.6 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Discute la compatibilidad en función de $a$:
+
+      $$
+      \left.
+      \begin{array}{rcl}
+      x - 2y + az &=& a\\
+      x + 4y + a^{2}z &=& 6+a\\
+      x - 8y + a^{2}z &=& -6
+      \end{array}
+      \right\}
+      $$
+    pide: La compatibilidad del sistema según los valores de a.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Las tres ecuaciones empiezan por $x$ con coeficiente 1. ¿Qué conviene
+          hacer con eso antes de calcular el determinante?
+        opciones:
+          - texto: >-
+              Restar la primera a las otras dos: el determinante no cambia y se
+              queda un menor de orden 2 a la vista
+            correcta: true
+            mensaje: |
+              Eso es. Restar filas no altera el determinante, y aquí deja dos
+              ceros en la primera columna: el de orden 3 se reduce a uno de
+              orden 2 sin desarrollar nada.
+          - texto: Dividir la primera entre su coeficiente
+            mensaje: |
+              Ya vale 1, así que no habría nada que dividir. Y ojo: dividir una
+              fila **sí** cambia el determinante, aunque no cambie las
+              soluciones.
+          - texto: Nada; el determinante hay que desarrollarlo entero
+            mensaje: |
+              Se puede, pero es más largo y con un parámetro dentro cada término
+              trae su $a^{2}$. Restar filas primero deja la cuenta en dos
+              líneas.
+
+      - tipo: calcular
+        titulo: El valor de a que hace el sistema incompatible
+        pregunta: |
+          El determinante vale $12a(a-1)$, así que los casos críticos son $a=0$
+          y $a=1$. ¿Cuál de los dos deja el sistema **incompatible**?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '0'
+            mensaje: |
+              Con $a=0$ la $z$ desaparece de las tres ecuaciones y queda un
+              sistema en $x$ e $y$ que **sí** tiene solución: es compatible
+              **indeterminado**, con $z$ libre.
+          - valor: '-1'
+            mensaje: |
+              $a=-1$ no anula el determinante: $12(-1)(-2)=24\neq0$. Ahí el
+              sistema es compatible determinado.
+          - valor: '12'
+            mensaje: |
+              $12$ es el coeficiente de la fórmula del determinante, no un valor
+              crítico de $a$. Los valores críticos son las **raíces**.
+        pista: |
+          Sustituye $a=1$ y resta la primera ecuación a las otras dos: mira si
+          las dos condiciones sobre $y$ se pueden cumplir a la vez.
+        desarrollo: |
+          Con $a=1$ las tres ecuaciones son
+
+          $$
+          x-2y+z = 1,\qquad x+4y+z = 7,\qquad x-8y+z = -6
+          $$
+
+          Restando la primera a las otras dos:
+
+          $$
+          6y = 6 \;\Rightarrow\; y = 1,
+          \qquad
+          -6y = -7 \;\Rightarrow\; y = \tfrac76
+          $$
+
+          Dos valores distintos para la misma incógnita: **incompatible**.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la discusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Restando la primera fila a las otras dos, el determinante queda
+              $\begin{vmatrix}6 & a^{2}-a\\-6 & a^{2}-a\end{vmatrix}
+              = 12a(a-1)$.
+          - texto: >-
+              Si $a\neq0$ y $a\neq1$, el determinante no se anula y el sistema
+              es **compatible determinado**.
+          - texto: >-
+              Con $a=0$ la incógnita $z$ desaparece de las tres ecuaciones: el
+              rango baja a 2 y el sistema es **compatible indeterminado**, con
+              $z$ libre.
+          - texto: >-
+              Con $a=1$ las dos ecuaciones que salen de restar dan $y=1$ e
+              $y=\frac76$: **incompatible**.
+          - texto: >-
+              Como el determinante se anula en $a=0$ y en $a=1$, en los dos
+              casos el sistema se comporta igual.
+            trampa: true
+            mensaje: |
+              Es justo lo contrario, y por eso este ejercicio está bien
+              elegido: los dos valores anulan el determinante y dan resultados
+              **opuestos** — uno indeterminado y el otro incompatible. El
+              determinante dice dónde mirar, nunca qué se va a encontrar.
+
+    resolucion: |
+      **El determinante, restando filas primero.** Las tres ecuaciones tienen
+      el mismo coeficiente en $x$, así que $F_2-F_1$ y $F_3-F_1$ dejan ceros en
+      la primera columna sin cambiar el determinante:
+
+      $$
+      \left|A\right| =
+      \begin{vmatrix}1&-2&a\\0&6&a^{2}-a\\0&-6&a^{2}-a\end{vmatrix}
+      = \begin{vmatrix}6 & a^{2}-a\\-6 & a^{2}-a\end{vmatrix}
+      = 12\left(a^{2}-a\right) = 12a(a-1)
+      $$
+
+      **Caso general**, $a\neq0$ y $a\neq1$: el determinante no se anula, el
+      rango es 3 y el sistema es **compatible determinado**.
+
+      **Caso $a=0$.** Los coeficientes de $z$ son $a=0$ y $a^{2}=0$: la $z$
+      **desaparece del sistema**. Queda
+
+      $$
+      x-2y = 0,\qquad x+4y = 6,\qquad x-8y = -6
+      $$
+
+      Las dos primeras dan $x=2$, $y=1$, y la tercera se cumple:
+      $2-8=-6$ ✓ Los dos rangos valen 2, menor que las tres incógnitas:
+      **compatible indeterminado**, con $z$ libre. Las soluciones son
+      $(2,1,\lambda)$ para todo $\lambda$.
+
+      **Caso $a=1$.** Restando la primera a las otras dos sale $y=1$ por un lado
+      y $y=\frac76$ por otro: **incompatible**.
+
+      $$
+      \boxed{
+      \begin{array}{ll}
+      a\neq 0,1 & \text{compatible determinado}\\
+      a = 0 & \text{compatible indeterminado, } (2,1,\lambda)\\
+      a = 1 & \text{incompatible}
+      \end{array}}
+      $$
+
+      > **Por qué este ejercicio vale por tres.** Los dos valores que anula el
+      > determinante dan los **dos** resultados posibles, uno cada uno. Eso
+      > deja claro lo que el determinante hace y lo que no: señala dónde
+      > mirar, y nunca dice qué vas a encontrar. Un sistema con determinante
+      > cero puede tener infinitas soluciones o ninguna, y decidirlo es
+      > Rouché-Fröbenius, no el determinante.
+
+  - id: ejalg5-bol57-el-nucleo-mas-grande-posible
+    titulo: El parámetro que hace el núcleo lo más grande posible
+    fuente: >-
+      Ejercicio 5.7 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Halla el valor de $a$ para el que la dimensión del núcleo del
+      endomorfismo
+
+      $$
+      f(x,y,z) = \left(ax+y+z,\; x+ay+z,\; x+y+az\right)
+      $$
+
+      sea la mayor posible, y encuentra una base.
+    pide: El valor de a que maximiza dim(ker f), y una base del núcleo.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué relación hay entre la dimensión del núcleo y el rango de la
+          matriz asociada?
+        opciones:
+          - texto: >-
+              $\dim\ker f = 3 - \operatorname{rg}(A)$, así que el núcleo es lo
+              más grande posible cuando el rango es lo más **pequeño** posible
+            correcta: true
+            mensaje: |
+              Exacto, y eso da la vuelta a la pregunta: buscar el núcleo mayor
+              es buscar el rango menor. La fórmula es el teorema de las
+              dimensiones, $\dim V = \dim\ker f + \dim\operatorname{Im} f$.
+          - texto: >-
+              Son iguales: a más rango, más núcleo
+            mensaje: |
+              Van al revés. Lo que el rango gana en imagen lo pierde el núcleo:
+              su suma es constante e igual a la dimensión del espacio de
+              partida.
+          - texto: >-
+              No hay relación: el núcleo se calcula resolviendo el sistema
+            mensaje: |
+              Se calcula así, sí, pero la dimensión sale del rango sin resolver
+              nada. Por eso conviene mirar el rango primero.
+
+      - tipo: calcular
+        titulo: La dimensión mayor que puede tener el núcleo
+        pregunta: |
+          El determinante es $(a-1)^{2}(a+2)$, y para $a=1$ la matriz tiene
+          todas sus entradas iguales a 1. ¿Cuánto vale $\dim\ker f$ en ese
+          caso?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ es lo que sale en $a=-2$, donde el rango baja solo a 2. Con
+              $a=1$ las tres filas son iguales y el rango cae hasta **1**, así
+              que el núcleo llega a 2.
+          - valor: '3'
+            mensaje: |
+              Un núcleo de dimensión 3 significaría que $f$ manda **todo** al
+              cero, o sea que la matriz es nula. Con unos en todas las entradas
+              el rango es 1, no 0.
+          - valor: '0'
+            mensaje: |
+              $0$ es lo que vale el núcleo cuando el determinante **no** se
+              anula. Aquí se anula, así que hay núcleo.
+        pista: |
+          Si las tres filas son iguales, ¿cuánto vale el rango? Y $3$ menos eso.
+        desarrollo: |
+          Con $a=1$,
+
+          $$
+          A = \begin{pmatrix}1&1&1\\1&1&1\\1&1&1\end{pmatrix},
+          \qquad \operatorname{rg}(A) = 1
+          $$
+
+          $$
+          \dim\ker f = 3 - 1 = 2
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La matriz asociada es
+              $\begin{pmatrix}a&1&1\\1&a&1\\1&1&a\end{pmatrix}$, con
+              determinante $(a-1)^{2}(a+2)$.
+          - texto: >-
+              Si $a\neq1$ y $a\neq-2$ el rango es 3 y el núcleo es $\{\bar0\}$,
+              de dimensión 0.
+          - texto: >-
+              Con $a=-2$ el rango baja a 2 y $\dim\ker f = 1$.
+          - texto: >-
+              Con $a=1$ las tres filas son iguales, el rango es 1 y
+              $\dim\ker f = 2$: el mayor posible.
+          - texto: >-
+              Como $a=1$ es raíz **doble** del determinante, el núcleo tiene
+              dimensión 2 por eso mismo.
+            trampa: true
+            mensaje: |
+              Coincide, pero no es la razón, y confundirlas cuesta caro en
+              diagonalización. La multiplicidad de la raíz no determina la
+              dimensión del núcleo: hay que mirar el **rango de la matriz**
+              sustituida. Aquí la dimensión sale 2 porque las tres filas son
+              iguales, no porque la raíz esté repetida.
+
+    resolucion: |
+      **Dar la vuelta a la pregunta.** Por el teorema de las dimensiones,
+
+      $$
+      \dim\ker f = 3 - \operatorname{rg}(A)
+      $$
+
+      así que buscar el núcleo más grande es buscar el **rango más pequeño**.
+
+      **El determinante**, sumando las tres filas a la primera —todas suman lo
+      mismo— y sacando factor común:
+
+      $$
+      \left|A\right| =
+      \begin{vmatrix}a&1&1\\1&a&1\\1&1&a\end{vmatrix}
+      = (a-1)^{2}(a+2)
+      $$
+
+      Se anula en $a=1$ y en $a=-2$, y en cualquier otro caso el rango es 3 y
+      el núcleo es solo el vector nulo.
+
+      **En $a=-2$** las filas son $(-2,1,1)$, $(1,-2,1)$ y $(1,1,-2)$: dos son
+      independientes, el rango es 2 y $\dim\ker f = 1$.
+
+      **En $a=1$** la matriz es toda unos. Las tres filas son la misma, el
+      rango es **1**, y
+
+      $$
+      \boxed{\;\dim\ker f = 3-1 = 2,\ \text{alcanzado en } a=1\;}
+      $$
+
+      **La base.** El núcleo es el conjunto de soluciones de $x+y+z=0$ —una
+      sola ecuación, porque las tres son idénticas—. Despejando $x=-y-z$ y
+      dando valores:
+
+      $$
+      \boxed{\;\left\{(1,-1,0),\;(1,0,-1)\right\}\;}
+      $$
+
+      Dos vectores independientes que cumplen la ecuación: base del núcleo.
+
+      > **Lo que este ejercicio prepara.** Es diagonalización con otro nombre.
+      > Cuando en el tema 7 se calcule el subespacio propio de un autovalor
+      > $\lambda$, lo que se hará es exactamente esto: el núcleo de
+      > $A-\lambda I$, y su dimensión saldrá del rango de esa matriz — **no**
+      > de la multiplicidad de $\lambda$ en el polinomio característico. La
+      > pieza trampa de arriba es el error que allí decide si una matriz
+      > diagonaliza o no.
+
+  - id: ejalg5-bol58-un-homogeneo-con-dos-parametros
+    titulo: Un sistema homogéneo, y cuándo tiene algo más que el cero
+    fuente: >-
+      Ejercicio 5.8 · Boletín de problemas, Sistemas de ecuaciones lineales ·
+      Álgebra, Escuela de Ingeniería de Gipuzkoa (UPV/EHU) · Departamento de
+      Matemática Aplicada.
+    nivel: practica
+    enunciado: |
+      Discute y resuelve en función de $a$ y $b$.
+
+      $$
+      \left.
+      \begin{array}{rcl}
+      x + 2y - 3z &=& 0\\
+      2x + 5y - 8z &=& 0\\
+      ax + by + 3z &=& 0\\
+      ax + y + bz &=& 0
+      \end{array}
+      \right\}
+      $$
+    pide: La discusión en función de a y b, y las soluciones.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Todos los términos independientes son cero. ¿Qué se sabe **antes** de
+          calcular nada?
+        opciones:
+          - texto: >-
+              Que es **compatible siempre**: el vector nulo es solución para
+              cualquier $a$ y $b$
+            correcta: true
+            mensaje: |
+              Eso es, y cambia la pregunta: en un homogéneo nunca se discute si
+              hay solución, sino si hay **más** que la trivial. Y eso pasa
+              exactamente cuando el rango es menor que el número de incógnitas.
+          - texto: Que puede ser incompatible según $a$ y $b$
+            mensaje: |
+              Un sistema homogéneo no puede ser incompatible nunca: basta tomar
+              todas las incógnitas iguales a cero. Los dos rangos coinciden
+              siempre, porque la columna añadida es de ceros.
+          - texto: Que tiene infinitas soluciones
+            mensaje: |
+              Solo si el rango es menor que 3. Con rango 3 la única solución es
+              la trivial, que también es «una solución».
+
+      - tipo: calcular
+        titulo: El valor de b que permite soluciones no triviales
+        pregunta: |
+          Las dos primeras ecuaciones obligan a que la solución sea múltiplo de
+          $(-1,2,1)$. Sustituyendo en las otras dos salen
+          $-a+2b+3=0$ y $-a+b+2=0$. ¿Cuánto vale $b$?
+        respuesta:
+          tipo: numero
+          valor: '-1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Signo cambiado. Restando las dos ecuaciones queda $b+1=0$, así
+              que $b=-1$.
+          - valor: '0'
+            mensaje: |
+              Con $b=0$ las dos condiciones darían $a=3$ y $a=2$, incompatibles
+              entre sí. No hay ningún $a$ que valga.
+          - valor: '-3'
+            mensaje: |
+              $-3$ es el coeficiente de $z$ en la primera ecuación. La
+              condición sobre $b$ sale de restar las dos ecuaciones de abajo.
+        pista: |
+          Resta $-a+b+2=0$ de $-a+2b+3=0$.
+        desarrollo: |
+          $$
+          \left(-a+2b+3\right)-\left(-a+b+2\right) = b+1 = 0
+          \;\Longrightarrow\;
+          b = -1
+          $$
+
+          Y sustituyendo en la segunda, $-a-1+2=0 \Rightarrow a=1$.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la discusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Las dos primeras ecuaciones son independientes, y resolviéndolas
+              sale $y=2z$, $x=-z$: la solución es $z\,(-1,2,1)$.
+          - texto: >-
+              Sustituyendo ese vector en la tercera:
+              $-a+2b+3=0$; y en la cuarta: $-a+b+2=0$.
+          - texto: >-
+              Las dos condiciones a la vez dan $b=-1$ y $a=1$.
+          - texto: >-
+              Con $a=1$ y $b=-1$ el sistema es **compatible indeterminado**, y
+              sus soluciones son $\lambda(-1,2,1)$.
+          - texto: >-
+              Para cualquier otro par $(a,b)$ el sistema es incompatible.
+            trampa: true
+            mensaje: |
+              Un sistema homogéneo **nunca** es incompatible: el vector nulo
+              siempre lo cumple. Para los demás pares el rango es 3 y la única
+              solución es la trivial $(0,0,0)$ — que sigue siendo una solución,
+              no la ausencia de ellas.
+
+    resolucion: |
+      **Un homogéneo siempre es compatible**, así que la pregunta no es si hay
+      solución sino si hay **más** que la trivial. Y hay más exactamente cuando
+      el rango baja de 3.
+
+      **Las dos primeras ecuaciones no llevan parámetros**, así que se resuelven
+      de entrada:
+
+      $$
+      \left.\begin{array}{rcl}x+2y-3z&=&0\\2x+5y-8z&=&0\end{array}\right\}
+      \;\Longrightarrow\;
+      y = 2z,\quad x = -z
+      $$
+
+      Es decir: **cualquier** solución del sistema completo tiene que ser de la
+      forma $z\,(-1,2,1)$. Eso reduce el problema a comprobar si ese vector
+      cumple las otras dos.
+
+      **Sustituyendo** $(x,y,z)=(-1,2,1)$:
+
+      $$
+      \text{tercera: } -a+2b+3 = 0,
+      \qquad
+      \text{cuarta: } -a+b+2 = 0
+      $$
+
+      Restando, $b+1=0$, y de ahí
+
+      $$
+      \boxed{\;a = 1,\qquad b = -1\;}
+      $$
+
+      **La discusión completa:**
+
+      | caso | rango | soluciones |
+      |---|---|---|
+      | $a=1$ y $b=-1$ | 2 | $\lambda\,(-1,2,1)$, infinitas |
+      | cualquier otro $(a,b)$ | 3 | solo la trivial $(0,0,0)$ |
+
+      > **El atajo que ahorra el trabajo entero.** En vez de calcular rangos de
+      > una matriz $4\times3$ con dos parámetros dentro, se resuelve la parte
+      > **sin parámetros** —que ya deja una sola dirección posible— y se obliga
+      > a las otras ecuaciones a contener esa dirección. Dos ecuaciones en $a$ y
+      > $b$, y listo. Buscar primero lo que no tiene parámetros es la jugada que
+      > más veces funciona en este tema.
