@@ -402,15 +402,24 @@ escrita no se puede autocorregir, pero su estructura lógica sí.
 
 ### La portada
 
-Es un **mapa del temario**, no un selector. Las nueve asignaturas como nombres
-grandes que se reparten la pantalla; al posarse encima una fila crece y las
-demás se comprimen. Al elegir, **el nombre pulsado viaja hasta convertirse en
-el título** de la vista de detalle (técnica FLIP: medir, invertir, animar).
-Paleta de comandos con `/` o `⌘K` que busca asignaturas, temas y conceptos a la
-vez.
+Es la pizarra de entrada (rediseño Pizarra, agosto 2026): héroe con el
+titular subrayado en tiza y la figura tocable de la tangente, el temario en
+dos columnas con **estados honestos del catálogo** —entera / la estamos
+escribiendo / aún no—, y la repisa con el lema. La portada **no supone
+itinerario**: son puertas, no un orden.
 
-Principio: **fluido no es tener animaciones, es no perder nunca el sitio.** Cada
-movimiento contesta de dónde ha salido algo y dónde se ha ido lo otro.
+Al elegir una asignatura, **el nombre pulsado viaja hasta convertirse en el
+título** de la vista de detalle (técnica FLIP: medir, invertir, animar), que
+es banda de pizarra + cuerpo de papel (brief §5b). Paleta de comandos con
+`/` o `⌘K` que busca asignaturas, temas, conceptos y rutas a la vez.
+
+Principio: **fluido no es tener animaciones, es no perder nunca el sitio.** El
+movimiento se ve una vez o bajo demanda; mientras se lee, nada se mueve.
+
+> Hasta el 29 de agosto de 2026 esta sección describía el selector anterior
+> —las nueve asignaturas como filas que crecen al posarse—. Se sustituyó por
+> el mundo Pizarra elegido por Ionan; el brief vive en
+> `referencia/rediseno-pizarra-brief.md`.
 
 ---
 
