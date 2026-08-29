@@ -1963,3 +1963,30 @@ falta, dicho en voz alta» pintando las falta[] reales.
   ancla profunda dentro de un bloque cerrado se abre a mano (§17).
 - Los remates §6c de la portada: escala del tablero, el hueco entre
   listas y repisa repartido, y user-select: none en la figura tocable.
+
+## Punto de reanudación (30-08, sesión cortada por límite de uso)
+
+- t05 y t03 COMPLETOS y subidos. t07 lleva 3 del boletín nuevos (7.1-7.3);
+  faltan 7.4, 7.5, 7.8-7.25 (20). Los autovalores de TODO el boletín de t07
+  ya están verificados (ver commits y este fichero, sección de abajo).
+- t04 SIN transcribir pero con TODAS las cuentas verificadas:
+  4.1 (−1 si z≠1, 4 si z=1) · 4.2=16 · 4.3=(1+a)³ · 4.4=1+a·n(n+1)/2 ·
+  4.5 ✓identidad · 4.8a=a(a−a′)(b′−b)² · 4.8b muestras (1,1,1)→−1 ·
+  4.9=(x³−2)^{n−1}(x³+2(n−1)) · 4.10 ✓ · 4.11=aⁿ⁻¹(a+Σx) · 4.12 ✓ ·
+  4.13 A⁻¹=Aᵗ-like calculada y B⁻¹ patrón potencias de a · 4.14 det=1
+  inversa entera · 4.15 rangos 2 y 2 · 4.15bis det=1875 · 4.16=(x+y+z)³ ·
+  4.17=a²(a+3) · 4.18=−(α−5)² (inversa α=0 = matriz/5) · 4.19=k²(k−3) ·
+  4.20=(λ−1)⁶.
+- t07 verificado: 7.2 {−1,1,2,2} · 7.6 A1{1,2,2}✓diag A2{−3,1,3}✓
+  A3{2,2,−4}✓ A4{1,1,1}NO · 7.7 A1{−3,−1,0} A2{−9,0,0} A3{−1,2,5}
+  A4{0,1,2} A5{2,2,5} · 7.8{−1,2,3} · 7.9{4,−2,−2}✓ · 7.10 diag⟺a=0
+  (c≠1) ó a=b=0 (c=1) · 7.11 diag⟺a∉{−1,5} ó (a=−1,b=0) · 7.14=7.15=7.20
+  misma matriz {2,2,3} NO diag · 7.16{−2,−1,−1}✓ · 7.17 diag⟺c=1 ·
+  7.18{4,2,2}✓ · 7.21{1,−1,−1}✓ y A²⁰=I · 7.22 A²=I → A⁶=I, A⁻¹=A ·
+  7.23{1,−1,−1}✓ · 7.24{6,6,12} · 7.25{4,−2,−2}.
+- t02 y t01: SIN empezar (20 + 30). Los txt están volcados en el scratchpad.
+- Método íntegro en este fichero; imágenes de todos los boletines en
+  scratchpad/alg/ (mat-*, det-*, diag-*, p59-*).
+- OJO: el suelo local de la última tanda dio un falso rojo por una carrera
+  autoprovocada (un build paralelo machacó dist durante el humo). El CI
+  valida en limpio.
