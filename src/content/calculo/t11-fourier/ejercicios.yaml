@@ -403,6 +403,135 @@ ejercicios:
       reduce a $\pi$. Solo hay que mirar la paridad del número, y eso convierte
       $S(2024\pi)$ o $S(41\pi)$ en preguntas de un segundo.
 
+  - id: ej-un-coeficiente-integrado
+    titulo: Un coeficiente calculado, con la integral entera
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Para la función de periodo $2\pi$ definida por $f(t) = t$ en
+      $(-\pi,\pi)$, calcular el coeficiente $b_1$ de su serie de Fourier.
+    pide: El valor de b₁.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de integrar, ¿qué se sabe de los coeficientes de esta función?
+        opciones:
+          - texto: >-
+              Que $f$ es **impar**, así que todos los $a_n$ se anulan y solo hay
+              senos
+            correcta: true
+            mensaje: |
+              Eso es, y es medio ejercicio ahorrado. $f(-t) = -t = -f(t)$: impar.
+              El producto de impar por coseno es impar, y sobre un intervalo
+              simétrico integra cero.
+          - texto: Que todos son positivos, porque $f$ crece
+            mensaje: |
+              El signo de los coeficientes no tiene que ver con que la función
+              crezca. Aquí los $b_n$ alternan de signo, y el primero es
+              positivo pero el segundo no.
+          - texto: Que hay que calcular los tres tipos, porque no tiene simetría
+            mensaje: |
+              Sí la tiene: es impar. Comprobarlo cuesta una sustitución y ahorra
+              la mitad de las integrales.
+      - tipo: calcular
+        titulo: El primer coeficiente
+        pregunta: |
+          Con $b_n = \dfrac{1}{\pi}\displaystyle\int_{-\pi}^{\pi} t\,\text{sen}\,nt\,dt$,
+          ¿cuánto vale $b_1$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '-2'
+            mensaje: |
+              Signo cambiado. Al integrar por partes sale
+              $-t\cos t + \text{sen}\,t$, y evaluado entre $-\pi$ y $\pi$ da
+              $2\pi$; dividido entre $\pi$, $+2$. El menos de la primitiva ya
+              está dentro de esa cuenta.
+          - valor: '1'
+            mensaje: |
+              $1$ saldría de olvidar que el intervalo es simétrico y vale el
+              doble: la integral de $-\pi$ a $\pi$ es dos veces la de $0$ a
+              $\pi$, porque $t\,\text{sen}\,t$ es **par**.
+          - valor: '6.2831853'
+            mensaje: |
+              $2\pi$ es el valor de la **integral**, antes de dividir entre
+              $\pi$. El coeficiente lleva el $\frac1\pi$ delante.
+        pista: |
+          Integra por partes con $u=t$ y $dv=\text{sen}\,t\,dt$. La primitiva es
+          $-t\cos t + \text{sen}\,t$.
+        desarrollo: |
+          Por partes, con $u=t$ y $dv = \text{sen}\,t\,dt$:
+
+          $$
+          \int t\,\text{sen}\,t\,dt = -t\cos t + \text{sen}\,t
+          $$
+
+          $$
+          \int_{-\pi}^{\pi} t\,\text{sen}\,t\,dt
+          = \Bigl[-t\cos t + \text{sen}\,t\Bigr]_{-\pi}^{\pi}
+          = \pi + \pi = 2\pi
+          $$
+
+          $$
+          b_1 = \frac{1}{\pi}\cdot 2\pi = 2
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: '$f(-t) = -t = -f(t)$, luego $f$ es impar y $a_n = 0$ para todo $n$.'
+          - texto: 'Queda solo $b_n = \frac1\pi\int_{-\pi}^{\pi} t\,\text{sen}\,nt\,dt$.'
+          - texto: 'Para $n=1$, integrando por partes sale $2\pi$, y dividido entre $\pi$ da $b_1 = 2$.'
+          - texto: 'El integrando $t\,\text{sen}\,t$ es **par**, así que la integral es el doble de la mitad derecha.'
+          - texto: 'Como $f$ es impar, la integral sobre el intervalo simétrico vale cero y $b_1=0$.'
+            trampa: true
+            mensaje: |
+              Lo que integra cero es $f$ **por un coseno**, que es impar. Aquí
+              el integrando es $f$ por un **seno**: impar por impar da par, y
+              una función par sobre un intervalo simétrico no se anula — vale el
+              doble de la mitad. Confundir esas dos es el error más común del
+              tema.
+    resolucion: |
+      **La paridad primero**, que es gratis. $f(-t) = -t = -f(t)$, así que $f$
+      es **impar** y
+
+      $$
+      a_n = 0 \quad \text{para todo } n, \qquad \text{incluido } a_0
+      $$
+
+      La serie es solo de senos, y de las tres familias de integrales queda una.
+
+      **El coeficiente**, por partes con $u = t$ y $dv = \text{sen}\,t\,dt$:
+
+      $$
+      \int t\,\text{sen}\,t\,dt = -t\cos t + \int \cos t\,dt = -t\cos t + \text{sen}\,t
+      $$
+
+      Evaluando entre $-\pi$ y $\pi$, y recordando que
+      $\cos(\pm\pi) = -1$ y $\text{sen}(\pm\pi) = 0$:
+
+      $$
+      \Bigl[-t\cos t + \text{sen}\,t\Bigr]_{-\pi}^{\pi}
+      = \bigl(\pi + 0\bigr) - \bigl(-\pi + 0\bigr) = 2\pi
+      $$
+
+      $$
+      \boxed{\;b_1 = \frac{1}{\pi}\cdot 2\pi = 2\;}
+      $$
+
+      > **Las dos paridades, que no son la misma y por eso se confunden.** $f$
+      > es impar. Pero el **integrando** de $b_n$ es $f$ por un seno, o sea
+      > impar por impar: **par**. Por eso esa integral no se anula y vale el
+      > doble de la mitad derecha. La que sí se anula es la de $a_n$, donde el
+      > integrando es $f$ por un coseno: impar por par, impar.
+      >
+      > Y el caso general sale igual: $b_n = \frac{2(-1)^{n+1}}{n}$, que en
+      > $n=1$ da 2. De ahí salen las sumas numéricas que el examen pide al
+      > final, y por eso este coeficiente conviene tenerlo hecho a mano una vez.
+
   # ═══════════════════════════════════════════════════════════════════
   # Del boletín de problemas complementarios del tema 11.
   # ═══════════════════════════════════════════════════════════════════

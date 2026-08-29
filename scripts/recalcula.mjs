@@ -6,11 +6,16 @@
  * `npm run suelo` estaba en verde y §15 cumplida. Los guardianes de §11
  * demuestran que el sitio no está roto; ninguno mira si las cuentas salen.
  *
- * Antes de esto se intentaron dos guardianes de texto y los dos se
- * descartaron por ruidosos: comparar el `valor` con los números de su
- * `desarrollo` marcaba 26 de 323 y casi todos eran falsos, y comprobar la
- * aritmética escrita solo encontraba 10 patrones y fallaba en 8. Lo que sí
- * funciona es evaluar de verdad las expresiones que el propio corpus escribe.
+ * Antes de esto se intentaron TRES comprobaciones y las tres se descartaron:
+ *   · comparar el `valor` con los números de su `desarrollo` — 26 avisos de
+ *     323 y casi todos falsos;
+ *   · comprobar la aritmética que el desarrollo escribe — solo 10 patrones
+ *     comparables en todo el corpus, y 8 falsos;
+ *   · comparar el `valor` con el final del desarrollo — el desarrollo de un
+ *     paso termina muchas veces en una magnitud intermedia, y restringirlo al
+ *     \boxed dejaba 2 casos comparables de 1.055, con uno falso.
+ * Lo que sí funciona es evaluar de verdad las expresiones que el propio
+ * corpus escribe y compararlas con el decimal que él mismo declara.
  *
  * QUÉ COMPRUEBA — solo lo que el contenido ya afirma, nunca algo inventado:
  *   1. Cada «EXPRESIÓN \approx DECIMAL» de una resolución o un desarrollo:

@@ -584,6 +584,258 @@ ejercicios:
       gráfica de la derivada determina la función salvo una constante: todas las
       $f(x) = \frac{x^{2}}{2} + C$ tienen esta misma derivada.
 
+  - id: ej-componer-un-desarrollo
+    titulo: Un desarrollo compuesto, sin derivar ni una vez
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Obtener los tres primeros términos no nulos del desarrollo de Maclaurin
+      de $f(x) = e^{x^{2}}$, sin calcular ninguna derivada.
+    pide: Los tres primeros términos no nulos del desarrollo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué no hace falta derivar para obtener este desarrollo?
+        opciones:
+          - texto: >-
+              Porque el de $e^{u}$ ya se conoce, y basta sustituir $u = x^{2}$
+            correcta: true
+            mensaje: |
+              Eso es. Los seis desarrollos memorizados no son seis casos: son
+              seis **moldes**, y casi todo lo que cae sale de sustituir algo
+              dentro de uno de ellos.
+          - texto: Porque la función es par
+            mensaje: |
+              Es par, y eso explica que solo aparezcan potencias pares. Pero no
+              es lo que ahorra las derivadas: lo que las ahorra es reconocer el
+              molde.
+          - texto: Porque el desarrollo de una exponencial siempre es finito
+            mensaje: |
+              No lo es: la serie de $e^{u}$ tiene infinitos términos. Lo que
+              pide el enunciado son los tres primeros, que es otra cosa.
+      - tipo: calcular
+        titulo: El coeficiente de grado cuatro
+        pregunta: |
+          En $e^{x^{2}} = 1 + x^{2} + \frac{x^{4}}{2} + \ldots$, ¿cuál es el
+          coeficiente de $x^{4}$? En forma exacta, o con cuatro decimales.
+        respuesta:
+          tipo: numero
+          valor: '0.5'
+          tolerancia: 0.0005
+          formato: en forma exacta (1/2), o con cuatro decimales
+        distractores:
+          - valor: '0.0416667'
+            mensaje: |
+              $\frac1{24} = \frac1{4!}$ sería el coeficiente de $x^{4}$ en el
+              desarrollo de $e^{x}$. Aquí la potencia cuarta viene del término
+              $\frac{u^{2}}{2!}$ con $u=x^{2}$, así que el factorial que toca es
+              el $2!$, no el $4!$.
+          - valor: '1'
+            mensaje: |
+              $1$ es el coeficiente de $x^{2}$, que sale del término $u$. El de
+              $x^{4}$ viene del siguiente, y lleva el $\frac1{2!}$.
+          - valor: '0.1666667'
+            mensaje: |
+              $\frac16 = \frac1{3!}$ es el coeficiente del término cúbico de
+              $e^{u}$, que aquí da $x^{6}$, no $x^{4}$. Al sustituir
+              $u = x^{2}$ **los grados se duplican**.
+        pista: |
+          En $e^{u} = 1+u+\frac{u^{2}}{2!}+\ldots$ pon $u = x^{2}$ y mira qué
+          término produce $x^{4}$.
+        desarrollo: |
+          $$
+          e^{u} = 1 + u + \frac{u^{2}}{2!} + \frac{u^{3}}{3!} + \ldots
+          $$
+
+          Con $u = x^{2}$, cada término sube el grado al doble:
+
+          $$
+          e^{x^{2}} = 1 + x^{2} + \frac{x^{4}}{2} + \frac{x^{6}}{6} + \ldots
+          $$
+
+          El coeficiente de $x^{4}$ es $\frac{1}{2!} = \frac12 = 0{,}5$.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'Se parte de $e^{u} = 1+u+\frac{u^{2}}{2!}+\frac{u^{3}}{3!}+\ldots$'
+          - texto: 'Se sustituye $u = x^{2}$, con lo que cada grado se duplica.'
+          - texto: 'Queda $e^{x^{2}} = 1 + x^{2} + \frac{x^{4}}{2} + \ldots$, con solo potencias pares.'
+          - texto: 'El radio de convergencia sigue siendo infinito, porque el de $e^{u}$ lo es.'
+          - texto: 'Para llegar hasta $x^{4}$ hay que derivar $f$ cuatro veces y evaluar en 0.'
+            trampa: true
+            mensaje: |
+              Se **puede**, pero es exactamente lo que este método evita, y con
+              motivo: la cuarta derivada de $e^{x^{2}}$ ocupa media página. El
+              desarrollo compuesto da el mismo resultado en dos líneas, y el
+              examen lo pide así — en 2021-2022 preguntaba la derivada número
+              veinticinco, que por derivación directa no se calcula en ninguna
+              cantidad de tiempo.
+    resolucion: |
+      **La idea entera del apartado, en una línea:** casi ningún desarrollo se
+      calcula derivando. Se reconoce cuál de los seis moldes tiene dentro y se
+      sustituye.
+
+      $$
+      e^{u} = \sum_{n\ge 0}\frac{u^{n}}{n!}
+      = 1 + u + \frac{u^{2}}{2!} + \frac{u^{3}}{3!} + \ldots
+      $$
+
+      Con $u = x^{2}$:
+
+      $$
+      \boxed{\;e^{x^{2}} = 1 + x^{2} + \frac{x^{4}}{2} + \frac{x^{6}}{6} + \ldots\;}
+      $$
+
+      **Dos cosas que se leen de aquí sin más cuentas:**
+
+      - Solo hay **potencias pares**, porque $x^{2}$ elevado a lo que sea es
+        par. Eso confirma que $f$ es par, que ya se veía en la fórmula.
+      - El **radio de convergencia sigue siendo infinito**: la serie de $e^{u}$
+        converge para todo $u$, y $u = x^{2}$ existe para todo $x$.
+
+      > **Y de aquí sale la derivada de orden alto sin derivar.** El coeficiente
+      > de $x^{n}$ en un desarrollo de Maclaurin es $\frac{f^{(n)}(0)}{n!}$, así
+      > que leyendo el coeficiente se obtiene la derivada:
+      >
+      > $$
+      > \frac{f^{(4)}(0)}{4!} = \frac12
+      > \qquad\Longrightarrow\qquad
+      > f^{(4)}(0) = \frac{4!}{2} = 12
+      > $$
+      >
+      > Ese es el truco que el examen pregunta año tras año, y por eso este
+      > ejercicio va antes que ninguno de los suyos.
+
+  - id: ej-cota-del-resto
+    titulo: La cota del error, que es media pregunta
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Se aproxima $e^{x}$ por su polinomio de Maclaurin de orden 2 en el
+      intervalo $[0, 1]$. Acotar el error cometido.
+    pide: Una cota del error de la aproximación en ese intervalo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En el resto de Lagrange $R_2(x) = \dfrac{f'''(\xi)}{3!}x^{3}$,
+          ¿qué es lo que hay que acotar?
+        opciones:
+          - texto: >-
+              La **tercera** derivada en el intervalo, porque $\xi$ está ahí
+              dentro y no se sabe dónde
+            correcta: true
+            mensaje: |
+              Eso es. El resto de orden $n$ lleva la derivada $n+1$, evaluada en
+              un punto desconocido. Como no se sabe cuál, se acota por el mayor
+              valor que pueda tomar en el intervalo.
+          - texto: La segunda derivada, que es el orden del polinomio
+            mensaje: |
+              El polinomio es de orden 2, pero el resto lleva **una derivada
+              más**: la tercera. Confundir los dos órdenes es el error más
+              común de este apartado.
+          - texto: El valor de $x$, que es lo único que varía
+            mensaje: |
+              $x$ también se acota —por eso se toma $x=1$, el extremo—, pero lo
+              que no se conoce y hay que acotar de verdad es la derivada, porque
+              $\xi$ es un punto desconocido.
+      - tipo: calcular
+        titulo: La cota
+        pregunta: |
+          Con $f'''(\xi) = e^{\xi} \le e$ en $[0,1]$ y $x \le 1$, ¿cuánto vale
+          la cota $\dfrac{e}{6}$? En forma exacta, o con cuatro decimales.
+        respuesta:
+          tipo: numero
+          valor: '0.4530'
+          tolerancia: 0.0005
+          formato: en forma exacta (e/6), o con cuatro decimales
+        distractores:
+          - valor: '0.1133'
+            mensaje: |
+              $\frac{e}{24} = \frac{e}{4!}$ lleva el factorial del **orden del
+              polinomio más uno**… pero mal: el resto de orden 2 lleva $3!=6$,
+              no $4!$. Ese cuatro sería para un polinomio de orden 3.
+          - valor: '1.3591'
+            mensaje: |
+              $\frac{e}{2}$ usa $2!$, el factorial del orden del polinomio. El
+              resto lleva **una unidad más**: $3! = 6$.
+          - valor: '2.7182818'
+            mensaje: |
+              $e$ es la cota de la derivada, pero falta dividir entre $3!$ y
+              multiplicar por $x^{3}$, que aquí vale como mucho 1.
+        pista: |
+          $e \approx 2{,}71828$. Divídelo entre 6.
+        desarrollo: |
+          $$
+          \left|R_2(x)\right|
+          = \left|\frac{f'''(\xi)}{3!}\,x^{3}\right|
+          \le \frac{e}{6}\cdot 1^{3}
+          = \frac{e}{6} \approx 0{,}4530
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El resto de un polinomio de orden 2 es
+              $R_2(x) = \frac{f'''(\xi)}{3!}x^{3}$, con $\xi$ entre 0 y $x$.
+          - texto: >-
+              Todas las derivadas de $e^{x}$ son $e^{x}$, así que
+              $f'''(\xi) = e^{\xi}$.
+          - texto: 'Como $\xi \in [0,1]$ y la exponencial crece, $e^{\xi} \le e$.'
+          - texto: 'Y como $x \le 1$, entonces $x^{3}\le 1$, así que la cota es $\frac{e}{6}$.'
+          - texto: 'Al ser una cota, el error real es exactamente $\frac{e}{6}$.'
+            trampa: true
+            mensaje: |
+              Una cota dice «el error **no pasa** de esto», no cuánto vale. El
+              error real aquí es bastante menor: en $x=1$ vale
+              $e - 2{,}5 \approx 0{,}218$, menos de la mitad de la cota. Que la
+              cota sea holgada no la invalida: sigue siendo una respuesta
+              correcta, y es lo que el examen pide.
+    resolucion: |
+      **El polinomio**, que es la parte fácil:
+
+      $$
+      P_2(x) = 1 + x + \frac{x^{2}}{2}
+      $$
+
+      **Y el resto**, que es la que puntúa. La fórmula de Lagrange para el resto
+      de un polinomio de orden $n$ lleva la derivada de orden $n+1$:
+
+      $$
+      R_n(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!}\,x^{\,n+1},
+      \qquad \xi \text{ entre } 0 \text{ y } x
+      $$
+
+      Con $n=2$, la derivada que aparece es la **tercera** y el factorial es
+      $3!$. Ese desfase de uno es lo que más se falla del apartado.
+
+      $$
+      R_2(x) = \frac{f'''(\xi)}{3!}\,x^{3} = \frac{e^{\xi}}{6}\,x^{3}
+      $$
+
+      **Acotar es sustituir lo desconocido por lo peor posible.** No se sabe
+      dónde está $\xi$, pero sí que está en $[0,1]$, y ahí la exponencial es
+      creciente:
+
+      $$
+      e^{\xi} \le e^{1} = e,
+      \qquad
+      x^{3} \le 1
+      $$
+
+      $$
+      \boxed{\;\left|R_2(x)\right| \le \frac{e}{6} \approx 0{,}4530\;}
+      $$
+
+      > **Cómo se lee una cota, y por qué el enunciado a veces la pide al
+      > revés.** Esto dice que el error no llega a medio punto — no que valga
+      > medio punto: el real en $x=1$ es $e-2{,}5\approx 0{,}218$. Y de la misma
+      > desigualdad sale la otra pregunta que hace el examen, «cuántos términos
+      > hacen falta para que el error sea menor que $10^{-3}$»: se escribe la
+      > cota con $n$ genérico y se busca el primer $n$ que la cumpla, **sin
+      > sumar ningún término**.
+
   - id: teorema-de-lagrange
     titulo: Tres funciones y una pendiente media
     fuente: >-

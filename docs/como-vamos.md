@@ -94,26 +94,32 @@ valorará la presentación».
 
 ## Cálculo, tema a tema
 
+> node scripts/mide.mjs
+
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2 885 | 3 | 37 | 8 | **74** |
-| t02 sucesiones | 2 035 | 3 | 19 | 4 | **32** |
-| t03 funciones reales | **2 017** | 3 | 23 | 5 | 21 |
-| t04 estudio local | **2 281** | 3 | 18 | 5 | **85** |
-| t05 integración | **2 251** | 4 | 30 | 4 | **49** |
-| t06 varias variables | **2 071** | 2 | 12 | 4 | **20** |
-| t07 integral múltiple | **1 932** | 3 | 11 | 4 | **41** |
-| t08 integral curvilínea | **1 208** | 1 | 7 | 2 | **26** |
-| t09 ecuaciones diferenciales | **1 800** | 1 | 7 | 2 | **36** |
-| t10 Laplace | **1 617** | **2** | **9** | **3** | **24** |
-| t11 Fourier | **2 012** | **2** | **9** | **3** | **17** |
-| **total** | **22 109** | **27** | **182** | **44** | **425** |
+| t01 complejos | 2820 | 3 | 37 | 8 | 74 |
+| t02 sucesiones | 2020 | 3 | 19 | 4 | 32 |
+| t03 funciones reales | 1920 | 3 | 23 | 5 | 21 |
+| t04 estudio local | 2453 | 3 | 20 | 7 | 85 |
+| t05 integracion | 2104 | 4 | 30 | 4 | 49 |
+| t06 varias variables | 1993 | 2 | 12 | 4 | 20 |
+| t07 integral multiple | 1789 | 3 | 11 | 4 | 41 |
+| t08 integral curvilinea | 1163 | 2 | 9 | 4 | 26 |
+| t09 ecuaciones diferenciales | 1785 | 2 | 10 | 5 | 36 |
+| t10 laplace | 1563 | 2 | 10 | 4 | 24 |
+| t11 fourier | 1935 | 2 | 10 | 4 | 17 |
 
-En todo el corpus: **607 ejercicios y 2 349 pasos**.
+> **Esta tabla la genera `npm run mide`**, y ahí vive también la definición de
+> «palabra»: la prosa de un tema quitando la portada, los bloques `<svg>`, los
+> pies de figura, las fórmulas y las etiquetas. Se escribía a mano y llegó a
+> publicar dos commits con una cifra vieja; desde el 29 de agosto de 2026 se
+> regenera. Los números bajan un poco respecto a la versión escrita a mano: no
+> es que haya menos prosa, es que ahora se cuenta siempre igual.
 
-> La prosa sube de 19 955 a 22 109 palabras el 26 de agosto de 2026, y no por
-> engordar: son los catorce huecos que destapó la auditoría de §15, contados y
-> cerrados. Está explicado más abajo, en su propio apartado.
+> La prosa creció el 26 de agosto de 2026 por los catorce huecos que destapó la
+> auditoría de §15, y el 29 por los nueve ejemplos de entrada que cerraron la
+> escalera. Ninguna de las dos veces por engordar: las dos salieron de contar.
 
 El tema 10 ya no es la frontera: pasa de 872 a **1 605 palabras** y de una
 figura a dos. Lo que se le añadió no salió de mirar el temario sino de contar
@@ -481,12 +487,12 @@ auditoría periódica, que se pasa a mano y se lee con criterio.
 | todo tema enlazado por una ruta tiene prosa | ✅ |
 | **toda herramienta que el examen usa, presentada en la prosa** | ✅ **auditado el 26 de agosto de 2026, catorce huecos cerrados** |
 | **todo ejercicio de examen enlazado** | ✅ **425 de 425**, cerrado el 28 de agosto de 2026 |
-| **todo ejercicio de tema enlazado** | ✅ **182 de 182**, el mismo día |
-| cada tema con ejemplo introductorio propio | ✅ 44 |
-| cada tema con al menos una figura | ✅ 27 |
+| **todo ejercicio de tema enlazado** | ✅ **191 de 191** |
+| cada tema con ejemplo introductorio propio | ✅ **53**, y ninguno de los 156 escalones arranca en un ejercicio de examen |
+| cada tema con al menos una figura | ✅ 29 |
 | una ruta por evaluación | ✅ **7 rutas para los 9 tipos de convocatoria** |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |
-| `falta[]` dice lo que no está | ✅ 30 huecos |
+| `falta[]` dice lo que no está | ✅ 37 huecos, y las siete rutas dicen con qué tres criterios se buscaron |
 | `npm run suelo` en verde | ✅ |
 | **todas las convocatorias publicadas transcritas** | ✅ **88 de 88** |
 

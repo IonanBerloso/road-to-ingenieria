@@ -65,13 +65,11 @@ async function main() {
   await esperaServidor();
 
   const navegador = await chromium.launch();
-  const pagina = await navegador.newPage({ viewport: { width: 1280, height: 1000 } });
+  /* La pestaña se renueva en cada página del bucle de abajo; esta primera es
+     solo para tener algo que cerrar la primera vez. */
+  let pagina = await navegador.newPage({ viewport: { width: 1280, height: 1000 } });
 
   const erroresConsola = [];
-  pagina.on('pageerror', (e) => erroresConsola.push(String(e)));
-  pagina.on('console', (m) => {
-    if (m.type() === 'error') erroresConsola.push(m.text());
-  });
 
   /* Se recorre cada página de contenido, no solo una: el día que haya veinte
      temas, el fallo aparecerá en el que nadie miró.
@@ -97,17 +95,92 @@ async function main() {
           /\/[a-z]+\/(t\d{2}-|examenes\/\d{4}-\d{4}|preparar\/)/.test(h),
       ),
   );
-  const rutas = [...new Set(paginas)];
+  /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
+     del contenido: 96 páginas con 457 ejercicios. Durante meses el navegador
+     abrió 8 de esas 96 —un 8 %— y el resto solo lo miraba `verify.mjs`, que
+     lee el HTML y no ejecuta nada. El único fallo que el guardián de viewBox
+     ha cazado lo cazó de rebote, porque esa figura se reutilizaba en una ruta.
+
+     Así que se añade una MUESTRA ROTATORIA: ocho páginas de examen elegidas
+     por el día del año, con lo que en unas semanas pasan todas sin que el CI
+     se dispare. Se imprime cuáles son, para que un fallo se pueda reproducir.
+     Y `HUMO_TODO=1` las abre todas: eso es lo que se pasa al cerrar una
+     asignatura, no en cada commit. */
+  const todosLosExamenes = [...new Set(
+    (await Promise.all(
+      [...new Set([...(await (await fetch(`${ORIGEN}/`)).text())
+        .matchAll(/href="([^"]+)"/g)].map((m) => m[1])
+        .filter((h) => h.startsWith(BASE) && /\/[a-z]+\/$/.test(h.replace(BASE, '/')))
+        .map((h) => h))]
+        .map(async (h) => {
+          const html = await (await fetch(`${ORIGEN.replace(BASE, '')}${h}`)).text().catch(() => '');
+          /* sin el fragmento: `#ej-…` no es otra página, y contarlo dejaba la
+             muestra de ocho en un solo examen */
+          return [...html.matchAll(/href="([^"#]+examenes\/\d{4}-\d{4}[^"#]*)"/g)].map((m) => m[1]);
+        }),
+    )).flat(),
+  )].filter((h) => h.startsWith(BASE));
+
+  const yaAbiertos = new Set(paginas);
+  const candidatos = todosLosExamenes.filter((h) => !yaAbiertos.has(h)).sort();
+  const TODO = process.env.HUMO_TODO === '1';
+  const CUANTOS = 8;
+  let muestra = [];
+  if (candidatos.length) {
+    if (TODO) {
+      muestra = candidatos;
+    } else {
+      const dia = Math.floor((Date.now() - Date.UTC(new Date().getUTCFullYear(), 0, 0)) / 86400000);
+      const desde = (dia * CUANTOS) % candidatos.length;
+      for (let i = 0; i < Math.min(CUANTOS, candidatos.length); i++) {
+        muestra.push(candidatos[(desde + i) % candidatos.length]);
+      }
+    }
+  }
+
+  const rutas = [...new Set([...paginas, ...muestra])];
 
   comprueba(rutas.length > 0, `hay páginas de contenido que comprobar (${rutas.length})`);
+  console.log(
+    `  · exámenes: ${yaAbiertos.size ? [...yaAbiertos].filter((h) => h.includes('/examenes/')).length : 0} fijos` +
+    ` + ${muestra.length} ${TODO ? 'de la barrida completa (HUMO_TODO=1)' : `de la muestra rotatoria de hoy, de ${candidatos.length} posibles`}`,
+  );
+  if (!TODO && muestra.length) {
+    console.log(`    ${muestra.map((h) => h.replace(BASE, '')).join('\n    ')}`);
+  }
 
   /** Recuento global de trazos: ver el comentario de más abajo. */
   const medidos = { raiz: 0, barra: 0, etiqueta: 0 };
 
   for (const ruta of rutas) {
+    /* Cada página va en su propio try. Antes, un fallo de infraestructura en
+       una —una navegación a destiempo, un tiempo de espera— abortaba el
+       recorrido entero y las 122 restantes se quedaban sin mirar, con un
+       mensaje que ni siquiera decía cuál había sido. Ahora se anota, se sigue,
+       y al final se dice con nombre. */
+    try {
     console.log(`\n${ruta}`);
-    await pagina.goto(`http://localhost:${PUERTO}${ruta}`, { waitUntil: 'networkidle' });
-    await pagina.waitForTimeout(300);
+    /* Una pestaña para las 123 páginas de la barrida completa acababa dando
+       «Execution context was destroyed» en una página distinta cada vez: no era
+       un fallo de contenido sino de acumulación —cada tema son 150.000 nodos y
+       varios megas—. Se abre una pestaña limpia por página y se cierra al
+       terminar. Cuesta unos segundos y quita una fuente de ruido: un guardián
+       que falla al azar se acaba ignorando, que es lo que §11 prohíbe. */
+    if (pagina && !pagina.isClosed()) await pagina.close().catch(() => {});
+    pagina = await navegador.newPage({ viewport: { width: 1280, height: 1000 } });
+    pagina.on('pageerror', (e) => erroresConsola.push(`${ruta} → ${e.message}`));
+    pagina.on('console', (m) => m.type() === 'error' && erroresConsola.push(`${ruta} → ${m.text()}`));
+    await pagina.goto(`http://localhost:${PUERTO}${ruta}`, { waitUntil: 'load', timeout: 60000 });
+    /* Esperar a que el navegador quede ocioso, no un tiempo fijo. El tema 1
+       pinta doce lienzos del paso `verificar` en `requestIdleCallback`, y esa
+       tarea chocaba con las medidas de aquí: el guardián fallaba con
+       «Execution context was destroyed» en esa página y solo en esa. Si el
+       trabajo diferido no ha terminado, medir es medir a medias. */
+    await pagina.evaluate(() => new Promise((listo) => {
+      const espera = window.requestIdleCallback ?? ((f) => setTimeout(f, 300));
+      espera(() => listo(), { timeout: 8000 });
+    })).catch(() => {});
+    await pagina.waitForTimeout(400);
 
     /* 1 · Los signos que se estiran se DIBUJAN, no solo existen en el DOM.
        Las fórmulas las dibuja KaTeX en el build, con sus propias fuentes: la
@@ -122,10 +195,22 @@ async function main() {
        Se mide con TODO desplegado. En modo guiado casi nada está visible, y
        una comprobación que no encuentra fórmulas pasa en vacío: eso es un
        guardián de mentira. */
+    /* Abrir una pestaña dispara `history.replaceState` (Tema.astro), y con
+       decenas de ejercicios en la página eso rompía el `evaluate` que lanzaba
+       los clics: el guardián fallaba con «Execution context was destroyed» en
+       una página distinta cada vez. No era contenido, era el propio guardián
+       navegando mientras miraba. Se desactiva mientras duran los clics —lo que
+       nos interesa es abrir los paneles, no el historial— y se devuelve. */
     await pagina.evaluate(() => {
-      for (const b of document.querySelectorAll('[data-modo="completo"]')) b.click();
+      const original = history.replaceState;
+      history.replaceState = () => {};
+      try {
+        for (const b of document.querySelectorAll('[data-modo="completo"]')) b.click();
+      } finally {
+        history.replaceState = original;
+      }
     });
-    await pagina.waitForTimeout(200);
+    await pagina.waitForTimeout(300);
 
     const trazos = await pagina.evaluate(() => {
       const medidas = { raiz: [], barra: [] };
@@ -206,6 +291,15 @@ async function main() {
        guardián que da la alarma once veces de once en falso enseña a ignorar
        los guardianes, que es el daño de verdad (§11).
 
+       Y el 29 de agosto de 2026, al abrir por primera vez las 96 páginas de
+       examen enteras, la regla de `circle` se estrecha por lo mismo: dio
+       cuatro avisos y los cuatro eran correctos. Tres eran círculos guía —el
+       de radio 2 del que solo se dibuja un arco de 45°, la esfera del cuenco,
+       la del cucurucho—, dibujados a propósito más grandes que el marco. El
+       cuarto eran marcadores de continuación con el centro fuera. Así que un
+       círculo solo cuenta si es un **marcador cortado**: radio pequeño y
+       centro dentro del marco. El filtro está en el bucle, con su motivo.
+
        Un `<text>` fuera del viewBox no rompe nada: el navegador lo recorta y
        la página sigue en verde. Por eso hacía falta medirlo, y por eso se mide
        aquí y no en `verify.mjs`: la caja de un texto SVG solo la sabe el
@@ -267,6 +361,21 @@ async function main() {
             continue;
           }
           if (!b.width) continue;
+          /* Los círculos solo cuentan si son MARCADORES CORTADOS: radio
+             pequeño y centro dentro del marco. Al abrir las 96 páginas de
+             examen por primera vez —29 de agosto de 2026— la regla marcó
+             cuatro figuras y las cuatro eran correctas: tres círculos guía de
+             radio 138 a 200 de los que solo se dibuja un arco, y unos
+             marcadores de continuación con el centro fuera a propósito. Cero
+             fallos reales de cuatro avisos: sin este filtro la regla enseñaría
+             a ignorar el guardián, que es lo que §11 prohíbe. */
+          if (t.tagName === 'circle') {
+            const r = t.r?.baseVal?.value ?? 0;
+            const cx = t.cx?.baseVal?.value ?? 0;
+            const cy = t.cy?.baseVal?.value ?? 0;
+            const dentro = cx >= vx && cx <= vx + vw && cy >= vy && cy <= vy + vh;
+            if (r > 20 || !dentro) continue;
+          }
           if (raiz) {
             const m = t.getScreenCTM();
             if (m) {
@@ -500,6 +609,9 @@ async function main() {
         `«${prueba.titulo}»: cada respuesta equivocada recibe su diagnóstico`,
         prueba.mudos.length ? `sin diagnosticar: ${prueba.mudos.join(', ')}` : '',
       );
+    }
+    } catch (e) {
+      fallo(`la página ${ruta} no se pudo comprobar`, String(e).slice(0, 160));
     }
   }
 

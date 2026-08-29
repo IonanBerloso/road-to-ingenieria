@@ -223,6 +223,252 @@ ejercicios:
       > Fíjate en lo poco que se parecen los dos campos y lo mucho que cambia la
       > estrategia. **Por eso la comprobación va primero y cuesta diez segundos.**
 
+  - id: ej-trabajo-parametrizando
+    titulo: Un trabajo calculado a pelo, sin ningún atajo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el trabajo del campo $\vec F = (y,\;x^{2})$ a lo largo del
+      segmento que va de $(0,0)$ a $(1,1)$.
+    pide: El valor del trabajo sobre ese segmento.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué aquí hay que parametrizar, y no vale ningún atajo?
+        opciones:
+          - texto: >-
+              Porque el campo **no** es conservativo —$P_y = 1$ y $Q_x = 2x$ no
+              coinciden— y la curva no es cerrada
+            correcta: true
+            mensaje: |
+              Eso es. Los dos atajos del tema piden una cosa cada uno: el
+              potencial pide campo conservativo y Green pide curva cerrada.
+              Fallan los dos, así que toca la definición.
+          - texto: Porque el campo tiene un cuadrado
+            mensaje: |
+              Que haya un cuadrado no impide nada. Lo que decide es si las dos
+              derivadas cruzadas coinciden, y aquí no lo hacen.
+          - texto: Porque la curva es un segmento
+            mensaje: |
+              Sobre un segmento se puede usar el potencial perfectamente, si el
+              campo es conservativo. Lo que obliga a parametrizar aquí es que
+              no lo sea.
+      - tipo: calcular
+        titulo: El trabajo
+        pregunta: |
+          Con $\vec r(t) = (t,t)$ para $t\in[0,1]$, ¿cuánto vale el trabajo?
+          En forma exacta, o con cuatro decimales.
+        respuesta:
+          tipo: numero
+          valor: '0.8333333'
+          tolerancia: 0.0005
+          formato: en forma exacta (5/6), o con cuatro decimales
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ sale de integrar solo la primera componente, $\int_0^1 t\,dt$
+              dos veces, o de olvidar que $Q = x^{2}$ y no $x$. Los dos sumandos
+              son $\frac12$ y $\frac13$.
+          - valor: '0.6666667'
+            mensaje: |
+              $\frac23$ sale de integrar $\int_0^1 (t + t^{2})\,dt$ sin
+              multiplicar por los $dx$ e $dy$… que aquí valen $dt$ los dos, así
+              que el error está en otro sitio: revisa que la suma es
+              $\frac12 + \frac13$, no $\frac13 + \frac13$.
+          - valor: '0.5'
+            mensaje: |
+              $\frac12$ es solo el primer sumando, $\int_0^1 t\,dt$. Falta el
+              segundo, $\int_0^1 t^{2}\,dt = \frac13$.
+        pista: |
+          Con $x=y=t$: $P\,dx = t\,dt$ y $Q\,dy = t^{2}\,dt$. Suma las dos
+          integrales de 0 a 1.
+        desarrollo: |
+          $$
+          \vec r(t) = (t,\,t),
+          \qquad dx = dt,\quad dy = dt,
+          \qquad t \in [0,1]
+          $$
+
+          $$
+          \int_C P\,dx + Q\,dy
+          = \int_0^{1} \underbrace{t}_{y}\,dt + \int_0^{1}\underbrace{t^{2}}_{x^{2}}\,dt
+          = \frac12 + \frac13 = \frac56 \approx 0{,}8333
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: '$P_y = 1$ y $Q_x = 2x$ no coinciden, así que el campo no es conservativo.'
+          - texto: 'La curva no es cerrada, así que Green tampoco vale: hay que parametrizar.'
+          - texto: 'Con $\vec r(t)=(t,t)$ y $t\in[0,1]$ se recorre de $(0,0)$ a $(1,1)$.'
+          - texto: 'Sustituyendo, la integral queda $\int_0^1 (t+t^{2})\,dt = \frac56$.'
+          - texto: 'Como el resultado sale positivo, el campo era conservativo después de todo.'
+            trampa: true
+            mensaje: |
+              El signo del resultado no dice nada sobre si el campo tiene
+              potencial. Un campo no conservativo puede dar trabajos positivos,
+              negativos o cero según el camino — y eso es justamente lo que
+              significa que **dependa del camino**.
+    resolucion: |
+      **Primero las dos comprobaciones**, que son gratis y a veces ahorran el
+      ejercicio entero:
+
+      | pregunta | aquí |
+      |---|---|
+      | ¿es conservativo? | $P_y = 1$, $Q_x = 2x$ → **no** |
+      | ¿es cerrada la curva? | va de $(0,0)$ a $(1,1)$ → **no** |
+
+      Fallan las dos, así que toca la definición: parametrizar y sustituir.
+
+      **La parametrización.** El segmento de $(0,0)$ a $(1,1)$ es
+      $\vec r(t) = (t,t)$ con $t\in[0,1]$ — y conviene comprobar el sentido:
+      en $t=0$ sale el origen y en $t=1$ el punto de llegada ✓
+
+      $$
+      dx = dt,
+      \qquad
+      dy = dt
+      $$
+
+      **Sustituyendo**, con $y = t$ y $x^{2} = t^{2}$:
+
+      $$
+      W = \int_0^{1} t\,dt + \int_0^{1} t^{2}\,dt
+      = \left[\frac{t^{2}}{2}\right]_0^1 + \left[\frac{t^{3}}{3}\right]_0^1
+      = \frac12 + \frac13
+      $$
+
+      $$
+      \boxed{\;W = \frac56 \approx 0{,}8333\;}
+      $$
+
+      > **Para qué sirve haber hecho este.** Es el caso sin atajo, y por eso es
+      > la referencia: cuando en un ejercicio de examen el campo **sí** sea
+      > conservativo, lo que te ahorras es exactamente este trabajo — dos
+      > integrales y una parametrización — y se sustituye por restar el
+      > potencial en dos puntos. Verlo una vez a pelo es lo que hace que el
+      > atajo signifique algo.
+
+  - id: ej-green-en-un-triangulo
+    titulo: Green en un triángulo, con el integrando constante
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular $\displaystyle\oint_C (-y)\,dx + x\,dy$, donde $C$ es el borde
+      del triángulo de vértices $(0,0)$, $(4,0)$ y $(0,3)$, recorrido en
+      sentido antihorario.
+    pide: El valor de la integral sobre el contorno cerrado.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El borde son **tres** segmentos. ¿Qué hace Green con ellos?
+        opciones:
+          - texto: >-
+              Los cambia por una sola integral doble sobre el triángulo, sin
+              parametrizar ninguno
+            correcta: true
+            mensaje: |
+              Eso es lo que compensa. Tres tramos son tres parametrizaciones y
+              tres integrales; la doble es una, y aquí además el integrando
+              sale constante.
+          - texto: Los suma después de parametrizar cada uno
+            mensaje: |
+              Eso es hacerlo **sin** Green, que también llega al mismo número
+              pero cuesta el triple. Green existe precisamente para no tener
+              que recorrer el borde.
+          - texto: Los reduce a dos, porque uno está sobre un eje
+            mensaje: |
+              Que un tramo esté sobre un eje simplifica esa integral, pero no
+              es lo que hace Green. Green cambia **todo** el borde por el
+              interior.
+      - tipo: calcular
+        titulo: El integrando de la doble
+        pregunta: |
+          Con $P = -y$ y $Q = x$, ¿cuánto vale $Q_x - P_y$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '0'
+            mensaje: |
+              $0$ saldría de $1 - 1$, o sea de olvidar el signo menos de
+              $P=-y$. Como $P_y = -1$, la resta es $1-(-1) = 2$. Y si valiera
+              cero el campo sería conservativo y la integral sería cero.
+          - valor: '1'
+            mensaje: |
+              $1$ es solo $Q_x$. Falta restarle $P_y$, que vale $-1$: restar un
+              negativo suma.
+          - valor: '-2'
+            mensaje: |
+              Signo cambiado: es $Q_x - P_y$, no $P_y - Q_x$. El orden importa
+              y es el que hace que el sentido antihorario dé positivo.
+        pista: |
+          $Q_x = 1$ y $P_y = -1$. Réstalos en ese orden.
+        desarrollo: |
+          $$
+          Q_x = \frac{\partial}{\partial x}(x) = 1,
+          \qquad
+          P_y = \frac{\partial}{\partial y}(-y) = -1
+          $$
+
+          $$
+          Q_x - P_y = 1 - (-1) = 2
+          $$
+
+          Es **constante**, así que la integral doble se convierte en dos veces
+          el área.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'La curva es cerrada y va en sentido antihorario: Green se puede aplicar.'
+          - texto: '$Q_x - P_y = 1-(-1) = 2$, constante en todo el plano.'
+          - texto: 'Luego $\oint_C = \iint_D 2\,dA = 2\cdot\text{área}(D)$.'
+          - texto: 'El triángulo tiene área $\frac{4\cdot3}{2}=6$, así que la integral vale 12.'
+          - texto: 'Si la curva se recorriera en sentido horario el resultado sería el mismo, porque es cerrada.'
+            trampa: true
+            mensaje: |
+              Sería $-12$. El sentido es una de las tres hipótesis de Green
+              precisamente porque cambia el signo: recorrer el borde al revés
+              equivale a cambiar el orden de los extremos en cada tramo. Que la
+              curva sea cerrada no borra su orientación.
+    resolucion: |
+      **Las tres condiciones, dichas antes de empezar:** la curva es cerrada ✓,
+      se recorre en sentido antihorario ✓, y $P$ y $Q$ son polinomios, con
+      parciales continuas en todo el plano ✓ Green se puede aplicar.
+
+      $$
+      Q_x - P_y = \frac{\partial x}{\partial x} - \frac{\partial(-y)}{\partial y}
+      = 1 - (-1) = 2
+      $$
+
+      **Y aquí está la gracia:** el integrando es **constante**, así que la
+      integral doble no hay ni que plantearla con límites.
+
+      $$
+      \oint_C (-y)\,dx + x\,dy
+      = \iint_D 2\,dA
+      = 2\,\text{área}(D)
+      $$
+
+      El triángulo tiene catetos 4 y 3:
+
+      $$
+      \text{área}(D) = \frac{4\cdot 3}{2} = 6
+      \qquad\Longrightarrow\qquad
+      \boxed{\;\oint_C = 12\;}
+      $$
+
+      > **Este caso concreto es una fórmula que conviene reconocer.** Cuando
+      > $Q_x-P_y$ vale una constante $k$, la integral de línea es $k$ por el
+      > área encerrada — y con $k=2$, como aquí, la integral vale **el doble del
+      > área**. Eso se usa en los dos sentidos: para calcular la integral
+      > sabiendo el área, y para calcular el área sabiendo la integral. Los
+      > exámenes lo piden de las dos formas, y tres años seguidos lo pidieron
+      > con una curva de la que no se daba la ecuación, solo el área.
+
   # ═══════════════════════════════════════════════════════════════════
   # Del boletín de problemas complementarios del tema 8.
   # ═══════════════════════════════════════════════════════════════════

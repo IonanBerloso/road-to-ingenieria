@@ -388,6 +388,124 @@ ejercicios:
       y se multiplica por $u(t-3)$. El factor exponencial nunca entra en las
       fracciones simples.
 
+  - id: ej-edo-entera-con-laplace
+    titulo: El rodeo completo, de la EDO a la solución
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Resolver $y' + 3y = 0$ con $y(0) = 2$ usando la transformada de Laplace.
+    pide: La función y(t).
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Al transformar $y'$, ¿qué aparece además de $sY$?
+        opciones:
+          - texto: >-
+              La condición inicial, con signo menos: $\mathcal{L}\{y'\} = sY - y(0)$
+            correcta: true
+            mensaje: |
+              Eso es, y es **la** ventaja del método: la condición inicial entra
+              en la primera línea. Con los métodos del tema 9 se resuelve la
+              general y se impone al final; aquí ya está dentro.
+          - texto: Nada más, es simplemente $sY$
+            mensaje: |
+              Falta $y(0)$. Sale de integrar por partes en la definición, y es
+              lo que hace que Laplace no necesite imponer condiciones al final.
+          - texto: La constante de integración
+            mensaje: |
+              No hay constante de integración: el método nunca integra la
+              ecuación. Lo que aparece es el valor inicial, que es un dato del
+              enunciado y no una incógnita.
+      - tipo: calcular
+        titulo: El polo de Y(s)
+        pregunta: |
+          Despejando queda $Y(s) = \dfrac{2}{s+3}$. ¿En qué valor de $s$ se
+          anula su denominador?
+        respuesta:
+          tipo: numero
+          valor: '-3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Signo cambiado. El denominador es $s+3$, que se anula en $s=-3$.
+              Y ese signo decide todo: con $s-3$ la solución crecería, con
+              $s+3$ decae.
+          - valor: '2'
+            mensaje: |
+              $2$ es el numerador, que viene de $y(0)$. Lo que decide la forma
+              de la solución es el denominador.
+          - valor: '0'
+            mensaje: |
+              En $s=0$ el denominador vale 3, no cero. Buscas dónde $s+3=0$.
+        pista: |
+          Resuelve $s+3=0$.
+        desarrollo: |
+          $$
+          Y(s) = \frac{2}{s+3}
+          \qquad\Longrightarrow\qquad
+          s+3 = 0
+          \qquad\Longrightarrow\qquad
+          s = -3
+          $$
+
+          Y de la tabla, $\mathcal{L}^{-1}\!\left[\frac{1}{s-a}\right] = e^{at}$
+          con $a=-3$: la solución es $2e^{-3t}$, que **decae**.
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'Transformando: $sY - 2 + 3Y = 0$, con el 2 que es $y(0)$.'
+          - texto: 'Agrupando: $Y(s+3) = 2$, y de ahí $Y = \dfrac{2}{s+3}$.'
+          - texto: 'De la tabla, $\mathcal{L}^{-1}\!\left[\frac{1}{s-a}\right]=e^{at}$ con $a=-3$.'
+          - texto: 'Luego $y(t) = 2e^{-3t}$, y en $t=0$ vale 2 ✓'
+          - texto: 'Al final hay que imponer $y(0)=2$ sobre la solución obtenida.'
+            trampa: true
+            mensaje: |
+              Ya está impuesta: entró en la primera línea, en el $-y(0)$ de la
+              transformada de la derivada. Por eso el resultado sale sin
+              constantes libres. Volver a imponerla no está mal, pero delata
+              que no se ha visto dónde entró — y en los sistemas de dos
+              ecuaciones esa es justamente la ventaja que hace ganar tiempo.
+    resolucion: |
+      **El rodeo, de principio a fin y sobre la ecuación más corta posible.**
+
+      **1 · Transformar.** La derivada se lleva la condición inicial dentro:
+
+      $$
+      \mathcal{L}\{y'\} = sY - y(0) = sY - 2
+      \qquad\Longrightarrow\qquad
+      sY - 2 + 3Y = 0
+      $$
+
+      **2 · Despejar**, que ya no es cálculo sino álgebra de bachillerato:
+
+      $$
+      Y(s+3) = 2
+      \qquad\Longrightarrow\qquad
+      Y(s) = \frac{2}{s+3}
+      $$
+
+      **3 · Volver.** De la tabla, $\mathcal{L}^{-1}\!\left[\frac{1}{s-a}\right] = e^{at}$,
+      y aquí $a = -3$:
+
+      $$
+      \boxed{\;y(t) = 2e^{-3t}\;}
+      $$
+
+      **La comprobación:** $y(0) = 2$ ✓ y $y' + 3y = -6e^{-3t} + 6e^{-3t} = 0$ ✓
+
+      > **Lo que hay que llevarse.** Esta ecuación se resuelve en dos líneas
+      > separando variables, y con Laplace cuesta más. **El método no compensa
+      > aquí**, y verlo en el caso donde no compensa es lo que deja claro dónde
+      > sí: cuando hay un escalón, una convolución, o dos ecuaciones acopladas.
+      > Ahí separar variables no llega y el rodeo es el único camino.
+      >
+      > Y fíjate en el signo del denominador, porque es lo que más se falla:
+      > $s+3$ da $e^{-3t}$ y decae; $s-3$ daría $e^{3t}$ y explota. Un signo
+      > cambiado no da un número distinto, da una física distinta.
+
   # ═══════════════════════════════════════════════════════════════════
   # Del boletín de problemas complementarios del tema 10.
   # ═══════════════════════════════════════════════════════════════════

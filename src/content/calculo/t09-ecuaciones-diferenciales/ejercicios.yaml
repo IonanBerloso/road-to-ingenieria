@@ -215,6 +215,356 @@ ejercicios:
       > La regla es recorrer el árbol de arriba abajo y **parar en el primer sí**,
       > porque los métodos de arriba son más baratos.
 
+  - id: ej-lineal-con-factor-integrante
+    titulo: La lineal, y el factor que la hace integrable
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Resolver $y' + 2y = 6$ con $y(0) = 1$.
+    pide: La solución que cumple la condición inicial.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué esta ecuación es **lineal** y no separable?
+        opciones:
+          - texto: >-
+              Porque tiene la forma $y' + P(x)\,y = Q(x)$, con $y$ e $y'$ a la
+              primera potencia y sin multiplicarse entre sí
+            correcta: true
+            mensaje: |
+              Eso es. Y aquí además se podría separar, porque $P$ y $Q$ son
+              constantes; pero el método lineal funciona siempre que tenga esa
+              forma, y por eso conviene reconocerla.
+          - texto: Porque el segundo miembro es una constante
+            mensaje: |
+              El segundo miembro puede ser cualquier función de $x$ y la
+              ecuación sigue siendo lineal. Lo que la define es cómo aparecen
+              $y$ e $y'$, no qué hay al otro lado.
+          - texto: Porque no se puede separar de ninguna forma
+            mensaje: |
+              Esta en concreto **sí** se puede separar. Que dos métodos valgan a
+              la vez es normal; la clasificación dice cuáles se pueden usar, no
+              cuál es el único.
+      - tipo: calcular
+        titulo: La constante de integración
+        pregunta: |
+          La solución general es $y = 3 + C\,e^{-2x}$. Con $y(0)=1$, ¿cuánto
+          vale $C$?
+        respuesta:
+          tipo: numero
+          valor: '-2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Signo cambiado. En $x=0$ la exponencial vale 1, así que
+              $1 = 3 + C$ y de ahí $C = 1-3 = -2$. Si te sale $+2$ has
+              despejado $C = 3-1$.
+          - valor: '1'
+            mensaje: |
+              $1$ es $y(0)$, no $C$. La constante es lo que hay que **añadir**
+              al 3 para llegar a 1, no el valor de la función.
+          - valor: '3'
+            mensaje: |
+              $3$ es la solución particular constante, la que sale de
+              $y'=0$. La condición inicial se impone sobre la suma de las dos
+              piezas, no sobre una sola.
+        pista: |
+          En $x=0$, $e^{-2x}$ vale 1. Sustituye y despeja.
+        desarrollo: |
+          $$
+          y(0) = 3 + C\,e^{0} = 3 + C = 1
+          \qquad\Longrightarrow\qquad
+          C = -2
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'Está en la forma $y'' + P y = Q$ con $P = 2$, así que es lineal.'
+          - texto: 'El factor integrante es $\mu = e^{\int 2\,dx} = e^{2x}$.'
+          - texto: 'Multiplicando por $\mu$, el primer miembro se vuelve $(y\,e^{2x})''$.'
+          - texto: 'Integrando: $y\,e^{2x} = 3e^{2x} + C$, luego $y = 3 + C e^{-2x}$.'
+          - texto: 'Al factor integrante hay que sumarle su propia constante de integración.'
+            trampa: true
+            mensaje: |
+              No. En $\mu = e^{\int P\,dx}$ la constante se puede tomar cero
+              siempre: si tomaras otra, $\mu$ quedaría multiplicado por un
+              número, y ese número se cancela al dividir al final. La única
+              constante que sobrevive es la de la integración de la derecha.
+    resolucion: |
+      **Por qué es lineal.** Tiene la forma $y' + P(x)y = Q(x)$ con $P=2$ y
+      $Q=6$: $y$ e $y'$ aparecen a la primera y no se multiplican entre sí. Que
+      además se pueda separar no cambia nada — el árbol de clasificar se para en
+      el primer sí, y aquí los dos caminos llegan al mismo sitio.
+
+      **El factor integrante**, que es toda la idea del método:
+
+      $$
+      \mu(x) = e^{\int P\,dx} = e^{\int 2\,dx} = e^{2x}
+      $$
+
+      Sirve para esto y solo para esto: al multiplicar la ecuación por $\mu$, el
+      primer miembro **se convierte en la derivada de un producto**.
+
+      $$
+      e^{2x}y' + 2e^{2x}y = 6e^{2x}
+      \qquad\Longrightarrow\qquad
+      \left(y\,e^{2x}\right)' = 6e^{2x}
+      $$
+
+      Y una derivada se deshace integrando:
+
+      $$
+      y\,e^{2x} = 3e^{2x} + C
+      \qquad\Longrightarrow\qquad
+      y = 3 + C\,e^{-2x}
+      $$
+
+      **La condición inicial.** Con $y(0)=1$ sale $C=-2$:
+
+      $$
+      \boxed{\;y = 3 - 2e^{-2x}\;}
+      $$
+
+      **La comprobación**, que cuesta diez segundos: $y' = 4e^{-2x}$, y
+
+      $$
+      y' + 2y = 4e^{-2x} + 6 - 4e^{-2x} = 6 \quad\checkmark
+      $$
+
+      > **Lo que se lleva de aquí.** El 3 es hacia donde tiende la solución
+      > cuando $x$ crece —la exponencial se apaga— y el $-2$ solo dice desde
+      > dónde arranca. Esa lectura vale para todos los modelos del tema: el
+      > embalse, el enfriamiento, el paracaidista. La constante marca el punto de
+      > partida; el término que sobrevive marca el destino.
+
+  - id: ej-segundo-orden-dos-raices
+    titulo: Segundo orden, cuando la característica tiene dos raíces
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Resolver $y'' - 5y' + 6y = 0$.
+    pide: La solución general.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es el primer paso ante una ecuación de segundo orden con
+          coeficientes constantes?
+        opciones:
+          - texto: >-
+              Escribir la ecuación característica, cambiando $y''$ por $r^{2}$,
+              $y'$ por $r$ e $y$ por 1
+            correcta: true
+            mensaje: |
+              Sí. Sale de probar $y = e^{rx}$: al sustituir, la exponencial es
+              factor común y lo que queda es un polinomio en $r$.
+          - texto: Separar variables
+            mensaje: |
+              Separar variables es de primer orden. Aquí hay una segunda
+              derivada y no hay nada que pasar a cada lado.
+          - texto: Buscar un factor integrante
+            mensaje: |
+              El factor integrante también es de primer orden. En segundo orden
+              con coeficientes constantes el camino es la característica.
+      - tipo: calcular
+        titulo: La raíz mayor
+        pregunta: |
+          Resolviendo $r^{2}-5r+6=0$, ¿cuál es la raíz **mayor**?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              $2$ es la otra raíz, la menor. Las dos valen para la solución
+              —$y = C_1e^{2x}+C_2e^{3x}$—, pero aquí se pide la mayor.
+          - valor: '6'
+            mensaje: |
+              $6$ es el término independiente, que es el **producto** de las dos
+              raíces. La suma es 5 y el producto 6: eso da 2 y 3.
+          - valor: '5'
+            mensaje: |
+              $5$ es la suma de las dos raíces, que aparece con el signo
+              cambiado como coeficiente de $r$. No es una raíz.
+        pista: |
+          Dos números que sumen 5 y multiplicados den 6.
+        desarrollo: |
+          $$
+          r^{2}-5r+6 = (r-2)(r-3) = 0
+          \qquad\Longrightarrow\qquad
+          r = 2,\; 3
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'Se prueba $y = e^{rx}$ y se sustituye: $r^{2}e^{rx}-5re^{rx}+6e^{rx}=0$.'
+          - texto: 'Como $e^{rx}$ nunca vale cero, se puede dividir por él y queda $r^{2}-5r+6=0$.'
+          - texto: 'Las raíces son $2$ y $3$, reales y distintas.'
+          - texto: 'La solución general es $y = C_1e^{2x} + C_2e^{3x}$.'
+          - texto: 'Como hay dos raíces, hacen falta dos condiciones iniciales para que la solución exista.'
+            trampa: true
+            mensaje: |
+              La solución general **existe** sin ninguna condición: es toda la
+              familia. Las dos condiciones hacen falta para elegir **una** de
+              ellas, que es otra cosa. Un ejercicio que no las da está pidiendo
+              la familia entera, y contestar con una sola solución es responder
+              de menos.
+    resolucion: |
+      **De dónde sale la característica.** Se prueba $y = e^{rx}$, que es la
+      única función que se reproduce al derivar. Sustituyendo:
+
+      $$
+      r^{2}e^{rx} - 5re^{rx} + 6e^{rx} = 0
+      $$
+
+      Y como $e^{rx}$ **no se anula nunca**, se puede dividir por él sin perder
+      soluciones. Ese detalle es el que convierte una ecuación diferencial en
+      un polinomio:
+
+      $$
+      r^{2}-5r+6 = 0
+      \qquad\Longrightarrow\qquad
+      (r-2)(r-3)=0
+      \qquad\Longrightarrow\qquad
+      r = 2,\;3
+      $$
+
+      **Dos raíces reales y distintas** dan dos exponenciales independientes, y
+      la solución general es su combinación:
+
+      $$
+      \boxed{\;y = C_1e^{2x} + C_2e^{3x}\;}
+      $$
+
+      > **Los tres casos, para tenerlos vistos.** Con raíces reales distintas
+      > salen dos exponenciales. Con una raíz **doble** $r$ sale
+      > $(C_1 + C_2x)e^{rx}$ — hace falta la $x$ porque si no las dos piezas
+      > serían la misma. Y con raíces **complejas** $a\pm bi$ sale
+      > $e^{ax}(C_1\cos bx + C_2\,\text{sen}\,bx)$, que es la que oscila. El
+      > discriminante decide cuál de los tres, y conviene mirarlo antes de
+      > resolver: dice si la solución va a crecer, a decaer o a oscilar.
+
+  - id: ej-particular-sin-resonancia
+    titulo: La particular, cuando el segundo miembro no resuena
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar una solución particular de $y'' - y = 3e^{2x}$.
+    pide: Una solución particular de la ecuación completa.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué se puede proponer $y_p = A e^{2x}$ sin multiplicar por $x$?
+        opciones:
+          - texto: >-
+              Porque $2$ **no** es raíz de la característica $r^{2}-1=0$, cuyas
+              raíces son $\pm 1$
+            correcta: true
+            mensaje: |
+              Exacto. Esa comparación es lo primero que hay que hacer, siempre.
+              Si el exponente coincidiera con una raíz, la propuesta se anularía
+              al sustituir y habría que multiplicarla por $x$.
+          - texto: Porque el segundo miembro es una exponencial
+            mensaje: |
+              Que sea exponencial dice **qué forma** proponer, no si hace falta
+              el factor $x$. Eso lo decide comparar el exponente con las raíces.
+          - texto: Porque la ecuación es homogénea
+            mensaje: |
+              No lo es: tiene un segundo miembro distinto de cero. Justo por eso
+              hace falta una particular además de la homogénea.
+      - tipo: calcular
+        titulo: El coeficiente de la particular
+        pregunta: |
+          Sustituyendo $y_p = A e^{2x}$ en $y''-y = 3e^{2x}$, ¿cuánto vale $A$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              $3$ es el coeficiente del segundo miembro copiado tal cual. Hay
+              que sustituir: $y_p'' - y_p = 4Ae^{2x}-Ae^{2x} = 3Ae^{2x}$, y eso
+              igualado a $3e^{2x}$ da $A=1$.
+          - valor: '0.75'
+            mensaje: |
+              $\frac34$ saldría de dividir 3 entre 4, o sea de quedarse solo con
+              el $y''$ y olvidar el $-y$. El factor correcto es $4-1=3$.
+          - valor: '0.3333333'
+            mensaje: |
+              $\frac13$ es el inverso: has dividido 1 entre 3 en vez de 3 entre
+              3. Al sustituir queda $3A = 3$.
+        pista: |
+          $y_p'' = 4Ae^{2x}$. Resta $y_p$ y iguala a $3e^{2x}$.
+        desarrollo: |
+          $$
+          y_p = Ae^{2x},
+          \qquad
+          y_p'' = 4Ae^{2x}
+          $$
+
+          $$
+          y_p'' - y_p = 4Ae^{2x} - Ae^{2x} = 3Ae^{2x} = 3e^{2x}
+          \qquad\Longrightarrow\qquad
+          A = 1
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'La característica es $r^{2}-1=0$, con raíces $r=\pm1$.'
+          - texto: 'El exponente del segundo miembro es 2, que no está entre las raíces: no hay resonancia.'
+          - texto: 'Se propone $y_p = Ae^{2x}$ y se sustituye, saliendo $3A=3$, o sea $A=1$.'
+          - texto: 'La solución completa es $y = C_1e^{x}+C_2e^{-x}+e^{2x}$.'
+          - texto: 'Como la particular ya cumple la ecuación, la homogénea sobra.'
+            trampa: true
+            mensaje: |
+              La particular cumple la ecuación completa, sí, pero es **una**
+              solución, no todas. La general es homogénea más particular, y sin
+              la homogénea no hay constantes con las que imponer condiciones
+              iniciales. Quitarla es responder a un ejercicio distinto.
+    resolucion: |
+      **Lo primero es comparar, no proponer.** La característica es
+      $r^{2}-1=0$, con raíces $r=\pm1$. El segundo miembro es $3e^{2x}$, y su
+      exponente es $2$: **no coincide con ninguna raíz**, así que no hay
+      resonancia y la propuesta va sin el factor $x$.
+
+      $$
+      y_p = A e^{2x}
+      \qquad\Longrightarrow\qquad
+      y_p'' = 4Ae^{2x}
+      $$
+
+      $$
+      y_p'' - y_p = (4A - A)e^{2x} = 3Ae^{2x} = 3e^{2x}
+      \qquad\Longrightarrow\qquad
+      A = 1
+      $$
+
+      $$
+      \boxed{\;y_p = e^{2x}\;}
+      $$
+
+      Y la solución **general** es la homogénea más esta:
+
+      $$
+      y = C_1e^{x} + C_2e^{-x} + e^{2x}
+      $$
+
+      > **Por qué la comparación va primero.** Si el segundo miembro hubiera
+      > sido $3e^{x}$, con exponente 1 —que **sí** es raíz—, al sustituir
+      > $Ae^{x}$ saldría $A e^{x} - A e^{x} = 0 \neq 3e^{x}$: la propuesta se
+      > anula sola y no queda nada que igualar. Ese es el caso que obliga a
+      > multiplicar por $x$, y es el que cae en cuatro de los siete ejercicios
+      > de EDO de la ordinaria. Mirar las raíces antes de proponer cuesta diez
+      > segundos y evita descubrirlo a mitad de la cuenta.
+
   # ═══════════════════════════════════════════════════════════════════
   # Del boletín de problemas complementarios del tema 9.
   # ═══════════════════════════════════════════════════════════════════

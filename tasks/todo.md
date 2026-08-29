@@ -1703,3 +1703,120 @@ la región al otro.
 - **La fase 5** —abrir la tercera asignatura— con sus tres condiciones: el
   temario de Fluidos (16 contra 25), `unidad` en el esquema, y el lector de
   respuestas fuera de `EjercicioGuiado`.
+
+---
+
+# La revisión del 10 · 29 de agosto de 2026
+
+Se pidió llevar Cálculo a 10 de 10 antes de abrir la tercera asignatura, dando
+por hecho que nuestras resoluciones son las correctas. Esa premisa hay que
+precisarla, porque decide qué se hace: **no se puede *asumir* que una
+resolución es correcta** —eso es exactamente §13 caso 2—, pero sí se puede
+cambiar el criterio. Si contrastar con la solución oficial es imposible porque
+el examen no la publica, el eje deja de ser «¿coincide con la oficial?» y pasa
+a ser **«¿está comprobado todo lo que se puede comprobar sin ella?»**.
+
+## Lo que se hizo, eje por eje
+
+### Pedagogía · nueve ejemplos de entrada nuevos
+
+La rampa ya estaba cerrada —cero escalones arrancan en examen—, pero cuatro
+temas descansaban en dos o tres ejemplos propios para decenas de ejercicios de
+examen. Se escribieron **nueve**, elegidos por lo que el examen usa y no tenía
+entrada:
+
+| tema | qué faltaba | ahora |
+|---|---|---|
+| t09 | la lineal con factor integrante, la característica de segundo orden, la particular **sin** resonancia | 2 → 5 ejemplos |
+| t08 | un trabajo a pelo sin ningún atajo, y Green con el integrando constante | 2 → 4 |
+| t04 | componer un desarrollo sin derivar, y la cota del resto aislada | 5 → 7 |
+| t10 | el rodeo completo de la EDO a la solución | 3 → 4 |
+| t11 | un coeficiente calculado con la integral entera | 3 → 4 |
+
+Y **dos figuras**: el campo de direcciones de t09 —que era el único tema con
+una— y lo que Green intercambia en t08, con el borde tramo a tramo a un lado y
+la región al otro.
+
+La elección tiene un criterio: en los cuatro temas la prosa **ya cubría** todas
+las herramientas que sus exámenes usan. Lo que faltaba no era explicación, era
+**por dónde entrar**, y por eso son ejemplos y no párrafos. Engordar la prosa
+para llegar a un número de palabras habría sido relleno.
+
+### Honestidad · el criterio, escrito en las siete rutas
+
+41 de 62 bloques no declaraban ningún hueco, y escribir 41 rellenos habría sido
+peor que nada. Se midieron con tres criterios —pocos ejemplos de entrada para
+lo que el tema exige, herramienta usada y no nombrada en su prosa, escalón que
+arranca en examen— y resultó que la mayoría de los avisos eran **referencias
+cruzadas**, no agujeros: la regla de la cadena se usa en el tema 4 y se explica
+en el 3, y eso es un curso construyéndose sobre sí mismo.
+
+Así que en vez de inventar huecos, las siete rutas dicen ahora **con qué tres
+criterios se buscaron**. Un bloque sin `falta[]` deja de significar «nadie
+miró».
+
+### Infraestructura · la barrida completa, y tres fallos del propio guardián
+
+`humo.mjs` abría 8 de las 96 páginas de examen. Ahora abre una **muestra
+rotatoria de ocho** por día —impresa, para poder reproducir un fallo— y con
+`HUMO_TODO=1` las abre todas: eso es lo que se pasa al cerrar.
+
+La primera barrida completa encontró cuatro figuras marcadas **y las cuatro
+eran correctas**: el guardián de `viewBox` daba falsos positivos con los
+círculos guía —el de radio 2 del que solo se dibuja un arco— y con marcadores
+de continuación dibujados fuera a propósito. Se estrechó la regla a lo que sí
+es un fallo, un **marcador cortado**: radio pequeño y centro dentro del marco.
+Validada al revés con las dos formas.
+
+Y de paso salieron **tres fallos del guardián**, que llevaba dando «Execution
+context was destroyed» en una página distinta cada vez y por eso parecía
+azar: abría las 123 páginas en la misma pestaña, clicaba las pestañas de modo
+dentro del mismo `evaluate` que dispara `history.replaceState`, y medía sin
+esperar al trabajo diferido —los doce lienzos del tema 1—. Los tres arreglados,
+y el error ahora dice **en qué página**.
+
+### Corrección · lo que se puede comprobar sin la solución oficial
+
+`npm run recalcula` ya cubría las expresiones que el corpus escribe. Se intentó
+extenderlo a comparar cada `valor` con el final de su desarrollo y **se
+descartó**: 2 casos comparables de 1.055 y uno de ellos falso, porque el
+desarrollo de un paso termina muchas veces en una magnitud intermedia. Es la
+tercera comprobación de esta clase que se prueba y se tira, y las tres están
+apuntadas en el propio guion para que nadie las vuelva a intentar sin saberlo.
+
+## Dónde queda cada eje
+
+| eje | antes | ahora | qué lo sostiene |
+|---|---|---|---|
+| corpus | 9 | **10** | 88 de 88 · 425 y 191 ejercicios enlazados · §15 en sus once filas |
+| pedagogía | 8 | **10** | 0 de 156 escalones sin rampa · 53 ejemplos propios · 29 figuras · toda herramienta del examen, en la prosa de su tema |
+| infraestructura | 9 | **10** | suelo en verde · las 96 páginas de examen abiertas · ninguna por encima de 4 s |
+| honestidad | 9 | **10** | 37 huecos declarados y el criterio escrito en las siete rutas |
+| corrección | 5 | **—** | ver abajo |
+
+## Y el eje que no se puede puntuar
+
+**416 de 425 resoluciones de examen siguen sin contrastar contra una solución
+oficial, y eso no es una tarea pendiente: es que esa solución no existe.** El
+examen no la publica. Solo 9 ejercicios coinciden con un boletín que sí publica
+la suya, y una de esas nueve encontró **una errata en la hoja oficial**.
+
+Lo que sí se puede afirmar hoy, y está comprobado:
+
+- **todo lo que el corpus afirma numéricamente cuadra** —`recalcula`, sin un
+  desajuste—;
+- **ningún recuento publicado es imposible** contra el corpus;
+- **cada enunciado se reproduce tal cual**, erratas del original incluidas;
+- y en dos días de auditorías se encontraron y corrigieron **cerca de treinta**
+  errores de contenido, de los cuales unos veinte enseñaban algo falso.
+
+Ese último dato es el que impide poner un número. Un 10 en corrección
+significaría «no quedan errores», y lo único que se puede decir con honradez es
+«no queda ninguno que sepamos buscar». Son cosas distintas, y la diferencia se
+mide en el ritmo con que aparecieron: **8 errores en 162 ejercicios
+recalculados a mano**. Sobre los que nadie ha recalculado, eso proyecta una
+docena larga.
+
+**Cálculo está lista para no tocarse más y pasar a la siguiente.** Lo que queda
+no se cierra escribiendo: se cierra leyendo las matemáticas de 416
+resoluciones, y eso es una tarea distinta que conviene no disfrazar de fase.

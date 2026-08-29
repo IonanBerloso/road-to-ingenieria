@@ -148,6 +148,9 @@ scripts/
   humo.mjs                 lo abre en Chromium (§11)
   check-color.mjs          contraste y daltonismo
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
+  recalcula.mjs            que las cuentas del corpus salgan (§11)
+  peso.mjs                 cuánto tarda una página en un móvil (§11)
+  mide.mjs                 la tabla de docs/como-vamos.md, generada
   diario.mjs               el diario en PDF
 tests/
   *.test.ts                los lectores de respuesta, con vitest
@@ -301,19 +304,19 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 681 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.250 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 674 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 690 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.259 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 683 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
 
-`redactar` se ha usado **una vez de 2.631 pasos**. Está construido y razonado
+`redactar` se ha usado **una vez de 2.658 pasos**. Está construido y razonado
 en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
 pide, no porque esté en la tabla.
 
 > Las cifras de esta tabla y las de §05 y §15 se quedaron en el corpus de
 > agosto y estuvieron desfasadas hasta el 28 de agosto de 2026: decían 1.022
-> pasos cuando eran 2.631, y 270 ejercicios cuando eran 674. **Regla que sale
+> pasos cuando eran 2.658, y 270 ejercicios cuando eran 683. **Regla que sale
 > de ahí: un número de este fichero se recalcula al cerrar cada asignatura, no
 > cuando alguien se acuerda.** El guion está en el scratchpad y son veinte
 > líneas: recorre las colecciones y cuenta.
@@ -360,9 +363,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 18 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 674 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 683 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 674 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 683 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 1 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -682,6 +685,25 @@ Comprueba, en Chromium y sobre cada página de tema:
 - Una respuesta equivocada recibe **un diagnóstico**, no un «incorrecto».
 - Cero errores de JavaScript en consola.
 
+### `HUMO_TODO=1 npm run humo` — la barrida completa
+
+En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
+muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
+que un fallo se pueda reproducir. En unas semanas pasan todas.
+
+Con `HUMO_TODO=1` las abre **todas** —123 páginas—, y eso es lo que se pasa al
+cerrar una asignatura. La primera vez que se hizo, el 29 de agosto de 2026,
+encontró cuatro figuras marcadas… y las cuatro eran correctas: el guardián de
+`viewBox` daba falsos positivos con los círculos guía. Se estrechó la regla y
+se dejó dicho por qué. Ese es el uso: **la barrida no busca aprobar, busca
+enterarse.**
+
+> Y de paso arregló tres fallos del propio guardián, que llevaba dando
+> «Execution context was destroyed» en una página distinta cada vez: abría las
+> 123 en la misma pestaña, clicaba las pestañas de modo dentro del mismo
+> `evaluate` que dispara `history.replaceState`, y medía sin esperar al trabajo
+> diferido. Un guardián que falla al azar se acaba ignorando.
+
 ### `npm run peso` — cuánto tarda una página en un móvil
 
 Tampoco es un guardián: el número depende de la máquina y tardaría demasiado
@@ -954,9 +976,9 @@ nivel de arriba, que es el que se entrega.
 
 ### Cuánto es «una asignatura», medido
 
-Cálculo es la referencia, y ya está cerrada entera. Once temas dan **31.382
-palabras de prosa, 182 ejercicios de tema, 88 convocatorias con 425 ejercicios,
-156 escalones en 7 rutas y 27 figuras.** Sirve para dimensionar, no como cuota:
+Cálculo es la referencia, y ya está cerrada entera. Once temas dan **32.460
+palabras de prosa, 191 ejercicios de tema, 88 convocatorias con 425 ejercicios,
+156 escalones en 7 rutas y 29 figuras.** Sirve para dimensionar, no como cuota:
 un tema que necesita ocho figuras lleva ocho.
 
 > Esta cifra decía «cinco temas, 12.644 palabras, 127 ejercicios, 33 exámenes,
@@ -1005,6 +1027,23 @@ de una. Así que después de construir, y antes de dar nada por hecho:
    hasta que has escrito el error y has visto salir **su** diagnóstico. Que
    acepte la buena no dice nada: los distractores son la mitad del producto.
 6. **Y solo entonces** `npm run suelo`.
+
+### Y al cerrar una asignatura, cuatro cosas más
+
+El suelo se pasa en cada commit. Estas cuatro no —tardan, o dependen de la
+máquina— y por eso se pasan **al cerrar**, todas juntas, en el mismo commit que
+declara la asignatura terminada:
+
+| | qué comprueba | qué pasó por no tenerlo |
+|---|---|---|
+| `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
+| `HUMO_TODO=1 npm run humo` | las 96 páginas de examen en un navegador | el navegador abría 8 de 96 durante meses |
+| `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
+| `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
+
+Y con ellas, recontar las cifras de §04, §05, §09 y §15, que es lo que más se
+olvida: el 28 de agosto de 2026 llevaban una semana diciendo la mitad de la
+verdad.
 
 > Si no puedes hacer el punto 1 —sin navegador, sin capturas—, dilo en el
 > commit. Un contenido visual sin mirar no es contenido terminado, es contenido
