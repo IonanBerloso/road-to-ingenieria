@@ -1011,10 +1011,17 @@ nivel de arriba, que es el que se entrega.
 
 ### Cuánto es «una asignatura», medido
 
-Cálculo es la referencia, y ya está cerrada entera. Once temas dan **32.460
+Cálculo es la referencia, y ya está cerrada entera. Once temas dan **21.545
 palabras de prosa, 191 ejercicios de tema, 88 convocatorias con 425 ejercicios,
 156 escalones en 7 rutas y 29 figuras.** Sirve para dimensionar, no como cuota:
 un tema que necesita ocho figuras lleva ocho.
+
+**La definición de «palabra» es la de `scripts/mide.mjs` y solo esa.** Este
+fichero decía 32.460 hasta el 29 de agosto de 2026 —el conteo crudo del MDX,
+etiquetas y LaTeX incluidos— mientras `docs/como-vamos.md` publicaba 21.545
+con la definición del guion. Ninguna mentía, pero dos definiciones sin nombrar
+son un descuadre esperando a que alguien las compare. Manda la del guion,
+porque es la reproducible.
 
 > Esta cifra decía «cinco temas, 12.644 palabras, 127 ejercicios, 33 exámenes,
 > 56 escalones» hasta el 28 de agosto de 2026, es decir la mitad de la

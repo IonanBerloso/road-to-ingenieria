@@ -47,6 +47,13 @@ const tema = z.object({
   patrones: z.array(patron).min(1),
   /** true solo cuando el tema existe como index.mdx y está terminado según §04. */
   hecho: z.boolean().default(false),
+  /** La etiqueta Caveat de la lista del detalle (brief §5b): «una etiqueta
+   *  solo donde informa». Nació derivada del patrón simulador y se generalizó
+   *  el 29 de agosto de 2026 cuando la auditoría cazó que t03 y t05 de
+   *  Álgebra publicaban «peso medio» sin decir que son transversales: sus
+   *  herramientas caen DENTRO de los demás ejercicios, nunca como hueco
+   *  propio. Opcional: un tema sin etiqueta no pinta nada. */
+  etiqueta: z.string().min(4).max(45).optional(),
 });
 
 const catalogo = defineCollection({
