@@ -2,7 +2,6 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
-import Lectura from '../../../components/patrones/Lectura.astro';
 import EjercicioGuiado from '../../../components/patrones/EjercicioGuiado.astro';
 import Reparto from '../../../components/ui/Reparto.astro';
 import { mate } from '../../../lib/markdown.mjs';
@@ -16,11 +15,10 @@ import { SUFIJO_CONV } from '../../../content.config';
  * No es un índice del temario. Los bloques son **los huecos del examen**,
  * medidos contando los once últimos años, y van ordenados por lo que rinden.
  *
- * La página nace del patrón Lectura (§03, §05): una ruta es prosa con enlaces,
- * así que no necesita el armazón de pestañas de `ui/Tema.astro` ni el de
- * `ui/Examen.astro` — y por tanto no lo copia. De `Lectura` salen gratis el
- * modo guiado y el modo completo que exige §11, la navegación por apartados y
- * la impresión.
+ * Desde la fase 3 del rediseño Pizarra (brief §6b) la página es un CAMINO
+ * de bloques plegables: el primero abre, los demás al pulsarlos — que es el
+ * modo guiado hecho estructura. Al imprimir se abren todos (el completo).
+ * Ya no usa el patrón Lectura: el acordeón nativo hace su trabajo aquí.
  *
  * **Aquí no se declara ni un dato del examen.** Los porcentajes por
  * competencia se calculan abajo sumando los `puntos` de los ejercicios que la
@@ -303,6 +301,10 @@ const bloquesHtml = await Promise.all(
     ...b,
     pideHtml: await mate(b.pide),
     porqueHtml: await mate(b.porque),
+    /* El dominio del BLOQUE cierra su tarjeta («lo tienes cuando:»). Hasta la
+       fase 3 del rediseño el esquema lo exigía y la página lo tiraba sin
+       pintarlo — la corrección de fondo del brief §6b. */
+    dominioHtml: await mate(b.dominio),
     faltaHtml: await Promise.all(b.falta.map((f) => mate(f))),
     material: await Promise.all(
       b.material.map(async (m) => ({ ...m, notaHtml: m.nota ? await mate(m.nota) : null })),
@@ -327,6 +329,13 @@ const bloquesHtml = await Promise.all(
 );
 
 const crumb = `${asignatura.data.nombre} · preparar`;
+
+/* Las falta[] de todos los bloques, juntas para la tarjeta del carril
+   («Lo que falta, dicho en voz alta», brief §6b): la honestidad declarada
+   hecha interfaz. Cada una lleva el nombre de su bloque. */
+const faltas = bloquesHtml.flatMap((b) =>
+  b.faltaHtml.map((html) => ({ bloque: b.titulo, html })),
+);
 ---
 
 <Base
@@ -335,53 +344,42 @@ const crumb = `${asignatura.data.nombre} · preparar`;
   acento={asignatura.data.acento}
   crumb={crumb}
 >
-  <Cabecera crumb={crumb}>
-    {/* Igual que en la página de tema: el conmutador guiado/completo va en
-        la barra pizarra y lo enciende el script de Lectura. */}
-    <div class="modos no-imprimir" role="group" aria-label="Modo de lectura" data-modos hidden>
-      <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
-      <button type="button" data-modo="completo" aria-pressed="false">completo</button>
-      <span class="rotulo avance" data-avance></span>
-    </div>
-  </Cabecera>
+  <Cabecera crumb={crumb} />
 
   <main id="principal" class="envoltorio">
-    <p class="rotulo rotulo--live eyebrow">
-      {asignatura.data.nombre} · ruta de estudio
+    <div class="dos-columnas">
+    <div class="camino-col">
+    <p class="mano kicker">
+      medido sobre {d.medidoSobre} convocatorias — nada por intuición
     </p>
     <h1>{d.titulo}</h1>
     <div class="lede prosa" set:html={ledeHtml} />
 
-    <section class="medicion" aria-label="El reparto de puntos, medido">
-      <p class="rotulo">
-        Medido sobre {d.medidoSobre} convocatorias · {conPuntos} ejercicios · {total} puntos
-      </p>
-      <Reparto puntos={suma} rotulo="Reparto de la nota por competencia" />
-      <p class="dato">
-        <strong>El {pct(suma.comp1 + suma.comp4)} % de la nota no es calcular</strong>, y la
-        explicación formal sola vale el {pct(suma.comp4)} %. No es una impresión: sale de
-        sumar el reparto que imprime cada examen.
-      </p>
-      <p class="dato dato--flojo">
-        Esta ruta te lleva por {deExamenCitados} de esos {conPuntos} ejercicios. Los que
-        faltan están nombrados en su bloque, con el motivo.
-      </p>
-    </section>
-
-    <aside class="nota orden">
-      <p class="rotulo">Por qué en este orden</p>
-      <div class="prosa" set:html={ordenHtml} />
-    </aside>
-
-    <Lectura>
+    {/* ── el camino de bloques (brief §6b): números en círculo unidos por
+        una espina de tiza. El orden ES el contenido de una ruta, y la
+        maqueta lo hace visible. El primero abre; los demás, al pulsarlos. */}
+    <ol class="camino">
       {
         bloquesHtml.map((b, i) => (
-          <Fragment>
-            <h2 id={b.id}>
-              <span class="b-n rotulo" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              {b.titulo}
-            </h2>
+          <li class="bloq">
+            <span class="mano bnum" aria-hidden="true">{i + 1}</span>
+            <details class="bcaja" open={i === 0} data-bloque>
+              <summary>
+                <h2 id={b.id}>{b.titulo}</h2>
+                {b.apunte && (
+                  <span class:list={['mano', 'apunte', `apunte--${b.apunte.tono}`]}>
+                    {b.apunte.texto}
+                  </span>
+                )}
+                <span class="bmeta rotulo">
+                  {b.escalones.length > 0
+                    ? `${b.escalones.length} ${b.escalones.length === 1 ? 'escalón' : 'escalones'}`
+                    : `${b.material.length} referencias`}
+                </span>
+                <span class="bflecha" aria-hidden="true">▾</span>
+              </summary>
 
+              <div class="bcuerpo">
             {b.invariante && (
               <p class="frecuencia rotulo rotulo--flag">
                 Cae {b.invariante.anios} de {d.medidoSobre} años
@@ -389,21 +387,12 @@ const crumb = `${asignatura.data.nombre} · preparar`;
             )}
 
             <div class="prosa pide" set:html={b.pideHtml} />
-            <div class="prosa" set:html={b.porqueHtml} />
+            <div class="prosa porque" set:html={b.porqueHtml} />
 
             {b.invariante && (
               <aside class="nota">
                 <p class="rotulo">De dónde sale ese dato</p>
                 <p>{b.invariante.fuente}</p>
-              </aside>
-            )}
-
-            {b.falta.length > 0 && (
-              <aside class="nota nota--falta">
-                <p class="rotulo">Esto todavía no lo enseñamos</p>
-                {b.faltaHtml.map((f) => (
-                  <div class="prosa" set:html={f} />
-                ))}
               </aside>
             )}
 
@@ -517,14 +506,104 @@ const crumb = `${asignatura.data.nombre} · preparar`;
             {b.material
               .filter((m) => m.tipo === 'ejercicio' && m.incrustado)
               .map((m) => <EjercicioGuiado id={m.id} />)}
-          </Fragment>
+
+            {/* El cierre del bloque: su criterio de dominio, SIEMPRE pintado
+                (brief §6b — el esquema lo exigía y la página lo tiraba). */}
+            <div class="b-dominio">
+              <span class="mano bd-k">lo tienes cuando:</span>
+              <div class="prosa" set:html={b.dominioHtml} />
+            </div>
+              </div>
+            </details>
+          </li>
         ))
       }
-    </Lectura>
+    </ol>
+    </div>
+
+    {/* ── el carril derecho (brief §6b) ── */}
+    <aside class="carril" aria-label="El porqué del orden y lo que falta">
+      <div class="orden-caja">
+        <p class="mano oc-tit">Por qué este orden</p>
+        <div class="prosa oc-cuerpo" set:html={ordenHtml} />
+      </div>
+
+      <div class="eval-caja">
+        <p class="rotulo ec-tit">Esta evaluación</p>
+        <p class="ec-dato">
+          Medido sobre {d.medidoSobre} convocatorias · {conPuntos} ejercicios ·{' '}
+          {total} puntos.
+        </p>
+        <Reparto puntos={suma} rotulo="Reparto de la nota por competencia" />
+        <p class="ec-dato ec-dato--fuerte">
+          El {pct(suma.comp1 + suma.comp4)} % de la nota no es calcular; la
+          explicación formal sola vale el {pct(suma.comp4)} %.
+        </p>
+        <p class="ec-flojo">
+          Esta ruta te lleva por {deExamenCitados} de esos {conPuntos}{' '}
+          ejercicios; los que faltan están nombrados con su motivo. Un bloque
+          no se acaba: se domina — cada uno te dice cómo sabes que ya lo tienes.
+        </p>
+      </div>
+
+      {faltas.length > 0 && (
+        <div class="falta-caja">
+          <p class="rotulo fc-tit">Lo que falta, dicho en voz alta</p>
+          {faltas.map((f) => (
+            <div class="fc-item">
+              <p class="rotulo fc-bloque">{f.bloque}</p>
+              <div class="prosa" set:html={f.html} />
+            </div>
+          ))}
+          <p class="fc-lema">
+            Un hueco declarado es información; uno escondido, una promesa
+            incumplida.
+          </p>
+        </div>
+      )}
+
+      <p class="mano consejo">empieza por el bloque 1 aunque te sepas el tema</p>
+    </aside>
+    </div>
   </main>
 </Base>
 
 <script>
+  /* ── el camino de bloques plegables ──────────────────────────────
+     Tres deberes que un <details> no hace solo:
+     1 · Un ancla dentro de un bloque cerrado (#esc-…, #ej-…, #bloque) no
+         navega: el destino no tiene caja (§17). Se abre su bloque y se
+         salta a mano — el mismo remedio que Tema y Examen.
+     2 · Al imprimir se abren todos (el «modo completo» de esta página) y
+         se devuelven a como estaban.
+     3 · El contenido de un details cerrado no se ve, pero humo.mjs ya
+         sabe abrirlos para medir (29-08-2026). */
+  {
+    const bloquesDet = [...document.querySelectorAll<HTMLDetailsElement>('details[data-bloque]')];
+
+    const abreElAncla = () => {
+      const destino = decodeURIComponent(location.hash.slice(1));
+      if (!destino) return;
+      const el = document.getElementById(destino);
+      if (!el) return;
+      const caja = el.closest('details');
+      if (caja && !caja.open) caja.open = true;
+      el.scrollIntoView({ block: 'start' });
+    };
+
+    abreElAncla();
+    window.addEventListener('hashchange', abreElAncla);
+
+    let abiertos: boolean[] = [];
+    window.addEventListener('beforeprint', () => {
+      abiertos = bloquesDet.map((x) => x.open);
+      for (const x of bloquesDet) x.open = true;
+    });
+    window.addEventListener('afterprint', () => {
+      bloquesDet.forEach((x, i) => (x.open = abiertos[i] ?? false));
+    });
+  }
+
   /* Las marcas de aprendizaje.
    *
    * Lo escribe `EjercicioGuiado` al completar un ejercicio, y aquí solo se
@@ -586,36 +665,207 @@ const crumb = `${asignatura.data.nombre} · preparar`;
     padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 6rem;
   }
 
-  .eyebrow { margin-bottom: .6rem; }
-  h1 { max-width: var(--measure); }
-  .lede { max-width: var(--measure); margin: .9rem 0 2rem; }
+  .mano { font-family: var(--mano); }
 
-  /* ── el reparto medido ─────────────────────────────────────────── */
-  .medicion {
-    max-width: var(--measure);
-    margin: 0 0 2rem;
-    padding: 1.2rem 1.4rem;
-    background: var(--panel);
-    border-radius: 6px;
+  .dos-columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 25rem);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
   }
 
-  .medicion > .rotulo { margin-bottom: .3rem; color: var(--graphite); }
-  .dato { margin-top: 1rem; font-size: .9rem; }
-  .dato--flojo { margin-top: .5rem; font-size: .82rem; color: var(--graphite); }
+  .kicker { font-size: 1.3rem; color: var(--live); margin-bottom: .1rem; }
+  h1 { max-width: var(--measure); }
+  .lede { max-width: 68ch; margin: .6rem 0 1.6rem; }
 
-  .orden { max-width: var(--measure); margin-bottom: 2.5rem; }
+  /* ── el camino (brief §6b): círculos y espina de tiza ──────────── */
+  .camino {
+    list-style: none;
+    position: relative;
+    padding: 0;
+  }
 
-  /* ── bloques ───────────────────────────────────────────────────── */
-  .b-n {
-    display: inline-block;
-    margin-right: .7rem;
-    color: var(--acento);
+  /* la espina: discontinua, verde al 50 %, detrás de los círculos */
+  .camino::before {
+    content: '';
+    position: absolute;
+    left: calc(1.05rem - 1px);
+    top: 1.2rem;
+    bottom: 1.2rem;
+    width: 2px;
+    background: repeating-linear-gradient(180deg, var(--live) 0 6px, transparent 6px 11px);
+    opacity: .5;
+  }
+
+  .bloq {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.7rem minmax(0, 1fr);
+    gap: .35rem;
+    margin-bottom: .55rem;
+  }
+
+  .bnum {
+    position: relative;
+    z-index: 1;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 99px;
+    background: var(--panel);
+    border: 2px solid var(--live);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    color: var(--live);
+    margin-top: .35rem;
+  }
+
+  /* el bloque abierto lleva su número relleno */
+  .bloq:has(details[open]) .bnum { background: var(--live); color: var(--panel); }
+
+  .bcaja {
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    background: var(--panel);
+    box-shadow: var(--shadow-1);
+  }
+
+  .bcaja[open] { box-shadow: var(--shadow-activo); }
+
+  .bcaja summary {
+    display: flex;
+    align-items: baseline;
+    gap: .8rem;
+    flex-wrap: wrap;
+    padding: .7rem 1.1rem;
+    cursor: pointer;
+    list-style: none;
+    border-radius: 12px;
+  }
+
+  .bcaja summary::-webkit-details-marker { display: none; }
+  .bcaja summary:hover { background: var(--live-soft); }
+  .bcaja[open] summary { border-radius: 12px 12px 0 0; }
+
+  .bcaja summary h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    margin: 0;
+    scroll-margin-top: 5rem;
+  }
+
+  /* la anotación de tiza, con su semántica de color (brief §6b) */
+  .apunte { font-size: 1.1rem; line-height: 1.1; }
+  .apunte--nota { color: var(--flag); }
+  .apunte--marco { color: var(--barra-justificar); }
+  .apunte--neutro { color: var(--faint); }
+
+  .bmeta { margin-left: auto; color: var(--faint); white-space: nowrap; }
+  .bflecha { color: var(--faint); font-size: .7rem; transition: transform .2s; }
+  .bcaja[open] .bflecha { transform: rotate(180deg); }
+
+  .bcuerpo { padding: .3rem 1.2rem 1.2rem; }
+  .bcuerpo :global(p) { margin-bottom: .9rem; }
+  .bcuerpo :global(ul), .bcuerpo :global(ol:not(.material)) { margin: 0 0 1rem 1.2rem; }
+
+  /* fórmulas en bloque: la caja que antes ponía Lectura */
+  .bcuerpo :global(.katex-display) {
+    display: block;
+    margin: 1.4rem 0;
+    padding: 1.1rem 1.3rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--live);
+    border-radius: 0 6px 6px 0;
+    overflow-x: auto;
   }
 
   .frecuencia { margin-bottom: .8rem; }
   .pide { font-weight: 600; }
+  .porque :global(p) { color: var(--graphite); }
 
-  .nota--falta { border-left: 3px solid var(--flag); }
+  /* el cierre del bloque: el dominio, siempre pintado (brief §6b) */
+  .b-dominio {
+    margin-top: 1.2rem;
+    border-left: 3px solid var(--live);
+    background: var(--live-soft);
+    border-radius: 0 8px 8px 0;
+    padding: .7rem 1rem;
+  }
+
+  .bd-k { font-size: 1.2rem; color: var(--live); margin-right: .4rem; }
+  .b-dominio .prosa { display: inline; font-size: .92rem; }
+  .b-dominio .prosa :global(p) { display: inline; margin: 0; }
+
+  /* ── el carril derecho ─────────────────────────────────────────── */
+  .carril {
+    position: sticky;
+    top: 4.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .orden-caja {
+    background:
+      radial-gradient(var(--tiza-polvo-1) 1px, transparent 1px) 0 0 / 7px 9px,
+      radial-gradient(ellipse at 30% 20%, var(--piz-claro), var(--piz-medio) 75%);
+    border-radius: 12px;
+    padding: 1rem 1.2rem .8rem;
+    box-shadow: var(--piz-vineta-caja), var(--shadow-1);
+  }
+
+  .oc-tit { font-size: 1.45rem; color: var(--tiza-amarilla); margin-bottom: .2rem; }
+  .oc-cuerpo { font-size: .84rem; line-height: 1.6; color: var(--tiza-suave); }
+  .oc-cuerpo :global(p) { margin-bottom: .6rem; }
+  .oc-cuerpo :global(p:last-child) { margin-bottom: 0; }
+  .oc-cuerpo :global(strong) { color: var(--tiza); }
+
+  .eval-caja {
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.2rem .9rem;
+    box-shadow: var(--shadow-1);
+  }
+
+  .ec-tit { color: var(--live); margin-bottom: .45rem; }
+  .ec-dato { font-size: .84rem; line-height: 1.5; margin-bottom: .3rem; }
+  .ec-dato--fuerte { font-weight: 700; margin-top: .8rem; }
+  .ec-flojo {
+    font-size: .78rem;
+    color: var(--graphite);
+    line-height: 1.5;
+    border-top: 1px solid var(--rule);
+    padding-top: .55rem;
+    margin-top: .55rem;
+  }
+
+  .falta-caja {
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-left: 4px solid var(--barra-justificar);
+    border-radius: 12px;
+    padding: 1rem 1.2rem .8rem;
+    box-shadow: var(--shadow-1);
+  }
+
+  .fc-tit { color: var(--barra-justificar); margin-bottom: .6rem; }
+  .fc-item { margin-bottom: .7rem; }
+  .fc-bloque { color: var(--faint); margin-bottom: .1rem; }
+  .fc-item .prosa { font-size: .82rem; line-height: 1.5; color: var(--graphite); }
+  .fc-item .prosa :global(p) { margin: 0; }
+  .fc-lema {
+    font-size: .76rem;
+    color: var(--faint);
+    border-top: 1px solid var(--rule);
+    padding-top: .5rem;
+    margin-top: .3rem;
+  }
+
+  .consejo { font-size: 1.15rem; color: var(--faint); text-align: center; }
 
   /* ── lista de material ─────────────────────────────────────────── */
   .material {
@@ -743,6 +993,11 @@ const crumb = `${asignatura.data.nombre} · preparar`;
 
   .progreso button:hover { border-color: var(--flag); color: var(--flag); }
 
+  @media (max-width: 900px) {
+    .dos-columnas { grid-template-columns: minmax(0, 1fr); }
+    .carril { position: static; }
+  }
+
   @media (max-width: 40rem) {
     .m a { grid-template-columns: 4.2rem 1fr; }
     .m-pts { grid-column: 2; }
@@ -750,5 +1005,16 @@ const crumb = `${asignatura.data.nombre} · preparar`;
     .escalon { padding: .9rem .8rem 1rem; }
     .e-aprendes { margin-left: 0; }
     .e-leer { grid-template-columns: 4.2rem 1fr; }
+    .bloq { grid-template-columns: 2.2rem minmax(0, 1fr); }
+    .bcuerpo { padding: .3rem .8rem 1rem; }
+    .bmeta { display: none; }
+  }
+
+  @media print {
+    .dos-columnas { display: block; }
+    .carril { position: static; margin-top: 2rem; }
+    .camino::before { display: none; }
+    .bcaja { border: none; box-shadow: none; }
+    .bflecha { display: none; }
   }
 </style>

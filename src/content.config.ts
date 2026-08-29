@@ -674,6 +674,23 @@ const bloque = z.object({
    *  Obligatorio, y en segunda persona: describe lo que tienes que ser capaz
    *  de hacer, no lo que tienes que haber leído. */
   dominio: z.string().min(20),
+  /** La anotación de tiza del camino (rediseño Pizarra, brief §6b): el
+   *  porqué medido del bloque comprimido en una frase de pizarra —
+   *  «cae los 11 años — 7 pts de cálculo». Es dato y no presentación
+   *  porque comprimir el `porque` en ocho palabras es una lectura humana,
+   *  y la regla del brief es que la página no escribe nada.
+   *
+   *  El `tono` dice con qué tiza se escribe, y la semántica es estricta:
+   *  `nota` (rojo) SOLO si la frase habla de puntos que deciden nota;
+   *  `marco` (ámbar) para lo que sostiene sin puntuar — el suelo, el
+   *  formulario—; `neutro` (gris) para el resto. Opcional: un bloque sin
+   *  apunte no pinta nada, nunca se inventa uno. */
+  apunte: z
+    .object({
+      texto: z.string().min(6).max(80),
+      tono: z.enum(['nota', 'marco', 'neutro']).default('neutro'),
+    })
+    .optional(),
   /** La forma vieja: una pila plana de referencias.
    *
    *  Sigue valiendo, y por eso es opcional en vez de estar borrada: los

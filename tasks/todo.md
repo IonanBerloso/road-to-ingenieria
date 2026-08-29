@@ -1943,3 +1943,23 @@ reparto apilada con sus tres colores propios.
   viewBox con las filas plegadas (validado al revés: sin el cambio, rojo).
 - La página de ruta de estudio (preparar/) NO se rediseñó: el brief lo
   prohíbe hasta que exista su tablero.
+
+## Fase 3 — la ruta de estudio (29 de agosto de 2026, brief §6b aprobado)
+
+El camino de bloques del tablero «Ruta · preparar la 1.ª evaluación»:
+números en círculo unidos por la espina de tiza, el primero abierto y los
+demás plegados, la anotación de tiza con el porqué medido, y el carril con
+«Por qué este orden» en pizarra, los datos de la evaluación y «Lo que
+falta, dicho en voz alta» pintando las falta[] reales.
+
+- **La corrección de fondo**: el `dominio` del BLOQUE se pinta siempre
+  («lo tienes cuando:») — el esquema lo exigía y la página lo tiraba.
+- **Campo nuevo `apunte` en el esquema** (texto + tono nota/marco/neutro):
+  la anotación es dato porque comprimir el porqué es una lectura humana y
+  la página no escribe nada. 74 apuntes escritos para las 9 rutas,
+  destilados de sus `porque`.
+- **La página deja el patrón Lectura**: el acordeón nativo ES el modo
+  guiado hecho estructura; al imprimir se abren todos los bloques. El
+  ancla profunda dentro de un bloque cerrado se abre a mano (§17).
+- Los remates §6c de la portada: escala del tablero, el hueco entre
+  listas y repisa repartido, y user-select: none en la figura tocable.

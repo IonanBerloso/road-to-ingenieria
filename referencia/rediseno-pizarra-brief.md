@@ -167,9 +167,45 @@ tarjeta de reparto por competencias (barra apilada con etiquetas directas:
 tres son SOLO para esta barra, no entran en la interfaz general). Los
 repartos se calculan de la colección, nunca a mano.
 
-**Pendiente de diseñar:** la página de ruta de estudio (preparar/). Hasta
-que exista su tablero, no improvisar su rediseño: se hace con el mismo
-método.
+## 6b · La ruta de estudio (fase 3) — APROBADA por Ionan (29-08-2026)
+
+Referencia: tablero «Ruta · preparar la 1.ª evaluación» (página «Estudio»
+del lienzo). Cuerpo en papel con barra pizarra, como todo el interior.
+
+- **Los bloques son un CAMINO vertical**, no una lista: números en círculo
+  (Caveat, borde verde; el activo relleno verde) unidos por una espina de
+  tiza discontinua (`repeating-linear-gradient` vertical verde al 50 %).
+  El orden es el contenido de una ruta — la maqueta lo hace visible.
+- Cabecera: kicker Caveat verde «medido sobre N convocatorias — nada por
+  intuición» (N = `medidoSobre`), título, y el `lede` literal del YAML.
+- **Bloque abierto** (el primero, o el que el alumno abra): título +
+  anotación Caveat con el porqué medido + el `porque` resumido en gris +
+  los escalones como filas con casilla vacía (los `aprendes` en segunda
+  persona; el primero enseña la escalera «teoría → ejemplo → práctica» en
+  verde) + el **`dominio` SIEMPRE PINTADO** como cierre: recuadro con borde
+  izquierdo verde, «lo tienes cuando:» en Caveat + el texto del YAML. Esta
+  es la corrección de fondo: el dominio nunca más se valida y se tira.
+- **Bloques plegados**: fila blanca con número, título, anotación Caveat
+  con su porqué medido («cae los 11 años — 7 pts de cálculo», «el más
+  rentable — 7+ pts sin una cuenta») y el recuento de escalones. El rojo
+  `#C6503C` solo en las anotaciones que hablan de puntos que deciden nota;
+  ámbar `#A8842C` para el suelo y el formulario; gris para el resto.
+- Carril derecho: recuadro pizarra «Por qué este orden» con el
+  `criterioDeOrden` del YAML; tarjeta blanca con los datos de la
+  evaluación; y una tarjeta con borde ámbar «Lo que falta, dicho en voz
+  alta» que pinta las `falta[]` REALES del YAML — la honestidad declarada
+  hecha interfaz, nunca se omite si el YAML las trae.
+- Todo el texto sale del YAML de la ruta; nada se escribe en la página.
+
+## 6c · Remates detectados en la verificación del 29-08-2026
+
+Del repaso en navegador contra los tableros (todo lo demás, fiel):
+- Portada: la escala sigue algo por debajo del tablero (H1/entradilla/
+  nombres — valores en §5.2 y §5.4) y queda banda vacía bajo las listas.
+- Figura tocable: añadir `user-select: none` a la figura y su etiqueta —
+  arrastrar el punto selecciona el texto de al lado.
+- Tema oscuro: pendiente declarado; cuando se haga, es una variante
+  pizarra del papel, no la paleta fría antigua.
 
 ## 7 · Contenido de muestra — NO copiar al repo
 
