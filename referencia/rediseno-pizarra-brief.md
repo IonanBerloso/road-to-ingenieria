@@ -121,13 +121,55 @@ Referencia: tablero «Después · detalle de Cálculo». Aprobado por Ionan.
 - Todos los datos salen de las colecciones en el build, nunca escritos a
   mano en la página.
 
-## 6 · El interior (fase 2, tras validar la portada)
+## 6 · Las pantallas de estudio (fase 2) — APROBADAS por Ionan (29-08-2026)
 
-Referencia: tablero «Después · interior T01». Lectura sobre papel; la
-pizarra aparece como: barra superior, mini-pizarra de figura, recuadro de
-ErrorTipico (título en Caveat amarilla), recuadro de diagnóstico del
-ejercicio. El toggle claro/oscuro existente se replantea aquí (el papel
-cálido ES el modo claro; el oscuro del interior puede esperar a esta fase).
+Referencia: página «Estudio · teoría, ejercicio, examen» del lienzo. Regla
+común a las tres: cuerpo en PAPEL; la pizarra entra solo como barra
+superior, mini-pizarra de figura, recuadro de ErrorTipico y recuadro de
+diagnóstico. El toggle claro/oscuro existente se replantea aquí (el papel
+cálido ES el modo claro; el oscuro puede esperar). Las fórmulas de los
+tableros van en serif como marcador de posición: en el sitio las sigue
+dibujando KaTeX en el build — no se toca §07.
+
+**Teoría (patrón Lectura).** Tres columnas: carril izquierdo con los
+apartados del tema (el activo con borde verde y fondo blanco, el resto con
+borde `#E2DBC8`), columna de lectura a 66ch (prosa 16.5px/1.7, H2 23px,
+fórmulas de bloque con borde izquierdo verde sobre blanco), y carril
+derecho con la figura del tema en mini-pizarra + una tarjeta «practica lo
+que acabas de leer» que enlaza al primer ejercicio de nivel ejemplo. El
+toggle Modo guiado / Completo vive en la barra pizarra. Pie con
+anterior/siguiente y la `fuente` del frontmatter.
+
+**Ejercicio guiado (EjercicioGuiado).** La escalera de pasos VISIBLE:
+- paso hecho: plegado, borde y fondo verde suave, check + la opción
+  elegida + apunte en Caveat;
+- paso activo: abierto, con sombra; el campo de respuesta en rojo
+  `#C6503C`/fondo `#FBF1EE` cuando hay fallo, y debajo el diagnóstico DEL
+  DISTRACTOR en recuadro de pizarra (título Caveat amarilla + mensaje del
+  YAML tal cual). Junto al campo, el recordatorio «vale la forma exacta»;
+- paso pendiente: plegado al 60 % de opacidad con círculo vacío.
+Cabecera: chip `nivel` + la `fuente` literal + título. Enunciado en caja
+blanca con borde izquierdo verde. Pie de paso: «1.er intento · al 2.º la
+pista, al 3.º el desarrollo». Carril derecho: figura del ejercicio en
+mini-pizarra + tarjeta «qué entrena» con los tres pasos y su estado, y el
+dato medido del 42,7 % (recalcular al cerrar asignatura, §09).
+
+**Examen (Examen.astro).** Cabecera papel con la línea Caveat «tal cual
+cayó — sin cambiar un número», título con fecha real y total. Lista de
+ejercicios: fila plegada = nº Caveat + título + chip de tema + reparto
+«c1 + c2 + c4 = 10 pts»; la abierta añade enunciado, CTA amarillo
+«Resolver guiado» + secundario «Resolución completa» y la nota de
+honestidad del YAML («resolución propuesta nuestra, pendiente de
+revisión»). Un ejercicio 100 % demostración lleva borde izquierdo
+`#C6503C` y su aviso. Carril derecho: recuadro pizarra del PDF original +
+tarjeta de reparto por competencias (barra apilada con etiquetas directas:
+`#B9B29E` reconocer / `#1C6E51` calcular / `#A8842C` justificar — estos
+tres son SOLO para esta barra, no entran en la interfaz general). Los
+repartos se calculan de la colección, nunca a mano.
+
+**Pendiente de diseñar:** la página de ruta de estudio (preparar/). Hasta
+que exista su tablero, no improvisar su rediseño: se hace con el mismo
+método.
 
 ## 7 · Contenido de muestra — NO copiar al repo
 

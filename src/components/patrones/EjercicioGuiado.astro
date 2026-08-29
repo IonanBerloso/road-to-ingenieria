@@ -226,9 +226,14 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
 <section class="ejercicio" data-ejercicio={ejercicio.id} aria-labelledby={`ej-${ejercicio.id}`}>
   <header class="ej-cab">
-    <p class="rotulo rotulo--live">Ejercicio guiado · {ejercicio.pasos.length} pasos</p>
+    {/* El chip de nivel y la fuente literal, en una línea (brief §6): antes
+        de empezar se sabe si esto es un ejemplo nuestro, un boletín o algo
+        que cayó de verdad. */}
+    <p class="ej-meta">
+      <span class="chip-nivel">nivel: {ejercicio.nivel}</span>
+      <span class="fuente rotulo">{ejercicio.fuente}</span>
+    </p>
     <h3 id={`ej-${ejercicio.id}`}>{ejercicio.titulo}</h3>
-    <p class="fuente rotulo">{ejercicio.fuente}</p>
 
     {/* Solo los de examen traen reparto. Verlo antes de empezar cambia cómo
         se aborda el ejercicio: si COMP2 vale cero, no hay nada que calcular
@@ -243,7 +248,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   </div>
 
   <p class="modo-pista rotulo" data-modo-pista>
-    En modo guiado no verás la solución aunque falles: verás en qué paso te has ido y por qué.
+    1.er intento a pelo · al 2.º aparece la pista, al 3.º el desarrollo — la
+    solución nunca se da al fallar: se te dice en qué te has ido y por qué.
   </p>
 
   <div class="enunciado">
@@ -298,7 +304,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     placeholder="…"
                   />
                   {paso.respuesta!.formato && (
-                    <span class="formato rotulo">{paso.respuesta!.formato}</span>
+                    <span class="formato rotulo">
+                      {paso.respuesta!.formato} — vale la forma exacta: pi/4, sqrt(3)/2, (e^2-1)/2…
+                    </span>
                   )}
                   <button type="button" class="comprobar" data-comprobar>
                     Comprobar
@@ -1104,19 +1112,41 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
 <style>
   .ejercicio {
-    border: 1px solid var(--rule);
-    border-radius: 8px;
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
     padding: 1.4rem clamp(1rem, 3vw, 1.6rem) 1.6rem;
     margin: 2.5rem 0;
     background: var(--panel);
+    box-shadow: var(--shadow-1);
+  }
+
+  .ej-meta {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    margin-bottom: .1rem;
+  }
+
+  .chip-nivel {
+    font-family: var(--mono);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--live);
+    background: var(--live-soft);
+    border-radius: 99px;
+    padding: .2rem .65rem;
+    white-space: nowrap;
   }
 
   .ej-cab h3 {
     font-family: var(--display);
     font-size: 1.35rem;
-    font-weight: 600;
+    font-weight: 800;
     letter-spacing: -.015em;
-    margin: .2rem 0 .3rem;
+    margin: .3rem 0 .3rem;
   }
 
   .fuente {
@@ -1156,11 +1186,12 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     margin-bottom: 1.4rem;
   }
 
-  /* ── enunciado ─────────────────────────────────────────────────── */
+  /* ── enunciado: caja blanca con el borde verde (brief §6) ──────── */
   .enunciado {
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
+    border: 1.5px solid var(--rule);
+    border-left: 3px solid var(--live);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.2rem;
     margin-bottom: 1.6rem;
     background: var(--paper);
   }
@@ -1168,19 +1199,28 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   .enunciado .rotulo { margin-bottom: .5rem; }
   .pide { font-weight: 500; margin-top: .6rem; }
 
-  /* ── pasos ─────────────────────────────────────────────────────── */
+  /* ── la escalera de pasos, con sus tres estados a la vista ─────── */
   .pasos { list-style: none; }
 
   .paso {
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    margin-bottom: .9rem;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    margin-bottom: .7rem;
     overflow: hidden;
-    transition: opacity .25s, border-color .25s;
+    transition: opacity .25s, border-color .25s, box-shadow .25s;
   }
 
-  .paso.bloqueado { opacity: .38; pointer-events: none; }
-  .paso.resuelto { border-color: var(--live); }
+  /* pendiente: plegado en atención, con su círculo vacío */
+  .paso.bloqueado { opacity: .6; pointer-events: none; }
+
+  /* activo: el único desbloqueado sin resolver lleva la sombra */
+  .paso:not(.bloqueado):not(.resuelto) { box-shadow: var(--shadow-activo); }
+
+  /* hecho: verde suave, como una casilla tachada */
+  .paso.resuelto {
+    border-color: color-mix(in srgb, var(--live) 40%, transparent);
+    background: color-mix(in srgb, var(--live) 5%, var(--panel));
+  }
 
   .paso-cab {
     display: flex;
@@ -1189,11 +1229,31 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     padding: .8rem 1rem .2rem;
   }
 
-  .paso-cab h4 { font-size: .96rem; font-weight: 600; flex: 1; }
+  .paso-cab h4 { font-size: .96rem; font-weight: 700; flex: 1; }
   .paso-cab .n { font-size: .66rem; }
   .paso-cab .comp { font-size: .62rem; color: var(--alt); }
-  .paso-cab .tick { color: var(--live); visibility: hidden; }
-  .paso.resuelto .tick { visibility: visible; }
+
+  /* la marca de estado: círculo vacío pendiente, relleno verde al resolver */
+  .paso-cab .tick {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 99px;
+    border: 2px solid var(--rule);
+    color: transparent;
+    font-size: .7rem;
+    font-weight: 700;
+    align-self: center;
+  }
+
+  .paso.resuelto .tick {
+    border-color: var(--live);
+    background: var(--live);
+    color: var(--panel);
+  }
 
   .paso-cuerpo { padding: 0 1rem 1rem; }
 
@@ -1339,13 +1399,45 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     font-size: .89rem;
   }
 
-  .fb .rotulo { font-size: .63rem; margin-bottom: .25rem; }
-  .fb.mal { border-left: 2px solid var(--flag); background: var(--flag-soft); }
-  .fb.mal .rotulo { color: var(--flag); }
+  .fb :global(.rotulo) { font-size: .63rem; margin-bottom: .25rem; }
+
+  /* El diagnóstico del error es un recuadro de PIZARRA (brief §2 y §6): lo
+     que te suspende se escribe en la pizarra, con el título en tiza. La
+     pista y el acierto siguen siendo papel — no son la voz del profesor
+     señalando el fallo. */
+  .fb.mal {
+    background:
+      radial-gradient(var(--tiza-polvo-1) 1px, transparent 1px) 0 0 / 7px 9px,
+      radial-gradient(ellipse at 30% 20%, var(--piz-claro), var(--piz-medio) 75%);
+    border-radius: 10px;
+    color: var(--tiza-suave);
+    box-shadow: var(--piz-vineta-caja);
+  }
+
+  /* `:global` obligatorio: el contenido del fb lo inyecta el script con
+     innerHTML y nace SIN el atributo de ámbito de Astro — un selector
+     escopado no lo vestiría (la misma trampa que la paleta de comandos). */
+  .fb.mal :global(.rotulo) {
+    font-family: var(--mano);
+    font-size: 1.2rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--tiza-amarilla);
+  }
+
+  .fb.mal :global(strong) { color: var(--tiza); }
+
+  /* el campo que ha fallado se pone en rojo mientras el diagnóstico esté
+     a la vista */
+  .paso:has(.fb.mal:not([hidden])) .respuesta input:not(:disabled) {
+    border-color: var(--flag);
+    background: var(--flag-soft);
+  }
+
   .fb.pista { border-left: 2px solid var(--alt); background: var(--alt-soft); }
-  .fb.pista .rotulo { color: var(--alt); }
+  .fb.pista :global(.rotulo) { color: var(--alt); }
   .fb.bien { border-left: 2px solid var(--live); background: var(--live-soft); }
-  .fb.bien .rotulo { color: var(--live); }
+  .fb.bien :global(.rotulo) { color: var(--live); }
 
   .solucion {
     margin-top: .9rem;

@@ -220,6 +220,8 @@ async function main() {
          está plegado sigue estando rota cuando el alumno lo abra. */
       const tapados = [...document.querySelectorAll('[hidden]')];
       for (const e of tapados) e.hidden = false;
+      /* Y las filas plegadas de la hoja de examen, por el mismo motivo. */
+      for (const e of document.querySelectorAll('details:not([open])')) e.open = true;
 
       for (const panel of document.querySelectorAll('.panel')) {
         panel.style.display = 'block'; // ver los dos paneles a la vez, solo para medir
@@ -326,6 +328,18 @@ async function main() {
         e.removeAttribute('hidden');
         window.__tapados.push([e, 'hidden']);
       }
+      /* Un <details> cerrado es la TERCERA forma de ocultar, y no cae en
+         ninguna de las otras dos: su contenido no está [hidden] ni computa
+         display:none — simplemente no se renderiza. El 29 de agosto de 2026,
+         al plegar la hoja de examen en <details> (brief §6), las figuras de
+         los enunciados quedaron sin caja, getScreenCTM() devolvió null y el
+         guardián perdió la corrección de transformadas: ocho falsos
+         positivos con coordenadas sin transformar. Se abren, se mide, y se
+         devuelven a como estaban. */
+      for (const e of document.querySelectorAll('details:not([open])')) {
+        e.setAttribute('open', '');
+        window.__tapados.push([e, 'details']);
+      }
       for (const e of document.querySelectorAll('body *')) {
         if (getComputedStyle(e).display === 'none') {
           e.style.display = 'block';
@@ -421,6 +435,7 @@ async function main() {
 
       for (const [e, que] of tapados) {
         if (que === 'hidden') e.hidden = true;
+        else if (que === 'details') e.removeAttribute('open');
         else e.style.display = '';
       }
       /* Solo cuentan como figura los SVG que llevan alguna etiqueta dentro:

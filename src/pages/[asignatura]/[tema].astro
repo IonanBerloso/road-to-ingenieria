@@ -94,6 +94,13 @@ const ficheroEjercicios = (await getCollection('ejercicios')).find(
   (f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios`,
 );
 const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
+
+/** La tarjeta «practica lo que acabas de leer» (brief §6) enlaza al primer
+ *  ejercicio de nivel ejemplo: el que puede hacer alguien que acaba de leer
+ *  la teoría. Si el tema no tiene ninguno, la tarjeta no se dibuja — una
+ *  invitación a practicar que aterriza en un ejercicio de examen sería la
+ *  queja del escalón (§14) con otra cara. */
+const primerEjemplo = ejercicios.find((e) => e.nivel === 'ejemplo');
 ---
 
 <Base
@@ -102,7 +109,16 @@ const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
   acento={asignatura.data.acento}
   crumb={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`}
 >
-  <Cabecera crumb={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`} />
+  <Cabecera crumb={`${asignatura.data.nombre} · tema ${String(ficha.n).padStart(2, '0')}`}>
+    {/* El conmutador guiado/completo, en la barra pizarra (brief §6). Nace
+        oculto: lo enciende el script de Lectura cuando hay más de un
+        apartado, exactamente igual que cuando vivía dentro de la columna. */}
+    <div class="modos no-imprimir" role="group" aria-label="Modo de lectura" data-modos hidden>
+      <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
+      <button type="button" data-modo="completo" aria-pressed="false">completo</button>
+      <span class="rotulo avance" data-avance></span>
+    </div>
+  </Cabecera>
 
   <main id="principal">
     <Tema
@@ -116,6 +132,17 @@ const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
     >
       <Lectura slot="teoria">
         <Content />
+        {primerEjemplo && (
+          <div class="practica no-imprimir" data-practica>
+            <p class="rotulo pr-k">Practica lo que acabas de leer</p>
+            <p class="pr-tit">{primerEjemplo.titulo}</p>
+            <p class="pr-sub">
+              Ejemplo introductorio, para entrar de cero. Cada paso equivocado
+              recibe su diagnóstico, no un «incorrecto».
+            </p>
+            <a class="pr-cta" href={`#ej-${primerEjemplo.id}`}>Hacer el ejercicio →</a>
+          </div>
+        )}
       </Lectura>
 
       <Fragment slot="ejercicios">
@@ -124,3 +151,42 @@ const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
     </Tema>
   </main>
 </Base>
+
+<style>
+  /* La tarjeta «practica lo que acabas de leer» (brief §6). El tablero la
+     pone en un carril derecho que la página de tema no tiene; aquí cierra
+     la lectura, que es el momento en el que la invitación tiene sentido. */
+  .practica {
+    margin-top: 2.2rem;
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.25rem 1.1rem;
+    box-shadow: var(--shadow-1);
+  }
+
+  .pr-k { color: var(--live); margin-bottom: .4rem; }
+
+  .pr-tit { font-size: .95rem; font-weight: 700; margin-bottom: .35rem; }
+
+  .pr-sub {
+    font-size: .82rem;
+    color: var(--graphite);
+    line-height: 1.5;
+    margin-bottom: .8rem;
+  }
+
+  .pr-cta {
+    display: inline-block;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--piz-medio);
+    background: var(--tiza-amarilla);
+    border-radius: 8px;
+    padding: .5rem 1rem;
+    text-decoration: none;
+    transition: background .15s;
+  }
+
+  .pr-cta:hover { background: var(--tiza-amarilla-hover); }
+</style>

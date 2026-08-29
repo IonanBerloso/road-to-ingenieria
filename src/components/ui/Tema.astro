@@ -132,7 +132,14 @@ const indice = headings.filter((h) => h.depth === 2);
 
     // Entrar con el enlace puesto, o volver atrás, deja la misma pestaña.
     abre(panelDe(location.hash.slice(1)), false);
-    window.addEventListener('hashchange', () => abre(panelDe(location.hash.slice(1)), false));
+    window.addEventListener('hashchange', () => {
+      const h = location.hash.slice(1);
+      abre(panelDe(h), false);
+      /* El navegador ya intentó saltar al ancla con el panel aún oculto, y
+         un elemento sin caja no se puede desplazar (§17). Mismo remedio que
+         en Examen.astro: ahora que el panel está visible, se salta a mano. */
+      if (h.startsWith('ej-')) document.getElementById(h)?.scrollIntoView({ block: 'start' });
+    });
 
     // Al imprimir va todo: teoría y ejercicios, que es como se repasa (§11).
     window.addEventListener('beforeprint', () => (shell.dataset.panel = 'todo'));

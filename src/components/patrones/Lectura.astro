@@ -10,13 +10,11 @@
  */
 ---
 
+{/* El conmutador guiado/completo ya no se dibuja aquí: desde la fase 2 del
+    rediseño Pizarra vive en la barra superior (brief §6), y lo coloca la
+    página dentro del slot de la Cabecera. El script de abajo lo encuentra
+    igual — busca [data-modos] en el documento, no dentro de la columna. */}
 <div class="read" data-lectura>
-  <div class="modos no-imprimir" role="group" aria-label="Modo de lectura" data-modos hidden>
-    <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
-    <button type="button" data-modo="completo" aria-pressed="false">completo</button>
-    <span class="rotulo avance" data-avance></span>
-  </div>
-
   <slot />
 
   <nav class="pasos no-imprimir" data-pasos hidden aria-label="Navegación por apartados">
@@ -96,32 +94,8 @@
     border-left: 2px solid var(--rule);
   }
 
-  /* ── control de modo ───────────────────────────────────────────── */
-  .modos {
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    margin-bottom: 2rem;
-  }
-
-  .modos button {
-    font-family: var(--mono);
-    font-size: .71rem;
-    border: 1px solid var(--rule);
-    background: none;
-    color: var(--graphite);
-    padding: .35rem .85rem;
-    border-radius: 99px;
-    cursor: pointer;
-  }
-
-  .modos button[aria-pressed='true'] {
-    border-color: var(--live);
-    color: var(--live);
-    font-weight: 600;
-  }
-
-  .modos .avance { margin-left: auto; font-size: .66rem; }
+  /* El control de modo vive en la barra pizarra; sus estilos, en base.css
+     (.top .modos), porque lo colocan dos páginas distintas. */
 
   .pasos {
     display: flex;
@@ -172,8 +146,9 @@
     let actual: HTMLElement | null = null;
 
     for (const hijo of hijos) {
-      // Los controles no pertenecen a ningún apartado.
-      if (hijo.matches('[data-modos], [data-pasos]')) continue;
+      // Los controles y la tarjeta de practicar no pertenecen a ningún
+      // apartado: se quedan fuera de los grupos y se ven en los dos modos.
+      if (hijo.matches('[data-modos], [data-pasos], [data-practica]')) continue;
       if (hijo.tagName === 'H2') {
         actual = document.createElement('section');
         actual.className = 'grupo';

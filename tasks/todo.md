@@ -1909,3 +1909,37 @@ aprobado. Lo implementado, y las decisiones que el brief dejaba abiertas:
   dejaba de casar con `.detalle:target` y **cerraba el detalle**: se cubrió
   con `.detalle:has(:target)` y el enrutador aprende a abrir la asignatura
   madre si el hash llega con `-rutas`.
+
+## Fase 2 — las pantallas de estudio (29 de agosto de 2026, brief §6 aprobado)
+
+Implementado: barra pizarra en todo el sitio, ErrorTipico y diagnóstico del
+distractor como recuadros de pizarra con título en Caveat amarilla, toggle
+guiado/completo en la barra, enunciado con borde verde, la escalera de pasos
+con sus tres estados a la vista (hecho verde · activo con sombra · pendiente
+al 60 %), campo en rojo al fallar, «vale la forma exacta» junto al formato,
+tarjeta «practica lo que acabas de leer» al pie de la teoría, y el examen
+entero: filas plegables, carril derecho con el PDF en pizarra y la barra de
+reparto apilada con sus tres colores propios.
+
+**Diferencias conscientes con los tableros, y por qué:**
+
+- **El examen conserva las pestañas examen/resoluciones.** El tablero no las
+  dibuja; son el mecanismo que valida humo.mjs, lo que funciona sin
+  JavaScript y la filosofía documentada del «examen en blanco». Las filas
+  plegables van DENTRO del panel de examen y lo refuerzan.
+- **La tarjeta de practicar cierra la lectura en vez de ir en carril
+  derecho**: la página de tema no tiene ese carril, y añadir una tercera
+  columna para una tarjeta era más rejilla que contenido.
+- **La figura del tema en mini-pizarra del carril queda pendiente**: exige
+  designar «la figura del tema» por dato (¿cuál de las 3 de t01?). Se hace
+  cuando el catálogo lleve ese campo, no eligiendo una al azar.
+- **La tarjeta «qué entrena» del ejercicio queda pendiente** por lo mismo:
+  los ejercicios se incrustan en listas (tema, examen) sin carril propio.
+- **El botón «Resolución completa» del examen es uno solo** («Resolver
+  guiado →»): el modo completo vive dentro del propio ejercicio, y dos
+  botones que aterrizan en el mismo sitio confunden más que ayudan.
+- **El guardián de humo aprendió a abrir `<details>`**: era la tercera forma
+  de ocultar que su «destapa todo» no cubría, y daba 8 falsos positivos de
+  viewBox con las filas plegadas (validado al revés: sin el cambio, rojo).
+- La página de ruta de estudio (preparar/) NO se rediseñó: el brief lo
+  prohíbe hasta que exista su tablero.
