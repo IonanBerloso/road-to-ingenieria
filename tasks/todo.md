@@ -1964,29 +1964,38 @@ falta, dicho en voz alta» pintando las falta[] reales.
 - Los remates §6c de la portada: escala del tablero, el hueco entre
   listas y repisa repartido, y user-select: none en la figura tocable.
 
-## Punto de reanudación (30-08, sesión cortada por límite de uso)
+## ~~Punto de reanudación (30-08)~~ · Fase 4 de Álgebra TERMINADA el 30 de agosto de 2026
 
-- t05 y t03 COMPLETOS y subidos. t07 lleva 3 del boletín nuevos (7.1-7.3);
-  faltan 7.4, 7.5, 7.8-7.25 (20). Los autovalores de TODO el boletín de t07
-  ya están verificados (ver commits y este fichero, sección de abajo).
-- t04 SIN transcribir pero con TODAS las cuentas verificadas:
-  4.1 (−1 si z≠1, 4 si z=1) · 4.2=16 · 4.3=(1+a)³ · 4.4=1+a·n(n+1)/2 ·
-  4.5 ✓identidad · 4.8a=a(a−a′)(b′−b)² · 4.8b muestras (1,1,1)→−1 ·
-  4.9=(x³−2)^{n−1}(x³+2(n−1)) · 4.10 ✓ · 4.11=aⁿ⁻¹(a+Σx) · 4.12 ✓ ·
-  4.13 A⁻¹=Aᵗ-like calculada y B⁻¹ patrón potencias de a · 4.14 det=1
-  inversa entera · 4.15 rangos 2 y 2 · 4.15bis det=1875 · 4.16=(x+y+z)³ ·
-  4.17=a²(a+3) · 4.18=−(α−5)² (inversa α=0 = matriz/5) · 4.19=k²(k−3) ·
-  4.20=(λ−1)⁶.
-- t07 verificado: 7.2 {−1,1,2,2} · 7.6 A1{1,2,2}✓diag A2{−3,1,3}✓
-  A3{2,2,−4}✓ A4{1,1,1}NO · 7.7 A1{−3,−1,0} A2{−9,0,0} A3{−1,2,5}
-  A4{0,1,2} A5{2,2,5} · 7.8{−1,2,3} · 7.9{4,−2,−2}✓ · 7.10 diag⟺a=0
-  (c≠1) ó a=b=0 (c=1) · 7.11 diag⟺a∉{−1,5} ó (a=−1,b=0) · 7.14=7.15=7.20
-  misma matriz {2,2,3} NO diag · 7.16{−2,−1,−1}✓ · 7.17 diag⟺c=1 ·
-  7.18{4,2,2}✓ · 7.21{1,−1,−1}✓ y A²⁰=I · 7.22 A²=I → A⁶=I, A⁻¹=A ·
-  7.23{1,−1,−1}✓ · 7.24{6,6,12} · 7.25{4,−2,−2}.
-- t02 y t01: SIN empezar (20 + 30). Los txt están volcados en el scratchpad.
-- Método íntegro en este fichero; imágenes de todos los boletines en
-  scratchpad/alg/ (mat-*, det-*, diag-*, p59-*).
-- OJO: el suelo local de la última tanda dio un falso rojo por una carrera
-  autoprovocada (un build paralelo machacó dist durante el humo). El CI
-  valida en limpio.
+El boletín oficial está dentro en seis temas de siete: t01 (33), t02 (23),
+t03 (20), t04 (21, el 4.15 va dos veces en el original), t05 (22) y t07 (25
+enunciados, 32 ejercicios porque el 7.6 y el 7.7 traen varias matrices). De
+35 ejercicios de tema a 179; de 142 pasos a 576. Un commit por tema, cada
+uno con el suelo en verde.
+
+Lo que se aprendió y no estaba escrito:
+
+- **`titulo` y `fuente` son texto plano.** Un `$A_1$` en la fuente sale como
+  «fórmula sin dibujar» en `verify` y para el despliegue. Subíndices en
+  Unicode o sin subíndice.
+- **La trampa del 7.10 estaba mal en la nota de reanudación** («a=b=0 si
+  c=1»): con c=1 el 1 fijo en la posición (1,3) hace que A−I nunca tenga
+  rango 0, así que con c=1 no diagonaliza nunca. La corrección salió de un
+  cálculo numérico, no de releer: **toda condición de diagonalización con
+  parámetro se comprueba con un valor concreto antes de escribirla.**
+- **Dos enunciados del boletín de espacios vectoriales traen erratas casi
+  seguras** (el 28: los tres vectores son base y el «si no se cumple,
+  completar» no se activa; el 31: con w=(4,0,5,19) el subespacio es un
+  hiperplano y b queda libre; con −19 todo cuadra). Se resuelven tal como
+  están impresos y se dice qué cambiaría. No se corrige el enunciado (§08).
+- **Escribir borrador en el mensaje de una trampa es publicar borrador.** Se
+  cazaron tres («pieza mal escrita a propósito», «…comprueba tú los seis
+  productos», una interpretación geométrica a medias) antes del suelo.
+  Regla: el mensaje de la trampa se escribe entero o no se escribe.
+- **El suelo no acepta `npm run build` en paralelo** (dos falsos rojos el
+  29). Tampoco conviene lanzar dos `suelo` a la vez: el segundo machaca
+  `dist/` del primero. Uno cada vez, en segundo plano, y seguir escribiendo
+  contenido mientras tanto es seguro.
+
+Queda pendiente el boletín de t06 (euclídeos, 9 de sus ejercicios dentro),
+y enlazar desde escalones solo lo que cada escalón entrena: 77 de 179
+enlazados, el resto se llega desde la página del tema.

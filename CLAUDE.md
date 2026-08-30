@@ -304,13 +304,13 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 690 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.259 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 683 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 834 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.405 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 827 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
 
-`redactar` se ha usado **una vez de 2.658 pasos**. Está construido y razonado
+`redactar` se ha usado **una vez de 3.092 pasos**. Está construido y razonado
 en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
 pide, no porque esté en la tabla.
 
@@ -363,9 +363,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 18 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 683 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 827 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 683 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 827 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 1 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1194,7 +1194,13 @@ Cosas que ya han costado horas. No son opiniones.
   el signo, y encima avisa con un `Syntax Error: No display font for 'Symbol'`
   que es fácil dar por ruido. **Regla: el volcado de un examen se hace siempre
   con `pdftotext -enc UTF-8 -layout`, y la imagen se usa para la disposición,
-  no para los signos.**
+  no para los signos.** Y al revés para los boletines con matrices: el volcado
+  de texto destroza las matrices y la imagen las conserva; ahí manda la
+  imagen y el texto solo sirve para los signos.
+- **`titulo` y `fuente` son texto plano, sin `$…$`.** Un `(matriz $A_1$)` en
+  la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
+  `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
+  Unicode (A₁) o sin subíndice; la fórmula va en `enunciado`.
 
 ---
 

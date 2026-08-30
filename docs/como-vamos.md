@@ -22,7 +22,9 @@ convocatorias transcritas de 96**, y el guardián de convocatorias huérfanas ya
 no cuenta ninguna suelta.
 
 Álgebra se abrió el 26 de agosto de 2026 y se cerró el 27: ocho convocatorias,
-siete temas, dos rutas. Su auditoría §15 está más abajo, con las once filas
+siete temas, dos rutas. El 30 se le metió el boletín oficial entero en seis de
+los siete temas —de 35 ejercicios de tema a 179—, que es lo que separa «§15 se
+cumple» de «un alumno tiene con qué practicar cada tema». Su auditoría §15 está más abajo, con las once filas
 medidas.
 
 **Cálculo se cerró el 28 de agosto de 2026**, un día después que Álgebra
@@ -530,7 +532,7 @@ ficheros y no leída por encima:
 | `falta[]` dice lo que no está | ✅ **12 huecos** declarados |
 | toda herramienta que el examen usa, presentada en la prosa | ✅ **48 de 48** |
 | todo ejercicio de examen, enlazado desde una ruta | ✅ **32 de 32** |
-| todo ejercicio de tema, enlazado desde una ruta | ✅ **35 de 35** |
+| todo ejercicio de tema, enlazado desde una ruta | ⚠️ **77 de 179** desde un escalón; los 102 restantes son boletín y se llegan desde la página de su tema. Con el boletín entero dentro (30 de agosto), enlazarlos todos haría de cada escalón una lista, que es lo que §14 prohíbe |
 | `npm run suelo` en verde | ✅ las dos líneas, cero fallos |
 
 > **El reparto por competencia es la única fila que Álgebra no puede cumplir, y
@@ -605,18 +607,32 @@ como bloques de rendimiento, que es exactamente la distinción que §14 hace.
 
 ### Los siete temas escritos: 7 de 7
 
-Contado sobre los ficheros, el 27 de agosto de 2026:
+Contado sobre los ficheros, el 30 de agosto de 2026, con `npm run mide
+algebra` —la definición de «palabra» de `scripts/mide.mjs`, que es la única
+que vale (§15); la tabla anterior decía 13.343 con el conteo crudo del MDX—:
 
 | tema | palabras | figuras | ejercicios | de ellos propios | pasos |
 |---|---|---|---|---|---|
-| 1 · espacios vectoriales | **2.938** | 2 | 6 | 3 | 22 |
-| 2 · aplicaciones lineales | **2.255** | 2 | 6 | 3 | 23 |
-| 3 · matrices | **1.750** | 1 | 4 | 2 | 16 |
-| 4 · determinantes | **1.676** | 1 | 5 | 3 | 20 |
-| 5 · sistemas lineales | **1.497** | 1 | 4 | 2 | 18 |
-| 6 · espacios euclídeos | **1.604** | 1 | 5 | 3 | 22 |
-| 7 · diagonalización | **1.623** | 1 | 5 | 3 | 21 |
-| **total** | **13.343** | **9** | **35** | **19** | **142** |
+| 1 · espacios vectoriales | **2.145** | 2 | 36 | 3 | 112 |
+| 2 · aplicaciones lineales | **1.344** | 2 | 26 | 3 | 83 |
+| 3 · matrices | **1.205** | 1 | 22 | 2 | 70 |
+| 4 · determinantes | **1.231** | 1 | 24 | 3 | 79 |
+| 5 · sistemas lineales | **1.000** | 1 | 24 | 2 | 78 |
+| 6 · espacios euclídeos | **1.142** | 1 | 12 | 3 | 43 |
+| 7 · diagonalización | **1.111** | 1 | 35 | 3 | 111 |
+| **total** | **9.178** | **9** | **179** | **19** | **576** |
+
+**El boletín oficial está transcrito entero en seis de los siete temas**
+(30 de agosto de 2026): los 33 de espacios vectoriales, los 23 de
+aplicaciones lineales, los 20 de matrices, los 21 de determinantes (el 4.15 va
+dos veces en el original), los 22 de sistemas y los 25 de diagonalización (32
+ejercicios, porque el 7.6 y el 7.7 traen varias matrices cada uno), cada uno
+con su enunciado verbatim, sus
+pasos guiados y las cuentas comprobadas numéricamente antes de escribir un
+solo mensaje de diagnóstico. Queda el de euclídeos, que sigue con 9 de sus
+ejercicios. Dos enunciados traen erratas casi seguras del original (el 28 y el
+31 de espacios vectoriales) y se resuelven tal como están impresos, diciendo
+qué cambiaría con el signo probable.
 
 **El reparto de longitudes no es casual y conviene que quede dicho:** los temas
 1 y 2 son los largos porque ocupan un hueco del examen **cada uno de los ocho
@@ -666,7 +682,10 @@ tienen ruta». Ya no hay ninguna suelta.
 Los ejercicios de cada tema son **ejemplos de entrada nuestros** —que existen
 porque el boletín y el examen empiezan los dos por encima del nivel de quien
 acaba de leer la teoría— y **ejercicios del boletín oficial**, reproducidos
-verbatim.
+verbatim. Hasta el 29 de agosto había dos o tres del boletín por tema; desde el
+30, el boletín entero en seis temas de siete, con el método que quedó escrito
+en `tasks/todo.md`: renderizar el PDF a imagen (el volcado de texto se come
+las matrices), comprobar cada cuenta con un guion, y solo entonces escribir.
 
 **Los temas 3 y 4 son más cortos a propósito**, y no por falta de material:
 ninguno de los dos ocupa un hueco del examen por sí mismo. El 3 es el suelo
