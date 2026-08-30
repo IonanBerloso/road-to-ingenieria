@@ -45,6 +45,7 @@ if (!vivo) {
 const PAGINAS = process.argv.slice(2).length ? process.argv.slice(2) : [
   '/calculo/t01-complejos/',
   '/calculo/t05-integracion/',
+  '/algebra/t07-diagonalizacion/',
   '/calculo/preparar/ord/',
   '/calculo/examenes/2019-2020-ord/',
   '/',
