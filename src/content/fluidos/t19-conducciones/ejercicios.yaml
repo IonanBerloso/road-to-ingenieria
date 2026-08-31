@@ -1,0 +1,525 @@
+ejercicios:
+  # ── NUESTRO (§08). Los problemas de la colección meten las pérdidas menores
+  #    dentro de instalaciones grandes, donde el método se pierde entre veinte
+  #    cuentas. Este las aísla, y el resultado —que en un tramo corto son casi
+  #    un tercio del total— justifica por qué no se llaman «despreciables».
+  - id: ejflu19-cuanto-pesan-de-verdad-las-perdidas-menores
+    titulo: Los dos métodos, y cuánto pesan de verdad las pérdidas menores
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Un tramo de tubería de acero de $150\ \text{mm}$ de diámetro y
+      $45\ \text{m}$ de longitud lleva agua a $2\ \text{m/s}$. Su coeficiente
+      de frotamiento es $f = 0{,}022$.
+
+      La instalación tiene además **cuatro codos de 90°** con factor de paso
+      $K = 0{,}3$ cada uno, y **una válvula** cuya longitud equivalente es
+      $L_e = 12\ \text{m}$.
+
+      a) Calcular la pérdida del tramo recto.
+
+      b) Calcular la pérdida total.
+
+      c) Determinar qué porcentaje del total son las pérdidas menores.
+    pide: Las dos pérdidas y el peso de las menores sobre el total.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Se pueden despreciar aquí las pérdidas menores?
+        opciones:
+          - texto: >-
+              No: la regla práctica pide unos mil diámetros entre piezas, que
+              aquí serían 150 m, y toda la conducción mide 45
+            correcta: true
+            mensaje: |
+              Exacto. La regla de los mil diámetros es lo que separa una traída
+              larga de campo —donde las menores no se notan— de un circuito de
+              sala de máquinas, donde son la mitad del problema.
+          - texto: >-
+              Sí, porque se llaman «menores» y su nombre lo indica
+            mensaje: |
+              El nombre engaña y es un clásico. En instalaciones industriales,
+              urbanas y domésticas las pérdidas puntuales pueden superar a las
+              de los tramos rectos. Aquí van a salir casi un tercio del total.
+          - texto: >-
+              Sí, porque el factor de paso de los codos, 0,3, es muy pequeño
+              comparado con el 0,022 del frotamiento
+            mensaje: |
+              No son comparables: el $K$ multiplica directamente a
+              $v^{2}/2g$, mientras que el $f$ va multiplicado además por
+              $L/D$, que aquí vale 300. El que hay que comparar con $K$ es el
+              producto $f\,L/D$, no el $f$ solo.
+
+      - tipo: calcular
+        titulo: La pérdida del tramo recto
+        pregunta: |
+          ¿Cuánto pierde el tramo recto?
+        respuesta:
+          tipo: magnitud
+          valor: '1.347 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '2.694 m'
+            mensaje: |
+              Te has dejado el 2 del denominador. La altura cinética es
+              $v^{2}/2g$, no $v^{2}/g$: con $v = 2$ m/s vale $0{,}204$ m, no
+              $0{,}408$.
+          - valor: '0.00135 m'
+            mensaje: |
+              Has hecho $L/D = 45/150$, mezclando metros con milímetros. El
+              cociente es adimensional: $45/0{,}15 = 300$.
+        pista: |
+          $h_f = f\,\dfrac{L}{D}\,\dfrac{v^{2}}{2g}$, con todo en metros.
+        desarrollo: |
+          $$
+          \frac{v^{2}}{2g} = \frac{2^{2}}{2\cdot 9{,}8} = 0{,}204\ \text{m}
+          $$
+          $$
+          h_f = 0{,}022\cdot\frac{45}{0{,}15}\cdot 0{,}204
+          = 0{,}022\cdot 300\cdot 0{,}204 = 1{,}347\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La pérdida total
+        pregunta: |
+          Sumando los codos y la válvula, ¿cuánto pierde la instalación?
+        respuesta:
+          tipo: magnitud
+          valor: '1.951 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '4.041 m'
+            mensaje: |
+              Has usado los 12 m de la válvula como si fueran un factor de
+              paso. No lo son: $L_e$ va dentro de Darcy-Weisbach, dividida por
+              el diámetro y multiplicada por $f$. Su $K$ equivalente es
+              $f\,L_e/D = 0{,}022\cdot 80 = 1{,}76$, no 12.
+          - valor: '1.592 m'
+            mensaje: |
+              Te falta la válvula, que es la pieza que más pierde de las tres:
+              sus 12 m equivalentes valen más que los cuatro codos juntos.
+        pista: |
+          Los codos con $K\,v^{2}/2g$; la válvula, sumando su $L_e$ a la
+          longitud —o con su $K$ equivalente, pero no las dos cosas.
+        desarrollo: |
+          $$
+          h_{f,\text{codos}} = 4\cdot 0{,}3\cdot 0{,}204 = 0{,}245\ \text{m}
+          $$
+          $$
+          h_{f,\text{válvula}} = 0{,}022\cdot\frac{12}{0{,}15}\cdot 0{,}204
+          = 0{,}359\ \text{m}
+          $$
+          $$
+          h_{f,\text{total}} = 1{,}347 + 0{,}245 + 0{,}359 = 1{,}951\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: El peso de las menores
+        pregunta: |
+          ¿Qué porcentaje del total son las pérdidas menores? (solo el número)
+        respuesta:
+          tipo: numero
+          valor: '31'
+          tolerancia: 1
+          formato: un porcentaje, solo el número
+        distractores:
+          - valor: '44.9'
+            mensaje: |
+              Has dividido entre la pérdida del **tramo recto** en vez de entre
+              el total. El porcentaje que se pide es sobre lo que pierde la
+              instalación entera: $0{,}604/1{,}951$.
+          - valor: '12.6'
+            mensaje: |
+              Solo has contado los codos. La válvula también es una pérdida
+              menor —«menor» significa puntual, no pequeña— y es la mayor de
+              las tres.
+        pista: |
+          Codos más válvula, dividido entre el total, por cien.
+        desarrollo: |
+          $$
+          \frac{0{,}245 + 0{,}359}{1{,}951} = \frac{0{,}604}{1{,}951}
+          = 0{,}310 = 31\ \%
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La regla de los mil diámetros pide 150 m de separación entre
+              piezas, y toda la conducción mide 45: las menores no se pueden
+              despreciar.
+          - texto: >-
+              Con los codos por factor de paso y la válvula por longitud
+              equivalente, las puntuales suman 0,604 m frente a 1,347 del
+              tramo recto.
+          - texto: >-
+              Eso es el 31 % del total, así que despreciarlas habría
+              infravalorado la pérdida en casi un tercio.
+          - texto: >-
+              Como la válvula está dada por su longitud equivalente, hay que
+              sumarle además su factor de paso para no dejarse ninguna de las
+              dos contribuciones.
+            trampa: true
+            mensaje: |
+              Los dos métodos describen **la misma** pérdida por caminos
+              distintos: sumarlos la cuenta dos veces. Se elige uno y lo que
+              venga en el otro se traduce con $K = f\,L_e/D$.
+
+    resolucion: |
+      **Si se pueden despreciar o no.** La regla práctica del tema pide del
+      orden de mil diámetros entre pieza y pieza, que aquí serían 150 m. La
+      conducción entera mide 45 y lleva cinco singularidades. No hay ni que
+      calcular para saber que no.
+
+      **El tramo recto.** Con $v^{2}/2g = 0{,}204$ m:
+
+      $$
+      h_f = 0{,}022\cdot 300\cdot 0{,}204 = 1{,}347\ \text{m}
+      $$
+
+      **Las menores**, cada una por su método:
+
+      $$
+      \text{codos: } 4\cdot 0{,}3\cdot 0{,}204 = 0{,}245\ \text{m}
+      \qquad
+      \text{válvula: } 0{,}022\cdot 80\cdot 0{,}204 = 0{,}359\ \text{m}
+      $$
+
+      **El total** es $1{,}951$ m, y las puntuales son el **31 %**.
+
+      **Lo que hay que llevarse.** Casi un tercio, en una instalación
+      pequeñita con cinco piezas. Y fíjate en cuál pesa más: la válvula sola
+      supera a los cuatro codos juntos. Su $K$ equivalente es
+      $f\,L_e/D = 1{,}76$, casi seis veces el de un codo.
+
+      **Y el error de contabilidad que hay que evitar**: los dos métodos son
+      dos formas de decir lo mismo, no dos pérdidas distintas. Si un enunciado
+      mezcla piezas dadas con $L_e$ y piezas dadas con $K$, se traduce todo a
+      un método con $K = f\,L_e/D$ y se suma una vez.
+
+  # ── COLECCIÓN 6.3. El ejercicio del tema: el caudal sale limpio, y solo al
+  #    mirar el punto alto se descubre que la instalación no puede funcionar.
+  #    Trae además una iteración de las de verdad y el dimensionado de la
+  #    válvula que arregla el problema.
+  - id: ejflu19-el-sifon-de-keroseno-que-cavita
+    titulo: Un sifón de keroseno, y la presión imposible del punto alto
+    fuente: >-
+      Ejercicio 6.3 · Colección de Problemas, capítulo 6 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se quiere hacer circular keroseno a $20\ °\text{C}$ ($s = 0{,}77$) desde
+      la cota $z_A = 240\ \text{m}$ a un depósito situado en la cota
+      $z_B = 232\ \text{m}$, mediante una conducción que pasa por un punto C,
+      de cota $z_C = 247\ \text{m}$. Se pide:
+
+      a) Caudal circulante suponiendo funcionamiento correcto.
+
+      b) Comprobar anomalías en el funcionamiento del sistema.
+
+      Para resolver estas anomalías se instala una válvula de mariposa que
+      origina una pérdida singular localizada al final del tramo 2, cerca de B.
+      Calcular en las condiciones límite de funcionamiento, es decir, en el
+      mismo comienzo de la cavitación:
+
+      c) El nuevo caudal circulante.
+
+      d) Factor de paso necesario de la válvula de mariposa.
+
+      Datos: diámetro de la conducción constante, $500\ \text{mm}$; tubería de
+      fundición ($\varepsilon = 0{,}026\ \text{cm}$); presión atmosférica
+      $10\ \text{mca}$; presión de vapor del keroseno (absoluta)
+      $0{,}0183\ \text{kg/cm}^{2}$; longitud del tramo (1) A-C,
+      $130\ \text{m}$; longitud del tramo (2) C-B, $35\ \text{m}$;
+      $\nu = 2{,}2\cdot 10^{-6}\ \text{m}^{2}/\text{s}$.
+    pide: El caudal, la presión en C, el caudal límite y el factor de paso de la válvula.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Bernoulli entre A y B da el caudal sin problema. ¿Por qué el
+          enunciado pide además «comprobar anomalías»?
+        opciones:
+          - texto: >-
+              Porque la conducción pasa por una cota más alta que los dos
+              depósitos, y ahí la línea piezométrica puede quedar por debajo
+              del tubo
+            correcta: true
+            mensaje: |
+              Eso es. Bernoulli entre los extremos no sabe nada de lo que pasa
+              en medio. Que el caudal salga no garantiza que la instalación
+              funcione: hay que ir al punto alto y mirar la presión.
+          - texto: >-
+              Porque hay que comprobar que el régimen sea turbulento antes de
+              usar el ábaco
+            mensaje: |
+              Eso se comprueba siempre, y aquí sale turbulento sin
+              dificultad. La anomalía que busca el enunciado es otra, y está
+              en la geometría: el punto C está por encima de los dos depósitos.
+          - texto: >-
+              Porque las pérdidas menores no se han tenido en cuenta
+            mensaje: |
+              El enunciado no da ninguna pieza especial en los apartados a) y
+              b) —la válvula aparece después—, así que no hay menores que
+              contar. Lo que hay que mirar es la cota de C.
+
+      - tipo: calcular
+        titulo: El caudal, suponiendo que todo va bien
+        pregunta: |
+          ¿Qué caudal circularía?
+        respuesta:
+          tipo: magnitud
+          valor: '1.03 m3/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '0.257 m3/s'
+            mensaje: |
+              Has usado el área con el radio en vez del diámetro, o has puesto
+              $\pi D^{2}$ sin dividir entre 4. Con $D = 0{,}5$ m el área es
+              $0{,}196\ \text{m}^{2}$.
+          - valor: '0.688 m3/s'
+            mensaje: |
+              Te has quedado en $\sqrt f\cdot v = 0{,}69$ y lo has tomado por
+              la velocidad. Falta dividir entre $\sqrt f = 0{,}131$ para
+              obtener $v = 5{,}25$ m/s.
+        pista: |
+          $h_f = 8$ m sale de las cotas. Como es constante, calcula
+          $Re\sqrt f$ y entra al ábaco por arriba, igual que en el tema 18.
+        desarrollo: |
+          $$
+          h_f = z_A - z_B = 8\ \text{mc keroseno}
+          \qquad
+          \sqrt f = \frac{1}{v}\sqrt{\frac{8\cdot 0{,}5\cdot 19{,}6}{165}}
+          = \frac{0{,}689}{v}
+          $$
+          $$
+          Re\sqrt f = 0{,}689\cdot\frac{0{,}5}{2{,}2\cdot 10^{-6}}
+          = 1{,}57\cdot 10^{5}
+          \qquad
+          \frac{\varepsilon}{D} = \frac{0{,}026}{50} = 0{,}00052
+          $$
+
+          El ábaco da una tubería semilisa con $f \approx 0{,}0172$
+          (Colebrook-White: $0{,}01725$), y de ahí
+
+          $$
+          v = \frac{0{,}689}{0{,}1314} = 5{,}25\ \text{m/s}
+          \qquad
+          Q = 5{,}25\cdot 0{,}196 = 1{,}03\ \text{m}^{3}/\text{s}
+          $$
+
+      - tipo: calcular
+        titulo: La presión en el punto alto
+        pregunta: |
+          ¿Qué presión manométrica sale en C, expresada en metros de columna de
+          agua?
+        respuesta:
+          tipo: magnitud
+          valor: '-11.33 mca'
+          tolerancia: 0.02
+          formato: una presión, con su unidad (y con su signo)
+        distractores:
+          - valor: '-14.71 mca'
+            mensaje: |
+              Ese es el valor en metros de columna de **keroseno**, que es lo
+              que sale directamente de Bernoulli. Para pasarlo a columna de
+              agua hay que multiplicar por la densidad relativa:
+              $-14{,}71\cdot 0{,}77 = -11{,}33$.
+          - valor: '-7 mca'
+            mensaje: |
+              Esa es solo la diferencia de cotas, $240 - 247$. Faltan los otros
+              dos términos, que además restan: la altura cinética y la pérdida
+              de carga del tramo A-C. Entre los dos son otros $7{,}7$ metros.
+        pista: |
+          Bernoulli de A a C: $z_A - h_{f,AC} = z_C + v^{2}/2g + p_C/\gamma$.
+          Y después, de columna de keroseno a columna de agua.
+        desarrollo: |
+          $$
+          \frac{p_C}{\gamma} = (z_A - z_C) - \frac{v^{2}}{2g} - h_{f,AC}
+          $$
+          $$
+          \frac{v^{2}}{2g} = \frac{5{,}25^{2}}{19{,}6} = 1{,}40\ \text{m}
+          \qquad
+          h_{f,AC} = 0{,}01725\cdot\frac{130}{0{,}5}\cdot 1{,}40 = 6{,}30\ \text{m}
+          $$
+          $$
+          \frac{p_C}{\gamma} = -7 - 1{,}40 - 6{,}30 = -14{,}71\ \text{mc keroseno}
+          = -11{,}33\ \text{mca}
+          $$
+
+      - tipo: calcular
+        titulo: El caudal en el límite de la cavitación
+        pregunta: |
+          Con la válvula instalada, ¿qué caudal circula cuando en C se alcanza
+          justo la presión de vapor?
+        respuesta:
+          tipo: magnitud
+          valor: '889 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '1030 l/s'
+            mensaje: |
+              Ese es el caudal del apartado a), el que no puede circular. La
+              válvula está precisamente para reducirlo: al frenar el flujo baja
+              la altura cinética y baja la pérdida en A-C, y con eso la presión
+              en C sube hasta ser posible.
+          - valor: '765 l/s'
+            mensaje: |
+              Casi seguro te has quedado en la primera iteración, con
+              $f = 0{,}025$ supuesto. Ese valor da $v = 3{,}88$ m/s; hay que
+              recalcular $f$ con el Reynolds resultante y repetir hasta que
+              coincidan.
+        pista: |
+          Bernoulli de A a C con $p_C/\gamma$ igual a la presión de vapor
+          manométrica. Queda una ecuación con $v$ y $f$: hay que iterar desde
+          $f = 0{,}03$ o similar.
+        desarrollo: |
+          La presión de vapor absoluta, $0{,}0183\ \text{kg/cm}^{2}$, son
+          $0{,}183$ mca; en manométrica, $0{,}183 - 10 = -9{,}82$ mca, que en
+          columna de keroseno son $-12{,}75$ m.
+
+          $$
+          240 - h_{f,AC} = 247 - 12{,}75 + \frac{v^{2}}{2g}
+          \;\Longrightarrow\;
+          5{,}75 = \frac{v^{2}}{2g}\left(260f + 1\right)
+          $$
+
+          Dos incógnitas y ninguna entrada al ábaco: se itera con
+          $v = 10{,}62/\sqrt{260f+1}$.
+
+          | $f$ supuesto | $v$ (m/s) | $Re$ | $f$ obtenido |
+          |---|---|---|---|
+          | 0,025 | 3,88 | $8{,}8\cdot 10^{5}$ | 0,0174 |
+          | 0,0174 | 4,52 | $1{,}03\cdot 10^{6}$ | 0,0173 |
+          | 0,0173 | 4,53 | $1{,}03\cdot 10^{6}$ | 0,0173 |
+
+          $$
+          Q = 4{,}53\cdot 0{,}196 = 0{,}889\ \text{m}^{3}/\text{s} = 889\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: El factor de paso de la válvula
+        pregunta: |
+          ¿Qué factor de paso $K$ debe tener la válvula de mariposa?
+        respuesta:
+          tipo: numero
+          valor: '1.94'
+          tolerancia: 0.05
+          formato: un número sin unidades
+        distractores:
+          - valor: '3.87'
+            mensaje: |
+              Te has dejado el 2 de $2g$ al despejar. $h_f = K\,v^{2}/2g$, así
+              que $K = 2g\,h_f/v^{2}$, con $2g = 19{,}6$.
+          - valor: '7.63'
+            mensaje: |
+              Has usado los 8 m enteros como pérdida de la válvula. De esos 8,
+              casi 6 se los lleva el rozamiento del tubo: a la válvula le
+              tocan solo $8 - 5{,}97 = 2{,}03$ m.
+        pista: |
+          De los 8 m disponibles, resta lo que pierde la tubería con el caudal
+          nuevo. Lo que queda es lo que tiene que disipar la válvula.
+        desarrollo: |
+          $$
+          h_{f,AB} = 0{,}0173\cdot\frac{165}{0{,}5}\cdot\frac{4{,}53^{2}}{19{,}6}
+          = 5{,}97\ \text{m}
+          $$
+          $$
+          h_{f,\text{válvula}} = 8 - 5{,}97 = 2{,}03\ \text{m}
+          $$
+          $$
+          K = \frac{2g\,h_f}{v^{2}} = \frac{19{,}6\cdot 2{,}03}{4{,}53^{2}}
+          = 1{,}94
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Bernoulli entre A y B da 8 m de pérdida disponible y un caudal de
+              1,03 m³/s, pero no dice nada de lo que ocurre en el punto alto.
+          - texto: >-
+              En C la presión saldría de −11,33 mca, por debajo del cero
+              absoluto: imposible, así que ese caudal no existe y la
+              instalación cavita.
+          - texto: >-
+              Poniendo una válvula cerca de B se frena el flujo, y con menos
+              velocidad la presión en C sube hasta ser posible: el límite es
+              justo la presión de vapor.
+          - texto: >-
+              La válvula conviene ponerla en el tramo A-C, antes del punto
+              alto, para que la pérdida que introduce alivie la depresión de C.
+            trampa: true
+            mensaje: |
+              Al revés, y es el detalle bonito del ejercicio. Una pérdida
+              **antes** de C baja aún más la presión allí: se resta en el mismo
+              Bernoulli. La válvula tiene que ir **aguas abajo** del punto
+              crítico, y por eso el enunciado la coloca al final del tramo 2.
+
+    resolucion: |
+      **a) El caudal, si todo fuera bien.** Los dos depósitos están abiertos, y
+      Bernoulli entre A y B deja $h_f = 240 - 232 = 8$ mc keroseno. Como es
+      constante, se usa la entrada de arriba del ábaco:
+
+      $$
+      Re\sqrt f = 1{,}57\cdot 10^{5}
+      \qquad
+      \frac{\varepsilon}{D} = 0{,}00052
+      \qquad\Longrightarrow\qquad
+      f = 0{,}01725
+      $$
+      $$
+      v = 5{,}25\ \text{m/s}
+      \qquad
+      Q = 1{,}03\ \text{m}^{3}/\text{s}
+      $$
+
+      **b) La anomalía.** Bernoulli de A a C:
+
+      $$
+      \frac{p_C}{\gamma} = -7 - 1{,}40 - 6{,}30 = -14{,}71\ \text{mc keroseno}
+      = -11{,}33\ \text{mca}
+      $$
+
+      **Once metros de columna de agua por debajo de la atmosférica es más de
+      lo que hay.** La presión absoluta saldría negativa, que no existe. Mucho
+      antes de llegar ahí el keroseno alcanza su presión de vapor, hierve, se
+      rompe la vena líquida y el sifón deja de trasegar. El caudal del apartado
+      a) es un número correcto de una instalación que no funciona.
+
+      **c) El caudal límite.** Se impone que en C se alcance exactamente la
+      presión de vapor. En manométrica son $-12{,}75$ mc keroseno, y Bernoulli
+      de A a C queda
+
+      $$
+      5{,}75 = \frac{v^{2}}{2g}\,(260f + 1)
+      $$
+
+      con dos incógnitas y ninguna entrada al ábaco: hay que iterar. Partiendo
+      de $f = 0{,}025$, en dos vueltas converge a $f = 0{,}0173$ y
+      $v = 4{,}53$ m/s, es decir $Q = 889$ l/s.
+
+      **d) La válvula.** Con ese caudal la tubería pierde 5,97 m de los 8
+      disponibles, así que la válvula tiene que disipar los 2,03 restantes:
+
+      $$
+      K = \frac{2g\,h_f}{v^{2}} = 1{,}94
+      $$
+
+      **Dónde va la válvula, que es la pregunta de fondo.** Aguas **abajo** del
+      punto alto. Una pérdida colocada antes de C aparece restando en el
+      Bernoulli de A a C y empeoraría la depresión; puesta después, no entra en
+      esa ecuación y sin embargo frena el caudal de toda la conducción. Es la
+      misma idea que la válvula de regulación a la salida de una bomba.
+
+      **Una nota sobre los números del boletín.** La solución oficial redondea
+      $f$ a 0,0172 y publica 891 l/s y $K = 1{,}93$; iterando hasta converger
+      salen 889 l/s y 1,94. La diferencia es del 0,3 %, muy por debajo de lo
+      que se puede leer en el ábaco a ojo.

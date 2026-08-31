@@ -1,0 +1,324 @@
+---
+asignatura: fluidos
+tema: 18
+titulo: Pérdidas de carga en conductos cerrados
+descripcion: Darcy-Weisbach, las cinco fórmulas del coeficiente de frotamiento y cómo se usa el ábaco de Moody en los tres tipos de problema.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 18 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Este es el tema que arregla Bernoulli. Bernoulli decía $B_1 = B_2$; con
+viscosidad, lo que hay es
+
+$$
+B_1 - h_f = B_2
+$$
+
+y todo el tema consiste en **calcular ese $h_f$**. Es de peso alto, aparece en
+casi todos los exámenes dentro de un problema mayor, y el 90 % del trabajo se
+reduce a una fórmula y a saber qué expresión usar para un coeficiente.
+
+## La ecuación de Darcy-Weisbach
+
+Sale de un balance de fuerzas sobre un trozo de conducto de longitud $L$,
+sección $A$ y perímetro mojado $P$. Las cuatro fuerzas que actúan:
+
+$$
+p_1A - p_2A + \gamma A L\sin\alpha = \tau\,L\,P
+$$
+
+Con $\sin\alpha = \Delta z/L$ y dividiendo por el volumen $AL$:
+
+$$
+\frac{\Delta p}{L} + \gamma\,\frac{\Delta z}{L} = \tau\,\frac{P}{A}
+$$
+
+Ahora entran dos cosas. La primera es de Prandtl: en flujo turbulento la
+tensión de cortadura es proporcional a la densidad y al cuadrado de la
+velocidad, $\tau = \lambda\rho v^{2}/2$. La segunda es la definición de **radio
+hidráulico**, $R_H = A/P$. Y la tercera, Bernoulli con pérdidas entre las dos
+secciones, que con régimen uniforme —misma velocidad en las dos— deja
+$\Delta p + \gamma\Delta z = \gamma h_f$.
+
+Juntándolo todo:
+
+$$
+h_f = \lambda\,\frac{L}{R_H}\,\frac{v^{2}}{2g}
+$$
+
+que es Darcy-Weisbach para **sección cualquiera**. En un tubo circular el radio
+hidráulico vale
+
+$$
+R_H = \frac{A}{P} = \frac{\pi D^{2}/4}{\pi D} = \frac{D}{4}
+$$
+
+y llamando $f = 4\lambda$ al **coeficiente de frotamiento** queda la forma que
+se usa siempre:
+
+$$
+\boxed{\,h_f = f\,\frac{L}{D}\,\frac{v^{2}}{2g}\,}
+$$
+
+<ErrorTipico titulo="El radio hidráulico de un tubo lleno es D/4, no D/2">
+
+Es el despiste más caro del tema porque duplica el resultado y el número sigue
+pareciendo razonable.
+
+$R_H$ **no es un radio**: es área partido por perímetro mojado, y en un tubo
+circular lleno eso da $D/4$, la mitad del radio geométrico. Que se llame
+«radio» es un accidente histórico.
+
+Dos consecuencias prácticas:
+
+- En un **conducto no circular** se usa $h_f = \dfrac{f}{4R_H}\dfrac{L\,v^{2}}{2g}$,
+  y el $f$ se obtiene igual que siempre entrando en Moody con
+  $Re = v\,(4R_H)/\nu$ y con $\varepsilon/(4R_H)$. Es decir: se sustituye $D$
+  por $4R_H$ en todas partes, no por $R_H$.
+- En un **canal**, que no va lleno, el perímetro mojado es solo la parte que
+  toca agua. Eso es el tema 21.
+
+</ErrorTipico>
+
+El coeficiente $f$ es adimensional y, como ya salió del análisis dimensional en
+el tema 16, depende de dos cosas y solo dos:
+
+$$
+f = f\!\left(Re,\ \frac{\varepsilon}{D}\right)
+$$
+
+donde $\varepsilon$ es el **espesor medio de la rugosidad** del material,
+tabulado en el cuadro nº 20 de «Cuadros y ábacos», y $\varepsilon/D$ es la
+**rugosidad relativa**.
+
+## Liso, semirrugoso y rugoso: no es el tubo, es el flujo
+
+Aquí se cobra la idea del tema 17. Pegada a la pared hay siempre una **subcapa
+laminar**, cuyo espesor es inversamente proporcional al Reynolds. Comparándola
+con la altura de las rugosidades:
+
+| si | el tubo se comporta como | y entonces |
+|---|---|---|
+| $\delta_{sl} \gg \varepsilon$ | **liso** | $f = f(Re)$ |
+| $\delta_{sl} \approx \varepsilon$ | **semirrugoso** | $f = f(Re,\ \varepsilon/D)$ |
+| $\delta_{sl} \ll \varepsilon$ | **rugoso** | $f = f(\varepsilon/D)$ |
+
+> **Un tubo no es liso ni rugoso: se comporta como uno u otro según a qué
+> velocidad vaya el fluido.** La rugosidad relativa es fija; lo que cambia es
+> la subcapa que la tapa.
+
+Y las fronteras entre los tres comportamientos son valores del Reynolds,
+obtenidos experimentalmente:
+
+$$
+\text{lisa} \to \text{semirrugosa:}\quad Re' = \frac{23}{\varepsilon/D}
+\qquad\qquad
+\text{semirrugosa} \to \text{rugosa:}\quad Re'' = \frac{560}{\varepsilon/D}
+$$
+
+Con una tubería de rugosidad relativa $0{,}001$, por ejemplo, eso son
+$Re' = 17.700$ y $Re'' = 560.000$: entre esos dos valores está en la franja
+semirrugosa, que es donde cae la mayoría de los problemas reales.
+
+En los ábacos se usa además una tercera versión de la segunda frontera,
+$Re'' = 200/\big((\varepsilon/D)\sqrt{f}\,\big)$, que es la que aparece
+dibujada como línea de trazos.
+
+## Las cinco fórmulas, y cuándo se usa cada una
+
+| régimen | comportamiento | fórmula | quién | $h_f$ va con |
+|---|---|---|---|---|
+| laminar, $Re<2000$ | (da igual) | $f = \dfrac{64}{Re}$ | Hagen-Poiseuille | $v$ |
+| $2000<Re<4000$ | zona crítica | **no se trabaja aquí** | — | — |
+| turbulento, liso, $Re \le 10^{5}$ | $Re<Re'$ | $f = \dfrac{0{,}316}{Re^{0{,}25}}$ | Blasius | $v^{1{,}75}$ |
+| turbulento, liso, $Re > 10^{5}$ | $Re<Re'$ | $\dfrac{1}{\sqrt f} = -2\log\dfrac{2{,}51}{Re\sqrt f}$ | Karman-Prandtl | — |
+| turbulento, semirrugoso | $Re'<Re<Re''$ | $\dfrac{1}{\sqrt f} = -2\log\left(\dfrac{2{,}51}{Re\sqrt f} + \dfrac{\varepsilon/D}{3{,}71}\right)$ | Colebrook-White | — |
+| turbulento, rugoso | $Re>Re''$ | $f = \dfrac{0{,}25}{\left[\log\dfrac{3{,}71}{\varepsilon/D}\right]^{2}}$ | Karman-Prandtl | $v^{2}$ |
+
+Tres lecturas que ahorran mucho tiempo:
+
+- **En laminar, la rugosidad no interviene.** Ni aparece. Un tubo de fundición
+  oxidada y uno de vidrio pierden lo mismo si el Reynolds es el mismo.
+- **Las dos de en medio son implícitas**: $f$ aparece a los dos lados y hay que
+  iterar, o leer el ábaco. Las otras dos son directas.
+- **En rugoso, $f$ ya no depende del Reynolds.** Por eso las curvas del ábaco
+  se aplanan a la derecha, y por eso ahí $h_f$ va exactamente con $v^{2}$.
+
+Existen además expresiones explícitas aproximadas, de **Swamee y Jain**
+(P.S.A.K.), que sustituyen a las implícitas con muy buena precisión:
+
+$$
+f = \frac{0{,}25}{\left[\log\left(\dfrac{\varepsilon/D}{3{,}71} + \dfrac{5{,}74}{Re^{0{,}9}}\right)\right]^{2}}
+$$
+
+y la misma sin el primer sumando para tubería lisa. Son útiles cuando no se
+tiene el ábaco delante, aunque en el examen de esta asignatura el ábaco se
+reparte.
+
+## El ábaco de Moody
+
+Moody, 1944. No aporta física nueva: **dibuja en papel logarítmico las cinco
+fórmulas de arriba** para que no haya que iterar. En ordenadas, $f$; en
+abscisas, $Re$; y la rugosidad relativa como familia de curvas.
+
+<figure>
+<svg viewBox="0 0 440 262" role="img" width="440" height="262"
+     aria-labelledby="flu18-t flu18-d">
+  <title id="flu18-t">Esqueleto del ábaco de Moody: qué fórmula gobierna en cada zona</title>
+  <desc id="flu18-d">Ejes logarítmicos con el número de Reynolds en horizontal, de mil a cien millones, y el coeficiente de frotamiento en vertical, de 0,008 a 0,1. A la izquierda, una recta descendente corta: el régimen laminar con f igual a 64 partido por Reynolds. Después una banda vertical estrecha marcada como zona crítica, entre 2000 y 4000, donde no se trabaja. A la derecha, la curva de tubería lisa que sigue bajando indefinidamente, y dos curvas de rugosidad relativa que se separan de ella y acaban horizontales: cuando se aplanan, el coeficiente ya no depende del Reynolds.</desc>
+
+  <line x1="55" y1="26" x2="55" y2="204" stroke="var(--ink-suave)" stroke-width="1"/>
+  <line x1="55" y1="204" x2="420" y2="204" stroke="var(--ink-suave)" stroke-width="1"/>
+
+  <text x="50" y="34" font-size="9" text-anchor="end" fill="var(--ink-suave)">0,1</text>
+  <text x="50" y="115" font-size="9" text-anchor="end" fill="var(--ink-suave)">0,03</text>
+  <text x="50" y="189" font-size="9" text-anchor="end" fill="var(--ink-suave)">0,01</text>
+  <text x="16" y="16" font-size="9.5" fill="var(--ink)">f</text>
+  <text x="55" y="218" font-size="9" text-anchor="middle" fill="var(--ink-suave)">10³</text>
+  <text x="199" y="218" font-size="9" text-anchor="middle" fill="var(--ink-suave)">10⁵</text>
+  <text x="343" y="218" font-size="9" text-anchor="middle" fill="var(--ink-suave)">10⁷</text>
+  <text x="238" y="236" font-size="9.5" text-anchor="middle" fill="var(--ink)">número de Reynolds</text>
+
+  <polyline points="55,60 66,83 77,107" fill="none" stroke="var(--live)" stroke-width="2.4"/>
+  <text x="58" y="52" font-size="9.5" fill="var(--live)">f = 64/Re</text>
+
+  <rect x="77" y="26" width="21" height="178" fill="var(--flag)" fill-opacity=".14"/>
+  <text x="88" y="252" font-size="9" text-anchor="middle" fill="var(--flag)">zona crítica</text>
+  <line x1="88" y1="240" x2="88" y2="208" stroke="var(--flag)" stroke-width="0.8"/>
+
+  <polyline points="98,91 127,109 156,125 185,139 213,152 242,164 271,175 300,185 329,194"
+            fill="none" stroke="var(--ink)" stroke-width="2.2"/>
+  <text x="336" y="197" font-size="9.5" fill="var(--ink)">lisa</text>
+
+  <polyline points="98,90 127,106 156,119 185,128 213,134 242,137 271,139 300,139 329,139 357,140 386,140"
+            fill="none" stroke="var(--alt)" stroke-width="2"/>
+  <text x="392" y="136" font-size="9" fill="var(--alt)">0,001</text>
+
+  <polyline points="98,78 127,87 156,91 185,94 213,95 242,95 271,95 300,95 329,95 357,95 386,95"
+            fill="none" stroke="var(--alt)" stroke-width="2"/>
+  <text x="392" y="91" font-size="9" fill="var(--alt)">ε/D = 0,01</text>
+
+  <text x="150" y="52" font-size="9.5" fill="var(--ink-suave)">se separan de la lisa</text>
+  <text x="150" y="64" font-size="9.5" fill="var(--ink-suave)">antes cuanto más rugosas</text>
+  <text x="256" y="112" font-size="9.5" fill="var(--ink)">al aplanarse, f ya no</text>
+  <text x="256" y="124" font-size="9.5" fill="var(--ink)">depende del Reynolds</text>
+</svg>
+<figcaption>
+
+El ábaco no es un dibujo: son las cinco fórmulas puestas juntas. La recta de la
+izquierda es Hagen-Poiseuille; la franja roja es la zona crítica, donde no se
+diseña; la curva negra es la tubería lisa, que baja sin parar; y las curvas de
+rugosidad se despegan de ella —antes cuanto más rugosas— hasta quedar
+**horizontales**. A partir de ahí el tubo es hidráulicamente rugoso: el
+Reynolds deja de importar y la pérdida va exactamente con el cuadrado de la
+velocidad.
+
+</figcaption>
+</figure>
+
+## Los tres tipos de problema
+
+Todo problema de tuberías es una combinación de estos tres, y **lo primero que
+hay que hacer al leer un enunciado es decidir cuál es**, porque el método
+cambia:
+
+| tipo | datos | incógnita | cómo |
+|---|---|---|---|
+| **I** | $Q$, $L$, $D$, $\varepsilon$, $\nu$ | $h_f$ | directo |
+| **II** | $h_f$, $L$, $D$, $\varepsilon$, $\nu$ | $Q$ | por la entrada de arriba, o iterando |
+| **III** | $h_f$, $L$, $Q$, $\varepsilon$, $\nu$ | $D$ | iterando siempre |
+
+### Tipo I — directo
+
+El más frecuente. Con los datos se calcula $v = Q/A$, después $Re$ y
+$\varepsilon/D$; con esos dos se entra en Moody y sale $f$; y con
+Darcy-Weisbach, $h_f$. Sin iterar.
+
+**Ejemplo** (ejercicio 6.1 de la colección). Glicerina a 30 °C
+($\nu = 1{,}9\cdot10^{-4}$, $s = 1{,}547$), 12 l/s por un tubo de cobre de
+100 m y 100 mm:
+
+$$
+v = \frac{0{,}012}{\pi\,0{,}1^{2}/4} = 1{,}53\ \text{m/s}
+\qquad
+Re = \frac{1{,}53\cdot 0{,}1}{1{,}9\cdot 10^{-4}} = 804
+$$
+
+Laminar, así que ni se mira la rugosidad: $f = 64/804 = 0{,}0796$, y
+
+$$
+h_f = 0{,}0796\cdot\frac{100}{0{,}1}\cdot\frac{1{,}53^{2}}{2\cdot 9{,}8}
+= 9{,}5\ \text{m de columna de glicerina}
+$$
+
+### Tipo II — el truco de la entrada de arriba
+
+Aquí falta la velocidad, así que no se puede calcular ni el Reynolds. Pero hay
+un caso en el que **no hace falta iterar**, y es el que más cae:
+
+**Si $h_f$ es un dato numérico**, el producto $Re\sqrt f$ se puede calcular sin
+conocer $v$, porque la velocidad se cancela:
+
+$$
+\sqrt f = \frac{1}{v}\sqrt{\frac{h_f\,D\,2g}{L}}
+\qquad
+Re = \frac{vD}{\nu}
+\qquad\Longrightarrow\qquad
+Re\sqrt f = \frac{D}{\nu}\sqrt{\frac{h_f\,D\,2g}{L}}
+$$
+
+Y $Re\sqrt f$ es justamente la **escala de arriba del ábaco de Moody**. Se
+entra por ahí, se corta con la curva de $\varepsilon/D$, se lee $f$, y de ahí
+sale $v$.
+
+Si $h_f$ **no** es constante —depende de la propia velocidad, por ejemplo
+porque hay pérdidas menores o un término cinético— entonces sí hay que iterar:
+se supone $f = 0{,}03$ (el centro del eje), se saca $v$ con Darcy-Weisbach, se
+calcula $Re$, se lee un $f$ nuevo y se compara. **Con un 5 % de diferencia se
+da por bueno**, y no suelen hacer falta más de tres vueltas.
+
+### Tipo III — iterar siempre
+
+Sin el diámetro no hay ninguna de las tres entradas al ábaco: ni $Re$, ni
+$\varepsilon/D$, ni $Re\sqrt f$. Se supone $f$, se despeja $D$ de
+Darcy-Weisbach, se calculan $Re$ y $\varepsilon/D$, se lee $f$ y se repite.
+
+<ErrorTipico titulo="Los metros de pérdida de carga son metros de columna del fluido que circula, no de agua">
+
+$h_f$ sale de dividir presión entre **el peso específico del fluido del
+problema**, así que sus unidades son «metros de columna de ese líquido». En el
+ejemplo de arriba son 9,5 metros de columna de glicerina, no de agua.
+
+Importa en dos sitios:
+
+- **Al convertir a presión**: $\Delta p = \gamma\,h_f$, con
+  $\gamma = s\cdot 9800$, no con 9800 a secas.
+- **Al calcular la potencia perdida**, que es lo que suelen pedir:
+
+  $$
+  \text{Pot} = \gamma\,Q\,h_f
+  $$
+
+  En el ejemplo, $1{,}547\cdot 9800\cdot 0{,}012\cdot 9{,}5 = 1{,}73\ \text{kW}$.
+  Usando 9800 saldría 1,12 kW, un 35 % menos, y el número seguiría pareciendo
+  perfectamente creíble.
+
+</ErrorTipico>
+
+## Flujo compresible
+
+El temario cierra con el cálculo de pérdidas en **flujo compresible
+isotermo**, que es el caso de una conducción larga de gas. La diferencia de
+fondo: al perder presión el gas se expande, así que la densidad y la velocidad
+cambian a lo largo del tubo y $v$ ya no se puede sacar fuera de la integral.
+Lo que sí se conserva es el **gasto másico**, como se vio en el tema 10.
+
+En las convocatorias de 2020-2026 no ha caído ningún problema numérico de
+pérdidas en compresible; lo que sí aparece es la pregunta conceptual de qué se
+conserva y qué no.

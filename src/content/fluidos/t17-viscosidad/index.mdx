@@ -1,0 +1,253 @@
+---
+asignatura: fluidos
+tema: 17
+titulo: Efectos de la viscosidad en flujos
+descripcion: Dónde vuelve la viscosidad después de dieciséis temas ignorándola, y las dos ideas que hacen falta para el ábaco de Moody.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 17 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+La viscosidad se definió en el tema 2 y desde entonces no ha aparecido. No fue
+un olvido: en estática no produce ningún efecto, y en dinámica se ha venido
+suponiendo **fluido perfecto** —viscosidad nula— para poder llegar a Euler y de
+ahí a Bernoulli.
+
+Ese es el precio que Bernoulli lleva pagado: dice que la energía se conserva, y
+en una tubería real no se conserva. Este tema levanta esa hipótesis, y los dos
+siguientes calculan cuánta energía se pierde.
+
+Lo que hay que sacar de aquí son **dos ideas**, y las dos son la base del ábaco
+de Moody:
+
+- **el número de Reynolds decide el régimen**, y
+- **junto a la pared siempre hay una película laminar**, aunque el resto del
+  flujo sea turbulento.
+
+## Flujo interno y flujo externo
+
+Dos familias, y no se resuelven igual:
+
+- **Interno**: completamente limitado por superficies sólidas. Tuberías,
+  toberas, difusores, válvulas, ensanchamientos. El régimen lo decide el
+  Reynolds y poco más. Es lo que ocupa el resto de la asignatura.
+- **Externo**: un cuerpo sumergido en un fluido sin fronteras, que se supone
+  de extensión infinita. Un ala, un casco, un pilar de puente.
+
+En flujo externo la teoría trabaja **partiendo el campo en dos zonas**: una
+capa delgada pegada al cuerpo donde la viscosidad importa —la capa límite— y
+todo lo demás, donde el fluido se puede tratar como ideal. Esa partición es de
+Prandtl y es lo que reconcilia los dieciséis temas anteriores con la realidad:
+Bernoulli seguía valiendo, pero solo **fuera** de la capa límite.
+
+## La experiencia de Reynolds
+
+En 1883 Osborne Reynolds montó un tubo de vidrio horizontal alimentado desde un
+depósito, con una válvula al final para regular el caudal, e inyectó un filete
+de colorante dentro.
+
+- Con caudal pequeño, el filete se mantenía **recto y sin mezclarse**: flujo
+  laminar.
+- Al abrir la válvula, el filete empezaba a ondularse.
+- Con más caudal aún, el filete **se rompía bruscamente** y el color se
+  difundía por todo el tubo: flujo turbulento.
+
+Lo que buscaba no era el colorante, era el grupo adimensional. Ya había
+deducido de las ecuaciones diferenciales que dos flujos son dinámicamente
+semejantes si comparten $\rho v L/\mu$, y por eso ese cociente lleva su nombre:
+
+$$
+Re = \frac{\rho\,v\,L}{\mu} = \frac{v\,L}{\nu}
+$$
+
+En tuberías, $L$ es el **diámetro** y $v$ la velocidad **media**.
+
+### Los números críticos, y cuáles importan
+
+Reynolds llegó a $Re = 12.000$ sin que apareciera turbulencia. Investigadores
+posteriores, con su mismo equipo, dejando el agua quieta varios días y evitando
+vibraciones, llegaron a **40.000**.
+
+**Esos números no sirven para nada práctico**, y conviene entender por qué: una
+instalación real tiene codos, soldaduras, vibraciones y un bombeo detrás, y con
+esas irregularidades la turbulencia aparece muchísimo antes. Son un récord de
+laboratorio, no un dato de diseño.
+
+Los que se usan son los otros dos, los que salen **bajando** el caudal desde
+turbulento:
+
+| | régimen | qué manda |
+|---|---|---|
+| $Re < 2000$ | **laminar** | las fuerzas viscosas. Se cumple la ley de Newton |
+| $2000 < Re < 4000$ | **indeterminado** | ni una cosa ni otra: zona crítica |
+| $Re > 4000$ | **turbulento** | la turbulencia anula casi del todo la viscosidad. **No** se cumple la ley de Newton |
+
+<ErrorTipico titulo="La zona crítica no es «más o menos laminar»: es una zona en la que no se diseña">
+
+Entre 2000 y 4000 el flujo **no está entre dos cosas, va saltando de una a
+otra**. Y el salto se realimenta solo, que es lo que hace el fenómeno
+interesante — se llama **intermitencia** y se explica entero con Bernoulli:
+
+En una tubería alimentada por un depósito de nivel constante, la altura
+disponible $H$ se reparte entre energía cinética y pérdida de carga, y **es
+fija**. Si el flujo se pone turbulento, la pérdida crece —pasa a ir con
+$v^{1{,}75}$ o $v^{2}$ en vez de con $v$—, así que a la velocidad le queda
+menos altura y **baja**; al bajar la velocidad baja el Reynolds y el flujo
+vuelve a laminar; con la pérdida laminar, más pequeña, la velocidad **sube** y
+vuelve a hacerse turbulento. Y otra vez.
+
+Consecuencia de ingeniería, que es lo que se pregunta: **en esa franja no se
+trabaja**. No porque no se sepa calcular, sino porque el caudal real oscila y
+cualquier número que se calcule es una media de dos estados distintos.
+
+</ErrorTipico>
+
+### Un ejemplo que fija el orden de magnitud
+
+Un tubo de $40\ \text{mm}$, y dos fluidos:
+
+| fluido | $\nu$ (m²/s) | velocidad a la que deja de ser laminar |
+|---|---|---|
+| agua a 20 °C | $10^{-6}$ | $0{,}05\ \text{m/s}$ |
+| aceite | $10^{-4}$ | $5\ \text{m/s}$ |
+
+Cinco centímetros por segundo. **En la práctica, el agua en una conducción va
+siempre en régimen turbulento**, y el laminar queda para aceites, para tubos
+capilares y para el laboratorio. Eso explica que el resto de la asignatura se
+dedique casi entero al turbulento.
+
+## La capa límite
+
+Prandtl, 1904. La idea de partida es la **condición de no deslizamiento**: el
+fluido en contacto con un sólido tiene exactamente su velocidad. Si la pared
+está quieta, ahí el fluido está quieto.
+
+Alejándose de la pared, la velocidad crece hasta alcanzar la de la corriente
+libre. Esa región donde la velocidad cambia es la **capa límite**, y su espesor
+$\delta$ se define, por convenio, como la distancia a la que el fluido va al
+**99 %** de la velocidad libre.
+
+Dentro de la capa hay tensión de cortadura, porque hay gradiente de velocidad:
+
+$$
+\tau = \mu\,\frac{du}{dy} \quad\text{(laminar)}
+\qquad\qquad
+\tau = \eta\,\frac{du}{dy} \quad\text{(turbulenta)}
+$$
+
+y en la segunda $\eta$ no es una propiedad del fluido, es la **viscosidad de
+turbulencia o de remolino**: depende del flujo, no del líquido.
+
+### La capa límite también cambia de régimen
+
+Sobre una placa plana, la capa empieza laminar en el borde de ataque y va
+engordando. Cuando alcanza cierto espesor se vuelve inestable y pasa a
+turbulenta. La transición se produce, medida experimentalmente, para
+
+$$
+Re_x = \frac{v\,x}{\nu} \quad\text{entre } 5\cdot 10^{5} \text{ y } 10^{6}
+$$
+
+donde $x$ es la distancia **desde el borde de ataque**, no el diámetro. Es el
+mismo número con otra longitud característica, y confundir las dos es el error
+de bulto del tema.
+
+<ErrorTipico titulo="La subcapa laminar existe siempre, y es la que decide todo el tema 18">
+
+Aquí está la idea que hay que llevarse, porque sin ella el tema 18 no se
+entiende:
+
+**Por muy turbulento que sea el flujo, pegada a la pared queda una película
+donde el régimen es laminar.** El motivo es geométrico antes que físico: la
+turbulencia es movimiento transversal, y a un milímetro de la pared no cabe
+movimiento transversal. La pared lo prohíbe.
+
+Esa película se llama **subcapa laminar**, y su espesor es **inversamente
+proporcional al número de Reynolds**: cuanto más rápido va el flujo, más fina
+es.
+
+Y de ahí sale el tema siguiente entero. Las rugosidades de la pared miden lo
+que miden. Si la subcapa las tapa, el fluido no las ve y el tubo se comporta
+como **liso**; si el Reynolds sube y la subcapa adelgaza hasta que las
+rugosidades asoman, el mismo tubo pasa a comportarse como **rugoso**.
+
+Por eso en el tema 18 se dice que un tubo **no es** liso o rugoso: **se
+comporta** como uno u otro según a qué velocidad vaya el fluido.
+
+</ErrorTipico>
+
+## Los perfiles de velocidad
+
+En una tubería, el perfil no es el mismo desde la entrada. El fluido entra
+casi plano; el rozamiento frena las capas de la pared y, por continuidad, la
+zona central se acelera. La capa límite crece hasta llenar el conducto, y a
+partir de esa sección **el régimen está dinámicamente establecido**: el perfil
+ya no cambia con la distancia.
+
+El perfil establecido es distinto según el régimen, y la diferencia tiene
+consecuencias:
+
+- **Laminar**: parábola. La velocidad en el eje es el **doble** de la media.
+- **Turbulento**: logarítmico, y en la práctica **casi plano**. Casi toda la
+  variación ocurre dentro de la subcapa laminar, en una franja finísima.
+
+<figure>
+<svg viewBox="0 0 430 200" role="img" width="430" height="200"
+     aria-labelledby="flu17-t flu17-d">
+  <title id="flu17-t">Perfil parabólico del flujo laminar frente al perfil casi plano del turbulento</title>
+  <desc id="flu17-d">Dos tuberías vistas de perfil. En la de la izquierda, régimen laminar, el perfil de velocidades es una parábola ancha que llega a su máximo en el eje, con la velocidad máxima del doble de la media. En la de la derecha, régimen turbulento, el perfil es casi plano en toda la sección y cae a cero en una franja finísima pegada a la pared, marcada como subcapa laminar.</desc>
+
+  <line x1="30" y1="34" x2="190" y2="34" stroke="var(--ink)" stroke-width="2"/>
+  <line x1="30" y1="150" x2="190" y2="150" stroke="var(--ink)" stroke-width="2"/>
+  <line x1="30" y1="92" x2="190" y2="92" stroke="var(--ink-suave)" stroke-width="0.7" stroke-dasharray="4 4"/>
+  <path d="M40 34 Q 128 92 40 150" fill="var(--live)" fill-opacity=".1"
+        stroke="var(--live)" stroke-width="2.2"/>
+  <line x1="40" y1="92" x2="100" y2="92" stroke="var(--live)" stroke-width="1.4"/>
+  <text x="104" y="88" font-size="9.5" fill="var(--live)">media</text>
+  <text x="70" y="112" font-size="9.5" fill="var(--live)">máx = 2 · media</text>
+  <text x="110" y="20" font-size="10.5" text-anchor="middle" fill="var(--ink)">laminar</text>
+
+  <line x1="240" y1="34" x2="400" y2="34" stroke="var(--ink)" stroke-width="2"/>
+  <line x1="240" y1="150" x2="400" y2="150" stroke="var(--ink)" stroke-width="2"/>
+  <line x1="240" y1="92" x2="400" y2="92" stroke="var(--ink-suave)" stroke-width="0.7" stroke-dasharray="4 4"/>
+  <path d="M250 34 Q 264 40 322 56 Q 336 92 322 128 Q 264 144 250 150"
+        fill="var(--alt)" fill-opacity=".1" stroke="var(--alt)" stroke-width="2.2"/>
+  <rect x="240" y="34" width="10" height="116" fill="var(--flag)" fill-opacity=".16"/>
+  <line x1="245" y1="34" x2="245" y2="150" stroke="var(--flag)" stroke-width="1.2"/>
+  <text x="320" y="20" font-size="10.5" text-anchor="middle" fill="var(--ink)">turbulento</text>
+  <text x="336" y="96" font-size="9.5" fill="var(--alt)">casi plano</text>
+  <line x1="245" y1="168" x2="245" y2="154" stroke="var(--flag)" stroke-width="1"/>
+  <text x="252" y="172" font-size="9.5" fill="var(--flag)"
+        textLength="72" lengthAdjust="spacingAndGlyphs">la subcapa laminar:</text>
+  <text x="252" y="186" font-size="9.5" fill="var(--flag)"
+        textLength="118" lengthAdjust="spacingAndGlyphs">aquí cae toda la velocidad</text>
+</svg>
+<figcaption>
+
+En laminar la velocidad varía por toda la sección y la del eje es el doble de
+la media. En turbulento el perfil es casi plano y **toda la caída ocurre dentro
+de la subcapa laminar**, que en una tubería de 100 mm mide una décima de
+milímetro. Por eso en turbulento se puede trabajar con la velocidad media sin
+corregir casi nada — los coeficientes alfa y beta de los temas 12 y 14 valen
+prácticamente 1.
+
+</figcaption>
+</figure>
+
+## Lo que este tema tiene en el programa y no en el material
+
+El apartado **17.4 del temario oficial** —«Resistencia sobre cuerpos
+sumergidos. Coeficientes de resistencia y de sustentación»— **no está en los
+apuntes ni en las diapositivas de la asignatura**, y la colección de problemas
+tampoco trae ningún ejercicio de flujo externo sobre cuerpos.
+
+Se dice aquí en vez de rellenarlo por nuestra cuenta, que sería inventar lo que
+esta escuela enseña. Lo que sí aparece en examen son los coeficientes
+$C_D$ y $C_L$ como **parámetros adimensionales** dentro de un problema de
+teoría de modelos —el ala en el túnel aerodinámico—, y eso está en el tema 16,
+«Análisis dimensional y teoría de modelos».
