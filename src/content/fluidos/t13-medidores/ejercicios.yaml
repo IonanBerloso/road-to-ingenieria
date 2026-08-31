@@ -1199,3 +1199,558 @@ ejercicios:
 
       Por eso los aforadores de laboratorio y de pequeños arroyos son
       triangulares, y los de canal de riego, rectangulares.
+
+  # ── COLECCIÓN 3.30. El único del capítulo donde los tres aparatos del tema
+  #    —piezómetro, Pitot y manómetro diferencial— trabajan a la vez y cada
+  #    uno mide una cosa distinta. Y el resultado, un coeficiente de 0,65,
+  #    explica por qué un diafragma no se usa sin calibrar.
+  - id: ejflu13-col330-calibrar-el-diafragma
+    titulo: Calibrar un diafragma con tres aparatos a la vez
+    fuente: >-
+      Ejercicio 3.30 · Colección de Problemas, capítulo 3 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Un diafragma de $50\ \text{mm}$ de diámetro sirve para medir el caudal
+      de agua que circula por una tubería horizontal de $80\ \text{mm}$ de
+      diámetro. Se desea calibrar el diafragma mediante un piezómetro abierto,
+      un Pitot y un manómetro diferencial de mercurio. Para un valor del flujo
+      determinado las lecturas son las siguientes:
+      $H_{\text{piezómetro}} = 1960\ \text{mm}$;
+      $H_{\text{Pitot}} = 2700\ \text{mm}$;
+      $R_{\text{manómetro}} = 900\ \text{mm}$. Se pide:
+
+      a) Coeficiente de gasto del diafragma.
+
+      b) Número de Reynolds.
+
+      Dato: viscosidad del agua $= 1\ \text{cSt}$.
+    pide: El coeficiente de gasto del diafragma y el número de Reynolds.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Hay tres lecturas y cada una mide otra cosa. ¿Cuál da la velocidad
+          en la tubería?
+        opciones:
+          - texto: >-
+              La **diferencia** entre el Pitot y el piezómetro, porque el
+              Pitot mide la carga total y el piezómetro solo la de presión
+            correcta: true
+            mensaje: |
+              Exacto. Su diferencia es la altura cinética, $v^{2}/2g$, y de
+              ahí sale la velocidad sin necesidad de ningún coeficiente. Es la
+              medida «limpia» del ejercicio: la que sirve de patrón para
+              calibrar el diafragma.
+          - texto: >-
+              El Pitot, porque es el aparato que mide velocidades
+            mensaje: |
+              El Pitot mide la carga **total**, presión más velocidad. Su
+              lectura sola no dice nada de la velocidad; hace falta restarle
+              la presión estática, que es lo que da el piezómetro.
+          - texto: >-
+              El manómetro diferencial, porque las diferencias de presión son
+              proporcionales al cuadrado de la velocidad
+            mensaje: |
+              Ese mide la caída de presión **a través del diafragma**, que es
+              precisamente la que queremos relacionar con el caudal. Si la
+              usáramos para obtener la velocidad estaríamos suponiendo el
+              coeficiente que buscamos.
+
+      - tipo: calcular
+        titulo: El caudal real
+        pregunta: |
+          ¿Qué caudal circula de verdad por la tubería?
+        respuesta:
+          tipo: magnitud
+          valor: '19.14 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '36.6 l/s'
+            mensaje: |
+              Has usado los 2700 mm del Pitot como altura cinética. La carga
+              total incluye la presión: la parte que corresponde a la
+              velocidad es la **diferencia**, $2700 - 1960 = 740$ mm.
+          - valor: '7.48 l/s'
+            mensaje: |
+              Parece que has usado el diámetro del diafragma, 50 mm, para
+              calcular el caudal. La velocidad medida por Pitot y piezómetro
+              es la de la **tubería**, así que va con los 80 mm.
+        pista: |
+          $v^{2}/2g = H_{\text{Pitot}} - H_{\text{piez}}$, y después
+          $Q = v\,\pi D^{2}/4$ con $D = 80$ mm.
+        desarrollo: |
+          $$
+          \frac{v^{2}}{2g} = 2{,}700 - 1{,}960 = 0{,}740\ \text{m}
+          \;\Longrightarrow\;
+          v = \sqrt{19{,}6\cdot 0{,}740} = 3{,}808\ \text{m/s}
+          $$
+          $$
+          Q = 3{,}808\cdot\frac{\pi\,0{,}08^{2}}{4} = 19{,}14\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: El coeficiente de gasto
+        pregunta: |
+          ¿Cuánto vale el coeficiente de gasto del diafragma?
+        respuesta:
+          tipo: numero
+          valor: '0.654'
+          tolerancia: 0.01
+          formato: un número sin unidades
+        distractores:
+          - valor: '2.32'
+            mensaje: |
+              Te has dejado el mercurio. Los 900 mm de desnivel del manómetro
+              no son 900 mm de columna de agua: hay que multiplicar por
+              $s_{Hg} - 1 = 12{,}6$, y salen 11,34 m. Y fíjate en que un
+              coeficiente de gasto **mayor que 1 es imposible**: el aparato no
+              puede dejar pasar más de lo que la teoría permite.
+          - valor: '1.249'
+            mensaje: |
+              Has usado los 2700 mm del Pitot como altura cinética en vez de
+              la diferencia con el piezómetro. Otra vez sale mayor que 1, que
+              es la señal de que algo va mal.
+        pista: |
+          $C_d = Q_{\text{real}}/Q_{\text{teórico}}$, con
+          $Q_{\text{teórico}} = A_{\text{diaf}}\sqrt{2g\,\Delta h}$ y
+          $\Delta h = R\,(s_{Hg}-1)$.
+        desarrollo: |
+          $$
+          \Delta h = 0{,}9\,(13{,}6 - 1) = 11{,}34\ \text{m de agua}
+          $$
+          $$
+          Q_{\text{teo}} = \frac{\pi\,0{,}05^{2}}{4}\sqrt{19{,}6\cdot 11{,}34}
+          = 29{,}27\ \text{l/s}
+          $$
+          $$
+          C_d = \frac{19{,}14}{29{,}27} = 0{,}654
+          $$
+
+      - tipo: calcular
+        titulo: El número de Reynolds
+        pregunta: |
+          ¿Cuánto vale $Re$ en la tubería?
+        respuesta:
+          tipo: numero
+          valor: '304700'
+          tolerancia: 2000
+          formato: un número sin unidades
+        distractores:
+          - valor: '190400'
+            mensaje: |
+              Has usado el diámetro del diafragma. El Reynolds que caracteriza
+              el flujo de la conducción se calcula con el diámetro de la
+              **tubería**, 80 mm, y con su velocidad.
+          - valor: '487500'
+            mensaje: |
+              Parece que has mezclado la velocidad de la garganta con el
+              diámetro del diafragma, o al revés. Las dos magnitudes tienen
+              que ser de la misma sección: $v = 3{,}81$ m/s con $D = 0{,}08$ m.
+        pista: |
+          $1\ \text{cSt} = 10^{-6}\ \text{m}^{2}/\text{s}$.
+        desarrollo: |
+          $$
+          Re = \frac{v\,D}{\nu} = \frac{3{,}808\cdot 0{,}08}{10^{-6}}
+          = 3{,}05\cdot 10^{5}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Pitot menos piezómetro da la altura cinética, 0,740 m, y con
+              ella la velocidad real: 3,81 m/s y 19,14 l/s.
+          - texto: >-
+              El manómetro de mercurio da la caída a través del diafragma,
+              $0{,}9\cdot 12{,}6 = 11{,}34$ m de agua, de la que saldrían
+              29,27 l/s teóricos.
+          - texto: >-
+              El cociente entre los dos es el coeficiente de gasto, 0,65: el
+              diafragma deja pasar dos tercios de lo que la teoría le
+              atribuye.
+          - texto: >-
+              Y ese 0,65 es una propiedad del aparato, así que servirá para
+              cualquier caudal y cualquier fluido que pase por él.
+            trampa: true
+            mensaje: |
+              Depende del **número de Reynolds**, y por eso el apartado b)
+              pide calcularlo: la calibración vale en el entorno de
+              $Re = 3\cdot 10^{5}$. Por encima de unos $10^{5}$ el
+              coeficiente se estabiliza bastante y la aproximación es
+              razonable, pero a Reynolds bajos cae en picado. Un caudalímetro
+              se calibra en su rango de trabajo, no de una vez para siempre.
+
+    resolucion: |
+      **Tres aparatos, tres medidas distintas.** Es lo que hace bueno a este
+      ejercicio: obliga a decir qué mide cada uno antes de tocar un número.
+
+      | aparato | lectura | qué mide |
+      |---|---|---|
+      | piezómetro | 1960 mm | la carga de presión, $p/\gamma$ |
+      | Pitot | 2700 mm | la carga total, $p/\gamma + v^{2}/2g$ |
+      | manómetro diferencial | 900 mm Hg | la caída a través del diafragma |
+
+      **El caudal patrón.** La diferencia entre el Pitot y el piezómetro es la
+      altura cinética, y de ahí sale la velocidad **sin ningún coeficiente**:
+      $v = 3{,}808$ m/s, $Q = 19{,}14$ l/s. Este es el caudal de verdad, el
+      que sirve de referencia.
+
+      **El caudal que el diafragma cree ver.** Con $\Delta h = 11{,}34$ m de
+      agua y su propia sección, la teoría daría 29,27 l/s.
+
+      $$
+      C_d = \frac{19{,}14}{29{,}27} = 0{,}654
+      $$
+
+      **Qué significa ese 0,65.** El chorro que atraviesa el diafragma se
+      contrae por detrás —la vena contracta— y además pierde por fricción, así
+      que pasa un tercio menos de lo que la ecuación ideal predice. **Un
+      diafragma sin calibrar sobreestima el caudal en un 50 %**, y por eso
+      todo caudalímetro de obstrucción lleva su coeficiente.
+
+      **Una nota sobre la fórmula teórica.** Aquí se ha usado
+      $Q_{\text{teo}} = A_2\sqrt{2g\Delta h}$, sin el factor de velocidad de
+      aproximación $1/\sqrt{1-\beta^{4}}$. Es la convención de la colección, y
+      es la que reproduce el 0,65 publicado. Incluyendo ese factor el
+      coeficiente saldría 0,602, y sería igual de correcto: **el coeficiente
+      no significa nada sin decir con qué fórmula teórica se ha comparado.**
+
+  # ── COLECCIÓN 3.31. Dos aparatos encadenados: un orificio que fija el
+  #    caudal y un vertedero que lo tiene que evacuar. Es el ejercicio que
+  #    obliga a ver que en una instalación el caudal lo manda uno y el resto
+  #    se adapta.
+  - id: ejflu13-col331-del-orificio-al-vertedero
+    titulo: Del orificio al vertedero, y quién manda el caudal
+    fuente: >-
+      Ejercicio 3.31 · Colección de Problemas, capítulo 3 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      El agua evacuada a través de un orificio de $15\ \text{cm}$ de diámetro
+      ($C_d = 0{,}6$), bajo una altura de carga de $3\ \text{m}$, pasa a un
+      canal rectangular y por un vertedero con contracciones. El canal tiene
+      $1{,}8\ \text{m}$ de ancho y el vertedero $0{,}3\ \text{m}$, siendo
+      $1{,}50\ \text{m}$ la altura de su umbral sobre la solera del canal.
+
+      Determinar la profundidad del agua sobre la solera del canal, en metros.
+    pide: La profundidad del agua sobre la solera del canal.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El orificio y el vertedero están en serie. ¿Quién fija el caudal y
+          quién se adapta?
+        opciones:
+          - texto: >-
+              Lo fija el orificio, porque su carga de 3 m es un dato; el
+              vertedero se adapta subiendo la lámina hasta poder evacuarlo
+            correcta: true
+            mensaje: |
+              Eso es. El orificio tiene todos sus datos y da un caudal
+              cerrado. El vertedero es el que tiene la incógnita, y lo que
+              ajusta es su carga.
+          - texto: >-
+              Lo fija el vertedero, porque es el que está aguas abajo y
+              controla la salida
+            mensaje: |
+              Estar aguas abajo no da el mando. El vertedero solo podría
+              limitar el caudal si se ahogara, y aquí desagua libremente: se
+              limita a evacuar lo que le llega, con la lámina que haga falta.
+          - texto: >-
+              Ninguno: hay que resolver las dos ecuaciones a la vez porque el
+              nivel del canal afecta al orificio
+            mensaje: |
+              Afectaría si el orificio descargara **sumergido**, con el nivel
+              del canal por encima de él. Aquí el orificio descarga a la
+              atmósfera con una carga fija de 3 m, así que su caudal no
+              depende de lo que pase después.
+
+      - tipo: calcular
+        titulo: El caudal del orificio
+        pregunta: |
+          ¿Qué caudal sale por el orificio?
+        respuesta:
+          tipo: magnitud
+          valor: '81.3 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '135.5 l/s'
+            mensaje: |
+              Te has dejado el coeficiente de gasto. El $C_d = 0{,}6$ recoge
+              la contracción de la vena y la fricción: por un orificio sale
+              siempre bastante menos de lo que dice Torricelli.
+          - valor: '57.5 l/s'
+            mensaje: |
+              Te has dejado el 2 de $\sqrt{2gH}$. La velocidad de salida es
+              la de caída libre desde la carga: $\sqrt{2gH}$, no $\sqrt{gH}$.
+        pista: |
+          $Q = C_d\,A\sqrt{2gH}$, con $A$ la sección del orificio y $H$ la
+          carga.
+        desarrollo: |
+          $$
+          Q = 0{,}6\cdot\frac{\pi\,0{,}15^{2}}{4}\sqrt{2\cdot 9{,}8\cdot 3}
+          = 0{,}6\cdot 0{,}01767\cdot 7{,}668 = 81{,}3\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: La lámina sobre el umbral
+        pregunta: |
+          ¿Cuánta agua hay por encima del umbral del vertedero?
+        respuesta:
+          tipo: magnitud
+          valor: '0.329 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.279 m'
+            mensaje: |
+              Has usado la longitud del vertedero tal cual, sin descontar las
+              contracciones. Con dos contracciones laterales la longitud
+              efectiva es $L - 0{,}2h$, y ese descuento importa mucho aquí
+              porque el vertedero es estrecho: 30 cm frente a 33 de lámina.
+          - valor: '0.15 m'
+            mensaje: |
+              Comprueba el orden de magnitud: con esa lámina el vertedero
+              evacuaría 29 l/s, poco más de un tercio de lo que le llega. Tiene que
+              subir bastante más.
+        pista: |
+          Francis con contracciones: $Q = 1{,}84\,(L - 0{,}1\,n\,h)\,h^{3/2}$,
+          con $n = 2$ y $L = 0{,}3$ m. Hay que iterar.
+        desarrollo: |
+          $$
+          0{,}0813 = 1{,}84\,(0{,}3 - 0{,}2h)\,h^{3/2}
+          $$
+
+          | $h$ | $L_{\text{ef}}$ | $Q$ (l/s) |
+          |---|---|---|
+          | 0,30 | 0,240 | 72,6 |
+          | 0,33 | 0,234 | 81,6 |
+          | 0,329 | 0,234 | 81,3 |
+
+          $$
+          h = 0{,}329\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La profundidad sobre la solera
+        pregunta: |
+          ¿Qué profundidad tiene el agua medida desde la solera del canal?
+        respuesta:
+          tipo: magnitud
+          valor: '1.829 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '1.5 m'
+            mensaje: |
+              Esa es la altura del umbral. Encima del umbral hay 33 cm más de
+              agua, que es justamente lo que el vertedero necesita para
+              evacuar el caudal.
+          - valor: '0.329 m'
+            mensaje: |
+              Esa es la lámina sobre el umbral. La pregunta es desde la
+              **solera**, es decir desde el fondo del canal, y el umbral está
+              a 1,50 m de ella.
+        pista: |
+          La profundidad es el umbral más la lámina.
+        desarrollo: |
+          $$
+          y = 1{,}50 + 0{,}329 = 1{,}829\ \text{m}
+          $$
+
+          El boletín publica 1,84 m; la diferencia es del 0,6 %.
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El orificio manda: con $C_d = 0{,}6$ y 3 m de carga entrega
+              81,3 l/s, y ese caudal no depende de nada de lo que hay aguas
+              abajo.
+          - texto: >-
+              El vertedero tiene que evacuarlo, y para eso necesita 0,329 m de
+              lámina sobre su umbral.
+          - texto: >-
+              Como el umbral está a 1,50 m de la solera, el agua del canal
+              llega a 1,83 m de profundidad.
+          - texto: >-
+              El ancho del canal, 1,8 m, entra en la cuenta porque determina
+              la velocidad de aproximación al vertedero.
+            trampa: true
+            mensaje: |
+              El ancho del canal **no se ha usado en ningún sitio**, y es un
+              dato que el enunciado da a propósito para ver si se distingue lo
+              que hace falta de lo que no. La fórmula de Francis con
+              contracciones ya lleva incorporado el efecto de la velocidad de
+              aproximación en su coeficiente 1,84; el ancho solo importaría si
+              hubiera que corregirla, y con 1,8 m frente a 30 cm de vertedero
+              la aproximación es tan lenta que no lo pide.
+
+    resolucion: |
+      **Quién manda.** El orificio tiene todos sus datos —diámetro, carga y
+      coeficiente— así que su caudal está cerrado antes de mirar el resto:
+
+      $$
+      Q = C_d\,A\sqrt{2gH} = 81{,}3\ \text{l/s}
+      $$
+
+      El vertedero no puede cambiarlo: solo puede subir su lámina hasta
+      evacuarlo.
+
+      **La lámina.** Francis con dos contracciones laterales,
+
+      $$
+      Q = 1{,}84\,(L - 0{,}2h)\,h^{3/2}
+      $$
+
+      y hay que iterar porque $h$ aparece dos veces. Salen 0,329 m.
+
+      **Cuánto pesan las contracciones aquí.** Sin descontarlas la lámina
+      saldría 0,279 m: **cinco centímetros de diferencia, un 18 %**. Y es
+      lógico: la corrección resta $0{,}2h = 6{,}6$ cm a una longitud de
+      30 cm, o sea el 22 % del vertedero. En un vertedero de tres metros ese
+      mismo descuento sería del 2 % y podría despreciarse; en uno de treinta
+      centímetros, no.
+
+      **La profundidad.** $1{,}50 + 0{,}329 = 1{,}83$ m sobre la solera. El
+      boletín publica 1,84.
+
+      **Y el dato que sobra.** El ancho del canal, 1,8 m, no interviene. Está
+      en el enunciado como en el examen: para que haya que decidir qué se usa.
+
+  # ── COLECCIÓN 3.33. Tres líneas, y sirve para fijar la ley de potencia
+  #    5/2 del vertedero triangular, que es lo que lo hace bueno midiendo
+  #    caudales pequeños y malo midiendo grandes.
+  - id: ejflu13-col333-el-vertedero-triangular
+    titulo: El vertedero triangular, y la potencia cinco medios
+    fuente: >-
+      Ejercicio 3.33 · Colección de Problemas, capítulo 3 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Un vertedero triangular con ángulo $\alpha = 90°$ tiene hasta el vértice
+      una altura $H = 1{,}2\ \text{m}$. La profundidad del flujo aguas arriba
+      es de $1{,}6\ \text{m}$. Calcúlese el caudal.
+
+      Dato: $C_d = 0{,}6$.
+    pide: El caudal que evacua el vertedero.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado da dos alturas: 1,2 m hasta el vértice y 1,6 m de
+          profundidad. ¿Cuál es la carga del vertedero?
+        opciones:
+          - texto: >-
+              La diferencia, $0{,}4\ \text{m}$: la carga se mide desde el
+              vértice de la V hasta la superficie libre
+            correcta: true
+            mensaje: |
+              Eso es. La carga es la altura de agua **que pasa por encima** de
+              la escotadura, no la profundidad del canal. El 1,2 solo sirve
+              para situar el vértice.
+          - texto: >-
+              $1{,}6\ \text{m}$, que es la profundidad del agua
+            mensaje: |
+              Esa es la profundidad del canal. Por debajo del vértice el agua
+              está quieta contra la pared del vertedero; solo la lámina que
+              queda por encima participa en el desagüe. Usar 1,6 multiplica el
+              caudal por 32.
+          - texto: >-
+              $1{,}2\ \text{m}$, la altura del vértice
+            mensaje: |
+              Esa es la altura a la que **empieza** la escotadura. La carga se
+              cuenta desde ahí hacia arriba: $1{,}6 - 1{,}2 = 0{,}4$ m.
+
+      - tipo: calcular
+        titulo: El caudal
+        pregunta: |
+          ¿Cuánto caudal evacua?
+        respuesta:
+          tipo: magnitud
+          valor: '143 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '4588 l/s'
+            mensaje: |
+              Has usado $h = 1{,}6$ m. Con la potencia $5/2$ el error se
+              amplifica muchísimo: $(1{,}6/0{,}4)^{2,5} = 32$, y el caudal
+              sale treinta y dos veces mayor.
+          - valor: '179 l/s'
+            mensaje: |
+              Has usado el coeficiente $2/3$ del vertedero **rectangular**. El
+              triangular lleva $8/15$, que sale de integrar sobre una anchura
+              que crece linealmente con la altura en vez de ser constante.
+        pista: |
+          $Q = \dfrac{8}{15}\,C_d\sqrt{2g}\,\tan\dfrac{\alpha}{2}\,h^{5/2}$,
+          con $\alpha = 90°$ y $h$ la carga.
+        desarrollo: |
+          $$
+          Q = \frac{8}{15}\cdot 0{,}6\cdot\sqrt{19{,}6}\cdot\tan 45°\cdot
+          0{,}4^{5/2}
+          $$
+          $$
+          = 0{,}32\cdot 4{,}427\cdot 1\cdot 0{,}1012 = 0{,}1434\
+          \text{m}^{3}/\text{s}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La carga es $1{,}6 - 1{,}2 = 0{,}4$ m: solo cuenta el agua que
+              pasa por encima del vértice.
+          - texto: >-
+              Con $\alpha = 90°$ la tangente de la mitad vale 1, y la fórmula
+              se queda en $Q = \frac{8}{15}C_d\sqrt{2g}\,h^{5/2}$.
+          - texto: >-
+              De ahí salen 143 l/s, y el exponente $5/2$ viene de que la
+              anchura de la escotadura crece con la altura.
+          - texto: >-
+              Y como el exponente es mayor que el del rectangular, el
+              triangular es más preciso midiendo caudales grandes.
+            trampa: true
+            mensaje: |
+              Es al revés, y es la razón de ser del vertedero en V. Con
+              $Q \propto h^{5/2}$ un cambio pequeño de caudal produce un
+              cambio **relativamente grande** de lámina cuando la lámina es
+              pequeña: por eso mide bien los caudales pequeños. Con caudales
+              grandes la lámina crece tanto que el vertedero se vuelve
+              inmanejable, y ahí se usa el rectangular, que va con
+              $h^{3/2}$.
+
+    resolucion: |
+      **La carga, que es la única dificultad.** El enunciado da dos alturas y
+      solo una es la carga: $h = 1{,}6 - 1{,}2 = 0{,}4$ m. Confundirlas
+      multiplica el resultado por 32, y ese factor sale precisamente del
+      exponente $5/2$.
+
+      **La fórmula y de dónde sale.** En una escotadura en V la anchura a la
+      altura $y$ es $2(h-y)\tan(\alpha/2)$, y al integrar $v\,dA$ con
+      $v = \sqrt{2gy}$ aparece el $8/15$ y la potencia $5/2$:
+
+      $$
+      Q = \frac{8}{15}\,C_d\sqrt{2g}\,\tan\frac{\alpha}{2}\,h^{5/2}
+      = 143\ \text{l/s}
+      $$
+
+      Con $\alpha = 90°$, que es el ángulo estándar, la tangente vale 1 y la
+      fórmula se simplifica a $Q = 1{,}417\,h^{5/2}$ para $C_d = 0{,}6$.
+
+      **Por qué el exponente decide el uso.** Compara con el rectangular, que
+      va con $h^{3/2}$:
+
+      | | ley | duplicar el caudal sube la lámina |
+      |---|---|---|
+      | triangular | $h^{5/2}$ | un 32 % |
+      | rectangular | $h^{3/2}$ | un 59 % |
+
+      Leído al revés: para el **mismo** error de lectura de la lámina, el
+      triangular comete menos error de caudal cuando el caudal es pequeño,
+      porque su lámina es proporcionalmente más alta. Es el aforador de los
+      arroyos y los laboratorios. Y por lo mismo, con caudales grandes su
+      lámina se dispara y deja de ser práctico.

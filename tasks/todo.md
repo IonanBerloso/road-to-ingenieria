@@ -44,21 +44,25 @@ y 482 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**113 ejercicios y 482 pasos**, de los cuales **79 son problemas transcritos
+**122 ejercicios y 523 pasos**, de los cuales **89 son problemas transcritos
 de la colección**. Cobertura por capítulo:
 
 | capítulo | dentro | total | qué falta |
 |---|---|---|---|
-| 1 · Propiedades | 22 | 27 | los que piden figura |
+| 1 · Propiedades | 23 | 27 | 1.4, 1.6, 1.7 y 1.8 |
 | 2 · Estática | 18 | 46 | compuertas con figura acotada |
-| 3 · Bernoulli | 7 | 34 | casi todo |
-| 4 · Cantidad de movimiento | 5 | 22 | casi todo |
+| 3 · Bernoulli | 10 | 34 | los que llevan esquema de instalación |
+| 4 · Cantidad de movimiento | 5 | 22 | álabes y placas, casi todos con figura |
 | 5 · Análisis dimensional | 6 | 20 | los simbólicos de teorema π |
 | 6 · Conducciones | 10 | 29 | redes y ramificaciones con figura |
-| 7 · Golpe de ariete | 6 | 17 | los que llevan esquema |
-| 8 · Canales | 3 | 22 | secciones trapeciales con figura |
+| 7 · Golpe de ariete | 8 | 17 | los que llevan esquema |
+| 8 · Canales | 7 | 22 | secciones compuestas con figura |
 | 9 · Bombeo | 2 | 19 | los que remiten a los anexos de curvas |
-| **total** | **79** | **236** | |
+| **total** | **89** | **236** | |
+
+La lista exacta de lo que está dentro se saca del corpus en veinte líneas
+—cargar los YAML y extraer el `\d+\.\d+` de cada `fuente`— y **así es como se
+comprueba, no de memoria**.
 
 **La regla que sale de todo esto, y que no se vuelve a discutir:** un capítulo
 de la colección se transcribe **entero** antes de dar la fase por hecha, y un
