@@ -782,6 +782,38 @@ quedó cerrada con su boletín entero. Lo hecho el primer día:
 | temas escritos | 0 | **1 de 25** (t01, introducción) |
 | respuestas con unidad | imposibles | tipo `magnitud`, con lector y 20 tests |
 
+### Dónde está Fluidos el 31 de agosto de 2026
+
+Ocho fases después, y medido con `npm run mide fluidos`:
+
+| | |
+|---|---|
+| temas con prosa, figura y ejercicios | **23 de 25** |
+| palabras de prosa | **22.480** (Cálculo entera son 21.545) |
+| figuras | 19 |
+| ejercicios | 52, con 228 pasos |
+| convocatorias transcritas | **0 de 17** |
+| rutas de estudio | **0 de 2** |
+
+Los **dos temas que faltan son los que no tienen material**: el 5 (equilibrio
+relativo) y el 6 (estática de compresibles) están en el programa oficial y no
+aparecen ni en los dos volúmenes de apuntes, ni en las diapositivas, ni en la
+colección de problemas. El catálogo lo dice con su `etiqueta` en vez de
+rellenarlos por nuestra cuenta. Lo mismo con el apartado **17.4** —resistencia
+sobre cuerpos sumergidos—, declarado en la prosa del tema 17.
+
+Y lo que falta **no es material sino trabajo**: las 17 convocatorias (16 en el
+cuadernillo de 2020-2025 más la ordinaria de 2026) y las dos rutas. Los PDF
+originales ya están en `public/examenes/fluidos/`.
+
+> **Una cosa que este bloque enseñó y no estaba prevista.** Al abrir «Cuadros y
+> ábacos» para verificar un examen apareció que un ejercicio del tema 18 usaba
+> la rugosidad del acero comercial que dan Çengel y White —0,046 mm— en vez de
+> la del **cuadro n.º 20 de esta escuela**, que es 0,06 mm. Seis números
+> publicados eran falsos con el suelo, los tests y el humo en verde. Los cazó
+> abrir la fuente para otra cosa, y es el mejor argumento que hay para el punto
+> 1 de §16: **el verde no es una comprobación, es la ausencia de una.**
+
 **El temario oficial son 25 temas y no 16.** El catálogo llevaba meses
 publicando una lista plausible —los temas «que parecían caer»— con
 `temarioOficial: false`, que es lo que §15 exige mientras no tengas la fuente.

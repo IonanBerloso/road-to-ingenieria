@@ -18,16 +18,59 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 |---|---|---|---|
 | **0 · Cimientos** | 1, 2 | 1 · Propiedades | ✅ **hecha** |
 | **1 · Estática** | 3, 4, ~~5~~, ~~6~~, 7, 8 | 2 · Estática y fuerzas sobre superficies | ✅ **hecha**, salvo lo que no tiene material |
-| **2 · Continuidad y Bernoulli** | 9, 10, 11, 12, 13 | 3 · Conservación de masa y energía. Medida | |
-| **3 · Cantidad de movimiento** | 14, 15 | 4 · Conservación de la cantidad de movimiento | |
-| **4 · Análisis dimensional** | 16 | 5 · Análisis dimensional y semejanza | |
-| **5 · Conducciones** | 17, 18, 19 | 6 · Flujo permanente en conductos cerrados | |
-| **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | |
-| **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | |
-| **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | |
+| **2 · Continuidad y Bernoulli** | 9, 10, 11, 12, 13 | 3 · Conservación de masa y energía. Medida | ✅ **hecha** |
+| **3 · Cantidad de movimiento** | 14, 15 | 4 · Conservación de la cantidad de movimiento | ✅ **hecha** |
+| **4 · Análisis dimensional** | 16 | 5 · Análisis dimensional y semejanza | ✅ **hecha** |
+| **5 · Conducciones** | 17, 18, 19 | 6 · Flujo permanente en conductos cerrados | ✅ **hecha**, salvo el 17.4 |
+| **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
+| **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
+| **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **empezada** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
+
+**El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
+no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
+22.480 palabras de prosa —más que Cálculo entera—, 19 figuras, 52 ejercicios y
+228 pasos.
+
+### Fase 9 · lo que se ha visto al empezarla
+
+Los PDF originales ya están en `public/examenes/fluidos/`: el cuadernillo del
+departamento con las 16 convocatorias de 2020-2025 y la ordinaria de 2026
+aparte. Y con eso a la vista, **esta fase no se parece a la de Álgebra**, por
+un motivo que conviene dejar escrito antes de seguir:
+
+- **El cuadernillo publica el enunciado y el resultado final, y nada entre
+  medias.** No hay resolución oficial que contrastar. Para cada apartado hay
+  que **reconstruir la resolución entera y comprobar que aterriza en el número
+  publicado**, y cuando no aterriza hay que decidir si el error es nuestro o
+  del boletín. Eso ya ha pasado dos veces en la colección —el 6.2 y el 6.3—.
+- **Varios enunciados dependen de una figura acotada** y de tablas de
+  catálogo (curvas de bomba de los anexos). La figura se puede leer
+  renderizando la página; las curvas de catálogo **no entran en el
+  repositorio** (§08) y esos apartados habrá que replantearlos con la curva
+  dada como expresión analítica, que es como la dan los propios exámenes.
+- **Fluidos no imprime reparto por competencia**, solo el porcentaje del
+  ejercicio. El esquema ya admite exámenes sin `puntos` —lo abrió Álgebra— así
+  que se transcriben sin inventarlo.
+
+**Un caso concreto ya encontrado y no resuelto:** el ejercicio 4 de la
+ordinaria de 2026 (depósito → boquilla con manómetro en U). Reconstruyendo
+Bernoulli sale H = 5,87 m y el enunciado publica 5,67. La diferencia son 0,2 m
+y no se explica ni tomando `hf tramo D1 = 0,24` como columna de agua ni como
+columna de líquido. **No se publica hasta saber por qué**: §13 caso 2.
+
+### El orden recomendado para retomar la fase 9
+
+1. **La ordinaria de 2026 primero**, que es la que un alumno de 2027 tiene más
+   cerca, y ya está leída entera (nueve ejercicios, pesos 10/12,5/10/12,5/10/
+   12,5/12,5/15/5). Verificados: el 1 (manómetro, tres lecturas), el 3 (globo
+   aerostático, 70,56 °C) y el 5 (canal semicircular, R = 1,01 m). Pendientes
+   de cuadrar: el 2, el 4, el 6, el 7 y el 8.
+2. Los dos finales de 2025, y hacia atrás por años.
+3. Los parciales al final: son de 2020 y 2021 y el formato de la asignatura ha
+   cambiado desde entonces.
 
 **Qué incluye cada fase de contenido**, sin excepción (§04): prosa con al
 menos una figura que responda a una pregunta, un ejemplo de entrada **nuestro**
