@@ -793,7 +793,7 @@ Ocho fases después, y medido con `npm run mide fluidos`:
 | figuras | 23 |
 | ejercicios | **122**, con 523 pasos |
 | de ellos, problemas de la colección | **89 de 236** |
-| convocatorias transcritas | **0 de 17** |
+| convocatorias transcritas | **1 de 17** (la ordinaria de 2026, 7 de sus 9 ejercicios) |
 | rutas de estudio | **0 de 2** |
 
 Los **dos temas que faltan son los que no tienen material**: el 5 (equilibrio

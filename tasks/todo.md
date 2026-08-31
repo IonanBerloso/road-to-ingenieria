@@ -25,7 +25,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **empezada** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **1 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
@@ -103,19 +103,45 @@ un motivo que conviene dejar escrito antes de seguir:
   ejercicio. El esquema ya admite exámenes sin `puntos` —lo abrió Álgebra— así
   que se transcriben sin inventarlo.
 
-**Un caso concreto ya encontrado y no resuelto:** el ejercicio 4 de la
-ordinaria de 2026 (depósito → boquilla con manómetro en U). Reconstruyendo
-Bernoulli sale H = 5,87 m y el enunciado publica 5,67. La diferencia son 0,2 m
-y no se explica ni tomando `hf tramo D1 = 0,24` como columna de agua ni como
-columna de líquido. **No se publica hasta saber por qué**: §13 caso 2.
+**Un caso concreto encontrado y todavía sin resolver:** el ejercicio 4 de la
+ordinaria de 2026 (depósito → boquilla, con la presión de la tubería tomada
+en un manómetro sobre un colchón de aire). Reconstruyendo Bernoulli desde la
+lámina hasta esa sección salen **5,87 m** y el examen publica **5,67**. Se han
+probado tres lecturas del enunciado y ninguna da el número impreso:
 
-### El orden recomendado para retomar la fase 9
+| lectura | H |
+|---|---|
+| `hf tramoD1 = 0,24` como columna de líquido | 5,87 m |
+| el mismo dato como columna de agua, convertido a mcl | 5,79 m |
+| el tubo del manómetro lleno de aire (sin la columna de 50 cm) | 5,37 m |
 
-1. **La ordinaria de 2026 primero**, que es la que un alumno de 2027 tiene más
-   cerca, y ya está leída entera (nueve ejercicios, pesos 10/12,5/10/12,5/10/
-   12,5/12,5/15/5). Verificados: el 1 (manómetro, tres lecturas), el 3 (globo
-   aerostático, 70,56 °C) y el 5 (canal semicircular, R = 1,01 m). Pendientes
-   de cuadrar: el 2, el 4, el 6, el 7 y el 8.
+Y el apartado b) necesita además una cota del manómetro diferencial que la
+figura no acota. **No se publica**: §13 caso 2. Es el único de los nueve que
+queda fuera junto con el 9, que es un test de huecos sin cálculo.
+
+### La ordinaria de 2026, transcrita el 31 de agosto de 2026
+
+Siete de los nueve ejercicios, en
+`src/content/fluidos/examenes/2025-2026-ord/`. Todos reconstruidos y
+comprobados contra el resultado impreso antes de escribirlos:
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 10 % | t04 | 0,131 kg/cm² · 4,37 bar · 3,44 kg/cm² — exacto |
+| 2 | 12,5 % | t25 | bomba 3; hf válvula 7,88 frente a 8,09 publicado (2,6 %, es una resta de dos alturas parecidas) |
+| 3 | 10 % | t08 | 70,6 °C frente a 70,56 |
+| 5 | 10 % | t21 | R = 1,008 · D = 2,1 · +130,9 % — exacto |
+| 6 | 12,5 % | t15 | 13,47 mca · 0,90 N · 15,33 N — exacto |
+| 7 | 12,5 % | t16 | 37,04 m/s · 93,4 N · 566,7 m/s — exacto |
+| 8 | 15 % | t18 | 22,85 l/s exacto; D = 96,7 frente a 96,4 mm (0,3 %) |
+
+De paso quedaron fijados dos datos de ábaco que el examen no imprime y que
+harán falta otra vez: **ν del alcohol etílico a 0 °C = 2·10⁻⁶ m²/s** (sale de
+que el apartado 8a dé exactamente 22,85 l/s) y **C_HW = 150 para el PVC**.
+
+### El orden recomendado para seguir con la fase 9
+
+1. ~~La ordinaria de 2026~~ — hecha, 7 de 9.
 2. Los dos finales de 2025, y hacia atrás por años.
 3. Los parciales al final: son de 2020 y 2021 y el formato de la asignatura ha
    cambiado desde entonces.

@@ -1157,6 +1157,17 @@ Cosas que ya han costado horas. No son opiniones.
   es `requestIdleCallback`, que no depende de la visibilidad. **Regla: al
   diferir cualquier cosa, comprueba después que llega a ejecutarse** — que la
   página vaya más rápido puede significar que ya no hace su trabajo.
+- **Una línea que empieza por `- ` parte en dos una fórmula que venía de la
+  línea anterior.** Dentro de un bloque `|` el texto es Markdown, y en
+  Markdown `- ` al principio de línea abre una lista: eso cierra el párrafo,
+  y el `$…$` que cruzaba el salto se queda sin pareja a cada lado. El
+  resultado son dos trozos de LaTeX publicados como texto crudo. Pasó el 31
+  de agosto de 2026 al escribir una `pista` con
+  `$NPSH_d = p_{at}/\gamma - p_v/\gamma - z_{asp}` y la continuación
+  `- h_{f,asp}$` en la línea siguiente. Lo caza `verify.mjs` —«LaTeX que ha
+  salido como texto»— pero se tarda menos en evitarlo: **al partir una
+  fórmula entre dos líneas, la segunda nunca empieza por un signo menos**;
+  se recoloca el corte o se pasa a `$$…$$`.
 - **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
   Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
   decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro
