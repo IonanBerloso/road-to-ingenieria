@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **6 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **7 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 173 ejercicios
-y 780 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 180 ejercicios
+y 811 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 780 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**173 ejercicios y 780 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 48 son ejercicios de convocatoria. Cobertura de la
+**180 ejercicios y 811 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 55 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -263,6 +263,36 @@ La segunda convocatoria completa, y la primera con los nueve ejercicios.
 turbobomba y publica 14,47 m; nuestra reconstrucción da 15,52 y la
 diferencia de 1,05 m no se explica con ninguna lectura probada. Se dice en
 la propia resolución, que es donde lo va a leer un alumno.
+
+### La ordinaria de mayo de 2025, siete de nueve — reabierta
+
+Esta convocatoria estuvo **cerrada semanas** con el criterio de que «media
+convocatoria es peor que ninguna». Se reabre porque el ejercicio 1 de la
+extraordinaria de junio de 2023 destapó la construcción adhesión-cohesión
+que la bloqueaba.
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 2 | 10 % | t02 | cos θ = 0,663 · h_cap = 24,6 mm · 14,74 mbar — exacto |
+| 3 | 10 % | t04 | s₂ entre 0,93 y 1,07 · α = 5,739° — exacto |
+| 4 | 7,5 % | t21 | A = 6,785 m² · Q = 17,313 m³/s · R = 1,786 m — exacto |
+| 5 | 10 % | t16 | los cinco π · 0,025 bar · 1.152 s · 0,0833 — exacto |
+| 6 | 15 % | t22 | 19,836 MW — exacto |
+| 7 | 10 % | t15 | 82,56 kg — exacto, con los 10° partidos por la mitad |
+| 8 | 10 % | t13 | el factor 0,206, y el empate agua-tetracloruro — exacto |
+
+**Faltan dos, y por motivos distintos.** El **1** reproduce F_H, F_V y R_A
+pero su α = 36,4° exige el equilibrio de la compuerta triangular, y la
+figura no fija sin ambigüedad el apoyo B. El **9** se resuelve **sobre el
+anexo de curvas** de la bomba; su apartado a) sí sale
+—h_mi = 32 + 6,64·10⁻³·Q^1,852— pero el resto no es transcribible sin
+publicar el anexo.
+
+> **La lección de método.** El ejercicio 2 llevaba semanas declarado como
+> «construcción no publicada en los apuntes», y no lo estaba: estaba en
+> otro examen. Cuando un ejercicio no cuadra por una herramienta que falta,
+> conviene mirar si otra convocatoria la usa con los datos suficientes para
+> deducirla. **Un hueco declarado no es un hueco cerrado.**
 
 ### La extraordinaria de junio de 2023, los nueve
 
