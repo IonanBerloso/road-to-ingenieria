@@ -31,8 +31,40 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 19 figuras, 52 ejercicios y
-228 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 113 ejercicios
+y 482 pasos.
+
+### La colección, que es donde estaba el hueco de verdad
+
+> Lo abrió una pregunta de Ionan —«¿por qué hay tan pocos ejercicios por
+> tema?»— y la respuesta fue incómoda: **la colección tiene 236 problemas y
+> solo 18 estaban dentro**, mientras 34 de los 52 ejercicios del corpus eran
+> ejemplos escritos por mí. Había tratado la colección como una fuente de
+> inspiración en vez de transcribirla, que es justo lo contrario de lo que
+> dice el plan de esta página.
+
+Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
+**113 ejercicios y 482 pasos**, de los cuales **79 son problemas transcritos
+de la colección**. Cobertura por capítulo:
+
+| capítulo | dentro | total | qué falta |
+|---|---|---|---|
+| 1 · Propiedades | 22 | 27 | los que piden figura |
+| 2 · Estática | 18 | 46 | compuertas con figura acotada |
+| 3 · Bernoulli | 7 | 34 | casi todo |
+| 4 · Cantidad de movimiento | 5 | 22 | casi todo |
+| 5 · Análisis dimensional | 6 | 20 | los simbólicos de teorema π |
+| 6 · Conducciones | 10 | 29 | redes y ramificaciones con figura |
+| 7 · Golpe de ariete | 6 | 17 | los que llevan esquema |
+| 8 · Canales | 3 | 22 | secciones trapeciales con figura |
+| 9 · Bombeo | 2 | 19 | los que remiten a los anexos de curvas |
+| **total** | **79** | **236** | |
+
+**La regla que sale de todo esto, y que no se vuelve a discutir:** un capítulo
+de la colección se transcribe **entero** antes de dar la fase por hecha, y un
+problema «que necesita figura» no es un problema excluido — es un problema al
+que hay que renderizarle la página del PDF. Las dos veces que dije «esto no se
+puede transcribir» estaba equivocado.
 
 ### Fase 9 · lo que se ha visto al empezarla
 

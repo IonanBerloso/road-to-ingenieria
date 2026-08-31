@@ -790,8 +790,9 @@ Ocho fases después, y medido con `npm run mide fluidos`:
 |---|---|
 | temas con prosa, figura y ejercicios | **23 de 25** |
 | palabras de prosa | **22.480** (Cálculo entera son 21.545) |
-| figuras | 19 |
-| ejercicios | 52, con 228 pasos |
+| figuras | 23 |
+| ejercicios | **113**, con 482 pasos |
+| de ellos, problemas de la colección | **79 de 236** |
 | convocatorias transcritas | **0 de 17** |
 | rutas de estudio | **0 de 2** |
 
@@ -839,6 +840,21 @@ imposible algo sin comprobarlo—:
 La segunda la destapó una pregunta suya: «¿las curvas no están en los
 documentos de esa carpeta?». Sí estaban. **La regla que sale de ahí: «no tengo
 el dato» es una afirmación, y hay que comprobarla como cualquier otra.**
+
+Al cerrar la tanda el corpus va por **79 de 236**. Los tres capítulos que
+apenas se habían tocado —el 5 de análisis dimensional, el 7 de golpe de ariete
+y el 8 de canales, con uno o tres problemas cada uno— pasan a 6, 6 y 3. La
+cobertura capítulo a capítulo está en la tabla de `tasks/todo.md`.
+
+Y una cosa que la transcripción en bloque enseñó y no se sabía: **reconstruir
+un problema entero casi nunca da exactamente el número del boletín.** La
+mayoría de las veces la diferencia es del 0,3 al 1,6 % y viene de leer el
+ábaco a ojo; esas se publican con la discrepancia dicha en la resolución y con
+la tolerancia abierta lo justo para que las dos lecturas valgan. Cuando la
+diferencia no se explica, el problema **no se publica**: le ha pasado al 6.23,
+que se aparta un 4 % de forma sistemática con los cuadros de la escuela, y
+antes al 2.33. Un problema que no se sabe reproducir no es un problema difícil:
+es un problema que todavía no se entiende.
 
 **El temario oficial son 25 temas y no 16.** El catálogo llevaba meses
 publicando una lista plausible —los temas «que parecían caer»— con

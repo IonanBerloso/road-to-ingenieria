@@ -442,3 +442,771 @@ ejercicios:
 
       Y ojo con la berma en ese tramo: el calado baja a 1,56 m, así que el
       canal de 2,3 m de altura va sobrado. Es el otro lado del mismo cambio.
+
+  # ── COLECCIÓN 8.7. El apartado c) es el que vale: pone el rectángulo y el
+  #    semicírculo uno al lado del otro con el mismo material, la misma
+  #    pendiente y el mismo caudal, y pregunta cuál es mejor. Es la
+  #    comparación que el tema afirma y casi nunca se hace con números.
+  - id: ejflu21-col87-el-rectangulo-y-la-media-cana
+    titulo: El canal rectangular y la media caña, con los mismos datos
+    fuente: >-
+      Ejercicio 8.7 · Colección de Problemas, capítulo 8 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Un canal rectangular de cemento sin acabado (coeficiente de Manning
+      $n = 0{,}014$) tiene $2{,}5\ \text{m}$ de ancho. La pendiente de la
+      solera es de $1{,}5$ milésimas. Se pide:
+
+      a) Calado o altura del agua para un caudal de $6\ \text{m}^{3}/\text{s}$.
+
+      b) Si la sección del canal fuese semicircular y fuese a sección llena,
+      calcular el diámetro.
+
+      c) ¿Cuál de las dos opciones es mejor? ¿Por qué?
+    pide: El calado del canal rectangular, el diámetro del semicircular y cuál conviene.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En Manning, $Q = \frac{1}{n}A\,R_H^{2/3}\sqrt{J}$. ¿Qué es $R_H$ en
+          un canal rectangular con el agua a calado $h$?
+        opciones:
+          - texto: >-
+              El área mojada dividida entre el perímetro **mojado**:
+              $bh/(b + 2h)$, contando la solera y las dos paredes pero no la
+              superficie libre
+            correcta: true
+            mensaje: |
+              Eso es, y las dos precisiones importan: la superficie libre no
+              roza con nada y no entra en el perímetro; las dos paredes sí, y
+              de ahí el 2.
+          - texto: >-
+              El calado, $h$, porque es la profundidad hidráulica
+            mensaje: |
+              El radio hidráulico solo coincide con una profundidad en un
+              canal infinitamente ancho, donde las paredes no cuentan. Aquí
+              $b = 2{,}5$ m y el calado va a salir de 1,2: las paredes son la
+              mitad del perímetro.
+          - texto: >-
+              El área mojada dividida entre el perímetro total de la sección,
+              incluida la superficie libre
+            mensaje: |
+              La superficie libre está en contacto con el aire, no con la
+              pared: no aporta rozamiento y por eso no se cuenta. Es la
+              diferencia entre «perímetro mojado» y «perímetro», y el nombre
+              lo dice.
+
+      - tipo: calcular
+        titulo: El calado del canal rectangular
+        pregunta: |
+          ¿Qué calado alcanza el agua con $6\ \text{m}^{3}/\text{s}$?
+        respuesta:
+          tipo: magnitud
+          valor: '1.2 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.918 m'
+            mensaje: |
+              Has tomado $R_H = h$. Con $b = 2{,}5$ m eso ignora las paredes,
+              y el radio hidráulico real es $bh/(b+2h) = 0{,}61$ m, la mitad
+              del calado.
+          - valor: '1.056 m'
+            mensaje: |
+              Perímetro mojado $b + h$: te has dejado una pared. Son dos, y el
+              agua roza con las dos.
+        pista: |
+          $6 = \frac{1}{0{,}014}\,(2{,}5h)\left(\frac{2{,}5h}{2{,}5+2h}
+          \right)^{2/3}\sqrt{0{,}0015}$. Se itera sobre $h$.
+        desarrollo: |
+          Agrupando lo que no depende de $h$:
+          $\frac{1}{0{,}014}\sqrt{0{,}0015} = 2{,}766$.
+
+          | $h$ | $A$ | $P$ | $R_H$ | $Q$ |
+          |---|---|---|---|---|
+          | 1,00 | 2,50 | 4,50 | 0,556 | 4,66 |
+          | 1,20 | 3,00 | 4,90 | 0,612 | 5,99 |
+          | 1,21 | 3,03 | 4,92 | 0,615 | 6,06 |
+
+          $$
+          h = 1{,}2\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: El diámetro de la media caña
+        pregunta: |
+          ¿Qué diámetro necesita la sección semicircular a sección llena?
+        respuesta:
+          tipo: magnitud
+          valor: '2.68 m'
+          tolerancia: 0.02
+          formato: un diámetro, con su unidad
+        distractores:
+          - valor: '2.26 m'
+            mensaje: |
+              Has usado $R_H = D/2$, el radio geométrico. El radio
+              **hidráulico** de un semicírculo a sección llena es
+              $A/P = (\pi D^{2}/8)/(\pi D/2) = D/4$: la mitad del geométrico.
+              Que los dos se llamen «radio» es una coincidencia de nombres.
+          - valor: '2.07 m'
+            mensaje: |
+              Parece que has usado el área del círculo completo,
+              $\pi D^{2}/4$. La sección es media caña: por debajo del diámetro
+              solo hay medio círculo, $\pi D^{2}/8$.
+        pista: |
+          A sección llena, $A = \pi D^{2}/8$, $P = \pi D/2$ y por tanto
+          $R_H = D/4$. Todo queda en función de $D$.
+        desarrollo: |
+          $$
+          6 = \frac{1}{0{,}014}\,\frac{\pi D^{2}}{8}
+          \left(\frac{D}{4}\right)^{2/3}\sqrt{0{,}0015}
+          = 0{,}4311\,D^{8/3}
+          $$
+          $$
+          D^{8/3} = 13{,}92
+          \;\Longrightarrow\;
+          D = 2{,}68\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: Cuánto se ahorra con la media caña
+        pregunta: |
+          ¿Qué porcentaje de perímetro mojado ahorra la media caña respecto
+          del rectángulo? (solo el número)
+        respuesta:
+          tipo: numero
+          valor: '14'
+          tolerancia: 1
+          formato: un porcentaje, solo el número
+        distractores:
+          - valor: '5.7'
+            mensaje: |
+              Ese es el ahorro de **área**: de 3,00 a 2,83 m². También es
+              cierto y también cuenta, pero se pregunta por el perímetro
+              mojado, que es el que mide el rozamiento y el revestimiento: de
+              4,90 a 4,21 m.
+          - valor: '45'
+            mensaje: |
+              Parece que has usado el diámetro, 2,68, como perímetro. El
+              perímetro mojado de la media caña es media circunferencia:
+              $\pi D/2 = 4{,}21$ m.
+        pista: |
+          Rectángulo: $P = b + 2h$. Media caña: $P = \pi D/2$.
+        desarrollo: |
+          $$
+          P_{\text{rect}} = 2{,}5 + 2\cdot 1{,}2 = 4{,}90\ \text{m}
+          \qquad
+          P_{\text{semi}} = \frac{\pi\cdot 2{,}68}{2} = 4{,}21\ \text{m}
+          $$
+          $$
+          \frac{4{,}90 - 4{,}21}{4{,}90} = 0{,}141 = 14\ \%
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta al apartado c). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con el mismo material, la misma pendiente y el mismo caudal, el
+              rectángulo necesita 3,00 m² de sección y 4,90 m de perímetro
+              mojado.
+          - texto: >-
+              La media caña de 2,68 m necesita 2,83 m² y 4,21 m: un 6 % menos
+              de área y un 14 % menos de perímetro.
+          - texto: >-
+              Menos perímetro es menos rozamiento y menos área es menos
+              excavación y menos hormigón, así que la media caña es mejor por
+              las dos razones a la vez.
+          - texto: >-
+              Y como la media caña es la sección hidráulicamente óptima, el
+              rectángulo nunca puede competir con ella por mucho que se
+              ajusten sus proporciones.
+            trampa: true
+            mensaje: |
+              La primera parte es verdad —el semicírculo es la óptima
+              absoluta— pero la conclusión está mal medida. El rectángulo de
+              este enunciado **no** está optimizado: la sección óptima
+              rectangular es $b = 2h$, y aquí $b = 2{,}5$ con $h = 1{,}2$, es
+              decir casi exactamente eso. Es decir que la comparación se está
+              haciendo con el mejor rectángulo posible, y aun así el
+              semicírculo gana un 14 %. **Ese** es el argumento, no que el
+              rectángulo no pueda competir.
+
+    resolucion: |
+      **a) El calado.** Manning con $A = 2{,}5h$ y $P = 2{,}5 + 2h$ no se
+      despeja: hay que iterar. Con $h = 1{,}2$ m sale $Q = 5{,}99$
+      m³/s, que es el caudal pedido.
+
+      **b) El diámetro.** A sección llena el semicírculo deja todo en función
+      de $D$, porque $A = \pi D^{2}/8$ y $R_H = D/4$:
+
+      $$
+      Q = 0{,}4311\,D^{8/3} = 6
+      \;\Longrightarrow\;
+      D = 2{,}68\ \text{m}
+      $$
+
+      Aquí sí hay despeje directo, y es la razón de que las secciones
+      circulares se calculen más rápido que las rectangulares.
+
+      **c) Cuál es mejor, con números.**
+
+      | | área | perímetro mojado | $R_H$ |
+      |---|---|---|---|
+      | rectángulo $2{,}5\times 1{,}2$ | 3,00 m² | 4,90 m | 0,612 m |
+      | media caña $D = 2{,}68$ | 2,83 m² | 4,21 m | 0,670 m |
+
+      La media caña gana en las tres columnas: menos área —menos excavación y
+      menos material—, menos perímetro —menos rozamiento— y más radio
+      hidráulico, que es la otra cara de lo mismo.
+
+      **Y el detalle que hace honesta la comparación.** El rectángulo del
+      enunciado está prácticamente en su óptimo: la sección rectangular
+      óptima cumple $b = 2h$, y aquí $2{,}5 \approx 2\cdot 1{,}2$. Así que no
+      se está comparando el semicírculo con un rectángulo mal hecho, sino con
+      el mejor rectángulo posible. El 14 % de ahorro es real y es el techo de
+      lo que se puede ganar cambiando la forma.
+
+      **Por qué entonces se siguen haciendo canales rectangulares.** Porque
+      un encofrado plano es mucho más barato que una media caña de dos metros
+      y medio de diámetro, y porque un rectángulo se limpia con una pala. El
+      14 % hidráulico se paga en obra, y esa es una decisión que el cálculo
+      no toma.
+
+  # ── COLECCIÓN 8.9. El problema tipo del tema: dimensionar a sección llena,
+  #    redondear al diámetro comercial y VOLVER a calcular el calado real, que
+  #    ya no es el de la sección llena. Es el único de la colección que usa el
+  #    cuadro nº 27 tal como está pensado.
+  - id: ejflu21-col89-el-colector-de-hormigon
+    titulo: Dimensionar la media caña, y volver atrás a por el calado
+    fuente: >-
+      Ejercicio 8.9 · Colección de Problemas, capítulo 8 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Determinar el diámetro de un canal semicircular, de hormigón en bruto
+      (coeficiente de Manning $n = 0{,}015$). El caudal
+      $Q = 2\ \text{m}^{3}/\text{s}$. La pendiente del canal es $J = 8$
+      milésimas. Los diámetros comerciales van de 100 en 100 mm. Una vez
+      seleccionado el diámetro, calcular el calado y la velocidad del flujo.
+    pide: El diámetro comercial, y el calado y la velocidad reales con ese diámetro.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Se dimensiona a sección llena y sale un diámetro; se redondea al
+          comercial superior. ¿Por qué hay que **volver** a calcular el
+          calado?
+        opciones:
+          - texto: >-
+              Porque con el diámetro comercial, mayor que el justo, el caudal
+              de diseño ya no llena la sección: el agua se queda por debajo
+            correcta: true
+            mensaje: |
+              Exacto. La sección llena se usó solo para dimensionar. Una vez
+              elegido el tubo, el caudal real es el que es y encuentra su
+              propio calado de equilibrio, más bajo.
+          - texto: >-
+              Porque al redondear hacia arriba la velocidad baja y hay que
+              comprobar que no sedimenta
+            mensaje: |
+              Es una consecuencia, y hay que comprobarla, pero no es la razón.
+              La razón es geométrica: el calado ya no es $D/2$ y todo —área,
+              perímetro, radio hidráulico— cambia con él.
+          - texto: >-
+              No hace falta: a sección llena el calado es $D/2$ por definición
+            mensaje: |
+              A sección llena sí, pero la sección **no** va llena. Se
+              dimensionó suponiendo que iría, se redondeó hacia arriba, y con
+              el diámetro comercial sobra hueco.
+
+      - tipo: calcular
+        titulo: El diámetro a sección llena
+        pregunta: |
+          ¿Qué diámetro llenaría exactamente la media caña con
+          $2\ \text{m}^{3}/\text{s}$?
+        respuesta:
+          tipo: magnitud
+          valor: '1.33 m'
+          tolerancia: 0.02
+          formato: un diámetro, con su unidad
+        distractores:
+          - valor: '1.12 m'
+            mensaje: |
+              $R_H = D/2$. El radio hidráulico de un semicírculo a sección
+              llena es $A/P = D/4$, no el radio geométrico.
+          - valor: '1.03 m'
+            mensaje: |
+              Parece que has usado el área del círculo completo. Media caña es
+              medio círculo: $A = \pi D^{2}/8$.
+        pista: |
+          $Q = \frac{1}{n}\,\frac{\pi D^{2}}{8}\left(\frac{D}{4}\right)^{2/3}
+          \sqrt{J}$, todo en función de $D$.
+        desarrollo: |
+          $$
+          2 = \frac{1}{0{,}015}\,\frac{\pi D^{2}}{8}
+          \left(\frac{D}{4}\right)^{2/3}\sqrt{0{,}008}
+          = 0{,}9293\,D^{8/3}
+          $$
+          $$
+          D^{8/3} = 2{,}152
+          \;\Longrightarrow\;
+          D = 1{,}33\ \text{m}
+          $$
+
+          Y como los comerciales van de 100 en 100 mm, se sube a
+          $D = 1{,}4$ m.
+
+      - tipo: calcular
+        titulo: El caudal que cabe en el tubo elegido
+        pregunta: |
+          Con $D = 1{,}4\ \text{m}$, ¿qué caudal llevaría la media caña a
+          sección llena?
+        respuesta:
+          tipo: magnitud
+          valor: '2.28 m3/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '4.56 m3/s'
+            mensaje: |
+              Ese es el de la **tubería** llena, el círculo completo. Es
+              exactamente el doble, porque al pasar de medio círculo a círculo
+              entero el área se dobla y el radio hidráulico no cambia. Ese
+              número hace falta después, pero no es el de aquí.
+          - valor: '3.62 m3/s'
+            mensaje: |
+              $R_H = D/2$ otra vez. Con $D/4 = 0{,}35$ m sale $2{,}28$.
+        pista: |
+          La misma expresión del paso anterior, ahora con $D$ conocido.
+        desarrollo: |
+          $$
+          Q_{\text{ll}} = 0{,}9293\cdot 1{,}4^{8/3} = 2{,}28\
+          \text{m}^{3}/\text{s}
+          $$
+
+          Sobra un 14 % de capacidad, que es lo que cuesta redondear al
+          comercial siguiente.
+
+      - tipo: calcular
+        titulo: El calado real
+        pregunta: |
+          ¿A qué calado circulan los $2\ \text{m}^{3}/\text{s}$?
+        respuesta:
+          tipo: magnitud
+          valor: '0.65 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.7 m'
+            mensaje: |
+              Ese es el calado a sección llena, $D/2$. El caudal de diseño es
+              un 12 % menor que el que cabe, así que el agua se queda por
+              debajo del diámetro.
+          - valor: '1.09 m'
+            mensaje: |
+              Has entrado en el cuadro n.º 27 con $Q_c/Q_{\text{ll}} = 0{,}88$
+              y multiplicado por $D$ el valor de $h_c/H_{\text{ll}}$ de esa
+              fila. Ojo con la referencia del cuadro: es la **tubería** llena,
+              no la media caña llena, y por tanto
+              $Q_c/Q_{\text{ll}} = 2/4{,}56 = 0{,}44$.
+        pista: |
+          El cuadro n.º 27 relaciona $Q_c/Q_{\text{ll}}$ con $h_c/D$, y su
+          referencia es la **tubería** a sección llena: $4{,}56$
+          m³/s.
+        desarrollo: |
+          $$
+          \frac{Q_c}{Q_{\text{ll}}} = \frac{2}{4{,}56} = 0{,}44
+          \;\Longrightarrow\;
+          \frac{h_c}{D} = 0{,}464
+          \;\Longrightarrow\;
+          h_c = 0{,}464\cdot 1{,}4 = 0{,}65\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad real
+        pregunta: |
+          ¿A qué velocidad circula el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '2.87 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '2.96 m/s'
+            mensaje: |
+              Esa es la velocidad a sección llena. La real es algo menor:
+              el cuadro da $v_c/v_{\text{ll}} = 0{,}968$ para
+              $Q_c/Q_{\text{ll}} = 0{,}44$.
+          - valor: '2.6 m/s'
+            mensaje: |
+              Has dividido el caudal entre el área de la media caña **llena**,
+              $0{,}77\ \text{m}^{2}$. El agua no llega arriba: a
+              $h = 0{,}65$ m su área es $0{,}70\ \text{m}^{2}$, y ahí sí sale
+              $2/0{,}70 = 2{,}87$ m/s.
+        pista: |
+          O con $v_c/v_{\text{ll}}$ del cuadro n.º 27, o dividiendo el caudal
+          entre el área mojada real. Las dos tienen que dar lo mismo.
+        desarrollo: |
+          $$
+          v_{\text{ll}} = \frac{1}{0{,}015}\,0{,}35^{2/3}\sqrt{0{,}008}
+          = 2{,}96\ \text{m/s}
+          $$
+          $$
+          v_c = 0{,}968\cdot 2{,}96 = 2{,}87\ \text{m/s}
+          $$
+
+          Comprobación por el otro camino: el área mojada a
+          $h = 0{,}65$ m vale $0{,}70\ \text{m}^{2}$, y
+          $2/0{,}70 = 2{,}87$ m/s. Cuadra.
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              A sección llena harían falta 1,33 m, y como los comerciales van
+              de 100 en 100 mm se instala el de 1,4.
+          - texto: >-
+              Con 1,4 m la media caña admite 2,28 m³/s, un 14 % más de lo
+              necesario, así que los 2 m³/s no la llenan.
+          - texto: >-
+              Entrando en el cuadro n.º 27 con
+              $Q_c/Q_{\text{ll}} = 2/4{,}56 = 0{,}44$ salen $h_c = 0{,}65$ m y
+              $v_c = 2{,}87$ m/s.
+          - texto: >-
+              Y como el calado real es menor que el de proyecto, la velocidad
+              también baja, lo que reduce el riesgo de erosión.
+            trampa: true
+            mensaje: |
+              La velocidad baja poquísimo —de 2,96 a 2,87 m/s, un 3 %— y esa
+              es la propiedad más útil de las secciones circulares: **la
+              velocidad es casi independiente del calado** en un rango
+              amplísimo. El cuadro lo dice: entre el 30 % y el 100 % del
+              caudal, $v_c/v_{\text{ll}}$ se mueve solo entre 0,875 y 1,14 —y
+              de hecho **pasa de 1**, porque en torno al 90 % del caudal el
+              radio hidráulico es mayor que a sección llena—. Por eso los
+              colectores se hacen circulares: arrastran los sólidos igual de
+              bien con caudal alto que con caudal bajo.
+
+    resolucion: |
+      **La secuencia, que es la del tema entero.** Dimensionar a sección
+      llena → redondear al comercial → volver atrás y calcular el calado real.
+      El tercer paso es el que se olvida, y es el que da la respuesta que se
+      pregunta.
+
+      **1 · El diámetro.** A sección llena todo queda en $D$:
+
+      $$
+      Q = \frac{1}{n}\,\frac{\pi D^{2}}{8}\left(\frac{D}{4}\right)^{2/3}
+      \sqrt{J} = 0{,}9293\,D^{8/3} = 2
+      \;\Longrightarrow\;
+      D = 1{,}33\ \text{m}
+      $$
+
+      Comercial: **1,4 m**, con el que caben 2,28 m³/s.
+
+      **2 · El calado.** Aquí entra el cuadro n.º 27, y hay que leerlo con
+      cuidado: sus relaciones están referidas a la **tubería** a sección
+      llena, no a la media caña. Y resulta que
+      $Q_{\text{tubería llena}} = 2\,Q_{\text{media caña llena}}$ exactamente,
+      porque al cerrar el círculo el área se dobla y el radio hidráulico
+      —$D/4$ en los dos casos— no cambia. Así que la referencia es 4,56
+      m³/s:
+
+      $$
+      \frac{Q_c}{Q_{\text{ll}}} = 0{,}44
+      \;\Longrightarrow\;
+      \frac{h_c}{D} = 0{,}464,\quad \frac{v_c}{v_{\text{ll}}} = 0{,}968
+      $$
+      $$
+      h_c = 0{,}65\ \text{m}
+      \qquad
+      v_c = 2{,}87\ \text{m/s}
+      $$
+
+      **3 · La comprobación, que no cuesta nada.** El área mojada a 0,65 m es
+      un segmento circular de 0,70 m², y $2/0{,}70 = 2{,}87$ m/s. Los dos
+      caminos coinciden, lo que dice que el cuadro se ha leído bien.
+
+      **Lo que hay que llevarse.** De los 2,28 m³/s que caben se usan 2, un
+      88 %, y con eso el agua sube al 46 % del diámetro. **La relación entre
+      caudal y calado no es proporcional ni de lejos**: en una sección
+      circular el último tramo de altura aporta muchísimo caudal, porque es
+      donde la sección es más ancha. Ese es todo el contenido del cuadro
+      n.º 27, y es la razón de que exista.
+
+  # ── COLECCIÓN 8.20. El apartado c) es distinto de todo lo demás del
+  #    capítulo: no pide calcular, pide **elegir**, y con tres variables a la
+  #    vez. Es el ejercicio que enseña qué hace cada término de Manning y
+  #    hacia dónde empuja.
+  - id: ejflu21-col820-el-canal-de-desague-de-la-central
+    titulo: El canal de desagüe, y elegir las tres variables a la vez
+    fuente: >-
+      Ejercicio 8.20 · Colección de Problemas, capítulo 8 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      El agua turbinada en una central del Pirineo se descarga al canal de
+      desagüe, para devolverla al río. El canal es de hormigón en bruto, de
+      sección rectangular y de $1\ \text{m}$ de ancho. El caudal es
+      $1{,}25\ \text{m}^{3}/\text{s}$. Se pide:
+
+      a) Pendiente de la solera del canal (milésimas), para que el calado sea
+      de $0{,}5\ \text{m}$.
+
+      b) Velocidad del agua en el canal.
+
+      c) El canal es antiguo y está en mal estado, por lo que se ha decidido
+      renovarlo. Se puede elegir el material, la pendiente (9, 15 ó 20
+      milésimas) y la sección transversal del canal. Elegir de forma
+      justificada las tres variables para que la velocidad del agua en el
+      canal sea **máxima**. Calcular dicha velocidad máxima.
+
+      Materiales disponibles (cuadro n.º 26): hormigón acabado 0,012;
+      hormigón en bruto 0,015; arena 0,020; mampostería 0,026; tierra 0,026;
+      tierra con piedras o hierba 0,035; piedras 0,037; rocas medias 0,042;
+      rocas grandes 0,060.
+    pide: La pendiente y la velocidad actuales, y las tres elecciones que hacen máxima la velocidad.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En $v = \frac{1}{n}R_H^{2/3}\sqrt{J}$, ¿hacia dónde hay que mover
+          cada variable para que la velocidad sea máxima?
+        opciones:
+          - texto: >-
+              $n$ lo más pequeño posible, $J$ lo más grande posible y la
+              sección la que maximice el radio hidráulico
+            correcta: true
+            mensaje: |
+              Exacto, y las tres son independientes: no hay que ceder en una
+              para ganar en otra. Por eso el apartado se puede resolver
+              variable a variable.
+          - texto: >-
+              $n$ grande, porque un canal más rugoso frena menos al tener más
+              superficie de contacto
+            mensaje: |
+              El coeficiente de Manning está en el **denominador**: más
+              rugoso, menos velocidad. Es lo contrario de lo que dice la
+              opción, y además más superficie de contacto es más rozamiento,
+              no menos.
+          - texto: >-
+              La sección más grande posible, porque cabe más agua
+            mensaje: |
+              El caudal está fijado en 1,25 m³/s: agrandar la sección solo
+              reparte ese caudal en más área y baja la velocidad. Lo que hay
+              que maximizar no es el área, es el **radio hidráulico** —área
+              partido por perímetro mojado— y eso pide la sección óptima, que
+              es la más pequeña.
+
+      - tipo: calcular
+        titulo: La velocidad actual
+        pregunta: |
+          Con $1\ \text{m}$ de ancho y $0{,}5\ \text{m}$ de calado, ¿a qué
+          velocidad va el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '2.5 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '1.25 m/s'
+            mensaje: |
+              Has dividido entre $1\ \text{m}^{2}$: has usado el ancho como
+              área. El área mojada es ancho por calado, $1\cdot 0{,}5 =
+              0{,}5\ \text{m}^{2}$.
+          - valor: '0.63 m/s'
+            mensaje: |
+              Parece que has usado el perímetro mojado, $2$ m, como si fuera
+              el área. El perímetro sirve para el radio hidráulico, no para
+              la continuidad.
+        pista: |
+          Este apartado no necesita Manning: es continuidad, $v = Q/A$.
+        desarrollo: |
+          $$
+          A = 1\cdot 0{,}5 = 0{,}5\ \text{m}^{2}
+          \qquad
+          v = \frac{1{,}25}{0{,}5} = 2{,}5\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: La pendiente actual
+        pregunta: |
+          ¿Qué pendiente tiene la solera, en milésimas? (solo el número)
+        respuesta:
+          tipo: numero
+          valor: '8.93'
+          tolerancia: 0.1
+          formato: un número en milésimas, sin unidades
+        distractores:
+          - valor: '94.5'
+            mensaje: |
+              Te ha faltado elevar al cuadrado. Manning lleva $\sqrt J$: de
+              despejar sale $\sqrt J = 0{,}0945$, y la pendiente es su
+              cuadrado, $0{,}00893$.
+          - valor: '22.5'
+            mensaje: |
+              Parece que has usado $R_H = h = 0{,}5$ m. El radio hidráulico
+              es $A/P = 0{,}5/2 = 0{,}25$ m, la mitad del calado: en un canal
+              de un metro de ancho las dos paredes son la mitad del perímetro.
+        pista: |
+          $v = \frac{1}{n}R_H^{2/3}\sqrt J$ con $v$ ya conocida, y despeja $J$
+          sin olvidar que va bajo raíz.
+        desarrollo: |
+          $$
+          R_H = \frac{0{,}5}{1 + 2\cdot 0{,}5} = 0{,}25\ \text{m}
+          $$
+          $$
+          \sqrt J = \frac{v\,n}{R_H^{2/3}}
+          = \frac{2{,}5\cdot 0{,}015}{0{,}3969} = 0{,}0945
+          \;\Longrightarrow\;
+          J = 8{,}93\ \text{milésimas}
+          $$
+
+      - tipo: calcular
+        titulo: El diámetro del canal renovado
+        pregunta: |
+          Con hormigón acabado, 20 milésimas de pendiente y sección
+          semicircular a sección llena, ¿qué diámetro hace falta?
+        respuesta:
+          tipo: magnitud
+          valor: '0.866 m'
+          tolerancia: 0.02
+          formato: un diámetro, con su unidad
+        distractores:
+          - valor: '0.729 m'
+            mensaje: |
+              $R_H = D/2$. En un semicírculo a sección llena
+              $R_H = A/P = D/4$, la mitad del radio geométrico.
+          - valor: '0.667 m'
+            mensaje: |
+              Parece que has usado el área del círculo entero,
+              $\pi D^{2}/4$. La sección es media caña: $\pi D^{2}/8$.
+        pista: |
+          $Q = \frac{1}{n}\frac{\pi D^{2}}{8}\left(\frac{D}{4}\right)^{2/3}
+          \sqrt{J}$, con $n = 0{,}012$ y $J = 0{,}020$.
+        desarrollo: |
+          $$
+          1{,}25 = \frac{1}{0{,}012}\,\frac{\pi D^{2}}{8}
+          \left(\frac{D}{4}\right)^{2/3}\sqrt{0{,}020}
+          = 1{,}8366\,D^{8/3}
+          $$
+          $$
+          D^{8/3} = 0{,}6806
+          \;\Longrightarrow\;
+          D = 0{,}866\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad máxima
+        pregunta: |
+          ¿Cuál es entonces la velocidad máxima alcanzable?
+        respuesta:
+          tipo: magnitud
+          valor: '4.25 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '4 m/s'
+            mensaje: |
+              Parece que has mantenido la sección rectangular óptima
+              —$b = 2h$— en vez de pasar a la media caña. Con los mismos $n$ y
+              $J$ da 4,00 m/s: el semicírculo solo aporta el último 6 %, pero
+              lo aporta, y el enunciado pide el máximo.
+          - valor: '3.59 m/s'
+            mensaje: |
+              Parece que te has quedado en el hormigón **en bruto**,
+              $n = 0{,}015$. Pasar a acabado, $0{,}012$, sube la velocidad de
+              3,59 a 4,25 sin tocar nada más: es la elección más rentable de
+              las tres.
+        pista: |
+          $v = Q/A$, con el área de la media caña llena de diámetro 0,866 m.
+        desarrollo: |
+          $$
+          A = \frac{\pi\,0{,}866^{2}}{8} = 0{,}294\ \text{m}^{2}
+          \qquad
+          v = \frac{1{,}25}{0{,}294} = 4{,}25\ \text{m/s}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la justificación del apartado c). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El coeficiente de Manning está en el denominador, así que se
+              elige el material más liso disponible: hormigón acabado,
+              $n = 0{,}012$.
+          - texto: >-
+              La pendiente entra bajo raíz en el numerador, así que se elige
+              la mayor de las tres ofrecidas: 20 milésimas.
+          - texto: >-
+              Y la sección se elige por su radio hidráulico, que es máximo en
+              la hidráulicamente óptima; entre todas las formas, la óptima
+              absoluta es el semicírculo.
+          - texto: >-
+              Las tres elecciones son la misma que se haría para maximizar el
+              caudal, así que el canal más rápido es también el de mayor
+              capacidad.
+            trampa: true
+            mensaje: |
+              El caudal está **fijado** en 1,25 m³/s: no se está maximizando
+              nada de eso. Y las dos optimizaciones no coinciden: si lo que se
+              quisiera fuera capacidad, la sección se haría más grande, y eso
+              baja la velocidad. Aquí se busca lo contrario —la sección más
+              pequeña que aún pase el caudal— y por eso sale la óptima.
+
+    resolucion: |
+      **a) y b), que van al revés de como parece.** El calado y el ancho dan
+      el área, y el área con el caudal da la velocidad **sin usar Manning**:
+      $v = 1{,}25/0{,}5 = 2{,}5$ m/s. Solo entonces se entra en Manning, con
+      $v$ conocida, para despejar la pendiente:
+
+      $$
+      R_H = \frac{0{,}5}{2} = 0{,}25\ \text{m}
+      \qquad
+      J = \left(\frac{2{,}5\cdot 0{,}015}{0{,}25^{2/3}}\right)^{2}
+      = 8{,}93\ \text{milésimas}
+      $$
+
+      El orden importa: quien empieza por Manning se encuentra con dos
+      incógnitas y se atasca.
+
+      **c) Las tres elecciones, una por término.** La fórmula
+      $v = \frac{1}{n}R_H^{2/3}\sqrt J$ tiene tres factores y cada variable
+      toca uno solo, así que se decide por separado:
+
+      | variable | dónde entra | elección |
+      |---|---|---|
+      | material | $1/n$ | hormigón acabado, $n = 0{,}012$ |
+      | pendiente | $\sqrt J$ | 20 milésimas, la mayor ofrecida |
+      | sección | $R_H^{2/3}$ | semicircular, la óptima absoluta |
+
+      Y entonces se dimensiona: $D = 0{,}866$ m, $A = 0{,}294$ m², y
+
+      $$
+      v = \frac{1{,}25}{0{,}294} = 4{,}25\ \text{m/s}
+      $$
+
+      **Cuánto aporta cada decisión, que es lo que el ejercicio no dice y
+      conviene ver.** Se parte del canal original y se cambia una cosa cada
+      vez, redimensionando el calado para que sigan pasando los mismos
+      1,25 m³/s:
+
+      | | $n$ | $J$ (‰) | sección | $v$ (m/s) |
+      |---|---|---|---|---|
+      | original | 0,015 | 8,93 | rect. $1\times 0{,}50$ | 2,50 |
+      | + pendiente | 0,015 | 20 | rect. $1\times 0{,}37$ | 3,36 |
+      | + material | 0,012 | 20 | rect. $1\times 0{,}32$ | 3,95 |
+      | + sección | 0,012 | 20 | media caña $D = 0{,}87$ | **4,25** |
+
+      La pendiente es la palanca más fuerte —vale ella sola tanto como las
+      otras dos juntas— y es también la única que muchas veces no se puede
+      elegir: la marca el terreno. La forma es la que menos aporta, un 8 %, y
+      es la más cara de construir. **Ese orden es el que hay que tener en la
+      cabeza antes de optimizar nada.**
+
+      **Y el aviso que este ejercicio no pide pero un proyecto sí.** Cuatro
+      metros y cuarto por segundo en hormigón es mucho: el límite habitual
+      para no erosionar anda entre 2 y 3 m/s en hormigón corriente. El
+      enunciado pide maximizar la velocidad como ejercicio de manejo de la
+      fórmula; en obra, la pregunta suele ser la contraria — cómo mantenerla
+      por debajo de un tope sin que el canal sedimente.
