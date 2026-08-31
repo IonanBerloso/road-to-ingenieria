@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **5 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **6 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 164 ejercicios
-y 738 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 173 ejercicios
+y 780 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 738 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**164 ejercicios y 738 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 39 son ejercicios de convocatoria. Cobertura de la
+**173 ejercicios y 780 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 48 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -264,7 +264,42 @@ turbobomba y publica 14,47 m; nuestra reconstrucción da 15,52 y la
 diferencia de 1,05 m no se explica con ninguna lectura probada. Se dice en
 la propia resolución, que es donde lo va a leer un alumno.
 
-> El ejercicio 3 es el que más enseña de los nueve, y no por la cuenta. Un
+### La extraordinaria de junio de 2023, los nueve
+
+Y la segunda seguida que entra entera.
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 7,5 % | t02 | h = 3σcosθ/(γb) · cosθ = 0,917 · 9,99 mm — exacto |
+| 2 | 10 % | t04 | 2.613,3 N/m³ · 872,75 torr · 107.347 Pa — exacto |
+| 3 | 10 % | t08 | H = 67,74 mm — exacto |
+| 4 | 10 % | t15 | 22,19 kN · máximo en 90° con 25,13 kN — exacto |
+| 5 | 12,5 % | t16 | los tres π · 859,6 km/h · 8,19 kPa — exacto |
+| 6 | 15 % | t19 | f₄ = 0,02171 · 48,32 l/s · 64,24 m · 35,49 m — al 0,6 % |
+| 7 | 15 % | t21 | 41,5 cm · 50,7 cm · 111,33 m · D = 1,2 m — exacto |
+| 8 | 15 % | t25 | 4,5·10⁻⁴ · M2 a 163,45 l/s · k = 1,546 · 276,18 l/s — exacto |
+| 9 | 5 % | t23 | la tabla — la anticipaba el propio tema |
+
+**Con el apartado b) del 3 declarado**: publica s₁ = 0,752 y la misma
+ecuación que da el a) exacto devuelve 0,712.
+
+> **Lo que este examen desbloquea.** Su ejercicio 1 usa la construcción
+> adhesión-cohesión que faltaba: con F_adh/F_coh = 7/3, componiendo la
+> adhesión perpendicular a la pared con la cohesión a 45°, sale
+> cos θ = 0,917 y el ascenso de 9,99 mm es exacto. **Esa era justamente la
+> construcción que dejaba fuera el ejercicio 2 de la ordinaria de mayo de
+> 2025**, y que se declaró como «no publicada en los apuntes». Ya está
+> reconstruida: hay que volver a aquella convocatoria.
+
+> Y una advertencia sobre el ejercicio 6. La determinación del caudal es
+> **hipersensible**: sale de igualar las pérdidas de dos ramales en
+> paralelo que además llevan el mismo caudal, y el factor de fricción del
+> PVC depende del Reynolds tan débilmente que un 0,1 % en f mueve el
+> caudal un 0,5 %. Nuestra reconstrucción da 48,58 l/s frente a 48,32, y
+> 35,69 m frente a 35,49. No es desacuerdo de física; es aritmética mal
+> condicionada, y está dicho en la propia resolución.
+
+> El ejercicio 3 de la ordinaria es el que más enseña de los nueve, y no por la cuenta. Un
 > tramo curvo con un fluido a cada lado invita a pensar que se
 > contrarrestan. Aquí no: el manómetro abierto de la derecha sitúa el plano
 > de cargas del fluido 2 **por debajo** del tramo, así que su presión es
