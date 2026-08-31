@@ -622,17 +622,19 @@ que vale (§15); la tabla anterior decía 13.343 con el conteo crudo del MDX—:
 | 7 · diagonalización | **1.111** | 1 | 35 | 3 | 111 |
 | **total** | **9.178** | **9** | **179** | **19** | **576** |
 
-**El boletín oficial está transcrito entero en seis de los siete temas**
+**El boletín oficial está transcrito entero en los siete temas**
 (30 de agosto de 2026): los 33 de espacios vectoriales, los 23 de
 aplicaciones lineales, los 20 de matrices, los 21 de determinantes (el 4.15 va
-dos veces en el original), los 22 de sistemas y los 25 de diagonalización (32
+dos veces en el original), los 22 de sistemas, los 7 de euclídeos (9
+ejercicios, el 6.4 trae tres bases) y los 25 de diagonalización (32
 ejercicios, porque el 7.6 y el 7.7 traen varias matrices cada uno), cada uno
-con su enunciado verbatim, sus
-pasos guiados y las cuentas comprobadas numéricamente antes de escribir un
-solo mensaje de diagnóstico. Queda el de euclídeos, que sigue con 9 de sus
-ejercicios. Dos enunciados traen erratas casi seguras del original (el 28 y el
-31 de espacios vectoriales) y se resuelven tal como están impresos, diciendo
-qué cambiaría con el signo probable.
+con su enunciado verbatim, sus pasos guiados y las cuentas comprobadas
+numéricamente antes de escribir un solo mensaje de diagnóstico. Al principio
+quedó escrito aquí que faltaba el de euclídeos: era falso — su boletín solo
+tiene 7 enunciados y estaban los 7 desde el cierre del 27 de agosto. Dos
+enunciados traen erratas casi seguras del original (el 28 y el 31 de espacios
+vectoriales, más la ya conocida del 6.7) y se resuelven tal como están
+impresos, diciendo qué cambiaría con el signo probable.
 
 **El reparto de longitudes no es casual y conviene que quede dicho:** los temas
 1 y 2 son los largos porque ocupan un hueco del examen **cada uno de los ocho
@@ -767,9 +769,56 @@ examen delante y no antes (§13), y lo que hacía falta eran dos tipos:
 
 ## Las otras siete asignaturas
 
-Cero contenido. Fluidos tiene los 16 temas en el catálogo y un README; las
-otras seis están como `prev`. Es §00 funcionando: no se abre una hasta cerrar
-la anterior.
+Seis están como `prev`, con cero contenido. Es §00 funcionando: no se abre una
+hasta cerrar la anterior.
+
+**Mecánica de Fluidos se abrió el 30 de agosto de 2026**, en cuanto Álgebra
+quedó cerrada con su boletín entero. Lo hecho el primer día:
+
+| | antes | ahora |
+|---|---|---|
+| temario | 16 temas puestos a ojo, `temarioOficial: false` | **los 25 oficiales**, de la Guía de la asignatura |
+| pesos | estimados | **medidos** sobre los 10 exámenes finales de 2020-2025 |
+| temas escritos | 0 | **1 de 25** (t01, introducción) |
+| respuestas con unidad | imposibles | tipo `magnitud`, con lector y 20 tests |
+
+**El temario oficial son 25 temas y no 16.** El catálogo llevaba meses
+publicando una lista plausible —los temas «que parecían caer»— con
+`temarioOficial: false`, que es lo que §15 exige mientras no tengas la fuente.
+La fuente es el apartado 4 de la Guía de la asignatura, «Programa de teoría de
+Mecánica de Fluidos».
+
+**Y los pesos no son una impresión.** Los cuadernillos de examen de esta
+asignatura **imprimen el porcentaje de cada ejercicio** —cosa que Álgebra no
+hacía—, así que se extrajeron los 111 ejercicios con su tanto por ciento, se
+clasificó cada uno por tema y se sumó. De ahí salen los nueve temas de peso
+alto (4, 7, 13, 15, 16, 18, 19, 21 y 25) y, sobre todo, las ocho `etiqueta` de
+temas **transversales**: el 12 (Bernoulli) y el 14 (cantidad de movimiento)
+casi nunca ocupan un hueco propio, pero caen dentro de los que sí.
+
+### La capa de unidades, que es lo que Fluidos le pide al sistema
+
+Cada asignatura ha tensionado el sistema por un sitio distinto: Cálculo pedía
+lectura de regiones, Álgebra pidió vectores y matrices. **Fluidos pide
+unidades**, y CLAUDE.md llevaba meses diciendo que eso se hacía «una vez,
+bien, cuando entre la primera asignatura con unidades — no con un apaño en el
+contenido».
+
+Lo que entró es un tipo de respuesta `magnitud` (`src/lib/unidades.ts`) que
+compara **por dimensión**: convierte lo escrito y lo esperado a unidades base
+del SI y los contrasta allí. Consecuencias visibles para el alumno:
+
+- **`1 bar`, `100 kPa` y `10,2 mca` son la misma respuesta**, y las tres se
+  dan por buenas. La unidad la elige quien contesta, no quien redactó.
+- **Faltar la unidad no es lo mismo que fallar el número.** Quien escribe
+  «1,5» donde la respuesta es «1,5 bar» recibe *«el número está bien; falta la
+  unidad»*, no un «mal» a secas.
+- **Y dar caudal en m/s tiene mensaje propio**: *«esa unidad es de otra
+  magnitud»*, con la recomendación de comprobar dimensiones antes que
+  números. Es el error conceptual, y es el que más se repite.
+
+La tolerancia de este tipo es **relativa** (2 % por defecto) y no absoluta,
+porque media respuesta de fluidos sale de leer el ábaco de Moody a ojo.
 
 ---
 
@@ -960,7 +1009,9 @@ una línea:
   `display: none` devuelve ceros. Arreglado eso —destapar la página, medir en
   un segundo paso, y contar—, el barrido de las 96 páginas encontró seis más, de
   meses atrás. Todas arregladas.
-- **2** — el temario de Fluidos está en el catálogo sin fuente verificada.
+- **2** — ~~el temario de Fluidos está en el catálogo sin fuente verificada~~.
+  **Cerrada** el 30 de agosto de 2026: los 25 temas oficiales, tomados del
+  apartado 4 de la Guía de la asignatura, con `temarioOficial: true`.
 - **5** — el patrón «figura fija» sigue sin construir, a propósito: ningún
   contenido lo ha pedido todavía.
 - **18** — el bloque del formulario duplica hechos que ya están en la prosa.

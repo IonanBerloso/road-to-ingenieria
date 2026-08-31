@@ -314,6 +314,18 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
 pide, no porque esté en la tabla.
 
+Y dentro de `calcular`, seis tipos de respuesta según lo que se escriba en la
+casilla:
+
+| `respuesta.tipo` | qué lee | tolerancia | dónde vive el lector |
+|---|---|---|---|
+| `numero` | un real, con forma exacta (`pi/4`, `sqrt(3)/2`) | absoluta | `lib/regiones.ts` |
+| `complejo` | forma binómica | absoluta | `lib/complejo.ts` |
+| `conjunto` | varias soluciones, sin orden | absoluta | `lib/complejo.ts` |
+| `vector` | coordenadas **con** orden | absoluta | `lib/algebra.ts` |
+| `matriz` | filas y columnas | absoluta | `lib/algebra.ts` |
+| `magnitud` | número **con unidad**, comparado por dimensión | **relativa** | `lib/unidades.ts` |
+
 > Las cifras de esta tabla y las de §05 y §15 se quedaron en el corpus de
 > agosto y estuvieron desfasadas hasta el 28 de agosto de 2026: decían 1.022
 > pasos cuando eran 2.658, y 270 ejercicios cuando eran 683. **Regla que sale
@@ -1178,11 +1190,28 @@ Cosas que ya han costado horas. No son opiniones.
   id se copia del `ejercicios.yaml`, siempre.** El build lo caza —«referencia el
   ejercicio X, que no existe»—, pero una ruta enlazando el ejercicio equivocado
   **no lo caza nadie**, y eso es §13 caso 2.
-- **El esquema no tiene `unidad`.** Cálculo nunca la necesitó. Fluidos la
-  necesita en su primer ejercicio, y el ejemplo de §04 de este fichero la usó
-  durante meses sin que existiera. Añadirla es tocar la capa compartida: se
-  hace una vez, bien, cuando entre la primera asignatura con unidades — no con
-  un apaño en el contenido.
+- **~~El esquema no tiene `unidad`~~ · resuelto el 30 de agosto de 2026.** Lo
+  que entró no es un campo `unidad` sino un **tipo de respuesta**,
+  `magnitud`, con su lector en `src/lib/unidades.ts` y 20 casos en
+  `tests/unidades.test.ts`. La diferencia importa: un campo `unidad` al lado
+  de un número compara textos —«1 bar» y «100 kPa» serían respuestas
+  distintas, y «2 m/s» valdría como caudal—; un tipo propio compara **por
+  dimensión**, convirtiendo las dos a unidades base del SI.
+
+  Tres decisiones que conviene no volver a discutir:
+
+  1. **La tolerancia de `magnitud` es relativa** (0,02 = 2 %), al revés que
+     en los otros tipos. Lo pide el ábaco de Moody: media respuesta de
+     fluidos sale de leer una curva a ojo, y exigir cuatro cifras es exigir
+     que el alumno y quien escribió el ejercicio lean el mismo píxel.
+  2. **Tres errores, tres diagnósticos.** Número bueno sin unidad (descuido),
+     unidad de otra magnitud (confusión conceptual, la grave) y número malo
+     no son el mismo fallo, y el comparador devuelve cuál ha sido. Los dos
+     primeros mensajes están en `EjercicioGuiado.astro` y **no hay que
+     declararlos como distractor en cada ejercicio**.
+  3. **Si la respuesta es adimensional, el tipo es `numero`.** Un Reynolds o
+     un rendimiento no llevan unidad, y el esquema rechaza una `magnitud`
+     sin unidad precisamente para que nadie la use como número con adorno.
 - **`pdftotext` sin `-enc UTF-8` se come los signos.** Los exámenes escritos con
   el editor de ecuaciones de Word ponen el menos, el ≤ y el ∈ en fuente
   **Symbol**, y con la codificación por defecto salen como un espacio: el

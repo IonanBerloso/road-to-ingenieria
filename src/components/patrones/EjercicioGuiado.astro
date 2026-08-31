@@ -466,6 +466,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from '../../lib/complejo';
   import { comparaMatriz, comparaVector, leeMatriz, leeVector } from '../../lib/algebra';
   import { analiza, cumple, evaluaNumero, mismaRegion } from '../../lib/regiones';
+  import { comparaMagnitud, leeMagnitud, nombreDim } from '../../lib/unidades';
 
   type Respuesta = { tipo: 'complejo' | 'numero'; valor: string; tolerancia: number };
   type Dato =
@@ -595,6 +596,11 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
        *  la respuesta buena, porque lo que importa es identificar el
        *  razonamiento, no el redondeo. */
       const coincide = (escrito: string, objetivo: string, tolerancia: number) => {
+        if (respuesta.tipo === 'magnitud') {
+          const a = leeMagnitud(escrito);
+          const b = leeMagnitud(objetivo);
+          return a && b ? comparaMagnitud(a, b, tolerancia).igual : false;
+        }
         if (respuesta.tipo === 'conjunto') {
           const a = leeConjunto(escrito);
           const b = leeConjunto(objetivo);
@@ -628,6 +634,10 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       const lee = (texto: string) => leeComplejo(texto) ?? evaluaNumero(texto);
 
       const holgura = (objetivo: string) => {
+        /* En una magnitud la tolerancia ya ES relativa, así que la holgura del
+           2 % que se aplica a los números no tiene sentido aquí: duplicarla
+           haría que un distractor al 4 % se comiera la respuesta buena. */
+        if (respuesta.tipo === 'magnitud') return Math.max(respuesta.tolerancia, 0.02);
         if (respuesta.tipo === 'conjunto') return respuesta.tolerancia;
         /* Un vector o una matriz no tienen «escala» única —cada entrada tiene
            la suya—, así que la holgura del 2 % no se puede calcular sobre el
@@ -640,6 +650,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       /** Se lee según el tipo: una lista de soluciones no es un solo número. */
       const legible = (texto: string) => {
+        if (respuesta.tipo === 'magnitud') return leeMagnitud(texto);
         if (respuesta.tipo === 'conjunto') return leeConjunto(texto);
         if (respuesta.tipo === 'vector') return leeVector(texto);
         if (respuesta.tipo === 'matriz') return leeMatriz(texto);
@@ -664,7 +675,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             paso,
             'mal',
             'No he entendido la respuesta',
-            respuesta.tipo === 'conjunto'
+            respuesta.tipo === 'magnitud'
+              ? '<p>Escribe el <strong>número y la unidad</strong>, por ejemplo ' +
+                  '<code>2,5 bar</code> o <code>50 l/s</code>. Vale cualquier unidad de la ' +
+                  'misma magnitud: si la respuesta está en pascales, <code>1 bar</code> ' +
+                  'también cuenta. Los exponentes se escriben <code>m^3</code> o ' +
+                  '<code>m3</code>.</p>'
+            : respuesta.tipo === 'conjunto'
               ? '<p>Escribe <strong>todas</strong> las soluciones separadas por comas, ' +
                   'por ejemplo <code>1, -1+i, -1-i</code>.</p>'
               : respuesta.tipo === 'vector'
@@ -695,6 +712,38 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         if (k >= 0) {
           fb(paso, 'mal', 'Sé lo que ha pasado', html(paso, `[data-msg-distractor="${k}"]`));
           return;
+        }
+
+        /* Los dos diagnósticos de unidades. Van DESPUÉS de los distractores
+           —un distractor declarado sabe más del error concreto que una regla
+           general— y antes del «no es la respuesta», porque decirle «está mal»
+           a quien ha hecho toda la física bien y se ha dejado el «bar» es
+           mentirle sobre lo que le falta por aprender. */
+        if (respuesta.tipo === 'magnitud') {
+          const a = leeMagnitud(escrito);
+          const b = leeMagnitud(respuesta.valor);
+          const v = a && b ? comparaMagnitud(a, b, respuesta.tolerancia) : null;
+
+          if (v?.faltaUnidad) {
+            fb(paso, 'mal', 'El número está bien; falta la unidad',
+              '<p>Has hecho la física correctamente. Pero una magnitud <strong>no es un ' +
+                'número</strong>: sin unidad, ese valor no dice si son pascales, bares o ' +
+                'metros de columna de agua, y las tres cifras serían distintas.</p>' +
+                '<p>En el examen esto cuesta puntos aunque el desarrollo esté perfecto. ' +
+                'Escríbela y vuelve a probar.</p>');
+            return;
+          }
+
+          if (v?.otraDimension) {
+            fb(paso, 'mal', 'Esa unidad es de otra magnitud',
+              `<p>Has escrito ${nombreDim(a!.dim)} y aquí se pide ${nombreDim(b!.dim)}. ` +
+                'No es un despiste de escritura: si las unidades no cuadran, la fórmula que ' +
+                'has usado no es la de esta pregunta.</p>' +
+                '<p><strong>Comprueba las dimensiones antes que los números.</strong> Es la ' +
+                'forma más rápida de cazar una fórmula mal aplicada, y funciona sin saber ' +
+                'cuál es el resultado.</p>');
+            return;
+          }
         }
 
         /* Contar cuántas soluciones faltan es un diagnóstico en sí mismo, y

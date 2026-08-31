@@ -2,6 +2,7 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from './lib/complejo';
 import { leeMatriz, leeVector } from './lib/algebra';
+import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -21,6 +22,7 @@ const lector = (tipo: string): ((s: string) => unknown | null) => {
   if (tipo === 'conjunto') return leeConjunto;
   if (tipo === 'vector') return leeVector;
   if (tipo === 'matriz') return leeMatriz;
+  if (tipo === 'magnitud') return leeMagnitud;
   return leeComplejo;
 };
 
@@ -118,8 +120,16 @@ const pasoCalcular = z.object({
        con unas coordenadas y con una matriz asociada. `conjunto` no vale para
        ninguna de las dos —compara sin orden—, y en una base el orden ES la
        respuesta. */
-    tipo: z.enum(['complejo', 'numero', 'conjunto', 'vector', 'matriz']),
+    /* `magnitud` entra el 30 de agosto de 2026 con Mecánica de Fluidos, la
+       primera asignatura donde la respuesta lleva unidad. No es un `numero`
+       con la unidad metida en `formato`: eso daría por buena una presión en
+       m/s y por mala la misma presión escrita en bar. Ver `lib/unidades.ts`,
+       que explica los tres errores que hay que saber distinguir. */
+    tipo: z.enum(['complejo', 'numero', 'conjunto', 'vector', 'matriz', 'magnitud']),
     valor: z.string().min(1),
+    /** Para `magnitud` es **relativa** (0,02 = 2 %); para todo lo demás,
+     *  absoluta. Lo pide el ábaco de Moody: media respuesta de fluidos sale
+     *  de leer una curva a ojo. */
     tolerancia: z.number().positive().default(0.001),
     /** Qué forma se espera; se muestra junto al campo para no adivinar.
      *  Texto plano: va en un rótulo, no pasa por el procesador de Markdown,
@@ -152,11 +162,47 @@ const pasoCalcular = z.object({
         'hay un distractor que el lector de respuestas no sabe interpretar, así que nunca se dispararía',
     },
   )
+  /* Una respuesta de tipo `magnitud` sin unidad es un ejercicio que no puede
+     corregir lo que dice corregir: el alumno escribiría «5» y el sistema no
+     tendría contra qué contrastar la unidad. Si de verdad es adimensional
+     —un Reynolds, un rendimiento—, el tipo es `numero`. */
+  .refine((p) => p.respuesta.tipo !== 'magnitud' || traeUnidad(p.respuesta.valor), {
+    message:
+      'una respuesta de tipo magnitud tiene que llevar unidad; si es adimensional, el tipo es numero',
+    path: ['respuesta', 'valor'],
+  })
+  /* Y un distractor de otra dimensión nunca se dispararía como distractor: el
+     comparador lo atrapa antes con el diagnóstico de «eso es otra magnitud».
+     Declararlo es escribir un mensaje que nadie va a leer. */
+  .refine(
+    (p) => {
+      if (p.respuesta.tipo !== 'magnitud') return true;
+      const buena = leeMagnitud(p.respuesta.valor);
+      if (!buena) return true;
+      return p.distractores.every((d) => {
+        const mala = leeMagnitud(d.valor);
+        return !mala || !comparaMagnitud(mala, buena, p.respuesta.tolerancia).otraDimension;
+      });
+    },
+    {
+      message:
+        'hay un distractor con unidad de otra magnitud: el comparador lo diagnostica antes, y este mensaje no se vería',
+      path: ['distractores'],
+    },
+  )
   /* Y un distractor demasiado parecido a la respuesta buena se da por bueno.
      Pasó con un 0,995 puesto frente a una respuesta de 1 con tolerancia 0,01:
      el alumno escribía el error y el sistema le decía que había acertado. */
   .refine(
     (p) => {
+      if (p.respuesta.tipo === 'magnitud') {
+        const buena = leeMagnitud(p.respuesta.valor);
+        if (!buena) return true;
+        return p.distractores.every((d) => {
+          const mala = leeMagnitud(d.valor);
+          return !mala || !comparaMagnitud(mala, buena, p.respuesta.tolerancia).igual;
+        });
+      }
       if (p.respuesta.tipo !== 'numero' && p.respuesta.tipo !== 'complejo') return true;
       const buena = leeComplejo(p.respuesta.valor);
       if (!buena) return true; // ya lo caza la regla anterior

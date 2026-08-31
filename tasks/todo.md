@@ -18,10 +18,20 @@ siguiente, en el orden en que conviene hacerlo.
 ojo. Están marcados `temarioOficial: false` y `verify.mjs` avisa en cada
 ejecución. Sustituirlos antes de que se conviertan en carpetas.
 
-**2 · El temario completo de Fluidos.** Los dieciséis temas del catálogo salen
-de los PDF que tienes descargados, así que los títulos son reales, pero hay
-huecos en la numeración (faltan el 5, 6, 9, 10, 11, 20, 22, 23 y 24). Confirmar
-si existen o si la asignatura salta esos números.
+**2 · ~~El temario completo de Fluidos.~~ Resuelto el 30 de agosto de 2026.**
+No hacía falta preguntarte: la respuesta estaba en `Gua_de_la_asignatura.pdf`,
+apartado 4, «Programa de teoría». **Los nueve temas que faltaban existen** —la
+asignatura no salta números—, así que el catálogo pasa de 16 a **25 temas** y
+de `temarioOficial: false` a `true`.
+
+Los que faltaban y ahora están: 5 (equilibrio relativo), 6 (estática de
+compresibles), 9 (fundamentos del movimiento), 10 (continuidad), 11 (Euler y
+Navier-Stokes), 20 (golpe de ariete), 22 (principios de máquinas
+hidráulicas), 23 (turbinas) y 24 (bombas).
+
+> **La lección, que vale para las seis asignaturas que quedan:** el dato que
+> llevaba meses esperándote estaba en el primer PDF de la carpeta. Antes de
+> escribir «bloqueado, esperándote a ti», hay que abrir la guía docente.
 
 **3 · ~~Los seis prototipos que faltan.~~ Resuelto.** Están los ocho en
 `referencia/`. Con ellos se cerraron tres cosas:
@@ -1700,9 +1710,13 @@ la región al otro.
 - **Álgebra sin verificar**, y sin herramienta que la verifique.
 - **t08 y t09 siguen siendo los temas más flacos**: 1.516 y 2.440 palabras, y
   dos ejemplos de entrada cada uno.
-- **La fase 5** —abrir la tercera asignatura— con sus tres condiciones: el
-  temario de Fluidos (16 contra 25), `unidad` en el esquema, y el lector de
-  respuestas fuera de `EjercicioGuiado`.
+- **La fase 5** —abrir la tercera asignatura— tenía tres condiciones. Dos
+  cerradas el 30 de agosto de 2026: el **temario de Fluidos** (25 oficiales,
+  de la guía docente) y las **unidades en el esquema** (tipo `magnitud`, con
+  `lib/unidades.ts` y 20 tests). Queda la tercera: **el lector de respuestas
+  sigue dentro de `EjercicioGuiado.astro`**, y ya son seis tipos. No bloquea
+  —la lógica vive en `lib/`, lo que queda en el componente es el despacho—,
+  pero cada tipo nuevo toca cuatro sitios del mismo fichero.
 
 ---
 
@@ -1996,6 +2010,9 @@ Lo que se aprendió y no estaba escrito:
   `dist/` del primero. Uno cada vez, en segundo plano, y seguir escribiendo
   contenido mientras tanto es seguro.
 
-Queda pendiente el boletín de t06 (euclídeos, 9 de sus ejercicios dentro),
-y enlazar desde escalones solo lo que cada escalón entrena: 77 de 179
-enlazados, el resto se llega desde la página del tema.
+CORRECCIÓN (30-08, misma sesión): aquí decía que quedaba el boletín de t06,
+y era falso — el de euclídeos solo tiene 7 enunciados (6.1–6.7) y los 9
+ejercicios que salen de ellos están dentro desde el 27 de agosto. **El
+boletín de Álgebra está completo en los siete temas.** Lo único abierto es
+la decisión de enlace: 77 de 179 desde escalones, el resto desde la página
+del tema.
