@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **2 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **4 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 140 ejercicios
-y 616 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 155 ejercicios
+y 694 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 616 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**140 ejercicios y 616 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 15 son ejercicios de convocatoria. Cobertura de la
+**155 ejercicios y 694 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 30 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -136,9 +136,37 @@ comprobados contra el resultado impreso antes de escribirlos:
 | 7 | 12,5 % | t16 | 37,04 m/s · 93,4 N · 566,7 m/s — exacto |
 | 8 | 15 % | t18 | 22,85 l/s exacto; D = 96,7 frente a 96,4 mm (0,3 %) |
 
-De paso quedaron fijados dos datos de ábaco que el examen no imprime y que
-harán falta otra vez: **ν del alcohol etílico a 0 °C = 2·10⁻⁶ m²/s** (sale de
-que el apartado 8a dé exactamente 22,85 l/s) y **C_HW = 150 para el PVC**.
+De paso quedó fijado un dato de ábaco que el examen no imprime y que hará
+falta otra vez: **ν del alcohol etílico a 0 °C = 2·10⁻⁶ m²/s**, que sale de
+exigir que el apartado 8a dé exactamente los 22,85 l/s publicados.
+
+> **Corregido el 31 de agosto de 2026, un rato después de publicarlo.** El
+> ejercicio 2 se escribió con `C_HW = 150` para el PVC, y el cuadro n.º 25 no
+> dice eso: sus bandas van por **ε/D**, y el PVC de 150 mm tiene
+> ε/D = 4,7·10⁻⁵, que cae en `1,5·10⁻⁵ < ε/D ≤ 2·10⁻⁴`, es decir **140**. El
+> error venía de asignar el coeficiente por material en vez de por rugosidad
+> relativa. Con 140 las pérdidas suben un 12 %, el caudal de la bomba 3 baja
+> de 16,68 a 16,55 l/s y la pérdida de la válvula pasa de 7,88 a **8,09 m**,
+> que es exactamente lo publicado. Es decir: **la discrepancia del 2,6 % que
+> yo había atribuido a «restar dos alturas parecidas» era un fallo mío**, y
+> el examen tenía razón.
+>
+> La regla que sale de ahí: el `C_HW` **no es una propiedad del material**.
+> Depende de ε/D, así que el mismo PVC cambia de banda al cambiar de
+> diámetro. Las bandas completas del cuadro n.º 25 son:
+>
+> | C_HW | ε/D |
+> |---|---|
+> | 150 | ≤ 1,5·10⁻⁵ |
+> | 140 | 1,5·10⁻⁵ … 2·10⁻⁴ |
+> | 130 | 2·10⁻⁴ … 1·10⁻³ |
+> | 120 | 1·10⁻³ … 4·10⁻³ |
+> | 110 | 4·10⁻³ … 1,5·10⁻² |
+> | 100 | > 1,5·10⁻² |
+>
+> Revisados los otros tres sitios donde el corpus usa Hazen-Williams —el 9.5
+> y el 9.10 de la colección y el ejercicio 2 de la extraordinaria de 2025—:
+> los tres estaban bien.
 
 ### La extraordinaria de junio de 2025, transcrita el 31 de agosto de 2026
 
@@ -170,10 +198,64 @@ son una presión, no una altura.** En el 5a, dar los 1,46 mca como columna de
 petróleo cambia el caudal de 63,9 a 69,4 l/s, y ninguno de los dos números
 resulta sospechoso.
 
+### La ordinaria de mayo de 2024, transcrita **entera**
+
+Los ocho ejercicios, en `src/content/fluidos/examenes/2023-2024-ord/`, y los
+ocho cuadrando con el resultado impreso. Es la primera convocatoria completa
+de Fluidos.
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 7,5 % | t02 | h = 1,334 mm — exacto |
+| 2 | 12,5 % | t15 | 16.780,3 N a 0,654° — exacto |
+| 3 | 12,5 % | t04 | miente P₃; p_C = 0,70 bar; s₄ = 4,30 — exacto |
+| 4 | 15 % | t07 | 135.975 N · 72.158,46 N · 128.680 N — exacto |
+| 5 | 12,5 % | t13 | c_c = 0,695 — exacto |
+| 6 | 15 % | t25 | A = 73,41 y B = 2,17·10⁻³ — exacto |
+| 7 | 10 % | t16 | λ^{3/2} = 98,9, semejanza imposible — exacto |
+| 8 | 15 % | t19 | Q = 1,027 l/s; L_eq = 47,9 frente a 47,95 mm |
+
+Y es el examen que **destapó el error del C_HW**: su ejercicio 6 solo cuadra
+si el mismo hierro galvanizado toma 130 en el tubo de 150 mm y 120 en el de
+125, lo que es imposible si el coeficiente fuera del material.
+
+### La extraordinaria de junio de 2024, siete de ocho
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 10 % | t02 | −10,99 bar — exacto |
+| 2 | 15 % | t08 | 69.000 kg · 37 personas · h = 0,575 · H = 7,067 m · 676,2 kN — exacto |
+| 3 | 10 % | t04 | s₂ = 1,333 · F = 307,88 N · γ = 11.800 N/m³ — exacto |
+| 4 | 15 % | t13 | Q = 8,00 l/s · c = 0,975 — exacto |
+| 5 | 10 % | t16 | g = 1,383 m/s² — exacto |
+| 6 | 15 % | t25 | 60,64 l/s · 58,45 m · 64,69 % · 0,0434 €/m³ — exacto |
+| 7 | 12,5 % | t21 | R = 0,238 · D = 50 cm · H = 49,58 cm — exacto |
+
+**Falta el 8.** Pide la máxima diferencia de presiones entre dos tanques para
+que el conducto anterior a la bomba siga siendo laminar; con Re = 2000 salen
+8,80 kPa y el examen publica 11,75, y con Re = 2300 se dispara a 25,7.
+Ninguna de las dos fronteras usuales da el número.
+
+> Y una nota sobre el ejercicio 7, que estuvo a punto de quedarse fuera: mi
+> primera reconstrucción daba H = 24,6 cm frente a los 49,58 publicados. El
+> fallo era de lectura de la figura, no de física: **H se mide desde el fondo
+> de las cunetas**, no desde el firme, y la diferencia es exactamente el radio
+> de la cuneta. Antes de declarar que un problema no cuadra conviene volver a
+> mirar de dónde a dónde va cada cota.
+
+Aporta además tres cosas que no había en el corpus: **capilaridad en una
+sección que no es un tubo** (el hueco entre un cuadrado y un círculo, donde
+$h = \frac{\sigma\cos\theta}{\gamma}\frac{P}{A}$ hay que deducirlo), **un
+manómetro que miente** y hay que descubrir cuál con un tercer camino, y
+**una compuerta con aire encima del líquido**, donde el prisma de presiones
+no es un triángulo sino un rectángulo negativo más dos triángulos.
+
 ### El orden recomendado para seguir con la fase 9
 
 1. ~~La ordinaria de 2026~~ — hecha, 7 de 9.
    ~~La extraordinaria de 2025~~ — hecha, 8 de 9.
+   ~~La ordinaria de 2024~~ — hecha, **8 de 8**.
+   ~~La extraordinaria de 2024~~ — hecha, 7 de 8.
    **La ordinaria de mayo de 2025 está a medias y conviene saber por qué:**
    verificados el 3 (micromanómetros: s₂ entre 0,93 y 1,07, α = 5,739°), el
    5 (análisis dimensional, Δp_p = 0,025 bar y t_p = 1152 s) y el 6 (la

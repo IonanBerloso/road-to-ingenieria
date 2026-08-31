@@ -1282,6 +1282,14 @@ Cosas que ya han costado horas. No son opiniones.
   no para los signos.** Y al revés para los boletines con matrices: el volcado
   de texto destroza las matrices y la imagen las conserva; ahí manda la
   imagen y el texto solo sirve para los signos.
+- **El símbolo del euro no se puede dibujar dentro de una fórmula.** KaTeX
+  tiene sus propias fuentes (§07) y el `€` no está en ellas: ni suelto ni
+  dentro de un `\text{…}`. Pasó el 31 de agosto de 2026 con un coste de
+  bombeo escrito como `\text{€/m}^{3}` en dos sitios del mismo ejercicio.
+  Lo caza `verify.mjs` —«KaTeX no sabe dibujar ese símbolo dentro de $…$»—
+  pero cuesta un suelo entero: **la unidad monetaria se saca de la fórmula
+  y se dice en la prosa de al lado** («Es decir, 0,0434 €/m³»). Vale para
+  cualquier símbolo que no sea matemático.
 - **`titulo` y `fuente` son texto plano, sin `$…$`.** Un `(matriz $A_1$)` en
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
