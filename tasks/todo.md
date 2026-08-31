@@ -17,7 +17,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | fase | temas | capítulo de problemas | estado |
 |---|---|---|---|
 | **0 · Cimientos** | 1, 2 | 1 · Propiedades | ✅ **hecha** |
-| **1 · Estática** | 3, 4, 5, 6, 7, 8 | 2 · Estática y fuerzas sobre superficies | ⏳ |
+| **1 · Estática** | 3, 4, ~~5~~, ~~6~~, 7, 8 | 2 · Estática y fuerzas sobre superficies | ✅ **hecha**, salvo lo que no tiene material |
 | **2 · Continuidad y Bernoulli** | 9, 10, 11, 12, 13 | 3 · Conservación de masa y energía. Medida | |
 | **3 · Cantidad de movimiento** | 14, 15 | 4 · Conservación de la cantidad de movimiento | |
 | **4 · Análisis dimensional** | 16 | 5 · Análisis dimensional y semejanza | |
@@ -49,6 +49,30 @@ escribir el diagnóstico, nunca después.
 convocatorias de 2020-2025: nueve temas de peso alto (4, 7, 13, 15, 16, 18, 19,
 21, 25) y ocho transversales que casi nunca ocupan hueco propio pero caen
 dentro de otros (1, 3, 9, 10, 12, 14, 22, 24).
+
+### Lo que el material docente no trae · comprobado el 31 de agosto de 2026
+
+Búsqueda exhaustiva sobre los dos volúmenes de apuntes, las diapositivas de
+tema y los dos primeros capítulos de la colección:
+
+- **Los temas 5 y 6 no existen fuera del programa.** Ni diapositivas, ni
+  apartado en los apuntes, ni un solo problema. Cero apariciones de
+  «equilibrio relativo», «rotación uniforme» o «aceleración uniforme». Están
+  declarados así en el catálogo y **no se escriben**: §15 prohíbe inventar lo
+  que no está.
+- **El tema 8 tiene diapositivas parciales.** Llegan hasta Barlow; la
+  estabilidad, el metacentro y los cuerpos flotantes del programa (8.4 a 8.6)
+  no aparecen, y sí caen en examen —la gabarra de 2024—. El tema lo dice en
+  voz alta en vez de fingir que lo cubre.
+- **Los ejercicios del capítulo 2 se resuelven sobre una figura acotada.**
+  Compuertas articuladas, topes, tramos curvos: reproducirlos exige dibujar la
+  figura, y dibujarla mal es peor que no ponerla. Están pendientes; los temas
+  7 y 8 llevan de momento ejemplos propios y el 2.5, que es el único
+  autocontenido.
+
+**Preguntas que te tocan a ti**, y hasta entonces no hay nada que hacer con
+ellas: ¿se dan de verdad los temas 5 y 6? ¿Hay apuntes de estabilidad que no
+estén en la carpeta?
 
 ---
 

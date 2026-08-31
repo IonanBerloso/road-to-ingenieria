@@ -190,6 +190,43 @@ const pasoCalcular = z.object({
       path: ['distractores'],
     },
   )
+  /* Dos distractores indistinguibles entre sí son un diagnóstico que nunca se
+     ve: el alumno escribe el segundo y recibe el mensaje del primero. Pasó el
+     31 de agosto de 2026 en las campanas de buceo del tema 8 de Fluidos, donde
+     dos errores distintos —usar la presión absoluta y resolver la otra
+     campana— daban por casualidad el mismo 30,61 m. Lo cazaba `humo.mjs` en el
+     navegador diez minutos después; aquí falla el build en un segundo.
+
+     La holgura tiene que ser **la misma que usa `EjercicioGuiado` al reconocer
+     un distractor**, o esto da falsos positivos. Y no es la misma en los dos
+     casos: en `magnitud` la tolerancia ya es relativa, mientras que en
+     `numero` y `complejo` el componente la escala con el propio valor
+     (`max(|v|·0,02, tolerancia)`). Con un 2 % fijo, los distractores `0` y
+     `0,0173` de una sucesión de Cálculo salían «confundibles» y no lo son. */
+  .refine(
+    (p) => {
+      const t = p.respuesta.tipo;
+      if (t !== 'magnitud' && t !== 'numero' && t !== 'complejo') return true;
+      const tol = p.respuesta.tolerancia;
+      const lee = (s: string) => (t === 'magnitud' ? leeMagnitud(s) : leeComplejo(s));
+      const iguales = (a: never, b: never) => {
+        if (t === 'magnitud') return comparaMagnitud(a, b, Math.max(tol, 0.02)).igual;
+        const v = b as { re: number; im: number };
+        const escala = Math.max(Math.abs(v.re), Math.abs(v.im));
+        return comparaComplejo(a, b, Math.max(escala * 0.02, tol));
+      };
+      const vs = p.distractores.map((d) => lee(d.valor));
+      for (let i = 0; i < vs.length; i++)
+        for (let j = i + 1; j < vs.length; j++)
+          if (vs[i] && vs[j] && iguales(vs[i] as never, vs[j] as never)) return false;
+      return true;
+    },
+    {
+      message:
+        'hay dos distractores que se confunden entre sí: el segundo nunca mostraría su diagnóstico',
+      path: ['distractores'],
+    },
+  )
   /* Y un distractor demasiado parecido a la respuesta buena se da por bueno.
      Pasó con un 0,995 puesto frente a una respuesta de 1 con tolerancia 0,01:
      el alumno escribía el error y el sistema le decía que había acertado. */
