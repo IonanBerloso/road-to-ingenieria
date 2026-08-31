@@ -1,0 +1,158 @@
+---
+asignatura: fluidos
+tema: 9
+titulo: Fundamentos del movimiento de fluidos
+descripcion: Los tipos de flujo, Euler frente a Lagrange y el volumen de control. El vocabulario con el que están escritos los temas siguientes.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 9 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Hasta aquí el fluido estaba quieto. A partir de ahora se mueve, y eso obliga a
+fijar un vocabulario antes de escribir una sola ecuación: **qué tipo de flujo
+es, desde dónde se mira y sobre qué región se hacen los balances.**
+
+Este tema no se examina solo. Pero cada hipótesis que aquí se define es la que
+permite que las ecuaciones de los temas 10, 12 y 14 tengan la forma sencilla
+que tienen — y el examen sí pregunta por qué se pueden aplicar.
+
+## Los cuatro criterios para clasificar un flujo
+
+**Por el número de dimensiones que se estudian:** unidimensional (solo la
+dirección principal, como en un conducto), bidimensional o tridimensional.
+
+**Por cómo se intercambia cantidad de movimiento entre moléculas:**
+
+- **Laminar**: el fluido se mueve en capas que deslizan una sobre otra, sin
+  intercambio, y cumpliendo la ley de Newton $\tau = \mu\,dv/dy$. Pide mucha
+  viscosidad y poca velocidad, y **es lo inusual**.
+- **Turbulento**: las partículas siguen trayectorias erráticas y sí
+  intercambian cantidad de movimiento. Es el caso frecuente. Se puede escribir
+  una ley parecida, $\tau = \eta\,dv/dy$, donde $\eta$ es la **viscosidad de
+  remolino** y engloba la del fluido más el efecto del intercambio.
+
+Las **pérdidas de carga son mayores en turbulento**, y esa frase es la que
+conecta este tema con el 18.
+
+**Por cómo varía la velocidad en el espacio:**
+
+$$
+\text{uniforme:}\quad \frac{\partial \vec{v}}{\partial s}\Big|_t = 0
+\qquad\qquad
+\text{no uniforme:}\quad \frac{\partial \vec{v}}{\partial s}\Big|_t \ne 0
+$$
+
+Un codo no es uniforme aunque no cambie la sección, porque cambia la
+**dirección** del vector.
+
+**Por cómo varía en el tiempo:**
+
+$$
+\text{permanente:}\quad
+\frac{\partial v}{\partial t} = \frac{\partial \rho}{\partial t}
+= \frac{\partial T}{\partial t} = \frac{\partial P}{\partial t} = 0
+$$
+
+Un depósito que se vacía manteniendo el nivel constante da flujo permanente; si
+el nivel baja, no lo es.
+
+<ErrorTipico titulo="Uniforme y permanente no son lo mismo, y se confunden siempre">
+
+Son dos derivadas distintas: **uniforme** es que no cambie con la posición
+($\partial/\partial s$), **permanente** es que no cambie con el tiempo
+($\partial/\partial t$).
+
+Un flujo puede ser cualquiera de las cuatro combinaciones:
+
+| | uniforme | no uniforme |
+|---|---|---|
+| **permanente** | tubería recta de sección constante, caudal fijo | codo o difusor con caudal fijo |
+| **no permanente** | tubería recta al abrir una válvula | depósito que se vacía por un difusor |
+
+Casi todos los problemas de la asignatura son **permanentes**, y muchos no son
+uniformes. Cuando el enunciado dice «régimen permanente» está autorizando a
+quitar los términos con $\partial/\partial t$, no los otros.
+
+</ErrorTipico>
+
+Y **por la compresibilidad**: incompresible cuando las variaciones de densidad
+son despreciables, compresible cuando no. El ejemplo de compresible que sí
+aparece en la asignatura es el golpe de ariete (tema 20).
+
+## Euler y Lagrange: dos formas de mirar
+
+- **Lagrange** sigue a cada partícula: sus coordenadas son función del tiempo y
+  de dónde estaba al principio. Es lo que se hace en mecánica del sólido, y en
+  fluidos se usa en el análisis diferencial y en simulación.
+- **Euler** fija un punto del espacio y mira qué pasa allí: qué presión, qué
+  densidad y qué velocidad tiene la partícula que ocupa ese punto en cada
+  instante.
+
+**En esta asignatura se usa Euler**, porque va con el análisis integral y con
+los volúmenes de control.
+
+## Línea de corriente, tubo de corriente, trayectoria
+
+La **línea de corriente** es la curva tangente al vector velocidad en cada
+punto. La **trayectoria** es el camino que recorre una partícula concreta.
+
+> **Si el régimen es permanente, las dos coinciden.** Si no lo es, no tienen
+> por qué, y ahí está la diferencia entre lo que se ve en una foto y lo que se
+> ve en un vídeo.
+
+El **tubo de corriente** es la superficie formada por las líneas de corriente
+que pasan por una curva cerrada. Su propiedad útil: **por su pared lateral no
+entra ni sale fluido**, porque la velocidad es tangente a ella. Por eso se
+puede tratar como una tubería aunque no haya tubo.
+
+## La aceleración tiene dos partes
+
+En flujo unidimensional, con $\vec{v} = f(s,t)$:
+
+$$
+\vec{a} = \frac{d\vec{v}}{dt}
+= \underbrace{\frac{\partial \vec{v}}{\partial s}\,v}_{\text{convectiva}}
++ \underbrace{\frac{\partial \vec{v}}{\partial t}}_{\text{local}}
+$$
+
+- La **local** es la variación con el tiempo: **desaparece si el flujo es
+  permanente**.
+- La **convectiva** es la variación al avanzar: **desaparece si el flujo es
+  uniforme**.
+
+Y de aquí sale una idea que no es obvia: en una tobera con caudal constante el
+flujo es permanente y aun así **hay aceleración**, porque el fluido se acelera
+al estrecharse el paso. La aceleración convectiva es la que explica que la
+velocidad cambie sin que nada cambie con el tiempo.
+
+## Caudal y gasto
+
+$$
+Q = v\,A \quad [\text{m}^{3}/\text{s}]
+\qquad\qquad
+\dot{m} = \rho\,v\,A = \rho\,Q \quad [\text{kg/s}]
+$$
+
+El **caudal** es volumen por unidad de tiempo; el **gasto** o flujo másico es
+masa por unidad de tiempo. En un líquido los dos se conservan; en un gas, solo
+el segundo.
+
+## Sistema y volumen de control
+
+- **Sistema**: una masa fija que se sigue en su movimiento, $dm/dt = 0$.
+- **Volumen de control**: una región fija del espacio, $d\forall/dt = 0$, por
+  la que el fluido entra y sale.
+
+El **teorema del transporte de Reynolds** es el puente entre los dos: permite
+escribir para un volumen de control las leyes que la física enuncia para una
+masa. Es la razón de que se pueda aplicar «$F = ma$» a un codo por el que pasa
+agua sin seguir a ninguna partícula.
+
+> **Y el resumen con el que el propio tema se cierra**, que conviene tener
+> presente todo el resto de la asignatura: de aquí en adelante se estudian
+> flujos **unidimensionales, uniformes, permanentes e incompresibles**,
+> analizados de forma **integral** sobre volúmenes de control.

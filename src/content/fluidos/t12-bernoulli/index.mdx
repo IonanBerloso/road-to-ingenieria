@@ -1,0 +1,177 @@
+---
+asignatura: fluidos
+tema: 12
+titulo: Ecuación de Bernoulli
+descripcion: Cinco hipótesis, tres formas de escribirla y las cuatro que se pueden levantar. Con la bomba, la turbina y la potencia.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 12 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Es la ecuación que sostiene la segunda mitad de la asignatura. No es una ley
+nueva: es la conservación de la energía escrita para un flujo, y sale de
+integrar la de Euler sobre una línea de corriente **bajo cinco hipótesis**.
+
+Saber cuáles son esas cinco no es erudición: **el examen consiste casi siempre
+en levantar alguna de ellas**, y hay que saber cuál se está levantando y qué
+término aparece a cambio.
+
+## De Euler a Bernoulli, en cinco pasos
+
+Partiendo de la ecuación de Euler, $\vec{R} - \frac{1}{\rho}\nabla P = \vec{a}$:
+
+1. **Fluido perfecto** ($\mu = 0$): ya está supuesto en Euler.
+2. **Campo gravitatorio**, con $\vec{R} = -\nabla U$ y $U = gz$.
+3. **Proyección sobre la línea de corriente** $s$, con
+   $\vec{a} = \frac{\partial v}{\partial s}v + \frac{\partial v}{\partial t}$.
+4. **Flujo permanente**: desaparece $\partial v/\partial t$, y queda
+   $-d(gz) - \frac{1}{\rho}dP = v\,dv$.
+5. **Flujo incompresible**: $\rho$ sale de la integral.
+
+$$
+\boxed{g\,z + \frac{P}{\rho} + \frac{v^{2}}{2} = \text{cte}}
+$$
+
+## Tres formas, y la que se usa
+
+Dividiendo por $g$ o multiplicando por $\rho$, la misma ecuación cambia de
+unidades:
+
+| forma | expresión | unidades |
+|---|---|---|
+| energía/masa | $\dfrac{P}{\rho}+gz+\dfrac{v^{2}}{2}$ | J/kg |
+| **energía/peso** | $\dfrac{P}{\gamma}+z+\dfrac{v^{2}}{2g}$ | **m (mcl)** |
+| energía/volumen | $P+\gamma z+\rho\dfrac{v^{2}}{2}$ | J/m³ = Pa |
+
+**En esta asignatura se usa siempre la segunda**, porque todos sus términos
+son **metros de columna de líquido** y se pueden dibujar en el esquema de la
+instalación. Sus nombres:
+
+- $z$ — **cota geométrica**
+- $z + P/\gamma$ — **cota piezométrica**
+- $z + P/\gamma + v^{2}/2g$ — **Bernoulli** o altura total
+
+Y $P/\gamma$ es la **presión estática**, $v^{2}/2g$ la **dinámica**.
+
+<ErrorTipico titulo="La constante de Bernoulli es de cada línea de corriente">
+
+$K(s)$ depende de la línea de corriente: dos partículas que van por caminos
+distintos no tienen por qué tener la misma altura total.
+
+**Salvo en un caso, y es el que salva casi todos los problemas:** si todas las
+líneas de corriente **parten de la superficie libre de un depósito**, allí
+tienen la misma cota, la misma presión y velocidad prácticamente nula, así que
+arrancan con el mismo Bernoulli. Entonces la constante es común a todo el
+flujo y se puede aplicar la ecuación entre dos puntos cualesquiera.
+
+Por eso los enunciados empiezan tantas veces con «desde un depósito abierto de
+grandes dimensiones».
+
+</ErrorTipico>
+
+## Las cuatro hipótesis que se pueden levantar
+
+La del campo gravitatorio se cumple siempre. Las otras cuatro se relajan así:
+
+- **Gases**: si la variación de presión es pequeña —un 2 o 3 % de la
+  absoluta—, la densidad apenas cambia y el gas se trata como incompresible.
+  Es el caso de los ventiladores.
+- **Flujo no permanente**: si las variaciones con el tiempo son lentas, se
+  aplica Bernoulli **en cada instante**. Así se resuelve el vaciado de un
+  depósito grande.
+- **Líneas de corriente distintas**: resuelto arriba con el depósito.
+- **Fluido real**: esta es la importante.
+
+## Bernoulli generalizada: las pérdidas
+
+Un fluido real tiene viscosidad, la viscosidad genera esfuerzos cortantes y
+esos esfuerzos **disipan energía**. La altura total ya no se conserva: se
+pierde por el camino.
+
+$$
+\boxed{B_1 - h_{f_{1\to2}} = B_2}
+\qquad\text{con}\qquad
+h_f = k\,\frac{v^{2}}{2g}
+$$
+
+Las pérdidas son **proporcionales a la energía cinética**: a más velocidad,
+muchas más pérdidas. Esa forma $k\,v^{2}/2g$ es la que desarrollan los temas
+18 y 19.
+
+Y si en el camino hay una máquina, aparece su término:
+
+$$
+\text{bomba:}\quad B_E + H_m = B_S
+\qquad\qquad
+\text{turbina:}\quad B_E - H_T = B_S
+$$
+
+$H_m$ es la **altura manométrica** —energía por unidad de peso que la bomba
+entrega al flujo— y $H_T$ la **altura neta** que la turbina le quita.
+
+<figure>
+<svg viewBox="0 0 420 196" role="img" width="420" height="196"
+     aria-labelledby="flu12-t flu12-d">
+  <title id="flu12-t">Las tres líneas de un esquema de Bernoulli</title>
+  <desc id="flu12-d">Un conducto que baja y se estrecha. Sobre él, tres líneas: la de cota geométrica sigue al conducto; la piezométrica va por encima, separada por la altura de presión; y la de Bernoulli va aún más arriba, separada por la altura cinética. En el tramo estrecho la velocidad crece, así que la altura cinética crece y la piezométrica baja. La línea de Bernoulli desciende suavemente por las pérdidas de carga.</desc>
+
+  <path d="M40 150 L190 150 L230 132 L380 132" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
+  <path d="M40 168 L190 168 L230 158 L380 158" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
+  <text x="40" y="184" font-size="10" fill="var(--ink-suave)">conducto (cota geométrica z)</text>
+
+  <path d="M40 96 L190 92 L230 108 L346 104" fill="none" stroke="var(--d2)" stroke-width="1.8" stroke-dasharray="6 3"/>
+  <text x="350" y="108" font-size="10" fill="var(--d2)" textLength="64" lengthAdjust="spacingAndGlyphs">piezométrica</text>
+
+  <path d="M40 44 L346 60" fill="none" stroke="var(--live)" stroke-width="1.8"/>
+  <text x="350" y="58" font-size="10" fill="var(--live)" textLength="50" lengthAdjust="spacingAndGlyphs">Bernoulli</text>
+
+  <line x1="100" y1="44" x2="100" y2="95" stroke="var(--live)" stroke-width="1"/>
+  <line x1="100" y1="95" x2="100" y2="150" stroke="var(--d2)" stroke-width="1"/>
+  <text x="106" y="68" font-size="9.5" fill="var(--live)">v²/2g</text>
+  <text x="106" y="126" font-size="9.5" fill="var(--d2)">P/γ</text>
+
+  <line x1="300" y1="55" x2="300" y2="106" stroke="var(--live)" stroke-width="1"/>
+  <line x1="300" y1="106" x2="300" y2="132" stroke="var(--d2)" stroke-width="1"/>
+  <text x="306" y="82" font-size="9.5" fill="var(--live)">v²/2g mayor</text>
+  <text x="306" y="124" font-size="9.5" fill="var(--d2)">P/γ menor</text>
+
+  <text x="210" y="24" text-anchor="middle" font-size="10.5" fill="var(--ink)">Al estrechar, la energía pasa de presión a velocidad</text>
+  <text x="210" y="38" text-anchor="middle" font-size="10" fill="var(--ink-suave)">y la línea de Bernoulli solo baja por las pérdidas</text>
+</svg>
+<figcaption>
+
+El dibujo es la ecuación: la distancia entre el conducto y la piezométrica es
+la presión, y entre la piezométrica y Bernoulli, la velocidad. Donde el tubo
+se estrecha, la segunda crece a costa de la primera. Y la línea de Bernoulli
+nunca sube salvo que haya una bomba.
+
+</figcaption>
+</figure>
+
+## Potencia
+
+Multiplicando el Bernoulli (energía por unidad de peso) por el peso que pasa
+por segundo ($\gamma Q$):
+
+$$
+\boxed{\text{Pot} = B\,\gamma\,Q}
+$$
+
+De ahí, tres casos que se usan constantemente:
+
+- **Chorro por una boquilla**: $\text{Pot} = \gamma Q\,\dfrac{v^{2}}{2g}$
+- **Potencia perdida** entre dos puntos:
+  $\text{Pot} = \gamma Q\,h_{f_{1\to2}}$
+- **Bomba**: potencia hidráulica $= H_m\gamma Q$, y el rendimiento
+
+$$
+\eta = \frac{\text{Pot útil}}{\text{Pot bruta}}
+$$
+
+que en una **bomba** es hidráulica entre absorbida, y en una **turbina**,
+mecánica entre neta. La distinción importa: en la bomba la útil está en el
+fluido y en la turbina, en el eje.
