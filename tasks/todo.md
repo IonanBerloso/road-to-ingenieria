@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **7 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **8 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 180 ejercicios
-y 811 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 191 ejercicios
+y 861 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 811 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**180 ejercicios y 811 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 55 son ejercicios de convocatoria. Cobertura de la
+**191 ejercicios y 861 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 66 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -263,6 +263,37 @@ La segunda convocatoria completa, y la primera con los nueve ejercicios.
 turbobomba y publica 14,47 m; nuestra reconstrucción da 15,52 y la
 diferencia de 1,05 m no se explica con ninguna lectura probada. Se dice en
 la propia resolución, que es donde lo va a leer un alumno.
+
+### La ordinaria de junio de 2022, los once
+
+La convocatoria más larga del cuadernillo —once enunciados— y la primera
+que entra entera con los once, incluidos los tres que no dan número.
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 5 % | t17 | v = 0,12[1−(y/R)²] · τ = −24(y/R) mPa — exacto |
+| 2 | 7,5 % | t02 | 15,07 · 15,12 MPa · 1.032,56 kg/m³ — exacto |
+| 3 | 7,5 % | t21 | Q = 10 m³/s · berma 0,1 m · n = 0,0117 — exacto |
+| 4 | 7,5 % | t04 | 5,52 kg/cm² absolutos — exacto |
+| 5 | 15 % | t07 | H = 6,29 m · A_x = 406,85 · B_y = 193,56 · A_y = 0 — exacto |
+| 6 | 10 % | t13 | R₁/R₂ = (γ₂−γ₀)/(γ₀−γ₁) — deducción |
+| 7 | 5 % | t15 | 20,87 kg — exacto |
+| 8 | 5 % | t16 | los tres Π y la tabla de potencias — deducción |
+| 9 | 15 % | t19 | 4,85 y 5,31 l/s — exacto |
+| 10 | 7,5 % | t23 | las cinco respuestas |
+| 11 | 15 % | t25 | 8,27·10⁻⁴ · 5,576·10⁻⁴ · 109,98 l/s · 4,58 m · 3,34 m — exacto |
+
+> **Dos trampas de lectura que este examen enseña juntas.** En el 7, el
+> enunciado dice «diámetro **del chorro**», así que el coeficiente de
+> contracción que también da es un dato de sobra: usarlo otra vez rebaja
+> el resultado de 20,87 a 18,8 kg. Y los 70º son del **vértice** del cono,
+> de modo que cada pared desvía 35º; con 70º saldrían 75,9 kg. Un mismo
+> ejercicio de cinco por ciento con dos formas distintas de perderlo.
+
+> Y una de signo, en el 9. La bomba está en uno de los dos ramales y entre
+> A y B ya hay 15 metros de energía a favor, así que la pérdida del ramal
+> con bomba es **15 + H_m**, no H_m − 15. Con el signo cambiado salen 2,03
+> l/s en vez de 4,85, y el número sigue pareciendo razonable.
 
 ### La ordinaria de mayo de 2025, siete de nueve — reabierta
 
