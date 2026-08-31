@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **8 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **10 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 191 ejercicios
-y 861 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 205 ejercicios
+y 920 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 861 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**191 ejercicios y 861 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 66 son ejercicios de convocatoria. Cobertura de la
+**205 ejercicios y 920 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 80 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -263,6 +263,90 @@ La segunda convocatoria completa, y la primera con los nueve ejercicios.
 turbobomba y publica 14,47 m; nuestra reconstrucción da 15,52 y la
 diferencia de 1,05 m no se explica con ninguna lectura probada. Se dice en
 la propia resolución, que es donde lo va a leer un alumno.
+
+### Lo que queda de fase 9, ya leído y con las cuentas hechas
+
+Para que la próxima tanda no tenga que volver a reconstruirlo todo, aquí
+queda lo verificado de las convocatorias que faltan. **Verificado** quiere
+decir que la cuenta aterriza en el resultado impreso; falta escribir el
+ejercicio.
+
+**Final del 29 de junio de 2020** (8 ejercicios)
+
+| ej. | estado |
+|---|---|
+| 1 · embrague hidráulico multidisco | figura necesaria |
+| 2 · depósitos A y B dentro de C | figura necesaria |
+| 3 · cono flotando entre dos fluidos | figura necesaria |
+| 4 · limpiacristales, apartado a) | **verificado**, v = 16,63 m/s; b) y c) piden la geometría del cono |
+| 5 · semejanza de dos turbobombas | **verificado**: 444,4 rpm y 10,5 m³/min |
+| 6 · turbina entre dos tuberías | **verificado**: D₁ = 176 mm, P = 7,3 kW |
+| 7 · red de cuatro barrios | curva de bomba en gráfica |
+| 8 · canal circular de arena | **verificado**: J = 6,561‰, v = 2,46 m/s, b = 1,866 m |
+
+> Y de ahí sale un dato para el cuadro n.º 26 que no teníamos: **la arena
+> tiene n = 0,020**. Se deduce del apartado a) del ejercicio 8, que publica
+> pendiente y velocidad con la geometría dada.
+
+**Parciales de 2020 y 2021** — cinco exámenes más, todavía sin leer con
+detalle. El del 8 de mayo de 2020 y el del 4 de junio de 2020 están
+volcados y sus resultados publicados; sus ejercicios de bombeo y de
+canales parecen transcribibles sin figura.
+
+### La ordinaria de junio de 2021, seis de ocho
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 15 % | t07 | α = 35,21° · 21,0 MN · β = 24,78° · subpresión 33,41 MN — exacto |
+| 2 | 10 % | t13 | C_v = 0,906 — exacto |
+| 3 | 10 % | t21 | D = 2 m · J₂ = 0,816‰ · v = 1,5 y 1,617 m/s — exacto |
+| 4 | 15 % | t20 | Q = 139,0 l/s · c = 684 m/s · L_BC = 790,15 m — exacto |
+| 6 | 12,5 % | t16 | 10 bar imposible · 5 bar · 104 m/s · 0,2 — exacto |
+| 8 | 15 % | t25 | 22,77 · 16,75 · 27,81 · 24,99 · 5,63 m — exacto |
+
+**Faltan dos y medio.** El **5** es un elevador de taller con ocho
+apartados encadenados cuya figura no acota B, C, D ni E. El **7** es
+teoría y dibujo cualitativo. Y el apartado c) del **4** —la fuerza sobre
+un codo convergente— da 2.488 y 4.239 N frente a los 4.274 y 2.426
+publicados: los mismos órdenes con los ejes intercambiados, y el «detalle
+B» de la figura no permite fijar qué ángulo va a la entrada.
+
+> **La subpresión del ejercicio 1 es la fuerza mayor de las tres**: 33,4 MN
+> hacia arriba frente a los 21,0 del embalse. Le quita a la presa 3.400
+> toneladas de peso efectivo justo cuando más lo necesita, y es la razón de
+> que una presa de gravedad lleve siempre pantalla y drenes bajo el
+> cimiento. Merece la pena tenerlo escrito porque el instinto dice lo
+> contrario: uno mira una presa y piensa en el empuje del agua de delante.
+
+> Y el ejercicio 4 usa el golpe de ariete **al revés**: en vez de calcular
+> la sobrepresión de una tubería conocida, mide la sobrepresión para saber
+> dónde está la válvula. Es el principio de la detección de fugas por
+> transitorios.
+
+### La extraordinaria de junio de 2022, ocho de nueve
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 5 % | t02 | D = 10⁻³ mm — exacto |
+| 2 | 10 % | t03 | 10,79 · 20,84 · 34,37 bar, y el orden 3-1-2 — exacto |
+| 3 | 15 % | t08 | x/m = 1,25 · 17,82 y 14,34 kN — exacto |
+| 4 | 15 % | t15 | 1.550 m³/h · 4,83 y 4,67 bar · 18,37 y 67,52 kN — exacto |
+| 5 | 10 % | t16 | ν_m/ν_p = λ^{3/2} — deducción |
+| 6 | 12,5 % | t21 | y = 0,467 m · h = 0,683 m — exacto |
+| 7 | 15 % | t19 | D = 406,45 → 425 mm — exacto |
+| 8 | 10 % | t25 | z < 5,93 m — exacto |
+
+**Falta el 9**, que se resuelve **sobre la gráfica**: curvas de instalación
+y bomba superpuestas, de las que hay que leer caudal, pérdidas, presión
+del depósito superior y la pérdida adicional de una válvula. Sin publicar
+el gráfico no hay ejercicio que transcribir.
+
+> El ejercicio 1 es el más bonito del examen y lo es por salir «mal». Da
+> una micra de diámetro para que la savia suba 30 metros, y los vasos
+> reales del xilema miden entre veinte y quinientas. Es decir: **la
+> capilaridad sola no explica el árbol**. Un cálculo que contradice la
+> realidad no es un cálculo inútil; es la forma de descubrir que falta
+> física —aquí, la tensión-cohesión y el agua a presión negativa—.
 
 ### La ordinaria de junio de 2022, los once
 
