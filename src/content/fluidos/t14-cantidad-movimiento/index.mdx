@@ -1,0 +1,150 @@
+---
+asignatura: fluidos
+tema: 14
+titulo: Teorema de la cantidad de movimiento
+descripcion: La segunda ley de Newton escrita para un volumen de control. Una ecuación vectorial que se resuelve por componentes.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 14 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Bernoulli dice cómo se reparte la energía; este teorema dice **qué fuerza hace
+falta**. Son preguntas distintas y hacen falta las dos: con Bernoulli se
+calculan presiones y velocidades, y con la cantidad de movimiento, la fuerza
+que el fluido ejerce sobre un codo, un álabe o una placa.
+
+## De Newton al volumen de control
+
+Se parte de $\sum\vec{F} = m\vec{a}$ y se hacen tres hipótesis: flujo
+**permanente, unidimensional e incompresible**. Escribiendo la aceleración
+como variación de cantidad de movimiento:
+
+$$
+\sum\vec{F}\,dt = d\vec{p}
+$$
+
+Durante $dt$, el volumen de control pierde el trozo que sale y gana el que
+entra; **la parte central no cambia porque el flujo es permanente**, así que
+esa parte se cancela y queda solo la diferencia entre lo que sale y lo que
+entra:
+
+$$
+\sum\vec{F} = \dot{m}_2\vec{v}_2 - \dot{m}_1\vec{v}_1
+$$
+
+y con densidad constante, en la forma que se usa:
+
+$$
+\boxed{\sum\vec{F}_{\text{ext}}
+= \rho\left(\sum_{\text{salen}} Q_i\vec{v}_i - \sum_{\text{entran}} Q_i\vec{v}_i\right)}
+$$
+
+> **La suma de las fuerzas exteriores sobre el volumen de control es el flujo
+> de cantidad de movimiento que sale menos el que entra.** Vale para líquidos
+> y para gases.
+
+<ErrorTipico titulo="Es una ecuación vectorial: los signos los pone el eje, no el sentido físico">
+
+El error que más apartados cuesta en este tema no es de física, es de
+contabilidad.
+
+- **Cada velocidad entra con el signo de su proyección sobre el eje**. Un
+  chorro que sale hacia $-x$ aporta $-v$, aunque «salga».
+- **Salidas menos entradas**, no «lo que se mueve menos lo que está quieto».
+- **Y en el primer miembro van todas las fuerzas exteriores**: las de presión
+  en las secciones de entrada y salida, el peso si cuenta, y la reacción del
+  sólido.
+
+La forma de no equivocarse es mecánica: dibujar los ejes, escribir una columna
+por eje, y poner cada término con su signo antes de sustituir ningún número.
+
+</ErrorTipico>
+
+## Las fuerzas que hay que contar
+
+En el primer miembro entran, por este orden de olvido:
+
+1. **Las fuerzas de presión sobre las secciones** de entrada y salida,
+   $p\,A$, siempre perpendiculares a ellas y hacia dentro del volumen.
+2. **La reacción del sólido** sobre el fluido, que es la incógnita habitual.
+   La fuerza sobre el sólido es su opuesta.
+3. **El peso** del fluido contenido, si el problema no es horizontal.
+
+La primera es la que se olvida, y suele ser la mayor: en un codo de
+$200\ \text{mm}$ a $3\ \text{bar}$, el término de presión vale
+$9{,}4\ \text{kN}$ y el de cantidad de movimiento, $0{,}2\ \text{kN}$. **Cuarenta
+y seis veces más.**
+
+<figure>
+<svg viewBox="0 0 420 172" role="img" width="420" height="172"
+     aria-labelledby="flu14-t flu14-d">
+  <title id="flu14-t">Qué entra en cada miembro del teorema de la cantidad de movimiento</title>
+  <desc id="flu14-d">Un codo con entrada por la izquierda y salida hacia abajo. En el miembro de las fuerzas: la presión por el área en cada sección, apuntando hacia dentro del volumen de control, y la reacción del sólido. En el miembro del flujo: la cantidad de movimiento que sale menos la que entra. El término de presión suele ser mucho mayor que el de cantidad de movimiento.</desc>
+
+  <path d="M28 44 L150 44 L150 150" fill="none" stroke="var(--ink)" stroke-width="2.2"/>
+  <path d="M28 86 L108 86 L108 150" fill="none" stroke="var(--ink)" stroke-width="2.2"/>
+  <rect x="28" y="44" width="122" height="42" fill="var(--live)" fill-opacity=".08"/>
+  <rect x="108" y="86" width="42" height="64" fill="var(--live)" fill-opacity=".08"/>
+
+  <line x1="6" y1="65" x2="40" y2="65" stroke="var(--flag)" stroke-width="2.4" marker-end="url(#flu14f)"/>
+  <text x="6" y="34" font-size="10" fill="var(--flag)">p₁A₁</text>
+  <line x1="129" y1="168" x2="129" y2="142" stroke="var(--flag)" stroke-width="2.4" marker-end="url(#flu14f)"/>
+  <text x="136" y="166" font-size="10" fill="var(--flag)">p₂A₂</text>
+
+  <line x1="44" y1="65" x2="86" y2="65" stroke="var(--live)" stroke-width="1.6" marker-end="url(#flu14g)"/>
+  <text x="52" y="58" font-size="10" fill="var(--live)">v₁</text>
+  <line x1="129" y1="104" x2="129" y2="140" stroke="var(--live)" stroke-width="1.6" marker-end="url(#flu14g)"/>
+  <text x="136" y="126" font-size="10" fill="var(--live)">v₂</text>
+
+  <text x="176" y="52" font-size="10.5" fill="var(--ink)">ΣF = ρ(Q v₂ − Q v₁)</text>
+  <text x="176" y="76" font-size="10" fill="var(--flag)">en ΣF: las presiones pA</text>
+  <text x="176" y="92" font-size="10" fill="var(--flag)">y la reacción del sólido</text>
+  <text x="176" y="116" font-size="10" fill="var(--ink-suave)">En un codo de 200 mm a 3 bar:</text>
+  <text x="176" y="132" font-size="10" fill="var(--ink-suave)">pA = 9,4 kN · ρQv = 0,2 kN</text>
+  <text x="176" y="150" font-size="10" fill="var(--ink)">el que se olvida es el grande</text>
+
+  <defs>
+    <marker id="flu14f" viewBox="0 0 9 9" refX="7" refY="4.5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 z" fill="var(--flag)"/>
+    </marker>
+    <marker id="flu14g" viewBox="0 0 9 9" refX="7" refY="4.5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 z" fill="var(--live)"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption>
+
+Las fuerzas de presión sobre las secciones apuntan siempre **hacia dentro** del
+volumen de control, y son las que más se olvidan pese a ser casi siempre las
+mayores. El segundo miembro es lo que sale menos lo que entra, con el signo de
+cada proyección.
+
+</figcaption>
+</figure>
+
+## Coeficiente de corrección
+
+La ecuación se ha escrito con la velocidad media, pero el flujo real tiene un
+perfil de velocidades. La corrección se hace con un coeficiente $\beta$ que
+multiplica al término de cantidad de movimiento — análogo al $\alpha$ que
+corrige la energía cinética en Bernoulli.
+
+En régimen turbulento, que es el habitual, $\beta$ vale entre $1{,}01$ y
+$1{,}04$: se toma **1** salvo que el enunciado diga lo contrario.
+
+## Momento cinético
+
+Tomando momentos respecto a un punto en vez de fuerzas, sale el **teorema del
+momento de la cantidad de movimiento**:
+
+$$
+\sum\vec{M} = \rho\left(\sum_{\text{salen}} Q_i(\vec{r}_i\times\vec{v}_i)
+- \sum_{\text{entran}} Q_i(\vec{r}_i\times\vec{v}_i)\right)
+$$
+
+Es el que se usa en las turbomáquinas del tema 22, donde lo que interesa no es
+la fuerza sobre un álabe sino el **par** en el eje.

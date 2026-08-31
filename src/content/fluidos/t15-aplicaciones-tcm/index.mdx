@@ -1,0 +1,147 @@
+---
+asignatura: fluidos
+tema: 15
+titulo: Aplicaciones de la cantidad de movimiento
+descripcion: Codos, álabes y chorros. Cinco pasos que se siguen siempre en el mismo orden, y el álabe móvil, que es una turbina Pelton.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 15 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Este tema es de peso alto y se resuelve siempre igual. El propio temario lo
+plantea como un método de **cinco pasos**, y merece la pena seguirlos en ese
+orden aunque parezca que se puede ir más rápido:
+
+1. **Elegir el volumen de control**: el trozo de fluido donde cambia el vector
+   velocidad.
+2. **Elegir los ejes.**
+3. **Analizar las fuerzas exteriores**: de volumen y de superficie.
+4. **Calcular velocidades y caudales** a la entrada y a la salida.
+5. **Aplicar el teorema por componentes.**
+
+$$
+\sum\vec{F}_{\text{ext}}
+= \rho\left(\sum_{\text{salen}} Q_i\vec{v}_i - \sum_{\text{entran}} Q_i\vec{v}_i\right)
+$$
+
+## Fuerzas sobre un codo
+
+Un codo cambia la dirección del flujo, así que hay que sujetarlo. Con un codo
+de $90°$ en horizontal, entrada en $+x$ y salida en $+y$:
+
+$$
+\text{eje } x:\quad p_1A_1 + R_x = \rho Q(0 - v_1)
+\qquad
+\text{eje } y:\quad -p_2A_2 + R_y = \rho Q(v_2 - 0)
+$$
+
+$R_x$ y $R_y$ son lo que el codo hace **sobre el fluido**; la fuerza sobre el
+codo es la opuesta, y es la que hay que aguantar con anclajes.
+
+**Y el término que domina es el de presión.** En un codo de $200\ \text{mm}$
+con $80\ \text{l/s}$ a $3\ \text{bar}$: la presión aporta
+$9{,}4\ \text{kN}$ por rama y la cantidad de movimiento, $0{,}2$. Por eso los
+codos de las conducciones llevan macizos de hormigón y no tornillos.
+
+## Teoría general de los álabes
+
+Un álabe es una superficie curva que **desvía un chorro**. Al cambiar la
+cantidad de movimiento del chorro, el chorro empuja al álabe.
+
+Cuatro hipótesis, y la primera es la que hace todo lo demás fácil:
+
+1. **Sin rozamiento** entre chorro y álabe ($h_f = 0$).
+2. El chorro **incide tangencialmente**, sin choque.
+3. La diferencia de cotas entre entrada y salida es despreciable.
+4. El chorro está **a presión atmosférica** en todo el recorrido.
+
+Con eso, Bernoulli entre entrada y salida deja $v_1 = v_2 = v$: **el módulo de
+la velocidad no cambia**, solo su dirección. Ese es el resultado que hay que
+recordar.
+
+### Álabe fijo
+
+Si el chorro se desvía un ángulo $\theta$ respecto de su dirección original:
+
+$$
+\boxed{F_x = \rho\,Q\,v\,(1-\cos\theta)}
+\qquad
+\boxed{F_y = \rho\,Q\,v\,\sin\theta}
+$$
+
+y el módulo de la resultante tiene una forma muy limpia:
+
+$$
+|F| = 2\rho\,Q\,v\,\sin\frac{\theta}{2}
+$$
+
+Tres casos que conviene tener memorizados como comprobación:
+
+| desviación | $F_x$ | comentario |
+|---|---|---|
+| $\theta = 0°$ | $0$ | no desvía, no hay fuerza |
+| $\theta = 90°$ | $\rho Q v$ | el caso del codo |
+| $\theta = 180°$ | $2\rho Q v$ | **el doble**: la cuchara de una Pelton |
+
+<ErrorTipico titulo="Con 180° la fuerza es el doble, no la misma">
+
+Es el resultado que más sorprende y el que más cae. Al devolver el chorro por
+donde vino, su cantidad de movimiento pasa de $+\rho Q v$ a $-\rho Q v$: la
+variación es $2\rho Q v$, no $\rho Q v$.
+
+Por eso las cucharas de una turbina Pelton son **dobles y muy curvadas**: para
+acercarse todo lo posible a los 180° y sacar el doble de fuerza del mismo
+chorro.
+
+El aviso de notación: las diapositivas escriben la misma fórmula con el ángulo
+medido desde otro eje, y allí es $F_x = \rho Q v(\cos\alpha+1)$ con
+$\alpha = 180° - \theta$. **Las dos dicen lo mismo**; lo que hay que fijar
+antes de sustituir es respecto de qué se mide el ángulo del dibujo.
+
+</ErrorTipico>
+
+### Álabe móvil
+
+Si el álabe se mueve con velocidad $u$ en la dirección del chorro, lo que
+empuja es la **velocidad relativa** $v-u$:
+
+$$
+F_x = \rho\,Q'\,(v-u)(1-\cos\theta)
+\qquad\qquad
+\text{Pot} = F_x\cdot u
+$$
+
+Y aquí hay que distinguir dos casos, porque **el caudal que aprovecha el álabe
+no es el mismo**:
+
+- **Un álabe suelto** se escapa del chorro, así que solo intercepta
+  $Q' = A(v-u)$. La potencia lleva entonces un factor $(v-u)^{2}u$, y su
+  máximo está en $\boxed{u = v/3}$.
+- **Una rueda de álabes** —una turbina— tiene siempre una cuchara en el
+  chorro, así que aprovecha **todo** el caudal, $Q' = Av$. La potencia va con
+  $(v-u)u$ y el máximo está en $\boxed{u = v/2}$.
+
+El segundo es el criterio de diseño de las Pelton del tema 23: la rueda gira a
+la mitad de la velocidad del chorro. Y con $\theta = 180°$ y $u = v/2$ el
+rendimiento teórico llega al 100 %, porque el agua sale de la cuchara con
+velocidad absoluta nula: ha entregado toda su energía cinética.
+
+Confundir los dos casos es un error clásico, y se detecta comprobando si el
+enunciado habla de **un** álabe o de una **rueda**.
+
+## Y el resto de aplicaciones del temario
+
+El programa cierra con hélices propulsoras e hipótesis de Rankine, propulsión
+a chorro, mecánica del cohete, ensanchamiento brusco y aspersores. Todos son
+el mismo teorema con otro volumen de control:
+
+- **Ensanchamiento brusco**: aplicando cantidad de movimiento y Bernoulli a la
+  vez sale la pérdida de carga $h_f = (v_1-v_2)^{2}/2g$, que es la única
+  pérdida localizada que se puede **deducir** en vez de tabular. Vuelve en el
+  tema 19.
+- **Propulsión**: el empuje es $\dot m\,\Delta v$, la misma ecuación mirada
+  desde el vehículo.
