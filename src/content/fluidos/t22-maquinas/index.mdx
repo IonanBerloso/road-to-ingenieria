@@ -1,0 +1,262 @@
+---
+asignatura: fluidos
+tema: 22
+titulo: Máquinas hidráulicas. Principios fundamentales
+descripcion: La ecuación de Euler, la cadena de rendimientos que hay que recorrer en orden, y la velocidad específica, que dice qué máquina toca.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 22 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Los cuatro últimos temas son máquinas, y este es el que pone los cimientos.
+Todo lo que viene después —Pelton, Francis, Kaplan, bombas centrífugas,
+instalaciones de bombeo— es este tema aplicado.
+
+Una **máquina de fluido** usa un fluido como intercambiador de energía. Se
+parten en dos por el comportamiento del fluido:
+
+- **hidráulicas**, si el fluido se comporta como incompresible: bombas,
+  ventiladores, turbinas hidráulicas, aerogeneradores;
+- **térmicas**, si es compresible y los fenómenos termodinámicos mandan:
+  compresores, turbinas de gas.
+
+Aquí solo las primeras.
+
+## Las dos clasificaciones que hay que saber
+
+**Por principio de funcionamiento** —la más importante— y es un reencuentro con
+dos temas anteriores:
+
+| | en qué se basa | tipos |
+|---|---|---|
+| **Turbomáquinas** | el **teorema del momento cinético** (tema 14) | radiales, axiales, mixtas |
+| **Desplazamiento positivo** | el **principio de Pascal** (tema 4) | alternativas y rotativas |
+
+Una turbomáquina intercambia energía porque el fluido **cambia su momento
+cinético** al atravesar un rodete que gira. Una de desplazamiento positivo
+encierra un volumen y lo empuja: sube la presión en un punto y Pascal la
+transmite a todo lo que hay aguas abajo. Son mecanismos distintos, no dos
+versiones de lo mismo.
+
+**Por el sentido de la conversión:**
+
+- **motoras**: el fluido mueve la máquina. Turbinas hidráulicas y eólicas,
+  motores hidráulicos.
+- **generadoras**: la máquina energiza el fluido. Bombas y ventiladores.
+
+Y el elemento común a todas las turbomáquinas es el **rodete**: el único sitio
+donde se transforma la energía. Todo lo demás —distribuidor, difusor, voluta—
+está para que el fluido entre y salga del rodete en las mejores condiciones.
+
+## La cadena de rendimientos
+
+Aquí se pierden más puntos que en ninguna otra parte del tema, porque hay
+cuatro rendimientos y cada uno mide **un tramo distinto** del camino. En una
+**turbobomba**, el camino va del motor eléctrico al fluido:
+
+| altura | qué es |
+|---|---|
+| $H_a$ | **absorbida**: la energía mecánica que la bomba pide al motor |
+| $H_i$ | **interna**: la parte de esa que se convierte en hidráulica en el rodete |
+| $H_m$ | **manométrica o útil**: la que acaba en el fluido |
+| $H_E$ | **de Euler**: la que daría con **infinitos álabes**. No es alcanzable |
+
+y las dos pérdidas que las separan:
+
+$$
+H_a - h_{fo} = H_i
+\qquad\qquad
+H_i - h_{fh} = H_m
+$$
+
+con $h_{fo}$ las pérdidas **orgánicas** (mecánicas: rozamientos, prensaestopas)
+y $h_{fh}$ las **hidráulicas** (fricción y choques dentro de la máquina).
+
+Los cuatro rendimientos, cada uno el cociente de dos escalones consecutivos:
+
+| rendimiento | turbobomba | qué evalúa |
+|---|---|---|
+| eficiencia del álabe | $H_i/H_E$ | que los álabes son finitos |
+| **hidráulico o manométrico** $\eta_m$ | $H_m/H_i$ | pérdidas por fricción interna |
+| **volumétrico** $\eta_v$ | $Q_u/Q_t$ | el caudal que se recircula y se fuga |
+| **orgánico o mecánico** $\eta_o$ | $H_i/H_a$ | rozamientos mecánicos |
+| **global** $\eta_g$ | $P_u/P_a$ | todo junto |
+
+$$
+\boxed{\eta_g = \eta_m\,\eta_v\,\eta_o}
+$$
+
+<ErrorTipico titulo="Los caudales también son tres, y no son el mismo">
+
+Con las alturas se tiene cuidado; con los caudales, no, y ahí está el error.
+
+- **Caudal total** $Q_t$: el que pasa por los conductos del rodete.
+- **Caudal útil** $Q_u$: el que sale por la tubería de impulsión, que es el
+  que se mide y el que sirve.
+- **Caudal perdido**: el que recircula en cortocircuito entre la salida y la
+  entrada del rodete, más el que se fuga entre carcasa y eje.
+
+Y las potencias van emparejadas con **su** altura y **su** caudal, no
+mezcladas:
+
+$$
+P_u = \gamma\,H_m\,Q_u
+\qquad
+P_i = \gamma\,H_i\,Q_t
+\qquad
+P_a = \gamma\,H_a\,Q_t
+$$
+
+Fíjate en el patrón: la útil lleva el caudal útil, y las otras dos, el total.
+Calcular $P_a$ con $Q_u$ es el fallo silencioso del tema, porque el número sale
+razonable.
+
+En turbinas, el rendimiento volumétrico es tan alto —**0,98 a 0,99**— que se
+suele tomar 1. En bombas no siempre se puede.
+
+</ErrorTipico>
+
+## La ecuación de Euler
+
+Es el teorema del momento cinético del tema 14 aplicado a un rodete, y su
+deducción cabe en cuatro líneas porque **casi todos los momentos se anulan**.
+
+Sobre el volumen de control que es el rodete, las fuerzas de presión en la
+entrada y en la salida y el peso **no crean momento respecto al eje**. El único
+momento exterior es el del rodete sobre el fluido, opuesto al momento motor.
+Entonces:
+
+$$
+M = \rho\,Q\,(r_1 c_{u1} - r_2 c_{u2}) \quad\text{(turbina)}
+$$
+
+Multiplicando por la velocidad angular $\omega$ y usando $u = \omega r$:
+
+$$
+\boxed{H_e = \frac{u_1 c_{u1} - u_2 c_{u2}}{g}} \quad\text{(turbina)}
+\qquad
+\boxed{H_E = \frac{u_2 c_{u2} - u_1 c_{u1}}{g}} \quad\text{(bomba)}
+$$
+
+Los subíndices: $u$ es la velocidad de arrastre del rodete, $c$ la absoluta del
+fluido, $w$ la relativa, y $c_u = c\cos\alpha$ es la **componente de la
+absoluta en la dirección de $u$**. Los triángulos de velocidades son la
+herramienta de todo el tema 23.
+
+<ErrorTipico titulo="Turbina y bomba llevan la resta al revés, y las conclusiones también son opuestas">
+
+Es lo primero que hay que fijar y lo que más se confunde.
+
+En una **turbina** el fluido entrega energía, así que el término de entrada va
+primero: $u_1c_{u1} - u_2c_{u2}$. En una **bomba** la recibe, y va al revés:
+$u_2c_{u2} - u_1c_{u1}$.
+
+Y de ahí salen condiciones de diseño **opuestas**:
+
+| | turbina | bomba |
+|---|---|---|
+| condición de máximo rendimiento | $c_{u2}=0$, es decir $\alpha_2 = 90°$ | $c_{u1}=0$, es decir $\alpha_1 = 90°$ |
+| velocidades absolutas | $c_2 < c_1$ | $c_1 < c_2$ |
+| radios | $r_2 < r_1$: el flujo va **hacia el eje** | $r_1 < r_2$: el flujo va **hacia fuera** |
+| velocidad relativa | $w_2 > w_1$: canales convergentes | $w_1 > w_2$: canales divergentes |
+
+Todo esto sale de escribir Euler con el teorema del coseno
+$w^{2} = u^{2} + c^{2} - 2uc\cos\alpha$:
+
+$$
+H_e = \frac{(c_1^{2}-c_2^{2}) + (u_1^{2}-u_2^{2}) + (w_2^{2}-w_1^{2})}{2g}
+$$
+
+Los tres paréntesis dicen lo mismo tres veces: para sacar energía del fluido hay
+que **frenarlo, traerlo hacia el eje y acelerarlo dentro del canal**. En una
+bomba, las tres al revés.
+
+Y la razón física de que el máximo pida $c_{u2}=0$ en turbinas es la más
+intuitiva del tema: **el agua que sale girando se lleva energía consigo**. Que
+salga radial es que ha entregado todo lo que podía.
+
+</ErrorTipico>
+
+## Semejanza: los parámetros de Rateau
+
+Aquí vuelve el tema 16, y con el mismo final. Aplicando Buckingham a una
+turbomáquina con $D$, $N$ y $\rho$ como variables repetidas salen cuatro
+parámetros, que reordenados dan los **de Rateau**:
+
+$$
+\mu_R = \frac{gH}{N^{2}D^{2}} \;\text{(coeficiente manométrico)}
+\qquad
+\delta_R = \frac{Q}{N D^{3}} \;\text{(coeficiente de caudal)}
+$$
+
+más Reynolds y Froude. Y el fenómeno queda descrito por
+$\mu_R = F(\delta_R, Re, Fr)$.
+
+**Y entonces se repite el argumento del tema 16.** Igualar los cuatro obligaría
+a fluidos imposibles o a escala unidad, así que hay que renunciar a alguno. En
+una turbomáquina se puede renunciar a **dos**, y con buena conciencia:
+
+- **Froude**, porque la diferencia de cotas entre entrada y salida de la máquina
+  es despreciable;
+- **Reynolds**, porque el flujo es turbulento del todo y las fuerzas viscosas no
+  gobiernan.
+
+Queda la **semejanza restringida geométrica**, $\mu_R = F(\delta_R)$, y con ella
+el **teorema de Combes-Bertrand-Rateau**:
+
+> Si una serie de turbomáquinas geométricamente semejantes tienen el mismo
+> coeficiente de caudal, **funcionan de manera semejante**: son homólogas, y
+> comparten todos los demás parámetros, incluido el rendimiento.
+
+Es lo que permite ensayar un modelo pequeño y comprar la máquina grande.
+
+## La velocidad específica
+
+Combinando los dos parámetros de Rateau se puede eliminar el diámetro, y eso da
+un número que **caracteriza a la familia entera, no al tamaño**. Hay tres
+versiones y conviene tenerlas separadas porque los enunciados usan las tres:
+
+| | fórmula | unidades | qué es |
+|---|---|---|---|
+| **$n_s$**, número de Camerer | $n_s = N\dfrac{P_e^{1/2}}{H_n^{5/4}}$ | rpm, **dimensional** | las rpm de la máquina homóloga que con 1 m de salto diera 1 CV |
+| **$N_s$**, adimensional | $N_s = n\dfrac{Q^{1/2}}{(gH)^{3/4}}$ | **adimensional**, $n$ en rev/s | el mismo concepto sin unidades |
+| **$n_q$**, convencional | $n_q = N\dfrac{Q^{1/2}}{H^{3/4}}$ | rpm | el de los catálogos de fabricante |
+
+Las tres dicen lo mismo con distinta escala. $N_s$ es la correcta y da valores
+incómodamente pequeños; $n_q$ es la que usan los fabricantes porque da números
+manejables; $n_s$ es la clásica y es la que emplean los apuntes.
+
+**Para qué sirve, que es lo importante.** Ensayada una familia de máquinas, la
+curva de rendimiento frente a la velocidad específica tiene un máximo, y ese
+máximo **caracteriza el tipo de máquina**:
+
+> **Velocidad específica pequeña, máquina radial. Velocidad específica grande,
+> máquina axial.**
+
+Y ahí está la utilidad de proyecto: con el salto y el caudal de un
+aprovechamiento se calcula $n_s$, y el número dice si toca Pelton, Francis o
+Kaplan **antes** de dimensionar nada. Es lo que hace el tema 23.
+
+<ErrorTipico titulo="Qué se mete en la velocidad específica no es lo mismo en turbina que en bomba">
+
+Los símbolos son los mismos y significan cosas distintas:
+
+| | $H$ | $P$ | $Q$ |
+|---|---|---|---|
+| **turbina** | $H_n$, altura neta | $P_e$, potencia efectiva | $Q_t$, caudal total |
+| **turbobomba** | $H_m$, altura manométrica | $P_u$, potencia útil | $Q_u$, caudal útil |
+
+Es coherente con la cadena de rendimientos: en cada máquina se toma la altura y
+la potencia **del lado por donde sale el producto**. Una turbina vende potencia
+en el eje; una bomba, altura y caudal en la tubería.
+
+Y una comprobación de unidades: en $n_s$ la potencia va **en CV**, porque la
+definición es «1 CV con 1 m». Meterla en kW da un número que no se parece a
+ninguna tabla y no hay forma de darse cuenta si no se tienen las tablas al lado.
+
+</ErrorTipico>

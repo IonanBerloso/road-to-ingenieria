@@ -1,0 +1,228 @@
+---
+asignatura: fluidos
+tema: 23
+titulo: Turbinas hidráulicas
+descripcion: Acción y reacción, y por qué la velocidad específica basta para saber si toca Pelton, Francis o Kaplan.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP4
+fuente: Adaptado del Tema 23 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Una turbina hidráulica convierte la energía del agua en energía mecánica en un
+eje. Este tema es, sobre todo, **descriptivo**, y conviene decirlo porque cambia
+cómo se estudia: en las convocatorias de 2020-2026 aparece como pregunta de
+rellenar huecos o de completar una tabla, no como problema numérico. Lo que se
+examina es **saber cuál es cuál y por qué**.
+
+## Acción y reacción
+
+La división que ordena el tema entero, y es por el tipo de energía que el agua
+le entrega al rodete:
+
+- **Turbinas de acción**, o de vena libre: el agua mueve el rodete
+  **exclusivamente con energía cinética**. El chorro sale del inyector ya a
+  presión atmosférica. Es la **Pelton**, y es la única.
+- **Turbinas de reacción**, o de vena forzada: el agua llega al rodete con
+  energía cinética **y de presión**, y va soltando las dos al atravesarlo.
+  Francis, Hélice, Kaplan, Deriaz, Bulbo y Straflo.
+
+La consecuencia visible es la **admisión**: en una Pelton el chorro entra por
+**puntos** —donde estén los inyectores— y en una de reacción, por **toda** la
+periferia del rodete a la vez.
+
+| | acción | reacción |
+|---|---|---|
+| **tipos** | Pelton | Francis, Hélice, Kaplan, Deriaz, Bulbo, Straflo |
+| **admisión** | por puntos | total |
+| **elementos** | inyector y rodete | cámara espiral, antedistribuidor, distribuidor, rodete y **tubo difusor** |
+| **energía aportada** | cinética, $c^{2}/2g$ | cinética y de presión, $c^{2}/2g + p/\gamma$ |
+| **campo $Q/H$** | pequeño | medio y grande |
+| **número de Camerer $n_s$** | 5 – 36 | 50 – 1300 |
+| **tipo de central** | cabecera de los ríos | cauce medio, terminal y desembocaduras |
+
+Esa tabla es literalmente una pregunta de examen —cayó en junio de 2023 con
+huecos que rellenar—, así que merece la pena sabérsela de corrido.
+
+## El tubo difusor, que es lo que hace distinta a una de reacción
+
+Es el elemento que más se olvida al enumerar y el que más rinde entender.
+
+En una turbina de reacción, el agua sale del rodete todavía con energía. Si se
+la dejara ir, se perdería. El **tubo difusor** —un conducto divergente entre el
+rodete y el canal de desagüe— hace dos cosas a la vez:
+
+- al ensancharse, **frena el agua** y recupera parte de su energía cinética;
+- y al hacerlo, **genera una depresión a su entrada**, es decir a la salida del
+  rodete, lo que aumenta el salto que la turbina aprovecha.
+
+Por eso una turbina de reacción puede colocarse por encima del nivel de
+desagüe sin perder esa altura: **el difusor se la devuelve**. Y por eso una
+Pelton no lo lleva: su rodete trabaja al aire, a presión atmosférica, y ahí no
+hay depresión que crear.
+
+<ErrorTipico titulo="«De reacción» no significa que el agua empuje; significa que llega con presión">
+
+El nombre engaña y la confusión es antigua.
+
+En las dos el agua empuja. La diferencia es **con qué energía llega al
+rodete**:
+
+- En una **Pelton** todo el salto se ha convertido ya en velocidad dentro del
+  inyector. El chorro está a presión atmosférica **antes** de tocar la cuchara,
+  y la sigue teniendo después. El rodete solo cambia la dirección de la
+  velocidad — que es exactamente el álabe del tema 15.
+- En una **Francis o una Kaplan** el agua entra al rodete **con presión**, y va
+  perdiéndola mientras lo atraviesa. Hay salto de presión entre la entrada y la
+  salida del rodete; en la Pelton no lo hay.
+
+La comprobación mental: **si abres una Pelton en marcha, el rodete está seco
+salvo donde da el chorro.** Si abres una Francis, está llena de agua a presión.
+
+</ErrorTipico>
+
+## La velocidad específica dice qué máquina toca
+
+Aquí se cobra el tema 22. Con el salto y el caudal de un aprovechamiento se
+calcula $n_s$, y el número **elige la máquina** antes de dimensionar nada:
+
+<figure>
+<svg viewBox="0 0 440 208" role="img" width="440" height="208"
+     aria-labelledby="flu23-t flu23-d">
+  <title id="flu23-t">La velocidad específica reparte el mapa de las turbinas hidráulicas</title>
+  <desc id="flu23-d">Un eje logarítmico con el número de Camerer, de 5 a 1300. En el tramo de 5 a 36 están las Pelton, con mucho salto y poco caudal. De 50 a 400, las Francis. De 400 a 700, las Hélice y Kaplan. Y de 700 a 1300, las Kaplan, Deriaz, Bulbo y Straflo, con poco salto y mucho caudal. Entre 36 y 50 hay un hueco que se cubre con Peltons de varios inyectores.</desc>
+
+  <rect x="50" y="86" width="128" height="26" fill="var(--live)" fill-opacity=".18"/>
+  <rect x="178" y="86" width="21" height="26" fill="var(--ink-suave)" fill-opacity=".14"/>
+  <rect x="199" y="86" width="135" height="26" fill="var(--alt)" fill-opacity=".14"/>
+  <rect x="334" y="86" width="36" height="26" fill="var(--alt)" fill-opacity=".24"/>
+  <rect x="370" y="86" width="40" height="26" fill="var(--alt)" fill-opacity=".34"/>
+
+  <line x1="50" y1="112" x2="410" y2="112" stroke="var(--ink)" stroke-width="1.4"/>
+  <line x1="50" y1="86" x2="410" y2="86" stroke="var(--ink-suave)" stroke-width="0.8"/>
+  <line x1="178" y1="86" x2="178" y2="118" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="199" y1="86" x2="199" y2="118" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="334" y1="86" x2="334" y2="118" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="370" y1="86" x2="370" y2="118" stroke="var(--ink)" stroke-width="1"/>
+
+  <text x="50" y="130" font-size="9" text-anchor="middle" fill="var(--ink-suave)">5</text>
+  <text x="178" y="130" font-size="9" text-anchor="middle" fill="var(--ink-suave)">36</text>
+  <text x="199" y="142" font-size="9" text-anchor="middle" fill="var(--ink-suave)">50</text>
+  <text x="334" y="130" font-size="9" text-anchor="middle" fill="var(--ink-suave)">400</text>
+  <text x="370" y="142" font-size="9" text-anchor="middle" fill="var(--ink-suave)">700</text>
+  <text x="410" y="130" font-size="9" text-anchor="middle" fill="var(--ink-suave)">1300</text>
+  <text x="230" y="162" font-size="9.5" text-anchor="middle" fill="var(--ink)">número de Camerer</text>
+
+  <text x="114" y="80" font-size="10.5" text-anchor="middle" fill="var(--live)">Pelton</text>
+  <text x="266" y="80" font-size="10.5" text-anchor="middle" fill="var(--alt)">Francis</text>
+  <text x="352" y="66" font-size="9.5" text-anchor="middle" fill="var(--alt)">Hélice</text>
+  <text x="352" y="78" font-size="9.5" text-anchor="middle" fill="var(--alt)">Kaplan</text>
+  <text x="404" y="66" font-size="9.5" text-anchor="end" fill="var(--alt)">Bulbo</text>
+  <text x="404" y="78" font-size="9.5" text-anchor="end" fill="var(--alt)">Straflo</text>
+
+  <text x="50" y="42" font-size="9.5" fill="var(--ink-suave)">mucho salto,</text>
+  <text x="50" y="54" font-size="9.5" fill="var(--ink-suave)">poco caudal</text>
+  <text x="410" y="42" font-size="9.5" text-anchor="end" fill="var(--ink-suave)">poco salto,</text>
+  <text x="410" y="54" font-size="9.5" text-anchor="end" fill="var(--ink-suave)">mucho caudal</text>
+  <line x1="130" y1="34" x2="330" y2="34" stroke="var(--ink-suave)" stroke-width="1"/>
+
+  <text x="188" y="186" font-size="9" text-anchor="middle" fill="var(--ink-suave)">el hueco 36–50 lo cubren</text>
+  <text x="188" y="198" font-size="9" text-anchor="middle" fill="var(--ink-suave)">las Pelton de varios inyectores</text>
+</svg>
+<figcaption>
+
+La velocidad específica no mide el tamaño de la máquina, mide su **forma**: a
+la izquierda, rodetes radiales que aprovechan mucha altura con poca agua; a la
+derecha, rodetes axiales que tragan mucho caudal con poco desnivel. Por eso,
+con el salto y el caudal de un aprovechamiento ya se sabe qué familia toca,
+antes de dimensionar una sola pieza.
+
+</figcaption>
+</figure>
+
+Y dentro de la reacción, la subdivisión del temario:
+
+| $n_s$ | máquinas |
+|---|---|
+| 50 – 400 | Francis |
+| 400 – 700 | Hélice, Kaplan, Deriaz |
+| 700 – 1300 | Kaplan, Deriaz, Bulbo, Straflo |
+
+El principio general del tema 22 se lee aquí directamente: **velocidad
+específica pequeña, rodete radial; velocidad específica grande, rodete axial.**
+Una Pelton es lo más radial que hay —el agua ni siquiera atraviesa el rodete— y
+una Bulbo es una hélice metida en una tubería.
+
+<ErrorTipico titulo="El hueco entre 36 y 50 no es un error de la tabla">
+
+Es una pregunta razonable y tiene respuesta.
+
+La tabla deja sin cubrir el tramo entre el $n_s$ máximo de una Pelton (36) y el
+mínimo de una Francis (50), y ahí es donde entran las **Pelton de varios
+inyectores**.
+
+El motivo es que $n_s$ crece con $\sqrt{P}$, y repartir el caudal entre $z$
+inyectores multiplica la velocidad específica del conjunto por $\sqrt z$. Con
+dos inyectores, $36\sqrt2 = 51$; con cuatro, 72. Por eso la convocatoria de
+2021 habla de «una turbina Pelton con dos inyectores» y no es un detalle
+decorativo: es exactamente el recurso para subir de banda sin cambiar de
+familia.
+
+Y aquí está también la razón de que el $n_s$ que se tabula sea **por
+inyector**: una Pelton de seis chorros no es una máquina distinta, es la misma
+seis veces.
+
+</ErrorTipico>
+
+## La central hidroeléctrica
+
+Seis elementos, en el orden en que los ve el agua:
+
+1. **Presa o azud de derivación.** Puede tener dos misiones: elevar el nivel o
+   almacenar para regular el caudal. Cuál de las dos depende de dónde salga la
+   conducción, y esto se pregunta:
+   - canal desde la **parte alta** del embalse → la presa **solo eleva** el
+     nivel;
+   - canal desde la **parte baja** → la presa **solo almacena**: la cota se
+     pierde al caer el agua al canal;
+   - **tubería forzada o galería a presión** desde la presa → hace **las dos
+     cosas**, que es lo mejor.
+
+   Cuando la presa solo sirve para derivar hacia un canal, se llama **azud**.
+2. **Canal de derivación**, que lleva el agua a un punto de topografía mejor.
+3. **Depósito de carga**, que regula el caudal **a corto plazo**. El embalse
+   tarda demasiado en responder a un cambio de potencia; el depósito absorbe el
+   desajuste mientras el canal se reajusta solo.
+4. **Tubería forzada**, donde la energía de posición se convierte en presión y
+   velocidad. Es la que sufre el golpe de ariete del tema 20.
+5. **Casa de máquinas**: turbinas y generadores.
+6. **Canal de desagüe**, que devuelve el agua al río.
+
+No todas las centrales tienen los seis. Y la disposición más eficiente toma el
+agua **por debajo** del nivel superior de la presa, sustituyendo el canal por
+una galería a presión: así no se pierde la cota que la presa ha ganado.
+
+**Y las dos clases por la forma de usar el agua:**
+
+- **De agua fluyente**: turbina lo que el río trae en cada momento, sin
+  reserva. El caudal oscila con las estaciones y la central puede quedarse
+  parada. Solo lleva azud.
+- **De agua embalsada**: tiene reserva y puede decidir cuándo turbinar.
+
+## Lo que este tema no trae
+
+Dicho en voz alta, para que nadie lo busque: **la colección de problemas no
+tiene ningún ejercicio de turbinas**. Su capítulo 9 es entero de instalaciones
+de bombeo, que es el tema 25.
+
+En las convocatorias de 2020-2026 las turbinas aparecen como preguntas
+conceptuales —la tabla de acción y reacción, los elementos de una Pelton, la
+función del distribuidor— y en un problema de conducción que alimenta el
+inyector de una Pelton, donde lo que se calcula es la tubería forzada, no la
+turbina.
+
+Por eso los ejercicios de este tema son **nuestros y de concepto**: son los que
+corresponden a lo que se pregunta.

@@ -1,0 +1,210 @@
+ejercicios:
+  # ── NUESTRO (§08). El tema es teórico entero y la colección no lo toca. Este
+  #    ejercicio pone el número que hace falta para entenderlo: cuánto vale de
+  #    verdad el término que separa a Euler de Navier-Stokes, y por qué esa
+  #    cuenta engaña si se hace con el diámetro.
+  - id: ejflu11-cuanto-pesa-el-termino-viscoso
+    titulo: Cuánto pesa el término que separa a Euler de Navier-Stokes
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Por una tubería de $100\ \text{mm}$ circula agua a $20\ °\text{C}$
+      ($\nu = 10^{-6}\ \text{m}^{2}/\text{s}$) a $2\ \text{m/s}$.
+
+      Comparando los términos de Navier-Stokes en órdenes de magnitud, el
+      cociente entre el término viscoso y el de inercia es aproximadamente
+      $1/Re$.
+
+      a) Calcular el número de Reynolds.
+
+      b) Estimar el peso del término viscoso frente al de inercia.
+
+      c) Repetir con glicerina ($\nu = 1{,}9\cdot 10^{-4}\ \text{m}^{2}/\text{s}$)
+      en la misma tubería y a la misma velocidad.
+    pide: Los dos Reynolds y los dos cocientes, y qué significan.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué distingue exactamente a la ecuación de Euler de las de
+          Navier-Stokes?
+        opciones:
+          - texto: >-
+              Un solo sumando, el término viscoso $\nu\nabla^{2}\vec v$, que
+              Euler no lleva porque supone fluido perfecto
+            correcta: true
+            mensaje: |
+              Eso es, y es una diferencia sorprendentemente pequeña de escribir
+              para lo mucho que cambia. Todo lo demás —fuerzas volumétricas,
+              gradiente de presión, aceleración— es idéntico en las dos.
+          - texto: >-
+              Que Euler vale para flujo permanente y Navier-Stokes también para
+              variable
+            mensaje: |
+              Las dos admiten flujo variable: la aceleración del segundo
+              miembro incluye la parte local. La diferencia no es el tiempo, es
+              la viscosidad.
+          - texto: >-
+              Que Euler es escalar y Navier-Stokes vectorial
+            mensaje: |
+              Las dos son vectoriales, y las dos dan tres ecuaciones al
+              escribirlas por componentes. De hecho esas tres son las que, con
+              la continuidad, el estado y el proceso, cierran el sistema de
+              seis.
+
+      - tipo: calcular
+        titulo: El Reynolds del agua
+        pregunta: |
+          ¿Qué número de Reynolds tiene el agua?
+        respuesta:
+          tipo: numero
+          valor: '200000'
+          tolerancia: 100
+          formato: un número sin unidades
+        distractores:
+          - valor: '200'
+            mensaje: |
+              Has usado $\nu = 10^{-3}$, que es la viscosidad **dinámica** del
+              agua en Pa·s. La cinemática, que es la que va con $vD$ a secas,
+              es $10^{-6}\ \text{m}^{2}/\text{s}$.
+          - valor: '20000'
+            mensaje: |
+              Un factor diez en el diámetro: son $0{,}1\ \text{m}$, no
+              $0{,}01$.
+        pista: |
+          $Re = vD/\nu$, con todo en unidades del SI.
+        desarrollo: |
+          $$
+          Re = \frac{2\cdot 0{,}1}{10^{-6}} = 2\cdot 10^{5}
+          $$
+
+      - tipo: calcular
+        titulo: El peso del término viscoso
+        pregunta: |
+          ¿Cuántas **millonésimas** del término de inercia representa el
+          viscoso? (escribe solo el número de millonésimas)
+        respuesta:
+          tipo: numero
+          valor: '5'
+          tolerancia: 0.1
+          formato: un número, contado en millonésimas
+        distractores:
+          - valor: '200000'
+            mensaje: |
+              Ese es el Reynolds, no su inverso. El Reynolds compara inercia
+              **entre** viscosidad; lo que se pide es al revés, y por eso sale
+              diminuto.
+          - valor: '950'
+            mensaje: |
+              Esas son las millonésimas de la **glicerina**, el apartado c).
+              Con agua el cociente es ciento noventa veces menor.
+        pista: |
+          Es $1/Re$. En millonésimas, $10^{6}/Re$.
+        desarrollo: |
+          $$
+          \frac{\text{viscoso}}{\text{inercia}} \sim \frac{1}{Re}
+          = \frac{1}{2\cdot 10^{5}} = 5\cdot 10^{-6}
+          $$
+
+          **Cinco millonésimas.** Escrito así, el término viscoso parece
+          perfectamente despreciable.
+
+      - tipo: calcular
+        titulo: Y con glicerina
+        pregunta: |
+          ¿Cuántas millonésimas vale ese cociente para la glicerina?
+        respuesta:
+          tipo: numero
+          valor: '950'
+          tolerancia: 10
+          formato: un número, contado en millonésimas
+        distractores:
+          - valor: '1053'
+            mensaje: |
+              Ese es el Reynolds de la glicerina —que además avisa de algo: por
+              debajo de 2000, el flujo es **laminar**—. Lo que se pide es su
+              inverso.
+          - valor: '5'
+            mensaje: |
+              Esas son las del agua. La glicerina es 190 veces más viscosa, así
+              que su cociente es 190 veces mayor.
+        pista: |
+          Mismo cálculo con $\nu = 1{,}9\cdot 10^{-4}$.
+        desarrollo: |
+          $$
+          Re = \frac{2\cdot 0{,}1}{1{,}9\cdot 10^{-4}} = 1053
+          \qquad
+          \frac{1}{Re} = 9{,}5\cdot 10^{-4}
+          $$
+
+          Ciento noventa veces más que con agua, y con un Reynolds de 1053 el
+          flujo además es **laminar**.
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El único término que separa a Euler de Navier-Stokes es el
+              viscoso, y su peso relativo es del orden de $1/Re$.
+          - texto: >-
+              Con agua en una tubería corriente eso son cinco millonésimas, y
+              con glicerina, casi mil veces más: novecientas cincuenta
+              millonésimas.
+          - texto: >-
+              Aun así, esa tubería de agua pierde carga, y toda la pérdida es
+              viscosa: la estimación se ha hecho con la escala del diámetro, no
+              con la de la capa límite.
+          - texto: >-
+              Como el cociente sale tan pequeño con agua, en esa tubería se
+              puede aplicar Bernoulli sin pérdidas y el resultado será correcto
+              con un error de cinco millonésimas.
+            trampa: true
+            mensaje: |
+              Esa es exactamente la conclusión que el ejercicio quiere
+              desmontar. En la **capa límite** el gradiente de velocidad es
+              mil veces mayor que en el centro, y ahí el término viscoso no es
+              despreciable en absoluto: es el que produce toda la pérdida de
+              carga del tema 18. Un cálculo con Bernoulli sin pérdidas en 100 m
+              de esa tubería se equivoca en metros, no en millonésimas.
+
+    resolucion: |
+      **Las dos cuentas.**
+
+      $$
+      Re_{\text{agua}} = 2\cdot 10^{5}
+      \;\Longrightarrow\;
+      \frac{1}{Re} = 5\cdot 10^{-6}
+      $$
+      $$
+      Re_{\text{glicerina}} = 1053
+      \;\Longrightarrow\;
+      \frac{1}{Re} = 9{,}5\cdot 10^{-4}
+      $$
+
+      **La lectura ingenua**, que es la que hay que corregir: con agua, el
+      término que separa a Euler de Navier-Stokes vale cinco millonésimas del
+      otro. Parece que se puede tachar sin más y quedarse con Euler, es decir
+      con Bernoulli sin pérdidas.
+
+      **Por qué es falsa.** Esa estimación usa la escala del **diámetro** para
+      medir el gradiente de velocidad. En el centro de la tubería, con el perfil
+      turbulento casi plano del tema 17, el gradiente es efectivamente
+      minúsculo. Pero en la **subcapa laminar**, de una décima de milímetro, la
+      velocidad pasa de cero a casi la máxima: el gradiente es del orden de mil
+      veces mayor, y con él el término viscoso.
+
+      Y el efecto acumulado de esa franja finísima es toda la pérdida de carga
+      de la conducción.
+
+      **La consecuencia, que es la idea de Prandtl:**
+
+      > **Euler vale fuera de la capa límite. Dentro hace falta
+      > Navier-Stokes.**
+
+      Como resolver Navier-Stokes en la capa límite no está al alcance de esta
+      asignatura, lo que se hace es **medir su efecto** con el ábaco de Moody y
+      llamarlo $h_f$. Y el número de la glicerina apunta al otro extremo: con
+      $Re = 1053$ el flujo es laminar, y ese sí es de los pocos casos en que
+      Navier-Stokes tiene solución exacta —Hagen-Poiseuille, $f = 64/Re$—.

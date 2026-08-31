@@ -1,0 +1,281 @@
+---
+asignatura: fluidos
+tema: 25
+titulo: Instalaciones de bombeo
+descripcion: El punto de funcionamiento, cómo se mueve, y el NPSH, que es la cuenta que decide si la bomba cavita o no.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 25 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El último tema, y el que junta todo. Aquí una bomba deja de ser una máquina en
+un catálogo y pasa a ser **una máquina en una instalación concreta**, que es
+donde se decide qué caudal da de verdad.
+
+Dos nombres que el temario distingue y conviene respetar:
+
+- **Sistema de bombeo**: la bomba **más** las conducciones y depósitos.
+- **Instalación de bombeo**: solo las conducciones y depósitos.
+
+Un sistema convencional son cinco piezas: depósito de aspiración, tubería de
+aspiración, bomba, tubería de impulsión y depósito superior.
+
+## La curva característica de la instalación
+
+Es Bernoulli entre los dos depósitos, con la bomba como incógnita:
+
+$$
+H_{mi} = \Delta z + \frac{\Delta p}{\gamma} + \frac{\Delta v^{2}}{2g} + h_{f,1\text{-}2}
+$$
+
+Y lo importante es **cuáles de esos términos dependen del caudal**:
+
+| término | ¿depende de $Q$? |
+|---|---|
+| $\Delta z$ | **no** |
+| $\Delta p/\gamma$ | **no** |
+| $\Delta v^{2}/2g$ | sí, con $Q^{2}$ |
+| $h_f$ | sí, aproximadamente con $Q^{2}$ |
+
+Los dos primeros suman la **altura piezométrica de la instalación**, $H_{i0}$,
+que es lo que la instalación pide **a caudal nulo**. Los otros dos hacen que la
+curva sea una parábola creciente que arranca de ahí.
+
+$$
+\boxed{H_{mi} = H_{i0} + k\,Q^{2}}
+$$
+
+El término cinético se suele despreciar por pequeño, **salvo cuando el líquido
+sale a la atmósfera por una boquilla**, donde puede ser importante.
+
+> **Un depósito presurizado equivale a un depósito más alto.** Dos kilopondios
+> por centímetro cuadrado son 20 metros de columna de agua, así que a efectos
+> de la curva es exactamente como si estuviera veinte metros por encima. Es la
+> forma rápida de leer un enunciado con depósitos a presión.
+
+## El punto de funcionamiento
+
+La bomba tiene su propia curva, $H$ frente a $Q$, descendente. Y aquí está la
+idea del tema:
+
+> La **altura manométrica de la instalación** y la **altura manométrica de la
+> bomba** son conceptos completamente distintos —una es lo que hace falta, la
+> otra es lo que se da— y responden a expresiones matemáticas distintas. Pero
+> cuando esa bomba trabaja en esa instalación, **tienen el mismo valor
+> numérico**.
+
+Por tanto el sistema funciona en la **intersección de las dos curvas**, y solo
+ahí. No en el punto que uno quisiera.
+
+<figure>
+<svg viewBox="0 0 440 230" role="img" width="440" height="230"
+     aria-labelledby="flu25-t flu25-d">
+  <title id="flu25-t">El punto de funcionamiento es el cruce de la curva de la bomba con la de la instalación</title>
+  <desc id="flu25-d">Un gráfico de altura frente a caudal. La curva de la instalación es una parábola que arranca de la altura piezométrica y sube. La curva de la bomba baja desde su altura a caudal nulo. Se cortan en el punto de funcionamiento. Si se cierra parcialmente una válvula, la parábola de la instalación se cierra en abanico y el punto de funcionamiento se desplaza hacia la izquierda: menos caudal y más altura. Si en cambio sube la cota del depósito superior, la parábola se traslada hacia arriba paralelamente a sí misma.</desc>
+
+  <line x1="56" y1="20" x2="56" y2="180" stroke="var(--ink-suave)" stroke-width="1"/>
+  <line x1="56" y1="180" x2="418" y2="180" stroke="var(--ink-suave)" stroke-width="1"/>
+  <text x="24" y="16" font-size="9.5" fill="var(--ink)">H</text>
+  <text x="418" y="196" font-size="9.5" text-anchor="end" fill="var(--ink)">Q</text>
+
+  <line x1="50" y1="150" x2="56" y2="150" stroke="var(--ink-suave)" stroke-width="1"/>
+  <text x="46" y="153" font-size="9" text-anchor="end" fill="var(--ink-suave)">Hi0</text>
+
+  <path d="M56 150 Q 210 142 360 92" fill="none" stroke="var(--alt)" stroke-width="2.4"/>
+  <text x="364" y="90" font-size="9.5" fill="var(--alt)">instalación</text>
+
+  <path d="M56 150 Q 150 128 236 60" fill="none" stroke="var(--alt)" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <text x="240" y="56" font-size="9" fill="var(--alt)">válvula cerrándose</text>
+
+  <path d="M56 118 Q 210 108 384 44" fill="none" stroke="var(--ink-suave)" stroke-width="1.4" stroke-dasharray="2 4"/>
+  <text x="388" y="42" font-size="9" fill="var(--ink-suave)">más cota</text>
+
+  <path d="M56 46 Q 200 62 372 168" fill="none" stroke="var(--live)" stroke-width="2.4"/>
+  <text x="70" y="40" font-size="9.5" fill="var(--live)">bomba</text>
+
+  <circle cx="300" cy="112" r="4.5" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <line x1="300" y1="112" x2="300" y2="180" stroke="var(--ink-suave)" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <text x="304" y="106" font-size="9.5" fill="var(--ink)">punto de funcionamiento</text>
+
+  <circle cx="202" cy="83" r="4" fill="none" stroke="var(--flag)" stroke-width="1.8"/>
+  <line x1="202" y1="83" x2="202" y2="180" stroke="var(--flag)" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <text x="150" y="200" font-size="9" text-anchor="middle" fill="var(--flag)">con la válvula</text>
+  <text x="290" y="200" font-size="9" text-anchor="middle" fill="var(--ink-suave)">sin ella</text>
+
+  <text x="60" y="220" font-size="9.5" fill="var(--ink-suave)"
+        textLength="336" lengthAdjust="spacingAndGlyphs">Cerrar una válvula cierra la parábola en abanico; subir la cota la traslada.</text>
+</svg>
+<figcaption>
+
+La instalación pide y la bomba ofrece: el sistema se instala donde las dos
+curvas se cruzan, y ese punto **no se elige**. Solo se puede mover cambiando
+una de las dos curvas — cerrando una válvula, que la cierra en abanico, o
+variando cotas y presiones, que la traslada paralelamente.
+
+</figcaption>
+</figure>
+
+## Cómo se mueve el punto de funcionamiento
+
+**Actuando sobre la instalación:**
+
+- **cambiar cotas o presiones** de los depósitos: la curva se **traslada
+  paralelamente** a sí misma, porque solo cambia $H_{i0}$;
+- **cerrar una válvula**: aumentan las pérdidas, así que la curva **se cierra
+  en abanico** sin mover su arranque. Cerrada del todo, la curva es el eje de
+  ordenadas y el caudal es nulo.
+
+**Actuando sobre la bomba**, dos procedimientos: **variar la velocidad de giro**
+y **tornear el rodete**.
+
+Y aquí vuelve la semejanza del tema 22. Igualando los parámetros de Rateau con
+el mismo diámetro y la misma gravedad:
+
+$$
+\frac{H}{N^{2}} = \text{cte}
+\qquad\qquad
+\frac{Q}{N} = \text{cte}
+$$
+
+es decir, **la altura va con el cuadrado del régimen y el caudal con su primera
+potencia**. Para pasar de $N_1$ a $N_2$:
+
+$$
+H_2 = H_1\frac{N_2^{2}}{N_1^{2}}
+\qquad
+Q_2 = Q_1\frac{N_2}{N_1}
+$$
+
+<ErrorTipico titulo="Los puntos de igual rendimiento están sobre una parábola, no sobre la curva de la bomba">
+
+Es el detalle que hace utilizables las leyes de semejanza, y el que se salta
+todo el mundo.
+
+Dividiendo $H/N^{2}$ entre $(Q/N)^{2}$ desaparece el régimen de giro:
+
+$$
+\frac{H}{Q^{2}} = \text{cte}
+\;\Longrightarrow\;
+\boxed{H = K\,Q^{2}}
+$$
+
+**Los puntos homólogos —los de igual rendimiento— están sobre una parábola que
+pasa por el origen.** No sobre la curva característica, que es otra cosa.
+
+La consecuencia práctica es la que cuenta: si cambias el régimen de una bomba,
+el punto de funcionamiento **no se mueve por una parábola de rendimiento
+constante** salvo que la curva de la instalación sea justamente una de esas
+parábolas — y solo lo es si $H_{i0} = 0$, es decir si no hay que vencer ninguna
+altura geométrica ni presión.
+
+En una instalación con desnivel, bajar el régimen **cambia también el
+rendimiento**, y suele empeorarlo. Por eso variar la velocidad no siempre es
+tan buena idea como parece.
+
+</ErrorTipico>
+
+## Cavitación y NPSH
+
+Es el apartado que más cae de este tema y el que cierra la asignatura.
+
+**Dónde cavita una bomba.** La presión mínima de todo el sistema está a la
+**entrada de la bomba**, junto a la proa de los álabes, donde el líquido
+todavía no ha recibido energía del rodete. Si allí la presión baja hasta la de
+vapor, el líquido hierve.
+
+Y lo que hace daño no es que hierva: es que **las burbujas implosionan** al
+recuperar presión, como martillos neumáticos microscópicos contra las paredes,
+que acaban con aspecto de terrón de azúcar. Además el aire desprendido es rico
+en oxígeno y oxida. El resultado son vibraciones, ruido, pérdida de altura
+manométrica y pérdida de rendimiento.
+
+**La cuenta.** Bernoulli entre la lámina del depósito de aspiración (B) y el
+punto crítico (D), restando la presión de vapor a los dos lados:
+
+$$
+\underbrace{\frac{p_D - p_s}{\gamma} + \frac{v_D^{2}}{2g}}_{\text{lo que hay en D}}
+=
+\underbrace{\frac{p_B - p_s}{\gamma} - (z_D - z_B) - h_{f,BD}}_{\text{todo esto es de la instalación}}
+$$
+
+El segundo miembro se llama **NPSH disponible**, y la observación clave es que
+**todos sus términos son de la instalación**: la bomba no aparece.
+
+$$
+\boxed{NPSH_{\text{disp}} = \frac{p_{\text{atm}}}{\gamma} - \frac{p_v}{\gamma}
+- z_{\text{aspiración}} - h_{f,\text{aspiración}}}
+$$
+
+Para que no haya cavitación hace falta $p_D > p_s$, es decir que el
+$NPSH_{\text{disp}}$ supere a $v_D^{2}/2g$. Y a ese término, que **es de la
+máquina**, se le llama **NPSH requerido**: la energía mínima que el líquido
+necesita traer para que la bomba no cavite. Lo da el fabricante, y crece con el
+caudal.
+
+$$
+NPSH_{\text{disp}} = NPSH_{\text{req}} + NPSH_{\text{seguridad}}
+$$
+
+**El criterio de proyecto:** que el NPSH de seguridad no baje nunca de **0,5 a
+0,9 mcl**, o equivalentemente que
+
+$$
+NPSH_{\text{disp}} > 1{,}3\,NPSH_{\text{req}}
+$$
+
+<ErrorTipico titulo="La válvula de regulación va en la impulsión, nunca en la aspiración">
+
+Es pregunta de examen —cayó en junio de 2021— y se responde entera con la
+fórmula del NPSH disponible.
+
+Una válvula introduce una pérdida de carga. Si se pone en la **aspiración**,
+esa pérdida entra en $h_{f,\text{aspiración}}$ y **baja el NPSH disponible**:
+justo lo que hay que evitar. Si se pone en la **impulsión**, no aparece en esa
+fórmula, y sin embargo frena el caudal igual — que era lo que se quería.
+
+De paso, con el caudal más bajo el $NPSH_{\text{req}}$ también baja y las
+pérdidas de aspiración se reducen, así que cerrar la válvula de impulsión
+**aleja** de la cavitación por dos caminos a la vez.
+
+Los tres términos que restan en el NPSH disponible dicen además qué hacer
+cuando una bomba cavita:
+
+1. **bajarla de cota** —o subir el nivel del depósito—, que reduce
+   $z_{\text{aspiración}}$;
+2. **acortar y ensanchar la aspiración**, que reduce $h_f$;
+3. **bajar el caudal**, que reduce las dos cosas y además el requerido.
+
+Y una que no está en la lista pero es la que decide: **si el líquido está
+caliente, su presión de vapor sube** y el NPSH disponible se hunde. Bombear
+agua a 75 °C no es lo mismo que bombearla a 20.
+
+</ErrorTipico>
+
+## El problema tipo, de principio a fin
+
+Así se resuelve una instalación de bombeo completa, que es lo que piden los
+problemas largos del examen:
+
+1. **Escribir la curva de la instalación**: $H_{mi} = H_{i0} + k\,Q^{2}$, con
+   $H_{i0}$ de cotas y presiones y $k$ de las pérdidas —Darcy-Weisbach o
+   Hazen-Williams, más las menores del tema 19—.
+2. **Seleccionar la bomba** con el caudal deseado, entrando en las curvas del
+   fabricante. No pasará exactamente por el punto que se quería.
+3. **Cruzar las dos curvas**: eso da el punto de funcionamiento real
+   $(Q, H, \eta)$, que no es el deseado.
+4. **Calcular la potencia absorbida**, $P_a = \gamma Q H/\eta$.
+5. **Comprobar el NPSH** en ese punto, y con él la cota máxima a la que se
+   puede montar la bomba.
+6. Si el caudal resulta mayor del necesario, **calcular la pérdida que debe
+   introducir la válvula** de regulación, y lo que cuesta esa energía tirada.
+
+Ese último paso tiene una moraleja que conviene decir: **estrangular una
+válvula es tirar energía**. El coste anual de esa maniobra es un cálculo que la
+colección pide una y otra vez, y es la razón industrial de que hoy se prefiera
+regular con **variador de frecuencia** —cambiando el régimen de giro— antes que
+con una llave.

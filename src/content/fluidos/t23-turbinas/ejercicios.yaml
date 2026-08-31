@@ -1,0 +1,409 @@
+ejercicios:
+  # ── NUESTROS (§08). La colección no tiene ni un ejercicio de turbinas: su
+  #    capítulo 9 es entero de bombeo. Y en los exámenes el tema cae como
+  #    pregunta conceptual. Estos dos ponen números a las dos decisiones que
+  #    esas preguntas dan por sabidas: qué familia toca, y cómo se dimensiona
+  #    una Pelton una vez elegida.
+  - id: ejflu23-que-turbina-toca
+    titulo: Dos aprovechamientos de la misma potencia y dos turbinas distintas
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Se estudian dos aprovechamientos hidroeléctricos, los dos con un grupo
+      que gira a $600\ \text{rpm}$ y un rendimiento global de $0{,}88$:
+
+      - **A**: salto neto $320\ \text{m}$, caudal $1{,}2\ \text{m}^{3}/\text{s}$.
+      - **B**: salto neto $30\ \text{m}$, caudal $12\ \text{m}^{3}/\text{s}$.
+
+      a) Comprobar que las dos potencias son casi iguales.
+
+      b) Calcular el número de Camerer de cada uno y decidir qué turbina
+      corresponde.
+
+      Recordar que $n_s = N\,P_e^{1/2}/H_n^{5/4}$ con la potencia **en CV**.
+    pide: Las dos potencias, las dos velocidades específicas y el tipo de turbina de cada una.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Si las dos instalaciones dan casi la misma potencia, ¿por qué no
+          sirve la misma turbina?
+        opciones:
+          - texto: >-
+              Porque el tipo lo decide la velocidad específica, que reparte la
+              potencia entre salto y caudal, no la potencia sola
+            correcta: true
+            mensaje: |
+              Exacto. $n_s$ mide **la forma** del aprovechamiento: mucho salto
+              con poca agua, o al revés. Dos centrales de la misma potencia
+              pueden necesitar máquinas completamente distintas.
+          - texto: >-
+              Porque la potencia se calcula distinto en cada caso
+            mensaje: |
+              Se calcula igual, $P = \gamma\,Q\,H\,\eta$, y por eso salen casi
+              iguales: uno tiene diez veces más salto y el otro diez veces más
+              caudal. Lo que cambia es la forma de conseguirla.
+          - texto: >-
+              Porque con 320 m de salto la presión rompería una turbina de
+              reacción
+            mensaje: |
+              Existen Francis trabajando con saltos de varios cientos de
+              metros, así que no es un problema de resistencia. El criterio no
+              es el límite del material, es el rendimiento: cada familia tiene
+              su banda de $n_s$ y fuera de ella rinde mal.
+
+      - tipo: calcular
+        titulo: La potencia del aprovechamiento A
+        pregunta: |
+          ¿Qué potencia da el aprovechamiento A, en CV?
+        respuesta:
+          tipo: magnitud
+          valor: '4503 cv'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '5117 cv'
+            mensaje: |
+              Te has dejado el rendimiento. La potencia **efectiva** en el eje
+              es la hidráulica disponible multiplicada por $\eta_g = 0{,}88$;
+              lo demás se queda por el camino.
+          - valor: '3312 cv'
+            mensaje: |
+              Ese es el valor en **kilovatios**, no en CV. Un CV son
+              $735{,}5\ \text{W}$, así que el número en CV es mayor. Y en esta
+              fórmula la unidad importa: $n_s$ está definido a partir de 1 CV.
+        pista: |
+          $P_e = \gamma\,Q\,H\,\eta_g$, y después de W a CV dividiendo entre
+          735,5.
+        desarrollo: |
+          $$
+          P_e = 9800\cdot 1{,}2\cdot 320\cdot 0{,}88 = 3\,312\ \text{kW}
+          $$
+          $$
+          P_e = \frac{3\,312\,000}{735{,}5} = 4503\ \text{CV}
+          $$
+
+          Para B sale $3105\ \text{kW} = 4221\ \text{CV}$: prácticamente la
+          misma máquina en potencia.
+
+      - tipo: calcular
+        titulo: La velocidad específica de A
+        pregunta: |
+          ¿Cuál es el número de Camerer del aprovechamiento A?
+        respuesta:
+          tipo: numero
+          valor: '29.8'
+          tolerancia: 0.5
+          formato: un número sin unidades
+        distractores:
+          - valor: '25.5'
+            mensaje: |
+              Has metido la potencia en kW. El número sigue cayendo en la banda
+              Pelton, así que la conclusión no cambia — y por eso este error es
+              peligroso: no se detecta mirando el resultado. La definición de
+              $n_s$ es «1 CV con 1 m», y hay que respetarla.
+          - valor: '532'
+            mensaje: |
+              Has usado $H^{3/4}$, que es el exponente de $n_q$ y de $N_s$. El
+              de $n_s$ es $5/4$, y la diferencia cambia el resultado en un
+              factor veinte: te llevaría a proyectar una Kaplan donde va una
+              Pelton.
+        pista: |
+          $n_s = N\,\sqrt{P_e}/H_n^{5/4}$, con $P_e$ en CV.
+        desarrollo: |
+          $$
+          n_s = \frac{600\cdot\sqrt{4503}}{320^{5/4}}
+          = \frac{600\cdot 67{,}1}{1353}
+          = 29{,}8
+          $$
+
+          Está en la banda 5–36: **turbina Pelton**.
+
+      - tipo: calcular
+        titulo: La velocidad específica de B
+        pregunta: |
+          ¿Y la del aprovechamiento B?
+        respuesta:
+          tipo: numero
+          valor: '555'
+          tolerancia: 10
+          formato: un número sin unidades
+        distractores:
+          - valor: '29.8'
+            mensaje: |
+              Ese es el de A. Comprueba el salto: en B es $30\ \text{m}$, y
+              como va elevado a $5/4$ en el denominador, dividir el salto por
+              diez multiplica $n_s$ por casi veinte.
+          - valor: '175.6'
+            mensaje: |
+              Parece que has usado el caudal de A o el salto de B con la
+              potencia de A. Recalcula: $P_B = 4221$ CV y
+              $30^{5/4} = 70{,}2$.
+        pista: |
+          Misma fórmula, con $P_B = 4221$ CV y $H = 30$ m.
+        desarrollo: |
+          $$
+          n_s = \frac{600\cdot\sqrt{4221}}{30^{5/4}} = \frac{600\cdot 64{,}97}{70{,}2}
+          = 555
+          $$
+
+          Está en la banda 400–700: **turbina Hélice o Kaplan**.
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Las dos instalaciones dan prácticamente la misma potencia, 3312 y
+              3105 kW, repartida de forma opuesta entre salto y caudal.
+          - texto: >-
+              El número de Camerer de A es 29,8, dentro de la banda 5–36:
+              corresponde una Pelton, con admisión por puntos y sin tubo
+              difusor.
+          - texto: >-
+              El de B es 555, dentro de 400–700: corresponde una Hélice o
+              Kaplan, de reacción, con admisión total y tubo difusor.
+          - texto: >-
+              Como las dos potencias son casi iguales, las dos máquinas tendrán
+              rodetes de tamaño parecido.
+            trampa: true
+            mensaje: |
+              La velocidad específica no lleva el diámetro dentro precisamente
+              porque **no dice nada del tamaño**: describe la forma. Con el
+              mismo régimen de giro, la Kaplan de B tiene que tragar diez veces
+              más caudal, así que su rodete es mucho mayor. Misma potencia,
+              máquinas de dimensiones muy distintas.
+
+    resolucion: |
+      **Las potencias.**
+
+      $$
+      P_A = 9800\cdot 1{,}2\cdot 320\cdot 0{,}88 = 3312\ \text{kW} = 4503\ \text{CV}
+      $$
+      $$
+      P_B = 9800\cdot 12\cdot 30\cdot 0{,}88 = 3105\ \text{kW} = 4221\ \text{CV}
+      $$
+
+      Casi iguales, y conseguidas al revés: A con mucho salto y poca agua, B con
+      poco salto y mucha.
+
+      **Las velocidades específicas.**
+
+      $$
+      n_{s,A} = \frac{600\sqrt{4503}}{320^{5/4}} = 29{,}8
+      \qquad
+      n_{s,B} = \frac{600\sqrt{4221}}{30^{5/4}} = 555
+      $$
+
+      **Las máquinas.** A pide una **Pelton** —banda 5–36, turbina de acción,
+      cabecera de río—. B pide una **Hélice o Kaplan** —banda 400–700, de
+      reacción, cauce medio o bajo—. Y no se parecen en nada: una tiene
+      inyector y rodete al aire; la otra, cámara espiral, distribuidor y tubo
+      difusor.
+
+      **Lo que hay que llevarse.** La potencia no elige la turbina. La elige
+      **cómo está repartida** entre salto y caudal, y eso es exactamente lo que
+      mide la velocidad específica. Es el mismo tipo de razonamiento que el
+      tema 16: un número adimensional —o casi— que resume el fenómeno y decide
+      el diseño.
+
+      Y el detalle de unidades, que no perdona: en $n_s$ la potencia va en
+      **CV**. Metida en kW da 25,5 en vez de 29,8, sigue cayendo en la banda
+      Pelton y por tanto **no se nota**. En un aprovechamiento cercano a una
+      frontera, ese mismo error cambia la máquina.
+
+  - id: ejflu23-dimensionar-la-pelton
+    titulo: Dimensionar la Pelton, con el óptimo del tema 15
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Para el aprovechamiento A del ejercicio anterior —salto neto
+      $320\ \text{m}$, caudal $1{,}2\ \text{m}^{3}/\text{s}$, grupo a
+      $600\ \text{rpm}$— se ha decidido una turbina Pelton de **un inyector**,
+      con coeficiente de velocidad $C_v = 0{,}98$.
+
+      a) Calcular la velocidad del chorro a la salida del inyector.
+
+      b) Calcular el diámetro del rodete, sabiendo que la rueda debe girar en
+      su punto óptimo.
+
+      c) Calcular el diámetro del chorro.
+    pide: La velocidad del chorro, el diámetro del rodete y el del chorro.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál es la velocidad de la cuchara en el punto óptimo?
+        opciones:
+          - texto: >-
+              La mitad de la del chorro, porque una rueda intercepta todo el
+              caudal
+            correcta: true
+            mensaje: |
+              Eso es, y viene del tema 15. El $u = v/2$ es el óptimo de una
+              **rueda**, que siempre tiene una cuchara en el chorro y por tanto
+              aprovecha $Q' = Av$. Un álabe suelto, que se escapa, tiene su
+              óptimo en $v/3$.
+          - texto: >-
+              Un tercio de la del chorro
+            mensaje: |
+              Ese es el óptimo de un **álabe suelto**, que solo intercepta
+              $A(v-u)$ porque se va escapando del chorro. Una rueda no se
+              escapa: siempre hay una cuchara recibiendo, así que aprovecha
+              todo el caudal y su óptimo es $v/2$.
+          - texto: >-
+              La misma que la del chorro, para que no haya choque
+            mensaje: |
+              Con $u = v$ la velocidad relativa sería nula: el agua no
+              empujaría nada y la potencia sería cero. La potencia es
+              $F\cdot u$ y $F$ va con $(v-u)$, así que el máximo está en algún
+              punto intermedio.
+
+      - tipo: calcular
+        titulo: La velocidad del chorro
+        pregunta: |
+          ¿A qué velocidad sale el agua del inyector?
+        respuesta:
+          tipo: magnitud
+          valor: '77.61 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '79.2 m/s'
+            mensaje: |
+              Te falta el coeficiente de velocidad. $79{,}2$ m/s es el
+              Torricelli ideal; el inyector real pierde algo, y $C_v = 0{,}98$
+              lo recoge. Es el mismo coeficiente del tema 13.
+          - valor: '3136 m/s'
+            mensaje: |
+              Te has dejado la raíz. $2gH = 6272$, y la velocidad es su raíz
+              cuadrada: unos 79 m/s, que ya es una barbaridad para un chorro
+              de agua.
+        pista: |
+          Torricelli con coeficiente: $c_1 = C_v\sqrt{2gH_n}$.
+        desarrollo: |
+          $$
+          c_1 = C_v\sqrt{2gH_n} = 0{,}98\sqrt{2\cdot 9{,}8\cdot 320}
+          = 0{,}98\cdot 79{,}2 = 77{,}6\ \text{m/s}
+          $$
+
+          Doscientos ochenta kilómetros por hora.
+
+      - tipo: calcular
+        titulo: El diámetro del rodete
+        pregunta: |
+          ¿Qué diámetro debe tener la rueda?
+        respuesta:
+          tipo: magnitud
+          valor: '1.235 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '2.47 m'
+            mensaje: |
+              Has usado $u = c_1$ en vez de $u = c_1/2$. En el óptimo la
+              cuchara va a la mitad de la velocidad del chorro, así que la
+              rueda es la mitad de grande de lo que has calculado.
+          - valor: '0.617 m'
+            mensaje: |
+              Has despejado el **radio** y lo has dado como diámetro, o has
+              metido un 2 de más. Comprueba: $u = \pi D N/60$, con $D$ el
+              diámetro.
+        pista: |
+          $u = c_1/2$, y después $D = 60u/(\pi N)$.
+        desarrollo: |
+          $$
+          u = \frac{c_1}{2} = 38{,}8\ \text{m/s}
+          \qquad
+          D = \frac{60\,u}{\pi N} = \frac{60\cdot 38{,}8}{\pi\cdot 600}
+          = 1{,}24\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: El diámetro del chorro
+        pregunta: |
+          ¿Qué diámetro tiene el chorro que sale del inyector?
+        respuesta:
+          tipo: magnitud
+          valor: '140.3 mm'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '198.4 mm'
+            mensaje: |
+              Has usado la velocidad de la cuchara, $38{,}8$ m/s, en vez de la
+              del chorro. El caudal lo fija el chorro al salir del inyector,
+              antes de tocar la rueda.
+          - valor: '15.46 mm'
+            mensaje: |
+              Ese es el **área** en m², no el diámetro. Falta despejar:
+              $d = \sqrt{4A/\pi}$.
+        pista: |
+          $Q = A\,c_1$, y de ahí el diámetro del círculo.
+        desarrollo: |
+          $$
+          A = \frac{Q}{c_1} = \frac{1{,}2}{77{,}6} = 0{,}01546\ \text{m}^{2}
+          \qquad
+          d = \sqrt{\frac{4A}{\pi}} = 0{,}140\ \text{m} = 140\ \text{mm}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el dimensionado. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El inyector convierte todo el salto en velocidad: $c_1 = C_v
+              \sqrt{2gH_n} = 77{,}6$ m/s.
+          - texto: >-
+              La rueda gira en su óptimo, $u = c_1/2 = 38{,}8$ m/s, y con 600
+              rpm eso obliga a un diámetro de 1,24 m.
+          - texto: >-
+              El caudal fija el chorro: 140 mm de diámetro, y la relación
+              $D/d \approx 8{,}8$.
+          - texto: >-
+              Como la relación $D/d$ sale baja, conviene subir las revoluciones
+              del grupo para que la rueda salga más pequeña.
+            trampa: true
+            mensaje: |
+              Justo al revés: $D = 60u/\pi N$, así que **más revoluciones da
+              una rueda más pequeña** y la relación $D/d$ baja todavía más. Si
+              se quiere subir $D/d$ con este caudal, lo que se hace es
+              **repartirlo entre varios inyectores**: cada chorro es más fino y
+              la relación mejora sin tocar la rueda.
+
+    resolucion: |
+      **El chorro.** El inyector convierte el salto entero en velocidad, con la
+      misma corrección de Torricelli del tema 13:
+
+      $$
+      c_1 = 0{,}98\sqrt{2\cdot 9{,}8\cdot 320} = 77{,}6\ \text{m/s}
+      $$
+
+      **La rueda.** Aquí se cobra el tema 15: el óptimo de una **rueda**
+      —no de un álabe suelto— está en $u = c_1/2$.
+
+      $$
+      u = 38{,}8\ \text{m/s}
+      \qquad
+      D = \frac{60\cdot 38{,}8}{\pi\cdot 600} = 1{,}24\ \text{m}
+      $$
+
+      **El chorro, otra vez.** Por continuidad,
+
+      $$
+      d = \sqrt{\frac{4Q}{\pi c_1}} = 140\ \text{mm}
+      $$
+
+      **La comprobación que hace un proyectista.** La relación entre el
+      diámetro de la rueda y el del chorro sale $D/d = 8{,}8$, y en las Pelton
+      reales suele estar bastante por encima: un chorro demasiado gordo
+      respecto a la cuchara no se desvía limpiamente y el rendimiento cae.
+
+      El arreglo no es cambiar la rueda —subir las rpm la haría **más
+      pequeña** y empeoraría la relación—, sino **repartir el caudal entre
+      varios inyectores**. Con dos, cada chorro baja a 99 mm y $D/d$ sube a
+      12,5. Es la misma solución que sube la velocidad específica de banda, y
+      por eso las Pelton multichorro son tan comunes: resuelven dos problemas
+      con la misma pieza.

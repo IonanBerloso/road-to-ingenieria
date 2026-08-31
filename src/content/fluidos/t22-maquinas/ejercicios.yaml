@@ -1,0 +1,412 @@
+ejercicios:
+  # ── NUESTROS (§08). El capítulo 9 de la colección va entero de instalaciones
+  #    de bombeo —tema 25— y da por sabida toda esta capa. Estos dos aíslan lo
+  #    que el 25 usa sin explicar: la cadena de rendimientos y Euler.
+  - id: ejflu22-la-cadena-de-rendimientos
+    titulo: Del enchufe al agua, escalón por escalón
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Una turbobomba impulsa $40\ \text{l/s}$ de agua con una altura
+      manométrica de $45\ \text{m}$. Sus rendimientos son:
+      hidráulico $\eta_m = 0{,}85$, volumétrico $\eta_v = 0{,}95$ y orgánico
+      $\eta_o = 0{,}92$.
+
+      a) Calcular la potencia útil.
+
+      b) Calcular el rendimiento global.
+
+      c) Calcular la potencia que la bomba pide al motor.
+    pide: La potencia útil, el rendimiento global y la potencia absorbida.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En $P_u = \gamma\,H\,Q$, ¿qué altura y qué caudal hay que meter?
+        opciones:
+          - texto: >-
+              La manométrica $H_m$ y el caudal útil $Q_u$, que son los que
+              acaban en la tubería de impulsión
+            correcta: true
+            mensaje: |
+              Eso es, y el patrón se repite: la potencia útil lleva las
+              magnitudes útiles; la interna y la absorbida llevan el caudal
+              **total**, que incluye el que recircula dentro de la máquina.
+          - texto: >-
+              La manométrica $H_m$ y el caudal total $Q_t$
+            mensaje: |
+              El caudal total incluye el que se recircula en cortocircuito
+              dentro del rodete y el que se fuga entre carcasa y eje. Ese
+              caudal no sale por la impulsión, así que no forma parte de la
+              potencia **útil**.
+          - texto: >-
+              La altura absorbida $H_a$ y el caudal útil $Q_u$
+            mensaje: |
+              $H_a$ es lo que la bomba pide al motor, antes de las pérdidas
+              mecánicas e hidráulicas. Mezclarla con el caudal útil no
+              corresponde a ningún escalón de la cadena: cada altura va con
+              su caudal.
+
+      - tipo: calcular
+        titulo: La potencia útil
+        pregunta: |
+          ¿Qué potencia recibe el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '17.64 kw'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '18.57 kw'
+            mensaje: |
+              Has usado el caudal total, $Q_u/\eta_v = 42{,}1$ l/s. La potencia
+              útil se calcula con el caudal que de verdad sale por la
+              impulsión: los 40 l/s del enunciado.
+          - valor: '1.8 kw'
+            mensaje: |
+              Has usado la densidad ($1000\ \text{kg/m}^{3}$) donde va el peso
+              específico ($9800\ \text{N/m}^{3}$). Falta la gravedad.
+        pista: |
+          $P_u = \gamma\,H_m\,Q_u$, con $\gamma = 9800\ \text{N/m}^{3}$.
+        desarrollo: |
+          $$
+          P_u = 9800\cdot 45\cdot 0{,}04 = 17\,640\ \text{W} = 17{,}64\ \text{kW}
+          $$
+
+      - tipo: calcular
+        titulo: El rendimiento global
+        pregunta: |
+          ¿Cuál es el rendimiento global de la bomba? (en tanto por uno)
+        respuesta:
+          tipo: numero
+          valor: '0.743'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.782'
+            mensaje: |
+              Te falta el volumétrico. Los tres se multiplican:
+              $\eta_g = \eta_m\,\eta_v\,\eta_o$. El volumétrico es alto pero no
+              es 1, y en bombas conviene no darlo por supuesto —en turbinas sí
+              se suele hacer—.
+          - valor: '0.907'
+            mensaje: |
+              Parece que has hecho la media de los tres. No se promedian: son
+              tres escalones **en serie**, y las pérdidas se acumulan
+              multiplicativamente. El global es siempre menor que el peor de
+              los tres.
+        pista: |
+          Los tres rendimientos son escalones consecutivos del mismo camino.
+        desarrollo: |
+          $$
+          \eta_g = \eta_m\,\eta_v\,\eta_o = 0{,}85\cdot 0{,}95\cdot 0{,}92
+          = 0{,}743
+          $$
+
+      - tipo: calcular
+        titulo: La potencia absorbida
+        pregunta: |
+          ¿Qué potencia le pide la bomba al motor?
+        respuesta:
+          tipo: magnitud
+          valor: '23.74 kw'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '13.1 kw'
+            mensaje: |
+              Has multiplicado por el rendimiento en vez de dividir. La
+              absorbida es **mayor** que la útil: el motor tiene que aportar
+              todo lo que llega al agua **más** todo lo que se pierde por el
+              camino.
+          - valor: '19.17 kw'
+            mensaje: |
+              Solo has descontado el rendimiento orgánico. Faltan el hidráulico
+              y el volumétrico: la potencia absorbida se obtiene dividiendo
+              entre el **global**.
+        pista: |
+          $P_a = P_u/\eta_g$, y tiene que salir mayor que la útil.
+        desarrollo: |
+          $$
+          P_a = \frac{P_u}{\eta_g} = \frac{17{,}64}{0{,}743} = 23{,}74\ \text{kW}
+          $$
+
+          Comprobación por el otro camino, con la cadena entera:
+
+          $$
+          H_i = \frac{H_m}{\eta_m} = 52{,}9\ \text{m}
+          \qquad
+          H_a = \frac{H_i}{\eta_o} = 57{,}5\ \text{m}
+          \qquad
+          Q_t = \frac{Q_u}{\eta_v} = 42{,}1\ \text{l/s}
+          $$
+          $$
+          P_a = \gamma\,H_a\,Q_t = 9800\cdot 57{,}5\cdot 0{,}0421 = 23{,}74\ \text{kW}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La potencia útil se calcula con las magnitudes útiles: 9800 por
+              45 por 0,04, es decir 17,64 kW.
+          - texto: >-
+              Los tres rendimientos son escalones en serie del mismo camino, así
+              que se multiplican: 0,743.
+          - texto: >-
+              La absorbida es la útil dividida entre el global, 23,74 kW, y es
+              mayor porque incluye todo lo que se pierde por el camino.
+          - texto: >-
+              Como el rendimiento volumétrico es el más alto de los tres, es el
+              que menos margen de mejora deja y el primero que se debe
+              descartar al rediseñar la máquina.
+            trampa: true
+            mensaje: |
+              El razonamiento está invertido. Un rendimiento **alto** es el que
+              ya está casi perfecto: mejorar el volumétrico de 0,95 a 0,99
+              apenas gana un 4 %. Donde hay margen es en el **más bajo**, aquí
+              el hidráulico, que es también el más difícil de tocar. Que sea
+              el que menos margen deja es cierto; que por eso sea el primero
+              que se descarta, no: se descarta por eso mismo al revés.
+
+    resolucion: |
+      **La potencia útil.** Con las magnitudes que salen por la impulsión:
+
+      $$
+      P_u = \gamma\,H_m\,Q_u = 9800\cdot 45\cdot 0{,}04 = 17{,}64\ \text{kW}
+      $$
+
+      **El rendimiento global.** Los tres son escalones consecutivos y se
+      multiplican:
+
+      $$
+      \eta_g = 0{,}85\cdot 0{,}95\cdot 0{,}92 = 0{,}743
+      $$
+
+      **La potencia absorbida.**
+
+      $$
+      P_a = \frac{17{,}64}{0{,}743} = 23{,}74\ \text{kW}
+      $$
+
+      **Lo que hay que llevarse de aquí.** Seis kilovatios de cada veinticuatro
+      se van por el camino, con tres rendimientos que individualmente parecen
+      buenos. Es la aritmética de las cosas en serie: 0,85 por 0,95 por 0,92 no
+      es «bastante bien tres veces», es un 26 % perdido.
+
+      Y el orden de la cadena, que es lo que hay que tener presente al leer un
+      enunciado:
+
+      $$
+      \text{motor} \xrightarrow{\ \eta_o\ } H_i
+      \xrightarrow{\ \eta_m\ } H_m
+      \qquad
+      Q_t \xrightarrow{\ \eta_v\ } Q_u
+      $$
+
+  - id: ejflu22-el-triangulo-de-salida-de-una-bomba
+    titulo: La altura de Euler de un rodete centrífugo
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      El rodete de una bomba centrífuga tiene $300\ \text{mm}$ de diámetro
+      exterior y $20\ \text{mm}$ de ancho a la salida, y gira a
+      $1450\ \text{rpm}$. Los álabes salen con un ángulo
+      $\beta_2 = 30°$ respecto de la dirección tangencial, y la bomba impulsa
+      $50\ \text{l/s}$.
+
+      La entrada es radial, es decir $c_{u1} = 0$.
+
+      a) Calcular la velocidad de arrastre a la salida, $u_2$.
+
+      b) Calcular la componente meridiana $c_{m2}$.
+
+      c) Calcular la altura de Euler.
+    pide: Las dos componentes del triángulo de salida y la altura de Euler.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado dice «la entrada es radial». ¿Qué significa eso y por
+          qué simplifica?
+        opciones:
+          - texto: >-
+              Que la velocidad absoluta a la entrada no tiene componente
+              tangencial, $c_{u1} = 0$, y por tanto Euler se queda en un solo
+              término
+            correcta: true
+            mensaje: |
+              Eso es, y no es casualidad: en una bomba, $\alpha_1 = 90°$ es
+              justamente la condición de máximo rendimiento del tema 22. Casi
+              todas se diseñan así, y por eso casi todos los enunciados lo
+              dicen.
+          - texto: >-
+              Que el agua entra perpendicular al eje de giro
+            mensaje: |
+              Eso lo cumple cualquier bomba centrífuga, radial o no: el agua
+              entra por el centro y sale por la periferia. «Entrada radial»
+              aquí se refiere a la **velocidad absoluta**, no a la geometría.
+          - texto: >-
+              Que la velocidad relativa a la entrada es nula
+            mensaje: |
+              Si la relativa fuera nula, el agua no atravesaría el rodete. Lo
+              que se anula es la componente **tangencial de la absoluta**,
+              $c_{u1}$, que es la que aparece en la ecuación de Euler.
+
+      - tipo: calcular
+        titulo: La velocidad de arrastre
+        pregunta: |
+          ¿Cuánto vale $u_2$?
+        respuesta:
+          tipo: magnitud
+          valor: '22.78 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '11.39 m/s'
+            mensaje: |
+              Has usado el radio donde va el diámetro, o al revés.
+              $u = \omega r = \pi D N/60$: con el diámetro, la fórmula lleva
+              $\pi D$, no $\pi D/2$.
+          - valor: '1367 m/s'
+            mensaje: |
+              Te has dejado el 60. La velocidad de giro viene en revoluciones
+              por **minuto** y $\omega$ tiene que salir en rad/s.
+        pista: |
+          $u_2 = \dfrac{\pi D_2 N}{60}$, con $D_2$ en metros.
+        desarrollo: |
+          $$
+          u_2 = \frac{\pi\cdot 0{,}3\cdot 1450}{60} = 22{,}78\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: La componente meridiana
+        pregunta: |
+          ¿Cuánto vale $c_{m2}$?
+        respuesta:
+          tipo: magnitud
+          valor: '2.653 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '10.61 m/s'
+            mensaje: |
+              Has usado el área de un círculo, $\pi D^{2}/4$. La sección de
+              salida de un rodete no es un círculo: es la **superficie lateral
+              del cilindro** que forma la periferia, $\pi D_2 b_2$.
+          - valor: '0.833 m/s'
+            mensaje: |
+              Revisa el ancho: son $20\ \text{mm} = 0{,}02\ \text{m}$. Con
+              $b_2$ en centímetros el área sale demasiado grande.
+        pista: |
+          El agua sale por toda la periferia del rodete: el área es
+          $\pi D_2 b_2$.
+        desarrollo: |
+          $$
+          c_{m2} = \frac{Q}{\pi D_2 b_2}
+          = \frac{0{,}05}{\pi\cdot 0{,}3\cdot 0{,}02} = 2{,}65\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: La altura de Euler
+        pregunta: |
+          ¿Cuál es la altura de Euler de este rodete?
+        respuesta:
+          tipo: magnitud
+          valor: '42.26 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '52.94 m'
+            mensaje: |
+              Has tomado $c_{u2} = u_2$, que es lo que ocurriría con álabes
+              **radiales** ($\beta_2 = 90°$). Con álabes curvados hacia atrás,
+              como aquí, hay que restar $c_{m2}/\tan\beta_2$.
+          - valor: '63.61 m'
+            mensaje: |
+              Signo cambiado: has sumado $c_{m2}/\tan\beta_2$ en vez de
+              restarlo. Los álabes van curvados **hacia atrás**, así que la
+              componente tangencial del agua es **menor** que la del rodete;
+              $c_{u2}$ tiene que salir por debajo de $u_2$.
+        pista: |
+          Del triángulo de salida, $c_{u2} = u_2 - c_{m2}/\tan\beta_2$. Y con
+          entrada radial, $H_E = u_2 c_{u2}/g$.
+        desarrollo: |
+          $$
+          c_{u2} = u_2 - \frac{c_{m2}}{\tan\beta_2}
+          = 22{,}78 - \frac{2{,}65}{\tan 30°} = 22{,}78 - 4{,}59
+          = 18{,}18\ \text{m/s}
+          $$
+          $$
+          H_E = \frac{u_2\,c_{u2}}{g} = \frac{22{,}78\cdot 18{,}18}{9{,}8}
+          = 42{,}3\ \text{m}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con entrada radial, $c_{u1} = 0$ y la ecuación de Euler se reduce
+              a $H_E = u_2 c_{u2}/g$.
+          - texto: >-
+              La componente meridiana sale de la continuidad sobre la
+              superficie lateral del rodete, $c_{m2} = Q/(\pi D_2 b_2)$.
+          - texto: >-
+              Del triángulo de salida, $c_{u2} = u_2 - c_{m2}/\tan\beta_2 =
+              18{,}18$ m/s, y de ahí $H_E = 42{,}3$ m.
+          - texto: >-
+              Como $H_E$ es la altura teórica para infinitos álabes, la bomba
+              real dará algo más, porque los álabes reales guían mejor el
+              flujo.
+            trampa: true
+            mensaje: |
+              Al revés: $H_E$ es un **techo** que la máquina real no alcanza.
+              Con álabes finitos el flujo no queda perfectamente guiado —hay
+              recirculación entre canales— y la altura interna $H_i$ es menor.
+              Esa relación es precisamente la eficiencia del álabe,
+              $H_i/H_E < 1$.
+
+    resolucion: |
+      **La velocidad de arrastre.**
+
+      $$
+      u_2 = \frac{\pi D_2 N}{60} = \frac{\pi\cdot 0{,}3\cdot 1450}{60}
+      = 22{,}78\ \text{m/s}
+      $$
+
+      **La componente meridiana.** El agua atraviesa la superficie lateral del
+      rodete, no un círculo:
+
+      $$
+      c_{m2} = \frac{Q}{\pi D_2 b_2} = \frac{0{,}05}{\pi\cdot 0{,}3\cdot 0{,}02}
+      = 2{,}65\ \text{m/s}
+      $$
+
+      **El triángulo, y la altura.** Con álabes curvados hacia atrás:
+
+      $$
+      c_{u2} = u_2 - \frac{c_{m2}}{\tan\beta_2} = 18{,}18\ \text{m/s}
+      \qquad
+      H_E = \frac{u_2 c_{u2}}{g} = 42{,}3\ \text{m}
+      $$
+
+      **Tres lecturas.**
+
+      La primera es de magnitud: $c_{m2}$ es **ocho veces menor** que $u_2$. En
+      un rodete centrífugo el agua sale casi tangencialmente, arrastrada; lo
+      que la empuja hacia fuera es una fracción pequeña de su velocidad. Por
+      eso $c_{u2}$ se parece tanto a $u_2$.
+
+      La segunda es de diseño: con álabes **radiales** ($\beta_2 = 90°$) sería
+      $c_{u2} = u_2$ y la altura subiría a 52,9 m. Curvarlos hacia atrás cuesta
+      un 20 % de altura teórica, y aun así es lo que se hace en casi todas las
+      bombas, porque da una curva característica estable y mejor rendimiento.
+
+      La tercera es de expectativas: 42,3 m es la altura de **Euler**, el techo
+      con infinitos álabes. La manométrica real de esta bomba estará bastante
+      por debajo, después de descontar la eficiencia del álabe y el rendimiento
+      hidráulico.

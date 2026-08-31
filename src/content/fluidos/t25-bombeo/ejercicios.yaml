@@ -1,0 +1,462 @@
+ejercicios:
+  # ── NUESTROS (§08). Los diecinueve problemas del capítulo 9 exigen leer las
+  #    curvas de catálogo de los anexos, que son documentación del fabricante y
+  #    no entran en el repositorio (§08). Estos dos dan la curva de la bomba
+  #    como expresión analítica —que es como la dan los propios exámenes— y
+  #    aíslan las dos cuentas que se repiten en todos ellos: el punto de
+  #    funcionamiento y el NPSH.
+  - id: ejflu25-el-punto-de-funcionamiento
+    titulo: Dónde acaba trabajando la bomba, y lo que cuesta cerrar una válvula
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Una instalación de bombeo de agua tiene por curva característica
+
+      $$
+      H_{mi} = 42 + 8\cdot 10^{-4}\,Q^{2}
+      $$
+
+      y la bomba elegida,
+
+      $$
+      H_b = 70 - 2{,}5\cdot 10^{-3}\,Q^{2}
+      $$
+
+      con $H$ en metros y $Q$ en l/s. El rendimiento de la bomba en la zona de
+      trabajo es del $78\ \%$.
+
+      a) Calcular el caudal y la altura del punto de funcionamiento.
+
+      b) Calcular la potencia absorbida.
+
+      c) El proceso solo necesita $70\ \text{l/s}$. Calcular la pérdida de
+      carga que debe introducir la válvula de regulación.
+    pide: El punto de funcionamiento, la potencia absorbida y la pérdida de la válvula.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué el punto de funcionamiento es la intersección de las dos
+          curvas?
+        opciones:
+          - texto: >-
+              Porque la altura que la instalación necesita y la que la bomba da
+              son conceptos distintos, pero tienen que valer lo mismo cuando
+              esa bomba trabaja en esa instalación
+            correcta: true
+            mensaje: |
+              Eso es, y merece la pena tener las dos ideas separadas: la
+              $H_{mi}$ es lo que hace falta para trasegar un caudal, la $H_b$
+              es lo que la máquina entrega a ese caudal. Solo coinciden en un
+              punto, y ahí se instala el sistema.
+          - texto: >-
+              Porque es el punto de máximo rendimiento de la bomba
+            mensaje: |
+              No tiene por qué serlo, y de hecho casi nunca lo es. Al
+              seleccionar se intenta que el punto resultante no quede lejos del
+              nominal, pero el cruce lo decide la instalación, no el
+              rendimiento.
+          - texto: >-
+              Porque es donde la pérdida de carga iguala a la altura
+              geométrica
+            mensaje: |
+              Eso sería una coincidencia sin significado. Lo que se iguala en
+              el punto de funcionamiento son las **dos alturas manométricas**,
+              no dos de los sumandos de una de ellas.
+
+      - tipo: calcular
+        titulo: El caudal
+        pregunta: |
+          ¿Qué caudal circula?
+        respuesta:
+          tipo: magnitud
+          valor: '92.11 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '105.8 l/s'
+            mensaje: |
+              Has igualado la curva de la bomba a los 42 m, olvidando que la
+              instalación también pierde carga. Los dos términos en $Q^{2}$ se
+              suman al despejar: $(8\cdot 10^{-4} + 2{,}5\cdot 10^{-3})Q^{2} = 28$.
+          - valor: '145.6 l/s'
+            mensaje: |
+              Te has dejado la altura piezométrica de la instalación, los 42 m.
+              Es lo que hay que vencer aunque el caudal sea cero, y es
+              justamente lo que hace que la instalación no pueda tragar el
+              caudal máximo de la bomba.
+        pista: |
+          Iguala las dos expresiones y agrupa los términos en $Q^{2}$.
+        desarrollo: |
+          $$
+          42 + 8\cdot 10^{-4}Q^{2} = 70 - 2{,}5\cdot 10^{-3}Q^{2}
+          $$
+          $$
+          3{,}3\cdot 10^{-3}\,Q^{2} = 28
+          \;\Longrightarrow\;
+          Q^{2} = 8485
+          \;\Longrightarrow\;
+          Q = 92{,}1\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: La altura
+        pregunta: |
+          ¿Qué altura manométrica corresponde a ese caudal?
+        respuesta:
+          tipo: magnitud
+          valor: '48.79 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '42 m'
+            mensaje: |
+              Esa es la altura piezométrica, la que pide la instalación a
+              caudal **nulo**. Con 92 l/s circulando hay además pérdidas de
+              carga que vencer.
+          - valor: '70 m'
+            mensaje: |
+              Esa es la altura de la bomba a caudal nulo, es decir con la
+              impulsión cerrada del todo. Con caudal, la bomba da menos.
+        pista: |
+          Sustituye el caudal en cualquiera de las dos curvas: tienen que dar
+          lo mismo.
+        desarrollo: |
+          $$
+          H = 42 + 8\cdot 10^{-4}\cdot 8485 = 48{,}8\ \text{m}
+          $$
+
+          Y por la otra:
+          $70 - 2{,}5\cdot 10^{-3}\cdot 8485 = 48{,}8\ \text{m}$. Coinciden, que
+          es la comprobación de que el despeje está bien.
+
+      - tipo: calcular
+        titulo: La potencia absorbida
+        pregunta: |
+          ¿Qué potencia pide la bomba al motor?
+        respuesta:
+          tipo: magnitud
+          valor: '56.46 kw'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '44.04 kw'
+            mensaje: |
+              Esa es la potencia **útil**, la que recibe el agua. La absorbida
+              incluye lo que se pierde en la máquina: hay que dividir entre el
+              rendimiento, no dejarlo así.
+          - valor: '34.35 kw'
+            mensaje: |
+              Has multiplicado por el rendimiento en vez de dividir. La
+              absorbida es siempre mayor que la útil.
+        pista: |
+          $P_a = \gamma\,Q\,H/\eta$, con el caudal en m³/s.
+        desarrollo: |
+          $$
+          P_u = 9800\cdot 0{,}0921\cdot 48{,}8 = 44{,}0\ \text{kW}
+          \qquad
+          P_a = \frac{44{,}0}{0{,}78} = 56{,}5\ \text{kW}
+          $$
+
+      - tipo: calcular
+        titulo: La pérdida de la válvula
+        pregunta: |
+          Para bajar a 70 l/s, ¿qué pérdida tiene que introducir la válvula?
+        respuesta:
+          tipo: magnitud
+          valor: '11.83 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '57.75 m'
+            mensaje: |
+              Esa es la altura que da la bomba a 70 l/s, no lo que sobra. Hay
+              que restarle lo que la instalación necesita a ese mismo caudal,
+              45,92 m.
+          - valor: '3.92 m'
+            mensaje: |
+              Esa es la pérdida de carga de la instalación a 70 l/s, que ya
+              está contada dentro de su curva. La válvula tiene que disipar la
+              **diferencia** entre lo que la bomba da y lo que la instalación
+              pide a ese caudal.
+        pista: |
+          A 70 l/s, calcula lo que da la bomba y lo que pide la instalación. La
+          válvula se come la diferencia.
+        desarrollo: |
+          $$
+          H_b(70) = 70 - 2{,}5\cdot 10^{-3}\cdot 4900 = 57{,}75\ \text{m}
+          $$
+          $$
+          H_{mi}(70) = 42 + 8\cdot 10^{-4}\cdot 4900 = 45{,}92\ \text{m}
+          $$
+          $$
+          h_{f,\text{válvula}} = 57{,}75 - 45{,}92 = 11{,}8\ \text{m}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Igualando las dos curvas sale el punto de funcionamiento: 92,1
+              l/s y 48,8 m, que la bomba da y la instalación necesita a la vez.
+          - texto: >-
+              Ahí la potencia absorbida es de 56,5 kW, un 28 % más que la que
+              llega al agua.
+          - texto: >-
+              Para bajar a 70 l/s hay que cerrar una válvula que disipe 11,8 m,
+              es decir 8,1 kW tirados a la basura.
+          - texto: >-
+              Esa válvula conviene colocarla en la aspiración, para que la
+              bomba trabaje ya con el caudal reducido desde el principio.
+            trampa: true
+            mensaje: |
+              Nunca en la aspiración: esa pérdida entra directamente en el
+              NPSH disponible y acerca la bomba a la cavitación. La válvula de
+              regulación va **siempre en la impulsión**, donde frena el caudal
+              igual sin tocar la aspiración.
+
+    resolucion: |
+      **El punto de funcionamiento.** Igualando las dos curvas:
+
+      $$
+      3{,}3\cdot 10^{-3}\,Q^{2} = 28
+      \;\Longrightarrow\;
+      Q = 92{,}1\ \text{l/s}
+      \qquad
+      H = 48{,}8\ \text{m}
+      $$
+
+      Comprobado por las dos expresiones, que es como se sabe que el despeje
+      está bien.
+
+      **La potencia.**
+
+      $$
+      P_a = \frac{9800\cdot 0{,}0921\cdot 48{,}8}{0{,}78} = 56{,}5\ \text{kW}
+      $$
+
+      **La válvula.** A 70 l/s la bomba da 57,75 m y la instalación pide 45,92:
+      la válvula tiene que disipar **11,8 m**.
+
+      **Y lo que eso significa en dinero**, que es lo que la colección pregunta
+      una y otra vez:
+
+      $$
+      P_{\text{tirada}} = 9800\cdot 0{,}07\cdot 11{,}8 = 8{,}1\ \text{kW}
+      $$
+
+      Ocho kilovatios convertidos en calor dentro de una válvula, de forma
+      permanente. A 4500 horas al año y 0,10 €/kWh son unos **3.600 € anuales**
+      quemados por estrangular.
+
+      Esa cuenta es la razón industrial de que hoy se regule con **variador de
+      frecuencia**: bajar el régimen de giro mueve la curva de la bomba en vez
+      de añadir resistencia, y el caudal se reduce sin disipar nada. La válvula
+      sigue siendo más barata de instalar, y más cara de tener.
+
+  - id: ejflu25-el-npsh-y-la-cota-de-la-bomba
+    titulo: Hasta qué altura se puede subir la bomba antes de que cavite
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Una bomba aspira agua a $20\ °\text{C}$ de un pozo, con su eje
+      $4\ \text{m}$ por encima de la lámina libre. La tubería de aspiración
+      pierde $1{,}8\ \text{m}$ al caudal de trabajo.
+
+      El fabricante da un $NPSH_{\text{requerido}} = 2{,}8\ \text{mca}$ en ese
+      punto.
+
+      Datos: presión atmosférica $10\ \text{mca}$, presión de vapor del agua a
+      20 °C $0{,}24\ \text{mca}$ (absoluta).
+
+      a) Calcular el NPSH disponible.
+
+      b) Calcular el NPSH de seguridad y decidir si la instalación es
+      aceptable.
+
+      c) Calcular la cota máxima a la que podría montarse la bomba.
+    pide: El NPSH disponible, el de seguridad y la cota máxima admisible.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿De qué depende cada uno de los dos NPSH?
+        opciones:
+          - texto: >-
+              El disponible es solo de la instalación y el requerido solo de la
+              máquina
+            correcta: true
+            mensaje: |
+              Esa separación es toda la utilidad del concepto: permite comprar
+              la bomba y proyectar la instalación por separado, y comprobar al
+              final que encajan.
+          - texto: >-
+              Los dos dependen de la instalación, y el fabricante solo da un
+              valor orientativo
+            mensaje: |
+              El requerido es la energía cinética en un punto **interior** de
+              la máquina, $v_D^{2}/2g$: depende de la geometría del rodete y
+              del caudal, no de dónde se monte. Por eso lo da el fabricante y
+              es un dato firme.
+          - texto: >-
+              El disponible depende de la bomba, porque es ella la que aspira
+            mensaje: |
+              La bomba no «aspira» en el sentido de tirar: lo que empuja el
+              agua hacia arriba es la presión atmosférica sobre el pozo. Todos
+              los términos del NPSH disponible —atmosférica, presión de vapor,
+              cota y pérdidas— son de la instalación.
+
+      - tipo: calcular
+        titulo: El NPSH disponible
+        pregunta: |
+          ¿Cuánto vale el NPSH disponible?
+        respuesta:
+          tipo: magnitud
+          valor: '3.96 mca'
+          tolerancia: 0.02
+          formato: una presión, con su unidad
+        distractores:
+          - valor: '4.2 mca'
+            mensaje: |
+              Te falta restar la presión de vapor. El NPSH es la carga neta
+              **sobre la tensión de vapor**: es lo que le sobra al líquido por
+              encima del punto en el que herviría.
+          - valor: '7.96 mca'
+            mensaje: |
+              Te falta restar la cota de aspiración. Los 4 m que la bomba está
+              por encima del pozo se los tiene que ganar el agua contra la
+              gravedad, y salen del mismo presupuesto.
+        pista: |
+          $NPSH_{\text{disp}} = p_{atm}/\gamma - p_v/\gamma - z - h_f$, todo en
+          mca.
+        desarrollo: |
+          $$
+          NPSH_{\text{disp}} = 10 - 0{,}24 - 4 - 1{,}8 = 3{,}96\ \text{mca}
+          $$
+
+      - tipo: calcular
+        titulo: El NPSH de seguridad
+        pregunta: |
+          ¿Cuánto margen queda frente a la cavitación?
+        respuesta:
+          tipo: magnitud
+          valor: '1.16 mca'
+          tolerancia: 0.02
+          formato: una presión, con su unidad
+        distractores:
+          - valor: '6.76 mca'
+            mensaje: |
+              Has sumado el requerido en vez de restarlo. La relación es
+              $NPSH_{\text{disp}} = NPSH_{\text{req}} + NPSH_{\text{seg}}$: el
+              margen es lo que sobra **después** de cubrir el requerido.
+          - valor: '1.414 mca'
+            mensaje: |
+              Parece un cociente en vez de una resta. El de seguridad es una
+              diferencia, en metros de columna; lo que se compara como cociente
+              es el criterio $NPSH_{\text{disp}} > 1{,}3\,NPSH_{\text{req}}$,
+              que es otra comprobación.
+        pista: |
+          Es lo que sobra del disponible después de cubrir el requerido.
+        desarrollo: |
+          $$
+          NPSH_{\text{seg}} = 3{,}96 - 2{,}8 = 1{,}16\ \text{mca}
+          $$
+
+          Por encima del mínimo recomendado (0,5 a 0,9 mcl). Y por el otro
+          criterio: $1{,}3\cdot 2{,}8 = 3{,}64 < 3{,}96$. **Cumple**, aunque no
+          con mucha holgura.
+
+      - tipo: calcular
+        titulo: La cota máxima
+        pregunta: |
+          ¿A qué altura máxima sobre el pozo podría montarse la bomba,
+          aplicando el criterio $NPSH_{\text{disp}} > 1{,}3\,NPSH_{\text{req}}$?
+        respuesta:
+          tipo: magnitud
+          valor: '4.32 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '5.16 m'
+            mensaje: |
+              Has usado el requerido tal cual, sin el coeficiente 1,3. Eso
+              dejaría margen cero: sería el punto en el que la bomba empieza
+              justo a cavitar, no una cota de proyecto.
+          - valor: '6.12 m'
+            mensaje: |
+              Te has dejado la pérdida de carga de la aspiración. Esos 1,8 m
+              salen del mismo presupuesto que la cota, y además crecerían si
+              alargaras la tubería para subir la bomba.
+        pista: |
+          Despeja $z$ de la fórmula del disponible, imponiendo que el
+          disponible valga $1{,}3\,NPSH_{\text{req}}$.
+        desarrollo: |
+          $$
+          z_{\max} = \frac{p_{atm}}{\gamma} - \frac{p_v}{\gamma} - h_f
+          - 1{,}3\,NPSH_{\text{req}}
+          $$
+          $$
+          z_{\max} = 10 - 0{,}24 - 1{,}8 - 3{,}64 = 4{,}32\ \text{m}
+          $$
+
+          Treinta y dos centímetros de margen sobre los 4 m actuales. Y ojo:
+          subirla más obligaría a alargar la aspiración, con lo que $h_f$
+          crecería y el margen real sería todavía menor.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El NPSH disponible es de la instalación: atmosférica menos tensión
+              de vapor, menos cota, menos pérdidas de aspiración. Aquí 3,96 mca.
+          - texto: >-
+              El requerido lo da el fabricante y es de la máquina: 2,8 mca. El
+              margen es la diferencia, 1,16 mca.
+          - texto: >-
+              Con el criterio de 1,3 veces el requerido, la cota máxima es de
+              4,32 m: la instalación cumple, pero con poco margen.
+          - texto: >-
+              Si se bombeara el mismo caudal de agua a 75 °C, los cuatro
+              términos seguirían igual y la instalación seguiría cumpliendo.
+            trampa: true
+            mensaje: |
+              La presión de vapor del agua a 75 °C ronda los 4 mca, no 0,24. El
+              disponible se hundiría hasta $10 - 4 - 4 - 1{,}8 = 0{,}2$ mca y
+              la bomba cavitaría sin remedio. **La temperatura es el término
+              que más se olvida y el que más manda**: por eso las bombas de
+              agua caliente se montan en carga, por debajo del depósito.
+
+    resolucion: |
+      **El disponible**, que solo depende de la instalación:
+
+      $$
+      NPSH_{\text{disp}} = 10 - 0{,}24 - 4 - 1{,}8 = 3{,}96\ \text{mca}
+      $$
+
+      **El margen.** $3{,}96 - 2{,}8 = 1{,}16$ mca, por encima del mínimo
+      recomendado de 0,5–0,9. Y por el criterio del cociente,
+      $3{,}96 > 1{,}3\cdot 2{,}8 = 3{,}64$. Cumple.
+
+      **La cota máxima.**
+
+      $$
+      z_{\max} = 10 - 0{,}24 - 1{,}8 - 3{,}64 = 4{,}32\ \text{m}
+      $$
+
+      **Cómo leer la fórmula, que es lo que hay que llevarse.** Los cuatro
+      términos dicen qué hacer si una bomba cavita, en orden de facilidad:
+
+      1. **bajarla**, o subir el nivel del depósito: ataca la $z$;
+      2. **acortar y ensanchar la aspiración**: ataca $h_f$;
+      3. **bajar el caudal**: baja $h_f$ **y** el requerido a la vez;
+      4. y si nada de eso basta, cambiar de bomba por una de menor requerido.
+
+      Y el término que no se toca pero decide: **la presión de vapor**. A 20 °C
+      son 24 centímetros y no molesta; a 75 °C son unos cuatro metros y se come
+      el presupuesto entero. Por eso las bombas de agua caliente —las de una
+      caldera, por ejemplo— se montan **en carga**, con el depósito por encima,
+      y no aspirando.
