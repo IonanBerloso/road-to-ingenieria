@@ -1,10 +1,15 @@
 ejercicios:
-  # ── NUESTROS (§08). Los diecinueve problemas del capítulo 9 exigen leer las
-  #    curvas de catálogo de los anexos, que son documentación del fabricante y
-  #    no entran en el repositorio (§08). Estos dos dan la curva de la bomba
-  #    como expresión analítica —que es como la dan los propios exámenes— y
-  #    aíslan las dos cuentas que se repiten en todos ellos: el punto de
-  #    funcionamiento y el NPSH.
+  # ── NUESTROS (§08). Dan la curva de la bomba como expresión analítica —que
+  #    es como la dan los propios exámenes— y aíslan las dos cuentas que se
+  #    repiten en todo el capítulo 9: el punto de funcionamiento y el NPSH.
+  #
+  #    CORRECCIÓN del 31 de agosto de 2026: aquí decía que los problemas del
+  #    capítulo 9 no se podían transcribir porque sus curvas de catálogo «no
+  #    entran en el repositorio». Era falso por dos motivos. Las curvas están
+  #    en el propio PDF de la colección —anexos, páginas 205 a 216— y se leen
+  #    perfectamente extrayendo la imagen. Y §08 no prohíbe usarlas: prohíbe
+  #    recortarlas, y manda redibujarlas, que es lo que se hace en el 9.5 de
+  #    más abajo.
   - id: ejflu25-el-punto-de-funcionamiento
     titulo: Dónde acaba trabajando la bomba, y lo que cuesta cerrar una válvula
     fuente: >-
@@ -460,3 +465,315 @@ ejercicios:
       el presupuesto entero. Por eso las bombas de agua caliente —las de una
       caldera, por ejemplo— se montan **en carga**, con el depósito por encima,
       y no aspirando.
+
+  # ── COLECCIÓN 9.5. El problema completo de instalación de bombeo, de
+  #    principio a fin: curva de la instalación desde los cuadros de la
+  #    escuela, selección en el anexo, punto de funcionamiento, NPSH y coste
+  #    del estrangulamiento. Es el examen entero en un solo ejercicio.
+  - id: ejflu25-col95-la-instalacion-completa
+    titulo: Una instalación de bombeo de principio a fin
+    fuente: >-
+      Ejercicio 9.5 · Colección de Problemas, capítulo 9 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se eleva agua de un pozo mediante una bomba, situado su eje $4\ \text{m}$
+      por encima de la lámina superior de aquel. La tubería de aspiración, de
+      $400\ \text{mm}$ de diámetro y $10\ \text{m}$ de longitud, consta de una
+      válvula de pie y un codo de $90°$. La tubería de impulsión tiene una
+      longitud de $80\ \text{m}$, un diámetro de $200\ \text{mm}$, 2 codos de
+      $90°$, una válvula antirretorno, una válvula esférica de regulación, y la
+      salida a la atmósfera está $10\ \text{m}$ por encima del eje de la bomba.
+      Toda la tubería es de acero comercial, siendo el caudal necesario de
+      $60\ \text{l/s}$. Se pide:
+
+      a) Expresión analítica y representación gráfica de la cc de la
+      instalación.
+
+      b) Seleccionar la bomba más conveniente entre las aportadas.
+
+      c) Caudal y altura proporcionada por la bomba seleccionada, así como la
+      potencia absorbida.
+
+      d) $NPSH_{\text{seguridad}}$ en el punto de funcionamiento.
+
+      e) Pérdida de carga que habría que producir en la válvula esférica para
+      que solo circularan $60\ \text{l/s}$. Costo horario producido por el
+      maniobrado de la válvula.
+
+      Datos: factores de paso — válvula de pie $K = 8$; codo de $90°$
+      $K = 0{,}5$; válvula antirretorno $K = 2{,}5$; válvula esférica abierta
+      $K = 0{,}05$; presión de vapor $= 0{,}018\ \text{kg/cm}^{2}$; precio del
+      kWh $= 0{,}1$ euro.
+
+      Documentación: curvas características de turbobombas, Anexo I de la
+      colección.
+    pide: La curva de la instalación, la bomba, el punto de funcionamiento, el NPSH y el coste de estrangular.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué parte de la curva de la instalación **no** depende del caudal?
+        opciones:
+          - texto: >-
+              Los $14\ \text{m}$ de desnivel entre la lámina del pozo y la
+              salida: $4$ hasta el eje de la bomba y $10$ por encima
+            correcta: true
+            mensaje: |
+              Eso es la altura piezométrica de la instalación, lo que hay que
+              vencer aunque no circule nada. Los dos depósitos están abiertos,
+              así que no hay término de presión que sumar.
+          - texto: >-
+              Solo los $10\ \text{m}$ de la impulsión
+            mensaje: |
+              El agua también tiene que subir los $4\ \text{m}$ desde el pozo
+              hasta el eje de la bomba. El desnivel total entre las dos láminas
+              es de 14 m, y es lo que cuenta.
+          - texto: >-
+              Nada: todos los términos dependen del caudal
+            mensaje: |
+              La diferencia de cotas no. Es lo que hace que la curva de la
+              instalación **no pase por el origen**, y por eso una bomba nunca
+              puede dar caudal si su altura a caudal nulo no supera ese valor.
+
+      - tipo: calcular
+        titulo: Las pérdidas en piezas especiales
+        pregunta: |
+          ¿Cuánto valen las pérdidas menores al caudal de funcionamiento de
+          $62{,}4\ \text{l/s}$?
+        respuesta:
+          tipo: magnitud
+          valor: '1.023 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.9158 m'
+            mensaje: |
+              Te has dejado la aspiración. Aporta poco —$0{,}11\ \text{m}$—
+              porque su diámetro es doble y la velocidad cuatro veces menor,
+              pero su válvula de pie tiene $K = 8$ y cuenta.
+          - valor: '0.8216 m'
+            mensaje: |
+              Te falta la salida a la atmósfera. La energía cinética del chorro
+              que descarga se pierde, y eso equivale a un $K = 1$ más en la
+              impulsión.
+        pista: |
+          $\sum K\,v^{2}/2g$ en cada tubería. En la impulsión hay que añadir
+          $K = 1$ por la salida.
+        desarrollo: |
+          $$
+          \text{aspiración: } \sum K = 8 + 0{,}5 = 8{,}5
+          \qquad
+          \text{impulsión: } \sum K = 2\cdot 0{,}5 + 2{,}5 + 0{,}05 + 1 = 4{,}55
+          $$
+
+          Con $A_a = 0{,}1257$ y $A_i = 0{,}0314\ \text{m}^{2}$:
+
+          $$
+          h_{\text{menores}} = \left(8{,}5\cdot 3{,}231 + 4{,}55\cdot 51{,}69\right)Q^{2}
+          = 262{,}7\,Q^{2}\ \ (Q\text{ en m}^{3}/\text{s})
+          $$
+          $$
+          = 2{,}627\cdot 10^{-4}\,Q^{2}\ \ (Q\text{ en l/s})
+          \;\Longrightarrow\;
+          2{,}627\cdot 10^{-4}\cdot 62{,}4^{2} = 1{,}02\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La altura de la instalación en el punto de funcionamiento
+        pregunta: |
+          ¿Cuánta altura pide la instalación a $62{,}4\ \text{l/s}$?
+        respuesta:
+          tipo: magnitud
+          valor: '16.58 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '14 m'
+            mensaje: |
+              Esa es la altura a caudal **nulo**. Con 62,4 l/s circulando hay
+              además $1{,}56\ \text{m}$ de pérdidas en las tuberías y
+              $1{,}02$ en las piezas.
+          - valor: '15.56 m'
+            mensaje: |
+              Te has dejado las pérdidas menores. Con cinco piezas especiales y
+              una salida a la atmósfera aportan un metro largo, más de la mitad
+              de lo que aportan los noventa metros de tubería.
+        pista: |
+          $H_{mi} = 14 + 7{,}36\cdot 10^{-4}Q^{1{,}852} +
+          2{,}63\cdot 10^{-4}Q^{2}$, con $Q$ en l/s.
+        desarrollo: |
+          Con Hazen-Williams y los coeficientes del cuadro n.º 25
+          —$C_{HW} = 140$ en la aspiración y $130$ en la impulsión, según su
+          rugosidad relativa—:
+
+          $$
+          H_{mi} = 14 + 7{,}36\cdot 10^{-4}\,Q^{1{,}852}
+          + 2{,}63\cdot 10^{-4}\,Q^{2}
+          $$
+          $$
+          H_{mi}(62{,}4) = 14 + 1{,}56 + 1{,}02 = 16{,}58\ \text{m}
+          $$
+
+          Que es justamente la altura que da la bomba **INP 125/250 con rodete
+          de 255 mm** a ese caudal, según el Anexo I: por eso ahí está el punto
+          de funcionamiento.
+
+      - tipo: calcular
+        titulo: El NPSH disponible
+        pregunta: |
+          ¿Cuánto vale el NPSH disponible en el punto de funcionamiento?
+        respuesta:
+          tipo: magnitud
+          valor: '6.04 mca'
+          tolerancia: 0.02
+          formato: una presión, con su unidad
+        distractores:
+          - valor: '10.04 mca'
+            mensaje: |
+              Te has dejado la cota de aspiración. La bomba está $4\ \text{m}$
+              **por encima** del pozo, y esos cuatro metros salen del mismo
+              presupuesto.
+          - valor: '6.22 mca'
+            mensaje: |
+              Te falta la tensión de vapor. Son solo $0{,}18\ \text{mca}$
+              —$0{,}018\ \text{kg/cm}^{2}$— pero el NPSH se define **sobre** la
+              presión de vapor, no sobre el cero absoluto.
+        pista: |
+          $NPSH_{\text{disp}} = p_{atm}/\gamma - p_v/\gamma - z - h_{f,\text{asp}}$.
+          Toma $p_{atm} = 10{,}33\ \text{mca}$; las pérdidas de aspiración son
+          $0{,}11\ \text{m}$.
+        desarrollo: |
+          $$
+          NPSH_{\text{disp}} = 10{,}33 - 0{,}18 - 4 - 0{,}11 = 6{,}04\ \text{mca}
+          $$
+
+          Y con el $NPSH_{\text{req}} = 2{,}8\ \text{mca}$ que se lee en el
+          Anexo I para esta bomba a $225\ \text{m}^{3}/\text{h}$:
+
+          $$
+          NPSH_{\text{seg}} = 6{,}04 - 2{,}80 = 3{,}24\ \text{mca}
+          $$
+
+      - tipo: calcular
+        titulo: La pérdida que debe introducir la válvula
+        pregunta: |
+          Para bajar a $60\ \text{l/s}$, y sabiendo que a ese caudal la bomba
+          da $17{,}39\ \text{m}$, ¿qué pérdida debe introducir la válvula?
+        respuesta:
+          tipo: magnitud
+          valor: '1 m'
+          tolerancia: 0.05
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.186 m'
+            mensaje: |
+              Esa es la diferencia entre lo que pide la **instalación** a 62,4
+              y a 60 l/s. La válvula tiene que absorber la diferencia entre lo
+              que la bomba **da** y lo que la instalación **pide**, los dos al
+              caudal nuevo.
+          - valor: '17.39 m'
+            mensaje: |
+              Esa es la altura que da la bomba. Hay que restarle lo que la
+              instalación necesita a ese mismo caudal, $16{,}39\ \text{m}$.
+        pista: |
+          Calcula $H_{mi}$ a 60 l/s y réstalo de los 17,39 m de la bomba.
+        desarrollo: |
+          $$
+          H_{mi}(60) = 14 + 7{,}36\cdot 10^{-4}\cdot 60^{1{,}852}
+          + 2{,}63\cdot 10^{-4}\cdot 3600 = 16{,}39\ \text{m}
+          $$
+          $$
+          h_{f,\text{válvula}} = 17{,}39 - 16{,}39 = 1{,}0\ \text{m}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La curva de la instalación arranca en 14 m —el desnivel entre las
+              dos láminas— y le suma las pérdidas de tubería y de piezas.
+          - texto: >-
+              Cruzándola con las curvas del Anexo I, la bomba que mejor encaja
+              es la INP 125/250 con rodete de 255 mm: 62,4 l/s a 16,5 m con un
+              76,5 % de rendimiento.
+          - texto: >-
+              El NPSH disponible es de 6,04 mca frente a los 2,8 que pide la
+              bomba: quedan 3,24 de margen, muy por encima del mínimo.
+          - texto: >-
+              Como la instalación pide 62,4 l/s y el proceso solo necesita 60,
+              lo más barato es estrangular la válvula esférica.
+            trampa: true
+            mensaje: |
+              Estrangular es lo más **fácil**, no lo más barato: la válvula
+              disipa energía de forma permanente y la bomba pasa a absorber
+              algo más. Lo barato sería tornear el rodete o poner un variador;
+              lo que pasa es que 0,015 €/h son 130 € al año y no compensan el
+              variador. **La decisión es económica, no técnica**, y depende de
+              cuánto se estrangule.
+
+    resolucion: |
+      **Este es el problema completo de la asignatura**: curva de instalación,
+      selección en catálogo, punto de funcionamiento, comprobación de
+      cavitación y coste de la regulación. Los cinco pasos, en orden.
+
+      **a) La curva de la instalación.** Tres términos:
+
+      $$
+      H_{mi} = \underbrace{14}_{\Delta z}
+      + \underbrace{7{,}36\cdot 10^{-4}\,Q^{1{,}852}}_{\text{tuberías, Hazen-Williams}}
+      + \underbrace{2{,}63\cdot 10^{-4}\,Q^{2}}_{\text{piezas especiales}}
+      \qquad (Q\text{ en l/s})
+      $$
+
+      El primero es el desnivel entre las dos láminas. El segundo sale de los
+      cuadros n.º 20 y 25: acero comercial da $\varepsilon = 0{,}006\ \text{cm}$,
+      y con $\varepsilon/D$ resultan $C_{HW} = 140$ en la aspiración y $130$ en
+      la impulsión. El tercero, de los factores de paso, **con un $K = 1$
+      añadido por la salida a la atmósfera**.
+
+      **b) y c) La bomba y el punto.** Cruzando esa curva con las del Anexo I,
+      la **INP 125/250 con rodete de 255 mm** corta en
+
+      $$
+      Q = 62{,}4\ \text{l/s}
+      \qquad
+      H = 16{,}5\ \text{m}
+      \qquad
+      \eta = 76{,}5\ \%
+      \qquad
+      P_{\text{abs}} = 13{,}3\ \text{kW}
+      $$
+
+      **d) El NPSH.**
+
+      $$
+      NPSH_{\text{disp}} = 10{,}33 - 0{,}18 - 4 - 0{,}11 = 6{,}04\ \text{mca}
+      \;\Longrightarrow\;
+      NPSH_{\text{seg}} = 3{,}24\ \text{mca}
+      $$
+
+      Con holgura: el mínimo recomendado son 0,5–0,9 mca y el criterio del
+      1,3 pediría 3,64 disponibles frente a los 6,04 que hay.
+
+      **e) La válvula.** A 60 l/s la bomba da 17,39 m y la instalación pide
+      16,39: la válvula tiene que **quemar 1 metro**. Eso hace que la bomba
+      absorba unos 0,15 kW más que en el punto libre, es decir **0,015 €/h**.
+
+      > **Sobre ese último número, con toda la honestidad.** Es la diferencia
+      > entre dos potencias absorbidas de trece kilovatios y pico, las dos
+      > leídas del anexo. Una diferencia de dos números grandes y parecidos
+      > hereda todo el error de la lectura: reproducir el 0,015 exige leer la
+      > curva de potencia con una precisión que un escaneo no da. Lo que sí es
+      > robusto —y es lo que hay que saber hacer— es el metro de pérdida en la
+      > válvula.
+
+      **Y la comprobación que valida todo lo demás.** La curva que sale de los
+      cuadros de la escuela es
+      $14 + 7{,}363\cdot 10^{-4}Q^{1{,}852} + 2{,}627\cdot 10^{-4}Q^{2}$, y el
+      boletín publica $14 + 7{,}3666\cdot 10^{-4}Q^{1{,}852} +
+      2{,}626\cdot 10^{-4}Q^{2}$: coinciden en cuatro cifras. Y el
+      $NPSH_{\text{req}}$ que hace falta para que salgan los 3,24 publicados es
+      $2{,}80\ \text{mca}$, que es exactamente lo que se lee en la curva del
+      anexo. **Cuando dos caminos independientes dan el mismo número, la
+      lectura del catálogo está bien hecha.**

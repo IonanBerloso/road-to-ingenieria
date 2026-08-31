@@ -814,6 +814,32 @@ originales ya están en `public/examenes/fluidos/`.
 > abrir la fuente para otra cosa, y es el mejor argumento que hay para el punto
 > 1 de §16: **el verde no es una comprobación, es la ausencia de una.**
 
+### El boletín, que es donde estaba el hueco de verdad
+
+El 31 de agosto Ionan preguntó por qué había tan pocos ejercicios por tema, y
+el número le daba la razón: **la colección de problemas son 236 ejercicios y
+solo había 18 dentro**. De los 52 que tenía Fluidos, 34 eran ejemplos
+introductorios nuestros.
+
+La causa era de método y conviene dejarla escrita: en las ocho fases traté la
+colección como **fuente de ejemplos** —uno o dos problemas representativos por
+tema— en vez de transcribirla entera, que es exactamente lo que hizo bueno el
+boletín de Álgebra. El plan en `tasks/todo.md` decía «los ejercicios del
+capítulo con su enunciado verbatim» y no se cumplió.
+
+Corregido capítulo a capítulo. Y por el camino cayeron **dos supuestos falsos
+que yo mismo había publicado**, los dos de la misma familia —dar por
+imposible algo sin comprobarlo—:
+
+| decía | resultó |
+|---|---|
+| «35 problemas del capítulo 2 dependen de figura acotada y no se pueden transcribir» | se leen renderizando la página del PDF y ampliándola |
+| «las curvas de bomba del capítulo 9 son documentación de fabricante y no entran en el repositorio» | **están en el propio PDF de la colección**, anexos, páginas 205 a 216; y §08 no prohíbe usarlas, prohíbe recortarlas |
+
+La segunda la destapó una pregunta suya: «¿las curvas no están en los
+documentos de esa carpeta?». Sí estaban. **La regla que sale de ahí: «no tengo
+el dato» es una afirmación, y hay que comprobarla como cualquier otra.**
+
 **El temario oficial son 25 temas y no 16.** El catálogo llevaba meses
 publicando una lista plausible —los temas «que parecían caer»— con
 `temarioOficial: false`, que es lo que §15 exige mientras no tengas la fuente.

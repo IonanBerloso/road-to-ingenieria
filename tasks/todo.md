@@ -46,11 +46,23 @@ un motivo que conviene dejar escrito antes de seguir:
   que **reconstruir la resolución entera y comprobar que aterriza en el número
   publicado**, y cuando no aterriza hay que decidir si el error es nuestro o
   del boletín. Eso ya ha pasado dos veces en la colección —el 6.2 y el 6.3—.
-- **Varios enunciados dependen de una figura acotada** y de tablas de
-  catálogo (curvas de bomba de los anexos). La figura se puede leer
-  renderizando la página; las curvas de catálogo **no entran en el
-  repositorio** (§08) y esos apartados habrá que replantearlos con la curva
-  dada como expresión analítica, que es como la dan los propios exámenes.
+- **Varios enunciados dependen de una figura acotada.** Se leen renderizando
+  la página del PDF y ampliándola; probado en el capítulo 2 con seis
+  compuertas.
+
+  > **CORREGIDO el 31 de agosto de 2026.** Aquí decía además que las curvas de
+  > catálogo de las bombas «no entran en el repositorio (§08)» y que habría que
+  > replantear esos apartados. Las dos mitades eran falsas y lo destapó una
+  > pregunta de Ionan: «¿las curvas no están en los documentos de esa
+  > carpeta?». **Sí están** —en el propio PDF de la colección, anexos, páginas
+  > 205 a 216, cuatro bombas INP por página con sus curvas H–Q, sus contornos
+  > de rendimiento, su potencia absorbida y su NPSH requerido— y se extraen
+  > con `pdfimages` perfectamente legibles. Y §08 no prohíbe **usar** una
+  > figura ajena: prohíbe recortarla y manda redibujarla.
+  >
+  > La lección, que vale para todo el proyecto: **«no tengo el dato» hay que
+  > comprobarlo, no suponerlo.** Lo di por hecho porque el enunciado decía
+  > «Documentación: Ccb: Anexo I» y no busqué dónde estaba ese anexo.
 - **Fluidos no imprime reparto por competencia**, solo el porcentaje del
   ejercicio. El esquema ya admite exámenes sin `puntos` —lo abrió Álgebra— así
   que se transcriben sin inventarlo.
