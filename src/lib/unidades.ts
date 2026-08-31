@@ -79,6 +79,7 @@ const NOMBRES: ReadonlyArray<readonly [Dim, string]> = [
   [D(0, 2, -1), 'una viscosidad cinemática'],
   [D(1, 2, -2), 'una energía'],
   [D(1, 2, -3), 'una potencia'],
+  [D(0, 0, -1), 'una velocidad de giro'],
 ];
 
 export function nombreDim(d: Dim): string {
@@ -168,6 +169,14 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   stokes: { f: 1e-4, d: D(0, 2, -1) },
   st: { f: 1e-4, d: D(0, 2, -1) },
   cst: { f: 1e-6, d: D(0, 2, -1) },
+  // — velocidad de giro
+  /* Una vuelta es adimensional —es un ángulo—, así que las revoluciones por
+     minuto son una frecuencia y punto: 1 rpm = 1/60 s⁻¹. Que salgan
+     comparables con hercios es correcto, no un descuido. Entraron con el
+     tema 16, donde el enunciado de la bomba da el resultado en rpm. */
+  rpm: { f: 1 / 60, d: D(0, 0, -1) },
+  rps: { f: 1, d: D(0, 0, -1) },
+  hz: { f: 1, d: D(0, 0, -1) },
   // — adimensionales con nombre (Reynolds, Froude…) y el porcentaje
   '': { f: 1, d: ADIMENSIONAL },
 };

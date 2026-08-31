@@ -1,0 +1,708 @@
+ejercicios:
+  # ── NUESTRO (§08). La colección abre el capítulo 5 con una hélice de siete
+  #    variables y cuatro parámetros: demasiado para entrar. Este es el caso
+  #    mínimo con dos π, uno de ellos Reynolds, y el sistema de exponentes cabe
+  #    en tres líneas.
+  - id: ejflu16-los-dos-primeros-parametros-pi
+    titulo: Cinco variables, dos parámetros, y uno de ellos es Reynolds
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      La caída de presión $\Delta p$ en un tramo de tubería depende de la
+      velocidad media $v$, del diámetro $D$, de la densidad $\rho$ y de la
+      viscosidad dinámica $\mu$ del fluido:
+
+      $$
+      \Delta p = f(v,\, D,\, \rho,\, \mu)
+      $$
+
+      a) Determinar cuántos parámetros adimensionales describen el fenómeno.
+
+      b) Tomando $\rho$, $v$ y $D$ como variables repetidas, obtener el
+      parámetro que contiene a $\mu$, es decir
+      $\pi = \rho^{a}\,v^{b}\,D^{c}\,\mu$.
+
+      c) Calcular su valor para agua a $20\ °\text{C}$
+      ($\nu = 10^{-6}\ \text{m}^{2}/\text{s}$) circulando a
+      $2\ \text{m/s}$ por un tubo de $50\ \text{mm}$.
+    pide: El número de parámetros, el exponente de la densidad y el Reynolds.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuántos parámetros adimensionales describen este fenómeno?
+        opciones:
+          - texto: >-
+              Dos, porque hay cinco variables y tres magnitudes fundamentales
+            correcta: true
+            mensaje: |
+              Eso es. El teorema $\pi$ dice $n - m$: cinco variables
+              —$\Delta p$, $v$, $D$, $\rho$, $\mu$— menos las tres
+              fundamentales $M$, $L$, $T$.
+          - texto: >-
+              Cuatro, porque hay cuatro variables de las que depende la
+              presión
+            mensaje: |
+              La variable dependiente cuenta como una más: son cinco, no
+              cuatro. Y luego se restan las tres fundamentales, no se dejan
+              tal cual.
+          - texto: >-
+              Tres, tantos como variables repetidas se han elegido
+            mensaje: |
+              Las repetidas son tantas como magnitudes fundamentales, sí, pero
+              lo que dan es la **base** con la que se construyen los $\pi$. El
+              número de parámetros es $n-m$, uno por cada variable **no**
+              repetida.
+
+      - tipo: calcular
+        titulo: El exponente de la densidad
+        pregunta: |
+          En $\pi = \rho^{a}\,v^{b}\,D^{c}\,\mu$, ¿cuánto vale $a$?
+        respuesta:
+          tipo: numero
+          valor: '-1'
+          tolerancia: 0.001
+          formato: un número entero, con su signo
+        distractores:
+          - valor: '1'
+            mensaje: |
+              El signo. La masa solo aparece en $\rho$ y en $\mu$: la ecuación
+              es $a + 1 = 0$, y $\mu$ está en el numerador con exponente $+1$.
+              Para que se cancele, la densidad tiene que ir **debajo**.
+          - valor: '-3'
+            mensaje: |
+              Ese $-3$ es el exponente de la longitud dentro de la densidad
+              ($\rho = ML^{-3}$), no el exponente al que elevas $\rho$. Son
+              cosas distintas: el de la tabla y el que estás buscando.
+        pista: |
+          Escribe solo la ecuación de la masa. Solo dos variables la llevan.
+        desarrollo: |
+          Con $\rho = ML^{-3}$, $v = LT^{-1}$, $D = L$ y $\mu = ML^{-1}T^{-1}$:
+
+          $$
+          \pi = (ML^{-3})^{a}(LT^{-1})^{b}(L)^{c}(ML^{-1}T^{-1}) = M^{0}L^{0}T^{0}
+          $$
+
+          Igualando exponentes, y empezando por la más corta:
+
+          $$
+          M:\; a + 1 = 0 \;\Rightarrow\; a = -1
+          \qquad
+          T:\; -b - 1 = 0 \;\Rightarrow\; b = -1
+          $$
+          $$
+          L:\; -3a + b + c - 1 = 0 \;\Rightarrow\; 3 - 1 + c - 1 = 0
+          \;\Rightarrow\; c = -1
+          $$
+
+          Es decir $\pi = \dfrac{\mu}{\rho v D}$, que es el **inverso** del
+          número de Reynolds.
+
+      - tipo: calcular
+        titulo: El número de Reynolds
+        pregunta: |
+          ¿Cuánto vale $Re = \dfrac{vD}{\nu}$ en las condiciones del enunciado?
+        respuesta:
+          tipo: numero
+          valor: '100000'
+          tolerancia: 100
+          formato: un número sin unidades
+        distractores:
+          - valor: '100000000'
+            mensaje: |
+              Has metido el diámetro en milímetros. En un adimensional las
+              unidades tienen que cancelarse, y para eso todas van en el mismo
+              sistema: $50\ \text{mm} = 0{,}05\ \text{m}$.
+          - valor: '100'
+            mensaje: |
+              Has usado $10^{-3}$, que es la viscosidad **dinámica** del agua
+              en $\text{Pa}\cdot\text{s}$. La cinemática es
+              $\nu = \mu/\rho = 10^{-6}\ \text{m}^{2}/\text{s}$, y es la que
+              va con $vD$ a secas.
+        pista: |
+          $Re = vD/\nu$, con las tres magnitudes en unidades del SI.
+        desarrollo: |
+          $$
+          Re = \frac{v\,D}{\nu} = \frac{2 \cdot 0{,}05}{10^{-6}} = 10^{5}
+          $$
+
+          Muy por encima de 4.000, así que el flujo es **turbulento**, que es
+          lo habitual en una conducción real.
+
+      - tipo: justificar
+        pregunta: Ordena el argumento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con cinco variables y tres magnitudes fundamentales, el teorema
+              $\pi$ garantiza dos parámetros adimensionales.
+          - texto: >-
+              El que contiene a $\mu$ sale $\mu/\rho v D$, que es el inverso
+              de Reynolds; elevar un $\pi$ a $-1$ da otro $\pi$ igual de
+              válido.
+          - texto: >-
+              El otro parámetro es $\Delta p/\rho v^{2}$, el número de Euler,
+              y la ley del fenómeno es $Eu = \phi(Re)$.
+          - texto: >-
+              Como los dos parámetros son adimensionales, el análisis
+              dimensional ya da la relación entre ellos sin necesidad de
+              ensayar.
+            trampa: true
+            mensaje: |
+              Esto es justo lo que el teorema **no** hace. Dice cuántos
+              números hay y cuáles son; la función $\phi$ que los relaciona
+              solo la da el experimento. Aquí esa función acabará siendo el
+              ábaco de Moody, en el tema 18.
+
+    resolucion: |
+      **Cuántos.** Cinco variables ($\Delta p$, $v$, $D$, $\rho$, $\mu$) y tres
+      magnitudes fundamentales dan $5-3 = 2$ parámetros.
+
+      **Las repetidas valen.** $\rho$ aporta la masa, $D$ la longitud y $v$ el
+      tiempo, y ninguna pareja se diferencia solo en el exponente. Son una
+      elección legítima.
+
+      **El parámetro con $\mu$.** Planteando
+      $\pi = \rho^{a}v^{b}D^{c}\mu = M^{0}L^{0}T^{0}$ y resolviendo el sistema
+      —masa, tiempo y por último longitud— salen $a = b = c = -1$, es decir
+
+      $$
+      \pi = \frac{\mu}{\rho v D} = \frac{1}{Re}
+      $$
+
+      **El otro.** Repitiendo con $\Delta p$ en vez de $\mu$ sale
+      $\Delta p/\rho v^{2}$, el número de **Euler**. Así que la ley del
+      fenómeno es $Eu = \phi(Re)$: una función de **una** variable en vez de
+      cuatro. Ahí está el ahorro: cuatro variables exigen barrer un espacio de
+      cuatro dimensiones en el laboratorio; una curva se levanta en una tarde.
+
+      **El valor.** Con $\nu = 10^{-6}\ \text{m}^{2}/\text{s}$,
+      $v = 2\ \text{m/s}$ y $D = 0{,}05\ \text{m}$:
+      $Re = 10^{5}$, turbulento.
+
+  # ── COLECCIÓN 5.3. El ejercicio canónico de superficie libre: escalas de
+  #    Froude y el kilopondio escondido en el apartado de la fuerza.
+  - id: ejflu16-la-presa-a-escala-1-49
+    titulo: Una presa ensayada a escala 1 a 49
+    fuente: >-
+      Ejercicio 5.3 · Colección de Problemas, capítulo 5 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se desea estudiar una presa mediante un modelo a escala $1{:}49$, en
+      donde se mide la velocidad del agua (modelo) y resulta ser
+      $0{,}4\ \text{m/s}$. El caudal máximo desaguado (prototipo) por la presa
+      es de $500\ \text{m}^{3}/\text{s}$. En el modelo se midió la fuerza
+      ejercida sobre la presa, resultando ser de $2{,}5\ \text{kg}$. Se pide
+      calcular:
+
+      a) Escalas de velocidades, caudales y fuerzas en función de la escala de
+      longitud $\lambda$.
+
+      b) Caudal que tiene que circular en el modelo, en l/s.
+
+      c) Velocidad del agua en la presa, en m/s.
+
+      d) Fuerza ejercida sobre la presa, en N.
+
+      e) ¿Qué condiciones tiene que satisfacer el fluido para que la semejanza
+      sea completa?
+    pide: Las escalas y los tres valores del prototipo, más la condición del fluido.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué número adimensional hay que igualar entre modelo y prototipo?
+        opciones:
+          - texto: >-
+              Froude, porque una presa desagua con superficie libre y ahí la
+              gravedad es la que manda
+            correcta: true
+            mensaje: |
+              Eso es. El agua toca la atmósfera, así que la presión no varía y
+              lo que cambia es la cota: gobierna la gravedad. Reynolds habrá
+              que sacrificarlo, y el apartado e) pregunta justamente por ese
+              precio.
+          - texto: >-
+              Reynolds, porque siempre hay viscosidad
+            mensaje: |
+              Viscosidad hay siempre, pero eso no la hace dominante. En un
+              flujo con superficie libre las fuerzas gravitatorias son muy
+              superiores a las viscosas, y quien manda es **Froude**. Si
+              igualas Reynolds aquí, el problema sale completo y entero mal.
+          - texto: >-
+              Los dos a la vez, que es lo que exige la semejanza absoluta
+            mensaje: |
+              Eso es lo que exige, sí, y por eso no se puede: con el mismo
+              fluido en los dos las dos condiciones piden velocidades
+              distintas y solo coinciden en $\lambda = 1$. El apartado e) lo
+              cuantifica.
+
+      - tipo: calcular
+        titulo: El caudal del modelo
+        pregunta: |
+          ¿Qué caudal tiene que circular por el modelo?
+        respuesta:
+          tipo: magnitud
+          valor: '29.75 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '208.3 l/s'
+            mensaje: |
+              Has escalado solo el área. El caudal es velocidad **por** área, y
+              la velocidad también cambia: $\lambda^{1/2}\cdot\lambda^{2} =
+              \lambda^{5/2}$, no $\lambda^{2}$.
+          - valor: '4.25 l/s'
+            mensaje: |
+              Ese es $\lambda^{3}$, que es la escala de **fuerzas** (y la de
+              volúmenes). El caudal es un volumen por unidad de tiempo, y el
+              tiempo también se escala: queda $\lambda^{5/2}$.
+        pista: |
+          $Q = v\,A$, con $v \propto \lambda^{1/2}$ y $A \propto \lambda^{2}$.
+        desarrollo: |
+          $$
+          \frac{Q_m}{Q_p} = \frac{v_m}{v_p}\cdot\frac{A_m}{A_p}
+          = \lambda^{1/2}\cdot\lambda^{2} = \lambda^{5/2}
+          $$
+          $$
+          Q_m = 500\left(\tfrac{1}{49}\right)^{5/2}
+          = \frac{500}{49^{2}\cdot 7} = \frac{500}{16807}
+          = 0{,}02975\ \text{m}^{3}/\text{s} = 29{,}75\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad en la presa real
+        pregunta: |
+          ¿A qué velocidad circula el agua en el prototipo?
+        respuesta:
+          tipo: magnitud
+          valor: '2.8 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '0.0571 m/s'
+            mensaje: |
+              Has multiplicado donde había que dividir. La escala
+              $v_m/v_p = \lambda^{1/2}$ va del modelo **al** prototipo, así que
+              para subir se divide: $v_p = v_m/\lambda^{1/2}$. Y comprueba el
+              sentido físico: el prototipo es más grande, el agua va más
+              deprisa.
+          - valor: '19.6 m/s'
+            mensaje: |
+              Has usado $\lambda$ en vez de $\lambda^{1/2}$. Froude es
+              $v^{2}/gL$, y el cuadrado de la velocidad es lo que va con la
+              longitud: la velocidad va con su **raíz**.
+        pista: |
+          $Fr$ constante da $v_m/v_p = \sqrt{\lambda}$, y aquí $\sqrt{1/49} = 1/7$.
+        desarrollo: |
+          $$
+          \frac{v_m^{2}}{gL_m} = \frac{v_p^{2}}{gL_p}
+          \;\Longrightarrow\;
+          \frac{v_m}{v_p} = \lambda^{1/2} = \frac{1}{7}
+          $$
+          $$
+          v_p = 0{,}4 \cdot 7 = 2{,}8\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: La fuerza sobre la presa, en newtons
+        pregunta: |
+          ¿Qué fuerza soporta la presa real?
+        respuesta:
+          tipo: magnitud
+          valor: '2.882 MN'
+          tolerancia: 0.02
+          formato: una fuerza, con su unidad
+        distractores:
+          - valor: '294122.5 N'
+            mensaje: |
+              El número está bien pero es de kilopondios, no de newtons. Los
+              $2{,}5\ \text{kg}$ del enunciado son kilopondios —el apartado d)
+              pide newtons justo por eso—, así que al final hay que multiplicar
+              por $9{,}8$.
+          - valor: '58825 N'
+            mensaje: |
+              Has escalado con $\lambda^{2}$ pensando «fuerza = presión por
+              área». La presión también cambia: va con $v^{2}$, es decir con
+              $\lambda$. Queda $\lambda\cdot\lambda^{2} = \lambda^{3}$.
+        pista: |
+          $F \propto \rho v^{2}L^{2}$, y con el mismo fluido eso es $\lambda^{3}$.
+          Después, de kp a N.
+        desarrollo: |
+          $$
+          \frac{F_m}{F_p} = \frac{\rho\,v_m^{2}L_m^{2}}{\rho\,v_p^{2}L_p^{2}}
+          = \lambda\cdot\lambda^{2} = \lambda^{3}
+          $$
+          $$
+          F_p = 2{,}5 \cdot 49^{3} = 294\,122{,}5\ \text{kp}
+          $$
+          $$
+          F_p = 294\,122{,}5 \cdot 9{,}8 = 2\,882\,400\ \text{N} \approx 2{,}88\ \text{MN}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta al apartado e). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Para la semejanza completa haría falta, además de Froude, la
+              igualdad de Reynolds, que aquí no se ha impuesto.
+          - texto: >-
+              Igualando los dos, $\nu_p/\nu_m = \lambda^{-3/2} = 49^{3/2} =
+              343$, es decir un fluido 343 veces menos viscoso que el agua.
+          - texto: >-
+              Como no existe un líquido así de disponible, se recurre a la
+              semejanza restringida y se conserva solo Froude, con buenos
+              resultados prácticos.
+          - texto: >-
+              Al haber renunciado a Reynolds, los resultados del modelo no
+              sirven para el prototipo y hay que corregirlos empíricamente uno
+              a uno.
+            trampa: true
+            mensaje: |
+              La semejanza restringida no invalida el ensayo: se renuncia al
+              número que **no** gobierna el fenómeno, y por eso los resultados
+              se trasladan directamente. Si hubiera que corregirlo todo a mano,
+              el ensayo no serviría para nada y no se harían modelos de presas.
+
+    resolucion: |
+      **El tipo de flujo decide todo lo demás.** Una presa desagua en contacto
+      con la atmósfera: es flujo en **superficie libre**, la presión no varía y
+      manda la gravedad. Se conserva **Froude**.
+
+      **a) Las escalas.** De $Fr$ constante,
+      $v_m/v_p = \lambda^{1/2}$. De ahí:
+
+      $$
+      \frac{Q_m}{Q_p} = \lambda^{1/2}\lambda^{2} = \lambda^{5/2}
+      \qquad
+      \frac{F_m}{F_p} = \lambda\cdot\lambda^{2} = \lambda^{3}
+      $$
+
+      **b)** $Q_m = 500\,(1/49)^{5/2} = 0{,}02975\ \text{m}^{3}/\text{s}
+      = 29{,}75\ \text{l/s}$.
+
+      **c)** $v_p = 0{,}4 \cdot 7 = 2{,}8\ \text{m/s}$.
+
+      **d)** $F_p = 2{,}5\cdot 49^{3} = 294.122{,}5\ \text{kp}$, y en newtons,
+      $2{,}88\ \text{MN}$. Los «kg» del enunciado son kilopondios, y el
+      apartado pide newtons precisamente para que se note.
+
+      **e) La condición sobre el fluido.** Igualando también Reynolds:
+
+      $$
+      \frac{\nu_p}{\nu_m} = \lambda^{-3/2} = 49^{3/2} = 343
+      \;\Longrightarrow\;
+      \nu_{\text{modelo}} = \frac{\nu_{\text{agua}}}{343}
+      $$
+
+      No hay líquido a mano con esa viscosidad, así que la semejanza completa
+      es inalcanzable y se acepta la restringida.
+
+  # ── COLECCIÓN 5.15. El mismo argumento que el e) de la presa, pero aquí es
+  #    el ejercicio entero: qué fluido haría falta, y qué relaciones quedan.
+  - id: ejflu16-el-canal-y-el-liquido-que-no-existe
+    titulo: El canal, y el líquido que haría falta para la homología
+    fuente: >-
+      Ejercicio 5.15 · Colección de Problemas, capítulo 5 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se dispone de un canal, que denominamos prototipo, que funciona con un
+      líquido cuya viscosidad cinemática es
+      $4{,}7\cdot 10^{-5}\ \text{m}^{2}/\text{s}$. Se desea experimentar con un
+      modelo reducido a escala $1/5$, deseándose conocer la viscosidad del
+      líquido que deberá emplearse para que haya homología, así como la
+      relación de velocidades y caudales entre el prototipo y modelo.
+    pide: La viscosidad cinemática del líquido del modelo y las dos relaciones.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado pide **homología**, que es semejanza completa. ¿Qué
+          significa eso aquí?
+        opciones:
+          - texto: >-
+              Que se cumplan Froude y Reynolds a la vez, y como el fluido es
+              libre, la condición se convierte en una exigencia sobre su
+              viscosidad
+            correcta: true
+            mensaje: |
+              Exacto, y es la diferencia con la presa: allí el fluido estaba
+              fijado —agua en los dos— y por eso la homología era imposible.
+              Aquí el líquido es la incógnita, así que sí se puede.
+          - texto: >-
+              Que las dos secciones sean geométricamente semejantes, y nada más
+            mensaje: |
+              La semejanza geométrica es la primera de las tres y no basta:
+              hace falta también la cinemática y la dinámica. La homología es
+              la dinámica, y esa se traduce en igualdad de **todos** los
+              parámetros adimensionales.
+          - texto: >-
+              Que se cumpla Froude, porque el canal tiene superficie libre
+            mensaje: |
+              Eso es la semejanza **restringida**, que es lo que se hace cuando
+              la completa no se puede. El enunciado pide homología, es decir la
+              completa: Froude **y** Reynolds.
+
+      - tipo: calcular
+        titulo: La viscosidad del líquido del modelo
+        pregunta: |
+          ¿Qué viscosidad cinemática debe tener el líquido del modelo?
+        respuesta:
+          tipo: magnitud
+          valor: '4.204e-6 m2/s'
+          tolerancia: 0.02
+          formato: una viscosidad cinemática, con su unidad
+        distractores:
+          - valor: '9.4e-6 m2/s'
+            mensaje: |
+              Has escalado con $\lambda$. La condición conjunta de Froude y
+              Reynolds da $\lambda^{3/2}$, no $\lambda$: viene de combinar
+              $v \propto \lambda^{1/2}$ con $\nu \propto v L$.
+          - valor: '1.88e-6 m2/s'
+            mensaje: |
+              Has usado $\lambda^{2}$. El exponente correcto es $3/2$: uno y
+              medio, no dos. Sale de $\nu_m/\nu_p = (v_m/v_p)(L_m/L_p) =
+              \lambda^{1/2}\cdot\lambda$.
+        pista: |
+          De Froude, $v_m/v_p = \lambda^{1/2}$. Métela en
+          $Re$: $\nu_m/\nu_p = (v_m/v_p)(L_m/L_p)$.
+        desarrollo: |
+          $$
+          \frac{\nu_m}{\nu_p} = \frac{v_m L_m}{v_p L_p}
+          = \lambda^{1/2}\cdot\lambda = \lambda^{3/2}
+          $$
+          $$
+          \nu_m = 4{,}7\cdot 10^{-5}\left(\tfrac{1}{5}\right)^{3/2}
+          = 4{,}7\cdot 10^{-5}\cdot 0{,}08944
+          = 4{,}20\cdot 10^{-6}\ \text{m}^{2}/\text{s}
+          $$
+
+      - tipo: calcular
+        titulo: La relación de caudales
+        pregunta: |
+          ¿Cuánto vale $Q_p/Q_m$?
+        respuesta:
+          tipo: numero
+          valor: '55.9'
+          tolerancia: 0.5
+          formato: un número sin unidades
+        distractores:
+          - valor: '25'
+            mensaje: |
+              Ese es $\lambda^{-2}$, la relación de **áreas**. Falta la
+              velocidad, que también cambia: $\lambda^{-1/2}\cdot\lambda^{-2}
+              = \lambda^{-5/2}$.
+          - valor: '11.18'
+            mensaje: |
+              Ese es $5^{3/2}$, el exponente de la viscosidad del apartado
+              anterior. El del caudal es $5/2$: $5^{5/2} = 55{,}9$.
+        pista: |
+          $Q = vA$, y aquí $v_p/v_m = \sqrt{5}$, $A_p/A_m = 25$.
+        desarrollo: |
+          $$
+          \frac{Q_p}{Q_m} = \frac{v_p}{v_m}\cdot\frac{A_p}{A_m}
+          = \sqrt{5}\cdot 25 = 5^{5/2} = 55{,}9 \approx 56
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el argumento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Un canal tiene superficie libre, así que la semejanza completa
+              exige igualar Froude y Reynolds a la vez.
+          - texto: >-
+              Froude fija la relación de velocidades en $\lambda^{1/2}$, y
+              metida en Reynolds obliga a $\nu_m/\nu_p = \lambda^{3/2}$.
+          - texto: >-
+              Como aquí el líquido del modelo es la incógnita y no está
+              impuesto, la condición se puede satisfacer y la homología es
+              alcanzable.
+          - texto: >-
+              Al ser la viscosidad del modelo menor que la del prototipo, el
+              modelo tendrá menos pérdidas relativas y habrá que corregirlas.
+            trampa: true
+            mensaje: |
+              Si hay homología, **no hay nada que corregir**: eso es
+              exactamente lo que significa. Las pérdidas relativas son un
+              adimensional, y un adimensional vale lo mismo en modelo y
+              prototipo cuando los parámetros coinciden.
+
+    resolucion: |
+      **Lo que pide la homología.** Un canal tiene superficie libre, así que la
+      semejanza completa exige igualdad de **Froude y de Reynolds**. La
+      diferencia con el ejercicio de la presa es que allí el fluido estaba
+      fijado —agua en los dos— y aquí es la incógnita: por eso allí la
+      homología era imposible y aquí no.
+
+      **La viscosidad.** De Froude, $v_m/v_p = \lambda^{1/2}$. Sustituyendo en
+      la igualdad de Reynolds:
+
+      $$
+      \frac{\nu_m}{\nu_p} = \frac{v_m L_m}{v_p L_p} = \lambda^{3/2}
+      = \left(\tfrac{1}{5}\right)^{3/2} = 0{,}08944
+      $$
+      $$
+      \nu_m = 4{,}7\cdot 10^{-5}\cdot 0{,}08944
+      = 4{,}20\cdot 10^{-6}\ \text{m}^{2}/\text{s}
+      $$
+
+      Un valor razonable: está en el orden de un aceite muy ligero, así que
+      **este ensayo sí se puede montar**.
+
+      **Las relaciones.**
+
+      $$
+      \frac{v_p}{v_m} = \lambda^{-1/2} = \sqrt{5} = 2{,}24
+      \qquad
+      \frac{Q_p}{Q_m} = \lambda^{-5/2} = 5^{5/2} = 55{,}9 \approx 56
+      $$
+
+      **La lectura.** Compara con la presa a escala $1{:}49$, que pedía un
+      fluido 343 veces menos viscoso que el agua. La diferencia entera está en
+      el exponente $3/2$: reducir la escala castiga la viscosidad exigida muy
+      deprisa. A $1/5$ el ensayo es viable; a $1/49$, no.
+
+  # ── COLECCIÓN 5.13. Corto, y el resultado es contraintuitivo: el modelo es
+  #    tres veces más grande y tiene que girar cien veces más despacio.
+  - id: ejflu16-la-bomba-que-gira-cien-veces-mas-despacio
+    titulo: Una bomba ensayada con aire, y a qué velocidad tiene que girar
+    fuente: >-
+      Ejercicio 5.13 · Colección de Problemas, capítulo 5 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Una bomba centrífuga girando a $1200\ \text{rpm}$ bombea un aceite
+      lubricante a $15\ °\text{C}$. Se va a ensayar un modelo de la bomba que
+      utiliza aire a $20\ °\text{C}$. Si el diámetro del modelo es 3 veces
+      mayor que el del prototipo, ¿a qué velocidad debe girar el modelo?
+
+      Datos:
+      $\nu_{\text{aceite}} = 1{,}8\cdot 10^{-4}\ \text{m}^{2}/\text{s}$;
+      $\nu_{\text{aire}} = 1{,}5\cdot 10^{-5}\ \text{m}^{2}/\text{s}$.
+    pide: La velocidad de giro del modelo, en rpm.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Una bomba es flujo en carga. ¿Qué se iguala, y con qué velocidad?
+        opciones:
+          - texto: >-
+              Reynolds, tomando como velocidad característica $nD$ y como
+              longitud el diámetro, con lo que queda $nD^{2}/\nu$
+            correcta: true
+            mensaje: |
+              Eso es. En una turbomáquina no hay una velocidad de corriente
+              obvia, así que se usa la de la punta del rodete, proporcional a
+              $nD$. El Reynolds queda entonces $nD\cdot D/\nu = nD^{2}/\nu$.
+          - texto: >-
+              Froude, porque el líquido cae por gravedad dentro de la bomba
+            mensaje: |
+              Dentro de una bomba el fluido va confinado y aislado de la
+              atmósfera: es flujo **en carga**, y la variación de cota se
+              agrupa con la presión. La gravedad no gobierna, y Froude se
+              descarta.
+          - texto: >-
+              Reynolds, con la velocidad de giro directamente como velocidad
+              característica
+            mensaje: |
+              La velocidad de giro no es una velocidad: sus dimensiones son
+              $T^{-1}$, no $LT^{-1}$. Hay que multiplicarla por una longitud
+              —el diámetro— para obtener una velocidad de verdad.
+
+      - tipo: calcular
+        titulo: La velocidad de giro del modelo
+        pregunta: |
+          ¿A qué velocidad debe girar el modelo?
+        respuesta:
+          tipo: magnitud
+          valor: '11.11 rpm'
+          tolerancia: 0.02
+          formato: una velocidad de giro, con su unidad
+        distractores:
+          - valor: '133.3 rpm'
+            mensaje: |
+              Has escalado solo el tamaño y has olvidado que el fluido cambia.
+              El aire es doce veces menos viscoso que el aceite, y eso entra en
+              la cuenta: $1200/9$ hay que multiplicarlo aún por
+              $\nu_{\text{aire}}/\nu_{\text{aceite}}$.
+          - valor: '1600 rpm'
+            mensaje: |
+              Has puesto la relación de viscosidades del revés. El fluido del
+              **modelo** va en el numerador:
+              $n_m = n_p (D_p/D_m)^{2}(\nu_m/\nu_p)$, y el aire es el menos
+              viscoso, así que el factor achica el resultado en vez de
+              agrandarlo.
+        pista: |
+          Iguala $nD^{2}/\nu$ y despeja $n_m$. Ojo: el modelo es **más
+          grande**, así que $D_p/D_m = 1/3$.
+        desarrollo: |
+          $$
+          \frac{n_m D_m^{2}}{\nu_m} = \frac{n_p D_p^{2}}{\nu_p}
+          \;\Longrightarrow\;
+          n_m = n_p\left(\frac{D_p}{D_m}\right)^{2}\frac{\nu_m}{\nu_p}
+          $$
+          $$
+          n_m = 1200\cdot\frac{1}{9}\cdot\frac{1{,}5\cdot 10^{-5}}{1{,}8\cdot 10^{-4}}
+          = 133{,}3\cdot 0{,}08333 = 11{,}11\ \text{rpm}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el argumento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Una bomba es flujo en carga, así que la semejanza dinámica se
+              consigue igualando el número de Reynolds.
+          - texto: >-
+              Con la velocidad de punta $nD$, el Reynolds de la máquina es
+              $nD^{2}/\nu$, y de ahí $n_m = n_p (D_p/D_m)^{2}(\nu_m/\nu_p)$.
+          - texto: >-
+              Los dos factores empujan en el mismo sentido —el modelo es más
+              grande y su fluido menos viscoso—, así que sale mucho más lento:
+              $11{,}11$ rpm.
+          - texto: >-
+              Como el modelo gira tan despacio, el ensayo no será
+              representativo y habrá que subir las revoluciones hasta un valor
+              realista.
+            trampa: true
+            mensaje: |
+              Subir las revoluciones rompe la igualdad de Reynolds, que es lo
+              único que hace válido el ensayo. Un resultado incómodo no es un
+              resultado equivocado: si $11{,}11$ rpm es inviable, lo que se
+              cambia es el **fluido** o el **tamaño**, no el número que se
+              estaba igualando.
+
+    resolucion: |
+      **El número.** Una bomba trabaja en carga —fluido confinado, la cota se
+      agrupa con la presión—, así que la semejanza dinámica se logra igualando
+      **Reynolds**.
+
+      **La velocidad característica.** En una turbomáquina no hay corriente
+      libre a la que medirle la velocidad: se usa la de la punta del rodete,
+      proporcional a $nD$. Con el diámetro como longitud característica:
+
+      $$
+      Re = \frac{(nD)\,D}{\nu} = \frac{n D^{2}}{\nu}
+      $$
+
+      **El despeje.**
+
+      $$
+      n_m = n_p\left(\frac{D_p}{D_m}\right)^{2}\frac{\nu_m}{\nu_p}
+      = 1200\cdot\left(\frac{1}{3}\right)^{2}\cdot
+      \frac{1{,}5\cdot 10^{-5}}{1{,}8\cdot 10^{-4}} = 11{,}11\ \text{rpm}
+      $$
+
+      **Por qué sale tan bajo, que es lo que hay que entender.** Los dos
+      factores tiran hacia abajo a la vez: el modelo es **tres veces mayor**
+      —y el diámetro entra al cuadrado, así que divide por nueve— y su fluido
+      es **doce veces menos viscoso**, lo que vuelve a dividir por doce. Nueve
+      por doce, ciento ocho.
+
+      Once revoluciones por minuto es una vuelta cada cinco segundos y medio:
+      un ensayo perfectamente realizable, aunque no se parezca en nada a lo que
+      hace la bomba real. Ese es todo el sentido de la teoría de modelos —el
+      modelo no tiene que **parecerse** al prototipo, tiene que tener sus
+      mismos números adimensionales—.

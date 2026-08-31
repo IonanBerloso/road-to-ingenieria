@@ -1,0 +1,313 @@
+---
+asignatura: fluidos
+tema: 16
+titulo: Análisis dimensional y teoría de modelos
+descripcion: Cómo se reducen diez variables a cuatro números, y por qué casi nunca se puede ensayar un modelo con semejanza completa.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 16 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Hasta aquí, cada tema ha traído una ecuación que se resuelve. Este no. Este
+tema sirve para los problemas que **no se pueden resolver**: la resistencia de
+un casco, la sustentación de un ala, el desagüe de una presa. Ahí no hay
+fórmula, hay laboratorio.
+
+Y el laboratorio es caro. El análisis dimensional es la herramienta que
+**reduce el número de experimentos**, y la teoría de modelos, la que permite
+ensayar con una maqueta y creerse el resultado.
+
+## Por qué funciona
+
+Toda magnitud física se escribe como producto de potencias de tres
+fundamentales: masa $M$, longitud $L$ y tiempo $T$. La fuerza es
+$MLT^{-2}$, la densidad $ML^{-3}$, la viscosidad dinámica $ML^{-1}T^{-1}$.
+
+De ahí sale el **principio de homogeneidad dimensional**: en una ecuación
+física real, todos los sumandos tienen la misma ecuación de dimensiones. Si no
+la tienen, la ecuación está mal aunque el número salga.
+
+Compruébalo en Bernoulli, que ya conoces:
+
+$$
+\frac{p}{\rho} + \frac{v^{2}}{2} + gz = \text{cte.}
+$$
+
+| término | dimensiones | resultado |
+|---|---|---|
+| $p/\rho$ | $\dfrac{ML^{-1}T^{-2}}{ML^{-3}}$ | $L^{2}T^{-2}$ |
+| $v^{2}/2$ | $(LT^{-1})^{2}$ | $L^{2}T^{-2}$ |
+| $gz$ | $LT^{-2}\cdot L$ | $L^{2}T^{-2}$ |
+
+Los tres iguales. **Esa comprobación es gratis y caza la mitad de los errores
+de álgebra**: si al despejar te queda un sumando con otras dimensiones, no
+sigas.
+
+## El teorema $\pi$ de Vaschy-Buckingham
+
+Si un fenómeno depende de $n$ variables físicas y en ellas intervienen $m$
+magnitudes fundamentales, el fenómeno queda descrito por
+
+$$
+\boxed{n - m \text{ parámetros adimensionales } \pi}
+$$
+
+En mecánica $m = 3$ casi siempre ($M$, $L$, $T$). Así que un problema con diez
+variables se estudia con siete números, y uno con seis, con tres. La función
+que los relaciona **la sigue teniendo que dar el experimento** — el teorema no
+adivina física, solo dice cuántos botones hay que girar.
+
+### El procedimiento, en seis pasos
+
+1. **Listar todas las variables** que intervienen. Si sobra una, saldrá un
+   $\pi$ que el experimento demostrará irrelevante; si falta una, el resultado
+   es falso y nada lo avisa.
+2. Elegir las **fundamentales**: $M$, $L$, $T$.
+3. Escribir la **ecuación de dimensiones de cada variable**, en tabla.
+4. Elegir las **variables repetidas**, tantas como fundamentales.
+5. Combinar las repetidas con cada una de las restantes y **resolver el sistema
+   de exponentes**, un $\pi$ por variable no repetida.
+6. **Comprobar** que cada $\pi$ sale adimensional.
+
+<ErrorTipico titulo="Las variables repetidas no se eligen a gusto: hay dos condiciones">
+
+El apartado que más se falla de este tema es el 4, y en los exámenes de esta
+escuela viene enunciado al revés a propósito: te dan una lista de repetidas y
+te piden **justificar si es posible usarla**.
+
+Las dos condiciones:
+
+- **Entre las repetidas tienen que aparecer todas las magnitudes
+  fundamentales.** Si ninguna lleva masa, no hay forma de que la $M$ de las
+  demás se cancele.
+- **Dos repetidas no pueden diferenciarse solo en el exponente.** Un diámetro
+  ($L$) y un volumen ($L^{3}$) no valen como pareja: dan la misma información
+  y el sistema queda indeterminado.
+
+Ejemplo real, de junio de 2020: se propone usar $\mu$, $\varepsilon$ y $c$ como
+repetidas. $\mu = ML^{-1}T^{-1}$ aporta la masa, $\varepsilon = L$ la longitud
+y $c = LT^{-1}$ el tiempo. **Sí se puede**, aunque los $\pi$ que salgan no
+tengan los nombres de siempre.
+
+Y ese es el otro aviso: **los $\pi$ no son únicos**. Cambiando las repetidas
+salen otros, igual de válidos. Un $\pi$ elevado a cualquier potencia, o el
+producto de dos, sigue siendo adimensional — por eso $\rho v D/\mu$ y
+$\mu/\rho v D$ son el mismo número mirado del derecho y del revés, y se le
+llama Reynolds al primero por convenio.
+
+</ErrorTipico>
+
+## Los cinco números, y qué manda en cada caso
+
+Cada parámetro es un **cociente de fuerzas**. Saber cuál es cuál importa más
+que la fórmula, porque es lo que decide qué se puede despreciar:
+
+| número | fórmula | compara | manda cuando |
+|---|---|---|---|
+| **Reynolds** | $Re = \dfrac{\rho v D}{\mu}$ | inercia / viscosidad | casi siempre, y sobre todo en **flujo en carga** |
+| **Froude** | $Fr = \dfrac{v^{2}}{gL}$ | inercia / gravedad | hay **superficie libre**: canales, presas, cascos |
+| **Euler** | $Eu = \dfrac{\Delta p}{\rho v^{2}}$ | presión / inercia | la caída de presión es el objeto del estudio |
+| **Weber** | $We = \dfrac{\rho v^{2}L}{\sigma}$ | inercia / tensión superficial | gotas, sprays, capilares. Cuanto **menor**, más importa |
+| **Mach** | $Ma = \dfrac{v}{c}$ | inercia / compresibilidad | gases rápidos. Por debajo de $0{,}3$ el flujo es incompresible |
+
+Y uno derivado de Euler que ya conoces del tema 2: el **número de cavitación**,
+$Ca = \dfrac{p - p_v}{\rho v^{2}}$, con la presión de vapor como referencia.
+
+Dos lecturas que conviene fijar. El Reynolds **elevado** es turbulento y el
+bajo, laminar. El Weber es al revés que los demás: **cuanto más pequeño, más
+pesa** la tensión superficial, así que un Weber grande es permiso para
+ignorarla.
+
+## Semejanza: tres, y cada una exige la anterior
+
+Para trasladar el resultado del modelo al prototipo no basta con que se
+parezcan:
+
+1. **Geométrica** — correspondencia punto a punto. A los puntos que se
+   corresponden se les llama **homólogos**, y toda longitud está en la misma
+   proporción $\lambda$. Si las máquinas fueran esculturas, con esto bastaría.
+2. **Cinemática** — puntos homólogos en posiciones homólogas en instantes
+   homólogos, con velocidades de igual dirección y sentido y módulos en
+   proporción constante. Las líneas de corriente son las mismas a escala.
+   **Exige la geométrica**, porque las fronteras del cuerpo son las que
+   dibujan las líneas de corriente.
+3. **Dinámica** — puntos homólogos sometidos a fuerzas homólogas: los
+   triángulos de fuerzas son paralelos. **Exige las dos anteriores.**
+
+Y la traducción al análisis dimensional es lo que hace útil todo lo de arriba:
+
+> **Hay semejanza dinámica absoluta cuando todos los parámetros
+> adimensionales valen lo mismo en modelo y en prototipo.**
+
+Con un matiz que ahorra trabajo en el examen: como la ley del fenómeno los
+relaciona, **basta igualar todos menos uno**; el que sobra se iguala solo. Por
+eso, si se igualan Reynolds y Froude, el número de Euler ya sale igual, y con
+él todos sus derivados.
+
+## La pregunta que cae siempre: ¿es posible la semejanza absoluta?
+
+Aparece en casi todas las convocatorias, vale entre el 5 y el 15 %, y **no se
+responde con una fórmula sino contando grados de libertad**. El razonamiento es
+siempre el mismo: cada número que se iguala impone una relación entre las
+escalas; si las relaciones se contradicen, no hay semejanza absoluta.
+
+El caso clásico, Froude y Reynolds a la vez, con el **mismo fluido** en modelo
+y prototipo. Llamando $\lambda = L_m/L_p$:
+
+$$
+Fr_m = Fr_p \;\Longrightarrow\; \frac{v_m}{v_p} = \lambda^{1/2}
+\qquad\qquad
+Re_m = Re_p \;\Longrightarrow\; \frac{v_m}{v_p} = \frac{1}{\lambda}
+$$
+
+Las dos condiciones piden velocidades distintas, y solo coinciden en un sitio:
+
+$$
+\lambda^{1/2} = \lambda^{-1} \;\Longrightarrow\; \lambda^{3/2} = 1
+\;\Longrightarrow\; \boxed{\lambda = 1}
+$$
+
+**El modelo tendría que ser del tamaño del prototipo**, que es lo mismo que
+decir que no hay modelo. La condición no deja ningún grado de libertad.
+
+<figure>
+<svg viewBox="0 0 430 236" role="img" width="430" height="236"
+     aria-labelledby="flu16-t flu16-d">
+  <title id="flu16-t">Froude y Reynolds solo piden la misma velocidad cuando la escala vale uno</title>
+  <desc id="flu16-d">Dos curvas sobre el mismo par de ejes. En horizontal, la escala geométrica del modelo, de 0,2 a 1. En vertical, la relación de velocidades que exige cada número. La curva de Froude sube despacio desde 0,45 hasta 1. La curva de Reynolds baja desde 5 hasta 1. Solo se cortan en el extremo derecho, donde la escala vale uno y el modelo es tan grande como el prototipo.</desc>
+
+  <line x1="60" y1="26" x2="60" y2="196" stroke="var(--ink-suave)" stroke-width="1"/>
+  <line x1="60" y1="196" x2="392" y2="196" stroke="var(--ink-suave)" stroke-width="1"/>
+
+  <line x1="56" y1="158" x2="60" y2="158" stroke="var(--ink-suave)" stroke-width="1"/>
+  <text x="52" y="162" font-size="9" text-anchor="end" fill="var(--ink-suave)">1</text>
+  <line x1="56" y1="94" x2="60" y2="94" stroke="var(--ink-suave)" stroke-width="1"/>
+  <text x="52" y="98" font-size="9" text-anchor="end" fill="var(--ink-suave)">3</text>
+  <line x1="56" y1="30" x2="60" y2="30" stroke="var(--ink-suave)" stroke-width="1"/>
+  <text x="52" y="34" font-size="9" text-anchor="end" fill="var(--ink-suave)">5</text>
+  <text x="14" y="18" font-size="9.5" fill="var(--ink)">vm / vp</text>
+
+  <text x="60" y="210" font-size="9" text-anchor="middle" fill="var(--ink-suave)">0,2</text>
+  <text x="220" y="210" font-size="9" text-anchor="middle" fill="var(--ink-suave)">0,6</text>
+  <text x="380" y="210" font-size="9" text-anchor="middle" fill="var(--ink-suave)">1</text>
+  <text x="220" y="228" font-size="9.5" text-anchor="middle" fill="var(--ink)">escala geométrica del modelo</text>
+
+  <polyline points="60,30 100,83 140,110 180,126 220,137 260,144 300,150 340,154 380,158"
+            fill="none" stroke="var(--flag)" stroke-width="2.2"/>
+  <text x="112" y="60" font-size="10" fill="var(--flag)">Reynolds pide</text>
+  <text x="112" y="73" font-size="10" fill="var(--flag)">ir más deprisa</text>
+
+  <polyline points="60,176 100,172 140,170 180,167 220,165 260,163 300,161 340,160 380,158"
+            fill="none" stroke="var(--live)" stroke-width="2.2"/>
+  <text x="112" y="190" font-size="10" fill="var(--live)">Froude pide ir más despacio</text>
+
+  <circle cx="380" cy="158" r="4.5" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
+  <line x1="380" y1="150" x2="356" y2="122" stroke="var(--ink)" stroke-width="1"/>
+  <text x="352" y="116" font-size="10" text-anchor="end" fill="var(--ink)">el único punto común:</text>
+  <text x="352" y="104" font-size="10" text-anchor="end" fill="var(--ink)">modelo = prototipo</text>
+</svg>
+<figcaption>
+
+Con el mismo fluido, igualar Reynolds obliga al modelo a ir **más rápido**
+cuanto más pequeño sea, e igualar Froude, **más despacio**. Las dos exigencias
+solo se encuentran cuando la escala vale uno, y entonces ya no hay modelo. Esa
+es la razón de que la semejanza restringida no sea una chapuza, sino el caso
+normal.
+
+</figcaption>
+</figure>
+
+### Las tres salidas
+
+Cuando la respuesta es «no es posible», el examen sigue pidiendo qué se hace.
+Hay tres caminos y conviene tenerlos separados:
+
+- **Cambiar de fluido.** La condición conjunta obliga a
+  $\nu_m/\nu_p = \lambda^{3/2}$. Con $\lambda = 1/49$ eso pide un fluido 343
+  veces menos viscoso que el agua, y ese fluido no está en el almacén. A veces
+  sí sale: a escala $1/4$ hace falta $\lambda^{3/2} = 1/8$, y eso lo cumple el
+  mercurio.
+- **Cambiar la densidad sin cambiar el fluido.** Es la salida elegante de los
+  túneles aerodinámicos. La velocidad del sonido y la viscosidad de un gas
+  dependen mucho de la temperatura y **muy poco de la presión**, así que
+  presurizando el túnel se sube $\rho$ —y con ella el Reynolds— sin tocar el
+  Mach. Cae tal cual en la convocatoria de junio de 2023.
+- **Renunciar a un número: la semejanza restringida.** Es lo que se hace casi
+  siempre, y la elección no es libre.
+
+<ErrorTipico titulo="Qué número se conserva no se elige: lo decide el tipo de flujo">
+
+Es la regla operativa del tema entera, y es corta:
+
+- **Flujo en carga** —aislado de la atmósfera, tuberías y máquinas—: la
+  variación de cota se agrupa con la presión, así que la gravedad no manda.
+  Se conserva **Reynolds** y se tira Froude.
+- **Flujo en superficie libre** —canales, presas, cascos, vertederos—: la
+  presión es la atmosférica en todo el contorno y la que varía es la cota. Se
+  conserva **Froude** y se tira Reynolds.
+
+Elegir al revés es el error caro de este tema, porque el número **sale**, el
+problema queda completo y todo lo posterior está mal. La forma de no
+equivocarse es preguntarse una sola cosa antes de escribir nada: **¿el fluido
+toca la atmósfera?**
+
+</ErrorTipico>
+
+## Las escalas, que son lo que se calcula
+
+Con la semejanza geométrica, toda longitud va con $\lambda$ y toda área con
+$\lambda^{2}$. Lo demás depende del número que se haya conservado. Bajo
+**Froude**, que es el caso de canales y presas:
+
+| magnitud | escala | de dónde sale |
+|---|---|---|
+| longitud | $\lambda$ | semejanza geométrica |
+| velocidad | $\lambda^{1/2}$ | $v^{2}/gL$ constante |
+| tiempo | $\lambda^{1/2}$ | $L/v$ |
+| caudal | $\lambda^{5/2}$ | $v\cdot A$ |
+| fuerza | $\lambda^{3}$ | $\rho v^{2}L^{2}$, con el mismo fluido |
+
+Y el número de Euler, al ser función de los anteriores, sale igual solo. De ahí
+la relación que se usa para pasar presiones y pérdidas de carga:
+
+$$
+\frac{\Delta p_m}{\Delta p_p} = \frac{v_m^{2}}{v_p^{2}}
+\qquad\qquad
+\frac{h_{f,m}}{h_{f,p}} = \frac{v_m^{2}}{v_p^{2}}
+$$
+
+<ErrorTipico titulo="La fuerza va con la escala al cubo, y en el boletín viene en kilopondios">
+
+Dos avisos que cuestan puntos en el mismo apartado.
+
+El primero es de orden de magnitud: **la fuerza escala con $\lambda^{3}$**, no
+con $\lambda^{2}$. Es tentador razonar «la fuerza es presión por área, luego
+$\lambda^{2}$», pero la presión también cambia — va con $v^{2}$, es decir con
+$\lambda$ —, y $\lambda\cdot\lambda^{2} = \lambda^{3}$. A escala $1/49$ eso son
+**117.649 veces**, no 2.401.
+
+El segundo es de unidades, y es de esta escuela: las soluciones del boletín dan
+las fuerzas en **kg**, que aquí son kilopondios. Los 2,5 kg medidos en el
+modelo de la presa se convierten en 294.122,5 kp en el prototipo, y eso son
+**2,88 MN**. Si el enunciado pide newtons, falta multiplicar por 9,8; si pide
+kg y das newtons, el número es diez veces mayor y parece un error de escala
+cuando es de unidades.
+
+</ErrorTipico>
+
+## Lo que no cambia con la escala
+
+Cierra el tema una idea que se usa poco y vale mucho: **una magnitud
+adimensional vale lo mismo en el modelo que en el prototipo** cuando hay
+semejanza. Un rendimiento, un coeficiente de descarga, un factor de fricción,
+un ángulo.
+
+Por eso en el ejercicio del cuerpo flotante el rendimiento medido en la maqueta
+—69,67 %— es directamente el del barco, sin escalar nada. Cuando un apartado
+pide «el rendimiento del prototipo» y te ves montando escalas, para: la
+respuesta es el número que ya tienes.

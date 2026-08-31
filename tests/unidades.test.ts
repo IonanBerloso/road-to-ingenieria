@@ -106,6 +106,20 @@ describe('leeMagnitud · las formas en que se escribe una magnitud a mano', () =
     expect(lee('75%').valor).toBeCloseTo(0.75, 12);
   });
 
+  /* Tema 16: el enunciado de la bomba da la velocidad de giro en rpm, y la
+     escala de Froude la viscosidad cinemática en m²/s. Las dos entraron con
+     ese tema, que es el criterio de §17: la tabla la amplía el contenido. */
+  it('lee la velocidad de giro, que es una frecuencia', () => {
+    expect(lee('1200 rpm').valor).toBeCloseTo(20, 12);
+    expect(comparaMagnitud(lee('11,11 rpm'), lee('0,18517 hz'), 0.02).igual).toBe(true);
+    expect(comparaMagnitud(lee('1200 rpm'), lee('1200 m/s'), 0.02).otraDimension).toBe(true);
+  });
+
+  it('lee la viscosidad cinemática escrita como m2/s y como stokes', () => {
+    expect(lee('4,204e-6 m2/s').valor).toBeCloseTo(4.204e-6, 15);
+    expect(comparaMagnitud(lee('1e-6 m^2/s'), lee('1 cst'), 0.02).igual).toBe(true);
+  });
+
   it('devuelve null cuando no entiende, en vez de inventarse una lectura', () => {
     for (const t of ['', 'un rato', 'm', '5 gaznápiros', '5 m^']) {
       expect(leeMagnitud(t), t).toBeNull();
