@@ -1,0 +1,187 @@
+---
+asignatura: fluidos
+tema: 13
+titulo: Aplicaciones de Bernoulli. Aparatos de medida
+descripcion: Pitot, Prandtl, Torricelli, venturímetro y diafragma. Todos salen de Bernoulli más hidrostática, y todos llevan coeficientes.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 13 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Este tema es de peso alto y tiene una estructura muy reconocible: **cada
+aparato se deduce igual**. Bernoulli entre dos puntos del flujo, hidrostática
+por dentro del manómetro, se igualan, y sale la velocidad o el caudal.
+
+Si se entiende esa receta una vez, los seis aparatos son el mismo problema con
+distinto dibujo.
+
+## Estática, dinámica y total
+
+$$
+\underbrace{\frac{P}{\gamma}}_{\text{estática}}
++ \underbrace{\frac{v^{2}}{2g}}_{\text{dinámica}}
++ z = \text{Bernoulli}
+$$
+
+Y los aparatos se clasifican por cuál de los tres miden:
+
+| mide | aparato |
+|---|---|
+| **estática** $P/\gamma$ | piezómetro abierto, tubo estático |
+| **total** $P/\gamma + v^{2}/2g$ | tubo de Pitot |
+| **dinámica** $v^{2}/2g$ | Pitot + piezómetro, o Pitot + tubo estático (**tubo de Prandtl**) |
+
+La idea de fondo: **un solo aparato no puede dar la velocidad**. Hace falta
+restar dos medidas, y por eso los medidores de velocidad son siempre una
+combinación.
+
+## Pitot y Prandtl
+
+En la boca del Pitot el fluido se frena hasta pararse: es el **punto de
+estancamiento**, con $v = 0$. Toda la energía cinética se ha convertido en
+presión, así que el tubo marca la **total**.
+
+Restándole la estática que da un piezómetro, y midiendo esa diferencia con un
+manómetro de líquido de densidad relativa $s_0$ que sube una altura $R$:
+
+$$
+\frac{v^{2}}{2g} = R\left(\frac{s_0}{s}-1\right)
+\qquad\Longrightarrow\qquad
+\boxed{v = \sqrt{2gR\left(\frac{s_0}{s}-1\right)}}
+$$
+
+**La misma fórmula vale para el tubo de Prandtl**, que integra los dos en una
+sola sonda: por eso es el que se usa de verdad, en aviones y en túneles de
+viento.
+
+<ErrorTipico titulo="El factor (s₀/s − 1), y por qué no es s₀/s">
+
+El manómetro tiene dos líquidos: el que sube, de densidad $s_0$, y el del
+propio flujo, $s$, que ocupa el otro lado. El desnivel $R$ del líquido pesado
+está **compensado** por $R$ del líquido ligero al otro lado, así que lo que
+mide la diferencia de presión es la **diferencia** de densidades.
+
+- Mercurio y agua: $13{,}6-1 = 12{,}6$.
+- Mercurio y aire: $13{,}6-0{,}0012 \approx 13{,}6$, y ahí sí se puede
+  despreciar el $-1$.
+
+Olvidar el $-1$ con dos líquidos de densidad parecida es un error grande: con
+$s_0 = 1{,}1$ frente a $s = 1$, el factor pasa de $1{,}1$ a $0{,}1$, once
+veces menos.
+
+</ErrorTipico>
+
+## Torricelli, y los tres coeficientes
+
+Con un orificio en un depósito de nivel constante, Bernoulli da la velocidad
+**teórica**:
+
+$$
+v_t = \sqrt{2gh}
+\qquad
+Q_t = A_0\sqrt{2gh}
+$$
+
+Pero el chorro real ni va a esa velocidad ni tiene la sección del orificio. Se
+corrige con tres coeficientes, que se obtienen **experimentalmente**:
+
+$$
+C_v = \frac{v_r}{v_t}\approx 0{,}98
+\qquad
+C_c = \frac{A_{\text{chorro}}}{A_{\text{orificio}}} = 0{,}5 \div 1
+\qquad
+C_d = C_v\,C_c
+$$
+
+$$
+\boxed{Q_r = C_d\,A_0\sqrt{2gh}}
+$$
+
+Y cómo se miden, que el examen lo pregunta: la velocidad real con un **Pitot**
+a la salida del chorro, el diámetro del chorro con un **limnímetro**, y el
+caudal real por el **método volumétrico**.
+
+## Vaciado de depósitos
+
+Aquí el flujo **no es permanente**: el nivel baja. Pero baja despacio, así que
+se aplica Bernoulli en cada instante y se integra. Igualando el volumen que
+sale con el que desciende el nivel:
+
+$$
+Q_r\,dt = -A_{\text{dep}}\,dh
+$$
+
+y con el depósito abierto ($P_1 = 0$):
+
+$$
+\boxed{t = \frac{2\,A_{\text{dep}}}{C_d\,A_0\sqrt{2g}}
+\left(\sqrt{h_{\text{ini}}}-\sqrt{h_{\text{fin}}}\right)}
+$$
+
+El vaciado va con **raíces de las alturas**, no con las alturas: por eso la
+segunda mitad del depósito tarda más que la primera.
+
+## Aparatos deprimógenos
+
+Todos hacen lo mismo: **estrechan el paso**, la velocidad sube, la presión
+baja, y se mide esa depresión. Con Bernoulli, continuidad e hidrostática sale
+
+$$
+\boxed{Q_r = C\,A_2\,\frac{\sqrt{2gR\left(\frac{\gamma_0}{\gamma}-1\right)}}{\sqrt{1-\left(\frac{A_2}{A_1}\right)^{2}}}}
+$$
+
+<figure>
+<svg viewBox="0 0 420 178" role="img" width="420" height="178"
+     aria-labelledby="flu13-t flu13-d">
+  <title id="flu13-t">Venturímetro y diafragma: la diferencia está en la contracción</title>
+  <desc id="flu13-d">Arriba, un venturímetro: el conducto se estrecha suavemente y el chorro llena la garganta, así que el coeficiente de contracción vale uno. Abajo, un diafragma: una placa con un agujero, y el chorro se contrae más allá de la placa, así que el coeficiente de contracción es menor que uno. Los dos miden el caudal por la depresión que crean.</desc>
+
+  <path d="M24 24 L120 24 L160 44 L206 44 L246 24 L342 24" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <path d="M24 78 L120 78 L160 58 L206 58 L246 78 L342 78" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <text x="348" y="46" font-size="10.5" fill="var(--ink)">venturímetro</text>
+  <text x="183" y="38" text-anchor="middle" font-size="9.5" fill="var(--live)">Cc = 1</text>
+  <line x1="72" y1="51" x2="104" y2="51" stroke="var(--live)" stroke-width="1.4" marker-end="url(#flu13f)"/>
+  <line x1="262" y1="51" x2="300" y2="51" stroke="var(--live)" stroke-width="1.4" marker-end="url(#flu13f)"/>
+
+  <path d="M24 116 L342 116" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <path d="M24 164 L342 164" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <path d="M172 116 L172 133 M172 147 L172 164" stroke="var(--ink)" stroke-width="4"/>
+  <path d="M172 133 C196 134 214 138 240 139 M172 147 C196 146 214 142 240 141" fill="none" stroke="var(--d2)" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="348" y="142" font-size="10.5" fill="var(--ink)">diafragma</text>
+  <text x="250" y="128" font-size="9.5" fill="var(--d2)">Cc &lt; 1</text>
+  <line x1="72" y1="140" x2="104" y2="140" stroke="var(--live)" stroke-width="1.4" marker-end="url(#flu13f)"/>
+
+  <defs>
+    <marker id="flu13f" viewBox="0 0 9 9" refX="7" refY="4.5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 z" fill="var(--live)"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption>
+
+En el venturímetro el estrechamiento es suave y el chorro llena la garganta:
+el coeficiente de contracción vale uno y la fórmula lleva solo el de
+velocidad. En el diafragma el chorro se contrae después de la placa, así que
+ese coeficiente baja de uno y el global es bastante menor. A cambio, el
+diafragma es una chapa y el venturímetro, una pieza cara.
+
+</figcaption>
+</figure>
+
+La diferencia entre los dos está solo en ese detalle:
+
+| | venturímetro | diafragma |
+|---|---|---|
+| contracción | $C_c = 1$: el chorro llena la garganta | $C_c \ne 1$ |
+| coeficiente | $C_{\text{vent}}\approx0{,}96\div0{,}98$ | $C_{\text{diaf}}$ bastante menor |
+| pérdidas | pocas | muchas |
+| coste | alto | bajo |
+
+Y el término $\sqrt{1-(A_2/A_1)^{2}}$ del denominador es la corrección por que
+**la velocidad aguas arriba no es cero**. Cuando la garganta es mucho más
+estrecha que la tubería ese término tiende a 1 y desaparece; con
+$D_2/D_1 = 0{,}5$ vale $0{,}968$, así que solo corrige un 3 %.

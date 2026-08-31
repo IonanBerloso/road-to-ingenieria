@@ -215,10 +215,18 @@ const pasoCalcular = z.object({
         const escala = Math.max(Math.abs(v.re), Math.abs(v.im));
         return comparaComplejo(a, b, Math.max(escala * 0.02, tol));
       };
+      /* Simétrico a propósito: la holgura se calcula sobre el segundo
+         argumento, así que `a≈b` y `b≈a` no son la misma pregunta cuando los
+         dos valores están justo en el límite. El componente prueba el escrito
+         contra **cada** distractor, así que basta con que uno de los dos
+         sentidos coincida para que el diagnóstico se pierda. */
       const vs = p.distractores.map((d) => lee(d.valor));
       for (let i = 0; i < vs.length; i++)
-        for (let j = i + 1; j < vs.length; j++)
-          if (vs[i] && vs[j] && iguales(vs[i] as never, vs[j] as never)) return false;
+        for (let j = i + 1; j < vs.length; j++) {
+          if (!vs[i] || !vs[j]) continue;
+          if (iguales(vs[i] as never, vs[j] as never)) return false;
+          if (iguales(vs[j] as never, vs[i] as never)) return false;
+        }
       return true;
     },
     {

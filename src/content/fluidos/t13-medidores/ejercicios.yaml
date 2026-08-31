@@ -1,0 +1,430 @@
+ejercicios:
+  # ── Los tres son NUESTROS (§08). El capítulo 3 de la colección arranca con
+  #    instalaciones completas; estos tres aíslan cada aparato para que la
+  #    receta —Bernoulli, hidrostática, igualar— se use una vez por separado.
+  - id: ejflu13-el-tubo-de-pitot
+    titulo: La velocidad que marca un tubo de Pitot
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Por una tubería circula agua. Un tubo de Pitot combinado con un
+      piezómetro marca una diferencia de $15\ \text{cm}$ en un manómetro de
+      mercurio ($s_0 = 13{,}6$).
+
+      Calcular la velocidad del agua en ese punto.
+
+      Tomar $g = 9{,}8\ \text{m/s}^{2}$.
+    pide: La velocidad del agua.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El Pitot mide la presión total y el piezómetro la estática. ¿Qué
+          representa su diferencia?
+        opciones:
+          - texto: >-
+              La presión **dinámica**, $v^{2}/2g$: total menos estática. De
+              ahí sale la velocidad
+            correcta: true
+            mensaje: |
+              Eso es. Un aparato solo no da la velocidad: hace falta restar
+              dos medidas, y esa resta es exactamente la altura cinética.
+          - texto: >-
+              La pérdida de carga entre los dos puntos
+            mensaje: |
+              Están en el **mismo** punto del flujo, así que no hay pérdida
+              entre ellos. Lo que los distingue es que uno frena el fluido
+              (Pitot) y el otro no (piezómetro).
+          - texto: >-
+              La diferencia de cotas entre las dos tomas
+            mensaje: |
+              Las cotas se cancelan al estar los dos en el mismo punto. Lo que
+              queda es la energía cinética.
+
+      - tipo: calcular
+        titulo: La velocidad
+        pregunta: |
+          ¿A qué velocidad circula el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '6.09 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '6.32 m/s'
+            mensaje: |
+              Has usado $s_0 = 13{,}6$ sin restarle el 1 del agua. El
+              desnivel de mercurio está compensado por agua al otro lado, así
+              que el factor es $13{,}6-1 = 12{,}6$.
+          - valor: '1.71 m/s'
+            mensaje: |
+              Has olvidado el factor de densidades: $\sqrt{2gR}$ solo valdría
+              si el manómetro fuera del mismo líquido que el flujo, y
+              entonces no mediría nada.
+        pista: |
+          v = √(2·g·R·(s₀/s − 1)), con R = 0,15 m y s₀/s = 13,6.
+        desarrollo: |
+          $$
+          v = \sqrt{2gR\left(\frac{s_0}{s}-1\right)}
+          = \sqrt{2\cdot9{,}8\cdot0{,}15\cdot12{,}6} = 6{,}09\ \text{m/s}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la deducción. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En la boca del Pitot el fluido se estanca: $v = 0$, y el tubo
+              marca $P/\gamma + v^{2}/2g$.
+          - texto: >-
+              El piezómetro marca solo $P/\gamma$, porque su toma es paralela
+              al flujo y no lo frena.
+          - texto: >-
+              La diferencia entre los dos es $v^{2}/2g$.
+          - texto: >-
+              Recorriendo el manómetro, esa diferencia vale
+              $R\left(s_0/s - 1\right) = 0{,}15\cdot12{,}6 = 1{,}89\ \text{mca}$.
+          - texto: >-
+              $v = \sqrt{2g\cdot1{,}89} = 6{,}09\ \text{m/s}$.
+          - texto: >-
+              Si se usara un manómetro de agua en vez de mercurio, la lectura
+              $R$ sería la misma pero más fácil de leer.
+            trampa: true
+            mensaje: |
+              Con agua a los dos lados el factor $(s_0/s-1)$ vale **cero** y
+              el manómetro no marca nada. El líquido manométrico tiene que
+              ser distinto —y más denso— que el del flujo: es lo que hace
+              posible la medida.
+
+    resolucion: |
+      La diferencia entre la presión total (Pitot) y la estática (piezómetro)
+      es la altura cinética, y el manómetro la mide:
+
+      $$
+      \frac{v^{2}}{2g} = R\left(\frac{s_0}{s}-1\right) = 0{,}15\cdot12{,}6 = 1{,}89\ \text{mca}
+      $$
+      $$
+      \boxed{v = \sqrt{2g\cdot1{,}89} = 6{,}09\ \text{m/s}}
+      $$
+
+      > **La misma fórmula sirve para el tubo de Prandtl**, que mete el Pitot
+      > y el tubo estático en una sola sonda. Es el que llevan los aviones, y
+      > es la razón de que una sonda helada dé velocidades falsas: si se
+      > obstruye la toma estática, la resta deja de ser la altura cinética.
+
+  - id: ejflu13-el-venturimetro
+    titulo: El caudal que mide un venturímetro
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      En una tubería de $300\ \text{mm}$ por la que circula agua se instala
+      un venturímetro con garganta de $150\ \text{mm}$. El manómetro
+      diferencial de mercurio ($s_0 = 13{,}6$) marca $R = 25\ \text{cm}$.
+
+      a) Calcular el caudal teórico.
+
+      b) Calcular el caudal real si el coeficiente del venturímetro es
+      $C_v = 0{,}98$.
+
+      Tomar $g = 9{,}8\ \text{m/s}^{2}$.
+    pide: El caudal teórico y el real.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En la fórmula del venturímetro aparece
+          $\sqrt{1-(A_2/A_1)^{2}}$ en el denominador. ¿Por qué?
+        opciones:
+          - texto: >-
+              Porque la velocidad aguas arriba **no es cero**: hay que
+              descontar la energía cinética que el flujo ya traía
+            correcta: true
+            mensaje: |
+              Eso es. Si la garganta fuera minúscula frente a la tubería, la
+              velocidad de entrada sería despreciable y el término
+              desaparecería. Con $D_2/D_1 = 0{,}5$ vale $0{,}968$: corrige un
+              3 %.
+          - texto: >-
+              Porque el chorro se contrae en la garganta
+            mensaje: |
+              Eso es el coeficiente de contracción, y en un venturímetro
+              vale **1** precisamente porque el estrechamiento es suave y el
+              chorro llena la garganta. El término del denominador es otra
+              cosa.
+          - texto: >-
+              Para convertir el caudal en velocidad
+            mensaje: |
+              Esa conversión es el $A_2$ que multiplica. El radical corrige
+              por la velocidad de aproximación.
+
+      - tipo: calcular
+        titulo: La velocidad en la garganta
+        pregunta: |
+          ¿Cuál es la velocidad teórica en la garganta?
+        respuesta:
+          tipo: magnitud
+          valor: '8.115 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '7.858 m/s'
+            mensaje: |
+              Te has dejado el denominador $\sqrt{1-(A_2/A_1)^{2}}$, que aquí
+              vale $0{,}968$ y sube el resultado un 3 %.
+          - valor: '2.213 m/s'
+            mensaje: |
+              Has olvidado el factor $(s_0/s-1) = 12{,}6$ del manómetro de
+              mercurio.
+        pista: |
+          v₂ = √(2·g·R·12,6) dividido por √(1 − (A₂/A₁)²), con A₂/A₁ = 0,25.
+        desarrollo: |
+          $$
+          \frac{A_2}{A_1} = \left(\frac{150}{300}\right)^{2} = 0{,}25
+          \qquad
+          \sqrt{1-0{,}25^{2}} = 0{,}968
+          $$
+          $$
+          v_{2t} = \frac{\sqrt{2\cdot9{,}8\cdot0{,}25\cdot12{,}6}}{0{,}968}
+          = \frac{7{,}858}{0{,}968} = 8{,}115\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: El caudal real
+        pregunta: |
+          Con $C_v = 0{,}98$, ¿cuál es el caudal real?
+        respuesta:
+          tipo: magnitud
+          valor: '140.5 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '143.4 l/s'
+            mensaje: |
+              Ese es el caudal **teórico**, sin aplicar el coeficiente. El
+              real es un 2 % menor: $0{,}98\cdot143{,}4$.
+          - valor: '562 l/s'
+            mensaje: |
+              Has usado el área de la tubería ($300\ \text{mm}$) en vez de la
+              de la garganta. La velocidad calculada es la de la garganta, así
+              que va con $A_2$.
+        pista: |
+          Q = Cv · v₂ · A₂, con A₂ = π·0,15²/4.
+        desarrollo: |
+          $$
+          A_2 = \frac{\pi\cdot0{,}15^{2}}{4} = 0{,}01767\ \text{m}^{2}
+          $$
+          $$
+          Q_t = 8{,}115\cdot0{,}01767 = 0{,}1434\ \text{m}^{3}/\text{s}
+          \qquad
+          Q_r = 0{,}98\cdot143{,}4 = 140{,}5\ \text{l/s}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Bernoulli entre la tubería y la garganta, más continuidad, más
+              hidrostática en el manómetro.
+          - texto: >-
+              La lectura del manómetro da
+              $R(s_0/s-1) = 0{,}25\cdot12{,}6 = 3{,}15\ \text{mca}$ de
+              diferencia de alturas piezométricas.
+          - texto: >-
+              $v_{2t} = \sqrt{2g\cdot3{,}15}/\sqrt{1-0{,}25^{2}} = 8{,}115\ \text{m/s}$.
+          - texto: >-
+              $Q_t = v_{2t}A_2 = 143{,}4\ \text{l/s}$ y
+              $Q_r = 0{,}98\,Q_t = 140{,}5\ \text{l/s}$.
+          - texto: >-
+              En un venturímetro $C_c = 1$, así que su único coeficiente es el
+              de velocidad.
+          - texto: >-
+              Como el venturímetro está inclinado o no, la lectura $R$
+              cambiaría, y por eso hay que dar siempre la cota de las tomas.
+            trampa: true
+            mensaje: |
+              **La inclinación no afecta**: al recorrer el manómetro, los
+              términos de cota se cancelan con los del propio conducto. Por
+              eso la fórmula solo tiene $R$ y no aparece $z$ — y por eso un
+              venturímetro se puede montar en vertical sin recalcular nada.
+
+    resolucion: |
+      $$
+      \boxed{v_{2t} = \frac{\sqrt{2gR(s_0/s-1)}}{\sqrt{1-(A_2/A_1)^{2}}}
+      = \frac{7{,}858}{0{,}968} = 8{,}115\ \text{m/s}}
+      $$
+      $$
+      \boxed{Q_t = 143{,}4\ \text{l/s}}
+      \qquad
+      \boxed{Q_r = C_v\,Q_t = 140{,}5\ \text{l/s}}
+      $$
+
+      > **Los tres ingredientes, siempre los mismos.** Bernoulli da la
+      > relación entre presión y velocidad; la continuidad relaciona las dos
+      > velocidades; y la hidrostática traduce la lectura del manómetro. La
+      > fórmula del formulario es el resultado de juntar esas tres, y merece
+      > la pena saber deducirla porque el examen a veces pide justo eso.
+
+  - id: ejflu13-orificio-y-vaciado
+    titulo: Un orificio, sus coeficientes y cuánto tarda en vaciarse el depósito
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Un depósito abierto de $6\ \text{m}^{2}$ de sección tiene en el fondo
+      un orificio de $80\ \text{mm}$ de diámetro, con
+      $C_v = 0{,}98$ y $C_c = 0{,}62$. El nivel inicial es de
+      $4\ \text{m}$.
+
+      a) Calcular el caudal real que sale al principio.
+
+      b) Calcular el tiempo que tarda en vaciarse por completo.
+
+      Tomar $g = 9{,}8\ \text{m/s}^{2}$.
+    pide: El caudal real inicial y el tiempo de vaciado.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El apartado b) dice «se vacía», así que el nivel baja. ¿Se puede
+          usar Bernoulli?
+        opciones:
+          - texto: >-
+              Sí, **en cada instante**: el nivel baja tan despacio que el
+              flujo se puede tratar como permanente en cada momento, y luego
+              se integra
+            correcta: true
+            mensaje: |
+              Eso es la cuarta hipótesis levantada del tema 12. La ecuación
+              del vaciado sale de igualar lo que sale por el orificio con lo
+              que desciende el nivel, y después integrar.
+          - texto: >-
+              No: Bernoulli exige régimen permanente y aquí no lo hay
+            mensaje: |
+              Estrictamente no lo hay, pero la variación es lenta y esa es
+              justamente la hipótesis que se puede relajar. Si no, no habría
+              forma de resolver ningún vaciado.
+          - texto: >-
+              Sí, porque el depósito es grande y el nivel no cambia
+            mensaje: |
+              El nivel **sí** cambia: por eso el depósito se vacía. Lo que
+              permite usar Bernoulli no es que no cambie, sino que cambie
+              despacio.
+
+      - tipo: calcular
+        titulo: El caudal real inicial
+        pregunta: |
+          ¿Qué caudal sale con el nivel en $4\ \text{m}$?
+        respuesta:
+          tipo: magnitud
+          valor: '27.04 l/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '44.51 l/s'
+            mensaje: |
+              Ese es el caudal **teórico**, $A_0\sqrt{2gh}$. Falta multiplicar
+              por $C_d = C_vC_c = 0{,}608$.
+          - valor: '19.12 l/s'
+            mensaje: |
+              Te has dejado el 2 de $\sqrt{2gh}$: con $\sqrt{gh}$ sale un
+              factor $\sqrt2$ menos. La cota se convierte en altura cinética
+              como $h = v^{2}/2g$, y al despejar aparece el 2.
+        pista: |
+          Q = Cv·Cc·A₀·√(2gh), con A₀ = π·0,08²/4.
+        desarrollo: |
+          $$
+          A_0 = \frac{\pi\cdot0{,}08^{2}}{4} = 5{,}027\cdot10^{-3}\ \text{m}^{2}
+          \qquad
+          v_t = \sqrt{2\cdot9{,}8\cdot4} = 8{,}854\ \text{m/s}
+          $$
+          $$
+          Q_r = 0{,}98\cdot0{,}62\cdot5{,}027\cdot10^{-3}\cdot8{,}854
+          = 0{,}02704\ \text{m}^{3}/\text{s} = 27{,}04\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: El tiempo de vaciado
+        pregunta: |
+          ¿Cuánto tarda en vaciarse del todo?
+        respuesta:
+          tipo: magnitud
+          valor: '1775 s'
+          tolerancia: 0.02
+          formato: un tiempo, con su unidad
+        distractores:
+          - valor: '887 s'
+            mensaje: |
+              Eso es el volumen inicial dividido por el caudal inicial, que
+              supondría caudal constante. Pero el caudal **disminuye** al
+              bajar el nivel, así que tarda el doble.
+          - valor: '3550 s'
+            mensaje: |
+              Un factor 2 de más: la fórmula es
+              $t = 2A_{\text{dep}}\sqrt{h}/(C_dA_0\sqrt{2g})$, con el 2 ya
+              incluido.
+        pista: |
+          t = 2·A_dep·(√h_ini − √h_fin) / (C_d·A₀·√(2g)).
+        desarrollo: |
+          $$
+          t = \frac{2\,A_{\text{dep}}\left(\sqrt{h_{\text{ini}}}-\sqrt{h_{\text{fin}}}\right)}
+          {C_d\,A_0\sqrt{2g}}
+          = \frac{2\cdot6\cdot2}{0{,}608\cdot5{,}027\cdot10^{-3}\cdot4{,}427}
+          = 1775\ \text{s}
+          $$
+
+          Unos **30 minutos**. Y el doble de lo que daría suponer caudal
+          constante, que es la comprobación de que el vaciado se frena.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Torricelli da la velocidad teórica, $v_t = \sqrt{2gh}$, que con
+              $h = 4\ \text{m}$ vale $8{,}85\ \text{m/s}$.
+          - texto: >-
+              El caudal real lleva los dos coeficientes:
+              $C_d = C_vC_c = 0{,}608$, y sale $27{,}04\ \text{l/s}$.
+          - texto: >-
+              Para el vaciado: $Q_r\,dt = -A_{\text{dep}}dh$, y se integra
+              entre $4\ \text{m}$ y $0$.
+          - texto: >-
+              $t = 1775\ \text{s}$, unos treinta minutos.
+          - texto: >-
+              El tiempo va con $\sqrt{h}$, así que vaciar de 4 a 1 metro tarda
+              la mitad que de 1 a 0... no: tarda el doble, porque
+              $\sqrt4-\sqrt1 = 1$ y $\sqrt1-\sqrt0 = 1$ son iguales.
+            trampa: true
+            mensaje: |
+              Pieza escrita para tropezar, y los dos números que da son
+              correctos pero la conclusión sobra: $\sqrt4-\sqrt1 = 1$ y
+              $\sqrt1-\sqrt0 = 1$ son **iguales**, así que los dos tramos
+              tardan **lo mismo** — y eso es lo interesante, porque el primero
+              tiene tres metros de agua y el segundo solo uno.
+
+    resolucion: |
+      **a) El caudal inicial:**
+
+      $$
+      \boxed{Q_r = C_vC_c\,A_0\sqrt{2gh} = 0{,}608\cdot5{,}027\cdot10^{-3}\cdot8{,}854
+      = 27{,}04\ \text{l/s}}
+      $$
+
+      **b) El tiempo**, integrando $Q_r\,dt = -A_{\text{dep}}\,dh$:
+
+      $$
+      \boxed{t = \frac{2A_{\text{dep}}\sqrt{h_{\text{ini}}}}{C_dA_0\sqrt{2g}}
+      = 1775\ \text{s} \approx 30\ \text{min}}
+      $$
+
+      > **Por qué el vaciado tarda el doble de lo que parece.** Con el caudal
+      > inicial constante saldrían 887 s; pero el caudal cae con
+      > $\sqrt{h}$, y el resultado es exactamente el doble. De ahí también
+      > que los últimos centímetros tarden tanto: bajar de 1 a 0 metros lleva
+      > el mismo tiempo que bajar de 4 a 1.
