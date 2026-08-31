@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **10 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **11 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 205 ejercicios
-y 920 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 211 ejercicios
+y 948 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 920 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**205 ejercicios y 920 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 80 son ejercicios de convocatoria. Cobertura de la
+**211 ejercicios y 948 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 86 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -264,34 +264,106 @@ turbobomba y publica 14,47 m; nuestra reconstrucción da 15,52 y la
 diferencia de 1,05 m no se explica con ninguna lectura probada. Se dice en
 la propia resolución, que es donde lo va a leer un alumno.
 
-### Lo que queda de fase 9, ya leído y con las cuentas hechas
+### La ordinaria de junio de 2020, seis de ocho
 
-Para que la próxima tanda no tenga que volver a reconstruirlo todo, aquí
-queda lo verificado de las convocatorias que faltan. **Verificado** quiere
-decir que la cuenta aterriza en el resultado impreso; falta escribir el
-ejercicio.
+La convocatoria más antigua del cuadernillo.
 
-**Final del 29 de junio de 2020** (8 ejercicios)
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 3 | 14 % | t08 | h = 0,457 m · 5.226 mmHg · diferencia 33,70 kN — exacto |
+| 4 | 14 % | t15 | v = 16,63 m/s · α = 9,63° — exacto |
+| 5 | 12 % | t16 | 444,4 rpm · 10,5 m³/min · igual rendimiento — exacto |
+| 6 | 12 % | t19 | D₁ = 176 mm · P = 7,3 kW — exacto |
+| 7 | 15 % | t25 | 45/17,5/24/11 l/s · p_D = 43,82 mca · D₄ = 125 mm — exacto |
+| 8 | 8 % | t21 | J = 6,561‰ · v = 2,46 m/s · b = 1,866 m — exacto |
 
-| ej. | estado |
-|---|---|
-| 1 · embrague hidráulico multidisco | figura necesaria |
-| 2 · depósitos A y B dentro de C | figura necesaria |
-| 3 · cono flotando entre dos fluidos | figura necesaria |
-| 4 · limpiacristales, apartado a) | **verificado**, v = 16,63 m/s; b) y c) piden la geometría del cono |
-| 5 · semejanza de dos turbobombas | **verificado**: 444,4 rpm y 10,5 m³/min |
-| 6 · turbina entre dos tuberías | **verificado**: D₁ = 176 mm, P = 7,3 kW |
-| 7 · red de cuatro barrios | curva de bomba en gráfica |
-| 8 · canal circular de arena | **verificado**: J = 6,561‰, v = 2,46 m/s, b = 1,866 m |
+**Faltan dos y medio.** El **1** —embrague hidráulico multidisco— necesita
+la tabla de aceites de su figura. El **2** —dos depósitos dentro de un
+tercero, con cinco manómetros y dos tubos en U— no acota dónde empieza y
+acaba cada columna. Y el apartado c) del **4** da 3,96 m/s frente a los
+3,74 publicados, porque el examen arrastra un coeficiente de descarga
+efectivo de 0,715 en vez del 0,7 del enunciado.
 
-> Y de ahí sale un dato para el cuadro n.º 26 que no teníamos: **la arena
-> tiene n = 0,020**. Se deduce del apartado a) del ejercicio 8, que publica
-> pendiente y velocidad con la geometría dada.
+> **Un dato nuevo para el cuadro n.º 26**: la arena tiene **n = 0,020**.
+> Se deduce del apartado a) del ejercicio 8, que publica pendiente y
+> velocidad con la geometría dada, y es el único valor que reproduce
+> exactamente los dos resultados.
 
-**Parciales de 2020 y 2021** — cinco exámenes más, todavía sin leer con
-detalle. El del 8 de mayo de 2020 y el del 4 de junio de 2020 están
-volcados y sus resultados publicados; sus ejercicios de bombeo y de
-canales parecen transcribibles sin figura.
+> Y el ejercicio 3 deja una lección de método numérico que vale para todo
+> el temario. Las dos fuerzas verticales sobre el cuerpo valen más de dos
+> meganewton cada una y su diferencia son 33,7 kN: el 99 % lo pone el gas y
+> se cancela. Calcularlas por separado y restarlas es pésimo —dos cifras de
+> error en cualquiera se comen el resultado— y por eso el balance se hace
+> con el empuje, que ya trae la resta hecha.
+
+### Lo que queda de fase 9
+
+**Cinco parciales**: 8 de mayo y 4 de junio de 2020, y 16 de abril, 7 de
+mayo y 3 de junio de 2021.
+
+> **Y antes de escribirlos hay que decidir una cosa de la capa compartida.**
+> La tabla `CONVOCATORIAS` de `content.config.ts` no tiene «parcial»: sus
+> claves son las cinco evaluaciones de Cálculo más ordinaria y
+> extraordinaria. Fluidos tiene hasta **tres parciales por curso**, así que
+> harían falta tres claves nuevas —`primer-parcial`, `segundo-parcial`,
+> `tercer-parcial`— con su URL y sus dos nombres.
+>
+> No es un arreglo para un caso: son seis exámenes de dos cursos, y la
+> propia tabla existe —dice su comentario— para que añadir una convocatoria
+> sea tocar un sitio y no seis. Pero es capa compartida (§13 caso 4), y
+> afecta también a `preparar`, que usa el mismo enum como `evaluacion`. Se
+> hace de una vez, con el suelo delante, y no de pasada mientras se
+> transcribe un examen.
+
+Del **parcial del 8 de mayo de 2020** hay dos ejercicios ya verificados:
+
+- **El 1**, el recipiente de aire del que se extrae la mitad de la masa:
+  V = 0,499 m³, ρ = 11,22 kg/m³, p₁ = 4,279 kg/cm² y K = 1,38 MPa. Y trae
+  dos trampas que merecen escribirse. Una: «$T_1 = 2T_0$» con
+  $T_0 = 25$ ºC significa **50 ºC**, no 596 K; el examen lo resuelve así y
+  la ley de los gases exige después pasar a absolutos. Otra: el módulo de
+  elasticidad sale de la fórmula **exponencial** —$1{,}384$ MPa— y no de la
+  lineal, que daría 1,5.
+- **El 2**, el laboratorio submarino: p_aire = 468.972 Pa, el Bourdon A
+  marca 0,29725 kg/cm² —que son exactamente los 2,9 m de columna de agua
+  del acceso—, z_máx = 40,7 m y γ = 1.059,75 kg/m³. Los cuatro exactos.
+
+Y del **parcial del 4 de junio de 2020**, otros dos:
+
+- **El 1**, el chorro sobre un álabe móvil que lo desvía 180º: 42,47 kN con
+  el álabe huyendo a v/3, potencia útil nula en u = 0 y en u = v, y
+  169,9 kN con el álabe yendo al encuentro del chorro a 20 m/s. Exactos.
+- **El 3, apartado a)**: el canal de madera sin cepillar con el nivel
+  limitado al 45 % del diámetro. Sale D = 1,05 m, comercial **1,1 m**, y
+  con él h = 46,3 cm y v = 1,17 m/s. Los apartados b) y c) piden la
+  tensión admisible del acero, que está en la figura.
+
+Y del **parcial del 16 de abril de 2021**, el **ejercicio 2 entero**: el
+micromanómetro que hay que diseñar eligiendo la pareja de líquidos. La más
+precisa es **aceite y agua** —0,15 de diferencia frente a 0,52 y 0,67—, con
+R = 0,28 m, p_abs = 1,002 bar, una resolución de 1,47 Pa por milímetro y un
+tubo inclinado equivalente de 10,8º si se llena de alcohol. Los cinco
+apartados numéricos, exactos.
+
+Y de ese mismo parcial, el **apartado a) del ejercicio 4**: el depósito que
+se puede llenar de queroseno o de butano. El queroseno comprimido a 60,8 m
+de mercurio absolutos pasa de 720,3 a **723,19 kg/m³** —con la fórmula
+exponencial, otra vez— y el butano a 4 bar **manométricos** da
+**11,89 kg/m³**. Ojo a las dos trampas de unidades: 73,5 UTM/m³ son 720,3
+kg/m³, y los 4 bar del camión son relativos, no absolutos.
+
+Del **parcial del 7 de mayo de 2021**, el **apartado b) del ejercicio 4**:
+la misma válvula con agua y con mercurio. Con el factor de paso constante,
+$Q \propto \sqrt{\Delta p/\rho}$, y de 10 l/s de agua con 1,2 kPa se pasa a
+**8,56 l/s** de mercurio con 1,22 mca. Es el ejercicio más corto de todo el
+cuadernillo que enseña algo de verdad: que un coeficiente de pérdida es
+adimensional y por eso vale para cualquier fluido.
+
+Y los tres ejercicios grandes que se han quedado fuera por figura
+—el elevador de taller de 2021, el embrague de 2020 y los depósitos
+anidados de 2020— podrían recuperarse renderizando sus páginas a más
+resolución y midiendo las cotas sobre el dibujo. No es imposible; es que
+cuesta más que un ejercicio nuevo.
 
 ### La ordinaria de junio de 2021, seis de ocho
 
