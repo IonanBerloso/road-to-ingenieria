@@ -1,0 +1,276 @@
+---
+asignatura: fluidos
+tema: 20
+titulo: Régimen variable en tuberías
+descripcion: 'El golpe de ariete: por qué cerrar una válvula deprisa puede reventar una conducción, y qué fórmula se usa según el tiempo de cierre.'
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 20 de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Todo lo anterior suponía régimen **permanente**: el caudal no cambia con el
+tiempo. Este tema levanta esa hipótesis una vez, para el caso que rompe
+tuberías: **cerrar una válvula**.
+
+Al cerrar, la primera rodaja de fluido se para en seco; la segunda la comprime,
+la tercera a la segunda, y así hasta el depósito. Aparece un aumento de presión
+que se propaga aguas arriba como una onda, a una velocidad $a$ que ronda los
+mil metros por segundo. Eso es el **golpe de ariete**, y en la literatura
+moderna, el **transitorio**.
+
+Y el aviso que hay que dar antes de nada: **también hay golpe de ariete
+negativo**. Aguas abajo de la válvula el flujo sigue tirando de la rodaja
+parada y produce una succión. Puede bajar hasta cerca del cero absoluto y
+**aplastar la tubería desde fuera**, que es un modo de fallo tan real como
+reventarla desde dentro.
+
+## De qué depende la celeridad
+
+Al cerrar en B, ¿por qué sigue entrando fluido por A? Los tres casos del
+temario lo explican por eliminación:
+
+| hipótesis | qué pasa | celeridad |
+|---|---|---|
+| fluido incompresible + tubo rígido | todo se para a la vez | $a = \infty$ |
+| fluido compresible + tubo rígido | el fluido se comprime | $a = c$, la del sonido |
+| fluido compresible + **tubo elástico** | el fluido se comprime **y** el tubo se dilata | $a < c$ |
+
+Solo el tercero existe. Los otros dos están para entender de dónde sale cada
+término, y el primero es además una comprobación mental útil: **si nada cediera,
+el golpe sería infinito**.
+
+**La velocidad del sonido** en el propio fluido sale del módulo de elasticidad
+volumétrico:
+
+$$
+c = \sqrt{\frac{K}{\rho}}
+\qquad
+\text{agua: } c = \sqrt{\frac{2{,}03\cdot 10^{9}}{1000}} = 1425\ \text{m/s}
+$$
+
+**Y la celeridad en la tubería** es la de Joukowski, que añade la elasticidad
+del tubo:
+
+$$
+a = \frac{\sqrt{K/\rho}}{\sqrt{1 + \dfrac{K}{E}\dfrac{D}{e}}}
+$$
+
+con $E$ el módulo del material, $D$ el diámetro interior y $e$ el espesor. Para
+agua, Allievi la dejó en una forma mucho más manejable, que es la que se usa:
+
+$$
+\boxed{\,a = \frac{9900}{\sqrt{48{,}3 + k\,\dfrac{D}{e}}}\,}
+\qquad
+k = \frac{10^{7}}{E\ (\text{N/cm}^{2})}
+$$
+
+| material | $k$ |
+|---|---|
+| hierro y acero | 0,5 |
+| fundición | 1 |
+| hormigón y hormigón armado | 5 |
+| fibrocemento | 5,4 |
+| poliéster | 6,6 |
+| plomo | 5 |
+| PVC | 33 (entre 20 y 50) |
+
+Se lee de un vistazo: **cuanto más flexible el material, menor la celeridad, y
+menor el golpe**. Un PVC tiene $k = 33$ frente al 0,5 del acero, y por eso una
+red de plástico sufre transitorios mucho más suaves que una de acero. También
+por eso una tubería **de pared fina** (mucho $D/e$) golpea menos que una gruesa
+del mismo material: se dilata más.
+
+## El golpe máximo: Allievi
+
+Se obtiene con el teorema de la cantidad de movimiento del tema 14, aplicado a
+la columna de fluido que se para. El impulso de la fuerza $F = S\,\Delta p$
+durante el tiempo $L/a$ que tarda en detenerse iguala a la variación de
+cantidad de movimiento $\rho S L \Delta v$:
+
+$$
+S\,\Delta p\,\frac{L}{a} = \rho\,S\,L\,\Delta v
+\;\Longrightarrow\;
+\boxed{\Delta p = \rho\,a\,\Delta v}
+\qquad
+\boxed{\Delta H = \frac{a\,\Delta v}{g}}
+$$
+
+Con cierre total, $\Delta v = v$: es el **máximo golpe posible**.
+
+Y conviene mirar el orden de magnitud, porque es lo que justifica el tema. Agua
+a $2\ \text{m/s}$ por una tubería de fundición con $a \approx 1100\ \text{m/s}$:
+
+$$
+\Delta H = \frac{1100\cdot 2}{9{,}8} \approx 225\ \text{m de columna de agua}
+$$
+
+**Veintidós bares** por cerrar una llave, en una conducción que a lo mejor
+trabaja a tres.
+
+## El ciclo, y por qué el periodo es 4L/a
+
+Lo que ocurre después del cierre instantáneo es un ciclo de cuatro tiempos que
+se repite:
+
+| instante | qué pasa |
+|---|---|
+| $t = 0$ | aparece el golpe en B y la onda sale hacia el depósito |
+| $t = L/a$ | la onda llega a A. **Toda la tubería está dilatada y el fluido comprimido y en reposo.** Es el momento más peligroso |
+| $t = 2L/a$ | la onda estabilizadora vuelve a B. El fluido entero se mueve **hacia el depósito**, y al no poder salir por B tira de la rodaja: **golpe negativo** |
+| $t = 3L/a$ | la depresión llega a A. Tubería contraída, fluido expandido |
+| $t = 4L/a$ | vuelve la situación inicial. **Y otra vez.** |
+
+En A no puede haber más presión que la de su altura de agua: por eso la onda
+«desaparece» al llegar y vuelve como onda estabilizadora. Ese rebote es lo que
+hace el ciclo.
+
+<figure>
+<svg viewBox="0 0 440 214" role="img" width="440" height="214"
+     aria-labelledby="flu20-t flu20-d">
+  <title id="flu20-t">La presión en la válvula alterna entre sobrepresión y depresión cada 2L partido por a</title>
+  <desc id="flu20-d">Gráfico de la presión en la válvula frente al tiempo. Parte de la presión estática, salta a la sobrepresión máxima y se mantiene ahí durante un tiempo igual a dos ele partido por a. Después cae por debajo de la estática hasta una depresión de igual valor absoluto, y se mantiene otro tanto. El ciclo completo dura cuatro ele partido por a y se repite, con la amplitud amortiguándose por el rozamiento. La depresión es tan grande como la sobrepresión.</desc>
+
+  <line x1="60" y1="110" x2="418" y2="110" stroke="var(--ink-suave)" stroke-width="1.2"/>
+  <text x="56" y="107" font-size="9" text-anchor="end" fill="var(--ink-suave)">estática</text>
+  <line x1="60" y1="50" x2="418" y2="50" stroke="var(--ink-suave)" stroke-width="0.6" stroke-dasharray="3 4"/>
+  <line x1="60" y1="170" x2="418" y2="170" stroke="var(--ink-suave)" stroke-width="0.6" stroke-dasharray="3 4"/>
+  <text x="56" y="47" font-size="9" text-anchor="end" fill="var(--flag)">+ΔH</text>
+  <text x="56" y="174" font-size="9" text-anchor="end" fill="var(--flag)">−ΔH</text>
+
+  <polyline points="60,110 60,50 130,50 130,170 200,170 200,68 270,68 270,152 340,152 340,83 410,83"
+            fill="none" stroke="var(--live)" stroke-width="2.4"/>
+
+  <line x1="60" y1="34" x2="200" y2="34" stroke="var(--alt)" stroke-width="1.2"/>
+  <line x1="60" y1="30" x2="60" y2="38" stroke="var(--alt)" stroke-width="1.2"/>
+  <line x1="200" y1="30" x2="200" y2="38" stroke="var(--alt)" stroke-width="1.2"/>
+  <text x="130" y="26" font-size="9.5" text-anchor="middle" fill="var(--alt)">un ciclo: 4L/a</text>
+
+  <text x="210" y="196" font-size="9.5" fill="var(--ink-suave)"
+        textLength="106" lengthAdjust="spacingAndGlyphs">el rozamiento amortigua,</text>
+  <text x="210" y="208" font-size="9.5" fill="var(--ink-suave)"
+        textLength="146" lengthAdjust="spacingAndGlyphs">pero el primer ciclo llega entero</text>
+  <text x="64" y="196" font-size="9.5" fill="var(--flag)"
+        textLength="130" lengthAdjust="spacingAndGlyphs">la depresión vale lo mismo</text>
+  <text x="64" y="208" font-size="9.5" fill="var(--flag)"
+        textLength="120" lengthAdjust="spacingAndGlyphs">que la sobrepresión</text>
+</svg>
+<figcaption>
+
+La presión en la válvula no sube y se queda: **oscila**, con periodo igual a
+cuatro veces el tiempo que tarda la onda en recorrer la tubería, y la mitad del
+tiempo está por debajo de la estática. El rozamiento va
+amortiguando la onda hasta anularla, pero el primer ciclo llega entero, y es el
+que dimensiona la tubería. Por eso el golpe negativo se calcula igual que el
+positivo: puede aplastar el tubo desde fuera.
+
+</figcaption>
+</figure>
+
+## Cierre lento o rápido: la clasificación lo decide todo
+
+El golpe completo de Allievi solo aparece si la válvula termina de cerrarse
+**antes** de que vuelva la onda estabilizadora. Ese es todo el criterio:
+
+$$
+T = \frac{2L}{a}
+$$
+
+| condición | se llama | fórmula |
+|---|---|---|
+| $T_c < T$, o sea $L > a\,T_c/2$ | **cierre rápido** o conducción larga | **Allievi**: $\Delta H = \dfrac{a\,v}{g}$ |
+| $T_c > T$, o sea $L < a\,T_c/2$ | **cierre lento** o conducción corta | **Michaud**: $\Delta H = \dfrac{2Lv}{g\,T_c}$ |
+
+La fórmula de Michaud sale por semejanza de triángulos: si el golpe crece
+linealmente con el tiempo y la onda estabilizadora vuelve a mitad de camino, lo
+que se alcanza es la fracción $\dfrac{2L/a}{T_c}$ del golpe completo. Sustituye
+y sale sola.
+
+> Jouguet obtuvo para cierre lento $\Delta H = \dfrac{Lv}{g\,T_c}$, **la mitad
+> que Michaud**. Las dos están en el temario. Michaud es la conservadora y es la
+> que se usa para dimensionar; si un enunciado nombra a Jouguet, pide la suya.
+
+**La longitud crítica.** Con cierre gradual, el golpe no llega entero a toda la
+tubería: hay un tramo junto al depósito donde va de cero al máximo. Ese tramo es
+
+$$
+L_c = \frac{T_c\,a}{2}
+$$
+
+y comparándolo con $L$ se tiene la misma clasificación de antes: $L > L_c$ es
+conducción larga, $L < L_c$ corta, $L = L_c$ crítica. La línea que une el
+depósito con el punto donde ya está el golpe entero es el **techo de
+presiones**, y es lo que hay que usar para calcular la resistencia de la
+tubería, no un valor único.
+
+<ErrorTipico titulo="Clasificar primero, calcular después: la fórmula equivocada da un número perfectamente creíble">
+
+Es el error del tema, y no se detecta mirando el resultado.
+
+Con una conducción de 800 m de fundición ($a = 1119\ \text{m/s}$) y agua a
+2 m/s, $T = 2L/a = 1{,}43\ \text{s}$:
+
+- Cerrando en **1 s** es rápido: Allievi da $\Delta H = 228\ \text{m}$.
+- Cerrando en **5 s** es lento: Michaud da $\Delta H = 65\ \text{m}$.
+
+Usar Michaud en el primer caso daría 326 m, y Allievi en el segundo, 228. Los
+cuatro números son del mismo orden y **ninguno chirría**. La única forma de
+saber cuál es el bueno es haber calculado $T = 2L/a$ **antes**.
+
+El orden correcto, siempre el mismo:
+
+1. Celeridad $a$, con Allievi y el $k$ del material.
+2. Periodo de ida y vuelta $T = 2L/a$.
+3. Comparar con $T_c$.
+4. **Y solo entonces** elegir fórmula.
+
+Y ojo con el detalle que se cuela: en la fórmula de Allievi el golpe **no
+depende de la longitud**. En la de Michaud, sí. Si al cambiar el tiempo de
+cierre te encuentras usando la longitud en un caso y no en otro, no es un
+despiste: es la diferencia entre las dos.
+
+</ErrorTipico>
+
+## Parada de bomba: el tiempo que no se sabía
+
+En un cierre de válvula el tiempo $T_c$ lo pone el operador. En una **parada
+imprevista de bombeo** —un corte de luz— nadie lo elige: lo pone la inercia del
+grupo, y hasta 1966 no se sabía estimarlo. Se calculaba en el caso más
+desfavorable, y salían tuberías sobredimensionadas.
+
+Lo resolvió el español **Enrique Mendiluce**, en el VII Congreso Internacional
+de Abastecimiento de Agua:
+
+$$
+T = C_1 + C_2\,\frac{L\,v}{g\,H_m}
+$$
+
+con $C_1$ función de la pendiente de la tubería y $C_2$ de su longitud, los dos
+tabulados. Lo que hay que entender es la forma: el término que manda es
+$Lv/gH_m$, es decir **la inercia de la columna de agua frente a la altura que
+la bomba estaba dando**. Una conducción larga con poca altura manométrica se
+para despacio; una corta a mucha presión, deprisa.
+
+## Cómo se combate
+
+Cierra el tema lo que se hace en obra, y son las tres consecuencias directas de
+todo lo anterior:
+
+- **Alargar el tiempo de cierre.** Es la más barata: pasar de cierre rápido a
+  lento cambia Allievi por Michaud, y con ella el golpe baja en proporción a
+  $2L/(a\,T_c)$. Volantes de inercia en los grupos de bombeo, y válvulas de
+  cierre lento.
+- **Bajar la celeridad**, eligiendo material más flexible o pared más delgada:
+  entra por la $a$ de Allievi.
+- **Dar por dónde escapar**: chimeneas de equilibrio, calderines, ventosas y
+  válvulas de alivio. Interrumpen la columna de agua y acortan la $L$ que
+  interviene.
+
+Y la que no está en la lista pero está en todas las demás: **bajar la
+velocidad**. El golpe es proporcional a $v$ en las dos fórmulas, así que una
+conducción dimensionada con holgura sufre menos transitorios. Es otra razón, y
+no la menor, para no apurar los diámetros.

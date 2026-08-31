@@ -1,0 +1,444 @@
+ejercicios:
+  # ── NUESTRO (§08). La deducción de la sección óptima rectangular cayó tal
+  #    cual en junio de 2023 («deducir de forma clara y concisa cuál es la
+  #    sección hidráulicamente óptima en un canal rectangular de ancho b»),
+  #    y la colección solo trae el caso trapecial general. Este la aísla y le
+  #    pone números para que se vea cuánto se gana de verdad.
+  - id: ejflu21-la-seccion-optima-y-cuanto-se-gana
+    titulo: El semicuadrado, y cuánto se gana de verdad con él
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Se quiere conducir $3\ \text{m}^{3}/\text{s}$ por un canal rectangular de
+      hormigón en bruto ($n = 0{,}015$) con una pendiente de **1 milésima**.
+
+      a) Calcular el calado y la solera de la **sección hidráulicamente
+      óptima**.
+
+      b) Calcular la velocidad del agua.
+
+      c) Si esa misma sección se construyera con el doble de pendiente, ¿qué
+      caudal transportaría?
+    pide: Las dimensiones de la sección óptima, su velocidad y el caudal con doble pendiente.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué la sección de mínimo perímetro mojado es también la de
+          mínima área?
+        opciones:
+          - texto: >-
+              Porque Manning deja $A^{5/3}/P^{2/3}$ constante para $Q$, $n$ y
+              $J$ dados, y de ahí $A = k\,P^{2/5}$: las dos crecen juntas
+            correcta: true
+            mensaje: |
+              Exacto, y por eso la sección hidráulicamente óptima es a la vez
+              la más barata: menos área es menos excavación y menos perímetro
+              es menos revestimiento. No hay que elegir entre las dos cosas.
+          - texto: >-
+              Porque el radio hidráulico es $A/P$, y si $P$ baja, $A$ tiene que
+              bajar para que $R_H$ no cambie
+            mensaje: |
+              $R_H$ **sí** cambia: de hecho la sección óptima es justamente la
+              que lo hace máximo. El argumento correcto no pasa por suponer
+              nada constante a mano, sale de la propia fórmula de Manning.
+          - texto: >-
+              Porque el perímetro mojado y el área son proporcionales en
+              cualquier figura geométrica
+            mensaje: |
+              No lo son: al alargar un rectángulo a área constante el perímetro
+              crece sin límite. Lo que liga las dos aquí no es la geometría, es
+              la condición de que el caudal sea el mismo.
+
+      - tipo: calcular
+        titulo: El calado óptimo
+        pregunta: |
+          ¿Cuál es el calado de la sección óptima?
+        respuesta:
+          tipo: magnitud
+          valor: '1.047 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.88 m'
+            mensaje: |
+              Has usado $R_H = h$. En la sección óptima el radio hidráulico es
+              $R_H = A/P = 2h^{2}/4h = h/2$, la mitad del calado. Es una de las
+              cosas que hace cómoda esta sección, y también una de las que más
+              se olvida.
+          - valor: '1.5 m'
+            mensaje: |
+              Parece que has tomado $b = h$ en vez de $b = 2h$. La condición de
+              óptimo es que la solera sea el **doble** del calado: el
+              semicuadrado, no el cuadrado.
+        pista: |
+          En la óptima, $A = 2h^{2}$ y $R_H = h/2$. Sustituye en Manning y
+          despeja: te queda $h$ elevado a $8/3$.
+        desarrollo: |
+          $$
+          Q = \frac{1}{n}\,A\,R_H^{2/3}\,J^{1/2}
+          \;\Longrightarrow\;
+          A\,R_H^{2/3} = \frac{n\,Q}{\sqrt J}
+          = \frac{0{,}015\cdot 3}{\sqrt{0{,}001}} = 1{,}423
+          $$
+          $$
+          2h^{2}\left(\frac{h}{2}\right)^{2/3} = 1{,}423
+          \;\Longrightarrow\;
+          h^{8/3} = \frac{1{,}423\cdot 2^{2/3}}{2} = 1{,}129
+          \;\Longrightarrow\;
+          h = 1{,}047\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad
+        pregunta: |
+          ¿A qué velocidad circula el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '1.369 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '2.739 m/s'
+            mensaje: |
+              Has dividido entre $h^{2}$ en vez de entre $A = 2h^{2}$. La
+              solera es el doble del calado, así que el área es dos veces el
+              cuadrado del calado.
+          - valor: '0.685 m/s'
+            mensaje: |
+              Un factor dos al revés: has usado $A = 4h^{2}$, que sería
+              $b = 4h$. En la óptima $b = 2h$ y $A = 2h^{2} = 2{,}19\
+              \text{m}^{2}$.
+        pista: |
+          $v = Q/A$, con $A = 2h^{2}$.
+        desarrollo: |
+          $$
+          A = 2h^{2} = 2\cdot 1{,}047^{2} = 2{,}19\ \text{m}^{2}
+          \qquad
+          v = \frac{3}{2{,}19} = 1{,}37\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: Con el doble de pendiente
+        pregunta: |
+          Manteniendo la misma sección, ¿qué caudal llevaría con $J = 2$
+          milésimas?
+        respuesta:
+          tipo: magnitud
+          valor: '4.243 m3/s'
+          tolerancia: 0.02
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '6 m3/s'
+            mensaje: |
+              El caudal no es proporcional a la pendiente. En Manning la
+              pendiente entra bajo raíz: al duplicarla, el caudal se multiplica
+              por $\sqrt2 = 1{,}41$, no por 2.
+          - valor: '3.78 m3/s'
+            mensaje: |
+              Parece que has aplicado un exponente $2/3$ a la pendiente. El
+              $2/3$ es del radio hidráulico; la pendiente lleva $1/2$.
+        pista: |
+          Todo lo demás igual, $Q \propto \sqrt J$.
+        desarrollo: |
+          $$
+          \frac{Q_2}{Q_1} = \sqrt{\frac{J_2}{J_1}} = \sqrt2
+          \qquad
+          Q_2 = 3\sqrt2 = 4{,}24\ \text{m}^{3}/\text{s}
+          $$
+
+          Y el aviso de proyecto: con ese caudal la velocidad subiría a
+          $1{,}94\ \text{m/s}$, cerca del límite habitual de 2 m/s por erosión.
+
+      - tipo: justificar
+        pregunta: Ordena la deducción, que es la que cayó en junio de 2023. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              De Manning, $A^{5/3}/P^{2/3}$ es constante para $Q$, $n$ y $J$
+              dados, luego $A = kP^{2/5}$: el área es mínima cuando lo es el
+              perímetro.
+          - texto: >-
+              En un rectángulo, eliminando la solera queda $P = A/h + 2h$, y
+              anulando la derivada respecto al calado sale $A = 2h^{2}$.
+          - texto: >-
+              Como $A = bh$, eso significa $b = 2h$: la sección óptima es el
+              semicuadrado, con $R_H = h/2$.
+          - texto: >-
+              Y como es la de mínimo perímetro, también es la de mínima
+              velocidad, lo que reduce la erosión de la solera.
+            trampa: true
+            mensaje: |
+              Al revés: con el caudal fijo y el área mínima, la velocidad
+              $v = Q/A$ es **máxima**. La sección óptima es la más barata y la
+              que más rinde por metro de contorno, pero es también la que más
+              rápido hace ir el agua; por eso el límite de velocidad se
+              comprueba **después** de dimensionarla.
+
+    resolucion: |
+      **La deducción, que es lo que se examina.** De Manning,
+
+      $$
+      Q = \frac{1}{n}\,\frac{A^{5/3}}{P^{2/3}}\,J^{1/2}
+      \;\Longrightarrow\;
+      \frac{A^{5/3}}{P^{2/3}} = \text{cte}
+      \;\Longrightarrow\;
+      A = k\,P^{2/5}
+      $$
+
+      Área mínima y perímetro mínimo son la misma condición. En un rectángulo,
+      $P = A/h + 2h$, y derivando respecto al calado:
+
+      $$
+      \frac{\partial P}{\partial h} = -\frac{A}{h^{2}} + 2 = 0
+      \;\Longrightarrow\;
+      A = 2h^{2} = bh
+      \;\Longrightarrow\;
+      b = 2h
+      $$
+
+      **El semicuadrado.** Y su radio hidráulico es $R_H = h/2$.
+
+      **Los números.** Con $nQ/\sqrt J = 1{,}423$:
+
+      $$
+      2h^{2}\left(\frac{h}{2}\right)^{2/3} = 1{,}423
+      \;\Longrightarrow\;
+      h = 1{,}05\ \text{m}
+      \qquad
+      b = 2{,}09\ \text{m}
+      \qquad
+      A = 2{,}19\ \text{m}^{2}
+      $$
+      $$
+      v = \frac{3}{2{,}19} = 1{,}37\ \text{m/s}
+      $$
+
+      **Con doble pendiente**, $Q = 3\sqrt2 = 4{,}24\ \text{m}^{3}/\text{s}$.
+
+      **Cuánto se gana en realidad.** Si en vez de la óptima se impusiera una
+      solera de 4 m, el calado bajaría a 0,60 m y el área subiría a
+      $2{,}39\ \text{m}^{2}$: un **9 % más de excavación** para llevar el mismo
+      caudal. No es espectacular, y conviene saberlo: la sección óptima merece
+      la pena, pero no tanto como para sacrificar por ella una restricción real
+      de anchura o de calado. Casi todos los canales que se construyen no son
+      óptimos, y no están mal proyectados por eso.
+
+  # ── COLECCIÓN 8.2. Problema de diseño completo: la óptima, la berma, la
+  #    comprobación de velocidad y —el apartado que enseña de verdad— el
+  #    quinto grado que sale al fijar la solera.
+  - id: ejflu21-el-canal-de-doce-metros-cubicos
+    titulo: Diseñar un canal para doce metros cúbicos por segundo
+    fuente: >-
+      Ejercicio 8.2 · Colección de Problemas, capítulo 8 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se desea diseñar un canal de sección rectangular, con una pendiente de
+      $0{,}5$ milésimas, $Q = 12\ \text{m}^{3}/\text{s}$ y material hormigón en
+      bruto ($n = 0{,}015$), donde la velocidad del agua no supere los
+      $2\ \text{m/s}$.
+
+      a) Calcular la base $b$, para el caso de sección hidráulicamente óptima
+      ($b = 2h$).
+
+      b) Calcular la altura $H$, con una berma del 15 %.
+
+      c) Comprobar el condicionante de la velocidad.
+
+      d) Si la canalización, en un tramo importante, toma una pendiente mayor
+      (1 milésima), calcular la nueva profundidad $h$ del agua en el canal.
+    pide: La base, la altura total con berma, la comprobación de velocidad y el nuevo calado.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En el apartado d) la pendiente se duplica y la solera sigue siendo la
+          misma. ¿Qué le pasa al calado?
+        opciones:
+          - texto: >-
+              Baja, porque con más pendiente el agua va más deprisa y el mismo
+              caudal cabe en menos sección
+            correcta: true
+            mensaje: |
+              Eso es, y conviene saberlo **antes** de iterar: te da el sentido
+              en el que buscar y te avisa si el tanteo se va por otro lado.
+          - texto: >-
+              Sube, porque más pendiente significa más energía y más agua
+            mensaje: |
+              El caudal es el mismo dato en los dos apartados: 12 m³/s. Lo que
+              cambia con la pendiente no es cuánta agua hay, es a qué velocidad
+              va, y a más velocidad hace falta menos sección.
+          - texto: >-
+              No cambia: el calado lo fija el caudal y la solera, no la
+              pendiente
+            mensaje: |
+              La pendiente está dentro de Manning, así que sí interviene. Si no
+              lo hiciera, un canal horizontal llevaría el mismo caudal que uno
+              inclinado, y no lleva ninguno.
+
+      - tipo: calcular
+        titulo: La base de la sección óptima
+        pregunta: |
+          ¿Cuánto mide la solera?
+        respuesta:
+          tipo: magnitud
+          valor: '4 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '2 m'
+            mensaje: |
+              Ese es el **calado**. La pregunta es la solera, que en la sección
+              óptima es el doble: $b = 2h = 4$ m.
+          - valor: '3.37 m'
+            mensaje: |
+              Casi seguro has usado $R_H = h$ en vez de $h/2$. En el
+              semicuadrado, $R_H = 2h^{2}/4h = h/2$.
+        pista: |
+          $A\,R_H^{2/3} = nQ/\sqrt J$, con $A = 2h^{2}$ y $R_H = h/2$.
+        desarrollo: |
+          $$
+          A\,R_H^{2/3} = \frac{0{,}015\cdot 12}{\sqrt{0{,}0005}} = 8{,}05
+          $$
+          $$
+          2h^{2}\left(\frac{h}{2}\right)^{2/3} = 8{,}05
+          \;\Longrightarrow\;
+          h^{8/3} = \frac{8{,}05\cdot 2^{2/3}}{2} = 6{,}39
+          \;\Longrightarrow\;
+          h = 2{,}00\ \text{m}
+          $$
+          $$
+          b = 2h = 4\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La altura total con berma
+        pregunta: |
+          Con una berma del 15 %, ¿qué altura hay que darle al canal?
+        respuesta:
+          tipo: magnitud
+          valor: '2.3 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.3 m'
+            mensaje: |
+              Eso es solo la berma. La altura del canal es el calado **más** el
+              resguardo: $2 + 0{,}3$.
+          - valor: '4.6 m'
+            mensaje: |
+              Has aplicado la berma sobre la solera, no sobre el calado. La
+              berma es el resguardo vertical por encima de la lámina de agua.
+        pista: |
+          La berma es un resguardo sobre el calado: $H = h\,(1 + 0{,}15)$.
+        desarrollo: |
+          $$
+          H = h + 0{,}15\,h = 2 + 0{,}3 = 2{,}3\ \text{m}
+          $$
+
+          El agua ocupa 2 m y los 30 cm de arriba quedan vacíos, para oleaje,
+          para una crecida pequeña y para que el canal no rebose al primer
+          imprevisto.
+
+      - tipo: calcular
+        titulo: El nuevo calado con doble pendiente
+        pregunta: |
+          Con $J = 1$ milésima y la misma solera de 4 m, ¿cuál es el calado?
+        respuesta:
+          tipo: magnitud
+          valor: '1.556 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '2 m'
+            mensaje: |
+              Ese es el calado del apartado a), con la pendiente antigua. Al
+              duplicar la pendiente el agua va más deprisa y necesita menos
+              sección: el calado tiene que **bajar**.
+          - valor: '1.414 m'
+            mensaje: |
+              Parece que has aplicado $h/\sqrt2$, como si el calado escalara
+              con la raíz de la pendiente. No lo hace: al cambiar $h$ cambian
+              el área **y** el perímetro, y la relación no es una potencia
+              simple. Hay que resolver la ecuación.
+        pista: |
+          $A^{5/3}/P^{2/3} = nQ/\sqrt J$, con $A = 4h$ y $P = 4 + 2h$. Eleva al
+          cubo y resuelve por tanteo: la solución está entre 1,5 y 1,6.
+        desarrollo: |
+          $$
+          \frac{A^{5/3}}{P^{2/3}} = \frac{0{,}015\cdot 12}{\sqrt{0{,}001}}
+          = 5{,}69
+          \;\Longrightarrow\;
+          A^{5} = 5{,}69^{3}\,P^{2} = 184{,}4\,P^{2}
+          $$
+          $$
+          (4h)^{5} = 184{,}4\,(4+2h)^{2}
+          \;\Longrightarrow\;
+          h^{5} - 0{,}72\,h^{2} - 2{,}88\,h - 2{,}88 = 0
+          $$
+
+          Un quinto grado: se resuelve por tanteo o Newton-Raphson, y da
+          $h = 1{,}556\ \text{m}$.
+
+          Comprobación hacia atrás, que cuesta treinta segundos: con
+          $A = 6{,}22\ \text{m}^{2}$ y $P = 7{,}11\ \text{m}$,
+          $R_H = 0{,}875$, y Manning devuelve $Q = 12\ \text{m}^{3}/\text{s}$.
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La sección óptima sale de $A R_H^{2/3} = nQ/\sqrt J = 8{,}05$ con
+              $A = 2h^{2}$ y $R_H = h/2$: da $h = 2$ m y $b = 4$ m.
+          - texto: >-
+              Con la berma del 15 % el canal se construye de 2,3 m de altura, y
+              la velocidad, $12/8 = 1{,}5$ m/s, cumple el límite de 2 m/s.
+          - texto: >-
+              Al duplicar la pendiente con la misma solera queda un polinomio
+              de quinto grado en $h$, que por tanteo da 1,556 m.
+          - texto: >-
+              Con ese calado menor la velocidad también baja, porque el área
+              mojada es menor.
+            trampa: true
+            mensaje: |
+              El caudal es el mismo y el área es menor, así que la velocidad
+              **sube**: $12/6{,}22 = 1{,}93$ m/s frente a los 1,5 de antes. Y
+              es justo el apartado que habría que revisar, porque queda a un
+              pelo del límite de 2 m/s que impone el enunciado.
+
+    resolucion: |
+      **a) La sección óptima.**
+
+      $$
+      A\,R_H^{2/3} = \frac{n\,Q}{\sqrt J} = \frac{0{,}015\cdot 12}{\sqrt{0{,}0005}}
+      = 8{,}05
+      $$
+
+      Con $A = 2h^{2}$ y $R_H = h/2$ sale $h = 2\ \text{m}$ y
+      $b = 4\ \text{m}$.
+
+      **b) La berma.** $H = 2{,}3\ \text{m}$. Los 30 cm de resguardo no llevan
+      agua: son para oleaje y para no rebosar a la primera.
+
+      **c) La velocidad.** $v = 12/(4\cdot 2) = 1{,}5\ \text{m/s}$, por debajo
+      de los 2 m/s exigidos. Cumple.
+
+      **d) El tramo de más pendiente.** Con $J = 0{,}001$ y $b = 4$ fija:
+
+      $$
+      h^{5} - 0{,}72\,h^{2} - 2{,}88\,h - 2{,}88 = 0
+      \;\Longrightarrow\;
+      h = 1{,}556\ \text{m}
+      $$
+
+      **Y lo que el enunciado no pide pero un proyectista miraría.** Con ese
+      calado, $A = 6{,}22\ \text{m}^{2}$ y la velocidad sube a
+      $1{,}93\ \text{m/s}$. Sigue cumpliendo, pero por tres centésimas. El
+      apartado d) es exactamente la situación en la que la comprobación del
+      apartado c) deja de ser un trámite: **cada vez que cambia la pendiente,
+      hay que volver a comprobar la velocidad**.
+
+      Y ojo con la berma en ese tramo: el calado baja a 1,56 m, así que el
+      canal de 2,3 m de altura va sobrado. Es el otro lado del mismo cambio.
