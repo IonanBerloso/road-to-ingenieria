@@ -89,11 +89,17 @@ export function nombreDim(d: Dim): string {
 /** Una unidad: cuánto vale en unidades base del SI, y su dimensión.
  *
  *  Los factores no son de memoria. `mca` y `mmHg` salen de $p = \rho g h$ con
- *  la densidad del agua a 4 °C (1000) y la del mercurio (13595,1), y con
- *  $g = 9,80665$, que es la gravedad estándar y la que usa el enunciado
- *  cuando dice «metros de columna de agua». Están escritos como producto para
- *  que se vea de dónde vienen. */
-const G = 9.80665;
+ *  la densidad del agua a 4 °C (1000) y la del mercurio (13595,1). Están
+ *  escritos como producto para que se vea de dónde vienen.
+ *
+ *  **La gravedad es 9,8 y no 9,80665**, que es la estándar internacional. Se
+ *  usa la de la asignatura: sus apuntes y todas sus soluciones oficiales
+ *  calculan con 9,8, y con ella salen exactamente los números que el tema 4
+ *  publica —1 mca = 9800 Pa, 1 kg/cm² = 10 mca—. Con la gravedad estándar
+ *  saldría 9806,6 Pa, un 0,07 % de diferencia que la tolerancia se comería
+ *  igual, pero que dejaría la tabla de conversiones descuadrada respecto de
+ *  la fuente. Manda la fuente. */
+const G = 9.8;
 
 const UNIDADES: Record<string, { f: number; d: Dim }> = {
   // — longitud
@@ -117,10 +123,17 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   l: { f: 0.001, d: D(0, 3) },
   ml: { f: 1e-6, d: D(0, 3) },
   cc: { f: 1e-6, d: D(0, 3) },
+  // — masa (la del Sistema Técnico)
+  utm: { f: G, d: D(1) },
   // — fuerza
   n: { f: 1, d: D(1, 1, -2) },
   kn: { f: 1000, d: D(1, 1, -2) },
   mn: { f: 1e6, d: D(1, 1, -2) }, // meganewton; el milinewton no aparece en fluidos
+  /* El decanewton lo pide el enunciado, no nosotros: el ejercicio 1.2 de la
+     colección pide la fuerza «en daN». Es la única unidad con prefijo `da`
+     que aparece, y por eso no hay una regla general de prefijos. */
+  dan: { f: 10, d: D(1, 1, -2) },
+  dyn: { f: 1e-5, d: D(1, 1, -2) },
   kp: { f: G, d: D(1, 1, -2) },
   kgf: { f: G, d: D(1, 1, -2) },
   // — presión
@@ -143,6 +156,11 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   mw: { f: 1e6, d: D(1, 2, -3) },
   cv: { f: 735.49875, d: D(1, 2, -3) },
   // — viscosidad, que en los enunciados viejos viene en poises
+  /* El poiseuille es la unidad SI de viscosidad dinámica y así la llaman los
+     apuntes de esta asignatura: 1 Pl = 1 Pa·s. Faltaba en la primera versión
+     de esta tabla y lo cazó el test del tema 2 —seis respuestas ilegibles—,
+     que es exactamente para lo que está el test. */
+  pl: { f: 1, d: D(1, -1, -1) },
   poise: { f: 0.1, d: D(1, -1, -1) },
   p: { f: 0.1, d: D(1, -1, -1) },
   cpoise: { f: 0.001, d: D(1, -1, -1) },
@@ -152,6 +170,28 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   cst: { f: 1e-6, d: D(0, 2, -1) },
   // — adimensionales con nombre (Reynolds, Froude…) y el porcentaje
   '': { f: 1, d: ADIMENSIONAL },
+};
+
+/**
+ * Unidades compuestas que **no** se pueden descomponer en factores, porque el
+ * símbolo significa otra cosa dentro del cociente.
+ *
+ * El caso es `kg/cm²`, y no es una rareza: es la unidad de presión del Sistema
+ * Técnico y los enunciados de esta escuela la usan sin parpadear —«la lectura
+ * del vacuómetro es de 0,4 kg/cm²», «NPSH requerido = 0,35 kg/cm²», «el
+ * depósito se presuriza a 1,2 kg/cm²»—. Ese «kg» es un **kilopondio**, igual
+ * que el «pesa 50 kg» del tema 1, así que la unidad es una presión y no una
+ * masa por unidad de área.
+ *
+ * Se resuelve con una tabla y no con una regla general («kg partido por un
+ * área es presión») porque una regla así acertaría aquí y fallaría en cuanto
+ * alguien escribiera una densidad superficial de verdad. Los apuntes del tema
+ * 4 dan la equivalencia: 1 kg/cm² = 9,8·10⁴ Pa.
+ */
+const COMPUESTAS: Record<string, { f: number; d: Dim }> = {
+  'kg/cm2': { f: G * 1e4, d: D(1, -1, -2) },
+  'kg/m2': { f: G, d: D(1, -1, -2) },
+  'kg/mm2': { f: G * 1e6, d: D(1, -1, -2) },
 };
 
 /** Las escalas que **no** son proporcionales. Se convierten aparte y solo se
@@ -245,6 +285,13 @@ export function leeMagnitud(entrada: string): Magnitud | null {
 
   const u = p.u.replace(/^%$/, '');
   if (p.u === '%') return { valor: p.n / 100, dim: ADIMENSIONAL, unidad: '%' };
+
+  /* Las compuestas van antes que la descomposición en factores: si no,
+     `kg/cm²` se leería como una masa dividida por un área. */
+  const compuesta = COMPUESTAS[u.replace(/[\^\s]/g, '')];
+  if (compuesta) {
+    return { valor: p.n * compuesta.f, dim: compuesta.d, unidad: p.u };
+  }
 
   const escala = ESCALAS[u];
   if (escala) {

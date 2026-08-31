@@ -50,11 +50,17 @@ describe('leeMagnitud · las formas en que se escribe una magnitud a mano', () =
     }
   });
 
+  /* Los valores de referencia son los que publica el tema 4 de la asignatura,
+     calculados con g = 9,8. Ver la nota de `G` en `unidades.ts`. */
   it('convierte a SI las unidades de presión que usa la asignatura', () => {
     expect(lee('1 bar').valor).toBeCloseTo(1e5, 6);
     expect(lee('1 atm').valor).toBeCloseTo(101325, 6);
-    expect(lee('760 mmhg').valor).toBeCloseTo(101325, -1); // la definición vieja da 101 322 Pa
-    expect(lee('10 mca').valor).toBeCloseTo(98066.5, 3);
+    expect(lee('1 mca').valor).toBeCloseTo(9800, 1); // apuntes del tema 4
+    /* Los apuntes redondean el torr a 133,3 Pa; con ρ(Hg) = 13595,1 y g = 9,8
+       sale 133,23. La diferencia es del 0,05 % y la tolerancia se la come. */
+    expect(lee('1 torr').valor).toBeCloseTo(133.23, 1);
+    expect(lee('1 kg/cm2').valor / lee('1 mca').valor).toBeCloseTo(10, 3); // apuntes
+    expect(lee('1 bar').valor / lee('1 mca').valor).toBeCloseTo(10.2, 2); // apuntes
   });
 
   it('convierte caudales, velocidades y viscosidades', () => {
@@ -62,6 +68,32 @@ describe('leeMagnitud · las formas en que se escribe una magnitud a mano', () =
     expect(lee('36 km/h').valor).toBeCloseTo(10, 9);
     expect(lee('1 poise').valor).toBeCloseTo(0.1, 12);
     expect(lee('1 cst').valor).toBeCloseTo(1e-6, 15);
+  });
+
+  /* Estas cuatro faltaban en la primera versión de la tabla y las cazó el
+     tema 2 al escribirlo: seis respuestas correctas salían «no he entendido».
+     El poiseuille es LA unidad de viscosidad de los apuntes, y el daN lo pide
+     un enunciado literalmente. */
+  it('lee las unidades que usan los enunciados de esta escuela', () => {
+    expect(lee('0,004 pl').valor).toBeCloseTo(0.004, 12); // poiseuille = Pa·s
+    expect(lee('1 pl').valor).toBeCloseTo(lee('10 p').valor, 12); // 1 Pl = 10 P
+    expect(lee('0,0218 dan').valor).toBeCloseTo(0.218, 9); // decanewton
+    expect(lee('1e7 dyn').valor).toBeCloseTo(100, 9); // dina
+    expect(lee("1 utm").valor).toBeCloseTo(9.8, 5); // masa del Sistema Técnico
+  });
+
+  /* El «kg» del Sistema Técnico otra vez, ahora dentro de un cociente. Los
+     enunciados de esta escuela dan presiones en kg/cm² constantemente: si se
+     leyera como masa partido por área, el comparador diría «esa unidad es de
+     otra magnitud» a una respuesta correcta. */
+  it('lee kg/cm² como la presión que es, no como masa por unidad de área', () => {
+    // los apuntes del tema 4: 1 kg/cm² = 9,8·10⁴ Pa
+    expect(lee('1 kg/cm^2').valor).toBeCloseTo(98000, 1);
+    expect(lee('1 kg/cm2').valor).toBeCloseTo(98000, 1);
+    expect(lee('1 kg/cm²').valor).toBeCloseTo(98000, 1);
+    expect(nombreDim(lee('0,4 kg/cm2').dim)).toBe('una presión');
+    // y sigue siendo comparable con las demás presiones
+    expect(comparaMagnitud(lee('1 kg/cm2'), lee('0,98 bar'), 0.01).igual).toBe(true);
   });
 
   it('lee un número pelado, y deja constancia de que no traía unidad', () => {

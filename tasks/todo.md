@@ -5,6 +5,53 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Mecánica de Fluidos, por fases · abierta el 30 de agosto de 2026
+
+**El criterio del orden no es el número del tema: es el capítulo de la
+colección de problemas.** Los nueve capítulos del cuaderno de ejercicios
+agrupan los 25 temas de teoría, y cada capítulo trae sus problemas resueltos y
+sus propuestos con resultado. Escribir un bloque entero de una vez significa
+leer un capítulo una vez, verificar sus cuentas una vez y transcribirlas
+seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebra.
+
+| fase | temas | capítulo de problemas | estado |
+|---|---|---|---|
+| **0 · Cimientos** | 1, 2 | 1 · Propiedades | ✅ **hecha** |
+| **1 · Estática** | 3, 4, 5, 6, 7, 8 | 2 · Estática y fuerzas sobre superficies | ⏳ |
+| **2 · Continuidad y Bernoulli** | 9, 10, 11, 12, 13 | 3 · Conservación de masa y energía. Medida | |
+| **3 · Cantidad de movimiento** | 14, 15 | 4 · Conservación de la cantidad de movimiento | |
+| **4 · Análisis dimensional** | 16 | 5 · Análisis dimensional y semejanza | |
+| **5 · Conducciones** | 17, 18, 19 | 6 · Flujo permanente en conductos cerrados | |
+| **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | |
+| **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | |
+| **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | |
+| **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
+| **11 · Auditoría §15 y cierre** | — | — | |
+
+**Qué incluye cada fase de contenido**, sin excepción (§04): prosa con al
+menos una figura que responda a una pregunta, un ejemplo de entrada **nuestro**
+por tema, los ejercicios del capítulo con su enunciado verbatim, y el suelo en
+verde antes del commit. Las cuentas se verifican con un guion **antes** de
+escribir el diagnóstico, nunca después.
+
+**Dos cosas que esta asignatura hace distinto de Álgebra:**
+
+1. **Las unidades son contenido, no formato.** Media docena de errores típicos
+   del examen son de conversión, así que cada respuesta va con su unidad y el
+   tipo `magnitud` los diagnostica aparte (ver §04 de CLAUDE.md). Cuando un
+   enunciado traiga una unidad que la tabla no conozca, se añade **con su test**.
+2. **Los exámenes imprimen el peso de cada ejercicio.** Eso permite que las
+   rutas de la fase 10 se midan igual que las de Álgebra pero con un dato
+   mejor: no «cuántas veces cae», sino «cuánto vale».
+
+**Lo que se sabe ya del examen**, medido sobre los 111 ejercicios de las 15
+convocatorias de 2020-2025: nueve temas de peso alto (4, 7, 13, 15, 16, 18, 19,
+21, 25) y ocho transversales que casi nunca ocupan hueco propio pero caen
+dentro de otros (1, 3, 9, 10, 12, 14, 22, 24).
+
+---
+
 ## Bloqueado, esperándote a ti
 
 > **Lo primero, al 26 de agosto de 2026: Cálculo está cerrada contra §15 y la

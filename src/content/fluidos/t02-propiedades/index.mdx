@@ -1,0 +1,201 @@
+---
+asignatura: fluidos
+tema: 2
+titulo: Propiedades físicas de los fluidos
+descripcion: Viscosidad y ley de Newton, compresibilidad, capilaridad y cavitación. Las cuatro propiedades que deciden qué fórmula se usa después.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 2 y de la Colección de problemas de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Un fluido se define por lo que hace bajo un esfuerzo cortante: **se deforma de
+manera continua, por pequeño que sea el esfuerzo**. Un sólido se deforma un
+poco y se planta; un fluido no se planta nunca. Esa frase, que parece de
+diccionario, es la que justifica la propiedad central del tema.
+
+Porque si el fluido no deja de deformarse, lo que se puede medir no es
+*cuánto* se ha deformado, sino **a qué velocidad** lo hace. Y la constante que
+relaciona el esfuerzo con esa velocidad es la viscosidad.
+
+## La ley de Newton de la viscosidad
+
+Entre dos placas, una fija y otra que se mueve, el fluido no desliza sobre
+ninguna: la capa en contacto con cada placa **va a la velocidad de esa placa**.
+Eso obliga a que haya un gradiente de velocidad entre las dos, y ese gradiente
+es proporcional al esfuerzo que hay que hacer:
+
+$$
+\tau = \frac{dF}{dA} = \mu\,\frac{dv}{dy}
+$$
+
+La constante $\mu$ es la **viscosidad dinámica** (o absoluta). Los fluidos que
+cumplen esta ley —agua, aire, casi todos los del examen— se llaman
+**newtonianos**.
+
+Sus unidades son la primera trampa del tema:
+
+| sistema | unidad | equivalencia |
+|---|---|---|
+| Internacional | poiseuille (Pl) = Pa·s = N·s/m² | — |
+| Cegesimal | poise (P) = dyn·s/cm² | **1 Pl = 10 P** |
+| Técnico | UTM/(m·s) | — |
+
+Y se usa mucho el **centipoise**, porque el agua a 15 °C tiene justo
+$\mu = 1\ \text{cP} = 10^{-3}\ \text{Pl}$. Es un buen número de referencia: si
+te sale una viscosidad de agua mil veces mayor, has perdido un factor por el
+camino.
+
+<ErrorTipico titulo="El poise no es el pascal por segundo">
+
+Es su décima parte. $1\ \text{P} = 0{,}1\ \text{Pl}$, y la mitad de los
+enunciados de la colección dan la viscosidad en poises justamente porque es la
+unidad del sistema cegesimal, no del SI.
+
+El error no se nota en el resultado intermedio —sale un número plausible— y
+aparece al final multiplicado por diez. **La comprobación:** el agua tiene
+$0{,}001\ \text{Pl}$ y los aceites, entre $0{,}01$ y $1\ \text{Pl}$. Una
+viscosidad de $1{,}5\ \text{Pl}$ es un aceite espeso; una de
+$15\ \text{Pl}$ es casi un sólido, y probablemente son 15 poises.
+
+</ErrorTipico>
+
+La **viscosidad cinemática** es la dinámica dividida por la densidad:
+
+$$
+\nu = \frac{\mu}{\rho}
+$$
+
+Tiene dimensiones $L^{2}T^{-1}$ —no lleva masa— y se mide en m²/s o en
+**stokes** ($1\ \text{St} = 1\ \text{cm}^{2}/\text{s} = 10^{-4}\ \text{m}^{2}/\text{s}$).
+Para el agua a 15 °C vale $10^{-6}\ \text{m}^{2}/\text{s}$, que es
+$1\ \text{cSt}$.
+
+Aparece en cuanto hay flujo, porque es la que entra en el número de Reynolds.
+Cuál de las dos pide el enunciado se sabe por las unidades del resultado, y por
+eso conviene escribirlas siempre.
+
+## Con la temperatura, líquidos y gases hacen lo contrario
+
+- En un **líquido** la viscosidad se debe a las fuerzas de cohesión entre
+  moléculas. Al calentar, la cohesión se debilita: **la viscosidad baja**. Es
+  el aceite del motor, que fluye mejor caliente.
+- En un **gas** se debe al intercambio de cantidad de movimiento entre
+  moléculas. Al calentar, se mueven más y chocan más: **la viscosidad sube**.
+
+No es un detalle de cultura general: en un problema de conducción con aceite
+caliente, tomar la viscosidad de la tabla a 20 °C puede cambiar el régimen de
+laminar a turbulento y con él toda la pérdida de carga.
+
+## Compresibilidad: el módulo de elasticidad volumétrico
+
+Un líquido se puede tratar como incompresible **casi siempre**, y este tema
+sirve para saber cuándo no. Si al aplicar $dp$ el volumen disminuye $-dV$:
+
+$$
+\frac{dV}{V} = -\alpha\,dp
+\qquad\Longrightarrow\qquad
+E = \frac{1}{\alpha} = \frac{-dp}{dV/V} = \frac{dp}{d\rho/\rho}
+$$
+
+$\alpha$ es el **coeficiente de compresibilidad cúbica** y su inverso $E$ es el
+**módulo de elasticidad volumétrico**, que tiene unidades de presión. En los
+líquidos se considera constante hasta unos 300 bar; para el agua ronda los
+$2.100\ \text{MPa}$.
+
+Y en un gas comprimido **isotérmicamente**, $E = p$: el módulo no es una
+propiedad del gas, es la presión a la que está.
+
+<figure>
+<svg viewBox="0 0 420 190" role="img" width="420" height="190"
+     aria-labelledby="flu2-t flu2-d">
+  <title id="flu2-t">Por qué la placa del medio siente dos veces el rozamiento</title>
+  <desc id="flu2-d">Dos superficies fijas separadas 32 milímetros con una placa delgada entre ellas, a 10 milímetros de la superficie de arriba y 22 de la de abajo. La placa se mueve a 0,2 metros por segundo. El gradiente de velocidad es distinto arriba y abajo: 20 por segundo en el hueco estrecho y 9,1 por segundo en el ancho, y las dos fuerzas se suman.</desc>
+
+  <line x1="30" y1="26" x2="390" y2="26" stroke="var(--ink)" stroke-width="3"/>
+  <text x="30" y="18" font-size="10.5" fill="var(--ink-suave)">superficie fija</text>
+
+  <line x1="30" y1="164" x2="390" y2="164" stroke="var(--ink)" stroke-width="3"/>
+  <text x="30" y="180" font-size="10.5" fill="var(--ink-suave)">superficie fija</text>
+
+  <rect x="120" y="66" width="180" height="6" rx="2" fill="var(--live)"/>
+  <text x="210" y="60" text-anchor="middle" font-size="10.5" fill="var(--live)">placa · v = 0,2 m/s</text>
+
+  <path d="M300 69 L346 69" stroke="var(--live)" stroke-width="1.6" marker-end="url(#flu2f)"/>
+
+  <line x1="70" y1="26" x2="70" y2="66" stroke="var(--ink-suave)" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="76" y="50" font-size="10.5" fill="var(--ink)">10 mm → dv/dy = 20 s⁻¹</text>
+
+  <line x1="70" y1="72" x2="70" y2="164" stroke="var(--ink-suave)" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="76" y="124" font-size="10.5" fill="var(--ink)">22 mm → dv/dy = 9,1 s⁻¹</text>
+
+  <path d="M330 30 L306 62" stroke="var(--flag)" stroke-width="1.2"/>
+  <path d="M330 160 L306 76" stroke="var(--flag)" stroke-width="1.2"/>
+  <text x="336" y="100" font-size="10.5" fill="var(--flag)">las dos frenan</text>
+
+  <defs>
+    <marker id="flu2f" viewBox="0 0 9 9" refX="7" refY="4.5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 z" fill="var(--live)"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption>
+
+El gradiente no es el mismo arriba que abajo, porque los huecos son distintos.
+Por eso la fuerza total no se calcula con «la» separación: se calcula dos
+veces y se suma. Es el ejercicio 1.2 de la colección, y el fallo habitual es
+usar solo el hueco que da el enunciado en primer lugar.
+
+</figcaption>
+</figure>
+
+## Tensión superficial y capilaridad
+
+En el interior de un líquido cada molécula es atraída por igual en todas
+direcciones. En la superficie no: **falta la mitad de las vecinas**, y el
+resultado es que la superficie se comporta como una membrana en tensión. La
+**tensión superficial** $\sigma$ es la fuerza por unidad de longitud de esa
+membrana, y solo depende de la temperatura.
+
+En un tubo estrecho, esa fuerza sostiene una columna de líquido. Igualando la
+componente vertical con el peso:
+
+$$
+2\pi R\,\sigma\cos\theta = \rho\,g\,\pi R^{2} h
+\qquad\Longrightarrow\qquad
+h = \frac{2\sigma\cos\theta}{\rho\,g\,R}
+$$
+
+Si el líquido **moja** ($\theta < 90°$, agua y vidrio) el menisco es cóncavo y
+el líquido sube; si **no moja** ($\theta > 90°$, mercurio y vidrio) es convexo
+y baja. La **ley de Jurin** resume la dependencia: $h\cdot D$ es constante para
+una pareja líquido-sólido dada.
+
+Y una forma de la fórmula que ahorra tiempo cuando el tubo no es circular
+—porque el examen lo pone cuadrado o en corona—: lo que sube la columna sale de
+comparar **perímetro mojado** con **área**,
+
+$$
+h = \frac{\sigma\,P\cos\theta}{\rho\,g\,A}
+$$
+
+que para un círculo devuelve la de arriba y para un cuadrado de lado $L$ da
+$h = 4\sigma\cos\theta/(\rho g L)$.
+
+## Presión de vapor y cavitación
+
+La **presión de vapor** es aquella a la que el líquido hierve a una temperatura
+dada. Sube con la temperatura, y **es siempre absoluta**: darla en manométrica
+no significa nada.
+
+Cuando en algún punto de una instalación la presión baja hasta la de vapor, el
+líquido se evapora ahí mismo: es la **cavitación**. Las burbujas viajan a zonas
+de más presión y colapsan, con microchorros que alcanzan presiones puntuales
+enormes y erosionan el material. Da ruido, vibración y agujeros en los álabes.
+
+Aquí solo se define. Vuelve en el tema 25, y ahí es media pregunta de examen:
+la altura máxima a la que se puede colocar una bomba sale precisamente de
+exigir que la presión en la aspiración no baje de la de vapor.

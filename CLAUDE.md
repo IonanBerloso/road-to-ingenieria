@@ -1174,6 +1174,24 @@ Cosas que ya han costado horas. No son opiniones.
   distintas. **Regla: al informar de un desbordamiento de texto se dice con qué
   familia se midió**, y al dejar margen en un `viewBox` se cuenta con que la
   fuente puede no haber cargado todavía.
+
+  **Y la forma de que no vuelva: `textLength` con `lengthAdjust="spacingAndGlyphs"`.**
+  Fijar el ancho hace que la caja mida lo que dice el atributo **en cualquier
+  fuente**, así que la comprobación deja de depender de la máquina. Se pone en
+  las etiquetas largas —las de dos o tres términos con raíces— y se elige un
+  valor cercano al natural para no deformar los glifos.
+- **El humo abre una muestra rotatoria de exámenes elegida por el día del año,
+  así que un fallo latente aparece cualquier mañana sin que nadie haya tocado
+  nada.** El 31 de agosto de 2026 el CI se puso rojo con el suelo local en
+  verde: le tocó el turno a `2015-2016-ext`, cuya figura del semicírculo tenía
+  dos etiquetas fuera del `viewBox` **desde el día que se escribió**. El commit
+  que lo destapó era de Fluidos y no tenía nada que ver.
+
+  Dos consecuencias prácticas. Una: **un CI rojo no significa que lo tuyo esté
+  mal** — mira qué página falla antes de tocar tu cambio. Y dos: el verde de
+  `npm run suelo` cubre la muestra de hoy, no las 96 páginas; **para eso está
+  `HUMO_TODO=1 npm run humo`**, y conviene pasarlo una vez por tanda de
+  trabajo, no una vez por commit.
 - **Insertar delante de un elemento de lista YAML deja su campo huérfano.** Si
   un elemento es `- id: X` seguido de su `nota:`, y sustituyes solo la línea
   `- id: X` por «`- id: X` + tu nota + tu elemento nuevo», la `nota` original
@@ -1212,6 +1230,26 @@ Cosas que ya han costado horas. No son opiniones.
   3. **Si la respuesta es adimensional, el tipo es `numero`.** Un Reynolds o
      un rendimiento no llevan unidad, y el esquema rechaza una `magnitud`
      sin unidad precisamente para que nadie la use como número con adorno.
+
+  Y dos cosas que la tabla de unidades tiene que saber de **esta** escuela,
+  porque no son estándar:
+
+  - **`kg/cm²` es una presión**, no una masa por unidad de área: ese «kg» es
+    un kilopondio, igual que el «pesa 50 kg» del tema 1. Los enunciados la
+    usan sin avisar («la lectura del vacuómetro es de 0,4 kg/cm²»). Está como
+    unidad compuesta, no como regla general, para no romper una densidad
+    superficial de verdad el día que aparezca.
+  - **La gravedad de la tabla es 9,8, no 9,80665.** Es la que usan los
+    apuntes y todas las soluciones oficiales, y con ella salen exactamente
+    sus conversiones publicadas: 1 mca = 9800 Pa, 1 kg/cm² = 10 mca,
+    1 bar = 10,2 mca. Con la estándar la tabla quedaría descuadrada respecto
+    de la fuente por un 0,07 %.
+
+  La tabla se amplía cuando un enunciado trae una unidad que no está, y eso
+  **lo caza el contenido, no la revisión**: al escribir el tema 2 seis
+  respuestas correctas salieron «no he entendido» porque faltaba el
+  poiseuille. Cuando pase, se añade la unidad **y su caso en
+  `tests/unidades.test.ts`**.
 - **`pdftotext` sin `-enc UTF-8` se come los signos.** Los exámenes escritos con
   el editor de ecuaciones de Word ponen el menos, el ≤ y el ∈ en fuente
   **Symbol**, y con la codificación por defecto salen como un espacio: el

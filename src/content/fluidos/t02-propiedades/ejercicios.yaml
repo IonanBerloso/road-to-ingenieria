@@ -1,0 +1,891 @@
+ejercicios:
+  # ── El primero es NUESTRO (§08). La colección abre el capítulo con una placa
+  #    entre DOS superficies, que exige sumar dos gradientes distintos; antes
+  #    de eso hace falta haber aplicado la ley de Newton una sola vez.
+  - id: ejflu2-la-ley-de-newton-una-sola-vez
+    titulo: Una placa, un hueco y la ley de Newton
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      Una placa de $0{,}4\ \text{m}^{2}$ se desliza sobre una superficie fija
+      a $1{,}5\ \text{m/s}$, separada de ella por una película de aceite de
+      $2\ \text{mm}$ de espesor y viscosidad dinámica
+      $\mu = 0{,}2\ \text{Pl}$.
+
+      Suponiendo que el perfil de velocidades es lineal, calcular la fuerza
+      necesaria para mantener el movimiento y la potencia disipada.
+    pide: La fuerza de arrastre y la potencia, con sus unidades.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado dice «perfil de velocidades lineal». ¿Qué permite hacer
+          esa hipótesis?
+        opciones:
+          - texto: >-
+              Sustituir la derivada por un cociente:
+              $dv/dy = v/y = 1{,}5/0{,}002$, sin integrar nada
+            correcta: true
+            mensaje: |
+              Eso es. La ley de Newton está escrita con una derivada, pero si
+              la velocidad varía linealmente entre $0$ y $v$ a lo largo del
+              espesor, la derivada es constante y vale $v/y$. Sin esa
+              hipótesis habría que conocer el perfil.
+          - texto: >-
+              Suponer que la viscosidad es constante
+            mensaje: |
+              La viscosidad es un dato del enunciado y no depende del perfil:
+              depende del fluido y de su temperatura. Lo que la linealidad
+              permite es cambiar la derivada por un cociente.
+          - texto: >-
+              Despreciar el rozamiento con el aire
+            mensaje: |
+              Eso se desprecia siempre en estos problemas, con perfil lineal
+              o sin él. La hipótesis sirve para calcular el gradiente.
+
+      - tipo: calcular
+        titulo: El gradiente de velocidad
+        pregunta: |
+          ¿Cuánto vale $dv/dy$?
+        respuesta:
+          tipo: magnitud
+          valor: '750 s^-1'
+          tolerancia: 0.01
+          formato: una velocidad de deformación, con su unidad
+        distractores:
+          - valor: '0.75 s^-1'
+            mensaje: |
+              Has dividido por $2$ en vez de por $0{,}002$: el espesor está en
+              milímetros y hay que pasarlo a metros. Un factor mil.
+          - valor: '3 s^-1'
+            mensaje: |
+              Eso es $1{,}5 \cdot 2$. El gradiente es la velocidad **entre** el
+              espesor, no por él.
+        pista: |
+          v entre y, con el espesor en metros: 1,5 / 0,002.
+        desarrollo: |
+          $$
+          \frac{dv}{dy} = \frac{v}{y} = \frac{1{,}5}{0{,}002} = 750\ \text{s}^{-1}
+          $$
+
+          Fíjate en la unidad: **el gradiente de velocidad es un inverso de
+          tiempo**, porque son m/s divididos por m. Por eso también se llama
+          «velocidad de deformación angular» y se mide en rad/s.
+
+      - tipo: calcular
+        titulo: La fuerza
+        pregunta: |
+          Con la ley de Newton, ¿qué fuerza hay que hacer?
+        respuesta:
+          tipo: magnitud
+          valor: '60 N'
+          tolerancia: 0.01
+          formato: una fuerza, con su unidad
+        distractores:
+          - valor: '150 N'
+            mensaje: |
+              Eso es la tensión cortante $\tau = \mu\,dv/dy = 150\ \text{Pa}$,
+              que es fuerza **por unidad de área**. Falta multiplicar por los
+              $0{,}4\ \text{m}^{2}$.
+          - valor: '0.06 N'
+            mensaje: |
+              Te has dejado el factor mil del espesor en milímetros. Con
+              $y = 0{,}002\ \text{m}$ salen $60\ \text{N}$.
+        pista: |
+          F = μ·A·(dv/dy), con las tres cosas en unidades del SI.
+        desarrollo: |
+          $$
+          F = \mu\,A\,\frac{dv}{dy} = 0{,}2 \cdot 0{,}4 \cdot 750 = 60\ \text{N}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Perfil lineal: $dv/dy = v/y = 1{,}5/0{,}002 = 750\ \text{s}^{-1}$.
+          - texto: >-
+              Ley de Newton: $\tau = \mu\,dv/dy = 0{,}2 \cdot 750 = 150\ \text{Pa}$.
+          - texto: >-
+              La fuerza es la tensión por el área:
+              $F = 150 \cdot 0{,}4 = 60\ \text{N}$.
+          - texto: >-
+              Potencia disipada: $P = F\,v = 60 \cdot 1{,}5 = 90\ \text{W}$.
+          - texto: >-
+              Comprobación dimensional: $\text{Pl} \cdot \text{m}^{2} \cdot \text{s}^{-1}
+              = \text{Pa·s} \cdot \text{m}^{2}/\text{s} = \text{N}$ ✓.
+          - texto: >-
+              Si se duplicara el espesor de la película, la fuerza también se
+              duplicaría, porque hay el doble de aceite que arrastrar.
+            trampa: true
+            mensaje: |
+              Al revés: el espesor está **dividiendo**, así que al duplicarlo
+              la fuerza se reduce a la mitad. Cuanta más película, más suave
+              es el gradiente y menos cuesta deslizar — que es exactamente
+              para lo que sirve engrasar.
+
+    resolucion: |
+      **El gradiente**, con perfil lineal:
+
+      $$
+      \frac{dv}{dy} = \frac{1{,}5}{0{,}002} = 750\ \text{s}^{-1}
+      $$
+
+      **La fuerza**, por la ley de Newton de la viscosidad:
+
+      $$
+      \tau = \mu\,\frac{dv}{dy} = 0{,}2 \cdot 750 = 150\ \text{Pa}
+      \qquad
+      \boxed{F = \tau\,A = 150 \cdot 0{,}4 = 60\ \text{N}}
+      $$
+
+      **La potencia** es la fuerza por la velocidad a la que se aplica:
+
+      $$
+      \boxed{P = F\,v = 60 \cdot 1{,}5 = 90\ \text{W}}
+      $$
+
+      > **Las tres cosas que hay que tener claras antes del siguiente
+      > ejercicio.** Que el gradiente es $v/y$ y se mide en s⁻¹; que $\tau$ es
+      > fuerza por unidad de área y $F$ no; y que el espesor va en metros.
+      > Con dos superficies en vez de una, lo único que cambia es que hay
+      > **dos** gradientes y las fuerzas se suman.
+
+  - id: ejflu2-col113-la-viscosidad-a-partir-de-la-fuerza
+    titulo: Del rozamiento medido a la viscosidad del fluido
+    fuente: >-
+      Ejercicio 1.13 · Colección de problemas de Mecánica de Fluidos,
+      Propiedades de los fluidos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      Una placa situada a $0{,}5\ \text{mm}$ de otra fija, se mueve a
+      $0{,}25\ \text{m/s}$ y requiere una fuerza por unidad de superficie de
+      $2\ \text{N/m}^{2}$, para mantener esta velocidad. Calcúlese la
+      viscosidad absoluta del fluido situado entre las dos placas, en unidades
+      del sistema internacional, así como la velocidad de deformación angular
+      de dicho fluido.
+    pide: La viscosidad absoluta en unidades del SI y la velocidad de deformación angular.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El dato es «una fuerza por unidad de superficie de 2 N/m²». ¿Qué es
+          esa magnitud en la ley de Newton?
+        opciones:
+          - texto: >-
+              La tensión cortante $\tau$, que es justo el miembro izquierdo de
+              la ley: no hay que multiplicar por ningún área
+            correcta: true
+            mensaje: |
+              Eso es, y por eso el enunciado no da el área: no hace falta. La
+              ley se despeja directamente,
+              $\mu = \tau/(dv/dy)$.
+          - texto: >-
+              La fuerza $F$, y el área hay que suponerla de $1\ \text{m}^{2}$
+            mensaje: |
+              Suponer un área es innecesario: «fuerza por unidad de
+              superficie» **es** la tensión cortante. Numéricamente saldría lo
+              mismo con $A = 1$, pero el razonamiento sería casualidad, no
+              método.
+          - texto: >-
+              La presión que ejerce la placa sobre el fluido
+            mensaje: |
+              Las dos tienen las mismas unidades (Pa), pero no son lo mismo:
+              la presión actúa **perpendicular** a la superficie y la tensión
+              cortante, **tangencial**. Aquí la placa se desliza, así que es
+              cortante.
+
+      - tipo: calcular
+        titulo: La velocidad de deformación angular
+        pregunta: |
+          ¿Cuánto vale el gradiente de velocidad?
+        respuesta:
+          tipo: magnitud
+          valor: '500 s^-1'
+          tolerancia: 0.01
+          formato: una velocidad de deformación angular, con su unidad
+        distractores:
+          - valor: '0.5 s^-1'
+            mensaje: |
+              El espesor está en milímetros: $0{,}5\ \text{mm} = 0{,}0005\ \text{m}$.
+              $0{,}25/0{,}0005 = 500\ \text{s}^{-1}$.
+          - valor: '0.125 s^-1'
+            mensaje: |
+              Has multiplicado en vez de dividir. El gradiente es velocidad
+              entre distancia.
+        pista: |
+          0,25 m/s dividido entre 0,5 mm pasados a metros.
+        desarrollo: |
+          $$
+          \frac{dv}{dy} = \frac{0{,}25}{0{,}0005} = 500\ \text{s}^{-1}
+          $$
+
+      - tipo: calcular
+        titulo: La viscosidad absoluta
+        pregunta: |
+          Despejando de la ley de Newton, ¿cuál es $\mu$?
+        respuesta:
+          tipo: magnitud
+          valor: '0.004 Pl'
+          tolerancia: 0.01
+          formato: una viscosidad dinámica, con su unidad
+        distractores:
+          - valor: '1000 Pl'
+            mensaje: |
+              Has dividido el gradiente entre la tensión. La ley es
+              $\tau = \mu\,(dv/dy)$, así que
+              $\mu = \tau/(dv/dy) = 2/500$.
+          - valor: '0.0004 Pl'
+            mensaje: |
+              Un cero de más: $2/500 = 0{,}004$, no $0{,}0004$.
+        pista: |
+          μ = τ / (dv/dy) = 2 / 500.
+        desarrollo: |
+          $$
+          \mu = \frac{\tau}{dv/dy} = \frac{2}{500} = 0{,}004\ \text{Pl}
+          = 0{,}04\ \text{P} = 4\ \text{cP}
+          $$
+
+          **Un aceite ligero**: cuatro veces el agua a 15 °C. El orden de
+          magnitud es el que hay que reconocer para saber que la cuenta va
+          bien.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              «Fuerza por unidad de superficie» es la tensión cortante:
+              $\tau = 2\ \text{Pa}$.
+          - texto: >-
+              El espesor en metros: $0{,}5\ \text{mm} = 5\cdot10^{-4}\ \text{m}$.
+          - texto: >-
+              $dv/dy = 0{,}25/5\cdot10^{-4} = 500\ \text{s}^{-1}$, que es la
+              velocidad de deformación angular pedida.
+          - texto: >-
+              $\mu = \tau/(dv/dy) = 2/500 = 0{,}004\ \text{Pl}$.
+          - texto: >-
+              En unidades cegesimales serían $0{,}04\ \text{P}$, porque
+              $1\ \text{Pl} = 10\ \text{P}$.
+          - texto: >-
+              La velocidad de deformación angular se mide en radianes, así que
+              su unidad es el radián y no el inverso de segundo.
+            trampa: true
+            mensaje: |
+              Es velocidad **de deformación**: radianes por segundo, no
+              radianes. Y como el radián es adimensional, la unidad queda en
+              $\text{s}^{-1}$ — que es exactamente lo que sale de dividir m/s
+              entre m.
+
+    resolucion: |
+      El dato de fuerza ya viene por unidad de superficie, así que es
+      directamente la tensión cortante y no hace falta el área:
+
+      $$
+      \frac{dv}{dy} = \frac{0{,}25}{5\cdot10^{-4}} = \boxed{500\ \text{s}^{-1}}
+      \qquad
+      \mu = \frac{\tau}{dv/dy} = \frac{2}{500} = \boxed{0{,}004\ \text{Pl}}
+      $$
+
+      > **Por qué el enunciado no da el área.** Porque da la fuerza dividida
+      > por ella. Quien busque el área en el enunciado y no la encuentre
+      > perderá tiempo; quien reconozca que «N/m²» ya es una tensión, tiene el
+      > ejercicio hecho en dos líneas.
+
+  - id: ejflu2-col12-la-placa-entre-dos-superficies
+    titulo: La placa que roza por las dos caras
+    fuente: >-
+      Ejercicio 1.2 · Colección de problemas de Mecánica de Fluidos,
+      Propiedades de los fluidos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      Dos superficies planas de grandes dimensiones están separadas
+      $32\ \text{mm}$ y el espacio entre ellas está lleno con un líquido cuya
+      viscosidad es de $0{,}15\ \text{Poise}$. Suponiendo que el gradiente de
+      velocidades es lineal, se pide:
+
+      a) ¿Qué fuerza en daN se requiere para arrastrar una placa de muy poco
+      espesor y $0{,}5\ \text{m}^{2}$ de área a la velocidad constante de
+      $20\ \text{cm/s}$, si la placa dista $10\ \text{mm}$ de una de las
+      superficies?
+
+      b) ¿Cuál es la potencia disipada en watio? Razónese todo lo que se haga.
+    pide: La fuerza en decanewtons y la potencia en vatios.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La placa está a $10\ \text{mm}$ de una superficie. ¿Y de la otra?
+        opciones:
+          - texto: >-
+              A $22\ \text{mm}$, y las dos películas frenan a la vez: hay que
+              calcular dos fuerzas y sumarlas
+            correcta: true
+            mensaje: |
+              Eso es. $32 - 10 = 22\ \text{mm}$. Los dos huecos tienen
+              gradientes distintos —$0{,}2/0{,}01$ y $0{,}2/0{,}022$— y las
+              dos fuerzas van en el mismo sentido: contra el movimiento.
+          - texto: >-
+              También a $10\ \text{mm}$: la placa va por el centro
+            mensaje: |
+              Solo si estuviera centrada, y el enunciado dice explícitamente
+              que dista 10 mm de **una** de las superficies. Los 32 mm totales
+              dejan 22 al otro lado. Si fuera simétrico, el dato de los 10 mm
+              sobraría.
+          - texto: >-
+              A $32\ \text{mm}$, que es la separación dada
+            mensaje: |
+              Los $32\ \text{mm}$ son la separación entre las dos superficies
+              fijas, no entre la placa y la segunda. Restando: $22\ \text{mm}$.
+
+      - tipo: calcular
+        titulo: La fuerza total
+        pregunta: |
+          Sumando las dos contribuciones, ¿qué fuerza hay que hacer?
+        respuesta:
+          tipo: magnitud
+          valor: '0.218 N'
+          tolerancia: 0.02
+          formato: una fuerza, con su unidad
+        distractores:
+          - valor: '0.15 N'
+            mensaje: |
+              Esa es solo la película de $10\ \text{mm}$
+              ($0{,}015 \cdot 0{,}5 \cdot 20 = 0{,}15\ \text{N}$). Falta la de
+              $22\ \text{mm}$, que aporta otros $0{,}068\ \text{N}$.
+          - valor: '2.18 N'
+            mensaje: |
+              Un factor diez: la viscosidad son $0{,}15$ **poises**, es decir
+              $0{,}015\ \text{Pl}$. Con $0{,}15\ \text{Pl}$ saldría diez veces
+              más.
+        pista: |
+          F = μ·A·(v/l₁ + v/l₂), con μ en Pl y los huecos en metros.
+        desarrollo: |
+          $$
+          F = \mu\,A\left(\frac{v}{l_1}+\frac{v}{l_2}\right)
+          = 0{,}015 \cdot 0{,}5\left(\frac{0{,}2}{0{,}01}+\frac{0{,}2}{0{,}022}\right)
+          $$
+          $$
+          = 0{,}0075\,(20 + 9{,}09) = 0{,}218\ \text{N} = 0{,}0218\ \text{daN}
+          $$
+
+      - tipo: calcular
+        titulo: La potencia disipada
+        pregunta: |
+          ¿Cuánta potencia se disipa?
+        respuesta:
+          tipo: magnitud
+          valor: '0.0436 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '1.09 W'
+            mensaje: |
+              Has multiplicado por $5$ o dividido por la velocidad. La
+              potencia es $P = F\,v = 0{,}218 \cdot 0{,}2$.
+          - valor: '0.218 W'
+            mensaje: |
+              Ese es el número de la fuerza. Para la potencia falta
+              multiplicar por la velocidad, $0{,}2\ \text{m/s}$.
+        pista: |
+          P = F·v, con la fuerza que acabas de calcular.
+        desarrollo: |
+          $$
+          P = F\,v = 0{,}218 \cdot 0{,}2 = 0{,}0436\ \text{W}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $0{,}15\ \text{P} = 0{,}015\ \text{Pl}$; $v = 0{,}2\ \text{m/s}$;
+              $l_1 = 0{,}01\ \text{m}$ y $l_2 = 0{,}022\ \text{m}$.
+          - texto: >-
+              Cada cara aporta $\mu A v/l$: los dos gradientes son distintos
+              porque los huecos lo son.
+          - texto: >-
+              $F = 0{,}0075\,(20+9{,}09) = 0{,}218\ \text{N}$, que en
+              decanewtons son $0{,}0218\ \text{daN}$.
+          - texto: >-
+              $P = F v = 0{,}0436\ \text{W}$.
+          - texto: >-
+              El espesor de la placa no interviene porque el enunciado dice
+              que es muy pequeño.
+          - texto: >-
+              Como la placa está más cerca de una superficie que de la otra,
+              hay que usar la media de los dos huecos, $16\ \text{mm}$.
+            trampa: true
+            mensaje: |
+              Promediar los huecos daría $2\mu A v/0{,}016 = 0{,}1875\ \text{N}$,
+              y la respuesta es $0{,}218$. No se puede promediar porque la
+              fuerza depende de $1/l$, no de $l$: la media de los inversos no
+              es el inverso de la media.
+
+    resolucion: |
+      **a) La fuerza.** La placa arrastra líquido por sus dos caras, y los dos
+      huecos son distintos: $10\ \text{mm}$ y $32-10 = 22\ \text{mm}$.
+
+      $$
+      F = \mu A\left(\frac{v}{l_1}+\frac{v}{l_2}\right)
+      = 0{,}015 \cdot 0{,}5\left(\frac{0{,}2}{0{,}01}+\frac{0{,}2}{0{,}022}\right)
+      = \boxed{0{,}218\ \text{N} = 0{,}0218\ \text{daN}}
+      $$
+
+      **b) La potencia.**
+
+      $$
+      \boxed{P = F\,v = 0{,}218 \cdot 0{,}2 = 0{,}0436\ \text{W}}
+      $$
+
+      > **Dos avisos de unidades en un solo ejercicio.** La viscosidad viene
+      > en poises (÷10 para pasar a Pl), la velocidad en cm/s (÷100) y la
+      > respuesta se pide en daN (÷10 desde newtons). Ninguna de las tres
+      > conversiones está avisada en el enunciado, y las tres se cazan igual:
+      > escribiendo la unidad en cada paso.
+
+  - id: ejflu2-col112-de-dinamica-a-cinematica
+    titulo: De la viscosidad dinámica a la cinemática, pasando por los stokes
+    fuente: >-
+      Ejercicio 1.12 · Colección de problemas de Mecánica de Fluidos,
+      Propiedades de los fluidos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      En un punto en un flujo viscoso, la tensión cortante es de
+      $35\ \text{kPa}$ y el gradiente de velocidad es de
+      $6000\ \text{m/s}\cdot\text{m}$. Si la densidad relativa del líquido es
+      $0{,}93$. ¿Cuál es la viscosidad cinemática (en Stoke)?
+    pide: La viscosidad cinemática en stokes.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué hay que calcular primero, y por qué no se puede ir directo a la
+          cinemática?
+        opciones:
+          - texto: >-
+              La dinámica, $\mu = \tau/(dv/dy)$: la cinemática es
+              $\nu = \mu/\rho$ y necesita $\mu$
+            correcta: true
+            mensaje: |
+              Eso es. La ley de Newton da la dinámica; la cinemática sale
+              después dividiendo por la densidad. Y la densidad hay que
+              construirla desde la relativa: $0{,}93 \cdot 1000$.
+          - texto: >-
+              La densidad, que es el dato que falta
+            mensaje: |
+              La densidad sale de la relativa en un paso
+              ($930\ \text{kg/m}^{3}$), pero no es lo primero: sin $\mu$ no
+              hay nada que dividir.
+          - texto: >-
+              Nada: la viscosidad cinemática es la tensión entre el gradiente
+            mensaje: |
+              Eso es la **dinámica**. La cinemática es esa dividida por la
+              densidad, y por eso tiene dimensiones distintas: $L^{2}T^{-1}$
+              frente a $ML^{-1}T^{-1}$.
+
+      - tipo: calcular
+        titulo: La viscosidad dinámica
+        pregunta: |
+          ¿Cuánto vale $\mu$?
+        respuesta:
+          tipo: magnitud
+          valor: '5.833 Pl'
+          tolerancia: 0.01
+          formato: una viscosidad dinámica, con su unidad
+        distractores:
+          - valor: '0.00583 Pl'
+            mensaje: |
+              La tensión son $35\ \text{kPa} = 35\,000\ \text{Pa}$, no
+              $35\ \text{Pa}$. Con el kilo puesto: $35000/6000 = 5{,}83$.
+          - valor: '1029 Pl'
+            mensaje: |
+              Has multiplicado. $\mu = \tau/(dv/dy)$, con la tensión arriba.
+        pista: |
+          μ = τ/(dv/dy), y τ son 35 000 Pa.
+        desarrollo: |
+          $$
+          \mu = \frac{35\,000}{6000} = 5{,}833\ \text{Pl}
+          $$
+
+          Es un fluido **muy** viscoso: casi seis mil veces el agua. Un
+          gradiente de $6000\ \text{s}^{-1}$ con tensiones de kilopascales es
+          propio de un lubricante en un cojinete.
+
+      - tipo: calcular
+        titulo: La viscosidad cinemática, en stokes
+        pregunta: |
+          Con $\rho = 930\ \text{kg/m}^{3}$, ¿cuánto vale $\nu$ en stokes?
+        respuesta:
+          tipo: magnitud
+          valor: '62.7 st'
+          tolerancia: 0.02
+          formato: una viscosidad cinemática, con su unidad
+        distractores:
+          - valor: '0.00627 st'
+            mensaje: |
+              Ese es el valor en $\text{m}^{2}/\text{s}$, no en stokes. Un
+              stoke es $\text{cm}^{2}/\text{s}$, así que hay que multiplicar
+              por $10^{4}$.
+          - valor: '5425 st'
+            mensaje: |
+              Has multiplicado por la densidad en vez de dividir. La
+              cinemática es la dinámica **entre** la densidad.
+        pista: |
+          ν = μ/ρ en m²/s, y después ×10⁴ para pasarlo a stokes.
+        desarrollo: |
+          $$
+          \nu = \frac{\mu}{\rho} = \frac{5{,}833}{930}
+          = 6{,}272\cdot10^{-3}\ \text{m}^{2}/\text{s}
+          = 62{,}7\ \text{St}
+          $$
+
+          El factor $10^{4}$ sale de que $1\ \text{St} = 1\ \text{cm}^{2}/\text{s}$
+          y hay $10^{4}\ \text{cm}^{2}$ en un metro cuadrado.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $\mu = \tau/(dv/dy) = 35\,000/6000 = 5{,}833\ \text{Pl}$.
+          - texto: >-
+              $\rho = s\,\rho_{\text{agua}} = 0{,}93 \cdot 1000 = 930\ \text{kg/m}^{3}$.
+          - texto: >-
+              $\nu = \mu/\rho = 6{,}272\cdot10^{-3}\ \text{m}^{2}/\text{s}$.
+          - texto: >-
+              En stokes: $\times 10^{4} = 62{,}7\ \text{St}$.
+          - texto: >-
+              Comprobación dimensional: $\text{Pl}/(\text{kg/m}^{3})
+              = \text{m}^{2}/\text{s}$, sin masa ✓.
+          - texto: >-
+              La densidad relativa $0{,}93$ se puede usar tal cual en
+              $\nu = \mu/s$, porque es adimensional y no cambia el resultado.
+            trampa: true
+            mensaje: |
+              Ser adimensional es precisamente lo que impide usarla: dividir
+              entre $0{,}93$ daría $6{,}27\ \text{Pl}$, un número con las
+              unidades equivocadas y mil veces mayor. La densidad relativa
+              hay que convertirla en densidad multiplicando por la del agua.
+
+    resolucion: |
+      **Primero la dinámica**, de la ley de Newton:
+
+      $$
+      \mu = \frac{\tau}{dv/dy} = \frac{35\,000}{6000} = 5{,}833\ \text{Pl}
+      $$
+
+      **Después la densidad**, desde la relativa:
+      $\rho = 0{,}93 \cdot 1000 = 930\ \text{kg/m}^{3}$.
+
+      **Y la cinemática:**
+
+      $$
+      \nu = \frac{\mu}{\rho} = 6{,}272\cdot10^{-3}\ \frac{\text{m}^{2}}{\text{s}}
+      = \boxed{62{,}7\ \text{St}}
+      $$
+
+      > **Tres unidades en tres líneas**, y ninguna avisada: kPa a Pa,
+      > relativa a absoluta, m²/s a stokes. Este ejercicio no tiene más
+      > física que la ley de Newton; lo que examina es si sabes moverte entre
+      > sistemas sin perder un factor mil por el camino.
+
+  - id: ejflu2-col125-el-ascenso-capilar
+    titulo: El ascenso capilar, con la tensión superficial en kilopondios
+    fuente: >-
+      Ejercicio 1.25 · Colección de problemas de Mecánica de Fluidos,
+      Propiedades de los fluidos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      Introducido un tubo capilar de sección circular en agua, se pide:
+
+      a) Deducir la expresión que proporciona la elevación del agua en el tubo
+      capilar, suponiendo que el líquido moja totalmente al sólido.
+
+      b) Aplicarlo al caso en que el diámetro del tubo sea de $5\ \text{mm}$.
+
+      Dato: tensión superficial del agua $\sigma = 0{,}0074\ \text{kg/m}$.
+    pide: La deducción de la fórmula y la altura para un tubo de 5 mm.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Moja totalmente» fija un dato de la fórmula. ¿Cuál?
+        opciones:
+          - texto: >-
+              El ángulo de contacto: $\theta = 0$, y por tanto $\cos\theta = 1$
+            correcta: true
+            mensaje: |
+              Eso es. Con mojado total el menisco es tangente a la pared y
+              toda la tensión superficial tira hacia arriba. Si el enunciado
+              diera un ángulo, habría que arrastrar el coseno.
+          - texto: >-
+              La tensión superficial, que vale la del agua
+            mensaje: |
+              La tensión superficial es un dato aparte y la da el enunciado.
+              Lo que fija «moja totalmente» es el ángulo de contacto.
+          - texto: >-
+              Que el ascenso es positivo
+            mensaje: |
+              El signo es una consecuencia, no la hipótesis. Lo que se fija es
+              $\theta = 0$; de ahí sale que $\cos\theta = 1 > 0$ y que el
+              líquido sube.
+
+      - tipo: calcular
+        titulo: La tensión superficial en unidades del SI
+        pregunta: |
+          El dato viene en kg/m, o sea kilopondios por metro. ¿Cuánto vale en
+          N/m?
+        respuesta:
+          tipo: magnitud
+          valor: '0.07252 N/m'
+          tolerancia: 0.01
+          formato: una tensión superficial, con su unidad
+        distractores:
+          - valor: '0.0074 N/m'
+            mensaje: |
+              Ese es el número del enunciado sin convertir. Un kilopondio son
+              $9{,}8\ \text{N}$: $0{,}0074 \cdot 9{,}8 = 0{,}07252$.
+          - valor: '0.000755 N/m'
+            mensaje: |
+              Has dividido entre $9{,}8$ en vez de multiplicar. De kp a N se
+              multiplica.
+        pista: |
+          El «kg» del dato es un kilopondio: ×9,8 para pasar a newtons.
+        desarrollo: |
+          $$
+          \sigma = 0{,}0074\ \frac{\text{kp}}{\text{m}}
+          = 0{,}0074 \cdot 9{,}8 = 0{,}07252\ \frac{\text{N}}{\text{m}}
+          $$
+
+          **Y este es el paso que decide el ejercicio.** Con el dato sin
+          convertir la altura sale $0{,}6\ \text{mm}$ en vez de
+          $5{,}92\ \text{mm}$: casi diez veces menos.
+
+      - tipo: calcular
+        titulo: La altura de ascenso
+        pregunta: |
+          Con $D = 5\ \text{mm}$, ¿cuánto sube el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '5.92 mm'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '2.96 mm'
+            mensaje: |
+              Has usado el diámetro donde va el radio (o al revés). La fórmula
+              con radio es $h = 2\sigma/(\rho g R)$; con diámetro,
+              $h = 4\sigma/(\rho g D)$. Cuidado con el 2 y el 4.
+          - valor: '0.604 mm'
+            mensaje: |
+              Es el resultado con la tensión superficial sin pasar de
+              kilopondios a newtons. Falta el factor $9{,}8$.
+        pista: |
+          h = 4σ/(ρ·g·D), con σ ya en N/m y D en metros.
+        desarrollo: |
+          $$
+          h = \frac{4\sigma}{\rho\,g\,D}
+          = \frac{4 \cdot 0{,}07252}{1000 \cdot 9{,}8 \cdot 0{,}005}
+          = \frac{0{,}29008}{49} = 5{,}92\cdot10^{-3}\ \text{m} = 5{,}92\ \text{mm}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la deducción y el cálculo. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La fuerza de tensión superficial actúa a lo largo del perímetro
+              de contacto: $F = \sigma\,(2\pi R)\cos\theta$.
+          - texto: >-
+              El peso de la columna levantada es
+              $W = \rho\,g\,(\pi R^{2}h)$.
+          - texto: >-
+              Igualando las dos y despejando:
+              $h = \dfrac{2\sigma\cos\theta}{\rho g R} = \dfrac{4\sigma\cos\theta}{\rho g D}$.
+          - texto: >-
+              Con mojado total, $\cos\theta = 1$.
+          - texto: >-
+              Números: $\sigma = 0{,}07252\ \text{N/m}$ y $D = 0{,}005\ \text{m}$
+              dan $h = 5{,}92\ \text{mm}$.
+          - texto: >-
+              Si se duplicara el diámetro del tubo, la altura también se
+              duplicaría, porque cabe el doble de agua.
+            trampa: true
+            mensaje: |
+              Al revés, y es el contenido de la ley de Jurin: $h\,D$ es
+              constante, así que al duplicar el diámetro la altura **se
+              reduce a la mitad**. La fuerza que sostiene la columna crece con
+              el perímetro ($\propto D$) y el peso a levantar crece con el
+              área ($\propto D^{2}$).
+
+    resolucion: |
+      **a) La deducción.** La componente vertical de la tensión superficial,
+      repartida por el perímetro de contacto, sostiene el peso de la columna:
+
+      $$
+      \sigma\,(2\pi R)\cos\theta = \rho\,g\,\pi R^{2}h
+      \qquad\Longrightarrow\qquad
+      \boxed{h = \frac{2\sigma\cos\theta}{\rho\,g\,R} = \frac{4\sigma\cos\theta}{\rho\,g\,D}}
+      $$
+
+      **b) El número.** Mojado total, $\cos\theta = 1$; y la tensión
+      superficial, de kp/m a N/m:
+
+      $$
+      \sigma = 0{,}0074 \cdot 9{,}8 = 0{,}07252\ \text{N/m}
+      \qquad
+      h = \frac{4 \cdot 0{,}07252}{1000 \cdot 9{,}8 \cdot 0{,}005}
+      = \boxed{5{,}92\ \text{mm}}
+      $$
+
+      > **El «kg/m» del enunciado es kilopondio por metro**, no kilogramo por
+      > metro. Es el mismo aviso del tema 1, y aquí decide el resultado por un
+      > factor diez. La forma de no caer: cuando una unidad de un dato no
+      > cuadre dimensionalmente con la fórmula —y kg/m no es una tensión
+      > superficial— es que está en el Sistema Técnico.
+
+  - id: ejflu2-col121-el-modulo-de-elasticidad
+    titulo: Cuánto se comprime el alcohol, y qué módulo tiene
+    fuente: >-
+      Ejercicio 1.21 · Colección de problemas de Mecánica de Fluidos,
+      Propiedades de los fluidos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      Cuando se somete un volumen de alcohol de $0{,}02892\ \text{m}^{3}$ a
+      una presión de $51000\ \text{kPa}$, éste se contrae a
+      $0{,}02770\ \text{m}^{3}$. Calcúlese la elasticidad (en MPa).
+    pide: El módulo de elasticidad volumétrico en megapascales.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué es exactamente el módulo de elasticidad volumétrico?
+        opciones:
+          - texto: >-
+              El incremento de presión dividido por la deformación
+              volumétrica unitaria: $E = -dp/(dV/V)$, y tiene unidades de
+              presión
+            correcta: true
+            mensaje: |
+              Eso es. El signo menos está porque al aumentar la presión el
+              volumen disminuye, y así $E$ sale positivo. Es el inverso del
+              coeficiente de compresibilidad cúbica $\alpha$.
+          - texto: >-
+              La variación de volumen por unidad de presión
+            mensaje: |
+              Eso es el coeficiente de compresibilidad $\alpha$, que es su
+              **inverso**. $E = 1/\alpha$, y se usa más porque sus unidades
+              son las de la presión y los números salen manejables.
+          - texto: >-
+              Una propiedad adimensional del líquido
+            mensaje: |
+              No lo es: la deformación $dV/V$ sí es adimensional, así que $E$
+              hereda las unidades de $dp$, es decir, pascales.
+
+      - tipo: calcular
+        titulo: La deformación volumétrica unitaria
+        pregunta: |
+          ¿Cuánto vale $\Delta V/V$, en tanto por ciento?
+        respuesta:
+          tipo: numero
+          valor: '4.22'
+          tolerancia: 0.05
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '0.0422'
+            mensaje: |
+              Esa es la fracción, no el porcentaje: $\times 100$ para pasarlo a
+              tanto por ciento.
+          - valor: '4.4'
+            mensaje: |
+              Has dividido entre el volumen final. La deformación unitaria se
+              refiere al volumen **inicial**: $(0{,}02892-0{,}02770)/0{,}02892$.
+        pista: |
+          (V inicial − V final) dividido entre V inicial, y ×100.
+        desarrollo: |
+          $$
+          \frac{\Delta V}{V} = \frac{0{,}02892-0{,}02770}{0{,}02892}
+          = 0{,}0422 = 4{,}22\ \%
+          $$
+
+          Un 4 % de compresión: mucho para un líquido, y coherente con los 510
+          bar del enunciado.
+
+      - tipo: calcular
+        titulo: El módulo
+        pregunta: |
+          ¿Cuál es el módulo de elasticidad volumétrico?
+        respuesta:
+          tipo: magnitud
+          valor: '1209 MPa'
+          tolerancia: 0.02
+          formato: un módulo de elasticidad, con su unidad
+        distractores:
+          - valor: '2152 MPa'
+            mensaje: |
+              Has usado el volumen final en el denominador de la deformación.
+              Con el inicial salen $1209\ \text{MPa}$.
+          - valor: '1.209 MPa'
+            mensaje: |
+              Los $51000\ \text{kPa}$ son $51\ \text{MPa}$, no
+              $51\ \text{kPa}$. Un factor mil.
+        pista: |
+          E = Δp / (ΔV/V), con Δp = 51 MPa y la deformación en fracción.
+        desarrollo: |
+          $$
+          E = \frac{\Delta p}{\Delta V/V} = \frac{51\ \text{MPa}}{0{,}0422}
+          = 1209\ \text{MPa}
+          $$
+
+          (La solución oficial redondea a $1208\ \text{MPa}$; la diferencia
+          está en los decimales que se arrastren de la deformación.)
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la solución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $\Delta V = 0{,}02892-0{,}02770 = 0{,}00122\ \text{m}^{3}$.
+          - texto: >-
+              $\Delta V/V = 0{,}00122/0{,}02892 = 0{,}0422$, adimensional.
+          - texto: >-
+              $\Delta p = 51000\ \text{kPa} = 51\ \text{MPa}$.
+          - texto: >-
+              $E = 51/0{,}0422 = 1209\ \text{MPa}$.
+          - texto: >-
+              Comprobación de orden de magnitud: el agua tiene
+              $2100\ \text{MPa}$, y el alcohol es más compresible que el
+              agua, así que menos módulo tiene sentido.
+          - texto: >-
+              Como $E$ es grande comparado con $\Delta p$, el alcohol es
+              prácticamente incompresible y el resultado demuestra que la
+              hipótesis de incompresibilidad vale siempre.
+            trampa: true
+            mensaje: |
+              Precisamente aquí **no** vale: el volumen ha cambiado un 4 %, y
+              despreciar eso sería despreciar el propio enunciado. La
+              hipótesis de incompresibilidad es buena a presiones normales;
+              a 510 bar deja de serlo, y por eso el capítulo incluye estos
+              problemas.
+
+    resolucion: |
+      $$
+      \frac{\Delta V}{V} = \frac{0{,}02892-0{,}02770}{0{,}02892} = 0{,}0422
+      \qquad
+      \boxed{E = \frac{\Delta p}{\Delta V/V} = \frac{51\ \text{MPa}}{0{,}0422}
+      = 1209\ \text{MPa}}
+      $$
+
+      > **Dónde está el examen en un ejercicio de dos líneas.** En dos
+      > sitios: en dividir entre el volumen **inicial** (el final da
+      > $2152\ \text{MPa}$, un 78 % de error) y en ver que
+      > $51000\ \text{kPa}$ son $51\ \text{MPa}$. La física —la definición de
+      > $E$— es una línea de teoría; el resto es cuidado.

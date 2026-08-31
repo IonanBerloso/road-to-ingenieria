@@ -1,0 +1,220 @@
+---
+asignatura: fluidos
+tema: 4
+titulo: Hidrostática
+descripcion: La ecuación fundamental, Pascal, las escalas de presión y los manómetros. El tema que aparece en todos los exámenes.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 4 y de la Colección de problemas de Mecánica de Fluidos · Departamento de Ingeniería Energética, UPV/EHU
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Este es el tema que más veces cae, y casi nunca solo: **aparece dentro de los
+demás**. Un problema de bombeo empieza leyendo un manómetro, uno de compuertas
+empieza con una presión en la superficie, y uno de cavitación termina
+comparando con la presión de vapor. Todo eso es este tema.
+
+Su contenido cabe en una ecuación y una tabla de conversiones. La dificultad
+está en otro sitio: en no perderse entre **presión absoluta y manométrica**, y
+en recorrer un manómetro sin equivocarse de signo.
+
+## La ecuación fundamental
+
+Del tema 3, con la gravedad como única fuerza de volumen y densidad
+constante:
+
+$$
+dp + \rho\,g\,dz = 0
+\qquad\Longrightarrow\qquad
+\boxed{p + \rho\,g\,z = \text{cte}}
+$$
+
+En cuanto se mide $h$ **hacia abajo** desde la superficie libre, el signo
+desaparece y queda la forma que se usa siempre:
+
+$$
+p_1 = p_0 + \rho\,g\,h
+$$
+
+Es válida con cinco condiciones, y conviene saberlas porque los temas 5 y 6
+existen precisamente porque alguna falla: fluido **en reposo**, gravedad como
+**única** fuerza de volumen, eje vertical, fluido **incompresible y
+homogéneo**, y $g$ constante.
+
+**Sus consecuencias** son las que se usan sin pensar:
+
+- Todos los puntos a la misma cota tienen la misma presión — y al revés,
+  todos los puntos con la misma presión están en el mismo plano horizontal.
+- La superficie libre es horizontal (el **plano piezométrico**).
+- La variación de presión solo depende de la **diferencia de cota**, no de la
+  forma del recipiente ni de cuánto líquido haya.
+
+## Pascal, y la prensa hidráulica
+
+Si la presión se transmite por igual en todo el fluido, dos émbolos conectados
+cumplen $p_1 = p_2$:
+
+$$
+\frac{F_1}{A_1} = \frac{F_2}{A_2}
+\qquad\Longrightarrow\qquad
+F_2 = \frac{A_2}{A_1}\,F_1
+$$
+
+Una fuerza pequeña sobre un área pequeña levanta una grande sobre un área
+grande. **Y el trabajo es el mismo**, porque los desplazamientos van en razón
+inversa: $A_1 l_1 = A_2 l_2$. No hay energía gratis; hay cambio de escala.
+
+## Las unidades, que son medio examen
+
+$$
+1\ \text{bar} = 10^{5}\ \text{Pa}
+\qquad
+1\ \text{atm} = 1{,}013\cdot10^{5}\ \text{Pa} = 760\ \text{Torr}
+\qquad
+1\ \text{kg/cm}^{2} = 9{,}8\cdot10^{4}\ \text{Pa}
+$$
+
+Y la unidad que más se usa aquí, los **metros de columna de líquido**: la
+presión dividida por el peso específico.
+
+$$
+h\ (\text{mcl}) = \frac{p}{\gamma}
+$$
+
+Convertir entre columnas de líquidos distintos es multiplicar por la densidad
+relativa, y esto ahorra mucho tiempo en los manómetros:
+
+$$
+h_{\text{mcl}}\cdot s_{\text{l}} = h_{\text{mca}}
+\qquad\text{p. ej.}\qquad
+1\ \text{mcHg} = 13{,}6\ \text{mca}
+$$
+
+| unidad | en mca | en pascales |
+|---|---|---|
+| 1 mca | 1 | 9800 |
+| 1 bar | 10,2 | 100 000 |
+| 1 kg/cm² | 10 | 98 000 |
+| 1 atm | 10,336 | 101 325 |
+| 1 Torr = 1 mmHg | 0,0136 | 133,3 |
+
+## Absoluta y manométrica
+
+$$
+\boxed{p_{\text{abs}} = p_{\text{atm}} + p_{\text{man}}}
+$$
+
+La diferencia entre las dos es **dónde está el cero**: en el vacío absoluto o
+en la atmósfera del lugar. Consecuencias:
+
+- En absolutas **no hay presiones negativas**. En manométricas sí: una presión
+  por debajo de la atmosférica es un **vacío** o depresión, y se mide con un
+  **vacuómetro**.
+- **En toda ecuación de estado se usan absolutas.** Lo mismo con la presión de
+  vapor y con la cavitación del tema 25.
+- En lo demás se trabaja en manométricas, porque la atmósfera empuja por los
+  dos lados de casi todo y se cancela.
+
+<figure>
+<svg viewBox="0 0 420 214" role="img" width="420" height="214"
+     aria-labelledby="flu4-t flu4-d">
+  <title id="flu4-t">Las dos escalas de presión, y por qué un vacuómetro marca negativo</title>
+  <desc id="flu4-d">Dos escalas verticales paralelas. La absoluta arranca en el vacío absoluto, valor cero, y la manométrica arranca en la presión atmosférica local, diez coma dos metros de columna de agua más arriba. Un punto A por encima de la atmosférica marca positivo en las dos escalas; un punto B por debajo marca positivo en absoluta y negativo en manométrica.</desc>
+
+  <line x1="96" y1="24" x2="96" y2="186" stroke="var(--ink)" stroke-width="1.4"/>
+  <line x1="300" y1="24" x2="300" y2="186" stroke="var(--ink)" stroke-width="1.4"/>
+
+  <text x="96" y="16" text-anchor="middle" font-size="10.5" fill="var(--ink-suave)">escala absoluta</text>
+  <text x="300" y="16" text-anchor="middle" font-size="10.5" fill="var(--ink-suave)">escala manométrica</text>
+
+  <line x1="72" y1="186" x2="336" y2="186" stroke="var(--ink-suave)" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="68" y="190" text-anchor="end" font-size="10" fill="var(--ink-suave)" textLength="28" lengthAdjust="spacingAndGlyphs">vacío</text>
+  <text x="104" y="200" font-size="10" fill="var(--ink)">0</text>
+
+  <line x1="72" y1="122" x2="336" y2="122" stroke="var(--live)" stroke-width="1.4"/>
+  <text x="68" y="126" text-anchor="end" font-size="10" fill="var(--live)" textLength="52" lengthAdjust="spacingAndGlyphs">atmósfera</text>
+  <text x="104" y="118" font-size="10" fill="var(--live)">10,2 mca</text>
+  <text x="308" y="118" font-size="10" fill="var(--live)">0</text>
+
+  <circle cx="96" cy="56" r="4" fill="var(--flag)"/>
+  <circle cx="300" cy="56" r="4" fill="var(--flag)"/>
+  <text x="104" y="52" font-size="10.5" fill="var(--flag)">A · 17 mca</text>
+  <text x="308" y="52" font-size="10.5" fill="var(--flag)">+6,8 mca</text>
+
+  <circle cx="96" cy="160" r="4" fill="var(--d2)"/>
+  <circle cx="300" cy="160" r="4" fill="var(--d2)"/>
+  <text x="104" y="156" font-size="10.5" fill="var(--d2)">B · 3,4 mca</text>
+  <text x="308" y="156" font-size="10.5" fill="var(--d2)">−6,8 mca</text>
+
+  <text x="210" y="208" text-anchor="middle" font-size="10.5" fill="var(--ink-suave)">El mismo punto, dos números: los separa la atmosférica local</text>
+</svg>
+<figcaption>
+
+Un vacuómetro que marca −6,8 mca no dice que la presión sea negativa: dice que
+está 6,8 mca por debajo de la atmosférica, o sea 3,4 mca en absoluta. Es el
+apartado a) del problema 2.3 de la colección, y el sitio donde más se falla.
+
+</figcaption>
+</figure>
+
+## Recorrer un manómetro sin equivocarse
+
+Un manómetro se lee **caminando por el fluido** desde un punto conocido hasta
+el que se busca, y aplicando una sola regla:
+
+> **Bajando se suma $\gamma h$; subiendo se resta.** Y al cambiar de fluido,
+> se cambia el $\gamma$.
+
+Escrito en metros de columna de agua, cada tramo aporta su altura por su
+densidad relativa, lo que evita arrastrar el $9800$ hasta el final:
+
+$$
+\frac{p_A}{\gamma} \pm \sum h_i\,s_i = \frac{p_B}{\gamma}
+$$
+
+<ErrorTipico titulo="Los tramos horizontales no cuentan, y los de gas casi tampoco">
+
+Dos simplificaciones que el enunciado no explicita:
+
+- **Un tramo horizontal no cambia la presión.** Solo cuenta la diferencia de
+  cota, así que da igual lo largo que sea el tubo.
+- **En un gas, la variación de presión es despreciable.** Con aire, dos
+  metros son 24 Pa frente a los miles de pascales del problema (tema 3). Por
+  eso se toma la misma presión en todo el gas de un depósito.
+
+Lo que **sí** cuenta siempre: cada tramo vertical de líquido, con el signo de
+su sentido y la densidad de **su** fluido. El error clásico es arrastrar la
+densidad del primer líquido al segundo tramo.
+
+</ErrorTipico>
+
+## Los aparatos, y qué mide cada uno
+
+| aparato | qué mide |
+|---|---|
+| **barómetro** | la presión atmosférica |
+| **manómetro** | presión manométrica positiva |
+| **vacuómetro** | presión manométrica negativa (depresión) |
+| **manómetro diferencial** | la diferencia entre dos puntos |
+| **micromanómetro** | presiones muy pequeñas |
+
+El **piezómetro** es el más simple: un tubo transparente conectado al
+depósito, donde el líquido sube hasta la altura que marca la presión. Es
+preciso y no necesita otro líquido, pero solo sirve para presiones que no
+excedan mucho la atmosférica — con dos bares harían falta veinte metros de
+tubo.
+
+El **manómetro en U** añade un líquido más pesado e inmiscible, casi siempre
+mercurio, y así mide presiones mayores con un tubo corto. El **diferencial**
+conecta dos depósitos:
+
+$$
+p_1 - p_2 = g\,h\,(\rho_m - \rho)
+$$
+
+Y el **micromanómetro de tubo inclinado** aprovecha que, con el tubo casi
+horizontal, una diferencia de presión mínima produce un recorrido largo del
+menisco: la lectura se amplifica por $1/\sin\theta$.
