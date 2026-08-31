@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **4 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **5 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 155 ejercicios
-y 694 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 164 ejercicios
+y 738 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 694 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**155 ejercicios y 694 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 30 son ejercicios de convocatoria. Cobertura de la
+**164 ejercicios y 738 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 39 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -242,6 +242,36 @@ Ninguna de las dos fronteras usuales da el número.
 > de las cunetas**, no desde el firme, y la diferencia es exactamente el radio
 > de la cuneta. Antes de declarar que un problema no cuadra conviene volver a
 > mirar de dónde a dónde va cada cota.
+
+### La ordinaria de junio de 2023, los nueve
+
+La segunda convocatoria completa, y la primera con los nueve ejercicios.
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 10 % | t04 | 5 mmca · 0,98 Pa/mm — exacto |
+| 2 | 10 % | t15 | Q = 112,37 l/s · F = 8,59 kN — exacto |
+| 3 | 15 % | t07 | 13,72 kN · 13,18 kN · 627,2 N · 985,2 N — los cuatro exactos |
+| 4 | 10 % | t02 | 0,429 l y 0,452 l — exacto, con la fórmula exponencial |
+| 5 | 10 % | t13 | T = 1,28 m · 116,28 l/s — exacto |
+| 6 | 10 % | t16 | λ = 1 y λ = ρ_p/ρ_m — deducción |
+| 7 | 5 % | t21 | b = 2y, R = y/2 — deducción |
+| 8 | 15 % | t19 | 9,98 · 8,30 · 18,28 l/s · 60,42 m · 0,403 bar — exacto |
+| 9 | 15 % | t25 | 1,267·10⁻⁴ y 1,059·10⁻⁴ · 242,04 l/s · 9,496 m — exacto |
+
+**Con un apartado declarado dentro del 9.** Su e) pide la cota máxima de la
+turbobomba y publica 14,47 m; nuestra reconstrucción da 15,52 y la
+diferencia de 1,05 m no se explica con ninguna lectura probada. Se dice en
+la propia resolución, que es donde lo va a leer un alumno.
+
+> El ejercicio 3 es el que más enseña de los nueve, y no por la cuenta. Un
+> tramo curvo con un fluido a cada lado invita a pensar que se
+> contrarrestan. Aquí no: el manómetro abierto de la derecha sitúa el plano
+> de cargas del fluido 2 **por debajo** del tramo, así que su presión es
+> negativa y **tira** de la pared en el mismo sentido en que el otro fluido
+> empuja. Es el primer ejercicio del corpus donde una fuerza hidrostática
+> cambia de signo, y los dos resultados publicados salen exactos solo con
+> esa lectura.
 
 Aporta además tres cosas que no había en el corpus: **capilaridad en una
 sección que no es un tubo** (el hueco entre un cuadrado y un círculo, donde
