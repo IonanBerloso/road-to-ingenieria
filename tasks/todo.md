@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **1 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **2 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 113 ejercicios
-y 482 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 140 ejercicios
+y 616 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,21 +44,22 @@ y 482 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**122 ejercicios y 523 pasos**, de los cuales **89 son problemas transcritos
-de la colección**. Cobertura por capítulo:
+**140 ejercicios y 616 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 15 son ejercicios de convocatoria. Cobertura de la
+colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
 |---|---|---|---|
 | 1 · Propiedades | 23 | 27 | 1.4, 1.6, 1.7 y 1.8 |
 | 2 · Estática | 18 | 46 | compuertas con figura acotada |
 | 3 · Bernoulli | 10 | 34 | los que llevan esquema de instalación |
-| 4 · Cantidad de movimiento | 5 | 22 | álabes y placas, casi todos con figura |
+| 4 · Cantidad de movimiento | 6 | 22 | álabes y placas, casi todos con figura |
 | 5 · Análisis dimensional | 6 | 20 | los simbólicos de teorema π |
 | 6 · Conducciones | 10 | 29 | redes y ramificaciones con figura |
 | 7 · Golpe de ariete | 8 | 17 | los que llevan esquema |
 | 8 · Canales | 7 | 22 | secciones compuestas con figura |
-| 9 · Bombeo | 2 | 19 | los que remiten a los anexos de curvas |
-| **total** | **89** | **236** | |
+| 9 · Bombeo | 4 | 19 | los que remiten a los anexos de curvas |
+| **total** | **92** | **236** | |
 
 La lista exacta de lo que está dentro se saca del corpus en veinte líneas
 —cargar los YAML y extraer el `\d+\.\d+` de cada `fuente`— y **así es como se
@@ -139,9 +140,48 @@ De paso quedaron fijados dos datos de ábaco que el examen no imprime y que
 harán falta otra vez: **ν del alcohol etílico a 0 °C = 2·10⁻⁶ m²/s** (sale de
 que el apartado 8a dé exactamente 22,85 l/s) y **C_HW = 150 para el PVC**.
 
+### La extraordinaria de junio de 2025, transcrita el 31 de agosto de 2026
+
+Ocho de los nueve, en `src/content/fluidos/examenes/2024-2025-ext/`:
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 10 % | t02 | 1,487·10⁶ dyn/cm² · 0,45 UTM/m³ · 4·10⁻⁶ Pa⁻¹ — exacto |
+| 2 | 15 % | t25 | cci exacta; k de la válvula 174 frente a 175,79 (1,1 %) |
+| 4 | 7,5 % | t16 | π₁ = α, π₂ = Q/(H^{5/2}√g) — exacto |
+| 5 | 15 % | t25 | 69,4 l/s y 137,4 kW — exacto |
+| 6 | 10 % | t07 | 35,28 kN y 60,47 kN — exacto |
+| 7 | 12,5 % | t21 | L = 98,99 cm exacto; Q = 5,07 m³/s |
+| 8 | 10 % | t15 | 106,1 / 601,7 / 113,6 / 862,7 N y 18,1 kW — exacto |
+| 9 | 10 % | t13 | 11,04 mm y 342 m/s — exacto |
+
+**Falta el 3**, y por lo de siempre: un manómetro relativo dentro de una
+cámara con su propio barómetro. Sumando su lectura a los 760 mmHg salen
+12,03 mca y el examen publica 10,43; probado también como vacío (8,64) y
+suponiendo que el barómetro mide la atmósfera exterior. §13 caso 2.
+
+Este examen fija además dos cosas del cuadro n.º 25 que no estaban dichas:
+**C_HW = 130 para ε/D = 2,4·10⁻⁴ y 140 para 2,0·10⁻⁴** —la frontera de banda
+cae entre esos dos valores— y confirma **ε = 0,006 cm para el hierro
+forjado**.
+
+Y trae el aviso que más veces se va a repetir: **los «mca» de un enunciado
+son una presión, no una altura.** En el 5a, dar los 1,46 mca como columna de
+petróleo cambia el caudal de 63,9 a 69,4 l/s, y ninguno de los dos números
+resulta sospechoso.
+
 ### El orden recomendado para seguir con la fase 9
 
 1. ~~La ordinaria de 2026~~ — hecha, 7 de 9.
+   ~~La extraordinaria de 2025~~ — hecha, 8 de 9.
+   **La ordinaria de mayo de 2025 está a medias y conviene saber por qué:**
+   verificados el 3 (micromanómetros: s₂ entre 0,93 y 1,07, α = 5,739°), el
+   5 (análisis dimensional, Δp_p = 0,025 bar y t_p = 1152 s) y el 6 (la
+   central de 19,836 MW, exacto). Fuera de alcance por ahora el 1 —simbólico,
+   y no he sabido reconstruir el equilibrio de momentos que da α = 36,4°— y
+   el 2, que necesita una construcción para pasar de F_adh/F_coh al ángulo de
+   contacto que los apuntes no publican. Media convocatoria es peor que
+   ninguna, así que no se ha abierto.
 2. Los dos finales de 2025, y hacia atrás por años.
 3. Los parciales al final: son de 2020 y 2021 y el formato de la asignatura ha
    cambiado desde entonces.

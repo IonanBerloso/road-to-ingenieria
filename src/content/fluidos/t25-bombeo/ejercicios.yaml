@@ -1446,3 +1446,313 @@ ejercicios:
       1414 W y 9,89 mca—. Con el peso específico real saldrían 1377 W y
       10,18 mcl: un 2,7 % de diferencia, que es lo que abre la tolerancia de
       estos dos pasos.
+
+  # ── COLECCIÓN 9.14. El primero del capítulo que usa de verdad el anexo de
+  #    curvas —la INP 65/200 del anexo 3— y el único que termina con la
+  #    bomba **cavitando**: no se pide comprobar que va bien, se pide
+  #    comprobar, y sale mal. Ese es su valor.
+  - id: ejflu25-col914-la-bomba-que-cavita
+    titulo: La instalación completa, y la bomba que acaba cavitando
+    fuente: >-
+      Ejercicio 9.14 · Colección de Problemas, capítulo 9 · Mecánica de
+      Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se tiene una instalación de bombeo para elevar un líquido de
+      $s = 1{,}2$ y viscosidad similar a la del agua, cuyas características
+      son las siguientes:
+
+      - Cota del depósito inferior, $180\ \text{m}$.
+      - Cota del depósito superior, $200\ \text{m}$.
+      - Presión en el depósito superior, $235{,}2\ \text{kPa}$.
+      - Cota del eje de la bomba, $183\ \text{m}$.
+      - Tubería de acero comercial de $100\ \text{mm}$ de diámetro.
+      - Longitud equivalente total de la aspiración, $30\ \text{m}$.
+      - Longitud equivalente total de la impulsión, $125\ \text{m}$.
+      - Presión de vapor del líquido (absoluta), $1{,}6\ \text{kPa}$.
+
+      Se pide:
+
+      a) Seleccionar la bomba necesaria para que circule un caudal de
+      $20\ \text{l/s}$.
+
+      b) Determinar el punto de funcionamiento de la instalación
+      ($H$, $Q$, $\eta$) y la potencia absorbida (kW).
+
+      c) Estudiar la cavitación de la bomba.
+
+      e) ¿Qué marcará un vacuómetro colocado en la tubería de aspiración a la
+      entrada de la bomba?
+
+      Dato de catálogo (anexo 3 de la colección): la **INP 65/200 a 2900 rpm
+      con rodete de 200 mm** pasa por $H \approx 51$ m con
+      $\eta \approx 74{,}5\ \%$ a $73{,}8\ \text{m}^{3}/\text{h}$, y su
+      $NPSH$ requerido en ese punto ronda los $4$ m.
+    pide: El punto de funcionamiento con su potencia, el estudio de cavitación y la lectura del vacuómetro.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El depósito superior está presurizado a $235{,}2\ \text{kPa}$. ¿Cómo
+          entra eso en la curva de la instalación?
+        opciones:
+          - texto: >-
+              Como altura añadida al desnivel, y convertida a columna **del
+              líquido que se bombea**: $235{,}2/(1{,}2\cdot 9{,}8) = 20$ mcl
+            correcta: true
+            mensaje: |
+              Eso es. La altura piezométrica de la instalación es
+              $\Delta z + \Delta p/\gamma$, y ese $\gamma$ es el del fluido que
+              circula, no el del agua. Aquí casualmente sale un número redondo,
+              20 m, que se suma a los otros 20 de desnivel.
+          - texto: >-
+              Como $235{,}2/9{,}8 = 24$ m, porque las presiones se pasan a
+              metros de columna de agua
+            mensaje: |
+              «Metros de columna de agua» es una unidad de presión cómoda, pero
+              la ecuación de Bernoulli trabaja en columna **del fluido del
+              problema**. Con $s = 1{,}2$ la misma presión son menos metros:
+              20 en vez de 24.
+          - texto: >-
+              No entra: la presión del depósito de llegada no afecta a la
+              bomba, solo el desnivel
+            mensaje: |
+              Afecta, y mucho: aquí **duplica** la altura piezométrica. Bombear
+              a un depósito presurizado es como bombearlo veinte metros más
+              arriba.
+
+      - tipo: calcular
+        titulo: La altura piezométrica de la instalación
+        pregunta: |
+          ¿Cuál es el término independiente de la curva de la instalación?
+        respuesta:
+          tipo: magnitud
+          valor: '40 m'
+          tolerancia: 0.02
+          formato: una altura, con su unidad
+        distractores:
+          - valor: '20 m'
+            mensaje: |
+              Te has quedado con el desnivel de cotas y has olvidado la presión
+              del depósito superior, que vale otros 20 m de columna del
+              líquido.
+          - valor: '44 m'
+            mensaje: |
+              Has convertido los $235{,}2$ kPa a columna de **agua**, 24 m. El
+              líquido tiene $s = 1{,}2$, así que la misma presión son 20 m de
+              su columna.
+        pista: |
+          $\Delta z + \Delta p/\gamma$, con $\gamma = 1{,}2\cdot 9800$.
+        desarrollo: |
+          $$
+          H_{\text{piez}} = (200 - 180) + \frac{235\,200}{1{,}2\cdot 9800}
+          = 20 + 20 = 40\ \text{m}
+          $$
+
+      - tipo: calcular
+        titulo: La pérdida de carga en el punto de funcionamiento
+        pregunta: |
+          Con la bomba del anexo la instalación se estabiliza en
+          $20{,}5\ \text{l/s}$. ¿Cuánta carga se pierde por rozamiento?
+        respuesta:
+          tipo: magnitud
+          valor: '10.19 m'
+          tolerancia: 0.02
+          formato: una altura, con su unidad
+        distractores:
+          - valor: '1.97 m'
+            mensaje: |
+              Esa es solo la pérdida de la **aspiración**, los 30 m
+              equivalentes. La curva de la instalación cuenta los 155 m
+              completos: aspiración más impulsión.
+          - valor: '8.22 m'
+            mensaje: |
+              Solo has contado la impulsión, los 125 m. Los 30 de la aspiración
+              también son tubería y también pierden.
+        pista: |
+          $L_{\text{eq}} = 30 + 125 = 155$ m, $\varepsilon = 0{,}006$ cm para
+          el acero comercial, y $\nu \approx 10^{-6}$.
+        desarrollo: |
+          $$
+          v = \frac{0{,}0205}{\pi\,0{,}1^{2}/4} = 2{,}61\ \text{m/s}
+          \qquad
+          Re = 2{,}61\cdot 10^{5}
+          \qquad
+          \frac{\varepsilon}{D} = 6\cdot 10^{-4}
+          \;\Longrightarrow\;
+          f = 0{,}0189
+          $$
+          $$
+          h_f = 0{,}0189\,\frac{155}{0{,}1}\,\frac{2{,}61^{2}}{19{,}6}
+          = 10{,}19\ \text{m}
+          $$
+
+          Y la instalación pide $40 + 10{,}19 = 50{,}2$ m, que es donde corta
+          la curva de la bomba: los 51 m del catálogo, leídos a ojo.
+
+      - tipo: calcular
+        titulo: La potencia absorbida
+        pregunta: |
+          ¿Qué potencia absorbe la bomba?
+        respuesta:
+          tipo: magnitud
+          valor: '16.5 kw'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '12.29 kw'
+            mensaje: |
+              Esa es la potencia **útil**, $\gamma Q H$. La absorbida se
+              obtiene dividiendo entre el rendimiento del 74,5 % que da la
+              curva.
+          - valor: '13.75 kw'
+            mensaje: |
+              Has usado el peso específico del agua. El líquido tiene
+              $s = 1{,}2$, así que su $\gamma$ es $11\,760\ \text{N/m}^{3}$ y
+              todo pesa un 20 % más.
+        pista: |
+          $P = \gamma Q H/\eta$, con $\gamma$ del líquido y el rendimiento del
+          catálogo.
+        desarrollo: |
+          $$
+          P = \frac{1{,}2\cdot 9800\cdot 0{,}0205\cdot 51}{0{,}745}
+          = 16\,500\ \text{W} = 16{,}5\ \text{kW}
+          $$
+
+      - tipo: calcular
+        titulo: El NPSH disponible
+        pregunta: |
+          ¿De cuánto NPSH dispone la bomba?
+        respuesta:
+          tipo: magnitud
+          valor: '3.51 m'
+          tolerancia: 0.02
+          formato: una altura, con su unidad
+        distractores:
+          - valor: '5.48 m'
+            mensaje: |
+              Te has dejado la pérdida de la aspiración, 1,97 m. Son los 30 m
+              equivalentes que hay entre el depósito y la bomba, y en el NPSH
+              cuentan enteros.
+          - valor: '6.51 m'
+            mensaje: |
+              Te has dejado los 3 m de cota. La bomba está a 183 y el depósito
+              a 180: aspira **en depresión**, y eso es lo que más margen le
+              quita.
+        pista: |
+          $\dfrac{p_{at} - p_v}{\gamma} - z_{\text{asp}} - h_{f,\text{asp}}$,
+          con $\gamma$ del líquido y las presiones en absolutas.
+        desarrollo: |
+          $$
+          \frac{p_{at}}{\gamma} = \frac{101\,325}{11\,760} = 8{,}62\ \text{mcl}
+          \qquad
+          \frac{p_v}{\gamma} = \frac{1600}{11\,760} = 0{,}14\ \text{mcl}
+          $$
+          $$
+          NPSH_d = 8{,}62 - 0{,}14 - 3 - 1{,}97 = 3{,}51\ \text{mcl}
+          $$
+
+          Y el catálogo pide unos 4 m en ese punto: **la bomba cavita.**
+
+      - tipo: calcular
+        titulo: La lectura del vacuómetro
+        pregunta: |
+          ¿Qué marca un vacuómetro a la entrada de la bomba, en metros de
+          columna del líquido?
+        respuesta:
+          tipo: magnitud
+          valor: '-5.32 m'
+          tolerancia: 0.05
+          formato: una presión en metros de columna, con su signo y su unidad
+        distractores:
+          - valor: '-4.97 m'
+            mensaje: |
+              Te falta la altura cinética. En la brida el líquido ya va a
+              $2{,}61$ m/s, y esos $0{,}35$ m salen también de la presión.
+          - valor: '-13.54 m'
+            mensaje: |
+              Has usado los 155 m de tubería. Antes de la bomba solo hay 30: el
+              resto está en la impulsión, aguas abajo.
+        pista: |
+          Bernoulli del depósito inferior a la brida, en relativas:
+          $-z_{\text{asp}} - h_{f,\text{asp}} - v^{2}/2g$.
+        desarrollo: |
+          $$
+          \frac{p_e}{\gamma} = -3 - 1{,}97 - 0{,}35 = -5{,}32\ \text{mcl}
+          $$
+
+          El boletín publica $5{,}49$; la diferencia del 3 % viene de leer el
+          caudal en el ábaco.
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La instalación pide $40 + 10{,}2 = 50{,}2$ m a 20,5 l/s, y ahí
+              corta la curva de la INP 65/200 con rodete de 200 mm.
+          - texto: >-
+              Con $\eta = 74{,}5\ \%$ y el peso específico del líquido, la
+              potencia absorbida son 16,5 kW.
+          - texto: >-
+              Pero el NPSH disponible son 3,51 m frente a los 4 que pide el
+              catálogo: **la bomba cavita**.
+          - texto: >-
+              La solución es cambiar a una bomba más grande, que tenga más
+              altura disponible.
+            trampa: true
+            mensaje: |
+              Una bomba más grande empeora el problema: a más caudal, más
+              pérdida en la aspiración y más $NPSH$ requerido. La cavitación no
+              se arregla desde la bomba, se arregla desde la **aspiración**:
+              bajar la bomba —los 3 m de desnivel son casi todo el déficit—,
+              acortar o ensanchar la tubería de aspiración, o quitarle
+              accesorios. Aquí bastaría con poner la bomba a la cota 180 en vez
+              de 183.
+
+    resolucion: |
+      **Por qué este ejercicio importa más que los otros del capítulo.** Los
+      demás terminan con la bomba funcionando. Este termina con la bomba
+      **cavitando**, y el enunciado no lo avisa: dice «estudiar la
+      cavitación», y estudiarla incluye la posibilidad de que salga mal.
+
+      **La curva de la instalación.** Dos términos independientes del caudal:
+      el desnivel de 20 m y la presión del depósito superior, que en columna
+      del líquido son otros 20:
+
+      $$
+      H = 40 + h_f(Q)
+      $$
+
+      **El punto de funcionamiento.** Con $L_{eq} = 155$ m,
+      $\varepsilon = 0{,}006$ cm y $\nu \approx 10^{-6}$, a 20,5 l/s salen
+      $f = 0{,}0189$ y $h_f = 10{,}2$ m, así que la instalación pide 50,2 m.
+      La INP 65/200 con rodete de 200 mm a 2900 rpm pasa justo por ahí —51 m
+      en el ábaco— con un rendimiento del 74,5 %:
+
+      $$
+      P = \frac{\gamma Q H}{\eta} = 16{,}5\ \text{kW}
+      $$
+
+      **La cavitación.**
+
+      $$
+      NPSH_d = \frac{p_{at} - p_v}{\gamma} - z_{\text{asp}}
+      - h_{f,\text{asp}} = 8{,}62 - 0{,}14 - 3 - 1{,}97 = 3{,}51\ \text{mcl}
+      $$
+
+      frente a los $\approx 4$ m que pide la curva. **Cavita**, y por poco:
+      medio metro.
+
+      **Y ahí está la lección de proyecto.** Mira de dónde se ha ido el
+      margen: la presión atmosférica aportaba 8,62 m, y de ellos 3 se los ha
+      llevado poner la bomba tres metros por encima del depósito y 1,97 la
+      tubería de aspiración. **El único término que el proyectista no controla
+      —la atmosférica— es el que da todo el margen; los dos que se lo comen
+      son decisiones suyas.** Bajar la bomba a la cota del depósito
+      resolvería el problema entero sin tocar la máquina.
+
+      **Una nota sobre el peso específico.** Aparece en tres sitios y en los
+      tres hay que acordarse de que $s = 1{,}2$: al pasar los 235,2 kPa a
+      metros, al calcular la potencia y al pasar la atmosférica y la presión
+      de vapor a columna. Usar 9800 en cualquiera de los tres da un resultado
+      plausible y equivocado.

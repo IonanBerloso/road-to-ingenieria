@@ -1168,6 +1168,13 @@ Cosas que ya han costado horas. No son opiniones.
   salido como texto»— pero se tarda menos en evitarlo: **al partir una
   fórmula entre dos líneas, la segunda nunca empieza por un signo menos**;
   se recoloca el corte o se pasa a `$$…$$`.
+
+  **Y pasó dos veces el mismo día**, las dos con un `NPSH` y las dos
+  costando un suelo entero de doce minutos. El guardián está bien donde
+  está —`verify.mjs` lo caza— pero conviene barrer antes de lanzarlo: se
+  cargan los YAML, y en cada cadena se cuentan los `$` línea a línea; si
+  una línea deja una fórmula abierta y la siguiente empieza por `- `, ahí
+  está. Veinte líneas, y devuelve el fichero y el campo.
 - **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
   Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
   decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro
