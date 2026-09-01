@@ -2143,6 +2143,45 @@ la instalación cortando la de la bomba (t25), el prisma de presiones cuando no
 es un triángulo (t07), el ciclo del golpe de ariete (t20) y las secciones
 compuestas de canal (t21). Ninguna se dibuja hasta tener escrita la pregunta
 que responde (§13).
+
+> **Cuatro de las cinco se cubrieron el 1 de septiembre de 2026 con los
+> simuladores de la fase 13**, que además son interactivos: t25 dibuja las dos
+> curvas cortándose, t07 el prisma en todas sus formas, t20 el techo de
+> presiones y t21 las tres tipologías a escala. Queda el ciclo temporal del
+> golpe de ariete, que el simulador no dibuja —enseña la curva ΔH(Tc) y el
+> techo, no la onda cuadrada en el tiempo—, y para eso ya está la figura fija
+> que el tema tiene.
+
+**51 · ~~Los simuladores estaban publicados y no se veía ninguno.~~ Arreglado
+el 2 de septiembre de 2026, y la lección vale más que el arreglo.**
+
+Se publicaron los cinco, el suelo dio verde, las capturas de cada uno eran
+correctas… y al abrir la URL del tema no aparecía ninguno. Los cinco viven en
+un apartado que **no es el primero**, y en modo guiado los demás están
+`hidden`. Las capturas estaban tomadas después de pulsar «completo», así que
+demostraban que el simulador funciona, no que se encuentre.
+
+Es el mismo fallo que los 58 enlaces de teoría de agosto: **el destino existe y
+no llega.** Y llevaba ahí desde el principio sin que nadie lo viera —
+`PlanoComplejo`, en el tema 1 de Cálculo, está en el segundo apartado y era
+igual de invisible desde el primer día del proyecto.
+
+El arreglo tiene tres piezas, todas leyendo el DOM y ninguna añadiendo un campo
+al esquema:
+
+1. cada simulador lleva `id="sim-…"`, así que tiene ancla propia y se puede
+   enlazar desde fuera;
+2. la cabecera del tema muestra **«este tema trae un simulador»** con su
+   nombre, sacado del `<h3>` del propio componente;
+3. el apartado que lo contiene lleva un chip **«simulador»** en el índice.
+
+Y el catálogo dice ahora la verdad: los cinco temas de Fluidos declaran el
+patrón `simulador` y salen marcados en la portada, como ya hacía el tema 1 de
+Cálculo.
+
+**Lo que queda anotado en `CLAUDE.md` §16 es la regla, no el arreglo:** una
+captura tomada después de tocar algo demuestra que la cosa funciona, no que se
+encuentre. **Son dos comprobaciones distintas y hay que hacer las dos.**
 ---
 
 # Álgebra · el plan, en ocho fases

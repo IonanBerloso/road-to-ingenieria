@@ -40,7 +40,13 @@ const indice = headings.filter((h) => h.depth === 2);
         {
           indice.map((h) => (
             <li>
-              <a href={`#${h.slug}`}>{h.text}</a>
+              {/* El texto va envuelto: el chip de «simulador» que el script
+                  añade a algunos es otro hijo del flex, y con el título como
+                  nodo suelto los dos se repartían el ancho y el título se
+                  partía en cuatro líneas. */}
+              <a href={`#${h.slug}`}>
+                <span class="t">{h.text}</span>
+              </a>
             </li>
           ))
         }
@@ -65,6 +71,15 @@ const indice = headings.filter((h) => h.depth === 2);
     <p class="rotulo rotulo--live eyebrow">{eyebrow}</p>
     <h1>{titulo}</h1>
     <p class="lede">{descripcion}</p>
+
+    {/* El acceso a la herramienta del tema, si la hay. Nace oculto y lo
+        rellena el script leyendo el DOM: no hay campo en el esquema que diga
+        dónde está el simulador, y no debe haberlo — sería un dato que hay que
+        mantener a mano al lado de otro que ya lo sabe (Regla 0). */}
+    <a class="ir-sim no-imprimir" data-ir-sim href="#" hidden>
+      <span class="rotulo rotulo--live">este tema trae un simulador</span>
+      <span class="nombre" data-ir-sim-nombre></span>
+    </a>
 
     <nav class="pestanas" aria-label="Secciones del tema">
       {/* `data-pestana` y no `data-ir`: los botones «anterior / siguiente» de
@@ -146,6 +161,61 @@ const indice = headings.filter((h) => h.depth === 2);
     window.addEventListener('afterprint', () =>
       abre(location.hash.slice(1) === 'ejercicios' ? 'ejercicios' : 'teoria', false),
     );
+
+    /* ── El simulador del tema, si lo hay ────────────────────────────
+       Se descubrió mirando: los cinco simuladores de Fluidos viven dentro de
+       un apartado que **no es el primero**, así que en modo guiado están
+       `hidden` y no los ve nadie. El sitio los servía correctamente y eran
+       invisibles, que es el mismo fallo de los 58 enlaces de teoría de agosto:
+       el destino existe y no llega.
+
+       Se resuelve leyendo el DOM y no el esquema. `patron: simulador` está en
+       el `.mdx` pero no dice **dónde**, y añadir un campo con el ancla sería
+       un dato que hay que mantener a mano al lado de otro que ya lo sabe. */
+    const sims = [...shell.querySelectorAll<HTMLElement>('#teoria figure.sim[id]')];
+    const sim = sims[0];
+    const aviso = shell.querySelector<HTMLAnchorElement>('[data-ir-sim]');
+
+    if (sim && aviso) {
+      aviso.href = `#${sim.id}`;
+      shell.querySelector('[data-ir-sim-nombre]')!.textContent =
+        sim.querySelector('.sim-head h3')?.textContent?.trim() ?? 'ábrelo';
+      aviso.hidden = false;
+
+      /* Y el apartado que lo contiene se marca en el índice. Su `h2` es el
+         encabezado de nivel 2 que precede al simulador **en orden de
+         documento**, que es lo que hay que buscar: para cuando esto corre,
+         `Lectura.astro` puede haber envuelto ya cada apartado en su
+         `<section class="grupo">`, así que mirar hermanos no basta. */
+      const h2s = [...shell.querySelectorAll<HTMLElement>('#teoria h2[id]')];
+      /* Se marcan **todos**, no solo el del aviso: si algún día un tema lleva
+         dos herramientas, el índice las enseña las dos aunque la cabecera
+         nombre la primera. Un comportamiento a medias y silencioso es peor
+         que uno incompleto y visible. */
+      for (const s of sims) {
+        const suyo = h2s
+          .filter((h) => h.compareDocumentPosition(s) & Node.DOCUMENT_POSITION_FOLLOWING)
+          .pop();
+        const destino = suyo && shell.querySelector(`.rail a[href="#${CSS.escape(suyo.id)}"] .t`);
+        if (!destino || destino.querySelector('.chip')) continue;
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = 'simulador';
+        destino.append(chip);
+      }
+
+      /* En modo guiado, saltar al simulador tiene que abrir su apartado. De
+         eso ya se encarga `abreElAncla()` de Lectura.astro cuando cambia el
+         hash, así que aquí basta con dejar que el enlace haga lo suyo — pero
+         el navegador no dispara `hashchange` si el hash ya es ese, y entonces
+         el segundo clic no hace nada. */
+      aviso.addEventListener('click', (e) => {
+        if (location.hash === aviso.hash) {
+          e.preventDefault();
+          sim.scrollIntoView({ block: 'start' });
+        }
+      });
+    }
   }
 </script>
 
@@ -195,6 +265,51 @@ const indice = headings.filter((h) => h.depth === 2);
   .rail a:hover { background: var(--live-soft); color: var(--ink); }
   .rail a[aria-current='true'] { color: var(--live); font-weight: 500; }
   .rail a[aria-current='true']::before { color: var(--live); }
+
+  /* El apartado que lleva la herramienta se distingue de los demás. Antes
+     todos se veían iguales y el simulador no aparecía por ninguna parte.
+
+     El chip va **dentro** del texto, no como hermano del número: probado como
+     hermano —un `::after` del enlace—, o le robaba el ancho al título y lo
+     partía en cuatro líneas, o al forzarlo a su propia línea se llevaba
+     también el número. Dentro del texto fluye como una palabra más.
+
+     Y va con `:global` porque **lo crea el script**: Astro acota cada regla
+     con un `data-astro-cid-…`, y un elemento nacido en el navegador no lo
+     lleva, así que sin `:global` el chip se publica sin ningún estilo —
+     pegado a la última palabra y sin caja. */
+  .rail a :global(.chip) {
+    display: inline-block;
+    margin-left: .4rem;
+    font-family: var(--mono);
+    font-size: .6rem;
+    letter-spacing: .06em;
+    color: var(--live);
+    border: 1px solid var(--live);
+    border-radius: 3px;
+    padding: 0 .3rem;
+    white-space: nowrap;
+    vertical-align: 1px;
+  }
+
+  /* ── el acceso directo de la cabecera ──────────────────────────── */
+  .ir-sim {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .1rem;
+    margin: 0 0 1.6rem;
+    padding: .6rem .9rem;
+    background: var(--live-soft);
+    border: 1px solid var(--live);
+    border-left-width: 3px;
+    border-radius: 0 6px 6px 0;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .ir-sim .nombre { font-size: .88rem; font-weight: 600; }
+  .ir-sim:hover .nombre { color: var(--live); }
+  .ir-sim:hover { background: var(--panel); }
 
   .eyebrow { margin-bottom: .6rem; font-size: .72rem; letter-spacing: .11em; }
 

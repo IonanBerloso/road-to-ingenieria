@@ -1090,6 +1090,19 @@ de una. Así que después de construir, y antes de dar nada por hecho:
    etiqueta cortada o una curva con el signo cambiado no las ve ningún
    guardián, y las dos han pasado. `scripts/leer-grafica.mjs` ayuda cuando no
    puedes mirar, pero no sustituye a mirar.
+
+   **Y míralo como llega alguien que no sabe que está**: abriendo la URL del
+   tema a pelo, sin ancla, sin pulsar nada y sin `localStorage`. El 1 de
+   septiembre de 2026 se publicaron cinco simuladores y **no se veía ninguno**:
+   los cinco viven en un apartado que no es el primero, y en modo guiado los
+   demás están `hidden`. El sitio los servía, el suelo estaba en verde, las
+   capturas de cada simulador eran correctas — porque se habían tomado tras
+   pulsar «completo». Es el mismo fallo que los 58 enlaces de teoría: **el
+   destino existe y no llega.**
+
+   La regla que sale: una captura tomada después de tocar algo demuestra que
+   la cosa funciona, no que se encuentre. **Las dos comprobaciones son
+   distintas y hay que hacer las dos.**
 2. **Pulsa lo que has enlazado.** No compruebes que el `href` existe:
    comprueba que **llega**. Los 58 enlaces rotos tenían destino válido y
    apuntaban a un elemento oculto, así que el navegador no se movía.
@@ -1234,6 +1247,16 @@ Cosas que ya han costado horas. No son opiniones.
   fuente**, así que la comprobación deja de depender de la máquina. Se pone en
   las etiquetas largas —las de dos o tres términos con raíces— y se elige un
   valor cercano al natural para no deformar los glifos.
+- **Astro acota los estilos, así que un elemento creado por el script se
+  publica sin ninguno.** Cada regla de un `<style>` de `.astro` se compila con
+  un `data-astro-cid-…` añadido al selector, y ese atributo lo pone el
+  compilador en el marcado del componente — no en lo que crea el navegador con
+  `createElement`. El 2 de septiembre de 2026 el chip «simulador» del índice
+  salió publicado como texto pegado a la última palabra del título, sin caja ni
+  color, y la regla estaba escrita y era correcta. **Regla: todo lo que el
+  script cree en tiempo de ejecución se estiliza con `:global(...)`**, y se
+  comprueba mirando, porque no falla nada: el elemento está, se lee, y solo se
+  ve mal.
 - **Ocultar un texto no es lo mismo que no tenerlo: `opacity: 0` sigue
   midiendo.** Un `<text>` invisible conserva su caja, así que sigue contando
   para el guardián de `viewBox` — y, peor, sigue diciendo lo que diga si
