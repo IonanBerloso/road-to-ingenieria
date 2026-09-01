@@ -28,7 +28,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
 | **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
-| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **26 de 43** |
+| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **30 de 43** |
 | **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
@@ -851,6 +851,8 @@ aquí. Esos siguen fuera y seguirán.
 | extraordinaria de junio de 2022 | 3 | balancín en dos fluidos, derivación en Y, dos depósitos a distinto nivel |
 | t02 propiedades | 2 | tres cilindros coaxiales, disco sobre película |
 | t04 hidrostática | 1 | el gato hidráulico |
+| 3.er parcial de junio de 2021 | 2 | la instalación con válvula de retención, el trasvase por gravedad |
+| ordinaria de junio de 2020 | 2 | el cuerpo que flota entre dos líquidos, el limpiacristales y su cono |
 
 **Dos que salieron mal y se arreglaron mirándolas**, que es §16 punto 1
 funcionando: el tanque en T llevaba un `Z` de más en el trazado y cerraba con
@@ -917,6 +919,14 @@ que no hay forma de decidir cuál de las dos lecturas es la buena.
 Dibujarla «aproximadamente» sería inventarse la geometría de una presa en un
 ejercicio que pide fuerzas sobre ella. Es §13 caso 2, y la respuesta es la
 misma que para los doce ejercicios declarados: se dice y no se publica.
+
+**Y una segunda, por el motivo contrario.** El ejercicio 2 del tercer parcial
+de junio de 2021 tampoco lleva figura, pero aquí no es que no se pueda: es
+que **el original no tiene ninguna** y su apartado a) dice, literalmente,
+«esquema de la instalación». Dibujarlo sería resolver el primer apartado
+dentro del enunciado. Es el mismo caso que los cuadros vacíos del
+venturímetro de junio de 2022, y la regla que sale de los dos es la misma:
+**cuando la figura es la pregunta, no se dibuja.**
 
 ### Lo que el material docente no trae · comprobado el 31 de agosto de 2026
 
