@@ -1,0 +1,519 @@
+---
+/**
+ * Herramienta incrustada del tema 21.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «El problema de proyecto casi siempre llega con un condicionante — una
+ *    anchura máxima, un calado impuesto. ¿Cuánto cuesta obedecerlo?»
+ *
+ * El tema deduce la sección óptima y ahí lo deja, así que apartarse de ella
+ * se lee como un error. Medido, no lo es: **el óptimo es plano**. Entre
+ * b/h = 1,5 y b/h = 3 se paga menos de un 3 % de perímetro. Lo que sí se paga
+ * es el canal ancho y somero — un 44 % a b/h = 10 —, y eso es lo que el
+ * simulador enseña a ver.
+ *
+ * Dos paneles acoplados. Arriba, la sección dibujada a escala con su calado y
+ * su solera, y detrás en gris la óptima de su tipología para comparar. Abajo,
+ * la curva del perímetro frente a b/h con su mínimo marcado: la que enseña que
+ * el valle es ancho.
+ *
+ * El modelo vive en `src/lib/canales.ts` y `tests/fisica/canales.test.ts` lo
+ * verifica contra las tres secciones de 4 m² de la figura de este mismo tema
+ * (§10).
+ *
+ * SVG a mano, sin librería de gráficas (§02).
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'canal' } = Astro.props;
+---
+
+<figure class="sim" data-canal>
+  <figcaption class="sim-head">
+    <h3>La sección de canal, y lo que cuesta no poder usar la óptima</h3>
+    <span class="rotulo hint">mueve b/h y mira el fondo del valle</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 520 240" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>La sección elegida, con la óptima detrás</title>
+      <desc id={`${id}-d1`}>
+        La sección de canal dibujada a escala, con la lámina de agua rayada y
+        las cotas de la solera y del calado. Detrás, en trazo fino, la sección
+        óptima de la misma tipología llevando el mismo caudal, para comparar
+        las dos de un vistazo. Todas las magnitudes están en la tabla de abajo.
+      </desc>
+
+      <line class="suelo" x1="0" y1="196" x2="520" y2="196"></line>
+      <path class="optima" data-optima></path>
+      <path class="agua" data-agua></path>
+      <path class="cauce" data-cauce></path>
+      <g data-cotas></g>
+      <text class="etiqueta chica" data-txt-optima x="512" y="20" text-anchor="end"
+        >en gris, la óptima con el mismo caudal</text
+      >
+    </svg>
+  </div>
+
+  <div class="stage valle">
+    <svg viewBox="0 0 520 180" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>El perímetro mojado frente a la relación entre solera y calado</title>
+      <desc id={`${id}-d2`}>
+        Cuánto perímetro de más gasta la sección respecto de la óptima de su
+        tipología, en tanto por ciento, frente a la relación entre solera y
+        calado. Es una curva con un valle muy ancho: el mínimo está en la
+        relación óptima y a su alrededor la penalización se queda por debajo
+        del tres por ciento en un tramo largo. Una banda sombreada marca ese
+        tramo y un punto marca la sección actual.
+      </desc>
+
+      <rect class="banda" data-banda y="18" height="112"></rect>
+      <g data-rejilla-v></g>
+      <path class="curva-v" data-curva-v></path>
+      <line class="opt" data-opt y1="18" y2="130"></line>
+      <text class="etiqueta chica" data-txt-opt y="14">óptima</text>
+      <circle class="punto-v" data-punto-v r="4.5"></circle>
+      <text class="etiqueta chica" data-txt-banda></text>
+
+      <text class="etiqueta" x="270" y="172" text-anchor="middle">b / h</text>
+      <text class="etiqueta" transform="rotate(-90 14 74)" x="14" y="74" text-anchor="middle"
+        >P de más</text
+      >
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-r`}>solera entre calado, b/h <output data-out-r>2,00</output></label>
+      <input id={`${id}-r`} type="range" min="0.3" max="10" step="0.05" value="2" data-r />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-q`}>caudal <output data-out-q>5,0 m³/s</output></label>
+      <input id={`${id}-q`} type="range" min="0.5" max="30" step="0.5" value="5" data-q />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-j`}>pendiente <output data-out-j>1,0 ‰</output></label>
+      <input id={`${id}-j`} type="range" min="0.2" max="20" step="0.1" value="1" data-j />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-a`}>talud del trapecio <output data-out-a>60°</output></label>
+      <input id={`${id}-a`} type="range" min="25" max="90" step="1" value="60" data-a />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">tipología y material</span>
+      <div class="botones">
+        <button type="button" data-tipo="rectangulo" aria-pressed="true">rectangular</button>
+        <button type="button" data-tipo="trapecio" aria-pressed="false">trapecial</button>
+        <button type="button" data-tipo="semicirculo" aria-pressed="false">semicircular</button>
+      </div>
+      <div class="botones">
+        <button type="button" class="accion" data-accion="optima">ponme la óptima</button>
+        <button type="button" class="accion" data-accion="ancho">un canal ancho</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">la sección</span>
+      <span class="v chica" data-medidas>h = 1,26 m · b = 2,52 m</span>
+      <span class="sub" data-area>A = 3,17 m² · P = 5,03 m · R = 0,63 m</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">velocidad</span>
+      <span class="v" data-v>1,58 m/s</span>
+      <span class="sub" data-aviso>dentro de lo razonable para hormigón</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">perímetro de más</span>
+      <span class="v" data-pena>0,0 %</span>
+      <span class="sub" data-pena-sub>estás en la óptima de tu tipología</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">frente al semicírculo</span>
+      <span class="v" data-vs>+16,2 %</span>
+      <span class="sub">de perímetro, con el mismo caudal</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag" data-alarma-tit></span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import {
+    area,
+    penalizacion,
+    perimetro,
+    radioHidraulico,
+    relacionOptima,
+    seccionPara,
+    velocidad,
+    type Seccion,
+    type Tipo,
+  } from '../../lib/canales';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-canal]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    const sR = $<HTMLInputElement>('[data-r]');
+    const sQ = $<HTMLInputElement>('[data-q]');
+    const sJ = $<HTMLInputElement>('[data-j]');
+    const sA = $<HTMLInputElement>('[data-a]');
+    let tipo: Tipo = 'rectangulo';
+
+    /* Hormigón. Es la n con la que el tema hace sus cuentas y el simulador no
+       la ofrece como mando: ya hay cuatro, y cambiarla no enseña nada nuevo. */
+    const N = 0.014;
+    const num = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+
+    /* ── panel 1: la sección ── */
+    const SUELO = 196;
+    const CX = 260;
+
+    /** El contorno mojado de una sección, en coordenadas de pantalla. */
+    function contorno(s: Seccion, esc: number): string {
+      const h = s.h * esc;
+      if (s.tipo === 'semicirculo') {
+        const r = h;
+        return `M${CX - r} ${SUELO - r} A${r} ${r} 0 0 0 ${CX + r} ${SUELO - r}`;
+      }
+      const b = (s.b * esc) / 2;
+      if (s.tipo === 'rectangulo') {
+        return `M${CX - b} ${SUELO - h} L${CX - b} ${SUELO} L${CX + b} ${SUELO} L${CX + b} ${SUELO - h}`;
+      }
+      const vuelo = h / Math.tan(((s.alfa ?? 60) * Math.PI) / 180);
+      return `M${CX - b - vuelo} ${SUELO - h} L${CX - b} ${SUELO} L${CX + b} ${SUELO} L${CX + b + vuelo} ${SUELO - h}`;
+    }
+
+    /** El polígono cerrado del agua, para rellenarlo. */
+    const relleno = (s: Seccion, esc: number) => `${contorno(s, esc)} Z`;
+
+    /* ── panel 2: el valle ── */
+    const VX0 = 64;
+    const VX1 = 492;
+    const VY0 = 18;
+    const VY1 = 130;
+    const RMAX = 10;
+    const PMAX = 0.25; // 25 % de perímetro de más
+    const vx = (r: number) => VX0 + (Math.min(RMAX, r) / RMAX) * (VX1 - VX0);
+    const vy = (p: number) => VY1 - (Math.max(0, Math.min(PMAX, p)) / PMAX) * (VY1 - VY0);
+
+    {
+      const t: string[] = [];
+      for (let r = 0; r <= RMAX; r += 2) {
+        t.push(
+          `<line class="rej" x1="${vx(r)}" y1="${VY0}" x2="${vx(r)}" y2="${VY1}"/>`,
+          `<text class="etiqueta chica" text-anchor="middle" x="${vx(r)}" y="${VY1 + 15}">${r}</text>`,
+        );
+      }
+      for (const p of [0.05, 0.1, 0.15, 0.2, 0.25]) {
+        t.push(
+          `<line class="rej" x1="${VX0}" y1="${vy(p)}" x2="${VX1}" y2="${vy(p)}"/>`,
+          `<text class="etiqueta chica" text-anchor="end" x="${VX0 - 6}" y="${vy(p) + 3.5}">${p * 100} %</text>`,
+        );
+      }
+      $('[data-rejilla-v]').innerHTML = t.join('');
+    }
+
+    function pinta() {
+      const r = Number(sR.value);
+      const Q = Number(sQ.value);
+      const J = Number(sJ.value) / 1000;
+      const alfa = Number(sA.value);
+      const relacion = tipo === 'semicirculo' ? 0 : r;
+
+      const s = seccionPara(tipo, relacion, N, J, Q, alfa);
+      const ropt = relacionOptima(tipo, alfa);
+      const opt = seccionPara(tipo, ropt, N, J, Q, alfa);
+      const circ = seccionPara('semicirculo', 0, N, J, Q);
+      const pena = penalizacion(tipo, relacion, N, J, Q, alfa);
+
+      /* La escala se fija con la más ancha de las dos secciones para que
+         ninguna se salga y las dos se puedan comparar de verdad. */
+      const anchoDe = (x: Seccion) =>
+        x.tipo === 'semicirculo'
+          ? 2 * x.h
+          : x.tipo === 'rectangulo'
+            ? x.b
+            : x.b + (2 * x.h) / Math.tan((alfa * Math.PI) / 180);
+      const ancho = Math.max(anchoDe(s), anchoDe(opt), 1e-6);
+      const alto = Math.max(s.h, opt.h, 1e-6);
+      const esc = Math.min(430 / ancho, 150 / alto);
+
+      $('[data-cauce]').setAttribute('d', contorno(s, esc));
+      $('[data-agua]').setAttribute('d', relleno(s, esc));
+      const dibujaOpt = tipo !== 'semicirculo' && Math.abs(relacion - ropt) > 0.02;
+      $('[data-optima]').setAttribute('d', dibujaOpt ? contorno(opt, esc) : '');
+      $('[data-txt-optima]').setAttribute('opacity', dibujaOpt ? '1' : '0');
+
+      /* Las dos cotas: el calado a la izquierda y la solera abajo. */
+      /* La cota del calado se pone fuera de la sección si cabe y dentro si no:
+         con un canal ancho el rótulo se salía por la izquierda del marco. */
+      const semi = (tipo === 'semicirculo' ? 2 * s.h : s.b) * esc * 0.5;
+      const hpx = s.h * esc;
+      const cabeFuera = CX - semi - 26 > 70;
+      const xc = cabeFuera ? CX - semi - 26 : CX - semi + 26;
+      $('[data-cotas]').innerHTML = [
+        `<line class="cota" x1="${xc}" y1="${SUELO}" x2="${xc}" y2="${SUELO - hpx}"/>`,
+        `<text class="etiqueta chica" text-anchor="${cabeFuera ? 'end' : 'start'}" x="${xc + (cabeFuera ? -6 : 6)}" y="${SUELO - hpx / 2 + 3}">h = ${num(s.h)} m</text>`,
+        tipo === 'semicirculo'
+          ? ''
+          : `<text class="etiqueta chica" text-anchor="middle" x="${CX}" y="${SUELO + 16}">b = ${num(s.b)} m</text>`,
+      ].join('');
+
+      /* ── el valle ── */
+      /* La curva se corta donde se sale por arriba, no se aplasta contra el
+         techo: aplastada parecía que la penalización deja de crecer, que es
+         exactamente lo contrario de lo que este panel enseña. */
+      const p: string[] = [];
+      if (tipo !== 'semicirculo') {
+        for (let x = 0.3; x <= RMAX + 1e-9; x += 0.05) {
+          const pen = penalizacion(tipo, x, N, J, Q, alfa);
+          if (pen > PMAX) break;
+          p.push(`${vx(x).toFixed(1)} ${vy(pen).toFixed(1)}`);
+        }
+      }
+      $('[data-curva-v]').setAttribute('d', p.length > 1 ? `M${p.join(' L')}` : '');
+      $('[data-opt]').setAttribute('opacity', tipo === 'semicirculo' ? '0' : '1');
+      $('[data-opt]').setAttribute('x1', String(vx(ropt)));
+      $('[data-opt]').setAttribute('x2', String(vx(ropt)));
+      $('[data-txt-opt]').setAttribute('opacity', tipo === 'semicirculo' ? '0' : '1');
+      $('[data-txt-opt]').setAttribute('x', String(vx(ropt) + 5));
+      $('[data-punto-v]').setAttribute('opacity', tipo === 'semicirculo' ? '0' : '1');
+      $('[data-punto-v]').setAttribute('cx', String(vx(relacion)));
+      $('[data-punto-v]').setAttribute('cy', String(Math.max(VY0 + 3, vy(pena))));
+
+      /* La banda del 3 %, buscada sobre la propia curva y no supuesta: es el
+         resultado que este panel publica, así que se mide cada vez. */
+      let desde = ropt;
+      let hasta = ropt;
+      if (tipo !== 'semicirculo') {
+        while (desde > 0.3 && penalizacion(tipo, desde - 0.05, N, J, Q, alfa) < 0.03) desde -= 0.05;
+        while (hasta < RMAX && penalizacion(tipo, hasta + 0.05, N, J, Q, alfa) < 0.03) hasta += 0.05;
+      }
+      const banda = $('[data-banda]');
+      banda.setAttribute('opacity', tipo === 'semicirculo' ? '0' : '1');
+      banda.setAttribute('x', String(vx(desde)));
+      banda.setAttribute('width', String(vx(hasta) - vx(desde)));
+      /* Se vacía en vez de ocultarse: un texto invisible sigue teniendo caja,
+         y en el semicírculo esa caja decía «de 0,0 a 0,0» y se salía del
+         marco por la izquierda. Ocultar no es lo mismo que no haber. */
+      const tb = $('[data-txt-banda]');
+      tb.setAttribute('x', String((vx(desde) + vx(hasta)) / 2));
+      tb.setAttribute('y', '124');
+      tb.setAttribute('text-anchor', 'middle');
+      tb.textContent =
+        tipo === 'semicirculo' ? '' : `de ${num(desde, 1)} a ${num(hasta, 1)}, menos de un 3 %`;
+
+      /* ── la tabla ── */
+      const v = velocidad(s, N, J);
+      $('[data-medidas]').textContent =
+        tipo === 'semicirculo'
+          ? `radio = calado = ${num(s.h)} m`
+          : `h = ${num(s.h)} m · b = ${num(s.b)} m`;
+      $('[data-area]').textContent =
+        `A = ${num(area(s))} m² · P = ${num(perimetro(s))} m · R = ${num(radioHidraulico(s))} m`;
+      $('[data-v]').textContent = `${num(v)} m/s`;
+      $('[data-aviso]').textContent =
+        v > 6
+          ? 'demasiado rápido: erosiona el revestimiento'
+          : v < 0.4
+            ? 'demasiado lento: sedimenta'
+            : 'dentro de lo razonable para hormigón';
+      $('[data-pena]').textContent = tipo === 'semicirculo' ? '—' : `${num(pena * 100, 1)} %`;
+      $('[data-pena-sub]').textContent =
+        tipo === 'semicirculo'
+          ? 'el semicírculo no tiene forma que elegir: ya es el mejor'
+          : pena < 0.001
+            ? 'estás en la óptima de tu tipología'
+            : pena < 0.03
+              ? 'dentro del valle: sale casi gratis'
+              : 'esto ya se paga en excavación y revestimiento';
+      const vs = perimetro(s) / perimetro(circ) - 1;
+      $('[data-vs]').textContent = `${vs >= 0 ? '+' : '−'}${num(Math.abs(vs) * 100, 1)} %`;
+
+      raiz.dataset.valle = pena < 0.03 ? 'si' : 'no';
+
+      const alarma = $<HTMLElement>('[data-alarma]');
+      alarma.hidden = !(pena > 0.15 || v > 6);
+      if (v > 6) {
+        $('[data-alarma-tit]').textContent = 'A esta velocidad el canal se erosiona';
+        $('[data-alarma-txt]').textContent =
+          `${num(v)} m/s es demasiado para un revestimiento de hormigón. La velocidad no es un ` +
+          `mando: sale de la sección y de la pendiente, así que para bajarla hay que tender la ` +
+          `pendiente o ensanchar la sección. Es el condicionante que más veces aparece en el ` +
+          `problema de proyecto.`;
+      } else if (pena > 0.15) {
+        $('[data-alarma-tit]').textContent = 'Esto ya no es un condicionante barato';
+        $('[data-alarma-txt]').textContent =
+          `Con b/h = ${num(relacion, 1)} gastas un ${num(pena * 100, 1)} % de perímetro de más que ` +
+          `la óptima de tu tipología, y el perímetro es lo que hay que revestir. Dentro del valle ` +
+          `sombreado se paga menos de un 3 %; fuera, se paga de verdad. Un canal ancho y somero es ` +
+          `caro, y además va lento.`;
+      }
+
+      $<HTMLOutputElement>('[data-out-r]').textContent = tipo === 'semicirculo' ? '—' : num(r);
+      $<HTMLOutputElement>('[data-out-q]').textContent = `${num(Q, 1)} m³/s`;
+      $<HTMLOutputElement>('[data-out-j]').textContent = `${num(Number(sJ.value), 1)} ‰`;
+      $<HTMLOutputElement>('[data-out-a]').textContent =
+        tipo === 'trapecio' ? `${alfa}°` : '—';
+    }
+
+    for (const s of [sR, sQ, sJ, sA]) s.addEventListener('input', pinta);
+
+    const botones = [...raiz.querySelectorAll<HTMLButtonElement>('[data-tipo]')];
+    for (const b of botones) {
+      b.addEventListener('click', () => {
+        tipo = b.dataset.tipo as Tipo;
+        for (const o of botones) o.setAttribute('aria-pressed', String(o === b));
+        pinta();
+      });
+    }
+
+    $('[data-accion="optima"]').addEventListener('click', () => {
+      sR.value = String(relacionOptima(tipo, Number(sA.value)) || 2);
+      pinta();
+    });
+    $('[data-accion="ancho"]').addEventListener('click', () => {
+      sR.value = '10';
+      pinta();
+    });
+
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 { margin: 0; font-size: .9rem; font-weight: 600; }
+  .hint { font-size: .68rem; text-transform: none; letter-spacing: .02em; }
+
+  .stage svg { display: block; width: 100%; height: auto; }
+  .valle { border-top: 1px solid var(--rule); background: var(--grid); }
+
+  .rej { stroke: var(--rule); stroke-width: 1; }
+  .etiqueta { fill: var(--faint); font-family: var(--mono); font-size: 10px; }
+  .etiqueta.chica { font-size: 9px; }
+
+  .suelo { stroke: var(--rule); stroke-width: 1; }
+  .cota { stroke: var(--faint); stroke-width: .9; stroke-dasharray: 3 3; }
+  .cauce { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linejoin: round; }
+  .agua { fill: var(--live); fill-opacity: .14; stroke: none; }
+  .optima { fill: none; stroke: var(--faint); stroke-width: 1.3; stroke-dasharray: 5 4; }
+
+  .curva-v { fill: none; stroke: var(--live); stroke-width: 2.4; stroke-linejoin: round; }
+  .opt { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 4 4; }
+  .banda { fill: var(--live); opacity: .10; }
+  .punto-v { fill: var(--flag); stroke: var(--grid); stroke-width: 1.6; }
+  [data-valle='si'] .punto-v { fill: var(--live); }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.1rem 1.5rem;
+    padding: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .5rem;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--graphite);
+    margin-bottom: .4rem;
+  }
+
+  .ctrl label output { color: var(--live); font-weight: 500; font-size: .78rem; }
+  input[type='range'] { width: 100%; accent-color: var(--live); cursor: pointer; }
+
+  .atajos .k { display: block; margin-bottom: .45rem; font-size: .63rem; letter-spacing: .08em; }
+  .botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .botones + .botones { margin-top: .4rem; }
+
+  .botones button {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .3rem .6rem;
+    color: var(--live);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .botones button:hover { background: var(--live-soft); border-color: var(--live); }
+
+  .botones button[aria-pressed='true'] {
+    background: var(--live);
+    border-color: var(--live);
+    color: var(--panel);
+  }
+
+  .botones button.accion { color: var(--flag); border-style: dashed; }
+  .botones button.accion:hover { background: var(--flag-soft); border-color: var(--flag); }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell { background: var(--panel); padding: .75rem .9rem; }
+  .cell .k { display: block; margin-bottom: .25rem; font-size: .63rem; letter-spacing: .08em; }
+
+  .cell .v {
+    display: block;
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica { font-size: .78rem; }
+
+  .cell .sub {
+    display: block;
+    margin-top: .2rem;
+    font-size: .7rem;
+    line-height: 1.35;
+    color: var(--faint);
+  }
+
+  .alarma {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: .8rem 1.1rem;
+    background: var(--flag-soft);
+    border-top: 1px solid var(--flag);
+    color: var(--flag);
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+</style>

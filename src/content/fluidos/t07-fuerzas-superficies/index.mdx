@@ -3,7 +3,7 @@ asignatura: fluidos
 tema: 7
 titulo: Fuerzas sobre superficies
 descripcion: Resultante y centro de presión sobre superficies planas y curvas. El prisma de presiones, que es la forma de no equivocarse.
-patron: lectura
+patron: simulador
 competencias:
   - COMP1
   - COMP2
@@ -11,6 +11,7 @@ fuente: Adaptado del Tema 7 y de la Colección de problemas de Mecánica de Flui
 ---
 
 import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+import PrismaDePresiones from '../../../components/sim/PrismaDePresiones.astro';
 
 Una compuerta, la pared de un depósito o el paramento de una presa reciben una
 fuerza que hay que saber calcular **y saber dónde se aplica**. Lo segundo es lo
@@ -149,6 +150,53 @@ Por eso los enunciados piden dibujarlo acotado antes de calcular nada.
 
 </figcaption>
 </figure>
+
+### Cuánto baja el centro de presión, exactamente
+
+Arriba se ha dicho que el centro de presión cae por debajo del centroide
+«tanto más cuanto más cerca esté la superficie de la lámina libre». Es cierto
+y no sirve para nada: no dice cuánto, ni a partir de dónde deja de importar.
+Se puede decir, y es más limpio de lo que parece.
+
+Lo que baja es $e = I_G/(Y_G A)$. Y resulta que para las formas que salen en
+los enunciados, $I_G/A$ vale siempre $L^{2}/k$ con $k$ fijo:
+
+$$
+\boxed{\ \frac{e}{L} = \frac{L}{k\,Y_G}\ }
+\qquad
+k = 12 \text{ rectángulo} \quad
+k = 16 \text{ círculo} \quad
+k = 18 \text{ triángulo}
+$$
+
+donde $L$ es la longitud de la compuerta **medida sobre su plano**. Tres cosas
+que esa expresión dice y que conviene leer despacio:
+
+- **Ni el ancho, ni el líquido, ni la inclinación aparecen.** Una compuerta de
+  medio metro de ancho y otra de nueve se comportan igual; el aceite y el agua
+  también. Solo cuentan la forma, la longitud y a qué distancia está.
+- **La bajada relativa es inversamente proporcional a la profundidad**, así que
+  se desploma rápido: al doble de hondo, la mitad de excentricidad.
+- Y de ahí sale el «a partir de cuándo»: $e$ baja del **1 % de la compuerta**
+  cuando el centroide llega a $100L/k$ sobre el plano — **8,3 longitudes de
+  compuerta en un rectángulo**, 6,3 en un círculo y 5,6 en un triángulo.
+
+Cuidado con lo que eso significa y con lo que no. Que la excentricidad sea
+pequeña **no autoriza a ignorarla**: el examen pide la fórmula completa, y un
+momento calculado en el centroide sigue estando mal. Lo que da es una
+comprobación: si sale una excentricidad del 30 % en una compuerta hundida,
+hay un error de cuenta.
+
+<PrismaDePresiones />
+
+Dos cosas que hacer con él. Una, pulsar **«los dos tercios»**: pone el borde
+superior en la lámina libre y sale el 66,7 % de siempre. Sube entonces la
+profundidad un metro y verás la fracción caer al 58 % — la regla no es de las
+compuertas, es de *esa* compuerta. Y dos, cambiar de forma sin tocar nada más:
+el punto salta de una hipérbola a otra, y el $k$ de la tabla cambia con él.
+
+Los números están comprobados en `tests/fisica/compuertas.test.ts` contra los
+dos ejemplos de este mismo tema.
 
 ## Y la presión atmosférica, ¿se cuenta?
 

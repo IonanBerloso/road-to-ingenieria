@@ -1,0 +1,589 @@
+---
+/**
+ * Herramienta incrustada del tema 7.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «El centro de presión baja "tanto más cuanto más cerca esté la lámina
+ *    libre". ¿Cuánto, exactamente, y a partir de dónde da igual?»
+ *
+ * El tema lo dice con esas palabras y así no se puede usar para nada. La
+ * respuesta es una ley exacta que la prosa no tiene y que este simulador
+ * publica:
+ *
+ *     e/L = L / (k·Y_G)      con k = 12 rectángulo · 16 círculo · 18 triángulo
+ *
+ * Ni el ancho, ni el líquido, ni la inclinación entran. Y de ahí sale el «a
+ * partir de dónde»: la excentricidad baja del 1 % de la compuerta cuando el
+ * centroide está a 8,3 longitudes de compuerta, en un rectángulo.
+ *
+ * Dos paneles acoplados. A la izquierda, la escena: el depósito de canto, la
+ * compuerta con su inclinación y el prisma de presiones dibujado encima, con
+ * el centroide y el centro de presión marcados. A la derecha, la ley: la
+ * excentricidad relativa frente a la profundidad, las tres curvas de las tres
+ * formas y el punto actual encima de la suya.
+ *
+ * El modelo vive en `src/lib/compuertas.ts` y `tests/fisica/compuertas.test.ts`
+ * lo verifica contra los dos ejemplos publicados del propio tema (§10).
+ *
+ * SVG a mano, sin librería de gráficas (§02).
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'prisma' } = Astro.props;
+---
+
+<figure class="sim" data-prisma>
+  <figcaption class="sim-head">
+    <h3>El prisma de presiones, y dónde cae de verdad la resultante</h3>
+    <span class="rotulo hint">hunde la compuerta y mira separarse los dos puntos</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 520 240" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>La compuerta con su prisma de presiones</title>
+      <desc id={`${id}-d1`}>
+        Un depósito visto de canto, con la lámina libre arriba. La compuerta,
+        con la inclinación elegida, va del borde superior al inferior. Sobre
+        ella se dibuja el prisma de presiones: un trapecio cuya altura en cada
+        punto es la presión que hay allí, creciente con la profundidad. Un
+        círculo hueco marca el centroide de la compuerta y un círculo relleno
+        el centro de presión, que siempre queda por debajo. La distancia entre
+        los dos, y todo lo demás, está en la tabla.
+      </desc>
+
+      <rect class="agua" x="0" y="34" width="520" height="206"></rect>
+      <line class="lamina" x1="0" y1="34" x2="520" y2="34"></line>
+      <text class="etiqueta chica live" x="8" y="28">lámina libre</text>
+
+      <g data-cotas></g>
+
+      <path class="prisma" data-prisma-p></path>
+      <line class="flecha" data-fl-arriba marker-end={`url(#${id}-p)`}></line>
+      <line class="flecha" data-fl-abajo marker-end={`url(#${id}-p)`}></line>
+      <text class="etiqueta chica live" data-txt-p1></text>
+      <text class="etiqueta chica live" data-txt-p2></text>
+
+      <line class="placa" data-placa></line>
+      <circle class="marca centroide" data-centroide r="4"></circle>
+      <circle class="marca presion" data-presion r="4.5"></circle>
+      <text class="etiqueta chica" data-txt-g>centroide</text>
+      <text class="etiqueta chica flag" data-txt-p>centro de presión</text>
+
+      <defs>
+        <marker id={`${id}-p`} viewBox="0 0 9 9" refX="7.5" refY="4.5" markerWidth="5.5"
+          markerHeight="5.5" orient="auto">
+          <path d="M0 0 L9 4.5 L0 9 z" fill="var(--live)"></path>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="stage ley">
+    <svg viewBox="0 0 520 176" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>La excentricidad relativa frente a la profundidad</title>
+      <desc id={`${id}-d2`}>
+        Cuánto baja el centro de presión respecto del centroide, medido en
+        tanto por ciento de la longitud de la compuerta, frente a la distancia
+        del centroide medida en longitudes de compuerta. Son tres hipérbolas,
+        una por forma: el rectángulo arriba, el círculo en medio y el triángulo
+        abajo. Una línea horizontal marca el uno por ciento, y el punto actual
+        va sobre la curva de su forma.
+      </desc>
+
+      <g data-rejilla-l></g>
+      <line class="umbral" data-umbral></line>
+      <text class="etiqueta chica" data-txt-umbral>1 % de la compuerta</text>
+
+      <path class="curva-l" data-ley-12></path>
+      <path class="curva-l" data-ley-16></path>
+      <path class="curva-l" data-ley-18></path>
+      <text class="etiqueta chica" data-rot-12>rectángulo · k = 12</text>
+      <text class="etiqueta chica" data-rot-16>círculo · k = 16</text>
+      <text class="etiqueta chica" data-rot-18>triángulo · k = 18</text>
+
+      <circle class="marca presion" data-punto-l r="4.5"></circle>
+
+      <text class="etiqueta" x="270" y="170" text-anchor="middle"
+        >el centroide, en longitudes de compuerta</text
+      >
+      <text class="etiqueta" transform="rotate(-90 16 79)" x="16" y="79" text-anchor="middle"
+        >e / L</text
+      >
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-h`}>profundidad del borde <output data-out-h>1,0 m</output></label>
+      <input id={`${id}-h`} type="range" min="0" max="18" step="0.1" value="1" data-h />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-l`}>longitud de la compuerta <output data-out-l>2,0 m</output></label>
+      <input id={`${id}-l`} type="range" min="0.5" max="4" step="0.1" value="2" data-l />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-a`}>inclinación <output data-out-a>90°</output></label>
+      <input id={`${id}-a`} type="range" min="15" max="90" step="1" value="90" data-a />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">forma de la compuerta</span>
+      <div class="botones">
+        <button type="button" data-forma="rectangulo" aria-pressed="true">rectángulo</button>
+        <button type="button" data-forma="circulo" aria-pressed="false">círculo</button>
+        <button type="button" data-forma="triangulo-abajo" aria-pressed="false">
+          triángulo ▽
+        </button>
+        <button type="button" data-forma="triangulo-arriba" aria-pressed="false">
+          triángulo △
+        </button>
+      </div>
+      <div class="botones">
+        <button type="button" class="accion" data-accion="dostercios">los dos tercios</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">resultante</span>
+      <span class="v" data-f>78,4 kN</span>
+      <span class="sub" data-detalle>γ · 2,00 m · 4,00 m²</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">centroide y centro de presión</span>
+      <span class="v chica" data-puntos>2,000 m y 2,167 m de profundidad</span>
+      <span class="sub" data-fraccion>el centro de presión, al 58 % de la compuerta</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">lo que baja</span>
+      <span class="v" data-exc>0,167 m</span>
+      <span class="sub" data-relativa>un 8,3 % de la compuerta</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">la ley exacta</span>
+      <span class="v chica" data-ley>e/L = L/(12 · Y_G)</span>
+      <span class="sub" data-umbral-txt>baja del 1 % a partir de 16,7 m sobre el plano</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag" data-alarma-tit></span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import {
+    constanteDeForma,
+    profundidadIndiferente,
+    resuelve,
+    type Compuerta,
+    type Forma,
+  } from '../../lib/compuertas';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-prisma]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    const sH = $<HTMLInputElement>('[data-h]');
+    const sL = $<HTMLInputElement>('[data-l]');
+    const sA = $<HTMLInputElement>('[data-a]');
+    let forma: Forma = 'rectangulo';
+
+    const num = (v: number, d = 1) => v.toFixed(d).replace('.', ',');
+
+    /* ── panel 1: la escena ─────────────────────────────────────────── */
+    /*
+     * La escala **no** es fija. Con un rango de profundidad constante, una
+     * compuerta de tres metros hundida a catorce salía de cuarenta píxeles y
+     * no se veía nada — que es lo que pasó en la primera versión. Aquí el
+     * panel encuadra siempre desde la lámina libre hasta el borde inferior,
+     * así que la compuerta se ve y lo que cambia al hundirla es **la forma
+     * del prisma**: de triángulo picudo a rectángulo, que es la física.
+     */
+    const LAMINA = 34;
+    const FONDO = 224;
+    const XG = 150; // donde nace la compuerta, en x
+
+    /* ── panel 2: la ley ────────────────────────────────────────────── */
+    const LX0 = 70;
+    const LX1 = 452;
+    const LY0 = 22;
+    const LY1 = 136;
+    const NMAX = 8; // longitudes de compuerta
+    const EMAX = 0.1; // 10 % de la compuerta
+    const lx = (n: number) => LX0 + (Math.min(NMAX, n) / NMAX) * (LX1 - LX0);
+    const ly = (e: number) => LY1 - (Math.max(0, Math.min(EMAX, e)) / EMAX) * (LY1 - LY0);
+
+    {
+      const t: string[] = [];
+      for (let n = 0; n <= NMAX; n += 1) {
+        t.push(`<line class="rej" x1="${lx(n)}" y1="${LY0}" x2="${lx(n)}" y2="${LY1}"/>`);
+        if (n % 2 === 0) {
+          t.push(
+            `<text class="etiqueta chica" text-anchor="middle" x="${lx(n)}" y="${LY1 + 15}">${n}</text>`,
+          );
+        }
+      }
+      for (const e of [0.02, 0.04, 0.06, 0.08, 0.1]) {
+        t.push(
+          `<line class="rej" x1="${LX0}" y1="${ly(e)}" x2="${LX1}" y2="${ly(e)}"/>`,
+          `<text class="etiqueta chica" text-anchor="end" x="${LX0 - 6}" y="${ly(e) + 3.5}">${num(e * 100, 0)} %</text>`,
+        );
+      }
+      $('[data-rejilla-l]').innerHTML = t.join('');
+
+      /* Las tres hipérbolas e/L = 1/(k·n), con n = Y_G en longitudes.
+         Cada rótulo va sobre su propia curva y a distinta abscisa: puestos
+         los tres al borde derecho se apilaban, porque ahí las tres se juntan. */
+      const DONDE: Record<number, number> = { 12: 1.3, 16: 2.2, 18: 3.2 };
+      for (const k of [12, 16, 18]) {
+        const p: string[] = [];
+        for (let n = 1 / (k * EMAX); n <= NMAX + 1e-9; n += 0.02) {
+          p.push(`${lx(n).toFixed(1)} ${ly(1 / (k * n)).toFixed(1)}`);
+        }
+        $(`[data-ley-${k}]`).setAttribute('d', `M${p.join(' L')}`);
+        const rot = $(`[data-rot-${k}]`);
+        const n = DONDE[k];
+        rot.setAttribute('x', String(lx(n) + 7));
+        rot.setAttribute('y', String(ly(1 / (k * n)) - 5));
+      }
+
+      $('[data-umbral]').setAttribute('x1', String(LX0));
+      $('[data-umbral]').setAttribute('x2', String(LX1));
+      $('[data-umbral]').setAttribute('y1', String(ly(0.01)));
+      $('[data-umbral]').setAttribute('y2', String(ly(0.01)));
+      $('[data-txt-umbral]').setAttribute('x', String(LX1 - 2));
+      $('[data-txt-umbral]').setAttribute('y', String(ly(0.01) + 12));
+      $('[data-txt-umbral]').setAttribute('text-anchor', 'end');
+    }
+
+    function pinta() {
+      const L = Number(sL.value);
+      const h1 = Number(sH.value);
+      const grados = Number(sA.value);
+      const compuerta: Compuerta = { forma, b: 2, L };
+      const r = resuelve({ compuerta, h1, grados });
+      const k = constanteDeForma(forma);
+
+      const rad = (grados * Math.PI) / 180;
+      const ux = Math.cos(rad);
+      const uy = Math.sin(rad);
+      const hondo = Math.max(0.6, h1 + L * uy);
+      const ESCALA = Math.min((FONDO - LAMINA) / (hondo * 1.06), 150 / Math.max(0.3, L));
+      const py = (h: number) => LAMINA + h * ESCALA;
+
+      const x1 = XG;
+      const y1 = py(h1);
+      const x2 = XG + L * ux * ESCALA;
+      const y2 = py(h1 + L * uy);
+
+      const placa = $('[data-placa]');
+      placa.setAttribute('x1', String(x1));
+      placa.setAttribute('y1', String(y1));
+      placa.setAttribute('x2', String(x2));
+      placa.setAttribute('y2', String(y2));
+
+      /* El prisma sale perpendicular a la placa y hacia el lado del agua, con
+         la anchura proporcional a la presión de cada borde. Su escala también
+         es relativa: la presión más honda de la escena mide siempre lo mismo,
+         así que lo que se lee es **la forma** —cuánto más ancho es abajo que
+         arriba—, que es lo que cambia al hundir la compuerta. */
+      const p1 = 9800 * h1;
+      const p2 = 9800 * (h1 + L * uy);
+      const nx = uy;
+      const ny = -ux;
+      /* Tres topes, y el segundo es el que importa: la normal a una placa
+         inclinada apunta hacia arriba, así que sin él la flecha del borde
+         superior sale **por encima de la lámina libre** y el dibujo dice una
+         mentira sobre dónde hay agua. */
+      const esc = Math.min(
+        210 / Math.max(p2, 1),
+        p1 > 0 && ny < 0 ? (y1 - LAMINA - 5) / (-ny * p1) : Infinity,
+        (504 - Math.max(x1, x2)) / Math.max(nx * p2, 1),
+      );
+      const a1 = [x1 + nx * p1 * esc, y1 + ny * p1 * esc];
+      const a2 = [x2 + nx * p2 * esc, y2 + ny * p2 * esc];
+
+      $('[data-prisma-p]').setAttribute(
+        'd',
+        `M${x1} ${y1} L${a1[0].toFixed(1)} ${a1[1].toFixed(1)} L${a2[0].toFixed(1)} ${a2[1].toFixed(1)} L${x2} ${y2} Z`,
+      );
+      for (const [sel, desde, hasta] of [
+        ['[data-fl-arriba]', [x1, y1], a1],
+        ['[data-fl-abajo]', [x2, y2], a2],
+      ] as const) {
+        const l = $(sel);
+        l.setAttribute('x1', String(desde[0]));
+        l.setAttribute('y1', String(desde[1]));
+        l.setAttribute('x2', String(hasta[0]));
+        l.setAttribute('y2', String(hasta[1]));
+      }
+      const kpa = (p: number) => `${num(p / 1000)} kPa`;
+      for (const [sel, punto, valor, dy] of [
+        ['[data-txt-p1]', a1, p1, -6],
+        ['[data-txt-p2]', a2, p2, 13],
+      ] as const) {
+        const t = $(sel);
+        t.setAttribute('x', String(Math.min(514, punto[0] + 6)));
+        t.setAttribute('y', String(Math.max(LAMINA - 6, Math.min(236, punto[1] + dy))));
+        t.setAttribute('text-anchor', 'start');
+        t.textContent = kpa(valor);
+      }
+
+      /* Los dos puntos, sobre la placa y a su distancia real desde el corte
+         con la lámina libre. */
+      const sobrePlaca = (Y: number) => {
+        const desdeArriba = Y - h1 / uy;
+        return [XG + desdeArriba * ux * ESCALA, py(h1 + desdeArriba * uy)];
+      };
+      const [gx, gy] = sobrePlaca(r.Yg);
+      const [ppx, ppy] = sobrePlaca(r.Yp);
+      $('[data-centroide]').setAttribute('cx', String(gx));
+      $('[data-centroide]').setAttribute('cy', String(gy));
+      $('[data-presion]').setAttribute('cx', String(ppx));
+      $('[data-presion]').setAttribute('cy', String(ppy));
+
+      /* Los dos rótulos se separan a la fuerza: en cuanto la compuerta se
+         hunde, los puntos se juntan y sus nombres se solaparían — y ese es
+         precisamente el estado que hay que poder leer. */
+      /* Los rótulos se apartan **perpendicularmente a la placa y por el lado
+         contrario al prisma**: puestos en horizontal caían encima del trazo
+         negro de la compuerta, que es grueso, y no se leían. */
+      const tg = $('[data-txt-g]');
+      const tp = $('[data-txt-p]');
+      const aparta = (t: Element, px: number, py2: number, dy: number) => {
+        t.setAttribute('x', String(Math.max(70, px - nx * 16)));
+        t.setAttribute('y', String(Math.max(LAMINA + 12, Math.min(234, py2 - ny * 16 + dy))));
+        t.setAttribute('text-anchor', 'end');
+      };
+      /* Y separados en vertical además: hundida la compuerta los dos puntos
+         se juntan —que es el resultado— y apartarlos solo en perpendicular
+         dejaba los dos nombres escritos uno encima del otro. */
+      aparta(tg, gx, gy, -7);
+      aparta(tp, ppx, ppy, 10);
+
+      /* Las cotas de profundidad, a la izquierda del todo: a la derecha está
+         el prisma, que se ensancha y las tapaba. */
+      const cotas: string[] = [];
+      /* Con el borde en la lámina libre la cota de arriba vale cero y se
+         escribía encima del rótulo «lámina libre». No se acota lo obvio. */
+      const aCotar: [number, string][] =
+        h1 < 0.05
+          ? [[L * uy, `${num(L * uy, 2)} m`]]
+          : [
+              [h1, `${num(h1, 2)} m`],
+              [h1 + L * uy, `${num(h1 + L * uy, 2)} m`],
+            ];
+      for (const [h, txt] of aCotar) {
+        cotas.push(
+          `<line class="cota" x1="8" y1="${py(h)}" x2="${Math.min(x1, x2) - 6}" y2="${py(h)}"/>`,
+          `<text class="etiqueta chica" text-anchor="start" x="8" y="${py(h) - 5}">${txt}</text>`,
+        );
+      }
+      $('[data-cotas]').innerHTML = cotas.join('');
+
+      /* ── el panel de la ley ── */
+      const n = r.Yg / L;
+      $('[data-punto-l]').setAttribute('cx', String(lx(n)));
+      $('[data-punto-l]').setAttribute('cy', String(ly(r.relativa)));
+
+      /* ── la tabla ── */
+      $('[data-f]').textContent = `${num(r.F / 1000)} kN`;
+      $('[data-detalle]').textContent = `γ · ${num(r.Hg, 2)} m · ${num(r.A, 2)} m²`;
+      $('[data-puntos]').textContent = `${num(r.Hg, 3)} m y ${num(r.Hp, 3)} m de profundidad`;
+      $('[data-fraccion]').textContent =
+        `el centro de presión, al ${num(r.fraccion * 100, 0)} % de la compuerta`;
+      $('[data-exc]').textContent = `${num(r.excentricidad, 3)} m`;
+      $('[data-relativa]').textContent =
+        `un ${num(r.relativa * 100, r.relativa < 0.01 ? 2 : 1)} % de la compuerta`;
+      $('[data-ley]').textContent = `e/L = L/(${k} · Y_G)`;
+      $('[data-umbral-txt]').textContent =
+        `baja del 1 % con el centroide a ${num(profundidadIndiferente(compuerta))} m sobre el plano`;
+
+      raiz.dataset.lejos = r.relativa < 0.01 ? 'si' : 'no';
+
+      const alarma = $<HTMLElement>('[data-alarma]');
+      const dosTercios = h1 === 0 && forma === 'rectangulo';
+      alarma.hidden = !(dosTercios || r.relativa < 0.01);
+      if (dosTercios) {
+        $('[data-alarma-tit]').textContent = 'Este es el único caso en que valen los dos tercios';
+        $('[data-alarma-txt]').textContent =
+          `Con el borde superior en la lámina libre y la compuerta rectangular, el centro de ` +
+          `presión cae al 66,7 % — los 2h/3 de siempre. Sube un poco la profundidad y verás bajar ` +
+          `esa fracción enseguida: a 1 m ya es el 58 %. La regla no es de las compuertas, es de ` +
+          `esta compuerta.`;
+      } else if (r.relativa < 0.01) {
+        $('[data-alarma-tit]').textContent = 'Aquí ya casi da igual, y se puede decir cuánto';
+        $('[data-alarma-txt]').textContent =
+          `El centro de presión está ${num(r.excentricidad * 100, 1)} cm por debajo del centroide: ` +
+          `un ${num(r.relativa * 100, 2)} % de la compuerta. La ley es e/L = L/(${k}·Y_G), así que ` +
+          `con esta forma la excentricidad baja del 1 % en cuanto el centroide pasa de ` +
+          `${num(profundidadIndiferente(compuerta))} m sobre el plano. Sigue sin ser cero, y el ` +
+          `examen sigue pidiendo la fórmula completa.`;
+      }
+
+      $<HTMLOutputElement>('[data-out-h]').textContent = `${num(h1)} m`;
+      $<HTMLOutputElement>('[data-out-l]').textContent = `${num(L)} m`;
+      $<HTMLOutputElement>('[data-out-a]').textContent = `${grados}°`;
+    }
+
+    for (const s of [sH, sL, sA]) s.addEventListener('input', pinta);
+
+    const botones = [...raiz.querySelectorAll<HTMLButtonElement>('[data-forma]')];
+    for (const b of botones) {
+      b.addEventListener('click', () => {
+        forma = b.dataset.forma as Forma;
+        for (const o of botones) o.setAttribute('aria-pressed', String(o === b));
+        pinta();
+      });
+    }
+
+    $('[data-accion="dostercios"]').addEventListener('click', () => {
+      forma = 'rectangulo';
+      for (const o of botones) o.setAttribute('aria-pressed', String(o.dataset.forma === 'rectangulo'));
+      sH.value = '0';
+      sL.value = '3';
+      sA.value = '90';
+      pinta();
+    });
+
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 { margin: 0; font-size: .9rem; font-weight: 600; }
+  .hint { font-size: .68rem; text-transform: none; letter-spacing: .02em; }
+
+  .stage svg { display: block; width: 100%; height: auto; }
+  .ley { border-top: 1px solid var(--rule); background: var(--grid); }
+
+  .rej { stroke: var(--rule); stroke-width: 1; }
+  .etiqueta { fill: var(--faint); font-family: var(--mono); font-size: 10px; }
+  .etiqueta.chica { font-size: 9px; }
+  .etiqueta.live { fill: var(--live); }
+  .etiqueta.flag { fill: var(--flag); }
+
+  .agua { fill: var(--live); opacity: .08; }
+  .lamina { stroke: var(--live); stroke-width: 1.6; }
+  .cota { stroke: var(--faint); stroke-width: .8; stroke-dasharray: 3 3; }
+
+  .placa { stroke: var(--ink); stroke-width: 5; stroke-linecap: butt; }
+  .prisma { fill: var(--live); fill-opacity: .16; stroke: var(--live); stroke-width: 1.4; }
+  .flecha { stroke: var(--live); stroke-width: 1.3; }
+
+  .marca.centroide { fill: none; stroke: var(--faint); stroke-width: 2; }
+  .marca.presion { fill: var(--flag); stroke: var(--panel); stroke-width: 1.6; }
+
+  .curva-l { fill: none; stroke: var(--faint); stroke-width: 1.4; opacity: .5; }
+  .umbral { stroke: var(--alt); stroke-width: 1.2; stroke-dasharray: 5 4; }
+  [data-lejos='si'] .umbral { stroke-width: 2; stroke-dasharray: none; }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.1rem 1.5rem;
+    padding: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .5rem;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--graphite);
+    margin-bottom: .4rem;
+  }
+
+  .ctrl label output { color: var(--live); font-weight: 500; font-size: .78rem; }
+  input[type='range'] { width: 100%; accent-color: var(--live); cursor: pointer; }
+
+  .atajos .k { display: block; margin-bottom: .45rem; font-size: .63rem; letter-spacing: .08em; }
+  .botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .botones + .botones { margin-top: .4rem; }
+
+  .botones button {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .3rem .6rem;
+    color: var(--live);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .botones button:hover { background: var(--live-soft); border-color: var(--live); }
+
+  .botones button[aria-pressed='true'] {
+    background: var(--live);
+    border-color: var(--live);
+    color: var(--panel);
+  }
+
+  .botones button.accion { color: var(--flag); border-style: dashed; }
+  .botones button.accion:hover { background: var(--flag-soft); border-color: var(--flag); }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell { background: var(--panel); padding: .75rem .9rem; }
+  .cell .k { display: block; margin-bottom: .25rem; font-size: .63rem; letter-spacing: .08em; }
+
+  .cell .v {
+    display: block;
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica { font-size: .76rem; }
+
+  .cell .sub {
+    display: block;
+    margin-top: .2rem;
+    font-size: .7rem;
+    line-height: 1.35;
+    color: var(--faint);
+  }
+
+  .alarma {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: .8rem 1.1rem;
+    background: var(--flag-soft);
+    border-top: 1px solid var(--flag);
+    color: var(--flag);
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+</style>

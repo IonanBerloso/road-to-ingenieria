@@ -3,7 +3,7 @@ asignatura: fluidos
 tema: 21
 titulo: Flujo en conductos abiertos. Canales
 descripcion: Chezy y Manning, y por qué la sección que menos cuesta es siempre la que menos perímetro mojado tiene.
-patron: lectura
+patron: simulador
 competencias:
   - COMP1
   - COMP2
@@ -12,6 +12,7 @@ fuente: Adaptado del Tema 21 de Mecánica de Fluidos · Departamento de Ingenier
 ---
 
 import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+import SeccionDeCanal from '../../../components/sim/SeccionDeCanal.astro';
 
 Un canal es un conducto **abierto**: el fluido tiene superficie libre. Eso
 cambia dos cosas de raíz respecto a todo lo anterior, y de esas dos sale el
@@ -233,6 +234,44 @@ tiene solución única: hay que fijar la forma. Si no hay condicionantes, se eli
 la sección óptima y sale directo; si los hay —una anchura máxima, una velocidad
 máxima, un calado impuesto—, se fija lo que esté impuesto y queda una ecuación
 en la incógnita restante.
+
+### Cuánto cuesta obedecer un condicionante
+
+Leído lo anterior, la sección óptima parece un sitio del que no conviene
+moverse, y el condicionante, una desgracia. Medido, no es así, y conviene
+saberlo antes de pelearse con un enunciado.
+
+Con un canal de hormigón de 5 m³/s y pendiente del uno por mil, esto es lo que
+cuesta apartarse del semicuadrado, en perímetro mojado — que es lo que hay que
+revestir:
+
+| $b/h$ | perímetro de más |
+|---|---|
+| 1 | +7,6 % |
+| 1,5 | **+1,3 %** |
+| 2 | la óptima |
+| 3 | **+2,6 %** |
+| 4 | +7,6 % |
+| 6 | +19,7 % |
+| 10 | +44,4 % |
+
+**El óptimo es plano.** Entre $b/h = 1{,}5$ y $b/h = 3$ se paga menos de un 3 %,
+así que un condicionante moderado sale casi gratis: si el enunciado impone una
+anchura que deja el canal en ese tramo, se acepta y se sigue. Lo que sí se paga
+es el canal **ancho y somero**, que además va lento y sedimenta.
+
+<SeccionDeCanal />
+
+Tres cosas que hacer con él. Pulsar **«un canal ancho»** para ver el precio del
+extremo. Cambiar a **trapecial** y mover el talud, para comprobar que el mínimo
+está en 60° y que ahí sale el semihexágono. Y ponerlo en **semicircular**, que
+no tiene forma que elegir porque ya es la mejor: gana un 14 % de perímetro al
+semicuadrado a igualdad de caudal.
+
+> Ese 14 % y el **11 %** que dice el pie de la figura de más arriba no se
+> contradicen: la figura compara las tres secciones **a igualdad de área** y el
+> simulador **a igualdad de caudal**, que no es lo mismo. Las dos cifras están
+> medidas en `tests/fisica/canales.test.ts`.
 
 ### La berma, o el resguardo, que no es lo mismo que el calado
 
