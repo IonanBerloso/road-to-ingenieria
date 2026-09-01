@@ -791,9 +791,9 @@ Ocho fases después, y medido con `npm run mide fluidos`:
 | temas con prosa, figura y ejercicios | **23 de 25** |
 | palabras de prosa | **22.480** (Cálculo entera son 21.545) |
 | figuras | 23 |
-| ejercicios | **220**, con 994 pasos |
+| ejercicios | **223**, con 1.008 pasos |
 | de ellos, problemas de la colección | **92 de 236** |
-| convocatorias transcritas | **13 de 17** — 2026 ord. (7 de 9), 2025 ord. (7 de 9), 2025 ext. (8 de 9), 2024 ord. (**8 de 8**), 2024 ext. (7 de 8), 2023 ord. (**9 de 9**), 2023 ext. (**9 de 9**), 2022 ord. (**11 de 11**), 2022 ext. (8 de 9), 2021 ord. (6 de 8), 2020 ord. (6 de 8) y los dos primeros parciales, el de 2021 (**4 de 4**) y el de 2020 (**5 de 5**) |
+| convocatorias transcritas | **14 de 17** — 2026 ord. (7 de 9), 2025 ord. (7 de 9), 2025 ext. (8 de 9), 2024 ord. (**8 de 8**), 2024 ext. (7 de 8), 2023 ord. (**9 de 9**), 2023 ext. (**9 de 9**), 2022 ord. (**11 de 11**), 2022 ext. (8 de 9), 2021 ord. (6 de 8), 2020 ord. (6 de 8) y los dos primeros parciales, el primero de 2021 (**4 de 4**) y los dos de 2020 (**5 de 5** y 3 de 5) |
 | rutas de estudio | **0 de 2** |
 
 Los **dos temas que faltan son los que no tienen material**: el 5 (equilibrio

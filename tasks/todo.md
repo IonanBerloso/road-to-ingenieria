@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **13 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **14 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 220 ejercicios
-y 994 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 223 ejercicios
+y 1.008 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 994 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**220 ejercicios y 994 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 95 son ejercicios de convocatoria. Cobertura de la
+**223 ejercicios y 1.008 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 98 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -341,21 +341,37 @@ Todos exactos.
 > $\sqrt{2}/2$—. La misma herramienta que en junio de 2023 desbloqueó la
 > ordinaria de mayo de 2025.
 
+### El segundo parcial de junio de 2020, tres de cinco
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 13 % | t15 | 42,47 kN · u' = 60 m/s · 169,9 kN — exacto |
+| 2 | 15 % | t16 | los seis Π con variables repetidas raras — deducción |
+| 3 | 25 % | t20 | D = 1,1 m · h = 46,3 cm · e = 14 mm · el cambio es aceptable |
+
+**Faltan dos, los dos por una tabla que está en la figura**: el 4 necesita
+los factores de paso del cuadro de pérdidas menores del departamento —codo
+comercial, compuerta al 62,5 %, esférica girada 30º— y el 5, la tabla de
+longitudes y diámetros de sus cinco tuberías.
+
+> **El apartado c) del ejercicio 3 es el mejor del examen.** Pregunta si
+> cerrar la válvula en 10 s en vez de en 25 es buena idea, y la respuesta
+> no es «sí» a secas. Con 10 s se cruza el tiempo crítico —11,2 s— y el
+> cierre pasa de lento a rápido: la sobrepresión salta de 158 a 354 m, un
+> 27 % de la estática. Y sin embargo el espesor necesario solo sube de
+> 12,07 a 13,52 mm, así que el comercial sigue siendo el mismo. **El cambio
+> es aceptable porque entre esos dos valores no hay ningún múltiplo de 2**,
+> no porque la sobrepresión sea pequeña. Un margen que depende del catálogo
+> del proveedor no es un margen de diseño, y eso hay que decírselo al
+> cliente junto con el sí.
+
 ### Lo que queda de fase 9
 
-**Tres parciales**: 4 de junio de 2020, y 7 de mayo y 3 de junio de 2021.
+**Dos parciales**: 7 de mayo y 3 de junio de 2021.
 
-De ellos hay tres ejercicios ya verificados, para que la próxima tanda no
+De ellos hay un ejercicio ya verificado, para que la próxima tanda no
 repita las cuentas:
 
-- **4 de junio de 2020, ejercicio 1** · el chorro sobre un álabe móvil que
-  lo desvía 180º: 42,47 kN con el álabe huyendo a v/3, potencia útil nula
-  en u = 0 y en u = v, y 169,9 kN con el álabe yendo al encuentro del
-  chorro a 20 m/s.
-- **4 de junio de 2020, ejercicio 3a** · el canal de madera sin cepillar
-  con el nivel limitado al 45 % del diámetro: D = 1,05 m, comercial
-  **1,1 m**, y con él h = 46,3 cm y v = 1,17 m/s. Los apartados b) y c)
-  piden la tensión admisible del acero, que está en la figura.
 - **7 de mayo de 2021, ejercicio 4b** · la misma válvula con agua y con
   mercurio. Con el factor de paso constante,
   $Q \propto \sqrt{\Delta p/\rho}$, y de 10 l/s de agua con 1,2 kPa se pasa
