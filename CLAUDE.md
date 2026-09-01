@@ -1307,6 +1307,28 @@ Cosas que ya han costado horas. No son opiniones.
   pero cuesta un suelo entero: **la unidad monetaria se saca de la fórmula
   y se dice en la prosa de al lado** («Es decir, 0,0434 €/m³»). Vale para
   cualquier símbolo que no sea matemático.
+- **En el pie de una figura no hay fórmulas.** Dentro de un `<figure>` el
+  procesador deja pasar el HTML tal cual, así que un `$h$` en el
+  `<figcaption>` se publica **con los dólares a la vista**. Lo curioso es que
+  el **negrita sí funciona** —`**así**` sale como `<strong>`—, y eso engaña:
+  se prueba una cosa, se ve que va, y se da por hecho que va todo. Hay un
+  guardián en `verify.mjs` que lo caza, y aun así costó un suelo el 1 de
+  septiembre de 2026 escribiendo las primeras figuras de ejercicio de
+  Fluidos. **Regla: en un pie, las variables van en negrita o en texto
+  llano** —«la cota **h**», «respecto de O»—, y la fórmula, si hace falta, en
+  la prosa de fuera.
+- **Un `var(--token)` que no existe no da error: pinta negro.** Es peor que un
+  color literal, porque el literal al menos se ve y `verify.mjs` lo cazaba
+  desde el principio. Un token inventado invalida la declaración, la propiedad
+  cae a su **valor inicial** —y el inicial de `fill` es negro—, así que la
+  figura sale bien en claro y en oscuro deja las etiquetas en negro sobre
+  fondo casi negro. El 1 de septiembre de 2026 había **148 usos de
+  `--ink-suave` y `--linea`, ninguno de los dos definido**, repartidos por 22
+  de las 23 figuras de Fluidos. Lo caza la regla **2 ter** de `verify.mjs`
+  desde ese día, y esa regla mira también los `.yaml` porque ahí viven las
+  176 figuras de ejercicio de Cálculo. **Regla: un token nuevo se define en
+  `tokens.css` antes de usarlo, y si ya existe uno que significa lo mismo, se
+  usa ese** — dos nombres para un color es la Regla 0 con otra cara.
 - **Un encabezado con LaTeX dentro produce un ancla que ninguna ruta puede
   enlazar.** `## El teorema $\pi$ de Vaschy-Buckingham` genera el id
   `el-teorema-πpiπ-de-vaschy-buckingham` —la salida de KaTeX es

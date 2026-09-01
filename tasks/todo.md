@@ -27,7 +27,9 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
-| **11 · Auditoría §15 y cierre** | — | — | en curso · bloquea la deuda 49 |
+| **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
+| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **6 de 43** · t07 entero |
+| **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 1 de septiembre de
@@ -771,6 +773,71 @@ curvas que no tenemos; cinco ejercicios grandes se caen por figura sin acotar;
 los
 temas 22, 23 y 24 no tienen ni un ejercicio de nivel `practica`; y no hay
 cronómetro para el simulacro.
+
+### Fase 12 · las figuras de ejercicio
+
+Abierta el 1 de septiembre de 2026 a petición de Ionan: «me gustaría que los
+ejercicios tuviesen figuras dibujadas en las que lo piden».
+
+**Medido primero, que es lo que cambió el plan.** De los 232 ejercicios de
+Fluidos, **43 nombran una figura o un esquema en su enunciado** y ninguno la
+tenía. Se concentran así:
+
+| | figuras que faltan |
+|---|---|
+| t07 fuerzas sobre superficies | 6 de 9 |
+| ordinaria 2022 | 5 de 11 |
+| 1.er parcial 2020 | 4 de 5 |
+| ordinaria 2023 | 4 de 9 |
+| t02, t04 y otras once convocatorias | 1 a 3 cada una |
+
+**Y no hacía falta tocar el esquema, al revés de lo que anuncié.** La
+capacidad ya existía: **176 de los 616 ejercicios de Cálculo llevan su figura
+SVG dentro del campo `enunciado`**, y `mate()` ya les prefija los ids, los
+`aria-labelledby` y los `url(#…)`. Fluidos simplemente nunca la usó. Así que
+esto no es construir el «patrón 2 · Figura fija» de §05: es rellenar con un
+molde probado 176 veces. Conviene decirlo porque anuncié lo contrario antes de
+mirar, que es exactamente lo que §16 punto 1 manda no hacer.
+
+**El convenio de color**, para que las 43 se parezcan entre sí:
+
+| | token |
+|---|---|
+| agua y su lámina libre | `--live`, relleno al 12 % |
+| otros líquidos (aceite, líquido manométrico) | `--alt`, relleno al 14 % |
+| sólidos, paredes, compuertas | `--ink`, y el cuerpo de una compuerta **opaco** con `--panel` para que el agua no se transparente |
+| cotas, ángulos y rayado del terreno | `--faint` |
+| fuerzas, momentos y contrapesos | `--alt` |
+
+Y un pie que dice **qué se ve**, no qué se calcula. En el cuarto de cilindro,
+por ejemplo, que la componente vertical apunta hacia arriba porque el volumen
+que pesaría sobre el arco es imaginario, y que por eso el apartado c) da cero
+exacto.
+
+**El límite, que es duro y no se salta:** solo se dibuja lo que el original
+acota. Los doce ejercicios declarados fuera lo están porque su figura no da
+las cotas, y una figura inventada sería §13 caso 2, el peor fallo posible
+aquí. Esos siguen fuera y seguirán.
+
+> **Y al ir a copiar el molde apareció un fallo de los caros.** Veintidós de
+> las veintitrés figuras de Fluidos pintaban sus etiquetas con
+> `fill="var(--ink-suave)"`, y **`--ink-suave` no existe en `tokens.css`**:
+> 148 usos, contando también `--linea`. Un `var()` sin definir invalida la
+> declaración, así que el color cae a su valor inicial —negro— y en tema
+> oscuro esas etiquetas quedaban negras sobre `#14171A`. Se dibujaban bien en
+> claro y nadie las había mirado en oscuro.
+>
+> **Se arregla renombrando en los 22 ficheros, no definiendo el token.** Y es
+> Regla 0 leída con cuidado: la capa compartida ya existe —`--faint` y
+> `--rule`—, lo que fallaba era que el contenido la llamaba por un nombre que
+> no estaba. Definir `--ink-suave: var(--faint)` habría dejado dos nombres
+> para un color, que es la enfermedad que §01 describe.
+>
+> Con guardián nuevo en `verify.mjs`, **regla 2 ter**: falla si algún
+> `var(--x)` apunta a un token inexistente. Validado al revés como manda §11
+> —roto a mano, rojo; restaurado, verde—. Y mira también los `.yaml`, que era
+> el otro hueco: las 176 figuras de Cálculo viven dentro del YAML y la regla
+> 2, que solo lee `.css`, `.astro` y `.mdx`, nunca las había leído.
 
 ### Lo que el material docente no trae · comprobado el 31 de agosto de 2026
 

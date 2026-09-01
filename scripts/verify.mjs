@@ -114,6 +114,62 @@ console.log('\nTokens');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   2 ter · Ningún var(--x) apunta a un token que no existe
+   ═══════════════════════════════════════════════════════════════════
+   La regla 2 caza un color literal. No caza lo contrario, que resultó ser más
+   frecuente y mucho más silencioso: **usar un token que nadie ha definido**.
+
+   Encontrado el 1 de septiembre de 2026 al empezar las figuras de ejercicio.
+   Veintidós de las veintitrés figuras de Fluidos pintaban sus etiquetas
+   secundarias con `fill="var(--ink-suave)"`, y `--ink-suave` **no existe en
+   `tokens.css`**: son 140 usos. Un `var()` sin definir invalida la
+   declaración, así que `fill` cae a su valor inicial —negro— y en tema
+   oscuro esas etiquetas quedan en negro sobre #14171A. Las figuras se
+   dibujaban «bien» en claro y nadie las miró en oscuro, que es §16 punto 1
+   otra vez.
+
+   Se mira también en los `.yaml`, y eso es la mitad del valor de esta regla:
+   la 2 solo lee `.css`, `.astro` y `.mdx`, y **176 ejercicios de Cálculo
+   llevan su figura SVG dentro del YAML**, es decir fuera del alcance de
+   cualquier comprobación de color hasta hoy.
+
+   Los tokens que se asignan en línea —`--acento` desde `Base.astro`, y los
+   `--pad`/`--i` locales de la portada— se declaran aquí como conocidos: no
+   viven en `tokens.css` y eso es correcto. */
+{
+  const TOKENS = new Set(
+    [...leer(join(SRC, 'styles', 'tokens.css')).matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm)].map(
+      (m) => m[1],
+    ),
+  );
+  /* Definidos en línea por un componente, no en la paleta. Si añades uno,
+     añádelo aquí y di quién lo asigna. */
+  const EN_LINEA = new Set([
+    '--acento', // Base.astro e index.astro, con el color de la asignatura
+    '--pad', //    index.astro, retículas de la portada
+    '--i', //      index.astro, índice de la animación de entrada
+  ]);
+
+  const huerfanos = new Map();
+  for (const f of archivos(SRC, ['.css', '.astro', '.mdx', '.yaml'])) {
+    for (const m of sinComentarios(leer(f)).matchAll(/var\(\s*(--[a-z0-9-]+)/g)) {
+      if (TOKENS.has(m[1]) || EN_LINEA.has(m[1])) continue;
+      if (!huerfanos.has(m[1])) huerfanos.set(m[1], new Set());
+      huerfanos.get(m[1]).add(rel(f));
+    }
+  }
+
+  if (huerfanos.size === 0) ok(`todos los var(--x) apuntan a un token que existe (${TOKENS.size})`);
+  else
+    fallo(
+      'Hay var(--x) que apuntan a un token inexistente: la declaración se invalida y el color cae a su valor inicial',
+      [...huerfanos]
+        .map(([t, fs]) => `${t} → ${fs.size} ficheros (${[...fs][0]}…)`)
+        .join('\n    '),
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    2 bis · LaTeX que no se dibuja
    ═══════════════════════════════════════════════════════════════════
    `\bar{z}` usa un acento que muchas fuentes matemáticas no traen, y la barra
