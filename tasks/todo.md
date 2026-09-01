@@ -28,7 +28,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
 | **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
-| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **6 de 43** · t07 entero |
+| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **20 de 43** |
 | **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
@@ -838,6 +838,68 @@ aquí. Esos siguen fuera y seguirán.
 > —roto a mano, rojo; restaurado, verde—. Y mira también los `.yaml`, que era
 > el otro hueco: las 176 figuras de Cálculo viven dentro del YAML y la regla
 > 2, que solo lee `.css`, `.astro` y `.mdx`, nunca las había leído.
+
+#### Lo dibujado, por convocatoria
+
+| dónde | figuras | qué son |
+|---|---|---|
+| t07 fuerzas sobre superficies | 6 | las seis compuertas del capítulo 2 |
+| ordinaria de junio de 2022 | 5 | U invertida con helio, cuarto de cilindro, venturímetro de dos manómetros, cono sobre el chorro, dos ramales en paralelo |
+| 1.er parcial de mayo de 2020 | 4 | laboratorio submarino, red de la boquilla, tubo de helio, tanque en T |
+| ordinaria de junio de 2023 | 4 | codo-boquilla de 180°, depósito partido con tramo BC, venturímetro inclinado, circuito cerrado |
+| ordinaria de junio de 2021 | 1 | el orificio y el manómetro que mide su pérdida |
+
+**Dos que salieron mal y se arreglaron mirándolas**, que es §16 punto 1
+funcionando: el tanque en T llevaba un `Z` de más en el trazado y cerraba con
+un diagonal de esquina a esquina, y el venturímetro inclinado me había salido
+en forma de **V**, como un valle, cuando el original es una tubería recta en
+pendiente con un estrechamiento. El segundo se rehízo rotando el tubo entero
+12,9°, que además deja la etiqueta del glicol siguiendo la pendiente.
+
+#### El guardián que fallaba al azar, diagnosticado
+
+Al empezar las figuras de examen el humo empezó a tumbar páginas con
+«Execution context was destroyed»: **una en la primera tanda, tres en la
+segunda, cuatro en la tercera**, y ninguna de ellas tocada. §11 ya lo había
+atacado dos veces —una pestaña por página, esperar al trabajo diferido— y
+volvía.
+
+**No era azar y no era una navegación.** Falla siempre en las mismas cuatro
+páginas de Álgebra, siempre después de superar siete u ocho ejercicios con
+sus clics y sus diagnósticos, y con **14 GB libres** en la máquina: es el
+proceso de render de Chromium quedándose sin sitio en las páginas grandes
+—`t07-diagonalizacion` son 4,9 MB y 133.000 nodos—, y Playwright lo cuenta
+con el mismo mensaje que un error de contenido.
+
+Dos arreglos, los dos en `humo.mjs`:
+
+- **`--js-flags=--max-old-space-size=4096` y `--disable-dev-shm-usage`** al
+  lanzar el navegador: cuatro veces el montón de JavaScript por defecto, y
+  fuera el `/dev/shm` pequeño.
+- **Un reintento por página**, solo si la excepción coincide con el patrón de
+  caída, con aviso impreso. Un fallo de verdad falla las dos veces, y los
+  fallos de contenido ni siquiera pasan por ahí: los registra `comprueba()`
+  directamente, así que el reintento no los puede tapar.
+
+> Y una consecuencia que conviene no perder de vista: **el humo se está
+> quedando pequeño para el tamaño del corpus.** Si el aviso de reintento
+> vuelve a salir en cada tanda, el arreglo ya no es darle más memoria: es que
+> las páginas de tema tienen 150.000 nodos porque incrustan treinta y siete
+> ejercicios enteros, y eso es un problema de diseño de la página, no del
+> guardián.
+
+#### Una figura que no se dibuja, y por qué
+
+**El ejercicio 1 de la ordinaria de junio de 2021 —la presa con dos leyes—
+se queda sin figura.** No por falta de original, sino porque el original no
+se deja leer: las tres cotas de 6 m de la base no cuadran con la geometría
+que exigen los resultados publicados —las caras salen con relaciones 6/8,5 y
+6/13, que dan una base de 15 m, no de 18—, y el dibujo no está a escala, así
+que no hay forma de decidir cuál de las dos lecturas es la buena.
+
+Dibujarla «aproximadamente» sería inventarse la geometría de una presa en un
+ejercicio que pide fuerzas sobre ella. Es §13 caso 2, y la respuesta es la
+misma que para los doce ejercicios declarados: se dice y no se publica.
 
 ### Lo que el material docente no trae · comprobado el 31 de agosto de 2026
 

@@ -64,7 +64,24 @@ async function esperaServidor() {
 async function main() {
   await esperaServidor();
 
-  const navegador = await chromium.launch();
+  /* Los dos argumentos son contra la misma cosa: el proceso de render se
+     queda sin sitio a media comprobación en las páginas grandes.
+
+     Medido el 1 de septiembre de 2026 sobre `algebra/t07-diagonalizacion`
+     —4,9 MB y 133.000 nodos—: la página supera siete ejercicios, con sus
+     clics y sus diagnósticos, y **cae en el octavo**. No es una navegación,
+     aunque Playwright lo llame así: es el render muriéndose. Se nota porque
+     falla siempre en las mismas cuatro páginas de Álgebra, no al azar, y
+     porque el sistema tenía 14 GB libres.
+
+     `--js-flags` le da al montón de JavaScript cuatro veces el tamaño por
+     defecto, y `--disable-dev-shm-usage` evita el `/dev/shm` pequeño, que es
+     el otro sitio donde se estrangula. Con el reintento de más abajo, entre
+     los dos convierten un guardián que fallaba al azar en uno que solo falla
+     cuando hay algo que arreglar. */
+  const navegador = await chromium.launch({
+    args: ['--disable-dev-shm-usage', '--js-flags=--max-old-space-size=4096'],
+  });
   /* La pestaña se renueva en cada página del bucle de abajo; esta primera es
      solo para tener algo que cerrar la primera vez. */
   let pagina = await navegador.newPage({ viewport: { width: 1280, height: 1000 } });
@@ -157,7 +174,23 @@ async function main() {
        una —una navegación a destiempo, un tiempo de espera— abortaba el
        recorrido entero y las 122 restantes se quedaban sin mirar, con un
        mensaje que ni siquiera decía cuál había sido. Ahora se anota, se sigue,
-       y al final se dice con nombre. */
+       y al final se dice con nombre.
+
+       **Y se repite una vez si el navegador se cae.** «Execution context was
+       destroyed» no siempre es un fallo de la página: en las más pesadas
+       —t01 de Cálculo son 5,8 MB y 152.000 nodos— el proceso de render se
+       queda sin memoria a mitad de la comprobación, y Playwright lo cuenta
+       igual que un error de contenido. El 1 de septiembre de 2026 fallaron
+       así **tres páginas de una tanda y ninguna de ellas se había tocado**;
+       repetido el humo sin cambiar nada, verde. Es la definición de guardián
+       que falla al azar, y §11 dice que eso acaba enseñando a ignorarlo.
+
+       Un reintento distingue lo uno de lo otro sin ablandar la regla: un
+       fallo de verdad falla las dos veces. Se imprime el aviso para que la
+       caída no pase inadvertida —si empieza a salir en cada tanda, el
+       problema es el tamaño de las páginas y hay que atacarlo ahí—, y las
+       comprobaciones de esa página salen listadas dos veces a propósito. */
+    for (let intento = 1; intento <= 2; intento++) {
     try {
     console.log(`\n${ruta}`);
     /* Una pestaña para las 123 páginas de la barrida completa acababa dando
@@ -625,8 +658,17 @@ async function main() {
         prueba.mudos.length ? `sin diagnosticar: ${prueba.mudos.join(', ')}` : '',
       );
     }
+    break;
     } catch (e) {
+      const seCayo = /Execution context was destroyed|Target (page|closed)|has been closed|crashed/i
+        .test(String(e));
+      if (seCayo && intento === 1) {
+        console.log(`  · el navegador se cayó a media comprobación — se repite ${ruta}`);
+        continue;
+      }
       fallo(`la página ${ruta} no se pudo comprobar`, String(e).slice(0, 160));
+      break;
+    }
     }
   }
 
