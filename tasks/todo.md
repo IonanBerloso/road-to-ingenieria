@@ -28,7 +28,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
 | **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
-| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **30 de 43** |
+| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **34 de 43** |
 | **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
@@ -853,6 +853,9 @@ aquí. Esos siguen fuera y seguirán.
 | t04 hidrostática | 1 | el gato hidráulico |
 | 3.er parcial de junio de 2021 | 2 | la instalación con válvula de retención, el trasvase por gravedad |
 | ordinaria de junio de 2020 | 2 | el cuerpo que flota entre dos líquidos, el limpiacristales y su cono |
+| 2.º parcial de junio de 2020 | 1 | el álabe de 180°, huyendo y embistiendo |
+| 1.er parcial de abril de 2021 | 1 | la compuerta OABO, con su sector y su triángulo |
+| 2.º parcial de mayo de 2021 | 2 | la embotelladora de diez boquillas, el Pitot con piezómetro |
 
 **Dos que salieron mal y se arreglaron mirándolas**, que es §16 punto 1
 funcionando: el tanque en T llevaba un `Z` de más en el trazado y cerraba con
