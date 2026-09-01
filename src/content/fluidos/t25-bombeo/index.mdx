@@ -3,7 +3,7 @@ asignatura: fluidos
 tema: 25
 titulo: Instalaciones de bombeo
 descripcion: El punto de funcionamiento, cómo se mueve, y el NPSH, que es la cuenta que decide si la bomba cavita o no.
-patron: lectura
+patron: simulador
 competencias:
   - COMP1
   - COMP2
@@ -12,6 +12,7 @@ fuente: Adaptado del Tema 25 de Mecánica de Fluidos · Departamento de Ingenier
 ---
 
 import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+import PuntoFuncionamiento from '../../../components/sim/PuntoFuncionamiento.astro';
 
 El último tema, y el que junta todo. Aquí una bomba deja de ser una máquina en
 un catálogo y pasa a ser **una máquina en una instalación concreta**, que es
@@ -255,6 +256,44 @@ caliente, su presión de vapor sube** y el NPSH disponible se hunde. Bombear
 agua a 75 °C no es lo mismo que bombearla a 20.
 
 </ErrorTipico>
+
+### Las dos cuentas a la vez
+
+Hasta aquí el tema ha ido por partes: primero el cruce de las dos curvas,
+después cómo se mueve, y por último si cavita. En el examen las tres llegan
+juntas — y la ordinaria de 2025-2026 es exactamente eso: tres bombas, una
+instalación, y elegir.
+
+El simulador de abajo es ese enunciado. Arriba, el plano $Q$-$H$ con la curva
+de la instalación y la de la bomba. Abajo, en el mismo eje de caudales, el
+$NPSH$ disponible bajando y el requerido subiendo: donde se cruzan empieza la
+zona sombreada, y a la derecha de ella la bomba cavita.
+
+Tres cosas que conviene hacer con él, en este orden:
+
+1. **Pulsa las tres bombas.** Salen 12,58, 15,71 y 16,55 l/s, que son los tres
+   caudales del examen. La 1 no llega al mínimo de 14 y la 2 cavita: solo
+   queda la 3, y eso es todo el apartado a).
+2. **Cierra la válvula con la bomba 2.** Verás el punto retroceder por la
+   curva de la bomba hasta salir de la zona sombreada. Ahí deja de cavitar, y
+   la diferencia entre lo que la bomba da y lo que la instalación pide es la
+   pérdida que introduce la maniobra — el apartado b).
+3. **Baja el régimen de giro.** Aparecen la curva nominal en trazos, la
+   parábola de puntos homólogos y un segundo círculo hueco donde las leyes de
+   semejanza dicen que debería estar el punto. **No está ahí.** Al 80 % de
+   régimen el caudal real es 8,7 l/s y la semejanza predice 13,2: un 52 % de
+   diferencia.
+
+Y entonces el botón que importa: **«sin desnivel»**. Pone $H_{i0}$ a cero
+manteniendo el 80 % de régimen, y los dos círculos se juntan. Eso es la
+demostración de que el error típico de arriba dice la verdad y de dónde viene:
+la curva de la instalación solo es una parábola por el origen si no hay
+desnivel que vencer.
+
+<PuntoFuncionamiento />
+
+Los números del ejercicio están comprobados en `tests/fisica/bombeo.test.ts`
+contra los seis resultados publicados de esa convocatoria.
 
 ## El problema tipo, de principio a fin
 

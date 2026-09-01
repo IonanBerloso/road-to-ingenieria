@@ -29,7 +29,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
 | **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
 | **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **41 de 43 · cerrada**, las 2 restantes declaradas |
-| **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | |
+| **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | **2 de 5** · t18 y t25 hechos con su caso de física |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 1 de septiembre de
@@ -1040,10 +1040,20 @@ de abstraer nada más. Los candidatos naturales son `calculo/t02-sucesiones`
 (donde COMP2 vale cero y casi todo es demostración) y `fluidos/t25-bombeo`
 (donde hay simulador y datos reales de examen).
 
-**7 · Tests de física.** `tests/fisica/` está vacío porque todavía no hay
-simulador con física dentro: `PlanoComplejo` es geometría, no un modelo. En
-cuanto entre el simulador de bombeo, su caso con resultado conocido va antes que
-el componente.
+**7 · ~~Tests de física~~ · resuelto el 1 de septiembre de 2026.** Estuvo vacío
+hasta que hubo un simulador con física dentro —`PlanoComplejo` es geometría, no
+un modelo—. Ahora tiene dos ficheros y 34 casos:
+
+- `moody.test.ts`, contra el ejercicio 4 del tercer parcial de junio de 2021,
+  que recorre las tres zonas del ábaco con la misma tubería de 250 mm;
+- `bombeo.test.ts`, contra los seis resultados publicados de la ordinaria de
+  2025-2026: tres bombas, cavitación y una maniobra de válvula.
+
+Y se cumplió lo que decía la nota: **el caso con resultado conocido fue antes
+que el componente en los dos**. En los dos también el test corrigió la prosa —
+las fronteras del ábaco no son «exactamente 0,3 y 6», y el error de aplicar
+semejanza al punto de funcionamiento no es «apreciable» sino del 52 %—, que es
+justo lo que §10 existe para atrapar.
 
 **8 · Paleta de comandos completa.** Ya es una paleta de verdad: se abre con `/`
 o `⌘K`, tiene su propio índice construido en el build y responde a flechas,
