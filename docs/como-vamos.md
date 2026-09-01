@@ -791,9 +791,9 @@ Ocho fases después, y medido con `npm run mide fluidos`:
 | temas con prosa, figura y ejercicios | **23 de 25** |
 | palabras de prosa | **22.480** (Cálculo entera son 21.545) |
 | figuras | 23 |
-| ejercicios | **223**, con 1.008 pasos |
+| ejercicios | **232**, con 1.050 pasos |
 | de ellos, problemas de la colección | **92 de 236** |
-| convocatorias transcritas | **14 de 17** — 2026 ord. (7 de 9), 2025 ord. (7 de 9), 2025 ext. (8 de 9), 2024 ord. (**8 de 8**), 2024 ext. (7 de 8), 2023 ord. (**9 de 9**), 2023 ext. (**9 de 9**), 2022 ord. (**11 de 11**), 2022 ext. (8 de 9), 2021 ord. (6 de 8), 2020 ord. (6 de 8) y los dos primeros parciales, el primero de 2021 (**4 de 4**) y los dos de 2020 (**5 de 5** y 3 de 5) |
+| convocatorias transcritas | **las 16, todas** — los once finales (2026 ord. 7 de 9, 2025 ord. 7 de 9, 2025 ext. 8 de 9, 2024 ord. **8 de 8**, 2024 ext. 7 de 8, 2023 ord. **9 de 9**, 2023 ext. **9 de 9**, 2022 ord. **11 de 11**, 2022 ext. 8 de 9, 2021 ord. 6 de 8, 2020 ord. 6 de 8) y los cinco parciales (2021 **4 de 4**, **4 de 4** y 5 de 6; 2020 **5 de 5** y 3 de 5) |
 | rutas de estudio | **0 de 2** |
 
 Los **dos temas que faltan son los que no tienen material**: el 5 (equilibrio
@@ -803,9 +803,14 @@ colección de problemas. El catálogo lo dice con su `etiqueta` en vez de
 rellenarlos por nuestra cuenta. Lo mismo con el apartado **17.4** —resistencia
 sobre cuerpos sumergidos—, declarado en la prosa del tema 17.
 
-Y lo que falta **no es material sino trabajo**: las 17 convocatorias (16 en el
-cuadernillo de 2020-2025 más la ordinaria de 2026) y las dos rutas. Los PDF
-originales ya están en `public/examenes/fluidos/`.
+Y lo que falta **no es material sino trabajo**: las dos rutas de estudio. Las
+**16 convocatorias** —las 15 del cuadernillo de 2020-2025 más la ordinaria de
+2026— están transcritas, con sus PDF originales en `public/examenes/fluidos/`.
+
+> Ese número decía **17** hasta el 1 de septiembre de 2026, y estaba mal: el
+> cuadernillo trae quince exámenes —diez finales y **cinco** parciales—, no
+> dieciséis. Salió al contar las carpetas para cerrar la fase. Un recuento
+> publicado que nadie vuelve a contar es la forma más silenciosa de §10.
 
 > **Una cosa que este bloque enseñó y no estaba prevista.** Al abrir «Cuadros y
 > ábacos» para verificar un examen apareció que un ejercicio del tema 18 usaba

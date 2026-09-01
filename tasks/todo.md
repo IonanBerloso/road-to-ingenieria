@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **14 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 223 ejercicios
-y 1.008 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 232 ejercicios
+y 1.050 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 1.008 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**223 ejercicios y 1.008 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 98 son ejercicios de convocatoria. Cobertura de la
+**232 ejercicios y 1.050 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 107 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -365,21 +365,87 @@ longitudes y diámetros de sus cinco tuberías.
 > del proveedor no es un margen de diseño, y eso hay que decírselo al
 > cliente junto con el sí.
 
-### Lo que queda de fase 9
+### El tercer parcial de junio de 2021, cinco de seis
 
-**Dos parciales**: 7 de mayo y 3 de junio de 2021.
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 15 % | t22 | la tabla de máquinas hidráulicas |
+| 2 | 15 % | t19 | h_f = 0,056 m · k = 5 — exacto |
+| 3 | 15 % | t20 | a = 951 m/s · ΔH = 355,12 mca · σ = 2.131 kg/cm² |
+| 4 | 20 % | t18 | ε = 0,3316 cm · 176,46 l/s · k = 7 · 1.440-2.880 l/h |
+| 5 | 15 % | t21 | L = 95,34 cm · H = 1,365 m · z = 629,23 m · D = 2 m |
 
-De ellos hay un ejercicio ya verificado, para que la próxima tanda no
-repita las cuentas:
+**Falta el 6**, que exige elegir la bomba en la familia de curvas del anexo
+y leer de ella el punto de funcionamiento, el rendimiento y el NPSH
+requerido.
 
-- **7 de mayo de 2021, ejercicio 4b** · la misma válvula con agua y con
-  mercurio. Con el factor de paso constante,
-  $Q \propto \sqrt{\Delta p/\rho}$, y de 10 l/s de agua con 1,2 kPa se pasa
-  a **8,56 l/s** de mercurio con 1,22 mca. Es el ejercicio más corto del
-  cuadernillo que enseña algo de verdad: que un coeficiente de pérdida es
-  adimensional y por eso vale para cualquier fluido.
+> **El ejercicio 4 es el mejor del cuadernillo para entender el ábaco de
+> Moody**, porque recorre sus tres zonas en tres apartados con la misma
+> tubería. En a) el tubo corroído está en **turbulencia completa** y la
+> rugosidad se despeja sin iterar; en b), con tubo nuevo, cae en la
+> **transición** y hay que iterar Colebrook; en c), con polietileno, es
+> hidráulicamente **liso**. Identificar el régimen no es un adorno del
+> enunciado: decide cuánto trabajo cuesta el problema.
 
-**Y cinco ejercicios grandes que se han quedado fuera por figura**: el
+> Y el 5 deja un número que merece recordarse. El ramal R2 lleva **la
+> mitad** de caudal que R1 y aun así tiene que arrancar **setenta metros
+> más alto**, porque su enunciado le prohíbe que el agua rebase la parte
+> triangular. Una limitación de calado se paga en cota, y aquí sale
+> carísima.
+
+### El segundo parcial de mayo de 2021, los cuatro — y con él, fase 9 cerrada
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 25 % | t19 | 169,4 kJ/m³ · 25,25 · 9,11 l/s · 57,44 % · 128 kPa |
+| 2 | 25 % | t13 | 102 l/s · R = 0,504 m · 0,81 m/s · s₀ = 0,726 |
+| 3 | 25 % | t15 | T₁ = γπd²C_c C_v²H/2 · T₃ = ρQv√(2(1−cos θ)) · T = 0 |
+| 4 | 25 % | t16 | los cinco Π · 8,56 l/s |
+
+> **El apartado c) del ejercicio 3 se responde sin una sola cuenta**, y es de
+> los mejores del corpus por eso. Si se unen el depósito y el carro con una
+> barra y se toma un volumen de control que encierre todo el fluido, no hay
+> flujo de cantidad de movimiento ni a la entrada ni a la salida: la
+> resultante es nula y la barra no trabaja. El chorro empuja el depósito
+> hacia la izquierda exactamente con la fuerza con que empuja el carro hacia
+> la derecha. Es la razón por la que un cohete con una pantalla delante que
+> recogiera su propio chorro no avanzaría.
+
+### Fase 9, cerrada
+
+**Las dieciséis convocatorias**, con 107 ejercicios.
+
+> **Y una cifra corregida al cerrarla.** Este fichero decía «17
+> convocatorias · 11 finales y 6 parciales» y estaba mal: el cuadernillo de
+> 2020-2025 trae **quince** exámenes —diez finales y **cinco** parciales—,
+> no dieciséis, así que con la ordinaria de 2026 son **16**. El error salió
+> al contar las carpetas para dar la fase por terminada, no antes. Un
+> recuento publicado que nadie vuelve a contar es la forma más silenciosa de
+> incumplir §10.
+
+**Lo que queda fuera, y por qué**, en un solo sitio:
+
+| convocatoria | fuera | motivo |
+|---|---|---|
+| 2026 ord. | ej. 4 y 9 | tres lecturas dan 5,87 / 5,79 / 5,37 frente a 5,67; el 9 es un test de huecos sin cálculo |
+| 2025 ord. | ej. 1 y 9 | figura sin acotar el apoyo B; anexo de curvas |
+| 2025 ext. | ej. 3 | 12,03 mca frente a 10,43 publicados |
+| 2024 ext. | ej. 8 | 8,80 kPa con Re = 2000 y 25,7 con 2300, frente a 11,75 |
+| 2023 ord. | ej. 9e | 15,52 m frente a 14,47 |
+| 2023 ext. | ej. 3b | 0,712 frente a 0,752 |
+| 2022 ext. | ej. 9 | se resuelve sobre la gráfica |
+| 2021 ord. | ej. 5, 7 y 4c | figura sin acotar; teoría y dibujo; ejes intercambiados |
+| 2020 ord. | ej. 1, 2 y 4c | tabla de aceites y cotas en la figura; C_d efectivo 0,715 |
+| 2020 2.º parc. | ej. 4 y 5 | cuadro de pérdidas menores y tabla de tuberías |
+| 2021 3.º parc. | ej. 6 | familia de curvas del anexo |
+
+**Catorce ejercicios enteros de ciento veintiuno**, más cuatro apartados
+sueltos —el 9e de 2023 ord., el 3b de 2023 ext. y los 4c de 2021 y 2020 ord.—,
+**todos declarados con su número**. Nueve se caen porque falta una figura, una
+tabla o un anexo de curvas; cinco porque el resultado no reconstruye, y eso se
+dice en voz alta en la propia resolución en vez de maquillarlo.
+
+**Cinco ejercicios grandes que se han quedado fuera por figura**: el
 elevador de taller de junio de 2021, el embrague multidisco y los depósitos
 anidados de junio de 2020, el apartado b) del bloque de anclaje de junio de
 2023 y el codo convergente de junio de 2021. Podrían recuperarse
@@ -553,23 +619,26 @@ manómetro que miente** y hay que descubrir cuál con un tercer camino, y
 **una compuerta con aire encima del líquido**, donde el prisma de presiones
 no es un triángulo sino un rectángulo negativo más dos triángulos.
 
-### El orden recomendado para seguir con la fase 9
+### El orden que se siguió, y lo que enseñó
 
-1. ~~La ordinaria de 2026~~ — hecha, 7 de 9.
-   ~~La extraordinaria de 2025~~ — hecha, 8 de 9.
-   ~~La ordinaria de 2024~~ — hecha, **8 de 8**.
-   ~~La extraordinaria de 2024~~ — hecha, 7 de 8.
-   **La ordinaria de mayo de 2025 está a medias y conviene saber por qué:**
-   verificados el 3 (micromanómetros: s₂ entre 0,93 y 1,07, α = 5,739°), el
-   5 (análisis dimensional, Δp_p = 0,025 bar y t_p = 1152 s) y el 6 (la
-   central de 19,836 MW, exacto). Fuera de alcance por ahora el 1 —simbólico,
-   y no he sabido reconstruir el equilibrio de momentos que da α = 36,4°— y
-   el 2, que necesita una construcción para pasar de F_adh/F_coh al ángulo de
-   contacto que los apuntes no publican. Media convocatoria es peor que
-   ninguna, así que no se ha abierto.
-2. Los dos finales de 2025, y hacia atrás por años.
-3. Los parciales al final: son de 2020 y 2021 y el formato de la asignatura ha
-   cambiado desde entonces.
+De la ordinaria de 2026 hacia atrás por años, y los cinco parciales al
+final. El orden era el bueno: los finales recientes fijan las convenciones
+de la asignatura —los cuadros, el `g = 9,8`, la asíntota de von Kármán— y
+los parciales viejos ya no obligan a decidir nada dos veces.
+
+Pero el orden no fue lo que más rindió. Lo que más rindió fue **volver**.
+La ordinaria de mayo de 2025 estuvo semanas cerrada porque su ejercicio 2
+pedía pasar de F_adh/F_coh al ángulo de contacto, y aquí quedó escrito que
+esa construcción «no está publicada en los apuntes». Sí lo estaba: en el
+ejercicio 1 de la extraordinaria de junio de 2023, transcrito diez días
+después. Con ella los 14,74 mbar salen exactos.
+
+> **La regla, y es de método, no de fluidos: un hueco declarado no es un
+> hueco cerrado.** Cuando algo se declara por falta de material se anota
+> **qué** material falta —nunca «no se puede»— y se vuelve a mirar al
+> terminar la tanda, cuando el corpus ya sabe cosas que no sabía. De las
+> once convocatorias con huecos esa fue la única que se reabrió, pero se
+> reabrió entera.
 
 **Qué incluye cada fase de contenido**, sin excepción (§04): prosa con al
 menos una figura que responda a una pregunta, un ejemplo de entrada **nuestro**
