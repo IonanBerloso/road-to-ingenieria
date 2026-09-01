@@ -1,0 +1,564 @@
+---
+/**
+ * Herramienta incrustada del tema 18.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «¿Por qué un tubo deja de ser liso y pasa a ser rugoso, y de dónde salen
+ *    el 23 y el 560 de la tabla?»
+ *
+ * Son **dos paneles acoplados**, y esa es toda la idea. Arriba, el ábaco de
+ * Moody, que es la contabilidad: cinco fórmulas y un punto que se mueve.
+ * Abajo, la pared del tubo con sus picos de rugosidad y la subcapa laminar
+ * encima, que es la física. Al subir el Reynolds la subcapa adelgaza, los
+ * picos emergen, y arriba el punto cruza la frontera. Lo uno explica lo otro.
+ *
+ * El modelo vive en `src/lib/moody.ts`, no aquí, porque §10 exige que un
+ * simulador con física dentro lleve su caso de prueba y para probarlo hay que
+ * poder importarlo. `tests/fisica/moody.test.ts` lo verifica contra los
+ * números publicados del tercer parcial de junio de 2021.
+ *
+ * SVG a mano, sin librería de gráficas (§02).
+ *
+ * Tres decisiones de dibujo que costaron una primera versión y conviene no
+ * deshacer, todas salidas de mirar la captura (§16 punto 1):
+ *
+ * 1. **Las curvas de referencia van rotuladas con su ε/D en un canalón a la
+ *    derecha.** Sin rótulo son cuatro líneas grises que no dicen nada, y el
+ *    ábaco de verdad se lee justamente por ahí.
+ * 2. **Las dos alturas se comparan en un canalón aparte, no sobre los picos.**
+ *    Cuando ε/δ vale 115 la subcapa mide 0,2 px y su etiqueta se metía entre
+ *    los dientes: ilegible justo en el caso que hay que entender. En el
+ *    canalón las dos barras comparten base y se leen siempre.
+ * 3. **La banda sobre los picos se dibuja a su altura real, aunque desaparezca.**
+ *    Que la subcapa se pierda entre la rugosidad *es* el resultado. Lo único
+ *    que se falsea es el tope de 118 px por arriba, y cuando se llega a él la
+ *    línea pasa a trazos para decir que sigue.
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'moody' } = Astro.props;
+---
+
+<figure class="sim" data-moody>
+  <figcaption class="sim-head">
+    <h3>El ábaco de Moody, y la subcapa que hay debajo</h3>
+    <span class="rotulo hint">mueve el Reynolds y mira las dos cosas a la vez</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 520 300" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>Ábaco de Moody con el punto de trabajo</title>
+      <desc id={`${id}-d1`}>
+        Ejes logarítmicos: el número de Reynolds en horizontal, de mil a cien
+        millones, y el coeficiente de frotamiento en vertical. Se dibujan la
+        recta laminar, la franja crítica, la curva de tubería lisa, cuatro
+        curvas de rugosidad de referencia rotuladas a la derecha con su valor
+        de épsilon partido por D, y la curva de la rugosidad elegida. Un punto
+        marca el estado actual, y dos líneas de trazos marcan las dos fronteras
+        de régimen. Todos los valores están en la tabla de abajo.
+      </desc>
+
+      <g data-rejilla></g>
+      <rect class="critica" data-critica x="0" y="26" width="0" height="220"></rect>
+      <text class="etiqueta chica" data-critica-txt text-anchor="middle">zona crítica</text>
+
+      <path class="curva ref" data-ref-1></path>
+      <path class="curva ref" data-ref-2></path>
+      <path class="curva ref" data-ref-3></path>
+      <path class="curva ref" data-ref-4></path>
+      <path class="curva lisa" data-lisa></path>
+      <path class="curva laminar" data-laminar></path>
+      <path class="curva activa" data-activa></path>
+
+      <line class="frontera" data-f1 y1="26" y2="246"></line>
+      <line class="frontera" data-f2 y1="26" y2="246"></line>
+      <text class="etiqueta chica f" data-f1-txt y="20">Re′</text>
+      <text class="etiqueta chica f" data-f2-txt y="20">Re″</text>
+
+      <circle class="punto" data-punto r="5.5"></circle>
+
+      <g data-gutter></g>
+      <text class="etiqueta mini" x="442" y="20">ε/D</text>
+      <text class="etiqueta activa-txt" data-activa-txt x="442"></text>
+
+      <text class="etiqueta" x="245" y="288" text-anchor="middle">número de Reynolds</text>
+      <text class="etiqueta" x="12" y="20">f</text>
+    </svg>
+  </div>
+
+  <div class="stage muro">
+    <svg viewBox="0 0 520 186" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>La pared del tubo, con su rugosidad y la subcapa laminar</title>
+      <desc id={`${id}-d2`}>
+        A la izquierda, dos barras que arrancan de la misma base comparan la
+        altura de la rugosidad, épsilon, con el espesor de la subcapa laminar,
+        delta. A la derecha, el mismo trozo de pared visto de canto: los picos
+        de la rugosidad dibujados como dientes y, encima, la banda de la
+        subcapa a su altura real. Cuando la banda cubre los picos el tubo se
+        comporta como liso; cuando los picos la atraviesan, como rugoso. El
+        cociente entre las dos alturas está en la tabla de abajo.
+      </desc>
+
+      <line class="base-canalon" x1="16" y1="138" x2="84" y2="138"></line>
+      <rect class="barra-e" x="26" y="112" width="18" height="26"></rect>
+      <rect class="barra-d" data-barra-d x="58" width="18"></rect>
+      <text class="etiqueta simbolo" x="35" y="153" text-anchor="middle">ε</text>
+      <text class="etiqueta simbolo d" x="67" y="153" text-anchor="middle">δ</text>
+
+      <rect class="capa" data-capa x="126" width="380"></rect>
+      <path class="picos" data-picos></path>
+      <line class="linea-capa" data-linea-capa x1="126" x2="506"></line>
+      <rect class="pared" x="126" y="138" width="380" height="20"></rect>
+
+      <text class="etiqueta veredicto" data-veredicto x="506" y="178" text-anchor="end"></text>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-re`}>número de Reynolds <output data-out-re>10⁵</output></label>
+      <input id={`${id}-re`} type="range" min="3" max="8" step="0.01" value="5" data-re />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-er`}>rugosidad relativa ε/D <output data-out-er>0,001</output></label>
+      <input id={`${id}-er`} type="range" min="-6" max="-1.3" step="0.01" value="-3" data-er />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">el ejercicio de junio de 2021</span>
+      <div class="botones">
+        <button type="button" data-caso="corroido" aria-pressed="false">tubo corroído</button>
+        <button type="button" data-caso="nuevo" aria-pressed="false">tubo nuevo</button>
+        <button type="button" data-caso="pe" aria-pressed="false">polietileno</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">se comporta como</span>
+      <span class="v" data-regimen>semirrugoso</span>
+      <span class="sub" data-formula>Colebrook-White</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">coeficiente f</span>
+      <span class="v" data-f>0,0220</span>
+      <span class="sub" data-sens>si Re sube un 1 %, f baja 0,15 %</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k k--simbolo">ε / δ</span>
+      <span class="v" data-cociente>1,4</span>
+      <span class="sub">los picos, frente a la subcapa</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">las dos fronteras</span>
+      <span class="v chica" data-fronteras>Re′ 2,3·10⁴ · Re″ 5,6·10⁵</span>
+      <span class="sub" data-donde>estás entre las dos</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag">Aquí el Reynolds ya no importa</span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import {
+    Re1,
+    Re2,
+    f as coefF,
+    regimen,
+    rugosidadSobreSubcapa,
+    sensibilidadRe,
+  } from '../../lib/moody';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-moody]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    /* Marco del ábaco. Los ejes son logarítmicos en las dos direcciones, y el
+       canalón de la derecha (436-518) es para los rótulos de ε/D: un Moody sin
+       ellos no es un Moody, son cuatro líneas grises. */
+    const X0 = 54;
+    const X1 = 436;
+    const Y0 = 26;
+    const Y1 = 246;
+    const LRE0 = 3;
+    const LRE1 = 8;
+    const LF0 = Math.log10(0.1);
+    const LF1 = Math.log10(0.008);
+
+    const x = (Re: number) => X0 + ((Math.log10(Re) - LRE0) / (LRE1 - LRE0)) * (X1 - X0);
+    const y = (f: number) =>
+      Math.max(Y0, Math.min(Y1, Y0 + ((LF0 - Math.log10(f)) / (LF0 - LF1)) * (Y1 - Y0)));
+
+    const sRe = $<HTMLInputElement>('[data-re]');
+    const sEr = $<HTMLInputElement>('[data-er]');
+
+    const num = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+    const sup = (n: number) =>
+      String(n)
+        .replace('-', '⁻')
+        .replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(c)]);
+    const pot = (v: number) => {
+      const e = Math.floor(Math.log10(v));
+      const m = v / 10 ** e;
+      return m < 1.05 ? `10${sup(e)}` : `${num(m, 1)}·10${sup(e)}`;
+    };
+    /** La rugosidad relativa: decimal mientras se pueda leer, potencia después. */
+    const fmtEr = (er: number) => (er >= 1e-4 ? num(er, 5).replace(/0+$/, '') : pot(er));
+
+    /** La curva de una rugosidad, con el mismo dispatch que da el número. */
+    function curva(er: number, desde = 4000): string {
+      const puntos: string[] = [];
+      for (let l = Math.log10(desde); l <= LRE1 + 1e-9; l += 0.02) {
+        const Re = 10 ** l;
+        puntos.push(`${x(Re).toFixed(1)} ${y(coefF(Re, er)).toFixed(1)}`);
+      }
+      return `M${puntos.join(' L')}`;
+    }
+
+    /* ── lo que no cambia nunca: rejilla, laminar, crítica, referencias ── */
+    /* Cuatro referencias y no cinco: abajo del todo las curvas convergen, y la
+       quinta se comía el rótulo de la lisa, que es la que más falta hace. */
+    const REFS = [4e-2, 1e-2, 2e-3, 4e-4];
+    const yRefs = REFS.map((er) => y(coefF(1e8, er)));
+    {
+      const g = $('[data-rejilla]');
+      const trozos: string[] = [];
+      for (let d = 3; d <= 8; d++) {
+        trozos.push(
+          `<line class="rej" x1="${x(10 ** d)}" y1="${Y0}" x2="${x(10 ** d)}" y2="${Y1}"/>`,
+          `<text class="etiqueta chica" text-anchor="${d === LRE1 ? 'end' : 'middle'}" x="${x(10 ** d)}" y="${Y1 + 16}">10${sup(d)}</text>`,
+        );
+      }
+      for (const f of [0.01, 0.015, 0.02, 0.03, 0.05, 0.08]) {
+        trozos.push(
+          `<line class="rej" x1="${X0}" y1="${y(f)}" x2="${X1}" y2="${y(f)}"/>`,
+          `<text class="etiqueta chica" text-anchor="end" x="${X0 - 6}" y="${y(f) + 4}">${num(f, f < 0.02 ? 3 : 2)}</text>`,
+        );
+      }
+      g.innerHTML = trozos.join('');
+
+      const laminar: string[] = [];
+      for (let Re = 1000; Re <= 2000; Re += 25) {
+        laminar.push(`${x(Re).toFixed(1)} ${y(64 / Re).toFixed(1)}`);
+      }
+      $('[data-laminar]').setAttribute('d', `M${laminar.join(' L')}`);
+
+      /* El rótulo de la franja crítica va girado dentro de ella: puesto arriba
+         se pisaba con Re′ en cuanto la rugosidad subía. */
+      const cx = (x(2000) + x(4000)) / 2;
+      $('[data-critica]').setAttribute('x', String(x(2000)));
+      $('[data-critica]').setAttribute('width', String(x(4000) - x(2000)));
+      const cTxt = $('[data-critica-txt]');
+      cTxt.setAttribute('x', String(cx));
+      cTxt.setAttribute('y', '190');
+      cTxt.setAttribute('transform', `rotate(-90 ${cx.toFixed(1)} 190)`);
+
+      $('[data-lisa]').setAttribute('d', curva(1e-9));
+      REFS.forEach((er, i) => {
+        $(`[data-ref-${i + 1}]`).setAttribute('d', curva(er));
+      });
+
+      const rot = REFS.map(
+        (er, i) =>
+          `<text class="etiqueta mini" data-rot="${i}" x="442" y="${(yRefs[i] + 3.5).toFixed(1)}">${fmtEr(er)}</text>`,
+      );
+      rot.push(
+        `<text class="etiqueta mini" data-rot="lisa" x="442" y="${Math.min(240, y(coefF(1e8, 1e-9)) + 3.5).toFixed(1)}">lisa</text>`,
+      );
+      $('[data-gutter]').innerHTML = rot.join('');
+    }
+
+    const FORMULAS: Record<string, string> = {
+      laminar: 'Hagen-Poiseuille · 64/Re',
+      critica: 'aquí no se trabaja',
+      'liso-blasius': 'Blasius · 0,316/Re^0,25',
+      'liso-karman': 'Karman-Prandtl liso',
+      semirrugoso: 'Colebrook-White',
+      rugoso: 'Karman-Prandtl rugoso',
+    };
+
+    function pinta() {
+      const Re = 10 ** Number(sRe.value);
+      const er = 10 ** Number(sEr.value);
+      const fv = coefF(Re, er);
+      const reg = regimen(Re, er);
+      const cociente = rugosidadSobreSubcapa(Re, er);
+      const sens = sensibilidadRe(Re, er);
+
+      $<HTMLOutputElement>('[data-out-re]').textContent = pot(Re);
+      $<HTMLOutputElement>('[data-out-er]').textContent = fmtEr(er);
+
+      $('[data-activa]').setAttribute('d', curva(er));
+      $('[data-punto]').setAttribute('cx', String(x(Re)));
+      $('[data-punto]').setAttribute('cy', String(y(fv)));
+
+      /* El rótulo de la curva activa se queda donde muere su curva, y el de
+         referencia que le estorba se apaga. Apartarlo once píxeles no bastaba:
+         dos números tan juntos se leen como uno solo, que es peor que faltar. */
+      const at = $('[data-activa-txt]');
+      const ya = Math.max(32, Math.min(240, y(coefF(1e8, er)) + 3.5));
+      at.setAttribute('y', String(ya));
+      at.textContent = fmtEr(er);
+      const rotulos: [string, number][] = yRefs.map((yr, i) => [String(i), yr + 3.5]);
+      rotulos.push(['lisa', Math.min(240, y(coefF(1e8, 1e-9)) + 3.5)]);
+      for (const [clave, yr] of rotulos) {
+        raiz
+          .querySelector(`[data-rot="${clave}"]`)
+          ?.setAttribute('opacity', Math.abs(ya - yr) < 11 ? '0' : '1');
+      }
+
+      for (const [sel, valor, txt] of [
+        ['[data-f1]', Re1(er), '[data-f1-txt]'],
+        ['[data-f2]', Re2(er), '[data-f2-txt]'],
+      ] as const) {
+        const dentro = valor > 10 ** LRE0 && valor < 10 ** LRE1;
+        $(sel).setAttribute('x1', String(x(valor)));
+        $(sel).setAttribute('x2', String(x(valor)));
+        $(sel).setAttribute('opacity', dentro ? '1' : '0');
+        $(txt).setAttribute('x', String(x(valor)));
+        $(txt).setAttribute('opacity', dentro ? '1' : '0');
+      }
+
+      $('[data-regimen]').textContent =
+        reg === 'liso-blasius' || reg === 'liso-karman' ? 'liso' : reg;
+      $('[data-f]').textContent = num(fv, 4);
+      $('[data-formula]').textContent = FORMULAS[reg];
+      $('[data-cociente]').textContent = cociente < 10 ? num(cociente, 2) : num(cociente, 1);
+      $('[data-sens]').textContent =
+        sens === 0
+          ? 'si Re sube un 1 %, f no cambia'
+          : `si Re sube un 1 %, f ${sens < 0 ? 'baja' : 'sube'} ${num(Math.abs(sens) * 100, 2)} %`;
+
+      $('[data-fronteras]').textContent = `Re′ ${pot(Re1(er))} · Re″ ${pot(Re2(er))}`;
+      $('[data-donde]').textContent =
+        Re < 4000
+          ? 'todavía no eres turbulento'
+          : Re < Re1(er)
+            ? 'estás por debajo de Re′'
+            : Re < Re2(er)
+              ? 'estás entre las dos'
+              : 'has pasado Re″';
+
+      /* ── el muro: la rugosidad se dibuja fija y la subcapa, a escala ── */
+      const ALTO_PICO = 26;
+      const TOPE = 118;
+      const crudo = ALTO_PICO / Math.max(cociente, 1e-6);
+      const capa = Math.max(1.2, Math.min(TOPE, crudo));
+      const base = 138;
+
+      const dientes: string[] = [`M126 ${base}`];
+      for (let i = 0; i < 19; i++) {
+        const alto = ALTO_PICO * (0.55 + 0.45 * Math.sin(i * 2.4));
+        dientes.push(`L${126 + i * 20 + 10} ${(base - alto).toFixed(1)}`);
+        dientes.push(`L${126 + (i + 1) * 20} ${base}`);
+      }
+      $('[data-picos]').setAttribute('d', dientes.join(' '));
+
+      for (const sel of ['[data-capa]', '[data-barra-d]']) {
+        $(sel).setAttribute('y', String(base - capa));
+        $(sel).setAttribute('height', String(capa));
+      }
+      $('[data-linea-capa]').setAttribute('y1', String(base - capa));
+      $('[data-linea-capa]').setAttribute('y2', String(base - capa));
+
+      const veredicto = $('[data-veredicto]');
+      veredicto.textContent =
+        cociente < 0.3
+          ? 'la subcapa tapa los picos → se comporta como liso'
+          : cociente > 6
+            ? 'los picos la atraviesan → se comporta como rugoso'
+            : 'los picos asoman → semirrugoso';
+      raiz.dataset.zona = cociente < 0.3 ? 'liso' : cociente > 6 ? 'rugoso' : 'medio';
+      raiz.dataset.capado = crudo > TOPE ? 'si' : 'no';
+
+      const alarma = $<HTMLElement>('[data-alarma]');
+      alarma.hidden = reg !== 'rugoso';
+      $('[data-alarma-txt]').textContent =
+        `Con ε/D = ${fmtEr(er)} el punto ya ha pasado Re″ = ${pot(Re2(er))}. ` +
+        `Los picos son ${num(cociente, 1)} veces la subcapa, así que el flujo los ve enteros: ` +
+        `f = ${num(fv, 4)} y no se mueve por mucho que subas el caudal. Es la zona plana del ábaco.`;
+    }
+
+    /* Los tres estados del ejercicio 4 del tercer parcial de junio de 2021,
+       que es el mismo tubo de 250 mm en las tres zonas del ábaco. Sirve para
+       ver que las tres respuestas del examen son tres sitios de esta figura. */
+    const CASOS: Record<string, [number, number]> = {
+      corroido: [Math.log10(6e5), Math.log10(0.003316 / 0.25)],
+      nuevo: [Math.log10(8.81e5), Math.log10(0.00015 / 0.25)],
+      pe: [Math.log10(1e6), Math.log10(0.000001 / 0.25)],
+    };
+    const botones = [...raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')];
+    const marca = (cual: string | null) => {
+      for (const b of botones) b.setAttribute('aria-pressed', String(b.dataset.caso === cual));
+    };
+
+    for (const s of [sRe, sEr]) {
+      s.addEventListener('input', () => {
+        marca(null);
+        pinta();
+      });
+    }
+
+    for (const b of botones) {
+      b.addEventListener('click', () => {
+        const [re, er] = CASOS[b.dataset.caso!];
+        sRe.value = String(re);
+        sEr.value = String(er);
+        marca(b.dataset.caso!);
+        pinta();
+      });
+    }
+
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 { margin: 0; font-size: .9rem; font-weight: 600; }
+  .hint { font-size: .68rem; text-transform: none; letter-spacing: .02em; }
+
+  .stage svg { display: block; width: 100%; height: auto; }
+  .muro { border-top: 1px solid var(--rule); background: var(--grid); }
+
+  .rej { stroke: var(--rule); stroke-width: 1; }
+  .etiqueta { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+  .etiqueta.chica { font-size: 9.5px; }
+  .etiqueta.mini { font-size: 9px; }
+  .etiqueta.f { fill: var(--faint); text-anchor: middle; }
+  .etiqueta.simbolo { font-size: 12px; fill: var(--graphite); }
+  .etiqueta.simbolo.d { fill: var(--live); }
+  .activa-txt { fill: var(--live); font-size: 9.5px; font-weight: 600; }
+
+  .critica { fill: var(--flag); opacity: .10; }
+
+  .curva { fill: none; stroke-linejoin: round; }
+  .curva.ref { stroke: var(--faint); stroke-width: 1.1; opacity: .38; }
+  .curva.lisa { stroke: var(--graphite); stroke-width: 1.4; opacity: .75; }
+  .curva.laminar { stroke: var(--graphite); stroke-width: 2.4; }
+  .curva.activa { stroke: var(--live); stroke-width: 2.6; }
+
+  .frontera { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 4 4; }
+  .punto { fill: var(--flag); stroke: var(--panel); stroke-width: 2; }
+
+  .pared { fill: var(--graphite); }
+  .picos { fill: var(--graphite); stroke: none; }
+  .base-canalon { stroke: var(--faint); stroke-width: 1; }
+  .barra-e { fill: var(--graphite); }
+  .barra-d { fill: var(--live); }
+  .capa { fill: var(--live); opacity: .22; }
+  .linea-capa { stroke: var(--live); stroke-width: 1.6; }
+  .veredicto { font-size: 11px; fill: var(--live); }
+
+  [data-zona='rugoso'] .barra-d,
+  [data-zona='rugoso'] .capa { fill: var(--flag); }
+  [data-zona='rugoso'] .linea-capa { stroke: var(--flag); }
+  [data-zona='rugoso'] .veredicto { fill: var(--flag); }
+  [data-zona='rugoso'] .etiqueta.simbolo.d { fill: var(--flag); }
+  [data-capado='si'] .linea-capa { stroke-dasharray: 6 4; }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.1rem 1.5rem;
+    padding: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--graphite);
+    margin-bottom: .4rem;
+  }
+
+  .ctrl label output { color: var(--live); font-weight: 500; font-size: .82rem; }
+  input[type='range'] { width: 100%; accent-color: var(--live); cursor: pointer; }
+
+  .atajos .k { display: block; margin-bottom: .45rem; font-size: .63rem; letter-spacing: .08em; }
+  .botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+  .botones button {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .3rem .6rem;
+    color: var(--live);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .botones button:hover { background: var(--live-soft); border-color: var(--live); }
+
+  .botones button[aria-pressed='true'] {
+    background: var(--live);
+    border-color: var(--live);
+    color: var(--panel);
+  }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell { background: var(--panel); padding: .75rem .9rem; }
+  .cell .k { display: block; margin-bottom: .25rem; font-size: .63rem; letter-spacing: .08em; }
+  .k--simbolo { text-transform: none; letter-spacing: .04em; }
+
+  .cell .v {
+    display: block;
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica { font-size: .78rem; }
+
+  .cell .sub {
+    display: block;
+    margin-top: .2rem;
+    font-size: .7rem;
+    line-height: 1.35;
+    color: var(--faint);
+  }
+
+  .alarma {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: .8rem 1.1rem;
+    background: var(--flag-soft);
+    border-top: 1px solid var(--flag);
+    color: var(--flag);
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+</style>

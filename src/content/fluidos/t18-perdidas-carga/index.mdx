@@ -3,7 +3,7 @@ asignatura: fluidos
 tema: 18
 titulo: Pérdidas de carga en conductos cerrados
 descripcion: Darcy-Weisbach, las cinco fórmulas del coeficiente de frotamiento y cómo se usa el ábaco de Moody en los tres tipos de problema.
-patron: lectura
+patron: simulador
 competencias:
   - COMP1
   - COMP2
@@ -12,6 +12,7 @@ fuente: Adaptado del Tema 18 de Mecánica de Fluidos · Departamento de Ingenier
 ---
 
 import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+import AbacoMoody from '../../../components/sim/AbacoMoody.astro';
 
 Este es el tema que arregla Bernoulli. Bernoulli decía $B_1 = B_2$; con
 viscosidad, lo que hay es
@@ -129,6 +130,50 @@ semirrugosa, que es donde cae la mayoría de los problemas reales.
 En los ábacos se usa además una tercera versión de la segunda frontera,
 $Re'' = 200/\big((\varepsilon/D)\sqrt{f}\,\big)$, que es la que aparece
 dibujada como línea de trazos.
+
+### De dónde salen el 23 y el 560
+
+«Obtenidos experimentalmente» es verdad y es insuficiente: parecen dos
+constantes caídas del cielo, y no lo son. Salen de comparar la rugosidad con
+el espesor de la subcapa laminar.
+
+La subcapa tiene espesor $\delta = 5\nu/v^{*}$, donde
+$v^{*} = v\sqrt{f/8}$ es la **velocidad de fricción**. Dividiendo por el
+diámetro y metiendo el Reynolds:
+
+$$
+\frac{\delta}{D} = \frac{5\sqrt{8}}{Re\sqrt f}
+\qquad\Longrightarrow\qquad
+\frac{\varepsilon}{\delta} = \frac{(\varepsilon/D)\,Re\,\sqrt f}{14{,}14}
+$$
+
+Nikuradse midió dónde está cada frontera con ese cociente: por debajo de
+$\varepsilon/\delta \approx 0{,}3$ la capa **tapa** los picos y el tubo se
+comporta como liso; por encima de $\approx 6$ los picos **la atraviesan** y
+se comporta como rugoso. Sustituyendo $Re' = 23/(\varepsilon/D)$ en la
+expresión de arriba sale $0{,}7\sqrt f$, que con los $f$ del ábaco ronda
+justamente 0,3; y con $Re''$, unos 6.
+
+> **Y aquí conviene ser preciso, porque la versión bonita es falsa.** Medido
+> sobre el ábaco entero, $\varepsilon/\delta$ en la primera frontera va de
+> **0,17 a 0,61**, y en la segunda de **3,6 a 10,6**: no son constantes. En
+> las rugosidades habituales —de $10^{-4}$ a $10^{-2}$— sí se quedan en
+> 0,22-0,33 y 4,6-6,7. Es decir: **el 23 y el 560 son la versión en Reynolds
+> de un criterio sobre la subcapa, redondeada para no tener que iterar.** Los
+> rangos están medidos en `tests/fisica/moody.test.ts`, no estimados.
+
+El simulador de abajo enseña las dos cosas a la vez. Arriba, el ábaco, que es
+la contabilidad. Abajo, la pared del tubo con sus picos y la subcapa encima,
+que es la física. Sube el Reynolds y verás adelgazar la capa hasta que los
+picos emergen — y en ese mismo instante, arriba, el punto cruza $Re''$ y la
+curva se aplana.
+
+<AbacoMoody />
+
+Los tres botones son los tres apartados del ejercicio 4 del tercer parcial de
+junio de 2021: **el mismo tubo de 250 mm** corroído, nuevo y en polietileno.
+Que las tres respuestas del examen sean tres puntos de esta figura es todo lo
+que hay que entender del tema.
 
 ## Las cinco fórmulas, y cuándo se usa cada una
 
