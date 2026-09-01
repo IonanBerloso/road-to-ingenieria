@@ -1,0 +1,536 @@
+---
+/**
+ * Herramienta incrustada del tema 20.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «¿Dónde está la frontera entre cierre rápido y lento, y qué pasa justo al
+ *    cruzarla?»
+ *
+ * El tema presenta Allievi y Michaud como dos fórmulas separadas por una
+ * frontera, y leídas así parece que ahí hay un salto. **No lo hay**: en
+ * `T_c = 2L/a` las dos dan exactamente lo mismo, así que el golpe frente al
+ * tiempo de cierre es una sola curva continua —plana mientras el cierre sea
+ * rápido, hipérbola en cuanto se pasa—. Eso cambia lo que se entiende: cerrar
+ * más despacio **no sirve de nada** hasta que se cruza la frontera, y a partir
+ * de ahí el golpe cae con 1/T_c.
+ *
+ * El panel de arriba dibuja esa curva con las dos ramas equivocadas al lado,
+ * en trazo fino, que es el error típico del tema hecho figura. El de abajo
+ * dibuja el **techo de presiones** a lo largo de la conducción, que el tema
+ * nombra —«es lo que hay que usar para calcular la resistencia de la tubería,
+ * no un valor único»— y no dibuja.
+ *
+ * El modelo vive en `src/lib/ariete.ts` y `tests/fisica/ariete.test.ts` lo
+ * verifica contra los cuatro números del error típico, los dos buenos y los
+ * dos equivocados (§10).
+ *
+ * SVG a mano, sin librería de gráficas (§02).
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'ariete' } = Astro.props;
+---
+
+<figure class="sim" data-ariete>
+  <figcaption class="sim-head">
+    <h3>El golpe, el tiempo de cierre y la frontera entre las dos fórmulas</h3>
+    <span class="rotulo hint">cruza la frontera despacio y mira que no hay salto</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 520 250" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>El golpe frente al tiempo de cierre</title>
+      <desc id={`${id}-d1`}>
+        La sobrepresión, en metros de columna de agua, frente al tiempo de
+        cierre de la válvula. Es una curva continua: horizontal en el valor de
+        Allievi mientras el cierre es rápido, y a partir de la frontera cae
+        como una hipérbola siguiendo a Michaud. Una línea de trazos marca la
+        frontera, que está en dos ele partido por a. En trazo fino se dibujan
+        las dos prolongaciones equivocadas: Michaud aplicado a la zona rápida,
+        que da de más, y Allievi aplicado a la lenta, que da de más también.
+        Todos los valores están en la tabla de abajo.
+      </desc>
+
+      <g data-rejilla></g>
+      <path class="curva mala" data-mala-mich></path>
+      <line class="curva mala" data-mala-alli></line>
+      <path class="curva buena" data-buena></path>
+      <line class="frontera" data-frontera y1="20" y2="200"></line>
+      <text class="etiqueta chica alt" data-txt-frontera y="16">frontera: 2L/a</text>
+      <circle class="punto" data-punto r="5"></circle>
+      <text class="etiqueta chica" data-txt-alli>Allievi</text>
+      <text class="etiqueta chica" data-txt-mich>Michaud</text>
+
+      <text class="etiqueta" x="280" y="240" text-anchor="middle"
+        >tiempo de cierre (s)</text
+      >
+      <text class="etiqueta" transform="rotate(-90 14 110)" x="14" y="110" text-anchor="middle"
+        >ΔH (mca)</text
+      >
+    </svg>
+  </div>
+
+  <div class="stage perfil">
+    <svg viewBox="0 0 520 200" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>El techo de presiones a lo largo de la conducción</title>
+      <desc id={`${id}-d2`}>
+        La conducción vista de lado, con el depósito a la izquierda y la
+        válvula a la derecha. Sobre ella, la envolvente de presiones máximas:
+        vale cero en el depósito, crece linealmente hasta la longitud crítica y
+        se queda en el golpe completo a partir de ahí. Debajo, simétrica, la
+        envolvente de depresiones, que vale lo mismo y puede aplastar el tubo.
+        Cuando el cierre es lento la longitud crítica cae más allá de la
+        válvula y ni siquiera ella ve el golpe entero.
+      </desc>
+
+      <line class="estatica" x1="46" y1="100" x2="500" y2="100"></line>
+      <text class="etiqueta chica" x="52" y="114" text-anchor="start">estática</text>
+
+      <path class="sobre" data-sobre></path>
+      <path class="bajo" data-bajo></path>
+      <line class="tubo" x1="46" y1="100" x2="500" y2="100"></line>
+      <rect class="deposito" x="24" y="70" width="22" height="60"></rect>
+      <rect class="valvula" x="496" y="86" width="8" height="28"></rect>
+      <line class="critica" data-critica y1="18" y2="182"></line>
+      <text class="etiqueta chica alt" data-txt-critica y="14">L crítica</text>
+      <text class="etiqueta chica" x="46" y="150" text-anchor="start">depósito</text>
+      <text class="etiqueta chica" x="500" y="150" text-anchor="end">válvula</text>
+      <text class="etiqueta chica flag" data-txt-sobre></text>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-tc`}>tiempo de cierre <output data-out-tc>1,0 s</output></label>
+      <input id={`${id}-tc`} type="range" min="0.1" max="12" step="0.1" value="1" data-tc />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-l`}>longitud <output data-out-l>800 m</output></label>
+      <input id={`${id}-l`} type="range" min="100" max="3000" step="25" value="800" data-l />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-v`}>velocidad del agua <output data-out-v>2,0 m/s</output></label>
+      <input id={`${id}-v`} type="range" min="0.4" max="4" step="0.1" value="2" data-v />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-de`}>diámetro entre espesor <output data-out-de>30</output></label>
+      <input id={`${id}-de`} type="range" min="10" max="120" step="1" value="30" data-de />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">material de la tubería</span>
+      <div class="botones">
+        <button type="button" data-mat="acero" aria-pressed="false">acero</button>
+        <button type="button" data-mat="fundicion" aria-pressed="true">fundición</button>
+        <button type="button" data-mat="hormigon" aria-pressed="false">hormigón</button>
+        <button type="button" data-mat="pvc" aria-pressed="false">PVC</button>
+      </div>
+      <div class="botones">
+        <button type="button" class="accion" data-accion="rapido">el cierre de 1 s</button>
+        <button type="button" class="accion" data-accion="lento">el de 5 s</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">celeridad y periodo</span>
+      <span class="v chica" data-cel>a = 1119 m/s · 2L/a = 1,43 s</span>
+      <span class="sub" data-clase>cierre rápido: la onda vuelve después</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">sobrepresión</span>
+      <span class="v" data-dh>228 mca</span>
+      <span class="sub" data-bar>23 bar por cerrar una llave</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">la fórmula que toca</span>
+      <span class="v chica" data-formula>Allievi · ΔH = a·v/g</span>
+      <span class="sub" data-otra>la otra daría 326 mca</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">longitud crítica</span>
+      <span class="v" data-lc>560 m</span>
+      <span class="sub" data-lc-sub>de 560 a 800 m el golpe llega entero</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag" data-alarma-tit></span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import {
+    allievi,
+    celeridad,
+    clasifica,
+    golpe,
+    K_MATERIAL,
+    longitudCritica,
+    michaud,
+    periodo,
+    techo,
+    type Material,
+  } from '../../lib/ariete';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-ariete]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    const sTc = $<HTMLInputElement>('[data-tc]');
+    const sL = $<HTMLInputElement>('[data-l]');
+    const sV = $<HTMLInputElement>('[data-v]');
+    const sDe = $<HTMLInputElement>('[data-de]');
+    let material: Material = 'fundicion';
+
+    const num = (v: number, d = 1) => v.toFixed(d).replace('.', ',');
+    const ent = (v: number) => Math.round(v).toString();
+
+    /* ── panel 1: el golpe frente al tiempo de cierre ── */
+    const X0 = 48;
+    const X1 = 494;
+    const Y0 = 20;
+    const Y1 = 200;
+    const TMAX = 12;
+    /* El eje vertical se fija con el peor golpe posible del rango de mandos,
+       para que mover un control no reencuadre la gráfica: si el techo bailara,
+       la curva parecería no cambiar. */
+    const HMAX = 520;
+    const x = (t: number) => X0 + (Math.min(TMAX, t) / TMAX) * (X1 - X0);
+    const y = (h: number) => Y1 - (Math.max(0, Math.min(HMAX, h)) / HMAX) * (Y1 - Y0);
+
+    {
+      const t: string[] = [];
+      for (let s = 0; s <= TMAX; s += 2) {
+        t.push(
+          `<line class="rej" x1="${x(s)}" y1="${Y0}" x2="${x(s)}" y2="${Y1}"/>`,
+          `<text class="etiqueta chica" text-anchor="middle" x="${x(s)}" y="${Y1 + 16}">${s}</text>`,
+        );
+      }
+      for (let h = 100; h <= HMAX; h += 100) {
+        t.push(
+          `<line class="rej" x1="${X0}" y1="${y(h)}" x2="${X1}" y2="${y(h)}"/>`,
+          `<text class="etiqueta chica" text-anchor="end" x="${X0 - 6}" y="${y(h) + 3.5}">${h}</text>`,
+        );
+      }
+      $('[data-rejilla]').innerHTML = t.join('');
+    }
+
+    /* ── panel 2: el techo de presiones ── */
+    const PX0 = 46;
+    const PX1 = 500;
+    const EJE = 100;
+    const ALTO = 78; // píxeles para el golpe completo del caso peor razonable
+
+    function pinta() {
+      const Tc = Number(sTc.value);
+      const L = Number(sL.value);
+      const v = Number(sV.value);
+      const de = Number(sDe.value);
+      /* El mando da directamente D/e, así que se pasa como diámetro con
+         espesor unidad: en la fórmula solo entra el cociente. */
+      const a = celeridad(K_MATERIAL[material], de, 1);
+      const T = periodo(L, a);
+      const dH = golpe(L, a, v, Tc);
+      const clase = clasifica(L, a, Tc);
+      const Lc = longitudCritica(Tc, a);
+      const completo = allievi(a, v);
+
+      /* La curva buena: plana hasta la frontera y Michaud a partir de ahí. */
+      const buena: string[] = [`${x(0.02).toFixed(1)} ${y(completo).toFixed(1)}`];
+      for (let t = 0.02; t <= TMAX + 1e-9; t += 0.04) {
+        buena.push(`${x(t).toFixed(1)} ${y(golpe(L, a, v, t)).toFixed(1)}`);
+      }
+      $('[data-buena]').setAttribute('d', `M${buena.join(' L')}`);
+
+      /* Y las dos prolongaciones equivocadas, que son el error típico del
+         tema dibujado: Michaud metido en la zona rápida y Allievi en la
+         lenta. Se ven finas y en trazos porque son lo que no hay que hacer. */
+      const mala: string[] = [];
+      for (let t = 0.06; t <= Math.min(T, TMAX) + 1e-9; t += 0.04) {
+        const h = michaud(L, v, t);
+        if (h > HMAX) continue;
+        mala.push(`${x(t).toFixed(1)} ${y(h).toFixed(1)}`);
+      }
+      $('[data-mala-mich]').setAttribute('d', mala.length > 1 ? `M${mala.join(' L')}` : '');
+      const ma = $('[data-mala-alli]');
+      ma.setAttribute('x1', String(x(Math.min(T, TMAX))));
+      ma.setAttribute('x2', String(X1));
+      ma.setAttribute('y1', String(y(completo)));
+      ma.setAttribute('y2', String(y(completo)));
+      ma.setAttribute('opacity', T < TMAX ? '1' : '0');
+
+      const fr = $('[data-frontera]');
+      const dentro = T < TMAX;
+      fr.setAttribute('x1', String(x(T)));
+      fr.setAttribute('x2', String(x(T)));
+      fr.setAttribute('opacity', dentro ? '1' : '0');
+      const tf = $('[data-txt-frontera]');
+      tf.setAttribute('opacity', dentro ? '1' : '0');
+      tf.setAttribute('x', String(Math.min(X1 - 2, x(T) + 6)));
+      tf.setAttribute('text-anchor', x(T) > X1 - 90 ? 'end' : 'start');
+
+      $('[data-punto]').setAttribute('cx', String(x(Tc)));
+      $('[data-punto]').setAttribute('cy', String(y(dH)));
+
+      /* Los dos rótulos, cada uno sobre su tramo de la curva buena. */
+      const ta = $('[data-txt-alli]');
+      ta.setAttribute('x', String(X0 + 8));
+      ta.setAttribute('y', String(Math.max(Y0 + 12, y(completo) - 8)));
+      ta.setAttribute('opacity', completo <= HMAX ? '1' : '0');
+      const tm = $('[data-txt-mich]');
+      const tMich = Math.min(TMAX * 0.82, Math.max(T * 2.2, TMAX * 0.5));
+      tm.setAttribute('x', String(x(tMich)));
+      tm.setAttribute('y', String(y(golpe(L, a, v, tMich)) - 9));
+      tm.setAttribute('opacity', dentro ? '1' : '0');
+
+      /* ── el techo de presiones ── */
+      const escP = ALTO / Math.max(completo, 1);
+      const px = (m: number) => PX0 + (m / L) * (PX1 - PX0);
+      const arriba: string[] = [];
+      for (let m = 0; m <= L + 1e-9; m += L / 120) {
+        arriba.push(`${px(m).toFixed(1)} ${(EJE - techo(m, L, a, v, Tc) * escP).toFixed(1)}`);
+      }
+      $('[data-sobre]').setAttribute('d', `M${arriba.join(' L')}`);
+      $('[data-bajo]').setAttribute(
+        'd',
+        `M${arriba
+          .map((p) => {
+            const [ax, ay] = p.split(' ').map(Number);
+            return `${ax} ${(2 * EJE - ay).toFixed(1)}`;
+          })
+          .join(' L')}`,
+      );
+
+      const cr = $('[data-critica]');
+      const lcDentro = Lc < L;
+      cr.setAttribute('opacity', lcDentro ? '1' : '0');
+      cr.setAttribute('x1', String(px(Math.min(Lc, L))));
+      cr.setAttribute('x2', String(px(Math.min(Lc, L))));
+      const tc = $('[data-txt-critica]');
+      tc.setAttribute('opacity', lcDentro ? '1' : '0');
+      tc.setAttribute('x', String(Math.min(PX1, px(Math.min(Lc, L)) + 6)));
+      tc.setAttribute('text-anchor', px(Lc) > PX1 - 70 ? 'end' : 'start');
+
+      const ts = $('[data-txt-sobre]');
+      ts.setAttribute('x', String(PX1 - 4));
+      ts.setAttribute('y', String(EJE - dH * escP - 7));
+      ts.setAttribute('text-anchor', 'end');
+      ts.textContent = `+${ent(dH)} mca en la válvula`;
+
+      raiz.dataset.clase = clase;
+
+      /* ── la tabla ── */
+      $('[data-cel]').textContent = `a = ${ent(a)} m/s · 2L/a = ${num(T, 2)} s`;
+      $('[data-clase]').textContent =
+        clase === 'lento'
+          ? 'cierre lento: la onda vuelve antes de terminar'
+          : clase === 'critico'
+            ? 'justo en la frontera: las dos fórmulas coinciden'
+            : 'cierre rápido: la onda vuelve después';
+      $('[data-dh]').textContent = `${ent(dH)} mca`;
+      $('[data-bar]').textContent = `${num((dH * 9800) / 1e5)} bar sobre la estática`;
+      $('[data-formula]').textContent =
+        clase === 'lento' ? 'Michaud · ΔH = 2Lv/(g·Tc)' : 'Allievi · ΔH = a·v/g';
+      const otra = clase === 'lento' ? allievi(a, v) : michaud(L, v, Tc);
+      $('[data-otra]').textContent =
+        clase === 'critico'
+          ? 'aquí las dos dan lo mismo'
+          : `la otra daría ${ent(otra)} mca, y no chirría`;
+      $('[data-lc]').textContent = `${ent(Lc)} m`;
+      $('[data-lc-sub]').textContent = lcDentro
+        ? `de ${ent(Lc)} a ${ent(L)} m el golpe llega entero`
+        : 'más larga que la tubería: el golpe no llega entero a ningún punto';
+
+      $<HTMLOutputElement>('[data-out-tc]').textContent = `${num(Tc)} s`;
+      $<HTMLOutputElement>('[data-out-l]').textContent = `${ent(L)} m`;
+      $<HTMLOutputElement>('[data-out-v]').textContent = `${num(v)} m/s`;
+      $<HTMLOutputElement>('[data-out-de]').textContent = ent(de);
+
+      const alarma = $<HTMLElement>('[data-alarma]');
+      const cerca = Math.abs(Tc - T) / T < 0.12;
+      alarma.hidden = !(cerca || dH > 250);
+      if (cerca) {
+        $('[data-alarma-tit]').textContent = 'Aquí no hay salto, y eso es lo raro';
+        $('[data-alarma-txt]').textContent =
+          `Con Tc = ${num(Tc)} s estás pegado a la frontera, que está en ${num(T, 2)} s. Las dos ` +
+          `fórmulas dan lo mismo ahí —Michaud con Tc = 2L/a es exactamente a·v/g—, así que la ` +
+          `curva no se rompe: solo cambia de pendiente. Lo que sí cambia es que a la izquierda ` +
+          `cerrar más despacio no sirve de nada, y a la derecha el golpe cae con 1/Tc.`;
+      } else if (dH > 250) {
+        $('[data-alarma-tit]').textContent = 'Esto revienta la tubería';
+        $('[data-alarma-txt]').textContent =
+          `${ent(dH)} mca son ${num((dH * 9800) / 1e5)} bar de sobrepresión, y la depresión del ` +
+          `medio ciclo siguiente vale lo mismo con el signo cambiado: puede aplastar el tubo desde ` +
+          `fuera. Prueba a cerrar más despacio, a bajar la velocidad o a cambiar a un material más ` +
+          `flexible — el PVC tiene k = 33 frente al 0,5 del acero.`;
+      }
+    }
+
+    for (const s of [sTc, sL, sV, sDe]) s.addEventListener('input', pinta);
+
+    const botones = [...raiz.querySelectorAll<HTMLButtonElement>('[data-mat]')];
+    for (const b of botones) {
+      b.addEventListener('click', () => {
+        material = b.dataset.mat as Material;
+        for (const o of botones) o.setAttribute('aria-pressed', String(o === b));
+        pinta();
+      });
+    }
+
+    /* Los dos cierres del error típico del tema: los mismos 800 m de fundición
+       con agua a 2 m/s, cerrados en 1 s y en 5 s. */
+    const preparaCaso = (Tc: string) => () => {
+      material = 'fundicion';
+      for (const o of botones) o.setAttribute('aria-pressed', String(o.dataset.mat === 'fundicion'));
+      sL.value = '800';
+      sV.value = '2';
+      /* D/e = 30 es el que da a = 1119 m/s, la celeridad que publica el
+         error típico del tema. Con cualquier otro los botones darían números
+         parecidos a los suyos y distintos, que es lo que §10 prohíbe. */
+      sDe.value = '30';
+      sTc.value = Tc;
+      pinta();
+    };
+    $('[data-accion="rapido"]').addEventListener('click', preparaCaso('1'));
+    $('[data-accion="lento"]').addEventListener('click', preparaCaso('5'));
+
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 { margin: 0; font-size: .9rem; font-weight: 600; }
+  .hint { font-size: .68rem; text-transform: none; letter-spacing: .02em; }
+
+  .stage svg { display: block; width: 100%; height: auto; }
+  .perfil { border-top: 1px solid var(--rule); background: var(--grid); }
+
+  .rej { stroke: var(--rule); stroke-width: 1; }
+  .etiqueta { fill: var(--faint); font-family: var(--mono); font-size: 10px; }
+  .etiqueta.chica { font-size: 9px; }
+  .etiqueta.alt { fill: var(--alt); }
+  .etiqueta.flag { fill: var(--flag); }
+
+  .curva { fill: none; stroke-linejoin: round; }
+  .curva.buena { stroke: var(--live); stroke-width: 2.6; }
+  .curva.mala { stroke: var(--flag); stroke-width: 1.2; stroke-dasharray: 4 4; opacity: .55; }
+  .frontera { stroke: var(--alt); stroke-width: 1.4; stroke-dasharray: 5 4; }
+  .punto { fill: var(--ink); stroke: var(--panel); stroke-width: 2; }
+
+  .estatica { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 4 4; }
+  .tubo { stroke: var(--graphite); stroke-width: 3.4; }
+  .deposito { fill: var(--graphite); }
+  .valvula { fill: var(--flag); }
+  .sobre { fill: none; stroke: var(--flag); stroke-width: 2.4; }
+  .bajo { fill: none; stroke: var(--flag); stroke-width: 1.6; stroke-dasharray: 5 4; opacity: .7; }
+  .critica { stroke: var(--alt); stroke-width: 1.2; stroke-dasharray: 5 4; }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.1rem 1.5rem;
+    padding: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .5rem;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--graphite);
+    margin-bottom: .4rem;
+  }
+
+  .ctrl label output { color: var(--live); font-weight: 500; font-size: .78rem; }
+  input[type='range'] { width: 100%; accent-color: var(--live); cursor: pointer; }
+
+  .atajos .k { display: block; margin-bottom: .45rem; font-size: .63rem; letter-spacing: .08em; }
+  .botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .botones + .botones { margin-top: .4rem; }
+
+  .botones button {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .3rem .6rem;
+    color: var(--live);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .botones button:hover { background: var(--live-soft); border-color: var(--live); }
+
+  .botones button[aria-pressed='true'] {
+    background: var(--live);
+    border-color: var(--live);
+    color: var(--panel);
+  }
+
+  .botones button.accion { color: var(--flag); border-style: dashed; }
+  .botones button.accion:hover { background: var(--flag-soft); border-color: var(--flag); }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell { background: var(--panel); padding: .75rem .9rem; }
+  .cell .k { display: block; margin-bottom: .25rem; font-size: .63rem; letter-spacing: .08em; }
+
+  .cell .v {
+    display: block;
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica { font-size: .76rem; }
+
+  .cell .sub {
+    display: block;
+    margin-top: .2rem;
+    font-size: .7rem;
+    line-height: 1.35;
+    color: var(--faint);
+  }
+
+  .alarma {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: .8rem 1.1rem;
+    background: var(--flag-soft);
+    border-top: 1px solid var(--flag);
+    color: var(--flag);
+    font-size: .84rem;
+    line-height: 1.5;
+  }
+</style>

@@ -795,7 +795,7 @@ Diez fases después, y medido con `npm run mide fluidos`:
 | de ellos, problemas de la colección | **92 de 236** |
 | convocatorias transcritas | **las 16, todas** — los once finales (2026 ord. 7 de 9, 2025 ord. 7 de 9, 2025 ext. 8 de 9, 2024 ord. **8 de 8**, 2024 ext. 7 de 8, 2023 ord. **9 de 9**, 2023 ext. **9 de 9**, 2022 ord. **11 de 11**, 2022 ext. 8 de 9, 2021 ord. 6 de 8, 2020 ord. 6 de 8) y los cinco parciales (2021 **4 de 4**, **4 de 4** y 5 de 6; 2020 **5 de 5** y 3 de 5) |
 | ruta de estudio | **1**, con 14 bloques y 48 escalones, que prepara la ordinaria y la extraordinaria |
-| simuladores, con su caso en `tests/fisica/` | **2 de 5** — el ábaco de Moody (t18) y el punto de funcionamiento (t25), con 34 casos entre los dos |
+| simuladores, con su caso en `tests/fisica/` | **5** — el ábaco de Moody (t18), el punto de funcionamiento (t25), el prisma de presiones (t07), la sección de canal (t21) y el golpe de ariete (t20), con **86 casos** entre los cinco |
 
 Tema a tema, con `npm run mide fluidos`:
 

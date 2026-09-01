@@ -133,7 +133,10 @@ src/
                            ya está y dice por qué en ese orden.
   components/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
-    sim/                   PlanoComplejo — simuladores concretos por tema
+    sim/                   PlanoComplejo (cálculo) y los cinco de fluidos:
+                           AbacoMoody · PuntoFuncionamiento · PrismaDePresiones
+                           SeccionDeCanal · GolpeDeAriete. Su física vive en
+                           lib/ para poder probarla (§10), nunca dentro
     ui/                    Cabecera · Tema · Examen · Reparto
   layouts/
     Base.astro             el ÚNICO layout
@@ -154,8 +157,9 @@ scripts/
   diario.mjs               el diario en PDF
 tests/
   *.test.ts                los lectores de respuesta, con vitest
-  fisica/                  casos con resultado conocido — VACÍO todavía:
-                           no hay simulador de física que lo pida (§10)
+  fisica/                  casos con resultado conocido, uno por simulador:
+                           moody · bombeo · compuertas · canales · ariete,
+                           86 casos sacados del corpus, nunca de un libro (§10)
 public/
   examenes/<asignatura>/   los enunciados originales en PDF —85 de cálculo y
                            8 de álgebra. La ÚNICA carpeta del repo donde entra
@@ -383,7 +387,7 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 | **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.059 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
 | **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.059 |
-| (*simulador*) | `sim/`, cuando el tema lo pide | 1 |
+| (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
 ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
@@ -689,9 +693,24 @@ simulación.
 
 - Todo simulador lleva en `tests/fisica/` al menos un caso con resultado
   conocido, verificado contra el ejercicio original o contra bibliografía.
+  Y **el caso va antes que el componente**, no después: se escribió así los
+  cinco de fluidos y las cinco veces el test cambió algo de la prosa.
+- **Su física vive en `lib/`, no dentro del `.astro`.** No es estilo: el
+  código de un `<script>` de Astro no se puede importar desde vitest, así que
+  un simulador con la física dentro **no se puede probar**, y la regla de
+  arriba se vuelve decorativa.
 - Las constantes van con nombre y unidades explícitas.
 - Si un resultado no cuadra con el original, se para y se revisa. **Nunca se
   ajusta una constante para que salga el número esperado.**
+- **Un simulador que solo ilustra no vale la pena.** El listón, medido sobre
+  los cinco de fluidos, es que el test descubra algo que la prosa no dice o
+  dice mal: las fronteras del ábaco no son «exactamente 0,3 y 6» sino un rango
+  de 0,17 a 0,61; aplicar semejanza al punto de funcionamiento se equivoca un
+  52 %, no «algo»; la excentricidad del centro de presión sigue una ley exacta,
+  `e/L = L/(k·Y_G)`, que el tema no tenía; el óptimo de una sección de canal es
+  plano, así que un condicionante moderado sale casi gratis; y en la frontera
+  de Allievi-Michaud no hay salto, porque las dos coinciden ahí. **Los cinco
+  cambiaron la prosa**, y esa es la prueba de que servían.
 - Los datos que se publican como ciertos tienen que serlo. Si el peso de un
   tema en el examen es estimado, se muestran tres niveles —alto, medio, bajo—
   y no un porcentaje falsamente preciso.
@@ -1215,6 +1234,35 @@ Cosas que ya han costado horas. No son opiniones.
   fuente**, así que la comprobación deja de depender de la máquina. Se pone en
   las etiquetas largas —las de dos o tres términos con raíces— y se elige un
   valor cercano al natural para no deformar los glifos.
+- **Ocultar un texto no es lo mismo que no tenerlo: `opacity: 0` sigue
+  midiendo.** Un `<text>` invisible conserva su caja, así que sigue contando
+  para el guardián de `viewBox` — y, peor, sigue diciendo lo que diga si
+  alguien lo lee con un lector de pantalla. Pasó el 1 de septiembre de 2026 en
+  el simulador de canales: el rótulo de la banda se apagaba en el semicírculo
+  y su caja seguía ahí, escrita «de 0,0 a 0,0» y saliéndose por la izquierda.
+  **Regla: para quitar un texto se le pone `textContent = ''`**; la opacidad
+  se reserva para lo que sí sigue estando, como una curva de referencia.
+- **Una escala fija convierte una figura correcta en una figura ilegible.**
+  El simulador del tema 7 encuadraba siempre 22 m de profundidad, así que una
+  compuerta de 3 m hundida a 14 salía de cuarenta píxeles y no se veía ni el
+  prisma ni los dos puntos que hay que comparar. Nada estaba mal calculado y
+  nada lo cazó: `verify` y `humo` dan verde con una figura minúscula. **Regla:
+  al dibujar una escena con un mando que cambia su tamaño, la escala se calcula
+  cada vez a partir de lo que hay que enseñar**, y lo que informa es entonces
+  la *forma* —el prisma pasa de triángulo a rectángulo—, no el tamaño.
+- **Una normal apunta hacia arriba en cuanto la placa se inclina.** El prisma
+  de presiones se dibuja perpendicular a la compuerta, y con la compuerta a
+  35° la flecha del borde superior salía **por encima de la lámina libre**:
+  una figura que dice que hay agua donde no la hay. Se caza mirando, no
+  midiendo. **Regla: toda construcción perpendicular lleva su tope contra los
+  bordes físicos de la escena** —la lámina, la solera—, no solo contra el
+  `viewBox`.
+- **El humo corrige las transformadas y `getBBox()` no.** Si escribes un
+  guion propio para comprobar desbordes, un rótulo con `rotate(-90 …)` te dará
+  un falso positivo: `getBBox()` devuelve la caja **sin** transformar. Hay que
+  pasar las cuatro esquinas por `el.getCTM()`, que es lo que hace
+  `scripts/humo.mjs`. Un falso positivo es caro por lo que esconde: mientras
+  se le da vueltas, el desborde de verdad de otro estado pasa desapercibido.
 - **El humo abre una muestra rotatoria de exámenes elegida por el día del año,
   así que un fallo latente aparece cualquier mañana sin que nadie haya tocado
   nada.** El 31 de agosto de 2026 el CI se puso rojo con el suelo local en

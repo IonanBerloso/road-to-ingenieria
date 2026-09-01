@@ -29,7 +29,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
 | **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
 | **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **41 de 43 · cerrada**, las 2 restantes declaradas |
-| **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | **2 de 5** · t18 y t25 hechos con su caso de física |
+| **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | **5 de 5 · cerrada**, con 86 casos en `tests/fisica/` |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 1 de septiembre de

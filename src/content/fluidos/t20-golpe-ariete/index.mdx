@@ -3,7 +3,7 @@ asignatura: fluidos
 tema: 20
 titulo: Régimen variable en tuberías
 descripcion: 'El golpe de ariete: por qué cerrar una válvula deprisa puede reventar una conducción, y qué fórmula se usa según el tiempo de cierre.'
-patron: lectura
+patron: simulador
 competencias:
   - COMP1
   - COMP2
@@ -12,6 +12,7 @@ fuente: Adaptado del Tema 20 de Mecánica de Fluidos · Departamento de Ingenier
 ---
 
 import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+import GolpeDeAriete from '../../../components/sim/GolpeDeAriete.astro';
 
 Todo lo anterior suponía régimen **permanente**: el caudal no cambia con el
 tiempo. Este tema levanta esa hipótesis una vez, para el caso que rompe
@@ -234,6 +235,43 @@ cierre te encuentras usando la longitud en un caso y no en otro, no es un
 despiste: es la diferencia entre las dos.
 
 </ErrorTipico>
+
+### En la frontera no hay salto
+
+Leídas las dos fórmulas como acaban de leerse —una a cada lado de una
+frontera— es fácil quedarse con la idea de que cruzar $T_c = 2L/a$ cambia el
+resultado de golpe. **No lo hace**, y la comprobación cabe en una línea:
+
+$$
+\text{Michaud con } T_c = \frac{2L}{a}
+\;\Longrightarrow\;
+\Delta H = \frac{2Lv}{g\,(2L/a)} = \frac{a\,v}{g}
+= \text{Allievi}
+$$
+
+Las dos coinciden exactamente ahí. Así que el golpe frente al tiempo de cierre
+no son dos curvas: es **una sola, continua**, plana en el valor de Allievi
+mientras el cierre sea rápido y una hipérbola que cae en cuanto se pasa. Y eso
+cambia lo que se entiende del tema:
+
+- **Antes de la frontera, cerrar más despacio no sirve de nada.** El golpe es
+  el mismo cerrando en una décima que en un segundo, si los dos son rápidos.
+- **Después, cae con $1/T_c$**: al doble de tiempo, la mitad de golpe. Por eso
+  «alargar el tiempo de cierre» es la medida barata — pero solo funciona si se
+  llega a cruzar la frontera.
+
+<GolpeDeAriete />
+
+Los dos botones son los dos casos del error típico de arriba: los mismos 800 m
+de fundición con agua a 2 m/s, cerrados en 1 s y en 5 s. Pulsa uno, pulsa el
+otro, y mira la línea de trazos roja — es la fórmula equivocada, dibujada al
+lado, para ver que cae **en el mismo orden de magnitud** y por eso no chirría.
+
+El panel de abajo es el **techo de presiones**, que el tema nombra al hablar de
+la longitud crítica y no dibuja: el golpe que llega a cada punto de la
+conducción, cero en el depósito y creciendo hasta $L_c$. Con cierre lento
+$L_c$ se sale por la derecha, y entonces ni la válvula ve el golpe entero —
+que es otra forma de decir Michaud.
 
 ## Parada de bomba: el tiempo que no se sabía
 
