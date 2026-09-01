@@ -152,6 +152,8 @@ scripts/
   check-color.mjs          contraste y daltonismo
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   recalcula.mjs            que las cuentas del corpus salgan (§11)
+  revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
+                           bloque en el corpus: en un segundo, sin construir
   peso.mjs                 cuánto tarda una página en un móvil (§11)
   mide.mjs                 la tabla de docs/como-vamos.md, generada
   diario.mjs               el diario en PDF
@@ -198,6 +200,17 @@ a ojo.
 
 Esta es la sección que decide si el proyecto llega a veinte temas o se queda en
 tres. **Un tema no se programa: se rellena.**
+
+> **Cómo se añade un ejercicio sin perder media hora.** Se escribe el bloque en
+> el scratchpad, se pasa `node scripts/revisa-ejercicios.mjs <fichero> --suelto`
+> y **solo entonces** se pega al `ejercicios.yaml`. El guion comprueba lo mismo
+> que el esquema —los tres pasos obligatorios, los mínimos de longitud, la
+> pieza trampa única, los distractores dentro de la tolerancia— en un segundo y
+> sin construir el sitio. Nace el 2 de septiembre de 2026 porque el primer
+> bloque de los 145 de Fluidos se pegó sin validar, rompió el YAML por un `: `
+> sin comillas (§17) y hubo que revertir el fichero entero.
+>
+> El esquema sigue mandando: si los dos discrepan, el guion está mal.
 
 Un tema nuevo son dos ficheros:
 
