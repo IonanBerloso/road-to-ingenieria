@@ -304,13 +304,13 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 834 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.405 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 827 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.068 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.989 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.059 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
 
-`redactar` se ha usado **una vez de 3.092 pasos**. Está construido y razonado
+`redactar` se ha usado **una vez de 4.142 pasos**. Está construido y razonado
 en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
 pide, no porque esté en la tabla.
 
@@ -332,6 +332,11 @@ casilla:
 > de ahí: un número de este fichero se recalcula al cerrar cada asignatura, no
 > cuando alguien se acuerda.** El guion está en el scratchpad y son veinte
 > líneas: recorre las colecciones y cuenta.
+>
+> Recontadas el **1 de septiembre de 2026**, al cerrar Fluidos: los pasos
+> pasan de 3.092 a 4.142 y los ejercicios de 827 a 1.059, repartidos en 41
+> temas de tres asignaturas. La regla funcionó — las cifras llevaban cuatro
+> días desfasadas, desde el recuento del 28 de agosto, no una semana.
 
 > Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
 > MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
@@ -373,11 +378,11 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 
 | patrón | dónde vive de verdad | usos |
 |---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 18 temas |
+| **1 · Lectura** | `patrones/Lectura.astro` | los 41 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 827 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.059 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 827 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.059 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 1 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1302,6 +1307,18 @@ Cosas que ya han costado horas. No son opiniones.
   pero cuesta un suelo entero: **la unidad monetaria se saca de la fórmula
   y se dice en la prosa de al lado** («Es decir, 0,0434 €/m³»). Vale para
   cualquier símbolo que no sea matemático.
+- **Un encabezado con LaTeX dentro produce un ancla que ninguna ruta puede
+  enlazar.** `## El teorema $\pi$ de Vaschy-Buckingham` genera el id
+  `el-teorema-πpiπ-de-vaschy-buckingham` —la salida de KaTeX es
+  `htmlAndMathml` (§07), así que el símbolo dibujado, el texto y el MathML
+  entran los tres en el slug—, y el esquema de `preparar` rechaza ese slug
+  porque `π` no está en su clase de caracteres. El fallo no se ve en la
+  página, que se dibuja perfecta: se ve el día que una ruta intenta apuntar
+  ahí. Salió el 1 de septiembre de 2026 al escribir la ruta de Fluidos.
+  **Regla: los `##` y `###` se escriben en texto plano.** Si hace falta el
+  símbolo, va en la primera línea del apartado, no en su título — que es lo
+  mismo que §17 ya pide para `titulo` y `fuente`, por el mismo motivo de
+  fondo: **todo lo que se convierte en identificador es texto plano.**
 - **`titulo` y `fuente` son texto plano, sin `$…$`.** Un `(matriz $A_1$)` en
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en

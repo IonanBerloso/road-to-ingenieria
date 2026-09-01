@@ -782,19 +782,52 @@ quedó cerrada con su boletín entero. Lo hecho el primer día:
 | temas escritos | 0 | **1 de 25** (t01, introducción) |
 | respuestas con unidad | imposibles | tipo `magnitud`, con lector y 20 tests |
 
-### Dónde está Fluidos el 31 de agosto de 2026
+### Dónde está Fluidos el 1 de septiembre de 2026
 
-Ocho fases después, y medido con `npm run mide fluidos`:
+Diez fases después, y medido con `npm run mide fluidos`:
 
 | | |
 |---|---|
 | temas con prosa, figura y ejercicios | **23 de 25** |
-| palabras de prosa | **22.480** (Cálculo entera son 21.545) |
+| palabras de prosa | **23.739** (Cálculo entera son 21.545) |
 | figuras | 23 |
 | ejercicios | **232**, con 1.050 pasos |
 | de ellos, problemas de la colección | **92 de 236** |
 | convocatorias transcritas | **las 16, todas** — los once finales (2026 ord. 7 de 9, 2025 ord. 7 de 9, 2025 ext. 8 de 9, 2024 ord. **8 de 8**, 2024 ext. 7 de 8, 2023 ord. **9 de 9**, 2023 ext. **9 de 9**, 2022 ord. **11 de 11**, 2022 ext. 8 de 9, 2021 ord. 6 de 8, 2020 ord. 6 de 8) y los cinco parciales (2021 **4 de 4**, **4 de 4** y 5 de 6; 2020 **5 de 5** y 3 de 5) |
-| rutas de estudio | **0 de 2** |
+| ruta de estudio | **1**, con 14 bloques y 48 escalones, que prepara la ordinaria y la extraordinaria |
+
+Tema a tema, con `npm run mide fluidos`:
+
+| tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
+|---|---|---|---|---|---|
+| t01 introduccion | 786 | 1 | 4 | 1 | 0 |
+| t02 propiedades | 1280 | 1 | 21 | 1 | 10 |
+| t03 estatica | 607 | 1 | 2 | 2 | 2 |
+| t04 hidrostatica | 1020 | 1 | 8 | 1 | 9 |
+| t07 fuerzas superficies | 717 | 1 | 9 | 2 | 6 |
+| t08 fuerzas cuerpos | 568 | 1 | 5 | 1 | 6 |
+| t09 fundamentos movimiento | 881 | 1 | 2 | 2 | 0 |
+| t10 continuidad | 383 | 1 | 1 | 1 | 0 |
+| t11 dinamica | 958 | 1 | 1 | 1 | 0 |
+| t12 bernoulli | 602 | 1 | 5 | 2 | 0 |
+| t13 medidores | 758 | 1 | 10 | 3 | 9 |
+| t14 cantidad movimiento | 501 | 1 | 2 | 1 | 0 |
+| t15 aplicaciones tcm | 770 | 1 | 7 | 2 | 11 |
+| t16 analisis dimensional | 1701 | 1 | 7 | 1 | 13 |
+| t17 viscosidad | 1375 | 1 | 2 | 2 | 1 |
+| t18 perdidas carga | 1413 | 1 | 8 | 1 | 2 |
+| t19 conducciones | 1544 | 1 | 4 | 1 | 8 |
+| t20 golpe ariete | 1384 | 1 | 8 | 1 | 3 |
+| t21 canales | 1423 | 1 | 8 | 1 | 11 |
+| t22 maquinas | 1449 | 1 | 2 | 2 | 2 |
+| t23 turbinas | 1255 | 1 | 2 | 2 | 2 |
+| t24 bombas | 1106 | 1 | 1 | 1 | 0 |
+| t25 bombeo | 1258 | 1 | 6 | 2 | 12 |
+
+> La columna de figuras es la que hay que mirar: **una por tema**, contra las
+> 2,6 de Cálculo. Cumple el mínimo de §15 y se queda corta para un temario de
+> compuertas, ábacos y secciones de canal. Está anotado como deuda 50 en
+> `tasks/todo.md`, con los cuatro sitios donde más se nota.
 
 Los **dos temas que faltan son los que no tienen material**: el 5 (equilibrio
 relativo) y el 6 (estática de compresibles) están en el programa oficial y no
@@ -803,14 +836,32 @@ colección de problemas. El catálogo lo dice con su `etiqueta` en vez de
 rellenarlos por nuestra cuenta. Lo mismo con el apartado **17.4** —resistencia
 sobre cuerpos sumergidos—, declarado en la prosa del tema 17.
 
-Y lo que falta **no es material sino trabajo**: las dos rutas de estudio. Las
-**16 convocatorias** —las 15 del cuadernillo de 2020-2025 más la ordinaria de
-2026— están transcritas, con sus PDF originales en `public/examenes/fluidos/`.
+Las **16 convocatorias** —las 15 del cuadernillo de 2020-2025 más la ordinaria
+de 2026— están transcritas, con sus PDF originales en
+`public/examenes/fluidos/`, y la ruta las referencia todas.
+
+**Y es una ruta, no dos, porque los dos exámenes son el mismo.** Contadas por
+separado, las 7 ordinarias y las 4 extraordinarias traen los mismos bloques
+con la misma frecuencia. Álgebra tiene dos rutas porque allí la extraordinaria
+cambia un hueco entero en las cuatro convocatorias leídas; aquí no cambia
+ninguno, así que la extraordinaria se declara en `tambienPrepara` y la página
+de su examen enlaza a la misma ruta. Escribir la segunda habría sido publicar
+una diferencia que no existe.
 
 > Ese número decía **17** hasta el 1 de septiembre de 2026, y estaba mal: el
 > cuadernillo trae quince exámenes —diez finales y **cinco** parciales—, no
 > dieciséis. Salió al contar las carpetas para cerrar la fase. Un recuento
 > publicado que nadie vuelve a contar es la forma más silenciosa de §10.
+
+> **Y la ruta resultó ser el mejor auditor de la prosa que tiene el
+> proyecto.** §14 exige que toda herramienta que el examen usa esté presentada
+> en la prosa del tema, no solo dentro de la resolución de un ejercicio.
+> Comprobarlo obliga a preguntar «¿dónde se explica esto?» cuarenta y ocho
+> veces seguidas, y **aparecieron seis huecos**: la forma integrada de la
+> compresibilidad, la construcción de adhesión y cohesión, la berma de un
+> canal, el manómetro Bourdon, el rotámetro y la notación de la escuela para
+> la fórmula de rugoso. Los seis daban build verde. Los seis están escritos
+> ya, en los temas 2, 4, 13, 18 y 21.
 
 > **Una cosa que este bloque enseñó y no estaba prevista.** Al abrir «Cuadros y
 > ábacos» para verificar un examen apareció que un ejercicio del tema 18 usaba

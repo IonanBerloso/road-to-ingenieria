@@ -78,37 +78,6 @@ Aparece en cuanto hay flujo, porque es la que entra en el número de Reynolds.
 Cuál de las dos pide el enunciado se sabe por las unidades del resultado, y por
 eso conviene escribirlas siempre.
 
-## Con la temperatura, líquidos y gases hacen lo contrario
-
-- En un **líquido** la viscosidad se debe a las fuerzas de cohesión entre
-  moléculas. Al calentar, la cohesión se debilita: **la viscosidad baja**. Es
-  el aceite del motor, que fluye mejor caliente.
-- En un **gas** se debe al intercambio de cantidad de movimiento entre
-  moléculas. Al calentar, se mueven más y chocan más: **la viscosidad sube**.
-
-No es un detalle de cultura general: en un problema de conducción con aceite
-caliente, tomar la viscosidad de la tabla a 20 °C puede cambiar el régimen de
-laminar a turbulento y con él toda la pérdida de carga.
-
-## Compresibilidad: el módulo de elasticidad volumétrico
-
-Un líquido se puede tratar como incompresible **casi siempre**, y este tema
-sirve para saber cuándo no. Si al aplicar $dp$ el volumen disminuye $-dV$:
-
-$$
-\frac{dV}{V} = -\alpha\,dp
-\qquad\Longrightarrow\qquad
-E = \frac{1}{\alpha} = \frac{-dp}{dV/V} = \frac{dp}{d\rho/\rho}
-$$
-
-$\alpha$ es el **coeficiente de compresibilidad cúbica** y su inverso $E$ es el
-**módulo de elasticidad volumétrico**, que tiene unidades de presión. En los
-líquidos se considera constante hasta unos 300 bar; para el agua ronda los
-$2.100\ \text{MPa}$.
-
-Y en un gas comprimido **isotérmicamente**, $E = p$: el módulo no es una
-propiedad del gas, es la presión a la que está.
-
 <figure>
 <svg viewBox="0 0 420 190" role="img" width="420" height="190"
      aria-labelledby="flu2-t flu2-d">
@@ -152,6 +121,64 @@ usar solo el hueco que da el enunciado en primer lugar.
 </figcaption>
 </figure>
 
+## Con la temperatura, líquidos y gases hacen lo contrario
+
+- En un **líquido** la viscosidad se debe a las fuerzas de cohesión entre
+  moléculas. Al calentar, la cohesión se debilita: **la viscosidad baja**. Es
+  el aceite del motor, que fluye mejor caliente.
+- En un **gas** se debe al intercambio de cantidad de movimiento entre
+  moléculas. Al calentar, se mueven más y chocan más: **la viscosidad sube**.
+
+No es un detalle de cultura general: en un problema de conducción con aceite
+caliente, tomar la viscosidad de la tabla a 20 °C puede cambiar el régimen de
+laminar a turbulento y con él toda la pérdida de carga.
+
+## Compresibilidad: el módulo de elasticidad volumétrico
+
+Un líquido se puede tratar como incompresible **casi siempre**, y este tema
+sirve para saber cuándo no. Si al aplicar $dp$ el volumen disminuye $-dV$:
+
+$$
+\frac{dV}{V} = -\alpha\,dp
+\qquad\Longrightarrow\qquad
+E = \frac{1}{\alpha} = \frac{-dp}{dV/V} = \frac{dp}{d\rho/\rho}
+$$
+
+$\alpha$ es el **coeficiente de compresibilidad cúbica** y su inverso $E$ es el
+**módulo de elasticidad volumétrico**, que tiene unidades de presión. En los
+líquidos se considera constante hasta unos 300 bar; para el agua ronda los
+$2.100\ \text{MPa}$.
+
+Y en un gas comprimido **isotérmicamente**, $E = p$: el módulo no es una
+propiedad del gas, es la presión a la que está.
+
+### La forma integrada, que es la que piden los exámenes
+
+Lo de arriba está escrito en diferenciales, y un enunciado nunca da un $dp$:
+da un salto de presión entero, de 1 a 300 bar. Integrando entre los dos
+estados con $\alpha$ constante:
+
+$$
+\frac{V}{V_{0}} = e^{-\alpha\,\Delta p}
+\qquad\Longleftrightarrow\qquad
+\frac{\rho}{\rho_{0}} = e^{\Delta p/E}
+$$
+
+y la merma de volumen es $\Delta V = V_{0}\left(1 - e^{-\alpha\Delta p}\right)$.
+
+**Esta es la forma que hay que usar, no la lineal.** Está extendido escribir
+$\Delta V = -V_{0}\,\alpha\,\Delta p$, que es el primer término del desarrollo
+en serie de la exponencial y vale para saltos pequeños. Las soluciones
+oficiales de esta asignatura salen con la exponencial, así que con la lineal
+el resultado se aparta lo justo para no coincidir con el boletín — y eso, en
+un ejercicio que solo pide un número, es la diferencia entre acertar y no.
+
+Un ejemplo del orden de magnitud: comprimir agua de 1 a 300 bar —es decir
+$\Delta p = 29{,}9$ MPa— con $E = 2.100$ MPa da $\Delta V/V_{0} = 1{,}414\ \%$
+con la exponencial y $1{,}424\ \%$ con la lineal. La diferencia es pequeña
+**porque el salto es pequeño comparado con $E$**; en cuanto el enunciado sube
+la presión o baja el módulo, se separan.
+
 ## Tensión superficial y capilaridad
 
 En el interior de un líquido cada molécula es atraída por igual en todas
@@ -184,6 +211,33 @@ $$
 
 que para un círculo devuelve la de arriba y para un cuadrado de lado $L$ da
 $h = 4\sigma\cos\theta/(\rho g L)$.
+
+### De dónde sale $\theta$, cuando el enunciado no lo da
+
+Hay exámenes que no dan el ángulo de contacto: dan la fuerza de **adhesión**
+—la que el sólido ejerce sobre las moléculas del líquido pegadas a la pared—
+y la de **cohesión** —la que el resto del líquido ejerce sobre ellas— y piden
+deducirlo. La construcción es siempre la misma y conviene tenerla dibujada:
+
+- La **adhesión** $F_{a}$ es perpendicular a la pared y apunta hacia ella.
+- La **cohesión** $F_{c}$ apunta hacia el interior del líquido, a **45°** de
+  la pared, porque esa es la dirección de la masa que tira.
+- La **superficie libre se coloca perpendicular a la resultante** de las dos.
+
+Proyectando la cohesión sobre los dos ejes —sus dos componentes valen
+$F_{c}/\sqrt{2}$— y midiendo $\theta$ desde la pared:
+
+$$
+\cos\theta =
+\frac{F_{a} - F_{c}/\sqrt{2}}
+     {\sqrt{\left(F_{a} - F_{c}/\sqrt{2}\right)^{2} + \left(F_{c}/\sqrt{2}\right)^{2}}}
+$$
+
+La lectura física está en el numerador. Si la adhesión gana a la componente
+de cohesión que tira hacia dentro, el coseno es positivo, $\theta < 90°$ y el
+líquido **moja**; si pierde, el coseno es negativo y el líquido se retrae.
+El caso frontera, $F_{a} = F_{c}/\sqrt{2}$, da exactamente 90° — un menisco
+plano, ni ascenso ni descenso.
 
 ## Presión de vapor y cavitación
 

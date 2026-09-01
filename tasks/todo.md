@@ -26,13 +26,15 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
-| **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
-| **11 · Auditoría §15 y cierre** | — | — | |
+| **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
+| **11 · Auditoría §15 y cierre** | — | — | en curso · bloquea la deuda 49 |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
-no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 232 ejercicios
-y 1.050 pasos.
+no tienen material. Medido con `npm run mide fluidos` el 1 de septiembre de
+2026: 23.739 palabras de prosa —más que Cálculo entera—, 23 figuras, 232
+ejercicios y 1.050 pasos. Una figura por tema, que cumple el mínimo de §15
+pero se queda lejos de las 2,6 por tema de Cálculo: es la deuda visual de la
+asignatura y está dicha aquí para que no se olvide.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -652,14 +654,123 @@ escribir el diagnóstico, nunca después.
    del examen son de conversión, así que cada respuesta va con su unidad y el
    tipo `magnitud` los diagnostica aparte (ver §04 de CLAUDE.md). Cuando un
    enunciado traiga una unidad que la tabla no conozca, se añade **con su test**.
-2. **Los exámenes imprimen el peso de cada ejercicio.** Eso permite que las
-   rutas de la fase 10 se midan igual que las de Álgebra pero con un dato
-   mejor: no «cuántas veces cae», sino «cuánto vale».
+2. **Los exámenes imprimen el porcentaje de cada ejercicio, pero no el
+   reparto por competencia.** Así que el corpus los transcribe sin `puntos`
+   —el esquema lo admite, lo abrió Álgebra— y la ruta de la fase 10 se mide
+   contando convocatorias, como la de Álgebra, no ponderando puntos.
 
-**Lo que se sabe ya del examen**, medido sobre los 111 ejercicios de las 15
-convocatorias de 2020-2025: nueve temas de peso alto (4, 7, 13, 15, 16, 18, 19,
-21, 25) y ocho transversales que casi nunca ocupan hueco propio pero caen
-dentro de otros (1, 3, 9, 10, 12, 14, 22, 24).
+   > Aquí ponía lo contrario: que el peso impreso permitiría medir «no
+   > cuántas veces cae, sino cuánto vale». No se hizo, y no por olvido: el
+   > porcentaje impreso es del ejercicio entero, y un ejercicio de Fluidos
+   > mezcla dos y tres temas, así que ese número no se puede repartir sin
+   > inventarse el reparto. Corregido el 1 de septiembre de 2026, al escribir
+   > la ruta.
+
+**Lo que dice el examen**, contado sobre los 121 ejercicios de las 16
+convocatorias, agrupando los temas como los agrupa el examen:
+
+| hueco | finales | parciales | ejercicios |
+|---|---|---|---|
+| máquinas e instalaciones de bombeo (22-25) | **11 de 11** | 2 de 5 | 16 |
+| análisis dimensional (16) | **11 de 11** | 2 de 5 | 13 |
+| canales (21) | 10 de 11 | 1 de 5 | 11 |
+| fuerzas sobre superficies y cuerpos (7-8) | 10 de 11 | 2 de 5 | 12 |
+| cantidad de movimiento (14-15) | 9 de 11 | 2 de 5 | 11 |
+| estática e hidrostática (3-4) | 8 de 11 | 2 de 5 | 11 |
+| propiedades del fluido (2) | 8 de 11 | 2 de 5 | 10 |
+| conducciones y pérdidas (17-19) | 7 de 11 | 2 de 5 | 11 |
+| Bernoulli y medidores (12-13) | 7 de 11 | 2 de 5 | 9 |
+| golpe de ariete (20) | **1 de 11** | 2 de 5 | 3 |
+
+Y los transversales, que no ocupan hueco propio ni una sola vez en once años
+pero están dentro de casi todos: **1** (unidades y el kilopondio), **9**,
+**10** y **11** (clasificación del flujo, continuidad, Navier-Stokes).
+
+> **El golpe de ariete es el único donde los dos recuentos discrepan**, y
+> mucho: una vez de once en los finales, dos de cinco en los parciales. Por
+> eso la ruta lo pone el penúltimo y dice el número, en vez de esconderlo
+> entre los demás.
+
+### Fase 10 · la ruta, y por qué es una y no dos
+
+`src/content/preparar/fluidos-ord.yaml`. **Catorce bloques, cuarenta y ocho
+escalones, y los 232 ejercicios del corpus referenciados** — ninguno queda
+suelto.
+
+El orden: el suelo, los once huecos por rendimiento medido, el simulacro y el
+formulario. El suelo son las unidades y el kilopondio, las seis formas de
+escribir una presión, Darcy y los cuadros, y la clasificación del flujo:
+cuatro escalones que entre los cuatro han ocupado hueco propio **una sola vez
+en once años** y sin los cuales no se termina ninguno de los demás.
+
+**Y una ruta, no dos.** La fase se abrió diciendo «las dos rutas», y al
+medirlas resultó que no hay dos. La extraordinaria de Fluidos tiene los mismos
+bloques que la ordinaria y con la misma frecuencia: análisis dimensional en
+las 7 ordinarias y en las 4 extraordinarias, bombeo en 6 y 4, canales en 6 y
+4, propiedades en 4 y 4. Lo que queda —hidrostática 5/7 frente a 2/4, cuerpos
+sumergidos 2/7 frente a 3/4— cabe dentro del ruido de cuatro exámenes, y
+escribir una segunda ruta apoyándose en eso sería publicar una diferencia
+inventada.
+
+> Álgebra sí tiene dos, y el contraste explica la decisión. Allí la
+> extraordinaria **cambia un hueco entero** —determinantes donde la ordinaria
+> pone euclídeos— en las cuatro convocatorias leídas. Aquí no cambia ninguno,
+> así que la extraordinaria se declara en `tambienPrepara`, que es el campo
+> que existe justo para esto, y la página del examen extraordinario enlaza a
+> la misma ruta.
+
+**Lo que la ruta destapó, y es lo que de verdad valía la pena.** §14 pide que
+toda herramienta que el examen usa esté presentada en la prosa del tema, no
+solo dentro de la resolución de un ejercicio, y que se compruebe **contando**.
+Contado, faltaban seis:
+
+| herramienta | la usa | estaba |
+|---|---|---|
+| la forma **integrada** de la compresibilidad | 5 convocatorias | solo la diferencial |
+| la construcción **adhesión-cohesión** del ángulo de contacto | 2 convocatorias | no |
+| la **berma** y el resguardo de un canal | 7 finales y 1 parcial | no |
+| el manómetro **Bourdon** y contra qué mide | 6 enunciados, 5 convocatorias | no |
+| el **rotámetro** como aparato de contraste | 3 enunciados | no |
+| la forma de la escuela de la fórmula de rugoso | los que piden rugosidad | equivalente, otra notación |
+
+Las seis están escritas ya, en los temas 2, 4, 13, 18 y 21. La de la
+compresibilidad era además una mentira en marcha: la ruta llegó a decir que el
+apartado «insiste en la forma exponencial» cuando el apartado no la traía.
+
+> **La regla que sale de aquí, y sirve para las nueve asignaturas: la ruta es
+> el mejor auditor de la prosa que tiene el proyecto.** Escribir «¿dónde se
+> explica esto?» cuarenta y ocho veces seguidas obliga a mirar apartado por
+> apartado, y lo que no está aparece solo. Ninguno de los dos guardianes
+> podía cazar esto —los seis huecos daban build verde— y leer la prosa por
+> encima tampoco: los apartados existían, y parecían completos.
+
+Y una trampa nueva para §17, cara y silenciosa: **un encabezado con LaTeX
+dentro genera un ancla que ninguna ruta puede enlazar**. `## El teorema $\pi$
+de Vaschy-Buckingham` producía el id `el-teorema-πpiπ-de-vaschy-buckingham`,
+porque la salida `htmlAndMathml` mete el símbolo, el texto y el MathML los
+tres en el slug. La página se dibujaba perfecta. Renombrado el encabezado y
+anotado en CLAUDE.md.
+
+**Un comprobador de vuelo previo, y por qué NO entra en el repositorio.** La
+ruta se escribió con un guion de scratchpad que lee el YAML y comprueba, sin
+construir nada: que los 232 ids existan, que cada ancla de teoría esté de
+verdad en el HTML publicado del tema, los mínimos de longitud del esquema y
+que ningún ejercicio se incruste dos veces. Ahorró **cuatro sueltos enteros**
+—cada uno son veinte minutos— porque cazó los fallos antes del build.
+
+No entra, y es §11 aplicado en frío: **lo que comprueba ya lo comprueban el
+esquema y `verify.mjs`**, solo que veinte minutos más tarde. Un guardián
+duplicado no añade seguridad, añade un sitio más donde la regla puede
+divergir. Se queda como herramienta de sesión, junto a los otros dos —el de
+forma de ejercicio y el de distractores— y su sitio es el scratchpad.
+
+**Lo que la ruta declara en `falta[]`**, que es información y no una promesa
+incumplida: los cuadros de la escuela no están reunidos en una página propia;
+tres ejercicios de bombeo del cuadernillo se resuelven sobre un anexo de
+curvas que no tenemos; cinco ejercicios grandes se caen por figura sin acotar;
+los
+temas 22, 23 y 24 no tienen ni un ejercicio de nivel `practica`; y no hay
+cronómetro para el simulacro.
 
 ### Lo que el material docente no trae · comprobado el 31 de agosto de 2026
 
@@ -733,6 +844,24 @@ subido a la capa compartida. Se hará cuando un patrón real los pida, no antes.
 **4 · El formato de datos de `EjercicioGuiado`.** Es la decisión que determina
 si producir un tema es rellenar un YAML o programar. No se escribe hasta
 haberlo discutido. Es lo siguiente en la lista después de esto.
+
+**5 · Tres preguntas sobre el examen de Fluidos**, anotadas el 1 de septiembre
+de 2026 al escribir la ruta, y las tres son §13 caso 5 —hechos del mundo que
+el repositorio no contiene—:
+
+- **¿Cuánto dura el examen?** Ninguna de las dieciséis convocatorias lo
+  imprime. El bloque de simulacro lo declara en su `falta[]` y dice «de una
+  sentada» en vez de inventarse tres horas.
+- **¿Se puede llevar calculadora, y de qué tipo?** Para Cálculo lo dijiste tú
+  —no se puede—, y de ahí salió §09. Para Fluidos no lo sabemos, y aquí
+  importa más: hay ejercicios que exigen iterar Colebrook.
+- **¿Se dan de verdad los temas 5 y 6?** La pregunta sigue abierta desde el 31
+  de agosto, y ahora bloquea algo concreto: la deuda 49, que es lo único que
+  impide marcar la asignatura como terminada.
+
+Y lo que sí está confirmado, por los propios enunciados: **los cuadros y
+ábacos se reparten con el examen**, porque las convocatorias citan
+«Documentación: Anexo I».
 
 ---
 
@@ -1804,6 +1933,43 @@ bloque, porque una fórmula **en línea** no se desplaza por mucha regla que hay
 
 Medido: el documento pasa de 426 px de ancho a 360 clavados.
 
+**49 · Una asignatura cuyo programa oficial incluye temas sin material no
+puede marcarse nunca como terminada.** Descubierta el 1 de septiembre de 2026,
+al ir a cerrar Fluidos.
+
+El esquema del catálogo dice `estado: ok` **solo si todos los temas tienen
+`hecho: true`**, y Fluidos tiene dos —el 5, equilibrio relativo, y el 6,
+estática de compresibles— que están en el programa oficial y de los que no
+existen ni apuntes, ni diapositivas, ni un solo problema. Los dos llevan ya su
+`etiqueta` diciéndolo con todas las letras.
+
+Así que la asignatura se queda en `obra` con las 16 convocatorias, la ruta y
+los 23 temas escritos, y eso publica algo que no es verdad: que se sigue
+escribiendo. Las tres salidas, y ninguna se puede tomar desde el contenido:
+
+- **marcar los dos temas `hecho: true`** — es mentira, queda descartada;
+- **quitarlos del catálogo** — también, porque §15 exige que el catálogo sea
+  el temario oficial y no una lista plausible;
+- **que el esquema acepte `ok` con temas declarados sin material** —
+  probablemente un campo `sinMaterial: true` que exima del `hecho` y que la
+  portada pinte distinto. Es la única honesta, y toca `content.config.ts`.
+
+Es §13.4 —capa compartida— así que queda escrita en vez de resuelta. Mientras
+tanto, `docs/como-vamos.md` dice el estado real con números; lo único que
+miente es la palabra «en obra» de la portada.
+
+**50 · Fluidos tiene una figura por tema, y Cálculo tiene dos y media.**
+Medido el 1 de septiembre de 2026 con `npm run mide`: 23 figuras en 23 temas
+frente a las 29 en 11 de Cálculo.
+
+Cumple el mínimo de §15 —«al menos una figura que responde a una pregunta»— y
+por eso no bloquea el cierre, pero es la deuda visual de la asignatura y en un
+temario que va de compuertas, ábacos, curvas de bomba y secciones de canal es
+justo donde más se nota. Los sitios que más lo piden, por orden: la curva de
+la instalación cortando la de la bomba (t25), el prisma de presiones cuando no
+es un triángulo (t07), el ciclo del golpe de ariete (t20) y las secciones
+compuestas de canal (t21). Ninguna se dibuja hasta tener escrita la pregunta
+que responde (§13).
 ---
 
 # Álgebra · el plan, en ocho fases
