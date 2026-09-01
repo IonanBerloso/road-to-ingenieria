@@ -1,4 +1,4 @@
-# Cómo vamos · 27 de agosto de 2026
+# Cómo vamos · 2 de septiembre de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -16,10 +16,21 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Dos asignaturas terminadas de nueve: Cálculo y Álgebra.** Las dos cumplen §15
-entera y las dos están en el catálogo como `ok`. Entre las dos, **96
-convocatorias transcritas de 96**, y el guardián de convocatorias huérfanas ya
-no cuenta ninguna suelta.
+**Tres asignaturas terminadas de nueve: Cálculo, Álgebra y Mecánica de
+Fluidos.** Las tres cumplen §15 entera y las tres están en el catálogo como
+`ok`. Entre las tres, **112 convocatorias transcritas de 112**, y el guardián
+de convocatorias huérfanas no cuenta ninguna suelta.
+
+**Fluidos se cerró el 2 de septiembre de 2026**, y lo que la tenía abierta no
+era material: eran **dos temas del programa oficial de los que no hay nada que
+transcribir**. El esquema exigía `hecho: true` en todos para permitir `ok`, así
+que la asignatura no podía cerrarse nunca por mucho que se trabajara. El dato
+que faltaba no estaba en el repositorio y no se podía deducir de él — el 5 y el
+6 solo se explican en clase y no caen nunca—, así que se anotó como deuda 49 en
+vez de resolverse a ojo, y se resolvió el día que el alumno lo dijo. Ahora el
+catálogo tiene el campo `soloEnClase`, que guarda **el motivo con su fuente**, y
+la portada los distingue de un tema pendiente. Es §13 caso 5 funcionando
+exactamente como está escrito.
 
 Álgebra se abrió el 26 de agosto de 2026 y se cerró el 27: ocho convocatorias,
 siete temas, dos rutas. El 30 se le metió el boletín oficial entero en seis de
@@ -782,14 +793,14 @@ quedó cerrada con su boletín entero. Lo hecho el primer día:
 | temas escritos | 0 | **1 de 25** (t01, introducción) |
 | respuestas con unidad | imposibles | tipo `magnitud`, con lector y 20 tests |
 
-### Dónde está Fluidos el 1 de septiembre de 2026
+### Dónde está Fluidos el 2 de septiembre de 2026, ya cerrada
 
-Diez fases después, y medido con `npm run mide fluidos`:
+Trece fases después, y medido con `npm run mide fluidos`:
 
 | | |
 |---|---|
-| temas con prosa, figura y ejercicios | **23 de 25** |
-| palabras de prosa | **23.739** (Cálculo entera son 21.545) |
+| temas con prosa, figura y ejercicios | **23 de 23** — los 25 del temario oficial menos los dos que solo se explican en clase, declarados en el catálogo con su motivo |
+| palabras de prosa | **25.363** (Cálculo entera son 21.545) |
 | figuras | 23 |
 | ejercicios | **232**, con 1.050 pasos |
 | de ellos, problemas de la colección | **92 de 236** |

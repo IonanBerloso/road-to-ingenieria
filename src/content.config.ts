@@ -49,6 +49,21 @@ const tema = z.object({
   patrones: z.array(patron).min(1),
   /** true solo cuando el tema existe como index.mdx y está terminado según §04. */
   hecho: z.boolean().default(false),
+  /** Un tema del temario oficial del que **no hay nada que transcribir**: se
+   *  explica en clase y no aparece ni en la colección de problemas ni en
+   *  ninguna convocatoria, así que no puede tener `index.mdx` por mucho que se
+   *  trabaje. El valor es el **motivo con su fuente**, no un booleano, y por
+   *  eso es una cadena larga: es un hecho del mundo que el repositorio no
+   *  contiene (§13 caso 5) y no se deduce de ningún dato de aquí. Escribirlo
+   *  obliga a decir quién lo dijo.
+   *
+   *  Nace el 2 de septiembre de 2026 con los temas 5 y 6 de Fluidos, que
+   *  bloqueaban el cierre de la asignatura: el esquema exigía `hecho` en
+   *  todos para permitir `estado: ok`, así que Fluidos no podía cerrarse
+   *  nunca. Las dos salidas malas eran borrarlos del catálogo —y entonces el
+   *  temario deja de ser el oficial, contra §15— o marcarlos `hecho` —y
+   *  entonces el dato miente, contra §10—. Esta es la tercera: **decirlo**. */
+  soloEnClase: z.string().min(30, 'un tema sin material tiene que decir por qué, y quién lo dice').optional(),
   /** La etiqueta Caveat de la lista del detalle (brief §5b): «una etiqueta
    *  solo donde informa». Nació derivada del patrón simulador y se generalizó
    *  el 29 de agosto de 2026 cuando la auditoría cazó que t03 y t05 de
@@ -56,6 +71,8 @@ const tema = z.object({
    *  herramientas caen DENTRO de los demás ejercicios, nunca como hueco
    *  propio. Opcional: un tema sin etiqueta no pinta nada. */
   etiqueta: z.string().min(4).max(45).optional(),
+}).refine((t) => !(t.hecho && t.soloEnClase), {
+  message: 'un tema no puede estar hecho y no tener material a la vez: elige',
 });
 
 const catalogo = defineCollection({
@@ -78,9 +95,18 @@ const catalogo = defineCollection({
     .refine((a) => new Set(a.temas.map((t) => t.id)).size === a.temas.length, {
       message: 'hay dos temas con el mismo id',
     })
-    .refine((a) => a.estado !== 'ok' || a.temas.every((t) => t.hecho), {
-      message: 'una asignatura marcada ok no puede tener temas sin hacer',
-    }),
+    .refine((a) => a.estado !== 'ok' || a.temas.every((t) => t.hecho || t.soloEnClase), {
+      message:
+        'una asignatura marcada ok no puede tener temas sin hacer, salvo los que declaren soloEnClase con su motivo',
+    })
+    /* Y el freno de mano: si algún día la mitad del temario se declara
+       «solo en clase», eso no es una asignatura terminada, es una lista de
+       excusas. El tope es un tercio, y está puesto para que salte antes de
+       que a nadie se le ocurra usar la salida como atajo. */
+    .refine(
+      (a) => a.temas.filter((t) => t.soloEnClase).length * 3 <= a.temas.length,
+      { message: 'más de un tercio del temario sin material: eso no se cierra, se investiga' },
+    ),
 });
 
 /* ═══════════════════════════════════════════════════════════════════

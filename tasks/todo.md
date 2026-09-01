@@ -17,7 +17,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | fase | temas | capítulo de problemas | estado |
 |---|---|---|---|
 | **0 · Cimientos** | 1, 2 | 1 · Propiedades | ✅ **hecha** |
-| **1 · Estática** | 3, 4, ~~5~~, ~~6~~, 7, 8 | 2 · Estática y fuerzas sobre superficies | ✅ **hecha**, salvo lo que no tiene material |
+| **1 · Estática** | 3, 4, ~~5~~, ~~6~~, 7, 8 | 2 · Estática y fuerzas sobre superficies | ✅ **hecha**; el 5 y el 6 no tienen material y se declaran en el catálogo |
 | **2 · Continuidad y Bernoulli** | 9, 10, 11, 12, 13 | 3 · Conservación de masa y energía. Medida | ✅ **hecha** |
 | **3 · Cantidad de movimiento** | 14, 15 | 4 · Conservación de la cantidad de movimiento | ✅ **hecha** |
 | **4 · Análisis dimensional** | 16 | 5 · Análisis dimensional y semejanza | ✅ **hecha** |
@@ -27,7 +27,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
-| **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
+| **11 · Auditoría §15 y cierre** | — | — | ✅ **cerrada** el 2 de septiembre de 2026 · la asignatura está en `ok` |
 | **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **41 de 43 · cerrada**, las 2 restantes declaradas |
 | **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | **5 de 5 · cerrada**, con 86 casos en `tests/fisica/` |
 
@@ -2106,9 +2106,39 @@ bloque, porque una fórmula **en línea** no se desplaza por mucha regla que hay
 
 Medido: el documento pasa de 426 px de ancho a 360 clavados.
 
-**49 · Una asignatura cuyo programa oficial incluye temas sin material no
-puede marcarse nunca como terminada.** Descubierta el 1 de septiembre de 2026,
+**49 · ~~Una asignatura cuyo programa oficial incluye temas sin material no
+puede marcarse nunca como terminada.~~ Resuelta el 2 de septiembre de 2026, y
+por la vía que decía la propia deuda.** Descubierta el 1 de septiembre de 2026,
 al ir a cerrar Fluidos.
+
+> **Cómo se cerró.** El dato que faltaba lo dio el alumno: los temas 5 y 6
+> **solo se explican en clase y no caen nunca**. Con eso, de las tres salidas
+> que estaban escritas abajo se tomó la tercera, que era la única honesta:
+> `content.config.ts` acepta ahora un campo **`soloEnClase`** en un tema, y
+> `estado: ok` exige `hecho` **o** ese campo.
+>
+> Tres decisiones dentro del arreglo que conviene no deshacer:
+>
+> - **el campo es una cadena, no un booleano**, y el esquema le exige 30
+>   caracteres: guarda el motivo **con su fuente**, porque es un hecho del
+>   mundo que el repositorio no contiene (§13 caso 5) y nadie lo puede deducir
+>   mirando los datos. Un `true` no diría quién lo dijo;
+> - **un tema no puede ser `hecho` y `soloEnClase` a la vez**, y el esquema lo
+>   rechaza: son estados excluyentes y confundirlos volvería a hacer posible la
+>   mentira que esta deuda evitaba;
+> - **hay un tope de un tercio del temario.** Si algún día media asignatura se
+>   declara «solo en clase», eso no es una asignatura terminada sino una lista
+>   de excusas, y el build para. La salida está para un caso raro, no para ser
+>   un atajo.
+>
+> Y la portada distingue las dos cosas, que antes se veían iguales: «todavía no
+> escrito» y «no hay nada que escribir» no son lo mismo, así que un tema
+> `soloEnClase` no se apaga más —eso lo haría parecer más pendiente— sino que
+> lleva su etiqueta *«solo se explica en clase»* y el motivo en el `title`.
+>
+> **Fluidos pasa a `ok`**, y con ella son **tres asignaturas cerradas**.
+
+El texto original, por si hace falta reconstruir el razonamiento:
 
 El esquema del catálogo dice `estado: ok` **solo si todos los temas tienen
 `hecho: true`**, y Fluidos tiene dos —el 5, equilibrio relativo, y el 6,
@@ -2130,6 +2160,14 @@ escribiendo. Las tres salidas, y ninguna se puede tomar desde el contenido:
 Es §13.4 —capa compartida— así que queda escrita en vez de resuelta. Mientras
 tanto, `docs/como-vamos.md` dice el estado real con números; lo único que
 miente es la palabra «en obra» de la portada.
+
+> **Y esto es lo que hay que llevarse de la deuda 49, más que el arreglo.**
+> Estuvo escrita y sin resolver **un día**, y no por falta de tiempo: faltaba
+> **una frase de una persona**. §13 dice parar y anotar cuando lo que falta es
+> un hecho del mundo, y funcionó exactamente como está escrito — se anotó, se
+> preguntó, y con la respuesta el arreglo salió en media hora. Si en vez de
+> anotarla la hubiera resuelto por mi cuenta el día 1, habría elegido entre
+> mentir en el dato o romper el temario oficial, y las dos son peores.
 
 **50 · Fluidos tiene una figura por tema, y Cálculo tiene dos y media.**
 Medido el 1 de septiembre de 2026 con `npm run mide`: 23 figuras en 23 temas

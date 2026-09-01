@@ -334,6 +334,13 @@ const enteras = asignaturas
                         <Etiqueta
                           class="tema"
                           data-peso={t.peso}
+                          {/* «Todavía no escrito» y «no hay nada que escribir»
+                              se veían igual, y no son lo mismo: del segundo no
+                              va a llegar nunca nada, y el motivo va en el
+                              título para que se pueda leer. */}
+                          {...(t.soloEnClase
+                            ? { 'data-solo-clase': '', title: t.soloEnClase }
+                            : {})}
                           {...(enlace ? { href: enlace } : { 'aria-disabled': 'true' })}
                         >
                           <span class="mano tn">{String(t.n).padStart(2, '0')}</span>
@@ -1201,6 +1208,14 @@ const enteras = asignaturas
   }
 
   .tema[aria-disabled='true'] { opacity: .6; }
+
+  /* Un tema del que no hay nada que escribir no está «a medias»: está cerrado
+     así a propósito. Se distingue del que aún no se ha escrito por el número
+     apagado y la etiqueta, no por estar más gris — apagarlo más lo haría
+     parecer más pendiente, que es justo lo contrario. */
+  .tema[data-solo-clase] { opacity: 1; }
+  .tema[data-solo-clase] .tn { color: var(--faint); }
+  .tema[data-solo-clase] .t-tit { font-weight: 500; color: var(--graphite); }
 
   .tn { font-size: 1.2rem; color: var(--live); text-align: right; line-height: 1; }
 

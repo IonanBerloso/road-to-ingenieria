@@ -1033,6 +1033,16 @@ nivel de arriba, que es el que se entrega.
 
 - **Los temas del catálogo son el temario oficial**, no una lista plausible.
   Con su fuente. Si no la tienes, el catálogo dice `prev` y no finge.
+- **Y si un tema del temario oficial no tiene material, se dice, no se
+  esconde.** Hay temas que solo se explican en clase y no aparecen ni en la
+  colección ni en ninguna convocatoria: de esos no hay nada que transcribir por
+  mucho que se trabaje. Se declaran con **`soloEnClase`** en el catálogo —una
+  cadena con el motivo **y su fuente**, no un booleano—, y entonces no impiden
+  cerrar la asignatura. Lo que sigue prohibido es lo de antes: marcarlos
+  `hecho` (miente) o borrarlos del catálogo (rompe la regla de arriba). El
+  esquema pone dos frenos: un tema no puede ser `hecho` y `soloEnClase` a la
+  vez, y **más de un tercio del temario así rompe el build** — media asignatura
+  «solo en clase» no es una asignatura terminada, es una lista de excusas.
 - **Todas las convocatorias publicadas están transcritas**, con su reparto por
   competencia y su PDF original en `public/examenes/<asignatura>/`.
 - **Una ruta por evaluación**, cumpliendo §14 entera.
