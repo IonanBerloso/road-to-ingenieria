@@ -523,6 +523,17 @@ const ejercicio = z
  *  PDF. Cada una va **antes** de su evaluación, porque cuando tienen fechas
  *  distintas la recuperación es la primera.
  *
+ *  **Los tres parciales.** Entraron el 1 de septiembre de 2026 con Fluidos,
+ *  que a diferencia de Cálculo no se evalúa por cuadernillos numerados sino
+ *  con exámenes parciales a lo largo del curso: dos en 2019-2020 y **tres**
+ *  en 2020-2021. Van después de las evaluaciones y antes de la ordinaria,
+ *  que es su orden en el calendario.
+ *
+ *  Y aquí el nombre **no** sale de la cabecera del examen, que dice solo
+ *  «EXAMEN PARCIAL» y la fecha. El ordinal es nuestro y hace falta para que
+ *  dos parciales del mismo curso no compartan carpeta ni URL; se numeran por
+ *  fecha, que es como los nombra un alumno.
+ *
  *  El nombre largo va en minúscula: quien lo pinta como título lo capitaliza,
  *  y así no hacen falta dos columnas que digan lo mismo. */
 export const CONVOCATORIAS = {
@@ -541,6 +552,9 @@ export const CONVOCATORIAS = {
     larga: 'recuperación del primer cuatrimestre, con la 5.ª evaluación',
   },
   quinta: { url: '5ev', corta: '5.ª ev.', larga: 'quinta evaluación' },
+  'primer-parcial': { url: '1par', corta: '1.er parc.', larga: 'primer examen parcial' },
+  'segundo-parcial': { url: '2par', corta: '2.º parc.', larga: 'segundo examen parcial' },
+  'tercer-parcial': { url: '3par', corta: '3.er parc.', larga: 'tercer examen parcial' },
   ordinaria: { url: 'ord', corta: 'ordinaria', larga: 'convocatoria ordinaria' },
   extraordinaria: { url: 'ext', corta: 'extraord.', larga: 'convocatoria extraordinaria' },
 } as const;

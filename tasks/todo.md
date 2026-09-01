@@ -25,14 +25,14 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **6 · Golpe de ariete** | 20 | 7 · Régimen variable en tuberías | ✅ **hecha** |
 | **7 · Canales** | 21 | 8 · Flujo en conductos abiertos | ✅ **hecha** |
 | **8 · Máquinas hidráulicas** | 22, 23, 24, 25 | 9 · Instalaciones de bombeo | ✅ **hecha** |
-| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **11 de 17** |
+| **9 · Las convocatorias** | — | los 11 finales y 6 parciales de 2020-2026 | **13 de 17** |
 | **10 · Las dos rutas** | — | ordinaria y extraordinaria | |
 | **11 · Auditoría §15 y cierre** | — | — | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
 no tienen material. Medido con `npm run mide fluidos` el 31 de agosto de 2026:
-22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 211 ejercicios
-y 948 pasos.
+22.480 palabras de prosa —más que Cálculo entera—, 23 figuras, 220 ejercicios
+y 994 pasos.
 
 ### La colección, que es donde estaba el hueco de verdad
 
@@ -44,8 +44,8 @@ y 948 pasos.
 > dice el plan de esta página.
 
 Corpus de fluidos el 31 de agosto de 2026, al cerrar la tanda:
-**211 ejercicios y 948 pasos**, de los cuales **92 son problemas transcritos
-de la colección** y 86 son ejercicios de convocatoria. Cobertura de la
+**220 ejercicios y 994 pasos**, de los cuales **92 son problemas transcritos
+de la colección** y 95 son ejercicios de convocatoria. Cobertura de la
 colección por capítulo:
 
 | capítulo | dentro | total | qué falta |
@@ -296,74 +296,79 @@ efectivo de 0,715 en vez del 0,7 del enunciado.
 > error en cualquiera se comen el resultado— y por eso el balance se hace
 > con el empuje, que ya trae la resta hecha.
 
+### Los dos primeros parciales, enteros
+
+Entraron el 1 de septiembre de 2026, y con ellos **tres filas nuevas en la
+tabla `CONVOCATORIAS`**: `primer-parcial`, `segundo-parcial` y
+`tercer-parcial`. Era capa compartida (§13 caso 4) y por eso se hizo
+aparte, con el build delante; pero era exactamente lo que la tabla existe
+para permitir: se añade una fila y la URL, la abreviatura y el nombre largo
+se derivan solos. El enum, `SUFIJO_CONV`, `ORDEN_CONV` y las tres páginas
+que las consumen no se tocaron.
+
+**Primer parcial de 2020-2021 · 16 de abril de 2021 · los cuatro**
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 30 % | t02 | las seis afirmaciones, falsas · μ = 2,46·10⁻⁴ · √2 |
+| 2 | 20 % | t04 | aceite y agua · R = 0,28 m · 1,002 bar · 1,47 Pa · 10,8° |
+| 3 | 30 % | t07 | 58.800 N · 1,67 m · A_y = 19.878 − 1242h² · 4 m · 17.207 N |
+| 4 | 20 % | t03 | 723,19 y 11,89 kg/m³ · 354,98 kN |
+
+**Primer parcial de 2019-2020 · 8 de mayo de 2020 · los cinco**
+
+| ej. | peso | tema | comprobación |
+|---|---|---|---|
+| 1 | 18 % | t02 | 0,499 m³ · 11,22 kg/m³ · 4,279 kg/cm² · 1,38 MPa |
+| 2 | 20 % | t04 | 468.972 Pa · 0,297 kg/cm² · 40,7 m · 1.059,75 kg/m³ |
+| 3 | 20 % | t25 | 33,03 m · 1.861 W · 394,4 W · 3,37 l/s · 2,32 kg/cm² |
+| 4 | 25 % | t08 | 121,41 y 294,65 kN · 587,58 kN · 10.819 kN |
+| 5 | 17 % | t13 | 110,5 cm · 9,82 cm |
+
+Todos exactos.
+
+> **Dos trampas de temperatura y presión que conviene tener juntas.** En el
+> ejercicio 1 de mayo de 2020, «$T_1 = 2T_0$» con $T_0 = 25$ ºC significa
+> **50 ºC**, no 596 K; y quien duplique los kelvin obtiene un resultado
+> engañosamente redondo —la presión final coincide con la inicial— que
+> invita a creérselo. En el ejercicio 4 de abril de 2021, la fórmula de
+> dilatación del depósito pide presión **manométrica** y la ley de los
+> gases, **absoluta**, y el enunciado da una de cada clase a propósito.
+
+> Y el ejercicio 1 de abril de 2021 cierra un círculo: la construcción
+> adhesión-cohesión aparece por tercera vez en el cuadernillo, y aquí sirve
+> para **refutar** —con 90º de ángulo de contacto sale $\sqrt{2}$ y no
+> $\sqrt{2}/2$—. La misma herramienta que en junio de 2023 desbloqueó la
+> ordinaria de mayo de 2025.
+
 ### Lo que queda de fase 9
 
-**Cinco parciales**: 8 de mayo y 4 de junio de 2020, y 16 de abril, 7 de
-mayo y 3 de junio de 2021.
+**Tres parciales**: 4 de junio de 2020, y 7 de mayo y 3 de junio de 2021.
 
-> **Y antes de escribirlos hay que decidir una cosa de la capa compartida.**
-> La tabla `CONVOCATORIAS` de `content.config.ts` no tiene «parcial»: sus
-> claves son las cinco evaluaciones de Cálculo más ordinaria y
-> extraordinaria. Fluidos tiene hasta **tres parciales por curso**, así que
-> harían falta tres claves nuevas —`primer-parcial`, `segundo-parcial`,
-> `tercer-parcial`— con su URL y sus dos nombres.
->
-> No es un arreglo para un caso: son seis exámenes de dos cursos, y la
-> propia tabla existe —dice su comentario— para que añadir una convocatoria
-> sea tocar un sitio y no seis. Pero es capa compartida (§13 caso 4), y
-> afecta también a `preparar`, que usa el mismo enum como `evaluacion`. Se
-> hace de una vez, con el suelo delante, y no de pasada mientras se
-> transcribe un examen.
+De ellos hay tres ejercicios ya verificados, para que la próxima tanda no
+repita las cuentas:
 
-Del **parcial del 8 de mayo de 2020** hay dos ejercicios ya verificados:
+- **4 de junio de 2020, ejercicio 1** · el chorro sobre un álabe móvil que
+  lo desvía 180º: 42,47 kN con el álabe huyendo a v/3, potencia útil nula
+  en u = 0 y en u = v, y 169,9 kN con el álabe yendo al encuentro del
+  chorro a 20 m/s.
+- **4 de junio de 2020, ejercicio 3a** · el canal de madera sin cepillar
+  con el nivel limitado al 45 % del diámetro: D = 1,05 m, comercial
+  **1,1 m**, y con él h = 46,3 cm y v = 1,17 m/s. Los apartados b) y c)
+  piden la tensión admisible del acero, que está en la figura.
+- **7 de mayo de 2021, ejercicio 4b** · la misma válvula con agua y con
+  mercurio. Con el factor de paso constante,
+  $Q \propto \sqrt{\Delta p/\rho}$, y de 10 l/s de agua con 1,2 kPa se pasa
+  a **8,56 l/s** de mercurio con 1,22 mca. Es el ejercicio más corto del
+  cuadernillo que enseña algo de verdad: que un coeficiente de pérdida es
+  adimensional y por eso vale para cualquier fluido.
 
-- **El 1**, el recipiente de aire del que se extrae la mitad de la masa:
-  V = 0,499 m³, ρ = 11,22 kg/m³, p₁ = 4,279 kg/cm² y K = 1,38 MPa. Y trae
-  dos trampas que merecen escribirse. Una: «$T_1 = 2T_0$» con
-  $T_0 = 25$ ºC significa **50 ºC**, no 596 K; el examen lo resuelve así y
-  la ley de los gases exige después pasar a absolutos. Otra: el módulo de
-  elasticidad sale de la fórmula **exponencial** —$1{,}384$ MPa— y no de la
-  lineal, que daría 1,5.
-- **El 2**, el laboratorio submarino: p_aire = 468.972 Pa, el Bourdon A
-  marca 0,29725 kg/cm² —que son exactamente los 2,9 m de columna de agua
-  del acceso—, z_máx = 40,7 m y γ = 1.059,75 kg/m³. Los cuatro exactos.
-
-Y del **parcial del 4 de junio de 2020**, otros dos:
-
-- **El 1**, el chorro sobre un álabe móvil que lo desvía 180º: 42,47 kN con
-  el álabe huyendo a v/3, potencia útil nula en u = 0 y en u = v, y
-  169,9 kN con el álabe yendo al encuentro del chorro a 20 m/s. Exactos.
-- **El 3, apartado a)**: el canal de madera sin cepillar con el nivel
-  limitado al 45 % del diámetro. Sale D = 1,05 m, comercial **1,1 m**, y
-  con él h = 46,3 cm y v = 1,17 m/s. Los apartados b) y c) piden la
-  tensión admisible del acero, que está en la figura.
-
-Y del **parcial del 16 de abril de 2021**, el **ejercicio 2 entero**: el
-micromanómetro que hay que diseñar eligiendo la pareja de líquidos. La más
-precisa es **aceite y agua** —0,15 de diferencia frente a 0,52 y 0,67—, con
-R = 0,28 m, p_abs = 1,002 bar, una resolución de 1,47 Pa por milímetro y un
-tubo inclinado equivalente de 10,8º si se llena de alcohol. Los cinco
-apartados numéricos, exactos.
-
-Y de ese mismo parcial, el **apartado a) del ejercicio 4**: el depósito que
-se puede llenar de queroseno o de butano. El queroseno comprimido a 60,8 m
-de mercurio absolutos pasa de 720,3 a **723,19 kg/m³** —con la fórmula
-exponencial, otra vez— y el butano a 4 bar **manométricos** da
-**11,89 kg/m³**. Ojo a las dos trampas de unidades: 73,5 UTM/m³ son 720,3
-kg/m³, y los 4 bar del camión son relativos, no absolutos.
-
-Del **parcial del 7 de mayo de 2021**, el **apartado b) del ejercicio 4**:
-la misma válvula con agua y con mercurio. Con el factor de paso constante,
-$Q \propto \sqrt{\Delta p/\rho}$, y de 10 l/s de agua con 1,2 kPa se pasa a
-**8,56 l/s** de mercurio con 1,22 mca. Es el ejercicio más corto de todo el
-cuadernillo que enseña algo de verdad: que un coeficiente de pérdida es
-adimensional y por eso vale para cualquier fluido.
-
-Y los tres ejercicios grandes que se han quedado fuera por figura
-—el elevador de taller de 2021, el embrague de 2020 y los depósitos
-anidados de 2020— podrían recuperarse renderizando sus páginas a más
-resolución y midiendo las cotas sobre el dibujo. No es imposible; es que
-cuesta más que un ejercicio nuevo.
+**Y cinco ejercicios grandes que se han quedado fuera por figura**: el
+elevador de taller de junio de 2021, el embrague multidisco y los depósitos
+anidados de junio de 2020, el apartado b) del bloque de anclaje de junio de
+2023 y el codo convergente de junio de 2021. Podrían recuperarse
+renderizando sus páginas a más resolución y midiendo las cotas sobre el
+dibujo. No es imposible; es que cuesta más que un ejercicio nuevo.
 
 ### La ordinaria de junio de 2021, seis de ocho
 

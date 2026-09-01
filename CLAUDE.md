@@ -1149,6 +1149,18 @@ Cosas que ya han costado horas. No son opiniones.
   se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
   cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
   después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
+- **Borrar «desde aquí hasta allí» se lleva por delante lo que se añadió en
+  medio.** Al podar una sección obsoleta de `tasks/todo.md` se ancló el
+  corte en dos textos que estaban a 250 líneas de distancia, y entre ellos
+  habían crecido **cinco secciones nuevas** que desaparecieron sin avisar.
+  El fichero seguía compilando y el guardián no lee `tasks/`. La regla de
+  §16 —contar antes y después— lo cazó, pero contar líneas no basta:
+  `wc -l` solo dijo que faltaban 246, y eso podía ser lo esperado.
+  **Cuenta encabezados, no líneas** (`grep -c '^### '`), y mejor aún
+  compara la lista: `git diff -U0 fichero | grep '^-#'` dice exactamente
+  qué secciones se han ido. Y para acotar un bloque, ánclalo por **índice
+  de línea comprobando los dos bordes** antes de escribir, no por dos
+  cadenas lejanas.
 - **Un `IntersectionObserver` no sirve para diferir trabajo en modo guiado.**
   Los paneles cerrados están en `display: none`, no intersecan nunca, y lo que
   cuelgue del observador **no se ejecuta jamás**. Pasó el 28 de agosto de 2026
