@@ -28,7 +28,7 @@ seguidas — que es exactamente lo que hizo barato cerrar el boletín de Álgebr
 | **9 · Las convocatorias** | — | los 11 finales y 5 parciales de 2020-2026 | **16 de 16 · cerrada** |
 | **10 · La ruta** | — | una, y la extraordinaria dentro | ✅ **hecha** · 14 bloques, 48 escalones |
 | **11 · Auditoría §15 y cierre** | — | — | hecha salvo la deuda 49 |
-| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **20 de 43** |
+| **12 · Las figuras de ejercicio** | — | los 43 enunciados que nombran una figura | **26 de 43** |
 | **13 · Los simuladores** | — | Moody, punto de funcionamiento, prisma, canal, ariete | |
 
 **El temario está cerrado: 23 temas de 25**, y los dos que faltan son los que
@@ -848,6 +848,9 @@ aquí. Esos siguen fuera y seguirán.
 | 1.er parcial de mayo de 2020 | 4 | laboratorio submarino, red de la boquilla, tubo de helio, tanque en T |
 | ordinaria de junio de 2023 | 4 | codo-boquilla de 180°, depósito partido con tramo BC, venturímetro inclinado, circuito cerrado |
 | ordinaria de junio de 2021 | 1 | el orificio y el manómetro que mide su pérdida |
+| extraordinaria de junio de 2022 | 3 | balancín en dos fluidos, derivación en Y, dos depósitos a distinto nivel |
+| t02 propiedades | 2 | tres cilindros coaxiales, disco sobre película |
+| t04 hidrostática | 1 | el gato hidráulico |
 
 **Dos que salieron mal y se arreglaron mirándolas**, que es §16 punto 1
 funcionando: el tanque en T llevaba un `Z` de más en el trazado y cerraba con
@@ -855,6 +858,20 @@ un diagonal de esquina a esquina, y el venturímetro inclinado me había salido
 en forma de **V**, como un valle, cuando el original es una tubería recta en
 pendiente con un estrechamiento. El segundo se rehízo rotando el tubo entero
 12,9°, que además deja la etiqueta del glicol siguiendo la pendiente.
+
+> **Y tres que se escribieron sin mirar, y el guardián las cazó.** Las de t02
+> y t04 se redactaron mientras corría un suelo, con la idea de mirarlas
+> después. El de `viewBox` las devolvió con cuatro etiquetas recortadas —«450
+> mm», «2 mm de aceite», «F = 100 N», «Ø₂ = 5 cm»— y al abrirlas apareció
+> además un fallo que ningún guardián puede ver: en los cilindros coaxiales,
+> **las líneas de referencia de e₁ y e₂ apuntaban al hueco cambiado**, la de
+> «dentro» al de fuera y al revés. La figura era correcta y estaba mal
+> etiquetada, que es la peor combinación.
+>
+> Sale de ahí una regla de método más estricta que §16: **una figura no se
+> escribe sin poder mirarla en el mismo rato**. Escribir una tanda entera y
+> revisarla después parece más eficiente y no lo es — el guardián solo caza
+> lo que se sale del marco, no lo que señala mal.
 
 #### El guardián que fallaba al azar, diagnosticado
 
