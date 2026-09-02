@@ -125,6 +125,26 @@ commit propios para que el avance quede aunque el día se corte.
 > al terminar una tanda se vuelve a pasar el inventario y se comprueba que el
 > incremento es el esperado; ningún guardián mira esto.
 >
+> **Los que faltan y no dependen de figura son ya solo quince**, medidos
+> cruzando `faltan.json` con el texto del enunciado: 2.17, 2.40, 3.6, 3.17,
+> 3.26, 3.34, 5.12, 6.18, 6.23, 6.25, 6.29, 7.16, 8.11, 9.9 y 9.11. Y de esos,
+> varios tampoco se sostienen solos:
+>
+> - **6.23** pide la pérdida de carga por rozamiento en fibrocemento, y **ni
+>   la colección ni el repositorio publican la rugosidad de ese material**. Los
+>   resultados publicados (8 m de rozamiento con 100 l/s en 1250 m de 300 mm)
+>   exigen ε ≈ 0,2 mm, que es el doble de lo que dan las tablas al uso. Elegir
+>   el valor que cuadre es exactamente lo que §10 prohíbe, así que **queda
+>   pendiente del cuadro de rugosidades del profesor.** Lo que sí cuadra al
+>   decimal es la parte de piezas especiales: 250 juntas de K = 0,15 más
+>   entrada y salida dan K = 39 y 3,98 mca, contra los 4 publicados.
+> - **2.40** (presa de gravedad) y **2.17** dan las cotas en el dibujo aunque
+>   el texto no diga «figura».
+>
+> Es decir: **a partir de aquí casi todo lo que queda pasa por leer figuras**,
+> que es lo que ya decía la triaje del 3 de septiembre y ahora está medido
+> hasta el final.
+
 > **Una discrepancia con el boletín, declarada y sin resolver.** El apartado c)
 > del 8.19 —pendiente de una media caña de 30 cm para 50 l/s— publica **15
 > milésimas** y la cuenta directa da **14,2**, un 5 %. No se ha tocado ningún
