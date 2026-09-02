@@ -154,6 +154,8 @@ scripts/
   recalcula.mjs            que las cuentas del corpus salgan (§11)
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
                            bloque en el corpus: en un segundo, sin construir
+  inventario-coleccion.mjs qué problemas de la colección faltan, cruzando el
+                           volcado del PDF contra el corpus
   peso.mjs                 cuánto tarda una página en un móvil (§11)
   mide.mjs                 la tabla de docs/como-vamos.md, generada
   diario.mjs               el diario en PDF

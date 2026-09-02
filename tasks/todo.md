@@ -5,6 +5,136 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Mañana · 3 de septiembre de 2026, por fases
+
+Escrito al cerrar el día 7, con el estado medido y no recordado. **Tres
+asignaturas cerradas de nueve** —Cálculo, Álgebra y Mecánica de Fluidos—, 112
+convocatorias transcritas de 112 y 98 de los 236 problemas de la colección de
+Fluidos.
+
+El orden no es el del temario ni el de lo que apetece: va por **lo que rinde**
+y por **lo que bloquea a otra cosa**. Las fases A y B son de Ionan, no mías, y
+por eso van primero: mientras no las conteste, la C se puede hacer entera.
+
+---
+
+## Fase A · Dos decisiones que son tuyas, y una bloquea
+
+Ninguna se puede tomar desde el contenido (§13). Cinco minutos de respuesta
+desbloquean días de trabajo.
+
+**A1 · ¿Se parten las páginas de teoría en dos?** Hoy una página de tema
+incrusta la prosa **y** los ejercicios enteros **y**, en cinco temas, el
+simulador. El tema 1 de Cálculo llegó a tardar 5,9 s en un móvil antes de
+diferir los lienzos. Partir teoría y ejercicios arregla el peso de raíz, pero
+**cambia las URL y las 7 rutas de estudio de Cálculo y la de Fluidos**, así que
+no lo toco sin que lo digas. Está pendiente desde el día 1 de septiembre.
+
+**A2 · ¿Cuál es la cuarta asignatura?** Fluidos cerró hoy. §00 dice que la
+siguiente se elige porque **tensiona el sistema por un sitio distinto**, no
+porque toque en el temario. Las candidatas, con lo que romperían:
+
+| asignatura | qué rompe que no esté roto | coste |
+|---|---|---|
+| **Expresión Gráfica** | no hay «respuesta numérica»: se evalúa un dibujo. Rompe `EjercicioGuiado` entero | alto, y abre un patrón nuevo |
+| **Fundamentos Químicos** | reacciones y estequiometría: pide un lector de fórmulas químicas | medio |
+| **Ciencia de Materiales** | diagramas de fases — es el caso puro del patrón «figura fija», el único de los cinco sin construir | medio |
+| **Ingeniería Térmica** | ciclos termodinámicos; reutiliza casi todo de Fluidos | bajo, y por eso enseña poco |
+
+Mi recomendación, si quieres una: **Ciencia de Materiales**, porque es la única
+que fuerza a construir el patrón que lleva desde el principio en §05 sin
+construirse. Pero es tu decisión y no la tomo yo.
+
+---
+
+## Fase B · Comprobar lo de ayer con los ojos, no con el suelo
+
+**No es opcional y va antes de escribir nada nuevo.** Ayer se publicaron cinco
+simuladores que el suelo dio por buenos y que no se veían; hoy están
+arreglados, pero **nadie los ha usado todavía**.
+
+1. Abrir los seis temas con simulador **como llega un desconocido**: URL a
+   pelo, sin ancla, sin `localStorage`, y comprobar que el aviso de la cabecera
+   se ve y lleva.
+2. **Mover los mandos de los cinco** y mirar que los números que salen son los
+   del examen. Los botones de preajuste están puestos para eso.
+3. Y lo que de verdad falta: **que Ionan los juzgue**. Se le pasaron las URL y
+   no ha dado su opinión sobre ninguno.
+
+Si algo hay que cambiar, se cambia aquí y no después de escribir cuarenta
+ejercicios encima.
+
+---
+
+## Fase C · Los 138 problemas de la colección que faltan
+
+El grueso del día. Va por capítulos, y cada capítulo se cierra con suelo y
+commit propios para que el avance quede aunque el día se corte.
+
+**El orden es por rendimiento**, medido sobre las 16 convocatorias:
+
+| orden | cap. | tema | faltan | por qué aquí |
+|---|---|---|---|---|
+| 1.º | 2 · Estática y superficies | t03/t04/t07/t08 | 25 | el hueco más grande del examen, y el más figurado |
+| 2.º | 6 · Conducciones | t18/t19 | 19 | el tema de peso alto que más cae dentro de problemas mayores |
+| 3.º | 3 · Bernoulli y medidores | t12/t13 | 24 | sostiene los capítulos 6 y 9 |
+| 4.º | 9 · Bombeo | t25 | 15 | 11 de 11 convocatorias, pero solo 4 escritos |
+| 5.º | 8 · Canales | t21 | 15 | 11 convocatorias |
+| 6.º | 4 · Cantidad de movimiento | t14/t15 | 16 | |
+| 7.º | 5 · Análisis dimensional | t16 | 14 | |
+| 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
+
+**El ritmo real, medido hoy: de 2 a 5 por tanda.** No es lentitud gratuita:
+casi todos los enunciados dicen «de la figura» y esa geometría **no está en el
+volcado de texto**, así que hay que renderizar la página del PDF y mirarla —del
+orden de cien páginas—, y de los problemas propuestos la colección publica
+**solo el resultado final**, con lo que el desarrollo entero hay que hacerlo y
+verificarlo. Eso es justamente el hueco que da sentido al proyecto (§00) y
+también lo que lo hace lento.
+
+**El procedimiento, ya rodado y sin sorpresas:**
+
+1. `node inv.mjs` cruza el PDF contra el corpus y dice qué falta y en qué
+   página está;
+2. se renderiza la página con `pdftoppm -r 125` y se lee;
+3. se escribe el bloque **en el scratchpad**, nunca directo al corpus;
+4. `node scripts/revisa-ejercicios.mjs <fichero> --suelto`;
+5. se verifica cada número **por separado**, contra el resultado publicado;
+6. se pega, se construye, y la figura se mira en claro, oscuro y 360 px.
+
+Los pasos 3 y 4 no son burocracia: el primer bloque de ayer se saltó el 4 y
+costó revertir el fichero entero.
+
+---
+
+## Fase D · Lo que se arrastra y conviene no dejar pudrir
+
+Solo si sobra día, y en este orden:
+
+- **La deuda 34**, que es la más vieja viva: `docs/como-vamos.md` se escribe a
+  mano y por eso envejece. La salida buena es generarlo con `mide.mjs`. Hoy
+  volvió a hacer falta corregirlo a mano en tres sitios.
+- **`npm run peso`**, que no se pasa desde que los cinco simuladores entraron
+  en las páginas de teoría. Si A1 se resuelve partiendo las páginas, esto se
+  mide **después**, no antes.
+- **`HUMO_TODO=1 npm run humo`** sobre las 167 páginas. Se pasa una vez por
+  tanda de trabajo, no por commit, y no se ha pasado desde el cierre de
+  Fluidos.
+
+---
+
+## Lo que NO se hace mañana, y por qué queda escrito
+
+- **No se abre la cuarta asignatura hasta que A2 esté contestada.** §00: pocas
+  excelentes antes que muchas a medias.
+- **No se toca `content.config.ts`** salvo que un contenido real lo exija
+  (§13.4). Hoy se tocó una vez, con motivo, y con dos frenos puestos.
+- **No se escribe ningún enunciado sin haber visto su figura.** Si una página
+  no se puede leer, ese problema no existe todavía y se anota — no se deduce
+  del resultado.
+
+---
+
 # Mecánica de Fluidos, por fases · abierta el 30 de agosto de 2026
 
 **El criterio del orden no es el número del tema: es el capítulo de la
