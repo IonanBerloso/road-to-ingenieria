@@ -108,7 +108,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 129 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 130 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -159,6 +159,23 @@ commit propios para que el avance quede aunque el día se corte.
 > Es decir: **a partir de aquí casi todo lo que queda pasa por leer figuras**,
 > que es lo que ya decía la triaje del 3 de septiembre y ahora está medido
 > hasta el final.
+
+> **Dos categorías del capítulo 2 que no encajan en el molde de §04**, vistas
+> al abrirlo y dichas aquí para que no se redescubran:
+>
+> - **«Dibujar los prismas de presiones»** — 2.21 (cinco casos planos) y 2.27
+>   (cinco casos cilíndricos). No tienen números: la respuesta **es un
+>   dibujo**, en función de R y de las densidades. Un `calcular` no los coge y
+>   un `justificar` solo cogería la mitad. Es el primer contenido del corpus
+>   que pediría de verdad el patrón **figura fija** de §05, que sigue sin
+>   construirse. Diez sub-casos son bastante trabajo de SVG: conviene decidir
+>   el patrón antes de empezar, no a mitad.
+> - **2.34** (compuerta cilíndrica en un rincón a 45°) está leído y **no
+>   escrito**: la figura no fija sin ambigüedad dónde apoya el cilindro
+>   respecto de la cota de 1,2 m, y ninguna de las lecturas probadas reproduce
+>   a la vez los 8.589,8 y los 13.265,6 daN publicados. Elegir la geometría que
+>   cuadre sería inventar el enunciado (§13 caso 2). Necesita una lectura de la
+>   figura con más resolución, o las soluciones desarrolladas.
 
 > **Una discrepancia con el boletín, declarada y sin resolver.** El apartado c)
 > del 8.19 —pendiente de una media caña de 30 cm para 50 l/s— publica **15
