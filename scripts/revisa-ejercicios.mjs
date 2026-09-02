@@ -120,6 +120,32 @@ for (const e of ejercicios) {
       const bueno = comparable ? escalar(p.respuesta?.valor) : NaN;
       const tol = p.respuesta?.tolerancia;
       const relativa = p.respuesta?.tipo === 'magnitud';
+
+      /* Y dos distractores parecidos ENTRE SÍ tampoco valen, aunque los dos
+         estén lejos de la respuesta buena: el componente busca el primero que
+         encaje, así que el segundo nunca se dispara y su mensaje es letra
+         muerta. Lo caza el esquema y a mí se me escapó con «531» y «5308»
+         frente a una respuesta de 5,3 millones con tolerancia 20 000: a esa
+         escala los dos distractores son el mismo número.
+         La holgura se replica tal como la calcula el esquema. */
+      if (comparable && typeof tol === 'number') {
+        const vs = (p.distractores ?? []).map((d) => escalar(d.valor));
+        for (let i = 0; i < vs.length; i++) {
+          for (let j = i + 1; j < vs.length; j++) {
+            if (!Number.isFinite(vs[i]) || !Number.isFinite(vs[j])) continue;
+            const holgura = relativa
+              ? Math.max(Math.abs(vs[j]), Math.abs(vs[i])) * Math.max(tol, 0.02)
+              : Math.max(Math.max(Math.abs(vs[i]), Math.abs(vs[j])) * 0.02, tol);
+            if (Math.abs(vs[i] - vs[j]) <= holgura * (1 + 1e-9)) {
+              mal(
+                dónde,
+                `los distractores «${p.distractores[i].valor}» y «${p.distractores[j].valor}» se confunden entre sí: el segundo nunca mostraría su diagnóstico`,
+              );
+            }
+          }
+        }
+      }
+
       if (Number.isFinite(bueno) && typeof tol === 'number') {
         for (const d of p.distractores ?? []) {
           const malo = escalar(d.valor);
