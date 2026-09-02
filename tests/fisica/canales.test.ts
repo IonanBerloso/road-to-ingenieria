@@ -250,9 +250,12 @@ describe('la sección circular parcialmente llena', () => {
   });
 
   it('8.8 · la acequia de PVC da los 3,094 m/s publicados', () => {
-    /* D = 0,6 m, J = 16 milésimas, n = 0,009 (el PVC no está en el cuadro de
-       materiales de la colección; 0,009 es el valor que reproduce el
-       resultado publicado, y es el de las tablas al uso). */
+    /* D = 0,6 m, J = 16 milésimas, n = 0,009 para el PVC.
+       Se obtuvo primero invirtiendo el resultado publicado, porque el cuadro
+       de materiales que trae la colección no lo lista; después apareció en el
+       `Cuadro nº 26` de `Cuadros_y_ábacos.pdf`, que sí lo da — y da 0,009. Lo
+       mismo con la madera sin cepillar, 0,013. Las dos inversiones acertaron,
+       pero **ahora el valor tiene fuente publicada y no hace falta deducirlo.** */
     const y = 0.303;
     cerca(relacionVelocidad(y) * velocidadLleno(0.6, 0.009, 0.016), 3.094, 0.005);
   });

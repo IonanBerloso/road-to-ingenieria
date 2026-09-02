@@ -14,6 +14,7 @@
  * que el test saliera exacto sería justo lo que prohíbe §10.
  */
 import { describe, expect, it } from 'vitest';
+import type { Material } from '../../src/lib/moody';
 import {
   Re1,
   Re2,
@@ -27,6 +28,8 @@ import {
   rugosidadDesdeF,
   rugosidadSobreSubcapa,
   sensibilidadRe,
+  RUGOSIDAD,
+  rugosidadRelativa,
 } from '../../src/lib/moody';
 
 /** Tolerancia relativa, con su motivo dicho arriba. */
@@ -163,5 +166,71 @@ describe('de dónde salen el 23 y el 560', () => {
     const D = 0.25;
     expect(rugosidadSobreSubcapa(6e5, 0.003316 / D)).toBeGreaterThan(6);
     expect(rugosidadSobreSubcapa(8.81e5, 0.00015 / D)).toBeLessThan(6);
+  });
+});
+
+/**
+ * El Cuadro nº 20, y lo que se ve al meterlo en el ábaco.
+ *
+ * No se comprueban los doce números uno a uno —eso sería copiar la tabla dos
+ * veces— sino lo que el cuadro **afirma sobre el mundo** y se puede contrastar:
+ * el orden de los materiales, que el intervalo contiene al valor de diseño, y
+ * que llevados al ábaco caen donde el tema dice que caen.
+ */
+describe('la rugosidad por material, del Cuadro nº 20', () => {
+  it('todo valor de diseño está dentro de su intervalo', () => {
+    for (const [nombre, r] of Object.entries(RUGOSIDAD)) {
+      expect(r.diseno, nombre).toBeGreaterThanOrEqual(r.intervalo[0]);
+      expect(r.diseno, nombre).toBeLessThanOrEqual(r.intervalo[1]);
+    }
+  });
+
+  it('el orden es el que dicta el sentido común de los materiales', () => {
+    const orden: Material[] = [
+      'aceroRoblonado',
+      'hormigon',
+      'madera',
+      'fundicion',
+      'hierroGalvanizado',
+      'fibrocemento',
+      'aceroComercial',
+      'pvcYPe',
+      'tuboEstirado',
+      'latonYCobre',
+    ];
+    for (let i = 1; i < orden.length; i++) {
+      expect(RUGOSIDAD[orden[i]].diseno, orden[i]).toBeLessThan(RUGOSIDAD[orden[i - 1]].diseno);
+    }
+  });
+
+  it('el acero roblonado tiene un intervalo de un factor diez, y eso importa', () => {
+    /* De 0,91 a 9,1 mm. En una tubería de 500 mm eso mueve el coeficiente de
+       fricción de 0,023 a 0,046: el doble. Cuando un enunciado dice el
+       material y no la rugosidad, está aceptando esa horquilla. */
+    const [lo, hi] = RUGOSIDAD.aceroRoblonado.intervalo;
+    expect(hi / lo).toBeCloseTo(10, 6);
+    expect(fRugoso(hi / 0.5) / fRugoso(lo / 0.5)).toBeGreaterThan(1.7);
+  });
+
+  it('el PVC y el latón son lisos en la práctica, y el hormigón nunca lo es', () => {
+    /* Con una tubería de 100 mm y Re = 10⁵: los plásticos y los metales
+       estirados se comportan como tubería lisa; el hormigón, no. */
+    const Re = 1e5;
+    expect(regimen(Re, rugosidadRelativa('pvcYPe', 0.1))).toBe('liso-blasius');
+    expect(regimen(Re, rugosidadRelativa('latonYCobre', 0.1))).toBe('liso-blasius');
+    expect(regimen(Re, rugosidadRelativa('hormigon', 0.1))).toBe('rugoso');
+    expect(regimen(Re, rugosidadRelativa('fibrocemento', 0.1))).toBe('semirrugoso');
+  });
+
+  it('fibrocemento de 300 mm a Re = 4·10⁵ da f = 0,0167', () => {
+    /* El caso del ejercicio 6.23 de la colección, y la razón de que este
+       cuadro esté aquí: con la rugosidad que publica la propia escuela sale
+       0,0167, no el 0,0189 que harían falta para reproducir su resultado. La
+       diferencia está anotada en tasks/todo.md; el dato no se toca (§10). */
+    const er = rugosidadRelativa('fibrocemento', 0.3);
+    expect(er).toBeCloseTo(3.333e-4, 7);
+    const fv = f(4e5, er);
+    expect(fv).toBeGreaterThan(0.016);
+    expect(fv).toBeLessThan(0.0175);
   });
 });

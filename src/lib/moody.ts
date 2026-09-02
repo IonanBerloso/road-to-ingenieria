@@ -167,3 +167,48 @@ export const subcapaRelativa = (Re: number, fv: number) => (5 * Math.SQRT2 * 2) 
 export function rugosidadSobreSubcapa(Re: number, er: number): number {
   return er / subcapaRelativa(Re, f(Re, er));
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   La rugosidad por material — Cuadro nº 20 de la escuela
+
+   Hasta ahora este módulo sabía convertir una rugosidad en un coeficiente de
+   fricción y no sabía de dónde sale la rugosidad, así que cada ejercicio del
+   capítulo 6 traía el número a mano o no lo traía. Aquí está el cuadro, con
+   sus valores **en metros** y su intervalo, porque el intervalo es la mitad
+   de la información: un acero roblonado va de 0,91 a 9,1 mm, un factor diez.
+
+   Son datos físicos publicados, no una figura ajena: se transcriben (§08).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+export interface Rugosidad {
+  /** El valor de diseño, en metros. Es el que usan los enunciados. */
+  diseno: number;
+  /** El intervalo [mínimo, máximo], en metros. */
+  intervalo: [number, number];
+}
+
+/**
+ * Cuadro nº 20, en metros. En el original está en centímetros; aquí va en
+ * unidades del SI porque es lo que come `f(Re, er)` y porque mezclar
+ * centímetros con metros en la rugosidad relativa es el fallo clásico.
+ */
+export const RUGOSIDAD: Record<string, Rugosidad> = {
+  aceroRoblonado: { diseno: 1.8e-3, intervalo: [9.1e-4, 9.1e-3] },
+  hormigon: { diseno: 1.2e-3, intervalo: [3e-4, 3e-3] },
+  fundicion: { diseno: 2.6e-4, intervalo: [1.2e-4, 6e-4] },
+  madera: { diseno: 6e-4, intervalo: [1.83e-4, 9e-4] },
+  hierroGalvanizado: { diseno: 1.5e-4, intervalo: [6e-5, 2.4e-4] },
+  fundicionAsfaltada: { diseno: 1.2e-4, intervalo: [6e-5, 1.8e-4] },
+  aceroComercial: { diseno: 6e-5, intervalo: [3e-5, 9e-5] },
+  hierroForjado: { diseno: 6e-5, intervalo: [3e-5, 9e-5] },
+  tuboEstirado: { diseno: 2.4e-6, intervalo: [2.4e-6, 2.4e-6] },
+  latonYCobre: { diseno: 1.5e-6, intervalo: [1.5e-6, 1.5e-6] },
+  fibrocemento: { diseno: 1e-4, intervalo: [1e-4, 1e-4] },
+  pvcYPe: { diseno: 7e-6, intervalo: [7e-6, 7e-6] },
+};
+
+export type Material = keyof typeof RUGOSIDAD;
+
+/** La rugosidad relativa `ε/D` de un material en un diámetro dado. */
+export const rugosidadRelativa = (material: Material, D: number): number =>
+  RUGOSIDAD[material].diseno / D;

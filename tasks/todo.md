@@ -108,9 +108,16 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar la segunda tanda del 3 de septiembre: 126 de 236**, con
-> el capítulo 8 en 13 de 22 (entran 8.8 y 8.19). Los nueve que quedan llevan
-> figura o sección compuesta.
+> **Estado al cerrar el 3 de septiembre: 129 de 236.** Capítulo 8 en 13 de 22
+> (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
+> por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
+> comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
+>
+> Con eso queda demostrado que la parte con figura **sí se puede hacer**: el
+> procedimiento es renderizar la página con `pdftoppm -r 150`, mirarla,
+> redibujar en SVG **a la escala del resultado ya calculado** (§17) y
+> comprobar la captura en claro, oscuro y 360 px. Unos veinte minutos de
+> figura por ejercicio, aparte de la verificación de los números.
 >
 > **Y una lección de procedimiento que costó dos ejercicios escritos para
 > nada.** En esa tanda se escribieron además el 8.9 y el 8.13… que **ya
@@ -130,14 +137,22 @@ commit propios para que el avance quede aunque el día se corte.
 > 3.26, 3.34, 5.12, 6.18, 6.23, 6.25, 6.29, 7.16, 8.11, 9.9 y 9.11. Y de esos,
 > varios tampoco se sostienen solos:
 >
-> - **6.23** pide la pérdida de carga por rozamiento en fibrocemento, y **ni
->   la colección ni el repositorio publican la rugosidad de ese material**. Los
->   resultados publicados (8 m de rozamiento con 100 l/s en 1250 m de 300 mm)
->   exigen ε ≈ 0,2 mm, que es el doble de lo que dan las tablas al uso. Elegir
->   el valor que cuadre es exactamente lo que §10 prohíbe, así que **queda
->   pendiente del cuadro de rugosidades del profesor.** Lo que sí cuadra al
->   decimal es la parte de piezas especiales: 250 juntas de K = 0,15 más
->   entrada y salida dan K = 39 y 3,98 mca, contra los 4 publicados.
+> - **6.23** queda pendiente, y por un motivo distinto del que se anotó
+>   primero. Se dijo que faltaba la rugosidad del fibrocemento; **no falta**:
+>   está en el `Cuadro nº 20` de `Cuadros_y_ábacos.pdf`, ε = 0,01 cm = 0,1 mm,
+>   leído de la página renderizada porque la OCR descoloca las columnas. Con
+>   ese valor Colebrook da f = 0,0167 y el problema sale **104 l/s, 7,7 y
+>   4,3 mca**, contra los **100 l/s, 8 y 4** publicados; y el apartado d) da
+>   10,66 m de desnivel contra los 11,55 del boletín. Para reproducir el
+>   boletín haría falta f ≈ 0,0189, que **no es una lectura posible del ábaco**
+>   con esa rugosidad relativa —la asíntota rugosa está en 0,0152—.
+>
+>   O sea: la discrepancia está en el boletín, no en un dato que nos falte. Se
+>   deja sin escribir hasta ver las soluciones desarrolladas del profesor,
+>   porque publicarlo obligaría a elegir entre contradecir el resultado
+>   oficial o ajustar la rugosidad, y lo segundo es lo que §10 prohíbe. Lo que
+>   sí cuadra es la parte de piezas especiales: 250 juntas de K = 0,15 más
+>   entrada y salida dan K = 39, y con el caudal publicado 3,98 mca contra 4.
 > - **2.40** (presa de gravedad) y **2.17** dan las cotas en el dibujo aunque
 >   el texto no diga «figura».
 >
@@ -178,11 +193,19 @@ commit propios para que el avance quede aunque el día se corte.
 > publicados de 8.3, 8.4, 8.8 y 8.12. Los que queden del capítulo salen ya sin
 > volver a pelearse con esto.
 >
-> Y dos coeficientes de Manning que **el cuadro de materiales de la colección
-> no trae** —PVC y madera sin cepillar—: se han recuperado invirtiendo el
-> resultado publicado (0,009 y 0,013, que son además los de las tablas al
-> uso), y está dicho en el propio test. Si aparece la tabla del profesor, se
-> comprueban.
+> Y dos coeficientes de Manning que el cuadro de materiales de la colección no
+> trae —PVC y madera sin cepillar—: se recuperaron invirtiendo el resultado
+> publicado, 0,009 y 0,013. **Comprobado después contra el `Cuadro nº 26` de
+> `Cuadros_y_ábacos.pdf`: las dos inversiones acertaron**, y ahora el valor
+> tiene fuente publicada en vez de deducida.
+>
+> **Ese fichero de cuadros no se estaba usando y es la mina del capítulo 6.**
+> Trae el Cuadro nº 20 (rugosidades por material), el 21 (coeficientes de
+> fricción con Colebrook-White y Karman-Prandtl) y el 26 (Manning). El 20 está
+> ya en `src/lib/moody.ts` como `RUGOSIDAD`, con sus intervalos y cinco casos
+> en `tests/fisica/moody.test.ts`. Aviso para quien lo lea: **la OCR de esas
+> tablas descoloca las columnas** —material y valor quedan desparejados— así
+> que hay que renderizar la página con `pdftoppm` y mirarla.
 
 **El ritmo real, medido hoy: de 2 a 5 por tanda.** No es lentitud gratuita:
 casi todos los enunciados dicen «de la figura» y esa geometría **no está en el

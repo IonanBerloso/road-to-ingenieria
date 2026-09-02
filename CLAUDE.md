@@ -1317,6 +1317,19 @@ Cosas que ya han costado horas. No son opiniones.
   y su caja seguía ahí, escrita «de 0,0 a 0,0» y saliéndose por la izquierda.
   **Regla: para quitar un texto se le pone `textContent = ''`**; la opacidad
   se reserva para lo que sí sigue estando, como una curva de referencia.
+- **Una figura de ejercicio se dibuja a la escala del resultado, no «a
+  ojo».** Al redibujar el enunciado 2.19 —un tubo cerrado que mide el nivel
+  comprimiendo su aire— el agua de dentro del tubo se puso, esquemáticamente,
+  más alta que la de fuera. Es exactamente lo contrario de lo que pasa, y era
+  además **la idea entera del problema**: el aire comprimido impide que suba.
+  Los números ya estaban calculados —1,44 m dentro contra 5 fuera— y no se
+  usaron para dibujar.
+
+  Nada lo cazó: el SVG era válido, los tokens correctos, el `viewBox` sin
+  desbordes, y `verify` y `humo` en verde. Lo cazó mirar la captura (§16). La
+  regla: **si has resuelto el problema, la figura se construye con esos
+  números** —una escala de píxeles por metro y las cotas calculadas—, porque
+  una figura esquemática es una segunda oportunidad de afirmar algo falso.
 - **Una escala fija convierte una figura correcta en una figura ilegible.**
   El simulador del tema 7 encuadraba siempre 22 m de profundidad, así que una
   compuerta de 3 m hundida a 14 salía de cuarenta píxeles y no se veía ni el
