@@ -1281,3 +1281,540 @@ ejercicios:
       está anclado por la geometría; con un cuerpo redondeado, donde el punto
       de desprendimiento depende del Reynolds, el mismo ensayo habría dado un
       coeficiente equivocado.
+
+  - id: ejflu16-col55-los-tres-grupos-de-una-turbomaquina
+    titulo: Los tres grupos de una turbomáquina, deducidos y no memorizados
+    fuente: >-
+      Ejercicio 5.5 · Colección de problemas de Mecánica de Fluidos, Análisis
+      dimensional y semejanza de modelos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      La experiencia y la experimentación demuestran que la diferencia de
+      presiones entre la salida y la entrada de una turbomáquina depende del
+      caudal $Q$ turbinado, de la velocidad de giro de la máquina $n$, de la
+      densidad del fluido $\rho$, de la viscosidad cinemática $\nu$ del líquido
+      turbinado y del diámetro del rodete de la turbina $D$.
+
+      **a)** Hallar los parámetros adimensionales de los que dependerá el
+      fenómeno físico, si se toman como variables repetidas $\rho$, $n$ y $D$.
+    pide: Los tres parámetros adimensionales del fenómeno.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de montar ninguna matriz: ¿cuántos parámetros adimensionales
+          van a salir?
+        opciones:
+          - texto: >-
+              Tres: seis variables menos las tres dimensiones fundamentales que
+              intervienen
+            correcta: true
+            mensaje: |
+              Eso es el teorema de Vaschy-Buckingham: $\pi = n - k$, con $n$ el
+              número de variables y $k$ el de dimensiones independientes. Aquí
+              $6 - 3 = 3$, y **se sabe antes de empezar**: si al final salen
+              cuatro, hay un error.
+          - texto: Tres, porque son tres las variables repetidas
+            mensaje: |
+              El número de repetidas coincide con $k$, así que el resultado es
+              el mismo, pero el razonamiento no: las repetidas son tres
+              **porque** hay tres dimensiones, no al revés. Con un problema
+              puramente mecánico sin masa saldrían dos.
+          - texto: Seis, uno por variable
+            mensaje: |
+              Entonces no habría reducido nada. La gracia del teorema es
+              justamente que **agrupa**: seis variables que había que barrer una
+              a una se convierten en tres grupos.
+      - tipo: calcular
+        titulo: El exponente de la velocidad de giro
+        pregunta: |
+          En el grupo que contiene $\Delta p$, escrito como
+          $\pi_1 = \Delta p \cdot \rho^{a} n^{b} D^{c}$, ¿cuánto vale $b$?
+        respuesta:
+          tipo: numero
+          valor: '-2'
+          tolerancia: 0.001
+          formato: un número entero, con su signo
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Con $b = -1$ te quedaría un tiempo suelto. $\Delta p$ lleva
+              $T^{-2}$ y la única variable con tiempo entre las repetidas es
+              $n$, que aporta $T^{-1}$: hacen falta **dos** para cancelarlo.
+          - valor: '2'
+            mensaje: >-
+              El signo al revés. $\Delta p$ ya tiene $T^{-2}$; para anularlo hay
+              que multiplicar por $n^{-2}$, no por $n^{2}$.
+        pista: |
+          $[\Delta p] = ML^{-1}T^{-2}$ y $[n] = T^{-1}$. Solo $n$ tiene tiempo
+          entre las repetidas, así que el exponente de $T$ lo decide ella sola.
+        desarrollo: |
+          $$
+          [\Delta p]\,[\rho]^{a}[n]^{b}[D]^{c}
+          = (ML^{-1}T^{-2})(ML^{-3})^{a}(T^{-1})^{b}(L)^{c} = M^{0}L^{0}T^{0}
+          $$
+
+          Tomando exponentes:
+
+          | | ecuación | sale |
+          |---|---|---|
+          | $M$ | $1 + a = 0$ | $a = -1$ |
+          | $T$ | $-2 - b = 0$ | $b = -2$ |
+          | $L$ | $-1 - 3a + c = 0$ | $c = -2$ |
+
+          $$
+          \boxed{\pi_1 = \frac{\Delta p}{\rho\,n^{2}D^{2}}}
+          $$
+      - tipo: calcular
+        titulo: El exponente del diámetro en el grupo del caudal
+        pregunta: |
+          En $\pi_2 = Q \cdot \rho^{a} n^{b} D^{c}$, ¿cuánto vale $c$?
+        respuesta:
+          tipo: numero
+          valor: '-3'
+          tolerancia: 0.001
+          formato: un número entero, con su signo
+        distractores:
+          - valor: '-2'
+            mensaje: |
+              Eso saldría si $Q$ fuera una velocidad. Es un **caudal**:
+              $L^{3}T^{-1}$, tres longitudes, no dos. El grupo es $Q/(nD^{3})$.
+          - valor: '3'
+            mensaje: >-
+              El signo al revés. $Q$ ya aporta $L^{3}$; para anularlo hace falta
+              $D^{-3}$.
+        pista: |
+          $[Q] = L^{3}T^{-1}$. La densidad no hace falta aquí — su exponente
+          sale cero — así que solo quedan $n$ y $D$.
+        desarrollo: |
+          $$
+          (L^{3}T^{-1})(ML^{-3})^{a}(T^{-1})^{b}(L)^{c} = M^{0}L^{0}T^{0}
+          $$
+
+          De $M$: $a = 0$. De $T$: $-1-b = 0 \Rightarrow b = -1$. De $L$:
+          $3 + c = 0 \Rightarrow c = -3$.
+
+          $$
+          \boxed{\pi_2 = \frac{Q}{n\,D^{3}}}
+          $$
+
+          Que la densidad desaparezca tiene sentido: un caudal es geometría por
+          tiempo, y ahí la masa no pinta nada.
+      - tipo: reconocer
+        pregunta: |
+          Los dos primeros grupos no son nuevos. ¿De qué te suenan?
+        opciones:
+          - texto: >-
+              Son los parámetros de Rateau del tema 22: el coeficiente de
+              altura y el de caudal
+            correcta: true
+            mensaje: |
+              Exacto, y esa es la gracia del ejercicio. $H/(n^{2}D^{2})$ y
+              $Q/(nD^{3})$ son las dos constantes con las que se comparan
+              máquinas semejantes, y **salen solas** del análisis dimensional:
+              no hay que memorizarlas.
+          - texto: Son el número de Reynolds y el de Froude
+            mensaje: |
+              El tercero, $\nu/(nD^{2})$, sí es un Reynolds disfrazado —con
+              $nD$ haciendo de velocidad—. Pero los dos primeros no: son los
+              coeficientes de altura y de caudal.
+          - texto: >-
+              No se parecen a nada conocido; son propios de este enunciado
+            mensaje: |
+              Son exactamente las dos expresiones que el tema 22 usa para la
+              semejanza de turbomáquinas, y las que el tema 25 emplea al variar
+              el régimen de giro de una bomba.
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Hay seis variables y tres dimensiones fundamentales, así que el
+              teorema de Vaschy-Buckingham anuncia tres grupos.
+          - texto: >-
+              Con $\rho$, $n$ y $D$ como repetidas, cada grupo se forma con una
+              de las tres variables restantes y las tres repetidas elevadas a
+              exponentes por determinar.
+          - texto: >-
+              Imponiendo que cada grupo sea adimensional salen tres ecuaciones
+              —una por dimensión— y tres exponentes.
+          - texto: >-
+              Las variables repetidas se eligen porque son las más importantes
+              del fenómeno.
+            trampa: true
+            mensaje: |
+              Se eligen porque **entre las tres contienen las tres dimensiones y
+              no forman por sí solas un grupo adimensional**, no por importancia.
+              De hecho la variable que más interesa —aquí $\Delta p$— nunca se
+              pone como repetida: se quiere que aparezca en un solo grupo, para
+              poder despejarla.
+          - texto: >-
+              Salen $\Delta p/(\rho n^{2}D^{2})$, $Q/(nD^{3})$ y
+              $\nu/(nD^{2})$, y los dos primeros son los parámetros de Rateau.
+    resolucion: |
+      **Cuántos grupos.** Seis variables —$\Delta p$, $Q$, $n$, $\rho$, $\nu$,
+      $D$— y tres dimensiones fundamentales, así que el teorema de
+      Vaschy-Buckingham anuncia $6-3 = 3$ grupos. Eso se sabe **antes** de
+      montar nada, y sirve de comprobación al final.
+
+      **Los tres grupos.** Con $\rho$, $n$ y $D$ como repetidas, cada una de
+      las tres variables restantes forma un grupo:
+
+      $$
+      \pi_1 = \frac{\Delta p}{\rho\,n^{2}D^{2}}
+      \qquad
+      \pi_2 = \frac{Q}{n\,D^{3}}
+      \qquad
+      \pi_3 = \frac{\nu}{n\,D^{2}}
+      $$
+
+      **Qué son.** Los dos primeros son los **parámetros de Rateau** del tema
+      22 —el coeficiente de altura y el de caudal—, los mismos con los que el
+      tema 25 cambia el régimen de giro de una bomba. El tercero es un
+      **Reynolds** con $nD$ haciendo de velocidad característica.
+
+      **Lo que hay que llevarse.** Las leyes de semejanza de las turbomáquinas
+      no son una tabla que memorizar: **salen del análisis dimensional en tres
+      líneas**, y con ellas sale también el aviso de que hay un tercer grupo
+      —el Reynolds— que en la práctica se desprecia porque en las máquinas
+      grandes apenas cambia.
+
+  - id: ejflu16-col56-el-proyectil-y-el-numero-de-mach
+    titulo: El proyectil rápido, y de dónde sale el número de Mach
+    fuente: >-
+      Ejercicio 5.6 · Colección de problemas de Mecánica de Fluidos, Análisis
+      dimensional y semejanza de modelos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      La resistencia $F$ sobre un proyectil de alta velocidad depende de la
+      velocidad $V$ del proyectil, de la densidad del fluido $\rho$, de la
+      velocidad del sonido $a$, del diámetro del proyectil $D$ y de la
+      viscosidad del fluido $\mu$.
+
+      **a)** Encontrar los parámetros adimensionales que definen el fenómeno
+      físico, mediante el teorema de $\pi$. Hágase el problema por el método
+      rápido.
+    pide: Los tres parámetros adimensionales, tomando la velocidad del sonido como repetida.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado incluye la velocidad del sonido entre las variables.
+          ¿Qué está diciendo con eso?
+        opciones:
+          - texto: >-
+              Que el fluido se va a comportar como compresible, y que va a
+              aparecer un grupo con la forma $V/a$
+            correcta: true
+            mensaje: |
+              Eso es. La velocidad del sonido solo entra en un problema cuando
+              la compresibilidad importa, y en cuanto entra aparece
+              inevitablemente el cociente $V/a$ — el número de Mach. En un
+              problema de agua en tubería no estaría.
+          - texto: Que hay que tener en cuenta el ruido del disparo
+            mensaje: |
+              La velocidad del sonido aquí no tiene que ver con el sonido que
+              se oye: es la velocidad a la que se propagan las perturbaciones
+              de presión en el fluido, y por tanto la medida de su
+              compresibilidad.
+          - texto: >-
+              Que el proyectil va más rápido que el sonido, necesariamente
+            mensaje: |
+              No lo dice: dice «alta velocidad». Que $V$ sea mayor o menor que
+              $a$ es precisamente lo que decide el grupo $V/a$, y el análisis
+              vale en los dos casos.
+      - tipo: calcular
+        titulo: El exponente de la velocidad del sonido
+        pregunta: |
+          En $\pi_1 = F \cdot \rho^{x} a^{y} D^{z}$, ¿cuánto vale $y$?
+        respuesta:
+          tipo: numero
+          valor: '-2'
+          tolerancia: 0.001
+          formato: un número entero, con su signo
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Quedaría un $T^{-1}$ suelto. La fuerza aporta $T^{-2}$ y la única
+              repetida con tiempo es $a$, con $T^{-1}$: hacen falta dos.
+          - valor: '-4'
+            mensaje: >-
+              Ese es el exponente que saldría si el grupo llevara $n$, una
+              velocidad de giro, en vez de una velocidad lineal. Aquí $a$ es
+              $LT^{-1}$, no $T^{-1}$.
+        pista: |
+          $[F] = MLT^{-2}$, $[\rho] = ML^{-3}$, $[a] = LT^{-1}$, $[D] = L$.
+          Empieza por la masa, sigue por el tiempo y termina por la longitud.
+        desarrollo: |
+          $$
+          (MLT^{-2})(ML^{-3})^{x}(LT^{-1})^{y}(L)^{z} = M^{0}L^{0}T^{0}
+          $$
+
+          | | ecuación | sale |
+          |---|---|---|
+          | $M$ | $1 + x = 0$ | $x = -1$ |
+          | $T$ | $-2 - y = 0$ | $y = -2$ |
+          | $L$ | $1 - 3x + y + z = 0$ | $z = -2$ |
+
+          $$
+          \boxed{\pi_1 = \frac{F}{\rho\,a^{2}D^{2}}}
+          $$
+
+          El orden importa poco, pero empezar por la masa y el tiempo ahorra
+          trabajo: los dos aparecen en una sola variable cada uno.
+      - tipo: calcular
+        titulo: El tercer grupo
+        pregunta: |
+          El tercer grupo es $\mu/(\rho\,a\,D)$. ¿Qué número adimensional
+          conocido es su inverso?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: escribe 1 si es un Reynolds, 2 si es un Froude, 3 si es un Weber
+        distractores:
+          - valor: '2'
+            mensaje: |
+              El Froude compara inercia con gravedad y lleva una $g$ dentro.
+              Aquí no hay gravedad por ninguna parte: el grupo lleva viscosidad,
+              así que es un Reynolds.
+          - valor: '3'
+            mensaje: >-
+              El Weber lleva tensión superficial, que aquí no aparece. Un grupo
+              con $\mu$ en el numerador y $\rho\,\ell\,v$ en el denominador es
+              el inverso de un Reynolds.
+        pista: |
+          Mira qué variable física lleva dentro: $\mu$ es viscosidad.
+        desarrollo: |
+          $$
+          \pi_3 = \frac{\mu}{\rho\,a\,D}
+          = \frac{1}{Re_a}
+          $$
+
+          Es un **Reynolds construido con la velocidad del sonido** en vez de
+          con la del proyectil. No es un capricho: al elegir $a$ como variable
+          repetida, todas las velocidades del problema se miden contra ella.
+
+          Y como $Re_V = Re_a \cdot (V/a) = Re_a\cdot M$, los tres grupos
+          contienen la misma información que $F/(\rho V^{2}D^{2})$, $M$ y
+          $Re_V$: **la elección de repetidas cambia la cara de los grupos, no
+          la física**.
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Seis variables y tres dimensiones dan tres grupos adimensionales.
+          - texto: >-
+              Con $\rho$, $a$ y $D$ como repetidas, los tres grupos se forman
+              con $F$, $V$ y $\mu$.
+          - texto: >-
+              Sale $F/(\rho a^{2}D^{2})$, el número de Mach $V/a$ y un Reynolds
+              construido sobre la velocidad del sonido.
+          - texto: >-
+              Como las repetidas son otras, estos grupos describen un fenómeno
+              distinto del que describirían con $V$ repetida.
+            trampa: true
+            mensaje: |
+              El fenómeno es el mismo. Cambiar las variables repetidas cambia
+              **la forma** de los grupos, no la física: cada juego se obtiene
+              del otro multiplicando y dividiendo grupos entre sí. Aquí,
+              $Re_V = Re_a \cdot M$.
+          - texto: >-
+              La ley adimensional queda
+              $F/(\rho a^{2}D^{2}) = f(M,\ 1/Re_a)$.
+    resolucion: |
+      **Cuántos.** Seis variables —$F$, $V$, $\rho$, $a$, $D$, $\mu$— y tres
+      dimensiones: tres grupos.
+
+      **Los tres**, con $\rho$, $a$ y $D$ como repetidas:
+
+      $$
+      \pi_1 = \frac{F}{\rho\,a^{2}D^{2}}
+      \qquad
+      \pi_2 = \frac{V}{a}
+      \qquad
+      \pi_3 = \frac{\mu}{\rho\,a\,D}
+      $$
+
+      **Qué son.** El segundo es el **número de Mach**, y aparece en cuanto la
+      velocidad del sonido entra en la lista — que es la forma que tiene un
+      enunciado de decir «esto es compresible». El tercero es un **Reynolds**
+      construido con $a$ en vez de con $V$.
+
+      **Lo que hay que llevarse.** Que los grupos salgan con $a$ y no con $V$
+      no cambia la física: $Re_V = Re_a\cdot M$, así que un juego se obtiene
+      del otro. **Las variables repetidas cambian la cara de la respuesta, no
+      la respuesta**, y por eso el enunciado tiene que decir cuáles se toman —
+      si no, hay infinitas presentaciones correctas.
+
+  - id: ejflu16-col510-los-siete-grupos-de-una-tuberia
+    titulo: Siete grupos para una tubería, y por qué el tema 18 usa solo dos
+    fuente: >-
+      Ejercicio 5.10 · Colección de problemas de Mecánica de Fluidos, Análisis
+      dimensional y semejanza de modelos · Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU) · Departamento de Ingeniería Energética.
+    nivel: practica
+    enunciado: |
+      Determinar de qué parámetros $\pi$ adimensionales depende la pérdida de
+      carga en una tubería, sabiendo que la caída de presión es función del
+      diámetro $D$, la longitud $L$, la rugosidad $\varepsilon$, la velocidad
+      media $V$, la viscosidad del fluido que circula $\mu$, la densidad del
+      mismo $\rho$, la tensión superficial $\sigma$, la gravedad $g$ y el
+      módulo de elasticidad volumétrico $K$.
+
+      **a)** De los parámetros que se obtengan, indicar su nombre y la relación
+      de fuerzas a que equivale.
+
+      Nota: tómense como variables repetidas $\rho$, $V$, $D$.
+    pide: Los siete parámetros adimensionales, con su nombre y la relación de fuerzas de cada uno.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Diez variables y tres dimensiones. ¿Cuántos grupos salen?
+        opciones:
+          - texto: Siete
+            correcta: true
+            mensaje: |
+              $10 - 3 = 7$. Y merece la pena pararse en el número: siete grupos
+              para un problema que en el tema 18 se resuelve con **dos**. Esa
+              diferencia es el contenido de este ejercicio.
+          - texto: Diez, uno por variable
+            mensaje: |
+              Entonces el teorema no habría agrupado nada. El punto es
+              justamente que diez variables se reducen a siete grupos, y en la
+              práctica a dos.
+          - texto: Tres, como las variables repetidas
+            mensaje: |
+              Tres es el número de **repetidas**, que es $k$. El número de
+              grupos es $n - k = 10 - 3 = 7$.
+      - tipo: calcular
+        titulo: El grupo de la gravedad
+        pregunta: |
+          En $\pi = g\cdot\rho^{x}V^{y}D^{z}$, ¿cuánto vale $y$?
+        respuesta:
+          tipo: numero
+          valor: '-2'
+          tolerancia: 0.001
+          formato: un número entero, con su signo
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Quedaría un tiempo sin cancelar. $[g] = LT^{-2}$ y
+              $[V] = LT^{-1}$: hacen falta dos velocidades para anular el
+              $T^{-2}$.
+          - valor: '2'
+            mensaje: >-
+              El signo al revés. Con $V^{2}$ en el numerador el grupo tendría
+              $T^{-4}$; hace falta dividir, no multiplicar.
+        pista: |
+          $[g] = LT^{-2}$. La densidad no entra —su exponente sale cero—, así
+          que solo hay que casar $V$ y $D$.
+        desarrollo: |
+          $$
+          (LT^{-2})(ML^{-3})^{x}(LT^{-1})^{y}(L)^{z} = M^{0}L^{0}T^{0}
+          $$
+
+          De $M$: $x = 0$. De $T$: $-2-y = 0 \Rightarrow y = -2$. De $L$:
+          $1 + y + z = 0 \Rightarrow z = 1$.
+
+          $$
+          \pi = \frac{g\,D}{V^{2}} = \frac{1}{Fr^{2}}
+          $$
+
+          Es el inverso del cuadrado del número de **Froude**, que compara la
+          inercia con la gravedad.
+      - tipo: reconocer
+        pregunta: |
+          El tema 18 dice que el coeficiente de frotamiento depende solo de
+          $Re$ y de $\varepsilon/D$. Aquí han salido siete grupos. ¿Se
+          contradicen?
+        opciones:
+          - texto: >-
+              No: en una tubería llena de líquido, cuatro de los siete no
+              intervienen, y el de la longitud se factoriza aparte
+            correcta: true
+            mensaje: |
+              Exacto, y esa es la lectura del ejercicio. **Froude** exige
+              superficie libre y en un conducto lleno no la hay; **Weber**
+              exige una interfaz entre dos fluidos; **Cauchy** exige
+              compresibilidad, y un líquido no la tiene a estas presiones. El
+              de $L/D$ no desaparece: sale fuera, y es la $L/D$ que Darcy-
+              Weisbach lleva delante. Quedan $Re$ y $\varepsilon/D$.
+          - texto: >-
+              Sí: el análisis dimensional da la respuesta buena y el tema 18
+              simplifica de más
+            mensaje: |
+              El análisis dimensional dice de qué **puede** depender, no de qué
+              depende. Descartar los grupos que no intervienen en un caso
+              concreto no es simplificar de más: es el paso siguiente, y hay
+              que saber justificarlo.
+          - texto: >-
+              Sí: el tema 18 se olvidó del número de Euler
+            mensaje: |
+              El número de Euler no falta: **es la incógnita**.
+              $\Delta p/(\rho V^{2})$ es justamente lo que se quiere calcular, y
+              por eso aparece despejado a un lado de la ley adimensional y no
+              como variable de la que depende.
+      - tipo: justificar
+        pregunta: |
+          Ordena la lectura de los siete grupos. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $L/D$ y $\varepsilon/D$ son puramente geométricos: no llevan
+              ninguna magnitud física dentro.
+          - texto: >-
+              $\Delta p/(\rho V^{2})$ es el número de **Euler**, y compara las
+              fuerzas de presión con las de inercia. Es la incógnita.
+          - texto: >-
+              $\mu/(\rho V D)$ es el inverso del **Reynolds**, que compara las
+              viscosas con las de inercia; $gD/V^{2}$, el inverso del cuadrado
+              del **Froude**, que compara la gravedad con la inercia.
+          - texto: >-
+              $\sigma/(\rho V^{2}D)$ es el inverso del **Weber**, y como toda
+              tubería tiene tensión superficial en su pared, siempre interviene.
+            trampa: true
+            mensaje: |
+              La tensión superficial no aparece entre un líquido y una pared
+              sólida: aparece en una **interfaz entre dos fluidos**. En una
+              tubería que va llena no hay ninguna, así que el Weber no
+              interviene — y por eso desaparece de la lista del tema 18. Sí
+              intervendría en un canal, o en un tubo capilar.
+          - texto: >-
+              $K/(\rho V^{2})$ es el inverso del **Cauchy**, que compara las
+              elásticas con las de inercia, y solo cuenta si el fluido es
+              compresible.
+    resolucion: |
+      **Cuántos.** Diez variables y tres dimensiones: **siete grupos**.
+
+      **Los siete**, con $\rho$, $V$ y $D$ como repetidas, y lo que significa
+      cada uno:
+
+      | grupo | nombre | compara |
+      |---|---|---|
+      | $L/D$ | — | geometría |
+      | $\varepsilon/D$ | rugosidad relativa | geometría |
+      | $\Delta p/(\rho V^{2})$ | **Euler** | presión / inercia |
+      | $\mu/(\rho V D)$ | inverso de **Reynolds** | viscosas / inercia |
+      | $gD/V^{2}$ | inverso de **Froude**$^{2}$ | gravedad / inercia |
+      | $\sigma/(\rho V^{2}D)$ | inverso de **Weber** | tensión superficial / inercia |
+      | $K/(\rho V^{2})$ | inverso de **Cauchy** | elásticas / inercia |
+
+      **Y ahora la parte que importa**, porque el tema 18 resuelve este mismo
+      problema con dos grupos y no con siete:
+
+      - el **Euler** no es un dato, **es la incógnita**: se despeja a un lado;
+      - el **Froude** necesita superficie libre, y una tubería llena no la
+        tiene;
+      - el **Weber** necesita una interfaz entre dos fluidos, y tampoco la hay;
+      - el **Cauchy** necesita compresibilidad, y un líquido no la tiene a
+        estas presiones;
+      - y $L/D$ **no desaparece**: sale factorizado, y es la $L/D$ que
+        Darcy-Weisbach lleva delante.
+
+      Quedan $Re$ y $\varepsilon/D$, que es exactamente
+      $f = f(Re,\ \varepsilon/D)$ — el ábaco de Moody.
+
+      **Lo que hay que llevarse.** El análisis dimensional dice de qué **puede**
+      depender un fenómeno; decidir cuáles de esos grupos intervienen de verdad
+      es un paso aparte, y es física, no álgebra. Los siete grupos de aquí y los
+      dos del tema 18 no se contradicen: los cinco que faltan se han descartado
+      uno a uno, con motivo.

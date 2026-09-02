@@ -71,6 +71,30 @@ ejercicios encima.
 El grueso del día. Va por capítulos, y cada capítulo se cierra con suelo y
 commit propios para que el avance quede aunque el día se corte.
 
+> **El orden cambió el 3 de septiembre, y por un dato medido.** De los cinco
+> primeros problemas del capítulo 2 que se abrieron, **tres no se pudieron
+> escribir** — no por dificultad, sino porque su figura no se lee con
+> suficiente seguridad. Al triarlos todos salió que **97 de los 138 llevan
+> figura y 41 no**, y que los que no la llevan están muy concentrados:
+>
+> | cap. | sin figura | de un total de |
+> |---|---|---|
+> | 5 · Análisis dimensional | **13** | 14 |
+> | 7 · Golpe de ariete | 7 | 10 |
+> | 8 · Canales | 7 | 15 |
+> | 3 · Bernoulli | 5 | 24 |
+> | 6 · Conducciones | 4 | 19 |
+> | 2 · Estática | 2 | 23 |
+>
+> Los de análisis dimensional son teorema de $\pi$ puro: **verificables
+> exactamente**, sin margen de interpretación, y con el resultado completo
+> publicado. Así que el capítulo 5 pasa al principio y el 2 baja: no tiene
+> sentido pelearse con figuras ilegibles teniendo trece problemas limpios
+> esperando.
+>
+> El criterio nuevo, y vale para todo lo que queda: **primero lo que se puede
+> verificar, después lo que hay que interpretar.**
+
 **El orden es por rendimiento**, medido sobre las 16 convocatorias:
 
 | orden | cap. | tema | faltan | por qué aquí |
