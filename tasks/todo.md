@@ -105,6 +105,36 @@ también lo que lo hace lento.
 Los pasos 3 y 4 no son burocracia: el primer bloque de ayer se saltó el 4 y
 costó revertir el fichero entero.
 
+### Los que no se pueden escribir todavía, y por qué
+
+Un hueco declarado es información; uno callado es una promesa incumplida
+(§15). Estos dos se leyeron, se intentaron y **se dejaron sin escribir a
+propósito**, porque la única forma de publicarlos habría sido ajustar un dato
+hasta que el número cuadrara — que es exactamente lo que prohíbe §10.
+
+- **2.10 · el manómetro en cadena de seis tramos.** La figura tiene siete
+  cotas (1 · 1,5 · 2 · 2,2 · 2,5 · 5 · 6) y cinco fluidos (agua, aire, s = 3,
+  mercurio, s = 4, aceite s = 0,8). Los niveles se leen bien; **lo que no se
+  puede decidir es qué fluido ocupa cada tramo**, y en particular a qué cota
+  llega el mercurio por la rama derecha. La reconstrucción más razonable da
+  $p_A = 7{,}61\ \text{kg/cm}^{2}$ y el examen publica **7,797**. La diferencia
+  es del 2,5 %: se arregla moviendo una cota once centímetros, y eso sería
+  inventar. Hace falta el PDF a más resolución o la solución del profesor.
+
+- **2.14 · el micromanómetro de dos líquidos.** Aquí el problema es el
+  contrario: la figura se lee bien y **el resultado publicado tiene una sola
+  cifra significativa**, $3\cdot 10^{-4}\ \text{kg/cm}^{2}$. Con la corrección
+  por el desplazamiento de los depósitos sale $2{,}77\cdot 10^{-4}$; sin ella,
+  $2{,}54\cdot 10^{-4}$. **Las dos redondean a 3**, así que el dato publicado
+  no distingue cuál de los dos modelos pide el enunciado, y la diferencia entre
+  ellos es del 9 %. Publicar uno sería elegir por el profesor.
+
+  Hay una variante que da **3,01** exacto —contar el desplazamiento de los
+  depósitos con $a\,L/A$ en vez de $a\,L/2A$—, y precisamente por eso hay que
+  desconfiar de ella: se encontró buscando el número, no leyendo la figura.
+
+Los dos quedan en el inventario como pendientes, no como hechos.
+
 ---
 
 ## Fase D · Lo que se arrastra y conviene no dejar pudrir

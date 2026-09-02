@@ -156,6 +156,8 @@ scripts/
                            bloque en el corpus: en un segundo, sin construir
   inventario-coleccion.mjs qué problemas de la colección faltan, cruzando el
                            volcado del PDF contra el corpus
+  comprueba-simuladores.mjs  que un simulador se ENCUENTRE y que sus botones
+                           den los números del examen (§10, §16)
   peso.mjs                 cuánto tarda una página en un móvil (§11)
   mide.mjs                 la tabla de docs/como-vamos.md, generada
   diario.mjs               el diario en PDF
@@ -789,6 +791,31 @@ enterarse.**
 > 123 en la misma pestaña, clicaba las pestañas de modo dentro del mismo
 > `evaluate` que dispara `history.replaceState`, y medía sin esperar al trabajo
 > diferido. Un guardián que falla al azar se acaba ignorando.
+
+### `npm run sim` — que un simulador se encuentre y diga la verdad
+
+Tampoco es un guardián del suelo: necesita el sitio levantado. Se pasa **al
+tocar un simulador**, como `recalcula` al tocar el corpus.
+
+Existe por un fallo concreto y caro. El 2 de septiembre de 2026 se publicaron
+cinco simuladores correctos y **completamente invisibles** —viven en un
+apartado que no es el primero, y el modo guiado tapa los demás— con el suelo
+en verde y las capturas de cada uno bien. `tests/fisica/` prueba la física;
+`humo.mjs` prueba que la página no reviente. **Nadie probaba el cable entre las
+dos cosas.**
+
+Comprueba dos cosas, y las dos habían fallado:
+
+- que el simulador **se encuentre** aterrizando en la URL a pelo, sin ancla y
+  sin `localStorage` — que la cabecera lo anuncie, que el índice marque su
+  apartado y que el aviso **lleve**;
+- que cada botón de preajuste deje en la tabla **los valores que publica la
+  convocatoria** de la que sale. No se recalculan aquí: están copiados del
+  examen, que es lo único contra lo que tiene sentido comparar (§10).
+
+Validado al revés con dos regresiones reales: volver a poner `D/e = 40` en el
+golpe de ariete —que daba 215 mca donde el examen dice 228— y quitar el aviso
+de la cabecera. Las dos, rojas.
 
 ### `npm run peso` — cuánto tarda una página en un móvil
 
