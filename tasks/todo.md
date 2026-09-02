@@ -108,7 +108,31 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar la tanda del 3 de septiembre: 124 de 236.** Capítulo 5
+> **Estado al cerrar la segunda tanda del 3 de septiembre: 126 de 236**, con
+> el capítulo 8 en 13 de 22 (entran 8.8 y 8.19). Los nueve que quedan llevan
+> figura o sección compuesta.
+>
+> **Y una lección de procedimiento que costó dos ejercicios escritos para
+> nada.** En esa tanda se escribieron además el 8.9 y el 8.13… que **ya
+> estaban en el corpus** desde una sesión anterior. El motivo es exacto: se
+> eligieron leyendo el listado del PDF en vez de leyendo `faltan.json`. El
+> paso 1 del procedimiento de abajo existe precisamente para eso, y saltárselo
+> no dio ningún error — los duplicados son YAML válido, pasan el validador y
+> habrían pasado el suelo—. Lo cazó una cuenta: el inventario subió 2 donde
+> tenía que subir 4.
+>
+> **Regla: el problema siguiente se elige de `faltan.json`, nunca del PDF.** Y
+> al terminar una tanda se vuelve a pasar el inventario y se comprueba que el
+> incremento es el esperado; ningún guardián mira esto.
+>
+> **Una discrepancia con el boletín, declarada y sin resolver.** El apartado c)
+> del 8.19 —pendiente de una media caña de 30 cm para 50 l/s— publica **15
+> milésimas** y la cuenta directa da **14,2**, un 5 %. No se ha tocado ningún
+> dato para cuadrarlo (§10): está dicho en la propia resolución del ejercicio.
+> La hipótesis es un redondeo al alza a valor de obra, y como hipótesis queda.
+> Se comprueba el día que aparezcan las soluciones desarrolladas del profesor.
+
+> **Estado al cerrar la primera tanda del 3 de septiembre: 124 de 236.** Capítulo 5
 > cerrado salvo el 5.12 (declarado inescribible: pide una densidad del aire
 > que no cuadra con ninguna tabla). Capítulo 7 en 14 de 17 — los tres que
 > quedan, 7.15, 7.16 y 7.17, llevan figura. Capítulo 8 abierto y en 11 de 22.

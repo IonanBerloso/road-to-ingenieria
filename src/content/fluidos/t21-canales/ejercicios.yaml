@@ -2700,3 +2700,401 @@ ejercicios:
       mojado tiene para un área dada es siempre el semicírculo, y por eso los
       enunciados que buscan de verdad lo mejor piden media caña. «Óptima» aquí
       es una condición de forma, como decir «cuadrado»: no es un superlativo.
+  - id: ejflu21-col88-la-condicion-que-no-decide
+    titulo: La acequia de PVC, y la condición que no decide nada
+    fuente: Ejercicio 8.8 · Colección de problemas, capítulo 8 · Mecánica de Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Diseñar una acequia semicircular de PVC, que con una pendiente de 16
+      milésimas tenga una capacidad hidráulica de 230 l/s. Es necesaria una
+      berma mínima del 15 % del diámetro. La velocidad de circulación no puede
+      ser superior a 3,5 m/s. Diámetros comerciales: 25, 30, 35, 40, 45, 50, 60,
+      70 y 80 cm.
+
+      El coeficiente de Manning del PVC es $n = 0{,}009$.
+    pide: El diámetro comercial, la velocidad de circulación y la relación de calado.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La acequia es **semicircular**: media caña, no un tubo entero. ¿Qué
+          significa entonces «berma mínima del 15 % del diámetro»?
+        opciones:
+          - texto: |
+              Que el agua no puede pasar del 35 % del diámetro, porque la
+              acequia solo llega hasta la mitad y hay que dejar libre un 15 %
+            correcta: true
+            mensaje: |
+              Eso es. Una media caña de diámetro $D$ tiene su borde a $D/2$; si
+              hay que dejar un 15 % de $D$ sin agua, el calado máximo es
+              $0{,}5D - 0{,}15D = 0{,}35D$. Es la cuenta que más se falla de
+              este enunciado, y no por difícil: por leer «berma del 15 %» y
+              restar el 15 % de la mitad en vez del 15 % del diámetro.
+          - texto: Que el agua no puede pasar del 85 % del diámetro
+            mensaje: |
+              Eso valdría para un tubo cerrado, donde el agua sí puede llegar
+              hasta $D$. Aquí la acequia es media caña: por encima de $D/2$ no
+              hay canal, hay aire.
+          - texto: Que el calado no puede pasar del 15 % del diámetro
+            mensaje: |
+              La berma es lo que se deja **libre**, no lo que se llena. Con esa
+              lectura harían falta tubos enormes: al 15 % del calado una sección
+              circular apenas lleva el 6 % de su capacidad.
+          - texto: |
+              Que hay que dejar 15 cm de resguardo por encima de la lámina de
+              agua
+            mensaje: |
+              Sería así si el enunciado diera una longitud. Dice «del 15 % del
+              diámetro», así que la berma crece con el tubo: 3,75 cm en el de 25
+              y 12 cm en el de 80.
+
+      - tipo: calcular
+        titulo: El diámetro comercial
+        pregunta: |
+          Al 35 % del calado una sección circular lleva el 26,3 % de su caudal a
+          sección llena. ¿Cuál es el diámetro comercial más pequeño que
+          transporta 230 l/s cumpliendo la berma? Da el diámetro en cm.
+        respuesta:
+          tipo: magnitud
+          valor: '60 cm'
+          tolerancia: 0.02
+          formato: el diámetro en cm
+        distractores:
+          - valor: '35 cm'
+            mensaje: |
+              El de 35 cm sí llega en caudal —267 l/s a sección llena, más que
+              los 230— pero lo hace con el agua al 72 % de la altura, o sea muy
+              por encima del borde de una media caña. Es el error que la berma
+              está ahí para evitar: comprobar la capacidad y olvidar el nivel.
+          - valor: '50 cm'
+            mensaje: |
+              Con 50 cm el calado queda al 39,8 % del diámetro, todavía por
+              encima del 35 % que permite la berma. Falta un escalón.
+          - valor: '70 cm'
+            mensaje: |
+              El de 70 cumple, pero no es el más pequeño que lo hace: el de 60
+              deja el agua al 30,7 %, dentro del límite. Se pide el mínimo.
+        pista: |
+          $Q_{ll} \ge 230/0{,}263$, y luego comprueba el calado de cada uno.
+        desarrollo: |
+          | $D$ | $Q_{ll}$ | $h/D$ que resulta | ¿berma? |
+          |---|---|---|---|
+          | 35 cm | 267 l/s | 0,717 | no |
+          | 40 cm | 381 l/s | 0,561 | no |
+          | 45 cm | 521 l/s | 0,465 | no |
+          | 50 cm | 690 l/s | 0,398 | no |
+          | **60 cm** | **1122 l/s** | **0,307** | **sí** |
+
+          Hace falta el de 60 cm, que a sección llena llevaría casi cinco veces
+          el caudal de diseño. No es despilfarro: es lo que cuesta llevar el
+          agua a media caña y con resguardo.
+
+      - tipo: calcular
+        titulo: La velocidad
+        pregunta: |
+          Con $D = 60$ cm y $h/D = 0{,}303$, ¿cuál es la velocidad de
+          circulación, en m/s?
+        respuesta:
+          tipo: magnitud
+          valor: '3.094 m/s'
+          tolerancia: 0.02
+          formato: la velocidad en m/s
+        distractores:
+          - valor: '3.968 m/s'
+            mensaje: |
+              Esa es la velocidad a **sección llena**. A este calado el radio
+              hidráulico es bastante menor que $D/4$ —el agua va por el fondo,
+              que es estrecho—, así que la velocidad baja: $V/V_{ll} = 0{,}78$.
+          - valor: '0.813 m/s'
+            mensaje: |
+              Parece $Q/A_{ll}$: el caudal repartido en el área **llena**. El
+              área mojada es mucho menor, así que la velocidad real es casi
+              cuatro veces mayor.
+        pista: |
+          $V_{ll} = (1/n)(D/4)^{2/3}\sqrt{J}$, y luego por $V/V_{ll} = 0{,}78$.
+        desarrollo: |
+          $$
+          V_{ll} = \frac{1}{0{,}009}\left(\frac{0{,}60}{4}\right)^{2/3}
+                   \sqrt{0{,}016} = 3{,}967\ \text{m/s}
+          $$
+
+          $$
+          v_c = 0{,}780 \cdot 3{,}967 = 3{,}094\ \text{m/s} \;<\; 3{,}5 \quad\checkmark
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          El enunciado impone dos condiciones. Ordena lo que se puede decir
+          sobre ellas. Una pieza es falsa.
+        piezas:
+          - texto: |
+              La berma es la que decide: obliga a que el calado no pase del
+              35 % del diámetro, y eso descarta los cuatro diámetros que van de
+              35 a 50 cm aunque los cuatro tengan capacidad de sobra.
+          - texto: |
+              El límite de velocidad, en cambio, **no descarta ninguno**: los
+              cinco diámetros que llevan los 230 l/s lo hacen entre 3,12 y
+              3,17 m/s, todos por debajo de 3,5.
+          - texto: |
+              Y esa constancia tiene explicación: al subir el diámetro sube la
+              velocidad a sección llena, pero baja el calado relativo y con él
+              la razón $V/V_{ll}$. Los dos efectos casi se cancelan.
+          - texto: |
+              Así que la respuesta al diseño es 60 cm por la berma, y el límite
+              de velocidad hay que comprobarlo igual — pero saber que no manda
+              ahorra volver atrás.
+          - texto: |
+              Si en vez de PVC la acequia fuera de hormigón en bruto, la
+              velocidad seguiría siendo la misma: la $n$ se cancela al formar
+              las razones del cuadro.
+            trampa: true
+            mensaje: |
+              Lo que se cancela son las **razones** $Q/Q_{ll}$ y $V/V_{ll}$, no
+              las velocidades. Con $n = 0{,}015$ en vez de 0,009 la velocidad a
+              sección llena cae de 3,97 a 2,38 m/s, el mismo caudal necesita más
+              calado, y todo el diseño cambia. La independencia del cuadro
+              respecto del material es real y muy útil, y confundirla con
+              independencia de los resultados es el error que produce.
+    resolucion: |
+      **Un diseño con dos condiciones, y solo una de las dos manda.**
+
+      **La berma, primero, porque es la que aprieta.** Media caña de diámetro
+      $D$ tiene su borde a $D/2$; dejando libre el 15 % de $D$, el calado
+      máximo es $0{,}35D$. Al 35 % de calado una sección circular lleva el
+      26,3 % de su caudal lleno, así que
+
+      $$
+      Q_{ll} \ge \frac{230}{0{,}263} = 875\ \text{l/s}
+      $$
+
+      El primer diámetro comercial que la alcanza es **60 cm**, con 1122 l/s.
+
+      **El punto de trabajo.**
+
+      $$
+      \frac{Q_c}{Q_{ll}} = \frac{230}{1122} = 0{,}205
+      \;\longrightarrow\;
+      \frac{h_c}{D} \approx 0{,}30
+      \;\longrightarrow\;
+      h_c = 18\ \text{cm}
+      $$
+
+      $$
+      v_c = 0{,}780\cdot 3{,}967 = 3{,}09\ \text{m/s} \;<\; 3{,}5 \quad\checkmark
+      $$
+
+      **Lo que se aprende comprobando la otra condición.** El límite de
+      velocidad no descarta ningún diámetro: los cinco candidatos van entre
+      3,12 y 3,17 m/s. Está puesto porque en una acequia real hay que
+      comprobarlo —por encima de unos 3 m/s el agua empieza a arrastrar
+      material— pero en este problema no decide.
+
+      Y merece la pena entender **por qué la velocidad apenas cambia con el
+      diámetro**. Al ensanchar el tubo sube $V_{ll}$, que va con $D^{2/3}$;
+      pero el mismo caudal ocupa una fracción menor de la sección, el calado
+      relativo baja y con él la razón $V/V_{ll}$. Los dos efectos se cancelan
+      casi exactamente. Es una regla útil para el examen: **en estos problemas
+      la velocidad se mueve poco, y el diámetro lo decide casi siempre la
+      condición de nivel.**
+
+  - id: ejflu21-col819-la-pendiente-o-el-material
+    titulo: Bajar la pendiente, o cambiar de material
+    fuente: Ejercicio 8.19 · Colección de problemas, capítulo 8 · Mecánica de Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se desea diseñar un canal circular de hormigón en bruto ($n = 0{,}015$),
+      con una pendiente de 5 milésimas, para que por él circule un caudal de
+      agua de 50 l/s. Se pide:
+
+      a) Determinar el diámetro del canal si los diámetros comerciales van de 5
+      en 5 cm.
+
+      b) Calcular la altura de calado de la lámina de agua.
+
+      c) Si el canal fuera semicircular, determinar la pendiente del canal para
+      que transportara el mismo caudal (50 l/s).
+
+      d) Si la pendiente obtenida se considera demasiado grande, ¿qué
+      coeficiente de Manning se debería emplear en el diseño del canal para
+      reducir dicha pendiente? ¿Por qué? Opciones: $n = 0{,}009$ o
+      $n = 0{,}035$.
+    pide: El diámetro comercial, el calado, y qué material baja la pendiente.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El apartado a) no impone ninguna condición de calado ni de velocidad.
+          ¿Qué criterio queda entonces para elegir el diámetro?
+        opciones:
+          - texto: |
+              Que quepa: el menor diámetro comercial cuya capacidad a sección
+              llena supere los 50 l/s
+            correcta: true
+            mensaje: |
+              Con esto basta cuando no hay más condiciones, y conviene ver que
+              es un caso **excepcional** en este capítulo: casi todos los demás
+              enunciados imponen una berma o un nivel máximo precisamente para
+              que no valga el criterio fácil. Aquí sí vale.
+          - texto: El que dé exactamente 50 l/s a sección llena
+            mensaje: |
+              Los diámetros comerciales van de 5 en 5 cm, así que ninguno dará
+              exactamente 50: siempre habrá que subir al siguiente y aceptar
+              margen. Pedir el ajuste exacto es pedir un tubo a medida.
+          - texto: El que haga que el agua vaya a menos de 3 m/s
+            mensaje: |
+              Es una condición razonable en obra y aquí **no está en el
+              enunciado**. Añadir condiciones que no están es tan grave como
+              saltarse las que están: cambia la respuesta.
+          - texto: |
+              El más grande de la lista, porque así se garantiza que nunca se
+              desborde
+            mensaje: |
+              Y sería el más caro con diferencia. Diseñar es elegir el mínimo
+              que cumple, no el que no puede fallar: para eso están las bermas,
+              que dan margen sin pagar tres escalones de diámetro.
+
+      - tipo: calcular
+        titulo: El diámetro
+        pregunta: |
+          ¿Cuál es el diámetro comercial más pequeño que lleva 50 l/s a sección
+          llena, con $n = 0{,}015$ y $J = 5$ milésimas? Da el diámetro en cm.
+        respuesta:
+          tipo: magnitud
+          valor: '30 cm'
+          tolerancia: 0.02
+          formato: el diámetro en cm
+        distractores:
+          - valor: '25 cm'
+            mensaje: |
+              El de 25 cm da 36,4 l/s a sección llena: se queda a un 27 % de lo
+              que hace falta. Y como iría lleno, no hay forma de sacarle más.
+          - valor: '20 cm'
+            mensaje: |
+              20,1 l/s, menos de la mitad. Fíjate en lo deprisa que crece: el
+              caudal va con $D^{8/3}$, así que pasar de 20 a 30 cm —un 50 % más
+              de diámetro— casi triplica la capacidad.
+        pista: |
+          $Q_{ll} = (1/n)(\pi D^{2}/4)(D/4)^{2/3}\sqrt{J}$, y prueba 20, 25, 30.
+        desarrollo: |
+          | $D$ | $Q_{ll}$ |
+          |---|---|
+          | 20 cm | 20,1 l/s |
+          | 25 cm | 36,4 l/s |
+          | **30 cm** | **59,3 l/s** |
+
+          **$D = 30$ cm**, con un 19 % de margen sobre los 50 l/s pedidos.
+
+      - tipo: calcular
+        titulo: El calado
+        pregunta: |
+          Con $D = 30$ cm la razón es $Q_c/Q_{ll} = 50/59{,}3 = 0{,}844$, que
+          corresponde a $h_c/D = 0{,}702$. ¿Cuál es el calado, en cm?
+        respuesta:
+          tipo: magnitud
+          valor: '21.06 cm'
+          tolerancia: 0.02
+          formato: el calado en cm
+        distractores:
+          - valor: '25.3 cm'
+            mensaje: |
+              Has multiplicado el diámetro por 0,844, que es la razón de
+              **caudales**. La de calados es 0,702, y la diferencia entre las
+              dos es justo lo que aporta el cuadro.
+          - valor: '15 cm'
+            mensaje: |
+              15 cm es la mitad del diámetro, es decir el tubo a media sección.
+              Ahí llevaría 29,6 l/s, bastante menos de los 50 que se piden.
+        pista: |
+          $h_c = 0{,}702\cdot 30$ cm.
+        desarrollo: |
+          $$
+          h_c = 0{,}702 \cdot 30 = 21{,}06\ \text{cm}
+          $$
+
+          El tubo va al 70 % de su altura. Es un punto de trabajo alto —queda
+          poco resguardo— y es la consecuencia directa de que el enunciado no
+          impusiera ninguna berma: el diámetro se eligió solo por capacidad, y
+          el resultado es un canal casi lleno.
+
+      - tipo: justificar
+        pregunta: |
+          Responde al apartado d). Ordena el argumento. Una pieza es falsa.
+        piezas:
+          - texto: |
+              En Manning, $Q = (1/n)\,A\,R^{2/3}\sqrt{J}$: para un caudal y una
+              geometría fijos, $\sqrt{J}$ es proporcional a $n$.
+          - texto: |
+              Así que reducir la pendiente exige reducir la $n$: hay que
+              elegir el material **más liso**, y entre las dos opciones ese es
+              $n = 0{,}009$.
+          - texto: |
+              El efecto no es pequeño: como $J$ va con $n^{2}$, pasar de 0,015 a
+              0,009 divide la pendiente necesaria por 2,8.
+          - texto: |
+              Y tiene sentido físico directo: un canal más liso opone menos
+              rozamiento, así que necesita menos desnivel para que el agua baje
+              a la velocidad que hace falta.
+          - texto: |
+              La otra opción, $n = 0{,}035$, correspondería a un material más
+              rugoso, que frena más el agua y por eso permite bajar la pendiente
+              sin que se desborde.
+            trampa: true
+            mensaje: |
+              Frena más el agua, sí, y por eso hace falta **más** pendiente, no
+              menos: con $n = 0{,}035$ la pendiente necesaria se multiplica por
+              5,4. La confusión viene de mezclar dos preguntas — «¿qué frena el
+              agua?» y «¿qué desnivel hace falta?»— que apuntan en sentidos
+              opuestos.
+    resolucion: |
+      **a) y b) · El diámetro y el calado.**
+
+      Sin condición de nivel, el criterio es el mínimo que quepa:
+
+      | $D$ | $Q_{ll}$ |
+      |---|---|
+      | 20 cm | 20,1 l/s |
+      | 25 cm | 36,4 l/s |
+      | **30 cm** | **59,3 l/s** |
+
+      $$
+      \frac{Q_c}{Q_{ll}} = \frac{50}{59{,}3} = 0{,}844
+      \;\longrightarrow\;
+      \frac{h_c}{D} = 0{,}702
+      \;\longrightarrow\;
+      h_c = 21{,}06\ \text{cm}
+      $$
+
+      **c) · La pendiente de la sección semicircular.** Una media caña que va
+      llena tiene $A = \pi D^{2}/8$ y $R = D/4$, así que con el mismo diámetro
+      de 30 cm:
+
+      $$
+      \sqrt{J} = \frac{Q\,n}{A\,R^{2/3}}
+               = \frac{0{,}050\cdot 0{,}015}{0{,}03534\cdot 0{,}075^{2/3}}
+               = 0{,}1193
+      \;\Longrightarrow\;
+      J = 14{,}2\ \text{milésimas}
+      $$
+
+      > **Una discrepancia con el boletín, dicha en voz alta.** El resultado
+      > publicado para este apartado es **15 milésimas**, y la cuenta directa da
+      > 14,2 — un 5 % de diferencia. No se ha tocado ningún dato para hacerla
+      > desaparecer (§10). La explicación más probable es un redondeo al alza a
+      > un valor de obra, pero es una suposición y como tal queda dicha: si
+      > comparas cifra a cifra con el boletín, la diferencia está aquí y no en
+      > tu cuenta.
+
+      El salto sí es real e importante: de 5 milésimas a más de 14. La media
+      caña necesita casi el triple de pendiente para el mismo caudal, porque a
+      igualdad de diámetro tiene la mitad de área.
+
+      **d) · Qué material.** Con caudal y geometría fijos, $\sqrt{J} \propto n$,
+      luego $J \propto n^{2}$:
+
+      | $n$ | $J$ necesaria |
+      |---|---|
+      | 0,009 | 5,1 milésimas |
+      | 0,015 | 14,2 milésimas |
+      | 0,035 | 77 milésimas |
+
+      **$n = 0{,}009$**, el más liso. Y el efecto es enorme porque va al
+      cuadrado: elegir bien el material puede ahorrar más desnivel que
+      cualquier ajuste de sección.
