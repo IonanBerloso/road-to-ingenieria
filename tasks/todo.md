@@ -108,6 +108,38 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
+> **Estado al cerrar la tanda del 3 de septiembre: 124 de 236.** Capítulo 5
+> cerrado salvo el 5.12 (declarado inescribible: pide una densidad del aire
+> que no cuadra con ninguna tabla). Capítulo 7 en 14 de 17 — los tres que
+> quedan, 7.15, 7.16 y 7.17, llevan figura. Capítulo 8 abierto y en 11 de 22.
+>
+> | cap. | hechos | faltan |
+> |---|---|---|
+> | 1 | 27 | 0 |
+> | 2 | 23 | 23 |
+> | 3 | 10 | 24 |
+> | 4 | 6 | 16 |
+> | 5 | 19 | **1** |
+> | 6 | 10 | 19 |
+> | 7 | 14 | **3** |
+> | 8 | 11 | 11 |
+> | 9 | 4 | 15 |
+>
+> **Lo que desbloqueó el capítulo 8**, y es reutilizable: quince de sus
+> veintidós problemas son sección circular parcialmente llena, que se resuelve
+> leyendo los cuadros 27 y 28 de la escuela. Esos cuadros **no hacía falta
+> transcribirlos** (§08): las razones $Q/Q_{ll}$ y $V/V_{ll}$ dependen solo de
+> $h/D$, así que se calculan, y ahora viven en `src/lib/canales.ts` con nueve
+> casos en `tests/fisica/canales.test.ts` contrastados contra los resultados
+> publicados de 8.3, 8.4, 8.8 y 8.12. Los que queden del capítulo salen ya sin
+> volver a pelearse con esto.
+>
+> Y dos coeficientes de Manning que **el cuadro de materiales de la colección
+> no trae** —PVC y madera sin cepillar—: se han recuperado invirtiendo el
+> resultado publicado (0,009 y 0,013, que son además los de las tablas al
+> uso), y está dicho en el propio test. Si aparece la tabla del profesor, se
+> comprueban.
+
 **El ritmo real, medido hoy: de 2 a 5 por tanda.** No es lentitud gratuita:
 casi todos los enunciados dicen «de la figura» y esa geometría **no está en el
 volcado de texto**, así que hay que renderizar la página del PDF y mirarla —del

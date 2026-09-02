@@ -1464,6 +1464,29 @@ Cosas que ya han costado horas. No son opiniones.
   símbolo, va en la primera línea del apartado, no en su título — que es lo
   mismo que §17 ya pide para `titulo` y `fuente`, por el mismo motivo de
   fondo: **todo lo que se convierte en identificador es texto plano.**
+- **El `$$` de una fórmula en bloque va en su propia línea, siempre.** El
+  procesador de §07 dibuja esto:
+
+  ```
+  $$
+  a = b + c
+  $$
+  ```
+
+  y **no** dibuja `$$ a = b` en una línea con `= c $$` en la siguiente: ahí
+  el primer `$$` se lee como dos delimitadores en línea, KaTeX se come el
+  cierre y la fórmula se publica como texto crudo. El 2 de septiembre de 2026
+  entraron así **27 fórmulas** en cinco ejercicios y tumbaron el suelo entero
+  —doce minutos— con `verify.mjs` diciendo «LaTeX que ha salido como texto».
+  Lo curioso, y lo que engaña: en **una sola línea** `$$ a = b + c $$` sí se
+  dibuja, así que probar un caso corto no demuestra nada. El corpus entero
+  usaba ya la forma con valla —cero apariciones de la otra en seis ficheros
+  mirados— y esto fue romper la convención sin darse cuenta.
+
+  Desde ese día lo caza `scripts/revisa-ejercicios.mjs`, que pasa cada campo
+  de prosa por el procesador de verdad y mira si KaTeX ha devuelto un error:
+  un segundo, contra los doce minutos del suelo. Validado al revés con el
+  bloque original, que sale rojo en las tres fórmulas.
 - **`titulo` y `fuente` son texto plano, sin `$…$`.** Un `(matriz $A_1$)` en
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en

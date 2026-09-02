@@ -14,6 +14,7 @@ import { describe, expect, it } from 'vitest';
 import {
   allievi,
   celeridad,
+  celeridadJoukowski,
   ciclo,
   clasifica,
   golpe,
@@ -51,6 +52,43 @@ describe('la celeridad', () => {
 
   it('y una pared fina golpea menos que una gruesa del mismo material', () => {
     expect(celeridad(1, 0.4, 0.004)).toBeLessThan(celeridad(1, 0.4, 0.02));
+  });
+});
+
+describe('la celeridad de Joukowski, que es la que pide media colección', () => {
+  /* Los tres son de la colección, capítulo 7, y con sus datos de K y E: el
+     enunciado los da precisamente porque quiere esta forma y no la tabla. */
+  const K = 2.2e9;
+
+  it('7.11 · fibrocemento de 150 mm y 12 de espesor da 937 m/s', () => {
+    cerca(celeridadJoukowski(K, 1.825e10, 150, 12), 936.8, 0.002);
+  });
+
+  it('y con ella la sobrepresión del 7.11 sale 143,39 mca, la publicada', () => {
+    const a = celeridadJoukowski(K, 1.825e10, 150, 12);
+    cerca(allievi(a, 1.5), 143.39, 0.005);
+  });
+
+  it('7.12 · acero de 300 mm y 9 de espesor da 1269 m/s y cierre lento', () => {
+    const a = celeridadJoukowski(K, 2e11, 300, 9);
+    cerca(a, 1268.7, 0.002);
+    expect(clasifica(1250, a, 3)).toBe('lento');
+    const v = 0.08 / ((Math.PI * 0.3 ** 2) / 4);
+    cerca(michaud(1250, v, 3), 96.24, 0.005);
+  });
+
+  it('la tabla de Allievi y Joukowski NO dan lo mismo, y por eso conviven', () => {
+    const joukowski = celeridadJoukowski(K, 1.825e10, 150, 12);
+    const tabla = celeridad(K_MATERIAL.fibrocemento, 150, 12);
+    cerca(tabla, 919.9, 0.002);
+    /* Un 1,8 %: pequeño, pero suficiente para no acertar el resultado
+       publicado si se coge la fórmula que no es. */
+    expect(Math.abs(joukowski - tabla) / tabla).toBeGreaterThan(0.01);
+    expect(Math.abs(joukowski - tabla) / tabla).toBeLessThan(0.03);
+  });
+
+  it('con tubo infinitamente rígido las dos convergen a la del sonido', () => {
+    cerca(celeridadJoukowski(K, 1e30, 100, 1), Math.sqrt(K / 1000), 1e-9);
   });
 });
 

@@ -137,3 +137,88 @@ export function penalizacion(
   const opt = perimetro(seccionPara(tipo, relacionOptima(tipo, alfa), n, J, Q, alfa));
   return mia / opt - 1;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Sección circular parcialmente llena — el caso del capítulo 8
+
+   El tema lo despacha diciendo que «se hace con ábacos, cuadros o programa» y
+   que los canales circulares completos «se dejan para asignaturas
+   posteriores». Es cierto que no se despeja a mano, y es engañoso como
+   prioridad: quince de los veintidós problemas de la colección son justo
+   esto, resueltos leyendo los cuadros 27 y 28 de la escuela.
+
+   Lo que hace posible ese cuadro —y el tema no dice— es que las razones
+   `Q/Q_ll` y `V/V_ll` dependen **solo** de `h/D`. Ni del diámetro, ni de la
+   pendiente, ni del material: se cancelan al dividir. Por eso un único cuadro
+   sirve para todas las tuberías del mundo, y por eso se puede reproducir aquí
+   en lugar de transcribirlo (§08: el cuadro es de la escuela; la ley no es de
+   nadie).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * El ángulo central mojado, en radianes, para un calado relativo `y = h/D`.
+ *
+ * Vale 0 con la tubería vacía y 2π con la tubería llena.
+ */
+export const anguloMojado = (y: number): number => 2 * Math.acos(1 - 2 * y);
+
+/**
+ * `Q/Q_ll`: el caudal que lleva la tubería a calado relativo `y`, dividido
+ * entre el que llevaría llena.
+ *
+ * **No siempre es menor que 1.** Ese es el resultado que no está en la prosa:
+ * el máximo está en `y ≈ 0,938` y vale un 7,6 % **más** que a sección llena,
+ * porque al pasar de 0,94 a 1 el perímetro mojado crece más deprisa que el
+ * área. Tiene consecuencia de diseño: un colector calculado para ir
+ * exactamente lleno trabaja en un punto donde subir el calado **baja** el
+ * caudal, y eso es una inestabilidad, no un margen.
+ */
+export function relacionCaudal(y: number): number {
+  if (y <= 0) return 0;
+  if (y >= 1) return 1;
+  const t = anguloMojado(y);
+  return ((t - Math.sin(t)) / (2 * Math.PI)) * (1 - Math.sin(t) / t) ** (2 / 3);
+}
+
+/**
+ * `V/V_ll`. Es `(R/R_ll)^(2/3)`, y su máximo está en `y ≈ 0,81`: un 14 % por
+ * encima de la velocidad a sección llena.
+ */
+export function relacionVelocidad(y: number): number {
+  if (y <= 0) return 0;
+  if (y >= 1) return 1;
+  const t = anguloMojado(y);
+  return (1 - Math.sin(t) / t) ** (2 / 3);
+}
+
+/** Caudal a sección llena. `R_ll = D/4`, que es el radio hidráulico del círculo. */
+export const caudalLleno = (D: number, n: number, J: number): number =>
+  (1 / n) * ((Math.PI * D * D) / 4) * (D / 4) ** (2 / 3) * Math.sqrt(J);
+
+/** Velocidad a sección llena. */
+export const velocidadLleno = (D: number, n: number, J: number): number =>
+  (1 / n) * (D / 4) ** (2 / 3) * Math.sqrt(J);
+
+/**
+ * El calado relativo que da una razón de caudales, invirtiendo el cuadro.
+ *
+ * Se busca **solo en la rama creciente**, hasta `y = 0,938`, y esa restricción
+ * es la mitad de la utilidad de esta función: por encima del máximo hay una
+ * segunda solución —una tubería casi llena y otra llena del todo pueden llevar
+ * el mismo caudal— y no es la que quiere ningún enunciado.
+ */
+export const CALADO_DE_CAUDAL_MAXIMO = 0.938;
+
+export function caladoRelativo(razonDeCaudal: number): number {
+  const tope = CALADO_DE_CAUDAL_MAXIMO;
+  if (razonDeCaudal <= 0) return 0;
+  if (razonDeCaudal >= relacionCaudal(tope)) return tope;
+  let lo = 0;
+  let hi = tope;
+  for (let i = 0; i < 200; i++) {
+    const m = (lo + hi) / 2;
+    if (relacionCaudal(m) < razonDeCaudal) lo = m;
+    else hi = m;
+  }
+  return (lo + hi) / 2;
+}

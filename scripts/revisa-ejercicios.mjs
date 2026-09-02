@@ -192,6 +192,47 @@ for (const e of ejercicios) {
   }
 }
 
+/* ── §07 · que las fórmulas se DIBUJEN, no solo que estén equilibradas ──
+   El recuento de `$` de arriba caza una fórmula sin cerrar, y no caza nada
+   más. El 2 de septiembre de 2026 cinco ejercicios pasaron este guion con
+   todo en verde y tumbaron el suelo entero —doce minutos— por 27 fórmulas
+   publicadas como texto crudo: estaban escritas como `$$ x =` en una línea
+   y `= y $$` en la siguiente, y **el procesador de §07 solo dibuja la forma
+   con la valla `$$` en línea propia**. El corpus entero la usaba así; yo no.
+
+   Como el motivo es exactamente el mismo que el del guion —enterarse antes
+   de construir— la comprobación va aquí: se pasa cada campo de prosa por el
+   procesador de verdad y se mira si KaTeX ha devuelto un error. Tarda un
+   segundo y cubre cualquier fórmula rota, no solo esta forma. */
+const camposDeProsa = (e) => {
+  const salida = [['enunciado', e.enunciado], ['resolucion', e.resolucion]];
+  for (const [i, p] of (e.pasos ?? []).entries()) {
+    for (const c of ['pregunta', 'pista', 'desarrollo', 'titulo']) {
+      if (typeof p?.[c] === 'string') salida.push([`paso ${i + 1} · ${c}`, p[c]]);
+    }
+    for (const o of p?.opciones ?? []) if (o?.texto) salida.push([`paso ${i + 1} · opción`, o.texto]);
+    for (const d of p?.distractores ?? []) if (d?.mensaje) salida.push([`paso ${i + 1} · distractor`, d.mensaje]);
+    for (const z of p?.piezas ?? []) if (z?.texto) salida.push([`paso ${i + 1} · pieza`, z.texto]);
+  }
+  return salida.filter(([, t]) => typeof t === 'string' && t.includes('$'));
+};
+
+try {
+  const { mate } = await import('../src/lib/markdown.mjs');
+  for (const e of ejercicios) {
+    for (const [dónde, texto] of camposDeProsa(e)) {
+      const html = await mate(texto, 'revision');
+      if (!html.includes('katex-error')) continue;
+      const motivo = /title="ParseError: ([^"]{0,110})/.exec(html)?.[1] ?? 'KaTeX no ha sabido dibujarla';
+      mal(e.id ?? '(sin id)', `${dónde}: fórmula que no se dibuja — ${motivo}`);
+    }
+  }
+} catch (err) {
+  /* Que no se pueda cargar el procesador no puede tumbar la revisión del
+     resto: se dice y se sigue, porque el suelo lo volverá a mirar. */
+  console.log(`  · no se ha podido dibujar las fórmulas aquí: ${String(err).split('\n')[0]}`);
+}
+
 console.log(
   fallos === 0
     ? `  ✓ ${ejercicios.length} ejercicio(s), sin fallos`

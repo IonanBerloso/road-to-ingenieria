@@ -43,6 +43,29 @@ export type Material = keyof typeof K_MATERIAL;
 export const celeridad = (k: number, D: number, e: number): number =>
   9900 / Math.sqrt(48.3 + (k * D) / e);
 
+/**
+ * La celeridad en la forma **de Joukowski**, que es la general:
+ *
+ *     a = √(K/ρ) / √(1 + (K/E)·(D/e))
+ *
+ * La forma de Allievi de arriba es esta misma con los valores del agua ya
+ * metidos y `k = 10⁷/E` tabulado. Conviven porque el corpus usa las dos: si el
+ * enunciado da el módulo de elasticidad del material, quiere Joukowski; si
+ * solo nombra el material, quiere la tabla.
+ *
+ * Y no dan lo mismo. En el ejercicio 7.11 —fibrocemento de 150 mm y 12 de
+ * espesor— Allievi da 920 m/s y Joukowski 937, un 1,8 % de diferencia que en
+ * la sobrepresión son 2,6 mca. El resultado publicado es el de Joukowski, así
+ * que **el que manda es el que pide el enunciado**, no el más cómodo.
+ */
+export const celeridadJoukowski = (
+  K: number,
+  E: number,
+  D: number,
+  e: number,
+  rho = 1000,
+): number => Math.sqrt(K / rho) / Math.sqrt(1 + (K / E) * (D / e));
+
 /** El periodo de ida y vuelta de la onda: `T = 2L/a`. Es el que clasifica. */
 export const periodo = (L: number, a: number): number => (2 * L) / a;
 

@@ -1793,3 +1793,910 @@ ejercicios:
       se pongan por costumbre: aquí la del 30 % está para que una crecida
       —o una hoja atravesada— no desborde la acequia dentro del recinto del
       castillo.
+  - id: ejflu21-col84-el-calado-que-sale-de-una-razon
+    titulo: El calado que sale de una razón, no de un despeje
+    fuente: Ejercicio 8.4 · Colección de problemas, capítulo 8 · Mecánica de Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Un canal de sección circular de diámetro 0,8 m está construido de un
+      material con un coeficiente de Manning $n = 0{,}020$ y conduce 200 l/s.
+      Calcular la altura de calado y la velocidad si la pendiente de la solera
+      es 1 por 1200.
+    pide: El calado de la lámina de agua y la velocidad del flujo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Manning da el caudal a partir del calado. Aquí te dan el caudal y
+          piden el calado. ¿Por qué no se despeja y ya está?
+        opciones:
+          - texto: |
+              Porque el calado entra en el área y en el perímetro a través de un
+              arco de circunferencia, y de ahí no sale despejado
+            correcta: true
+            mensaje: |
+              Eso es. En un rectángulo el área es $bh$ y se puede despejar; en
+              un círculo parcialmente lleno el calado entra dentro de un
+              $\arccos$, y luego el resultado va elevado a $2/3$. No hay
+              despeje. Por eso este caso se resuelve con el cuadro de razones,
+              que es una forma de tener la inversa ya calculada.
+          - texto: Porque falta la pendiente, y sin ella Manning no se puede usar
+            mensaje: |
+              La pendiente está dada: 1 por 1200, es decir $J = 8{,}33 \cdot 10^{-4}$.
+              Lo que falta no es un dato, es el despeje.
+          - texto: |
+              Porque el caudal de 200 l/s está en litros y Manning necesita el
+              sistema internacional
+            mensaje: |
+              Hay que pasarlo a m³/s, sí, pero eso es una conversión, no la
+              dificultad. Con el caudal en las unidades correctas el calado
+              sigue sin despejarse.
+          - texto: |
+              Porque en un canal circular no vale Manning: hay que usar
+              Darcy-Weisbach como en las tuberías
+            mensaje: |
+              Manning vale siempre que haya lámina libre, y aquí la hay: el tubo
+              no va lleno. Darcy-Weisbach es para conducciones en carga, donde
+              la presión empuja; en un canal lo único que empuja es la gravedad.
+
+      - tipo: calcular
+        titulo: El caudal a sección llena
+        pregunta: |
+          El primer paso es el único que sí es directo: ¿cuánto llevaría esta
+          tubería **llena**? Recuerda que el radio hidráulico de un círculo
+          lleno es $D/4$. Da el resultado en l/s.
+        respuesta:
+          tipo: magnitud
+          valor: '248.1 l/s'
+          tolerancia: 0.005
+          formato: el caudal a sección llena, en l/s
+        distractores:
+          - valor: '124.1 l/s'
+            mensaje: |
+              Has usado $R = D/8$, que es el radio hidráulico de la **media**
+              sección. Lleno, el área es $\pi D^{2}/4$ y el perímetro $\pi D$:
+              el cociente es $D/4$.
+          - valor: '496.2 l/s'
+            mensaje: |
+              Parece que has usado $R = D/2$, el radio geométrico. El radio
+              hidráulico no es el radio: es área entre perímetro mojado, y para
+              un círculo lleno sale la mitad de eso.
+        pista: |
+          $A = \pi D^{2}/4$, $R = D/4$, $J = 1/1200$.
+        desarrollo: |
+          $$
+          Q_{ll} = \frac{1}{0{,}020}\cdot\frac{\pi\,0{,}8^{2}}{4}
+                   \cdot\left(\frac{0{,}8}{4}\right)^{2/3}
+                   \cdot\sqrt{\frac{1}{1200}}
+                 = 0{,}2481\ \text{m}^{3}/\text{s}
+          $$
+
+          Es decir 248,1 l/s. La tubería lleva 200, así que no va llena: va al
+          80 % de su capacidad, y eso es lo que hay que traducir a calado.
+
+      - tipo: calcular
+        titulo: El calado
+        pregunta: |
+          La razón $Q_c/Q_{ll}$ vale 0,806. Entrando con ella en el cuadro de
+          sección circular sale $h_c/D = 0{,}68$. ¿Cuál es el calado, en metros?
+        respuesta:
+          tipo: magnitud
+          valor: '0.544 m'
+          tolerancia: 0.01
+          formato: el calado en metros
+        distractores:
+          - valor: '0.645 m'
+            mensaje: |
+              Has multiplicado el diámetro por la razón de **caudales** (0,806)
+              en vez de por la de calados (0,68). Son dos números distintos y el
+              cuadro sirve precisamente para pasar del uno al otro: el caudal no
+              crece proporcionalmente al calado.
+          - valor: '0.68 m'
+            mensaje: |
+              0,68 es la razón $h_c/D$, no el calado. Falta multiplicarla por el
+              diámetro. Y fíjate en que 0,68 m sería casi el diámetro entero:
+              imposible como lectura directa.
+        pista: |
+          $h_c = 0{,}68 \cdot D$.
+        desarrollo: |
+          $$
+          \frac{Q_c}{Q_{ll}} = \frac{200}{248{,}1} = 0{,}806
+          \;\longrightarrow\;
+          \frac{h_c}{D} = 0{,}68
+          \;\longrightarrow\;
+          h_c = 0{,}68\cdot 0{,}8 = 0{,}544\ \text{m}
+          $$
+
+          Fíjate en la asimetría: llevando el **80 %** del caudal, el agua está
+          al **68 %** de la altura. La tubería aprovecha mejor de lo que parece
+          la parte de arriba.
+
+      - tipo: calcular
+        titulo: La velocidad
+        pregunta: |
+          El mismo cuadro da $V_c/V_{ll} = 1{,}11$ para ese calado. ¿Cuál es la
+          velocidad del flujo, en m/s?
+        respuesta:
+          tipo: magnitud
+          valor: '0.55 m/s'
+          tolerancia: 0.02
+          formato: la velocidad en m/s
+        distractores:
+          - valor: '0.444 m/s'
+            mensaje: |
+              Has **dividido** entre 1,11 en vez de multiplicar. Y el sentido
+              físico avisa: la razón es mayor que 1, así que el agua va **más
+              deprisa** que si el tubo fuera lleno, no menos.
+          - valor: '0.368 m/s'
+            mensaje: |
+              Parece que has hecho $Q/A$ con el área **llena**. El área mojada
+              es menor que la llena, así que la velocidad sale mayor: 1,50 m² no,
+              0,364 m².
+        pista: |
+          Primero $V_{ll} = Q_{ll}/A_{ll}$, y luego multiplica por 1,11.
+        desarrollo: |
+          $$
+          V_{ll} = \frac{Q_{ll}}{A_{ll}} = \frac{0{,}2481}{0{,}5027}
+                 = 0{,}493\ \text{m/s}
+          \qquad
+          V_c = 1{,}11\cdot 0{,}493 = 0{,}55\ \text{m/s}
+          $$
+
+          **Va más deprisa medio vacía que llena.** No es un error de lectura:
+          al bajar de lleno a 0,68 se pierde algo de área pero se pierde
+          proporcionalmente más perímetro mojado —desaparece toda la bóveda—,
+          el radio hidráulico sube y con él la velocidad.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena el argumento de por qué el cuadro sirve para cualquier tubería.
+          Una pieza es falsa.
+        piezas:
+          - texto: |
+              El caudal a calado $h$ y el caudal a sección llena se calculan
+              los dos con Manning, con **la misma** $n$ y la misma $J$.
+          - texto: |
+              Al dividir el uno entre el otro, $n$ y $\sqrt{J}$ se cancelan, y
+              el diámetro también: lo que queda depende únicamente de $h/D$.
+          - texto: |
+              Por eso una sola curva vale para una acequia de 25 cm de PVC y
+              para un colector de hormigón de metro y medio, y por eso el
+              procedimiento es siempre el mismo: calcular $Q_{ll}$, formar la
+              razón, entrar al cuadro.
+          - texto: |
+              Y hay un punto que se puede comprobar de cabeza: a media tubería
+              el radio hidráulico es el mismo que lleno, así que la velocidad no
+              cambia y el caudal es exactamente la mitad.
+          - texto: |
+              Como las razones no dependen del material, tampoco depende de él
+              el calado: dos tuberías del mismo diámetro con el mismo caudal
+              llevan el agua a la misma altura aunque una sea de hormigón y otra
+              de tierra.
+            trampa: true
+            mensaje: |
+              La primera mitad es cierta y la conclusión no se sigue. Las
+              **razones** no dependen del material, pero $Q_{ll}$ sí: con una
+              $n$ mayor la tubería llena lleva menos, la razón $Q_c/Q_{ll}$ sale
+              mayor para el mismo caudal, y el calado sube. Un canal de tierra
+              lleva la misma agua más alta que uno de hormigón.
+    resolucion: |
+      **Tres pasos, y el segundo no es una cuenta sino una lectura.**
+
+      **1 · El caudal a sección llena**, que es lo único directo, porque un
+      círculo lleno tiene $R = D/4$:
+
+      $$
+      Q_{ll} = \frac{1}{0{,}020}\cdot 0{,}5027\cdot 0{,}2^{2/3}
+               \cdot\sqrt{1/1200} = 248{,}1\ \text{l/s}
+      $$
+
+      **2 · La razón, y el cuadro.**
+
+      $$
+      \frac{Q_c}{Q_{ll}} = \frac{200}{248{,}1} = 0{,}806
+      \;\longrightarrow\;
+      \frac{h_c}{D} = 0{,}68
+      \;\qquad\;
+      \frac{V_c}{V_{ll}} = 1{,}11
+      $$
+
+      **3 · Deshacer las razones.**
+
+      $$
+      h_c = 0{,}68\cdot 0{,}8 = 0{,}544\ \text{m}
+      \qquad
+      V_c = 1{,}11\cdot\frac{0{,}2481}{0{,}5027} = 0{,}55\ \text{m/s}
+      $$
+
+      **Los dos números raros, dichos aparte.** El primero: con el 80 % del
+      caudal el agua está al 68 % de la altura. El segundo, y es el que más
+      choca: **la velocidad es mayor que a sección llena**. Los dos tienen la
+      misma explicación. Al no llenar el tubo desaparece la bóveda, que es
+      perímetro mojado —rozamiento— sin apenas aportar área. El radio
+      hidráulico sube, y con él la velocidad.
+
+      Llevado al extremo, eso significa que el caudal máximo de una tubería
+      **no** se da llena, sino sobre el 94 % del calado, con un 7,6 % más que
+      llena. Está en el error típico del tema, y aquí lo estás viendo empezar.
+
+  - id: ejflu21-col83-el-diametro-y-la-condicion-de-calado
+    titulo: El diámetro que impone una condición de calado
+    fuente: Ejercicio 8.3 · Colección de problemas, capítulo 8 · Mecánica de Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se desean conducir 120 l/s de agua con una pendiente de 1 milésima.
+
+      a) Elegir el diámetro de la tubería de hormigón centrifugado
+      ($n = 0{,}015$) para que se cumpla la relación $h_c/D \le 0{,}75$.
+      Diámetros disponibles: 40, 45, 50 y 60 cm.
+
+      b) Calcular el calado $h_c$ y la relación $h_c/D$.
+    pide: El diámetro comercial, el calado y la relación de calado que resulta.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La condición está sobre el **calado** y lo que se elige es el
+          **diámetro**. ¿Cómo se pasa de una cosa a la otra?
+        opciones:
+          - texto: |
+              Traduciendo la condición de calado a una condición de caudal con
+              el cuadro: $h_c/D = 0{,}75$ corresponde a $Q_c/Q_{ll} = 0{,}91$,
+              y de ahí sale el $Q_{ll}$ mínimo
+            correcta: true
+            mensaje: |
+              Ese es el giro del problema, y es el mismo cuadro leído al revés
+              que en el ejercicio anterior. Allí se entraba con caudal y salía
+              calado; aquí se entra con calado y sale caudal. La condición
+              «no pases del 75 % de altura» se convierte en «no pases del 91 %
+              de tu capacidad», y esa sí se puede imponer sobre el diámetro.
+          - texto: |
+              Calculando el calado para cada uno de los cuatro diámetros y
+              quedándose con el primero que cumpla
+            mensaje: |
+              Funciona, y es más trabajo: son cuatro cuadros en vez de uno. Y
+              además es más frágil, porque hay que leer bien las cuatro veces.
+              Traducir la condición una sola vez deja el resto en aritmética.
+          - texto: |
+              Imponiendo que el calado sea 0,75 veces el diámetro dentro de la
+              fórmula de Manning y despejando $D$
+            mensaje: |
+              Ahí está el problema de siempre: con $h = 0{,}75D$ el área y el
+              perímetro siguen llevando el arco de circunferencia, y $D$ no sale
+              despejado de dentro de un $\arccos$ y una potencia $2/3$ a la vez.
+          - texto: |
+              La condición $h_c/D \le 0{,}75$ no afecta al diámetro: es una
+              recomendación de ventilación del colector
+            mensaje: |
+              Sí afecta, y mucho: es la que descarta los tres diámetros
+              pequeños. Que además tenga sentido constructivo —dejar aire
+              arriba— no la hace menos vinculante.
+
+      - tipo: calcular
+        titulo: El caudal a sección llena mínimo
+        pregunta: |
+          Con $h_c/D = 0{,}75$ el cuadro da $Q_c/Q_{ll} = 0{,}91$. Si la
+          tubería tiene que llevar 120 l/s sin pasar de ahí, ¿cuál es el
+          $Q_{ll}$ mínimo, en l/s?
+        respuesta:
+          tipo: magnitud
+          valor: '131.9 l/s'
+          tolerancia: 0.005
+          formato: el caudal a sección llena, en l/s
+        distractores:
+          - valor: '109.2 l/s'
+            mensaje: |
+              Has multiplicado por 0,91 en vez de dividir. Piensa en el sentido:
+              la tubería tiene que poder llevar **más** que 120 llena, porque
+              solo se le va a pedir el 91 % de su capacidad.
+          - valor: '160 l/s'
+            mensaje: |
+              Parece que has dividido entre 0,75, que es la razón de calados. La
+              condición sobre el calado se traduce a una condición sobre el
+              caudal, y ahí el número es 0,91, no 0,75.
+        pista: |
+          $Q_{ll} \ge 120/0{,}91$.
+        desarrollo: |
+          $$
+          \frac{Q_c}{Q_{ll}} \le 0{,}91
+          \;\Longrightarrow\;
+          Q_{ll} \ge \frac{120}{0{,}91} = 131{,}9\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: El diámetro
+        pregunta: |
+          ¿Cuál es el diámetro comercial más pequeño cuyo $Q_{ll}$ llega a
+          131,9 l/s, con $n = 0{,}015$ y $J = 1$ milésima? Da el diámetro en cm.
+        respuesta:
+          tipo: magnitud
+          valor: '60 cm'
+          tolerancia: 0.02
+          formato: el diámetro en cm
+        distractores:
+          - valor: '50 cm'
+            mensaje: |
+              El de 50 cm da $Q_{ll} = 103{,}5$ l/s, y ni siquiera llega a los
+              120 que hay que transportar: iría lleno y aun así se quedaría
+              corto. Es el salto de 50 a 60 el que resuelve el ejercicio, y por
+              eso el enunciado ofrece esos cuatro y no otros.
+          - valor: '45 cm'
+            mensaje: |
+              78,1 l/s a sección llena, muy lejos. Fíjate en cómo crece el
+              caudal con el diámetro: va con $D^{8/3}$, así que subir de 45 a 60
+              —un tercio más de diámetro— más que duplica el caudal.
+        pista: |
+          Prueba los cuatro. El caudal crece con $D^{8/3}$, muy deprisa.
+        desarrollo: |
+          | $D$ | $Q_{ll}$ |
+          |---|---|
+          | 40 cm | 57,1 l/s |
+          | 45 cm | 78,1 l/s |
+          | 50 cm | 103,5 l/s |
+          | **60 cm** | **168,3 l/s** |
+
+          Solo el de 60 cm supera los 131,9 l/s necesarios. Y no por poco: le
+          sobra un 28 %.
+
+      - tipo: calcular
+        titulo: El calado que resulta
+        pregunta: |
+          Con $D = 60$ cm, la razón real es $Q_c/Q_{ll} = 120/168{,}3 = 0{,}713$,
+          que el cuadro traduce en $h_c/D = 0{,}624$. ¿Cuál es el calado, en cm?
+        respuesta:
+          tipo: magnitud
+          valor: '37.4 cm'
+          tolerancia: 0.02
+          formato: el calado en cm
+        distractores:
+          - valor: '45 cm'
+            mensaje: |
+              45 cm es $0{,}75 \cdot 60$, o sea el calado **límite** que se
+              impuso al principio. El real es menor, porque el diámetro elegido
+              tenía margen de sobra: la condición se cumple con holgura.
+          - valor: '42.8 cm'
+            mensaje: |
+              Has usado 0,713, la razón de caudales, en vez de 0,624, la de
+              calados. Es el mismo cambio que en el ejercicio anterior: el
+              cuadro existe justamente para no confundirlas.
+        pista: |
+          $h_c = 0{,}624 \cdot 60$ cm.
+        desarrollo: |
+          $$
+          h_c = 0{,}624\cdot 60 = 37{,}4\ \text{cm}
+          \qquad
+          \frac{h_c}{D} = 0{,}62 \;<\; 0{,}75 \quad\checkmark
+          $$
+
+          La condición se cumple con margen, y era de esperar: el salto de
+          diámetros comerciales de 50 a 60 cm es grande, así que el que cumple
+          cumple sobrado.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la respuesta del apartado a). Una pieza es falsa.
+        piezas:
+          - texto: |
+              La condición se da sobre el calado, así que lo primero es
+              traducirla a caudal: $h_c/D = 0{,}75$ es $Q_c/Q_{ll} = 0{,}91$.
+          - texto: |
+              De ahí sale la capacidad mínima que se le pide a la tubería:
+              $Q_{ll} \ge 120/0{,}91 = 131{,}9$ l/s.
+          - texto: |
+              De los cuatro diámetros disponibles solo el de 60 cm la alcanza
+              —168,3 l/s—, así que ese es el elegido.
+          - texto: |
+              Y con él la condición se cumple de sobra: el calado real queda en
+              0,62 del diámetro, trece puntos por debajo del límite.
+          - texto: |
+              El de 50 cm se descarta por incumplir la condición de calado, pero
+              serviría si no existiera esa condición, porque su capacidad a
+              sección llena supera los 120 l/s que hay que llevar.
+            trampa: true
+            mensaje: |
+              No los supera: el de 50 cm da 103,5 l/s a sección llena, por
+              debajo de los 120 que hay que transportar. Ni siquiera lleno
+              serviría, así que no lo descarta la condición de calado: lo
+              descarta la capacidad. La condición solo hace falta para pensar
+              **antes** de probar diámetros.
+    resolucion: |
+      **El mismo cuadro, leído en el otro sentido.**
+
+      En el problema anterior se entraba con el caudal y salía el calado. Aquí
+      la incógnita es el diámetro, y la condición viene dada sobre el calado:
+      hay que traducirla.
+
+      **a) El diámetro.**
+
+      $$
+      \frac{h_c}{D} \le 0{,}75
+      \;\longrightarrow\;
+      \frac{Q_c}{Q_{ll}} \le 0{,}91
+      \;\longrightarrow\;
+      Q_{ll} \ge \frac{120}{0{,}91} = 131{,}9\ \text{l/s}
+      $$
+
+      Con $n = 0{,}015$ y $J = 10^{-3}$, los cuatro diámetros dan 57,1 · 78,1 ·
+      103,5 · 168,3 l/s. **$D = 60$ cm.**
+
+      **b) El calado real.**
+
+      $$
+      \frac{Q_c}{Q_{ll}} = \frac{120}{168{,}3} = 0{,}713
+      \;\longrightarrow\;
+      \frac{h_c}{D} = 0{,}62
+      \;\longrightarrow\;
+      h_c = 37{,}4\ \text{cm}
+      $$
+
+      **Lo que enseña sobre diámetros comerciales.** El caudal crece con
+      $D^{8/3}$: subir un escalón de diámetro no es un ajuste fino, es un salto
+      grande. Aquí el de 50 cm no llega ni a mover el caudal pedido y el de 60
+      le sobra un 28 %. Por eso en estos problemas nunca sale «justo»: lo
+      normal es descartar el anterior por poco o por mucho y aceptar el
+      siguiente con holgura.
+
+  - id: ejflu21-col812-la-acequia-con-el-nivel-limitado
+    titulo: La acequia con el nivel limitado
+    fuente: Ejercicio 8.12 · Colección de problemas, capítulo 8 · Mecánica de Fluidos, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Diseñar un canal semicircular, de madera sin cepillar, con una pendiente
+      de 10 milésimas, para que pueda transportar un caudal de 400 l/s. El
+      nivel de agua no debe superar el 38 % del diámetro. Calcular el nivel de
+      agua $h$ y la velocidad del flujo $v_c$. Diámetros comerciales: 70, 80,
+      90, 100, 110 y 120 cm.
+
+      El coeficiente de Manning de la madera sin cepillar es $n = 0{,}013$.
+    pide: El diámetro comercial, el nivel de agua y la velocidad del flujo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «El nivel de agua no debe superar el 38 % del diámetro.» ¿Qué papel
+          juega esa frase en el diseño?
+        opciones:
+          - texto: |
+              Fija el punto de trabajo: el diámetro se elige para que el caudal
+              de diseño quepa **sin pasar** de ese calado, no para que quepa a
+              secas
+            correcta: true
+            mensaje: |
+              Exacto. Sin esa frase bastaría el tubo más pequeño que llevase
+              400 l/s. Con ella hay que buscar el más pequeño que lleve 400 l/s
+              **estando solo al 38 %**, que es bastante mayor. Lo que sobra
+              arriba es la berma o resguardo, y no es desperdicio: es lo que
+              absorbe una avenida y lo que ventila el canal.
+          - texto: |
+              Es una condición sobre la velocidad disfrazada, para que el agua
+              no erosione la madera
+            mensaje: |
+              La erosión se limita con una condición sobre la velocidad, y
+              cuando la hay el enunciado la dice en m/s. Esta habla de altura.
+          - texto: |
+              Significa que hay que calcular con un caudal un 38 % del de
+              diseño
+            mensaje: |
+              Al revés de dos maneras. El 38 % es de la **altura**, no del
+              caudal, y el caudal de diseño se transporta entero: lo que se
+              limita es a qué altura lo hace.
+          - texto: |
+              Es el margen de error de la fórmula de Manning para canales de
+              madera
+            mensaje: |
+              Manning no lleva margen de error tabulado por materiales: la
+              incertidumbre está dentro de la $n$. Esto es una condición de
+              diseño puesta por quien encarga el canal.
+
+      - tipo: calcular
+        titulo: El diámetro comercial
+        pregunta: |
+          Al 38 % del calado, una tubería lleva el 30,6 % de lo que llevaría
+          llena. ¿Cuál es el diámetro comercial más pequeño que transporta los
+          400 l/s en esas condiciones? Da el diámetro en cm.
+        respuesta:
+          tipo: magnitud
+          valor: '80 cm'
+          tolerancia: 0.02
+          formato: el diámetro en cm
+        distractores:
+          - valor: '70 cm'
+            mensaje: |
+              El de 70 cm llevaría 926 l/s lleno, más que de sobra… pero al 38 %
+              del calado solo lleva 284 l/s, y hacen falta 400. Es justamente el
+              error que la condición de nivel está ahí para provocar: sobra
+              capacidad y falta altura.
+          - valor: '90 cm'
+            mensaje: |
+              El de 90 cumple —555 l/s al 38 %—, pero no es el más pequeño que
+              lo hace: el de 80 da 405 l/s, que ya pasa de los 400. Se pide el
+              mínimo, y aquí la diferencia es un tubo un 27 % más caro en
+              material.
+        pista: |
+          $Q_{ll}$ para cada diámetro, multiplicado por 0,306, comparado con 400.
+        desarrollo: |
+          | $D$ | $Q_{ll}$ | al 38 % del calado |
+          |---|---|---|
+          | 70 cm | 926 l/s | 284 l/s |
+          | **80 cm** | **1322 l/s** | **405 l/s** |
+          | 90 cm | 1810 l/s | 555 l/s |
+
+          El de 80 cm es el primero que pasa de 400, y por muy poco: 405 l/s
+          contra 400. **$D = 80$ cm.**
+
+      - tipo: calcular
+        titulo: El nivel de agua y la velocidad
+        pregunta: |
+          Con $D = 80$ cm la razón real es $Q_c/Q_{ll} = 400/1322 = 0{,}3025$,
+          que corresponde a $h/D = 0{,}377$. ¿Cuál es el nivel de agua, en
+          metros?
+        respuesta:
+          tipo: magnitud
+          valor: '0.30 m'
+          tolerancia: 0.02
+          formato: el nivel de agua en metros
+        distractores:
+          - valor: '0.242 m'
+            mensaje: |
+              Has usado 0,3025 —la razón de caudales— como razón de calados. En
+              esta zona baja del cuadro las dos se separan mucho: al 37,7 % de
+              altura solo va el 30,2 % del caudal, porque el fondo del tubo es
+              estrecho.
+          - valor: '0.377 m'
+            mensaje: |
+              0,377 es la **razón** $h/D$, no una longitud: falta multiplicarla
+              por el diámetro. Y hay una comprobación que lo caza sola: 0,377 m
+              sería casi la mitad de un tubo de 80 cm, cuando la condición
+              obligaba a quedarse por debajo del 38 % de la altura.
+        pista: |
+          $h = 0{,}377\cdot 0{,}80$.
+        desarrollo: |
+          $$
+          h = 0{,}377\cdot 0{,}80 = 0{,}30\ \text{m}
+          \qquad
+          v_c = \frac{V_c}{V_{ll}}\cdot V_{ll} = 0{,}876\cdot 2{,}63 = 2{,}30\ \text{m/s}
+          $$
+
+          El nivel queda en 30 cm, justo por debajo de los 30,4 cm que permitía
+          la condición. Que salga tan ajustado no es casualidad: el de 80 cm era
+          el diámetro **mínimo** que cumplía, así que trabaja casi en el límite.
+
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento del diseño. Una pieza es falsa.
+        piezas:
+          - texto: |
+              La condición de nivel convierte el problema: no basta con que el
+              tubo pueda llevar 400 l/s, tiene que llevarlos sin pasar del 38 %
+              de su altura.
+          - texto: |
+              Al 38 % del calado una tubería circular lleva solo el 30,6 % de su
+              caudal a sección llena, así que hace falta una capacidad de
+              $400/0{,}306 = 1307$ l/s.
+          - texto: |
+              El menor diámetro comercial que la alcanza es el de 80 cm, con
+              1322 l/s a sección llena.
+          - texto: |
+              Con él, el nivel real queda en 30 cm —el 37,7 % del diámetro,
+              justo por debajo del límite— y la velocidad en 2,30 m/s.
+          - texto: |
+              La velocidad de 2,30 m/s es menor que la que tendría el mismo tubo
+              a sección llena, porque al ir con menos agua hay menos empuje.
+            trampa: true
+            mensaje: |
+              El número es correcto —2,30 frente a 2,63 llena— y la razón es
+              falsa, que es lo que hay que cazar. No es «menos empuje»: en un
+              canal el empuje por unidad de peso lo pone la pendiente y no
+              cambia. Es el **radio hidráulico**, que al 38 % de calado vale
+              menos que lleno porque el fondo estrecho es casi todo perímetro
+              mojado. Y prueba de que la explicación falsa no vale: entre el 50 %
+              y el 94 % de calado la velocidad es **mayor** que llena, con la
+              misma pendiente y menos agua.
+    resolucion: |
+      **Un diseño donde manda la altura, no la capacidad.**
+
+      La condición «el nivel no debe superar el 38 % del diámetro» es la que
+      hace el problema. Sin ella, el tubo de 70 cm sobraría: lleva 926 l/s
+      lleno contra los 400 que se piden. Con ella no llega, porque a esa altura
+      solo lleva 284.
+
+      **El diámetro.** Al 38 % de calado, $Q_c/Q_{ll} = 0{,}306$. Hace falta
+      entonces
+
+      $$
+      Q_{ll} \ge \frac{400}{0{,}306} = 1307\ \text{l/s}
+      $$
+
+      y con $n = 0{,}013$ y $J = 10^{-2}$ el primer diámetro comercial que la
+      alcanza es **80 cm** (1322 l/s).
+
+      **El punto de trabajo real.**
+
+      $$
+      \frac{Q_c}{Q_{ll}} = \frac{400}{1322} = 0{,}3025
+      \;\longrightarrow\;
+      \frac{h}{D} = 0{,}377
+      \;\longrightarrow\;
+      h = 0{,}30\ \text{m}
+      \qquad
+      v_c = 2{,}30\ \text{m/s}
+      $$
+
+      **Por qué el enunciado limita el nivel.** Un canal que va casi lleno no
+      tiene margen. Y en sección circular hay una razón añadida, que es el
+      error típico del tema: el caudal máximo no se da lleno sino sobre el 94 %
+      del calado, así que un canal calculado para ir lleno trabaja pasado el
+      máximo, donde subir el nivel **baja** el caudal. Las bermas del 15 %, del
+      30 % o el 38 % de este enunciado son todas la misma precaución escrita
+      con números distintos.
+
+  - id: ejflu21-col818-la-pendiente-que-se-deduce-del-calado
+    titulo: La pendiente que se deduce del calado
+    fuente: Ejercicio 8.18 · Colección de problemas, capítulo 8 · Mecánica de Fluidos, UPV/EHU
+    nivel: examen
+    enunciado: |
+      Por un canal de arena, de sección circular y 1,6 m de diámetro, discurre
+      un caudal de agua de 3,7 m³/s. El calado del flujo es de 1,12 m. Se pide:
+
+      a) Calcular la pendiente exacta del canal en milésimas y la velocidad del
+      flujo.
+
+      En otro punto de la instalación se pretende instalar un canal con la
+      sección hidráulicamente óptima rectangular, con una pendiente de 5
+      milésimas. El caudal de agua y el material del canal se mantienen igual
+      que en el apartado anterior. Se pide:
+
+      b) Calcular las dimensiones de la sección transversal del canal.
+
+      El coeficiente de Manning de la arena es $n = 0{,}020$.
+    pide: La pendiente y la velocidad del canal circular, y las dimensiones del rectángulo óptimo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Este problema no se resuelve con el cuadro de razones, aunque el canal
+          sea circular. ¿Por qué?
+        opciones:
+          - texto: |
+              Porque aquí el calado es un **dato**: con $h$ y $D$ conocidos, el
+              área y el perímetro se calculan directamente y Manning se despeja
+              en $J$
+            correcta: true
+            mensaje: |
+              Eso es. El cuadro sirve para lo que no se despeja, que es sacar el
+              calado del caudal. Al revés —del calado a todo lo demás— la
+              geometría es directa: el ángulo sale de un $\arccos$, el área y el
+              perímetro salen del ángulo, y $J$ sale despejada de Manning
+              elevando al cuadrado. El cuadro aquí solo daría error de lectura.
+          - texto: |
+              Porque el cuadro solo vale para tuberías de hormigón, y esta es de
+              arena
+            mensaje: |
+              El cuadro no depende del material: es justamente su gracia, las
+              razones se calculan dividiendo y la $n$ se cancela. Lo que cambia
+              aquí es qué se conoce y qué se busca.
+          - texto: Porque el canal no es cerrado, y el cuadro es para tuberías
+            mensaje: |
+              «Canal de sección circular» y «tubería que no va llena» son lo
+              mismo desde el punto de vista hidráulico: hay lámina libre y la
+              geometría mojada es un segmento circular. El cuadro valdría.
+          - texto: |
+              Porque falta la pendiente, y sin ella no se puede calcular el
+              radio hidráulico
+            mensaje: |
+              El radio hidráulico es pura geometría: área entre perímetro
+              mojado. No necesita la pendiente para nada — y por eso se puede
+              calcular primero y despejar la pendiente después.
+
+      - tipo: calcular
+        titulo: El radio hidráulico
+        pregunta: |
+          Con $D = 1{,}6$ m y $h = 1{,}12$ m, el ángulo mojado es
+          $\theta = 2\arccos(1-2h/D) = 3{,}965$ rad. ¿Cuánto vale el radio
+          hidráulico, en metros?
+        respuesta:
+          tipo: magnitud
+          valor: '0.474 m'
+          tolerancia: 0.01
+          formato: el radio hidráulico en metros
+        distractores:
+          - valor: '0.4 m'
+            mensaje: |
+              0,4 m es $D/4$, el radio hidráulico a **sección llena**. Aquí el
+              tubo va al 70 % y el radio hidráulico es mayor, no igual: falta la
+              bóveda, que es perímetro sin área.
+          - valor: '0.8 m'
+            mensaje: |
+              0,8 m es el radio geométrico. El hidráulico es área entre
+              perímetro mojado, y no coincide con ningún radio de la figura.
+          - valor: '1.503 m'
+            mensaje: |
+              Eso es el área en m², no el radio. Falta dividir entre el
+              perímetro mojado, 3,172 m.
+        pista: |
+          $A = (D^{2}/8)(\theta-\operatorname{sen}\theta)$ y $P = D\theta/2$.
+        desarrollo: |
+          $$
+          A = \frac{1{,}6^{2}}{8}\,(3{,}965 - \operatorname{sen}3{,}965)
+            = 0{,}32\cdot 4{,}698 = 1{,}503\ \text{m}^{2}
+          $$
+
+          $$
+          P = \frac{1{,}6\cdot 3{,}965}{2} = 3{,}172\ \text{m}
+          \qquad
+          R = \frac{1{,}503}{3{,}172} = 0{,}474\ \text{m}
+          $$
+
+          Nota que $\operatorname{sen}3{,}965$ es **negativo** ($-0{,}726$), así
+          que en la resta se suma. Es el fallo de signo más habitual de esta
+          fórmula, y se detecta solo: si el área te sale menor que la mitad del
+          círculo con el tubo al 70 %, has restado donde tocaba sumar.
+
+      - tipo: calcular
+        titulo: La pendiente
+        pregunta: |
+          Despeja $J$ de Manning y da la pendiente **en milésimas**.
+        respuesta:
+          tipo: magnitud
+          valor: '6.56 mm/m'
+          tolerancia: 0.01
+          formato: la pendiente en milésimas, o sea en mm/m
+        distractores:
+          - valor: '81.0 mm/m'
+            mensaje: |
+              Te has dejado el cuadrado. De Manning sale $\sqrt{J} = 0{,}081$, y
+              lo que se pide es $J$: hay que elevar al cuadrado, y sale
+              $6{,}56\cdot 10^{-3}$.
+          - valor: '2.19 mm/m'
+            mensaje: |
+              Parece que has usado el área o el radio a sección llena. Con la
+              geometría real —$A = 1{,}503$ m², $R = 0{,}474$ m— sale 6,56.
+        pista: |
+          $\sqrt{J} = Q n / (A R^{2/3})$, y una milésima es $10^{-3}$.
+        desarrollo: |
+          $$
+          \sqrt{J} = \frac{Q\,n}{A\,R^{2/3}}
+                   = \frac{3{,}7\cdot 0{,}020}{1{,}503\cdot 0{,}474^{2/3}}
+                   = \frac{0{,}074}{0{,}9128} = 0{,}0810
+          $$
+
+          $$
+          J = 0{,}0810^{2} = 6{,}56\cdot 10^{-3} = 6{,}56\ \text{milésimas}
+          $$
+
+          Y la velocidad, que ya no necesita a Manning para nada:
+
+          $$
+          V = \frac{Q}{A} = \frac{3{,}7}{1{,}503} = 2{,}46\ \text{m/s}
+          $$
+
+      - tipo: calcular
+        titulo: La solera del rectángulo óptimo
+        pregunta: |
+          El apartado b) cambia a sección rectangular **hidráulicamente
+          óptima**, con $J = 5$ milésimas, mismo caudal y mismo material.
+          ¿Cuánto mide la solera $b$, en metros?
+        respuesta:
+          tipo: magnitud
+          valor: '1.866 m'
+          tolerancia: 0.01
+          formato: la solera en metros
+        distractores:
+          - valor: '0.933 m'
+            mensaje: |
+              Eso es el calado $h$, no la solera. En el rectángulo óptimo
+              $b = 2h$: el canal es el doble de ancho que de hondo, media
+              cuadrado. Está calculado bien, pero has contestado la otra mitad.
+          - valor: '3.731 m'
+            mensaje: |
+              Has puesto $h = b/2$ del revés, o has multiplicado dos veces por 2.
+              El óptimo rectangular es ancho y poco profundo: $b = 2h$, no
+              $h = 2b$.
+        pista: |
+          En el óptimo, $b = 2h$ y $R = h/2$. Sustituye en Manning y despeja $h$.
+        desarrollo: |
+          En el rectángulo hidráulicamente óptimo la solera es el doble del
+          calado, y entonces el radio hidráulico es la mitad del calado:
+
+          $$
+          A = 2h^{2}
+          \qquad
+          R = \frac{2h^{2}}{2h+2h} = \frac{h}{2}
+          $$
+
+          $$
+          3{,}7 = \frac{1}{0{,}020}\cdot 2h^{2}\cdot\left(\frac{h}{2}\right)^{2/3}
+                  \cdot\sqrt{0{,}005}
+          \;\Longrightarrow\;
+          h = 0{,}933\ \text{m}
+          $$
+
+          $$
+          b = 2h = 1{,}866\ \text{m}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la comparación entre las dos secciones. Una pieza es falsa.
+        piezas:
+          - texto: |
+              El canal circular lleva 3,7 m³/s a 2,46 m/s con una pendiente de
+              6,56 milésimas y un área mojada de 1,503 m².
+          - texto: |
+              El rectángulo óptimo lleva el mismo caudal con una pendiente
+              menor —5 milésimas— y una sección de 1,866 × 0,933 m, es decir
+              1,741 m².
+          - texto: |
+              Es decir: el rectángulo mueve el mismo caudal con **menos
+              pendiente**, y a cambio necesita **más sección** y va más despacio
+              —2,13 m/s frente a 2,46—. Menos desnivel se paga con más
+              excavación, y esa es la elección real.
+          - texto: |
+              Y eso deja claro que «hidráulicamente óptima» no significa «la
+              mejor de todas las secciones»: significa la mejor **dentro de su
+              tipología**. El rectángulo óptimo sigue siendo peor que un
+              semicírculo.
+          - texto: |
+              Como el rectángulo es el óptimo, con la misma pendiente de 6,56
+              milésimas llevaría más caudal que el circular con menos área: el
+              óptimo lo es frente a cualquier sección.
+            trampa: true
+            mensaje: |
+              El óptimo lo es **dentro de su familia**: entre todos los
+              rectángulos, el de $b = 2h$ es el que menos perímetro mojado tiene
+              para un área dada. No lo es frente a otras formas. El semicírculo
+              gana a cualquier rectángulo, porque de todas las figuras es la que
+              menos perímetro encierra por unidad de área, y por eso los
+              enunciados que buscan lo mejor de verdad piden media caña.
+    resolucion: |
+      **Dos secciones, y el cuadro no hace falta en ninguna.**
+
+      **a) El canal circular.** El calado es dato, así que la geometría es
+      directa. Con $y = h/D = 0{,}70$:
+
+      $$
+      \theta = 2\arccos(1-2y) = 3{,}965\ \text{rad}
+      \qquad
+      A = \frac{D^{2}}{8}(\theta-\operatorname{sen}\theta) = 1{,}503\ \text{m}^{2}
+      \qquad
+      P = \frac{D\theta}{2} = 3{,}172\ \text{m}
+      $$
+
+      $$
+      R = 0{,}474\ \text{m}
+      \qquad
+      \sqrt{J} = \frac{Qn}{AR^{2/3}} = 0{,}0810
+      \qquad
+      J = 6{,}56\ \text{milésimas}
+      $$
+
+      $$
+      V = \frac{Q}{A} = 2{,}46\ \text{m/s}
+      $$
+
+      **b) El rectángulo óptimo.** $b = 2h$, $R = h/2$, y Manning con
+      $J = 5$ milésimas:
+
+      $$
+      3{,}7 = \frac{2h^{2}}{0{,}020}\left(\frac{h}{2}\right)^{2/3}\sqrt{0{,}005}
+      \;\Longrightarrow\;
+      h = 0{,}933\ \text{m}
+      \qquad
+      b = 1{,}866\ \text{m}
+      $$
+
+      **Lo que compara el problema sin decirlo.** Los dos llevan 3,7 m³/s, y
+      así quedan:
+
+      | | pendiente | área | velocidad |
+      |---|---|---|---|
+      | circular, $D = 1{,}6$ m | 6,56 milésimas | 1,503 m² | 2,46 m/s |
+      | rectángulo óptimo | 5 milésimas | 1,741 m² | 2,13 m/s |
+
+      El rectángulo se conforma con **menos pendiente** y a cambio pide **más
+      sección**. No es una casualidad ni una contradicción: menos pendiente es
+      menos empuje, menos velocidad, y para el mismo caudal eso obliga a más
+      área. La elección real es esa — desnivel de terreno contra volumen de
+      excavación—, y ningún criterio hidráulico la decide solo.
+
+      Y una advertencia sobre la palabra «óptima». Es óptima **entre los
+      rectángulos**, no entre todas las formas. La forma que menos perímetro
+      mojado tiene para un área dada es siempre el semicírculo, y por eso los
+      enunciados que buscan de verdad lo mejor piden media caña. «Óptima» aquí
+      es una condición de forma, como decir «cuadrado»: no es un superlativo.

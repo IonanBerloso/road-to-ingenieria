@@ -20,6 +20,13 @@ import {
   seccionPara,
   velocidad,
   type Seccion,
+  anguloMojado,
+  CALADO_DE_CAUDAL_MAXIMO,
+  caudalLleno,
+  caladoRelativo,
+  relacionCaudal,
+  relacionVelocidad,
+  velocidadLleno,
 } from '../../src/lib/canales';
 
 const cerca = (v: number, esperado: number, rel = 0.005) =>
@@ -203,5 +210,119 @@ describe('cuánto cuesta de verdad no usar la sección óptima', () => {
     const circ: Seccion = { tipo: 'semicirculo', h: Math.sqrt(8 / Math.PI), b: 0 };
     cerca(area(rect), area(circ), 1e-9);
     cerca(1 - perimetro(circ) / perimetro(rect), 0.114, 0.02);
+  });
+});
+
+/**
+ * Sección circular parcialmente llena, que es el capítulo 8 entero.
+ *
+ * Los números salen de los problemas resueltos 8.3 y 8.4 de la colección, que
+ * publican las lecturas del cuadro de la escuela, y de los resultados de 8.8 y
+ * 8.12. La comprobación que importa es que **las fórmulas reproducen el cuadro
+ * sin transcribirlo**: si las lecturas publicadas y estas funciones no
+ * coincidieran, el cuadro sería otra cosa y habría que leerlo (§10).
+ */
+describe('la sección circular parcialmente llena', () => {
+  it('8.3 · con h/D = 0,75 el cuadro da Q/Q_ll = 0,91, y la fórmula también', () => {
+    cerca(relacionCaudal(0.75), 0.91, 0.005);
+  });
+
+  it('8.4 · con h/D = 0,68 el cuadro da Q/Q_ll = 0,806 y V/V_ll = 1,11', () => {
+    cerca(relacionCaudal(0.68), 0.806, 0.005);
+    cerca(relacionVelocidad(0.68), 1.11, 0.005);
+  });
+
+  it('8.4 · y de ahí salen el calado y la velocidad publicados', () => {
+    /* D = 0,8 m, n = 0,020, J = 1/1200, Q = 200 l/s. */
+    const Qll = caudalLleno(0.8, 0.02, 1 / 1200);
+    cerca(Qll, 0.2481, 0.002);
+    const y = caladoRelativo(0.2 / Qll);
+    cerca(y * 0.8, 0.544, 0.01); //  h_c = 0,544 m
+    cerca(relacionVelocidad(y) * velocidadLleno(0.8, 0.02, 1 / 1200), 0.55, 0.02);
+  });
+
+  it('8.3 · el diámetro que hace falta para 120 l/s con h/D ≤ 0,75', () => {
+    /* Hormigón centrifugado, n = 0,015, J = 1 milésima. El de 50 cm no llega
+       y el de 60 sí, que es lo que concluye el enunciado. */
+    expect(caudalLleno(0.5, 0.015, 0.001)).toBeLessThan(0.1319);
+    cerca(caudalLleno(0.6, 0.015, 0.001), 0.16827, 0.002);
+    cerca(0.12 / caudalLleno(0.6, 0.015, 0.001), 0.713, 0.005);
+  });
+
+  it('8.8 · la acequia de PVC da los 3,094 m/s publicados', () => {
+    /* D = 0,6 m, J = 16 milésimas, n = 0,009 (el PVC no está en el cuadro de
+       materiales de la colección; 0,009 es el valor que reproduce el
+       resultado publicado, y es el de las tablas al uso). */
+    const y = 0.303;
+    cerca(relacionVelocidad(y) * velocidadLleno(0.6, 0.009, 0.016), 3.094, 0.005);
+  });
+
+  it('8.12 · el canal de madera da los 2,3 m/s publicados', () => {
+    /* D = 0,8 m, J = 10 milésimas, n = 0,013 (madera sin cepillar). */
+    const Qll = caudalLleno(0.8, 0.013, 0.01);
+    const y = caladoRelativo(0.4 / Qll);
+    cerca(y * 0.8, 0.3, 0.02); // h = 0,30 m
+    cerca(relacionVelocidad(y) * velocidadLleno(0.8, 0.013, 0.01), 2.3, 0.01);
+  });
+
+  /* ── y lo que el cuadro enseña y la prosa del tema no dice ── */
+
+  it('las razones NO dependen del diámetro, ni de n, ni de la pendiente', () => {
+    /* Es la razón de que un solo cuadro sirva para todas las tuberías, y no
+       está escrito en el tema. Aquí se comprueba directamente: tres tuberías
+       que no se parecen en nada dan la misma razón a igual calado relativo. */
+    const y = 0.6;
+    const casos: [number, number, number][] = [
+      [0.3, 0.012, 0.001],
+      [1.6, 0.026, 0.02],
+      [0.05, 0.009, 0.0005],
+    ];
+    const razones = casos.map(([D, n, J]) => {
+      const Qll = caudalLleno(D, n, J);
+      const t = anguloMojado(y);
+      const A = ((D * D) / 8) * (t - Math.sin(t));
+      const R = A / ((D * t) / 2);
+      return ((1 / n) * A * R ** (2 / 3) * Math.sqrt(J)) / Qll;
+    });
+    for (const r of razones) expect(r).toBeCloseTo(relacionCaudal(y), 9);
+  });
+
+  it('una tubería casi llena lleva MÁS que llena: el máximo está en 0,938', () => {
+    /* El resultado que no está en la prosa, y el que tiene consecuencia de
+       diseño. Un colector calculado para ir exactamente lleno se apoya en un
+       punto donde subir el calado baja el caudal. */
+    const maximo = relacionCaudal(CALADO_DE_CAUDAL_MAXIMO);
+    expect(maximo).toBeGreaterThan(1);
+    cerca(maximo, 1.076, 0.005);
+    expect(relacionCaudal(0.9)).toBeGreaterThan(1);
+    expect(relacionCaudal(0.99)).toBeLessThan(maximo);
+    /* y en 1 vuelve exactamente a 1, que es la definición */
+    expect(relacionCaudal(1)).toBe(1);
+  });
+
+  it('y la velocidad máxima está antes, sobre 0,81, un 14 % por encima', () => {
+    let mejor = 0;
+    let dónde = 0;
+    for (let y = 0.01; y < 1; y += 0.001) {
+      const v = relacionVelocidad(y);
+      if (v > mejor) [mejor, dónde] = [v, y];
+    }
+    cerca(dónde, 0.81, 0.02);
+    cerca(mejor, 1.14, 0.01);
+  });
+
+  it('a media tubería lleva justo la mitad, y a la misma velocidad', () => {
+    /* El único punto que se puede comprobar de cabeza: con y = 0,5 el área es
+       la mitad y el radio hidráulico es el mismo, así que la velocidad no
+       cambia y el caudal se parte por dos. Sirve de control de que las
+       fórmulas no están del revés. */
+    expect(relacionVelocidad(0.5)).toBeCloseTo(1, 9);
+    expect(relacionCaudal(0.5)).toBeCloseTo(0.5, 9);
+  });
+
+  it('invertir el cuadro devuelve el calado de partida', () => {
+    for (const y of [0.1, 0.303, 0.5, 0.68, 0.75, 0.9]) {
+      cerca(caladoRelativo(relacionCaudal(y)), y, 1e-6);
+    }
   });
 });
