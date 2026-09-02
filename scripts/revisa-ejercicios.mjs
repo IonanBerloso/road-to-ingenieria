@@ -124,7 +124,15 @@ for (const e of ejercicios) {
         for (const d of p.distractores ?? []) {
           const malo = escalar(d.valor);
           if (!Number.isFinite(malo)) continue;
-          const holgura = relativa ? Math.abs(bueno) * tol : tol;
+          /* Relativa en `magnitud` y absoluta en `numero`, que es lo que hace
+             el esquema —`comparaMagnitud` frente a `comparaComplejo`— y lo que
+             hace el componente al reconocer un distractor (§17).
+             Probé a usar la más ancha de las dos «por prudencia» y salieron
+             once falsos positivos: con respuestas del orden de 0,004 Pl, una
+             tolerancia absoluta de 0,01 se traga cualquier distractor.
+             El margen de 10⁻⁹ es por los casos justo en el filo: el primero
+             que se me escapó fallaba en el decimoséptimo decimal. */
+          const holgura = (relativa ? Math.abs(bueno) * tol : tol) * (1 + 1e-9);
           if (Math.abs(malo - bueno) <= holgura) {
             mal(
               dónde,
