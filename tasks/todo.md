@@ -115,7 +115,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 164 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 165 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -268,6 +268,11 @@ commit propios para que el avance quede aunque el día se corte.
 >    examen. Y hay un dato que la página no da y que no se inventa: en las
 >    capturas no salen los temas 20, 22, 23 y 24, y no consta si es que no
 >    los lista o que las capturas no llegan (§13 caso 5).
+>
+> **Capítulo 3 cerrado en recomendados el 3 de septiembre**: los cinco que
+> faltan (3.13, 3.21, 3.22, 3.25 y 3.33) no están en la lista de la escuela.
+> El orden que queda: **capítulo 4** (11 recomendados), **6** (14), **8** (9) y
+> los tres del 2 que siguen bloqueados por un dato. Y lo de antes, ya cumplido:
 >
 > El orden que sale de aquí para lo que queda: **capítulo 3** (19 recomendados,
 > y sus cuatro «resueltos» que faltan traen resolución desarrollada en la
