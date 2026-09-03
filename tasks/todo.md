@@ -115,9 +115,9 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 192 de 236.** **Capítulo 8 cerrado
+> **Estado al cerrar el 3 de septiembre: 193 de 236.** **Capítulo 8 cerrado
 > entero, 22 de 22**, y con él los capítulos 1 (27/27) y 5 (19/20). Capítulo 6
-> en 18 de 29, con los cinco problemas resueltos del boletín ya dentro (6.4,
+> en 19 de 29, con los cinco problemas resueltos del boletín ya dentro (6.4,
 > 6.5, 6.7, 6.8 y 6.11);
 > capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
@@ -142,10 +142,10 @@ commit propios para que el avance quede aunque el día se corte.
 > al terminar una tanda se vuelve a pasar el inventario y se comprueba que el
 > incremento es el esperado; ningún guardián mira esto.
 >
-> **Los que faltan y no dependen de figura son ya solo quince**, medidos
-> cruzando `faltan.json` con el texto del enunciado: 2.17, 2.40, 3.6, 3.17,
-> 3.26, 3.34, 5.12, 6.18, 6.23, 6.25, 6.29, 7.16, 8.11, 9.9 y 9.11. Y de esos,
-> varios tampoco se sostienen solos:
+> **Los que faltan y no dependen de figura son ya solo siete** —eran quince el
+> 3 de septiembre; entraron 2.17, 2.40, 3.6, 3.17, 3.26, 3.34, 6.18 y 8.11—.
+> Quedan: **5.12, 6.23, 6.25, 6.29, 7.16, 9.9 y 9.11**. Y de esos, varios
+> tampoco se sostienen solos:
 >
 > - **6.23** queda pendiente, y por un motivo distinto del que se anotó
 >   primero. Se dijo que faltaba la rugosidad del fibrocemento; **no falta**:
@@ -163,6 +163,37 @@ commit propios para que el avance quede aunque el día se corte.
 >   oficial o ajustar la rugosidad, y lo segundo es lo que §10 prohíbe. Lo que
 >   sí cuadra es la parte de piezas especiales: 250 juntas de K = 0,15 más
 >   entrada y salida dan K = 39, y con el caudal publicado 3,98 mca contra 4.
+> - **6.20 y 6.26 quedan pendientes por el mismo motivo que el 6.23**, medido
+>   la madrugada del 4 de septiembre. En los dos el modelo está entendido y
+>   comprobado: en el **6.20** las tuberías 1 y 2 van en paralelo de C al nudo
+>   A, la 5 lleva la suma hasta B y allí se reparte entre la 3 y la 4; en el
+>   **6.26** el circuito de la piscina es un lazo cerrado —así que las cotas se
+>   cancelan y solo cuentan las pérdidas—, con las tuberías 2 y 3 en paralelo
+>   entre N y M y el filtro dentro de la 2. Lo que no cuadra son los números:
+>   con Colebrook el 6.20 da Q₂ = 91,7 l/s contra los 98,79 publicados (un
+>   7 %), y el 6.26 da 2158 W contra los 2265,34 (un 4,7 %). En los dos casos
+>   haría falta leer f entre un 5 y un 15 % por encima de lo que da la
+>   rugosidad relativa correspondiente.
+>
+>   La prueba de que el modelo es el bueno la da el propio 6.26: con la
+>   potencia **publicada**, el apartado b) sale 7,98 l/s contra los 7,92 del
+>   boletín, un 0,7 %. Es decir, la red está bien planteada y lo que discrepa
+>   es la lectura del ábaco. Se dejan sin escribir por lo mismo que el 6.23:
+>   publicarlos obligaría a contradecir el resultado oficial o a ajustar f, y
+>   §10 prohíbe lo segundo.
+> - **6.28** se queda por otra razón, y conviene dejarla escrita porque no es
+>   una discrepancia numérica sino de planteamiento. Sus apartados a), b) y c)
+>   se reproducen bien —14,81 m contra 15,07; 970,8 W contra 978,7; 6,69 l/s
+>   contra 6,63; 3,74 contra 3,68; 3,97 mca de válvula contra 4,06 y K = 28,2
+>   contra 28,8—, todo dentro del 3 % que cabe en leer el ábaco. Pero el
+>   apartado d) publica una altura de chorro de 5,5 m que con esos mismos
+>   datos sale 4,79. Y al intentar cuadrarlo aparece algo más de fondo: con
+>   las dos boquillas iguales, «alturas iguales» obliga a Q₂ = Q₃, y entonces
+>   el sistema —bomba a potencia constante, tubería 1, y las dos ramas— tiene
+>   **una ecuación menos que incógnitas**. La válvula queda como grado de
+>   libertad, así que hay infinitas soluciones y el boletín elige una sin
+>   decir cuál es el criterio. Hasta saberlo, no se puede escribir.
+> - **6.29** no se ha llegado a examinar.
 > - **2.40** (presa de gravedad) y **2.17** dan las cotas en el dibujo aunque
 >   el texto no diga «figura».
 >
