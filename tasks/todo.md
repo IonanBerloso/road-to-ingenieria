@@ -108,7 +108,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 133 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 134 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -170,6 +170,27 @@ commit propios para que el avance quede aunque el día se corte.
 >   que pediría de verdad el patrón **figura fija** de §05, que sigue sin
 >   construirse. Diez sub-casos son bastante trabajo de SVG: conviene decidir
 >   el patrón antes de empezar, no a mitad.
+> - **2.42** (compuerta acodada con contrapeso de hormigón sumergido) está
+>   leído, resuelto y **no escrito**, y merece la pena dejar el trabajo hecho
+>   porque falta un solo dato. La geometría está clara —la compuerta es una
+>   ele que gira en A, en el suelo; el brazo vertical sube 2 m hasta la lámina
+>   libre y 0,50 m más hasta el brazo horizontal; el tope está a la altura del
+>   agua— y las dos respuestas publicadas salen exactas **si el brazo
+>   horizontal mide 2,5 m**:
+>
+>   - $W_{ef}\,L = \gamma b H^{3}/6 = 39\,200$ N·m con $H = 2$ m y $b = 3$ m;
+>   - $V = 39\,200/(2{,}5\cdot 13\,800) = 1{,}136$ m³ ✓ publicado;
+>   - $R\cdot 2 = 39\,200 - \gamma b\,1{,}5^{3}/6 \Rightarrow R = 11\,331{,}3$ N
+>     ✓ publicado.
+>
+>   El problema es que **la figura no acota ese brazo por ningún sitio**
+>   —comprobado ampliando la página a 300 ppp con margen por los cuatro
+>   lados—, así que los 2,5 m están **deducidos del resultado**, no leídos. Y
+>   a diferencia de la `n` del PVC del 8.8, aquí no hay una segunda ecuación
+>   que lo confirme: la reacción del tope solo fija el producto $W_{ef}L$, no
+>   $L$ por separado. Dos indicios de que es correcto —sale redondo, y
+>   coincide con $0{,}50 + 2$— no son una lectura (§13 caso 2). Se escribe el
+>   día que aparezca el dato: la comprobación son dos minutos.
 > - **2.34** (compuerta cilíndrica en un rincón a 45°) está leído y **no
 >   escrito**: la figura no fija sin ambigüedad dónde apoya el cilindro
 >   respecto de la cota de 1,2 m, y ninguna de las lecturas probadas reproduce
