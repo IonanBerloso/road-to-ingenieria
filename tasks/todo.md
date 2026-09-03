@@ -115,9 +115,17 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 193 de 236.** **Capítulo 8 cerrado
+> **Y con el 6.29 se acaba la lista de recomendados que se puede escribir.**
+> De los 236 problemas de la colección, los que la página de la asignatura
+> marca como recomendados están todos dentro salvo siete, y los siete están
+> **declarados** con su motivo: 2.4, 2.34 y 2.42 porque la figura no acota un
+> dato que hace falta; 6.20, 6.23 y 6.26 porque sus resultados exigen leer f
+> por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
+> que queda del corpus son problemas no recomendados.
+>
+> **Estado al cerrar la madrugada del 4 de septiembre: 194 de 236.** **Capítulo 8 cerrado
 > entero, 22 de 22**, y con él los capítulos 1 (27/27) y 5 (19/20). Capítulo 6
-> en 19 de 29, con los cinco problemas resueltos del boletín ya dentro (6.4,
+> en 20 de 29, con los cinco problemas resueltos del boletín ya dentro (6.4,
 > 6.5, 6.7, 6.8 y 6.11);
 > capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
@@ -142,9 +150,9 @@ commit propios para que el avance quede aunque el día se corte.
 > al terminar una tanda se vuelve a pasar el inventario y se comprueba que el
 > incremento es el esperado; ningún guardián mira esto.
 >
-> **Los que faltan y no dependen de figura son ya solo siete** —eran quince el
-> 3 de septiembre; entraron 2.17, 2.40, 3.6, 3.17, 3.26, 3.34, 6.18 y 8.11—.
-> Quedan: **5.12, 6.23, 6.25, 6.29, 7.16, 9.9 y 9.11**. Y de esos, varios
+> **Los que faltan y no dependen de figura son ya solo seis** —eran quince el
+> 3 de septiembre; entraron 2.17, 2.40, 3.6, 3.17, 3.26, 3.34, 6.18, 6.29 y
+> 8.11—. Quedan: **5.12, 6.23, 6.25, 7.16, 9.9 y 9.11**. Y de esos, varios
 > tampoco se sostienen solos:
 >
 > - **6.23** queda pendiente, y por un motivo distinto del que se anotó
@@ -193,7 +201,6 @@ commit propios para que el avance quede aunque el día se corte.
 >   **una ecuación menos que incógnitas**. La válvula queda como grado de
 >   libertad, así que hay infinitas soluciones y el boletín elige una sin
 >   decir cuál es el criterio. Hasta saberlo, no se puede escribir.
-> - **6.29** no se ha llegado a examinar.
 > - **2.40** (presa de gravedad) y **2.17** dan las cotas en el dibujo aunque
 >   el texto no diga «figura».
 >
