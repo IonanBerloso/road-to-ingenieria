@@ -115,7 +115,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 140 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 143 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
