@@ -115,7 +115,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 171 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 173 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -219,6 +219,18 @@ commit propios para que el avance quede aunque el día se corte.
 > La hipótesis es un redondeo al alza a valor de obra, y como hipótesis queda.
 > Se comprueba el día que aparezcan las soluciones desarrolladas del profesor.
 
+> **Una discrepancia sin explicar, y así queda dicho.** El 4.9 —la caja negra
+> de cuatro tuberías— reproduce Rx = −37,4 N contra los −37,3 publicados, lo
+> que confirma la lectura de los ángulos (los del 2 y el 4 se miden desde los
+> bordes VERTICALES de la caja). Pero Ry sale −2.085 frente a −2.048,3: un
+> 1,8 % que no se ha sabido reproducir con ninguna variante razonable del
+> planteamiento. Se atribuye a un redondeo de las presiones intermedias y está
+> declarado en la propia resolución.
+>
+> El ejercicio obliga además a una hipótesis que el enunciado no da: que la
+> carga de Bernoulli se conserva dentro de la caja. Sin ella hay tres
+> incógnitas más que ecuaciones. También está dicha.
+>
 > **Otra discrepancia con el boletín, esta explicada.** El 2.35 —el conducto de
 > dos semicilindros con aceite arriba y un manómetro de mercurio en la clave—
 > publica 17.514 kg/m, 1.078 kg y 11,7 cm, y los tres salen de tomar en la clave
