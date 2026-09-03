@@ -73,9 +73,16 @@ commit propios para que el avance quede aunque el día se corte.
 
 > **El orden cambió el 3 de septiembre, y por un dato medido.** De los cinco
 > primeros problemas del capítulo 2 que se abrieron, **tres no se pudieron
-> escribir** — no por dificultad, sino porque su figura no se lee con
+> escribir** — no por dificultad, sino porque su figura no se leía con
 > suficiente seguridad. Al triarlos todos salió que **97 de los 138 llevan
 > figura y 41 no**, y que los que no la llevan están muy concentrados:
+>
+> > **Corregido el mismo día, más tarde:** los tres —2.10, 2.14 y 2.16— se
+> > leen perfectamente **renderizando a 300 ppp en vez de a 125**, y los tres
+> > están ya escritos con sus resultados publicados reproducidos exactos. Lo
+> > que no se leía era la resolución del render, no la figura. Regla que sale
+> > de aquí: **una figura no se declara ilegible sin haberla mirado a 300 ppp
+> > y recortada.** Ver la nota de cada uno más abajo.
 >
 > | cap. | sin figura | de un total de |
 > |---|---|---|
@@ -108,7 +115,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 139 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 140 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -191,6 +198,13 @@ commit propios para que el avance quede aunque el día se corte.
 >   $L$ por separado. Dos indicios de que es correcto —sale redondo, y
 >   coincide con $0{,}50 + 2$— no son una lectura (§13 caso 2). Se escribe el
 >   día que aparezca el dato: la comprobación son dos minutos.
+> - **2.4** (compuerta plana a 45° apoyada sobre otra circular, siete
+>   apartados) está leído y **no escrito** por un motivo distinto: **no publica
+>   ningún resultado**. Todo lo que se escribiera sería derivación propia sin
+>   nada contra lo que contrastarla, y el criterio de esta tanda ha sido
+>   verificar cada número contra el boletín antes de publicarlo. Se hará el
+>   día que haya soluciones desarrolladas, o como ejercicio propio marcado como
+>   tal — pero no como transcripción de la colección.
 > - **2.34** (compuerta cilíndrica en un rincón a 45°) está leído y **no
 >   escrito**: la figura no fija sin ambigüedad dónde apoya el cilindro
 >   respecto de la cota de 1,2 m, y ninguna de las lecturas probadas reproduce
@@ -273,28 +287,39 @@ Un hueco declarado es información; uno callado es una promesa incumplida
 propósito**, porque la única forma de publicarlos habría sido ajustar un dato
 hasta que el número cuadrara — que es exactamente lo que prohíbe §10.
 
-- **2.10 · el manómetro en cadena de seis tramos.** La figura tiene siete
-  cotas (1 · 1,5 · 2 · 2,2 · 2,5 · 5 · 6) y cinco fluidos (agua, aire, s = 3,
-  mercurio, s = 4, aceite s = 0,8). Los niveles se leen bien; **lo que no se
-  puede decidir es qué fluido ocupa cada tramo**, y en particular a qué cota
-  llega el mercurio por la rama derecha. La reconstrucción más razonable da
-  $p_A = 7{,}61\ \text{kg/cm}^{2}$ y el examen publica **7,797**. La diferencia
-  es del 2,5 %: se arregla moviendo una cota once centímetros, y eso sería
-  inventar. Hace falta el PDF a más resolución o la solución del profesor.
+- **2.10 · el manómetro en cadena — RESUELTO.** A 125 ppp no se podía decidir
+  qué fluido ocupaba cada tramo ni hasta qué cota llegaba el mercurio, y la
+  mejor reconstrucción daba 7,61 contra los 7,797 publicados. **A 300 ppp el
+  reparto es inequívoco**: aceite de 6 a 5, s = 4 de 5 a 2,2, mercurio de 2,2
+  a 1, s = 3 de 1 a 2, aire de 2 a 2,5, agua de 2,5 a 1,5. Con eso sale
+  **7,797 kg/cm² y 7,641 bar, los dos exactos** (con 1 atm = 1,033 kg/cm²).
+  No hubo que mover ninguna cota: había que verla.
 
-- **2.14 · el micromanómetro de dos líquidos.** Aquí el problema es el
-  contrario: la figura se lee bien y **el resultado publicado tiene una sola
-  cifra significativa**, $3\cdot 10^{-4}\ \text{kg/cm}^{2}$. Con la corrección
-  por el desplazamiento de los depósitos sale $2{,}77\cdot 10^{-4}$; sin ella,
-  $2{,}54\cdot 10^{-4}$. **Las dos redondean a 3**, así que el dato publicado
-  no distingue cuál de los dos modelos pide el enunciado, y la diferencia entre
-  ellos es del 9 %. Publicar uno sería elegir por el profesor.
+- **2.14 · el micromanómetro de dos líquidos — RESUELTO, y con una corrección
+  a la nota anterior.** El resultado publicado, $3\cdot 10^{-4}$ kg/cm², tiene
+  una sola cifra, y eso sigue siendo verdad. Pero la duda entre «con
+  corrección de depósitos» y «sin ella» no era una elección del profesor: **es
+  física, y tiene una sola respuesta**. Cuando la interfase sube $h$ por el
+  tubo, el líquido pesado que entra en el tubo, $a\,h$, sale **entero** del
+  depósito A; y el ligero que desaloja, también $a\,h$, entra **entero** en el
+  B. Luego $\delta_A = a\,h/A_A$ y $\delta_B = a\,h/A_B$ — no la mitad. El
+  $a\,L/2A$ que usaba la nota anterior es lo que valdría si los 5,08 cm fuesen
+  la separación total entre dos meniscos de una U simétrica, y no lo son: son
+  el desplazamiento de **una** interfase en **un** tubo.
 
-  Hay una variante que da **3,01** exacto —contar el desplazamiento de los
-  depósitos con $a\,L/A$ en vez de $a\,L/2A$—, y precisamente por eso hay que
-  desconfiar de ella: se encontró buscando el número, no leyendo la figura.
+  Con el balance correcto sale $3{,}03\cdot 10^{-4}$, y las correcciones de los
+  depósitos son el 16 % del total. La «variante que daba 3,01» no era una
+  búsqueda del número: era la deducción bien hecha, y se descartó por
+  desconfianza en vez de por física. Queda dicho porque es un error de método
+  que conviene reconocer: **desconfiar de un resultado porque cuadra no es
+  rigor si no se ha comprobado la deducción.**
 
-Los dos quedan en el inventario como pendientes, no como hechos.
+- **2.16 · el matraz invertido — RESUELTO.** También se lee a 300 ppp. Con
+  $P_A = P_{atm} + \gamma_{Hg}h - \gamma_w a$ y C a $h + l - a = 80$ cm sobre
+  la boca salen los cuatro publicados: 578,2 mbar, 1,558 bar, 1,670 kg/cm² y
+  198,5 Torr.
+
+Los tres están escritos y en el corpus.
 
 ---
 
