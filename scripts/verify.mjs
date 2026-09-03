@@ -773,6 +773,20 @@ if (SOLO_FUENTE) {
       latexCrudo.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
     }
 
+    /* Y el caso hermano, que esta regla NO veía: una fórmula que sí llega a
+       KaTeX pero que KaTeX no sabe dibujar. Ahí no queda ningún `$` suelto
+       —KaTeX se los ha comido— sino un `katex-error`, que se publica como un
+       recuadro rojo con el LaTeX dentro. Es peor que el `$` crudo, porque
+       parece deliberado.
+
+       Añadida el 3 de septiembre de 2026 tras encontrar así un `\boxed{` sin
+       cerrar en la resolución de un ejercicio de Álgebra que llevaba semanas
+       publicado, con el suelo en verde todas ellas. Barrido el corpus entero
+       —9 650 campos con fórmula— era el único. */
+    for (const m of html.matchAll(/class="katex-error"[^>]*title="([^"]{0,90})/g)) {
+      latexCrudo.push(`${nombre} → KaTeX no sabe dibujarla: ${m[1].replace(/&#x27;/g, "'")}…`);
+    }
+
     /* una figura que se ha publicado partida.
        Añadida el 25 de agosto de 2026, y es la que más ha rendido de todo el
        fichero. Una figura incrustada en un `ejercicios.yaml` es HTML crudo

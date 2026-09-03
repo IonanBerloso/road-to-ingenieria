@@ -210,9 +210,22 @@ const camposDeProsa = (e) => {
     for (const c of ['pregunta', 'pista', 'desarrollo', 'titulo']) {
       if (typeof p?.[c] === 'string') salida.push([`paso ${i + 1} · ${c}`, p[c]]);
     }
-    for (const o of p?.opciones ?? []) if (o?.texto) salida.push([`paso ${i + 1} · opción`, o.texto]);
-    for (const d of p?.distractores ?? []) if (d?.mensaje) salida.push([`paso ${i + 1} · distractor`, d.mensaje]);
-    for (const z of p?.piezas ?? []) if (z?.texto) salida.push([`paso ${i + 1} · pieza`, z.texto]);
+    /* Los `mensaje` van también, y no es un detalle: el fallo que obligó a
+       escribir la comprobación del LaTeX crudo vivía en el `mensaje` de una
+       pieza trampa, y la primera versión de esta función solo miraba los
+       `texto`. Un guardián que no mira donde está el fallo no es un
+       guardián. */
+    for (const o of p?.opciones ?? []) {
+      if (o?.texto) salida.push([`paso ${i + 1} · opción`, o.texto]);
+      if (o?.mensaje) salida.push([`paso ${i + 1} · diagnóstico de opción`, o.mensaje]);
+    }
+    for (const d of p?.distractores ?? []) {
+      if (d?.mensaje) salida.push([`paso ${i + 1} · distractor`, d.mensaje]);
+    }
+    for (const z of p?.piezas ?? []) {
+      if (z?.texto) salida.push([`paso ${i + 1} · pieza`, z.texto]);
+      if (z?.mensaje) salida.push([`paso ${i + 1} · mensaje de la trampa`, z.mensaje]);
+    }
   }
   return salida.filter(([, t]) => typeof t === 'string' && t.includes('$'));
 };
@@ -222,9 +235,28 @@ try {
   for (const e of ejercicios) {
     for (const [dónde, texto] of camposDeProsa(e)) {
       const html = await mate(texto, 'revision');
-      if (!html.includes('katex-error')) continue;
-      const motivo = /title="ParseError: ([^"]{0,110})/.exec(html)?.[1] ?? 'KaTeX no ha sabido dibujarla';
-      mal(e.id ?? '(sin id)', `${dónde}: fórmula que no se dibuja — ${motivo}`);
+      if (html.includes('katex-error')) {
+        const motivo = /title="ParseError: ([^"]{0,110})/.exec(html)?.[1] ?? 'KaTeX no ha sabido dibujarla';
+        mal(e.id ?? '(sin id)', `${dónde}: fórmula que no se dibuja — ${motivo}`);
+        continue;
+      }
+      /* Y el fallo hermano, que NO produce error de KaTeX porque el LaTeX no
+         llega a KaTeX: una fórmula partida entre dos líneas cuya continuación
+         empieza por `-`, `*` o `+` abre una lista de Markdown, el párrafo se
+         cierra y los `$` se publican como texto. Se detecta igual que en
+         `verify.mjs`: si queda un `$` en el texto visible, algo no se dibujó.
+         Añadido el 3 de septiembre de 2026, después de que esta misma trampa
+         tumbara el suelo dos veces en la misma semana (§17). */
+      const visible = html
+        .replace(/<math[\s\S]*?<\/math>/g, '')
+        .replace(/<[^>]+>/g, ' ');
+      const suelto = /.{0,40}\$.{0,40}/.exec(visible)?.[0];
+      if (suelto) {
+        mal(
+          e.id ?? '(sin id)',
+          `${dónde}: LaTeX publicado como texto — …${suelto.replace(/\s+/g, ' ').trim()}…`,
+        );
+      }
     }
   }
 } catch (err) {

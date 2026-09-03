@@ -1270,6 +1270,14 @@ Cosas que ya han costado horas. No son opiniones.
   fórmula entre dos líneas, la segunda nunca empieza por un signo menos**;
   se recoloca el corte o se pasa a `$$…$$`.
 
+  **Y no es solo el menos: en Markdown abren lista `-`, `*` y `+`.** El 3 de
+  septiembre de 2026 volvió a caer el suelo por lo mismo con un `+ ` — una
+  raíz partida como `$\sqrt{11471{,}5^{2}` y `+ 332{,}5^{2}}$` en la línea
+  siguiente. La regla completa: **la continuación de una fórmula no empieza
+  nunca por `-`, `*` ni `+`.** Y hay una forma de no tener que acordarse: si
+  la fórmula no cabe en una línea, va en `$$…$$` con las vallas en línea
+  propia, que es la forma que el corpus usa para todo lo demás.
+
   **Y pasó dos veces el mismo día**, las dos con un `NPSH` y las dos
   costando un suelo entero de doce minutos. El guardián está bien donde
   está —`verify.mjs` lo caza— pero conviene barrer antes de lanzarlo: se
@@ -1500,6 +1508,25 @@ Cosas que ya han costado horas. No son opiniones.
   de prosa por el procesador de verdad y mira si KaTeX ha devuelto un error:
   un segundo, contra los doce minutos del suelo. Validado al revés con el
   bloque original, que sale rojo en las tres fórmulas.
+
+  > **Y hay dos formas de que una fórmula no se dibuje, no una.** La regla
+  > vieja de `verify.mjs` buscaba un `$` suelto en el texto publicado, que es
+  > lo que queda cuando el LaTeX **no llega** a KaTeX. Pero si llega y KaTeX
+  > no sabe dibujarlo, no queda ningún `$`: queda un `katex-error`, o sea un
+  > recuadro rojo con el LaTeX dentro, que es peor porque parece deliberado.
+  >
+  > Esa segunda forma no la miraba nadie. Al añadirla —3 de septiembre de
+  > 2026— aparecieron **dos fallos que llevaban semanas publicados** con el
+  > suelo en verde todas ellas: un `\boxed{` sin cerrar en una resolución de
+  > Álgebra y un `$$…$$` partido en dos líneas en un examen de Cálculo.
+  > Barridos los 22 228 campos con fórmula del contenido entero, eran los
+  > únicos dos. Están arreglados y la comprobación vive ya en `verify.mjs` y
+  > en `revisa-ejercicios.mjs`.
+  >
+  > La lección de método: **al escribir un guardián, comprueba que mira donde
+  > está el fallo.** La primera versión de `revisa-ejercicios.mjs` recorría
+  > los `texto` de las opciones y las piezas pero no sus `mensaje`, y el fallo
+  > que motivó todo esto vivía justo en un `mensaje`.
 - **`titulo` y `fuente` son texto plano, sin `$…$`.** Un `(matriz $A_1$)` en
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
