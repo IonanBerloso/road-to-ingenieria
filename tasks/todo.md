@@ -115,7 +115,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 143 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 145 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -218,6 +218,20 @@ commit propios para que el avance quede aunque el día se corte.
 > dato para cuadrarlo (§10): está dicho en la propia resolución del ejercicio.
 > La hipótesis es un redondeo al alza a valor de obra, y como hipótesis queda.
 > Se comprueba el día que aparezcan las soluciones desarrolladas del profesor.
+
+> **Otra discrepancia con el boletín, esta explicada.** El 2.35 —el conducto de
+> dos semicilindros con aceite arriba y un manómetro de mercurio en la clave—
+> publica 17.514 kg/m, 1.078 kg y 11,7 cm, y los tres salen de tomar en la clave
+> 13.600 · 0,25 = 3.400 kg/m². Pero el mercurio del ramal cerrado está 20 cm por
+> encima de la clave (leído a 300 ppp, sin duda) y el tubo entre medias va lleno
+> del aceite del conducto: 120 kg/m² más, 3.520. Con la física completa salen
+> 17.874 kg/m, 1.099,5 kg y 11,83 cm. El ejercicio publica los correctos y lleva
+> los tres números del boletín como distractores que dicen de dónde salen, y
+> la resolución lo explica con el porcentaje (2 % en la fuerza, 1 % en el
+> diámetro). No se ha ajustado nada para cuadrar (§10): se ha dicho.
+>
+> El 2.40 (presa de gravedad con hielo y subpresión) sale exacto: 22,56 m con
+> momentos respecto de O, publicado 22,5.
 
 > **Estado al cerrar la primera tanda del 3 de septiembre: 124 de 236.** Capítulo 5
 > cerrado salvo el 5.12 (declarado inescribible: pide una densidad del aire
