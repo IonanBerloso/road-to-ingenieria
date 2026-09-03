@@ -115,7 +115,7 @@ commit propios para que el avance quede aunque el día se corte.
 | 7.º | 5 · Análisis dimensional | t16 | 14 | |
 | 8.º | 7 · Golpe de ariete | t20 | 10 | el que menos falta |
 
-> **Estado al cerrar el 3 de septiembre: 145 de 236.** Capítulo 8 en 13 de 22
+> **Estado al cerrar el 3 de septiembre: 153 de 236.** Capítulo 8 en 13 de 22
 > (entran 8.8 y 8.19); capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
@@ -249,6 +249,30 @@ commit propios para que el avance quede aunque el día se corte.
 > | 7 | 14 | **3** |
 > | 8 | 11 | 11 |
 > | 9 | 4 | 15 |
+>
+> **La distribución oficial de ejercicios llegó el 3 de septiembre de 2026** y
+> está transcrita en `referencia/fluidos-recomendados.json`. Manda sobre
+> cualquier reparto propio, y cambia tres cosas:
+>
+> 1. **Un problema se archiva en el tema que dice la escuela, no en el que
+>    parezca.** Tres estaban mal: el 3.1 en t10-continuidad y el 3.14 y el
+>    3.15 en t13-medidores; los tres son del tema 12. Movidos, con sus ids y
+>    la ruta que los enlaza. Antes de suponer un tema, se mira el JSON.
+>
+> 2. **No todos los problemas de la Colección están recomendados.** De los 86
+>    que faltan, 51 lo están y 35 no. El capítulo 9 entero —quince problemas
+>    de turbomáquinas— y los tres que restan del 7 no aparecen en ninguna
+>    lista: son los últimos, no los siguientes.
+>
+> 3. **El tema 25 no tiene problemas de la Colección**: solo ejercicios de
+>    examen. Y hay un dato que la página no da y que no se inventa: en las
+>    capturas no salen los temas 20, 22, 23 y 24, y no consta si es que no
+>    los lista o que las capturas no llegan (§13 caso 5).
+>
+> El orden que sale de aquí para lo que queda: **capítulo 3** (19 recomendados,
+> y sus cuatro «resueltos» que faltan traen resolución desarrollada en la
+> propia Colección), luego **4** (11), **6** (14), **8** (9) y el resto del 2
+> (2.4, 2.34 y 2.42, los tres declarados y bloqueados por un dato).
 >
 > **Lo que desbloqueó el capítulo 8**, y es reutilizable: quince de sus
 > veintidós problemas son sección circular parcialmente llena, que se resuelve
