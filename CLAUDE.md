@@ -853,12 +853,33 @@ Comprueba solo **lo que el propio contenido ya afirma**, nunca algo inventado:
 
 Lo que no sabe evaluar lo declara **saltado**, y no lo cuenta como fallo.
 
-> **Su límite, dicho aquí para que nadie lea mal su verde.** Solo alcanza a las
-> respuestas escritas como decimal. **Álgebra queda entera fuera**: sus
-> resultados son objetos exactos —vectores, matrices— y sus ejercicios de
-> determinantes usan propiedades, no matrices escritas. Cero desajustes en
-> Álgebra significa «no hay nada que este guion sepa mirar», no «está
-> comprobada». Ahí la verificación sigue siendo leer las matemáticas.
+> **Su límite, dicho aquí para que nadie lea mal su verde.** Solo mira los
+> pares escritos con `\approx`, y solo cuando el lado izquierdo se puede
+> evaluar. Medido por asignatura el 4 de septiembre de 2026:
+>
+> | | pares comprobados | saltados |
+> |---|---|---|
+> | Cálculo | 279 | 583 |
+> | Álgebra | **0** | 1 |
+> | Fluidos | **0** | 19 |
+>
+> Es decir: **los 279 pares son todos de Cálculo, y Fluidos entera está
+> fuera**, no solo Álgebra. Este fichero decía hasta ese día que la que
+> quedaba fuera era Álgebra —porque sus resultados son objetos exactos,
+> vectores y matrices, y eso sigue siendo cierto— y callaba lo de Fluidos,
+> que es la asignatura con más aritmética del proyecto. El motivo es otro y
+> es de estilo: **el corpus de Fluidos escribe `=` y no `\approx`**, así que
+> el guion no reconoce ni un solo par. «Recalcula en verde» tras una tanda
+> de Fluidos no significa nada; ahí la verificación sigue siendo evaluar los
+> números a mano contra el boletín, que es lo que se ha venido haciendo.
+>
+> Ampliarlo a `=` está **medido y no es una línea**: aceptando también `=`,
+> Fluidos pasa de 0 a 1216 pares y salta 259 avisos, un 21 % — el mismo
+> orden de ruido que hizo descartar los dos guardianes de texto de abajo.
+> Los tres tipos de falso positivo están identificados: cambios de unidad en
+> la misma cadena (`= 19\,836` W `= 19,836` kW), redondeos encadenados que
+> difieren en la última cifra, y expresiones que el extractor corta por la
+> mitad. Hasta que se resuelvan los tres, no se amplía.
 
 Antes de escribirlo se intentaron dos guardianes de texto y los dos se
 descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusión,

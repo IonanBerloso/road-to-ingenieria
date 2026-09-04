@@ -123,10 +123,44 @@ commit propios para que el avance quede aunque el día se corte.
 > por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
 > que queda del corpus son problemas no recomendados.
 >
-> **Estado al cerrar el 4 de septiembre: 208 de 236, y el capítulo 9 se queda
-> solo.** De los 28 que faltan, **13 están declarados** con su motivo y los
-> otros **15 son todo el capítulo 9**, el de turbomáquinas. Es decir: de los
-> capítulos 1 a 8 ya no queda nada escribible.
+> **Estado al cerrar el 4 de septiembre: 213 de 236, y lo que queda es el
+> anexo de bombas.** De los 23 que faltan, **catorce están declarados** con
+> su motivo y los **nueve restantes dependen del anexo de curvas de
+> bombas**. De los capítulos 1 a 8 ya no queda nada, y del 9 no queda nada
+> que se pueda escribir sin abrir el anexo.
+>
+> El capítulo 9 se abrió con cinco, y con ellos se aprendió cómo está hecho:
+> **sus cuatro primeros problemas vienen resueltos en la propia colección**,
+> con los puntos de la curva de la bomba escritos en la resolución, así que no
+> hace falta leer el anexo de catálogos para escribirlos. Entraron 9.1 (el
+> trasvase y el depósito que se presuriza), 9.2 (la fuente de chorro
+> regulable), 9.4 (la bomba a dos mil metros de altitud), 9.9 (el sobrepresor
+> que reparte a dos servicios) y 9.19 (llenar la piscina con la red y una
+> bomba), que trae su curva de bomba escrita como fórmula y por eso tampoco
+> necesita el anexo.
+>
+> De los diez que quedan, **nueve dependen del anexo de curvas de bombas**
+> —cada uno dice «Documentación: Ccb: Anexo …» y remite a las páginas 199 y
+> siguientes de la colección: son 9.3, 9.6, 9.7, 9.8, 9.11, 9.13, 9.15, 9.17 y
+> 9.18—. Ese es un tipo de trabajo distinto: leer una carta de catálogo
+> rasterizada para elegir rodete. Conviene hacerlos en una tanda propia y con
+> el procedimiento decidido antes de empezar. El único que no lo necesitaba
+> era el **9.16**, y se ha declarado abajo: el boletín publica solo el
+> veredicto «No cavita», sin un número contra el que contrastar, y el
+> manómetro de mercurio de la entrada admite dos lecturas.
+>
+> **Es decir: la colección se queda aquí hasta que se decida cómo leer el
+> anexo de curvas de bombas.** Es la primera vez en toda la fase C que el
+> límite no es el trabajo sino una herramienta que falta, y por eso conviene
+> pensarla antes que ponerse: son nueve problemas que dependen de la misma
+> lectura, así que lo que se invierta en hacerla bien se cobra nueve veces.
+>
+> Dos avisos de esta tanda, por si alguien mira los números al detalle: el
+> 9.9 lleva **un apartado declarado dentro del propio ejercicio** —su altura
+> manométrica necesita la cota del depósito de aspiración, que el enunciado
+> no da— y el 9.19 publica en b4 un coste de 0,832 euros donde el cálculo
+> directo da 0,85, un 2 % que sale de con qué caudal se evalúa la altura de
+> la bomba. Los dos están dichos en el propio contenido.
 >
 > **Capítulo 7 cerrado entero, 17 de 17**, con 7.15 (el canal de montaña con su
 > media caña y la válvula que el cliente quiere automática), 7.16 (la Pelton del
@@ -250,6 +284,18 @@ commit propios para que el avance quede aunque el día se corte.
 >   $L$ por separado. Dos indicios de que es correcto —sale redondo, y
 >   coincide con $0{,}50 + 2$— no son una lectura (§13 caso 2). Se escribe el
 >   día que aparezca el dato: la comprobación son dos minutos.
+> - **9.16** (el medidor de codo y el estudio de cavitación) está leído y
+>   **no escrito**, y es el único del capítulo 9 que no depende del anexo de
+>   bombas. El boletín publica solo el veredicto, «No cavita», sin ningún
+>   número, y para escribirlo harían falta dos lecturas que no están cerradas:
+>   el signo del manómetro de mercurio de la entrada de la bomba —h1 = 0,14 m
+>   de agua y h2 = 0,49 m de mercurio, y según cómo se lea el esquema la
+>   presión de entrada sale entre −6,5 y −6,8 mca— y qué presión atmosférica
+>   tomar, porque la instalación está en la **cota 900** y el enunciado no la
+>   da. El veredicto aguanta con todas las lecturas probadas —el NPSH
+>   disponible queda entre 2,6 y 3,7 mca contra los 2 requeridos— pero
+>   publicar un número sería elegir una de ellas (§13 caso 2). Con la lectura
+>   del ábaco Q-h en h = 30 cm salen unos 4 l/s, y eso sí está claro.
 > - **6.24** (dos depósitos a 20 y 45 °C que se mezclan en un nudo) está leído,
 >   modelado y **no escrito**: la temperatura de salida no se puede reproducir.
 >   La proporción entre los dos caudales solo depende de las dos ramas, y con
@@ -1532,6 +1578,23 @@ Enter y Escape. Falta que busque **conceptos** dentro de los temas —hoy el
 ---
 
 ## Deudas conocidas, escritas para que no se olviden
+
+**53 · `recalcula` no comprueba ni un solo número de Fluidos.** Medido el 4
+de septiembre de 2026, asignatura por asignatura: los 279 pares que dice
+comprobar son **todos de Cálculo**; Álgebra da 0 y Fluidos da 0 también. El
+motivo no es el de Álgebra —allí los resultados son objetos exactos— sino de
+estilo de escritura: el guion solo reconoce `\approx` y el corpus de Fluidos
+escribe `=`. Consecuencia práctica: cada commit de esta tanda ha informado
+«recalcula sin desajustes» y eso, para Fluidos, no quería decir nada.
+
+Ampliarlo a `=` está probado y no vale como cambio de una línea: con `=`
+aceptado, Fluidos pasa de 0 a 1216 pares y saltan 259 avisos (21 %), el mismo
+orden de ruido que hizo descartar los dos guardianes de texto que cuenta §11.
+Los falsos positivos son de tres clases y las tres tienen arreglo conocido:
+cadenas con cambio de unidad, redondeos encadenados que bailan en la última
+cifra, y expresiones que `expresionAntesDe` corta por la mitad. El trabajo es
+de una tarde y merece la pena, porque hoy la aritmética de la asignatura más
+numérica del proyecto no la mira nadie salvo quien la escribe.
 
 **52 · 22 subíndices con tilde dentro de `$…$`.** `P_{útil}`, `k_{válv}`,
 `Z_{máx}`, `\rho_{hormigón}`, `v_{tubería}`, `Q_{teórico}`, `V_{teórica}`,
