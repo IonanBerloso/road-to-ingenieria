@@ -123,7 +123,7 @@ commit propios para que el avance quede aunque el día se corte.
 > por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
 > que queda del corpus son problemas no recomendados.
 >
-> **Estado al cerrar la madrugada del 4 de septiembre: 195 de 236.** **Capítulo 8 cerrado
+> **Estado al cerrar la madrugada del 4 de septiembre: 197 de 236.** **Capítulo 8 cerrado
 > entero, 22 de 22**, y con él los capítulos 1 (27/27) y 5 (19/20). Capítulo 6
 > en 20 de 29, con los cinco problemas resueltos del boletín ya dentro (6.4,
 > 6.5, 6.7, 6.8 y 6.11);
