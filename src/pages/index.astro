@@ -359,6 +359,33 @@ const enteras = asignaturas
               </div>
 
               <aside class="carril">
+                {/* Cómo se compone la nota. Lo pidió la auditoría externa del
+                    4 de septiembre de 2026 y lo llamó la mejora de más
+                    rendimiento de todo el informe: entre un 20 y un 30 % de la
+                    nota no es el examen escrito, y la página no lo decía en
+                    ningún sitio. Va antes que las rutas y que los exámenes
+                    porque es lo que decide qué hay que estudiar. */}
+                {a.data.evaluacion && (
+                  <div class="nota-caja">
+                    <p class="rotulo nc-tit">Cómo se puntúa</p>
+                    {a.data.evaluacion.modalidades.map((m) => (
+                      <div class="nc-mod">
+                        <p class="nc-nombre">{m.nombre}</p>
+                        <ul class="nc-partes">
+                          {m.partes.map((p) => (
+                            <li>
+                              <span class="nc-peso">{p.peso} %</span>
+                              <span class="nc-que">{p.que}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        {m.nota && <p class="nc-nota">{m.nota}</p>}
+                      </div>
+                    ))}
+                    <p class="nc-fuente">{a.data.evaluacion.fuente}</p>
+                  </div>
+                )}
+
                 {rutasPorAsignatura.has(a.id) && (
                   <div class="rc" id={`${a.id}-rutas`}>
                     <p class="mano rc-tit">Por dónde empezar</p>
@@ -457,6 +484,28 @@ const enteras = asignaturas
   const escena = document.querySelector<HTMLElement>('.escena')!;
   const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* A partir de aquí manda `data-vista`, y `:target` se aparta.
+   *
+   * POR QUÉ HACE FALTA ESTA MARCA. Las dos vías de abrir el detalle no se
+   * hablaban: el CSS lo abre con `:target` y el script con `.activa` +
+   * `history.replaceState`, y **`replaceState` no actualiza `:target`**. Quien
+   * entraba por un enlace compartido con almohadilla —`…/#algebra`— dejaba esa
+   * sección abierta por `:target` para siempre: pulsar «Cálculo» añadía la
+   * suya encima y se veían **las dos**, con Álgebra tapando a Cálculo por ir
+   * antes en el DOM. Ni «← todas» la cerraba. Solo lo arreglaba recargar.
+   *
+   * Lo encontró la auditoría externa del 4 de septiembre de 2026, y no lo
+   * había visto nadie porque **desde la portada sin hash todo funciona**: hay
+   * que llegar por un enlace con ancla, que es justo como llega el alumno
+   * nuevo al que se lo pasan por WhatsApp.
+   *
+   * La marca es necesaria y no basta con `data-vista`: ese atributo viene YA
+   * en el HTML servido —`data-vista="lista"`—, así que una regla que solo
+   * mirara a él se aplicaría también sin JavaScript y rompería el respaldo de
+   * `:target`, que es el que hace que la portada funcione sin scripts (§11).
+   * `data-js` solo existe cuando el script ha tomado el control. */
+  escena.dataset.js = '';
+
   /* ── abrir y cerrar el detalle ─────────────────────────────────── */
   const detalles = new Map<string, HTMLElement>(
     [...document.querySelectorAll<HTMLElement>('.detalle')].map((s) => [s.id, s]),
@@ -539,7 +588,30 @@ const enteras = asignaturas
   if (location.hash.length > 1) {
     const id = location.hash.slice(1);
     abre(detalles.has(id) ? id : id.replace(/-rutas$/, ''), null);
+
+    /* Y hay que volver a subir cuando la página se ha asentado. El `scrollTo`
+       de `abre()` compite con el salto al ancla que hace el propio navegador
+       —y con el reflujo de las tipografías—, y quien llegaba por `…/#calculo`
+       se quedaba 69 px más abajo: justo lo que mide la barra de asignaturas,
+       que quedaba escondida bajo la cabecera pegajosa **con el «← todas»
+       dentro**. Medido el 5 de septiembre de 2026; se ve entrando por el
+       enlace con almohadilla, nunca desde la portada (§16 punto 6). */
+    const arriba = () => window.scrollTo({ top: 0, behavior: 'auto' });
+    if (document.fonts?.ready) document.fonts.ready.then(arriba);
+    window.addEventListener('load', arriba, { once: true });
   }
+
+  /* Y si el ancla cambia sin recargar, la vista tiene que seguirla.
+     No lo disparan los chips —esos usan `replaceState`, que no emite
+     `hashchange`— sino el caso que se le escapaba a la página: llegar a
+     `…/#calculo` y escribir `…/#fluidos` en la barra de direcciones, o
+     cualquier enlace externo que solo cambie la almohadilla. El navegador no
+     recarga y hasta hoy no pasaba nada. */
+  window.addEventListener('hashchange', () => {
+    const id = location.hash.slice(1);
+    if (!id) return cierra();
+    abre(detalles.has(id) ? id : id.replace(/-rutas$/, ''), null);
+  });
 
   /* ── la figura tocable ─────────────────────────────────────────────
      Un punto amarillo arrastrable por la curva; la tangente le sigue.
@@ -1051,6 +1123,14 @@ const enteras = asignaturas
   .detalle:has(:target),
   .detalle.activa { display: block; }
 
+  /* Con JavaScript, `data-vista` manda y `:target` se aparta.
+     Sin `data-js` —o sea, sin script— estas dos reglas no existen y sigue
+     mandando `:target` sola, que es el respaldo documentado arriba.
+     Ver el comentario largo del script, donde está el fallo que las trajo. */
+  .escena[data-js][data-vista='lista'] .detalle:target,
+  .escena[data-js][data-vista='lista'] .detalle:has(:target) { display: none; }
+  .escena[data-js][data-vista='detalle'] .detalle:not(.activa) { display: none; }
+
   .banda {
     background:
       radial-gradient(var(--tiza-polvo-1) 1px, transparent 1px) 0 0 / 7px 9px,
@@ -1108,10 +1188,18 @@ const enteras = asignaturas
   .b-cta:hover { background: var(--tiza-amarilla-hover); transform: translateY(-1px); }
 
   /* Con JavaScript la clase manda; sin él, el ancla. En los dos casos la
-     lista se retira en vez de quedarse debajo empujando. */
+     lista se retira en vez de quedarse debajo empujando.
+
+     El `:not([data-js])` es la misma corrección que arriba y hace falta por el
+     mismo motivo: `history.replaceState` no actualiza `:target`, así que al
+     volver a la lista desde una entrada con almohadilla el `:has(:target)`
+     seguía siendo cierto y **el héroe entero —el temario, las nueve
+     asignaturas— quedaba oculto**. Pulsar «← todas» dejaba la portada en
+     blanco. Salió al reproducir el fallo de la auditoría paso a paso; el
+     informe señalaba el detalle y esto es su hermano. */
   .escena[data-vista='detalle'] .hero,
-  .escena:has(.detalle:target) .hero,
-  .escena:has(.detalle :target) .hero {
+  .escena:not([data-js]):has(.detalle:target) .hero,
+  .escena:not([data-js]):has(.detalle :target) .hero {
     display: none;
   }
 
@@ -1120,6 +1208,22 @@ const enteras = asignaturas
     to { opacity: 1; transform: none; }
   }
 
+  /* La barra de asignaturas. Son NUEVE, y midiéndolas resultó que solo caben
+     enteras a partir de 1500 px: a 1280 se veían 7, a 768 cuatro y a 360 dos
+     —de nueve—. Y el carril lleva la barra de desplazamiento oculta a
+     propósito, así que no había **ninguna** pista de que hubiera más: la
+     novena asignatura era invisible e indescubrible. Medido el 5 de septiembre
+     de 2026 barriendo la portada a cuatro anchos, después de que la auditoría
+     externa enseñara a mirar por donde uno no suele entrar (§16 punto 6).
+
+     Dos remedios, según quepan o no:
+     - de 1000 px para arriba **se envuelven**: dos filas de pastillas y las
+       nueve a la vista, que es mejor que un desplazamiento escondido;
+     - por debajo sigue siendo carril —envolver nueve en un móvil se comería
+       cinco líneas— pero ahora se ve que sigue: un velo en cada borde,
+       enganchado al contenido con `local`, que aparece solo cuando queda algo
+       por ese lado y se apaga al llegar al final. Es CSS puro, así que
+       funciona igual sin JavaScript. */
   .chips {
     display: flex;
     gap: .3rem;
@@ -1127,9 +1231,26 @@ const enteras = asignaturas
     padding: .55rem 0 .8rem;
     border-bottom: 1px solid var(--rule);
     scrollbar-width: none;
+    /* El carril vive sobre la banda de pizarra, no sobre papel: los dos velos
+       de arriba tienen que ser del color de la banda —`--piz-medio`, que es
+       el mismo en los dos temas (§06)— o se publican dos barras claras en los
+       bordes. Se vio mirando la captura, no midiendo. */
+    background:
+      linear-gradient(to right, var(--piz-medio), transparent) 0 0 / 1.6rem 100% no-repeat,
+      linear-gradient(to left, var(--piz-medio), transparent) 100% 0 / 1.6rem 100% no-repeat,
+      linear-gradient(to right, var(--piz-oscuro), transparent) 0 0 / 1.4rem 100% no-repeat local,
+      linear-gradient(to left, var(--piz-oscuro), transparent) 100% 0 / 1.4rem 100% no-repeat local;
   }
 
   .chips::-webkit-scrollbar { display: none; }
+
+  @media (min-width: 1000px) {
+    .chips {
+      flex-wrap: wrap;
+      overflow-x: visible;
+      background: none;
+    }
+  }
 
   .chip,
   .volver {
@@ -1304,6 +1425,74 @@ const enteras = asignaturas
   .rc-btn:last-child:nth-child(odd) { grid-column: span 2; }
 
   /* ── la tarjeta de exámenes, en papel ──────────────────────────── */
+  /* ── cómo se puntúa ─────────────────────────────────────────────
+     Mismo molde que la caja de exámenes: es una tarjeta del carril, no una
+     pieza nueva. El peso va en mono y a la izquierda porque es un número que
+     se compara de un vistazo entre modalidades. */
+  .nota-caja {
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.15rem .9rem;
+    box-shadow: var(--shadow-1);
+    margin-bottom: 1.1rem;
+  }
+
+  .nc-tit { color: var(--live); margin-bottom: .6rem; }
+
+  .nc-mod + .nc-mod {
+    margin-top: .85rem;
+    padding-top: .85rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .nc-nombre {
+    font-size: .84rem;
+    font-weight: 700;
+    margin-bottom: .4rem;
+  }
+
+  .nc-partes { list-style: none; margin: 0; padding: 0; }
+
+  .nc-partes li {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr;
+    gap: .5rem;
+    align-items: baseline;
+    font-size: .8rem;
+    line-height: 1.45;
+    margin-bottom: .25rem;
+  }
+
+  .nc-peso {
+    font-family: var(--mono);
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+  }
+
+  .nc-que { color: var(--graphite); }
+
+  .nc-nota {
+    font-size: .76rem;
+    line-height: 1.5;
+    color: var(--graphite);
+    margin-top: .5rem;
+    padding-left: .6rem;
+    border-left: 2px solid var(--flag);
+  }
+
+  .nc-fuente {
+    font-family: var(--mono);
+    font-size: .64rem;
+    line-height: 1.5;
+    color: var(--faint);
+    margin-top: .8rem;
+    padding-top: .6rem;
+    border-top: 1px solid var(--rule);
+  }
+
   .ex-caja {
     background: var(--panel);
     border: 1.5px solid var(--rule);

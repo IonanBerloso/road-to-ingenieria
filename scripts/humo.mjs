@@ -721,6 +721,74 @@ async function main() {
     );
   }
 
+  /* ── la portada, entrando por un enlace con almohadilla ──────────
+     La auditoría externa del 4 de septiembre de 2026 encontró que llegar a
+     `…/#algebra` —como llega quien recibe el enlace compartido— y pulsar otra
+     asignatura dejaba **las dos abiertas**, con la primera tapando a la
+     segunda, y que «← todas» no cerraba nada. La causa: el detalle se abre por
+     dos vías que no se hablan, `:target` en el CSS y `.activa` en el script, y
+     `history.replaceState` **no actualiza `:target`**.
+
+     Nada de esto lo ve `verify.mjs`: el HTML publicado es correcto: el fallo
+     nace de combinar un ancla con un clic. Por eso vive aquí. */
+  {
+    const pagina = await navegador.newPage();
+    const mal = [];
+    const abiertos = () =>
+      pagina.evaluate(() =>
+        [...document.querySelectorAll('.detalle')]
+          .filter((d) => d.getBoundingClientRect().height > 0)
+          .map((d) => d.id),
+      );
+    const pulsa = async (sel) => {
+      for (const e of await pagina.$$(sel)) {
+        if (await e.boundingBox()) {
+          await e.scrollIntoViewIfNeeded();
+          await e.click();
+          return true;
+        }
+      }
+      return false;
+    };
+
+    await pagina.goto(`http://localhost:${PUERTO}${BASE}/#algebra`, { waitUntil: 'load' });
+    await pagina.waitForTimeout(400);
+    let v = await abiertos();
+    if (v.join() !== 'algebra') mal.push(`al entrar con #algebra se ve [${v}]`);
+
+    /* No encontrar el mando es un fallo, no un motivo para saltarse el paso:
+       un guardián que se salta a sí mismo da verde sin haber comprobado nada
+       (§11), y aquí es fácil que pase porque los dos mandos solo existen con
+       un detalle abierto. */
+    if (!(await pulsa('a.chip[href="#calculo"], [data-fila="calculo"]'))) {
+      mal.push('con #algebra abierto no hay ningún mando visible que lleve a Cálculo');
+    } else {
+      await pagina.waitForTimeout(400);
+      v = await abiertos();
+      if (v.join() !== 'calculo') mal.push(`al pasar a Cálculo se ve [${v}]`);
+    }
+
+    if (!(await pulsa('.volver'))) {
+      mal.push('no hay ningún «← todas» visible desde un detalle abierto');
+    } else {
+      await pagina.waitForTimeout(400);
+      v = await abiertos();
+      if (v.length) mal.push(`tras «← todas» sigue abierto [${v}]`);
+      const heroe = await pagina.evaluate(() => {
+        const h = document.querySelector('.hero');
+        return !!h && h.getBoundingClientRect().height > 0;
+      });
+      if (!heroe) mal.push('tras «← todas» el héroe se queda oculto');
+    }
+
+    await pagina.close();
+    comprueba(
+      mal.length === 0,
+      'entrar por un enlace con almohadilla y cambiar de asignatura',
+      mal.join(' · '),
+    );
+  }
+
   console.log('');
   comprueba(
     medidos.raiz > 0 && medidos.barra > 0,

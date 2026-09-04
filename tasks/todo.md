@@ -40,6 +40,104 @@ en el scratchpad y se pueden llevar a `scripts/` el día que se repitan.
 
 ---
 
+# La auditoría externa, la de verdad
+
+**4 de septiembre de 2026, noche.** Llegó el informe. Cuatro puntos, y los
+cuatro están resueltos. Lo que sigue es qué dijo, qué se hizo y —lo que más
+vale— **por qué ninguno de los cuatro lo había encontrado yo**.
+
+### 1 · GRAVE · cambiar de asignatura no cambiaba de asignatura
+
+Entrando en la portada **con hash** —`…/#algebra`, que es como llega
+cualquiera que abra un enlace compartido— y pulsando después el chip de otra
+asignatura, se veían **las dos a la vez**. Y al pulsar «← todas» la portada
+se quedaba en blanco: el héroe seguía escondido.
+
+La causa: `history.replaceState` **no actualiza `:target`**. El CSS decía
+`.detalle:target { display: block }`, el script cambiaba el hash sin
+recargar, y el navegador seguía considerando «target» al primero. Sin hash de
+entrada no había ningún `:target` y por eso el camino normal funcionaba —que
+es exactamente por qué llevaba semanas sin que nadie lo viera—.
+
+Arreglado con un marcador `data-js` que el script pone en la escena, de modo
+que las reglas de `:target` solo mandan cuando **no** hay JavaScript. El
+informe sugería reutilizar `data-vista`, y no vale: `data-vista="lista"` ya
+viene en el HTML servido, así que apoyarse en él habría roto la portada sin
+JavaScript. Validado al revés: los diez pasos de las tres formas de entrar,
+y una comprobación nueva dentro de `humo.mjs`.
+
+### 2 · Álgebra tenía siete temas y el programa oficial tiene ocho
+
+Falta **«Cónicas y cuádricas»**, tema 8 de la guía docente de la 26509.
+Contado antes de escribir nada: **cero menciones** de cónicas o cuádricas en
+todo `src/content/algebra/` —ocho convocatorias, 2021-2022 a 2024-2025—. No
+hay nada que transcribir. Declarado con `soloEnClase` (§15), que es la
+salida honesta: ni `hecho` (mentiría) ni borrado del catálogo (rompería la
+regla de que el temario es el oficial).
+
+### 3 · No se decía en ninguna parte cómo se puntúa
+
+El informe lo llamó «la mejora de más rendimiento de toda la auditoría», y
+tenía razón: el sitio enseñaba a resolver y no decía cuánto vale nada.
+Ahora el detalle de cada asignatura abre con **«cómo se puntúa»** —las
+modalidades, sus pesos, el umbral cuando lo hay— y **con la guía docente
+citada** (§10: dato con fuente o no se publica). El esquema exige que los
+pesos de cada modalidad sumen 100.
+
+Con una honestidad que conviene no borrar: **de las tres guías docentes solo
+la de Fluidos está entre el material**, y por eso es la única citada
+literalmente. Las de Cálculo y Álgebra las leyó la auditoría, y la `fuente`
+lo dice con todas las letras. Si algún día aparecen los dos PDF, se
+contrastan.
+
+### 4 · LEVE · el `<title>` decía dos veces la convocatoria
+
+«Convocatoria ordinaria · 2025-2026 · convocatoria ordinaria — Mecánica de
+Fluidos», en las 112 páginas de examen. Arreglado.
+
+---
+
+### Y dos más, que salió al aplicar su método
+
+No están en el informe. Salieron al barrer la portada a cuatro anchos con la
+lente que enseña §16 punto 6 —entrar por donde uno no suele entrar—, que es
+justo lo que la auditoría demostró que faltaba.
+
+**La novena asignatura era invisible.** La barra de asignaturas son nueve
+pastillas en un carril con la barra de desplazamiento **oculta a propósito**,
+y medido: a 1280 px se veían 7, a 768 cuatro y a 360 **dos de nueve**, sin
+ninguna pista de que hubiera más. De 1000 px para arriba ahora se envuelven en
+dos filas —las nueve a la vista—; por debajo sigue siendo carril, porque
+envolver nueve en un móvil se come cinco líneas, pero con un velo en cada
+borde que aparece solo cuando queda algo por ese lado. Es CSS puro, así que
+también funciona sin JavaScript.
+
+Y una lección de método de propina: la primera versión del velo usaba
+`--paper` y publicaba **dos barras claras** en los bordes, porque el carril
+vive sobre la banda de pizarra y no sobre papel. No lo cazó nada — lo cazó la
+captura. §16 punto 1, otra vez.
+
+**Al llegar por el enlace con almohadilla, la barra se quedaba escondida.** La
+página se asentaba 69 px más abajo de la cuenta —el `scrollTo` del script
+compitiendo con el salto al ancla del navegador y con el reflujo de las
+tipografías—, y 69 px es exactamente lo que mide esa barra: quedaba tapada por
+la cabecera pegajosa **con el «← todas» dentro**, o sea con la única forma de
+volver a la portada. Solo pasaba entrando con hash, nunca desde la portada.
+
+---
+
+**Lo que enseña, y es lo mismo que la tabla de arriba con otra cara.** Los
+cuatro fallos son de **producto**, no de código: ninguno rompe un build,
+ninguno lo caza un guardián, y los cuatro se ven abriendo el sitio. Pero hay
+una diferencia con los seis de la mañana que merece quedar escrita: **estos
+cuatro tampoco los encontró mirar**, porque yo miraba el camino que ya sabía
+que funcionaba —entrar sin hash— y leía el catálogo en vez de compararlo con
+el programa oficial. Mirar no basta si miras por donde ya sabes que va bien.
+Lo que encontró los cuatro fue **alguien de fuera entrando como entra un
+alumno**. Esa es la comprobación que ningún guion sustituye.
+
+---
+
 # Mañana · 3 de septiembre de 2026, por fases
 
 Escrito al cerrar el día 7, con el estado medido y no recordado. **Tres

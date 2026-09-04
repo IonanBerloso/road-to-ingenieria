@@ -88,6 +88,57 @@ const catalogo = defineCollection({
       /** false = el temario está puesto a ojo y hay que sustituirlo por el oficial. */
       temarioOficial: z.boolean(),
       temas: z.array(tema).default([]),
+      /**
+       * Cómo se compone la nota. Es un dato de la guía docente, no del examen.
+       *
+       * POR QUÉ EXISTE. Lo pidió la auditoría externa del 4 de septiembre de
+       * 2026 y lo llamó «la mejora de más rendimiento de toda la auditoría»:
+       * el sitio no decía en ningún sitio cómo se puntúa, y **entre el 20 y el
+       * 30 % de la nota no es el examen escrito**. Un alumno que estudiara
+       * solo aquí creería que la nota es el examen; en Cálculo se enteraría
+       * tarde de que hay un 20 % de laboratorio y un umbral por cuatrimestre
+       * que le capa la nota a 4,5.
+       *
+       * `fuente` es obligatoria y larga a propósito (§10): un peso publicado
+       * sin decir de dónde sale es exactamente el «dato estimado con
+       * apariencia de medido» que este proyecto se prohíbe. Si un día no se
+       * tiene la guía, no se pone el campo — no se rellena a ojo.
+       */
+      evaluacion: z
+        .object({
+          fuente: z.string().min(25, 'de qué guía y de qué año sale esto'),
+          modalidades: z
+            .array(
+              z.object({
+                /** «Evaluación continua», «Evaluación final»… */
+                nombre: z.string().min(4).max(40),
+                partes: z
+                  .array(
+                    z.object({
+                      que: z.string().min(3).max(80),
+                      /** Porcentaje sobre la nota de esa modalidad. */
+                      peso: z.number().int().min(1).max(100),
+                    }),
+                  )
+                  .min(1),
+                /** Umbrales y condiciones que no son un porcentaje. */
+                nota: z.string().min(20).optional(),
+              }),
+            )
+            .min(1),
+        })
+        .optional()
+        .superRefine((e, ctx) => {
+          for (const m of e?.modalidades ?? []) {
+            const suma = m.partes.reduce((s, p) => s + p.peso, 0);
+            if (suma !== 100) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `los pesos de «${m.nombre}» suman ${suma}, no 100`,
+              });
+            }
+          }
+        }),
     })
     .refine((a) => a.estado === 'prev' || a.temas.length > 0, {
       message: 'una asignatura en obra o terminada necesita temario',

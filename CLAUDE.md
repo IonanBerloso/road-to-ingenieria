@@ -1143,6 +1143,14 @@ nivel de arriba, que es el que se entrega.
 - **`tests/fisica/` tiene un caso por simulador**, si hay simuladores (§10).
 - **`falta[]` dice lo que no está.** Una asignatura terminada con huecos
   declarados es un producto honesto; una sin huecos declarados es sospechosa.
+- **El catálogo dice cómo se puntúa**, en el campo `evaluacion`: las
+  modalidades, el peso de cada parte y el umbral si lo hay, **con la guía
+  docente citada**. Nace de la auditoría externa del 4 de septiembre de 2026,
+  que lo llamó «la mejora de más rendimiento» de todo el informe, y tenía
+  razón: el sitio enseñaba a resolver un examen sin decir en ninguna parte
+  cuánto vale. Los pesos de una modalidad **suman 100 o el build falla**, y si
+  la guía no está entre el material la `fuente` lo dice con esas palabras
+  (§10) — hoy pasa en dos de las tres.
 - `npm run suelo` en verde con todas sus páginas dentro.
 
 ### Cuánto es «una asignatura», medido
@@ -1203,8 +1211,24 @@ cinco fallos reales:
 > es «hacen falta más guardianes» —cuatro de estos seis ya tienen el suyo
 > desde ese día—: es que **el orden estaba invertido**. Se mira primero y se
 > mide después; un guardián se escribe cuando mirar ha encontrado algo, no
-> para no tener que mirar. El build en verde no es una comprobación: es la ausencia
-de una. Así que después de construir, y antes de dar nada por hecho:
+> para no tener que mirar.
+
+> **Y esa misma noche llegó la auditoría externa, que encontró cuatro cosas
+> más — ninguna de ellas vista por haber mirado.** Un fallo grave de
+> navegación que solo aparece **entrando con hash** (`…/#algebra`, o sea
+> abriendo un enlace compartido) y que por eso no se ve nunca por el camino
+> normal; un tema del programa oficial de Álgebra que faltaba en el catálogo;
+> ningún sitio donde se dijera **cuánto vale cada cosa** en el examen; y el
+> `<title>` repetido en las 112 páginas de examen.
+>
+> La lección se apila sobre la de arriba y la afila: **mirar no basta si
+> miras por donde ya sabes que va bien.** Yo probaba la portada entrando sin
+> hash y leía el catálogo en vez de compararlo contra el programa oficial.
+> Los cuatro los encontró alguien de fuera entrando **como entra un alumno**.
+> De ahí sale el punto 7 de esta lista.
+
+El build en verde no es una comprobación: es la ausencia de una. Así que
+después de construir, y antes de dar nada por hecho:
 
 1. **Míralo.** Levanta `npm run dev` y abre la página. Si has dibujado una
    figura, **haz una captura y ábrela**: en claro, en oscuro y a 360 px. Una
@@ -1238,7 +1262,15 @@ de una. Así que después de construir, y antes de dar nada por hecho:
 5. **Prueba una respuesta equivocada.** Un ejercicio nuevo no está probado
    hasta que has escrito el error y has visto salir **su** diagnóstico. Que
    acepte la buena no dice nada: los distractores son la mitad del producto.
-6. **Y solo entonces** `npm run suelo`.
+6. **Entra por donde no sueles entrar.** Con hash y sin él, desde un enlace
+   compartido, pulsando dos veces seguidas, dando marcha atrás. Los caminos
+   que pruebas son los que ya sabes que funcionan, y el fallo vive en los
+   otros: el de la auditoría del 4 de septiembre —dos asignaturas abiertas a
+   la vez y la portada en blanco— solo aparecía **entrando con hash**, que es
+   justo como llega alguien a quien le han pasado el enlace. Y lo mismo con
+   los datos: un catálogo se comprueba **contra el programa oficial**, no
+   releyéndolo.
+7. **Y solo entonces** `npm run suelo`.
 
 ### Y al cerrar una asignatura, cuatro cosas más
 
@@ -1611,6 +1643,22 @@ Cosas que ya han costado horas. No son opiniones.
   > está el fallo.** La primera versión de `revisa-ejercicios.mjs` recorría
   > los `texto` de las opciones y las piezas pero no sus `mensaje`, y el fallo
   > que motivó todo esto vivía justo en un `mensaje`.
+- **`history.replaceState` no actualiza `:target`.** Es la trampa que produjo
+  el único fallo grave de la auditoría externa del 4 de septiembre de 2026.
+  La portada mostraba el detalle de una asignatura con
+  `.detalle:target { display: block }` y cambiaba el hash con `replaceState`
+  para no ensuciar el historial. Pero `:target` lo fija el navegador al
+  navegar, y `replaceState` **no navega**: quien entraba en `…/#algebra` y
+  pulsaba después otra asignatura veía **las dos a la vez**, y al volver se
+  quedaba con la portada en blanco porque el héroe seguía oculto por la
+  misma regla. Entrando **sin** hash no hay ningún `:target` y todo funciona,
+  que es por lo que aguantó semanas sin que nadie lo viera.
+
+  **Regla: si el JavaScript gobierna qué se ve, `:target` es solo el plan B
+  de quien no tiene JavaScript, y las dos cosas no pueden mandar a la vez.**
+  Se separan con un marcador que **ponga el script** —aquí `data-js` en la
+  escena—, nunca con un atributo que ya venga en el HTML servido: ese lo
+  tienen los dos casos y no distingue nada.
 - **`titulo` y `fuente` son texto plano, sin `$…$`.** Un `(matriz $A_1$)` en
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
