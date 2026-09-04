@@ -5,6 +5,8 @@ import Cabecera from '../../components/ui/Cabecera.astro';
 import Tema from '../../components/ui/Tema.astro';
 import Lectura from '../../components/patrones/Lectura.astro';
 import EjercicioGuiado from '../../components/patrones/EjercicioGuiado.astro';
+import { ruta } from '../../lib/rutas';
+import { SUFIJO_CONV } from '../../content.config';
 
 /**
  * Una página por tema terminado. El cruce entre el catálogo y los temas
@@ -101,6 +103,41 @@ const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
  *  invitación a practicar que aterriza en un ejercicio de examen sería la
  *  queja del escalón (§14) con otra cara. */
 const primerEjemplo = ejercicios.find((e) => e.nivel === 'ejemplo');
+
+/** A dónde se puede seguir desde este tema.
+ *
+ *  Hasta el 4 de septiembre de 2026 la respuesta era: **a la portada y nada
+ *  más**. Contado sobre el sitio construido, una página de tema tenía un solo
+ *  enlace de navegación —el del wordmark—, así que para pasar del tema 4 al 5
+ *  había que volver al principio y entrar otra vez, y desde dentro de una
+ *  asignatura no se llegaba ni a sus exámenes ni a su ruta. Cuarenta y una
+ *  páginas así, en las tres asignaturas.
+ *
+ *  Lo cazó contar el grafo de enlaces, no un guardián: `verify.mjs` comprueba
+ *  que ningún enlace esté roto, y nadie comprobaba lo contrario. */
+const hechosDeLaAsignatura = asignatura.data.temas.filter((t) => t.hecho);
+const donde = hechosDeLaAsignatura.findIndex((t) => t.id === ficha.id);
+const enlaceTema = (t: (typeof hechosDeLaAsignatura)[number] | undefined) =>
+  t ? { href: ruta(`${asignatura.id}/${t.id}`), titulo: t.titulo, n: t.n } : undefined;
+
+const todasLasRutas = await getCollection('preparar');
+const rutasDelTema = todasLasRutas
+  .filter((r) => r.data.asignatura === asignatura.id && r.data.temas.includes(ficha.id))
+  .map((r) => ({
+    href: ruta(`${asignatura.id}/preparar/${SUFIJO_CONV[r.data.evaluacion]}`),
+    titulo: r.data.titulo,
+  }));
+
+const convocatorias = (await getCollection('examen')).filter(
+  (e) => e.data.asignatura === asignatura.id,
+).length;
+
+const navegacion = {
+  anterior: enlaceTema(hechosDeLaAsignatura[donde - 1]),
+  siguiente: enlaceTema(hechosDeLaAsignatura[donde + 1]),
+  examenes: { href: ruta(`${asignatura.id}/examenes`), cuantos: convocatorias },
+  rutas: rutasDelTema,
+};
 ---
 
 <Base
@@ -129,6 +166,7 @@ const primerEjemplo = ejercicios.find((e) => e.nivel === 'ejemplo');
       ejercicios={ejercicios.map((e) => ({ id: e.id, titulo: e.titulo }))}
       fuente={entrada.data.fuente}
       competencias={entrada.data.competencias}
+      navegacion={navegacion}
     >
       <Lectura slot="teoria">
         <Content />

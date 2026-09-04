@@ -671,6 +671,36 @@ const examen = defineCollection({
           }),
         )
         .min(1),
+      /**
+       * Los ejercicios del cuadernillo que **no** están transcritos, con su
+       * número y su motivo.
+       *
+       * POR QUÉ EXISTE. Hasta el 4 de septiembre de 2026 esto se escribía en
+       * un **comentario** de este mismo fichero, y un comentario no llega a
+       * nadie: la página de la convocatoria ordinaria de 2025-2026 anunciaba
+       * «7 ejercicios» de un examen que trae **nueve**, sin decir una palabra.
+       * El alumno abre el PDF de al lado —que el sitio le ofrece en un botón
+       * amarillo—, encuentra un 4 y un 9 que aquí no están, y no sabe si es un
+       * fallo, un descuido o que no existen. Ocho de las dieciséis
+       * convocatorias de Fluidos estaban así.
+       *
+       * Es §15 incumplido en el sitio mientras se cumplía en el repositorio:
+       * «un hueco declarado es información; uno escondido, una promesa
+       * incumplida». Estaba declarado donde no lo lee nadie.
+       *
+       * El `motivo` es obligatorio y largo a propósito: si no se puede
+       * explicar en dos líneas por qué falta, es que no está decidido.
+       */
+      fuera: z
+        .array(
+          z.object({
+            /** El número con el que aparece en el cuadernillo. */
+            n: z.number().int().positive(),
+            /** Por qué no está, con el detalle que haga falta. */
+            motivo: z.string().min(40),
+          }),
+        )
+        .default([]),
     })
     .refine((e) => new Set(e.ejercicios.map((x) => x.id)).size === e.ejercicios.length, {
       message: 'el examen repite un ejercicio',

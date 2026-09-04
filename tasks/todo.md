@@ -5,6 +5,41 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Lo primero, y va antes que cualquier contenido nuevo
+
+**4 de septiembre de 2026, tarde.** Una auditoría externa puntuó el sitio con
+un **0,5 sobre 10**. No dio detalle, así que se hizo lo que §16 lleva pidiendo
+desde agosto y llevaba semanas sin hacerse: **abrirlo y mirarlo** —la URL a
+pelo, sin ancla, sin pulsar nada, sin `localStorage`—. En la primera hora
+salió esto, todo publicado, con los cuatro guardianes en verde y dos
+asignaturas declaradas terminadas:
+
+| lo que estaba publicado | alcance | estado |
+|---|---|---|
+| **`El NaN % de la nota`, en negrita** | 3 de las 10 rutas | arreglado + guardián |
+| **«70 PUNTOS» inventados** (`n.º de ejercicios × 10`) | índice de exámenes de las 3 asignaturas | arreglado |
+| «7 ejercicios» de un examen de 9, sin decirlo | 9 de las 16 convocatorias de Fluidos | arreglado, campo `fuera` |
+| la página se desplaza en horizontal a 360 px | **toda** página de tema | arreglado |
+| columna de texto de un ejercicio en móvil: **145 px** | rutas | arreglado, ahora 231 |
+| 12 fórmulas cortadas a media letra sin avisar | 10 páginas | 5 partidas + aviso en el resto |
+| 5 de 7 pastillas de tema cortadas | cada examen | arreglado |
+| un enlace a la resolución de un examen no salta | todas las páginas de examen | arreglado |
+
+**Lo que hay que aprender de aquí, y es lo único que importa de esta tabla:**
+se pasó el día puliendo guardianes —`recalcula` ampliado, las tildes, el humo
+completo, el peso— y presentando sus verdes como si fueran calidad. Los cuatro
+estaban en verde mientras el producto publicaba un `NaN` en negrita y un
+número inventado. **El orden estaba invertido: se mira primero y se mide
+después.** Un guardián se escribe cuando mirar ha encontrado algo, no para no
+tener que mirar. Está anotado en §16 de `CLAUDE.md` con la tabla entera.
+
+Y una consecuencia práctica para la próxima tanda: **antes de escribir
+contenido nuevo hay que barrer las 167 páginas** —a 1280 y a 360— buscando
+desbordes, textos cortados y cadenas imposibles. Los guiones del barrido están
+en el scratchpad y se pueden llevar a `scripts/` el día que se repitan.
+
+---
+
 # Mañana · 3 de septiembre de 2026, por fases
 
 Escrito al cerrar el día 7, con el estado medido y no recordado. **Tres
@@ -1679,33 +1714,29 @@ De paso, sin categoría propia: los cuatro **Materiales de apoyo** de la
 asignatura y las tres **aplicaciones Android** de la escuela —estática,
 Bernoulli, pérdidas de carga— tampoco están referenciados desde ningún sitio.
 
-**53 · `recalcula` no comprueba ni un solo número de Fluidos.** Medido el 4
-de septiembre de 2026, asignatura por asignatura: los 279 pares que dice
-comprobar son **todos de Cálculo**; Álgebra da 0 y Fluidos da 0 también. El
-motivo no es el de Álgebra —allí los resultados son objetos exactos— sino de
-estilo de escritura: el guion solo reconoce `\approx` y el corpus de Fluidos
-escribe `=`. Consecuencia práctica: cada commit de esta tanda ha informado
-«recalcula sin desajustes» y eso, para Fluidos, no quería decir nada.
+**~~53 · `recalcula` no comprueba ni un solo número de Fluidos~~ · hecho el 4
+de septiembre de 2026.** Ampliado a `=`: de **279 pares a 1.991**, y Fluidos
+pasa de 0 a 1.416. El primer pase encontró **diez desajustes reales** —cinco
+en Fluidos y cinco en Cálculo, una asignatura cerrada y dada por verificada—:
+dos cifras transpuestas, una suma de tres términos mal, un resto de Lagrange
+con un 25 % de error, un punto de millar dentro de una fórmula y cinco
+redondeos. Todos arreglados; el guion queda en verde.
 
-Ampliarlo a `=` está probado y no vale como cambio de una línea: con `=`
-aceptado, Fluidos pasa de 0 a 1216 pares y saltan 259 avisos (21 %), el mismo
-orden de ruido que hizo descartar los dos guardianes de texto que cuenta §11.
-Los falsos positivos son de tres clases y las tres tienen arreglo conocido:
-cadenas con cambio de unidad, redondeos encadenados que bailan en la última
-cifra, y expresiones que `expresionAntesDe` corta por la mitad. El trabajo es
-de una tarde y merece la pena, porque hoy la aritmética de la asignatura más
-numérica del proyecto no la mira nadie salvo quien la escribe.
+Los falsos positivos eran cuatro clases, no tres, y cada una tiene su arreglo
+comentado en el guion: fórmulas partidas por el salto de línea del YAML,
+coeficientes tomados por resultados, redondeos encadenados —que ahora se
+propagan literal a literal en vez de compararse contra media unidad del
+resultado— y cambios de unidad. **La concesión que quedó, dicha en §11:**
+cuando el número lleva unidad escrita se acepta cualquier potencia de diez, así
+que un error de factor mil con unidad detrás no lo caza. Sin eso, veinte de
+treinta y tres avisos eran ruido y el guardián se habría acabado ignorando.
 
-**52 · 22 subíndices con tilde dentro de `$…$`.** `P_{útil}`, `k_{válv}`,
-`Z_{máx}`, `\rho_{hormigón}`, `v_{tubería}`, `Q_{teórico}`, `V_{teórica}`,
-`\sum F_{presión,y}`, `cierre rápido` y `sistema homogéneo`. KaTeX los dibuja
-—el suelo está en verde y `verify.mjs` no protesta— pero avisa por consola con
-`unicodeTextInMathMode` cada vez que se compilan, y el aviso tapa los que sí
-importan. Contados el 4 de septiembre de 2026 con un barrido de las fórmulas
-ya parseadas (no con `grep`, §17): 1 en Álgebra y 21 en Fluidos, repartidos en
-nueve ficheros. El arreglo es sacar la palabra del modo matemático
-—`P_{\text{útil}}` o simplemente el subíndice sin tilde—, y como toca nueve
-ficheros a la vez conviene hacerlo de una tanda y no de paso.
+**~~52 · 22 subíndices con tilde dentro de `$…$`~~ · hecho el 4 de septiembre
+de 2026.** Los 22 pasados a `\text{}`, que además es la tipografía correcta
+para un subíndice que es una palabra. El build ya no imprime ni un
+`unicodeTextInMathMode`. Se localizaron pasando cada fórmula por KaTeX con la
+configuración del build y recogiendo sus avisos, no con `grep` (§17); el guion
+de barrido está en el scratchpad y son cuarenta líneas.
 
 **9 · `peso` tiene dos definiciones enfrentadas en `CLAUDE.md`.** El ejemplo de
 frontmatter de §04 usa `peso: 8` —un número— y §10 dice que un dato estimado se
@@ -2832,6 +2863,19 @@ que responde (§13).
 > golpe de ariete, que el simulador no dibuja —enseña la curva ΔH(Tc) y el
 > techo, no la onda cuadrada en el tiempo—, y para eso ya está la figura fija
 > que el tema tiene.
+
+> **Y el 4 de septiembre la deuda cambia de tamaño sin que nadie la tocara.**
+> Recontado: Fluidos tiene **169 figuras**, no 23. Las 23 siguen siendo las de
+> la prosa —una por tema, que es lo que mide `npm run mide`— y las otras
+> **146 han entrado dentro de los ejercicios** al transcribir la colección:
+> compuertas, instalaciones de bombeo, redes, canales. Contra las 218 de
+> Cálculo, medidas igual.
+>
+> Así que la deuda sigue viva pero dice otra cosa: **no falta dibujo en la
+> asignatura, falta dibujo en la prosa.** Quien lee el tema sin abrir un
+> ejercicio ve una figura; quien resuelve, ve veinte. Lo que hay que decidir
+> es si alguna de esas 146 merece subir a la prosa, y eso se decide leyendo,
+> no contando.
 
 **51 · ~~Los simuladores estaban publicados y no se veía ninguno.~~ Arreglado
 el 2 de septiembre de 2026, y la lección vale más que el arreglo.**

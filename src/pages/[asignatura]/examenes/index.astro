@@ -63,6 +63,36 @@ export async function getStaticPaths() {
 const { asignatura, lista, rutas } = Astro.props;
 const crumb = `${asignatura.data.nombre} · exámenes`;
 
+/**
+ * Los puntos **de verdad** de cada convocatoria, y cuántos ejercicios traía.
+ *
+ * POR QUÉ EXISTE. Hasta el 4 de septiembre de 2026 esta página escribía
+ * `const puntos = ex.data.ejercicios.length * 10` y lo publicaba como
+ * «7 EJERCICIOS · 70 PUNTOS» en cada fila. **Ni Álgebra ni Fluidos publican
+ * reparto de puntos**: sus cuadernillos dan el peso porcentual de cada
+ * ejercicio y nada más. Esos «70 puntos» eran un número inventado con
+ * apariencia de dato, que es lo que §10 prohíbe con todas las letras. En
+ * Cálculo acertaba de casualidad —sus ejercicios valen diez— y esa casualidad
+ * es justo lo que hizo que nadie lo mirara.
+ *
+ * Ahora se suman los `puntos` que declara cada ejercicio; si no hay ninguno,
+ * no se enseña ningún total. Y de paso se dice cuántos ejercicios traía el
+ * cuadernillo, no solo cuántos hemos transcrito.
+ */
+const ficherosEj = await getCollection('ejercicios');
+const puntosPorId = new Map(
+  ficherosEj.flatMap((f) => f.data.ejercicios.map((e) => [e.id, e.puntos] as const)),
+);
+const datos = new Map(
+  lista.map((ex) => {
+    const total = ex.data.ejercicios.reduce((s, { id }) => {
+      const p = puntosPorId.get(id);
+      return s + (p ? p.comp1 + p.comp2 + p.comp4 : 0);
+    }, 0);
+    return [ex.id, { total, fuera: ex.data.fuera.length }];
+  }),
+);
+
 /* Los nombres salen de CONVOCATORIAS, en minúscula; aquí encabezan un grupo,
    así que se capitaliza la primera letra al pintarlos. */
 const NOMBRE_CONV: Record<string, string> = Object.fromEntries(
@@ -121,7 +151,10 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
       <ol class="lista">
         {
           lista.map((ex) => {
-            const puntos = ex.data.ejercicios.length * 10;
+            const { total, fuera } = datos.get(ex.id)!;
+            const cuantos = fuera
+              ? `${ex.data.ejercicios.length} de ${ex.data.ejercicios.length + fuera} ejercicios`
+              : `${ex.data.ejercicios.length} ejercicios`;
             return (
               <li>
                 <a
@@ -151,7 +184,8 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                   </span>
                   <span class="der">
                     <span class="rotulo pts">
-                      {ex.data.ejercicios.length} ejercicios · {puntos} puntos
+                      {cuantos}
+                      {total > 0 && ` · ${total} puntos`}
                     </span>
                     <span class="go" aria-hidden="true">→</span>
                   </span>

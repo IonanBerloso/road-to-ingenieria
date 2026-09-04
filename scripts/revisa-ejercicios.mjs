@@ -247,6 +247,16 @@ const camposDeProsa = (e) => {
 
 try {
   const { mate } = await import('../src/lib/markdown.mjs');
+  /* KaTeX corre en modo `strict: 'warn'` y sus quejas salen por `console.warn`.
+     Se recogen aquí en vez de leerlas en la consola: son avisos de verdad, no
+     ruido, y así se pueden atribuir al campo exacto que los produjo. */
+  const avisos = [];
+  const warnOriginal = console.warn;
+  console.warn = (...a) => {
+    const t = a.join(' ');
+    if (t.includes('unicodeTextInMathMode')) avisos.push(t);
+    else warnOriginal(...a);
+  };
   for (const e of ejercicios) {
     for (const [dónde, texto] of camposDeProsa(e)) {
       const html = await mate(texto, 'revision');
@@ -272,8 +282,25 @@ try {
           `${dónde}: LaTeX publicado como texto — …${suelto.replace(/\s+/g, ' ').trim()}…`,
         );
       }
+      /* Y el tercer hermano: una tilde dentro del modo matemático. KaTeX la
+         dibuja —no hay error, no hay `$` suelto— pero avisa por consola con
+         `unicodeTextInMathMode` en cada build, y el aviso tapa a los que sí
+         importan. El 4 de septiembre de 2026 había 22 repartidos por nueve
+         ficheros: `P_{útil}`, `k_{válv}`, `\rho_{hormigón}`. El arreglo es
+         `\text{}`, que además es la tipografía correcta para un subíndice que
+         es una palabra.
+         Se caza **escuchando a KaTeX**, no adivinando dónde empieza y acaba
+         una fórmula con una expresión regular: emparejar `$` a ojo daba 34
+         falsos positivos sobre el corpus entero, todos de prosa atrapada
+         entre dos fórmulas distintas de la misma línea. */
+      for (const aviso of avisos) {
+        const trozo = /character "(.)"/.exec(aviso)?.[1] ?? '';
+        mal(e.id ?? '(sin id)', `${dónde}: «${trozo}» dentro de $…$ — sácalo con \\text{…} o KaTeX avisará en cada build`);
+      }
+      avisos.length = 0;
     }
   }
+  console.warn = warnOriginal;
 } catch (err) {
   /* Que no se pueda cargar el procesador no puede tumbar la revisión del
      resto: se dice y se sigue, porque el suelo lo volverá a mirar. */

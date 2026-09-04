@@ -51,9 +51,16 @@ interface Props {
    *  `evaluacion` o de `tambienPrepara` en el YAML de la ruta. */
   ruta: { href: string; titulo: string } | null;
   ejercicios: EjercicioDeExamen[];
+  /** Los ejercicios del cuadernillo que no están transcritos, con su motivo.
+   *  Va aquí y no en un comentario del YAML porque un comentario no lo lee el
+   *  alumno: hasta el 4 de septiembre de 2026 esta página anunciaba «7
+   *  ejercicios» de un examen de nueve sin decir una palabra, con el PDF
+   *  original enlazado al lado. */
+  fuera: { n: number; motivo: string }[];
 }
 
-const { eyebrow, titulo, fecha, pdfs, ruta, ejercicios } = Astro.props;
+const { eyebrow, titulo, fecha, pdfs, ruta, ejercicios, fuera } = Astro.props;
+const deCuantos = ejercicios.length + fuera.length;
 
 const total = ejercicios.reduce(
   (s, e) => s + (e.puntos ? e.puntos.comp1 + e.puntos.comp2 + e.puntos.comp4 : 0),
@@ -104,7 +111,7 @@ const hoja = await Promise.all(
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
           no lo hay, no se dice nada en vez de decir un número inventado
           (§10). */}
-      {fecha} · {ejercicios.length} ejercicios{total > 0 ? ` · ${total} puntos` : ''}
+      {fecha} · {fuera.length > 0 ? `${ejercicios.length} de los ${deCuantos} ejercicios` : `${ejercicios.length} ejercicios`}{total > 0 ? ` · ${total} puntos` : ''}
     </p>
 
     <nav class="pestanas" aria-label="Vistas del examen">
@@ -120,6 +127,28 @@ const hoja = await Promise.all(
         Empieza sin mirar: abre cada ejercicio cuando vayas a por él. Las
         resoluciones están en la otra pestaña.
       </p>
+
+      {fuera.length > 0 && (
+        <div class="aviso aviso--flag faltan">
+          <p class="rotulo f-tit">
+            {fuera.length === 1
+              ? `Falta el ejercicio ${fuera[0].n} de los ${deCuantos} del cuadernillo`
+              : `Faltan ${fuera.length} de los ${deCuantos} ejercicios del cuadernillo: el ${fuera.map((f) => f.n).join(' y el ')}`}
+          </p>
+          <ul>
+            {fuera.map((f) => (
+              <li>
+                <strong>{f.n}.</strong> {f.motivo}
+              </li>
+            ))}
+          </ul>
+          <p class="f-pie">
+            Están en el PDF original, que es el mismo que se repartió en el
+            aula. Si los echas de menos al contrastar, no es un descuido: es
+            que no sabemos resolverlos con lo que el examen publica.
+          </p>
+        </div>
+      )}
 
       <ol class="hoja">
         {
@@ -270,8 +299,27 @@ const hoja = await Promise.all(
     const panelDe = (hash: string) =>
       hash === 'resoluciones' || hash.startsWith('ej-') ? 'resoluciones' : 'examen';
 
+    /* Abrir el panel no basta: hay que **saltar** al ejercicio.
+       El navegador lo intentó al cargar, con el panel todavía oculto, y un
+       elemento sin caja no se puede desplazar (§17). Aquí faltaban las dos
+       ramas —al entrar y al cambiar el ancla—, así que un enlace de una ruta
+       a la resolución de un ejercicio de examen abría la pestaña buena y
+       dejaba la página arriba. Medido el 4 de septiembre de 2026 abriendo
+       treinta enlaces de la ruta de Fluidos: cinco no llegaban. */
+    const saltaAlEjercicio = () => {
+      const h = decodeURIComponent(location.hash.slice(1));
+      if (!h.startsWith('ej-')) return;
+      const ir = () => document.getElementById(h)?.scrollIntoView({ block: 'start' });
+      if (document.fonts?.ready) document.fonts.ready.then(() => requestAnimationFrame(ir));
+      else requestAnimationFrame(ir);
+    };
+
     abre(panelDe(location.hash.slice(1)), false);
-    window.addEventListener('hashchange', () => abre(panelDe(location.hash.slice(1)), false));
+    saltaAlEjercicio();
+    window.addEventListener('hashchange', () => {
+      abre(panelDe(location.hash.slice(1)), false);
+      saltaAlEjercicio();
+    });
 
     /* Al imprimir van los dos paneles Y todas las filas abiertas: el
        contenido de un <details> cerrado no se imprime, así que se abren
@@ -362,6 +410,28 @@ const hoja = await Promise.all(
 
   .aviso--flag { border-left-color: var(--flag); background: var(--flag-soft); }
 
+  /* El aviso de los ejercicios que faltan. Va en rojo y arriba del todo
+     porque es lo que el alumno tiene que saber ANTES de empezar a contrastar
+     con el PDF, no después de buscar diez minutos un ejercicio que no está. */
+  .faltan { font-family: var(--body); }
+  .faltan .f-tit {
+    font-family: var(--mono);
+    color: var(--flag);
+    margin-bottom: .5rem;
+  }
+  .faltan ul {
+    margin: 0 0 .6rem 1.1rem;
+    padding: 0;
+    font-size: .88rem;
+    line-height: 1.55;
+  }
+  .faltan li { margin-bottom: .35rem; }
+  .faltan .f-pie {
+    font-size: .82rem;
+    color: var(--graphite);
+    margin: 0;
+  }
+
   /* ── la hoja: filas plegables (brief §6) ───────────────────────── */
   .hoja { list-style: none; }
 
@@ -410,10 +480,15 @@ const hoja = await Promise.all(
     background: var(--peso-medio-fondo);
     border-radius: 99px;
     padding: .2rem .65rem;
-    white-space: nowrap;
-    max-width: 12rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* Con `nowrap` + `max-width: 12rem` + puntos suspensivos, cinco de las
+       siete pastillas de la ordinaria de 2026 salían cortadas —«FUERZAS SOBRE
+       CUERPOS CE…», «APLICACIONES DE LA CANTID…»— y no se podía saber de qué
+       tema era el ejercicio, que es justo lo que la pastilla existe para
+       decir. Se deja envolver: una fila más alta se lee; una palabra cortada,
+       no. Visto el 4 de septiembre de 2026 mirando la página (§16). */
+    max-width: 14rem;
+    line-height: 1.3;
+    text-align: center;
   }
 
   .p-pts { font-size: .76rem; color: var(--faint); white-space: nowrap; }
@@ -597,6 +672,10 @@ const hoja = await Promise.all(
   @media print {
     .shell { display: block; }
     .rail, .pestanas, .aviso { display: none; }
+    /* Menos el de los ejercicios que faltan: en papel importa **más** que en
+       pantalla, porque quien imprime la hoja para hacerla a reloj no tiene el
+       PDF original al lado para contar. */
+    .aviso.faltan { display: block; break-inside: avoid; }
     #examen, #resoluciones { display: block !important; }
     .pregunta { break-inside: avoid; border: none; box-shadow: none; }
     .p-flecha { display: none; }

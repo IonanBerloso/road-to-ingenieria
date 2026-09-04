@@ -705,6 +705,7 @@ if (SOLO_FUENTE) {
   const sinViewport = [];
   const sinModos = [];
   const latexCrudo = [];
+  const numeroRoto = [];
   const svgComoTexto = [];
   const refsRotas = [];
   /* Anclas a OTRA página: se apuntan aquí y se resuelven al final, cuando ya
@@ -785,6 +786,33 @@ if (SOLO_FUENTE) {
        —9 650 campos con fórmula— era el único. */
     for (const m of html.matchAll(/class="katex-error"[^>]*title="([^"]{0,90})/g)) {
       latexCrudo.push(`${nombre} → KaTeX no sabe dibujarla: ${m[1].replace(/&#x27;/g, "'")}…`);
+    }
+
+    /* Un número que se ha ido al garete y se ha publicado igual.
+
+       Añadida el 4 de septiembre de 2026, y es el fallo más caro que ha tenido
+       este proyecto en proporción a lo que costaba verlo. La página de la ruta
+       calcula el reparto por competencia dividiendo por el total de puntos de
+       la convocatoria, y **Álgebra y Fluidos no publican reparto**: sus
+       cuadernillos dan el peso de cada ejercicio y nada más. Total cero,
+       división por cero, y esto publicado en negrita en el panel que explica
+       para qué sirve la ruta, en TRES de las diez rutas:
+
+           El NaN % de la nota no es calcular; la explicación formal sola
+           vale el NaN %.
+           Esta ruta te lleva por 54 de esos 0 ejercicios.
+
+       Con las dos asignaturas declaradas terminadas, el suelo en verde y
+       `recalcula`, `humo` y `peso` pasados. Ninguno mira el texto publicado en
+       busca de un número roto, porque a nadie se le había ocurrido que hiciera
+       falta. Se ve **abriendo la página**, que es lo que §16 lleva pidiendo
+       desde agosto y lo que llevaba semanas sin hacerse.
+
+       La regla es tonta a propósito: en el texto visible de este sitio no hay
+       ningún motivo legítimo para que aparezca `NaN`, `undefined`, `Infinity`
+       ni un `[object Object]`. */
+    for (const m of visible.matchAll(/.{0,40}(NaN|undefined|Infinity|\[object Object\]).{0,40}/g)) {
+      numeroRoto.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
     }
 
     /* una figura que se ha publicado partida.
@@ -916,6 +944,7 @@ if (SOLO_FUENTE) {
     'enlaces cuyo destino existe pero cuyo #ancla no: el navegador se queda en la cabecera',
   );
   grupo(latexCrudo, 'cero fórmulas sin dibujar en el texto publicado', 'LaTeX que ha salido como texto');
+  grupo(numeroRoto, 'cero números rotos en el texto publicado', 'NaN, undefined o Infinity a la vista');
   grupo(
     refsRotas,
     'toda referencia interna (#id, url(#id)) apunta a algo que existe',

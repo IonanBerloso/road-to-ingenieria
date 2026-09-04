@@ -26,9 +26,28 @@ interface Props {
   ejercicios: { id: string; titulo: string }[];
   fuente?: string;
   competencias: string[];
+  /** A dónde se puede ir desde aquí.
+   *
+   *  POR QUÉ EXISTE. Medido el 4 de septiembre de 2026 sobre el sitio
+   *  publicado: una página de tema tenía **un solo enlace de navegación**, el
+   *  de la portada. Ni al tema anterior, ni al siguiente, ni a los exámenes de
+   *  la asignatura, ni a la ruta que lo prepara. Cuarenta y una páginas de
+   *  tema, las tres asignaturas, y todas callejón sin salida: para pasar del
+   *  tema 4 al 5 había que volver a la portada y entrar otra vez.
+   *
+   *  Lo encontró contar el grafo de enlaces del sitio construido, no un
+   *  guardián: `verify.mjs` comprueba que ningún enlace esté roto y nadie
+   *  comprobaba lo contrario, que es igual de caro. */
+  navegacion: {
+    anterior?: { href: string; titulo: string; n: number };
+    siguiente?: { href: string; titulo: string; n: number };
+    examenes: { href: string; cuantos: number };
+    rutas: { href: string; titulo: string }[];
+  };
 }
 
-const { eyebrow, titulo, descripcion, headings, ejercicios, fuente, competencias } = Astro.props;
+const { eyebrow, titulo, descripcion, headings, ejercicios, fuente, competencias, navegacion } =
+  Astro.props;
 const indice = headings.filter((h) => h.depth === 2);
 ---
 
@@ -110,6 +129,35 @@ const indice = headings.filter((h) => h.depth === 2);
       <slot name="ejercicios" />
     </section>
 
+    <nav class="seguir no-imprimir" aria-label="Seguir desde aquí">
+      <div class="s-lados">
+        {navegacion.anterior ? (
+          <a class="s-tema s-ant" href={navegacion.anterior.href}>
+            <span class="rotulo">← tema {String(navegacion.anterior.n).padStart(2, '0')}</span>
+            <span class="s-t">{navegacion.anterior.titulo}</span>
+          </a>
+        ) : <span />}
+        {navegacion.siguiente && (
+          <a class="s-tema s-sig" href={navegacion.siguiente.href}>
+            <span class="rotulo">tema {String(navegacion.siguiente.n).padStart(2, '0')} →</span>
+            <span class="s-t">{navegacion.siguiente.titulo}</span>
+          </a>
+        )}
+      </div>
+      <div class="s-otros">
+        {navegacion.rutas.map((r) => (
+          <a class="s-otro" href={r.href}>
+            <span class="rotulo">ruta de estudio</span>
+            <span class="s-t">{r.titulo}</span>
+          </a>
+        ))}
+        <a class="s-otro" href={navegacion.examenes.href}>
+          <span class="rotulo">exámenes</span>
+          <span class="s-t">Las {navegacion.examenes.cuantos} convocatorias, resueltas enteras</span>
+        </a>
+      </div>
+    </nav>
+
     <footer class="pie">
       <p class="rotulo">Entrena {competencias.join(' · ')}</p>
       {fuente && <p class="rotulo fuente">{fuente}</p>}
@@ -147,6 +195,27 @@ const indice = headings.filter((h) => h.depth === 2);
 
     // Entrar con el enlace puesto, o volver atrás, deja la misma pestaña.
     abre(panelDe(location.hash.slice(1)), false);
+
+    /* Y al ENTRAR con el ancla puesta hay que saltar a mano igual que al
+       cambiarla, cosa que este fichero hacía solo en `hashchange`.
+       Consecuencia, medida el 4 de septiembre de 2026 abriendo treinta
+       enlaces de la ruta de Fluidos: **cinco no llegaban**, y los cinco eran
+       enlaces a un ejercicio —los más valiosos de una ruta—. El panel se
+       abría bien, el ejercicio estaba a 1.892 px, y la página se quedaba
+       arriba. Es el fallo de los 58 enlaces de teoría de agosto con otra
+       cara: el destino existe y no llega (§16 punto 2).
+
+       Se espera a las fuentes porque KaTeX cambia la altura de media página
+       al dibujar, y sin eso el salto aterriza en el sitio equivocado. */
+    {
+      const h = location.hash.slice(1);
+      if (h.startsWith('ej-')) {
+        const salta = () =>
+          document.getElementById(decodeURIComponent(h))?.scrollIntoView({ block: 'start' });
+        if (document.fonts?.ready) document.fonts.ready.then(() => requestAnimationFrame(salta));
+        else requestAnimationFrame(salta);
+      }
+    }
     window.addEventListener('hashchange', () => {
       const h = location.hash.slice(1);
       abre(panelDe(h), false);
@@ -387,6 +456,44 @@ const indice = headings.filter((h) => h.depth === 2);
     font-size: .95rem;
     max-width: var(--measure);
     padding: 2rem 0;
+  }
+
+  /* ── seguir desde aquí ─────────────────────────────────────────── */
+  .seguir {
+    margin-top: 3rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    gap: .8rem;
+  }
+  .s-lados {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+  }
+  .s-tema,
+  .s-otro {
+    display: grid;
+    gap: .2rem;
+    padding: .75rem .9rem;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--panel);
+    transition: border-color .15s;
+  }
+  .s-tema:hover,
+  .s-otro:hover { border-color: var(--live); }
+  .s-tema .rotulo,
+  .s-otro .rotulo { color: var(--live); }
+  .s-sig { text-align: right; }
+  .s-t { font-size: .94rem; font-weight: 600; line-height: 1.3; }
+  .s-otros { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .8rem; }
+
+  @media (max-width: 40rem) {
+    .s-lados { grid-template-columns: 1fr; }
+    .s-sig { text-align: left; }
   }
 
   /* ── pie ───────────────────────────────────────────────────────── */

@@ -122,6 +122,37 @@ svg { max-width: 100%; }
   color: var(--tiza-amarilla);
 }
 
+/* La barra en un móvil de 360 px.
+   Medido el 4 de septiembre de 2026 abriendo el sitio a 360 (§16 punto 1):
+   el wordmark ocupa 139, el conmutador guiado/completo 151 y el botón de tema
+   66 — 388 más 32 de margen, o sea **420 en una pantalla de 360**. El botón
+   de tema quedaba fuera de la pantalla y la página se desplazaba en
+   horizontal en TODA página de tema.
+
+   `verify.mjs` daba verde porque su regla de 360 px busca anchos fijos en el
+   CSS y aquí no hay ninguno: el desborde lo produce una fila flex que no
+   envuelve. La regla no estaba mal; estaba mirando otra cosa.
+
+   Se recorta lo prescindible —el «1 de 5», que la propia página repite— y se
+   deja `flex-wrap` como red: si algún día entra una pieza más, baja de línea
+   en vez de salirse. */
+@media (max-width: 480px) {
+  .top {
+    gap: .4rem;
+    padding-inline: .7rem;
+    flex-wrap: wrap;
+    row-gap: .35rem;
+    justify-content: space-between;
+  }
+  /* Sin esto la barra cabe y aun así envuelve: `margin-left: auto` se come
+     todo el hueco libre y empuja al botón a una segunda fila. */
+  .top .spacer { display: none; }
+  .brand { font-size: 1.05rem; }
+  .top .modos .avance { display: none; }
+  .top .modos button { padding: .3rem .5rem; }
+  .toggle { padding: .3rem .55rem; }
+}
+
 /* El conmutador guiado/completo, cuando la página lo pone en la barra
    (brief §6). Grupo sobre un velo de tiza; el activo, amarilla sólida. */
 .top .modos {
@@ -209,6 +240,48 @@ h1 {
   overflow-y: hidden;
   padding-block: .35rem;
 }
+
+/* Y que se note que hay más a la derecha.
+   Poder desplazar no sirve de nada si nadie sabe que se puede: la fórmula
+   termina a media letra y parece que ahí se acaba. Se pinta un degradado en el
+   borde derecho y una flecha pequeña; la clase la pone el guion de
+   `Base.astro`, porque el CSS no sabe medir desbordes. */
+.katex-display.se-desplaza::after {
+  content: '→ se desplaza de lado';
+  display: block;
+  /* Pegado al borde izquierdo **visible**, no al del contenido: así el aviso
+     sigue ahí mientras se arrastra la fórmula. */
+  position: sticky;
+  left: 0;
+  width: max-content;
+  margin-top: .15rem;
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--faint);
+  text-align: left;
+}
+
+/* Y la hermana que faltaba: la fórmula **en línea** que tampoco cabe.
+   `\.katex-display` cubre las de bloque, que son las que el corpus escribe
+   casi siempre. Pero un enunciado que define tres subespacios seguidos en
+   línea —«A={(x,y,z) / x−2y=0}, B=…, C=…»— produce una caja de 675 px en una
+   columna de 485 y **se sale por la derecha, encima del carril lateral**.
+   Medido el 4 de septiembre de 2026 barriendo las 167 páginas: pasa en las
+   dos rutas de Álgebra y en seis páginas de examen, hasta 190 px fuera.
+
+   Se le da el mismo trato que a la de bloque y que a las tablas: que se
+   desplace dentro de su caja en vez de empujar el documento. El
+   `vertical-align` evita que la caja con `overflow` arrastre la línea base
+   del párrafo hacia abajo. */
+.prosa .katex {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
+.katex-display > .katex { overflow: visible; }
 
 /* ── tablas ────────────────────────────────────────────────────────
    Hasta el 27 de agosto de 2026 este fichero no decía **nada** sobre las

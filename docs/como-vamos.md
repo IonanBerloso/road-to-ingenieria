@@ -977,6 +977,88 @@ alto (4, 7, 13, 15, 16, 18, 19, 21 y 25) y, sobre todo, las ocho `etiqueta` de
 temas **transversales**: el 12 (Bernoulli) y el 14 (cantidad de movimiento)
 casi nunca ocupan un hueco propio, pero caen dentro de los que sí.
 
+### El día que `recalcula` empezó a mirar Fluidos
+
+4 de septiembre de 2026, y es el hallazgo más incómodo de la semana. El guion
+que comprueba que las cuentas del corpus salen llevaba desde el 28 de agosto
+informando «sin desajustes» después de cada tanda de Fluidos, y **no estaba
+comprobando ni un solo número de la asignatura**. El motivo era de estilo de
+escritura: solo reconocía los pares escritos con `\approx`, y el corpus de
+Fluidos escribe `=`.
+
+| | pares comprobados antes | después |
+|---|---|---|
+| Cálculo | 279 | **575** |
+| Álgebra | 0 | 0 |
+| Fluidos | **0** | **1.416** |
+
+Ampliarlo estaba anotado como deuda desde el día que se midió, con las tres
+clases de falso positivo identificadas. Resultaron ser cuatro, y el arreglo de
+cada una está comentado en el guion: fórmulas partidas por el salto de línea
+del YAML, coeficientes tomados por resultados, redondeos encadenados —que
+ahora se propagan literal a literal— y cambios de unidad.
+
+**Lo que encontró el primer pase: diez desajustes reales.** Cinco en Fluidos y
+**cinco en Cálculo**, una asignatura cerrada, auditada y dada por verificada
+desde el 28 de agosto. Dos cifras transpuestas (`1{,}04234` donde tocaba
+`1{,}04324`), una suma de tres términos mal, un resto de Lagrange con un 25 %
+de error, un punto de millar metido dentro de una fórmula y cinco redondeos.
+Ninguno rompía nada: el sitio funcionaba perfectamente enseñándolos.
+
+**Y una lección de método que costó encontrar.** La primera versión del guion
+ampliado rechazaba las expresiones que empiezan por paréntesis —un descuido de
+una clase de caracteres— y con eso se comía en silencio buena parte de los
+pares. No lo delató ninguna cuenta: lo delató la validación al revés que pide
+§11, meter un fallo a mano y comprobar que el guion se pone rojo. Se hizo con
+tres fallos en tres ficheros distintos, y el primero salió verde.
+
+De paso se cerró la otra deuda del día: **los 22 subíndices con tilde dentro
+de `$…$`**, que KaTeX dibujaba avisando por consola en cada build. Ahora van
+en `\text{}` —que además es la tipografía correcta para un subíndice que es
+una palabra— y `revisa-ejercicios.mjs` caza el siguiente **escuchando a
+KaTeX**, no adivinando dónde empieza una fórmula con una expresión regular:
+esa versión daba 34 falsos positivos.
+
+### El día que abrimos el sitio y lo miramos
+
+También el 4 de septiembre de 2026, y es la parte del día que más ha rendido.
+Después de una jornada entera de guardianes —`recalcula` ampliado, las tildes,
+el humo completo, el peso— con los cuatro en verde, se abrió el sitio y se leyó
+como lo lee un alumno: la URL a pelo, sin ancla, sin pulsar nada, sin
+`localStorage`. En diez minutos apareció esto:
+
+| lo que estaba publicado | dónde |
+|---|---|
+| **`El NaN % de la nota`, en negrita** | 3 de las 10 rutas: Fluidos ordinaria, Álgebra ordinaria y extraordinaria |
+| «7 ejercicios» en un examen que trae 9, sin decir que faltan dos | 9 de las 16 convocatorias de Fluidos |
+| la página se desplaza en horizontal a 360 px | **toda** página de tema |
+| 5 de 7 pastillas de tema cortadas a media palabra | cada página de examen |
+| la columna de texto de un ejercicio en un móvil: **145 px** | las rutas, dentro de un bloque y un escalón |
+| 12 fórmulas cortadas a media letra sin decir que se desplazan | 10 páginas |
+
+**El `NaN` es el que duele.** La página de la ruta calcula el reparto por
+competencia dividiendo por el total de puntos de la convocatoria, y ni Álgebra
+ni Fluidos publican reparto: sus cuadernillos dan el peso de cada ejercicio y
+nada más. Cero partido por cero, publicado en negrita en el panel que explica
+para qué sirve la ruta, en dos asignaturas declaradas terminadas.
+
+**El de los exámenes es el que más engaña.** La declaración de los catorce
+ejercicios que faltan existía… **en un comentario del YAML**. El alumno abría
+la convocatoria, veía «7 ejercicios», pulsaba el botón amarillo del PDF
+original y encontraba un 4 y un 9 que aquí no estaban. §15 dice que «un hueco
+declarado es información; uno escondido, una promesa incumplida», y estaba
+declarado donde no lo lee nadie. Ahora es un campo del esquema —`fuera`, con el
+número y el motivo— y la página lo pone en rojo antes de la primera pregunta.
+
+**Y el de los 145 píxeles es el que más gente afecta.** El componente de
+ejercicio guiado, que es el corazón del sitio, **no tenía ni una consulta de
+medios**. Dentro de una ruta, el anidamiento sumaba relleno siete veces y la
+columna útil quedaba en 145 px: tres palabras por línea. Arreglado, son 231.
+
+Lo que queda escrito de aquí, en §16 de `CLAUDE.md`, es una regla de orden:
+**se mira primero y se mide después.** Un guardián se escribe cuando mirar ha
+encontrado algo, no para no tener que mirar.
+
 ### La capa de unidades, que es lo que Fluidos le pide al sistema
 
 Cada asignatura ha tensionado el sistema por un sitio distinto: Cálculo pedía

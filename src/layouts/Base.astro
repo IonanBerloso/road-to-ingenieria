@@ -78,5 +78,35 @@ const estilo = [
   <body>
     <a class="saltar" href="#principal">Saltar al contenido</a>
     <slot />
+
+    <script is:inline>
+      /* Marca las fórmulas de bloque que no caben en su columna.
+       *
+       * `.katex-display` ya se puede desplazar de lado, pero **no lo dice**, y
+       * eso es peor que no poder: el 4 de septiembre de 2026, barriendo las
+       * 167 páginas, salieron **doce fórmulas cortadas** y la peor era el
+       * enunciado de un ejercicio de Álgebra que define tres conjuntos y solo
+       * enseñaba dos y medio — con la pregunta pidiendo «cuáles de los tres».
+       * El lector ve una fórmula que acaba a media letra y no tiene por qué
+       * imaginarse que hay más a la derecha.
+       *
+       * Se hace aquí, con JavaScript, porque el CSS no sabe si algo desborda.
+       * Es lo mínimo: una clase, y el resto lo pinta `base.css`. */
+      (() => {
+        const marca = () => {
+          for (const f of document.querySelectorAll('.katex-display')) {
+            const d = f.firstElementChild;
+            f.classList.toggle('se-desplaza', !!d && d.scrollWidth > f.clientWidth + 4);
+          }
+        };
+        const cuando = () => requestAnimationFrame(marca);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(cuando);
+        else cuando();
+        addEventListener('resize', cuando);
+        /* Los paneles y los bloques plegables cambian el ancho al abrirse. */
+        addEventListener('toggle', cuando, true);
+        document.addEventListener('click', cuando);
+      })();
+    </script>
   </body>
 </html>

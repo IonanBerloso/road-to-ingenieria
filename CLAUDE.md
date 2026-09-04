@@ -756,7 +756,17 @@ Comprueba:
 - `prefers-reduced-motion` respetado en toda animación.
 - `description`, `og:title` y `canonical` en toda página.
 - Cero enlaces internos rotos.
-- Responsive real hasta 360 px.
+- **Cero números rotos en el texto publicado** — ni `NaN`, ni `undefined`, ni
+  `Infinity`, ni `[object Object]`. Añadida el 4 de septiembre de 2026 después
+  de encontrar **`El NaN % de la nota` en negrita** en el panel principal de
+  tres de las diez rutas, con las dos asignaturas declaradas terminadas y el
+  suelo en verde. La causa era una división entre cero: Álgebra y Fluidos no
+  publican reparto por competencia y la página lo calculaba igual.
+- Responsive real hasta 360 px. **Ojo con lo que esta regla NO mira**: busca
+  anchos fijos en el CSS, y el 4 de septiembre de 2026 el sitio se desplazaba
+  en horizontal en toda página de tema a 360 px **sin un solo ancho fijo** —lo
+  producía una fila flex que no envolvía—. Un desborde de verdad se mide
+  abriendo la página, no leyendo el CSS.
 - Toda página de contenido con **modo guiado y modo completo**. Nadie repasa la
   noche antes de un examen haciendo scroll por una narración; el modo completo
   se imprime bien y sirve para explicárselo a alguien.
@@ -851,40 +861,52 @@ perfectamente enseñando algo que no es verdad.
 
 Comprueba solo **lo que el propio contenido ya afirma**, nunca algo inventado:
 
-- cada «expresión $\approx$ decimal» de una resolución o un desarrollo,
+- cada «expresión $\approx$ decimal» **y cada «expresión = decimal»** de una
+  resolución o un desarrollo,
 - cada forma exacta que un `formato` declara entre paréntesis, contra su
   `valor`,
 - que un `formato` que promete «un número entero» guarde un entero.
 
 Lo que no sabe evaluar lo declara **saltado**, y no lo cuenta como fallo.
 
-> **Su límite, dicho aquí para que nadie lea mal su verde.** Solo mira los
-> pares escritos con `\approx`, y solo cuando el lado izquierdo se puede
-> evaluar. Medido por asignatura el 4 de septiembre de 2026:
+> **Su alcance, medido, y lo que le sigue quedando fuera.** Hasta el 4 de
+> septiembre de 2026 solo miraba los pares escritos con `\approx`, y eso
+> dejaba fuera a **Fluidos entera** —su corpus escribe `=`—, es decir la
+> asignatura con más aritmética del proyecto: 279 pares comprobados, los
+> 279 de Cálculo. Ese día se amplió a `=`. Medido después:
 >
 > | | pares comprobados | saltados |
 > |---|---|---|
-> | Cálculo | 279 | 583 |
-> | Álgebra | **0** | 1 |
-> | Fluidos | **0** | 19 |
+> | Cálculo | 575 | 1.080 |
+> | Álgebra | **0** | 2 |
+> | Fluidos | **1.416** | 2.917 |
 >
-> Es decir: **los 279 pares son todos de Cálculo, y Fluidos entera está
-> fuera**, no solo Álgebra. Este fichero decía hasta ese día que la que
-> quedaba fuera era Álgebra —porque sus resultados son objetos exactos,
-> vectores y matrices, y eso sigue siendo cierto— y callaba lo de Fluidos,
-> que es la asignatura con más aritmética del proyecto. El motivo es otro y
-> es de estilo: **el corpus de Fluidos escribe `=` y no `\approx`**, así que
-> el guion no reconoce ni un solo par. «Recalcula en verde» tras una tanda
-> de Fluidos no significa nada; ahí la verificación sigue siendo evaluar los
-> números a mano contra el boletín, que es lo que se ha venido haciendo.
+> De 279 a 1.991, y con el primer pase **diez desajustes reales, cinco en
+> Fluidos y cinco en Cálculo** —una asignatura cerrada y dada por verificada—:
+> dos cifras transpuestas (`1{,}04234` por `1{,}04324`), una suma de tres
+> términos mal, un resto de Lagrange con un 25 % de error, un punto de millar
+> dentro de una fórmula y cinco redondeos. Ninguno rompía nada.
 >
-> Ampliarlo a `=` está **medido y no es una línea**: aceptando también `=`,
-> Fluidos pasa de 0 a 1216 pares y salta 259 avisos, un 21 % — el mismo
-> orden de ruido que hizo descartar los dos guardianes de texto de abajo.
-> Los tres tipos de falso positivo están identificados: cambios de unidad en
-> la misma cadena (`= 19\,836` W `= 19,836` kW), redondeos encadenados que
-> difieren en la última cifra, y expresiones que el extractor corta por la
-> mitad. Hasta que se resuelvan los tres, no se amplía.
+> **Álgebra sigue en cero y seguirá**, y esa parte del límite no es un
+> defecto: sus respuestas son objetos exactos —vectores, matrices, bases— y
+> no hay decimales que recalcular.
+>
+> Lo que costó la ampliación fueron los falsos positivos, que eran cuatro
+> clases y no tres: expresiones partidas por el salto de línea del YAML
+> —resuelto uniendo las líneas dentro de un `$$…$$` **sin mover las
+> posiciones**—, coeficientes tomados por resultados (`= 1{,}1\,\frac{v^2}{2g}`),
+> redondeos encadenados —resuelto propagando la incertidumbre de cada
+> literal decimal en vez de comparar contra media unidad del último dígito—
+> y cambios de unidad en la misma cadena.
+>
+> **Y ese último obligó a una concesión que conviene tener presente.** Cuando
+> el número lleva unidad escrita, el guion acepta **cualquier potencia de
+> diez** como lectura posible, porque el corpus calcula en centímetros y
+> escribe en milímetros con toda naturalidad. Consecuencia: **un error de
+> factor mil pasa desapercibido si el número lleva unidad.** Se aceptó
+> porque sin ello los avisos de esa clase se comían el guardián —de 33
+> avisos, 20 eran esto— y §11 dice que un guardián que se ignora es peor que
+> ninguno.
 
 Antes de escribirlo se intentaron dos guardianes de texto y los dos se
 descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusión,
@@ -1160,7 +1182,28 @@ cinco fallos reales:
 | etiquetas cortadas en cuatro figuras | no |
 | un párrafo reescrito dos veces sobre sí mismo | no |
 
-**Cuatro de cinco.** El build en verde no es una comprobación: es la ausencia
+**Cuatro de cinco.**
+
+> **Y el 4 de septiembre de 2026 volvió a pasar, peor y por lo mismo.** Se
+> pasó el día entero puliendo guardianes —`recalcula` ampliado, tildes,
+> `humo` completo, `peso`— y presentando sus verdes como si fueran calidad.
+> Bastó **abrir el sitio diez minutos** para encontrar esto:
+>
+> | lo que estaba publicado | ¿lo cazaba algo? |
+> |---|---|
+> | **`El NaN % de la nota`, en negrita**, en 3 de las 10 rutas | no |
+> | «7 ejercicios» en un examen de 9, sin decir que faltan dos — en 9 convocatorias | no |
+> | la página se desplaza en horizontal a 360 px en **toda** página de tema | no |
+> | 5 de 7 pastillas de tema cortadas en cada examen | no |
+> | la columna de texto de un ejercicio en un móvil: **145 px**, tres palabras por línea | no |
+> | 12 fórmulas cortadas a media letra, sin decir que se desplazan | no |
+>
+> **Seis de seis.** Los cuatro guardianes en verde, dos asignaturas
+> declaradas terminadas, y el producto roto por donde se usa. La lección no
+> es «hacen falta más guardianes» —cuatro de estos seis ya tienen el suyo
+> desde ese día—: es que **el orden estaba invertido**. Se mira primero y se
+> mide después; un guardián se escribe cuando mirar ha encontrado algo, no
+> para no tener que mirar. El build en verde no es una comprobación: es la ausencia
 de una. Así que después de construir, y antes de dar nada por hecho:
 
 1. **Míralo.** Levanta `npm run dev` y abre la página. Si has dibujado una
@@ -1469,6 +1512,21 @@ Cosas que ya han costado horas. No son opiniones.
   no para los signos.** Y al revés para los boletines con matrices: el volcado
   de texto destroza las matrices y la imagen las conserva; ahí manda la
   imagen y el texto solo sirve para los signos.
+- **Una tilde dentro de `$…$` se dibuja, y avisa en cada build.** KaTeX pinta
+  perfectamente `P_{útil}` o `k_{válv}` —no hay error, no queda ningún `$`
+  suelto, el suelo da verde— pero emite un `unicodeTextInMathMode` por consola
+  cada vez que se compila, y ese ruido tapa a los avisos que sí señalan algo
+  roto. El 4 de septiembre de 2026 había **22 repartidos por nueve ficheros**.
+  El arreglo es `P_{\text{útil}}`, que además es la tipografía correcta: un
+  subíndice que es una palabra va en redonda, no en cursiva.
+
+  Lo caza `revisa-ejercicios.mjs` desde ese día, y **la forma de cazarlo tiene
+  su propia lección**: se hace **escuchando a KaTeX** —interceptando su
+  `console.warn`— y no emparejando `$` con una expresión regular. La versión
+  de regex daba 34 falsos positivos sobre el corpus entero, todos de prosa
+  atrapada entre dos fórmulas distintas de la misma línea. Es el mismo error
+  que §17 ya avisa para `grep`: **no adivines la estructura, pásala por el
+  procesador de verdad.**
 - **El símbolo del euro no se puede dibujar dentro de una fórmula.** KaTeX
   tiene sus propias fuentes (§07) y el `€` no está en ellas: ni suelto ni
   dentro de un `\text{…}`. Pasó el 31 de agosto de 2026 con un coste de

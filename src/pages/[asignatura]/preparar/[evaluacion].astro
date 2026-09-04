@@ -274,6 +274,28 @@ for (const ex of deLaConvocatoria) {
 const total = suma.comp1 + suma.comp2 + suma.comp4;
 const pct = (n: number) => ((100 * n) / total).toFixed(1).replace('.', ',');
 
+/** Cuántos ejercicios de examen hay en esta evaluación, **con o sin reparto**.
+ *
+ *  Hace falta porque no todas las escuelas publican el reparto por
+ *  competencia. Cálculo y Álgebra sí; **Mecánica de Fluidos no**: sus
+ *  cuadernillos dan el porcentaje de cada ejercicio sobre el total y nada más,
+ *  así que `puntos` va vacío en los 107 ejercicios de sus 16 convocatorias.
+ *
+ *  Y eso, hasta el 4 de septiembre de 2026, se publicaba así en la página de
+ *  la ruta de Fluidos, en negrita y con la asignatura declarada terminada:
+ *
+ *      Medido sobre 16 convocatorias · 0 ejercicios · 0 puntos.
+ *      El NaN % de la nota no es calcular; la explicación formal sola vale
+ *      el NaN %.
+ *      Esta ruta te lleva por 54 de esos 0 ejercicios.
+ *
+ *  Cero guardián lo vio: `verify.mjs` no lee texto, `humo.mjs` mira figuras y
+ *  pestañas, y el suelo estaba en verde. Lo vio abrir la página (§16 punto 1),
+ *  que es justo lo que llevaba semanas sin hacerse. */
+const ejerciciosDeExamen = deLaConvocatoria
+  .reduce((n, ex) => n + ex.data.ejercicios.length, 0);
+const hayReparto = total > 0;
+
 /** Cuántos de esos ejercicios están en la ruta, para poder decirlo sin
  *  presumir de cubrirlos todos.
  *
@@ -530,19 +552,37 @@ const faltas = bloquesHtml.flatMap((b) =>
 
       <div class="eval-caja">
         <p class="rotulo ec-tit">Esta evaluación</p>
-        <p class="ec-dato">
-          Medido sobre {d.medidoSobre} convocatorias · {conPuntos} ejercicios ·{' '}
-          {total} puntos.
-        </p>
-        <Reparto puntos={suma} rotulo="Reparto de la nota por competencia" />
-        <p class="ec-dato ec-dato--fuerte">
-          El {pct(suma.comp1 + suma.comp4)} % de la nota no es calcular; la
-          explicación formal sola vale el {pct(suma.comp4)} %.
-        </p>
+        {hayReparto ? (
+          <>
+            <p class="ec-dato">
+              Medido sobre {d.medidoSobre} convocatorias · {conPuntos} ejercicios ·{' '}
+              {total} puntos.
+            </p>
+            <Reparto puntos={suma} rotulo="Reparto de la nota por competencia" />
+            <p class="ec-dato ec-dato--fuerte">
+              El {pct(suma.comp1 + suma.comp4)} % de la nota no es calcular; la
+              explicación formal sola vale el {pct(suma.comp4)} %.
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="ec-dato">
+              Medido sobre {d.medidoSobre} convocatorias · {ejerciciosDeExamen}{' '}
+              ejercicios transcritos.
+            </p>
+            <p class="ec-dato ec-dato--fuerte">
+              Estos exámenes no publican el reparto por competencia — solo el
+              peso de cada ejercicio sobre el total —, así que aquí no hay
+              porcentaje que enseñar. Lo que no está medido no se estima.
+            </p>
+          </>
+        )}
         <p class="ec-flojo">
-          Esta ruta te lleva por {deExamenCitados} de esos {conPuntos}{' '}
-          ejercicios; los que faltan están nombrados con su motivo. Un bloque
-          no se acaba: se domina — cada uno te dice cómo sabes que ya lo tienes.
+          {deExamenCitados >= ejerciciosDeExamen
+            ? `Esta ruta te lleva por los ${ejerciciosDeExamen}, sin dejarse ninguno.`
+            : `Esta ruta te lleva por ${deExamenCitados} de esos ${ejerciciosDeExamen} ejercicios; los que faltan están nombrados con su motivo.`}{' '}
+          Un bloque no se acaba: se domina — cada uno te dice cómo sabes que ya
+          lo tienes.
         </p>
       </div>
 
@@ -768,7 +808,9 @@ const faltas = bloquesHtml.flatMap((b) =>
 
   .bcuerpo { padding: .3rem 1.2rem 1.2rem; }
   .bcuerpo :global(p) { margin-bottom: .9rem; }
-  .bcuerpo :global(ul), .bcuerpo :global(ol:not(.material)) { margin: 0 0 1rem 1.2rem; }
+  /* `.pasos` queda fuera: es la escalera del ejercicio guiado, no una lista de
+     prosa, y sangrarla le robaba 19 px de columna en un teléfono. */
+  .bcuerpo :global(ul), .bcuerpo :global(ol:not(.material):not(.pasos)) { margin: 0 0 1rem 1.2rem; }
 
   /* fórmulas en bloque: la caja que antes ponía Lectura */
   .bcuerpo :global(.katex-display) {
@@ -1008,6 +1050,21 @@ const faltas = bloquesHtml.flatMap((b) =>
     .bloq { grid-template-columns: 2.2rem minmax(0, 1fr); }
     .bcuerpo { padding: .3rem .8rem 1rem; }
     .bmeta { display: none; }
+  }
+
+  /* Un teléfono de 360 px, que es donde se estudia de verdad.
+     Medido el 4 de septiembre de 2026 abriendo esta página a 360: la columna
+     de texto del ejercicio se quedaba en **145 px** —unas dieciocho letras—
+     porque el anidamiento suma relleno cinco veces: envoltorio 16, carril del
+     número 43, bcuerpo 13, escalón 13, ejercicio 16, pasos 19, cabecera 16. La
+     página existía y era ilegible, que es la peor combinación posible: parece
+     que está y no sirve. Aquí se recorta todo lo que no informa. */
+  @media (max-width: 30rem) {
+    .envoltorio { padding-inline: .55rem; }
+    .bloq { grid-template-columns: 1.35rem minmax(0, 1fr); gap: .35rem; }
+    .bcuerpo { padding: .3rem .5rem .9rem; }
+    .escalon { padding: .8rem .5rem .9rem; }
+    .bnum { font-size: .8rem; }
   }
 
   @media print {
