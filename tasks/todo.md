@@ -123,17 +123,18 @@ commit propios para que el avance quede aunque el día se corte.
 > por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
 > que queda del corpus son problemas no recomendados.
 >
-> **Estado al cerrar el 4 de septiembre: 219 de 236, y los 17 que faltan están
-> declarados uno a uno.** Catorce venían de antes y los tres últimos —9.11,
-> 9.13 y 9.15— se declaran en esta tanda, cada uno con lo que le falta escrito
-> abajo. De los capítulos 1 a 8 no queda nada, y el 9 va por once de
-> diecinueve.
+> **Estado al cerrar el 4 de septiembre: 222 de 236, y los 14 que faltan son
+> exactamente los que ya estaban declarados.** Es decir: **no queda ningún
+> problema de la colección sin escribir o sin explicar por qué no se escribe.**
+> Capítulos 1, 7 y 8 enteros; el 9 en 18 de 19; y los catorce huecos son 2.4,
+> 2.21, 2.27, 2.34, 2.42, 3.22, 4.16, 5.12, 6.20, 6.23, 6.24, 6.26, 6.28 y
+> 9.16, cada uno con su motivo escrito más abajo.
 >
-> **Es decir: la fase C de la colección se cierra aquí.** No porque no haya
-> trabajo, sino porque lo que queda depende de datos que el material no da o
-> de lecturas que hay que hacer con la página delante. Un corpus con 219
-> problemas escritos y 17 huecos explicados es un producto honesto; uno con
-> 236 y tres inventados, no.
+> Los tres últimos en entrar fueron **9.11** (los mil trescientos metros
+> equivalentes), **9.13** (el petróleo crudo, el único Darcy del capítulo) y
+> **9.15** (el filtrado de la piscina y su by-pass). Los tres estaban
+> declarados esa misma tarde y los tres se destrabaron leyendo lo que faltaba
+> en vez de suponerlo.
 >
 > **El anexo se lee, y se comprueba.** Con el 9.6 y el 9.7 quedó montado el
 > procedimiento entero, que es el mismo del hidrograma del 8.21: renderizar
@@ -150,22 +151,25 @@ commit propios para que el avance quede aunque el día se corte.
 > de 1,3 mcl cuadre. Un centímetro de diferencia sobre treinta y dos metros.
 > Los ficheros del barrido están en el scratchpad (`lee2.mjs`, `traza2.mjs`).
 >
-> El capítulo 9 va por once. Los cinco primeros no necesitaban el anexo
+> El capítulo 9 va por dieciocho de diecinueve. Los cinco primeros no
+> necesitaban el anexo
 > —**sus cuatro primeros problemas vienen resueltos en la propia colección**,
 > con los puntos de la curva de la bomba escritos, y el 9.19 trae la suya como
 > fórmula—: 9.1 (el trasvase y el depósito que se presuriza), 9.2 (la fuente de
 > chorro regulable), 9.4 (la bomba a dos mil metros de altitud), 9.9 (el
 > sobrepresor que reparte a dos servicios) y 9.19 (llenar la piscina con la red
-> y una bomba). Los seis siguientes ya son del anexo: **9.6** (la turbobomba
+> y una bomba). Los nueve siguientes ya son del anexo: **9.6** (la turbobomba
 > elegida y la válvula que cuesta dinero), **9.7** (la fuente del jardín y los
 > ocho metros exactos), **9.8** (el chorro de quince metros y lo que cuesta la
 > hora), **9.17** (el tramo estrecho y la tubería en paralelo), **9.18** (el
-> depósito que ayuda y el chorro que hay que subir) y **9.3** (el sobrepresor,
-> el riego y el depósito regulador).
+> depósito que ayuda y el chorro que hay que subir), **9.3** (el sobrepresor,
+> el riego y el depósito regulador), **9.11** (los mil trescientos metros
+> equivalentes), **9.13** (el petróleo crudo y el único Darcy del capítulo) y
+> **9.15** (el filtrado de la piscina y su by-pass).
 >
-> Los cuatro que quedan del capítulo —9.11, 9.13, 9.15 y 9.16— están
-> declarados abajo, cada uno con el dato o la lectura que le falta. El
-> procedimiento del anexo ya no es el obstáculo en ninguno de ellos.
+> El único que queda del capítulo es el **9.16**, declarado abajo: el boletín
+> publica solo el veredicto «No cavita», sin un número contra el que
+> contrastar, y el manómetro de mercurio de la entrada admite dos lecturas.
 >
 > **Y una convención de la escuela que quedó establecida al escribir el
 > 9.6: la presión atmosférica se toma a la altitud de la obra, no a nivel
@@ -309,33 +313,32 @@ commit propios para que el avance quede aunque el día se corte.
 >   $L$ por separado. Dos indicios de que es correcto —sale redondo, y
 >   coincide con $0{,}50 + 2$— no son una lectura (§13 caso 2). Se escribe el
 >   día que aparezca el dato: la comprobación son dos minutos.
-> - **9.11** (la elevación de montaña, 74 m de desnivel y 1361 m equivalentes)
->   está resuelto en su mayor parte y **no escrito** por dos cabos sueltos. El
->   coeficiente de pérdidas sale **exacto** —fibrocemento de 200 mm, C = 130,
->   1361 m equivalentes y 1,2480·10⁻² contra los 1,248·10⁻² publicados, lo que
->   además confirma que la válvula de pie ya incluye la entrada y no se le suma
->   la salida de depósito— pero el término estático publicado es **73,925**
->   cuando la diferencia de cotas es 974 − 900 = **74 exactos**, y esos siete
->   centímetros y medio no salen de ningún sitio. Y el apartado e), la cota del
->   eje, necesita el NPSH requerido de la INP 65/250 a 104 m³/h, que hay que
->   leer del anexo III. Se escribe el día que se lea esa carta o se sepa de
->   dónde sale el 73,925.
-> - **9.13** (el petróleo crudo a 14 °C) está leído y **no escrito**: es el
->   único del capítulo que usa Darcy-Weisbach en vez de Hazen-Williams, y para
->   cerrar la altura publicada de 73,4 mcl hace falta un factor de fricción de
->   0,028, que a su vez exige una viscosidad cinemática del crudo de unos
->   1,1·10⁻⁵ m²/s. Ese número **no está en el enunciado**: hay que leerlo del
->   ábaco nº 5 a 14 °C, y ajustarlo desde el resultado sería justo lo que §13
->   caso 2 prohíbe. Además su término estático depende otra vez de la presión
->   atmosférica a la altitud —sale 91,45 kPa para la cota 960— y su apartado d)
->   necesita el NPSH del anexo IV.
-> - **9.15** (el filtrado de la piscina del complejo deportivo) está leído y
->   **no escrito** porque su figura es una red con una válvula V que abre o
->   cierra un lazo, y de ella dependen los dos casos del enunciado. Redibujarla
->   bien es la mitad del trabajo, y conviene hacerlo con la página delante y no
->   a la carrera. El dato del filtro —2940·Q² en pascales con Q en l/s— y las
->   cuatro tuberías de hierro galvanizado están claros; lo que falta es la
->   topología.
+> - **Tres lecturas que costaron y que sirven para más de un problema.** La
+>   viscosidad cinemática del **petróleo crudo a 14 ºC** del ábaco nº 5 es
+>   $1{,}04\cdot 10^{-5}$ m²/s, y se valida sola: con ella el 9.13 reproduce
+>   los 73,4 mcl publicados. El **NPSH requerido de la INP 65/250** a 2900 rpm
+>   sale de barrer su carta del anexo III —90 m³/h → 3,90 m; 100 → 4,57;
+>   110 → 5,30—. Y la **válvula de pie con filtro tiene K = 2,5** en el cuadro
+>   nº 24, que es lo que hace cuadrar el coeficiente cuadrático del 9.7.
+> - **La presión atmosférica no tiene una convención única en la colección, y
+>   ningún enunciado la escribe.** Medido sobre los tres problemas que la
+>   necesitan: el **9.6** solo cuadra con 94 kPa —la atmósfera tipo en su cota
+>   680, y ahí lo confirman dos ecuaciones independientes—; el **9.11** con los
+>   98 kPa de la conversión de siempre (10 mca); y el **9.13** con 91,45 kPa,
+>   la atmósfera tipo en su cota 960. Los tres ejercicios lo dicen en su propio
+>   texto, porque es un dato deducido del resultado y callarlo sería
+>   publicarlo como si viniera del enunciado.
+> - **Y un error del boletín, dicho en el propio ejercicio.** El 9.11 publica
+>   31,7 kW de potencia absorbida, que es exactamente lo que sale usando el
+>   peso específico del **agua** en vez del del líquido, que tiene s = 1,1. Lo
+>   correcto son 34,9 kW. La misma colección lo hace bien en el 9.1, donde
+>   escribe el 1,2 dentro de la fórmula. El ejercicio da 34,9 y explica la
+>   diferencia en su paso de justificación.
+> - **9.11**, además, publica su término estático como **73,925** cuando la
+>   diferencia de cotas es $974-900 = 74$ exactos. Esos siete centímetros y
+>   medio no salen de ningún dato y no cambian ninguna respuesta —la altura en
+>   el punto sale 80,38 con 74 y 80,30 con 73,925, y el catálogo da 80,3—, así
+>   que el ejercicio usa el 74 y lo dice.
 > - **9.16** (el medidor de codo y el estudio de cavitación) está leído y
 >   **no escrito**, y es el único del capítulo 9 que no depende del anexo de
 >   bombas. El boletín publica solo el veredicto, «No cavita», sin ningún
