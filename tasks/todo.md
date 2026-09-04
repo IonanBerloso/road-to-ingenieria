@@ -123,18 +123,48 @@ commit propios para que el avance quede aunque el día se corte.
 > por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
 > que queda del corpus son problemas no recomendados.
 >
-> **Estado al cerrar el 4 de septiembre: 222 de 236, y los 14 que faltan son
+> **Estado al cerrar el 4 de septiembre: 224 de 236, y los 12 que faltan son
 > exactamente los que ya estaban declarados.** Es decir: **no queda ningún
 > problema de la colección sin escribir o sin explicar por qué no se escribe.**
-> Capítulos 1, 7 y 8 enteros; el 9 en 18 de 19; y los catorce huecos son 2.4,
-> 2.21, 2.27, 2.34, 2.42, 3.22, 4.16, 5.12, 6.20, 6.23, 6.24, 6.26, 6.28 y
-> 9.16, cada uno con su motivo escrito más abajo.
+> Capítulos 1, 7, 8 y 9 **enteros**; y los doce huecos son 2.4, 2.21, 2.27,
+> 2.34, 3.22, 4.16, 5.12, 6.20, 6.23, 6.24, 6.26 y 6.28, cada uno con su
+> motivo escrito más abajo.
 >
-> Los tres últimos en entrar fueron **9.11** (los mil trescientos metros
-> equivalentes), **9.13** (el petróleo crudo, el único Darcy del capítulo) y
-> **9.15** (el filtrado de la piscina y su by-pass). Los tres estaban
-> declarados esa misma tarde y los tres se destrabaron leyendo lo que faltaba
-> en vez de suponerlo.
+> Los dos últimos en entrar, **2.42** y **9.16**, estaban declarados por
+> ambigüedad de figura y salieron los dos por el mismo método: **buscar una
+> segunda ecuación que el enunciado no pedía** y ver cuál de las lecturas
+> posibles sobrevive.
+>
+> - En el **2.42** la geometría entera está en el dibujo y ninguna cota en el
+>   texto. Leyéndolo como cable a 2,50 m, tope a 2,00 m y lámina al nivel del
+>   tope, salen **los dos** resultados publicados —1,136 m³ y 11.331,3 N— al
+>   último decimal. Dos números independientes con una sola lectura no es
+>   casualidad. De paso confirma que la colección calcula con
+>   $\gamma = 9800$ N/m³: con 9,81 saldrían 1,138 y 11.342,8.
+> - En el **9.16** el manómetro de mercurio admite dos lecturas y **el
+>   resultado publicado no distingue entre ellas** —«No cavita» sale con las
+>   dos, con NPSH de 3,08 y de 7,63—. Lo que sí distingue es el balance de
+>   energía de la aspiración: la lectura buena da 1,59 m de pérdidas y la
+>   otra **−2,96 m**, que es imposible. Ese era justo el bloqueo declarado, y
+>   se levanta sin ajustar nada al resultado.
+>
+> **Y tres bloqueos se volvieron a revisar y siguen en pie**, ahora con la
+> comprobación hecha en vez de supuesta:
+>
+> - **6.20, 6.23 y 6.26** necesitan un factor de fricción entre un 5 y un 15 %
+>   por encima del que da la rugosidad. Se buscó el ábaco de la propia
+>   escuela —es el **nº 22** de `Cuadros_y_ábacos.pdf`, un Moody estándar— y
+>   para el 6.23 lee 0,0165–0,017 donde el boletín necesita 0,0189. Y el
+>   **cuadro nº 21**, que es el que prescribe el régimen, manda a Colebrook:
+>   con $\varepsilon/D = 3{,}33\cdot 10^{-4}$ salen $Re' = 69\,069$ y
+>   $Re'' = 1{,}68\cdot 10^{6}$, así que con $Re = 424\,500$ la tubería es
+>   semirrugosa y f vale 0,0167. Ni el ábaco de la escuela ni su propio
+>   cuadro de regímenes explican la diferencia.
+> - **2.21 y 2.27** son diez casos de prismas de presiones, y lo que piden
+>   dibujar es la respuesta. Vistas las páginas a 150 ppp: los datos son
+>   simbólicos —R, s = 2, s = 3— y **no hay ningún resultado publicado**. Son
+>   exactamente el par de problemas para los que hace falta el patrón
+>   `figura-fija`, que sigue sin existir.
 >
 > **El anexo se lee, y se comprueba.** Con el 9.6 y el 9.7 quedó montado el
 > procedimiento entero, que es el mismo del hidrograma del 8.21: renderizar
@@ -292,27 +322,6 @@ commit propios para que el avance quede aunque el día se corte.
 >   que pediría de verdad el patrón **figura fija** de §05, que sigue sin
 >   construirse. Diez sub-casos son bastante trabajo de SVG: conviene decidir
 >   el patrón antes de empezar, no a mitad.
-> - **2.42** (compuerta acodada con contrapeso de hormigón sumergido) está
->   leído, resuelto y **no escrito**, y merece la pena dejar el trabajo hecho
->   porque falta un solo dato. La geometría está clara —la compuerta es una
->   ele que gira en A, en el suelo; el brazo vertical sube 2 m hasta la lámina
->   libre y 0,50 m más hasta el brazo horizontal; el tope está a la altura del
->   agua— y las dos respuestas publicadas salen exactas **si el brazo
->   horizontal mide 2,5 m**:
->
->   - $W_{ef}\,L = \gamma b H^{3}/6 = 39\,200$ N·m con $H = 2$ m y $b = 3$ m;
->   - $V = 39\,200/(2{,}5\cdot 13\,800) = 1{,}136$ m³ ✓ publicado;
->   - $R\cdot 2 = 39\,200 - \gamma b\,1{,}5^{3}/6 \Rightarrow R = 11\,331{,}3$ N
->     ✓ publicado.
->
->   El problema es que **la figura no acota ese brazo por ningún sitio**
->   —comprobado ampliando la página a 300 ppp con margen por los cuatro
->   lados—, así que los 2,5 m están **deducidos del resultado**, no leídos. Y
->   a diferencia de la `n` del PVC del 8.8, aquí no hay una segunda ecuación
->   que lo confirme: la reacción del tope solo fija el producto $W_{ef}L$, no
->   $L$ por separado. Dos indicios de que es correcto —sale redondo, y
->   coincide con $0{,}50 + 2$— no son una lectura (§13 caso 2). Se escribe el
->   día que aparezca el dato: la comprobación son dos minutos.
 > - **Tres lecturas que costaron y que sirven para más de un problema.** La
 >   viscosidad cinemática del **petróleo crudo a 14 ºC** del ábaco nº 5 es
 >   $1{,}04\cdot 10^{-5}$ m²/s, y se valida sola: con ella el 9.13 reproduce
@@ -339,19 +348,6 @@ commit propios para que el avance quede aunque el día se corte.
 >   medio no salen de ningún dato y no cambian ninguna respuesta —la altura en
 >   el punto sale 80,38 con 74 y 80,30 con 73,925, y el catálogo da 80,3—, así
 >   que el ejercicio usa el 74 y lo dice.
-> - **9.16** (el medidor de codo y el estudio de cavitación) está leído y
->   **no escrito**, y es el único del capítulo 9 que no depende del anexo de
->   bombas. El boletín publica solo el veredicto, «No cavita», sin ningún
->   número, y para escribirlo haría falta cerrar el signo del manómetro de
->   mercurio de la entrada de la bomba: con h1 = 0,14 m de agua y h2 = 0,49 m
->   de mercurio, según cómo se lea el esquema la presión de entrada sale entre
->   −6,5 y −6,8 mca. La otra duda —qué presión atmosférica tomar en la cota
->   900— **está resuelta desde el 9.6**: la escuela la toma a la altitud de la
->   obra, y a 900 m son unos 91 kPa, o sea 9,28 mca. Con eso el NPSH
->   disponible queda entre 2,36 y 2,64 mca contra los 2 requeridos, así que el
->   veredicto «no cavita» aguanta con las dos lecturas; lo que no se puede es
->   publicar un margen concreto sin elegir una (§13 caso 2). Con la lectura del
->   ábaco Q-h en h = 30 cm salen unos 4 l/s, y eso sí está claro.
 > - **6.24** (dos depósitos a 20 y 45 °C que se mezclan en un nudo) está leído,
 >   modelado y **no escrito**: la temperatura de salida no se puede reproducir.
 >   La proporción entre los dos caudales solo depende de las dos ramas, y con
@@ -376,6 +372,33 @@ commit propios para que el avance quede aunque el día se corte.
 >   a la vez los 8.589,8 y los 13.265,6 daN publicados. Elegir la geometría que
 >   cuadre sería inventar el enunciado (§13 caso 2). Necesita una lectura de la
 >   figura con más resolución, o las soluciones desarrolladas.
+> - **3.22** (el Pitot con válvula y la columna de vapor) está leído a 500 ppp
+>   y **no escrito**, y aquí el motivo se puede dejar con números. El conducto
+>   es de 0,5 m y lleva 1,54 m³/s, así que $v = 7{,}84$ m/s y la altura
+>   cinética son **3,139 m de agua**. Lo que el mercurio hace con esos 3,139 m
+>   depende de qué haya encima de él en cada rama, y el dibujo **corta la rama
+>   derecha sin decir adónde va**:
+>
+>   - con agua sobre el mercurio en las dos ramas, $3{,}139/12{,}6 = 249{,}1$ mm;
+>   - con vapor sobre el mercurio, $3{,}139/13{,}6 = 230{,}8$ mm.
+>
+>   El boletín publica **233,7 mm**, que no es ninguna de las dos —queda un
+>   1,3 % por encima de la segunda y un 6 % por debajo de la primera—. Elegir
+>   la lectura que más se acerque y llamarla buena sería exactamente lo que el
+>   9.16 enseña a no hacer. Se escribe el día que aparezca la solución
+>   desarrollada o una figura que cierre la rama derecha.
+> - **4.16** (el dispositivo anular entre dos placas) está leído, modelado y
+>   **no escrito** porque **sus tres respuestas publicadas no salen del mismo
+>   caudal**. El apartado b) sale exacto y sin necesidad de caudal: el punto N
+>   está 2 m bajo el manómetro y la tubería no cambia de sección, así que
+>   $p_N = 0{,}75\ \text{atm} + 2\ \text{mca} = 95{,}59$ kPa contra los
+>   **95,6** publicados. Pero con esa misma presión, Bernoulli entre N y la
+>   corona de salida —$\pi D e$ con $D = 0{,}50$ m y $e = 0{,}01$ m, que es
+>   justo la mitad del área de la tubería— da **250,8 l/s**, no los **254,5**
+>   del boletín; y la fuerza publicada, **5.173,1 N**, exigiría **261,1 l/s**.
+>   Tres apartados, tres caudales. No hay lectura de la figura que los junte,
+>   así que lo que falta aquí no es un dato: es saber cuál de los tres es el
+>   bueno.
 
 > **Una discrepancia con el boletín, declarada y sin resolver.** El apartado c)
 > del 8.19 —pendiente de una media caña de 30 cm para 50 l/s— publica **15
@@ -1634,6 +1657,27 @@ Enter y Escape. Falta que busque **conceptos** dentro de los temas —hoy el
 ---
 
 ## Deudas conocidas, escritas para que no se olviden
+
+**54 · Las nueve prácticas de laboratorio de Fluidos no están en el sitio, y
+la guía dice que se preguntan.** Encontrado el 4 de septiembre de 2026 al
+repasar la asignatura contra §15 con el material de la escuela delante. El
+apartado 7 de la guía dice que el examen final «constará de preguntas
+relativas a las prácticas del laboratorio», y el guion de prácticas trae nueve
+—balanza, viscosímetro Engler y capilaridad (tema 2); aparatos de medida de
+presión, manómetros diferenciales y micromanómetros (tema 4); fuerzas sobre
+superficies (tema 7); hidrómetro y pesada hidrostática (tema 8)—.
+
+**Lo que matiza la deuda: en las 16 convocatorias transcritas no hay ni una
+pregunta de procedimiento de laboratorio.** Los aparatos sí están, como física,
+en la prosa de esos cuatro temas y en los ejercicios; lo que no está es el
+montaje, la toma de datos y la hoja de resultados. Así que la deuda no es
+«falta contenido evaluable» sino «falta saber si se evalúa». Es la primera
+pregunta que hacerle al alumno sobre Fluidos. Anotado con más detalle en
+`docs/como-vamos.md`.
+
+De paso, sin categoría propia: los cuatro **Materiales de apoyo** de la
+asignatura y las tres **aplicaciones Android** de la escuela —estática,
+Bernoulli, pérdidas de carga— tampoco están referenciados desde ningún sitio.
 
 **53 · `recalcula` no comprueba ni un solo número de Fluidos.** Medido el 4
 de septiembre de 2026, asignatura por asignatura: los 279 pares que dice

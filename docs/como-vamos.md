@@ -793,19 +793,23 @@ quedó cerrada con su boletín entero. Lo hecho el primer día:
 | temas escritos | 0 | **1 de 25** (t01, introducción) |
 | respuestas con unidad | imposibles | tipo `magnitud`, con lector y 20 tests |
 
-### Dónde está Fluidos el 2 de septiembre de 2026, ya cerrada
+### Dónde está Fluidos el 4 de septiembre de 2026, con la colección dentro
 
-Trece fases después, y medido con `npm run mide fluidos`:
+Cerró el 2 de septiembre cumpliendo §15 entera. Lo de después son dos días de
+fase C —transcribir la colección de problemas—, que no era requisito de cierre
+y ha subido el corpus de 232 ejercicios a 365. Medido con
+`npm run mide fluidos`:
 
 | | |
 |---|---|
 | temas con prosa, figura y ejercicios | **23 de 23** — los 25 del temario oficial menos los dos que solo se explican en clase, declarados en el catálogo con su motivo |
-| palabras de prosa | **25.363** (Cálculo entera son 21.545) |
-| figuras | 23 |
-| ejercicios | **232**, con 1.050 pasos |
-| de ellos, problemas de la colección | **98 de 236** · el capítulo 1 cerrado (27 de 27); los 138 restantes, en `tasks/todo.md` con su orden por rendimiento |
+| palabras de prosa | **25.690** (Cálculo entera son 21.545) |
+| figuras | **169** — 23 de prosa, una por tema, y 146 dentro de los ejercicios |
+| ejercicios | **365**, con 1.730 pasos |
+| de ellos, problemas de la colección | **224 de 236** · los capítulos 1, 7, 8 y 9 enteros; los 12 que faltan están declarados uno a uno en `tasks/todo.md` con el dato que le falta a cada uno |
 | convocatorias transcritas | **las 16, todas** — los once finales (2026 ord. 7 de 9, 2025 ord. 7 de 9, 2025 ext. 8 de 9, 2024 ord. **8 de 8**, 2024 ext. 7 de 8, 2023 ord. **9 de 9**, 2023 ext. **9 de 9**, 2022 ord. **11 de 11**, 2022 ext. 8 de 9, 2021 ord. 6 de 8, 2020 ord. 6 de 8) y los cinco parciales (2021 **4 de 4**, **4 de 4** y 5 de 6; 2020 **5 de 5** y 3 de 5) |
 | ruta de estudio | **1**, con 14 bloques y 48 escalones, que prepara la ordinaria y la extraordinaria |
+| ejercicios de examen transcritos | **107 de 121** · los 14 restantes están declarados en la cabecera de su `examen.yaml` |
 | simuladores, con su caso en `tests/fisica/` | **5** — el ábaco de Moody (t18), el punto de funcionamiento (t25), el prisma de presiones (t07), la sección de canal (t21) y el golpe de ariete (t20), con **86 casos** entre los cinco |
 
 Tema a tema, con `npm run mide fluidos`:
@@ -813,33 +817,37 @@ Tema a tema, con `npm run mide fluidos`:
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
 | t01 introduccion | 786 | 1 | 4 | 1 | 0 |
-| t02 propiedades | 1280 | 1 | 21 | 1 | 10 |
+| t02 propiedades | 1280 | 1 | 25 | 1 | 10 |
 | t03 estatica | 607 | 1 | 2 | 2 | 2 |
-| t04 hidrostatica | 1020 | 1 | 8 | 1 | 9 |
-| t07 fuerzas superficies | 717 | 1 | 9 | 2 | 6 |
-| t08 fuerzas cuerpos | 568 | 1 | 5 | 1 | 6 |
+| t04 hidrostatica | 1020 | 1 | 18 | 1 | 9 |
+| t07 fuerzas superficies | 1078 | 1 | 20 | 2 | 6 |
+| t08 fuerzas cuerpos | 568 | 1 | 8 | 1 | 6 |
 | t09 fundamentos movimiento | 881 | 1 | 2 | 2 | 0 |
 | t10 continuidad | 383 | 1 | 1 | 1 | 0 |
 | t11 dinamica | 958 | 1 | 1 | 1 | 0 |
-| t12 bernoulli | 602 | 1 | 5 | 2 | 0 |
-| t13 medidores | 758 | 1 | 10 | 3 | 9 |
-| t14 cantidad movimiento | 501 | 1 | 2 | 1 | 0 |
-| t15 aplicaciones tcm | 770 | 1 | 7 | 2 | 11 |
-| t16 analisis dimensional | 1701 | 1 | 7 | 1 | 13 |
+| t12 bernoulli | 602 | 1 | 19 | 2 | 0 |
+| t13 medidores | 758 | 1 | 19 | 3 | 9 |
+| t14 cantidad movimiento | 501 | 1 | 5 | 1 | 0 |
+| t15 aplicaciones tcm | 770 | 1 | 19 | 2 | 11 |
+| t16 analisis dimensional | 1701 | 1 | 20 | 1 | 13 |
 | t17 viscosidad | 1375 | 1 | 2 | 2 | 1 |
-| t18 perdidas carga | 1413 | 1 | 8 | 1 | 2 |
-| t19 conducciones | 1544 | 1 | 4 | 1 | 8 |
-| t20 golpe ariete | 1384 | 1 | 8 | 1 | 3 |
-| t21 canales | 1423 | 1 | 8 | 1 | 11 |
+| t18 perdidas carga | 1727 | 1 | 12 | 1 | 2 |
+| t19 conducciones | 1544 | 1 | 14 | 1 | 8 |
+| t20 golpe ariete | 1677 | 1 | 18 | 1 | 3 |
+| t21 canales | 2064 | 1 | 23 | 1 | 11 |
 | t22 maquinas | 1449 | 1 | 2 | 2 | 2 |
 | t23 turbinas | 1255 | 1 | 2 | 2 | 2 |
 | t24 bombas | 1106 | 1 | 1 | 1 | 0 |
-| t25 bombeo | 1258 | 1 | 6 | 2 | 12 |
+| t25 bombeo | 1600 | 1 | 21 | 2 | 12 |
+| **total** | **25690** | **23** | **258** | **34** | **107** |
 
-> La columna de figuras es la que hay que mirar: **una por tema**, contra las
-> 2,6 de Cálculo. Cumple el mínimo de §15 y se queda corta para un temario de
-> compuertas, ábacos y secciones de canal. Está anotado como deuda 50 en
-> `tasks/todo.md`, con los cuatro sitios donde más se nota.
+> La columna de figuras dice **una por tema**, y esa sigue siendo la cuenta de
+> la prosa: contra las 2,6 de Cálculo, se queda corta para un temario de
+> compuertas, ábacos y secciones de canal, y está anotada como deuda 50 en
+> `tasks/todo.md`. Lo que ha cambiado desde el 2 de septiembre es lo que la
+> tabla no cuenta: los ejercicios de la colección traen **146 figuras más**,
+> casi todas de compuertas y de instalaciones. La deuda es de la prosa, no del
+> corpus.
 
 Los **dos temas que faltan son los que no tienen material**: el 5 (equilibrio
 relativo) y el 6 (estática de compresibles) están en el programa oficial y no
@@ -847,6 +855,37 @@ aparecen ni en los dos volúmenes de apuntes, ni en las diapositivas, ni en la
 colección de problemas. El catálogo lo dice con su `etiqueta` en vez de
 rellenarlos por nuestra cuenta. Lo mismo con el apartado **17.4** —resistencia
 sobre cuerpos sumergidos—, declarado en la prosa del tema 17.
+
+### Y lo que la asignatura tiene y el sitio no: el laboratorio
+
+Encontrado el 4 de septiembre de 2026, al repasar Fluidos contra §15 con el
+material de la escuela delante. **La guía de la asignatura dice, en su apartado
+7, que el examen final «constará de preguntas relativas a las prácticas del
+laboratorio, así como teoría y ejercicios», y que «cualquier sesión de
+laboratorio que se haya trabajado durante el curso es evaluable».** El guion de
+prácticas trae **nueve**, cada una atada a su tema: la balanza, el viscosímetro
+Engler y la capilaridad (tema 2); los aparatos de medida de presión, los
+manómetros diferenciales y los micromanómetros (tema 4); las fuerzas sobre
+superficies (tema 7); el hidrómetro y la pesada hidrostática (tema 8).
+
+El sitio no las cubre. Y hay un dato que matiza cuánto importa: **en las 16
+convocatorias transcritas no aparece ni una pregunta de procedimiento de
+laboratorio**. Los aparatos sí están —micromanómetros, hidrómetros, pesada
+hidrostática son ejercicios de la colección y de examen, y la prosa de los
+temas 2, 4, 7 y 8 los presenta—, pero el montaje, la toma de datos y la hoja de
+resultados no. Es decir: lo evaluable según la guía está cubierto por su
+física; lo que falta es la práctica como tal.
+
+No se rellena a ojo. Se deja dicho aquí, que es lo que §15 pide de un hueco, y
+queda como la primera pregunta que hacerle al alumno sobre esta asignatura:
+**si el examen que él va a hacer pregunta de laboratorio, esto es una deuda; si
+no, es una nota al pie.**
+
+Lo mismo, en menor escala, con los cuatro **Materiales de apoyo** de la
+asignatura —integrales y logaritmos, superficies de contacto, momento y
+potencia, unidades de peso y masa— y con las tres **aplicaciones Android** que
+la escuela publica (estática, Bernoulli, pérdidas de carga). Ninguno está
+referenciado desde el sitio.
 
 Las **16 convocatorias** —las 15 del cuadernillo de 2020-2025 más la ordinaria
 de 2026— están transcritas, con sus PDF originales en

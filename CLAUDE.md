@@ -327,11 +327,11 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 |---|---|---|---|
 | `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.068 |
 | `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.989 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.059 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.192 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
 
-`redactar` se ha usado **una vez de 4.142 pasos**. Está construido y razonado
+`redactar` se ha usado **una vez de 4.822 pasos**. Está construido y razonado
 en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
 pide, no porque esté en la tabla.
 
@@ -355,9 +355,14 @@ casilla:
 > líneas: recorre las colecciones y cuenta.
 >
 > Recontadas el **1 de septiembre de 2026**, al cerrar Fluidos: los pasos
-> pasan de 3.092 a 4.142 y los ejercicios de 827 a 1.059, repartidos en 41
+> pasaron de 3.092 a 4.142 y los ejercicios de 827 a 1.059, repartidos en 41
 > temas de tres asignaturas. La regla funcionó — las cifras llevaban cuatro
 > días desfasadas, desde el recuento del 28 de agosto, no una semana.
+>
+> Y recontadas otra vez el **4 de septiembre**, al meter la colección de
+> Fluidos: **4.822 pasos y 1.192 ejercicios** en los mismos 41 temas. En tres
+> días el corpus ha crecido un 13 % sin abrir un tema nuevo, y eso lo hace
+> todo un solo trabajo: transcribir un boletín que ya existía.
 
 > Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
 > MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
@@ -401,9 +406,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 41 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.059 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.192 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.059 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.192 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
