@@ -123,57 +123,56 @@ commit propios para que el avance quede aunque el día se corte.
 > por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
 > que queda del corpus son problemas no recomendados.
 >
-> **Estado al cerrar el 4 de septiembre: 213 de 236, y lo que queda es el
-> anexo de bombas.** De los 23 que faltan, **catorce están declarados** con
-> su motivo y los **nueve restantes dependen del anexo de curvas de
-> bombas**. De los capítulos 1 a 8 ya no queda nada, y del 9 no queda nada
-> que se pueda escribir sin abrir el anexo.
+> **Estado al cerrar el 4 de septiembre: 216 de 236, con el anexo de bombas
+> ya abierto.** De los 20 que faltan, **catorce están declarados** con su
+> motivo y los **seis restantes son del anexo**: 9.3, 9.11, 9.13, 9.15, 9.17 y
+> 9.18. De los capítulos 1 a 8 no queda nada.
 >
-> El capítulo 9 se abrió con cinco, y con ellos se aprendió cómo está hecho:
-> **sus cuatro primeros problemas vienen resueltos en la propia colección**,
-> con los puntos de la curva de la bomba escritos en la resolución, así que no
-> hace falta leer el anexo de catálogos para escribirlos. Entraron 9.1 (el
-> trasvase y el depósito que se presuriza), 9.2 (la fuente de chorro
-> regulable), 9.4 (la bomba a dos mil metros de altitud), 9.9 (el sobrepresor
-> que reparte a dos servicios) y 9.19 (llenar la piscina con la red y una
-> bomba), que trae su curva de bomba escrita como fórmula y por eso tampoco
-> necesita el anexo.
+> **El anexo se lee, y se comprueba.** Con el 9.6 y el 9.7 quedó montado el
+> procedimiento entero, que es el mismo del hidrograma del 8.21: renderizar
+> la carta a 400 ppp con `pdftoppm -x -y -W -H`, cargarla en un lienzo con
+> playwright, sacar las rachas verticales de píxeles oscuros de cada columna y
+> seguir la curva del rodete descartando las rachas que caen en alturas
+> enteras —esas son la rejilla— y las demasiado finas —esas son las curvas de
+> rendimiento y de potencia—. Calibrar los ejes con la propia rejilla sale
+> gratis y con precisión de una décima.
 >
-> De los diez que quedan, **nueve dependen del anexo de curvas de bombas**
-> —cada uno dice «Documentación: Ccb: Anexo …» y remite a las páginas 199 y
-> siguientes de la colección: son 9.3, 9.6, 9.7, 9.8, 9.11, 9.13, 9.15, 9.17 y
-> 9.18—. Ese es un tipo de trabajo distinto: leer una carta de catálogo
-> rasterizada para elegir rodete. Conviene hacerlos en una tanda propia y con
-> el procedimiento decidido antes de empezar. El único que no lo necesitaba
-> era el **9.16**, y se ha declarado abajo: el boletín publica solo el
-> veredicto «No cavita», sin un número contra el que contrastar, y el
-> manómetro de mercurio de la entrada admite dos lecturas.
+> **Y lo importante: la lectura se valida contra el boletín.** En el 9.6, la
+> curva del rodete de 320 mm de la INP 80/315 leída así da 32,03 m a 72 m³/h,
+> y el apartado e) del boletín exige exactamente 32,04 para que su respuesta
+> de 1,3 mcl cuadre. Un centímetro de diferencia sobre treinta y dos metros.
+> Los ficheros del barrido están en el scratchpad (`lee2.mjs`, `traza2.mjs`).
 >
-> **Es decir: la colección se queda aquí hasta que se decida cómo leer el
-> anexo de curvas de bombas.** Es la primera vez en toda la fase C que el
-> límite no es el trabajo sino una herramienta que falta, y por eso conviene
-> pensarla antes que ponerse: son nueve problemas que dependen de la misma
-> lectura, así que lo que se invierta en hacerla bien se cobra nueve veces.
+> El capítulo 9 va por ocho. Los cinco primeros no necesitaban el anexo
+> —**sus cuatro primeros problemas vienen resueltos en la propia colección**,
+> con los puntos de la curva de la bomba escritos, y el 9.19 trae la suya como
+> fórmula—: 9.1 (el trasvase y el depósito que se presuriza), 9.2 (la fuente de
+> chorro regulable), 9.4 (la bomba a dos mil metros de altitud), 9.9 (el
+> sobrepresor que reparte a dos servicios) y 9.19 (llenar la piscina con la red
+> y una bomba). Los tres siguientes ya son del anexo: **9.6** (la turbobomba
+> elegida y la válvula que cuesta dinero), **9.7** (la fuente del jardín y los
+> ocho metros exactos) y **9.8** (el chorro de quince metros y lo que cuesta
+> la hora).
 >
-> **Y hay una buena noticia para esa tanda: la lectura del anexo se puede
-> validar.** Los enunciados publican el modelo elegido *y* el punto de
-> funcionamiento —el 9.6, por ejemplo, da «INP 80/135, D = 320 mm; 21,4 l/s,
-> 31,5 mcl, 72,7 %»—, así que extraer los puntos de la curva del gráfico y
-> comprobar que el corte con la curva de la instalación cae donde dice el
-> boletín **es una verificación de verdad**, no una suposición. El
-> procedimiento del hidrograma del 8.21 —renderizar a 300 ppp, cargar el PNG
-> en un lienzo y barrer columnas— vale igual aquí.
+> Los seis que quedan —9.3, 9.11, 9.13, 9.15, 9.17 y 9.18— son todos
+> del anexo, y con el procedimiento ya montado son trabajo, no incógnita. El
+> único del capítulo que no lo necesitaba era el **9.16**, y ese sí está
+> declarado abajo: el boletín publica solo el veredicto «No cavita», sin un
+> número contra el que contrastar, y el manómetro de mercurio de la entrada
+> admite dos lecturas.
 >
-> **Aviso que sale de intentarlo con el 9.6, y que hay que resolver antes:**
-> su curva de la instalación tiene el término de fricción exacto —600 m de
-> 150 mm en acero comercial dan 22,33·10⁻³ contra los 22,32 publicados— pero
-> el término estático solo cuadra si se toma la presión atmosférica **a la
-> altitud de la instalación**, unos 94 kPa a la cota 680. Con los 101,3 del
-> nivel del mar salen 24,39 en vez de 25,01. El enunciado no da esa presión y
-> no aparece ningún cuadro de atmósfera tipo en el material; hasta saber de
-> dónde la sacan, cualquier problema del capítulo 9 con presiones absolutas y
-> cotas de varios cientos de metros —9.6, 9.11 y 9.16 al menos— arrastra ese
-> dato sin declarar.
+> **Y una convención de la escuela que quedó establecida al escribir el
+> 9.6: la presión atmosférica se toma a la altitud de la obra, no a nivel
+> del mar.** Su curva de la instalación solo cuadra con unos 94 kPa en la
+> cota 680; con los 101,3 del nivel del mar salen 24,39 en vez de los 25,01
+> publicados. Lo que convierte esa deducción en dato y no en suposición es
+> que **el apartado g) del mismo problema la confirma por otro camino**: para
+> que el NPSH de seguridad valga los 0,52 publicados hace falta exactamente
+> la misma presión. Dos ecuaciones independientes, el mismo número, y encima
+> coincide con la atmósfera tipo a esa altitud. El enunciado no la da y no
+> hay cuadro de atmósfera tipo en el material, así que **cada ejercicio que
+> la use tiene que decirlo**, como hace el 9.6 en su paso de justificación.
+> Afecta también al 9.11 y al 9.16.
 >
 > Dos avisos de esta tanda, por si alguien mira los números al detalle: el
 > 9.9 lleva **un apartado declarado dentro del propio ejercicio** —su altura
@@ -307,15 +306,16 @@ commit propios para que el avance quede aunque el día se corte.
 > - **9.16** (el medidor de codo y el estudio de cavitación) está leído y
 >   **no escrito**, y es el único del capítulo 9 que no depende del anexo de
 >   bombas. El boletín publica solo el veredicto, «No cavita», sin ningún
->   número, y para escribirlo harían falta dos lecturas que no están cerradas:
->   el signo del manómetro de mercurio de la entrada de la bomba —h1 = 0,14 m
->   de agua y h2 = 0,49 m de mercurio, y según cómo se lea el esquema la
->   presión de entrada sale entre −6,5 y −6,8 mca— y qué presión atmosférica
->   tomar, porque la instalación está en la **cota 900** y el enunciado no la
->   da. El veredicto aguanta con todas las lecturas probadas —el NPSH
->   disponible queda entre 2,6 y 3,7 mca contra los 2 requeridos— pero
->   publicar un número sería elegir una de ellas (§13 caso 2). Con la lectura
->   del ábaco Q-h en h = 30 cm salen unos 4 l/s, y eso sí está claro.
+>   número, y para escribirlo haría falta cerrar el signo del manómetro de
+>   mercurio de la entrada de la bomba: con h1 = 0,14 m de agua y h2 = 0,49 m
+>   de mercurio, según cómo se lea el esquema la presión de entrada sale entre
+>   −6,5 y −6,8 mca. La otra duda —qué presión atmosférica tomar en la cota
+>   900— **está resuelta desde el 9.6**: la escuela la toma a la altitud de la
+>   obra, y a 900 m son unos 91 kPa, o sea 9,28 mca. Con eso el NPSH
+>   disponible queda entre 2,36 y 2,64 mca contra los 2 requeridos, así que el
+>   veredicto «no cavita» aguanta con las dos lecturas; lo que no se puede es
+>   publicar un margen concreto sin elegir una (§13 caso 2). Con la lectura del
+>   ábaco Q-h en h = 30 cm salen unos 4 l/s, y eso sí está claro.
 > - **6.24** (dos depósitos a 20 y 45 °C que se mezclan en un nudo) está leído,
 >   modelado y **no escrito**: la temperatura de salida no se puede reproducir.
 >   La proporción entre los dos caudales solo depende de las dos ramas, y con
