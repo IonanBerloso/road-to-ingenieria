@@ -17,6 +17,7 @@
  */
 import { readFileSync } from 'node:fs';
 import yaml from 'js-yaml';
+import { leeMagnitud } from '../src/lib/unidades.ts';
 
 const [ruta, ...banderas] = process.argv.slice(2);
 const suelto = banderas.includes('--suelto');
@@ -99,6 +100,20 @@ for (const e of ejercicios) {
       /* §17 · una `magnitud` sin unidad es un `numero` con adorno */
       if (p.respuesta?.tipo === 'magnitud' && !/[a-zA-Z°%]/.test(String(p.respuesta.valor))) {
         mal(dónde, `magnitud sin unidad: «${p.respuesta.valor}»`);
+      }
+
+      /* Y llevar unidad no basta: tiene que ser una unidad que el lector de
+         `lib/unidades.ts` sepa leer. El 4 de septiembre de 2026 se escribió
+         «63 mcl» —metros de columna de líquido, que es como lo dice el
+         enunciado— y este guion dio verde: la comprobación de arriba solo
+         mira que haya letras. Lo cazó el esquema, un build entero después.
+         Aquí se pasa la misma función que usa el componente. */
+      if (p.respuesta?.tipo === 'magnitud') {
+        for (const v of [p.respuesta.valor, ...(p.distractores ?? []).map((d) => d.valor)]) {
+          if (v != null && !leeMagnitud(String(v))) {
+            mal(dónde, `unidad que el lector no sabe leer: «${v}»`);
+          }
+        }
       }
 
       /* Un distractor dentro de la tolerancia se daría por bueno, y entonces

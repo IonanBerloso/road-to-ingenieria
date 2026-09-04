@@ -123,14 +123,22 @@ commit propios para que el avance quede aunque el día se corte.
 > por encima de lo que da la rugosidad; y 6.28 porque está mal planteado. Lo
 > que queda del corpus son problemas no recomendados.
 >
-> **Estado a media tarde del 4 de septiembre: 202 de 236.** Capítulo 7 en 16 de
-> 17, con dos entradas nuevas: 7.16, la Pelton del Pirineo con su chimenea de
-> equilibrio, y 7.17, la válvula de retención que recibe el golpe. Solo queda
-> el 7.15. **Capítulo 8 cerrado
+> **Estado al cerrar el 4 de septiembre: 208 de 236, y el capítulo 9 se queda
+> solo.** De los 28 que faltan, **13 están declarados** con su motivo y los
+> otros **15 son todo el capítulo 9**, el de turbomáquinas. Es decir: de los
+> capítulos 1 a 8 ya no queda nada escribible.
+>
+> **Capítulo 7 cerrado entero, 17 de 17**, con 7.15 (el canal de montaña con su
+> media caña y la válvula que el cliente quiere automática), 7.16 (la Pelton del
+> Pirineo y su chimenea de equilibrio) y 7.17 (la válvula de retención que
+> recibe el golpe). **Capítulo 8 cerrado
 > entero, 22 de 22**, y con él los capítulos 1 (27/27) y 5 (19/20). Capítulo 6
-> en 20 de 29, con los cinco problemas resueltos del boletín ya dentro (6.4,
-> 6.5, 6.7, 6.8 y 6.11);
-> capítulo 3 abierto con el 3.1; y **el capítulo 2 abierto
+> en 24 de 29 —los cinco que faltan, declarados—, con cuatro entradas de esta
+> tanda: 6.17 (el llenado del camión de keroseno), 6.21 (los tres depósitos y el
+> que no se sabe qué hace), 6.22 (la red abierta que se resuelve desde el final)
+> y 6.25 (el riego y el sobrepresor que se reparten el depósito).
+> Capítulo 3 en 33 de 34 —solo falta el 3.22, declarado— tras entrar el 3.21,
+> el combustible repartido en tres servicios; y **el capítulo 2 abierto
 > por fin con figura redibujada**: 2.19 (el sensor que mide el nivel
 > comprimiendo aire) y 2.20 (la prensa de tracción y su corona).
 >
@@ -242,6 +250,17 @@ commit propios para que el avance quede aunque el día se corte.
 >   $L$ por separado. Dos indicios de que es correcto —sale redondo, y
 >   coincide con $0{,}50 + 2$— no son una lectura (§13 caso 2). Se escribe el
 >   día que aparezca el dato: la comprobación son dos minutos.
+> - **6.24** (dos depósitos a 20 y 45 °C que se mezclan en un nudo) está leído,
+>   modelado y **no escrito**: la temperatura de salida no se puede reproducir.
+>   La proporción entre los dos caudales solo depende de las dos ramas, y con
+>   ellas —25 m de 50 mm contra 30 m de 70 mm, desde las cotas 15 y 20— el
+>   cociente Q2/Q1 no puede bajar de 2,2 **para ninguna cota del nudo**, lo que
+>   pone la mezcla en 37,2 °C como mínimo. Con la geometría real sale 39,1 °C,
+>   y el boletín publica 36,7. Comprobado con Hazen-Williams (C = 120 por
+>   rugosidad) y con Darcy-Colebrook a las viscosidades de cada temperatura:
+>   las dos dan 39,1. El apartado b) tampoco cuadra —pide 38 °C y publica una
+>   cota de 5,32 m, y en este modelo subir el punto A **sube** la temperatura,
+>   no la baja—. Se escribe el día que haya soluciones desarrolladas.
 > - **2.4** (compuerta plana a 45° apoyada sobre otra circular, siete
 >   apartados) está leído y **no escrito** por un motivo distinto: **no publica
 >   ningún resultado**. Todo lo que se escribiera sería derivación propia sin
@@ -1513,6 +1532,17 @@ Enter y Escape. Falta que busque **conceptos** dentro de los temas —hoy el
 ---
 
 ## Deudas conocidas, escritas para que no se olviden
+
+**52 · 22 subíndices con tilde dentro de `$…$`.** `P_{útil}`, `k_{válv}`,
+`Z_{máx}`, `\rho_{hormigón}`, `v_{tubería}`, `Q_{teórico}`, `V_{teórica}`,
+`\sum F_{presión,y}`, `cierre rápido` y `sistema homogéneo`. KaTeX los dibuja
+—el suelo está en verde y `verify.mjs` no protesta— pero avisa por consola con
+`unicodeTextInMathMode` cada vez que se compilan, y el aviso tapa los que sí
+importan. Contados el 4 de septiembre de 2026 con un barrido de las fórmulas
+ya parseadas (no con `grep`, §17): 1 en Álgebra y 21 en Fluidos, repartidos en
+nueve ficheros. El arreglo es sacar la palabra del modo matemático
+—`P_{\text{útil}}` o simplemente el subíndice sin tilde—, y como toca nueve
+ficheros a la vez conviene hacerlo de una tanda y no de paso.
 
 **9 · `peso` tiene dos definiciones enfrentadas en `CLAUDE.md`.** El ejemplo de
 frontmatter de §04 usa `peso: 8` —un número— y §10 dice que un dato estimado se
