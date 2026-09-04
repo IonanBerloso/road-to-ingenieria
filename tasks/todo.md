@@ -155,6 +155,26 @@ commit propios para que el avance quede aunque el día se corte.
 > pensarla antes que ponerse: son nueve problemas que dependen de la misma
 > lectura, así que lo que se invierta en hacerla bien se cobra nueve veces.
 >
+> **Y hay una buena noticia para esa tanda: la lectura del anexo se puede
+> validar.** Los enunciados publican el modelo elegido *y* el punto de
+> funcionamiento —el 9.6, por ejemplo, da «INP 80/135, D = 320 mm; 21,4 l/s,
+> 31,5 mcl, 72,7 %»—, así que extraer los puntos de la curva del gráfico y
+> comprobar que el corte con la curva de la instalación cae donde dice el
+> boletín **es una verificación de verdad**, no una suposición. El
+> procedimiento del hidrograma del 8.21 —renderizar a 300 ppp, cargar el PNG
+> en un lienzo y barrer columnas— vale igual aquí.
+>
+> **Aviso que sale de intentarlo con el 9.6, y que hay que resolver antes:**
+> su curva de la instalación tiene el término de fricción exacto —600 m de
+> 150 mm en acero comercial dan 22,33·10⁻³ contra los 22,32 publicados— pero
+> el término estático solo cuadra si se toma la presión atmosférica **a la
+> altitud de la instalación**, unos 94 kPa a la cota 680. Con los 101,3 del
+> nivel del mar salen 24,39 en vez de 25,01. El enunciado no da esa presión y
+> no aparece ningún cuadro de atmósfera tipo en el material; hasta saber de
+> dónde la sacan, cualquier problema del capítulo 9 con presiones absolutas y
+> cotas de varios cientos de metros —9.6, 9.11 y 9.16 al menos— arrastra ese
+> dato sin declarar.
+>
 > Dos avisos de esta tanda, por si alguien mira los números al detalle: el
 > 9.9 lleva **un apartado declarado dentro del propio ejercicio** —su altura
 > manométrica necesita la cota del depósito de aspiración, que el enunciado
