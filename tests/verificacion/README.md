@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 610 |
+| Cálculo | 805 | 644 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **753 (61 %)** |
+| | **1.241** | **787 (63 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -83,9 +83,9 @@ aquí.
 
 **Cálculo tiene ya las veintitrés convocatorias finales**, incluidas la más
 reciente y la más antigua del corpus, que son las que más va a mirar quien se
-examine en 2027 — y con ellas las segundas, terceras, cuartas y quintas
-evaluaciones más recientes. Lo que queda son las primeras evaluaciones, las
-cuartas y quintas antiguas y las recuperaciones.
+examine en 2027 — y con ellas **las cinco evaluaciones de los seis cursos más
+recientes**. Lo que queda son las evaluaciones parciales anteriores a 2020 y
+las recuperaciones.
 
 Y aquí la comprobación es **más independiente** que en las otras dos
 asignaturas: donde la resolución integra por partes o deriva y despeja, el test
@@ -100,9 +100,16 @@ hace justo lo que el enunciado da por imposible: recorre la curva. Un ordenador
 no tiene que saber integrar e^y a lo largo de una semicircunferencia, solo
 evaluarla muchas veces.
 
+Los lugares geométricos de las primeras evaluaciones se prestan a lo mismo por
+otro lado. El examen manipula la condición hasta dejarla en la forma
+(x−a)² + (y−b)² = r²; el test no despeja nada: **busca puntos del lugar
+resolviendo la condición tal como está escrita y les ajusta una
+circunferencia**. Si el lugar no fuera una circunferencia, o lo fuera con otro
+centro, el ajuste lo diría.
+
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 753 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 787 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
