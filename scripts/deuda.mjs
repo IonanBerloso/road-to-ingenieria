@@ -146,7 +146,8 @@ if (existsSync(dirV))
        compensa traerse un analizador de TypeScript para esto. */
     const texto = readFileSync(join(dirV, f), 'utf8').replace(/\s+/g, ' ');
     let ultimo = null;
-    const patron = /const id = '([^']+)'|cuadra\(\s*(?:'([^']+)'|\w+)\s*,\s*'([^']+)'/g;
+    const patron =
+      /const id = '([^']+)'|cuadra(?:\.\w+)?\(\s*(?:'([^']+)'|\w+)\s*,\s*'([^']+)'/g;
     for (const m of texto.matchAll(patron)) {
       if (m[1]) ultimo = m[1];
       else {
@@ -161,12 +162,16 @@ const sinCubrir = [];
 for (const [id, e] of EJ) {
   if (!e.deExamen) continue;
   for (const p of e.pasos ?? []) {
-    if (!['numero', 'magnitud', 'complejo'].includes(p.respuesta?.tipo)) continue;
+    /* Las cuatro formas que `cuadra()` sabe comparar. Las de texto libre
+       —`formula`, y los pasos sin respuesta— quedan fuera porque no hay nada
+       que recalcular en ellas. */
+    if (!['numero', 'magnitud', 'complejo', 'vector', 'matriz', 'conjunto'].includes(p.respuesta?.tipo))
+      continue;
     numericas++;
     if (!cubiertas.has(clave(id, p.titulo ?? ''))) sinCubrir.push(`${e.asig} · ${id}`);
   }
 }
-fila('de', `${numericas} respuestas numéricas de examen, ${numericas - sinCubrir.length} recalculadas` +
+fila('de', `${numericas} respuestas de examen comparables, ${numericas - sinCubrir.length} recalculadas` +
   ` (${Math.round(((numericas - sinCubrir.length) / numericas) * 100)} %)`);
 const porAsig = {};
 for (const s of sinCubrir) {
