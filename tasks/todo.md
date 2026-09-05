@@ -4704,9 +4704,9 @@ envejecería en silencio.
 |---|---|---|
 | Fundamentos Químicos | 67 | **67** |
 | Álgebra | 76 | **76** |
-| Cálculo | 805 | 374 |
+| Cálculo | 805 | 386 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **517 (42 %)** |
+| | **1.241** | **529 (43 %)** |
 
 El orden no es por facilidad. Química primero por ser la más reciente —27
 resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
@@ -4717,7 +4717,7 @@ en un número impreso o se declaran fuera.
 
 ## Lo que encontró
 
-**En el corpus, nada.** Las 517 cuadran, incluidas las cadenas largas: los
+**En el corpus, nada.** Las 529 cuadran, incluidas las cadenas largas: los
 siete apartados del sulfúrico, la molalidad que arrastra cuatro pasos, la
 matriz expresada en dos bases que no son la canónica, el trabajo de la
 ventisca.
@@ -4737,7 +4737,7 @@ Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
 
 ## Lo que queda, y cómo se sigue
 
-**431 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
+**419 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
 Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
 `deuda.mjs` cuenta cuántas van.
 
