@@ -294,6 +294,52 @@ escrito para no volver a confundir las dos cosas (§15):
    compuesto y diagnosticar tres errores por su cuenta. No ajusta ecuaciones:
    ninguno de los dos ejercicios lo pide.
 
+## Volver a mirar los `fuera` de Fluidos, y lo que salió
+
+**5 de septiembre de 2026, noche.** Con Química llegando al límite de lo que
+el material permite, tocaba mirar la deuda declarada de las otras tres. Cálculo
+y Álgebra tienen **cero** ejercicios en `fuera`; Fluidos tenía **catorce**.
+
+Releídos los catorce motivos uno a uno, la clasificación honesta es esta:
+
+| motivo | cuántos | ¿envejece? |
+|---|---|---|
+| falta material —una tabla dentro de la figura, curvas de catálogo— | 5 | no, describe algo ausente |
+| la figura no acota la geometría | 3 | no |
+| la respuesta publicada no se reproduce (§13 caso 1) | 3 | no, es una parada honesta |
+| solo una parte del ejercicio es reconstruible | 2 | no |
+| **«no encaja en el formato guiado»** | **2** | **sí — y ahí estaba el fallo** |
+
+**Uno de los dos de formato estaba mal pensado.** El ejercicio 9 de la
+ordinaria de 2025-2026 —ocho huecos sobre turbomáquinas— llevaba fuera con el
+motivo «sin ningún cálculo». Era cierto y era la razón equivocada: un paso de
+cálculo puede **contar** en vez de operar —lo aprendimos en Química con los
+cinco signos de entropía— y, sobre todo, **el propio enunciado traía una
+cuenta** que nadie había mirado. Avisa de que cada fallo resta lo mismo que
+suma un acierto, y de ahí sale cuándo compensa dejar un hueco en blanco, que
+es lo más útil que enseña. Escrito y dentro: quedan trece.
+
+**El otro sí se queda.** El ejercicio 7 de 2020-2021 es teoría y dibujo, y su
+enunciado no trae ninguna cuenta ni escondida. Forzar un paso de cálculo para
+que encajase sería rellenar. Su motivo también estaba mal escrito —daba una
+razón que no era la buena— y se ha corregido para que el próximo que lo lea no
+tenga que volver a averiguarlo.
+
+La regla que sale está en §17: **un `fuera` cuyo motivo sea de formato se
+relee entero, y se relee el enunciado, no el motivo.** Los motivos de material
+envejecen bien; los de formato describen una limitación nuestra, y esas
+cambian.
+
+### Y una carencia que destapó, ya cubierta
+
+Al releer el ejercicio 7 salió que **ningún tema dibujaba las líneas de
+alturas totales y piezométrica de una instalación con turbina**. El tema 12
+tiene las tres líneas de un conducto liso; el caso con válvula e inyector —que
+es el que el examen pide trazar— no estaba. Escrito y dibujado en el tema 23,
+con las tres cosas que se corrigen: que la total nunca sube sin bomba, que las
+dos son paralelas mientras el diámetro no cambie, y que la piezométrica
+termina en la atmosférica porque el chorro sale al aire.
+
 ## Había una sexta convocatoria, y llevaba todo el día delante
 
 **5 de septiembre de 2026, tarde.** Rastreando la colección de problemas del

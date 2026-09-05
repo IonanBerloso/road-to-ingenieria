@@ -1674,6 +1674,29 @@ Cosas que ya han costado horas. No son opiniones.
   176 figuras de ejercicio de Cálculo. **Regla: un token nuevo se define en
   `tokens.css` antes de usarlo, y si ya existe uno que significa lo mismo, se
   usa ese** — dos nombres para un color es la Regla 0 con otra cara.
+- **«No encaja en el formato» es la razón más fácil de escribir y la que menos
+  se revisa.** El ejercicio 9 de la ordinaria de Fluidos 2025-2026 —un
+  «rellenar los espacios» de ocho huecos sobre turbomáquinas— llevaba en
+  `fuera` desde que entró la convocatoria, con el motivo «sin ningún cálculo, y
+  el esquema exige un paso de cálculo». Era verdad y estaba mal pensado por dos
+  sitios: un paso de cálculo puede **contar** en vez de operar, y sobre todo
+  **el propio enunciado traía una cuenta** que nadie había mirado — avisa de
+  que cada fallo resta lo mismo que suma un acierto, y de ahí sale cuándo
+  compensa dejar un hueco en blanco, que es lo más útil del ejercicio.
+
+  **Regla: un `fuera` cuyo motivo sea de formato y no de material se relee
+  entero antes de darlo por bueno**, y se relee el enunciado, no el motivo.
+  Los motivos de material —falta una tabla, falta una figura acotada, la
+  respuesta publicada no se reproduce— envejecen bien porque describen algo
+  ausente; los de formato describen una limitación **nuestra**, y esas cambian.
+
+  Al aplicarla al resto de los `fuera` de Fluidos solo había otro caso, el
+  ejercicio 7 de 2020-2021, y ese sí se queda: su enunciado no trae ninguna
+  cuenta ni escondida. Su motivo también estaba mal escrito —daba una razón
+  que no era la buena— y se ha corregido. **Que la regla nueva confirme un
+  «no» es tan resultado como que desbloquee un «sí»**; lo que no vale es no
+  volver a mirar.
+
 - **Un fichero sin extensión no sale en ninguna búsqueda por tipo, y ahí puede
   haber una convocatoria entera.** El 5 de septiembre de 2026 se dio por
   cerrado el inventario de exámenes de Química en cinco, encontrados con un
