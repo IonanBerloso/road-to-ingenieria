@@ -504,8 +504,17 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   import { comparaMatriz, comparaVector, leeMatriz, leeVector } from '../../lib/algebra';
   import { analiza, cumple, evaluaNumero, mismaRegion } from '../../lib/regiones';
   import { comparaMagnitud, leeMagnitud, nombreDim } from '../../lib/unidades';
+  import { comparaFormula, leeFormula } from '../../lib/quimica';
 
-  type Respuesta = { tipo: 'complejo' | 'numero'; valor: string; tolerancia: number };
+  /* Los siete tipos del esquema. Estaba con dos desde antes de Álgebra y se ha
+     ido quedando corto sin romper nada, porque el script de un `.astro` no se
+     comprueba con TypeScript: las comparaciones contra `magnitud` o `formula`
+     funcionaban con un tipo que decía que no existían. Puesto al día. */
+  type Respuesta = {
+    tipo: 'complejo' | 'numero' | 'conjunto' | 'vector' | 'matriz' | 'magnitud' | 'formula';
+    valor: string;
+    tolerancia: number;
+  };
   type Dato =
     | { tipo: 'reconocer'; correcta: number }
     | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[] }
@@ -633,6 +642,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
        *  la respuesta buena, porque lo que importa es identificar el
        *  razonamiento, no el redondeo. */
       const coincide = (escrito: string, objetivo: string, tolerancia: number) => {
+        if (respuesta.tipo === 'formula') return comparaFormula(escrito, objetivo).igual;
         if (respuesta.tipo === 'magnitud') {
           const a = leeMagnitud(escrito);
           const b = leeMagnitud(objetivo);
@@ -674,6 +684,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         /* En una magnitud la tolerancia ya ES relativa, así que la holgura del
            2 % que se aplica a los números no tiene sentido aquí: duplicarla
            haría que un distractor al 4 % se comiera la respuesta buena. */
+        /* Una fórmula química no tiene escala ni distancia: se acierta o no. */
+        if (respuesta.tipo === 'formula') return 0;
         if (respuesta.tipo === 'magnitud') return Math.max(respuesta.tolerancia, 0.02);
         if (respuesta.tipo === 'conjunto') return respuesta.tolerancia;
         /* Un vector o una matriz no tienen «escala» única —cada entrada tiene
@@ -687,6 +699,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       /** Se lee según el tipo: una lista de soluciones no es un solo número. */
       const legible = (texto: string) => {
+        if (respuesta.tipo === 'formula') return leeFormula(texto);
         if (respuesta.tipo === 'magnitud') return leeMagnitud(texto);
         if (respuesta.tipo === 'conjunto') return leeConjunto(texto);
         if (respuesta.tipo === 'vector') return leeVector(texto);
@@ -756,6 +769,44 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
            general— y antes del «no es la respuesta», porque decirle «está mal»
            a quien ha hecho toda la física bien y se ha dejado el «bar» es
            mentirle sobre lo que le falta por aprender. */
+        /* Los tres errores que el lector químico sabe distinguir, y que no hay
+           que declarar como distractor en cada compuesto: son los mismos en
+           los veinte del corpus. */
+        if (respuesta.tipo === 'formula') {
+          const v = comparaFormula(escrito, respuesta.valor);
+
+          if (v.fallo === 'mayusculas') {
+            fb(paso, 'mal', 'Cuidado con las mayúsculas',
+              '<p>Has escrito las letras correctas con otra caja, y en química eso ' +
+                'cambia la sustancia: <code>Co</code> es cobalto y <code>CO</code> es ' +
+                'monóxido de carbono.</p>' +
+                '<p><strong>Un símbolo de elemento empieza siempre por mayúscula y ' +
+                'sigue en minúscula</strong>, nunca al revés y nunca dos mayúsculas ' +
+                'seguidas dentro del mismo símbolo.</p>');
+            return;
+          }
+
+          if (v.fallo === 'subindices') {
+            fb(paso, 'mal', 'Los elementos están bien; la proporción no',
+              '<p>Has acertado qué átomos entran y en qué orden, así que el compuesto ' +
+                'lo tienes identificado. Lo que falla son los subíndices, es decir ' +
+                '<strong>cuántos de cada uno</strong>.</p>' +
+                '<p>Salen de igualar las cargas: la valencia de uno pasa a ser el ' +
+                'subíndice del otro, y después se simplifica si se puede.</p>');
+            return;
+          }
+
+          if (v.fallo === 'genero-cambiado') {
+            fb(paso, 'mal', 'Has contestado en la otra columna',
+              '<p>Lo que has escrito es correcto como compuesto, pero aquí se pide ' +
+                'la otra forma: si te dan el nombre hay que escribir la fórmula, y si ' +
+                'te dan la fórmula hay que escribir el nombre.</p>' +
+                '<p>Es el despiste más común de este ejercicio, porque el enunciado ' +
+                'trae las dos columnas juntas.</p>');
+            return;
+          }
+        }
+
         if (respuesta.tipo === 'magnitud') {
           const a = leeMagnitud(escrito);
           const b = leeMagnitud(respuesta.valor);
@@ -852,11 +903,17 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         }
 
         if (intentos[i] === 1) {
+          /* «Ese número» no vale para una fórmula química: la respuesta no es
+             un número y el mensaje delataba que el sitio no sabía qué estaba
+             corrigiendo. Salió al probarlo a mano con un CaCl₂. */
           fb(
             paso,
             'mal',
             'No es correcto',
-            '<p>Ese número no sale de ninguna vía razonable. Revisa el paso anterior antes de rehacer el cálculo.</p>',
+            respuesta.tipo === 'formula'
+              ? '<p>Ese compuesto no es el que se pide. Vuelve al nombre y sepáralo en sus ' +
+                  'dos partes —el anión y el catión— antes de escribir nada.</p>'
+              : '<p>Ese número no sale de ninguna vía razonable. Revisa el paso anterior antes de rehacer el cálculo.</p>',
           );
         } else if (intentos[i] === 2) {
           fb(paso, 'pista', 'Pista', html(paso, '[data-msg-pista]'));

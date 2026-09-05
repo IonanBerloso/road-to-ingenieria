@@ -325,9 +325,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.253 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.472 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.228 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.285 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.517 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.254 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
 
@@ -349,6 +349,13 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > que se note: los suyos no tienen colección transcrita, solo los dos
 > ejemplos propios por tema y los dieciséis de examen. **El hueco está
 > declarado en `tasks/todo.md`, no disimulado en esta cifra.**
+>
+> Y una cuarta, esa misma tarde, al cerrar la transcripción de Química:
+> **1.254 ejercicios y 5.086 pasos**. La asignatura pasa de 36 a **62
+> ejercicios** —20 ejemplos, 15 de colección y 27 de examen— y sus seis
+> convocatorias quedan enteras, sin un solo `fuera`. Cuatro recuentos en un
+> día es mucho, y es exactamente lo que la regla pretendía: **se recuenta al
+> tocar el corpus en más de un fichero**, no cuando alguien se acuerda.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -373,6 +380,30 @@ casilla:
 | `vector` | coordenadas **con** orden | absoluta | `lib/algebra.ts` |
 | `matriz` | filas y columnas | absoluta | `lib/algebra.ts` |
 | `magnitud` | número **con unidad**, comparado por dimensión | **relativa** | `lib/unidades.ts` |
+| `formula` | una fórmula química o el nombre de un compuesto | **ninguna** | `lib/quimica.ts` |
+
+> `formula` entra el 5 de septiembre de 2026, y su historia es el ejemplo
+> limpio de §13 funcionando. Cuando lo pedía **un** ejercicio se dejó sin
+> construir y se anotó; cuando apareció el **segundo** —la misma pregunta, en
+> el otro control del primer cuatrimestre— se escribió, y no antes.
+>
+> Es el único tipo **sin tolerancia**: una fórmula se acierta o no. Lo que sí
+> tiene es normalización —`Fe₂O₃` vale igual que `Fe2O3`, y un nombre se
+> compara sin tildes ni conectores— y **sinónimos obligatorios**, porque la
+> nomenclatura admite dos formas válidas y el propio examen imprime las dos:
+> «Plomo(II) hidróxido / hidróxido plumboso». Dar una por mala sería corregir
+> peor que el profesor.
+>
+> Sabe diagnosticar tres errores sin que haya que declararlos como distractor:
+> **mayúsculas** —`CO` es monóxido y `Co` es cobalto—, **subíndices** —los
+> elementos correctos en la proporción equivocada— y **columna equivocada**,
+> que es contestar con el nombre donde se pedía la fórmula.
+>
+> Y una lección de método: los 32 tests pasaban y aun así, **al teclearlo en
+> el navegador**, `k2so4` en minúsculas recibía «has contestado en la otra
+> columna» y un compuesto erróneo recibía «ese número no sale de ninguna vía
+> razonable». Los dos son §16 punto 1: probarlo a mano encontró lo que los
+> tests no buscaban.
 
 > Las cifras de esta tabla y las de §05 y §15 se quedaron en el corpus de
 > agosto y estuvieron desfasadas hasta el 28 de agosto de 2026: decían 1.022
@@ -460,9 +491,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 51 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.228 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.254 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.228 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.254 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:

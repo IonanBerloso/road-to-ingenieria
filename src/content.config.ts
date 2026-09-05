@@ -4,6 +4,7 @@ import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from './li
 import { leeMatriz, leeVector } from './lib/algebra';
 import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
 import { evaluaNumero } from './lib/regiones';
+import { comparaFormula, leeFormula } from './lib/quimica';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -24,6 +25,7 @@ const lector = (tipo: string): ((s: string) => unknown | null) => {
   if (tipo === 'vector') return leeVector;
   if (tipo === 'matriz') return leeMatriz;
   if (tipo === 'magnitud') return leeMagnitud;
+  if (tipo === 'formula') return leeFormula;
   /* Los dos, en el mismo orden que el navegador.
      ──────────────────────────────────────────────
      `EjercicioGuiado` lee una respuesta numérica con
@@ -216,7 +218,13 @@ const pasoCalcular = z.object({
        con la unidad metida en `formato`: eso daría por buena una presión en
        m/s y por mala la misma presión escrita en bar. Ver `lib/unidades.ts`,
        que explica los tres errores que hay que saber distinguir. */
-    tipo: z.enum(['complejo', 'numero', 'conjunto', 'vector', 'matriz', 'magnitud']),
+    /* `formula` entra el 5 de septiembre de 2026 con Fundamentos Químicos, y
+       se ha esperado a que lo pidieran DOS ejercicios y no uno (§13). Los dos
+       son la misma pregunta —una lista de diez compuestos, la mitad para
+       nombrar y la mitad para formular— y eran el único bloqueo que impedía
+       dar por transcritas las seis convocatorias de la asignatura. No ajusta
+       ecuaciones: ninguno de los dos lo pide. Ver `lib/quimica.ts`. */
+    tipo: z.enum(['complejo', 'numero', 'conjunto', 'vector', 'matriz', 'magnitud', 'formula']),
     valor: z.string().min(1),
     /** Para `magnitud` es **relativa** (0,02 = 2 %); para todo lo demás,
      *  absoluta. Lo pide el ábaco de Moody: media respuesta de fluidos sale
@@ -323,6 +331,28 @@ const pasoCalcular = z.object({
     {
       message:
         'hay dos distractores que se confunden entre sí: el segundo nunca mostraría su diagnóstico',
+      path: ['distractores'],
+    },
+  )
+  /* La misma trampa, en la versión química. Aquí no hay tolerancia que valga:
+     lo que confunde es la NORMALIZACIÓN. `Fe₂O₃` y `Fe2O3` son la misma
+     respuesta para el lector, y `óxido de sodio` y `Óxido sodio` también, así
+     que un distractor escrito con otra grafía **es** la respuesta buena y se
+     daría por acertado. Se comprueba contra la respuesta y entre distractores.
+     Validado al revés poniendo `Fe₂O₃` de distractor de `Fe2O3`. */
+  .refine(
+    (p) => {
+      if (p.respuesta.tipo !== 'formula') return true;
+      const vs = p.distractores.map((d) => d.valor);
+      if (vs.some((v) => comparaFormula(v, p.respuesta.valor).igual)) return false;
+      for (let i = 0; i < vs.length; i++)
+        for (let j = i + 1; j < vs.length; j++)
+          if (comparaFormula(vs[i], vs[j]).igual) return false;
+      return true;
+    },
+    {
+      message:
+        'hay un distractor que, una vez normalizado, es la misma respuesta que otro o que la buena',
       path: ['distractores'],
     },
   )
