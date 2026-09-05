@@ -367,7 +367,7 @@ casilla:
 
 | `respuesta.tipo` | qué lee | tolerancia | dónde vive el lector |
 |---|---|---|---|
-| `numero` | un real, con forma exacta (`pi/4`, `sqrt(3)/2`) | absoluta | `lib/regiones.ts` |
+| `numero` | un real, con forma exacta (`pi/4`, `sqrt(3)/2`, `1.8e-5`) | absoluta | `leeComplejo` y, si falla, `evaluaNumero` |
 | `complejo` | forma binómica | absoluta | `lib/complejo.ts` |
 | `conjunto` | varias soluciones, sin orden | absoluta | `lib/complejo.ts` |
 | `vector` | coordenadas **con** orden | absoluta | `lib/algebra.ts` |
@@ -1643,6 +1643,55 @@ Cosas que ya han costado horas. No son opiniones.
   176 figuras de ejercicio de Cálculo. **Regla: un token nuevo se define en
   `tokens.css` antes de usarlo, y si ya existe uno que significa lo mismo, se
   usa ese** — dos nombres para un color es la Regla 0 con otra cara.
+- **La `e` de `1.8e-5` se leía como el número de Euler, y no daba error: daba
+  otro número.** El lector de respuestas evaluaba `1.8e-5` como
+  $1{,}8 \times e - 5 = -0{,}107$, un valor perfectamente finito. Así que un
+  alumno que escribía la constante de acidez **bien** recibía «no es
+  correcto» y ninguna pista de por qué. En Química eso no es un caso raro: es
+  cómo se teclea toda Ka, Kb, Kp y Kw.
+
+  Y lo peor no es el fallo, es cómo se llegó a él. **El mismo bug se había
+  arreglado esa misma mañana en `recalcula.mjs`** —el potencial normal
+  `E^{0} = 0{,}249` se leía como Euler y daba un desajuste falso— y se
+  arregló allí sin barrer los demás evaluadores. Allí producía un aviso falso
+  a quien mantiene el proyecto; aquí rechazaba la respuesta buena de un
+  alumno. **Regla: al arreglar un fallo de interpretación de texto, se busca
+  el mismo patrón en todos los sitios que interpretan texto** —hay cuatro:
+  `regiones.ts`, `complejo.ts`, `unidades.ts` y `recalcula.mjs`— y se dice en
+  el commit cuáles se han mirado.
+
+  El arreglo, en el lexer de `regiones.ts`: el exponente se consume solo si
+  tras la `e` viene un signo opcional y **al menos un dígito**, así que `2e3`
+  es 2000 y `2e` sigue siendo $2e$. Con ocho casos en
+  `tests/respuesta-exacta.test.ts`, validados al revés.
+
+  Y el barrido que la regla exige, hecho el mismo día y con su resultado:
+
+  | lector | con `1.8e-5` | veredicto |
+  |---|---|---|
+  | `evaluaNumero` (`regiones.ts`) | daba **−0,107** | era el fallo · arreglado |
+  | `leeComplejo` (`complejo.ts`) | devuelve `null` | falla **limpio**, y el `?? evaluaNumero` lo recoge |
+  | `leeMagnitud` (`unidades.ts`) | lo lee bien | correcto ya |
+  | `leeVector` · `leeMatriz` (`algebra.ts`) | devuelven `null` | limitación real, **demanda cero** |
+
+  Los dos de Álgebra no se tocan, y eso es §13 y no pereza: sus respuestas son
+  objetos exactos y no hay ni un decimal en su corpus (§11). Se arreglan el
+  día que un ejercicio lo pida, no antes.
+
+- **El esquema puede ser más estricto que el sitio, y entonces no protege
+  nada.** Salió con lo anterior. `EjercicioGuiado` lee una respuesta numérica
+  con `leeComplejo(t) ?? evaluaNumero(t)`, dos lectores en cadena; el
+  `lector()` de `content.config.ts` llamaba **solo al primero**. Resultado:
+  el build rechazaba respuestas que el navegador habría aceptado, y el aviso
+  —«la respuesta correcta no se puede leer con el formato declarado»— sonaba
+  a error de contenido cuando el contenido estaba bien.
+
+  Cuesta encontrarlo porque el guardián falla en la dirección que parece
+  segura: de más. **Regla: un guardián que simula al producto tiene que
+  llamar exactamente a lo que llama el producto**, y si el producto encadena
+  dos lectores, el guardián encadena los dos. Si los dos códigos divergen,
+  eso ya es la Regla 0 (§01) con otra cara.
+
 - **Un `<path>` sin `fill="none"` se rellena de negro, y solo se nota cuando
   el camino tiene codo.** El relleno por defecto de un `path` es negro, no
   transparente, y SVG cierra el contorno para rellenarlo aunque el camino

@@ -3,6 +3,7 @@ import { glob } from 'astro/loaders';
 import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from './lib/complejo';
 import { leeMatriz, leeVector } from './lib/algebra';
 import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
+import { evaluaNumero } from './lib/regiones';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -23,7 +24,20 @@ const lector = (tipo: string): ((s: string) => unknown | null) => {
   if (tipo === 'vector') return leeVector;
   if (tipo === 'matriz') return leeMatriz;
   if (tipo === 'magnitud') return leeMagnitud;
-  return leeComplejo;
+  /* Los dos, en el mismo orden que el navegador.
+     ──────────────────────────────────────────────
+     `EjercicioGuiado` lee una respuesta numérica con
+     `leeComplejo(t) ?? evaluaNumero(t)`: el primero entiende la forma
+     binómica y el segundo las expresiones —`pi/4`, `sqrt(3)/2`, notación
+     científica—. Aquí solo se llamaba al primero, así que **el esquema era
+     más estricto que el sitio**: rechazaba en el build respuestas que el
+     navegador habría aceptado sin problema.
+
+     Salió el 5 de septiembre de 2026 con las constantes de equilibrio de
+     Química: `1.08e-3` es una respuesta perfectamente legible en la página
+     y tumbaba el build. Un guardián que no espeja lo que hace el producto
+     no está protegiendo el producto, está describiendo otro (§11). */
+  return (s: string) => leeComplejo(s) ?? evaluaNumero(s);
 };
 
 /** Peso de un tema en el examen. Tres niveles, nunca un porcentaje:

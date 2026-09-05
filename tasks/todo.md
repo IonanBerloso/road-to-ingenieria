@@ -232,16 +232,74 @@ escrito para no volver a confundir las dos cosas (§15):
    P-V de 2024-2025-2c (necesita figura redibujada), la hidracina, los cinco
    signos de entropía y la peste del estaño de 2023-2024-2c-control, y la pila
    de yodo y cobre de la extraordinaria.
-4. **La colección sin transcribir.** Hay problemas resueltos y propuestos por
-   tema en el material, y en el corpus solo están los dos ejemplos propios de
-   cada tema. Es el hueco grande: 36 ejercicios en diez temas, contra los 258
-   de Fluidos en veintitrés.
+4. **La colección, empezada.** Hay problemas propuestos por tema en el
+   material, con su respuesta publicada, y hasta hoy no había ni uno en el
+   corpus. Van diez —cuatro del tema 9, tres del 8 y tres del 7— y quedan los
+   demás; ver la sección de abajo.
 5. **El lector de respuestas químicas.** Nombrar un compuesto y ajustar una
    ecuación no los sabe leer ninguno de los seis `respuesta.tipo` que hay. El
    ejercicio 2 del control de 2023-2024 sigue entero en `fuera` por esto, y es
    el único que queda bloqueado por falta de herramienta. §13: el patrón se
    destila del contenido, y de momento lo pide **un** ejercicio — sigue sin
    ser suficiente para construirlo.
+
+## La colección de Química, empezada
+
+**5 de septiembre de 2026, tarde.** La razón de abrirla ahora no es que
+tocara: es que **sin ella no se puede escribir ninguna ruta**. El escalón de
+§14 exige una rampa de `ejemplo` a `practica` a `examen`, y al contar los
+niveles salió esto:
+
+| asignatura | ejemplo | practica | examen |
+|---|---|---|---|
+| Álgebra | 19 | 160 | 32 |
+| Cálculo | 53 | 138 | 425 |
+| Fluidos | 34 | 134 | 197 |
+| **Química** | 20 | **0** | 16 |
+
+Cero. Con eso, un escalón saltaría de un ejemplo de tres pasos a un ejercicio
+de examen de seis apartados — que es exactamente la crítica que hizo nacer el
+escalón. Así que la ruta espera y entra la colección.
+
+Van **diez problemas**, todos de la colección de la escuela y **todos con su
+respuesta publicada en la fuente**, que es lo que los hace valiosos: el número
+no sale de mi aritmética.
+
+- **Tema 9**, cuatro: la dilución de Ostwald, el efecto del ion común, una
+  reguladora básica y una valoración cuyo punto de equivalencia no está en 7.
+- **Tema 8**, tres: la esterificación con el volumen que se cancela, el paso
+  de Kc a Kp con su exponente, y un equilibrio heterogéneo donde los sólidos
+  no entran.
+- **Tema 7**, tres: la entropía de condensar, una expansión isoterma entera y
+  la energía libre de una combustión.
+
+Quedan por transcribir los propuestos de los temas 2, 5 y 6, y el resto de los
+de 7, 8 y 9. Los del tema 5 están en un PDF **de imagen** —el volcado de texto
+devuelve una línea— así que hay que renderizarlo y leerlo a ojo.
+
+### El fallo que salió al escribirlos, y era grave
+
+Un alumno que tecleaba `1.8e-5` —la forma normal de escribir una constante de
+acidez— recibía «no es correcto». No porque el lector fallara: porque leía la
+`e` como el **número de Euler** y devolvía $1{,}8 \times e - 5 = -0{,}107$. Un
+número perfectamente finito, así que nada saltaba.
+
+Y lo peor es de método: **el mismo fallo se había arreglado esa misma mañana
+en `recalcula.mjs`** —el potencial normal `E^{0}` leído como Euler— y se
+arregló allí sin barrer los demás evaluadores. Allí molestaba a quien mantiene
+el proyecto; aquí rechazaba la respuesta buena de un alumno. La regla que sale
+está en §17: al arreglar una interpretación de texto, se barren los cuatro
+sitios que interpretan texto y se dice en el commit cuáles se han mirado.
+
+Barrido hecho: `leeComplejo` falla limpio y el `?? evaluaNumero` lo recoge,
+`leeMagnitud` ya lo leía bien, y `leeVector`/`leeMatriz` no lo leen pero no
+hay ni un decimal en el corpus de Álgebra, así que se dejan.
+
+Y de paso salió un segundo defecto, más silencioso: **el esquema era más
+estricto que el sitio**. El navegador lee con `leeComplejo(t) ?? evaluaNumero(t)`
+y `content.config.ts` llamaba solo al primero, así que el build rechazaba
+respuestas que la página habría aceptado. Un guardián que no espeja al
+producto no lo está protegiendo.
 
 ### Un dato que se deja declarado y no resuelto
 

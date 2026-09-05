@@ -70,6 +70,34 @@ function fichas(entrada: string): Ficha[] {
     if (/[0-9.]/.test(c)) {
       let j = i;
       while (j < s.length && /[0-9.]/.test(s[j])) j++;
+      /* Notación científica: `1.8e-5` es UN número, no `1.8 · e - 5`.
+         ─────────────────────────────────────────────────────────────
+         Se toca la capa compartida (§13 caso 4) y por eso hay que
+         justificarlo: no es un contenido el que lo pide, es una asignatura
+         entera. En Química toda constante de equilibrio se escribe así
+         —Ka, Kb, Kp, Kw— y la forma natural de teclearla es `1.8e-5`.
+
+         Sin esto, la `e` se leía como el número de Euler y `1.8e-5` daba
+         `1.8 × 2,718 − 5 = −0,107`. Lo grave no es que fallara: es que
+         **no fallaba**. Devolvía un número perfectamente finito, así que
+         el alumno escribía la respuesta correcta y recibía «no es
+         correcto» sin más explicación, y ningún guardián veía nada.
+
+         Es el mismo fallo que `recalcula.mjs` tuvo el 5 de septiembre de
+         2026 con el potencial normal `E^{0}`, arreglado esa mañana
+         renombrando el testigo de Euler. Se arregló allí y no se barrió
+         aquí, que es el sitio que de verdad importa: allí producía un
+         aviso falso a quien mantiene el proyecto, aquí rechaza la
+         respuesta buena de un alumno.
+
+         La regla es la estándar y no crea ambigüedad: el exponente se
+         consume **solo** si tras la `e` viene un signo opcional y al menos
+         un dígito. Así `2e3` es 2000 y `2e` sigue siendo 2·e; para
+         multiplicar de verdad quedan `2*e*3` y `2 e 3`. Barrido el corpus
+         antes de cambiarlo: ninguna respuesta `numero` dependía de la
+         lectura vieja. */
+      const exp = /^[eE][+-]?[0-9]+/.exec(s.slice(j));
+      if (exp && j > i) j += exp[0].length;
       salida.push({ t: 'num', v: parseFloat(s.slice(i, j)) });
       i = j;
       continue;
