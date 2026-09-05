@@ -49,6 +49,26 @@ function numero(t: string): number {
 export const vector = (t: string): number[] =>
   t.replace(/^[([{]|[)\]}]$/g, '').split(',').map(numero);
 
+/** «-1+9.5i», «2i», «-i», «3» → [re, im]. */
+export function complejo(t: string): [number, number] {
+  const s = t.replace(/\s+/g, '').replace(',', '.');
+  /* Tres formas, probadas EN ORDEN. Con un solo patrón de partes opcionales,
+     «2i» se leía como 2 + i: el grupo de la parte real es codicioso, se
+     quedaba con el 2 y dejaba la i suelta con coeficiente vacío. */
+  const coeficiente = (c: string) => (c === '' || c === '+' ? 1 : c === '-' ? -1 : Number(c));
+
+  const soloImaginario = /^([+-]?[0-9.]*)i$/.exec(s);
+  if (soloImaginario) return [0, coeficiente(soloImaginario[1])];
+
+  const ambos = /^([+-]?[0-9.]+)([+-][0-9.]*)i$/.exec(s);
+  if (ambos) return [Number(ambos[1]), coeficiente(ambos[2])];
+
+  const soloReal = /^[+-]?[0-9.]+$/.exec(s);
+  if (soloReal) return [Number(s), 0];
+
+  throw new Error(`no sé leer el complejo «${t}»`);
+}
+
 /** «[1, 2; 3, 4]» → [[1,2],[3,4]]. También sin corchetes. */
 export const matriz = (t: string): number[][] =>
   t.replace(/^[([{]|[)\]}]$/g, '').split(';').map(vector);
@@ -60,11 +80,10 @@ export function convocatoria(asignatura: string, carpeta: string) {
   const porId = new Map(doc.ejercicios.map((e) => [e.id, e]));
 
   /**
-   * Comprueba que `calculado` cae dentro de la tolerancia del paso `titulo`
-   * del ejercicio `id`. Si el paso no existe, falla diciendo cuáles hay: un
-   * título mal escrito daría un test que pasa sin comprobar nada.
+   * El paso `titulo` del ejercicio `id`, con su valor y su tolerancia. Si el
+   * paso no existe, falla diciendo cuáles hay: un título mal escrito daría un
+   * test que pasa sin comprobar nada.
    */
-  /** El paso `titulo` del ejercicio `id`, o un error que dice cuáles hay. */
   function busca(id: string, titulo: string) {
     const ej = porId.get(id);
     if (!ej) throw new Error(`no existe el ejercicio ${id} en ${carpeta}`);
@@ -100,6 +119,19 @@ export function convocatoria(asignatura: string, carpeta: string) {
         `${id} · ${titulo}: componente ${i + 1} recalculada ${calculado[i]}, publicada ${v}`,
       ).toBeLessThanOrEqual(tol),
     );
+  };
+
+  /**
+   * Un complejo escrito como el corpus lo escribe: «-1+9.5i», «2i», «3».
+   * Se compara la distancia entre el recalculado y el publicado en el plano.
+   */
+  cuadra.complejo = (id: string, titulo: string, calculado: [number, number]) => {
+    const { valor, tol } = busca(id, titulo);
+    const [re, im] = complejo(valor);
+    expect(
+      Math.hypot(calculado[0] - re, calculado[1] - im),
+      `${id} · ${titulo}: recalculado ${calculado[0]}${calculado[1] >= 0 ? '+' : ''}${calculado[1]}i, publicado ${valor}`,
+    ).toBeLessThanOrEqual(tol);
   };
 
   /** Una matriz, fila a fila. */

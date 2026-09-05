@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 75 |
+| Cálculo | 805 | 95 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **218 (18 %)** |
+| | **1.241** | **238 (19 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -92,13 +92,14 @@ trayectoria de verdad.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 218 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 238 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
 
-**En el verificador, cuatro cosas**, y por eso `lineal.ts` y `numerico.ts`
-tienen cada uno su propio fichero de tests:
+**En el verificador, seis cosas**, y por eso los tres módulos que lo forman
+—`lineal.ts`, `numerico.ts` y los lectores de `corpus.ts`— tienen cada uno su
+fichero de tests:
 
 1. Una normalización «a coordenadas enteras mínimas» que dividía por la primera
    coordenada y daba (1, 0, 0.25) donde el examen pide (4, 0, 1).
@@ -111,8 +112,14 @@ tienen cada uno su propio fichero de tests:
 4. Una integral con singularidad que **suponía siempre que el extremo malo era
    el primero**, y al pedirle un cuarto de circunferencia de 4 a 2√2 devolvió
    el área con el signo cambiado sin quejarse de nada.
+5. Un contador de extremos que buscaba productos negativos entre valores
+   consecutivos de la derivada. Cuando la malla cae **justo encima** de un
+   cero, el producto vale cero y el cambio de signo se pierde.
+6. Un lector de complejos que leía «2i» como **2 + i**: el grupo de la parte
+   real es codicioso, se quedaba con el 2 y dejaba la i suelta. Ese caso no
+   está todavía en el corpus, así que lo encontró el test del lector y no una
+   comparación fallida — que es justamente para lo que sirve.
 
-Ninguna de las cuatro habría dado un fallo visible: habrían dado **confianza
-falsa**. Es el argumento entero para que el verificador se verifique, y por eso
-`lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests con casos de
-resultado conocido.
+Ninguna de las seis habría dado un fallo visible: habrían dado **confianza
+falsa**, que es peor que no comprobar nada. Es el argumento entero para que el
+verificador se verifique.
