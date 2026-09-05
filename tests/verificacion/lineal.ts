@@ -93,6 +93,15 @@ export function resuelve(A: number[][], b: number[]): number[] {
   return x;
 }
 
+/** Inversa por Gauss-Jordan sobre [A | I]. Falla si A es singular. */
+export function inversa(A: number[][]): number[][] {
+  const n = A.length;
+  const { R, pivotes } = rref(A.map((f, i) => [...f, ...f.map((_, j) => (i === j ? 1 : 0))]));
+  if (pivotes.length !== n || pivotes.some((c, i) => c !== i))
+    throw new Error('la matriz no tiene inversa');
+  return R.map((f) => f.slice(n));
+}
+
 /**
  * Una base del núcleo de M, con los parámetros libres tomados de uno en uno.
  * El orden de los vectores es el de las columnas libres, de izquierda a
@@ -110,7 +119,15 @@ export function nucleo(M: number[][]): number[][] {
   });
 }
 
-/** Valores propios de una matriz 2×2 o 3×3, por la característica. */
+/**
+ * Valores propios de una matriz 2×2 o 3×3, por el polinomio característico.
+ * Devuelve siempre tantos como el orden, contando multiplicidades.
+ *
+ * PRECISIÓN: sobre una raíz simple el error queda por debajo de 1e-9; sobre
+ * una TRIPLE baja a unas 2e-5, porque ahí el polinomio se aplasta contra el
+ * eje y la bisección deja de ganar bits. Sigue siendo cincuenta veces más
+ * fino que la tolerancia más estrecha que declara el corpus.
+ */
 export function valoresPropios(M: number[][]): number[] {
   const n = M.length;
   if (n === 2) {
@@ -128,24 +145,56 @@ export function valoresPropios(M: number[][]): number[] {
     M.filter((_, a) => a !== i && a !== j).map((f) => f.filter((_, b) => b !== i && b !== j));
   const m = det(menor(0, 0)) + det(menor(1, 1)) + det(menor(2, 2));
   const d = det(M);
-  /* Raíces por barrido y bisección: los exámenes las tienen enteras o casi,
-     y una cúbica de este tamaño no merece Cardano. */
   const p = (x: number) => x ** 3 - tr * x ** 2 + m * x - d;
-  const raices: number[] = [];
-  for (let x = -50; x < 50; x += 0.001) {
-    const a = p(x);
-    const b = p(x + 0.001);
-    if (a === 0) raices.push(x);
-    else if (a * b < 0) {
-      let lo = x;
-      let hi = x + 0.001;
-      for (let k = 0; k < 60; k++) {
-        const mid = (lo + hi) / 2;
-        if (p(lo) * p(mid) <= 0) hi = mid;
-        else lo = mid;
-      }
-      raices.push((lo + hi) / 2);
-    }
+
+  /* UNA raíz por bisección —una cúbica real siempre tiene al menos una—, y
+     las otras dos deflacionando y resolviendo la cuadrática.
+     El primer intento buscaba las tres por cambio de signo, y **se dejaba las
+     dobles**: una raíz doble toca el eje y no lo cruza. Lo destapó la
+     extraordinaria de Álgebra de 2021-2022, cuyo ejercicio 4 va justo de
+     eso. */
+  let lo = -1;
+  let hi = 1;
+  while (p(lo) * p(hi) > 0) {
+    lo *= 2;
+    hi *= 2;
+    if (hi > 1e6) throw new Error('no encuentro ninguna raíz real');
   }
-  return raices;
+  for (let k = 0; k < 200; k++) {
+    const mid = (lo + hi) / 2;
+    if (p(lo) * p(mid) <= 0) hi = mid;
+    else lo = mid;
+  }
+  const r1 = (lo + hi) / 2;
+
+  /* División sintética por (λ − r1): queda λ² + b·λ + c. */
+  const b = -tr + r1;
+  const c = m + r1 * b;
+  const disc = b * b - 4 * c;
+  if (disc < -1e-9) throw new Error('dos de los valores propios son complejos');
+  const raiz = Math.sqrt(Math.max(disc, 0));
+  return [r1, (-b - raiz) / 2, (-b + raiz) / 2];
+}
+
+/** Producto vectorial en R³. */
+export const productoVectorial = (a: number[], b: number[]) => [
+  a[1] * b[2] - a[2] * b[1],
+  a[2] * b[0] - a[0] * b[2],
+  a[0] * b[1] - a[1] * b[0],
+];
+
+/** Producto escalar usual y norma que sale de él. */
+export const escalar = (a: number[], b: number[]) => a.reduce((s, x, i) => s + x * b[i], 0);
+export const norma = (a: number[]) => Math.sqrt(escalar(a, a));
+export const unitario = (a: number[]) => a.map((x) => x / norma(a));
+
+/** Gram-Schmidt con el producto escalar usual, devolviendo la base ortonormal. */
+export function gramSchmidt(vectores: number[][]): number[][] {
+  const base: number[][] = [];
+  for (const v of vectores) {
+    const orto = base.reduce((w, u) => w.map((x, i) => x - escalar(v, u) * u[i]), [...v]);
+    if (norma(orto) < CERO) continue; // dependiente de los anteriores
+    base.push(unitario(orto));
+  }
+  return base;
 }

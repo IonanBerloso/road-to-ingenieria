@@ -22,14 +22,27 @@ type Paso = {
 };
 type Ejercicio = { id: string; pasos?: Paso[] };
 
-/** «-5/3» y «2.4494897» leídos igual; nada más, que esto no es un intérprete. */
+/**
+ * Las formas en que el corpus escribe un número dentro de un vector o de una
+ * matriz: entero, decimal, fracción y raíz —«-5/3», «2.4494897», «1/√10»,
+ * «3√2/2»—. Nada más: esto no es un intérprete de expresiones, y si aparece
+ * una forma nueva conviene que falle en vez de adivinar.
+ */
+function termino(t: string): number {
+  const m = /^(-?)(\d+(?:\.\d+)?)?(?:√(\d+(?:\.\d+)?))?$/.exec(t.trim());
+  if (!m || (!m[2] && !m[3])) throw new Error(`no sé leer el número «${t}»`);
+  const signo = m[1] === '-' ? -1 : 1;
+  const coef = m[2] ? Number(m[2]) : 1;
+  const raiz = m[3] ? Math.sqrt(Number(m[3])) : 1;
+  return signo * coef * raiz;
+}
+
 function numero(t: string): number {
   const s = t.trim().replace(',', '.');
-  const frac = /^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/.exec(s);
-  if (frac) return Number(frac[1]) / Number(frac[2]);
-  const v = Number(s);
-  if (!Number.isFinite(v)) throw new Error(`no sé leer el número «${t}»`);
-  return v;
+  const partes = s.split('/');
+  if (partes.length === 2) return termino(partes[0]) / termino(partes[1]);
+  if (partes.length !== 1) throw new Error(`no sé leer el número «${t}»`);
+  return termino(s);
 }
 
 /** «(1, -1, 2)» → [1, -1, 2]. También sin paréntesis. */

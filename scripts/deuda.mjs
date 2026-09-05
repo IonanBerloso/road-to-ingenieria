@@ -147,7 +147,7 @@ if (existsSync(dirV))
     const texto = readFileSync(join(dirV, f), 'utf8').replace(/\s+/g, ' ');
     let ultimo = null;
     const patron =
-      /const id = '([^']+)'|cuadra(?:\.\w+)?\(\s*(?:'([^']+)'|\w+)\s*,\s*'([^']+)'/g;
+      /const id = '([^']+)'|cuadra\w*(?:\.\w+)?\(\s*(?:'([^']+)'|\w+)\s*,\s*'([^']+)'/g;
     for (const m of texto.matchAll(patron)) {
       if (m[1]) ultimo = m[1];
       else {
