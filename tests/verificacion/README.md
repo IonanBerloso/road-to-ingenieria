@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 644 |
+| Cálculo | 805 | 702 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **787 (63 %)** |
+| | **1.241** | **845 (68 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -84,8 +84,9 @@ aquí.
 **Cálculo tiene ya las veintitrés convocatorias finales**, incluidas la más
 reciente y la más antigua del corpus, que son las que más va a mirar quien se
 examine en 2027 — y con ellas **las cinco evaluaciones de los seis cursos más
-recientes**. Lo que queda son las evaluaciones parciales anteriores a 2020 y
-las recuperaciones.
+recientes**, y con las de esta tanda **las once primeras evaluaciones, las once
+segundas y las once terceras**. Lo que queda son las cuartas y quintas
+anteriores a 2020 y las recuperaciones.
 
 Y aquí la comprobación es **más independiente** que en las otras dos
 asignaturas: donde la resolución integra por partes o deriva y despeja, el test
@@ -109,7 +110,7 @@ centro, el ajuste lo diría.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 787 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 845 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
