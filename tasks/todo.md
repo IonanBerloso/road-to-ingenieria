@@ -40,6 +40,211 @@ en el scratchpad y se pueden llevar a `scripts/` el día que se repitan.
 
 ---
 
+# La reauditoría · del 8,5 al 10
+
+**5 de septiembre de 2026.** Con los cuatro encargos anteriores cerrados, la
+reauditoría puso nota **solo al examen escrito en evaluación final**: Cálculo
+9, Álgebra 8, Fluidos 8,5. Y mandó seis encargos. Esto es qué se hizo y qué
+salió, con los recuentos, porque los recuentos son la mitad del trabajo.
+
+## 1 · «¿Esto está mal? Dilo» — hecho
+
+Un enlace al pie de cada ejercicio que abre un *issue* de GitHub con **el id
+del ejercicio, la asignatura y la URL ya rellenos**. Vive en
+`patrones/EjercicioGuiado.astro` y no en dos sitios: las páginas de examen
+renderizan ese mismo componente, así que ponerlo también en `ui/Examen.astro`
+habría sido la Regla 0 con otra cara. Es un `<a>`: sin JavaScript, sin
+backend, sin cookies. La plantilla está en
+`.github/ISSUE_TEMPLATE/error-ejercicio.yml`, con la pregunta que convierte un
+aviso en dato: **¿lo has contrastado, y con qué?**
+
+**La decisión que hay que revisar, porque es capa compartida (§13 caso 4).**
+`verify.mjs` prohíbe «dominios externos» y cazaba cualquier URL del HTML,
+enlaces incluidos. Lo he **relajado con una lista blanca de un solo prefijo**
+—el formulario de avisos de este repositorio— en vez de anotarlo y esperar,
+que es lo que el encargo pedía. El razonamiento está entero en el comentario
+de `verify.mjs`: lo que la regla protege es §07, *cero peticiones*, y un
+`<a href>` no descarga nada; la comprobación se llamaba ya «cero **peticiones**
+a dominios externos» y su implementación era más ancha que su nombre.
+Validado al revés: con un CDN se pone roja, y **con otra URL del mismo
+github.com también**. Si prefieres el criterio ancho —cualquier enlace
+externo— o ninguno, se cambia una constante.
+
+Los *issues* del repositorio están activados y es público: comprobado antes de
+publicar el enlace, porque si no llevaría a un 404.
+
+## 2 · Las convenciones de Fluidos — barridas las 365, dos arregladas
+
+| convención | la tocan | desviaciones reales | qué se hizo |
+|---|---|---|---|
+| Cc se aplica al área del chorro | 17 | **0** | — |
+| los mca, siempre con densidad del agua | 106 | **0** | — |
+| el TCM con sus cinco pasos | 29 | **22** | declarado, no tocado — ver abajo |
+| Hazen-Williams con el Cuadro 25 | 27 | **0** | — |
+| C_HW por el rango de ε/D | 16 | **2** | arreglados |
+| las singulares aparte, con Q en m³/s | 26 | **0** | — |
+
+**Cómo se comprobó Hazen-Williams, que es lo que más vale de este encargo.**
+La primera versión del contador exigía que la constante `1,2117e10` estuviera
+escrita y daba **17 desviaciones de 27**. Todas falsas: la convención dice
+«usando el Cuadro n.º 25», o sea que los J₁ se **leen** de un cuadro y
+reescribir la fórmula sería ruido. Estaba midiendo mi suposición. Lo que sí es
+objetivo es la aritmética: se extraen las ternas (C_HW, D en mm, J₁) que la
+propia resolución escribe y se recalcula
+`J₁ = 1,2117·10¹⁰/(C_HW^1,852 · D_mm^4,87)`. **18 ternas comprobadas, cero
+desajustes.** Los dos que saltaron eran un `J_{1,máx}` —el máximo admisible,
+que no sale del cuadro— y mi propia expresión regular.
+
+Lo mismo con los mca: los diez marcados eran números pegados a un γ, o
+conversiones correctas —el aceite de γ=7840 pasando mca a columna de aceite es
+la convención bien aplicada, no una desviación—.
+
+**Y lo que hay que decidir: el TCM.** De los 29 ejercicios que lo aplican,
+**22 no nombran el volumen de control en ninguna parte**, ni en la resolución
+ni en los pasos. El encargo dice que por encima de una decena hay que parar y
+avisar, y tiene razón: no es un descuido, es que el corpus entero de Fluidos
+se escribió sin ese ritual. Arreglarlo son 22 resoluciones a mano y cambia
+cómo se leen. **Es decisión tuya, no mía.**
+
+## 3 · Los métodos numéricos de Cálculo — contados, y era un no
+
+De los **425 ejercicios de las 88 convocatorias**, un solo enunciado pide un
+método numérico: la **regla del punto medio con cuatro subintervalos**, en la
+extraordinaria de **2012-2013**, el examen más antiguo del corpus. En los doce
+años siguientes no vuelve. Cero de Newton-Raphson, cero de bisección, cero de
+trapecios, cero de Simpson, cero de Euler, cero de Runge-Kutta.
+
+Se buscó sobre el `enunciado` y el `pide`, no sobre las resoluciones: que una
+resolución nuestra itere para cerrar una cuenta no significa que el examen
+pida el método.
+
+Y salió un fallo de paso: la ruta de la 1.ª evaluación **publicaba que no
+aparecía «una sola vez»**, y aparece una. Eso es §10 y está corregido, con el
+recuento. Declarado además en las rutas de la 3.ª y la 5.ª, que son las que
+cubren los temas 5 y 9, donde la guía también los lista.
+
+## 4 · Demostrar por escrito — medido y escritas cuatro
+
+**Fase A, el recuento** (5 de septiembre de 2026, sobre `enunciado`, `pide` y
+`titulo`):
+
+| Cálculo · 88 convocatorias, 425 ejercicios | veces | COMP4 medio |
+|---|---|---|
+| el orden se conserva al pasar al límite | 10 | 7,3 |
+| Lagrange / teorema del valor medio | 6 | 6,2 |
+| Barrow / teorema fundamental | 5 | 7,8 |
+| De Moivre y las identidades complejas | 4 | 5,5 |
+| teorema del punto fijo | 3 | 8,0 |
+| Bolzano / existencia de raíz | 3 | 6,0 |
+| Fermat | 2 | **10,0** |
+
+**50 de 425 piden demostrar: el 11,8 %.**
+
+| Álgebra · 8 convocatorias, 32 ejercicios | veces | en cuántas convocatorias |
+|---|---|---|
+| que un conjunto es subespacio vectorial | 7 | 5 de 8 |
+| propiedades de una aplicación lineal | 7 | 5 de 8 |
+| identidades de la norma y del producto escalar | 6 | 5 de 8 |
+| autovalores y autovectores | 4 | 4 de 8 |
+| matrices y determinantes | 4 | 3 de 8 |
+
+**22 de 32 piden demostrar: el 69 %.**
+
+**Fase B, las cuatro escritas.** El `redactar` que ya existía era justo el de
+la familia n.º 1 de Cálculo, así que las nuevas son:
+
+- Cálculo: **Barrow** (el caso difícil que pedía el encargo) y **Lagrange**.
+- Álgebra: **«esto es subespacio vectorial»** y **«núcleo trivial implica
+  inyectiva»**.
+
+De **1 a 5 `redactar` en 4.826 pasos**. Se paran aquí a propósito (§13: el
+patrón se destila del contenido). Miradas en claro, oscuro y 360 px: se leen
+bien y la rúbrica numerada funciona. **Lo siguiente es leerlas tú**, no
+producir más.
+
+## 5 · Las prácticas de Fluidos — NO estaba bloqueado
+
+El encargo lo daba por bloqueado «hasta tener material». El material **está en
+la carpeta**: `Guion_de_prácticas.pdf` detalla **27 prácticas, cada una con su
+tema**, y la guía de la asignatura las agrupa en su apartado 5 en **cinco
+sesiones, quince horas por alumno, veintitrés prácticas**.
+
+Declarado en `preparar/fluidos-ord.yaml` con las cinco sesiones nombradas y su
+fuente. Y con el hallazgo que de verdad importa: **la teoría de las
+veintitrés está escrita**, porque sus temas —2, 4, 7, 8, 13, 18, 19, 23 y
+24— son los que esa ruta ya prepara. Lo que falta es solo lo que vive en el
+cuaderno de quien las hizo: qué se midió, con qué aparato y qué salió.
+
+> ⚠️ **`Grupos_Laboratorio_16A_2025-26.pdf` son nombres completos de alumnos
+> reales.** Mismo trato que `PRIMER_CONTROL._NOTAS.pdf` y
+> `Notas_parcial_esttica.pdf`: no entra en el repositorio, no se cita y no se
+> convierte. El repositorio es público.
+
+## 6 · Álgebra — la causa del tema 8, y una pregunta
+
+La causa está puesta, y va delante de la observación porque vale más: **solo
+da tiempo a plantearlo en clase, por horas, y nunca entra en el examen**, lo
+dijiste el 5 de septiembre de 2026. El recuento de cero menciones en ocho
+convocatorias queda detrás, como comprobación.
+
+**La pregunta que queda:** ¿existe una colección de problemas de Álgebra, como
+la de Fluidos, y la tienes? Álgebra se apoya en cuatro cursos frente a los
+once de Cálculo, y transcribirla es lo único que apuntalaría sus rutas. Si no
+existe, no hay nada que hacer aquí y se dice.
+
+## 7 · Los ejercicios de Fluidos, en el orden de la colección
+
+No estaba en el informe: lo pediste tú al terminar los seis. «Que estén
+distribuidos como están en lo que te enseñé.»
+
+**Lo primero fue medir, porque la frase tenía dos lecturas.** El reparto sobre
+el temario ya era correcto: los nueve capítulos de la colección caen enteros
+dentro de sus temas del temario oficial —cero problemas archivados fuera de
+sitio—. El que no lo era es **el orden dentro de cada tema**: los catorce
+temas con problemas de la colección estaban revueltos. El tema 2 abría con el
+**1.13**, seguía con el 1.2 y luego el 1.12. Iban agrupados por nivel y,
+dentro de cada grupo, en el orden en que se transcribieron, que no es un
+orden.
+
+Ahora cada tema va 1.1, 1.2, 1.3… con nuestros ejemplos introductorios
+delante, porque no tienen número en la colección.
+
+**Cómo se hizo sin romper nada.** Con js-yaml no: volcar el YAML se habría
+llevado por delante los comentarios, y algunos dicen cosas que no están en
+ningún otro sitio. Se trabajó sobre el texto, moviendo bloques enteros. Y se
+contó (§16 punto 4): mismo conjunto de ids, **mismo número de líneas** y cada
+bloque idéntico byte a byte en los catorce ficheros. Los catorce pasan
+`revisa-ejercicios`.
+
+**Un comentario dejó de ser cierto** y hubo que reescribirlo: en el tema 16
+decía que el 5.20 era «el contrapunto de los tres anteriores», y al ordenar
+el 5.18 pasó a ir justo delante y ya es de Froude.
+
+La regla queda en CLAUDE.md §04, porque sin ella alguien lo «arregla» de
+vuelta: **la página de un tema es la referencia y la ruta es la que enseña.**
+Quien abre el tema tiene el PDF al lado y busca el 6.14 donde está el 6.14;
+la rampa de dificultad la ordena §14 en los escalones, y duplicarla en el
+tema estropeaba la referencia sin mejorar nada.
+
+## Un fallo que salió por el camino, y no lo buscaba nadie
+
+Barriendo Hazen-Williams apareció `J_{1,<TAB>ext{máx}}` en **tres sitios** de
+un ejercicio de conducciones: el `\t` de `\text` se había convertido en un
+tabulador de verdad, y lo publicado era `J₁,ₑₓₜ{ₘₐₓ}` con las llaves a la
+vista. Es §17 al pie de la letra, con otra letra.
+
+Lo que lo hace peligroso es que **todo funciona**: es LaTeX válido, KaTeX lo
+dibuja sin quejarse, no queda ningún `$` suelto, no hay `katex-error`, y al
+leer el YAML un tabulador parece sangría. Los cuatro guardianes en verde
+durante semanas.
+
+Arreglado, barrido el contenido entero —275 YAML y 41 MDX, cero más— y con
+guardián nuevo en los dos sitios: `revisa-ejercicios.mjs` (un segundo) y
+`verify.mjs`, que lo mira dentro de la anotación TeX del MathML publicado.
+Validado al revés: con el fallo reinyectado señala los tres campos exactos.
+
+---
+
 # La auditoría externa, la de verdad
 
 **4 de septiembre de 2026, noche.** Llegó el informe. Cuatro puntos, y los

@@ -325,15 +325,30 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.068 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 1.989 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.210 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.394 |
 | `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.192 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 1 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
 
-`redactar` se ha usado **una vez de 4.822 pasos**. Está construido y razonado
-en `content.config.ts`, pero no es un patrón probado: úsalo si el ejercicio lo
-pide, no porque esté en la tabla.
+> Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
+> pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
+> agosto —decían 1.068 y 1.989 cuando eran 1.210 y 2.394—, que es la tercera
+> vez que pasa lo mismo con esta tabla. La regla de recontar al cerrar una
+> asignatura no basta cuando pasan semanas sin cerrar ninguna: **se recuenta
+> también al tocar el corpus en más de un fichero**.
+
+`redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
+encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
+intuición: en Cálculo **50 de los 425 ejercicios de examen piden demostrar**
+—el 11,8 %— y en Álgebra **22 de 32**, o sea el 69 %. Las cuatro nuevas son
+las dos demostraciones más pedidas de cada asignatura: Barrow y Lagrange en
+Cálculo, «esto es subespacio vectorial» y «núcleo trivial implica inyectiva»
+en Álgebra.
+
+Y sigue sin ser un patrón maduro: cinco usos de 4.826 pasos. Se pararon en
+cuatro **a propósito** (§13: el framework se destila del contenido). Antes de
+escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
 
 Y dentro de `calcular`, seis tipos de respuesta según lo que se escriba en la
 casilla:
@@ -380,6 +395,33 @@ JavaScript, algo está mal diseñado: vuelve atrás y generalízalo.
 
 Solo se escribe código nuevo cuando el tema necesita **un simulador que no
 existe**. Todo lo demás es prosa y datos.
+
+### En qué orden van los ejercicios dentro de un `ejercicios.yaml`
+
+**Primero los nuestros, y después los de la colección en el orden de la
+colección.** No por nivel.
+
+Lo pidió Ionan el 5 de septiembre de 2026 —«que estén distribuidos como están
+en lo que te enseñé»— y al medirlo tenía toda la razón: los catorce temas de
+Fluidos con problemas de la colección estaban **desordenados**. El tema 2
+abría con el 1.13, seguía con el 1.2 y luego el 1.12. Iban agrupados por
+nivel, y dentro de cada grupo en el orden en que se transcribieron, que no es
+un orden: es el azar de quien fue tecleando.
+
+El motivo de fondo, y por eso esto es una regla y no una manía: **la página de
+un tema es la referencia, y la ruta es la que enseña.** Quien abre el tema
+suele tener el PDF de la colección al lado y quiere encontrar el 6.14 donde
+está el 6.14. Quien quiere una rampa de dificultad va a la ruta, donde §14 ya
+manda que un escalón vaya de `ejemplo` a `practica` a `examen`. Ordenar el
+tema por nivel duplicaba mal el trabajo de la ruta y estropeaba la referencia.
+
+Los ejemplos introductorios nuestros van delante porque no tienen número que
+respetar (§08) y porque son la entrada. Todo lo demás, por su número.
+
+Al reordenar se cuenta (§16 punto 4): mismo conjunto de ids, mismo número de
+líneas y cada bloque idéntico byte a byte antes y después — solo movido. Y se
+releen los comentarios que hablan de posición: «el contrapunto de los tres
+anteriores» dejó de ser cierto en el tema 16 y hubo que reescribirlo.
 
 ### Un tema está terminado cuando
 
