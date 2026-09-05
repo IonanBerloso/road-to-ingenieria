@@ -261,21 +261,32 @@ Cero. Con eso, un escalón saltaría de un ejemplo de tres pasos a un ejercicio
 de examen de seis apartados — que es exactamente la crítica que hizo nacer el
 escalón. Así que la ruta espera y entra la colección.
 
-Van **diez problemas**, todos de la colección de la escuela y **todos con su
+Van **quince problemas**, todos de la colección de la escuela y **todos con su
 respuesta publicada en la fuente**, que es lo que los hace valiosos: el número
-no sale de mi aritmética.
+no sale de mi aritmética, solo el desarrollo y los distractores.
 
-- **Tema 9**, cuatro: la dilución de Ostwald, el efecto del ion común, una
-  reguladora básica y una valoración cuyo punto de equivalencia no está en 7.
+- **Tema 2**, dos: tres cargas efectivas por Slater —una de ellas de un
+  electrón $d$, que usa otra tabla— y ordenar por electronegatividad dentro de
+  un grupo y dentro de un periodo.
+- **Tema 5**, tres: el convenio de signos en una línea, una compresión
+  isoterma de helio y dos compresiones encadenadas donde el trabajo es función
+  de camino.
+- **Tema 7**, tres: la entropía de condensar, una expansión isoterma entera y
+  la energía libre de una combustión.
 - **Tema 8**, tres: la esterificación con el volumen que se cancela, el paso
   de Kc a Kp con su exponente, y un equilibrio heterogéneo donde los sólidos
   no entran.
-- **Tema 7**, tres: la entropía de condensar, una expansión isoterma entera y
-  la energía libre de una combustión.
+- **Tema 9**, cuatro: la dilución de Ostwald, el efecto del ion común, una
+  reguladora básica y una valoración cuyo punto de equivalencia no está en 7.
 
-Quedan por transcribir los propuestos de los temas 2, 5 y 6, y el resto de los
-de 7, 8 y 9. Los del tema 5 están en un PDF **de imagen** —el volcado de texto
-devuelve una línea— así que hay que renderizarlo y leerlo a ojo.
+Con eso los niveles de Química quedan en **20 ejemplo · 15 practica · 16
+examen**, así que **el escalón de §14 ya se puede montar** y las rutas dejan
+de estar bloqueadas. Ese era el objetivo de esta tanda.
+
+Quedan los propuestos del tema 6 y el resto de los de 2, 5, 7, 8 y 9 —de cada
+uno se ha transcrito entre un cuarto y un tercio—. Y una nota de método: el
+PDF del tema 5 es **una imagen**, el volcado de texto devuelve una línea, así
+que sus enunciados se leyeron sobre la página renderizada a 140 ppp.
 
 ### El fallo que salió al escribirlos, y era grave
 
