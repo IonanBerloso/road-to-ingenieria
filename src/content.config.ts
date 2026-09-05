@@ -1059,4 +1059,22 @@ const algebra = defineCollection({
   schema: temaEscrito,
 });
 
-export const collections = { catalogo, calculo, fluidos, algebra, ejercicios, examen, preparar };
+/* Y Fundamentos Químicos el 5 de septiembre de 2026, la cuarta. La clave de
+   la colección tiene que ser **el id del catálogo** —`fundamentos-quimicos`,
+   con guion— porque `[tema].astro` llama a `getCollection(asignatura.id)`.
+   Si no coincidiera, el build fallaría con un mensaje que apunta aquí. */
+const fundamentosQuimicos = defineCollection({
+  loader: glob({ pattern: '**/index.mdx', base: './src/content/fundamentos-quimicos' }),
+  schema: temaEscrito,
+});
+
+export const collections = {
+  catalogo,
+  calculo,
+  fluidos,
+  algebra,
+  'fundamentos-quimicos': fundamentosQuimicos,
+  ejercicios,
+  examen,
+  preparar,
+};

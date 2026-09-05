@@ -61,6 +61,20 @@ const examenesPorAsignatura = new Map<
   string,
   { curso: string; conv: string; slug: string }[]
 >();
+/** Qué asignaturas tienen TODAS sus convocatorias transcritas enteras.
+ *
+ *  Esta página decía «N convocatorias resueltas enteras» en dos sitios, sin
+ *  mirar nada, y era verdad por casualidad: cuando se escribió, ninguna
+ *  convocatoria declaraba ejercicios `fuera`. Dejó de serlo dos veces sin que
+ *  nadie lo notara — primero cuando la auditoría del 4 de septiembre de 2026
+ *  añadió los ejercicios que faltan a 9 de las 16 convocatorias de Fluidos, y
+ *  otra vez el 5 de septiembre con Fundamentos Químicos, que abre sus cinco
+ *  con 6 ejercicios de 22.
+ *
+ *  Una frase fija que era cierta por casualidad es §10 esperando su turno: el
+ *  corpus cambia, el sitio empieza a afirmar algo falso y no hay guardián que
+ *  compare una frase con los datos. Se calcula. */
+const enterasPorAsignatura = new Map<string, boolean>();
 for (const ex of await getCollection('examen')) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
   lista.push({
@@ -69,6 +83,12 @@ for (const ex of await getCollection('examen')) {
     slug: `${ex.data.curso}-${SUFIJO_CONV[ex.data.convocatoria]}`,
   });
   examenesPorAsignatura.set(ex.data.asignatura, lista);
+
+  const entera = (ex.data.fuera ?? []).length === 0;
+  enterasPorAsignatura.set(
+    ex.data.asignatura,
+    (enterasPorAsignatura.get(ex.data.asignatura) ?? true) && entera,
+  );
 }
 
 /** Las rutas de estudio, para poder ofrecerlas antes que los exámenes sueltos:
@@ -302,7 +322,9 @@ const enteras = asignaturas
                   <p class="mano b-meta">
                     {a.data.temas.length} temas
                     {examenesPorAsignatura.has(a.id) &&
-                      ` · ${examenesPorAsignatura.get(a.id)!.length} convocatorias resueltas enteras`}
+                      ` · ${examenesPorAsignatura.get(a.id)!.length} convocatorias${
+                        enterasPorAsignatura.get(a.id) ? ' resueltas enteras' : ' abiertas'
+                      }`}
                   </p>
                 )}
                 {rutasPorAsignatura.has(a.id) && (
@@ -424,9 +446,18 @@ const enteras = asignaturas
                   <div class="ex-caja">
                     <p class="rotulo ex-tit">Exámenes</p>
                     <p class="ex-sub">
-                      {examenesPorAsignatura.get(a.id)!.length === 1
-                        ? 'Una convocatoria, con su enunciado original en PDF y resuelta entera.'
-                        : `${examenesPorAsignatura.get(a.id)!.length} convocatorias, con su enunciado original en PDF y resueltas enteras.`}
+                      {(() => {
+                        const n = examenesPorAsignatura.get(a.id)!.length;
+                        const enteras = enterasPorAsignatura.get(a.id);
+                        if (n === 1) {
+                          return enteras
+                            ? 'Una convocatoria, con su enunciado original en PDF y resuelta entera.'
+                            : 'Una convocatoria, con su enunciado original en PDF. Cada ejercicio que falta lo dice en su página.';
+                        }
+                        return enteras
+                          ? `${n} convocatorias, con su enunciado original en PDF y resueltas enteras.`
+                          : `${n} convocatorias, con su enunciado original en PDF. Los ejercicios que faltan están dichos uno a uno en cada página.`;
+                      })()}
                     </p>
                     <ul class="ex-lista">
                       {examenesPorAsignatura

@@ -26,7 +26,7 @@ export async function getStaticPaths() {
    *  y la página no se publicó. Es la misma forma exacta del fallo que tenía
    *  el guardián de convocatorias huérfanas de `verify.mjs`, y por eso se
    *  arregla aquí arriba y no con un `||` más (§01). */
-  const CON_TEMAS = ['calculo', 'fluidos', 'algebra'] as const;
+  const CON_TEMAS = ['calculo', 'fluidos', 'algebra', 'fundamentos-quimicos'] as const;
   type ConTemas = (typeof CON_TEMAS)[number];
   const tieneTemas = (id: string): id is ConTemas =>
     (CON_TEMAS as readonly string[]).includes(id);
@@ -128,14 +128,36 @@ const rutasDelTema = todasLasRutas
     titulo: r.data.titulo,
   }));
 
-const convocatorias = (await getCollection('examen')).filter(
+const examenesDeLaAsignatura = (await getCollection('examen')).filter(
   (e) => e.data.asignatura === asignatura.id,
-).length;
+);
+const convocatorias = examenesDeLaAsignatura.length;
+
+/* ¿Están **enteras**, o solo abiertas?
+ *
+ * Hasta el 5 de septiembre de 2026 el enlace de abajo decía «resueltas
+ * enteras» siempre, sin mirar nada. Era cierto en las tres asignaturas que
+ * había —Cálculo, Álgebra y Fluidos declaran en `fuera` los pocos ejercicios
+ * que faltan— y dejó de serlo el día que entró Fundamentos Químicos con cinco
+ * convocatorias abiertas y seis ejercicios de veintidós transcritos.
+ *
+ * Un texto fijo que era verdad por casualidad es §10 esperando su turno: en
+ * cuanto el corpus cambia, el sitio afirma algo falso y nadie se entera,
+ * porque no hay guardián que compare una frase con los datos. Ahora se
+ * calcula: una convocatoria está entera si no declara ningún ejercicio
+ * `fuera`. */
+const convocatoriasEnteras = examenesDeLaAsignatura.every(
+  (e) => (e.data.fuera ?? []).length === 0,
+);
 
 const navegacion = {
   anterior: enlaceTema(hechosDeLaAsignatura[donde - 1]),
   siguiente: enlaceTema(hechosDeLaAsignatura[donde + 1]),
-  examenes: { href: ruta(`${asignatura.id}/examenes`), cuantos: convocatorias },
+  examenes: {
+    href: ruta(`${asignatura.id}/examenes`),
+    cuantos: convocatorias,
+    enteras: convocatoriasEnteras,
+  },
   rutas: rutasDelTema,
 };
 ---

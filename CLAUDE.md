@@ -325,9 +325,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.210 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.394 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.192 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.220 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.426 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.202 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
 
@@ -337,6 +337,11 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > vez que pasa lo mismo con esta tabla. La regla de recontar al cerrar una
 > asignatura no basta cuando pasan semanas sin cerrar ninguna: **se recuenta
 > también al tocar el corpus en más de un fichero**.
+>
+> Y otra vez el mismo día al abrir Fundamentos Químicos: **1.202 ejercicios y
+> 4.878 pasos**, en 43 temas de cuatro asignaturas. Los diez nuevos son seis
+> de examen y cuatro ejemplos introductorios; la regla de arriba funcionó a la
+> primera.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una

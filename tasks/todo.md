@@ -107,19 +107,57 @@ más pequeño.
   caminos equivocados dan 0,200 y el bueno es 0,203. Se estrechó la tolerancia
   y se avisa en la pista de que ahí la tercera cifra decide.
 
+## Las cinco convocatorias, abiertas
+
+Hecho el mismo día: **las cinco tienen ya su PDF original enlazado y al menos
+un ejercicio transcrito**, y son seis ejercicios en total, todos de los dos
+temas de peso alto.
+
+| convocatoria | ejercicio | tema |
+|---|---|---|
+| final 1.er cuatr. 2024-2025 | el ácido sulfúrico en tres etapas | 1 |
+| control 1.er cuatr. 2023-2024 | la fórmula de la cocaína | 1 |
+| control 1.er cuatr. 2023-2024 | la calcopirita y la errata | 1 |
+| final 2.º cuatr. 2024-2025 | el eteno y los diez kilos de aluminio | 6 |
+| extraordinaria 2.º cuatr. 2024-2025 | el etanol contra el etano | 6 |
+| control 2.º cuatr. 2023-2024 | el octano y los 458 kg de agua | 6 |
+
+Los ejercicios que faltan de cada cuadernillo van en `fuera` con su motivo, y
+el motivo es casi siempre el mismo: son de los temas 2, 3, 4, 5, 7, 8, 9 y 10,
+que todavía no están escritos.
+
+### Lo que enseñaron estos seis
+
+**El guardián de distractores obliga a preguntar mejor.** Chocaron tres veces,
+y las tres tenía razón: sobre números de 1400 kJ un 2 % son 28 unidades, así
+que los errores interesantes —del 0,5 %— no se pueden discriminar. La salida
+no fue aflojar la tolerancia sino **cambiar qué pregunta el paso**: en vez de
+la entalpía a 100 ºC, el `ΔCp`, donde olvidar el coeficiente del oxígeno
+cambia el valor un 63 %; en vez de la energía interna, el `Δn` de gases, donde
+contar el agua como gas da 0 en vez de −2. El número grande solo era la suma
+de después, y preguntando por él se escondía el razonamiento.
+
+**El `º` no se dibuja dentro de una fórmula**, igual que el euro y las tildes.
+Va `\text{°C}` con el símbolo de grado de verdad.
+
+**Y el guardián de jerga interna cazó a su propio autor** seis horas después
+de escribirlo: había metido un «(§17)» en un motivo de `fuera`, que es texto
+publicado.
+
 ## Lo siguiente, en este orden
 
-1. Las **cuatro convocatorias que faltan** (los dos controles de 2023-2024, el
-   final del 2.º cuatrimestre y la extraordinaria de 2024-2025).
-2. Los **temas 1 y 6**, que son los dos `alto`, con su prosa y sus ejemplos de
-   entrada. Antes que ninguno de los otros ocho.
-3. Solo entonces, **el lector de respuestas químicas**. Nombrar un compuesto y
-   ajustar una ecuación no los sabe leer ningún `respuesta.tipo` de los seis
-   que hay, y hoy esos apartados se resuelven en la prosa. §13: el patrón se
-   destila del contenido, así que primero hay que ver cuántas veces hace falta
-   de verdad.
-4. Las **rutas**, cuando haya exámenes suficientes transcritos para contar
-   huecos.
+1. Los **temas 1 y 6**, que son los dos `alto`, con su prosa y sus ejemplos de
+   entrada. Antes que ninguno de los otros ocho, y antes que más
+   transcripciones: seis ejercicios de examen sin una línea de teoría detrás
+   son un examen resuelto, no un sitio para estudiar.
+2. Después el resto de ejercicios de las cinco convocatorias, según se vayan
+   escribiendo los temas que necesitan.
+3. **El lector de respuestas químicas.** Nombrar un compuesto y ajustar una
+   ecuación no los sabe leer ninguno de los seis `respuesta.tipo` que hay, y
+   hoy esos apartados se resuelven en la prosa —el ejercicio 2 del control de
+   2023-2024 está entero en `fuera` por esto—. §13: el patrón se destila del
+   contenido, así que primero hay que ver cuántas veces hace falta de verdad.
+4. Las **rutas**, cuando haya bastante transcrito para contar huecos.
 
 ---
 
