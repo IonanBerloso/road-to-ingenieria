@@ -4667,3 +4667,88 @@ la siguiente.
 distintos del original: dos de Cálculo que ya estaban y dos de Química cuyo único
 ejercicio **es** el ejemplo de entrada, porque el tema no tiene colección. Ese
 segundo caso está declarado en su `falta[]` y no se puede arreglar sin material.
+
+---
+
+# El punto 1, que era el mayor riesgo, ya tiene procedimiento
+
+De las 592 resoluciones de examen del sitio, 472 no tienen nada contra lo que
+comprobarse: sus exámenes no publican ni solución ni resultado. Estaba escrito
+como «el mayor riesgo del proyecto y no tiene plan» desde el 24 de agosto.
+
+## Por qué no lo cubría nada de lo que había
+
+- `npm run suelo` demuestra que el sitio no está roto, no que las cuentas
+  salgan.
+- `scripts/recalcula.mjs` comprueba que el corpus es coherente **consigo
+  mismo** —que cada «expresión = decimal» que escribe es cierta—, no que la
+  expresión sea la respuesta correcta a la pregunta.
+
+Falta la única comprobación que verifica de verdad: rehacer el ejercicio desde
+su enunciado, por un camino escrito aparte.
+
+## `tests/verificacion/`
+
+Cada fichero toma una convocatoria y, para cada respuesta comparable,
+transcribe los datos del enunciado, recalcula con código sin mirar el
+`desarrollo`, y compara con el valor que publica el corpus dentro de la
+tolerancia que el propio corpus declara.
+
+**El test no repite el número: lo lee del YAML.** Si alguien cambia una
+respuesta y la cuenta deja de salir, se pone rojo. Un número copiado a mano
+envejecería en silencio.
+
+## Estado, medido por `node scripts/deuda.mjs`
+
+| asignatura | comparables | recalculadas |
+|---|---|---|
+| Fundamentos Químicos | 67 | **67** |
+| Álgebra | 76 | **76** |
+| Cálculo | 805 | 18 |
+| Fluidos | 293 | 0 |
+| | **1.241** | **161 (13 %)** |
+
+El orden no es por facilidad. Química primero por ser la más reciente —27
+resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
+Álgebra después por ser la más pequeña. Cálculo empieza por la ordinaria de
+2024-2025, que es la que más va a mirar quien se examine. Fluidos va última
+porque sus exámenes **sí publican el resultado**: sus resoluciones ya aterrizan
+en un número impreso o se declaran fuera.
+
+## Lo que encontró
+
+**En el corpus, nada.** Las 161 cuadran, incluidas las cadenas largas: los
+siete apartados del sulfúrico, la molalidad que arrastra cuatro pasos, la
+matriz expresada en dos bases que no son la canónica, el trabajo de la
+ventisca.
+
+**En el verificador, cuatro cosas**, y ninguna habría dado un fallo visible:
+
+1. Una normalización a enteros que dividía por la primera coordenada y devolvía
+   (1, 0, 0.25) donde el examen pide (4, 0, 1).
+2. Un buscador de valores propios que localizaba raíces por cambio de signo y
+   se dejaba las dobles —una raíz doble toca el eje y no lo cruza—.
+3. Un lector que no sabía leer «1/√10».
+4. Una integral con singularidad que suponía que el extremo malo era siempre el
+   primero, y devolvió un área con el signo cambiado sin quejarse.
+
+Las cuatro habrían dado **confianza falsa**, que es peor que no comprobar nada.
+Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
+
+## Lo que queda, y cómo se sigue
+
+**787 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
+Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
+`deuda.mjs` cuenta cuántas van.
+
+Para Cálculo el método está probado y es el mejor de los tres, porque el camino
+del test **no es el de la resolución**: donde el examen integra por partes, el
+test integra por Simpson; donde deriva y despeja, busca el máximo por sección
+áurea; donde resta potenciales de un campo conservativo, integra a lo largo de
+la trayectoria. Eso es verificación de verdad y no una relectura.
+
+Y una limitación dicha en voz alta: esto no es independencia total. Lo escribe
+quien escribió la resolución, así que un malentendido de fondo sobre el
+enunciado sobrevive a los dos. Lo que sí atrapa —y es la mayor parte de lo que
+se falla— son erratas de transcripción, unidades cambiadas, un dato leído mal,
+un intermedio arrastrado y una tolerancia más ancha que el número que declara.

@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 0 |
+| Cálculo | 805 | 18 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **143 (12 %)** |
+| | **1.241** | **161 (13 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -81,7 +81,15 @@ además sus módulos se comprueban en `tests/fisica/` contra esos mismos
 resultados. Es la que menos urgencia tiene de las cuatro, aunque siga contando
 aquí.
 
-## Lo que estos dos pases encontraron
+**Cálculo empieza por la ordinaria más reciente**, que es la que más va a mirar
+quien se examine en 2027. Y aquí la comprobación es **más independiente** que
+en las otras dos asignaturas: donde la resolución integra por partes o deriva y
+despeja, el test integra por Simpson y busca el máximo por sección áurea. No es
+el mismo camino con otra letra. El caso más claro es el trabajo de un campo
+conservativo: el examen resta potenciales, el test integra a lo largo de la
+trayectoria de verdad.
+
+## Lo que estos pases encontraron
 
 **En el corpus, nada.** Las 143 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
@@ -98,6 +106,11 @@ fichero de tests:
    justamente de eso.
 3. Un lector de números que no sabía leer «1/√10», que es como el corpus
    escribe las bases ortonormales.
+4. Una integral con singularidad que **suponía siempre que el extremo malo era
+   el primero**, y al pedirle un cuarto de circunferencia de 4 a 2√2 devolvió
+   el área con el signo cambiado sin quejarse de nada.
 
-Ninguna de las tres habría dado un fallo visible: habrían dado **confianza
-falsa**. Es el argumento entero para que el verificador se verifique.
+Ninguna de las cuatro habría dado un fallo visible: habrían dado **confianza
+falsa**. Es el argumento entero para que el verificador se verifique, y por eso
+`lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests con casos de
+resultado conocido.
