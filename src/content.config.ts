@@ -393,13 +393,27 @@ const pasoJustificar = z.object({
   pregunta: z.string().min(10),
   piezas: z
     .array(
+      /* `.strict()` — un nombre de campo mal escrito TIENE que fallar.
+       *
+       * Zod descarta en silencio las claves que no conoce, así que escribir
+       * `trambpa` en vez de `trampa` no da error: la pieza deja de ser la
+       * trampa, el paso se queda sin ninguna, y el único aviso llega —si
+       * llega— desde el refine que las cuenta. El 5 de septiembre de 2026
+       * cometí esa errata **dos veces en la misma tarde** escribiendo
+       * Fundamentos Químicos, y las dos veces pasó el guardián porque la
+       * clave buena estaba justo al lado.
+       *
+       * Es la clase de fallo que este proyecto más teme: no rompe nada, no se
+       * ve, y se pierde contenido. Aquí es donde más duele —una pieza sin su
+       * `mensaje` es un diagnóstico que no llega— así que aquí entra primero.
+       */
       z.object({
         texto: z.string().min(5),
         /** La pieza envenenada. Va exactamente una por paso. */
         trampa: z.boolean().default(false),
         /** Por qué esta pieza no entra. Obligatorio en la trampa. */
         mensaje: z.string().optional(),
-      }),
+      }).strict('esa clave no existe en una pieza: solo `texto`, `trampa` y `mensaje`. Si has escrito bien el nombre, el campo hay que declararlo en content.config.ts'),
     )
     .min(3)
     .refine((ps) => ps.filter((p) => p.trampa).length === 1, {

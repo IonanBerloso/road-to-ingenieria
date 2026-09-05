@@ -144,19 +144,62 @@ Va `\text{°C}` con el símbolo de grado de verdad.
 de escribirlo: había metido un «(§17)» en un motivo de `fuera`, que es texto
 publicado.
 
+## Tres temas escritos
+
+**1 · Compuestos y estequiometría**, **6 · Termoquímica** y **7 ·
+Espontaneidad y energía libre.** Los dos primeros son los `alto` que marcó el
+recuento; el 7 entró después porque las resoluciones de los tres ejercicios de
+termoquímica ya transcritos se meten en él —entropía, energía libre,
+temperatura de inversión— y explicaban cosas que no tenían página detrás.
+
+Cada uno con su prosa ordenada por lo que pide el examen, sus errores típicos
+sacados de fallos reales del corpus, y **dos ejemplos de entrada propios** que
+aíslan una sola idea. Son seis ejemplos en total, y existen porque los
+ejercicios de examen de esta asignatura encadenan seis apartados: sin ellos no
+hay por dónde entrar.
+
+### La frase que llevaba semanas mintiendo
+
+Al mirar la página del tema recién publicada apareció **«Las N convocatorias,
+resueltas enteras»**, escrito a pelo en `Tema.astro` y dos veces más en la
+portada, sin mirar ningún dato.
+
+Era cierto por casualidad el día que se escribió. Dejó de serlo **dos veces sin
+que nadie lo notara**: el 4 de septiembre, cuando la auditoría añadió los
+ejercicios que faltan a 9 de las 16 convocatorias de Fluidos —desde entonces el
+sitio prometía dieciséis exámenes enteros y servía siete—, y otra vez el 5 con
+Química.
+
+Ahora se calcula. Y la lección es la que más se repite en este proyecto: **una
+frase fija que es verdad por casualidad es §10 esperando su turno.** No hay
+guardián que compare una frase con unos datos; la única defensa es no escribir
+la frase.
+
+## Un riesgo que se vio y no se ha tocado
+
+Al escribir el tema 9 se me coló una clave con errata —`trambpa` en vez de
+`trampa`— y **ningún guardián dijo nada**: Zod descarta en silencio las claves
+que no conoce, así que un campo mal escrito no falla, simplemente se pierde.
+Aquí no rompió nada porque la buena estaba al lado, pero podría haberse comido
+un `mensaje` o un `distractor` entero.
+
+El arreglo es una línea, `.strict()` en el esquema del ejercicio, y hacerlo
+bien pide barrer antes el corpus para comprobar que no hay claves legítimas
+sin declarar. **No se ha hecho**: es capa compartida y merece su propia tanda,
+con su validación al revés.
+
 ## Lo siguiente, en este orden
 
-1. Los **temas 1 y 6**, que son los dos `alto`, con su prosa y sus ejemplos de
-   entrada. Antes que ninguno de los otros ocho, y antes que más
-   transcripciones: seis ejercicios de examen sin una línea de teoría detrás
-   son un examen resuelto, no un sitio para estudiar.
-2. Después el resto de ejercicios de las cinco convocatorias, según se vayan
-   escribiendo los temas que necesitan.
+1. El **tema 10**, redox, que es el único bloque del segundo cuatrimestre sin
+   página y tiene dos ejercicios esperando en el `fuera`.
+2. Los temas **2, 3, 4 y 5**, del primer cuatrimestre.
+3. El `.strict()` del esquema, con su barrido previo.
 3. **El lector de respuestas químicas.** Nombrar un compuesto y ajustar una
    ecuación no los sabe leer ninguno de los seis `respuesta.tipo` que hay, y
-   hoy esos apartados se resuelven en la prosa —el ejercicio 2 del control de
-   2023-2024 está entero en `fuera` por esto—. §13: el patrón se destila del
-   contenido, así que primero hay que ver cuántas veces hace falta de verdad.
+   hoy esos apartados se resuelven solo en la prosa: el ejercicio 2 del
+   control de 2023-2024 está entero en `fuera` por esto, y cuando se escriba
+   el tema 2 serán dos. §13: el patrón se destila del contenido, así que
+   primero hay que ver cuántas veces hace falta de verdad — y ya van dos.
 4. Las **rutas**, cuando haya bastante transcrito para contar huecos.
 
 ---

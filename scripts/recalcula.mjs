@@ -102,8 +102,20 @@ function normaliza(tex) {
   /* potencias: ^{n} → ^(n) */
   s = s.replace(/\^\s*\{([^{}]*)\}/g, '^($1)');
 
-  /* la e de Euler: solo cuando va suelta o elevada, nunca dentro de palabra */
-  s = s.replace(/(?<![A-Za-z])e(?![A-Za-z])/g, 'E');
+  /* La e de Euler: solo cuando va suelta o elevada, nunca dentro de palabra.
+   *
+   * Y se marca con un nombre PROPIO, no con la E mayúscula, porque si no una
+   * E que ya venía mayúscula en el texto se toma también por Euler. El 5 de
+   * septiembre de 2026 eso produjo un desajuste falso en el tema 10 de
+   * Química: la prosa escribe «E^{0} = 0,249 V» —un potencial de pila— y el
+   * guardián respondió que «vale 1», que es e elevado a cero.
+   *
+   * No es un caso aislado: en electroquímica la E de potencial aparece en casi
+   * todas las líneas con un igual detrás, así que el aviso sonaría siempre. Y
+   * un guardián que suena siempre se acaba ignorando (§11). Con el nombre
+   * separado, una E mayúscula es una letra cualquiera y la expresión se
+   * declara no evaluable, que es exactamente lo correcto. */
+  s = s.replace(/(?<![A-Za-z])e(?![A-Za-z])/g, 'EULER');
 
   /* llaves de agrupación que sobreviven */
   s = s.replace(/[{}]/g, '');
@@ -123,7 +135,7 @@ function evaluaNormalizado(s) {
   if (!s) return null;
   /* si queda alguna letra que no sea una función conocida, PI o E, no es
      un número: puede llevar una x, una n, un subíndice… */
-  const restos = s.replace(/\b(?:PI|E)\b/g, '').replace(
+  const restos = s.replace(/\b(?:PI|EULER)\b/g, '').replace(
     new RegExp(`\\b(?:${Object.keys(FUNCIONES).join('|')})\\b`, 'g'), '');
   if (/[A-Za-z\\]/.test(restos)) return null;
 
@@ -140,7 +152,7 @@ function evaluaNormalizado(s) {
     if (nom) {
       const n = nom[0]; i += n.length;
       if (n === 'PI') return Math.PI;
-      if (n === 'E') return Math.E;
+      if (n === 'EULER') return Math.E;
       const f = FUNCIONES[n];
       if (!f) throw 0;
       salta();
