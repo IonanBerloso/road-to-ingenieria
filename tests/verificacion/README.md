@@ -52,15 +52,15 @@ convocatoria más. `node scripts/deuda.mjs` cuenta cuántas van.
 
 **No se escribe a mano.** `node scripts/deuda.mjs` lo cuenta leyendo las
 llamadas a `cuadra()` de estos ficheros y comparándolas con los pasos de
-examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
+examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
 
 | asignatura | respuestas comparables de examen | recalculadas |
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 749 |
+| **Cálculo** | 805 | **805** |
 | Fluidos | 293 | 0 |
-| | **1.241** | **892 (72 %)** |
+| | **1.241** | **948 (76 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -81,13 +81,11 @@ además sus módulos se comprueban en `tests/fisica/` contra esos mismos
 resultados. Es la que menos urgencia tiene de las cuatro, aunque siga contando
 aquí.
 
-**Cálculo tiene ya las veintitrés convocatorias finales**, incluidas la más
-reciente y la más antigua del corpus, que son las que más va a mirar quien se
-examine en 2027 — y con ellas **las cinco evaluaciones de los seis cursos más
-recientes**, y con las de las últimas tandas **las cincuenta y cuatro
-evaluaciones parciales del corpus, de 2014-2015 a 2025-2026**: once primeras,
-once segundas, once terceras, once cuartas y diez quintas. Lo único que queda
-son las **once recuperaciones**.
+**Cálculo está entera**: las 805 respuestas numéricas de sus **ochenta y ocho
+convocatorias**, de 2014-2015 a 2025-2026. Las veintitrés finales —ordinarias y
+extraordinarias—, las cincuenta y cuatro evaluaciones parciales y las once
+recuperaciones. Es la asignatura con más aritmética del proyecto y la que más
+va a mirar quien se examine en 2027.
 
 Y aquí la comprobación es **más independiente** que en las otras dos
 asignaturas: donde la resolución integra por partes o deriva y despeja, el test
@@ -111,7 +109,7 @@ centro, el ajuste lo diría.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 892 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 948 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
@@ -156,3 +154,18 @@ fichero de tests:
 Ninguna de las nueve habría dado un fallo visible: habrían dado **confianza
 falsa**, que es peor que no comprobar nada. Es el argumento entero para que el
 verificador se verifique.
+
+**Y una décima, que no es del verificador sino del recuento.** Al terminar
+Cálculo el contador se quedó en **dos respuestas sin recalcular** y no había
+forma de saber cuáles: `deuda.mjs` publicaba el porcentaje y el reparto por
+asignatura, nada más. Con un guion aparte resultaron ser los dos pasos del
+ejercicio 4 de la 2.ª evaluación de 2022-2023, un ejercicio entero **saltado sin
+darse cuenta** al escribir su fichero, con los otros tres del mismo examen
+puestos.
+
+Un porcentaje no avisa de eso. Desde ese día `deuda.mjs` **lista las que
+faltan** cuando a una asignatura le quedan quince o menos, con su ejercicio y
+su paso. El tope se cuenta por asignatura y no sobre el total, y eso fue lo
+que costó: la primera versión lo hacía sobre el total, y con Fluidos en 293 el
+hueco de una sola respuesta de Cálculo no se habría listado nunca. Validado al
+revés borrando una llamada a mano.

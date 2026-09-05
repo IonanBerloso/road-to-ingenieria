@@ -144,3 +144,34 @@ describe('2022-2023 · 3 · recta que minimiza la suma', () => {
     cuadra2223(id, 'La pendiente', -b / a);
   });
 });
+
+describe('2022-2023 · 4 · la cota y el error exacto', () => {
+  const id = 'ex2223-2ev-4-cota-y-error-exacto';
+  /* LECTURA DE LA FIGURA: las tres curvas —la función, su derivada y su
+     derivada segunda— se midieron sobre el PDF y salen de
+     y = −2x³ − 3x² + 8x + 5. Antes de usarla se comprueba contra lo que el
+     dibujo dice: el máximo de y cerca de 0,7 y valiendo 8,5, el máximo de y′
+     en −0,5 valiendo 9,5, y el corte de y″ en −0,5. */
+  const y = (x: number) => -2 * x ** 3 - 3 * x * x + 8 * x + 5;
+
+  it('la reconstrucción encaja con las tres curvas del dibujo', () => {
+    const cima = maximiza(y, 0, 2);
+    if (Math.abs(cima.x - 0.7) > 0.1 || Math.abs(cima.y - 8.5) > 0.2)
+      throw new Error('el máximo de y no está donde dice el dibujo');
+    const cimaDerivada = maximiza((x) => deriva(y, x), -2, 1);
+    if (Math.abs(cimaDerivada.x + 0.5) > 0.05 || Math.abs(cimaDerivada.y - 9.5) > 0.2)
+      throw new Error('el máximo de y′ no está donde dice el dibujo');
+    if (Math.abs(deriva2(y, -0.5)) > 1e-4) throw new Error('y″ no corta el eje en −0,5');
+  });
+
+  it('el polinomio arranca en y(−1) = −4', () => cuadra2223(id, 'El polinomio', y(-1)));
+
+  it('y la cota del error es 4/3', () => {
+    /* Resto de Lagrange de orden 1: la mitad del máximo de |y″| entre el
+       centro y el punto, por el cuadrado de la distancia. El máximo se busca
+       recorriendo el intervalo, que es lo que evita darlo por sabido. */
+    let M = 0;
+    for (let x = -1; x <= -1 / 3; x += 1e-5) M = Math.max(M, Math.abs(deriva2(y, x)));
+    cuadra2223(id, 'La cota del error', (M / 2) * (-1 / 3 - -1) ** 2);
+  });
+});

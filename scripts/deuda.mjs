@@ -168,7 +168,8 @@ for (const [id, e] of EJ) {
     if (!['numero', 'magnitud', 'complejo', 'vector', 'matriz', 'conjunto'].includes(p.respuesta?.tipo))
       continue;
     numericas++;
-    if (!cubiertas.has(clave(id, p.titulo ?? ''))) sinCubrir.push(`${e.asig} · ${id}`);
+    if (!cubiertas.has(clave(id, p.titulo ?? '')))
+      sinCubrir.push(`${e.asig} · ${id} · «${p.titulo ?? '(sin título)'}»`);
   }
 }
 fila('de', `${numericas} respuestas de examen comparables, ${numericas - sinCubrir.length} recalculadas` +
@@ -176,9 +177,23 @@ fila('de', `${numericas} respuestas de examen comparables, ${numericas - sinCubr
 const porAsig = {};
 for (const s of sinCubrir) {
   const a = s.split(' · ')[0];
-  porAsig[a] = (porAsig[a] ?? 0) + 1;
+  (porAsig[a] ??= []).push(s);
 }
-for (const [a, n] of Object.entries(porAsig)) fila(a, `${n} sin recalcular`);
+for (const [a, lista] of Object.entries(porAsig)) {
+  fila(a, `${lista.length} sin recalcular`);
+  /* Y cuando a una asignatura le quedan pocas, se dicen cuáles. Nace el 6 de
+     septiembre de 2026: al cerrar Cálculo el contador se quedó en dos y hubo
+     que escribir un guion aparte para averiguar qué eran. Resultó ser un
+     ejercicio entero —el 4 de la 2.ª de 2022-2023— saltado sin darse cuenta al
+     escribir su fichero, con los otros tres del mismo examen puestos. Un
+     porcentaje no avisa de eso; una lista, sí.
+
+     El tope se cuenta **por asignatura y no sobre el total**, y eso es lo que
+     costó: la primera versión lo hacía sobre el total, y como Fluidos tenía
+     293 pendientes, el hueco de una sola respuesta de Cálculo no se listaba
+     nunca. Se validó al revés borrando una llamada a mano. */
+  if (lista.length <= 15) for (const s of lista) fila('', `· ${s.split(' · ').slice(1).join(' · ')}`);
+}
 
 pinta('Y el tamaño del corpus, que también se publica y también envejece');
 fila('ejercicios', EJ.size);
