@@ -259,6 +259,33 @@ try {
   };
   for (const e of ejercicios) {
     for (const [dónde, texto] of camposDeProsa(e)) {
+      /* Y el cuarto hermano, que es el más silencioso de todos: un carácter
+         de control donde debía ir una barra invertida. `\text{max}` escrito a
+         través del shell llega como TAB + «ext{max}» —el `\t` se come a sí
+         mismo—, y entonces **todo funciona**: es LaTeX válido, KaTeX no
+         protesta, no queda ningún `$` suelto, y lo que se publica es
+         `J₁,ₑₓₜ{ₘₐₓ}` con las llaves a la vista. Al leer el fichero tampoco
+         se ve, porque un tabulador parece sangría.
+
+         Encontrado el 5 de septiembre de 2026 en tres sitios del mismo
+         ejercicio de conducciones, publicados y con los cuatro guardianes en
+         verde. Es exactamente lo que §17 avisa para `\f`, con otra letra: por
+         eso se miran todas las que un `\x` mal escapado puede producir. */
+      const control = /[\t\f\v\b\0]/.exec(texto);
+      if (control) {
+        const cual = { '\t': '\\t', '\f': '\\f', '\v': '\\v', '\b': '\\b', '\0': '\\0' }[control[0]];
+        const ventana = texto
+          .slice(Math.max(0, control.index - 40), control.index + 40)
+          .replace(/[\t\f\v\b\0]/g, '⟦aquí⟧')
+          .replace(/\s+/g, ' ');
+        mal(
+          e.id ?? '(sin id)',
+          `${dónde}: hay un carácter de control (${cual}) donde debía ir una barra — ` +
+            `…${ventana.trim()}… (§17: el LaTeX no se escribe por el shell)`,
+        );
+        continue;
+      }
+
       const html = await mate(texto, 'revision');
       if (html.includes('katex-error')) {
         const motivo = /title="ParseError: ([^"]{0,110})/.exec(html)?.[1] ?? 'KaTeX no ha sabido dibujarla';
