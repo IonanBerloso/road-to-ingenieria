@@ -243,6 +243,55 @@ escrito para no volver a confundir las dos cosas (§15):
    destila del contenido, y de momento lo pide **un** ejercicio — sigue sin
    ser suficiente para construirlo.
 
+## Había una sexta convocatoria, y llevaba todo el día delante
+
+**5 de septiembre de 2026, tarde.** Rastreando la colección de problemas del
+tema 6 aparecieron cuatro ficheros **sin extensión** en el material. Tres eran
+teoría; el cuarto, llamado `1C_Control` a secas, era **el control del primer
+cuatrimestre de 2024-2025**: una convocatoria entera de cinco ejercicios y diez
+puntos que el sitio no tenía y que nadie había echado en falta.
+
+Es especialmente valiosa porque cubre los temas 1 a 4 enteros, que es justo la
+mitad del temario con menos material de examen. Y trae **el único ejercicio de
+todo el corpus que pide un ciclo de Born-Haber**.
+
+### Lo que destapó, que es peor que el hueco
+
+Al añadirla saltaron **dos frases publicadas que eran falsas**, las dos del
+tipo que este proyecto ya se ha comido tres veces:
+
+- El catálogo etiquetaba el tema 1 con «cae en las cinco convocatorias». Al
+  medirlo cae en **tres de seis** — todas las del primer cuatrimestre, que es
+  el dato que sí significa algo. Y no es que la sexta la haya estropeado: era
+  falsa cuando se escribió, porque el tema 1 no aparece en ninguna de las tres
+  del segundo cuatrimestre.
+- El tema 6 llevaba «abre los dos exámenes del 2.º cuatrimestre». Son **tres**,
+  y los abre en dos.
+
+Las dos se escribieron a ojo, sin contar. La regla ya estaba escrita —una frase
+fija que es verdad por casualidad es un dato falso esperando su turno— y aun
+así se repitió. **Lo que faltaba no era la regla, era el recuento:** ahora las
+etiquetas dicen un número que sale de recorrer los `examen.yaml`, no de
+recordar.
+
+### Y la regla de método que sale del hallazgo
+
+**Un fichero sin extensión no aparece en ninguna búsqueda por tipo.** Los cinco
+exámenes anteriores se encontraron buscando `*.pdf`; este no salía. Antes de dar
+por cerrado el inventario de una asignatura hay que **listar el directorio
+entero** y mirar los ficheros que no casan con ningún patrón, comprobando su
+tipo real por el contenido y no por el nombre.
+
+Aplicada acto seguido a todo `Desktop/Estudios`: los cuatro únicos ficheros sin
+extensión de todo el árbol son los de la carpeta de Química —el examen y tres
+PDF de teoría— y no hay material de Química fuera de ella. **El inventario de
+la asignatura queda cerrado en seis convocatorias.**
+
+Y un hallazgo lateral que conviene no perder: en `Estudios/Cerebro UPV-EHU` hay
+577 ficheros con teoría y ejercicios de **Mecánica Aplicada** y **Sistemas de
+Producción**, dos de las asignaturas de 2.º que siguen en `prev`. El día que se
+abran, el material ya está localizado.
+
 ## La colección de Química, empezada
 
 **5 de septiembre de 2026, tarde.** La razón de abrirla ahora no es que

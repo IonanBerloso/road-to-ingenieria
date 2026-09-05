@@ -1643,6 +1643,27 @@ Cosas que ya han costado horas. No son opiniones.
   176 figuras de ejercicio de Cálculo. **Regla: un token nuevo se define en
   `tokens.css` antes de usarlo, y si ya existe uno que significa lo mismo, se
   usa ese** — dos nombres para un color es la Regla 0 con otra cara.
+- **Un fichero sin extensión no sale en ninguna búsqueda por tipo, y ahí puede
+  haber una convocatoria entera.** El 5 de septiembre de 2026 se dio por
+  cerrado el inventario de exámenes de Química en cinco, encontrados con un
+  `find … -iname "*.pdf"`. Horas después, rastreando otra cosa, apareció un
+  fichero llamado **`1C_Control` a secas** —sin `.pdf`— que era una sexta
+  convocatoria completa: cinco ejercicios, diez puntos, y el único ejercicio
+  de todo el corpus que pide un ciclo de Born-Haber.
+
+  **Regla: el inventario de una asignatura se cierra listando el directorio
+  entero**, no buscando por extensión, y comprobando el tipo real de lo que no
+  encaje —`file` lo dice por el contenido, no por el nombre—. Es barato y el
+  coste de saltárselo es publicar una asignatura a la que le falta un examen
+  sin que nadie lo eche en falta.
+
+  Y de propina destapó dos frases falsas publicadas —«cae en las cinco
+  convocatorias» en el catálogo, «abre los dos exámenes» en otro tema—, las
+  dos escritas a ojo y una de ellas falsa ya el día que se escribió. Es la
+  cuarta vez que este proyecto se come lo mismo, así que conviene decirlo en
+  su forma más corta: **si una frase publicada lleva un número, ese número se
+  cuenta con un guion antes de escribirlo.**
+
 - **La `e` de `1.8e-5` se leía como el número de Euler, y no daba error: daba
   otro número.** El lector de respuestas evaluaba `1.8e-5` como
   $1{,}8 \times e - 5 = -0{,}107$, un valor perfectamente finito. Así que un
