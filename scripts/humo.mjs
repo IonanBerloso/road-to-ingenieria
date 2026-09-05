@@ -572,6 +572,37 @@ async function main() {
       await pagina.click(`[data-pestana="${nombres.ejercicios}"]`);
     }
 
+    /* Cada ejercicio tiene su «¿Esto está mal? Dilo», y el enlace lleva SU id
+       dentro. Un ejercicio sin enlace es un ejercicio sin revisor, y como el
+       enlace se genera en el componente el fallo posible no es que falte en
+       uno: es que se caiga en todos a la vez —una plantilla renombrada, un
+       `id` que deja de llegar— y eso no lo nota nadie mirando una página.
+       Se comprueba que hay tantos enlaces como ejercicios y que **cada uno
+       nombra a su ejercicio**, no que exista el enlace a secas: un enlace con
+       el id de otro sería peor que ninguno, porque manda el aviso al sitio
+       equivocado. Añadido el 5 de septiembre de 2026 con el propio enlace
+       (encargo 1 de la reauditoría). */
+    if (cuantos) {
+      const avisos = await pagina.evaluate(() =>
+        [...document.querySelectorAll('[data-ejercicio]')].map((caja) => {
+          const a = caja.querySelector('a[data-avisar]');
+          if (!a) return { id: caja.dataset.ejercicio ?? '?', mal: 'no tiene enlace' };
+          const href = a.getAttribute('href') ?? '';
+          const suyo = decodeURIComponent((href.match(/[?&]ejercicio=([^&]*)/) ?? [, ''])[1]);
+          const id = caja.dataset.ejercicio ?? '';
+          if (!href.includes('/issues/new')) return { id, mal: 'el enlace no va al formulario' };
+          if (id && suyo !== id) return { id, mal: `el enlace nombra a «${suyo}»` };
+          if (!/[?&]pagina=http/.test(href)) return { id, mal: 'el enlace no dice desde qué página' };
+          return null;
+        }).filter(Boolean),
+      );
+      comprueba(
+        avisos.length === 0,
+        `cada ejercicio puede avisar de un error, con su id dentro (${cuantos})`,
+        avisos.map((a) => `${a.id}: ${a.mal}`).join(' · '),
+      );
+    }
+
     for (let n = 0; n < cuantos; n++) {
       await pagina.waitForTimeout(200);
 

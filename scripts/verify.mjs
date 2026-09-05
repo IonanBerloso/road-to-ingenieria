@@ -30,6 +30,36 @@ const DIST = join(ROOT, 'dist');
 const { default: astroConfig } = await import('../astro.config.mjs');
 const BASE = astroConfig.base.replace(/\/$/, '');
 const ORIGEN = astroConfig.site.replace(/\/$/, '');
+
+/**
+ * La ÚNICA excepción a «cero dominios externos», y conviene que quede
+ * razonada porque relajar esta regla es tocar capa compartida (§13 caso 4).
+ *
+ * QUÉ SE PERMITE: exactamente este prefijo, que es el formulario de avisos
+ * del propio repositorio. Nada más — ni el resto de github.com, ni ningún
+ * otro dominio.
+ *
+ * POR QUÉ NO LA ROMPE. Lo que esta regla protege es §07: **cero peticiones**
+ * a terceros, para que el sitio funcione con la red desconectada y no cargue
+ * nada de un CDN. Un `<a href>` no es una petición: no descarga nada, no se
+ * ejecuta, y el sitio sigue viéndose igual sin red. El nombre de la
+ * comprobación ya lo decía —«cero peticiones a dominios externos»— y la
+ * implementación era más ancha que su propio nombre: cazaba cualquier URL en
+ * el texto, fuese recurso o enlace.
+ *
+ * POR QUÉ SE ACEPTA EL COSTE. Sin esto, un alumno que ve un error en una de
+ * nuestras 1.192 resoluciones no tiene forma de decirlo, y `recalcula`
+ * demostró el 4 de septiembre de 2026 que los hay en asignaturas cerradas.
+ *
+ * La alternativa que se descartó era distinguir `<a href>` de los recursos y
+ * permitir cualquier enlace externo: más limpia de leer y demasiado ancha —
+ * abriría la puerta a enlazar material de terceros, que es lo que §08
+ * prohíbe. Una lista blanca de un solo prefijo se revisa de un vistazo.
+ *
+ * Añadido el 5 de septiembre de 2026 (encargo 1 de la reauditoría). Si Ionan
+ * prefiere el criterio ancho o ninguno, se cambia esta constante y ya.
+ */
+const AVISAR = 'https://github.com/IonanBerloso/road-to-ingenieria/issues/new';
 const SOLO_FUENTE = process.argv.includes('--solo-fuente');
 
 /* Los prototipos de referencia/ están fuera a propósito: son material de
@@ -723,6 +753,7 @@ if (SOLO_FUENTE) {
       const url = m[0];
       if (url.startsWith(ORIGEN)) continue;
       if (url.startsWith('http://www.w3.org/')) continue; // espacio de nombres de MathML, no una petición
+      if (url.startsWith(AVISAR)) continue; // ver la nota de abajo
       externos.add(`${nombre} → ${url}`);
     }
 
@@ -786,6 +817,31 @@ if (SOLO_FUENTE) {
        —9 650 campos con fórmula— era el único. */
     for (const m of html.matchAll(/class="katex-error"[^>]*title="([^"]{0,90})/g)) {
       latexCrudo.push(`${nombre} → KaTeX no sabe dibujarla: ${m[1].replace(/&#x27;/g, "'")}…`);
+    }
+
+    /* Y el tercer hermano, el más silencioso: una barra invertida que se
+       convirtió en el carácter de control que nombraba. `\text{max}` escrito
+       a través del shell llega como TAB + «ext{max}», y a partir de ahí
+       **todo va bien**: es LaTeX válido, KaTeX lo dibuja sin quejarse, no
+       queda ningún `$` y no hay `katex-error`. Lo que se publica es
+       `J₁,ₑₓₜ{ₘₐₓ}`, con las llaves a la vista, y al leer el YAML no se ve
+       nada raro porque un tabulador parece sangría.
+
+       Se mira dentro de la anotación TeX que KaTeX deja en el MathML (§07),
+       que es donde vive el LaTeX original ya publicado.
+
+       Encontrada el 5 de septiembre de 2026 con tres apariciones en el mismo
+       ejercicio de conducciones, publicadas y con los cuatro guardianes en
+       verde durante semanas. §17 ya avisaba de esto para `\f`; era la misma
+       trampa con otra letra. */
+    for (const m of html.matchAll(/<annotation encoding="application\/x-tex">([^<]*)<\/annotation>/g)) {
+      const c = /[\t\f\v\b\0]/.exec(m[1]);
+      if (!c) continue;
+      const cual = { '\t': '\\t', '\f': '\\f', '\v': '\\v', '\b': '\\b', '\0': '\\0' }[c[0]];
+      const ventana = m[1].slice(Math.max(0, c.index - 30), c.index + 30).replace(/[\t\f\v\b\0]/g, '⟦aquí⟧');
+      latexCrudo.push(
+        `${nombre} → un carácter de control (${cual}) donde debía ir una barra: …${ventana}…`,
+      );
     }
 
     /* Un número que se ha ido al garete y se ha publicado igual.

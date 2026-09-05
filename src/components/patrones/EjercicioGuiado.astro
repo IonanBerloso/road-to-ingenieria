@@ -57,6 +57,35 @@ if (encontrados.length > 1) {
 
 const ejercicio = encontrados[0].e;
 
+/* ── «¿Esto está mal? Dilo» ───────────────────────────────────────────────
+ *
+ * POR QUÉ EXISTE, y por qué va en este componente y no en la página. Las
+ * 1.192 resoluciones de este sitio las escribimos nosotros, y el 4 de
+ * septiembre de 2026 `recalcula` encontró diez desajustes reales en dos
+ * asignaturas **ya declaradas terminadas**. Hasta hoy, un alumno que veía uno
+ * no tenía forma de decirlo: el sitio es estático, no hay cuentas ni backend.
+ * Un enlace a un issue con el ejercicio ya identificado convierte a cada
+ * lector en revisor, y es lo único de este proyecto que escala con el número
+ * de alumnos en vez de con las horas de quien lo escribe.
+ *
+ * Va aquí porque las páginas de examen renderizan este mismo componente
+ * (`ui/Examen.astro`), así que ponerlo en los dos sitios sería la Regla 0 con
+ * otra cara: un enlace escrito dos veces son dos enlaces que se desincronizan.
+ *
+ * Es un `<a>`, no una petición: sin JavaScript, sin backend y sin cookies. La
+ * página no habla con GitHub — es el navegador del alumno cuando pulsa.
+ */
+const asignaturaDelEjercicio = encontrados[0].en.split('/')[0];
+const REPO = 'https://github.com/IonanBerloso/road-to-ingenieria';
+/* `Astro.url` en un build estático es la URL final de la página, así que el
+   aviso llega diciendo desde dónde se mandó sin que haya que pasarlo a mano. */
+const paginaDelAviso = new URL(Astro.url.pathname, Astro.site ?? 'https://ionanberloso.github.io').href;
+const avisar =
+  `${REPO}/issues/new?template=error-ejercicio.yml` +
+  `&title=${encodeURIComponent(`[${asignaturaDelEjercicio}] ${id}: `)}` +
+  `&ejercicio=${encodeURIComponent(id)}` +
+  `&pagina=${encodeURIComponent(paginaDelAviso)}`;
+
 /** Barajado estable: el orden de las piezas no puede cambiar entre builds, o
  *  cada despliegue generaría un diff distinto sin que nadie haya tocado nada. */
 function baraja<T>(items: T[], semilla: string): T[] {
@@ -458,6 +487,14 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     <p class="rotulo rotulo--live">Resolución completa</p>
     <div class="prosa" set:html={resolucionHtml} />
   </div>
+
+  {/* Siempre visible, no solo con la resolución abierta: un error se ve tanto
+      en un diagnóstico como en el desarrollo, y quien lo ve en el paso 2 no
+      tiene por qué llegar al final para poder decirlo. */}
+  <p class="avisar">
+    <a href={avisar} rel="noopener" data-avisar>¿Esto está mal? Dilo →</a>
+    <span class="avisar-nota">La resolución es nuestra y puede tener fallos. El enunciado es el original.</span>
+  </p>
 
   <script type="application/json" data-datos set:html={JSON.stringify(datos)} />
 </section>
@@ -1555,6 +1592,41 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   }
 
   .resolucion > .rotulo { margin-bottom: .8rem; }
+
+  /* ── «¿Esto está mal? Dilo» ────────────────────────────────────────
+     Discreto a propósito: no compite con el ejercicio, pero está en todos.
+     No se imprime —en papel un enlace no sirve de nada (§06)—. */
+  .avisar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .2rem .7rem;
+    margin-top: 1.6rem;
+    padding-top: .8rem;
+    border-top: 1px dashed var(--rule);
+  }
+
+  .avisar a {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--live);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+
+  .avisar a:hover,
+  .avisar a:focus-visible { border-bottom-color: var(--live); }
+
+  .avisar-nota {
+    font-size: .7rem;
+    line-height: 1.5;
+    color: var(--faint);
+  }
+
+  @media print {
+    .avisar { display: none; }
+  }
 
   /* ── prosa que viene del YAML ──────────────────────────────────── */
   .prosa :global(p) { margin-bottom: .7rem; }
