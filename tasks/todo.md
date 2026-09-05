@@ -224,8 +224,17 @@ Dos cosas, las dos de dibujar y ninguna cazada por un guardián:
 Los diez temas escritos **no son la asignatura terminada**, y conviene tenerlo
 escrito para no volver a confundir las dos cosas (§15):
 
-1. **Siete temas sin ninguna figura** — el 1 y del 5 al 10. §15 pide al menos
-   una por tema, y una que responda a una pregunta, no de adorno.
+1. ~~Siete temas sin ninguna figura~~ · **hecho el 5 de septiembre de 2026.**
+   Los diez temas tienen ya al menos una, y las siete nuevas responden a una
+   pregunta concreta: las cuatro puertas del mol (1), dos caminos con el mismo
+   ΔU y distinto trabajo (5), la escalera de Hess desde los elementos (6), los
+   cuatro cuadrantes de signos (7), Q frente a K en una recta (8), la curva de
+   valoración con sus cuatro tramos (9) y la pila con su puente salino (10).
+
+   El 10 tenía un apartado titulado **«La pila, dibujada»** y ningún dibujo
+   desde el día que se escribió. Nadie lo cazó porque no hay guardián que
+   compare un título con su contenido — y probablemente no debe haberlo: se
+   caza leyendo el índice del tema, que cuesta diez segundos.
 2. **Ninguna ruta.** Cero de las que pide §14. Hasta que no haya bastante
    transcrito no se pueden contar huecos, y ya casi lo hay.
 3. **Dos ejercicios de examen en `fuera`, y los dos por la misma causa.** Son
