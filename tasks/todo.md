@@ -235,8 +235,28 @@ escrito para no volver a confundir las dos cosas (§15):
    desde el día que se escribió. Nadie lo cazó porque no hay guardián que
    compare un título con su contenido — y probablemente no debe haberlo: se
    caza leyendo el índice del tema, que cuesta diez segundos.
-2. **Ninguna ruta.** Cero de las que pide §14. Hasta que no haya bastante
-   transcrito no se pueden contar huecos, y ya casi lo hay.
+2. ~~Ninguna ruta~~ · **las dos, el 5 de septiembre de 2026.** Una por
+   cuatrimestre, con **15 bloques y 33 escalones**, y cada bloque con su hueco
+   contado sobre las tres convocatorias de su cuatrimestre.
+
+   Las otras tres convocatorias van en `tambienPrepara` y la decisión está
+   medida, no supuesta: los dos controles del primer cuatrimestre cubren los
+   mismos cuatro temas que su final, y la extraordinaria cubre lo mismo que la
+   ordinaria menos el diagrama P-V. El control del segundo sí se corta antes
+   —no pasa de la espontaneidad— y eso se dice en el criterio de orden en vez
+   de escribirle una ruta que sería la misma con tres bloques menos.
+
+   Los 53 enlaces de teoría probados **uno a uno en el navegador**, no
+   comprobando que el `href` existe: los 53 llegan a un encabezado visible.
+   Es el fallo de los 58 enlaces rotos de agosto, que tenían destino válido y
+   no navegaban.
+
+   Lo que sigue sin cubrirse va en el `falta[]` de su bloque, a la vista en la
+   página: los temas 1, 3, 4, 6 y 10 no tienen colección transcrita, así que
+   en sus escalones no hay peldaño entre el ejemplo y el examen. Y el bloque de
+   formular no tiene ni ejemplo propio — es el único de las dos rutas donde
+   falta el primer peldaño.
+
 3. ~~Ejercicios de examen en `fuera`~~ · **cero, el 5 de septiembre de 2026.**
    **Las seis convocatorias de Química están transcritas enteras**, 27
    ejercicios, y es la primera asignatura del proyecto que llega a cero sin
