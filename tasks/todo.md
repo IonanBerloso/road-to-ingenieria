@@ -4704,20 +4704,20 @@ envejecería en silencio.
 |---|---|---|
 | Fundamentos Químicos | 67 | **67** |
 | Álgebra | 76 | **76** |
-| Cálculo | 805 | 18 |
+| Cálculo | 805 | 75 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **161 (13 %)** |
+| | **1.241** | **218 (18 %)** |
 
 El orden no es por facilidad. Química primero por ser la más reciente —27
 resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
-Álgebra después por ser la más pequeña. Cálculo empieza por la ordinaria de
-2024-2025, que es la que más va a mirar quien se examine. Fluidos va última
+Álgebra después por ser la más pequeña. Cálculo va por las cuatro
+convocatorias más recientes, que son las que más va a mirar quien se examine. Fluidos va última
 porque sus exámenes **sí publican el resultado**: sus resoluciones ya aterrizan
 en un número impreso o se declaran fuera.
 
 ## Lo que encontró
 
-**En el corpus, nada.** Las 161 cuadran, incluidas las cadenas largas: los
+**En el corpus, nada.** Las 218 cuadran, incluidas las cadenas largas: los
 siete apartados del sulfúrico, la molalidad que arrastra cuatro pasos, la
 matriz expresada en dos bases que no son la canónica, el trabajo de la
 ventisca.
@@ -4737,7 +4737,7 @@ Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
 
 ## Lo que queda, y cómo se sigue
 
-**787 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
+**730 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
 Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
 `deuda.mjs` cuenta cuántas van.
 
