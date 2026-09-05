@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 487 |
+| Cálculo | 805 | 503 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **630 (51 %)** |
+| | **1.241** | **646 (52 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -91,7 +91,7 @@ trayectoria de verdad.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 630 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 646 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
