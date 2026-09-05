@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 570 |
+| Cálculo | 805 | 610 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **713 (57 %)** |
+| | **1.241** | **753 (61 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -83,18 +83,26 @@ aquí.
 
 **Cálculo tiene ya las veintitrés convocatorias finales**, incluidas la más
 reciente y la más antigua del corpus, que son las que más va a mirar quien se
-examine en 2027 — y con ellas las segundas, terceras y cuartas evaluaciones
-más recientes. Lo que queda son las primeras evaluaciones, las cuartas y
-quintas antiguas y las recuperaciones. Y aquí la comprobación es **más independiente** que
-en las otras dos asignaturas: donde la resolución integra por partes o deriva y
-despeja, el test integra por Simpson y busca el máximo por sección áurea. No es
-el mismo camino con otra letra. El caso más claro es el trabajo de un campo
-conservativo: el examen resta potenciales, el test integra a lo largo de la
-trayectoria de verdad.
+examine en 2027 — y con ellas las segundas, terceras, cuartas y quintas
+evaluaciones más recientes. Lo que queda son las primeras evaluaciones, las
+cuartas y quintas antiguas y las recuperaciones.
+
+Y aquí la comprobación es **más independiente** que en las otras dos
+asignaturas: donde la resolución integra por partes o deriva y despeja, el test
+integra por Simpson y busca el máximo por sección áurea. No es el mismo camino
+con otra letra.
+
+El caso más claro son las integrales de línea de las quintas evaluaciones. Esos
+ejercicios están construidos **para que recorrer la curva sea inviable a mano**
+—una hélice entera, un campo con arctg x y e^y sobre un semianillo— y por eso el
+examen usa el atajo: resta potenciales en uno, aplica Green en el otro. El test
+hace justo lo que el enunciado da por imposible: recorre la curva. Un ordenador
+no tiene que saber integrar e^y a lo largo de una semicircunferencia, solo
+evaluarla muchas veces.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 713 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 753 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
