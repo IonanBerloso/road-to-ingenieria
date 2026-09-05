@@ -175,7 +175,7 @@ frase fija que es verdad por casualidad es §10 esperando su turno.** No hay
 guardián que compare una frase con unos datos; la única defensa es no escribir
 la frase.
 
-## Un riesgo que se vio y no se ha tocado
+## Un riesgo que se vio y se arregló el mismo día
 
 Al escribir el tema 9 se me coló una clave con errata —`trambpa` en vez de
 `trampa`— y **ningún guardián dijo nada**: Zod descarta en silencio las claves
@@ -183,24 +183,75 @@ que no conoce, así que un campo mal escrito no falla, simplemente se pierde.
 Aquí no rompió nada porque la buena estaba al lado, pero podría haberse comido
 un `mensaje` o un `distractor` entero.
 
-El arreglo es una línea, `.strict()` en el esquema del ejercicio, y hacerlo
-bien pide barrer antes el corpus para comprobar que no hay claves legítimas
-sin declarar. **No se ha hecho**: es capa compartida y merece su propia tanda,
-con su validación al revés.
+Hecho lo que faltaba: `.strict()` en el objeto `piezas`, con su barrido previo
+del corpus —ninguna clave legítima sin declarar— y validado al revés. Hoy
+`trambpa` rompe el build diciendo `ejercicios.3.pasos.4.piezas.5:
+Unrecognized key`. Y volvió a hacer falta a las pocas horas: escribí la misma
+errata **una segunda vez**, y esta vez saltó.
 
-## Lo siguiente, en este orden
+## Los diez temas, escritos
 
-1. El **tema 10**, redox, que es el único bloque del segundo cuatrimestre sin
-   página y tiene dos ejercicios esperando en el `fuera`.
-2. Los temas **2, 3, 4 y 5**, del primer cuatrimestre.
-3. El `.strict()` del esquema, con su barrido previo.
-3. **El lector de respuestas químicas.** Nombrar un compuesto y ajustar una
-   ecuación no los sabe leer ninguno de los seis `respuesta.tipo` que hay, y
-   hoy esos apartados se resuelven solo en la prosa: el ejercicio 2 del
-   control de 2023-2024 está entero en `fuera` por esto, y cuando se escriba
-   el tema 2 serán dos. §13: el patrón se destila del contenido, así que
-   primero hay que ver cuántas veces hace falta de verdad — y ya van dos.
-4. Las **rutas**, cuando haya bastante transcrito para contar huecos.
+**5 de septiembre de 2026, tarde.** Con el 2, el 3 y el 4 cerrados, los diez
+temas del temario oficial de Química tienen prosa. Los tres del primer
+cuatrimestre salieron de material que no había mirado hasta hoy: hay teoría
+por tema y **problemas resueltos** en el material de la escuela, y de ahí sale
+lo que este tema no se podía inventar — que la asignatura calcula la carga
+nuclear efectiva **por las reglas de Slater**, con sus constantes 0,35 · 0,85 ·
+1,00 y su regla aparte para los electrones $d$.
+
+Con ellos entran cinco ejercicios de examen más, y **el final de 2024-2025
+queda transcrito entero, los cinco ejercicios**: es la primera convocatoria de
+Química sin `fuera`.
+
+Y las **tres primeras figuras de la asignatura**, en los temas 2, 3 y 4. Es
+poco y está dicho abajo: los siete temas restantes siguen sin ninguna, que es
+§15 sin cumplir.
+
+### Lo que costó, y no era el contenido
+
+Dos cosas, las dos de dibujar y ninguna cazada por un guardián:
+
+- Un `<path>` con codo **y sin `fill="none"` se rellena de negro**. El árbol de
+  decisión del tema 4 salió publicado con cuatro cuñas negras tapando media
+  figura, con el `viewBox` sin desbordes y todos los tokens definidos. Lo
+  encontró mirar la captura. Ahora hay guardián —`verify.mjs`, regla 2
+  quater— y está en §17.
+- Una etiqueta fuera del `viewBox` en la figura de Slater, arreglada con
+  `textLength` para que la comprobación no dependa de la fuente (§17).
+
+## Lo que le falta a Química para estar terminada
+
+Los diez temas escritos **no son la asignatura terminada**, y conviene tenerlo
+escrito para no volver a confundir las dos cosas (§15):
+
+1. **Siete temas sin ninguna figura** — el 1 y del 5 al 10. §15 pide al menos
+   una por tema, y una que responda a una pregunta, no de adorno.
+2. **Ninguna ruta.** Cero de las que pide §14. Hasta que no haya bastante
+   transcrito no se pueden contar huecos, y ya casi lo hay.
+3. **Cinco ejercicios de examen en `fuera`**, cada uno con su motivo: el ciclo
+   P-V de 2024-2025-2c (necesita figura redibujada), la hidracina, los cinco
+   signos de entropía y la peste del estaño de 2023-2024-2c-control, y la pila
+   de yodo y cobre de la extraordinaria.
+4. **La colección sin transcribir.** Hay problemas resueltos y propuestos por
+   tema en el material, y en el corpus solo están los dos ejemplos propios de
+   cada tema. Es el hueco grande: 36 ejercicios en diez temas, contra los 258
+   de Fluidos en veintitrés.
+5. **El lector de respuestas químicas.** Nombrar un compuesto y ajustar una
+   ecuación no los sabe leer ninguno de los seis `respuesta.tipo` que hay. El
+   ejercicio 2 del control de 2023-2024 sigue entero en `fuera` por esto, y es
+   el único que queda bloqueado por falta de herramienta. §13: el patrón se
+   destila del contenido, y de momento lo pide **un** ejercicio — sigue sin
+   ser suficiente para construirlo.
+
+### Un dato que se deja declarado y no resuelto
+
+La carga efectiva del **cobre** del ejercicio 3 del final de 2024-2025 depende
+de qué configuración se escriba: con la real, $3d^{10}4s^{1}$, sale 3,70; con
+la que da Moeller sin pensar, $3d^{9}4s^{2}$, sale 3,35. La correcta es la
+primera y es la que defendemos, pero **el examen no publica solución y no
+tenemos la del profesor**, así que la resolución deja las dos cuentas escritas
+en vez de publicar una como confirmada (§10). Si aparece la corrección
+oficial, se cierra.
 
 ---
 

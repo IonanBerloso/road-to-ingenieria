@@ -325,9 +325,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.220 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.426 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.202 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.253 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.472 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.228 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
 
@@ -342,6 +342,13 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > 4.878 pasos**, en 43 temas de cuatro asignaturas. Los diez nuevos son seis
 > de examen y cuatro ejemplos introductorios; la regla de arriba funcionó a la
 > primera.
+>
+> Y una tercera vez el mismo día, al terminar los diez temas de Química:
+> **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
+> aporta 36 ejercicios y 157 pasos, que es poco para diez temas y está bien
+> que se note: los suyos no tienen colección transcrita, solo los dos
+> ejemplos propios por tema y los dieciséis de examen. **El hueco está
+> declarado en `tasks/todo.md`, no disimulado en esta cifra.**
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -451,11 +458,11 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 
 | patrón | dónde vive de verdad | usos |
 |---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 41 temas |
+| **1 · Lectura** | `patrones/Lectura.astro` | los 51 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.192 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.228 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.192 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.228 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1636,6 +1643,34 @@ Cosas que ya han costado horas. No son opiniones.
   176 figuras de ejercicio de Cálculo. **Regla: un token nuevo se define en
   `tokens.css` antes de usarlo, y si ya existe uno que significa lo mismo, se
   usa ese** — dos nombres para un color es la Regla 0 con otra cara.
+- **Un `<path>` sin `fill="none"` se rellena de negro, y solo se nota cuando
+  el camino tiene codo.** El relleno por defecto de un `path` es negro, no
+  transparente, y SVG cierra el contorno para rellenarlo aunque el camino
+  esté abierto. Una flecha recta —`M235 40 L235 62`— no encierra área y no se
+  ve nada; una flecha en ángulo —`M150 25 L92 25 L92 62`— encierra un
+  triángulo, y ese triángulo sale pintado de negro sobre el papel. Pasó el
+  5 de septiembre de 2026 en el árbol de decisión del tema 4 de Química:
+  cuatro cuñas negras enormes tapando media figura, con `verify` en verde,
+  el `viewBox` sin desbordes y todos los tokens definidos.
+
+  Lo que lo hace traicionero es que el resto del corpus se libró por
+  casualidad: las figuras anteriores usan `path` con codo solo dentro de un
+  `<g fill="none">`, o para flechas rectas. **Regla: un `<path>` con `stroke`
+  declara su relleno —propio o heredado de su `<g>`— siempre que pueda
+  encerrar área**, y no se confía en que la forma sea recta hoy. Se caza
+  mirando la captura, no midiendo: no hay error, no hay desborde y no hay
+  token inventado.
+
+  Lo caza `verify.mjs` desde ese día, regla **2 quater**, y **escribirlo
+  costó dos rondas de falsos positivos que conviene tener anotadas**, porque
+  las dos son la misma lección de §11 por sus dos lados. La primera versión
+  miraba solo la etiqueta del `path` y dio nueve avisos, los nueve falsos:
+  las figuras grandes de Cálculo agrupan sus curvas en un `<g fill="none">` y
+  **el relleno se hereda**. Corregido con una pila de ancestros, quedaron
+  seis, también falsos y por el motivo contrario: un trazo de un solo
+  segmento recto, o varios sueltos separados por `M`, **no encierra área** y
+  el relleno negro no pinta un píxel. La regla final solo avisa de un
+  subcamino con curva, con cierre o con dos segmentos encadenados.
 - **Un encabezado con LaTeX dentro produce un ancla que ninguna ruta puede
   enlazar.** `## El teorema $\pi$ de Vaschy-Buckingham` genera el id
   `el-teorema-πpiπ-de-vaschy-buckingham` —la salida de KaTeX es

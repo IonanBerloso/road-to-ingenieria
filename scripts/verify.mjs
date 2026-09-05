@@ -200,6 +200,85 @@ console.log('\nTokens');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   2 quater · Todo <path> con stroke declara su fill
+   ═══════════════════════════════════════════════════════════════════
+   Hermana de la 2 ter y por el mismo motivo: un valor por defecto que pinta
+   negro sin avisar. El relleno inicial de un `path` es negro, no
+   transparente, y SVG cierra el contorno para rellenarlo aunque el camino
+   esté abierto.
+
+   Una flecha recta no encierra área y no se nota nada. Una flecha en ángulo
+   —`M150 25 L92 25 L92 62`— encierra un triángulo, y ese triángulo sale
+   pintado de negro encima del papel. Pasó el 5 de septiembre de 2026 en el
+   árbol de decisión del tema 4 de Química: cuatro cuñas negras tapando media
+   figura, con el `viewBox` sin desbordes, todos los tokens definidos y este
+   guardián en verde por no existir.
+
+   El corpus anterior se libró por casualidad —las 23 figuras de Fluidos usan
+   `path` solo para flechas rectas—, así que la regla no llega tarde a nada:
+   entra con cero deuda. Validada al revés quitando el `fill="none"` de una
+   de las cuatro flechas del árbol, que la pone roja nombrando el fichero.
+
+   No se mira el `fill` del `path` de un `<marker>`: ahí el relleno ES el
+   dibujo, y todos lo declaran. La regla solo exige que se declare algo.
+
+   **Y el fill se hereda, así que la regla tiene que llevar la pila de
+   `<g>`.** La primera versión miraba solo la etiqueta del `path` y sacó
+   nueve avisos, los nueve falsos: las figuras grandes de Cálculo agrupan sus
+   curvas en un `<g fill="none" stroke-width="2.9">` y los `path` de dentro
+   heredan el relleno, que es la forma correcta de escribirlo. Un guardián
+   con nueve falsos de nueve se ignora el mismo día (§11), así que se lleva
+   la cuenta de los ancestros abiertos y solo se avisa cuando **ninguno**
+   declara `fill`.
+
+   **Y aun así quedaban seis falsos más, por el otro lado: caminos que no
+   encierran nada.** Un trazo de un solo segmento recto —o varios sueltos
+   separados por `M`, que es como se dibujan las marcas de cota y las líneas
+   de puntos— tiene área cero, así que el relleno negro no pinta un solo
+   píxel y exigirle `fill="none"` sería exigir ruido. Solo se avisa de un
+   subcamino que pueda encerrar área: dos o más segmentos rectos encadenados,
+   una curva, o un cierre explícito. */
+{
+  /* ¿Puede este `d` encerrar área? Se parte en subcaminos por cada M/m y se
+     mira cada uno: una curva o un cierre bastan, y dos segmentos rectos
+     encadenados también —el codo del triángulo—. */
+  const encierraArea = (d) =>
+    d
+      .split(/(?=[Mm])/)
+      .some((sub) => /[CcSsQqTtAaZz]/.test(sub) || (sub.match(/[LlHhVv]/g) ?? []).length >= 2);
+
+  const sinRelleno = [];
+  for (const f of archivos(SRC, ['.astro', '.mdx', '.yaml'])) {
+    /* Un solo recorrido en orden por las etiquetas que importan, llevando la
+       pila de contenedores abiertos y si cada uno declara relleno. */
+    const pila = [];
+    for (const m of sinComentarios(leer(f)).matchAll(/<(\/?)(svg|g|path)\b([^>]*)>/g)) {
+      const [, cierre, tag, attrs] = m;
+      if (tag === 'path') {
+        if (cierre) continue;
+        if (!/\bstroke\s*=/.test(attrs)) continue;
+        if (/\bfill\s*=/.test(attrs)) continue;
+        if (pila.some((heredaRelleno) => heredaRelleno)) continue;
+        const d = /\bd\s*=\s*"([^"]*)"/.exec(attrs)?.[1] ?? '';
+        if (!encierraArea(d)) continue;
+        sinRelleno.push(`${rel(f)} · d="${d.replace(/\s+/g, ' ').trim().slice(0, 40)}…"`);
+        continue;
+      }
+      if (cierre) pila.pop();
+      else if (!attrs.endsWith('/')) pila.push(/\bfill\s*=/.test(attrs));
+    }
+  }
+
+  if (sinRelleno.length === 0)
+    ok('todo <path> con trazo declara su relleno, propio o heredado');
+  else
+    fallo(
+      'Hay <path> con stroke y sin fill: el relleno por defecto es NEGRO, y un camino con codo se pinta como una cuña negra',
+      sinRelleno.slice(0, 12).join('\n    '),
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    2 bis · LaTeX que no se dibuja
    ═══════════════════════════════════════════════════════════════════
    `\bar{z}` usa un acento que muchas fuentes matemáticas no traen, y la barra
