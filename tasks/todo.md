@@ -4704,9 +4704,9 @@ envejecería en silencio.
 |---|---|---|
 | Fundamentos Químicos | 67 | **67** |
 | Álgebra | 76 | **76** |
-| Cálculo | 805 | 503 |
+| Cálculo | 805 | 533 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **646 (52 %)** |
+| | **1.241** | **676 (54 %)** |
 
 El orden no es por facilidad. Química primero por ser la más reciente —27
 resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
@@ -4717,12 +4717,14 @@ en un número impreso o se declaran fuera.
 
 ## Lo que encontró
 
-**En el corpus, nada.** Las 646 cuadran, incluidas las cadenas largas: los
+**En el corpus, nada.** Las 676 cuadran, incluidas las cadenas largas: los
 siete apartados del sulfúrico, la molalidad que arrastra cuatro pasos, la
 matriz expresada en dos bases que no son la canónica, el trabajo de la
 ventisca.
 
-**En el verificador, seis cosas**, y ninguna habría dado un fallo visible:
+**En el verificador, nueve cosas**, contadas una a una en
+`tests/verificacion/README.md`. Ninguna habría dado un fallo visible; las
+cuatro primeras:
 
 1. Una normalización a enteros que dividía por la primera coordenada y devolvía
    (1, 0, 0.25) donde el examen pide (4, 0, 1).
@@ -4732,12 +4734,12 @@ ventisca.
 4. Una integral con singularidad que suponía que el extremo malo era siempre el
    primero, y devolvió un área con el signo cambiado sin quejarse.
 
-Las seis habrían dado **confianza falsa**, que es peor que no comprobar nada.
+Las nueve habrían dado **confianza falsa**, que es peor que no comprobar nada.
 Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
 
 ## Lo que queda, y cómo se sigue
 
-**302 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
+**272 respuestas de Cálculo y 293 de Fluidos.** No es una barrida: es un ritmo.
 Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
 `deuda.mjs` cuenta cuántas van.
 

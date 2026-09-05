@@ -58,9 +58,9 @@ examen que declaran una respuesta numérica. Al 5 de septiembre de 2026:
 |---|---|---|
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
-| Cálculo | 805 | 503 |
+| Cálculo | 805 | 533 |
 | Fluidos | 293 | 0 |
-| | **1.241** | **646 (52 %)** |
+| | **1.241** | **676 (54 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -91,12 +91,12 @@ trayectoria de verdad.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 646 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 676 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
 
-**En el verificador, seis cosas**, y por eso los tres módulos que lo forman
+**En el verificador, nueve cosas**, y por eso los tres módulos que lo forman
 —`lineal.ts`, `numerico.ts` y los lectores de `corpus.ts`— tienen cada uno su
 fichero de tests:
 
@@ -118,7 +118,21 @@ fichero de tests:
    real es codicioso, se quedaba con el 2 y dejaba la i suelta. Ese caso no
    está todavía en el corpus, así que lo encontró el test del lector y no una
    comparación fallida — que es justamente para lo que sirve.
+7. Un cálculo de trabajo que comparaba con **tolerancia absoluta de 10⁻⁹** una
+   integral que vale 2.870. El integrador adaptativo nunca llegaba a ese
+   listón y la recursión se hundía sola: la tolerancia de una integral es
+   relativa a lo que vale la integral, no a cero.
+8. Una derivada tercera con error de truncamiento O(h²) contrastada contra
+   tolerancias de 5·10⁻⁶. La fórmula no estaba mal; estaba mal el **orden**.
+   Se arregló con dos niveles de Richardson, que la dejan en O(h⁶).
+9. Y una que no es del verificador sino de cómo se escribió: una barra perdida
+   al pasar por el shell convirtió la expresión que quita los espacios en una
+   que quita las eses. Es §17, primera trampa, otra vez — y ha vuelto a pasar
+   al escribir **este mismo párrafo**: la barra de la expresión regular se la
+   comió el heredoc que lo insertaba, y hubo que arreglarlo con la herramienta
+   de edición. La regla no dice «ten cuidado con el shell»; dice que no se
+   escriben barras a través de él.
 
-Ninguna de las seis habría dado un fallo visible: habrían dado **confianza
+Ninguna de las nueve habría dado un fallo visible: habrían dado **confianza
 falsa**, que es peor que no comprobar nada. Es el argumento entero para que el
 verificador se verifique.
