@@ -228,20 +228,39 @@ escrito para no volver a confundir las dos cosas (§15):
    una por tema, y una que responda a una pregunta, no de adorno.
 2. **Ninguna ruta.** Cero de las que pide §14. Hasta que no haya bastante
    transcrito no se pueden contar huecos, y ya casi lo hay.
-3. **Cinco ejercicios de examen en `fuera`**, cada uno con su motivo: el ciclo
-   P-V de 2024-2025-2c (necesita figura redibujada), la hidracina, los cinco
-   signos de entropía y la peste del estaño de 2023-2024-2c-control, y la pila
-   de yodo y cobre de la extraordinaria.
+3. **Dos ejercicios de examen en `fuera`, y los dos por la misma causa.** Son
+   los de nombrar y formular —el 2 del control de 2023-2024 y el 5 del de
+   2024-2025—, parados por el lector de respuestas químicas del punto 5. Todo
+   lo demás está transcrito: **cuatro de las seis convocatorias están enteras**
+   y las otras dos solo esperan esa herramienta.
+
+   Los cinco que había aquí se escribieron el 5 de septiembre por la tarde: el
+   ciclo P-V de 2024-2025-2c —con su figura redibujada en SVG—, la hidracina,
+   los cinco signos de entropía y la peste del estaño del control de
+   2023-2024, y la pila de yodo y cobre de la extraordinaria.
 4. **La colección, empezada.** Hay problemas propuestos por tema en el
    material, con su respuesta publicada, y hasta hoy no había ni uno en el
    corpus. Van diez —cuatro del tema 9, tres del 8 y tres del 7— y quedan los
    demás; ver la sección de abajo.
-5. **El lector de respuestas químicas.** Nombrar un compuesto y ajustar una
-   ecuación no los sabe leer ninguno de los seis `respuesta.tipo` que hay. El
-   ejercicio 2 del control de 2023-2024 sigue entero en `fuera` por esto, y es
-   el único que queda bloqueado por falta de herramienta. §13: el patrón se
-   destila del contenido, y de momento lo pide **un** ejercicio — sigue sin
-   ser suficiente para construirlo.
+5. **El lector de respuestas químicas**, que ya es el único bloqueo que queda
+   en la transcripción de exámenes. Nombrar un compuesto o formularlo no lo
+   sabe leer ninguno de los seis `respuesta.tipo` que hay, y por eso siguen en
+   `fuera` el ejercicio 2 del control de 2023-2024 y el 5 del de 2024-2025.
+
+   **Han pasado de uno a dos, y con eso cambia la decisión.** Cuando lo pedía
+   un solo ejercicio, construir un lector nuevo era diseñar en el vacío. Ahora
+   lo piden dos, los dos son el mismo tipo de pregunta —una lista de diez
+   compuestos que nombrar o formular—, y son **lo único** que impide dar por
+   transcritas las seis convocatorias. Además la pregunta es de las que caen
+   siempre: aparece en los dos controles del primer cuatrimestre que hay.
+
+   Lo que haría falta, medido sobre esos dos enunciados: comparar una fórmula
+   química como texto normalizado —`Fe2O3` igual que `Fe₂O₃`— y aceptar los
+   dos nombres válidos de un compuesto, el de stock y el tradicional
+   («hidróxido de plomo(II)» y «hidróxido plumboso» son la misma respuesta y
+   el examen imprime los dos). No hace falta ajustar ecuaciones: ninguno de
+   los dos ejercicios lo pide. **Es un lector pequeño con alcance conocido**,
+   y esa es la diferencia con hace ocho horas.
 
 ## Había una sexta convocatoria, y llevaba todo el día delante
 
