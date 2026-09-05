@@ -127,6 +127,54 @@ for (const [id, e] of EJ)
 fila('de', `${pasos} pasos, ${detDec.length}`);
 detDec.forEach((d) => fila('', d));
 
+/* ── 1 bis · cuántas respuestas se han vuelto a calcular ────────────── */
+pinta('1 bis · Respuestas de examen recalculadas en tests/verificacion/');
+console.log(`   Lo único que verifica de verdad una resolución que no tiene solución
+   publicada: rehacer la cuenta desde el enunciado por un camino escrito
+   aparte. Se cuenta leyendo las llamadas a cuadra() de los tests, así que
+   esta cifra no se puede inflar a mano.`);
+const dirV = join(RAIZ, 'tests', 'verificacion');
+const cubiertas = new Set();
+const clave = (id, titulo) => id + ' · ' + titulo;
+if (existsSync(dirV))
+  for (const f of readdirSync(dirV).filter((n) => n.endsWith('.test.ts'))) {
+    /* Muchas llamadas pasan el id por una variable declarada encima del
+       `describe`, y otras lo escriben literal pero partiendo la llamada en
+       varias líneas. Las dos formas se cubren mirando el fichero entero como
+       un solo texto con los saltos de línea aplanados, y resolviendo la
+       variable por la última asignación vista. Un barrido tonto, pero no
+       compensa traerse un analizador de TypeScript para esto. */
+    const texto = readFileSync(join(dirV, f), 'utf8').replace(/\s+/g, ' ');
+    let ultimo = null;
+    const patron = /const id = '([^']+)'|cuadra\(\s*(?:'([^']+)'|\w+)\s*,\s*'([^']+)'/g;
+    for (const m of texto.matchAll(patron)) {
+      if (m[1]) ultimo = m[1];
+      else {
+        const id = m[2] ?? ultimo;
+        if (id) cubiertas.add(clave(id, m[3]));
+      }
+    }
+  }
+/* Y el denominador: cada paso de examen con respuesta numérica. */
+let numericas = 0;
+const sinCubrir = [];
+for (const [id, e] of EJ) {
+  if (!e.deExamen) continue;
+  for (const p of e.pasos ?? []) {
+    if (!['numero', 'magnitud', 'complejo'].includes(p.respuesta?.tipo)) continue;
+    numericas++;
+    if (!cubiertas.has(clave(id, p.titulo ?? ''))) sinCubrir.push(`${e.asig} · ${id}`);
+  }
+}
+fila('de', `${numericas} respuestas numéricas de examen, ${numericas - sinCubrir.length} recalculadas` +
+  ` (${Math.round(((numericas - sinCubrir.length) / numericas) * 100)} %)`);
+const porAsig = {};
+for (const s of sinCubrir) {
+  const a = s.split(' · ')[0];
+  porAsig[a] = (porAsig[a] ?? 0) + 1;
+}
+for (const [a, n] of Object.entries(porAsig)) fila(a, `${n} sin recalcular`);
+
 pinta('Y el tamaño del corpus, que también se publica y también envejece');
 fila('ejercicios', EJ.size);
 fila('pasos', pasos);
