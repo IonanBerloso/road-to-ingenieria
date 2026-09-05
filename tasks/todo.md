@@ -267,6 +267,19 @@ escrito para no volver a confundir las dos cosas (§15):
    entropía y la peste del estaño del control de 2023-2024, la pila de yodo y
    cobre de la extraordinaria, y los dos de nombrar y formular, que esperaban
    al lector del punto 5.
+4 bis. **El tema 1 ya la tiene**, y salió de mirar bien el material: sus tres
+   problemas estaban en la «Autoevaluación Tema 4.2» —el 4.2 del curso es
+   nuestro tema 1— y venían con **la hoja de resolución completa**, no solo la
+   respuesta. Los tres están en el corpus y en los escalones de la ruta, así
+   que el bloque de estequiometría es el primero de Química con la rampa
+   entera de ejemplo a colección a examen.
+
+   Quedan sin colección los temas **3, 4, 6 y 10**, y con estos cuatro no es
+   cuestión de buscar mejor: **no hay material**. Sus PDF de teoría no traen
+   problemas propuestos, y ya se ha listado el directorio entero. O aparece
+   otra hoja, o esos cuatro bloques se quedan con el salto del ejemplo al
+   examen y así está dicho en sus `falta[]`.
+
 4. **La colección, empezada.** Hay problemas propuestos por tema en el
    material, con su respuesta publicada, y hasta hoy no había ni uno en el
    corpus. Van diez —cuatro del tema 9, tres del 8 y tres del 7— y quedan los
