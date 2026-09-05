@@ -325,9 +325,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.285 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.517 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.254 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.299 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.544 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.267 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
 
@@ -342,6 +342,12 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > 4.878 pasos**, en 43 temas de cuatro asignaturas. Los diez nuevos son seis
 > de examen y cuatro ejemplos introductorios; la regla de arriba funcionó a la
 > primera.
+>
+> **Y una tercera vez el mismo día**, al escribir las nueve rampas que faltaban:
+> **1.267 ejercicios y 5.140 pasos**. Tres recuentos en un día es la señal de
+> que la regla estaba bien puesta y de que la tabla no debería escribirse a
+> mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
+> de deuda entera. La cifra se copia de su salida, no se estima.
 >
 > Y una tercera vez el mismo día, al terminar los diez temas de Química:
 > **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química

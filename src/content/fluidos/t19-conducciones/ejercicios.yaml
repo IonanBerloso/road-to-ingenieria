@@ -202,6 +202,191 @@ ejercicios:
       mezcla piezas dadas con $L_e$ y piezas dadas con $K$, se traduce todo a
       un método con $K = f\,L_e/D$ y se suma una vez.
 
+  # ── El ejemplo de entrada de Hazen-Williams. Escrito el 5 de septiembre
+  #    de 2026: el escalón de la ruta arrancaba directamente en el ejercicio
+  #    7 de la extraordinaria de 2021-2022, que despeja el diámetro. Aquí no
+  #    se despeja nada, solo se lee el cuadro bien.
+  - id: ejflu19-el-coeficiente-que-cambia-con-el-diametro
+    titulo: El mismo PVC, dos diámetros y dos coeficientes
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. No es de examen ni de la
+      colección de problemas de la asignatura; los datos son nuestros y el
+      cuadro n.º 25 es el del temario.
+    nivel: ejemplo
+    enunciado: |
+      Una conducción de PVC de rugosidad absoluta $\varepsilon = 0{,}007\
+      \text{mm}$ transporta agua. Se pide:
+
+      a) El coeficiente de Hazen-Williams que le corresponde si el diámetro es
+      de 150 mm, y el que le corresponde si es de 500 mm.
+
+      b) La pérdida de carga en un tramo de 1.200 m del tubo de 150 mm cuando
+      circulan 40 l/s.
+    pide: El coeficiente de Hazen-Williams de cada diámetro y la pérdida de carga del tramo pequeño.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El cuadro n.º 25 da el coeficiente $C_{HW}$ por bandas. ¿Qué es lo
+          que decide en qué banda cae una tubería?
+        opciones:
+          - texto: La rugosidad relativa $\varepsilon/D$
+            correcta: true
+            mensaje: |
+              Eso es, y por eso el mismo material puede tener dos coeficientes
+              distintos. La rugosidad absoluta la fija el material, pero la que
+              entra en el cuadro es la relativa, y en ella el diámetro está
+              dividiendo.
+          - texto: El material del tubo
+            mensaje: |
+              Es la lectura más natural del cuadro y es la que cuesta puntos.
+              El material fija $\varepsilon$, pero el cuadro no entra por
+              $\varepsilon$ sino por $\varepsilon/D$: la misma tubería cambia de
+              banda al cambiar de diámetro.
+          - texto: El caudal que circula
+            mensaje: |
+              No, y esa es justamente la ventaja de Hazen-Williams frente a
+              Colebrook: $C_{HW}$ no depende del caudal, así que no hay que
+              iterar ni calcular el Reynolds.
+          - texto: La temperatura del agua
+            mensaje: |
+              La temperatura no entra en el cuadro. Lo que sí hay que respetar
+              es el rango de validez de la fórmula: agua a temperatura
+              ordinaria. Con un aceite el resultado no significa nada.
+
+      - tipo: calcular
+        titulo: El coeficiente del tubo de 150 mm
+        pregunta: |
+          Calcula la rugosidad relativa del tubo de 150 mm y busca su banda en
+          el cuadro. ¿Qué $C_{HW}$ le toca?
+        respuesta:
+          tipo: numero
+          valor: '140'
+          tolerancia: 0.5
+          formato: un número, el del cuadro
+        distractores:
+          - valor: '150'
+            mensaje: |
+              Ese es el del tubo de 500 mm. Con $D = 150\ \text{mm}$ sale
+              $\varepsilon/D = 4{,}67\cdot 10^{-5}$, que está por encima de
+              $1{,}5\cdot 10^{-5}$ y por tanto **fuera** de la banda de 150.
+          - valor: '130'
+            mensaje: |
+              Te has ido una banda por debajo. La de 130 empieza en
+              $2\cdot 10^{-4}$, y $4{,}67\cdot 10^{-5}$ es cuatro veces menor.
+          - valor: '120'
+            mensaje: |
+              Esa banda es para tuberías mucho más rugosas, de
+              $\varepsilon/D$ por encima de $10^{-3}$. Un PVC nuevo no llega ni
+              de lejos.
+        pista: |
+          Los dos datos van en las mismas unidades: 0,007 mm entre 150 mm.
+        desarrollo: |
+          $$
+          \frac{\varepsilon}{D} = \frac{0{,}007}{150} = 4{,}67\cdot 10^{-5}
+          $$
+
+          y esa cifra cae en la banda $1{,}5\cdot 10^{-5}\ldots 2\cdot 10^{-4}$,
+          que es la de $C_{HW} = 140$.
+
+          Con $D = 500\ \text{mm}$, en cambio, $\varepsilon/D = 1{,}40\cdot
+          10^{-5}$, por debajo de $1{,}5\cdot 10^{-5}$: ahí sí es 150.
+
+      - tipo: calcular
+        titulo: La pérdida del tramo
+        pregunta: |
+          Con ese coeficiente, ¿cuánto se pierde en los 1.200 m de tubo de
+          150 mm con 40 l/s?
+        respuesta:
+          tipo: magnitud
+          valor: '36.1 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '31.8 m'
+            mensaje: |
+              Has usado $C_{HW} = 150$, el del tubo grande. Fíjate en lo que
+              cuesta el descuido: 4,3 m de menos sobre 36, un 12 %. Y en el
+              sentido peligroso, porque las pérdidas calculadas salen **más
+              pequeñas** de lo que serán.
+          - valor: '0.0301 m'
+            mensaje: |
+              Eso es $J$, la pérdida por metro de tubo. Falta multiplicar por
+              la longitud del tramo.
+        pista: |
+          $J = \dfrac{10{,}7}{C_{HW}^{1{,}852}\,D^{4{,}87}}\,Q^{1{,}852}$, con
+          todo en unidades del SI, y después $h_f = J\,L$.
+        desarrollo: |
+          En unidades del SI, $D = 0{,}150\ \text{m}$ y
+          $Q = 0{,}040\ \text{m}^{3}/\text{s}$:
+
+          $$
+          J = \frac{10{,}7}{140^{1{,}852}\cdot 0{,}150^{4{,}87}}\,
+          0{,}040^{1{,}852} = 0{,}0301\ \text{m/m}
+          $$
+
+          $$
+          h_f = J\,L = 0{,}0301 \times 1200 = 36{,}1\ \text{m}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el argumento. Una pieza es falsa.
+        piezas:
+          - texto: 'El material fija la rugosidad absoluta, que aquí vale 0,007 mm y no cambia con el diámetro.'
+          - texto: 'El cuadro n.º 25 no entra por la rugosidad absoluta sino por la relativa, y en ella el diámetro divide.'
+          - texto: 'A 150 mm la relativa es 4,67·10⁻⁵ y toca 140; a 500 mm es 1,40·10⁻⁵ y toca 150.'
+          - texto: 'Tomar 150 en el tubo pequeño baja la pérdida calculada de 36,1 a 31,8 m, un 12 % menos.'
+          - texto: 'Como el coeficiente sube con el diámetro, basta con mirar si el tubo es grande o pequeño para elegirlo.'
+            trampa: true
+            mensaje: |
+              Sube con el diámetro **para un mismo material**, que es otra cosa.
+              Un tubo de fundición vieja de 500 mm tiene una rugosidad relativa
+              mucho peor que este PVC de 150, y su coeficiente es más bajo. Lo
+              que hay que mirar siempre es el cociente, no el tamaño.
+    resolucion: |
+      ## El cuadro no va por material
+
+      Es lo único que hay que llevarse de este ejemplo, y es donde se pierden
+      los puntos: el cuadro n.º 25 tabula $C_{HW}$ por **bandas de rugosidad
+      relativa**, no por materiales. Como $\varepsilon/D$ lleva el diámetro
+      dividiendo, la misma tubería sube de banda al ensancharse.
+
+      **a · Los dos coeficientes.**
+
+      $$
+      \frac{\varepsilon}{D_1} = \frac{0{,}007}{150} = 4{,}67\cdot 10^{-5}
+      \;\Rightarrow\; C_{HW} = 140
+      $$
+
+      $$
+      \frac{\varepsilon}{D_2} = \frac{0{,}007}{500} = 1{,}40\cdot 10^{-5}
+      \;\Rightarrow\; C_{HW} = 150
+      $$
+
+      El salto de banda ocurre en $\varepsilon/D = 1{,}5\cdot 10^{-5}$, es
+      decir alrededor de los 470 mm. Por debajo de ese diámetro este PVC es una
+      tubería de 140.
+
+      **b · La pérdida, y lo que cuesta equivocarse de banda.**
+
+      $$
+      J = \frac{10{,}7}{140^{1{,}852}\cdot 0{,}150^{4{,}87}}\,0{,}040^{1{,}852}
+      = 0{,}0301\ \text{m/m}
+      \qquad
+      h_f = 0{,}0301 \times 1200 = 36{,}1\ \text{m}
+      $$
+
+      Con $C_{HW} = 150$ saldrían 31,8 m. La diferencia es de 4,3 m, un 12 %, y
+      conviene ver de dónde viene: en la fórmula el coeficiente entra elevado a
+      $-1{,}852$, así que un 7 % de error en $C$ se convierte en un 12 % de
+      error en la pérdida. **Los exponentes de Hazen-Williams amplifican todos
+      los descuidos**, y el del diámetro —$-4{,}87$— es todavía peor: confundir
+      150 con 160 mm cambia la pérdida un 27 %.
+
+      Y el error va en el sentido malo. Coger el coeficiente de más deja la
+      instalación calculada con menos pérdidas de las que tendrá, o sea con una
+      bomba corta.
+
   # ── COLECCIÓN 6.3. El ejercicio del tema: el caudal sale limpio, y solo al
   #    mirar el punto alto se descubre que la instalación no puede funcionar.
   #    Trae además una iteración de las de verdad y el dimensionado de la

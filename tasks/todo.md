@@ -3953,6 +3953,14 @@ es justo lo que pasa en los extremos— y enlazado desde t02.
 
 ## Lo que queda, medido y sin arreglar
 
+> **CIFRAS CADUCADAS.** Todo lo que sigue se midió el 24 de agosto de 2026 sobre
+> Cálculo sola. El 5 de septiembre se volvió a medir con las cuatro asignaturas
+> y **cinco de los seis puntos habían cambiado**; el 4 estaba resuelto y sin
+> tachar. La lista viva está al final de este fichero, en «La lista de deuda,
+> remedida», y ahora la saca `node scripts/deuda.mjs`. Esta sección se deja
+> porque su razonamiento sigue valiendo — y como recordatorio de lo deprisa que
+> un recuento a mano deja de ser un recuento.
+
 ### 1 · 417 de 425 resoluciones de examen están sin contrastar
 
 El 98 %. Sus `fuente` lo dicen una por una —«el examen no publica solución: la
@@ -4556,3 +4564,106 @@ ejercicios que salen de ellos están dentro desde el 27 de agosto. **El
 boletín de Álgebra está completo en los siete temas.** Lo único abierto es
 la decisión de enlace: 77 de 179 desde escalones, el resto desde la página
 del tema.
+
+---
+
+# La lista de deuda, remedida · 5 de septiembre de 2026
+
+La sección «Lo que queda, medido y sin arreglar» se escribió el **24 de agosto**,
+sobre Cálculo sola, con seis puntos numerados. Antes de ponerme a trabajarla la
+volví a medir, y **cinco de los seis estaban mal**. No un poco: mal de señalar a
+la asignatura equivocada.
+
+| punto | decía | es |
+|---|---|---|
+| 1 · resoluciones sin contrastar | 417 de 425, el 98 % | 476 de 592, el 80 % — y con tres categorías, no dos |
+| 2 · escalones sin rampa | 42 de 156, el 27 %, en Cálculo | 10 de 271, y **ocho eran de Química**, escritos ayer |
+| 3 · pasos que piden decimales | 32 | 2 de verdad; los otros 11 sí daban la forma exacta |
+| 4 · el navegador solo abre 8 exámenes | — | **resuelto y sin tachar**: `humo.mjs` tiene muestra rotatoria y `HUMO_TODO=1` |
+| 5 · escalones con un ejercicio | 8 | 10, y siete eran nuevos |
+| 6 · bloques sin `falta[]` | 46 de 62, el 75 % | 53 de 103, el 51 % |
+
+Que una lista de deuda envejezca es normal. Lo que no lo es tanto: **el punto 4
+estaba resuelto desde hacía días y seguía publicado como pendiente**, y el punto
+2 apuntaba al primer cuatrimestre de Cálculo cuando el agujero ya estaba en la
+asignatura que abrí anteayer.
+
+## Y una frase publicada que era falsa
+
+En la ruta del primer cuatrimestre de Química, el `falta[]` del bloque de
+formulación decía:
+
+> Es el **único** bloque de las dos rutas de Química donde falta el primer
+> peldaño.
+
+Eran **ocho escalones repartidos por seis bloques**. La frase se escribió a ojo
+mientras montaba la ruta, y es exactamente lo que §10 prohíbe. Es la quinta vez
+esta semana que una frase con un número dentro sale falsa, y ya no vale con
+apuntar la lección: la lista ahora la mide un guion.
+
+## `scripts/deuda.mjs`
+
+Mide los seis puntos y de paso el tamaño del corpus, que es la otra cifra que se
+publica y envejece —hoy la tabla de §04 iba por el tercer recuento del día—. No
+es un guardián: no falla nunca, imprime. Su regla de uso es la de `mide.mjs`:
+**antes de escribir una cifra en `todo.md` o en `como-vamos.md`, se saca de aquí.**
+
+El punto 3 enseñó algo sobre cómo se cuenta. La primera medición dio 13 casos y
+once eran falsos positivos: preguntas del estilo «el volumen sale $8\pi$, ¿cuánto
+vale con cuatro decimales?», que **sí** ofrecen la forma exacta, dentro de la
+pregunta y en LaTeX. Un recuento que no distingue eso no mide lo que dice medir.
+
+## Lo que se ha arreglado hoy
+
+**Las nueve rampas.** Ocho ejemplos de entrada de Química —formular cruzando
+cargas, los sufijos que no son números, la serie isoelectrónica, polaridad y
+fuerzas, el ciclo de Born-Haber con el no metal ya gaseoso, los cuatro tipos de
+sólido, el estado del agua y la pila Daniell— y una de Fluidos, el coeficiente de
+Hazen-Williams que cambia con el diámetro. Con ellas el punto 2 pasa de 10 a
+**cero** y el punto 5 de 10 a 4.
+
+Cada una está escrita con el mismo criterio que los seis ejemplos de complejos:
+`nivel: ejemplo`, `fuente` que dice que son nuestros, **una sola idea**, y números
+que salen a mano. Y cada una prepara la trampa concreta del ejercicio de examen
+que va detrás — el Born-Haber del cloro gaseoso existe para que se vea que el del
+yodo lleva un escalón más; la pila Daniell existe para que el alumno use el atajo
+del signo antes de que el examen se lo desactive poniendo los dos potenciales
+positivos.
+
+**Una rampa que no hubo que escribir.** El escalón de presión absoluta y
+manométrica de Fluidos arrancaba en un ejercicio de examen teniendo en el mismo
+tema el 2.3 de la colección, que es exactamente eso sin ninguna pregunta
+capciosa. Estaba transcrito y sin enlazar. Mirar antes de escribir salió gratis.
+
+**Y un porcentaje mal redondeado, en cuatro sitios.** «396 kJ sobre 5470, casi un
+8 %» aparecía en el tema 6, en dos ejercicios y en la ruta. Es 7,24 %. «Casi un
+8» redondea en la dirección que hace más grande el argumento, que es la peor de
+las dos.
+
+## Lo que queda de la lista, y por qué
+
+**El punto 1 sigue siendo el mayor riesgo del proyecto**, y ahora se ve mejor
+porque está partido en tres:
+
+| | resoluciones | contra el resultado publicado | contra el boletín | contra nada |
+|---|---|---|---|---|
+| Cálculo | 425 | 0 | 12 | **413** |
+| Álgebra | 32 | 0 | 0 | **32** |
+| Fluidos | 108 | 104 | 0 | 4 |
+| Química | 27 | 0 | 0 | **27** |
+
+Fluidos está en otra situación que las otras tres, y conviene decirlo: sus
+exámenes **publican el resultado**, así que sus 104 resoluciones aterrizan en un
+número impreso o se declaran fuera. Cálculo, Álgebra y Química no tienen nada, y
+ahí los 472 desarrollos son propuesta nuestra sin contrastar. Sigue sin haber
+plan, y sigue siendo lo primero que habría que resolver.
+
+**El punto 6 —53 de 103 bloques sin declarar hueco— no se arregla escribiendo
+huecos.** Se arregla mirando bloque a bloque, y eso es trabajo de la misma
+naturaleza que la auditoría §15 de cada asignatura. Queda para cuando se cierre
+la siguiente.
+
+**El punto 5, los cuatro escalones con un solo ejercicio**, son ahora casos
+distintos del original: dos de Cálculo que ya estaban y dos de Química cuyo único
+ejercicio **es** el ejemplo de entrada, porque el tema no tiene colección. Ese
+segundo caso está declarado en su `falta[]` y no se puede arreglar sin material.
