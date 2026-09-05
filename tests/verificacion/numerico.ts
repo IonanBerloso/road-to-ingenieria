@@ -105,15 +105,24 @@ export function trabajo(
   r: (t: number) => number[],
   t0: number,
   t1: number,
+  tol = 1e-9,
 ): number {
   const integrando = (t: number) => {
-    const h = 1e-6;
-    const antes = r(t - h);
-    const despues = r(t + h);
-    const dr = despues.map((x, i) => (x - antes[i]) / (2 * h));
+    /* Diferencias centradas de cinco puntos: con tres, el ruido de la
+       derivada era del orden de 1e-4 relativo, y una integral que vale
+       varios miles no llegaba nunca a la tolerancia por defecto. */
+    const h = 1e-4;
+    const c = [1 / 12, -8 / 12, 0, 8 / 12, -1 / 12];
+    const puntos = [-2, -1, 0, 1, 2].map((k) => r(t + k * h));
+    const dr = puntos[0].map((_, i) =>
+      c.reduce((s, cj, j) => s + cj * puntos[j][i], 0) / h,
+    );
     return V(r(t)).reduce((s, x, i) => s + x * dr[i], 0);
   };
-  return integra(integrando, t0, t1, 1e-9);
+  /* La tolerancia es absoluta, así que en integrales grandes hay que
+     aflojarla: pedir 1e-9 sobre un valor de varios miles es pedir trece
+     cifras significativas, más de las que da ninguna derivada numérica. */
+  return integra(integrando, t0, t1, tol);
 }
 
 /* ── complejos, lo justo ────────────────────────────────────────────── */
