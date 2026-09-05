@@ -352,6 +352,18 @@ const enteras = asignaturas
                             <span class:list={['pesop', t.peso]}>peso {t.peso}</span>
                           </span>
                         </Etiqueta>
+                        {/* Y el motivo, escrito y no en un `title`.
+                            Estaba SOLO como atributo, o sea como globito al
+                            posarse el ratón: invisible en un móvil, invisible
+                            con el teclado y sin leer para quien no sepa que
+                            hay algo que mirar. §15 obliga a declarar por qué
+                            un tema del temario oficial no tiene material, y
+                            un dato declarado donde nadie lo ve no está
+                            declarado — es el mismo fallo que los 58 enlaces
+                            que existían y no llevaban (§16).
+                            Son tres temas en todo el sitio, así que esto no
+                            engorda nada: uno en Álgebra y dos en Fluidos. */}
+                        {t.soloEnClase && <p class="solo-clase">{t.soloEnClase}</p>}
                       </li>
                     );
                   })}
@@ -1338,6 +1350,20 @@ const enteras = asignaturas
   .tema[data-solo-clase] .tn { color: var(--faint); }
   .tema[data-solo-clase] .t-tit { font-weight: 500; color: var(--graphite); }
 
+  /* El motivo, leído y no adivinado. Va sangrado a la altura del título —la
+     rejilla de `.tema` reserva la primera columna para el número— y con la
+     regla lateral que este sitio usa para «esto es una nota al margen, no
+     contenido principal». */
+  .solo-clase {
+    margin: -.15rem 0 .55rem 2.9rem;
+    padding-left: .7rem;
+    border-left: 2px solid var(--rule);
+    font-size: .74rem;
+    line-height: 1.55;
+    color: var(--faint);
+    max-width: 62ch;
+  }
+
   .tn { font-size: 1.2rem; color: var(--live); text-align: right; line-height: 1; }
 
   .t-tit { font-size: .97rem; font-weight: 700; line-height: 1.25; }
@@ -1345,6 +1371,48 @@ const enteras = asignaturas
   .t-der { display: flex; align-items: center; gap: .6rem; }
 
   .t-sim { font-size: 1rem; color: var(--live); }
+
+  /* La fila del tema no cabe en tres columnas cuando su hueco se estrecha.
+     Diecinueve de los cuarenta y cuatro temas llevan etiqueta y alguna mide
+     42 caracteres; con la tercera columna en `auto`, el título se quedaba con
+     sitio para cinco letras, se partía en tres líneas y la etiqueta en Caveat
+     acababa pintada por encima.
+
+     No lo cazaba nada, y por dos motivos que conviene tener juntos. Uno: las
+     dos cajas no llegan a cruzarse —el título rodea a la etiqueta—, así que
+     un guardián de solapes da verde y lo que se ve es ilegible. Y dos: **no
+     depende del ancho de la ventana**. La primera versión de este arreglo era
+     un `@media (max-width: 560px)` y dejaba el peor caso de todos sin tocar:
+     a 960 px entra el carril lateral, la columna del temario se estrecha de
+     golpe y el título caía a **52 px y cinco líneas**, peor que en un móvil.
+     Medido a diez anchos el 5 de septiembre de 2026: 360 y 420 bien, 600 mal,
+     880 bien, 960 el peor, 1120 regular, 1280 bien. Un punto de corte por
+     ventana no puede describir eso.
+
+     Lo que manda es el hueco real, así que se mide el contenedor. Por debajo
+     de 46rem la etiqueta y el peso bajan a su propia línea. El umbral se midió,
+     no se eligió: con tres columnas el título no llega a 300 px cómodos por
+     debajo de ahí. */
+  .temas {
+    container-type: inline-size;
+    container-name: temario;
+  }
+
+  @container temario (max-width: 46rem) {
+    .tema {
+      grid-template-columns: 2.4rem minmax(0, 1fr);
+      gap: .35rem .9rem;
+      align-items: start;
+    }
+
+    .t-der {
+      grid-column: 2;
+      flex-wrap: wrap;
+      gap: .3rem .6rem;
+    }
+
+    .t-sim { font-size: .95rem; line-height: 1.2; }
+  }
 
   /* Las tres pastillas: el rojo SOLO en «alto» (§5b). */
   .pesop {

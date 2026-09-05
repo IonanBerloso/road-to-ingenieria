@@ -736,6 +736,7 @@ if (SOLO_FUENTE) {
   const sinModos = [];
   const latexCrudo = [];
   const numeroRoto = [];
+  const andamio = [];
   const svgComoTexto = [];
   const refsRotas = [];
   /* Anclas a OTRA página: se apuntan aquí y se resuelven al final, cuando ya
@@ -871,6 +872,31 @@ if (SOLO_FUENTE) {
       numeroRoto.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
     }
 
+    /* El andamio no se publica: nada de §, de CLAUDE.md ni de rutas del
+       repositorio en el texto que lee un alumno.
+     *
+     * Nace el 5 de septiembre de 2026 y de la forma que §11 pide: mirando.
+     * Al sacar de un `title` el motivo de un tema «solo en clase» —hasta ese
+     * día era un globito al posar el ratón, o sea invisible en un móvil— se
+     * vio que el texto llevaba dentro backticks y `src/content/algebra/`.
+     * Barrido el sitio entero aparecieron **25 más**: «que por §08 no entran
+     * en el repositorio», «contado sobre los `examen.yaml`», «CLAUDE.md §08»,
+     * `scripts/leer-grafica.mjs`.
+     *
+     * Las secciones de este fichero de reglas son el reglamento de quien
+     * escribe, no información para quien estudia. El razonamiento sí vale la
+     * pena publicarlo —«las figuras de terceros se redibujan»— pero dicho, no
+     * referenciado: citar §08 en la página es enseñar el andamio en vez del
+     * edificio, y encima obliga al lector a fiarse de algo que no puede ver.
+     *
+     * Solo mira el texto VISIBLE, así que los comentarios de los YAML —que
+     * sí citan las secciones, y deben hacerlo— no le importan. */
+    for (const m of visible.matchAll(
+      /.{0,45}(§\s?\d+|CLAUDE\.md|src\/content\/[a-z0-9/*.-]+|scripts\/[a-z-]+\.mjs|\b[a-z-]*\.(?:yaml|mjs|astro|mdx)\b).{0,45}/g,
+    )) {
+      andamio.push(`${nombre} → «${m[1]}» en …${m[0].replace(/\s+/g, ' ').trim()}…`);
+    }
+
     /* una figura que se ha publicado partida.
        Añadida el 25 de agosto de 2026, y es la que más ha rendido de todo el
        fichero. Una figura incrustada en un `ejercicios.yaml` es HTML crudo
@@ -1001,6 +1027,7 @@ if (SOLO_FUENTE) {
   );
   grupo(latexCrudo, 'cero fórmulas sin dibujar en el texto publicado', 'LaTeX que ha salido como texto');
   grupo(numeroRoto, 'cero números rotos en el texto publicado', 'NaN, undefined o Infinity a la vista');
+  grupo(andamio, 'cero jerga interna en el texto publicado', 'secciones, rutas o ficheros del repositorio a la vista');
   grupo(
     refsRotas,
     'toda referencia interna (#id, url(#id)) apunta a algo que existe',
