@@ -145,3 +145,30 @@ export const cCos = (z: C): C => [
   Math.cos(z[0]) * Math.cosh(z[1]),
   -Math.sin(z[0]) * Math.sinh(z[1]),
 ];
+
+/**
+ * Segunda y tercera derivada por diferencias centradas con extrapolación de
+ * Richardson.
+ *
+ * POR QUÉ CON RICHARDSON. La fórmula de cinco puntos para la tercera derivada
+ * tiene error O(h²), y con el paso que hace falta para que el redondeo no
+ * mande —del orden de 0,05— ese error es de 10⁻⁴. Varios coeficientes de
+ * Taylor del corpus se declaran con tolerancia 5·10⁻⁶, así que la fórmula
+ * cruda no llega: se calcula con dos pasos y se combina.
+ */
+/** Dos niveles de Richardson sobre una fórmula de error O(h²): queda O(h⁶). */
+const richardson = (d: (p: number) => number, h: number) => {
+  const r1 = (p: number) => (4 * d(p / 2) - d(p)) / 3;
+  return (16 * r1(h / 2) - r1(h)) / 15;
+};
+
+export function deriva2(f: (x: number) => number, x: number, h = 0.04): number {
+  return richardson((p) => (f(x + p) - 2 * f(x) + f(x - p)) / (p * p), h);
+}
+
+export function deriva3(f: (x: number) => number, x: number, h = 0.08): number {
+  return richardson(
+    (p) => (f(x + 2 * p) - 2 * f(x + p) + 2 * f(x - p) - f(x - 2 * p)) / (2 * p ** 3),
+    h,
+  );
+}

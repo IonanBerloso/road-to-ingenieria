@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import {
-  cCos, cEntre, cModulo, cPor, cSen, deriva, integra, integraCasi, maximiza, raiz, trabajo,
+  cCos, cEntre, cModulo, cPor, cSen, deriva, deriva2, deriva3, integra, integraCasi, maximiza, raiz, trabajo,
 } from './numerico';
 
 const cerca = (a: number, b: number, e = 1e-8) => expect(Math.abs(a - b)).toBeLessThan(e);
@@ -87,4 +87,19 @@ describe('complejos', () => {
     cerca(q[0], 1);
     cerca(q[1], 0);
   });
+});
+
+describe('derivadas de orden dos y tres', () => {
+  /* Entraron el 5 de septiembre de 2026: la fórmula cruda de cinco puntos
+     daba 0,16677 donde el coeficiente vale 1/6, y el corpus declara esos
+     coeficientes con tolerancia 5·10⁻⁶. */
+  it('la segunda de x⁴ en 2 vale 48', () => cerca(deriva2((x) => x ** 4, 2), 48, 1e-7));
+  it('la segunda del seno en 0 vale 0', () => cerca(deriva2(Math.sin, 0), 0, 1e-9));
+  it('la tercera del seno hiperbólico en 0 vale 1', () =>
+    cerca(deriva3((x) => (Math.exp(x) - Math.exp(-x)) / 2, 0), 1, 1e-7));
+  it('la tercera de x³ vale 6 en cualquier punto', () => {
+    for (const x of [-2, 0, 3.7]) cerca(deriva3((t) => t ** 3, x), 6, 1e-7);
+  });
+  it('y la tercera de √(1+x) en 0 vale 3/8', () =>
+    cerca(deriva3((x) => Math.sqrt(1 + x), 0), 0.375, 1e-6));
 });
