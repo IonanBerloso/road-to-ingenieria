@@ -8,7 +8,7 @@
  * limpiador de espacios en un borrador de eses—.
  */
 import { describe, expect, it } from 'vitest';
-import { complejo, matriz, vector } from './corpus';
+import { complejo, convocatoria, matriz, vector } from './corpus';
 
 describe('vectores', () => {
   it('con paréntesis y sin ellos', () => {
@@ -55,4 +55,37 @@ describe('complejos', () => {
   it('solo real', () => expect(complejo('3')).toEqual([3, 0]));
   it('con espacios', () => expect(complejo('  -1 + 9.5i ')).toEqual([-1, 9.5]));
   it('se niega ante algo que no sabe leer', () => expect(() => complejo('1+2j')).toThrow());
+});
+
+/**
+ * `cuadra.magnitud` no tiene lector propio: llama a `leeMagnitud` y
+ * `comparaMagnitud` de `src/lib/unidades.ts`, que son las que corrigen al
+ * alumno. Lo que sí hay que comprobar es que **el cable está bien puesto**, y
+ * en concreto las dos cosas que lo separan de una comparación numérica normal:
+ * que la tolerancia es relativa y que una unidad de otra magnitud es un fallo
+ * distinto, no un número que no cuadra.
+ *
+ * Se comprueba contra una convocatoria de verdad para que el día que cambie el
+ * corpus se entere alguien.
+ */
+describe('el cable de las magnitudes', () => {
+  const cuadra = convocatoria('fluidos', '2019-2020-1par');
+  const id = 'exflu1920-1par-2-el-laboratorio-submarino';
+  const titulo = 'La presión del aire del laboratorio';
+
+  it('acepta el valor en otra unidad de la misma magnitud', () => {
+    /* El corpus publica 468.972 Pa; en kPa son los mismos y tiene que pasar. */
+    cuadra.magnitud(id, titulo, 468.972, 'kPa');
+  });
+
+  it('rechaza un número fuera de la tolerancia relativa', () => {
+    /* La tolerancia es el 2 %, así que un 10 % de más tiene que fallar. */
+    expect(() => cuadra.magnitud(id, titulo, 468972 * 1.1, 'Pa')).toThrow();
+  });
+
+  it('y distingue una unidad de otra magnitud', () => {
+    /* Este es el error conceptual, y el mensaje lo dice con esas palabras en
+       vez de enseñar dos números que no se parecen. */
+    expect(() => cuadra.magnitud(id, titulo, 468972, 'm/s')).toThrow(/magnitudes distintas/);
+  });
 });

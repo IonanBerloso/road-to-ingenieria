@@ -12,6 +12,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import yaml from 'js-yaml';
+import { comparaMagnitud, leeMagnitud, nombreDim } from '../../src/lib/unidades';
 import { expect } from 'vitest';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -163,6 +164,35 @@ export function convocatoria(asignatura: string, carpeta: string) {
         `${id} · ${titulo}: elemento ${i + 1} recalculado ${mio[i]}, publicado ${v}`,
       ).toBeLessThanOrEqual(tol),
     );
+  };
+
+  /**
+   * Una magnitud: número **con unidad**, comparada por dimensión. Es el tipo
+   * de casi toda Mecánica de Fluidos.
+   *
+   * Aquí no se compara a mano: se llama a `leeMagnitud` y `comparaMagnitud`,
+   * que son **exactamente** las que usa `EjercicioGuiado` para corregir al
+   * alumno. §17 ya dejó dicho por qué —un guardián que simula al producto
+   * tiene que llamar a lo que llama el producto—, y aquí importa el doble:
+   * la tolerancia de `magnitud` es relativa, no absoluta, y reimplementar esa
+   * regla en el test sería tener dos versiones de la misma decisión.
+   *
+   * El test declara **en qué unidad ha calculado**, y eso es parte de la
+   * comprobación: si el recálculo sale en metros por segundo donde el corpus
+   * publica un caudal, el veredicto lo dice con esas palabras en vez de
+   * enseñar dos números que no se parecen.
+   */
+  cuadra.magnitud = (id: string, titulo: string, calculado: number, unidad: string) => {
+    const { valor, tol } = busca(id, titulo);
+    const mio = leeMagnitud(`${calculado} ${unidad}`);
+    const publicado = leeMagnitud(valor);
+    if (!mio) throw new Error(`${id} · ${titulo}: no sé leer «${calculado} ${unidad}»`);
+    if (!publicado) throw new Error(`${id} · ${titulo}: no sé leer el valor publicado «${valor}»`);
+    const v = comparaMagnitud(mio, publicado, tol || 0.02);
+    const donde = `${id} · ${titulo}: recalculado ${calculado} ${unidad}, publicado ${valor}`;
+    if (v.otraDimension)
+      throw new Error(`${donde} — son magnitudes distintas (${nombreDim(mio.dim)} contra ${nombreDim(publicado.dim)})`);
+    expect(v.igual, `${donde} (tolerancia relativa ${tol || 0.02})`).toBe(true);
   };
 
   return cuadra;

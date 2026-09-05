@@ -59,8 +59,8 @@ examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 0 |
-| | **1.241** | **948 (76 %)** |
+| Fluidos | 293 | 16 |
+| | **1.241** | **964 (78 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -75,11 +75,25 @@ obligó a ampliar la herramienta: solo 36 de sus 76 respuestas son números, y
 verificar únicamente esas habría sido hacer media asignatura y decir que estaba
 hecha.
 
-Fluidos es el caso contrario a Química: sus exámenes publican el resultado, así
-que sus resoluciones ya aterrizan en un número impreso o se declaran fuera, y
-además sus módulos se comprueban en `tests/fisica/` contra esos mismos
-resultados. Es la que menos urgencia tiene de las cuatro, aunque siga contando
-aquí.
+**Fluidos es el caso contrario a Química**, y por eso va la última: sus
+exámenes **publican el resultado**, así que sus resoluciones ya aterrizan en un
+número impreso o se declaran fuera, y además sus módulos se comprueban en
+`tests/fisica/` contra esos mismos resultados.
+
+Eso cambia lo que se comprueba aquí. En las otras tres la pregunta es «¿es
+correcto el resultado?»; en Fluidos es **«¿el camino escrito llega hasta él?»**.
+Un desarrollo puede aterrizar en la cifra buena con un paso intermedio mal y
+otro compensándolo, y eso solo lo destapa rehacer la cuenta.
+
+Y trae dos cosas propias. La primera: casi todas sus respuestas llevan
+**unidad**, así que se comparan con `cuadra.magnitud`, que llama a los mismos
+`leeMagnitud` y `comparaMagnitud` que corrigen al alumno en la página —§17 ya
+dejó dicho que un guardián que simula al producto tiene que llamar a lo que
+llama el producto—. La tolerancia de `magnitud` es **relativa**, no absoluta, y
+una unidad de otra magnitud es un fallo distinto de un número que no cuadra: el
+test lo dice con esas palabras. La segunda: la gravedad es **9,8 y no
+9,80665**, que es la de los apuntes y la que hace ciertas sus conversiones
+publicadas.
 
 **Cálculo está entera**: las 805 respuestas numéricas de sus **ochenta y ocho
 convocatorias**, de 2014-2015 a 2025-2026. Las veintitrés finales —ordinarias y
@@ -109,7 +123,7 @@ centro, el ajuste lo diría.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 948 cuentas cuadran, incluidas las cadenas más
+**En el corpus, nada.** Las 964 cuentas cuadran, incluidas las cadenas más
 largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
 pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
 la ventisca integrado sobre la trayectoria—.
