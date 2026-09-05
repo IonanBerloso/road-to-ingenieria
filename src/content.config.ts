@@ -611,6 +611,25 @@ const ejercicio = z
  *  dos parciales del mismo curso no compartan carpeta ni URL; se numeran por
  *  fecha, que es como los nombra un alumno.
  *
+ *  **Los cuatro de cuatrimestre, y la extraordinaria partida.** Entraron el 5
+ *  de septiembre de 2026 con Fundamentos Químicos, que no se evalúa ni por
+ *  evaluaciones numeradas ni por parciales: su guía docente manda **dos
+ *  pruebas por cuatrimestre** —un control a mitad, que vale un 5 %, y un
+ *  examen final de cuatrimestre, que vale un 35 %— y una extraordinaria en la
+ *  que el alumno puede presentarse a un cuatrimestre o a los dos.
+ *
+ *  Se podría haber metido todo en `ordinaria` y `extraordinaria`, y sería
+ *  falso de una forma cara: quien prepara el primer cuatrimestre vería el
+ *  examen del segundo como si fuera lo mismo, y son temas distintos —el 1.º
+ *  va del tema 1 al 4 y el 2.º del 5 al 10—. Mandar a alguien a estudiar
+ *  termoquímica cuando su examen es de estequiometría es el peor fallo que
+ *  puede cometer una ruta.
+ *
+ *  Cada una de las cinco filas nuevas tiene su documento delante: dos
+ *  controles de 2023-2024, dos finales de 2024-2025 y la extraordinaria del
+ *  segundo cuatrimestre de 2024-2025. Ninguna se ha añadido «por si acaso»,
+ *  que es como esta tabla se llenaría de filas muertas.
+ *
  *  El nombre largo va en minúscula: quien lo pinta como título lo capitaliza,
  *  y así no hacen falta dos columnas que digan lo mismo. */
 export const CONVOCATORIAS = {
@@ -632,8 +651,33 @@ export const CONVOCATORIAS = {
   'primer-parcial': { url: '1par', corta: '1.er parc.', larga: 'primer examen parcial' },
   'segundo-parcial': { url: '2par', corta: '2.º parc.', larga: 'segundo examen parcial' },
   'tercer-parcial': { url: '3par', corta: '3.er parc.', larga: 'tercer examen parcial' },
+  'control-primer-cuatrimestre': {
+    url: '1c-control',
+    corta: 'control 1.er c.',
+    larga: 'control del primer cuatrimestre',
+  },
+  'primer-cuatrimestre': {
+    url: '1c',
+    corta: 'final 1.er c.',
+    larga: 'examen final del primer cuatrimestre',
+  },
+  'control-segundo-cuatrimestre': {
+    url: '2c-control',
+    corta: 'control 2.º c.',
+    larga: 'control del segundo cuatrimestre',
+  },
+  'segundo-cuatrimestre': {
+    url: '2c',
+    corta: 'final 2.º c.',
+    larga: 'examen final del segundo cuatrimestre',
+  },
   ordinaria: { url: 'ord', corta: 'ordinaria', larga: 'convocatoria ordinaria' },
   extraordinaria: { url: 'ext', corta: 'extraord.', larga: 'convocatoria extraordinaria' },
+  'extraordinaria-segundo-cuatrimestre': {
+    url: '2c-ext',
+    corta: 'extraord. 2.º c.',
+    larga: 'extraordinaria del segundo cuatrimestre',
+  },
 } as const;
 
 /** Las claves de la tabla, en su orden. Es el orden en que se listan. */

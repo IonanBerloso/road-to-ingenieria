@@ -40,6 +40,89 @@ en el scratchpad y se pueden llevar a `scripts/` el día que se repitan.
 
 ---
 
+# Fase 4 · Fundamentos Químicos
+
+**5 de septiembre de 2026.** Cuarta asignatura, y la elección no fue de gusto:
+es la única de **1.º** que faltaba. El plazo de §00 es septiembre de 2027 y es
+el **arranque** de un curso, así que quien entre ese día se topa con Álgebra ✓,
+Cálculo ✓ y Química ✗. Fluidos es de 2.º y va por delante. Expresión Gráfica
+queda para el final por decisión de Ionan.
+
+## El susto del inventario, que conviene no repetir
+
+Primero conté los exámenes de las cinco candidatas y me salió **1 en Química y
+0 en las demás**. Con eso escribí media propuesta de «hay que cambiar el
+método porque §14 no puede contar huecos sin exámenes».
+
+Era falso. Los exámenes estaban archivados dentro de `Ejercicios_de_repaso`, y
+mi búsqueda solo miró el primer nivel de cada carpeta. **Química tiene cinco
+convocatorias con enunciado.** La regla que sale: un inventario de material se
+hace con `find`, en profundidad, y nunca con `ls`.
+
+| asignatura | curso | guía docente | convocatorias |
+|---|---|---|---|
+| **Fundamentos Químicos** | 1.º | ✓ | **5** |
+| Mecánica Aplicada | 2.º | ✗ | 2 |
+| Ciencia de Materiales | 2.º | ✗ | 0 |
+| Ingeniería Térmica | 2.º | ✗ | 0 |
+| Sistemas de Producción | 2.º | ✓ | 0 |
+
+Cinco convocatorias son pocas al lado de las 88 de Cálculo, pero **Álgebra se
+cerró con ocho** y el método aguanta: §14 ya tiene `medidoSobre` para decir
+sobre cuántas se ha contado, y el esquema impide que un bloque presuma de más
+años de los que hay. No hay que bajar el listón, hay que rellenar un número
+más pequeño.
+
+## Hecho
+
+- **El catálogo, con el temario oficial y su fuente.** Diez temas de la guía
+  docente 2025-26 de la 25975, estado `obra`, y `evaluacion` copiada del
+  documento —que sí está entre el material— con los tres umbrales que tiene
+  esta asignatura y que no tiene ninguna otra.
+- **Los pesos, medidos y no estimados** (§10). Se leyeron las cinco
+  convocatorias y se miró qué tema toca cada ejercicio: el tema 1 sale en las
+  cinco y el 6 abre los dos exámenes del segundo cuatrimestre, así que esos
+  dos son `alto`; el 4 es el único `bajo`.
+- **Cinco convocatorias nuevas en la tabla compartida.** Química no se evalúa
+  por evaluaciones numeradas ni por parciales, sino con un control y un examen
+  final **por cuatrimestre**. Meter todo en `ordinaria` habría mandado a
+  estudiar termoquímica a quien se examina de estequiometría. Cada fila nueva
+  tiene su documento delante; ninguna se añadió por si acaso.
+- **El primer examen transcrito**, el final del 1.er cuatrimestre de 2024-2025,
+  empezando por el caso difícil (§13): su ejercicio 1 vale 3,50 de 10 y encadena
+  nombrar, ajustar, rendimiento, gases y disoluciones. Ocho pasos guiados, con
+  los ocho resultados recalculados antes de escribirlos.
+
+## Lo que salió al hacerlo
+
+- **El esquema no sabe guardar estos puntos.** El cuadernillo publica lo que
+  vale cada ejercicio —3,50 · 2 · 2 · 0,50 · 2— pero **sin repartir por
+  competencia**, y `puntos` exige comp1/comp2/comp4 y que el total sea múltiplo
+  de 5. Se omiten, como en Álgebra. Lo que se pierde es real: que un ejercicio
+  valga siete veces más que otro es la mejor guía de qué estudiar. Arreglarlo
+  pide un campo nuevo para el total suelto, y eso es capa compartida: **queda
+  como decisión, no lo he tocado**.
+- **Dos distractores míos caían dentro de la tolerancia** y los cazó el
+  esquema. No era descuido: en el apartado de la molalidad **todos** los
+  caminos equivocados dan 0,200 y el bueno es 0,203. Se estrechó la tolerancia
+  y se avisa en la pista de que ahí la tercera cifra decide.
+
+## Lo siguiente, en este orden
+
+1. Las **cuatro convocatorias que faltan** (los dos controles de 2023-2024, el
+   final del 2.º cuatrimestre y la extraordinaria de 2024-2025).
+2. Los **temas 1 y 6**, que son los dos `alto`, con su prosa y sus ejemplos de
+   entrada. Antes que ninguno de los otros ocho.
+3. Solo entonces, **el lector de respuestas químicas**. Nombrar un compuesto y
+   ajustar una ecuación no los sabe leer ningún `respuesta.tipo` de los seis
+   que hay, y hoy esos apartados se resuelven en la prosa. §13: el patrón se
+   destila del contenido, así que primero hay que ver cuántas veces hace falta
+   de verdad.
+4. Las **rutas**, cuando haya exámenes suficientes transcritos para contar
+   huecos.
+
+---
+
 # La reauditoría · del 8,5 al 10
 
 **5 de septiembre de 2026.** Con los cuatro encargos anteriores cerrados, la
@@ -179,6 +262,28 @@ cuaderno de quien las hizo: qué se midió, con qué aparato y qué salió.
 > reales.** Mismo trato que `PRIMER_CONTROL._NOTAS.pdf` y
 > `Notas_parcial_esttica.pdf`: no entra en el repositorio, no se cita y no se
 > convierte. El repositorio es público.
+
+### Los ficheros del material que NO se tocan nunca
+
+La lista completa, en un sitio, porque va creciendo y se descubre de uno en
+uno. Son datos personales de terceros y el repositorio es **público**: no
+entran, no se citan, no se convierten y no se abren para «mirar un dato».
+
+| asignatura | fichero | qué contiene |
+|---|---|---|
+| Álgebra | `PRIMER_CONTROL._NOTAS.pdf` | DNI y notas |
+| Mecánica | `Notas_parcial_esttica.pdf` | notas |
+| Fluidos | `Grupos_Laboratorio_16A_2025-26_act._20260212.pdf` | nombres completos |
+| Expresión Gráfica | `CONVOCATORIA_EXTRAORDINARIA_-_NOTAS.pdf` | notas |
+| Expresión Gráfica | `CONVOCATORIA_ORDINARIA_-_CALIFICACIONES.pdf` | notas |
+| Química | `Lista_del_grupo_01_GL1…GL4_apellidos_*.php` (4) | listas de clase |
+
+Los dos de Expresión Gráfica y los cuatro de Química se encontraron el 5 de
+septiembre de 2026 inventariando material para elegir la cuarta asignatura.
+La regla práctica que sale de haberlos encontrado buscando otra cosa:
+**cualquier fichero cuyo nombre lleve «notas», «calificaciones», «lista» o
+«grupo» se trata como personal hasta demostrar lo contrario**, y demostrarlo
+no requiere abrirlo entero.
 
 ## 6 · Álgebra — la causa del tema 8, y una pregunta
 
