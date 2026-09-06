@@ -9,6 +9,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { complejo, convocatoria, matriz, vector } from './corpus';
+import { coeficienteHW } from './tablas';
 
 describe('vectores', () => {
   it('con paréntesis y sin ellos', () => {
@@ -87,5 +88,28 @@ describe('el cable de las magnitudes', () => {
     /* Este es el error conceptual, y el mensaje lo dice con esas palabras en
        vez de enseñar dos números que no se parecen. */
     expect(() => cuadra.magnitud(id, titulo, 468972, 'm/s')).toThrow(/magnitudes distintas/);
+  });
+});
+
+describe('la tabla de Hazen-Williams del tema 19', () => {
+  /* Se lee del sitio y no se copia, así que lo que hay que comprobar es que se
+     lee bien: las seis bandas, y sobre todo los bordes, que es donde estaba el
+     fallo. Con el lector anterior la primera banda quedaba sin tope y una
+     tubería lisísima recibía 140 en vez de 150. */
+  it('asigna las seis bandas por rugosidad relativa', () => {
+    expect(coeficienteHW(1e-6)).toBe(150);
+    expect(coeficienteHW(1.5e-5)).toBe(150);
+    expect(coeficienteHW(4.7e-5)).toBe(140);
+    expect(coeficienteHW(7e-5)).toBe(140);
+    expect(coeficienteHW(6e-4)).toBe(130);
+    expect(coeficienteHW(2e-3)).toBe(120);
+    expect(coeficienteHW(1e-2)).toBe(110);
+    expect(coeficienteHW(3e-2)).toBe(100);
+  });
+  it('y los bordes caen del lado de la banda que los declara', () => {
+    /* La tabla escribe «$1{,}5\cdot 10^{-5}$ … $2\cdot 10^{-4}$», y ese 2·10⁻⁴
+       es el tope de 140, no el suelo de 130. */
+    expect(coeficienteHW(2e-4)).toBe(140);
+    expect(coeficienteHW(2.0001e-4)).toBe(130);
   });
 });

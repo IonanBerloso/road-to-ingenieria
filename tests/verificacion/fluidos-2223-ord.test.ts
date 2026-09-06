@@ -17,7 +17,7 @@
  * cambiara esa tabla, el test se pondría rojo.
  */
 import { describe, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { coeficienteHW } from './tablas';
 import { convocatoria } from './corpus';
 import { raiz } from './numerico';
 
@@ -268,31 +268,10 @@ describe('9 · el circuito cerrado de filtrado', () => {
     /* **La tabla la publica el propio tema 19**, y asigna el coeficiente por
        bandas de rugosidad relativa, no por material. Se lee de ahí y se busca
        la banda que contiene a este tubo: si el tema la cambiara, esto se
-       pondría rojo. */
-    const tema = readFileSync('src/content/fluidos/t19-conducciones/index.mdx', 'utf8');
-    /* El corpus escribe la coma decimal como `{,}` para que KaTeX no la trate
-       como separador, así que hay que deshacer eso antes de leer el número. */
-    const numero = (t: string) => {
-      const limpio = t.trim().replace(/\{,\}/g, '.');
-      const m = /^\$(?:([\d.]+)\\cdot\s*)?10\^\{(-?\d+)\}\$$/.exec(limpio);
-      if (!m) throw new Error(`no sé leer «${t}»`);
-      return Number(m[1] ?? '1') * 10 ** Number(m[2]);
-    };
-    const bandas: { C: number; hasta: number }[] = [];
-    for (const linea of tema.split('\n')) {
-      const m = /^\|\s*(\d{3})\s*\|\s*(.+?)\s*\|$/.exec(linea);
-      if (!m) continue;
-      const rango = m[2];
-      const tope = /…\s*(\$[^$]+\$)/.exec(rango) ?? /^\\le\s*(\$?[^|]+)$/.exec(rango);
-      bandas.push({ C: Number(m[1]), hasta: tope ? numero(tope[1]) : Infinity });
-    }
-    if (bandas.length < 5) throw new Error('la tabla del tema 19 ya no tiene sus bandas');
-    /* Acero galvanizado: ε = 0,015 cm, la misma que usa el corpus en el tercer
-       parcial de 2020-2021. */
-    const relativa = 1.5e-4 / D;
-    const banda = bandas.sort((a, b) => a.hasta - b.hasta).find((x) => relativa <= x.hasta);
-    if (!banda) throw new Error('la rugosidad relativa se sale de la tabla');
-    cuadra(id, 'El coeficiente de Hazen-Williams', banda.C);
+       pondría rojo.
+       Acero galvanizado: ε = 0,015 cm, la misma que usa el corpus en el
+       tercer parcial de 2020-2021. */
+    cuadra(id, 'El coeficiente de Hazen-Williams', coeficienteHW(1.5e-4 / D));
   });
 
   /* Longitud total: los tres tramos más el metro equivalente de la válvula. */

@@ -18,7 +18,7 @@
  * ordinaria de 2022-2023.
  */
 import { describe, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { coeficienteHW } from './tablas';
 import { convocatoria } from './corpus';
 import { raiz } from './numerico';
 
@@ -35,28 +35,6 @@ function colebrook(Re: number, rugosidadRelativa: number) {
 }
 const hazenWilliams = (L: number, Q: number, D: number, C: number) =>
   (10.674 * L * Q ** 1.852) / (C ** 1.852 * D ** 4.871);
-
-/** El C_HW que la tabla del tema 19 asigna a una rugosidad relativa. */
-function coeficienteHW(relativa: number) {
-  const tema = readFileSync('src/content/fluidos/t19-conducciones/index.mdx', 'utf8');
-  const numero = (t: string) => {
-    const limpio = t.trim().replace(/\{,\}/g, '.');
-    const m = /^\$(?:([\d.]+)\\cdot\s*)?10\^\{(-?\d+)\}\$$/.exec(limpio);
-    if (!m) throw new Error(`no sé leer «${t}»`);
-    return Number(m[1] ?? '1') * 10 ** Number(m[2]);
-  };
-  const bandas: { C: number; hasta: number }[] = [];
-  for (const linea of tema.split('\n')) {
-    const m = /^\|\s*(\d{3})\s*\|\s*(.+?)\s*\|$/.exec(linea);
-    if (!m) continue;
-    const tope = /…\s*(\$[^$]+\$)/.exec(m[2]) ?? /^\\le\s*(\$[^$]+\$)/.exec(m[2]);
-    bandas.push({ C: Number(m[1]), hasta: tope ? numero(tope[1]) : Infinity });
-  }
-  if (bandas.length < 5) throw new Error('la tabla del tema 19 ya no tiene sus bandas');
-  const banda = bandas.sort((a, b) => a.hasta - b.hasta).find((x) => relativa <= x.hasta);
-  if (!banda) throw new Error('la rugosidad relativa se sale de la tabla');
-  return banda.C;
-}
 
 describe('1 · la capilaridad entre dos tubos', () => {
   const id = 'exflu2324-ord-1-la-capilaridad-entre-dos-tubos';

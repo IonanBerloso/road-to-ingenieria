@@ -59,8 +59,8 @@ examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 207 |
-| | **1.241** | **1.155 (93 %)** |
+| Fluidos | 293 | 231 |
+| | **1.241** | **1.179 (95 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -123,13 +123,13 @@ centro, el ajuste lo diría.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, ni un error de cuenta.** Las 1.155 cuadran, incluidas las
+**En el corpus, ni un error de cuenta.** Las 1.179 cuadran, incluidas las
 cadenas más largas —los siete apartados del sulfúrico, la molalidad que
 arrastra cuatro pasos, la matriz expresada en dos bases que no son la canónica,
 el trabajo de la ventisca integrado sobre la trayectoria—.
 
 **Pero sí un número publicado con más precisión de la que el enunciado
-soporta**, y es el primero en 1.155. El apartado (c) del ejercicio 6 de la
+soporta**, y es el primero en 1.179. El apartado (c) del ejercicio 6 de la
 extraordinaria de Fluidos de 2022-2023 pide la longitud de una tubería, y esa
 longitud sale de **restar** la altura de la bomba menos dos pérdidas casi tan
 grandes como ella. El caudal del que todo depende se despeja de una ecuación
@@ -200,3 +200,22 @@ su paso. El tope se cuenta por asignatura y no sobre el total, y eso fue lo
 que costó: la primera versión lo hacía sobre el total, y con Fluidos en 293 el
 hueco de una sola respuesta de Cálculo no se habría listado nunca. Validado al
 revés borrando una llamada a mano.
+
+**Y una undécima, la primera que sale de la Regla 0 en vez de de un fallo
+visible.** Los exámenes de Fluidos que usan Hazen-Williams no calculan su
+coeficiente: lo buscan en una tabla, y verificar ese paso copiando el número
+aquí no verificaría nada. Por eso el test lo lee **de la página de teoría del
+propio sitio**, el tema 19, y una incoherencia entre examen y teoría se pone
+roja. Al escribir la tercera convocatoria que lo necesitaba, ese lector estaba
+copiado en dos ficheros y se iba a copiar en un tercero — §01 sin ambigüedad.
+Vive ya en `tablas.ts`.
+
+Y al juntar las dos copias apareció el fallo que ninguna de las dos delataba:
+la primera banda de la tabla se escribe `$\le 1{,}5\cdot 10^{-5}$` y las de en
+medio `$a$ … $b$`, y el lector solo sabía leer la segunda forma. La banda de
+$C = 150$ quedaba **sin tope**, se iba al final del orden, y una tubería
+lisísima habría recibido 140. No lo notó nadie porque ningún examen ha pedido
+todavía una rugosidad relativa tan baja: era confianza falsa esperando su
+turno, que es exactamente lo que estos pases buscan. Arreglado, con las seis
+bandas y sus dos bordes en `corpus.test.ts` y un freno en el propio lector —si
+la tabla acaba con más de una banda sin tope, se planta.
