@@ -113,8 +113,8 @@ valorará la presentación».
 |---|---|---|---|---|---|
 | t01 complejos | 2820 | 3 | 37 | 8 | 74 |
 | t02 sucesiones | 2020 | 3 | 19 | 4 | 32 |
-| t03 funciones reales | 1920 | 3 | 23 | 5 | 21 |
-| t04 estudio local | 2453 | 3 | 20 | 7 | 85 |
+| t03 funciones reales | 1920 | 3 | 24 | 6 | 21 |
+| t04 estudio local | 2453 | 3 | 21 | 8 | 85 |
 | t05 integracion | 2104 | 4 | 30 | 4 | 49 |
 | t06 varias variables | 1993 | 2 | 12 | 4 | 20 |
 | t07 integral multiple | 1789 | 3 | 11 | 4 | 41 |
@@ -500,8 +500,8 @@ auditoría periódica, que se pasa a mano y se lee con criterio.
 | todo tema enlazado por una ruta tiene prosa | ✅ |
 | **toda herramienta que el examen usa, presentada en la prosa** | ✅ **auditado el 26 de agosto de 2026, catorce huecos cerrados** |
 | **todo ejercicio de examen enlazado** | ✅ **425 de 425**, cerrado el 28 de agosto de 2026 |
-| **todo ejercicio de tema enlazado** | ✅ **191 de 191** |
-| cada tema con ejemplo introductorio propio | ✅ **53**, y ninguno de los 156 escalones arranca en un ejercicio de examen |
+| **todo ejercicio de tema enlazado** | ✅ **193 de 193** |
+| cada tema con ejemplo introductorio propio | ✅ **55**, y ninguno de los 156 escalones arranca en un ejercicio de examen |
 | cada tema con al menos una figura | ✅ 29 |
 | una ruta por evaluación | ✅ **7 rutas para los 9 tipos de convocatoria** |
 | `tests/fisica/` con un caso por simulador | ✅ vacío, no hay simuladores |

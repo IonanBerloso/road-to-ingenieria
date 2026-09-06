@@ -103,6 +103,22 @@ const catalogo = defineCollection({
       descripcion: z.string().min(10).max(200),
       /** false = el temario está puesto a ojo y hay que sustituirlo por el oficial. */
       temarioOficial: z.boolean(),
+      /**
+       * De dónde sale el temario, cuando se afirma que es el oficial.
+       *
+       * §15 lo pedía desde el principio —«los temas del catálogo son el
+       * temario oficial, no una lista plausible. **Con su fuente**»— y el
+       * esquema no lo tenía: `temarioOficial` era un booleano pelado, así que
+       * la afirmación más importante del catálogo era la única sin respaldo.
+       * Lo cazó cerrar las cuatro asignaturas el 6 de septiembre de 2026,
+       * comprobando §15 criterio a criterio en vez de darlo por sabido.
+       *
+       * El `refine` de abajo lo hace obligatorio en cuanto se dice `true`, que
+       * es la forma de que no vuelva a pasar: la afirmación y su respaldo
+       * entran juntos o no entra ninguna. Es el mismo trato que ya tenía
+       * `evaluacion.fuente`, y por el mismo motivo (§10).
+       */
+      fuenteTemario: z.string().min(20).optional(),
       temas: z.array(tema).default([]),
       /**
        * Cómo se compone la nota. Es un dato de la guía docente, no del examen.
@@ -161,6 +177,10 @@ const catalogo = defineCollection({
     })
     .refine((a) => new Set(a.temas.map((t) => t.id)).size === a.temas.length, {
       message: 'hay dos temas con el mismo id',
+    })
+    .refine((a) => !a.temarioOficial || Boolean(a.fuenteTemario), {
+      message:
+        'si el temario se declara oficial hay que decir de dónde sale, en fuenteTemario (§15)',
     })
     .refine((a) => a.estado !== 'ok' || a.temas.every((t) => t.hecho || t.soloEnClase), {
       message:

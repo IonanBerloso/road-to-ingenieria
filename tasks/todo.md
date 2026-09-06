@@ -1,5 +1,45 @@
 # Qué queda
 
+## Dónde está el proyecto · 6 de septiembre de 2026
+
+**Las cuatro asignaturas abiertas están cerradas contra §15**: Cálculo,
+Álgebra, Mecánica de Fluidos y Fundamentos Químicos. Quedan cinco en `prev`, y
+§00 dice qué hacer con ellas — se abre una, y no se abre la siguiente hasta
+cerrarla.
+
+| | |
+|---|---|
+| temas publicados | **51**, más 3 declarados `soloEnClase` con su motivo |
+| convocatorias transcritas, con su PDF | **118** |
+| rutas de estudio | **12**, con 273 escalones |
+| corpus | **1.270 ejercicios · 5.154 pasos** |
+| respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
+| bloques de ruta que no dicen si les falta algo | **0 de 103** |
+| suelo, tests y navegador completo | verde |
+
+**Y lo que sigue abierto, que es lo que hace honesto lo de arriba.** Casi todo
+depende de material o de una respuesta tuya, no de trabajo:
+
+- **Fluidos · las tres preguntas del examen**: cuánto dura, si se puede llevar
+  calculadora —aquí importa, hay ejercicios que exigen iterar Colebrook— y si
+  se preguntan las prácticas de laboratorio, que la guía dice que sí y de las
+  que no hay ninguna en el sitio. Recontado hoy: ninguna de las dieciséis
+  convocatorias imprime la duración ni menciona la calculadora.
+- **Química · la colección de los temas 3, 4, 6 y 10.** No hay material: sus
+  PDF de teoría no traen problemas propuestos y el directorio está listado
+  entero. Si aparece otra hoja, cuatro bloques pasan de tener el salto del
+  ejemplo al examen a tener su rampa.
+- **Fluidos · trece ejercicios de examen en `fuera`**, cada uno con su motivo
+  releído: cinco por falta de material, tres porque la figura no acota, tres
+  porque el número publicado no se reproduce, dos porque solo una parte es
+  reconstruible.
+- **La tolerancia del apartado (c) del ejercicio 6 de la extraordinaria de
+  Fluidos de 2022-2023**, que es la única de las 1.241 que se deja sin
+  verificar a propósito: está publicada al 2 % y el problema no la determina
+  mejor que al 10 %.
+
+---
+
 Sesión 1 cerrada: cimientos + una página de contenido real. Esto es lo
 siguiente, en el orden en que conviene hacerlo.
 
@@ -219,7 +259,43 @@ Dos cosas, las dos de dibujar y ninguna cazada por un guardián:
 - Una etiqueta fuera del `viewBox` en la figura de Slater, arreglada con
   `textLength` para que la comprobación no dependa de la fuente (§17).
 
-## Lo que le falta a Química para estar terminada
+## Química, cerrada el 6 de septiembre de 2026
+
+**Pasa a `ok`, y con ella las cuatro asignaturas abiertas están cerradas
+contra §15.** No por decreto: se pasó criterio a criterio, y estos son los
+diez con lo que se comprobó en cada uno.
+
+| criterio de §15 | Química |
+|---|---|
+| temario oficial **con su fuente** | ✅ los 10 temas, guía docente 25975, que está entre el material |
+| temas sin material declarados `soloEnClase` | ✅ no hace falta ninguno: los 10 están escritos |
+| convocatorias transcritas, con PDF | ✅ **6 de 6**, y **cero** ejercicios en `fuera` |
+| una ruta por evaluación (§14 entera) | ✅ dos, una por cuatrimestre, y las otras tres convocatorias en `tambienPrepara` con el motivo medido |
+| todo tema que una ruta enlaza tiene prosa | ✅ lo comprueba el build |
+| cada tema con ejemplo propio y con figura | ✅ 10 de 10 en las dos cosas |
+| `tests/fisica` por simulador | ✅ no tiene simuladores |
+| `falta[]` dice lo que no está | ✅ 0 bloques sin declarar |
+| el catálogo dice cómo se puntúa | ✅ con la guía citada literalmente |
+| `npm run suelo` en verde | ✅ |
+
+Y las cuatro comprobaciones que §16 exige **al cerrar**, pasadas hoy:
+`recalcula` —2.286 pares, ninguno descuadra—, `HUMO_TODO=1`, `peso`
+—ninguna página pasa de 2,6 s— y `mide`.
+
+**Cerrada no es sin huecos: es con los huecos declarados**, que es lo que §15
+llama un producto honesto. Los de Química, nombrados y a la vista en sus
+rutas: **los temas 3, 4, 6 y 10 no tienen colección transcrita**, y con esos
+cuatro no es cuestión de buscar mejor —sus PDF de teoría no traen problemas
+propuestos y el directorio está listado entero—; el escalón del puente del mol
+tiene un solo ejercicio por lo mismo; y los dos simulacros no tienen cronómetro
+ni corrección automática.
+
+**Lo que sí desbloquearía trabajo de verdad**, y es lo primero que preguntar:
+si aparece otra hoja de problemas propuestos de los temas 3, 4, 6 o 10, esos
+cuatro bloques pasan de tener el salto del ejemplo al examen a tener su rampa
+entera. Es la única deuda de Química que no depende de nosotros.
+
+## Lo que le faltaba a Química para estar terminada
 
 Los diez temas escritos **no son la asignatura terminada**, y conviene tenerlo
 escrito para no volver a confundir las dos cosas (§15):

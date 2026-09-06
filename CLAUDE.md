@@ -20,6 +20,20 @@ temario.
 importaba de la regla vieja: **pocas excelentes antes que muchas a medias.** No
 se abre una asignatura hasta que la anterior está terminada según §15.
 
+> **Al 6 de septiembre de 2026 las cuatro abiertas están cerradas contra §15**:
+> Cálculo, Álgebra, Mecánica de Fluidos y Fundamentos Químicos. Son
+> **51 temas publicados** —más tres declarados `soloEnClase` con su motivo—,
+> **118 convocatorias** transcritas con su PDF, **doce rutas** y **1.270
+> ejercicios**. Quedan cinco asignaturas en `prev`, y la regla de arriba dice
+> qué hacer con ellas: se abre una, y no se abre la siguiente hasta cerrarla.
+>
+> «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
+> declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
+> tiene colección transcrita en cuatro de sus diez temas porque el material no
+> la trae; Fluidos tiene trece ejercicios de examen declarados `fuera` y sus
+> veintitrés prácticas de laboratorio sin material; y de las 1.241 respuestas
+> de examen comparables hay **una** que se deja sin verificar a propósito.
+
 > Hasta el 24 de agosto de 2026 esta sección decía **«Piloto: Cálculo y Mecánica
 > de Fluidos»**, elegidas porque tensionan el sistema en direcciones opuestas —
 > una abstracta y de gráficas, la otra física y de esquemas de instalación—, y
@@ -1322,7 +1336,7 @@ nivel de arriba, que es el que se entrega.
 ### Cuánto es «una asignatura», medido
 
 Cálculo es la referencia, y ya está cerrada entera. Once temas dan **21.545
-palabras de prosa, 191 ejercicios de tema, 88 convocatorias con 425 ejercicios,
+palabras de prosa, 193 ejercicios de tema, 88 convocatorias con 425 ejercicios,
 156 escalones en 7 rutas y 29 figuras.** Sirve para dimensionar, no como cuota:
 un tema que necesita ocho figuras lleva ocho.
 
@@ -1637,6 +1651,27 @@ Cosas que ya han costado horas. No son opiniones.
   pasar las cuatro esquinas por `el.getCTM()`, que es lo que hace
   `scripts/humo.mjs`. Un falso positivo es caro por lo que esconde: mientras
   se le da vueltas, el desborde de verdad de otro estado pasa desapercibido.
+- **`astro preview` es un demonio y sobrevive al guion que lo arrancó.** Si te
+  quedas uno levantado —de una captura, de una prueba en el navegador—,
+  `humo.mjs` no puede arrancar el suyo y muere con «El servidor de vista
+  previa no ha arrancado en 30 s», que **no dice cuál es la causa**. Y hay una
+  variante peor: si el puerto está libre pero el demonio sigue vivo en otro,
+  el barrido puede arrancar y caerse a media ejecución sin marcar ningún
+  fallo — pasó el 6 de septiembre de 2026, con 399 líneas todas en verde y un
+  código de salida 4 que no significaba nada. **Regla: `astro preview stop`
+  antes de lanzar el humo**, y si un barrido se cae sin un solo `✗`, mira si
+  hay un servidor tuyo dando vueltas antes de buscar el fallo en el sitio.
+
+  **Y una tercera forma de rojo que no es del sitio**, vista el mismo día: una
+  página suelta que falla con `ERR_NETWORK_ACCESS_DENIED` a media barrida, con
+  las 4.183 líneas restantes en verde. No era la página —abierta a mano
+  devuelve 200, sus siete ejercicios y cero errores de consola—, era un
+  tropiezo de red del propio navegador. **Cómo distinguirlo de un fallo de
+  verdad, y es rápido:** un fallo del sitio se repite; uno de entorno no. Si
+  el rojo es una sola página y su mensaje es de red y no de contenido, ábrela
+  a mano antes de tocar nada. Lo que **no** vale es dar el barrido por bueno
+  sin comprobarlo: eso es cómo se aprende a ignorar un guardián (§11).
+
 - **El humo abre una muestra rotatoria de exámenes elegida por el día del año,
   así que un fallo latente aparece cualquier mañana sin que nadie haya tocado
   nada.** El 31 de agosto de 2026 el CI se puso rojo con el suelo local en
