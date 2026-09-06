@@ -329,7 +329,7 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 | `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.547 |
 | `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.270 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 9 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 10 |
 
 > Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
 > pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
@@ -349,15 +349,16 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
 > de deuda entera. La cifra se copia de su salida, no se estima.
 >
-> Y el 6 de septiembre de 2026, **1.270 ejercicios y 5.153 pasos**: trece pasos
+> Y el 6 de septiembre de 2026, **1.270 ejercicios y 5.154 pasos**: catorce pasos
 > más y tres ejercicios, y ninguno de examen. Son tres ejemplos de entrada
 > —el del diferencial, que cierra el último escalón de Cálculo con un solo
 > ejercicio; el de las dos líneas de alturas de una central; y el de decidir
 > cuál de dos curvas dibujadas es la derivada de la otra, que es el primero de
-> Cálculo con figura propia— más los **cuatro primeros `redactar` de
-> Fluidos**, metidos **dentro** de ejercicios de examen que ya estaban. Que el
-> corpus pueda crecer por dentro conviene que se note: no todo crecimiento es
-> transcribir una convocatoria más.
+> Cálculo con figura propia— más **cinco pasos con rúbrica**: los cuatro
+> primeros de Fluidos y el tercero de Álgebra, metidos **dentro** de
+> ejercicios de examen que ya estaban. Que el corpus pueda crecer por dentro
+> conviene que se note: no todo crecimiento es transcribir una convocatoria
+> más.
 >
 > Y una tercera vez el mismo día, al terminar los diez temas de Química:
 > **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
@@ -376,7 +377,7 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
 intuición: en Cálculo **50 de los 425 ejercicios de examen piden demostrar**
-—el 11,8 %— y en Álgebra **22 de 32**, o sea el 69 %. Las cuatro nuevas son
+—el 11,8 %— y en Álgebra, **24 de 32**, o sea el 75 %. Las cuatro nuevas son
 las dos demostraciones más pedidas de cada asignatura: Barrow y Lagrange en
 Cálculo, «esto es subespacio vectorial» y «núcleo trivial implica inyectiva»
 en Álgebra.
@@ -410,6 +411,24 @@ escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
 >
 > La regla de arriba no se levanta, se cumple: se miró antes de escribir más,
 > y las cuatro nuevas van donde el dato dice, no donde apetecía.
+>
+> **Y una quinta, la primera de Álgebra desde el pase de agosto**, por la
+> misma razón medida: Álgebra pide demostrar en **24 de sus 32** ejercicios de
+> examen, la proporción más alta de las cuatro asignaturas, y solo tenía dos
+> rúbricas. Sus dos familias más pedidas ya estaban cubiertas, así que entra
+> la siguiente: **las propiedades de la norma en un espacio euclídeo**, que
+> abren el **ejercicio 3 de cuatro convocatorias** —Minkowsky, la identidad de
+> polarización, Pitágoras— y las cuatro empiezan igual, desarrollando
+> $\left\|\overline{x}+\overline{y}\right\|^{2}$ con el producto escalar.
+> Cambia lo que se pide al final, no el camino.
+>
+> **Y la cifra de Álgebra cambia de 22 a 24, con su definición escrita**,
+> porque el 22 no lo reproduce ninguna cuenta que se le pueda hacer hoy al
+> corpus: buscando el verbo en el enunciado entero salen **29 de 32**, y
+> mirando solo el primer apartado —que es donde vive la demostración— salen
+> **24**. Se publica el 24 y se dice cómo se cuenta, que era lo que faltaba.
+> **Un número sin su definición al lado no se puede volver a comprobar**, y
+> entonces no se puede corregir: solo se puede sospechar de él.
 >
 > **Y los tres números de este párrafo estuvieron mal durante una hora**, por
 > una trampa que §17 ya avisaba a medias y que ahora avisa entera: cargué el

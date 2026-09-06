@@ -590,6 +590,18 @@ cubren los temas 5 y 9, donde la guía también los lista.
 
 **22 de 32 piden demostrar: el 69 %.**
 
+> **Recontado el 6 de septiembre de 2026 y corregido a 24 de 32, el 75 %.** El
+> 22 no lo reproduce ninguna cuenta que se le pueda hacer hoy al corpus:
+> buscando el verbo en el enunciado entero salen 29 y mirando solo el primer
+> apartado —que es donde vive la demostración— salen 24. §04 publica el 24 con
+> su definición escrita al lado, que era lo que faltaba: **un número sin su
+> definición no se puede volver a comprobar, y entonces no se puede corregir.**
+>
+> La tabla de arriba sí se sostiene con una salvedad: la fila de las
+> identidades de la norma dice «5 de 8» y son **4**, porque la quinta es el
+> ejercicio de matrices ortogonales de 2023-2024, que es otra familia. Esas
+> cuatro son las que ahora tienen rúbrica.
+
 **Fase B, las cuatro escritas.** El `redactar` que ya existía era justo el de
 la familia n.º 1 de Cálculo, así que las nuevas son:
 
