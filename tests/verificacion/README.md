@@ -2,7 +2,7 @@
 
 ## El problema que resuelve
 
-De las 592 resoluciones de examen del sitio, **472 no tienen nada contra lo que
+De las 592 resoluciones de examen del sitio, **476 no tienen nada contra lo que
 comprobarse**: sus exámenes no publican solución ni resultado. Su `fuente` lo
 dice una por una, así que es honesto y no oculto, pero es el mayor riesgo del
 proyecto: un desarrollo equivocado enseña algo falso con toda la apariencia de
@@ -44,9 +44,17 @@ transcripción, unidades cambiadas, un dato del enunciado leído mal, un
 intermedio arrastrado y una tolerancia demasiado ancha para el número que
 declara.
 
-**No es una barrida.** 472 resoluciones no se verifican de una tacada. Esto es
-un ritmo: cada vez que se cierra o se toca una asignatura, entra una
-convocatoria más. `node scripts/deuda.mjs` cuenta cuántas van.
+**No caduca, pero no se mantiene solo.** Cuando entre una convocatoria nueva,
+entra con su fichero de aquí o el contador lo dice. Eso es lo que mide
+`node scripts/deuda.mjs`, y por eso la tabla de abajo no se escribe a mano.
+
+> Este apartado decía «**No es una barrida**: 472 resoluciones no se verifican
+> de una tacada; esto es un ritmo». Se escribió el 5 de septiembre de 2026, con
+> 67 respuestas recalculadas de 1.241, y describía bien lo que había entonces.
+> Dejó de ser cierto el 6: **están las 1.241 menos una**, y esa una se deja
+> fuera a propósito y con su motivo escrito. Se cambia porque una advertencia
+> que ya no describe el estado no protege de nada — invita a suponer que el
+> hueco sigue ahí.
 
 ## Estado
 
@@ -59,8 +67,8 @@ examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 272 |
-| | **1.241** | **1.220 (98 %)** |
+| Fluidos | 293 | **292** |
+| | **1.241** | **1.240 — todas menos una** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -95,6 +103,20 @@ test lo dice con esas palabras. La segunda: la gravedad es **9,8 y no
 9,80665**, que es la de los apuntes y la que hace ciertas sus conversiones
 publicadas.
 
+**Y Fluidos también está entera**: 292 de sus 293, en sus **dieciséis
+convocatorias**, de 2019-2020 a 2025-2026. La que falta es una sola y es la de
+más abajo, dejada fuera a propósito.
+
+Cerrarla trajo el hallazgo de método de todo el pase, y es al revés de lo
+esperado: donde más rinde recalcular no es donde la cuenta es larga, sino
+**donde el enunciado se comprueba a sí mismo**. El flyboard de 2024-2025 tiene
+los diámetros elegidos para que el agua salga a la misma velocidad a la que
+entra, así que la continuidad audita la presión, los coeficientes y el ángulo a
+la vez — y ahí se ve que los 10° son entre los dos chorros y no de cada uno con
+la vertical, porque la otra lectura deja el empuje 7 N corto. Ese tipo de
+comprobación no la da rehacer la cuenta: la da mirar qué **otra** cosa tiene
+que cuadrar.
+
 **Cálculo está entera**: las 805 respuestas numéricas de sus **ochenta y ocho
 convocatorias**, de 2014-2015 a 2025-2026. Las veintitrés finales —ordinarias y
 extraordinarias—, las cincuenta y cuatro evaluaciones parciales y las once
@@ -123,13 +145,13 @@ centro, el ajuste lo diría.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, ni un error de cuenta.** Las 1.220 cuadran, incluidas las
+**En el corpus, ni un error de cuenta.** Las 1.240 cuadran, incluidas las
 cadenas más largas —los siete apartados del sulfúrico, la molalidad que
 arrastra cuatro pasos, la matriz expresada en dos bases que no son la canónica,
 el trabajo de la ventisca integrado sobre la trayectoria—.
 
 **Pero sí un número publicado con más precisión de la que el enunciado
-soporta**, y es el primero en 1.220. El apartado (c) del ejercicio 6 de la
+soporta**, y es el primero en 1.240. El apartado (c) del ejercicio 6 de la
 extraordinaria de Fluidos de 2022-2023 pide la longitud de una tubería, y esa
 longitud sale de **restar** la altura de la bomba menos dos pérdidas casi tan
 grandes como ella. El caudal del que todo depende se despeja de una ecuación

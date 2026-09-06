@@ -3961,7 +3961,20 @@ es justo lo que pasa en los extremos— y enlazado desde t02.
 > porque su razonamiento sigue valiendo — y como recordatorio de lo deprisa que
 > un recuento a mano deja de ser un recuento.
 
-### 1 · 417 de 425 resoluciones de examen están sin contrastar
+### 1 · ~~417 de 425 resoluciones de examen están sin contrastar~~ · CERRADO el 6 de septiembre de 2026
+
+> **Cerrado, y con la cifra al lado: 1.240 respuestas de examen recalculadas de
+> 1.241.** El procedimiento que aquí se pedía existe y vive en
+> `tests/verificacion/`, con su README. La única que queda fuera está declarada
+> con su motivo, y `node scripts/deuda.mjs` lo cuenta solo — la cifra de esta
+> línea no se escribe a mano.
+>
+> Lo que el pase encontró está en ese README: en el corpus, **ni un error de
+> cuenta** en 1.240 respuestas, y **once fallos en el verificador**, todos de
+> los que habrían dado confianza falsa en vez de un fallo visible. Ese reparto
+> es el argumento entero para que el verificador se verifique.
+
+Lo que decía cuando se escribió, que sigue siendo la razón de haberlo hecho:
 
 El 98 %. Sus `fuente` lo dicen una por una —«el examen no publica solución: la
 resolución es propuesta nuestra, pendiente de revisión»—, así que es honesto,
@@ -4672,7 +4685,7 @@ segundo caso está declarado en su `falta[]` y no se puede arreglar sin material
 
 # El punto 1, que era el mayor riesgo, ya tiene procedimiento
 
-De las 592 resoluciones de examen del sitio, 472 no tienen nada contra lo que
+De las 592 resoluciones de examen del sitio, 476 no tienen nada contra lo que
 comprobarse: sus exámenes no publican ni solución ni resultado. Estaba escrito
 como «el mayor riesgo del proyecto y no tiene plan» desde el 24 de agosto.
 
@@ -4705,8 +4718,8 @@ envejecería en silencio.
 | Fundamentos Químicos | 67 | **67** |
 | Álgebra | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 272 |
-| | **1.241** | **1.220 (98 %)** |
+| Fluidos | 293 | **292** |
+| | **1.241** | **1.240 — todas menos una** |
 
 El orden no es por facilidad. Química primero por ser la más reciente —27
 resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
@@ -4717,7 +4730,7 @@ en un número impreso o se declaran fuera.
 
 ## Lo que encontró
 
-**En el corpus, ni un error de cuenta.** Las 1.220 cuadran, incluidas las
+**En el corpus, ni un error de cuenta.** Las 1.240 cuadran, incluidas las
 cadenas largas: los siete apartados del sulfúrico, la molalidad que arrastra
 cuatro pasos, la matriz expresada en dos bases que no son la canónica, el
 trabajo de la ventisca.
@@ -4725,7 +4738,7 @@ trabajo de la ventisca.
 ### Y una cosa que sí, pendiente de decidir
 
 **Un número publicado con más precisión de la que el enunciado soporta**, el
-primero en 1.220. Es el paso «La longitud que falta» del ejercicio 6 de
+primero en 1.240. Es el paso «La longitud que falta» del ejercicio 6 de
 `2022-2023-ext` de Fluidos.
 
 La longitud del tramo 3 sale de restar la altura de la bomba menos dos pérdidas
@@ -4767,10 +4780,16 @@ Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
 
 ## Lo que queda, y cómo se sigue
 
-**Solo Fluidos: 21 respuestas**, en una convocatoria: la ordinaria de
-2025-2026. No es una barrida: es un ritmo.
-Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
-`deuda.mjs` cuenta cuántas van.
+**Nada, y eso hay que decirlo con la cifra al lado: 1.240 de 1.241.** Las
+cuatro asignaturas con exámenes transcritos están recalculadas enteras —67 de
+Química, 76 de Álgebra, 805 de Cálculo y 292 de las 293 de Fluidos—, y la que
+falta es una sola, la de la sección de arriba, dejada fuera a propósito y con
+su motivo escrito.
+
+Lo que sí queda es **que siga siendo verdad**. Una convocatoria nueva entra con
+su fichero de `tests/verificacion/` o el contador lo dice; `deuda.mjs` no
+felicita, mide. Este punto se cierra, pero no se borra: se comprueba al cerrar
+cada asignatura, junto con las cifras de §04, §05, §09 y §15.
 
 Para Cálculo el método está probado y es el mejor de los tres, porque el camino
 del test **no es el de la resolución**: donde el examen integra por partes, el
