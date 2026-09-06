@@ -252,10 +252,20 @@ escrito para no volver a confundir las dos cosas (§15):
    no navegaban.
 
    Lo que sigue sin cubrirse va en el `falta[]` de su bloque, a la vista en la
-   página: los temas 1, 3, 4, 6 y 10 no tienen colección transcrita, así que
-   en sus escalones no hay peldaño entre el ejemplo y el examen. Y el bloque de
-   formular no tiene ni ejemplo propio — es el único de las dos rutas donde
-   falta el primer peldaño.
+   página.
+
+   > **Este párrafo decía dos cosas que dejaron de ser ciertas esa misma tarde,
+   > y estuvo mal cinco días.** Decía que los temas «1, 3, 4, 6 y 10» no tienen
+   > colección —el 1 la tiene desde el punto 4 bis de aquí abajo, tres
+   > problemas de la Autoevaluación 4.2— y que el bloque de formular «no tiene
+   > ni ejemplo propio», cuando esa tarde se escribieron los ocho ejemplos de
+   > entrada que faltaban. Lo bueno: **el `falta[]` publicado sí estaba bien en
+   > los dos casos** —comprobado el 6 de septiembre de 2026—, así que el alumno
+   > nunca llegó a leer la versión falsa; el que envejeció fue este fichero.
+   >
+   > Al 6 de septiembre de 2026: sin colección transcrita quedan los temas
+   > **3, 4, 6 y 10**, y con esos cuatro no es cuestión de buscar mejor, no hay
+   > material. Sus bloques lo dicen uno por uno.
 
 3. ~~Ejercicios de examen en `fuera`~~ · **cero, el 5 de septiembre de 2026.**
    **Las seis convocatorias de Química están transcritas enteras**, 27
