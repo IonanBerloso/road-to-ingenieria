@@ -4174,7 +4174,9 @@ empieza por arriba».
 >   sola, en el tema 16 y de pasada, contra 72 apariciones en los ejercicios
 >   del 13. Más los cinco exámenes declarados fuera repartidos por su bloque,
 >   los 35 de 108 ejercicios que piden deducir contra los cero pasos
->   `redactar` del corpus, y el momento cinético, con teoría y sin ejercicios.
+>   `redactar` que Fluidos tenía **esa mañana** —esa misma noche se
+>   escribieron los dos primeros, así que la cifra buena ya es otra: dos de
+>   treinta y cinco—, y el momento cinético, con teoría y sin ejercicios.
 >   Y uno se **arregló** en vez de declararse: el bloque de golpe de ariete
 >   cita en su `pide` la tensión de tracción, Barlow está bien explicado en el
 >   tema 8, y el bloque no lo enlazaba. Tiene un tercer escalón desde hoy.

@@ -329,7 +329,7 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 | `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.545 |
 | `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.268 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 7 |
 
 > Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
 > pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
@@ -349,9 +349,13 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
 > de deuda entera. La cifra se copia de su salida, no se estima.
 >
-> Y el 6 de septiembre de 2026, **1.268 ejercicios y 5.143 pasos**: un ejemplo
-> de entrada más, el del diferencial, que cierra el último escalón de Cálculo
-> que tenía un solo ejercicio.
+> Y el 6 de septiembre de 2026, **1.268 ejercicios y 5.145 pasos**: cinco
+> pasos más y un solo ejercicio, y ninguno de examen. Tres pasos son el
+> ejemplo de entrada del diferencial —que cierra el último escalón de Cálculo
+> con un solo ejercicio— y los otros dos son los primeros `redactar` de
+> Fluidos, metidos **dentro** de ejercicios de examen que ya estaban. Que el
+> corpus pueda crecer por dentro conviene que se note: no todo crecimiento es
+> transcribir una convocatoria más.
 >
 > Y una tercera vez el mismo día, al terminar los diez temas de Química:
 > **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
@@ -378,6 +382,29 @@ en Álgebra.
 Y sigue sin ser un patrón maduro: cinco usos de 4.826 pasos. Se pararon en
 cuatro **a propósito** (§13: el framework se destila del contenido). Antes de
 escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
+
+> **Mirado el 6 de septiembre de 2026, y con el resultado escrito, que es lo
+> que faltaba para poder seguir.** Las cinco se leyeron enteras y se abrió una
+> en el navegador. El patrón está bien resuelto y conviene no tocarlo: **no
+> hay casilla donde teclear**, y eso es deliberado —lo que corrige el examen
+> es un folio—; hay un botón que revela la rúbrica solo cuando dices que ya la
+> has escrito, y detrás un mensaje que dice qué hacer con ella. Lo que hace
+> que la rúbrica valga no es la lista de puntos sino el `porque` de cada uno:
+> nombra el fallo concreto, no la manía. «Continua y derivable en $[a,b]$
+> pierde el punto **y además es un teorema más débil**» enseña algo; «pon bien
+> las hipótesis» no.
+>
+> Con eso, `redactar` pasa de cinco a **siete**, y las dos nuevas son de
+> **Fluidos**, que era la asignatura con la demanda medida más alta y con cero
+> pasos de este tipo: **35 de sus 108 ejercicios de examen piden deducir,
+> demostrar o razonar** —el 32 %, en las dieciséis convocatorias—. Se han
+> elegido las dos que más se repiten, contadas una a una: «deducir la
+> expresión analítica de la curva característica de la instalación», con esas
+> palabras en **cinco** convocatorias, y el teorema de Vaschy-Buckingham, en
+> **cuatro**, una de ellas con el enunciado diciendo «de uso obligatorio».
+>
+> La regla de arriba no se levanta, se cumple: se miró antes de escribir más,
+> y las dos nuevas van donde el dato dice, no donde apetecía.
 
 Y dentro de `calcular`, seis tipos de respuesta según lo que se escriba en la
 casilla:
