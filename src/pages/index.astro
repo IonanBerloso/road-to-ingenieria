@@ -12,11 +12,11 @@
  * El principio de §05: fluido no es tener animaciones, es no perder nunca el
  * sitio. Cada movimiento contesta de dónde ha salido algo.
  */
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { ruta } from '../lib/rutas';
-import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV } from '../content.config';
+import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, CON_TEMAS, type ConTemas } from '../content.config';
 
 const asignaturas = (await getCollection('catalogo')).sort(
   (a, b) => a.data.curso - b.data.curso || a.data.orden - b.data.orden,
@@ -126,16 +126,60 @@ for (const lista of examenesPorAsignatura.values()) {
   );
 }
 
+/** Los **conceptos**: cada apartado de la prosa de cada tema, con su ancla.
+ *
+ *  §05 promete que la paleta busca «asignaturas, temas, conceptos y rutas a la
+ *  vez» y hasta hoy no buscaba conceptos: solo títulos de tema. Y el concepto
+ *  es justo con lo que llega un alumno —«arco capaz», «calado crítico»,
+ *  «NPSH»— porque el título del tema no lo sabe todavía.
+ *
+ *  Los anclajes salen de `render()`, que es **el mismo slugger que usa la
+ *  página del tema**, así que no pueden desviarse: si un apartado se renombra,
+ *  el enlace de la paleta se renombra con él. Copiarlos a mano habría sido la
+ *  quinta fuente de verdad de este proyecto (§17).
+ *
+ *  Solo entran los temas publicados —los que el catálogo marca `hecho`—,
+ *  porque un concepto que lleva a una página que no existe es peor que no
+ *  encontrarlo. */
+const conceptos: { tipo: 'c'; nombre: string; sub: string; destino: string }[] = [];
+for (const a of asignaturas) {
+  const hechos = a.data.temas.filter((t) => t.hecho);
+  if (hechos.length === 0) continue;
+  if (!(CON_TEMAS as readonly string[]).includes(a.id)) continue;
+  const coleccion = await getCollection(a.id as ConTemas);
+  for (const t of hechos) {
+    const entrada = coleccion.find((e) => e.id === t.id || e.id.startsWith(`${t.id}/`));
+    if (!entrada) continue;
+    const { headings } = await render(entrada);
+    for (const h of headings) {
+      /* Solo apartados y subapartados: el `#` es el título del tema, que ya
+         está en el índice por su cuenta y saldría dos veces. */
+      if (h.depth < 2 || h.depth > 3) continue;
+      /* Sin `clave`: para un concepto sería `nombre` y `sub` otra vez en
+         minúscula, y son 382 entradas. La arma el cliente en la primera
+         pulsación, que cuesta un milisegundo y ahorra 40 KB en cada visita a
+         la portada. Medido: el índice pasa de 145 a 105 KB, y la portada de
+         217 a 177 — 27,5 KB una vez comprimida, que es lo que de verdad viaja
+         por el cable. */
+      conceptos.push({
+        tipo: 'c',
+        nombre: h.text,
+        sub: `${t.titulo} · ${a.data.nombre}`,
+        destino: `${ruta(`${a.id}/${t.id}`)}#${h.slug}`,
+      });
+    }
+  }
+}
+
 /** El índice de la paleta de comandos se arma aquí, no en el cliente:
  *  buscar tiene que funcionar con la primera pulsación, sin recorrer el DOM. */
-const indice = asignaturas.flatMap((a, i) => [
+const indice = asignaturas.flatMap((a) => [
   {
     tipo: 'a' as const,
     nombre: a.data.nombre,
     sub: `${a.data.curso === 1 ? '1.er' : '2.º'} curso`,
     clave: `${a.data.nombre} ${a.data.descripcion}`.toLowerCase(),
     destino: `#${a.id}`,
-    orden: i,
   },
   ...a.data.temas.map((t) => ({
     tipo: 't' as const,
@@ -143,7 +187,6 @@ const indice = asignaturas.flatMap((a, i) => [
     sub: a.data.nombre,
     clave: `${t.titulo} ${t.descripcion} ${a.data.nombre}`.toLowerCase(),
     destino: t.hecho ? ruta(`${a.id}/${t.id}`) : `#${a.id}`,
-    orden: i,
     n: t.n,
   })),
   /* Las rutas de estudio son lo más buscable del sitio: «regiones»,
@@ -155,9 +198,8 @@ const indice = asignaturas.flatMap((a, i) => [
     sub: `${a.data.nombre} · ruta de estudio`,
     clave: `${r.titulo} ${r.bloques} ${a.data.nombre} preparar ruta estudio`.toLowerCase(),
     destino: ruta(`${a.id}/preparar/${r.sufijo}`),
-    orden: i,
   })),
-]);
+]).concat(conceptos);
 
 /* ── los números del héroe salen de las colecciones, no de la prosa ──
  * §10: un dato publicado tiene que ser verdad. Si mañana entra un examen
@@ -728,13 +770,27 @@ const enteras = asignaturas
 
   /* ── paleta de comandos ────────────────────────────────────────── */
   type Entrada = {
-    tipo: 'a' | 't';
+    tipo: 'a' | 't' | 'r' | 'c';
     nombre: string;
     sub: string;
-    clave: string;
+    /** Los conceptos no la traen: sería su nombre y su tema otra vez en
+     *  minúscula, y son 382 entradas. Se rellena aquí abajo. */
+    clave?: string;
     destino: string;
     n?: number;
   };
+
+  /** El orden en que se agrupan los resultados. Es también el orden en que se
+   *  desempata cuando dos cosas encajan igual de bien: lo más general primero,
+   *  porque quien escribe «complejos» quiere el tema y no sus quince
+   *  apartados. */
+  const ORDEN_TIPO = { a: 0, t: 1, r: 2, c: 3 } as const;
+  const ROTULO = {
+    a: 'Asignaturas',
+    t: 'Temas',
+    r: 'Rutas de estudio',
+    c: 'Conceptos',
+  } as const;
 
   const paleta = document.querySelector<HTMLElement>('[data-paleta]')!;
   const campo = document.querySelector<HTMLInputElement>('#q')!;
@@ -742,6 +798,7 @@ const enteras = asignaturas
   const indice: Entrada[] = JSON.parse(
     document.querySelector<HTMLElement>('[data-indice]')?.textContent ?? '[]',
   );
+  for (const x of indice) x.clave ??= `${x.nombre} ${x.sub}`.toLowerCase();
 
   let visibles: Entrada[] = [];
   let cursor = 0;
@@ -761,7 +818,28 @@ const enteras = asignaturas
 
   function pinta() {
     const q = campo.value.trim().toLowerCase();
-    visibles = q ? indice.filter((x) => x.clave.includes(q)).slice(0, 12) : indice.filter((x) => x.tipo === 'a');
+    /* Con los conceptos dentro, el índice pasó de 90 entradas a más de 470, y
+       un `filter().slice(12)` a pelo dejaba de encontrar los temas: cualquier
+       palabra corriente casaba con veinte apartados y los empujaba fuera del
+       corte. Así que primero se puntúa —dónde encaja la consulta, y en qué
+       tipo de cosa— y solo después se corta. */
+    if (!q) {
+      visibles = indice.filter((x) => x.tipo === 'a');
+    } else {
+      const puntua = (x: Entrada) => {
+        const n = x.nombre.toLowerCase();
+        const donde = n.startsWith(q) ? 0 : n.includes(q) ? 1 : 2;
+        return donde * 10 + ORDEN_TIPO[x.tipo];
+      };
+      visibles = indice
+        .filter((x) => x.clave!.includes(q))
+        .sort((a, b) => puntua(a) - puntua(b))
+        .slice(0, 12)
+        /* Y se reordenan por tipo para que cada grupo salga de una pieza: el
+           rótulo se escribe cuando cambia el tipo, así que sin esto saldría
+           «Temas» tres veces en la misma lista. */
+        .sort((a, b) => ORDEN_TIPO[a.tipo] - ORDEN_TIPO[b.tipo]);
+    }
     panel.textContent = '';
 
     if (!visibles.length) {
@@ -776,8 +854,7 @@ const enteras = asignaturas
     let grupo = '';
 
     visibles.forEach((x, j) => {
-      const cual =
-        x.tipo === 'a' ? 'Asignaturas' : x.tipo === 'r' ? 'Rutas de estudio' : 'Temas';
+      const cual = ROTULO[x.tipo];
       if (cual !== grupo) {
         grupo = cual;
         const t = document.createElement('p');
@@ -791,11 +868,12 @@ const enteras = asignaturas
       b.className = j === cursor ? 'hit cur' : 'hit';
       b.innerHTML =
         `<span class="k"></span><span class="nb"></span><span class="sb"></span>`;
-      /* La insignia: `##` para una asignatura, `→` para una ruta y el número
-         del tema para todo lo demás. Sin la rama de `r` saldría `TUndefined`,
-         porque una ruta no tiene `n`. */
+      /* La insignia: `##` para una asignatura, `→` para una ruta, `§` para un
+         concepto —que es un apartado dentro de un tema— y el número del tema
+         para el tema. Cada rama tiene que estar escrita: sin la de `r` salía
+         `TUndefined`, porque una ruta no tiene `n`, y un concepto tampoco. */
       b.querySelector('.k')!.textContent =
-        x.tipo === 'a' ? '##' : x.tipo === 'r' ? '→' : `T${String(x.n).padStart(2, '0')}`;
+        x.tipo === 'a' ? '##' : x.tipo === 'r' ? '→' : x.tipo === 'c' ? '§' : `T${String(x.n).padStart(2, '0')}`;
       b.querySelector('.nb')!.textContent = x.nombre;
       b.querySelector('.sb')!.textContent = x.sub;
       b.addEventListener('mouseenter', () => {

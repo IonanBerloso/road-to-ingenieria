@@ -741,6 +741,20 @@ export const CONVOCATORIAS = {
 /** Las claves de la tabla, en su orden. Es el orden en que se listan. */
 export const ORDEN_CONV = Object.keys(CONVOCATORIAS) as (keyof typeof CONVOCATORIAS)[];
 
+/** Las asignaturas que tienen colección de temas, o sea prosa publicada.
+ *
+ *  Vivía dentro de `[tema].astro` con su porqué escrito al lado, y salió aquí
+ *  el 6 de septiembre de 2026 al necesitarla también la portada, para armar el
+ *  índice de conceptos de la paleta. Dos listas con los mismos cuatro nombres
+ *  en dos ficheros es §01 exactamente: la que se olvide de actualizar hará que
+ *  una asignatura entera se salte **en silencio**, que es la forma que ya tuvo
+ *  este fallo cuando se escribió el primer tema de Álgebra.
+ *
+ *  Se amplía al abrir la quinta asignatura, y entonces se amplía **una sola
+ *  vez**. */
+export const CON_TEMAS = ['calculo', 'fluidos', 'algebra', 'fundamentos-quimicos'] as const;
+export type ConTemas = (typeof CON_TEMAS)[number];
+
 const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
 
 /** Un `ejercicios.yaml` por tema, junto a su `index.mdx`.

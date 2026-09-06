@@ -2439,10 +2439,39 @@ las fronteras del ábaco no son «exactamente 0,3 y 6», y el error de aplicar
 semejanza al punto de funcionamiento no es «apreciable» sino del 52 %—, que es
 justo lo que §10 existe para atrapar.
 
-**8 · Paleta de comandos completa.** Ya es una paleta de verdad: se abre con `/`
-o `⌘K`, tiene su propio índice construido en el build y responde a flechas,
-Enter y Escape. Falta que busque **conceptos** dentro de los temas —hoy el
-índice solo tiene asignaturas y títulos—, que es lo que promete `CLAUDE.md` §05.
+**8 · ~~Paleta de comandos completa~~ · HECHO el 6 de septiembre de 2026.** Se
+abre con `/` o `⌘K`, tiene su propio índice construido en el build y responde a
+flechas, Enter y Escape. Y desde hoy busca **conceptos**: los **382 apartados**
+de la prosa de los 54 temas publicados, que es lo que `CLAUDE.md` §05 prometía
+y no era verdad. El índice pasa de 75 a 457 entradas.
+
+El concepto es con lo que llega un alumno —«arco capaz», «NPSH», «Slater»—,
+porque el título del tema todavía no lo sabe. Comprobado a mano en el
+navegador: «arco capaz» sale el primero y **lleva** al apartado, abierto y en
+pantalla, no solo a una URL con almohadilla.
+
+Tres decisiones que conviene no volver a discutir:
+
+- **Los anclajes salen de `render()`**, el mismo slugger que usa la página del
+  tema, así que no pueden desviarse: renombrar un apartado renombra el enlace.
+  Copiarlos habría sido la quinta fuente de verdad del proyecto. Comprobadas
+  las 382 contra el HTML publicado una vez: cero rotas. No lleva guardián a
+  propósito —no puede romperse por construcción—, y `verify.mjs` no las ve
+  porque viven dentro de un JSON y él solo mira los `<a href>`.
+- **Se puntúa antes de cortar.** Con 457 entradas, un `filter().slice(12)` a
+  pelo dejaba de encontrar los temas: cualquier palabra corriente casaba con
+  veinte apartados y los empujaba fuera. Ahora ordena por dónde encaja la
+  consulta y por tipo, y luego reagrupa para que cada rótulo salga de una
+  pieza.
+- **El peso, medido y no supuesto**: la portada pasa de 100 a 177 KB, que son
+  **27,5 KB comprimidos**, de los cuales 18 son el índice. Quitar la clave de
+  los conceptos —se rehace en el cliente— ahorró 40 de esos KB. Con eso no hace
+  falta cargarlo aparte.
+
+Y de paso salió un fallo de §17 que llevaba ahí desde que se escribió el tema:
+`### De dónde sale $\theta$…` en Fluidos 2 producía el ancla
+`de-dónde-sale-θthetaθ-cuando-…`, porque la salida de KaTeX mete el símbolo, el
+texto y el MathML en el slug. Reescrito en texto plano. Era el único de los 382.
 
 ---
 

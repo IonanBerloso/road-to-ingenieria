@@ -6,7 +6,7 @@ import Tema from '../../components/ui/Tema.astro';
 import Lectura from '../../components/patrones/Lectura.astro';
 import EjercicioGuiado from '../../components/patrones/EjercicioGuiado.astro';
 import { ruta } from '../../lib/rutas';
-import { SUFIJO_CONV } from '../../content.config';
+import { SUFIJO_CONV, CON_TEMAS, type ConTemas } from '../../content.config';
 
 /**
  * Una página por tema terminado. El cruce entre el catálogo y los temas
@@ -19,15 +19,16 @@ export async function getStaticPaths() {
   /** Se piden solo las colecciones que hagan falta: pedir una vacía ensucia
    *  la salida del build con avisos que no significan nada.
    *
-   *  La lista va aquí, en una constante con nombre, y no dispersa en un `if`.
-   *  Cuando solo existían `calculo` y `fluidos` estaba escrita como
+   *  La lista va en una constante con nombre, y no dispersa en un `if`. Cuando
+   *  solo existían `calculo` y `fluidos` estaba escrita como
    *  `id !== 'calculo' && id !== 'fluidos'`, y al escribir el primer tema de
    *  Álgebra el build **no falló**: se saltó la asignatura entera en silencio
    *  y la página no se publicó. Es la misma forma exacta del fallo que tenía
-   *  el guardián de convocatorias huérfanas de `verify.mjs`, y por eso se
-   *  arregla aquí arriba y no con un `||` más (§01). */
-  const CON_TEMAS = ['calculo', 'fluidos', 'algebra', 'fundamentos-quimicos'] as const;
-  type ConTemas = (typeof CON_TEMAS)[number];
+   *  el guardián de convocatorias huérfanas de `verify.mjs`.
+   *
+   *  Desde el 6 de septiembre de 2026 vive en `content.config.ts` y no aquí,
+   *  porque la portada también la necesita para el índice de conceptos de la
+   *  paleta: dos copias del mismo puñado de nombres es §01 con otra cara. */
   const tieneTemas = (id: string): id is ConTemas =>
     (CON_TEMAS as readonly string[]).includes(id);
 
@@ -49,7 +50,7 @@ export async function getStaticPaths() {
     if (!tieneTemas(asignatura.id)) {
       throw new Error(
         `El catálogo de "${asignatura.id}" marca temas como hechos, pero esa asignatura ` +
-          `no está en CON_TEMAS, unas líneas más arriba de este fichero. Añádela ahí y ` +
+          `no está en CON_TEMAS, en content.config.ts. Añádela ahí y ` +
           `declara su colección en content.config.ts, o pon hecho: false.`,
       );
     }
