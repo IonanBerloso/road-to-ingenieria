@@ -4705,8 +4705,8 @@ envejecería en silencio.
 | Fundamentos Químicos | 67 | **67** |
 | Álgebra | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 248 |
-| | **1.241** | **1.196 (96 %)** |
+| Fluidos | 293 | 272 |
+| | **1.241** | **1.220 (98 %)** |
 
 El orden no es por facilidad. Química primero por ser la más reciente —27
 resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
@@ -4717,7 +4717,7 @@ en un número impreso o se declaran fuera.
 
 ## Lo que encontró
 
-**En el corpus, ni un error de cuenta.** Las 1.196 cuadran, incluidas las
+**En el corpus, ni un error de cuenta.** Las 1.220 cuadran, incluidas las
 cadenas largas: los siete apartados del sulfúrico, la molalidad que arrastra
 cuatro pasos, la matriz expresada en dos bases que no son la canónica, el
 trabajo de la ventisca.
@@ -4725,7 +4725,7 @@ trabajo de la ventisca.
 ### Y una cosa que sí, pendiente de decidir
 
 **Un número publicado con más precisión de la que el enunciado soporta**, el
-primero en 1.196. Es el paso «La longitud que falta» del ejercicio 6 de
+primero en 1.220. Es el paso «La longitud que falta» del ejercicio 6 de
 `2022-2023-ext` de Fluidos.
 
 La longitud del tramo 3 sale de restar la altura de la bomba menos dos pérdidas
@@ -4767,8 +4767,8 @@ Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
 
 ## Lo que queda, y cómo se sigue
 
-**Solo Fluidos: 45 respuestas**, en dos convocatorias —2024-2025-ext y
-2025-2026-ord—. No es una barrida: es un ritmo.
+**Solo Fluidos: 21 respuestas**, en una convocatoria: la ordinaria de
+2025-2026. No es una barrida: es un ritmo.
 Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
 `deuda.mjs` cuenta cuántas van.
 
