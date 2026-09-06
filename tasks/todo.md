@@ -4152,6 +4152,27 @@ empieza por arriba».
 
 ### 6 · ~~46 de 62 bloques no declaran nada en `falta[]`~~ · CERRADO el 6 de septiembre de 2026
 
+> **Y de los trece huecos que el cuarto criterio encontró, once se
+> arreglaron en vez de quedarse declarados**, esa misma madrugada: cuarenta
+> peldaños de boletín en veintiséis escalones de las tres rutas de Cálculo,
+> elegidos uno a uno por lo que cada escalón dice que enseña. Cuatro de ellos
+> eran el enunciado del examen un año antes, esperando en el tema que la ruta
+> ya enlazaba, sin usar: el bañista del lago, el triángulo de área mínima, el
+> cubo igual a menos el módulo y el rectángulo en el triángulo equilátero.
+>
+> **Quedan siete bloques en todo el sitio que van del ejemplo al examen, y
+> los siete lo declaran**: cuatro de Química, bloqueados por el material;
+> turbinas de Fluidos, cuyos temas 22, 23 y 24 no tienen ni un problema de
+> colección; y dos de Cálculo donde el boletín sencillamente no tiene lo que
+> haría falta — leer una gráfica y demostrar un teorema.
+>
+> Y un aviso de método que casi cuesta un dato falso publicado: la primera
+> versión del guion que cuenta esos bloques dio **35 de 103**, porque construí
+> el mapa de niveles solo con Cálculo y los ejercicios de las otras tres
+> asignaturas caían todos como «de examen». **Contar antes de escribir no
+> basta si el guion que cuenta está mal**: hay que mirar si el número es
+> plausible, y 35 de 103 no lo era después de haber arreglado once.
+
 > **Cerrado: 0 de 103 bloques sin decir nada**, y el camino hasta ahí cambió
 > lo que se estaba midiendo, que es lo que merece quedar escrito.
 >
