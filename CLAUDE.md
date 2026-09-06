@@ -325,9 +325,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.299 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.544 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.267 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.300 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.545 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.268 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 5 |
 
@@ -348,6 +348,10 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > que la regla estaba bien puesta y de que la tabla no debería escribirse a
 > mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
 > de deuda entera. La cifra se copia de su salida, no se estima.
+>
+> Y el 6 de septiembre de 2026, **1.268 ejercicios y 5.143 pasos**: un ejemplo
+> de entrada más, el del diferencial, que cierra el último escalón de Cálculo
+> que tenía un solo ejercicio.
 >
 > Y una tercera vez el mismo día, al terminar los diez temas de Química:
 > **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
@@ -497,9 +501,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 51 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.254 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.268 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.254 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.268 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
