@@ -396,15 +396,24 @@ escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
 >
 > Con eso, `redactar` pasa de cinco a **siete**, y las dos nuevas son de
 > **Fluidos**, que era la asignatura con la demanda medida más alta y con cero
-> pasos de este tipo: **35 de sus 108 ejercicios de examen piden deducir,
-> demostrar o razonar** —el 32 %, en las dieciséis convocatorias—. Se han
-> elegido las dos que más se repiten, contadas una a una: «deducir la
-> expresión analítica de la curva característica de la instalación», con esas
-> palabras en **cinco** convocatorias, y el teorema de Vaschy-Buckingham, en
-> **cuatro**, una de ellas con el enunciado diciendo «de uso obligatorio».
+> pasos de este tipo: **36 de sus 108 ejercicios de examen piden deducir,
+> demostrar o razonar** —el 33 %, y no hay una sola de las dieciséis
+> convocatorias que no lo pida—. Se han elegido las dos que más se repiten:
+> **los adimensionales, en diez de las dieciséis** —dos de ellas nombrando el
+> teorema de Vaschy-Buckingham, una «de uso obligatorio»— y **la curva
+> característica de la instalación, en seis**.
 >
 > La regla de arriba no se levanta, se cumple: se miró antes de escribir más,
 > y las dos nuevas van donde el dato dice, no donde apetecía.
+>
+> **Y los tres números de este párrafo estuvieron mal durante una hora**, por
+> una trampa que §17 ya avisaba a medias y que ahora avisa entera: cargué el
+> YAML —que es lo que §17 pedía— pero busqué la frase sobre el valor **tal
+> cual**, y un bloque `>-` conserva los saltos de línea con los que se
+> escribió. «Curva característica de la instalación» partida en dos líneas no
+> casa con la frase escrita seguida. Salieron 5 donde había 6, y 4 donde había
+> 10. Cargar el YAML no basta: hay que **normalizar los espacios** antes de
+> buscar una frase.
 
 Y dentro de `calcular`, seis tipos de respuesta según lo que se escriba en la
 casilla:
@@ -1516,6 +1525,17 @@ Cosas que ya han costado horas. No son opiniones.
   sobre la cadena ya parseada, nunca con `grep` sobre el fichero.** Vale igual
   para los decimales, que van en LaTeX: `0{,}42865` no lo encuentra un `grep`
   de `0,42865`.
+
+  **Y cargar el YAML tampoco basta**, que es la segunda mitad de la misma
+  trampa y costó tres números publicados mal el 6 de septiembre de 2026. Un
+  bloque `>-` o `|` **conserva los saltos de línea** con los que se escribió,
+  así que la cadena ya parseada trae «curva característica de la\ninstalación»
+  y una expresión regular con la frase seguida no casa. Salieron cinco
+  convocatorias donde había seis, y cuatro donde había diez — el error es
+  siempre **por defecto**, que es el peor sentido: uno se queda tranquilo. La
+  regla completa: se carga el YAML **y se normalizan los espacios**
+  —`.replace(/\s+/g, ' ')`— antes de buscar cualquier frase de más de una
+  palabra.
 - **Una anchura de texto medida en el navegador no es reproducible entre
   máquinas.** La misma etiqueta SVG midió 285 unidades con la tipografía del
   sitio cargada y 315 en otro entorno, y en el segundo se salía del `viewBox` y
