@@ -2354,9 +2354,22 @@ estén en la carpeta?
 > volcado de eGela de sus convocatorias. Está escrito entero en la deuda 48, al
 > final de este fichero.
 
-**1 · El temario oficial de Cálculo.** Los diez temas del catálogo los puse a
-ojo. Están marcados `temarioOficial: false` y `verify.mjs` avisa en cada
-ejecución. Sustituirlos antes de que se conviertan en carpetas.
+**1 · ~~El temario oficial de Cálculo.~~ Resuelto, y llevaba tiempo resuelto
+sin que esta línea se enterase.** Comprobado el 6 de septiembre de 2026:
+`calculo.json` dice `temarioOficial: true`, igual que Álgebra, Fluidos y
+Fundamentos Químicos, y `verify.mjs` no emite ningún aviso. Las cuatro que
+siguen en `false` —Ciencia de Materiales, Expresión Gráfica, Ingeniería
+Térmica, Mecánica Aplicada y Sistemas de Producción— están en `prev`, que es
+lo que §15 manda: el catálogo no finge una lista plausible.
+
+> Lo que decía: «los diez temas del catálogo los puse a ojo, están marcados
+> `temarioOficial: false` y `verify.mjs` avisa en cada ejecución».
+>
+> **Y el fallo no es que estuviera pendiente: es que era lo primero de una
+> lista titulada «bloqueado, esperándote a ti».** Una lista de bloqueos con
+> cosas resueltas dentro hace creer al alumno que debe algo que ya entregó, y
+> es peor que no tener lista. Desde hoy, cada vez que se toque este fichero se
+> relee esa sección entera — son ocho entradas y se leen en dos minutos.
 
 **2 · ~~El temario completo de Fluidos.~~ Resuelto el 30 de agosto de 2026.**
 No hacía falta preguntarte: la respuesta estaba en `Gua_de_la_asignatura.pdf`,
@@ -2388,9 +2401,16 @@ Queda pendiente: `base.css` sigue extraído de dos prototipos, no de ocho. Los
 seis nuevos traen cajas, controles de rango y tablas que todavía no se han
 subido a la capa compartida. Se hará cuando un patrón real los pida, no antes.
 
-**4 · El formato de datos de `EjercicioGuiado`.** Es la decisión que determina
-si producir un tema es rellenar un YAML o programar. No se escribe hasta
-haberlo discutido. Es lo siguiente en la lista después de esto.
+**4 · ~~El formato de datos de `EjercicioGuiado`.~~ Resuelto hace mucho, y esta
+línea tampoco se enteró.** Decía «no se escribe hasta haberlo discutido», y a 6
+de septiembre de 2026 el formato lleva **1.268 ejercicios y 5.143 pasos**
+encima, con su esquema en `content.config.ts`, sus cinco tipos de paso y sus
+siete lectores de respuesta. La decisión se tomó construyendo, que es lo que
+§13 dice que hay que hacer con el framework.
+
+Lo que sí sigue abierto de aquello, y es otra cosa: **los tipos de paso que
+apenas se usan.** `verificar` tiene 25 usos y `redactar` cinco de 5.143, y §04
+dice expresamente que no se escriben más hasta mirar cómo se leen las que hay.
 
 **5 · Tres preguntas sobre el examen de Fluidos**, anotadas el 1 de septiembre
 de 2026 al escribir la ruta, y las tres son §13 caso 5 —hechos del mundo que
@@ -2398,7 +2418,12 @@ el repositorio no contiene—:
 
 - **¿Cuánto dura el examen?** Ninguna de las dieciséis convocatorias lo
   imprime. El bloque de simulacro lo declara en su `falta[]` y dice «de una
-  sentada» en vez de inventarse tres horas.
+  sentada» en vez de inventarse tres horas. **Vuelto a contar el 6 de
+  septiembre de 2026** sobre las dieciséis: cero menciones de duración y cero
+  de calculadora, ni en los enunciados ni en las cabeceras. Sigue abierta, y
+  ahora se sabe que sigue abierta porque se ha mirado, no por inercia. En
+  Química, en cambio, la duración **sí** está impresa —1.45 h el primer
+  cuatrimestre, 1.30 h el segundo— y por eso allí sus rutas la publican.
 - **¿Se puede llevar calculadora, y de qué tipo?** Para Cálculo lo dijiste tú
   —no se puede—, y de ahí salió §09. Para Fluidos no lo sabemos, y aquí
   importa más: hay ejercicios que exigen iterar Colebrook.
@@ -2418,11 +2443,16 @@ Y lo que sí está confirmado, por los propios enunciados: **los cuadros y
 Ahora mismo usa Lectura porque no había prototipo. Cuando aparezca, se extrae
 el patrón y se pasa `t01-complejos` a él.
 
-**6 · El segundo tema de cada asignatura, escrito entero.** `CLAUDE.md` §13:
-el framework se destila del contenido. Dos temas completos por asignatura antes
-de abstraer nada más. Los candidatos naturales son `calculo/t02-sucesiones`
-(donde COMP2 vale cero y casi todo es demostración) y `fluidos/t25-bombeo`
-(donde hay simulador y datos reales de examen).
+**6 · ~~El segundo tema de cada asignatura, escrito entero.~~ Superado con
+mucho.** Pedía dos temas completos por asignatura antes de abstraer nada más, y
+los dos candidatos que nombraba —`calculo/t02-sucesiones` y
+`fluidos/t25-bombeo`— llevan escritos desde agosto. A 6 de septiembre de 2026
+hay **51 temas publicados** de los 54 que declaran los cuatro catálogos
+abiertos: los once de Cálculo, siete de los ocho de Álgebra, veintitrés de los
+veinticinco de Fluidos y los diez de Química. La condición que ponía §13 para
+extraer abstracciones se cumplió hace
+tiempo, y de hecho se extrajeron: el escalón, el tipo `magnitud`, el tipo
+`formula` y el paso `verificar` salieron los cuatro de contenido ya escrito.
 
 **7 · ~~Tests de física~~ · resuelto el 1 de septiembre de 2026.** Estuvo vacío
 hasta que hubo un simulador con física dentro —`PlanoComplejo` es geometría, no
@@ -2442,8 +2472,13 @@ justo lo que §10 existe para atrapar.
 **8 · ~~Paleta de comandos completa~~ · HECHO el 6 de septiembre de 2026.** Se
 abre con `/` o `⌘K`, tiene su propio índice construido en el build y responde a
 flechas, Enter y Escape. Y desde hoy busca **conceptos**: los **382 apartados**
-de la prosa de los 54 temas publicados, que es lo que `CLAUDE.md` §05 prometía
-y no era verdad. El índice pasa de 75 a 457 entradas.
+de la prosa de los **51 temas publicados**, que es lo que `CLAUDE.md` §05
+prometía y no era verdad. El índice pasa de 75 a 457 entradas.
+
+> El mensaje del commit que lo subió dice «54 temas publicados» y son 51: los
+> 54 son los que declaran los catálogos, publicados o no. Se me coló por no
+> contar antes de escribir, que es la cuarta vez que este proyecto se come lo
+> mismo. La cifra buena es esta.
 
 El concepto es con lo que llega un alumno —«arco capaz», «NPSH», «Slater»—,
 porque el título del tema todavía no lo sabe. Comprobado a mano en el
