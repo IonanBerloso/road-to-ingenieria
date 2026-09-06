@@ -59,8 +59,8 @@ examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
 | **Fundamentos Químicos** | 67 | **67** |
 | **Álgebra** | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 160 |
-| | **1.241** | **1.108 (89 %)** |
+| Fluidos | 293 | 183 |
+| | **1.241** | **1.131 (91 %)** |
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que
@@ -123,10 +123,27 @@ centro, el ajuste lo diría.
 
 ## Lo que estos pases encontraron
 
-**En el corpus, nada.** Las 1.108 cuentas cuadran, incluidas las cadenas más
-largas —los siete apartados del sulfúrico, la molalidad que arrastra cuatro
-pasos, la matriz expresada en dos bases que no son la canónica, el trabajo de
-la ventisca integrado sobre la trayectoria—.
+**En el corpus, ni un error de cuenta.** Las 1.131 cuadran, incluidas las
+cadenas más largas —los siete apartados del sulfúrico, la molalidad que
+arrastra cuatro pasos, la matriz expresada en dos bases que no son la canónica,
+el trabajo de la ventisca integrado sobre la trayectoria—.
+
+**Pero sí un número publicado con más precisión de la que el enunciado
+soporta**, y es el primero en 1.131. El apartado (c) del ejercicio 6 de la
+extraordinaria de Fluidos de 2022-2023 pide la longitud de una tubería, y esa
+longitud sale de **restar** la altura de la bomba menos dos pérdidas casi tan
+grandes como ella. El caudal del que todo depende se despeja de una ecuación
+casi degenerada —el punto cae en turbulencia casi completa, donde el factor de
+fricción ya no depende del Reynolds—, así que un solve independiente aterriza
+en 49,18 l/s frente a los 48,32 publicados: un 1,8 % que la tolerancia del 2 %
+absorbe sin problema. En la resta, ese 1,8 % se convierte en un **8,8 %**:
+32,35 m frente a 35,49.
+
+No es un fallo de aritmética. Es que ese paso está publicado con una tolerancia
+del 2 % cuando el propio problema no determina el número mejor que al 10 %, y
+la resolución ya avisaba de la sensibilidad sin sacar la consecuencia. Queda
+anotado en `tasks/todo.md` y el paso **no se da por verificado** mientras tanto:
+es el único de los 1.241 que se deja fuera a propósito.
 
 **En el verificador, nueve cosas**, y por eso los tres módulos que lo forman
 —`lineal.ts`, `numerico.ts` y los lectores de `corpus.ts`— tienen cada uno su

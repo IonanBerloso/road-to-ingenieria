@@ -4705,8 +4705,8 @@ envejecería en silencio.
 | Fundamentos Químicos | 67 | **67** |
 | Álgebra | 76 | **76** |
 | **Cálculo** | 805 | **805** |
-| Fluidos | 293 | 160 |
-| | **1.241** | **1.108 (89 %)** |
+| Fluidos | 293 | 183 |
+| | **1.241** | **1.131 (91 %)** |
 
 El orden no es por facilidad. Química primero por ser la más reciente —27
 resoluciones escritas en dos días— y la única cuyos exámenes no publican nada.
@@ -4717,10 +4717,38 @@ en un número impreso o se declaran fuera.
 
 ## Lo que encontró
 
-**En el corpus, nada.** Las 1.108 cuadran, incluidas las cadenas largas: los
-siete apartados del sulfúrico, la molalidad que arrastra cuatro pasos, la
-matriz expresada en dos bases que no son la canónica, el trabajo de la
-ventisca.
+**En el corpus, ni un error de cuenta.** Las 1.131 cuadran, incluidas las
+cadenas largas: los siete apartados del sulfúrico, la molalidad que arrastra
+cuatro pasos, la matriz expresada en dos bases que no son la canónica, el
+trabajo de la ventisca.
+
+### Y una cosa que sí, pendiente de decidir
+
+**Un número publicado con más precisión de la que el enunciado soporta**, el
+primero en 1.131. Es el paso «La longitud que falta» del ejercicio 6 de
+`2022-2023-ext` de Fluidos.
+
+La longitud del tramo 3 sale de restar la altura de la bomba menos dos pérdidas
+casi tan grandes como ella, y el caudal del que todo depende se despeja de una
+ecuación **casi degenerada**: el punto cae en turbulencia casi completa, donde
+el factor de fricción ya no depende del Reynolds. Un solve independiente da
+49,18 l/s frente a los 48,32 publicados —un 1,8 %, dentro de la tolerancia del
+2 %—, pero en la resta ese 1,8 % se convierte en un **8,8 %**: 32,35 m frente a
+35,49.
+
+No es aritmética mal hecha; la propia resolución ya avisa de la sensibilidad,
+pero no saca la consecuencia. **Lo que hay que decidir** —y es una decisión de
+contenido, no de test— es una de estas tres:
+
+- ensanchar la tolerancia de ese paso al 10 %, que es lo que el problema
+  determina de verdad, y decirlo en la resolución;
+- o declarar el apartado `fuera`, como se hizo con el (b) del ejercicio 3 de
+  esa misma convocatoria;
+- o encontrar la lectura del enunciado que fija el caudal con más precisión, si
+  la hay.
+
+Mientras tanto el paso **no se da por verificado**: es el único de los 1.241
+que se deja fuera a propósito, y `deuda.mjs` lo lista por su nombre.
 
 **En el verificador, nueve cosas**, contadas una a una en
 `tests/verificacion/README.md`. Ninguna habría dado un fallo visible; las
@@ -4739,7 +4767,7 @@ Por eso `lineal.ts` y `numerico.ts` tienen cada uno su fichero de tests.
 
 ## Lo que queda, y cómo se sigue
 
-**Solo Fluidos: 133 respuestas.** No es una barrida: es un ritmo.
+**Solo Fluidos: 110 respuestas.** No es una barrida: es un ritmo.
 Cada vez que se cierre o se toque una asignatura, entra una convocatoria más, y
 `deuda.mjs` cuenta cuántas van.
 
