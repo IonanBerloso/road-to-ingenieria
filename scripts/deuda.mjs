@@ -83,7 +83,10 @@ for (const f of readdirSync(join(CONT, 'preparar'))) {
   const ruta = f.replace('.yaml', '');
   for (const b of doc?.bloques ?? []) {
     bloques++;
-    if (!b.falta?.length) sinFalta++;
+    /* Un bloque está declarado si dice qué le falta o si dice que se ha
+       mirado y no le falta nada. Lo que se cuenta aquí es lo tercero: los que
+       no dicen ninguna de las dos cosas. */
+    if (!b.falta?.length && !b.revisado) sinFalta++;
     for (const esc of b.escalones ?? []) {
       escalones++;
       const ids = (esc.ejercicios ?? []).map((x) => x.id);
@@ -105,8 +108,12 @@ pinta('5 · Escalones con un solo ejercicio');
 fila('de', `${escalones} escalones, ${unEjercicio}`);
 detUno.forEach((d) => fila('', d));
 
-pinta('6 · Bloques que no declaran ningún hueco');
-fila('de', `${bloques} bloques, ${sinFalta} sin nada en falta[] (${Math.round((sinFalta / bloques) * 100)} %)`);
+pinta('6 · Bloques que no dicen si les falta algo');
+console.log(`   Un falta[] vacío decía dos cosas incompatibles: «mirado y no hay
+   hueco» y «sin mirar». Desde el 6 de septiembre de 2026 la primera se declara
+   con la fecha en \`revisado\`, así que lo que se cuenta aquí es lo que de
+   verdad está pendiente: bloques que no dicen ninguna de las dos.`);
+fila('de', `${bloques} bloques, ${sinFalta} sin decir nada (${Math.round((sinFalta / bloques) * 100)} %)`);
 
 /* ── 3 · pasos que piden decimales sin ofrecer la forma exacta ──────── */
 pinta('3 · Pasos que ordenan dar decimales');

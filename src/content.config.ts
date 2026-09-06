@@ -1022,6 +1022,22 @@ const bloque = z.object({
   /** Lo que el examen pide y el sitio todavía **no** enseña. Se publica tal
    *  cual: prometer material que no existe es peor que enseñar el hueco. */
   falta: z.array(z.string().min(20)).default([]),
+  /** La fecha en que este bloque se pasó por los criterios de hueco que la
+   *  ruta declara en su `criterioDeOrden`. No se publica: es para el recuento.
+   *
+   *  Existe porque un `falta[]` vacío decía dos cosas incompatibles —«se ha
+   *  mirado y no hay hueco» y «no lo ha mirado nadie»— y `deuda.mjs` no podía
+   *  distinguirlas: contaba 53 de 103 bloques «sin declarar» cuando las siete
+   *  rutas de Cálculo llevaban desde el 29 de agosto de 2026 diciendo en su
+   *  propia prosa que sus bloques sí se habían revisado. Una métrica que no
+   *  puede distinguir esas dos cosas empuja a inventarse huecos para
+   *  apagarla, que es justo lo contrario de lo que §10 pide.
+   *
+   *  Va por bloque y no por ruta a propósito: una frase en la cabecera de la
+   *  ruta la hereda cualquier bloque que se añada después sin haberlo mirado
+   *  nadie, y ese es el fallo que este proyecto ya se ha comido varias veces.
+   *  Un bloque nuevo nace sin fecha y sale en el recuento. */
+  revisado: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'la fecha va como aaaa-mm-dd').optional(),
 }).refine((b) => Boolean(b.material) !== Boolean(b.escalones), {
   message: 'un bloque lleva `material` o `escalones`, uno de los dos y no los dos',
 });
