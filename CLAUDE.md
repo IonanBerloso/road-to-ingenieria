@@ -329,7 +329,7 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 | `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.546 |
 | `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.269 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 7 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 8 |
 
 > Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
 > pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
@@ -349,11 +349,11 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
 > de deuda entera. La cifra se copia de su salida, no se estima.
 >
-> Y el 6 de septiembre de 2026, **1.269 ejercicios y 5.148 pasos**: ocho pasos
+> Y el 6 de septiembre de 2026, **1.269 ejercicios y 5.149 pasos**: nueve pasos
 > más y dos ejercicios, y ninguno de examen. Son dos ejemplos de entrada —el
 > del diferencial, que cierra el último escalón de Cálculo con un solo
-> ejercicio, y el de las dos líneas de alturas de una central— más los dos
-> primeros `redactar` de Fluidos, metidos **dentro** de ejercicios de examen
+> ejercicio, y el de las dos líneas de alturas de una central— más los **tres
+> primeros `redactar` de Fluidos**, metidos **dentro** de ejercicios de examen
 > que ya estaban. Que el corpus pueda crecer por dentro conviene que se note:
 > no todo crecimiento es transcribir una convocatoria más.
 >
@@ -394,17 +394,19 @@ escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
 > pierde el punto **y además es un teorema más débil**» enseña algo; «pon bien
 > las hipótesis» no.
 >
-> Con eso, `redactar` pasa de cinco a **siete**, y las dos nuevas son de
+> Con eso, `redactar` pasa de cinco a **ocho**, y las tres nuevas son de
 > **Fluidos**, que era la asignatura con la demanda medida más alta y con cero
 > pasos de este tipo: **36 de sus 108 ejercicios de examen piden deducir,
 > demostrar o razonar** —el 33 %, y no hay una sola de las dieciséis
-> convocatorias que no lo pida—. Se han elegido las dos que más se repiten:
+> convocatorias que no lo pida—. Se han elegido las tres que más se repiten:
 > **los adimensionales, en diez de las dieciséis** —dos de ellas nombrando el
-> teorema de Vaschy-Buckingham, una «de uso obligatorio»— y **la curva
-> característica de la instalación, en seis**.
+> teorema de Vaschy-Buckingham, una «de uso obligatorio»—, **la curva
+> característica de la instalación, en seis**, y **la expresión del caudal de
+> un aparato deprimógeno, en cuatro**, que además vale para los tres disfraces
+> con que cae: venturímetro, vertedero y diafragma.
 >
 > La regla de arriba no se levanta, se cumple: se miró antes de escribir más,
-> y las dos nuevas van donde el dato dice, no donde apetecía.
+> y las tres nuevas van donde el dato dice, no donde apetecía.
 >
 > **Y los tres números de este párrafo estuvieron mal durante una hora**, por
 > una trampa que §17 ya avisaba a medias y que ahora avisa entera: cargué el
