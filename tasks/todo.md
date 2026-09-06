@@ -4216,6 +4216,67 @@ Lo que decía cuando se escribió:
 incumplida. Tres cuartas partes de los bloques no declaran ninguno. No significa
 que no tengan —el punto 2 demuestra que sí—, significa que no se ha mirado.
 
+## La frase que envejece sola, y dónde volver a mirar
+
+**6 de septiembre de 2026.** De todo lo que ha fallado en esta tanda, hay una
+clase de error que ha aparecido **seis veces** y merece su propia sección,
+porque no se arregla con más cuidado sino sabiendo dónde vive:
+
+> Una frase que era **verdad el día que se escribió** y que dejó de serlo al
+> abrir la asignatura siguiente, al arreglar el hueco que describía o al
+> transcribir una convocatoria más. Ninguna la caza un guardián, porque no hay
+> nada roto: el sitio funciona perfectamente afirmando algo que ya no pasa.
+
+Las seis de hoy, para reconocer el patrón:
+
+| dónde | decía | era |
+|---|---|---|
+| `falta[]` de conducciones | «esa figura no la dibuja ningún tema» | está en el 23 desde el 5 de septiembre |
+| `falta[]` de análisis dimensional | «Fluidos no tiene ni un paso `redactar`» | los escribí yo esa misma noche |
+| catálogo de Fluidos, **publicado** | «el único de los tres documentos que sí está entre el material» | el de Química también, desde el 5 |
+| §15 | «hoy pasa en dos de las tres» | las asignaturas ya son cuatro |
+| «bloqueado, esperándote a ti» | pedía el temario de Cálculo y el formato de `EjercicioGuiado` | los dos resueltos hacía tiempo |
+| Química en `todo.md` | «el tema 1 no tiene colección» | la tiene desde esa misma tarde |
+
+**Dónde vive esta clase de frase**, que es lo accionable:
+
+1. En un `falta[]` que describe **el estado del sitio** —«no existe», «no lo
+   dibuja nadie», «no hay ninguno»— en vez de describir el material que falta.
+   Los de material envejecen bien; los de estado, no.
+2. En el motivo de un `fuera`, por lo mismo. Y §17 ya avisa de que se relee
+   antes de darlo por bueno: **también antes de citarlo desde otro sitio**.
+3. En cualquier frase con «el único», «ninguno», «todavía no», «de las tres».
+4. En las listas de bloqueo y de deuda, que nadie relee porque se dan por
+   estables.
+
+**Regla práctica, y con su coste medido**, porque probé a automatizarla el
+mismo día y conviene decir en qué queda:
+
+Buscar en las rutas `no existe`, `todavía no`, `aún no`, `no está escrito`,
+`no lo dibuja` y `no hay ninguno` da **24 resultados y casi todos son ruido**:
+casan con matemáticas —«un límite que no existe», «la primitiva no existe»,
+«el intervalo no está escrito»— y no con afirmaciones sobre el sitio. Y añadir
+`el único` sube a 37, casi todos legítimos: «el único de los once años» es un
+recuento sobre el corpus de exámenes, no sobre el estado del sitio.
+
+Así que **no es un guardián y no debe escribirse como tal**: es un buscador de
+pistas que hay que leer. Aun así rinde — de los cuatro fallos de esta noche,
+tres los encontré escribiendo al lado y **el cuarto salió de aquí**: el bloque
+de enteros de la tercera evaluación decía que dos ejercicios «no tienen
+resolución guiada ni teoría detrás» y que «el tema 6 todavía no está escrito».
+Los dos tienen resolución, ninguna de las dos convocatorias declara nada fuera
+y el tema 6 está publicado. Tres afirmaciones, las tres ciertas al escribirse,
+las tres falsas hoy, y a la vista de cualquier alumno que abriera esa ruta.
+
+Y la distinción que hay que tener presente al leer los resultados, porque son
+dos familias con relojes distintos:
+
+- **Frases sobre el estado del sitio** —«no existe», «no está escrito»—. Caducan
+  cuando *nosotros* arreglamos algo, que es a menudo. Son las peligrosas.
+- **Frases sobre el corpus de exámenes** —«el único de los once», «cae en ocho
+  de once»—. Caducan solo al transcribir una convocatoria nueva, y el
+  `medidoSobre` de la ruta ya las ancla.
+
 ## Lo que se comprobó y está bien
 
 Para que la lista de arriba se pueda leer en proporción:

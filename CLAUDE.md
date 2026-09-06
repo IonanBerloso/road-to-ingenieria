@@ -325,9 +325,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.301 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.546 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.269 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.302 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.547 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.270 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 9 |
 
@@ -349,13 +349,15 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
 > de deuda entera. La cifra se copia de su salida, no se estima.
 >
-> Y el 6 de septiembre de 2026, **1.269 ejercicios y 5.150 pasos**: diez pasos
-> más y dos ejercicios, y ninguno de examen. Son dos ejemplos de entrada —el
-> del diferencial, que cierra el último escalón de Cálculo con un solo
-> ejercicio, y el de las dos líneas de alturas de una central— más los
-> **cuatro primeros `redactar` de Fluidos**, metidos **dentro** de ejercicios
-> de examen que ya estaban. Que el corpus pueda crecer por dentro conviene que
-> se note: no todo crecimiento es transcribir una convocatoria más.
+> Y el 6 de septiembre de 2026, **1.270 ejercicios y 5.153 pasos**: trece pasos
+> más y tres ejercicios, y ninguno de examen. Son tres ejemplos de entrada
+> —el del diferencial, que cierra el último escalón de Cálculo con un solo
+> ejercicio; el de las dos líneas de alturas de una central; y el de decidir
+> cuál de dos curvas dibujadas es la derivada de la otra, que es el primero de
+> Cálculo con figura propia— más los **cuatro primeros `redactar` de
+> Fluidos**, metidos **dentro** de ejercicios de examen que ya estaban. Que el
+> corpus pueda crecer por dentro conviene que se note: no todo crecimiento es
+> transcribir una convocatoria más.
 >
 > Y una tercera vez el mismo día, al terminar los diez temas de Química:
 > **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
@@ -540,9 +542,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 51 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.269 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.270 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.269 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.270 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1284,7 +1286,18 @@ nivel de arriba, que es el que se entrega.
   razón: el sitio enseñaba a resolver un examen sin decir en ninguna parte
   cuánto vale. Los pesos de una modalidad **suman 100 o el build falla**, y si
   la guía no está entre el material la `fuente` lo dice con esas palabras
-  (§10) — hoy pasa en dos de las tres.
+  (§10) — al 6 de septiembre de 2026 pasa en **dos de las cuatro**
+  asignaturas abiertas: las guías de Cálculo y de Álgebra las leyó la
+  auditoría externa y no están en el repositorio; las de Fluidos y Química sí,
+  y por eso las suyas van citadas literalmente.
+
+  > Decía «dos de las tres», y la cuenta seguía siendo dos pero las
+  > asignaturas ya eran cuatro. Peor: la `fuente` de Fluidos afirmaba ser «el
+  > único de los tres documentos que sí está entre el material», y eso **se
+  > publica en la portada** — dejó de ser cierto el día que entró Química con
+  > su guía. Corregido el 6 de septiembre de 2026. Es la misma clase de frase
+  > que §16 persigue: verdadera al escribirla, falsa al abrir la asignatura
+  > siguiente, y sin ningún guardián que la mire.
 - `npm run suelo` en verde con todas sus páginas dentro.
 
 ### Cuánto es «una asignatura», medido
