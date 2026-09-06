@@ -4046,6 +4046,25 @@ pestañas sin manejador— eran invisibles al HTML.
 
 Es la superficie más grande del sitio y la menos comprobada.
 
+> **Al 6 de septiembre de 2026 son cuatro, y los cuatro tienen su razón
+> escrita donde el lector la ve.** Dos son de Química y están bloqueados por
+> el material, no por el trabajo: `1c/contar-particulas/el-puente-del-mol`
+> —los tres problemas de colección del tema 1 son de limitante y de fórmula
+> empírica, así que el paso más básico no tiene con qué repetirse— y
+> `1c/el-enlace-y-la-molecula/lewis`, porque el tema 3 no tiene colección. Los
+> otros dos son de Cálculo y son deliberados: `5ev/edos/cualitativo` lo dice
+> en su propia nota —«es la única puerta de entrada a este escalón»— y
+> `2ev/derivada-aplicada/diferencial` lo dice desde hoy: el diferencial **no
+> cae nunca como ejercicio propio** en las doce convocatorias, lo que se pide
+> es acotar el error de un Taylor, que es otra cosa. Es una herramienta, no un
+> hueco.
+>
+> Lo único que queda pendiente de verdad, y va a la lista de trabajo y no a la
+> de deuda: **escribir un ejemplo de entrada del diferencial**, más corto que
+> los cuatro valores que hay. No se hace en el mismo commit que esto porque un
+> ejercicio guiado nuevo no está terminado hasta haber tecleado en él una
+> respuesta equivocada y visto salir su diagnóstico, y eso pide navegador.
+
 ### 5 · Ocho escalones con un solo ejercicio
 
 `2ev/derivada-aplicada/diferencial` · `5ev/curvilinea/escalar` ·
