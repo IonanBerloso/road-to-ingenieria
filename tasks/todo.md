@@ -4057,7 +4057,44 @@ Un escalón con un ejercicio no es una escalera. La ruta de la quinta ya lo
 declara para uno de ellos, con estas palabras: «Quien llegue sin haberla visto
 empieza por arriba».
 
-### 6 · 46 de 62 bloques no declaran nada en `falta[]`
+### 6 · ~~46 de 62 bloques no declaran nada en `falta[]`~~ · CERRADO el 6 de septiembre de 2026
+
+> **Cerrado: 0 de 103 bloques sin decir nada**, y el camino hasta ahí cambió
+> lo que se estaba midiendo, que es lo que merece quedar escrito.
+>
+> Al mirarlo de cerca, **la métrica estaba mal**. Un `falta[]` vacío decía dos
+> cosas incompatibles —«se ha mirado y no hay hueco» y «no lo ha mirado
+> nadie»— y el contador no podía distinguirlas, mientras las siete rutas de
+> Cálculo llevaban desde el 29 de agosto diciendo en su propia prosa que sus
+> bloques sí se habían revisado. Un contador así no empuja a mirar: empuja a
+> **inventarse un hueco para apagarlo**, que es exactamente lo que §10
+> prohíbe. Ahora hay un campo `revisado` con la fecha, por bloque y no por
+> ruta —una frase en la cabecera la hereda cualquier bloque que se añada
+> después—, y `deuda.mjs` cuenta lo que de verdad está pendiente. Validado al
+> revés borrando una fecha: el contador sube a 1.
+>
+> Con la métrica arreglada quedó el trabajo de verdad, que fue este:
+>
+> - **Fluidos, siete bloques.** Dos huecos de teoría que nadie había visto:
+>   el régimen del canal —Froude en lámina libre, calado crítico, resalto—
+>   aparece **cero veces** en la prosa de los 23 temas, y «vertedero» una
+>   sola, en el tema 16 y de pasada, contra 72 apariciones en los ejercicios
+>   del 13. Más los cinco exámenes declarados fuera repartidos por su bloque,
+>   los 35 de 108 ejercicios que piden deducir contra los cero pasos
+>   `redactar` del corpus, y el momento cinético, con teoría y sin ejercicios.
+>   Y uno se **arregló** en vez de declararse: el bloque de golpe de ariete
+>   cita en su `pide` la tensión de tracción, Barlow está bien explicado en el
+>   tema 8, y el bloque no lo enlazaba. Tiene un tercer escalón desde hoy.
+> - **Química, cinco bloques**, con un cuarto criterio que el pase de agosto
+>   no tenía: si el bloque salta del ejemplo al examen sin ningún problema de
+>   colección en medio.
+> - **Cálculo, sesenta y dos bloques** vueltos a pasar con ese cuarto
+>   criterio, que señaló **trece** que los otros tres daban por buenos —los
+>   tres miraban el primer peldaño y este mira el que falta en medio—.
+>   Concentrados en las dos rutas de final: siete de los quince bloques de la
+>   ordinaria no usan ni un problema de boletín.
+
+Lo que decía cuando se escribió:
 
 §14 dice que un hueco declarado es información y uno escondido es una promesa
 incumplida. Tres cuartas partes de los bloques no declaran ninguno. No significa
