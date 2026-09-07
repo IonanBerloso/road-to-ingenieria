@@ -24,8 +24,9 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > Cálculo, Álgebra, Mecánica de Fluidos y Fundamentos Químicos. Son
 > **51 temas publicados** —más tres declarados `soloEnClase` con su motivo—,
 > **118 convocatorias** transcritas con su PDF, **doce rutas** y **1.270
-> ejercicios**. Quedan cinco asignaturas en `prev`, y la regla de arriba dice
-> qué hacer con ellas: se abre una, y no se abre la siguiente hasta cerrarla.
+> ejercicios**. Quedaban entonces cinco asignaturas en `prev` —hoy cuatro, con
+> Térmica ya en `obra`—, y la regla de arriba dice qué hacer con ellas: se abre
+> una, y no se abre la siguiente hasta cerrarla.
 >
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
@@ -33,6 +34,18 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > la trae; Fluidos tiene trece ejercicios de examen declarados `fuera` y sus
 > veintitrés prácticas de laboratorio sin material; y de las 1.241 respuestas
 > de examen comparables hay **una** que se deja sin verificar a propósito.
+>
+> **Y el 7 de septiembre de 2026 se abrió la quinta, Ingeniería Térmica**, que
+> queda en `obra` y no en `ok`: sus **diez temas están escritos** —con su
+> figura y su ejemplo de entrada cada uno, que es lo que §15 pide— y su ruta
+> también, medida sobre seis convocatorias. Lo que falta no es trabajo: son
+> las **22 convocatorias sin transcribir**, y están paradas por §13 caso 5.
+> Veinte de los veintidós PDF llevan dentro la resolución completa del
+> profesor, así que publicarlos no es lo mismo que publicar un enunciado y la
+> decisión no me corresponde. Las tres salidas están escritas en
+> `tasks/todo.md`; mientras tanto los ejercicios de examen cuelgan de su tema
+> con su `fuente` diciendo de qué convocatoria salen, que funciona y no
+> requiere decidir nada.
 
 > Hasta el 24 de agosto de 2026 esta sección decía **«Piloto: Cálculo y Mecánica
 > de Fluidos»**, elegidas porque tensionan el sistema en direcciones opuestas —
@@ -339,11 +352,11 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.302 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.547 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.270 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.339 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.645 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.307 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 10 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
 > Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
 > pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
@@ -387,6 +400,13 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > convocatorias quedan enteras, sin un solo `fuera`. Cuatro recuentos en un
 > día es mucho, y es exactamente lo que la regla pretendía: **se recuenta al
 > tocar el corpus en más de un fichero**, no cuando alguien se acuerda.
+>
+> Y el **7 de septiembre de 2026**, con Ingeniería Térmica escrita:
+> **1.307 ejercicios y 5.327 pasos en 61 temas**, con 423 figuras. Térmica
+> aporta 37 ejercicios y 241 pasos. La cifra sale de `node scripts/deuda.mjs`
+> y se copia de su salida, que es la regla desde el 5 de septiembre; ese día
+> el propio guion se saltaba Térmica **en silencio** porque llevaba la lista
+> de asignaturas escrita a mano, y ahora la saca del catálogo.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -573,11 +593,11 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 
 | patrón | dónde vive de verdad | usos |
 |---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 51 temas |
+| **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.270 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.307 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.270 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.307 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1096,6 +1116,41 @@ Lo que no sabe evaluar lo declara **saltado**, y no lo cuenta como fallo.
 > avisos, 20 eran esto— y §11 dice que un guardián que se ignora es peor que
 > ninguno.
 
+> **Y el 7 de septiembre de 2026, al cerrar Ingeniería Térmica, resultó que
+> el guardián no sabía leer castellano.** Dio **veinte desajustes, los veinte
+> falsos**, y todos por lo mismo: leía `110.735` —un Reynolds— como 110,735.
+> El punto de millar. La tentación era reescribir el contenido; lo correcto
+> era medir, y medido queda: de los **144 puntos que hay dentro de una
+> fórmula en todo el corpus, los 129 con exactamente tres dígitos detrás son
+> millares**, y los 15 con uno o dos son decimales de enunciados de examen
+> reproducidos tal cual (§08) —`$x = 0.5$`, `$z=1.6$`—. Se distinguen por la
+> forma, así que el guardián puede aprenderlo y el contenido no se toca. Es
+> §01 con otra cara: **el fallo estaba en la capa que mira, no en las
+> cuarenta y tres que se miran.**
+>
+> Quitar los millares destapó de inmediato que **los resultados enteros no se
+> comprobaban nunca**: el número de la derecha tenía que llevar separador
+> decimal, y `= 135.000\ \text{W}` solo entraba porque el punto lo disfrazaba
+> de decimal —y entonces se comparaba 135 contra 135.000, que pasaba por la
+> concesión de la potencia de diez de arriba—. Al admitirlos, la cobertura
+> pasa de **2.444 a 3.819 pares**, un 56 % más.
+>
+> Y admitirlos destapó a su vez **dos fallos del guardián que llevaban ahí
+> desde el principio y que ningún corpus había tocado**, los dos encontrados
+> por los 45 avisos falsos que salieron de golpe: la lista de «esto de la
+> derecha no es un resultado» usaba `\b`, y entre la `t` de `\cdot` y el `3`
+> de `\cdot3` no hay frontera de palabra —medio corpus lo escribe sin
+> espacio—; y el analizador leía el signo por debajo de la potencia, así que
+> **`-(1+1)^{2}` valía +4**. Los dos arreglados y validados al revés.
+>
+> Lo que encontró de verdad, ya con todo eso limpio, fue **un desajuste real
+> en Fluidos**: `1744 - 5902 = -4159` en la pieza en Y, donde los dos
+> sumandos estaban redondeados y la resta arrastraba el redondeo al
+> resultado —son 1743,5 y 5901,3, y da −4157,8—. Más dos divisiones escritas
+> de forma ambigua, `K/p = 2{,}2\cdot 10^{9}/2{,}5\cdot 10^{6}`, que solo
+> significan lo que quieren decir si el lector agrupa por su cuenta: pasadas
+> a fracción.
+
 Antes de escribirlo se intentaron dos guardianes de texto y los dos se
 descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusión,
 que vale para la próxima vez: **esta clase de fallo no se caza con patrones en
@@ -1488,6 +1543,16 @@ Y con ellas, recontar las cifras de §04, §05, §09 y §15, que es lo que más 
 olvida: el 28 de agosto de 2026 llevaban una semana diciendo la mitad de la
 verdad.
 
+**Y releer la primera sección de `docs/como-vamos.md`, «En una frase».** El
+guion regenera su tabla, no su prosa, y esa prosa dice **cuántas asignaturas
+hay terminadas**: es la frase más presente-continuo de todo el repositorio y
+envejece el día que se cierra cualquier otra. El 7 de septiembre de 2026
+llevaba desde el 6 diciendo «tres asignaturas terminadas» y «112
+convocatorias» cuando eran cuatro y 118 — el mismo fallo que el propio
+documento denuncia en su cabecera, cometido cuatro líneas después.
+No basta con la regla del «mismo commit»: lo que cambia esa frase suele estar
+en **otra** asignatura.
+
 > Si no puedes hacer el punto 1 —sin navegador, sin capturas—, dilo en el
 > commit. Un contenido visual sin mirar no es contenido terminado, es contenido
 > propuesto, y hay que decirlo con esa palabra.
@@ -1711,6 +1776,34 @@ Cosas que ya han costado horas. No son opiniones.
   `npm run suelo` cubre la muestra de hoy, no las 96 páginas; **para eso está
   `HUMO_TODO=1 npm run humo`**, y conviene pasarlo una vez por tanda de
   trabajo, no una vez por commit.
+
+- **Un guardián puede dar verde sobre menos sitio del que dice, y eso no se ve
+  nunca.** El filtro con el que `humo.mjs` elige qué páginas abrir decía
+  `\/[a-z]+\/` para el nombre de la asignatura — **sin guion**. Las dos
+  asignaturas cuyo `slug` lo lleva, `fundamentos-quimicos` e
+  `ingenieria-termica`, no casaban jamás. Medido el 7 de septiembre de 2026
+  sobre una barrida completa: **169 páginas abiertas, cero de Térmica y
+  ninguno de los diez temas de Química**. Los veinte temas y las tres rutas
+  de las dos asignaturas más nuevas del sitio **no los había abierto un
+  navegador nunca**, y la barrida terminaba con «Navegador: en verde».
+
+  Lo que lo hace peor que un fallo normal es que **no falla**: no hay rojo que
+  investigar, solo un verde más barato de lo que parece. Y se coló por el
+  sitio donde uno menos mira, que es la línea que elige el trabajo, no la que
+  lo hace.
+
+  Dos cosas salen de aquí. Una: **desde hoy la barrida imprime cuántas páginas
+  abre de cada asignatura**, porque un cero en esa línea delata el agujero sin
+  que tenga que fallar nada — es la comprobación que hoy habría bastado. Y
+  dos, la regla general: **cuando un guardián recorre un conjunto, el tamaño
+  de ese conjunto es un dato tan publicable como su resultado**, y hay que
+  mirarlo. «Ha pasado» no significa nada si no sabes sobre cuántos.
+
+  Y una tercera, de método, que costó una barrida entera: al arreglarlo,
+  anclar el otro filtro —el de los índices `…/examenes/`— con `^` lo dejó en
+  **cero exámenes**, porque `/algebra/examenes/` tiene dos segmentos y no uno.
+  De 169 páginas a 90. **Un arreglo que cambia cuántas cosas mira el guardián
+  se comprueba contando otra vez**, no leyendo el `diff`.
 - **Insertar delante de un elemento de lista YAML deja su campo huérfano.** Si
   un elemento es `- id: X` seguido de su `nota:`, y sustituyes solo la línea
   `- id: X` por «`- id: X` + tu nota + tu elemento nuevo», la `nota` original

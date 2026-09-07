@@ -102,14 +102,29 @@ async function main() {
      dando verde. Es la segunda vez que pasa lo mismo, y por eso está apuntado
      en `tasks/todo.md` que este filtro debería dejar de enumerar formas de URL
      y pasar a ser «toda página enlazada desde la portada con un
-     [data-ejercicio] dentro». */
+     [data-ejercicio] dentro».
+
+     Y el 7 de septiembre de 2026 esa deuda cobró: el filtro decía `[a-z]+`
+     para el nombre de la asignatura, **sin guion**, así que las dos
+     asignaturas cuyo `slug` lleva uno —`fundamentos-quimicos` e
+     `ingenieria-termica`— no casaban NUNCA. Medido sobre la barrida completa
+     de ese día: 169 páginas abiertas, **cero de Térmica y ninguno de los diez
+     temas de Química**; de Química solo entraban seis exámenes, por el otro
+     camino. Los veinte temas y las tres rutas de las dos asignaturas más
+     nuevas del sitio no los había abierto un navegador jamás, y la barrida
+     daba «Navegador: en verde» las dos veces.
+
+     Es el fallo que este guardián existe para no tener: no da rojo, da verde
+     sobre menos sitio del que dice. Por eso la línea que imprime cuántas
+     páginas abre es tan importante como el resultado — y por eso desde hoy
+     también imprime **cuántas por asignatura**. */
   const paginas = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
     [...html.matchAll(/href="([^"]+)"/g)]
       .map((m) => m[1])
       .filter(
         (h) =>
           h.startsWith(BASE) &&
-          /\/[a-z]+\/(t\d{2}-|examenes\/\d{4}-\d{4}|preparar\/)/.test(h),
+          /\/[a-z-]+\/(t\d{2}-|examenes\/\d{4}-\d{4}|preparar\/)/.test(h),
       ),
   );
   /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
@@ -127,7 +142,11 @@ async function main() {
     (await Promise.all(
       [...new Set([...(await (await fetch(`${ORIGEN}/`)).text())
         .matchAll(/href="([^"]+)"/g)].map((m) => m[1])
-        .filter((h) => h.startsWith(BASE) && /\/[a-z]+\/$/.test(h.replace(BASE, '/')))
+        /* Esto casa los índices `…/examenes/` de cada asignatura, que es de
+           donde salen las 106 convocatorias de la barrida completa. Anclarlo
+           al principio —probado el 7 de septiembre de 2026— lo deja en cero:
+           `/algebra/examenes/` tiene dos segmentos, no uno. */
+        .filter((h) => h.startsWith(BASE) && /\/[a-z-]+\/$/.test(h.replace(BASE, '/')))
         .map((h) => h))]
         .map(async (h) => {
           const html = await (await fetch(`${ORIGEN.replace(BASE, '')}${h}`)).text().catch(() => '');
@@ -165,6 +184,18 @@ async function main() {
   if (!TODO && muestra.length) {
     console.log(`    ${muestra.map((h) => h.replace(BASE, '')).join('\n    ')}`);
   }
+  /* El reparto por asignatura, que es lo que habría delatado el filtro sin
+     guion sin necesidad de que fallara nada: un cero en esta línea es una
+     asignatura que el navegador no abre. */
+  const porAsignatura = {};
+  for (const h of rutas) {
+    const a = h.replace(BASE, '').split('/').filter(Boolean)[0] ?? '?';
+    porAsignatura[a] = (porAsignatura[a] ?? 0) + 1;
+  }
+  console.log(`  · por asignatura: ${Object.entries(porAsignatura)
+    .sort()
+    .map(([a, n]) => `${a} ${n}`)
+    .join(' · ')}`);
 
   /** Recuento global de trazos: ver el comentario de más abajo. */
   const medidos = { raiz: 0, barra: 0, etiqueta: 0 };

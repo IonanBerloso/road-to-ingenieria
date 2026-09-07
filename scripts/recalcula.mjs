@@ -69,9 +69,35 @@ const FUNCIONES = {
   arccos: Math.acos, sh: Math.sinh, ch: Math.cosh, senh: Math.sinh, cosh: Math.cosh,
 };
 
+/**
+ * El separador de MILLAR del corpus: `135.000` es ciento treinta y cinco mil,
+ * no ciento treinta y cinco. Se quita siempre antes de tocar el separador
+ * decimal, porque después `0{,}023` ya sería `0.023` y sus tres cifras
+ * pasarían por un millar.
+ *
+ * Que se pueda distinguir por la forma no es una suposición: está medido
+ * sobre las cinco asignaturas el 7 de septiembre de 2026. De los 144 puntos
+ * que aparecen dentro de una fórmula en todo el contenido, **los 129 que
+ * llevan exactamente tres dígitos detrás son millares**; los 15 que llevan
+ * uno o dos son decimales de enunciados de examen reproducidos tal cual
+ * (§08) —«$x = 0.5$», «$z=1.6$»— y esos no se tocan.
+ *
+ * Nace de veinte desajustes falsos de Ingeniería Térmica, que es la
+ * asignatura con las cuentas más largas: el guardián leía un Reynolds de
+ * 110.735 como 110,735 y protestaba. El fallo era suyo, no del contenido.
+ */
+function quitaMillares(s) {
+  let previo;
+  do {
+    previo = s;
+    s = s.replace(/(\d)\.(\d{3})(?!\d)/g, (_, a, b) => a + b);
+  } while (s !== previo);
+  return s;
+}
+
 /** Pasa una expresión LaTeX a algo que el analizador de abajo entienda. */
 function normaliza(tex) {
-  let s = tex;
+  let s = quitaMillares(tex);
 
   /* el separador decimal del corpus */
   s = s.replace(/\{,\}/g, '.');
@@ -146,8 +172,10 @@ function evaluaNormalizado(s) {
   function primario() {
     salta();
     if (s[i] === '(') { i++; const v = suma(); salta(); if (s[i] !== ')') throw 0; i++; return v; }
-    if (s[i] === '-') { i++; return -primario(); }
-    if (s[i] === '+') { i++; return primario(); }
+    /* El signo NO se lee aquí: lo lee `unario()`, por encima de la potencia.
+       Hasta el 7 de septiembre de 2026 estaba en este nivel y eso hacía que
+       `-(1+1)^{2}` valiera +4, porque el menos se pegaba a la base antes de
+       elevar. Daba un desajuste falso en un examen de Cálculo. */
     const nom = /^[A-Za-z]+/.exec(s.slice(i));
     if (nom) {
       const n = nom[0]; i += n.length;
@@ -168,15 +196,23 @@ function evaluaNormalizado(s) {
   function potencia() {
     const b = primario();
     salta();
-    if (s[i] === '^') { i++; return b ** potencia(); }
+    /* el exponente sí admite signo: `10^-4` */
+    if (s[i] === '^') { i++; return b ** unario(); }
     return b;
   }
+  /** El signo, por encima de la potencia: `-2^2` es −4, no +4. */
+  function unario() {
+    salta();
+    if (s[i] === '-') { i++; return -unario(); }
+    if (s[i] === '+') { i++; return unario(); }
+    return potencia();
+  }
   function producto() {
-    let v = potencia();
+    let v = unario();
     for (;;) {
       salta();
-      if (s[i] === '*') { i++; v *= potencia(); continue; }
-      if (s[i] === '/') { i++; v /= potencia(); continue; }
+      if (s[i] === '*') { i++; v *= unario(); continue; }
+      if (s[i] === '/') { i++; v /= unario(); continue; }
       /* yuxtaposición: 2PI, 3sqrt(2), (a)(b) */
       if (s[i] === '(' || /[A-Za-z]/.test(s[i] ?? '')) { v *= potencia(); continue; }
       return v;
@@ -365,11 +401,20 @@ for (const asig of asignaturas) {
         ]),
       ];
       for (const [sitio, crudo] of bloques) {
-        const txt = unePartidas(crudo);
+        /* Los millares se quitan aquí y no solo dentro de `normaliza` porque
+           el número de la DERECHA —el que el corpus publica— también los
+           lleva: «= 135.000\ \text{W}» se leía como 135. */
+        const txt = quitaMillares(unePartidas(crudo));
         /* El decimal puede venir con una potencia de diez detrás
            —«2{,}13\cdot10^{-5}»— o como porcentaje. Las dos cosas cambian el
            número, así que entran en la captura o el par se compara mal. */
-        const COLA = String.raw`\s*(-?\d+(?:\{,\}|\.)\d+)\s*(?:(?:\\cdot|\\times)\s*10\^\{?(-?\d+)\}?)?\s*(?:\\[,;:!\s])*\s*(\\?%)?`;
+        /* La parte decimal es opcional desde el 7 de septiembre de 2026. Antes
+           era obligatoria, y eso dejaba fuera todo resultado entero: «= 135.000
+           W» solo entraba porque el punto de millar lo disfrazaba de decimal
+           —y entonces se comparaba 135 contra 135.000, que pasaba únicamente
+           por la concesión de la potencia de diez—. Al quitar los millares
+           arriba, esos pares desaparecían del recuento en vez de comprobarse. */
+        const COLA = String.raw`\s*(-?\d+(?:(?:\{,\}|\.)\d+)?)\s*(?:(?:\\cdot|\\times)\s*10\^\{?(-?\d+)\}?)?\s*(?:\\[,;:!\s])*\s*(\\?%)?`;
         /* Los dos signos con los que el corpus da un valor. Hasta el 4 de
            septiembre de 2026 aquí solo estaba `\approx`, y por eso **Fluidos
            entera —la asignatura más numérica del proyecto— no tenía ni un
@@ -390,7 +435,15 @@ for (const asig of asignaturas) {
                coeficiente, no un valor. Ojo: `\text{m/s}` sí es una unidad y
                tiene que pasar, así que aquí se enumeran los comandos, no se
                rechaza toda contrabarra. */
-            if (/^(\\(cdot|times|d?frac|tfrac|sqrt|left|sum|int|pi|gamma|rho|mu|nu|eta|alpha|beta|theta|lambda|omega|Delta|delta|sigma|tau|phi|varepsilon)\b|[A-Za-z])/.test(cola)) {
+            /* El `\b` de esta lista era un fallo silencioso hasta el 7 de
+               septiembre de 2026: `\cdot3` y `\sqrt2` —sin espacio, que es
+               como los escribe medio corpus— no casaban, porque entre la `t`
+               y el `3` no hay frontera de palabra. No se notaba mientras el
+               número de la derecha tenía que ser decimal; al admitir enteros
+               salieron 45 avisos falsos de golpe, todos de esta forma. Y el
+               grado va aparte: «\frac{\pi}{4} = 45°» es una conversión, no
+               una cuenta que deba cuadrar. */
+            if (/^(\\(cdot|times|d?frac|tfrac|sqrt|left|sum|int|pi|gamma|rho|mu|nu|eta|alpha|beta|theta|lambda|omega|Delta|delta|sigma|tau|phi|varepsilon|mathrm)(?![A-Za-z])|\\?circ\b|[A-Za-z°([])/.test(cola)) {
               saltados++; continue;
             }
             let decimal = parseFloat(m[1].replace('{,}', '.'));

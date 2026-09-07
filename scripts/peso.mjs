@@ -72,8 +72,19 @@ for (const ruta of PAGINAS) {
   const cdp = await ctx.newCDPSession(pag);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   const t0 = Date.now();
-  await pag.goto(ORIGEN + ruta, { waitUntil: 'load', timeout: 120000 });
+  const resp = await pag.goto(ORIGEN + ruta, { waitUntil: 'load', timeout: 120000 });
   const listo = (Date.now() - t0) / 1000;
+  /* Una ruta mal escrita devolvía la página de 404 y se medía igual: «0,0 MB,
+     23 nodos, 0,0 s», y el guion terminaba diciendo «ninguna página pasa de
+     4 s». O sea, verde sobre nada. Pasó el 7 de septiembre de 2026 al medir a
+     mano las páginas de Térmica, y es la misma familia que el filtro sin guion
+     de `humo.mjs` del mismo día (§17): un guardián que da verde sobre menos
+     sitio del que dice. Aquí se corta en seco, porque medir una 404 no es
+     medir. */
+  if (!resp?.ok()) {
+    console.error(`\n${ruta}: el servidor devuelve ${resp?.status() ?? 'nada'}. Esa página no existe.`);
+    await ctx.close(); await nav.close(); srv.kill(); process.exit(1);
+  }
   const { nodos, html } = await pag.evaluate(() => ({
     nodos: document.getElementsByTagName('*').length,
     html: document.documentElement.outerHTML.length,

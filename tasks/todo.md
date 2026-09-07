@@ -194,10 +194,84 @@ a contar. Hace falta releer las once convocatorias finales y decidir si el
 bloque se declara con cero o se parte en dos. Térmica sí va con cero, porque
 ahí sí está contado.
 
+**Y al ir a mirarlo, el 7 de septiembre de 2026, resultó ser mucho peor que un
+bloque.** Los **doce bloques** de `fluidos-ord.yaml` declaran `anios: 11`, los
+doce, mientras el `porque` de cada uno dice un número distinto y **ya medido**:
+
+| bloque | dice su propio texto | publica la pastilla |
+|---|---|---|
+| suelo · unidades, presiones y pérdidas | cero de once, y una de once para pérdidas | 11 de 16 |
+| análisis dimensional | 11 de 11 | 11 de 16 |
+| instalaciones de bombeo | 11 de 11 | 11 de 16 |
+| canales | 10 de 11 | 11 de 16 |
+| fuerzas sobre superficies y cuerpos | 10 de 11 | 11 de 16 |
+| cantidad de movimiento | 9 de 11 | 11 de 16 |
+| estática e hidrostática | 8 de 11 | 11 de 16 |
+| propiedades del fluido | 8 de 11 | 11 de 16 |
+| conducciones | 7 de 11 | 11 de 16 |
+| medidores y vaciado | 7 de 11 | 11 de 16 |
+| **golpe de ariete** | **1 de 11** | **11 de 16** |
+| **turbinas y máquinas** | **2 de 11** | **11 de 16** |
+
+O sea: **el número más visible de cada bloque —el que decide en qué orden
+estudia alguien que va con el tiempo justo— es falso en diez de los doce, y
+en dos lo es por un factor de diez.** El golpe de ariete, que el propio texto
+llama «el bloque con el número más bajo de todo el examen final, una sola vez
+en once años», luce una pastilla que dice que cae once de dieciséis. Nadie lo
+vio porque el `porque` está dos líneas más abajo y dice la verdad.
+
+Y hay una segunda mitad: **`medidoSobre` es 16 y todos los recuentos son sobre
+11.** Los dieciséis son once finales más cinco parciales, y el `fuente` de
+cada bloque empieza literalmente por «Las once finales». Así que la pastilla
+compara un numerador de una base con el denominador de otra.
+
+**Y contado con un guion, que es como se cuenta (§17).** No hacía falta
+releer los PDF: cada `examen.yaml` lleva el `tema` de cada ejercicio, así que
+basta cruzar las agrupaciones que la propia ruta declara —«temas 22 a 25 como
+un solo hueco», «temas 17 a 19 juntos»— contra las dieciséis convocatorias.
+El recuento **reproduce exactamente los once números que los `porque` ya
+publicaban**, lo cual es la comprobación de que las agrupaciones son las que
+dicen ser:
+
+| bloque | finales | parciales | de 16 |
+|---|---|---|---|
+| suelo · unidades, presiones y pérdidas | 1 | 1 | 2 |
+| análisis dimensional | 11 | 2 | 13 |
+| instalaciones de bombeo | 11 | 2 | 13 |
+| canales | 10 | 1 | 11 |
+| fuerzas sobre superficies y cuerpos | 10 | 2 | 12 |
+| cantidad de movimiento | 9 | 2 | 11 |
+| estática e hidrostática | 8 | 2 | 10 |
+| propiedades del fluido | 8 | 2 | 10 |
+| conducciones | 7 | 2 | 9 |
+| medidores y vaciado | 7 | 2 | 9 |
+| golpe de ariete | 1 | 2 | 3 |
+| **turbinas y máquinas** | **4** | 1 | 5 |
+
+**Y el único que no reproduce delata un segundo dato falso**: el bloque de
+turbinas dice «solo 2 de las 11 convocatorias finales, y las dos veces sin
+apenas cálculo». Son **cuatro**: 2021-2022 ordinaria —cinco preguntas—,
+2022-2023 extraordinaria —la tabla de acción y reacción—, **2024-2025
+ordinaria, que es «la central de tres turbinas» y sí tiene cálculo**, y
+2025-2026 ordinaria, que es el «ocho huecos y un descuento». Los dos últimos
+entraron al corpus después de escribirse la ruta —el de 2025-2026 es el que se
+rescató de `fuera` al descubrir que su enunciado sí traía una cuenta (§17)— y
+el `porque` nunca se volvió a mirar. O sea: **el bloque peor valorado de la
+ruta rinde el doble de lo que dice, y su «sin apenas cálculo» ya no es
+cierto.**
+
+**Lo que hay que hacer, y por qué no va en este commit.** Bajar `medidoSobre`
+a 11 o pasar cada `anios` al total sobre 16 —hay que elegir una base y decirlo
+en el `criterioDeOrden`—, poner en cada bloque el número que le corresponde,
+reescribir el `porque` de turbinas y volver a mirar su sitio en el orden, que
+se decidió con un 2 que era un 4. Es un cambio de una asignatura **cerrada**,
+con su build y su barrida propios, y metido dentro del commit de las figuras
+de Térmica se escondería. Va en el siguiente, solo.
+
 ### La ruta de estudio · ESCRITA, sobre seis convocatorias contadas
 
 `preparar/ingenieria-termica-ord.yaml`: siete bloques, dieciocho escalones y
-los treinta y cuatro ejercicios de la asignatura repartidos sin repetir ninguno.
+los treinta y siete ejercicios de la asignatura repartidos sin repetir ninguno.
 Prepara también la extraordinaria, porque la estructura es la misma en las dos.
 
 **Ninguno de los dieciocho escalones empieza por un ejercicio de examen**, que
@@ -240,6 +314,33 @@ Tres datos más que salieron de leerlas y que la ruta debería publicar:
 - **~~El ejercicio 1 de 2022-2023 no pide ningún número~~** · ESCRITO. Pide el
   signo de cinco magnitudes y si las paredes son rígidas o móviles, y ya está
   transcrito como «Seis signos, y ningún número que dar».
+
+### El pase de §15 y §16, y lo que encontró MIRAR
+
+§15 pide dos cosas por tema que no las mira ningún guardián: **un ejemplo
+introductorio propio y al menos una figura que responda a una pregunta**. Al
+contarlas había **cero figuras en los diez temas** y tres temas sin ejemplo
+propio. Ya no: diez figuras, una por tema, y los tres ejemplos que faltaban
+—la variación de entropía repartida en sus dos términos (t06), qué es el
+coeficiente de película antes de calcularlo (t09) y por qué la radiación va a
+la cuarta (t10)—. La asignatura pasa de 34 a **37 ejercicios**, y la ruta
+enlaza los tres como primer peldaño de su escalón.
+
+Y después, §16 punto 1: **abrir las veinte capturas** —claro y oscuro— en vez
+de fiarse del verde. Seis cosas, ninguna vista por ningún guardián:
+
+| lo que estaba dibujado | por qué importa |
+|---|---|
+| la curva de exergía **bajaba** al final | $1-T_0/T$ es creciente; el trazado la hacía no monótona, y encima el eje de temperaturas no era lineal |
+| las cuatro resistencias del t08 «a escala», y no lo estaban | el acero es el 0,26 % y se dibujaba como un tercio de la convección interior. Una figura esquemática es una segunda oportunidad de afirmar algo falso (§17) |
+| `E_b1` con el guion bajo a la vista | en un SVG no hay LaTeX: el subíndice se pone con `tspan` |
+| «si las dos son negras» **cortado por la izquierda** | se salía del `viewBox` |
+| la ecuación del t04 llevaba `Δep` y la tabla no tenía esa columna | el lector que la sigue término a término se queda sin uno |
+| el diagrama P-v sin nombrar los ejes | la figura entera va de qué significa el área |
+
+Todas arregladas y vueltas a mirar. Es la tercera vez que esta sección se
+escribe con el mismo resultado: **el suelo en verde no dice nada sobre si lo
+dibujado es cierto.**
 
 ### Lo demás, que sí es trabajo
 
@@ -2941,6 +3042,25 @@ aparece un tipo de página con ejercicios dentro hay que acordarse de tocarlo, y
 las dos veces anteriores nadie se acordó hasta que se buscó a propósito. La
 regla duradera sería «toda página enlazada desde la portada que contenga un
 `[data-ejercicio]`». Se cambia la próxima vez que falle.
+
+> **Y falló, el 7 de septiembre de 2026, por un sitio que esta nota no
+> preveía**: no por el tipo de página sino por el **nombre de la asignatura**.
+> El filtro decía `[a-z]+`, sin guion, así que `fundamentos-quimicos` e
+> `ingenieria-termica` no casaban nunca. Medido sobre la barrida completa de
+> ese día: **169 páginas, cero de Térmica y ninguno de los diez temas de
+> Química**, y «Navegador: en verde» al final. Los veinte temas y las tres
+> rutas de las dos asignaturas más nuevas no los había abierto un navegador
+> jamás.
+>
+> Arreglado el filtro, y añadida la comprobación que hoy habría bastado: la
+> barrida **imprime cuántas páginas abre de cada asignatura**. Un cero en esa
+> línea delata el agujero sin que tenga que fallar nada.
+>
+> La deuda de fondo —dejar de enumerar formas de URL— **sigue abierta**, y
+> ahora con una razón medida: en tres años este filtro ha fallado por el tipo
+> de página dos veces y por el nombre de la asignatura una. Lo que tienen en
+> común es que **el guardián decide su propio alcance con una expresión
+> regular escrita a mano**, y eso no lo revisa nadie.
 
 **16 · `ALCANCE_CONV` y la ruta declaran los mismos temas.**
 `examenes/index.astro` codifica «1.ª ev = temas 1–2, 10 % de la nota» y

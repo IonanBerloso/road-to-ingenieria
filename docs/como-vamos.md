@@ -1,4 +1,4 @@
-# Cómo vamos · 2 de septiembre de 2026
+# Cómo vamos · 7 de septiembre de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -16,10 +16,27 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Tres asignaturas terminadas de nueve: Cálculo, Álgebra y Mecánica de
-Fluidos.** Las tres cumplen §15 entera y las tres están en el catálogo como
-`ok`. Entre las tres, **112 convocatorias transcritas de 112**, y el guardián
-de convocatorias huérfanas no cuenta ninguna suelta.
+**Cuatro asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos
+y Fundamentos Químicos.** Las cuatro cumplen §15 entera y las cuatro están en el
+catálogo como `ok`. Entre las cuatro, **118 convocatorias transcritas de 118**,
+y el guardián de convocatorias huérfanas no cuenta ninguna suelta.
+
+**Y una quinta abierta, Ingeniería Térmica, en `obra`.** Sus diez temas están
+escritos —cada uno con su figura y su ejemplo de entrada, que es lo que §15
+pide— y su ruta también, medida sobre seis convocatorias contadas apartado por
+apartado. Lo que la mantiene en `obra` no es trabajo pendiente: son las **22
+convocatorias sin transcribir**, paradas por §13 caso 5. Veinte de los
+veintidós PDF llevan dentro la resolución completa del profesor, así que
+publicarlos no es lo mismo que publicar un enunciado y la decisión no es del
+que escribe el sitio. Las tres salidas posibles están en `tasks/todo.md`.
+
+> El párrafo de arriba decía **«tres asignaturas terminadas»** y **«112
+> convocatorias»** hasta el 7 de septiembre de 2026, y llevaba así desde que
+> Química se cerró el día 6. Es exactamente el fallo que este documento
+> denuncia en su propia cabecera —publicar una cifra vieja— cometido cuatro
+> líneas después de denunciarlo. La regla del «mismo commit» no basta cuando lo que
+> cambia el estado está en otra asignatura; lo que hace falta es que esta
+> sección se lea al cerrar cualquiera, y eso es lo que dice ahora §16.
 
 **Fluidos se cerró el 2 de septiembre de 2026**, y lo que la tenía abierta no
 era material: eran **dos temas del programa oficial de los que no hay nada que
