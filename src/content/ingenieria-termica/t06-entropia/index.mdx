@@ -1,0 +1,309 @@
+---
+asignatura: ingenieria-termica
+tema: 6
+titulo: La entropía y su utilización
+descripcion: La magnitud que se crea y no se destruye, el balance de entropía con su término de generación, y el rendimiento isentrópico.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 6, «La entropía y su utilización» —que la asignatura imparte junto al Tema 5— · Departamento de Ingeniería Energética, UPV/EHU. Los valores del ejemplo trabajado están contrastados contra la resolución oficial de la convocatoria de enero de 2026.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El tema 5 terminó con la desigualdad de Clausius:
+
+$$
+\oint \frac{\delta Q}{T} \le 0
+$$
+
+con la igualdad en los procesos reversibles. Y que una integral cíclica valga
+cero significa exactamente una cosa: que lo de dentro **es la diferencial de
+una función de estado**. Esa función es la entropía, y este tema es lo que se
+puede hacer con ella.
+
+$$
+dS = \left.\frac{\delta Q}{T}\right|_{reversible}
+\qquad
+[S] = \frac{\text{J}}{\text{K}}
+$$
+
+## La propiedad que se crea
+
+Aquí está la diferencia con todo lo anterior. La energía se conserva: no se
+crea ni se destruye. La entropía **no se conserva**: se crea.
+
+Para un proceso irreversible, $dS > \delta Q/T$, y lo que sobra tiene nombre:
+
+$$
+\Delta S_{12} = \int_1^2 \frac{\delta Q}{T} + S_G
+\qquad\text{con}\qquad
+S_G \ge 0
+$$
+
+Léela despacio, porque es la ecuación que gobierna el resto de la asignatura.
+La entropía de un sistema cambia por **dos** motivos, y solo dos:
+
+- **Porque entra o sale calor**, y eso es el término integral. Puede ser
+  positivo o negativo: el calor que entra sube la entropía, el que sale la
+  baja.
+- **Porque el proceso es irreversible**, y eso es $S_G$. Este término **nunca
+  es negativo**. Vale cero si el proceso es reversible y positivo si no.
+
+De ahí, el caso particular más citado: en un sistema **aislado** no entra ni
+sale calor, así que el término integral desaparece y queda
+
+$$
+\Delta S_{12}\big|_{aislado} \ge 0
+$$
+
+La entropía de un sistema aislado nunca disminuye. Y como el universo es el
+sistema aislado por excelencia, la entropía del universo solo puede crecer.
+
+<ErrorTipico titulo="«La entropía siempre aumenta»">
+Solo en un sistema aislado. La de un sistema cualquiera puede bajar
+perfectamente, y baja cada vez que cede calor: enfría un vaso de agua en la
+nevera y su entropía disminuye.
+
+Lo que no puede bajar es la del **conjunto** —el vaso más la nevera más la
+cocina—, porque ahí ya no hay nada fuera que se lleve el calor. En el
+ejercicio 1 de enero de 2026, la entropía del aire del cilindro baja
+0,5776 kJ/K y la del medio circundante sube 0,8191: el sistema baja, el
+universo sube 0,2415, y las tres cifras son correctas a la vez.
+
+Si en un examen te sale $\Delta S$ negativa para un sistema, no es un error.
+Si te sale $S_G$ negativa, sí lo es.
+</ErrorTipico>
+
+## Cómo se calcula $\Delta s$
+
+La entropía es función de estado, así que su variación entre dos estados se
+puede calcular **por cualquier camino**, aunque el real sea irreversible. Se
+elige uno reversible que una los mismos extremos y se integra.
+
+Combinando el primer principio, $\delta Q = dU + \delta W$, con la definición
+de entropía, sale la **ecuación fundamental de la termodinámica**:
+
+$$
+T\,dS = dU + P\,dV
+$$
+
+Y de ella, integrando:
+
+$$
+\Delta S_{12} = \int_1^2 \frac{dU}{T} + \int_1^2 \frac{P\,dV}{T}
+$$
+
+### Gas ideal
+
+Con $dU = m\,c_v\,dT$ y $P/T = mR'/V$:
+
+$$
+\Delta S_{12}
+= m\,c_v \ln\frac{T_2}{T_1} + m\,R' \ln\frac{V_2}{V_1}
+= m\,c_p \ln\frac{T_2}{T_1} - m\,R' \ln\frac{P_2}{P_1}
+$$
+
+Las dos formas son la misma; se usa la que case con los datos del enunciado.
+Y las dos llevan logaritmos de cocientes de temperaturas, así que **todo en
+kelvin**.
+
+### Sustancia incompresible
+
+Es el modelo del agua líquida, y el que el examen usa para el agua de
+refrigeración. Si $v$ es constante, el término $P\,dv$ desaparece y los dos
+calores específicos colapsan en uno:
+
+$$
+c_p = c_v = c
+\qquad
+\Delta u = c\,\Delta T
+\qquad
+\Delta h = c\,\Delta T + v\,\Delta P \approx c\,\Delta T
+\qquad
+\Delta s = c\ln\frac{T_2}{T_1}
+$$
+
+Y aquí viene un detalle de la asignatura que hay que saber, porque los
+enunciados lo dan por sabido: **el origen de $h$ y de $u$ para este modelo
+está en 0 °C**. Es decir:
+
+$$
+u = c\,\theta
+\qquad
+h \approx c\,\theta
+\qquad
+s = c\ln\frac{T}{273}
+$$
+
+Fíjate en la asimetría, que es la fuente de la mitad de los errores: la
+entalpía se calcula con la temperatura en **grados Celsius**, y la entropía
+con el **cociente en kelvin** respecto de 273. No es incoherencia: las dos
+están referidas al mismo estado —0 °C—, pero una es una diferencia y la otra
+un cociente, y ya sabemos qué escala pide cada cosa.
+
+Comprobado en la resolución oficial de enero de 2026, para el agua a 15 °C:
+
+$$
+h_0 = 4{,}186\cdot 15 = 62{,}79\ \frac{\text{kJ}}{\text{kg}}
+\qquad
+s_0 = 4{,}186\ln\frac{288}{273} = 0{,}224\ \frac{\text{kJ}}{\text{kg}\cdot\text{K}}
+$$
+
+### Y el tercer principio
+
+$$
+\lim_{T\to 0} S = 0 \qquad\text{(sustancia pura)}
+$$
+
+Es lo que fija el cero de la escala de entropías, igual que el punto triple
+fija el de las entalpías del agua. En los ejercicios casi nunca interviene,
+pero es la razón de que las tablas puedan dar entropías absolutas y no solo
+diferencias.
+
+## El diagrama T-s
+
+Si $dS = \delta Q/T$ en un proceso reversible, entonces $\delta Q = T\,dS$, y
+por tanto
+
+$$
+q = \int_1^2 T\,ds = \text{el área bajo el proceso reversible en el } T\text{-}s
+$$
+
+Es el gemelo exacto de lo que pasaba en el $P\text{-}v$ con el trabajo. Y como
+allí, el área **solo** es el calor si el proceso es reversible.
+
+Con esto, dos lecturas inmediatas:
+
+- Un proceso **adiabático reversible** es una **vertical** en el $T\text{-}s$,
+  porque $\delta Q = 0$ y $S_G = 0$ implican $ds = 0$. Por eso «adiabático
+  reversible» e «isentrópico» son lo mismo.
+- Un **ciclo de Carnot** es un **rectángulo**: dos horizontales (isotermas) y
+  dos verticales (isentrópicas). Su área es el trabajo neto.
+
+Los procesos politrópicos también tienen su forma. De
+$ds = c_n\,dT/T$ sale
+
+$$
+\Delta s = c_n \ln\frac{T}{T_0}
+\qquad\text{es decir}\qquad
+T = T_0\,e^{\frac{s-s_0}{c_n}}
+$$
+
+y cada valor de $n$ da su exponencial: el isotermo ($n=1$, con
+$c_n = \infty$) es una horizontal, el adiabático ($n=\gamma$, con
+$c_\gamma = 0$) es una vertical, y el isóbaro y el isócoro son exponenciales
+de pendiente $c_p$ y $c_v$ —el isócoro más empinado, porque su calor
+específico es menor—.
+
+## El balance de entropía en un volumen de control
+
+Con la masa cruzando la frontera, el balance se escribe igual que el de
+energía: lo que sale menos lo que entra, más lo que se acumula, menos lo que
+llega con el calor.
+
+$$
+\dot S_G = \dot m\,(s_2 - s_1) - \int_{S.C.}\frac{\delta \dot Q_i}{T_i} \ge 0
+\qquad\text{(régimen permanente)}
+$$
+
+En régimen transitorio aparece además el término de acumulación,
+$(dS/dt)_{vc}$.
+
+Fíjate en el subíndice de la temperatura: $T_i$ es la temperatura **de la
+superficie por la que entra ese calor**, no la del fluido ni la media del
+proceso. Cuando el calor entra por una frontera a temperatura uniforme, la
+integral es simplemente $\dot Q/T$.
+
+<ErrorTipico titulo="Dividir el calor por la temperatura equivocada">
+El término $\int \delta Q/T$ se evalúa con la temperatura **del sitio por
+donde cruza el calor**, y ese sitio depende de dónde hayas puesto la frontera.
+
+Es el error que más veces estropea un cálculo de entropía generada, y se ve
+bien en el ejercicio 1 de enero de 2026. El aire del cilindro se enfría de
+557,5 K a 300 K cediendo 240 kJ al medio circundante, que está a 20 °C. Hay
+dos cuentas distintas y las dos aparecen:
+
+- Para el **sistema**, el calor sale a través de una frontera cuya temperatura
+  va cambiando con el gas, así que hay que integrar:
+  $\int \delta Q/T = m\,c_n \ln(T_2/T_1) = -0{,}578\ \text{kJ/K}$.
+- Para el **medio circundante**, el calor entra a través de una frontera que
+  está siempre a 20 °C, porque el medio es tan grande que no se calienta:
+  $\Delta S_{MC} = Q/T_{MC} = 240/293 = 0{,}819\ \text{kJ/K}$.
+
+Los dos números salen del mismo calor, 240 kJ, y son distintos. Esa diferencia
+**es** la entropía generada.
+</ErrorTipico>
+
+### El ejemplo completo
+
+Sigamos ese ejercicio hasta el final, porque es el esqueleto de casi todos.
+
+**Entropía generada en el sistema.** El proceso es reversible según el
+enunciado, así que debería salir cero, y sale:
+
+$$
+S_{G,sist} = m\,(s_2 - s_1) - \int\frac{\delta Q}{T}
+= -0{,}578 - (-0{,}578) = 0
+$$
+
+**Entropía generada en el universo.** El universo es el sistema más el medio,
+y está aislado, así que toda su variación es generación:
+
+$$
+S_{G,univ} = \Delta S_{sist} + \Delta S_{MC}
+= -0{,}578 + 0{,}819 = 0{,}241\ \frac{\text{kJ}}{\text{K}}
+$$
+
+Y ahí está la lección del ejercicio: **el proceso es internamente reversible y
+el universo genera entropía igualmente**. La irreversibilidad no está dentro
+del cilindro; está en la frontera, donde 240 kJ pasan de un gas que está entre
+284 y 27 °C a un ambiente que está a 20. Transferir calor con una diferencia
+finita de temperaturas es irreversible, y es la tercera condición del tema 5.
+
+## El rendimiento isentrópico
+
+Última pieza del tema, y la que conecta con las máquinas del tema 4.
+
+Los procesos reales se estudian tomando como referencia el proceso reversible
+entre las mismas dos presiones, y corrigiendo con un factor. El más importante
+es el **rendimiento interno o isentrópico**, que compara el salto de entalpía
+real con el que habría si el proceso fuese isentrópico.
+
+Se escribe al revés según el aparato, y el criterio es el mismo de siempre —
+arriba lo que se obtiene, abajo lo que se paga—:
+
+$$
+\text{expansión (turbina, tobera):}\quad
+\eta_{ST} = \frac{h_1 - h_2}{h_1 - h_{2'}}
+$$
+
+$$
+\text{compresión (compresor, difusor, bomba):}\quad
+\eta_{SC} = \frac{h_{2'} - h_1}{h_2 - h_1}
+$$
+
+donde $2'$ es el estado que se alcanzaría con $s_{2'} = s_1$, es decir bajando
+o subiendo **en vertical** en el diagrama $h\text{-}s$ hasta la presión final.
+
+Los dos cocientes son menores que uno, y por el mismo motivo: en una expansión
+real se obtiene **menos** trabajo del ideal, y en una compresión real hay que
+meter **más**. Si te sale mayor que uno, has invertido la fracción.
+
+<ErrorTipico titulo="Buscar el estado 2 prima con la temperatura en vez de con la entropía">
+El estado $2'$ se localiza con **dos** datos, como cualquier estado: la
+presión final —que es la misma que la del proceso real— y la entropía del
+estado inicial, $s_{2'} = s_1$. Esa segunda condición es la que le da nombre
+al rendimiento.
+
+La temperatura de $2'$ no es un dato: es un resultado, y en general **no**
+coincide con la del estado real 2. En una expansión, $T_{2'} < T_2$, porque el
+proceso real desperdicia parte del salto en calentar el propio fluido.
+
+Es el paso que la bomba del ejercicio 2 de enero de 2026 exige: se entra en la
+tabla de líquido comprimido con $P_{3'} = 50\ \text{bar}$ y
+$s_{3'} = s_2 = 1{,}3028\ \text{kJ/(kg·K)}$, y de ahí sale
+$h_{3'} = 345{,}82$, que comparado con el salto real da un rendimiento del
+61,6 %.
+</ErrorTipico>

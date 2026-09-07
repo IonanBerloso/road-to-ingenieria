@@ -1,0 +1,334 @@
+ejercicios:
+  - id: ejter-el-motor-que-promete-demasiado
+    titulo: El motor que promete un 45 %
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre el teorema de Carnot
+      del Tema 5 de la asignatura. No es de examen ni de la colección.
+    nivel: ejemplo
+    enunciado: |
+      Un fabricante ofrece un motor térmico que opera entre un foco caliente a
+      $227\ \text{°C}$ y uno frío a $27\ \text{°C}$, y afirma que su
+      rendimiento es del $45\ \%$.
+
+      a) ¿Cuál es el rendimiento máximo que puede tener un motor entre esos
+      dos focos?
+
+      b) ¿Es posible lo que afirma el fabricante?
+
+      c) Si el motor absorbiera $100\ \text{kJ}$ del foco caliente, ¿cuál es
+      el mínimo calor que tendría que ceder al foco frío?
+    pide: El rendimiento máximo, si la afirmación es posible, y el calor mínimo cedido.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El fabricante no dice si su motor es reversible ni qué fluido usa.
+          ¿Se puede juzgar la afirmación sin esos datos?
+        opciones:
+          - texto: >-
+              Sí: el teorema de Carnot dice que ningún motor entre dos focos
+              dados supera al reversible, y el del reversible depende solo de
+              las dos temperaturas
+            correcta: true
+            mensaje: |
+              Exacto, y eso es lo potente del teorema: da un techo que no
+              depende del fluido, ni del ciclo, ni del tamaño de la máquina.
+              Dos temperaturas bastan.
+          - texto: >-
+              No: sin saber el fluido de trabajo no se puede calcular el
+              rendimiento máximo
+            mensaje: |
+              Esa es justamente la conclusión que el teorema de Carnot
+              descarta. Todos los motores reversibles entre los mismos dos
+              focos tienen el **mismo** rendimiento, sea cual sea su fluido;
+              si dependiera del fluido, se podrían acoplar dos y violar
+              Kelvin-Planck.
+          - texto: >-
+              No: hace falta saber cuánto calor absorbe para calcular el
+              rendimiento
+            mensaje: |
+              El rendimiento es un cociente, así que la escala se cancela: un
+              motor que absorbe 100 kJ y otro que absorbe 100 MJ pueden tener
+              el mismo. Lo que hace falta son las temperaturas.
+
+      - tipo: calcular
+        titulo: El rendimiento máximo
+        pregunta: |
+          ¿Cuál es el rendimiento de Carnot entre esos dos focos?
+        respuesta:
+          tipo: numero
+          valor: '0.40'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.881'
+            mensaje: |
+              Has metido grados Celsius en el cociente: $1 - 27/227$. La
+              temperatura entra aquí dividiendo, así que va en kelvin. Y
+              fíjate en lo que el error te habría hecho creer: que un motor
+              con un 88 % de rendimiento es posible.
+          - valor: '0.60'
+            mensaje: |
+              Ese es el cociente $T_{FF}/T_{FB} = 300/500$, es decir la
+              fracción de calor que se **tira** al foco frío. El rendimiento
+              es lo que queda: uno menos eso.
+        pista: |
+          $\eta_C = 1 - T_{FF}/T_{FB}$, con las dos temperaturas en kelvin.
+        desarrollo: |
+          $$
+          T_{FB} = 227 + 273 = 500\ \text{K}
+          \qquad
+          T_{FF} = 27 + 273 = 300\ \text{K}
+          $$
+
+          $$
+          \eta_C = 1 - \frac{300}{500} = 0{,}40
+          $$
+
+          Un 40 %, y eso es un techo: ninguna máquina entre esos dos focos
+          puede pasar de ahí, ni siendo perfecta.
+
+      - tipo: calcular
+        titulo: El calor mínimo que hay que tirar
+        pregunta: |
+          Si el motor absorbiera 100 kJ del foco caliente, ¿cuánto calor
+          tendría que ceder como mínimo al foco frío?
+        respuesta:
+          tipo: magnitud
+          valor: '60 kJ'
+          tolerancia: 0.02
+          formato: un calor, con su unidad
+        distractores:
+          - valor: '40 kJ'
+            mensaje: |
+              Esos son los 40 kJ de trabajo que produciría el motor ideal. El
+              calor cedido es lo que sobra: los 100 que entran menos los 40
+              que salen como trabajo.
+          - valor: '0 kJ'
+            mensaje: |
+              Ese sería el motor que Kelvin-Planck prohíbe: uno que convierte
+              todo el calor absorbido en trabajo intercambiando con un solo
+              foco. Siempre sobra calor que tirar, y cuánto lo dice el
+              rendimiento máximo.
+        pista: |
+          En el mejor de los casos, $W = \eta_C\,Q_1$, y el resto se cede.
+        desarrollo: |
+          $$
+          W_{max} = \eta_C\,Q_1 = 0{,}40\cdot 100 = 40\ \text{kJ}
+          $$
+          $$
+          |Q_2|_{min} = Q_1 - W_{max} = 100 - 40 = 60\ \text{kJ}
+          $$
+
+          Sesenta de cada cien kilojulios se van al foco frío por narices, y
+          eso en la máquina perfecta. En una real, más.
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta al apartado b). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El teorema de Carnot fija un techo que solo depende de las
+              temperaturas de los focos: 40 % entre 500 K y 300 K.
+          - texto: >-
+              El fabricante afirma un 45 %, que está por encima de ese techo.
+          - texto: >-
+              Luego la afirmación es imposible: viola el segundo principio,
+              aunque no viole el primero.
+          - texto: >-
+              Además viola el primer principio, porque un 45 % de rendimiento
+              significa crear energía que no existía.
+            trampa: true
+            mensaje: |
+              El primer principio está tan contento: un motor con un 45 % de
+              rendimiento absorbería 100 kJ, produciría 45 y cedería 55, y la
+              suma cuadra perfectamente. Ese es justo el interés del segundo
+              principio: prohíbe cosas que la conservación de la energía
+              permitiría.
+    resolucion: |
+      **a) El rendimiento máximo.** Por el teorema de Carnot, ningún motor
+      entre dos focos supera al reversible, y el del reversible solo depende
+      de las temperaturas:
+
+      $$
+      \eta_C = 1 - \frac{T_{FF}}{T_{FB}} = 1 - \frac{300}{500} = 0{,}40
+      $$
+
+      Las dos en kelvin, porque están en un cociente.
+
+      **b) No es posible.** El 45 % está por encima del 40 % que es el máximo
+      teórico. La afirmación no viola el primer principio —la energía
+      cuadraría— pero sí el segundo, y con eso basta para descartarla.
+
+      **c) El calor mínimo cedido.** En el mejor de los casos el motor
+      produciría $0{,}40\cdot 100 = 40\ \text{kJ}$, así que cedería
+
+      $$
+      |Q_2|_{min} = 100 - 40 = 60\ \text{kJ}
+      $$
+
+      **Lo que hay que llevarse.** Este cálculo es de dos líneas y sirve como
+      **comprobación de plausibilidad** en cualquier ejercicio con focos. Si
+      un resultado tuyo sale por encima del rendimiento de Carnot de sus
+      temperaturas, no hace falta buscar más: hay un error antes.
+
+  - id: ejter-el-frigorifico-y-su-techo
+    titulo: El frigorífico, y por qué su medida no es un rendimiento
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre la máquina frigorífica
+      y el coeficiente de operación del Tema 5 de la asignatura. No es de
+      examen ni de la colección.
+    nivel: ejemplo
+    enunciado: |
+      Un frigorífico mantiene su congelador a $-18\ \text{°C}$ en una cocina
+      que está a $22\ \text{°C}$. Consume $200\ \text{W}$ y el fabricante
+      afirma que extrae $900\ \text{W}$ de calor del congelador.
+
+      a) ¿Cuál es el coeficiente de operación que afirma el fabricante?
+
+      b) ¿Cuál es el máximo posible entre esas dos temperaturas?
+
+      c) ¿Es creíble la afirmación?
+    pide: El COP declarado, el COP máximo y si el dato es posible.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El COP declarado sale mayor que 1. ¿Es eso un problema?
+        opciones:
+          - texto: >-
+              No: el COP no es un rendimiento. Compara el calor extraído con
+              el trabajo consumido, y el calor extraído no sale del trabajo
+            correcta: true
+            mensaje: |
+              Exacto, y por eso se llama coeficiente de operación y no
+              rendimiento. El calor sale del congelador; el trabajo solo lo
+              empuja cuesta arriba. Un COP de 4,5 significa que por cada julio
+              de electricidad se mueven cuatro julios y medio de calor, y eso
+              no crea nada.
+          - texto: >-
+              Sí: ningún rendimiento puede pasar de 1, así que el dato es
+              imposible de entrada
+            mensaje: |
+              Sería cierto de un rendimiento, que compara lo que sale con lo
+              que entra **de la misma cosa**. El COP compara calor con
+              trabajo, que son dos entradas distintas del balance, y por eso
+              habitualmente vale entre 2 y 6.
+          - texto: >-
+              Sí, salvo que la máquina sea reversible, en cuyo caso puede
+              pasar de 1
+            mensaje: |
+              La reversibilidad no cambia la naturaleza del cociente: un
+              frigorífico real y corriente, comprado en una tienda, tiene un
+              COP muy por encima de 1. Lo que la reversibilidad fija es el
+              **techo**, y ese techo también es mayor que 1.
+
+      - tipo: calcular
+        titulo: El COP declarado
+        pregunta: |
+          ¿Qué coeficiente de operación afirma el fabricante?
+        respuesta:
+          tipo: numero
+          valor: '4.5'
+          tolerancia: 0.02
+          formato: un número
+        distractores:
+          - valor: '0.222'
+            mensaje: |
+              Has dividido al revés, $W/Q_2$. El COP pone arriba lo que se
+              obtiene —el calor extraído del foco frío— y abajo lo que se
+              paga, que es el trabajo.
+        pista: |
+          $\text{COP} = Q_2/W$, con las dos potencias en vatios.
+        desarrollo: |
+          $$
+          \text{COP} = \frac{\dot Q_2}{\dot W} = \frac{900}{200} = 4{,}5
+          $$
+
+      - tipo: calcular
+        titulo: El COP máximo
+        pregunta: |
+          ¿Cuál es el coeficiente de operación de una máquina **reversible**
+          entre esas dos temperaturas?
+        respuesta:
+          tipo: numero
+          valor: '6.379'
+          tolerancia: 0.005
+          formato: un número
+        distractores:
+          - valor: '7.379'
+            mensaje: |
+              Ese es el COP de una **bomba de calor**, $T_{FB}/(T_{FB}-T_{FF})$,
+              que aprovecha el calor entregado al foco caliente en vez del
+              extraído del frío. Es exactamente uno más que el del
+              frigorífico, y no por casualidad: la diferencia es el trabajo,
+              que también acaba en el foco caliente.
+          - valor: '0.1355'
+            mensaje: |
+              Eso es el **rendimiento** de Carnot de un motor entre esas dos
+              temperaturas, $1 - 255{,}15/295{,}15$. Un frigorífico no es un motor al
+              revés en la fórmula: su cociente es otro, aunque salga del mismo
+              ciclo.
+        pista: |
+          Del ciclo reversible, $\text{COP}_C = T_{FF}/(T_{FB} - T_{FF})$, con
+          las temperaturas en kelvin.
+        desarrollo: |
+          $$
+          T_{FF} = -18 + 273{,}15 = 255{,}15\ \text{K}
+          \qquad
+          T_{FB} = 22 + 273{,}15 = 295{,}15\ \text{K}
+          $$
+
+          $$
+          \text{COP}_C = \frac{T_{FF}}{T_{FB} - T_{FF}}
+          = \frac{255{,}15}{40} = 6{,}379
+          $$
+
+          Fíjate en el denominador: es el **salto** de temperatura, y por eso
+          da igual la escala. El numerador, en cambio, es una temperatura
+          absoluta y tiene que ir en kelvin.
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta al apartado c). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El COP declarado es 4,5 y el máximo teórico entre esas dos
+              temperaturas es 6,38.
+          - texto: >-
+              4,5 está por debajo de 6,38, así que la afirmación no viola el
+              segundo principio.
+          - texto: >-
+              Y es además un valor plausible: un 71 % del máximo teórico es
+              buena máquina, pero no imposible.
+          - texto: >-
+              Si el fabricante subiera la temperatura del congelador a −10 °C,
+              el COP máximo bajaría, porque hay que enfriar menos.
+            trampa: true
+            mensaje: |
+              Sube. Cuanto **menor** es el salto de temperatura que hay que
+              vencer, más fácil es bombear calor: con el congelador a −10 °C
+              el salto pasa de 40 a 32 grados y el COP máximo sube de 6,38 a
+              8,22. Es la razón por la que un congelador consume mucho más que
+              un frigorífico normal.
+    resolucion: |
+      **a) El COP declarado.**
+
+      $$
+      \text{COP} = \frac{900}{200} = 4{,}5
+      $$
+
+      **b) El máximo.** El de la máquina reversible entre esas temperaturas:
+
+      $$
+      \text{COP}_C = \frac{T_{FF}}{T_{FB}-T_{FF}} = \frac{255{,}15}{40}
+      = 6{,}379
+      $$
+
+      **c) Sí, es creíble.** 4,5 está por debajo de 6,38, así que no hay
+      violación del segundo principio, y el cociente entre los dos —un 71 %
+      del máximo— es exigente pero razonable para un electrodoméstico
+      moderno.
+
+      **Lo que hay que llevarse.** El COP mayor que uno no es una anomalía:
+      es lo normal, y es la razón por la que calentar una casa con una bomba
+      de calor cuesta menos que con una resistencia eléctrica. La resistencia
+      convierte un julio de electricidad en un julio de calor, con
+      «rendimiento» 1. La bomba de calor mueve cuatro o cinco. No crea
+      energía: la trae de fuera.

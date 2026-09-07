@@ -25,7 +25,20 @@ import yaml from 'js-yaml';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONT = join(RAIZ, 'src', 'content');
-const ASIGS = ['calculo', 'algebra', 'fluidos', 'fundamentos-quimicos'];
+/* Las asignaturas salen del **catálogo**, que es quien decide cuáles existen.
+ *
+ * Estuvo escrito a mano —«calculo, algebra, fluidos, fundamentos-quimicos»—
+ * hasta el 7 de septiembre de 2026, y ese día pasó lo que el comentario de
+ * `CON_TEMAS` en `content.config.ts` llevaba escrito desde el 6: una lista
+ * duplicada se olvida, y la asignatura entera se salta **en silencio**. Se
+ * abrió Ingeniería Térmica con once ejercicios y este guion siguió diciendo
+ * 1.270, el mismo número que antes de escribirlos.
+ *
+ * Es de las peores formas del fallo, porque el guion no protesta: publica un
+ * recuento que parece correcto y no lo es, que es §10 exactamente. */
+const ASIGS = readdirSync(join(CONT, 'catalogo'))
+  .filter((n) => n.endsWith('.json'))
+  .map((n) => n.replace(/\.json$/, ''));
 
 /* ── el corpus entero, indexado por id ──────────────────────────────── */
 const EJ = new Map();

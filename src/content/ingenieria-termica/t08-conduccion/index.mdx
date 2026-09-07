@@ -1,0 +1,213 @@
+---
+asignatura: ingenieria-termica
+tema: 8
+titulo: Transmisión de calor por conducción
+descripcion: La ley de Fourier, la analogía termoeléctrica que convierte un muro en un circuito, y por qué casi siempre manda una sola resistencia.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 8, «Transmisión de calor por conducción» · Departamento de Ingeniería Energética, UPV/EHU. Los números del ejemplo trabajado están rehechos y contrastados contra la resolución oficial de la convocatoria de enero de 2026.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Aquí empieza el segundo bloque de la asignatura, y cambia la pregunta. Los
+siete temas anteriores contestaban **cuánta** energía hay y **cuánta** vale.
+Los tres que quedan contestan **a qué velocidad se mueve**, y por qué camino.
+
+Hay tres mecanismos, y este tema es el primero:
+
+- **Conducción**: el calor se propaga por el material sin que la materia se
+  mueva. Es el de este tema.
+- **Convección**: el calor lo transporta un fluido que se mueve. Tema 9.
+- **Radiación**: el calor viaja como onda electromagnética, sin necesitar
+  medio. Tema 10.
+
+## La ley de Fourier
+
+El campo de temperaturas de un cuerpo es
+$\theta = \theta(x, y, z, t)$, y su **gradiente** apunta hacia donde la
+temperatura crece más deprisa. La ley de Fourier dice que el calor va
+exactamente al revés:
+
+$$
+\vec{q} = -k\,\nabla\theta
+\qquad
+\left[\frac{\text{W}}{\text{m}^{2}}\right]
+$$
+
+El signo menos es la segunda ley disfrazada: el calor baja por el gradiente,
+de caliente a frío, nunca al contrario. Y $k$ es la **conductividad térmica**
+del material, en W/(m·K), que en general depende de la temperatura.
+
+Los órdenes de magnitud de $k$ conviene tenerlos, porque explican la mitad de
+los resultados: un metal ronda las decenas o centenas —el acero del ejemplo de
+abajo, 52—, un material de construcción anda por la unidad, y un aislante por
+las centésimas. **Cuatro órdenes de magnitud entre un metal y un aislante**, y
+eso es lo que hace que en un muro real la chapa metálica no pinte nada.
+
+### Con generación interna
+
+La ecuación general de la conducción incluye además un término de calor
+generado dentro del propio material, $\dot e_{gen}$ en W/m³. No es una
+rareza de laboratorio; las transparencias del tema dan cinco casos, y valen la
+pena porque enseñan a reconocerlo:
+
+- el **muro de hormigón** de un reactor nuclear, que absorbe radiación y la
+  convierte en calor dentro de sí mismo;
+- el **suelo radiante**, donde la tubería calefactora se modela como fuente
+  distribuida dentro del forjado;
+- la **refrigeración regenerativa** de una tobera de cohete, con el
+  combustible circulando por microcanales de la pared;
+- la **respiración de frutas y verduras**, cuyo calor metabólico es
+  despreciable por pieza y considerable en una cámara de maduración de muchas
+  toneladas;
+- los **componentes de una placa electrónica**.
+
+## La analogía termoeléctrica
+
+Este es el instrumento del tema, y el que convierte problemas que parecen
+difíciles en circuitos de bachillerato.
+
+Para una **pared plana** sin generación, integrando Fourier con temperatura
+fija en las dos caras sale un perfil lineal,
+$\theta(x) = \theta_1 + (\theta_2-\theta_1)x/L$, y un flujo
+
+$$
+\dot q = \frac{k}{L}\,(\theta_1 - \theta_2)
+$$
+
+Puesto del revés, eso es la ley de Ohm:
+
+| eléctrico | térmico |
+|---|---|
+| $I = \Delta V / R$ | $\dot Q = \Delta\theta / R$ |
+| intensidad | flujo de calor |
+| diferencia de potencial | diferencia de temperatura |
+| resistencia eléctrica | **resistencia térmica** |
+
+Y las resistencias térmicas de las tres geometrías del tema:
+
+$$
+\text{plana:}\quad R = \frac{L}{k\,A}
+\qquad
+\text{cilíndrica:}\quad R = \frac{\ln(r_2/r_1)}{2\pi k L}
+\qquad
+\text{esférica:}\quad R = \frac{r_2 - r_1}{4\pi k\,r_1 r_2}
+$$
+
+A partir de aquí, un muro de tres capas es **tres resistencias en serie**, y
+se suman. Un tubo con aislamiento, lo mismo. Y donde el calor entra o sale por
+convección, se añade una resistencia más:
+
+$$
+R_{conv} = \frac{1}{h\,A}
+$$
+
+que es del tema 9 pero se usa ya, porque casi ningún problema real acaba en
+una superficie a temperatura conocida: acaba en un fluido.
+
+<ErrorTipico titulo="Sumar resistencias cilíndricas usando el área equivocada">
+En una pared plana, todas las capas tienen la misma área y $A$ se puede sacar
+factor común: por eso se trabaja con resistencias **por unidad de área**,
+$R = L/k$, en m²·K/W.
+
+En un cilindro **no se puede**, porque el área crece con el radio. Ahí la
+resistencia es $\ln(r_2/r_1)/(2\pi k L)$, en K/W a secas, y el área ya está
+dentro del logaritmo. Mezclar las dos convenciones en el mismo circuito da
+números sin sentido, y es fácil hacerlo cuando el problema tiene una capa
+cilíndrica y una convección.
+
+La regla que lo evita: **decidir al principio si el circuito va por unidad de
+longitud o entero**, escribirlo en el folio, y que todas las resistencias
+lleven la misma unidad.
+</ErrorTipico>
+
+## El ejemplo del examen, y la pregunta que de verdad importa
+
+El ejercicio 3 de enero de 2026 es el modelo del tema. Por una tubería de
+0,5 m de diámetro interior circulan 0,3 kg/s de agua que entra a 250 °C y sale
+a 150 °C. La tubería tiene dos capas —3 cm de acero, $k = 52$, y 6 cm de
+aislante, $k = 0{,}75$—, el aire exterior está en reposo a 10 °C y la
+superficie exterior a 110,7 °C.
+
+El circuito tiene **cuatro** resistencias en serie: convección interior,
+conducción por el acero, conducción por el aislante y convección exterior. Y
+la segunda pregunta del examen es la buena:
+
+> ¿Cuál es la resistencia térmica dominante, y qué porcentaje representa cada
+> una?
+
+| resistencia | valor (K/W) | % del total |
+|---|---|---|
+| convección interior | $2{,}24\cdot 10^{-4}$ | 15,9 |
+| conducción, acero | $3{,}65\cdot 10^{-6}$ | **0,26** |
+| conducción, aislante | $4{,}34\cdot 10^{-4}$ | 30,8 |
+| **convección exterior** | $7{,}46\cdot 10^{-4}$ | **53,0** |
+
+Y ahí están las dos lecciones que un ingeniero se lleva de este tema:
+
+**La chapa de acero no existe.** Aporta el 0,26 % de la resistencia total.
+Podrías quitarla del cálculo entero y el resultado cambiaría en la tercera
+cifra. Es la consecuencia directa de que $k$ valga 52 frente a 0,75: el acero opone
+unas **sesenta veces menos resistencia por centímetro** que el aislante, y
+además hay la mitad de centímetros.
+
+**Manda la convección exterior**, con más de la mitad. Es decir: si quieres
+reducir las pérdidas de esa tubería, **poner más aislante es la segunda mejor
+idea**; la primera es hacer algo con el aire exterior. Identificar la
+resistencia dominante antes de gastar dinero es literalmente el oficio.
+
+<ErrorTipico titulo="Los redondeos de la resolución oficial, en este ejercicio">
+Rehacer este ejercicio entero da los mismos números que el examen salvo en la
+tercera o cuarta cifra —94,92 m de longitud frente a 94,95, por ejemplo—, y
+eso es redondeo intermedio normal.
+
+Pero hay **una errata de verdad**, y conviene saberla para no volverse loco: en
+la línea donde suma las cuatro resistencias, la resolución escribe
+$9{,}63703\cdot 10^{-6}$ para la del acero, cuando dos renglones antes la ha
+calculado como $3{,}65481\cdot 10^{-6}$ y en la tabla de porcentajes vuelve a
+usar la buena.
+
+Lo delata la propia suma: con $3{,}65\cdot 10^{-6}$ el total sale
+$1{,}40737\cdot 10^{-3}$, que es el que el examen imprime; con
+$9{,}64\cdot 10^{-6}$ saldría $1{,}41336\cdot 10^{-3}$, que no lo es. El
+número bueno es el pequeño.
+</ErrorTipico>
+
+## La otra forma de plantearlo: por dónde entrar
+
+Un detalle de método que la propia resolución oficial explica, y que vale para
+todo el bloque.
+
+El ejercicio se podría atacar desde fuera, calculando el coeficiente de
+convección natural del aire alrededor del tubo. Para eso haría falta la
+correlación de Churchill y Chu, que es esta:
+
+$$
+Nu = \left\{0{,}6 + \frac{0{,}387\,Ra^{1/6}}
+{\left[1+(0{,}559/Pr)^{9/16}\right]^{8/27}}\right\}^{2}
+$$
+
+La resolución la escribe y a continuación dice, con todas las letras, que
+**no es aconsejable para un examen** y que conviene otra vía: resolver **de
+dentro hacia afuera**, porque ahí todos los datos están.
+
+Es un consejo de examen y merece la pena tomárselo en serio. El criterio
+general: cuando un problema de transmisión de calor se puede recorrer en dos
+direcciones, se empieza por el extremo donde el enunciado ha puesto más datos,
+y las correlaciones feas se dejan para cuando no hay alternativa.
+
+De hecho, el propio enunciado te está ayudando sin decirlo: darte la
+temperatura de la superficie exterior, 110,7 °C, es exactamente lo que permite
+calcular la resistencia de convección exterior **por diferencia**, sin ninguna
+correlación:
+
+$$
+R_{conv-ext} = \frac{\theta_3 - \theta_{f,ext}}{\dot Q}
+= \frac{110{,}7 - 10}{135.000} = 7{,}459\cdot 10^{-4}\ \frac{\text{K}}{\text{W}}
+$$
+
+Cuando un enunciado te da una temperatura de superficie que no parece hacer
+falta, casi siempre es para ahorrarte una correlación.

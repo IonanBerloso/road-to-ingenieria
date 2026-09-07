@@ -134,6 +134,36 @@ for (const e of ejercicios) {
         }
       }
 
+      /* Y un distractor con unidad de OTRA magnitud tampoco vale, aunque se
+         lea perfectamente. El comparador diagnostica primero «eso es otra
+         magnitud» y nunca llega a mirar si el número coincide con un
+         distractor, así que su mensaje —normalmente el mejor escrito de los
+         tres— es letra muerta.
+
+         Entra el 7 de septiembre de 2026: en el ejercicio de la tobera puse
+         «6 m3/s» como distractor de un gasto másico, para explicar que faltaba
+         dividir por el volumen específico. El esquema lo cazó, un build
+         entero después, y este guion lo había dado por bueno. Es el mismo
+         patrón que las dos comprobaciones de abajo. */
+      if (p.respuesta?.tipo === 'magnitud') {
+        const buena = leeMagnitud(String(p.respuesta.valor));
+        for (const d of p.distractores ?? []) {
+          const m = leeMagnitud(String(d.valor));
+          if (!buena || !m || m.unidad === null) continue;
+          const misma =
+            m.dim.M === buena.dim.M &&
+            m.dim.L === buena.dim.L &&
+            m.dim.T === buena.dim.T &&
+            m.dim.K === buena.dim.K;
+          if (!misma) {
+            mal(
+              dónde,
+              `el distractor «${d.valor}» tiene unidad de otra magnitud que «${p.respuesta.valor}»: el comparador lo diagnostica antes y este mensaje no se vería`,
+            );
+          }
+        }
+      }
+
       /* Un distractor dentro de la tolerancia se daría por bueno, y entonces
          el alumno recibe un «bien» por el razonamiento equivocado. Lo caza el
          esquema, pero se tarda un build entero en enterarse; aquí, un

@@ -1508,6 +1508,14 @@ Cosas que ya han costado horas. No son opiniones.
   cualquier comprobador hecho con `grep`.
 - **`dist/` abierto con `file://` no tiene CSS.** Las variables salen vacías y
   parece que los SVG no se dibujan. Levanta un servidor.
+- **Una tolerancia relativa sobre una temperatura es enorme.** El lector de
+  magnitudes convierte los grados Celsius a kelvin antes de comparar, así que
+  el 2 % por defecto de una respuesta de 40 °C son **±6,3 K**: cualquier
+  distractor a menos de seis grados se da por bueno. Lo cazó el esquema el 7
+  de septiembre de 2026, en el primer ejercicio de Térmica cuya respuesta era
+  una temperatura. En una respuesta de tipo temperatura, la tolerancia se pone
+  a ojo mirando **cuántos kelvin** representa, no cuántos por ciento; 0,005
+  son un grado y medio, que es lo razonable.
 - **Los ids de encabezado se generan por `render()`, no por documento.** Astro
   instancia el slugger en cada llamada, así que dos resoluciones con un `##
   Resultado` producen dos `id="resultado"` en la misma página. Se prefijan en

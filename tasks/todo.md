@@ -1,18 +1,17 @@
 # Qué queda
 
-## Dónde está el proyecto · 6 de septiembre de 2026
+## Dónde está el proyecto · 7 de septiembre de 2026
 
-**Las cuatro asignaturas abiertas están cerradas contra §15**: Cálculo,
-Álgebra, Mecánica de Fluidos y Fundamentos Químicos. Quedan cinco en `prev`, y
-§00 dice qué hacer con ellas — se abre una, y no se abre la siguiente hasta
-cerrarla.
+**Cuatro asignaturas cerradas contra §15** —Cálculo, Álgebra, Mecánica de
+Fluidos y Fundamentos Químicos— y **la quinta, Ingeniería Térmica, abierta y
+en obra**. Quedan cuatro en `prev`.
 
 | | |
 |---|---|
-| temas publicados | **51**, más 3 declarados `soloEnClase` con su motivo |
+| temas publicados | **59**, más 3 declarados `soloEnClase` con su motivo |
 | convocatorias transcritas, con su PDF | **118** |
 | rutas de estudio | **12**, con 273 escalones |
-| corpus | **1.270 ejercicios · 5.154 pasos** |
+| corpus | **1.289 ejercicios · 5.239 pasos** |
 | respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
 | bloques de ruta que no dicen si les falta algo | **0 de 103** |
 | suelo, tests y navegador completo | verde |
@@ -80,6 +79,82 @@ en el scratchpad y se pueden llevar a `scripts/` el día que se repitan.
 
 ---
 
+# Fase 5 · Ingeniería Térmica · abierta el 7 de septiembre de 2026
+
+La quinta asignatura, y la primera cuyo material publica **la resolución
+oficial de cada examen**. Eso cambia el método: en Fluidos había que
+reconstruir el camino entero y comprobar que aterrizaba en el número impreso;
+aquí se puede contrastar paso a paso, y de hecho ya ha servido para encontrar
+tres redondeos de las propias resoluciones.
+
+## Hecho el primer día
+
+- **El catálogo**, con los diez temas del programa oficial copiados de la
+  presentación de la asignatura y `fuenteTemario` diciendo de dónde salen. Y
+  la evaluación con sus dos modalidades, continua y final con renuncia.
+- **La colección cableada**: una línea en `CON_TEMAS` y otra en `collections`,
+  que es exactamente lo que `content.config.ts` dejó previsto.
+- **Ocho temas escritos**, del 1 al 8: el bloque entero de Moran y Shapiro
+  —temas 1 a 7— y el primero de Çengel. Diecinueve ejercicios, y **once de
+  ellos salen de material con resolución publicada**: el examen de enero de
+  2026, los ejercicios 3.2 y 8.1 de la colección y el de la tobera del tema 4.
+
+  Del examen de enero están **siete de sus trece apartados**, repartidos por
+  los temas a los que pertenecen: el 1 entero salvo su rendimiento exergético,
+  el 3 entero, y del 2 solo el gasto de refrigeración y la entalpía a la
+  salida de la bomba. Los seis que faltan —exergía destruida y rendimientos
+  del condensador y de la bomba— son todos del ejercicio 2 y necesitan las
+  tablas de líquido comprimido, que el enunciado no reproduce.
+- **Los números, todos rehechos.** Y de ahí salieron tres discrepancias con
+  la resolución oficial: escribe $c_v = 0{,}718$ y opera con 0,7175 —314,66
+  frente a 314,27—, y en la suma de resistencias del ejercicio 3 pone
+  `9,63703·10⁻⁶` donde dos renglones antes ha calculado `3,65481·10⁻⁶`. La
+  errata la delata la propia suma: solo el número pequeño reproduce el total
+  que el examen imprime. Las tres quedan explicadas en el sitio, porque un
+  alumno que rehaga la cuenta se va a topar con ellas.
+
+## Lo que salió al hacerlo, y que no era de Térmica
+
+- **El kelvin no era una dimensión.** `lib/unidades.ts` trataba la temperatura
+  solo como escala afín, y con eso bastaba para las cuatro asignaturas
+  anteriores. Aquí no: un calor específico va en kJ/(kg·K) y el lector
+  devolvía `null`. Ahora es el cuarto exponente de `Dim`, y de paso cayó un
+  fallo latente —una temperatura y un adimensional tenían la misma dimensión,
+  así que el comparador no distinguía una energía específica de un calor
+  específico—.
+- **`revisa-ejercicios.mjs` tenía dos agujeros**, los dos del mismo tipo: el
+  guion daba verde y el esquema tumbaba el build un minuto después. No miraba
+  los pasos `verificar`, ni si un distractor tenía unidad de otra magnitud.
+  Los dos arreglados y comprobados en reverso.
+- **`deuda.mjs` llevaba la lista de asignaturas escrita a mano**, y se saltó
+  Térmica entera **en silencio**: seguía diciendo 1.270 ejercicios con catorce
+  nuevos delante. Ahora la lista sale del catálogo. Es la peor forma del
+  fallo, porque el guion no protesta: publica un recuento que parece bueno.
+- **Toda página de tema enlazaba a los exámenes de su asignatura sin mirar si
+  había alguno.** Las cuatro anteriores entraron con sus convocatorias desde
+  el primer día; Térmica tiene temas antes que exámenes, y el enlace apuntaba
+  a una página que no se construye.
+- **La regla de la calculadora no valía para todas las asignaturas.** §09
+  decía «en el examen no se puede usar calculadora» a secas, y era una regla
+  de Cálculo. En Térmica sí está permitida, con anexo de tablas.
+
+## Lo que queda
+
+- **Los temas 9 y 10**: convección y radiación, que cierran el bloque de Çengel.
+  Los tres últimos son el segundo bloque de la asignatura y siguen otro libro
+  —Çengel—, así que su notación hay que mirarla aparte.
+- **Las 22 convocatorias.** Ninguna transcrita todavía como `examen.yaml`: los
+  ejercicios de examen escritos cuelgan de su tema. La de enero de 2026 está
+  leída entera y es la candidata natural para la primera.
+- **Las tablas.** §08 impide reproducir las de Çengel y Moran y Shapiro. De
+  momento los enunciados llevan dentro los valores que usan, que es lo que
+  hace el propio examen; si en algún tema hiciera falta la tabla entera, hay
+  que redibujarla.
+- **Dos ficheros sin clasificar** —`Resultados_Test_1.1` y
+  `Resultados_Test_2.1`— que siguen sin abrirse a propósito.
+
+---
+
 # Fase 4 · Fundamentos Químicos
 
 **5 de septiembre de 2026.** Cuarta asignatura, y la elección no fue de gusto:
@@ -104,8 +179,15 @@ hace con `find`, en profundidad, y nunca con `ls`.
 | **Fundamentos Químicos** | 1.º | ✓ | **5** |
 | Mecánica Aplicada | 2.º | ✗ | 2 |
 | Ciencia de Materiales | 2.º | ✗ | 0 |
-| Ingeniería Térmica | 2.º | ✗ | 0 |
+| Ingeniería Térmica | 2.º | ✗ | **22** |
 | Sistemas de Producción | 2.º | ✓ | 0 |
+
+> El 22 de Térmica decía 0 hasta el 7 de septiembre de 2026, y la corrección
+> es la misma historia otra vez: el recuento se hizo sin abrir la carpeta. Son
+> veintidós, y **veinte de ellas traen la resolución oficial dentro del mismo
+> PDF**, cosa que no tiene ninguna de las otras ocho asignaturas.
+
+
 
 Cinco convocatorias son pocas al lado de las 88 de Cálculo, pero **Álgebra se
 cerró con ocho** y el método aguanta: §14 ya tiene `medidoSobre` para decir
@@ -958,6 +1040,19 @@ porque toque en el temario. Las candidatas, con lo que romperían:
 | **Fundamentos Químicos** | reacciones y estequiometría: pide un lector de fórmulas químicas | medio |
 | **Ciencia de Materiales** | diagramas de fases — es el caso puro del patrón «figura fija», el único de los cinco sin construir | medio |
 | **Ingeniería Térmica** | ciclos termodinámicos; reutiliza casi todo de Fluidos | bajo, y por eso enseña poco |
+
+> **Esa última fila estaba mal, y se vio el 7 de septiembre de 2026 al abrir
+> la asignatura.** No reutiliza casi nada de Fluidos: obligó a añadir la
+> temperatura como cuarta dimensión del lector de magnitudes, porque media
+> asignatura lleva kelvin dentro de la unidad —calores específicos, entropías,
+> entropía generada por segundo—. Y «enseña poco» era exactamente al revés:
+> es la única de las nueve cuyo material publica **la resolución oficial de
+> cada examen**, veintidós de ellas, así que es la primera donde un desarrollo
+> se puede contrastar paso a paso en vez de solo contra el resultado.
+>
+> La lección no es sobre Térmica: es sobre estimar el coste de una asignatura
+> **antes de mirar su material**. Esta tabla se escribió sin abrir un solo
+> fichero de las cinco candidatas.
 
 Mi recomendación, si quieres una: **Ciencia de Materiales**, porque es la única
 que fuerza a construir el patrón que lleva desde el principio en §05 sin

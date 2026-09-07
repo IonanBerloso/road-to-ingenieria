@@ -1,0 +1,247 @@
+---
+asignatura: ingenieria-termica
+tema: 7
+titulo: Análisis exergético
+descripcion: Cuánto trabajo se puede sacar de verdad de una energía, el teorema de Guy-Stodola, y el rendimiento que sí distingue una instalación buena de una mala.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 7, «Análisis exergético» · Departamento de Ingeniería Energética, UPV/EHU. Los valores del ejemplo trabajado están contrastados contra la resolución oficial de la convocatoria de enero de 2026.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El primer principio cuenta energía. El segundo dice que no toda la energía
+vale lo mismo. Este tema pone **un número** a esa diferencia de calidad, y ese
+número es lo que un ingeniero usa para decidir dónde invertir.
+
+La idea es de una frase: **la exergía de una cantidad de energía es el máximo
+trabajo que se puede sacar de ella**. Lo que no se puede sacar se llama
+**anergia**, y no es recuperable por nadie ni con ninguna máquina.
+
+$$
+\text{energía} = \text{exergía} + \text{anergia}
+$$
+
+Un kilojulio de trabajo es un kilojulio de exergía y cero de anergia: el
+trabajo se puede convertir entero en cualquier otra cosa. Un kilojulio de
+calor a temperatura $T$, en cambio, se parte en dos:
+
+$$
+Ex_Q = Q\left(1 - \frac{T_0}{T}\right)
+\qquad
+\text{anergia} = Q\,\frac{T_0}{T}
+$$
+
+Ese factor $(1 - T_0/T)$ te va a resultar familiar: **es el rendimiento de
+Carnot** entre la temperatura del calor y la del ambiente. No es una analogía:
+el máximo trabajo que se puede sacar de un calor es exactamente el que sacaría
+un motor reversible entre esos dos focos, y el tema 5 ya lo había demostrado.
+
+La consecuencia práctica es la que hace útil el concepto: **el calor vale más
+cuanto más caliente está**. Cien kilojulios a 1.000 K y cien kilojulios a
+310 K son la misma energía y no son ni de lejos la misma cosa.
+
+## Los dos estados que hay que declarar
+
+Antes de calcular ninguna exergía hay que fijar la referencia, y el enunciado
+siempre la da —«tómese como estado de referencia 15 °C y 1 bar»—.
+
+- **Estado de referencia**: el del ambiente, $(T_0, P_0)$. Es el estado de
+  menor potencial energético que hay a mano.
+- **Estado muerto**: el del sistema cuando ya no puede desarrollar ningún
+  trabajo, porque está en equilibrio con el ambiente. En el estado muerto, las
+  condiciones del sistema **son** las del medio circundante.
+
+La exergía se mide siempre respecto de ese estado. Cambiar la referencia
+cambia todas las exergías del problema, y por eso el enunciado la declara.
+
+## La exergía de un sistema cerrado
+
+Es el máximo trabajo útil que se puede obtener llevando el sistema al estado
+muerto. Se llama también **disponibilidad**:
+
+$$
+a = (u - u_0) + P_0\,(v - v_0) - T_0\,(s - s_0)
+\qquad \left[\frac{\text{J}}{\text{kg}}\right]
+$$
+
+Los tres términos se leen así: el primero es la energía interna que el sistema
+tiene de más; el segundo **descuenta** el trabajo que hay que gastar en
+apartar la atmósfera al expandirse —ese trabajo se lo lleva el ambiente y no
+sirve para nada—; y el tercero descuenta la parte que el segundo principio
+prohíbe convertir.
+
+### El balance de exergía
+
+Combinando el primer principio, el balance de entropía y la definición de $a$:
+
+$$
+a_2 - a_1
+= \underbrace{\left(1 - \frac{T_0}{T}\right)q}_{\text{exergía del calor}}
+- \underbrace{\big[w - P_0(v_2 - v_1)\big]}_{\text{exergía del trabajo}}
+- \underbrace{T_0\,s_G}_{\text{exergía destruida}}
+$$
+
+Fíjate en el término del trabajo: no es $w$, es **$w$ menos lo que se gasta en
+apartar la atmósfera**. Ese es el trabajo *útil*, el único que se puede
+aprovechar.
+
+## El teorema de Guy-Stodola
+
+El término que sobra en el balance tiene nombre propio y es el resultado
+central del tema:
+
+$$
+\boxed{\;Ex_D = T_0\,S_G \ge 0\;}
+$$
+
+**La exergía destruida es la temperatura del ambiente por la entropía
+generada.** Las dos magnitudes que el tema 6 introdujo por separado —la
+entropía que se crea y la irreversibilidad— resultan ser la misma cosa medida
+en unidades distintas, y el cambio de unidades es multiplicar por $T_0$.
+
+Esto es lo que convierte la entropía generada en algo que se puede llevar a
+una reunión: 0,2415 kJ/K no le dice nada a nadie, pero
+$288 \cdot 0{,}2415 = 69{,}6\ \text{kJ}$ de trabajo perdido, sí.
+
+<ErrorTipico titulo="Creer que la exergía se conserva">
+La energía se conserva y la exergía **no**: se destruye, y se destruye en
+cuanto hay una irreversibilidad. Ese es todo el interés del concepto.
+
+Un balance de exergía nunca cuadra solo con las entradas y las salidas: falta
+siempre el término $Ex_D$, y ese término es lo que se ha perdido. Si tu
+balance cuadra sin él, o el proceso es reversible o te has dejado algo.
+
+Y el signo: $Ex_D$ es **siempre positiva o cero**, igual que $S_G$, porque es
+$T_0$ —positiva— por $S_G$ —no negativa—. Si te sale negativa, hay un error en
+el balance.
+</ErrorTipico>
+
+## La exergía de flujo
+
+En un volumen de control, el trabajo de flujo vuelve a aparecer y la exergía
+adopta una forma más sencilla:
+
+$$
+a_f = h - T_0\,s
+$$
+
+Y el balance, en régimen estacionario:
+
+$$
+\dot m\,(a_{f2} - a_{f1})
+= \left(1 - \frac{T_0}{T}\right)\dot Q - \dot W - \dot{Ex}_D
+$$
+
+Aquí ya no aparece el término $P_0\,\Delta V$: en un volumen de control con
+fronteras fijas no hay atmósfera que apartar.
+
+<ErrorTipico titulo="Olvidar la exergía del estado de referencia">
+La exergía de flujo se cuenta **respecto del estado muerto**, así que lo que
+entra en los balances no es $a_f$ sino $a_f - a_{f0}$.
+
+Ese $a_{f0}$ casi nunca vale cero, y en la resolución oficial de enero de 2026
+sale negativo:
+
+$$
+h_0 = c_p\,\theta_0 = 4{,}186\cdot 15 = 62{,}79
+\qquad
+s_0 = c_p\ln\frac{T_0}{273} = 4{,}186\ln\frac{288}{273} = 0{,}2239
+$$
+$$
+a_{f0} = 62{,}79 - 288\cdot 0{,}2239 = -1{,}69\ \frac{\text{kJ}}{\text{kg}}
+$$
+
+Que salga negativo no significa nada raro: es consecuencia de que las
+referencias de $h$ y de $s$ del modelo incompresible son distintas —0 °C para
+la entalpía, 273 K para la entropía—. Lo que importa es restarlo siempre, y
+restarlo a las dos corrientes.
+</ErrorTipico>
+
+## El rendimiento exergético
+
+Y aquí está el pago del tema. Un rendimiento energético compara energías y
+puede ser engañoso; el **rendimiento exergético** compara lo que de verdad se
+podía aprovechar con lo que se aprovechó.
+
+La regla es la de siempre —arriba lo que se obtiene, abajo lo que se paga—,
+pero con exergías:
+
+$$
+\text{turbina:}\quad \eta_{ex} = \frac{\dot W}{\dot m\,(a_{f1} - a_{f2})}
+\qquad
+\text{compresor:}\quad \eta_{ex} = \frac{\dot m\,(a_{f2} - a_{f1})}{\dot W}
+$$
+
+$$
+\text{intercambiador:}\quad
+\eta_{ex} = \frac{\dot m_f\,(a_{f2} - a_{f1})}{\dot m_c\,(a_{f3} - a_{f4})}
+$$
+
+En el intercambiador la lectura es transparente: arriba, la exergía que gana
+el fluido frío, que es lo que quieres; abajo, la que pierde el caliente, que
+es lo que gastas. La diferencia entre las dos es exergía destruida, y en el
+condensador del examen de enero de 2026 ese rendimiento sale del **20,34 %**
+—se destruyen cuatro quintas partes de la exergía que el vapor entrega—.
+
+<ErrorTipico titulo="Confundir rendimiento isentrópico con rendimiento exergético">
+Se parecen y no son lo mismo. Los dos comparan lo real con un ideal, pero con
+ideales distintos:
+
+- El **isentrópico** (tema 6) compara con el proceso **adiabático reversible
+  entre las mismas dos presiones**. Es un rendimiento de máquina: dice cómo de
+  buena es esa turbina.
+- El **exergético** compara con **todo el trabajo que la corriente podía dar**.
+  Es un rendimiento termodinámico: dice cuánto potencial se está tirando.
+
+En la bomba del ejercicio 2 de enero de 2026 los dos se calculan sobre el
+mismo aparato y salen distintos: **61,6 %** el isentrópico y **69,55 %** el
+exergético. Ninguno es «el bueno»; contestan a preguntas distintas, y el
+examen pide los dos por separado.
+</ErrorTipico>
+
+## Un ejemplo completo, con sus signos
+
+El ejercicio 1 de enero de 2026 termina con un balance de exergía sobre el
+universo, y merece la pena verlo entero porque los signos son lo difícil.
+
+**En el sistema** —el aire del cilindro, que se enfría de 557,5 a 300 K
+mientras se expande de 0,8 a 1,9255 m³—:
+
+$$
+\Delta Ex_{sist} = m\,\Delta a_{12}
+= m\big[(u_2-u_1) + P_0(v_2-v_1) - T_0(s_2-s_1)\big]
+= -275{,}35\ \text{kJ}
+$$
+
+**En el medio circundante**, con los signos **cambiados** —el calor que sale
+del sistema entra en el medio, el trabajo que hace el sistema lo recibe el
+medio, y el volumen que gana el sistema lo pierde el medio—:
+
+$$
+\Delta Ex_{MC} = \left(1-\frac{T_0}{T_{MC}}\right)Q
+- \big[W - P_0\,\Delta V_{MC}\big]
+= \left(1-\frac{288}{293}\right)240 - \big[-314{,}25 - 100\cdot(-1{,}125)\big]
+$$
+$$
+= 4{,}10 + 201{,}70 = 205{,}79\ \text{kJ}
+$$
+
+**Y en el universo**, que es la suma:
+
+$$
+\Delta Ex_{univ} = -275{,}35 + 205{,}79 = -69{,}56\ \text{kJ}
+$$
+
+Negativa, y tiene que serlo: el universo es un sistema aislado, así que lo
+único que puede cambiar su exergía es la destrucción, que es positiva y por
+tanto la hace bajar. Comprobación con Guy-Stodola:
+
+$$
+Ex_D = T_0\,S_G = 288\cdot 0{,}2415 = 69{,}6\ \text{kJ}
+$$
+
+Los mismos 69,6 kJ, calculados por dos caminos independientes. Cuando en un
+ejercicio de este tema los dos números coinciden, el ejercicio está bien.

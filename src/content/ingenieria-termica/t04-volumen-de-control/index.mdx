@@ -1,0 +1,243 @@
+---
+asignatura: ingenieria-termica
+tema: 4
+titulo: Análisis energético en un volumen de control
+descripcion: La ecuación de la energía en régimen estacionario, y la tabla de qué término se anula en cada aparato.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 4, «Análisis energético en un volumen de control» —que la asignatura imparte junto al Tema 2— y de la Colección de problemas de los temas 2 y 4 · Departamento de Ingeniería Energética, UPV/EHU.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Casi todo lo que un ingeniero térmico calcula pasa por aquí. Una turbina, un
+compresor, una caldera, un condensador, un radiador, una válvula: todos son
+volúmenes de control con masa entrando y saliendo, y todos se resuelven con
+**la misma ecuación**.
+
+Lo que cambia de uno a otro no es la ecuación: es **qué términos se tachan**.
+Ese es el tema.
+
+## Las dos ecuaciones de conservación
+
+Un volumen de control es una región del espacio con su superficie de control,
+por la que cruzan masa, calor y trabajo. Se le aplican dos balances, y los dos
+se escriben igual:
+
+> lo que entra = lo que sale + lo que se acumula dentro
+
+**La masa.** En **régimen estacionario** nada se acumula, así que el gasto que
+entra es el que sale:
+
+$$
+\dot m_1 = \dot m_2 = \dot m = \text{cte}
+$$
+
+Y ese gasto, en cada sección, es la ecuación de continuidad:
+
+$$
+\dot m = \rho\,A\,c = \frac{A\,c}{v}
+$$
+
+donde $c$ es la velocidad del fluido y $v$ su volumen específico. Escrita con
+$v$ en vez de con $\rho$ es como se usa aquí, porque el volumen específico es
+lo que dan las tablas.
+
+**La energía.** Con la misma estructura, y aquí sí con todos sus términos:
+
+$$
+\dot Q = \dot m\left[(h_2 - h_1)
++ \frac{c_2^{2} - c_1^{2}}{2}
++ g\,(z_2 - z_1)\right] + \dot W
+$$
+
+Los signos son los del tema 2 y no cambian: **calor positivo el que entra,
+trabajo positivo el que hace el sistema**.
+
+<ErrorTipico titulo="Escribir u donde va h">
+La ecuación de la energía de un volumen de control lleva **entalpía**, no
+energía interna, y no es una convención: es que la masa que cruza la frontera
+hay que empujarla, y ese empujón cuesta $Pv$ por kilogramo.
+
+La entalpía $h = u + Pv$ ya lleva ese término dentro. Escribir $u$ sería
+olvidarse del trabajo de flujo, es decir, del trabajo que el fluido de detrás
+hace sobre el que entra y el que el que sale hace sobre el de delante.
+
+La regla corta del tema 2 se explica ahora sola: **sistema cerrado, $u$ y
+$c_v$; volumen de control, $h$ y $c_p$**. No es por el volumen ni por la
+presión: es por si la masa cruza o no cruza.
+</ErrorTipico>
+
+### Cuándo se desprecian la cinética y la potencial
+
+Casi siempre, y por eso la ecuación que se usa de verdad es la corta:
+
+$$
+\dot Q = \dot m\,(h_2 - h_1) + \dot W
+\qquad\text{o, por kilogramo,}\qquad
+q = h_2 - h_1 + w
+$$
+
+El criterio es de órdenes de magnitud. Un salto de entalpía típico en una
+turbina son cientos de kJ/kg; para que la energía cinética compita hay que
+irse a velocidades de cientos de metros por segundo —$c^2/2$ con $c = 100$ m/s
+son 5 kJ/kg—, y la potencial necesita desniveles de kilómetros.
+
+Las excepciones son dos, y son justo aquellas cuyo oficio es la velocidad: la
+**tobera** y el **difusor**. Ahí el término cinético no solo no se desprecia:
+es el único que queda.
+
+## La tabla que resuelve los ejercicios
+
+Todos los aparatos salen de tachar términos en la misma ecuación. Vale la pena
+aprenderse esta tabla, porque es literalmente el planteamiento de la mitad de
+los ejercicios de la asignatura:
+
+| aparato | para qué sirve | qué se tacha | queda |
+|---|---|---|---|
+| **tobera** | ganar velocidad a costa de la presión | $q$, $w$, $\Delta e_p$ | $\dfrac{c_2^{2}-c_1^{2}}{2} = h_1 - h_2$ |
+| **difusor** | ganar presión a costa de la velocidad | $q$, $w$, $\Delta e_p$ | $h_2 - h_1 = \dfrac{c_1^{2}-c_2^{2}}{2}$ |
+| **turbina** | obtener trabajo de la entalpía | $q$, $\Delta e_c$, $\Delta e_p$ | $w = h_1 - h_2 > 0$ |
+| **compresor / bomba** | subir la presión consumiendo trabajo | $\Delta e_c$, $\Delta e_p$ | $w = h_1 - h_2 + q < 0$ |
+| **caldera** | pasar agua a vapor | $w$, $\Delta e_c$, $\Delta e_p$ | $q = h_2 - h_1 > 0$ |
+| **intercambiador** | pasar calor de un fluido a otro | $q$ y $w$ **del conjunto** | $\dot m_c\,\Delta h_c + \dot m_f\,\Delta h_f = 0$ |
+| **válvula de laminación** | bajar la presión, y nada más | $q$, $w$, $\Delta e_c$, $\Delta e_p$ | $h_2 = h_1$ |
+
+Esa última fila tiene nombre: la laminación es un proceso **isoentálpico**. No
+porque la entalpía se conserve por ninguna ley, sino porque en una válvula no
+queda nada más en la ecuación.
+
+<ErrorTipico titulo="Tachar el calor de un compresor sin que el enunciado lo diga">
+«Adiabático» es un dato, no una propiedad de los compresores. Los hay
+refrigerados —de hecho refrigerar un compresor **reduce** el trabajo que
+consume, que es por lo que se hace—, y en ellos $q \neq 0$.
+
+El aviso vale para toda la tabla: la columna «qué se tacha» dice lo que se
+tacha **cuando el enunciado no diga otra cosa**. Un compresor con camisa de
+agua, una turbina con pérdidas térmicas declaradas o una tobera con un
+desnivel de cien metros rompen la fila correspondiente, y el enunciado siempre
+avisa.
+</ErrorTipico>
+
+## El intercambiador, y el volumen de control que se elige
+
+El intercambiador es el que más se resiste, y es porque hay **dos corrientes**
+y hay que decidir qué encierra la frontera.
+
+Si el volumen de control abarca el aparato entero, el calor pasa de un fluido
+al otro **dentro** de la frontera, así que no cruza: $\dot Q = 0$ para el
+conjunto. Tampoco hay trabajo. Queda un balance limpio:
+
+$$
+\dot m_c\,(h_2 - h_1) + \dot m_f\,(h_4 - h_3) = 0
+$$
+
+Es decir: lo que un fluido pierde, el otro lo gana. Si en cambio la frontera
+encierra **una sola** de las corrientes, entonces el calor sí cruza y aparece
+$\dot Q$, que es lo que interesa cuando lo que se pide es la potencia
+intercambiada.
+
+Ninguna de las dos elecciones es más correcta. La buena es la que hace que el
+dato que falta no aparezca en la ecuación.
+
+### El ejemplo del examen
+
+En el ejercicio 2 de enero de 2026 entra al condensador vapor de agua con
+$\dot m_1 = 0{,}7\ \text{kg/s}$, que sale como líquido saturado, y hay que
+averiguar cuánta agua de refrigeración hace falta. El agua entra a 18 °C y
+sale a 35 °C, y las dos corrientes **no se mezclan**.
+
+Con el volumen de control sobre el condensador entero, $\dot Q = 0$ y
+$\dot W = 0$:
+
+$$
+\dot m_{H_2O} = \frac{\dot m_1\,(h_2 - h_1)}{h_{in} - h_{out}}
+$$
+
+El vapor va por tablas —$h_1 = 2474{,}43$ con su título,
+$h_2 = h' = 340{,}54$ por ser líquido saturado—. El agua de refrigeración, en
+cambio, está a una presión no mucho mayor que la atmosférica, así que se le
+aplica el **modelo de sustancia incompresible**:
+
+$$
+h_{in} - h_{out} = c_{p,H_2O}\,(\theta_{in} - \theta_{out})
+= 4{,}186\cdot(18 - 35)
+$$
+
+$$
+\dot m_{H_2O} = \frac{0{,}7\cdot(340{,}54 - 2474{,}43)}{4{,}186\cdot(18-35)}
+= 20{,}99\ \frac{\text{kg}}{\text{s}}
+$$
+
+Treinta veces más agua de refrigeración que vapor a condensar. Es un número
+que sorprende la primera vez y no debería: condensar un kilo de vapor libera
+unos 2.130 kJ, y calentar un kilo de agua diecisiete grados absorbe 71. La
+razón entre esos dos números **es** el treinta.
+
+<ErrorTipico titulo="Aplicar el modelo incompresible al vapor, o las tablas al agua líquida">
+Las dos corrientes del condensador son la misma sustancia y se calculan de dos
+maneras distintas, y eso desconcierta. El criterio no es la sustancia: es la
+zona del diagrama.
+
+El vapor entra dentro de la campana, con título 0,926, así que su entalpía
+sale de la tabla de saturación. El agua de refrigeración es líquido lejos de
+la saturación, y para el líquido el modelo incompresible —$\Delta h =
+c_p\,\Delta\theta$, con $c_p = 4{,}186\ \text{kJ/(kg·K)}$— es exacto de sobra y
+mucho más rápido que interpolar en la tabla de líquido comprimido.
+
+Fíjate además en que ahí sí se usa el salto en **grados Celsius**: es una
+diferencia de temperaturas, y una diferencia vale lo mismo en las dos escalas.
+</ErrorTipico>
+
+## El trabajo de un proceso reversible en régimen estacionario
+
+En un sistema cerrado el trabajo reversible era $\int P\,dv$, el área **bajo**
+la curva en el $P\text{-}v$. En un volumen de control sale otra cosa:
+
+$$
+w = -\int_1^2 v\,dP
+$$
+
+que es el área **a la izquierda** de la curva, entre ella y el eje de
+presiones. La demostración es corta y vale la pena verla, porque explica de
+dónde sale el signo menos: partiendo de $q = h_2 - h_1 + w$, con
+$h = u + Pv$ y con $q - (u_2 - u_1) = \int P\,dv$ para un proceso reversible,
+
+$$
+w = \int_1^2 P\,dv - (P_2v_2 - P_1v_1)
+= \int_1^2 P\,dv - \int_1^2 d(Pv)
+= -\int_1^2 v\,dP
+$$
+
+La diferencia entre las dos áreas es exactamente el trabajo de flujo, otra vez.
+
+Y de ahí sale la lectura de signos que confirma la tabla de arriba: en una
+**turbina** la presión baja, $dP < 0$, luego $w > 0$ y el aparato produce; en
+un **compresor** la presión sube, $dP > 0$, luego $w < 0$ y el aparato
+consume. El signo no hay que recordarlo, se lee del diagrama.
+
+## Régimen transitorio
+
+Todo lo anterior supone régimen estacionario: nada se acumula dentro. Cuando
+no es así —un depósito que se llena, una botella que se descarga— reaparecen
+los términos de acumulación, que son los que se habían anulado:
+
+$$
+\frac{dm}{dt}\bigg|_{vc} \neq 0
+\qquad
+\frac{dE}{dt}\bigg|_{vc} \neq 0
+$$
+
+e integrando entre dos instantes, el balance queda con la masa que entra, la
+que sale y la que se queda:
+
+$$
+Q = \Delta m_2\,h_2 - \Delta m_1\,h_1
++ m_{final}\,u_{final} - m_{inicial}\,u_{inicial} + W
+$$
+
+Fíjate en la mezcla: **entalpía para lo que cruza la frontera, energía interna
+para lo que se queda dentro**. Es la misma distinción del tema 2 y del error
+típico de más arriba, ahora en la misma ecuación y a la vez.
