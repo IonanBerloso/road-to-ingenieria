@@ -1,0 +1,562 @@
+ejercicios:
+  - id: ejter-los-dos-caminos-entre-los-mismos-estados
+    titulo: Dos caminos entre los mismos dos estados
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre los tres casos de
+      trabajo de frontera del Tema 2 de la asignatura. No es de examen ni de
+      la colección.
+    nivel: ejemplo
+    enunciado: |
+      Un cilindro contiene un gas ideal a $P_1 = 3\ \text{bar}$ ocupando
+      $V_1 = 0{,}1\ \text{m}^{3}$. El gas se expande hasta
+      $V_2 = 0{,}3\ \text{m}^{3}$, **a temperatura constante**, de dos maneras
+      distintas:
+
+      - **Camino A**: se quita de golpe el peso que sujetaba el pistón, y el
+        gas se expande contra una presión exterior constante
+        $P_e = 1\ \text{bar}$.
+      - **Camino B**: se va quitando arena del pistón grano a grano, de modo
+        que en cada instante la presión del gas equilibra a la exterior.
+
+      a) ¿Qué trabajo realiza el gas por el camino A?
+
+      b) ¿Y por el camino B?
+
+      c) ¿Cuánto calor absorbe en cada caso?
+    pide: Los dos trabajos y los dos calores, entre los mismos dos estados.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Los dos caminos empiezan y acaban en el mismo estado. ¿Qué
+          magnitudes tienen que coincidir por fuerza?
+        opciones:
+          - texto: >-
+              Solo la variación de energía interna, porque $u$ es una función
+              de estado y el trabajo y el calor no lo son
+            correcta: true
+            mensaje: |
+              Exacto, y ese es el ejercicio entero. $\Delta u$ depende solo de
+              los extremos; $w$ y $q$ dependen del camino, y aquí van a salir
+              distintos aunque los extremos sean los mismos.
+          - texto: >-
+              Las tres: energía interna, calor y trabajo, porque el estado
+              inicial y el final son los mismos
+            mensaje: |
+              Es la intuición que este ejercicio existe para romper. Si el
+              calor y el trabajo dependieran solo de los extremos serían
+              funciones de estado, y entonces no habría ninguna diferencia
+              entre un motor bueno y uno malo.
+          - texto: >-
+              Solo el trabajo, porque el volumen inicial y el final están
+              fijados
+            mensaje: |
+              El trabajo es justamente el que **no** coincide. Que los
+              volúmenes extremos estén fijados no fija el área bajo la curva:
+              entre dos puntos caben infinitas curvas con áreas distintas.
+
+      - tipo: calcular
+        titulo: El trabajo por el camino A
+        pregunta: |
+          ¿Qué trabajo realiza el gas expandiéndose contra
+          $P_e = 1\ \text{bar}$ constante?
+        respuesta:
+          tipo: magnitud
+          valor: '20 kJ'
+          tolerancia: 0.02
+          formato: un trabajo, con su unidad
+        distractores:
+          - valor: '60 kJ'
+            mensaje: |
+              Has integrado con la presión del gas, $P_1 = 3\ \text{bar}$. En
+              una expansión brusca el gas no tiene una presión única —no está
+              en equilibrio—, y lo que hay que vencer es la presión
+              **exterior**, que es la que sí está definida.
+          - valor: '32.96 kJ'
+            mensaje: |
+              Ese es el trabajo del camino B, el reversible. Aquí no se puede
+              integrar $P\,dV$ con la presión del gas, porque el proceso no es
+              cuasiestático: no hay curva que dibujar entre los dos puntos.
+        pista: |
+          La presión exterior es constante, así que sale fuera de la integral.
+        desarrollo: |
+          $$
+          W_A = \int_{V_1}^{V_2} P_e\,dV = P_e\,(V_2 - V_1)
+          = 100 \cdot (0{,}3 - 0{,}1) = 20\ \text{kJ}
+          $$
+
+          Un bar son 100 kPa, y $\text{kPa}\cdot\text{m}^{3} = \text{kJ}$.
+
+      - tipo: calcular
+        titulo: El trabajo por el camino B
+        pregunta: |
+          Quitando la arena grano a grano el proceso es cuasiestático, y a
+          temperatura constante un gas ideal cumple $PV = \text{cte}$. ¿Qué
+          trabajo realiza ahora?
+        respuesta:
+          tipo: magnitud
+          valor: '32.96 kJ'
+          tolerancia: 0.02
+          formato: un trabajo, con su unidad
+        distractores:
+          - valor: '20 kJ'
+            mensaje: |
+              Ese es el del camino A. Aquí sí se puede integrar con la presión
+              del gas, porque el proceso es cuasiestático, y la integral de
+              una hipérbola no es el área de un rectángulo.
+          - valor: '-32.96 kJ'
+            mensaje: |
+              El signo. El gas se **expande**, así que empuja, así que el
+              trabajo lo hace él y es positivo. Un logaritmo del revés,
+              $\ln(V_1/V_2)$, da este número.
+        pista: |
+          $\int_{V_1}^{V_2} \frac{P_1V_1}{V}\,dV = P_1V_1\ln\frac{V_2}{V_1}$,
+          y $P_1V_1 = 30\ \text{kJ}$.
+        desarrollo: |
+          Con $PV = P_1V_1 = \text{cte}$:
+
+          $$
+          W_B = \int_{V_1}^{V_2} P\,dV
+          = P_1V_1 \ln\!\frac{V_2}{V_1}
+          = 30 \cdot \ln 3 = 32{,}96\ \text{kJ}
+          $$
+
+          Los mismos dos estados, y un 65 % más de trabajo que por el camino
+          A. La diferencia es exactamente lo que la expansión brusca
+          desperdicia.
+
+      - tipo: calcular
+        titulo: El calor del camino A
+        pregunta: |
+          El gas es ideal y la temperatura no cambia, así que
+          $\Delta U = 0$. ¿Cuánto calor absorbe por el camino A?
+        respuesta:
+          tipo: magnitud
+          valor: '20 kJ'
+          tolerancia: 0.02
+          formato: un calor, con su unidad
+        distractores:
+          - valor: '0 kJ'
+            mensaje: |
+              Que la energía interna no cambie no significa que no haya calor:
+              significa que todo el calor que entra sale como trabajo. Con
+              $\Delta U = 0$, la primera ley queda $Q = W$, no $Q = 0$.
+          - valor: '-20 kJ'
+            mensaje: |
+              El signo. El gas hace trabajo sin enfriarse, así que esa energía
+              tiene que entrar de algún sitio: el calor **entra**, y entra
+              positivo.
+        pista: |
+          $Q = \Delta U + W$, con $\Delta U = 0$.
+        desarrollo: |
+          $$
+          Q_A = \Delta U + W_A = 0 + 20 = 20\ \text{kJ}
+          $$
+
+          Y por el camino B, con el mismo razonamiento,
+          $Q_B = 32{,}96\ \text{kJ}$: también el calor depende del camino, y
+          tiene que hacerlo, porque su diferencia con el trabajo está
+          obligada a valer siempre $\Delta U$.
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión del ejercicio. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La energía interna es función de estado, así que $\Delta U = 0$
+              por los dos caminos: mismo estado inicial y mismo estado final.
+          - texto: >-
+              El trabajo vale 20 kJ por A y 32,96 kJ por B, porque el área
+              bajo un rectángulo y bajo una hipérbola no son la misma.
+          - texto: >-
+              Y como $Q = \Delta U + W$ con $\Delta U = 0$, el calor sigue al
+              trabajo: 20 kJ por A y 32,96 kJ por B.
+          - texto: >-
+              Como el calor y el trabajo salen distintos por cada camino, la
+              primera ley no se cumple en el camino A.
+            trampa: true
+            mensaje: |
+              La primera ley se cumple en los dos: $Q = \Delta U + W$ es
+              cierta con 20 y 20, y con 32,96 y 32,96. Lo que el ejercicio
+              enseña no es que la ley falle, sino que **no basta con los
+              extremos** para saber cuánto vale cada término por separado.
+    resolucion: |
+      **a) Camino A.** La expansión es brusca: el gas no está en equilibrio y
+      no tiene una presión única, así que hay que integrar con la presión
+      exterior, que sí está definida y es constante:
+
+      $$
+      W_A = P_e\,(V_2 - V_1) = 100\cdot 0{,}2 = 20\ \text{kJ}
+      $$
+
+      **b) Camino B.** Ahora el proceso es cuasiestático, $P_e = P$ en cada
+      instante, y el gas ideal a temperatura constante cumple
+      $PV = \text{cte}$:
+
+      $$
+      W_B = P_1V_1\ln\!\frac{V_2}{V_1} = 30\ln 3 = 32{,}96\ \text{kJ}
+      $$
+
+      **c) Los calores.** El gas es ideal y la temperatura no cambia, luego
+      $\Delta U = 0$ por los dos caminos, y la primera ley deja
+      $Q = W$:
+
+      $$
+      Q_A = 20\ \text{kJ} \qquad Q_B = 32{,}96\ \text{kJ}
+      $$
+
+      **Lo que hay que llevarse.** Entre los mismos dos estados, el camino
+      reversible entrega un 65 % más de trabajo. Esa diferencia —12,96 kJ— es
+      trabajo que la expansión brusca no llega a producir, y es la primera
+      aparición en el temario de algo que a partir del tema 5 tendrá nombre
+      propio: irreversibilidad.
+
+  - id: ejter-el-signo-que-decide-el-resto-del-examen
+    titulo: El trabajo de una expansión que cede calor
+    fuente: >-
+      Apartado del ejercicio 1 de la convocatoria ordinaria de enero de 2026 ·
+      Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El
+      examen publica su resolución oficial, y el desarrollo está contrastado
+      contra ella.
+    nivel: practica
+    enunciado: |
+      En un cilindro-pistón se expanden $m = 3\ \text{kg}$ de aire desde
+      $557{,}5\ \text{K}$ hasta $\theta_2 = 27\ \text{°C}$. Durante el proceso
+      **se intercambian 240 kJ de calor hacia el medio circundante**.
+
+      Datos del aire: $R' = 0{,}287\ \text{kJ/(kg}\cdot\text{K)}$,
+      $\gamma = 1{,}4$.
+
+      a) ¿Cuánto vale la variación de energía interna del aire?
+
+      b) ¿Qué trabajo realiza el gas?
+    pide: La variación de energía interna y el trabajo, cada uno con su signo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          «Se intercambian 240 kJ de calor **hacia el medio circundante**».
+          ¿Con qué signo entra ese dato en la ecuación?
+        opciones:
+          - texto: >-
+              $Q = -240\ \text{kJ}$, porque el calor sale del sistema y el
+              convenio cuenta como positivo el que entra
+            correcta: true
+            mensaje: |
+              Eso es. Y conviene escribirlo en una línea aparte, antes de la
+              ecuación: traducido el enunciado a signos, ya no queda nada que
+              decidir.
+          - texto: >-
+              $Q = +240\ \text{kJ}$, porque el enunciado da el valor del calor
+              intercambiado
+            mensaje: |
+              El enunciado da el **módulo**; la dirección la da con palabras,
+              «hacia el medio circundante». Con este signo saldría
+              $W = 794{,}27\ \text{kJ}$ en vez de 314,27, y el error se
+              arrastraría a la entropía y a la exergía sin que nada avisara.
+          - texto: >-
+              Depende de si el proceso es reversible o no
+            mensaje: |
+              El signo del calor lo fija hacia dónde va, no cómo de bien va.
+              La reversibilidad importa para poder integrar $P\,dV$, que es
+              otra pregunta.
+
+      - tipo: calcular
+        titulo: La variación de energía interna
+        pregunta: |
+          ¿Cuánto vale $\Delta U = m\,c_v\,(T_2 - T_1)$?
+        respuesta:
+          tipo: magnitud
+          valor: '-554.27 kJ'
+          tolerancia: 0.02
+          formato: una energía, con su unidad
+        distractores:
+          - valor: '-775.98 kJ'
+            mensaje: |
+              Has usado $c_p = 1{,}0045$ en vez de $c_v$. El sistema está
+              cerrado: lo que se contabiliza es la energía interna, y su
+              calor específico es $c_v$.
+          - valor: '554.27 kJ'
+            mensaje: |
+              El signo. El gas pasa de 557,5 K a 300 K: se **enfría**, así que
+              su energía interna baja. Comprueba el orden de la resta,
+              $T_2 - T_1$ y no al revés.
+        pista: |
+          $c_v = R'/(\gamma - 1) = 0{,}287/0{,}4$, y
+          $T_2 = 27 + 273 = 300\ \text{K}$.
+        desarrollo: |
+          $$
+          c_v = \frac{R'}{\gamma - 1} = \frac{0{,}287}{0{,}4}
+          = 0{,}7175\ \frac{\text{kJ}}{\text{kg}\cdot\text{K}}
+          $$
+
+          $$
+          \Delta U = m\,c_v\,(T_2 - T_1) = 3\cdot 0{,}7175\cdot(300 - 557{,}5)
+          = -554{,}27\ \text{kJ}
+          $$
+
+      - tipo: calcular
+        titulo: El trabajo
+        pregunta: |
+          Con $Q = \Delta U + W$, ¿qué trabajo realiza el gas?
+        respuesta:
+          tipo: magnitud
+          valor: '314.27 kJ'
+          tolerancia: 0.02
+          formato: un trabajo, con su unidad
+        distractores:
+          - valor: '794.27 kJ'
+            mensaje: |
+              Has puesto $Q = +240$. Es el error del primer paso, y aquí se ve
+              lo que cuesta: más del doble del valor correcto, sin que la
+              ecuación proteste.
+          - valor: '-314.27 kJ'
+            mensaje: |
+              El signo. El gas se **expande**, luego empuja al pistón, luego
+              el trabajo lo hace él y es positivo. Si te sale negativo,
+              revisa de qué lado has despejado.
+        pista: |
+          Despeja $W = Q - \Delta U$, con $Q$ negativo y $\Delta U$ también.
+        desarrollo: |
+          $$
+          W = Q - \Delta U = -240 - (-554{,}27) = +314{,}27\ \text{kJ}
+          $$
+
+          El gas cede 240 kJ de calor **y aun así** produce 314 kJ de trabajo.
+          No hay contradicción: los 554 kJ que pierde de energía interna dan
+          para las dos cosas.
+
+      - tipo: justificar
+        pregunta: Ordena la lectura física del resultado. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El aire se enfría de 557,5 K a 300 K, así que pierde 554,27 kJ
+              de energía interna.
+          - texto: >-
+              De esa energía, 240 kJ se van como calor al medio circundante,
+              porque el enunciado dice que el intercambio va hacia fuera.
+          - texto: >-
+              Los 314,27 kJ restantes salen como trabajo, empujando el pistón:
+              por eso $W$ es positivo.
+          - texto: >-
+              Como el gas cede calor, no puede producir trabajo, y el signo
+              positivo de $W$ indica que hay un error de planteamiento.
+            trampa: true
+            mensaje: |
+              Ceder calor y producir trabajo a la vez es lo normal en una
+              expansión: la fuente de las dos cosas es la energía interna que
+              el gas pierde al enfriarse. Lo que sería imposible es producir
+              más trabajo del que dan el calor absorbido y la energía interna
+              juntos, y aquí no pasa.
+    resolucion: |
+      **El signo, primero.** «Se intercambian 240 kJ hacia el medio
+      circundante» significa que el calor sale, y el convenio de la asignatura
+      cuenta como positivo el que entra:
+
+      $$
+      Q = -240\ \text{kJ}
+      $$
+
+      **a) La energía interna.** El sistema está cerrado, así que el calor
+      específico que interviene es $c_v$:
+
+      $$
+      c_v = \frac{R'}{\gamma-1} = \frac{0{,}287}{0{,}4} = 0{,}7175
+      \qquad
+      \Delta U = 3\cdot 0{,}7175\cdot(300 - 557{,}5) = -554{,}27\ \text{kJ}
+      $$
+
+      **b) El trabajo.** De la primera ley, $W = Q - \Delta U$:
+
+      $$
+      W = -240 + 554{,}27 = +314{,}27\ \text{kJ}
+      $$
+
+      **Comprobación de coherencia.** Los tres signos cuentan la misma
+      historia y hay que leerla antes de dar el ejercicio por bueno: el gas se
+      enfría ($\Delta U < 0$), cede calor ($Q < 0$) y produce trabajo
+      ($W > 0$). Si alguno de los tres no encajara con lo que el enunciado
+      describe, el error está en el planteamiento y no en la calculadora.
+
+      **Dos centésimas.** La resolución oficial imprime 314,25 kJ donde aquí
+      salen 314,27. La diferencia está en el redondeo de $c_v$: el examen lo
+      escribe como 0,718 y opera con 0,7175, y ninguno de los dos números
+      devuelve exactamente 314,25 —0,718 da 314,66 y 0,7175 da 314,27—. Es una
+      discrepancia del 0,006 % y no cambia nada, pero conviene saber de dónde
+      viene antes de pasar media hora buscándose un error que no existe.
+
+  - id: ejter-la-entalpia-como-suma
+    titulo: Lo que le sobra a la entalpía sobre la energía interna
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre la definición de la
+      entalpía del Tema 2 de la asignatura. No es de examen ni de la
+      colección.
+    nivel: ejemplo
+    enunciado: |
+      Se calienta aire desde $T_1 = 300\ \text{K}$ hasta
+      $T_2 = 500\ \text{K}$. Con el modelo de gas ideal y calores específicos
+      constantes, $R' = 0{,}287\ \text{kJ/(kg}\cdot\text{K)}$ y
+      $\gamma = 1{,}4$:
+
+      a) ¿Cuánto aumenta su energía interna específica?
+
+      b) ¿Cuánto aumenta su entalpía específica?
+
+      c) ¿A qué corresponde la diferencia entre las dos?
+    pide: Las dos variaciones específicas y el significado de su diferencia.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $h = u + Pv$. ¿Qué representa físicamente el sumando $Pv$?
+        opciones:
+          - texto: >-
+              El trabajo de flujo: la energía que hace falta para empujar la
+              masa a través de una frontera
+            correcta: true
+            mensaje: |
+              Eso es, y por eso la entalpía no hace falta mientras el sistema
+              esté cerrado: si nada cruza la frontera, no hay nada que
+              empujar. A partir del tema 4 toda la contabilidad se hará con
+              $h$.
+          - texto: >-
+              El trabajo de desplazamiento de frontera del proceso
+            mensaje: |
+              Ese es $\int P\,dv$, una integral a lo largo de un camino. $Pv$
+              es un producto de dos propiedades evaluado en **un** estado: no
+              depende de ningún proceso, y por eso $h$ es una propiedad y el
+              trabajo no.
+          - texto: >-
+              El calor absorbido a presión constante
+            mensaje: |
+              Es cierto que $\Delta h = q$ en un proceso a presión constante,
+              y de ahí viene la fama de la entalpía. Pero eso es una
+              consecuencia, no lo que $Pv$ significa: $Pv$ es energía de
+              flujo, y está ahí aunque no haya ningún calor.
+
+      - tipo: calcular
+        titulo: La energía interna
+        pregunta: |
+          ¿Cuánto vale $\Delta u = c_v\,\Delta T$?
+        respuesta:
+          tipo: magnitud
+          valor: '143.5 kJ/kg'
+          tolerancia: 0.02
+          formato: una energía específica, con su unidad
+        distractores:
+          - valor: '200.9 kJ/kg'
+            mensaje: |
+              Has usado $c_p$. Para la energía interna, $c_v$; la $p$ y la $v$
+              del subíndice recuerdan de dónde salió cada definición, y aquí
+              la magnitud que se pide es $u$.
+        pista: |
+          $c_v = 0{,}287/0{,}4$, y el salto son 200 K.
+        desarrollo: |
+          $$
+          \Delta u = c_v\,(T_2 - T_1) = 0{,}7175 \cdot 200
+          = 143{,}5\ \frac{\text{kJ}}{\text{kg}}
+          $$
+
+      - tipo: calcular
+        titulo: La entalpía
+        pregunta: |
+          ¿Y $\Delta h = c_p\,\Delta T$?
+        respuesta:
+          tipo: magnitud
+          valor: '200.9 kJ/kg'
+          tolerancia: 0.02
+          formato: una energía específica, con su unidad
+        distractores:
+          - valor: '143.5 kJ/kg'
+            mensaje: |
+              Ese es $\Delta u$. La entalpía crece más, y cuánto más es
+              justamente lo que pregunta el apartado c).
+        pista: |
+          $c_p = \gamma\,c_v = 1{,}4\cdot 0{,}7175$.
+        desarrollo: |
+          $$
+          c_p = \gamma\,c_v = 1{,}4\cdot 0{,}7175 = 1{,}0045
+          \qquad
+          \Delta h = 1{,}0045\cdot 200 = 200{,}9\ \frac{\text{kJ}}{\text{kg}}
+          $$
+
+      - tipo: calcular
+        titulo: La diferencia, por otro camino
+        pregunta: |
+          La diferencia entre las dos vale
+          $200{,}9 - 143{,}5 = 57{,}4\ \text{kJ/kg}$. Comprueba que ese número
+          es el que tiene que ser: calcula $\Delta(Pv)$ usando la ecuación de
+          estado del gas ideal, $Pv = R'T$.
+        respuesta:
+          tipo: magnitud
+          valor: '57.4 kJ/kg'
+          tolerancia: 0.02
+          formato: una energía específica, con su unidad
+        distractores:
+          - valor: '86.1 kJ/kg'
+            mensaje: |
+              Has multiplicado $R'$ por 300 en vez de por el salto de 200 K.
+              Lo que se compara es la **variación** de $Pv$ entre los dos
+              estados, no su valor en uno de ellos.
+        pista: |
+          $\Delta(Pv) = R'\,\Delta T$, con $\Delta T = 200\ \text{K}$.
+        desarrollo: |
+          $$
+          \Delta(Pv) = R'\,(T_2 - T_1) = 0{,}287\cdot 200
+          = 57{,}4\ \frac{\text{kJ}}{\text{kg}}
+          $$
+
+          Coincide exactamente con la diferencia de las dos primeras cuentas,
+          y no por casualidad: es la definición $h = u + Pv$ derivada término
+          a término. De paso queda comprobada la relación
+          $c_p - c_v = R'$, que es la misma igualdad dividida por
+          $\Delta T$.
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta al apartado c). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Por definición $h = u + Pv$, así que
+              $\Delta h = \Delta u + \Delta(Pv)$.
+          - texto: >-
+              Con el modelo de gas ideal, $Pv = R'T$, luego
+              $\Delta(Pv) = R'\,\Delta T = 57{,}4\ \text{kJ/kg}$.
+          - texto: >-
+              Esos 57,4 kJ/kg son la energía de flujo, y su cociente con el
+              salto de temperatura es $c_p - c_v = R'$.
+          - texto: >-
+              Luego la entalpía es la energía interna medida en otra escala, y
+              las dos crecen en la misma proporción.
+            trampa: true
+            mensaje: |
+              No es un cambio de escala: es una suma de un término que
+              **también** depende del estado. Y no crecen en la misma
+              proporción sino con la misma diferencia por kelvin, que es
+              $R'$; si fuera un cambio de escala, el cociente sería constante
+              y no lo es, porque $u$ y $h$ tienen orígenes distintos.
+    resolucion: |
+      **a) La energía interna.**
+
+      $$
+      c_v = \frac{R'}{\gamma-1} = \frac{0{,}287}{0{,}4} = 0{,}7175
+      \qquad
+      \Delta u = 0{,}7175\cdot 200 = 143{,}5\ \frac{\text{kJ}}{\text{kg}}
+      $$
+
+      **b) La entalpía.**
+
+      $$
+      c_p = \gamma\,c_v = 1{,}0045
+      \qquad
+      \Delta h = 1{,}0045\cdot 200 = 200{,}9\ \frac{\text{kJ}}{\text{kg}}
+      $$
+
+      **c) La diferencia.** Son 57,4 kJ/kg, y salen de la propia definición:
+
+      $$
+      \Delta h - \Delta u = \Delta(Pv) = R'\,\Delta T = 0{,}287\cdot 200
+      = 57{,}4\ \frac{\text{kJ}}{\text{kg}}
+      $$
+
+      Es la **energía de flujo**: lo que costaría empujar ese kilogramo de
+      aire a través de una frontera en cada uno de los dos estados. En un
+      sistema cerrado nadie la paga, y por eso ahí basta con $u$. En cuanto la
+      masa cruce la superficie de control —tema 4— habrá que pagarla, y la
+      entalpía es la propiedad que ya la lleva incluida para no tener que
+      acordarse.

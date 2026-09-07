@@ -850,10 +850,10 @@ Todo ejercicio guiado entrena las tres: una pregunta de reconocimiento antes
 del cálculo, y una comprobación de justificación formal después. **Un componente
 que solo verifica un número entrena la parte que menos se falla.**
 
-### En el examen no se puede usar calculadora
+### La calculadora, y en qué asignatura se puede
 
-Lo dijo el alumno el 23 de agosto de 2026, y cambia cómo se escribe un paso de
-cálculo. La consecuencia no es cosmética: **la respuesta de un ejercicio no
+**En Cálculo no se puede usar calculadora.** Lo dijo el alumno el 23 de agosto
+de 2026, y cambia cómo se escribe un paso de cálculo. La consecuencia no es cosmética: **la respuesta de un ejercicio no
 puede exigir un decimal que solo sale con una máquina**. Si un área vale
 $(e^{2}-1)/2$, pedir «cuatro decimales» es pedir algo que en el aula no se
 puede hacer.
@@ -874,6 +874,25 @@ Y en la prosa, cuidado con dar por hecha la calculadora. El error del argumento
 con `arctan` no es un despiste de máquina: es que $\arctan(1) = \pi/4$ tanto si
 vienes del primer cuadrante como del tercero, y esa información no la pone
 nadie por ti.
+
+**Y no vale para todas las asignaturas.** El título de este apartado decía «en
+el examen no se puede usar calculadora», a secas, desde que se escribió, y era
+una regla de Cálculo publicada como si fuera del sitio entero. En **Ingeniería
+Térmica la calculadora sí está permitida**, y además se entrega un anexo de
+tablas y diagramas: los propios enunciados dan rugosidades, propiedades del
+aire a la temperatura de película y entalpías de vapor con cuatro cifras, y
+sin máquina no hay ejercicio. En Mecánica de Fluidos pasa lo mismo de hecho,
+porque medio examen es leer un ábaco e iterar Colebrook.
+
+Así que la regla se lee al revés de como estaba escrita: **la forma exacta
+siempre vale, en todas partes; ordenar decimales solo se prohíbe donde el aula
+no tiene con qué calcularlos.** Lo que no cambia en ninguna asignatura es lo
+de arriba: un enunciado no ordena decimales a secas, y la prosa no da por
+hecho que haya una máquina delante.
+
+Queda pendiente confirmarlo asignatura por asignatura con el alumno. Lo
+seguro, con fuente, es Cálculo (no) e Ingeniería Térmica (sí, con anexo de
+tablas).
 
 ---
 

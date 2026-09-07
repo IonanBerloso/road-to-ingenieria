@@ -89,6 +89,24 @@ for (const e of ejercicios) {
       }
     }
 
+    /* `verificar` no es «calcular de otra manera»: es el paso de las regiones
+       del plano complejo, y su verdad de referencia es `condicion`, una
+       expresión en `z` que el componente dibuja y compara. Sin ella el paso no
+       tiene con qué comparar nada.
+
+       Entra el 7 de septiembre de 2026, con el tema 2 de Ingeniería Térmica.
+       Un paso escrito como `verificar` con la forma de un `calcular` —con
+       `respuesta` y `distractores`— pasó este guion entero, porque aquí solo
+       se miraban `reconocer`, `calcular` y `justificar`, y reventó el build.
+       Es justo lo que el guion existe para evitar. */
+    if (p.tipo === 'verificar') {
+      if (!p.condicion) {
+        mal(dónde, 'un paso `verificar` necesita `condicion`; si lo que querías era una cuenta, el tipo es `calcular`');
+      }
+      if ((p.pista ?? '').length < 10) mal(dónde, '`pista` con menos de 10 caracteres');
+      if ((p.desarrollo ?? '').length < 20) mal(dónde, '`desarrollo` con menos de 20 caracteres');
+    }
+
     if (p.tipo === 'calcular') {
       if (!p.respuesta) mal(dónde, 'sin `respuesta`');
       if (!(p.distractores ?? []).length) mal(dónde, 'sin ningún distractor');

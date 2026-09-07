@@ -772,7 +772,13 @@ export const ORDEN_CONV = Object.keys(CONVOCATORIAS) as (keyof typeof CONVOCATOR
  *
  *  Se amplía al abrir la quinta asignatura, y entonces se amplía **una sola
  *  vez**. */
-export const CON_TEMAS = ['calculo', 'fluidos', 'algebra', 'fundamentos-quimicos'] as const;
+export const CON_TEMAS = [
+  'calculo',
+  'fluidos',
+  'algebra',
+  'fundamentos-quimicos',
+  'ingenieria-termica',
+] as const;
 export type ConTemas = (typeof CON_TEMAS)[number];
 
 const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
@@ -1176,12 +1182,22 @@ const fundamentosQuimicos = defineCollection({
   schema: temaEscrito,
 });
 
+/* Y la quinta, Ingeniería Térmica, el 7 de septiembre de 2026. Es la primera
+   asignatura cuyo material publica **la resolución oficial** de cada examen y
+   no solo el resultado, así que aquí `fuente` puede decir algo que en Fluidos
+   no se podía decir: que el desarrollo se ha contrastado paso a paso. */
+const ingenieriaTermica = defineCollection({
+  loader: glob({ pattern: '**/index.mdx', base: './src/content/ingenieria-termica' }),
+  schema: temaEscrito,
+});
+
 export const collections = {
   catalogo,
   calculo,
   fluidos,
   algebra,
   'fundamentos-quimicos': fundamentosQuimicos,
+  'ingenieria-termica': ingenieriaTermica,
   ejercicios,
   examen,
   preparar,
