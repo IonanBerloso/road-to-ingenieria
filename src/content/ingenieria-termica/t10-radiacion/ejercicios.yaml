@@ -428,3 +428,335 @@ ejercicios:
       y aquí un metro contra ochenta centímetros no lo es. El aviso está en el
       propio enunciado: si te dan la emisividad de la superficie exterior, es
       porque hace falta.
+
+  - id: ejter-la-emisividad-que-sale-de-lo-que-sobra
+    titulo: La emisividad que sale de lo que sobra
+    fuente: >-
+      Ejercicio 3 de la convocatoria ordinaria de enero de 2017-2018 ·
+      Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El
+      examen publica su resolución oficial manuscrita, y los trece valores de
+      la cadena están rehechos y contrastados contra ella, del Reynolds a la
+      emisividad.
+    nivel: examen
+    enunciado: |
+      Por el interior de una tubería de $18\ \text{m}$ de longitud circula
+      agua a $0{,}3\ \text{m/s}$. El agua entra a $97\ \text{°C}$ y sale a
+      $93\ \text{°C}$. El diámetro interior es de $3\ \text{cm}$ y el espesor
+      de $1\ \text{cm}$; la conductividad de la tubería, $55\ \text{W/(m·K)}$.
+
+      La tubería discurre por una nave que se encuentra a $15\ \text{°C}$, y
+      puede considerarse que el aire dentro de la nave **está en reposo**.
+
+      Calcúlese la emisividad de la superficie exterior de la tubería,
+      supuesto régimen estacionario.
+
+      Propiedades del agua a 95 °C: $\rho = 961{,}4\ \text{kg/m}^{3}$,
+      $c_p = 4.212\ \text{J/(kg·K)}$, $k = 0{,}677\ \text{W/(m·K)}$,
+      $\text{Pr} = 1{,}85$,
+      $\nu = 3{,}0889\cdot 10^{-7}\ \text{m}^{2}/\text{s}$.
+
+      Propiedades del aire a 54,42 °C: $k = 0{,}02767\ \text{W/(m·K)}$,
+      $\text{Pr} = 0{,}7217$,
+      $\nu = 1{,}84\cdot 10^{-5}\ \text{m}^{2}/\text{s}$.
+    pide: La emisividad de la superficie exterior de la tubería.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado no da ningún dato de radiación, y la incógnita es la
+          emisividad. ¿Cómo se llega a ella?
+        opciones:
+          - texto: >-
+              Por diferencia: el calor total que pierde el agua menos el que se
+              va por convección exterior es el que se va por radiación, y de
+              ahí se despeja la emisividad
+            correcta: true
+            mensaje: |
+              Exacto, y es la estructura entera del ejercicio. Todo lo demás
+              —Reynolds, resistencias, Rayleigh— está al servicio de esa resta.
+              Fíjate en que la radiación es la única que no se puede calcular
+              directamente, y por eso es la que se despeja.
+          - texto: >-
+              De la ley de Stefan-Boltzmann, con la temperatura de la
+              superficie exterior
+            mensaje: |
+              Stefan-Boltzmann da el calor radiado **si conoces la
+              emisividad**, que es justo lo que falta. La ecuación tiene dos
+              incógnitas —el calor radiado y la emisividad— y hace falta otra
+              vía para una de las dos.
+          - texto: >-
+              De una tabla de emisividades, según el material de la tubería
+            mensaje: |
+              El enunciado no dice de qué material es la tubería, solo su
+              conductividad. Y aunque lo dijera, el ejercicio pide calcularla,
+              no consultarla: es un problema inverso.
+
+      - tipo: calcular
+        titulo: El calor que pierde el agua
+        pregunta: |
+          ¿Cuánto calor pierde el agua a lo largo de los 18 metros?
+        respuesta:
+          tipo: magnitud
+          valor: '3435 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '3.435 W'
+            mensaje: |
+              Un factor mil: has metido el calor específico en kJ/(kg·K) donde
+              el enunciado lo da en julios. Y el resultado debería haberte
+              parado: tres vatios y medio no enfrían cuatro grados a doscientos
+              gramos de agua por segundo.
+          - valor: '85883 W'
+            mensaje: |
+              Has usado un salto de 100 grados en vez de 4. El agua entra a 97
+              y sale a 93: pierde cuatro grados en los dieciocho metros, no
+              cien.
+        pista: |
+          Primero el gasto, $\dot m = \rho\,A\,c$ con
+          $A = \pi D_1^{2}/4$, y luego $\dot Q = \dot m\,c_p\,\Delta\theta$.
+        desarrollo: |
+          $$
+          \dot m = \rho\,\frac{\pi D_1^{2}}{4}\,c
+          = 961{,}4\cdot 7{,}069\cdot 10^{-4}\cdot 0{,}3
+          = 0{,}2039\ \frac{\text{kg}}{\text{s}}
+          $$
+
+          $$
+          \dot Q = 0{,}2039\cdot 4.212\cdot 4 = 3.435\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura de la superficie exterior
+        pregunta: |
+          Con la convección interior y la conducción de la pared, ¿a qué
+          temperatura está la cara exterior del tubo?
+        respuesta:
+          tipo: magnitud
+          valor: '93.85 C'
+          tolerancia: 0.002
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '95 C'
+            mensaje: |
+              Esa es la temperatura media del **agua**, que es el otro extremo
+              del circuito. Entre ella y la superficie exterior hay dos
+              resistencias, y su caída es lo que hay que restar: 1,15 grados.
+          - valor: '15 C'
+            mensaje: |
+              Esa es la de la nave. Si la superficie estuviera a 15 °C no
+              habría salto de temperatura hacia el aire y no saldría calor por
+              ninguna parte, cuando sabemos que salen 3.435 W.
+        pista: |
+          $\theta_2 = \theta_{agua} - \dot Q\,(R_1 + R_2)$, con
+          $R_1 = 1/(h_1\pi D_1 L)$ y
+          $R_2 = \ln(r_2/r_1)/(2\pi k L)$. El coeficiente interior sale de
+          Dittus-Boelter, y el agua **se enfría**.
+        desarrollo: |
+          La convección interior es forzada y turbulenta:
+
+          $$
+          \text{Re} = \frac{0{,}3\cdot 0{,}03}{3{,}0889\cdot 10^{-7}} = 29.137
+          > 2.100
+          $$
+
+          $$
+          \text{Nu} = 0{,}023\cdot 29.137^{0{,}8}\cdot 1{,}85^{0{,}3} = 103{,}14
+          \qquad
+          h_1 = \frac{103{,}14\cdot 0{,}677}{0{,}03} = 2.327{,}5
+          $$
+
+          Y las dos resistencias:
+
+          $$
+          R_1 = \frac{1}{2.327{,}5\cdot\pi\cdot 0{,}03\cdot 18}
+          = 2{,}53\cdot 10^{-4}
+          \qquad
+          R_2 = \frac{\ln(0{,}025/0{,}015)}{2\pi\cdot 55\cdot 18}
+          = 8{,}21\cdot 10^{-5}
+          $$
+
+          $$
+          \theta_2 = 95 - 3.435\,(2{,}53\cdot 10^{-4} + 8{,}21\cdot 10^{-5})
+          = 93{,}85\ \text{°C}
+          $$
+
+          Poco más de un grado de caída en todo el tubo: el agua va deprisa y
+          el acero conduce bien, así que la pared está prácticamente a la
+          temperatura del agua. Toda la resistencia del problema está fuera.
+
+      - tipo: calcular
+        titulo: El calor que se va por convección natural
+        pregunta: |
+          Con el aire en reposo, la correlación laminar
+          $\text{Nu} = 0{,}53\,\text{Ra}^{0{,}25}$ da
+          $h_2 = 8{,}26\ \text{W/(m}^{2}\text{K)}$. ¿Cuánto calor se lleva la
+          convección exterior?
+        respuesta:
+          tipo: magnitud
+          valor: '1842 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '3435 W'
+            mensaje: |
+              Ese es el calor **total**. Si toda la pérdida fuese por
+              convección no habría radiación, y entonces la emisividad saldría
+              cero: el ejercicio no tendría respuesta.
+          - valor: '1105 W'
+            mensaje: |
+              Has usado el diámetro interior, 0,03 m, para el área exterior. La
+              superficie que ve el aire es la de fuera: $D_1 + 2e = 0{,}05$ m.
+        pista: |
+          $\dot Q_{conv} = h_2\,(\pi D_3 L)\,(\theta_2 - \theta_{f,ext})$, con
+          $D_3 = 0{,}05\ \text{m}$.
+        desarrollo: |
+          $$
+          A_2 = \pi\cdot 0{,}05\cdot 18 = 2{,}827\ \text{m}^{2}
+          $$
+
+          $$
+          \dot Q_{conv} = 8{,}26\cdot 2{,}827\cdot(93{,}85 - 15)
+          = 1.842\ \text{W}
+          $$
+
+          De dónde sale ese 8,26: la temperatura característica es la media
+          entre superficie y fluido, $(93{,}85+15)/2 = 54{,}42\ \text{°C}$, y
+          con las propiedades del aire a esa temperatura sale
+          $\text{Gr} = 8{,}72\cdot 10^{5}$ y
+          $\text{Ra} = 6{,}29\cdot 10^{5}$. Por debajo de $10^{9}$, así que la
+          correlación laminar es aplicable y no hace falta Churchill-Chu.
+
+      - tipo: calcular
+        titulo: La emisividad
+        pregunta: |
+          Los watios que faltan se van por radiación. ¿Cuál es la emisividad
+          de la superficie exterior?
+        respuesta:
+          tipo: numero
+          valor: '0.885'
+          tolerancia: 0.01
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.5486'
+            mensaje: |
+              Has olvidado restar lo que la nave le devuelve al tubo: has
+              dividido entre $\sigma T_2^{4}$ en vez de entre
+              $\sigma\,(T_2^{4}-T_{nave}^{4})$. El intercambio es **neto**, y
+              la nave, aunque esté a 15 °C, también radia.
+          - valor: '1.908'
+            mensaje: |
+              Has usado el calor total, 3.435 W, en vez del que queda para la
+              radiación. Y el resultado debería haberte parado: una emisividad
+              mayor que uno es imposible, porque el cuerpo negro es el que más
+              emite y su emisividad vale exactamente 1.
+        pista: |
+          El tubo es un cuerpo pequeño dentro de un recinto grande, así que
+          $\dot Q_{rad} = \varepsilon_2 A_2\,\sigma\,(T_2^{4}-T_{nave}^{4})$,
+          con $\sigma = 5{,}67\cdot 10^{-8}$ y las temperaturas en kelvin.
+        desarrollo: |
+          $$
+          \dot Q_{rad} = 3.435 - 1.842 = 1.593\ \text{W}
+          $$
+
+          El tubo es una superficie pequeña dentro de una nave enorme, así que
+          $F_{2\text{-}nave} \approx 1$ y $A_2 \ll A_{nave}$: la resistencia
+          superficial de la nave es despreciable y el circuito se reduce al
+          caso de memoria.
+
+          $$
+          \varepsilon_2 = \frac{\dot Q_{rad}}{A_2\,\sigma\,(T_2^{4}-T_{nave}^{4})}
+          = \frac{1.593}{2{,}827\cdot 5{,}67\cdot 10^{-8}
+          \left(366{,}85^{4} - 288^{4}\right)}
+          = 0{,}885
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la estructura del ejercicio. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El calor total sale del balance del agua: 3.435 W en dieciocho
+              metros.
+          - texto: >-
+              La temperatura de la cara exterior sale de restarle a los 95 °C
+              del agua la caída de las dos resistencias interiores: 93,85 °C.
+          - texto: >-
+              Con ella se calcula la convección natural exterior, 1.842 W, y
+              lo que sobra hasta el total —1.593 W— se va por radiación.
+          - texto: >-
+              Y la emisividad sale de Stefan-Boltzmann; si diera mayor que uno
+              habría que redondearla a uno.
+            trampa: true
+            mensaje: |
+              Si diera mayor que uno, el resultado estaría **mal** y habría
+              que buscar el error, no redondear. La emisividad de un cuerpo
+              negro es exactamente 1 y ningún cuerpo real emite más: pasar de
+              uno significa que el calor radiado que has calculado es mayor
+              que el máximo físicamente posible, y eso solo puede venir de una
+              cuenta anterior equivocada.
+    resolucion: |
+      **La estructura, primero.** La radiación es lo único que no se puede
+      calcular directamente, así que se despeja por diferencia: todo lo demás
+      del ejercicio existe para llegar a esa resta.
+
+      $$
+      \dot Q_{rad} = |\dot Q| - \dot Q_{conv,ext}
+      $$
+
+      **1 · El calor total**, del balance del agua:
+
+      $$
+      \dot m = 961{,}4\cdot\frac{\pi\cdot 0{,}03^{2}}{4}\cdot 0{,}3 = 0{,}2039
+      \qquad
+      \dot Q = 0{,}2039\cdot 4.212\cdot 4 = 3.435\ \text{W}
+      $$
+
+      **2 · La temperatura exterior**, con Dittus-Boelter dentro y la
+      resistencia cilíndrica de la pared:
+
+      $$
+      \text{Re} = 29.137
+      \quad
+      \text{Nu} = 103{,}14
+      \quad
+      h_1 = 2.327{,}5
+      \quad
+      R_1 = 2{,}53\cdot 10^{-4}
+      \quad
+      R_2 = 8{,}21\cdot 10^{-5}
+      $$
+      $$
+      \theta_2 = 95 - 3.435\cdot 3{,}35\cdot 10^{-4} = 93{,}85\ \text{°C}
+      $$
+
+      **3 · La convección natural exterior**, a la temperatura característica
+      de 54,42 °C:
+
+      $$
+      \text{Ra} = 6{,}29\cdot 10^{5} < 10^{9}
+      \quad
+      \text{Nu} = 0{,}53\,\text{Ra}^{0{,}25} = 14{,}93
+      \quad
+      h_2 = 8{,}26
+      $$
+      $$
+      \dot Q_{conv} = 8{,}26\cdot 2{,}827\cdot 78{,}85 = 1.842\ \text{W}
+      $$
+
+      **4 · Y la emisividad**, con el tubo como cuerpo pequeño en un recinto
+      grande:
+
+      $$
+      \dot Q_{rad} = 3.435 - 1.842 = 1.593\ \text{W}
+      \qquad
+      \varepsilon_2 = \frac{1.593}{2{,}827\cdot 5{,}67\cdot 10^{-8}
+      \left(366{,}85^{4}-288^{4}\right)} = 0{,}885
+      $$
+
+      **Por qué este ejercicio vale por los tres temas.** Es el único del
+      material que junta los tres mecanismos en un solo circuito: conducción
+      en la pared, convección forzada dentro, convección natural fuera y
+      radiación en paralelo con esta última. Y trae la lectura que resume el
+      bloque entero: de los 3.435 W que pierde el agua, **1.593 se van por
+      radiación**, casi la mitad. A 94 °C la radiación ya no es despreciable,
+      y un cálculo que solo mirara la convección se quedaría corto por un
+      factor de casi dos.
