@@ -1,0 +1,259 @@
+---
+asignatura: ingenieria-termica
+tema: 10
+titulo: Radiación térmica
+descripcion: La cuarta potencia de la temperatura, el álgebra de los factores de visión, y la red de resistencias que convierte un horno en un circuito.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 10, «Transmisión de calor por radiación térmica» · Departamento de Ingeniería Energética, UPV/EHU. Las gráficas de factores de visión no se reproducen aquí; se explica el álgebra que permite reducir un caso a los que sí están publicados.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El tercer mecanismo, y el que se comporta distinto de los otros dos en las tres
+cosas que importan:
+
+- **No necesita medio.** El calor del Sol llega por el vacío. La conducción y
+  la convección necesitan materia.
+- **No depende de la diferencia de temperaturas, sino de las temperaturas.**
+  En conducción y convección el flujo es proporcional a $\Delta\theta$; aquí
+  va con $T_1^{4} - T_2^{4}$, que no es lo mismo ni de lejos.
+- **Depende de la geometría relativa** de las superficies: no basta con saber
+  cuánto miden, hay que saber cuánto se ven.
+
+Esa cuarta potencia es lo que hace que la radiación sea despreciable a
+temperatura ambiente y dominante en un horno. Y como va en cuarta potencia de
+la temperatura **absoluta**, aquí no hay ninguna discusión: **todo en kelvin,
+siempre**.
+
+## Lo que le pasa a la radiación que llega
+
+Cuando una radiación incide sobre un cuerpo, se reparte en tres, y los tres
+sumandos suman uno:
+
+$$
+\alpha + \rho + \tau = 1
+$$
+
+la **absortividad**, la **reflectividad** y la **transmisividad**. En rigor
+son función de la longitud de onda —$\alpha_\lambda$, $\rho_\lambda$,
+$\tau_\lambda$—, y por eso un cristal es transparente a la luz visible y opaco
+al infrarrojo, que es exactamente el efecto invernadero.
+
+## Las tres leyes del cuerpo negro
+
+Un **cuerpo negro** es el que absorbe toda la radiación que le llega,
+$\alpha = 1$. Es la referencia contra la que se mide todo lo demás.
+
+**Ley de Planck.** Da el poder emisivo monocromático de un cuerpo negro en
+función de la temperatura y de la longitud de onda:
+
+$$
+E_{b,\lambda}(T) = \frac{C_1}{\lambda^{5}\left(e^{C_2/\lambda T}-1\right)}
+$$
+
+**Ley de desplazamiento de Wien.** La longitud de onda del máximo de esa curva
+es inversamente proporcional a la temperatura absoluta. Es por lo que un metal
+al calentarse pasa de no verse a rojo, a naranja y a blanco: el máximo se
+desplaza hacia el visible.
+
+**Ley de Stefan-Boltzmann.** Integrando Planck sobre todo el espectro sale el
+poder emisivo total, y es la fórmula que se usa:
+
+$$
+E_b(T) = \sigma\,T^{4}
+\qquad
+\sigma = 5{,}67\cdot 10^{-8}\ \frac{\text{W}}{\text{m}^{2}\text{K}^{4}}
+$$
+
+### Emisividad, cuerpo gris y la ley de Kirchhoff
+
+La **emisividad** compara lo que emite un cuerpo real con lo que emitiría un
+cuerpo negro a la misma temperatura:
+
+$$
+\varepsilon_\lambda = \frac{E_\lambda}{E_{b,\lambda}}
+$$
+
+Un **cuerpo gris** es aquel cuyas propiedades no dependen de la longitud de
+onda: $\alpha_\lambda = \alpha$, $\varepsilon_\lambda = \varepsilon$, etc.
+Ningún cuerpo real lo es, pero se calcula como si lo fuera usando propiedades
+promedio, y con eso se trabaja en toda la asignatura.
+
+Y la **ley de Kirchhoff**, que ata las dos propiedades:
+
+$$
+\alpha = \varepsilon
+$$
+
+para un cuerpo en equilibrio térmico. De ahí que el cuerpo negro, además del
+que más absorbe, sea el que más emite: $\alpha_b = \varepsilon_b = 1$.
+
+<ErrorTipico titulo="Meter grados Celsius en la cuarta potencia">
+En los otros dos mecanismos la temperatura entra como diferencia y las dos
+escalas valen igual. Aquí entra elevada a la cuarta, y la diferencia es
+brutal.
+
+Dos placas a 1.000 °C y 500 °C intercambian
+$\sigma\,(1273{,}15^{4} - 773{,}15^{4}) = 128{,}7\ \text{kW/m}^{2}$. Con las
+temperaturas en grados Celsius saldría
+$\sigma\,(1000^{4} - 500^{4}) = 53{,}2\ \text{kW/m}^{2}$: menos de la mitad, y
+el error no avisa de ninguna manera.
+
+**Radiación es kelvin.** Sin excepciones, y en los cuatro sitios donde aparece
+la temperatura.
+</ErrorTipico>
+
+## El factor de visión
+
+Aquí está la parte específica del tema. El **factor de visión** $F_{12}$ es la
+fracción de la radiación emitida por la superficie 1 que llega a la 2. Depende
+solo de la geometría y de la posición relativa.
+
+Su definición es una integral doble sobre las dos superficies que nadie
+calcula a mano: se leen de **gráficas** publicadas para las configuraciones
+habituales —dos planos paralelos, dos planos con arista común, discos
+coaxiales—. Lo que sí hay que saber es el **álgebra** que permite llevar un
+caso cualquiera a esas configuraciones.
+
+**1 · Reciprocidad.**
+$$
+A_i\,F_{ij} = A_j\,F_{ji}
+$$
+
+**2 · Suma sobre un recinto cerrado.** Toda la radiación que sale de una
+superficie tiene que llegar a alguna parte:
+$$
+\sum_{j=1}^{n} F_{ij} = 1
+$$
+
+**3 · Factor propio.** $F_{ii} = 0$ si la superficie es plana o convexa —no se
+ve a sí misma—, y $F_{ii} > 0$ si es cóncava.
+
+**4 · Rango.** $0 < F_{ij} < 1$.
+
+**5 · Superposición.** Si $A_j = A_{j1} + A_{j2}$, entonces
+$F_{ij} = F_{ij1} + F_{ij2}$.
+
+<ErrorTipico titulo="Buscar en la gráfica un caso que no está publicado">
+Las gráficas cubren unas pocas configuraciones, y el enunciado casi siempre
+pide otra. La salida no es interpolar a ojo: es **escribir el factor que
+quieres en función de los que sí están publicados**, con las cinco reglas.
+
+El ejemplo que traen las transparencias: para dos planos desplazados,
+$F_{i1-j2}$ no tiene gráfica, pero los planos con arista común sí. Aplicando
+superposición y reciprocidad,
+
+$$
+A_{i1}F_{i1-j} = A_{i1}F_{i1-j1} + A_{i1}F_{i1-j2}
+\;\Longrightarrow\;
+F_{i1-j2} = F_{i1-j} - F_{i1-j1}
+$$
+
+y los dos de la derecha sí se leen. Es álgebra, no geometría: **el trabajo es
+descomponer, no dibujar**.
+</ErrorTipico>
+
+## La analogía eléctrica, otra vez
+
+Igual que en conducción, el intercambio radiante se monta como un circuito. Y
+aquí hay **dos tipos** de resistencia, que es lo que hay que tener claro.
+
+La **radiosidad** $J$ es todo lo que sale de una superficie: lo que emite más
+lo que refleja. Con ella:
+
+**Resistencia superficial**, una por cada superficie gris, entre su poder
+emisivo de cuerpo negro y su radiosidad:
+
+$$
+R_{sup} = \frac{1-\varepsilon}{A\,\varepsilon}
+$$
+
+Vale **cero** si la superficie es negra: en un cuerpo negro no hay nada
+reflejado, así que $J = E_b$ y los dos nodos se cortocircuitan.
+
+**Resistencia geométrica**, una por cada par de superficies que se ven, entre
+sus radiosidades:
+
+$$
+R_{geo} = \frac{1}{A_1\,F_{12}}
+$$
+
+Y el calor intercambiado es la diferencia de potencial —de poderes emisivos—
+partida por la resistencia total:
+
+$$
+\dot Q_{12} = \frac{E_{b1} - E_{b2}}{\sum R}
+= \frac{\sigma\left(T_1^{4}-T_2^{4}\right)}{\sum R}
+$$
+
+### Dos casos que salen de memoria
+
+**Dos planos paralelos grandes**, con $F_{12} = 1$ y áreas iguales:
+
+$$
+\frac{\dot Q_{12}}{A} = \frac{\sigma\left(T_1^{4}-T_2^{4}\right)}
+{\dfrac{1}{\varepsilon_1}+\dfrac{1}{\varepsilon_2}-1}
+$$
+
+**Un cuerpo pequeño dentro de un recinto grande**, con
+$A_1 \ll A_2$: la resistencia superficial del recinto se hace despreciable y
+el grande se comporta como un cuerpo negro, porque acaba absorbiendo todo lo
+que le llega:
+
+$$
+\dot Q_{12} = A_1\,\varepsilon_1\,\sigma\left(T_1^{4}-T_2^{4}\right)
+$$
+
+Es el caso de un tubo caliente en una nave, y el que más aparece.
+
+### Pantallas de radiación
+
+Intercalar una lámina delgada de emisividad baja entre dos superficies añade
+**dos** resistencias superficiales y una geométrica más, y eso reduce mucho el
+intercambio:
+
+$$
+\left.\frac{\dot Q_{12}}{A}\right|_{\text{sin pantalla}}
+= \frac{\sigma\,\Delta T^{4}}{\dfrac{1}{\varepsilon_1}+\dfrac{1}{\varepsilon_2}-1}
+\qquad
+\left.\frac{\dot Q_{12}}{A}\right|_{\text{con pantalla}}
+= \frac{\sigma\,\Delta T^{4}}{\dfrac{1}{\varepsilon_1}+\dfrac{2}{\varepsilon_3}+\dfrac{1}{\varepsilon_2}-2}
+$$
+
+Con superficies negras —$\varepsilon = 1$ en todas— eso es exactamente la
+mitad: una pantalla negra divide el intercambio por dos, dos pantallas por
+tres, y $n$ pantallas por $n+1$. Con una pantalla de emisividad baja, mucho
+más. Es el principio del termo de café y el de las mantas térmicas.
+
+<ErrorTipico titulo="Usar la fórmula corta cuando las áreas no son muy distintas">
+$\dot Q = A_1\varepsilon_1\sigma(T_1^{4}-T_2^{4})$ es cómoda y solo vale
+cuando $A_1 \ll A_2$. Aplicarla a dos superficies parecidas sobreestima, y
+mucho.
+
+En el ejercicio 10.3 de la colección —un conducto de 0,8 m dentro de otro de
+1 m, con emisividades 0,5 y 0,3— la fórmula corta daría
+$5.943\ \text{W/m}$, y el circuito completo da **3.074**. Casi el doble.
+
+El criterio: si el enunciado te da la emisividad de la superficie grande, es
+porque la vas a necesitar. Cuando de verdad se puede despreciar, el enunciado
+no suele ni mencionarla.
+</ErrorTipico>
+
+## Y con esto se cierra la asignatura
+
+Vale la pena mirar los tres mecanismos juntos, porque el examen los mezcla:
+
+| | de qué depende | resistencia |
+|---|---|---|
+| conducción | del material y del espesor | $L/kA$, $\ln(r_2/r_1)/2\pi kL$ |
+| convección | del fluido y de cómo se mueve | $1/hA$ |
+| radiación | de las temperaturas absolutas y de la geometría | $\dfrac{1-\varepsilon}{A\varepsilon}$, $\dfrac{1}{A_1F_{12}}$ |
+
+Los tres se montan como circuitos y los tres se suman en serie o en paralelo
+según toque. La diferencia práctica es que los dos primeros son lineales en la
+temperatura y el tercero no, así que un problema que mezcle convección y
+radiación sobre la misma superficie **no se resuelve despejando**: se resuelve
+iterando, o dejando la ecuación en cuarta potencia y buscando su raíz.

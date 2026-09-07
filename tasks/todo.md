@@ -8,10 +8,10 @@ en obra**. Quedan cuatro en `prev`.
 
 | | |
 |---|---|
-| temas publicados | **59**, más 3 declarados `soloEnClase` con su motivo |
+| temas publicados | **61**, más 3 declarados `soloEnClase` con su motivo |
 | convocatorias transcritas, con su PDF | **118** |
 | rutas de estudio | **12**, con 273 escalones |
-| corpus | **1.289 ejercicios · 5.239 pasos** |
+| corpus | **1.293 ejercicios · 5.258 pasos** |
 | respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
 | bloques de ruta que no dicen si les falta algo | **0 de 103** |
 | suelo, tests y navegador completo | verde |
@@ -94,10 +94,11 @@ tres redondeos de las propias resoluciones.
   la evaluación con sus dos modalidades, continua y final con renuncia.
 - **La colección cableada**: una línea en `CON_TEMAS` y otra en `collections`,
   que es exactamente lo que `content.config.ts` dejó previsto.
-- **Ocho temas escritos**, del 1 al 8: el bloque entero de Moran y Shapiro
-  —temas 1 a 7— y el primero de Çengel. Diecinueve ejercicios, y **once de
-  ellos salen de material con resolución publicada**: el examen de enero de
-  2026, los ejercicios 3.2 y 8.1 de la colección y el de la tobera del tema 4.
+- **Los diez temas escritos**, en un día: el bloque de Moran y Shapiro —temas
+  1 a 7— y el de Çengel —8, 9 y 10—. **Veintitrés ejercicios**, y trece de
+  ellos salen de material con resolución o resultados publicados: el examen de
+  enero de 2026, los ejercicios 3.2, 8.1 y 9.2 de la colección y el de la
+  tobera del tema 4.
 
   Del examen de enero están **siete de sus trece apartados**, repartidos por
   los temas a los que pertenecen: el 1 entero salvo su rendimiento exergético,
@@ -140,12 +141,15 @@ tres redondeos de las propias resoluciones.
 
 ## Lo que queda
 
-- **Los temas 9 y 10**: convección y radiación, que cierran el bloque de Çengel.
-  Los tres últimos son el segundo bloque de la asignatura y siguen otro libro
-  —Çengel—, así que su notación hay que mirarla aparte.
 - **Las 22 convocatorias.** Ninguna transcrita todavía como `examen.yaml`: los
-  ejercicios de examen escritos cuelgan de su tema. La de enero de 2026 está
-  leída entera y es la candidata natural para la primera.
+  ejercicios de examen escritos cuelgan de su tema, no de su convocatoria. La
+  asignatura sigue en `obra` por esto y no por los temas, que están los diez.
+  La de enero de 2026 está leída entera y es la candidata natural para la
+  primera; de las otras veintiuna, veinte traen su resolución dentro.
+- **Los enunciados escaneados.** La mayoría de los cuadernillos no tiene ni un
+  carácter extraíble: `pdftotext` devuelve cero. Hay que leerlos como
+  imágenes, página a página, y eso cambia el ritmo de la transcripción
+  respecto de Fluidos o Cálculo.
 - **Las tablas.** §08 impide reproducir las de Çengel y Moran y Shapiro. De
   momento los enunciados llevan dentro los valores que usan, que es lo que
   hace el propio examen; si en algún tema hiciera falta la tabla entera, hay

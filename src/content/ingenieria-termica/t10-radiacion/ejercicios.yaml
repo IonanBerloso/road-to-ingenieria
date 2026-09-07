@@ -1,0 +1,430 @@
+ejercicios:
+  - id: ejter-dos-placas-y-una-pantalla
+    titulo: Dos placas, y qué cambia poner una pantalla
+    fuente: >-
+      Ejercicio 10.2 de la colección de problemas del Tema 10 · Ingeniería
+      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El material no
+      publica sus resultados; el desarrollo es nuestro y sale de las fórmulas
+      del propio tema, con la comprobación de que los tres casos ordenan como
+      la física exige.
+    nivel: practica
+    enunciado: |
+      Dos placas paralelas se encuentran muy próximas entre sí. Una está a
+      $1.000\ \text{°C}$ y la otra a $500\ \text{°C}$. Calcúlese el
+      intercambio neto de calor por radiación entre ambas, por unidad de
+      superficie, en tres casos:
+
+      a) Ambas placas son negras.
+
+      b) Ambas son grises, con emisividad $0{,}6$.
+
+      c) Ambas son negras y entre ellas se interpone una tercera placa negra.
+
+      Dato: $\sigma = 5{,}67\cdot 10^{-8}\ \text{W/(m}^{2}\text{K}^{4})$.
+    pide: Los tres intercambios netos por unidad de superficie.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Las placas están «muy próximas entre sí». ¿Qué simplifica eso?
+        opciones:
+          - texto: >-
+              Que cada una ve solo a la otra: el factor de visión vale 1 y no
+              hay que buscarlo en ninguna gráfica
+            correcta: true
+            mensaje: |
+              Exacto. Toda la radiación que sale de una llega a la otra, así
+              que $F_{12} = 1$ y la resistencia geométrica se reduce a
+              $1/A$. Es la razón de que el enunciado insista en lo de
+              «próximas».
+          - texto: >-
+              Que la conducción entre ellas es despreciable
+            mensaje: |
+              Al revés: si estuvieran muy próximas y hubiera aire en medio, la
+              conducción sería **más** importante, no menos. Lo que la
+              proximidad simplifica es la geometría de la radiación, no la
+              existencia de otros mecanismos —que el enunciado sencillamente
+              no considera—.
+          - texto: >-
+              Que las dos están a la misma temperatura
+            mensaje: |
+              El enunciado dice que están a 1.000 y a 500 °C. Si estuvieran a
+              la misma temperatura no habría intercambio neto ninguno, que es
+              justamente lo que la fórmula devuelve cuando
+              $T_1^{4} = T_2^{4}$.
+
+      - tipo: calcular
+        titulo: Con las dos placas negras
+        pregunta: |
+          ¿Cuánto vale el intercambio neto por metro cuadrado si las dos son
+          negras?
+        respuesta:
+          tipo: magnitud
+          valor: '128711 W/m2'
+          tolerancia: 0.02
+          formato: una densidad de flujo de calor, con su unidad
+        distractores:
+          - valor: '53156 W/m2'
+            mensaje: |
+              Has puesto las temperaturas en grados Celsius. La ley de
+              Stefan-Boltzmann va con la temperatura **absoluta** elevada a la
+              cuarta, así que 1.000 °C son 1.273,15 K. Fíjate en el tamaño del
+              error: menos de la mitad del valor correcto, y sin ningún aviso.
+          - valor: '148971 W/m2'
+            mensaje: |
+              Has calculado solo lo que emite la placa caliente,
+              $\sigma T_1^{4}$, sin restar lo que le devuelve la fría. El
+              intercambio **neto** es la diferencia de las dos cuartas
+              potencias.
+        pista: |
+          Con las dos negras no hay resistencias superficiales, y con
+          $F_{12}=1$ queda $\dot q = \sigma\,(T_1^{4}-T_2^{4})$, en kelvin.
+        desarrollo: |
+          $$
+          T_1 = 1.273{,}15\ \text{K}
+          \qquad
+          T_2 = 773{,}15\ \text{K}
+          $$
+
+          $$
+          \dot q = \sigma\left(T_1^{4}-T_2^{4}\right)
+          = 5{,}67\cdot 10^{-8}\left(2{,}627\cdot 10^{12} - 3{,}573\cdot 10^{11}\right)
+          $$
+          $$
+          = 128.711\ \frac{\text{W}}{\text{m}^{2}}
+          $$
+
+          Casi 129 kW por metro cuadrado. Ese es el orden de magnitud de la
+          radiación en un horno, y por eso a estas temperaturas los otros dos
+          mecanismos casi no cuentan.
+
+      - tipo: calcular
+        titulo: Con las dos placas grises
+        pregunta: |
+          Con emisividad 0,6 en las dos, ¿cuánto vale ahora?
+        respuesta:
+          tipo: magnitud
+          valor: '55162 W/m2'
+          tolerancia: 0.02
+          formato: una densidad de flujo de calor, con su unidad
+        distractores:
+          - valor: '77227 W/m2'
+            mensaje: |
+              Has multiplicado por 0,6 el resultado de las placas negras. No
+              es proporcional: las dos superficies reflejan, y esa radiación
+              rebota entre ellas. El denominador correcto es
+              $1/\varepsilon_1 + 1/\varepsilon_2 - 1$, que aquí vale 2,33, no
+              1,67.
+          - valor: '38613 W/m2'
+            mensaje: |
+              Has usado $1/\varepsilon_1 + 1/\varepsilon_2$ sin restar el uno.
+              Ese $-1$ no es cosmético: sale de que las dos resistencias
+              superficiales y la geométrica comparten los mismos nodos, y sin
+              él el intercambio saldría siempre menor de lo que es.
+        pista: |
+          $\dot q = \dfrac{\sigma(T_1^{4}-T_2^{4})}
+          {1/\varepsilon_1 + 1/\varepsilon_2 - 1}$.
+        desarrollo: |
+          $$
+          \frac{1}{0{,}6}+\frac{1}{0{,}6}-1 = 2{,}333
+          $$
+
+          $$
+          \dot q = \frac{128.711}{2{,}333} = 55.162\ \frac{\text{W}}{\text{m}^{2}}
+          $$
+
+          Un 43 % de lo que intercambiarían siendo negras. Con emisividad 0,6
+          cada una, el conjunto se comporta como si tuviera una emisividad
+          efectiva de 0,43.
+
+      - tipo: calcular
+        titulo: Con una pantalla negra en medio
+        pregunta: |
+          Volviendo a las dos placas negras, ¿cuánto intercambian si se
+          interpone una tercera placa negra?
+        respuesta:
+          tipo: magnitud
+          valor: '64355 W/m2'
+          tolerancia: 0.02
+          formato: una densidad de flujo de calor, con su unidad
+        distractores:
+          - valor: '128711 W/m2'
+            mensaje: |
+              Ese es el valor sin pantalla. Una pantalla negra intercalada
+              **duplica** la resistencia del circuito: ahora hay dos saltos en
+              serie, del 1 al 3 y del 3 al 2, en vez de uno.
+          - valor: '42904 W/m2'
+            mensaje: |
+              Has dividido por tres. Con **una** pantalla el circuito tiene dos
+              resistencias en serie, así que el intercambio se divide por dos;
+              por tres se dividiría con dos pantallas.
+        pista: |
+          Con todas negras, la pantalla añade una resistencia igual a la que
+          ya había: el circuito pasa de una a dos en serie.
+        desarrollo: |
+          Con las tres superficies negras y $F = 1$ en los dos huecos, el
+          circuito tiene dos resistencias iguales en serie:
+
+          $$
+          \dot q = \frac{\sigma\left(T_1^{4}-T_2^{4}\right)}{2}
+          = \frac{128.711}{2} = 64.355\ \frac{\text{W}}{\text{m}^{2}}
+          $$
+
+          La regla general, con $n$ pantallas negras, es dividir por $n+1$. Y
+          la pantalla se pone a la temperatura que haga cuadrar el balance:
+          aquí, la que da el mismo flujo en los dos tramos.
+
+      - tipo: justificar
+        pregunta: Ordena la comparación de los tres casos. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con las dos placas negras el intercambio es máximo, 128,7 kW/m²:
+              nada se refleja y nada estorba.
+          - texto: >-
+              Bajar la emisividad a 0,6 lo reduce a 55,2 kW/m², porque parte
+              de la radiación rebota en vez de absorberse.
+          - texto: >-
+              Y una pantalla negra intercalada lo reduce a la mitad, 64,4
+              kW/m², sin cambiar ninguna emisividad.
+          - texto: >-
+              Luego una pantalla negra es más eficaz que bajar la emisividad
+              de las dos placas a 0,6.
+            trampa: true
+            mensaje: |
+              Los números dicen lo contrario: la pantalla deja 64,4 kW/m² y
+              las placas grises, 55,2. Bajar la emisividad ha sido más eficaz
+              **en este caso**. Y es coherente con la práctica: las pantallas
+              de radiación que se usan de verdad no son negras, son de baja
+              emisividad, y entonces sí ganan por goleada —es lo que hace un
+              termo—.
+    resolucion: |
+      **La geometría, primero.** Las placas están muy próximas, así que cada
+      una ve solo a la otra: $F_{12} = 1$ y la resistencia geométrica es
+      $1/A$.
+
+      **a) Ambas negras.** Sin resistencias superficiales:
+
+      $$
+      \dot q = \sigma\left(1.273{,}15^{4} - 773{,}15^{4}\right)
+      = 128.711\ \frac{\text{W}}{\text{m}^{2}}
+      $$
+
+      **b) Ambas grises, $\varepsilon = 0{,}6$.**
+
+      $$
+      \dot q = \frac{128.711}{\frac{1}{0{,}6}+\frac{1}{0{,}6}-1}
+      = \frac{128.711}{2{,}333} = 55.162\ \frac{\text{W}}{\text{m}^{2}}
+      $$
+
+      **c) Dos negras con una pantalla negra.** El circuito pasa de una
+      resistencia a dos en serie:
+
+      $$
+      \dot q = \frac{128.711}{2} = 64.355\ \frac{\text{W}}{\text{m}^{2}}
+      $$
+
+      **Las comprobaciones, que aquí hacen falta.** Este ejercicio no trae
+      resultados publicados, así que hay que verificarlo por otro lado, y hay
+      tres maneras: el caso negro tiene que ser el **máximo** de los tres,
+      porque cualquier emisividad menor que uno solo puede estorbar; el caso
+      gris tiene que salir menor que el negro y mayor que cero; y la pantalla
+      tiene que dar exactamente la mitad, porque duplica una resistencia que
+      era única. Los tres se cumplen.
+
+  - id: ejter-el-conducto-dentro-del-conducto
+    titulo: El conducto dentro del conducto, y la fórmula corta que no vale
+    fuente: >-
+      Ejercicio 10.3 de la colección de problemas del Tema 10 · Ingeniería
+      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El material no
+      publica sus resultados; el desarrollo es nuestro, con el circuito
+      completo de resistencias del propio tema.
+    nivel: practica
+    enunciado: |
+      Un conducto transporta un líquido caliente. Su diámetro exterior es de
+      $0{,}8\ \text{m}$ y la emisividad de su superficie exterior,
+      $0{,}5$. Está embebido en otro conducto de $1\ \text{m}$ de diámetro
+      interior y emisividad interior $0{,}3$. Entre ambos se ha hecho el vacío
+      para reducir las pérdidas. El conducto interior está a $550\ \text{K}$ y
+      el exterior a $300\ \text{K}$.
+
+      a) Las pérdidas de calor por metro de longitud.
+
+      b) La reducción de esas pérdidas si el conducto interior se pinta con
+      una pintura de emisividad $0{,}15$.
+    pide: Las pérdidas por metro y la reducción porcentual al bajar la emisividad.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Entre los dos conductos se ha hecho el vacío. ¿Qué implica eso para
+          el cálculo?
+        opciones:
+          - texto: >-
+              Que solo hay radiación: sin materia en medio no puede haber ni
+              conducción ni convección
+            correcta: true
+            mensaje: |
+              Exacto, y es la única razón de que el enunciado mencione el
+              vacío. La radiación es el único mecanismo que no necesita medio,
+              y por eso los termos y los criostatos se hacen así.
+          - texto: >-
+              Que la radiación también se anula, porque no hay nada que la
+              transporte
+            mensaje: |
+              La radiación es una onda electromagnética: viaja por el vacío
+              perfectamente. Si no fuera así no nos llegaría el calor del Sol,
+              que atraviesa 150 millones de kilómetros de vacío.
+          - texto: >-
+              Que hay que usar la transmisividad del vacío en las fórmulas
+            mensaje: |
+              El vacío no absorbe ni refleja nada, así que no interviene con
+              ninguna propiedad: sencillamente deja pasar toda la radiación.
+              Lo que hace es eliminar los otros dos mecanismos.
+
+      - tipo: calcular
+        titulo: Las pérdidas por metro
+        pregunta: |
+          ¿Cuánto calor pierde el conducto interior por metro de longitud?
+        respuesta:
+          tipo: magnitud
+          valor: '3074 W/m'
+          tolerancia: 0.02
+          formato: una potencia por unidad de longitud, con su unidad
+        distractores:
+          - valor: '5943 W/m'
+            mensaje: |
+              Has usado la fórmula corta,
+              $\dot Q = A_1\varepsilon_1\sigma(T_1^{4}-T_2^{4})$, que solo vale
+              cuando la superficie exterior es **mucho** mayor que la interior.
+              Aquí son 0,8 y 1 m de diámetro: se parecen demasiado, y por eso
+              el enunciado te da la emisividad del conducto exterior. Casi el
+              doble de error.
+          - valor: '11886 W/m'
+            mensaje: |
+              Es el intercambio que habría entre dos superficies negras. Las
+              dos emisividades, 0,5 y 0,3, añaden resistencias superficiales
+              que reducen el resultado a un tercio.
+        pista: |
+          Circuito completo: $R_1 = (1-\varepsilon_1)/(\varepsilon_1 A_1)$,
+          $R_{12} = 1/(A_1 F_{12})$ con $F_{12}=1$, y
+          $R_2 = (1-\varepsilon_2)/(\varepsilon_2 A_2)$. Por metro,
+          $A_1 = \pi\cdot 0{,}8$ y $A_2 = \pi\cdot 1$.
+        desarrollo: |
+          Por metro de conducto, $A_1 = 2{,}513$ y $A_2 = 3{,}142\ \text{m}^{2}$.
+          El conducto interior es convexo y está rodeado, así que $F_{12} = 1$.
+
+          $$
+          R_1 = \frac{1-0{,}5}{0{,}5\cdot 2{,}513} = 0{,}3979
+          \quad
+          R_{12} = \frac{1}{2{,}513} = 0{,}3979
+          \quad
+          R_2 = \frac{1-0{,}3}{0{,}3\cdot 3{,}142} = 0{,}7427
+          $$
+
+          $$
+          \dot Q = \frac{\sigma\left(550^{4}-300^{4}\right)}{1{,}5385}
+          = 3.074\ \frac{\text{W}}{\text{m}}
+          $$
+
+      - tipo: calcular
+        titulo: Con la pintura de baja emisividad
+        pregunta: |
+          Pintando el conducto interior con $\varepsilon_1 = 0{,}15$, ¿cuánto
+          pierde ahora?
+        respuesta:
+          tipo: magnitud
+          valor: '1393 W/m'
+          tolerancia: 0.02
+          formato: una potencia por unidad de longitud, con su unidad
+        distractores:
+          - valor: '922 W/m'
+            mensaje: |
+              Has escalado el resultado anterior por el cociente de
+              emisividades, $3.074\cdot 0{,}15/0{,}5$. No es proporcional: lo
+              que cambia es **una** de las tres resistencias del circuito, y
+              las otras dos siguen ahí.
+          - valor: '2049 W/m'
+            mensaje: |
+              Comprueba la resistencia superficial nueva:
+              $(1-0{,}15)/(0{,}15\cdot 2{,}513) = 2{,}255$, que es casi seis
+              veces la anterior. El total pasa de 1,54 a 3,40, y el calor cae
+              a menos de la mitad.
+        pista: |
+          Solo cambia $R_1$. Recalcúlala con la emisividad nueva y vuelve a
+          sumar las tres.
+        desarrollo: |
+          $$
+          R_1' = \frac{1-0{,}15}{0{,}15\cdot 2{,}513} = 2{,}2547
+          \qquad
+          \sum R = 2{,}2547 + 0{,}3979 + 0{,}7427 = 3{,}3953
+          $$
+
+          $$
+          \dot Q = \frac{\sigma\left(550^{4}-300^{4}\right)}{3{,}3953}
+          = 1.393\ \frac{\text{W}}{\text{m}}
+          $$
+
+          Una reducción del **54,7 %** con una mano de pintura, y sin tocar
+          nada más de la instalación.
+
+      - tipo: justificar
+        pregunta: Ordena por qué no vale la fórmula corta. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La fórmula $\dot Q = A_1\varepsilon_1\sigma\,\Delta T^{4}$ sale de
+              despreciar la resistencia superficial del cuerpo exterior.
+          - texto: >-
+              Esa resistencia, $(1-\varepsilon_2)/(\varepsilon_2 A_2)$, es
+              despreciable cuando $A_2$ es enorme, y aquí solo es un 25 %
+              mayor que $A_1$.
+          - texto: >-
+              De hecho es la mayor de las tres, 0,74 frente a 0,40 y 0,40:
+              despreciarla es despreciar casi la mitad del circuito.
+          - texto: >-
+              Y por eso la fórmula corta da menos calor del real, al haber
+              eliminado una resistencia.
+            trampa: true
+            mensaje: |
+              Da **más**, no menos: quitar una resistencia de un circuito en
+              serie baja la resistencia total y sube el flujo. Por eso la
+              fórmula corta daba 5.943 W/m frente a los 3.074 reales, casi el
+              doble. Es un error del lado peligroso, porque hace parecer las
+              pérdidas mayores de lo que son.
+    resolucion: |
+      **Solo radiación.** El vacío entre los dos conductos elimina la
+      conducción y la convección, y deja la radiación como único mecanismo.
+
+      **El circuito.** Por metro de longitud,
+      $A_1 = \pi\cdot 0{,}8 = 2{,}513$ y $A_2 = \pi\cdot 1 = 3{,}142\ \text{m}^{2}$.
+      El conducto interior es convexo y está completamente rodeado, así que
+      $F_{12} = 1$ y toda su radiación llega al exterior.
+
+      $$
+      R_1 = \frac{1-\varepsilon_1}{\varepsilon_1 A_1}
+      \qquad
+      R_{12} = \frac{1}{A_1}
+      \qquad
+      R_2 = \frac{1-\varepsilon_2}{\varepsilon_2 A_2}
+      $$
+
+      **a) Con $\varepsilon_1 = 0{,}5$**: las tres valen 0,3979, 0,3979 y
+      0,7427, y suman 1,5385.
+
+      $$
+      \dot Q = \frac{5{,}67\cdot 10^{-8}\left(550^{4}-300^{4}\right)}{1{,}5385}
+      = 3.074\ \frac{\text{W}}{\text{m}}
+      $$
+
+      **b) Con $\varepsilon_1 = 0{,}15$**: solo cambia la primera, que pasa a
+      2,2549, y el total a 3,3955.
+
+      $$
+      \dot Q = 1.393\ \frac{\text{W}}{\text{m}}
+      \qquad
+      \text{reducción} = \frac{3.074 - 1.393}{3.074} = 54{,}7\ \%
+      $$
+
+      **Y la comprobación que da sentido al ejercicio.** La fórmula corta,
+      $A_1\varepsilon_1\sigma\Delta T^{4}$, daría 5.943 W/m: casi el doble.
+      Solo vale cuando la superficie que rodea es mucho mayor que la rodeada,
+      y aquí un metro contra ochenta centímetros no lo es. El aviso está en el
+      propio enunciado: si te dan la emisividad de la superficie exterior, es
+      porque hace falta.

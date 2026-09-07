@@ -1,0 +1,298 @@
+---
+asignatura: ingenieria-termica
+tema: 9
+titulo: Convección de calor
+descripcion: Los tres números adimensionales, la temperatura característica que cambia con cada correlación, y la decisión de esta asignatura de no usar la media logarítmica.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+fuente: Adaptado del Tema 9, «Transmisión de calor por convección» · Departamento de Ingeniería Energética, UPV/EHU. Los números de los ejemplos trabajados están rehechos y contrastados contra las resoluciones del material y contra la de la convocatoria de enero de 2026.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+La conducción del tema 8 se resolvía con un dato del material, $k$, que está
+tabulado y no depende de nada más. La convección no tiene esa suerte: su dato
+equivalente, el **coeficiente de película** $h$, depende de la geometría, de
+la velocidad del fluido, de sus propiedades y de si el movimiento lo provoca
+una bomba o la propia diferencia de densidades.
+
+Por eso este tema no va de una ley: va de **elegir la correlación correcta y
+evaluarla a la temperatura correcta**. Las dos elecciones son donde se pierden
+los puntos.
+
+$$
+\dot Q = h\,A\,\Delta\theta
+\qquad
+R_{conv} = \frac{1}{h\,A}
+$$
+
+Esa resistencia se enchufa en el circuito del tema 8 como una más. Y cuando se
+juntan todas las de una pared —convección dentro, conducción, convección
+fuera— se suele condensar en un solo número, el **coeficiente global de
+transmisión** o **transmitancia**:
+
+$$
+\dot Q = U\,A\,\Delta\theta
+\qquad\text{con}\qquad
+\frac{1}{U\,A} = \sum R_i
+$$
+
+Es la $U$ que aparece en la normativa de edificación para caracterizar una
+fachada, y la misma que caracteriza un intercambiador de carcasa y tubos. Ojo
+con un detalle: en geometría cilíndrica las áreas de dentro y de fuera son
+distintas, así que **hay que decir respecto a qué superficie está referida
+$U$**.
+
+## Los tres números que gobiernan el tema
+
+El problema tiene demasiadas variables para atacarlo de frente, así que se
+reduce por análisis dimensional a un puñado de grupos adimensionales. Tres
+bastan para casi todo:
+
+| número | qué compara | para qué sirve |
+|---|---|---|
+| **Reynolds** $\ \text{Re} = \dfrac{c\,\Pi}{\nu}$ | inercia frente a viscosidad | decide si el flujo es laminar o turbulento |
+| **Prandtl** $\ \text{Pr} = \dfrac{c_p\,\mu}{k}$ | capacidad de almacenar energía frente a la de transmitirla | es una propiedad del fluido, y va tabulado |
+| **Nusselt** $\ \text{Nu} = \dfrac{h\,\Pi}{k}$ | convección frente a conducción en la capa límite | es la **incógnita**: de él sale $h$ |
+
+La mecánica de todo ejercicio de convección es siempre la misma, y conviene
+tenerla escrita:
+
+1. elegir la **longitud característica** $\Pi$,
+2. elegir la **temperatura característica** y sacar las propiedades a ella,
+3. calcular Re —y Ra, si la convección es natural—,
+4. elegir la correlación según el régimen,
+5. despejar $h$ de Nu, y con él la resistencia.
+
+La longitud característica es $L$ en una placa plana, $D$ en una tubería, y en
+un conducto de sección cualquiera el **diámetro hidráulico**,
+$\Pi = 4A/P_{mojado}$.
+
+<ErrorTipico titulo="La temperatura característica no es siempre la misma">
+Este es el error más caro del tema, porque no se detecta: sacas las
+propiedades de una tabla, la cuenta sale, y el número es otro.
+
+La temperatura a la que hay que leer $\rho$, $k$, $\mu$ y Pr **cambia con la
+correlación**:
+
+| caso | temperatura característica |
+|---|---|
+| placa plana, convección forzada | de película, $\theta_m = \dfrac{\theta_s+\theta_f}{2}$ |
+| **interior** de tubería, Dittus-Boelter | la del **fluido**, $\theta_f$ |
+| **exterior** de tubería, forzada | de película, $\theta_m$ |
+| convección natural | de película, $\theta_m$ |
+
+Es decir: de las cuatro, **la única que no usa la temperatura de película es
+justamente la más frecuente en los exámenes**, la del flujo interior. En el
+ejercicio 3 de enero de 2026 se ve: para la convección interior se toman las
+propiedades del agua a 200 °C —la media de los 250 de entrada y los 150 de
+salida, que es fluido— y para la exterior, a 60,35 °C, que es la media entre
+la superficie a 110,7 y el aire a 10.
+
+La costumbre que lo evita: **escribir la temperatura característica en el
+folio, con su nombre, antes de abrir ninguna tabla.**
+</ErrorTipico>
+
+## Convección forzada
+
+### Sobre una placa plana
+
+Con $\Pi = L$ y propiedades a la temperatura de película:
+
+$$
+\text{Re} < 5\cdot 10^{5}\ \text{(laminar)}:\quad
+\text{Nu} = 0{,}664\,\text{Re}_L^{1/2}\,\text{Pr}^{1/3}
+$$
+$$
+\text{Re} \ge 5\cdot 10^{5}\ \text{(turbulento)}:\quad
+\text{Nu} = 0{,}037\,\text{Re}_L^{0{,}8}\,\text{Pr}^{1/3}
+$$
+$$
+\text{flujo mixto}:\quad
+\text{Nu} = \left(0{,}037\,\text{Re}_L^{0{,}8} - 871\right)\text{Pr}^{1/3}
+$$
+
+El caso mixto es el que confunde: si la placa es más larga que la distancia
+crítica $x_{cr}$, una parte es laminar y otra turbulenta, y la correlación
+turbulenta a secas sobreestima. Ese $-871$ es exactamente la corrección del
+tramo laminar.
+
+### Dentro de una tubería: Dittus-Boelter
+
+Es la correlación que más aparece:
+
+$$
+\text{Nu} = 0{,}023\,\text{Re}^{0{,}8}\,\text{Pr}^{n}
+\qquad
+n = \begin{cases}
+0{,}4 & \text{si el fluido se calienta}\\
+0{,}3 & \text{si el fluido se enfría}
+\end{cases}
+$$
+
+Con sus condiciones de aplicación, que el enunciado espera que compruebes:
+
+- $\text{Re} > 10.000$ —aunque se admite para todo flujo turbulento,
+  $\text{Re} > 2.100$—,
+- $0{,}7 \le \text{Pr} \le 17.600$,
+- propiedades a la temperatura **del fluido**.
+
+<ErrorTipico titulo="El exponente de Prandtl, 0,3 o 0,4">
+Los dos exponentes de Dittus-Boelter no son intercambiables y la diferencia no
+es despreciable. En el ejercicio 9.2 del material, calentando agua con
+$\text{Pr} = 4{,}524$, el Nusselt sale **456,4** con $n = 0{,}4$ y **392,4**
+con $n = 0{,}3$: un 14 % menos, que se traslada entero a $h$ y a la longitud
+de tubería.
+
+La regla es fácil de recordar si se piensa en qué hace la capa límite: cuando
+el fluido **se calienta**, junto a la pared está más caliente y menos viscoso,
+así que se mueve mejor y transmite más. Por eso el exponente mayor va con el
+calentamiento.
+
+Y el dato de qué hace el fluido está siempre en el enunciado: si la pared está
+más caliente que el fluido, se calienta; si está más fría, se enfría.
+</ErrorTipico>
+
+### Fuera de una tubería
+
+Flujo transversal a un cilindro, con $\Pi = D$ y propiedades a la temperatura
+de película. La correlación general es la de **Churchill y Bernstein**, válida
+para cualquier Reynolds; hay alternativas más cortas por tramos —
+$1.000 < \text{Re} < 2\cdot 10^{5}$ y
+$2\cdot 10^{5} < \text{Re} < 10^{6}$— que son las que se usan en la práctica.
+
+## Convección natural
+
+Aquí no hay bomba: el fluido se mueve porque el calor cambia su densidad. El
+número que sustituye a Reynolds es el de **Grashof**, que compara el empuje
+con la viscosidad:
+
+$$
+\text{Gr} = \frac{g\,\beta\,\Delta\theta\,\Pi^{3}\rho^{2}}{\mu^{2}}
+$$
+
+donde $\beta$ es el coeficiente de dilatación volumétrica, que para un gas
+ideal vale simplemente $1/T$. Cuanto mayor es Grashof, más se mueve el fluido
+por sí solo.
+
+Y el que decide el régimen es el de **Rayleigh**:
+
+$$
+\text{Ra} = \text{Gr}\cdot\text{Pr}
+\qquad
+\text{Ra} > 10^{8}\ \Rightarrow\ \text{turbulento}
+$$
+
+Para un cilindro horizontal, la correlación de referencia es la de
+**Churchill y Chu**, válida hasta $\text{Ra} \le 10^{12}$:
+
+$$
+\text{Nu} = \left\{0{,}6 + \frac{0{,}387\,\text{Ra}^{1/6}}
+{\left[1+\left(0{,}559/\text{Pr}\right)^{9/16}\right]^{8/27}}\right\}^{2}
+$$
+
+y, si el flujo es laminar —$\text{Ra} < 10^{9}$—, la mucho más manejable
+
+$$
+\text{Nu} = 0{,}53\,\text{Ra}^{1/4}
+$$
+
+<ErrorTipico titulo="Aplicar la correlación laminar sin comprobar Rayleigh">
+La alternativa $\text{Nu} = 0{,}53\,\text{Ra}^{1/4}$ es tan cómoda que invita a
+usarla siempre, y tiene una condición: $\text{Ra} < 10^{9}$.
+
+En el ejercicio 3 de enero de 2026 la resolución oficial calcula
+$\text{Ra} = 1{,}86\cdot 10^{9}$ y concluye, con todas las letras, que **no se
+puede** aplicar. Y a continuación dice algo que conviene leer dos veces: que
+Churchill-Chu «no es aconsejable para un examen», así que opta por **otra
+vía**, resolver de dentro hacia afuera aprovechando que el enunciado da la
+temperatura de la superficie exterior.
+
+O sea: comprobar Rayleigh no solo evita usar la correlación equivocada;
+también avisa de que quizá el problema no había que atacarlo por ahí.
+</ErrorTipico>
+
+## La decisión de esta asignatura sobre la media logarítmica
+
+Y aquí un aviso que **no** es de física sino de programa, y que hay que saber
+porque cambia los resultados.
+
+Cuando un fluido recorre un tubo calentándose, la diferencia de temperatura
+con la pared no es constante: es grande al principio y pequeña al final. La
+forma rigurosa de promediarla es la **diferencia media logarítmica**:
+
+$$
+\Delta T_{ml} = \frac{\theta_s - \theta_i}
+{\ln\left(\dfrac{\theta_g-\theta_i}{\theta_g-\theta_s}\right)}
+$$
+
+> Las transparencias dicen literalmente: **«Este curso no usaremos el concepto
+> de diferencia media logarítmica de temperaturas; en su lugar usaremos la
+> temperatura media.»**
+
+Es decir, se promedia a lo bruto, $\theta_{media} = (\theta_s+\theta_i)/2$.
+
+No es una diferencia menor. En el ejercicio 9.2 del material —calentar 3 kg/s
+de agua de 10 a 66 °C en un tubo cuya pared está a 82 °C— la media logarítmica
+vale 37,23 °C y la media aritmética da un salto de 44, y con ellos:
+
+| criterio | longitud de tubería |
+|---|---|
+| media aritmética *(el del curso)* | **17,7 m** |
+| media logarítmica *(la rigurosa)* | 20,9 m |
+
+Un 18 % de diferencia. Los dos números son defendibles y solo uno es el que
+esta asignatura espera: **el de la media aritmética**. Si consultas apuntes de
+otra escuela y te sale un tercio más de tubería, no te has equivocado; estás
+usando el otro criterio.
+
+## El ejemplo completo, paso a paso
+
+El ejercicio 9.2 sirve de plantilla para todo el tema. Se quieren calentar
+$3\ \text{kg/s}$ de agua de 10 a 66 °C en un tubo de 5 cm cuya superficie
+interior está a 82 °C.
+
+**Temperatura característica.** Flujo interior, así que es la del fluido:
+$(10+66)/2 = 38\ \text{°C}$. A esa temperatura,
+$\rho = 992{,}9$, $k = 0{,}628$, $c_p = 4.179$, $\text{Pr} = 4{,}524$,
+$\nu = 6{,}949\cdot 10^{-7}$.
+
+**Velocidad y Reynolds.**
+
+$$
+c = \frac{\dot m}{\rho A} = \frac{3}{992{,}9\cdot 1{,}9635\cdot 10^{-3}}
+= 1{,}539\ \frac{\text{m}}{\text{s}}
+\qquad
+\text{Re} = \frac{1{,}539\cdot 0{,}05}{6{,}949\cdot 10^{-7}} = 110.735
+$$
+
+Muy por encima de 10.000, así que Dittus-Boelter es aplicable, y el agua se
+calienta, así que $n = 0{,}4$.
+
+**Nusselt y el coeficiente de película.**
+
+$$
+\text{Nu} = 0{,}023\cdot 110.735^{0{,}8}\cdot 4{,}524^{0{,}4} = 456{,}4
+\qquad
+h = \frac{456{,}4\cdot 0{,}628}{0{,}05} = 5.733\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+$$
+
+**Y la longitud**, igualando el calor que gana el agua con el que entra por la
+pared:
+
+$$
+\dot Q = 3\cdot 4.179\cdot 56 = 702.072\ \text{W}
+= h\,(\pi D L)\,(82-38)
+\;\Longrightarrow\;
+L = 17{,}7\ \text{m}
+$$
+
+Fíjate en el orden de magnitud de $h$: casi 5.800 W/(m²·K). Compáralo con el
+del aire en reposo del ejercicio del tema 8, donde la resistencia exterior de
+$7{,}46\cdot 10^{-4}$ K/W sobre 203 m² de superficie da
+$h_{ext} = 6{,}6\ \text{W/(m²·K)}$. **Casi mil veces menos** entre agua
+forzada y aire quieto, y ahí está resumido por qué en casi todo intercambiador
+manda el lado del gas: no importa lo bueno que sea el otro lado si este es mil
+veces peor.

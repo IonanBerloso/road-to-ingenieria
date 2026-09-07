@@ -1,0 +1,442 @@
+ejercicios:
+  - id: ejter-cuanta-tuberia-para-calentar-el-agua
+    titulo: Cuánta tubería hace falta para calentar el agua
+    fuente: >-
+      Ejercicio 9.2 de la colección de problemas del Tema 9 · Ingeniería
+      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El material lo
+      resuelve entero y publica sus valores intermedios; los cuatro están
+      rehechos y contrastados contra él.
+    nivel: practica
+    enunciado: |
+      Se quieren calentar $3\ \text{kg/s}$ de agua líquida desde
+      $10\ \text{°C}$ hasta $66\ \text{°C}$. Para ello se hace circular el
+      agua por un tubo cuya superficie interior está a $82\ \text{°C}$. El
+      diámetro de la tubería es de $5\ \text{cm}$.
+
+      Calcúlese la longitud de tubería necesaria.
+
+      Propiedades del agua a la temperatura característica:
+      $\rho = 992{,}9\ \text{kg/m}^{3}$, $k = 0{,}628\ \text{W/(m·K)}$,
+      $c_p = 4.179\ \text{J/(kg·K)}$, $\text{Pr} = 4{,}524$,
+      $\nu = 6{,}949\cdot 10^{-7}\ \text{m}^{2}/\text{s}$.
+    pide: La longitud de tubería, en metros.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El flujo es interior a una tubería. ¿A qué temperatura hay que leer
+          las propiedades del agua?
+        opciones:
+          - texto: >-
+              A la del fluido, que aquí es la media entre entrada y salida:
+              38 °C
+            correcta: true
+            mensaje: |
+              Exacto. Dittus-Boelter es la única de las correlaciones del tema
+              que **no** usa la temperatura de película, y por eso conviene
+              escribirlo en el folio antes de abrir la tabla.
+          - texto: >-
+              A la de película, la media entre la pared y el fluido:
+              $(82+38)/2 = 60\ \text{°C}$
+            mensaje: |
+              Esa es la de las otras tres correlaciones del tema —placa plana,
+              exterior de tubería y convección natural—, y por eso el error es
+              tan fácil. Dittus-Boelter es la excepción: propiedades a la
+              temperatura del fluido.
+          - texto: >-
+              A la de la pared, 82 °C, porque es donde ocurre el intercambio
+            mensaje: |
+              El intercambio ocurre en la capa límite, no en la pared, y la
+              capa límite está a temperaturas intermedias. Ninguna correlación
+              del tema evalúa las propiedades a la temperatura de la pared
+              sola.
+
+      - tipo: calcular
+        titulo: El número de Reynolds
+        pregunta: |
+          ¿Cuánto vale el Reynolds del flujo?
+        respuesta:
+          tipo: numero
+          valor: '110735'
+          tolerancia: 0.02
+          formato: un número grande, sin unidades
+        distractores:
+          - valor: '55361'
+            mensaje: |
+              Has usado el radio como longitud característica. En flujo
+              interior a una tubería, la longitud característica es el
+              **diámetro** entero: 0,05 m, no 0,025.
+          - valor: '77515'
+            mensaje: |
+              Has usado la velocidad sin dividir por la densidad, es decir
+              tomando el gasto másico como si fuera volumétrico. La velocidad
+              sale de $c = \dot m/(\rho A)$.
+        pista: |
+          Primero la velocidad, $c = \dot m/(\rho A)$ con
+          $A = \pi D^{2}/4$, y luego $\text{Re} = cD/\nu$.
+        desarrollo: |
+          $$
+          A = \frac{\pi D^{2}}{4} = 1{,}9635\cdot 10^{-3}\ \text{m}^{2}
+          \qquad
+          c = \frac{3}{992{,}9\cdot 1{,}9635\cdot 10^{-3}}
+          = 1{,}539\ \frac{\text{m}}{\text{s}}
+          $$
+
+          $$
+          \text{Re} = \frac{c\,D}{\nu}
+          = \frac{1{,}539\cdot 0{,}05}{6{,}949\cdot 10^{-7}} = 110.735
+          $$
+
+          Muy por encima de 10.000, así que Dittus-Boelter es aplicable sin
+          reservas.
+
+      - tipo: calcular
+        titulo: El coeficiente de película
+        pregunta: |
+          El agua **se calienta**, así que el exponente de Prandtl es 0,4.
+          ¿Cuánto vale $h$?
+        respuesta:
+          tipo: magnitud
+          valor: '5733 W/m2 K'
+          tolerancia: 0.02
+          formato: un coeficiente de película, con su unidad
+        distractores:
+          - valor: '4929 W/m2 K'
+            mensaje: |
+              Has usado el exponente 0,3, que es el del fluido que **se
+              enfría**. Aquí la pared está a 82 °C y el agua entra a 10: el
+              agua se calienta, y el exponente es 0,4. La diferencia es un
+              14 % en el Nusselt, y se traslada entera a la longitud.
+          - valor: '456.4 W/m2 K'
+            mensaje: |
+              Ese es el número de Nusselt, que es adimensional. Para pasar a
+              coeficiente de película hay que multiplicarlo por $k/D$: la
+              unidad lo delata.
+        pista: |
+          $\text{Nu} = 0{,}023\,\text{Re}^{0{,}8}\text{Pr}^{0{,}4}$, y de ahí
+          $h = \text{Nu}\,k/D$.
+        desarrollo: |
+          $$
+          \text{Nu} = 0{,}023\cdot 110.735^{0{,}8}\cdot 4{,}524^{0{,}4}
+          = 456{,}4
+          $$
+
+          $$
+          h = \frac{\text{Nu}\,k}{D} = \frac{456{,}4\cdot 0{,}628}{0{,}05}
+          = 5.733\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+      - tipo: calcular
+        titulo: La longitud
+        pregunta: |
+          Igualando el calor que gana el agua con el que entra por la pared,
+          ¿qué longitud de tubería hace falta?
+        respuesta:
+          tipo: magnitud
+          valor: '17.7 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '20.9 m'
+            mensaje: |
+              Has usado la diferencia media logarítmica de temperaturas,
+              37,23 °C. Es el criterio riguroso y **esta asignatura ha
+              decidido no usarlo**: sus transparencias dicen que se emplea la
+              temperatura media. Con ella el salto es de 44 grados y la
+              longitud, 17,7 m.
+          - valor: '35.4 m'
+            mensaje: |
+              El doble. Has puesto el radio donde va el diámetro en la
+              superficie lateral: es $\pi D L$, no $\pi r L$. Media superficie
+              obliga al doble de tubo.
+        pista: |
+          $\dot Q = \dot m c_p \Delta\theta$, y también
+          $\dot Q = h\,(\pi D L)(\theta_{pared} - \theta_{media})$ con la
+          temperatura media del agua, 38 °C.
+        desarrollo: |
+          $$
+          \dot Q = \dot m\,c_p\,(\theta_s - \theta_i)
+          = 3\cdot 4.179\cdot 56 = 702.072\ \text{W}
+          $$
+
+          $$
+          702.072 = 5.733\cdot(\pi\cdot 0{,}05\cdot L)\cdot(82 - 38)
+          \;\Longrightarrow\;
+          L = 17{,}7\ \text{m}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el método del ejercicio. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Flujo interior a tubería, así que la longitud característica es
+              el diámetro y las propiedades se leen a la temperatura del
+              fluido, 38 °C.
+          - texto: >-
+              Con Re = 110.735 el flujo es turbulento de sobra, así que
+              Dittus-Boelter es aplicable, y con exponente 0,4 porque el agua
+              se calienta.
+          - texto: >-
+              De Nusselt sale h, y de igualar los dos calores —el que gana el
+              agua y el que entra por la pared— sale la longitud.
+          - texto: >-
+              Y si el tubo fuera el doble de largo, el agua saldría al doble
+              de temperatura.
+            trampa: true
+            mensaje: |
+              No, porque el salto de temperatura que impulsa el calor **se va
+              agotando**: cuanto más se acerca el agua a los 82 °C de la
+              pared, menos calor entra por metro. El agua nunca pasaría de 82,
+              por muchos metros de tubo que pongas. Justamente por eso el
+              promedio correcto es logarítmico y no lineal, y por eso la
+              decisión del curso de usar la media aritmética es una
+              simplificación consciente.
+    resolucion: |
+      **La temperatura característica.** Flujo interior, así que Dittus-Boelter
+      pide las propiedades a la temperatura del **fluido**:
+      $(10+66)/2 = 38\ \text{°C}$. Es la única correlación del tema que no usa
+      la de película.
+
+      **Reynolds.**
+
+      $$
+      c = \frac{\dot m}{\rho A} = 1{,}539\ \frac{\text{m}}{\text{s}}
+      \qquad
+      \text{Re} = \frac{1{,}539\cdot 0{,}05}{6{,}949\cdot 10^{-7}} = 110.735
+      $$
+
+      **Nusselt y h.** El agua se calienta, luego $n = 0{,}4$:
+
+      $$
+      \text{Nu} = 0{,}023\cdot 110.735^{0{,}8}\cdot 4{,}524^{0{,}4} = 456{,}4
+      \qquad
+      h = 5.733\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      $$
+
+      **La longitud.**
+
+      $$
+      \dot Q = 3\cdot 4.179\cdot 56 = 702.072\ \text{W}
+      \qquad
+      L = \frac{702.072}{5.733\cdot\pi\cdot 0{,}05\cdot 44} = 17{,}7\ \text{m}
+      $$
+
+      **Un aviso sobre el 44.** Ese salto es la media aritmética entre pared y
+      fluido, y es lo que esta asignatura ha decidido usar: sus transparencias
+      dicen expresamente que **no** se emplea la diferencia media logarítmica.
+      Con ella el salto sería 37,23 °C y la longitud, 20,9 m —un 18 % más—.
+      Los dos números son defendibles; el del curso es el primero.
+
+  - id: ejter-el-agua-que-corre-por-dentro-de-la-tuberia
+    titulo: La convección de dentro, y por qué apenas pesa
+    fuente: >-
+      Parte del ejercicio 3 de la convocatoria ordinaria de enero de 2026 ·
+      Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El
+      examen publica su resolución oficial, y el desarrollo está contrastado
+      contra ella.
+    nivel: examen
+    enunciado: |
+      Por una tubería de $D_1 = 0{,}5\ \text{m}$ de diámetro interior circula
+      un gasto de $0{,}3\ \text{kg/s}$ de agua, que entra a $250\ \text{°C}$ y
+      sale a $150\ \text{°C}$.
+
+      Propiedades del agua a la temperatura característica:
+      $\rho = 864{,}3\ \text{kg/m}^{3}$, $k = 0{,}663\ \text{W/(m·K)}$,
+      $\text{Pr} = 0{,}91$,
+      $\nu = 1{,}55039\cdot 10^{-7}\ \text{m}^{2}/\text{s}$.
+
+      a) La velocidad del agua y su número de Reynolds.
+
+      b) El coeficiente de película interior.
+    pide: La velocidad, el Reynolds y el coeficiente de película interior.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El agua entra a 250 °C y sale a 150 °C. ¿A qué temperatura se leen
+          las propiedades, y qué exponente de Prandtl toca?
+        opciones:
+          - texto: >-
+              A 200 °C, la media del fluido, y con exponente 0,3 porque el
+              agua se enfría
+            correcta: true
+            mensaje: |
+              Los dos aciertos van juntos y salen del mismo dato: el agua
+              entra más caliente de lo que sale, así que se enfría, y en flujo
+              interior las propiedades van a la temperatura del fluido.
+          - texto: >-
+              A 200 °C, y con exponente 0,4 porque el fluido intercambia calor
+            mensaje: |
+              La temperatura es correcta pero el exponente no. El 0,4 es del
+              fluido que **se calienta**; aquí el agua pierde 100 grados por
+              el camino, así que se enfría y el exponente es 0,3.
+          - texto: >-
+              A la temperatura de película, y con exponente 0,3
+            mensaje: |
+              El exponente es correcto pero la temperatura no. Dittus-Boelter
+              es la excepción del tema: propiedades a la temperatura del
+              fluido, no a la de película. La de película es para la
+              convección **exterior**, que en este mismo ejercicio se evalúa a
+              60,35 °C.
+
+      - tipo: calcular
+        titulo: La velocidad del agua
+        pregunta: |
+          ¿A qué velocidad circula el agua por el tubo?
+        respuesta:
+          tipo: magnitud
+          valor: '0.00177 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '0.00708 m/s'
+            mensaje: |
+              Has usado el radio en vez del diámetro al calcular el área. La
+              sección es $\pi D^{2}/4$ con $D = 0{,}5$, y sale 0,196 m²: casi
+              un quinto de metro cuadrado, que es mucho tubo para 0,3 kg/s.
+          - valor: '1.77 m/s'
+            mensaje: |
+              Un factor mil, probablemente de la densidad. El agua a 200 °C
+              tiene 864,3 kg/m³, no 0,8643.
+        pista: |
+          $c = \dot m/(\rho A)$, con $A = \pi D_1^{2}/4 = 0{,}196\ \text{m}^2$.
+        desarrollo: |
+          $$
+          A_{int} = \frac{\pi\cdot 0{,}5^{2}}{4} = 0{,}196\ \text{m}^{2}
+          \qquad
+          c = \frac{0{,}3}{864{,}3\cdot 0{,}196}
+          = 0{,}00177\ \frac{\text{m}}{\text{s}}
+          $$
+
+          Menos de dos milímetros por segundo. Es lentísimo, y es lo que hace
+          interesante el apartado siguiente.
+
+      - tipo: calcular
+        titulo: El Reynolds
+        pregunta: |
+          ¿Cuánto vale el número de Reynolds, y basta para aplicar
+          Dittus-Boelter?
+        respuesta:
+          tipo: numero
+          valor: '5704'
+          tolerancia: 0.02
+          formato: un número, sin unidades
+        distractores:
+          - valor: '2851'
+            mensaje: |
+              Has usado el radio como longitud característica. En flujo
+              interior es el **diámetro** entero, 0,5 m. Y fíjate en lo que el
+              error te habría hecho concluir: 2.851 sigue estando por encima
+              de 2.100, así que Dittus-Boelter parecería aplicable igual y
+              nada te habría avisado.
+          - valor: '22804'
+            mensaje: |
+              Has usado el radio al calcular la **sección**, así que la
+              velocidad te ha salido cuatro veces mayor de lo que es. La
+              sección de un tubo es $\pi D^{2}/4$, y con medio metro de
+              diámetro son 0,196 m², no 0,049.
+        pista: |
+          $\text{Re} = c\,D_1/\nu$, con la velocidad del paso anterior.
+        desarrollo: |
+          $$
+          \text{Re} = \frac{0{,}00177\cdot 0{,}5}{1{,}55039\cdot 10^{-7}}
+          = 5.704
+          $$
+
+          Está por debajo de los 10.000 que Dittus-Boelter pide como condición
+          cómoda, pero **por encima de 2.100**, que es el umbral de flujo
+          turbulento y el límite que la propia asignatura admite. La
+          resolución oficial lo comprueba explícitamente antes de seguir.
+
+      - tipo: calcular
+        titulo: El coeficiente de película interior
+        pregunta: |
+          Con $n = 0{,}3$, ¿cuánto vale $h_{int}$?
+        respuesta:
+          tipo: magnitud
+          valor: '29.98 W/m2 K'
+          tolerancia: 0.02
+          formato: un coeficiente de película, con su unidad
+        distractores:
+          - valor: '22.61 W/m2 K'
+            mensaje: |
+              Ese es el número de Nusselt, que es adimensional. Falta
+              multiplicarlo por $k/D$ para convertirlo en coeficiente de
+              película.
+          - valor: '14.99 W/m2 K'
+            mensaje: |
+              Has multiplicado el Nusselt por $k$ pero te has dejado el
+              dividir por el diámetro. Es $h = \text{Nu}\,k/D$, y aquí $D$
+              vale 0,5, así que dividir por él **duplica** el resultado.
+
+              Y un aviso de paso sobre el exponente: cambiarlo de 0,3 a 0,4
+              aquí apenas mueve nada, porque el Prandtl del agua a 200 °C es
+              0,91, y 0,91 elevado a casi cualquier cosa sigue siendo casi 1.
+              La elección del exponente importa cuando el Prandtl se aleja de
+              la unidad, como en el ejercicio 9.2 de la colección, donde vale
+              4,5 y la diferencia es del 14 %.
+        pista: |
+          $\text{Nu} = 0{,}023\,\text{Re}^{0{,}8}\text{Pr}^{0{,}3}$ y
+          $h = \text{Nu}\,k/D_1$.
+        desarrollo: |
+          $$
+          \text{Nu} = 0{,}023\cdot 5.704^{0{,}8}\cdot 0{,}91^{0{,}3} = 22{,}61
+          $$
+
+          $$
+          h_{int} = \frac{22{,}61\cdot 0{,}663}{0{,}5}
+          = 29{,}98\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la lectura del resultado. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El agua circula a 1,8 mm/s, que para un tubo de medio metro de
+              diámetro es un caudal minúsculo.
+          - texto: >-
+              Por eso el Reynolds se queda en 5.704, apenas turbulento, y el
+              coeficiente de película sale de solo 30 W/(m²·K).
+          - texto: >-
+              Con ese valor tan bajo, la resistencia de convección interior
+              pesa un 15,9 % del circuito, más que las dos conducciones
+              juntas.
+          - texto: >-
+              Y como el agua va tan despacio, la convección interior es la
+              resistencia dominante del problema.
+            trampa: true
+            mensaje: |
+              Es la segunda por la cola, no la dominante. Con el 15,9 % queda
+              por detrás del aislante —30,8 %— y de la convección exterior
+              —53 %—, que es la que manda. Que un valor sea sorprendentemente
+              bajo no lo convierte en el que decide: eso lo dice el reparto
+              completo, no la intuición.
+    resolucion: |
+      **La temperatura característica y el exponente.** Flujo interior, así que
+      las propiedades van a la temperatura del fluido, $(250+150)/2 = 200$ °C.
+      Y el agua se enfría, así que en Dittus-Boelter $n = 0{,}3$.
+
+      **a) Velocidad y Reynolds.**
+
+      $$
+      A_{int} = \frac{\pi\cdot 0{,}5^{2}}{4} = 0{,}196\ \text{m}^{2}
+      \qquad
+      c = \frac{0{,}3}{864{,}3\cdot 0{,}196} = 0{,}00177\ \frac{\text{m}}{\text{s}}
+      $$
+      $$
+      \text{Re} = \frac{0{,}00177\cdot 0{,}5}{1{,}55039\cdot 10^{-7}} = 5.704 > 2.100
+      $$
+
+      **b) El coeficiente de película.**
+
+      $$
+      \text{Nu} = 0{,}023\cdot 5.704^{0{,}8}\cdot 0{,}91^{0{,}3} = 22{,}61
+      \qquad
+      h_{int} = \frac{22{,}61\cdot 0{,}663}{0{,}5} = 29{,}98\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      $$
+
+      **Lo que hay que llevarse.** Treinta W/(m²·K) para agua es un valor
+      pobrísimo: en el ejercicio 9.2 de la colección, con agua a 1,5 m/s en un
+      tubo de 5 cm, salían 5.733. La diferencia son casi doscientas veces, y
+      toda viene de la velocidad: aquí el agua va a menos de dos milímetros
+      por segundo porque el tubo es enorme para el caudal que lleva. Un buen
+      recordatorio de que $h$ no es una propiedad del fluido, sino de lo que
+      el fluido está haciendo.
