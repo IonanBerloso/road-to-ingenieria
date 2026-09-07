@@ -173,9 +173,24 @@ for (const e of ejercicios) {
          cifra, y compararlos así marcaba en falso 87 ejercicios de Álgebra y
          Cálculo que están bien: ahí la comparación es estructural y la hace
          el lector de respuestas, no una resta. */
+      /* En una `magnitud` se compara **el valor en unidades base**, que es lo
+         que hace el esquema, y no la cifra que va escrita delante. La
+         diferencia importa y no es sutil: en una temperatura, «2 C» y «5 C»
+         distan 3 unidades escritas y también 3 kelvin, pero la holgura
+         relativa se calcula sobre 275 y 278, no sobre 2 y 5, así que pasa de
+         0,1 a 5,6 y los dos distractores se confunden.
+
+         Escrito el 7 de septiembre de 2026, después de que este guion diera
+         verde por tercera vez a algo que el esquema tumbaba un build más
+         tarde. Las dos veces anteriores fueron un paso `verificar` sin
+         `condicion` y un distractor con unidad de otra magnitud. */
       const escalar = (v) => {
         const s = String(v).trim();
         if (/[(,]/.test(s)) return NaN;
+        if (p.respuesta?.tipo === 'magnitud') {
+          const m = leeMagnitud(s);
+          if (m) return m.valor;
+        }
         const m = s.match(/^-?\d+(\.\d+)?([eE][-+]?\d+)?/);
         return m ? Number(m[0]) : NaN;
       };

@@ -11,7 +11,7 @@ en obra**. Quedan cuatro en `prev`.
 | temas publicados | **61**, más 3 declarados `soloEnClase` con su motivo |
 | convocatorias transcritas, con su PDF | **118** |
 | rutas de estudio | **13**, con 291 escalones |
-| corpus | **1.301 ejercicios · 5.298 pasos** |
+| corpus | **1.302 ejercicios · 5.303 pasos** |
 | respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
 | bloques de ruta que no dicen si les falta algo | **0 de 103** |
 | suelo, tests y navegador completo | verde |
@@ -95,7 +95,7 @@ tres redondeos de las propias resoluciones.
 - **La colección cableada**: una línea en `CON_TEMAS` y otra en `collections`,
   que es exactamente lo que `content.config.ts` dejó previsto.
 - **Los diez temas escritos**, en un día: el bloque de Moran y Shapiro —temas
-  1 a 7— y el de Çengel —8, 9 y 10—. **Treinta y un ejercicios**, y dieciséis de
+  1 a 7— y el de Çengel —8, 9 y 10—. **Treinta y dos ejercicios**, y diecisiete de
   ellos salen de material con resolución o resultados publicados: el examen de
   enero de 2026, los ejercicios 3.2, 8.1 y 9.2 de la colección y el de la
   tobera del tema 4.
@@ -197,7 +197,7 @@ ahí sí está contado.
 ### La ruta de estudio · ESCRITA, sobre seis convocatorias contadas
 
 `preparar/ingenieria-termica-ord.yaml`: siete bloques, dieciocho escalones y
-los treinta y un ejercicios de la asignatura repartidos sin repetir ninguno.
+los treinta y dos ejercicios de la asignatura repartidos sin repetir ninguno.
 Prepara también la extraordinaria, porque la estructura es la misma en las dos.
 
 **Ninguno de los dieciocho escalones empieza por un ejercicio de examen**, que

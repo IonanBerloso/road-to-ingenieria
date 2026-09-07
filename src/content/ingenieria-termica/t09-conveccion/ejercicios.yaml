@@ -440,3 +440,267 @@ ejercicios:
       por segundo porque el tubo es enorme para el caudal que lleva. Un buen
       recordatorio de que $h$ no es una propiedad del fluido, sino de lo que
       el fluido está haciendo.
+
+  - id: ejter-la-pared-por-dos-caminos-y-el-numero-que-sobraba
+    titulo: La pared por dos caminos, y el dato que parecía sobrar
+    fuente: >-
+      Ejercicio 3 de la convocatoria ordinaria de enero de 2024-2025 ·
+      Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El
+      examen exige resolver los dos primeros apartados **de las dos maneras**,
+      y publica su resolución oficial manuscrita; los cinco valores están
+      rehechos y contrastados contra ella.
+    nivel: examen
+    enunciado: |
+      Una pared de conductividad térmica $12\ \text{W/(m·K)}$, altura
+      $1{,}5\ \text{m}$ y espesor $30\ \text{cm}$ está en contacto con aire
+      exterior **en reposo** a $5\ \text{°C}$. La superficie interior de la
+      pared se encuentra a $22\ \text{°C}$ y las pérdidas de calor a través de
+      la pared son de $80\ \text{W/m}^{2}$.
+
+      a) La temperatura superficial exterior de la pared.
+
+      b) El coeficiente de convección entre la pared y el aire exterior.
+
+      c) El número de Nusselt en la capa límite térmica exterior.
+
+      **Atención**: los apartados a) y b) deben resolverse de ambas maneras,
+      tanto analíticamente como empleando la analogía eléctrica.
+
+      **Nota**: para los parámetros adimensionales de la convección debe
+      utilizarse como temperatura característica la media entre la de la
+      superficie y la del fluido.
+
+      Dato: conductividad del aire a la temperatura característica,
+      $k_f = 0{,}02458\ \text{W/(m·K)}$.
+    pide: La temperatura exterior, el coeficiente de convección y el Nusselt.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado dice que el aire exterior está **en reposo**. ¿Qué
+          decide eso?
+        opciones:
+          - texto: >-
+              Que la convección exterior es natural, no forzada, y con ella la
+              correlación y la longitud característica que hay que usar
+            correcta: true
+            mensaje: |
+              Exacto. Y en convección natural sobre una placa plana vertical la
+              longitud característica es **la altura**, que es de donde sale
+              el 1,5 m del enunciado: el dato que parecía no hacer falta en
+              ningún sitio.
+          - texto: >-
+              Que no hay convección: sin movimiento del aire, el calor solo
+              sale por conducción
+            mensaje: |
+              El aire se mueve solo, empujado por su propia diferencia de
+              densidades al calentarse junto a la pared. Eso es precisamente
+              la convección natural, y es la que gobierna la cara exterior de
+              cualquier fachada.
+          - texto: >-
+              Que el coeficiente de convección es el del aire quieto, un valor
+              tabulado
+            mensaje: |
+              No hay un valor tabulado universal: $h$ depende de la geometría,
+              del salto de temperatura y de las propiedades del aire. Aquí, de
+              hecho, sale del balance —80 W/m² entre 15 grados— y no de
+              ninguna tabla.
+
+      - tipo: calcular
+        titulo: La temperatura de la cara exterior
+        pregunta: |
+          ¿A qué temperatura está la superficie exterior de la pared?
+        respuesta:
+          tipo: magnitud
+          valor: '20 C'
+          tolerancia: 0.005
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '2 C'
+            mensaje: |
+              Ese es el **salto** que produce la pared,
+              $\dot q\,L/k = 2$ grados, no la temperatura de la cara. Hay que
+              restárselo a los 22 de la cara interior.
+          - valor: '-178 C'
+            mensaje: |
+              Has metido el espesor en centímetros: $80\cdot 30/12 = 200$
+              grados de caída, en una pared de treinta centímetros. El
+              resultado debería haberte parado antes de escribirlo. La
+              conductividad va en W/(m·K), así que el espesor va en metros.
+        pista: |
+          Por la analogía, $\dot q = (\theta_1-\theta_2)/(L/k)$, con
+          $L/k = 0{,}3/12$.
+        desarrollo: |
+          **Por la analogía eléctrica**, la resistencia de conducción por
+          unidad de área es $L/k = 0{,}3/12 = 0{,}025$:
+
+          $$
+          80 = \frac{22 - \theta_2}{0{,}025}
+          \;\Longrightarrow\;
+          \theta_2 = 20\ \text{°C}
+          $$
+
+          **Y analíticamente**, integrando la ecuación de la conducción en
+          régimen permanente, sin generación y con $k$ constante:
+
+          $$
+          \frac{d^{2}\theta}{dx^{2}} = 0
+          \;\Longrightarrow\;
+          \theta(x) = C_1x + C_2
+          $$
+
+          La condición de contorno **de primera especie** —temperatura
+          impuesta— da $C_2 = 22$; la **de segunda especie** —flujo impuesto—
+          da $C_1$ por la ley de Fourier, $80 = -12\,C_1$, es decir
+          $C_1 = -6{,}67$. Y entonces
+
+          $$
+          \theta(0{,}3) = -6{,}67\cdot 0{,}3 + 22 = 20\ \text{°C}
+          $$
+
+          Los dos caminos dan lo mismo porque son el mismo: la analogía es esa
+          integración ya hecha.
+
+      - tipo: calcular
+        titulo: El coeficiente de convección
+        pregunta: |
+          ¿Cuánto vale el coeficiente de película entre la pared y el aire?
+        respuesta:
+          tipo: magnitud
+          valor: '5.33 W/m2 K'
+          tolerancia: 0.02
+          formato: un coeficiente de película, con su unidad
+        distractores:
+          - valor: '4.71 W/m2 K'
+            mensaje: |
+              Has usado el salto entre la cara **interior** y el aire, 22
+              menos 5. La resistencia de convección va solo de la superficie
+              exterior al aire: sus dos extremos son 20 y 5.
+          - valor: '0.1875 W/m2 K'
+            mensaje: |
+              Eso es la **resistencia** de convección por unidad de área,
+              $1/h$, en m²·K/W. El coeficiente es su inversa, y la unidad lo
+              delata.
+        pista: |
+          Ley de enfriamiento de Newton: $\dot q = h\,(\theta_2 - \theta_f)$,
+          con la misma densidad de flujo de 80 W/m².
+        desarrollo: |
+          En régimen permanente el mismo calor que atraviesa la pared por
+          conducción sale al aire por convección — es la **condición de
+          contorno de tercera especie**:
+
+          $$
+          h = \frac{\dot q}{\theta_2 - \theta_f} = \frac{80}{20 - 5}
+          = 5{,}33\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          Por analogía sale igual, resolviendo el circuito entero de una vez:
+
+          $$
+          80 = \frac{22-5}{\dfrac{0{,}3}{12} + \dfrac{1}{h}}
+          \;\Longrightarrow\;
+          h = 5{,}33
+          $$
+
+          Y fíjate en el reparto: la conducción aporta 0,025 de resistencia y
+          la convección 0,1875, siete veces y media más. Treinta centímetros
+          de pared pesan menos que la película de aire quieto que tiene
+          pegada.
+
+      - tipo: calcular
+        titulo: El número de Nusselt
+        pregunta: |
+          ¿Cuál es el número de Nusselt en la capa límite exterior?
+        respuesta:
+          tipo: numero
+          valor: '325.5'
+          tolerancia: 0.01
+          formato: un número, sin unidades
+        distractores:
+          - valor: '65.1'
+            mensaje: |
+              Has usado el **espesor** de la pared, 0,3 m, como longitud
+              característica. En convección natural sobre una placa vertical
+              la longitud característica es la **altura**: por eso el enunciado
+              da los 1,5 m, que no hacen falta para ninguna otra cosa.
+          - valor: '0.0031'
+            mensaje: |
+              Has invertido la fracción. El Nusselt compara la convección con
+              la conducción en la capa límite, así que el coeficiente de
+              película va arriba: $\text{Nu} = h\,\Pi/k_f$.
+        pista: |
+          $\text{Nu} = h\,\Pi/k_f$, con $\Pi$ la altura de la pared.
+        desarrollo: |
+          La temperatura característica, como dice el enunciado, es la media
+          entre superficie y fluido:
+
+          $$
+          \theta_{cc} = \frac{5+20}{2} = 12{,}5\ \text{°C}
+          $$
+
+          y a ella se lee la conductividad del aire. Con la altura como
+          longitud característica:
+
+          $$
+          \text{Nu} = \frac{h\,\Pi}{k_f} = \frac{5{,}33\cdot 1{,}5}{0{,}02458}
+          = 325{,}5
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena por qué el enunciado da la altura. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La altura no aparece en la conducción: la resistencia de una
+              pared plana es $L/k$ con $L$ el espesor, y el área se cancela al
+              trabajar por metro cuadrado.
+          - texto: >-
+              Tampoco en el coeficiente de convección, que sale de dividir la
+              densidad de flujo entre el salto de temperatura.
+          - texto: >-
+              Aparece solo en el Nusselt, porque en convección natural sobre
+              una placa vertical la longitud característica es la altura.
+          - texto: >-
+              Y si la pared fuese el doble de alta, el coeficiente de
+              convección sería el doble.
+            trampa: true
+            mensaje: |
+              El coeficiente no cambiaría: sale de 80 W/m² entre 15 grados, y
+              ninguno de los dos depende de la altura. Lo que se duplicaría es
+              el **Nusselt**, que es un número adimensional y lleva la altura
+              dentro. Confundir «h depende de la geometría» con «h se calcula
+              con la geometría» es el paso en falso: aquí $h$ se ha medido, no
+              se ha correlacionado.
+    resolucion: |
+      **a) La cara exterior, a 20 °C.** Por la analogía, con
+      $L/k = 0{,}025$:
+
+      $$
+      80 = \frac{22-\theta_2}{0{,}025} \;\Longrightarrow\; \theta_2 = 20\ \text{°C}
+      $$
+
+      Y analíticamente, integrando $d^{2}\theta/dx^{2} = 0$ con la condición
+      de primera especie —$\theta(0) = 22$— y la de segunda —$\dot q = -k\,C_1$,
+      de donde $C_1 = -6{,}67$—, sale $\theta(0{,}3) = 20$. Los dos caminos
+      coinciden porque la analogía **es** esa integración ya hecha.
+
+      **b) El coeficiente, 5,33 W/(m²·K).** Condición de tercera especie: el
+      calor que sale por conducción entra al aire por convección.
+
+      $$
+      h = \frac{80}{20-5} = 5{,}33\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      $$
+
+      **c) El Nusselt, 325,5.** Convección natural en placa vertical: la
+      longitud característica es la altura y la temperatura característica, la
+      media entre superficie y fluido.
+
+      $$
+      \text{Nu} = \frac{5{,}33\cdot 1{,}5}{0{,}02458} = 325{,}5
+      $$
+
+      **Lo que hay que llevarse.** Este ejercicio enseña dos cosas que no se
+      ven en el resultado. La primera es que la analogía eléctrica y la
+      integración son lo mismo, y por eso el examen las pide las dos: para que
+      no uses la analogía como una receta. La segunda es que un dato del
+      enunciado que no encaja en ninguna cuenta —los 1,5 m de altura— casi
+      siempre está señalando qué correlación toca; aquí, que la convección es
+      natural y sobre una placa vertical.
