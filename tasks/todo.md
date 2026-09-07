@@ -11,7 +11,7 @@ en obra**. Quedan cuatro en `prev`.
 | temas publicados | **61**, más 3 declarados `soloEnClase` con su motivo |
 | convocatorias transcritas, con su PDF | **118** |
 | rutas de estudio | **13**, con 291 escalones |
-| corpus | **1.298 ejercicios · 5.280 pasos** |
+| corpus | **1.301 ejercicios · 5.298 pasos** |
 | respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
 | bloques de ruta que no dicen si les falta algo | **0 de 103** |
 | suelo, tests y navegador completo | verde |
@@ -95,7 +95,7 @@ tres redondeos de las propias resoluciones.
 - **La colección cableada**: una línea en `CON_TEMAS` y otra en `collections`,
   que es exactamente lo que `content.config.ts` dejó previsto.
 - **Los diez temas escritos**, en un día: el bloque de Moran y Shapiro —temas
-  1 a 7— y el de Çengel —8, 9 y 10—. **Veintiocho ejercicios**, y trece de
+  1 a 7— y el de Çengel —8, 9 y 10—. **Treinta y un ejercicios**, y dieciséis de
   ellos salen de material con resolución o resultados publicados: el examen de
   enero de 2026, los ejercicios 3.2, 8.1 y 9.2 de la colección y el de la
   tobera del tema 4.
@@ -194,49 +194,52 @@ a contar. Hace falta releer las once convocatorias finales y decidir si el
 bloque se declara con cero o se parte en dos. Térmica sí va con cero, porque
 ahí sí está contado.
 
-### La ruta de estudio · ESCRITA, sobre cinco convocatorias contadas
+### La ruta de estudio · ESCRITA, sobre seis convocatorias contadas
 
 `preparar/ingenieria-termica-ord.yaml`: siete bloques, dieciocho escalones y
-los veintiocho ejercicios de la asignatura repartidos sin repetir ninguno.
+los treinta y un ejercicios de la asignatura repartidos sin repetir ninguno.
+Prepara también la extraordinaria, porque la estructura es la misma en las dos.
 
-**Y ninguno de los dieciocho escalones empieza por un ejercicio de examen**,
-que es la regla de §14 que más cuesta cumplir: «si el primer ejercicio de un
+**Ninguno de los dieciocho escalones empieza por un ejercicio de examen**, que
+es la regla de §14 que más cuesta cumplir: «si el primer ejercicio de un
 escalón no lo puede hacer alguien que acaba de leer la teoría, falta un
 ejemplo delante». Al medirlo salieron cinco escalones que empezaban arriba
 —exponente politrópico, intercambiador, bomba, Guy-Stodola y resistencia
 dominante—, así que se escribieron los cinco ejemplos que faltaban en vez de
 declararlo como deuda.
-Prepara también la extraordinaria, porque la estructura es idéntica en las
-dos. §14 no deja inventarse una ruta: hace falta `medidoSobre`. **Están
-contadas cinco convocatorias** —las únicas cuyo PDF tiene texto extraíble:
-enero y febrero de 2025-2026, enero de 2022-2023, febrero de 2021-2022 y enero
-de 2017-2018—, y esto es lo que dieron:
+
+§14 tampoco deja inventarse una ruta: hace falta `medidoSobre`. **Están
+contadas seis convocatorias**, y esto es lo que dieron:
 
 | conv. | ejercicio 1 | ejercicio 2 | ejercicio 3 |
 |---|---|---|---|
 | 2025-26 ene | cilindro-pistón politrópico | condensador + bomba | tubería, conducción + convección |
 | 2025-26 feb | tanque rígido aislado | intercambiador N₂/aire | convección forzada, túnel de viento |
+| 2024-25 ene | **compresor de helio** | vertido de agua en un depósito | pared plana |
 | 2022-23 ene | aire, exponente 3,5, **por signos** | turbina de vapor | tubería de cobre |
 | 2021-22 feb | mezcla de dos corrientes | turbina de gas | tubería con y sin aislante |
 | 2017-18 ene | cámara de mezcla | dos gases y un foco a 400 °C | tubería, y la **emisividad** |
 
-**Tres ejercicios, y el tercero es transmisión de calor en las cinco.** Los dos
-primeros son termodinámica: uno de sistema cerrado o sustancia pura y otro de
-volumen de control. La exergía aparece en las cinco, y casi siempre como los
-dos últimos apartados —exergía destruida y rendimiento exergético—.
+**Tres ejercicios, y el tercero es transmisión de calor en las seis.** Los dos
+primeros son termodinámica: uno con **gas ideal las seis veces** y otro con
+agua **cinco de las seis** —la excepción es enero de 2024-2025, donde el agua
+entra como líquido y se despacha con el modelo incompresible, sin tablas—. La
+exergía aparece en las seis, y casi siempre como los dos últimos apartados.
+
+Esa excepción es la única variación medida en seis años, y por eso el bloque
+de sustancias puras es el único de la ruta que declara 5 de 6 y no 6 de 6.
 
 Tres datos más que salieron de leerlas y que la ruta debería publicar:
 
 - **Cada ejercicio vale un tercio del examen.** Lo dicen las cabeceras, con
   todas las letras. No hay reparto por competencia, igual que en Álgebra.
 - **La duración cambia con el año**: 3,5 horas en 2017-2018, 3 en 2021-2022 y
-  2,5 en 2022-2023. No se puede publicar «el examen dura X»; hay que publicar
-  las tres cifras con su año.
-- **El ejercicio 1 de 2022-2023 no pide ningún número**: pide el **signo** de
-  seis magnitudes —calor específico politrópico, calor, variación de entropía,
-  entropía generada en el sistema y en el universo— y si las paredes son
-  rígidas o móviles. Es un ejercicio de razonamiento puro y encaja como anillo
-  al dedo en un paso `reconocer`.
+  2,5 en 2022-2023 y en 2024-2025. No se puede publicar «el examen dura X»;
+  hay que publicar las cifras con su año, y la tendencia —de 3,5 a 2,5 en
+  siete años— es un dato en sí.
+- **~~El ejercicio 1 de 2022-2023 no pide ningún número~~** · ESCRITO. Pide el
+  signo de cinco magnitudes y si las paredes son rígidas o móviles, y ya está
+  transcrito como «Seis signos, y ningún número que dar».
 
 ### Lo demás, que sí es trabajo
 
