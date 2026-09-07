@@ -507,6 +507,211 @@ ejercicios:
   # Del boletín de problemas complementarios del tema 7.
   # ═══════════════════════════════════════════════════════════════════
 
+  - id: ej-area-del-casquete-de-paraboloide
+    titulo: El área de un cuenco, y la raíz que aparece en polares
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre el área de una
+      superficie del tema 7. Es el peldaño entre el plano inclinado —donde la
+      raíz es constante— y los cuerpos del examen, donde además hay que
+      averiguar el recinto. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el área del trozo del paraboloide $z = x^{2}+y^{2}$ que queda
+      por debajo del plano $z = 1$.
+    pide: El área de esa superficie curva.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Sobre qué región se integra, y qué se integra sobre ella?
+        opciones:
+          - texto: >-
+              Sobre la **sombra** del cuenco en el plano XY, integrando
+              $\sqrt{1+z_x^{2}+z_y^{2}}$
+            correcta: true
+            mensaje: |
+              Eso es. El recinto de integración es siempre plano —la sombra—, y
+              lo que corrige que la superficie esté inclinada es la raíz. Si la
+              superficie fuera horizontal la raíz valdría 1 y saldría el área
+              de la sombra, que es justo lo que tiene que pasar.
+          - texto: >-
+              Sobre la sombra, integrando 1
+            mensaje: |
+              Eso da el área de la **sombra**, no la de la superficie. Aquí
+              serían $\pi$, y la respuesta buena es un 70 % mayor: el cuenco
+              está inclinado y por eso hay más superficie que suelo debajo.
+          - texto: >-
+              Sobre la propia superficie curva, integrando 1
+            mensaje: |
+              Conceptualmente es lo que se quiere, pero no se puede integrar
+              directamente sobre una superficie curva con una integral doble
+              corriente: hay que proyectarla sobre un recinto plano, y el
+              precio de esa proyección es exactamente la raíz.
+
+      - tipo: calcular
+        titulo: La integral en el radio
+        pregunta: |
+          En polares el integrando queda $\sqrt{1+4r^{2}}$ y el recinto es el
+          disco $r\le 1$. ¿Cuánto vale
+          $\displaystyle\int_0^{1}\sqrt{1+4r^{2}}\;r\,dr$?
+        respuesta:
+          tipo: numero
+          valor: '(5*sqrt(5)-1)/12'
+          tolerancia: 0.0005
+          formato: un número, en forma exacta o con cuatro decimales
+        distractores:
+          - valor: '1/3'
+            mensaje: |
+              Has integrado como si el cambio $u = 1+4r^{2}$ diera $u$ y no
+              $u^{3/2}$. Al integrar $\sqrt{u}$ sale $\frac{2}{3}u^{3/2}$, y esa
+              potencia de tres medios es la que convierte el 4 en
+              $5\sqrt5 - 1$.
+          - valor: '10.1803'
+            mensaje: |
+              Ese es $5\sqrt5-1$ sin dividir entre 12. El 12 sale de juntar el
+              $1/8$ del cambio de variable con el $2/3$ de la integral.
+        pista: |
+          Cambio $u = 1+4r^{2}$, y fíjate en que el $r$ que acompaña —el
+          jacobiano de las polares— es justo lo que hace falta para que el
+          cambio funcione.
+        desarrollo: |
+          Con $u = 1+4r^{2}$ se tiene $du = 8r\,dr$, así que
+
+          $$
+          \int_0^{1}\sqrt{1+4r^{2}}\;r\,dr
+          = \frac{1}{8}\int_1^{5}\sqrt{u}\,du
+          = \frac{1}{8}\cdot\frac{2}{3}\Bigl[u^{3/2}\Bigr]_1^{5}
+          = \frac{5\sqrt5-1}{12}
+          $$
+
+          Numéricamente, $0{,}8484$. Y merece la pena ver por qué el ejercicio
+          sale: **el jacobiano de las polares es el $r$ que el cambio de
+          variable necesitaba**. En cartesianas esta integral no es elemental;
+          en polares es inmediata. No es que las polares sean más cómodas: es
+          que son las que hacen que exista la primitiva.
+
+      - tipo: calcular
+        titulo: El área
+        pregunta: |
+          ¿Cuánto vale el área de la superficie? Da la forma exacta, o cuatro
+          decimales.
+        respuesta:
+          tipo: numero
+          valor: 'pi*(5*sqrt(5)-1)/6'
+          tolerancia: 0.0005
+          formato: un número, en forma exacta o con cuatro decimales
+        distractores:
+          - valor: 'pi'
+            mensaje: |
+              Ese es el área de la **sombra**, el disco de radio 1. Es la
+              respuesta que sale si se olvida la raíz, y siempre se queda
+              corta: una superficie inclinada nunca mide menos que su
+              proyección.
+          - valor: '0.8484'
+            mensaje: |
+              Te has quedado en la integral del radio y falta la de $\theta$.
+              Como el integrando no depende del ángulo, esa segunda integral es
+              solo un factor $2\pi$.
+        pista: |
+          El integrando no depende de $\theta$, así que la integral en el
+          ángulo es un factor.
+        desarrollo: |
+          $$
+          S = \int_0^{2\pi}\!\!\int_0^{1}\sqrt{1+4r^{2}}\;r\,dr\,d\theta
+          = 2\pi\cdot\frac{5\sqrt5-1}{12}
+          = \frac{\pi\left(5\sqrt5-1\right)}{6}
+          $$
+
+          Es decir $5{,}3304$.
+
+      - tipo: calcular
+        titulo: Cuánto más que su sombra
+        pregunta: |
+          ¿Cuántas veces mayor es la superficie que su sombra?
+        respuesta:
+          tipo: numero
+          valor: '1.6967'
+          tolerancia: 0.002
+          formato: un número
+        distractores:
+          - valor: '0.5895'
+            mensaje: |
+              Has dividido al revés. La superficie es la grande: una
+              proyección nunca es mayor que lo proyectado, así que el cociente
+              tiene que salir mayor que uno.
+        pista: |
+          Divide el área que acabas de calcular entre el área del disco.
+        desarrollo: |
+          $$
+          \frac{S}{\pi} = \frac{5\sqrt5-1}{6} = 1{,}6967
+          $$
+
+          Un **70 % más de superficie que de suelo**, y ese número es toda la
+          intuición del apartado: la raíz no es un adorno de la fórmula, es lo
+          que separa un cuenco de un disco. En el borde, donde el paraboloide
+          está más empinado, la raíz vale $\sqrt5 = 2{,}24$; en el fondo, donde
+          es horizontal, vale 1.
+
+      - tipo: justificar
+        pregunta: Ordena el planteamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La sombra del cuenco es el disco $x^{2}+y^{2}\le 1$, porque el
+              paraboloide llega a $z=1$ justo cuando $x^{2}+y^{2}=1$.
+          - texto: >-
+              Con $z_x = 2x$ y $z_y = 2y$, el integrando es
+              $\sqrt{1+4x^{2}+4y^{2}}$, que en polares es
+              $\sqrt{1+4r^{2}}$.
+          - texto: >-
+              El recinto es un disco y el integrando solo depende de $r$, así
+              que las polares dejan la integral en un producto de dos.
+          - texto: >-
+              Y como el recinto es el mismo disco, este resultado es también el
+              volumen que encierra el cuenco.
+            trampa: true
+            mensaje: |
+              Son dos cosas distintas y salen de integrales distintas. El
+              **área** integra la raíz; el **volumen** integraría la altura,
+              $\iint (1 - r^{2})\,r\,dr\,d\theta$, y vale $\pi/2$. Que
+              compartan recinto no los hace iguales: lo que cambia es qué se
+              suma sobre él, y esa es la pregunta que hay que leer bien en el
+              enunciado.
+    resolucion: |
+      **La sombra.** El paraboloide alcanza $z=1$ cuando $x^{2}+y^{2}=1$, así
+      que el recinto de integración es el disco unidad.
+
+      **El integrando.** Con $z = x^{2}+y^{2}$ se tiene $z_x = 2x$ y
+      $z_y = 2y$:
+
+      $$
+      \sqrt{1+z_x^{2}+z_y^{2}} = \sqrt{1+4x^{2}+4y^{2}}
+      \;\xrightarrow{\ \text{polares}\ }\;
+      \sqrt{1+4r^{2}}
+      $$
+
+      **La integral.** Disco más integrando radial: polares, con su jacobiano.
+
+      $$
+      S = \int_0^{2\pi}\!\!\int_0^{1}\sqrt{1+4r^{2}}\;r\,dr\,d\theta
+      = 2\pi\cdot\frac{1}{8}\int_1^{5}\sqrt{u}\,du
+      = \frac{\pi\left(5\sqrt5-1\right)}{6} \approx 5{,}3304
+      $$
+
+      **Lo que hay que llevarse.** Dos cosas, y la segunda es la que hace
+      falta para el examen.
+
+      La primera: **el recinto de integración siempre es plano**. Por curvada
+      que esté la superficie, se integra sobre su sombra, y todo lo que la
+      curvatura añade está dentro de la raíz. Aquí la sombra mide $\pi$ y la
+      superficie 5,33: un 70 % más.
+
+      La segunda: **el $r$ del jacobiano no es un estorbo, es lo que hace que
+      la integral exista**. En cartesianas $\iint\sqrt{1+4x^{2}+4y^{2}}$ no
+      tiene primitiva elemental; en polares, el $r$ que aparece al cambiar de
+      coordenadas es exactamente el factor que pide el cambio
+      $u = 1+4r^{2}$. Cuando en un examen la raíz se resiste, la pregunta que
+      hay que hacerse no es «qué primitiva es esta» sino **«estoy en las
+      coordenadas buenas»**.
+
   - id: invertir-el-orden
     titulo: Invertir el orden de integración
     fuente: Ejercicio 7.3 · Problemas complementarios, tema 7 · Cálculo, UPV/EHU (2017/2018 5E)

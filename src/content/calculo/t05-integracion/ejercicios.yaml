@@ -468,6 +468,204 @@ ejercicios:
       $\frac{1}{x^{2}}$, la misma cuenta da $\ln t$, que se va a infinito: esa
       diverge. El exponente decide, y por poco.
 
+  - id: ej-longitud-de-arco-que-sale-redonda
+    titulo: Una longitud de arco donde la raíz desaparece
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre la longitud de arco del
+      tema 5. Está elegido para que la raíz se simplifique, que es lo que hace
+      falta antes de enfrentarse a la del boletín, donde no lo hace. No es de
+      examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular la longitud del arco de la curva
+      $y = \dfrac{2}{3}x^{3/2}$ entre $x=0$ y $x=3$.
+    pide: La longitud de ese arco.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué va dentro de la raíz en la fórmula de la longitud de arco?
+        opciones:
+          - texto: >-
+              Uno más la **derivada** al cuadrado, $\sqrt{1+\left(y'\right)^{2}}$
+            correcta: true
+            mensaje: |
+              Eso es, y viene de Pitágoras: un trocito de curva es la
+              hipotenusa de un triángulo de catetos $dx$ y $dy$, o sea
+              $\sqrt{dx^{2}+dy^{2}} = \sqrt{1+(y')^{2}}\,dx$. Si te acuerdas
+              del triángulo, no hace falta memorizar la fórmula.
+          - texto: >-
+              Uno más la **función** al cuadrado, $\sqrt{1+y^{2}}$
+            mensaje: |
+              Esa es la del área de una superficie de revolución cuando gira
+              alrededor del eje X, y ni siquiera del todo. La longitud no
+              depende de a qué altura esté la curva: una recta horizontal a
+              altura 1 y otra a altura 100 miden lo mismo.
+          - texto: >-
+              Solo la derivada al cuadrado, $\sqrt{\left(y'\right)^{2}}$
+            mensaje: |
+              Eso es $|y'|$, y su integral daría el desnivel total recorrido,
+              no la longitud. Sin el uno, un tramo horizontal mediría cero.
+
+      - tipo: calcular
+        titulo: El integrando en el extremo
+        pregunta: |
+          ¿Cuánto vale $\sqrt{1+\left(y'\right)^{2}}$ en $x=3$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '3.6056'
+            mensaje: |
+              Has metido la **función** dentro de la raíz en vez de su
+              derivada: $y(3) = 2\sqrt3$, y $\sqrt{1+12} = \sqrt{13}$. Lo que
+              entra es $y'$.
+          - valor: '1.7321'
+            mensaje: |
+              Te has dejado el uno. $\left(y'\right)^{2} = x$, así que en
+              $x=3$ eso vale 3 y su raíz es $\sqrt3$ — pero dentro de la raíz
+              va $1+x$, no $x$.
+        pista: |
+          Deriva primero: la potencia $3/2$ baja y se queda en $1/2$.
+        desarrollo: |
+          $$
+          y' = \frac{2}{3}\cdot\frac{3}{2}x^{1/2} = \sqrt{x}
+          \qquad\Longrightarrow\qquad
+          1+\left(y'\right)^{2} = 1+x
+          $$
+
+          En $x=3$ eso vale 4 y su raíz es **2**.
+
+          Y fíjate en lo que acaba de pasar: **la raíz ha desaparecido**. Los
+          coeficientes $2/3$ y $3/2$ están elegidos para eso, y no es casual:
+          casi todos los enunciados de longitud de arco que se pueden resolver
+          a mano están construidos para que $1+(y')^{2}$ sea un cuadrado
+          perfecto o algo igual de simple.
+
+      - tipo: calcular
+        titulo: La longitud
+        pregunta: |
+          ¿Cuánto mide el arco? Da la forma exacta, o cuatro decimales.
+        respuesta:
+          tipo: numero
+          valor: '14/3'
+          tolerancia: 0.001
+          formato: un número, en forma exacta o con cuatro decimales
+        distractores:
+          - valor: '2*sqrt(3)'
+            mensaje: |
+              Te has dejado el uno de dentro de la raíz: $\int_0^3\sqrt{x}\,dx$
+              vale $2\sqrt3$. Y el resultado te avisa de que algo falla,
+              porque sale **menor que la distancia en línea recta** entre los
+              dos extremos, que es 4,58. Un arco nunca puede medir menos que
+              su cuerda.
+          - valor: 'sqrt(21)'
+            mensaje: |
+              Esa es la **cuerda**: la distancia en línea recta de $(0,0)$ a
+              $(3, 2\sqrt3)$. Es una buena comprobación —el arco tiene que
+              salir un poco mayor— pero no es la respuesta.
+        pista: |
+          Con $1+(y')^{2} = 1+x$, la integral es inmediata.
+        desarrollo: |
+          $$
+          L = \int_0^{3}\sqrt{1+x}\;dx
+          = \frac{2}{3}\Bigl[(1+x)^{3/2}\Bigr]_0^{3}
+          = \frac{2}{3}\left(8-1\right) = \frac{14}{3}
+          $$
+
+          Es decir $4{,}6667$.
+
+      - tipo: calcular
+        titulo: La comprobación que siempre se puede hacer
+        pregunta: |
+          ¿Cuánto mide la cuerda, es decir la distancia en línea recta entre
+          los dos extremos del arco?
+        respuesta:
+          tipo: numero
+          valor: 'sqrt(21)'
+          tolerancia: 0.001
+          formato: un número, en forma exacta o con cuatro decimales
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Esa es solo la diferencia de abscisas. La cuerda es la
+              hipotenusa: hay que contar también lo que sube la curva, que es
+              $y(3) = 2\sqrt3$.
+        pista: |
+          Los extremos son $(0,0)$ y $(3,\,y(3))$. Pitágoras.
+        desarrollo: |
+          $$
+          y(3) = \frac{2}{3}\cdot 3\sqrt3 = 2\sqrt3
+          \qquad
+          d = \sqrt{3^{2}+\left(2\sqrt3\right)^{2}} = \sqrt{9+12} = \sqrt{21}
+          $$
+
+          Es decir $4{,}5826$, y el arco medía $4{,}6667$: **un 1,8 % más**.
+          Tiene que ser así —el arco nunca es más corto que su cuerda— y esa
+          desigualdad es la comprobación más barata que existe en este
+          apartado. Si te sale un arco más corto que su cuerda, el fallo está
+          en la fórmula, no en la aritmética.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Un trocito de curva es la hipotenusa de catetos $dx$ y $dy$, así
+              que mide $\sqrt{1+(y')^{2}}\,dx$.
+          - texto: >-
+              Aquí $y' = \sqrt{x}$, y por eso $1+(y')^{2} = 1+x$ y la raíz se
+              vuelve inmediata.
+          - texto: >-
+              La integral da $14/3 = 4{,}6667$, que es un 1,8 % más que la
+              cuerda, $\sqrt{21} = 4{,}5826$.
+          - texto: >-
+              Y como el arco casi coincide con la cuerda, la curva es casi una
+              recta en todo el intervalo.
+            trampa: true
+            mensaje: |
+              No: la curva sale del origen con pendiente **cero** y llega a
+              $x=3$ con pendiente $\sqrt3$, o sea 60°. Se dobla bastante. Lo
+              que pasa es que la longitud es muy poco sensible a la curvatura
+              —depende de $\sqrt{1+(y')^{2}}$, que crece muy despacio—, y por
+              eso la comparación con la cuerda sirve para detectar un error de
+              bulto pero no para juzgar si una curva es recta.
+    resolucion: |
+      **La derivada, primero.**
+
+      $$
+      y = \frac{2}{3}x^{3/2}
+      \qquad\Longrightarrow\qquad
+      y' = \sqrt{x}
+      \qquad\Longrightarrow\qquad
+      1+\left(y'\right)^{2} = 1+x
+      $$
+
+      **La integral.**
+
+      $$
+      L = \int_0^{3}\sqrt{1+x}\;dx
+      = \frac{2}{3}\Bigl[(1+x)^{3/2}\Bigr]_0^{3}
+      = \frac{2}{3}\left(8-1\right) = \frac{14}{3} \approx 4{,}6667
+      $$
+
+      **La comprobación.** La cuerda de $(0,0)$ a $(3, 2\sqrt3)$ mide
+      $\sqrt{21} = 4{,}5826$, y el arco sale un 1,8 % mayor. Correcto: un arco
+      nunca mide menos que su cuerda.
+
+      **Lo que hay que llevarse, y por qué este ejemplo va antes que el del
+      boletín.** Aquí $1+(y')^{2}$ se ha quedado en $1+x$ y la integral es
+      inmediata. Eso **no es suerte**: los coeficientes $2/3$ y $3/2$ están
+      puestos para que ocurra, y lo mismo pasa en casi todos los enunciados de
+      longitud de arco que se resuelven a mano.
+
+      El del boletín es la parábola $y = x^{2}+x-2$, y ahí
+      $1+(y')^{2} = 1+(2x+1)^{2}$ no se simplifica: hace falta la primitiva de
+      $\sqrt{1+u^{2}}$, que es otra historia y que conviene tener localizada
+      **antes** de encontrársela en un examen. Ese es exactamente el escalón
+      que separa un ejercicio del otro: no la fórmula, sino qué integral queda
+      después de aplicarla.
+
   - id: teorema-de-la-media
     titulo: Seis veces el teorema de la media, y dos que no valen
     fuente: >-
