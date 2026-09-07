@@ -200,3 +200,33 @@ describe('traeUnidad · lo que el esquema usa para exigirla donde toca', () => {
     expect(traeUnidad('no es un número')).toBe(false);
   });
 });
+
+/* El kelvin dentro de una unidad compuesta. Entra el 7 de septiembre de 2026
+   con Ingeniería Térmica: hasta entonces la temperatura solo se leía suelta,
+   y «0,3107 kJ/(kg·K)» devolvía null, así que ese paso no se podía escribir
+   como `magnitud`. Lo cazó el primer ejercicio del tema 3 que pedía un calor
+   específico. */
+describe('kelvin dentro de una unidad compuesta', () => {
+  it('lee los calores específicos, la entropía y la entropía por segundo', () => {
+    expect(nombreDim(lee('0.3107 kJ/kg K').dim)).toBe('un calor específico');
+    expect(nombreDim(lee('1.0912 kJ/(kg*K)').dim)).toBe('un calor específico');
+    expect(nombreDim(lee('-0.5776 kJ/K').dim)).toBe('una entropía');
+    expect(nombreDim(lee('4.214 kW/K').dim)).toBe('una entropía por unidad de tiempo');
+    expect(nombreDim(lee('300 K').dim)).toBe('una temperatura');
+  });
+
+  it('convierte de kJ a J como cualquier otra unidad', () => {
+    expect(comparaMagnitud(lee('0.3107 kJ/kg K'), lee('310.7 J/kg K'), 0.001).igual).toBe(true);
+  });
+
+  it('un calor específico ya no se confunde con una energía específica', () => {
+    const v = comparaMagnitud(lee('143.5 kJ/kg'), lee('143.5 kJ/kg K'), 0.02);
+    expect(v.igual).toBe(false);
+    expect(v.otraDimension).toBe(true);
+  });
+
+  it('el grado Celsius sigue aceptándose solo suelto, que es lo correcto', () => {
+    expect(lee('27 °C').valor).toBeCloseTo(300.15, 2);
+    expect(leeMagnitud('1.0045 kJ/kg °C')).toBeNull();
+  });
+});

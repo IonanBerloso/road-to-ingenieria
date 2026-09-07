@@ -43,6 +43,23 @@ export interface Dim {
   M: number;
   L: number;
   T: number;
+  /** El exponente de la temperatura.
+   *
+   *  Nace el 7 de septiembre de 2026, con Ingeniería Térmica. Hasta entonces
+   *  la temperatura se trataba **solo** como escala afín —«20 °C no es veinte
+   *  veces nada»— y eso bastaba, porque en Cálculo, Álgebra, Química y
+   *  Fluidos ninguna respuesta lleva kelvin dentro de una unidad compuesta.
+   *
+   *  En Termodinámica lleva kelvin media asignatura: un calor específico va en
+   *  kJ/(kg·K), una entropía en kJ/K, una entropía específica en kJ/(kg·K), y
+   *  la entropía generada por unidad de tiempo en kW/K. Sin este exponente el
+   *  lector devolvía `null` en todas ellas y el paso no se podía escribir como
+   *  `magnitud`.
+   *
+   *  Lo de la escala afín sigue valiendo y sigue en `ESCALAS`: lo que se añade
+   *  es que una temperatura **tiene dimensión propia**, y por eso ahora un
+   *  calor específico y una energía específica dejan de parecerse. */
+  K: number;
 }
 
 export interface Magnitud {
@@ -54,7 +71,7 @@ export interface Magnitud {
   unidad: string | null;
 }
 
-const D = (M = 0, L = 0, T = 0): Dim => ({ M, L, T });
+const D = (M = 0, L = 0, T = 0, K = 0): Dim => ({ M, L, T, K });
 
 export const ADIMENSIONAL = D();
 
@@ -80,10 +97,16 @@ const NOMBRES: ReadonlyArray<readonly [Dim, string]> = [
   [D(1, 2, -2), 'una energía'],
   [D(1, 2, -3), 'una potencia'],
   [D(0, 0, -1), 'una velocidad de giro'],
+  // — las de Termodinámica, que llevan kelvin
+  [D(0, 0, 0, 1), 'una temperatura'],
+  [D(0, 2, -2), 'una energía específica'],
+  [D(1, 2, -2, -1), 'una entropía'],
+  [D(0, 2, -2, -1), 'un calor específico'],
+  [D(1, 2, -3, -1), 'una entropía por unidad de tiempo'],
 ];
 
 export function nombreDim(d: Dim): string {
-  const n = NOMBRES.find(([x]) => x.M === d.M && x.L === d.L && x.T === d.T);
+  const n = NOMBRES.find(([x]) => x.M === d.M && x.L === d.L && x.T === d.T && x.K === d.K);
   return n ? n[1] : 'una magnitud de otra clase';
 }
 
@@ -177,6 +200,14 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   rpm: { f: 1 / 60, d: D(0, 0, -1) },
   rps: { f: 1, d: D(0, 0, -1) },
   hz: { f: 1, d: D(0, 0, -1) },
+  /* — temperatura, para poder escribirla DENTRO de una unidad compuesta.
+     El kelvin es proporcional, así que como factor no tiene nada de raro; el
+     grado Celsius no lo es y por eso sigue viviendo solo en `ESCALAS`, donde
+     únicamente se acepta suelto. Es decir: «kJ/(kg·K)» se lee, y «kJ/(kg·°C)»
+     no, que es lo correcto —un salto de temperatura en el denominador es la
+     misma cosa en las dos escalas, pero escribirlo en Celsius invita a meter
+     ahí una temperatura absoluta—. */
+  k: { f: 1, d: D(0, 0, 0, 1) },
   // — adimensionales con nombre (Reynolds, Froude…) y el porcentaje
   '': { f: 1, d: ADIMENSIONAL },
 };
@@ -212,7 +243,7 @@ const ESCALAS: Record<string, (x: number) => number> = {
   k: (x) => x,
 };
 
-const DIM_TEMPERATURA = { M: 0, L: 0, T: 0, esTemperatura: true } as const;
+const DIM_TEMPERATURA: Dim = D(0, 0, 0, 1);
 
 /** Normaliza lo que producen el teclado del alumno, el copiar-pegar del PDF y
  *  la costumbre de escribir m3 en vez de m³. */
@@ -247,7 +278,7 @@ function factor(t: string): { f: number; d: Dim } | null {
   const e = m[2] === undefined ? 1 : Number(m[2]);
   return {
     f: Math.pow(base.f, e),
-    d: D(base.d.M * e, base.d.L * e, base.d.T * e),
+    d: D(base.d.M * e, base.d.L * e, base.d.T * e, base.d.K * e),
   };
 }
 
@@ -257,7 +288,18 @@ function factor(t: string): { f: number; d: Dim } | null {
 function unidad(t: string): { f: number; d: Dim } | null {
   if (t === '') return { f: 1, d: ADIMENSIONAL };
 
-  const [arriba, ...abajo] = t.split('/');
+  /* Los paréntesis que envuelven un tramo entero se quitan: «kJ/(kg·K)» es la
+     forma en que lo escriben el enunciado, la resolución oficial y el alumno,
+     y el partidor de abajo ya hace lo correcto sin ellos —todo lo que va
+     detrás de la primera barra divide—. Solo se quitan si abrazan el tramo
+     completo, para no aceptar cosas como «kJ/(kg)*K», donde sí cambiarían el
+     significado. */
+  const sinParentesis = (s: string) => {
+    const x = s.trim();
+    return /^\([^()]*\)$/.test(x) ? x.slice(1, -1) : x;
+  };
+
+  const [arriba, ...abajo] = t.split('/').map(sinParentesis);
   let f = 1;
   const d = D();
 
@@ -269,6 +311,7 @@ function unidad(t: string): { f: number; d: Dim } | null {
       d.M += signo * x.d.M;
       d.L += signo * x.d.L;
       d.T += signo * x.d.T;
+      d.K += signo * x.d.K;
     }
     return true;
   };
@@ -306,7 +349,7 @@ export function leeMagnitud(entrada: string): Magnitud | null {
   if (escala) {
     return {
       valor: escala(p.n),
-      dim: { M: DIM_TEMPERATURA.M, L: DIM_TEMPERATURA.L, T: DIM_TEMPERATURA.T },
+      dim: { ...DIM_TEMPERATURA },
       unidad: p.u,
     };
   }
@@ -326,7 +369,8 @@ export interface Veredicto {
   otraDimension: boolean;
 }
 
-const mismaDim = (a: Dim, b: Dim) => a.M === b.M && a.L === b.L && a.T === b.T;
+const mismaDim = (a: Dim, b: Dim) =>
+  a.M === b.M && a.L === b.L && a.T === b.T && a.K === b.K;
 
 /**
  * Compara dos magnitudes. `tolerancia` es **relativa**: 0,02 es el 2 % del
