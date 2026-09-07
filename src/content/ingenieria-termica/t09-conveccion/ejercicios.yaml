@@ -150,6 +150,239 @@ ejercicios:
       Por eso conviene tener claro desde el principio que $h$ no se busca: se
       calcula. Y que cuando un enunciado te lo da, como aquí, te está
       ahorrando justamente la parte difícil.
+  - id: ejter-el-rayleigh-que-obliga-a-churchill-chu
+    titulo: El Rayleigh que obliga a usar Churchill y Chu
+    fuente: >-
+      Ejemplo · Road to Ingeniería, escrito a propósito para el caso que el
+      material publicado esquiva: un Rayleigh por encima de mil millones, donde
+      la correlación laminar corta ya no vale y no hay atajo. No es de examen ni
+      de la colección.
+    nivel: ejemplo
+    enunciado: |
+      Una tubería horizontal de vapor de $600\ \text{mm}$ de diámetro exterior
+      tiene su superficie a $150\ \text{°C}$ y está rodeada de aire quieto a
+      $20\ \text{°C}$.
+
+      Calcúlese el calor que pierde por convección natural, por metro de
+      tubería.
+
+      Propiedades del aire a la temperatura de película:
+      $k = 0{,}030\ \text{W/(m·K)}$,
+      $\nu = 2{,}15\cdot 10^{-5}\ \text{m}^{2}/\text{s}$,
+      $\text{Pr} = 0{,}702$. Tómese $g = 9{,}8\ \text{m/s}^{2}$ y, para el
+      aire, $\beta = 1/T$.
+    pide: El calor perdido por convección natural, en vatios por metro.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de elegir correlación, ¿qué hay que calcular y por qué?
+        opciones:
+          - texto: >-
+              El Rayleigh, porque es el que dice si la correlación corta
+              —$\text{Nu} = 0{,}53\,\text{Ra}^{1/4}$— se puede usar o no
+            correcta: true
+            mensaje: |
+              Exacto. La corta lleva su condición pegada: $\text{Ra} < 10^{9}$.
+              Comprobarla no es un trámite, es lo que decide si el resto del
+              ejercicio está bien planteado.
+          - texto: >-
+              El Reynolds, para saber si es laminar o turbulento
+            mensaje: |
+              Aquí no hay nadie empujando el aire: no hay velocidad, así que no
+              hay Reynolds. En convección natural el papel de Reynolds lo hace
+              Grashof, y quien decide el régimen es Rayleigh.
+          - texto: >-
+              Nada: en un cilindro horizontal siempre vale Churchill y Chu
+            mensaje: |
+              Vale siempre, sí —hasta $\text{Ra} \le 10^{12}$—, y por eso es la
+              de referencia. Pero si no compruebas Rayleigh no sabes si podías
+              haberte ahorrado la fórmula larga, ni si el ejercicio se ataca
+              mejor por otro lado.
+
+      - tipo: calcular
+        titulo: El Rayleigh
+        pregunta: |
+          ¿Cuánto vale $\text{Ra}$?
+        respuesta:
+          tipo: numero
+          valor: '1.167e9'
+          tolerancia: 30000000
+          formato: un número, en notación científica si quieres
+        distractores:
+          - valor: '1.663e9'
+            mensaje: |
+              Ese es el **Grashof**, sin multiplicar por el Prandtl.
+              $\text{Ra} = \text{Gr}\cdot\text{Pr}$, y aquí el Prandtl vale
+              0,702, así que la diferencia no es pequeña: baja el resultado un
+              30 %.
+          - valor: '1.459e8'
+            mensaje: |
+              Has usado el radio, 0,3 m, en vez del diámetro. Y fíjate en lo
+              que eso hace: el cubo divide por ocho, el Rayleigh se queda en
+              $1{,}5\cdot 10^{8}$ y **concluirías que puedes usar la
+              correlación corta**. Un error de longitud característica no da un
+              número algo peor: cambia de fórmula.
+        pista: |
+          $\text{Gr} = g\,\beta\,\Delta\theta\,D^{3}/\nu^{2}$, con
+          $\beta = 1/T_f$ y $T_f = 85 + 273$. Después, $\text{Ra} =
+          \text{Gr}\cdot\text{Pr}$.
+        desarrollo: |
+          La temperatura de película es $(150+20)/2 = 85\ \text{°C}$, o sea
+          $358\ \text{K}$, y de ahí $\beta = 1/358 = 2{,}793\cdot 10^{-3}$.
+
+          $
+          \text{Gr} = \frac{9{,}8\cdot 2{,}793\cdot 10^{-3}\cdot 130\cdot
+          0{,}6^{3}}{\left(2{,}15\cdot 10^{-5}\right)^{2}}
+          = 1{,}663\cdot 10^{9}
+          $
+          $
+          \text{Ra} = 1{,}663\cdot 10^{9}\cdot 0{,}702 = 1{,}167\cdot 10^{9}
+          $
+
+          Por encima de $10^{9}$, aunque sea por poco: la correlación corta
+          queda fuera.
+
+      - tipo: calcular
+        titulo: El Nusselt
+        pregunta: |
+          Con Churchill y Chu, ¿cuánto vale $\text{Nu}$?
+        respuesta:
+          tipo: numero
+          valor: '121.4'
+          tolerancia: 2
+          formato: un número
+        distractores:
+          - valor: '97.97'
+            mensaje: |
+              Ese es el de la correlación corta,
+              $\text{Nu} = 0{,}53\,\text{Ra}^{1/4}$, que aquí **no se puede
+              usar**: el Rayleigh se ha pasado de $10^{9}$. Y no falla poco:
+              se queda un 19 % por debajo.
+          - valor: '11.02'
+            mensaje: |
+              Te has dejado el cuadrado de fuera. Toda la llave de Churchill y
+              Chu va elevada a dos; sin él el Nusselt sale once veces menor.
+        pista: |
+          $\text{Nu} = \left\{0{,}6 + 0{,}387\,\text{Ra}^{1/6} /
+          \left[1+(0{,}559/\text{Pr})^{9/16}\right]^{8/27}\right\}^{2}$.
+          Empieza por $\text{Ra}^{1/6}$.
+        desarrollo: |
+          Por partes, que es como no equivocarse:
+
+          $
+          \text{Ra}^{1/6} = \left(1{,}167\cdot 10^{9}\right)^{1/6} = 32{,}45
+          $
+          $
+          \left[1+\left(\frac{0{,}559}{0{,}702}\right)^{9/16}\right]^{8/27}
+          = \left[1+0{,}8798\right]^{8/27} = 1{,}2057
+          $
+          $
+          \text{Nu} = \left\{0{,}6 + \frac{0{,}387\cdot 32{,}45}{1{,}2057}
+          \right\}^{2} = \left\{0{,}6 + 10{,}42\right\}^{2} = 121{,}4
+          $
+
+      - tipo: calcular
+        titulo: El calor por metro
+        pregunta: |
+          ¿Cuánto calor pierde la tubería por cada metro de longitud?
+        respuesta:
+          tipo: magnitud
+          valor: '1487 W/m'
+          tolerancia: 0.02
+          formato: una potencia por unidad de longitud, con su unidad
+        distractores:
+          - valor: '1200 W/m'
+            mensaje: |
+              Eso sale de haber usado la correlación corta. Es exactamente lo
+              que cuesta no comprobar Rayleigh: 287 W por metro, un 19 %, y en
+              una tubería de cincuenta metros son catorce kilovatios.
+          - valor: '744 W/m'
+            mensaje: |
+              Has usado el radio en el perímetro. El área lateral por metro es
+              $\pi D$, no $\pi R$.
+        pista: |
+          Primero $h = \text{Nu}\,k/D$, y luego
+          $\dot{q}' = h\,\pi D\,\Delta\theta$.
+        desarrollo: |
+          $
+          h = \frac{\text{Nu}\,k}{D} = \frac{121{,}4\cdot 0{,}030}{0{,}6}
+          = 6{,}07\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $
+          $
+          \dot{q}' = h\,\pi D\,\Delta\theta
+          = 6{,}07\cdot\pi\cdot 0{,}6\cdot 130 = 1487\ \frac{\text{W}}{\text{m}}
+          $
+
+          Seis vatios por metro cuadrado y kelvin es un valor típico de
+          convección natural en aire: dos órdenes de magnitud por debajo del
+          agua en movimiento del tema. Y aun así, con trece metros cuadrados de
+          tubería por cada diez metros, se van casi quince kilovatios.
+
+      - tipo: justificar
+        pregunta: Ordena el planteamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              No hay velocidad impuesta, así que es convección natural y el
+              número que decide el régimen es Rayleigh, no Reynolds.
+          - texto: >-
+              Ra sale $1{,}167\cdot 10^{9}$, por encima de $10^{9}$, así que la
+              correlación corta queda descartada y hay que usar Churchill y Chu.
+          - texto: >-
+              Con Nu = 121,4 el coeficiente de película vale 6,07 y la tubería
+              pierde 1.487 W por metro.
+          - texto: >-
+              Como el Rayleigh apenas pasa de $10^{9}$, las dos correlaciones
+              dan prácticamente lo mismo y da igual cuál se use.
+            trampa: true
+            mensaje: |
+              Es la conclusión cómoda y es falsa: la corta da 1.200 W/m frente
+              a 1.487, un 19 % menos. Que una frontera se cruce por poco no
+              significa que las dos fórmulas se parezcan a los lados; significa
+              que ninguna de las dos es continua con la otra ahí. La condición
+              se comprueba y se obedece.
+    resolucion: |
+      **La temperatura de película y las propiedades.** $(150+20)/2 = 85$ °C,
+      es decir 358 K, y con ella $\beta = 1/358 = 2{,}793\cdot 10^{-3}$.
+
+      **El régimen.**
+
+      $
+      \text{Gr} = \frac{g\,\beta\,\Delta\theta\,D^{3}}{\nu^{2}}
+      = \frac{9{,}8\cdot 2{,}793\cdot 10^{-3}\cdot 130\cdot 0{,}216}{4{,}6225\cdot 10^{-10}}
+      = 1{,}663\cdot 10^{9}
+      $
+      $
+      \text{Ra} = \text{Gr}\cdot\text{Pr} = 1{,}167\cdot 10^{9} > 10^{9}
+      $
+
+      **La correlación, y por qué esta y no la otra.** Con $\text{Ra}$ por
+      encima de $10^{9}$ la alternativa laminar $0{,}53\,\text{Ra}^{1/4}$ está
+      fuera de su rango. Queda Churchill y Chu:
+
+      $
+      \text{Nu} = \left\{0{,}6 + \frac{0{,}387\cdot 32{,}45}{1{,}2057}
+      \right\}^{2} = 121{,}4
+      $
+
+      **El calor.**
+
+      $
+      h = \frac{121{,}4\cdot 0{,}030}{0{,}6} = 6{,}07
+      \qquad
+      \dot{q}' = 6{,}07\cdot\pi\cdot 0{,}6\cdot 130 = 1487\ \text{W/m}
+      $
+
+      **Por qué existe este ejercicio.** Porque en el material publicado no
+      hay ninguno donde Churchill y Chu sea inevitable. En el examen de enero
+      de 2026 el Rayleigh sale $1{,}86\cdot 10^{9}$ —también por encima— y la
+      resolución oficial dice que la correlación «no es aconsejable para un
+      examen» y resuelve por otra vía, aprovechando que el enunciado da la
+      temperatura exterior. En enero de 2017-2018 el Rayleigh se queda por
+      debajo y la laminar vale.
+
+      Aquí no hay escapatoria: lo que se pide es precisamente el calor que
+      sale de la superficie, así que no se puede entrar por el otro extremo.
+      Y el precio de saltarse la comprobación está medido: **un 19 %**.
   - id: ejter-cuanta-tuberia-para-calentar-el-agua
     titulo: Cuánta tubería hace falta para calentar el agua
     fuente: >-

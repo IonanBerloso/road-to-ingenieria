@@ -342,6 +342,36 @@ Todas arregladas y vueltas a mirar. Es la tercera vez que esta sección se
 escribe con el mismo resultado: **el suelo en verde no dice nada sobre si lo
 dibujado es cierto.**
 
+### Tres `falta[]` cerradas escribiendo el ejercicio, y una que no
+
+La ruta declaraba siete huecos. Tres se han cerrado escribiendo lo que
+faltaba, que es lo que §14 prefiere a bajar el listón:
+
+- **Churchill y Chu**, que no tenía ejercicio porque el material lo esquiva
+  —en enero de 2026 la resolución oficial dice que «no es aconsejable para un
+  examen» y entra por el otro extremo; en 2017-2018 el Rayleigh se queda por
+  debajo de 10⁹—. Hay que construir el caso donde no hay escapatoria: una
+  tubería de 600 mm a 150 °C en aire quieto, con `Ra = 1,167·10⁹` y lo que se
+  pide es justamente el calor que sale de la superficie. El precio de saltarse
+  la comprobación queda medido dentro del propio ejercicio: **un 19 %**.
+- **El rendimiento exergético de un compresor**, que la prosa del tema 7
+  define y ningún ejercicio pedía. Su lección es que **no es el isentrópico**:
+  sobre la misma máquina salen 0,861 y 0,753, y responder con uno donde piden
+  el otro es un cero con la cuenta bien hecha.
+- **El difusor**, una de las dos filas de la tabla del tema 4 sin ejercicio.
+  Es la tobera leída al revés, y trae el orden de magnitud que decide estos
+  ejercicios: la velocidad entra al cuadrado, así que frenar de 200 a 30 m/s
+  aprovecha el 99,8 % de lo que aprovecharía frenar hasta cero.
+
+**La cuarta, la caldera, se queda declarada a propósito.** Va con agua, y para
+dar sus dos entalpías hacen falta las tablas de propiedades. Escribirla con
+valores recordados sería publicar un dato de tabla sin fuente — §13 caso 1 con
+otra cara — y eso es peor que el hueco.
+
+Las tres que quedan siguen bloqueadas por lo mismo: las tablas de propiedades,
+el diagrama de Mollier y las gráficas de factores de visión son de las
+editoriales y del anexo, y §08 no las libera.
+
 ### Lo demás, que sí es trabajo
 
 - **Los enunciados escaneados.** La mayoría de los cuadernillos no tiene ni un

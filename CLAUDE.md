@@ -352,9 +352,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.339 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.645 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.307 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.342 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.654 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.310 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -402,8 +402,10 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > tocar el corpus en más de un fichero**, no cuando alguien se acuerda.
 >
 > Y el **7 de septiembre de 2026**, con Ingeniería Térmica escrita:
-> **1.307 ejercicios y 5.327 pasos en 61 temas**, con 423 figuras. Térmica
-> aporta 37 ejercicios y 241 pasos. La cifra sale de `node scripts/deuda.mjs`
+> **1.310 ejercicios y 5.342 pasos en 61 temas**, con 423 figuras. Térmica
+> aporta 40 ejercicios y 256 pasos — tres de ellos escritos esa misma tarde
+> para cerrar tres `falta[]` de su ruta: Churchill y Chu, el rendimiento
+> exergético de un compresor y el difusor. La cifra sale de `node scripts/deuda.mjs`
 > y se copia de su salida, que es la regla desde el 5 de septiembre; ese día
 > el propio guion se saltaba Térmica **en silencio** porque llevaba la lista
 > de asignaturas escrita a mano, y ahora la saca del catálogo.
@@ -595,9 +597,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.307 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.310 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.307 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.310 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1657,6 +1659,16 @@ Cosas que ya han costado horas. No son opiniones.
   cargan los YAML, y en cada cadena se cuentan los `$` línea a línea; si
   una línea deja una fórmula abierta y la siguiente empieza por `- `, ahí
   está. Veinte líneas, y devuelve el fichero y el campo.
+- **Una `\frac{…}{…}` partida justo entre las dos llaves confunde a
+  `recalcula`.** El corpus corta las fórmulas a 80 columnas, y si el corte cae
+  entre el `}` del numerador y el `{` del denominador, `expresionAntesDe` se
+  queda **solo con el denominador**: avisa de que «4,6225·10⁻¹⁰ no vale
+  1,663·10⁹», que es verdad y no significa nada. Pasó el 7 de septiembre de
+  2026 con el Grashof del ejercicio de Churchill y Chu. Cortar por el
+  numerador sí funciona, así que la regla es corta: **la `\frac` se parte
+  dentro de una llave, nunca entre las dos.** Y si no cabe, se deja la línea
+  larga: ochenta columnas es una costumbre, un aviso falso cuesta diez
+  minutos.
 - **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
   Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
   decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro
