@@ -141,11 +141,75 @@ tres redondeos de las propias resoluciones.
 
 ## Lo que queda
 
-- **Las 22 convocatorias.** Ninguna transcrita todavía como `examen.yaml`: los
-  ejercicios de examen escritos cuelgan de su tema, no de su convocatoria. La
-  asignatura sigue en `obra` por esto y no por los temas, que están los diez.
-  La de enero de 2026 está leída entera y es la candidata natural para la
-  primera; de las otras veintiuna, veinte traen su resolución dentro.
+### Bloqueado, esperándote a ti · el PDF de las convocatorias
+
+**Las 22 convocatorias no están transcritas como `examen.yaml`, y no es por
+falta de trabajo: es una decisión de derechos que no me corresponde.**
+
+El esquema exige el campo `pdf`, y con motivo: el comentario que lo acompaña
+dice que existe para que el alumno tenga «un enunciado original que
+contrastar». En las cuatro asignaturas anteriores eso significa publicar un
+cuadernillo con los enunciados y, como mucho, los resultados.
+
+En Térmica **no**. Veinte de los veintidós ficheros son
+`Enunciado_y_resolucin_IT_…`: llevan dentro la resolución completa del
+profesor, apartado por apartado, con sus diagramas y sus comentarios. Subir
+eso a un repositorio público no es lo mismo que subir un enunciado, y §08 no
+lo cubre.
+
+Las salidas que veo, para que decidas tú:
+
+1. **Publicar solo las páginas de enunciado**, recortando el PDF. Es lo más
+   parecido a lo que hacen las otras cuatro asignaturas, y deja al alumno con
+   lo que necesita para contrastar.
+2. **Publicar el PDF entero**, si tienes claro que el material es de libre
+   distribución entre el alumnado.
+3. **No publicar ninguno**, y dejar los ejercicios de examen colgando de su
+   tema, que es como están ahora y funciona: el `fuente` de cada uno dice de
+   qué convocatoria sale.
+
+Mientras tanto está la 3, que es la que no requiere decidir nada. La
+asignatura sigue en `obra` por esto y no por los temas, que están los diez.
+
+La de enero de 2026 está leída entera y es la candidata natural para la
+primera en cuanto haya decisión.
+
+### La ruta de estudio, con la medida ya hecha
+
+Térmica no tiene ruta, y §14 no deja inventarse una: hace falta `medidoSobre`,
+es decir haber contado sobre cuántas convocatorias. **Ya están contadas cinco**
+—las únicas cuyo PDF tiene texto extraíble: enero y febrero de 2025-2026,
+enero de 2022-2023, febrero de 2021-2022 y enero de 2017-2018—, y el resultado
+es lo bastante limpio como para no necesitar más:
+
+| conv. | ejercicio 1 | ejercicio 2 | ejercicio 3 |
+|---|---|---|---|
+| 2025-26 ene | cilindro-pistón politrópico | condensador + bomba | tubería, conducción + convección |
+| 2025-26 feb | tanque rígido aislado | intercambiador N₂/aire | convección forzada, túnel de viento |
+| 2022-23 ene | aire, exponente 3,5, **por signos** | turbina de vapor | tubería de cobre |
+| 2021-22 feb | mezcla de dos corrientes | turbina de gas | tubería con y sin aislante |
+| 2017-18 ene | cámara de mezcla | dos gases y un foco a 400 °C | tubería, y la **emisividad** |
+
+**Tres ejercicios, y el tercero es transmisión de calor en las cinco.** Los dos
+primeros son termodinámica: uno de sistema cerrado o sustancia pura y otro de
+volumen de control. La exergía aparece en las cinco, y casi siempre como los
+dos últimos apartados —exergía destruida y rendimiento exergético—.
+
+Tres datos más que salieron de leerlas y que la ruta debería publicar:
+
+- **Cada ejercicio vale un tercio del examen.** Lo dicen las cabeceras, con
+  todas las letras. No hay reparto por competencia, igual que en Álgebra.
+- **La duración cambia con el año**: 3,5 horas en 2017-2018, 3 en 2021-2022 y
+  2,5 en 2022-2023. No se puede publicar «el examen dura X»; hay que publicar
+  las tres cifras con su año.
+- **El ejercicio 1 de 2022-2023 no pide ningún número**: pide el **signo** de
+  seis magnitudes —calor específico politrópico, calor, variación de entropía,
+  entropía generada en el sistema y en el universo— y si las paredes son
+  rígidas o móviles. Es un ejercicio de razonamiento puro y encaja como anillo
+  al dedo en un paso `reconocer`.
+
+### Lo demás, que sí es trabajo
+
 - **Los enunciados escaneados.** La mayoría de los cuadernillos no tiene ni un
   carácter extraíble: `pdftotext` devuelve cero. Hay que leerlos como
   imágenes, página a página, y eso cambia el ritmo de la transcripción
