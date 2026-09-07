@@ -10,7 +10,7 @@ en obra**. Quedan cuatro en `prev`.
 |---|---|
 | temas publicados | **61**, más 3 declarados `soloEnClase` con su motivo |
 | convocatorias transcritas, con su PDF | **118** |
-| rutas de estudio | **12**, con 273 escalones |
+| rutas de estudio | **13**, con 291 escalones |
 | corpus | **1.293 ejercicios · 5.258 pasos** |
 | respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
 | bloques de ruta que no dicen si les falta algo | **0 de 103** |
@@ -174,13 +174,35 @@ asignatura sigue en `obra` por esto y no por los temas, que están los diez.
 La de enero de 2026 está leída entera y es la candidata natural para la
 primera en cuanto haya decisión.
 
-### La ruta de estudio, con la medida ya hecha
+### Un dato falso en la ruta de Fluidos, encontrado al escribir la de Térmica
 
-Térmica no tiene ruta, y §14 no deja inventarse una: hace falta `medidoSobre`,
-es decir haber contado sobre cuántas convocatorias. **Ya están contadas cinco**
-—las únicas cuyo PDF tiene texto extraíble: enero y febrero de 2025-2026,
-enero de 2022-2023, febrero de 2021-2022 y enero de 2017-2018—, y el resultado
-es lo bastante limpio como para no necesitar más:
+**El bloque de suelo de Fluidos publica «Cae 11 de 16 años» y su propio texto,
+dos centímetros más abajo, dice «cero de once para las unidades».** Las dos
+afirmaciones no pueden ser ciertas a la vez, y la destacada es la falsa.
+
+La causa era del modelo, no del dato: `invariante.anios` tenía `min(1)`, así
+que un bloque de suelo —el que por definición **no** ocupa hueco propio en
+ningún examen— no podía escribir su recuento honesto, que es cero. El esquema
+ya lo admite y la página lo dice de otra manera: «No cae solo — está dentro de
+las N».
+
+**Lo que queda por decidir es el número de Fluidos, y no lo he tocado.** Ese
+bloque agrupa tres asuntos con recuentos distintos —unidades cero de once,
+pérdidas de carga una de once, presiones dentro de casi todos—, así que poner
+un cero a secas sería cambiar una afirmación medida por otra sin haber vuelto
+a contar. Hace falta releer las once convocatorias finales y decidir si el
+bloque se declara con cero o se parte en dos. Térmica sí va con cero, porque
+ahí sí está contado.
+
+### La ruta de estudio · ESCRITA, sobre cinco convocatorias contadas
+
+`preparar/ingenieria-termica-ord.yaml`: siete bloques, dieciocho escalones y
+los veintitrés ejercicios de la asignatura repartidos sin repetir ninguno.
+Prepara también la extraordinaria, porque la estructura es idéntica en las
+dos. §14 no deja inventarse una ruta: hace falta `medidoSobre`. **Están
+contadas cinco convocatorias** —las únicas cuyo PDF tiene texto extraíble:
+enero y febrero de 2025-2026, enero de 2022-2023, febrero de 2021-2022 y enero
+de 2017-2018—, y esto es lo que dieron:
 
 | conv. | ejercicio 1 | ejercicio 2 | ejercicio 3 |
 |---|---|---|---|

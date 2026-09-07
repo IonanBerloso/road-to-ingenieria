@@ -1026,7 +1026,22 @@ const bloque = z.object({
    *  competencia NO van aquí: se calculan al generar la página. */
   invariante: z
     .object({
-      anios: z.number().int().min(1),
+      /** En cuántas de las convocatorias contadas cae este bloque.
+       *
+       *  **El cero es un valor legítimo y hasta el 7 de septiembre de 2026 el
+       *  esquema lo prohibía**, con `min(1)`. Era un supuesto falso metido en
+       *  el modelo: el bloque de **suelo** es, por definición, el que no ocupa
+       *  hueco propio en ningún examen —«no da puntos, los sostiene todos»—,
+       *  así que su recuento honesto es cero y no había manera de escribirlo.
+       *
+       *  La consecuencia se veía en la página: el suelo de Fluidos publicaba
+       *  «Cae 11 de 16 años» mientras su propio `porque` decía «cero de once
+       *  para las unidades». Dos afirmaciones incompatibles a dos centímetros
+       *  una de otra, y la de arriba en un rótulo destacado.
+       *
+       *  Con cero, la página dice otra cosa: que no cae como ejercicio propio
+       *  pero está dentro de todos. */
+      anios: z.number().int().min(0),
       fuente: z.string().min(10),
     })
     .optional(),
