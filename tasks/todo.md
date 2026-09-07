@@ -722,6 +722,9 @@ entran, no se citan, no se convierten y no se abren para «mirar un dato».
 | Expresión Gráfica | `CONVOCATORIA_EXTRAORDINARIA_-_NOTAS.pdf` | notas |
 | Expresión Gráfica | `CONVOCATORIA_ORDINARIA_-_CALIFICACIONES.pdf` | notas |
 | Química | `Lista_del_grupo_01_GL1…GL4_apellidos_*.php` (4) | listas de clase |
+| Ingeniería Térmica | `20252026_Nota_Prcticas_de_Laboratorio.pdf` | notas |
+| Ingeniería Térmica | `Notas_de_prcticas_de_aos_anteriores.pdf` | notas |
+| Ingeniería Térmica | **`Normas_y_recomendaciones_para_seguir_la_asignatura.pdf`** | **apellidos de alumnos por subgrupo, al final** |
 
 Los dos de Expresión Gráfica y los cuatro de Química se encontraron el 5 de
 septiembre de 2026 inventariando material para elegir la cuarta asignatura.
@@ -729,6 +732,33 @@ La regla práctica que sale de haberlos encontrado buscando otra cosa:
 **cualquier fichero cuyo nombre lleve «notas», «calificaciones», «lista» o
 «grupo» se trata como personal hasta demostrar lo contrario**, y demostrarlo
 no requiere abrirlo entero.
+
+> **Y el 6 de septiembre de 2026, al abrir Ingeniería Térmica, apareció el
+> caso que la regla del nombre no cubre.** Los dos primeros de Térmica los
+> cazó el nombre, como estaba previsto. El tercero **no**: se llama «Normas y
+> recomendaciones para seguir la asignatura», es el documento académico más
+> inocente del montón, y lleva al final tres tablas de «Grupo · Subgrupo ·
+> Apellidos» con los apellidos reales de la clase. Se descubrió leyéndolo —la
+> extracción se borró en el acto y nada de eso ha entrado en el repositorio—.
+>
+> **La regla que hay que añadir, porque la del nombre no basta:** al volcar un
+> PDF de material nuevo se mira **el final** antes de usar nada de él. Los
+> listados de clase se pegan al final de los documentos administrativos, no al
+> principio, y el nombre del fichero no los delata.
+>
+> Lo que sí se puede usar de él son los hechos académicos que trae y que no
+> son de nadie —el reparto de la nota, qué se puede llevar al examen, el
+> programa de prácticas—, y así se ha hecho, citándolo como fuente. Lo que no
+> vuelve a abrirse es el fichero.
+
+> **Dos de Térmica quedan sin clasificar, y por eso no se han abierto:**
+> `Resultados_Test_1.1.-_Concepts.pdf` y
+> `Resultados_Test_2.1._-_Displacement_work.pdf`. El nombre no encaja en la
+> regla —«Concepts» y «Displacement work» son temas, no personas— y lo más
+> probable es que sean las soluciones de dos test de autoevaluación, que serían
+> material útil. Pero «Resultados» a secas también podría ser una tabla de
+> clase, y el coste de equivocarse es asimétrico. Se abren cuando haga falta y
+> mirando primero el final, con la regla nueva.
 
 ## 6 · Álgebra — la causa del tema 8, y una pregunta
 
