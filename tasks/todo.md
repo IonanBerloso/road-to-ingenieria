@@ -11,7 +11,7 @@ en obra**. Quedan cuatro en `prev`.
 | temas publicados | **61**, más 3 declarados `soloEnClase` con su motivo |
 | convocatorias transcritas, con su PDF | **118** |
 | rutas de estudio | **13**, con 291 escalones |
-| corpus | **1.293 ejercicios · 5.258 pasos** |
+| corpus | **1.298 ejercicios · 5.280 pasos** |
 | respuestas de examen recalculadas desde el enunciado | **1.240 de 1.241** |
 | bloques de ruta que no dicen si les falta algo | **0 de 103** |
 | suelo, tests y navegador completo | verde |
@@ -95,7 +95,7 @@ tres redondeos de las propias resoluciones.
 - **La colección cableada**: una línea en `CON_TEMAS` y otra en `collections`,
   que es exactamente lo que `content.config.ts` dejó previsto.
 - **Los diez temas escritos**, en un día: el bloque de Moran y Shapiro —temas
-  1 a 7— y el de Çengel —8, 9 y 10—. **Veintitrés ejercicios**, y trece de
+  1 a 7— y el de Çengel —8, 9 y 10—. **Veintiocho ejercicios**, y trece de
   ellos salen de material con resolución o resultados publicados: el examen de
   enero de 2026, los ejercicios 3.2, 8.1 y 9.2 de la colección y el de la
   tobera del tema 4.
@@ -197,7 +197,15 @@ ahí sí está contado.
 ### La ruta de estudio · ESCRITA, sobre cinco convocatorias contadas
 
 `preparar/ingenieria-termica-ord.yaml`: siete bloques, dieciocho escalones y
-los veintitrés ejercicios de la asignatura repartidos sin repetir ninguno.
+los veintiocho ejercicios de la asignatura repartidos sin repetir ninguno.
+
+**Y ninguno de los dieciocho escalones empieza por un ejercicio de examen**,
+que es la regla de §14 que más cuesta cumplir: «si el primer ejercicio de un
+escalón no lo puede hacer alguien que acaba de leer la teoría, falta un
+ejemplo delante». Al medirlo salieron cinco escalones que empezaban arriba
+—exponente politrópico, intercambiador, bomba, Guy-Stodola y resistencia
+dominante—, así que se escribieron los cinco ejemplos que faltaban en vez de
+declararlo como deuda.
 Prepara también la extraordinaria, porque la estructura es idéntica en las
 dos. §14 no deja inventarse una ruta: hace falta `medidoSobre`. **Están
 contadas cinco convocatorias** —las únicas cuyo PDF tiene texto extraíble:
