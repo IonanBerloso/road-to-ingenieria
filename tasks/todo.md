@@ -44,6 +44,47 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Ingeniería Térmica · el inventario de exámenes, contado · 8 de septiembre de 2026
+
+Térmica sigue en `obra` y su cierre depende de una decisión que solo Ionan
+puede tomar. Aquí queda el dato con el que tomarla, que hasta hoy no estaba
+contado.
+
+**En el material hay 22 convocatorias**, de 2014-2015 a 2025-2026, enero y
+junio/febrero de casi todos los cursos:
+
+| | |
+|---|---|
+| solo enunciado | **2** — 2014-2015 enero y junio |
+| enunciado **y resolución** de la Escuela | **20** |
+| transcritas como convocatoria en el sitio | **0** |
+| ejercicios ya transcritos que citan una de ellas | **14**, de cuatro convocatorias distintas |
+
+Lo que eso significa, ordenado:
+
+1. **Las dos de 2014-2015 se pueden publicar enteras hoy mismo**: no llevan
+   resolución, así que no hay nada que recortar ni que decidir.
+2. Las otras veinte traen la resolución oficial dentro del mismo PDF. Ahí sí
+   hay que decidir: publicar el PDF entero, publicar solo el enunciado
+   recortado, o no publicar el PDF y transcribir solo los ejercicios.
+3. **§15 pide que toda convocatoria publicada esté transcrita con su PDF
+   original**, así que sin esa decisión la asignatura no cierra por mucho
+   contenido que se escriba.
+
+Y una deuda que **no** depende de esa decisión y es la primera a pagar: los
+recuentos de la ruta están medidos sobre **seis** convocatorias de las
+veintidós. Cuando la ruta dice «el tercer ejercicio es siempre de transmisión
+de calor», ese «siempre» son seis de seis, no veintidós de veintidós. Ya está
+declarado en la propia ruta.
+
+## Y las diez figuras, que no estaban en el molde
+
+De los 88 svg de prosa del sitio, 78 iban envueltos en `<figure>` con su
+`<figcaption>`. Los diez sueltos eran los diez de Térmica. Envueltos y
+escritos sus pies el 8 de septiembre de 2026: **88 de 88**.
+
+---
+
 # Repaso de Mecánica de Fluidos · 8 de septiembre de 2026
 
 **§15 se cumple**: 23 temas hechos más los 2 declarados `soloEnClase` —2 de
