@@ -44,6 +44,69 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Repaso de Cálculo · 8 de septiembre de 2026
+
+Cálculo estaba cerrada desde el 2 de septiembre y es la asignatura de
+referencia: la tabla de §15 que dice «cuánto es una asignatura» sale de ella.
+Se relee entera con el método de Álgebra.
+
+**§15 se cumple.** Once temas con figura y ejemplo propio, 88 convocatorias
+transcritas y **cero sin PDF**, siete rutas con 156 escalones, evaluación con
+su fuente. Cero ids duplicados en las 197 páginas, que un plan viejo daba por
+roto en 309.
+
+**Lo que no se sostuvo, de 33 frases con número releídas:**
+
+| decía | lo medido |
+|---|---|
+| la tabla de §15: 21.545 palabras · 193 ejercicios · 29 figuras | **21.657 · 197 · 30** — tres de seis caducadas |
+| «el tema 9 tiene **siete** ejercicios propios» | diez, cinco de ellos de entrada |
+| «el tema 8 tiene **la mitad** de palabras que cualquier otro», dicho dos veces | 1.163 frente a 1.675 del siguiente: dos tercios |
+| la recuperación de 2019-2020, «con cuatro ejercicios de complejos» | dos de complejos y **dos de sucesiones** |
+
+**Y aguantaron, que también hay que decirlo:** «un solo enunciado de los 425
+pide un método numérico» —el segundo candidato que salió era un pórtico
+*trapecio*, la forma—; «de los 29 de la cuarta esta ruta enlaza 28», con el
+29.º donde la nota decía; «Bolzano en dos ordinarias», que estuve a punto de
+corregir mal porque los dos exámenes lo llaman «punto fijo» y «valor
+intermedio»; los seis de leer una gráfica de la ordinaria y los tres de la
+extraordinaria con dos de enunciado repetido; «trece ejercicios y ciento
+treinta puntos, el más grande del corpus», con el siguiente en 80; los 26 y 24
+de examen de los temas 8 y 10, los 13 y 18 de boletín de los temas 4 y 3, y el
+«cae 6 de 11» del bloque de complejos.
+
+## Un defecto que estaba publicado, y que ningún guardián ve
+
+La ruta de la tercera publicaba, en mitad de una frase: «que los dos
+ejercicios **>** "no tienen resolución guiada" y que "el tema 6 **>** todavía
+no está escrito"». Una cita de markdown dentro de un escalar plegado de YAML
+pierde todos sus `>` menos el primero. `verify` y los 1.616 tests, en verde
+todo el tiempo. Lo cazó abrir la página, como las tres de Álgebra.
+
+## Lo que se deja montado
+
+- **El guardián que cinco `falta[]` llevaban pidiendo.** Decían, con estas
+  palabras, «no hay ningún guardián que lo compruebe todavía». Cubre el caso
+  comprobable: cuando la prosa anuncia su tamaño —«y las tres frases de
+  COMP4:»— la lista de debajo tiene que tener esos. Son 17 anuncios en cinco
+  asignaturas. Las cinco notas ahora dicen qué cubre **y qué no**.
+- El detector de citas plegadas, buscando en el origen y no en el HTML:
+  ahí un `>` no se distingue de un «mayor que» de una fórmula, y la primera
+  búsqueda dio 197 falsos en `h > f`.
+- `deuda.mjs` sabe leer numerales compuestos y comprobar dos formas más.
+
+## Lo que queda de Cálculo
+
+- **El bloque de complejos que dejaron de caer ya no es una lista desnuda**:
+  era el único del sitio con seis enlaces sin nota, y es justo el que pide al
+  lector decidir si se lo salta.
+- Quien llega a la ruta de la tercera **desde una recuperación** leía
+  porcentajes medidos sobre las once terceras. Ya está declarado.
+- Sigue sin haber **página de formulario propia** ni forma de imprimirlo
+  suelto, en las cinco rutas que lo declaran.
+
+---
+
 # Repaso de Álgebra · 8 de septiembre de 2026
 
 Álgebra estaba declarada cerrada contra §15 desde el 27 de agosto. Se volvió a
