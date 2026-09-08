@@ -121,6 +121,63 @@ pinta('5 · Escalones con un solo ejercicio');
 fila('de', `${escalones} escalones, ${unEjercicio}`);
 detUno.forEach((d) => fila('', d));
 
+/* ── 7 · el rótulo de frecuencia contra el texto que lleva debajo ─────
+ *
+ *  «Cae 8 de 8 años» encima de un `porque` que dice «cero de treinta y dos».
+ *  Dos afirmaciones incompatibles a dos centímetros una de otra, y la de
+ *  arriba en un rótulo destacado, que es la que se lee.
+ *
+ *  Pasó en el suelo de Fluidos —corregido el 7 de septiembre de 2026, y para
+ *  eso el esquema dejó de exigir `anios >= 1`— y **volvió a pasar en los dos
+ *  suelos de Álgebra**, que nadie miró al arreglar el primero. Un fallo que
+ *  reaparece es un fallo que necesita guardián y no una corrección más (§01).
+ *
+ *  Se detecta por lo que el bloque dice de sí mismo, no recontando los
+ *  exámenes: recontar exigiría adivinar qué tema «ocupa el hueco» y eso es una
+ *  lectura humana, que es justo lo que `invariante` existe para declarar. Si
+ *  el propio bloque afirma que no cae ninguna vez, el rótulo tiene que decir
+ *  cero.
+ *
+ *  El patrón que se busca es estrecho a propósito: **«cero de <número>»**,
+ *  que es como los dos bloques escribían su propio recuento —«cero de once»,
+ *  «cero de treinta y dos»—. La primera versión de este guardián buscaba
+ *  «ninguno» a secas y sacaba 26 avisos de 110 bloques, casi todos falsos:
+ *  «la única que no pide ninguna demostración» no habla de la frecuencia del
+ *  bloque, habla de un año. Un guardián que avisa 26 veces y acierta 2 se
+ *  aprende a ignorar, que es peor que no tenerlo (§11).
+ *
+ *  Y lleva una excepción que el propio guardián encontró: un «cero de once
+ *  **para** las unidades» no habla del bloque entero, habla de una de las
+ *  tres cosas que el bloque junta —así lo escribe el suelo de Fluidos, que
+ *  cuenta cero para las unidades y uno para las pérdidas de carga—. Una
+ *  negación con `para` detrás está acotada y no contradice al rótulo. */
+const NIEGA =
+  /\bcero de (?:\d+|un[oa]|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|dieciséis|veinte|treinta)\b(?!\s+para\b)/i;
+const contradicen = [];
+for (const f of readdirSync(join(CONT, 'preparar'))) {
+  const doc = yaml.load(readFileSync(join(CONT, 'preparar', f), 'utf8'));
+  for (const b of doc?.bloques ?? []) {
+    if (!b.invariante || b.invariante.anios === 0) continue;
+    for (const [campo, txt] of [
+      ['porque', b.porque],
+      ['invariante.fuente', b.invariante.fuente],
+    ]) {
+      if (txt && NIEGA.test(txt))
+        contradicen.push(
+          `${f.replace('.yaml', '')} / ${b.id}: el rótulo dice «cae ${b.invariante.anios} de ` +
+            `${doc.medidoSobre}» y su ${campo} dice «${NIEGA.exec(txt)[0]}»`,
+        );
+    }
+  }
+}
+pinta('7 · Rótulos de frecuencia que se contradicen con su propio texto');
+console.log(`   §10: el número destacado es el que se lee. Si el bloque escribe
+   debajo que no cae ninguna vez, \`anios\` tiene que ser cero — y entonces la
+   página escribe «No cae solo, está dentro de las N», que es lo que un suelo
+   de verdad es.`);
+fila('de', `${bloques} bloques, ${contradicen.length}`);
+contradicen.forEach((d) => fila('', '· ' + d));
+
 pinta('6 · Bloques que no dicen si les falta algo');
 console.log(`   Un falta[] vacío decía dos cosas incompatibles: «mirado y no hay
    hueco» y «sin mirar». Desde el 6 de septiembre de 2026 la primera se declara

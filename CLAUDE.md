@@ -2176,6 +2176,33 @@ Cosas que ya han costado horas. No son opiniones.
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
   Unicode (A₁) o sin subíndice; la fórmula va en `enunciado`.
+- **Un rótulo destacado que dice lo contrario que el párrafo de debajo gana,
+  porque es el que se lee.** El suelo de Fluidos publicaba «Cae 11 de 16 años»
+  sobre un `porque` que decía «cero de once»; se corrigió el 7 de septiembre
+  de 2026 **sin mirar si estaba en más sitios**, y el 8 apareció igual en los
+  **dos** suelos de Álgebra, con «Cae 8 de 8 años» sobre «cero de treinta y
+  dos». El origen es un supuesto del esquema: `invariante.anios` se llenaba
+  con «en cuántas convocatorias se **usa**» cuando el campo cuenta en cuántas
+  **cae como ejercicio propio**, y para un suelo esa respuesta es cero. Con
+  cero, la página ya escribe «No cae solo, está dentro de las N».
+
+  **Regla: cuando arregles una contradicción entre un rótulo y su texto,
+  búscala en las demás asignaturas antes de darla por cerrada** — y si
+  reaparece, el arreglo no es la tercera corrección sino un guardián. El de
+  este caso es la sección 7 de `deuda.mjs`, y busca un patrón estrecho a
+  propósito: «cero de ‹número›» sin un `para` detrás, dentro de un bloque con
+  `anios > 0`. La primera versión buscaba «ninguno» a secas y daba 26 avisos
+  de 110 bloques, casi todos falsos: **un guardián que acierta 2 de 26 se
+  aprende a ignorar, y eso es peor que no tenerlo** (§11).
+- **Un campo que se pinta sin pasar por `mate()` publica los asteriscos.**
+  `invariante.fuente` se pintaba en crudo justo debajo de un `porque` que sí
+  se renderiza, así que el lector veía énfasis en un párrafo y `**esto**` en
+  el siguiente. Nadie lo metió por descuido: el campo nació sin renderizar y
+  quien escribía suponía —razonablemente— que se portaba como su vecino.
+  Corregido en la plantilla el 8 de septiembre de 2026, que arregla de una vez
+  las seis marcas que había en tres asignaturas. **Antes de escribir markdown
+  en un campo nuevo, mira en la plantilla si ese campo pasa por `mate()`**; y
+  si escribes uno nuevo que es prosa, hazlo pasar.
 
 ---
 

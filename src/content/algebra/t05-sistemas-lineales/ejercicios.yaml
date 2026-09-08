@@ -1,7 +1,10 @@
 ejercicios:
-  # ── Los dos primeros son NUESTROS (§08). El boletín de sistemas empieza
+  # ── Los tres primeros son NUESTROS (§08). El boletín de sistemas empieza
   #    directamente por una discusión con DOS parámetros: sin haber aplicado
   #    antes Rouché sobre números concretos, no hay por dónde entrar.
+  #    El tercero entró el 8 de septiembre de 2026 y cierra un falta[]
+  #    declarado en las dos rutas: la prosa escribía la fórmula de Cramer y
+  #    ningún ejercicio la aplicaba, porque el boletín tampoco lo hace.
   - id: ejalg5-rouche-en-dos-comparaciones
     titulo: Clasificar un sistema en dos comparaciones
     fuente: >-
@@ -449,6 +452,222 @@ ejercicios:
       términos independientes no nulos: ahí el $\overline{0}$ se queda fuera, y
       lo que queda es una **variedad afín** — el subespacio del homogéneo
       asociado, trasladado.
+
+  - id: ejalg5-cramer-cuando-piden-una-sola-incognita
+    titulo: Cramer, y el único caso en que compensa
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. La prosa de este tema
+      escribe la fórmula de Cramer y dice cuándo compensa, y ni un solo
+      ejercicio del boletín la aplicaba paso a paso: el boletín entra
+      directamente por discusiones con parámetro. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      De este sistema **solo se pide $y$**:
+
+      $
+      \begin{cases}
+      2x+y+z=5\\
+      x+3y+2z=9\\
+      x+y+z=4
+      \end{cases}
+      $
+
+      Calcularla sin resolver el sistema entero.
+    pide: El valor de $y$, y por qué aquí Cramer gana a Gauss.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El tema dice que Cramer «casi nunca compensa». ¿Qué tiene este
+          enunciado para que aquí sí?
+        opciones:
+          - texto: >-
+              Que solo piden **una** incógnita: con Cramer se calculan dos
+              determinantes y se acabó, mientras que Gauss obliga a resolver
+              el sistema entero para tirar dos tercios del resultado
+            correcta: true
+            mensaje: |
+              Eso es, y es toda la regla. Gauss no sabe dar $y$ sin dar
+              también $x$ y $z$; Cramer sí. En cuanto piden las tres, la
+              cuenta se da la vuelta: serían cuatro determinantes de orden
+              tres frente a un escalonado.
+          - texto: >-
+              Que el sistema es cuadrado
+            mensaje: |
+              Hace falta —sin eso Cramer ni existe—, pero no basta. Casi
+              todos los sistemas de este tema son cuadrados y en casi todos
+              conviene Gauss. Lo que decide es **cuántas incógnitas piden**.
+          - texto: >-
+              Que los coeficientes son números pequeños
+            mensaje: |
+              Ayuda a hacer la cuenta, pero no cambia qué método conviene: con
+              números pequeños Gauss también es cómodo. Mira otra vez qué es
+              lo que se pide.
+          - texto: >-
+              Que no hay ningún parámetro
+            mensaje: |
+              Al revés de lo que parece: cuando **hay** parámetro es cuando el
+              determinante se calcula sí o sí, porque es lo que abre los
+              casos. Aquí no hay parámetro y aun así compensa, por otra razón.
+
+      - tipo: calcular
+        titulo: El determinante del sistema
+        pregunta: |
+          ¿Cuánto vale $\det A$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Un signo. En el desarrollo por la primera fila los signos van
+              $+,-,+$, y el menor del medio ya vale $-1$: al restarlo, **suma**.
+          - valor: '5'
+            mensaje: |
+              Ese es el determinante de la matriz con la columna de términos
+              independientes metida por en medio, no el del sistema. $\det A$
+              se calcula con los coeficientes solos, sin tocar el $5$, el $9$
+              ni el $4$.
+          - valor: '0'
+            mensaje: |
+              Si fuese $0$ no habría Cramer que valiera y habría que ir a
+              Rouché. No lo es: las tres filas son independientes. Vuelve a
+              desarrollar por la primera.
+        pista: |
+          Desarrolla por la primera fila. Los tres menores de orden dos salen
+          de cabeza.
+        desarrollo: |
+          $
+          \det A=\begin{vmatrix}2&1&1\\1&3&2\\1&1&1\end{vmatrix}
+          =2\begin{vmatrix}3&2\\1&1\end{vmatrix}
+          -1\begin{vmatrix}1&2\\1&1\end{vmatrix}
+          +1\begin{vmatrix}1&3\\1&1\end{vmatrix}
+          $
+
+          $
+          =2\cdot 1-1\cdot\left(-1\right)+1\cdot\left(-2\right)=1
+          $
+
+          No es cero, así que el sistema es de Cramer y la fórmula se puede
+          usar. Y que valga exactamente $1$ es una comodidad del enunciado, no
+          una casualidad con significado: lo único que importa es que no se
+          anule.
+
+      - tipo: calcular
+        titulo: La incógnita que piden
+        pregunta: |
+          ¿Cuánto vale $y$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Has sustituido la **primera** columna por los términos
+              independientes, y eso da $x$. La incógnita que piden es la
+              segunda, así que la columna que se sustituye es la segunda.
+          - valor: '5'
+            mensaje: |
+              Has cambiado la **fila** por los términos independientes en vez
+              de la columna. Cramer sustituye columnas: la columna $i$ es la
+              de los coeficientes de $x_i$, y es la que se reemplaza.
+          - valor: '0.5'
+            mensaje: |
+              Fracción del revés. La fórmula es $\det A_i$ **arriba** y
+              $\det A$ abajo; así lo de arriba crece con los términos
+              independientes, que es lo razonable.
+        pista: |
+          $y=\dfrac{\det A_{2}}{\det A}$, con la segunda columna sustituida por
+          $\left(5,9,4\right)$.
+        desarrollo: |
+          Se sustituye la **segunda** columna —la de los coeficientes de $y$—
+          por la de términos independientes:
+
+          $
+          \det A_{2}=\begin{vmatrix}2&5&1\\1&9&2\\1&4&1\end{vmatrix}
+          =2\left(9-8\right)-5\left(1-2\right)+1\left(4-9\right)
+          =2+5-5=2
+          $
+
+          $
+          y=\frac{\det A_{2}}{\det A}=\frac{2}{1}=2
+          $
+
+          Dos determinantes de orden tres, y ya está: no se ha averiguado
+          cuánto valen $x$ ni $z$, y no hacía falta.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El sistema es cuadrado y $\det A=1\neq0$, luego es de Cramer:
+              tiene solución y es única.
+          - texto: >-
+              Como solo piden $y$, basta con el determinante de $A$ con su
+              segunda columna cambiada por los términos independientes.
+          - texto: >-
+              Ese determinante vale $2$, así que $y=2/1=2$, sin haber
+              calculado $x$ ni $z$.
+          - texto: >-
+              Y si $\det A$ hubiera salido cero, Cramer diría directamente que
+              el sistema es incompatible.
+            trampa: true
+            mensaje: |
+              Un determinante nulo no dice **incompatible**: dice que Cramer no
+              se puede aplicar. A partir de ahí hay que ir a Rouché y comparar
+              $r\left(A\right)$ con $r\left(A\mid B\right)$, y el resultado
+              puede ser incompatible **o** compatible indeterminado — las dos
+              cosas pasan en este tema, y varias veces. Confundir «no puedo
+              usar la fórmula» con «no hay solución» es el error clásico de
+              este método.
+
+    resolucion: |
+      **La decisión, que es la mitad del ejercicio.** El enunciado pide una
+      sola incógnita de un sistema cuadrado. Gauss no sabe hacer eso: resuelve
+      todo o nada. Cramer sí, y le cuestan dos determinantes.
+
+      **El determinante del sistema**, desarrollado por la primera fila:
+
+      $
+      \det A=\begin{vmatrix}2&1&1\\1&3&2\\1&1&1\end{vmatrix}
+      =2\cdot 1-1\cdot\left(-1\right)+1\cdot\left(-2\right)=1
+      $
+
+      No se anula, luego el sistema es compatible determinado y la fórmula
+      vale.
+
+      **La incógnita**, sustituyendo la segunda columna:
+
+      $
+      \det A_{2}=\begin{vmatrix}2&5&1\\1&9&2\\1&4&1\end{vmatrix}=2
+      \qquad\Longrightarrow\qquad
+      y=\frac{\det A_{2}}{\det A}=\frac{2}{1}
+      $
+
+      $
+      \boxed{\;y=2\;}
+      $
+
+      **Lo que hay que llevarse.** Tres cosas, y la primera es la que decide si
+      el ejercicio sale corto o largo.
+
+      1. **Cramer se elige por lo que piden, no por cómo es el sistema.** Ser
+         cuadrado y con determinante no nulo es el permiso para usarlo; que
+         pidan una sola incógnita es la razón para hacerlo. Con las tres
+         incógnitas pedidas son cuatro determinantes de orden tres, y Gauss
+         gana sin discusión.
+      2. **Se sustituye la columna $i$, no la fila.** La columna $i$ es la de
+         los coeficientes de $x_i$: se cambia por los términos independientes
+         y el cociente da esa incógnita. Cambiar una fila da un número que no
+         significa nada.
+      3. **Determinante cero no es incompatible.** Es «aquí no llega Cramer».
+         Lo que sigue es Rouché, y de ahí puede salir cualquiera de los dos
+         casos malos.
 
   # ── Y estos dos son del boletín oficial, reproducidos tal cual (§08).
   - id: ejalg5-bol51-dos-parametros-y-tres-casos

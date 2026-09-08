@@ -127,16 +127,12 @@ export async function getStaticPaths() {
         ejercicios: es.ejercicios.map((x) => resuelveEjercicio(b.id, x)),
       })),
       material: (b.material ?? []).map((m) => {
-        if (m.tipo === 'ejercicio') {
-          const e = porId.get(m.id);
-          if (!e) {
-            throw new Error(
-              `La ruta "${r.id}.yaml", bloque "${b.id}", referencia el ejercicio ` +
-                `"${m.id}", que no existe en ningún ejercicios.yaml.`,
-            );
-          }
-          return { ...m, titulo: e.titulo, puntos: e.puntos, pagina: e.pagina };
-        }
+        /* Por la misma función que los escalones, y no por una copia suya: la
+           copia hacía la misma búsqueda pero se dejaba el `nivel`, y por eso
+           la plantilla acabó rotulando por `puntos` y llamando «boletín» a un
+           ejercicio de convocatoria. Duplicar cinco líneas cuesta más tarde
+           que compartirlas ahora (§01). */
+        if (m.tipo === 'ejercicio') return resuelveEjercicio(b.id, m);
         if (m.tipo === 'examen') {
           const ex = examenes.find(
             (x) => x.data.asignatura === idAsig && x.data.curso === m.curso && x.data.convocatoria === m.convocatoria,
@@ -327,6 +323,16 @@ const bloquesHtml = await Promise.all(
        fase 3 del rediseño el esquema lo exigía y la página lo tiraba sin
        pintarlo — la corrección de fondo del brief §6b. */
     dominioHtml: await mate(b.dominio),
+    /* La fuente del invariante se pintaba en crudo, y va justo debajo de un
+       `porque` que sí se renderiza: el lector veía énfasis en un párrafo y
+       `**asteriscos**` literales en el siguiente. Contadas el 8 de septiembre
+       de 2026: **seis marcas en cinco bloques** de tres asignaturas —Cálculo
+       tres, Álgebra dos, Química una—, y cuatro de ellas llevaban ahí desde
+       antes de hoy. Nadie las metió por descuido: el campo nació sin pasar por
+       `mate()` y quien lo escribía suponía, razonablemente, que se comportaba
+       como el `porque` de al lado. Se arregla aquí, en la plantilla, y no
+       reescribiendo los cinco bloques (§01). */
+    invarianteHtml: b.invariante ? await mate(b.invariante.fuente) : null,
     faltaHtml: await Promise.all(b.falta.map((f) => mate(f))),
     material: await Promise.all(
       b.material.map(async (m) => ({ ...m, notaHtml: m.nota ? await mate(m.nota) : null })),
@@ -419,7 +425,7 @@ const faltas = bloquesHtml.flatMap((b) =>
             {b.invariante && (
               <aside class="nota">
                 <p class="rotulo">De dónde sale ese dato</p>
-                <p>{b.invariante.fuente}</p>
+                <div class="prosa" set:html={b.invarianteHtml} />
               </aside>
             )}
 
@@ -514,7 +520,24 @@ const faltas = bloquesHtml.flatMap((b) =>
 
                   {m.tipo === 'ejercicio' && !m.incrustado && (
                     <a href={`${ruta(m.pagina)}#ej-${m.id}`} class="m-ej">
-                      <span class="m-k rotulo">{m.puntos ? 'examen' : 'boletín'}</span>
+                      {/* El mismo rótulo que pinta un escalón, y por el mismo
+                          dato. Aquí decía `m.puntos ? 'examen' : 'boletín'`,
+                          que es otra regla: el reparto por competencia solo lo
+                          llevan los ejercicios de convocatoria transcritos con
+                          él, así que un ejercicio de examen sin reparto salía
+                          rotulado «boletín». Se vio el 8 de septiembre de 2026
+                          al enlazar dos extraordinarias de Álgebra desde el
+                          bloque del formulario: las dos se publicaron como si
+                          fueran del boletín, al lado de una fuente que dice
+                          «Convocatoria extraordinaria, curso 2022-2023». Dos
+                          reglas para el mismo rótulo es una de más (§01). */}
+                      <span class="m-k rotulo">
+                        {m.nivel === 'ejemplo'
+                          ? 'ejemplo'
+                          : m.nivel === 'examen'
+                            ? 'examen'
+                            : 'práctica'}
+                      </span>
                       <span class="m-t">{m.titulo}</span>
                       {m.puntos && (
                         <span class="m-pts rotulo">

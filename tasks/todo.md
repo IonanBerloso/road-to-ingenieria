@@ -44,6 +44,76 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Repaso de Álgebra · 8 de septiembre de 2026
+
+Álgebra estaba declarada cerrada contra §15 desde el 27 de agosto. Se volvió a
+abrir entera para releerla, que es lo que §15 pide al cerrar una asignatura:
+recontar sus cifras en vez de fiarse de la fecha en que se escribieron.
+
+**§15 seguía cumplida, y sigue.** Los siete temas tienen su ejemplo de entrada
+propio y su figura; el boletín está transcrito entero —los siete PDF, cruzados
+uno a uno contra el corpus por su número de ejercicio—; las ocho convocatorias
+están y sus 32 ejercicios repartidos por tema; el catálogo dice cómo se puntúa,
+con la guía docente citada y diciendo que no está en el repositorio; y el
+octavo tema, cónicas y cuádricas, sigue declarado `soloEnClase`.
+
+**Lo que no se sostuvo fueron siete afirmaciones publicadas.** Todas del mismo
+tipo: verdaderas cuando se escribieron o escritas sin contar, y ninguna que
+ningún guardián pudiera mirar.
+
+| lo que decía | lo que se midió | qué se hizo |
+|---|---|---|
+| «no hay ningún ejercicio guiado de polinomios» | los dos del boletín estaban escritos, sin ruta que los enlazara | enlazados en las dos rutas |
+| «ni de productos escalares sobre funciones o matrices» | los dos estaban escritos | enlazados |
+| «la matriz con parámetro del boletín no está transcrita» | el boletín tiene **cuatro** con parámetro y las cuatro están | enlazada la que faltaba |
+| «Cramer sale **cinco veces** en el corpus» | **veintiuna** en las páginas de Álgebra | corregida, y escrito el ejercicio que faltaba |
+| «la inversa de un producto» es de las que caen en la extraordinaria | $\left(AB\right)^{-1}=B^{-1}A^{-1}$ se ha pedido demostrar **una vez de ocho**, y en una **ordinaria** | reescrito el bloque con el recuento real |
+| «las cuatro demostraciones que más se repiten» | dos de las cuatro no eran de las que más se repiten en la ordinaria | reescrito, leídos los 32 apartados (a) |
+| **«Cae 8 de 8 años»** en los dos suelos | su propio texto decía «cero de treinta y dos» | `anios: 0`, y ahora dice «No cae solo, está dentro de las 8» |
+
+**Lo único nuevo que se escribió** es un ejemplo de entrada: Cramer aplicado a
+un sistema del que solo se pide una incógnita, que es el único caso en que
+compensa. Lo pedía un `falta[]` desde que se escribió la ruta, y el boletín no
+lo trae porque entra directo por discusiones con parámetro.
+
+## Lo que salió al hacerlo, y no era de Álgebra
+
+- **El rótulo de frecuencia contra su propio texto.** El suelo de Fluidos tuvo
+  este fallo y se corrigió el 7 de septiembre **sin mirar si estaba en más
+  sitios**. Estaba, en los dos suelos de Álgebra. Ahora hay guardián —sección
+  7 de `deuda.mjs`— y la lección está en §17: *cuando arregles una
+  contradicción entre un rótulo y su texto, búscala en las demás asignaturas
+  antes de darla por cerrada.*
+- **`invariante.fuente` se pintaba sin renderizar**, justo debajo de un
+  `porque` que sí, así que se publicaban `**asteriscos**` literales. Seis
+  marcas en cinco bloques de tres asignaturas. Arreglado en la plantilla, no
+  en los cinco bloques (§01).
+- **La meta description de cinco páginas llevaba markdown dentro** —se saca
+  recortando el `lede`, que es markdown—. Es lo que se ve en un buscador y al
+  compartir el enlace. Limpiado en `Base.astro`, que lo arregla para las 197.
+- **Dos reglas distintas para el mismo rótulo.** Un escalón rotula sus
+  ejercicios por `nivel`; una lista plana los rotulaba por si traían reparto de
+  puntos, y llamaba «boletín» a todo lo que no lo trajera. Se vio al enlazar
+  dos extraordinarias desde el bloque del formulario: salieron rotuladas
+  «boletín» al lado de una fuente que dice «Convocatoria extraordinaria, curso
+  2022-2023». Las dos ramas ya resuelven por la misma función. Cambió seis
+  rótulos y los seis son de hoy; los otros seis de listas planas ya estaban
+  bien. Y no lo habría encontrado ningún guardián: se vio mirando la página
+  (§16).
+
+## Lo que queda de Álgebra, dicho con la cifra
+
+- **97 de los 179 ejercicios no los enlaza ninguna ruta.** No es un hueco: las
+  rutas son selectivas a propósito —van detrás de los cuatro huecos fijos del
+  examen— y esos 97 se leen desde su tema. Se dice aquí para que nadie lo
+  descubra y lo tome por un olvido.
+- **Sigue sin haber una página de formulario propia**, con las demostraciones
+  escritas seguidas y en el orden en que caen. Los dos bloques de formulario ya
+  no son solo enlaces a resúmenes —enlazan una por una las demostraciones que
+  piden de memoria—, pero la página no existe. Declarado en los dos `falta[]`.
+
+---
+
 # Lo primero, y va antes que cualquier contenido nuevo
 
 **4 de septiembre de 2026, tarde.** Una auditoría externa puntuó el sitio con
