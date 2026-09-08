@@ -215,6 +215,105 @@ for (const [a, lista] of Object.entries(porAsig)) {
   if (lista.length <= 15) for (const s of lista) fila('', `· ${s.split(' · ').slice(1).join(' · ')}`);
 }
 
+/* ── las afirmaciones de ausencia que ya no son ciertas ─────────────────
+ *
+ * Un `falta[]` se publica en la página de la ruta, y muchos llevan un número
+ * dentro: «el tema 9 tiene dos ejemplos de entrada propios», «una sola
+ * figura», «sus dos ejercicios propios». Se escriben cuando son verdad, el
+ * contenido se añade después, y **nadie vuelve a leerlas**.
+ *
+ * El 8 de septiembre de 2026 se releyeron todas a mano y **once estaban
+ * caducadas**: el tema 8 decía dos ejemplos y una figura cuando eran cinco y
+ * dos; el tema 9, dos y una cuando eran cinco y tres; una nota pedía «un
+ * dibujo de qué hace Green» que llevaba meses dibujado; otra decía que no
+ * había ningún ejercicio de la matriz en otra base habiendo seis, cuatro de
+ * ellos sin enlazar; otra que no había ninguno de orden cuatro habiendo
+ * cuatro. Once en un día, y ningún guardián las mira.
+ *
+ * Esto cuenta lo que se puede contar: cuántos ejemplos propios y cuántas
+ * figuras tiene el tema que la frase nombra. Lo demás —«no hay ningún
+ * ejercicio de Cramer»— no se puede automatizar, y por eso esta sección
+ * imprime también las frases con número que no ha sabido comprobar: para que
+ * se relean a mano al cerrar una asignatura.
+ *
+ * No falla: este guion no es un guardián. Informa. */
+pinta('Afirmaciones de ausencia con número dentro, contadas contra el corpus');
+
+const PALABRA = {
+  ningun: 0, ninguna: 0, cero: 0, un: 1, una: 1, uno: 1, dos: 2, tres: 3,
+  cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
+};
+const aNumero = (s) => {
+  const t = s.toLowerCase().replace(/[áéíóú]/g, (c) => 'aeiou'['áéíóú'.indexOf(c)]);
+  if (/^\d+$/.test(t)) return Number(t);
+  return PALABRA[t];
+};
+
+/* cuántos ejemplos propios y cuántas figuras tiene cada tema, de verdad */
+const REAL = {};
+for (const asig of ASIGS) {
+  const raiz = join(CONT, asig);
+  if (!existsSync(raiz)) continue;
+  for (const d of readdirSync(raiz, { withFileTypes: true })) {
+    if (!d.isDirectory() || !/^t\d/.test(d.name)) continue;
+    const fe = join(raiz, d.name, 'ejercicios.yaml');
+    const fm = join(raiz, d.name, 'index.mdx');
+    const ejs = existsSync(fe) ? yaml.load(readFileSync(fe, 'utf8'))?.ejercicios ?? [] : [];
+    REAL[`${asig}/${d.name}`] = {
+      ejemplos: ejs.filter((e) => e.nivel === 'ejemplo').length,
+      figuras: existsSync(fm) ? (readFileSync(fm, 'utf8').match(/<svg/g) ?? []).length : 0,
+    };
+  }
+}
+const temaDe = (asig, n) =>
+  Object.keys(REAL).find((k) => k.startsWith(asig + '/t' + String(n).padStart(2, '0')));
+
+const desfasadas = [], sinComprobar = [];
+for (const f of readdirSync(join(CONT, 'preparar'))) {
+  const ruta = yaml.load(readFileSync(join(CONT, 'preparar', f), 'utf8'));
+  for (const b of ruta.bloques ?? []) {
+    for (const x of b.falta ?? []) {
+      const t = String(x).replace(/\s+/g, ' ');
+      if (t.includes('~~')) continue;             // ya declarada resuelta
+      const donde = `${f.replace('.yaml', '')} · ${b.id}`;
+      let comprobada = false;
+
+      /* «el tema N tiene X ejemplos … propios» y «… y N figuras / una sola figura» */
+      const mTema = /\btema (\d+)\b/i.exec(t);
+      if (mTema) {
+        const clave = temaDe(ruta.asignatura, mTema[1]);
+        if (clave) {
+          const real = REAL[clave];
+          const mEj = /\*{0,2}(\w+) ejemplos? (?:de entrada )?propios?/i.exec(t);
+          if (mEj) {
+            const dice = aNumero(mEj[1]);
+            if (dice !== undefined) {
+              comprobada = true;
+              if (dice !== real.ejemplos)
+                desfasadas.push(`${donde}: dice ${dice} ejemplos propios del tema ${mTema[1]}, hay ${real.ejemplos}`);
+            }
+          }
+          const mFig = /\*{0,2}(?:una sola|\w+) figuras?\*{0,2}/i.exec(t);
+          if (mFig) {
+            const dice = /una sola/i.test(mFig[0]) ? 1 : aNumero(mFig[0].replace(/\*|figuras?/gi, '').trim());
+            if (dice !== undefined) {
+              comprobada = true;
+              if (dice !== real.figuras)
+                desfasadas.push(`${donde}: dice ${dice} figura(s) del tema ${mTema[1]}, hay ${real.figuras}`);
+            }
+          }
+        }
+      }
+      /* lo que lleva número y no se ha sabido comprobar */
+      if (!comprobada && /\b(ning[uú]n|ninguna|un solo|una sola|cero|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|\d+)\b/i.test(t))
+        sinComprobar.push(`${donde}: ${t.slice(0, 96)}…`);
+    }
+  }
+}
+fila('desfasadas', desfasadas.length);
+for (const d of desfasadas) fila('', '· ' + d);
+fila('con número, sin comprobar', `${sinComprobar.length} — se releen a mano al cerrar una asignatura`);
+
 pinta('Y el tamaño del corpus, que también se publica y también envejece');
 fila('ejercicios', EJ.size);
 fila('pasos', pasos);

@@ -187,6 +187,9 @@ scripts/
                            den los números del examen (§10, §16)
   peso.mjs                 cuánto tarda una página en un móvil (§11)
   mide.mjs                 la tabla de docs/como-vamos.md, generada
+  deuda.mjs                lo que queda, MEDIDO: el tamaño del corpus, los
+                           escalones sin rampa, y los `falta[]` que publican
+                           un número ya caducado (§16)
   diario.mjs               el diario en PDF
 tests/
   *.test.ts                los lectores de respuesta, con vitest
@@ -352,9 +355,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.342 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.654 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.310 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.351 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.682 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.319 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -409,6 +412,16 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > y se copia de su salida, que es la regla desde el 5 de septiembre; ese día
 > el propio guion se saltaba Térmica **en silencio** porque llevaba la lista
 > de asignaturas escrita a mano, y ahora la saca del catálogo.
+>
+> Y el **8 de septiembre de 2026**, **1.319 ejercicios y 5.388 pasos**. Los
+> nueve nuevos son todos peldaños: escalones que empezaban directamente por un
+> ejercicio de examen, que es lo que §14 dice que no puede pasar. Cinco de
+> Cálculo —longitud de arco por dos vías, área de superficie curva, Laplace con
+> coeficientes variables— y cuatro de Química —el puente del mol, los dos
+> órdenes de una configuración, el radio iónico y Nernst por electrodos—. Es la
+> forma de crecer que menos se nota en la cifra y más cambia el producto:
+> **ningún ejercicio nuevo de examen, y nueve entradas nuevas al corpus que ya
+> estaba.**
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -597,9 +610,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.310 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.319 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.310 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.319 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1540,10 +1553,45 @@ declara la asignatura terminada:
 | `HUMO_TODO=1 npm run humo` | las 96 páginas de examen en un navegador | el navegador abría 8 de 96 durante meses |
 | `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
 | `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
+| `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |
 
 Y con ellas, recontar las cifras de §04, §05, §09 y §15, que es lo que más se
 olvida: el 28 de agosto de 2026 llevaban una semana diciendo la mitad de la
 verdad.
+
+### Y una clase de dato que envejece sin que nadie la mire: los `falta[]`
+
+Un `falta[]` **se publica** en la página de la ruta, y muchos llevan un número
+dentro: «el tema 9 tiene dos ejemplos de entrada propios», «una sola figura»,
+«sus dos ejercicios propios», «no hay ningún ejercicio guiado de X». Se
+escriben cuando son verdad, el contenido se añade después, y **nadie vuelve a
+leerlas**.
+
+Releídas todas a mano el 8 de septiembre de 2026: **once estaban caducadas**.
+El tema 8 decía dos ejemplos y una figura cuando eran cinco y dos; el tema 9,
+dos y una cuando eran cinco y tres; una nota pedía «un dibujo de qué hace
+Green» que llevaba meses dibujado; otra decía que no había ningún ejercicio de
+la matriz en otra base habiendo **seis**, cuatro de ellos sin enlazar desde
+ninguna ruta; otra que no había ninguno de orden cuatro habiendo cuatro.
+
+De ahí salen dos cosas.
+
+La primera es una regla, y es la que más rinde: **cuando una nota dice «no hay
+ningún ejercicio de X», eso se cuenta antes de escribir uno nuevo.** Las tres
+veces que se comprobó ese día, el contenido existía; lo que faltaba era la
+prosa que lo explicara o el escalón que llevara a él. Escribir el ejercicio
+habría duplicado contenido y dejado el hueco de verdad sin tocar.
+
+La segunda es que `deuda.mjs` lo cuenta desde ese día, y **encontró un
+duodécimo caso en su primera ejecución**: una nota corregida esa misma mañana
+—de «tres ejemplos» a «cuatro»— que volvió a quedarse vieja unas horas después,
+al añadir el quinto. Ni releerlas a conciencia basta, porque el commit
+siguiente las estropea.
+
+Lo que el guion **no** sabe comprobar lo dice también: 77 frases con número que
+no encajan en ningún patrón contable —«no hay ningún ejercicio de Cramer», «cae
+en once de dieciséis»—. Esas se releen a mano al cerrar una asignatura. Un
+guardián que finge cubrir lo que no cubre es peor que ninguno.
 
 **Y releer la primera sección de `docs/como-vamos.md`, «En una frase».** El
 guion regenera su tabla, no su prosa, y esa prosa dice **cuántas asignaturas

@@ -315,6 +315,39 @@ Tres datos más que salieron de leerlas y que la ruta debería publicar:
   signo de cinco magnitudes y si las paredes son rígidas o móviles, y ya está
   transcrito como «Seis signos, y ningún número que dar».
 
+### Once notas de ausencia caducadas, y el guion que las cuenta
+
+Los `falta[]` **se publican** en la página de la ruta, y muchos llevan un
+número dentro. Releídos todos el 8 de septiembre de 2026, **once estaban
+caducados**:
+
+| decía | era |
+|---|---|
+| tema 8 de Cálculo: 2 ejemplos, 1 figura | 5 ejemplos, 2 figuras |
+| tema 9 de Cálculo: 2 ejemplos, 1 figura | 5 ejemplos, 3 figuras |
+| tema 10 de Cálculo: 3 ejemplos | 4, y horas después 5 |
+| tema 6 de Química: 2 ejercicios propios | 4 |
+| tema 10 de Química: 2 ejercicios propios | 3 |
+| «falta un dibujo de qué hace Green» | llevaba meses dibujado |
+| «las líneas de alturas con turbina no las dibuja ningún tema» | las dibuja el tema 23 |
+| «no hay campo de direcciones» | existía desde antes |
+| «no hay ningún ejercicio de la matriz en otra base» | **seis**, cuatro sin enlazar |
+| «no hay ningún ejercicio de orden 4» | **cuatro**, uno ya enlazado |
+| el escalón del puente del mol, «un solo ejercicio» | dos |
+
+**La regla que más rinde de todas:** cuando una nota dice «no hay ningún
+ejercicio de X», eso **se cuenta antes de escribir uno nuevo**. Las tres veces
+que se comprobó, el contenido existía; lo que faltaba era la prosa que lo
+explicara o el escalón que llevara a él. Escribir el ejercicio habría duplicado
+contenido y dejado el hueco de verdad sin tocar.
+
+Y `deuda.mjs` lo cuenta desde ese día. **Encontró un duodécimo caso en su
+primera ejecución**: una nota corregida esa misma mañana que volvió a quedarse
+vieja unas horas después, al añadir un ejemplo más. Validado al revés
+reintroduciendo dos de las frases. Lo que no sabe comprobar —77 frases con
+número que no encajan en ningún patrón contable— lo imprime aparte, para que se
+relean a mano al cerrar una asignatura.
+
 ### El pase de §15 y §16, y lo que encontró MIRAR
 
 §15 pide dos cosas por tema que no las mira ningún guardián: **un ejemplo
