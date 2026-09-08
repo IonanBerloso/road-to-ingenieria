@@ -79,21 +79,30 @@ declarado en la propia ruta.
 
 ## Y dos cosas que salieron al abrirlos, el 9 de septiembre de 2026
 
-**Las dieciséis que faltan por leer no son todas comparables, y diecisiete de
-las veintidós no se pueden leer con un guion.** De los 22 PDF, **solo cinco
-tienen capa de texto**; los otros diecisiete son escaneos. Y los más antiguos
-son de **otra asignatura**: el de enero de 2015 está en euskera, tiene
-**cuatro** ejercicios con pesos 1-2-3-4 en vez de tres a un tercio, y va de
-ciclo frigorífico con R-134a, psicrometría y Brayton — nada de eso está en los
-diez temas del temario actual. El de enero de 2026 sí encaja: politrópico,
-agua y transmisión de calor. Entre medias está el corte, y localizarlo exige
-abrirlos a mano porque el texto no sale solo.
+**Las convocatorias que faltan por leer no son todas comparables, y diecisiete
+de las veintidós no se pueden leer con un guion.** De los 22 PDF, **solo cinco
+tienen capa de texto**; los otros diecisiete son escaneos.
+
+Y hay un **corte de temario**, ya localizado:
+
+| | |
+|---|---|
+| **enero de 2015** | otra asignatura: cuatro ejercicios con pesos 1-2-3-4, ciclo frigorífico con R-134a, psicrometría y Brayton — nada de eso está en los diez temas |
+| 2015-2016 y 2016-2017 | **sin capa de texto**, sin leer: aquí está el corte |
+| **enero de 2018** | ya es la forma de ahora: tres ejercicios a un tercio, exergía en cámara de mezcla, entropía generada y transmisión de calor |
+
+Así que las comparables son **diecisiete**, de 2017-2018 en adelante, y de esas
+se han leído seis. Los enunciados anteriores a 2018 sirven de curiosidad y no
+de entrenamiento — **y eso retira la recomendación de publicar las dos de
+2014-2015**, que son las únicas sin resolución dentro pero también las que
+menos valen.
 
 **La duración estaba delante todo el tiempo.** Estaba en la lista de «preguntas
 para Ionan» y la imprimen los propios enunciados: «3 h 30 min» en enero de
-2015, «3 ordu» en febrero de 2022 y «2.5 ordu» en enero de 2023. No es
-constante, y los tres últimos años no la imprimen. Ya está publicado en la
-ruta, con las tres cifras y su año. Los mismos enunciados confirman además el
+2015, «Duración: 3,5 horas» en enero de 2018, «3 ordu» en febrero de 2022 y
+«2.5 ordu» en enero de 2023. **Va bajando**, y los tres últimos cursos no la
+imprimen. Ya está publicado en la ruta, con las cuatro cifras y su año, y con
+la recomendación de contar con la más reciente: dos horas y media. Los mismos enunciados confirman además el
 reparto que la ruta daba por bueno, con sus palabras: «cada ejercicio vale un
 tercio del examen completo».
 
