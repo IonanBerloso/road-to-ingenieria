@@ -2185,6 +2185,24 @@ Cosas que ya han costado horas. No son opiniones.
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
   Unicode (A₁) o sin subíndice; la fórmula va en `enunciado`.
+- **Una cita de markdown dentro de un escalar plegado de YAML publica sus
+  «>».** El `>-` de YAML une las líneas con un espacio, así que de un
+  blockquote de cinco renglones markdown solo lee el primer `>` y **los otros
+  cuatro salen como texto**, en mitad de la frase: «que los dos ejercicios >
+  «no tienen resolución guiada» y que «el tema 6 > todavía no está escrito»».
+  Estuvo publicado así en la ruta de la tercera de Cálculo hasta el 8 de
+  septiembre de 2026, y lo cazó **mirar la página**, no un guardián: `verify`
+  y los tests estaban en verde. **Regla: dentro de un campo de ruta, las
+  correcciones se escriben en el propio párrafo con `**~~…~~ · resuelto el
+  …**`, que es como las escribe el resto del proyecto — no como cita.** Si de
+  verdad hace falta una cita, el campo tiene que ser un escalar literal
+  (`|-`), que conserva los saltos.
+
+  Y una nota sobre cómo buscarlo, porque el primer intento fue peor que no
+  buscar: en el HTML publicado un `>` suelto **no se distingue** de un «mayor
+  que» de una fórmula, y la búsqueda daba 197 aciertos en `h > f` antes de
+  llegar a uno real. Se busca en el origen. Está en la sección 9 de
+  `deuda.mjs`.
 - **Un rótulo destacado que dice lo contrario que el párrafo de debajo gana,
   porque es el que se lee.** El suelo de Fluidos publicaba «Cae 11 de 16 años»
   sobre un `porque` que decía «cero de once»; se corrigió el 7 de septiembre

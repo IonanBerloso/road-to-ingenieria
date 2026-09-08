@@ -178,6 +178,100 @@ console.log(`   §10: el número destacado es el que se lee. Si el bloque escrib
 fila('de', `${bloques} bloques, ${contradicen.length}`);
 contradicen.forEach((d) => fila('', '· ' + d));
 
+/* ── 8 · listas que anuncian su propio tamaño ────────────────────────
+ *
+ *  Cinco `falta[]` de Cálculo dicen lo mismo, con estas palabras: «las listas
+ *  son una segunda copia de cosas que ya están explicadas en los temas, y si
+ *  un día se corrige la teoría y no se corrige aquí, esto miente. **No hay
+ *  ningún guardián que lo compruebe todavía**». Estaba declarado cinco veces
+ *  y nadie lo había escrito.
+ *
+ *  Comprobar «esto repite lo de arriba y ya no coincide» en general no se
+ *  puede. Lo que sí se puede es el caso en que **la propia prosa dice cuántos
+ *  elementos vienen**: «Y las tres frases de COMP4:» seguido de tres viñetas.
+ *  Ahí el texto lleva su propia comprobación dentro, y el día que alguien
+ *  añada una cuarta frase y no toque la línea de arriba, esto lo dice.
+ *
+ *  Son 17 anuncios en cinco asignaturas. No cubre el riesgo entero —una
+ *  fórmula corregida arriba y no abajo sigue pasando— y por eso los `falta[]`
+ *  siguen abiertos, ahora diciendo qué parte queda fuera. */
+const ANUNCIO = /\b(?:l[ao]s\s+)?(\w+)\s+(frases|puntos|reglas|ideas|cosas|preguntas)\b[^.\n]{0,60}:\s*\n/gi;
+const ORDINAL = { un: 1, una: 1, uno: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12, trece: 13, catorce: 14, quince: 15 };
+/* Propio, porque `sinTilde` se define más abajo y esta sección va antes. */
+const llano = (s) => s.toLowerCase().replace(/[áéíóú]/g, (c) => 'aeiou'['áéíóú'.indexOf(c)]);
+const descuadres = [];
+let anuncios = 0;
+for (const asig of ASIGS) {
+  const raiz = join(CONT, asig);
+  if (!existsSync(raiz)) continue;
+  for (const t of readdirSync(raiz)) {
+    const p = join(raiz, t, 'index.mdx');
+    if (!existsSync(p)) continue;
+    const mdx = readFileSync(p, 'utf8');
+    ANUNCIO.lastIndex = 0;
+    let m;
+    while ((m = ANUNCIO.exec(mdx))) {
+      const dice = /^\d+$/.test(m[1]) ? Number(m[1]) : ORDINAL[llano(m[1])];
+      if (dice === undefined) continue;
+      const lineas = mdx.slice(m.index + m[0].length).split('\n');
+      /* Si lo que sigue no es una lista, el anuncio no habla de una lista:
+         «las dos cosas conviven sin contradicción:» va seguido de prosa. Sin
+         este filtro salían ocho avisos y los ocho eran prosa corriente. */
+      const primera = lineas.find((l) => l.trim() !== '');
+      if (!primera || !/^\s*(?:[-*]|\d+\.)\s+\S/.test(primera)) continue;
+      anuncios++;
+      let n = 0;
+      for (const l of lineas) {
+        if (/^\s*(?:[-*]|\d+\.)\s+\S/.test(l)) n++;
+        else if (/^\s*$/.test(l) || /^\s{2,}\S/.test(l)) continue;
+        else break;
+      }
+      if (n !== dice)
+        descuadres.push(`${asig}/${t}: «${m[0].trim().slice(0, 54)}» anuncia ${dice} y hay ${n}`);
+    }
+  }
+}
+pinta('8 · Listas que anuncian su propio tamaño');
+console.log(`   El caso comprobable de «esto es una segunda copia y puede
+   quedarse vieja»: cuando la prosa dice cuántos elementos vienen, la lista de
+   debajo tiene que tener esos.`);
+fila('de', `${anuncios} anuncios, ${descuadres.length} descuadrados`);
+descuadres.forEach((d) => fila('', '· ' + d));
+
+/* ── 9 · blockquotes dentro de un escalar plegado ────────────────────
+ *
+ *  Un `>` de markdown dentro de un `>-` de YAML pierde todos sus renglones
+ *  menos el primero: el plegado une las líneas con un espacio y markdown solo
+ *  lee el `>` de delante. Los demás **se publican como texto**, y quedan dos
+ *  «mayor que» sueltos en mitad de una frase.
+ *
+ *  Pasó en la ruta de la tercera de Cálculo y se publicó así: «que los dos
+ *  ejercicios > «no tienen resolución guiada» y que «el tema 6 > todavía no
+ *  está escrito»». Lo cazó mirar la página (§16), no un guardián.
+ *
+ *  Se busca en el ORIGEN a propósito. En el HTML un `>` suelto no se
+ *  distingue de un «mayor que» de una fórmula: buscarlo ahí daba 197 falsos
+ *  en `h > f` antes de mirar ninguno de verdad. */
+const plegados = [];
+for (const f of readdirSync(join(CONT, 'preparar'))) {
+  const lineas = readFileSync(join(CONT, 'preparar', f), 'utf8').split('\n');
+  for (let i = 0; i < lineas.length; i++) {
+    const m = /^(\s*)(?:-\s+)?(?:[\w-]+:\s+)?>-?\s*$/.exec(lineas[i]);
+    if (!m) continue;
+    let bq = 0;
+    for (let j = i + 1; j < lineas.length; j++) {
+      const l = lineas[j];
+      if (l.trim() === '') continue;
+      if (l.match(/^\s*/)[0].length <= m[1].length) break;
+      if (/^\s*>/.test(l)) bq++;
+    }
+    if (bq > 1) plegados.push(`${f}:${i + 1} · ${bq} renglones de cita`);
+  }
+}
+pinta('9 · Citas dentro de un escalar plegado, que publican sus «>»');
+fila('de', `${readdirSync(join(CONT, 'preparar')).length} rutas, ${plegados.length}`);
+plegados.forEach((d) => fila('', '· ' + d));
+
 pinta('6 · Bloques que no dicen si les falta algo');
 console.log(`   Un falta[] vacío decía dos cosas incompatibles: «mirado y no hay
    hueco» y «sin mirar». Desde el 6 de septiembre de 2026 la primera se declara
