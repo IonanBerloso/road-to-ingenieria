@@ -44,6 +44,35 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Repaso de Mecánica de Fluidos · 8 de septiembre de 2026
+
+**§15 se cumple**: 23 temas hechos más los 2 declarados  —2 de
+25, por debajo del tercio—, todos con figura y ejemplo propio, las 16
+convocatorias con su PDF, ruta única que prepara ordinaria y extraordinaria, y
+evaluación citada literalmente porque la guía sí está entre el material.
+
+## Los 90 ejercicios mal etiquetados, resueltos
+
+Estaba medido desde el 7 de septiembre y esperando decisión. Se arregla.
+
+ es **procedencia**, no dificultad:  es nuestro, del boletín,  tal como cayó. Y el nivel **se publica** como chip al
+lado de la fuente, así que 90 ejercicios de tema mostraban «examen» junto a una
+línea que dice «Ejercicio 2.22 · Colección de problemas». La página se
+contradecía a sí misma.
+
+**La prueba de que era error y no criterio**: la misma cadena de fuente
+—«Ejercicio N · Colección de problemas, capítulo K»— aparecía con y con  en cuatro capítulos distintos. Ninguna de las otras cuatro
+asignaturas tenía un solo caso.
+
+Reetiquetados los 90, repartidos en doce temas: 90 líneas cambiadas y 90
+borradas, una por una, sin tocar estructura. Fluidos pasa de
+36 / 134 / 90 a **36 ejemplos, 224 de boletín y cero de examen** en sus temas,
+que es lo correcto: los de examen viven en , como en las otras
+cuatro. Suelo, recálculo, 1.616 tests y los escalones sin rampa, en verde
+antes y después.
+
+---
+
 # Repaso de Química · 8 de septiembre de 2026
 
 **§15 se cumple**: diez temas con figura y ejemplo propio, seis convocatorias
