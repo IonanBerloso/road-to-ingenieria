@@ -510,6 +510,227 @@ ejercicios:
   # Del boletín de problemas complementarios del tema 10.
   # ═══════════════════════════════════════════════════════════════════
 
+  - id: ej-multiplicar-por-t-es-derivar-la-transformada
+    titulo: Multiplicar por t es derivar la transformada
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre la propiedad de que
+      multiplicar por te equivale a derivar la transformada y cambiarle el
+      signo, del tema 10. Es el peldaño que faltaba antes del ejercicio de
+      coeficientes variables del examen de 2025-2026. No es de examen ni del
+      boletín.
+    nivel: ejemplo
+    enunciado: |
+      a) Comprobar, derivando la transformada, que
+      $\mathcal{L}\{t\,e^{3t}\}$ coincide con lo que dice la tabla.
+
+      b) Resolver con Laplace la ecuación $t\,y' - y = 0$ sabiendo que
+      $y'(0) = 2$.
+    pide: La transformada de t por una exponencial, y la solución de la ecuación.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué le hace a la transformada multiplicar la función por $t$?
+        opciones:
+          - texto: >-
+              La deriva respecto de $s$ y le cambia el signo:
+              $\mathcal{L}\{t\,f\} = -F'(s)$
+            correcta: true
+            mensaje: |
+              Eso es, y es la propiedad que hace útil a Laplace cuando aparece
+              una $t$ delante de una derivada. Fíjate en el precio: la ecuación
+              **deja de ser algebraica** en $Y$ y pasa a ser una ecuación
+              diferencial de primer orden en $Y(s)$.
+          - texto: >-
+              La divide entre $s$
+            mensaje: |
+              Dividir entre $s$ es lo que hace **integrar** la función, no
+              multiplicarla por $t$. Son propiedades distintas y las dos están
+              en la tabla; conviene no mezclarlas.
+          - texto: >-
+              La desplaza: $F(s-1)$
+            mensaje: |
+              El desplazamiento en $s$ lo produce multiplicar por una
+              **exponencial**, $e^{at}$, no por $t$. Multiplicar por $t$
+              deriva.
+
+      - tipo: calcular
+        titulo: La comprobación con la exponencial
+        pregunta: |
+          Sabiendo que $\mathcal{L}\{e^{3t}\} = 1/(s-3)$, ¿cuánto vale
+          $\mathcal{L}\{t\,e^{3t}\}$ en $s=5$?
+        respuesta:
+          tipo: numero
+          valor: '0.25'
+          tolerancia: 0.001
+          formato: un número, en forma exacta o decimal
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Eso es $\mathcal{L}\{e^{3t}\}$ en $s=5$: no has aplicado la
+              propiedad. Multiplicar por $t$ **sube el exponente del
+              denominador en uno**.
+          - valor: '0.125'
+            mensaje: |
+              Has elevado al cubo. Derivar $1/(s-3)$ una vez da
+              $-1/(s-3)^{2}$, con exponente 2; el cubo saldría de multiplicar
+              por $t^{2}$.
+        pista: |
+          Deriva $1/(s-3)$ respecto de $s$, cámbiale el signo y evalúa.
+        desarrollo: |
+          $$
+          -\frac{d}{ds}\left(\frac{1}{s-3}\right)
+          = -\left(-\frac{1}{(s-3)^{2}}\right) = \frac{1}{(s-3)^{2}}
+          $$
+
+          En $s=5$ eso vale $1/4 = 0{,}25$. Y coincide con la tabla, que trae
+          $\mathcal{L}\{t\,e^{at}\} = 1/(s-a)^{2}$: **los dos signos menos se
+          cancelan**, y por eso el resultado sale positivo aunque la propiedad
+          lleve uno delante.
+
+      - tipo: calcular
+        titulo: El exponente que sale de la ecuación
+        pregunta: |
+          Al transformar $t\,y' - y = 0$ queda una ecuación en $Y$ cuya
+          solución es $Y = K/s^{n}$. ¿Cuánto vale $n$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Te has dejado uno de los dos términos en $Y$. Al derivar
+              $sY - y(0)$ aparece $Y + sY'$, y ese $Y$ se suma al $-Y$ del
+              segundo término del enunciado: son **dos**, no uno.
+          - valor: '-2'
+            mensaje: |
+              El signo. De $s\,Y' = -2Y$ sale $Y'/Y = -2/s$, o sea
+              $\ln Y = -2\ln s$: el menos ya está en que $s$ va **debajo**.
+        pista: |
+          $\mathcal{L}\{t\,y'\} = -\frac{d}{ds}\bigl(sY-y(0)\bigr)$, y la
+          constante $y(0)$ desaparece al derivar.
+        desarrollo: |
+          $$
+          \mathcal{L}\{t\,y'\} = -\frac{d}{ds}\Bigl(sY - y(0)\Bigr)
+          = -\left(Y + sY'\right)
+          $$
+
+          Sustituyendo en la ecuación:
+
+          $$
+          -Y - sY' - Y = 0
+          \;\Longrightarrow\;
+          s\,Y' = -2Y
+          \;\Longrightarrow\;
+          \frac{Y'}{Y} = -\frac{2}{s}
+          \;\Longrightarrow\;
+          Y = \frac{K}{s^{2}}
+          $$
+
+          Y fíjate en algo que conviene tener visto antes del examen: **la
+          condición $y(0)$ se ha esfumado al derivar**, porque era una
+          constante. Así que la constante que queda no sale de ahí — tiene que
+          salir de otro dato.
+
+      - tipo: calcular
+        titulo: La solución
+        pregunta: |
+          Antitransformando y usando $y'(0)=2$, ¿cuánto vale $y(4)$?
+        respuesta:
+          tipo: numero
+          valor: '8'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Eso es la constante $K$, no $y(4)$. La antitransformada de
+              $K/s^{2}$ es $K\,t$, así que hay que evaluar en $t=4$.
+          - valor: '32'
+            mensaje: |
+              Has antitransformado $K/s^{2}$ como si diera $K\,t^{2}$. La
+              tabla dice que $1/s^{2}$ es $t$, y $t^{2}$ corresponde a
+              $2/s^{3}$.
+        pista: |
+          $\mathcal{L}^{-1}\{1/s^{2}\} = t$. Y si $y = Kt$, ¿cuánto vale
+          $y'(0)$?
+        desarrollo: |
+          $$
+          Y = \frac{K}{s^{2}} \;\Longrightarrow\; y = K\,t
+          $$
+
+          Como $y' = K$ para todo $t$, la condición $y'(0)=2$ da $K=2$, así que
+          $y = 2t$ y $y(4) = 8$.
+
+          **Y se comprueba en una línea**, que es lo que hay que hacer siempre
+          en este apartado: $t\,y' - y = t\cdot 2 - 2t = 0$. Cumple.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con una $t$ delante de la derivada los métodos del tema 9 no
+              arrancan, y Laplace sí, porque tiene una propiedad para eso.
+          - texto: >-
+              Esa propiedad convierte la ecuación algebraica en $Y$ en una
+              ecuación diferencial de primer orden en $Y(s)$, que es separable.
+          - texto: >-
+              Sale $Y = K/s^{2}$, o sea $y = Kt$, y la constante la fija
+              $y'(0)$ porque $y(0)$ se perdió al derivar.
+          - texto: >-
+              Y por eso este método necesita siempre **dos** condiciones
+              iniciales, igual que cualquier ecuación de segundo orden.
+            trampa: true
+            mensaje: |
+              Aquí la ecuación es de **primer** orden y ha bastado una
+              condición — y ni siquiera la habitual: $y(0)$ no sirve, porque
+              desaparece al derivar la transformada. Lo que decide cuántas
+              condiciones hacen falta es el orden de la ecuación, no el método;
+              lo que Laplace cambia es **cuál** de ellas acaba siendo útil.
+    resolucion: |
+      **a) La comprobación.** La propiedad dice
+      $\mathcal{L}\{t\,f\} = -F'(s)$, así que
+
+      $$
+      \mathcal{L}\{t\,e^{3t}\}
+      = -\frac{d}{ds}\left(\frac{1}{s-3}\right)
+      = \frac{1}{(s-3)^{2}}
+      $$
+
+      que es exactamente lo que trae la tabla. En $s=5$, $0{,}25$.
+
+      **b) La ecuación.** Transformando término a término, con la constante
+      $y(0)$ desapareciendo al derivar:
+
+      $$
+      -\left(Y + sY'\right) - Y = 0
+      \;\Longrightarrow\;
+      s\,Y' = -2Y
+      \;\Longrightarrow\;
+      Y = \frac{K}{s^{2}}
+      \;\Longrightarrow\;
+      y = K\,t
+      $$
+
+      Con $y'(0) = 2$ queda $y = 2t$, y $y(4) = 8$. Comprobación:
+      $t\,y' - y = 2t - 2t = 0$.
+
+      **Lo que hay que llevarse.** Tres cosas, y las tres reaparecen en el
+      ejercicio de examen de 2025-2026, que es el mismo método con una
+      ecuación de segundo orden:
+
+      1. **Multiplicar por $t$ deriva la transformada**, con un signo menos
+         que es el error más repetido del apartado.
+      2. **La ecuación en $Y$ deja de ser algebraica.** Sale una ecuación
+         diferencial de primer orden, y por suerte siempre separable en los
+         casos que caen: dos líneas.
+      3. **Las condiciones iniciales se comportan raro.** Al derivar, las
+         constantes $y(0)$ se van, así que la que fija $K$ suele ser la otra.
+         En el examen de 2025-2026 pasa lo mismo al revés: sobra una, y que
+         las dos se cumplan con una sola constante es la señal de que el
+         camino era bueno.
+
   - id: sistema-de-edos-con-laplace
     titulo: Un sistema de dos EDOs, resuelto con Laplace
     fuente: Ejercicio 10.10a · Problemas complementarios, tema 10 · Cálculo, UPV/EHU (2016/2017 7E)
