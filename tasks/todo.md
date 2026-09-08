@@ -77,6 +77,26 @@ veintidós. Cuando la ruta dice «el tercer ejercicio es siempre de transmisión
 de calor», ese «siempre» son seis de seis, no veintidós de veintidós. Ya está
 declarado en la propia ruta.
 
+## Y dos cosas que salieron al abrirlos, el 9 de septiembre de 2026
+
+**Las dieciséis que faltan por leer no son todas comparables, y diecisiete de
+las veintidós no se pueden leer con un guion.** De los 22 PDF, **solo cinco
+tienen capa de texto**; los otros diecisiete son escaneos. Y los más antiguos
+son de **otra asignatura**: el de enero de 2015 está en euskera, tiene
+**cuatro** ejercicios con pesos 1-2-3-4 en vez de tres a un tercio, y va de
+ciclo frigorífico con R-134a, psicrometría y Brayton — nada de eso está en los
+diez temas del temario actual. El de enero de 2026 sí encaja: politrópico,
+agua y transmisión de calor. Entre medias está el corte, y localizarlo exige
+abrirlos a mano porque el texto no sale solo.
+
+**La duración estaba delante todo el tiempo.** Estaba en la lista de «preguntas
+para Ionan» y la imprimen los propios enunciados: «3 h 30 min» en enero de
+2015, «3 ordu» en febrero de 2022 y «2.5 ordu» en enero de 2023. No es
+constante, y los tres últimos años no la imprimen. Ya está publicado en la
+ruta, con las tres cifras y su año. Los mismos enunciados confirman además el
+reparto que la ruta daba por bueno, con sus palabras: «cada ejercicio vale un
+tercio del examen completo».
+
 ## Y las diez figuras, que no estaban en el molde
 
 De los 88 svg de prosa del sitio, 78 iban envueltos en `<figure>` con su
