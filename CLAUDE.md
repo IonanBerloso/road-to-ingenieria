@@ -1424,10 +1424,19 @@ nivel de arriba, que es el que se entrega.
 
 ### Cuánto es «una asignatura», medido
 
-Cálculo es la referencia, y ya está cerrada entera. Once temas dan **21.545
-palabras de prosa, 193 ejercicios de tema, 88 convocatorias con 425 ejercicios,
-156 escalones en 7 rutas y 29 figuras.** Sirve para dimensionar, no como cuota:
-un tema que necesita ocho figuras lleva ocho.
+Cálculo es la referencia, y ya está cerrada entera. Once temas dan **21.657
+palabras de prosa, 197 ejercicios de tema, 88 convocatorias con 425 ejercicios,
+156 escalones en 62 bloques de 7 rutas y 30 figuras.** Sirve para dimensionar,
+no como cuota: un tema que necesita ocho figuras lleva ocho.
+
+> Recontado el **8 de septiembre de 2026**, al repasar Cálculo, y **tres de las
+> seis cifras habían envejecido**: 21.545 → 21.657 palabras, 193 → 197
+> ejercicios de tema, 29 → 30 figuras. Ninguna se había escrito mal; las tres
+> se quedaron atrás el día que se añadió contenido y nadie volvió a pasar
+> `mide.mjs`. Convocatorias, ejercicios de examen y escalones sí cuadraban.
+> Es el aviso de dos párrafos más abajo cumpliéndose otra vez, así que se
+> vuelve a decir aquí: **esta tabla se recuenta al cerrar una asignatura, no
+> se copia.**
 
 **La definición de «palabra» es la de `scripts/mide.mjs` y solo esa.** Este
 fichero decía 32.460 hasta el 29 de agosto de 2026 —el conteo crudo del MDX,

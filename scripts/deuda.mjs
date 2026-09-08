@@ -299,12 +299,31 @@ pinta('Afirmaciones de ausencia con número dentro, contadas contra el corpus');
 const PALABRA = {
   ningun: 0, ninguna: 0, cero: 0, un: 1, una: 1, uno: 1, dos: 2, tres: 3,
   cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
+  once: 11, doce: 12, trece: 13, catorce: 14, quince: 15, dieciseis: 16,
+  diecisiete: 17, dieciocho: 18, diecinueve: 19, veinte: 20, veintiun: 21,
+  veintiuno: 21, veintiuna: 21, veintidos: 22, veintitres: 23,
+  veinticuatro: 24, veinticinco: 25, veintiseis: 26, veintisiete: 27,
+  veintiocho: 28, veintinueve: 29, treinta: 30, cuarenta: 40, cincuenta: 50,
+  sesenta: 60, setenta: 70, ochenta: 80, noventa: 90, cien: 100, ciento: 100,
 };
+const sinTilde = (s) => s.toLowerCase().replace(/[áéíóú]/g, (c) => 'aeiou'['áéíóú'.indexOf(c)]);
+/* Admite «treinta y seis» y «veintiséis», no solo «seis». Sin esto el guardián
+   partía el compuesto, se quedaba con la unidad y acusaba de decir 6 a una
+   frase que decía 36 — un falso positivo el mismo día en que se escribió. */
 const aNumero = (s) => {
-  const t = s.toLowerCase().replace(/[áéíóú]/g, (c) => 'aeiou'['áéíóú'.indexOf(c)]);
+  const t = sinTilde(String(s)).trim();
   if (/^\d+$/.test(t)) return Number(t);
-  return PALABRA[t];
+  const m = /^(\w+)(?:\s+y\s+(\w+))?$/.exec(t);
+  if (!m) return undefined;
+  const decena = PALABRA[m[1]];
+  if (decena === undefined) return undefined;
+  if (m[2] === undefined) return decena;
+  const unidad = PALABRA[m[2]];
+  if (unidad === undefined || decena < 30 || decena % 10 !== 0 || unidad > 9) return undefined;
+  return decena + unidad;
 };
+/* Un numeral escrito: dígitos, o una palabra, o «treinta y seis». */
+const NUMERAL = '(\\d+|[a-záéíóúñ]+(?:\\s+y\\s+[a-záéíóúñ]+)?)';
 
 /* cuántos ejemplos propios y cuántas figuras tiene cada tema, de verdad */
 const REAL = {};
@@ -318,8 +337,33 @@ for (const asig of ASIGS) {
     const ejs = existsSync(fe) ? yaml.load(readFileSync(fe, 'utf8'))?.ejercicios ?? [] : [];
     REAL[`${asig}/${d.name}`] = {
       ejemplos: ejs.filter((e) => e.nivel === 'ejemplo').length,
+      /* Todos los del tema, no solo los de entrada. Lo pide una frase real:
+         «el tema 9 tiene siete ejercicios propios para diecisiete de examen»,
+         que el 8 de septiembre de 2026 no cuadraba ni con los diez que hay ni
+         con los cinco de entrada, y que este guardián no sabía mirar porque
+         solo entendía «ejemplos propios». */
+      propios: ejs.length,
       figuras: existsSync(fm) ? (readFileSync(fm, 'utf8').match(/<svg/g) ?? []).length : 0,
+      deExamen: 0,
     };
+  }
+}
+
+/* Y cuántos ejercicios de examen tiene cada tema, que es la otra mitad de esas
+   frases: «X propios para Y de examen». Sale del reparto por tema que cada
+   `examen.yaml` declara, que es el mismo dato con el que se dibujan las
+   páginas de convocatoria. */
+for (const asig of ASIGS) {
+  const raiz = join(CONT, asig, 'examenes');
+  if (!existsSync(raiz)) continue;
+  for (const d of readdirSync(raiz, { withFileTypes: true })) {
+    if (!d.isDirectory()) continue;
+    const fx = join(raiz, d.name, 'examen.yaml');
+    if (!existsSync(fx)) continue;
+    for (const e of yaml.load(readFileSync(fx, 'utf8'))?.ejercicios ?? []) {
+      const clave = `${asig}/${e.tema}`;
+      if (REAL[clave]) REAL[clave].deExamen++;
+    }
   }
 }
 const temaDe = (asig, n) =>
@@ -341,13 +385,62 @@ for (const f of readdirSync(join(CONT, 'preparar'))) {
         const clave = temaDe(ruta.asignatura, mTema[1]);
         if (clave) {
           const real = REAL[clave];
-          const mEj = /\*{0,2}(\w+) ejemplos? (?:de entrada )?propios?/i.exec(t);
+          const mEj = new RegExp(`\\*{0,2}${NUMERAL} ejemplos? (?:de entrada )?propios?`, 'i').exec(t);
           if (mEj) {
             const dice = aNumero(mEj[1]);
             if (dice !== undefined) {
               comprobada = true;
               if (dice !== real.ejemplos)
                 desfasadas.push(`${donde}: dice ${dice} ejemplos propios del tema ${mTema[1]}, hay ${real.ejemplos}`);
+            }
+          }
+          /* «X ejercicios propios». Ojo al orden: se mira DESPUÉS de los
+             ejemplos y solo si aquello no casó, porque «cinco ejemplos de
+             entrada propios» lleva dentro la palabra «propios» y no habla del
+             total. */
+          if (!comprobada) {
+            /* Con el verbo delante, y no a secas: «un ejercicio propio
+               necesitaría el anexo» no es un recuento, es una hipótesis, y sin
+               este ancla el guardián la acusaba de decir 1 donde hay 4. Lo que
+               se busca es la forma en que este proyecto escribe los recuentos:
+               «el tema N tiene X ejercicios propios». */
+            const mProp = new RegExp(
+              `(?:tiene|hay|lleva)\\s+\\*{0,2}${NUMERAL}\\*{0,2} ejercicios? propios?`,
+              'i',
+            ).exec(t);
+            if (mProp) {
+              const dice = aNumero(mProp[1]);
+              if (dice !== undefined) {
+                comprobada = true;
+                if (dice !== real.propios)
+                  desfasadas.push(
+                    `${donde}: dice ${dice} ejercicios propios del tema ${mTema[1]}, hay ${real.propios}`,
+                  );
+              }
+            }
+          }
+          /* «… para Y (ejercicios) de examen» */
+          /* «… para treinta y seis ejercicios de examen EN TODA LA ASIGNATURA».
+             La coletilla es obligatoria y va pegada, no en cualquier parte de
+             la frase: una nota puede contar los de una sola evaluación
+             —«diecisiete de examen» son los de la quinta— y este guion no sabe
+             repartir por convocatoria. Buscar «toda la asignatura» suelta en el
+             párrafo ya falló: una frase que daba las dos cifras, la de la
+             evaluación y la de la asignatura, quedó acusada de decir 17 donde
+             hay 36. Si la nota no se ata a un alcance, esto no la comprueba y
+             pasa al montón de releer a mano, que es lo honesto. */
+          const mEx = new RegExp(
+            `\\*{0,2}${NUMERAL}\\*{0,2} (?:ejercicios? )?de examen,? (?:en|de) toda la asignatura`,
+            'i',
+          ).exec(t);
+          if (mEx) {
+            const dice = aNumero(mEx[1]);
+            if (dice !== undefined) {
+              comprobada = true;
+              if (dice !== real.deExamen)
+                desfasadas.push(
+                  `${donde}: dice ${dice} de examen del tema ${mTema[1]} en toda la asignatura, hay ${real.deExamen}`,
+                );
             }
           }
           const mFig = /\*{0,2}(?:una sola|\w+) figuras?\*{0,2}/i.exec(t);

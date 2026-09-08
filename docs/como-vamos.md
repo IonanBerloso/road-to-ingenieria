@@ -820,7 +820,7 @@ y ha subido el corpus de 232 ejercicios a 365. Medido con
 | | |
 |---|---|
 | temas con prosa, figura y ejercicios | **23 de 23** — los 25 del temario oficial menos los dos que solo se explican en clase, declarados en el catálogo con su motivo |
-| palabras de prosa | **25.690** (Cálculo entera son 21.545) |
+| palabras de prosa | **25.690** (Cálculo entera son 21.657, recontadas el 8 de septiembre de 2026) |
 | figuras | **169** — 23 de prosa, una por tema, y 146 dentro de los ejercicios |
 | ejercicios | **365**, con 1.730 pasos |
 | de ellos, problemas de la colección | **224 de 236** · los capítulos 1, 7, 8 y 9 enteros; los 12 que faltan están declarados uno a uno en `tasks/todo.md` con el dato que le falta a cada uno |

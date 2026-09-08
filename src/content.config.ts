@@ -1123,10 +1123,20 @@ const preparar = defineCollection({
        *  Existe porque §15 pide «una ruta por evaluación» y Cálculo tiene
        *  **nueve** tipos de convocatoria y siete rutas. Las dos que faltaban
        *  son las recuperaciones, y escribirles ruta propia habría sido
-       *  duplicar: medido sobre el corpus, los 17 ejercicios de la
-       *  `recuperacion-cuarta` son **todos** de los temas 1 y 2 —la primera
-       *  evaluación entera— y los 14 de la `recuperacion-quinta` caen todos
-       *  dentro de los temas 1 a 4, que cubre la tercera.
+       *  duplicar: las dos son el mismo examen —«PRIMER CUATRIMESTRAL (sólo
+       *  para alumnos con el primer cuatrimestral suspendido)»— repartido en
+       *  dos fechas, y su alcance es el primer cuatrimestre entero, temas 1 a
+       *  5. La ruta de la tercera es la única que los cubre los cinco, así que
+       *  van las dos ahí. Sus 31 ejercicios —17 y 14— caen todos dentro de los
+       *  temas 1 a 4, dentro del alcance.
+       *
+       *  Y una advertencia, porque este comentario ya despistó una vez: **que
+       *  los 17 de la `recuperacion-cuarta` sean todos de los temas 1 y 2 no
+       *  la convierte en la primera evaluación.** Es una propiedad de esas
+       *  seis convocatorias, no del alcance del examen, y mandar por ahí a un
+       *  alumno a la ruta de la 1.ª le estrecharía el temario sin motivo. El
+       *  razonamiento largo está en la cabecera de `calculo-3ev.yaml`, donde
+       *  se tomó la decisión; esto de aquí lo resume y no debe contradecirlo.
        *
        *  Se declara aquí, en el dato, y no en un comentario, por dos motivos:
        *  para que la página del examen pueda enlazar a su ruta, y para que la
