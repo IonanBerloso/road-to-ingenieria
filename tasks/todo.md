@@ -44,6 +44,34 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Repaso de Química · 8 de septiembre de 2026
+
+**§15 se cumple**: diez temas con figura y ejemplo propio, seis convocatorias
+con su PDF, dos rutas, evaluación citando la guía docente. Los cuatro temas sin
+ejercicios de colección —3, 4, 6 y 10— son exactamente los que ya estaban
+declarados sin material.
+
+De las diecisiete frases con número, **dos falsas y una colocación mal**:
+
+- «el tema 5 no tiene transcritos los problemas 3, 5, 6 y 7 · van tres de
+  ocho». La nota se contradice sola: tres de ocho son **cinco** que faltan.
+  Transcritos están el 1, el 2 y el 4.
+- «los tres problemas del tema 1 son de reactivo limitante y de fórmula
+  empírica»: uno de los tres es **de disoluciones**.
+- Y la seria: el escalón del puente del mol decía «ahora son dos» y tenía
+  **uno**. El segundo estaba escrito y colgado del escalón siguiente, que va
+  de reactivo limitante — aunque su propia nota dice «el anterior cruza el
+  puente de gramos a gramos; este lo cruza también hacia moléculas». Devuelto
+  a su sitio. Con eso, los escalones de un solo ejercicio bajan de 10 a 9, y
+  los nueve que quedan son de Térmica, que sigue en obra.
+
+**Aguantó una que estuve a punto de borrar**: «la electrólisis y la corrosión
+están en el programa y en la prosa del tema, pero no han caído nunca». Mi
+primera búsqueda daba cero menciones en el tema 10 por un escape mal puesto;
+el tema tiene un apartado entero titulado así.
+
+---
+
 # Repaso de Cálculo · 8 de septiembre de 2026
 
 Cálculo estaba cerrada desde el 2 de septiembre y es la asignatura de
