@@ -109,7 +109,7 @@ tercio del examen completo».
 ## Las cuatro convocatorias abiertas a mano, y qué salió de cada una
 
 Los escaneos no los lee `pdftotext`, pero sí se pueden abrir página a página.
-**Quince de las diecisiete comparables** leídas el 9 de septiembre de 2026, mirando siempre el final primero:
+**Dieciséis de las diecisiete comparables** leídas el 9 de septiembre de 2026, mirando siempre el final primero:
 ninguna trae datos personales rellenados — la última hoja es la plantilla de
 examen en blanco.
 
@@ -126,6 +126,7 @@ examen en blanco.
 | **febrero 2021** | el examen más escueto: tres enunciados cortos, sin tablas ni figuras · «esfera de acero en agua» aquí es convección externa, y en feb 2020 era equilibrio adiabático: mismas palabras, física distinta |
 | **enero 2022** | **tercera aparición de los tubos concéntricos**, ahora con aire · encadenado como 2021, pero con la **salida de emergencia escrita**: «si no se ha resuelto el ejercicio 1, tómense estos datos aproximados» |
 | **enero 2025** | tercera aparición del molde «algo caliente en agua, adiabático, exergía destruida» · **resolver de dos maneras**: analíticamente Y por analogía eléctrica, 20 % cada una · el gas es **helio** |
+| **«febrero» 2023** | fechado **30 de enero de 2023**, igual que el de 2024: la segunda convocatoria no es en febrero, es a tres semanas de la primera · llenado de un depósito rígido desde otro, con la irreversibilidad principal razonada en porcentaje |
 | **enero 2026** | contrastados los nueve ejercicios que el sitio ya tenía de ella: **T₁ = 557,5 K, cₙ = 0,3107 y n = 1,705, los tres iguales** a la resolución oficial |
 
 Ese último contraste es el que más tranquiliza: la convocatoria de la que más
