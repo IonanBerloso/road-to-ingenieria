@@ -109,7 +109,7 @@ tercio del examen completo».
 ## Las cuatro convocatorias abiertas a mano, y qué salió de cada una
 
 Los escaneos no los lee `pdftotext`, pero sí se pueden abrir página a página.
-Cuatro leídas el 9 de septiembre de 2026, mirando siempre el final primero:
+**Catorce de las diecisiete comparables** leídas el 9 de septiembre de 2026, mirando siempre el final primero:
 ninguna trae datos personales rellenados — la última hoja es la plantilla de
 examen en blanco.
 
@@ -123,6 +123,8 @@ examen en blanco.
 | **enero 2020** | **un ejercicio repetido entero**: su separador mal aislado es idéntico, número a número, al del examen del 30 de enero de 2024 · suelo radiante en el de transmisión |
 | **febrero 2020** | **dos moldes que vuelven con otros números**: acero caliente en 20 litros de agua (también en feb 2025) y deducir los signos antes de calcular (también en ene 2019, allí gráficamente) · butano en vez de aire |
 | **enero 2021** | **segundo ejercicio repetido palabra por palabra**: sus tubos concéntricos son el ejercicio 3 del 30-ene-2024, con la misma tabla de datos · los tres ejercicios **encadenados**: el 2 usa el 1 y el 3 usa el 2 · 3,5 h |
+| **febrero 2021** | el examen más escueto: tres enunciados cortos, sin tablas ni figuras · «esfera de acero en agua» aquí es convección externa, y en feb 2020 era equilibrio adiabático: mismas palabras, física distinta |
+| **enero 2022** | **tercera aparición de los tubos concéntricos**, ahora con aire · encadenado como 2021, pero con la **salida de emergencia escrita**: «si no se ha resuelto el ejercicio 1, tómense estos datos aproximados» |
 | **enero 2026** | contrastados los nueve ejercicios que el sitio ya tenía de ella: **T₁ = 557,5 K, cₙ = 0,3107 y n = 1,705, los tres iguales** a la resolución oficial |
 
 Ese último contraste es el que más tranquiliza: la convocatoria de la que más
