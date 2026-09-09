@@ -121,6 +121,7 @@ examen en blanco.
 | **«febrero» 2024** | el fichero dice febrero y el examen está fechado **30 de enero de 2024** · 2,5 h, que rompe el patrón que yo había deducido · un cilindro-pistón que hay que rehacer en adiabático |
 | **enero 2019** | **el ejercicio de transmisión de calor es el PRIMERO**, no el tercero: falsifica el «siempre» de la cabecera de la ruta · un politrópico que hay que deducir gráficamente antes de calcular |
 | **enero 2020** | **un ejercicio repetido entero**: su separador mal aislado es idéntico, número a número, al del examen del 30 de enero de 2024 · suelo radiante en el de transmisión |
+| **febrero 2020** | **dos moldes que vuelven con otros números**: acero caliente en 20 litros de agua (también en feb 2025) y deducir los signos antes de calcular (también en ene 2019, allí gráficamente) · butano en vez de aire |
 | **enero 2026** | contrastados los nueve ejercicios que el sitio ya tenía de ella: **T₁ = 557,5 K, cₙ = 0,3107 y n = 1,705, los tres iguales** a la resolución oficial |
 
 Ese último contraste es el que más tranquiliza: la convocatoria de la que más
