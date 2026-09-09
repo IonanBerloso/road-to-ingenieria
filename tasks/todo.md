@@ -71,11 +71,20 @@ Lo que eso significa, ordenado:
    original**, así que sin esa decisión la asignatura no cierra por mucho
    contenido que se escriba.
 
-Y una deuda que **no** depende de esa decisión y es la primera a pagar: los
-recuentos de la ruta están medidos sobre **seis** convocatorias de las
-veintidós. Cuando la ruta dice «el tercer ejercicio es siempre de transmisión
-de calor», ese «siempre» son seis de seis, no veintidós de veintidós. Ya está
-declarado en la propia ruta.
+**Y la deuda que no dependía de esa decisión, pagada el 9 de septiembre de
+2026.** Los recuentos de los siete bloques estaban medidos sobre **seis**
+convocatorias y ahora lo están sobre **las diecisiete**, con el criterio de
+cada uno escrito en su fuente. Dos se movieron mucho:
+
+| bloque | antes | ahora |
+|---|---|---|
+| la exergía destruida | 6 de 6 | **15 de 17** — el que más cae de la ruta |
+| la entropía generada | 6 de 6 | **8 de 17** |
+
+La entropía baja porque se ha separado de «la variación de entropía», que
+aparece cuatro veces más y es otra cosa: una es una propiedad del sistema y la
+otra mide la irreversibilidad. Confundirlas es justo lo que separa un aprobado
+de un notable, así que el bloque cuenta solo lo que se pide con esas palabras.
 
 ## Y dos cosas que salieron al abrirlos, el 9 de septiembre de 2026
 
