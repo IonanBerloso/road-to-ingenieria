@@ -118,6 +118,7 @@ examen en blanco.
 | **enero 2024** | quinta duración (2.5 h) · su ejercicio 2 **no es de agua**: motor térmico moviendo un compresor |
 | **febrero 2025** | sexta duración (3 h) → la ordinaria y la extraordinaria duran distinto · ficha técnica de un generador comercial como enunciado · exergía destruida pedida **por dos caminos** |
 | **febrero 2026** | la más fácil de leer: compuesta a máquina · el de agua es el **primero** · exergía en dos de los tres ejercicios |
+| **«febrero» 2024** | el fichero dice febrero y el examen está fechado **30 de enero de 2024** · 2,5 h, que rompe el patrón que yo había deducido · un cilindro-pistón que hay que rehacer en adiabático |
 | **enero 2026** | contrastados los nueve ejercicios que el sitio ya tenía de ella: **T₁ = 557,5 K, cₙ = 0,3107 y n = 1,705, los tres iguales** a la resolución oficial |
 
 Ese último contraste es el que más tranquiliza: la convocatoria de la que más
