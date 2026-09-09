@@ -252,23 +252,35 @@ descuadres.forEach((d) => fila('', '· ' + d));
  *  Se busca en el ORIGEN a propósito. En el HTML un `>` suelto no se
  *  distingue de un «mayor que» de una fórmula: buscarlo ahí daba 197 falsos
  *  en `h > f` antes de mirar ninguno de verdad. */
+/*  Y no solo las citas: **cualquier construcción de markdown que necesite sus
+ *  saltos de línea** muere igual dentro de un `>-`. El 9 de septiembre de 2026
+ *  cayó una tabla en la ruta de Térmica —seis filas de duraciones— y se
+ *  publicó como un párrafo lleno de barras verticales. Misma trampa, otra
+ *  construcción, y por eso este guardián mira las dos. */
 const plegados = [];
 for (const f of readdirSync(join(CONT, 'preparar'))) {
   const lineas = readFileSync(join(CONT, 'preparar', f), 'utf8').split('\n');
   for (let i = 0; i < lineas.length; i++) {
     const m = /^(\s*)(?:-\s+)?(?:[\w-]+:\s+)?>-?\s*$/.exec(lineas[i]);
     if (!m) continue;
-    let bq = 0;
+    let bq = 0, tabla = 0;
     for (let j = i + 1; j < lineas.length; j++) {
       const l = lineas[j];
       if (l.trim() === '') continue;
       if (l.match(/^\s*/)[0].length <= m[1].length) break;
       if (/^\s*>/.test(l)) bq++;
+      /* fila de tabla: empieza y acaba en «|», o es el separador |---|---| */
+      if (/^\s*\|.*\|\s*$/.test(l)) tabla++;
     }
     if (bq > 1) plegados.push(`${f}:${i + 1} · ${bq} renglones de cita`);
+    if (tabla > 1) plegados.push(`${f}:${i + 1} · ${tabla} filas de tabla`);
   }
 }
-pinta('9 · Citas dentro de un escalar plegado, que publican sus «>»');
+pinta('9 · Markdown de varias líneas dentro de un escalar plegado');
+console.log(`   Un \`>-\` de YAML une las líneas con un espacio, así que una cita
+   pierde todos sus «>» menos el primero y una tabla se publica como un párrafo
+   lleno de barras. Las dos han pasado ya, y las dos se vieron mirando la
+   página: verify y los tests estaban en verde.`);
 fila('de', `${readdirSync(join(CONT, 'preparar')).length} rutas, ${plegados.length}`);
 plegados.forEach((d) => fila('', '· ' + d));
 

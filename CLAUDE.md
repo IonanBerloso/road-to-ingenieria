@@ -2185,6 +2185,15 @@ Cosas que ya han costado horas. No son opiniones.
   la fuente de siete ejercicios paró el despliegue el 30 de agosto de 2026:
   `verify` lo lista como «LaTeX que ha salido como texto». Subíndice en
   Unicode (A₁) o sin subíndice; la fórmula va en `enunciado`.
+- **Ninguna construcción de markdown que necesite sus saltos de línea
+  sobrevive dentro de un escalar plegado de YAML.** La regla general, con sus
+  dos casos vividos: una **cita** pierde todos sus `>` menos el primero, y una
+  **tabla** se publica como un párrafo lleno de barras verticales. La segunda
+  pasó el 9 de septiembre de 2026, con una tabla de seis duraciones en la ruta
+  de Térmica, **el mismo día en que se documentó la primera** — y se vio igual:
+  mirando la página, con `verify` y los 1.616 tests en verde. Si el campo
+  necesita saltos, o se escribe en prosa o el escalar pasa a literal (`|-`).
+  Lo cuenta la sección 9 de `deuda.mjs`, que mira las dos formas.
 - **Una cita de markdown dentro de un escalar plegado de YAML publica sus
   «>».** El `>-` de YAML une las líneas con un espacio, así que de un
   blockquote de cinco renglones markdown solo lee el primer `>` y **los otros
