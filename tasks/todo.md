@@ -106,6 +106,23 @@ la recomendación de contar con la más reciente: dos horas y media. Los mismos 
 reparto que la ruta daba por bueno, con sus palabras: «cada ejercicio vale un
 tercio del examen completo».
 
+## Las cuatro convocatorias abiertas a mano, y qué salió de cada una
+
+Los escaneos no los lee `pdftotext`, pero sí se pueden abrir página a página.
+Cuatro leídas el 9 de septiembre de 2026, mirando siempre el final primero:
+ninguna trae datos personales rellenados — la última hoja es la plantilla de
+examen en blanco.
+
+| convocatoria | qué aportó |
+|---|---|
+| **enero 2024** | quinta duración (2.5 h) · su ejercicio 2 **no es de agua**: motor térmico moviendo un compresor |
+| **febrero 2025** | sexta duración (3 h) → la ordinaria y la extraordinaria duran distinto · ficha técnica de un generador comercial como enunciado · exergía destruida pedida **por dos caminos** |
+| **febrero 2026** | la más fácil de leer: compuesta a máquina · el de agua es el **primero** · exergía en dos de los tres ejercicios |
+| **enero 2026** | contrastados los nueve ejercicios que el sitio ya tenía de ella: **T₁ = 557,5 K, cₙ = 0,3107 y n = 1,705, los tres iguales** a la resolución oficial |
+
+Ese último contraste es el que más tranquiliza: la convocatoria de la que más
+contenido se ha sacado está transcrita sin desviarse de la fuente.
+
 ## Y las diez figuras, que no estaban en el molde
 
 De los 88 svg de prosa del sitio, 78 iban envueltos en `<figure>` con su
