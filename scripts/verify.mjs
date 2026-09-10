@@ -816,6 +816,7 @@ if (SOLO_FUENTE) {
   const latexCrudo = [];
   const numeroRoto = [];
   const andamio = [];
+  const marcasCrudas = [];
   const svgComoTexto = [];
   const refsRotas = [];
   /* Anclas a OTRA página: se apuntan aquí y se resuelven al final, cuando ya
@@ -976,6 +977,36 @@ if (SOLO_FUENTE) {
       andamio.push(`${nombre} → «${m[1]}» en …${m[0].replace(/\s+/g, ' ').trim()}…`);
     }
 
+    /* Markdown que se ha publicado sin dibujar: `**así**` a la vista.
+     *
+     * Es el hermano del LaTeX crudo de arriba y tiene la misma causa: un campo
+     * de prosa pintado en un hueco que no pasa por `mate()`. Se añade el 10 de
+     * septiembre de 2026 y **a la tercera**, que es lo que §17 pide: la
+     * primera fue `invariante.fuente` en las rutas (8 de septiembre, seis
+     * marcas en tres asignaturas), la segunda las meta descriptions (9 de
+     * septiembre, cinco páginas), y la tercera el `lede` dentro del enlace del
+     * índice de exámenes — siete marcas visibles en Álgebra y en Cálculo, con
+     * las dos asignaturas cerradas y el suelo en verde. Las tres se
+     * encontraron mirando, ninguna con un guardián, y a la tercera el arreglo
+     * deja de ser una corrección más.
+     *
+     * Hay que quitar el `<style>` además del `<script>`: los comentarios de
+     * CSS y de JS llevan `**` con toda naturalidad —el primer barrido dio 401
+     * aciertos y los 401 eran eso—, y un comentario de código no es texto
+     * publicado. Medido tras quitarlos: 7, los 7 reales.
+     *
+     * Solo el énfasis fuerte, `**…**`, a propósito. Un asterisco suelto
+     * aparece en el sitio por motivos legítimos —una nota al pie, una
+     * multiplicación— y §11 dice que un guardián que acierta poco se aprende a
+     * ignorar. */
+    const sinEstilo = html
+      .replace(/<style[\s\S]*?<\/style>/g, '')
+      .replace(/<script[\s\S]*?<\/script>/g, '')
+      .replace(/<[^>]+>/g, ' ');
+    for (const m of sinEstilo.matchAll(/.{0,45}\*\*[^*]{2,80}\*\*.{0,45}/g)) {
+      marcasCrudas.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
+    }
+
     /* una figura que se ha publicado partida.
        Añadida el 25 de agosto de 2026, y es la que más ha rendido de todo el
        fichero. Una figura incrustada en un `ejercicios.yaml` es HTML crudo
@@ -1107,6 +1138,7 @@ if (SOLO_FUENTE) {
   grupo(latexCrudo, 'cero fórmulas sin dibujar en el texto publicado', 'LaTeX que ha salido como texto');
   grupo(numeroRoto, 'cero números rotos en el texto publicado', 'NaN, undefined o Infinity a la vista');
   grupo(andamio, 'cero jerga interna en el texto publicado', 'secciones, rutas o ficheros del repositorio a la vista');
+  grupo(marcasCrudas, 'cero markdown sin dibujar en el texto publicado', 'asteriscos de negrita a la vista: el campo no pasa por mate()');
   grupo(
     refsRotas,
     'toda referencia interna (#id, url(#id)) apunta a algo que existe',

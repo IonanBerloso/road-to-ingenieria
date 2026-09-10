@@ -74,6 +74,36 @@ export async function mate(texto, prefijo) {
 }
 
 /**
+ * Quita las marcas de énfasis y de código de un texto que **no** puede pasar
+ * por `mate()`.
+ *
+ * Hay sitios donde la prosa se pinta en un hueco que no admite bloques: un
+ * atributo `meta`, o el resumen dentro de un `<a>`. Ahí `mate()` no sirve
+ * —devolvería un `<p>` metido en un enlace— y la salida cruda tampoco: se
+ * publica el `**así**` a la vista, que es §17 («un campo que se pinta sin
+ * pasar por `mate()` publica los asteriscos»).
+ *
+ * Vive aquí, y no dentro de cada plantilla, por la Regla 0. Estaba duplicado:
+ * `Base.astro` lo tenía en línea desde el 9 de septiembre de 2026 para las
+ * meta descriptions, y el índice de exámenes no lo tenía en absoluto —así que
+ * publicaba **siete** marcas visibles en los ledes de las rutas de Álgebra y
+ * de Cálculo, encontradas el 10 de septiembre de 2026 mirando el HTML
+ * publicado y no con un guardián.
+ *
+ * Solo énfasis y código en línea: nada que recorte el texto ni cambie su
+ * sentido, que en un resumen de una línea importa.
+ *
+ * @param {string | undefined} texto
+ * @returns {string} el mismo texto, sin `**`, sin `*`/`_` y sin acentos graves
+ */
+export function sinMarcas(texto) {
+  return String(texto ?? '')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/(?<!\w)[*_]([^*_]+)[*_](?!\w)/g, '$1')
+    .replace(/`([^`]+)`/g, '$1');
+}
+
+/**
  * Quita las líneas en blanco de dentro de un `<svg>`.
  *
  * En Markdown, **una línea en blanco cierra un bloque de HTML crudo**. Un SVG

@@ -1409,13 +1409,20 @@ producir más.
 El encargo lo daba por bloqueado «hasta tener material». El material **está en
 la carpeta**: `Guion_de_prácticas.pdf` detalla **27 prácticas, cada una con su
 tema**, y la guía de la asignatura las agrupa en su apartado 5 en **cinco
-sesiones, quince horas por alumno, veintitrés prácticas**.
+sesiones, quince horas por alumno**, de las que cada grupo hace «tres por
+sesión, más o menos» — unas quince de las veintisiete.
 
 Declarado en `preparar/fluidos-ord.yaml` con las cinco sesiones nombradas y su
 fuente. Y con el hallazgo que de verdad importa: **la teoría de las
-veintitrés está escrita**, porque sus temas —2, 4, 7, 8, 13, 18, 19, 23 y
-24— son los que esa ruta ya prepara. Lo que falta es solo lo que vive en el
-cuaderno de quien las hizo: qué se midió, con qué aparato y qué salió.
+veintisiete está escrita**, porque sus temas —2, 4, 7, 8, 13, 14, 15, 18, 19,
+23, 24 y 25— son los que esa ruta ya prepara. Lo que falta es solo lo que vive
+en el cuaderno de quien las hizo: qué se midió, con qué aparato y qué salió.
+
+> Este apartado decía **veintitrés** prácticas y listaba nueve temas, hasta el
+> 8 de septiembre de 2026: son veintisiete y doce temas, contados uno a uno
+> sobre el índice del guion. Aquí se corrigió el 10, dos días después que la
+> ruta — que es la distancia habitual entre arreglar el dato publicado y
+> arreglar el sitio donde se anotó.
 
 > ⚠️ **`Grupos_Laboratorio_16A_2025-26.pdf` son nombres completos de alumnos
 > reales.** Mismo trato que `PRIMER_CONTROL._NOTAS.pdf` y
@@ -2656,7 +2663,14 @@ requerido.
 
 ### Fase 9, cerrada
 
-**Las dieciséis convocatorias**, con 107 ejercicios.
+**Las dieciséis convocatorias**, con **108** ejercicios.
+
+> Decía 107 hasta el 10 de septiembre de 2026, y la diferencia tiene nombre:
+> el **ejercicio 9 de la ordinaria de 2026**, el test de ocho huecos que
+> estuvo en `fuera` con el motivo «sin ningún cálculo» hasta que §17 obligó a
+> releer los `fuera` de formato y resultó que el propio enunciado traía una
+> cuenta —cada fallo resta lo que suma un acierto—. Se recuperó y nadie
+> volvió a sumar.
 
 > **Y una cifra corregida al cerrarla.** Este fichero decía «17
 > convocatorias · 11 finales y 6 parciales» y estaba mal: el cuadernillo de
@@ -2670,7 +2684,7 @@ requerido.
 
 | convocatoria | fuera | motivo |
 |---|---|---|
-| 2026 ord. | ej. 4 y 9 | tres lecturas dan 5,87 / 5,79 / 5,37 frente a 5,67; el 9 es un test de huecos sin cálculo |
+| 2026 ord. | ej. 4 | tres lecturas dan 5,87 / 5,79 / 5,37 frente a 5,67 |
 | 2025 ord. | ej. 1 y 9 | figura sin acotar el apoyo B; anexo de curvas |
 | 2025 ext. | ej. 3 | 12,03 mca frente a 10,43 publicados |
 | 2024 ext. | ej. 8 | 8,80 kPa con Re = 2000 y 25,7 con 2300, frente a 11,75 |
@@ -2682,18 +2696,33 @@ requerido.
 | 2020 2.º parc. | ej. 4 y 5 | cuadro de pérdidas menores y tabla de tuberías |
 | 2021 3.º parc. | ej. 6 | familia de curvas del anexo |
 
-**Catorce ejercicios enteros de ciento veintiuno**, más cuatro apartados
+**Trece ejercicios enteros de ciento veintiuno**, más cuatro apartados
 sueltos —el 9e de 2023 ord., el 3b de 2023 ext. y los 4c de 2021 y 2020 ord.—,
-**todos declarados con su número**. Nueve se caen porque falta una figura, una
-tabla o un anexo de curvas; cinco porque el resultado no reconstruye, y eso se
-dice en voz alta en la propia resolución en vez de maquillarlo.
+**todos declarados con su número**. Recontados uno a uno el 10 de septiembre
+de 2026 sobre los `fuera` del corpus, que es lo único que se puede volver a
+contar: **nueve** se caen porque falta una figura, una tabla o un anexo de
+curvas; **tres** porque el número publicado no se reproduce —el 8 de 2024
+ext., el 3 de 2025 ext. y el 4 de 2026 ord.—; y **uno**, el 7 de 2021 ord.,
+porque es teoría y dibujo cualitativo sin nada que teclear. Los cuatro
+apartados sueltos son todos de la segunda clase. Y se dice en voz alta en la
+propia resolución en vez de maquillarlo.
 
-**Cinco ejercicios grandes que se han quedado fuera por figura**: el
+> Decía «catorce … nueve … cinco» hasta ese día. Los dos errores vienen del
+> mismo sitio y conviene verlos juntos: el catorce no se restó al recuperar
+> el ejercicio 9 de 2026, y el cinco contaba los cuatro apartados sueltos
+> dentro de una frase que empezaba diciendo «ejercicios enteros». **Dos
+> recuentos en la misma línea con dos definiciones distintas de qué se
+> cuenta** — que es la forma de descuadre que §15 ya persigue en las
+> palabras de `mide.mjs`.
+
+**Cinco cosas grandes que se han quedado fuera porque el dibujo no da lo que
+hace falta**, y no son cinco ejercicios: **tres son ejercicios enteros** —el
 elevador de taller de junio de 2021, el embrague multidisco y los depósitos
-anidados de junio de 2020, el apartado b) del bloque de anclaje de junio de
-2023 y el codo convergente de junio de 2021. Podrían recuperarse
-renderizando sus páginas a más resolución y midiendo las cotas sobre el
-dibujo. No es imposible; es que cuesta más que un ejercicio nuevo.
+anidados de junio de 2020— y **dos son apartados sueltos** —el b) del bloque
+de anclaje de junio de 2023 y el c) del codo convergente de junio de 2021—,
+que además se caen por partida doble: su número tampoco reconstruye. Podrían
+recuperarse renderizando sus páginas a más resolución y midiendo las cotas
+sobre el dibujo. No es imposible; es que cuesta más que un ejercicio nuevo.
 
 ### La ordinaria de junio de 2021, seis de ocho
 

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
+import { sinMarcas } from '../../../lib/markdown.mjs';
 import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV } from '../../../content.config';
 
 /**
@@ -52,7 +53,11 @@ export async function getStaticPaths() {
       )
       .map((r) => ({
         titulo: r.data.titulo,
-        lede: r.data.lede,
+        /* El lede es markdown y aquí se pinta dentro de un <a>, donde `mate()`
+           no cabe: devolvería un <p> metido en un enlace. Sin limpiar, se
+           publicaban siete `**` a la vista en los índices de Álgebra y de
+           Cálculo (§17). */
+        lede: sinMarcas(r.data.lede),
         sufijo: SUFIJO_CONV[r.data.evaluacion],
       }));
 

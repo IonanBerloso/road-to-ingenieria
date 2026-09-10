@@ -32,7 +32,10 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
 > la trae; Fluidos tiene trece ejercicios de examen declarados `fuera` y sus
-> veintitrés prácticas de laboratorio sin material; y de las 1.241 respuestas
+> **veintisiete** prácticas de laboratorio sin material —decía «veintitrés»
+> hasta el 10 de septiembre de 2026, que es el número de la guía y no el que
+> numera el índice del guion; la ruta se corrigió el 8 y este fichero se
+> quedó atrás dos días—; y de las 1.241 respuestas
 > de examen comparables hay **una** que se deja sin verificar a propósito.
 >
 > **Y el 7 de septiembre de 2026 se abrió la quinta, Ingeniería Térmica**, que
@@ -355,9 +358,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.351 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.682 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.319 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.354 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.691 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.322 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -422,6 +425,15 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > forma de crecer que menos se nota en la cifra y más cambia el producto:
 > **ningún ejercicio nuevo de examen, y nueve entradas nuevas al corpus que ya
 > estaba.**
+>
+> Y el **10 de septiembre de 2026**, **1.322 ejercicios y 5.403 pasos**. Los
+> tres nuevos son de Ingeniería Térmica —entre ellos el de las dos masas de
+> agua que se mezclan, que cierra el escalón de exergía destruida por los dos
+> caminos— y el ejercicio 9 de la ordinaria de Fluidos de 2026, que **no es
+> nuevo**: estaba en `fuera` y se recuperó al releer los `fuera` de formato
+> (§17). Conviene que esa distinción quede escrita, porque la cifra no la
+> hace: **un corpus puede crecer recuperando lo que ya había transcrito**, y
+> eso es más barato que cualquier otra forma de crecer.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -610,9 +622,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.319 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.322 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.319 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.322 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -926,8 +938,20 @@ de arriba: un enunciado no ordena decimales a secas, y la prosa no da por
 hecho que haya una máquina delante.
 
 Queda pendiente confirmarlo asignatura por asignatura con el alumno. Lo
-seguro, con fuente, es Cálculo (no) e Ingeniería Térmica (sí, con anexo de
-tablas).
+seguro, con fuente, es Cálculo (no), Ingeniería Térmica (sí, con anexo de
+tablas) y **Mecánica de Fluidos (sí)**, esta última desde el 10 de septiembre
+de 2026: su guía la pide en el apartado 9.1 entre los conocimientos previos
+necesarios —«habilidad y agilidad en el uso de la calculadora»—, así que deja
+de ser una inferencia del tipo de ejercicios y pasa a tener fuente. Lo que
+sigue sin respuesta escrita en las tres es si se admite **programable**.
+
+> Y de paso, la regla general que ninguna de las tres decía: la nota de la
+> UPV/EHU sobre evaluación de pruebas académicas invierte el supuesto. «Salvo
+> indicación expresa, se consideran prohibidos libros, notas o apuntes, así
+> como dispositivos telefónicos, electrónicos, informáticos o de cualquier
+> otro tipo.» El anexo de tablas de Térmica y el de cuadros y ábacos de
+> Fluidos no son una concesión: son **la indicación expresa**, y por eso van
+> impresos con el examen.
 
 ---
 
@@ -2239,6 +2263,26 @@ Cosas que ya han costado horas. No son opiniones.
   las seis marcas que había en tres asignaturas. **Antes de escribir markdown
   en un campo nuevo, mira en la plantilla si ese campo pasa por `mate()`**; y
   si escribes uno nuevo que es prosa, hazlo pasar.
+
+  **Y pasó tres veces en tres días, así que a la tercera dejó de ser una
+  corrección y pasó a ser un guardián.** El 9 fueron las meta descriptions
+  —cinco páginas publicando `content="…y **son dos parciales el mismo
+  día**…"` en el buscador y al compartir el enlace—; el 10, el `lede` del
+  índice de exámenes, **siete marcas a la vista** en Álgebra y en Cálculo con
+  las dos asignaturas cerradas y el suelo en verde. Las tres se encontraron
+  mirando el HTML publicado, ninguna con un guardián.
+
+  De ahí salen dos cosas. Una, que **hay huecos donde `mate()` no cabe**: un
+  atributo, o un resumen dentro de un `<a>` —devolvería un `<p>` metido en un
+  enlace—. Para esos está `sinMarcas()` en `lib/markdown.mjs`, que quita el
+  énfasis y el código en línea y nada más; estaba escrito en línea dentro de
+  `Base.astro` y se extrajo el 10 de septiembre porque el segundo sitio que lo
+  necesitaba no lo tenía, que es la Regla 0 exacta. Y dos, el guardián: la
+  regla **«cero markdown sin dibujar en el texto publicado»** de `verify.mjs`,
+  hermana de la del LaTeX crudo. Solo mira `**…**`, a propósito —un asterisco
+  suelto es legítimo—, y quita el `<style>` además del `<script>`: el primer
+  barrido dio **401 aciertos y los 401 eran comentarios de CSS y de JS**.
+  Validada al revés quitando el arreglo: siete rojos, los siete reales.
 
 ---
 

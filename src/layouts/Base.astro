@@ -26,6 +26,7 @@ import '@fontsource/ibm-plex-mono/500.css';
 import 'katex/dist/katex.min.css';
 
 import { ruta } from '../lib/rutas';
+import { sinMarcas } from '../lib/markdown.mjs';
 
 interface Props {
   titulo: string;
@@ -45,12 +46,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
    día**…"` en su meta description y en su og:description, que es lo que se ve
    en un buscador y al compartir el enlace. Se limpia aquí y no en las seis
    llamadas, porque el sitio de un atributo es el sitio donde se pinta (§01).
-   Solo énfasis y código en línea: nada que recorte el texto ni cambie su
-   sentido, que en un resumen de 160 caracteres importa. */
-const meta = descripcion
-  .replace(/\*\*([^*]+)\*\*/g, '$1')
-  .replace(/(?<!\w)[*_]([^*_]+)[*_](?!\w)/g, '$1')
-  .replace(/`([^`]+)`/g, '$1');
+   La limpieza en sí vive en `lib/markdown.mjs` desde el 10 de septiembre de
+   2026: estaba escrita aquí en línea y el índice de exámenes la necesitaba
+   igual y no la tenía. */
+const meta = sinMarcas(descripcion);
 
 const estilo = [
   acento ? `--acento: var(${acento})` : '--acento: var(--live)',
