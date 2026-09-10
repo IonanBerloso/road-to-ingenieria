@@ -19,21 +19,28 @@ en obra**. Quedan cuatro en `prev`.
 **Y lo que sigue abierto, que es lo que hace honesto lo de arriba.** Casi todo
 depende de material o de una respuesta tuya, no de trabajo:
 
-- **Térmica · seis ficheros de ejercicios con contraseña.** Encontrado el 10 de
-  septiembre de 2026 supervisando la carpeta entera con `pdfinfo`, que devuelve
-  «Incorrect password» en seis: `Ejercicios_Tema_3_-_GASES`,
-  `Ejercicios_Tema_3_AGUA`, `Ejercicios_Tema_6_y_Tema_7`, `Ejercicio_Exergía`,
-  `Ejercicio_conducción_cilíndricas` y `Ejercicio_conducción_pared_plana`. Son
-  justo los temas donde la asignatura va más corta de ejercicios. **Es un
-  bloqueo distinto del de los exámenes y se levanta con una contraseña**, no
-  con una decisión: si la tienes, seis ficheros de boletín entran de golpe.
+- **~~Térmica · seis ficheros de ejercicios con contraseña.~~ · cerrado el 10
+  de septiembre de 2026, y no como hueco.** `pdfinfo` devuelve «Incorrect
+  password» en seis ficheros —los ejercicios de los temas 3, 6 y 7, el de
+  exergía y los dos de conducción—. **Ionan no tiene la contraseña, y la
+  Escuela va a quitarlos este curso; puede que los sustituya por otros
+  distintos.** Así que no es un bloqueo que se pueda levantar esperando: por
+  ahora se cuentan como material que **no tenemos**, ni como hueco pendiente
+  ni como algo por venir. Si aparecen los de recambio, se supervisan como
+  cualquier fichero nuevo y entonces se decide.
 
-  > Este bloqueo **no existía en la lista** hasta hoy, y llevaba ahí desde que
-  > se abrió la asignatura. No lo encontró ningún guardián porque ninguno mira
-  > la carpeta de material: se encontró supervisando los 44 PDF uno a uno, que
-  > es la regla de §17 sobre cerrar un inventario listando el directorio
-  > entero en vez de buscar por extensión — aplicada esta vez no a *qué hay*
-  > sino a *qué se puede leer*.
+  > Y conviene decir por qué eso **no cuesta nada**, que era la pregunta de
+  > verdad: los cuatro escalones que siguen con un solo ejercicio están todos
+  > cubiertos por ficheros que sí se leen —la colección de los temas 2 y 4
+  > para la entalpía, los dos de tema 3 (`AGUA_II` y `AIRE_II`) para decidir
+  > la zona y el título, y `Conducción_-_2_ejercicios` para el circuito de
+  > resistencias—. Ninguno dependía de los seis cerrados.
+  >
+  > Cómo apareció, que es lo aprovechable: supervisando los 44 PDF uno a uno y
+  > comprobando **cuáles se dejan leer**, no buscando por extensión. Es la
+  > regla de §17 sobre cerrar un inventario listando el directorio entero,
+  > aplicada no a *qué hay* sino a *qué se puede abrir*. Un fichero que no se
+  > abre pesa lo mismo en un listado que uno que sí.
 
 - **Fluidos · la pregunta del examen que queda**: cuánto dura. Buscada el 10
   de septiembre de 2026 en los tres únicos sitios donde podía estar —los
