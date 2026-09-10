@@ -374,9 +374,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.354 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.691 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.322 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.363 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.714 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.331 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -450,6 +450,16 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > (§17). Conviene que esa distinción quede escrita, porque la cifra no la
 > hace: **un corpus puede crecer recuperando lo que ya había transcrito**, y
 > eso es más barato que cualquier otra forma de crecer.
+>
+> Y esa misma tarde, **1.331 ejercicios y 5.444 pasos**, con la decisión de
+> Ionan de publicar los PDF de Térmica. Los nueve son de esa asignatura y de
+> tres orígenes distintos, que conviene distinguir porque cuestan cosas muy
+> diferentes: **tres de su colección** —los temas 2 y 4, la hoja de conducción
+> y el boletín de tema 3—, que no dependían de ninguna decisión y llevaban
+> ahí desde el principio; **dos ejemplos nuestros** para los escalones de
+> exergía; y **cuatro de examen**, las primeras convocatorias transcritas de
+> la asignatura. La forma más barata de las tres fue la primera, y era la que
+> nadie había mirado.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -638,9 +648,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.322 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.331 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.322 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.331 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
