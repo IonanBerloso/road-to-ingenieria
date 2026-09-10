@@ -178,6 +178,70 @@ recuento por asignatura que llevaba toda la mañana diciendo que no podía dar.
 
 ---
 
+## Fase 5 · Cerrar Térmica, que es lo único que bloquea el resto
+
+**Escrita al final del 10 de septiembre de 2026, con las fases 0, 2, 3 y 4
+cerradas y la 1 a medias.** No es una fase nueva: es la 1 partida en dos, porque
+al hacerla se vio que sus dos mitades cuestan cosas muy distintas.
+
+Va primero **porque bloquea**: §00 prohíbe abrir una sexta asignatura mientras
+Térmica esté en `obra`, y quedan cuatro sin abrir con septiembre de 2027
+encima. Nada de lo demás está bloqueado por nada.
+
+### 5A · Los cinco ejercicios de las tres convocatorias a medias
+
+Lo más barato que queda, y con diferencia: **los cinco enunciados ya están
+leídos** y descritos uno a uno en su `fuera`. No hay que descifrar ningún
+manuscrito nuevo; hay que escribirlos.
+
+| convocatoria | faltan | qué son |
+|---|---|---|
+| enero de 2018 | 2 de 3 | una cámara de mezcla · dos gases con un pistón interno |
+| febrero de 2022 | 2 de 3 | mezcla adiabática de dos corrientes · tubería con aislante |
+| enero de 2025 | 1 de 3 | el molde del agua caliente vertida sobre agua fría |
+
+El de enero de 2025 es el que más rinde: es **el molde que más se repite de
+toda la asignatura** y vuelve a salir en febrero de 2020 y febrero de 2025. El
+de los dos gases separados por un pistón móvil es el único así en el corpus, y
+el de febrero de 2022 cierra por una entropía en vez de por una temperatura.
+
+**Comprobación**: las tres convocatorias pasan a decir «3 de 3» y desaparecen
+sus bloques `fuera`.
+
+### 5B · Las catorce que faltan por montar
+
+Aquí está el trabajo de verdad, y conviene no engañarse con el ritmo de hoy:
+de las seis montadas, **tres fueron montar ejercicios ya escritos** y solo dos
+se transcribieron enteras desde cero. Las catorce que quedan son todas desde
+cero.
+
+Y sobre todo: **solo tres tienen capa de texto aprovechable**. Las once
+restantes son escaneos manuscritos que hay que abrir página a página. Junio de
+2017 parecía tenerla y la tiene **corrupta** —el volcado sale como ruido—, así
+que cuenta como escaneo.
+
+Orden por rendimiento, no por fecha:
+
+1. Las tres legibles primero, para hacer camino.
+2. **Enero de 2024**, porque dos de sus tres ejercicios se repiten literalmente
+   en 2020 y 2021 — transcribirlo cubre tres convocatorias de una vez. *(Esto
+   viene de la lectura del 9 de septiembre y conviene volver a comprobarlo
+   antes de apoyarse en ello.)*
+3. El resto, de más reciente a más antigua.
+
+**Y dos que no se van a poder**, declaradas: las de 2014-2015 son un folio cada
+una y solo en euskera. §00 dice que el sitio es solo en castellano y §08
+prohíbe reescribir un enunciado.
+
+> **Ojo con dar por hecho el idioma mirando una página.** El 10 de septiembre
+> se publicó que enero de 2025 «sale solo en euskera» tras mirar su primera
+> página, y era falso: el castellano está en la segunda. Costó dejar fuera de
+> alcance un ejercicio perfectamente transcribible durante unas horas. Antes de
+> declarar que una convocatoria no se puede transcribir, **se mira el documento
+> entero**, no su portada.
+
+---
+
 ## Lo que NO se va a hacer mañana, y por qué
 
 - **Abrir una sexta asignatura.** §00 lo prohíbe mientras haya una en `obra`, y
