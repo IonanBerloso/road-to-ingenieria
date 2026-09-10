@@ -29,7 +29,8 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > una, y no se abre la siguiente hasta cerrarla.
 >
 > **Al 10 de septiembre de 2026**, con Térmica dentro: **61 temas**, las mismas
-> 118 convocatorias, **trece rutas** con 110 bloques y 295 escalones, y
+> **119** convocatorias —la 119.ª es la primera de Térmica, montada esa
+> tarde—, **trece rutas** con 110 bloques y 295 escalones, y
 > **1.322 ejercicios**. Las cifras de esta nota son un corte con fecha, no un
 > estado: se añade una línea nueva y no se reescribe la anterior, para que se
 > vea qué cambia y a qué velocidad.
@@ -1986,6 +1987,18 @@ Cosas que ya han costado horas. No son opiniones.
   build falla con «duplicated mapping key» y la línea exacta—, pero se tarda
   menos en evitarlo: **para insertar antes de un elemento, ancla la sustitución
   en el elemento anterior completo, con su `nota`, no en la línea del `- id:`.**
+- **El prefijo `ex` de un id de examen no es una costumbre: está escrito dentro
+  de un guardián.** La regla de convocatorias huérfanas de `verify.mjs` busca
+  los ids con `/id:\s*(ex[a-z0-9-]+)/`, así que un ejercicio de examen cuyo id
+  no empiece por `ex` **no existe para ella**. Salió el 10 de septiembre de
+  2026 al montar la primera convocatoria de Térmica: sus siete ejercicios
+  llevaban el prefijo de tema, `ejter-`, porque hasta ese día colgaban de su
+  tema y no de una convocatoria, y el guardián dio «sus **0** ejercicios no los
+  enlaza ninguna ruta» sobre una convocatoria cuyos siete estaban enlazados.
+  Renombrados a `exter2526-ord-<n>-…`, que es la forma de las otras 118. **La
+  lección no es el prefijo: es que una convención que un guardián da por
+  supuesta hay que escribirla donde se lea**, porque el día que se rompe el
+  mensaje de error habla de otra cosa.
 - **Un id de ejercicio inventado suena igual que uno real.** Los ids llevan el
   curso, la convocatoria y el número, así que `ex2021-ext-3-el-polinomio-de-taylor`
   parece correcto y el real era `ex2021-ext-3-el-mclaurin-de-una-integral-sin-primitiva`.

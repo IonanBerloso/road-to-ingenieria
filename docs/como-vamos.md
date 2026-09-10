@@ -18,7 +18,8 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 **Cuatro asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos
 y Fundamentos Químicos.** Las cuatro cumplen §15 entera y las cuatro están en el
-catálogo como `ok`. Entre las cuatro, **118 convocatorias transcritas de 118**,
+catálogo como `ok`. Entre las cuatro, **118 convocatorias transcritas de 118**
+—y una 119.ª en Térmica desde el 10 de septiembre de 2026—,
 y el guardián de convocatorias huérfanas no cuenta ninguna suelta.
 
 **Y una quinta abierta, Ingeniería Térmica, en `obra`.** Sus diez temas están

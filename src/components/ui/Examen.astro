@@ -37,6 +37,13 @@ export interface EjercicioDeExamen {
   /** Título del tema al que pertenece, ya resuelto por la página. */
   tema: string;
   puntos?: Puntos;
+  /**
+   * El número que tiene **en el cuadernillo**, cuando varias piezas guiadas
+   * salen del mismo ejercicio. Solo lo usa Térmica, cuyos exámenes traen tres
+   * ejercicios de cinco apartados cada uno; en las demás asignaturas cada
+   * pieza es un ejercicio y este campo no viene.
+   */
+  n?: number;
 }
 
 interface Props {
@@ -60,7 +67,18 @@ interface Props {
 }
 
 const { eyebrow, titulo, fecha, pdfs, ruta, ejercicios, fuera } = Astro.props;
-const deCuantos = ejercicios.length + fuera.length;
+/* Cuántos ejercicios trae el cuadernillo y cuántas resoluciones ofrece el
+   sitio no siempre coinciden: en Térmica un ejercicio tiene cinco apartados
+   que cruzan tres temas y se parte en varias piezas guiadas. Cuando las
+   entradas declaran su `n` manda ese número; si no, las dos cifras son la
+   misma y esto se comporta como en las 118 convocatorias anteriores. */
+const numeros = new Set(
+  ejercicios.map((e) => e.n).filter((n): n is number => n != null),
+);
+const propios =
+  numeros.size > 0 && numeros.size < ejercicios.length ? numeros.size : ejercicios.length;
+const piezas = ejercicios.length;
+const deCuantos = propios + fuera.length;
 
 const total = ejercicios.reduce(
   (s, e) => s + (e.puntos ? e.puntos.comp1 + e.puntos.comp2 + e.puntos.comp4 : 0),
@@ -115,7 +133,7 @@ const fueraHtml = await Promise.all(
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
           no lo hay, no se dice nada en vez de decir un número inventado
           (§10). */}
-      {fecha} · {fuera.length > 0 ? `${ejercicios.length} de los ${deCuantos} ejercicios` : `${ejercicios.length} ejercicios`}{total > 0 ? ` · ${total} puntos` : ''}
+      {fecha} · {fuera.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : ''}
     </p>
 
     <nav class="pestanas" aria-label="Vistas del examen">

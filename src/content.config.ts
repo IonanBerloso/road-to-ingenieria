@@ -861,6 +861,29 @@ const examen = defineCollection({
             id: z.string().regex(/^[a-z0-9-]+$/),
             /** El tema del temario al que pertenece, para poder decirlo. */
             tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
+            /**
+             * El número que ese ejercicio tiene **en el cuadernillo**, cuando
+             * varias entradas de aquí salen del mismo.
+             *
+             * POR QUÉ EXISTE. Un examen de Ingeniería Térmica trae **tres**
+             * ejercicios, y cada uno cinco apartados que cruzan tres temas
+             * distintos: el 1 de enero de 2026 va de politrópicos (a), de
+             * entropía generada (b y c) y de exergía del universo (d y e). Eso
+             * no es una unidad que se pueda enseñar de una vez, así que se
+             * parte en varias piezas guiadas — siete para esos tres.
+             *
+             * Sin este campo la página contaría las entradas y publicaría
+             * «7 ejercicios» de un examen que tiene tres, que es **exactamente
+             * el fallo que `fuera` vino a arreglar** unas líneas más abajo:
+             * un número del cuadernillo que el sitio dice mal. Con él se
+             * pueden decir las dos cosas, que son las dos verdad: cuántos
+             * ejercicios trae el examen y cuántas resoluciones ofrece el sitio.
+             *
+             * Es opcional y ninguna de las 118 convocatorias que ya estaban lo
+             * usa: en Cálculo, Álgebra, Fluidos y Química cada entrada es un
+             * ejercicio del cuadernillo y las dos cifras coinciden.
+             */
+            n: z.number().int().positive().optional(),
           }),
         )
         .min(1),
