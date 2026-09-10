@@ -28,6 +28,12 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > Térmica ya en `obra`—, y la regla de arriba dice qué hacer con ellas: se abre
 > una, y no se abre la siguiente hasta cerrarla.
 >
+> **Al 10 de septiembre de 2026**, con Térmica dentro: **61 temas**, las mismas
+> 118 convocatorias, **trece rutas** con 110 bloques y 295 escalones, y
+> **1.322 ejercicios**. Las cifras de esta nota son un corte con fecha, no un
+> estado: se añade una línea nueva y no se reescribe la anterior, para que se
+> vea qué cambia y a qué velocidad.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -41,7 +47,10 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > **Y el 7 de septiembre de 2026 se abrió la quinta, Ingeniería Térmica**, que
 > queda en `obra` y no en `ok`: sus **diez temas están escritos** —con su
 > figura y su ejemplo de entrada cada uno, que es lo que §15 pide— y su ruta
-> también, medida sobre seis convocatorias. Lo que falta no es trabajo: son
+> también, **medida sobre diecisiete convocatorias** — las comparables al
+> formato de hoy, de 2017-2018 en adelante, leídas una a una el 9 de
+> septiembre de 2026; decía «seis» hasta entonces. Lo que falta no es
+> trabajo: son
 > las **22 convocatorias sin transcribir**, y están paradas por §13 caso 5.
 > Veinte de los veintidós PDF llevan dentro la resolución completa del
 > profesor, así que publicarlos no es lo mismo que publicar un enunciado y la
@@ -198,11 +207,17 @@ tests/
   *.test.ts                los lectores de respuesta, con vitest
   fisica/                  casos con resultado conocido, uno por simulador:
                            moody · bombeo · compuertas · canales · ariete,
-                           86 casos sacados del corpus, nunca de un libro (§10)
+                           107 casos sacados del corpus, nunca de un libro
+                           (§10). Decía 86 hasta el 10 de septiembre de 2026
 public/
-  examenes/<asignatura>/   los enunciados originales en PDF —85 de cálculo y
-                           8 de álgebra. La ÚNICA carpeta del repo donde entra
-                           un PDF ajeno (§08)
+  examenes/<asignatura>/   los enunciados originales en PDF —101 al 10 de
+                           septiembre de 2026: 85 de cálculo, 8 de álgebra,
+                           6 de química y 2 de fluidos. La ÚNICA carpeta del
+                           repo donde entra un PDF ajeno (§08). Ojo a la
+                           asimetría de fluidos: sus 16 convocatorias caben en
+                           2 ficheros porque quince vienen en un cuadernillo
+                           único, así que aquí «un PDF» no es «una
+                           convocatoria»
 docs/ · tasks/ · referencia/ · diario/
 CLAUDE.md
 ```
@@ -1041,8 +1056,11 @@ En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
 muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
 que un fallo se pueda reproducir. En unas semanas pasan todas.
 
-Con `HUMO_TODO=1` las abre **todas** —123 páginas—, y eso es lo que se pasa al
-cerrar una asignatura. La primera vez que se hizo, el 29 de agosto de 2026,
+Con `HUMO_TODO=1` las abre **todas** —196 al 10 de septiembre de 2026: 107 de
+Cálculo, 41 de Fluidos, 19 de Química, 18 de Álgebra y 11 de Térmica—, y eso
+es lo que se pasa al cerrar una asignatura. **La cifra se lee, no se ignora**:
+decía 123 y llevaba semanas sin actualizarse, que es justo el descuido que
+esta sección persigue en el guardián. La primera vez que se hizo, el 29 de agosto de 2026,
 encontró cuatro figuras marcadas… y las cuatro eran correctas: el guardián de
 `viewBox` daba falsos positivos con los círculos guía. Se estrechó la regla y
 se dejó dicho por qué. Ese es el uso: **la barrida no busca aprobar, busca
@@ -1583,7 +1601,7 @@ declara la asignatura terminada:
 | | qué comprueba | qué pasó por no tenerlo |
 |---|---|---|
 | `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
-| `HUMO_TODO=1 npm run humo` | las 96 páginas de examen en un navegador | el navegador abría 8 de 96 durante meses |
+| `HUMO_TODO=1 npm run humo` | las 196 páginas del sitio en un navegador, 118 de ellas de examen | el navegador abría 8 de 96 durante meses |
 | `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
 | `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
 | `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |
@@ -1891,7 +1909,7 @@ Cosas que ya han costado horas. No son opiniones.
 
   Dos consecuencias prácticas. Una: **un CI rojo no significa que lo tuyo esté
   mal** — mira qué página falla antes de tocar tu cambio. Y dos: el verde de
-  `npm run suelo` cubre la muestra de hoy, no las 96 páginas; **para eso está
+  `npm run suelo` cubre la muestra de hoy, no las 196; **para eso está
   `HUMO_TODO=1 npm run humo`**, y conviene pasarlo una vez por tanda de
   trabajo, no una vez por commit.
 
@@ -1922,6 +1940,24 @@ Cosas que ya han costado horas. No son opiniones.
   **cero exámenes**, porque `/algebra/examenes/` tiene dos segmentos y no uno.
   De 169 páginas a 90. **Un arreglo que cambia cuántas cosas mira el guardián
   se comprueba contando otra vez**, no leyendo el `diff`.
+
+  **Y el 10 de septiembre de 2026 volvió a pasar en su forma más difícil de
+  ver: la exclusión estaba razonada, y lo que había caducado era el motivo.**
+  El filtro dejaba fuera los cuatro índices `…/examenes/` con este comentario
+  al lado: «no entra, no tiene ejercicios». Era verdad. Pero un ejercicio no
+  es lo único que se puede publicar mal, y ese día aparecieron ahí **siete
+  marcas de negrita en crudo** —el `lede` de cada ruta se pinta dentro de un
+  `<a>`, donde `mate()` no cabe—. Cuatro páginas que la portada enlaza, que un
+  alumno abre, y que **ningún navegador había abierto nunca**, con la barrida
+  diciendo «en verde» sobre 192. De 192 a 196, contadas otra vez y con la
+  subida repartida como debía: una por asignatura, salvo Térmica, que no tiene
+  índice de exámenes porque no tiene exámenes.
+
+  La regla que sale, ya con dos casos y en su forma corta: **cuando excluyas
+  algo de un guardián, el comentario dice qué clase de fallo no puede tener
+  eso que excluyes** — no «no hace falta mirarlo». Escrito así, el día que
+  aparece otra clase de fallo el comentario se relee solo. Escrito como
+  estaba, la exclusión sobrevive a su motivo y nadie la vuelve a mirar.
 - **Insertar delante de un elemento de lista YAML deja su campo huérfano.** Si
   un elemento es `- id: X` seguido de su `nota:`, y sustituyes solo la línea
   `- id: X` por «`- id: X` + tu nota + tu elemento nuevo», la `nota` original

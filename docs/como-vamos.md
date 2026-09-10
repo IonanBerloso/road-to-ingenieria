@@ -1,4 +1,4 @@
-# Cómo vamos · 7 de septiembre de 2026
+# Cómo vamos · 10 de septiembre de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -23,12 +23,20 @@ y el guardián de convocatorias huérfanas no cuenta ninguna suelta.
 
 **Y una quinta abierta, Ingeniería Térmica, en `obra`.** Sus diez temas están
 escritos —cada uno con su figura y su ejemplo de entrada, que es lo que §15
-pide— y su ruta también, medida sobre seis convocatorias contadas apartado por
-apartado. Lo que la mantiene en `obra` no es trabajo pendiente: son las **22
-convocatorias sin transcribir**, paradas por §13 caso 5. Veinte de los
-veintidós PDF llevan dentro la resolución completa del profesor, así que
-publicarlos no es lo mismo que publicar un enunciado y la decisión no es del
-que escribe el sitio. Las tres salidas posibles están en `tasks/todo.md`.
+pide— y su ruta también, **medida sobre diecisiete convocatorias** leídas una a
+una: las diecisiete comparables al formato de hoy, de 2017-2018 en adelante. Lo
+que la mantiene en `obra` no es trabajo pendiente: son las **22 convocatorias
+sin transcribir**, paradas por §13 caso 5. Veinte de los veintidós PDF llevan
+dentro la resolución completa del profesor, así que publicarlos no es lo mismo
+que publicar un enunciado y la decisión no es del que escribe el sitio. Las
+tres salidas posibles están en `tasks/todo.md`.
+
+> Este párrafo decía «medida sobre seis convocatorias» hasta el 10 de
+> septiembre de 2026, y llevaba dos días atrasado: el 9 se leyeron las
+> diecisiete a mano —solo cinco tienen capa de texto; las demás son escaneos
+> abiertos página a página— y la ruta pasó a `medidoSobre: 17` con los siete
+> `porque` recontados. Este documento no se enteró, que es exactamente lo que
+> denuncia su propia cabecera.
 
 > El párrafo de arriba decía **«tres asignaturas terminadas»** y **«112
 > convocatorias»** hasta el 7 de septiembre de 2026, y llevaba así desde que
@@ -132,13 +140,14 @@ valorará la presentación».
 | t02 sucesiones | 2020 | 3 | 19 | 4 | 32 |
 | t03 funciones reales | 1920 | 3 | 24 | 6 | 21 |
 | t04 estudio local | 2453 | 3 | 21 | 8 | 85 |
-| t05 integracion | 2104 | 4 | 30 | 4 | 49 |
+| t05 integracion | 2104 | 4 | 31 | 5 | 49 |
 | t06 varias variables | 1993 | 2 | 12 | 4 | 20 |
-| t07 integral multiple | 1789 | 3 | 11 | 4 | 41 |
-| t08 integral curvilinea | 1163 | 2 | 9 | 4 | 26 |
-| t09 ecuaciones diferenciales | 1785 | 2 | 10 | 5 | 36 |
-| t10 laplace | 1563 | 2 | 10 | 4 | 24 |
+| t07 integral multiple | 1789 | 3 | 12 | 5 | 41 |
+| t08 integral curvilinea | 1163 | 2 | 10 | 5 | 26 |
+| t09 ecuaciones diferenciales | 1785 | 3 | 10 | 5 | 36 |
+| t10 laplace | 1675 | 2 | 11 | 5 | 24 |
 | t11 fourier | 1935 | 2 | 10 | 4 | 17 |
+| **total** | **21657** | **30** | **197** | **59** | **425** |
 
 > **Esta tabla la genera `npm run mide`**, y ahí vive también la definición de
 > «palabra»: la prosa de un tema quitando la portada, los bloques `<svg>`, los
@@ -271,14 +280,38 @@ alta.
 
 ## Rutas de estudio
 
-| ruta | bloques | escalones | medida sobre | huecos declarados |
-|---|---|---|---|---|
-| 1.ª evaluación | 7 | 21 | 11 convocatorias | 4 |
-| 2.ª evaluación | 8 | 17 | 11 | 2 |
-| 3.ª evaluación | 9 | 18 | 11 | 3 |
-| 4.ª evaluación | 3 | **12** | 11 | **4** |
-| 5.ª evaluación | 3 | 12 | 10 | 6 |
-| ordinaria | **8** | **19** | **11** | **6** |
+Las trece, no solo las de Cálculo. Recontadas el 10 de septiembre de 2026.
+
+| asignatura | ruta | bloques | escalones | medida sobre | huecos declarados |
+|---|---|---|---|---|---|
+| Álgebra | extraordinaria | 6 | 17 | 8 | 7 |
+| Álgebra | ordinaria | 6 | 18 | 8 | 7 |
+| Cálculo | 1.ª evaluación | 7 | 21 | 11 | 6 |
+| Cálculo | 2.ª evaluación | 8 | 17 | 11 | 2 |
+| Cálculo | 3.ª evaluación | 10 | 19 | 11 | 8 |
+| Cálculo | 4.ª evaluación | 3 | 12 | 11 | 4 |
+| Cálculo | 5.ª evaluación | 3 | 12 | 10 | 7 |
+| Cálculo | extraordinaria | 16 | 38 | 11 | 10 |
+| Cálculo | ordinaria | 15 | 37 | 11 | 12 |
+| Fluidos | ordinaria | 14 | 51 | 11 | 26 |
+| Química | 1.er cuatrimestre | 7 | 16 | 3 | 8 |
+| Química | 2.º cuatrimestre | 8 | 17 | 3 | 9 |
+| Térmica | ordinaria | 7 | 20 | 17 | 7 |
+| **total** | **13 rutas** | **110** | **295** | — | **113** |
+
+> Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
+> estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
+> escalones cuando tiene 15 y 37 —se rehizo en agosto y la tabla se quedó con
+> la versión de antes—, la tercera con 9 y 18 cuando son 10 y 19, y los huecos
+> declarados de cuatro filas eran menos de los que hay. Corregida el 10 de
+> septiembre de 2026 midiendo los trece ficheros.
+>
+> Y una lectura que solo aparece al verlas juntas: **Fluidos declara 26 huecos,
+> casi la cuarta parte de los 113 del sitio**, con una sola ruta. No es que
+> esté peor hecha —es la asignatura con más corpus y la única con laboratorio
+> sin material—, es que ahí se ha mirado más. Un número alto de huecos
+> declarados es una señal buena, y conviene decirlo porque la tabla invita a
+> leerlo al revés.
 
 **La de la ordinaria se rehizo el 26 de agosto de 2026**, el mismo día que se
 cerró la última convocatoria que le faltaba. Decía estar medida sobre 2 y ahora
@@ -795,10 +828,19 @@ examen delante y no antes (§13), y lo que hacía falta eran dos tipos:
   error clásico de la matriz asociada, porque las coordenadas de cada imagen van
   en columna.
 
-## Las otras siete asignaturas
+## Las otras cinco asignaturas
 
-Seis están como `prev`, con cero contenido. Es §00 funcionando: no se abre una
-hasta cerrar la anterior.
+**Cuatro** están como `prev`, con cero contenido —Ciencia de Materiales,
+Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción y
+Fabricación— y la quinta, Ingeniería Térmica, está en `obra`. Es §00
+funcionando: no se abre una hasta cerrar la anterior.
+
+> El encabezado decía «las otras siete» y el párrafo «seis están como `prev`»
+> hasta el 10 de septiembre de 2026. Las dos cifras se quedaron atrás al
+> cerrar Química el día 6 y al abrir Térmica el 7 — o sea que estuvieron mal
+> tres días, y en un documento cuya cabecera promete estar «medido sobre el
+> repositorio, no recordado». Es la tercera vez que envejece una frase de esta
+> sección por lo mismo: **lo que la cambia siempre pasa en otra asignatura.**
 
 **Mecánica de Fluidos se abrió el 30 de agosto de 2026**, en cuanto Álgebra
 quedó cerrada con su boletín entero. Lo hecho el primer día:

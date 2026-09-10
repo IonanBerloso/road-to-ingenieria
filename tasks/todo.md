@@ -19,19 +19,41 @@ en obra**. Quedan cuatro en `prev`.
 **Y lo que sigue abierto, que es lo que hace honesto lo de arriba.** Casi todo
 depende de material o de una respuesta tuya, no de trabajo:
 
-- **Fluidos · las tres preguntas del examen**: cuánto dura, si se puede llevar
-  calculadora —aquí importa, hay ejercicios que exigen iterar Colebrook— y si
-  se preguntan las prácticas de laboratorio, que la guía dice que sí y de las
-  que no hay ninguna en el sitio. Recontado hoy: ninguna de las dieciséis
-  convocatorias imprime la duración ni menciona la calculadora.
+- **Fluidos · la pregunta del examen que queda**: cuánto dura. Buscada el 10
+  de septiembre de 2026 en los tres únicos sitios donde podía estar —los
+  dieciséis enunciados, la guía de la asignatura y la nota de la escuela sobre
+  pruebas académicas— y no está en ninguno: la guía remite a «las fechas y
+  **horas** oficiales establecidas por la escuela», que es por lo que el
+  enunciado no la imprime. Sin fuente posible: la aporta quien haya hecho el
+  examen.
+
+  > **Las otras dos ya no están pendientes.** La calculadora la pide la propia
+  > guía en su apartado 9.1, entre los conocimientos previos necesarios —
+  > «habilidad y agilidad en el uso de la calculadora»—, y las prácticas las
+  > resuelve el apartado 7: «cualquier sesión de laboratorio que se haya
+  > trabajado durante el curso es evaluable». Las dos llevaban meses
+  > contestadas **en un documento que ya estaba en la carpeta**, listadas aquí
+  > como si dependieran de Ionan. Lo que sigue sin respuesta escrita es solo
+  > si se admite calculadora **programable**.
 - **Química · la colección de los temas 3, 4, 6 y 10.** No hay material: sus
   PDF de teoría no traen problemas propuestos y el directorio está listado
   entero. Si aparece otra hoja, cuatro bloques pasan de tener el salto del
   ejemplo al examen a tener su rampa.
 - **Fluidos · trece ejercicios de examen en `fuera`**, cada uno con su motivo
-  releído: cinco por falta de material, tres porque la figura no acota, tres
-  porque el número publicado no se reproduce, dos porque solo una parte es
-  reconstruible.
+  releído y **reclasificado el 10 de septiembre de 2026** leyendo los trece
+  motivos uno a uno: **cuatro** porque falta un cuadro o un anexo que no
+  tenemos —pérdidas menores, curvas de bomba—, **cinco** porque el dibujo no
+  da lo que hace falta —tres no acotan cotas y dos llevan una tabla metida
+  dentro de la propia figura—, **tres** porque el número publicado no se
+  reproduce, y **uno** porque es teoría y dibujo cualitativo sin nada que
+  teclear.
+
+  > El desglose anterior decía «cinco / tres / tres / dos» con una cuarta
+  > categoría, «solo una parte es reconstruible», que no corresponde a ningún
+  > motivo escrito en el corpus. Sumaba trece, que es lo que lo mantuvo en pie:
+  > **un total correcto no valida su desglose**, y aquí las dos cifras venían
+  > de recuentos distintos. Ahora coincide con el de la fase 9, que agrupa las
+  > dos primeras clases en «nueve por material que falta».
 - **La tolerancia del apartado (c) del ejercicio 6 de la extraordinaria de
   Fluidos de 2022-2023**, que es la única de las 1.241 que se deja sin
   verificar a propósito: está publicada al 2 % y el problema no la determina
@@ -635,7 +657,15 @@ se decidió con un 2 que era un 4. Es un cambio de una asignatura **cerrada**,
 con su build y su barrida propios, y metido dentro del commit de las figuras
 de Térmica se escondería. Va en el siguiente, solo.
 
-### La ruta de estudio · ESCRITA, sobre seis convocatorias contadas
+### La ruta de estudio · ESCRITA el 7 de septiembre sobre seis convocatorias
+
+> **Ya no son seis: son diecisiete.** El 9 de septiembre de 2026 se leyeron a
+> mano las diecisiete convocatorias comparables al formato de hoy —de
+> 2017-2018 en adelante; solo cinco tienen capa de texto y las demás se
+> abrieron página a página— y la ruta pasó a `medidoSobre: 17`, con los siete
+> `porque` recontados uno a uno. Lo que sigue es el estado del día que se
+> escribió, que se deja tal cual porque explica de dónde salió cada bloque;
+> las cifras de hoy son **siete bloques, veinte escalones y 41 ejercicios**.
 
 `preparar/ingenieria-termica-ord.yaml`: siete bloques, dieciocho escalones y
 los treinta y siete ejercicios de la asignatura repartidos sin repetir ninguno.

@@ -706,6 +706,279 @@ ejercicios:
       Cuál usar lo decide el enunciado. Cuando pregunta «rendimiento
       exergético» está pidiendo el segundo, y responder con el primero es un
       cero con la cuenta bien hecha.
+  - id: ejter-la-tuberia-que-pierde-calor-y-lo-que-cuesta
+    titulo: La tubería que pierde calor, y lo que eso cuesta en trabajo
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Una tubería de vapor atraviesa una nave. Su superficie exterior se
+      mantiene a $150\ ^\circ\text{C}$ y cede al aire de la nave, que está a
+      $20\ ^\circ\text{C}$, un flujo de calor de $30\ \text{kW}$.
+
+      El ambiente de referencia es ese mismo aire, $T_0 = 20\ ^\circ\text{C}$.
+    pide: La entropía generada por la transmisión y la potencia perdida.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El calor sale de la tubería y entra en el aire. ¿Dónde se genera
+          entropía en este proceso?
+        opciones:
+          - texto: En el salto de temperatura entre la superficie y el aire
+            correcta: true
+            mensaje: |
+              Eso es. Transmitir calor a través de una diferencia finita de
+              temperatura es irreversible, y ahí es donde se genera. El
+              volumen de control que hay que tomar incluye el salto entero.
+          - texto: Dentro de la tubería, porque el vapor se enfría
+            mensaje: |
+              El vapor cediendo calor a temperatura casi constante no genera
+              entropía por sí solo. Lo irreversible es el salto de 150 a 20,
+              no lo que pase antes.
+          - texto: En ningún sitio, porque el calor se conserva
+            mensaje: |
+              El calor se conserva —es el primer principio— y aun así la
+              entropía crece. Son dos balances distintos, y el segundo es el
+              que dice qué se ha estropeado.
+          - texto: En el aire de la nave, que se calienta
+            mensaje: |
+              El aire recibe entropía, sí, pero recibe más de la que pierde la
+              tubería. La diferencia entre las dos es lo generado, y no vive
+              en uno de los dos lados sino en el salto.
+
+      - tipo: calcular
+        titulo: La entropía generada
+        pregunta: |
+          Con la superficie a $423{,}15\ \text{K}$ y el aire a
+          $293{,}15\ \text{K}$, ¿cuánta entropía se genera por segundo?
+        respuesta:
+          tipo: magnitud
+          valor: '0.03144 kW/K'
+          tolerancia: 0.02
+          formato: en kW/K, con tres cifras
+        distractores:
+          - valor: '0.070897 kW/K'
+            mensaje: |
+              Eso es solo $\dot{Q}/T_s$, lo que la tubería pierde. Falta
+              restarlo de lo que el aire gana, que es más porque está más
+              frío.
+          - valor: '-0.03144 kW/K'
+            mensaje: |
+              Los signos al revés. La entropía generada nunca es negativa: se
+              resta lo que sale de lo que entra, no al contrario.
+        pista: |
+          $\dot{S}_{gen} = \dfrac{\dot{Q}}{T_0} - \dfrac{\dot{Q}}{T_s}$.
+        desarrollo: |
+          $$
+          \dot{S}_{gen} = \frac{30}{293{,}15} - \frac{30}{423{,}15}
+          = 0{,}102337 - 0{,}070897 = 0{,}031440\ \text{kW/K}
+          $$
+
+      - tipo: calcular
+        titulo: La potencia perdida
+        pregunta: |
+          Por Guy-Stodola, ¿cuánta potencia se está destruyendo?
+        respuesta:
+          tipo: magnitud
+          valor: '9.217 kW'
+          tolerancia: 0.02
+          formato: en kW, con tres cifras
+        distractores:
+          - valor: '30 kW'
+            mensaje: |
+              Esos son los 30 kW de calor, no su exergía. El calor que sale a
+              150 grados todavía vale algo; lo que se destruye es esa parte,
+              no el calor entero.
+          - valor: '20.78 kW'
+            mensaje: |
+              Has multiplicado por la temperatura de la superficie. En
+              Guy-Stodola el factor es siempre la del **ambiente**, porque es
+              contra él contra el que se mide lo que se podría haber sacado.
+        pista: |
+          $\dot{B}_D = T_0 \dot{S}_{gen}$, con $T_0$ en kelvin.
+        desarrollo: |
+          $$
+          \dot{B}_D = 293{,}15 \cdot 0{,}031440 = 9{,}217\ \text{kW}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el argumento. Una pieza es falsa.
+        piezas:
+          - texto: 'La exergía del calor a 423,15 K vale $\dot{Q}\left(1-\frac{T_0}{T_s}\right) = 9{,}217$ kW, exactamente lo destruido.'
+          - texto: 'Coincide porque el calor acaba en el ambiente, y allí su exergía es cero: se destruye toda.'
+          - texto: Se destruyen 30 kW, que es todo el calor que la tubería pierde.
+            trampa: true
+            mensaje: |
+              Lo que se pierde son 30 kW de **energía** y 9,22 kW de
+              **exergía**. Confundirlos es el error que este ejercicio existe
+              para evitar: aislar la tubería ahorra energía, pero lo que
+              recupera de trabajo es la cifra pequeña.
+    resolucion: |
+      **Dónde está la irreversibilidad.** El calor sale de la superficie a
+      423,15 K y entra en el aire a 293,15 K. El primer principio dice que los
+      30 kW se conservan; el segundo dice que en el camino se ha estropeado
+      algo, y lo mide contando entropía a los dos lados.
+
+      **La entropía generada.** La tubería pierde $30/423{,}15 = 0{,}070897$
+      kW/K y el aire gana $30/293{,}15 = 0{,}102337$ kW/K. El aire gana más
+      porque está más frío: la misma energía vale más entropía cuanto menor es
+      la temperatura a la que se entrega. La diferencia,
+      $0{,}031440$ kW/K, es lo generado.
+
+      **Lo que cuesta.** Guy-Stodola lo convierte en potencia:
+      $\dot{B}_D = T_0\dot{S}_{gen} = 293{,}15 \cdot 0{,}031440 = 9{,}217$ kW.
+
+      **La comprobación que conviene hacer siempre.** La exergía que llevaban
+      esos 30 kW al salir de la tubería es
+      $30\left(1 - 293{,}15/423{,}15\right) = 9{,}217$ kW. Sale lo mismo, y no
+      es casualidad: como el calor termina en el ambiente, donde su exergía es
+      nula, se destruye toda la que traía. Cuando el calor acaba en algún
+      sitio útil los dos números ya no coinciden, y entonces la diferencia es
+      justo lo aprovechado.
+
+      **Y la lectura de ingeniería.** Aislar esa tubería ahorra 30 kW de
+      energía, pero solo recupera 9,22 kW de capacidad de producir trabajo. Es
+      la cifra pequeña la que hay que comparar contra el coste del aislante.
+
+  - id: ejter-el-bloque-de-acero-que-se-enfria-solo
+    titulo: El bloque de acero que se enfría solo, por los dos caminos
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Un bloque de acero de $50\ \text{kg}$, con calor específico
+      $c = 0{,}45\ \text{kJ/(kg}\cdot\text{K)}$, sale de un horno a
+      $500\ \text{K}$ y se deja enfriar al aire hasta ponerse a la temperatura
+      ambiente, $T_0 = 300\ \text{K}$.
+
+      No se recoge nada de ese calor: se va al aire tal cual.
+    pide: La exergía destruida, calculada de las dos maneras.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de calcular: ¿qué distingue este proceso de uno reversible?
+        opciones:
+          - texto: Que el bloque se enfría contra el ambiente sin producir trabajo
+            correcta: true
+            mensaje: |
+              Exacto. El bloque tenía capacidad de producir trabajo por estar
+              caliente, y se ha gastado entera en calentar un poco el aire.
+              Una máquina entre el bloque y el ambiente habría sacado algo.
+          - texto: Que el acero cambia de fase
+            mensaje: |
+              No hay cambio de fase: es un sólido que baja de temperatura, y
+              por eso basta con $mc\,\Delta T$ y $mc\ln(T_2/T_1)$.
+          - texto: Que el calor específico no es constante
+            mensaje: |
+              El enunciado lo da constante, y esa no es la irreversibilidad.
+              Aunque variase, el proceso seguiría siendo irreversible por
+              donde lo es: el salto de temperatura contra el ambiente.
+          - texto: Que la entropía del bloque disminuye
+            mensaje: |
+              Disminuye, y eso no tiene nada de raro: es un sistema cerrado
+              que cede calor. Lo que no puede disminuir es la del bloque más
+              la del ambiente juntos.
+
+      - tipo: calcular
+        titulo: La entropía generada
+        pregunta: |
+          Sumando la del bloque y la del ambiente, ¿cuánta entropía se genera?
+        respuesta:
+          tipo: magnitud
+          valor: '3.506 kJ/K'
+          tolerancia: 0.02
+          formato: en kJ/K, con tres cifras
+        distractores:
+          - valor: '11.494 kJ/K'
+            mensaje: |
+              Ese es el valor absoluto de la variación del bloque. Falta
+              sumarle la del ambiente, que es positiva y mayor: $+15$ kJ/K.
+          - valor: '15 kJ/K'
+            mensaje: |
+              Esa es solo la del ambiente, $Q/T_0$. El bloque pierde 11,494 y
+              hay que restarlos.
+        pista: |
+          $\Delta S_{bloque} = mc\ln(T_0/T_1)$ y $\Delta S_{amb} = Q/T_0$, con
+          $Q = mc(T_1-T_0)$.
+        desarrollo: |
+          $$
+          Q = 50 \cdot 0{,}45 \cdot (500-300) = 4500\ \text{kJ}
+          $$
+
+          $$
+          \Delta S_{bloque} = 22{,}5\ln\frac{300}{500} = -11{,}494\ \text{kJ/K}
+          \qquad
+          \Delta S_{amb} = \frac{4500}{300} = 15\ \text{kJ/K}
+          $$
+
+          $$
+          S_{gen} = 15 - 11{,}494 = 3{,}506\ \text{kJ/K}
+          $$
+
+      - tipo: calcular
+        titulo: La exergía destruida
+        pregunta: |
+          ¿Cuánta exergía se ha destruido?
+        respuesta:
+          tipo: magnitud
+          valor: '1052 kJ'
+          tolerancia: 0.02
+          formato: en kJ, redondeada
+        distractores:
+          - valor: '4500 kJ'
+            mensaje: |
+              Esos son los 4500 kJ de calor que se han ido al aire. Solo una
+              parte de ellos era capacidad de producir trabajo; el resto no se
+              podía aprovechar de ninguna manera.
+          - valor: '3448 kJ'
+            mensaje: |
+              Ese es el término $T_0\Delta S_{bloque}$ suelto. La exergía
+              destruida es $T_0 S_{gen}$, con la entropía **generada**, no con
+              la del bloque.
+        pista: |
+          $B_D = T_0 S_{gen}$.
+        desarrollo: |
+          $$
+          B_D = 300 \cdot 3{,}506 = 1052\ \text{kJ}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la comprobación por el segundo camino. Una pieza es falsa.
+        piezas:
+          - texto: 'La exergía del bloque baja $\Delta B = \Delta U - T_0\Delta S = -4500 - 300(-11{,}494) = -1052$ kJ.'
+          - texto: 'Como no se recoge trabajo y el calor acaba en el ambiente, esos 1052 kJ no van a ninguna parte: se destruyen.'
+          - texto: Los dos caminos dan distinto porque el balance de exergía incluye el trabajo y Guy-Stodola no.
+            trampa: true
+            mensaje: |
+              Dan exactamente lo mismo, y esa es la comprobación. Guy-Stodola
+              y el balance de exergía son la misma ecuación escrita de dos
+              maneras; si te salen distintos, hay un error de signo en alguno
+              de los dos.
+    resolucion: |
+      **Por qué hay dos caminos.** El curso enseña la exergía destruida de dos
+      formas y los exámenes de 2024-2025 piden las dos por separado, puntuando
+      cada una. Conviene hacerlas siempre las dos: la segunda no es trabajo
+      extra, es la comprobación de la primera.
+
+      **Camino 1 · Guy-Stodola.** El bloque cede
+      $Q = mc(T_1-T_0) = 50 \cdot 0{,}45 \cdot 200 = 4500$ kJ. Su entropía baja
+      $mc\ln(T_0/T_1) = 22{,}5\ln 0{,}6 = -11{,}494$ kJ/K, y la del ambiente
+      sube $4500/300 = 15$ kJ/K, porque lo recibe entero a 300 K. Generada:
+      $3{,}506$ kJ/K. Y $B_D = T_0 S_{gen} = 300 \cdot 3{,}506 = 1052$ kJ.
+
+      **Camino 2 · el balance de exergía.** La exergía de un sistema cerrado
+      cambia en $\Delta B = \Delta U - T_0\Delta S$ —los términos de presión no
+      entran porque el volumen del sólido no cambia—. Aquí
+      $\Delta U = -4500$ kJ y $T_0\Delta S = 300 \cdot (-11{,}494) = -3448$ kJ,
+      así que $\Delta B = -4500 + 3448 = -1052$ kJ. El bloque ha perdido 1052
+      kJ de exergía; como no se ha recogido ningún trabajo y el calor termina
+      en el ambiente, donde no vale nada, esos 1052 kJ se han destruido.
+
+      **Los dos dan 1052 kJ**, que es lo que había que ver.
+
+      **Lo que enseña la comparación.** De los 4500 kJ de energía que el bloque
+      soltó, solo 1052 —el 23 %— eran capacidad de producir trabajo. Una
+      máquina térmica perfecta entre el bloque y el ambiente habría sacado
+      exactamente esos 1052 kJ y ni uno más. El resto no se ha desperdiciado:
+      nunca fue aprovechable.
   - id: ejter-la-exergia-que-el-universo-destruye
     titulo: La exergía que el universo destruye
     fuente: >-

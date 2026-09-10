@@ -57,7 +57,7 @@ esa cifra tiene que bajar.
 
 ---
 
-## Fase 2 · Los 21 escalones que arrancan mal, y los 10 que van solos
+## Fase 2 · Los 21 escalones que arrancan mal, y los 10 que van solos · HECHA
 
 **No depende de nadie. Es la deuda de §14 mejor medida que hay.**
 
@@ -73,6 +73,25 @@ enero y febrero de 2025 piden explícitamente por separado.
 
 **Comprobación**: la sección 5 de `deuda.mjs` baja, y ninguno de los nuevos
 arranca en un ejercicio de examen (sección 2, hoy en 0).
+
+> **Hecha el 10 de septiembre de 2026.** Los dos escalones de exergía tienen
+> ya su segundo peldaño, los dos escritos por nosotros porque no hacen falta
+> las convocatorias para eso: **la tubería que pierde 30 kW** —Guy-Stodola
+> aplicado de verdad, con la separación entre los 30 kW de energía y los 9,22
+> de exergía que se confunden siempre— y **el bloque de acero que se enfría
+> solo**, que resuelve por los dos caminos sobre el molde que el del agua no
+> cubría, el no adiabático, y da la cifra que más enseña de todo el bloque:
+> de los 4.500 kJ que suelta, solo el 23 % era capacidad de producir trabajo.
+>
+> Sección 5 de `deuda.mjs`: **12 → 10**, y los dos que caen son justo los del
+> bloque que cae quince de diecisiete veces. Sección 2 sigue en 0. Los dos
+> pasaron `revisa-ejercicios.mjs` antes de pegarse, que es lo que pide §04, y
+> `recalcula` da las 3.889 parejas del corpus cuadrando.
+>
+> Los diez que quedan no son deuda del mismo tipo y conviene decirlo: siete
+> son escalones de suelo de Térmica —convenios de signos, decidir la zona—
+> donde un solo ejemplo bien escrito basta, porque no hay dificultad que
+> escalar sino una convención que aprender.
 
 ---
 

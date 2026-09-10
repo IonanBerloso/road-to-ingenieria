@@ -95,7 +95,25 @@ async function main() {
      añadido cosmético: al crearlas, sus ejercicios quedaron fuera del filtro
      `/tNN-` y durante un rato el suelo dio verde sin haber probado **ni un
      solo distractor de examen**. Eso es exactamente la confianza falsa que
-     §11 prohíbe. El índice `/examenes/` no entra: no tiene ejercicios. */
+     §11 prohíbe.
+
+     **Los índices `…/examenes/` entran desde el 10 de septiembre de 2026**, y
+     hasta ese día su exclusión estaba razonada así: «no entra, no tiene
+     ejercicios». Era verdad y se quedó corta, porque un ejercicio no es lo
+     único que se puede publicar mal. Ese día aparecieron **siete marcas de
+     negrita en crudo** —`**los cuatro huecos están fijos**`— en los índices de
+     Álgebra y de Cálculo: el `lede` de cada ruta se pinta ahí dentro de un
+     `<a>`, donde `mate()` no cabe, y nadie lo limpiaba. Cuatro páginas
+     publicadas que la portada enlaza y que **ningún navegador había abierto
+     nunca**, con la barrida diciendo «en verde» sobre 192.
+
+     Es el mismo fallo que el del `[a-z]+` sin guion de tres días antes, con
+     otra cara: no da rojo, da verde sobre menos sitio del que dice. La
+     diferencia es que aquí la exclusión era deliberada y estaba argumentada;
+     lo que había caducado no era el filtro sino **su motivo**. De 192 a 196.
+     La regla, ya con dos casos: cuando excluyas una página de un guardián,
+     el comentario dice qué clase de fallo no puede tener — y el día que
+     aparezca otra clase, se relee. */
   /* Las rutas de estudio entran desde el 22 de agosto de 2026, y por el mismo
      motivo que entraron las de examen: incrustan ejercicios guiados, así que
      fuera del filtro sus distractores no se probarían y el suelo seguiría
@@ -124,7 +142,7 @@ async function main() {
       .filter(
         (h) =>
           h.startsWith(BASE) &&
-          /\/[a-z-]+\/(t\d{2}-|examenes\/\d{4}-\d{4}|preparar\/)/.test(h),
+          /\/[a-z-]+\/(t\d{2}-|examenes\/(?:\d{4}-\d{4}|$)|preparar\/)/.test(h),
       ),
   );
   /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
