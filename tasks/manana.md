@@ -71,10 +71,12 @@ valioso que queda en el proyecto: Térmica pasa de `obra` a cerrada.
 
 Orden propuesto, y no es por fecha sino por rendimiento:
 
-1. ~~**El 30 de enero de 2024**, primero de todos. Dos de sus tres ejercicios
-   son copias literales de 2020 y 2021, así que transcribirlo cubre tres
-   convocatorias de una vez.~~ · **Falso, comprobado el 10 de septiembre de
-   2026**; ver la fase 5B.
+1. **El 30 de enero de 2024** · hecho, y con la afirmación de esta línea
+   corregida **dos veces**. Decía que dos de sus tres ejercicios eran copias
+   de 2020 y 2021; se comprobó contra la **ordinaria** de ese curso, no se
+   parecía en nada, y quedó tachada por falsa. Al abrir la **extraordinaria**
+   resultó ser cierta sobre ella: su ejercicio 3 lleva los datos de enero de
+   2021 dígito a dígito. Estaba mal atribuida, no mal. Ver la fase 5B.
 2. **Febrero de 2026 y enero de 2026**, las dos más recientes y las únicas
    compuestas a máquina — se leen con `pdftotext` y no hay que descifrar
    manuscritos.
@@ -209,12 +211,16 @@ el de febrero de 2022 cierra por una entropía en vez de por una temperatura.
 **Comprobación**: las tres convocatorias pasan a decir «3 de 3» y desaparecen
 sus bloques `fuera`.
 
-### 5B · Las catorce que faltan por montar
+### 5B · Las que faltan por montar
 
-Aquí está el trabajo de verdad, y conviene no engañarse con el ritmo de hoy:
-de las seis montadas, **tres fueron montar ejercicios ya escritos** y solo dos
-se transcribieron enteras desde cero. Las catorce que quedan son todas desde
-cero.
+**Contado el 10 de septiembre de 2026, ya de noche: 22 convocatorias, 10
+montadas, 2 imposibles y quedan 10.** El encabezado decía «las catorce» y era
+la cuenta de por la tarde; se recuenta aquí en vez de arrastrarla, que es lo
+que §16 pide de cualquier cifra publicada.
+
+Aquí está el trabajo de verdad, y conviene no engañarse con el ritmo: de las
+diez montadas, **tres fueron montar ejercicios ya escritos** y el resto se
+transcribieron desde cero. Las diez que quedan son todas desde cero.
 
 Y sobre todo: **solo tres tienen capa de texto aprovechable**. Las once
 restantes son escaneos manuscritos que hay que abrir página a página. Junio de
@@ -224,14 +230,31 @@ que cuenta como escaneo.
 Orden por rendimiento, no por fecha:
 
 1. Las tres legibles primero, para hacer camino.
-2. ~~**Enero de 2024**, porque dos de sus tres ejercicios se repiten
-   literalmente en 2020 y 2021 — transcribirlo cubre tres convocatorias de una
-   vez.~~ · **Comprobado y falso**, el 10 de septiembre de 2026. El examen de
-   enero de 2021 son dos tubos concéntricos con aceite de motor y agua, y no se
-   parece en nada a enero de 2024. La nota venía de la lectura del día 9 y aquí
-   mismo quedó anotada como «conviene volver a comprobarlo antes de apoyarse en
-   ello»: se comprobó y se cae. **Esa anotación se ganó el sueldo**, porque el
-   criterio de orden entero se apoyaba en ella.
+2. **Enero de 2024**, y la historia de esta línea vale más que la línea.
+   Decía que dos de sus tres ejercicios se repetían literalmente en 2020 y
+   2021, y que transcribirla cubría tres convocatorias de una vez. El 10 de
+   septiembre de 2026 se comprobó **contra la ordinaria de enero**, que son un
+   cilindro-pistón con exponente politrópico negativo, un motor térmico
+   acoplado a un compresor y una tubería con magnesita — nada que ver con los
+   tubos concéntricos de enero de 2021. Se tachó por falsa.
+
+   Horas después, al abrir la **extraordinaria del mismo curso** —la del 30 de
+   enero de 2024—, apareció: su ejercicio 3 son esos mismos tubos
+   concéntricos, con los mismos 0,9 kg/s y la misma tabla de propiedades,
+   dígito a dígito. **La nota nunca estuvo mal: estaba mal atribuida**, y
+   comprobarla contra la convocatoria equivocada no la corrigió, la enterró.
+
+   Dos cosas quedan de aquí. Una, que la anotación «conviene volver a
+   comprobarlo antes de apoyarse en ello» se ganó el sueldo igual, porque el
+   criterio de orden se apoyaba en ella. Y dos, la que cuesta: **una
+   comprobación que sale «no» deja a todo el mundo tranquilo**, y por eso hay
+   que preguntarse contra qué se comprobó antes de dar por buena la ausencia
+   (§17).
+
+   Lo que sí es falso es «copia literal». Los datos son idénticos y lo que se
+   pide no: enero de 2021 pedía dos temperaturas superficiales, y el 30 de
+   enero de 2024 añade los dos coeficientes de convección — y uno de ellos, el
+   del anillo entre los dos tubos, no lo calcula ningún ejercicio del corpus.
 3. El resto, de más reciente a más antigua. Enero de 2024 se transcribe igual
    —está en castellano y su ejercicio 1 es el del exponente politrópico
    negativo, que no tiene equivalente en el corpus— pero por lo que vale él,
@@ -241,12 +264,18 @@ Orden por rendimiento, no por fecha:
 una y solo en euskera. §00 dice que el sitio es solo en castellano y §08
 prohíbe reescribir un enunciado.
 
-> **Ojo con dar por hecho el idioma mirando una página.** El 10 de septiembre
-> se publicó que enero de 2025 «sale solo en euskera» tras mirar su primera
-> página, y era falso: el castellano está en la segunda. Costó dejar fuera de
-> alcance un ejercicio perfectamente transcribible durante unas horas. Antes de
-> declarar que una convocatoria no se puede transcribir, **se mira el documento
-> entero**, no su portada.
+> **Ojo con dar por hecho el idioma mirando una página**, que ese mismo día
+> falló **dos veces y en los dos sentidos**. Por la tarde se publicó que enero
+> de 2025 «sale solo en euskera» tras mirar su primera página, y era falso: el
+> castellano está en la segunda — costó dejar fuera de alcance un ejercicio
+> perfectamente transcribible durante unas horas. Por la noche apareció el
+> reverso: enero de 2024 llevaba publicado «escrito solo en castellano» y su
+> página 1 está entera en euskera, con el castellano en la 2.
+>
+> Las dos veces el error vino de mirar **una** página de veintinueve, y las dos
+> veces el resultado fue una frase publicada que no era verdad. Antes de decir
+> en qué idioma está una convocatoria —para incluirla o para descartarla—, **se
+> mira el documento entero**, no su portada.
 
 ---
 
