@@ -44,6 +44,69 @@ siguiente, en el orden en que conviene hacerlo.
 
 ---
 
+# Las cuatro fases del 10 de septiembre de 2026
+
+El plan salió de `tasks/manana.md`. Tres de las cuatro fases no dependían de
+nadie y están hechas; la primera sigue esperando.
+
+## Fase 0 · sin hacer, y bloquea Térmica entera
+
+La decisión sobre los PDF de examen. Está planteada con sus tres salidas, su
+coste y lo que se pierde en cada una. **Sin ella, §15 no se cumple y la
+asignatura no cierra**, por mucho contenido que se escriba.
+
+## Fase 2 · el bloque que más cae ya no tiene un solo escalón
+
+El de exergía cae 15 de 17 —y en cinco convocatorias dos veces en el mismo
+examen— y tenía un escalón con tres ejercicios metidos dentro. Ahora son
+tres, partidos por lo que cambia la ecuación: Guy-Stodola, sistema **cerrado**
+y equipo de **flujo**.
+
+El del medio es nuevo entero y cubre el molde que más se repite en las
+diecisiete —algo caliente metido en agua en un recipiente adiabático—, que no
+tenía ni un ejercicio. Resuelve la exergía destruida **por los dos caminos**,
+que es lo que los dos exámenes de 2024-2025 piden por separado, y los dos dan
+35,3 kJ.
+
+**El precio, declarado**: dos de los tres escalones se quedan con un solo
+ejercicio porque en el tema 7 no hay más, y el recuento del sitio sube de diez
+a doce. Se empeora una métrica a cambio de que cada peldaño enseñe una cosa.
+
+## Fase 3 · dos notas decían que falta un ejercicio que existe
+
+De las cinco frases con número de la ruta de Térmica, dos eran falsas y eran
+la misma cosa vista dos veces: «no hay ningún ejercicio con interpolación en
+dos entradas» y «falta el diagrama de Mollier **y falta el ejercicio**». El
+ejercicio existe —el 2 de enero de 2023, publicado y contrastado contra la
+resolución oficial— y se resuelve interpolando, que es lo que hace la propia
+Escuela. Lo único que falta es el diagrama, que es de la editorial.
+
+**Por qué no se había visto:** la nota está escrita desde el bloque de
+sustancia pura y el ejercicio vive en el tema de entropía. Un hueco declarado
+desde un sitio puede estar cubierto desde otro.
+
+## Fase 4 · lo que solo se ve abriendo la página
+
+Cuatro defectos, ninguno detectable por los guardianes:
+
+1. **Los siete `porque` de Térmica contaban sobre seis convocatorias** con el
+   rótulo diciendo «de 17» dos centímetros más arriba. Y uno era falso, no
+   viejo: «el ejercicio de transmisión es el tercero sin una sola excepción, y
+   siempre es una tubería». En enero de 2019 es el primero, y las formas que
+   toma son seis.
+2. **Una tabla publicada como una fila de barras** en la resolución de la 2.ª
+   de 2018-2019: una celda contenía `$\left|z\right|$` y markdown cuenta las
+   barras sin mirar si están dentro de fórmula.
+3. **Cuatro `fuente` de ejercicio** publicando sus asteriscos.
+4. **Un `motivo` de ejercicio fuera** que además juntaba sus cuatro párrafos
+   en uno.
+
+Los guardianes nuevos: §7 aprende a detectar un texto que cuenta sobre un
+denominador distinto del que declara la ruta, y el `motivo` pasa por `mate()`
+como ya hacía `invariante.fuente`.
+
+---
+
 # Ingeniería Térmica · el inventario de exámenes, contado · 8 de septiembre de 2026
 
 Térmica sigue en `obra` y su cierre depende de una decisión que solo Ionan
