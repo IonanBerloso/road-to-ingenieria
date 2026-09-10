@@ -107,6 +107,51 @@ const COMPETENCIA = {
   redactar: 'COMP4',
 } as const;
 
+/**
+ * La coletilla que acompaña al `formato`, según lo que se pueda teclear.
+ *
+ * POR QUÉ EXISTE. Hasta el 10 de septiembre de 2026 aquí había **una cadena
+ * fija**: «— vale la forma exacta: pi/4, sqrt(3)/2, (e^2-1)/2…». Se escribió
+ * con Cálculo delante, cuando era la única asignatura, y desde entonces se
+ * enseñaba en **todos** los pasos de cálculo del sitio. Medido ese día: de los
+ * 2.695 pasos que llevan `formato`, **944 la recibían siendo falsa para su
+ * tipo de respuesta** —872 `magnitud`, 49 `vector`, 14 `matriz` y 9
+ * `formula`—, es decir el 35 %, y casi todos de Fluidos.
+ *
+ * No es un detalle de estilo. En una respuesta de tipo `magnitud` la única
+ * ayuda que importa es **que hay que escribir la unidad**: el lector la
+ * compara por dimensión y diagnostica «número bueno sin unidad» como error
+ * propio (§17). Ofrecerle en su lugar `pi/4` es mandarlo al sitio equivocado
+ * justo en la asignatura donde la unidad es media nota. Y en `formula`, que no
+ * tiene tolerancia ninguna, hablar de «forma exacta» no significa nada.
+ *
+ * Se arregla aquí y no en los 944 pasos: la Regla 0 con su cara más literal
+ * —el script que recorriera los 944 sería la prueba de que el fallo no está en
+ * ellos—. No lo cazó ningún guardián; se vio **mirando una captura** de un
+ * ejercicio nuevo (§16 punto 1).
+ */
+function ayudaDelTipo(tipo: string): string {
+  switch (tipo) {
+    case 'numero':
+    case 'complejo':
+    case 'conjunto':
+      return ' — vale la forma exacta: pi/4, sqrt(3)/2, (e^2-1)/2…';
+    case 'magnitud':
+      return ' — con su unidad; vale cualquiera de la misma magnitud';
+    /* Comprobado contra `lib/algebra.ts` antes de escribirlo (§10): un vector
+       separa por comas, salvo que escribas algún punto y coma —entonces manda
+       el punto y coma y la coma queda libre como marca decimal—; y una matriz
+       separa filas con punto y coma o con salto de línea, y columnas con
+       coma. */
+    case 'vector':
+      return ' — componentes separadas por comas';
+    case 'matriz':
+      return ' — columnas con comas, filas con punto y coma';
+    default:
+      return '';
+  }
+}
+
 /* Todo el texto del YAML pasa por el mismo procesador que el MDX, así que las
    fórmulas salen en MathML generado en el build (§07). */
 /* Prefijo único de esta instancia. Sin él, las treinta resoluciones que
@@ -334,7 +379,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                   />
                   {paso.respuesta!.formato && (
                     <span class="formato rotulo">
-                      {paso.respuesta!.formato} — vale la forma exacta: pi/4, sqrt(3)/2, (e^2-1)/2…
+                      {paso.respuesta!.formato}
+                      {ayudaDelTipo(paso.respuesta!.tipo)}
                     </span>
                   )}
                   <button type="button" class="comprobar" data-comprobar>
