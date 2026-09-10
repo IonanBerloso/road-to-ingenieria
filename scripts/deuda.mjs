@@ -153,6 +153,9 @@ detUno.forEach((d) => fila('', d));
  *  negación con `para` detrás está acotada y no contradice al rótulo. */
 const NIEGA =
   /\bcero de (?:\d+|un[oa]|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|dieciséis|veinte|treinta)\b(?!\s+para\b)/i;
+/* Propios, porque los de la sección 8 se declaran más abajo. */
+const CUENTA = { seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12, trece: 13, catorce: 14, quince: 15, dieciseis: 16, diecisiete: 17, veinte: 20 };
+const sinAcento = (s) => s.toLowerCase().replace(/[áéíóú]/g, (c) => 'aeiou'['áéíóú'.indexOf(c)]);
 const contradicen = [];
 for (const f of readdirSync(join(CONT, 'preparar'))) {
   const doc = yaml.load(readFileSync(join(CONT, 'preparar', f), 'utf8'));
@@ -162,6 +165,26 @@ for (const f of readdirSync(join(CONT, 'preparar'))) {
       ['porque', b.porque],
       ['invariante.fuente', b.invariante.fuente],
     ]) {
+      /* Segunda forma, y es la que se escapó: el texto cuenta sobre un
+         denominador distinto del que la ruta declara. Pasó el 10 de septiembre
+         de 2026 en los SIETE bloques de Térmica a la vez — se subió
+         `medidoSobre` de 6 a 17 y los `porque` siguieron diciendo «en las seis
+         convocatorias», a dos centímetros de un rótulo que ya decía «de 17».
+         Es el mismo fallo del día entero: se arregla el número y no los
+         textos que lo citaban. */
+      /* «las siete convocatorias RESTANTES» es un resto, no un denominador:
+         el bloque cae en 3 de 10 y las otras siete son las que no. Sin esta
+         excepción el guardián acusaba a una nota correcta de contar sobre 7.
+         Es la tercera vez en el repaso que un patrón nace demasiado ancho. */
+      const mDen = txt && /\b(?:las|los|de|sobre)\s+(seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieciséis|diecisiete|veinte|\d+)\s+convocatorias\b(?!\s+(?:restantes|que faltan|sin leer))/i.exec(txt);
+      if (mDen) {
+        const dice = /^\d+$/.test(mDen[1]) ? Number(mDen[1]) : CUENTA[sinAcento(mDen[1])];
+        if (dice !== undefined && dice !== doc.medidoSobre)
+          contradicen.push(
+            `${f.replace('.yaml', '')} / ${b.id}: su ${campo} cuenta sobre ${dice} convocatorias ` +
+              `y la ruta declara ${doc.medidoSobre}`,
+          );
+      }
       if (txt && NIEGA.test(txt))
         contradicen.push(
           `${f.replace('.yaml', '')} / ${b.id}: el rótulo dice «cae ${b.invariante.anios} de ` +
