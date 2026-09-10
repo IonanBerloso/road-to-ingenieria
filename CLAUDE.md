@@ -42,6 +42,31 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > sitio (§00). Es un cambio de naturaleza más que de tamaño: antes faltaba una
 > decisión, ahora falta trabajo.
 >
+> **Al 11 de septiembre de 2026, ese trabajo está hecho**: **61 temas**,
+> **138 convocatorias** —las 118 de siempre más las **veinte** de Térmica que
+> se pueden montar—, **trece rutas** y **1.352 ejercicios con 5.547 pasos**.
+> Las dieciséis que faltaban se cerraron en una tanda: catorce montadas esa
+> noche y **las dos de 2014-2015 declaradas imposibles** con su motivo, que es
+> lo que §15 pide de un hueco. Son un folio cada una, solo en euskera y sin
+> resolución: traducirlas sería inventarlas.
+>
+> Lo que a Térmica le queda para cerrarse contra §15 ya no son convocatorias
+> sino **los ejercicios que cada una deja `fuera`**, y esos sí están contados,
+> uno a uno, el 11 de septiembre de 2026: son **28**, y no todos son deuda.
+>
+> | por qué está fuera | cuántos |
+> |---|---|
+> | trabajo pendiente, con su resolución oficial detrás | 20 |
+> | ya cubierto por otro ejercicio del corpus, o repetido | 4 |
+> | fuera del temario actual — ciclos de potencia y R-134a | 3 |
+> | falta material: se resuelve leyendo el diagrama de Mollier | 1 |
+>
+> La distinción importa porque solo la primera fila es trabajo. Los tres de
+> temario no se van a escribir nunca —los ciclos salieron del programa—, los
+> cuatro repetidos ya tienen su resolución en otra convocatoria, y el de
+> Mollier —la tobera del 30 de enero de 2023— necesita antes que alguien
+> redibuje ese diagrama, porque el del examen es de una editorial (§08).
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -381,9 +406,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.364 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.717 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.332 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.385 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.774 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.352 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -467,6 +492,21 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > exergía; y **cuatro de examen**, las primeras convocatorias transcritas de
 > la asignatura. La forma más barata de las tres fue la primera, y era la que
 > nadie había mirado.
+>
+> Y el **11 de septiembre de 2026**, de madrugada, **1.352 ejercicios y 5.547
+> pasos**: veinte ejercicios más, y **los veinte de examen de Térmica**, uno
+> por cada una de las catorce convocatorias montadas esa noche más los seis
+> que ya estaban. Es el crecimiento más caro por unidad —cada uno exige
+> resolver a ciegas, abrir la resolución manuscrita del profesor y contrastar
+> cifra a cifra— y el único que cierra un hueco de §15 en vez de mejorar el
+> corpus por dentro.
+>
+> Conviene anotar lo que ese contraste encontró, porque es el argumento entero
+> de por qué se hace en ese orden: **cinco erratas en documentos oficiales**
+> —una masa escrita como 4 donde el enunciado dice 2, dos calores específicos
+> cambiados, dos temperaturas de referencia mal copiadas— y **cuatro
+> enunciados que se repiten literalmente** entre convocatorias separadas por
+> cuatro años o más. Nada de eso se ve leyendo la resolución primero.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -655,9 +695,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.332 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.352 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.332 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.352 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:

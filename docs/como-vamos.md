@@ -1,4 +1,4 @@
-# Cómo vamos · 10 de septiembre de 2026
+# Cómo vamos · 11 de septiembre de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -19,8 +19,8 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **Cuatro asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos
 y Fundamentos Químicos.** Las cuatro cumplen §15 entera y las cuatro están en el
 catálogo como `ok`. Entre las cuatro, **118 convocatorias transcritas de 118**
-—y **seis más en Térmica** desde el 10 de septiembre de 2026, que son 124—,
-y el guardián de convocatorias huérfanas no cuenta ninguna suelta.
+—y **veinte más en Térmica**, que son 138—, y el guardián de convocatorias
+huérfanas no cuenta ninguna suelta.
 
 **Y una quinta abierta, Ingeniería Térmica, en `obra`.** Sus diez temas están
 escritos —cada uno con su figura y su ejemplo de entrada, que es lo que §15
@@ -35,11 +35,24 @@ publicarlo todo. Los 22 PDF están dentro —64 MB, §12 justificado— y **seis
 convocatorias ya son página**: enero de 2018, febrero de 2022, enero de 2023,
 enero de 2025, enero de 2026 y febrero de 2026.
 
-Quedan **dieciséis por transcribir**, y de ellas **dos no se van a poder**: las
-de 2014-2015 están en euskera, y el sitio es solo en castellano (§00) mientras
-que §08 prohíbe reescribir un enunciado. Eso deja el hueco real en catorce.
-Ahora es un hueco de trabajo y no de permiso, que es un cambio de naturaleza
-más que de tamaño.
+**Y ese hueco se cerró la madrugada del 11 de septiembre de 2026.** Las catorce
+que faltaban se montaron de una tanda, así que Térmica publica **veinte
+convocatorias de veintidós**, cada una con su PDF y con al menos un ejercicio
+resuelto paso a paso.
+
+Las dos que faltan **no se van a poder**, y así queda declarado: las de
+2014-2015 son un folio cada una, escritas solo en euskera y sin resolución
+detrás. El sitio es solo en castellano (§00) y §08 prohíbe reescribir un
+enunciado, así que transcribirlas sería inventarlas. Con un consuelo parcial
+que también está dicho en la ruta: el ejercicio 3 de junio de 2015 es el mismo
+que el ejercicio 3 del 30 de enero de 2023, así que su enunciado se puede leer
+en castellano.
+
+Lo que a Térmica le queda ahora **no son convocatorias sino ejercicios**: los
+28 que las veinte páginas dejan en `fuera`, contados uno a uno. De esos, 20 son
+trabajo pendiente con la resolución oficial detrás, 4 están ya cubiertos por
+otro ejercicio del corpus, 3 examinan cosas que salieron del temario —ciclos de
+potencia y R-134a— y 1 necesita que alguien redibuje el diagrama de Mollier.
 
 > Este párrafo decía «medida sobre seis convocatorias» hasta el 10 de
 > septiembre de 2026, y llevaba dos días atrasado: el 9 se leyeron las
