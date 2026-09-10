@@ -1,0 +1,234 @@
+ejercicios:
+  - id: exter1617-ext-3-la-pantalla-que-hay-que-disenar
+    titulo: La pantalla de radiación que hay que diseñar, no calcular
+    fuente: Ejercicio 3 de la convocatoria extraordinaria de 2016-2017, celebrada el 19 de junio de 2017 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Se pretende reducir a un tercio el intercambio directo de calor por
+      radiación entre las dos paredes enfrentadas de un pasillo de
+      $4\ \text{m}$ de largo y $2\ \text{m}$ de alto formado por una pared a
+      $200\ ^\circ\text{C}$ y emisividad $0{,}8$ y otra pared de emisividad
+      $0{,}4$ situada a $1\ \text{m}$ frente a ella y a $20\ ^\circ\text{C}$.
+      Calcúlese la emisividad de la pantalla de radiación que se debe colocar
+      en el medio del pasillo en paralelo a ambas paredes y su temperatura.
+
+      *Los factores de visión se leen en el ábaco de rectángulos paralelos
+      alineados que la escuela entrega con el examen. Entrando con
+      $L_1/D = 2$ y $L_2/D = 4$ —las dos paredes, separadas 1 m— da
+      $F_{12} = 0{,}52$; con $L_1/D = 4$ y $L_2/D = 8$ —cada pared y la
+      pantalla, separadas medio metro— da $F_{1p} = F_{p2} = 0{,}71$.*
+    pide: La emisividad que debe tener la pantalla y la temperatura a la que se quedará.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué le hace una pantalla al circuito de radiación?
+        opciones:
+          - texto: Le añade dos resistencias superficiales y parte la geométrica en dos
+            correcta: true
+            mensaje: |
+              Eso es. La pantalla tiene dos caras, y cada una aporta su
+              $\dfrac{1-\varepsilon_p}{\varepsilon_p A}$; y donde había un
+              hueco entre las paredes ahora hay dos, cada uno con su factor de
+              visión. Seis resistencias en serie donde había tres.
+          - texto: Le añade una sola resistencia superficial, la de la cara que mira al foco caliente
+            mensaje: |
+              La cara fría también emite y también tiene su resistencia. Es el
+              error que más veces se comete aquí, y se nota en el resultado: si
+              solo cuentas una cara, te sale una emisividad de 0,134 en vez de
+              0,237.
+          - texto: 'Nada al circuito: simplemente refleja la mitad de la radiación'
+            mensaje: |
+              Una pantalla no refleja «la mitad» de nada. Lo que hace es
+              interponerse, y el efecto se calcula con el circuito completo. De
+              hecho una pantalla **negra** aquí solo reduciría el intercambio
+              un 20 %.
+          - texto: Convierte el problema en dos problemas independientes
+            mensaje: |
+              No son independientes: por los dos huecos pasa **el mismo** calor,
+              y eso es precisamente lo que fija la temperatura de la pantalla.
+              Están en serie, no en paralelo.
+
+      - tipo: calcular
+        titulo: El intercambio sin pantalla
+        pregunta: |
+          Con $\varepsilon_1 = 0{,}8$, $\varepsilon_2 = 0{,}4$,
+          $F_{12} = 0{,}52$ y $A = 8\ \text{m}^{2}$, ¿cuánto calor intercambian
+          las dos paredes?
+        respuesta:
+          tipo: magnitud
+          valor: '5271.3 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '197.6 W'
+            mensaje: |
+              Has metido las temperaturas en grados Celsius. En radiación eso
+              no es un error del diez por ciento: $200^{4}$ y $473^{4}$ se
+              diferencian en un factor de treinta.
+          - valor: '7040 W'
+            mensaje: |
+              Has tomado $F_{12} = 1$, como si fueran placas infinitas. No lo
+              son: miden 4×2 m y están a 1 m, así que una ve solo el 52 % de lo
+              que sale de la otra — el resto se escapa por los lados del
+              pasillo.
+        pista: |
+          Tres resistencias en serie, y el numerador es la diferencia de
+          poderes emisivos:
+
+          $$
+          \dot{Q} = \frac{\sigma(T_1^{4}-T_2^{4})}{\dfrac{1-\varepsilon_1}{\varepsilon_1 A} + \dfrac{1}{F_{12}A} + \dfrac{1-\varepsilon_2}{\varepsilon_2 A}}
+          $$
+        desarrollo: |
+          $$
+          \sum R = 0{,}03125 + 0{,}24038 + 0{,}1875 = 0{,}45913
+          $$
+
+          $$
+          \dot{Q}_{12} = \frac{2420{,}22}{0{,}45913} = 5271{,}3\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: La emisividad de la pantalla
+        pregunta: |
+          Para que pasen solo $1757{,}1\ \text{W}$, ¿qué emisividad debe tener
+          la pantalla?
+        respuesta:
+          tipo: numero
+          valor: '0.237'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1, sin unidad
+        distractores:
+          - valor: '0.134'
+            mensaje: |
+              Has contado una sola cara de la pantalla. Tiene dos, y cada una
+              aporta su resistencia superficial: por eso el término va
+              multiplicado por 2.
+          - valor: '0.079'
+            mensaje: |
+              Has dividido la emisividad entre tres. Lo que se divide entre
+              tres es el **calor**, y la relación entre los dos no es
+              proporcional: la emisividad entra dentro de una resistencia, y
+              las resistencias se suman con las demás.
+        pista: |
+          Iguala la resistencia total del circuito con pantalla a
+          $\dfrac{\sigma(T_1^{4}-T_2^{4})}{\dot{Q}_{12}/3}$ y despeja
+          $\varepsilon_p$; los dos huecos llevan $F = 0{,}71$.
+        desarrollo: |
+          $$
+          \frac{2420{,}22}{1757{,}1} = 0{,}03125 + \frac{2}{0{,}71 \cdot 8}
+          + \frac{2\,(1-\varepsilon_p)}{8\,\varepsilon_p} + 0{,}1875
+          $$
+
+          $$
+          \varepsilon_p = 0{,}237
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura de la pantalla
+        pregunta: |
+          Por el hueco entre la pared caliente y la pantalla pasan esos mismos
+          $1757{,}1\ \text{W}$. ¿A qué temperatura se queda la pantalla?
+        respuesta:
+          tipo: magnitud
+          valor: '147 °C'
+          tolerancia: 0.005
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '110 °C'
+            mensaje: |
+              Has hecho la media aritmética de 200 y 20. La pantalla no se pone
+              en la media porque las dos resistencias que la flanquean no son
+              iguales: la pared fría es mucho peor emisora, así que cuesta más
+              soltarle el calor y la pantalla se queda más caliente.
+          - valor: '138.6 °C'
+            mensaje: |
+              Esa es la media de las **cuartas potencias**, que sería la
+              respuesta si las dos paredes tuvieran la misma emisividad. No la
+              tienen: 0,8 contra 0,4.
+        pista: |
+          $\dot{Q}_{1p} = \dfrac{\sigma(T_1^{4}-T_p^{4})}{R_{1p}}$, con
+          $R_{1p}$ las tres resistencias del primer hueco.
+        desarrollo: |
+          $$
+          1757{,}1 = \frac{5{,}67\cdot 10^{-8}\,(473^{4}-T_p^{4})}
+          {0{,}03125 + 0{,}17606 + 0{,}40295}
+          $$
+
+          $$
+          T_p = 420\ \text{K} = 147\ ^\circ\text{C}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena lo que hay que entender del resultado. Una pieza es falsa.
+        piezas:
+          - texto: 'Una pantalla **negra** —la mejor que se puede imaginar en cuanto a emitir— solo bajaría el intercambio de 5.271 a 4.240 W, un 20 %.'
+          - texto: 'Para llegar a un tercio hace falta que además sea poco emisora, y con 0,237 basta: no hace falta un espejo.'
+          - texto: 'La pantalla se queda a 147 °C porque es la media entre las dos paredes.'
+            trampa: true
+            mensaje: |
+              La media de 200 y 20 son 110, no 147. La pantalla se queda
+              **más cerca de la pared caliente** porque el camino hacia la
+              fría es peor: esa pared tiene emisividad 0,4 y le cuesta más
+              absorber. En un circuito en serie, el punto intermedio se coloca
+              donde las dos caídas se igualan, y eso lo deciden las
+              resistencias, no las temperaturas.
+    resolucion: |
+      **Qué tiene de distinto este ejercicio.** Todos los demás de radiación
+      del corpus calculan un intercambio. Este lo da por conocido —tiene que
+      quedar en un tercio— y pide **diseñar la pantalla que lo consigue**. Se
+      resuelve con el mismo circuito, pero recorrido al revés.
+
+      **Lo que la pantalla le hace al circuito.** Sin ella hay tres
+      resistencias en serie: la superficial de cada pared y la geométrica del
+      hueco. Con ella hay **seis**: las dos superficiales de las paredes, las
+      **dos** de la pantalla —tiene dos caras, y las dos emiten— y dos
+      geométricas, una por hueco.
+
+      **El intercambio de partida.**
+
+      $$
+      \sum R = \frac{1-0{,}8}{0{,}8\cdot 8} + \frac{1}{0{,}52\cdot 8}
+      + \frac{1-0{,}4}{0{,}4\cdot 8} = 0{,}45913
+      $$
+
+      $$
+      \dot{Q}_{12} = \frac{5{,}67\cdot 10^{-8}\,(473^{4}-293^{4})}{0{,}45913}
+      = 5271{,}3\ \text{W}
+      $$
+
+      **La emisividad**, despejada de que la resistencia total se multiplique
+      por tres:
+
+      $$
+      \varepsilon_p = 0{,}237
+      $$
+
+      **Y la temperatura**, imponiendo que por el primer hueco pase ese mismo
+      calor —que es lo que significa régimen permanente:
+
+      $$
+      T_p = 420\ \text{K} = 147\ ^\circ\text{C}
+      $$
+
+      La comprobación que cierra el problema es hacer la misma cuenta por el
+      otro hueco, entre la pantalla y la pared fría: tienen que salir los
+      mismos 1.757 W. Si no salen, el fallo está en la emisividad.
+
+      **Lo que hay que llevarse, y son dos cosas que se contradicen a primera
+      vista.**
+
+      La primera: **estar ahí no basta**. Una pantalla negra —$\varepsilon = 1$,
+      la peor posible para este oficio— dejaría el intercambio en 4.240 W, o
+      sea un recorte del 20 %. Interponerse ayuda poco por sí solo.
+
+      La segunda: **y aun así no hace falta un espejo**. Con $\varepsilon = 0{,}237$
+      —una chapa pintada, nada exótico— se llega al tercio pedido. El salto de
+      1 a 0,237 vale mucho más que el salto de «no hay pantalla» a «hay una
+      pantalla negra», y esa es la intuición que este ejercicio deja: en
+      radiación, la emisividad manda más que la geometría.
+
+      Y la tercera, sobre dónde se coloca la pantalla en temperatura: no en la
+      media, sino **más cerca de la pared caliente**. El camino hacia la pared
+      fría es peor porque esa pared tiene emisividad 0,4, así que hace falta
+      más diferencia de temperatura para empujar el mismo calor por ese lado.
+      Es la misma lógica que un divisor de tensión.
