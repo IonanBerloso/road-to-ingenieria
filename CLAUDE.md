@@ -1750,6 +1750,31 @@ Cosas que ya han costado horas. No son opiniones.
   dentro de una llave, nunca entre las dos.** Y si no cabe, se deja la línea
   larga: ochenta columnas es una costumbre, un aviso falso cuesta diez
   minutos.
+- **Un enunciado puede pedir un teorema o un método sin nombrarlo, y entonces
+  ninguna búsqueda de texto lo encuentra.** Es la trampa que más recuentos ha
+  estropeado, porque falla siempre **por defecto**: uno busca, sale cero, y se
+  queda tranquilo publicando una ausencia. Los dos casos del 10 de septiembre
+  de 2026, encontrados el mismo día y por caminos distintos:
+
+  - El ejercicio 2 de la ordinaria de 2016-2017 pide demostrar el teorema del
+    valor intermedio **enteramente en símbolos** —«$\forall H\in[m,M]\
+    \exists x\in[a,b] / y(x)=H$»—, sin la palabra «teorema», sin «Bolzano» y
+    sin «valor intermedio». Una búsqueda por esos tres términos da cero, y la
+    ruta publicaba correctamente «dos ordinarias» porque el recuento se había
+    hecho a mano. Es decir: **el guion habría empeorado el dato**.
+  - El ejercicio 5 de la tercera de 2018-2019 es integración numérica —ordenar
+    la suma por el extremo izquierdo, la del derecho y el valor exacto— y no
+    nombra ningún método. Ahí sí ganó el guion: tres rutas llevaban meses
+    publicando «un solo enunciado pide un método numérico» cuando son dos.
+
+  La regla, entonces, no es «busca mejor»: es **busca por el concepto y por su
+  descripción, y cuando el resultado sea un cero, ábrelo antes de publicarlo.**
+  Un cero es la única cifra que no se puede comprobar leyendo lo que ha salido.
+  Y su hermana práctica: al medir sobre `enunciado`, **quita las figuras**
+  —`<figure>…</figure>`—, porque el `<desc>` de un SVG redibujado dice
+  «trapecio» y «punto medio» hablando de geometría. En el barrido de ese día
+  eran dos falsos positivos de tres.
+
 - **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
   Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
   decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro
