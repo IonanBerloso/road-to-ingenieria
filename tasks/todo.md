@@ -19,6 +19,22 @@ en obra**. Quedan cuatro en `prev`.
 **Y lo que sigue abierto, que es lo que hace honesto lo de arriba.** Casi todo
 depende de material o de una respuesta tuya, no de trabajo:
 
+- **Térmica · seis ficheros de ejercicios con contraseña.** Encontrado el 10 de
+  septiembre de 2026 supervisando la carpeta entera con `pdfinfo`, que devuelve
+  «Incorrect password» en seis: `Ejercicios_Tema_3_-_GASES`,
+  `Ejercicios_Tema_3_AGUA`, `Ejercicios_Tema_6_y_Tema_7`, `Ejercicio_Exergía`,
+  `Ejercicio_conducción_cilíndricas` y `Ejercicio_conducción_pared_plana`. Son
+  justo los temas donde la asignatura va más corta de ejercicios. **Es un
+  bloqueo distinto del de los exámenes y se levanta con una contraseña**, no
+  con una decisión: si la tienes, seis ficheros de boletín entran de golpe.
+
+  > Este bloqueo **no existía en la lista** hasta hoy, y llevaba ahí desde que
+  > se abrió la asignatura. No lo encontró ningún guardián porque ninguno mira
+  > la carpeta de material: se encontró supervisando los 44 PDF uno a uno, que
+  > es la regla de §17 sobre cerrar un inventario listando el directorio
+  > entero en vez de buscar por extensión — aplicada esta vez no a *qué hay*
+  > sino a *qué se puede leer*.
+
 - **Fluidos · la pregunta del examen que queda**: cuánto dura. Buscada el 10
   de septiembre de 2026 en los tres únicos sitios donde podía estar —los
   dieciséis enunciados, la guía de la asignatura y la nota de la escuela sobre

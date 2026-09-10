@@ -88,10 +88,21 @@ arranca en un ejercicio de examen (sección 2, hoy en 0).
 > pasaron `revisa-ejercicios.mjs` antes de pegarse, que es lo que pide §04, y
 > `recalcula` da las 3.889 parejas del corpus cuadrando.
 >
-> Los diez que quedan no son deuda del mismo tipo y conviene decirlo: siete
-> son escalones de suelo de Térmica —convenios de signos, decidir la zona—
-> donde un solo ejemplo bien escrito basta, porque no hay dificultad que
-> escalar sino una convención que aprender.
+> **~~Los diez que quedan no son deuda del mismo tipo: siete son escalones de
+> suelo de Térmica donde un solo ejemplo basta.~~ · falso, corregido esa misma
+> tarde al mirarlos uno a uno.** Solo **dos** de los siete son suelo —`theta-y-te`
+> y `el-convenio-de-signos`, los dos con `anios: 0`, donde efectivamente no hay
+> dificultad que escalar sino una convención que aprender—. Los otros
+> **cinco sostienen bloques que caen 16 de 17 convocatorias**: el trabajo de
+> frontera, la entalpía y los calores específicos, decidir la zona, el título
+> del depósito rígido y el circuito de resistencias. Eso no es deuda de suelo:
+> es el núcleo de la asignatura con un solo peldaño cada uno.
+>
+> Escribí esa frase sin abrir los escalones, y es exactamente el fallo que
+> llevo el día entero corrigiendo en notas ajenas: **una afirmación cómoda que
+> nadie contó**. Al contarla, uno de los cinco ya está resuelto —el trabajo de
+> frontera, con el ejercicio 2 de la colección— y los otros cuatro tienen
+> ahora un camino que no depende de ninguna decisión: la colección de Térmica.
 
 ---
 
