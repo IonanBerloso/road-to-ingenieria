@@ -99,6 +99,10 @@ const hoja = await Promise.all(
     pideHtml: await mate(e.pide, `hoja-${e.id}`),
   })),
 );
+
+const fueraHtml = await Promise.all(
+  fuera.map(async (f) => ({ ...f, motivoHtml: await mate(f.motivo, `fuera-${f.n}`) })),
+);
 ---
 
 <div class="shell" data-armazon>
@@ -136,9 +140,16 @@ const hoja = await Promise.all(
               : `Faltan ${fuera.length} de los ${deCuantos} ejercicios del cuadernillo: el ${fuera.map((f) => f.n).join(' y el ')}`}
           </p>
           <ul>
-            {fuera.map((f) => (
+            {/* El motivo se pintaba en crudo, y son dos defectos en uno: el
+                de 2020-2021 publicaba `**no contiene ninguna cuenta**` con
+                los asteriscos, y sus cuatro párrafos salían corridos porque
+                el `>-` de YAML los deja en un solo `\n` que el HTML colapsa.
+                Es el mismo arreglo que se le hizo a `invariante.fuente` el 8
+                de septiembre de 2026, por el mismo motivo: si el campo es
+                prosa, pasa por `mate()` (§01). */}
+            {fueraHtml.map((f) => (
               <li>
-                <strong>{f.n}.</strong> {f.motivo}
+                <strong>{f.n}.</strong> <span class="prosa" set:html={f.motivoHtml} />
               </li>
             ))}
           </ul>
