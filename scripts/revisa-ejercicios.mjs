@@ -186,11 +186,24 @@ for (const e of ejercicios) {
          `condicion` y un distractor con unidad de otra magnitud. */
       const escalar = (v) => {
         const s = String(v).trim();
-        if (/[(,]/.test(s)) return NaN;
+        /* Una `magnitud` se lee con su lector **antes** de descartar nada por
+           la forma del texto. El descarte de abajo —cualquier paréntesis o
+           coma— está para los vectores y las formas exactas, pero se llevaba
+           por delante todas las unidades compuestas: `kJ/(kg K)`,
+           `W/(m^2 K)`. Medido el 10 de septiembre de 2026: **13 pasos del
+           corpus, los trece de Ingeniería Térmica**, se saltaban en silencio
+           las dos comprobaciones de distractores de este guion.
+
+           No llegó nada malo al sitio, porque el esquema sí los mira en el
+           build. Lo que se perdía era justo aquello para lo que este guion
+           existe: enterarse en un segundo en vez de en un build entero. Y se
+           perdía **en la asignatura que se estaba escribiendo**, que es la
+           forma más cara de tener un agujero. */
         if (p.respuesta?.tipo === 'magnitud') {
           const m = leeMagnitud(s);
           if (m) return m.valor;
         }
+        if (/[(,]/.test(s)) return NaN;
         const m = s.match(/^-?\d+(\.\d+)?([eE][-+]?\d+)?/);
         return m ? Number(m[0]) : NaN;
       };
