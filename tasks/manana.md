@@ -71,9 +71,10 @@ valioso que queda en el proyecto: Térmica pasa de `obra` a cerrada.
 
 Orden propuesto, y no es por fecha sino por rendimiento:
 
-1. **El 30 de enero de 2024**, primero de todos. Dos de sus tres ejercicios son
-   copias literales de 2020 y 2021, así que transcribirlo cubre tres
-   convocatorias de una vez.
+1. ~~**El 30 de enero de 2024**, primero de todos. Dos de sus tres ejercicios
+   son copias literales de 2020 y 2021, así que transcribirlo cubre tres
+   convocatorias de una vez.~~ · **Falso, comprobado el 10 de septiembre de
+   2026**; ver la fase 5B.
 2. **Febrero de 2026 y enero de 2026**, las dos más recientes y las únicas
    compuestas a máquina — se leen con `pdftotext` y no hay que descifrar
    manuscritos.
@@ -223,11 +224,18 @@ que cuenta como escaneo.
 Orden por rendimiento, no por fecha:
 
 1. Las tres legibles primero, para hacer camino.
-2. **Enero de 2024**, porque dos de sus tres ejercicios se repiten literalmente
-   en 2020 y 2021 — transcribirlo cubre tres convocatorias de una vez. *(Esto
-   viene de la lectura del 9 de septiembre y conviene volver a comprobarlo
-   antes de apoyarse en ello.)*
-3. El resto, de más reciente a más antigua.
+2. ~~**Enero de 2024**, porque dos de sus tres ejercicios se repiten
+   literalmente en 2020 y 2021 — transcribirlo cubre tres convocatorias de una
+   vez.~~ · **Comprobado y falso**, el 10 de septiembre de 2026. El examen de
+   enero de 2021 son dos tubos concéntricos con aceite de motor y agua, y no se
+   parece en nada a enero de 2024. La nota venía de la lectura del día 9 y aquí
+   mismo quedó anotada como «conviene volver a comprobarlo antes de apoyarse en
+   ello»: se comprobó y se cae. **Esa anotación se ganó el sueldo**, porque el
+   criterio de orden entero se apoyaba en ella.
+3. El resto, de más reciente a más antigua. Enero de 2024 se transcribe igual
+   —está en castellano y su ejercicio 1 es el del exponente politrópico
+   negativo, que no tiene equivalente en el corpus— pero por lo que vale él,
+   no por lo que arrastre.
 
 **Y dos que no se van a poder**, declaradas: las de 2014-2015 son un folio cada
 una y solo en euskera. §00 dice que el sitio es solo en castellano y §08
