@@ -1,0 +1,188 @@
+ejercicios:
+  - id: exter1516-ord-3-la-plancha-de-pie-sobre-la-tabla
+    titulo: La plancha de pie sobre la tabla, y los tres mecanismos a la vez
+    fuente: Ejercicio 3 de la convocatoria ordinaria de 2015-2016, celebrada en enero de 2016 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Una plancha se deja en posición vertical sobre la tabla de planchar, en
+      una habitación a $20\ ^\circ\text{C}$. La superficie del lado exterior de
+      la placa de la plancha se encuentra a $200\ ^\circ\text{C}$. Dicha
+      superficie tiene un área de $0{,}037\ \text{m}^{2}$ y una emisividad de
+      $0{,}6$. La plancha tiene una altura desde la base hasta la punta de
+      $25\ \text{cm}$. La placa tiene una conductividad de
+      $20\ \text{W/mK}$ y un espesor de $0{,}5\ \text{cm}$. Calcúlese:
+
+      a) El calor que fluye a través de la placa
+
+      b) La temperatura del lado interior de la placa de la plancha
+
+      *Con las propiedades del aire del anexo a la temperatura de película
+      —$110\ ^\circ\text{C}$— sale $Ra = 8{,}767\cdot 10^{7}$ y
+      $k = 0{,}03165\ \text{W/m}\cdot\text{K}$, y la correlación de placa
+      vertical en régimen laminar, $Nu = 0{,}59\,Ra^{1/4}$, da
+      $h = 7{,}228\ \text{W/m}^{2}\text{K}$ y una convección de
+      $48{,}14\ \text{W}$.*
+    pide: El calor total que atraviesa la placa y la temperatura de su cara interior.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Para la radiación, ¿qué se supone de las paredes de la habitación?
+        opciones:
+          - texto: Que se comportan como un cuerpo negro, porque la plancha es un cuerpo pequeño dentro de un recinto grande
+            correcta: true
+            mensaje: |
+              Eso es, y simplifica el circuito de radiación a la mitad: la
+              resistencia superficial de las paredes se hace cero y el factor
+              de visión vale 1, porque **todo lo que emite la plancha acaba en
+              alguna pared**. Quedan solo dos resistencias, y una de ellas es
+              la de la propia plancha.
+          - texto: Que tienen la misma emisividad que la plancha, 0,6
+            mensaje: |
+              El enunciado no da ninguna emisividad de las paredes, y no es un
+              descuido: no hace falta. Un recinto grande frente a un cuerpo
+              pequeño se comporta como negro sea cual sea su emisividad real,
+              porque lo que refleja acaba volviendo a las propias paredes.
+          - texto: Que no radian, porque están a la temperatura ambiente
+            mensaje: |
+              Radian igual: todo cuerpo por encima del cero absoluto emite. Lo
+              que pasa es que emiten **menos** que la plancha, y el intercambio
+              neto va de la caliente a las frías. Si no radiaran, el resultado
+              saldría el doble de lo que es.
+          - texto: Que la plancha solo radia por la cara que mira al techo
+            mensaje: |
+              El enunciado da un área —0,037 m²— y esa es la superficie que
+              intercambia. Cómo esté orientada no cambia el cálculo mientras
+              lo que tenga enfrente sea la habitación.
+
+      - tipo: calcular
+        titulo: El calor por radiación
+        pregunta: |
+          Con $\varepsilon = 0{,}6$ y $A = 0{,}037\ \text{m}^{2}$, ¿cuánto
+          calor se va por radiación?
+        respuesta:
+          tipo: magnitud
+          valor: '53.72 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '2.01 W'
+            mensaje: |
+              Has metido las temperaturas en grados Celsius. En radiación eso
+              no aproxima nada: $200^{4}$ y $473^{4}$ se llevan un factor de
+              treinta.
+          - valor: '89.55 W'
+            mensaje: |
+              Has tratado la plancha como cuerpo negro y te has saltado su
+              resistencia superficial. Su emisividad es 0,6, y esa resistencia
+              vale 18,02 de los 45,05 totales: el 40 %.
+        pista: |
+          Dos resistencias en serie: la superficial de la plancha y la
+          geométrica con $F = 1$.
+        desarrollo: |
+          $$
+          \dot{Q}_{rad} = \frac{5{,}67\cdot 10^{-8}\,(473^{4}-293^{4})}
+          {\dfrac{1-0{,}6}{0{,}6\cdot 0{,}037} + \dfrac{1}{1\cdot 0{,}037}}
+          = \frac{2420{,}22}{18{,}02 + 27{,}03} = 53{,}72\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura de la cara interior
+        pregunta: |
+          Por la placa pasan los $101{,}86\ \text{W}$ que suman convección y
+          radiación. ¿A qué temperatura está su cara interior?
+        respuesta:
+          tipo: magnitud
+          valor: '200.7 °C'
+          tolerancia: 0.002
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '268.8 °C'
+            mensaje: |
+              Has metido el espesor en centímetros. La conductividad va en
+              vatios por **metro** y kelvin, así que 0,5 cm son 0,005 m — cien
+              veces menos resistencia.
+          - valor: '475 °C'
+            mensaje: |
+              Has multiplicado por la conductividad en vez de dividir. La
+              resistencia de una capa plana es $e/(kA)$: el material bueno
+              conductor **quita** resistencia, no la añade.
+        pista: |
+          $\theta_{int} = 200 + \dot{Q}\,\dfrac{e}{k\,A}$.
+        desarrollo: |
+          $$
+          \theta_{int} = 200 + 101{,}86 \cdot \frac{0{,}005}{20 \cdot 0{,}037}
+          = 200{,}7\ ^\circ\text{C}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena las tres lecturas del resultado. Una pieza es falsa.
+        piezas:
+          - texto: 'A 200 °C la radiación se lleva 53,72 W y la convección 48,14: el 53 % frente al 47 %, y gana la que casi nadie calcula primero.'
+          - texto: 'Los 5 mm de placa ofrecen 0,0068 K/W frente a los 1,77 que suman convección y radiación juntas: el 0,4 % del total.'
+          - texto: 'Por eso la cara interior tiene que estar bastante más caliente, para empujar los 101,86 W a través del acero.'
+            trampa: true
+            mensaje: |
+              Justo al revés, y es lo que el apartado b) enseña: está
+              **0,7 grados** más caliente. Una resistencia del 0,4 % se lleva
+              el 0,4 % de la caída de temperatura. Con metales y espesores de
+              milímetros, la conducción casi nunca es el cuello de botella —
+              lo son las películas de fluido y la radiación.
+    resolucion: |
+      **Los tres mecanismos en el mismo ejercicio, y en el orden en que se
+      encuentran.** La placa está a 200 °C por fuera y pierde calor de dos
+      maneras hacia la habitación: convección natural y radiación. Ese calor
+      total es el que ha tenido que atravesar antes los 5 mm de placa por
+      conducción.
+
+      **La convección.** La plancha de pie es una placa vertical de 25 cm, y
+      con las propiedades del aire a la temperatura de película —110 °C— sale
+      $Ra = 8{,}767\cdot 10^{7}$, dentro del régimen laminar:
+
+      $$
+      Nu = 0{,}59\,(8{,}767\cdot 10^{7})^{1/4} = 57{,}09
+      \;\Longrightarrow\; h = \frac{57{,}09 \cdot 0{,}03165}{0{,}25}
+      = 7{,}228\ \text{W/m}^{2}\text{K}
+      $$
+
+      $$
+      \dot{Q}_{conv} = 7{,}228 \cdot 0{,}037 \cdot (200-20) = 48{,}14\ \text{W}
+      $$
+
+      **La radiación**, con las paredes tratadas como cuerpo negro porque la
+      plancha es un cuerpo pequeño en un recinto grande:
+
+      $$
+      \dot{Q}_{rad} = \frac{2420{,}22}{18{,}02 + 27{,}03} = 53{,}72\ \text{W}
+      $$
+
+      **Y la conducción**, que es la suma de las dos porque en régimen
+      permanente todo lo que sale por la cara exterior ha entrado por dentro:
+
+      $$
+      \dot{Q} = 48{,}14 + 53{,}72 = 101{,}86\ \text{W}
+      $$
+
+      $$
+      \theta_{int} = 200 + 101{,}86\,\frac{0{,}005}{20\cdot 0{,}037}
+      = 200{,}7\ ^\circ\text{C}
+      $$
+
+      **Las dos cosas que este ejercicio deja, y las dos sorprenden.**
+
+      La primera: **a 200 °C la radiación gana a la convección**, 53,72 frente
+      a 48,14 vatios. Es el mecanismo que se calcula el último y el que más se
+      lleva. El motivo es la cuarta potencia: a 94 °C —el otro ejercicio del
+      corpus donde se comparan— la radiación se queda en el 46 %, y aquí, cien
+      grados más arriba, ya va por el 53. Cada vez que subes la temperatura, la
+      radiación gana terreno, y por eso en un horno acaba siendo casi lo único.
+
+      La segunda: **la placa está 0,7 grados más caliente por dentro**. Cinco
+      milímetros de un material que conduce a 20 W/mK ofrecen
+      $0{,}0068\ \text{K/W}$ frente a los $1{,}77$ que suman la convección y la
+      radiación por fuera: el 0,4 % de la resistencia total, y por tanto el
+      0,4 % de la caída de temperatura.
+
+      Y de ahí sale la costumbre que vale para casi todo el tema: **en un
+      circuito térmico con metal y fluido, la resistencia del metal es
+      despreciable salvo que te digan lo contrario.** Lo que decide son las
+      películas de fluido — y aquí, además, la radiación.
