@@ -1114,9 +1114,11 @@ En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
 muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
 que un fallo se pueda reproducir. En unas semanas pasan todas.
 
-Con `HUMO_TODO=1` las abre **todas** —196 al 10 de septiembre de 2026: 107 de
-Cálculo, 41 de Fluidos, 19 de Química, 18 de Álgebra y 11 de Térmica—, y eso
-es lo que se pasa al cerrar una asignatura. **La cifra se lee, no se ignora**:
+Con `HUMO_TODO=1` las abre **todas** —**217 al 11 de septiembre de 2026**:
+107 de Cálculo, 41 de Fluidos, **32 de Térmica**, 19 de Química y 18 de
+Álgebra—, y eso es lo que se pasa al cerrar una asignatura. Térmica pasó de 11
+a 32 esa madrugada al montar sus veinte convocatorias, que es la subida más
+grande que ha tenido esta cifra de una vez. **La cifra se lee, no se ignora**:
 decía 123 y llevaba semanas sin actualizarse, que es justo el descuido que
 esta sección persigue en el guardián. La primera vez que se hizo, el 29 de agosto de 2026,
 encontró cuatro figuras marcadas… y las cuatro eran correctas: el guardián de
@@ -1679,7 +1681,7 @@ declara la asignatura terminada:
 | | qué comprueba | qué pasó por no tenerlo |
 |---|---|---|
 | `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
-| `HUMO_TODO=1 npm run humo` | las 196 páginas del sitio en un navegador, 118 de ellas de examen | el navegador abría 8 de 96 durante meses |
+| `HUMO_TODO=1 npm run humo` | las 217 páginas del sitio en un navegador, 143 de ellas de examen | el navegador abría 8 de 96 durante meses |
 | `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
 | `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
 | `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |
@@ -1987,7 +1989,7 @@ Cosas que ya han costado horas. No son opiniones.
 
   Dos consecuencias prácticas. Una: **un CI rojo no significa que lo tuyo esté
   mal** — mira qué página falla antes de tocar tu cambio. Y dos: el verde de
-  `npm run suelo` cubre la muestra de hoy, no las 196; **para eso está
+  `npm run suelo` cubre la muestra de hoy, no las 217; **para eso está
   `HUMO_TODO=1 npm run humo`**, y conviene pasarlo una vez por tanda de
   trabajo, no una vez por commit.
 
@@ -2036,6 +2038,21 @@ Cosas que ya han costado horas. No son opiniones.
   eso que excluyes** — no «no hace falta mirarlo». Escrito así, el día que
   aparece otra clase de fallo el comentario se relee solo. Escrito como
   estaba, la exclusión sobrevive a su motivo y nadie la vuelve a mirar.
+- **`| tail` en un guardián largo te quita justo la línea que hay que leer.**
+  El recuento de páginas que la regla de arriba manda mirar lo imprime
+  `humo.mjs` **al principio**, antes de abrir nada. El 11 de septiembre de 2026
+  se lanzó la barrida completa con `| tail -40` para no llenar la pantalla, y
+  eso hizo dos cosas a la vez: guardar solo las últimas cuarenta líneas de
+  4.866 —tirando el recuento— y **no mostrar nada durante veinte minutos**,
+  porque `tail` no emite hasta que el proceso muere. Veinte minutos sin saber
+  si el guardián avanzaba o estaba colgado, y al final un verde sin el dato que
+  lo hace verificable. Hubo que repetir la barrida entera.
+
+  **Regla: la salida de un guardián largo va a un fichero completo**
+  —`node scripts/humo.mjs > salida.txt 2>&1`— y de ahí se leen las dos puntas:
+  el `head` para el tamaño del conjunto y el `tail` para el veredicto. Nunca
+  se poda por el camino, porque lo que se poda es siempre el principio y el
+  principio es donde está el recuento.
 - **Insertar delante de un elemento de lista YAML deja su campo huérfano.** Si
   un elemento es `- id: X` seguido de su `nota:`, y sustituyes solo la línea
   `- id: X` por «`- id: X` + tu nota + tu elemento nuevo», la `nota` original
