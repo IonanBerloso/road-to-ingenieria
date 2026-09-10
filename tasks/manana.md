@@ -191,11 +191,29 @@ Va primero **porque bloquea**: §00 prohíbe abrir una sexta asignatura mientras
 Térmica esté en `obra`, y quedan cuatro sin abrir con septiembre de 2027
 encima. Nada de lo demás está bloqueado por nada.
 
-### 5A · Los cinco ejercicios de las tres convocatorias a medias
+> **Cerrada la madrugada del 11 de septiembre de 2026, las dos mitades.**
+> Térmica publica **veinte convocatorias de veintidós** —las dos restantes
+> declaradas imposibles, con su motivo— y sus cinco ejercicios sueltos están
+> escritos. Lo que le queda para pasar de `obra` a `ok` son **veinte
+> ejercicios `fuera` que sí son deuda**, de los 28 totales; el desglose está
+> abajo, en 5B.
+>
+> Con eso, **lo que bloquea la sexta asignatura ya no es una fase entera sino
+> una lista de veinte ejercicios sobre material completo**, que es una
+> decisión distinta: se puede cerrar Térmica antes de abrir nada, o declararla
+> `ok` con esos veinte en `falta[]` si §15 lo admite. Eso sí hay que
+> preguntarlo, porque cambia el orden de todo lo que viene después.
 
-Lo más barato que queda, y con diferencia: **los cinco enunciados ya están
-leídos** y descritos uno a uno en su `fuera`. No hay que descifrar ningún
-manuscrito nuevo; hay que escribirlos.
+### 5A · ~~Los cinco ejercicios de las tres convocatorias a medias~~ · **HECHA**
+
+Comprobado el 11 de septiembre de 2026 contando los `fuera` de cada
+convocatoria: **enero de 2018, febrero de 2022 y enero de 2025 tienen cero**,
+así que las tres están enteras. Se deja la tabla porque explica por qué se
+eligieron esos cinco y en ese orden.
+
+Lo más barato que quedaba, y con diferencia: **los cinco enunciados ya estaban
+leídos** y descritos uno a uno en su `fuera`. No había que descifrar ningún
+manuscrito nuevo; había que escribirlos.
 
 | convocatoria | faltan | qué son |
 |---|---|---|
@@ -211,21 +229,52 @@ el de febrero de 2022 cierra por una entropía en vez de por una temperatura.
 **Comprobación**: las tres convocatorias pasan a decir «3 de 3» y desaparecen
 sus bloques `fuera`.
 
-### 5B · Las que faltan por montar
+### 5B · ~~Las que faltan por montar~~ · **HECHA** el 11 de septiembre de 2026
 
-**Contado el 10 de septiembre de 2026, ya de noche: 22 convocatorias, 10
-montadas, 2 imposibles y quedan 10.** El encabezado decía «las catorce» y era
-la cuenta de por la tarde; se recuenta aquí en vez de arrastrarla, que es lo
-que §16 pide de cualquier cifra publicada.
+**Las veinte transcribibles están montadas.** De las 22 convocatorias, veinte
+son página con su PDF y al menos un ejercicio resuelto; las dos de 2014-2015
+quedan **declaradas imposibles** —un folio cada una, solo en euskera, sin
+resolución— en la cabecera de la ruta y en `docs/como-vamos.md`.
 
-Aquí está el trabajo de verdad, y conviene no engañarse con el ritmo: de las
-diez montadas, **tres fueron montar ejercicios ya escritos** y el resto se
-transcribieron desde cero. Las diez que quedan son todas desde cero.
+Esta sección se escribió tres veces con tres cifras distintas —«las catorce»,
+luego «quedan 10»— y cada recuento fue correcto en su momento. Se deja el
+rastro a propósito: es el ejemplo más limpio de por qué §16 manda recontar en
+vez de arrastrar.
 
-Y sobre todo: **solo tres tienen capa de texto aprovechable**. Las once
-restantes son escaneos manuscritos que hay que abrir página a página. Junio de
-2017 parecía tenerla y la tiene **corrupta** —el volcado sale como ruido—, así
-que cuenta como escaneo.
+**Lo que costó, para calibrar la próxima vez.** Ninguna de las diez últimas
+tenía capa de texto aprovechable: todas son escaneos abiertos página a página,
+y junio de 2017 tiene capa de texto **corrupta**, que es peor que no tenerla
+porque parece servir. Cada convocatoria fueron dos o tres imágenes del
+enunciado, tres o cuatro de la resolución, una resolución a ciegas propia y el
+contraste cifra a cifra.
+
+**Y lo que encontró ese método, que es la razón de hacerlo así:** cinco
+erratas en las resoluciones oficiales y cuatro enunciados repetidos
+literalmente entre convocatorias separadas por cuatro años o más. Ninguna de
+las nueve cosas se ve si se abre la resolución antes de resolver.
+
+#### Lo que queda de Térmica, que ya no son convocatorias
+
+Son los **28 ejercicios** que las veinte páginas dejan en `fuera`, contados uno
+a uno el 11 de septiembre de 2026:
+
+| por qué está fuera | cuántos | ¿es deuda? |
+|---|---|---|
+| trabajo pendiente, con resolución oficial detrás | 20 | sí |
+| ya cubierto por otro ejercicio del corpus | 4 | no |
+| fuera del temario — ciclos de potencia y R-134a | 3 | no |
+| falta material: el diagrama de Mollier | 1 | no hasta redibujarlo |
+
+De los veinte que sí son deuda, los que más rinden por orden: el **ciclo de
+tres politrópicas** de junio de 2018, único en su especie; el **compresor de
+nitrógeno** de junio de 2017, que sería el peldaño de examen que le falta al
+escalón del rendimiento exergético; el **apartado b) del compresor** de junio
+de 2016, único sitio donde el enunciado enfrenta el modelo con la medida; y el
+**radiador de módulos** de enero de 2019, que es convección natural sobre placa
+vertical y responde con un número entero de piezas.
+
+<details>
+<summary>El orden con el que se hizo, y por qué (se conserva)</summary>
 
 Orden por rendimiento, no por fecha:
 
@@ -262,20 +311,26 @@ Orden por rendimiento, no por fecha:
 
 **Y dos que no se van a poder**, declaradas: las de 2014-2015 son un folio cada
 una y solo en euskera. §00 dice que el sitio es solo en castellano y §08
-prohíbe reescribir un enunciado.
+prohíbe reescribir un enunciado. Comprobado abriéndolas: enero de 2015 son
+cuatro ejercicios —ciclo de refrigeración, psicrometría, turbina de gas y una
+tubería— y junio de 2015, tres, y **ninguna de las dos trae resolución**.
 
-> **Ojo con dar por hecho el idioma mirando una página**, que ese mismo día
-> falló **dos veces y en los dos sentidos**. Por la tarde se publicó que enero
-> de 2025 «sale solo en euskera» tras mirar su primera página, y era falso: el
-> castellano está en la segunda — costó dejar fuera de alcance un ejercicio
-> perfectamente transcribible durante unas horas. Por la noche apareció el
-> reverso: enero de 2024 llevaba publicado «escrito solo en castellano» y su
-> página 1 está entera en euskera, con el castellano en la 2.
+</details>
+
+> **Ojo con dar por hecho el idioma mirando una página**, que acabó fallando
+> **seis veces en una tanda y en los dos sentidos**. Primero se publicó que
+> enero de 2025 «sale solo en euskera» tras mirar su primera página, y era
+> falso: el castellano está en la segunda — costó dejar fuera de alcance un
+> ejercicio perfectamente transcribible durante unas horas. Después apareció el
+> reverso cinco veces seguidas: enero de 2024, enero de 2022, febrero de 2021,
+> febrero de 2020 y junio de 2018 llegaron a escribirse como «solo en
+> castellano» y las cinco son bilingües.
 >
-> Las dos veces el error vino de mirar **una** página de veintinueve, y las dos
-> veces el resultado fue una frase publicada que no era verdad. Antes de decir
-> en qué idioma está una convocatoria —para incluirla o para descartarla—, **se
-> mira el documento entero**, no su portada.
+> Siempre el mismo error: mirar **una** página de veintitantas. La regla, ya
+> con seis casos: antes de decir en qué idioma está una convocatoria —para
+> incluirla o para descartarla—, **se mira la página siguiente**. Si es la
+> resolución, no hay otra versión; si es el mismo examen en el otro idioma, es
+> bilingüe. Cuesta treinta segundos y las seis veces lo habría evitado.
 
 ---
 
