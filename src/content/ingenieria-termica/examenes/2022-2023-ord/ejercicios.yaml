@@ -589,3 +589,227 @@ ejercicios:
       comparten ecuación —uno sale de las entalpías y las entropías de los dos
       estados, el otro de Guy-Stodola—. Cuando los dos coinciden, el ejercicio
       está bien; cuando no, el error casi siempre está en una interpolación.
+  - id: exter2223-ord-3-la-tuberia-que-mide-el-viento
+    titulo: La tubería que mide el viento, y la correlación que se descarta sola
+    fuente: Ejercicio 3 de la convocatoria ordinaria de enero de 2022-2023 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen publica su resolución oficial manuscrita, y los cuatro valores del desarrollo están rehechos y contrastados contra ella.
+    nivel: examen
+    enunciado: |
+      Una tubería de cobre (conductividad del cobre,
+      $k = 385\ \text{W/mK}$) de $10\ \text{cm}$ de diámetro interior y
+      $0{,}3\ \text{cm}$ de espesor, sin aislamiento, transporta
+      $0{,}12\ \text{kg/s}$ de agua caliente a $80\ ^\circ\text{C}$ de
+      temperatura media. La tubería discurre por el exterior. Calcúlense:
+
+      a) Las pérdidas de calor por unidad de longitud de tubería si la
+      temperatura de la superficie exterior de la tubería es
+      $76\ ^\circ\text{C}$.
+
+      b) La velocidad del viento sobre la superficie exterior de la tubería, si
+      el aire se encuentra a $20\ ^\circ\text{C}$.
+    pide: Las pérdidas por unidad de longitud y la velocidad del viento.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado da la temperatura de la superficie exterior. ¿Para qué
+          sirve ese dato?
+        opciones:
+          - texto: Para cerrar el circuito por dentro y calcular el calor sin saber nada del aire
+            correcta: true
+            mensaje: |
+              Exacto. Con el agua a 80 y la superficie a 76 ya hay un salto
+              conocido a través de dos resistencias conocidas —la convección
+              interior y la conducción del cobre—, así que el calor sale sin
+              tocar el exterior. Y una vez sabido el calor, el exterior se
+              resuelve **al revés**: de él sale $h$, y de $h$ el viento.
+          - texto: Para calcular la conducción a través del cobre, que es la que manda
+            mensaje: |
+              La conducción del cobre no manda nada: su resistencia por metro
+              vale $2{,}4\cdot 10^{-5}$ frente a $0{,}020$ de la convección
+              interior. Es **ochocientas veces menor**, y podría despreciarse
+              sin que cambiara el resultado.
+          - texto: Para saber si el flujo exterior es laminar o turbulento
+            mensaje: |
+              Eso viene después, y no de la temperatura sino del Reynolds — que
+              es justamente lo que hay que averiguar. Aquí la temperatura de la
+              superficie es el dato que **evita** tener que saber nada del aire
+              para el apartado a).
+          - texto: Es un dato redundante, se podría calcular
+            mensaje: |
+              No se podría: para calcularla haría falta la resistencia
+              exterior, y esa depende del viento, que es la incógnita. El
+              enunciado la da precisamente para romper ese círculo.
+
+      - tipo: calcular
+        titulo: Las pérdidas por unidad de longitud
+        pregunta: |
+          Con el agua a $80\ ^\circ\text{C}$ y la superficie exterior a
+          $76\ ^\circ\text{C}$, ¿cuánto calor se pierde por metro de tubería?
+        respuesta:
+          tipo: magnitud
+          valor: '198.38 W/m'
+          tolerancia: 0.02
+          formato: un calor por unidad de longitud, con su unidad
+        distractores:
+          - valor: '166000 W/m'
+            mensaje: |
+              Has usado solo la conducción del cobre. Su resistencia es
+              minúscula, así que sola daría un calor enorme; lo que frena de
+              verdad es la película de agua pegada a la pared interior.
+          - valor: '2777 W/m'
+            mensaje: |
+              Has puesto el salto de 80 a 20 en vez de a 76. Los 20 °C son del
+              aire, y el aire está al otro lado de una resistencia que todavía
+              no conoces.
+        pista: |
+          $\dot{Q}/L = \dfrac{\theta_{agua}-\theta_{sup}}{R_{conv,i} + R_{cond}}$,
+          las dos por unidad de longitud.
+        desarrollo: |
+          $$
+          R_{cond} = \frac{\ln(0{,}106/0{,}10)}{2\pi \cdot 385}
+          = 2{,}41\cdot 10^{-5}
+          \qquad
+          R_{conv,i} = \frac{1}{h_i\,\pi D_1} = 0{,}020139
+          $$
+
+          $$
+          \frac{\dot{Q}}{L} = \frac{80-76}{0{,}020163} = 198{,}38\ \text{W/m}
+          $$
+
+      - tipo: calcular
+        titulo: El coeficiente exterior
+        pregunta: |
+          Ese mismo calor atraviesa la película de aire, con la superficie a
+          $76$ y el aire a $20\ ^\circ\text{C}$. ¿Cuánto vale $h$ fuera?
+        respuesta:
+          tipo: magnitud
+          valor: '10.64 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente de convección, con su unidad
+        distractores:
+          - valor: '11.28 W/(m^2 K)'
+            mensaje: |
+              Has usado el diámetro interior, 0,10, en vez del exterior. La
+              superficie por la que sale el calor es la de fuera: 0,106.
+          - valor: '3.54 W/(m^2 K)'
+            mensaje: |
+              Te has dejado el $\pi D$: el área por metro de tubería es
+              $\pi D_2$, no $D_2$.
+        pista: |
+          $\dot{Q}/L = h_2\,\pi D_2\,(\theta_{sup}-\theta_{aire})$.
+        desarrollo: |
+          $$
+          h_2 = \frac{198{,}38}{\pi \cdot 0{,}106 \cdot (76-20)} = 10{,}64\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad del viento
+        pregunta: |
+          Con $Nu = 41{,}44$ y la correlación
+          $Nu = 0{,}26\,Re^{0{,}6}Pr^{1/3}$ —válida para
+          $1000 < Re < 2\cdot 10^{5}$—, con $Pr = 0{,}7233$ y
+          $\nu = 1{,}7788\cdot 10^{-5}$, ¿a qué velocidad sopla el viento?
+        respuesta:
+          tipo: magnitud
+          valor: '0.94 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '1.59 m/s'
+            mensaje: |
+              Ese sale de la **otra** correlación, la de
+              $0{,}076\,Re^{0{,}7}$. Da $Re = 9472$, que **no está** en su
+              rango de validez —$2\cdot 10^{5}$ a $10^{6}$—, así que hay que
+              descartarla.
+          - valor: '3.39 m/s'
+            mensaje: |
+              Eso son kilómetros por hora, no metros por segundo. Son 0,94 m/s,
+              que efectivamente equivalen a 3,4 km/h.
+        pista: |
+          Despeja $Re$ de la correlación y después
+          $c = Re\,\nu/D_2$.
+        desarrollo: |
+          $$
+          41{,}44 = 0{,}26\,Re^{0{,}6}\,(0{,}7233)^{1/3}
+          \;\Longrightarrow\;
+          Re = 5609
+          $$
+
+          $$
+          c = \frac{5609 \cdot 1{,}7788\cdot 10^{-5}}{0{,}106} = 0{,}94\ \text{m/s}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el criterio para elegir correlación. Una pieza es falsa.
+        piezas:
+          - texto: 'Se prueban las dos: la primera da $Re = 5609$ y la segunda, $Re = 9472$.'
+          - texto: '5.609 está dentro de $1000$–$2\cdot10^{5}$, que es el rango de la primera; 9.472 está muy por debajo de $2\cdot10^{5}$, que es donde empieza la segunda, así que la segunda se contradice a sí misma.'
+          - texto: 'Se elige la primera porque da el Reynolds más pequeño, y en caso de duda conviene quedarse del lado conservador.'
+            trampa: true
+            mensaje: |
+              No se elige por ser mayor o menor: se elige por **coherencia**.
+              Una correlación con rango de validez hay que usarla y después
+              comprobar que el Reynolds que devuelve cae dentro de su propio
+              rango. La segunda devuelve 9.472 diciendo que solo vale por
+              encima de 200.000: se descarta ella sola, sin necesidad de
+              criterio ninguno.
+    resolucion: |
+      **Por qué el enunciado da la temperatura de la superficie.** Sin ella no
+      se puede empezar: la resistencia exterior depende del viento, y el viento
+      es la incógnita. Dando los 76 °C se rompe el círculo — el calor sale del
+      lado de dentro, donde todo se conoce, y el lado de fuera se resuelve
+      después y al revés.
+
+      **a) Las pérdidas.** Dos resistencias en serie por metro de tubería, y
+      conviene mirar su tamaño antes de sumarlas:
+
+      $$
+      R_{cond} = \frac{\ln(0{,}106/0{,}10)}{2\pi\cdot 385} = 2{,}41\cdot 10^{-5}
+      \qquad
+      R_{conv,i} = 0{,}020139
+      $$
+
+      El cobre aporta **ochocientas veces menos** que la película de agua.
+      Podría despreciarse sin que cambiara ni la tercera cifra, y eso es lo que
+      hay que aprender del cobre: como conductor no ofrece resistencia
+      apreciable, así que la temperatura de sus dos caras es prácticamente la
+      misma y todo el trabajo lo hacen las dos convecciones.
+
+      $$
+      \frac{\dot{Q}}{L} = \frac{80-76}{0{,}020163} = 198{,}38\ \text{W/m}
+      $$
+
+      **b) De ahí al viento, en tres pasos.** El mismo calor atraviesa la
+      película exterior, así que
+
+      $$
+      h_2 = \frac{198{,}38}{\pi\cdot 0{,}106\cdot 56} = 10{,}64\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      Nu = \frac{10{,}64\cdot 0{,}106}{0{,}02721} = 41{,}44
+      $$
+
+      con las propiedades del aire a la temperatura de película,
+      $(76+20)/2 = 48\ ^\circ\text{C}$.
+
+      **Y aquí está lo que hay que copiar de la resolución oficial.** Hay dos
+      correlaciones posibles y cada una trae su rango:
+
+      $$
+      Nu = 0{,}26\,Re^{0{,}6}Pr^{1/3} \quad (10^{3} < Re < 2\cdot10^{5})
+      \qquad
+      Nu = 0{,}076\,Re^{0{,}7}Pr^{1/3} \quad (2\cdot10^{5} < Re < 10^{6})
+      $$
+
+      Se prueban **las dos**. La primera devuelve $Re = 5609$, que cae dentro
+      de su rango; la segunda devuelve $9472$, muy por debajo de los 200.000
+      donde ella misma dice empezar. **La segunda se descarta sola**, sin
+      necesidad de ningún criterio: una correlación con rango tiene que
+      devolver un Reynolds coherente con él, y comprobarlo cuesta una división.
+
+      $$
+      c = \frac{5609 \cdot 1{,}7788\cdot10^{-5}}{0{,}106} = 0{,}94\ \text{m/s}
+      $$
+
+      **Y el sentido físico, que confirma el resultado.** 0,94 m/s son 3,4 km/h
+      — una brisa apenas perceptible. Encaja con un $h$ exterior de 10,6, que
+      está en la frontera entre la convección natural y la forzada. Si hubiera
+      salido un viento de 20 m/s con esa $h$, habría que volver atrás.
