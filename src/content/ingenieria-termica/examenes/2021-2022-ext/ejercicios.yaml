@@ -1,4 +1,237 @@
 ejercicios:
+  - id: exter2122-ext-1-la-mezcla-que-sale-sobrecalentada
+    titulo: La mezcla que sale sobrecalentada, y una referencia elegida para que sobre
+    fuente: Ejercicio 1 de la convocatoria extraordinaria de febrero de 2022 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen es bilingüe y publica su resolución oficial manuscrita, contra la que está contrastado el desarrollo.
+    nivel: examen
+    enunciado: |
+      $0{,}5\ \text{kg/s}$ de agua con una entalpía específica de
+      $3.485\ \text{kJ/kg}$ se mezclan adiabáticamente con una corriente de
+      agua a $111\ ^\circ\text{C}$ y título igual a $0{,}8$. La corriente
+      resultante tiene una entropía específica de
+      $7{,}8\ \text{kJ/kgK}$. Calcúlese:
+
+      a) El gasto de la corriente que entra en estado de vapor húmedo.
+
+      b) La exergía destruida en el proceso.
+
+      c) El rendimiento exergético del proceso.
+
+      Nota: tómese $0\ ^\circ\text{C}$ y $0{,}00611\ \text{bar}$ como estado de
+      referencia.
+    pide: El gasto de vapor húmedo, la exergía destruida y el rendimiento exergético.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado no dice a qué presión ocurre nada. ¿Cómo se averigua?
+        opciones:
+          - texto: Por la corriente 2, que está saturada a 111 °C
+            correcta: true
+            mensaje: |
+              Eso es. Un vapor húmedo tiene su presión atada a su temperatura,
+              así que 111 °C con título 0,8 fija $P = 1{,}4882\ \text{bar}$. Y
+              como en una cámara de mezcla las tres corrientes están a la misma
+              presión, con eso queda fijada para las tres.
+          - texto: Por la corriente 1, con su entalpía de 3.485 kJ/kg
+            mensaje: |
+              Una entalpía sola no fija un estado en la zona de vapor
+              sobrecalentado: hacen falta dos propiedades. La 1 se resuelve
+              **después**, cuando ya se sabe la presión.
+          - texto: Hay que suponer la atmosférica
+            mensaje: |
+              No hace falta suponer nada, y suponer aquí sería inventarse un
+              dato que el enunciado sí da, solo que de forma indirecta: a
+              través del estado saturado de la corriente 2.
+          - texto: Por el estado de referencia, 0,00611 bar
+            mensaje: |
+              Ese es el punto triple del agua, y sirve para medir exergías, no
+              para decir a qué presión trabaja la instalación.
+
+      - tipo: reconocer
+        pregunta: |
+          La corriente que sale tiene $s_3 = 7{,}8\ \text{kJ/(kg}\cdot\text{K)}$
+          a $1{,}4882\ \text{bar}$, donde el vapor saturado seco tiene
+          $s'' \approx 7{,}22$. ¿En qué estado sale la mezcla?
+        opciones:
+          - texto: Vapor sobrecalentado, porque su entropía pasa de la del vapor saturado
+            correcta: true
+            mensaje: |
+              Exacto, y conviene comprobarlo antes de buscar en ninguna tabla.
+              Si $s_3 > s''$ el estado está fuera de la campana por la derecha,
+              así que hay que ir a las tablas de sobrecalentado y no a las de
+              saturación.
+          - texto: Vapor húmedo, con un título entre 0,8 y 1
+            mensaje: |
+              No cabe: el título máximo es 1 y ahí la entropía vale 7,22. Un
+              7,8 se sale por la derecha de la campana.
+          - texto: Líquido saturado, porque se ha mezclado con agua
+            mensaje: |
+              La corriente 1 entra con 3.485 kJ/kg, que es vapor muy caliente.
+              Mezclar eso con vapor húmedo no condensa nada: al revés, seca lo
+              que quedaba de líquido.
+          - texto: No se puede saber sin la temperatura
+            mensaje: |
+              Sí se puede, y ese es el truco: con la presión y la entropía el
+              estado ya está determinado. La temperatura sale de la tabla, no
+              hace falta antes.
+
+      - tipo: calcular
+        titulo: El gasto de vapor húmedo
+        pregunta: |
+          Con $h_1 = 3485$, $h_2 = 2247{,}49$ y
+          $h_3 = 2948\ \text{kJ/kg}$, ¿cuánto vapor húmedo entra?
+        respuesta:
+          tipo: magnitud
+          valor: '0.383 kg/s'
+          tolerancia: 0.02
+          formato: un gasto másico, con su unidad
+        distractores:
+          - valor: '0.5 kg/s'
+            mensaje: |
+              Ese es el gasto de la corriente 1, el que da el enunciado. No hay
+              ninguna razón para que las dos sean iguales.
+          - valor: '2.61 kg/s'
+            mensaje: |
+              Has puesto el cociente al revés. La corriente caliente es la
+              pequeña: aporta mucha entalpía por kilo, así que hace falta poca.
+        pista: |
+          $\dot{m}_2 = \dot{m}_1\dfrac{h_1-h_3}{h_3-h_2}$.
+        desarrollo: |
+          $$
+          \dot{m}_2 = 0{,}5 \cdot \frac{3485-2948}{2948-2247{,}49} = 0{,}383\ \text{kg/s}
+          $$
+
+      - tipo: calcular
+        titulo: La exergía destruida
+        pregunta: |
+          Con $s_1 = 8{,}6475$ y $s_2 = 6{,}0681$, y la referencia a
+          $0\ ^\circ\text{C}$, ¿cuánta exergía se destruye por segundo?
+        respuesta:
+          tipo: magnitud
+          valor: '65.54 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '0.24 kW'
+            mensaje: |
+              Esa es la entropía generada, en kW/K. Falta multiplicarla por los
+              273 K de la referencia.
+          - valor: '17.9 kW'
+            mensaje: |
+              Has usado 20 °C o similar como temperatura de referencia. Aquí el
+              enunciado la fija en **0 °C**, y no es un capricho: elegir el
+              punto triple hace que $h_0$ y $s_0$ valgan cero.
+        pista: |
+          $\dot{S}_G = (\dot{m}_1+\dot{m}_2)s_3 - \dot{m}_1s_1 - \dot{m}_2s_2$, y
+          después $\dot{B}_D = T_0\dot{S}_G$.
+        desarrollo: |
+          $$
+          \dot{S}_G = 0{,}883 \cdot 7{,}8 - 0{,}5 \cdot 8{,}6475 - 0{,}383 \cdot 6{,}0681
+          = 0{,}24\ \text{kW/K}
+          $$
+
+          $$
+          \dot{B}_D = 273 \cdot 0{,}24 = 65{,}54\ \text{kW}
+          $$
+
+      - tipo: calcular
+        titulo: El rendimiento exergético
+        pregunta: |
+          Con $a_{f1} = 1124{,}23$, $a_{f2} = 590{,}9$ y
+          $a_{f3} = 818{,}6\ \text{kJ/kg}$ medidas desde el estado muerto,
+          ¿cuál es el rendimiento exergético?
+        respuesta:
+          tipo: numero
+          valor: '0.917'
+          tolerancia: 0.01
+          formato: una fracción entre 0 y 1
+        distractores:
+          - valor: '0.083'
+            mensaje: |
+              Esa es la fracción destruida. El rendimiento es lo que sale
+              partido de lo que entra, no lo que se pierde.
+          - valor: '0.728'
+            mensaje: |
+              Has olvidado multiplicar $a_{f3}$ por el gasto de salida, que es
+              la **suma** de los dos: 0,883 kg/s.
+        pista: |
+          $\eta_B = \dfrac{(\dot{m}_1+\dot{m}_2)\,a_{f3}}{\dot{m}_1a_{f1} + \dot{m}_2a_{f2}}$.
+        desarrollo: |
+          $$
+          \eta_B = \frac{0{,}883 \cdot 818{,}6}{0{,}5 \cdot 1124{,}23 + 0{,}383 \cdot 590{,}9}
+          = \frac{722{,}8}{788{,}4} = 0{,}917
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la razón de que la referencia sea el punto triple. Una pieza es falsa.
+        piezas:
+          - texto: 'A 0 °C y 0,00611 bar el agua está en su punto triple, que es donde las tablas ponen el cero de entalpía y de entropía del líquido saturado.'
+          - texto: 'Por eso $h_0 = 0$ y $s_0 = 0$, y la exergía de flujo se queda en $a_f = h - T_0 s$ sin más términos.'
+          - texto: 'Se elige ese estado porque es el único físicamente correcto para medir exergías.'
+            trampa: true
+            mensaje: |
+              El estado muerto lo elige quien plantea el problema, y lo normal
+              es el ambiente —15, 18, 20 o 25 °C, según el examen—. Aquí se ha
+              elegido el punto triple **por comodidad de cálculo**, no por
+              corrección: hace que dos términos desaparezcan. Con otro estado
+              muerto el resultado sería distinto y también sería correcto,
+              porque la exergía siempre se mide **contra algo**.
+    resolucion: |
+      **Primero la presión, que no está escrita.** La corriente 2 es vapor
+      húmedo a 111 °C: eso ata su presión a la de saturación,
+      $P = 1{,}4882\ \text{bar}$, y como en una cámara de mezcla las tres
+      corrientes comparten presión, ya está fijada para todas. De ahí
+      $h_2 = 2247{,}49$ y $s_2 = 6{,}0681$.
+
+      **Después, una comprobación que ahorra buscar en la tabla equivocada.**
+      La salida tiene $s_3 = 7{,}8$, y a esa presión el vapor saturado seco
+      tiene $s'' \approx 7{,}22$. Como $s_3 > s''$, **la mezcla sale
+      sobrecalentada**: hay que ir a las tablas de sobrecalentado, donde con
+      $P$ y $s$ se lee $h_3 = 2948\ \text{kJ/kg}$. Puede sorprender que
+      mezclando con vapor húmedo salga vapor seco, pero la corriente 1 entra
+      con 3.485 kJ/kg —muy caliente— y lo que hace es secar lo que quedaba de
+      líquido.
+
+      **a) El gasto.** Balance de energía en la cámara, adiabática y sin
+      trabajo:
+
+      $$
+      \dot{m}_2 = \dot{m}_1\frac{h_1-h_3}{h_3-h_2}
+      = 0{,}5\,\frac{3485-2948}{2948-2247{,}49} = 0{,}383\ \text{kg/s}
+      $$
+
+      **b) La exergía destruida.**
+
+      $$
+      \dot{S}_G = 0{,}883 \cdot 7{,}8 - 0{,}5 \cdot 8{,}6475 - 0{,}383 \cdot 6{,}0681
+      = 0{,}24\ \text{kW/K}
+      \;\Longrightarrow\;
+      \dot{B}_D = 273 \cdot 0{,}24 = 65{,}54\ \text{kW}
+      $$
+
+      La resolución oficial la calcula por el balance de exergía y obtiene el
+      mismo número al céntimo, que es la comprobación que conviene hacer
+      siempre: los dos caminos coinciden en una cámara adiabática porque el
+      balance de energía cancela los términos de entalpía.
+
+      **c) El rendimiento.** Toda la exergía que sale entre toda la que entra:
+
+      $$
+      \eta_B = \frac{0{,}883 \cdot 818{,}6}{0{,}5 \cdot 1124{,}23 + 0{,}383 \cdot 590{,}9}
+      = \frac{722{,}8}{788{,}4} = 0{,}917
+      $$
+
+      Y se comprueba solo: $788{,}4 - 722{,}8 = 65{,}6$ kW, que es la exergía
+      destruida del apartado anterior.
+
+      **Por qué el enunciado elige 0 °C y 0,00611 bar como estado muerto.** No
+      es un ambiente realista —nadie vive en el punto triple del agua—: es que
+      **ahí las tablas ponen el cero** de entalpía y de entropía del líquido
+      saturado. Con $h_0 = s_0 = 0$, la exergía de flujo se queda en
+      $a_f = h - T_0 s$ y desaparecen dos términos de cada línea. Es una
+      elección de comodidad, no de corrección: el estado muerto lo fija quien
+      plantea el problema, y con otro los números serían distintos y también
+      válidos. La exergía siempre se mide **contra algo**, y hay que decir
+      contra qué.
   - id: exter2122-ext-2-la-turbina-de-gas-y-los-dos-rendimientos
     titulo: La turbina de gas, y los dos rendimientos que casi coinciden
     fuente: Ejercicio 2 de la convocatoria extraordinaria de febrero de 2022 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen es bilingüe y publica su resolución oficial manuscrita, contra la que está contrastado el desarrollo.
