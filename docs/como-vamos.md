@@ -19,18 +19,27 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **Cuatro asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos
 y Fundamentos Químicos.** Las cuatro cumplen §15 entera y las cuatro están en el
 catálogo como `ok`. Entre las cuatro, **118 convocatorias transcritas de 118**
-—y una 119.ª en Térmica desde el 10 de septiembre de 2026—,
+—y **seis más en Térmica** desde el 10 de septiembre de 2026, que son 124—,
 y el guardián de convocatorias huérfanas no cuenta ninguna suelta.
 
 **Y una quinta abierta, Ingeniería Térmica, en `obra`.** Sus diez temas están
 escritos —cada uno con su figura y su ejemplo de entrada, que es lo que §15
 pide— y su ruta también, **medida sobre diecisiete convocatorias** leídas una a
-una: las diecisiete comparables al formato de hoy, de 2017-2018 en adelante. Lo
-que la mantiene en `obra` no es trabajo pendiente: son las **22 convocatorias
-sin transcribir**, paradas por §13 caso 5. Veinte de los veintidós PDF llevan
-dentro la resolución completa del profesor, así que publicarlos no es lo mismo
-que publicar un enunciado y la decisión no es del que escribe el sitio. Las
-tres salidas posibles están en `tasks/todo.md`.
+una: las diecisiete comparables al formato de hoy, de 2017-2018 en adelante.
+
+**Lo que la mantenía en `obra` se desbloqueó el 10 de septiembre de 2026**:
+eran las 22 convocatorias sin transcribir, paradas por §13 caso 5 porque
+veinte de los veintidós PDF llevan dentro la resolución completa del profesor
+y publicar eso no es lo mismo que publicar un enunciado. Ionan decidió
+publicarlo todo. Los 22 PDF están dentro —64 MB, §12 justificado— y **seis
+convocatorias ya son página**: enero de 2018, febrero de 2022, enero de 2023,
+enero de 2025, enero de 2026 y febrero de 2026.
+
+Quedan **dieciséis por transcribir**, y de ellas **dos no se van a poder**: las
+de 2014-2015 están en euskera, y el sitio es solo en castellano (§00) mientras
+que §08 prohíbe reescribir un enunciado. Eso deja el hueco real en catorce.
+Ahora es un hueco de trabajo y no de permiso, que es un cambio de naturaleza
+más que de tamaño.
 
 > Este párrafo decía «medida sobre seis convocatorias» hasta el 10 de
 > septiembre de 2026, y llevaba dos días atrasado: el 9 se leyeron las

@@ -6,7 +6,19 @@ comprueba.
 
 ---
 
-## Fase 0 · La decisión que bloquea una asignatura entera
+## Fase 0 · La decisión que bloquea una asignatura entera · RESUELTA
+
+> **Ionan eligió la A el 10 de septiembre de 2026: «publícalo todo y ya
+> decidiremos después».** Los 22 PDF están en `public/examenes/`, con la
+> resolución oficial dentro, y con eso se levantó el bloqueo.
+>
+> Lo único que conviene tener presente, y se dijo al hacerlo: **el historial
+> de git conserva los ficheros aunque un día se sustituyan por versiones
+> recortadas.** «Decidiremos después» funciona para todo menos para eso.
+>
+> Lo que costó: 64,1 MB en 24 ficheros, que más que duplican el historial. Se
+> intentó comprimirlos y no hay ganancia —son escaneos ya optimizados—.
+> Justificado contra §12 en el commit.
 
 **No es trabajo: es una respuesta tuya, y va primero porque condiciona la
 fase 1.**
@@ -32,10 +44,30 @@ decisión y la asignatura espera a ella.
 
 ---
 
-## Fase 1 · Térmica, transcribir las convocatorias
+## Fase 1 · Térmica, transcribir las convocatorias · EN MARCHA, 6 de 22
 
 **Desbloqueada por la fase 0.** Con la decisión tomada, es el trabajo más
 valioso que queda en el proyecto: Térmica pasa de `obra` a cerrada.
+
+> **Al cierre del 10 de septiembre de 2026 hay seis montadas**: enero de 2018
+> (1 de 3 ejercicios), febrero de 2022 (1 de 3), enero de 2023 (3 de 3), enero
+> de 2025 (2 de 3), enero de 2026 (3 de 3, en 7 resoluciones) y febrero de
+> 2026 (3 de 3). Todo lo que falta está en un `fuera` con su motivo, y el
+> motivo es siempre el mismo: **no falta material, falta escribirlo**. Es una
+> distinción que conviene mantener limpia, porque los `fuera` de Fluidos son
+> casi todos de material y esos no se arreglan trabajando.
+>
+> **Lo que cambió el orden propuesto sobre la marcha.** El plan ponía primero
+> enero de 2024 por rendimiento, pero al medir *qué se puede leer* resultó que
+> solo cuatro convocatorias tienen capa de texto aprovechable —2025-2026 las
+> dos, enero de 2023 y febrero de 2022— y que junio de 2017, que parecía
+> tenerla, la tiene **corrupta**. El resto son escaneos que hay que abrir
+> página a página. Así que se empezó por las legibles, que es lo que permitió
+> montar seis en una tarde.
+>
+> **Y dos que no se van a poder**: las de 2014-2015 están en euskera. §00 dice
+> que el sitio es solo en castellano y §08 prohíbe reescribir un enunciado, así
+> que se publican como PDF y no como página. Declarado, no escondido.
 
 Orden propuesto, y no es por fecha sino por rendimiento:
 

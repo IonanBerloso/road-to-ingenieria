@@ -28,12 +28,19 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > Térmica ya en `obra`—, y la regla de arriba dice qué hacer con ellas: se abre
 > una, y no se abre la siguiente hasta cerrarla.
 >
-> **Al 10 de septiembre de 2026**, con Térmica dentro: **61 temas**, las mismas
-> **119** convocatorias —la 119.ª es la primera de Térmica, montada esa
-> tarde—, **trece rutas** con 110 bloques y 295 escalones, y
-> **1.322 ejercicios**. Las cifras de esta nota son un corte con fecha, no un
-> estado: se añade una línea nueva y no se reescribe la anterior, para que se
-> vea qué cambia y a qué velocidad.
+> **Al 10 de septiembre de 2026**, con Térmica dentro: **61 temas**,
+> **124 convocatorias** —las 118 de siempre más **seis de Térmica**, montadas
+> esa tarde con sus PDF, que Ionan decidió publicar—, **trece rutas** con 110
+> bloques y 295 escalones, y **1.332 ejercicios**. Las cifras de esta nota son
+> un corte con fecha, no un estado: se añade una línea nueva y no se reescribe
+> la anterior, para que se vea qué cambia y a qué velocidad.
+>
+> Con eso Térmica deja de tener el hueco que la mantenía en `obra` **por
+> definición** —§15 exige el PDF original y no había ninguno— y pasa a tener
+> uno **medible**: de sus 22 convocatorias hay seis montadas y **dieciséis por
+> transcribir**, dos de ellas en euskera y por tanto fuera del alcance del
+> sitio (§00). Es un cambio de naturaleza más que de tamaño: antes faltaba una
+> decisión, ahora falta trabajo.
 >
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
