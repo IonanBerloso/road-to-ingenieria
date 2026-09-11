@@ -778,6 +778,7 @@ export const CON_TEMAS = [
   'algebra',
   'fundamentos-quimicos',
   'ingenieria-termica',
+  'ciencia-materiales',
 ] as const;
 export type ConTemas = (typeof CON_TEMAS)[number];
 
@@ -1239,6 +1240,16 @@ const ingenieriaTermica = defineCollection({
   schema: temaEscrito,
 });
 
+/* La sexta, abierta el 12 de septiembre de 2026 por decisión de Ionan. Es la
+   primera que entra **sin ningún examen** entre el material: sus temas se
+   escriben sobre las diapositivas de la profesora y una colección que publica
+   el resultado de cada problema, y su ruta queda por medir hasta que aparezcan
+   convocatorias (§14, §15). */
+const cienciaMateriales = defineCollection({
+  loader: glob({ pattern: '**/index.mdx', base: './src/content/ciencia-materiales' }),
+  schema: temaEscrito,
+});
+
 export const collections = {
   catalogo,
   calculo,
@@ -1246,6 +1257,7 @@ export const collections = {
   algebra,
   'fundamentos-quimicos': fundamentosQuimicos,
   'ingenieria-termica': ingenieriaTermica,
+  'ciencia-materiales': cienciaMateriales,
   ejercicios,
   examen,
   preparar,
