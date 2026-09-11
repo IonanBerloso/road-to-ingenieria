@@ -193,3 +193,465 @@ ejercicios:
       sentido: las dos temperaturas de partida estaban relativamente cerca del
       ambiente, así que había poca calidad que estropear. Mete el mismo bloque
       a 800 grados y la cifra se dispara sin que cambie nada del método.
+
+  - id: exter2425-ext-2-el-generador-que-rinde-el-noventa-y-dos-y-el-once
+    titulo: El generador que rinde el noventa y dos por ciento, y también el once
+    fuente: 'Ejercicio 2 de la convocatoria extraordinaria de 2024-2025, celebrada en febrero de 2025 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen publica su resolución oficial manuscrita, contra la que está contrastado el desarrollo. La tabla de datos técnicos del fabricante no se reproduce: sus tres cifras útiles van dichas en el enunciado.'
+    nivel: examen
+    enunciado: |
+      La tabla de la figura muestra los datos técnicos de un generador de aire
+      caliente. La diferencia entre la potencia térmica nominal y la útil se
+      consideran pérdidas de calor (básicamente con los gases de combustión
+      expulsados a $70\ ^\circ\text{C}$) al medio circundante. La temperatura en
+      la zona de intercambio térmico dentro del generador de aire caliente es de
+      $400\ ^\circ\text{C}$. El aire entra a $11\ ^\circ\text{C}$ al generador.
+      El caudal de aire que se facilita en la tabla es en las condiciones a la
+      entrada del generador. Calcúlese:
+
+      a) La temperatura del aire caliente a la salida del generador.
+
+      b) La exergía destruida en el proceso.
+
+      c) El rendimiento exergético del generador de aire caliente.
+
+      Nota: Calor específico del aire $= 1{,}0045\ \text{kJ/kg}\cdot\text{K}$;
+      Temperatura de referencia: $10\ ^\circ\text{C}$.
+
+      *De la tabla del fabricante hacen falta tres filas: potencia nominal
+      $200\ \text{kW}$, potencia útil $184\ \text{kW}$ y caudal de aire
+      $16.500\ \text{m}^{3}/\text{h}$.*
+    pide: La temperatura de salida, la exergía destruida y el rendimiento exergético.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El catálogo da el caudal en $\text{m}^{3}/\text{h}$ y las cuentas
+          necesitan $\text{kg/s}$. ¿Qué hace falta para pasar de uno a otro?
+        opciones:
+          - texto: La densidad del aire a 11 °C, que sale de la ecuación de los gases ideales
+            correcta: true
+            mensaje: |
+              Eso es, y el enunciado se molesta en decir que el caudal está
+              medido **a la entrada** precisamente para que sepas a qué
+              temperatura evaluarla. Con $P/RT$ a 284 K salen
+              $1{,}2431\ \text{kg/m}^{3}$ y el gasto es de 5,698 kg/s.
+          - texto: 'Nada: 16.500 m³/h son 4,583 m³/s y con eso basta'
+            mensaje: |
+              Un metro cúbico de aire no pesa lo mismo a 11 °C que a 400. El
+              calor específico va **por kilogramo**, así que sin la densidad no
+              se puede calcular ninguna potencia.
+          - texto: La densidad en condiciones normales, 1,293 kg/m³
+            mensaje: |
+              Esa es a 0 °C, y aquí el aire entra a 11. La diferencia es del
+              4 %, poca pero gratuita de evitar: el enunciado dice a qué
+              temperatura está medido el caudal.
+          - texto: La densidad a la salida, porque es donde el aire ya está caliente
+            mensaje: |
+              El caudal está medido **a la entrada** —lo dice el enunciado— así
+              que hay que emparejarlo con la densidad de la entrada. A la salida
+              el gasto másico es el mismo, pero el volumétrico ya no son 16.500.
+
+      - tipo: calcular
+        titulo: El gasto de aire
+        pregunta: |
+          Con $16.500\ \text{m}^{3}/\text{h}$ medidos a $11\ ^\circ\text{C}$,
+          ¿cuántos kilogramos de aire pasan por segundo?
+        respuesta:
+          tipo: magnitud
+          valor: '5.698 kg/s'
+          tolerancia: 0.02
+          formato: un gasto másico, con su unidad
+        distractores:
+          - valor: '4.583 kg/s'
+            mensaje: |
+              Eso son los $\text{m}^{3}/\text{s}$, no los kg/s: has dividido
+              entre 3.600 y te has quedado ahí. Falta multiplicar por la
+              densidad.
+          - valor: '5.93 kg/s'
+            mensaje: |
+              Has usado la densidad en condiciones normales, $1{,}293$, que es
+              la de 0 °C. El aire entra a 11 y su densidad es $1{,}2431$.
+        pista: |
+          $\rho = \dfrac{P}{R\,T}$ con $T = 284\ \text{K}$, y después
+          $\dot{m} = \rho\,\dot{V}$.
+        desarrollo: |
+          $$
+          \rho = \frac{101{,}325}{0{,}287 \cdot 284} = 1{,}2431\ \text{kg/m}^{3}
+          $$
+
+          $$
+          \dot{m} = 1{,}2431 \cdot \frac{16500}{3600} = 5{,}698\ \text{kg/s}
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura de salida
+        pregunta: |
+          De las dos potencias de la tabla, la que calienta el aire es la
+          **útil**. ¿A qué temperatura sale?
+        respuesta:
+          tipo: magnitud
+          valor: '43.15 °C'
+          tolerancia: 0.002
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '45.9 °C'
+            mensaje: |
+              Has usado la potencia **nominal**, 200 kW. Los 16 kW de
+              diferencia no calientan el aire: se van por la chimenea con los
+              gases de combustión, y el enunciado lo dice.
+          - valor: '32.2 °C'
+            mensaje: |
+              Eso es el **salto** de temperatura, no la temperatura de salida.
+              Falta sumarle los 11 °C de entrada.
+        pista: |
+          $\dot{Q}_{\text{útil}} = \dot{m}\,c_p\,(\theta_2-\theta_1)$.
+        desarrollo: |
+          $$
+          \theta_2 = 11 + \frac{184}{5{,}698 \cdot 1{,}0045} = 43{,}15\ ^\circ\text{C}
+          $$
+
+      - tipo: calcular
+        titulo: La exergía destruida
+        pregunta: |
+          Entran $200\ \text{kW}$ de calor a $400\ ^\circ\text{C}$ y se van
+          $16\ \text{kW}$ con los gases a $70$. ¿Cuánta exergía se destruye?
+        respuesta:
+          tipo: magnitud
+          valor: '102.8 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '16 kW'
+            mensaje: |
+              Esos son los kilovatios de **energía** que se pierden con los
+              gases. La exergía destruida es seis veces mayor, y casi toda se
+              destruye **dentro**, degradando calor de 400 °C a 43.
+          - valor: '115.9 kW'
+            mensaje: |
+              Esa es toda la exergía que **entra** con el calor a 400 °C. De
+              ella, 10,3 kW se quedan en el aire y 2,8 se van con los gases; lo
+              que falta es lo destruido.
+        pista: |
+          Por Guy-Stodola: $\dot{S}_G = \dot{m}(s_2-s_1) - \displaystyle\int\frac{\delta\dot{Q}}{T}$,
+          y después $Ex_D = T_0\,\dot{S}_G$.
+        desarrollo: |
+          $$
+          \int\frac{\delta\dot{Q}}{T} = \frac{200}{673} - \frac{16}{343}
+          = 0{,}2505\ \text{kW/K}
+          $$
+
+          $$
+          \dot{S}_G = 5{,}698 \cdot 0{,}1077 - 0{,}2505 = 0{,}363\ \text{kW/K}
+          $$
+
+          $$
+          Ex_D = 283 \cdot 0{,}363 = 102{,}8\ \text{kW}
+          $$
+
+          La resolución oficial lo comprueba además por el balance de exergía y
+          le sale lo mismo, que es la costumbre que este bloque enseña.
+
+      - tipo: justificar
+        pregunta: Ordena las dos cifras de rendimiento. Una pieza es falsa.
+        piezas:
+          - texto: 'El rendimiento **energético** es 184/200 = 92 %: de cada cien kilovatios de calor, noventa y dos acaban en el aire.'
+          - texto: 'El **exergético** es 11,3 %, contando como salida la exergía del aire y la de los gases: de los 115,9 kW de capacidad de producir trabajo que entran, se salvan 13,1.'
+          - texto: 'Como el energético ya es del 92 %, a esta máquina le queda poco margen de mejora.'
+            trampa: true
+            mensaje: |
+              El 92 % dice que casi no se escapa **energía**, y es verdad. Lo
+              que la máquina destruye es **calidad**: coge calor a 400 °C, que
+              vale mucho, y lo convierte en aire a 43, que vale poquísimo. Se
+              destruyen 102,8 de los 115,9 kW de exergía que entran. Aislarla
+              mejor no arreglaría nada; lo que habría margen de hacer es
+              **usar ese calor a 400 °C para algo antes** de bajarlo a 43.
+    resolucion: |
+      **Lo que hace único a este ejercicio.** Es el único del corpus construido
+      sobre una **hoja de catálogo**: los datos no vienen redactados en el
+      enunciado sino en una tabla de fabricante, con potencia nominal, potencia
+      útil, caudal de aire y hasta el nivel sonoro. Parte del trabajo es decidir
+      qué tres filas sirven y qué hacer con ellas.
+
+      **El gasto, que hay que fabricarse.** El catálogo da
+      $16.500\ \text{m}^{3}/\text{h}$, y el calor específico va por kilogramo:
+
+      $$
+      \rho = \frac{101{,}325}{0{,}287\cdot 284} = 1{,}2431\ \text{kg/m}^{3}
+      \;\Longrightarrow\; \dot{m} = 5{,}698\ \text{kg/s}
+      $$
+
+      **a) La temperatura de salida.** De las dos potencias, la que calienta el
+      aire es la **útil**; los 16 kW de diferencia se van con los gases:
+
+      $$
+      \theta_2 = 11 + \frac{184}{5{,}698\cdot 1{,}0045} = 43{,}15\ ^\circ\text{C}
+      $$
+
+      **b) La exergía destruida**, por Guy-Stodola:
+
+      $$
+      \dot{S}_G = 5{,}698\cdot 0{,}1077 - \left(\frac{200}{673}-\frac{16}{343}\right)
+      = 0{,}363\ \text{kW/K}
+      $$
+
+      $$
+      Ex_D = 283 \cdot 0{,}363 = 102{,}8\ \text{kW}
+      $$
+
+      **c) Y el rendimiento, con la misma pregunta de siempre: cuál.** La
+      resolución oficial cuenta como salida la exergía del aire **y** la que se
+      va con los gases:
+
+      $$
+      \eta_{Ex} = \frac{5{,}698\cdot 1{,}808 + 2{,}799}{115{,}9} = 11{,}3\ \%
+      $$
+
+      Contando solo el aire, que es lo único que alguien aprovecha, sale
+      **8,9 %**. Es la tercera vez que este corpus se encuentra lo mismo, y ya
+      conviene decirlo como regla: **un rendimiento exergético no es un número,
+      es una definición** — y hay que usar la que pida el enunciado sabiendo
+      cuál es la otra.
+
+      **La lectura que se lleva uno de aquí**, y es de las que cambian cómo se
+      mira una ficha técnica:
+
+      | | rinde | qué mide |
+      |---|---|---|
+      | energético | **92 %** | cuánta energía no se escapa |
+      | exergético | **11 %** | cuánta capacidad de producir trabajo sobrevive |
+
+      El 92 % es el número que va en el catálogo, y es honesto: casi no se
+      pierde energía. Pero la máquina coge calor a **400 °C** —que vale mucho,
+      porque con él se podría mover una turbina— y lo entrega como aire a
+      **43 °C**, que no sirve para nada más que templar una nave. Los 102,8 kW
+      destruidos son la factura de esa degradación, y no se arreglan aislando:
+      se arreglarían **usando el calor a 400 °C para algo antes** de bajarlo.
+
+  - id: exter2425-ext-3-el-viento-que-sale-de-una-perdida-de-calor
+    titulo: El viento que sale de una pérdida de calor, y la correlación que hay que elegir
+    fuente: Ejercicio 3 de la convocatoria extraordinaria de 2024-2025, celebrada en febrero de 2025 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen publica su resolución oficial manuscrita, contra la que está contrastado el desarrollo.
+    nivel: examen
+    enunciado: |
+      Por un tubo horizontal de $6\ \text{m}$ de largo, $10\ \text{cm}$ de
+      diámetro interior y $4\ \text{mm}$ de espesor fluyen
+      $0{,}15\ \text{kg/s}$ de agua. La temperatura del agua a la entrada de la
+      tubería es de $80\ ^\circ\text{C}$ y la presión es de $1\ \text{bar}$. Se
+      coloca una capa de aislamiento de $1\ \text{cm}$ sobre la tubería,
+      reduciendo así las pérdidas de calor a través de la tubería a
+      $1\ \text{kW}$. Si sobre la superficie exterior del material aislante el
+      viento pega de forma perpendicular, y la temperatura del aire exterior es
+      de $15\ ^\circ\text{C}$, calcúlese:
+
+      a) Velocidad del aire exterior.
+
+      b) El valor del coeficiente general de transferencia de calor (en relación
+      con la superficie exterior).
+
+      Datos: Conductividad térmica de la tubería,
+      $k_T = 20\ \text{W/(m}\cdot\text{K)}$; Conductividad térmica del
+      aislante, $k_I = 0{,}08\ \text{W/(m}\cdot\text{K)}$.
+
+      *Las propiedades del aire salen del anexo, a la temperatura de película:
+      $k = 0{,}02495\ \text{W/m}\cdot\text{K}$,
+      $\nu = 1{,}4928\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y $Pr = 0{,}7316$.
+      El anexo da dos correlaciones alternativas a Churchill-Bernstein para
+      flujo cruzado sobre cilindro, cada una con su rango:
+      $Nu = 0{,}26\,Re^{0{,}6}Pr^{1/3}$ para
+      $1000 < Re < 2\cdot 10^{5}$, y $Nu = 0{,}076\,Re^{0{,}7}Pr^{1/3}$ para
+      $2\cdot 10^{5} < Re < 10^{6}$.*
+    pide: La velocidad del viento y el coeficiente global referido al exterior.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado pide **la velocidad del viento**. ¿Qué lo hace
+          calculable?
+        opciones:
+          - texto: Que el calor perdido es dato, así que toda la cadena de resistencias queda determinada y la única que falta es la del viento
+            correcta: true
+            mensaje: |
+              Eso es, y es el molde que más se repite en esta asignatura: el
+              balance térmico usado **al revés**. Con $\dot{Q} = 1\ \text{kW}$
+              conocido se puede bajar desde el agua hasta la superficie del
+              aislante, y lo que queda entre esa superficie y el aire es la
+              incógnita.
+          - texto: Que la tubería es horizontal, lo que fija el régimen de convección
+            mensaje: |
+              Que sea horizontal importa para elegir la **correlación**, no para
+              hacer el problema resoluble. Lo que lo hace resoluble es tener el
+              calor como dato.
+          - texto: Que dan las dos conductividades, y con ellas se despeja la velocidad
+            mensaje: |
+              Las conductividades solo dan las resistencias de conducción, que
+              son dos eslabones de la cadena. Sin el calor no se puede
+              recorrerla, porque no habría por dónde empezar.
+          - texto: Que el agua entra a 80 °C, lo que fija su temperatura en todo el tubo
+            mensaje: |
+              El agua no está a 80 en todo el tubo: se enfría al perder ese
+              kilovatio, hasta 78,4 °C. La temperatura que se usa es la media,
+              79,21 °C, y sale precisamente del calor perdido.
+
+      - tipo: calcular
+        titulo: El coeficiente global referido al exterior
+        pregunta: |
+          El agua está a $79{,}21\ ^\circ\text{C}$ de media y el diámetro
+          exterior del aislante es $12{,}8\ \text{cm}$. ¿Cuánto vale $U_3$?
+        respuesta:
+          tipo: magnitud
+          valor: '6.455 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente global, con su unidad
+        distractores:
+          - valor: '8.26 W/(m^2 K)'
+            mensaje: |
+              Has usado la superficie **interior** del tubo, la de 10 cm. El
+              enunciado pide el coeficiente «en relación con la superficie
+              exterior», y por eso el área es la del aislante.
+          - valor: '38.7 W/(m^2 K)'
+            mensaje: |
+              Te has dejado la longitud. El área lateral de un cilindro es
+              $\pi D L$, y aquí $L$ son 6 metros.
+        pista: |
+          Por el camino corto: $U_3 = \dfrac{\dot{Q}}{A_3\,(\theta_{agua}-\theta_{aire})}$.
+        desarrollo: |
+          $$
+          U_3 = \frac{1000}{\pi \cdot 0{,}128 \cdot 6 \cdot (79{,}21-15)}
+          = 6{,}455\ \text{W/m}^{2}\text{K}
+          $$
+
+          Sale de una línea porque el coeficiente global **es**, por
+          definición, lo que hay que poner ahí para que la cuenta cierre. La
+          forma larga —sumar las cuatro resistencias y referirlas al exterior—
+          da lo mismo y sirve de comprobación.
+
+      - tipo: calcular
+        titulo: El coeficiente del viento
+        pregunta: |
+          La superficie exterior del aislante queda a $19{,}95\ ^\circ\text{C}$.
+          ¿Cuál es el coeficiente de convección del aire?
+        respuesta:
+          tipo: magnitud
+          valor: '83.79 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente de convección, con su unidad
+        distractores:
+          - valor: '6.455 W/(m^2 K)'
+            mensaje: |
+              Ese es el coeficiente **global**, que incluye toda la cadena. El
+              del viento es solo el último eslabón, y es trece veces mayor:
+              justamente por eso el aislante manda y el viento casi no.
+          - valor: '429.86 W/(m^2 K)'
+            mensaje: |
+              Ese es el número de **Nusselt**, adimensional. Para pasar a $h$
+              hay que multiplicar por $k/D$, y con $k = 0{,}02495$ y
+              $D = 0{,}128$ eso divide por cinco.
+        pista: |
+          Todo el kilovatio cruza esa última película:
+          $\dot{Q} = h_3\,A_3\,(\theta_{s}-\theta_{aire})$.
+        desarrollo: |
+          $$
+          h_3 = \frac{1000}{\pi \cdot 0{,}128 \cdot 6 \cdot (19{,}95-15)}
+          = 83{,}79\ \text{W/m}^{2}\text{K}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad del viento
+        pregunta: |
+          Con $Nu = 429{,}86$ y la correlación que corresponda, ¿a qué velocidad
+          sopla el aire?
+        respuesta:
+          tipo: magnitud
+          valor: '31.06 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '32.07 m/s'
+            mensaje: |
+              Has usado la correlación del rango bajo,
+              $Nu = 0{,}26\,Re^{0{,}6}Pr^{1/3}$. Su Reynolds sale 274.991, que
+              está **fuera de su propio rango** —vale hasta $2\cdot 10^{5}$—,
+              así que esa correlación se descarta ella sola.
+          - valor: '36.81 m/s'
+            mensaje: |
+              Has usado el diámetro del tubo, 10,8 cm, en vez del del aislante.
+              El viento pega sobre el aislante, así que la longitud
+              característica es 12,8 cm.
+        pista: |
+          Despeja $Re$ de la correlación válida y después
+          $c = Re\,\nu/D_3$.
+        desarrollo: |
+          $$
+          429{,}86 = 0{,}076\,Re^{0{,}7}\,0{,}7316^{1/3}
+          \;\Longrightarrow\; Re = 266{.}292
+          $$
+
+          $$
+          c = \frac{266292 \cdot 1{,}4928\cdot 10^{-5}}{0{,}128} = 31{,}06\ \text{m/s}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena cómo se elige la correlación. Una pieza es falsa.
+        piezas:
+          - texto: 'Se prueban las dos: la del rango bajo da $Re = 274.991$ y la del alto, $266.292$.'
+          - texto: 'La primera queda fuera de su propio rango —vale hasta $2\cdot 10^{5}$— y la segunda cae dentro del suyo, así que la válida es la segunda.'
+          - texto: 'Como las dos dan Reynolds parecidos, da igual cuál se use.'
+            trampa: true
+            mensaje: |
+              Aquí dan parecidos —un 3 % — y por eso este ejercicio es benévolo.
+              Pero eso es una casualidad de estos números, no una regla: las dos
+              correlaciones tienen exponentes distintos, así que se separan en
+              cuanto te alejas de la frontera. Lo que hay que hacer siempre es
+              **comprobar que el Reynolds obtenido cae dentro del rango de la
+              correlación que lo ha producido**; si no cae, esa correlación se
+              descarta aunque el número parezca razonable.
+    resolucion: |
+      **El molde, que ya es el cuarto del corpus: el balance térmico al revés.**
+      El calor perdido es dato —$1\ \text{kW}$— y lo que se busca es una
+      condición del entorno. Con el calor conocido se recorre la cadena de
+      resistencias desde el agua hacia fuera, y lo único que queda sin
+      determinar es la película de aire.
+
+      **El agua no está a 80.** Pierde ese kilovatio a lo largo de los 6 m, así
+      que baja a 78,4 y su temperatura representativa es la media, **79,21 °C**.
+
+      **b) El coeficiente global**, por el camino corto:
+
+      $$
+      U_3 = \frac{1000}{\pi\cdot 0{,}128\cdot 6\cdot (79{,}21-15)}
+      = 6{,}455\ \text{W/m}^{2}\text{K}
+      $$
+
+      **a) Y la velocidad.** La superficie exterior del aislante queda a
+      $19{,}95\ ^\circ\text{C}$, apenas cinco grados por encima del aire, y por
+      esa película tiene que pasar todo el kilovatio:
+
+      $$
+      h_3 = \frac{1000}{\pi\cdot 0{,}128\cdot 6\cdot (19{,}95-15)}
+      = 83{,}79\ \text{W/m}^{2}\text{K}
+      \;\Longrightarrow\; Nu = \frac{83{,}79\cdot 0{,}128}{0{,}02495} = 429{,}86
+      $$
+
+      $$
+      Re = 266{.}292 \;\Longrightarrow\; c = 31{,}06\ \text{m/s}
+      $$
+
+      **La parte que enseña el método.** El anexo da **dos** correlaciones para
+      flujo cruzado sobre cilindro, cada una con su rango, y no se puede elegir
+      a ojo: hay que calcular el Reynolds con las dos y quedarse con aquella
+      cuyo resultado **caiga dentro de su propio rango**.
+
+      | correlación | su rango | Reynolds que produce | ¿vale? |
+      |---|---|---|---|
+      | $0{,}26\,Re^{0{,}6}Pr^{1/3}$ | hasta $2\cdot 10^{5}$ | 274.991 | **no**, se sale |
+      | $0{,}076\,Re^{0{,}7}Pr^{1/3}$ | de $2\cdot 10^{5}$ a $10^{6}$ | 266.292 | sí |
+
+      Aquí las dos dan valores parecidos y el ejercicio perdona; con otros
+      números no perdonaría. Es la misma costumbre que el corpus ya pide en
+      Churchill y Chu, y el motivo es el mismo: **una correlación no es una
+      fórmula, es un ajuste con fronteras.**
+
+      **Y una última lectura, sobre el tamaño del resultado.** 31 m/s son
+      **112 km/h**: un temporal. No es un error — es lo que el enunciado
+      impone al fijar las pérdidas en 1 kW con solo un centímetro de aislante.
+      Para sacar un kilovatio por 2,4 m² con apenas cinco grados de diferencia
+      hace falta un viento así. Cuando un dato de entrada se fija a
+      conveniencia, la incógnita que sale puede ser física y a la vez poco
+      realista, y conviene decirlo en vez de disimularlo.
