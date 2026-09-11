@@ -201,3 +201,217 @@ ejercicios:
       Y una consecuencia práctica que sale sola: si quisieras arreglar este
       proceso, aislar el depósito no serviría de nada. Lo que habría que hacer
       es no dejar que el gas se expanda solo — poner una turbina en medio.
+
+  - id: exter2223-ext-3-el-metal-que-esta-vez-si-cuenta
+    titulo: La tubería de hierro fundido, y el metal que esta vez sí cuenta
+    fuente: Ejercicio 3 de la convocatoria extraordinaria de 2022-2023, celebrada el 30 de enero de 2023 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      En una tubería de hierro fundido de diámetro interior $50\ \text{mm}$,
+      espesor $5\ \text{mm}$ y longitud $1{,}2\ \text{m}$, entra un gasto de
+      agua líquida de $2\ \text{kg/s}$ a $38\ ^\circ\text{C}$ y sale a
+      $45\ ^\circ\text{C}$. Calcúlese la temperatura superficial exterior de la
+      tubería. Tómese la conductividad térmica del hierro fundido igual a
+      $52\ \text{W/mK}$.
+
+      *Las propiedades del agua salen del anexo, a la temperatura característica
+      $41{,}5\ ^\circ\text{C}$: $c_p = 4{,}179\ \text{kJ/kg}\cdot\text{K}$,
+      $\rho = 991{,}5\ \text{kg/m}^{3}$,
+      $k = 0{,}6328\ \text{W/m}\cdot\text{K}$,
+      $\nu = 6{,}4135\cdot 10^{-7}\ \text{m}^{2}/\text{s}$ y $Pr = 4{,}197$.*
+    pide: La temperatura de la cara exterior de la tubería.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿A qué temperatura hay que entrar en las tablas del agua?
+        opciones:
+          - texto: A la media entre la entrada y la salida, 41,5 °C
+            correcta: true
+            mensaje: |
+              Eso es. En convección **interna** la temperatura característica es
+              la media del fluido entre las dos secciones, porque representa a
+              todo el tramo. Ojo con confundirla con la de película: esa se usa
+              en convección **externa**, y ahí sí entra la pared.
+          - texto: A la de película, la media entre el agua y la pared
+            mensaje: |
+              Esa es la de convección **externa**. Aquí el fluido va por dentro,
+              así que la característica es la suya. Y además la de la pared no
+              la sabes todavía: es justo lo que se pide.
+          - texto: A la de entrada, 38 °C, porque es el estado conocido
+            mensaje: |
+              El agua se calienta siete grados a lo largo del tubo y sus
+              propiedades cambian. Tomar la de entrada describe bien la primera
+              sección y mal el resto; la media describe razonablemente todo.
+          - texto: A 45 °C, porque las propiedades se evalúan donde el fluido está más caliente
+            mensaje: |
+              No hay ninguna regla que diga eso. La convención es la media, y
+              tiene motivo: la propiedad que más manda aquí es la viscosidad, y
+              usar un extremo sesgaría el Reynolds hacia ese lado.
+
+      - tipo: calcular
+        titulo: El calor que recibe el agua
+        pregunta: |
+          ¿Cuánto calor entra al agua a lo largo de esos $1{,}2\ \text{m}$?
+        respuesta:
+          tipo: magnitud
+          valor: '58.5 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '29.25 kW'
+            mensaje: |
+              Te has dejado el gasto: eso es el calor por **kilogramo**, no por
+              segundo. Pasan 2 kg/s, así que hay que multiplicar por dos.
+          - valor: '376.1 kW'
+            mensaje: |
+              Has usado 45 como salto de temperatura. El salto son **siete**
+              grados, de 38 a 45: lo que cuenta es la diferencia, no el valor
+              final.
+        pista: |
+          $\dot{Q} = \dot{m}\,c_p\,(\theta_s-\theta_e)$.
+        desarrollo: |
+          $$
+          \dot{Q} = 2 \cdot 4{,}179 \cdot (45-38) = 58{,}5\ \text{kW}
+          $$
+
+          Conviene pararse un segundo: son **58,5 kW por 1,2 metros de tubo**.
+          Repartido por la superficie interior eso son
+          $310\ \text{kW/m}^{2}$, y ese flujo brutal explica lo que viene
+          después.
+
+      - tipo: calcular
+        titulo: El coeficiente de convección
+        pregunta: |
+          Con $Re = 80.091$ y $Pr = 4{,}197$, y Dittus-Boelter con exponente
+          $0{,}4$ porque el fluido **se calienta**, ¿cuánto vale $h$?
+        respuesta:
+          tipo: magnitud
+          valor: '4326 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente de convección, con su unidad
+        distractores:
+          - valor: '4704 W/(m^2 K)'
+            mensaje: |
+              Sale de tomar $Nu = 371{,}7$, que es el valor que **imprime la
+              resolución oficial** y está mal: con ese Reynolds y ese Prandtl la
+              correlación da 342. El propio profesor usa después el $h$ bueno,
+              así que su resultado final es correcto — pero copiar su Nusselt
+              arrastra el error.
+          - valor: '342 W/(m^2 K)'
+            mensaje: |
+              Ese es el número de **Nusselt**, que es adimensional. Falta
+              convertirlo: $h = Nu\,k/D$, y con $k = 0{,}6328$ y $D = 0{,}05$
+              eso multiplica por casi trece.
+        pista: |
+          $Nu = 0{,}023\,Re^{0{,}8}\,Pr^{0{,}4}$, y después $h = Nu\,k/D$.
+        desarrollo: |
+          $$
+          Nu = 0{,}023 \cdot 80091^{0{,}8} \cdot 4{,}197^{0{,}4} = 341{,}8
+          $$
+
+          $$
+          h = \frac{341{,}8 \cdot 0{,}6328}{0{,}05} = 4326\ \text{W/m}^{2}\text{K}
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura de la cara exterior
+        pregunta: |
+          Con la cara interior a $113{,}3\ ^\circ\text{C}$, ¿a cuánto está la
+          exterior?
+        respuesta:
+          tipo: magnitud
+          valor: '140.5 °C'
+          tolerancia: 0.004
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '113.3 °C'
+            mensaje: |
+              Esa es la cara **interior**, que es el dato de partida. Falta
+              atravesar los 5 mm de hierro, y esos cuestan 27 grados.
+          - valor: '134.7 °C'
+            mensaje: |
+              Vienes arrastrando el $Nu = 371{,}7$ de la resolución oficial. El
+              salto por la pared, 27 grados, lo tienes bien; lo que está mal es
+              la temperatura de la que partes.
+        pista: |
+          $\theta_{p2} = \theta_{p1} + \dot{Q}\,\dfrac{\ln(r_2/r_1)}{2\pi k L}$.
+        desarrollo: |
+          $$
+          \theta_{p2} = 113{,}3 + 58506 \cdot \frac{\ln(30/25)}{2\pi \cdot 52 \cdot 1{,}2}
+          = 140{,}5\ ^\circ\text{C}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena por qué aquí el metal sí pesa. Una pieza es falsa.
+        piezas:
+          - texto: 'La convección del agua vale $1/(hA) = 1{,}23\cdot 10^{-3}$ K/W y los 5 mm de hierro, $4{,}65\cdot 10^{-4}$: la pared es el **27,5 %** del total.'
+          - texto: 'En la plancha de enero de 2016, con un espesor parecido, la pared era el 0,4 % — porque enfrente tenía aire quieto y aquí tiene agua a un metro por segundo.'
+          - texto: 'Luego la regla «el metal es despreciable» está mal y no hay que usarla nunca.'
+            trampa: true
+            mensaje: |
+              La regla no está mal: está **incompleta**. Una resistencia no es
+              grande ni pequeña por sí sola, lo es **comparada con las que tiene
+              al lado**. Con aire quieto enfrente el metal desaparece; con agua
+              forzada, que da un coeficiente seiscientas veces mayor, el metal
+              se lleva más de un cuarto. Lo que hay que hacer no es tirar la
+              regla, sino mirar siempre contra qué compite.
+    resolucion: |
+      **El calor, y el primer aviso.**
+
+      $$
+      \dot{Q} = 2 \cdot 4{,}179 \cdot (45-38) = 58{,}5\ \text{kW}
+      $$
+
+      Son 58,5 kW por **1,2 metros** de tubería. Por la superficie interior eso
+      son $310\ \text{kW/m}^{2}$: un flujo enorme, y conviene registrarlo
+      porque es lo que hace raro a este ejercicio.
+
+      **La convección dentro.** El agua va a $1{,}03\ \text{m/s}$, lo que da
+      $Re = 80.091$ —turbulento de sobra— y Dittus-Boelter con exponente
+      $0{,}4$, porque el fluido **se calienta**:
+
+      $$
+      Nu = 0{,}023 \cdot 80091^{0{,}8} \cdot 4{,}197^{0{,}4} = 341{,}8
+      \;\Longrightarrow\; h = 4326\ \text{W/m}^{2}\text{K}
+      $$
+
+      **Las dos temperaturas.** La cara interior sale del balance de convección,
+      y la exterior de atravesar el hierro:
+
+      $$
+      \theta_{p1} = 41{,}5 + \frac{58506}{4326 \cdot 0{,}1885} = 113{,}3\ ^\circ\text{C}
+      $$
+
+      $$
+      \theta_{p2} = 113{,}3 + 58506\,\frac{\ln(30/25)}{2\pi\cdot 52\cdot 1{,}2}
+      = 140{,}5\ ^\circ\text{C}
+      $$
+
+      **Y aquí está lo que hay que llevarse, porque contradice lo que parecía
+      una regla.** Los cinco milímetros de hierro cuestan **27 grados**. En la
+      plancha de enero de 2016, con un espesor parecido y un material peor
+      conductor, la placa costaba **siete décimas**.
+
+      La diferencia no está en el metal, está en **con qué compite**:
+
+      | | resistencia de la pared | resistencia del fluido | la pared es |
+      |---|---|---|---|
+      | la plancha, aire quieto | 0,0068 K/W | 1,77 K/W | 0,4 % |
+      | esta tubería, agua forzada | 0,000465 K/W | 0,00123 K/W | **27,5 %** |
+
+      El agua forzada da un coeficiente de convección de 4.326 frente a los 7,2
+      del aire quieto: seiscientas veces mayor. Cuando el fluido conduce tan
+      bien, el metal deja de ser transparente.
+
+      **La regla corregida, que es la que sirve:** una resistencia no es grande
+      ni pequeña por sí misma. Antes de despreciar ninguna se comparan todas, y
+      en un problema de convección forzada con líquido la pared casi nunca se
+      puede tirar.
+
+      > **Una errata de la resolución oficial, y de las que no se notan.**
+      > Imprime $Nu = 371{,}71$, y con ese Reynolds y ese Prandtl la correlación
+      > da **341,8**. Lo curioso es que su resultado final es correcto: el
+      > $h = 4327{,}7$ que escribe justo debajo sale de 341,8, no de 371,71. El
+      > número mal escrito **no llega a propagarse** — pero quien copie el
+      > Nusselt y siga desde ahí obtiene 107,5 y 134,7 °C, que parecen
+      > perfectamente razonables.
