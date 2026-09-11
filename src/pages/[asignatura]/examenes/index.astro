@@ -98,6 +98,25 @@ const datos = new Map(
   }),
 );
 
+/*
+ * Cuántos ejercicios quedan sin resolver en toda la asignatura, y en cuántas
+ * convocatorias están.
+ *
+ * POR QUÉ EXISTE. Cada convocatoria ya dice lo suyo —«1 de 3 ejercicios», y su
+ * caja de `fuera` explica cuáles y por qué—, pero eso solo se ve **después de
+ * entrar en una**. Quien abre este índice y ve veinte convocatorias en fila se
+ * lleva la impresión de que la asignatura está entera, y no lo está: el 11 de
+ * septiembre de 2026 Ingeniería Térmica publicaba sus veinte convocatorias con
+ * **28 ejercicios** todavía sin resolución, y ninguna frase de esta página lo
+ * decía.
+ *
+ * Se calcula, nunca se escribe (§10): el día que se resuelva el último, la
+ * frase desaparece sola. Y no se pinta si no hay ninguno, para que su presencia
+ * signifique algo.
+ */
+const sinResolver = [...datos.values()].reduce((s, d) => s + d.fuera, 0);
+const convocatoriasConHueco = [...datos.values()].filter((d) => d.fuera > 0).length;
+
 /* Los nombres salen de CONVOCATORIAS, en minúscula; aquí encabezan un grupo,
    así que se capitaliza la primera letra al pintarlos. */
 const NOMBRE_CONV: Record<string, string> = Object.fromEntries(
@@ -137,6 +156,19 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
         Los exámenes no publican solución: las resoluciones son propuesta
         nuestra y están pendientes de revisión.
       </p>
+
+      {
+        sinResolver > 0 && (
+          <p class="aviso aviso--falta rotulo">
+            Y falta trabajo, dicho aquí para que no haya que entrar a
+            descubrirlo: <strong>{sinResolver} ejercicios</strong> de{' '}
+            {convocatoriasConHueco}{' '}
+            {convocatoriasConHueco === 1 ? 'convocatoria' : 'convocatorias'}{' '}
+            siguen sin resolución guiada. Están en el PDF de cada una, y cada
+            convocatoria dice cuáles son y por qué todavía no están.
+          </p>
+        )
+      }
 
       {
         rutas.length > 0 && (
@@ -279,6 +311,16 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
     text-transform: none;
     letter-spacing: .01em;
     max-width: var(--measure);
+  }
+
+  /* El de la deuda va pegado al anterior y en tono de nota, no de alarma: lo
+     que cuenta no es un riesgo para quien lee, es una promesa que todavía no
+     está cumplida. Por eso el acento de la asignatura y no el rojo. */
+  .aviso--falta {
+    margin-top: -1.8rem;
+    border-left-color: var(--acento);
+    background: transparent;
+    color: var(--graphite);
   }
 
   .lista { list-style: none; }
