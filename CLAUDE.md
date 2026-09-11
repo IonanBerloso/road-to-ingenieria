@@ -98,6 +98,16 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > el material**, y eso decide por dónde se empieza; está en `tasks/manana.md`,
 > fase 7.
 >
+> **Y la sexta se abre ese mismo día: Ciencia de Materiales**, por decisión de
+> Ionan —«haz materiales primero»—, no por la recomendación escrita, que era
+> Mecánica Aplicada. Queda en `obra` con su temario oficial de diez temas y su
+> evaluación, las dos copiadas de la guía del alumnado 2025-2026. Arranca con
+> dos huecos declarados desde el primer día: **no hay ni un examen** entre el
+> material, así que su ruta no se puede medir, y **los temas 7 a 10 no tienen
+> material de la profesora** —se trabajan con presentaciones de los alumnos,
+> que llevan sus nombres y no se abren—. El plan, tema a tema, está en
+> `tasks/manana.md`.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no

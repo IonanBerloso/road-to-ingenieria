@@ -179,6 +179,67 @@ terminadas**.
 
 ## Fase 7 · La sexta asignatura
 
+> **Ionan eligió Ciencia de Materiales el 12 de septiembre de 2026: «haz
+> materiales primero».** Lo de abajo —la tabla del material, el hallazgo de que
+> ninguna de las cuatro trae exámenes y la recomendación que no se siguió— se
+> conserva porque sigue siendo cierto, y el plan de Materiales va primero.
+
+### El plan de Ciencia de Materiales
+
+Medido el 12 de septiembre de 2026 sobre `Desktop/2027 proyecto contenido/
+Ciencia de Materiales/`, abriendo solo lo que el nombre no delata como
+personal —las presentaciones por grupos, los resultados y datos de prácticas
+de un grupo, la carpeta de datos de laboratorio y los dos ficheros de grupos
+y fechas de presentaciones se quedan sin abrir—, y mirando el final de cada
+documento antes de usar nada de él.
+
+**Lo que hay.** El temario oficial está en la guía del alumnado 2025-2026,
+apartado 5: diez temas. Los seis primeros tienen diapositivas de la profesora
+—370 páginas con capa de texto— y **una colección de 99 ejercicios con el
+resultado impreso**: 30 del tema 2, 29 del 3 (en tres partes), 29 del 4, 7 del
+5 y 4 del 6. El tema 1 no tiene colección: se evalúa con un **test de
+contenidos mínimos** que hay que aprobar para aprobar la asignatura. Los
+temas 7 a 10 —aleaciones, cerámicos, polímeros y compuestos— **no tienen
+material de la profesora**: se trabajan con presentaciones de los alumnos por
+grupos, que llevan sus nombres y no se abren, y se evalúan con un test (10 %)
+y en el examen final.
+
+**Lo que no hay: exámenes.** Ni uno. §15 los exige y §14 mide la ruta sobre
+ellos, así que la ruta de Materiales **no se puede escribir todavía** y la
+asignatura se queda en `obra` hasta que aparezcan. Es la misma situación que
+la de Térmica antes del 10 de septiembre, y se declara igual.
+
+**El orden:**
+
+1. **Catálogo** — temario oficial y evaluación, las dos de la guía; `estado:
+   obra`. El peso de cada tema sale de la planificación semanal de la guía y
+   de qué temas entran en el examen ordinario, no de exámenes que no hay.
+2. **Tema 1**, que es breve y es la puerta: sin el test de mínimos no se
+   aprueba. Prosa, figura y ejercicios de reconocer.
+3. **Tema 2, propiedades mecánicas**, el que mejor encaja con lo que el sitio
+   ya sabe corregir —tensiones, deformaciones, módulos, durezas, con unidad—.
+   Treinta ejercicios de colección.
+4. **Tema 3**, estructuras, defectos y endurecimiento: veintinueve.
+5. **Tema 4, diagramas de fase**: veintinueve ejercicios que **se leen sobre un
+   diagrama**. Los del material son de libro, así que antes de transcribir hay
+   que redibujarlos en SVG a partir de los que reparte la profesora (§08), con
+   la escala construida sobre los números y no a ojo (§17).
+6. **Temas 5 y 6**, transformaciones y tratamientos: once ejercicios, también
+   sobre curvas de libro —TTT y Jominy— que hay que redibujar.
+7. **Temas 7 a 10**, con prosa propia sobre el temario de la guía y ejemplos
+   propios, porque la asignatura no reparte material suyo. Van los últimos y
+   su `fuente` lo dice con todas las letras. Declararlos `soloEnClase` no vale:
+   serían cuatro de diez, por encima del tercio que §15 admite, y además
+   **no lo son** —entran en el test y en el examen—.
+
+Las **prácticas de laboratorio** (20 % de la nota, con sus guiones entre el
+material) quedan fuera del alcance de los temas, como en Fluidos, y se
+declaran en el catálogo.
+
+**Comprobación de cada tema**, la de siempre: `revisa-ejercicios` antes de
+pegar, los resultados de la colección contra lo recalculado, el tema abierto
+en claro, oscuro y 360 px con los distractores tecleados, y `npm run suelo`.
+
 **Bloqueada por la fase 6** (§00). Pero lo que hay que averiguar para ella se
 puede ir contestando mientras tanto, y hay una pregunta que no me corresponde.
 
