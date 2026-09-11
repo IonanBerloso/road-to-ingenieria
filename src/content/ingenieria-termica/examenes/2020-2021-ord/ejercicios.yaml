@@ -206,3 +206,605 @@ ejercicios:
       el cuello de botella está **siempre** en el aceite, y engordar o adelgazar
       el tubo no cambia nada apreciable. Si se quiere mejorar, se mejora la
       convección del lado malo: más velocidad, turbuladores, aletas por dentro.
+
+  - id: exter2021-ord-2-la-referencia-es-el-agua-que-entra
+    titulo: La referencia es el agua que entra, y el 92 % que se destruye
+    fuente: Ejercicio 2 de la convocatoria ordinaria de enero de 2020-2021 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen es bilingüe y publica su resolución oficial manuscrita; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Calcúlese la exergía destruida y el rendimiento exergético del proceso
+      que ocurre entre agua y aceite en el ejercicio anterior. Tómese la
+      temperatura del fluido a menor temperatura como temperatura de
+      referencia para el cálculo de la exergía.
+
+      *Lo que hace falta del ejercicio anterior, el 1 de esta misma
+      convocatoria: $0{,}9\ \text{kg/s}$ de aceite para motor entran a
+      $106\ ^\circ\text{C}$ y salen a $96\ ^\circ\text{C}$, con
+      $c_p = 2224{,}4\ \text{J/(kg}\cdot\text{K)}$; el agua entra a
+      $14\ ^\circ\text{C}$ y sale a $25\ ^\circ\text{C}$, con
+      $c_p = 4182{,}3\ \text{J/(kg}\cdot\text{K)}$. No hay pérdidas de calor
+      al exterior.*
+    pide: La exergía destruida en el intercambiador y su rendimiento exergético.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado no da un ambiente: dice «la temperatura del fluido a
+          menor temperatura». ¿Cuál es?
+        opciones:
+          - texto: La del agua al entrar, 14 °C, o sea 287 K
+            correcta: true
+            mensaje: |
+              Eso es. De las cuatro temperaturas del problema, la más baja es
+              la del agua a la entrada, y esa es $T_0$. Fíjate en lo que
+              implica: **el agua entra en el estado muerto**, con exergía
+              cero. Todo lo que gane será a partir de ahí.
+          - texto: La del agua al salir, 25 °C, que es a la que queda
+            mensaje: |
+              El enunciado pide la del fluido «a menor temperatura», y el agua
+              está más fría al entrar que al salir. Los 25 °C son la más alta
+              de las dos temperaturas del agua.
+          - texto: La media del agua, 19,5 °C, que es la que representa al fluido frío
+            mensaje: |
+              La temperatura de referencia no es una media: es la del estado
+              muerto, un valor fijo con el que se compara todo. La media del
+              agua sirve para leer propiedades, no para esto.
+          - texto: La del aceite al salir, 96 °C, que es la más baja del aceite
+            mensaje: |
+              «El fluido a menor temperatura» es el agua, que va de 14 a 25 °C
+              y está entera por debajo del aceite. La referencia es la más
+              baja de todo el problema.
+
+      - tipo: calcular
+        titulo: El gasto de agua
+        pregunta: |
+          El ejercicio 1 no lo pedía, pero aquí hace falta. ¿Cuánta agua
+          circula?
+        respuesta:
+          tipo: magnitud
+          valor: '0.4352 kg/s'
+          tolerancia: 0.02
+          formato: un gasto másico, con su unidad
+        distractores:
+          - valor: '0.9 kg/s'
+            mensaje: |
+              Ese es el gasto de aceite. El del agua sale de igualar los dos
+              calores: el que cede el aceite lo recibe el agua, con su propio
+              calor específico y su propio salto de temperatura.
+          - valor: '0.818 kg/s'
+            mensaje: |
+              Has usado el calor específico del aceite, 2224,4, para el agua.
+              El agua tiene casi el doble, 4182,3, y por eso le basta la mitad
+              de gasto para llevarse el mismo calor.
+        pista: |
+          $\dot{m}_{ac}\,c_{p,ac}\,(106-96) = \dot{m}_{ag}\,c_{p,ag}\,(25-14)$.
+        desarrollo: |
+          $$
+          \dot{m}_{ag} = \frac{0{,}9 \cdot 2224{,}4 \cdot 10}{4182{,}3 \cdot 11}
+          = \frac{20019{,}6}{46005{,}3} = 0{,}4352\ \text{kg/s}
+          $$
+
+      - tipo: calcular
+        titulo: La entropía generada
+        pregunta: |
+          Los dos fluidos son incompresibles y no se pierde calor al exterior.
+          ¿Cuánta entropía se genera?
+        respuesta:
+          tipo: magnitud
+          valor: '14.92 W/K'
+          tolerancia: 0.02
+          formato: una entropía por unidad de tiempo, con su unidad
+        distractores:
+          - valor: '856.9 W/K'
+            mensaje: |
+              Has metido las temperaturas en grados Celsius dentro del
+              logaritmo, $\ln(96/106)$ y $\ln(25/14)$. Un cociente de
+              temperaturas solo tiene sentido en kelvin: $\ln(369/379)$ y
+              $\ln(298/287)$.
+          - valor: '121.98 W/K'
+            mensaje: |
+              Has sumado las dos variaciones como si fueran positivas. La
+              entropía del aceite **baja**, porque se enfría, y su término
+              entra con su signo menos: la generada es lo que gana el agua
+              menos lo que pierde el aceite.
+        pista: |
+          $\dot{S}_G = \dot{m}_{ac}\,c_{ac}\ln\frac{T_{s,ac}}{T_{e,ac}} + \dot{m}_{ag}\,c_{ag}\ln\frac{T_{s,ag}}{T_{e,ag}}$,
+          sin término de calor porque no hay pérdidas.
+        desarrollo: |
+          $$
+          \Delta s_{ac} = 2224{,}4 \ln\frac{369}{379} = -59{,}48\ \frac{\text{J}}{\text{kg}\cdot\text{K}}
+          \qquad
+          \Delta s_{ag} = 4182{,}3 \ln\frac{298}{287} = 157{,}302\ \frac{\text{J}}{\text{kg}\cdot\text{K}}
+          $$
+
+          $$
+          \dot{S}_G = 0{,}9 \cdot (-59{,}48) + 0{,}4352 \cdot 157{,}302 = 14{,}92\ \text{W/K}
+          $$
+
+      - tipo: calcular
+        titulo: La exergía destruida
+        pregunta: |
+          ¿Cuánta exergía se destruye en el intercambiador?
+        respuesta:
+          tipo: magnitud
+          valor: '4.282 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '4282 kW'
+            mensaje: |
+              Mil veces de más, y es un descuido de unidades que comete la
+              propia resolución oficial. Con los calores específicos en
+              J/(kg·K) y los gastos en kg/s, la entropía generada sale en W/K
+              y la exergía destruida en **vatios**: son 4.282 W, es decir
+              4,28 kW.
+          - valor: '4.446 kW'
+            mensaje: |
+              Has multiplicado por 298 K, la del agua a la salida. Guy-Stodola
+              multiplica siempre por $T_0$, y aquí $T_0$ es la del fluido más
+              frío: los 287 K del agua al entrar.
+        pista: |
+          Guy-Stodola: $\dot{E}x_d = T_0\,\dot{S}_G$, con $T_0 = 287\ \text{K}$.
+        desarrollo: |
+          $$
+          \dot{E}x_d = 287 \cdot 14{,}92 = 4282\ \text{W}
+          $$
+
+          Es decir, 4,28 kW.
+
+      - tipo: calcular
+        titulo: El rendimiento exergético
+        pregunta: |
+          El objetivo del aparato es calentar el agua con el aceite. ¿Qué
+          rendimiento exergético tiene, en tanto por ciento?
+        respuesta:
+          tipo: numero
+          valor: '8.03'
+          tolerancia: 0.2
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '91.97'
+            mensaje: |
+              Esa es la fracción que se **destruye**: 4.282 de los 4.656 W que
+              cede el aceite. El rendimiento es lo contrario, lo que llega al
+              agua.
+          - valor: '1.87'
+            mensaje: |
+              Has dividido la exergía que gana el agua entre el **calor** que
+              pasa, 20.020 W. El rendimiento exergético compara exergía con
+              exergía: lo que gana el agua entre lo que cede el aceite.
+        pista: |
+          $\eta_{ex} = \dfrac{\dot{m}_{ag}\,(\psi_s-\psi_e)_{ag}}{\dot{m}_{ac}\,(\psi_e-\psi_s)_{ac}}$,
+          con $\psi_e-\psi_s = c\,(\theta_e-\theta_s) - T_0\,c\ln\frac{T_e}{T_s}$.
+        desarrollo: |
+          $$
+          (\psi_e-\psi_s)_{ac} = 2224{,}4 \cdot 10 - 287 \cdot 59{,}48 = 5173{,}2\ \text{J/kg}
+          $$
+
+          $$
+          (\psi_s-\psi_e)_{ag} = 4182{,}3 \cdot 11 - 287 \cdot 157{,}302 = 859{,}6\ \text{J/kg}
+          $$
+
+          $$
+          \eta_{ex} = \frac{0{,}4352 \cdot 859{,}6}{0{,}9 \cdot 5173{,}2} = \frac{374{,}1}{4656} = 0{,}0803
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena por qué rinde tan poco. Una pieza es falsa.
+        piezas:
+          - texto: 'El aceite cede 4.656 W de exergía y el agua gana 374: el resto, 4.282 W, se destruye en el tubo.'
+          - texto: 'El calor pasa de un aceite a unos 100 °C a un agua a menos de 25, y cuanto mayor es ese salto, más entropía genera cada julio que lo cruza.'
+          - texto: 'Y lo poco que llega vale poco, porque el agua entra en el estado muerto y sale a solo 11 grados de él.'
+          - texto: 'Rinde poco porque el intercambiador pierde calor al exterior, y esa energía ya no llega al agua.'
+            trampa: true
+            mensaje: |
+              El ejercicio 1 dice lo contrario: se desprecian las pérdidas al
+              exterior. **Toda** la energía que suelta el aceite llega al agua,
+              y el rendimiento energético es del 100 %. Lo que no llega es la
+              calidad, y esa no se escapa por ninguna pared: se destruye
+              dentro, al cruzar el calor un salto de setenta grados.
+    resolucion: |
+      **La referencia la fija el enunciado, y no es un ambiente.** «La
+      temperatura del fluido a menor temperatura» es la del agua al entrar:
+
+      $$
+      T_0 = 14 + 273 = 287\ \text{K}
+      $$
+
+      Eso significa que **el agua entra en el estado muerto**, con exergía
+      cero, y es la clave de todo lo que va a salir.
+
+      **El gasto de agua**, que el ejercicio 1 no pedía y aquí hace falta,
+      sale de igualar los dos calores:
+
+      $$
+      \dot{m}_{ag} = \frac{0{,}9 \cdot 2224{,}4 \cdot 10}{4182{,}3 \cdot 11} = 0{,}4352\ \text{kg/s}
+      $$
+
+      **La entropía generada.** Dos líquidos incompresibles y ninguna
+      pérdida al exterior, así que el balance solo tiene las dos corrientes:
+
+      $$
+      \Delta s_{ac} = 2224{,}4 \ln\frac{369}{379} = -59{,}48\ \frac{\text{J}}{\text{kg}\cdot\text{K}}
+      \qquad
+      \Delta s_{ag} = 4182{,}3 \ln\frac{298}{287} = 157{,}302\ \frac{\text{J}}{\text{kg}\cdot\text{K}}
+      $$
+
+      $$
+      \dot{S}_G = 0{,}9 \cdot (-59{,}48) + 0{,}4352 \cdot 157{,}302 = 14{,}92\ \text{W/K}
+      $$
+
+      $$
+      \dot{E}x_d = T_0\,\dot{S}_G = 287 \cdot 14{,}92 = 4282\ \text{W}
+      $$
+
+      **Y por el otro camino**, con las exergías de flujo, sale lo mismo:
+
+      $$
+      (\psi_e-\psi_s)_{ac} = 2224{,}4 \cdot 10 - 287 \cdot 59{,}48 = 5173{,}2\ \text{J/kg}
+      $$
+
+      $$
+      (\psi_s-\psi_e)_{ag} = 4182{,}3 \cdot 11 - 287 \cdot 157{,}302 = 859{,}6\ \text{J/kg}
+      $$
+
+      $$
+      \dot{E}x_d = 0{,}9 \cdot 5173{,}2 - 0{,}4352 \cdot 859{,}6 = 4282\ \text{W}
+      $$
+
+      **El rendimiento exergético** es lo que gana el agua entre lo que cede
+      el aceite:
+
+      $$
+      \eta_{ex} = \frac{374{,}1}{4656} = 0{,}0803
+      $$
+
+      **De cada cien unidades de exergía que suelta el aceite, llegan ocho.**
+      Y el intercambiador no pierde ni un julio de energía: el rendimiento
+      energético es del 100 %. Las dos cifras no se contradicen, miden cosas
+      distintas. Se destruye tanto por dos motivos que se suman: el calor
+      cruza un salto enorme —de un aceite a unos cien grados a un agua a
+      menos de veinticinco—, y lo que llega, llega a un agua que está justo
+      encima de la referencia, donde un julio de calor casi no vale nada.
+
+      Es el mismo efecto que el ejercicio 2 de febrero de este mismo curso,
+      donde el aire entraba a la temperatura de referencia y el rendimiento
+      salía del 26,7 %. Allí la referencia era un ambiente que coincidía con
+      el aire; aquí el enunciado la **define** como la del fluido frío, y el
+      efecto es todavía más fuerte.
+
+      > **Una errata de unidades en la resolución oficial.** Escribe los
+      > $\Delta s$ en kJ/(kg·K) y la exergía destruida como «4281,9 kW». Con
+      > los calores específicos en J/(kg·K), las dos cifras están en julios y
+      > en **vatios**: son 4.282 W, o sea 4,28 kW. El número es el bueno y la
+      > unidad, mil veces grande. Si te sale 4,28 kW y en el recuadro ves
+      > 4.281,9 kW, no te has equivocado tú.
+
+  - id: exter2021-ord-3-la-bomba-que-rinde-el-ochenta-y-tres-y-no-el-cuatro
+    titulo: La bomba que rinde el 83 % y no el 4, y la mezcla que destruye cien kilovatios
+    fuente: Ejercicio 3 de la convocatoria ordinaria de enero de 2020-2021 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El examen es bilingüe y publica su resolución oficial manuscrita; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella, y en el apartado a) se aparta de ella a propósito, por un motivo que la resolución explica.
+    nivel: examen
+    enunciado: |
+      El agua del ejercicio 2, a la salida de la conducción de
+      $9{,}5\ \text{m}$, se envía a una cámara adiabática, donde se mezcla con
+      $1\ \text{kg/s}$ de vapor de agua a $400\ ^\circ\text{C}$ y
+      $6\ \text{bar}$. Calcúlese:
+
+      a- El rendimiento exergético de la bomba necesaria antes de la cámara,
+      si ésta tiene un rendimiento interno del 82 %.
+
+      b- La exergía destruida en la cámara de mezcla.
+
+      Tómese la misma temperatura de referencia para el cálculo de la exergía
+      que el ejercicio anterior, y considérese la presión del agua a la
+      entrada de la bomba igual a $1{,}4\ \text{bar}$.
+
+      *Lo que hace falta de los dos ejercicios anteriores: el agua sale de la
+      conducción a $25\ ^\circ\text{C}$, con un gasto de
+      $0{,}435\ \text{kg/s}$ y una densidad de $998{,}11\ \text{kg/m}^{3}$, y
+      la temperatura de referencia es la del agua al entrar en ella,
+      $14\ ^\circ\text{C}$. De las tablas de vapor: el líquido a
+      $25\ ^\circ\text{C}$ tiene $h = 104{,}89\ \text{kJ/kg}$ y
+      $s = 0{,}3674\ \text{kJ/kg}\cdot\text{K}$; el vapor a $6\ \text{bar}$ y
+      $400\ ^\circ\text{C}$, $h = 3270{,}3\ \text{kJ/kg}$ y
+      $s = 7{,}7079\ \text{kJ/kg}\cdot\text{K}$; y la saturación a
+      $6\ \text{bar}$, $h' = 670{,}56$, $h'' = 2756{,}8\ \text{kJ/kg}$,
+      $s' = 1{,}9312$ y $s'' = 6{,}76\ \text{kJ/kg}\cdot\text{K}$.*
+    pide: El rendimiento exergético de la bomba y la exergía destruida en la cámara.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La exergía de flujo del agua líquida cambia al pasar por la bomba.
+          ¿De qué depende ese cambio?
+        opciones:
+          - texto: 'De la temperatura y de la presión: $\Delta h = c\,\Delta T + v\,\Delta P$, y la entropía solo de la temperatura'
+            correcta: true
+            mensaje: |
+              Eso es, y en una bomba decide todo: el trabajo va casi entero al
+              segundo término, a subir la presión, y apenas nada al primero.
+              La entropía solo nota el poquito que se calienta el agua, y ese
+              poquito es lo único que se destruye.
+          - texto: 'Solo de la temperatura: un líquido es incompresible, así que la presión no cuenta'
+            mensaje: |
+              Incompresible quiere decir que el volumen específico no cambia,
+              no que la presión no cuente. La entalpía de un líquido lleva
+              $v\,\Delta P$, y en una bomba ese término es casi todo. Es el
+              error de la resolución oficial de este ejercicio, y la lleva a un
+              rendimiento del 3,9 %.
+          - texto: 'Solo de la presión: la bomba no calienta el agua'
+            mensaje: |
+              La calienta un poco: lo que el rendimiento interno pierde, el 18 %
+              del trabajo, acaba calentando el agua. Son 0,024 grados, pero son
+              justo lo que se destruye.
+          - texto: 'De nada: una bomba cambia la energía del agua, no su exergía'
+            mensaje: |
+              Si fuera así, el rendimiento exergético sería cero. El agua sale
+              a más presión, y un líquido a presión puede mover una turbina:
+              eso es exergía, y es casi todo lo que la bomba le da.
+
+      - tipo: calcular
+        titulo: La potencia que consume la bomba
+        pregunta: |
+          La bomba sube el agua de $1{,}4$ a $6\ \text{bar}$ con un rendimiento
+          interno del 82 %. ¿Qué potencia consume?
+        respuesta:
+          tipo: magnitud
+          valor: '0.2445 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '0.2005 kW'
+            mensaje: |
+              Esa es la de la bomba ideal, la isentrópica. La real consume
+              **más**: se divide entre el rendimiento.
+          - valor: '0.1644 kW'
+            mensaje: |
+              Has multiplicado por el rendimiento en vez de dividir. Una bomba
+              real necesita más trabajo que la ideal, nunca menos: si te sale
+              menos, el 0,82 va abajo.
+        pista: |
+          Ideal, $\dot{W}_s = \dot{m}\,v\,(P_2-P_1)$. Real,
+          $\dot{W} = \dot{W}_s/\eta_i$.
+        desarrollo: |
+          $$
+          \dot{W}_s = 0{,}435 \cdot \frac{600-140}{998{,}11} = 0{,}2005\ \text{kW}
+          \qquad
+          \dot{W} = \frac{0{,}2005}{0{,}82} = 0{,}2445\ \text{kW}
+          $$
+
+      - tipo: calcular
+        titulo: Lo que gana el agua en exergía
+        pregunta: |
+          Por cada kilogramo, la bomba mete $w = 0{,}5621\ \text{kJ/kg}$, de
+          los que $v\,\Delta P = 0{,}4609$ suben la presión. ¿Cuánto aumenta la
+          exergía de flujo del agua?
+        respuesta:
+          tipo: magnitud
+          valor: '0.4646 kJ/kg'
+          tolerancia: 0.02
+          formato: una exergía por unidad de masa, con su unidad
+        distractores:
+          - valor: '0.0209 kJ/kg'
+            mensaje: |
+              Has metido todo el trabajo en calentar el agua, 0,134 grados, y
+              has dejado fuera la presión. Es la cuenta de la resolución
+              oficial, y está mal: en un líquido la entalpía sube por las dos
+              cosas, y el agua solo se calienta con lo que la bomba **pierde**,
+              0,1012 kJ/kg. Sube 0,024 grados, no 0,134.
+          - valor: '0.5621 kJ/kg'
+            mensaje: |
+              Eso es lo que sube la **entalpía**, el trabajo entero. La
+              exergía sube algo menos: hay que descontar $T_0\,\Delta s$, lo
+              que se destruye al calentarse el agua con el trabajo perdido.
+        pista: |
+          $\psi_2-\psi_1 = (h_2-h_1) - T_0\,(s_2-s_1)$, y la entropía de un
+          líquido solo cambia con la temperatura.
+        desarrollo: |
+          $$
+          \Delta T = \frac{0{,}5621 - 0{,}4609}{4{,}182} = 0{,}0242\ \text{K}
+          $$
+
+          $$
+          \psi_2-\psi_1 = 0{,}5621 - 287 \cdot 4{,}182 \ln\frac{298{,}0242}{298} = 0{,}4646\ \text{kJ/kg}
+          $$
+
+      - tipo: calcular
+        titulo: El rendimiento exergético de la bomba
+        pregunta: |
+          ¿Qué rendimiento exergético tiene la bomba, en tanto por ciento?
+        respuesta:
+          tipo: numero
+          valor: '82.66'
+          tolerancia: 0.4
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '3.8'
+            mensaje: |
+              Es el que da la resolución oficial, 3,88 %, y sale de olvidar la
+              presión en la exergía del agua. Hay una prueba rápida de que no
+              puede ser: con esa cuenta, una bomba **perfecta**, de rendimiento
+              interno 100 %, rendiría el 3,7 %. Una máquina reversible no
+              destruye nada, y su rendimiento exergético es el 100 %.
+          - valor: '82'
+            mensaje: |
+              Ese es el rendimiento **interno**, el isentrópico, y es dato. El
+              exergético sale un poco mayor, porque parte del trabajo perdido
+              se queda en el agua como un calentamiento que todavía vale algo,
+              igual que en un compresor.
+        pista: |
+          $\eta_{ex} = \dfrac{\psi_2-\psi_1}{w}$, las dos por kilogramo.
+        desarrollo: |
+          $$
+          \eta_{ex} = \frac{0{,}4646}{0{,}5621} = 0{,}8265
+          $$
+
+      - tipo: calcular
+        titulo: La entalpía de la mezcla
+        pregunta: |
+          El agua sale de la bomba con $h_2 = 105{,}45\ \text{kJ/kg}$. ¿Con qué
+          entalpía sale la mezcla de la cámara?
+        respuesta:
+          tipo: magnitud
+          valor: '2310.9 kJ/kg'
+          tolerancia: 0.005
+          formato: una entalpía, con su unidad
+        distractores:
+          - valor: '1687.9 kJ/kg'
+            mensaje: |
+              Has hecho la media de las dos entalpías sin pesarlas. Entra más
+              del doble de vapor que de agua, 1 kg/s contra 0,435, y cada
+              entalpía pesa según su gasto.
+          - valor: '3316.2 kJ/kg'
+            mensaje: |
+              Te has olvidado de dividir entre lo que sale. La cámara es
+              adiabática y sin trabajo, así que la energía que entra sale con
+              $1{,}435\ \text{kg/s}$, no con uno.
+        pista: |
+          $\dot{m}_2 h_2 + \dot{m}_3 h_3 = (\dot{m}_2+\dot{m}_3)\,h_4$.
+        desarrollo: |
+          $$
+          h_4 = \frac{0{,}435 \cdot 105{,}45 + 1 \cdot 3270{,}3}{1{,}435} = 2310{,}9\ \text{kJ/kg}
+          $$
+
+      - tipo: calcular
+        titulo: La exergía destruida en la cámara
+        pregunta: |
+          A 6 bar, $h_4$ cae entre $h'$ y $h''$: la mezcla sale húmeda, con
+          título $0{,}7863$ y $s_4 = 5{,}7281\ \text{kJ/kg}\cdot\text{K}$. Con
+          $s_2 = 0{,}3677$, ¿cuánta exergía se destruye en la cámara?
+        respuesta:
+          tipo: magnitud
+          valor: '101 kW'
+          tolerancia: 0.025
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '4.93 kW'
+            mensaje: |
+              Has multiplicado por 14, la temperatura de referencia en grados
+              Celsius. Guy-Stodola va en kelvin: 287.
+          - valor: '-101 kW'
+            mensaje: |
+              El signo está al revés: has restado lo que sale de lo que entra.
+              La entropía generada es lo que sale menos lo que entra, y en una
+              cámara adiabática no puede ser negativa.
+        pista: |
+          Cámara adiabática, $\dot{S}_G = \dot{m}_4 s_4 - \dot{m}_2 s_2 - \dot{m}_3 s_3$,
+          y $\dot{E}x_d = T_0\,\dot{S}_G$.
+        desarrollo: |
+          $$
+          \dot{S}_G = 1{,}435 \cdot 5{,}7281 - 0{,}435 \cdot 0{,}3677 - 7{,}7079 = 0{,}3520\ \text{kW/K}
+          $$
+
+          $$
+          \dot{E}x_d = 287 \cdot 0{,}3520 = 101{,}0\ \text{kW}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la lectura de los dos apartados. Una pieza es falsa.
+        piezas:
+          - texto: 'De los 0,5621 kJ/kg que mete la bomba, 0,4609 suben la presión y solo 0,1012 calientan el agua, que sube 0,024 grados.'
+          - texto: 'Lo que se destruye es ese calentamiento visto desde la referencia, $T_0\,\Delta s = 0{,}0975$ kJ/kg, y por eso el rendimiento exergético sale del 82,7 %.'
+          - texto: 'La cámara destruye 101 kW, más de dos mil veces lo de la bomba: mezclar vapor a 400 °C con agua a 25 es donde se va la exergía del montaje.'
+          - texto: 'Un 3,9 % es lo normal en una bomba, porque casi todo su trabajo acaba convertido en calor dentro del agua.'
+            trampa: true
+            mensaje: |
+              Si fuera así, el agua se calentaría 0,134 grados y la presión no
+              subiría. Es la cuenta de la resolución oficial, y con ella hasta
+              una bomba perfecta, de rendimiento interno 100 %, rendiría el
+              3,7 %, que es imposible: una máquina reversible no destruye nada.
+              En un líquido la entalpía sube por la temperatura y por la
+              presión, y una bomba mete casi todo su trabajo en lo segundo.
+    resolucion: |
+      **a) La bomba.** El agua sale de la conducción a 25 °C y 1,4 bar, con
+      los 0,435 kg/s del ejercicio 1, y hay que subirla a los 6 bar de la
+      cámara. El trabajo de la bomba ideal es el de un líquido
+      incompresible:
+
+      $$
+      w_s = v\,(P_2-P_1) = \frac{600-140}{998{,}11} = 0{,}4609\ \text{kJ/kg}
+      \qquad
+      w = \frac{w_s}{\eta_i} = \frac{0{,}4609}{0{,}82} = 0{,}5621\ \text{kJ/kg}
+      $$
+
+      Es decir, 0,2005 kW la ideal y 0,2445 kW la real.
+
+      **Ahora, el paso que decide el apartado.** La entalpía de un líquido
+      cambia por dos cosas, $\Delta h = c\,\Delta T + v\,\Delta P$, y la bomba
+      reparte su trabajo entre las dos: 0,4609 kJ/kg suben la presión, y solo
+      lo que se pierde, 0,1012, calienta el agua.
+
+      $$
+      \Delta T = \frac{0{,}5621 - 0{,}4609}{4{,}182} = 0{,}0242\ \text{K}
+      $$
+
+      La entropía de un líquido solo nota ese calentamiento, así que:
+
+      $$
+      \psi_2-\psi_1 = w - T_0\,c\ln\frac{T_2}{T_1}
+      = 0{,}5621 - 287 \cdot 4{,}182 \ln\frac{298{,}0242}{298} = 0{,}4646\ \text{kJ/kg}
+      $$
+
+      $$
+      \eta_{ex} = \frac{0{,}4646}{0{,}5621} = 0{,}8265
+      $$
+
+      **Un 82,7 %**, un poco por encima del rendimiento interno. Es lo mismo
+      que pasa en un compresor: del trabajo que se pierde respecto de la
+      máquina ideal, una parte se queda en el fluido como un calentamiento
+      que todavía vale algo, y el exergético no la cuenta como pérdida.
+
+      > **Aquí esta resolución se aparta de la oficial, y conviene decir por
+      > qué.** La oficial calcula la temperatura de salida como si **todo** el
+      > trabajo calentara el agua, $0{,}5621/4{,}182 = 0{,}134$ grados, y con
+      > eso la exergía del agua sube 0,0218 kJ/kg y el rendimiento sale del
+      > **3,88 %**. El fallo es dejar fuera el término $v\,\Delta P$: el agua
+      > no puede calentarse 0,134 grados y además subir de presión con el
+      > mismo trabajo. Hay una prueba que no necesita discutir la fórmula: con
+      > esa cuenta, una bomba **perfecta**, de rendimiento interno 100 %,
+      > rendiría el 3,7 %. Una máquina reversible no destruye nada, así que su
+      > rendimiento exergético tiene que ser el 100 %. Las casillas de este
+      > ejercicio dan por buena la cifra correcta y reconocen la oficial para
+      > decirte de dónde sale.
+
+      **b) La cámara de mezcla.** Adiabática y sin trabajo, así que el primer
+      principio da la entalpía de salida:
+
+      $$
+      h_2 = 104{,}89 + 0{,}5621 = 105{,}45\ \text{kJ/kg}
+      $$
+
+      $$
+      h_4 = \frac{0{,}435 \cdot 105{,}45 + 1 \cdot 3270{,}3}{1{,}435} = 2310{,}9\ \text{kJ/kg}
+      $$
+
+      A 6 bar eso cae entre $h' = 670{,}56$ y $h'' = 2756{,}8$, así que **la
+      mezcla sale húmeda**:
+
+      $$
+      x_4 = \frac{2310{,}9 - 670{,}56}{2756{,}8 - 670{,}56} = 0{,}7863
+      \qquad
+      s_4 = 1{,}9312 + 0{,}7863\,(6{,}76 - 1{,}9312) = 5{,}7281
+      $$
+
+      La entropía del agua a la salida de la bomba es la del líquido a 25 °C
+      más lo poquísimo que la sube la bomba, $0{,}3674 + 0{,}0003 = 0{,}3677$.
+      Con eso:
+
+      $$
+      \dot{S}_G = 1{,}435 \cdot 5{,}7281 - 0{,}435 \cdot 0{,}3677 - 7{,}7079 = 0{,}3520\ \text{kW/K}
+      $$
+
+      $$
+      \dot{E}x_d = 287 \cdot 0{,}3520 = 101{,}0\ \text{kW}
+      $$
+
+      **Ciento un kilovatios en la cámara, contra cuarenta y dos vatios en la
+      bomba.** Mezclar vapor a 400 °C con agua a 25 es donde se va la exergía
+      de este montaje, más de dos mil veces más que en la bomba, y eso sin
+      que se pierda un julio de energía.
+
+      > **La resolución oficial da 98,87 kW**, y la diferencia no es de
+      > planteamiento sino de cuarta cifra. La entropía generada es una resta,
+      > 8,22 menos 7,87, que se queda en 0,35, y ahí una $s_4$ de 5,7245 en
+      > lugar de 5,7281 mueve el resultado un 2 %. Con las cifras que la propia
+      > resolución imprime, 5,73 y 0,368, saldría 101,2. Las casillas aceptan
+      > las dos.

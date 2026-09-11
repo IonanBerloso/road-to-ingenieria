@@ -1,4 +1,611 @@
 ejercicios:
+  - id: exter2122-ord-1-la-temperatura-del-agua-que-hay-que-suponer
+    titulo: Los conductos concéntricos, y la temperatura del agua que hay que suponer
+    fuente: Ejercicio 1 de la convocatoria ordinaria de 2021-2022, celebrada el 11 de enero de 2022 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Dos conductos concéntricos de $10\ \text{m}$ de longitud conducen aire y
+      agua. El conducto interior transporta $0{,}5\ \text{kg/s}$ de aire que
+      entran a $90\ ^\circ\text{C}$ y salen a $70\ ^\circ\text{C}$. Su
+      diámetro interior es de $6\ \text{cm}$ y el exterior de $8\ \text{cm}$,
+      y la conductividad del material es $45\ \text{W/mK}$.
+
+      El conducto exterior de sección anular transporta $2\ \text{kg/s}$ de
+      agua y tiene un diámetro de $20\ \text{cm}$.
+
+      Calcúlese:
+
+      a) La temperatura superficial interior y exterior del conducto de aire.
+
+      b) La temperatura promedio del agua en el conducto exterior.
+
+      *Las propiedades que toma la resolución oficial de las tablas: aire a
+      $80\ ^\circ\text{C}$, $\rho = 0{,}9994\ \text{kg/m}^{3}$,
+      $c_p = 1008\ \text{J/(kg}\cdot\text{K)}$,
+      $k = 0{,}02953\ \text{W/(m}\cdot\text{K)}$,
+      $\nu = 2{,}097\cdot10^{-5}\ \text{m}^{2}/\text{s}$ y $Pr = 0{,}7154$;
+      agua a $60\ ^\circ\text{C}$, $\rho = 983{,}3\ \text{kg/m}^{3}$,
+      $k = 0{,}654\ \text{W/(m}\cdot\text{K)}$,
+      $\mu = 4{,}67\cdot10^{-4}\ \text{kg/(m}\cdot\text{s)}$ y $Pr = 2{,}99$.*
+    pide: Las dos temperaturas superficiales del conducto de aire y la temperatura media del agua.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El apartado b) pide la temperatura del agua, y para su coeficiente
+          de convección hacen falta sus propiedades… a esa misma temperatura.
+          ¿Cómo se sale de ahí?
+        opciones:
+          - texto: Suponiendo una temperatura del agua, calculando con ella y corrigiendo hasta que no cambie
+            correcta: true
+            mensaje: |
+              Eso es: se itera. Y hay una pista para empezar bien, porque el
+              agua recibe calor de una pared a unos 65 °C y tiene que estar por
+              debajo. La resolución oficial arranca en 60 y en dos vueltas está.
+          - texto: Con la media de la entrada y la salida del agua, que salen del balance
+            mensaje: |
+              El enunciado no da ninguna temperatura del agua, solo su gasto.
+              El balance dice cuánto se calienta, 1,2 grados, pero no desde
+              dónde.
+          - texto: Tomando las propiedades del agua a 80 °C, la temperatura del aire
+            mensaje: |
+              Cada fluido va con sus propiedades y a su temperatura. El aire
+              está a 80 °C de media; el agua, que es la incógnita, no tiene por
+              qué estarlo, y de hecho no lo está.
+          - texto: No hace falta su coeficiente, porque el agua está a la temperatura de la pared
+            mensaje: |
+              Entre la pared y el agua hay una película, igual que entre el
+              aire y la cara interior. Sin su coeficiente no se sabe cuánto
+              cae en ella, y resultan ser casi ocho grados.
+
+      - tipo: calcular
+        titulo: El calor que suelta el aire
+        pregunta: |
+          ¿Cuánto calor cede el aire al recorrer los 10 m?
+        respuesta:
+          tipo: magnitud
+          valor: '10.08 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '10.08 W'
+            mensaje: |
+              Mil veces de menos. El calor específico va en J/(kg·K), así que
+              el producto sale en vatios: 10.080 W, es decir 10,08 kW.
+          - valor: '40.32 kW'
+            mensaje: |
+              Has multiplicado por la temperatura media del aire, 80 °C, en vez
+              de por lo que baja, 20 grados. El balance va con el salto.
+        pista: |
+          $\dot{Q} = \dot{m}\,c_p\,(\theta_e-\theta_s)$ en el lado del aire.
+        desarrollo: |
+          $$
+          \dot{Q} = 0{,}5 \cdot 1008 \cdot (90-70) = 10080\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: El coeficiente de convección del aire
+        pregunta: |
+          Con $Re = 506.280$ y Dittus-Boelter para el fluido que se enfría,
+          $Nu = 0{,}023\,Re^{0{,}8}Pr^{0{,}3}$, ¿cuánto vale $h_1$?
+        respuesta:
+          tipo: magnitud
+          valor: '374.73 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente de convección, con su unidad
+        distractores:
+          - valor: '761.39 W/(m^2 K)'
+            mensaje: |
+              Eso es el número de Nusselt, que es adimensional. Falta
+              multiplicar por la conductividad del aire y dividir por el
+              diámetro.
+          - valor: '362.4 W/(m^2 K)'
+            mensaje: |
+              Has usado el exponente 0,4 del Prandtl, el del fluido que se
+              **calienta**. El aire se enfría, así que va 0,3; el 0,4 le toca
+              al agua.
+        pista: |
+          $h_1 = \dfrac{Nu\,k}{D_1}$, con la $k$ del aire.
+        desarrollo: |
+          $$
+          Nu = 0{,}023 \cdot 506.280^{0{,}8} \cdot 0{,}7154^{0{,}3} = 761{,}39
+          \qquad
+          h_1 = \frac{761{,}39 \cdot 0{,}02953}{0{,}06} = 374{,}73\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+      - tipo: calcular
+        titulo: La cara interior del conducto
+        pregunta: |
+          Con el aire a $80\ ^\circ\text{C}$ de media y
+          $A_1 = 1{,}885\ \text{m}^{2}$, ¿a qué temperatura está la cara
+          interior?
+        respuesta:
+          tipo: magnitud
+          valor: '65.73 °C'
+          tolerancia: 0.003
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '94.27 °C'
+            mensaje: |
+              Has sumado la caída en vez de restarla. El calor va del aire a
+              la pared, así que la pared está **más fría** que el aire.
+          - valor: '80 °C'
+            mensaje: |
+              Esa es la del aire. Entre el aire y la pared hay una película
+              que se lleva catorce grados.
+        pista: |
+          $\dot{Q} = h_1 A_1\,(\theta_{aire}-\theta_1)$, y se despeja $\theta_1$.
+        desarrollo: |
+          $$
+          \theta_1 = 80 - \frac{10080}{374{,}73 \cdot 1{,}885} = 65{,}73\ ^\circ\text{C}
+          $$
+
+      - tipo: calcular
+        titulo: La cara exterior del conducto
+        pregunta: |
+          El conducto es una capa cilíndrica de 6 a 8 cm con
+          $k = 45\ \text{W/(m}\cdot\text{K)}$. ¿A qué temperatura está su cara
+          exterior?
+        respuesta:
+          tipo: magnitud
+          valor: '64.70 °C'
+          tolerancia: 0.002
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '59.29 °C'
+            mensaje: |
+              Te has dejado el $2\pi$ de la resistencia cilíndrica. Es
+              $\ln(r_2/r_1)/(2\pi k L)$, y sin él la caída en el metal sale
+              seis veces mayor.
+          - valor: '66.76 °C'
+            mensaje: |
+              Has sumado la caída del metal. El calor sigue yendo hacia fuera,
+              así que la cara exterior está más fría que la interior.
+        pista: |
+          $R = \dfrac{\ln(D_2/D_1)}{2\pi k L}$ y $\theta_2 = \theta_1 - \dot{Q}\,R$.
+        desarrollo: |
+          $$
+          R_{cond} = \frac{\ln(0{,}08/0{,}06)}{2\pi \cdot 45 \cdot 10} = 1{,}017\cdot10^{-4}\ \text{K/W}
+          \qquad
+          \theta_2 = 65{,}73 - 10080 \cdot 1{,}017\cdot10^{-4} = 64{,}70\ ^\circ\text{C}
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura media del agua
+        pregunta: |
+          Se supone el agua a 60 °C para leer sus propiedades, y la sección
+          anular se trata con su diámetro hidráulico. ¿Qué temperatura media
+          tiene el agua, ya iterada?
+        respuesta:
+          tipo: magnitud
+          valor: '56.9 °C'
+          tolerancia: 0.002
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '72.34 °C'
+            mensaje: |
+              Has sumado la caída de la película del agua. El agua está **más
+              fría** que la pared que la calienta, así que se resta.
+          - valor: '60 °C'
+            mensaje: |
+              Esa es la temperatura que se **supone** para empezar. La vuelta
+              con ella devuelve 57,06, y eso es lo que dice que había que
+              corregirla.
+        pista: |
+          $D_h = D_3 - D_2$, Dittus-Boelter con el exponente 0,4 porque el agua
+          se calienta, y $\theta_{agua} = \theta_2 - \dot{Q}/(h_2 A_2)$.
+        desarrollo: |
+          $$
+          c = \frac{2}{983{,}3 \cdot 0{,}02639} = 0{,}0771\ \text{m/s}
+          \qquad
+          Re = \frac{0{,}0771 \cdot 0{,}12 \cdot 983{,}3}{4{,}67\cdot10^{-4}} = 19.475
+          $$
+
+          $$
+          Nu = 0{,}023 \cdot 19.475^{0{,}8} \cdot 2{,}99^{0{,}4} = 96{,}29
+          \qquad
+          h_2 = \frac{96{,}29 \cdot 0{,}654}{0{,}12} = 524{,}8\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \theta_{agua} = 64{,}70 - \frac{10080}{524{,}8 \cdot 2{,}513} = 57{,}06\ ^\circ\text{C}
+          $$
+
+          Una segunda vuelta con las propiedades a 57,06 °C da 56,9 °C.
+
+      - tipo: justificar
+        pregunta: Ordena la lectura del resultado. Una pieza es falsa.
+        piezas:
+          - texto: 'En la primera vuelta, el aire se lleva 14,3 grados, el metal 1,0 y el agua 7,6: el 62 %, el 4 % y el 33 % de la resistencia.'
+          - texto: 'El metal apenas cuenta porque enfrente tiene dos películas de convección, y cualquiera de las dos le saca un orden de magnitud.'
+          - texto: 'La temperatura del agua se encuentra desde la pared hacia fuera, restando la caída en su película, y por eso hace falta conocer antes la pared.'
+          - texto: 'La primera vuelta ya es la buena: el resultado no depende de la temperatura que se suponga para el agua.'
+            trampa: true
+            mensaje: |
+              Sí depende, y por eso se itera: las propiedades del agua cambian
+              con su temperatura, y su coeficiente con ellas. La vuelta desde
+              60 °C da 57,06, y la siguiente, desde 57,06, da 56,9. Se para
+              cuando lo que sale coincide con lo que se ha supuesto, no antes.
+    resolucion: |
+      **El calor que suelta el aire** marca todo lo demás, y sale del lado
+      del aire:
+
+      $$
+      \dot{Q} = 0{,}5 \cdot 1008 \cdot (90-70) = 10080\ \text{W}
+      $$
+
+      **a) La cara interior del conducto.** Convección forzada dentro de un
+      tubo, con las propiedades a la temperatura media del aire, 80 °C, y
+      Dittus-Boelter con el exponente 0,3 del fluido que se enfría:
+
+      $$
+      c = \frac{0{,}5}{0{,}9994 \cdot \pi \cdot 0{,}06^{2}/4} = 176{,}94\ \text{m/s}
+      \qquad
+      Re = \frac{176{,}94 \cdot 0{,}06}{2{,}097\cdot10^{-5}} = 506.280
+      $$
+
+      $$
+      Nu = 0{,}023 \cdot 506.280^{0{,}8} \cdot 0{,}7154^{0{,}3} = 761{,}39
+      \qquad
+      h_1 = \frac{761{,}39 \cdot 0{,}02953}{0{,}06} = 374{,}73\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      $$
+
+      $$
+      \theta_1 = 80 - \frac{10080}{374{,}73 \cdot 1{,}885} = 65{,}73\ ^\circ\text{C}
+      $$
+
+      Ciento setenta y siete metros por segundo es mucho aire, y sale de
+      tomar la densidad a presión atmosférica; con los 2 bar que el
+      ejercicio 2 dice que lleva, serían la mitad. **Al Reynolds le da
+      igual**: $Re = 4\dot{m}/(\pi D\mu)$, y ni el gasto ni la viscosidad
+      dependen de la presión.
+
+      **La cara exterior**, con la resistencia de una capa cilíndrica:
+
+      $$
+      R_{cond} = \frac{\ln(0{,}08/0{,}06)}{2\pi \cdot 45 \cdot 10} = 1{,}017\cdot10^{-4}\ \text{K/W}
+      \qquad
+      \theta_2 = 65{,}73 - 10080 \cdot 1{,}017\cdot10^{-4} = 64{,}70\ ^\circ\text{C}
+      $$
+
+      **b) El agua, y por qué hay que suponerla.** Para el coeficiente del
+      agua hacen falta sus propiedades, que dependen de su temperatura, que
+      es justo lo que se pide. No hay forma de despejarla: se supone, se
+      calcula y se corrige. Tiene que estar por debajo de la pared, 64,7 °C,
+      y la resolución oficial arranca en **60 °C**.
+
+      La sección es anular, así que el diámetro que va en el Reynolds y en el
+      Nusselt es el hidráulico, $D_h = D_3 - D_2 = 0{,}12\ \text{m}$:
+
+      $$
+      A = \frac{\pi\,(0{,}2^{2} - 0{,}08^{2})}{4} = 0{,}02639\ \text{m}^{2}
+      \qquad
+      c = \frac{2}{983{,}3 \cdot 0{,}02639} = 0{,}0771\ \text{m/s}
+      $$
+
+      $$
+      Re = \frac{0{,}0771 \cdot 0{,}12 \cdot 983{,}3}{4{,}67\cdot10^{-4}} = 19.475
+      \qquad
+      Nu = 0{,}023 \cdot 19.475^{0{,}8} \cdot 2{,}99^{0{,}4} = 96{,}29
+      $$
+
+      Ahora con el exponente 0,4, porque el agua se **calienta**:
+
+      $$
+      h_2 = \frac{96{,}29 \cdot 0{,}654}{0{,}12} = 524{,}8\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \theta_{agua} = 64{,}70 - \frac{10080}{524{,}8 \cdot 2{,}513} = 57{,}06\ ^\circ\text{C}
+      $$
+
+      Se había supuesto 60 y sale 57,06. La resolución oficial repite la
+      vuelta con las propiedades a 57,06 °C y obtiene **56,9 °C**, que ya no
+      se mueve: la segunda vuelta cambia el resultado en 0,16 grados.
+
+      **Y el reparto, que es la lectura que hay que llevarse.** Con los
+      números de la primera vuelta, el aire se lleva 14,3 grados, el metal
+      1,0 y el agua 7,6: el 62 %, el 4 % y el 33 % de la resistencia. Es la
+      tercera vez que el corpus pregunta cuánto cuenta el metal de un tubo, y
+      la respuesta sigue siendo la misma: depende de lo que tenga al lado. Con
+      aceite por dentro, el acero de enero de 2021 se llevaba dos grados de
+      setenta y tres; con agua forzada enfrente, el hierro fundido de 5 mm de
+      enero de 2023 se llevaba el 27,5 %. Aquí, con aire por dentro, vuelve a
+      no contar.
+
+  - id: exter2122-ord-2-el-tercio-del-calor-que-se-escapa
+    titulo: El tercio del calor que se escapa, y el 44 % que queda
+    fuente: Ejercicio 2 de la convocatoria ordinaria de 2021-2022, celebrada el 11 de enero de 2022 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Calcúlese la exergía destruida y el rendimiento exergético del conducto
+      concéntrico descrito en el ejercicio 1, considerando los siguientes
+      datos:
+
+      - Estado de referencia $20\ ^\circ\text{C}$ y $1\ \text{bar}$.
+      - $1/3$ del calor intercambiado desde el aire del conducto interior sale
+        hacia el exterior desde el conducto de agua exterior.
+      - El aire en el conducto interior circula a $2\ \text{bar}$.
+      - Despréciese la resistencia térmica de la pared exterior del conducto
+        exterior.
+
+      Nota: Si no se ha resuelto el ejercicio 1, tómense los siguientes datos
+      aproximados para poder resolver el ejercicio 2:
+
+      - Temperatura promedio del agua $= 56\ ^\circ\text{C}$.
+
+      *Lo que hace falta del ejercicio 1: $0{,}5\ \text{kg/s}$ de aire que
+      entran a $90\ ^\circ\text{C}$ y salen a $70\ ^\circ\text{C}$, con
+      $c_p = 1008\ \text{J/(kg}\cdot\text{K)}$, y $2\ \text{kg/s}$ de agua,
+      con $c_p = 4183{,}8\ \text{J/(kg}\cdot\text{K)}$, cuya temperatura media
+      sale $56{,}9\ ^\circ\text{C}$.*
+    pide: La exergía destruida en el conducto y su rendimiento exergético.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Un tercio del calor sale al exterior atravesando la pared del
+          conducto de agua. En el balance de entropía, ¿a qué temperatura se
+          divide ese calor?
+        opciones:
+          - texto: A la del agua, 56,9 °C, porque la resistencia de esa pared se desprecia
+            correcta: true
+            mensaje: |
+              Eso es, y es el dato que el cuarto guion del enunciado pone ahí a
+              propósito. La frontera del sistema es esa pared, y sin
+              resistencia su cara de fuera está a la temperatura del agua. Por
+              ahí cruza el calor perdido, y esa es su temperatura.
+          - texto: A la del ambiente, 20 °C, que es adonde va el calor
+            mensaje: |
+              Eso es poner la frontera lejos, en el aire de la sala, y entonces
+              el sistema incluye la caída de 57 a 20 °C: la entropía generada
+              sale mayor porque metes dentro una destrucción que ocurre fuera
+              del conducto.
+          - texto: A la del aire, 80 °C, que es de donde sale el calor
+            mensaje: |
+              El calor sale del aire, pero cruza la frontera del sistema por la
+              pared del conducto de agua. En el término $\int\delta Q/T$ manda
+              la temperatura del sitio por donde cruza.
+          - texto: A ninguna, porque el conducto se trata como adiabático
+            mensaje: |
+              No es adiabático: pierde un tercio de lo que suelta el aire,
+              3.360 W. Si quitas ese término, la entropía generada sale
+              **negativa**, y eso ya dice que falta algo.
+
+      - tipo: calcular
+        titulo: El calor que se queda el agua
+        pregunta: |
+          El aire suelta $10.080\ \text{W}$. ¿Cuánto recibe el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '6.72 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '10.08 kW'
+            mensaje: |
+              Eso es todo lo que suelta el aire. Un tercio no llega al agua: se
+              escapa al exterior atravesando su conducto.
+          - valor: '3.36 kW'
+            mensaje: |
+              Ese es el tercio que se **escapa**. El agua se queda con los otros
+              dos: 6.720 W.
+        pista: |
+          $\dot{Q}_{agua} = \dot{Q}_{aire} - \tfrac{1}{3}\dot{Q}_{aire}$.
+        desarrollo: |
+          $$
+          \dot{Q}_{perd} = \frac{10080}{3} = 3360\ \text{W}
+          \qquad
+          \dot{Q}_{agua} = 10080 - 3360 = 6720\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: La entropía generada
+        pregunta: |
+          Con el agua a $T_m = 329{,}9\ \text{K}$ de media, ¿cuánta entropía se
+          genera en el conducto?
+        respuesta:
+          tipo: magnitud
+          valor: '1.992 W/K'
+          tolerancia: 0.05
+          formato: una entropía por unidad de tiempo, con su unidad
+        distractores:
+          - valor: '-8.19 W/K'
+            mensaje: |
+              Te has dejado el término del calor que se escapa, y por eso sale
+              negativa, que es imposible. Ese calor se lleva entropía al salir,
+              $3360/329{,}9 = 10{,}18\ \text{W/K}$, y el balance lo descuenta.
+          - valor: '3.275 W/K'
+            mensaje: |
+              Has dividido el calor perdido entre la temperatura ambiente, 293
+              K. Eso es poner la frontera en el aire de la sala y meter dentro
+              del sistema la caída de 57 a 20 °C, que no ocurre en el conducto.
+              Con la resistencia de la pared despreciada, el calor cruza la
+              frontera a la temperatura del agua.
+        pista: |
+          $\dot{S}_G = \dot{m}_{aire}\,\Delta s_{aire} + \dot{m}_{agua}\,\Delta s_{agua} - \dot{Q}_{perd}/T_m$,
+          con $\dot{Q}_{perd} = -3360\ \text{W}$ porque sale.
+        desarrollo: |
+          $$
+          \Delta s_{aire} = 1008 \ln\frac{343}{363} = -57{,}126\ \frac{\text{J}}{\text{kg}\cdot\text{K}}
+          $$
+
+          El agua gana $6720/329{,}9$ y el calor perdido se lleva
+          $3360/329{,}9$; juntos, el calor entero del aire partido por la
+          temperatura del agua:
+
+          $$
+          \dot{S}_G = 0{,}5 \cdot (-57{,}126) + \frac{10080}{329{,}9} = 1{,}992\ \text{W/K}
+          $$
+
+      - tipo: calcular
+        titulo: La exergía destruida
+        pregunta: |
+          ¿Cuánta exergía se destruye dentro del conducto?
+        respuesta:
+          tipo: magnitud
+          valor: '583.7 W'
+          tolerancia: 0.05
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '959.5 W'
+            mensaje: |
+              Eso es lo que destruye el **universo**: además de los 583,7 W de
+              dentro, los 375,8 W que salen con el calor perdido y se destruyen
+              fuera, al bajar ese calor de 57 a 20 °C. El enunciado pide lo del
+              conducto.
+          - valor: '657.2 W'
+            mensaje: |
+              Has multiplicado por la temperatura del agua, 329,9 K.
+              Guy-Stodola multiplica siempre por $T_0$, la del estado de
+              referencia: 293 K.
+        pista: |
+          Guy-Stodola, $\dot{E}x_d = T_0\,\dot{S}_G$, con $T_0 = 293\ \text{K}$.
+        desarrollo: |
+          $$
+          \dot{E}x_d = 293 \cdot 1{,}992 = 583{,}7\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: El rendimiento exergético
+        pregunta: |
+          La resolución oficial define el objetivo como calentar el agua, y el
+          calor que se escapa como pérdida. ¿Qué rendimiento exergético sale,
+          en tanto por ciento?
+        respuesta:
+          tipo: numero
+          valor: '43.93'
+          tolerancia: 1.2
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '65.89'
+            mensaje: |
+              Si te sale en torno al 66 %, has hecho una de dos cosas. O has
+              metido en el numerador la exergía que se escapa con el calor
+              perdido, 375,8 W, que es la definición del separador de enero de
+              2024 y aquí se llama pérdida; o has calculado el rendimiento
+              **energético**, dos tercios. Arriba va solo lo que gana el agua
+              en exergía.
+          - valor: '34.11'
+            mensaje: |
+              Esa es la fracción que se **destruye**, 583,7 de 1.711 W. El
+              rendimiento es lo que llega al agua: 751,6 de 1.711.
+        pista: |
+          $\eta_{ex} = \dfrac{\dot{m}_{agua}\,(\psi_s-\psi_e)_{agua}}{\dot{m}_{aire}\,(\psi_e-\psi_s)_{aire}}$.
+        desarrollo: |
+          $$
+          \dot{m}_{aire}\,(\psi_e-\psi_s) = 0{,}5\,\left[1008 \cdot 20 - 293 \cdot 57{,}126\right] = 1711\ \text{W}
+          $$
+
+          $$
+          \dot{m}_{agua}\,(\psi_s-\psi_e) = 6720\left(1 - \frac{293}{329{,}9}\right) = 751{,}6\ \text{W}
+          \qquad
+          \eta_{ex} = \frac{751{,}6}{1711} = 0{,}4393
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena adónde va la exergía que suelta el aire. Una pieza es falsa.
+        piezas:
+          - texto: 'El aire cede 1.711 W de exergía: 751,6 llegan al agua, 375,8 se van con el calor que se escapa y 583,7 se destruyen dentro.'
+          - texto: 'El tercio perdido no cambia la entropía generada, porque sale a la temperatura del agua: para el balance es como si hubiera llegado a ella.'
+          - texto: 'Por eso el rendimiento baja del 65,9 % al 43,9 % sin que se destruya ni un vatio más: la exergía perdida no se destruye en el conducto, se marcha.'
+          - texto: 'Aislando bien el conducto de agua, el rendimiento exergético llegaría al 100 %.'
+            trampa: true
+            mensaje: |
+              Llegaría al 65,9 %. Los 583,7 W que se destruyen al pasar el
+              calor de un aire a 80 °C a un agua a 57 seguirían ahí: esa
+              destrucción no la arregla ningún aislante, solo acercar las dos
+              temperaturas.
+    resolucion: |
+      **Dónde está la frontera, y a qué temperatura la cruza el calor.** El
+      sistema es el conducto entero, con sus dos corrientes. Un tercio del
+      calor que suelta el aire se escapa por la pared exterior del conducto
+      de agua, y el enunciado desprecia la resistencia de esa pared: su cara
+      de fuera está a la temperatura del agua. **Esa es la temperatura a la
+      que el calor perdido cruza la frontera**, y la que va en el balance de
+      entropía.
+
+      **Los calores.** Del ejercicio 1, el aire suelta 10.080 W; se escapa
+      un tercio y el agua se queda con el resto:
+
+      $$
+      \dot{Q}_{perd} = \frac{10080}{3} = 3360\ \text{W}
+      \qquad
+      \dot{Q}_{agua} = 10080 - 3360 = 6720\ \text{W}
+      $$
+
+      Con 2 kg/s, el agua sube $6720/(2 \cdot 4183{,}8) = 0{,}80$ grados:
+      entra a 56,5 °C y sale a 57,3.
+
+      **La entropía generada**, con el agua a $T_m = 329{,}9\ \text{K}$ y la
+      referencia a $T_0 = 293\ \text{K}$. El aire, con la presión constante:
+
+      $$
+      \Delta s_{aire} = 1008 \ln\frac{343}{363} = -57{,}126\ \frac{\text{J}}{\text{kg}\cdot\text{K}}
+      $$
+
+      Como el agua apenas cambia de temperatura, lo que gana en entropía es,
+      a todos los efectos, su calor partido por su temperatura,
+      $6720/329{,}9$. Y el calor perdido sale **a esa misma temperatura**,
+      así que su término es $3360/329{,}9$. Juntos dan el calor entero del
+      aire partido por la temperatura del agua:
+
+      $$
+      \dot{S}_G = 0{,}5 \cdot (-57{,}126) + \frac{10080}{329{,}9} = 1{,}992\ \text{W/K}
+      $$
+
+      $$
+      \dot{E}x_d = 293 \cdot 1{,}992 = 583{,}7\ \text{W}
+      $$
+
+      **Fíjate en lo que acaba de pasar: el tercio que se escapa no ha
+      cambiado la entropía generada.** Con el conducto perfectamente aislado
+      saldría lo mismo. Lo que se destruye dentro es el paso del calor de un
+      aire a 80 °C a un agua a 57, y eso no depende de adónde vaya después
+      ese calor.
+
+      **Por el otro camino**, con las exergías de flujo, se ve adónde va cada
+      vatio. Los 2 bar del aire no entran: la presión no cambia entre la
+      entrada y la salida, y el término $R\ln(P_s/P_e)$ se anula.
+
+      $$
+      \dot{m}_{aire}\,(\psi_e-\psi_s) = 0{,}5\,\left[1008 \cdot 20 - 293 \cdot 57{,}126\right] = 1711\ \text{W}
+      $$
+
+      $$
+      \dot{m}_{agua}\,(\psi_s-\psi_e) = 6720\left(1 - \frac{293}{329{,}9}\right) = 751{,}6\ \text{W}
+      \qquad
+      \dot{E}x_{perd} = 3360\left(1 - \frac{293}{329{,}9}\right) = 375{,}8\ \text{W}
+      $$
+
+      Lo que falta para cuadrar es lo destruido,
+      $1711 - 751{,}6 - 375{,}8 = 583{,}6\ \text{W}$: los dos caminos dan lo
+      mismo.
+
+      **El rendimiento exergético.** La resolución oficial dice de dónde sale
+      su definición, que es lo que casi ningún examen hace: el objetivo es
+      «utilizar la energía que intercambia el aire en forma de calor para
+      calentar el agua, y por lo tanto, el calor que sale hacia el exterior
+      son pérdidas». Así que arriba va solo lo que gana el agua:
+
+      $$
+      \eta_{ex} = \frac{751{,}6}{1711} = 0{,}4393
+      $$
+
+      **Un 43,9 %.** De cada cien unidades de exergía que suelta el aire, 44
+      llegan al agua, 22 se van con el calor perdido y 34 se destruyen.
+      Aislando el conducto, el rendimiento subiría al 65,9 %, porque las 22
+      que se escapan llegarían al agua, pero no más: las 34 destruidas no las
+      arregla ningún aislante.
+
+      Es la otra cara del separador del 30 de enero de 2024, que salía al
+      97,4 % porque su definición metía **en el numerador** la exergía que se
+      escapaba por la pared. Aquí la definición la llama pérdida, y por eso
+      la misma clase de fuga baja el rendimiento en vez de esconderse en él.
+
+      > **Si has usado los 56 °C de la nota de rescate**, te sale una exergía
+      > destruida de unos 608 W y un rendimiento del 43,0 %, y las casillas
+      > aceptan los dos. Y dos descuidos de la resolución oficial que no se
+      > propagan: escribe el calor específico del aire, 1008, en la entropía
+      > del agua —el resultado, 10,18, está hecho con el del agua—, y en la
+      > última línea pone 378,8 donde es 375,8.
+
   - id: exter2122-ord-3-cincuenta-kilojulios-de-calor-que-quitan-exergia
     titulo: Cincuenta kilojulios de calor, y la exergía que baja
     fuente: Ejercicio 3 de la convocatoria ordinaria de 2021-2022, celebrada el 11 de enero de 2022 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
