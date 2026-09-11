@@ -108,6 +108,26 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > que llevan sus nombres y no se abren—. El plan, tema a tema, está en
 > `tasks/manana.md`.
 >
+> **Y la noche de ese 12 de septiembre de 2026, Materiales tiene escrito todo
+> lo que se puede escribir**: sus **diez temas publicados** —71 en el sitio—,
+> cada uno con prosa, figura y ejemplos propios, y **los 99 ejercicios de su
+> colección** resueltos paso a paso y contrastados contra su resultado
+> impreso. La asignatura suma 120 ejercicios y el corpus pasa a **1.492
+> ejercicios y 6.270 pasos**. Diez de esos 99 se leen de una curva de libro y
+> entraron cuando las curvas estuvieron redibujadas a escala: **dieciocho
+> figuras de libro** en los temas 2 a 6 (§08).
+>
+> Sigue en `obra`, y ya no por trabajo: sin exámenes no hay ruta que medir
+> (§14) ni convocatorias que transcribir (§15). El contraste volvió a
+> encontrar erratas en un documento oficial —tres resultados impresos que la
+> figura no da, en los problemas 3.23, 3.26 b) y 3.27 b)— y se publicaron
+> como en Térmica: la lectura buena en la casilla y la impresa como
+> distractor explicado. Y queda **una pregunta para la profesora**, que no me
+> corresponde resolver: el 4.19 imprime un 44,8 % que sale de mezclar dos
+> temperaturas en la regla de la palanca, y el sitio publica el 55,2 %
+> coherente con la fórmula del tema y explica el otro. Está en
+> `tasks/manana.md`.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -447,9 +467,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.405 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.848 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.372 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.578 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.164 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.492 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -556,6 +576,14 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > pidió lo mismo que los anteriores: resolver a ciegas, abrir la resolución y
 > contrastar. Lo que eso encontró —entre otras cosas, el primer error de
 > concepto en una resolución oficial— está en §00.
+>
+> Y el 12 de septiembre de 2026, con Ciencia de Materiales escrita, **1.492
+> ejercicios y 6.270 pasos**: 120 ejercicios y 609 pasos más, todos de
+> Materiales. Es la primera asignatura sin un solo ejercicio de examen —99
+> de los 120 son de su colección, y el resto, ejemplos—, porque no hay
+> exámenes entre el material. Y la primera donde un problema no se podía
+> escribir hasta tener dibujada la figura de la que se lee: diez esperaron a
+> sus curvas.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -742,11 +770,11 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 
 | patrón | dónde vive de verdad | usos |
 |---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
+| **1 · Lectura** | `patrones/Lectura.astro` | los 71 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.372 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.492 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.372 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.492 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
@@ -1316,6 +1344,27 @@ Lo que no sabe evaluar lo declara **saltado**, y no lo cuenta como fallo.
 > de forma ambigua, `K/p = 2{,}2\cdot 10^{9}/2{,}5\cdot 10^{6}`, que solo
 > significan lo que quieren decir si el lector agrupa por su cuenta: pasadas
 > a fracción.
+
+> **Y el 12 de septiembre de 2026 resultó que no comprobaba ningún porcentaje
+> con decimales.** Lo destapó al revés, con cinco avisos falsos en
+> Materiales, todos de la forma `\frac{5 - 2}{5}\cdot 100 = 60\ \%`: un `%`
+> detrás del resultado multiplicaba la expresión por cien aunque ya llevara
+> su `\cdot 100`. La misma forma con decimales —la cristalinidad del tema 9,
+> `\frac{0{,}070}{0{,}1222}\cdot 100 = 57{,}3\ \%`— no avisaba, y el motivo
+> era peor que el aviso: el margen de redondeo se medía contra el valor ya
+> multiplicado y salía del tamaño del propio valor, así que **pasaba
+> cualquier número**, y el marcador lo contaba como comprobado.
+>
+> Arreglado admitiendo las dos lecturas de un porcentaje —la expresión es una
+> fracción, o ya está en tanto por ciento— con el margen medido en la escala
+> de la expresión. Al quitar el margen roto salieron tres avisos más, en
+> Fluidos, y los tres eran la segunda lectura: una interpolación entre
+> rendimientos de tabla y la fórmula de dilatación del primer parcial de
+> 2021, que el enunciado da en tanto por ciento. Validado al revés con un
+> 67,3 donde el tema 9 dice 57,3 —que antes pasaba— y un 70 donde el tema 3
+> dice 60: dos rojos, los dos. El precio es la concesión de las unidades en
+> pequeño: **un error de factor cien entre fracción y porcentaje ya no se
+> caza.**
 
 Antes de escribirlo se intentaron dos guardianes de texto y los dos se
 descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusión,

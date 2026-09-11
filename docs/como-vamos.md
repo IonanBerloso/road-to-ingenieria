@@ -863,14 +863,28 @@ examen delante y no antes (§13), y lo que hacía falta eran dos tipos:
   error clásico de la matriz asociada, porque las coordenadas de cada imagen van
   en columna.
 
-## Las otras cuatro asignaturas
+## Ciencia de Materiales, y las otras tres
 
-**Las cuatro** están como `prev`, con cero contenido: Ciencia de Materiales,
-Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción y Fabricación.
-Es §00 funcionando: no se abre una hasta cerrar la anterior, y la anterior,
-Térmica, se cerró el 12 de septiembre de 2026. Qué hace falta para abrir la
-sexta —y por qué lo primero son exámenes, que ninguna de las cuatro trae en
-el material— está en `tasks/manana.md`, fase 7.
+**Ciencia de Materiales se abrió el 12 de septiembre de 2026**, el mismo día
+en que se cerró Térmica, por decisión de Ionan —«haz materiales primero»—.
+Sus **diez temas están publicados**, cada uno con prosa, figura y ejemplos
+propios, y **los 99 ejercicios de su colección** están resueltos paso a paso y
+contrastados contra el resultado impreso —diez de ellos se leen de curvas de
+libro, que hubo que redibujar a escala antes (§08)—. Está en `obra`, no en
+`ok`, por un motivo que no es trabajo: **no hay ni un examen** entre el
+material, así que §15 no se puede cumplir y la ruta de §14 no se puede medir. Los temas 7 a 10 no tienen material de la
+profesora —se trabajan con presentaciones de alumnos, que llevan sus nombres
+y no se abren—, así que su prosa se apoya en la guía y en los temas 1 a 6.
+
+**Las otras tres** siguen en `prev`, con cero contenido: Expresión Gráfica,
+Mecánica Aplicada y Sistemas de Producción y Fabricación. Es §00
+funcionando: no se abre una hasta cerrar la anterior. Por qué lo primero son
+exámenes, que ninguna trae en el material, está en `tasks/manana.md`, fase 7.
+
+> Este encabezado decía «las otras cuatro» y el párrafo «las cuatro están como
+> `prev`, con cero contenido» hasta la tarde del 12 de septiembre de 2026, con
+> Materiales ya abierta y sus temas 1 a 4 publicados. La cuarta vez que esta
+> sección envejece por lo mismo.
 
 > El encabezado decía «las otras siete» y el párrafo «seis están como `prev`»
 > hasta el 10 de septiembre de 2026. Las dos cifras se quedaron atrás al

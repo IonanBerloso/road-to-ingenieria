@@ -186,6 +186,49 @@ terminadas**.
 
 ### El plan de Ciencia de Materiales
 
+> **Dónde está, la noche del 12 de septiembre de 2026: todo lo que se puede
+> escribir, escrito.** Los diez temas están publicados con prosa, figura y
+> ejemplos propios, y **los 99 ejercicios de la colección** están escritos y
+> contrastados contra su resultado impreso. Los diez últimos eran los que se
+> leen de una curva de libro —2.25 y 2.26 de la curva del latón, 3.20 y 3.22
+> a 3.27 de las de trabajo en frío, 4.3 de las del cobre-níquel—, y entraron
+> cuando esas curvas estuvieron redibujadas a escala (§08): **dieciocho
+> figuras de libro** en los temas 2 a 6 —una en el 2, dos en el 3, siete en
+> el 4, cuatro en el 5 y cuatro en el 6—.
+>
+> Lo único que falta no es trabajo:
+>
+> | qué | por qué no está |
+> |---|---|
+> | la ruta de estudio | no hay ni un examen entre el material, y §14 la mide sobre ellos |
+> | cerrar contra §15 | por lo mismo: §15 exige las convocatorias con su PDF |
+>
+> La asignatura se queda en `obra` hasta que aparezcan exámenes. Es la
+> situación de Térmica antes del 10 de septiembre, y se desbloquea igual: con
+> material, no con más horas.
+>
+> **Lo que el contraste encontró en la colección**, porque los datos de una
+> curva se pueden volver a leer y los resultados impresos no siempre salen:
+>
+> | problema | impreso | lo que da la figura |
+> |---|---|---|
+> | 3.23 | espesor entre 0,14 y **0,19 cm** | 0,176 cm: con 0,19 el cobre ya está por debajo del 5 % de alargamiento |
+> | 3.26 b) | ductilidad del **26 %** | 31 %: el 26 % es la lectura en el 10 % de trabajo en frío, no en el 7 % |
+> | 3.27 b) | **10 %** de alargamiento | 1 %: el 10 % corresponde a un 32 % de trabajo en frío, no a un 60 % |
+>
+> En los tres el sitio publica la lectura de la figura, pone el valor impreso
+> como distractor con su explicación y lo cuenta en la resolución. Otros dos
+> no son erratas y la casilla acepta los dos valores: el 2.26 b) es un
+> redondeo hecho antes de tiempo, y el 3.24 queda a punto y medio del borde
+> que pide el enunciado, dentro de lo que da de sí una lectura a ojo.
+>
+> **Y una pregunta que no es mía.** El resultado impreso del 4.19 —44,8 % de
+> Pb— sale de una palanca que mezcla la fase alfa a 300 °C con el eutéctico a
+> 465 °C, y el 4.13 e) usa el mismo atajo en pequeño. El sitio publica la
+> cuenta coherente con la fórmula del tema (55,2 %) y explica la otra. Si la
+> profesora corrige con su criterio, conviene saberlo: está en la resolución
+> del 4.19.
+
 Medido el 12 de septiembre de 2026 sobre `Desktop/2027 proyecto contenido/
 Ciencia de Materiales/`, abriendo solo lo que el nombre no delata como
 personal —las presentaciones por grupos, los resultados y datos de prácticas

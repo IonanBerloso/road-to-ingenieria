@@ -454,16 +454,34 @@ for (const asig of asignaturas) {
                es una reescritura —«h = 0{,}42»— y contarla infla el marcador
                con comprobaciones que no comprueban. */
             if (!/[+\-*/^]|\\frac|\\sqrt|\\cdot|\\times/.test(izq)) { saltados++; continue; }
-            let v = evalua(izq);
-            if (v === null) { saltados++; continue; }
-            if (esPorcentaje) v *= 100;
+            const v0 = evalua(izq);
+            if (v0 === null) { saltados++; continue; }
+            /* Un «= 50 %» admite dos lecturas de la expresión, y el guion no
+               tiene cómo elegir entre ellas. O calcula una fracción, que hay
+               que pasar a porcentaje —«\frac{3}{6} = 50 %»—, o ya está en
+               tanto por ciento: «\frac{5 - 2}{5}\cdot 100 = 60 %», una
+               interpolación entre rendimientos de tabla —«70 - 0{,}55(70-62)
+               = 65{,}6 %»— o una fórmula del enunciado que da el porcentaje
+               directamente. Basta con que cuadre una.
+
+               Hasta el 12 de septiembre de 2026 solo existía la primera, y
+               eso tenía dos caras. Con enteros en la expresión daba avisos
+               falsos: cinco en Materiales. Con decimales no daba ninguno, y
+               era peor: el margen de redondeo se medía contra el valor ya
+               multiplicado por cien y salía del tamaño del propio valor, así
+               que **ningún porcentaje con decimales en la expresión se
+               comprobaba de verdad**, y el marcador los contaba como
+               comprobados. El precio de admitir las dos lecturas es el de la
+               potencia de diez de las unidades, en pequeño: un error de
+               factor cien entre fracción y porcentaje ya no se caza. */
+            const factores = esPorcentaje ? [1, 100] : [1];
             pares++;
             /* el decimal está redondeado: media unidad de su último dígito */
             const dec = (m[1].split(/\{,\}|\./)[1] ?? '').length;
             const escala = m[2] ? 10 ** parseInt(m[2], 10) : 1;
-            const margen = 0.5 * 10 ** -dec * escala
-              + margenPorRedondeo(izq, v)
-              + Math.abs(v) * 1e-9;
+            /* margenPorRedondeo reevalúa la expresión tal cual, así que se
+               mide sin factor y se escala con cada lectura. */
+            const margenExpr = margenPorRedondeo(izq, v0);
             /* Las dos lecturas legítimas del número escrito, medidas al
                ampliar el guion a `=`. Basta con que **una** cuadre. */
             const candidatos = [decimal];
@@ -498,10 +516,15 @@ for (const asig of asignaturas) {
             /* 2 · grados: el corpus escribe ángulos en grados y el evaluador,
                como cualquier biblioteca, devuelve radianes. */
             if (/\\?(arctan|arcsin|arccos)/.test(izq)) candidatos.push(decimal * Math.PI / 180);
-            const cuadra = candidatos.some((c) =>
-              Math.abs(v - c) <= margen * Math.max(1, Math.abs(c / (decimal || 1))));
+            const cuadra = factores.some((f) => {
+              const v = v0 * f;
+              const margen = 0.5 * 10 ** -dec * escala + margenExpr * f + Math.abs(v) * 1e-9;
+              return candidatos.some((c) =>
+                Math.abs(v - c) <= margen * Math.max(1, Math.abs(c / (decimal || 1))));
+            });
             if (cuadra) continue;
-            fallos.push(`${donde} · ${e.id} · ${sitio}\n      escribe  ${izq.replace(/\s+/g, ' ').slice(0, 70)}  ${signo} ${decimal}${u ? ' ' + u : ''}\n      y vale   ${v.toPrecision(10)}`);
+            const vale = factores.map((f) => (v0 * f).toPrecision(10)).join(' o ');
+            fallos.push(`${donde} · ${e.id} · ${sitio}\n      escribe  ${izq.replace(/\s+/g, ' ').slice(0, 70)}  ${signo} ${decimal}${esPorcentaje ? ' %' : ''}${u ? ' ' + u : ''}\n      y vale   ${vale}`);
           }
         }
       }
