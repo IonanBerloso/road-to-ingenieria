@@ -46,6 +46,21 @@ ignora «solo por esta vez».
 **Recomendación: A.** Si la guía docente dice otra cosa, manda la guía, y eso
 se escribe.
 
+> **Hecha el 12 de septiembre de 2026, por la A.** La guía docente de
+> 2025-2026 del Grado en Ingeniería Mecánica de Gipuzkoa es pública en ehu.eus
+> y confirma lo que el catálogo publicaba —55 % el examen, 45 % las prácticas,
+> nueve semanas para renunciar a la continua—, y añade dos mínimos que el
+> catálogo no decía y que un alumno necesita saber antes de entrar: **el 40 %
+> del examen y el 25 % de cada ejercicio**. Tres detalles que solo venían del
+> documento vetado —un mínimo de 2,25 en prácticas, que la nota se guarde dos
+> cursos y que faltar a una sea un cero— **no están en la guía y se han
+> quitado**: sin fuente que se pueda citar, §10 no deja publicarlos.
+>
+> Un aviso sobre cómo se leyó: la guía se consultó por la web, y el cuatrimestre
+> salió distinto en dos lecturas de dos páginas —la lista del grado y la ficha
+> de 2026-2027—. Los porcentajes y los mínimos coinciden en las dos; el
+> cuatrimestre no se publica hasta abrirla entera.
+
 ### 6.2 · `tests/verificacion` de Térmica · el trabajo grande
 
 `deuda.mjs`, sección 1 bis: de las **1.424 respuestas de examen comparables**
@@ -82,6 +97,15 @@ quedó a medias.
 
 **Comprobación**: releídas una a una, y cada una que cambie, dicha en el commit.
 
+> **Hecha el 12 de septiembre de 2026, y más pequeña de lo que parecía.** De
+> las 74, **solo tres son de Térmica** —`deuda.mjs` las lista desde ese día con
+> `DEUDA_FRASES=ingenieria-termica`; antes solo daba el recuento—, y las tres
+> siguen siendo ciertas con veinte convocatorias y 57 resoluciones delante:
+> ningún ejercicio de examen es una **caldera**; la extraordinaria de 2025 pide,
+> en efecto, la exergía destruida «mediante una de las dos maneras» y después
+> «mediante la otra»; y el **factor de visión** sigue teniendo cuatro
+> ejercicios de radiación publicados, los mismos cuatro. No cambia ninguna.
+
 ### 6.4 · Los escalones de un solo ejercicio
 
 Quedan **7 de 295** en todo el sitio, y 4 son de Térmica. Dos son de suelo
@@ -99,6 +123,15 @@ tirar:
   se cuenta»).
 
 **Comprobación**: sección 5 de `deuda.mjs`, de 7 a 5 como mínimo.
+
+> **Hecha el 12 de septiembre de 2026.** A `decidir-la-zona` le entran las dos
+> cámaras de mezcla, que deciden la zona por la entropía y por la entalpía en
+> vez de por el volumen. A `la-entalpia-y-los-calores-especificos`, la turbina
+> de gas de febrero de 2022, cuyo distractor de 869 kW es justo usar $c_v$ en un
+> volumen de control. El candidato de enero de 2019 que salió en la búsqueda
+> **no** entra ahí: su $c_n$ lleva $c_v$ aunque el sistema sea abierto, así que
+> es la excepción de la regla, no un ejemplo de ella, y así queda dicho en la
+> nota. Los dos de suelo se quedan con un ejercicio, a propósito.
 
 ### 6.5 · El cierre
 
@@ -144,6 +177,16 @@ Así que lo primero es un hecho del mundo (§13 caso 5), y es para Ionan:
 **¿hay exámenes de alguna de las cuatro, y de cuál?** Y una segunda, que decide
 el orden según §00 —ir un cuatrimestre por delante—: **qué cuatrimestre es cada
 una.**
+
+> **La segunda tiene ya una primera respuesta**, de la lista de asignaturas del
+> Grado en Ingeniería Mecánica de Gipuzkoa en ehu.eus, curso 2026-2027:
+> **Mecánica Aplicada es anual**, Ciencia de Materiales es del primer
+> cuatrimestre y Sistemas de Producción del segundo. Expresión Gráfica es de
+> 1.º y no sale en esa lista. Con la misma salvedad que en la 6.1: se leyó por
+> la web y en una ficha el cuatrimestre salió distinto, así que se confirma
+> abriendo cada guía antes de apoyarse en él. Si se confirma, refuerza la
+> recomendación de abajo: una asignatura anual es la que más semanas tiene
+> alguien estudiándola.
 
 ### Mi recomendación, con lo que hay
 

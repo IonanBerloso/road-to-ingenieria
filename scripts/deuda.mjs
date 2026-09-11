@@ -592,6 +592,13 @@ for (const f of readdirSync(join(CONT, 'preparar'))) {
 fila('desfasadas', desfasadas.length);
 for (const d of desfasadas) fila('', '· ' + d);
 fila('con número, sin comprobar', `${sinComprobar.length} — se releen a mano al cerrar una asignatura`);
+/* Releerlas a mano exige tenerlas delante, y hasta el 12 de septiembre de 2026
+   el guion solo daba el recuento: al ir a releer las de Térmica no había de
+   dónde sacar cuáles eran. Con DEUDA_FRASES=1 las lista, y con un valor que no
+   sea 1 lista solo las que contienen ese texto (DEUDA_FRASES=ingenieria-termica). */
+if (process.env.DEUDA_FRASES)
+  for (const s of sinComprobar)
+    if (process.env.DEUDA_FRASES === '1' || s.includes(process.env.DEUDA_FRASES)) fila('', '· ' + s);
 
 pinta('Y el tamaño del corpus, que también se publica y también envejece');
 fila('ejercicios', EJ.size);
