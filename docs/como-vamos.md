@@ -1,4 +1,4 @@
-# Cómo vamos · 11 de septiembre de 2026
+# Cómo vamos · 12 de septiembre de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -48,11 +48,17 @@ que también está dicho en la ruta: el ejercicio 3 de junio de 2015 es el mismo
 que el ejercicio 3 del 30 de enero de 2023, así que su enunciado se puede leer
 en castellano.
 
-Lo que a Térmica le queda ahora **no son convocatorias sino ejercicios**: los
-28 que las veinte páginas dejan en `fuera`, contados uno a uno. De esos, 20 son
-trabajo pendiente con la resolución oficial detrás, 4 están ya cubiertos por
-otro ejercicio del corpus, 3 examinan cosas que salieron del temario —ciclos de
-potencia y R-134a— y 1 necesita que alguien redibuje el diagrama de Mollier.
+Lo que a Térmica le quedaba después **no eran convocatorias sino ejercicios**:
+los 28 que las veinte páginas dejaban en `fuera`, contados uno a uno. De esos,
+20 eran trabajo pendiente con la resolución oficial detrás, y **el 12 de
+septiembre de 2026 están los veinte escritos**: el corpus pasa a 1.372
+ejercicios, y Térmica a 57 resoluciones de examen. Los ocho que siguen fuera no
+son trabajo: 4 están ya cubiertos por otro ejercicio del corpus, 3 examinan
+cosas que salieron del temario —ciclos de potencia y R-134a— y 1 necesita que
+alguien redibuje el diagrama de Mollier.
+
+Térmica sigue en `obra` hasta cerrar lo que §15 pide además del contenido, y
+eso está contado en `tasks/manana.md`, fase 6.
 
 > Este párrafo decía «medida sobre seis convocatorias» hasta el 10 de
 > septiembre de 2026, y llevaba dos días atrasado: el 9 se leyeron las

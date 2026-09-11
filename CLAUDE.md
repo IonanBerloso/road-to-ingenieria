@@ -67,6 +67,21 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > Mollier —la tobera del 30 de enero de 2023— necesita antes que alguien
 > redibuje ese diagrama, porque el del examen es de una editorial (§08).
 >
+> **Al 12 de septiembre de 2026, la primera fila de esa tabla está a cero.**
+> Los veinte ejercicios con su resolución oficial detrás están escritos,
+> contrastados cifra a cifra y enganchados en la ruta: el corpus pasa a
+> **1.372 ejercicios y 5.661 pasos**, y Térmica a **57 resoluciones de
+> examen** en sus veinte convocatorias. Los ocho `fuera` que quedan son las
+> otras tres filas, y ninguna es trabajo. El contraste siguió encontrando
+> erratas —un factor mil de unidades, un calor específico escrito donde no
+> tocaba— y, por primera vez, **un error de concepto** en una resolución
+> oficial: el rendimiento exergético de una bomba dado en un 3,88 % cuando es
+> el 82,7 %, por dejar fuera el término v·ΔP de la entalpía de un líquido
+> (enero de 2021, ejercicio 3). El sitio publica el bueno y explica el otro.
+>
+> Lo que le queda a Térmica para pasar a `ok` ya no es contenido, y está
+> escrito en `tasks/manana.md`, fase 6.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -406,9 +421,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.385 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.774 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.352 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.405 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 2.848 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.372 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
 
@@ -507,6 +522,14 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 > cambiados, dos temperaturas de referencia mal copiadas— y **cuatro
 > enunciados que se repiten literalmente** entre convocatorias separadas por
 > cuatro años o más. Nada de eso se ve leyendo la resolución primero.
+>
+> Y entre el 11 y el 12 de septiembre de 2026, **1.372 ejercicios y 5.661
+> pasos**: veinte más, y los veinte de examen de Térmica, que son la fila
+> entera de «trabajo pendiente» de la tabla de §00. Ya no había convocatoria
+> que montar, solo el ejercicio que cada una dejaba fuera, y aun así cada uno
+> pidió lo mismo que los anteriores: resolver a ciegas, abrir la resolución y
+> contrastar. Lo que eso encontró —entre otras cosas, el primer error de
+> concepto en una resolución oficial— está en §00.
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -695,9 +718,9 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 61 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.352 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.372 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.352 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.372 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
