@@ -220,3 +220,489 @@ ejercicios:
       > mal es el 1,005 escrito. Quien rehaga la cuenta con lo impreso obtiene
       > 65,4 kJ/kg y un rendimiento del 3 %, y va a creer que se ha equivocado
       > él.
+
+  - id: exter2021-ext-3-la-esfera-y-las-dos-correlaciones-que-no-coinciden
+    titulo: La esfera en la corriente, y dos correlaciones que no coinciden
+    fuente: Ejercicio 3 de la convocatoria extraordinaria de 2020-2021, celebrada en febrero de 2021 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor, resuelta con dos correlaciones; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Una esfera de acero tiene una temperatura superficial de
+      $60\ ^\circ\text{C}$ y se sumerge en una corriente de agua a
+      $15\ ^\circ\text{C}$ que fluye a $2\ \text{m/s}$. Calcúlese el flujo de
+      calor disipado desde la esfera si el diámetro de la misma es
+      $4\ \text{cm}$.
+
+      *El anexo da dos correlaciones para una esfera en flujo cruzado. La de
+      Whitaker, $Nu = 2 + \left(0{,}4\,Re^{1/2} + 0{,}06\,Re^{2/3}\right)Pr^{0{,}4}$,
+      con las propiedades a la temperatura del fluido y válida para
+      $3{,}5 \le Re \le 80.000$ y $0{,}7 \le Pr \le 380$; y la alternativa,
+      $Nu = 0{,}33\,Re^{0{,}6}$, con las propiedades a la temperatura de
+      película. Agua a $15\ ^\circ\text{C}$: $\rho = 999{,}1\ \text{kg/m}^{3}$,
+      $k = 0{,}589\ \text{W/m}\cdot\text{K}$,
+      $\mu = 1{,}138\cdot 10^{-3}\ \text{kg/m}\cdot\text{s}$ y $Pr = 8{,}09$.
+      Agua a $37{,}5\ ^\circ\text{C}$: $\rho = 993{,}05\ \text{kg/m}^{3}$,
+      $k = 0{,}627\ \text{W/m}\cdot\text{K}$ y
+      $\mu = 6{,}865\cdot 10^{-4}\ \text{kg/m}\cdot\text{s}$.*
+    pide: El calor que disipa la esfera, por las dos correlaciones.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿A qué temperatura hay que leer las propiedades del agua?
+        opciones:
+          - texto: Depende de la correlación — Whitaker las pide a la del agua, 15 °C, y la alternativa a la de película
+            correcta: true
+            mensaje: |
+              Eso es, y es lo primero que hay que mirar de cualquier
+              correlación: **cada una dice a qué temperatura se leen sus
+              propiedades**, porque así se ajustó a los experimentos. Aquí una
+              va a 15 °C y la otra a 37,5, y con el mismo problema salen dos
+              Reynolds distintos.
+          - texto: Siempre a la temperatura de película, 37,5 °C
+            mensaje: |
+              Es la costumbre de la convección externa, pero no una ley: la de
+              Whitaker se ajustó con las propiedades a la temperatura del
+              fluido lejano, y leerlas a otra temperatura es usarla fuera de
+              como se construyó.
+          - texto: A la de la esfera, 60 °C, porque es la que impulsa el calor
+            mensaje: |
+              La superficie es uno de los dos extremos, no la temperatura
+              característica. Ninguna de las dos correlaciones del anexo lee
+              las propiedades ahí.
+          - texto: Da igual, el agua apenas cambia de propiedades entre 15 y 60 °C
+            mensaje: |
+              Cambia mucho: su viscosidad baja casi a la mitad entre 15 y
+              37,5 °C, y con ella el Reynolds sube un 65 %. En líquidos la
+              temperatura a la que se leen las propiedades importa bastante más
+              que en gases.
+
+      - tipo: calcular
+        titulo: El Reynolds de Whitaker
+        pregunta: |
+          Con las propiedades a $15\ ^\circ\text{C}$ y el diámetro como
+          longitud característica, ¿cuánto vale el Reynolds?
+        respuesta:
+          tipo: numero
+          valor: '70236'
+          tolerancia: 800
+          formato: un número sin unidad
+        distractores:
+          - valor: '115723'
+            mensaje: |
+              Ese es el Reynolds con las propiedades a la temperatura de
+              **película**, que es el de la otra correlación. Whitaker las pide
+              a la del fluido, 15 °C, donde el agua es mucho más viscosa.
+          - valor: '35118'
+            mensaje: |
+              Has usado el **radio**. La longitud característica de una esfera
+              en flujo cruzado es su diámetro, 0,04 m.
+        pista: |
+          $Re = \dfrac{\rho\,D\,c}{\mu}$.
+        desarrollo: |
+          $$
+          Re = \frac{999{,}1\cdot 0{,}04\cdot 2}{1{,}138\cdot 10^{-3}} = 70236
+          $$
+
+          Dentro del rango de Whitaker, que llega hasta 80.000.
+
+      - tipo: calcular
+        titulo: El coeficiente de Whitaker
+        pregunta: |
+          Con $Re = 70.236$ y $Pr = 8{,}09$, ¿cuánto vale $h$?
+        respuesta:
+          tipo: magnitud
+          valor: '7103 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente de convección, con su unidad
+        distractores:
+          - valor: '3094 W/(m^2 K)'
+            mensaje: |
+              Te has dejado el $Pr^{0{,}4}$. En agua a 15 °C el Prandtl vale
+              8,09 y ese factor multiplica por 2,3: en un líquido es casi la
+              mitad del resultado.
+          - valor: '482.4 W/(m^2 K)'
+            mensaje: |
+              Ese es el **Nusselt**, adimensional. Falta $h = Nu\,k/D$, y con
+              $D = 0{,}04$ eso multiplica casi por quince.
+        pista: |
+          $Nu = 2 + \left(0{,}4\,Re^{1/2} + 0{,}06\,Re^{2/3}\right)Pr^{0{,}4}$,
+          y después $h = Nu\,k/D$.
+        desarrollo: |
+          $$
+          Nu = 2 + \left(0{,}4\cdot 70236^{1/2} + 0{,}06\cdot 70236^{2/3}\right)\cdot 8{,}09^{0{,}4} = 482{,}4
+          $$
+
+          $$
+          h = \frac{482{,}4\cdot 0{,}589}{0{,}04} = 7103\ \text{W/m}^{2}\text{K}
+          $$
+
+      - tipo: calcular
+        titulo: El calor, por Whitaker
+        pregunta: |
+          ¿Cuánto calor disipa la esfera?
+        respuesta:
+          tipo: magnitud
+          valor: '1607 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '401.7 W'
+            mensaje: |
+              Has usado el área de un **círculo**, $\pi D^{2}/4$. La superficie
+              de una esfera es cuatro veces eso: $\pi D^{2}$.
+          - valor: '2142 W'
+            mensaje: |
+              Has multiplicado por 60 en vez de por $60-15$. La ley de Newton va
+              con la **diferencia** entre la superficie y el agua.
+        pista: |
+          $\dot{Q} = h\,\pi D^{2}\,(\theta_s-\theta_\infty)$.
+        desarrollo: |
+          $$
+          \dot{Q} = 7103\cdot 5{,}027\cdot 10^{-3}\cdot 45 = 1607\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: El calor, por la correlación alternativa
+        pregunta: |
+          Ahora con $Nu = 0{,}33\,Re^{0{,}6}$ y las propiedades a la temperatura
+          de película. ¿Cuánto calor sale?
+        respuesta:
+          tipo: magnitud
+          valor: '1277 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '889 W'
+            mensaje: |
+              Has leído las propiedades a 15 °C, que es lo que pide Whitaker.
+              Esta correlación las pide a la temperatura de **película**,
+              37,5 °C, y ahí el agua es menos viscosa: el Reynolds sube a
+              115.723.
+          - valor: '319.3 W'
+            mensaje: |
+              Has usado el área de un **círculo**. La superficie de la esfera es
+              $\pi D^{2} = 5{,}027\cdot 10^{-3}\ \text{m}^{2}$.
+        pista: |
+          $Re$ con $\rho = 993{,}05$ y $\mu = 6{,}865\cdot 10^{-4}$, después
+          $Nu$, $h$ y $\dot{Q}$ como antes.
+        desarrollo: |
+          $$
+          Re = \frac{993{,}05\cdot 0{,}04\cdot 2}{6{,}865\cdot 10^{-4}} = 115723
+          \qquad
+          Nu = 0{,}33\cdot 115723^{0{,}6} = 360{,}2
+          $$
+
+          $$
+          h = \frac{360{,}2\cdot 0{,}627}{0{,}04} = 5646\ \text{W/m}^{2}\text{K}
+          \qquad
+          \dot{Q} = 5646\cdot 5{,}027\cdot 10^{-3}\cdot 45 = 1277\ \text{W}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena qué hacer con dos respuestas distintas. Una pieza es falsa.
+        piezas:
+          - texto: 'Whitaker, con las propiedades a 15 °C, da 1.607 W; la alternativa, con las propiedades a 37,5 °C, da 1.277 W.'
+          - texto: 'Son un 26 % distintas y la propia resolución da las dos por buenas: una correlación de convección es un ajuste a experimentos, no una ley.'
+          - texto: 'Una de las dos tiene que estar mal, porque la esfera disipa un solo calor.'
+            trampa: true
+            mensaje: |
+              La esfera disipa un solo calor, pero lo que sabemos de él viene de
+              ajustes a experimentos, y cada ajuste tiene su dispersión y su
+              rango. Las dos correlaciones son legítimas y se dan por correctas
+              en el examen. Lo que no vale es mezclarlas —las propiedades de una
+              con la fórmula de la otra—, que es el error de verdad.
+    resolucion: |
+      **Lo primero, antes de ninguna cuenta: a qué temperatura se leen las
+      propiedades.** No hay una respuesta única, la da cada correlación. La de
+      Whitaker se construyó con las propiedades a la temperatura del fluido
+      lejano, 15 °C; la alternativa, a la de película, 37,5 °C. Y en agua la
+      diferencia es grande: la viscosidad casi se reduce a la mitad.
+
+      **Por Whitaker**, con el agua a 15 °C:
+
+      $$
+      Re = \frac{999{,}1\cdot 0{,}04\cdot 2}{1{,}138\cdot 10^{-3}} = 70236
+      $$
+
+      $$
+      Nu = 2 + \left(0{,}4\cdot 70236^{1/2} + 0{,}06\cdot 70236^{2/3}\right)\cdot 8{,}09^{0{,}4} = 482{,}4
+      \qquad
+      h = 7103\ \text{W/m}^{2}\text{K}
+      $$
+
+      $$
+      \dot{Q} = 7103\cdot\pi\cdot 0{,}04^{2}\cdot(60-15) = 1607\ \text{W}
+      $$
+
+      **Por la alternativa**, con el agua a 37,5 °C:
+
+      $$
+      Re = 115723 \qquad Nu = 0{,}33\cdot 115723^{0{,}6} = 360{,}2
+      \qquad h = 5646\ \text{W/m}^{2}\text{K}
+      \qquad \dot{Q} = 1277\ \text{W}
+      $$
+
+      **Un 26 % de diferencia, y las dos valen.** La resolución oficial lo dice
+      con todas las letras: «a la hora de corregir los exámenes se consideran
+      ambos procedimientos y resultados correctos», y para un resultado más
+      preciso haría falta «una búsqueda bibliográfica exhaustiva».
+
+      Es la tercera vez que este corpus se encuentra lo mismo, y la más
+      grande. En febrero de 2022, dos correlaciones para el mismo apartado
+      daban un 13 % de diferencia; en febrero de 2026, la correlación de una
+      hemiesfera lisa se quedaba a menos de la mitad de lo medido sobre un
+      casco. Aquí, un 26 % sobre una esfera perfecta. **Una correlación de
+      convección no es una ley: es un ajuste a experimentos, con su rango y su
+      dispersión**, y quien la usa tiene que saber cuál ha elegido y por qué.
+
+      Lo que sí es un error es mezclarlas: leer las propiedades a una
+      temperatura y usar la fórmula de la otra. Con las propiedades a 15 °C en
+      la alternativa saldrían 889 W, un número que no pertenece a ninguna de las
+      dos.
+
+      > **Dos matices sobre las cifras.** La resolución da $Nu = 483{,}22$ y
+      > 1.609,5 W por Whitaker; con sus mismos datos la fórmula da 482,4 y
+      > 1.607 W, un 0,2 % que no cambia nada. Y en la bibliografía la de
+      > Whitaker suele escribirse con un factor más, $(\mu_\infty/\mu_s)^{1/4}$,
+      > que corrige por la viscosidad del agua junto a la pared; la resolución
+      > no lo usa, y como el agua es más viscosa a 15 °C que a 60, ese factor
+      > subiría algo el resultado.
+
+  - id: exter2021-ext-1-el-deposito-que-triplica-la-presion-y-sigue-siendo-mezcla
+    titulo: El depósito que triplica su presión y sigue siendo una mezcla
+    fuente: Ejercicio 1 de la convocatoria extraordinaria de 2020-2021, celebrada en febrero de 2021 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor, con el diagrama P-v dibujado; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      Un recipiente rígido contiene $2\ \text{kg}$ de agua a $2\ \text{bar}$ y
+      título $0{,}2$. Se le aporta calor desde una fuente de calor a
+      $300\ ^\circ\text{C}$, hasta triplicar su presión. Calcúlese el calor
+      aportado, la temperatura final y la entropía generada en el universo.
+
+      *De las tablas de vapor, a $2\ \text{bar}$:
+      $v' = 0{,}0010605$, $v'' = 0{,}8857\ \text{m}^{3}/\text{kg}$,
+      $u' = 504{,}49$, $u'' = 2529{,}5\ \text{kJ/kg}$,
+      $s' = 1{,}5301$, $s'' = 7{,}1271\ \text{kJ/kg}\cdot\text{K}$. A
+      $6\ \text{bar}$: $v' = 0{,}001101$, $v'' = 0{,}3157\ \text{m}^{3}/\text{kg}$,
+      $u' = 669{,}9$, $u'' = 2567{,}4\ \text{kJ/kg}$,
+      $s' = 1{,}9312$, $s'' = 6{,}76\ \text{kJ/kg}\cdot\text{K}$, y la
+      temperatura de saturación, $158{,}9\ ^\circ\text{C}$.*
+    pide: El calor aportado, la temperatura final y la entropía generada en el universo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El recipiente es rígido. ¿Qué propiedad del agua es la misma al
+          principio y al final?
+        opciones:
+          - texto: El volumen específico, porque la masa y el volumen del recipiente no cambian
+            correcta: true
+            mensaje: |
+              Eso es, y es la llave del ejercicio: el estado final se fija con
+              dos propiedades, la presión que da el enunciado —6 bar— y el
+              volumen específico, que es el del principio. Con esas dos se entra
+              en la tabla y se decide la zona.
+          - texto: La temperatura, porque el agua está en saturación
+            mensaje: |
+              Está en saturación al principio y al final, pero a **presiones
+              distintas**, así que a temperaturas distintas: 120 °C a 2 bar y
+              158,9 a 6. La temperatura cambia; lo que no cambia es el volumen.
+          - texto: El título, porque no se añade ni se quita agua
+            mensaje: |
+              La masa total no cambia, pero sí cómo se reparte entre líquido y
+              vapor: el calor evapora agua. El título pasa de 0,2 a 0,56.
+          - texto: La entalpía, porque no hay trabajo
+            mensaje: |
+              Sin trabajo, lo que cambia igual que el calor es la **energía
+              interna**, no la entalpía. La entalpía es la cuenta de los
+              sistemas abiertos.
+
+      - tipo: calcular
+        titulo: El volumen específico
+        pregunta: |
+          A $2\ \text{bar}$ y título $0{,}2$, ¿cuánto vale $v$?
+        respuesta:
+          tipo: magnitud
+          valor: '0.178 m^3/kg'
+          tolerancia: 0.02
+          formato: un volumen específico, con su unidad
+        distractores:
+          - valor: '0.8857 m^3/kg'
+            mensaje: |
+              Ese es el del vapor saturado seco. El agua está a título 0,2:
+              solo una quinta parte de la masa es vapor.
+          - valor: '0.7088 m^3/kg'
+            mensaje: |
+              Has usado $1-x$ en vez de $x$. El título es la fracción de
+              **vapor**, y es lo que multiplica el tramo entre líquido y vapor.
+        pista: |
+          $v = v' + x\,(v''-v')$.
+        desarrollo: |
+          $$
+          v_1 = 0{,}0010605 + 0{,}2\,(0{,}8857-0{,}0010605) = 0{,}178\ \text{m}^{3}/\text{kg}
+          $$
+
+      - tipo: calcular
+        titulo: El título final
+        pregunta: |
+          A $6\ \text{bar}$ con ese mismo volumen específico, ¿cuál es el
+          título?
+        respuesta:
+          tipo: numero
+          valor: '0.5623'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.2'
+            mensaje: |
+              El título no se conserva: el calor evapora agua. Lo que se
+              conserva es el volumen específico, y a 6 bar ese volumen cae mucho
+              más cerca del vapor que a 2.
+          - valor: '2.25'
+            mensaje: |
+              Un título mayor que 1 no existe, y es la mejor señal de que algo
+              falla antes: el volumen de partida está mal, probablemente por
+              haber usado $1-x$ en el paso anterior.
+        pista: |
+          $x_2 = \dfrac{v_2 - v'}{v''-v'}$ con los valores de 6 bar.
+        desarrollo: |
+          $$
+          x_2 = \frac{0{,}178-0{,}001101}{0{,}3157-0{,}001101} = 0{,}5623
+          $$
+
+          Entre 0 y 1: **sigue siendo una mezcla**, así que la temperatura final
+          es la de saturación a 6 bar, 158,9 °C, sin más cuentas.
+
+      - tipo: calcular
+        titulo: El calor aportado
+        pregunta: |
+          Con $u_1 = 909{,}49$ y $u_2 = 1736{,}9\ \text{kJ/kg}$, ¿cuánto calor
+          recibe el agua?
+        respuesta:
+          tipo: magnitud
+          valor: '1654.8 kJ'
+          tolerancia: 0.02
+          formato: un calor, con su unidad
+        distractores:
+          - valor: '827.4 kJ'
+            mensaje: |
+              Eso es por **kilogramo**. En el recipiente hay dos.
+          - valor: '3474 kJ'
+            mensaje: |
+              Has multiplicado la energía interna final por la masa sin restarle
+              la inicial. El calor va con la **variación**, $u_2-u_1$.
+        pista: |
+          Rígido, sin trabajo: $Q = \Delta U = m\,(u_2-u_1)$.
+        desarrollo: |
+          $$
+          Q = 2\,(1736{,}9-909{,}49) = 1654{,}8\ \text{kJ}
+          $$
+
+      - tipo: calcular
+        titulo: La entropía generada en el universo
+        pregunta: |
+          La entropía del agua sube $3{,}994\ \text{kJ/K}$, y la fuente a
+          $300\ ^\circ\text{C}$ entrega esos $1654{,}8\ \text{kJ}$. ¿Cuánta
+          entropía se genera?
+        respuesta:
+          tipo: magnitud
+          valor: '1.106 kJ/K'
+          tolerancia: 0.02
+          formato: una entropía, con su unidad
+        distractores:
+          - valor: '3.994 kJ/K'
+            mensaje: |
+              Esa es solo la del **agua**. La fuente cede el calor y su entropía
+              baja; el universo son las dos.
+          - valor: '-2.888 kJ/K'
+            mensaje: |
+              Esa es solo la de la **fuente**. Falta sumarle la del agua, que
+              sube más de lo que baja la de la fuente.
+        pista: |
+          $S_G = \Delta S_{agua} - \dfrac{Q}{T_{fuente}}$, con $T_{fuente} = 573\ \text{K}$.
+        desarrollo: |
+          $$
+          S_G = 3{,}994 - \frac{1654{,}8}{573} = 1{,}106\ \text{kJ/K}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena cómo se llega a la temperatura final. Una pieza es falsa.
+        piezas:
+          - texto: 'El volumen específico no cambia: 0,178 m³/kg a 2 bar y a 6 bar. A 6 bar eso cae entre el líquido y el vapor saturados, así que el agua sigue siendo una mezcla.'
+          - texto: 'Y una mezcla a 6 bar solo puede estar a una temperatura, la de saturación: 158,9 °C, sin necesidad de ninguna cuenta más.'
+          - texto: 'Como la presión se triplica, la temperatura también se triplica.'
+            trampa: true
+            mensaje: |
+              Eso sería un gas ideal a volumen constante, y ni siquiera así: lo
+              que se triplicaría es la temperatura **absoluta**. Aquí el agua es
+              una mezcla de líquido y vapor, y en una mezcla la temperatura la
+              fija la presión de saturación. Pasa de 120 °C a 158,9, no a 360.
+    resolucion: |
+      **La llave es lo que no cambia.** El recipiente es rígido, así que el
+      volumen específico del agua es el mismo al principio y al final. El
+      estado final queda fijado por dos propiedades: la presión —el triple,
+      6 bar— y ese volumen.
+
+      **El volumen de partida**, a 2 bar y título 0,2:
+
+      $$
+      v_1 = 0{,}0010605 + 0{,}2\,(0{,}8857-0{,}0010605) = 0{,}178\ \text{m}^{3}/\text{kg}
+      $$
+
+      **La zona del estado final.** A 6 bar, el líquido saturado ocupa
+      $0{,}001101$ y el vapor saturado $0{,}3157\ \text{m}^{3}/\text{kg}$; 0,178
+      cae entre los dos, así que **sigue siendo mezcla**:
+
+      $$
+      x_2 = \frac{0{,}178-0{,}001101}{0{,}3157-0{,}001101} = 0{,}5623
+      $$
+
+      Y una mezcla a 6 bar solo puede estar a su temperatura de saturación:
+      $\theta_2 = 158{,}9\ ^\circ\text{C}$. Esa es la respuesta del segundo
+      apartado, y no lleva ninguna cuenta.
+
+      **El calor**, que en un recipiente rígido es la variación de energía
+      interna:
+
+      $$
+      u_1 = 504{,}49 + 0{,}2\,(2529{,}5-504{,}49) = 909{,}49
+      \qquad
+      u_2 = 669{,}9 + 0{,}5623\,(2567{,}4-669{,}9) = 1736{,}9\ \text{kJ/kg}
+      $$
+
+      $$
+      Q = 2\,(1736{,}9-909{,}49) = 1654{,}8\ \text{kJ}
+      $$
+
+      **La entropía generada en el universo**, que son el agua y la fuente:
+
+      $$
+      s_1 = 1{,}5301 + 0{,}2\,(7{,}1271-1{,}5301) = 2{,}6495
+      \qquad
+      s_2 = 1{,}9312 + 0{,}5623\,(6{,}76-1{,}9312) = 4{,}6464
+      $$
+
+      $$
+      \Delta S_{agua} = 2\,(4{,}6464-2{,}6495) = 3{,}994\ \text{kJ/K}
+      \qquad
+      \Delta S_{fuente} = -\frac{1654{,}8}{573} = -2{,}888\ \text{kJ/K}
+      $$
+
+      $$
+      S_G = 3{,}994 - 2{,}888 = 1{,}106\ \text{kJ/K}
+      $$
+
+      Positiva y grande, porque el calor baja de una fuente a 300 °C a un agua
+      que está entre 120 y 159: casi siglo y medio de salto.
+
+      **La trampa que el enunciado pone, y conviene verla.** «Hasta triplicar
+      su presión» invita a pensar en un gas, donde a volumen constante la
+      temperatura absoluta seguiría a la presión. El agua de aquí no es un
+      gas: es una mezcla de líquido y vapor, y en una mezcla presión y
+      temperatura no son independientes. Triplicar la presión la lleva de
+      120 °C a 158,9, y el agua sigue siendo mezcla.
+
+      > **Una errata de la resolución oficial.** Toma el volumen del líquido
+      > saturado a 2 bar como $0{,}001605$ cuando es $0{,}0010605$: se le ha
+      > caído un cero. Con título 0,2 el líquido pesa poco en el volumen, así
+      > que el efecto es pequeño —0,1784 en vez de 0,178, y un calor de 1.659,9
+      > kJ en vez de 1.654,8—, pero quien compare cifra a cifra verá la
+      > diferencia y conviene que sepa de dónde sale. $S_G$ queda en 1,1101
+      > frente a 1,106.
