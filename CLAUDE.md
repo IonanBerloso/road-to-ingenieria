@@ -82,6 +82,22 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > Lo que le queda a Térmica para pasar a `ok` ya no es contenido, y está
 > escrito en `tasks/manana.md`, fase 6.
 >
+> **Y ese mismo 12 de septiembre de 2026, Térmica pasa a `ok`**: la quinta
+> asignatura cerrada contra §15. Lo que le faltaba no era contenido, eran tres
+> cosas. La fuente de su evaluación citaba un documento con datos personales, y
+> se sustituyó por la guía docente pública, que además trae dos mínimos que el
+> sitio no decía: el 40 % del examen y el 25 % de cada ejercicio. Sus **183
+> respuestas de examen** se recalcularon en `tests/verificacion/`, y el pase
+> encontró seis casillas que corregían mal, todas arregladas (§17). Y los dos
+> escalones de un solo ejercicio que eran deuda tienen ya su caso de examen.
+> Siguen en pie sus huecos declarados: las dos convocatorias de 2014-2015, solo
+> en euskera, y los ocho `fuera` que no son trabajo.
+>
+> La regla de arriba se aplica ahora a la sexta: se abre una, y no se abre la
+> siguiente hasta cerrarla. **Ninguna de las cuatro que quedan trae exámenes en
+> el material**, y eso decide por dónde se empieza; está en `tasks/manana.md`,
+> fase 7.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -2474,6 +2490,29 @@ Cosas que ya han costado horas. No son opiniones.
   suelto es legítimo—, y quita el `<style>` además del `<script>`: el primer
   barrido dio **401 aciertos y los 401 eran comentarios de CSS y de JS**.
   Validada al revés quitando el arreglo: siete rojos, los siete reales.
+
+- **La tolerancia de una respuesta `numero` es absoluta, y un `0.02` escrito
+  ahí no significa un 2 %.** La de `magnitud` es relativa (§17, más arriba) y
+  la de `numero` no, y la costumbre de escribir `0.02` pasa de un tipo al otro
+  sin que nada se queje. En un Reynolds de 5.704 eso es pedirlo a la
+  centésima: **la página rechaza la cuenta exacta**, 5.701, y solo acepta a
+  quien teclee el redondeo del corpus. Lo encontró el 12 de septiembre de 2026
+  el recálculo de Térmica en tres pasos de examen —dos Reynolds y un Nusselt—,
+  con el esquema, los cuatro guardianes y la barrida completa en verde: ninguno
+  mira si una casilla acepta la respuesta buena, solo si rechaza las malas.
+
+  Su hermana, en el mismo pase: una tolerancia de `magnitud` **estrechada para
+  echar un distractor** dejaba fuera la cuenta buena, porque los datos
+  redondeados del paso anterior no fijaban el resultado mejor que al 0,8 % y
+  el distractor quedaba a otro 0,8 %. **Regla: una tolerancia se elige por lo
+  que el enunciado deja calcular, no por el distractor.** Si el distractor
+  queda más cerca que eso, el que sobra es el distractor —o falta dar un dato
+  en la pregunta—, no la tolerancia.
+
+  Donde las respuestas son exactas y no hay calculadora —Cálculo, Álgebra,
+  Química— una tolerancia estrecha es lo correcto. Medido ese día, en Térmica y
+  en Fluidos: cuatro casos en Térmica, corregidos, y tres en Fluidos que
+  quedan anotados en `tasks/manana.md`.
 
 ---
 

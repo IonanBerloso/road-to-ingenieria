@@ -16,16 +16,18 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Cuatro asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos
-y Fundamentos Químicos.** Las cuatro cumplen §15 entera y las cuatro están en el
-catálogo como `ok`. Entre las cuatro, **118 convocatorias transcritas de 118**
-—y **veinte más en Térmica**, que son 138—, y el guardián de convocatorias
+**Cinco asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos,
+Fundamentos Químicos e Ingeniería Térmica.** Las cinco cumplen §15 entera y las
+cinco están en el catálogo como `ok`. Entre las cinco, **138 convocatorias
+transcritas** —las 118 de las cuatro primeras y veinte de Térmica, que tiene
+veintidós y dos declaradas imposibles—, y el guardián de convocatorias
 huérfanas no cuenta ninguna suelta.
 
-**Y una quinta abierta, Ingeniería Térmica, en `obra`.** Sus diez temas están
-escritos —cada uno con su figura y su ejemplo de entrada, que es lo que §15
-pide— y su ruta también, **medida sobre diecisiete convocatorias** leídas una a
-una: las diecisiete comparables al formato de hoy, de 2017-2018 en adelante.
+**Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
+después de abrirse. Sus diez temas están escritos —cada uno con su figura y su
+ejemplo de entrada, que es lo que §15 pide— y su ruta también, **medida sobre
+diecisiete convocatorias** leídas una a una: las diecisiete comparables al
+formato de hoy, de 2017-2018 en adelante. Cómo llegó hasta ahí, por orden:
 
 **Lo que la mantenía en `obra` se desbloqueó el 10 de septiembre de 2026**:
 eran las 22 convocatorias sin transcribir, paradas por §13 caso 5 porque
@@ -57,8 +59,12 @@ son trabajo: 4 están ya cubiertos por otro ejercicio del corpus, 3 examinan
 cosas que salieron del temario —ciclos de potencia y R-134a— y 1 necesita que
 alguien redibuje el diagrama de Mollier.
 
-Térmica sigue en `obra` hasta cerrar lo que §15 pide además del contenido, y
-eso está contado en `tasks/manana.md`, fase 6.
+Y lo último que le faltaba, el mismo 12 de septiembre de 2026, no era
+contenido. La fuente de su evaluación citaba un documento con datos personales
+y pasó a ser la guía docente pública; sus 183 respuestas de examen se
+recalcularon aparte, y el pase encontró seis casillas que corregían mal, todas
+arregladas; y dos escalones de un solo ejercicio recibieron su caso de examen.
+Con eso pasó a `ok`.
 
 > Este párrafo decía «medida sobre seis convocatorias» hasta el 10 de
 > septiembre de 2026, y llevaba dos días atrasado: el 9 se leyeron las
@@ -857,12 +863,14 @@ examen delante y no antes (§13), y lo que hacía falta eran dos tipos:
   error clásico de la matriz asociada, porque las coordenadas de cada imagen van
   en columna.
 
-## Las otras cinco asignaturas
+## Las otras cuatro asignaturas
 
-**Cuatro** están como `prev`, con cero contenido —Ciencia de Materiales,
-Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción y
-Fabricación— y la quinta, Ingeniería Térmica, está en `obra`. Es §00
-funcionando: no se abre una hasta cerrar la anterior.
+**Las cuatro** están como `prev`, con cero contenido: Ciencia de Materiales,
+Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción y Fabricación.
+Es §00 funcionando: no se abre una hasta cerrar la anterior, y la anterior,
+Térmica, se cerró el 12 de septiembre de 2026. Qué hace falta para abrir la
+sexta —y por qué lo primero son exámenes, que ninguna de las cuatro trae en
+el material— está en `tasks/manana.md`, fase 7.
 
 > El encabezado decía «las otras siete» y el párrafo «seis están como `prev`»
 > hasta el 10 de septiembre de 2026. Las dos cifras se quedaron atrás al

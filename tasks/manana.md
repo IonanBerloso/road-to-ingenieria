@@ -166,6 +166,15 @@ cifras de §04, §05, §09 y §15; `estado: ok` en el catálogo; y la sección �
 una frase» de `docs/como-vamos.md`, que pasa a decir **cinco asignaturas
 terminadas**.
 
+> **Hecha el 12 de septiembre de 2026, y con ella la fase 6 entera: Térmica
+> está en `ok`.** Pasados en el mismo día `recalcula` (4.325 cuentas, ninguna
+> descuadrada), `peso` (ninguna página por encima de 4 s), `deuda.mjs` (1.423
+> de 1.424 respuestas recalculadas, 5 escalones de un solo ejercicio de 295,
+> ninguna nota caducada) y la barrida completa del navegador —217 páginas,
+> leída entera desde un fichero—, y `npm run suelo` en el commit del cierre.
+> Las cifras de §04 y §05 no se movieron desde el recuento de la mañana
+> —1.372 ejercicios y 5.661 pasos—, y las de §09 y §15 son de Cálculo.
+
 ---
 
 ## Fase 7 · La sexta asignatura
