@@ -317,7 +317,15 @@ Contado el 12 de septiembre de 2026 por los **nombres** de los ficheros de
 | asignatura | curso | material | exámenes |
 |---|---|---|---|
 | Expresión Gráfica | 1.º | 51 ficheros: geometría descriptiva, normalización, vistas, acotación, tolerancias, uniones y conjuntos; una colección con soluciones; criterios de corrección | **ninguno** — solo las dos actas de notas, vetadas |
-| Mecánica Aplicada | 2.º | 17: teoría y colección de ejercicios de los **ocho temas**, del cálculo vectorial al movimiento plano | **ninguno** — el de notas del parcial, vetado |
+| Mecánica Aplicada | 2.º | ~~17: teoría y colección de ejercicios de los **ocho temas**, del cálculo vectorial al movimiento plano~~ **38** en `Desktop/…/Mecánica`: teoría y colección de los **doce temas**, con enunciados y resoluciones completas del 9 al 12 · ver la nota de abajo | ~~**ninguno**~~ **ocho**, en `Exmenes_pasados/`: tres bilingües y cinco solo en euskera — el de notas del parcial, vetado |
+
+> **La fila de Mecánica Aplicada estaba mal, y por la trampa que §17 ya
+> avisaba.** Se contó sobre `Documents/…/Mecánica Aplicada`, que es una copia
+> parcial —17 ficheros, ocho temas— y no sobre `Desktop/…/Mecánica`, que
+> tiene 38 y una carpeta `Exmenes_pasados` con ocho convocatorias. Lo destapó
+> listar el directorio entero al abrir la asignatura, el 12 de septiembre de
+> 2026. **Un inventario se cierra listando todas las carpetas donde vive el
+> material**, no la primera que aparece.
 | Ciencia de Materiales | 2.º | 149, casi todos datos de laboratorio; teoría de seis temas con su listado de ejercicios, guía del alumnado, normativa de exámenes | **ninguno** |
 | Sistemas de Producción | 2.º | 23: ocho temas, colección de problemas 2025-26, guía del estudiantado, un problema resuelto, un recurso de CNC para el examen | **ninguno como convocatoria** |
 
@@ -371,11 +379,79 @@ laboratorio.
 
 ---
 
+## Fase 8 · Mecánica Aplicada, la séptima
+
+> **Ionan lo decidió el 12 de septiembre de 2026, por la noche: «sigue con el
+> plan de la siguiente fase».** Es la segunda salida del conflicto de §00 que
+> quedó anotado abajo: Materiales se queda en `obra` —le falta material, no
+> trabajo— y se abre la siguiente. La recomendación escrita era esta, y al
+> abrirla resultó mejor de lo que decía la tabla de arriba: **sí tiene
+> exámenes**.
+
+### Lo que hay, contado listando las dos carpetas
+
+- **La guía docente 2025/26**, pública en ehu.eus: código 25984, 9 créditos,
+  anual. Doce temas en dos bloques —Estática, del 1 al 6; Cinemática y
+  Dinámica, del 7 al 12— y la evaluación, que va citada en el catálogo.
+- **El libro de la asignatura**, «Mecánica Aplicada» de Faustino Mujika,
+  publicado por el Departamento en ehu.eus: los mismos doce temas, con su
+  índice.
+- **Teoría y colección de los doce temas.** Del 1 al 8, cada problema trae una
+  nota del profesor y su resultado impreso; del 9 al 12, enunciados y
+  resoluciones completas por separado, y el 8 tiene además problemas
+  resueltos. Unos 210 problemas contados por sus «Resultado»; el recuento
+  exacto se hace tema a tema, al transcribir.
+- **Ocho convocatorias** en `Exmenes_pasados/`:
+
+| convocatoria | bloque | idioma | qué hay |
+|---|---|---|---|
+| enero de 2024 | estática | bilingüe | cuatro cuestiones y tres ejercicios; las páginas de ejercicios llevan la cabecera del 18 de enero de 2023 |
+| ordinaria, 6 de junio de 2025 | estática | bilingüe | cuatro cuestiones y dos ejercicios; la columna en castellano puntúa la teoría sobre 5 y la de euskera sobre 4, que es la que suma 10 |
+| extraordinaria, 27 de junio de 2025 | estática | castellano | incompleta: dos cuestiones y el ejercicio 1; el 2 está en blanco en el PDF |
+| 2017-2018 y 2018-2019, cinco ficheros | estática y dinámica | solo euskera | imposibles, como las dos de Térmica de 2014-2015 |
+
+- **Lo que no se abre:** `Notas_parcial_esttica.pdf`, que está en las dos
+  carpetas.
+
+### Lo que eso decide
+
+1. **Se puede cerrar contra §15**, a diferencia de Materiales: el bloque 1
+   tiene tres convocatorias que se pueden transcribir. El bloque 2 solo tiene
+   exámenes en euskera, así que su ruta o se mide leyendo esos cinco para
+   contar qué cae —leer para clasificar no es transcribir— o se declara sin
+   medir. Se decide al llegar, y se dice.
+2. **La asignatura pesa en figuras.** Casi cada problema remite a «la
+   figura», y §08 obliga a redibujarlas todas. Es el coste principal, y el
+   orden sale de ahí.
+
+### El orden
+
+1. **Registro**: el catálogo con el temario y la evaluación de la guía, este
+   plan y la nota de §00. Un commit.
+2. **Las tres convocatorias de estática**, con su PDF en
+   `public/examenes/mecanica-aplicada/` y sus figuras redibujadas. Van
+   primero porque son lo escaso y porque dicen qué pesa cada tema del bloque 1.
+3. **Los temas 1 a 6**, el bloque 1 —el primer cuatrimestre, el que alguien se
+   encuentra antes (§00)—: prosa, figura y ejemplos propios, y la colección
+   entera con sus figuras.
+4. **La ruta del bloque 1**, medida sobre las tres convocatorias.
+5. **Los temas 7 a 12**, el bloque 2, con sus colecciones.
+6. **La ruta del bloque 2**, con la decisión del punto 1 de arriba.
+7. **El cierre** contra §15, con las comprobaciones de §16.
+
+Cada tema va en su commit, con el suelo en verde. La colección se transcribe
+literal (§08) y cada resultado impreso se contrasta haciendo la cuenta, que es
+lo que encontró las erratas de Materiales y de Térmica.
+
+---
+
 ## Lo que NO se va a hacer, y por qué
 
 - **Abrir la sexta antes de cerrar Térmica.** §00.
-- **Abrir la séptima sin que lo decida Ionan.** Es un conflicto de §00 y lo
-  dejo anotado en vez de resolverlo (§13, caso 3). La regla dice que no se
+- **~~Abrir la séptima sin que lo decida Ionan~~ · decidido el 12 de
+  septiembre de 2026: se abre Mecánica Aplicada, fase 8.** Lo que decía este
+  punto, para que se entienda la decisión: era un conflicto de §00 y lo
+  dejé anotado en vez de resolverlo (§13, caso 3). La regla dice que no se
   abre una hasta cerrar la anterior, y Materiales **no se puede cerrar**: le
   falta material, no trabajo —no hay exámenes—, y quedó en `obra` la noche
   del 12 de septiembre de 2026 con todo lo escribible escrito. Las tres que

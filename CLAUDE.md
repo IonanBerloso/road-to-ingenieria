@@ -128,6 +128,16 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > coherente con la fórmula del tema y explica el otro. Está en
 > `tasks/manana.md`.
 >
+> **Y esa misma noche se abre la séptima, Mecánica Aplicada**, por decisión
+> de Ionan —«sigue con el plan de la siguiente fase»— y con Materiales todavía
+> en `obra`. Es una excepción a la regla de arriba y conviene decirla como
+> tal: Materiales no se puede cerrar porque le falta material, no trabajo, y
+> esperar a que aparezcan sus exámenes habría parado el proyecto entero.
+> Mecánica Aplicada era la recomendación escrita, y al abrirla resultó que
+> **sí tiene exámenes** —ocho convocatorias, tres de ellas con el enunciado en
+> castellano— que la tabla del plan no veía porque se contó sobre una copia
+> parcial del material. El plan está en `tasks/manana.md`, fase 8.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
