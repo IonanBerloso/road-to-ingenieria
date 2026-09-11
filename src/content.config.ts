@@ -779,6 +779,7 @@ export const CON_TEMAS = [
   'fundamentos-quimicos',
   'ingenieria-termica',
   'ciencia-materiales',
+  'mecanica-aplicada',
 ] as const;
 export type ConTemas = (typeof CON_TEMAS)[number];
 
@@ -1250,6 +1251,15 @@ const cienciaMateriales = defineCollection({
   schema: temaEscrito,
 });
 
+/* La séptima, abierta el 12 de septiembre de 2026 por decisión de Ionan, con
+   Materiales todavía en obra. Al contrario que Materiales, **sí tiene
+   exámenes**: tres con enunciado en castellano, todos del bloque 1, y cinco
+   solo en euskera (tasks/manana.md, fase 8). */
+const mecanicaAplicada = defineCollection({
+  loader: glob({ pattern: '**/index.mdx', base: './src/content/mecanica-aplicada' }),
+  schema: temaEscrito,
+});
+
 export const collections = {
   catalogo,
   calculo,
@@ -1258,6 +1268,7 @@ export const collections = {
   'fundamentos-quimicos': fundamentosQuimicos,
   'ingenieria-termica': ingenieriaTermica,
   'ciencia-materiales': cienciaMateriales,
+  'mecanica-aplicada': mecanicaAplicada,
   ejercicios,
   examen,
   preparar,
