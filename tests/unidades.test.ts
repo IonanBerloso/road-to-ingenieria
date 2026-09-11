@@ -230,3 +230,28 @@ describe('kelvin dentro de una unidad compuesta', () => {
     expect(leeMagnitud('1.0045 kJ/kg °C')).toBeNull();
   });
 });
+
+/* Las de Ciencia de Materiales, 12 de septiembre de 2026: el módulo en GPa,
+   los datos en psi y ksi de la colección del tema 2 —que viene de un libro
+   americano— y la resiliencia en MJ/m³. Antes, «45 GPa» recibía «no he
+   entendido» en una respuesta de 45 000 MPa. */
+describe('las unidades de Ciencia de Materiales', () => {
+  it('un módulo en GPa es el mismo que en MPa', () => {
+    expect(comparaMagnitud(lee('45 GPa'), lee('45000 MPa'), 0.001).igual).toBe(true);
+    expect(nombreDim(lee('200 GPa').dim)).toBe('una presión');
+  });
+
+  it('el psi y el ksi salen del sistema inglés definido', () => {
+    expect(lee('1 psi').valor).toBeCloseTo(6894.757, 2);
+    expect(comparaMagnitud(lee('95.5 ksi'), lee('658.4 MPa'), 0.002).igual).toBe(true);
+  });
+
+  it('la libra fuerza es una fuerza', () => {
+    expect(lee('1 lbf').valor).toBeCloseTo(4.448222, 5);
+    expect(nombreDim(lee('2000 lbf').dim)).toBe('una fuerza');
+  });
+
+  it('MJ/m³ es una energía por volumen, y vale lo mismo que el MPa', () => {
+    expect(comparaMagnitud(lee('1.40 MJ/m3'), lee('1.40 MPa'), 0.001).igual).toBe(true);
+  });
+});

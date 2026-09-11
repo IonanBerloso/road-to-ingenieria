@@ -17,7 +17,7 @@
  */
 import { readFileSync } from 'node:fs';
 import yaml from 'js-yaml';
-import { leeMagnitud } from '../src/lib/unidades.ts';
+import { comparaMagnitud, leeMagnitud } from '../src/lib/unidades.ts';
 
 const [ruta, ...banderas] = process.argv.slice(2);
 const suelto = banderas.includes('--suelto');
@@ -221,13 +221,27 @@ for (const e of ejercicios) {
          La holgura se replica tal como la calcula el esquema. */
       if (comparable && typeof tol === 'number') {
         const vs = (p.distractores ?? []).map((d) => escalar(d.valor));
+        /* En una magnitud se compara con el lector de verdad, en los dos
+           sentidos, que es lo que hace el esquema. La cuenta a mano de abajo
+           no veía un caso: con el esperado a cero `comparaMagnitud` usa la
+           tolerancia como ABSOLUTA y en SI, así que un distractor «0 mm» se
+           traga todo lo que quede a menos de 20 mm. Pasó el 12 de septiembre
+           de 2026 con «0 mm» y «0,4 mm»: este guion dio verde y el build no. */
+        const ms = relativa ? (p.distractores ?? []).map((d) => leeMagnitud(String(d.valor))) : [];
+        const seConfunden = (i, j) => {
+          if (relativa && ms[i] && ms[j]) {
+            const t = Math.max(tol, 0.02);
+            return comparaMagnitud(ms[i], ms[j], t).igual || comparaMagnitud(ms[j], ms[i], t).igual;
+          }
+          if (!Number.isFinite(vs[i]) || !Number.isFinite(vs[j])) return false;
+          const holgura = relativa
+            ? Math.max(Math.abs(vs[j]), Math.abs(vs[i])) * Math.max(tol, 0.02)
+            : Math.max(Math.max(Math.abs(vs[i]), Math.abs(vs[j])) * 0.02, tol);
+          return Math.abs(vs[i] - vs[j]) <= holgura * (1 + 1e-9);
+        };
         for (let i = 0; i < vs.length; i++) {
           for (let j = i + 1; j < vs.length; j++) {
-            if (!Number.isFinite(vs[i]) || !Number.isFinite(vs[j])) continue;
-            const holgura = relativa
-              ? Math.max(Math.abs(vs[j]), Math.abs(vs[i])) * Math.max(tol, 0.02)
-              : Math.max(Math.max(Math.abs(vs[i]), Math.abs(vs[j])) * 0.02, tol);
-            if (Math.abs(vs[i] - vs[j]) <= holgura * (1 + 1e-9)) {
+            if (seConfunden(i, j)) {
               mal(
                 dónde,
                 `los distractores «${p.distractores[i].valor}» y «${p.distractores[j].valor}» se confunden entre sí: el segundo nunca mostraría su diagnóstico`,

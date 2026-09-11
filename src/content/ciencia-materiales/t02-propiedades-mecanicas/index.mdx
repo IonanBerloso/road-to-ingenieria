@@ -1,0 +1,290 @@
+---
+asignatura: ciencia-materiales
+tema: 2
+titulo: Propiedades mecánicas
+descripcion: Tensión y deformación, la ley de Hooke y el coeficiente de Poisson, qué queda al descargar, las cinco propiedades de tracción, la dureza y la fatiga.
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 2, «Propiedades mecánicas de los materiales» · Ciencia de Materiales, UPV/EHU, curso 2025-2026. La figura es nuestra, construida con los números del problema 2.16 de la colección.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+De los temas que entran en el examen, este es el que más problemas pone, y
+casi todos salen de lo mismo: **dos cocientes y una recta**. La tensión es una
+fuerza repartida sobre una sección; la deformación, un alargamiento repartido
+sobre una longitud; y mientras el material es elástico, las dos van unidas por
+una constante. Lo difícil no es la cuenta. Es saber en qué zona de la curva
+estás, y qué pasa cuando dejas de tirar.
+
+## Fuerza, tensión y deformación
+
+Cuando una fuerza actúa sobre un material, lo que el material «siente» no es la
+fuerza sino la **tensión**, la fuerza por unidad de sección, y su respuesta es
+la **deformación**. En un ensayo de tracción, con la fuerza perpendicular a la
+sección inicial de la probeta:
+
+$$
+\sigma = \frac{F}{A_0}
+\qquad
+\varepsilon = \frac{l_i - l_0}{l_0} = \frac{\Delta l}{l_0}
+$$
+
+$F$ en newtons y $A_0$ en milímetros cuadrados dan la tensión en megapascales,
+porque $1\ \text{MPa} = 1\ \text{N/mm}^{2}$. La deformación es adimensional —un
+alargamiento partido por una longitud—, y a menudo se da en porcentaje.
+
+En **compresión** se usan las mismas fórmulas con el convenio de signos: la
+fuerza de compresión es negativa, así que la tensión y el alargamiento también
+lo son. En **cortadura** la fuerza es paralela a la sección y la deformación es
+un ángulo: $\tau = F/A_0$ y $\gamma = \tan\theta$. La **torsión** es cortadura
+producida por un par.
+
+> **La deformación es una respuesta a la tensión, no a la fuerza.** La misma
+> fuerza estira el doble una barra con la mitad de sección. Por eso los
+> materiales se comparan por tensiones, nunca por cargas.
+
+<ErrorTipico titulo="«La carga está en kilos»">
+Varios enunciados dan la carga como una masa —«una carga de 2500 kg», «3,5 t»—,
+y la fórmula de la tensión pide newtons. Hay que multiplicar por la gravedad:
+2500 kg son $2500 \cdot 9{,}8 = 24\,500\ \text{N}$. Meter los 2500 tal cual da
+una tensión diez veces menor, y el resultado no avisa: sale un número
+perfectamente razonable.
+</ErrorTipico>
+
+## La zona elástica: la ley de Hooke
+
+Con tensiones bajas, tensión y deformación son **proporcionales**:
+
+$$
+\sigma = E\,\varepsilon
+$$
+
+$E$ es el **módulo elástico** o **módulo de Young**, la pendiente de la zona
+recta de la curva tensión-deformación, y mide la **rigidez** del material:
+cuanto mayor, menos se deforma bajo la misma tensión. Algunos valores, en
+megapascales:
+
+| material | $E$ (MPa) |
+|---|---|
+| polietileno, nailon | 1.400 |
+| aleaciones de magnesio | 42.000 |
+| vidrio, aleaciones de aluminio | 70.000 |
+| latón | 105.000 |
+| acero | 200.000 |
+
+El módulo está ligado a la energía de los enlaces, y por eso sigue el orden de
+las familias: los cerámicos son los más rígidos, luego los metales y muy por
+detrás los polímeros. Disminuye al subir la temperatura. Y es una propiedad del
+material que casi no se deja tocar: el procesado mueve mucho el límite elástico
+o la ductilidad, pero apenas mueve el módulo.
+
+La deformación elástica es **reversible**: dura mientras dura la tensión, y al
+descargar se recupera. En la mayoría de materiales hay además una parte que
+tarda en recuperarse —la **anelasticidad**—, despreciable en los metales y muy
+importante en los polímeros, que por eso se llaman **viscoelásticos**.
+
+## Poisson: el diámetro que encoge
+
+Cuando una probeta se estira en la dirección $z$, se estrecha en las dos
+direcciones perpendiculares. El **coeficiente de Poisson** compara las dos
+deformaciones:
+
+$$
+\nu = -\frac{\varepsilon_x}{\varepsilon_z} = -\frac{\varepsilon_y}{\varepsilon_z}
+$$
+
+El signo menos está para que $\nu$ salga positivo: en tracción el diámetro
+disminuye, $\varepsilon_x < 0$, mientras la longitud aumenta, $\varepsilon_z > 0$.
+En compresión es al revés, y $\nu$ sigue siendo positivo. La deformación
+lateral se calcula con el diámetro, $\varepsilon_x = \Delta d/d_0$.
+
+En cortadura la constante es el **módulo de cortadura** o de Coulomb,
+$\tau = G\,\gamma$, y para un material **isótropo** —con las mismas
+propiedades en todas direcciones— las tres constantes elásticas no son
+independientes:
+
+$$
+E = 2G\,(1+\nu)
+$$
+
+El ejemplo de clase lo recorre entero hacia atrás: una probeta de latón de
+10 mm de diámetro debe estrecharse $2{,}5\cdot 10^{-3}$ mm. Eso es
+$\varepsilon_x = -2{,}5\cdot 10^{-4}$; con $\nu = 0{,}35$,
+$\varepsilon_z = 7{,}14\cdot 10^{-4}$; con $E = 10{,}1\cdot 10^{4}$ MPa,
+$\sigma = 72{,}1$ MPa; y sobre una sección de $78{,}5\ \text{mm}^{2}$, una
+fuerza de 5663 N.
+
+<ErrorTipico titulo="El signo del cambio de diámetro">
+En tracción el diámetro **baja**, así que $\Delta d$ es negativo, y la
+colección lo escribe con su signo: «−0,007 mm». Olvidar el signo en
+$\varepsilon_x$ da un coeficiente de Poisson negativo, que no existe en ningún
+material de este curso: es la señal de que algo se ha escrito al revés.
+</ErrorTipico>
+
+## Cuando deja de ser elástica, y qué queda al descargar
+
+Pasada cierta tensión —en la mayoría de los metales, con deformaciones del
+orden de 0,005— la tensión deja de ser proporcional a la deformación: se rompen
+enlaces y se forman otros, y la deformación pasa a ser **plástica**,
+**permanente**. La ley de Hooke deja de valer.
+
+Lo que no deja de valer es esto, y es la clave de medio tema:
+
+$$
+\text{deformación total} = \text{deformación plástica} + \text{deformación elástica}
+$$
+
+Si se carga una pieza por encima de su límite elástico y luego se descarga, la
+parte elástica se recupera —y se recupera siguiendo una recta **paralela** a la
+zona elástica, con la misma pendiente $E$— y la plástica se queda.
+
+<figure>
+<svg viewBox="0 0 460 270" role="img" width="460" height="270"
+     aria-labelledby="cm2-t cm2-d">
+  <title id="cm2-t">Cargar por encima del límite elástico y descargar</title>
+  <desc id="cm2-d">Curva tensión-deformación de un material elástico-plástico con módulo de 70 GPa y límite elástico de 100 MPa, dibujada a escala: una recta desde el origen hasta 100 MPa con deformación 0,00143, y después un tramo horizontal a 100 MPa hasta la fractura. Se carga hasta una deformación total de 0,004 y se descarga por una recta paralela a la elástica, que llega al eje en 0,00257. De la deformación total, 0,00143 se recupera y 0,00257 se queda.</desc>
+
+  <line x1="60" y1="200" x2="430" y2="200" stroke="var(--faint)" stroke-width="1.2"/>
+  <line x1="60" y1="200" x2="60" y2="42" stroke="var(--faint)" stroke-width="1.2"/>
+  <text x="434" y="204" font-size="10" fill="var(--faint)">ε</text>
+  <text x="50" y="46" font-size="10" text-anchor="end" fill="var(--faint)">σ (MPa)</text>
+
+  <text x="60" y="214" font-size="9" text-anchor="middle" fill="var(--faint)">0</text>
+  <line x1="180" y1="200" x2="180" y2="204" stroke="var(--faint)"/>
+  <text x="180" y="214" font-size="9" text-anchor="middle" fill="var(--faint)">0,004</text>
+  <line x1="300" y1="200" x2="300" y2="204" stroke="var(--faint)"/>
+  <text x="300" y="214" font-size="9" text-anchor="middle" fill="var(--faint)">0,008</text>
+  <line x1="420" y1="200" x2="420" y2="204" stroke="var(--faint)"/>
+  <text x="420" y="214" font-size="9" text-anchor="middle" fill="var(--faint)">0,012</text>
+  <text x="54" y="144" font-size="9" text-anchor="end" fill="var(--faint)">50</text>
+  <line x1="56" y1="141.7" x2="60" y2="141.7" stroke="var(--faint)"/>
+  <text x="54" y="86" font-size="9" text-anchor="end" fill="var(--faint)">100</text>
+  <line x1="56" y1="83.3" x2="60" y2="83.3" stroke="var(--faint)"/>
+
+  <path d="M60 200 L102.9 83.3 L402.9 83.3" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <circle cx="402.9" cy="83.3" r="3" fill="var(--flag)"/>
+  <text x="402.9" y="74" font-size="9.5" text-anchor="middle" fill="var(--flag)">fractura</text>
+  <text x="96" y="74" font-size="9.5" text-anchor="middle" fill="var(--ink)">límite elástico</text>
+
+  <line x1="180" y1="83.3" x2="137.1" y2="200" stroke="var(--live)" stroke-width="2" stroke-dasharray="5 3"/>
+  <circle cx="180" cy="83.3" r="3" fill="var(--live)"/>
+  <text x="188" y="104" font-size="9.5" fill="var(--live)">se descarga aquí,</text>
+  <text x="188" y="117" font-size="9.5" fill="var(--live)">en paralelo a la recta elástica</text>
+
+  <line x1="60" y1="232" x2="137.1" y2="232" stroke="var(--alt)" stroke-width="1.6"/>
+  <line x1="60" y1="227" x2="60" y2="237" stroke="var(--alt)" stroke-width="1.6"/>
+  <line x1="137.1" y1="227" x2="137.1" y2="237" stroke="var(--alt)" stroke-width="1.6"/>
+  <text x="98.6" y="250" font-size="9.5" text-anchor="middle" fill="var(--alt)">se queda: 0,00257</text>
+  <line x1="137.1" y1="232" x2="180" y2="232" stroke="var(--live)" stroke-width="1.6"/>
+  <line x1="180" y1="227" x2="180" y2="237" stroke="var(--live)" stroke-width="1.6"/>
+  <text x="200" y="264" font-size="9.5" text-anchor="middle" fill="var(--live)">se recupera: 0,00143</text>
+</svg>
+<figcaption>
+
+Un material que fluye a 100 MPa sin endurecer, con un módulo de 70 GPa, cargado
+hasta una deformación total de 0,004 y descargado. Al soltar, la pieza
+**recorre hacia abajo una recta paralela a la elástica**: recupera la parte
+elástica, 100/70 000 = 0,00143, y se queda con el resto. Una barra de 250 mm
+estirada hasta 251 vuelve a 250,64, no a 250. Es el problema 2.16.
+
+</figcaption>
+</figure>
+
+## Las cinco propiedades de tracción
+
+De la curva tensión-deformación de un ensayo de tracción salen cinco
+propiedades, y cada una es una lectura distinta de la misma curva.
+
+1. **Límite elástico.** La tensión que el material soporta sin deformarse
+   plásticamente. Cuando la curva se aparta de la recta de forma gradual y el
+   punto exacto no se puede fijar, se sigue un convenio: se traza una paralela a
+   la zona elástica desde una deformación de **0,002**, y la tensión donde corta
+   a la curva es el límite elástico. Para hormigones y algunas fundiciones se
+   usa 0,005.
+2. **Resistencia a la tracción.** La tensión máxima de la curva. Hasta ahí la
+   probeta se deforma de manera uniforme; a partir de ahí aparece la
+   **estricción**, un cuello donde se concentra toda la deformación y donde
+   acabará rompiendo.
+3. **Ductilidad.** Cuánta deformación plástica aguanta hasta romper. Se mide
+   como alargamiento relativo o como reducción de área:
+   $$
+   \%EL = \frac{l_f - l_0}{l_0}\cdot 100
+   \qquad
+   \%AR = \frac{A_0 - A_f}{A_0}\cdot 100
+   $$
+   Un material es **frágil** si rompe con menos de un 5 % de alargamiento.
+4. **Resiliencia.** La energía que absorbe por unidad de volumen mientras se
+   deforma elásticamente, el área bajo la recta hasta el límite elástico:
+   $$
+   U_r = \tfrac{1}{2}\,\sigma_y\,\varepsilon_y = \frac{\sigma_y^{2}}{2E}
+   $$
+5. **Tenacidad.** La energía total que absorbe hasta romper: el área bajo la
+   curva entera.
+
+<ErrorTipico titulo="Dúctil no es lo mismo que tenaz">
+La ductilidad es **cuánto se estira**; la tenacidad, **cuánta energía se
+traga**, que es el área bajo la curva y depende también de a qué tensión se
+estira. Un material muy dúctil pero poco resistente puede ser poco tenaz, y un
+composite con ductilidad media puede ser muy tenaz. Son dos preguntas distintas
+sobre la misma curva, y el examen las distingue.
+</ErrorTipico>
+
+## Tensión y deformación reales
+
+La curva nominal parece decir que, pasada la resistencia máxima, el material
+aguanta menos. No es así: lo que pasa es que la sección se estrecha en el
+cuello, y la tensión nominal sigue dividiendo por la sección **inicial**. La
+**tensión real** y la **deformación real** se calculan con la sección y la
+longitud **instantáneas**:
+
+$$
+\sigma_T = \frac{F}{A_i}
+\qquad
+\varepsilon_T = \ln\frac{l_i}{l_0}
+$$
+
+Si el volumen no cambia durante el ensayo, $A_i\,l_i = A_0\,l_0$, y se pasan de
+unas a otras sin medir la sección:
+
+$$
+\sigma_T = \sigma\,(1+\varepsilon)
+\qquad
+\varepsilon_T = \ln(1+\varepsilon)
+$$
+
+## La dureza, y otros ensayos
+
+La **dureza** es la resistencia de un material a que otro cuerpo lo deforme
+localmente —una abolladura, una raya—. La primera escala fue la de **Mohs**,
+que ordena los minerales por cuál raya a cuál, del talco (1) al diamante (10).
+Los ensayos modernos clavan una punta con una fuerza controlada y miden la
+huella:
+
+- **Brinell**: punta esférica, se mide el diámetro de la huella;
+- **Rockwell**: punta cónica, se mide la profundidad;
+- **Vickers** y **Knoop**: punta piramidal, se mide el diámetro.
+
+La dureza Brinell, con la carga $P$ en kilogramos y los diámetros de la punta
+y de la huella en milímetros:
+
+$$
+HB = \frac{2P}{\pi D\left(D - \sqrt{D^{2}-d^{2}}\right)}
+$$
+
+El ensayo de **flexión** es mixto: una cara de la probeta trabaja a compresión
+y la otra a tracción. Y los ensayos de **impacto** —el péndulo, la caída de
+bola, la tracción a alta velocidad— miden la energía para romper a gran
+velocidad, que es otra forma de medir la tenacidad.
+
+## La fatiga
+
+Un material sometido a cargas **cíclicas**, repetidas, acaba rompiendo con
+tensiones **menores** que las que lo romperían si fueran estáticas, menores
+incluso que su límite elástico. Eso es la **fatiga**, y es la primera causa de
+rotura de los metales —alrededor del 90 % de los casos—. Su peligro es que
+llega sin aviso: la rotura tiene aspecto frágil aunque el metal sea dúctil,
+porque apenas hay deformación plástica antes de romper.

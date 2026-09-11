@@ -1,0 +1,4189 @@
+ejercicios:
+  - id: ejcm3-los-atomos-que-son-de-la-celda
+    titulo: Los átomos que son de la celda, y los que solo se ven
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre el recuento de átomos
+      por celda del Tema 3 de la asignatura. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Una celda FCC dibujada muestra un átomo en cada uno de los 8 vértices del
+      cubo y otro en el centro de cada una de sus 6 caras. Una celda BCC
+      muestra uno en cada vértice y uno en el centro del cubo. ¿Cuántos átomos
+      pertenecen a cada celda?
+    pide: Los átomos por celda de FCC y de BCC.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué parte de un átomo de un vértice pertenece a la celda?
+        opciones:
+          - texto: Un octavo, porque ese átomo lo comparten las ocho celdas que se juntan en el vértice
+            correcta: true
+            mensaje: |
+              Eso es. En cada vértice de una red cúbica se juntan ocho celdas,
+              y el átomo se reparte entre todas. Por la misma razón, uno de una
+              cara es de dos celdas y uno del interior, solo de una.
+          - texto: El átomo entero, porque está dibujado en la celda
+            mensaje: |
+              Dibujado sí, pero no es solo suyo: la celda de al lado lo dibuja
+              también. Si cada celda se quedara con sus vértices enteros, un
+              mismo átomo se contaría ocho veces.
+          - texto: La mitad, porque el vértice está en el borde
+            mensaje: |
+              La mitad es lo que corresponde a un átomo en el centro de una
+              **cara**, que comparten dos celdas. En un vértice se juntan ocho.
+
+      - tipo: calcular
+        titulo: Los átomos de una celda FCC
+        pregunta: |
+          ¿Cuántos átomos pertenecen a una celda FCC?
+        respuesta:
+          tipo: numero
+          valor: '4'
+          tolerancia: 0.1
+          formato: un número entero
+        distractores:
+          - valor: '14'
+            mensaje: |
+              Has contado los que se ven: 8 más 6. Cada uno de un vértice es de
+              ocho celdas y cada uno de una cara, de dos:
+              $8 \cdot \tfrac{1}{8} + 6 \cdot \tfrac{1}{2} = 4$.
+          - valor: '7'
+            mensaje: |
+              Has repartido los de los vértices entre dos, como los de las
+              caras. En un vértice se juntan ocho celdas, no dos.
+        pista: |
+          $8 \cdot \tfrac{1}{8}$ de los vértices, más $6 \cdot \tfrac{1}{2}$ de
+          las caras.
+        desarrollo: |
+          $$
+          n = 8 \cdot \tfrac{1}{8} + 6 \cdot \tfrac{1}{2} = 1 + 3 = 4
+          $$
+
+      - tipo: calcular
+        titulo: Los átomos de una celda BCC
+        pregunta: |
+          ¿Y a una celda BCC?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.1
+          formato: un número entero
+        distractores:
+          - valor: '9'
+            mensaje: |
+              Has contado los nueve que se ven. Los ocho de los vértices suman
+              un átomo entre todos, y el del centro es entero: 2.
+          - valor: '1.5'
+            mensaje: |
+              Has repartido también el del centro. Ese está entero dentro de
+              la celda y no lo comparte con ninguna otra.
+        pista: |
+          $8 \cdot \tfrac{1}{8}$ de los vértices, más el del centro, entero.
+        desarrollo: |
+          $$
+          n = 8 \cdot \tfrac{1}{8} + 1 = 2
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el recuento. Una pieza es falsa.
+        piezas:
+          - texto: 'En una red cúbica, en cada vértice se juntan ocho celdas, y en cada cara, dos.'
+          - texto: 'Así, un átomo de un vértice aporta un octavo a la celda, uno de una cara la mitad y uno del interior, uno entero.'
+          - texto: 'FCC tiene 4 átomos por celda y BCC, 2: por eso, con el mismo radio, FCC está más llena.'
+          - texto: 'FCC tiene 14 átomos por celda, porque son los que aparecen en el dibujo.'
+            trampa: true
+            mensaje: |
+              El dibujo enseña los catorce, pero la celda solo es dueña de
+              cuatro: los demás son compartidos con las celdas vecinas. Contar
+              catorce en la fórmula de la densidad la multiplica por tres y
+              medio.
+    resolucion: |
+      **Cada átomo se reparte entre las celdas que lo tocan.** En una red
+      cúbica, en cada vértice se juntan ocho celdas y en cada cara dos:
+
+      $$
+      n_{FCC} = 8 \cdot \tfrac{1}{8} + 6 \cdot \tfrac{1}{2} = 4
+      \qquad
+      n_{BCC} = 8 \cdot \tfrac{1}{8} + 1 = 2
+      $$
+
+      Son los números que van en la fórmula de la densidad teórica y en la del
+      factor de empaquetamiento, y el error que más cuesta es poner los que se
+      ven en el dibujo.
+
+  - id: ejcm3-los-indices-de-un-plano
+    titulo: Los índices de un plano, con el paso que se salta
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, sobre los índices de Miller de
+      un plano del Tema 3 de la asignatura. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Un plano de una celda cúbica corta al eje $x$ en $x = 1$, es paralelo al
+      eje $y$ y corta al eje $z$ en $z = \tfrac{1}{2}$, todo en unidades de
+      arista. ¿Cuáles son sus índices de Miller?
+    pide: Los índices de Miller del plano.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El plano es paralelo al eje $y$. ¿Qué índice le corresponde en ese eje?
+        opciones:
+          - texto: Cero, porque lo corta en el infinito y el inverso de infinito es cero
+            correcta: true
+            mensaje: |
+              Exacto. Un plano paralelo a un eje no lo corta nunca: la
+              intersección es infinita y su inverso, cero.
+          - texto: Infinito, porque no lo corta
+            mensaje: |
+              La intersección es infinita, pero el índice es su **inverso**, y
+              el inverso de infinito es cero. Un índice nunca es infinito.
+          - texto: Uno, porque el plano atraviesa toda la celda en esa dirección
+            mensaje: |
+              Que el plano recorra la celda a lo largo de $y$ es justo lo que
+              significa ser paralelo a $y$: no lo corta, y el índice es cero.
+
+      - tipo: calcular
+        titulo: Los índices de Miller
+        pregunta: |
+          ¿Cuáles son los índices $(h, k, l)$ del plano?
+        respuesta:
+          tipo: vector
+          valor: '(1, 0, 2)'
+          tolerancia: 0.001
+          formato: 'tres enteros entre paréntesis, separados por comas: (h, k, l)'
+        distractores:
+          - valor: '(2, 0, 1)'
+            mensaje: |
+              Has reducido las intersecciones en vez de sus inversos. En un
+              plano hay que invertir primero: $1/1 = 1$, $1/\infty = 0$ y
+              $1/\tfrac{1}{2} = 2$.
+          - valor: '(1, 0, 0.5)'
+            mensaje: |
+              Esas son las intersecciones, sin invertir y con el infinito
+              convertido en cero. Faltan los inversos: el $\tfrac{1}{2}$ del eje
+              $z$ se convierte en un 2.
+        pista: |
+          Intersecciones, inversos, reducir: $1,\ \infty,\ \tfrac{1}{2}$ dan
+          $1,\ 0,\ 2$.
+        desarrollo: |
+          $$
+          (1,\ \infty,\ \tfrac{1}{2})
+          \;\longrightarrow\;
+          \left(\tfrac{1}{1},\ \tfrac{1}{\infty},\ \tfrac{1}{1/2}\right)
+          = (1,\ 0,\ 2)
+          $$
+
+          Ya son enteros, así que el plano es el $(1\,0\,2)$.
+
+      - tipo: justificar
+        pregunta: Ordena el procedimiento. Una pieza es falsa.
+        piezas:
+          - texto: 'Se buscan las intersecciones con los ejes: 1, infinito y un medio.'
+          - texto: 'Se toman sus inversos: 1, 0 y 2.'
+          - texto: 'Ya son enteros, así que no hay que reducir: el plano es el (1 0 2).'
+          - texto: 'Como en una dirección, las intersecciones ya son los índices: basta con reducirlas.'
+            trampa: true
+            mensaje: |
+              Eso vale para una **dirección**, cuyas proyecciones ya son los
+              índices. En un plano hay que invertir las intersecciones antes de
+              reducir; saltárselo da el $(2\,0\,1)$, que es otro plano.
+    resolucion: |
+      **En un plano, los índices son los inversos de las intersecciones**, no
+      las intersecciones:
+
+      $$
+      (1,\ \infty,\ \tfrac{1}{2})
+      \;\longrightarrow\;
+      (1,\ 0,\ 2)
+      $$
+
+      El plano es el $(1\,0\,2)$. El infinito del eje $y$ se convierte en un
+      cero, y el medio del eje $z$ en un dos. Reducir las intersecciones sin
+      invertirlas da el $(2\,0\,1)$, que corta los ejes en otros sitios: es el
+      error más frecuente, y viene de hacer con un plano lo que se hace con una
+      dirección.
+
+  - id: ejcm3-col31-la-cubica-simple
+    titulo: La cúbica simple, vecinos y hueco
+    fuente: >-
+      Ejercicio 3.1 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Suponiendo un metal de estructura cristalina cúbica simple con los átomos
+      localizados en los vértices del cubo y tocándose entre sí a lo largo de
+      las aristas del cubo (ver figura).
+
+      a) ¿Cuál es el número de coordinación para esta estructura cristalina?
+
+      b) Calcula el factor de empaquetamiento atómico.
+
+      *La figura, descrita: un cubo con una esfera centrada en cada uno de sus
+      ocho vértices; las caras del cubo cortan las esferas, y cada esfera toca
+      a sus vecinas a lo largo de las aristas.*
+    pide: El número de coordinación y el factor de empaquetamiento atómico de la cúbica simple.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de calcular el F.E.A. hay que saber cuántos átomos pertenecen a
+          la celda. En la cúbica simple, ¿cuántos son?
+        opciones:
+          - texto: >-
+              Uno: hay ocho en los vértices, pero cada vértice lo comparten
+              ocho celdas
+            correcta: true
+            mensaje: |
+              Eso es. Cada esfera de un vértice aporta $1/8$ a esta celda,
+              porque las otras siete octavas partes caen en las siete celdas
+              que se juntan en ese vértice. $8\cdot 1/8 = 1$.
+          - texto: >-
+              Ocho, uno por vértice
+            mensaje: |
+              Es el error más común del tema. Mira la figura: de cada esfera
+              solo cae **dentro** del cubo un octante. Contarlas enteras mete
+              en la celda átomos que son de las vecinas, y el F.E.A. sale
+              mayor que 1, que es imposible.
+          - texto: >-
+              Dos, como en la BCC
+            mensaje: |
+              La BCC tiene un átomo más en el centro del cubo, y ese sí es
+              entero. Aquí no hay átomo central: solo están los ocho vértices,
+              que suman uno.
+
+      - tipo: calcular
+        titulo: El número de coordinación
+        pregunta: |
+          ¿Con cuántos átomos está en contacto cada átomo de la red?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.1
+          formato: un número entero
+        distractores:
+          - valor: '8'
+            mensaje: |
+              Ocho son los vértices de **una** celda, no los vecinos de un
+              átomo. Coloca un átomo en un vértice y mira las aristas que salen
+              de él en la red entera: seis, dos por cada eje.
+          - valor: '12'
+            mensaje: |
+              Ese es el de la FCC y la HC, donde los átomos se tocan por la
+              diagonal de las caras. En la cúbica simple solo se tocan a lo
+              largo de las aristas, y de cada vértice salen seis.
+        pista: |
+          Piensa en un átomo rodeado por las ocho celdas que comparten su
+          vértice. ¿Cuántas aristas salen de ese punto?
+        desarrollo: |
+          Los átomos se tocan a lo largo de las aristas. De cada vértice de la
+          red salen seis aristas —una hacia $+x$, otra hacia $-x$, y lo mismo
+          en $y$ y en $z$—, y al otro extremo de cada una hay un átomo en
+          contacto. El número de coordinación es **6**.
+
+      - tipo: calcular
+        titulo: El factor de empaquetamiento
+        pregunta: |
+          ¿Cuánto vale el F.E.A.? Da la fracción, no el porcentaje.
+        respuesta:
+          tipo: numero
+          valor: '0.5236'
+          tolerancia: 0.01
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '4.189'
+            mensaje: |
+              Has contado los ocho átomos enteros. Un F.E.A. mayor que 1
+              querría decir que las esferas ocupan más que la celda, y eso es
+              la señal de que hay átomos contados de más: cada vértice aporta
+              $1/8$.
+          - valor: '0.3401'
+            mensaje: |
+              Has usado la arista de la BCC, $a = 4R/\sqrt{3}$. Aquí los átomos
+              se tocan a lo largo de la **arista**, no de la diagonal del cubo,
+              así que $a = 2R$.
+          - valor: '0.7854'
+            mensaje: |
+              Eso es $\pi/4$, el cociente entre un círculo y el cuadrado que lo
+              contiene: lo que ocupa una **cara**, no la celda. El F.E.A. es un
+              cociente de volúmenes, esfera entre cubo.
+        pista: |
+          Un átomo por celda, y $a = 2R$ porque se tocan por la arista.
+        desarrollo: |
+          $$
+          \text{F.E.A.} = \frac{1\cdot\frac{4}{3}\pi R^{3}}{(2R)^{3}}
+          = \frac{\frac{4}{3}\pi R^{3}}{8R^{3}} = \frac{\pi}{6} = 0{,}52
+          $$
+
+          El radio se va: el F.E.A. solo depende de la geometría, no del
+          tamaño del átomo.
+
+      - tipo: justificar
+        pregunta: Ordena por qué casi ningún metal cristaliza así. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En la cúbica simple cada átomo toca a seis vecinos y las esferas
+              ocupan el 52 % del volumen.
+          - texto: >-
+              La FCC y la HC llegan a doce vecinos y al 74 %, y la BCC a ocho y
+              al 68 %.
+          - texto: >-
+              El enlace metálico no es direccional, así que un metal gana
+              estabilidad rodeándose de cuantos más vecinos mejor.
+          - texto: >-
+              Luego la cúbica simple, con casi la mitad del volumen vacío, es
+              la que menos favorece al enlace metálico.
+          - texto: >-
+              Como el F.E.A. sale 0,52 para cualquier radio, todos los metales
+              con esta estructura tendrían la misma densidad.
+            trampa: true
+            mensaje: |
+              El F.E.A. es una fracción de volumen, no una densidad. La
+              densidad depende además del peso atómico y del tamaño de la
+              celda, que cambian de un metal a otro. Dos metales con el mismo
+              F.E.A. pueden tener densidades muy distintas: el aluminio y el
+              oro son FCC los dos.
+    resolucion: |
+      **Átomos por celda.** Ocho vértices, cada uno compartido por ocho celdas:
+      $8\cdot\tfrac{1}{8} = 1$ átomo.
+
+      **a) Número de coordinación.** Los átomos se tocan a lo largo de las
+      aristas, y de cada vértice de la red salen seis: el número de
+      coordinación es **6**.
+
+      **b) F.E.A.** Como se tocan por la arista, $a = 2R$:
+
+      $$
+      \text{F.E.A.} = \frac{\frac{4}{3}\pi R^{3}}{(2R)^{3}} = \frac{\pi}{6}
+      = 0{,}52
+      $$
+
+      **Lo que hay que llevarse.** Casi la mitad de la celda está vacía. Por
+      eso la cúbica simple es una rareza entre los metales —el polonio es el
+      ejemplo de manual— y las tres estructuras que importan son la FCC, la
+      BCC y la HC, que empaquetan bastante mejor.
+
+  - id: ejcm3-col32-los-parametros-de-red-del-hierro
+    titulo: Los parámetros de red del hierro
+    fuente: >-
+      Ejercicio 3.2 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      El hierro a $20\ \text{°C}$ presenta estructura BCC con átomos de radio
+      atómico $0{,}124\ \text{nm}$. Calcula los parámetros de red de la celda
+      unidad del hierro.
+    pide: La arista de la celda y sus ángulos.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En la BCC, ¿a lo largo de qué línea se tocan los átomos?
+        opciones:
+          - texto: >-
+              De la diagonal del cubo, que atraviesa el átomo del centro
+            correcta: true
+            mensaje: |
+              Exacto. Esa diagonal mide $\sqrt{3}\,a$ y contiene un radio del
+              vértice, el diámetro del átomo central y otro radio: $4R$. De
+              ahí $a = 4R/\sqrt{3}$.
+          - texto: >-
+              De la diagonal de una cara
+            mensaje: |
+              Eso es la FCC, que tiene un átomo en el centro de cada cara. En
+              la BCC las caras no tienen átomo central, así que por su diagonal
+              los átomos de los vértices no llegan a tocarse.
+          - texto: >-
+              De la arista
+            mensaje: |
+              Eso es la cúbica simple. En la BCC el átomo del centro separa a
+              los de los vértices: no caben tocándose por la arista y por la
+              diagonal a la vez, y el que manda es el contacto por la diagonal.
+
+      - tipo: calcular
+        titulo: La arista
+        pregunta: |
+          ¿Cuánto mide la arista $a$ de la celda, en nanómetros?
+        respuesta:
+          tipo: numero
+          valor: '0.2864'
+          tolerancia: 0.002
+          formato: un número, en nm
+        distractores:
+          - valor: '0.3507'
+            mensaje: |
+              Has usado la relación de la FCC, $a = 4R/\sqrt{2}$. En la BCC los
+              átomos se tocan por la diagonal del **cubo**, que mide
+              $\sqrt{3}\,a$, no por la de la cara.
+          - valor: '0.248'
+            mensaje: |
+              Eso es $2R$: has supuesto que los átomos se tocan a lo largo de la
+              arista, como en la cúbica simple. En la BCC el átomo central
+              obliga a separarlos.
+        pista: |
+          $\sqrt{3}\,a = 4R$.
+        desarrollo: |
+          $$
+          a = \frac{4R}{\sqrt{3}} = \frac{4\cdot 0{,}124}{\sqrt{3}}
+          = 0{,}286\ \text{nm}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta completa. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Los parámetros de red son las tres aristas $a$, $b$, $c$ y los
+              tres ángulos $\alpha$, $\beta$, $\gamma$.
+          - texto: >-
+              La celda BCC es cúbica, así que $a = b = c$ y
+              $\alpha = \beta = \gamma = 90°$.
+          - texto: >-
+              Con $a = 4R/\sqrt{3}$ sale $a = 0{,}286\ \text{nm}$, y con eso
+              quedan dados los seis.
+          - texto: >-
+              Basta con dar $a$, porque en cualquier celda los ángulos son
+              siempre de 90°.
+            trampa: true
+            mensaje: |
+              Solo en las cúbicas, tetragonales y ortorrómbicas. En la
+              hexagonal uno de los ángulos es de 120°, y en la monoclínica y la
+              triclínica hay ángulos distintos de 90°. Aquí se dan los 90°
+              **porque** la celda es cúbica, y eso hay que decirlo.
+    resolucion: |
+      **La relación.** En la BCC los átomos se tocan a lo largo de la diagonal
+      del cubo, que mide $\sqrt{3}\,a$ y contiene cuatro radios:
+
+      $$
+      a = \frac{4R}{\sqrt{3}} = \frac{4\cdot 0{,}124}{\sqrt{3}}
+      = 0{,}286\ \text{nm}
+      $$
+
+      **Los parámetros de red.** La celda es cúbica, así que los seis quedan
+      dados:
+
+      $$
+      a = b = c = 0{,}286\ \text{nm}
+      \qquad
+      \alpha = \beta = \gamma = 90°
+      $$
+
+      El «a 20 °C» del enunciado no es decoración: el hierro es BCC a
+      temperatura ambiente y pasa a FCC a 912 °C. Con la otra estructura, la
+      misma cuenta daría otra arista.
+
+  - id: ejcm3-col33-la-arista-a-partir-del-radio
+    titulo: La arista a partir del radio, en cuatro metales
+    fuente: >-
+      Ejercicio 3.3 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Calcula el valor de $a$ de los siguientes metales, conocido el radio
+      atómico.
+
+      | Metal | Estructura cristalina | Radio atómico (nm) |
+      |---|---|---|
+      | Potasio | BCC | 0,238 |
+      | Tugsteno | BCC | 0,141 |
+      | Iridio | FCC | 0,135 |
+      | Aluminio | FCC | 0,143 |
+    pide: La arista de la celda de cada uno de los cuatro metales.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Dos metales son BCC y dos FCC. ¿Qué cambia en la cuenta de uno a otro?
+        opciones:
+          - texto: >-
+              La diagonal por la que se tocan los átomos: la del cubo en la
+              BCC y la de la cara en la FCC
+            correcta: true
+            mensaje: |
+              Eso es. En los dos casos esa diagonal mide $4R$. En la BCC es
+              $\sqrt{3}\,a$ y en la FCC $\sqrt{2}\,a$, y de ahí salen las dos
+              fórmulas.
+          - texto: >-
+              Nada: en las dos $a = 2R$
+            mensaje: |
+              $a = 2R$ es la cúbica simple, donde los átomos se tocan por la
+              arista. En la BCC y en la FCC hay un átomo más —en el centro del
+              cubo o en el de las caras— que los obliga a separarse.
+          - texto: >-
+              El número de átomos por celda, que entra en la fórmula de $a$
+            mensaje: |
+              El número de átomos entra en la densidad y en el F.E.A., pero no
+              en la arista. La arista sale de una sola condición geométrica: por
+              dónde se tocan las esferas.
+
+      - tipo: calcular
+        titulo: El potasio, BCC
+        pregunta: |
+          ¿Cuánto vale $a$ para el potasio, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.5496'
+          tolerancia: 0.003
+          formato: un número, en nm
+        distractores:
+          - valor: '0.6732'
+            mensaje: |
+              Has usado la relación de la FCC, $4R/\sqrt{2}$. El potasio es
+              BCC: los átomos se tocan por la diagonal del cubo y se divide
+              entre $\sqrt{3}$.
+          - valor: '0.476'
+            mensaje: |
+              Eso es $2R$, la arista de la cúbica simple. En la BCC el átomo
+              del centro separa a los de los vértices.
+        pista: |
+          $a = 4R/\sqrt{3}$.
+        desarrollo: |
+          $$
+          a = \frac{4\cdot 0{,}238}{\sqrt{3}} = 0{,}550\ \text{nm}
+          $$
+
+      - tipo: calcular
+        titulo: El tungsteno, BCC
+        pregunta: |
+          ¿Y para el tungsteno, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.3256'
+          tolerancia: 0.002
+          formato: un número, en nm
+        distractores:
+          - valor: '0.3988'
+            mensaje: |
+              Relación de la FCC otra vez. El tungsteno es BCC, como el
+              potasio: la misma fórmula con otro radio.
+          - valor: '0.282'
+            mensaje: |
+              Eso es $2R$. En la BCC la arista es mayor que el diámetro,
+              porque el contacto está en la diagonal del cubo.
+        pista: |
+          La misma fórmula que el potasio.
+        desarrollo: |
+          $$
+          a = \frac{4\cdot 0{,}141}{\sqrt{3}} = 0{,}326\ \text{nm}
+          $$
+
+      - tipo: calcular
+        titulo: El iridio, FCC
+        pregunta: |
+          ¿Cuánto vale $a$ para el iridio, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.3818'
+          tolerancia: 0.002
+          formato: un número, en nm
+        distractores:
+          - valor: '0.3118'
+            mensaje: |
+              Has seguido con la fórmula de la BCC. El iridio es FCC: los
+              átomos se tocan por la diagonal de la **cara**, que mide
+              $\sqrt{2}\,a$.
+          - valor: '0.270'
+            mensaje: |
+              Eso es $2R$. En la FCC el átomo del centro de cada cara separa a
+              los de los vértices.
+        pista: |
+          $\sqrt{2}\,a = 4R$, es decir $a = 2\sqrt{2}\,R$.
+        desarrollo: |
+          $$
+          a = 2\sqrt{2}\cdot 0{,}135 = 0{,}382\ \text{nm}
+          $$
+
+      - tipo: calcular
+        titulo: El aluminio, FCC
+        pregunta: |
+          ¿Y para el aluminio, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.4045'
+          tolerancia: 0.002
+          formato: un número, en nm
+        distractores:
+          - valor: '0.3302'
+            mensaje: |
+              Fórmula de la BCC. El aluminio es FCC, como el iridio.
+          - valor: '0.286'
+            mensaje: |
+              Eso es $2R$, la arista de la cúbica simple.
+        pista: |
+          La misma fórmula que el iridio.
+        desarrollo: |
+          $$
+          a = 2\sqrt{2}\cdot 0{,}143 = 0{,}404\ \text{nm}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena lo que dicen los cuatro resultados. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En la BCC los átomos se tocan por la diagonal del cubo, así que
+              $a = 4R/\sqrt{3} \approx 2{,}31\,R$.
+          - texto: >-
+              En la FCC se tocan por la diagonal de la cara, así que
+              $a = 2\sqrt{2}\,R \approx 2{,}83\,R$.
+          - texto: >-
+              Por eso, con radios casi iguales —0,141 y 0,143 nm—, el aluminio
+              FCC tiene una arista mayor que la del tungsteno BCC.
+          - texto: >-
+              Y como su arista es mayor, la celda del aluminio está menos
+              empaquetada que la del tungsteno.
+            trampa: true
+            mensaje: |
+              Es al revés. La celda FCC es más grande, pero lleva **cuatro**
+              átomos y la BCC dos: la FCC empaqueta el 74 % y la BCC el 68 %.
+              Una arista mayor no es una celda más vacía si dentro caben más
+              átomos.
+    resolucion: |
+      **Las dos relaciones.** El contacto entre esferas está en una diagonal
+      que mide cuatro radios:
+
+      - BCC, diagonal del cubo: $\sqrt{3}\,a = 4R$, luego $a = 4R/\sqrt{3}$.
+      - FCC, diagonal de la cara: $\sqrt{2}\,a = 4R$, luego $a = 2\sqrt{2}\,R$.
+
+      **Los cuatro metales.**
+
+      | Metal | Estructura | R (nm) | a (nm) |
+      |---|---|---|---|
+      | Potasio | BCC | 0,238 | 0,550 |
+      | Tugsteno | BCC | 0,141 | 0,326 |
+      | Iridio | FCC | 0,135 | 0,382 |
+      | Aluminio | FCC | 0,143 | 0,404 |
+
+      Los cuatro coinciden con el listado. El error que conviene vigilar es
+      aplicar a los cuatro la misma fórmula: la tabla cambia de estructura a
+      mitad, y la fórmula tiene que cambiar con ella.
+
+  - id: ejcm3-col34-el-volumen-de-la-celdilla
+    titulo: El volumen de la celdilla, hexagonal y cúbica
+    fuente: >-
+      Ejercicio 3.4 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Calcula el volumen de la celdilla unidad de los siguientes metales.
+
+      | Metal | Estructura cristalina | Ctes de red (nm) |
+      |---|---|---|
+      | Berilio | HCP | $a = 0{,}229$ y $c = 0{,}358$ |
+      | Magnesio | HCP | $a = 0{,}321$ y $c = 0{,}521$ |
+      | Cobre | FCC | $a = 0{,}362$ |
+      | Wolframio | BCC | $a = 0{,}316$ |
+    pide: El volumen de la celdilla unidad de los cuatro metales, en nm³.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La celdilla HCP de estas transparencias es el prisma hexagonal
+          entero. ¿Cuánto vale el área de su base?
+        opciones:
+          - texto: >-
+              La de seis triángulos equiláteros de lado $a$:
+              $\frac{3\sqrt{3}}{2}\,a^{2}$
+            correcta: true
+            mensaje: |
+              Eso es. Cada triángulo tiene área $\frac{\sqrt{3}}{4}a^{2}$, y
+              seis suman $\frac{3\sqrt{3}}{2}a^{2}$. Multiplicada por la altura
+              $c$, da el volumen del prisma.
+          - texto: >-
+              $a^{2}$, como si la base fuera un cuadrado
+            mensaje: |
+              La base es un **hexágono**, no un cuadrado. Tomar $a^{2}$ se deja
+              fuera un factor de 2,6: el volumen sale menos de la mitad del
+              verdadero.
+          - texto: >-
+              Da igual: en la HCP el volumen es $a^{3}$ como en las cúbicas
+            mensaje: |
+              $a^{3}$ solo vale para una celda cúbica, con las tres aristas
+              iguales y a 90°. La HCP tiene dos parámetros, $a$ y $c$, y una
+              base de ángulos de 120°.
+
+      - tipo: calcular
+        titulo: El berilio, HCP
+        pregunta: |
+          ¿Cuánto vale el volumen de la celdilla del berilio, en nm³?
+        respuesta:
+          tipo: numero
+          valor: '0.04878'
+          tolerancia: 0.001
+          formato: un número, en nm³
+        distractores:
+          - valor: '0.01877'
+            mensaje: |
+              Eso es $a^{2}c$: has tomado la base como un cuadrado de lado $a$.
+              La base es un hexágono, y su área es
+              $\frac{3\sqrt{3}}{2}a^{2}$.
+          - valor: '0.09755'
+            mensaje: |
+              El doble. Al calcular el área como perímetro por apotema te has
+              dejado el «partido por dos»: $A = \frac{6a\cdot a\sin 60°}{2}$.
+        pista: |
+          $V = \frac{3\sqrt{3}}{2}\,a^{2}\,c$.
+        desarrollo: |
+          $$
+          V = \frac{3\sqrt{3}}{2}\cdot 0{,}229^{2}\cdot 0{,}358
+          = 0{,}049\ \text{nm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: El magnesio, HCP
+        pregunta: |
+          ¿Y el del magnesio, en nm³?
+        respuesta:
+          tipo: numero
+          valor: '0.1395'
+          tolerancia: 0.002
+          formato: un número, en nm³
+        distractores:
+          - valor: '0.05368'
+            mensaje: |
+              Otra vez $a^{2}c$, la base cuadrada. Falta el factor
+              $\frac{3\sqrt{3}}{2} = 2{,}598$ del hexágono.
+          - valor: '0.2790'
+            mensaje: |
+              El doble: el área de la base es perímetro por apotema **partido
+              por dos**.
+        pista: |
+          La misma fórmula que el berilio.
+        desarrollo: |
+          $$
+          V = \frac{3\sqrt{3}}{2}\cdot 0{,}321^{2}\cdot 0{,}521
+          = 0{,}139\ \text{nm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: El cobre, FCC
+        pregunta: |
+          ¿Y el del cobre, en nm³?
+        respuesta:
+          tipo: numero
+          valor: '0.04744'
+          tolerancia: 0.001
+          formato: un número, en nm³
+        distractores:
+          - valor: '1.073'
+            mensaje: |
+              Has tomado 0,362 como radio y has calculado la arista con
+              $a = 2\sqrt{2}\,R$. Mira la cabecera de la columna: aquí se dan
+              las **constantes de red**, no los radios como en el 3.3. La
+              arista ya está dada.
+          - valor: '0.1898'
+            mensaje: |
+              Has multiplicado por los cuatro átomos de la FCC. El volumen de
+              la celdilla es el del cubo y nada más; el número de átomos entra
+              en la densidad y en el F.E.A., no aquí.
+        pista: |
+          Celda cúbica: $V = a^{3}$.
+        desarrollo: |
+          $$
+          V = 0{,}362^{3} = 0{,}047\ \text{nm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: El wolframio, BCC
+        pregunta: |
+          ¿Y el del wolframio, en nm³?
+        respuesta:
+          tipo: numero
+          valor: '0.03155'
+          tolerancia: 0.001
+          formato: un número, en nm³
+        distractores:
+          - valor: '0.3887'
+            mensaje: |
+              Has tratado 0,316 como un radio y has sacado la arista con
+              $4R/\sqrt{3}$. La tabla da la constante de red: $a$ ya es la
+              arista.
+          - valor: '0.06311'
+            mensaje: |
+              Has multiplicado por los dos átomos de la BCC. El volumen de la
+              celdilla no depende de cuántos átomos lleve dentro.
+        pista: |
+          Celda cúbica: $V = a^{3}$.
+        desarrollo: |
+          $$
+          V = 0{,}316^{3} = 0{,}032\ \text{nm}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el método. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En las celdas cúbicas, FCC o BCC, el volumen es $a^{3}$ y la
+              estructura no cambia la cuenta.
+          - texto: >-
+              En la HCP la celdilla es un prisma hexagonal: base de seis
+              triángulos equiláteros por altura $c$.
+          - texto: >-
+              De ahí $V = \frac{3\sqrt{3}}{2}\,a^{2}c$, y con ella el berilio
+              da 0,049 nm³ y el magnesio 0,139.
+          - texto: >-
+              Como la tabla dice «FCC» y «BCC», primero hay que pasar de la
+              arista al radio y luego volver a la arista.
+            trampa: true
+            mensaje: |
+              La tabla ya da la **arista**. La estructura sirve para saber
+              cuántos átomos hay dentro y dónde se tocan, pero el volumen de
+              una celda cúbica es $a^{3}$ se llame como se llame. Dar la vuelta
+              por el radio es trabajo de más y una ocasión de equivocarse.
+    resolucion: |
+      **Las celdas cúbicas.** Cobre y wolframio: $V = a^{3}$.
+
+      $$
+      V_{\text{Cu}} = 0{,}362^{3} = 0{,}047\ \text{nm}^{3}
+      \qquad
+      V_{\text{W}} = 0{,}316^{3} = 0{,}032\ \text{nm}^{3}
+      $$
+
+      **Las hexagonales.** La base es un hexágono regular de lado $a$, seis
+      triángulos equiláteros: $A = \frac{3\sqrt{3}}{2}a^{2}$. Por la altura
+      $c$:
+
+      $$
+      V_{\text{Be}} = \frac{3\sqrt{3}}{2}\cdot 0{,}229^{2}\cdot 0{,}358
+      = 0{,}049\ \text{nm}^{3}
+      $$
+
+      $$
+      V_{\text{Mg}} = \frac{3\sqrt{3}}{2}\cdot 0{,}321^{2}\cdot 0{,}521
+      = 0{,}139\ \text{nm}^{3}
+      $$
+
+      Los cuatro coinciden con el listado. Un detalle que ayuda en el examen:
+      $c/a$ vale 1,56 en el berilio y 1,62 en el magnesio, cerca del 1,633 del
+      empaquetamiento ideal de esferas. Si al hacer la cuenta te sale un
+      prisma muy achatado o muy alto, has cambiado $a$ por $c$.
+
+  - id: ejcm3-col35-el-fea-de-cuatro-metales
+    titulo: El F.E.A. de cuatro metales, y el dato que sobra
+    fuente: >-
+      Ejercicio 3.5 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado no publica resultado
+      para este ejercicio: los cuatro valores son nuestros, comprobados con la
+      fórmula general de cada estructura y con los datos de la tabla.
+    nivel: practica
+    enunciado: |
+      Calcula el F.E.A. de las celdillas unidad de los siguientes metales.
+
+      | Metal | Estructura cristalina | Ctes de red (nm) |
+      |---|---|---|
+      | Cromo | BCC | $a = 0{,}289$ |
+      | Tántalo | BCC | $a = 0{,}330$ |
+      | Platino | FCC | $a = 0{,}393$ |
+      | Plata | FCC | $a = 0{,}409$ |
+    pide: El factor de empaquetamiento atómico de los cuatro metales.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de hacer cuatro cuentas: ¿depende el F.E.A. del valor de la
+          arista?
+        opciones:
+          - texto: >-
+              No: en el modelo de esferas rígidas el radio es proporcional a
+              la arista y se cancela, así que solo depende de la estructura
+            correcta: true
+            mensaje: |
+              Eso es. En la BCC $R = \sqrt{3}\,a/4$ y en la FCC
+              $R = \sqrt{2}\,a/4$; al meterlo en el cociente, $a^{3}$ se va de
+              arriba y de abajo. Salen dos números, no cuatro.
+          - texto: >-
+              Sí: con una arista mayor caben más átomos y el F.E.A. sube
+            mensaje: |
+              El número de átomos por celda lo fija la estructura —dos en la
+              BCC, cuatro en la FCC—, no el tamaño. Una celda mayor lleva
+              átomos mayores, en la misma proporción.
+          - texto: >-
+              Sí, y por eso la tabla da una arista distinta para cada metal
+            mensaje: |
+              La tabla da las aristas porque son datos reales de cada metal, y
+              hacen falta para la densidad o para el radio. Para el F.E.A.
+              sobran: es el dato que el ejercicio te pone delante para ver si
+              lo necesitas.
+
+      - tipo: calcular
+        titulo: El radio del cromo
+        pregunta: |
+          Para hacer la cuenta con números, ¿cuánto vale el radio atómico del
+          cromo, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.1251'
+          tolerancia: 0.001
+          formato: un número, en nm
+        distractores:
+          - valor: '0.1022'
+            mensaje: |
+              Has usado la relación de la FCC, $R = \sqrt{2}\,a/4$. El cromo es
+              BCC: el contacto es por la diagonal del cubo, $\sqrt{3}\,a = 4R$.
+          - valor: '0.1445'
+            mensaje: |
+              Eso es $a/2$: has supuesto que los átomos se tocan por la arista.
+              En la BCC el átomo central los separa.
+        pista: |
+          $R = \sqrt{3}\,a/4$.
+        desarrollo: |
+          $$
+          R = \frac{\sqrt{3}\cdot 0{,}289}{4} = 0{,}1251\ \text{nm}
+          $$
+
+      - tipo: calcular
+        titulo: El F.E.A. del cromo
+        pregunta: |
+          Con dos átomos por celda, ¿cuánto vale el F.E.A. del cromo?
+        respuesta:
+          tipo: numero
+          valor: '0.680'
+          tolerancia: 0.01
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.340'
+            mensaje: |
+              La mitad: has contado un solo átomo, los ocho octavos de los
+              vértices, y te has dejado el del centro del cubo, que es entero.
+          - valor: '1.360'
+            mensaje: |
+              Has contado cuatro átomos, como en la FCC. Un F.E.A. mayor que 1
+              es imposible, y eso ya dice que sobran átomos: la BCC tiene dos.
+        pista: |
+          $\text{F.E.A.} = 2\cdot\frac{4}{3}\pi R^{3} / a^{3}$.
+        desarrollo: |
+          $$
+          \text{F.E.A.} = \frac{2\cdot\frac{4}{3}\pi\cdot 0{,}1251^{3}}{0{,}289^{3}}
+          = \frac{0{,}01642}{0{,}02414} = 0{,}680
+          $$
+
+          Y en general, sustituyendo $R = \sqrt{3}\,a/4$:
+          $\text{F.E.A.} = \pi\sqrt{3}/8 = 0{,}68$, sin $a$ por ningún lado.
+
+      - tipo: calcular
+        titulo: El F.E.A. del platino
+        pregunta: |
+          El platino es FCC. ¿Cuánto vale su F.E.A.?
+        respuesta:
+          tipo: numero
+          valor: '0.740'
+          tolerancia: 0.01
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.370'
+            mensaje: |
+              La mitad: has contado dos átomos, como en la BCC. La FCC lleva
+              cuatro, uno de los vértices y tres de las seis caras.
+          - valor: '0.185'
+            mensaje: |
+              Has contado solo el átomo de los vértices y te has dejado los de
+              las caras. Cada cara aporta medio átomo, y son seis.
+        pista: |
+          Cuatro átomos, y $R = \sqrt{2}\,a/4 = a/(2\sqrt{2})$.
+        desarrollo: |
+          $$
+          R = \frac{0{,}393}{2\sqrt{2}} = 0{,}1389\ \text{nm}
+          \qquad
+          \text{F.E.A.} = \frac{4\cdot\frac{4}{3}\pi\cdot 0{,}1389^{3}}{0{,}393^{3}}
+          = 0{,}740
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la conclusión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El F.E.A. es un cociente de volúmenes, y en el modelo de esferas
+              rígidas el radio es proporcional a la arista.
+          - texto: >-
+              Por eso sale el mismo para todos los metales de una estructura:
+              0,68 en la BCC y 0,74 en la FCC.
+          - texto: >-
+              Cromo y tántalo dan 0,68; platino y plata, 0,74, con aristas
+              distintas en los cuatro.
+          - texto: >-
+              Y como la plata tiene la mayor arista de la tabla, es el más
+              denso de los cuatro.
+            trampa: true
+            mensaje: |
+              La densidad depende del peso atómico y del volumen de la celda,
+              no solo del empaquetamiento. El platino, con 195 g/mol, es mucho
+              más denso que la plata, con 108, aunque los dos empaqueten igual
+              y la plata tenga la celda mayor.
+    resolucion: |
+      **El atajo.** En el modelo de esferas rígidas el radio es una fracción
+      fija de la arista, así que el F.E.A. no depende de $a$:
+
+      $$
+      \text{BCC:}\ \ \frac{2\cdot\frac{4}{3}\pi\left(\frac{\sqrt{3}a}{4}\right)^{3}}{a^{3}}
+      = \frac{\pi\sqrt{3}}{8} = 0{,}680
+      \qquad
+      \text{FCC:}\ \ \frac{4\cdot\frac{4}{3}\pi\left(\frac{a}{2\sqrt{2}}\right)^{3}}{a^{3}}
+      = \frac{\pi}{3\sqrt{2}} = 0{,}740
+      $$
+
+      **Los cuatro metales.**
+
+      | Metal | Estructura | a (nm) | R (nm) | F.E.A. |
+      |---|---|---|---|---|
+      | Cromo | BCC | 0,289 | 0,1251 | 0,68 |
+      | Tántalo | BCC | 0,330 | 0,1429 | 0,68 |
+      | Platino | FCC | 0,393 | 0,1389 | 0,74 |
+      | Plata | FCC | 0,409 | 0,1446 | 0,74 |
+
+      El listado no publica resultado para este ejercicio. Los dos valores son
+      los que dan las transparencias para cada estructura, y las cuatro
+      cuentas con números llegan a ellos. Lo que el ejercicio enseña de verdad
+      es a reconocer un dato que sobra.
+
+  - id: ejcm3-col36-la-densidad-del-molibdeno
+    titulo: La densidad del molibdeno
+    fuente: >-
+      Ejercicio 3.6 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      El molibdeno tiene una estructura cristalina BCC, un radio atómico de
+      $0{,}1363\ \text{nm}$ y un peso atómico de $95{,}94\ \text{g/mol}$.
+      Calcula su densidad.
+    pide: La densidad teórica del molibdeno, en g/cm³.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La densidad es la masa de los átomos de la celda entre su volumen.
+          ¿Qué dos cosas de la BCC hacen falta?
+        opciones:
+          - texto: >-
+              Que lleva dos átomos por celda y que $a = 4R/\sqrt{3}$
+            correcta: true
+            mensaje: |
+              Exacto. Con $n = 2$ se calcula la masa de la celda y con la
+              arista su volumen:
+              $\rho = n\,A / (V_c\,N_A)$.
+          - texto: >-
+              Que lleva nueve átomos por celda y que $a = 2R$
+            mensaje: |
+              Nueve es contar los ocho vértices enteros más el centro. Cada
+              vértice es de ocho celdas y aporta $1/8$: son dos. Y $a = 2R$ es
+              la cúbica simple.
+          - texto: >-
+              Solo el F.E.A., 0,68, porque la densidad es proporcional a él
+            mensaje: |
+              El F.E.A. es igual para todos los metales BCC y sus densidades no
+              lo son. Hace falta el peso atómico y el volumen real de la celda.
+
+      - tipo: calcular
+        titulo: La arista
+        pregunta: |
+          ¿Cuánto mide la arista de la celda, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.3148'
+          tolerancia: 0.002
+          formato: un número, en nm
+        distractores:
+          - valor: '0.3855'
+            mensaje: |
+              Relación de la FCC, $4R/\sqrt{2}$. En la BCC el contacto es por
+              la diagonal del cubo y se divide entre $\sqrt{3}$.
+          - valor: '0.2726'
+            mensaje: |
+              Eso es $2R$, el contacto por la arista de la cúbica simple.
+        pista: |
+          $a = 4R/\sqrt{3}$.
+        desarrollo: |
+          $$
+          a = \frac{4\cdot 0{,}1363}{\sqrt{3}} = 0{,}3148\ \text{nm}
+          = 3{,}148\cdot 10^{-8}\ \text{cm}
+          $$
+
+      - tipo: calcular
+        titulo: La densidad
+        pregunta: |
+          ¿Cuánto vale la densidad del molibdeno?
+        respuesta:
+          tipo: magnitud
+          valor: '10.21 g/cm3'
+          tolerancia: 0.02
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '5.107 g/cm3'
+            mensaje: |
+              La mitad exacta: has puesto $n = 1$. Los ocho vértices suman un
+              átomo, pero la BCC tiene además el del centro del cubo, que es
+              entero y solo de esta celda.
+          - valor: '5.560 g/cm3'
+            mensaje: |
+              Has calculado la arista con la relación de la FCC. Eso agranda la
+              celda un 22 % y el volumen un 84 %: la densidad cae casi a la
+              mitad.
+        pista: |
+          $\rho = \dfrac{n\,A}{a^{3}\,N_A}$, con la arista en centímetros para
+          que salga en g/cm³.
+        desarrollo: |
+          $$
+          V_c = \left(3{,}148\cdot 10^{-8}\right)^{3} = 3{,}119\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho = \frac{2\cdot 95{,}94}{3{,}119\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+          = 10{,}21\ \text{g/cm}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la cuenta. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La masa de la celda son dos átomos: $2\cdot 95{,}94/N_A$ gramos.
+          - texto: >-
+              El volumen de la celda es $a^{3}$, con $a = 4R/\sqrt{3}$ pasada a
+              centímetros.
+          - texto: >-
+              El cociente da 10,21 g/cm³, muy cerca de la densidad medida del
+              molibdeno.
+          - texto: >-
+              El nanómetro se puede dejar sin convertir, porque el número de
+              Avogadro ya corrige las unidades.
+            trampa: true
+            mensaje: |
+              El número de Avogadro pasa de moles a átomos, no de nanómetros a
+              centímetros. Si dejas $a^{3}$ en nm³ el resultado sale
+              $10^{21}$ veces más grande: $1\ \text{nm} = 10^{-7}\ \text{cm}$,
+              y al cubo son $10^{-21}$.
+    resolucion: |
+      **La arista.** BCC, contacto por la diagonal del cubo:
+
+      $$
+      a = \frac{4R}{\sqrt{3}} = \frac{4\cdot 0{,}1363}{\sqrt{3}}
+      = 0{,}3148\ \text{nm} = 3{,}148\cdot 10^{-8}\ \text{cm}
+      $$
+
+      **La densidad.** Dos átomos por celda:
+
+      $$
+      \rho = \frac{n\,A}{a^{3}\,N_A}
+      = \frac{2\cdot 95{,}94}{3{,}119\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+      = 10{,}21\ \text{g/cm}^{3}
+      $$
+
+      Coincide con el listado. El paso donde más se falla no es la física sino
+      la unidad: la arista hay que pasarla a centímetros **antes** de elevarla
+      al cubo, porque la densidad se pide en g/cm³.
+
+  - id: ejcm3-col37-el-radio-del-paladio
+    titulo: El radio del paladio, a partir de la densidad
+    fuente: >-
+      Ejercicio 3.7 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Calcula el radio de un átomo de paladio sabiendo que el Pd tiene una
+      estructura cristalina FCC, una densidad de $12{,}0\ \text{g/cm}^{3}$ y
+      un peso atómico de $106{,}4\ \text{g/mol}$.
+    pide: El radio atómico del paladio, en centímetros.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Es la fórmula de la densidad leída al revés. ¿Qué se despeja primero?
+        opciones:
+          - texto: >-
+              El volumen de la celda, $a^{3}$, y de él la arista; el radio
+              sale al final con la relación de la FCC
+            correcta: true
+            mensaje: |
+              Eso es. De $\rho = 4A/(a^{3}N_A)$ se despeja $a^{3}$, se saca la
+              raíz cúbica y luego $R = a/(2\sqrt{2})$.
+          - texto: >-
+              El radio directamente, porque la densidad es proporcional a $R$
+            mensaje: |
+              La densidad va con $1/a^{3}$, y por tanto con $1/R^{3}$. No hay
+              manera de llegar al radio sin pasar por el volumen de la celda.
+          - texto: >-
+              El número de átomos por celda, que es la incógnita
+            mensaje: |
+              El número de átomos lo da la estructura: FCC, cuatro. Aquí la
+              incógnita es el tamaño, no la cuenta de átomos. (En el 3.12 y el
+              3.13 sí será al revés.)
+
+      - tipo: calcular
+        titulo: La arista
+        pregunta: |
+          ¿Cuánto mide la arista de la celda, en centímetros?
+        respuesta:
+          tipo: magnitud
+          valor: '3.890e-8 cm'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '3.088e-8 cm'
+            mensaje: |
+              Has puesto $n = 2$, el de la BCC. La FCC lleva cuatro átomos: uno
+              de los vértices y tres de las seis caras.
+          - valor: '2.451e-8 cm'
+            mensaje: |
+              Has puesto $n = 1$: solo los vértices. En la FCC los seis átomos
+              de las caras aportan medio cada uno, tres más.
+        pista: |
+          $a^{3} = \dfrac{4\cdot 106{,}4}{12{,}0\cdot 6{,}023\cdot 10^{23}}$, y
+          luego raíz cúbica.
+        desarrollo: |
+          $$
+          a^{3} = \frac{4\cdot 106{,}4}{12{,}0\cdot 6{,}023\cdot 10^{23}}
+          = 5{,}889\cdot 10^{-23}\ \text{cm}^{3}
+          \qquad
+          a = 3{,}890\cdot 10^{-8}\ \text{cm}
+          $$
+
+      - tipo: calcular
+        titulo: El radio
+        pregunta: |
+          ¿Cuánto vale el radio del átomo de paladio?
+        respuesta:
+          tipo: magnitud
+          valor: '1.375e-8 cm'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '1.945e-8 cm'
+            mensaje: |
+              Eso es $a/2$: has supuesto contacto por la arista. En la FCC los
+              átomos se tocan por la diagonal de la cara, $\sqrt{2}\,a = 4R$.
+          - valor: '1.685e-8 cm'
+            mensaje: |
+              Has usado la relación de la BCC, $R = \sqrt{3}\,a/4$. El paladio
+              es FCC: $R = \sqrt{2}\,a/4$.
+        pista: |
+          $R = \dfrac{\sqrt{2}\,a}{4} = \dfrac{a}{2\sqrt{2}}$.
+        desarrollo: |
+          $$
+          R = \frac{3{,}890\cdot 10^{-8}}{2\sqrt{2}} = 1{,}38\cdot 10^{-8}\ \text{cm}
+          $$
+
+          Es decir, 0,138 nm, que es un radio metálico razonable: el del cobre
+          es 0,128.
+
+      - tipo: justificar
+        pregunta: Ordena el despeje. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              De $\rho = 4A/(a^{3}N_A)$ sale $a^{3} = 5{,}889\cdot 10^{-23}$ cm³.
+          - texto: >-
+              La raíz cúbica da $a = 3{,}890\cdot 10^{-8}$ cm.
+          - texto: >-
+              En la FCC los átomos se tocan por la diagonal de la cara, así que
+              $R = a/(2\sqrt{2}) = 1{,}38\cdot 10^{-8}$ cm.
+          - texto: >-
+              Para pasar de $a^{3}$ al radio se puede dividir el volumen entre
+              cuatro átomos y sacar el radio de la esfera que ocupa cada uno.
+            trampa: true
+            mensaje: |
+              Eso supondría que las esferas llenan la celda entera, y solo
+              llenan el 74 %. El radio que sale así es un 10 % mayor que el
+              verdadero. El radio sale de la geometría del contacto, no de
+              repartir el volumen.
+    resolucion: |
+      **El volumen de la celda.** FCC, cuatro átomos:
+
+      $$
+      a^{3} = \frac{n\,A}{\rho\,N_A}
+      = \frac{4\cdot 106{,}4}{12{,}0\cdot 6{,}023\cdot 10^{23}}
+      = 5{,}889\cdot 10^{-23}\ \text{cm}^{3}
+      $$
+
+      **La arista.** $a = \sqrt[3]{5{,}889\cdot 10^{-23}} = 3{,}890\cdot
+      10^{-8}\ \text{cm}$.
+
+      **El radio.** Contacto por la diagonal de la cara:
+
+      $$
+      R = \frac{\sqrt{2}\,a}{4} = \frac{3{,}890\cdot 10^{-8}}{2\sqrt{2}}
+      = 1{,}38\cdot 10^{-8}\ \text{cm}
+      $$
+
+      Coincide con el listado. Un truco para la raíz cúbica de una potencia de
+      diez: escribe $5{,}889\cdot 10^{-23}$ como $58{,}89\cdot 10^{-24}$, con
+      el exponente múltiplo de tres, y la raíz sale $3{,}89\cdot 10^{-8}$.
+
+  - id: ejcm3-col38-el-volumen-de-la-celdilla-del-circonio
+    titulo: El volumen de la celdilla del circonio
+    fuente: >-
+      Ejercicio 3.8 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      El circonio tiene una estructura cristalina HC y una densidad de
+      $6{,}51\ \text{g/cm}^{3}$. Si su peso atómico es $91{,}2\ \text{g/mol}$.
+      ¿Cuál es el volumen de la celdilla unidad en metros cúbicos?
+    pide: El volumen de la celdilla unidad del circonio, en m³.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuántos átomos lleva la celdilla HC de las transparencias, el prisma
+          hexagonal entero?
+        opciones:
+          - texto: >-
+              Seis: dos de los doce vértices, uno de los centros de las bases y
+              tres enteros en el plano central
+            correcta: true
+            mensaje: |
+              Eso es. Cada vértice del prisma lo comparten seis celdas
+              ($12\cdot 1/6 = 2$), cada centro de base dos ($2\cdot 1/2 = 1$) y
+              los tres del plano medio son enteros.
+          - texto: >-
+              Diecisiete: doce vértices, dos bases y tres centrales
+            mensaje: |
+              Eso es contar las esferas que ves, no las que pertenecen a la
+              celda. Un vértice del prisma hexagonal es de seis celdas y un
+              centro de base de dos.
+          - texto: >-
+              Dos, como en la BCC
+            mensaje: |
+              Dos átomos es la celda **primitiva** de la hexagonal, un tercio
+              del prisma. Se usa en otros libros; en esta asignatura la celdilla
+              es el prisma entero y lleva seis. Si mezclas las dos, el volumen
+              sale un tercio del que pide el listado.
+
+      - tipo: calcular
+        titulo: La masa de la celdilla
+        pregunta: |
+          ¿Cuánta masa hay dentro de una celdilla?
+        respuesta:
+          tipo: magnitud
+          valor: '9.085e-22 g'
+          tolerancia: 0.02
+          formato: una masa, con su unidad
+        distractores:
+          - valor: '1.514e-22 g'
+            mensaje: |
+              Esa es la masa de **un** átomo, $91{,}2/N_A$. En la celdilla hay
+              seis.
+          - valor: '3.029e-22 g'
+            mensaje: |
+              Has contado dos átomos, los de la celda primitiva. La celdilla de
+              esta asignatura es el prisma hexagonal entero, con seis.
+        pista: |
+          Masa de un átomo, $A/N_A$, por el número de átomos.
+        desarrollo: |
+          $$
+          m = \frac{6\cdot 91{,}2}{6{,}023\cdot 10^{23}}
+          = 9{,}085\cdot 10^{-22}\ \text{g}
+          $$
+
+      - tipo: calcular
+        titulo: El volumen
+        pregunta: |
+          ¿Cuál es el volumen de la celdilla, en metros cúbicos?
+        respuesta:
+          tipo: magnitud
+          valor: '1.396e-28 m3'
+          tolerancia: 0.02
+          formato: un volumen, con su unidad
+        distractores:
+          - valor: '1.396e-22 m3'
+            mensaje: |
+              Ese número es el volumen en **centímetros** cúbicos. La densidad
+              venía en g/cm³, así que el cociente sale en cm³, y para pasar a
+              m³ hay que multiplicar por $10^{-6}$.
+          - valor: '1.396e-24 m3'
+            mensaje: |
+              Has convertido con $10^{-2}$, que es el factor de centímetros a
+              metros. En un volumen el factor va al cubo:
+              $(10^{-2})^{3} = 10^{-6}$.
+          - valor: '4.652e-29 m3'
+            mensaje: |
+              Un tercio: has contado dos átomos por celda, los de la celda
+              primitiva, en lugar de los seis del prisma.
+        pista: |
+          $V_c = m/\rho$, y $1\ \text{cm}^{3} = 10^{-6}\ \text{m}^{3}$.
+        desarrollo: |
+          $$
+          V_c = \frac{9{,}085\cdot 10^{-22}}{6{,}51}
+          = 1{,}396\cdot 10^{-22}\ \text{cm}^{3}
+          = 1{,}396\cdot 10^{-28}\ \text{m}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la cuenta. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La celdilla HC lleva seis átomos, así que su masa es
+              $6\cdot 91{,}2/N_A$ gramos.
+          - texto: >-
+              Dividida por la densidad da el volumen, en cm³ porque la densidad
+              venía en g/cm³.
+          - texto: >-
+              Multiplicado por $10^{-6}$ queda en m³: $1{,}396\cdot 10^{-28}$.
+          - texto: >-
+              Para este volumen hace falta conocer también $a$ y $c$.
+            trampa: true
+            mensaje: |
+              No hacen falta. La densidad ya contiene la información del
+              tamaño: masa conocida entre densidad conocida da el volumen, sea
+              cual sea la forma de la celda. Con $a$ y $c$ se calcularía el
+              mismo número por la otra vía.
+    resolucion: |
+      **Átomos por celdilla.** HC, prisma hexagonal entero:
+      $12\cdot\tfrac{1}{6} + 2\cdot\tfrac{1}{2} + 3 = 6$.
+
+      **El volumen.** De $\rho = n\,A/(V_c\,N_A)$:
+
+      $$
+      V_c = \frac{n\,A}{\rho\,N_A}
+      = \frac{6\cdot 91{,}2}{6{,}51\cdot 6{,}023\cdot 10^{23}}
+      = 1{,}396\cdot 10^{-22}\ \text{cm}^{3}
+      $$
+
+      **A metros cúbicos.** $1\ \text{cm}^{3} = 10^{-6}\ \text{m}^{3}$, así que
+      $V_c = 1{,}396\cdot 10^{-28}\ \text{m}^{3}$.
+
+      Coincide con el listado. Las dos trampas del ejercicio son las dos
+      últimas palabras del enunciado —«metros cúbicos»— y el número de átomos:
+      con la celda primitiva de dos átomos, que traen otros libros, el volumen
+      sale un tercio.
+
+  - id: ejcm3-col39-fcc-o-bcc-el-rodio
+    titulo: FCC o BCC, decidido con la densidad
+    fuente: >-
+      Ejercicio 3.9 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      El rodio, Rh, tiene un radio atómico de $1{,}345\cdot 10^{-8}\ \text{cm}$
+      y una densidad de $12{,}41\ \text{g/cm}^{3}$. Determina si tiene
+      estructura cristalina FCC o BCC. Peso atómico: $102{,}91\ \text{g/mol}$.
+    pide: Si el rodio es FCC o BCC, con la cuenta que lo decide.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cómo se decide entre las dos estructuras?
+        opciones:
+          - texto: >-
+              Calculando la densidad teórica con cada una y viendo cuál
+              coincide con la medida
+            correcta: true
+            mensaje: |
+              Eso es. Cada hipótesis fija $n$ y la relación entre $a$ y $R$,
+              así que da una densidad. La que coincide con 12,41 g/cm³ es la
+              buena.
+          - texto: >-
+              Con el F.E.A.: el más alto es el del metal más denso
+            mensaje: |
+              El F.E.A. no usa ni la densidad ni el peso atómico, que son los
+              datos del enunciado. Con él solo sabrías que la FCC empaqueta
+              más, cosa que es verdad para cualquier metal.
+          - texto: >-
+              No se puede: haría falta una difracción de rayos X
+            mensaje: |
+              En la práctica la estructura se mide así, sí. Pero con el radio,
+              la densidad y el peso atómico las dos hipótesis dan densidades
+              distintas, y eso basta para descartar una.
+
+      - tipo: calcular
+        titulo: La densidad si fuera FCC
+        pregunta: |
+          Suponiendo que es FCC, ¿qué densidad tendría?
+        respuesta:
+          tipo: magnitud
+          valor: '12.41 g/cm3'
+          tolerancia: 0.02
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '6.207 g/cm3'
+            mensaje: |
+              La mitad: has puesto dos átomos por celda. En la FCC son cuatro,
+              uno de los vértices y tres de las caras.
+          - valor: '22.81 g/cm3'
+            mensaje: |
+              Has combinado cuatro átomos con la arista de la BCC,
+              $4R/\sqrt{3}$. En la FCC la arista es $2\sqrt{2}\,R$: cada
+              hipótesis lleva su $n$ y su $a$, y no se mezclan.
+        pista: |
+          $a = 2\sqrt{2}\,R$ y $n = 4$.
+        desarrollo: |
+          $$
+          a = 2\sqrt{2}\cdot 1{,}345\cdot 10^{-8} = 3{,}804\cdot 10^{-8}\ \text{cm}
+          \qquad
+          a^{3} = 5{,}506\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho_{\text{FCC}} = \frac{4\cdot 102{,}91}{5{,}506\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+          = 12{,}41\ \text{g/cm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: La densidad si fuera BCC
+        pregunta: |
+          Y suponiendo que es BCC, ¿qué densidad tendría?
+        respuesta:
+          tipo: magnitud
+          valor: '11.40 g/cm3'
+          tolerancia: 0.02
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '5.701 g/cm3'
+            mensaje: |
+              La mitad: te has dejado el átomo del centro del cubo. La BCC
+              lleva dos, el de los vértices y el central.
+          - valor: '22.81 g/cm3'
+            mensaje: |
+              Has puesto cuatro átomos, los de la FCC, con la arista de la
+              BCC. En la BCC son dos.
+        pista: |
+          $a = 4R/\sqrt{3}$ y $n = 2$.
+        desarrollo: |
+          $$
+          a = \frac{4\cdot 1{,}345\cdot 10^{-8}}{\sqrt{3}} = 3{,}106\cdot 10^{-8}\ \text{cm}
+          \qquad
+          a^{3} = 2{,}997\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho_{\text{BCC}} = \frac{2\cdot 102{,}91}{2{,}997\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+          = 11{,}40\ \text{g/cm}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la decisión. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con la hipótesis FCC la densidad teórica sale 12,41 g/cm³, igual
+              que la medida.
+          - texto: >-
+              Con la BCC sale 11,40 g/cm³, un 8 % por debajo.
+          - texto: >-
+              Luego el rodio es FCC.
+          - texto: >-
+              Es FCC porque la FCC es la estructura más densa, y el rodio es un
+              metal denso.
+            trampa: true
+            mensaje: |
+              «Denso» no decide nada: el wolframio, con 19,3 g/cm³, es BCC, y
+              el aluminio, con 2,7, es FCC. La densidad de un metal depende
+              sobre todo de su peso atómico. Lo que decide es que **la cuenta
+              con la hipótesis FCC reproduce la densidad medida** y la BCC no.
+    resolucion: |
+      **Las dos hipótesis.** Cada estructura fija el número de átomos y la
+      arista:
+
+      | | n | a | $\rho$ teórica |
+      |---|---|---|---|
+      | FCC | 4 | $2\sqrt{2}\,R = 3{,}804\cdot 10^{-8}$ cm | 12,41 g/cm³ |
+      | BCC | 2 | $4R/\sqrt{3} = 3{,}106\cdot 10^{-8}$ cm | 11,40 g/cm³ |
+
+      Con $\rho = n\,A/(a^{3}N_A)$ y $N_A = 6{,}023\cdot 10^{23}$.
+
+      **La decisión.** La densidad medida es 12,41 g/cm³, que es exactamente la
+      de la hipótesis FCC. El rodio es **FCC**, como dice el listado.
+
+      Fíjate en que las dos densidades no están muy lejos, un 8 %. Por eso
+      conviene hacer las dos cuentas con cuidado: con un redondeo brusco de la
+      arista la diferencia se puede comer.
+
+  - id: ejcm3-col310-la-celda-tetragonal
+    titulo: Una celda que no es cúbica
+    fuente: >-
+      Ejercicio 3.10 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Esta es la celda unidad de un hipotético metal:
+
+      a) ¿A qué sistema cristalino pertenece esta celda unidad?
+
+      b) ¿Cómo se llama esta estructura cristalina?
+
+      c) Calcula la densidad del material sabiendo que su peso atómico es
+      $114\ \text{g/mol}$.
+
+      *La figura, descrita: un prisma recto de base cuadrada, con las dos
+      aristas de la base de $0{,}30\ \text{nm}$ (sobre los ejes $x$ e $y$) y
+      la altura de $0{,}40\ \text{nm}$ (sobre el eje $z$). Los tres ángulos
+      entre aristas están marcados como de 90°. Hay un átomo en cada uno de
+      los ocho vértices y otro en el centro del prisma.*
+    pide: El sistema cristalino, el nombre de la estructura y la densidad.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Tres ángulos de 90°, dos aristas de 0,30 nm y una de 0,40. ¿Qué
+          sistema cristalino es?
+        opciones:
+          - texto: Tetragonal, porque $a = b \ne c$ y los tres ángulos son rectos
+            correcta: true
+            mensaje: |
+              Eso es. Es un cubo estirado en una dirección: conserva los
+              ángulos rectos y pierde la igualdad de una de las aristas.
+          - texto: Cúbico, porque los tres ángulos son de 90°
+            mensaje: |
+              Los ángulos rectos no bastan: el cúbico exige además
+              $a = b = c$. Aquí la altura mide 0,40 nm y la base 0,30.
+          - texto: Ortorrómbico, porque no es un cubo
+            mensaje: |
+              El ortorrómbico tiene las **tres** aristas distintas,
+              $a \ne b \ne c$. Aquí dos son iguales, y eso es justamente lo que
+              define al tetragonal.
+
+      - tipo: calcular
+        titulo: Los átomos de la celda
+        pregunta: |
+          ¿Cuántos átomos pertenecen a la celda?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.1
+          formato: un número entero
+        distractores:
+          - valor: '9'
+            mensaje: |
+              Has contado las nueve esferas enteras. Cada vértice lo comparten
+              ocho celdas, igual que en un cubo: los ocho vértices suman uno.
+          - valor: '1'
+            mensaje: |
+              Te has dejado el átomo del centro, el que la figura dibuja con
+              trazo discontinuo. El trazo solo dice que está detrás, dentro del
+              prisma; pertenece entero a esta celda.
+        pista: |
+          Ocho vértices a $1/8$, más el del centro.
+        desarrollo: |
+          $$
+          n = 8\cdot\tfrac{1}{8} + 1 = 2
+          $$
+
+      - tipo: calcular
+        titulo: La densidad
+        pregunta: |
+          ¿Cuánto vale la densidad del material?
+        respuesta:
+          tipo: magnitud
+          valor: '10.52 g/cm3'
+          tolerancia: 0.02
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '5.258 g/cm3'
+            mensaje: |
+              La mitad: has puesto un solo átomo por celda. El del centro
+              también cuenta.
+          - valor: '14.02 g/cm3'
+            mensaje: |
+              Has calculado el volumen como un cubo de 0,30 nm. La celda es un
+              prisma: $V = a\cdot a\cdot c = 0{,}30\cdot 0{,}30\cdot 0{,}40$.
+          - valor: '47.32 g/cm3'
+            mensaje: |
+              Has contado las nueve esferas enteras. Cada vértice aporta
+              $1/8$; son dos átomos, no nueve.
+        pista: |
+          $V_c = a^{2}c$, pasado a cm³, y $\rho = n\,A/(V_c\,N_A)$.
+        desarrollo: |
+          $$
+          V_c = 0{,}30\cdot 0{,}30\cdot 0{,}40 = 0{,}036\ \text{nm}^{3}
+          = 3{,}6\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho = \frac{2\cdot 114}{3{,}6\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+          = 10{,}5\ \text{g/cm}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta a los tres apartados. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              a) Dos aristas iguales, una distinta y tres ángulos rectos: sistema
+              tetragonal.
+          - texto: >-
+              b) Con un átomo en cada vértice y otro en el centro, es la
+              estructura tetragonal centrada en el cuerpo.
+          - texto: >-
+              c) Dos átomos en $0{,}036\ \text{nm}^{3}$ dan una densidad de
+              10,5 g/cm³.
+          - texto: >-
+              b) Es una BCC, porque tiene un átomo en el centro y ocho en los
+              vértices.
+            trampa: true
+            mensaje: |
+              La BCC es **cúbica** centrada en el cuerpo: además del átomo
+              central, exige $a = b = c$. El nombre de una estructura dice dos
+              cosas —el sistema de la celda y dónde van los átomos— y aquí el
+              sistema es tetragonal.
+    resolucion: |
+      **a) El sistema.** $a = b = 0{,}30\ \text{nm}$, $c = 0{,}40\ \text{nm}$ y
+      $\alpha = \beta = \gamma = 90°$: sistema **tetragonal**.
+
+      **b) La estructura.** Átomos en los vértices y uno en el centro:
+      **tetragonal centrada en el cuerpo**.
+
+      **c) La densidad.** Dos átomos por celda, $8\cdot\tfrac{1}{8} + 1$:
+
+      $$
+      V_c = a^{2}c = 0{,}036\ \text{nm}^{3} = 3{,}6\cdot 10^{-23}\ \text{cm}^{3}
+      $$
+
+      $$
+      \rho = \frac{2\cdot 114}{3{,}6\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+      = 10{,}5\ \text{g/cm}^{3}
+      $$
+
+      Coincide con el listado. Lo que el ejercicio quiere ver es si sabes
+      separar la **forma** de la celda (el sistema) de **dónde van los
+      átomos** dentro de ella; las dos juntas dan el nombre.
+
+  - id: ejcm3-col311-el-titanato-de-bario
+    titulo: El titanato de bario, densidad y empaquetamiento
+    fuente: >-
+      Ejercicio 3.11 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Calcula la densidad ($\text{g/cm}^{3}$) del titanato de bario
+      ($\text{BaTiO}_3$) y su factor de empaquetamiento atómico.
+
+      Datos: $A_{\text{Ba}} = 137{,}3\ \text{g/mol}$,
+      $A_{\text{Ti}} = 47{,}8\ \text{g/mol}$, $A_{\text{O}} = 16\ \text{g/mol}$,
+      $a = 0{,}434\ \text{nm}$, $r_{\text{Ti}^{4+}} = 0{,}071\ \text{nm}$,
+      $r_{\text{Ba}^{2+}} = 0{,}113\ \text{nm}$,
+      $r_{\text{O}^{2-}} = 0{,}140\ \text{nm}$.
+
+      *La figura, descrita: una celda cúbica con un ion $\text{Ba}^{2+}$ en
+      cada vértice, un ion $\text{Ti}^{4+}$ en el centro del cubo y un ion
+      $\text{O}^{2-}$ en el centro de cada una de las seis caras.*
+    pide: La densidad del titanato de bario y su factor de empaquetamiento, en porcentaje.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuántas unidades de fórmula $\text{BaTiO}_3$ hay en la celda?
+        opciones:
+          - texto: >-
+              Una: los ocho bario suman uno, el titanio es entero y los seis
+              oxígenos de las caras suman tres
+            correcta: true
+            mensaje: |
+              Eso es: $8\cdot\tfrac{1}{8} = 1$ bario, 1 titanio y
+              $6\cdot\tfrac{1}{2} = 3$ oxígenos. Justo una fórmula, lo que
+              confirma que el recuento está bien.
+          - texto: >-
+              Cuatro, como en una FCC
+            mensaje: |
+              Los oxígenos están en los centros de las caras, como los átomos
+              de una FCC, pero no hay otro ion en los vértices de la misma
+              especie. Cuenta especie por especie y comprueba que sale la
+              proporción 1 : 1 : 3.
+          - texto: >-
+              Quince, una por ion dibujado
+            mensaje: |
+              Son los iones que se ven, no los que pertenecen a la celda. Y una
+              unidad de fórmula son cinco iones juntos, no uno: aquí hay
+              exactamente cinco dentro de la celda.
+
+      - tipo: calcular
+        titulo: La densidad
+        pregunta: |
+          ¿Cuánto vale la densidad del titanato de bario?
+        respuesta:
+          tipo: magnitud
+          valor: '4.73 g/cm3'
+          tolerancia: 0.02
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '25.23 g/cm3'
+            mensaje: |
+              Has contado los ocho bario y los seis oxígenos enteros. Un
+              vértice es de ocho celdas y una cara de dos: en la celda hay un
+              bario y tres oxígenos.
+          - valor: '4.084 g/cm3'
+            mensaje: |
+              Has sumado un solo oxígeno a la masa. La unidad de fórmula es
+              $\text{BaTiO}_3$: $137{,}3 + 47{,}8 + 3\cdot 16 = 233{,}1$.
+        pista: |
+          $\rho = \dfrac{n'\left(\sum A_C + \sum A_A\right)}{V_c\,N_A}$ con
+          $n' = 1$.
+        desarrollo: |
+          $$
+          V_c = 0{,}434^{3} = 0{,}08175\ \text{nm}^{3}
+          = 8{,}175\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho = \frac{1\cdot(137{,}3 + 47{,}8 + 3\cdot 16)}{8{,}175\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+          = \frac{233{,}1}{49{,}24} = 4{,}73\ \text{g/cm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: El factor de empaquetamiento
+        pregunta: |
+          ¿Qué porcentaje del volumen de la celda ocupan los iones?
+        respuesta:
+          tipo: numero
+          valor: '51.4'
+          tolerancia: 0.5
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '12.3'
+            mensaje: |
+              Has sumado los radios al cubo sin el $\frac{4}{3}\pi$. El volumen
+              de una esfera es $\frac{4}{3}\pi r^{3}$, y ese factor vale 4,19:
+              no es un detalle.
+          - valor: '23.3'
+            mensaje: |
+              Has metido un solo oxígeno. En la celda hay tres, y son los
+              iones más grandes: aportan más del 80 % del volumen ocupado.
+          - valor: '145'
+            mensaje: |
+              Más del 100 % es imposible, y es la señal de iones contados de
+              más: has tomado enteros los ocho bario de los vértices y los seis
+              oxígenos de las caras.
+        pista: |
+          Volumen de un Ba, un Ti y tres O, entre $a^{3}$.
+        desarrollo: |
+          $$
+          V_{\text{iones}} = \frac{4}{3}\pi\left(0{,}113^{3} + 0{,}071^{3}
+          + 3\cdot 0{,}140^{3}\right) = 0{,}04203\ \text{nm}^{3}
+          $$
+
+          $$
+          \text{F.E.A.} = \frac{0{,}04203}{0{,}08175} = 0{,}514 = 51{,}4\ \%
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la lectura del resultado. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La celda contiene exactamente una unidad de fórmula: un bario,
+              un titanio y tres oxígenos.
+          - texto: >-
+              Con ella, la densidad sale 4,73 g/cm³ y los iones ocupan el 51,4 %
+              del volumen.
+          - texto: >-
+              Es menos que el 74 % de una FCC metálica porque los iones son de
+              tamaños muy distintos y no encajan como esferas iguales.
+          - texto: >-
+              Y como el F.E.A. es del 51 %, casi la mitad de la masa de la celda
+              está en el hueco.
+            trampa: true
+            mensaje: |
+              En el hueco no hay masa: por eso es un hueco. El F.E.A. reparte
+              el **volumen**, no la masa. Toda la masa está en los iones, y la
+              mayor parte en el bario, que es el más pesado aunque no sea el
+              más voluminoso.
+    resolucion: |
+      **La celda.** Perovskita: $\text{Ba}^{2+}$ en los vértices
+      ($8\cdot\tfrac{1}{8} = 1$), $\text{Ti}^{4+}$ en el centro (1) y
+      $\text{O}^{2-}$ en las caras ($6\cdot\tfrac{1}{2} = 3$). Una unidad de
+      fórmula, $n' = 1$.
+
+      **La densidad.**
+
+      $$
+      \rho = \frac{233{,}1}{0{,}434^{3}\cdot 10^{-21}\cdot 6{,}023\cdot 10^{23}}
+      = 4{,}73\ \text{g/cm}^{3}
+      $$
+
+      **El factor de empaquetamiento.**
+
+      $$
+      \text{F.E.A.} = \frac{\frac{4}{3}\pi\left(0{,}113^{3} + 0{,}071^{3}
+      + 3\cdot 0{,}140^{3}\right)}{0{,}434^{3}} = \frac{0{,}04203}{0{,}08175}
+      = 51{,}4\ \%
+      $$
+
+      > El F.E.A. coincide con el listado. La densidad sale 4,734 g/cm³ y el
+      > listado imprime 4,74: es redondeo, no otra cuenta. Con $a^{3}$
+      > redondeado a 0,0817 nm³ y $N_A = 6{,}02\cdot 10^{23}$ sale 4,739. La
+      > casilla acepta los dos.
+
+  - id: ejcm3-col312-el-fea-de-la-espinela
+    titulo: El empaquetamiento de la espinela, sin saber cuántas fórmulas caben
+    fuente: >-
+      Ejercicio 3.12 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      La celda unidad del compuesto $\text{MgO}\cdot\text{Fe}_2\text{O}_3$ tiene
+      una simetría cúbica con una longitud de lado igual a $0{,}836\ \text{nm}$.
+      Si la densidad de este material es de $4{,}52\ \text{g/cm}^{3}$, determina
+      su factor de empaquetamiento atómico.
+
+      Datos: $A_{\text{Fe}} = 55{,}85\ \text{g/mol}$,
+      $A_{\text{O}} = 16\ \text{g/mol}$, $A_{\text{Mg}} = 24{,}32\ \text{g/mol}$,
+      $r_{\text{Fe}^{3+}} = 0{,}069\ \text{nm}$,
+      $r_{\text{O}^{2-}} = 0{,}140\ \text{nm}$,
+      $r_{\text{Mg}^{2+}} = 0{,}072\ \text{nm}$.
+    pide: El factor de empaquetamiento atómico, en porcentaje.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Para el F.E.A. hay que saber cuántos iones hay en la celda, y el
+          enunciado no lo dice. ¿De dónde sale?
+        opciones:
+          - texto: >-
+              De la densidad: con ella y el volumen se despeja el número de
+              unidades de fórmula por celda
+            correcta: true
+            mensaje: |
+              Eso es. Es la fórmula de la densidad leída al revés:
+              $n' = \rho\,V_c\,N_A / M$. Por eso el enunciado da una densidad
+              que, para el F.E.A., parecería no hacer falta.
+          - texto: >-
+              Se toma una unidad de fórmula, como en el titanato de bario
+            mensaje: |
+              En el 3.11 salía una porque se contaban los iones en la figura.
+              Aquí no hay figura, y suponerlo da un F.E.A. del 8,6 %, ocho
+              veces menor que el verdadero.
+          - texto: >-
+              Se toman cuatro, porque la celda es cúbica y centrada en las caras
+            mensaje: |
+              El enunciado no dice que sea FCC, solo que la simetría es cúbica.
+              Y aunque la red de oxígenos se parezca a una FCC, la celda de
+              este compuesto es mucho mayor —su lado es casi el doble del de
+              la magnesia— y lleva más fórmulas.
+
+      - tipo: calcular
+        titulo: Las unidades de fórmula
+        pregunta: |
+          ¿Cuántas unidades de fórmula $\text{MgFe}_2\text{O}_4$ hay en la
+          celda?
+        respuesta:
+          tipo: numero
+          valor: '8'
+          tolerancia: 0.1
+          formato: un número entero
+        distractores:
+          - valor: '39.45'
+            mensaje: |
+              Has usado la masa del MgO, 40,32 g/mol, en lugar de la del
+              compuesto entero. La unidad de fórmula es
+              $\text{MgO}\cdot\text{Fe}_2\text{O}_3$: un magnesio, dos hierros y
+              cuatro oxígenos, 200,02 g/mol.
+          - valor: '7.952e21'
+            mensaje: |
+              Has dejado el volumen en nm³. Un número de fórmulas de
+              $10^{21}$ en una celda de un nanómetro no puede ser: el lado hay
+              que pasarlo a centímetros, $1\ \text{nm} = 10^{-7}\ \text{cm}$.
+        pista: |
+          $M = 24{,}32 + 2\cdot 55{,}85 + 4\cdot 16$, y
+          $n' = \rho\,a^{3}N_A/M$ con $a$ en centímetros.
+        desarrollo: |
+          $$
+          M = 24{,}32 + 2\cdot 55{,}85 + 4\cdot 16 = 200{,}02\ \text{g/mol}
+          \qquad
+          V_c = 0{,}836^{3} = 0{,}5843\ \text{nm}^{3}
+          $$
+
+          $$
+          n' = \frac{4{,}52\cdot 5{,}843\cdot 10^{-22}\cdot 6{,}023\cdot 10^{23}}{200{,}02}
+          = 7{,}95 \approx 8
+          $$
+
+          Tiene que ser entero: una celda no lleva media fórmula. El 7,95 es
+          el redondeo de la densidad.
+
+      - tipo: calcular
+        titulo: El factor de empaquetamiento
+        pregunta: |
+          Con ocho fórmulas por celda, ¿qué porcentaje del volumen ocupan los
+          iones?
+        respuesta:
+          tipo: numero
+          valor: '68.9'
+          tolerancia: 0.3
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '8.61'
+            mensaje: |
+              Has contado una sola unidad de fórmula. Hay ocho, así que los
+              iones de la celda son 8 magnesios, 16 hierros y 32 oxígenos.
+          - valor: '16.4'
+            mensaje: |
+              Te falta el $\frac{4}{3}\pi$ del volumen de cada esfera. Lo que
+              has sumado son radios al cubo, no volúmenes.
+        pista: |
+          En la celda hay $8\ \text{Mg}^{2+}$, $16\ \text{Fe}^{3+}$ y
+          $32\ \text{O}^{2-}$.
+        desarrollo: |
+          $$
+          V_{\text{iones}} = \frac{4}{3}\pi\left(8\cdot 0{,}072^{3}
+          + 16\cdot 0{,}069^{3} + 32\cdot 0{,}140^{3}\right)
+          = 0{,}4023\ \text{nm}^{3}
+          $$
+
+          $$
+          \text{F.E.A.} = \frac{0{,}4023}{0{,}5843} = 0{,}689 = 68{,}9\ \%
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La densidad, el volumen de la celda y la masa molar dan el número
+              de unidades de fórmula: 7,95, es decir ocho.
+          - texto: >-
+              Ocho fórmulas son 8 iones de magnesio, 16 de hierro y 32 de
+              oxígeno.
+          - texto: >-
+              Sus volúmenes, entre el de la celda, dan un F.E.A. del 68,9 %.
+          - texto: >-
+              Conviene usar 7,95 y no 8, porque es el valor que sale de los
+              datos.
+            trampa: true
+            mensaje: |
+              Un número de fórmulas por celda es un entero por definición: la
+              celda se repite, y no se puede repetir media fórmula. El 7,95
+              lleva dentro los redondeos de la densidad y de la arista; con él
+              el F.E.A. sale 68,5 %, que no es el del compuesto sino el de los
+              redondeos.
+    resolucion: |
+      **Cuántas fórmulas caben.** El enunciado no lo dice, así que se despeja
+      de la densidad. Con $M = 200{,}02\ \text{g/mol}$ y
+      $V_c = 0{,}836^{3} = 0{,}5843\ \text{nm}^{3}$:
+
+      $$
+      n' = \frac{\rho\,V_c\,N_A}{M}
+      = \frac{4{,}52\cdot 5{,}843\cdot 10^{-22}\cdot 6{,}023\cdot 10^{23}}{200{,}02}
+      = 7{,}95 \approx 8
+      $$
+
+      **Los iones.** Ocho fórmulas: $8\ \text{Mg}^{2+}$, $16\ \text{Fe}^{3+}$ y
+      $32\ \text{O}^{2-}$.
+
+      **El factor de empaquetamiento.**
+
+      $$
+      \text{F.E.A.} = \frac{\frac{4}{3}\pi\left(8\cdot 0{,}072^{3}
+      + 16\cdot 0{,}069^{3} + 32\cdot 0{,}140^{3}\right)}{0{,}836^{3}}
+      = \frac{0{,}4023}{0{,}5843} = 68{,}9\ \%
+      $$
+
+      Coincide con el listado. Los oxígenos se llevan el 91 % del volumen
+      ocupado: en un óxido, el empaquetamiento lo deciden casi siempre los
+      aniones, que son los grandes.
+
+  - id: ejcm3-col313-el-fea-de-la-alumina
+    titulo: El empaquetamiento de la alúmina, en celda hexagonal
+    fuente: >-
+      Ejercicio 3.13 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      La celda unidad de la alúmina, $\text{Al}_2\text{O}_3$, tiene una simetría
+      hexagonal con los siguientes parámetros de red: $a = 0{,}4759\ \text{nm}$
+      y $b = 1{,}2989\ \text{nm}$. Si su densidad es de
+      $3{,}99\ \text{g/cm}^{3}$, calcula su factor de empaquetamiento atómico.
+
+      Datos: $A_{\text{Al}} = 27\ \text{g/mol}$, $A_{\text{O}} = 16\ \text{g/mol}$,
+      $r_{\text{Al}^{3+}} = 0{,}053\ \text{nm}$,
+      $r_{\text{O}^{2-}} = 0{,}140\ \text{nm}$.
+    pide: El factor de empaquetamiento atómico de la alúmina, en porcentaje.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado llama $b$ al segundo parámetro. En una celda hexagonal,
+          ¿qué es ese 1,2989 nm?
+        opciones:
+          - texto: >-
+              La altura del prisma, la que en las transparencias se llama $c$
+            correcta: true
+            mensaje: |
+              Eso es. En la hexagonal $a = b$ por definición —son dos lados de
+              la base—, así que el parámetro distinto es la altura. El
+              enunciado la llama $b$; la cuenta es la del prisma,
+              $\frac{3\sqrt{3}}{2}a^{2}c$.
+          - texto: >-
+              El otro lado de la base, porque la base es un rombo de lados
+              distintos
+            mensaje: |
+              En una celda hexagonal los dos lados de la base son iguales, con
+              120° entre ellos. Si fueran distintos no sería hexagonal. El dato
+              que falta para el volumen es la altura, y es ese.
+          - texto: >-
+              Nada: sobra, porque en la hexagonal $c = 1{,}633\,a$
+            mensaje: |
+              El 1,633 es el cociente ideal de la HC de esferas iguales. La
+              alúmina no es un metal de esferas iguales: aquí
+              $1{,}2989/0{,}4759 = 2{,}73$, y el dato hay que usarlo.
+
+      - tipo: calcular
+        titulo: El volumen de la celda
+        pregunta: |
+          ¿Cuánto vale el volumen de la celda hexagonal, en nm³?
+        respuesta:
+          tipo: numero
+          valor: '0.7643'
+          tolerancia: 0.005
+          formato: un número, en nm³
+        distractores:
+          - valor: '0.2942'
+            mensaje: |
+              Eso es $a^{2}c$, la base como un cuadrado. La base de la celda
+              hexagonal de las transparencias es un hexágono, seis triángulos
+              equiláteros: $\frac{3\sqrt{3}}{2}a^{2}$.
+          - valor: '2.086'
+            mensaje: |
+              Has cambiado los papeles: el 1,2989 como lado de la base y el
+              0,4759 como altura. El lado de la base es $a$.
+        pista: |
+          $V_c = \frac{3\sqrt{3}}{2}\,a^{2}c$ con $c = 1{,}2989$.
+        desarrollo: |
+          $$
+          V_c = \frac{3\sqrt{3}}{2}\cdot 0{,}4759^{2}\cdot 1{,}2989
+          = 0{,}7643\ \text{nm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: Las unidades de fórmula
+        pregunta: |
+          ¿Cuántas unidades de fórmula $\text{Al}_2\text{O}_3$ hay en la celda?
+        respuesta:
+          tipo: numero
+          valor: '18'
+          tolerancia: 0.1
+          formato: un número entero
+        distractores:
+          - valor: '6.93'
+            mensaje: |
+              Has usado el volumen $a^{2}c$, sin el factor del hexágono. Con
+              la celda del prisma entero salen 18.
+          - valor: '42.71'
+            mensaje: |
+              Has usado 43 g/mol, la masa de «AlO». La fórmula es
+              $\text{Al}_2\text{O}_3$: $2\cdot 27 + 3\cdot 16 = 102$.
+        pista: |
+          $n' = \rho\,V_c\,N_A/M$, con $M = 102\ \text{g/mol}$ y $V_c$ en cm³.
+        desarrollo: |
+          $$
+          n' = \frac{3{,}99\cdot 7{,}643\cdot 10^{-22}\cdot 6{,}023\cdot 10^{23}}{102}
+          = 18{,}0
+          $$
+
+      - tipo: calcular
+        titulo: El factor de empaquetamiento
+        pregunta: |
+          ¿Qué porcentaje del volumen de la celda ocupan los iones?
+        respuesta:
+          tipo: numero
+          valor: '84.15'
+          tolerancia: 0.3
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '4.67'
+            mensaje: |
+              Has metido una sola fórmula, dos aluminios y tres oxígenos. En la
+              celda hay dieciocho: 36 aluminios y 54 oxígenos.
+          - valor: '20.1'
+            mensaje: |
+              Falta el $\frac{4}{3}\pi$. Has sumado radios al cubo, que no son
+              volúmenes.
+        pista: |
+          Dieciocho fórmulas: $36\ \text{Al}^{3+}$ y $54\ \text{O}^{2-}$.
+        desarrollo: |
+          $$
+          V_{\text{iones}} = \frac{4}{3}\pi\left(36\cdot 0{,}053^{3}
+          + 54\cdot 0{,}140^{3}\right) = 0{,}6431\ \text{nm}^{3}
+          $$
+
+          $$
+          \text{F.E.A.} = \frac{0{,}6431}{0{,}7643} = 0{,}8415 = 84{,}1\ \%
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el método. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El segundo parámetro es la altura del prisma hexagonal, y con él
+              el volumen de la celda es 0,7643 nm³.
+          - texto: >-
+              La densidad da dieciocho fórmulas por celda: 36 aluminios y 54
+              oxígenos.
+          - texto: >-
+              Sus volúmenes entre el de la celda dan un F.E.A. del 84 %.
+          - texto: >-
+              Un 84 % supera el 74 % de la FCC, y eso demuestra que la cuenta
+              está mal, porque el 74 % es el máximo posible.
+            trampa: true
+            mensaje: |
+              El 74 % es el máximo para esferas **del mismo tamaño**. Con dos
+              tamaños muy distintos los iones pequeños caben en los huecos que
+              dejan los grandes, y el empaquetamiento puede pasar de ahí. El
+              $\text{Al}^{3+}$ mide 0,053 nm y el $\text{O}^{2-}$, 0,140.
+    resolucion: |
+      **El volumen.** El «$b$» del enunciado es la altura del prisma, el $c$ de
+      las transparencias:
+
+      $$
+      V_c = \frac{3\sqrt{3}}{2}\,a^{2}c
+      = \frac{3\sqrt{3}}{2}\cdot 0{,}4759^{2}\cdot 1{,}2989 = 0{,}7643\ \text{nm}^{3}
+      $$
+
+      **Las fórmulas por celda.** Con $M = 102\ \text{g/mol}$:
+
+      $$
+      n' = \frac{3{,}99\cdot 7{,}643\cdot 10^{-22}\cdot 6{,}023\cdot 10^{23}}{102}
+      = 18{,}0
+      $$
+
+      **El factor de empaquetamiento.** 36 $\text{Al}^{3+}$ y 54
+      $\text{O}^{2-}$:
+
+      $$
+      \text{F.E.A.} = \frac{\frac{4}{3}\pi\left(36\cdot 0{,}053^{3}
+      + 54\cdot 0{,}140^{3}\right)}{0{,}7643} = 84{,}1\ \%
+      $$
+
+      > El listado imprime 84,2 %. La cuenta con dieciocho fórmulas da
+      > 84,15 %, justo en el filo del redondeo; con el 18,007 sin redondear
+      > sale 84,18. La diferencia es de la última cifra y la casilla acepta
+      > las dos.
+
+  - id: ejcm3-col314-la-magnesia
+    titulo: La magnesia, una sal gema con otros iones
+    fuente: >-
+      Ejercicio 3.14 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Considera la estructura de la celda unidad del mineral óxido de magnesio o
+      magnesia:
+
+      a) ¿De qué tipo de estructura cristalina se trata?
+
+      b) ¿Es un material cerámico con alto o bajo carácter iónico? ¿Por qué?
+
+      c) Calcula su densidad sabiendo que los pesos atómicos del Mg y el O son
+      24 y 16 g/mol, respectivamente, y los radios iónicos:
+      $r_{\text{Mg}^{2+}} = 0{,}072\ \text{nm}$ y
+      $r_{\text{O}^{2-}} = 0{,}140\ \text{nm}$.
+
+      *La figura, descrita: una celda cúbica con iones $\text{O}^{2-}$ (esferas
+      grandes) en los ocho vértices y en los centros de las seis caras, e
+      iones $\text{Mg}^{2+}$ (esferas pequeñas) en los centros de las doce
+      aristas y en el centro del cubo.*
+    pide: El tipo de estructura, el carácter iónico y la densidad de la magnesia.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          a) ¿Qué estructura es?
+        opciones:
+          - texto: >-
+              Tipo AX como la del NaCl: una FCC de aniones con los cationes en
+              los centros de las aristas y del cubo
+            correcta: true
+            mensaje: |
+              Eso es. Y lo confirma el cociente de radios:
+              $0{,}072/0{,}140 = 0{,}514$, entre 0,4 y 0,7, que da coordinación
+              6 —octaédrica—, la de la sal gema.
+          - texto: >-
+              Tipo CsCl, porque hay un ion en el centro del cubo
+            mensaje: |
+              En el CsCl la celda es un cubo simple de aniones con **un** catión
+              en el centro, y coordinación 8. Aquí los oxígenos también ocupan
+              los centros de las caras y los magnesios los de las aristas. Y
+              el cociente, 0,514, no llega al 0,7 que pediría la coordinación 8.
+          - texto: >-
+              Una FCC metálica, porque los oxígenos están en vértices y caras
+            mensaje: |
+              Los oxígenos forman una red FCC, sí, pero la estructura completa
+              lleva los magnesios intercalados, y el enlace es iónico. No es un
+              metal: es un cerámico de tipo AX.
+
+      - tipo: reconocer
+        pregunta: |
+          b) ¿Alto o bajo carácter iónico?
+        opciones:
+          - texto: >-
+              Alto, en torno al 73 %, por la gran diferencia de
+              electronegatividad entre un metal y el oxígeno
+            correcta: true
+            mensaje: |
+              Eso es. El carácter iónico crece con la diferencia de
+              electronegatividad, y la del magnesio con el oxígeno es de las
+              grandes. Las transparencias le dan un 73 %, por detrás del
+              $\text{CaF}_2$ y por delante del NaCl.
+          - texto: >-
+              Bajo, porque los cerámicos son covalentes
+            mensaje: |
+              Hay cerámicos muy covalentes, como el SiC, con un 12 % de carácter
+              iónico. Pero son los que unen dos elementos de electronegatividad
+              parecida. Un metal alcalinotérreo con oxígeno está en el otro
+              extremo.
+          - texto: >-
+              Alto, porque tiene coordinación 6
+            mensaje: |
+              La coordinación sale del cociente de radios, no del tipo de
+              enlace: es geometría. El carácter iónico lo decide la diferencia
+              de electronegatividad.
+
+      - tipo: calcular
+        titulo: La arista
+        pregunta: |
+          ¿Cuánto mide la arista de la celda, en nm?
+        respuesta:
+          tipo: numero
+          valor: '0.424'
+          tolerancia: 0.003
+          formato: un número, en nm
+        distractores:
+          - valor: '0.212'
+            mensaje: |
+              Eso es $r_{\text{Mg}} + r_{\text{O}}$, la distancia de un centro
+              a otro. A lo largo de una arista hay un oxígeno, un magnesio y
+              otro oxígeno: dos radios de cada uno.
+          - valor: '0.396'
+            mensaje: |
+              Has supuesto que los oxígenos se tocan por la diagonal de la cara,
+              como los átomos de una FCC metálica. Aquí los que se tocan son
+              catión y anión, a lo largo de la arista; los oxígenos quedan
+              ligeramente separados.
+        pista: |
+          A lo largo de la arista: $a = 2\,r_{\text{Mg}} + 2\,r_{\text{O}}$.
+        desarrollo: |
+          $$
+          a = 2\,(0{,}072 + 0{,}140) = 0{,}424\ \text{nm}
+          $$
+
+      - tipo: calcular
+        titulo: La densidad
+        pregunta: |
+          c) ¿Cuánto vale la densidad de la magnesia?
+        respuesta:
+          tipo: magnitud
+          valor: '3.485 g/cm3'
+          tolerancia: 0.02
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '0.8713 g/cm3'
+            mensaje: |
+              Una cuarta parte: has puesto una sola unidad de fórmula. En la
+              estructura del NaCl hay cuatro: 4 oxígenos (vértices y caras) y 4
+              magnesios (aristas y centro).
+          - valor: '27.88 g/cm3'
+            mensaje: |
+              Has tomado la arista como $r_{\text{Mg}} + r_{\text{O}}$. Esa es
+              media arista: el volumen sale ocho veces menor y la densidad
+              ocho veces mayor.
+          - valor: '4.278 g/cm3'
+            mensaje: |
+              Has sacado la arista del contacto entre oxígenos por la diagonal
+              de la cara, $2\sqrt{2}\,r_{\text{O}}$. El contacto es catión y
+              anión por la arista.
+        pista: |
+          $n' = 4$, $M = 40\ \text{g/mol}$ y $a = 0{,}424\ \text{nm}$.
+        desarrollo: |
+          $$
+          V_c = \left(4{,}24\cdot 10^{-8}\right)^{3} = 7{,}622\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho = \frac{4\cdot(24 + 16)}{7{,}622\cdot 10^{-23}\cdot 6{,}023\cdot 10^{23}}
+          = 3{,}49\ \text{g/cm}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El cociente de radios, 0,514, da coordinación 6: estructura tipo
+              NaCl, con cuatro unidades de fórmula por celda.
+          - texto: >-
+              Catión y anión se tocan a lo largo de la arista, así que
+              $a = 2\,(r_{\text{Mg}} + r_{\text{O}}) = 0{,}424$ nm.
+          - texto: >-
+              Con cuatro fórmulas de 40 g/mol, la densidad sale 3,5 g/cm³.
+          - texto: >-
+              La densidad sale menor que la del NaCl porque el MgO tiene menos
+              carácter iónico.
+            trampa: true
+            mensaje: |
+              Y además es falso que salga menor: el NaCl da 2,14 g/cm³ en las
+              transparencias y la magnesia 3,5. La densidad la deciden la masa
+              de la fórmula y el tamaño de la celda; el carácter iónico no
+              entra en la cuenta.
+    resolucion: |
+      **a) La estructura.** Oxígenos en vértices y caras (una FCC de aniones) y
+      magnesios en aristas y centro. El cociente
+      $r_{\text{Mg}^{2+}}/r_{\text{O}^{2-}} = 0{,}514$ está entre 0,4 y 0,7:
+      coordinación 6, octaédrica. Estructura **tipo AX, la del NaCl**.
+
+      **b) El carácter iónico.** **Alto**, un 73 % según las transparencias,
+      porque la diferencia de electronegatividad entre el magnesio y el
+      oxígeno es grande.
+
+      **c) La densidad.** Cuatro unidades de fórmula por celda, y el contacto
+      catión-anión por la arista:
+
+      $$
+      a = 2\,(0{,}072 + 0{,}140) = 0{,}424\ \text{nm}
+      \qquad
+      \rho = \frac{4\cdot 40}{\left(4{,}24\cdot 10^{-8}\right)^{3}\cdot 6{,}023\cdot 10^{23}}
+      = 3{,}49\ \text{g/cm}^{3}
+      $$
+
+      Coincide con el 3,5 g/cm³ del listado. Es la misma cuenta que el ejemplo
+      del NaCl de las transparencias, con otros iones: aprendida una, sale la
+      otra.
+
+  - id: ejcm3-col315-los-indices-de-cuatro-direcciones
+    titulo: Los índices de Miller de cuatro direcciones
+    fuente: >-
+      Ejercicio 3.15 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Escribe los índices de Miller de las siguientes direcciones
+      cristalográficas:
+
+      *La figura, descrita: una celda cúbica con el origen en el vértice donde
+      se cortan los ejes $x$, $y$, $z$, y la arista como unidad. Las cuatro
+      flechas van de un punto a otro de la celda:*
+
+      | Dirección | sale de | llega a |
+      |---|---|---|
+      | A (azul) | el vértice del eje $x$, $(1, 0, 0)$ | el extremo del eje $z$, $(0, 0, 1)$ |
+      | B (negra) | el punto medio de la arista inferior de la cara $y = 1$, $(1/2, 1, 0)$ | el vértice $(1, 0, 1)$ |
+      | C (roja) | un punto de la arista superior trasera, $(0, 3/4, 1)$ | el vértice del eje $x$, $(1, 0, 0)$ |
+      | D (verde) | el origen, $(0, 0, 0)$ | el punto medio de la arista vertical trasera derecha, $(0, 1, 1/2)$ |
+    pide: Los índices de Miller de las direcciones A, B, C y D.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Una flecha que no sale del origen, ¿cómo se convierte en índices?
+        opciones:
+          - texto: >-
+              Se restan las coordenadas: punto final menos punto inicial, y se
+              quitan las fracciones multiplicando por el mínimo común múltiplo
+            correcta: true
+            mensaje: |
+              Eso es. La resta traslada la flecha al origen sin girarla, y lo
+              que queda son sus proyecciones sobre los ejes. Luego se pasan a
+              los enteros más pequeños con la misma proporción.
+          - texto: >-
+              Se toman las coordenadas del punto final, como en las flechas que
+              salen del origen
+            mensaje: |
+              Solo vale si la flecha sale del origen, porque entonces el punto
+              inicial es $(0, 0, 0)$ y restarlo no cambia nada. En A, B y C no
+              es así.
+          - texto: >-
+              Se toman los inversos de los puntos de corte con los ejes
+            mensaje: |
+              Ese es el método de los **planos**. Una dirección es un vector y
+              se describe por sus proyecciones; los inversos solo aparecen al
+              describir un plano por dónde corta a los ejes.
+
+      - tipo: calcular
+        titulo: La dirección A
+        pregunta: |
+          ¿Cuáles son los índices de la dirección A?
+        respuesta:
+          tipo: vector
+          valor: '(-1, 0, 1)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(0, 0, 1)'
+            mensaje: |
+              Son las coordenadas del punto final. A no sale del origen: hay que
+              restarle el punto de salida, $(1, 0, 0)$.
+          - valor: '(1, 0, 1)'
+            mensaje: |
+              La flecha va **hacia atrás** en $x$: sale de $x = 1$ y llega a
+              $x = 0$. Esa proyección es negativa, y el signo es parte de la
+              dirección.
+        pista: |
+          $(0, 0, 1) - (1, 0, 0)$.
+        desarrollo: |
+          $$
+          (0, 0, 1) - (1, 0, 0) = (-1, 0, 1)
+          \;\Longrightarrow\;
+          [\overline{1}\,0\,1]
+          $$
+
+      - tipo: calcular
+        titulo: La dirección B
+        pregunta: |
+          ¿Cuáles son los índices de la dirección B?
+        respuesta:
+          tipo: vector
+          valor: '(1, -2, 2)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(0.5, -1, 1)'
+            mensaje: |
+              La resta está bien, pero los índices de Miller son **enteros**.
+              Multiplica por 2 para quitar el medio.
+          - valor: '(-1, 2, -2)'
+            mensaje: |
+              Has restado al revés, inicial menos final. Eso es la dirección
+              opuesta: la punta de la flecha está en $(1, 0, 1)$, y ese es el
+              punto final.
+          - valor: '(1, 0, 1)'
+            mensaje: |
+              Son las coordenadas del punto final. B sale de
+              $(1/2, 1, 0)$, y hay que restarlo.
+        pista: |
+          $(1, 0, 1) - (1/2, 1, 0)$, y luego por 2.
+        desarrollo: |
+          $$
+          (1, 0, 1) - \left(\tfrac{1}{2}, 1, 0\right)
+          = \left(\tfrac{1}{2}, -1, 1\right)
+          \;\xrightarrow{\ \times 2\ }\;
+          [1\,\overline{2}\,2]
+          $$
+
+      - tipo: calcular
+        titulo: La dirección C
+        pregunta: |
+          ¿Cuáles son los índices de la dirección C?
+        respuesta:
+          tipo: vector
+          valor: '(4, -3, -4)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(1, -0.75, -1)'
+            mensaje: |
+              Faltan los enteros. Con un cuarto en medio hay que multiplicar
+              por 4.
+          - valor: '(-4, 3, 4)'
+            mensaje: |
+              Has restado al revés, inicial menos final. La flecha termina en
+              el vértice del eje $x$, $(1, 0, 0)$: a ese punto se le resta el
+              de salida.
+        pista: |
+          $(1, 0, 0) - (0, 3/4, 1)$, y luego por 4.
+        desarrollo: |
+          $$
+          (1, 0, 0) - \left(0, \tfrac{3}{4}, 1\right)
+          = \left(1, -\tfrac{3}{4}, -1\right)
+          \;\xrightarrow{\ \times 4\ }\;
+          [4\,\overline{3}\,\overline{4}]
+          $$
+
+      - tipo: calcular
+        titulo: La dirección D
+        pregunta: |
+          ¿Cuáles son los índices de la dirección D?
+        respuesta:
+          tipo: vector
+          valor: '(0, 2, 1)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(0, 1, 0.5)'
+            mensaje: |
+              Es el punto final, y como D sale del origen coincide con la
+              resta. Falta el último paso: multiplicar por 2 para tener
+              enteros.
+          - valor: '(0, -2, -1)'
+            mensaje: |
+              Es la dirección opuesta. D sale del origen y va hacia $+y$ y
+              hacia $+z$: las dos proyecciones son positivas.
+        pista: |
+          D sale del origen: el punto final ya es el vector. Solo queda quitar
+          la fracción.
+        desarrollo: |
+          $$
+          \left(0, 1, \tfrac{1}{2}\right)
+          \;\xrightarrow{\ \times 2\ }\;
+          [0\,2\,1]
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el método. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Se leen en la figura el punto de salida y el de llegada, con la
+              arista como unidad.
+          - texto: >-
+              Se resta llegada menos salida: son las proyecciones del vector
+              sobre los tres ejes.
+          - texto: >-
+              Se multiplican por el número más pequeño que las deje enteras, y
+              los negativos se escriben con una barra encima.
+          - texto: >-
+              Como $[\overline{1}\,0\,1]$ y $[1\,0\,\overline{1}]$ tienen los mismos
+              números, son la misma dirección.
+            trampa: true
+            mensaje: |
+              Son direcciones **opuestas**: una va de $(1, 0, 0)$ a
+              $(0, 0, 1)$ y la otra de vuelta. Una dirección es un vector, con
+              sentido; cambiar todos los signos le da la vuelta a la flecha.
+              (En los planos pasa otra cosa, y es el ejercicio siguiente.)
+    resolucion: |
+      **El método.** Punto final menos punto inicial, y los enteros más
+      pequeños con esa proporción. Los negativos llevan la barra encima.
+
+      | | salida | llegada | resta | índices |
+      |---|---|---|---|---|
+      | A | $(1, 0, 0)$ | $(0, 0, 1)$ | $(-1, 0, 1)$ | $[\overline{1}\,0\,1]$ |
+      | B | $(1/2, 1, 0)$ | $(1, 0, 1)$ | $(1/2, -1, 1)$ | $[1\,\overline{2}\,2]$ |
+      | C | $(0, 3/4, 1)$ | $(1, 0, 0)$ | $(1, -3/4, -1)$ | $[4\,\overline{3}\,\overline{4}]$ |
+      | D | $(0, 0, 0)$ | $(0, 1, 1/2)$ | $(0, 1, 1/2)$ | $[0\,2\,1]$ |
+
+      Los cuatro coinciden con el listado. Los puntos de salida y llegada están
+      leídos de su figura, que aquí va descrita; en el examen la lectura es la
+      mitad del ejercicio, así que conviene comprobarla: C sale a tres cuartos
+      de la arista superior trasera, no a la mitad.
+
+  - id: ejcm3-col316-los-indices-de-doce-planos
+    titulo: Los índices de Miller de doce planos
+    fuente: >-
+      Ejercicio 3.16 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Escribe los índices de Miller de los siguientes planos cristalográficos:
+
+      *La figura, descrita: doce celdas cúbicas, de la a) a la l), cada una con
+      un plano sombreado. El origen está en el vértice donde se cortan los
+      ejes $x$, $y$, $z$, y la arista es la unidad. Para cada plano se dan los
+      vértices del polígono que dibuja dentro de la celda:*
+
+      | Plano | vértices del polígono sombreado |
+      |---|---|
+      | a | (1, 1, 1), (0, 2/3, 1), (0, 1, 0) |
+      | b | (1, 0, 0), (1, 0, 1), (0, 1/3, 1), (0, 1/3, 0) |
+      | c | (1, 0, 1/3), (0, 0, 1/3), (0, 1, 0), (1, 1, 0) |
+      | d | (0, 0, 0), (0, 1, 0), (1, 1, 1), (1, 0, 1) |
+      | e | (0, 0, 1), (0, 1, 1), (1, 1, 1/2), (1, 0, 1/2) |
+      | f | (1, 1/2, 1), (0, 1/2, 1), (0, 1, 0), (1, 1, 0) |
+      | g | (0, 0, 0), (1, 0, 1), (0, 1, 1) |
+      | h | (0, 0, 0), (1, 1, 0), (0, 1, 1/2) |
+      | i | (0, 0, 1), (1, 0, 1), (1, 1/3, 0), (0, 1/3, 0) |
+      | j | (1/2, 0, 1), (1/2, 1, 1), (1, 1, 1/2), (1, 0, 1/2) |
+      | k | (0, 0, 1), (1/2, 1, 1), (0, 1, 0) |
+      | l | (2/3, 0, 1), (1, 1/2, 1), (1, 1/2, 0), (2/3, 0, 0) |
+    pide: Los índices de Miller de los doce planos.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El plano d pasa por el origen. ¿Qué se hace?
+        opciones:
+          - texto: >-
+              Se lleva el origen a otro vértice de la celda, uno que no esté en
+              el plano, y se miden los cortes desde allí
+            correcta: true
+            mensaje: |
+              Eso es. Un plano de la red es igual a todos sus paralelos, así que
+              mover el origen no cambia la familia. Lo que puede cambiar es el
+              signo de **todos** los índices a la vez, y $(h\,k\,l)$ y
+              $(\overline{h}\,\overline{k}\,\overline{l})$ describen el mismo plano.
+          - texto: >-
+              Los tres cortes son cero, así que los índices son $(0\,0\,0)$
+            mensaje: |
+              $(0\,0\,0)$ no es ningún plano: sería un vector normal nulo. Y
+              los inversos de cero ni siquiera existen. Con el origen dentro
+              del plano el método no se puede aplicar tal cual.
+          - texto: >-
+              Se toma el corte con cada eje como infinito
+            mensaje: |
+              Un corte infinito significa que el plano es **paralelo** al eje.
+              El plano d no es paralelo a $x$ ni a $z$: los contiene en su
+              traza, que es otra cosa. Hay que mover el origen.
+
+      - tipo: calcular
+        titulo: El plano b
+        pregunta: |
+          Con el origen en su sitio, ¿cuáles son los índices del plano b?
+        respuesta:
+          tipo: vector
+          valor: '(1, 3, 0)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(1, 0.333, 0)'
+            mensaje: |
+              Has escrito los cortes, no sus inversos. El plano corta al eje
+              $y$ en $1/3$, y el índice es el **inverso**: 3.
+        pista: |
+          Corta al eje $x$ en 1, al $y$ en $1/3$, y es paralelo al $z$.
+        desarrollo: |
+          Cortes $1,\ \tfrac{1}{3},\ \infty$; inversos $1,\ 3,\ 0$. Ya son
+          enteros:
+
+          $$
+          (1\,3\,0)
+          $$
+
+      - tipo: calcular
+        titulo: El plano a
+        pregunta: |
+          El listado lleva el origen al vértice $(0, 1, 1)$. Desde allí, ¿cuáles
+          son los índices del plano a?
+        respuesta:
+          tipo: vector
+          valor: '(1, -3, -1)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(1, 3, 1)'
+            mensaje: |
+              Has medido las distancias sin sentido. Desde $(0, 1, 1)$ el plano
+              corta al eje $y$ yendo **hacia atrás** —a $y = 2/3$— y al eje $z$
+              yendo hacia abajo: esos dos cortes son negativos.
+          - valor: '(3, -1, -3)'
+            mensaje: |
+              Has quitado las fracciones de los **cortes** sin invertirlos. Los
+              cortes son $1,\ -\tfrac{1}{3},\ -1$, y los índices salen de sus
+              inversos: $1,\ -3,\ -1$.
+        pista: |
+          Desde el nuevo origen, el plano corta a $x'$ en 1, a $y'$ en
+          $-1/3$ y a $z'$ en $-1$.
+        desarrollo: |
+          Con el origen en $(0, 1, 1)$, los puntos $(1, 1, 1)$, $(0, 2/3, 1)$ y
+          $(0, 1, 0)$ quedan sobre los ejes nuevos en $x' = 1$,
+          $y' = -1/3$ y $z' = -1$. Los inversos:
+
+          $$
+          \left(1,\ -3,\ -1\right) \;\Longrightarrow\; (1\,\overline{3}\,\overline{1})
+          $$
+
+      - tipo: calcular
+        titulo: El plano d
+        pregunta: |
+          Lleva el origen al vértice $(0, 0, 1)$. ¿Cuáles son los índices del
+          plano d?
+        respuesta:
+          tipo: vector
+          valor: '(1, 0, -1)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(1, 0, 1)'
+            mensaje: |
+              Desde $(0, 0, 1)$ el plano corta al eje $z$ por **debajo**, en
+              $z' = -1$: el punto $(0, 0, 0)$. Ese corte es negativo, y su
+              inverso también.
+        pista: |
+          Desde $(0, 0, 1)$ el plano corta a $x$ en 1, es paralelo a $y$ y
+          corta a $z'$ en $-1$.
+        desarrollo: |
+          El plano contiene $(1, 0, 1)$, que está sobre el eje $x'$ nuevo a
+          distancia 1, y $(0, 0, 0)$, que está sobre el $z'$ a distancia
+          $-1$. Es paralelo a $y$. Cortes $1,\ \infty,\ -1$; inversos:
+
+          $$
+          (1\,0\,\overline{1})
+          $$
+
+      - tipo: calcular
+        titulo: El plano h
+        pregunta: |
+          Lleva el origen al vértice $(0, 1, 0)$. ¿Cuáles son los índices del
+          plano h?
+        respuesta:
+          tipo: vector
+          valor: '(1, -1, 2)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(1, 1, 2)'
+            mensaje: |
+              Desde $(0, 1, 0)$ el corte con el eje $y'$ es el punto
+              $(0, 0, 0)$, que está **detrás**: $y' = -1$. El segundo índice es
+              negativo.
+          - valor: '(1, -1, 0.5)'
+            mensaje: |
+              Son los cortes, no los inversos. El plano corta a $z'$ en
+              $1/2$, y su índice es 2.
+        pista: |
+          Desde $(0, 1, 0)$: corta a $x'$ en $(1, 1, 0)$, a $y'$ en
+          $(0, 0, 0)$ y a $z'$ en $(0, 1, 1/2)$.
+        desarrollo: |
+          Cortes $x' = 1$, $y' = -1$, $z' = \tfrac{1}{2}$. Inversos:
+
+          $$
+          (1\,\overline{1}\,2)
+          $$
+
+      - tipo: calcular
+        titulo: El plano j
+        pregunta: |
+          Lleva el origen al vértice $(1, 0, 1)$. ¿Cuáles son los índices del
+          plano j, ya reducidos?
+        respuesta:
+          tipo: vector
+          valor: '(-1, 0, -1)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(-2, 0, -2)'
+            mensaje: |
+              Es lo que imprime el listado, y le falta el último paso del
+              método de las transparencias: **reducir**. Allí un plano que
+              corta en $1/2$ da inversos $2\ 0\ 0$ y se escribe $(1\,0\,0)$.
+              Aquí igual: $(\overline{2}\,0\,\overline{2})$ se divide entre 2.
+          - valor: '(-0.5, 0, -0.5)'
+            mensaje: |
+              Son los cortes sin invertir. El inverso de $-1/2$ es $-2$, y
+              después se reduce.
+        pista: |
+          Desde $(1, 0, 1)$ el plano corta a $x'$ en $-1/2$ y a $z'$ en
+          $-1/2$, y es paralelo a $y$.
+        desarrollo: |
+          Cortes $-\tfrac{1}{2},\ \infty,\ -\tfrac{1}{2}$; inversos
+          $-2,\ 0,\ -2$; reducidos entre 2:
+
+          $$
+          (\overline{1}\,0\,\overline{1})
+          $$
+
+      - tipo: calcular
+        titulo: El plano l
+        pregunta: |
+          Lleva el origen al vértice $(1, 0, 0)$. ¿Cuáles son los índices del
+          plano l?
+        respuesta:
+          tipo: vector
+          valor: '(-3, 2, 0)'
+          tolerancia: 0.001
+          formato: tres índices entre paréntesis, separados por comas, con su signo
+        distractores:
+          - valor: '(3, 2, 0)'
+            mensaje: |
+              Desde $(1, 0, 0)$ el plano corta al eje $x'$ **hacia atrás**, en
+              $x = 2/3$: el corte es $-1/3$ y el índice, $-3$.
+          - valor: '(-0.333, 0.5, 0)'
+            mensaje: |
+              Son los cortes, no sus inversos. Invierte cada uno: $-1/3$ da
+              $-3$ y $1/2$ da 2.
+        pista: |
+          Desde $(1, 0, 0)$: corta a $x'$ en $-1/3$, a $y$ en $1/2$ y es
+          paralelo a $z$.
+        desarrollo: |
+          El plano pasa por $(2/3, 0, 0)$, a $-1/3$ del nuevo origen sobre el
+          eje $x$, y por la recta $x = 1,\ y = 1/2$, que corta al eje $y'$ en
+          $1/2$. Cortes $-\tfrac{1}{3},\ \tfrac{1}{2},\ \infty$; inversos:
+
+          $$
+          (\overline{3}\,2\,0)
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el método. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Si el plano pasa por el origen, se lleva el origen a otro vértice
+              de la celda.
+          - texto: >-
+              Se leen los cortes con los tres ejes, con su signo; un plano
+              paralelo a un eje lo corta en el infinito.
+          - texto: >-
+              Se toman los inversos —el de infinito es cero— y se pasan a los
+              enteros más pequeños.
+          - texto: >-
+              Si con otro origen salen los mismos índices con todos los signos
+              cambiados, uno de los dos cálculos está mal.
+            trampa: true
+            mensaje: |
+              Los dos están bien. $(h\,k\,l)$ y $(\overline{h}\,\overline{k}\,\overline{l})$
+              son el mismo plano: cambiar el origen de lado lo corta desde el
+              otro lado, y todos los cortes cambian de signo a la vez. Por eso
+              el listado da $(1\,\overline{3}\,\overline{1})$ para el plano a, y con el
+              origen en su sitio sale $(\overline{1}\,3\,1)$. En una **dirección** sí
+              serían dos cosas distintas.
+    resolucion: |
+      **El método.** Cortes con los ejes, inversos, enteros más pequeños. Si
+      el plano pasa por el origen, se mueve el origen. Con el origen en su
+      sitio o en otro vértice pueden salir los mismos índices con todos los
+      signos cambiados, y es el mismo plano.
+
+      | Plano | origen | cortes | índices | listado |
+      |---|---|---|---|---|
+      | a | $(0, 1, 1)$ | $1,\ -\tfrac{1}{3},\ -1$ | $(1\,\overline{3}\,\overline{1})$ | igual |
+      | b | $(0, 0, 0)$ | $1,\ \tfrac{1}{3},\ \infty$ | $(1\,3\,0)$ | igual |
+      | c | $(0, 0, 0)$ | $\infty,\ 1,\ \tfrac{1}{3}$ | $(0\,1\,3)$ | igual |
+      | d | $(0, 0, 1)$ | $1,\ \infty,\ -1$ | $(1\,0\,\overline{1})$ | igual |
+      | e | $(1, 0, 1)$ | $-1,\ \infty,\ -\tfrac{1}{2}$ | $(\overline{1}\,0\,\overline{2})$ | igual |
+      | f | $(0, 1, 1)$ | $\infty,\ -\tfrac{1}{2},\ -1$ | $(0\,\overline{2}\,\overline{1})$ | igual |
+      | g | $(0, 0, 1)$ | $1,\ 1,\ -1$ | $(1\,1\,\overline{1})$ | igual |
+      | h | $(0, 1, 0)$ | $1,\ -1,\ \tfrac{1}{2}$ | $(1\,\overline{1}\,2)$ | igual |
+      | i | $(0, 0, 0)$ | $\infty,\ \tfrac{1}{3},\ 1$ | $(0\,3\,1)$ | igual |
+      | j | $(1, 0, 1)$ | $-\tfrac{1}{2},\ \infty,\ -\tfrac{1}{2}$ | $(\overline{1}\,0\,\overline{1})$ | $(\overline{2}\,0\,\overline{2})$ |
+      | k | $(0, 1, 1)$ | $\tfrac{1}{2},\ -1,\ -1$ | $(2\,\overline{1}\,\overline{1})$ | igual |
+      | l | $(1, 0, 0)$ | $-\tfrac{1}{3},\ \tfrac{1}{2},\ \infty$ | $(\overline{3}\,2\,0)$ | igual |
+
+      En a, e, f, k y l el listado no usa el origen de los ejes aunque el plano
+      no pase por él. Con el origen en su sitio salen
+      $(\overline{1}\,3\,1)$, $(1\,0\,2)$, $(0\,2\,1)$, $(\overline{2}\,1\,1)$ y
+      $(3\,\overline{2}\,0)$: los mismos planos, con todos los signos cambiados.
+
+      > **El plano j no coincide.** El listado imprime $(\overline{2}\,0\,\overline{2})$,
+      > que es el resultado **antes** de reducir. Las transparencias del tema
+      > reducen siempre —un corte en $1/2$ da inversos $2\ 0\ 0$ y se escribe
+      > $(1\,0\,0)$—, así que aquí se da $(\overline{1}\,0\,\overline{1})$, que con el
+      > origen en su sitio es $(1\,0\,1)$. Los puntos del polígono están
+      > comprobados en la figura: el plano corta por su punto medio las dos
+      > aristas de la cara superior paralelas al eje $x$, y también las dos
+      > aristas verticales de la cara de delante.
+
+  - id: ejcm3-col317-densidades-lineales-y-planares
+    titulo: Densidades lineales y planares en la FCC y la BCC
+    fuente: >-
+      Ejercicio 3.17 · Tema 3, «Estructuras cristalinas. Problemas» · Ciencia de
+      Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Determina las densidades lineales y planares en los siguientes casos:
+
+      a) $[110]$ y $[111]$ en la estructura FCC.
+
+      b) $[110]$ y $[111]$ en la estructura BCC.
+
+      c) $(100)$ y $(111)$ en la estructura FCC.
+
+      d) $(100)$ y $(110)$ en la estructura BCC.
+    pide: Las ocho densidades, como fracción de longitud o de área ocupada.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En estas transparencias, ¿qué es la densidad lineal de una dirección?
+        opciones:
+          - texto: >-
+              La fracción de la longitud del vector que ocupan los átomos cuyo
+              centro está sobre él
+            correcta: true
+            mensaje: |
+              Eso es: longitud de átomos centrados en el vector entre la
+              longitud del vector. Sale un número entre 0 y 1, y la planar es
+              lo mismo con áreas.
+          - texto: >-
+              El número de átomos por nanómetro a lo largo de la dirección
+            mensaje: |
+              Es otra definición que se usa en otros libros, y da un número con
+              unidades. En esta asignatura es una fracción sin unidades: por
+              eso los resultados del listado son números como 0,612.
+          - texto: >-
+              La fracción de longitud que ocupan todos los átomos que toca la
+              recta, aunque su centro no esté sobre ella
+            mensaje: |
+              Solo cuentan los átomos **centrados** en el vector. Un átomo que
+              la recta roza de lado no aporta su diámetro, y contarlo es la
+              forma de sacar densidades mayores que 1.
+
+      - tipo: calcular
+        titulo: FCC, dirección [110]
+        pregunta: |
+          ¿Cuánto vale la densidad lineal de la dirección $[110]$ en la FCC?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Te has dejado el átomo del centro de la cara. La diagonal de la
+              cara de una FCC lleva medio átomo en cada vértice y uno entero en
+              el centro: dos diámetros, $4R$.
+          - valor: '1.414'
+            mensaje: |
+              Has dividido entre la arista $a$ en vez de entre la diagonal de
+              la cara, $\sqrt{2}\,a$. Una densidad mayor que 1 es imposible.
+        pista: |
+          La diagonal de la cara mide $\sqrt{2}\,a = 4R$.
+        desarrollo: |
+          $$
+          \text{DL}_{[110]} = \frac{2R + 2R}{\sqrt{2}\,a} = \frac{4R}{4R} = 1{,}000
+          $$
+
+          Es la dirección de máximo empaquetamiento de la FCC: los átomos se
+          tocan a lo largo de ella.
+
+      - tipo: calcular
+        titulo: FCC, dirección [111]
+        pregunta: |
+          ¿Y la de la dirección $[111]$ en la FCC?
+        respuesta:
+          tipo: numero
+          valor: '0.408'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.816'
+            mensaje: |
+              Has puesto un átomo en el centro del cubo, como en la BCC. La FCC
+              no tiene átomo central: sobre la diagonal del cubo solo están los
+              de los dos vértices, medio cada uno.
+          - valor: '0.707'
+            mensaje: |
+              Has dividido entre la arista $a$. La dirección $[111]$ es la
+              diagonal del cubo, que mide $\sqrt{3}\,a$.
+        pista: |
+          Sobre la diagonal del cubo, $\sqrt{3}\,a$ con $a = 2\sqrt{2}\,R$,
+          solo hay dos medios átomos.
+        desarrollo: |
+          $$
+          \text{DL}_{[111]} = \frac{2R}{\sqrt{3}\cdot 2\sqrt{2}\,R}
+          = \frac{1}{\sqrt{6}} = 0{,}408
+          $$
+
+      - tipo: calcular
+        titulo: BCC, dirección [110]
+        pregunta: |
+          ¿Cuánto vale la densidad lineal de la dirección $[110]$ en la BCC?
+        respuesta:
+          tipo: numero
+          valor: '0.612'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '1.225'
+            mensaje: |
+              Has puesto un átomo en el centro de la cara, como en la FCC. La
+              BCC no lo tiene: en la diagonal de la cara solo hay los dos
+              medios átomos de los vértices.
+          - valor: '0.5'
+            mensaje: |
+              Has usado la arista de la FCC, $a = 2\sqrt{2}\,R$. En la BCC es
+              $a = 4R/\sqrt{3}$.
+        pista: |
+          Diagonal de la cara, $\sqrt{2}\,a$ con $a = 4R/\sqrt{3}$, y un
+          diámetro de átomos.
+        desarrollo: |
+          $$
+          \text{DL}_{[110]} = \frac{2R}{\sqrt{2}\cdot\frac{4R}{\sqrt{3}}}
+          = \frac{\sqrt{3}}{2\sqrt{2}} = 0{,}612
+          $$
+
+      - tipo: calcular
+        titulo: BCC, dirección [111]
+        pregunta: |
+          ¿Y la de la dirección $[111]$ en la BCC?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Te has dejado el átomo del centro del cubo, que está justo sobre
+              la diagonal. Con él la diagonal queda llena: medio, uno y medio.
+          - valor: '0.816'
+            mensaje: |
+              Has usado la arista de la FCC. En la BCC la diagonal del cubo
+              mide exactamente $4R$: es la dirección donde se tocan.
+        pista: |
+          La diagonal del cubo es la línea de contacto de la BCC: $\sqrt{3}\,a = 4R$.
+        desarrollo: |
+          $$
+          \text{DL}_{[111]} = \frac{2R + 2R}{\sqrt{3}\,a} = \frac{4R}{4R} = 1{,}000
+          $$
+
+      - tipo: calcular
+        titulo: FCC, plano (100)
+        pregunta: |
+          ¿Cuánto vale la densidad planar del plano $(100)$ en la FCC?
+        respuesta:
+          tipo: numero
+          valor: '0.785'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.393'
+            mensaje: |
+              Te has dejado el átomo del centro de la cara. La cara de una FCC
+              lleva un cuarto de átomo en cada vértice y uno entero en el
+              centro: dos círculos.
+          - valor: '1.963'
+            mensaje: |
+              Has contado los cinco círculos enteros. De cada átomo de vértice
+              solo cae dentro de la cara un cuarto de círculo.
+        pista: |
+          Dos círculos de área $\pi R^{2}$ en un cuadrado de lado
+          $a = 2\sqrt{2}\,R$.
+        desarrollo: |
+          $$
+          \text{DP}_{(100)} = \frac{2\pi R^{2}}{\left(2\sqrt{2}\,R\right)^{2}}
+          = \frac{2\pi}{8} = \frac{\pi}{4} = 0{,}785
+          $$
+
+      - tipo: calcular
+        titulo: FCC, plano (111)
+        pregunta: |
+          ¿Y la del plano $(111)$ en la FCC?
+        respuesta:
+          tipo: numero
+          valor: '0.907'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.453'
+            mensaje: |
+              La mitad: has tomado el área del triángulo como base por altura,
+              sin el medio. El triángulo equilátero de lado $\sqrt{2}\,a$ tiene
+              área $\frac{\sqrt{3}}{4}\left(\sqrt{2}\,a\right)^{2}$.
+          - valor: '2.721'
+            mensaje: |
+              Has contado seis círculos enteros. De los tres de los vértices
+              solo cae dentro un sexto de cada uno, y de los tres de los lados,
+              medio: en total, dos.
+        pista: |
+          El plano corta la celda en un triángulo equilátero de lado
+          $\sqrt{2}\,a = 4R$, con tres sextos de átomo en los vértices y tres
+          medios en los lados.
+        desarrollo: |
+          $$
+          A = \frac{\sqrt{3}}{4}\,(4R)^{2} = 4\sqrt{3}\,R^{2}
+          \qquad
+          \text{DP}_{(111)} = \frac{2\pi R^{2}}{4\sqrt{3}\,R^{2}}
+          = \frac{\pi}{2\sqrt{3}} = 0{,}907
+          $$
+
+      - tipo: calcular
+        titulo: BCC, plano (100)
+        pregunta: |
+          ¿Cuánto vale la densidad planar del plano $(100)$ en la BCC?
+        respuesta:
+          tipo: numero
+          valor: '0.589'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '1.178'
+            mensaje: |
+              Has metido el átomo del centro del cubo. No está en la cara: está
+              media arista por detrás. En el plano $(100)$ solo están los
+              cuatro cuartos de los vértices.
+          - valor: '0.393'
+            mensaje: |
+              Has usado la arista de la FCC. En la BCC,
+              $a = 4R/\sqrt{3}$ y $a^{2} = 16R^{2}/3$.
+        pista: |
+          Un círculo —cuatro cuartos— en un cuadrado de lado $4R/\sqrt{3}$.
+        desarrollo: |
+          $$
+          \text{DP}_{(100)} = \frac{\pi R^{2}}{\left(\frac{4R}{\sqrt{3}}\right)^{2}}
+          = \frac{3\pi}{16} = 0{,}589
+          $$
+
+      - tipo: calcular
+        titulo: BCC, plano (110)
+        pregunta: |
+          ¿Y la del plano $(110)$ en la BCC?
+        respuesta:
+          tipo: numero
+          valor: '0.833'
+          tolerancia: 0.005
+          formato: un número entre 0 y 1
+        distractores:
+          - valor: '0.417'
+            mensaje: |
+              Te has dejado el átomo del centro, que en este plano sí está: el
+              $(110)$ es el rectángulo diagonal que atraviesa el cubo y pasa por
+              su centro.
+          - valor: '1.178'
+            mensaje: |
+              Has tomado como área $a^{2}$. El plano $(110)$ es un rectángulo de
+              lados $a$ y $\sqrt{2}\,a$: su área es $\sqrt{2}\,a^{2}$.
+        pista: |
+          Rectángulo $a \times \sqrt{2}\,a$, con cuatro cuartos en las esquinas
+          y el átomo central entero.
+        desarrollo: |
+          $$
+          \text{DP}_{(110)} = \frac{2\pi R^{2}}{\sqrt{2}\left(\frac{4R}{\sqrt{3}}\right)^{2}}
+          = \frac{6\pi}{16\sqrt{2}} = 0{,}833
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena lo que dicen los ocho números. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En la FCC la dirección llena es la $[110]$ y el plano más denso,
+              el $(111)$, con un 90,7 %.
+          - texto: >-
+              En la BCC la dirección llena es la $[111]$ y el plano más denso,
+              el $(110)$, con un 83,3 %.
+          - texto: >-
+              Son justo las direcciones y los planos por donde se deslizan los
+              átomos en la deformación plástica.
+          - texto: >-
+              La FCC es más densa que la BCC, así que todas sus direcciones
+              tienen más densidad lineal que las de la BCC.
+            trampa: true
+            mensaje: |
+              Mira la $[111]$: en la FCC vale 0,408 y en la BCC, 1,000. Una
+              estructura más empaquetada en conjunto puede tener direcciones
+              concretas más vacías que la otra. Por eso se calcula dirección a
+              dirección, y por eso los sistemas de deslizamiento son distintos
+              en cada estructura.
+    resolucion: |
+      **Las relaciones de partida.** FCC: $a = 2\sqrt{2}\,R$. BCC:
+      $a = 4R/\sqrt{3}$. Solo cuentan los átomos centrados en la recta o en el
+      plano, y por la fracción que cae dentro.
+
+      | | caso | átomos | longitud o área | densidad |
+      |---|---|---|---|---|
+      | a | FCC $[110]$ | 2 diámetros | $\sqrt{2}\,a = 4R$ | 1,000 |
+      | a | FCC $[111]$ | 1 diámetro | $\sqrt{3}\,a = 2\sqrt{6}\,R$ | 0,408 |
+      | b | BCC $[110]$ | 1 diámetro | $\sqrt{2}\,a$ | 0,612 |
+      | b | BCC $[111]$ | 2 diámetros | $\sqrt{3}\,a = 4R$ | 1,000 |
+      | c | FCC $(100)$ | 2 círculos | $a^{2} = 8R^{2}$ | 0,785 |
+      | c | FCC $(111)$ | 2 círculos | $\frac{\sqrt{3}}{2}a^{2} = 4\sqrt{3}\,R^{2}$ | 0,907 |
+      | d | BCC $(100)$ | 1 círculo | $a^{2} = 16R^{2}/3$ | 0,589 |
+      | d | BCC $(110)$ | 2 círculos | $\sqrt{2}\,a^{2}$ | 0,833 |
+
+      Siete coinciden con el listado a la tercera cifra.
+
+      > **La $[111]$ de la FCC.** El listado imprime 0,410, y la cuenta exacta
+      > es $1/\sqrt{6} = 0{,}408$. Es el mismo planteamiento —dos radios entre
+      > la diagonal del cubo— con un redondeo de más en algún paso intermedio.
+      > La casilla acepta los dos.
+
+      **Lo que hay que llevarse.** Las direcciones que salen 1,000 son las de
+      contacto de cada estructura, y los planos más densos son los de
+      deslizamiento. Eso conecta este ejercicio con la parte 3 del tema: una
+      dislocación se mueve por donde los átomos están más juntos.
+
+  - id: ejcm3-def1-densidad-sustitucional-e-intersticial
+    titulo: La densidad de una aleación, con el soluto en sus dos sitios
+    fuente: >-
+      Problema 1 · Tema 3, parte 2, «Defectos cristalinos. Problemas» · Ciencia
+      de Materiales, UPV/EHU, curso 2025-2026. El listado publica el resultado,
+      contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      La aleación de dos metales hipotéticos A-B presenta una estructura FCC
+      con parámetro de red $a = 0{,}358\ \text{nm}$. Si la concentración
+      másica del elemento B es del $0{,}8\ \%$, calcula la densidad de la
+      aleación en dos casos:
+
+      a) La aleación es substitucional.
+
+      b) La aleación es intersticial.
+
+      Datos: $M(\text{A}) = 56\ \text{g/mol}$, $M(\text{B}) = 12\ \text{g/mol}$.
+
+      \*NOTA: Las relaciones entre átomos en las soluciones intersticiales
+      serían aceptables si se utilizan 4/100 y 10/100 (en lugar de 4/96 y
+      10/90), ya que no se especifica.
+    pide: La densidad de la aleación si B sustituye a A y si B se mete en los huecos.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La red es FCC y el parámetro es el mismo en los dos casos. ¿Qué
+          cambia en la celda entre el apartado a) y el b)?
+        opciones:
+          - texto: >-
+              En a) los átomos de B ocupan algunos de los 4 nudos y la celda
+              sigue teniendo 4 átomos; en b) los 4 nudos son de A y los de B se
+              añaden en los huecos, así que la celda lleva más de 4
+            correcta: true
+            mensaje: |
+              Eso es. En la sustitucional B **reemplaza** a A, y como B es más
+              ligero la celda pesa menos que la de A puro. En la intersticial B
+              se **suma** a lo que ya había, y la celda pesa más. Mismo volumen,
+              masa distinta: densidades distintas.
+          - texto: >-
+              Nada: hay la misma masa de B en los dos casos, así que la
+              densidad es la misma
+            mensaje: |
+              El porcentaje en masa es el mismo, pero lo que decide la densidad
+              es cuánta masa cabe en **una celda** de volumen fijo. Si B quita
+              el sitio a un A, la celda pierde 56 y gana 12; si B se mete en un
+              hueco, la celda gana 12 y no pierde nada.
+          - texto: >-
+              En b) la red pasa a ser BCC, porque los intersticiales deforman
+              la estructura
+            mensaje: |
+              El disolvente mantiene su estructura cristalina: los átomos de
+              soluto se reparten por la red que ya había. El enunciado fija FCC
+              y $a = 0{,}358\ \text{nm}$ para los dos casos.
+
+      - tipo: calcular
+        titulo: De porcentaje en masa a porcentaje atómico
+        pregunta: |
+          La celda se llena con átomos, no con gramos. ¿Qué porcentaje de los
+          átomos de la aleación son de B?
+        respuesta:
+          tipo: numero
+          valor: '3.63'
+          # Absoluta. El listado redondea este número a 4 (su nota habla de
+          # 4/96), y con ese redondeo reproduce el 7,85 y el 8,18 que publica.
+          # La tolerancia acepta a quien redondee igual y sigue echando los dos
+          # distractores.
+          tolerancia: 0.4
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '0.8'
+            mensaje: |
+              Has tomado el porcentaje en masa como si fuera de átomos. Solo
+              coinciden si los dos átomos pesan lo mismo. B pesa menos de un
+              cuarto que A, así que en 0,8 g de B hay muchos más átomos que en
+              0,8 g de A.
+          - valor: '0.17'
+            mensaje: |
+              Has cruzado las masas molares: has dividido la masa de B entre 56
+              y la de A entre 12. Los moles de cada elemento son su masa entre
+              **su propia** masa molar.
+        pista: |
+          En 100 g de aleación hay 0,8 g de B y 99,2 g de A. Pasa cada uno a
+          moles y divide los de B entre el total.
+        desarrollo: |
+          $$
+          x_B = \frac{0{,}8/12}{0{,}8/12 + 99{,}2/56}
+          = \frac{0{,}0667}{0{,}0667 + 1{,}7714} = 0{,}0363
+          $$
+
+          Un 3,63 % de los átomos son de B. Cuatro veces y media más que el
+          0,8 % en masa, porque cada átomo de B pesa 12 frente a 56.
+
+      - tipo: calcular
+        titulo: La densidad de la aleación substitucional
+        pregunta: |
+          Los 4 nudos de la celda FCC se reparten entre A y B según esa
+          fracción atómica. ¿Cuánto vale la densidad?
+        respuesta:
+          tipo: magnitud
+          valor: '7.88 g/cm3'
+          tolerancia: 0.01
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '8.06 g/cm3'
+            mensaje: |
+              Has promediado las masas molares con los porcentajes **en masa**,
+              0,992·56 + 0,008·12. La masa media de un átomo se pondera con la
+              fracción de átomos, 0,9637 y 0,0363, porque lo que se reparte en
+              la celda son átomos.
+          - valor: '3.94 g/cm3'
+            mensaje: |
+              Has contado 2 átomos por celda, que son los de la BCC. La FCC
+              tiene 4: 8 vértices a un octavo y 6 caras a un medio.
+        pista: |
+          $\rho = \dfrac{n\,\overline{M}}{N_A\,a^{3}}$, con $n = 4$ y
+          $\overline{M} = x_A M_A + x_B M_B$. Pasa $a$ a centímetros antes de
+          elevarlo al cubo.
+        desarrollo: |
+          La masa media de un átomo de la aleación:
+
+          $$
+          \overline{M} = 0{,}9637\cdot 56 + 0{,}0363\cdot 12 = 54{,}40\ \text{g/mol}
+          $$
+
+          El volumen de la celda, con $a = 0{,}358\cdot 10^{-7}\ \text{cm}$:
+
+          $$
+          a^{3} = 4{,}588\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho = \frac{4\cdot 54{,}40}{6{,}022\cdot 10^{23}\cdot 4{,}588\cdot 10^{-23}}
+          = \frac{217{,}6}{27{,}63} = 7{,}88\ \text{g/cm}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: La densidad de la aleación intersticial
+        pregunta: |
+          Ahora los 4 nudos son de A y los átomos de B van en los huecos, a
+          razón de 3,63 átomos de B por cada 96,37 de A. ¿Cuánto vale la
+          densidad?
+        respuesta:
+          tipo: magnitud
+          valor: '8.17 g/cm3'
+          # Estrecha a propósito: la cuenta es exacta y el soluto solo añade un
+          # 0,8 % de masa, así que al 2 % no se distinguiría de la celda de A
+          # puro. Al 0,5 % entran el 8,18 del listado (4/96) y el 8,176 de su
+          # nota (4/100).
+          tolerancia: 0.005
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '8.11 g/cm3'
+            mensaje: |
+              Esa es la celda de A puro: 4·56 entre el volumen. Te has dejado
+              los átomos de B de los huecos, o casi: si has puesto 4·0,008
+              átomos de B, usando el porcentaje en masa como si fuera de
+              átomos, sale 8,12, prácticamente lo mismo.
+          - valor: '7.88 g/cm3'
+            mensaje: |
+              Esa es la del apartado a). Has repartido los 4 nudos entre A y B,
+              que es la sustitucional. En la intersticial ningún A deja su
+              sitio: los 4 nudos son de A y B se **añade**.
+        pista: |
+          Átomos de B por celda: $4\cdot\dfrac{0{,}0363}{0{,}9637}$. La masa de
+          la celda es la de los 4 átomos de A más la de esos átomos de B.
+        desarrollo: |
+          $$
+          n_B = 4\cdot\frac{0{,}0363}{0{,}9637} = 0{,}151\ \text{átomos de B por celda}
+          $$
+
+          $$
+          \rho = \frac{4\cdot 56 + 0{,}151\cdot 12}{27{,}63} = \frac{225{,}8}{27{,}63}
+          = 8{,}17\ \text{g/cm}^{3}
+          $$
+
+          Hay una comprobación rápida: la celda de A pesa lo mismo que antes y
+          ahora es el 99,2 % de la masa total, así que
+          $\rho = 8{,}107/0{,}992 = 8{,}17$.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La celda se llena con átomos, así que primero se pasa el 0,8 % en
+              masa a fracción atómica: un 3,63 % de los átomos son de B.
+          - texto: >-
+              En la sustitucional los 4 nudos se reparten entre A y B, la celda
+              pierde masa porque B es más ligero, y la densidad sale 7,88.
+          - texto: >-
+              En la intersticial los 4 nudos siguen siendo de A y B se añade en
+              los huecos, así que la densidad sube hasta 8,17.
+          - texto: >-
+              Las dos densidades salen iguales, porque la cantidad de B es la
+              misma y la red también.
+            trampa: true
+            mensaje: |
+              La cantidad de B es la misma, pero no hace lo mismo. Sustituyendo,
+              cada B **echa** a un A de 56 y la celda se aligera; en un hueco,
+              cada B **se suma**. Por eso una sale por debajo del metal puro,
+              8,11, y la otra por encima.
+    resolucion: |
+      **La fracción atómica.** En 100 g hay 0,8 g de B y 99,2 g de A:
+
+      $$
+      x_B = \frac{0{,}8/12}{0{,}8/12 + 99{,}2/56} = 0{,}0363
+      $$
+
+      **El volumen de la celda.** $a^{3} = (0{,}358\cdot 10^{-7})^{3}
+      = 4{,}588\cdot 10^{-23}\ \text{cm}^{3}$, y
+      $N_A\,a^{3} = 27{,}63\ \text{cm}^{3}/\text{mol}$.
+
+      **a) Sustitucional.** Los 4 nudos se reparten entre A y B:
+
+      $$
+      \rho = \frac{4\,(0{,}9637\cdot 56 + 0{,}0363\cdot 12)}{27{,}63}
+      = \frac{217{,}6}{27{,}63} = 7{,}88\ \text{g/cm}^{3}
+      $$
+
+      **b) Intersticial.** Los 4 nudos son de A y B va en los huecos, con
+      $4\cdot 0{,}0363/0{,}9637 = 0{,}151$ átomos de B por celda:
+
+      $$
+      \rho = \frac{4\cdot 56 + 0{,}151\cdot 12}{27{,}63} = 8{,}17\ \text{g/cm}^{3}
+      $$
+
+      **Lo que hay que llevarse.** El metal puro, con la misma celda, tendría
+      8,11. La sustitucional queda por debajo y la intersticial por encima: la
+      primera cambia átomos pesados por ligeros y la segunda solo añade.
+
+      > El listado publica 7,85 y 8,18 porque redondea la fracción atómica al
+      > 4 %, que es el 4/96 de su nota. Sin redondear sale 7,88 y 8,17: un
+      > 0,3 % y un 0,1 % de diferencia, y la casilla acepta las dos formas.
+
+  - id: ejcm3-def2-el-lingote-que-pesa-de-mas
+    titulo: Un lingote de cromo que pesa más de lo que debería
+    fuente: >-
+      Problema 2 · Tema 3, parte 2, «Defectos cristalinos. Problemas» · Ciencia
+      de Materiales, UPV/EHU, curso 2025-2026. El listado no publica resultado
+      de este problema; el desarrollo es nuestro.
+    nivel: practica
+    enunciado: |
+      Un laboratorio recibe un lingote metálico de $294{,}92\ \text{g}$ y
+      $2\times 2\times 10\ \text{cm}$, sin defecto macroscópico. El único dato
+      del lingote es la etiqueta que dice "Cr-BCC".
+
+      a) ¿Qué tipo de defectos dirías que tiene? ¿Por qué?
+
+      b) Posteriormente, el laboratorio recibe información de que tiene un
+      $10\ \%$ de impurezas intersticiales. ¿Dichas impurezas de qué átomos
+      son? ¿Por qué?
+
+      Datos: $M(\text{Cr}) = 52{,}01\ \text{g/mol}$,
+      $R(\text{Cr}) = 0{,}1249\ \text{nm}$.
+
+      \*NOTA: Las relaciones entre átomos en las soluciones intersticiales
+      serían aceptables si se utilizan 4/100 y 10/100 (en lugar de 4/96 y
+      10/90), ya que no se especifica.
+    pide: Qué defectos tiene el lingote y de qué átomos son sus impurezas intersticiales.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Del lingote solo sabes la masa, las medidas y la etiqueta. ¿Qué
+          comparación te dice qué defectos tiene?
+        opciones:
+          - texto: >-
+              La densidad del lingote contra la de una celda BCC de cromo
+              perfecta, calculada con el radio
+            correcta: true
+            mensaje: |
+              Eso es. La celda perfecta dice cuánta masa cabe en ese volumen si
+              no falta ni sobra nada. Si el lingote pesa más o menos que eso,
+              la diferencia es el defecto.
+          - texto: >-
+              El radio del enunciado contra el radio del cromo de las tablas
+            mensaje: |
+              El radio es un dato, no una medida del lingote: no dice nada de
+              lo que le pasa a esta pieza. Lo que se ha medido de la pieza es
+              su masa y su volumen, y eso es una densidad.
+          - texto: >-
+              El volumen del lingote contra el de la celda, para contar cuántas
+              celdas hay
+            mensaje: |
+              Contar celdas sin la masa no dice nada: saldría el mismo número
+              con o sin defectos. Hace falta comparar **masa por volumen**, que
+              es la densidad.
+
+      - tipo: calcular
+        titulo: La densidad de la celda perfecta
+        pregunta: |
+          ¿Cuánto vale la densidad teórica del cromo BCC, sin ningún defecto?
+        respuesta:
+          tipo: magnitud
+          valor: '7.20 g/cm3'
+          tolerancia: 0.01
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '11.08 g/cm3'
+            mensaje: |
+              Has tomado $a = 2R$, que es la cúbica simple. En la BCC los
+              átomos se tocan a lo largo de la **diagonal del cubo**:
+              $4R = a\sqrt{3}$. La celda te ha salido pequeña y la densidad,
+              enorme.
+          - valor: '3.60 g/cm3'
+            mensaje: |
+              Has contado un átomo por celda, solo los vértices. La BCC tiene
+              2: los ocho vértices a un octavo más el del centro, entero.
+          - valor: '7.84 g/cm3'
+            mensaje: |
+              Esa es la de una FCC, con 4 átomos y $a = 2\sqrt{2}\,R$. La
+              etiqueta dice BCC: 2 átomos y $a = 4R/\sqrt{3}$.
+        pista: |
+          En la BCC, $a = 4R/\sqrt{3}$ y hay 2 átomos por celda.
+          $\rho = \dfrac{2\,M}{N_A\,a^{3}}$.
+        desarrollo: |
+          $$
+          a = \frac{4R}{\sqrt{3}} = \frac{4\cdot 0{,}1249}{\sqrt{3}} = 0{,}2884\ \text{nm}
+          \qquad
+          a^{3} = 2{,}400\cdot 10^{-23}\ \text{cm}^{3}
+          $$
+
+          $$
+          \rho_{\text{teórica}} = \frac{2\cdot 52{,}01}{6{,}022\cdot 10^{23}\cdot 2{,}400\cdot 10^{-23}}
+          = \frac{104{,}02}{14{,}45} = 7{,}20\ \text{g/cm}^{3}
+          $$
+
+      - tipo: reconocer
+        pregunta: |
+          El lingote tiene $294{,}92/40 = 7{,}373\ \text{g/cm}^{3}$, un 2,4 %
+          más que la celda perfecta. ¿Qué defectos lo explican?
+        opciones:
+          - texto: >-
+              Átomos de más en la red: intersticiales, o impurezas
+              sustitucionales más pesadas que el cromo
+            correcta: true
+            mensaje: |
+              Eso es. En el mismo volumen hay más masa de la que cabe en una
+              red perfecta de cromo, así que sobra algo. Solo un átomo añadido,
+              o uno más pesado en el sitio de un Cr, sube la densidad.
+          - texto: >-
+              Vacantes, porque todos los cristales reales las tienen
+            mensaje: |
+              Todos las tienen, sí, pero una vacante es un átomo que **falta**:
+              baja la densidad, no la sube. Si el lingote solo tuviera
+              vacantes, pesaría menos de 288 g.
+          - texto: >-
+              Dislocaciones y límites de grano, de haberlo trabajado
+            mensaje: |
+              Existen, pero apenas cambian la densidad: una muestra
+              policristalina tiene casi la misma densidad que un monocristal
+              del mismo material. No explican un 2,4 % de masa de más.
+
+      - tipo: calcular
+        titulo: La masa molar de la impureza
+        pregunta: |
+          Hay un 10 % de átomos intersticiales. ¿Qué masa molar sale para ese
+          átomo?
+        respuesta:
+          tipo: numero
+          valor: '11.4'
+          # Absoluta y ancha, por dos motivos. La nota del listado da por buena
+          # la relación 10/100 además de la 10/90, y con ella sale 12,7. Y el
+          # número sale de una resta pequeña, 2,53 g sobre 106,5: redondear
+          # el parámetro de red a cuatro cifras lo mueve medio gramo. Lo que la
+          # casilla tiene que echar son los errores de conteo, que caen lejos.
+          tolerancia: 1.4
+          formato: una masa molar en g/mol, sin la unidad
+        distractores:
+          - valor: '2.53'
+            mensaje: |
+              Esa es la masa que sobra por cada mol de celdas, no la de un mol
+              de impurezas. Falta dividir entre los átomos de impureza que hay
+              en cada celda, que son bastante menos de uno.
+          - valor: '22.8'
+            mensaje: |
+              Has puesto un átomo de impureza por cada nueve **celdas**, y es
+              por cada nueve **átomos de cromo**. Cada celda BCC tiene 2 átomos
+              de cromo, así que le tocan $2/9$ de impureza, no $1/9$.
+        pista: |
+          Masa de un mol de celdas del lingote: $\rho\,N_A\,a^{3}$. Réstale los
+          $2\cdot 52{,}01$ del cromo y divide lo que sobre entre los átomos de
+          impureza por celda, $2\cdot 10/90$.
+        desarrollo: |
+          $$
+          \rho\,N_A\,a^{3} = 7{,}373\cdot 14{,}45 = 106{,}55\ \text{g}
+          $$
+
+          $$
+          106{,}55 - 2\cdot 52{,}01 = 2{,}53\ \text{g}
+          \qquad
+          M_X = \frac{2{,}53}{2\cdot 10/90} = 11{,}4\ \text{g/mol}
+          $$
+
+          Con la relación 10/100 de la nota, $M_X = 2{,}53/0{,}2 = 12{,}7$.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La celda BCC perfecta de cromo tiene una densidad de 7,20
+              g/cm³, y el lingote tiene 7,373.
+          - texto: >-
+              Hay más masa de la que cabe en una red perfecta, así que sobran
+              átomos: intersticiales, o sustitucionales más pesados que el Cr.
+          - texto: >-
+              Con un 10 % de intersticiales, cada celda lleva 2·10/90 = 0,22
+              átomos extra, y la masa que sobra da entre 11 y 13 g/mol.
+          - texto: >-
+              Es un átomo pequeño, de los que caben en los huecos, y con esa
+              masa el que encaja es el carbono.
+          - texto: >-
+              Las vacantes que tiene todo cristal real explican por qué el
+              lingote pesa más de lo previsto.
+            trampa: true
+            mensaje: |
+              Una vacante es un sitio vacío: quita masa sin quitar volumen, así
+              que **baja** la densidad. Un lingote con vacantes y nada más
+              pesaría menos que la celda perfecta, y este pesa más.
+    resolucion: |
+      **La celda perfecta.** En la BCC los átomos se tocan por la diagonal del
+      cubo, así que $a = 4R/\sqrt{3} = 0{,}2884\ \text{nm}$ y
+      $a^{3} = 2{,}400\cdot 10^{-23}\ \text{cm}^{3}$. Con 2 átomos por celda:
+
+      $$
+      \rho_{\text{teórica}} = \frac{2\cdot 52{,}01}{6{,}022\cdot 10^{23}\cdot 2{,}400\cdot 10^{-23}}
+      = 7{,}20\ \text{g/cm}^{3}
+      $$
+
+      **a) El lingote.** $\rho = 294{,}92/(2\cdot 2\cdot 10) = 7{,}373\
+      \text{g/cm}^{3}$, un 2,4 % más que la celda perfecta. El enunciado
+      descarta los defectos macroscópicos, y las vacantes restarían masa.
+      Sobran átomos: son **defectos puntuales que añaden masa**, átomos
+      intersticiales o impurezas sustitucionales más pesadas que el cromo.
+
+      **b) La impureza.** Un mol de celdas del lingote pesa
+      $7{,}373\cdot 14{,}45 = 106{,}55\ \text{g}$, de los que el cromo pone
+      $104{,}02$. Sobran $2{,}53\ \text{g}$, repartidos entre
+      $2\cdot 10/90 = 0{,}222$ átomos de impureza por celda:
+
+      $$
+      M_X = \frac{2{,}53}{0{,}222} = 11{,}4\ \text{g/mol}
+      $$
+
+      Con la relación 10/100 de la nota sale 12,7. Los átomos pequeños que
+      ocupan huecos intersticiales son H, B, C, N y O, y los únicos con una
+      masa entre 11 y 13 son el boro, 10,8, y el carbono, 12,0. Es
+      **carbono**: es el único que encaja con las dos relaciones de la nota, y
+      es el intersticial clásico en los metales BCC, el mismo que el acero
+      lleva en el hierro.
+
+      > El listado no publica el resultado. Conviene saber que el número es
+      > delicado: con la relación 10/90 el 11,4 cae justo a medio camino entre
+      > el boro y el carbono, y redondear el parámetro de red a 0,2884 lo
+      > acerca al boro. La conclusión se apoya en la relación 10/100, que la
+      > nota admite, y en cuál de los dos es el intersticial habitual.
+
+  - id: ejcm3-col318-cortadura-resuelta-bcc
+    titulo: La cortadura resuelta en un monocristal BCC
+    fuente: >-
+      Ejercicio 3.18 · Tema 3, «Dislocaciones y mecanismos de endurecimiento.
+      Problemas» · Ciencia de Materiales, UPV/EHU, curso 2025-2026. El listado
+      publica el resultado, contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Se ensaya un monocristal BCC en su dirección $[010]$ bajo una tensión de
+      tracción de $52\ \text{MPa}$.
+
+      a) Calcula la tensión de cortadura resuelta en el plano $(110)$ y en la
+      dirección $[111]$.
+
+      b) Suponiendo que el deslizamiento ocurre en el sistema mencionado y
+      sabiendo que la tensión de cortadura resuelta crítica es de
+      $30\ \text{MPa}$, calcula la tensión de tracción necesaria para que
+      comience la deformación plástica.
+    pide: La tensión de cortadura resuelta a 52 MPa y la tracción que hace deslizar el cristal.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En $\tau_R = \sigma\cos\phi\cos\lambda$, ¿qué ángulos son $\phi$ y
+          $\lambda$?
+        opciones:
+          - texto: >-
+              $\phi$, entre la normal al plano y la tracción; $\lambda$, entre
+              la dirección de deslizamiento y la tracción
+            correcta: true
+            mensaje: |
+              Eso es. Y en una celda cúbica la normal al plano $(110)$ es la
+              dirección $[110]$, con los mismos índices, así que los dos
+              ángulos salen de un producto escalar entre direcciones.
+          - texto: >-
+              $\phi$, entre el propio plano y la tracción; $\lambda$, entre la
+              dirección de deslizamiento y la tracción
+            mensaje: |
+              El ángulo con el plano es el complementario del de la normal, y
+              su coseno es el seno del bueno. Aquí coinciden por casualidad,
+              porque la normal forma 45°; en el 3.19 no, y el resultado
+              cambiaría.
+          - texto: >-
+              $\phi$, entre la normal al plano y la dirección de deslizamiento;
+              $\lambda$, entre la dirección de deslizamiento y la tracción
+            mensaje: |
+              La dirección de deslizamiento está **dentro** del plano, así que
+              forma siempre 90° con su normal: $\cos\phi$ valdría cero y no
+              habría cortadura nunca. Los dos ángulos se miden contra la
+              tracción.
+
+      - tipo: calcular
+        titulo: La tensión de cortadura resuelta
+        pregunta: |
+          Con la tracción de $52\ \text{MPa}$ en $[010]$, ¿cuánto vale
+          $\tau_R$ en el sistema del enunciado?
+        respuesta:
+          tipo: magnitud
+          valor: '21.2 MPa'
+          tolerancia: 0.02
+          formato: una tensión, con su unidad
+        distractores:
+          - valor: '36.8 MPa'
+            mensaje: |
+              Te has quedado solo con $\cos\phi = 1/\sqrt{2}$. Falta el otro
+              factor: la cortadura en el plano hay que proyectarla además sobre
+              la dirección de deslizamiento, $\cos\lambda = 1/\sqrt{3}$.
+          - valor: '30.0 MPa'
+            mensaje: |
+              Te has quedado solo con $\cos\lambda = 1/\sqrt{3}$. Falta
+              $\cos\phi$: la tracción se reparte primero sobre el plano, y eso
+              es lo que mide el ángulo con su normal.
+          - valor: '127 MPa'
+            mensaje: |
+              Has dividido. La cortadura resuelta es una **proyección** de la
+              tracción, y proyectar nunca da más que el original: los dos
+              cosenos multiplican.
+        pista: |
+          $\cos\phi = \dfrac{[110]\cdot[010]}{|[110]|\,|[010]|}$, y lo mismo
+          para $\lambda$ con la dirección de deslizamiento.
+        desarrollo: |
+          $$
+          \cos\phi = \frac{1\cdot 0 + 1\cdot 1 + 0\cdot 0}{\sqrt{2}\cdot 1} = \frac{1}{\sqrt{2}} = 0{,}707
+          \qquad
+          \cos\lambda = \frac{1}{\sqrt{3}\cdot 1} = 0{,}577
+          $$
+
+          $$
+          \tau_R = 52\cdot 0{,}707\cdot 0{,}577 = 52\cdot 0{,}408 = 21{,}2\ \text{MPa}
+          $$
+
+          La dirección de deslizamiento que dibuja la figura del listado es
+          $[\overline{1}11]$, y con $[010]$ da el mismo coseno que $[111]$:
+          el resultado no cambia.
+
+      - tipo: calcular
+        titulo: La tracción que hace deslizar
+        pregunta: |
+          Si $\tau_{\text{crss}} = 30\ \text{MPa}$, ¿qué tracción hace falta
+          para que empiece la deformación plástica?
+        respuesta:
+          tipo: magnitud
+          valor: '73.5 MPa'
+          tolerancia: 0.02
+          formato: una tensión, con su unidad
+        distractores:
+          - valor: '12.2 MPa'
+            mensaje: |
+              Has multiplicado $30\cdot 0{,}408$. Eso sería la cortadura que
+              produce una tracción de 30. Aquí se conoce la cortadura y se
+              busca la tracción, así que el factor de Schmid **divide**.
+          - valor: '60 MPa'
+            mensaje: |
+              Has usado un factor de Schmid de 0,5, el de la orientación ideal a
+              45° y 45°. Ese es el máximo posible, no el de este sistema: aquí
+              $\lambda$ no es 45° y el factor se queda en 0,408.
+          - valor: '30 MPa'
+            mensaje: |
+              Esa es la cortadura crítica, no la tracción. El cristal se
+              deforma cuando la cortadura **resuelta** llega a 30, y para eso
+              la tracción tiene que ser mayor.
+        pista: |
+          $\sigma_y = \dfrac{\tau_{\text{crss}}}{\cos\phi\cos\lambda}$.
+        desarrollo: |
+          $$
+          \sigma_y = \frac{30}{0{,}408} = 73{,}5\ \text{MPa}
+          $$
+
+          Es coherente con el apartado a): a 52 MPa la cortadura resuelta,
+          21,2, no llegaba a los 30 críticos, así que hacía falta más tracción.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La normal a (110) es la dirección [110], y forma 45° con la
+              tracción [010], así que cos φ = 1/√2.
+          - texto: >-
+              La dirección de deslizamiento, [1̄11] en la figura, forma con
+              [010] un ángulo de coseno 1/√3.
+          - texto: >-
+              A 52 MPa la cortadura resuelta vale 21,2 MPa, por debajo de los
+              30 críticos: el cristal todavía no desliza.
+          - texto: >-
+              Para que deslice hace falta σ = 30/0,408 = 73,5 MPa.
+          - texto: >-
+              Como el factor de Schmid nunca pasa de 0,5, la tracción necesaria
+              es 30/0,5 = 60 MPa.
+            trampa: true
+            mensaje: |
+              Que el factor no pase de 0,5 dice cuál es la tracción **mínima**
+              posible con la mejor orientación, no la de este cristal. Con la
+              tracción en [010] y este sistema, el factor es 0,408, y la
+              tracción necesaria es mayor: 73,5 MPa.
+    resolucion: |
+      **Los ángulos.** En una celda cúbica la normal al plano $(110)$ es la
+      dirección $[110]$. Los dos cosenos salen del producto escalar con la
+      dirección de la tracción, $[010]$:
+
+      $$
+      \cos\phi = \frac{[110]\cdot[010]}{\sqrt{2}\cdot 1} = \frac{1}{\sqrt{2}}
+      \qquad
+      \cos\lambda = \frac{[\overline{1}11]\cdot[010]}{\sqrt{3}\cdot 1} = \frac{1}{\sqrt{3}}
+      $$
+
+      **a) La cortadura resuelta.**
+
+      $$
+      \tau_R = \sigma\cos\phi\cos\lambda = 52\cdot 0{,}408 = 21{,}2\ \text{MPa}
+      $$
+
+      **b) La tracción que hace deslizar.**
+
+      $$
+      \sigma_y = \frac{\tau_{\text{crss}}}{\cos\phi\cos\lambda} = \frac{30}{0{,}408} = 73{,}5\ \text{MPa}
+      $$
+
+      **Un aviso sobre la dirección.** El enunciado escribe $[111]$, y esa
+      dirección no está en el plano $(110)$: $1+1+0 = 2 \neq 0$. La figura del
+      listado la rotula $[\overline{1}11]$, que sí lo está ($-1+1+0 = 0$). A la
+      barra se la ha comido la transcripción. Para esta cuenta da igual,
+      porque las dos forman el mismo ángulo con $[010]$.
+
+      > El listado publica 73,1 MPa. La cuenta con sus propios datos da 73,5
+      > —30 entre 0,408, o $52\cdot 30/21{,}2 = 73{,}6$ partiendo de su
+      > 21,2—, y ningún redondeo razonable de los cosenos baja a 73,1. La
+      > diferencia es de un 0,5 % y la casilla acepta los dos.
+
+  - id: ejcm3-col319-cortadura-resuelta-fcc
+    titulo: La cortadura resuelta en un FCC, con una barra perdida
+    fuente: >-
+      Ejercicio 3.19 · Tema 3, «Dislocaciones y mecanismos de endurecimiento.
+      Problemas» · Ciencia de Materiales, UPV/EHU, curso 2025-2026. El listado
+      publica el resultado, contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      Calcula la tensión de cortadura resuelta para un monocristal con
+      estructura FCC en el plano $(111)$ y dirección $[101]$, cuando se aplica
+      un esfuerzo de tracción de $0{,}069\ \text{MPa}$ en la dirección
+      $[001]$.
+    pide: La tensión de cortadura resuelta en el sistema del enunciado.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de calcular nada, ¿está la dirección $[101]$ contenida en el
+          plano $(111)$?
+        opciones:
+          - texto: >-
+              No, porque $1+0+1 = 2 \neq 0$. Hay que leerla como
+              $[\overline{1}01]$ o $[10\overline{1}]$, y el ángulo con $[001]$ es el
+              mismo
+            correcta: true
+            mensaje: |
+              Eso es. Una dirección $[uvw]$ está en el plano $(hkl)$ si
+              $hu + kv + lw = 0$. Con $[101]$ sale 2, así que falta una barra,
+              y las dos formas posibles dan el mismo $|\cos\lambda|$ con la
+              tracción.
+          - texto: >-
+              Sí, porque todas las direcciones del tipo ⟨110⟩ están en todos
+              los planos {111}
+            mensaje: |
+              Cada plano $\{111\}$ contiene solo tres de las seis direcciones
+              ⟨110⟩, las que cumplen $hu + kv + lw = 0$. Para $(111)$ son
+              $[\overline{1}10]$, $[\overline{1}01]$ y $[0\overline{1}1]$, con sus opuestas.
+          - texto: >-
+              No, así que el sistema no existe y el ejercicio no tiene solución
+            mensaje: |
+              El sistema existe, lo que se ha perdido es una barra. La
+              dirección compacta que hay en ese plano y se parece a la escrita
+              es $[\overline{1}01]$ o $[10\overline{1}]$, y con cualquiera de las dos el
+              valor absoluto del resultado es el mismo.
+
+      - tipo: calcular
+        titulo: El ángulo phi
+        pregunta: |
+          ¿Cuánto vale el ángulo $\phi$ entre la normal al plano $(111)$ y la
+          tracción, en grados?
+        respuesta:
+          tipo: numero
+          valor: '54.74'
+          tolerancia: 0.3
+          formato: un ángulo en grados, sin el símbolo
+        distractores:
+          - valor: '35.26'
+            mensaje: |
+              Ese es el ángulo entre la tracción y el **plano**, el
+              complementario. $\phi$ se mide contra la normal, que en una celda
+              cúbica es la dirección $[111]$.
+          - valor: '45'
+            mensaje: |
+              Ese es $\lambda$, el de la dirección de deslizamiento
+              $[\overline{1}01]$ con $[001]$. Para $\phi$ hay que usar la normal al
+              plano, $[111]$.
+        pista: |
+          La normal a $(111)$ es $[111]$.
+          $\cos\phi = \dfrac{[111]\cdot[001]}{\sqrt{3}\cdot 1}$.
+        desarrollo: |
+          $$
+          \cos\phi = \frac{1\cdot 0 + 1\cdot 0 + 1\cdot 1}{\sqrt{3}\cdot 1} = \frac{1}{\sqrt{3}} = 0{,}577
+          \qquad
+          \phi = 54{,}74^{\circ}
+          $$
+
+      - tipo: calcular
+        titulo: La tensión de cortadura resuelta
+        pregunta: |
+          ¿Cuánto vale $\tau_R$?
+        respuesta:
+          tipo: magnitud
+          valor: '0.0282 MPa'
+          tolerancia: 0.02
+          formato: una tensión, con su unidad
+        distractores:
+          - valor: '0.0398 MPa'
+            mensaje: |
+              Te has quedado solo con $\cos\phi = 1/\sqrt{3}$. Falta proyectar
+              sobre la dirección de deslizamiento: $\cos\lambda = 1/\sqrt{2}$.
+          - valor: '0.0488 MPa'
+            mensaje: |
+              Te has quedado solo con $\cos\lambda = 1/\sqrt{2}$. Falta
+              $\cos\phi$, el ángulo de la tracción con la normal al plano.
+          - valor: '0.023 MPa'
+            mensaje: |
+              Has usado $1/\sqrt{3}$ en los dos cosenos, es decir la normal
+              $[111]$ también como dirección de deslizamiento. La dirección de
+              deslizamiento está dentro del plano, y es $[\overline{1}01]$.
+          - valor: '0.169 MPa'
+            mensaje: |
+              Has dividido entre los cosenos. La cortadura resuelta es una
+              proyección de la tracción y siempre sale menor que ella.
+        pista: |
+          $\tau_R = \sigma\cos\phi\cos\lambda$, con
+          $\cos\lambda = \dfrac{[\overline{1}01]\cdot[001]}{\sqrt{2}\cdot 1}$.
+        desarrollo: |
+          $$
+          \cos\lambda = \frac{(-1)\cdot 0 + 0\cdot 0 + 1\cdot 1}{\sqrt{2}\cdot 1} = \frac{1}{\sqrt{2}} = 0{,}707
+          $$
+
+          $$
+          \tau_R = 0{,}069\cdot 0{,}577\cdot 0{,}707 = 0{,}069\cdot 0{,}408 = 0{,}0282\ \text{MPa}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La normal al plano (111) es la dirección [111], y con la tracción
+              [001] forma φ = 54,7°.
+          - texto: >-
+              [101] no está en (111); la dirección que sí está es [1̄01], o su
+              opuesta [101̄], y forma 45° con [001].
+          - texto: >-
+              τ = 0,069 · cos 54,7° · cos 45° = 0,069 · 0,408 = 0,0282 MPa.
+          - texto: >-
+              Sale el 40,8 % de la tracción porque en un FCC el factor de
+              Schmid vale siempre 0,408.
+            trampa: true
+            mensaje: |
+              El factor depende de cómo esté orientada la carga respecto del
+              cristal. Con la tracción en [001] sale 0,408; con la tracción en
+              [111], el mejor sistema del mismo FCC se queda en 0,272. Por eso
+              se calculan los dos ángulos cada vez.
+    resolucion: |
+      **Primero, el sistema.** La dirección $[101]$ no está en el plano
+      $(111)$: $1+0+1 = 2 \neq 0$. Falta una barra, y la dirección compacta del
+      plano que corresponde es $[\overline{1}01]$ (o su opuesta, $[10\overline{1}]$),
+      que sí cumple $-1+0+1 = 0$. Las dos dan el mismo $|\cos\lambda|$.
+
+      **Los ángulos.** La normal a $(111)$ es $[111]$:
+
+      $$
+      \cos\phi = \frac{[111]\cdot[001]}{\sqrt{3}} = \frac{1}{\sqrt{3}}
+      \qquad
+      \cos\lambda = \frac{[\overline{1}01]\cdot[001]}{\sqrt{2}} = \frac{1}{\sqrt{2}}
+      $$
+
+      **La cortadura resuelta.**
+
+      $$
+      \tau_R = 0{,}069\cdot\frac{1}{\sqrt{3}}\cdot\frac{1}{\sqrt{2}}
+      = 0{,}069\cdot 0{,}408 = 0{,}0282\ \text{MPa}
+      $$
+
+      Coincide con los 0,028 MPa del listado. **La costumbre que hay que
+      llevarse** es comprobar $hu + kv + lw = 0$ antes de calcular: una barra
+      perdida no cambia aquí el resultado, pero en otro sistema puede cambiar
+      la dirección entera.
+
+  - id: ejcm3-col321-trabajo-en-frio-de-una-placa
+    titulo: El trabajo en frío de una placa laminada
+    fuente: >-
+      Ejercicio 3.21 · Tema 3, «Dislocaciones y mecanismos de endurecimiento.
+      Problemas» · Ciencia de Materiales, UPV/EHU, curso 2025-2026. El listado
+      publica el resultado, contra el que está contrastado el desarrollo.
+    nivel: practica
+    enunciado: |
+      ¿Cuál es el porcentaje de trabajo en frío, para que una placa de
+      dimensiones $1\ \text{cm} \times 6\ \text{cm} \times 20\ \text{cm}$ se
+      lamine hasta obtener un espesor de $0{,}5\ \text{cm}$?
+    pide: El porcentaje de trabajo en frío del laminado.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $\%\,\text{T.F.} = \dfrac{A_0 - A_f}{A_0}\cdot 100$. En una placa que
+          pasa por los rodillos, ¿qué área es $A$?
+        opciones:
+          - texto: >-
+              La sección que atraviesa el material al avanzar: espesor por
+              ancho, 1 × 6 antes del laminado
+            correcta: true
+            mensaje: |
+              Eso es. Es la misma sección que en una barra trefilada: la
+              perpendicular a la dirección en que avanza el material. Al
+              laminar se estrecha, y eso es la deformación.
+          - texto: >-
+              La cara grande de la placa, 6 × 20
+            mensaje: |
+              Esa cara **crece** al laminar, porque la placa se alarga. Con
+              ella el porcentaje saldría negativo. La que se reduce es la
+              sección por la que pasa el material, espesor por ancho.
+          - texto: >-
+              El volumen de la placa, que es lo que se deforma
+            mensaje: |
+              El volumen no cambia en la deformación plástica: lo que pierde de
+              espesor lo gana de largo. Con el volumen el trabajo en frío
+              saldría cero en cualquier laminado.
+
+      - tipo: calcular
+        titulo: El porcentaje de trabajo en frío
+        pregunta: |
+          El ancho se mantiene en 6 cm. ¿Qué porcentaje de trabajo en frío
+          supone bajar el espesor de 1 a 0,5 cm?
+        respuesta:
+          tipo: numero
+          valor: '50'
+          tolerancia: 0.5
+          formato: un porcentaje, sin el símbolo
+        distractores:
+          - valor: '100'
+            mensaje: |
+              Has dividido entre el área **final**, 3 cm², en vez de la
+              inicial. El porcentaje se refiere siempre a cómo era la pieza
+              antes, $A_0 = 6\ \text{cm}^{2}$.
+          - valor: '-100'
+            mensaje: |
+              Has usado la cara grande, que pasa de $6\times 20$ a $6\times 40$.
+              Esa cara crece. El área que cuenta es la sección que cruza los
+              rodillos, espesor por ancho.
+          - valor: '0'
+            mensaje: |
+              Has usado el volumen, que no cambia. Que no cambie es
+              justamente lo que permite calcular el largo final, pero no mide
+              cuánto se ha deformado la sección.
+        pista: |
+          $A_0 = 1\cdot 6$ y $A_f = 0{,}5\cdot 6$, en centímetros cuadrados.
+        desarrollo: |
+          $$
+          \%\,\text{T.F.} = \frac{1\cdot 6 - 0{,}5\cdot 6}{1\cdot 6}\cdot 100
+          = \frac{6 - 3}{6}\cdot 100 = 50\ \%
+          $$
+
+          Con el ancho constante, el ancho se va y queda solo el espesor:
+          $(1 - 0{,}5)/1$.
+
+      - tipo: calcular
+        titulo: El largo de la placa laminada
+        pregunta: |
+          ¿Cuánto mide de largo la placa después del laminado?
+        respuesta:
+          tipo: magnitud
+          valor: '40 cm'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '20 cm'
+            mensaje: |
+              El largo no se queda igual. El volumen se conserva: si el espesor
+              baja a la mitad y el ancho no cambia, el largo tiene que
+              duplicarse.
+          - valor: '10 cm'
+            mensaje: |
+              Has reducido el largo en la misma proporción que el espesor. Es
+              al revés: lo que la placa pierde de espesor lo gana de largo,
+              porque el volumen no cambia.
+        pista: |
+          $1\cdot 6\cdot 20 = 0{,}5\cdot 6\cdot L$.
+        desarrollo: |
+          $$
+          L = \frac{1\cdot 6\cdot 20}{0{,}5\cdot 6} = 40\ \text{cm}
+          $$
+
+          Es la misma cuenta que usa el ejercicio 3.22: allí la placa pasa a
+          $0{,}1\times 6\times 200$, que también son $120\ \text{cm}^{3}$.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El trabajo en frío se mide con la sección que cruza los rodillos,
+              espesor por ancho, antes y después.
+          - texto: >-
+              El ancho no cambia, así que el porcentaje sale del espesor: de 1
+              a 0,5 cm es un 50 %.
+          - texto: >-
+              El volumen se conserva, así que la placa pasa de 20 a 40 cm de
+              largo.
+          - texto: >-
+              Como la placa se alarga al doble, el trabajo en frío es del 100 %.
+            trampa: true
+            mensaje: |
+              Un 100 % de trabajo en frío querría decir que la sección ha
+              desaparecido. El porcentaje compara la sección perdida con la
+              inicial, y aquí se ha perdido la mitad: un 50 %. El largo se
+              duplica, pero el largo no es la sección.
+    resolucion: |
+      **Qué área cuenta.** El porcentaje de trabajo en frío compara la sección
+      que atraviesa el material, antes y después:
+      $\%\,\text{T.F.} = (A_0 - A_f)/A_0\cdot 100$. En un laminado esa sección
+      es espesor por ancho.
+
+      **La cuenta.**
+
+      $$
+      \%\,\text{T.F.} = \frac{1\cdot 6 - 0{,}5\cdot 6}{1\cdot 6}\cdot 100 = 50\ \%
+      $$
+
+      **Lo que pasa con el resto de la placa.** El volumen se conserva,
+      $120\ \text{cm}^{3}$, así que la placa sale de 40 cm de largo. La cara
+      grande crece y la sección se estrecha: por eso importa elegir bien el
+      área.
+
+      Coincide con el 50 % del listado.

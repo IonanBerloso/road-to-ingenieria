@@ -158,12 +158,21 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
      que aparece, y por eso no hay una regla general de prefijos. */
   dan: { f: 10, d: D(1, 1, -2) },
   dyn: { f: 1e-5, d: D(1, 1, -2) },
+  lbf: { f: 4.4482216152605, d: D(1, 1, -2) },
   kp: { f: G, d: D(1, 1, -2) },
   kgf: { f: G, d: D(1, 1, -2) },
   // — presión
   pa: { f: 1, d: D(1, -1, -2) },
   kpa: { f: 1000, d: D(1, -1, -2) },
   mpa: { f: 1e6, d: D(1, -1, -2) },
+  /* El gigapascal, el psi y el ksi entran el 12 de septiembre de 2026 con
+     Ciencia de Materiales: un módulo elástico se da en GPa, y la colección
+     del tema 2 trae datos en psi y ksi porque sus enunciados vienen de un
+     libro americano. Los factores son los del sistema inglés definido:
+     1 lbf = 4,4482216 N y 1 in = 0,0254 m. */
+  gpa: { f: 1e9, d: D(1, -1, -2) },
+  psi: { f: 4.4482216152605 / 0.0254 ** 2, d: D(1, -1, -2) },
+  ksi: { f: (4.4482216152605 / 0.0254 ** 2) * 1000, d: D(1, -1, -2) },
   hpa: { f: 100, d: D(1, -1, -2) },
   bar: { f: 1e5, d: D(1, -1, -2) },
   mbar: { f: 100, d: D(1, -1, -2) },
@@ -175,6 +184,11 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   // — energía y potencia
   j: { f: 1, d: D(1, 2, -2) },
   kj: { f: 1000, d: D(1, 2, -2) },
+  /* Megajulio, no milijulio: el lector pasa todo a minúsculas y «mj» solo
+     puede ser uno de los dos. Es la misma elección que «mw» y «mpa» — el
+     prefijo pequeño no aparece en ningún enunciado de la escuela. Lo pide la
+     resiliencia del tema 2 de Materiales, que se da en MJ/m³. */
+  mj: { f: 1e6, d: D(1, 2, -2) },
   w: { f: 1, d: D(1, 2, -3) },
   kw: { f: 1000, d: D(1, 2, -3) },
   mw: { f: 1e6, d: D(1, 2, -3) },
