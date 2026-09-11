@@ -215,3 +215,423 @@ ejercicios:
       energía —el primer principio no lo permitiría—; lo que hace es no
       degradar la electricidad a calor de baja temperatura, que es donde se ha
       ido todo en esta tabla.
+
+  - id: exter1819-ord-1-diecisiete-modulos-y-no-dieciseis
+    titulo: El radiador de módulos, y por qué son diecisiete y no dieciséis
+    fuente: Ejercicio 1 de la convocatoria ordinaria de 2018-2019, celebrada en enero de 2019 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella. La fotografía del radiador del enunciado no se reproduce.
+    nivel: examen
+    enunciado: |
+      Un radiador de agua caliente está formado por módulos de $1\ \text{m}$ de
+      altura. El área superficial total de cada módulo es de
+      $0{,}8\ \text{m}^{2}$. La superficie exterior del radiador está a
+      $60\ ^\circ\text{C}$. El aire de la habitación está a
+      $20\ ^\circ\text{C}$. Calcúlese cuántos módulos serán necesarios instalar
+      para proporcionar una potencia térmica de $2\ \text{kW}$.
+
+      *Las propiedades del aire salen del anexo a la temperatura de película,
+      $40\ ^\circ\text{C}$: $\rho = 1{,}127\ \text{kg/m}^{3}$,
+      $k = 0{,}02662\ \text{W/m}\cdot\text{K}$,
+      $\mu = 1{,}918\cdot 10^{-5}\ \text{kg/m}\cdot\text{s}$ y
+      $Pr = 0{,}7255$. Para placa vertical el anexo da dos correlaciones:
+      $Nu = 0{,}59\,Ra^{1/4}$ para $10^{4} < Ra < 10^{9}$, y
+      $Nu = 0{,}1\,Ra^{1/3}$ para $10^{9} < Ra < 10^{13}$.*
+    pide: Cuántos módulos hacen falta para dar 2 kW.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El aire de la habitación está quieto. ¿Qué número decide qué
+          correlación usar?
+        opciones:
+          - texto: El Rayleigh, que hay que calcular antes de elegir nada
+            correcta: true
+            mensaje: |
+              Eso es. En convección **natural** no hay velocidad impuesta, así
+              que no hay Reynolds: el aire se mueve porque el caliente pesa
+              menos, y eso lo mide el Grashof. El Rayleigh es Grashof por
+              Prandtl, y su valor decide cuál de las dos correlaciones vale.
+          - texto: El Reynolds, con la velocidad del aire en la habitación
+            mensaje: |
+              No hay velocidad que meter: el enunciado no da ninguna porque el
+              aire está quieto. El movimiento lo produce la propia diferencia
+              de temperatura, y por eso la convección natural va con el
+              Grashof y no con el Reynolds.
+          - texto: Ninguno, porque para placa vertical siempre se usa la de exponente 1/4
+            mensaje: |
+              El anexo da **dos**, y la de exponente 1/4 solo vale hasta
+              $Ra = 10^{9}$. Aquí el Rayleigh sale $3{,}137\cdot 10^{9}$, justo
+              por encima, así que la que toca es la otra.
+          - texto: El Nusselt, que se lee directamente del anexo
+            mensaje: |
+              El Nusselt es lo que **sale** de la correlación, no lo que la
+              elige. Primero Rayleigh, luego la correlación que corresponda a
+              ese Rayleigh, y de ahí el Nusselt.
+
+      - tipo: calcular
+        titulo: El número de Rayleigh
+        pregunta: |
+          Con la altura del módulo como longitud característica y
+          $\beta = 1/T_{pelicula}$, ¿cuánto vale el Rayleigh?
+        respuesta:
+          tipo: numero
+          valor: '3.137e9'
+          tolerancia: 5e7
+          formato: un número sin unidad; vale en notación científica, como 3.1e9
+        distractores:
+          - valor: '4.324e9'
+            mensaje: |
+              Ese es el **Grashof**. El Rayleigh es Grashof por Prandtl, y con
+              $Pr = 0{,}7255$ baja casi un 30 %.
+          - valor: '2.455e10'
+            mensaje: |
+              Has puesto $\beta = 1/40$, con la temperatura de película en
+              grados Celsius. El coeficiente de expansión de un gas ideal es
+              $1/T$ en **kelvin**: $1/313$. En Celsius sale casi ocho veces
+              mayor.
+        pista: |
+          $Gr = \dfrac{g\,\beta\,\Delta\theta\,L^{3}\,\rho^{2}}{\mu^{2}}$ y
+          $Ra = Gr\cdot Pr$.
+        desarrollo: |
+          $$
+          Gr = \frac{9{,}8 \cdot \frac{1}{313} \cdot 40 \cdot 1^{3} \cdot 1{,}127^{2}}{(1{,}918\cdot 10^{-5})^{2}}
+          = 4{,}324\cdot 10^{9}
+          $$
+
+          $$
+          Ra = 4{,}324\cdot 10^{9} \cdot 0{,}7255 = 3{,}137\cdot 10^{9}
+          $$
+
+      - tipo: calcular
+        titulo: El coeficiente de convección
+        pregunta: |
+          Con ese Rayleigh y la correlación que le corresponde, ¿cuánto vale
+          $h$?
+        respuesta:
+          tipo: magnitud
+          valor: '3.9 W/(m^2 K)'
+          tolerancia: 0.02
+          formato: un coeficiente de convección, con su unidad
+        distractores:
+          - valor: '3.717 W/(m^2 K)'
+            mensaje: |
+              Has usado $Nu = 0{,}59\,Ra^{1/4}$, que solo vale hasta
+              $Ra = 10^{9}$. El tuyo es $3{,}137\cdot 10^{9}$: esa correlación
+              está fuera de su rango y se descarta.
+          - valor: '146.4 W/(m^2 K)'
+            mensaje: |
+              Ese es el **Nusselt**, adimensional. Falta $h = Nu\,k/L$, y con
+              $k = 0{,}02662$ eso divide casi por cuarenta.
+        pista: |
+          $Nu = 0{,}1\,Ra^{1/3}$, y después $h = Nu\,k/L$ con $L = 1\ \text{m}$.
+        desarrollo: |
+          $$
+          Nu = 0{,}1\,(3{,}137\cdot 10^{9})^{1/3} = 146{,}39
+          $$
+
+          $$
+          h = \frac{146{,}39 \cdot 0{,}02662}{1} = 3{,}897\ \text{W/m}^{2}\text{K}
+          $$
+
+      - tipo: calcular
+        titulo: Cuántos módulos
+        pregunta: |
+          Cada módulo tiene $0{,}8\ \text{m}^{2}$ con $40$ grados de salto.
+          ¿Cuántos hay que instalar para dar $2\ \text{kW}$?
+        respuesta:
+          tipo: numero
+          valor: '17'
+          tolerancia: 0.4
+          formato: un número entero de módulos
+        distractores:
+          - valor: '16'
+            mensaje: |
+              Has redondeado al entero **más cercano**, y 16,04 queda más cerca
+              de 16. Pero 16 módulos dan $16 \cdot 124{,}7 = 1995$ W, y la
+              habitación pide 2000. Aquí no se redondea: se **cubre**, y eso es
+              siempre hacia arriba.
+          - valor: '11'
+            mensaje: |
+              Has usado $60$ en vez de $60-20$. La ley de Newton va con la
+              **diferencia** de temperatura entre la superficie y el aire, no
+              con la temperatura de la superficie.
+        pista: |
+          $\dot{Q}_{modulo} = h\,A\,(\theta_s-\theta_\infty)$, y después
+          $2000/\dot{Q}_{modulo}$ — y ojo con cómo se redondea.
+        desarrollo: |
+          $$
+          \dot{Q}_{modulo} = 3{,}897 \cdot 0{,}8 \cdot (60-20) = 124{,}7\ \text{W}
+          $$
+
+          $$
+          \frac{2000}{124{,}7} = 16{,}04 \;\Longrightarrow\; 17\ \text{módulos}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena por qué la respuesta es 17. Una pieza es falsa.
+        piezas:
+          - texto: 'Cada módulo cede 124,7 W, así que hacen falta 2000/124,7 = 16,04 módulos.'
+          - texto: 'Los módulos no se venden por fracciones, y 16 se quedan en 1995 W: el entero que cubre la potencia es 17, aunque sobren 120 W.'
+          - texto: 'Como 16,04 está mucho más cerca de 16 que de 17, la respuesta correcta es 16.'
+            trampa: true
+            mensaje: |
+              Redondear al más cercano es la regla de las **cifras**, no la de
+              las **piezas**. Cuando un resultado dice cuántas cosas hay que
+              instalar para cubrir una necesidad, se redondea siempre hacia
+              arriba: con 16 la habitación se queda corta, por poco que sea. Es
+              el mismo razonamiento que el número de autobuses para una
+              excursión.
+    resolucion: |
+      **Lo primero, qué clase de convección es.** El aire de la habitación está
+      quieto, así que no hay Reynolds: el aire sube porque el caliente pesa
+      menos, y eso lo mide el Rayleigh. Con las propiedades a la temperatura de
+      película, $(60+20)/2 = 40\ ^\circ\text{C}$, y la altura del módulo como
+      longitud característica:
+
+      $$
+      Gr = \frac{9{,}8 \cdot \frac{1}{313} \cdot 40 \cdot 1{,}127^{2}}{(1{,}918\cdot 10^{-5})^{2}}
+      = 4{,}324\cdot 10^{9}
+      \;\Longrightarrow\; Ra = 3{,}137\cdot 10^{9}
+      $$
+
+      **La correlación, que la decide ese número.** El anexo da dos para placa
+      vertical, y el Rayleigh ha pasado de $10^{9}$, así que toca la de
+      exponente $1/3$:
+
+      $$
+      Nu = 0{,}1\,(3{,}137\cdot 10^{9})^{1/3} = 146{,}39
+      \;\Longrightarrow\; h = 3{,}897\ \text{W/m}^{2}\text{K}
+      $$
+
+      Conviene decir que aquí el ejercicio perdona: con la otra correlación
+      saldría $h = 3{,}717$ y **también** harían falta 17 módulos. Pero eso es
+      suerte de estos números, no del método — es la misma costumbre de
+      comprobar el rango que piden los ejercicios de convección forzada.
+
+      **La potencia de un módulo, y cuántos.**
+
+      $$
+      \dot{Q}_{modulo} = 3{,}897 \cdot 0{,}8 \cdot 40 = 124{,}7\ \text{W}
+      \qquad
+      \frac{2000}{124{,}7} = 16{,}04 \;\Longrightarrow\; 17
+      $$
+
+      **Diecisiete, y no dieciséis.** Es el único ejercicio del corpus cuya
+      respuesta es un número de piezas, y eso cambia cómo se redondea.
+      Dieciséis módulos dan 1.995 W y la habitación pide 2.000: se quedan
+      cortos. Cuando el resultado dice cuántas cosas instalar para cubrir una
+      necesidad, se redondea siempre hacia arriba, aunque el decimal sea 0,04.
+      Los 17 dan 2.120 W — un 6 % de más, que es el precio de no poder comprar
+      medio módulo.
+
+      **Y una advertencia sobre el modelo, dicha sin números porque el examen
+      no da con qué calcularlos.** El ejercicio solo cuenta la convección, y un
+      radiador real también radia hacia las paredes. Cuánto depende de qué
+      parte de su superficie ve la habitación y qué parte se ve a sí misma
+      entre aleta y aleta —que es un problema de factores de visión, del tema
+      10—. Por eso un fabricante no calcula esto así: lo mide.
+
+  - id: exter1819-ord-3-el-mismo-proceso-con-dos-trabajos-de-signo-contrario
+    titulo: El mismo proceso con dos trabajos de signo contrario
+    fuente: Ejercicio 3 de la convocatoria ordinaria de 2018-2019, celebrada en enero de 2019 · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El PDF trae la resolución manuscrita del profesor, con los dos diagramas dibujados; el desarrollo se hizo a ciegas desde el enunciado y se contrastó después contra ella.
+    nivel: examen
+    enunciado: |
+      En un sistema abierto entran $4\ \text{kg/s}$ de aire a
+      $18\ ^\circ\text{C}$ y tras un proceso de exponente politrópico
+      $-2{,}6$, sale a $34\ ^\circ\text{C}$.
+
+      a) Dedúzcase gráficamente, sin hacer cálculos numéricos:
+
+      - El intercambio de calor
+      - El intercambio de trabajo
+      - La variación de entropía
+
+      b) Calcúlese el valor numérico de las preguntas anteriores.
+    pide: El signo y el valor del calor, del trabajo y de la variación de entropía.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Es un sistema **abierto** en régimen permanente. ¿Qué trabajo es el
+          que intercambia, y dónde se ve en el diagrama P-v?
+        opciones:
+          - texto: El técnico, $-\int v\,dP$, que en el P-v es el área contra el eje de presiones
+            correcta: true
+            mensaje: |
+              Eso es. En un volumen de control el trabajo que sale por el eje
+              es el técnico, y en el P-v se lee **en horizontal**: el área
+              entre la curva y el eje vertical. El de frontera, $\int P\,dv$,
+              es el área contra el eje de volúmenes, y es el de los sistemas
+              cerrados.
+          - texto: El de frontera, $\int P\,dv$, el área bajo la curva
+            mensaje: |
+              Ese es el de un sistema **cerrado**. En uno abierto el fluido
+              entra y sale empujando, y el trabajo útil es el técnico,
+              $-\int v\,dP$. Aquí la diferencia no es un matiz: los dos tienen
+              **signo contrario**.
+          - texto: Cualquiera de los dos, porque para un gas ideal coinciden
+            mensaje: |
+              Solo coinciden en un proceso isotermo ($n = 1$). En general, para
+              una politrópica el técnico es $n$ veces el de frontera, y con
+              $n = -2{,}6$ eso los pone de signos opuestos.
+          - texto: Ninguno, porque en un proceso politrópico reversible no hay trabajo
+            mensaje: |
+              Reversible no quiere decir sin trabajo: quiere decir sin
+              irreversibilidades. De hecho el aire recibe 13,27 kW de trabajo
+              técnico en este proceso.
+
+      - tipo: calcular
+        titulo: El calor específico politrópico
+        pregunta: |
+          Con $\gamma = 1{,}4$ y $n = -2{,}6$, ¿cuánto vale $c_n$?
+        respuesta:
+          tipo: magnitud
+          valor: '0.7972 kJ/(kg K)'
+          tolerancia: 0.02
+          formato: un calor específico, con su unidad
+        distractores:
+          - valor: '1.116 kJ/(kg K)'
+            mensaje: |
+              Has multiplicado por $c_p$ en vez de por $c_v$. La fórmula es
+              $c_n = c_v\,\dfrac{\gamma-n}{1-n}$, y va con el de volumen
+              constante aunque el sistema sea abierto.
+          - valor: '0.6458 kJ/(kg K)'
+            mensaje: |
+              Has invertido la fracción. Con $\dfrac{\gamma-n}{1-n}$ el
+              $\gamma$ va arriba, porque $c_n$ tiene que anularse cuando
+              $n = \gamma$ —el caso adiabático—.
+        pista: |
+          $c_n = c_v\,\dfrac{\gamma-n}{1-n}$, con $c_v = R'/(\gamma-1)$.
+        desarrollo: |
+          $$
+          c_n = \frac{1{,}4+2{,}6}{1+2{,}6} \cdot \frac{0{,}287}{0{,}4}
+          = 0{,}7972\ \text{kJ/kg}\cdot\text{K}
+          $$
+
+          Positivo, así que calentarse y recibir calor van juntos.
+
+      - tipo: calcular
+        titulo: El calor
+        pregunta: |
+          Con ese $c_n$ y los $4\ \text{kg/s}$, ¿cuánto calor recibe el aire?
+        respuesta:
+          tipo: magnitud
+          valor: '51.02 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '64.29 kW'
+            mensaje: |
+              Esa es la variación de entalpía, $\dot{m}\,c_p\,\Delta\theta$.
+              Coincidiría con el calor si no hubiera trabajo técnico, y aquí lo
+              hay: el aire recibe 13,27 kW por el eje, así que el calor es
+              menor que el salto de entalpía.
+          - valor: '12.76 kW'
+            mensaje: |
+              Te has dejado el gasto: eso es el calor por **kilogramo**. Pasan
+              4 kg/s.
+        pista: |
+          $\dot{Q} = \dot{m}\,c_n\,(\theta_2-\theta_1)$.
+        desarrollo: |
+          $$
+          \dot{Q} = 4 \cdot 0{,}7972 \cdot (34-18) = 51{,}02\ \text{kW}
+          $$
+
+      - tipo: calcular
+        titulo: El trabajo técnico
+        pregunta: |
+          ¿Cuánto trabajo intercambia el aire, en el convenio de la asignatura?
+        respuesta:
+          tipo: magnitud
+          valor: '-13.27 kW'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad y con su signo
+        distractores:
+          - valor: '5.1 kW'
+            mensaje: |
+              Ese es el trabajo **de frontera**, $\int P\,dv$ — el que haría el
+              aire si estuviera encerrado en un cilindro. Existe y es positivo,
+              porque el volumen específico crece. Pero el sistema es abierto, y
+              lo que intercambia por el eje es el técnico: $-2{,}6$ veces ese,
+              o sea negativo.
+          - valor: '13.27 kW'
+            mensaje: |
+              El módulo está bien y el signo no. La presión **sube** a lo largo
+              del proceso, así que $-\int v\,dP$ es negativo: el aire recibe
+              trabajo.
+        pista: |
+          $\dot{W}_t = \dot{m}\,\dfrac{n}{n-1}\,R'\,(T_1-T_2)$.
+        desarrollo: |
+          $$
+          \dot{W}_t = 4 \cdot \frac{-2{,}6}{-3{,}6} \cdot 0{,}287 \cdot (18-34)
+          = -13{,}27\ \text{kW}
+          $$
+
+          Y la comprobación por el primer principio cierra:
+          $\dot{Q} = \dot{m}\,\Delta h + \dot{W}_t = 64{,}29 - 13{,}27 = 51{,}02$ kW.
+
+      - tipo: justificar
+        pregunta: Ordena la lectura de los dos diagramas. Una pieza es falsa.
+        piezas:
+          - texto: 'En el T-s la curva sube hacia la derecha: el área bajo ella es positiva, así que entra calor y la entropía crece.'
+          - texto: 'En el P-v la presión sube a lo largo del proceso, así que el área contra el eje de presiones, $-\int v\,dP$, es negativa: el aire recibe trabajo técnico.'
+          - texto: 'Como el volumen específico aumenta, el aire se expande y tiene que estar haciendo trabajo, así que el trabajo es positivo.'
+            trampa: true
+            mensaje: |
+              Eso es cierto para el trabajo **de frontera**, $\int P\,dv$, que
+              aquí vale +5,10 kW. Pero el sistema es abierto y lo que se
+              intercambia por el eje es el técnico, que para una politrópica
+              vale **n veces** el de frontera. Con $n = -2{,}6$, los dos tienen
+              signo contrario: el mismo proceso «se expande» y a la vez
+              «recibe trabajo», según a qué área mires.
+    resolucion: |
+      **a) Los signos, leídos de los diagramas.** El proceso es politrópico, y
+      por tanto reversible, así que las áreas de los diagramas **son** el calor
+      y el trabajo.
+
+      En el **T-s**, la politrópica de $n = -2{,}6$ sube hacia la derecha: la
+      temperatura pasa de 18 a 34 °C y la entropía crece. El área bajo la curva
+      es positiva, así que **entra calor** ($q > 0$) y $\Delta s > 0$.
+
+      En el **P-v**, con exponente negativo, $P = C\,v^{2{,}6}$: la presión y
+      el volumen crecen juntos. El trabajo de un sistema abierto es el técnico,
+      $-\int v\,dP$, que es el área contra el eje de **presiones**; como la
+      presión sube, sale negativo: **el aire recibe trabajo** ($w < 0$).
+
+      **b) Los números.** Por el calor específico politrópico:
+
+      $$
+      c_n = \frac{1{,}4+2{,}6}{1+2{,}6}\cdot\frac{0{,}287}{0{,}4}
+      = 0{,}7972\ \text{kJ/kg}\cdot\text{K}
+      $$
+
+      $$
+      \dot{Q} = 4\cdot 0{,}7972\cdot 16 = 51{,}02\ \text{kW}
+      $$
+
+      $$
+      \dot{W}_t = 4\cdot\frac{-2{,}6}{-3{,}6}\cdot 0{,}287\cdot(18-34) = -13{,}27\ \text{kW}
+      $$
+
+      $$
+      \Delta\dot{S} = 4\cdot 0{,}7972\cdot\ln\frac{307}{291} = 0{,}17\ \text{kW/K}
+      $$
+
+      Y el primer principio lo comprueba por el otro lado:
+      $\dot{m}\,\Delta h = 4\cdot 1{,}0045\cdot 16 = 64{,}29\ \text{kW}$, y
+      $64{,}29 - 13{,}27 = 51{,}02$. (La resolución oficial escribe 64,32 en esa
+      línea, que es la cuenta con $c_p = 1{,}005$; su resultado final, 51,02,
+      sale con el 1,0045 del enunciado.)
+
+      **Lo que este ejercicio tiene y los otros dos de signos no.** Enero de
+      2023 y febrero de 2020 piden lo mismo en sistemas **cerrados**; este es
+      el único abierto, y ahí aparece algo que conviene ver con números. En un
+      cilindro, este mismo proceso haría un trabajo de frontera
+
+      $$
+      \dot{m}\,\frac{R'\,(T_2-T_1)}{1-n} = 4\cdot\frac{0{,}287\cdot 16}{3{,}6} = +5{,}10\ \text{kW}
+      $$
+
+      **positivo**: el aire se expande. Y en el volumen de control el trabajo
+      técnico sale **negativo**. No hay contradicción: en una politrópica el
+      técnico es exactamente $n$ veces el de frontera, y con $n$ negativo
+      tienen signos opuestos. Es la misma curva y son dos áreas distintas del
+      mismo diagrama — y saber cuál corresponde a cada sistema es lo que decide
+      el signo que se pone en el examen.
