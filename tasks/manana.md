@@ -223,6 +223,13 @@ terminadas**.
 > situación de Térmica antes del 10 de septiembre, y se desbloquea igual: con
 > material, no con más horas.
 >
+> **Y pesa poco.** `npm run peso` sobre los diez temas, la misma noche:
+> ninguno pasa de 4 s en un móvil. Los tres con colección grande son los más
+> lentos —el 3 con 1,4 s y 2,4 MB, el 2 con 1,3 s, el 4 con 1,2 s— y del 5 al
+> 10 ninguno llega a 0,7 s. Se mide con `MSYS_NO_PATHCONV=1` delante en Git
+> Bash, o las rutas llegan convertidas en rutas de Windows, y sin ningún
+> `astro preview` vivo de un humo anterior, o el servidor no arranca.
+>
 > **Lo que el contraste encontró en la colección**, porque los datos de una
 > curva se pueden volver a leer y los resultados impresos no siempre salen:
 >
