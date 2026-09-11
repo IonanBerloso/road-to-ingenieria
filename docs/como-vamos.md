@@ -23,6 +23,12 @@ transcritas** —las 118 de las cuatro primeras y veinte de Térmica, que tiene
 veintidós y dos declaradas imposibles—, y el guardián de convocatorias
 huérfanas no cuenta ninguna suelta.
 
+**Y una sexta, Ciencia de Materiales, escrita entera y en `obra`.** Sus diez
+temas y los 99 ejercicios de su colección están publicados desde el 12 de
+septiembre de 2026, pero no hay un solo examen entre su material, y sin
+exámenes no hay ruta que medir ni cierre posible (§14, §15). Lo que le falta
+es material, no trabajo; está más abajo, en su propia sección.
+
 **Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
 después de abrirse. Sus diez temas están escritos —cada uno con su figura y su
 ejemplo de entrada, que es lo que §15 pide— y su ruta también, **medida sobre

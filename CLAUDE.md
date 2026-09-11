@@ -2571,7 +2571,14 @@ Cosas que ya han costado horas. No son opiniones.
   Donde las respuestas son exactas y no hay calculadora —Cálculo, Álgebra,
   Química— una tolerancia estrecha es lo correcto. Medido ese día, en Térmica y
   en Fluidos: cuatro casos en Térmica, corregidos, y tres en Fluidos que
-  quedan anotados en `tasks/manana.md`.
+  quedaron anotados en `tasks/manana.md`. **Se corrigieron esa misma noche**,
+  mirando cada paso con su cuenta exacta y no con la regla: los tres
+  rechazaban la cuenta buena —59,85 frente a 60, 137,8 frente a 138 y 790,3
+  frente a 791, los tres con 0,02—, y un cuarto, la k del 4.22, la aceptaba
+  por siete milésimas. De las nueve casillas que da la búsqueda por la forma,
+  las otras cinco son estrechas con motivo: sus datos fijan el resultado a esa
+  precisión y la cuenta exacta cae dentro. **Que una tolerancia sea estrecha
+  no la hace mala; lo que la hace mala es que deje fuera la cuenta exacta.**
 
 ---
 

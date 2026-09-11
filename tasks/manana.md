@@ -111,6 +111,22 @@ se para y se mira, como dice §10.
 > tolerancia estrecha es lo correcto, porque sus respuestas son exactas y no
 > hay calculadora. Las de Fluidos se miran una a una antes de tocarlas: son
 > ejercicios de colección y ningún recálculo las cubre.
+>
+> **Resuelta el 12 de septiembre de 2026, por la noche.** La búsqueda por la
+> forma da nueve casillas en Fluidos, y cada una se miró con su cuenta exacta:
+>
+> | casilla | valor | cuenta exacta | tolerancia |
+> |---|---|---|---|
+> | 3.19, factor de paso K₂ | 60 | 59,85 | 0,02 → **0,5** |
+> | 6.11, Reynolds | 138 | 137,8 | 0,02 → **1** |
+> | 6.29, factor de paso K₁ | 791 | 790,3 | 0,02 → **2** |
+> | 4.22, la k de la placa | 10,23 | 10,237 | 0,01 → **0,05** |
+>
+> Las tres primeras rechazaban la cuenta buena; la cuarta la aceptaba por
+> siete milésimas. El valor publicado no se toca en ninguna, y el distractor
+> más cercano sigue a más del 35 %. Las otras cinco —629,23 m, 1.032,59
+> kg/m³, 111,33 m, un Reynolds de 200.000 y 30,68°— se quedan como están:
+> sus datos fijan el resultado a esa precisión y la cuenta exacta cae dentro.
 
 ### 6.3 · Las frases con número de Térmica
 
@@ -351,6 +367,17 @@ laboratorio.
 ## Lo que NO se va a hacer, y por qué
 
 - **Abrir la sexta antes de cerrar Térmica.** §00.
+- **Abrir la séptima sin que lo decida Ionan.** Es un conflicto de §00 y lo
+  dejo anotado en vez de resolverlo (§13, caso 3). La regla dice que no se
+  abre una hasta cerrar la anterior, y Materiales **no se puede cerrar**: le
+  falta material, no trabajo —no hay exámenes—, y quedó en `obra` la noche
+  del 12 de septiembre de 2026 con todo lo escribible escrito. Las tres que
+  quedan tampoco traen exámenes, así que abrir cualquiera deja otra
+  asignatura en el mismo sitio. Hay dos salidas y las dos son suyas:
+  conseguir exámenes de alguna —Materiales se cerraría con su ruta, y
+  Mecánica Aplicada sigue siendo la recomendación de arriba si aparecen los
+  suyos—, o cambiar §00 para que una asignatura bloqueada por material no
+  bloquee la siguiente.
 - **Escribir los ocho `fuera` que le quedan a Térmica.** Cuatro ya tienen su
   resolución en otra convocatoria, tres examinan ciclos de potencia y R-134a,
   que salieron del temario, y el de la tobera del 30 de enero de 2023 necesita
