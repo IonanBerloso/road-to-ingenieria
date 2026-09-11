@@ -32,6 +32,11 @@ describe('vectores', () => {
     expect(v[0]).toBeCloseTo(Math.sqrt(3) / 3, 12);
     expect(v[1]).toBeCloseTo(-Math.sqrt(6) / 6, 12);
   });
+  it('y en notación científica, que es como el corpus escribe un Rayleigh', () => {
+    expect(vector('(3.137e9, 1.8e-5, -2E3)')).toEqual([3.137e9, 1.8e-5, -2000]);
+    // la «e» solo es exponente si detrás hay al menos un dígito (§17)
+    expect(() => vector('(2e, 1)')).toThrow();
+  });
   it('se niega ante algo que no sabe leer, en vez de adivinar', () =>
     expect(() => vector('(1, dos, 3)')).toThrow());
 });

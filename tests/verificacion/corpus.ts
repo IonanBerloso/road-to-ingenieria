@@ -26,11 +26,18 @@ type Ejercicio = { id: string; pasos?: Paso[] };
 /**
  * Las formas en que el corpus escribe un número dentro de un vector o de una
  * matriz: entero, decimal, fracción y raíz —«-5/3», «2.4494897», «1/√10»,
- * «3√2/2»—. Nada más: esto no es un intérprete de expresiones, y si aparece
- * una forma nueva conviene que falle en vez de adivinar.
+ * «3√2/2»—, y notación científica, «3.137e9». Nada más: esto no es un
+ * intérprete de expresiones, y si aparece una forma nueva conviene que falle
+ * en vez de adivinar.
+ *
+ * La notación científica entró el 12 de septiembre de 2026, con el primer
+ * Rayleigh de Térmica que se quiso verificar: el lector la rechazaba y el paso
+ * se quedaba sin comprobar. Es la trampa de la «e» de §17 en un quinto lector
+ * que aquella lista no nombraba, y se arregla igual: el exponente solo se lee
+ * si tras la «e» hay un signo opcional y al menos un dígito.
  */
 function termino(t: string): number {
-  const m = /^(-?)(\d+(?:\.\d+)?)?(?:√(\d+(?:\.\d+)?))?$/.exec(t.trim());
+  const m = /^(-?)(\d+(?:\.\d+)?(?:e[+-]?\d+)?)?(?:√(\d+(?:\.\d+)?))?$/i.exec(t.trim());
   if (!m || (!m[2] && !m[3])) throw new Error(`no sé leer el número «${t}»`);
   const signo = m[1] === '-' ? -1 : 1;
   const coef = m[2] ? Number(m[2]) : 1;

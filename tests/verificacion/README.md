@@ -60,7 +60,7 @@ entra con su fichero de aquí o el contador lo dice. Eso es lo que mide
 
 **No se escribe a mano.** `node scripts/deuda.mjs` lo cuenta leyendo las
 llamadas a `cuadra()` de estos ficheros y comparándolas con los pasos de
-examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
+examen que declaran una respuesta numérica. Al 12 de septiembre de 2026:
 
 | asignatura | respuestas comparables de examen | recalculadas |
 |---|---|---|
@@ -68,7 +68,32 @@ examen que declaran una respuesta numérica. Al 6 de septiembre de 2026:
 | **Álgebra** | 76 | **76** |
 | **Cálculo** | 805 | **805** |
 | Fluidos | 293 | **292** |
-| | **1.241** | **1.240 — todas menos una** |
+| **Ingeniería Térmica** | 183 | **183** |
+| | **1.424** | **1.423 — todas menos una** |
+
+**Térmica entró la última, el 12 de septiembre de 2026, y es la única cuyos
+exámenes traen la resolución oficial dentro.** Cada ejercicio se había
+contrastado cifra a cifra contra ella al escribirse, así que aquí no se
+esperaban errores de cuenta, y no apareció ninguno. Las veinte convocatorias
+se escribieron en cinco tandas en paralelo, con dos ficheros de plantilla
+delante, y cada exergía destruida se comprueba por los dos caminos.
+
+Lo que sí encontró es de otra clase, y conviene que quede dicho porque
+ninguno de los guardianes lo buscaba: **casillas que corrigen mal**. Cuatro
+pasos rechazaban la respuesta buena. Tres llevaban `tolerancia: 0.02` en un
+`numero` —dos Reynolds y un Nusselt—, que es una tolerancia relativa escrita
+en un campo absoluto: pedía la cifra a la centésima y solo entraba tecleando
+el redondeo del corpus. El cuarto se había estrechado al 0,5 % para echar un
+distractor, y como sus datos redondeados no fijaban el resultado mejor que al
+0,8 %, dejaba fuera la cuenta buena y dentro el distractor. Un quinto paso
+pedía un número que salía de unas propiedades del agua que la página no
+publicaba: el alumno tampoco podía hacerlo. Y una cadena de enero de 2024
+estaba escrita con un dato distinto al de la fuente, aunque la casilla lo
+tapaba. Los seis se corrigieron en el corpus, no en el test.
+
+Y una más en la herramienta: el lector de `corpus.ts` no sabía leer la
+notación científica, y un Rayleigh publicado como «3.137e9» se quedaba sin
+comprobar. Es la trampa de la «e» de §17 en un quinto lector.
 
 «Comparables» son las respuestas que `cuadra()` sabe contrastar: número,
 vector, matriz y conjunto. Las de texto libre no cuentan porque no hay nada que

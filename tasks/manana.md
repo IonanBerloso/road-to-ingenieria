@@ -87,6 +87,31 @@ de memoria**.
 `npm test` en verde. Si alguna no cuadra, eso es un hallazgo, no un estorbo:
 se para y se mira, como dice §10.
 
+> **Hecha el 12 de septiembre de 2026: Térmica, 183 de 183.** El sitio queda
+> en 1.423 de 1.424 respuestas de examen recalculadas, y la que falta es la de
+> Fluidos que se deja fuera a propósito. `npm test`: 1.814 pruebas en 116
+> ficheros. Las dos primeras convocatorias se escribieron a mano como
+> plantilla y las otras dieciocho en cuatro tandas en paralelo.
+>
+> **Ningún error de cuenta**, que es lo esperable después de contrastar cada
+> ejercicio contra la resolución oficial. Lo que salió fueron **seis pasos
+> que corregían mal**, todos arreglados en el corpus y contados en el
+> `README.md` de la carpeta: tres tolerancias relativas escritas en un campo
+> absoluto, una tolerancia estrechada que dejaba fuera la cuenta buena, un
+> paso que pedía datos que la página no publicaba —ahora sí, sacados de la
+> resolución oficial— y una cadena escrita con un dato distinto al de la
+> fuente. Más un lector que no sabía leer `3.137e9`.
+>
+> **Y una deuda nueva, medida y fuera de esta fase.** Buscando las demás
+> casillas con el mismo fallo —un `numero` de valor grande con tolerancia
+> absoluta menor que el 0,1 % del valor—, en Térmica solo quedaba una, en el
+> tema 9, y se ha corregido. En **Fluidos salen tres** que tienen toda la pinta
+> de ser lo mismo —dos factores de paso, 60 y 791, y un Reynolds de 138, los
+> tres con 0,02— y otras cuatro dudosas. En Cálculo, Álgebra y Química una
+> tolerancia estrecha es lo correcto, porque sus respuestas son exactas y no
+> hay calculadora. Las de Fluidos se miran una a una antes de tocarlas: son
+> ejercicios de colección y ningún recálculo las cubre.
+
 ### 6.3 · Las frases con número de Térmica
 
 `deuda.mjs` cuenta **74 afirmaciones con cifra** que el guion no sabe
