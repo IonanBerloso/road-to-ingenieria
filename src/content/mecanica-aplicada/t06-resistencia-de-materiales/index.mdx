@@ -1,0 +1,258 @@
+---
+asignatura: mecanica-aplicada
+tema: 6
+titulo: Fundamentos de resistencia de materiales
+descripcion: "Lo que pasa dentro de una pieza: los esfuerzos de sección, sus diagramas y las tensiones que producen. Flexión, cortante y torsión, con el convenio de signos del curso."
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 6, «Principios de resistencia de materiales» · Mecánica Aplicada, UPV/EHU, curso 2025-2026, y del capítulo 6 del libro de la asignatura. La figura es nuestra.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Hasta aquí los cuerpos eran rígidos y lo único que importaba eran las fuerzas
+que les llegan de fuera. Este tema abre la pieza por dentro. Si cortas una viga
+por una sección, cada mitad está en equilibrio gracias a unas fuerzas internas
+que la otra mitad le hace a través del corte. Esas fuerzas se resumen en tres
+números por sección —axil, cortante y flector—, y de ellos salen las tensiones
+que deciden si la pieza aguanta.
+
+Es el tema que cierra el bloque 1, y en el examen pesa como ninguno: en las dos
+convocatorias completas con enunciado en castellano, enero de 2024 y la
+ordinaria de 2025, hay **un ejercicio entero de viga** —diagramas, sección en T
+y tensión máxima— y **una cuestión de teoría** del tema, la torsión en una y el
+equilibrio del elemento diferencial en la otra.
+
+## Fuerzas y momentos de sección
+
+Corta la pieza por una sección. Para que cada parte siga en equilibrio, en la
+cara del corte tiene que haber fuerzas internas repartidas, y por acción y
+reacción, las de una cara son iguales y opuestas a las de la otra. Reducidas al
+centro de gravedad de la sección, en el caso plano son tres:
+
+- **$N$, el esfuerzo axil o normal**: la resultante en la dirección del eje de
+  la pieza. Impide que dos secciones vecinas se separen o se acerquen.
+- **$V$, el esfuerzo cortante**: la resultante en la dirección perpendicular.
+  Impide que resbalen una sobre otra.
+- **$M$, el momento flector**: el momento de las fuerzas axiales respecto del
+  eje $z$ de la sección. Impide que giren una respecto de otra.
+
+Se calculan con la estática del tema 3: aíslas la parte a un lado del corte y
+escribes su equilibrio.
+
+## El convenio de signos del curso
+
+El curso toma el eje $x$ a lo largo de la pieza, hacia la derecha, y el eje $y$
+de la sección **hacia abajo**. Con ese convenio:
+
+- **$N$ es positivo a tracción**: en cada cara del corte, saliendo de la pieza.
+- **$V$ es positivo** si, en la cara derecha de la parte izquierda, apunta hacia
+  abajo. En la práctica: **$V$ en una sección es la suma de las fuerzas hacia
+  arriba que hay a su izquierda**.
+- **$M$ es positivo** cuando **tracciona la fibra inferior**, es decir, cuando la
+  pieza se comba hacia abajo, como una viga biapoyada bajo su propio peso. En la
+  práctica: la suma de los momentos, respecto de la sección, de las fuerzas que
+  hay a su izquierda, contando positivo el giro horario.
+
+## El equilibrio de un elemento diferencial
+
+Aísla un trozo de pieza de longitud $dx$ con una carga repartida de componentes
+$q_x$ y $q_y$ —con $q_y$ positiva **hacia abajo**, como el eje $y$—. Escribiendo
+su equilibrio y despreciando los infinitésimos de segundo orden:
+
+$$
+\frac{dN}{dx} = -q_x
+\qquad
+\frac{dV}{dx} = -q_y
+\qquad
+\frac{dM}{dx} = V
+$$
+
+y combinando las dos últimas,
+
+$$
+\frac{d^{2}M}{dx^{2}} = -q_y
+$$
+
+Es la cuestión 4 de teoría de la ordinaria de 2025, que pedía deducirlas. Y
+dicen tres cosas que se usan en cada diagrama. El axil va por su lado,
+desligado de la flexión. La **pendiente del flector es la cortante**, así que
+donde $V$ se anula el flector tiene un máximo o un mínimo. Y una carga hacia
+abajo hace **bajar la cortante** y **curva el flector hacia abajo**.
+
+<ErrorTipico titulo="Las relaciones diferenciales con el signo de otro libro">
+Hay libros que toman $y$ hacia arriba o la carga positiva hacia arriba, y
+entonces escriben $dV/dx = q$. Mezclar esa relación con el convenio del curso
+hace que la cortante suba donde tiene que bajar, y el diagrama sale con la
+pendiente al revés en cada tramo. Con el convenio de aquí, $y$ hacia abajo y
+$q_y$ hacia abajo, es $dV/dx = -q_y$. Una comprobación que no depende de nada:
+en una viga biapoyada con carga hacia abajo, la cortante empieza positiva en el
+apoyo izquierdo y **baja** hacia el derecho.
+</ErrorTipico>
+
+## Cómo se dibujan los diagramas
+
+Los diagramas dicen cuánto vale cada esfuerzo en cada sección, y sirven para
+encontrar la sección más cargada. Hay tres formas de sacarlos:
+
+1. **Por tramos**: se corta una sección genérica en cada tramo —los tramos los
+   separan las cargas y los apoyos— y se escribe su equilibrio en función de $x$.
+2. **Integrando** las relaciones del elemento diferencial, con las constantes
+   que dan los extremos una vez calculadas las reacciones.
+3. **Con los valores en los extremos de cada tramo** y lo que dicen las
+   derivadas sobre la forma, que es la más rápida.
+
+Para la tercera basta con esta tabla: si la carga repartida en un tramo es un
+polinomio de grado $n$, la cortante es de grado $n + 1$ y el flector de grado
+$n + 2$.
+
+| carga en el tramo | cortante $V$ | flector $M$ |
+|---|---|---|
+| nula | constante | recta |
+| uniforme | recta | parábola |
+| lineal | parábola | cúbica |
+
+Y dos reglas para los puntos: una **fuerza puntual** hace saltar la cortante en
+su valor, y un **momento puntual** hace saltar el flector en el suyo.
+
+<figure>
+<svg viewBox="0 0 460 250" role="img" width="460" height="250"
+     aria-labelledby="ma6-t ma6-d">
+  <title id="ma6-t">Una viga biapoyada con carga uniforme, con sus diagramas de cortante y de flector</title>
+  <desc id="ma6-d">Arriba, una viga de 6 metros apoyada en sus extremos con una carga uniforme de 2 kilonewtons por metro; cada apoyo reacciona con 6 kilonewtons. En medio, el diagrama de cortante: una recta que baja de más 6 kilonewtons en el apoyo izquierdo a menos 6 en el derecho, y cruza el cero en el centro. Abajo, el diagrama de flector: una parábola que vale cero en los apoyos y tiene su máximo, 9 kilonewton metro, en el centro, justo donde la cortante es cero.</desc>
+
+  <rect x="80" y="52" width="300" height="7" fill="var(--faint)" fill-opacity="0.25" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="80" y1="30" x2="380" y2="30" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M80 30 V50 M110 30 V50 M140 30 V50 M170 30 V50 M200 30 V50 M230 30 V50 M260 30 V50 M290 30 V50 M320 30 V50 M350 30 V50 M380 30 V50" fill="none" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M76 46 L80 51 L84 46 M106 46 L110 51 L114 46 M136 46 L140 51 L144 46 M166 46 L170 51 L174 46 M196 46 L200 51 L204 46 M226 46 L230 51 L234 46 M256 46 L260 51 L264 46 M286 46 L290 51 L294 46 M316 46 L320 51 L324 46 M346 46 L350 51 L354 46 M376 46 L380 51 L384 46" fill="none" stroke="var(--d1)" stroke-width="1"/>
+  <text x="230" y="24" font-size="9.5" text-anchor="middle" fill="var(--d1)">q = 2 kN/m</text>
+  <path d="M80 59 L72 72 L88 72 Z" fill="none" stroke="var(--ink)" stroke-width="1"/>
+  <path d="M380 59 L372 72 L388 72 Z" fill="none" stroke="var(--ink)" stroke-width="1"/>
+  <text x="80" y="84" font-size="9" text-anchor="middle" fill="var(--ink)">6 kN</text>
+  <text x="380" y="84" font-size="9" text-anchor="middle" fill="var(--ink)">6 kN</text>
+  <text x="230" y="84" font-size="9" text-anchor="middle" fill="var(--faint)">6 m</text>
+
+  <line x1="80" y1="125" x2="380" y2="125" stroke="var(--ink)" stroke-width="0.9"/>
+  <path d="M80 125 L80 95 L380 155 L380 125" fill="var(--d2)" fill-opacity="0.15" stroke="none"/>
+  <line x1="80" y1="95" x2="380" y2="155" stroke="var(--d2)" stroke-width="2"/>
+  <line x1="80" y1="95" x2="80" y2="125" stroke="var(--d2)" stroke-width="1"/>
+  <line x1="380" y1="125" x2="380" y2="155" stroke="var(--d2)" stroke-width="1"/>
+  <text x="74" y="99" font-size="9" text-anchor="end" fill="var(--d2)">+6</text>
+  <text x="386" y="158" font-size="9" fill="var(--d2)">−6</text>
+  <text x="30" y="128" font-size="9.5" fill="var(--ink)">V (kN)</text>
+
+  <line x1="80" y1="225" x2="380" y2="225" stroke="var(--ink)" stroke-width="0.9"/>
+  <path d="M80 225 L105 211.3 L130 200 L155 191.3 L180 185 L205 181.3 L230 180 L255 181.3 L280 185 L305 191.3 L330 200 L355 211.3 L380 225 Z" fill="var(--d1)" fill-opacity="0.12" stroke="none"/>
+  <path d="M80 225 L105 211.3 L130 200 L155 191.3 L180 185 L205 181.3 L230 180 L255 181.3 L280 185 L305 191.3 L330 200 L355 211.3 L380 225" fill="none" stroke="var(--d1)" stroke-width="2"/>
+  <text x="236" y="176" font-size="9" fill="var(--d1)">9 kN·m</text>
+  <text x="30" y="228" font-size="9.5" fill="var(--ink)">M (kN·m)</text>
+
+  <line x1="230" y1="100" x2="230" y2="236" stroke="var(--flag)" stroke-width="0.9" stroke-dasharray="4 3"/>
+  <circle cx="230" cy="125" r="2.8" fill="var(--flag)"/>
+  <text x="236" y="120" font-size="9" fill="var(--flag)">V = 0</text>
+  <text x="230" y="246" font-size="9" text-anchor="middle" fill="var(--flag)">donde V se anula, M es máximo</text>
+</svg>
+<figcaption>
+
+Una viga biapoyada de **6 m** con **2 kN/m**. La carga es uniforme, así que la
+cortante es una recta que baja —de 6 a −6 kN— y el flector, una parábola. La
+pendiente del flector es la cortante: el flector sube mientras **V** es
+positiva, se para donde **V = 0** y baja después. Su máximo, **qL²/8 = 9 kN·m**, está en el
+centro, justo donde la cortante cruza el cero.
+
+</figcaption>
+</figure>
+
+## Tensiones, deformaciones y la ley de Hooke
+
+Los esfuerzos de sección son resultantes. Lo que de verdad rompe una pieza es
+cómo se reparten por la sección: las **tensiones**, fuerza por unidad de área.
+La **tensión normal** $\sigma$ va en la dirección del eje de la pieza y la
+**tangencial** $\tau$, en el plano de la sección. Cada una produce su
+deformación: una **deformación unitaria** $\varepsilon$, que alarga o acorta, y una
+**deformación angular** $\gamma$, que distorsiona. En la zona elástica las liga la
+ley de Hooke, $\sigma = E\,\varepsilon$ y $\tau = G\,\gamma$.
+
+## Esfuerzo axil: tracción y compresión
+
+Si solo hay axil, la tensión se reparte uniforme por la sección:
+
+$$
+\sigma = \frac{N}{A}
+$$
+
+## Flexión
+
+Con **flexión pura** —solo momento flector— las secciones planas siguen planas
+y giran alrededor de un eje, el **eje neutro**, que pasa por el centro de
+gravedad de la sección. La tensión crece en línea recta con la distancia a él,
+la **fórmula de Navier**:
+
+$$
+\sigma = \frac{M\,y}{I_z}
+$$
+
+con $I_z$ el momento de inercia de la sección respecto del eje neutro, del tema
+2. Con $M$ positivo, la parte de abajo trabaja a **tracción** y la de arriba a
+**compresión**, y las tensiones máximas están en las fibras más alejadas del eje
+neutro.
+
+Con **flexión simple** hay además cortante, y aparecen tensiones tangenciales.
+Se calculan con la fórmula de Collignon,
+
+$$
+\tau = \frac{V\,A_1\,\overline{y}_1}{b\,I_z}
+$$
+
+donde $A_1$ es el área de la sección por encima de la fibra que miras, $\overline{y}_1$
+la distancia de su centro de gravedad al eje neutro y $b$ el ancho en esa fibra.
+Al revés que la normal, es **máxima en el eje neutro** y nula en los bordes; en un
+rectángulo, $\tau_{\max} = \tfrac{3}{2}\,V/(bh)$.
+
+Y con **flexión compuesta**, axil y flector a la vez, las tensiones normales se
+suman: $\sigma = N/A + M\,y/I_z$.
+
+<ErrorTipico titulo="En una sección en T, la fibra más alejada no es la de siempre">
+En una sección simétrica las dos fibras extremas están a la misma distancia del
+eje neutro y basta con una. En una **T**, el eje neutro pasa por $G$, que no está
+en el centro de la altura, así que la fibra de arriba y la de abajo están a
+distancias distintas. La tensión máxima de tracción y la de compresión salen de
+fibras distintas y hay que calcular las dos, $M\,y_{\text{arriba}}/I$ y
+$M\,y_{\text{abajo}}/I$, en la sección de flector máximo **positivo** y en la de
+flector máximo **negativo**: el signo del momento cambia qué fibra tracciona. Es
+exactamente lo que piden las vigas de enero de 2024 y de la ordinaria de 2025.
+</ErrorTipico>
+
+## Torsión
+
+Un momento respecto del eje de la pieza, el **momento torsor** $M_t$, lo
+equilibran tensiones tangenciales. En una sección circular las secciones siguen
+planas y giran como sólidos rígidos, y la tensión crece en línea recta con la
+distancia al centro:
+
+$$
+\tau = \frac{M_t\,r}{I_p}
+$$
+
+con $I_p$ el **momento de inercia polar**, $\pi D^{4}/32$ para una sección llena.
+Es la cuestión 4 de teoría de enero de 2024. La tensión máxima está en el borde:
+
+$$
+\tau_{\max} = \frac{16\,M_t}{\pi D^{3}}
+$$
+
+Para una sección hueca de diámetros $D$ y $d$, $I_p = \pi(D^{4} - d^{4})/32$, y
+por eso las secciones huecas aprovechan mejor el material: quitan el que está
+cerca del centro, que apenas trabaja.
+
+## Lo que hay que llevarse
+
+- $N$, $V$ y $M$ son la estática de una parte de la pieza. En el curso, $y$
+  hacia abajo: $V$ es la suma de fuerzas hacia arriba a la izquierda y $M$ es
+  positivo si tracciona abajo.
+- $dV/dx = -q_y$ y $dM/dx = V$: el flector es máximo donde la cortante se anula.
+- Flexión: $\sigma = M\,y/I_z$, máxima en las fibras extremas; en una T, las dos.
+- Torsión: $\tau = M_t\,r/I_p$, y $\tau_{\max} = 16M_t/(\pi D^{3})$.
