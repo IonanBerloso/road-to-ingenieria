@@ -29,6 +29,16 @@ septiembre de 2026, pero no hay un solo examen entre su material, y sin
 exámenes no hay ruta que medir ni cierre posible (§14, §15). Lo que le falta
 es material, no trabajo; está más abajo, en su propia sección.
 
+**Y una séptima, Mecánica Aplicada, abierta el 12 de septiembre de 2026 y en
+`obra`.** Sus **doce temas están escritos** —prosa, figura y dos ejemplos
+propios cada uno— y sus **tres convocatorias con enunciado en castellano**
+están transcritas con su PDF: enero de 2024, la ordinaria y la extraordinaria
+de 2025, las tres del bloque 1, Estática. Las colecciones van por tema y hay
+dos montadas, las de los temas 1 y 2, con 35 problemas guiados. Le falta el
+resto de las colecciones, las dos rutas y el cierre; el bloque 2 no tiene
+ninguna convocatoria en castellano, así que su ruta o se mide leyendo los
+exámenes en euskera para clasificar qué cae, o se declara sin medir.
+
 **Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
 después de abrirse. Sus diez temas están escritos —cada uno con su figura y su
 ejemplo de entrada, que es lo que §15 pide— y su ruta también, **medida sobre

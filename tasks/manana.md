@@ -443,6 +443,36 @@ Cada tema va en su commit, con el suelo en verde. La colección se transcribe
 literal (§08) y cada resultado impreso se contrasta haciendo la cuenta, que es
 lo que encontró las erratas de Materiales y de Térmica.
 
+> **Dónde está, la madrugada del 12 de septiembre de 2026.** Hechos los
+> puntos 1, 2, 3 y 5 en su parte de prosa: el registro, las tres convocatorias
+> del bloque 1 con su PDF y sus figuras, y **los doce temas** escritos con
+> prosa, figura y dos ejemplos propios cada uno. El catálogo los marca hechos.
+>
+> **Las colecciones van por tema, y cada una se contrasta.** Las del tema 1
+> (18 problemas) y el tema 2 (17) están montadas detrás de los ejemplos; las
+> de los temas 3 a 12 quedaron a medias: los agentes que las transcribían se
+> pararon al agotarse el límite de sesión de la cuenta, que se repone a las
+> 4 de la mañana. Su trabajo parcial está en el borrador de la sesión. Lo que el contraste lleva encontrado:
+>
+> | problema | impreso | lo que dan los datos |
+> |---|---|---|
+> | 1.14 | 13,52 y τ = 168,78 | 13,526 y 168,844: redondeo a mitad de cuenta |
+> | 1.18 | k = 1 | también k = −7: «paralelos» no exige el mismo sentido |
+> | 2.1 | x_G = 2R·sen α/α | R·sen α/α: el arco abarca 2α, y el impreso deja G fuera del arco |
+> | 2.8 | 4254 mm³ | 720 mm³ leyendo el enunciado al pie de la letra; el impreso es el agujero entero |
+> | 2.17 | I_x = 1.166.736, I_y = 603.043 | 1.167.736 y 636.043: erratas de copia |
+>
+> En todos se publica lo que dan los datos, el impreso queda como distractor
+> con su explicación, y la fuente lo dice (§13).
+>
+> **Lo que falta:** las diez colecciones que quedan, las dos rutas —la del
+> bloque 1 medida sobre las tres convocatorias; la del bloque 2 con la decisión
+> del punto 1— y el cierre contra §15.
+>
+> **Una deuda pequeña, medida:** `normaliza()` de `src/lib/unidades.ts`
+> convierte ² y ³ pero no ⁴, así que las respuestas en cm⁴ de la colección del
+> tema 2 van como `numero` con la unidad en `formato` y no como `magnitud`.
+
 ---
 
 ## Lo que NO se va a hacer, y por qué

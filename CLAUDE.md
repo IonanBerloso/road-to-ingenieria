@@ -138,6 +138,28 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > castellano— que la tabla del plan no veía porque se contó sobre una copia
 > parcial del material. El plan está en `tasks/manana.md`, fase 8.
 >
+> **Y en la madrugada del 12 de septiembre de 2026, Mecánica Aplicada tiene
+> los doce temas escritos y sus tres convocatorias montadas.** Cada tema con
+> prosa, figura y dos ejemplos propios —**83 temas** en el sitio—, las tres
+> convocatorias del bloque 1 con su PDF y sus figuras redibujadas, y las
+> colecciones de los temas 1 y 2, 35 problemas guiados detrás de los ejemplos.
+> El corpus pasa a **1.571 ejercicios y 6.647 pasos**. Las diez colecciones
+> que faltan se quedaron a medias: los agentes que las transcribían se
+> pararon al agotarse el límite de sesión, y lo suyo está en el borrador, no
+> en el repositorio.
+>
+> El contraste volvió a encontrar resultados impresos que no salen, cinco en
+> las dos colecciones montadas: **1.14** y **1.18** del tema 1 —un redondeo a
+> mitad de cuenta y una segunda solución que los datos admiten— y **2.1**,
+> **2.8** y **2.17** del tema 2 —el doble de lo que da la integral, dos
+> lecturas del enunciado y dos erratas de copia—. Publicados como siempre: la
+> cuenta buena en la casilla y la impresa como distractor explicado.
+>
+> **Y una deuda nueva, medida:** las **57 respuestas de examen** de Mecánica
+> no tienen todavía su recálculo en `tests/verificacion/`, así que el sitio
+> queda en 1.423 de 1.481. Es la misma deuda que tuvo Térmica y se salda
+> igual.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -477,11 +499,11 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.578 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.164 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.492 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.661 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.375 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.571 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 11 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 15 |
 
 > Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
 > pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
@@ -780,11 +802,11 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 
 | patrón | dónde vive de verdad | usos |
 |---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 71 temas |
+| **1 · Lectura** | `patrones/Lectura.astro` | los 83 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.492 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.571 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.492 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.571 |
 | (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
