@@ -33,11 +33,13 @@ es material, no trabajo; está más abajo, en su propia sección.
 `obra`.** Sus **doce temas están escritos** —prosa, figura y dos ejemplos
 propios cada uno— y sus **tres convocatorias con enunciado en castellano**
 están transcritas con su PDF: enero de 2024, la ordinaria y la extraordinaria
-de 2025, las tres del bloque 1, Estática. Las colecciones van por tema y hay
-dos montadas, las de los temas 1 y 2, con 35 problemas guiados. Le falta el
-resto de las colecciones, las dos rutas y el cierre; el bloque 2 no tiene
-ninguna convocatoria en castellano, así que su ruta o se mide leyendo los
-exámenes en euskera para clasificar qué cae, o se declara sin medir.
+de 2025, las tres del bloque 1, Estática. **Las doce colecciones están
+transcritas enteras**, 230 problemas guiados con su figura redibujada, y el
+tema 6 estrena el primer simulador de la asignatura: la viga con sus
+diagramas, atada por sus pruebas a los números que publica la ordinaria de
+2025. Le faltan las dos rutas y el cierre; el bloque 2 no tiene ninguna
+convocatoria en castellano, así que su ruta o se mide leyendo los exámenes en
+euskera para clasificar qué cae, o se declara sin medir.
 
 **Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
 después de abrirse. Sus diez temas están escritos —cada uno con su figura y su

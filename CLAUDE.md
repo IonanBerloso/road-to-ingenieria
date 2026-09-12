@@ -160,6 +160,30 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > queda en 1.423 de 1.481. Es la misma deuda que tuvo Térmica y se salda
 > igual.
 >
+> **Y esa misma mañana quedan transcritas las doce colecciones enteras.** La
+> asignatura pasa de 191 a **250 ejercicios** y el corpus a **1.742 ejercicios
+> y 7.468 pasos**. Cada resultado impreso se ha recalculado por un camino
+> independiente del desarrollo escrito, y eso ha destapado **más de treinta
+> que no salen**: seis en el tema 3, cuatro en el 4, siete en el 7, dos en el
+> 8, tres en el 9, tres en el 10 y seis en el 12. En todos se publica lo que
+> dan los datos, con el impreso de distractor explicado (§13).
+>
+> Y algo que no había pasado hasta ahora: **las resoluciones oficiales del
+> profesor también fallan**, y no siempre del mismo lado. En el 12.17 encuadra
+> una raíz que sus propias ecuaciones no dan; en el 12.18 su fórmula del par
+> pierde una R y deja de ser dimensionalmente un par; y en el 10.1, al revés,
+> **el impreso acierta y la resolución se lleva un signo**. Cuando las dos
+> fuentes discrepan se publica la que reproducen las cuentas, y la fuente del
+> ejercicio dice cuál es.
+>
+> **El primer simulador de la asignatura**, en el tema 6: la viga con sus
+> diagramas de cortante y flector, con los apoyos móviles. Responde a por qué
+> el peor flector de una viga con voladizo está en el apoyo y no en el vano,
+> donde la cortante no pasa por cero sino que salta. Su modelo vive en
+> `src/lib/viga.ts` y sus 19 pruebas lo atan a números publicados: los
+> ejercicios 6.2, 6.5 y 6.9 de la colección y el ejercicio 2 de la ordinaria
+> de 2025, cuyo flector máximo —49MgL/8 en x = 7L/4— sale de ese modelo.
+>
 > «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
 > declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
 > tiene colección transcrita en cuatro de sus diez temas porque el material no
@@ -499,9 +523,9 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.661 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.375 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.571 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.833 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.853 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.742 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 15 |
 
@@ -804,10 +828,10 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 |---|---|---|
 | **1 · Lectura** | `patrones/Lectura.astro` | los 83 temas |
 | **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.571 ejercicios |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.742 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.571 |
-| (*simulador*) | `sim/`, cuando el tema lo pide | 6 |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.742 |
+| (*simulador*) | `sim/`, cuando el tema lo pide | 7 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
 ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
