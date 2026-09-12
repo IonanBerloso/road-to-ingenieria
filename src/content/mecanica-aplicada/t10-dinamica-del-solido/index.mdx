@@ -1,0 +1,199 @@
+---
+asignatura: mecanica-aplicada
+tema: 10
+titulo: Dinámica del sólido rígido
+descripcion: "Los teoremas del tema 9 en un sólido: el momento angular con el tensor de inercia, que no tiene por qué ir en la dirección del giro, la energía cinética y el trabajo de sus fuerzas."
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del Tema 10, «Dinámica del sólido rígido» · Mecánica Aplicada, UPV/EHU, curso 2025-2026, y del capítulo 10 del libro de la asignatura. La figura es nuestra.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Un sólido rígido es un sistema de partículas, así que los tres teoremas del
+tema 9 valen tal cual. Lo que este tema añade es cómo se calculan sus
+magnitudes, que para un sólido tienen una forma propia. La más importante, y la
+que más sorprende, es el momento angular: **no tiene por qué ir en la dirección
+de la velocidad angular**. Un cuerpo que gira con $\vec{\omega}$ constante puede
+necesitar un momento para seguir haciéndolo, y ese momento es lo que desgasta
+los cojinetes de un rotor mal equilibrado. De ahí sale el tema 11 entero.
+
+## El momento angular y el tensor de inercia
+
+Para un sólido rígido, el momento angular respecto de su centro de gravedad se
+obtiene integrando $\vec{r}' \times (\vec{\omega} \times \vec{r}')$ sobre todo el
+volumen. El resultado es lineal en $\vec{\omega}$, y se escribe con una matriz:
+
+$$
+\begin{pmatrix} H_{Gx} \\ H_{Gy} \\ H_{Gz} \end{pmatrix}
+=
+\begin{pmatrix}
+I_{Gx} & -I_{Gxy} & -I_{Gzx} \\
+-I_{Gxy} & I_{Gy} & -I_{Gyz} \\
+-I_{Gzx} & -I_{Gyz} & I_{Gz}
+\end{pmatrix}
+\begin{pmatrix} \omega_x \\ \omega_y \\ \omega_z \end{pmatrix}
+$$
+
+En la diagonal están los **momentos de inercia**, y fuera de ella los
+**productos de inercia**, con signo menos. La matriz es la representación del
+**tensor de inercia**, y la ecuación entera se escribe $\vec{H}_G = \mathbf{I}_G\,\vec{\omega}$.
+Respecto de un punto fijo $O$ es lo mismo con el tensor de $O$:
+$\vec{H}_O = \mathbf{I}_O\,\vec{\omega}$.
+
+Y aquí está la sorpresa. Una matriz no conserva la dirección de un vector en
+general, así que **$\vec{H}_G$ solo es paralelo a $\vec{\omega}$ si $\vec{\omega}$ va
+según una dirección principal**. Las **direcciones principales** son tres
+direcciones perpendiculares por $G$ en las que los productos de inercia se
+anulan. En esos ejes el tensor es diagonal y todo se simplifica:
+
+$$
+\vec{H}_G = I_{Gx}\,\omega_x\,\hat{\imath} + I_{Gy}\,\omega_y\,\hat{\jmath} + I_{Gz}\,\omega_z\,\hat{k}
+$$
+
+Por eso los problemas se plantean casi siempre en **ejes principales unidos al
+sólido**, en los que los momentos de inercia no cambian con el movimiento.
+
+<figure>
+<svg viewBox="0 0 460 250" role="img" width="460" height="250"
+     aria-labelledby="ma10-t ma10-d">
+  <title id="ma10-t">El momento angular de una barra que gira inclinada no va en la dirección del giro</title>
+  <desc id="ma10-d">Una barra delgada de 1 metro y 2 kilogramos gira a 5 radianes por segundo alrededor de un eje vertical que pasa por su centro G, inclinada 30 grados sobre la horizontal. La velocidad angular es vertical. El momento angular respecto de G, de 0,722 kilogramo metro cuadrado por segundo, es perpendicular a la barra, así que forma 30 grados con la vertical: tiene una componente vertical de 0,625 y una horizontal de 0,361. Esa componente horizontal gira con la barra, y hacerla girar exige un momento de 5 por 0,361, 1,80 newton metro.</desc>
+  <defs>
+    <marker id="ma10-f1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--d1)"/>
+    </marker>
+    <marker id="ma10-f2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--d2)"/>
+    </marker>
+  </defs>
+
+  <line x1="150" y1="236" x2="150" y2="24" stroke="var(--faint)" stroke-width="0.9" stroke-dasharray="4 3"/>
+  <line x1="150" y1="200" x2="150" y2="170" stroke="var(--d1)" stroke-width="2.2" marker-end="url(#ma10-f1)"/>
+  <text x="156" y="192" font-size="9.5" fill="var(--d1)">ω = 5 rad/s</text>
+
+  <line x1="63.4" y1="180" x2="236.6" y2="80" stroke="var(--ink)" stroke-width="4"/>
+  <circle cx="150" cy="130" r="3.4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.2"/>
+  <text x="160" y="142" font-size="10" fill="var(--ink)">G</text>
+  <line x1="150" y1="130" x2="250" y2="130" stroke="var(--faint)" stroke-width="0.8"/>
+  <path d="M190 130 A 40 40 0 0 0 184.6 110" fill="none" stroke="var(--faint)" stroke-width="0.8"/>
+  <text x="196" y="122" font-size="9" fill="var(--faint)">30°</text>
+
+  <line x1="150" y1="130" x2="101.5" y2="46" stroke="var(--d2)" stroke-width="2.4" marker-end="url(#ma10-f2)"/>
+  <text x="96" y="40" font-size="9.5" text-anchor="end" fill="var(--d2)">H = 0,722</text>
+  <line x1="150" y1="43.4" x2="100" y2="43.4" stroke="var(--flag)" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="125" y="36" font-size="9" text-anchor="middle" fill="var(--flag)">0,361</text>
+  <text x="156" y="70" font-size="9" fill="var(--faint)">0,625</text>
+
+  <text x="270" y="56" font-size="9.5" fill="var(--ink)">barra de 1 m y 2 kg</text>
+  <text x="270" y="74" font-size="9.5" fill="var(--ink)">I⊥ = ML²/12 = 0,167 kg·m²</text>
+  <text x="270" y="98" font-size="9.5" fill="var(--ink)">H va perpendicular a la barra,</text>
+  <text x="270" y="114" font-size="9.5" fill="var(--ink)">no en la dirección de ω</text>
+  <text x="270" y="150" font-size="9.5" fill="var(--flag)">su parte horizontal gira:</text>
+  <text x="270" y="166" font-size="9.5" fill="var(--flag)">M = ω · 0,361 = 1,80 N·m</text>
+</svg>
+<figcaption>
+
+Una barra delgada de **1 m** y **2 kg** que gira a **5 rad/s** alrededor de un
+eje vertical, inclinada 30°. A lo largo de la barra su momento de inercia es
+prácticamente nulo, así que el momento angular sale **perpendicular a la
+barra** y no vertical: tiene una parte horizontal de **0,361 kg·m²/s** que da
+vueltas con ella. Hacer girar esa parte cuesta un momento, **1,80 N·m**, aunque
+la velocidad angular no cambie.
+
+</figcaption>
+</figure>
+
+Si cambias de sistema de referencia, el tensor se transforma con la matriz de
+rotación $[R]$, cuyas filas son los vectores unitarios del sistema nuevo escritos
+en el viejo: $[\mathbf{I}]' = [R]\,[\mathbf{I}]\,[R]^{T}$.
+
+## La energía cinética de un sólido
+
+La energía cinética se parte en dos, igual que en un sistema de partículas: la
+de la **traslación** con el centro de gravedad y la de la **rotación** alrededor de
+él:
+
+$$
+T = \tfrac12\,M\,v_G^{2} + \tfrac12\,\vec{\omega} \cdot \mathbf{I}_G\,\vec{\omega}
+$$
+
+En ejes principales, la de rotación es
+$\tfrac12\left(I_{Gx}\,\omega_x^{2} + I_{Gy}\,\omega_y^{2} + I_{Gz}\,\omega_z^{2}\right)$. Y si
+el sólido tiene un punto fijo $O$, toda su energía es de rotación alrededor de
+él: $T = \tfrac12\,\vec{\omega} \cdot \mathbf{I}_O\,\vec{\omega}$.
+
+<ErrorTipico titulo="Quedarse con una de las dos energías de un disco que rueda">
+Un disco que rueda sin deslizar tiene las dos: avanza con su centro y gira
+alrededor de él. Contar solo $\tfrac12 M v_G^{2}$ o solo $\tfrac12 I_G\,\omega^{2}$ da
+una energía que se queda corta, y en un problema de energía sale una velocidad
+final más alta de la cuenta. Para un disco macizo, $I_G = MR^{2}/2$ y $v_G = \omega R$,
+y las dos juntas son $\tfrac34 M v_G^{2}$: la rotación es un tercio del total.
+</ErrorTipico>
+
+## El trabajo de las fuerzas
+
+En un sólido rígido **las fuerzas internas no trabajan**: la distancia entre dos
+puntos no cambia, así que su desplazamiento relativo es perpendicular a la
+fuerza que se hacen. Solo trabajan las externas, y su trabajo se escribe con la
+resultante y el momento en un punto cualquiera $P$:
+
+$$
+dW = \vec{F} \cdot d\vec{r}_P + \vec{M}_P \cdot d\vec{\theta}
+$$
+
+la traslación de $P$ más el giro alrededor de él. De ahí, la **potencia** es
+$\vec{F} \cdot \vec{v}_P + \vec{M}_P \cdot \vec{\omega}$, y la de un motor que da un par
+$M$ girando a $\omega$ es $P = M\,\omega$.
+
+## Cómo se aplican los teoremas
+
+Para un sólido rígido los teoremas del tema 9 dan dos ecuaciones vectoriales
+que definen su movimiento entero:
+
+$$
+\vec{F} = M\,\vec{a}_G
+\qquad
+\vec{M}_G = \frac{d\vec{H}_G}{dt}
+$$
+
+o, si hay un punto fijo, $\vec{M}_O = d\vec{H}_O/dt$. Dicen además dos cosas que
+cierran el círculo con los primeros temas: dos sistemas de fuerzas con la misma
+resultante y el mismo momento producen el mismo movimiento —por eso las
+fuerzas sobre un sólido son vectores deslizantes, tema 1—, y si $\vec{a}_G$ y
+$d\vec{H}_G/dt$ son nulos las fuerzas forman un sistema nulo: la estática es un caso
+particular de la dinámica.
+
+Lo delicado es derivar $\vec{H}_G$. Se calcula en unos ejes que giran con el sólido,
+para que los momentos de inercia no cambien, y entonces hay que derivar con la
+**fórmula de Boure**: si esos ejes giran con velocidad angular $\vec{\Omega}$,
+
+$$
+\frac{d\vec{H}_G}{dt} = \left(\frac{d\vec{H}_G}{dt}\right)_{\text{móvil}} + \vec{\Omega} \times \vec{H}_G
+$$
+
+El segundo término es el que da el momento de la barra de la figura: con
+$\vec{\omega}$ constante, la primera parte es nula, y aun así hace falta
+$\vec{\omega} \times \vec{H}_G$. Si el sólido tiene simetría de revolución, como un
+cilindro, no hace falta que los ejes sigan su giro propio: sus momentos de
+inercia son iguales en todo el plano perpendicular al eje.
+
+Y el teorema de la energía, con el trabajo de las fuerzas no conservativas
+—el rozamiento, un motor— separado del resto:
+
+$$
+W_{nc} + T_A + V_A = T_B + V_B
+$$
+
+## Lo que hay que llevarse
+
+- $\vec{H}_G = \mathbf{I}_G\,\vec{\omega}$, y solo es paralelo a $\vec{\omega}$ en una
+  dirección principal.
+- $T = \tfrac12 M v_G^{2} + \tfrac12\,\vec{\omega} \cdot \mathbf{I}_G\,\vec{\omega}$: traslación más
+  rotación.
+- En un sólido rígido solo trabajan las fuerzas externas.
+- $\vec{F} = M\vec{a}_G$ y $\vec{M}_G = d\vec{H}_G/dt$, derivando en ejes móviles con
+  $\vec{\Omega} \times \vec{H}_G$.
