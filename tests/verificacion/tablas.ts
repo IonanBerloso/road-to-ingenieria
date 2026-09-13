@@ -20,7 +20,20 @@ function numeroDeLaTabla(t: string) {
   const limpio = t.trim().replace(/\{,\}/g, '.').replace(/^\$\s*\\le\s*/, '$');
   const m = /^\$(?:([\d.]+)\\cdot\s*)?10\^\{(-?\d+)\}\$$/.exec(limpio);
   if (!m) throw new Error(`no sé leer «${t}»`);
-  return Number(m[1] ?? '1') * 10 ** Number(m[2]);
+  /* La notación científica se construye como TEXTO y la parsea el motor, en
+     vez de multiplicar por una potencia de diez.
+     `1.5 * 10 ** -5` y `1.5e-5` **no son el mismo double**: el primero hace
+     dos operaciones y arrastra el error de la segunda. En Node 24 sale
+     0.000015000000000000002 —por encima— y las comparaciones `<=` de las
+     bandas de esta tabla caen del lado bueno; la auditoría externa del 13 de
+     septiembre de 2026 reprodujo en Node 22 el valor 0.000014999999999999999
+     —por debajo— y con él tres pruebas en rojo, entre ellas
+     `coeficienteHW(1.5e-5)` devolviendo 140 donde la tabla dice 150.
+     No he podido reproducir ese rojo desde aquí, y da igual: un guardián cuyo
+     resultado depende de la versión del motor y no del contenido enseña a
+     ignorar un rojo, que es lo que §11 no admite. `Number('1.5e-5')` es una
+     sola conversión y da el double exacto de la literal, en cualquier motor. */
+  return Number(`${m[1] ?? '1'}e${m[2]}`);
 }
 
 /**

@@ -99,6 +99,21 @@ const catalogo = defineCollection({
       curso: z.union([z.literal(1), z.literal(2)]),
       orden: z.number().int().min(1),
       estado: z.enum(['ok', 'obra', 'prev']),
+      /** Por qué esta asignatura todavía no está, dicho para el alumno que
+       *  entra buscándola y se encuentra un «Todavía no».
+       *
+       *  Existe desde el 13 de septiembre de 2026 y lo pidió una auditoría
+       *  externa. La portada llevaba la razón escrita a fuego en la
+       *  plantilla —«primero se terminan Cálculo y Álgebra»— y las dos
+       *  llevaban cerradas desde agosto: era la misma frase caducada de
+       *  siempre, y encima en el único sitio donde `deuda.mjs` §10 no mira,
+       *  porque §10 lee `docs/` y esto vivía en un `.astro`.
+       *
+       *  Va en el catálogo porque el motivo es un dato de la asignatura, no
+       *  de la plantilla: cada una está parada por lo suyo, y quien lo sabe
+       *  es quien escribe el catálogo. Opcional: sin él, la portada dice lo
+       *  genérico, que no caduca. */
+      motivo: z.string().min(20).max(200).optional(),
       acento: z.string().regex(/^--a-[a-z]+$/, 'tiene que ser un token de tokens.css'),
       descripcion: z.string().min(10).max(200),
       /** false = el temario está puesto a ojo y hay que sustituirlo por el oficial. */
@@ -856,6 +871,31 @@ const examen = defineCollection({
         z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones'),
         z.array(z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones')).min(1),
       ]),
+      /** QUÉ es ese PDF, porque no es lo mismo en todas las asignaturas y el
+       *  sitio llevaba meses diciendo que sí.
+       *
+       *  Hasta el 13 de septiembre de 2026 cinco sitios distintos lo llamaban
+       *  «su **enunciado original** en PDF», y `Examen.astro` remataba con «el
+       *  PDF original, que es el mismo que se repartió en el examen». Para las
+       *  veinte convocatorias de Ingeniería Térmica eso es falso: sus PDF
+       *  tienen entre **14 y 32 páginas** —58 MB entre los veinte— y son la
+       *  **resolución completa del profesor**, con el enunciado citado en un
+       *  recuadro arriba y el desarrollo debajo. Un enunciado de tres
+       *  ejercicios es un folio, y así son los de las otras cinco asignaturas.
+       *
+       *  Lo encontró una auditoría externa el mismo día en que la interna
+       *  retiraba cuatro PDF de esa misma carpeta **por ser resoluciones del
+       *  profesor**: se retiraron porque no los enlazaba nadie, y ese criterio
+       *  tapó que veinte de la misma naturaleza seguían enlazados. Dos
+       *  guardianes mirando el mismo estante y ninguno preguntando qué había
+       *  dentro.
+       *
+       *  Publicar el enunciado y publicar la corrección del profesor no son la
+       *  misma decisión (§08, §13 caso 5), y la segunda no me toca a mí: queda
+       *  declarada aquí y anotada en `tasks/manana.md` para que Ionan la tome
+       *  por escrito. Lo que sí me toca es que la página no llame enunciado a
+       *  lo que no lo es. */
+      pdfEs: z.enum(['enunciado', 'resolucion']).default('enunciado'),
       ejercicios: z
         .array(
           z.object({

@@ -144,9 +144,9 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
       página no trae. La página de detalle ya lo condicionaba bien
       (`[examen].astro`); esta se quedó sin el condicional. Lo encontró la
       auditoría del 13 de septiembre de 2026. */}
-  descripcion={`Los exámenes de ${asignatura.data.nombre} resueltos enteros, con el enunciado original${
-    [...datos.values()].some((d) => d.total > 0) ? ' y el reparto de puntos por competencia' : ''
-  }.`}
+  descripcion={`Los exámenes de ${asignatura.data.nombre} resueltos enteros, con ${
+    lista.every((ex) => ex.data.pdfEs === 'resolucion') ? 'el PDF corregido de la escuela' : 'el enunciado original'
+  }${[...datos.values()].some((d) => d.total > 0) ? ' y el reparto de puntos por competencia' : ''}.`}
   acento={asignatura.data.acento}
   crumb={crumb}
 >
@@ -156,9 +156,14 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
     <div class="shell">
       <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre}</p>
       <h1>Exámenes</h1>
+      {/* «Enunciado original» solo si lo es. En Térmica el PDF de la escuela
+          es la corrección del profesor —14 a 32 páginas— con el enunciado
+          citado arriba, y este sitio lo llamaba enunciado en cinco lugares.
+          Lo encontró una auditoría externa el 13 de septiembre de 2026. */}
       <p class="lede">
-        Los de verdad, con su enunciado original en PDF. Cada uno abre en
-        blanco para que te lo hagas antes de mirar nada.
+        {lista.every((ex) => ex.data.pdfEs === 'resolucion')
+          ? 'Los de verdad, con el PDF de la escuela detrás: aquí es el examen corregido por el profesor, no el cuadernillo en blanco. Cada convocatoria abre en blanco para que te la hagas antes de mirar nada.'
+          : 'Los de verdad, con su enunciado original en PDF. Cada uno abre en blanco para que te lo hagas antes de mirar nada.'}
       </p>
 
       <p class="aviso rotulo">
@@ -262,7 +267,8 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                     target="_blank"
                     rel="noopener"
                   >
-                    ↓ PDF original{todos.length > 1 ? ` (${i + 1}/${todos.length})` : ''}
+                    ↓ {ex.data.pdfEs === 'resolucion' ? 'PDF corregido' : 'PDF original'}
+                    {todos.length > 1 ? ` (${i + 1}/${todos.length})` : ''}
                   </a>
                 ))}
               </li>

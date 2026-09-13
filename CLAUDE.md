@@ -1681,7 +1681,7 @@ cuatro son obligatorias:
 |---|---|
 | `aprendes` | qué vas a saber **hacer** al acabarlo, en segunda persona |
 | `teoria` | dónde se explica, enlazado al apartado exacto |
-| `ejercicios` | de `ejemplo` a `practica` a `examen`, en ese orden |
+| `ejercicios` | de `ejemplo` a `practica` a `examen`, en ese orden — con **una** excepción, la de abajo |
 | `dominio` | cómo sabes que este escalón está cerrado |
 
 > Nace el 23 de agosto de 2026 de una crítica del alumno: «lo que has hecho es
@@ -1693,6 +1693,27 @@ cuatro son obligatorias:
 
 La regla que lo resume: **si el primer ejercicio de un escalón no lo puede
 hacer alguien que acaba de leer la teoría, falta un ejemplo delante.**
+
+**Y la excepción, escrita el 13 de septiembre de 2026 en vez de saltársela.**
+Un `ejemplo` puede ir **al final** de un escalón cuando enseña *otro camino
+para lo mismo* que solo se aprecia después de haber hecho el principal: el
+tercer método de Cramer detrás de Gauss y del rango, Cayley-Hamilton detrás de
+la diagonalización, la válvula isoentálpica detrás de las otras filas de la
+tabla. Ahí el orden pedagógico va al revés que el orden por nivel, y quien lo
+mueve delante enseña un atajo antes de que haya nada de lo que atajar.
+
+Esto sale de una auditoría externa que contó **19 escalones desordenados**
+donde `deuda.mjs` decía «0 sin rampa» —solo miraba el primero—, y el recuento
+se reprodujo exacto. Pero los 19 no eran lo mismo, y el encargo de reordenarlos
+todos habría estropeado cinco: **10 tenían el `examen` colocado antes que la
+`practica`**, que es el fallo de verdad y se arreglaron ese día; **1** cerraba
+con el ejemplo introductorio, que en la ruta gemela abre el mismo escalón, y se
+movió; **5** son estos cierres deliberados, y lo que estaba mal era la regla,
+no ellos. Quedan **3** con un `ejemplo` en medio, que no son ninguna de las dos
+cosas y siguen en `tasks/manana.md`.
+
+`deuda.mjs` §2 bis los cuenta ahora separados por esas tres formas, porque
+tratarlas como una sola es lo que llevaba a arreglar mal nueve de diecinueve.
 
 ### Una ruta está terminada cuando
 

@@ -54,6 +54,12 @@ interface Props {
    *  uno; el examen de mayo-junio de 2020 son dos, y entonces cada uno trae su
    *  `etiqueta` para poder distinguirlos. */
   pdfs: { href: string; kb: number; etiqueta: string | null }[];
+  /** Qué es ese PDF. Casi siempre el enunciado que se repartió en el aula;
+   *  en Ingeniería Térmica son las veinte resoluciones completas del
+   *  profesor, de 14 a 32 páginas, con el enunciado citado arriba. Llamarlas
+   *  igual era una afirmación falsa publicada en cinco sitios: ver el campo
+   *  `pdfEs` en content.config.ts. */
+  pdfEs: 'enunciado' | 'resolucion';
   /** La ruta de estudio que prepara esta convocatoria, si la hay. Sale de
    *  `evaluacion` o de `tambienPrepara` en el YAML de la ruta. */
   ruta: { href: string; titulo: string } | null;
@@ -66,7 +72,8 @@ interface Props {
   fuera: { n: number; motivo: string }[];
 }
 
-const { eyebrow, titulo, fecha, pdfs, ruta, ejercicios, fuera } = Astro.props;
+const { eyebrow, titulo, fecha, pdfs, pdfEs, ruta, ejercicios, fuera } = Astro.props;
+const esResolucion = pdfEs === 'resolucion';
 /* Cuántos ejercicios trae el cuadernillo y cuántas resoluciones ofrece el
    sitio no siempre coinciden: en Térmica un ejercicio tiene cinco apartados
    que cruzan tres temas y se parte en varias piezas guiadas. Cuando las
@@ -182,9 +189,9 @@ const fueraHtml = await Promise.all(
               las 13 cajas. El pie ya no da la razón; la da cada motivo, que es
               donde se sabe cuál es (§10). */}
           <p class="f-pie">
-            Están en el PDF original, que es el mismo que se repartió en el
-            aula. Si los echas de menos al contrastar, no es un descuido: cada
-            uno dice ahí arriba por qué todavía no está resuelto aquí.
+            {esResolucion
+              ? 'Están en el PDF de la escuela, que aquí es el examen corregido por el profesor. Si los echas de menos al contrastar, no es un descuido: cada uno dice ahí arriba por qué todavía no está resuelto aquí.'
+              : 'Están en el PDF original, que es el mismo que se repartió en el aula. Si los echas de menos al contrastar, no es un descuido: cada uno dice ahí arriba por qué todavía no está resuelto aquí.'}
           </p>
         </div>
       )}
@@ -252,11 +259,13 @@ const fueraHtml = await Promise.all(
       pdfs.map((p) => (
         <div class="pdf-caja">
           <p class="mano pdf-tit">
-            El enunciado original{p.etiqueta ? ` · ${p.etiqueta}` : ''}
+            {esResolucion ? 'El examen corregido' : 'El enunciado original'}
+            {p.etiqueta ? ` · ${p.etiqueta}` : ''}
           </p>
           <p class="pdf-sub">
-            El PDF de la escuela, tal cual se repartió en el aula. Estudia con
-            lo que cayó, y contrasta cada resolución con su enunciado.
+            {esResolucion
+              ? 'El PDF de la escuela, y aquí no es el cuadernillo en blanco: es la corrección del profesor, con el enunciado citado arriba y su desarrollo debajo. Ábrelo después de intentarlo, no antes.'
+              : 'El PDF de la escuela, tal cual se repartió en el aula. Estudia con lo que cayó, y contrasta cada resolución con su enunciado.'}
           </p>
           <a class="pdf-cta" href={p.href} target="_blank" rel="noopener">
             Abrir el PDF →

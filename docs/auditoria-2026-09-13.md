@@ -355,6 +355,58 @@ Mecánica Aplicada, **que sí los traía** — y el propio fichero ya lo corrige
 
 ---
 
+## Lo que una segunda auditoría, hecha por la noche, corrige de esta
+
+El mismo 13 de septiembre, ya con estos arreglos subidos, una auditoría
+independiente barrió el repositorio sobre el commit `290c722`. Está en
+`2027 proyecto contenido/auditorias/auditoria-2026-09-13-externa.md`. No todo
+lo que dice es nuevo —coincidimos en lo grave—, pero **encontró tres cosas que
+esta se dejó**, y una de ellas es incómoda.
+
+**1 · Los veinte PDF de Térmica tampoco son enunciados.** Tienen de **14 a 32
+páginas** cada uno, 58 MB entre los veinte, y son la resolución completa del
+profesor con el enunciado citado en un recuadro arriba. Esta auditoría retiró
+esa misma mañana cuatro PDF de esa misma carpeta **por ser resoluciones del
+profesor** — y no miró los veinte que quedaban. El criterio que usó fue «no los
+enlaza nadie», y ese criterio le tapó el otro: dos guardianes mirando el mismo
+estante y ninguno preguntando qué había dentro. Peor, el sitio los llamaba «su
+**enunciado original** en PDF» en cinco sitios, rematando con «el mismo que se
+repartió en el aula». *Corregido con el campo `pdfEs`; si se siguen publicando
+o no es decisión de Ionan y está en `tasks/manana.md`.*
+
+**2 · Los escalones desordenados eran 19, no 12.** Contado de nuevo con un
+guion sobre los `nivel` reales, el reparto sale clavado al suyo: `algebra-ord`
+8, `algebra-ext` 6, `fundamentos-quimicos-2c` 2, `ingenieria-termica-ord` 2,
+`mecanica-aplicada-1c` 1. Pero **el encargo de reordenar los diecinueve habría
+estropeado cinco**: separados por forma, 10 tenían el `examen` antes que la
+`practica` —el fallo de verdad—, 1 cerraba con el ejemplo introductorio que en
+la ruta gemela abre el mismo escalón, y 5 son cierres deliberados que enseñan
+*otro camino para lo mismo*. Los 11 primeros, arreglados; los 5 últimos son la
+regla la que estaba corta, y §14 lleva ahora escrita la excepción.
+
+**3 · La portada publicaba «primero se terminan Cálculo y Álgebra»** a quien
+entraba buscando Expresión Gráfica, con las dos cerradas desde agosto. Es
+exactamente el patrón que esta auditoría persigue, y se le escapó porque
+`deuda.mjs` §10 mira `docs/` y esa frase vivía en una plantilla. *El motivo
+sale ahora del catálogo, y el texto de reserva no nombra ninguna asignatura.*
+
+**Y un bug que ninguna de las dos podía ver desde su máquina:** `npm test` da
+tres fallos en Node 22 y ninguno en Node 24, porque `1.5 * 10 ** -5` no es el
+mismo double que `1.5e-5`. No he podido reproducir el rojo, pero sí medir lo
+que importa: de los **once** valores de esa tabla, **exactamente uno** difiere
+entre las dos formas, y es el que la otra auditoría señaló. Arreglado
+construyendo el número como texto.
+
+**Lo que no comparto.** Su nota por asignatura y su orden de apertura son
+juicios razonables, no medidas, y el veredicto de Sistemas es una decisión ya
+tomada por Ionan («deja sistemas para el final»). Y su encargo de sellar
+`revisado` en los 26 bloques de Álgebra y Fluidos **no se ha hecho a
+propósito**: esa fecha significa «este bloque se pasó por los criterios de
+hueco», y ponerla sin pasarlos sería inventar para apagar una métrica — que es
+lo que el comentario de su propio esquema avisa que pasa.
+
+---
+
 ## Lo que la auditoría cambia en cómo el proyecto se comprueba
 
 Tres guardianes nuevos o arreglados, y son la parte que sobrevive a este

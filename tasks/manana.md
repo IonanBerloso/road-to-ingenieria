@@ -691,6 +691,67 @@ En orden de rendimiento:
   `package.json` —entre ellos `deuda.mjs`, que §04 declara la fuente oficial
   de las cifras—.
 
+### 10.7 bis · Lo que añade la auditoría EXTERNA del 13 de septiembre
+
+Llegó por la noche, hecha sobre `290c722` —o sea, sobre el trabajo de esa misma
+tarde— y está en `2027 proyecto contenido/auditorias/`. Lo suyo, ya hecho, va en
+el commit correspondiente; esto es lo que deja abierto.
+
+**Dos decisiones que son de Ionan, no encargos.**
+
+1. **Los veinte PDF de Ingeniería Térmica son la resolución completa del
+   profesor**, no el cuadernillo: de **14 a 32 páginas** cada uno, 58 MB entre
+   los veinte, con el enunciado citado en un recuadro arriba y el desarrollo
+   debajo. Comprobado contando páginas y abriendo la primera de la ordinaria de
+   2025-2026. §08 autoriza «los enunciados originales»; publicar la corrección
+   del profesor es otra cosa, y Ionan dio permiso el 10 de septiembre con un
+   «publícalo todo y ya decidiremos después». **Queda por decidir en firme.**
+   Lo que sí se ha hecho es que la página deje de llamarlo enunciado: el campo
+   `pdfEs` y los cinco rótulos que dependían de él.
+   Y la ironía, apuntada para no repetirla: ese mismo día la auditoría interna
+   retiró cuatro PDF de esa carpeta **por ser resoluciones del profesor**. Se
+   retiraron porque no los enlazaba nadie, y ese criterio tapó que veinte de la
+   misma naturaleza seguían enlazados. Dos guardianes mirando el mismo estante
+   y ninguno preguntando qué había dentro.
+2. **El 4.19 de Materiales** contradice a la profesora en un *método*, no en
+   una cuenta. Sigue abierto donde estaba.
+
+**Lo que NO he hecho, y por qué, porque el encargo lo pedía.**
+
+`revisado` sigue a **0 en los 12 bloques de Álgebra y en los 14 de Fluidos**.
+El encargo dice «poner `revisado` con fecha»; no lo he puesto. Esa fecha
+significa, según el comentario de su propio esquema, «este bloque se pasó por
+los criterios de hueco que la ruta declara en su `criterioDeOrden`», y yo he
+reordenado escalones, no he pasado veintiséis bloques por cuatro criterios.
+Sellar la fecha sería inventar para apagar una métrica — que es literalmente
+lo que ese comentario avisa que pasa cuando la métrica no distingue «mirado y
+sin huecos» de «sin mirar». **Queda como trabajo de un día, no como sello.**
+
+**Lo que queda de la externa.**
+
+- **El móvil, dentro de una ruta** (su §5). A 360 px las piezas de
+  `justificar` miden **184 px** dentro de `preparar/`, contra 328 px en una
+  página de tema: la ruta anida ejercicio dentro de escalón dentro de bloque y
+  cada nivel se lleva 8–20 px por lado. Es el fallo de los 145 px del 4 de
+  septiembre un nivel más adentro, y ningún guardián lo ve porque `humo.mjs`
+  mide 360 px en seis páginas de examen fijas. *Encargo: quitar el padding
+  lateral de `.bcaja`, `.escalon` y `.ejercicio` bajo 480 px hasta que el
+  párrafo pase de 280 px, y meter una ruta por asignatura en esa medida.*
+- **La paleta de comandos** (su §4): «viga», «flector», «cortante»,
+  «Coriolis», «lmp» y «diedrico» no devuelven nada, y «entropia» sin tilde
+  tampoco aunque «entropía» dé doce. Las 757 entradas son asignaturas, temas,
+  rutas y apartados — **ningún ejercicio**, y el mensaje de vacío promete
+  «prueba con una palabra del enunciado». *Encargo: normalizar tildes en la
+  clave y en la consulta, indexar los 1.742 títulos de ejercicio, y que el
+  mensaje prometa lo que hace.*
+- **Los 3 escalones con un `ejemplo` en medio** que quedan tras el arreglo de
+  hoy: los dos de `fundamentos-quimicos-2c` (`p j X`) y el de
+  `ingenieria-termica-ord / los-dos-caminos-en-un-sistema-cerrado`
+  (`j X X X j X`). No son cierre ni son el fallo grave: hay que mirarlos uno a
+  uno. `deuda.mjs` §2 bis los lista.
+- **Recontar Térmica** después de rehacer 2025-2026: pasa de 57 resoluciones
+  de examen a **52**, y esa cifra está en CLAUDE.md §00 y en `como-vamos.md`.
+
 ### 10.8 · Expresión Gráfica: lo que se puede hacer hoy sin la fase de diseño
 
 La auditoría confirma que **no la bloquea el material**: hay temario completo,
@@ -699,6 +760,30 @@ corrección. La bloquea que su examen es un dibujo, y eso es trabajo. Pero
 sigue con `temarioOficial: false` y **sin `evaluacion`** teniendo la guía y los
 criterios entre el material: eso se puede escribir ya, y es lo que la sacaría
 de `prev`.
+
+**Y hay más de lo que este fichero sabía.** La auditoría externa avisa de que
+la fase de diseño **ya está hecha** desde el 8 de septiembre y entregada fuera
+del repositorio: `2027 proyecto contenido/Claude outputs/expresion-grafica-paquete.zip`
+(y un `-1.zip` posterior), con el brief de arquitectura, un extractor que saca
+las 65 láminas de la colección como coordenadas del PDF vectorial, las 65
+figuras en JSON, el ejemplo YAML de un paso `construir` nuevo, el motor
+genérico y cuatro ejercicios probados. **Comprobado que los ficheros existen**;
+no los he abierto ni metido en el repositorio, porque eso es capa compartida y
+un tipo de paso nuevo (§13). El orden que propone la externa:
+
+1. sacarla de `prev` con lo que ya se sabe —`temarioOficial: true`, los tres
+   bloques de la guía y su `evaluacion` (diédrico 30 %, dibujo técnico 55 %,
+   CAD 15 %, con mínimo de 4 en cada examen)—, citando la guía;
+2. meter el paquete en `referencia/expresion-grafica/` **sin el PDF de la
+   colección** (las figuras van como JSON de coordenadas);
+3. construir `Taller.astro` + `lib/diedrico.ts` con SD1 de primer caso, y los
+   tests de geometría antes que el componente (§10).
+
+Y su argumento de orden, que hay que responder: es la única de **1.º** sin
+abrir, con 9 ECTS y todo el material, y §00 pone 1.º antes que 2.º — pero se
+abrió Sistemas, que es de 2.º y sin exámenes. Ionan dijo «deja sistemas para
+el final», así que el conflicto puede que ya esté resuelto; conviene decirlo
+donde se vea.
 
 ⚠️ En esa carpeta hay dos ficheros de calificaciones. No se abren.
 

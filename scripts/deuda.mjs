@@ -91,6 +91,28 @@ fila('TOTAL', `${totalEj} resoluciones, ${totalNada} sin nada contra lo que comp
 /* ── 2, 5, 6 · las rutas ────────────────────────────────────────────── */
 let escalones = 0, sinRampa = 0, unEjercicio = 0, bloques = 0, sinFalta = 0;
 const detSinRampa = [], detUno = [];
+/* §14 pide que los ejercicios de un escalón vayan «de `ejemplo` a `practica` a
+   `examen`, en ese orden», y hasta el 13 de septiembre de 2026 nadie lo
+   contaba: la sección 2 solo miraba el PRIMERO, así que un escalón que empieza
+   por un ejemplo y mete el examen en el segundo peldaño pasaba por bueno. Daba
+   «0 sin rampa» con diecinueve escalones desordenados dentro, y esos
+   diecinueve son la forma exacta del problema que hizo nacer el escalón en
+   agosto: el examen colocado donde todavía no se puede hacer.
+   Lo pidió una auditoría externa, que los contó a mano; este recuento los
+   reproduce y además los separa en tres, porque no son igual de graves:
+     · `examen` antes de `practica` — el fallo de verdad, el peldaño de arriba
+       puesto antes que la rampa;
+     · `ejemplo` al final — un ejemplo de cierre, que puede ser deliberado pero
+       §14 no lo contempla, así que se dice;
+     · `ejemplo` en medio — ni una cosa ni la otra.
+   Contarlos por separado es lo que permite arreglar los primeros hoy y
+   discutir los otros, en vez de tratar diecinueve casos como si fueran uno. */
+const ORDEN_NIVEL = { ejemplo: 0, practica: 1, examen: 2 };
+const detDesorden = {
+  'examen antes de práctica': [],
+  'ejemplo al final (permitido si es de cierre)': [],
+  'ejemplo en medio': [],
+};
 for (const f of readdirSync(join(CONT, 'preparar'))) {
   const doc = yaml.load(readFileSync(join(CONT, 'preparar', f), 'utf8'));
   const ruta = f.replace('.yaml', '');
@@ -105,6 +127,25 @@ for (const f of readdirSync(join(CONT, 'preparar'))) {
       const ids = (esc.ejercicios ?? []).map((x) => x.id);
       if (ids.length === 1) detUno.push(`${ruta} / ${b.id} / ${esc.id}`);
       if (EJ.get(ids[0])?.nivel === 'examen') detSinRampa.push(`${ruta} / ${b.id} / ${esc.id}`);
+
+      const niveles = ids.map((x) => EJ.get(x)?.nivel).filter(Boolean);
+      const v = niveles.map((n) => ORDEN_NIVEL[n]);
+      let baja = false;
+      for (let i = 1; i < v.length; i++) if (v[i] < v[i - 1]) baja = true;
+      if (baja) {
+        /* Qué clase de desorden, en el orden en que importa. */
+        const clase = v.some((x, i) => i && x === 1 && v.slice(0, i).includes(2))
+          ? 'examen antes de práctica'
+          : niveles[niveles.length - 1] === 'ejemplo'
+            ? 'ejemplo al final (permitido si es de cierre)'
+            : 'ejemplo en medio';
+        /* `j` ejemplo · `p` practica · `X` examen. Las dos primeras letras de
+           «ejemplo» y «examen» coinciden, así que no se abrevia por la
+           inicial: al escribir esto de la forma obvia salieron seis «EEEEEE»
+           que no querían decir nada. */
+        const dibujo = niveles.map((n) => ({ ejemplo: 'j', practica: 'p', examen: 'X' })[n]).join(' ');
+        detDesorden[clase].push(`${ruta} / ${b.id} / ${esc.id}  →  ${dibujo}`);
+      }
     }
   }
 }
@@ -116,6 +157,18 @@ console.log(`   §14: si el primero no lo puede hacer alguien que acaba de leer 
    teoría, falta un peldaño delante.`);
 fila('de', `${escalones} escalones, ${sinRampa} sin rampa (${Math.round((sinRampa / escalones) * 100)} %)`);
 detSinRampa.forEach((d) => fila('', d));
+
+pinta('2 bis · Escalones cuyos ejercicios no van de ejemplo a práctica a examen');
+console.log(`   §14 pide ese orden dentro del escalón, no solo en el primero, con una
+   excepción: un ejemplo de CIERRE, que enseña otro camino para lo mismo.
+   j = ejemplo · p = practica · X = examen.`);
+const totalDesorden = Object.values(detDesorden).reduce((s, l) => s + l.length, 0);
+fila('de', `${escalones} escalones, ${totalDesorden} desordenados`);
+for (const [clase, lista] of Object.entries(detDesorden)) {
+  if (!lista.length) continue;
+  fila(clase, lista.length);
+  lista.forEach((d) => fila('', '· ' + d));
+}
 
 pinta('5 · Escalones con un solo ejercicio');
 fila('de', `${escalones} escalones, ${unEjercicio}`);

@@ -75,6 +75,11 @@ const examenesPorAsignatura = new Map<
  *  corpus cambia, el sitio empieza a afirmar algo falso y no hay guardián que
  *  compare una frase con los datos. Se calcula. */
 const enterasPorAsignatura = new Map<string, boolean>();
+/** Y por el mismo motivo, qué asignaturas publican como PDF la corrección del
+ *  profesor en vez del cuadernillo en blanco. Aquí se decía «con su enunciado
+ *  original en PDF» de las seis, y en Ingeniería Térmica los veinte PDF son la
+ *  resolución completa —de 14 a 32 páginas—. Ver `pdfEs` en content.config.ts. */
+const corregidoPorAsignatura = new Map<string, boolean>();
 for (const ex of await getCollection('examen')) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
   lista.push({
@@ -88,6 +93,10 @@ for (const ex of await getCollection('examen')) {
   enterasPorAsignatura.set(
     ex.data.asignatura,
     (enterasPorAsignatura.get(ex.data.asignatura) ?? true) && entera,
+  );
+  corregidoPorAsignatura.set(
+    ex.data.asignatura,
+    (corregidoPorAsignatura.get(ex.data.asignatura) ?? true) && ex.data.pdfEs === 'resolucion',
   );
 }
 
@@ -497,14 +506,17 @@ const enteras = asignaturas
                       {(() => {
                         const n = examenesPorAsignatura.get(a.id)!.length;
                         const enteras = enterasPorAsignatura.get(a.id);
+                        const elPdf = corregidoPorAsignatura.get(a.id)
+                          ? 'el PDF corregido de la escuela'
+                          : 'su enunciado original en PDF';
                         if (n === 1) {
                           return enteras
-                            ? 'Una convocatoria, con su enunciado original en PDF y resuelta entera.'
-                            : 'Una convocatoria, con su enunciado original en PDF. Cada ejercicio que falta lo dice en su página.';
+                            ? `Una convocatoria, con ${elPdf} y resuelta entera.`
+                            : `Una convocatoria, con ${elPdf}. Cada ejercicio que falta lo dice en su página.`;
                         }
                         return enteras
-                          ? `${n} convocatorias, con su enunciado original en PDF y resueltas enteras.`
-                          : `${n} convocatorias, con su enunciado original en PDF. Los ejercicios que faltan están dichos uno a uno en cada página.`;
+                          ? `${n} convocatorias, con ${elPdf} y resueltas enteras.`
+                          : `${n} convocatorias, con ${elPdf}. Los ejercicios que faltan están dichos uno a uno en cada página.`;
                       })()}
                     </p>
                     <ul class="ex-lista">
@@ -542,9 +554,20 @@ const enteras = asignaturas
             <div class="pendiente">
               <p class="p-tit">Todavía no</p>
               <p>
-                {a.data.estado === 'obra'
-                  ? 'Se está construyendo ahora mismo. Los temas irán apareciendo aquí según se terminen.'
-                  : 'Esta asignatura está en el plan, pero primero se terminan Cálculo y Álgebra.'}
+                {/* El motivo sale del catálogo, que es quien lo sabe. Aquí
+                    estuvo escrito a fuego —«primero se terminan Cálculo y
+                    Álgebra»— hasta el 13 de septiembre de 2026, con las dos
+                    cerradas desde agosto y seis asignaturas terminadas: la
+                    frase que ve quien entra buscando la suya llevaba un mes
+                    siendo falsa. Lo encontró una auditoría externa, y se le
+                    había escapado a la mía porque `deuda.mjs` §10 persigue
+                    cifras caducadas en `docs/` y esta vivía en una plantilla.
+                    El texto de reserva es el genérico a propósito: no nombra
+                    ninguna asignatura, así que no puede volver a caducar. */}
+                {a.data.motivo ??
+                  (a.data.estado === 'obra'
+                    ? 'Se está construyendo ahora mismo. Los temas irán apareciendo aquí según se terminen.'
+                    : 'Está en el plan y todavía no tiene contenido. Se abre cuando le toca: una asignatura a la vez.')}
               </p>
             </div>
           )}
