@@ -499,6 +499,13 @@ lo que encontró las erratas de Materiales y de Térmica.
 >    lo lleva, así que sus cotas y etiquetas salen con el estilo por defecto.
 >    En Mecánica se arregló pasando esos estilos a un bloque global acotado a
 >    cada simulador; en Fluidos está sin tocar.
+> 3. **Los cinco escalones de un solo ejercicio de las rutas de Mecánica son
+>    los de `suelo`, y se quedan así a propósito**, por el mismo motivo que
+>    los dos de Térmica: un convenio de signos o la directriz de la catenaria
+>    son una convención que aprender, no una dificultad que escalar. La
+>    sección 5 de `deuda.mjs` los cuenta, y contarlos está bien; lo que no
+>    procede es inventarles un segundo ejercicio para apagar el marcador.
+>
 > 2. **Un guardián en verde no prueba que el modelo esté bien.** El de la viga
 >    comprobaba el flector del vano —que salía bien por casualidad— y no el
 >    del apoyo, que salía mal: un −8MgL en un extremo simplemente apoyado.
