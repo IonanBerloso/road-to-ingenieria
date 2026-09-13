@@ -473,6 +473,39 @@ lo que encontró las erratas de Materiales y de Térmica.
 > convierte ² y ³ pero no ⁴, así que las respuestas en cm⁴ de la colección del
 > tema 2 van como `numero` con la unidad en `formato` y no como `magnitud`.
 
+> **Y dónde quedó, la tarde del 12 de septiembre de 2026.** Las **doce
+> colecciones transcritas**: 250 ejercicios en la asignatura, con más de
+> treinta resultados impresos que no salen —publicados con la cuenta buena y
+> el impreso de distractor— y varias erratas encontradas en las resoluciones
+> oficiales del profesor, incluidas dos donde el impreso acierta y la
+> resolución falla.
+>
+> **Tres simuladores**, que era lo que de verdad le faltaba a Mecánica frente
+> a Fluidos: en figuras por ejercicio ya iba por delante. La viga y sus
+> diagramas (tema 6), el centro instantáneo (tema 8) y la catenaria contra la
+> parábola (tema 5), cada uno con su modelo en `src/lib/`, sus pruebas contra
+> números publicados, su preajuste y su entrada en el guardián.
+>
+> **Lo que queda de la fase 8:** las dos rutas —la del bloque 1, medida sobre
+> las tres convocatorias; la del bloque 2, con la decisión sobre los exámenes
+> en euskera— y el cierre contra §15, que incluye los **57 recálculos de
+> examen** en `tests/verificacion/`.
+>
+> **Dos deudas nuevas, medidas:**
+>
+> 1. **Los cinco simuladores de Fluidos dibujan sin estilo lo que crean en
+>    tiempo de ejecución.** El estilo con ámbito de Astro añade un atributo a
+>    cada elemento en la construcción, y lo que el script inserta después no
+>    lo lleva, así que sus cotas y etiquetas salen con el estilo por defecto.
+>    En Mecánica se arregló pasando esos estilos a un bloque global acotado a
+>    cada simulador; en Fluidos está sin tocar.
+> 2. **Un guardián en verde no prueba que el modelo esté bien.** El de la viga
+>    comprobaba el flector del vano —que salía bien por casualidad— y no el
+>    del apoyo, que salía mal: un −8MgL en un extremo simplemente apoyado.
+>    Lo cazó mirar la captura. Al elegir qué comprueba un preajuste conviene
+>    incluir **lo que tiene que valer cero**, no solo lo que la fuente
+>    publica como resultado.
+
 ---
 
 ## Lo que NO se va a hacer, y por qué

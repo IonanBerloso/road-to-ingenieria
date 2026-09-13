@@ -831,7 +831,7 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 | **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.742 ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
 | **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.742 |
-| (*simulador*) | `sim/`, cuando el tema lo pide | 7 |
+| (*simulador*) | `sim/`, cuando el tema lo pide | 9 |
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
 ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
