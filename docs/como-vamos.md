@@ -16,12 +16,13 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Cinco asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos,
-Fundamentos Químicos e Ingeniería Térmica.** Las cinco cumplen §15 entera y las
-cinco están en el catálogo como `ok`. Entre las cinco, **138 convocatorias
-transcritas** —las 118 de las cuatro primeras y veinte de Térmica, que tiene
-veintidós y dos declaradas imposibles—, y el guardián de convocatorias
-huérfanas no cuenta ninguna suelta.
+**Seis asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos,
+Fundamentos Químicos, Ingeniería Térmica y Mecánica Aplicada.** Las seis
+cumplen §15 entera y las seis están en el catálogo como `ok`. Entre las seis,
+**141 convocatorias transcritas** —las 118 de las cuatro primeras, veinte de
+Térmica y tres de Mecánica—, y el guardián de convocatorias huérfanas no
+cuenta ninguna suelta. Las que quedan fuera están declaradas con su motivo:
+dos de Térmica y cinco de Mecánica, todas íntegramente en euskera.
 
 **Y una sexta, Ciencia de Materiales, escrita entera y en `obra`.** Sus diez
 temas y los 99 ejercicios de su colección están publicados desde el 12 de
@@ -29,17 +30,22 @@ septiembre de 2026, pero no hay un solo examen entre su material, y sin
 exámenes no hay ruta que medir ni cierre posible (§14, §15). Lo que le falta
 es material, no trabajo; está más abajo, en su propia sección.
 
-**Y una séptima, Mecánica Aplicada, abierta el 12 de septiembre de 2026 y en
-`obra`.** Sus **doce temas están escritos** —prosa, figura y dos ejemplos
-propios cada uno— y sus **tres convocatorias con enunciado en castellano**
-están transcritas con su PDF: enero de 2024, la ordinaria y la extraordinaria
-de 2025, las tres del bloque 1, Estática. **Las doce colecciones están
-transcritas enteras**, 230 problemas guiados con su figura redibujada, y el
-tema 6 estrena el primer simulador de la asignatura: la viga con sus
-diagramas, atada por sus pruebas a los números que publica la ordinaria de
-2025. Le faltan las dos rutas y el cierre; el bloque 2 no tiene ninguna
-convocatoria en castellano, así que su ruta o se mide leyendo los exámenes en
-euskera para clasificar qué cae, o se declara sin medir.
+**Mecánica Aplicada se abrió el 12 de septiembre de 2026 y se cerró el 13**,
+que es lo más rápido que ha ido una asignatura en este proyecto. Sus **doce
+temas están escritos** —prosa, figura y dos ejemplos propios cada uno—, sus
+**tres convocatorias con enunciado en castellano** están transcritas con su
+PDF —enero de 2024, la ordinaria y la extraordinaria de 2025, las tres del
+bloque 1— y **las doce colecciones están enteras**: 250 ejercicios con su
+figura redibujada. Estrena además **tres simuladores** —la viga y sus
+diagramas, el centro instantáneo y la catenaria contra la parábola—, cada uno
+con su modelo probado, y sus **57 respuestas de examen recalculadas**.
+
+Sus dos rutas están medidas, y la del bloque 2 con una salvedad que conviene
+saber: **ese bloque no tiene ninguna convocatoria en castellano**, así que se
+ordenó leyendo los tres exámenes en euskera **solo para clasificar** qué tema
+pide cada hueco —leer para clasificar no es transcribir—, y esos exámenes son
+de 2018 y 2019. Las cinco convocatorias en euskera siguen sin transcribirse y
+declaradas con su motivo, como las dos de Térmica.
 
 **Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
 después de abrirse. Sus diez temas están escritos —cada uno con su figura y su

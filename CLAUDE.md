@@ -161,6 +161,28 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > **1.480 de 1.481**, y la que falta es la de Fluidos que se deja fuera a
 > propósito.
 >
+> **Y con eso, el 13 de septiembre de 2026 Mecánica Aplicada se cierra contra
+> §15: es la sexta terminada.** Sus doce temas escritos con figura y ejemplos
+> propios, sus doce colecciones —250 ejercicios—, las tres convocatorias
+> transcribibles con su PDF, tres simuladores con su modelo y sus pruebas, las
+> **dos rutas** y sus 57 respuestas recalculadas.
+>
+> Los huecos, que es lo que §15 pide de verdad y no que no los haya:
+>
+> - **Cinco convocatorias declaradas imposibles**: las de 2017-2018 y
+>   2018-2019 están íntegramente en euskera y traducirlas sería inventar el
+>   enunciado (§08). Es la misma decisión que las dos de Térmica. Sí se han
+>   **leído para clasificar** qué tema pide cada hueco —eso no publica una
+>   palabra de ellas— y de ahí sale la ruta del bloque 2.
+> - **El bloque 2 no tiene ninguna convocatoria en castellano**, así que su
+>   ruta está medida sobre exámenes de 2018 y 2019: siete años de antigüedad,
+>   y la ruta lo dice en su cabecera.
+> - **Dos huecos de material declarados en las rutas**: el círculo de Mohr y
+>   la velocidad de sucesión del CIR se explican y no tienen dónde
+>   practicarse, porque la colección no trae ni un problema de cada uno.
+> - Y los exámenes **no publican reparto por competencia**, así que sus
+>   ejercicios van sin `puntos`: no se estima lo que no se imprime (§10).
+>
 > **Y esa misma mañana quedan transcritas las doce colecciones enteras.** La
 > asignatura pasa de 191 a **250 ejercicios** y el corpus a **1.742 ejercicios
 > y 7.468 pasos**. Cada resultado impreso se ha recalculado por un camino
