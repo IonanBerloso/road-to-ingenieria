@@ -2009,6 +2009,27 @@ Cosas que ya han costado horas. No son opiniones.
   cualquier comprobador hecho con `grep`.
 - **`dist/` abierto con `file://` no tiene CSS.** Las variables salen vacías y
   parece que los SVG no se dibujan. Levanta un servidor.
+- **No reconstruyas mientras `humo.mjs` está corriendo.** El navegador lee
+  `dist/` a través del servidor de vista previa, así que un `npm run build` por
+  debajo le arranca las páginas de las manos y devuelve 404 que no son del
+  sitio. Pasó el 13 de septiembre de 2026, con 55 y luego 130 fallos fantasma,
+  y **volvió a pasar el 14** mientras se arreglaba justo eso: una barrida
+  entera perdida. Una tanda en segundo plano a la vez, y nada que toque `dist/`
+  hasta que termine.
+- **`max-width` y `overflow` NO hacen nada en una caja `display: inline`.** El
+  navegador los ignora en silencio, así que la regla se lee bien, pasa las
+  revisiones y no surte efecto. `.katex` es un `<span>`, o sea `inline` por
+  defecto: la regla que debía contener las fórmulas largas se escribió el 4 de
+  septiembre de 2026 y **estuvo diez días inerte**, con tres páginas de tema
+  yéndose de lado en un teléfono. Si una regla existe para arreglar algo
+  medido, hay que volver a medirlo después (§16); que esté escrita no es que
+  funcione.
+- **Un track `1fr` tiene `min-width: auto`, que es min-content y no cero.**
+  Cualquier hijo que no sepa encoger —una fila flex con `nowrap`, una tabla, una
+  fórmula— estira la columna entera y se lleva el documento con ella. En una
+  pantalla de 360 px la columna de un tema llegó a **771,8 px**. La cura es
+  `min-width: 0` en los hijos de la rejilla, y conviene ponerlo al escribir la
+  rejilla, no al descubrir el desborde.
 - **Una tolerancia relativa sobre una temperatura es enorme.** El lector de
   magnitudes convierte los grados Celsius a kelvin antes de comparar, así que
   el 2 % por defecto de una respuesta de 40 °C son **±6,3 K**: cualquier
