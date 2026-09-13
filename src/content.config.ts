@@ -954,6 +954,34 @@ const examen = defineCollection({
           z.object({
             /** El número con el que aparece en el cuadernillo. */
             n: z.number().int().positive(),
+            /**
+             * Los apartados que faltan, cuando el ejercicio **sí** está
+             * transcrito pero solo en parte: «b, c, e y f».
+             *
+             * POR QUÉ EXISTE, y es la segunda vez que este campo se queda
+             * corto por el mismo motivo. `fuera` nació el 4 de septiembre de
+             * 2026 para el hueco de grano grueso —un ejercicio del cuadernillo
+             * que no está—, y con Ingeniería Térmica apareció el de grano
+             * fino: sus ejercicios traen cinco y seis apartados, el sitio
+             * resuelve unos y no otros, y **no había manera de decirlo**.
+             *
+             * Medido el 14 de septiembre de 2026 sobre la ordinaria de enero
+             * de 2026: el examen pide **trece apartados** en sus tres
+             * ejercicios y el sitio resuelve **siete**. Del ejercicio 2, que
+             * pide seis, publicaba uno y medio. `fuera` estaba vacío, así que
+             * la página decía «Los 3 ejercicios … resueltos enteros» y la
+             * portada la contaba entre las convocatorias completas.
+             *
+             * Es exactamente el fallo que el comentario de arriba describe
+             * —«un hueco declarado es información; uno escondido, una promesa
+             * incumplida»— un nivel más adentro, y no lo vio ninguna de las
+             * dos auditorías del 13 de septiembre: las dos miraron si el
+             * enunciado era el del examen, ninguna contó los apartados.
+             *
+             * Con apartados, el ejercicio NO cuenta como ausente: está, y se
+             * dice qué le falta.
+             */
+            apartados: z.string().min(1).max(80).optional(),
             /** Por qué no está, con el detalle que haga falta. */
             motivo: z.string().min(40),
           }),

@@ -69,7 +69,7 @@ interface Props {
    *  alumno: hasta el 4 de septiembre de 2026 esta página anunciaba «7
    *  ejercicios» de un examen de nueve sin decir una palabra, con el PDF
    *  original enlazado al lado. */
-  fuera: { n: number; motivo: string }[];
+  fuera: { n: number; apartados?: string; motivo: string }[];
 }
 
 const { eyebrow, titulo, fecha, pdfs, pdfEs, ruta, ejercicios, fuera } = Astro.props;
@@ -85,7 +85,9 @@ const numeros = new Set(
 const propios =
   numeros.size > 0 && numeros.size < ejercicios.length ? numeros.size : ejercicios.length;
 const piezas = ejercicios.length;
-const deCuantos = propios + fuera.length;
+const enteros = fuera.filter((f) => !f.apartados);
+const aMedias = fuera.filter((f) => f.apartados);
+const deCuantos = propios + enteros.length;
 
 const total = ejercicios.reduce(
   (s, e) => s + (e.puntos ? e.puntos.comp1 + e.puntos.comp2 + e.puntos.comp4 : 0),
@@ -140,7 +142,7 @@ const fueraHtml = await Promise.all(
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
           no lo hay, no se dice nada en vez de decir un número inventado
           (§10). */}
-      {fecha} · {fuera.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : ''}
+      {fecha} · {enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : ''}
     </p>
 
     <nav class="pestanas" aria-label="Vistas del examen">
@@ -159,10 +161,20 @@ const fueraHtml = await Promise.all(
 
       {fuera.length > 0 && (
         <div class="aviso aviso--flag faltan">
+          {/* Dos huecos distintos y dos frases distintas, desde el 14 de
+              septiembre de 2026: el ejercicio que NO está, y el que está a
+              medias. Antes solo cabía el primero, y por eso una convocatoria
+              con siete de sus trece apartados resueltos podía decir «3
+              ejercicios, resueltos enteros» sin mentir en ninguna línea
+              concreta y mintiendo en el conjunto. */}
           <p class="rotulo f-tit">
-            {fuera.length === 1
-              ? `Falta el ejercicio ${fuera[0].n} de los ${deCuantos} del cuadernillo`
-              : `Faltan ${fuera.length} de los ${deCuantos} ejercicios del cuadernillo: el ${fuera.map((f) => f.n).join(' y el ')}`}
+            {enteros.length === 1
+              ? `Falta el ejercicio ${enteros[0].n} de los ${deCuantos} del cuadernillo`
+              : enteros.length > 1
+                ? `Faltan ${enteros.length} de los ${deCuantos} ejercicios del cuadernillo: el ${enteros.map((f) => f.n).join(' y el ')}`
+                : aMedias.length === 1
+                  ? `El ejercicio ${aMedias[0].n} está resuelto solo en parte`
+                  : `${aMedias.length} de los ${deCuantos} ejercicios están resueltos solo en parte: el ${aMedias.map((f) => f.n).join(' y el ')}`}
           </p>
           <ul>
             {/* El motivo se pintaba en crudo, y son dos defectos en uno: el
@@ -174,7 +186,15 @@ const fueraHtml = await Promise.all(
                 prosa, pasa por `mate()` (§01). */}
             {fueraHtml.map((f) => (
               <li>
-                <strong>{f.n}.</strong> <span class="prosa" set:html={f.motivoHtml} />
+                <strong>{f.n}.</strong>{' '}
+                {f.apartados && (
+                  <em>
+                    {f.apartados.includes(',') || f.apartados.includes(' y ')
+                      ? `Faltan los apartados ${f.apartados}.`
+                      : `Falta el apartado ${f.apartados}.`}
+                  </em>
+                )}{' '}
+                <span class="prosa" set:html={f.motivoHtml} />
               </li>
             ))}
           </ul>

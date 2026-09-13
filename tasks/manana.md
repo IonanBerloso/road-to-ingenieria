@@ -597,21 +597,44 @@ con lo ya arreglado tachado. Aquí solo lo que queda, en el orden en que lo
 haría, con el criterio de siempre: **primero lo que afecta a quien no puede
 elegir, después lo que miente, después lo que estorba.**
 
-### 10.1 · Térmica 2025-2026: los enunciados reconstruidos (§08)
+### 10.1 · ~~Térmica 2025-2026: los enunciados~~ · hecho el 14 de septiembre
 
-Es lo más grave que queda. El examen tiene **3 ejercicios** y el sitio publica
-**7**, con los enunciados reescritos: uno **añade un apartado que no existe**,
-dos incrustan en el cuerpo del enunciado valores calculados que no están en el
-original, y otro dice «el condensado del ejercicio anterior» refiriéndose al
-ejercicio *del sitio*. Ninguna `fuente` lo declara.
+Los nueve enunciados rehechos verbatim contra el PDF, con lo que arrastra cada
+pieza en el bloque en cursiva del molde de `2020-2021-ord` y con el apartado
+que resuelve dicho en cada una. Suelo en verde, `recalcula` sin un solo
+desajuste sobre 5.435 pares, los 34 casos de verificación de las dos
+convocatorias en verde.
 
-- **Desbloquea:** nada, se puede hacer ya. El PDF está en
-  `public/examenes/ingenieria-termica/2025-2026-ord.pdf`.
-- **El patrón bueno ya existe en el repo:** `2020-2021-ord/` transcribe literal
-  y añade los datos arrastrados en un bloque en cursiva rotulado «*Lo que hace
-  falta del ejercicio anterior…*». Se copia eso.
-- **Se comprueba** releyendo los siete contra el PDF, apartado por apartado.
-- **Y `2025-2026-ext` publica 4 por 3**: la misma revisión.
+**Pero al releerlas contra el PDF apareció algo que ninguna de las dos
+auditorías vio, porque las dos miraron el enunciado y ninguna contó los
+apartados: al examen de la ordinaria le faltan SEIS de sus TRECE apartados.**
+
+Del ejercicio 1 falta el e). Del ejercicio 2, que pide seis, están el a) y el
+primer paso del d): faltan b), c), e) y f). Ya está declarado —`fuera` acepta
+ahora `apartados` y la página lo dice en cinco sitios—, pero **escribirlos es
+trabajo pendiente y es el que más rinde de toda esta lista**: son los
+apartados de exergía y rendimiento exergético, que caen en quince y en ocho de
+las diecisiete convocatorias, y están todos desarrollados en el PDF de la
+escuela. No falta material: falta escribirlos.
+
+| falta | apartado | dónde está la resolución |
+|---|---|---|
+| ej 1 e) | rendimiento exergético del proceso en el universo | `2025-2026-ord.pdf` |
+| ej 2 b) | exergía destruida en el condensador | íd., pág. 7 |
+| ej 2 c) | rendimiento exergético del condensador | íd. |
+| ej 2 d) | rendimiento interno de la bomba (está el primer paso) | íd. |
+| ej 2 e) | exergía destruida en la bomba | íd. |
+| ej 2 f) | rendimiento exergético de la bomba | íd. |
+
+Al terminarlos, quitar las dos entradas de `fuera` y recontar: Térmica pasa de
+57 resoluciones de examen a las que salgan.
+
+**Y una tarea que sale de aquí, para todo el sitio:** ninguna convocatoria de
+ninguna asignatura declara apartados a medias, porque hasta hoy no se podía.
+Conviene pasar las otras diecinueve de Térmica —las únicas cuyos ejercicios
+tienen cinco y seis apartados— contando apartado por apartado contra su PDF.
+Si en la ordinaria de enero faltaban seis de trece sin que nadie lo supiera,
+no hay motivo para suponer que es la única.
 
 ### 10.2 · Las nueve `fuente` que callan una discrepancia
 

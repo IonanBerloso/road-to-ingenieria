@@ -94,7 +94,19 @@ const datos = new Map(
       const p = puntosPorId.get(id);
       return s + (p ? p.comp1 + p.comp2 + p.comp4 : 0);
     }, 0);
-    return [ex.id, { total, fuera: ex.data.fuera.length }];
+    return [
+      ex.id,
+      {
+        total,
+        /* Un ejercicio ausente y uno resuelto a medias no se suman en la misma
+           cifra: «faltan N ejercicios» dejaría de ser verdad. Se cuentan
+           aparte desde el 14 de septiembre de 2026, cuando apareció el
+           primer caso — la ordinaria de enero de 2026 de Térmica, con siete
+           de sus trece apartados resueltos y nada declarado. */
+        fuera: ex.data.fuera.filter((f) => !f.apartados).length,
+        aMedias: ex.data.fuera.filter((f) => f.apartados).length,
+      },
+    ];
   }),
 );
 
@@ -116,6 +128,8 @@ const datos = new Map(
  */
 const sinResolver = [...datos.values()].reduce((s, d) => s + d.fuera, 0);
 const convocatoriasConHueco = [...datos.values()].filter((d) => d.fuera > 0).length;
+const convocatoriasAMedias = [...datos.values()].filter((d) => d.aMedias > 0).length;
+const ejerciciosAMedias = [...datos.values()].reduce((s, d) => s + d.aMedias, 0);
 
 /* Los nombres salen de CONVOCATORIAS, en minúscula; aquí encabezan un grupo,
    así que se capitaliza la primera letra al pintarlos. */
@@ -172,14 +186,29 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
       </p>
 
       {
-        sinResolver > 0 && (
+        (sinResolver > 0 || ejerciciosAMedias > 0) && (
           <p class="aviso aviso--falta rotulo">
             Y falta trabajo, dicho aquí para que no haya que entrar a
-            descubrirlo: <strong>{sinResolver} ejercicios</strong> de{' '}
-            {convocatoriasConHueco}{' '}
-            {convocatoriasConHueco === 1 ? 'convocatoria' : 'convocatorias'}{' '}
-            siguen sin resolución guiada. Están en el PDF de cada una, y cada
-            convocatoria dice cuáles son y por qué todavía no están.
+            descubrirlo:{' '}
+            {sinResolver > 0 && (
+              <>
+                <strong>{sinResolver} ejercicios</strong> de{' '}
+                {convocatoriasConHueco}{' '}
+                {convocatoriasConHueco === 1 ? 'convocatoria' : 'convocatorias'}{' '}
+                siguen sin resolución guiada
+              </>
+            )}
+            {sinResolver > 0 && ejerciciosAMedias > 0 && ', y '}
+            {ejerciciosAMedias > 0 && (
+              <>
+                <strong>{ejerciciosAMedias}</strong> de{' '}
+                {convocatoriasAMedias}{' '}
+                {convocatoriasAMedias === 1 ? 'convocatoria' : 'convocatorias'}{' '}
+                están resueltos solo en parte
+              </>
+            )}
+            . Están en el PDF de cada una, y cada convocatoria dice cuáles son
+            y por qué todavía no están.
           </p>
         )
       }

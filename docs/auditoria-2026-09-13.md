@@ -182,7 +182,36 @@ ahora.
 
 ## Lo que queda
 
-### 1 · Térmica 2025-2026: enunciados reconstruidos presentados como de examen
+### 1 · ~~Térmica 2025-2026: enunciados reconstruidos~~ · hecho el 14 de septiembre, y era peor de lo que las dos auditorías vieron
+
+**Las dos miraron si el enunciado publicado era el del examen. Ninguna contó
+los apartados.** Contados contra el PDF: el examen de la ordinaria de enero de
+2026 pide **trece apartados** en sus tres ejercicios y el sitio resolvía
+**siete**. Del ejercicio 2, que pide seis, publicaba uno y medio — faltaban la
+exergía destruida y el rendimiento exergético del condensador, el rendimiento
+interno de la bomba y la exergía destruida y el rendimiento exergético de la
+bomba. `fuera` estaba vacío, así que la página decía «Los 3 ejercicios …
+**resueltos enteros**» y la portada contaba la convocatoria entre las
+completas. La palabra «rendimiento exergético» no aparecía ni una vez en todo
+el fichero, y el examen la pide tres veces.
+
+Y el hueco no se podía declarar: `fuera` nació para el grano grueso —un
+ejercicio del cuadernillo que no está— y aquí el ejercicio **está**, a medias.
+Es el mismo fallo que su propio comentario describe —«un hueco declarado es
+información; uno escondido, una promesa incumplida»— un nivel más adentro.
+
+*Hecho:* `fuera` acepta ahora `apartados`, un ejercicio a medias no cuenta
+como ausente, y la página lo dice en su caja, en su entradilla, en la
+`<meta>` y en el índice de la asignatura. Los seis apartados que faltan están
+declarados con su motivo. Los siete enunciados de la ordinaria y dos de la
+extraordinaria se han rehecho **verbatim** desde el PDF, con lo que arrastra
+cada pieza en el bloque en cursiva del molde de `2020-2021-ord`, y cada una
+dice qué apartado resuelve. Escribir los seis apartados que faltan es trabajo
+declarado, en `tasks/manana.md`.
+
+Lo que las dos auditorías sí vieron, para que conste:
+
+### 1 bis · Lo que decían del enunciado, confirmado
 
 **Es lo más grave que queda, y es §08 en su forma más seria.** El examen tiene
 **3 ejercicios** y el sitio publica **7**, con los enunciados **reescritos**,
