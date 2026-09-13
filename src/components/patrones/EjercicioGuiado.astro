@@ -1554,8 +1554,16 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     font-size: .88rem;
   }
 
-  .montaje li { margin-bottom: .3rem; }
-  .montaje .vacio { list-style: none; margin-left: -1.2rem; color: var(--faint); font-size: .8rem; }
+  /* `:global` obligatorio, por lo mismo que el `.fb` de más abajo: los `<li>`
+     del montaje los crea `dibujaMontaje` con `createElement`, así que nacen
+     SIN el atributo de ámbito de Astro y un selector escopado no los viste
+     nunca. Lo encontró la auditoría del 13 de septiembre de 2026 y llevaba
+     desde el principio: es el mismo fallo que se corrigió en los nueve
+     simuladores, escondido en el patrón más usado del sitio — `justificar`
+     aparece una vez por ejercicio. Se veía como el hueco vacío sin sangrar y
+     los pasos pegados unos a otros. */
+  .montaje :global(li) { margin-bottom: .3rem; }
+  .montaje :global(.vacio) { list-style: none; margin-left: -1.2rem; color: var(--faint); font-size: .8rem; }
 
   .piezas { list-style: none; display: grid; gap: .4rem; }
 

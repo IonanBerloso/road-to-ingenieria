@@ -29,20 +29,9 @@ jobs:
 
       - run: npm ci
 
-      - name: Construir
-        run: npm run build
-
-      - name: Suelo de calidad
-        run: node scripts/verify.mjs
-
-      - name: Paleta
-        run: node scripts/check-color.mjs
-
-      - name: Tests
-        run: npm test
-
       # El navegador se cachea entre despliegues: descargarlo cada vez
-      # costaría más que todo lo demás junto.
+      # costaría más que todo lo demás junto. Va ANTES del suelo porque el
+      # suelo termina en `humo`, que lo necesita.
       - name: Caché del navegador
         id: cache-navegador
         uses: actions/cache@v4
@@ -54,10 +43,15 @@ jobs:
         if: steps.cache-navegador.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
-      # Lo que verify.mjs no puede ver: que las fórmulas se dibujen y que
-      # los componentes respondan de verdad.
-      - name: Navegador
-        run: npm run humo
+      # UNA sola línea, y es exactamente la que se escribe en local (§01).
+      # Hasta el 13 de septiembre de 2026 este fichero repetía los cinco
+      # pasos de `suelo` sueltos —build, verify, color, test, humo—, y eso
+      # eran dos definiciones del suelo de calidad escritas a mano: añadir
+      # una comprobación a `suelo` no la metía en el despliegue, y §11
+      # afirmaba que los guardianes bloquean el despliegue sin que fuera
+      # cierto para ninguno que se añadiera después. Lo encontró la auditoría.
+      - name: Suelo de calidad
+        run: npm run suelo
 
       # El diario del proyecto no se versiona en PDF (§12): se genera aquí,
       # con el mismo Chromium que acaba de instalarse, y viaja con el sitio.

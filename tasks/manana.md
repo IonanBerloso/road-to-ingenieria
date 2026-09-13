@@ -517,6 +517,12 @@ lo que encontró las erratas de Materiales y de Térmica.
 
 ## Fase 9 · Sistemas de Producción y Fabricación, la octava
 
+> **Y Ionan decidió el 13 de septiembre de 2026 que va la última: «deja
+> sistemas para el final».** Queda registrada y abierta —su catálogo publica
+> ya el temario oficial y sus dos huecos declarados—, pero su contenido se
+> escribe después de Expresión Gráfica. El orden de §00 vuelve así a su
+> sitio: la de 1.º primero.
+
 > **Abierta el 13 de septiembre de 2026**, con Mecánica ya cerrada. Es otra
 > vez la excepción de §00 —Materiales sigue en `obra` porque le falta
 > material—, y se eligió entre las dos que quedaban: Expresión Gráfica es de

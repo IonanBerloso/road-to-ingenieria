@@ -463,6 +463,53 @@ console.log('\nContenido');
       );
     }
   }
+
+  /* Y el sentido contrario, que es el que faltaba: qué PDF de public/ no
+     enlaza nadie.
+     La página de una convocatoria ya comprueba YAML→disco (si un `pdf:`
+     apunta a un fichero que no existe, la build se cae). Nadie comprobaba
+     disco→YAML, y por eso el 13 de septiembre de 2026 esta auditoría
+     encontró cuatro PDF de Ingeniería Térmica servidos en el sitio sin que
+     ninguna página los enlazara — dos de ellos la resolución manuscrita del
+     profesor, que §00 dice expresamente que no me toca a mí decidir publicar.
+     Llevaban ahí desde el 24 de agosto. Un fichero en `public/` se publica por
+     el hecho de estar, no por estar enlazado: es la única carpeta del
+     repositorio donde el descuido tiene consecuencias fuera. */
+  const dirPublicos = join(ROOT, 'public', 'examenes');
+  if (existsSync(dirPublicos)) {
+    const citados = new Set();
+    for (const asignatura of readdirSync(join(SRC, 'content'))) {
+      const dirExamenes = join(SRC, 'content', asignatura, 'examenes');
+      if (!existsSync(dirExamenes)) continue;
+      for (const f of archivos(dirExamenes, ['.yaml'])) {
+        /* `pdf:` acepta las dos formas de YAML: un valor suelto y una lista.
+           La ordinaria de 2019-2020 de Cálculo va escaneada en dos folios y
+           usa la lista; leer solo el valor suelto los daba por huérfanos. */
+        for (const m of leer(f).matchAll(/^\s*(?:pdf:|-)\s*(\S+\.pdf)\s*$/gm)) {
+          citados.add(`${asignatura}/${m[1].replace(/^['"]|['"]$/g, '')}`);
+        }
+      }
+    }
+    const nadie = [];
+    let servidos = 0;
+    for (const asignatura of readdirSync(dirPublicos)) {
+      const dir = join(dirPublicos, asignatura);
+      if (!statSync(dir).isDirectory()) continue;
+      for (const pdf of readdirSync(dir)) {
+        if (extname(pdf) !== '.pdf') continue;
+        servidos++;
+        if (!citados.has(`${asignatura}/${pdf}`)) nadie.push(`${asignatura}/${pdf}`);
+      }
+    }
+    if (nadie.length === 0) {
+      ok(`todo PDF servido lo enlaza una convocatoria: ${servidos} de ${servidos}`);
+    } else {
+      fallo(
+        'Hay PDF ajenos publicándose sin que ninguna página los enlace (§08)',
+        `${nadie.length} de ${servidos}:\n    ${nadie.slice(0, 10).join('\n    ')}`,
+      );
+    }
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════

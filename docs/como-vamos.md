@@ -67,9 +67,24 @@ convocatorias de veintidós**, cada una con su PDF y con al menos un ejercicio
 resuelto paso a paso.
 
 Las dos que faltan **no se van a poder**, y así queda declarado: las de
-2014-2015 son un folio cada una, escritas solo en euskera y sin resolución
-detrás. El sitio es solo en castellano (§00) y §08 prohíbe reescribir un
-enunciado, así que transcribirlas sería inventarlas. Con un consuelo parcial
+2014-2015 son un folio cada una y están escritas solo en euskera. El sitio es
+solo en castellano (§00) y §08 prohíbe reescribir un enunciado, así que
+transcribirlas sería inventarlas.
+
+> **Corregido el 13 de septiembre de 2026.** Hasta hoy este párrafo añadía «y
+> sin resolución detrás», y la auditoría lo desmintió: de esas dos
+> convocatorias sí hay resolución, manuscrita por el profesor y en castellano.
+> La decisión no cambia —lo irreproducible es el enunciado— pero el motivo
+> publicado era falso. Peor: los cuatro PDF, los dos enunciados y las dos
+> resoluciones, llevaban desde el 24 de agosto **servidos** en
+> `public/examenes/ingenieria-termica/` sin que ninguna página los enlazara.
+> Un fichero en `public/` se publica por estar, no por estar enlazado, y
+> publicar la resolución del profesor no es una decisión que me corresponda
+> tomar a mí (§00). Se han retirado, y desde hoy el suelo cuenta también el
+> sentido disco→YAML: «todo PDF servido lo enlaza una convocatoria, 124 de
+> 124». Nadie lo comprobaba, y este fichero llegó a afirmar que sí.
+
+Con un consuelo parcial
 que también está dicho en la ruta: el ejercicio 3 de junio de 2015 es el mismo
 que el ejercicio 3 del 30 de enero de 2023, así que su enunciado se puede leer
 en castellano.
