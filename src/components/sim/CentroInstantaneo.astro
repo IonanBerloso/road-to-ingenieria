@@ -1,0 +1,611 @@
+---
+/**
+ * Herramienta incrustada del tema 8.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «El centro instantáneo se enseña como un truco para hallar velocidades en
+ *    UNA posición. ¿Y dónde está en las demás? Porque si se mueve, la base y
+ *    la ruleta dejan de ser dos palabras del temario y pasan a ser el rastro
+ *    que va dejando.»
+ *
+ * Un mecanismo biela-manivela con la manivela girable a mano. En cada
+ * posición se dibujan las dos perpendiculares que cortan en el centro
+ * instantáneo, y el centro va dejando su rastro: **la base**. Al acercarse a
+ * los puntos muertos el centro se escapa al infinito y la biela deja de
+ * girar, que es lo que la curva del panel de abajo enseña de golpe: la
+ * deslizadera se para dos veces por vuelta, y no en los extremos del ángulo
+ * sino donde manivela y biela se alinean.
+ *
+ * El modelo vive en `src/lib/mecanismo.ts` y `tests/fisica/mecanismo.test.ts`
+ * lo verifica contra la figura publicada en este mismo tema —0,1 y 0,3 m a
+ * 45° girando a 10 rad/s: centro en (0,362; 0,362), IA = 0,412, IB = 0,362,
+ * biela a 2,43 rad/s y deslizadera a 0,879 m/s— y contra la derivada numérica
+ * de la posición, que es un segundo camino de verdad independiente (§10).
+ *
+ * SVG a mano, sin librería de gráficas (§02). La animación respeta
+ * `prefers-reduced-motion`: arranca parada y solo se mueve si se pide.
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'cir' } = Astro.props;
+---
+
+<figure class="sim" data-cir id={`sim-${id}`}>
+  <figcaption class="sim-head">
+    <h3>El centro instantáneo, y el rastro que va dejando</h3>
+    <span class="rotulo hint">gira la manivela y mira adónde se va el centro</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 300" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>El mecanismo con su centro instantáneo de rotación</title>
+      <desc id={`${id}-d1`}>
+        Un mecanismo biela-manivela dibujado a escala: la manivela gira
+        alrededor de O y arrastra la biela, cuyo extremo B corre por una guía
+        horizontal. La velocidad de A es perpendicular a la manivela y la de B
+        es horizontal; las perpendiculares a esas dos velocidades —la recta de
+        la manivela prolongada y la vertical por B— se cortan en el centro
+        instantáneo de rotación de la biela. Una curva fina marca el rastro que
+        ese centro deja al dar la manivela una vuelta entera, que es la base.
+        Todos los valores están en la tabla de abajo.
+      </desc>
+      <path class="base" data-base></path>
+      <text class="etiqueta chica base-txt" data-nombre-base x="-99" y="-99">la base</text>
+      <line class="guia" data-guia></line>
+      <g data-perpendiculares></g>
+      <line class="manivela" data-manivela></line>
+      <line class="biela" data-biela></line>
+      <rect class="deslizadera" data-desl width="26" height="14" rx="2"></rect>
+      <circle class="eje" data-o r="4"></circle>
+      <circle class="nodo" data-a r="4"></circle>
+      <circle class="cir-punto" data-i r="5"></circle>
+      <g data-rotulos></g>
+    </svg>
+  </div>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 150" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>La velocidad de la deslizadera a lo largo de una vuelta</title>
+      <desc id={`${id}-d2`}>
+        La velocidad de la deslizadera frente al ángulo de la manivela, en una
+        vuelta completa. Cruza el cero dos veces, en los dos puntos muertos, y
+        la curva no es simétrica: el máximo de ida y el de vuelta no valen lo
+        mismo ni caen en ángulos opuestos, porque la biela tiene longitud
+        finita. Un punto marca la posición actual.
+      </desc>
+      <line class="cero" x1="40" y1="75" x2="540" y2="75"></line>
+      <path class="curva-v" data-curva></path>
+      <g data-muertos></g>
+      <circle class="punto-v" data-punto r="4.5"></circle>
+      <text class="etiqueta chica" x="40" y="16">velocidad de la deslizadera</text>
+      <text class="etiqueta chica" x="40" y="146">0°</text>
+      <text class="etiqueta chica" x="290" y="146" text-anchor="middle">180°</text>
+      <text class="etiqueta chica" x="540" y="146" text-anchor="end">360°</text>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-th`}>ángulo de la manivela <output data-out-th>45°</output></label>
+      <input id={`${id}-th`} type="range" min="0" max="360" step="1" value="45" data-th />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-r`}>manivela <output data-out-r>0,10 m</output></label>
+      <input id={`${id}-r`} type="range" min="0.04" max="0.16" step="0.005" value="0.1" data-r />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-l`}>biela <output data-out-l>0,30 m</output></label>
+      <input id={`${id}-l`} type="range" min="0.18" max="0.45" step="0.005" value="0.3" data-l />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-w`}>vueltas de la manivela <output data-out-w>10 rad/s</output></label>
+      <input id={`${id}-w`} type="range" min="1" max="30" step="0.5" value="10" data-w />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">posiciones que enseñan algo</span>
+      <div class="botones">
+        <button type="button" data-caso="figura" aria-pressed="true">la figura del tema</button>
+        <button type="button" data-caso="muerto" aria-pressed="false">punto muerto</button>
+        <button type="button" data-caso="corta" aria-pressed="false">biela corta</button>
+      </div>
+      <div class="botones">
+        <button type="button" class="accion" data-accion="anima">girar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">el centro instantáneo</span>
+      <span class="v chica" data-pos>I = (0,362; 0,362) m</span>
+      <span class="sub" data-dist>IA = 0,412 m · IB = 0,362 m</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">gira la biela a</span>
+      <span class="v" data-wb>2,43 rad/s</span>
+      <span class="sub">vA / IA, sin escribir una ecuación</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">y la deslizadera va a</span>
+      <span class="v" data-vb>0,879 m/s</span>
+      <span class="sub" data-vb-sub>ω de la biela por IB</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">velocidad de A</span>
+      <span class="v" data-va>1,00 m/s</span>
+      <span class="sub">ω por la manivela, perpendicular a ella</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag" data-alarma-tit></span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import { base, centroInstantaneo, cinematica, posiciones, type Mecanismo } from '../../lib/mecanismo';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-cir]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    const sTh = $<HTMLInputElement>('[data-th]');
+    const sR = $<HTMLInputElement>('[data-r]');
+    const sL = $<HTMLInputElement>('[data-l]');
+    const sW = $<HTMLInputElement>('[data-w]');
+
+    const num = (v: number, d = 3) => (Object.is(v, -0) ? 0 : v).toFixed(d).replace('.', ',');
+
+    /* ── escala del panel del mecanismo ──
+
+       No basta con que quepa el mecanismo: lo que hay que ver es el centro
+       instantáneo, que en el caso de la figura sube casi tanto como mide el
+       mecanismo entero. La escala la manda el que peor lo tenga de los dos. */
+    const OX = 80;
+    const OY = 232;
+    const alcance = () => Number(sR.value) + Number(sL.value);
+    const esc = () => Math.min(440 / (alcance() + 0.05), 208 / (1.05 * alcance()));
+    const px = (p: { x: number; y: number }) => ({ x: OX + p.x * esc(), y: OY - p.y * esc() });
+
+    function mec(): Mecanismo {
+      return {
+        r: Number(sR.value),
+        l: Number(sL.value),
+        theta: (Number(sTh.value) * Math.PI) / 180,
+        omega: Number(sW.value),
+      };
+    }
+
+    function pinta() {
+      const m = mec();
+      const { A, B } = posiciones(m);
+      const c = cinematica(m);
+      const I = c.I;
+      const pA = px(A);
+      const pB = px(B);
+      const pO = px({ x: 0, y: 0 });
+
+      /* La base, el rastro del centro. Se corta a la altura que cabe en el
+         panel, y el trazo se ROMPE en los puntos muertos en vez de cruzar el
+         dibujo de lado a lado: allí el centro no está lejos, está en el
+         infinito, y unir los dos lados sería dibujar una mentira. */
+      const tope = 1.02 * alcance();
+      const crudos = base(m.r, m.l, 360, tope / m.l);
+      const trozos: string[] = [];
+      let anterior: { x: number; y: number } | null = null;
+      for (const q of crudos) {
+        const p = px(q);
+        const salto = !anterior || Math.abs(q.y - anterior.y) > 0.35 * alcance();
+        trozos.push(`${salto ? 'M' : 'L'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
+        anterior = q;
+      }
+      $('[data-base]').setAttribute('d', trozos.join(' '));
+      /* Y su nombre, junto al primer trozo: una curva sin rótulo no enseña. */
+      const alto = crudos.filter((q) => q.y > 0.2 * alcance());
+      const refBase = alto.length ? px(alto[Math.floor(alto.length / 2)]) : null;
+      $('[data-nombre-base]').setAttribute('x', refBase ? (refBase.x + 8).toFixed(1) : '-99');
+      $('[data-nombre-base]').setAttribute('y', refBase ? refBase.y.toFixed(1) : '-99');
+
+      $('[data-guia]').setAttribute('x1', String(px({ x: -0.02, y: 0 }).x));
+      $('[data-guia]').setAttribute('y1', String(pO.y));
+      $('[data-guia]').setAttribute('x2', String(px({ x: m.l + m.r + 0.02, y: 0 }).x));
+      $('[data-guia]').setAttribute('y2', String(pO.y));
+
+      const linea = (sel: string, p1: { x: number; y: number }, p2: { x: number; y: number }) => {
+        const e = $(sel);
+        e.setAttribute('x1', p1.x.toFixed(1));
+        e.setAttribute('y1', p1.y.toFixed(1));
+        e.setAttribute('x2', p2.x.toFixed(1));
+        e.setAttribute('y2', p2.y.toFixed(1));
+      };
+      linea('[data-manivela]', pO, pA);
+      linea('[data-biela]', pA, pB);
+
+      const desl = $('[data-desl]');
+      desl.setAttribute('x', (pB.x - 13).toFixed(1));
+      desl.setAttribute('y', (pB.y - 7).toFixed(1));
+
+      $('[data-o]').setAttribute('cx', pO.x.toFixed(1));
+      $('[data-o]').setAttribute('cy', pO.y.toFixed(1));
+      $('[data-a]').setAttribute('cx', pA.x.toFixed(1));
+      $('[data-a]').setAttribute('cy', pA.y.toFixed(1));
+
+      /* las dos perpendiculares y el centro.
+
+         El centro se escapa del marco al acercarse al punto muerto, así que
+         las rectas se recortan al borde y ni el punto ni su rótulo se dibujan
+         fuera: el humo cazó una recta acabando en y = −113 y una «I» flotando
+         fuera del viewBox. */
+      const CAJA = { x0: 6, y0: 6, x1: 554, y1: 294 };
+      const recorta = (a: { x: number; y: number }, b: { x: number; y: number }) => {
+        let t = 1;
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        if (dx > 0) t = Math.min(t, (CAJA.x1 - a.x) / dx);
+        if (dx < 0) t = Math.min(t, (CAJA.x0 - a.x) / dx);
+        if (dy > 0) t = Math.min(t, (CAJA.y1 - a.y) / dy);
+        if (dy < 0) t = Math.min(t, (CAJA.y0 - a.y) / dy);
+        t = Math.max(0, Math.min(1, t));
+        return { x: a.x + dx * t, y: a.y + dy * t };
+      };
+      const punto = $<SVGCircleElement>('[data-i]');
+      if (I) {
+        const pI = px(I);
+        const dentro =
+          pI.x > CAJA.x0 && pI.x < CAJA.x1 && pI.y > CAJA.y0 && pI.y < CAJA.y1;
+        punto.style.display = dentro ? '' : 'none';
+        punto.setAttribute('cx', pI.x.toFixed(1));
+        punto.setAttribute('cy', pI.y.toFixed(1));
+        const fin1 = recorta(pO, pI);
+        const fin2 = recorta(pB, pI);
+        $('[data-perpendiculares]').innerHTML =
+          `<line class="perp" x1="${pO.x}" y1="${pO.y}" x2="${fin1.x.toFixed(1)}" y2="${fin1.y.toFixed(1)}"></line>` +
+          `<line class="perp" x1="${pB.x.toFixed(1)}" y1="${pB.y}" x2="${fin2.x.toFixed(1)}" y2="${fin2.y.toFixed(1)}"></line>`;
+        $('[data-rotulos]').innerHTML =
+          `<text class="etiqueta chica" x="${pO.x - 8}" y="${pO.y + 16}" text-anchor="end">O</text>` +
+          `<text class="etiqueta chica" x="${pA.x - 8}" y="${pA.y - 6}" text-anchor="end">A</text>` +
+          `<text class="etiqueta chica" x="${pB.x}" y="${pB.y + 26}" text-anchor="middle">B</text>` +
+          (dentro
+            ? `<text class="etiqueta chica" x="${(pI.x + 9).toFixed(1)}" y="${(pI.y - 7).toFixed(1)}">I</text>`
+            : '');
+      } else {
+        punto.style.display = 'none';
+        $('[data-perpendiculares]').innerHTML = '';
+        $('[data-rotulos]').innerHTML =
+          `<text class="etiqueta chica" x="${pO.x - 8}" y="${pO.y + 16}" text-anchor="end">O</text>` +
+          `<text class="etiqueta chica" x="${pB.x}" y="${pB.y + 26}" text-anchor="middle">B</text>`;
+      }
+
+      /* ── panel de la velocidad en la vuelta ── */
+      const muestras: Array<{ th: number; v: number }> = [];
+      for (let g = 0; g <= 360; g += 2) {
+        muestras.push({ th: g, v: cinematica({ ...m, theta: (g * Math.PI) / 180 }).vB });
+      }
+      const maxV = Math.max(1e-9, ...muestras.map((s) => Math.abs(s.v)));
+      const gx = (g: number) => 40 + (500 * g) / 360;
+      const gy = (v: number) => 75 - (v / maxV) * 52;
+      $('[data-curva]').setAttribute(
+        'd',
+        muestras.map((s, i) => `${i ? 'L' : 'M'}${gx(s.th).toFixed(1)} ${gy(s.v).toFixed(1)}`).join(' '),
+      );
+      $('[data-muertos]').innerHTML = [0, 180, 360]
+        .map((g) => `<line class="muerto" x1="${gx(g).toFixed(1)}" y1="24" x2="${gx(g).toFixed(1)}" y2="128"></line>`)
+        .join('');
+      const gAct = Number(sTh.value);
+      $('[data-punto]').setAttribute('cx', gx(gAct).toFixed(1));
+      $('[data-punto]').setAttribute('cy', gy(c.vB).toFixed(1));
+
+      /* ── la tabla ── */
+      $('[data-out-th]').textContent = `${gAct}°`;
+      $('[data-out-r]').textContent = `${num(m.r, 2)} m`;
+      $('[data-out-l]').textContent = `${num(m.l, 2)} m`;
+      $('[data-out-w]').textContent = `${num(m.omega, 1)} rad/s`;
+
+      $('[data-pos]').textContent = I ? `I = (${num(I.x)}; ${num(I.y)}) m` : 'I se va al infinito';
+      $('[data-dist]').textContent = I
+        ? `IA = ${num(c.IA)} m · IB = ${num(c.IB)} m`
+        : 'la manivela y la biela están alineadas';
+      $('[data-wb]').textContent = `${num(Math.abs(c.omegaBiela), 2)} rad/s`;
+      $('[data-vb]').textContent = `${num(Math.abs(c.vB))} m/s`;
+      $('[data-vb-sub]').textContent = I ? 'ω de la biela por IB' : 'parada: es un punto muerto';
+      $('[data-va]').textContent = `${num(c.vA, 2)} m/s`;
+
+      const alarma = $<HTMLElement>('[data-alarma]');
+      if (!I) {
+        alarma.hidden = false;
+        $('[data-alarma-tit]').textContent = 'punto muerto';
+        $('[data-alarma-txt]').textContent =
+          'Manivela y biela alineadas: las dos perpendiculares son paralelas y el centro instantáneo se va al infinito. Un giro alrededor de un punto infinitamente lejano es una traslación, y por eso la biela no gira y la deslizadera se para.';
+      } else if (Math.abs(c.vB) > 0.98 * maxV) {
+        alarma.hidden = false;
+        $('[data-alarma-tit]').textContent = 'lo más rápido de la vuelta';
+        $('[data-alarma-txt]').textContent =
+          'Aquí la deslizadera va a su máxima velocidad, y fíjate en que no es a 90°: con la biela de longitud finita el máximo se corre, y no vale lo mismo a la ida que a la vuelta.';
+      } else alarma.hidden = true;
+    }
+
+    const casos: Record<string, () => void> = {
+      /* El de la figura del tema, que la página publica con sus números. */
+      figura() {
+        sR.value = '0.1';
+        sL.value = '0.3';
+        sTh.value = '45';
+        sW.value = '10';
+      },
+      muerto() {
+        sR.value = '0.1';
+        sL.value = '0.3';
+        sTh.value = '0';
+        sW.value = '10';
+      },
+      /* Con la biela corta, la base se cierra sobre el mecanismo y la
+         asimetría entre ida y vuelta se ve a simple vista. */
+      corta() {
+        sR.value = '0.1';
+        sL.value = '0.18';
+        sTh.value = '45';
+        sW.value = '10';
+      },
+    };
+
+    for (const b of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+      b.addEventListener('click', () => {
+        for (const o of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+          o.setAttribute('aria-pressed', String(o === b));
+        }
+        casos[b.dataset.caso as string]();
+        pinta();
+      });
+    }
+
+    /* La animación no arranca sola, y quien pide menos movimiento no la ve
+       moverse aunque la pulse: avanza de diez en diez grados por pulsación. */
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    let animando = 0;
+    const boton = $<HTMLButtonElement>('[data-accion="anima"]');
+    boton.addEventListener('click', () => {
+      if (reduce.matches) {
+        sTh.value = String((Number(sTh.value) + 10) % 361);
+        pinta();
+        return;
+      }
+      if (animando) {
+        cancelAnimationFrame(animando);
+        animando = 0;
+        boton.textContent = 'girar';
+        return;
+      }
+      boton.textContent = 'parar';
+      const paso = () => {
+        sTh.value = String((Number(sTh.value) + 1) % 361);
+        pinta();
+        animando = requestAnimationFrame(paso);
+      };
+      animando = requestAnimationFrame(paso);
+    });
+
+    for (const s of [sTh, sR, sL, sW]) {
+      s.addEventListener('input', () => {
+        /* La biela tiene que ser más larga que la manivela o el mecanismo no
+           existe; el mando se ajusta solo en vez de dibujar un imposible. */
+        if (Number(sL.value) <= Number(sR.value) * 1.2) {
+          sL.value = (Number(sR.value) * 1.2).toFixed(3);
+        }
+        pinta();
+      });
+    }
+
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .hint {
+    font-size: 0.68rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .stage svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .stage + .stage {
+    border-top: 1px dashed var(--rule);
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.6rem 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: block;
+    font-size: 0.72rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .ctrl output {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .ctrl input[type='range'] {
+    width: 100%;
+  }
+
+  .atajos .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.3rem;
+  }
+
+  .atajos button {
+    font: inherit;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .atajos button[aria-pressed='true'] {
+    border-color: var(--d2);
+    background: color-mix(in srgb, var(--d2) 14%, transparent);
+  }
+
+  .atajos button:focus-visible {
+    outline: 2px solid var(--d2);
+    outline-offset: 2px;
+  }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.7rem 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .cell .v {
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica {
+    font-size: 0.85rem;
+  }
+
+  .cell .sub {
+    font-size: 0.7rem;
+    opacity: 0.85;
+  }
+
+  .alarma {
+    margin: 0;
+    padding: 0.7rem 1.1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.78rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 480px) {
+    .cell .v {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<style is:global>
+  [data-cir] .base-txt {
+    fill: var(--d3);
+  }
+  /* Lo que el script crea en tiempo de ejecución no lleva el atributo de
+     ámbito de Astro, así que su estilo va global y acotado a este
+     simulador. Lo cazó el humo: la carga repartida salía en negro. */
+  [data-cir] .guia{
+    stroke: var(--faint);
+    stroke-width: 1.5;
+  }
+  [data-cir] .manivela{
+    stroke: var(--ink);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+  [data-cir] .biela{
+    stroke: var(--d2);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+  [data-cir] .deslizadera{
+    fill: var(--faint);
+    fill-opacity: 0.5;
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+  [data-cir] .eje,
+  [data-cir] .nodo{
+    fill: var(--paper);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  [data-cir] .cir-punto{
+    fill: var(--flag);
+    stroke: none;
+  }
+  [data-cir] .perp{
+    stroke: var(--flag);
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+  }
+  [data-cir] .base{
+    fill: none;
+    stroke: var(--d3);
+    stroke-width: 1.4;
+    stroke-opacity: 0.75;
+  }
+  [data-cir] .cero{
+    stroke: var(--faint);
+    stroke-width: 1;
+  }
+  [data-cir] .curva-v{
+    fill: none;
+    stroke: var(--d2);
+    stroke-width: 2;
+  }
+  [data-cir] .muerto{
+    stroke: var(--flag);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+  [data-cir] .punto-v{
+    fill: var(--d2);
+  }
+  [data-cir] .etiqueta.chica{
+    font-size: 9.5px;
+    fill: var(--ink);
+  }
+</style>

@@ -1,0 +1,544 @@
+---
+/**
+ * Herramienta incrustada del tema 5.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «El tema distingue la parábola de la catenaria y avisa de que no son la
+ *    misma curva. Vale: ¿cuánto cuesta confundirlas? ¿Y por qué la y se mide
+ *    desde una directriz que está por debajo del cable y no desde el propio
+ *    cable, que sería lo natural?»
+ *
+ * Las dos se contestan moviendo la flecha. Con el cable tenso las dos curvas
+ * se pisan y el error es de milésimas: por eso los cables de un puente se
+ * calculan como parábolas sin remordimiento. En cuanto el cable cuelga de
+ * verdad, la catenaria se despega y la tensión real pasa de la que da la
+ * parábola. Y la directriz se ve como lo que es: la recta desde la que la
+ * altura mide la tensión, porque T = w·y en todo punto.
+ *
+ * El modelo vive en `src/lib/catenaria.ts` y `tests/fisica/catenaria.test.ts`
+ * lo verifica contra la figura publicada en este mismo tema —cable de 10 N/m
+ * con 20 N en el punto más bajo, c = 2 m, y en x = 3 m altura 4,705 m,
+ * longitud 4,259 m, tensión 47 N y 64,8°— y contra la identidad y² = c² + s²
+ * en todo el cable (§10).
+ *
+ * SVG a mano, sin librería de gráficas (§02).
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'cat' } = Astro.props;
+---
+
+<figure class="sim" data-cat id={`sim-${id}`}>
+  <figcaption class="sim-head">
+    <h3>La catenaria, su directriz y la parábola que no es</h3>
+    <span class="rotulo hint">mueve la flecha y mira cuánto se separan</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 280" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>El cable colgado, con su directriz y la parábola del mismo vano</title>
+      <desc id={`${id}-d1`}>
+        Un cable colgando entre dos amarres a la misma altura, dibujado a
+        escala. Debajo del punto más bajo, a una distancia igual al parámetro
+        c, está la directriz, que es la recta desde la que se mide la altura:
+        la tensión en cada punto es el peso de esa altura de cable. En trazo
+        discontinuo, la parábola que pasa por los mismos tres puntos, para ver
+        cuánto se separa de la catenaria. Un punto móvil marca la sección que
+        se está midiendo, con su tensión y su ángulo. Todos los valores están
+        en la tabla de abajo.
+      </desc>
+      <path class="parabola" data-parabola></path>
+      <path class="cable" data-cable></path>
+      <line class="directriz" data-directriz></line>
+      <text class="etiqueta chica" data-txt-directriz x="36" y="0">directriz</text>
+      <line class="cota-c" data-cota-c></line>
+      <text class="etiqueta chica" data-txt-c></text>
+      <g data-amarres></g>
+      <circle class="punto-o" data-o r="3.5"></circle>
+      <circle class="punto-p" data-p r="4.5"></circle>
+      <line class="tangente" data-tangente></line>
+      <g data-rotulos></g>
+    </svg>
+  </div>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 150" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>Lo que se equivoca la parábola, según lo que cuelgue el cable</title>
+      <desc id={`${id}-d2`}>
+        Error relativo de la parábola frente a la catenaria, en tanto por
+        ciento, frente a la relación entre la flecha y el vano. Se dibujan dos
+        curvas, la del error en la tensión máxima y la del error en la longitud
+        del cable. Las dos salen de cero: con el cable tenso las dos teorías
+        coinciden. Un punto marca el caso actual.
+      </desc>
+      <line class="cero" x1="44" y1="120" x2="540" y2="120"></line>
+      <g data-rejilla></g>
+      <path class="curva-t" data-curva-t></path>
+      <path class="curva-s" data-curva-s></path>
+      <circle class="punto-e" data-punto-e r="4.5"></circle>
+      <text class="etiqueta chica" x="44" y="14">error de la parábola</text>
+      <text class="etiqueta chica" data-leyenda x="540" y="14" text-anchor="end">tensión · longitud</text>
+      <text class="etiqueta chica" x="290" y="146" text-anchor="middle">flecha / vano</text>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-a`}>vano <output data-out-a>6,0 m</output></label>
+      <input id={`${id}-a`} type="range" min="2" max="40" step="0.5" value="6" data-a />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-f`}>flecha <output data-out-f>2,71 m</output></label>
+      <input id={`${id}-f`} type="range" min="0.05" max="20" step="0.001" value="2.705" data-f />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-w`}>peso del cable <output data-out-w>10,0 N/m</output></label>
+      <input id={`${id}-w`} type="range" min="1" max="60" step="0.5" value="10" data-w />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-x`}>sección que se mide <output data-out-x>3,0 m</output></label>
+      <input id={`${id}-x`} type="range" min="0" max="20" step="0.1" value="3" data-x />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">casos publicados</span>
+      <div class="botones">
+        <button type="button" data-caso="figura" aria-pressed="true">la figura del tema</button>
+        <button type="button" data-caso="tenso" aria-pressed="false">cable tenso</button>
+        <button type="button" data-caso="colgado" aria-pressed="false">cable colgado</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">el parámetro</span>
+      <span class="v" data-c>c = 2,00 m</span>
+      <span class="sub" data-t0>T0 = 20,0 N, la tensión en el punto más bajo</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">en la sección medida</span>
+      <span class="v chica" data-yp>y = 4,705 m · s = 4,259 m</span>
+      <span class="sub" data-ident>y² = c² + s², la identidad del tema</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">tensión ahí</span>
+      <span class="v" data-tp>47,0 N</span>
+      <span class="sub" data-ang>el peso de 4,705 m de cable, a 64,8°</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">si la tratas de parábola</span>
+      <span class="v" data-err>−4,3 %</span>
+      <span class="sub" data-err-sub>de error en la tensión máxima</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag" data-alarma-tit></span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import {
+    altura,
+    angulo,
+    errorParabola,
+    flecha as flechaDe,
+    longitud,
+    parabola,
+    parametroDesde,
+    tension,
+  } from '../../lib/catenaria';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-cat]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    const sA = $<HTMLInputElement>('[data-a]');
+    const sF = $<HTMLInputElement>('[data-f]');
+    const sW = $<HTMLInputElement>('[data-w]');
+    const sX = $<HTMLInputElement>('[data-x]');
+
+    const num = (v: number, d = 3) => (Object.is(v, -0) ? 0 : v).toFixed(d).replace('.', ',');
+
+    function pinta() {
+      const a = Number(sA.value) / 2; // semivano
+      const f = Math.min(Number(sF.value), 4 * a);
+      const w = Number(sW.value);
+      const c = parametroDesde(a, f);
+      const x = Math.min(Number(sX.value), a);
+
+      /* ── panel 1: el cable, a escala, con la directriz dentro ── */
+      const yMax = altura(c, a);
+      const escX = 460 / (2 * a);
+      const escY = Math.min(escX, 210 / Math.max(yMax, 1e-9));
+      const CX = 280;
+      const SUELO = 250; // la directriz
+      const px = (xx: number, yy: number) => ({ x: CX + xx * escX, y: SUELO - yy * escY });
+
+      const puntos: string[] = [];
+      const puntosPar: string[] = [];
+      for (let i = 0; i <= 120; i++) {
+        const xx = -a + (2 * a * i) / 120;
+        const p = px(xx, altura(c, xx));
+        const q = px(xx, parabola(c, xx));
+        puntos.push(`${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
+        puntosPar.push(`${i ? 'L' : 'M'}${q.x.toFixed(1)} ${q.y.toFixed(1)}`);
+      }
+      $('[data-cable]').setAttribute('d', puntos.join(' '));
+      $('[data-parabola]').setAttribute('d', puntosPar.join(' '));
+
+      const dir = $('[data-directriz]');
+      dir.setAttribute('x1', '30');
+      dir.setAttribute('y1', String(SUELO));
+      dir.setAttribute('x2', '540');
+      dir.setAttribute('y2', String(SUELO));
+      $('[data-txt-directriz]').setAttribute('y', String(SUELO + 14));
+
+      /* la cota del parámetro c, del punto más bajo a la directriz */
+      const pO = px(0, c);
+      const cota = $('[data-cota-c]');
+      cota.setAttribute('x1', pO.x.toFixed(1));
+      cota.setAttribute('y1', pO.y.toFixed(1));
+      cota.setAttribute('x2', pO.x.toFixed(1));
+      cota.setAttribute('y2', String(SUELO));
+      const txtC = $('[data-txt-c]');
+      txtC.setAttribute('x', (pO.x + 6).toFixed(1));
+      txtC.setAttribute('y', ((pO.y + SUELO) / 2).toFixed(1));
+      txtC.textContent = `c = ${num(c, 2)} m`;
+
+      $('[data-o]').setAttribute('cx', pO.x.toFixed(1));
+      $('[data-o]').setAttribute('cy', pO.y.toFixed(1));
+
+      const pP = px(x, altura(c, x));
+      $('[data-p]').setAttribute('cx', pP.x.toFixed(1));
+      $('[data-p]').setAttribute('cy', pP.y.toFixed(1));
+
+      /* la tangente en P, que es la dirección de la tensión */
+      const th = (angulo(c, x) * Math.PI) / 180;
+      const tg = $('[data-tangente]');
+      tg.setAttribute('x1', (pP.x - 34 * Math.cos(th)).toFixed(1));
+      tg.setAttribute('y1', (pP.y + 34 * Math.sin(th) * (escY / escX)).toFixed(1));
+      tg.setAttribute('x2', (pP.x + 34 * Math.cos(th)).toFixed(1));
+      tg.setAttribute('y2', (pP.y - 34 * Math.sin(th) * (escY / escX)).toFixed(1));
+
+      const pIzq = px(-a, yMax);
+      const pDer = px(a, yMax);
+      $('[data-amarres]').innerHTML =
+        `<path class="amarre" d="M${pIzq.x.toFixed(1)} ${pIzq.y.toFixed(1)} l-10 -12 l20 0 z"></path>` +
+        `<path class="amarre" d="M${pDer.x.toFixed(1)} ${pDer.y.toFixed(1)} l-10 -12 l20 0 z"></path>`;
+
+      $('[data-rotulos]').innerHTML =
+        `<text class="etiqueta chica" x="${(pO.x - 8).toFixed(1)}" y="${(pO.y - 8).toFixed(1)}" text-anchor="end">O</text>` +
+        `<text class="etiqueta chica" x="${(pP.x + (x > a * 0.7 ? -8 : 8)).toFixed(1)}" y="${(pP.y - 8).toFixed(1)}"${x > a * 0.7 ? ' text-anchor="end"' : ''}>P</text>` +
+        `<text class="etiqueta chica" x="${(pDer.x - 4).toFixed(1)}" y="${(pDer.y - 18).toFixed(1)}" text-anchor="end">flecha ${num(f, 2)} m</text>`;
+
+      /* ── panel 2: el error de la parábola ── */
+      const gx = (r: number) => 44 + (496 * r) / 0.5;
+      const gy = (e: number) => 120 - (e / 12) * 96;
+      const curvaT: string[] = [];
+      const curvaS: string[] = [];
+      for (let i = 0; i <= 60; i++) {
+        const r = 0.005 + (0.5 * i) / 60;
+        const cc = parametroDesde(1, 2 * r); // vano unidad: solo depende de f/vano
+        const e = errorParabola(cc, 1);
+        curvaT.push(`${i ? 'L' : 'M'}${gx(r).toFixed(1)} ${gy(Math.min(12, e.tension)).toFixed(1)}`);
+        curvaS.push(`${i ? 'L' : 'M'}${gx(r).toFixed(1)} ${gy(Math.min(12, e.longitud)).toFixed(1)}`);
+      }
+      $('[data-curva-t]').setAttribute('d', curvaT.join(' '));
+      $('[data-curva-s]').setAttribute('d', curvaS.join(' '));
+      $('[data-rejilla]').innerHTML = [0, 3, 6, 9, 12]
+        .map(
+          (e) =>
+            `<line class="rejilla" x1="44" y1="${gy(e).toFixed(1)}" x2="540" y2="${gy(e).toFixed(1)}"></line>` +
+            `<text class="etiqueta chica" x="40" y="${(gy(e) + 3).toFixed(1)}" text-anchor="end">${e} %</text>`,
+        )
+        .join('');
+
+      const err = errorParabola(c, a);
+      const razon = f / (2 * a);
+      $('[data-punto-e]').setAttribute('cx', gx(Math.min(0.5, razon)).toFixed(1));
+      $('[data-punto-e]').setAttribute('cy', gy(Math.min(12, err.tension)).toFixed(1));
+
+      /* ── la tabla ── */
+      $('[data-out-a]').textContent = `${num(2 * a, 1)} m`;
+      $('[data-out-f]').textContent = `${num(f, 2)} m`;
+      $('[data-out-w]').textContent = `${num(w, 1)} N/m`;
+      $('[data-out-x]').textContent = `${num(x, 1)} m`;
+
+      $('[data-c]').textContent = `c = ${num(c, 2)} m`;
+      $('[data-t0]').textContent = `T0 = ${num(w * c, 1)} N, la tensión en el punto más bajo`;
+      $('[data-yp]').textContent = `y = ${num(altura(c, x))} m · s = ${num(longitud(c, x))} m`;
+      $('[data-tp]').textContent = `${num(tension(c, x, w), 1)} N`;
+      $('[data-ang]').textContent = `el peso de ${num(altura(c, x))} m de cable, a ${num(angulo(c, x), 1)}°`;
+      $('[data-err]').textContent = `${err.tension >= 0 ? '+' : '−'}${num(Math.abs(err.tension), 2)} %`;
+      $('[data-err-sub]').textContent =
+        Math.abs(err.tension) < 0.1
+          ? 'de error en la tensión máxima: aquí la parábola vale'
+          : 'de error en la tensión máxima';
+
+      const alarma = $<HTMLElement>('[data-alarma]');
+      if (Math.abs(err.tension) < 0.1) {
+        alarma.hidden = false;
+        $('[data-alarma-tit]').textContent = 'aquí da igual';
+        $('[data-alarma-txt]').textContent =
+          'Con el cable así de tenso, la parábola y la catenaria se pisan: por eso los cables de un puente colgante se calculan como parábolas y nadie se despeina. La flecha es menos de un veinteavo del vano.';
+      } else if (err.tension > 3) {
+        alarma.hidden = false;
+        $('[data-alarma-tit]').textContent = 'aquí ya no';
+        $('[data-alarma-txt]').textContent =
+          'El cable cuelga lo bastante como para que la parábola se quede corta en la tensión máxima. Y la diferencia va toda en el mismo sentido: quien calcule con la parábola se queda del lado inseguro.';
+      } else alarma.hidden = true;
+
+      /* La sección medida no puede salirse del vano. */
+      sX.max = String(a);
+    }
+
+    const casos: Record<string, () => void> = {
+      /* La figura del tema: c = 2 m con w = 10 N/m, y la sección en x = 3 m,
+         donde la página publica y = 4,705 m, s = 4,259 m y T = 47 N. */
+      figura() {
+        sA.value = '6';
+        /* La flecha de la figura: 2·cosh(1,5) − 2 = 2,7048. El mando tenía
+           paso de 0,05 y redondeaba a 2,70, y entonces la tabla decía 4,703
+           donde la página publica 4,705: el paso es ahora de 0,001. */
+        sF.value = '2.705';
+        sW.value = '10';
+        sX.value = '3';
+      },
+      tenso() {
+        sA.value = '40';
+        sF.value = '1';
+        sW.value = '10';
+        sX.value = '20';
+      },
+      colgado() {
+        sA.value = '20';
+        sF.value = '16';
+        sW.value = '10';
+        sX.value = '10';
+      },
+    };
+
+    for (const b of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+      b.addEventListener('click', () => {
+        for (const o of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+          o.setAttribute('aria-pressed', String(o === b));
+        }
+        casos[b.dataset.caso as string]();
+        pinta();
+      });
+    }
+
+    for (const s of [sA, sF, sW, sX]) s.addEventListener('input', pinta);
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .hint {
+    font-size: 0.68rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .stage svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .stage + .stage {
+    border-top: 1px dashed var(--rule);
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.6rem 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: block;
+    font-size: 0.72rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .ctrl output {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .ctrl input[type='range'] {
+    width: 100%;
+  }
+
+  .atajos .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.3rem;
+  }
+
+  .atajos button {
+    font: inherit;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .atajos button[aria-pressed='true'] {
+    border-color: var(--d2);
+    background: color-mix(in srgb, var(--d2) 14%, transparent);
+  }
+
+  .atajos button:focus-visible {
+    outline: 2px solid var(--d2);
+    outline-offset: 2px;
+  }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.7rem 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .cell .v {
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica {
+    font-size: 0.85rem;
+  }
+
+  .cell .sub {
+    font-size: 0.7rem;
+    opacity: 0.85;
+  }
+
+  .alarma {
+    margin: 0;
+    padding: 0.7rem 1.1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.78rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 480px) {
+    .cell .v {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Lo que el script crea en tiempo de ejecución no lleva el atributo de
+     ámbito de Astro, así que su estilo va global y acotado a este
+     simulador. Lo cazó el humo: la carga repartida salía en negro. */
+  [data-cat] .cable{
+    fill: none;
+    stroke: var(--d2);
+    stroke-width: 2.4;
+  }
+  [data-cat] .parabola{
+    fill: none;
+    stroke: var(--d3);
+    stroke-width: 1.6;
+    stroke-dasharray: 5 4;
+  }
+  [data-cat] .directriz{
+    stroke: var(--faint);
+    stroke-width: 1.2;
+    stroke-dasharray: 6 4;
+  }
+  [data-cat] .cota-c{
+    stroke: var(--flag);
+    stroke-width: 1;
+  }
+  [data-cat] .amarre{
+    fill: var(--faint);
+    fill-opacity: 0.6;
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+  [data-cat] .punto-o{
+    fill: var(--ink);
+  }
+  [data-cat] .punto-p{
+    fill: var(--flag);
+  }
+  [data-cat] .tangente{
+    stroke: var(--flag);
+    stroke-width: 1.6;
+  }
+  [data-cat] .cero{
+    stroke: var(--faint);
+    stroke-width: 1;
+  }
+  [data-cat] .rejilla{
+    stroke: var(--faint);
+    stroke-width: 0.5;
+    stroke-opacity: 0.6;
+  }
+  [data-cat] .curva-t{
+    fill: none;
+    stroke: var(--d2);
+    stroke-width: 2;
+  }
+  [data-cat] .curva-s{
+    fill: none;
+    stroke: var(--d1);
+    stroke-width: 1.6;
+    stroke-dasharray: 4 3;
+  }
+  [data-cat] .punto-e{
+    fill: var(--d2);
+  }
+  [data-cat] .etiqueta.chica{
+    font-size: 9.5px;
+    fill: var(--ink);
+  }
+</style>

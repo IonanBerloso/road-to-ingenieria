@@ -88,6 +88,70 @@ const CASOS = [
     fuente: 'geometría, sin caso de física',
     pruebas: [],
   },
+  {
+    tema: 'mecanica-aplicada/t05-cables',
+    sim: '[data-cat]',
+    nombre: 'la catenaria y su directriz',
+    fuente: 'la figura del propio tema: cable de 10 N/m con 20 N en el punto más bajo',
+    pruebas: [
+      {
+        pulsa: '[data-caso="figura"]',
+        espera: {
+          '[data-c]': 'c = 2,00 m',
+          '[data-tp]': '47,0 N',
+          '[data-yp]': 'y = 4,705 m · s = 4,259 m',
+        },
+      },
+      /* Con el cable tenso la parábola deja de equivocarse, que es la
+         pregunta que el simulador contesta. */
+      {
+        pulsa: '[data-caso="tenso"]',
+        espera: { '[data-err]': '+0,00 %' },
+      },
+    ],
+  },
+  {
+    tema: 'mecanica-aplicada/t08-movimiento-plano',
+    sim: '[data-cir]',
+    nombre: 'el centro instantáneo',
+    fuente: 'la figura del propio tema, con el mecanismo de 0,1 y 0,3 m a 45°',
+    pruebas: [
+      {
+        pulsa: '[data-caso="figura"]',
+        espera: { '[data-wb]': '2,43 rad/s', '[data-vb]': '0,879 m/s' },
+      },
+      /* En el punto muerto el centro se va al infinito y la deslizadera se
+         para: es la posición que explica por qué existe la base. */
+      {
+        pulsa: '[data-caso="muerto"]',
+        espera: { '[data-pos]': 'I se va al infinito', '[data-vb]': '0,000 m/s' },
+      },
+    ],
+  },
+  {
+    tema: 'mecanica-aplicada/t06-resistencia-de-materiales',
+    sim: '[data-viga]',
+    nombre: 'los diagramas de la viga',
+    fuente: 'el ejercicio 2 de la ordinaria de 2025 y el 6.5 de la colección',
+    pruebas: [
+      /* El examen publica dos cosas de esta viga: que la cortante se anula en
+         x = 7L/4 y que el flector máximo vale 49MgL/8 = 6,125. */
+      {
+        pulsa: '[data-caso="ord25"]',
+        espera: { '[data-corte]': 'en x = 1,75', '[data-mvano]': '+6,125' },
+      },
+      /* Y el 6.5, que la página publica con sus reacciones y sus dos
+         flectores: +1290 kg·m en el vano y −6000 en el apoyo. */
+      {
+        pulsa: '[data-caso="col65"]',
+        espera: {
+          '[data-reacciones]': 'R_A = 8600 · R_B = 7400',
+          '[data-mvano]': '+1290',
+          '[data-mapoyo]': '−6000',
+        },
+      },
+    ],
+  },
 ];
 
 let fallos = 0;

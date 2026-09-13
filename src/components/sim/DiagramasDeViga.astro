@@ -1,0 +1,709 @@
+---
+/**
+ * Herramienta incrustada del tema 6.
+ *
+ * La pregunta que responde, escrita antes de dibujar nada (CLAUDE.md §13):
+ *   «Los apuntes dicen que el flector es extremo donde la cortante se anula.
+ *    ¿Y por qué el peor punto de casi toda viga con voladizo NO está en el
+ *    vano, sino justo en el apoyo, donde la cortante ni siquiera pasa por
+ *    cero, sino que salta?»
+ *
+ * Las dos cosas son la misma —dM/dx = V—, pero solo se ven juntas moviendo el
+ * apoyo: al acercarlo al centro, el flector del vano baja y el del apoyo sube,
+ * y hay una posición donde los dos se igualan, que es la que un proyectista
+ * busca. El simulador la deja encontrar a mano.
+ *
+ * Tres paneles acoplados y alineados en la misma escala de x: la viga con sus
+ * cargas, la cortante y el flector. El punto donde V corta el cero y el
+ * flector extremo se marcan a la vez, uno encima del otro.
+ *
+ * El modelo vive en `src/lib/viga.ts` y `tests/fisica/viga.test.ts` lo
+ * verifica contra los ejercicios 6.2, 6.5 y 6.9 de la colección y contra el
+ * ejercicio 2 de la convocatoria ordinaria de 2025, cuyo flector máximo
+ * publicado —49MgL/8 en x = 7L/4— sale de este mismo modelo (§10).
+ *
+ * El convenio de signos es el del curso: y hacia abajo, dV/dx = −q_y,
+ * dM/dx = V y M positivo cuando tracciona la fibra inferior.
+ *
+ * SVG a mano, sin librería de gráficas (§02).
+ */
+interface Props {
+  /** Prefijo de los ids de esta instancia. Único dentro de la página. */
+  id?: string;
+}
+const { id = 'viga' } = Astro.props;
+---
+
+<figure class="sim" data-viga id={`sim-${id}`}>
+  <figcaption class="sim-head">
+    <h3>La viga, y dónde tiene de verdad su peor flector</h3>
+    <span class="rotulo hint">mueve los apoyos y mira los dos diagramas a la vez</span>
+  </figcaption>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 156" role="img" aria-labelledby={`${id}-t1 ${id}-d1`}>
+      <title id={`${id}-t1`}>La viga con sus apoyos y sus cargas</title>
+      <desc id={`${id}-d1`}>
+        La viga dibujada a escala con la carga repartida, la carga puntual y,
+        si el caso lo lleva, el par; los dos apoyos se pueden mover a lo largo
+        de ella y lo que quede fuera es voladizo. Debajo, alineados con la
+        misma escala horizontal, están el diagrama de cortantes y el de
+        flectores, y todos los valores de la tabla que sigue.
+      </desc>
+      <g data-repartida></g>
+      <line class="viga-eje" data-eje x1="30" y1="96" x2="530" y2="96"></line>
+      <g data-apoyos></g>
+      <g data-puntual></g>
+      <g data-par></g>
+      <g data-cotas-x></g>
+    </svg>
+  </div>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 120" role="img" aria-labelledby={`${id}-t2 ${id}-d2`}>
+      <title id={`${id}-t2`}>El diagrama de esfuerzos cortantes</title>
+      <desc id={`${id}-d2`}>
+        El esfuerzo cortante a lo largo de la viga. Salta en cada apoyo y en
+        cada carga puntual, y baja con pendiente constante bajo la carga
+        repartida. Donde cruza el cero se marca con una línea vertical, porque
+        ahí el flector es extremo.
+      </desc>
+      <line class="cero" x1="30" y1="60" x2="530" y2="60"></line>
+      <path class="area-v" data-area-v></path>
+      <path class="curva-v" data-curva-v></path>
+      <g data-cortes></g>
+      <text class="etiqueta chica" x="30" y="14">cortante V</text>
+      <text class="etiqueta chica" data-vmax x="530" y="14" text-anchor="end"></text>
+    </svg>
+  </div>
+
+  <div class="stage">
+    <svg viewBox="0 0 560 130" role="img" aria-labelledby={`${id}-t3 ${id}-d3`}>
+      <title id={`${id}-t3`}>El diagrama de momentos flectores</title>
+      <desc id={`${id}-d3`}>
+        El momento flector a lo largo de la viga, con el convenio del curso:
+        positivo cuando tracciona la fibra inferior. Se marcan el máximo
+        positivo, en el vano, y el mínimo negativo, que en cuanto hay voladizo
+        aparece en el apoyo.
+      </desc>
+      <line class="cero" x1="30" y1="52" x2="530" y2="52"></line>
+      <path class="area-m" data-area-m></path>
+      <path class="curva-m" data-curva-m></path>
+      <g data-marcas-m></g>
+      <text class="etiqueta chica" x="30" y="14">flector M</text>
+      <text class="etiqueta chica" data-mmax x="530" y="14" text-anchor="end"></text>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for={`${id}-xa`}>apoyo A en <output data-out-xa>2,0</output></label>
+      <input id={`${id}-xa`} type="range" min="0" max="4" step="0.1" value="2" data-xa />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-xb`}>apoyo B en <output data-out-xb>7,0</output></label>
+      <input id={`${id}-xb`} type="range" min="5" max="10" step="0.1" value="7" data-xb />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-q`}>carga repartida <output data-out-q>2000</output></label>
+      <input id={`${id}-q`} type="range" min="0" max="4000" step="50" value="2000" data-q />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-xq`}>y llega hasta <output data-out-xq>7,0</output></label>
+      <input id={`${id}-xq`} type="range" min="0" max="10" step="0.1" value="7" data-xq />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-p`}>carga puntual <output data-out-p>2000</output></label>
+      <input id={`${id}-p`} type="range" min="0" max="6000" step="100" value="2000" data-p />
+    </div>
+    <div class="ctrl">
+      <label for={`${id}-xp`}>y va aplicada en <output data-out-xp>10,0</output></label>
+      <input id={`${id}-xp`} type="range" min="0" max="10" step="0.1" value="10" data-xp />
+    </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">casos publicados</span>
+      <div class="botones">
+        <button type="button" data-caso="col65" aria-pressed="true">6.5 · dos voladizos</button>
+        <button type="button" data-caso="ord25" aria-pressed="false">ordinaria 2025</button>
+        <button type="button" data-caso="simple" aria-pressed="false">biapoyada limpia</button>
+      </div>
+      <div class="botones">
+        <button type="button" class="accion" data-accion="iguala">iguala vano y apoyo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="cell">
+      <span class="rotulo k">reacciones</span>
+      <span class="v chica" data-reacciones>R_A = 8600 · R_B = 7400</span>
+      <span class="sub" data-unidades>en kg y metros</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">la cortante se anula</span>
+      <span class="v" data-corte>en x = 4,30</span>
+      <span class="sub" data-corte-sub>ahí el flector es extremo</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">flector en el vano</span>
+      <span class="v" data-mvano>+1290</span>
+      <span class="sub" data-mvano-sub>tracciona la fibra inferior</span>
+    </div>
+    <div class="cell">
+      <span class="rotulo k">flector en el apoyo</span>
+      <span class="v" data-mapoyo>−6000</span>
+      <span class="sub" data-mapoyo-sub>tracciona la de arriba: es el que manda</span>
+    </div>
+  </div>
+
+  <p class="alarma" data-alarma hidden>
+    <span class="rotulo rotulo--flag" data-alarma-tit></span>
+    <span data-alarma-txt></span>
+  </p>
+</figure>
+
+<script>
+  import { diagrama, extremos, flector, reacciones, type Carga, type Viga } from '../../lib/viga';
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-viga]')) {
+    const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
+
+    const sXA = $<HTMLInputElement>('[data-xa]');
+    const sXB = $<HTMLInputElement>('[data-xb]');
+    const sQ = $<HTMLInputElement>('[data-q]');
+    const sP = $<HTMLInputElement>('[data-p]');
+    const sXP = $<HTMLInputElement>('[data-xp]');
+    const sXQ = $<HTMLInputElement>('[data-xq]');
+
+    /* La longitud no es un mando —lo que se mueve son los apoyos, que es de
+       lo que va el simulador—, pero sí la fija cada caso, porque el de la
+       ordinaria de 2025 viene en unidades de L y sus números publicados solo
+       salen con la viga de 4L. */
+    let L = 10;
+
+    /** Deja los mandos con el rango que pide el caso elegido. */
+    function rangos(rangoQ: number, pasoQ: number, rangoP: number, pasoP: number) {
+      const paso = (L / 100).toFixed(3);
+      sXA.min = '0';
+      sXA.max = String(L / 2);
+      sXA.step = paso;
+      sXB.min = String(L / 2);
+      sXB.max = String(L);
+      sXB.step = paso;
+      sXP.min = '0';
+      sXP.max = String(L);
+      sXP.step = paso;
+      sXQ.min = '0';
+      sXQ.max = String(L);
+      sXQ.step = paso;
+      sQ.max = String(rangoQ);
+      sQ.step = String(pasoQ);
+      sP.max = String(rangoP);
+      sP.step = String(pasoP);
+    }
+    /** Un par, cuando el caso lo lleva: solo la ordinaria de 2025. */
+    let par: { x: number; M: number } | null = null;
+    /** Cómo se rotulan los números de la tabla en el caso elegido. */
+    let unidades = 'en kg y metros';
+    let decimales = 0;
+
+    const num = (v: number, d = decimales) =>
+      (Object.is(v, -0) ? 0 : v).toFixed(d).replace('.', ',');
+    const signo = (v: number, d = decimales) => (v >= 0 ? '+' : '−') + num(Math.abs(v), d);
+
+    /* ── escala común a los tres paneles ── */
+    const X0 = 30;
+    const X1 = 530;
+    const px = (x: number) => X0 + ((X1 - X0) * x) / L;
+
+    function viga(): Viga {
+      const xB = Number(sXB.value);
+      const cargas: Carga[] = [];
+      const q = Number(sQ.value);
+      /* La repartida empieza en el extremo izquierdo y acaba donde diga su
+         mando: en el 6.5 muere en el apoyo B y en la viga de la ordinaria, a
+         media viga. Darlo por hecho fue lo que impidió reproducir el examen. */
+      const xq = Math.min(Number(sXQ.value), L);
+      if (q > 0 && xq > 0) cargas.push({ tipo: 'repartida', x1: 0, x2: xq, q1: q, q2: q });
+      const P = Number(sP.value);
+      if (P > 0) cargas.push({ tipo: 'puntual', x: Number(sXP.value), P });
+      if (par) cargas.push({ tipo: 'par', x: par.x, M: par.M });
+      return { L, xA: Number(sXA.value), xB, cargas };
+    }
+
+    /** Un camino que une puntos ya en coordenadas de pantalla. */
+    const camino = (pts: Array<[number, number]>) =>
+      pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
+
+    function dibujaViga(v: Viga) {
+      const q = Number(sQ.value);
+      const xB = Math.min(Number(sXQ.value), L);
+
+      /* la repartida, como una banda de flechas cortas */
+      const rep = $('[data-repartida]');
+      if (q > 0) {
+        const alto = 26;
+        let d = `M${px(0)} ${96 - alto} L${px(xB)} ${96 - alto} L${px(xB)} 96 L${px(0)} 96 Z`;
+        let flechas = '';
+        for (let i = 0; i <= 10; i++) {
+          const x = px((xB * i) / 10);
+          flechas += `M${x} ${96 - alto} L${x} 92 M${x - 3} 88 L${x} 92 L${x + 3} 88 `;
+        }
+        rep.innerHTML =
+          `<path class="banda-q" d="${d}"></path>` +
+          `<path class="flechas-q" d="${flechas}"></path>` +
+          `<text class="etiqueta chica" x="${px(xB / 2)}" y="${96 - alto - 6}" text-anchor="middle">q = ${num(q)}</text>`;
+      } else rep.innerHTML = '';
+
+      /* los apoyos, como triángulos */
+      const tri = (x: number, letra: string) =>
+        `<path class="apoyo" d="M${px(x)} 96 L${px(x) - 8} 110 L${px(x) + 8} 110 Z"></path>` +
+        `<text class="etiqueta chica" x="${px(x)}" y="124" text-anchor="middle">${letra}</text>`;
+      $('[data-apoyos]').innerHTML = tri(v.xA, 'A') + tri(v.xB, 'B');
+
+      /* la puntual */
+      const P = Number(sP.value);
+      const xp = Number(sXP.value);
+      /* Cerca del borde derecho la etiqueta se sale del viewBox, así que
+         cambia de lado. Lo cazó el humo con la carga en el extremo. */
+      const pDerecha = xp > 0.75 * L;
+      $('[data-puntual]').innerHTML =
+        P > 0
+          ? `<path class="flecha-p" d="M${px(xp)} 40 L${px(xp)} 92 M${px(xp) - 5} 84 L${px(xp)} 92 L${px(xp) + 5} 84"></path>` +
+            `<text class="etiqueta chica" x="${px(xp) + (pDerecha ? -7 : 7)}" y="46"${pDerecha ? ' text-anchor="end"' : ''}>P = ${num(P)}</text>`
+          : '';
+
+      /* el par, cuando lo hay */
+      $('[data-par]').innerHTML = par
+        ? `<path class="par" d="M${px(par.x) - 14} 84 A 14 14 0 1 1 ${px(par.x) + 14} 84"></path>` +
+          `<path class="par" d="M${px(par.x) + 9} 78 L${px(par.x) + 14} 85 L${px(par.x) + 19} 78"></path>` +
+          `<text class="etiqueta chica" x="${px(par.x)}" y="66" text-anchor="middle">par ${num(Math.abs(par.M))}</text>`
+        : '';
+
+      /* la cota de longitudes */
+      let cotas = `<line class="cota" x1="${px(0)}" y1="138" x2="${px(L)}" y2="138"></line>`;
+      for (const x of [0, v.xA, v.xB, L]) {
+        cotas += `<line class="cota" x1="${px(x)}" y1="134" x2="${px(x)}" y2="142"></line>`;
+      }
+      cotas += `<text class="etiqueta chica" x="${px(L / 2)}" y="149" text-anchor="middle">longitud total ${num(L, 0)}</text>`;
+      $('[data-cotas-x]').innerHTML = cotas;
+    }
+
+    function dibujaDiagramas(v: Viga) {
+      const pts = diagrama(v, 600);
+      const maxV = Math.max(1e-9, ...pts.map((p) => Math.abs(p.V)));
+      const maxM = Math.max(1e-9, ...pts.map((p) => Math.abs(p.M)));
+
+      const yV = (V: number) => 60 - (V / maxV) * 42;
+      const yM = (M: number) => 52 - (M / maxM) * 40;
+
+      const cV = camino(pts.map((p) => [px(p.x), yV(p.V)]));
+      $('[data-curva-v]').setAttribute('d', cV);
+      $('[data-area-v]').setAttribute(
+        'd',
+        `${cV} L${px(pts[pts.length - 1].x)} 60 L${px(pts[0].x)} 60 Z`,
+      );
+
+      const cM = camino(pts.map((p) => [px(p.x), yM(p.M)]));
+      $('[data-curva-m]').setAttribute('d', cM);
+      $('[data-area-m]').setAttribute(
+        'd',
+        `${cM} L${px(pts[pts.length - 1].x)} 52 L${px(pts[0].x)} 52 Z`,
+      );
+
+      const { MmaxPos, MmaxNeg, Mabs, cortesV } = extremos(v, 2000);
+
+      /* los cortes de la cortante, que son los candidatos a extremo */
+      $('[data-cortes]').innerHTML = cortesV
+        .map((x) => {
+          const derecha = x > 0.75 * L;
+          return (
+            `<line class="corte" x1="${px(x)}" y1="18" x2="${px(x)}" y2="102"></line>` +
+            `<text class="etiqueta chica" x="${px(x) + (derecha ? -4 : 4)}" y="100"${derecha ? ' text-anchor="end"' : ''}>x = ${num(x, 2)}</text>`
+          );
+        })
+        .join('');
+
+      /* y los dos extremos del flector */
+      const marca = (p: { x: number; M: number }, clase: string) =>
+        `<line class="${clase}" x1="${px(p.x)}" y1="52" x2="${px(p.x)}" y2="${yM(p.M).toFixed(1)}"></line>` +
+        `<circle class="${clase}" cx="${px(p.x)}" cy="${yM(p.M).toFixed(1)}" r="3.5"></circle>` +
+        `<text class="etiqueta chica" x="${px(p.x) + 5}" y="${(yM(p.M) + (p.M >= 0 ? 12 : -6)).toFixed(1)}">${signo(p.M)}</text>`;
+      $('[data-marcas-m]').innerHTML =
+        (Math.abs(MmaxPos.M) > 1e-9 ? marca(MmaxPos, 'marca-pos') : '') +
+        (Math.abs(MmaxNeg.M) > 1e-9 ? marca(MmaxNeg, 'marca-neg') : '');
+
+      $('[data-vmax]').textContent = `máxima ${num(maxV)}`;
+      $('[data-mmax]').textContent = `el que manda: ${signo(Mabs.M)}`;
+
+      return { MmaxPos, MmaxNeg, Mabs, cortesV };
+    }
+
+    function pinta() {
+      const v = viga();
+      /* Los apoyos no pueden cruzarse: B siempre a la derecha de A. */
+      if (v.xB - v.xA < L / 10) {
+        sXB.value = String(Math.min(L, v.xA + L / 10));
+        return pinta();
+      }
+      const { RA, RB } = reacciones(v);
+      dibujaViga(v);
+      const { MmaxPos, MmaxNeg, cortesV } = dibujaDiagramas(v);
+
+      $('[data-out-xa]').textContent = num(v.xA, 1);
+      $('[data-out-xb]').textContent = num(v.xB, 1);
+      $('[data-out-q]').textContent = num(Number(sQ.value));
+      $('[data-out-p]').textContent = num(Number(sP.value));
+      $('[data-out-xp]').textContent = num(Number(sXP.value), 1);
+      $('[data-out-xq]').textContent = num(Math.min(Number(sXQ.value), L), 1);
+
+      $('[data-reacciones]').textContent = `R_A = ${num(RA)} · R_B = ${num(RB)}`;
+      $('[data-unidades]').textContent = unidades;
+
+      const corte = cortesV.find((x) => x > v.xA && x < v.xB) ?? cortesV[0];
+      $('[data-corte]').textContent = corte === undefined ? 'en ningún punto' : `en x = ${num(corte, 2)}`;
+      $('[data-corte-sub]').textContent =
+        corte === undefined
+          ? 'la cortante no pasa por cero: el extremo está en un borde'
+          : 'ahí el flector es extremo';
+
+      $('[data-mvano]').textContent = signo(MmaxPos.M);
+      $('[data-mvano-sub]').textContent = `en x = ${num(MmaxPos.x, 2)}, tracciona la fibra inferior`;
+      const mApoyo = Math.min(flector(v, v.xA), flector(v, v.xB));
+      $('[data-mapoyo]').textContent = signo(mApoyo);
+      $('[data-mapoyo-sub]').textContent =
+        Math.abs(mApoyo) > Math.abs(MmaxPos.M)
+          ? 'tracciona la de arriba, y es el que manda'
+          : 'tracciona la de arriba, y aquí no es el peor';
+
+      /* El aviso que da sentido al simulador: con voladizo, el peor suele
+         estar en el apoyo, y hay una posición donde los dos se igualan. */
+      const alarma = $<HTMLElement>('[data-alarma]');
+      const dif = Math.abs(Math.abs(mApoyo) - Math.abs(MmaxPos.M));
+      const escala = Math.max(Math.abs(mApoyo), Math.abs(MmaxPos.M), 1e-9);
+      if (dif / escala < 0.02 && escala > 1e-6) {
+        alarma.hidden = false;
+        $('[data-alarma-tit]').textContent = 'los dos iguales';
+        $('[data-alarma-txt]').textContent =
+          'El flector del vano y el del apoyo valen lo mismo: con esta posición del apoyo la viga aprovecha su sección por los dos lados, y es la que busca un proyectista.';
+      } else if (Math.abs(MmaxNeg.M) > Math.abs(MmaxPos.M) * 1.5 && Math.abs(MmaxNeg.M) > 1e-6) {
+        alarma.hidden = false;
+        $('[data-alarma-tit]').textContent = 'manda el apoyo';
+        $('[data-alarma-txt]').textContent =
+          'El peor flector no está en el vano sino en el apoyo, y ahí la cortante no pasa por cero: salta. Por eso los extremos hay que buscarlos también en los bordes de cada tramo.';
+      } else alarma.hidden = true;
+    }
+
+    /* ── casos publicados ── */
+    const casos: Record<string, () => void> = {
+      /* Ejercicio 6.5 de la colección: R_A = 8600, R_B = 7400 kg,
+         M = +1290 kg·m en x = 4,3 y M(B) = −6000 kg·m. */
+      col65() {
+        par = null;
+        unidades = 'en kg y metros';
+        decimales = 0;
+        L = 10;
+        rangos(4000, 50, 6000, 100);
+        sXA.value = '2';
+        sXB.value = '7';
+        sQ.value = '2000';
+        sXQ.value = '7';
+        sP.value = '2000';
+        sXP.value = '10';
+      },
+      /* Ejercicio 2 de la ordinaria de junio de 2025, en unidades de Mg y L:
+         cuatro tramos, q0 = 4Mg/L y un par de 4MgL en D. El examen publica
+         que V se anula en x = 7L/4 y que el flector máximo es 49MgL/8. */
+      ord25() {
+        L = 4;
+        par = { x: 3, M: -4 };
+        unidades = 'en unidades de Mg y de L: la viga mide 4L';
+        decimales = 3;
+        rangos(8, 0.1, 8, 0.1);
+        sXA.value = '0';
+        sXB.value = '4';
+        sQ.value = '4';
+        sXQ.value = '2';
+        sP.value = '0';
+        sXP.value = '4';
+      },
+      /* Una biapoyada sin voladizos, para ver el caso de libro. */
+      simple() {
+        par = null;
+        unidades = 'en kg y metros';
+        decimales = 0;
+        L = 10;
+        rangos(4000, 50, 6000, 100);
+        sXA.value = '0';
+        sXB.value = '10';
+        sQ.value = '1000';
+        sXQ.value = '10';
+        sP.value = '0';
+        sXP.value = '10';
+      },
+    };
+
+    for (const b of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+      b.addEventListener('click', () => {
+        for (const o of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+          o.setAttribute('aria-pressed', String(o === b));
+        }
+        casos[b.dataset.caso as string]();
+        pinta();
+      });
+    }
+
+    /* «Iguala vano y apoyo»: busca la posición del apoyo B donde el flector
+       del vano y el del apoyo tienen el mismo módulo. Bisección a mano, que
+       para esto sobra y no mete una dependencia (§02). */
+    $('[data-accion="iguala"]').addEventListener('click', () => {
+      const desigual = (xb: number) => {
+        sXB.value = String(xb);
+        const v = viga();
+        const { MmaxPos } = extremos(v, 800);
+        return Math.abs(MmaxPos.M) - Math.abs(Math.min(flector(v, v.xA), flector(v, v.xB)));
+      };
+      let lo = Math.max(Number(sXA.value) + L / 10, L / 2);
+      let hi = L;
+      if (desigual(lo) * desigual(hi) < 0) {
+        for (let i = 0; i < 40; i++) {
+          const mid = (lo + hi) / 2;
+          if (desigual(lo) * desigual(mid) <= 0) hi = mid;
+          else lo = mid;
+        }
+        sXB.value = ((lo + hi) / 2).toFixed(2);
+      }
+      pinta();
+    });
+
+    for (const s of [sXA, sXB, sQ, sP, sXP, sXQ]) s.addEventListener('input', pinta);
+    casos.col65();
+    pinta();
+  }
+</script>
+
+<style>
+  .sim {
+    margin: 2rem 0 1rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .sim-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .hint {
+    font-size: 0.68rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .stage svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .stage + .stage {
+    border-top: 1px dashed var(--rule);
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.6rem 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ctrl label {
+    display: block;
+    font-size: 0.72rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .ctrl output {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .ctrl input[type='range'] {
+    width: 100%;
+  }
+
+  .atajos .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.3rem;
+  }
+
+  .atajos button {
+    font: inherit;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .atajos button[aria-pressed='true'] {
+    border-color: var(--d2);
+    background: color-mix(in srgb, var(--d2) 14%, transparent);
+  }
+
+  .atajos button:focus-visible {
+    outline: 2px solid var(--d2);
+    outline-offset: 2px;
+  }
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.7rem 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .cell .v {
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .v.chica {
+    font-size: 0.85rem;
+  }
+
+  .cell .sub {
+    font-size: 0.7rem;
+    opacity: 0.85;
+  }
+
+  .alarma {
+    margin: 0;
+    padding: 0.7rem 1.1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.78rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 480px) {
+    .cell .v {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Lo que el script crea en tiempo de ejecución no lleva el atributo de
+     ámbito de Astro, así que su estilo va global y acotado a este
+     simulador. Lo cazó el humo: la carga repartida salía en negro. */
+  [data-viga] .viga-eje{
+    stroke: var(--ink);
+    stroke-width: 3;
+  }
+  [data-viga] .apoyo{
+    fill: var(--faint);
+    fill-opacity: 0.5;
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+  [data-viga] .banda-q{
+    fill: var(--d1);
+    fill-opacity: 0.14;
+    stroke: var(--d1);
+    stroke-width: 1;
+  }
+  [data-viga] .flechas-q{
+    fill: none;
+    stroke: var(--d1);
+    stroke-width: 1;
+  }
+  [data-viga] .flecha-p{
+    fill: none;
+    stroke: var(--d2);
+    stroke-width: 2;
+  }
+  [data-viga] .par{
+    fill: none;
+    stroke: var(--d3);
+    stroke-width: 1.8;
+  }
+  [data-viga] .cota{
+    stroke: var(--faint);
+    stroke-width: 0.8;
+  }
+  [data-viga] .cero{
+    stroke: var(--faint);
+    stroke-width: 1;
+  }
+  [data-viga] .curva-v{
+    fill: none;
+    stroke: var(--d1);
+    stroke-width: 2;
+  }
+  [data-viga] .area-v{
+    fill: var(--d1);
+    fill-opacity: 0.12;
+    stroke: none;
+  }
+  [data-viga] .curva-m{
+    fill: none;
+    stroke: var(--d2);
+    stroke-width: 2;
+  }
+  [data-viga] .area-m{
+    fill: var(--d2);
+    fill-opacity: 0.12;
+    stroke: none;
+  }
+  [data-viga] .corte{
+    stroke: var(--flag);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+  [data-viga] .marca-pos{
+    stroke: var(--d2);
+    fill: var(--d2);
+    stroke-width: 1.2;
+  }
+  [data-viga] .marca-neg{
+    stroke: var(--flag);
+    fill: var(--flag);
+    stroke-width: 1.2;
+  }
+  [data-viga] .etiqueta{
+    font-size: 11px;
+    fill: var(--ink);
+  }
+  [data-viga] .etiqueta.chica{
+    font-size: 9.5px;
+    fill: var(--ink);
+  }
+</style>
