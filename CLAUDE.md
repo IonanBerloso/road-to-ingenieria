@@ -155,10 +155,11 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > lecturas del enunciado y dos erratas de copia—. Publicados como siempre: la
 > cuenta buena en la casilla y la impresa como distractor explicado.
 >
-> **Y una deuda nueva, medida:** las **57 respuestas de examen** de Mecánica
-> no tienen todavía su recálculo en `tests/verificacion/`, así que el sitio
-> queda en 1.423 de 1.481. Es la misma deuda que tuvo Térmica y se salda
-> igual.
+> **Y una deuda que duró un día:** las **57 respuestas de examen** de Mecánica
+> entraron en `tests/verificacion/` el 13 de septiembre de 2026, sus tres
+> convocatorias en paralelo, sin una sola discrepancia. El sitio queda en
+> **1.480 de 1.481**, y la que falta es la de Fluidos que se deja fuera a
+> propósito.
 >
 > **Y esa misma mañana quedan transcritas las doce colecciones enteras.** La
 > asignatura pasa de 191 a **250 ejercicios** y el corpus a **1.742 ejercicios

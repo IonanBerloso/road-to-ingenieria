@@ -60,7 +60,7 @@ entra con su fichero de aquí o el contador lo dice. Eso es lo que mide
 
 **No se escribe a mano.** `node scripts/deuda.mjs` lo cuenta leyendo las
 llamadas a `cuadra()` de estos ficheros y comparándolas con los pasos de
-examen que declaran una respuesta numérica. Al 12 de septiembre de 2026:
+examen que declaran una respuesta numérica. Al 13 de septiembre de 2026:
 
 | asignatura | respuestas comparables de examen | recalculadas |
 |---|---|---|
@@ -69,7 +69,8 @@ examen que declaran una respuesta numérica. Al 12 de septiembre de 2026:
 | **Cálculo** | 805 | **805** |
 | Fluidos | 293 | **292** |
 | **Ingeniería Térmica** | 183 | **183** |
-| | **1.424** | **1.423 — todas menos una** |
+| **Mecánica Aplicada** | 57 | **57** |
+| | **1.481** | **1.480 — todas menos una** |
 
 **Térmica entró la última, el 12 de septiembre de 2026, y es la única cuyos
 exámenes traen la resolución oficial dentro.** Cada ejercicio se había
@@ -167,6 +168,27 @@ otro lado. El examen manipula la condición hasta dejarla en la forma
 resolviendo la condición tal como está escrita y les ajusta una
 circunferencia**. Si el lugar no fuera una circunferencia, o lo fuera con otro
 centro, el ajuste lo diría.
+
+**Mecánica Aplicada entró el 13 de septiembre de 2026**, sus tres
+convocatorias del bloque 1 en paralelo, y es la primera que llega con un
+modelo propio ya probado detrás: `src/lib/viga.ts` y `src/lib/catenaria.ts`,
+que los simuladores usan y `tests/fisica/` verifica. Donde el ejercicio es de
+verdad esa cuenta, el test los importa; donde no, se rehace a mano.
+
+Los tres ficheros buscaron a propósito **otro camino** que el de la
+resolución: el eje central por un operador lineal resuelto con `resuelve` en
+vez de despejando; la carga triangular integrada con Simpson en vez de aplicar
+su fórmula; el parámetro de la catenaria por bisección en vez de la forma
+cerrada; y las reacciones de la viga con par por un sistema 2×2 contrastado
+después contra `viga.ts`. **Ni una discrepancia** en las 57.
+
+Dos cosas quedaron dichas por el camino. En el ejercicio 6 de enero de 2024 las
+ecuaciones **no bastan**: dejan dos ramas según el signo del rozamiento en A, y
+lo que desempata es el sentido del par que dibuja la figura; el test construye
+las dos y comprueba que sobrevive una sola. Y en el ejercicio 2 de la ordinaria
+la lectura de que la repartida **solo llega hasta C** se confirma por tercera
+vez: es la única con la que encajan a la vez R_A = 7Mg, la cortante nula en
+7L/4 y el flector máximo 49MgL/8.
 
 ## Lo que estos pases encontraron
 
