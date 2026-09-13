@@ -515,6 +515,75 @@ lo que encontró las erratas de Materiales y de Térmica.
 
 ---
 
+## Fase 9 · Sistemas de Producción y Fabricación, la octava
+
+> **Abierta el 13 de septiembre de 2026**, con Mecánica ya cerrada. Es otra
+> vez la excepción de §00 —Materiales sigue en `obra` porque le falta
+> material—, y se eligió entre las dos que quedaban: Expresión Gráfica es de
+> 1.º y tendría preferencia, pero **su examen es un dibujo** y el sitio no
+> sabe corregir eso. Necesita una fase de diseño propia, no contenido.
+
+### Lo que hay, contado listando las dos carpetas
+
+- **La guía del estudiantado 25/26**, entre el material. Da el temario
+  oficial —cinco bloques— y la evaluación: 70 % prueba escrita, 30 %
+  prácticas, con **mínimo de 5 en el examen** y hasta +1 punto por el informe
+  TM+.
+- **Nueve juegos de diapositivas** por proceso: presentación, torneado,
+  fresado, taladrado, CNC, rectificado, fundición, metrología y deformación
+  plástica. Más catálogos de herramienta de torneado y fresado.
+- **Una colección de 54 problemas** con su resultado impreso, repartidos en
+  siete procesos: torneado 9, fresado 9, taladrado 6, CNC, fundición,
+  metrología y deformación plástica. El recuento exacto por tema se hace al
+  transcribir.
+- Guiones de prácticas, un problema resuelto y el recurso de CNC que se puede
+  llevar al examen.
+- **Ningún examen.** Como Materiales: nace en `obra` y no se puede cerrar
+  contra §15 hasta que aparezca alguno.
+- **Lo que no se abre:** `Distribucin_grupos_prcticas.pdf`, que es una lista
+  de grupos.
+
+### Dos cosas declaradas desde el primer día
+
+1. **El temario oficial son cinco bloques y el material son nueve procesos.**
+   El catálogo publica los bloques de la guía, con el mecanizado agrupando
+   torneado, fresado, taladrado y rectificado, y dice qué diapositivas caen en
+   cada bloque.
+2. **«Tecnologías de unión» no tiene material**: ni una diapositiva de
+   soldadura entre los treinta y siete ficheros, ni un problema en la
+   colección. Va con `soloEnClase` y su motivo. Es uno de seis, por debajo
+   del tercio que §15 admite.
+
+Y un conflicto que trae la propia guía: su tabla resumen da un **20 %** a las
+prácticas y su apartado 8.1 les da un **30 %**. Se publica el 30, que es el
+que suma 100 con el examen, y la fuente lo dice (§13 caso 3).
+
+### El orden
+
+1. **Registro**: catálogo con el temario y la evaluación de la guía, este plan
+   y la nota de §00. Un commit. **Hecho.**
+2. **La colección primero, en lo que se pueda**: el volcado de texto **pierde
+   las unidades** —«600 .» donde el papel dice 600 rpm—, así que hay que
+   leerla de las imágenes de la página, como el tema 7 de Mecánica. Eso
+   condiciona el ritmo.
+3. **Los temas por peso de colección**: mecanizado primero, que se lleva
+   torneado, fresado y taladrado; luego deformación plástica y fundición, que
+   son las otras dos con muchos problemas; después CNC, metrología y unión.
+4. **La ruta**, cuando haya con qué medirla. Sin exámenes, o se declara sin
+   medir —como no se hizo en Materiales— o se mide sobre la colección
+   diciendo que eso es lo que se ha medido.
+5. **El cierre contra §15**, que hoy no se puede: no hay convocatorias.
+
+### Lo que hay que decidir cuando llegue
+
+**CNC es programación, no cálculo.** Sus problemas piden escribir código de
+control numérico, y el sitio no tiene un tipo de respuesta para eso. Las
+salidas son tres y ninguna es obvia: pasos `reconocer` sobre código ya
+escrito, un paso `redactar` con rúbrica, o declarar el bloque como práctica
+de taller. Se decide al llegar al tema 2, con los problemas delante.
+
+---
+
 ## Lo que NO se va a hacer, y por qué
 
 - **Abrir la sexta antes de cerrar Térmica.** §00.

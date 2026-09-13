@@ -183,6 +183,37 @@ se abre una asignatura hasta que la anterior está terminada según §15.
 > - Y los exámenes **no publican reparto por competencia**, así que sus
 >   ejercicios van sin `puntos`: no se estima lo que no se imprime (§10).
 >
+> **Y con Mecánica cerrada se abre la octava, Sistemas de Producción y
+> Fabricación**, el 13 de septiembre de 2026. Vuelve a ser la excepción de
+> arriba y conviene repetir por qué: Materiales sigue en `obra` y no se puede
+> cerrar —le falta material, no trabajo—, así que esperar a que aparezcan sus
+> exámenes pararía el proyecto entero.
+>
+> Se eligió entre las dos que quedaban, y no por descarte: **Expresión Gráfica
+> es de 1.º y por §00 tendría que ir antes, pero su examen es un dibujo**. El
+> sitio no sabe corregir una vista ni un corte, el patrón «figura fija» sigue
+> sin construir y no hay tipo de respuesta para eso: necesita una fase de
+> diseño propia antes que contenido, y hacerla con prisa saldría mal.
+>
+> Lo que tiene Sistemas, contado listando **sus dos carpetas** —que es la
+> lección que costó el inventario de Mecánica—: treinta y siete ficheros,
+> nueve juegos de diapositivas por proceso, la guía del estudiantado 25/26 y
+> una **colección de 54 problemas** con su resultado impreso. **Ningún
+> examen**, así que nace en `obra` como Materiales.
+>
+> Y nace con dos cosas declaradas desde el primer día. La primera, que el
+> temario oficial son **cinco bloques** y el material son nueve juegos por
+> proceso: el catálogo publica los bloques de la guía y dice qué diapositivas
+> caen en cada uno. La segunda, que **«Tecnologías de unión» no tiene
+> material**: ni una diapositiva de soldadura entre los treinta y siete
+> ficheros, ni un problema en la colección. Va con `soloEnClase` y su motivo,
+> que es para lo que existe ese campo.
+>
+> Un conflicto más, y está dentro de la propia guía: su tabla resumen da un
+> **20 %** a las prácticas y su apartado 8.1 les da un **30 %**. Se publica el
+> 30, que es el que suma 100 con el examen, y la `fuente` lo explica para que
+> nadie lo lea como una errata nuestra (§13 caso 3).
+>
 > **Y esa misma mañana quedan transcritas las doce colecciones enteras.** La
 > asignatura pasa de 191 a **250 ejercicios** y el corpus a **1.742 ejercicios
 > y 7.468 pasos**. Cada resultado impreso se ha recalculado por un camino
