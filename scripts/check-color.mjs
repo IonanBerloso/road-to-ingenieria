@@ -142,6 +142,20 @@ for (const [temaNombre, tokens] of [['claro', light], ['oscuro', dark]]) {
 
   for (const [grupo, { tokens: nombres, cvd }] of Object.entries(GRUPOS)) {
     const usables = nombres.filter((n) => hex(tokens[n]));
+    /* El fallo silencioso que encontró la auditoría del 13 de septiembre de
+       2026: `--d1..--d6` está escrita a mano y este filtro descarta sin decir
+       nada lo que no case con `#rrggbb`. Si alguien renombra los tokens,
+       `usables` se queda vacío, los dos bucles de abajo corren CERO veces,
+       `fallos` se queda en 0 y el guion imprime «Paleta verificada» y sale 0.
+       Un guardián que se apaga solo es peor que no tenerlo, así que aquí se
+       afirma lo que se da por supuesto. */
+    if (usables.length !== nombres.length)
+      fallo(
+        `el grupo «${grupo}» declara ${nombres.length} tokens y solo ${usables.length} tienen color: ` +
+          `${nombres.filter((n) => !hex(tokens[n])).join(', ')} no se leen del tema ${temaNombre}`,
+      );
+    if (usables.length < 2)
+      fallo(`el grupo «${grupo}» se ha quedado con ${usables.length} token(s): no hay nada que comparar`);
     let peor = Infinity;
 
     for (const n of usables) {

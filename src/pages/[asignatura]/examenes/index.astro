@@ -137,7 +137,16 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
 
 <Base
   titulo={`Exámenes — ${asignatura.data.nombre}`}
-  descripcion={`Los exámenes de ${asignatura.data.nombre} resueltos enteros, con el enunciado original y el reparto de puntos por competencia.`}
+  {/* El reparto de puntos SOLO se promete si la asignatura lo tiene. Esta
+      línea lo prometía siempre, y de las seis asignaturas cerradas solo
+      Cálculo publica `puntos`: en Álgebra, Fluidos, Química, Térmica y
+      Mecánica la `<meta description>` anunciaba en Google un dato que la
+      página no trae. La página de detalle ya lo condicionaba bien
+      (`[examen].astro`); esta se quedó sin el condicional. Lo encontró la
+      auditoría del 13 de septiembre de 2026. */}
+  descripcion={`Los exámenes de ${asignatura.data.nombre} resueltos enteros, con el enunciado original${
+    [...datos.values()].some((d) => d.total > 0) ? ' y el reparto de puntos por competencia' : ''
+  }.`}
   acento={asignatura.data.acento}
   crumb={crumb}
 >

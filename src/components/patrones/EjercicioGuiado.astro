@@ -631,7 +631,19 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       const siguiente = pasos[i + 1];
       if (siguiente) {
         siguiente.classList.remove('bloqueado');
-        if (modo === 'guiado') siguiente.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        /* El `scroll-behavior: auto !important` de base.css NO anula esto: un
+           `behavior` explícito en JavaScript gana a la propiedad CSS. Era la
+           única animación del sitio que ignoraba la preferencia de movimiento
+           reducido, y encima la que más se dispara —una por paso resuelto, en
+           los 7.468 pasos del corpus—. Lo encontró la auditoría del 13 de
+           septiembre de 2026; el guardián de §11 no lo veía porque comprueba
+           que la cadena `prefers-reduced-motion` aparezca en el CSS, no que
+           una animación concreta la respete. */
+        if (modo === 'guiado')
+          siguiente.scrollIntoView({
+            behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            block: 'center',
+          });
       } else {
         resolucion.hidden = false;
       }

@@ -21,6 +21,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
@@ -204,16 +205,33 @@ async function main() {
   }
   /* El reparto por asignatura, que es lo que habría delatado el filtro sin
      guion sin necesidad de que fallara nada: un cero en esta línea es una
-     asignatura que el navegador no abre. */
+     asignatura que el navegador no abre.
+     ARREGLADO EL 13 DE SEPTIEMBRE DE 2026. Ese cero era **inalcanzable**: esta
+     línea contaba las claves presentes en `rutas`, y una asignatura con cero
+     páginas no produce una clave con valor 0, produce **ausencia**. O sea que
+     el guardián existía para emitir un número que no podía emitir, y nada
+     fallaba. Ahora la lista esperada sale del catálogo —que es quien decide
+     qué asignaturas existen— y se resta: lo que falta se dice, y si falta
+     alguna que tiene páginas construidas, se cae. */
   const porAsignatura = {};
   for (const h of rutas) {
     const a = h.replace(BASE, '').split('/').filter(Boolean)[0] ?? '?';
     porAsignatura[a] = (porAsignatura[a] ?? 0) + 1;
   }
-  console.log(`  · por asignatura: ${Object.entries(porAsignatura)
-    .sort()
-    .map(([a, n]) => `${a} ${n}`)
+  const conContenido = readdirSync(join(ROOT, 'src', 'content', 'catalogo'))
+    .filter((n) => n.endsWith('.json'))
+    .map((n) => n.replace(/\.json$/, ''))
+    .filter((a) => existsSync(join(ROOT, 'dist', a)));
+  console.log(`  · por asignatura: ${conContenido
+    .map((a) => `${a} ${porAsignatura[a] ?? 0}`)
     .join(' · ')}`);
+  const mudas = conContenido.filter((a) => !porAsignatura[a]);
+  if (mudas.length) {
+    console.error(
+      `  ✗ ${mudas.length} asignatura(s) con páginas construidas que el navegador no abre: ${mudas.join(', ')}`,
+    );
+    fallos++;
+  }
 
   /** Recuento global de trazos: ver el comentario de más abajo. */
   const medidos = { raiz: 0, barra: 0, etiqueta: 0 };

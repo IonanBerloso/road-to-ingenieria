@@ -24,10 +24,10 @@ Térmica y tres de Mecánica—, y el guardián de convocatorias huérfanas no
 cuenta ninguna suelta. Las que quedan fuera están declaradas con su motivo:
 dos de Térmica y cinco de Mecánica, todas íntegramente en euskera.
 
-**Y una sexta, Ciencia de Materiales, escrita entera y en `obra`.** Sus diez
-temas y los 99 ejercicios de su colección están publicados desde el 12 de
-septiembre de 2026, pero no hay un solo examen entre su material, y sin
-exámenes no hay ruta que medir ni cierre posible (§14, §15). Lo que le falta
+**Y una séptima con contenido, Ciencia de Materiales, escrita entera y en
+`obra`.** Sus diez temas y los 100 ejercicios de su colección están publicados
+desde el 12 de septiembre de 2026, pero no hay un solo examen entre su
+material, y sin exámenes no hay ruta que medir ni cierre posible (§14, §15). Lo que le falta
 es material, no trabajo; está más abajo, en su propia sección.
 
 **Mecánica Aplicada se abrió el 12 de septiembre de 2026 y se cerró el 13**,
@@ -354,24 +354,34 @@ alta.
 
 ## Rutas de estudio
 
-Las trece, no solo las de Cálculo. Recontadas el 10 de septiembre de 2026.
+Las quince, no solo las de Cálculo. Recontadas el 13 de septiembre de 2026, y
+desde ese día `node scripts/deuda.mjs` §10 compara la fila de totales con lo
+que hay: entre el 10 y el 13 esta tabla se quedó sin las dos rutas de Mecánica
+y siguió publicando 13 · 110 · 295.
 
-| asignatura | ruta | bloques | escalones | medida sobre | huecos declarados |
+La columna de huecos lleva ahora **dos** números, y la diferencia importa: un
+`falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
+documental pero infla el recuento. De los 115 declarados, **22 están tachados**
+y los **93** restantes siguen abiertos.
+
+| asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
 |---|---|---|---|---|---|
-| Álgebra | extraordinaria | 6 | 17 | 8 | 7 |
-| Álgebra | ordinaria | 6 | 18 | 8 | 7 |
-| Cálculo | 1.ª evaluación | 7 | 21 | 11 | 6 |
-| Cálculo | 2.ª evaluación | 8 | 17 | 11 | 2 |
-| Cálculo | 3.ª evaluación | 10 | 19 | 11 | 8 |
-| Cálculo | 4.ª evaluación | 3 | 12 | 11 | 4 |
-| Cálculo | 5.ª evaluación | 3 | 12 | 10 | 7 |
-| Cálculo | extraordinaria | 16 | 38 | 11 | 10 |
-| Cálculo | ordinaria | 15 | 37 | 11 | 12 |
-| Fluidos | ordinaria | 14 | 51 | 11 | 26 |
-| Química | 1.er cuatrimestre | 7 | 16 | 3 | 8 |
-| Química | 2.º cuatrimestre | 8 | 17 | 3 | 9 |
-| Térmica | ordinaria | 7 | 20 | 17 | 7 |
-| **total** | **13 rutas** | **110** | **295** | — | **113** |
+| Álgebra | extraordinaria | 6 | 17 | 8 | 3 / 7 |
+| Álgebra | ordinaria | 6 | 18 | 8 | 2 / 7 |
+| Cálculo | 1.ª evaluación | 7 | 21 | 11 | 6 / 6 |
+| Cálculo | 2.ª evaluación | 8 | 17 | 11 | 2 / 2 |
+| Cálculo | 3.ª evaluación | 10 | 19 | 11 | 8 / 8 |
+| Cálculo | 4.ª evaluación | 3 | 12 | 11 | 4 / 4 |
+| Cálculo | 5.ª evaluación | 3 | 12 | 10 | 5 / 7 |
+| Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 10 |
+| Cálculo | ordinaria | 15 | 37 | 11 | 10 / 12 |
+| Fluidos | ordinaria | 14 | 51 | 11 | 21 / 26 |
+| Mecánica | 1.er cuatrimestre | 7 | 18 | 3 | 1 / 1 |
+| Mecánica | 2.º cuatrimestre | 7 | 15 | 3 | 1 / 1 |
+| Química | 1.er cuatrimestre | 7 | 16 | 3 | 8 / 8 |
+| Química | 2.º cuatrimestre | 8 | 17 | 3 | 9 / 9 |
+| Térmica | ordinaria | 7 | 20 | 17 | 4 / 7 |
+| **total** | **15 rutas** | **124** | **328** | — | **93 / 115** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
@@ -907,18 +917,42 @@ examen delante y no antes (§13), y lo que hacía falta eran dos tipos:
 **Ciencia de Materiales se abrió el 12 de septiembre de 2026**, el mismo día
 en que se cerró Térmica, por decisión de Ionan —«haz materiales primero»—.
 Sus **diez temas están publicados**, cada uno con prosa, figura y ejemplos
-propios, y **los 99 ejercicios de su colección** están resueltos paso a paso y
+propios, y **los 100 ejercicios de su colección** están resueltos paso a paso y
 contrastados contra el resultado impreso —diez de ellos se leen de curvas de
-libro, que hubo que redibujar a escala antes (§08)—. Está en `obra`, no en
-`ok`, por un motivo que no es trabajo: **no hay ni un examen** entre el
-material, así que §15 no se puede cumplir y la ruta de §14 no se puede medir. Los temas 7 a 10 no tienen material de la
-profesora —se trabajan con presentaciones de alumnos, que llevan sus nombres
-y no se abren—, así que su prosa se apoya en la guía y en los temas 1 a 6.
+libro, que hubo que redibujar a escala antes (§08)—. Con los 20 ejemplos
+propios son 120. Está en `obra`, no en `ok`, por un motivo que no es trabajo:
+**no hay ni un examen** entre el material, así que §15 no se puede cumplir y la
+ruta de §14 no se puede medir.
 
-**Las otras tres** siguen en `prev`, con cero contenido: Expresión Gráfica,
-Mecánica Aplicada y Sistemas de Producción y Fabricación. Es §00
-funcionando: no se abre una hasta cerrar la anterior. Por qué lo primero son
-exámenes, que ninguna trae en el material, está en `tasks/manana.md`, fase 7.
+**Y una mitad más frágil que la otra, que hasta hoy no estaba dicha con
+números.** Los temas 7 a 10 no tienen material de la profesora —se trabajan con
+presentaciones de alumnos, que llevan sus nombres y no se abren—, así que su
+prosa se apoya en la guía y en los temas 1 a 6. Eso se sabía; lo que no estaba
+escrito es cuánto pesa. Medido con `node scripts/mide.mjs ciencia-materiales`:
+los temas 3 a 6 tienen entre **1.768 y 2.874** palabras de prosa, de 3 a 7
+figuras y de 6 a 31 ejercicios cada uno. Los temas 7 a 10 tienen entre **855 y
+1.363** palabras, **una** figura y **dos ejercicios, que son sus dos ejemplos
+propios**: ni uno de colección, porque no hay colección suya que transcribir.
+Los diez
+figuran igual en el catálogo, con `hecho: true` y sin distintivo, y eso es lo
+que la auditoría del 13 de septiembre marcó como el hueco no declarado de esta
+asignatura.
+
+**Las que quedan sin abrir.** El estado de cada asignatura lo decide
+`src/content/catalogo/*.json` y no esta página: al 13 de septiembre de 2026 son
+seis en `ok`, dos en `obra` —Materiales y Sistemas de Producción— y **una sola
+en `prev`**, Expresión Gráfica. Es §00 funcionando: no se abre una hasta cerrar
+la anterior.
+
+> Aquí ponía «**las otras tres** siguen en `prev`, con cero contenido:
+> Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción», y era falso
+> por partida doble: Mecánica llevaba un día cerrada en `ok` con 250 ejercicios
+> y dos rutas, y Sistemas estaba en `obra` con su catálogo escrito. **Es la
+> quinta vez que este párrafo envejece por lo mismo** —las cuatro anteriores
+> están confesadas justo debajo— y por eso a partir de hoy no repite la lista:
+> dice dónde está la verdad y manda allí. Una frase que hay que reescribir cada
+> vez que el proyecto avanza es una frase que va a estar mal la mayor parte del
+> tiempo.
 
 > Este encabezado decía «las otras cuatro» y el párrafo «las cuatro están como
 > `prev`, con cero contenido» hasta la tarde del 12 de septiembre de 2026, con

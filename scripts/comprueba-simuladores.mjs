@@ -12,8 +12,27 @@
  *
  *  1. que el simulador **se encuentre** aterrizando en la URL a pelo, sin
  *     ancla y sin `localStorage` — que es justo lo que no se comprobó;
- *  2. que cada botón de preajuste deje en la tabla los valores publicados en
- *     la convocatoria de la que sale.
+ *  2. que cada botón de preajuste deje en la tabla **los valores que declara
+ *     su campo `fuente`**, sean del examen o no.
+ *
+ * Y ESE «SEAN DEL EXAMEN O NO» HAY QUE LEERLO, porque hasta el 13 de
+ * septiembre de 2026 esta cabecera decía «los valores publicados en la
+ * convocatoria de la que sale» y el comentario de `CASOS` remataba: «están
+ * copiados de la convocatoria, que es lo único contra lo que tiene sentido
+ * comparar». Era verdad de **tres** de los nueve casos. Los `fuente` de los
+ * otros seis lo dicen negro sobre blanco —«los dos ejemplos del propio tema»,
+ * «la figura del propio tema», «el error típico del propio tema»— y uno no
+ * compara nada. O sea que el guardián describía como ancla externa lo que en
+ * su mayoría es una prueba de regresión contra nuestra propia prosa.
+ *
+ * La regresión también sirve: caza que un cambio en el modelo mueva lo que la
+ * página enseña, que es exactamente el fallo del 2 de septiembre. Lo que no
+ * hace es garantizar que el número sea cierto. La diferencia está tabulada
+ * fila por fila en `tests/fisica/README.md`, y **el reparto de hoy es 3 con
+ * ancla externa, 2 mixtas y 3 propias**.
+ *
+ * Un guardián que se cree más fuerte de lo que es hace más daño que uno que
+ * falta: por eso esto se corrige aquí y no solo en el informe.
  *
  * No entra en `npm run suelo`: necesita el sitio levantado y tarda. Se pasa
  * al tocar un simulador, como `recalcula` al tocar el corpus.
@@ -26,8 +45,13 @@ const BASE = process.env.ORIGEN ?? 'http://localhost:4321/road-to-ingenieria';
 
 /**
  * Cada caso dice qué pulsar y qué tiene que aparecer. Los valores **no** se
- * calculan aquí: están copiados de la convocatoria, que es lo único contra lo
- * que tiene sentido comparar (§10).
+ * calculan aquí, nunca: se copian de donde diga su `fuente`, y el `fuente`
+ * dice la verdad sobre de dónde salen (§10). Tres los toman de una
+ * convocatoria —el ábaco de Moody, el punto de funcionamiento y los diagramas
+ * de viga— y son los únicos que anclan contra algo ajeno al proyecto. Los
+ * demás los toman de la figura o del ejemplo del propio tema, y entonces esto
+ * comprueba que el modelo y la página sigan diciendo lo mismo, que es una
+ * regresión y no una verificación. Ver la cabecera.
  */
 const CASOS = [
   {

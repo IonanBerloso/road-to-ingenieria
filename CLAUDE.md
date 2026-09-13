@@ -410,14 +410,24 @@ scripts/
 tests/
   *.test.ts                los lectores de respuesta, con vitest
   fisica/                  casos con resultado conocido, uno por simulador:
-                           moody · bombeo · compuertas · canales · ariete,
-                           107 casos sacados del corpus, nunca de un libro
-                           (§10). Decía 86 hasta el 10 de septiembre de 2026
+                           moody · bombeo · compuertas · canales · ariete ·
+                           viga · catenaria · mecanismo, 8 ficheros y
+                           153 casos sacados del corpus, nunca de un libro
+                           (§10). Decía 86 y luego 107; desde el 13 de
+                           septiembre de 2026 la compara `deuda.mjs` §10, que
+                           es la única forma de que no vuelva a caducar. Y ojo
+                           al README de esa carpeta: solo 3 de los 8 comparan
+                           contra una convocatoria
 public/
-  examenes/<asignatura>/   los enunciados originales en PDF —101 al 10 de
-                           septiembre de 2026: 85 de cálculo, 8 de álgebra,
-                           6 de química y 2 de fluidos. La ÚNICA carpeta del
-                           repo donde entra un PDF ajeno (§08). Ojo a la
+  examenes/<asignatura>/   los enunciados originales en PDF —124 al 13 de
+                           septiembre de 2026: 85 de cálculo, 20 de térmica,
+                           8 de álgebra, 6 de química, 3 de mecánica y 2 de
+                           fluidos. La ÚNICA carpeta del repo donde entra un
+                           PDF ajeno (§08), y la única donde un fichero se
+                           publica por estar, no por estar enlazado: desde el
+                           13 de septiembre `verify.mjs` comprueba también el
+                           sentido disco→YAML, después de encontrar cuatro
+                           sueltos. Ojo a la
                            asimetría de fluidos: sus 16 convocatorias caben en
                            2 ficheros porque quince vienen en un cuadernillo
                            único, así que aquí «un PDF» no es «una
@@ -1301,10 +1311,12 @@ En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
 muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
 que un fallo se pueda reproducir. En unas semanas pasan todas.
 
-Con `HUMO_TODO=1` las abre **todas** —**227 al 12 de septiembre de 2026**:
-107 de Cálculo, 41 de Fluidos, 32 de Térmica, 19 de Química, 18 de Álgebra
-y **10 de Ciencia de Materiales**—, y eso es lo que se pasa al cerrar una
-asignatura. Térmica pasó de 11
+Con `HUMO_TODO=1` las abre **todas** —**246 al 13 de septiembre de 2026**:
+107 de Cálculo, 41 de Fluidos, 32 de Térmica, 19 de Química, 18 de Álgebra,
+**18 de Mecánica Aplicada** y **10 de Ciencia de Materiales**—, y eso es lo que
+se pasa al cerrar una asignatura. Esta línea decía 227 y se dejaba fuera a
+Mecánica entera, cerrada el día antes; la compara `deuda.mjs` §10 desde el 13
+de septiembre. Térmica pasó de 11
 a 32 esa madrugada al montar sus veinte convocatorias, que es la subida más
 grande que ha tenido esta cifra de una vez. **La cifra se lee, no se ignora**:
 decía 123 y llevaba semanas sin actualizarse, que es justo el descuido que
@@ -1337,13 +1349,26 @@ Comprueba dos cosas, y las dos habían fallado:
 - que el simulador **se encuentre** aterrizando en la URL a pelo, sin ancla y
   sin `localStorage` — que la cabecera lo anuncie, que el índice marque su
   apartado y que el aviso **lleve**;
-- que cada botón de preajuste deje en la tabla **los valores que publica la
-  convocatoria** de la que sale. No se recalculan aquí: están copiados del
-  examen, que es lo único contra lo que tiene sentido comparar (§10).
+- que cada botón de preajuste deje en la tabla **los valores que declara su
+  campo `fuente`**. No se recalculan aquí nunca: se copian de donde el `fuente`
+  diga (§10).
+
+**Y de dónde salen esos valores no es lo mismo en los nueve.** Hasta el 13 de
+septiembre de 2026 aquí ponía «los valores que publica la convocatoria… están
+copiados del examen, que es lo único contra lo que tiene sentido comparar», y
+era verdad de **tres**: el ábaco de Moody, el punto de funcionamiento y los
+diagramas de viga. Los otros seis comparan contra la figura o el ejemplo del
+propio tema —sus `fuente` lo decían y nadie los había sumado—, así que ahí esto
+es una **regresión** y no una verificación: caza que el modelo se separe de la
+página, no que el número sea cierto. El reparto está tabulado fila por fila en
+`tests/fisica/README.md`: 3 con ancla externa, 2 mixtas, 3 propias.
 
 Validado al revés con dos regresiones reales: volver a poner `D/e = 40` en el
-golpe de ariete —que daba 215 mca donde el examen dice 228— y quitar el aviso
-de la cabecera. Las dos, rojas.
+golpe de ariete —que daba 215 mca donde **el tema publica 228**— y quitar el
+aviso de la cabecera. Las dos, rojas. Y ojo al ejemplo, que ilustra lo de
+arriba mejor que ninguno: ese 228 no sale de un examen, sale de
+`fluidos/t20-golpe-ariete/index.mdx:218`, prosa nuestra. La regresión de
+validación se validó contra nosotros mismos.
 
 ### `npm run peso` — cuánto tarda una página en un móvil
 
@@ -1890,7 +1915,7 @@ declara la asignatura terminada:
 | | qué comprueba | qué pasó por no tenerlo |
 |---|---|---|
 | `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
-| `HUMO_TODO=1 npm run humo` | las 227 páginas del sitio en un navegador, 143 de ellas de examen | el navegador abría 8 de 96 durante meses |
+| `HUMO_TODO=1 npm run humo` | las 246 páginas del sitio en un navegador, 147 de ellas de examen | el navegador abría 8 de 96 durante meses |
 | `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
 | `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
 | `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |

@@ -1,18 +1,39 @@
 # Tests de física
 
 Todo simulador con física dentro lleva aquí al menos un caso con resultado
-conocido, verificado contra el ejercicio original o contra bibliografía.
-Nunca se ajusta una constante para que salga el número esperado (CLAUDE.md §10).
+conocido. Nunca se ajusta una constante para que salga el número esperado
+(CLAUDE.md §10).
 
-Cinco ficheros y 86 casos, uno por simulador de Mecánica de Fluidos:
+**Ocho ficheros y 153 casos**, para nueve simuladores. La cifra la da
+`node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
+la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
+y estuvo tres días diciéndolo con ocho ficheros en la carpeta.
 
-| fichero | simulador | de dónde salen los números |
-|---|---|---|
-| `moody.test.ts` | `AbacoMoody` (t18) | ejercicio 4 del 3.er parcial de junio de 2021, que recorre las tres zonas del ábaco con el mismo tubo de 250 mm |
-| `bombeo.test.ts` | `PuntoFuncionamiento` (t25) | ordinaria de 2025-2026: tres bombas, cavitación y una maniobra de válvula, con seis resultados publicados |
-| `compuertas.test.ts` | `PrismaDePresiones` (t07) | los dos ejemplos introductorios del propio tema, la compuerta vertical y la misma inclinada 60° |
-| `canales.test.ts` | `SeccionDeCanal` (t21) | las tres secciones de 4 m² de la figura del propio tema, con sus perímetros publicados |
-| `ariete.test.ts` | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus **cuatro** números: los dos buenos y los dos equivocados |
+**Y una distinción que hay que leer antes que la tabla.** «Verificado» no
+significa lo mismo en todas las filas. En **tres** de las ocho el número contra
+el que se compara sale de una **convocatoria**; en **dos** sale de nuestra
+propia figura pero hay además una **invariante matemática independiente** que
+el test comprueba aparte; y en las **tres** restantes sale solo de nuestra
+prosa o de nuestra figura, y entonces el test comprueba que el modelo y la
+página digan lo mismo, no que digan la verdad. Es una prueba de regresión, que
+también sirve, pero no es un ancla. Lo encontró la auditoría del 13 de septiembre de 2026, y
+está dicho aquí porque un guardián que se cree más fuerte de lo que es hace más
+daño que uno que falta.
+
+| fichero | casos | simulador | de dónde salen los números | ancla |
+|---|---|---|---|---|
+| `moody.test.ts` | 22 | `AbacoMoody` (t18) | ejercicio 4 del 3.er parcial de junio de 2021, que recorre las tres zonas del ábaco con el mismo tubo de 250 mm | **externa** |
+| `bombeo.test.ts` | 17 | `PuntoFuncionamiento` (t25) | ordinaria de 2025-2026: tres bombas, cavitación y una maniobra de válvula, con seis resultados publicados | **externa** |
+| `viga.test.ts` | 22 | `DiagramasDeViga` (mecánica t06) | ejercicios 6.2, 6.5 y 6.9 de la colección y el 49MgL/8 de la ordinaria de 2024-2025 | **externa** |
+| `catenaria.test.ts` | 14 | `LaCatenaria` (mecánica t05) | la figura del propio tema — pero con la invariante y² = c² + s² comprobada aparte, que sí es independiente | mixta |
+| `mecanismo.test.ts` | 10 | `CentroInstantaneo` (mecánica t08) | la figura del propio tema — con la velocidad contrastada contra la derivada numérica de la posición, que sí es independiente | mixta |
+| `compuertas.test.ts` | 16 | `PrismaDePresiones` (t07) | los dos ejemplos introductorios del propio tema, la compuerta vertical y la misma inclinada 60° | propia |
+| `canales.test.ts` | 27 | `SeccionDeCanal` (t21) | las tres secciones de 4 m² de la figura del propio tema, con sus perímetros publicados | propia |
+| `ariete.test.ts` | 25 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus **cuatro** números: los dos buenos y los dos equivocados | propia |
+
+El noveno simulador, `PlanoComplejo` (cálculo t01), **no tiene fichero aquí** y
+es el único cuya física vive dentro del `.astro` en vez de en `src/lib/`. Está
+declarado como deuda en `tasks/todo.md`.
 
 ## Dos reglas que salieron de escribirlos
 

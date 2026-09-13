@@ -590,6 +590,120 @@ de taller. Se decide al llegar al tema 2, con los problemas delante.
 
 ---
 
+## Fase 10 · Lo que deja la auditoría completa del 13 de septiembre
+
+El informe entero está en [`docs/auditoria-2026-09-13.md`](../docs/auditoria-2026-09-13.md),
+con lo ya arreglado tachado. Aquí solo lo que queda, en el orden en que lo
+haría, con el criterio de siempre: **primero lo que afecta a quien no puede
+elegir, después lo que miente, después lo que estorba.**
+
+### 10.1 · Térmica 2025-2026: los enunciados reconstruidos (§08)
+
+Es lo más grave que queda. El examen tiene **3 ejercicios** y el sitio publica
+**7**, con los enunciados reescritos: uno **añade un apartado que no existe**,
+dos incrustan en el cuerpo del enunciado valores calculados que no están en el
+original, y otro dice «el condensado del ejercicio anterior» refiriéndose al
+ejercicio *del sitio*. Ninguna `fuente` lo declara.
+
+- **Desbloquea:** nada, se puede hacer ya. El PDF está en
+  `public/examenes/ingenieria-termica/2025-2026-ord.pdf`.
+- **El patrón bueno ya existe en el repo:** `2020-2021-ord/` transcribe literal
+  y añade los datos arrastrados en un bloque en cursiva rotulado «*Lo que hace
+  falta del ejercicio anterior…*». Se copia eso.
+- **Se comprueba** releyendo los siete contra el PDF, apartado por apartado.
+- **Y `2025-2026-ext` publica 4 por 3**: la misma revisión.
+
+### 10.2 · Las nueve `fuente` que callan una discrepancia
+
+Lista con fichero y línea en el informe, §2. El arreglo es el de hoy: subir a
+la `fuente` lo que la resolución ya cuenta, y en las cinco que no lo tienen,
+**añadir el valor impreso como distractor** — que es la mitad que de verdad
+sirve, porque quien saque el número del boletín quiere saber por qué no cuadra.
+
+### 10.3 · Álgebra: pasar sus dos rutas por los criterios
+
+**12 de sus 35 escalones** ponen el ejercicio de examen delante de los de
+boletín, `revisado` está a **0 en sus 12 bloques**, y de sus 14 `falta[]`
+nueve están tachadas: declara **5 huecos abiertos** en la asignatura que pide
+demostrar en el 75 % de sus ejercicios de examen. Son las rutas más cortas del
+sitio: es barato y rinde.
+
+### 10.4 · `calculo-ext`: ordenar como dice que ordena
+
+Seis bloques fuera de sitio en las dos mitades. O se reordenan, o el
+`criterioDeOrden` dice la razón real. `calculo-ord` sí lo cumple, así que hay
+patrón.
+
+### 10.5 · Los guardianes que se creen más fuertes de lo que son
+
+En orden de rendimiento:
+
+1. **`comprueba-simuladores.mjs` y §11 dicen «contra el examen» donde no lo
+   es.** Seis de los nueve comparan contra prosa nuestra, y el «el examen dice
+   228» de §11 sale de `t20-golpe-ariete/index.mdx:218`. *Media hora, y cambia
+   lo que el proyecto cree saber de sí mismo.* (`tests/fisica/README.md` ya
+   publica la distinción fila por fila.)
+2. **`humo.mjs` y los 360 px:** mide seis páginas fijas que nunca rotan,
+   ignora `HUMO_TODO`, se traga el fallo de abrir la resolución y **nunca abre
+   una página de tema** — que es justo donde el sitio se desbordaba el 4 de
+   septiembre.
+3. **La portada se abre sin escuchas de error de JavaScript**, y es la página
+   con FLIP, `:target` y paleta de comandos. Dos líneas.
+4. **`verify.mjs` y el foco visible:** busca `outline: none`; un botón sin
+   ninguna regla de foco pasa.
+5. **`check-color.mjs` solo mide contra `--paper`:** fuera quedan `--panel`,
+   la paleta de pizarra entera y los `--barra-*`. Y `--barra-justificar` se
+   usa como color de texto a 3,50:1 sobre `--panel`, por debajo de AA.
+
+### 10.6 · Las cuatro duplicaciones de §01 cuyo próximo fallo es silencioso
+
+1. **La lista de asignaturas, tres veces en `content.config.ts`** — cinco
+   líneas de `Object.fromEntries` y deja de poder desaparecer una asignatura
+   sin romper el build.
+2. **La URL de un examen, cuatro veces** (una de ellas es un autocontrol
+   escrito contra una copia). Una función de tres líneas.
+3. **`NOMBRE_RUTA` en `index.astro`** duplica `CONVOCATORIAS[k].corta` y cubre
+   7 de las 17 claves: **Química y Mecánica salen con el título largo y se ve
+   en pantalla.** Y `ETIQUETA`/`FRASE_ESTADO` son la misma tabla dos veces, a
+   cuatro líneas de distancia.
+4. **`revisa-ejercicios.mjs` ya diverge del esquema**: `titulo` ≥ 5 contra
+   ≥ 3. Un carácter.
+
+### 10.7 · Lo suelto
+
+- **Cálculo**: extraer la física de `PlanoComplejo` a `src/lib/plano.ts` y
+  escribir su caso. Es la única casilla de §15 que le falta a la asignatura de
+  referencia.
+- **Fluidos**: decir en la ruta que los cinco parciales de 2019-2021 no tienen
+  ruta y por qué (son un formato extinto). Y usar la prosa de los cuatro temas
+  que declara y no enlaza.
+- **Las 21 + 13 rampas** que `deuda.mjs` no cuenta: aplicar el cuarto criterio
+  a **escalón** y no a bloque.
+- **`calculo-ord`**: `medidoSobre: 11` con 12 ordinarias transcritas.
+- **Química**: las dos rutas prometen fecha de revisión por bloque y la tienen
+  3 de 7 y 2 de 8.
+- **Un campo `pesoImpreso`** junto a `puntos`, o aceptar por escrito que se
+  tira el reparto que Química y Fluidos **sí** imprimen.
+- **Los nueve `.readout` sin región viva** — *hecho el 13 de septiembre*.
+- **Código muerto medido**: `EXP_HW`, `fLisoKarman`, `subcapaRelativa`,
+  `ADIMENSIONAL`, `.rotulo--ink`, `--step`. Los dos de física con cuidado.
+- **`vitest` está en `dependencies`**, y cinco guiones no tienen entrada en
+  `package.json` —entre ellos `deuda.mjs`, que §04 declara la fuente oficial
+  de las cifras—.
+
+### 10.8 · Expresión Gráfica: lo que se puede hacer hoy sin la fase de diseño
+
+La auditoría confirma que **no la bloquea el material**: hay temario completo,
+`Colección_de_ejercicios.pdf`, `Ejercicios_-_Solución.pdf` y los criterios de
+corrección. La bloquea que su examen es un dibujo, y eso es trabajo. Pero
+sigue con `temarioOficial: false` y **sin `evaluacion`** teniendo la guía y los
+criterios entre el material: eso se puede escribir ya, y es lo que la sacaría
+de `prev`.
+
+⚠️ En esa carpeta hay dos ficheros de calificaciones. No se abren.
+
+---
+
 ## Lo que NO se va a hacer, y por qué
 
 - **Abrir la sexta antes de cerrar Térmica.** §00.

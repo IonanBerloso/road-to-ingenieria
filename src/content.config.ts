@@ -1204,71 +1204,47 @@ const preparar = defineCollection({
     ),
 });
 
-const calculo = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/calculo' }),
-  schema: temaEscrito,
-});
-
-const fluidos = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/fluidos' }),
-  schema: temaEscrito,
-});
-
-/* Álgebra entra el 26 de agosto de 2026, cuando Cálculo cumple §15 entera.
-   Una colección por asignatura y no un glob sobre `content/` porque cada una
-   tiene su carpeta y Astro necesita saber la base; es el mismo patrón que
-   `fluidos` y se añade una línea por asignatura, que es el precio correcto. */
-const algebra = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/algebra' }),
-  schema: temaEscrito,
-});
-
-/* Y Fundamentos Químicos el 5 de septiembre de 2026, la cuarta. La clave de
-   la colección tiene que ser **el id del catálogo** —`fundamentos-quimicos`,
-   con guion— porque `[tema].astro` llama a `getCollection(asignatura.id)`.
-   Si no coincidiera, el build fallaría con un mensaje que apunta aquí. */
-const fundamentosQuimicos = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/fundamentos-quimicos' }),
-  schema: temaEscrito,
-});
-
-/* Y la quinta, Ingeniería Térmica, el 7 de septiembre de 2026. Es la primera
-   asignatura cuyo material publica **la resolución oficial** de cada examen y
-   no solo el resultado, así que aquí `fuente` puede decir algo que en Fluidos
-   no se podía decir: que el desarrollo se ha contrastado paso a paso. */
-const ingenieriaTermica = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/ingenieria-termica' }),
-  schema: temaEscrito,
-});
-
-/* La sexta, abierta el 12 de septiembre de 2026 por decisión de Ionan. Es la
-   primera que entra **sin ningún examen** entre el material: sus temas se
-   escriben sobre las diapositivas de la profesora y una colección que publica
-   el resultado de cada problema, y su ruta queda por medir hasta que aparezcan
-   convocatorias (§14, §15). */
-const cienciaMateriales = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/ciencia-materiales' }),
-  schema: temaEscrito,
-});
-
-/* La séptima, abierta el 12 de septiembre de 2026 por decisión de Ionan, con
-   Materiales todavía en obra. Al contrario que Materiales, **sí tiene
-   exámenes**: tres con enunciado en castellano, todos del bloque 1, y cinco
-   solo en euskera (tasks/manana.md, fase 8). */
-const mecanicaAplicada = defineCollection({
-  loader: glob({ pattern: '**/index.mdx', base: './src/content/mecanica-aplicada' }),
-  schema: temaEscrito,
-});
+/* Las siete colecciones de temas, DERIVADAS de `CON_TEMAS`.
+ *
+ * Estuvieron escritas una a una hasta el 13 de septiembre de 2026, y con
+ * eso la lista de asignaturas vivía **tres veces dentro de este mismo
+ * fichero**: en `CON_TEMAS`, en siete `defineCollection` idénticos salvo la
+ * ruta base, y en el mapa `collections` de abajo. Abrir una asignatura eran
+ * tres ediciones, y olvidar la tercera la hacía desaparecer **en silencio**
+ * —sin romper el build—, que es exactamente el modo de fallo que el
+ * comentario de `CON_TEMAS`, veinte líneas más arriba, describe para
+ * justificar su propia existencia. Lo encontró la auditoría del 13 de
+ * septiembre. Ahora es una edición: `CON_TEMAS`.
+ *
+ * La clave tiene que ser **el id del catálogo** —con guion:
+ * `fundamentos-quimicos`— porque `[tema].astro` llama a
+ * `getCollection(asignatura.id)`; derivándolas de `CON_TEMAS` eso ya no se
+ * puede desalinear, que era la otra pega que el comentario de Química avisaba.
+ *
+ * Y una colección por asignatura, no un glob sobre `content/`, porque cada una
+ * tiene su carpeta y Astro necesita saber la base.
+ *
+ * El rastro de cuándo entró cada una, que estaba repartido en siete
+ * comentarios: Cálculo y Fluidos desde el principio; Álgebra el 26 de agosto
+ * de 2026, cuando Cálculo cumplió §15 entera; Fundamentos Químicos el 5 de
+ * septiembre; Ingeniería Térmica el 7, la primera cuyo material publica **la
+ * resolución oficial** de cada examen y no solo el resultado; Ciencia de
+ * Materiales el 12, la primera que entra **sin ningún examen** entre el
+ * material; y Mecánica Aplicada el 12 también, con tres convocatorias en
+ * castellano y cinco solo en euskera. */
+const temas = Object.fromEntries(
+  CON_TEMAS.map((id) => [
+    id,
+    defineCollection({
+      loader: glob({ pattern: '**/index.mdx', base: `./src/content/${id}` }),
+      schema: temaEscrito,
+    }),
+  ]),
+);
 
 export const collections = {
   catalogo,
-  calculo,
-  fluidos,
-  algebra,
-  'fundamentos-quimicos': fundamentosQuimicos,
-  'ingenieria-termica': ingenieriaTermica,
-  'ciencia-materiales': cienciaMateriales,
-  'mecanica-aplicada': mecanicaAplicada,
+  ...temas,
   ejercicios,
   examen,
   preparar,

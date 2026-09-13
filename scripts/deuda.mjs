@@ -606,4 +606,117 @@ fila('pasos', pasos);
 const tipos = {};
 for (const e of EJ.values()) for (const p of e.pasos ?? []) tipos[p.tipo] = (tipos[p.tipo] ?? 0) + 1;
 for (const [t, n] of Object.entries(tipos).sort((a, b) => b[1] - a[1])) fila(t, n);
+
+/* ── 10 · las cifras que la documentación publica SOBRE SÍ MISMA ─────
+ *
+ * POR QUÉ EXISTE, y es la sección que más ha costado ganarse.
+ *
+ * La auditoría completa del 13 de septiembre de 2026 barrió el proyecto en
+ * cinco frentes. Los cinco informes, escritos por separado y sin verse entre
+ * ellos, encontraron **la misma clase de fallo** como el más repetido: una
+ * cifra que era verdad el día que se escribió, que dejó de serlo al crecer el
+ * proyecto, y que nadie volvió a medir. Treinta y dos casos contados, en
+ * CLAUDE.md, en docs/como-vamos.md y en los README de tests/.
+ *
+ * El ejemplo que lo resume no es ninguno de esos treinta y dos: es la portada.
+ * Su código pintaba un botón por asignatura terminada mientras el comentario
+ * de al lado decía «los DOS accesos directos del héroe». Fue verdad con dos
+ * asignaturas. Con seis, la portada ya no cabía en una pantalla. Nadie mintió:
+ * el proyecto creció y la frase se quedó quieta.
+ *
+ * Corregir los treinta y dos a mano los deja caducar otra vez el martes. Lo
+ * que no caduca es medirlos. Las cifras de aquí abajo salen del repositorio en
+ * cada ejecución; lo único escrito a mano es DÓNDE se publica cada una.
+ *
+ * Cómo se añade una: una fila más en AFIRMACIONES. Si una cifra no se puede
+ * medir con un `wc`, no se publica — que es lo que §10 lleva pidiendo desde el
+ * principio. */
+const cuenta = (dir, filtro, recursivo = false) => {
+  if (!existsSync(dir)) return 0;
+  let n = 0;
+  for (const d of readdirSync(dir, { withFileTypes: true })) {
+    if (d.isDirectory()) { if (recursivo) n += cuenta(join(dir, d.name), filtro, true); continue; }
+    if (filtro(d.name)) n++;
+  }
+  return n;
+};
+const ocurrencias = (dir, exp) => {
+  if (!existsSync(dir)) return 0;
+  let n = 0;
+  for (const d of readdirSync(dir, { withFileTypes: true })) {
+    if (d.isDirectory()) { n += ocurrencias(join(dir, d.name), exp); continue; }
+    if (!/\.(ts|mjs|js)$/.test(d.name)) continue;
+    n += (readFileSync(join(dir, d.name), 'utf8').match(exp) ?? []).length;
+  }
+  return n;
+};
+
+const DIST = join(RAIZ, 'dist');
+const estados = { ok: 0, obra: 0, prev: 0 };
+for (const a of ASIGS) {
+  const c = JSON.parse(readFileSync(join(CONT, 'catalogo', `${a}.json`), 'utf8'));
+  if (estados[c.estado] !== undefined) estados[c.estado]++;
+}
+
+const MEDIDO = {
+  rutas: readdirSync(join(CONT, 'preparar')).filter((f) => f.endsWith('.yaml')).length,
+  bloques,
+  escalones,
+  ejercicios: EJ.size,
+  pasos,
+  simuladores: cuenta(join(RAIZ, 'src', 'components', 'sim'), (n) => n.endsWith('.astro')),
+  lib: cuenta(join(RAIZ, 'src', 'lib'), (n) => n.endsWith('.ts')),
+  ficherosFisica: cuenta(join(RAIZ, 'tests', 'fisica'), (n) => n.endsWith('.test.ts')),
+  casosFisica: ocurrencias(join(RAIZ, 'tests', 'fisica'), /^\s*it\(/gm),
+  /* El número total de pruebas NO se mide aquí a propósito. Contar `it(` da
+     1.862 y `npm test` dice 1.923: la diferencia son los `it.each`, que
+     generan varias pruebas por línea. Publicar 1.862 como «las pruebas del
+     sitio» sería exactamente el fallo que esta sección persigue, con la
+     agravante de venir de un guion. Esa cifra la da vitest y de vitest hay
+     que sacarla. */
+  pdf: cuenta(join(RAIZ, 'public', 'examenes'), (n) => n.endsWith('.pdf'), true),
+  paginas: cuenta(DIST, (n) => n === 'index.html', true),
+  asignaturasOk: estados.ok,
+  asignaturasObra: estados.obra,
+  asignaturasPrev: estados.prev,
+};
+
+/* Dónde se publica cada cifra. El patrón captura el número en $1; se compara
+   con la medida y se dice el desfase. Un patrón que ya no case se dice
+   también: significa que la frase se reescribió y esta fila sobra. */
+const AFIRMACIONES = [
+  ['CLAUDE.md', /(\d[\d.]*) casos sacados del corpus/, 'casosFisica', 'casos de tests/fisica'],
+  ['CLAUDE.md', /\*\*(\d[\d.]*) al \d+ de \w+ de \d{4}\*\*/, 'paginas', 'páginas que abre HUMO_TODO'],
+  ['CLAUDE.md', /las (\d[\d.]*) páginas del sitio en un navegador/, 'paginas', 'páginas del sitio'],
+  ['docs/como-vamos.md', /\*\*(\d[\d.]*) rutas\*\* \| \*\*[\d.]+\*\* \| \*\*[\d.]+\*\*/, 'rutas', 'rutas en la tabla total'],
+  ['docs/como-vamos.md', /\*\*\d[\d.]* rutas\*\* \| \*\*(\d[\d.]*)\*\* \| \*\*[\d.]+\*\*/, 'bloques', 'bloques en la tabla total'],
+  ['docs/como-vamos.md', /\*\*\d[\d.]* rutas\*\* \| \*\*[\d.]+\*\* \| \*\*(\d[\d.]*)\*\*/, 'escalones', 'escalones en la tabla total'],
+  ['tests/fisica/README.md', /y (\d[\d.]*) casos/, 'casosFisica', 'casos de tests/fisica'],
+  /* Este trío es el que más veces ha caducado del repositorio: el párrafo de
+     `como-vamos.md` que dice cuántas asignaturas hay en cada estado ha
+     envejecido CINCO veces, y las cinco están confesadas debajo de él. La
+     sexta la caza el guion. */
+  ['docs/como-vamos.md', new RegExp(`son\\s+${NUMERAL} en \`ok\``), 'asignaturasOk', 'asignaturas en ok'],
+  ['docs/como-vamos.md', new RegExp(`en \`ok\`, ${NUMERAL} en \`obra\``), 'asignaturasObra', 'asignaturas en obra'],
+  ['docs/como-vamos.md', new RegExp(`${NUMERAL} sola?\\s+en \`prev\``), 'asignaturasPrev', 'asignaturas en prev'],
+];
+
+pinta('10 · Cifras que la documentación publica sobre el propio proyecto');
+console.log(`   La clase de fallo más repetida de la auditoría del 13 de septiembre:
+   verdadera al escribirla, falsa al crecer. Aquí se mide, no se recuerda.`);
+for (const [k, v] of Object.entries(MEDIDO)) fila(k, v);
+const caducadas = [];
+for (const [rutaDoc, exp, clave, que] of AFIRMACIONES) {
+  const f = join(RAIZ, rutaDoc);
+  if (!existsSync(f)) { caducadas.push(`${rutaDoc}: no existe`); continue; }
+  const m = exp.exec(readFileSync(f, 'utf8'));
+  if (!m) { caducadas.push(`${rutaDoc}: ya no dice «${que}» — sobra esta fila`); continue; }
+  /* Los numerales van escritos con letra en la prosa y con dígitos en las
+     tablas, y las dos formas cuentan: `aNumero` resuelve las dos. */
+  const dice = aNumero(m[1].replace(/\./g, ''));
+  if (dice === undefined) { caducadas.push(`${rutaDoc}: «${m[1]}» no es un número que sepa leer (${que})`); continue; }
+  if (dice !== MEDIDO[clave]) caducadas.push(`${rutaDoc}: dice ${dice} ${que}, hay ${MEDIDO[clave]}`);
+}
+fila('afirmaciones caducadas', caducadas.length);
+for (const c of caducadas) fila('', '· ' + c);
 console.log('');
