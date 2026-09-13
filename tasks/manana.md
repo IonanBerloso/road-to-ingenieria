@@ -752,21 +752,26 @@ sin huecos» de «sin mirar». **Queda como trabajo de un día, no como sello.**
 
 **Lo que queda de la externa.**
 
-- **El móvil, dentro de una ruta** (su §5). A 360 px las piezas de
-  `justificar` miden **184 px** dentro de `preparar/`, contra 328 px en una
-  página de tema: la ruta anida ejercicio dentro de escalón dentro de bloque y
-  cada nivel se lleva 8–20 px por lado. Es el fallo de los 145 px del 4 de
-  septiembre un nivel más adentro, y ningún guardián lo ve porque `humo.mjs`
-  mide 360 px en seis páginas de examen fijas. *Encargo: quitar el padding
-  lateral de `.bcaja`, `.escalon` y `.ejercicio` bajo 480 px hasta que el
-  párrafo pase de 280 px, y meter una ruta por asignatura en esa medida.*
-- **La paleta de comandos** (su §4): «viga», «flector», «cortante»,
-  «Coriolis», «lmp» y «diedrico» no devuelven nada, y «entropia» sin tilde
-  tampoco aunque «entropía» dé doce. Las 757 entradas son asignaturas, temas,
-  rutas y apartados — **ningún ejercicio**, y el mensaje de vacío promete
-  «prueba con una palabra del enunciado». *Encargo: normalizar tildes en la
-  clave y en la consulta, indexar los 1.742 títulos de ejercicio, y que el
-  mensaje prometa lo que hace.*
+- **~~El móvil, dentro de una ruta~~ · hecho el 14 de septiembre**, y por el
+  camino aparecieron **tres páginas de tema que se iban de lado en un
+  teléfono** —428, 264 y 42 px— por dos causas encadenadas: un track `1fr` sin
+  `min-width: 0` y una regla de KaTeX escrita el 4 de septiembre que llevaba
+  diez días sin hacer nada, porque `max-width` y `overflow` **se ignoran en una
+  caja `display: inline`**. Ninguna de las diez páginas medidas desborda ya, y
+  la pieza dentro de una ruta pasa de 211 a 240 px (279 en una página de tema).
+  `humo.mjs` mide ahora los tres tipos de página a 360 px y cuenta cuántas
+  resoluciones abre de verdad.
+- **~~La paleta de comandos~~ · hecho el 14 de septiembre.** Tildes
+  normalizadas en las dos puntas —«entropia» ya encuentra las mismas 17 cosas
+  que «entropía»— y los 1.073 títulos de ejercicio de tema indexados: «viga»
+  pasa de 0 a 20, «flector» a 6, «Coriolis» a 1, «CIR» a 25. Van en un fichero
+  aparte que la paleta pide al abrirse por primera vez, porque meterlos en la
+  portada la subía de 27 a 79 KB comprimidos. Y el mensaje de vacío ya no
+  promete buscar en los enunciados, que no se buscan.
+  **Queda un hueco de contenido que salió de ahí:** «cortante» no aparece en
+  ningún título de ejercicio ni en ningún apartado de prosa de todo el sitio —
+  solo en siete títulos de paso. En resistencia de materiales eso es raro, y
+  se arregla escribiendo, no indexando.
 - **Los 3 escalones con un `ejemplo` en medio** que quedan tras el arreglo de
   hoy: los dos de `fundamentos-quimicos-2c` (`p j X`) y el de
   `ingenieria-termica-ord / los-dos-caminos-en-un-sistema-cerrado`

@@ -180,6 +180,20 @@ for (const a of asignaturas) {
   }
 }
 
+/** Sin tildes y en minúscula, que es como hay que comparar lo que alguien
+ *  teclea con prisa.
+ *
+ *  Hasta el 14 de septiembre de 2026 la paleta comparaba en minúscula y nada
+ *  más, así que **«entropia» no encontraba nada y «entropía» encontraba
+ *  catorce cosas**. Nadie escribe la tilde en un buscador, y menos en el móvil.
+ *  Lo encontró una auditoría externa probando siete palabras en la portada
+ *  publicada; seis daban «Nada con…».
+ *
+ *  Va en las dos puntas —la clave y la consulta— porque normalizar solo una
+ *  las separa más todavía. */
+const sinTildes = (s: string) =>
+  s.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+
 /** El índice de la paleta de comandos se arma aquí, no en el cliente:
  *  buscar tiene que funcionar con la primera pulsación, sin recorrer el DOM. */
 const indice = asignaturas.flatMap((a) => [
@@ -187,14 +201,14 @@ const indice = asignaturas.flatMap((a) => [
     tipo: 'a' as const,
     nombre: a.data.nombre,
     sub: `${a.data.curso === 1 ? '1.er' : '2.º'} curso`,
-    clave: `${a.data.nombre} ${a.data.descripcion}`.toLowerCase(),
+    clave: sinTildes(`${a.data.nombre} ${a.data.descripcion}`),
     destino: `#${a.id}`,
   },
   ...a.data.temas.map((t) => ({
     tipo: 't' as const,
     nombre: t.titulo,
     sub: a.data.nombre,
-    clave: `${t.titulo} ${t.descripcion} ${a.data.nombre}`.toLowerCase(),
+    clave: sinTildes(`${t.titulo} ${t.descripcion} ${a.data.nombre}`),
     destino: t.hecho ? ruta(`${a.id}/${t.id}`) : `#${a.id}`,
     n: t.n,
   })),
@@ -205,7 +219,7 @@ const indice = asignaturas.flatMap((a) => [
     tipo: 'r' as const,
     nombre: r.titulo,
     sub: `${a.data.nombre} · ruta de estudio`,
-    clave: `${r.titulo} ${r.bloques} ${a.data.nombre} preparar ruta estudio`.toLowerCase(),
+    clave: sinTildes(`${r.titulo} ${r.bloques} ${a.data.nombre} preparar ruta estudio`),
     destino: ruta(`${a.id}/preparar/${r.sufijo}`),
   })),
 ]).concat(conceptos);
@@ -589,6 +603,10 @@ const enteras = asignaturas
   </div>
 
   <script type="application/json" data-indice set:html={JSON.stringify(indice)} />
+  {/* La URL del índice de ejercicios se escribe aquí y no en el script porque
+      el script no ve `import.meta.env.BASE_URL` con el prefijo del repositorio
+      resuelto, y una URL a mano sería la enésima copia de la base (§01). */}
+  <link rel="prefetch" data-indice-ejercicios href={ruta('indice-ejercicios.json')} />
 </Base>
 
 <script>
@@ -799,7 +817,7 @@ const enteras = asignaturas
 
   /* ── paleta de comandos ────────────────────────────────────────── */
   type Entrada = {
-    tipo: 'a' | 't' | 'r' | 'c';
+    tipo: 'a' | 't' | 'r' | 'c' | 'e';
     nombre: string;
     sub: string;
     /** Los conceptos no la traen: sería su nombre y su tema otra vez en
@@ -813,12 +831,13 @@ const enteras = asignaturas
    *  desempata cuando dos cosas encajan igual de bien: lo más general primero,
    *  porque quien escribe «complejos» quiere el tema y no sus quince
    *  apartados. */
-  const ORDEN_TIPO = { a: 0, t: 1, r: 2, c: 3 } as const;
+  const ORDEN_TIPO = { a: 0, t: 1, r: 2, c: 3, e: 4 } as const;
   const ROTULO = {
     a: 'Asignaturas',
     t: 'Temas',
     r: 'Rutas de estudio',
     c: 'Conceptos',
+    e: 'Ejercicios',
   } as const;
 
   const paleta = document.querySelector<HTMLElement>('[data-paleta]')!;
@@ -827,7 +846,11 @@ const enteras = asignaturas
   const indice: Entrada[] = JSON.parse(
     document.querySelector<HTMLElement>('[data-indice]')?.textContent ?? '[]',
   );
-  for (const x of indice) x.clave ??= `${x.nombre} ${x.sub}`.toLowerCase();
+  /* Sin tildes en las dos puntas: la clave que se arma aquí y la consulta de
+     abajo. Antes se comparaba solo en minúscula y «entropia» no encontraba
+     nada mientras «entropía» encontraba catorce cosas. */
+  const sinTildes = (t: string) => t.toLowerCase().normalize('NFD').replace(/p{M}/gu, '');
+  for (const x of indice) x.clave ??= sinTildes(`${x.nombre} ${x.sub}`);
 
   let visibles: Entrada[] = [];
   let cursor = 0;
@@ -846,7 +869,7 @@ const enteras = asignaturas
   }
 
   function pinta() {
-    const q = campo.value.trim().toLowerCase();
+    const q = sinTildes(campo.value.trim());
     /* Con los conceptos dentro, el índice pasó de 90 entradas a más de 470, y
        un `filter().slice(12)` a pelo dejaba de encontrar los temas: cualquier
        palabra corriente casaba con veinte apartados y los empujaba fuera del
@@ -856,7 +879,7 @@ const enteras = asignaturas
       visibles = indice.filter((x) => x.tipo === 'a');
     } else {
       const puntua = (x: Entrada) => {
-        const n = x.nombre.toLowerCase();
+        const n = sinTildes(x.nombre);
         const donde = n.startsWith(q) ? 0 : n.includes(q) ? 1 : 2;
         return donde * 10 + ORDEN_TIPO[x.tipo];
       };
@@ -874,7 +897,12 @@ const enteras = asignaturas
     if (!visibles.length) {
       const p = document.createElement('p');
       p.className = 'nada';
-      p.textContent = `Nada con «${campo.value}». Prueba con el número del tema o con una palabra del enunciado.`;
+      /* La frase promete lo que la paleta hace, no lo que nos gustaría que
+         hiciera. Decía «prueba con una palabra del enunciado» y los
+         enunciados no se indexan: se indexan los TÍTULOS de los ejercicios,
+         desde el 14 de septiembre de 2026. Prometer de más en la pantalla que
+         aparece justo al fallar es la peor de las promesas incumplidas. */
+      p.textContent = `Nada con «${campo.value}». Prueba con el número del tema, con el nombre de un concepto o con el título de un ejercicio.`;
       panel.appendChild(conAmbito(p));
       return;
     }
@@ -924,6 +952,46 @@ const enteras = asignaturas
     }
   }
 
+  /* Los ejercicios se piden la PRIMERA vez que se abre la paleta, no al cargar
+     la portada.
+     Los 1.073 títulos pesan 38 KB comprimidos —medido: el índice pasa de 27,9
+     a 65,8—, y meterlos en la portada era triplicar el peso de la página más
+     visitada del sitio por una función que usa una minoría de las visitas. Se
+     piden al mismo origen, una sola vez, y si la petición falla la paleta
+     sigue buscando en lo que ya tiene: es un extra, no un requisito. Por eso
+     no hay estado de error, solo un `catch` que no hace nada. */
+  let ejerciciosPedidos = false;
+  async function traeEjercicios() {
+    if (ejerciciosPedidos) return;
+    ejerciciosPedidos = true;
+    const url = document
+      .querySelector<HTMLLinkElement>('[data-indice-ejercicios]')
+      ?.getAttribute('href');
+    if (!url) return;
+    try {
+      const grupos: { u: string; s: string; e: [string, string][] }[] = await (
+        await fetch(url)
+      ).json();
+      for (const g of grupos) {
+        for (const [titulo, id] of g.e) {
+          indice.push({
+            tipo: 'e',
+            nombre: titulo,
+            sub: g.s,
+            clave: sinTildes(`${titulo} ${g.s}`),
+            destino: `${g.u}#ej-${id}`,
+          });
+        }
+      }
+      /* Repintar por si ya hay algo escrito: entre abrir y que llegue esto
+         caben varias pulsaciones, y sin esto la primera búsqueda de cada
+         visita se quedaría sin ejercicios sin decir por qué. */
+      if (!paleta.hidden) pinta();
+    } catch {
+      /* Sin ejercicios se busca igual, con lo que ya está cargado. */
+    }
+  }
+
   function abrePaleta() {
     ultimoFoco = document.activeElement as HTMLElement;
     paleta.hidden = false;
@@ -931,6 +999,7 @@ const enteras = asignaturas
     cursor = 0;
     pinta();
     campo.focus();
+    traeEjercicios();
   }
 
   function cierraPaleta() {

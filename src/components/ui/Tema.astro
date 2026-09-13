@@ -525,6 +525,21 @@ const indice = headings.filter((h) => h.depth === 2);
   @media (max-width: 820px) {
     .shell { grid-template-columns: 1fr; padding-top: 1.5rem; }
 
+    /* Un track `1fr` tiene `min-width: auto`, y eso es min-content, no cero.
+       Debajo el carril se convierte en una fila flex con `white-space: nowrap`
+       —la tira de fichas—, así que su min-content es la suma de todos los
+       títulos puestos en fila: el `overflow-x: auto` del `<ol>` no llega a
+       usarse nunca porque la columna se estira antes para caber.
+       Medido el 14 de septiembre de 2026 a 360 px, con la pestaña de
+       ejercicios abierta: la columna de `algebra/t01-espacios-vectoriales`
+       salía a **771,8 px** y la página entera se iba de lado 428. Con
+       `t07-diagonalizacion`, 264, y con `calculo/t05-integracion`, 42. Tres
+       páginas que en un teléfono se leían moviendo el dedo a los lados.
+       No lo vio ningún guardián porque el bloque de 360 px de `humo.mjs`
+       mide seis páginas de EXAMEN fijas y **nunca abre una de tema**, que es
+       justo lo que la auditoría del 13 de septiembre señaló de él. */
+    .shell > * { min-width: 0; }
+
     .rail {
       position: static;
       max-height: none;

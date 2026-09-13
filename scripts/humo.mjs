@@ -783,39 +783,68 @@ async function main() {
 
      La causa era una regla responsive que sustituía `minmax(0, 1fr)` por
      `1fr` a secas y con eso devolvía a la columna su `min-width: auto`. */
+  /* AMPLIADO EL 14 DE SEPTIEMBRE DE 2026, y con un fallo real detrás.
+     Este bloque medía **seis páginas de examen fijas** y ninguna otra. La
+     auditoría del 13 de septiembre lo señaló —«nunca abre una página de
+     tema»— y al día siguiente, midiendo a mano, apareció lo que se estaba
+     escapando: con la pestaña de ejercicios abierta a 360 px,
+     `algebra/t01-espacios-vectoriales` se iba de lado **428 px**,
+     `t07-diagonalizacion` 264 y `calculo/t05-integracion` 42. Tres páginas
+     que en un teléfono se leían moviendo el dedo a los lados, publicadas
+     así desde que existe el carril de fichas.
+     Ahora se mide una muestra de los TRES tipos de página —examen, tema y
+     ruta— y en cada una se abre lo que la esconde, que es donde estaba el
+     fallo: cerrada, ninguna desbordaba. */
   {
-    const deExamen = rutas.filter((u) => u.includes('/examenes/'));
+    const muestraDe = (patron, n) => rutas.filter((u) => patron.test(u)).slice(0, n);
+    const objetivo = [
+      ...muestraDe(/\/examenes\/\d/, 4).map((u) => [u, '#resoluciones', 'examen']),
+      ...muestraDe(/\/t\d{2}-/, 6).map((u) => [u, '#ejercicios', 'tema']),
+      ...muestraDe(/\/preparar\//, 3).map((u) => [u, '', 'ruta']),
+    ];
     const pagina = await navegador.newPage();
     await pagina.setViewportSize({ width: 360, height: 900 });
     const desbordan = [];
+    /* Cuántas resoluciones se han llegado a abrir de verdad. Sin este
+       contador, un fallo al pulsar dejaba la página medida SIN nada
+       desplegado y el guardián daba verde sobre una página en blanco: se
+       tragaba su propio fallo con un `catch` vacío. */
+    let abiertas = 0;
 
-    for (const url of deExamen.slice(0, 6)) {
-      // el fragmento activa la pestaña; sin él los botones están ocultos
-      await pagina.goto(`http://localhost:${PUERTO}${url}#resoluciones`, { waitUntil: 'load' });
+    for (const [url, ancla, tipo] of objetivo) {
+      await pagina.goto(`http://localhost:${PUERTO}${url}${ancla}`, { waitUntil: 'load' });
       await pagina.waitForTimeout(200);
       for (const caja of await pagina.$$('[data-ejercicio]')) {
         for (const b of await caja.$$('button')) {
           if (!/resoluci/i.test((await b.innerText()) ?? '')) continue;
-          // si uno no se deja pulsar no se para el guardián: se sigue con el resto
-          await b.click({ timeout: 2000 }).catch(() => {});
+          if (await b.click({ timeout: 2000 }).then(() => true, () => false)) abiertas++;
           break;
         }
       }
+      /* En una ruta los ejercicios viven dentro de `<details>` cerrados. */
+      await pagina.evaluate(() => {
+        for (const d of document.querySelectorAll('details')) d.open = true;
+      });
       await pagina.waitForTimeout(250);
       const ancho = await pagina.evaluate(() => ({
         scroll: document.documentElement.scrollWidth,
         visible: window.innerWidth,
       }));
       if (ancho.scroll > ancho.visible + 1) {
-        desbordan.push(`${url.split('/').filter(Boolean).pop()} → ${ancho.scroll}px`);
+        desbordan.push(`${tipo} ${url.split('/').filter(Boolean).slice(-2).join('/')} → ${ancho.scroll}px`);
       }
     }
     await pagina.close();
 
     comprueba(
       desbordan.length === 0,
-      `a 360 px, las resoluciones de examen abiertas no desbordan (${Math.min(6, deExamen.length)} páginas)`,
+      `a 360 px no desborda ninguna: ${objetivo.length} páginas de examen, tema y ruta, con ${abiertas} resoluciones abiertas`,
       desbordan.join(', '),
+    );
+    comprueba(
+      abiertas > 0,
+      'la medida de 360 px llegó a abrir alguna resolución',
+      'ninguna se dejó pulsar: se ha medido la página en blanco',
     );
   }
 

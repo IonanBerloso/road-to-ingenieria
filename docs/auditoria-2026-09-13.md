@@ -436,6 +436,51 @@ lo que el comentario de su propio esquema avisa que pasa.
 
 ---
 
+## Y lo que apareció al ir a arreglar los encargos, que fue más que los encargos
+
+Los tres hallazgos siguientes no los tenía ninguna de las dos auditorías. Los
+tres salieron de **medir antes de tocar**, que es la única parte del método que
+no se puede delegar.
+
+**1 · Tres páginas de tema se iban de lado en un teléfono.** Midiendo a 360 px
+con la pestaña de ejercicios abierta: `algebra/t01-espacios-vectoriales`
+desbordaba **428 px**, `t07-diagonalizacion` 264 y `calculo/t05-integracion`
+42. Dos causas encadenadas, y la segunda es la buena:
+
+- la columna de la rejilla se estiraba a **771,8 px** en una pantalla de 360,
+  porque un track `1fr` tiene `min-width: auto` y la tira de fichas del carril
+  —flex con `nowrap`— le impone su min-content. Un `min-width: 0` lo arregla;
+- y debajo quedaba una fórmula KaTeX de 370 px dentro de un párrafo de 261.
+  La regla que debía contenerla **existía desde el 4 de septiembre** y no hacía
+  nada: `.katex` es un `<span>` con `display: inline`, y en una caja en línea
+  el navegador **ignora `max-width` y `overflow`** sin avisar. Una regla
+  escrita para arreglar un desborde medido, inerte durante diez días. Con
+  `display: inline-block` funciona, y ninguna de las diez páginas medidas
+  desborda ya.
+
+Ningún guardián lo vio porque el bloque de 360 px de `humo.mjs` mide seis
+páginas de **examen** fijas y nunca abre una de tema — que es exactamente lo
+que la auditoría de código señaló de él, sin llegar a saber lo que se estaba
+escapando. Ahora mide una muestra de los tres tipos de página y **cuenta
+cuántas resoluciones ha llegado a abrir de verdad**, para no volver a dar verde
+sobre una página en blanco.
+
+**2 · «cortante» no existe en el corpus.** Buscando por qué la paleta no lo
+encontraba: no hay **ni un título de ejercicio ni un apartado de prosa** con
+esa palabra en todo el sitio; solo aparece en siete títulos de paso. Es un
+hueco de contenido en resistencia de materiales, no un fallo del buscador, y se
+arregla escribiendo, no indexando.
+
+**3 · Indexar los ejercicios en la portada la habría triplicado.** El encargo
+pedía meter los 1.742 títulos en la paleta. Medido antes de hacerlo: el índice
+pasaba de **27,9 a 65,8 KB comprimidos** y la portada de 27 a 79. Probada
+también la forma compacta —agrupando por tema— y solo bajaba a 34,7: gzip ya
+aprovecha esa repetición. Así que van en un fichero aparte que la paleta pide
+**la primera vez que se abre**; quien no la abra no lo descarga nunca, y si la
+petición falla la paleta sigue buscando en lo que ya tiene.
+
+---
+
 ## Lo que la auditoría cambia en cómo el proyecto se comprueba
 
 Tres guardianes nuevos o arreglados, y son la parte que sobrevive a este
