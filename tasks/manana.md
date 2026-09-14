@@ -806,6 +806,47 @@ de paso `dibujar`, con su primer uso en el 7.3).
    propio encargo avisa: **muchos complementarios de 6–11 ya están en el sitio
    como ejercicio de convocatoria y no se duplican** — se les añade el número
    de boletín al título y a la `fuente` para que «7.12» se encuentre.
+
+   **~~t07~~ · terminado el 14 de septiembre de 2026: 23 básicos y 20
+   complementarios, los 43.** Los básicos son los 23 del boletín «Integral
+   múltiple. Problemas», con su resultado publicado y contrastado uno a uno.
+   Los complementarios son 7.1, 7.2, 7.4, 7.5, 7.7 a 7.18, 7.21, 7.24, 7.26 y
+   7.27; los siete que ya estaban —7.3, 7.6, 7.19, 7.20, 7.22, 7.23 y 7.25— no
+   se han duplicado.
+
+   **Y una discrepancia que hay que dejar dicha:** el **7.24** publica
+   $\overline{z}=57/13\approx4{,}38$ y las condiciones tal como están escritas
+   dan $9/5$. Comprobado por dos caminos —integración directa y resta al
+   cilindro— y con el sólido complementario, que daría $9/2$. Se publica $9/5$
+   con el impreso de distractor y el aviso escrito en la resolución. Si algún
+   día se puede preguntar en clase, es la pregunta.
+
+   Tres apartados **no** se han transcrito porque dependen de figuras del
+   boletín que no se pueden leer sin ambigüedad: los (d) y (e) del 7.4. Están
+   declarados en la `fuente` del ejercicio correspondiente.
+
+   **t09, reconocido el 14 de septiembre y todavía sin transcribir.** El
+   boletín básico «Ecuaciones diferenciales. Problemas» son 6 ejercicios con
+   41 apartados: el 1 (siete EDOs separables y exactas), el 2 (siete
+   homogéneas, lineales y con factor integrante), el 3, 4 y 5 (dieciséis
+   lineales homogéneas de coeficientes constantes) y el 6 (doce no
+   homogéneas). **Los apartados del 1 y del 2 cubren el hueco declarado más
+   arriba**: ecuación exacta y factor integrante, cero ejercicios de tema y
+   nueve convocatorias que lo piden.
+
+   Los 41 resultados están comprobados uno a uno —los del 1 y el 2 por
+   integración directa, los del 3 al 5 por la ecuación característica y los
+   del 6 sustituyendo la solución particular en la EDO—. **Tres del
+   ejercicio 6 no cuadran y hay que publicarlos con aviso:**
+
+   | apartado | lo impreso | lo que sale |
+   |---|---|---|
+   | 6 (d) | $\tfrac{3}{26}\cos 3x+\tfrac{1}{13}\operatorname{sen}3x$ | $\tfrac{3}{13}\cos 3x+\tfrac{2}{13}\operatorname{sen}3x$ — el doble |
+   | 6 (f) | $\tfrac{1}{20}x\cos x$ | $\tfrac{1}{20}x\cos 2x$ — falta el 2 |
+   | 6 (j) | $\tfrac{1}{32\cos 4x}+\tfrac{1}{4}\tfrac{\operatorname{sen}^{2}x}{\cos 4x}$ | $\tfrac{1}{32\cos 4x}$ a secas |
+
+   Los tres verificados por sustitución analítica **y** por derivación
+   numérica. Los otros treinta y ocho cuadran.
 2. **Los 185 ejercicios de examen que piden dibujar** y ahora ya tienen tipo
    de paso donde hacerlo. El molde está escrito y probado en
    `t07/invertir-el-orden`; empezar por los 31 de t07 y los 23 de t01, y mover

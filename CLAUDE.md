@@ -587,12 +587,12 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.860 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.879 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.757 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.907 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.955 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.798 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 24 |
-| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 1 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 26 |
+| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 2 |
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
 > de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
@@ -2023,6 +2023,15 @@ Cosas que ya han costado horas. No son opiniones.
   en un carácter de avance de página **invisible** que rompe el YAML y no se
   ve al leer el fichero. Usa las herramientas de edición de ficheros. Pasó tres
   veces en un día.
+
+  **Y el reemplazo de `sed` es peor que el patrón.** El 14 de septiembre de
+  2026, un `sed 's/\operatorname{arctg}/\arctan/'` dejó escrito un carácter
+  BEL en mitad de una fórmula: `\a` en el **lado derecho** de la sustitución
+  no es «barra + a», es el timbre. El fichero se veía bien en el editor y el
+  build cayó con «the stream contains non-printable characters». Dos reglas
+  que salen de ahí: el reemplazo de `sed` nunca lleva una orden de LaTeX, y
+  cuando un YAML falla por «non-printable», lo primero es
+  `grep -c $'\a' fichero`.
 - **Un `: ` sin comillas dentro de un valor YAML rompe el fichero**, y el error
   que da apunta a otra línea. Ojo con los apóstrofos de `f'`, que confunden a
   cualquier comprobador hecho con `grep`.
