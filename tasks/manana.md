@@ -972,21 +972,51 @@ de paso `dibujar`, con su primer uso en el 7.3).
    minutos— y dejar la barrida para antes de empujar. Si el tiempo sigue
    creciendo habrá que partirla por asignatura.
 
-2. **Los 185 ejercicios de examen que piden dibujar** y ahora ya tienen tipo
-   de paso donde hacerlo. El molde está escrito y probado en
-   `t07/invertir-el-orden`; empezar por los 31 de t07 y los 23 de t01, y mover
-   la figura de la resolución al paso en vez de dibujarla otra vez.
+2. **~~Los ejercicios que piden dibujar~~ · terminado el 15 de septiembre de
+   2026: 178 pasos `dibujar`, de 3 que había.** El tipo pasa de ser una
+   promesa a ser el tercero más usado después de `calcular` y `reconocer`.
+
+   **Y el recuento estaba mal en las dos direcciones.** Este cuaderno decía
+   185; contados con el filtro burdo salían 243; y contados bien —exigiendo
+   un verbo imperativo de dibujo **fuera** del `<figure>`, porque los
+   `<desc>` de los SVG contienen «dibuja» y «representa» a mansalva— son
+   **178 más 7**. Los 7 no piden dibujar sino **leer** un dibujo dado —los
+   cuatro de t04, el de áreas con signo de t05 y tres de examen—: esos no
+   llevan paso `dibujar` y **no son deuda**.
+
+   | dónde | pasos |
+   |---|---|
+   | t01 | 25 |
+   | t05 | 9 |
+   | t06 | 4 |
+   | t07 | 10 |
+   | t11 | 3 |
+   | exámenes | 127 |
+
+   Cada paso es una lista de comprobación específica del ejercicio, sacada
+   de su propia resolución: qué tiene que aparecer en el dibujo y **por qué
+   decide algo**. Lo que queda de esta familia es opcional y es adorno:
+   mover al paso las 188 figuras que ya están en las resoluciones, para que
+   el alumno pueda comparar su dibujo con el bueno. El campo `figura` del
+   esquema es opcional a propósito.
 3. **~~Nueve rúbricas `redactar` más~~ · seis escritas el 14 de septiembre**,
    de 3 pasos a 21. Hechas: la definición formal de límite con cuantificadores,
    el signo del límite, la unicidad del límite (no estaba en su lista y es la
    tercera demostración clásica del tema 2), Rolle, el enunciado de Taylor con
    su resto y la identidad del seno de una suma en el plano complejo.
 
-   **Quedan tres, y su sitio no es el que parecía.** Fermat, punto fijo, y
-   factor integrante / ecuación exacta **no tienen ni un ejercicio de tema
-   donde colgarse**: contados el 14 de septiembre, cero de tema los tres. Van
-   en un ejercicio de examen, como ya hacen dos de las tres rúbricas
-   originales.
+   **~~Quedan tres~~ · las tres están, y ya estaban: comprobado el 15 de
+   septiembre.** Fermat vive en
+   `ex1617-ext-3-por-que-la-derivada-se-anula-en-un-maximo`, el punto fijo en
+   `ex1516-3ev-3-punto-fijo-con-unicidad` y el factor integrante en
+   `ex1718-ext-6-el-factor-que-hace-exacta-la-edo`. Las tres colgadas de un
+   ejercicio de examen, que es donde tenían que ir. **El encargo 3 está
+   cerrado.**
+
+   Y el hueco de contenido que las acompañaba **también se cerró**, en la
+   misma tanda del encargo 1: el tema 9 tiene ahora
+   `seis-exactas-y-su-potencial` y `seis-factores-integrantes`, así que la
+   familia que el examen pide en nueve convocatorias ya no está a cero.
 
    **Y ahí está el hallazgo, que es de contenido y no de rúbricas:**
 
