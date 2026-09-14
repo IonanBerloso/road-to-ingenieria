@@ -115,6 +115,30 @@ const catalogo = defineCollection({
        *  genérico, que no caduca. */
       motivo: z.string().min(20).max(200).optional(),
       acento: z.string().regex(/^--a-[a-z]+$/, 'tiene que ser un token de tokens.css'),
+      /** Las normas del aula: lo que la asignatura exige el día del examen y
+       *  que no se aprende estudiando.
+       *
+       *  Existe desde el 14 de septiembre de 2026 y lo pidió una auditoría
+       *  externa. Cálculo reparte un PDF —«Normativa para la realización de
+       *  exámenes»— con siete normas, y **el sitio no decía ninguna**: que se
+       *  escribe en tinta y nunca a lápiz, que no se puede usar calculadora,
+       *  que hasta un punto sobre diez se va en desorden y faltas de
+       *  ortografía. Eso último es más nota que varios ejercicios de la ruta,
+       *  y se estaba callando.
+       *
+       *  Va en el catálogo y no en las rutas a propósito: el encargo pedía
+       *  meterlo «en el suelo de las siete rutas», y eso son siete copias de
+       *  la misma lista esperando a separarse (§01). Una fuente, y las
+       *  páginas que la necesiten la leen.
+       *
+       *  `fuente` es obligatoria por lo mismo que en `evaluacion`: una norma
+       *  publicada sin decir de dónde sale no se puede comprobar. */
+      normasDeExamen: z
+        .object({
+          fuente: z.string().min(20),
+          normas: z.array(z.string().min(10)).min(1),
+        })
+        .optional(),
       descripcion: z.string().min(10).max(200),
       /** false = el temario está puesto a ojo y hay que sustituirlo por el oficial. */
       temarioOficial: z.boolean(),

@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
-import { sinMarcas } from '../../../lib/markdown.mjs';
+import { sinMarcas, mate } from '../../../lib/markdown.mjs';
 import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV } from '../../../content.config';
 
 /**
@@ -131,6 +131,12 @@ const convocatoriasConHueco = [...datos.values()].filter((d) => d.fuera > 0).len
 const convocatoriasAMedias = [...datos.values()].filter((d) => d.aMedias > 0).length;
 const ejerciciosAMedias = [...datos.values()].reduce((s, d) => s + d.aMedias, 0);
 
+/* Las normas del aula son prosa corta con negritas: pasan por el mismo
+   procesador que el resto (§01), no por un reemplazo de asteriscos a mano. */
+const normasHtml = await Promise.all(
+  (asignatura.data.normasDeExamen?.normas ?? []).map((n, i) => mate(n, `norma-${i}`)),
+);
+
 /* Los nombres salen de CONVOCATORIAS, en minúscula; aquí encabezan un grupo,
    así que se capitaliza la primera letra al pintarlos. */
 const NOMBRE_CONV: Record<string, string> = Object.fromEntries(
@@ -184,6 +190,25 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
         Los exámenes no publican solución: las resoluciones son propuesta
         nuestra y están pendientes de revisión.
       </p>
+
+      {/* Lo que el aula exige y no se aprende estudiando. Va aquí porque es la
+          página que se abre para practicar, y porque una de las normas
+          —hasta un punto sobre diez por desorden y faltas— vale más nota que
+          varios ejercicios de la ruta y el sitio no la decía en ninguna parte.
+          Sale del catálogo: una fuente, no una copia por ruta (§01). */}
+      {asignatura.data.normasDeExamen && (
+        <details class="normas">
+          <summary>
+            <span class="rotulo">Antes de entrar: las {asignatura.data.normasDeExamen.normas.length} normas del aula</span>
+          </summary>
+          <ul>
+            {normasHtml.map((n) => (
+              <li class="prosa" set:html={n} />
+            ))}
+          </ul>
+          <p class="n-fuente">{asignatura.data.normasDeExamen.fuente}</p>
+        </details>
+      )}
 
       {
         (sinResolver > 0 || ejerciciosAMedias > 0) && (
@@ -355,6 +380,49 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
     text-transform: none;
     letter-spacing: .01em;
     max-width: var(--measure);
+  }
+
+  /* Las normas del aula, plegadas: son seis y no se leen cada vez, pero el día
+     antes del examen valen más que media ruta. Cerradas por defecto para que
+     no compitan con las convocatorias, que es a lo que se viene. */
+  .normas {
+    margin: -1.4rem 0 2.4rem;
+    max-width: var(--measure);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+
+  .normas summary {
+    cursor: pointer;
+    padding: .55rem .8rem;
+    list-style: none;
+  }
+
+  .normas summary::-webkit-details-marker { display: none; }
+  .normas summary::before { content: '▸ '; color: var(--faint); }
+  .normas[open] summary::before { content: '▾ '; }
+  .normas summary:hover .rotulo { color: var(--live); }
+
+  .normas ul {
+    margin: 0;
+    padding: 0 .9rem .2rem 2rem;
+    display: grid;
+    gap: .45rem;
+  }
+
+  .normas li { font-size: .9rem; }
+  /* `mate()` envuelve cada norma en un <p>: sin esto cada punto se separaría
+     del siguiente con el margen de párrafo y la lista se leería como seis
+     bloques sueltos. */
+  .normas li :global(p) { margin: 0; }
+
+  .n-fuente {
+    margin: .7rem .9rem .8rem;
+    padding-top: .6rem;
+    border-top: 1px solid var(--rule);
+    font-size: .74rem;
+    color: var(--faint);
   }
 
   /* El de la deuda va pegado al anterior y en tono de nota, no de alarma: lo

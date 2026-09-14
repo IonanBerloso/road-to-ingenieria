@@ -16,11 +16,22 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { ruta } from '../lib/rutas';
+import { mate } from '../lib/markdown.mjs';
 import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, CON_TEMAS, type ConTemas } from '../content.config';
 
 const asignaturas = (await getCollection('catalogo')).sort(
   (a, b) => a.data.curso - b.data.curso || a.data.orden - b.data.orden,
 );
+
+/** Las notas de cada modalidad de evaluación, ya pasadas por `mate()`.
+ *  Van indexadas por «asignatura · modalidad» porque el JSX de abajo las
+ *  necesita dentro de un `.map()`, donde no se puede esperar a una promesa. */
+const notaEvaluacion = new Map<string, string>();
+for (const a of asignaturas) {
+  for (const m of a.data.evaluacion?.modalidades ?? []) {
+    if (m.nota) notaEvaluacion.set(`${a.id}·${m.nombre}`, await mate(m.nota, `eval-${a.id}`));
+  }
+}
 
 const cursos = [1, 2] as const;
 /* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
@@ -484,7 +495,16 @@ const enteras = asignaturas
                             </li>
                           ))}
                         </ul>
-                        {m.nota && <p class="nc-nota">{m.nota}</p>}
+                        {/* Por `mate()`, como TODAS las demás `nota` del
+                            proyecto: las de material, las de teoría y las de
+                            ejercicio de las rutas ya pasaban por él y esta
+                            era la única excepción, así que una negrita aquí
+                            salía con los asteriscos a la vista. Lo cazó
+                            `verify.mjs` el 14 de septiembre de 2026 al
+                            escribir los dos umbrales de Cálculo. */}
+                        {notaEvaluacion.has(`${a.id}·${m.nombre}`) && (
+                          <p class="nc-nota prosa" set:html={notaEvaluacion.get(`${a.id}·${m.nombre}`)} />
+                        )}
                       </div>
                     ))}
                     <p class="nc-fuente">{a.data.evaluacion.fuente}</p>
