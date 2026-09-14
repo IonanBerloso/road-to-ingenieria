@@ -955,6 +955,462 @@ ejercicios:
       jacobiano no es un trámite — es lo único que impide que el área cambie al
       cambiar de coordenadas.
 
+  - id: tres-dobles-directas
+    titulo: Tres integrales dobles, y en cada una manda el recinto
+    fuente: >-
+      Ejercicio 1 · Boletín «Integral múltiple. Problemas» · Cálculo, UPV/EHU
+      · Departamento de Matemática Aplicada. El boletín publica los tres
+      resultados y el desarrollo está contrastado contra ellos: salen 1/6, 4/3
+      y ln 2 exactos.
+    nivel: practica
+    enunciado: |
+      Calcular las siguientes integrales dobles:
+
+      **a)** $\displaystyle\iint_{D} x\,dx\,dy$, donde $D$ es el triángulo
+      limitado por los puntos $O(0,0)$, $A(1,1)$ y $B(0,1)$.
+
+      **b)** $\displaystyle\iint_{D} xy\,dx\,dy$, donde $D$ es el dominio
+      limitado por la semicircunferencia superior $(x-2)^{2}+y^{2}=1$ y el eje
+      $OX$.
+
+      **c)** $\displaystyle\iint_{D} \frac{x}{x^{2}+y^{2}}\,dx\,dy$, donde $D$
+      es el dominio limitado por las gráficas de las funciones $y=x$ e
+      $y=\dfrac{x^{2}}{2}$.
+    pide: El valor de las tres integrales.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En el apartado **a)**, el triángulo tiene vértices $O(0,0)$,
+          $A(1,1)$ y $B(0,1)$. ¿Cuál es el orden cómodo?
+        opciones:
+          - texto: >-
+              Primero $x$, de $0$ a $y$; después $y$, de $0$ a $1$
+            correcta: true
+            mensaje: |
+              Eso es. Los lados son $x=0$, $y=1$ y la recta $y=x$, así que
+              barriendo en horizontal el tramo va del eje vertical a la
+              diagonal: $0 \le x \le y$. Sin partir nada.
+          - texto: >-
+              Primero $y$, de $0$ a $1$; después $x$, de $0$ a $1$
+            mensaje: |
+              Eso integraría sobre el **cuadrado** entero, no sobre el
+              triángulo: incluiría los puntos con $y<x$, que están fuera. Los
+              límites de dentro tienen que depender de la variable de fuera.
+          - texto: >-
+              Hay que partirlo en dos, porque el triángulo no es rectángulo
+            mensaje: |
+              Sí lo es: los lados $x=0$ e $y=1$ son perpendiculares. Y aunque
+              no lo fuera, barrer en horizontal lo resuelve de una vez porque
+              en cada altura el tramo es un solo segmento.
+
+      - tipo: calcular
+        titulo: a) El triángulo
+        pregunta: |
+          Calcula $\displaystyle\int_0^1\!\!\int_0^y x\,dx\,dy$.
+        respuesta:
+          tipo: numero
+          valor: '0.1667'
+          tolerancia: 0.001
+          formato: en forma exacta (1/6) o con cuatro decimales
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Eso es $\int_0^1\!\int_0^1 x\,dx\,dy$: has integrado sobre el
+              cuadrado. El límite de dentro es $y$, no 1.
+          - valor: '0.3333'
+            mensaje: |
+              $1/3$ sale de integrar $y^{2}$ sin el $\tfrac12$ que deja la
+              primitiva de $x$. Ojo: $\int_0^y x\,dx = y^{2}/2$.
+        pista: |
+          $\int_0^y x\,dx = \tfrac{y^{2}}{2}$, y luego integra en $y$.
+        desarrollo: |
+          $$
+          \int_0^1\!\!\int_0^y x\,dx\,dy
+          = \int_0^1 \frac{y^{2}}{2}\,dy
+          = \left[\frac{y^{3}}{6}\right]_0^1 = \frac16
+          $$
+
+      - tipo: calcular
+        titulo: b) El semidisco desplazado
+        pregunta: |
+          El recinto es el medio disco de centro $(2,0)$ y radio 1, por encima
+          del eje. Calcula $\displaystyle\iint_D xy\,dx\,dy$.
+        respuesta:
+          tipo: numero
+          valor: '1.3333'
+          tolerancia: 0.002
+          formato: en forma exacta (4/3) o con cuatro decimales
+        distractores:
+          - valor: '0.6667'
+            mensaje: |
+              La mitad: has integrado sobre un cuarto de disco, o has olvidado
+              que la $y$ va de 0 hasta la semicircunferencia entera.
+          - valor: '2.0944'
+            mensaje: |
+              Eso es $2\pi/3$, lo que saldría con el disco **entero** o con
+              otro integrando. Aquí solo entra la mitad superior, y el
+              resultado es racional: la $y$ del integrando hace que el $\pi$
+              desaparezca.
+        pista: |
+          $\int_0^{h} y\,dy = h^{2}/2$ con $h=\sqrt{1-(x-2)^{2}}$, y luego
+          integra en $x$ de 1 a 3.
+        desarrollo: |
+          Con el orden $dy\,dx$, para cada $x\in[1,3]$ la $y$ va de 0 a
+          $\sqrt{1-(x-2)^{2}}$:
+
+          $$
+          \iint_D xy\,dx\,dy
+          = \int_1^3 x\left[\frac{y^{2}}{2}\right]_0^{\sqrt{1-(x-2)^{2}}}dx
+          = \frac12\int_1^3 x\big(1-(x-2)^{2}\big)\,dx
+          $$
+
+          Con $t=x-2$, el intervalo pasa a $[-1,1]$ y $x=t+2$:
+
+          $$
+          = \frac12\int_{-1}^{1} (t+2)(1-t^{2})\,dt
+          = \frac12\left[\underbrace{\int_{-1}^{1} t(1-t^{2})\,dt}_{=0}
+          + 2\int_{-1}^{1}(1-t^{2})\,dt\right]
+          $$
+
+          La primera es **impar** y se anula. La segunda vale $2\cdot\tfrac43$:
+
+          $$
+          = \frac12 \cdot 2 \cdot \frac43 = \frac43
+          $$
+
+      - tipo: calcular
+        titulo: c) Entre la recta y la parábola
+        pregunta: |
+          $y=x$ e $y=x^{2}/2$ se cortan en $x=0$ y $x=2$. Calcula
+          $\displaystyle\iint_D \frac{x}{x^{2}+y^{2}}\,dx\,dy$.
+        respuesta:
+          tipo: numero
+          valor: '0.6931'
+          tolerancia: 0.001
+          formato: en forma exacta (ln 2) o con cuatro decimales
+        distractores:
+          - valor: '1.5708'
+            mensaje: |
+              Eso es $\pi/2$: has integrado el arcotangente hasta infinito, o
+              te has dejado el término $-\arctan(x/2)$. La diferencia entre los
+              dos arcotangentes es lo que hace que salga un logaritmo.
+          - valor: '1.3863'
+            mensaje: |
+              $\ln 4$, el doble. Suele venir de integrar $2x/(x^{2}+y^{2})$ o
+              de duplicar el recinto.
+        pista: |
+          $\displaystyle\int \frac{x}{x^{2}+y^{2}}\,dy = \arctan\frac{y}{x}$.
+        desarrollo: |
+          La clave es integrar **primero en $y$**, porque con $x$ fijo el
+          integrando es la derivada de un arcotangente:
+
+          $$
+          \int \frac{x}{x^{2}+y^{2}}\,dy = \arctan\frac{y}{x}
+          $$
+
+          Entre $y=x^{2}/2$ e $y=x$:
+
+          $$
+          \arctan\frac{x}{x} - \arctan\frac{x^{2}/2}{x}
+          = \frac{\pi}{4} - \arctan\frac{x}{2}
+          $$
+
+          Y ahora en $x$, de 0 a 2, integrando por partes el arcotangente:
+
+          $$
+          \int_0^2\left(\frac{\pi}{4}-\arctan\frac{x}{2}\right)dx
+          = \frac{\pi}{2} - \left[x\arctan\frac{x}{2} - \ln\big(4+x^{2}\big)\right]_0^2
+          $$
+
+          $$
+          = \frac{\pi}{2} - \left(\frac{\pi}{2} - \ln 8 + \ln 4\right) = \ln 2
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena lo que decide cada apartado. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En **a)** manda la forma del recinto: barriendo en horizontal, el
+              tramo va de $x=0$ a $x=y$ y no hay que partir nada.
+          - texto: >-
+              En **b)** manda una simetría: al centrar con $t=x-2$, la parte
+              impar del integrando se anula y solo queda la par.
+          - texto: >-
+              En **c)** manda el integrando: con $x$ fijo, $x/(x^{2}+y^{2})$ es
+              la derivada de un arcotangente, así que hay que integrar en $y$
+              primero.
+          - texto: >-
+              Y en los tres, como el integrando es positivo, el resultado tiene
+              que ser mayor que el área del recinto.
+            trampa: true
+            mensaje: |
+              No hay tal relación. En **c)** el recinto tiene área $2/3$ y la
+              integral vale $\ln 2 \approx 0{,}69$, que es mayor; pero en
+              **a)** el área es $1/2$ y la integral $1/6$, que es **menor**,
+              porque ahí el integrando $x$ vale entre 0 y 1. La integral
+              compara con el área solo si el integrando es mayor o menor que 1
+              en todo el recinto, y eso hay que mirarlo.
+        veredicto: |
+          Tres apartados y tres motivos distintos para elegir el orden: la
+          forma del recinto, una simetría, y la primitiva que se busca. Eso es
+          lo que este ejercicio entrena, no las cuentas.
+    resolucion: |
+      **Datos.** Tres integrales dobles sobre tres recintos distintos.
+
+      ### a) El triángulo · $\iint x\,dA$
+
+      Vértices $O(0,0)$, $A(1,1)$, $B(0,1)$: los lados son $x=0$, $y=1$ y la
+      recta $y=x$. Barriendo en horizontal, para cada $y$ la $x$ va de 0 a $y$:
+
+      $$
+      \int_0^1\!\!\int_0^y x\,dx\,dy = \int_0^1 \frac{y^{2}}{2}\,dy = \frac16
+      $$
+
+      ### b) El semidisco · $\iint xy\,dA$
+
+      $(x-2)^{2}+y^{2}=1$ es la circunferencia de centro $(2,0)$ y radio 1; con
+      el eje $OX$ cierra el **medio disco superior**. Para cada $x\in[1,3]$:
+
+      $$
+      \iint_D xy\,dA = \frac12\int_1^3 x\big(1-(x-2)^{2}\big)dx
+      $$
+
+      Centrando con $t=x-2$ el integrando se parte en una función impar —que se
+      anula al integrar en $[-1,1]$— y una par:
+
+      $$
+      = \frac12\left[0 + 2\int_{-1}^{1}(1-t^{2})dt\right]
+      = \frac12\cdot 2\cdot\frac43 = \frac43
+      $$
+
+      Ese cero por simetría es el atajo del apartado, y se ve **antes** de
+      calcular nada.
+
+      ### c) Entre la recta y la parábola · $\iint \frac{x}{x^{2}+y^{2}}\,dA$
+
+      Los cortes: $x = x^{2}/2 \Rightarrow x=0$ y $x=2$, con la parábola por
+      debajo. Aquí manda el **integrando**: con $x$ fijo,
+
+      $$
+      \int \frac{x}{x^{2}+y^{2}}\,dy = \arctan\frac{y}{x}
+      $$
+
+      $$
+      \int_0^2\left[\arctan\frac{y}{x}\right]_{x^{2}/2}^{x}dx
+      = \int_0^2\left(\frac{\pi}{4}-\arctan\frac{x}{2}\right)dx = \ln 2
+      $$
+
+      Los tres coinciden con los resultados del boletín.
+
+      **Lo que hay que llevarse.** Los tres apartados se resuelven eligiendo
+      bien el orden, y en cada uno lo decide una cosa distinta: en **a)** la
+      forma del recinto, en **b)** una simetría que anula media integral, y en
+      **c)** la primitiva que se busca. Empezar a integrar sin haber mirado
+      cuál de las tres manda es lo que convierte un ejercicio de cinco líneas
+      en uno de media página.
+
+  - id: dos-dobles-en-polares
+    titulo: Dos en polares, y la circunferencia que no está centrada
+    fuente: >-
+      Ejercicio 2 · Boletín «Integral múltiple. Problemas» · Cálculo, UPV/EHU
+      · Departamento de Matemática Aplicada. El boletín publica los dos
+      resultados y el desarrollo está contrastado contra ellos: salen 3πa⁴/2 y
+      πa³/3 exactos.
+    nivel: practica
+    enunciado: |
+      Calcular las siguientes integrales dobles utilizando coordenadas
+      polares:
+
+      **a)** $\displaystyle\iint_{D}\left(x^{2}+y^{2}\right)dx\,dy$, donde $D$
+      es el dominio limitado por la circunferencia $x^{2}+y^{2}=2ax$.
+
+      **b)** $\displaystyle\iint_{D}\sqrt{a^{2}-x^{2}-y^{2}}\;dx\,dy$, donde
+      $D$ es el semicírculo de radio $a$ con centro en $O(0,0)$ y situado sobre
+      el eje $OX$.
+    pide: El valor de las dos integrales, en función de a.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Los dos recintos son circulares, pero **no son iguales**. ¿Cuál es la
+          diferencia que importa?
+        opciones:
+          - texto: >-
+              El de **a)** pasa por el origen y el de **b)** está centrado en
+              él: uno da $r=2a\cos\theta$ y el otro $r=a$
+            correcta: true
+            mensaje: |
+              Esa es toda la diferencia, y decide el ejercicio. Una
+              circunferencia centrada en el origen tiene radio constante; una
+              que **pasa** por él tiene el radio dependiendo del ángulo.
+          - texto: >-
+              Que uno es un círculo entero y el otro medio: por eso uno vale el
+              doble
+            mensaje: |
+              Es cierto que uno es medio, pero los integrandos también son
+              distintos, así que no hay factor 2 entre ellos. Y lo que cambia
+              la forma de los límites no es eso: es dónde está el centro.
+          - texto: >-
+              Ninguna: en polares los dos son $0 \le r \le a$
+            mensaje: |
+              El de **a)** no. Completando cuadrados es
+              $(x-a)^{2}+y^{2}=a^{2}$: centro en $(a,0)$ y radio $a$, así que
+              pasa por el origen y su ecuación polar es $r=2a\cos\theta$.
+
+      - tipo: calcular
+        titulo: a) El círculo desplazado
+        pregunta: |
+          En polares queda
+          $\displaystyle\int_{-\pi/2}^{\pi/2}\!\!\int_0^{2a\cos\theta} r^{3}\,dr\,d\theta$.
+          Con $a=1{,}7$, ¿cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '39.3583'
+          tolerancia: 0.02
+          formato: en forma exacta (3·pi·a^4/2) o con cuatro decimales
+        distractores:
+          - valor: '26.2389'
+            mensaje: |
+              Eso es $\pi a^{4}$, y sale de integrar $\cos^{4}$ mal: su
+              integral en $[-\pi/2,\pi/2]$ vale $\tfrac{3\pi}{8}$, no
+              $\tfrac{\pi}{4}$.
+          - valor: '19.6792'
+            mensaje: |
+              La mitad. Suele venir de tomar $\theta$ solo de 0 a $\pi/2$: la
+              circunferencia se recorre entera con $\theta$ de $-\pi/2$ a
+              $\pi/2$, porque para ángulos mayores el radio saldría negativo.
+        pista: |
+          $\int_0^{R} r^{3}dr = R^{4}/4$, y
+          $\int_{-\pi/2}^{\pi/2}\cos^{4}\theta\,d\theta = \tfrac{3\pi}{8}$.
+        desarrollo: |
+          El integrando $x^{2}+y^{2}$ es $r^{2}$, y con el $r$ del jacobiano
+          queda $r^{3}$:
+
+          $$
+          \int_0^{2a\cos\theta} r^{3}\,dr = \frac{16a^{4}\cos^{4}\theta}{4}
+          = 4a^{4}\cos^{4}\theta
+          $$
+
+          $$
+          \iint_D = 4a^{4}\int_{-\pi/2}^{\pi/2}\cos^{4}\theta\,d\theta
+          = 4a^{4}\cdot\frac{3\pi}{8} = \frac{3\pi a^{4}}{2}
+          $$
+
+          Con $a=1{,}7$: $\tfrac{3\pi}{2}(1{,}7)^{4} = 39{,}3583$.
+
+      - tipo: calcular
+        titulo: b) El semicírculo centrado
+        pregunta: |
+          Aquí el radio sí es constante:
+          $\displaystyle\int_0^{\pi}\!\!\int_0^{a}\sqrt{a^{2}-r^{2}}\;r\,dr\,d\theta$.
+          Con $a=1{,}7$, ¿cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '5.1449'
+          tolerancia: 0.01
+          formato: en forma exacta (pi·a^3/3) o con cuatro decimales
+        distractores:
+          - valor: '10.2898'
+            mensaje: |
+              El doble: has integrado $\theta$ de 0 a $2\pi$. El enunciado dice
+              **semicírculo** situado sobre el eje $OX$, así que $\theta$ va de
+              0 a $\pi$.
+          - valor: '15.4347'
+            mensaje: |
+              Eso es $\pi a^{3}$: te has dejado el $\tfrac13$ que deja la
+              integral en $r$.
+        pista: |
+          Con $t=a^{2}-r^{2}$, $\int_0^a r\sqrt{a^{2}-r^{2}}\,dr = a^{3}/3$.
+        desarrollo: |
+          $$
+          \int_0^{a} r\sqrt{a^{2}-r^{2}}\,dr
+          = \left[-\frac{(a^{2}-r^{2})^{3/2}}{3}\right]_0^{a} = \frac{a^{3}}{3}
+          $$
+
+          $$
+          \iint_D = \int_0^{\pi} \frac{a^{3}}{3}\,d\theta = \frac{\pi a^{3}}{3}
+          $$
+
+          Con $a=1{,}7$: $\tfrac{\pi}{3}(1{,}7)^{3} = 5{,}1449$.
+
+      - tipo: justificar
+        pregunta: Ordena la diferencia entre los dos apartados. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En **a)**, $x^{2}+y^{2}=2ax$ es $(x-a)^{2}+y^{2}=a^{2}$: pasa por
+              el origen, y su ecuación polar es $r=2a\cos\theta$.
+          - texto: >-
+              Por eso el límite superior de $r$ depende del ángulo, y $\theta$
+              recorre $[-\pi/2,\pi/2]$: fuera de ahí el radio saldría negativo.
+          - texto: >-
+              En **b)** el centro **es** el origen, así que $r$ va de 0 a $a$
+              con $\theta$ de 0 a $\pi$ por ser medio círculo.
+          - texto: >-
+              Y en los dos el jacobiano es $r$, salvo en **a)**, donde al estar
+              desplazado hay que multiplicar además por $\cos\theta$.
+            trampa: true
+            mensaje: |
+              El jacobiano de las polares es $r$ **siempre**, esté el recinto
+              donde esté: no depende del dominio, solo del cambio de variables.
+              Que el recinto esté desplazado se refleja en los **límites**
+              —el $2a\cos\theta$— y en ningún sitio más. Meter el coseno dos
+              veces es el error que duplica el resultado.
+        veredicto: |
+          Ahí está el reparto: el jacobiano lo pone el **cambio**, y los
+          límites los pone el **recinto**. Confundirlos es lo que hace que un
+          ejercicio de polares salga con un factor de más.
+    resolucion: |
+      **Datos.** Dos integrales dobles, las dos en polares, sobre dos recintos
+      circulares distintos.
+
+      ### a) El círculo que pasa por el origen
+
+      $$
+      x^{2}+y^{2}=2ax \iff (x-a)^{2}+y^{2}=a^{2}
+      $$
+
+      Centro $(a,0)$, radio $a$: **pasa por el origen**, y su ecuación polar es
+
+      $$
+      r^{2} = 2ar\cos\theta \;\Longrightarrow\; r = 2a\cos\theta
+      $$
+
+      El ángulo recorre $[-\pi/2,\pi/2]$ — fuera de ahí el coseno es negativo y
+      el radio no existe. Con $x^{2}+y^{2}=r^{2}$ y el jacobiano $r$:
+
+      $$
+      \iint_D (x^{2}+y^{2})\,dA
+      = \int_{-\pi/2}^{\pi/2}\!\!\int_0^{2a\cos\theta} r^{3}\,dr\,d\theta
+      = 4a^{4}\int_{-\pi/2}^{\pi/2}\cos^{4}\theta\,d\theta
+      $$
+
+      $$
+      = 4a^{4}\cdot\frac{3\pi}{8} = \boxed{\ \frac{3\pi a^{4}}{2}\ }
+      $$
+
+      ### b) El semicírculo centrado en el origen
+
+      Aquí el radio **sí** es constante: $0\le r\le a$, y por ser medio
+      círculo sobre el eje $OX$, $0\le\theta\le\pi$.
+
+      $$
+      \iint_D \sqrt{a^{2}-x^{2}-y^{2}}\,dA
+      = \int_0^{\pi}\!\!\int_0^{a}\sqrt{a^{2}-r^{2}}\;r\,dr\,d\theta
+      = \pi\cdot\frac{a^{3}}{3}
+      $$
+
+      $$
+      \boxed{\ \frac{\pi a^{3}}{3}\ }
+      $$
+
+      Los dos coinciden con los resultados del boletín.
+
+      **Lo que hay que llevarse.** Los dos apartados están puestos juntos a
+      propósito: son el mismo cambio con recintos distintos, y lo único que
+      cambia son los **límites**. El jacobiano es $r$ en los dos, esté el
+      círculo donde esté. Si al resolver uno desplazado te aparece un coseno de
+      más, casi siempre es que lo has metido dos veces — una en el límite y
+      otra en el jacobiano.
+
   - id: polares-generalizadas-en-la-elipse
     titulo: Polares generalizadas, y por qué la elipse deja de estorbar
     fuente: >-
