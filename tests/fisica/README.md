@@ -4,13 +4,13 @@ Todo simulador con física dentro lleva aquí al menos un caso con resultado
 conocido. Nunca se ajusta una constante para que salga el número esperado
 (CLAUDE.md §10).
 
-**Ocho ficheros y 153 casos**, para nueve simuladores. La cifra la da
+**Nueve ficheros y 166 casos**, para nueve simuladores. La cifra la da
 `node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
 la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
 y estuvo tres días diciéndolo con ocho ficheros en la carpeta.
 
 **Y una distinción que hay que leer antes que la tabla.** «Verificado» no
-significa lo mismo en todas las filas. En **tres** de las ocho el número contra
+significa lo mismo en todas las filas. En **tres** de las nueve el número contra
 el que se compara sale de una **convocatoria**; en **dos** sale de nuestra
 propia figura pero hay además una **invariante matemática independiente** que
 el test comprueba aparte; y en las **tres** restantes sale solo de nuestra
@@ -30,10 +30,14 @@ daño que uno que falta.
 | `compuertas.test.ts` | 16 | `PrismaDePresiones` (t07) | los dos ejemplos introductorios del propio tema, la compuerta vertical y la misma inclinada 60° | propia |
 | `canales.test.ts` | 27 | `SeccionDeCanal` (t21) | las tres secciones de 4 m² de la figura del propio tema, con sus perímetros publicados | propia |
 | `ariete.test.ts` | 25 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus **cuatro** números: los dos buenos y los dos equivocados | propia |
+| `plano.test.ts` | 13 | `PlanoComplejo` (cálculo t01) | el error típico del propio tema: con z = −1 − i, arctan devuelve π/4 y el argumento es −3π/4 | propia |
 
-El noveno simulador, `PlanoComplejo` (cálculo t01), **no tiene fichero aquí** y
-es el único cuya física vive dentro del `.astro` en vez de en `src/lib/`. Está
-declarado como deuda en `tasks/todo.md`.
+**Los nueve simuladores tienen ya su fichero.** El último en llegar fue
+`PlanoComplejo`, el 15 de septiembre de 2026: hasta entonces era el único cuyo
+modelo vivía dentro del `.astro`. Ahora está en `src/lib/plano.ts`, y lo que
+el test ancla no es una fórmula de física sino una **distinción**: que
+`argumento` y `arctanIngenuo` no calculan lo mismo, que es justo lo que el
+simulador existe para enseñar.
 
 ## Dos reglas que salieron de escribirlos
 

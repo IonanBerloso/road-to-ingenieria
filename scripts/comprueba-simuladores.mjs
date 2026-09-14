@@ -109,8 +109,27 @@ const CASOS = [
     tema: 'calculo/t01-complejos',
     sim: '[data-plano]',
     nombre: 'el plano complejo',
-    fuente: 'geometría, sin caso de física',
-    pruebas: [],
+    fuente: 'el error típico del propio tema: con z a la izquierda del eje, arctan se desvía π',
+    pruebas: [
+      {
+        pulsa: '[data-caso="trampa"]',
+        espera: {
+          '[data-cuadrante]': 'III',
+          '[data-polar]': '1,40 ∠ -2,36',
+          '[data-arctan]': '0,78',
+        },
+      },
+      /* El mismo módulo en el primer cuadrante: ahí los dos coinciden, y ese
+         contraste es lo que el bloque «Error típico» del tema pide mirar. */
+      {
+        pulsa: '[data-caso="limpio"]',
+        espera: { '[data-cuadrante]': 'I', '[data-polar]': '1,40 ∠ 0,78', '[data-arctan]': '0,78' },
+      },
+      {
+        pulsa: '[data-caso="giro"]',
+        espera: { '[data-producto-txt]': '2,00 ∠ 2,36' },
+      },
+    ],
   },
   {
     tema: 'mecanica-aplicada/t05-cables',

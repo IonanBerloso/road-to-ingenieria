@@ -376,7 +376,8 @@ src/
                            ya está y dice por qué en ese orden.
   components/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
-    sim/                   PlanoComplejo (cálculo) y los cinco de fluidos:
+    sim/                   PlanoComplejo (cálculo, modelo en lib/plano.ts
+                           desde el 15 de septiembre de 2026) y los de fluidos:
                            AbacoMoody · PuntoFuncionamiento · PrismaDePresiones
                            SeccionDeCanal · GolpeDeAriete. Su física vive en
                            lib/ para poder probarla (§10), nunca dentro
@@ -385,6 +386,7 @@ src/
     Base.astro             el ÚNICO layout
   lib/                     markdown.mjs (el procesador, §07) · rutas.ts
                            complejo.ts y regiones.ts (lectores de respuesta)
+                           plano.ts y los ocho modelos de los simuladores
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
@@ -411,8 +413,8 @@ tests/
   *.test.ts                los lectores de respuesta, con vitest
   fisica/                  casos con resultado conocido, uno por simulador:
                            moody · bombeo · compuertas · canales · ariete ·
-                           viga · catenaria · mecanismo, 8 ficheros y
-                           153 casos sacados del corpus, nunca de un libro
+                           viga · catenaria · mecanismo · plano, 9 ficheros y
+                           166 casos sacados del corpus, nunca de un libro
                            (§10). Decía 86 y luego 107; desde el 13 de
                            septiembre de 2026 la compara `deuda.mjs` §10, que
                            es la única forma de que no vuelva a caducar. Y ojo

@@ -68,6 +68,14 @@ const { id = 'plano' } = Astro.props;
       <label for={`${id}-giro`}>multiplicar por w = 1∠θ <output data-out-giro>0,00 rad</output></label>
       <input id={`${id}-giro`} type="range" min="-3.14" max="3.14" step="0.01" value="0" data-giro />
     </div>
+    <div class="ctrl atajos">
+      <span class="rotulo k">casos del tema</span>
+      <div class="botones">
+        <button type="button" class="accion" data-caso="trampa">z a la izquierda</button>
+        <button type="button" class="accion" data-caso="limpio">z en el primer cuadrante</button>
+        <button type="button" class="accion" data-caso="giro">girar un cuarto de vuelta</button>
+      </div>
+    </div>
   </div>
 
   <!-- `aria-live` obligatorio: ver AbacoMoody. -->
@@ -105,6 +113,15 @@ const { id = 'plano' } = Astro.props;
 </figure>
 
 <script>
+  import {
+    arctanIngenuo,
+    argumento,
+    binomica,
+    cuadrante,
+    modulo,
+    producto,
+  } from '../../lib/plano';
+
   for (const raiz of document.querySelectorAll<HTMLElement>('[data-plano]')) {
     const $ = <T extends Element>(s: string) => raiz.querySelector<T>(s)!;
     const ESCALA = 55; // píxeles por unidad
@@ -122,14 +139,14 @@ const { id = 'plano' } = Astro.props;
       const th = Number(sArg.value);
       const gi = Number(sGiro.value);
 
-      const a = r * Math.cos(th);
-      const b = r * Math.sin(th);
+      const { a, b } = binomica(r, th);
       const x = CX + a * ESCALA;
       const y = CY - b * ESCALA;
 
-      const thp = th + gi;
-      const xp = CX + r * Math.cos(thp) * ESCALA;
-      const yp = CY - r * Math.sin(thp) * ESCALA;
+      const p = producto(r, th, 1, gi);
+      const pun = binomica(p.r, p.theta);
+      const xp = CX + pun.a * ESCALA;
+      const yp = CY - pun.b * ESCALA;
 
       $<SVGLineElement>('[data-vector]').setAttribute('x2', String(x));
       $<SVGLineElement>('[data-vector]').setAttribute('y2', String(y));
@@ -158,15 +175,34 @@ const { id = 'plano' } = Astro.props;
       $('[data-out-arg]').textContent = `${num(th)} rad`;
       $('[data-out-giro]').textContent = `${num(gi)} rad`;
       $('[data-binomica]').textContent = `${num(a)} ${b < 0 ? '−' : '+'} ${num(Math.abs(b))}i`;
-      $('[data-polar]').textContent = `${num(r)} ∠ ${num(th)}`;
-      $('[data-producto-txt]').textContent = `${num(r)} ∠ ${num(Math.atan2(Math.sin(thp), Math.cos(thp)))}`;
+      /* La polar se recalcula desde (a, b) y no se copia de los deslizadores.
+         Es lo que hace honesta la comparación de la celda de al lado: el
+         argumento y el `arctan(b/a)` salen de los **mismos** dos números. */
+      $('[data-polar]').textContent = `${num(modulo(a, b))} ∠ ${num(argumento(a, b))}`;
+      $('[data-producto-txt]').textContent = `${num(p.r)} ∠ ${num(p.theta)}`;
 
-      const cuad = a >= 0 ? (b >= 0 ? 'I' : 'IV') : b >= 0 ? 'II' : 'III';
-      $('[data-cuadrante]').textContent = cuad;
-
-      const arctan = Math.atan(b / a);
-      $('[data-arctan]').textContent = num(arctan);
+      $('[data-cuadrante]').textContent = cuadrante(a, b);
+      $('[data-arctan]').textContent = num(arctanIngenuo(a, b));
       $<HTMLElement>('[data-alarma]').hidden = a >= 0;
+    }
+
+    /** Los tres casos que el tema nombra, para no tener que buscarlos a mano. */
+    const casos: Record<string, [number, number, number]> = {
+      // z a la izquierda del eje: aquí arctan se equivoca en media vuelta.
+      trampa: [1.4, -2.36, 0],
+      // El mismo módulo en el primer cuadrante: arctan y el argumento coinciden.
+      limpio: [1.4, 0.78, 0],
+      // Multiplicar por 1∠(π/2): gira sin cambiar el tamaño.
+      giro: [2, 0.79, 1.57],
+    };
+
+    for (const boton of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
+      boton.addEventListener('click', () => {
+        const c = casos[boton.dataset.caso ?? ''];
+        if (!c) return;
+        [sModulo.value, sArg.value, sGiro.value] = [String(c[0]), String(c[1]), String(c[2])];
+        pinta();
+      });
     }
 
     for (const s of [sModulo, sArg, sGiro]) s.addEventListener('input', pinta);
@@ -234,6 +270,22 @@ const { id = 'plano' } = Astro.props;
   .ctrl label output { color: var(--live); font-weight: 500; font-size: .82rem; }
 
   input[type='range'] { width: 100%; accent-color: var(--live); cursor: pointer; }
+
+  .atajos .k { display: block; margin-bottom: .4rem; font-size: .63rem; letter-spacing: .08em; }
+  .botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+  .botones button {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .3rem .6rem;
+    color: var(--flag);
+    background: transparent;
+    border: 1px dashed var(--rule);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .botones button:hover { background: var(--flag-soft); border-color: var(--flag); }
 
   .readout {
     display: grid;

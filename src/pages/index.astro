@@ -48,16 +48,18 @@ const FRASE_ESTADO = {
 
 /* Las etiquetas cortas de los botones de ruta. Presentación, no dato:
  * el título completo («Preparar la primera evaluación») no cabe en la
- * retícula de la caja de pizarra. */
-const NOMBRE_RUTA: Record<string, string> = {
-  '1ev': '1.ª evaluación',
-  '2ev': '2.ª evaluación',
-  '3ev': '3.ª evaluación',
-  '4ev': '4.ª evaluación',
-  '5ev': '5.ª evaluación',
-  ord: 'Ordinaria',
-  ext: 'Extraordinaria',
-};
+ * retícula de la caja de pizarra.
+ *
+ * Sale de `CONVOCATORIAS`, que es donde vive la tabla, y no de una copia.
+ * Hasta el 15 de septiembre de 2026 era una lista escrita a mano con **siete**
+ * de las diecisiete claves, así que las rutas de Química y de Mecánica —que
+ * son `1c` y `2c`— caían en el `??` y salían en pantalla con el título largo,
+ * «Preparar el examen final del primer cuatrimestre», reventando la retícula.
+ * Esa es la razón de que el campo `boton` exista: una clave sin etiqueta corta
+ * ahora rompe el tipo, no el diseño. */
+const NOMBRE_RUTA: Record<string, string> = Object.fromEntries(
+  Object.values(CONVOCATORIAS).map((c) => [c.url, c.boton]),
+);
 
 const hechos = (a: (typeof asignaturas)[number]) => a.data.temas.filter((t) => t.hecho).length;
 

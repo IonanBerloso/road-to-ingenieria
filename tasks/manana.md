@@ -651,11 +651,27 @@ nueve están tachadas: declara **5 huecos abiertos** en la asignatura que pide
 demostrar en el 75 % de sus ejercicios de examen. Son las rutas más cortas del
 sitio: es barato y rinde.
 
-### 10.4 · `calculo-ext`: ordenar como dice que ordena
+### 10.4 · ~~`calculo-ext`: ordenar como dice que ordena~~ · hecho el 15 de septiembre
 
-Seis bloques fuera de sitio en las dos mitades. O se reordenan, o el
-`criterioDeOrden` dice la razón real. `calculo-ord` sí lo cumple, así que hay
-patrón.
+Los seis estaban de verdad, y se han movido. Antes y después, con las veces
+que cae cada bloque de once convocatorias:
+
+| mitad | antes | ahora |
+|---|---|---|
+| primer cuatrimestral | 11 · 7 · 6 · 8 · 5 · 9 · 3 | 11 · 9 · 8 · 7 · 6 · 5 · 3 |
+| segundo cuatrimestral | 11 · 10 · 9 · **3** · 8 · 6 | 11 · 10 · 9 · 8 · 6 · 3 |
+
+El peor era el gradiente —tres de once— por delante de la integral de línea
+—ocho—. Se eligió reordenar y no reescribir el criterio porque **no había
+ninguna razón escrita** para las excepciones: ni por tema ni por dificultad
+explican el orden viejo. Comprobado que el fichero conserva las mismas líneas,
+solo permutadas, y que los rótulos de sección —SUELO, los dos cuatrimestrales
+y CIERRE— siguen donde estaban.
+
+Y `calculo-ord` **sí lo cumplía**, como decía la auditoría: su pareja
+edo/cruce parece fuera de orden pero está declarada en el propio criterio
+—«al final los dos que se reparten el hueco que sobra»—, que es la otra forma
+válida de cerrar esto.
 
 ### 10.5 · Los guardianes que se creen más fuertes de lo que son
 
@@ -685,18 +701,56 @@ En orden de rendimiento:
    sin romper el build.
 2. **La URL de un examen, cuatro veces** (una de ellas es un autocontrol
    escrito contra una copia). Una función de tres líneas.
-3. **`NOMBRE_RUTA` en `index.astro`** duplica `CONVOCATORIAS[k].corta` y cubre
-   7 de las 17 claves: **Química y Mecánica salen con el título largo y se ve
-   en pantalla.** Y `ETIQUETA`/`FRASE_ESTADO` son la misma tabla dos veces, a
-   cuatro líneas de distancia.
-4. **`revisa-ejercicios.mjs` ya diverge del esquema**: `titulo` ≥ 5 contra
-   ≥ 3. Un carácter.
+3. **~~`NOMBRE_RUTA` en `index.astro`~~ · arreglado el 15 de septiembre de
+   2026.** Era una copia a mano con **7** de las 17 claves, así que las rutas
+   de Química y de Mecánica —`1c` y `2c`— caían en el `??` y salían en
+   pantalla con el título largo, «Preparar el examen final del primer
+   cuatrimestre», reventando la retícula de la caja. Ahora `CONVOCATORIAS`
+   lleva un campo `boton` con la etiqueta corta de las diecisiete, y
+   `index.astro` la deriva: una clave sin etiqueta rompe el tipo, no el
+   diseño.
+
+   Lo que **queda** de este punto: `ETIQUETA` y `FRASE_ESTADO` siguen siendo
+   la misma tabla dos veces, a cuatro líneas de distancia.
+4. **~~`revisa-ejercicios.mjs` diverge del esquema~~ · comprobado el 15 de
+   septiembre: no diverge.** El guion exige `titulo` de 5 caracteres y el
+   esquema también —`min(5)` en el objeto `ejercicio`—. Los `min(3)` que
+   parecían la discrepancia son de **otros dos objetos**: el título de un
+   **tema** y el de un **paso**. La auditoría comparó campos con el mismo
+   nombre en esquemas distintos.
+
+### 10.6 bis · La página de integración se ha pasado de peso (nuevo, 15 de septiembre)
+
+`node scripts/peso.mjs` mide con Chromium a 390 px y la CPU cuatro veces más
+lenta. Después de meter los dieciséis ejercicios del boletín básico:
+
+| página | HTML | nodos | listo |
+|---|---|---|---|
+| `/calculo/t05-integracion/` | **10,5 MB** | 284.977 | **4,6 s** ← |
+| `/calculo/t01-complejos/` | 7,6 MB | 198.712 | 2,9 s |
+| `/algebra/t07-diagonalizacion/` | 4,9 MB | 133.152 | 1,7 s |
+
+Es la **primera página del sitio que pasa de cuatro segundos**, y la causa es
+mía: t05 ha pasado de 32 ejercicios a 48, y cada uno lleva su resolución
+entera en el HTML. No lo caza `npm run suelo` —`peso.mjs` no está dentro—, así
+que conviene decidir dos cosas: si el umbral entra en el suelo, y si la página
+de tema tiene que seguir sirviendo las 48 resoluciones de una vez. La segunda
+es arquitectura y no se improvisa; la primera es una línea de `package.json`.
 
 ### 10.7 · Lo suelto
 
-- **Cálculo**: extraer la física de `PlanoComplejo` a `src/lib/plano.ts` y
-  escribir su caso. Es la única casilla de §15 que le falta a la asignatura de
-  referencia.
+- **~~Cálculo~~ · hecho el 15 de septiembre de 2026.** El modelo de
+  `PlanoComplejo` vive ya en `src/lib/plano.ts`, con 13 casos en
+  `tests/fisica/plano.test.ts` y tres botones de caso en el simulador que
+  `comprueba-simuladores.mjs` pulsa. Los nueve simuladores tienen fichero:
+  **9 ficheros y 166 casos**.
+
+  Y lo que ancla el test no es una fórmula de física —no la hay— sino una
+  **distinción**: que `argumento(a,b)` y `arctanIngenuo(a,b)` no calculan lo
+  mismo. El caso sale del bloque «Error típico» del propio tema: con
+  $z=-1-i$, `arctan` devuelve $\pi/4$ —el argumento del número contrario— y
+  el de verdad es $-3\pi/4$. El botón «z a la izquierda» lleva el simulador a
+  ese punto, y el guardián comprueba las tres celdas.
 - **Fluidos**: decir en la ruta que los cinco parciales de 2019-2021 no tienen
   ruta y por qué (son un formato extinto). Y usar la prosa de los cuatro temas
   que declara y no enlaza.
