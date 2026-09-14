@@ -587,9 +587,9 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.995 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 4.117 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.886 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 2.011 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 4.149 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.902 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 33 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 27 |
 | `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 3 |

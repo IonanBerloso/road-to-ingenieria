@@ -935,8 +935,35 @@ de paso `dibujar`, con su primer uso en el 7.3).
    la media elipse del 7, la elipse de focos $4i$ y $-i$ del 8, el medio
    disco elíptico del 9 y la mediatriz del 10.
 
-   **Lo que queda del encargo 1**, con t01, t06, t07, t08, t09, t10 y t11
-   cerrados: t05 (14).
+   **~~t05~~ · terminado el 14 de septiembre de 2026: el boletín básico
+   «Integración. Problemas» entero, en 16 ejercicios** — las cinco tandas
+   de integrales indefinidas, las dos funciones valor medio, las dos
+   impropias y los nueve problemas de aplicaciones.
+
+   **Y es, con diferencia, el boletín con más erratas de los ocho: doce.**
+   Todas comprobadas derivando la primitiva impresa y comparándola con el
+   integrando en cuatro puntos.
+
+   | dónde | lo impreso | lo que sale |
+   |---|---|---|
+   | 1(f) | $e^{-x}(x^2+5)e^{-x}$ | $-e^{-x}(x^2+5)$ |
+   | 1(g) | un $x^3$ de más delante | $-3e^{-x/3}(x^3+9x^2+54x+162)$ |
+   | 1(h) | termina en $-\tfrac14$ | $-\tfrac{x}{4}$ |
+   | 3(b) | $\arctan\left(\tfrac{\tan x}{2}+1\right)$ | sin el $+1$ |
+   | 3(e) | $\arctan\left(\tan\tfrac x2\right)$ | con $\sqrt3$ dentro |
+   | 4(d) | se lee $\tfrac{\sqrt5}{8}$ | $\sqrt{\tfrac58}$ |
+   | 5(b) | tres términos multiplicados por 3 | divididos entre 3 |
+   | 5(d) | $\tfrac{2\sqrt3}{9}\arctan$ | $\tfrac{4\sqrt3}{9}\arctan$ |
+   | 5(f) | $\tfrac x6(\cos+\operatorname{sen})$ | $\tfrac{x}{10}(\cos+2\operatorname{sen})$ |
+   | 5(g) | $\ln\lvert x^2-x+1\rvert$ y $\tfrac{\sqrt3}{2}\arctan$ | $\ln(x^2+x+1)$ y $\sqrt3\arctan$ |
+   | 5(j) | otra combinación con un $\ln\lvert\tan^2x+1\rvert^3$ | la de la resolución |
+   | aplic. 8 | $L=\tfrac{\operatorname{argsh}3}{2}\approx0{,}91$ | $\tfrac{3\sqrt{10}+\operatorname{argsh}3}{2}\approx5{,}65$ |
+
+   La última se descarta sin integrar: el arco une $(-2,0)$ con $(1,0)$, así
+   que **no puede medir menos de 3**.
+
+   **Con esto el encargo 1 de Cálculo queda cerrado**: t01, t05, t06, t07,
+   t08, t09, t10 y t11, los ocho boletines.
 
    **Y un aviso de intendencia.** Con el corpus en 1.900 ejercicios,
    `npm run humo` tarda **más de una hora**. Ya no se puede lanzar una
