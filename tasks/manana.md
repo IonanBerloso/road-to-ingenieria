@@ -905,8 +905,20 @@ de paso `dibujar`, con su primer uso en el 7.3).
    | básico 8 | **no simplifica**: se publica tal cual, diciendo que no simplifica |
    | básico 10 | $\cos v\,z_{u}+\operatorname{sen}u\,z_{v}=0$ |
 
-   **Lo que queda del encargo 1**, con t06, t07, t08, t09 y t10 cerrados:
-   t11 (3+5), y después t01 (10) y t05 (14).
+   **~~t11~~ · terminado el 14 de septiembre de 2026: los 5 problemas del
+   boletín básico —en 6 ejercicios— y los 4 complementarios que faltaban
+   (11.1, 11.2b, 11.3 y 11.4).** Los que ya estaban —11.2(a), 11.5, 11.6,
+   11.7, 11.8 y 11.9— no se duplican.
+
+   **Y una errata más, en el básico:** el apartado 2(b) —onda cuadrada de
+   $\pm8$ con $T=4$— trae impreso $\tfrac{32}{\pi}$ delante del sumatorio,
+   y el coeficiente correcto es $\tfrac{16}{\pi}$: lo impreso da el doble.
+   Comprobado por integración numérica y contra la fórmula estándar
+   $b_n=\tfrac{4A}{n\pi}$ de la onda cuadrada. Los otros cuatro apartados
+   del ejercicio 2 y los ejercicios 1, 3, 4 y 5 cuadran todos.
+
+   **Lo que queda del encargo 1**, con t06, t07, t08, t09, t10 y t11
+   cerrados: t01 (10) y t05 (14).
 
    **Y un aviso de intendencia.** Con el corpus en 1.900 ejercicios,
    `npm run humo` tarda **más de una hora**. Ya no se puede lanzar una

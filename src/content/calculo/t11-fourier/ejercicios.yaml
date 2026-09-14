@@ -1282,3 +1282,2012 @@ ejercicios:
       > exponente es $n+1$ y no $n-1$: la serie empieza restando. Es el mismo
       > número de siempre con el signo cambiado, y confundirlo es tirar el
       > apartado entero después de haberlo hecho bien.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Boletín básico del tema 11. Los cinco problemas, en seis ejercicios.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: el-escalon-de-periodo-diez
+    titulo: Un escalón de periodo 10, y los tres puntos que hay que redefinir
+    fuente: Ejercicio 1 · Problemas, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Sea $f(t)$ la función periódica de periodo $10$ definida de la siguiente
+      forma:
+
+      $$
+      f(t)=\begin{cases}
+      0 & -5<t<0\\[2pt]
+      3 & 0<t<5
+      \end{cases}
+      $$
+
+      (a) Calcular la serie de Fourier de $f(t)$.
+
+      (b) Definir $f(t)$ en los puntos $t=-5$, $t=0$ y $t=5$ para que la serie
+      de Fourier converja a $f(t)$ en $[-5,5]$.
+    pide: La serie y el valor que hay que dar en los tres puntos.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de integrar nada: ¿qué se puede decir de los $a_n$ con $n\ge1$?
+        opciones:
+          - texto: >-
+              Que se anulan todos, porque $f$ menos su media es una función
+              **impar**
+            correcta: true
+            mensaje: |
+              Eso es. $f-\tfrac32$ vale $-\tfrac32$ en $(-5,0)$ y $+\tfrac32$
+              en $(0,5)$: impar. Y una función impar solo tiene senos. Restar
+              la media antes de mirar la paridad es el truco que ahorra la
+              mitad de las integrales.
+          - texto: >-
+              Que no se puede saber sin integrar, porque $f$ no es par ni impar
+            mensaje: |
+              $f$ tal cual no lo es, cierto. Pero $f-\tfrac32$ sí, y la media
+              solo afecta al término constante. Mirar la paridad **después de
+              restar la media** es lo que hay que hacer.
+          - texto: >-
+              Que son todos iguales a $\tfrac32$
+            mensaje: |
+              $\tfrac32$ es el término constante $\tfrac{a_0}{2}$, que es la
+              media de $f$ en un periodo. Los $a_n$ con $n\ge1$ son otra cosa.
+
+      - tipo: calcular
+        titulo: El término constante
+        pregunta: |
+          ¿Cuánto vale $\dfrac{a_0}{2}$, la media de $f$ en un periodo?
+        respuesta:
+          tipo: numero
+          valor: '1.5'
+          tolerancia: 0.006
+          formato: en forma exacta (3/2) o con un decimal
+        distractores:
+          - valor: '3'
+            mensaje: |
+              $3$ es el valor de $f$ en media onda. La media pesa las dos
+              mitades: la función vale $3$ en la mitad del periodo y $0$ en la
+              otra mitad.
+          - valor: '0.3'
+            mensaje: |
+              $0{,}3$ sería $\tfrac{3}{10}$, o sea dividir por el periodo sin
+              multiplicar por la longitud del tramo donde $f$ vale $3$.
+        pista: |
+          $\dfrac{1}{10}\displaystyle\int_{-5}^{5}f(t)\,dt$, y la integral es
+          el área de un rectángulo de base $5$ y altura $3$.
+        desarrollo: |
+          $$
+          \frac{a_0}{2} = \frac{1}{10}\int_{-5}^{5} f(t)\,dt
+          = \frac{1}{10}\int_{0}^{5} 3\,dt = \frac{15}{10} = \frac32
+          $$
+
+      - tipo: calcular
+        titulo: El primer armónico
+        pregunta: |
+          ¿Cuánto vale $b_1$?
+        respuesta:
+          tipo: numero
+          valor: '1.9099'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '0.9549'
+            mensaje: |
+              $\tfrac{3}{\pi}$ es la mitad. El factor $\left(1-\cos n\pi\right)$ vale $2$ para $n$ impar, no $1$.
+          - valor: '0'
+            mensaje: |
+              $0$ es lo que valen los $b_n$ **pares**, donde
+              $1-\cos n\pi = 0$. El primero es impar.
+        pista: |
+          $b_n = \dfrac{3\left(1-\cos n\pi\right)}{n\pi}$, y para $n=1$ el
+          paréntesis vale $2$.
+        desarrollo: |
+          $$
+          b_n = \frac{2}{10}\int_{0}^{5} 3\operatorname{sen}\frac{n\pi t}{5}\,dt
+          = \frac{3}{n\pi}\left(1-\cos n\pi\right)
+          $$
+
+          $$
+          b_1 = \frac{6}{\pi} \approx 1{,}9099
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento del apartado (b). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El teorema de Dirichlet dice que en un punto de salto la serie
+              converge a la **semisuma** de los dos límites laterales.
+          - texto: >-
+              En $t=0$ los límites son $0$ por la izquierda y $3$ por la
+              derecha: la serie vale $\tfrac32$.
+          - texto: >-
+              En $t=\pm5$ la periodicidad hace que los límites vuelvan a ser
+              $3$ y $0$, así que también vale $\tfrac32$.
+          - texto: >-
+              Y por eso hay que redefinir $f$ en todos los puntos del
+              intervalo, no solo en esos tres.
+            trampa: true
+            mensaje: |
+              En los demás puntos $f$ es continua y la serie ya converge al
+              valor que tiene: no hay nada que tocar. Solo los **tres puntos de
+              salto** necesitan una definición nueva, y es la que el propio
+              teorema impone.
+        veredicto: |
+          Redefinir $f$ en los saltos no es un capricho: es la única manera de
+          que la igualdad $f(t)=S(t)$ sea cierta **en todo** el intervalo. Sin
+          eso, la serie y la función discrepan exactamente en tres puntos.
+    resolucion: |
+      **Resultados.**
+
+      $$
+      S(t) = \frac32 + \frac{3}{\pi}\sum_{n=1}^{\infty}
+      \frac{1-\cos n\pi}{n}\,\operatorname{sen}\frac{n\pi t}{5}
+      $$
+
+      $$
+      f(-5) = f(0) = f(5) = \frac32
+      $$
+
+      ### 1 · El periodo y la frecuencia
+
+      $T=10$, así que el semiperiodo es $L=5$ y la frecuencia fundamental
+      $\omega=\tfrac{2\pi}{10}=\tfrac{\pi}{5}$. Todos los armónicos son
+      $\operatorname{sen}\tfrac{n\pi t}{5}$ y $\cos\tfrac{n\pi t}{5}$.
+
+      ### 2 · El término constante
+
+      $$
+      \frac{a_0}{2} = \frac{1}{10}\int_{-5}^{5} f
+      = \frac{1}{10}\cdot 15 = \frac32
+      $$
+
+      ### 3 · Los cosenos, que se van
+
+      $$
+      a_n = \frac{2}{10}\int_{0}^{5} 3\cos\frac{n\pi t}{5}\,dt
+      = \frac{3}{5}\left[\frac{5}{n\pi}\operatorname{sen}\frac{n\pi t}{5}
+      \right]_{0}^{5}
+      = \frac{3}{n\pi}\operatorname{sen}n\pi = 0
+      $$
+
+      Se podía haber visto sin integrar: $f-\tfrac32$ es impar.
+
+      ### 4 · Los senos
+
+      $$
+      b_n = \frac{2}{10}\int_{0}^{5} 3\operatorname{sen}\frac{n\pi t}{5}\,dt
+      = \frac{3}{5}\left[-\frac{5}{n\pi}\cos\frac{n\pi t}{5}\right]_{0}^{5}
+      = \frac{3\left(1-\cos n\pi\right)}{n\pi}
+      $$
+
+      | $n$ | $1-\cos n\pi$ | $b_n$ |
+      |---|---|---|
+      | impar | $2$ | $\dfrac{6}{n\pi}$ |
+      | par | $0$ | $0$ |
+
+      Solo sobreviven los armónicos impares, y su amplitud cae como
+      $\tfrac1n$ — la caída lenta típica de una función con saltos.
+
+      ### 5 · Los tres puntos
+
+      El teorema de Dirichlet garantiza que en un salto la serie converge a
+
+      $$
+      \frac{f(t^{-})+f(t^{+})}{2}
+      $$
+
+      En $t=0$: $\tfrac{0+3}{2}=\tfrac32$. En $t=5$, por la derecha empieza
+      otro periodo y vale $0$: $\tfrac{3+0}{2}=\tfrac32$. Y en $t=-5$ lo
+      mismo. Definiendo $f$ con ese valor en los tres puntos, la igualdad
+      $f=S$ pasa a ser cierta en todo $[-5,5]$.
+
+      Comprobación rápida: en $t=0$ todos los senos se anulan y
+      $S(0)=\tfrac32$ ✓, tal y como tenía que salir.
+
+      **Lo que hay que llevarse.** Dos rutinas que se repiten en todo el tema:
+      restar la media antes de mirar la paridad, y saber que la serie **nunca**
+      reproduce un salto — en el salto da la semisuma, y eso es un resultado,
+      no un fallo.
+
+  - id: la-parabola-en-un-periodo-entero
+    titulo: La parábola en un periodo entero, que no tiene ninguna simetría
+    fuente: Ejercicio 2 (a) · Problemas, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Desarrollar en serie de Fourier la función periódica
+      $f(t)=t^{2}$ con $0<t<2\pi$ y $T=2\pi$.
+    pide: La serie de Fourier de $f$.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $t^{2}$ es una función par. ¿Se anulan entonces los senos?
+        opciones:
+          - texto: >-
+              No: el periodo es $(0,2\pi)$, y en ese intervalo la función
+              **periódica** no es par
+            correcta: true
+            mensaje: |
+              Exacto, y es el error más repetido del tema. La paridad se mira
+              sobre un intervalo simétrico respecto del origen. Aquí el
+              periodo es $(0,2\pi)$, y la extensión periódica tiene un salto en
+              $t=0$ de $4\pi^{2}$ a $0$: nada de simetría.
+          - texto: >-
+              Sí: $t^{2}$ es par, así que $b_n=0$
+            mensaje: |
+              $t^{2}$ es par **como fórmula**, pero la función del problema es
+              la extensión periódica de $t^{2}$ desde $(0,2\pi)$, y esa no lo
+              es. Dibújala: sube de $0$ a $4\pi^{2}$ y cae en vertical.
+          - texto: >-
+              Sí, y además se anulan los cosenos
+            mensaje: |
+              No puede ser: si se anularan las dos familias, la serie sería
+              constante y la función no lo es.
+
+      - tipo: calcular
+        titulo: El término constante
+        pregunta: |
+          ¿Cuánto vale $\dfrac{a_0}{2}$?
+        respuesta:
+          tipo: numero
+          valor: '13.1595'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '26.3189'
+            mensaje: |
+              $\tfrac{8\pi^{2}}{3}$ es el doble: falta dividir la integral
+              entre el periodo $2\pi$, no entre $\pi$.
+          - valor: '9.8696'
+            mensaje: |
+              $\pi^{2}$ sería la media si la función fuese $t^{2}$ con
+              $-\pi<t<\pi$. Aquí el intervalo es $(0,2\pi)$.
+        pista: |
+          $\dfrac{1}{2\pi}\displaystyle\int_{0}^{2\pi}t^{2}\,dt$, y
+          $\tfrac{4\pi^{2}}{3}\approx13{,}16$.
+        desarrollo: |
+          $$
+          \frac{a_0}{2} = \frac{1}{2\pi}\int_{0}^{2\pi} t^{2}\,dt
+          = \frac{1}{2\pi}\cdot\frac{8\pi^{3}}{3} = \frac{4\pi^{2}}{3}
+          \approx 13{,}1595
+          $$
+
+      - tipo: calcular
+        titulo: El segundo coeficiente coseno
+        pregunta: |
+          Sabiendo que $a_n=\dfrac{4}{n^{2}}$, ¿cuánto vale $a_2$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.02
+          formato: un número entero
+        distractores:
+          - valor: '2'
+            mensaje: |
+              $2$ sería $\tfrac4n$. El denominador va al cuadrado: los
+              coeficientes de una función continua a trozos con salto caen
+              como $\tfrac1{n^{2}}$ en los cosenos.
+          - valor: '4'
+            mensaje: |
+              $4$ es $a_1$. Para $n=2$ hay que dividir entre $2^{2}=4$.
+        pista: |
+          $\dfrac{4}{2^{2}}$.
+        desarrollo: |
+          $$
+          a_2 = \frac{4}{4} = 1
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con $T=2\pi$, la frecuencia fundamental es $\omega=1$ y los
+              armónicos son $\cos nt$ y $\operatorname{sen}nt$.
+          - texto: >-
+              Integrando dos veces por partes,
+              $a_n=\tfrac{4}{n^{2}}$ y $b_n=-\tfrac{4\pi}{n}$.
+          - texto: >-
+              Los senos caen como $\tfrac1n$ y los cosenos como
+              $\tfrac1{n^{2}}$: la diferencia la produce el salto en $t=0$.
+          - texto: >-
+              Y como $b_n$ es negativo para todo $n$, la serie converge a un
+              valor menor que la función.
+            trampa: true
+            mensaje: |
+              El signo de un coeficiente no dice nada sobre a qué converge la
+              serie. La serie converge a $f(t)$ en todos los puntos de
+              continuidad, y a $2\pi^{2}$ en el salto — que, por cierto, es la
+              semisuma de $4\pi^{2}$ y $0$.
+        veredicto: |
+          La velocidad con que caen los coeficientes mide lo suave que es la
+          función: con salto, $\tfrac1n$; continua con esquina,
+          $\tfrac1{n^{2}}$. Aquí conviven las dos porque $t^{2}$ es suave
+          dentro del periodo pero salta al empalmarse consigo misma.
+    resolucion: |
+      **Resultado.**
+
+      $$
+      S(t) = \frac{4\pi^{2}}{3}
+      + \sum_{n=1}^{\infty}\left(\frac{4}{n^{2}}\cos nt
+      - \frac{4\pi}{n}\operatorname{sen}nt\right)
+      $$
+
+      ### 1 · Lo primero es dibujarla
+
+      En $(0,2\pi)$ la función sube de $0$ a $4\pi^{2}\approx39{,}5$. Y
+      entonces el periodo siguiente empieza otra vez en $0$: **hay un salto de
+      $4\pi^{2}$ en cada múltiplo de $2\pi$**. Esa es la razón de que no haya
+      ninguna simetría que aprovechar, y de que haya que calcular las dos
+      familias de coeficientes.
+
+      ### 2 · El término constante
+
+      $$
+      \frac{a_0}{2} = \frac{1}{2\pi}\int_{0}^{2\pi}t^{2}\,dt
+      = \frac{4\pi^{2}}{3}
+      $$
+
+      ### 3 · Los cosenos
+
+      $$
+      a_n = \frac{1}{\pi}\int_{0}^{2\pi}t^{2}\cos nt\,dt
+      $$
+
+      Por partes dos veces, con $u=t^{2}$:
+
+      $$
+      \int_{0}^{2\pi}t^{2}\cos nt\,dt
+      = \left[\frac{t^{2}\operatorname{sen}nt}{n}
+      + \frac{2t\cos nt}{n^{2}}
+      - \frac{2\operatorname{sen}nt}{n^{3}}\right]_{0}^{2\pi}
+      = \frac{4\pi}{n^{2}}
+      $$
+
+      porque $\operatorname{sen}2n\pi=0$ y $\cos 2n\pi=1$. Luego
+      $a_n=\tfrac{4}{n^{2}}$.
+
+      ### 4 · Los senos
+
+      $$
+      \int_{0}^{2\pi}t^{2}\operatorname{sen}nt\,dt
+      = \left[-\frac{t^{2}\cos nt}{n}
+      + \frac{2t\operatorname{sen}nt}{n^{2}}
+      + \frac{2\cos nt}{n^{3}}\right]_{0}^{2\pi}
+      = -\frac{4\pi^{2}}{n}
+      $$
+
+      y $b_n=-\tfrac{4\pi}{n}$.
+
+      ### 5 · Comprobación
+
+      En $t=0$ todos los senos se anulan y
+
+      $$
+      S(0) = \frac{4\pi^{2}}{3} + 4\sum_{n=1}^{\infty}\frac{1}{n^{2}}
+      = \frac{4\pi^{2}}{3} + 4\cdot\frac{\pi^{2}}{6}
+      = 2\pi^{2}
+      $$
+
+      que es exactamente la semisuma $\tfrac{4\pi^{2}+0}{2}$ del salto ✓. Esa
+      comprobación, además, **regala** la suma
+      $\sum\tfrac1{n^{2}}=\tfrac{\pi^{2}}{6}$ si se lee al revés.
+
+      **Lo que hay que llevarse.** «$t^{2}$ es par» no vale de nada si el
+      periodo no está centrado en el origen. La paridad se mira sobre la
+      función periódica dibujada, no sobre la fórmula.
+
+  - id: cuatro-desarrollos-del-boletin
+    titulo: Cuatro desarrollos más, y uno de los resultados no cuadra
+    fuente: Ejercicio 2 (b)–(e) · Problemas, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Desarrollar en serie de Fourier las siguientes funciones periódicas:
+
+      (b) $f(t)=\begin{cases}8 & 0<t<2\\ -8 & 2<t<4\end{cases}$ &nbsp;&nbsp;
+      con $T=4$
+
+      (c) $f(t)=\begin{cases}-t & -4\le t\le0\\ t & 0\le t\le4\end{cases}$
+      &nbsp;&nbsp; con $T=8$
+
+      (d) $f(t)=4t$, &nbsp; $0<t<10$, &nbsp; $T=10$
+
+      (e) $f(t)=\begin{cases}2t & 0\le t<3\\ 0 & -3<t<0\end{cases}$
+      &nbsp;&nbsp; con $T=6$
+    pide: Las cuatro series de Fourier.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Tres de las cuatro tienen una simetría aprovechable. ¿Cuál es la que
+          **no** tiene ninguna?
+        opciones:
+          - texto: >-
+              La (e), porque vale $2t$ a la derecha y $0$ a la izquierda
+            correcta: true
+            mensaje: |
+              Eso es, y por eso es la única con las dos familias de
+              coeficientes no nulas. La (b) es impar, la (c) es par, y la (d)
+              es impar una vez restada su media $20$.
+          - texto: >-
+              La (c), porque está definida a trozos
+            mensaje: |
+              La (c) es $\lvert t\rvert$ en $(-4,4)$: **par**, y por tanto sin
+              senos. Estar definida a trozos no impide tener simetría.
+          - texto: >-
+              La (d), porque $4t$ no es par ni impar en $(0,10)$
+            mensaje: |
+              Restando la media: $4t-20$ es impar respecto del centro del
+              periodo, $t=5$. Solo hay senos, y así sale.
+
+      - tipo: calcular
+        titulo: El primer armónico de la (b)
+        pregunta: |
+          ¿Cuánto vale $b_1$ en el apartado (b)?
+        respuesta:
+          tipo: numero
+          valor: '10.1859'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '20.3718'
+            mensaje: |
+              $\tfrac{64}{\pi}$ es **el doble**, y es lo que da el resultado
+              impreso en el boletín. Ahí hay una errata: el coeficiente que
+              antecede al sumatorio debería ser $\tfrac{16}{\pi}$, no
+              $\tfrac{32}{\pi}$.
+          - valor: '5.0930'
+            mensaje: |
+              $\tfrac{16}{\pi}$ es la mitad. El factor $1-\cos n\pi$ vale $2$
+              para $n$ impar, y $n=1$ lo es.
+        pista: |
+          Una onda cuadrada de amplitud $A$ tiene $b_n=\tfrac{4A}{n\pi}$ para
+          $n$ impar, y aquí $A=8$.
+        desarrollo: |
+          $$
+          b_n = \frac{2}{4}\int_{0}^{4} f\operatorname{sen}\frac{n\pi t}{2}\,dt
+          = \frac{16\left(1-\cos n\pi\right)}{n\pi}
+          $$
+
+          $$
+          b_1 = \frac{32}{\pi} \approx 10{,}1859
+          $$
+
+          Que es el resultado clásico $\tfrac{4A}{\pi}$ con $A=8$.
+
+      - tipo: calcular
+        titulo: El primer armónico de la (c)
+        pregunta: |
+          ¿Cuánto vale $a_1$ en el apartado (c)?
+        respuesta:
+          tipo: numero
+          valor: '-1.6211'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '1.6211'
+            mensaje: |
+              El signo. $\cos n\pi - 1$ vale $-2$ para $n$ impar, así que el
+              coeficiente sale negativo.
+          - valor: '-0.8106'
+            mensaje: |
+              $-\tfrac{8}{\pi^{2}}$ es la mitad: el factor
+              $1-\cos n\pi$ vale $2$ para $n=1$, no $1$.
+        pista: |
+          $a_n = -\dfrac{8\left(1-\cos n\pi\right)}{n^{2}\pi^{2}}$, y
+          $\tfrac{16}{\pi^{2}}\approx1{,}62$.
+        desarrollo: |
+          $$
+          a_1 = -\frac{8\cdot 2}{\pi^{2}} = -\frac{16}{\pi^{2}}
+          \approx -1{,}6211
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento sobre la errata de la (b). Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Una onda cuadrada que vale $+A$ media onda y $-A$ la otra tiene
+              $b_n=\tfrac{2A\left(1-\cos n\pi\right)}{n\pi}$.
+          - texto: >-
+              Con $A=8$ eso es $\tfrac{16\left(1-\cos n\pi\right)}{n\pi}$, o
+              sea $\tfrac{32}{n\pi}$ para $n$ impar.
+          - texto: >-
+              El boletín imprime $\tfrac{32}{\pi}$ delante del sumatorio, que
+              es el doble de lo que debe ser.
+          - texto: >-
+              Y como el error es un factor constante, la serie sigue
+              convergiendo a $f$, solo que más despacio.
+            trampa: true
+            mensaje: |
+              No converge a $f$: converge a $2f$. Multiplicar todos los
+              coeficientes por $2$ duplica la suma. Con el resultado impreso,
+              la serie valdría $16$ donde la función vale $8$.
+        veredicto: |
+          La comprobación que caza la errata cabe en una línea: en
+          $t=1$ la serie debe valer $8$, y con el coeficiente impreso vale
+          $16$. **Evaluar la serie en un punto fácil** es la forma más barata
+          de auditar un desarrollo.
+    resolucion: |
+      **Los cuatro.**
+
+      $$
+      \text{(b)}\quad S(t) = \frac{16}{\pi}\sum_{n=1}^{\infty}
+      \frac{1-\cos n\pi}{n}\operatorname{sen}\frac{n\pi t}{2}
+      $$
+
+      $$
+      \text{(c)}\quad S(t) = 2 - \frac{8}{\pi^{2}}\sum_{n=1}^{\infty}
+      \frac{1-\cos n\pi}{n^{2}}\cos\frac{n\pi t}{4}
+      $$
+
+      $$
+      \text{(d)}\quad S(t) = 20 - \frac{40}{\pi}\sum_{n=1}^{\infty}
+      \frac{1}{n}\operatorname{sen}\frac{n\pi t}{5}
+      $$
+
+      $$
+      \text{(e)}\quad S(t) = \frac32 + \sum_{n=1}^{\infty}\left(
+      \frac{6\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}\cos\frac{n\pi t}{3}
+      - \frac{6\cos n\pi}{n\pi}\operatorname{sen}\frac{n\pi t}{3}\right)
+      $$
+
+      ### 1 · La tabla que organiza el trabajo
+
+      | ap. | $T$ | simetría | qué hay que calcular |
+      |---|---|---|---|
+      | (b) | $4$ | impar | solo $b_n$ |
+      | (c) | $8$ | par | solo $a_0$ y $a_n$ |
+      | (d) | $10$ | impar tras restar $20$ | $a_0$ y $b_n$ |
+      | (e) | $6$ | ninguna | todo |
+
+      ### 2 · (b), la onda cuadrada
+
+      $$
+      b_n = \frac12\int_{0}^{4}f\operatorname{sen}\frac{n\pi t}{2}\,dt
+      = \frac12\cdot 8\cdot\frac{2}{n\pi}\cdot 2\left(1-\cos n\pi\right)
+      = \frac{16\left(1-\cos n\pi\right)}{n\pi}
+      $$
+
+      Para $n$ impar, $\tfrac{32}{n\pi}$ — el clásico $\tfrac{4A}{n\pi}$ con
+      $A=8$.
+
+      > **Errata del boletín.** El resultado impreso lleva $\tfrac{32}{\pi}$
+      > delante del sumatorio, que da el doble de lo debido. Comprobado por
+      > integración numérica y contra la fórmula estándar de la onda cuadrada:
+      > el coeficiente correcto es $\tfrac{16}{\pi}$.
+
+      ### 3 · (c), el pico triangular
+
+      Es $\lvert t\rvert$ en $(-4,4)$, función **par**: $b_n=0$.
+
+      $$
+      \frac{a_0}{2} = \frac18\int_{-4}^{4}\lvert t\rvert\,dt = 2
+      \qquad
+      a_n = \frac12\cdot 2\int_{0}^{4}t\cos\frac{n\pi t}{4}\,dt
+      = \frac{8\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}
+      $$
+
+      Los coeficientes caen como $\tfrac1{n^{2}}$: la función es continua, sin
+      saltos, y solo tiene esquinas.
+
+      ### 4 · (d), el diente de sierra
+
+      $$
+      \frac{a_0}{2} = \frac{1}{10}\int_{0}^{10}4t\,dt = 20
+      \qquad
+      b_n = \frac15\int_{0}^{10}4t\operatorname{sen}\frac{n\pi t}{5}\,dt
+      = -\frac{40}{n\pi}
+      $$
+
+      Caída $\tfrac1n$, la firma del salto en cada múltiplo de $10$.
+
+      ### 5 · (e), la que no tiene simetría
+
+      $$
+      \frac{a_0}{2} = \frac16\int_{0}^{3}2t\,dt = \frac32
+      $$
+
+      $$
+      a_n = \frac13\int_{0}^{3}2t\cos\frac{n\pi t}{3}\,dt
+      = \frac{6\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}
+      $$
+
+      $$
+      b_n = \frac13\int_{0}^{3}2t\operatorname{sen}\frac{n\pi t}{3}\,dt
+      = -\frac{6\cos n\pi}{n\pi}
+      $$
+
+      **Lo que hay que llevarse.** Antes de integrar, la tabla: periodo,
+      simetría, y qué familias hay que calcular. Y al terminar, evaluar la
+      serie en un punto donde la función se conozca — es lo que ha destapado la
+      errata de la (b).
+
+  - id: senos-y-cosenos-de-la-misma-recta
+    titulo: La misma recta, desarrollada en senos y en cosenos
+    fuente: Ejercicio 3 · Problemas, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Sea $f(t)=t$ con $0<t<2$.
+
+      (a) Desarrollar la función en serie de senos.
+
+      (b) Desarrollar la función en serie de cosenos.
+    pide: Las dos series de medio rango.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La función es la misma en $(0,2)$. ¿Cómo pueden salir dos series
+          distintas?
+        opciones:
+          - texto: >-
+              Porque se está **eligiendo** cómo prolongarla fuera de $(0,2)$:
+              impar para la de senos, par para la de cosenos
+            correcta: true
+            mensaje: |
+              Eso es. Dentro de $(0,2)$ las dos series valen lo mismo —$t$—;
+              fuera representan funciones distintas. La libertad está en la
+              extensión, no en el intervalo dado.
+          - texto: >-
+              Porque una de las dos está mal
+            mensaje: |
+              Las dos son correctas. Una función definida en medio periodo
+              admite infinitas extensiones periódicas, y dos de ellas —la par y
+              la impar— son especialmente cómodas.
+          - texto: >-
+              Porque el periodo es distinto en cada caso
+            mensaje: |
+              En los dos casos la extensión tiene periodo $4$: se refleja el
+              intervalo $(0,2)$ y se repite. Lo que cambia es **cómo** se
+              refleja.
+
+      - tipo: calcular
+        titulo: El primer seno
+        pregunta: |
+          En la serie de senos, ¿cuánto vale $b_1$?
+        respuesta:
+          tipo: numero
+          valor: '1.2732'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '-1.2732'
+            mensaje: |
+              El signo. $b_n=-\tfrac{4\cos n\pi}{n\pi}$, y para $n=1$ el coseno
+              vale $-1$: los dos signos se cancelan.
+          - valor: '0.6366'
+            mensaje: |
+              $\tfrac{2}{\pi}$ es la mitad. La fórmula de medio rango lleva el
+              factor $\tfrac{2}{L}$ con $L=2$, o sea $1$, y la integral da
+              $\tfrac{4}{\pi}$.
+        pista: |
+          $b_n=-\dfrac{4\cos n\pi}{n\pi}$, y $\tfrac4\pi\approx1{,}27$.
+        desarrollo: |
+          $$
+          b_n = \int_{0}^{2}t\operatorname{sen}\frac{n\pi t}{2}\,dt
+          = -\frac{4\cos n\pi}{n\pi}
+          $$
+
+          $$
+          b_1 = -\frac{4\cdot(-1)}{\pi} = \frac{4}{\pi} \approx 1{,}2732
+          $$
+
+      - tipo: calcular
+        titulo: El primer coseno
+        pregunta: |
+          En la serie de cosenos, ¿cuánto vale $a_1$?
+        respuesta:
+          tipo: numero
+          valor: '-0.8106'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '0.8106'
+            mensaje: |
+              El signo. $\cos n\pi - 1$ vale $-2$ para $n$ impar, así que
+              $a_1$ es negativo.
+          - valor: '-0.4053'
+            mensaje: |
+              $-\tfrac{4}{\pi^{2}}$ es la mitad: el paréntesis
+              $\cos\pi-1$ vale $-2$, no $-1$.
+        pista: |
+          $a_n=\dfrac{4\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}$, y
+          $\tfrac{8}{\pi^{2}}\approx0{,}81$.
+        desarrollo: |
+          $$
+          a_1 = \frac{4\left(-1-1\right)}{\pi^{2}} = -\frac{8}{\pi^{2}}
+          \approx -0{,}8106
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La extensión impar de $t$ desde $(0,2)$ es el diente de sierra
+              de periodo $4$, con salto en $t=\pm2$.
+          - texto: >-
+              La extensión par es la onda triangular, continua en todas
+              partes, con esquinas en $t=\pm2$.
+          - texto: >-
+              Por eso los senos caen como $\tfrac1n$ y los cosenos como
+              $\tfrac1{n^{2}}$: la par converge mucho más deprisa.
+          - texto: >-
+              Y por eso la serie de cosenos es la correcta y la de senos hay
+              que descartarla.
+            trampa: true
+            mensaje: |
+              Las dos son correctas: dentro de $(0,2)$ ambas valen $t$. La de
+              cosenos converge más deprisa, y eso la hace **preferible en la
+              práctica**, pero no convierte a la otra en falsa. En $t=2$ sí
+              discrepan: la de senos vale $0$ y la de cosenos vale $2$.
+        veredicto: |
+          Elegir la extensión es elegir cómo se comporta la serie fuera del
+          intervalo y en los extremos. La par evita el salto, y por eso
+          converge más rápido — es la que conviene si se va a truncar.
+    resolucion: |
+      **Resultados.**
+
+      $$
+      \text{(a)}\quad S(t) = \sum_{n=1}^{\infty}\frac{-4}{n\pi}\cos(n\pi)
+      \operatorname{sen}\frac{n\pi t}{2}
+      $$
+
+      $$
+      \text{(b)}\quad S(t) = 1 + \sum_{n=1}^{\infty}
+      \frac{4}{n^{2}\pi^{2}}\left(\cos n\pi-1\right)\cos\frac{n\pi t}{2}
+      $$
+
+      ### 1 · Qué significa «serie de senos»
+
+      Significa: extiende $f$ a $(-2,0)$ de forma **impar** y después
+      periódicamente con $T=4$. Una función impar solo tiene senos, así que
+      $a_n=0$ automáticamente y
+
+      $$
+      b_n = \frac{2}{L}\int_{0}^{L}f(t)\operatorname{sen}\frac{n\pi t}{L}\,dt,
+      \qquad L=2
+      $$
+
+      ### 2 · Los senos
+
+      $$
+      b_n = \int_{0}^{2}t\operatorname{sen}\frac{n\pi t}{2}\,dt
+      $$
+
+      Por partes, con $k=\tfrac{n\pi}{2}$:
+
+      $$
+      \left[-\frac{t\cos kt}{k}\right]_{0}^{2}
+      + \left[\frac{\operatorname{sen}kt}{k^{2}}\right]_{0}^{2}
+      = -\frac{2\cos n\pi}{k} = -\frac{4\cos n\pi}{n\pi}
+      $$
+
+      Para $n$ impar sale $+\tfrac{4}{n\pi}$ y para $n$ par
+      $-\tfrac{4}{n\pi}$: **todos los armónicos aparecen**, con signo
+      alternado.
+
+      ### 3 · Los cosenos
+
+      $$
+      \frac{a_0}{2} = \frac{1}{2}\int_{0}^{2}t\,dt = 1
+      \qquad
+      a_n = \int_{0}^{2}t\cos\frac{n\pi t}{2}\,dt
+      = \frac{4\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}
+      $$
+
+      Aquí los pares se anulan —$\cos n\pi=1$— y solo quedan los impares, con
+      amplitud $-\tfrac{8}{n^{2}\pi^{2}}$.
+
+      ### 4 · Las dos, comparadas
+
+      | | senos | cosenos |
+      |---|---|---|
+      | extensión | diente de sierra | onda triangular |
+      | continuidad | salto en $t=\pm2$ | continua |
+      | caída | $\tfrac1n$ | $\tfrac1{n^{2}}$ |
+      | valor en $t=2$ | $0$ (semisuma del salto) | $2$ |
+
+      En $t=1$ las dos valen $1$, como debe ser. En $t=2$ discrepan, y esa
+      discrepancia es la mejor manera de entender qué significa elegir una
+      extensión.
+
+      **Lo que hay que llevarse.** Un problema de medio rango no pregunta por
+      la función: pregunta por la **extensión**. Y el precio de cada elección
+      se lee en la velocidad de caída de los coeficientes.
+
+  - id: la-serie-de-cosenos-del-seno
+    titulo: El seno desarrollado en cosenos, y el armónico que falta
+    fuente: Ejercicio 4 · Problemas, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Desarrollar en serie de cosenos la función $f(t)=\operatorname{sen}t$
+      con $0<t<\pi$.
+    pide: La serie de cosenos de $f$.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué función periódica es la extensión par de
+          $\operatorname{sen}t$ desde $(0,\pi)$?
+        opciones:
+          - texto: >-
+              $\lvert\operatorname{sen}t\rvert$, la onda rectificada de doble
+              onda, de periodo $\pi$
+            correcta: true
+            mensaje: |
+              Eso es, y es una función que aparece en electrónica: la salida de
+              un rectificador de onda completa. Continua en todas partes, con
+              esquinas en cada múltiplo de $\pi$.
+          - texto: >-
+              $\operatorname{sen}t$ otra vez
+            mensaje: |
+              $\operatorname{sen}t$ es **impar**. Su extensión par desde
+              $(0,\pi)$ tiene que valer $\operatorname{sen}(-t)$ reflejado, o
+              sea $+\operatorname{sen}\lvert t\rvert$.
+          - texto: >-
+              $\cos t$
+            mensaje: |
+              $\cos t$ es par, sí, pero no coincide con
+              $\operatorname{sen}t$ en $(0,\pi)$, que es lo que se pide.
+
+      - tipo: calcular
+        titulo: El término constante
+        pregunta: |
+          ¿Cuánto vale $\dfrac{a_0}{2}$?
+        respuesta:
+          tipo: numero
+          valor: '0.6366'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '1.2732'
+            mensaje: |
+              $\tfrac{4}{\pi}$ es el doble. La media es
+              $\tfrac{1}{\pi}\int_{0}^{\pi}\operatorname{sen}t\,dt$, y esa
+              integral vale $2$.
+          - valor: '0.3183'
+            mensaje: |
+              $\tfrac{1}{\pi}$ olvida que
+              $\int_{0}^{\pi}\operatorname{sen}t\,dt=2$, no $1$.
+        pista: |
+          $\dfrac{1}{\pi}\displaystyle\int_{0}^{\pi}\operatorname{sen}t\,dt$, y
+          $\tfrac2\pi\approx0{,}64$.
+        desarrollo: |
+          $$
+          \frac{a_0}{2} = \frac{1}{\pi}\int_{0}^{\pi}\operatorname{sen}t\,dt
+          = \frac{1}{\pi}\left[-\cos t\right]_{0}^{\pi} = \frac{2}{\pi}
+          \approx 0{,}6366
+          $$
+
+      - tipo: calcular
+        titulo: El primer armónico que sobrevive
+        pregunta: |
+          ¿Cuánto vale $a_2$?
+        respuesta:
+          tipo: numero
+          valor: '-0.4244'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '0.4244'
+            mensaje: |
+              El signo. La fórmula es
+              $a_n=-\tfrac{2}{\pi}\cdot\tfrac{1+\cos n\pi}{n^{2}-1}$, y con
+              $n=2$ tanto el numerador como el denominador son positivos.
+          - valor: '-0.2122'
+            mensaje: |
+              $-\tfrac{2}{3\pi}$ es la mitad: el paréntesis
+              $1+\cos 2\pi$ vale $2$, no $1$.
+        pista: |
+          $a_n = -\dfrac{2\left(1+\cos n\pi\right)}{\pi\left(n^{2}-1\right)}$,
+          y con $n=2$ el denominador vale $3$.
+        desarrollo: |
+          $$
+          a_2 = -\frac{2\left(1+1\right)}{\pi\cdot 3} = -\frac{4}{3\pi}
+          \approx -0{,}4244
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La fórmula general $a_n=\tfrac{2}{\pi}\cdot \tfrac{1+\cos n\pi}{1-n^{2}}$ se obtiene convirtiendo el producto
+              $\operatorname{sen}t\cos nt$ en suma.
+          - texto: >-
+              Esa fórmula no vale para $n=1$, porque el denominador se anula:
+              $a_1$ hay que calcularlo aparte.
+          - texto: >-
+              Y sale $a_1=\tfrac{2}{\pi}\int_{0}^{\pi}\operatorname{sen}t\cos t \,dt=0$, así que el sumatorio empieza en $n=2$.
+          - texto: >-
+              Y los $a_n$ impares con $n\ge3$ también hay que calcularlos
+              aparte, por el mismo motivo.
+            trampa: true
+            mensaje: |
+              Para $n\ge3$ el denominador $1-n^{2}$ no se anula y la fórmula
+              general sirve. Lo que pasa con los impares es otra cosa: el
+              numerador $1+\cos n\pi$ vale $0$, así que **se anulan**, pero eso
+              lo dice la propia fórmula sin necesidad de calcular nada aparte.
+        veredicto: |
+          El caso $n=1$ es singular porque el denominador se anula, y hay que
+          tratarlo por separado. Los demás impares se anulan por el numerador,
+          que es un motivo distinto y no exige cálculo adicional.
+    resolucion: |
+      **Resultado.**
+
+      $$
+      S(t) = \frac{2}{\pi} - \frac{2}{\pi}\sum_{n=2}^{\infty}
+      \left(\frac{1+\cos n\pi}{n^{2}-1}\cos nt\right)
+      $$
+
+      ### 1 · La extensión
+
+      Extendiendo $\operatorname{sen}t$ de forma par desde $(0,\pi)$ se obtiene
+      $\lvert\operatorname{sen}t\rvert$, de periodo $\pi$. Por ser par,
+      $b_n=0$, y
+
+      $$
+      \frac{a_0}{2} = \frac{1}{\pi}\int_{0}^{\pi}\operatorname{sen}t\,dt
+      = \frac{2}{\pi}
+      \qquad
+      a_n = \frac{2}{\pi}\int_{0}^{\pi}\operatorname{sen}t\cos nt\,dt
+      $$
+
+      ### 2 · La integral, convirtiendo producto en suma
+
+      $$
+      \operatorname{sen}t\cos nt
+      = \frac12\Bigl[\operatorname{sen}\left(1+n\right)t
+      + \operatorname{sen}\left(1-n\right)t\Bigr]
+      $$
+
+      $$
+      \int_{0}^{\pi}\operatorname{sen}t\cos nt\,dt
+      = \frac12\left[\frac{1-\cos(1+n)\pi}{1+n}
+      + \frac{1-\cos(1-n)\pi}{1-n}\right]
+      $$
+
+      Y como $\cos(1\pm n)\pi = -\cos n\pi$:
+
+      $$
+      = \frac{1+\cos n\pi}{1-n^{2}}
+      \qquad\Longrightarrow\qquad
+      a_n = \frac{2}{\pi}\cdot\frac{1+\cos n\pi}{1-n^{2}}
+      $$
+
+      ### 3 · Los dos casos que hay que mirar aparte
+
+      **$n=1$.** La fórmula da $\tfrac00$. Volviendo a la integral:
+
+      $$
+      a_1 = \frac{2}{\pi}\int_{0}^{\pi}\operatorname{sen}t\cos t\,dt
+      = \frac{1}{\pi}\int_{0}^{\pi}\operatorname{sen}2t\,dt = 0
+      $$
+
+      Tenía que salir $0$: $\lvert\operatorname{sen}t\rvert$ tiene periodo
+      $\pi$, o sea que solo contiene armónicos de frecuencia par.
+
+      **$n$ impar, $n\ge3$.** El numerador $1+\cos n\pi$ vale $0$, así que
+      todos se anulan. La misma razón de fondo, vista desde la fórmula.
+
+      ### 4 · Los primeros términos
+
+      $$
+      S(t) = \frac{2}{\pi} - \frac{4}{3\pi}\cos 2t
+      - \frac{4}{15\pi}\cos 4t - \frac{4}{35\pi}\cos 6t - \dots
+      $$
+
+      Los denominadores son $n^{2}-1$ con $n$ par: $3$, $15$, $35$, $63$. La
+      caída es $\tfrac1{n^{2}}$, coherente con una función continua y con
+      esquinas.
+
+      Comprobación: en $t=\tfrac{\pi}{2}$ la función vale $1$, y
+
+      $$
+      \frac{2}{\pi}\left(1 + \frac{2}{3} - \frac{2}{15} + \dots\right)
+      $$
+
+      converge a $1$, que es lo que se esperaba.
+
+      **Lo que hay que llevarse.** Cuando una fórmula de coeficientes tiene un
+      denominador que se anula para algún $n$, ese $n$ **no está cubierto** y
+      hay que integrarlo aparte. Escribir el sumatorio desde $n=2$ sin decir
+      por qué es la mitad de la respuesta.
+
+  - id: dos-identidades-y-cuatro-sumas
+    titulo: Dos identidades de Fourier, y cuatro sumas que salen de ellas
+    fuente: Ejercicio 5 · Problemas, tema 11 · Cálculo, UPV/EHU
+    nivel: examen
+    enunciado: |
+      Demostrar que en el intervalo $0\le t\le\pi$ se verifican las siguientes
+      igualdades:
+
+      (a)
+
+      $$
+      t(\pi-t) = \frac{\pi^{2}}{6} - \left(\frac{\cos 2t}{1^{2}}
+      + \frac{\cos 4t}{2^{2}} + \frac{\cos 6t}{3^{2}} + \dots\right)
+      $$
+
+      (b)
+
+      $$
+      t(\pi-t) = \frac{8}{\pi}\left(\frac{\operatorname{sen}t}{1^{3}}
+      + \frac{\operatorname{sen}3t}{3^{3}}
+      + \frac{\operatorname{sen}5t}{5^{3}} + \dots\right)
+      $$
+
+      (c) Utilizando los apartados anteriores demostrar que
+
+      $$
+      \text{(c.1)}\quad \sum_{n=1}^{\infty}\frac{1}{n^{2}}
+      = \frac{\pi^{2}}{6}
+      $$
+
+      $$
+      \text{(c.2)}\quad \sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n^{2}}
+      = \frac{\pi^{2}}{12}
+      $$
+
+      $$
+      \text{(c.3)}\quad \sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{(2n-1)^{3}}
+      = \frac{\pi^{3}}{32}
+      $$
+
+      $$
+      \text{(c.4)}\quad \frac{1}{1^{3}} + \frac{1}{3^{3}} - \frac{1}{5^{3}}
+      - \frac{1}{7^{3}} + \frac{1}{9^{3}} + \frac{1}{11^{3}} - \dots
+      = \frac{3\pi^{3}\sqrt2}{128}
+      $$
+    pide: Las dos identidades y las cuatro sumas.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿De dónde sale cada una de las cuatro sumas?
+        opciones:
+          - texto: >-
+              De evaluar (a) o (b) en un punto bien elegido: $t=0$,
+              $t=\tfrac\pi2$ y $t=\tfrac\pi4$
+            correcta: true
+            mensaje: |
+              Eso es. Una identidad válida en todo el intervalo se convierte en
+              una suma numérica en cuanto se fija $t$. Todo el arte está en
+              elegir el punto donde los senos o cosenos valgan algo cómodo.
+          - texto: >-
+              De derivar las dos identidades
+            mensaje: |
+              Derivar cambiaría los exponentes de los denominadores, y además
+              derivar una serie de Fourier término a término no siempre es
+              legítimo. No hace falta: basta sustituir.
+          - texto: >-
+              De integrar entre $0$ y $\pi$
+            mensaje: |
+              Integrar daría $0$ en casi todos los términos y no produciría
+              estas sumas. La herramienta aquí es **evaluar**.
+
+      - tipo: calcular
+        titulo: La suma de Basilea
+        pregunta: |
+          Evaluando (a) en $t=0$, ¿cuánto vale
+          $\sum_{n=1}^{\infty}\tfrac{1}{n^{2}}$?
+        respuesta:
+          tipo: numero
+          valor: '1.644934'
+          tolerancia: 0.002
+          formato: con seis decimales
+        distractores:
+          - valor: '0.822467'
+            mensaje: |
+              $\tfrac{\pi^{2}}{12}$ es la suma **alternada**, la del apartado
+              (c.2). La de (c.1) tiene todos los términos positivos y es el
+              doble.
+          - valor: '1.2337'
+            mensaje: |
+              $\tfrac{\pi^{2}}{8}$ es la suma de $\tfrac{1}{n^{2}}$ solo sobre
+              los impares. Aquí entran todos los enteros.
+        pista: |
+          En $t=0$ el miembro izquierdo vale $0$ y todos los cosenos valen
+          $1$.
+        desarrollo: |
+          $$
+          0 = \frac{\pi^{2}}{6} - \sum_{n=1}^{\infty}\frac{1}{n^{2}}
+          \quad\Longrightarrow\quad
+          \sum_{n=1}^{\infty}\frac{1}{n^{2}} = \frac{\pi^{2}}{6}
+          \approx 1{,}644934
+          $$
+
+      - tipo: calcular
+        titulo: La suma con el patrón + + − −
+        pregunta: |
+          Evaluando (b) en $t=\tfrac{\pi}{4}$, ¿cuánto vale
+          $\tfrac{1}{1^{3}}+\tfrac{1}{3^{3}}-\tfrac{1}{5^{3}} -\tfrac{1}{7^{3}}+\dots$?
+        respuesta:
+          tipo: numero
+          valor: '1.027723'
+          tolerancia: 0.002
+          formato: con seis decimales
+        distractores:
+          - valor: '0.968946'
+            mensaje: |
+              $\tfrac{\pi^{3}}{32}$ es la suma de (c.3), con el patrón
+              $+\,-\,+\,-$. Esta otra alterna de dos en dos y sale algo mayor.
+          - valor: '0.726543'
+            mensaje: |
+              $\tfrac{3\pi^{3}}{128}$ olvida el $\sqrt2$, que viene de que
+              $\operatorname{sen}\tfrac{\pi}{4}=\tfrac{\sqrt2}{2}$ y hay que
+              despejarlo.
+        pista: |
+          Los senos valen $\tfrac{\sqrt2}{2}$, $\tfrac{\sqrt2}{2}$,
+          $-\tfrac{\sqrt2}{2}$, $-\tfrac{\sqrt2}{2}$, y así sucesivamente.
+        desarrollo: |
+          $$
+          \frac{\pi}{4}\cdot\frac{3\pi}{4} = \frac{3\pi^{2}}{16}
+          = \frac{8}{\pi}\cdot\frac{\sqrt2}{2}\left(
+          \frac{1}{1^{3}}+\frac{1}{3^{3}}-\frac{1}{5^{3}}-\dots\right)
+          $$
+
+          $$
+          \text{suma} = \frac{3\pi^{2}}{16}\cdot\frac{\pi}{8}
+          \cdot\frac{2}{\sqrt2} = \frac{3\pi^{3}\sqrt2}{128}
+          \approx 1{,}027723
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $t(\pi-t)$ es simétrica respecto de $t=\tfrac\pi2$ y se anula en
+              los dos extremos: por eso admite las dos representaciones.
+          - texto: >-
+              La (a) es su serie de cosenos de periodo $\pi$, y la (b) su serie
+              de senos en $(0,\pi)$.
+          - texto: >-
+              Las dos son continuas en $[0,\pi]$, así que la igualdad vale en
+              **todo** el intervalo cerrado, extremos incluidos.
+          - texto: >-
+              Y por eso los dos desarrollos convergen a la misma velocidad.
+            trampa: true
+            mensaje: |
+              No: la (a) cae como $\tfrac1{n^{2}}$ y la (b) como
+              $\tfrac1{n^{3}}$. La de senos es mucho más rápida porque su
+              extensión impar es más suave —no tiene esquinas—, y por eso es la
+              que produce las sumas cúbicas.
+        veredicto: |
+          Las dos identidades son el mismo objeto visto de dos maneras, y la
+          diferencia de suavidad de sus extensiones se lee directamente en el
+          exponente del denominador: $n^{2}$ frente a $n^{3}$.
+    resolucion: |
+      **Las dos identidades y las cuatro sumas.**
+
+      ### 1 · La identidad (a)
+
+      La extensión par de $t(\pi-t)$ desde $(0,\pi)$ tiene periodo $\pi$, así
+      que sus armónicos son $\cos 2nt$.
+
+      $$
+      \frac{a_0}{2} = \frac{1}{\pi}\int_{0}^{\pi}\left(\pi t-t^{2}\right)dt
+      = \frac{1}{\pi}\left(\frac{\pi^{3}}{2}-\frac{\pi^{3}}{3}\right)
+      = \frac{\pi^{2}}{6}
+      $$
+
+      $$
+      a_n = \frac{2}{\pi}\int_{0}^{\pi}\left(\pi t-t^{2}\right)\cos 2nt\,dt
+      = -\frac{1}{n^{2}}
+      $$
+
+      lo que da exactamente la identidad (a).
+
+      ### 2 · La identidad (b)
+
+      La extensión impar desde $(0,\pi)$ tiene periodo $2\pi$:
+
+      $$
+      b_n = \frac{2}{\pi}\int_{0}^{\pi}\left(\pi t-t^{2}\right)
+      \operatorname{sen}nt\,dt
+      = \frac{4\left(1-\cos n\pi\right)}{\pi n^{3}}
+      $$
+
+      Para $n$ par vale $0$; para $n$ impar, $\tfrac{8}{\pi n^{3}}$. Esa es la
+      identidad (b).
+
+      ### 3 · Las cuatro sumas, una por punto
+
+      | suma | dónde se evalúa | qué queda |
+      |---|---|---|
+      | (c.1) | (a) en $t=0$ | $0=\tfrac{\pi^{2}}{6}-\sum\tfrac1{n^{2}}$ |
+      | (c.2) | (a) en $t=\tfrac\pi2$ | $\tfrac{\pi^{2}}{4}=\tfrac{\pi^{2}}{6}-\sum\tfrac{\cos n\pi}{n^{2}}$ |
+      | (c.3) | (b) en $t=\tfrac\pi2$ | $\tfrac{\pi^{2}}{4}=\tfrac8\pi\sum\tfrac{(-1)^{n-1}}{(2n-1)^{3}}$ |
+      | (c.4) | (b) en $t=\tfrac\pi4$ | $\tfrac{3\pi^{2}}{16}=\tfrac8\pi\cdot\tfrac{\sqrt2}{2}\cdot\text{suma}$ |
+
+      **(c.2)** con más detalle: en $t=\tfrac\pi2$ el coseno $\cos 2nt$ pasa a
+      valer $\cos n\pi=(-1)^{n}$, así que
+
+      $$
+      \frac{\pi}{2}\cdot\frac{\pi}{2}
+      = \frac{\pi^{2}}{6} - \sum_{n=1}^{\infty}\frac{(-1)^{n}}{n^{2}}
+      = \frac{\pi^{2}}{6} + \sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n^{2}}
+      $$
+
+      y despejando,
+      $\sum\tfrac{(-1)^{n-1}}{n^{2}} = \tfrac{\pi^{2}}{4}-\tfrac{\pi^{2}}{6} = \tfrac{\pi^{2}}{12}$.
+
+      **(c.4)** con más detalle: los senos en $t=\tfrac\pi4$ siguen el patrón
+
+      $$
+      \operatorname{sen}\frac{\pi}{4},\;
+      \operatorname{sen}\frac{3\pi}{4},\;
+      \operatorname{sen}\frac{5\pi}{4},\;
+      \operatorname{sen}\frac{7\pi}{4},\;\dots
+      = \frac{\sqrt2}{2},\;\frac{\sqrt2}{2},\;
+      -\frac{\sqrt2}{2},\;-\frac{\sqrt2}{2},\;\dots
+      $$
+
+      que es exactamente el patrón $+\,+\,-\,-$ del enunciado.
+
+      ### 4 · Los cuatro valores
+
+      | suma | valor exacto | decimal |
+      |---|---|---|
+      | (c.1) | $\tfrac{\pi^{2}}{6}$ | $1{,}644934$ |
+      | (c.2) | $\tfrac{\pi^{2}}{12}$ | $0{,}822467$ |
+      | (c.3) | $\tfrac{\pi^{3}}{32}$ | $0{,}968946$ |
+      | (c.4) | $\tfrac{3\pi^{3}\sqrt2}{128}$ | $1{,}027723$ |
+
+      Los cuatro comprobados sumando las series numéricamente.
+
+      **Lo que hay que llevarse.** Una serie de Fourier es una máquina de
+      fabricar sumas numéricas: se evalúa en un punto donde los armónicos
+      valgan algo reconocible y se despeja. Los puntos que casi siempre
+      funcionan son $0$, $\tfrac\pi2$, $\tfrac\pi4$ y $\pi$.
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Problemas complementarios del tema 11. Los que ya estaban —11.2(a),
+  # 11.5, 11.6, 11.7, 11.8 y 11.9— no se repiten aquí.
+  # ═══════════════════════════════════════════════════════════════════
+
+  - id: tres-espectros-discretos
+    titulo: Tres espectros discretos, y las frecuencias que se repiten
+    fuente: Ejercicio 11.1 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Trazar el espectro discreto de las siguientes funciones:
+
+      (a)
+
+      $$
+      y(t) = 5 - 3\cos(3t) + 5\operatorname{sen}(3t) - \cos(12t)
+      - 3\cos(18t) + 5\cos(6t) - 4\cos(15t)
+      $$
+
+      (b)
+
+      $$
+      y(t) = 3 + 3\cos(4t) + 2\operatorname{sen}(4t) - 2\cos(8t)
+      - 3\cos(8t) - 3\cos(20t) - 4\operatorname{sen}(20t)
+      $$
+
+      (c)
+
+      $$
+      y(t) = 5\cos(23t) + 2\operatorname{sen}(46t) - 2\cos(46t)
+      - 3\cos(138t) - 5\operatorname{sen}(138t) - 4\operatorname{sen}(92t)
+      $$
+    pide: La amplitud de cada frecuencia presente.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En (a) aparecen $-3\cos 3t$ y $5\operatorname{sen}3t$. ¿Cuántas rayas
+          dibujan en el espectro?
+        opciones:
+          - texto: >-
+              Una sola, de altura $\sqrt{3^{2}+5^{2}}=\sqrt{34}$
+            correcta: true
+            mensaje: |
+              Eso es. Un seno y un coseno de la misma frecuencia son **un solo
+              armónico** escrito en dos piezas:
+              $a\cos\omega t + b\operatorname{sen}\omega t = A\cos\left(\omega t-\varphi\right)$ con
+              $A=\sqrt{a^{2}+b^{2}}$.
+          - texto: >-
+              Dos, una de altura $3$ y otra de altura $5$
+            mensaje: |
+              El espectro se dibuja **por frecuencias**, no por sumandos. Los
+              dos términos tienen la misma frecuencia $3$, así que se combinan
+              en una sola raya.
+          - texto: >-
+              Una, de altura $2$
+            mensaje: |
+              $2$ sería $5-3$. Las amplitudes no se restan: se componen con el
+              teorema de Pitágoras, porque seno y coseno están desfasados
+              $90^\circ$.
+
+      - tipo: calcular
+        titulo: La raya de frecuencia 3 en el apartado (a)
+        pregunta: |
+          ¿Qué altura tiene la raya de $\omega=3$ en el espectro de (a)?
+        respuesta:
+          tipo: numero
+          valor: '5.8310'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '2'
+            mensaje: |
+              $2$ es $5-3$. Las dos componentes están en cuadratura: se
+              combinan como catetos de un triángulo rectángulo, no restando.
+          - valor: '8'
+            mensaje: |
+              $8$ es $5+3$. Sumar las amplitudes sobrevalora el armónico: el
+              máximo de $-3\cos 3t+5\operatorname{sen}3t$ es $\sqrt{34}$, no
+              $8$.
+        pista: |
+          $\sqrt{(-3)^{2}+5^{2}}$, y $\sqrt{34}\approx5{,}83$.
+        desarrollo: |
+          $$
+          A_3 = \sqrt{(-3)^{2}+5^{2}} = \sqrt{34} \approx 5{,}8310
+          $$
+
+      - tipo: calcular
+        titulo: Cuántas rayas tiene el espectro de (a)
+        pregunta: |
+          ¿Cuántas rayas distintas dibuja el espectro del apartado (a),
+          contando la de frecuencia cero?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.02
+          formato: un número entero
+        distractores:
+          - valor: '7'
+            mensaje: |
+              $7$ es el número de sumandos. Dos de ellos —el coseno y el seno
+              de frecuencia $3$— comparten frecuencia y dan una sola raya.
+          - valor: '5'
+            mensaje: |
+              Faltaría contar el término constante $5$, que es la raya de
+              frecuencia $0$ y en un espectro sí se dibuja.
+        pista: |
+          Las frecuencias presentes son $0$, $3$, $6$, $12$, $15$ y $18$.
+        desarrollo: |
+          | $\omega$ | amplitud |
+          |---|---|
+          | $0$ | $5$ |
+          | $3$ | $\sqrt{34}\approx5{,}83$ |
+          | $6$ | $5$ |
+          | $12$ | $1$ |
+          | $15$ | $4$ |
+          | $18$ | $3$ |
+
+          Seis rayas.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Primero se agrupan los sumandos por frecuencia, sumando los que
+              comparten el mismo argumento.
+          - texto: >-
+              Después, cada grupo $a\cos\omega t+b\operatorname{sen}\omega t$
+              se reduce a una amplitud $\sqrt{a^{2}+b^{2}}$.
+          - texto: >-
+              El término independiente es la raya de $\omega=0$, y su altura es
+              el propio valor.
+          - texto: >-
+              Y los signos de $a$ y $b$ se conservan en la altura de la raya,
+              que por eso puede salir negativa.
+            trampa: true
+            mensaje: |
+              Una amplitud nunca es negativa: la raíz cuadrada se encarga. El
+              signo se traslada a la **fase**, que es la otra mitad de la
+              información y se dibuja en un segundo gráfico, el espectro de
+              fases.
+        veredicto: |
+          Trazar un espectro son dos pasos mecánicos: agrupar por frecuencia y
+          componer cada grupo con Pitágoras. Lo que se pierde por el camino es
+          la fase, y por eso el espectro de amplitudes no basta para
+          reconstruir la señal.
+    resolucion: |
+      **Los tres espectros.**
+
+      ### (a)
+
+      | $\omega$ | $a$ | $b$ | amplitud |
+      |---|---|---|---|
+      | $0$ | $5$ | — | $5$ |
+      | $3$ | $-3$ | $5$ | $\sqrt{34}\approx5{,}831$ |
+      | $6$ | $5$ | $0$ | $5$ |
+      | $12$ | $-1$ | $0$ | $1$ |
+      | $15$ | $-4$ | $0$ | $4$ |
+      | $18$ | $-3$ | $0$ | $3$ |
+
+      ### (b)
+
+      Aquí hay dos cosenos de frecuencia $8$ que **se suman antes**:
+      $-2\cos 8t-3\cos 8t = -5\cos 8t$.
+
+      | $\omega$ | $a$ | $b$ | amplitud |
+      |---|---|---|---|
+      | $0$ | $3$ | — | $3$ |
+      | $4$ | $3$ | $2$ | $\sqrt{13}\approx3{,}606$ |
+      | $8$ | $-5$ | $0$ | $5$ |
+      | $20$ | $-3$ | $-4$ | $5$ |
+
+      ### (c)
+
+      | $\omega$ | $a$ | $b$ | amplitud |
+      |---|---|---|---|
+      | $23$ | $5$ | $0$ | $5$ |
+      | $46$ | $-2$ | $2$ | $2\sqrt2\approx2{,}828$ |
+      | $92$ | $0$ | $-4$ | $4$ |
+      | $138$ | $-3$ | $-5$ | $\sqrt{34}\approx5{,}831$ |
+
+      Sin término constante: el espectro empieza en $\omega=23$.
+
+      ### Lo que enseña el (c)
+
+      Las frecuencias son $23$, $46=2\cdot23$, $92=4\cdot23$ y
+      $138=6\cdot23$. Todas son múltiplos de $23$, así que la señal **es
+      periódica** con frecuencia fundamental $23$ y periodo
+      $\tfrac{2\pi}{23}$. Los armónicos presentes son el primero, el segundo,
+      el cuarto y el sexto: faltan el tercero y el quinto, y eso es
+      información sobre la señal, no una omisión.
+
+      ### Cómo se dibuja
+
+      Eje horizontal $\omega$, y sobre cada frecuencia presente una raya
+      vertical de altura igual a la amplitud. Nada entre raya y raya: eso es lo
+      que significa **discreto**, y es la diferencia con el espectro continuo
+      de una señal no periódica.
+
+      **Lo que hay que llevarse.** Agrupar por frecuencia **antes** de medir,
+      y componer con $\sqrt{a^{2}+b^{2}}$. El error que más se repite es
+      dibujar una raya por sumando, que confunde la escritura con la señal.
+
+  - id: la-recta-desplazada-en-cinco-puntos
+    titulo: Una recta desplazada, y cinco puntos donde decidir
+    fuente: Ejercicio 11.2 (b) · Problemas complementarios, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Sea $f(t)=t+1$ con $0<t<2$ y $T=2$, y sea $S(t)$ su serie de Fourier.
+      Calcular $S(0)$, $S(1)$, $S(2)$, $S(3{,}5)$ y $S(4{,}5)$.
+    pide: Los cinco valores de la serie.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué hay que hacer antes que nada con un punto como $t=4{,}5$?
+        opciones:
+          - texto: >-
+              Reducirlo al periodo: $4{,}5 = 2\cdot2 + 0{,}5$, así que
+              equivale a $t=0{,}5$
+            correcta: true
+            mensaje: |
+              Eso es. $S$ es periódica de periodo $2$, así que solo hay que
+              saber qué pasa dentro de un periodo. Restar múltiplos del periodo
+              es el primer gesto de todo este tipo de ejercicios.
+          - texto: >-
+              Sustituirlo en $f(t)=t+1$, que da $5{,}5$
+            mensaje: |
+              La fórmula $t+1$ solo vale en $(0,2)$. Fuera, la función es su
+              repetición periódica, y $4{,}5$ hay que traerlo primero a ese
+              intervalo.
+          - texto: >-
+              Nada: $S$ y $f$ coinciden siempre
+            mensaje: |
+              Coinciden donde $f$ es continua, pero no en los saltos — y además
+              $f$ solo está dada en $(0,2)$: fuera hay que usar la
+              periodicidad.
+
+      - tipo: calcular
+        titulo: El valor en el salto
+        pregunta: |
+          ¿Cuánto vale $S(0)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.02
+          formato: un número entero
+        distractores:
+          - valor: '1'
+            mensaje: |
+              $1$ es el límite por la **derecha**, $f(0^{+})$. En un salto la
+              serie da la semisuma de los dos límites, no uno de ellos.
+          - valor: '3'
+            mensaje: |
+              $3$ es el límite por la **izquierda**, $f(2^{-})$. Falta
+              promediarlo con el de la derecha.
+        pista: |
+          Los límites laterales en $t=0$ son $3$ por la izquierda y $1$ por
+          la derecha.
+        desarrollo: |
+          $$
+          S(0) = \frac{f(0^{-})+f(0^{+})}{2} = \frac{3+1}{2} = 2
+          $$
+
+      - tipo: calcular
+        titulo: El valor en un punto lejano
+        pregunta: |
+          ¿Cuánto vale $S(4{,}5)$?
+        respuesta:
+          tipo: numero
+          valor: '1.5'
+          tolerancia: 0.006
+          formato: con un decimal
+        distractores:
+          - valor: '5.5'
+            mensaje: |
+              $5{,}5$ sale de sustituir $4{,}5$ en $t+1$ sin reducir al
+              periodo. La fórmula solo vale en $(0,2)$.
+          - valor: '2.5'
+            mensaje: |
+              $2{,}5$ es $S(3{,}5)$, que reduce a $t=1{,}5$. El $4{,}5$ reduce
+              a $0{,}5$.
+        pista: |
+          $4{,}5-4 = 0{,}5$, y ahí la función es continua.
+        desarrollo: |
+          $$
+          4{,}5 = 2\cdot 2 + 0{,}5
+          \quad\Longrightarrow\quad
+          S(4{,}5) = f(0{,}5) = 0{,}5+1 = 1{,}5
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La función periódica salta en cada múltiplo de $2$: de $3$ por la
+              izquierda a $1$ por la derecha.
+          - texto: >-
+              En esos puntos —$t=0$ y $t=2$— la serie vale la semisuma, $2$.
+          - texto: >-
+              En los puntos interiores la serie vale la función, previa
+              reducción al periodo: $S(1)=2$, $S(3{,}5)=2{,}5$,
+              $S(4{,}5)=1{,}5$.
+          - texto: >-
+              Y como $S(0)=S(1)=2$, la serie es constante en $[0,1]$.
+            trampa: true
+            mensaje: |
+              Es una coincidencia: $S(0)=2$ por ser la semisuma de un salto, y
+              $S(1)=2$ porque $f(1)=1+1=2$. Entre medias la serie recorre todos
+              los valores de $1$ a $2$. Dos valores iguales no hacen una
+              función constante.
+        veredicto: |
+          Dos reglas y nada más: **reducir al periodo** y, si el punto cae en
+          un salto, **promediar los laterales**. Todo lo demás es aritmética.
+    resolucion: |
+      **Los cinco valores.**
+
+      | $t$ | reduce a | ¿salto? | $S(t)$ |
+      |---|---|---|---|
+      | $0$ | $0$ | sí | $2$ |
+      | $1$ | $1$ | no | $2$ |
+      | $2$ | $0$ | sí | $2$ |
+      | $3{,}5$ | $1{,}5$ | no | $2{,}5$ |
+      | $4{,}5$ | $0{,}5$ | no | $1{,}5$ |
+
+      ### 1 · Cómo es la función
+
+      En $(0,2)$ sube de $1$ a $3$. Y entonces empieza otro periodo y vuelve a
+      $1$: **salto de $2$ unidades** en cada múltiplo del periodo, o sea en
+      $t=0,\,2,\,4,\,\dots$ Es un diente de sierra levantado una unidad.
+
+      ### 2 · La regla de Dirichlet
+
+      $$
+      S(t) = \begin{cases}
+      f(t) & \text{si }f\text{ es continua en }t\\[4pt]
+      \dfrac{f(t^{-})+f(t^{+})}{2} & \text{si hay salto}
+      \end{cases}
+      $$
+
+      En los saltos: $\tfrac{3+1}{2}=2$. Y esa es la respuesta para $t=0$ y
+      $t=2$.
+
+      ### 3 · Los tres puntos interiores
+
+      $$
+      S(1) = f(1) = 2
+      $$
+
+      $$
+      S(3{,}5): \quad 3{,}5-2 = 1{,}5 \;\Longrightarrow\; f(1{,}5) = 2{,}5
+      $$
+
+      $$
+      S(4{,}5): \quad 4{,}5-4 = 0{,}5 \;\Longrightarrow\; f(0{,}5) = 1{,}5
+      $$
+
+      ### 4 · Una comprobación gratis
+
+      La media de $f$ en un periodo es
+
+      $$
+      \frac{1}{2}\int_{0}^{2}\left(t+1\right)dt = \frac{1}{2}\cdot 4 = 2
+      $$
+
+      y coincide con el valor en el salto. **No es casualidad**: en un diente
+      de sierra el salto ocurre justo donde la recta pasaría por su valor
+      medio, así que la semisuma de los laterales es la media. En otras
+      funciones no tiene por qué pasar.
+
+      **Lo que hay que llevarse.** Reducir al periodo antes de sustituir, y
+      distinguir los puntos de salto de los demás. Los dos errores clásicos son
+      meter $4{,}5$ en la fórmula y dar $f(0^{+})$ en vez de la semisuma.
+
+  - id: nueve-funciones-par-impar-o-ninguna
+    titulo: Nueve funciones, y la tercera casilla que casi nadie marca
+    fuente: Ejercicio 11.3 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Determinar si las siguientes funciones son pares o impares:
+
+      (a) $f(t)=1-t^{2}$ &nbsp;&nbsp; (d) $f(t)=2t^{3}+3t^{2}-5t+1$
+      &nbsp;&nbsp; (g) $f(t)=e^{t}-e^{-t}$
+
+      (b) $f(t)=1-t$ &nbsp;&nbsp; (e) $f(t)=e^{t}$ &nbsp;&nbsp;
+      (h) $f(t)=\operatorname{sen}t\cos t$
+
+      (c) $f(t)=2t^{3}-4t$ &nbsp;&nbsp; (f) $f(t)=e^{t}+e^{-t}$
+      &nbsp;&nbsp; (i) $f(t)=\operatorname{sen}t+\cos t$
+    pide: La clasificación de las nueve.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué pasa con $f(t)=1-t$?
+        opciones:
+          - texto: >-
+              Ni par ni impar: $f(-t)=1+t$, que no es $f(t)$ ni $-f(t)$
+            correcta: true
+            mensaje: |
+              Eso es, y es la casilla que más se olvida. «Par o impar» es una
+              pregunta con **tres** respuestas posibles, y la tercera es la más
+              frecuente en la práctica.
+          - texto: >-
+              Impar, porque lleva una $t$ de grado uno
+            mensaje: |
+              El $1$ lo estropea: $f(-t)=1+t$ y $-f(t)=t-1$. No coinciden. Una
+              suma de un par y un impar no es ninguna de las dos cosas.
+          - texto: >-
+              Par, porque es una recta
+            mensaje: |
+              Una recta no vertical solo es par si es horizontal. $1-t$ tiene
+              pendiente, así que no es simétrica respecto del eje $OY$.
+
+      - tipo: calcular
+        titulo: Cuántas son pares
+        pregunta: |
+          De las nueve, ¿cuántas son **pares**?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.02
+          formato: un número entero
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Tres serían si se contara alguna de las «ninguna» como par.
+              Repasa la (b) y la (i): las dos mezclan una parte par con una
+              impar.
+          - valor: '1'
+            mensaje: |
+              Hay dos: la (a), que es un polinomio de exponentes pares, y la
+              (f), que es $2\cosh t$.
+        pista: |
+          Son la (a) y la (f). Las demás, o son impares, o no son ninguna de
+          las dos cosas.
+        desarrollo: |
+          **(a)** $1-t^{2}$: todos los exponentes son pares ✓
+
+          **(f)** $e^{t}+e^{-t}=2\cosh t$: al cambiar $t$ por $-t$ los dos
+          sumandos se intercambian y la suma no cambia ✓
+
+      - tipo: calcular
+        titulo: Cuántas son impares
+        pregunta: |
+          De las nueve, ¿cuántas son **impares**?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.02
+          formato: un número entero
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Falta alguna. La (h) es $\tfrac12\operatorname{sen}2t$, y un seno
+              es impar aunque venga disfrazado de producto.
+          - valor: '4'
+            mensaje: |
+              Cuatro serían si se contara la (i), pero
+              $\operatorname{sen}t+\cos t$ mezcla un impar con un par: no es
+              ninguna de las dos cosas.
+        pista: |
+          Son la (c), la (g) y la (h).
+        desarrollo: |
+          **(c)** $2t^{3}-4t$: exponentes impares ✓
+
+          **(g)** $e^{t}-e^{-t}=2\operatorname{senh}t$ ✓
+
+          **(h)** $\operatorname{sen}t\cos t=\tfrac12\operatorname{sen}2t$ ✓ —
+          y también por la regla «impar por par es impar».
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Un polinomio es par si solo tiene exponentes pares e impar si
+              solo tiene exponentes impares. La (a) y la (c) están en ese caso.
+          - texto: >-
+              Toda función se descompone en parte par más parte impar:
+              $f=\tfrac{f(t)+f(-t)}{2}+\tfrac{f(t)-f(-t)}{2}$.
+          - texto: >-
+              Por eso $e^{t}$ no es par ni impar, pero $e^{t}+e^{-t}$ y
+              $e^{t}-e^{-t}$ —sus dos partes— sí lo son.
+          - texto: >-
+              Y por eso una función que no es par ni impar no admite serie de
+              Fourier.
+            trampa: true
+            mensaje: |
+              La admite perfectamente: lo que pasa es que tendrá **las dos**
+              familias de coeficientes. La paridad es un atajo para ahorrar
+              integrales, no un requisito. Todas las funciones de este boletín
+              tienen serie.
+        veredicto: |
+          La paridad se comprueba siempre igual: sustituir $t$ por $-t$ y
+          comparar. Y merece la pena porque anula de golpe la mitad de los
+          coeficientes — pero su ausencia no impide nada.
+    resolucion: |
+      **Las nueve.**
+
+      | | función | clase | por qué |
+      |---|---|---|---|
+      | (a) | $1-t^{2}$ | **par** | exponentes $0$ y $2$ |
+      | (b) | $1-t$ | ninguna | $f(-t)=1+t$ |
+      | (c) | $2t^{3}-4t$ | **impar** | exponentes $3$ y $1$ |
+      | (d) | $2t^{3}+3t^{2}-5t+1$ | ninguna | mezcla pares e impares |
+      | (e) | $e^{t}$ | ninguna | $e^{-t}\ne\pm e^{t}$ |
+      | (f) | $e^{t}+e^{-t}$ | **par** | es $2\cosh t$ |
+      | (g) | $e^{t}-e^{-t}$ | **impar** | es $2\operatorname{senh}t$ |
+      | (h) | $\operatorname{sen}t\cos t$ | **impar** | es $\tfrac12\operatorname{sen}2t$ |
+      | (i) | $\operatorname{sen}t+\cos t$ | ninguna | impar más par |
+
+      Dos pares, tres impares y **cuatro que no son ninguna de las dos
+      cosas** — que es la mayoría, y por eso la tercera casilla importa.
+
+      ### 1 · La comprobación, siempre la misma
+
+      $$
+      f\text{ par} \iff f(-t)=f(t)
+      \qquad
+      f\text{ impar} \iff f(-t)=-f(t)
+      $$
+
+      ### 2 · Las reglas que ahorran trabajo
+
+      - **Polinomios**: par si todos los exponentes son pares, impar si todos
+        son impares, y ninguna si se mezclan. El término independiente cuenta
+        como exponente $0$, o sea par — por eso la (d) no es impar.
+      - **Productos**: par·par = par, impar·impar = par, par·impar = impar.
+        Con eso la (h) sale sin transformar nada.
+      - **Sumas**: solo conservan la clase si los dos sumandos la comparten.
+        La (i) suma un impar y un par, y por eso no es ninguna.
+
+      ### 3 · Por qué la (e) da las otras dos
+
+      $$
+      e^{t} = \underbrace{\frac{e^{t}+e^{-t}}{2}}_{\text{par}}
+      + \underbrace{\frac{e^{t}-e^{-t}}{2}}_{\text{impar}}
+      = \cosh t + \operatorname{senh}t
+      $$
+
+      Los apartados (e), (f) y (g) son el mismo ejemplo mirado tres veces: una
+      función sin paridad y sus dos mitades.
+
+      ### 4 · Para qué sirve
+
+      | si $f$ es | se anulan | quedan |
+      |---|---|---|
+      | par | todos los $b_n$ | serie de cosenos |
+      | impar | $a_0$ y todos los $a_n$ | serie de senos |
+      | ninguna | nada | las dos familias |
+
+      **Lo que hay que llevarse.** Comprobar la paridad cuesta una línea y
+      puede ahorrar la mitad de las integrales. Pero hay que estar dispuesto a
+      marcar la tercera casilla: cuatro de estas nueve no son ni lo uno ni lo
+      otro.
+
+  - id: tres-series-del-complementario
+    titulo: Tres series más, una por cada tipo de simetría
+    fuente: Ejercicio 11.4 · Problemas complementarios, tema 11 · Cálculo, UPV/EHU
+    nivel: practica
+    enunciado: |
+      Calcular la serie de Fourier $S(t)$ de las siguientes funciones
+      periódicas:
+
+      (a) $f(t)=\begin{cases}-1 & -1<t<0\\ 1 & 0<t<1\end{cases}$,
+      &nbsp; $T=2$
+
+      (b) $f(t)=\begin{cases}0 & -3<t<0\\ 2 & 0<t<3\end{cases}$,
+      &nbsp; $T=6$
+
+      (c) $f(t)=1+\lvert t\rvert$, &nbsp; $-1<t<1$, &nbsp; $T=2$
+    pide: Las tres series de Fourier.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La (b) es la (a) escalada y desplazada. ¿Qué relación hay entre sus
+          series?
+        opciones:
+          - texto: >-
+              La (b) vale $1+f_{a}$ con el periodo estirado: mismo $b_n$, más
+              un término constante $1$
+            correcta: true
+            mensaje: |
+              Exacto. $f_b(t) = 1 + f_a\!\left(\tfrac{t}{3}\right)$, así que
+              los senos son idénticos —solo cambia el argumento— y aparece la
+              media $1$. Verlo ahorra las integrales de la (b) enteras.
+          - texto: >-
+              No hay ninguna relación: son funciones distintas
+            mensaje: |
+              Las dos son ondas cuadradas de salto $2$. La diferencia es dónde
+              está el eje de simetría y cuánto dura el periodo, y las dos cosas
+              se traducen en cambios mecánicos de la serie.
+          - texto: >-
+              La (b) tiene los mismos coeficientes exactamente
+            mensaje: |
+              Los $b_n$ coinciden, pero la (b) tiene además el término
+              constante $1$ que la (a) no tiene, porque su media no es cero.
+
+      - tipo: calcular
+        titulo: El primer armónico de la (a)
+        pregunta: |
+          ¿Cuánto vale $b_1$ en el apartado (a)?
+        respuesta:
+          tipo: numero
+          valor: '1.2732'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '0.6366'
+            mensaje: |
+              $\tfrac{2}{\pi}$ es la mitad. El factor $1-\cos n\pi$ vale $2$
+              para $n=1$, así que el resultado es $\tfrac4\pi$.
+          - valor: '2.5465'
+            mensaje: |
+              $\tfrac8\pi$ es el doble. La fórmula de la onda cuadrada de
+              amplitud $A$ es $\tfrac{4A}{n\pi}$, y aquí $A=1$.
+        pista: |
+          Onda cuadrada de amplitud $1$: $b_n=\tfrac{4}{n\pi}$ para $n$ impar.
+        desarrollo: |
+          $$
+          b_n = \frac{2\left(1-\cos n\pi\right)}{n\pi}
+          \qquad
+          b_1 = \frac{4}{\pi} \approx 1{,}2732
+          $$
+
+      - tipo: calcular
+        titulo: El primer armónico de la (c)
+        pregunta: |
+          ¿Cuánto vale $a_1$ en el apartado (c)?
+        respuesta:
+          tipo: numero
+          valor: '-0.4053'
+          tolerancia: 0.002
+          formato: con cuatro decimales
+        distractores:
+          - valor: '0.4053'
+            mensaje: |
+              El signo. $\cos n\pi - 1$ vale $-2$ para $n$ impar, así que el
+              coeficiente es negativo.
+          - valor: '-0.2026'
+            mensaje: |
+              $-\tfrac{2}{\pi^{2}}$ es la mitad: el paréntesis
+              $\cos\pi-1$ vale $-2$, no $-1$.
+        pista: |
+          $a_n=\dfrac{2\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}$, y
+          $\tfrac{4}{\pi^{2}}\approx0{,}41$.
+        desarrollo: |
+          $$
+          a_1 = \frac{2\left(-1-1\right)}{\pi^{2}} = -\frac{4}{\pi^{2}}
+          \approx -0{,}4053
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La (a) es impar: solo senos, y sin término constante porque su
+              media es cero.
+          - texto: >-
+              La (b) tiene media $1$; restándosela queda una impar, así que
+              solo hay término constante y senos.
+          - texto: >-
+              La (c) es par —es $1+\lvert t\rvert$— y por tanto solo tiene
+              término constante y cosenos.
+          - texto: >-
+              Y las tres caen como $\tfrac1n$, porque las tres están definidas
+              a trozos.
+            trampa: true
+            mensaje: |
+              La (c) cae como $\tfrac1{n^{2}}$: es **continua**, solo tiene
+              esquinas. Lo que marca la velocidad de caída no es que la
+              definición tenga trozos, sino que la función salte o no.
+        veredicto: |
+          Las dos primeras saltan, y sus coeficientes caen como $\tfrac1n$. La
+          tercera no salta, y cae como $\tfrac1{n^{2}}$. La velocidad de caída
+          es un diagnóstico de suavidad, no de cómo esté escrita la función.
+    resolucion: |
+      **Las tres.**
+
+      $$
+      \text{(a)}\quad S(t) = \frac{2}{\pi}\sum_{n=1}^{\infty}
+      \frac{1-\cos n\pi}{n}\operatorname{sen}\left(n\pi t\right)
+      $$
+
+      $$
+      \text{(b)}\quad S(t) = 1 + \frac{2}{\pi}\sum_{n=1}^{\infty}
+      \frac{1-\cos n\pi}{n}\operatorname{sen}\frac{n\pi t}{3}
+      $$
+
+      $$
+      \text{(c)}\quad S(t) = \frac32 + \frac{2}{\pi^{2}}
+      \sum_{n=1}^{\infty}\frac{\cos n\pi-1}{n^{2}}\cos\left(n\pi t\right)
+      $$
+
+      ### 1 · (a), la onda cuadrada de amplitud 1
+
+      Función impar, media cero:
+
+      $$
+      b_n = \frac{2}{2}\int_{-1}^{1}f\operatorname{sen}\left(n\pi t\right)dt
+      = 2\int_{0}^{1}\operatorname{sen}\left(n\pi t\right)dt
+      = \frac{2\left(1-\cos n\pi\right)}{n\pi}
+      $$
+
+      Para $n$ impar, $\tfrac{4}{n\pi}$ — el clásico $\tfrac{4A}{n\pi}$ con
+      $A=1$.
+
+      ### 2 · (b), la misma onda levantada y estirada
+
+      $$
+      \frac{a_0}{2} = \frac16\int_{0}^{3}2\,dt = 1
+      \qquad
+      b_n = \frac13\int_{0}^{3}2\operatorname{sen}\frac{n\pi t}{3}\,dt
+      = \frac{2\left(1-\cos n\pi\right)}{n\pi}
+      $$
+
+      **Los mismos $b_n$ que la (a).** No es casualidad: restando la media,
+
+      $$
+      f_b(t) - 1 = f_a\!\left(\frac{t}{3}\right)
+      $$
+
+      y un cambio de escala en $t$ solo cambia el argumento de los senos, no
+      sus amplitudes.
+
+      ### 3 · (c), la onda triangular levantada
+
+      Par, así que $b_n=0$:
+
+      $$
+      \frac{a_0}{2} = \frac12\int_{-1}^{1}\left(1+\lvert t\rvert\right)dt
+      = \frac12\cdot 3 = \frac32
+      $$
+
+      $$
+      a_n = \int_{-1}^{1}\left(1+\lvert t\rvert\right)
+      \cos\left(n\pi t\right)dt
+      = 2\int_{0}^{1}t\cos\left(n\pi t\right)dt
+      = \frac{2\left(\cos n\pi-1\right)}{n^{2}\pi^{2}}
+      $$
+
+      El $1$ no contribuye a ningún $a_n$ con $n\ge1$: solo levanta la media.
+
+      ### 4 · Las tres, comparadas
+
+      | ap. | simetría | salto | caída |
+      |---|---|---|---|
+      | (a) | impar | sí | $\tfrac1n$ |
+      | (b) | impar tras restar $1$ | sí | $\tfrac1n$ |
+      | (c) | par | no | $\tfrac1{n^{2}}$ |
+
+      Truncando en diez términos, la (c) ya es casi indistinguible de la
+      función; las otras dos siguen oscilando visiblemente cerca de los saltos
+      — el fenómeno de Gibbs, que no desaparece por muchos términos que se
+      añadan.
+
+      **Lo que hay que llevarse.** Antes de integrar: restar la media, mirar la
+      paridad de lo que queda, y reconocer si la función ya es una de las
+      formas conocidas. Aquí las tres lo eran, y la (b) no necesitaba ni una
+      integral nueva.
