@@ -712,6 +712,672 @@ ejercicios:
       hay que hacerse no es «qué primitiva es esta» sino **«estoy en las
       coordenadas buenas»**.
 
+  # ── Boletín básico «Integral múltiple. Problemas» ──────────────────
+  # Los de clase, y los que traen «Sol:» impreso. Empieza aquí el encargo 1
+  # de la auditoría del 14 de septiembre de 2026: de los 23 de este boletín no
+  # había ni uno transcrito, y el tema es el que más demanda el examen —41
+  # ejercicios de convocatoria—. Método de la colección de Fluidos: resolver
+  # a ciegas, contrastar con el impreso, y si discrepan publicar lo que dan
+  # los datos con el impreso de distractor explicado (§13).
+  - id: area-con-tres-desigualdades
+    titulo: El área de un recinto dado por tres desigualdades
+    fuente: >-
+      Ejercicio 4 · Boletín «Integral múltiple. Problemas» · Cálculo, UPV/EHU
+      · Departamento de Matemática Aplicada. El boletín publica el resultado y
+      el desarrollo está contrastado contra él: sale ln 4 exacto.
+    nivel: practica
+    enunciado: |
+      Sea
+      $D = \left\{(x,y) \ / \ y-2x \le 0,\ 2y-x \ge 0,\ xy \le 2\right\}$.
+      Calcular el área de $D$.
+    pide: El área del recinto.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Las tres desigualdades no describen un recinto cómodo en $x$ e $y$.
+          ¿Qué sugieren las dos primeras?
+        opciones:
+          - texto: >-
+              Que la variable natural es el **cociente** $y/x$: las dos dicen
+              $\tfrac12 \le \tfrac{y}{x} \le 2$
+            correcta: true
+            mensaje: |
+              Eso es. $y \le 2x$ y $2y \ge x$ son dos rectas por el origen, y
+              lo que acotan es la **pendiente**. Escribirlas como cociente es
+              lo que convierte el recinto en un rectángulo.
+          - texto: >-
+              Que hay que integrar en $y$ primero, porque las dos despejan $y$
+            mensaje: |
+              Se puede intentar, y sale: pero hay que partir el recinto porque
+              la tapa cambia de recta a hipérbola. El cambio de variable lo
+              evita entero, y es lo que el enunciado está pidiendo con esa
+              forma.
+          - texto: >-
+              Que el recinto no está acotado y el área es infinita
+            mensaje: |
+              La tercera condición, $xy \le 2$, es la que lo cierra: sin ella
+              el sector entre las dos rectas sí sería infinito. Las tres juntas
+              acotan.
+
+      - tipo: reconocer
+        pregunta: |
+          Con $u=\dfrac{y}{x}$ y $v=xy$, ¿en qué se convierte $D$?
+        opciones:
+          - texto: >-
+              En el rectángulo $\tfrac12 \le u \le 2$, $0 < v \le 2$
+            correcta: true
+            mensaje: |
+              Exacto, y ahí está todo el ejercicio: las tres desigualdades se
+              vuelven tres constantes. Un recinto curvo pasa a ser un
+              rectángulo, y eso es lo que un cambio de variable busca.
+          - texto: >-
+              En el cuadrado $0 \le u \le 2$, $0 \le v \le 2$
+            mensaje: |
+              El $u$ no llega a cero: la condición $2y \ge x$ da
+              $u \ge \tfrac12$. Y en $u=0$ el cambio degenera —serían los
+              puntos del eje $y=0$—, que es justo lo que la desigualdad evita.
+          - texto: >-
+              En un triángulo, porque dos de las condiciones son rectas
+            mensaje: |
+              Son rectas en el plano $xy$, pero en las variables nuevas cada
+              una es $u = $ constante. Ahí está la ganancia: lo que era una
+              recta oblicua pasa a ser un lado del rectángulo.
+
+      - tipo: calcular
+        titulo: El jacobiano del cambio
+        pregunta: |
+          Despejando, $x=\sqrt{v/u}$ e $y=\sqrt{uv}$. ¿Cuánto vale
+          $\left|\dfrac{\partial(x,y)}{\partial(u,v)}\right|$?
+        respuesta:
+          tipo: numero
+          valor: '0.3846'
+          tolerancia: 0.001
+          formato: su valor en u = 1,3, con cuatro decimales
+        distractores:
+          - valor: '2.6'
+            mensaje: |
+              Has calculado el jacobiano **del revés**, el de $(u,v)$ respecto
+              de $(x,y)$, que vale $2u$. El que hace falta es el inverso: al
+              cambiar de variables en una integral doble se multiplica por el
+              jacobiano de las **viejas respecto de las nuevas**.
+          - valor: '0.7692'
+            mensaje: |
+              Te falta el 2 del denominador. Los dos productos cruzados dan
+              $-\tfrac{1}{4u}$ cada uno, y suman $-\tfrac{1}{2u}$, no
+              $-\tfrac{1}{u}$.
+        pista: |
+          $|J| = \dfrac{1}{2u}$. Sustituye $u=1{,}3$.
+        desarrollo: |
+          $$
+          \frac{\partial x}{\partial u} = -\frac{\sqrt v}{2u^{3/2}},
+          \qquad
+          \frac{\partial x}{\partial v} = \frac{1}{2\sqrt{uv}},
+          \qquad
+          \frac{\partial y}{\partial u} = \frac{\sqrt v}{2\sqrt u},
+          \qquad
+          \frac{\partial y}{\partial v} = \frac{\sqrt u}{2\sqrt v}
+          $$
+
+          $$
+          J = \frac{\partial x}{\partial u}\frac{\partial y}{\partial v}
+            - \frac{\partial x}{\partial v}\frac{\partial y}{\partial u}
+            = -\frac{1}{4u} - \frac{1}{4u} = -\frac{1}{2u}
+          $$
+
+          $$
+          |J| = \frac{1}{2u}
+          \quad\Longrightarrow\quad
+          |J|_{u=1{,}3} = \frac{1}{2{,}6} = 0{,}3846
+          $$
+
+          Fíjate en que **no depende de $v$**: por eso la integral de dentro
+          sale sola.
+
+      - tipo: calcular
+        titulo: El área
+        pregunta: |
+          Con el rectángulo y el jacobiano, el área es
+          $\displaystyle\int_{1/2}^{2}\!\!\int_0^2 \frac{1}{2u}\,dv\,du$.
+          ¿Cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '1.3863'
+          tolerancia: 0.001
+          formato: en forma exacta (ln 4) o con cuatro decimales
+        distractores:
+          - valor: '0.6931'
+            mensaje: |
+              Eso es $\ln 2$, y es el resultado de integrar $u$ solo de 1 a 2.
+              El intervalo empieza en $\tfrac12$, y $\ln 2 - \ln\tfrac12$ son
+              **dos** logaritmos de dos, no uno.
+          - valor: '2.7726'
+            mensaje: |
+              Te has dejado el $\tfrac12$ del jacobiano sin usar: con $1/u$ en
+              vez de $1/(2u)$ sale el doble.
+        pista: |
+          La integral en $v$ da un 2, que se come el 2 del jacobiano.
+        desarrollo: |
+          $$
+          \int_{1/2}^{2}\!\!\int_0^2 \frac{1}{2u}\,dv\,du
+          = \int_{1/2}^{2} \frac{2}{2u}\,du
+          = \int_{1/2}^{2} \frac{du}{u}
+          = \big[\ln u\big]_{1/2}^{2}
+          $$
+
+          $$
+          = \ln 2 - \ln\tfrac12 = \ln 2 + \ln 2 = \ln 4 \approx 1{,}3863
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Las dos primeras desigualdades acotan el cociente:
+              $\tfrac12 \le y/x \le 2$. La tercera acota el producto:
+              $xy \le 2$.
+          - texto: >-
+              Con $u=y/x$ y $v=xy$ el recinto se vuelve el rectángulo
+              $[\tfrac12,2]\times(0,2]$: tres curvas pasan a tres constantes.
+          - texto: >-
+              El jacobiano de las viejas respecto de las nuevas es
+              $|J|=\tfrac{1}{2u}$, y no depende de $v$.
+          - texto: >-
+              Como el recinto nuevo es un rectángulo, el área en las variables
+              nuevas es su base por su altura: $\tfrac32 \cdot 2 = 3$.
+            trampa: true
+            mensaje: |
+              El área **no se conserva** al cambiar de variables: eso es
+              exactamente lo que mide el jacobiano. El rectángulo mide 3 en el
+              plano $uv$, pero el recinto original mide $\ln 4 \approx 1{,}39$.
+              Olvidar el jacobiano —o darlo por 1— es el error que invalida
+              cualquier cambio de variable.
+        veredicto: |
+          Ese es el papel del jacobiano: el factor por el que hay que
+          multiplicar para que el área del plano nuevo mida lo que mide en el
+          viejo. Sin él, cambiar de variables sería hacer trampa.
+    resolucion: |
+      **Datos.** $D$ dado por $y-2x \le 0$, $2y-x \ge 0$, $xy \le 2$. Se pide
+      su área.
+
+      ### 1 · Leer las desigualdades
+
+      Las dos primeras son rectas por el origen y acotan la **pendiente**:
+
+      $$
+      y \le 2x \;\Rightarrow\; \frac{y}{x} \le 2,
+      \qquad
+      2y \ge x \;\Rightarrow\; \frac{y}{x} \ge \frac12
+      $$
+
+      La tercera acota el **producto**: $xy \le 2$. Un cociente y un producto:
+      el enunciado está pidiendo el cambio
+
+      $$
+      u = \frac{y}{x}, \qquad v = xy
+      $$
+
+      con el que $D$ se convierte en un rectángulo:
+
+      $$
+      \frac12 \le u \le 2, \qquad 0 < v \le 2
+      $$
+
+      ### 2 · El jacobiano
+
+      Despejando, $x=\sqrt{v/u}$ e $y=\sqrt{uv}$, y con las cuatro parciales:
+
+      $$
+      J = -\frac{1}{4u} - \frac{1}{4u} = -\frac{1}{2u},
+      \qquad
+      |J| = \frac{1}{2u}
+      $$
+
+      No depende de $v$, así que la integral interior es inmediata.
+
+      ### 3 · El área
+
+      $$
+      \text{Área}(D) = \iint_{D} dx\,dy
+      = \int_{1/2}^{2}\!\!\int_{0}^{2} \frac{1}{2u}\,dv\,du
+      = \int_{1/2}^{2} \frac{du}{u}
+      = \ln 2 - \ln\frac12
+      $$
+
+      $$
+      \boxed{\ \text{Área}(D) = \ln 4 \approx 1{,}3863\ }
+      $$
+
+      Coincide con el resultado del boletín.
+
+      **Lo que hay que llevarse.** Cuando las condiciones del recinto son
+      **cocientes y productos** en vez de rectas y parábolas, el cambio de
+      variable no es un atajo: es la forma natural de escribirlo. Y el
+      jacobiano no es un trámite — es lo único que impide que el área cambie al
+      cambiar de coordenadas.
+
+  - id: polares-generalizadas-en-la-elipse
+    titulo: Polares generalizadas, y por qué la elipse deja de estorbar
+    fuente: >-
+      Ejercicio 3 · Boletín «Integral múltiple. Problemas» · Cálculo, UPV/EHU
+      · Departamento de Matemática Aplicada. El boletín publica el resultado y
+      el desarrollo está contrastado contra él: sale 2πab/3 exacto.
+    nivel: practica
+    enunciado: |
+      Utilizando coordenadas polares generalizadas, calcular
+
+      $$
+      \iint_{D} \sqrt{\,1-\frac{x^{2}}{a^{2}}-\frac{y^{2}}{b^{2}}\,}\;dx\,dy
+      $$
+
+      donde $D$ es el recinto limitado por la elipse
+      $\dfrac{x^{2}}{a^{2}}+\dfrac{y^{2}}{b^{2}}=1$.
+    pide: El valor de la integral, en función de a y b.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué son las polares **generalizadas** y por qué aquí?
+        opciones:
+          - texto: >-
+              $x = a\,r\cos\theta$, $y = b\,r\operatorname{sen}\theta$: cada eje
+              con su semieje delante
+            correcta: true
+            mensaje: |
+              Eso es. Con ese cambio,
+              $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}} = r^{2}$, así que la
+              elipse pasa a ser $r=1$ y el integrando se vuelve
+              $\sqrt{1-r^{2}}$. Toda la dificultad del enunciado desaparece de
+              golpe.
+          - texto: >-
+              Las de siempre, $x=r\cos\theta$ e $y=r\operatorname{sen}\theta$,
+              pero con $r$ hasta el semieje mayor
+            mensaje: |
+              Con las de siempre la elipse **no** es $r$ constante: su radio
+              depende del ángulo, y el recinto vuelve a tener un borde curvo
+              variable. El cambio generalizado existe precisamente para
+              evitarlo.
+          - texto: >-
+              Un cambio a coordenadas cilíndricas
+            mensaje: |
+              Las cilíndricas son para tres variables. Aquí la integral es
+              doble: lo que hace falta es estirar cada eje por su semieje.
+
+      - tipo: calcular
+        titulo: El jacobiano
+        pregunta: |
+          Con $x = a\,r\cos\theta$ e $y = b\,r\operatorname{sen}\theta$,
+          ¿cuánto vale $\left|\dfrac{\partial(x,y)}{\partial(r,\theta)}\right|$
+          para $a=2$, $b=3$ y $r=1$?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '1'
+            mensaje: |
+              Ese sería el jacobiano si el cambio fuese la identidad. Al
+              estirar cada eje, las áreas se multiplican por $ab$ — y además
+              queda el $r$ de las polares de siempre.
+          - valor: '5'
+            mensaje: |
+              Has sumado los semiejes en vez de multiplicarlos. El jacobiano de
+              un estiramiento es el **producto** de los factores de cada eje.
+        pista: |
+          $|J| = ab\,r$. Con $a=2$, $b=3$, $r=1$.
+        desarrollo: |
+          $$
+          \frac{\partial(x,y)}{\partial(r,\theta)}
+          = \begin{vmatrix}
+            a\cos\theta & -a\,r\operatorname{sen}\theta \\[2pt]
+            b\operatorname{sen}\theta & b\,r\cos\theta
+          \end{vmatrix}
+          = ab\,r\cos^{2}\theta + ab\,r\operatorname{sen}^{2}\theta = ab\,r
+          $$
+
+          Es el $r$ de las polares de siempre multiplicado por $ab$: el factor
+          por el que el cambio estira las áreas.
+
+          Con $a=2$, $b=3$, $r=1$: $|J| = 6$.
+
+      - tipo: calcular
+        titulo: La integral
+        pregunta: |
+          Queda
+          $\displaystyle\int_0^{2\pi}\!\!\int_0^{1} \sqrt{1-r^{2}}\;ab\,r\,dr\,d\theta$.
+          Para $a=2$ y $b=3$, ¿cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '12.5664'
+          tolerancia: 0.002
+          formato: en forma exacta (4pi) o con cuatro decimales
+        distractores:
+          - valor: '6.2832'
+            mensaje: |
+              La mitad: te has dejado el $2$ del $2\pi$, o has integrado
+              $\theta$ solo hasta $\pi$. La elipse entera son $2\pi$ radianes.
+          - valor: '4.1888'
+            mensaje: |
+              Eso es $2\pi/3$, el resultado **sin** el $ab$: es lo que saldría
+              con la circunferencia unidad. Falta multiplicar por $ab=6$.
+        pista: |
+          $\int_0^1 r\sqrt{1-r^{2}}\,dr = \tfrac13$, y el resto es una
+          constante por $2\pi$.
+        desarrollo: |
+          La integral en $r$ sale con el cambio $t=1-r^{2}$:
+
+          $$
+          \int_0^{1} r\sqrt{1-r^{2}}\,dr
+          = \left[-\frac{(1-r^{2})^{3/2}}{3}\right]_0^{1} = \frac13
+          $$
+
+          Y el resto es constante:
+
+          $$
+          \iint_D = ab \int_0^{2\pi}\!\!d\theta \cdot \frac13
+          = ab \cdot 2\pi \cdot \frac13 = \frac{2\pi ab}{3}
+          $$
+
+          Con $a=2$ y $b=3$: $\dfrac{2\pi\cdot 6}{3} = 4\pi \approx 12{,}5664$.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con $x=ar\cos\theta$ e $y=br\operatorname{sen}\theta$, la
+              expresión $\tfrac{x^{2}}{a^{2}}+\tfrac{y^{2}}{b^{2}}$ se vuelve
+              $r^{2}$, y la elipse pasa a ser $r=1$.
+          - texto: >-
+              El jacobiano es $ab\,r$: el $r$ de las polares por el factor de
+              estiramiento de los dos ejes.
+          - texto: >-
+              El integrando queda $\sqrt{1-r^{2}}$, que ya no depende de
+              $\theta$, así que la integral angular es solo $2\pi$.
+          - texto: >-
+              Y como el recinto es una elipse y no un círculo, el ángulo
+              $\theta$ tiene que ir de 0 a $2\pi$ **corregido** por la
+              excentricidad.
+            trampa: true
+            mensaje: |
+              No hay corrección ninguna: en las variables nuevas el recinto es
+              el **disco unidad**, y ahí $\theta$ recorre $[0,2\pi]$ como
+              siempre. Toda la deformación de la elipse está metida en el
+              jacobiano $ab$ — ese es el sentido del cambio. Si además hubiera
+              que corregir el ángulo, el jacobiano no serviría para nada.
+        veredicto: |
+          El resultado, $\tfrac{2\pi ab}{3}$, es el del círculo unidad
+          multiplicado por $ab$. Tiene sentido: el cambio convierte la elipse
+          en un círculo y todo el precio está en un factor constante.
+    resolucion: |
+      **Datos.** La integral de $\sqrt{1-\frac{x^{2}}{a^{2}}-\frac{y^{2}}{b^{2}}}$
+      sobre el interior de la elipse de semiejes $a$ y $b$.
+
+      ### 1 · El cambio, que el enunciado ya nombra
+
+      $$
+      x = a\,r\cos\theta, \qquad y = b\,r\operatorname{sen}\theta
+      $$
+
+      Con él, la combinación que aparece en el integrando **y** en la ecuación
+      del recinto es la misma:
+
+      $$
+      \frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}} = r^{2}
+      $$
+
+      Así que la elipse es $r=1$ y el integrando es $\sqrt{1-r^{2}}$. El
+      recinto pasa a ser el **disco unidad**.
+
+      ### 2 · El jacobiano
+
+      $$
+      \frac{\partial(x,y)}{\partial(r,\theta)}
+      = ab\,r\left(\cos^{2}\theta+\operatorname{sen}^{2}\theta\right) = ab\,r
+      $$
+
+      El $r$ de las polares de siempre, por el factor $ab$ con que el cambio
+      estira las áreas.
+
+      ### 3 · La integral
+
+      $$
+      \iint_D \sqrt{1-\tfrac{x^{2}}{a^{2}}-\tfrac{y^{2}}{b^{2}}}\;dx\,dy
+      = \int_0^{2\pi}\!\!\int_0^1 \sqrt{1-r^{2}}\;ab\,r\,dr\,d\theta
+      $$
+
+      La de dentro, con $t = 1-r^{2}$:
+
+      $$
+      \int_0^1 r\sqrt{1-r^{2}}\,dr = \left[-\frac{(1-r^{2})^{3/2}}{3}\right]_0^1 = \frac13
+      $$
+
+      $$
+      \boxed{\ \iint_D = ab \cdot 2\pi \cdot \frac13 = \frac{2\pi ab}{3}\ }
+      $$
+
+      Coincide con el resultado del boletín.
+
+      **Lo que hay que llevarse.** El resultado es el del **círculo unidad**
+      multiplicado por $ab$, y eso no es casualidad: el cambio convierte la
+      elipse en un círculo y todo el precio de la deformación cabe en un factor
+      constante. Cuando el integrando y el recinto comparten la misma
+      combinación de $x$ e $y$ —aquí $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}$—
+      esa combinación es la variable nueva.
+
+  - id: area-entre-dos-circunferencias-en-polares
+    titulo: El área entre dos circunferencias que se tocan en el origen
+    fuente: >-
+      Ejercicio 5 · Boletín «Integral múltiple. Problemas» · Cálculo, UPV/EHU
+      · Departamento de Matemática Aplicada. El boletín publica el resultado y
+      el desarrollo está contrastado contra él: sale (3/4)(π+2) exacto.
+    nivel: practica
+    enunciado: |
+      Calcular el área del dominio limitado por las condiciones
+      $x^{2}+y^{2} \ge 2x$, $x^{2}+y^{2} \le 4x$, $y \ge 0$, $y \le x$.
+    pide: El área del dominio.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Las dos primeras condiciones tienen $x^{2}+y^{2}$ a un lado y un
+          múltiplo de $x$ al otro. ¿Qué son?
+        opciones:
+          - texto: >-
+              Dos **circunferencias** que pasan por el origen, de centro en el
+              eje $OX$
+            correcta: true
+            mensaje: |
+              Eso es: $x^{2}+y^{2}=2x$ se reescribe como
+              $(x-1)^{2}+y^{2}=1$, y la otra como $(x-2)^{2}+y^{2}=4$. Las dos
+              pasan por el origen y el recinto es lo que hay entre ellas.
+          - texto: >-
+              Dos parábolas, porque una variable está al cuadrado y la otra no
+            mensaje: |
+              Están **las dos** al cuadrado: $x^{2}$ e $y^{2}$, con el mismo
+              coeficiente. Eso es una circunferencia; lo que despista es que el
+              término lineal en $x$ está sin completar el cuadrado.
+          - texto: >-
+              Dos rectas, porque $2x$ y $4x$ son lineales
+            mensaje: |
+              El lado izquierdo no es lineal. Pasando todo a un lado queda
+              $x^{2}+y^{2}-2x \ge 0$, que es el exterior de una circunferencia.
+
+      - tipo: reconocer
+        pregunta: |
+          En polares, $x^{2}+y^{2}=r^{2}$ y $x=r\cos\theta$. ¿En qué se
+          convierten las cuatro condiciones?
+        opciones:
+          - texto: >-
+              $2\cos\theta \le r \le 4\cos\theta$, con
+              $0 \le \theta \le \tfrac{\pi}{4}$
+            correcta: true
+            mensaje: |
+              Exacto, y ahí está la ganancia: los dos radios dependen del
+              ángulo pero **el intervalo de $\theta$ es fijo**, que es lo que
+              hace la integral inmediata. La $r$ se simplifica en las dos
+              desigualdades porque es positiva.
+          - texto: >-
+              $2 \le r \le 4$, con $0 \le \theta \le \tfrac{\pi}{4}$
+            mensaje: |
+              Falta el coseno. Si las circunferencias estuviesen centradas en
+              el origen sí serían $r=2$ y $r=4$, pero pasan **por** el origen:
+              su ecuación polar es $r = 2a\cos\theta$.
+          - texto: >-
+              $2\cos\theta \le r \le 4\cos\theta$, con
+              $0 \le \theta \le \tfrac{\pi}{2}$
+            mensaje: |
+              El $\pi/2$ sería solo con $y \ge 0$. La cuarta condición,
+              $y \le x$, recorta hasta la bisectriz: $\tan\theta \le 1$, o sea
+              $\theta \le \pi/4$.
+
+      - tipo: calcular
+        titulo: La integral en r
+        pregunta: |
+          Con $dA = r\,dr\,d\theta$, la integral interior es
+          $\int_{2\cos\theta}^{4\cos\theta} r\,dr$. ¿A qué es igual, en función
+          de $\cos^{2}\theta$?
+        respuesta:
+          tipo: numero
+          valor: '6'
+          tolerancia: 0.001
+          formato: el coeficiente que multiplica a cos²θ
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Has restado los radios en vez de sus cuadrados. La primitiva de
+              $r$ es $r^{2}/2$, así que queda
+              $\tfrac12(16\cos^{2}\theta - 4\cos^{2}\theta)$.
+          - valor: '12'
+            mensaje: |
+              Te falta el $\tfrac12$ de la primitiva: $16-4=12$, y la mitad es
+              6.
+        pista: |
+          $\int r\,dr = r^{2}/2$, evaluada entre los dos radios.
+        desarrollo: |
+          $$
+          \int_{2\cos\theta}^{4\cos\theta} r\,dr
+          = \left[\frac{r^{2}}{2}\right]_{2\cos\theta}^{4\cos\theta}
+          = \frac{16\cos^{2}\theta - 4\cos^{2}\theta}{2}
+          = 6\cos^{2}\theta
+          $$
+
+      - tipo: calcular
+        titulo: El área
+        pregunta: |
+          Queda $\displaystyle\int_0^{\pi/4} 6\cos^{2}\theta\,d\theta$.
+          ¿Cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '3.8562'
+          tolerancia: 0.001
+          formato: en forma exacta (3(pi+2)/4) o con cuatro decimales
+        distractores:
+          - valor: '2.3562'
+            mensaje: |
+              Eso es $3\pi/4$: te has dejado el término del seno. Al integrar
+              $\cos^{2}$ con el ángulo doble aparecen **dos** sumandos, y el
+              segundo vale $\tfrac{\operatorname{sen}(\pi/2)}{2}=\tfrac12$.
+          - valor: '1.9281'
+            mensaje: |
+              La mitad del resultado: has usado $3\cos^{2}\theta$ en vez de
+              $6\cos^{2}\theta$, o has dividido de más al bajar el ángulo
+              doble.
+        pista: |
+          $\cos^{2}\theta = \dfrac{1+\cos 2\theta}{2}$.
+        desarrollo: |
+          $$
+          \int_0^{\pi/4} 6\cos^{2}\theta\,d\theta
+          = 3\int_0^{\pi/4}\big(1+\cos 2\theta\big)\,d\theta
+          = 3\left[\theta + \frac{\operatorname{sen}2\theta}{2}\right]_0^{\pi/4}
+          $$
+
+          $$
+          = 3\left(\frac{\pi}{4} + \frac12\right)
+          = \frac{3}{4}\,(\pi+2) \approx 3{,}8562
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $x^{2}+y^{2}=2x$ es $(x-1)^{2}+y^{2}=1$ y $x^{2}+y^{2}=4x$ es
+              $(x-2)^{2}+y^{2}=4$: dos circunferencias por el origen.
+          - texto: >-
+              En polares son $r=2\cos\theta$ y $r=4\cos\theta$, así que el
+              radio va de una a otra con el ángulo fijo entre 0 y $\pi/4$.
+          - texto: >-
+              La integral interior da $6\cos^{2}\theta$, y bajando el ángulo
+              doble sale $\tfrac34(\pi+2)$.
+          - texto: >-
+              Como las dos circunferencias pasan por el origen, el recinto
+              incluye ese punto y hay que tratarlo como una impropia.
+            trampa: true
+            mensaje: |
+              El origen es un punto, y un punto no tiene área: no hay nada
+              impropio. De hecho en $\theta$ las dos curvas se juntan solo en
+              $\theta=\pi/2$, que queda fuera del intervalo. El integrando
+              $6\cos^{2}\theta$ es continuo y acotado en todo $[0,\pi/4]$.
+        veredicto: |
+          Lo que hace fácil este ejercicio es que **el intervalo de $\theta$ es
+          constante** aunque los radios no lo sean: por eso la integral doble
+          se deshace en dos simples sin partir nada.
+    resolucion: |
+      **Datos.** Cuatro condiciones: $x^{2}+y^{2} \ge 2x$,
+      $x^{2}+y^{2} \le 4x$, $y \ge 0$, $y \le x$.
+
+      ### 1 · Qué es cada condición
+
+      Completando cuadrados:
+
+      $$
+      x^{2}+y^{2}=2x \iff (x-1)^{2}+y^{2}=1,
+      \qquad
+      x^{2}+y^{2}=4x \iff (x-2)^{2}+y^{2}=4
+      $$
+
+      Dos circunferencias **que pasan por el origen**, con centro en el eje
+      $OX$. El recinto es lo que queda **fuera** de la pequeña y **dentro** de
+      la grande, en el sector entre el eje $OX$ y la bisectriz.
+
+      ### 2 · Polares, que es lo que el enunciado pide a gritos
+
+      Con $x=r\cos\theta$ e $y=r\operatorname{sen}\theta$:
+
+      | condición | en polares |
+      |---|---|
+      | $x^{2}+y^{2} \ge 2x$ | $r \ge 2\cos\theta$ |
+      | $x^{2}+y^{2} \le 4x$ | $r \le 4\cos\theta$ |
+      | $y \ge 0$ | $\theta \ge 0$ |
+      | $y \le x$ | $\theta \le \pi/4$ |
+
+      La $r$ se simplifica en las dos primeras porque es positiva. Y lo
+      importante: **el intervalo de $\theta$ no depende de nada**.
+
+      ### 3 · La integral
+
+      $$
+      \text{Área} = \int_0^{\pi/4}\!\!\int_{2\cos\theta}^{4\cos\theta} r\,dr\,d\theta
+      = \int_0^{\pi/4} \frac{16\cos^{2}\theta-4\cos^{2}\theta}{2}\,d\theta
+      = \int_0^{\pi/4} 6\cos^{2}\theta\,d\theta
+      $$
+
+      Bajando el ángulo doble:
+
+      $$
+      = 3\left[\theta+\frac{\operatorname{sen}2\theta}{2}\right]_0^{\pi/4}
+      = 3\left(\frac{\pi}{4}+\frac12\right)
+      $$
+
+      $$
+      \boxed{\ \text{Área} = \frac{3}{4}(\pi+2) \approx 3{,}8562\ }
+      $$
+
+      Coincide con el resultado del boletín.
+
+      **Lo que hay que llevarse.** Una circunferencia que pasa por el origen
+      tiene ecuación polar $r=2a\cos\theta$, no $r=$ constante. Confundirlas es
+      el error que convierte este ejercicio en otro mucho más fácil y
+      equivocado — y se detecta solo: con $r$ constante, el $\cos^{2}\theta$
+      desaparece y el resultado no tiene el $+2$.
+
   - id: invertir-el-orden
     titulo: Invertir el orden de integración
     fuente: Ejercicio 7.3 · Problemas complementarios, tema 7 · Cálculo, UPV/EHU (2017/2018 5E)
