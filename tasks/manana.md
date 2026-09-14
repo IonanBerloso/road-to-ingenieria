@@ -917,8 +917,26 @@ de paso `dibujar`, con su primer uso en el 7.3).
    $b_n=\tfrac{4A}{n\pi}$ de la onda cuadrada. Los otros cuatro apartados
    del ejercicio 2 y los ejercicios 1, 3, 4 y 5 cuadran todos.
 
-   **Lo que queda del encargo 1**, con t06, t07, t08, t09, t10 y t11
-   cerrados: t01 (10) y t05 (14).
+   **~~t01~~ · terminado el 14 de septiembre de 2026: los 10 problemas del
+   boletín básico «Números complejos. Problemas».** Los complementarios del
+   tema 1 ya estaban todos.
+
+   **El boletín no publica ninguna solución**, así que los diez resultados
+   son míos y están comprobados numéricamente: las seis ecuaciones por
+   sustitución en el seno y el coseno complejos, y los siete lugares
+   geométricos comparando región contra región con `mismaRegion` de
+   `src/lib/regiones.ts` —cero celdas de desacuerdo en 8.100 en los doce
+   pares probados—.
+
+   **Y aquí es donde el patrón `verificar` por fin se usa como debe.** Ocho
+   de los nuevos pasos son verificadores de región, y eso sube el tipo de
+   25 a 33 usos. Los lugares que entran: la circunferencia de Apolonio del
+   4(f), el arco capaz del 5(c), la corona entre elipses confocales del 6,
+   la media elipse del 7, la elipse de focos $4i$ y $-i$ del 8, el medio
+   disco elíptico del 9 y la mediatriz del 10.
+
+   **Lo que queda del encargo 1**, con t01, t06, t07, t08, t09, t10 y t11
+   cerrados: t05 (14).
 
    **Y un aviso de intendencia.** Con el corpus en 1.900 ejercicios,
    `npm run humo` tarda **más de una hora**. Ya no se puede lanzar una
