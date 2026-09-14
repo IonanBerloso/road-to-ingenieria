@@ -583,7 +583,7 @@ Y los mínimos, que se olvidan: `fuente` ≥ 10 caracteres, `enunciado` ≥ 10,
 con `mensaje` ≥ 20 en cada una, al menos 1 distractor en un `calcular` y
 exactamente 1 pieza `trampa` en un `justificar`.
 
-Los cinco tipos de paso, y qué competencia entrena cada uno:
+Los **seis** tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
@@ -592,6 +592,25 @@ Los cinco tipos de paso, y qué competencia entrena cada uno:
 | `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.742 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 15 |
+| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 1 |
+
+> **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
+> de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
+> o esbozar algo** —el recinto de una integral doble, la región del plano
+> complejo, el sólido de revolución— y el sitio no pedía dibujar ni una vez.
+> Treinta y nueve tenían un paso que *menciona* el recinto; ninguno lo hacía
+> dibujar. Lo que se entrenaba en su lugar era el final: leer el enunciado,
+> saltar a los límites y calcular. En el examen, el que no dibuja el recinto
+> pone mal los límites, y eso no lo arregla calcular mejor.
+>
+> Es hermano de `redactar` y comparte su límite honesto: el sitio es estático
+> (§02) y **no se puede corregir un dibujo**. No lo finge. Enseña la figura
+> buena y la lista de lo que tiene que tener, y la comparación la haces tú.
+> Su `figura` es opcional a propósito, para que el tipo se pudiera usar el
+> primer día en vez de esperar a mover las 188 figuras de las resoluciones.
+> El primer uso, y el molde para los demás, está en
+> `calculo/t07-integral-multiple`, ejercicio `invertir-el-orden`: el que no se
+> puede hacer de cabeza.
 
 > Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
 > pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de

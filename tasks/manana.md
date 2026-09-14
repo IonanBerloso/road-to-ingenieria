@@ -780,6 +780,54 @@ sin huecos» de «sin mirar». **Queda como trabajo de un día, no como sello.**
 - **Recontar Térmica** después de rehacer 2025-2026: pasa de 57 resoluciones
   de examen a **52**, y esa cifra está en CLAUDE.md §00 y en `como-vamos.md`.
 
+### 10.7 ter · Cálculo, tras la tercera auditoría del 14 de septiembre
+
+Está en `2027 proyecto contenido/auditorias/`. Verificado antes de tocar nada:
+sus cifras se reproducen —425 ejercicios de examen, 59 ejemplos, **3** rúbricas
+`redactar`, **0** pasos `dibujar`, y la rampa clavada: 12 de 19 escalones en
+`calculo-3ev`, 1 de 12 en `-4ev`, 0 de 12 en `-5ev`—. Añado lo que no dice:
+**8 de los 12 escalones de `calculo-5ev` no tienen ni un ejercicio de
+colección**, y 11 de 38 en la extraordinaria.
+
+Y una corrección: su apunte «6 ejercicios de examen sin ruta» **es falso**. Los
+seis `ex*-2ev-1` de complejos son escalones con su nota en `calculo-2ev`.
+
+**Hecho:** el encargo 7 (las normas del aula y la guía citada) y el 3 (el tipo
+de paso `dibujar`, con su primer uso en el 7.3).
+
+**Lo que queda, por rendimiento:**
+
+1. **Los boletines de temas 6–11** (su encargo 1): 70 problemas
+   complementarios y 58 básicos, más 24 de los temas 1 y 5. Es el trabajo
+   grande y es de días, con el método de Fluidos: resolver a ciegas,
+   contrastar con el impreso, publicar lo que dan los datos con el impreso de
+   distractor si discrepan. Orden por demanda del examen: t07 (20+23), t09
+   (14+6), t08 (12+7), t10 (12+7), t06 (9+10), t11 (3+5). Ojo a lo que el
+   propio encargo avisa: **muchos complementarios de 6–11 ya están en el sitio
+   como ejercicio de convocatoria y no se duplican** — se les añade el número
+   de boletín al título y a la `fuente` para que «7.12» se encuentre.
+2. **Los 185 ejercicios de examen que piden dibujar** y ahora ya tienen tipo
+   de paso donde hacerlo. El molde está escrito y probado en
+   `t07/invertir-el-orden`; empezar por los 31 de t07 y los 23 de t01, y mover
+   la figura de la resolución al paso en vez de dibujarla otra vez.
+3. **Nueve rúbricas `redactar` más** (su encargo 2), en su orden: definición
+   formal de límite de una sucesión (10 ejercicios, 7 cursos), signo del
+   límite, Fermat, punto fijo, factor integrante, identidades trigonométricas
+   complejas, Bolzano, Rolle y Darboux, enunciado de Taylor con su resto.
+4. **El formulario imprimible** (encargo 5) y **los seis ejemplos de leer una
+   gráfica** (encargo 6).
+
+**Bloqueado por un dato que solo tiene Ionan (§13 caso 5):** el simulacro
+cronometrado (encargo 4) necesita **cuánto dura cada parcial**, y no está
+impreso en ningún PDF de la carpeta ni en las normas de examen. Sin ese dato el
+reloj sería un número inventado.
+
+**Y un hallazgo de paso, del sitio entero y no de Cálculo:** a 360 px los
+rótulos de las figuras SVG se renderizan a **7-7,6 px reales**. No es una
+figura mal hecha, es aritmética: los `viewBox` rondan 340-470 unidades y se
+pintan en 258-328 px, así que un `font-size="10"` acaba en siete. Habría que
+decidir un mínimo legible y medirlo, no arreglar una figura suelta.
+
 ### 10.8 · Expresión Gráfica: lo que se puede hacer hoy sin la fase de diseño
 
 La auditoría confirma que **no la bloquea el material**: hay temario completo,

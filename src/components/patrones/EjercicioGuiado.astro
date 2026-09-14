@@ -105,6 +105,10 @@ const COMPETENCIA = {
   justificar: 'COMP4',
   verificar: 'COMP2 · COMP4',
   redactar: 'COMP4',
+  /* Dibujar el recinto es COMP4 —representar y explicar— y no COMP2: lo que
+     se puntúa no es la cuenta que venga después, es haber entendido la región
+     antes de escribir un límite. */
+  dibujar: 'COMP4',
 } as const;
 
 /**
@@ -182,6 +186,26 @@ const pasos = await Promise.all(
             porqueHtml: await mate(r.porque, PREFIJO),
           })),
         ),
+        veredictoHtml: await mate(paso.veredicto, PREFIJO),
+      };
+    }
+
+    /* `dibujar` es el hermano de `redactar`: tampoco lleva `pregunta`, porque
+       lo que pide es un folio con un dibujo, no una respuesta que teclear. */
+    if (paso.tipo === 'dibujar') {
+      return {
+        i,
+        tipo: paso.tipo,
+        competencia: COMPETENCIA[paso.tipo],
+        titulo: 'Dibujarlo antes de calcular',
+        preguntaHtml: await mate(paso.consigna, PREFIJO),
+        comprueba: await Promise.all(
+          paso.comprueba.map(async (r) => ({
+            puntoHtml: await mate(r.punto, PREFIJO),
+            porqueHtml: await mate(r.porque, PREFIJO),
+          })),
+        ),
+        figuraHtml: paso.figura ? await mate(paso.figura, PREFIJO) : null,
         veredictoHtml: await mate(paso.veredicto, PREFIJO),
       };
     }
@@ -279,9 +303,11 @@ const datos = pasos.map((p) => {
   if (p.tipo === 'verificar') {
     return { tipo: p.tipo, condicion: p.condicion, ventana: p.ventana };
   }
-  /* `redactar` no se corrige: el navegador solo tiene que dejar pasar al
-     siguiente paso cuando el alumno diga que ya lo ha escrito. */
-  if (p.tipo === 'redactar') {
+  /* Ni `redactar` ni `dibujar` se corrigen: el navegador solo tiene que dejar
+     pasar al siguiente paso cuando el alumno diga que ya lo ha hecho. Fingir
+     que se corrige un folio o un dibujo sería mentir sobre lo que un sitio
+     estático puede hacer. */
+  if (p.tipo === 'redactar' || p.tipo === 'dibujar') {
     return { tipo: p.tipo };
   }
   return {
@@ -509,6 +535,39 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                   <p class="rotulo">Lo que se puntúa</p>
                   <ol>
                     {paso.rubrica!.map((r) => (
+                      <li>
+                        <div class="prosa r-punto" set:html={r.puntoHtml} />
+                        <div class="prosa r-porque" set:html={r.porqueHtml} />
+                      </li>
+                    ))}
+                  </ol>
+                  {paso.veredictoHtml && (
+                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                  )}
+                </div>
+              </>
+            )}
+
+            {paso.tipo === 'dibujar' && (
+              <>
+                <p class="papel no-imprimir">
+                  <span class="papel-i" aria-hidden="true">✎</span>
+                  Dibújalo en papel antes de seguir. No hace falta que quede
+                  bonito: hace falta que estén las cosas de la lista, que son
+                  las que deciden los límites de la integral.
+                </p>
+
+                <button type="button" class="ya no-imprimir" data-ya>
+                  Ya lo he dibujado · comparar
+                </button>
+
+                <div class="rubrica" data-rubrica hidden>
+                  {paso.figuraHtml && (
+                    <div class="d-figura prosa" set:html={paso.figuraHtml} />
+                  )}
+                  <p class="rotulo">Lo que tiene que estar</p>
+                  <ol>
+                    {paso.comprueba!.map((r) => (
                       <li>
                         <div class="prosa r-punto" set:html={r.puntoHtml} />
                         <div class="prosa r-porque" set:html={r.porqueHtml} />
@@ -1251,8 +1310,25 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
        comparación la haces tú, y fingir una corrección automática sería
        mentir sobre lo que esta herramienta puede hacer. */
 
+    /* `dibujar` comparte este bloque entero con `redactar`, y a propósito: son
+       el mismo trato —tú lo haces en papel, el sitio te enseña contra qué
+       compararlo— con distinto objeto. Lo único que cambia es el mensaje. */
+    const SIN_CORREGIR = {
+      redactar: [
+        'Ahora compárala',
+        '<p>Punto por punto. Lo que falte en tu folio es lo que el corrector ' +
+          'no va a encontrar.</p>',
+      ],
+      dibujar: [
+        'Ahora compáralo',
+        '<p>Punto por punto. Un recinto mal dibujado son unos límites mal ' +
+          'puestos, y eso no lo arregla calcular bien.</p>',
+      ],
+    } as const;
+
     pasos.forEach((paso, i) => {
-      if (datos[i].tipo !== 'redactar') return;
+      const mensaje = SIN_CORREGIR[datos[i].tipo as keyof typeof SIN_CORREGIR];
+      if (!mensaje) return;
 
       const boton = paso.querySelector<HTMLButtonElement>('[data-ya]');
       const rubrica = paso.querySelector<HTMLElement>('[data-rubrica]');
@@ -1261,13 +1337,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       boton.addEventListener('click', () => {
         rubrica.hidden = false;
         boton.disabled = true;
-        fb(
-          paso,
-          'bien',
-          'Ahora compárala',
-          '<p>Punto por punto. Lo que falte en tu folio es lo que el corrector ' +
-            'no va a encontrar.</p>',
-        );
+        fb(paso, 'bien', mensaje[0], mensaje[1]);
         resuelve(i);
       });
     });
@@ -1697,6 +1767,24 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   .r-porque {
     margin-top: .2rem;
     font-size: .86rem;
+    color: var(--graphite);
+  }
+
+  /* El dibujo bueno, cuando el paso lo trae. Va ANTES de la lista porque lo
+     primero que hace cualquiera al pulsar «ya lo he dibujado» es mirar si se
+     parece; la lista se lee después, para saber qué mirar. */
+  .d-figura {
+    margin: 0 0 .9rem;
+    padding: .6rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--paper);
+  }
+
+  .d-figura :global(svg) { display: block; width: 100%; height: auto; }
+  .d-figura :global(figcaption) {
+    margin-top: .4rem;
+    font-size: .8rem;
     color: var(--graphite);
   }
 

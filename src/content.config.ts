@@ -589,12 +589,60 @@ const pasoRedactar = z.object({
   veredicto: z.string().optional(),
 });
 
+/** DIBUJAR — hacer el dibujo en el papel y contrastarlo con lo que se mira.
+ *
+ *  Hermano de `redactar`, y por el mismo motivo. Medido el 14 de septiembre de
+ *  2026 sobre los 425 ejercicios de examen de Cálculo: **186 piden dibujar,
+ *  representar o esbozar algo** —el recinto de una integral doble, la región
+ *  del plano complejo, el sólido de revolución, la onda de Fourier—, y el
+ *  sitio no pedía dibujar ni una sola vez. Treinta y nueve tenían un paso que
+ *  *menciona* el recinto; ninguno lo hacía dibujar.
+ *
+ *  Lo que se estaba entrenando en su lugar es el final del ejercicio: el
+ *  alumno lee un enunciado, salta a los límites de integración y calcula. En
+ *  el examen, el que no dibuja el recinto pone mal los límites, y eso no se
+ *  arregla calculando mejor.
+ *
+ *  El mismo límite honesto que en `redactar`, y conviene repetirlo: el sitio
+ *  es estático (§02) y **no se puede corregir un dibujo**. Esto no lo finge.
+ *  Hace lo que haría alguien mirando por encima de tu hombro: enseñarte la
+ *  figura buena y la lista de lo que tiene que tener. La comparación la haces
+ *  tú, que es donde está el aprendizaje.
+ *
+ *  `figura` es OPCIONAL a propósito. Sin ella el paso sigue valiendo —la lista
+ *  de comprobación es la mitad útil— y así el tipo se puede usar desde el
+ *  primer día en vez de esperar a que las 188 figuras de las resoluciones se
+ *  muevan una a una. Cuando una se mueva, entra aquí.
+ *
+ *  No es un patrón nuevo (§05): es un tipo de paso, como `redactar`. */
+const pasoDibujar = z.object({
+  tipo: z.literal('dibujar'),
+  /** Qué hay que dibujar, exactamente, y con qué ejes. */
+  consigna: z.string().min(20),
+  /** Lo que un corrector busca en ese dibujo, en el orden en que se hace.
+   *  Cada uno dice **qué** se mira y **por qué** decide algo: una lista que
+   *  solo enumera se lee como una manía, igual que en `redactar`. */
+  comprueba: z
+    .array(
+      z.object({
+        punto: z.string().min(10),
+        porque: z.string().min(20),
+      }),
+    )
+    .min(3),
+  /** El dibujo bueno, en SVG, para comparar. Si no está, el paso enseña solo
+   *  la lista — que ya es más de lo que había. */
+  figura: z.string().min(20).optional(),
+  veredicto: z.string().optional(),
+});
+
 const paso = z.discriminatedUnion('tipo', [
   pasoReconocer,
   pasoCalcular,
   pasoJustificar,
   pasoVerificar,
   pasoRedactar,
+  pasoDibujar,
 ]);
 
 /** El reparto de puntos que el propio examen declara, por competencia.
