@@ -732,6 +732,14 @@ const MEDIDO = {
   asignaturasOk: estados.ok,
   asignaturasObra: estados.obra,
   asignaturasPrev: estados.prev,
+  /* Un tipo de paso por fila de la tabla de §05. `tipos` se cuenta más
+     arriba, sobre el corpus entero. */
+  pasoReconocer: tipos.reconocer ?? 0,
+  pasoCalcular: tipos.calcular ?? 0,
+  pasoJustificar: tipos.justificar ?? 0,
+  pasoVerificar: tipos.verificar ?? 0,
+  pasoRedactar: tipos.redactar ?? 0,
+  pasoDibujar: tipos.dibujar ?? 0,
 };
 
 /* Dónde se publica cada cifra. El patrón captura el número en $1; se compara
@@ -745,6 +753,16 @@ const AFIRMACIONES = [
   ['docs/como-vamos.md', /\*\*\d[\d.]* rutas\*\* \| \*\*(\d[\d.]*)\*\* \| \*\*[\d.]+\*\*/, 'bloques', 'bloques en la tabla total'],
   ['docs/como-vamos.md', /\*\*\d[\d.]* rutas\*\* \| \*\*[\d.]+\*\* \| \*\*(\d[\d.]*)\*\*/, 'escalones', 'escalones en la tabla total'],
   ['tests/fisica/README.md', /y (\d[\d.]*) casos/, 'casosFisica', 'casos de tests/fisica'],
+  /* La tabla de tipos de paso de §05. Es la que el propio CLAUDE.md declara
+     haber tenido desfasada TRES veces —«se recuenta al cerrar una asignatura
+     no basta cuando pasan semanas sin cerrar ninguna»—, así que sus seis
+     filas se comparan aquí y ya no hace falta acordarse. */
+  ['CLAUDE.md', /\| `reconocer` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoReconocer', 'pasos reconocer'],
+  ['CLAUDE.md', /\| `calcular` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoCalcular', 'pasos calcular'],
+  ['CLAUDE.md', /\| `justificar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoJustificar', 'pasos justificar'],
+  ['CLAUDE.md', /\| `verificar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoVerificar', 'pasos verificar'],
+  ['CLAUDE.md', /\| `redactar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoRedactar', 'pasos redactar'],
+  ['CLAUDE.md', /\| `dibujar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoDibujar', 'pasos dibujar'],
   /* Este trío es el que más veces ha caducado del repositorio: el párrafo de
      `como-vamos.md` que dice cuántas asignaturas hay en cada estado ha
      envejecido CINCO veces, y las cinco están confesadas debajo de él. La

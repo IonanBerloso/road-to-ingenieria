@@ -810,10 +810,31 @@ de paso `dibujar`, con su primer uso en el 7.3).
    de paso donde hacerlo. El molde está escrito y probado en
    `t07/invertir-el-orden`; empezar por los 31 de t07 y los 23 de t01, y mover
    la figura de la resolución al paso en vez de dibujarla otra vez.
-3. **Nueve rúbricas `redactar` más** (su encargo 2), en su orden: definición
-   formal de límite de una sucesión (10 ejercicios, 7 cursos), signo del
-   límite, Fermat, punto fijo, factor integrante, identidades trigonométricas
-   complejas, Bolzano, Rolle y Darboux, enunciado de Taylor con su resto.
+3. **~~Nueve rúbricas `redactar` más~~ · seis escritas el 14 de septiembre**,
+   de 3 pasos a 21. Hechas: la definición formal de límite con cuantificadores,
+   el signo del límite, la unicidad del límite (no estaba en su lista y es la
+   tercera demostración clásica del tema 2), Rolle, el enunciado de Taylor con
+   su resto y la identidad del seno de una suma en el plano complejo.
+
+   **Quedan tres, y su sitio no es el que parecía.** Fermat, punto fijo, y
+   factor integrante / ecuación exacta **no tienen ni un ejercicio de tema
+   donde colgarse**: contados el 14 de septiembre, cero de tema los tres. Van
+   en un ejercicio de examen, como ya hacen dos de las tres rúbricas
+   originales.
+
+   **Y ahí está el hallazgo, que es de contenido y no de rúbricas:**
+
+   | familia | ejercicios de tema | de examen |
+   |---|---|---|
+   | ecuación exacta | **0** | 9 |
+   | factor integrante | **0** | 5 |
+   | punto fijo | **0** | 3 |
+   | Fermat | **0** | 1 |
+   | Darboux | **0** | 1 |
+
+   El tema 9 no tiene ni un ejercicio de ecuación exacta y **el examen la pide
+   en nueve convocatorias**. Eso no se arregla con una rúbrica: se arregla
+   transcribiendo boletín, y es del encargo 1.
 4. **El formulario imprimible** (encargo 5) y **los seis ejemplos de leer una
    gráfica** (encargo 6).
 
