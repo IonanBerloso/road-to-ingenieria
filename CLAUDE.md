@@ -1382,7 +1382,9 @@ diagramas de viga. Los otros seis comparan contra la figura o el ejemplo del
 propio tema —sus `fuente` lo decían y nadie los había sumado—, así que ahí esto
 es una **regresión** y no una verificación: caza que el modelo se separe de la
 página, no que el número sea cierto. El reparto está tabulado fila por fila en
-`tests/fisica/README.md`: 3 con ancla externa, 2 mixtas, 3 propias.
+`tests/fisica/README.md`: 3 con ancla externa, 2 mixtas, 4 propias. La cuarta
+propia es el plano complejo, que entró el 15 de septiembre de 2026 y con ella
+deja de haber un simulador que no compara nada.
 
 Validado al revés con dos regresiones reales: volver a poner `D/e = 40` en el
 golpe de ariete —que daba 215 mca donde **el tema publica 228**— y quitar el
@@ -2046,6 +2048,21 @@ Cosas que ya han costado horas. No son opiniones.
   y **volvió a pasar el 14** mientras se arreglaba justo eso: una barrida
   entera perdida. Una tanda en segundo plano a la vez, y nada que toque `dist/`
   hasta que termine.
+
+  **Y si la barrida cae en el primer segundo diciendo «el servidor de vista
+  previa no ha arrancado en 30 s», no es el arranque: es que hay otro
+  servidor.** Astro guarda un `preview` **desprendido** entre ejecuciones y se
+  niega a levantar uno nuevo, con un mensaje que `humo.mjs` no ve porque lanza
+  el proceso con `stdio: 'ignore'`. Lo deja `peso.mjs` o
+  `comprueba-simuladores.mjs` si se cortan a medias, y puede estar en otro
+  puerto —4408, por ejemplo— así que mirar el 4321 con `netstat` no lo
+  encuentra. Pasó el 15 de septiembre de 2026 y costó dos barridas. Lo que lo
+  resuelve en diez segundos:
+
+  ```
+  node node_modules/astro/bin/astro.mjs preview status
+  node node_modules/astro/bin/astro.mjs preview stop
+  ```
 - **`max-width` y `overflow` NO hacen nada en una caja `display: inline`.** El
   navegador los ignora en silencio, así que la regla se lee bien, pasa las
   revisiones y no surte efecto. `.katex` es un `<span>`, o sea `inline` por

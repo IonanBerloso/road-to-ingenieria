@@ -677,11 +677,20 @@ válida de cerrar esto.
 
 En orden de rendimiento:
 
-1. **`comprueba-simuladores.mjs` y §11 dicen «contra el examen» donde no lo
-   es.** Seis de los nueve comparan contra prosa nuestra, y el «el examen dice
-   228» de §11 sale de `t20-golpe-ariete/index.mdx:218`. *Media hora, y cambia
-   lo que el proyecto cree saber de sí mismo.* (`tests/fisica/README.md` ya
-   publica la distinción fila por fila.)
+1. **~~`comprueba-simuladores.mjs` y §11 dicen «contra el examen» donde no lo
+   es~~ · corregido el 15 de septiembre de 2026.** La cabecera larga ya se
+   había arreglado el 13, pero **la primera línea del fichero y el mensaje de
+   final seguían diciéndolo**: «Los simuladores enseñan los números del
+   examen» y «Los simuladores enseñan lo que publica el examen». El titular es
+   lo último que se corrige y lo primero que se lee, y eso está dicho ahora en
+   el propio comentario.
+
+   Ahora dicen «los números que dice su `fuente`» y «cada simulador enseña lo
+   que declara su fuente». Y el reparto de §11 pasa a **3 externas, 2 mixtas y
+   4 propias**: la cuarta es el plano complejo, con lo que deja de haber un
+   simulador que no compare nada. El «228» de §11 ya llevaba su aviso desde el
+   13 —que no sale de un examen sino de
+   `fluidos/t20-golpe-ariete/index.mdx:218`— y se ha dejado tal cual.
 2. **`humo.mjs` y los 360 px:** mide seis páginas fijas que nunca rotan,
    ignora `HUMO_TODO`, se traga el fallo de abrir la resolución y **nunca abre
    una página de tema** — que es justo donde el sitio se desbordaba el 4 de

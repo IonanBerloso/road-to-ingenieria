@@ -1,5 +1,9 @@
 /**
- * Los simuladores enseñan los números del examen, no unos parecidos.
+ * Los simuladores enseñan los números que dice su `fuente`, no unos
+ * parecidos. En tres de los nueve esa fuente es una convocatoria; en los
+ * demás, nuestra propia prosa. La cabecera lo decía mal hasta el 13 de
+ * septiembre de 2026 y **esta primera línea siguió diciéndolo hasta el 15**:
+ * el titular es lo último que se corrige y lo primero que se lee.
  *
  * Nace el 3 de septiembre de 2026, y no «por si acaso» (§11): el 2 de
  * septiembre los cinco simuladores de Fluidos se publicaron correctos y
@@ -286,7 +290,7 @@ await nav.close();
 
 console.log(
   fallos === 0
-    ? '\nLos simuladores enseñan lo que publica el examen, y se encuentran.'
+    ? '\nCada simulador enseña lo que declara su fuente, y se encuentra.'
     : `\n${fallos} fallo(s). El despliegue se queda parado.`,
 );
 process.exit(fallos ? 1 : 0);
