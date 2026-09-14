@@ -889,8 +889,24 @@ de paso `dibujar`, con su primer uso en el 7.3).
    El **3 del básico** no trae resultado publicado; el que se da está
    calculado y contrastado sumando la serie numéricamente.
 
-   **Lo que queda del encargo 1**, con t07, t08, t09 y t10 cerrados:
-   t06 (9+10), t11 (3+5), y después t01 (10) y t05 (14).
+   **~~t06~~ · terminado el 14 de septiembre de 2026: los 10 del boletín
+   básico y los 10 complementarios.** Los que ya estaban —6.4, 6.9, 6.10,
+   6.12, 6.13, 6.14 y 6.17— no se duplican.
+
+   **Y es el único boletín básico que no publica ningún resultado**: las
+   cuarenta y una parciales y los cuatro cambios de variable están
+   calculados aquí y verificados por derivación numérica, con tres scripts
+   que comparan la fórmula simbólica contra diferencias finitas en varios
+   puntos. Tres resultados que conviene no perder:
+
+   | ejercicio | lo que sale |
+   |---|---|
+   | básico 7 | $3Z_{uv}+Z_{u}=0$ — forma canónica hiperbólica |
+   | básico 8 | **no simplifica**: se publica tal cual, diciendo que no simplifica |
+   | básico 10 | $\cos v\,z_{u}+\operatorname{sen}u\,z_{v}=0$ |
+
+   **Lo que queda del encargo 1**, con t06, t07, t08, t09 y t10 cerrados:
+   t11 (3+5), y después t01 (10) y t05 (14).
 
    **Y un aviso de intendencia.** Con el corpus en 1.900 ejercicios,
    `npm run humo` tarda **más de una hora**. Ya no se puede lanzar una
