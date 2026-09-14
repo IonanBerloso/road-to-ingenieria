@@ -587,12 +587,12 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.924 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.986 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.815 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.942 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 4.018 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.833 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 26 |
-| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 2 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 27 |
+| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 3 |
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
 > de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar

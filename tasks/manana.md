@@ -825,9 +825,26 @@ de paso `dibujar`, con su primer uso en el 7.3).
    boletín que no se pueden leer sin ambigüedad: los (d) y (e) del 7.4. Están
    declarados en la `fuente` del ejercicio correspondiente.
 
-   **t09, reconocido el 14 de septiembre y todavía sin transcribir.** El
-   boletín básico «Ecuaciones diferenciales. Problemas» son 6 ejercicios con
-   41 apartados: el 1 (siete EDOs separables y exactas), el 2 (siete
+   **~~t09~~ · terminado el 14 de septiembre de 2026: los 41 apartados del
+   boletín básico y los 14 problemas complementarios.** Los cinco que ya
+   estaban —9.1, 9.10(d), 9.14, 9.18 y 9.19— no se duplican, y el 9.12
+   (b), (c), (d) y el 9.13 entero son los mismos problemas que el
+   ejercicio 6 del básico: se les ha añadido la referencia cruzada en vez
+   de repetirlos. **Cierra el hueco de ecuación exacta y factor
+   integrante**, que tenía cero ejercicios de tema y catorce de examen.
+
+   **~~t08~~ · terminado el 14 de septiembre de 2026: los 7 del boletín
+   básico y 11 de los 12 complementarios.** Los cinco que ya estaban
+   —8.8, 8.9, 8.10, 8.13 y 8.17— no se duplican. **El 8.1 no se ha
+   transcrito**: son siete curvas dadas solo en figuras —tres de ellas en
+   perspectiva 3D— y no se pueden describir con palabras sin inventar
+   detalles. Está declarado en el comentario de cabecera del bloque.
+
+   **Y el detalle del boletín básico de t09, ya recogido en su sitio.** Lo
+   siguiente queda aquí como registro:
+
+   El boletín básico «Ecuaciones diferenciales. Problemas» son 6 ejercicios
+   con 41 apartados: el 1 (siete EDOs separables y exactas), el 2 (siete
    homogéneas, lineales y con factor integrante), el 3, 4 y 5 (dieciséis
    lineales homogéneas de coeficientes constantes) y el 6 (doce no
    homogéneas). **Los apartados del 1 y del 2 cubren el hueco declarado más
@@ -846,7 +863,13 @@ de paso `dibujar`, con su primer uso en el 7.3).
    | 6 (j) | $\tfrac{1}{32\cos 4x}+\tfrac{1}{4}\tfrac{\operatorname{sen}^{2}x}{\cos 4x}$ | $\tfrac{1}{32\cos 4x}$ a secas |
 
    Los tres verificados por sustitución analítica **y** por derivación
-   numérica. Los otros treinta y ocho cuadran.
+   numérica. Los otros treinta y ocho cuadran. Y dos de los tres tienen
+   confirmación independiente: el 9.13(b) y el 9.12(b) de los problemas
+   complementarios son los mismos apartados, allí bien escritos.
+
+   **Lo que queda del encargo 1**, con t07, t08 y t09 cerrados: t10 (12+7),
+   t06 (9+10), t11 (3+5), y después t01 (10) y t05 (14).
+
 2. **Los 185 ejercicios de examen que piden dibujar** y ahora ya tienen tipo
    de paso donde hacerlo. El molde está escrito y probado en
    `t07/invertir-el-orden`; empezar por los 31 de t07 y los 23 de t01, y mover
