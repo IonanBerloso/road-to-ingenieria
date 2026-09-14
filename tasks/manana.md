@@ -852,17 +852,27 @@ de paso `dibujar`, con su primer uso en el 7.3).
    Sirve a cualquier asignatura con ese apartado; hoy solo Cálculo lo tiene en
    sus once temas.
 
-5. **Los ejemplos de leer una gráfica** (encargo 6): **uno escrito** de los
-   seis, y es el que más cubre — `t05/ej-integral-contando-areas`, con figura
-   propia a escala. En un solo dibujo entran las dos preguntas que el examen
-   hace y el sitio no preparaba: la **integral como área con signo** —que vale
-   0 mientras el área geométrica vale 6— y **dónde hace cumbre $F(x)=\int_0^x
-   f$**, que no es donde $f$ es máxima sino donde cruza el cero bajando. Está
-   enlazado desde el escalón `verdadero-o-falso` de la ordinaria.
+5. **~~Los ejemplos de leer una gráfica~~ (encargo 6) · los seis, el 15 de
+   septiembre**, cada uno con figura propia a escala y enlazado desde el
+   escalón donde hace falta.
 
-   Quedan los otros cinco de la lista del encargo: dónde crece $f'$, dónde
-   $f''$ cambia de signo, cuál de dos curvas es la primitiva —de esta hay ya
-   dos ejemplos en t04—, y las variantes con dos gráficas superpuestas.
+   | ejemplo | tema | qué hueco tapa |
+   |---|---|---|
+   | `ej-integral-contando-areas` | t05 | ∫ como área **con signo** —vale 0 mientras el área geométrica vale 6— y dónde hace cumbre F(x)=∫₀ˣf |
+   | `ej-leer-la-grafica-de-efe` | t04 | f, f′ y f″ leídas del mismo dibujo |
+   | `ej-el-cuadrado-de-la-derivada` | t04 | h=(f′)², un enunciado **repetido idéntico** en 2017-18 y 2023-24 y sin rampa |
+   | `ej-leer-un-mapa-de-niveles` | t06 | curvas de nivel · **primera figura del tema** |
+   | `ej-serie-decidida-en-la-grafica` | t02 | Σk·g(x)ᵏ · **primera figura del tema** |
+   | `ej-signos-del-polinomio-de-taylor` | t04 | los tres coeficientes leídos del dibujo, 6 convocatorias |
+
+   **Y el hueco era mayor que el declarado.** El encargo decía que 13
+   ejercicios de examen entregan una gráfica; contados son **69**. Y dos temas
+   enteros —el 2 y el 6— no tenían **ni una figura** en sus ejemplos mientras
+   sus exámenes reparten gráficas: ese hueco no estaba en ninguna lista.
+
+   Lo que queda de esta familia no son ejemplos sino **figuras que faltan**:
+   `ej-taylor-orden-dos`, `ej-cota-del-resto` y `ej-componer-un-desarrollo`
+   siguen explicando Taylor sin dibujo.
 
 **Bloqueado por un dato que solo tiene Ionan (§13 caso 5):** el simulacro
 cronometrado (encargo 4) necesita **cuánto dura cada parcial**, y no está
