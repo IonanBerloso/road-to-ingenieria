@@ -1,6 +1,258 @@
 ejercicios:
   # ═══════════════════════════════════════════════════════════════════
   # Ejemplos introductorios del tema 5. Nuestros, no de examen ni del boletín.
+  #
+  # El de leer una gráfica —`ej-integral-contando-areas`— nace el 15 de
+  # septiembre de 2026 y responde a un hueco que la ruta declaraba desde el 6:
+  # «el boletín no tiene ni un ejercicio de leer una gráfica, y el examen lo
+  # pide en seis». Cubre de una vez las dos preguntas que caen: la integral
+  # como área con signo, y qué hace la función integral F(x) mientras tanto.
+  - id: ej-integral-contando-areas
+    titulo: La integral sin integrar, contando áreas
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, para el hueco de «leer una
+      gráfica» que la ruta de la ordinaria declara. No es de examen ni del
+      boletín; la función es nuestra y está elegida para que todas las cuentas
+      salgan a mano.
+    nivel: ejemplo
+    enunciado: |
+      La figura es la gráfica de una función $f$ formada por cuatro segmentos
+      rectos. **No hay fórmula, y no hace falta**: todo lo que se pide se lee
+      del dibujo.
+
+      <figure>
+      <svg viewBox="-10 -15 330 190" role="img" aria-labelledby="t5areaT t5areaD">
+        <title id="t5areaT">Una función lineal a trozos, con dos áreas iguales y de signo contrario</title>
+        <desc id="t5areaD">La gráfica sube del origen hasta el punto (2,2), baja hasta cortar el eje en x igual a 3, sigue bajando hasta (5,-2) y vuelve a subir hasta cortar el eje en x igual a 6. La región entre la curva y el eje está sombreada: por encima del eje entre 0 y 3, y por debajo entre 3 y 6.</desc>
+
+        <path d="M30 100 L120 50 L165 100 Z" fill="var(--live-soft)"></path>
+        <path d="M165 100 L255 150 L300 100 Z" fill="var(--alt-soft)"></path>
+
+        <line x1="20" y1="100" x2="315" y2="100" stroke="var(--rule)" stroke-width="1.2"></line>
+        <line x1="30" y1="160" x2="30" y2="35" stroke="var(--rule)" stroke-width="1.2"></line>
+
+        <polyline points="30,100 120,50 165,100 255,150 300,100" fill="none" stroke="var(--live)" stroke-width="2"></polyline>
+
+        <text x="24" y="114" font-size="10" fill="var(--faint)" font-family="var(--mono)">0</text>
+        <text x="117" y="114" font-size="10" fill="var(--faint)" font-family="var(--mono)">2</text>
+        <text x="162" y="114" font-size="10" fill="var(--faint)" font-family="var(--mono)">3</text>
+        <text x="252" y="94" font-size="10" fill="var(--faint)" font-family="var(--mono)">5</text>
+        <text x="297" y="114" font-size="10" fill="var(--faint)" font-family="var(--mono)">6</text>
+        <text x="14" y="54" font-size="10" fill="var(--faint)" font-family="var(--mono)">2</text>
+        <text x="10" y="154" font-size="10" fill="var(--faint)" font-family="var(--mono)">−2</text>
+        <text x="307" y="114" font-size="10" fill="var(--faint)" font-family="var(--mono)">x</text>
+
+        <text x="84" y="86" font-size="10" fill="var(--live)" font-family="var(--mono)">+3</text>
+        <text x="216" y="122" font-size="10" fill="var(--alt)" font-family="var(--mono)">−3</text>
+      </svg>
+      <figcaption>Cuatro segmentos y dos regiones triangulares: la de arriba mide 3 y la de abajo mide 3.</figcaption>
+      </figure>
+
+      a) ¿Cuánto vale $\displaystyle\int_0^6 f(x)\,dx$?
+
+      b) Y si $F(x)=\displaystyle\int_0^x f(t)\,dt$, ¿dónde alcanza $F$ su
+      máximo en $[0,6]$?
+    pide: El valor de la integral en todo el intervalo, y dónde es máxima la función integral.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Sin calcular nada todavía: ¿qué **es** $\int_0^6 f$ en este dibujo?
+        opciones:
+          - texto: >-
+              La suma de las áreas, contando **positiva** la que queda por
+              encima del eje y **negativa** la de debajo
+            correcta: true
+            mensaje: |
+              Eso es, y por eso este ejercicio no necesita ninguna primitiva.
+              La integral definida es el área **con signo**, y el signo lo pone
+              el lado del eje en que está la región.
+          - texto: >-
+              El área total encerrada entre la curva y el eje
+            mensaje: |
+              Esa es el área **geométrica**, que aquí vale 6 y siempre es
+              positiva. La integral no: la de abajo resta. Cuando el enunciado
+              quiere el área geométrica lo dice con un valor absoluto,
+              $\int|f|$, y entonces sí son cosas distintas — aquí una vale 0 y
+              la otra 6.
+          - texto: >-
+              No se puede saber sin conocer la fórmula de $f$
+            mensaje: |
+              Se puede, y es justo lo que el examen quiere comprobar. Los
+              cuatro trozos son rectos, así que las regiones son triángulos y
+              su área sale con base por altura entre dos. Una fórmula solo haría
+              falta si la curva no fuese reconocible.
+
+      - tipo: calcular
+        titulo: El área de arriba
+        pregunta: |
+          La región entre la curva y el eje en $[0,3]$ son dos triángulos: uno
+          de base 2 y altura 2, y otro de base 1 y altura 2. ¿Cuánto suman?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '4'
+            mensaje: |
+              Has multiplicado base por altura sin dividir entre dos en alguno
+              de los dos. Los triángulos son $\frac{b\cdot h}{2}$: el primero
+              vale $\frac{2\cdot2}{2}=2$ y el segundo $\frac{1\cdot2}{2}=1$.
+          - valor: '6'
+            mensaje: |
+              Eso es el área de **las cuatro** regiones sumadas en valor
+              absoluto. Aquí solo se pide la parte de $[0,3]$, la que queda por
+              encima del eje.
+        pista: |
+          Área de un triángulo, dos veces: $\frac{b\cdot h}{2}$.
+        desarrollo: |
+          $$
+          \int_0^3 f = \frac{2\cdot 2}{2} + \frac{1\cdot 2}{2} = 2 + 1 = 3
+          $$
+
+      - tipo: calcular
+        titulo: La integral en todo el intervalo
+        pregunta: |
+          La región de $[3,6]$ es la misma figura del revés, y está **debajo**
+          del eje. ¿Cuánto vale entonces $\int_0^6 f$?
+        respuesta:
+          tipo: numero
+          valor: '0'
+          tolerancia: 0.001
+          formato: un número
+        distractores:
+          - valor: '6'
+            mensaje: |
+              Has sumado las dos áreas en valor absoluto. La de abajo entra
+              **restando**: la integral vale $3 + (-3) = 0$. El 6 es
+              $\int_0^6 |f|$, que es otra pregunta.
+          - valor: '3'
+            mensaje: |
+              Ese es solo el trozo de arriba. Falta restarle la región de
+              $[3,6]$, que mide lo mismo y va con signo menos.
+        pista: |
+          Simetría: la de abajo es la de arriba con el signo cambiado.
+        desarrollo: |
+          $$
+          \int_0^6 f = \underbrace{3}_{[0,3]} + \underbrace{(-3)}_{[3,6]} = 0
+          $$
+
+          Y fíjate en lo que **no** significa: que $f$ sea cero, ni que la
+          curva no haga nada. Significa que lo que sube y lo que baja se
+          compensan exactamente.
+
+      - tipo: calcular
+        titulo: Dónde es máxima la función integral
+        pregunta: |
+          $F(x)=\int_0^x f$ va acumulando área con signo. Crece mientras
+          $f>0$ y decrece mientras $f<0$. ¿En qué $x$ alcanza su máximo?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número entre 0 y 6
+        distractores:
+          - valor: '2'
+            mensaje: |
+              Ahí es donde $f$ es máxima, que es otra cosa. $F$ sigue creciendo
+              mientras $f$ siga siendo positiva, y $f$ no se anula hasta
+              $x=3$: entre 2 y 3 la curva baja pero **todavía suma área**.
+              Confundir el máximo de $f$ con el de $F$ es el error más
+              frecuente de esta familia.
+          - valor: '6'
+            mensaje: |
+              En $x=6$ la función integral vale 0, que es su valor más bajo
+              junto con el del principio. Ha subido hasta 3 y ha vuelto a
+              bajar.
+          - valor: '5'
+            mensaje: |
+              Ahí $f$ alcanza su mínimo, así que $F$ está bajando lo más
+              deprisa que baja. Es el punto de inflexión de $F$, no su máximo.
+        pista: |
+          $F'=f$: el máximo de $F$ está donde $f$ cambia de signo de $+$ a $-$.
+        desarrollo: |
+          Por el teorema fundamental, $F'(x)=f(x)$. Así que $F$ crece donde
+          $f>0$ —en $(0,3)$— y decrece donde $f<0$ —en $(3,6)$—.
+
+          El máximo está en el punto donde $f$ **cruza el eje bajando**:
+
+          $$
+          x = 3, \qquad F(3) = \int_0^3 f = 3
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena lo que la gráfica dice de $F$. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              $F(0)=0$, porque la integral de 0 a 0 es cero sea cual sea $f$.
+          - texto: >-
+              En $(0,3)$ la curva está por encima del eje, así que $F$ **crece**
+              hasta llegar a $F(3)=3$.
+          - texto: >-
+              En $(3,6)$ la curva está por debajo, así que $F$ **decrece** y
+              vuelve a $F(6)=0$.
+          - texto: >-
+              Como $F(0)=F(6)=0$, la función $F$ es constante en todo el
+              intervalo.
+            trampa: true
+            mensaje: |
+              Empezar y acabar en el mismo sitio no es ser constante: $F$ sube
+              hasta 3 y vuelve a bajar. Es exactamente la hipótesis de Rolle
+              —$F(0)=F(6)$— y lo que garantiza es que $F'$ se anula en algún
+              punto de dentro, que aquí es $x=3$. Confundir «vuelve al mismo
+              valor» con «no se mueve» es el error que este dibujo enseña de un
+              vistazo.
+        veredicto: |
+          Ese contraste es lo que hay que llevarse: la gráfica de $f$ y la de
+          $F$ cuentan cosas distintas. Donde $f$ tiene su máximo, $F$ solo está
+          creciendo deprisa; donde $f$ cruza el cero, $F$ hace cumbre.
+    resolucion: |
+      **Nada de esto se integra.** Los cuatro trozos son rectos, así que las
+      regiones son triángulos y basta con medirlos.
+
+      ### a) La integral en $[0,6]$
+
+      | tramo | figura | área con signo |
+      |---|---|---|
+      | $[0,2]$ | triángulo de base 2 y altura 2 | $+2$ |
+      | $[2,3]$ | triángulo de base 1 y altura 2 | $+1$ |
+      | $[3,5]$ | triángulo de base 2 y altura 2, **debajo** | $-2$ |
+      | $[5,6]$ | triángulo de base 1 y altura 2, **debajo** | $-1$ |
+
+      $$
+      \int_0^6 f = 2+1-2-1 = 0
+      $$
+
+      Y conviene separarlo de su vecina, porque el examen pregunta las dos:
+
+      $$
+      \int_0^6 |f| = 2+1+2+1 = 6
+      $$
+
+      La primera es **área con signo**; la segunda, área a secas. Que la
+      integral valga cero no dice que la función sea pequeña: dice que lo de
+      arriba y lo de abajo se compensan.
+
+      ### b) El máximo de $F(x)=\int_0^x f$
+
+      El teorema fundamental da $F'=f$, así que el signo de $f$ **es** el
+      crecimiento de $F$:
+
+      | dónde | $f$ | $F$ |
+      |---|---|---|
+      | $(0,3)$ | positiva | crece |
+      | $x=3$ | se anula | **máximo** |
+      | $(3,6)$ | negativa | decrece |
+
+      $$
+      \max_{[0,6]} F = F(3) = 3
+      $$
+
+      **Lo que hay que llevarse.** El máximo de $F$ no está donde $f$ es más
+      grande —eso es $x=2$—, sino donde $f$ **cruza el cero de positiva a
+      negativa**. Es la pregunta que más se falla de esta familia, y se
+      contesta mirando dónde corta la curva al eje, sin calcular nada.
+
   # ═══════════════════════════════════════════════════════════════════
 
   - id: ej-derivar-funcion-integral

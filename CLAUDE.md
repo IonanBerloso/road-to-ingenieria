@@ -587,9 +587,9 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia | usos en el corpus |
 |---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.833 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.853 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.742 |
+| `reconocer` | elegir el concepto antes de calcular | COMP1 | 1.834 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 3.856 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.743 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 25 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 24 |
 | `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 1 |
@@ -1330,8 +1330,8 @@ En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
 muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
 que un fallo se pueda reproducir. En unas semanas pasan todas.
 
-Con `HUMO_TODO=1` las abre **todas** —**246 al 13 de septiembre de 2026**:
-107 de Cálculo, 41 de Fluidos, 32 de Térmica, 19 de Química, 18 de Álgebra,
+Con `HUMO_TODO=1` las abre **todas** —**248 al 15 de septiembre de 2026**:
+108 de Cálculo, 41 de Fluidos, 32 de Térmica, 19 de Química, 19 de Álgebra,
 **18 de Mecánica Aplicada** y **10 de Ciencia de Materiales**—, y eso es lo que
 se pasa al cerrar una asignatura. Esta línea decía 227 y se dejaba fuera a
 Mecánica entera, cerrada el día antes; la compara `deuda.mjs` §10 desde el 13
@@ -1955,7 +1955,7 @@ declara la asignatura terminada:
 | | qué comprueba | qué pasó por no tenerlo |
 |---|---|---|
 | `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
-| `HUMO_TODO=1 npm run humo` | las 246 páginas del sitio en un navegador, 147 de ellas de examen | el navegador abría 8 de 96 durante meses |
+| `HUMO_TODO=1 npm run humo` | las 248 páginas del sitio en un navegador, 147 de ellas de examen | el navegador abría 8 de 96 durante meses |
 | `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
 | `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
 | `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |

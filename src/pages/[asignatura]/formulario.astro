@@ -1,0 +1,264 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import { ruta } from '../../lib/rutas';
+import { mate } from '../../lib/markdown.mjs';
+import { CON_TEMAS, type ConTemas } from '../../content.config';
+
+/**
+ * El formulario de una asignatura: todos sus «Lo que hay que llevar sabido»
+ * en una página, para el rato de antes de entrar y para imprimir.
+ *
+ * POR QUÉ EXISTE, y estaba pedido por escrito en el sitio.
+ *
+ * El bloque `formulario` de las siete rutas de Cálculo declaraba dos huecos en
+ * su `falta[]` desde el 6 de septiembre de 2026, y esta página cierra los dos:
+ *
+ *   1. «No se puede imprimir solo el formulario: cada uno vive al final de la
+ *      página de su tema, así que imprimir arrastra el tema entero.» Once
+ *      páginas de 2.000 palabras cada una para llevarse tres tablas.
+ *
+ *   2. «Las tres listas son una segunda copia de cosas que ya están explicadas
+ *      en los temas, y eso tiene un riesgo: si un día se corrige la teoría y
+ *      no se corrige aquí, esto miente.»
+ *
+ * EL SEGUNDO ES EL QUE DECIDE CÓMO ESTÁ HECHA ESTA PÁGINA. La forma fácil era
+ * escribir aquí las once listas; habría sido una duodécima copia y el mismo
+ * riesgo multiplicado. Así que no se transcribe **ni una línea**: se lee el
+ * apartado «Lo que hay que llevar sabido» del `index.mdx` de cada tema, tal
+ * cual, y se pasa por el mismo `mate()` que usa la página del tema. Si mañana
+ * se corrige una fórmula arriba, aquí cambia sola (§01).
+ *
+ * El corte se hace sobre el **markdown de origen** y no sobre el HTML
+ * publicado, y esa es la parte que costó: en el HTML el apartado es el último
+ * de la prosa y no tiene un `<h2>` detrás donde parar, así que el trozo salía
+ * de 1,1 MB — el tema entero con sus ejercicios. En el MDX la frontera es el
+ * siguiente `## `, que sí existe o es el final del fichero.
+ *
+ * Sirve a cualquier asignatura que tenga ese apartado; hoy solo Cálculo lo usa
+ * en sus once temas, y la página no se genera para las que no lo tengan.
+ */
+export async function getStaticPaths() {
+  /* `recorta` vive AQUÍ DENTRO y no en el frontmatter: Astro extrae
+     `getStaticPaths` a su propio módulo y no ve nada de fuera. El aviso está
+     escrito en la cabecera de `examenes/index.astro` desde que le pasó lo
+     mismo, y aun así el primer intento de esta página se cayó con
+     «recorta is not defined» al construir. */
+  const recorta = (mdx: string): string | null => {
+    const lineas = mdx.split('\n');
+    const i = lineas.findIndex((l) => /^##\s+Lo que hay que llevar sabido\s*$/.test(l));
+    if (i < 0) return null;
+    let j = lineas.length;
+    for (let k = i + 1; k < lineas.length; k++) {
+      if (/^##\s/.test(lineas[k])) { j = k; break; }
+    }
+    return lineas.slice(i + 1, j).join('\n').trim() || null;
+  };
+
+  const catalogo = await getCollection('catalogo');
+  const salida = [];
+
+  for (const asignatura of catalogo) {
+    if (!(CON_TEMAS as readonly string[]).includes(asignatura.id)) continue;
+    const coleccion = await getCollection(asignatura.id as ConTemas);
+
+    const bloques = [];
+    for (const t of asignatura.data.temas) {
+      if (!t.hecho) continue;
+      const entrada = coleccion.find((e) => e.id === t.id || e.id.startsWith(`${t.id}/`));
+      if (!entrada?.body) continue;
+      const trozo = recorta(entrada.body);
+      if (trozo) bloques.push({ n: t.n, id: t.id, titulo: t.titulo, md: trozo });
+    }
+
+    /* Sin apartados no hay página: una que dijera «todavía no hay nada» habría
+       que enlazarla igual desde algún sitio, y no valdría para nada. */
+    if (bloques.length === 0) continue;
+    salida.push({ params: { asignatura: asignatura.id }, props: { asignatura, bloques } });
+  }
+  return salida;
+}
+
+const { asignatura, bloques } = Astro.props;
+const crumb = `${asignatura.data.nombre} · formulario`;
+
+const partes = await Promise.all(
+  bloques.map(async (b: { n: number; id: string; titulo: string; md: string }) => ({
+    ...b,
+    html: await mate(b.md, `form-${b.id}`),
+  })),
+);
+---
+
+<Base
+  titulo={`Formulario — ${asignatura.data.nombre}`}
+  descripcion={`Todo lo que hay que llevar sabido de ${asignatura.data.nombre}, los ${partes.length} temas en una página y pensado para imprimir.`}
+  acento={asignatura.data.acento}
+  crumb={crumb}
+>
+  <Cabecera crumb={crumb} />
+
+  <main id="principal">
+    <div class="envoltorio">
+      <p class="rotulo rotulo--live eyebrow no-imprimir">{asignatura.data.nombre}</p>
+      <h1>Lo que hay que llevar sabido</h1>
+      <p class="lede no-imprimir">
+        Los {partes.length} apartados de «lo que hay que llevar sabido», uno por
+        tema, en una sola página. Es la relectura del rato de antes de entrar, y
+        está pensada para imprimirse: sale a dos columnas y sin nada de la
+        interfaz.
+      </p>
+
+      {/* Esta advertencia no es humildad de adorno: si alguien estudia de aquí
+          en vez de del tema, la página habrá hecho daño. Lo dice también el
+          apartado de complejos en su primera línea, y se repite arriba del
+          todo porque aquí llega gente que no ha leído ninguno. */}
+      <p class="aviso rotulo no-imprimir">
+        Esto no es la fuente: es la relectura. Cada línea está explicada, con su
+        porqué, en el tema del que sale — y si alguna no te dice nada, el sitio
+        donde entenderla es aquél y no éste.
+      </p>
+
+      <nav class="indice no-imprimir" aria-label="Los temas de este formulario">
+        {partes.map((p) => (
+          <a href={`#f-${p.id}`}>
+            <span class="i-n">{String(p.n).padStart(2, '0')}</span>
+            <span class="i-t">{p.titulo}</span>
+          </a>
+        ))}
+      </nav>
+
+      <div class="hojas">
+        {partes.map((p) => (
+          <section class="hoja" id={`f-${p.id}`}>
+            <h2>
+              <span class="h-n">{String(p.n).padStart(2, '0')}</span>
+              {p.titulo}
+              <a class="h-ir no-imprimir" href={`${ruta(`${asignatura.id}/${p.id}`)}#lo-que-hay-que-llevar-sabido`}>
+                ver en el tema →
+              </a>
+            </h2>
+            <div class="prosa" set:html={p.html} />
+          </section>
+        ))}
+      </div>
+
+      <p class="pie no-imprimir">
+        Ninguna línea de esta página está escrita aquí: se leen los apartados de
+        los once temas, así que corregir una fórmula arriba la corrige también
+        aquí.
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .envoltorio {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 2rem 1.2rem 4rem;
+  }
+
+  h1 { margin: .3rem 0 .6rem; }
+  .lede { max-width: var(--measure); color: var(--graphite); }
+
+  .aviso {
+    margin: 1.4rem 0 2rem;
+    padding: .6rem .8rem;
+    border-left: 2px solid var(--flag);
+    background: var(--flag-soft);
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: .01em;
+    max-width: var(--measure);
+  }
+
+  /* ── el índice ─────────────────────────────────────────────────── */
+  .indice {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: .3rem;
+    margin-bottom: 2.4rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .indice a {
+    display: flex;
+    gap: .6rem;
+    align-items: baseline;
+    padding: .35rem .5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .indice a:hover { background: var(--panel); color: var(--live); }
+  .i-n { font-family: var(--mono); font-size: .74rem; color: var(--faint); }
+  .i-t { font-size: .9rem; }
+
+  /* ── las hojas ─────────────────────────────────────────────────── */
+  .hojas { display: grid; gap: 2.6rem; }
+
+  .hoja h2 {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin: 0 0 .8rem;
+    padding-bottom: .4rem;
+    border-bottom: 1.5px solid var(--rule);
+    font-size: 1.15rem;
+  }
+
+  .h-n { font-family: var(--mono); font-size: .8rem; color: var(--faint); }
+
+  .h-ir {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .h-ir:hover { color: var(--live); }
+
+  .pie {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+    font-size: .82rem;
+    color: var(--faint);
+  }
+
+  /* ── impresión: dos columnas y nada de interfaz ────────────────── */
+  @media print {
+    .envoltorio { max-width: none; padding: 0; }
+
+    /* Dos columnas, que es lo que hace que quepa. Los apartados se dejan
+       fluir entre ellas pero ninguno se parte por la mitad: leer media tabla
+       de transformadas al pie de una columna y la otra media arriba de la
+       siguiente es peor que gastar un hueco. */
+    .hojas {
+      display: block;
+      column-count: 2;
+      column-gap: 1.4rem;
+    }
+
+    .hoja {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 1rem;
+    }
+
+    .hoja h2 { font-size: .95rem; }
+    .prosa { font-size: .74rem; }
+    .prosa :global(table) { font-size: .72rem; }
+    /* KaTeX no encoge con el `font-size` del contenedor tanto como el texto,
+       y en dos columnas eso descuadra las tablas. */
+    .prosa :global(.katex) { font-size: .95em; }
+  }
+</style>

@@ -835,8 +835,34 @@ de paso `dibujar`, con su primer uso en el 7.3).
    El tema 9 no tiene ni un ejercicio de ecuación exacta y **el examen la pide
    en nueve convocatorias**. Eso no se arregla con una rúbrica: se arregla
    transcribiendo boletín, y es del encargo 1.
-4. **El formulario imprimible** (encargo 5) y **los seis ejemplos de leer una
-   gráfica** (encargo 6).
+4. **~~El formulario imprimible~~ (encargo 5) · hecho el 15 de septiembre.**
+   `/calculo/formulario/` junta los once «Lo que hay que llevar sabido» y sale
+   a dos columnas al imprimir. Cierra los **dos** huecos que el bloque
+   `formulario` declaraba desde el 6 de septiembre, y el segundo decidió cómo
+   está hecha: «las listas son una segunda copia de la teoría, y si un día se
+   corrige arriba y no aquí, esto miente». Así que **no transcribe ni una
+   línea** — lee el apartado del `index.mdx` de cada tema y lo pasa por el
+   mismo `mate()`. Corregir una fórmula arriba la corrige allí.
+
+   El corte se hace sobre el markdown de origen y no sobre el HTML publicado,
+   y esa fue la parte que costó: en el HTML ese apartado es el último de la
+   prosa y no tiene un `<h2>` detrás donde parar, así que el trozo salía de
+   **1,1 MB** — el tema entero con sus ejercicios.
+
+   Sirve a cualquier asignatura con ese apartado; hoy solo Cálculo lo tiene en
+   sus once temas.
+
+5. **Los ejemplos de leer una gráfica** (encargo 6): **uno escrito** de los
+   seis, y es el que más cubre — `t05/ej-integral-contando-areas`, con figura
+   propia a escala. En un solo dibujo entran las dos preguntas que el examen
+   hace y el sitio no preparaba: la **integral como área con signo** —que vale
+   0 mientras el área geométrica vale 6— y **dónde hace cumbre $F(x)=\int_0^x
+   f$**, que no es donde $f$ es máxima sino donde cruza el cero bajando. Está
+   enlazado desde el escalón `verdadero-o-falso` de la ordinaria.
+
+   Quedan los otros cinco de la lista del encargo: dónde crece $f'$, dónde
+   $f''$ cambia de signo, cuál de dos curvas es la primitiva —de esta hay ya
+   dos ejemplos en t04—, y las variantes con dos gráficas superpuestas.
 
 **Bloqueado por un dato que solo tiene Ionan (§13 caso 5):** el simulacro
 cronometrado (encargo 4) necesita **cuánto dura cada parcial**, y no está
