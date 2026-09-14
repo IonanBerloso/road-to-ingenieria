@@ -867,8 +867,37 @@ de paso `dibujar`, con su primer uso en el 7.3).
    confirmación independiente: el 9.13(b) y el 9.12(b) de los problemas
    complementarios son los mismos apartados, allí bien escritos.
 
-   **Lo que queda del encargo 1**, con t07, t08 y t09 cerrados: t10 (12+7),
+   **~~t10~~ · terminado el 14 de septiembre de 2026: los 7 del boletín
+   básico y los 12 complementarios.** Los seis que ya estaban —10.7(a),
+   10.10(a), 10.10(c), 10.12(d), 10.12(e) y 10.16— no se duplican, y el
+   10.4 es el mismo ejercicio que el 4 del básico.
+
+   **Y es el boletín con más erratas de los cuatro.** Todas comprobadas
+   por sustitución, y cuatro de ellas con confirmación independiente,
+   porque el mismo problema aparece en los dos boletines:
+
+   | dónde | lo impreso | lo que sale | confirmado por |
+   |---|---|---|---|
+   | básico 2 | falta la $s$ del numerador | $\tfrac{s\,e^{-2\pi s/3}}{s^{2}+1}$ | 10.3(e), el mismo tipo con $c=2$ |
+   | básico 5(f) | repite el resultado de 5(c) | $2t^{2}e^{t}$ | 10.5(b), el mismo problema |
+   | básico 7(b) y 7(c) | intercambiados, y (b) con los exponentes de signo cambiado | ver la resolución | 10.10(d), el mismo sistema |
+   | 10.8(d) | el seno con signo $+$ | $-\tfrac{5}{7\sqrt3}$ | — |
+   | 10.11 | $2+e^{-t}+e^{t}$, que no cumple ni la EDO ni los datos | $-2+2e^{2t}+3e^{-t}$ | — |
+   | 10.14(b) | $x=0$, que no pasa por $(3,-1)$ | $y\sqrt{x}=-\sqrt3$ | — |
+   | 10.15(c) | $S(2{,}05,\,3{,}01)$ | $S(2{,}05,\,3{,}10)$ | la propia recta $y=2x-1$ |
+
+   El **3 del básico** no trae resultado publicado; el que se da está
+   calculado y contrastado sumando la serie numéricamente.
+
+   **Lo que queda del encargo 1**, con t07, t08, t09 y t10 cerrados:
    t06 (9+10), t11 (3+5), y después t01 (10) y t05 (14).
+
+   **Y un aviso de intendencia.** Con el corpus en 1.900 ejercicios,
+   `npm run humo` tarda **más de una hora**. Ya no se puede lanzar una
+   barrida por cada tanda: conviene agrupar varias tandas, correr
+   `build + verify + recalcula + deuda + test` en cada una —que son cinco
+   minutos— y dejar la barrida para antes de empujar. Si el tiempo sigue
+   creciendo habrá que partirla por asignatura.
 
 2. **Los 185 ejercicios de examen que piden dibujar** y ahora ya tienen tipo
    de paso donde hacerlo. El molde está escrito y probado en
