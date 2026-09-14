@@ -1100,6 +1100,18 @@ export const SUFIJO_CONV: Record<string, string> = Object.fromEntries(
   Object.entries(CONVOCATORIAS).map(([k, v]) => [k, v.url]),
 );
 
+/** El nombre de la carpeta de un examen, que **es** el último tramo de su URL:
+ *  `2024-2025` + `ordinaria` → `2024-2025-ord`.
+ *
+ *  Sale a una función el 15 de septiembre de 2026. Estaba escrita cuatro
+ *  veces con la misma plantilla —la portada, el índice de exámenes de cada
+ *  asignatura, la página de un examen y la de una ruta—, y una de las cuatro
+ *  es el **autocontrol** que comprueba que la carpeta y los datos del examen
+ *  casan: estaba escrito contra una copia de la fórmula que quería vigilar,
+ *  así que un cambio en la plantilla se le habría colado sin protestar. */
+export const slugExamen = (curso: string, convocatoria: string): string =>
+  `${curso}-${SUFIJO_CONV[convocatoria]}`;
+
 /* ═══════════════════════════════════════════════════════════════════════
    Rutas de estudio
    ═══════════════════════════════════════════════════════════════════════ */

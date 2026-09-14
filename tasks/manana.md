@@ -705,11 +705,20 @@ En orden de rendimiento:
 
 ### 10.6 · Las cuatro duplicaciones de §01 cuyo próximo fallo es silencioso
 
-1. **La lista de asignaturas, tres veces en `content.config.ts`** — cinco
-   líneas de `Object.fromEntries` y deja de poder desaparecer una asignatura
-   sin romper el build.
-2. **La URL de un examen, cuatro veces** (una de ellas es un autocontrol
-   escrito contra una copia). Una función de tres líneas.
+1. **La lista de asignaturas — comprobado el 15 de septiembre: en
+   `content.config.ts` ya está una sola vez**, en `CON_TEMAS`, desde el 6 de
+   septiembre. Lo que **sí** quedaba era una copia vieja fuera de ahí: el
+   `getCollection(asignatura.id as ...)` de
+   `preparar/[evaluacion].astro` nombraba a mano **dos** asignaturas y llevaba
+   cinco sin actualizarse. No rompía nada porque el valor real siempre era
+   bueno, pero el tipo mentía. Ahora usa `ConTemas`.
+2. **~~La URL de un examen, cuatro veces~~ · hecha el 15 de septiembre de
+   2026.** `slugExamen(curso, convocatoria)` vive en `content.config.ts`, al
+   lado de `SUFIJO_CONV`, y la usan los cuatro sitios: la portada, el índice
+   de exámenes, la página de un examen y la de una ruta. La cuarta era el
+   **autocontrol** que comprueba que la carpeta del examen casa con sus datos,
+   y estaba escrito contra una copia de la fórmula que vigilaba: un cambio en
+   la plantilla se le habría colado sin protestar.
 3. **~~`NOMBRE_RUTA` en `index.astro`~~ · arreglado el 15 de septiembre de
    2026.** Era una copia a mano con **7** de las 17 claves, así que las rutas
    de Química y de Mecánica —`1c` y `2c`— caían en el `??` y salían en

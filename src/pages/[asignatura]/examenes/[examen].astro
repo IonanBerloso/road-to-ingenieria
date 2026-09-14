@@ -5,7 +5,7 @@ import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import Examen from '../../../components/ui/Examen.astro';
 import { archivo, ruta } from '../../../lib/rutas';
-import { SUFIJO_CONV, CONVOCATORIAS } from '../../../content.config';
+import { CONVOCATORIAS, slugExamen } from '../../../content.config';
 
 /**
  * Una página por convocatoria. Un examen cruza temas, así que no cabe dentro
@@ -33,7 +33,7 @@ export async function getStaticPaths() {
     /* El id es «calculo/examenes/2015-2016-1ev/examen»: la carpeta es el
        penúltimo segmento, porque el último es el nombre del fichero. */
     const carpeta = ex.id.split('/').at(-2) ?? '';
-    const esperado = `${curso}-${SUFIJO_CONV[convocatoria]}`;
+    const esperado = slugExamen(curso, convocatoria);
     if (carpeta !== esperado) {
       throw new Error(
         `El examen de la carpeta "${carpeta}" declara curso ${curso} y convocatoria ` +

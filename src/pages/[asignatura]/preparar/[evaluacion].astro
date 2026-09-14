@@ -6,7 +6,7 @@ import EjercicioGuiado from '../../../components/patrones/EjercicioGuiado.astro'
 import Reparto from '../../../components/ui/Reparto.astro';
 import { mate } from '../../../lib/markdown.mjs';
 import { ruta } from '../../../lib/rutas';
-import { SUFIJO_CONV } from '../../../content.config';
+import { SUFIJO_CONV, slugExamen, type ConTemas } from '../../../content.config';
 
 /**
  * La ruta de estudio de una evaluación: qué cae, con qué frecuencia y en qué
@@ -143,7 +143,7 @@ export async function getStaticPaths() {
                 `${m.curso} · ${m.convocatoria}, que no existe.`,
             );
           }
-          return { ...m, slug: `${m.curso}-${SUFIJO_CONV[m.convocatoria]}`, fecha: ex.data.fecha };
+          return { ...m, slug: slugExamen(m.curso, m.convocatoria), fecha: ex.data.fecha };
         }
         const ficha = asignatura.data.temas.find((x) => x.id === m.tema);
         if (!ficha) {
@@ -173,7 +173,11 @@ const d = laRuta.data;
    de MDX conserva los acentos: «Raíces n-ésimas…» produce
    `raíces-n-ésimas-cuántas-hay…`. Se comprueba aquí, contra los encabezados
    reales, y el build falla si alguno no está. */
-const coleccion = await getCollection(asignatura.id as 'calculo' | 'fluidos');
+/* El tipo sale de `CON_TEMAS`, no de una lista escrita aquí: hasta el 15 de
+   septiembre de 2026 este `as` nombraba a mano dos asignaturas y llevaba
+   cinco sin actualizarse. No rompía nada porque el valor real siempre era
+   bueno, pero el tipo mentía y con él la ayuda del editor. */
+const coleccion = await getCollection(asignatura.id as ConTemas);
 const slugsPorTema = new Map<string, string[]>();
 /* El título de verdad del apartado, indexado por «tema#slug».
    Hasta el 23 de agosto de 2026 el enlace mostraba el slug con los guiones
