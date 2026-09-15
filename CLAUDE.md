@@ -593,7 +593,7 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 | `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 4.149 |
 | `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.902 |
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 33 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 27 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 28 |
 | `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 178 |
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
