@@ -128,12 +128,64 @@ preguntar, no dejar que la decida `join`.
 
 ---
 
-## ▶ MAÑANA · 16 de septiembre de 2026 — por dónde seguir
+## ▶ MAÑANA · 17 de septiembre de 2026 — por dónde seguir
 
-Escrito al cerrar el día 12. El suelo está **entero en verde** —build, verify,
-color, 1.936 tests y la barrida completa del navegador— y las seis asignaturas
-publicadas no tienen ninguna deuda que bloquee. Esto es el orden que
-recomiendo, y por qué.
+Escrito al cerrar el día 13, con la reauditoría de Cálculo cerrada entera. El
+suelo está en verde y **el despliegue vuelve a funcionar**, que es lo que hoy
+no era verdad.
+
+### Antes de nada: dos decisiones tuyas, de un minuto cada una
+
+1. **El bloque «los exámenes enteros»** — la auditoría quería tres escalones y
+   lo he dejado como lista plana, por la razón que está en el §4 de abajo. Si
+   prefieres la otra lectura, es media hora.
+2. **La `fuente` de `duracionDelExamen` publica tu nombre** en una página
+   pública: «Ionan, 15 de septiembre de 2026: "…"». La alternativa es «dato
+   del profesor de la asignatura, comunicado el 15 de septiembre de 2026»,
+   comprobable igual para quien va a clase y sin nombrar a nadie.
+
+### 1 · Álgebra, las dos rutas por los criterios · §10.3
+
+**Lo único de contenido que queda medido**, y son las rutas más cortas del
+sitio. 12 de sus 35 escalones ponen el ejercicio de examen delante de los de
+boletín, `revisado` está a cero en sus 12 bloques y declara cinco huecos
+abiertos en la asignatura que pide demostrar en el 75 % de sus ejercicios de
+examen.
+
+Ahora además hay herramienta para hacerlo rápido: el trabajo de hoy en Cálculo
+—medir qué problemas de boletín no llegan a ninguna ruta y colocarlos delante
+del primer ejercicio de examen de su escalón— es el mismo procedimiento, y
+`deuda.mjs` §2 y §2 bis lo comprueban solo.
+
+### 2 · Lo que la auditoría dejó abierto y no es trabajo mío
+
+El **peso de `/calculo/t05-integracion/`** —10,5 MB y 4,6 s— y el **contraste
+de la barra de reparto** —tres segmentos contiguos a 2,92, 1,77 y 1,65—. Los
+dos están medidos y los dos son decisiones de diseño. Ver §10.6 bis y §10.5
+bis.
+
+### 3 · Lo suelto de §10.7, por coste
+
+`calculo-ext` con `medidoSobre: 11` y su ventana sin declarar —ahora existe
+`fueraDeLaVentana` y el arreglo es de dos líneas si resulta que le pasa lo
+mismo que a `calculo-ord`—; las dos rutas de Química, que prometen fecha de
+revisión por bloque y la tienen 3 de 7 y 2 de 8; los cinco parciales de
+Fluidos de 2019-2021 sin ruta y sin decir por qué; y las 21 + 13 rampas cuyo
+apunte **está mal redactado** y hay que releer antes de tocarlo.
+
+### Lo que NO toca
+
+Abrir una séptima asignatura: §00 lo prohíbe mientras Térmica esté en `obra`,
+y lo sigue estando.
+
+---
+
+## Fase del 16 de septiembre (cumplida)
+
+Escrito al cerrar el día 12. Lo que se planeó aquella noche se cumplió a
+medias y por buenas razones: la reauditoría llegó por la mañana y mandaba
+ella, porque su §0 decía que el sitio no se estaba publicando. Álgebra —que
+era el punto 1— sigue sin tocar y pasa a mañana.
 
 ### 1 · Álgebra, las dos rutas por los criterios · §10.3
 
