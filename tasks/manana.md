@@ -691,17 +691,105 @@ En orden de rendimiento:
    simulador que no compare nada. El «228» de §11 ya llevaba su aviso desde el
    13 —que no sale de un examen sino de
    `fluidos/t20-golpe-ariete/index.mdx:218`— y se ha dejado tal cual.
-2. **`humo.mjs` y los 360 px:** mide seis páginas fijas que nunca rotan,
-   ignora `HUMO_TODO`, se traga el fallo de abrir la resolución y **nunca abre
-   una página de tema** — que es justo donde el sitio se desbordaba el 4 de
-   septiembre.
-3. **La portada se abre sin escuchas de error de JavaScript**, y es la página
-   con FLIP, `:target` y paleta de comandos. Dos líneas.
-4. **`verify.mjs` y el foco visible:** busca `outline: none`; un botón sin
-   ninguna regla de foco pasa.
-5. **`check-color.mjs` solo mide contra `--paper`:** fuera quedan `--panel`,
-   la paleta de pizarra entera y los `--barra-*`. Y `--barra-justificar` se
-   usa como color de texto a 3,50:1 sobre `--panel`, por debajo de AA.
+2. **~~`humo.mjs` y los 360 px~~ · relectura del 15 de septiembre: ya estaba
+   hecho, y el apunte se había quedado viejo.** El guion honra `HUMO_TODO`,
+   tiene muestra rotatoria de ocho exámenes por día del año, abre las tres
+   clases de página —cuatro de examen, seis de tema, tres de ruta— y cuenta
+   cuántas resoluciones ha llegado a abrir de verdad, que es lo que impedía
+   tragarse el fallo. Lo describía el estado anterior al 13 de septiembre.
+3. **~~La portada se abre sin escuchas de error de JavaScript~~ · hecho el 15
+   de septiembre de 2026.** Era verdad, y no eran dos líneas sino un agujero:
+   de las tres pestañas que abre `humo.mjs`, solo la del bucle principal
+   escuchaba. Las otras dos son la de 360 px y **la portada**, que es la
+   página con FLIP, `:target` y paleta de mandos. O sea que «cero errores de
+   JavaScript en consola» se afirmaba sin haber mirado la página donde era más
+   probable que los hubiera. Ahora hay un ayudante `escucha(pestaña, etiqueta)`
+   y lo usan las tres.
+
+   **Y encontró algo en la primera pasada**, que es la mejor defensa de que el
+   hueco importaba: `portada → Invalid regular expression: /p{M}/gu: Incomplete
+   quantifier`. A `index.astro:884` le faltaba una barra —`\p{M}`, la marca
+   diacrítica, escrito `p{M}`—, y ese literal no es inválido al compilar sino
+   **al evaluarlo**: la primera llamada a `sinTildes` lanzaba y se llevaba por
+   delante el resto del script, o sea **la paleta de mandos entera**. La misma
+   línea está bien doce veces más arriba, en el lado servidor. Llevaba
+   publicado desde que se escribió la paleta, con la barrida diciendo «cero
+   errores de JavaScript en consola» todos los días — porque la consola de esa
+   página no la escuchaba nadie.
+4. **~~`verify.mjs` y el foco visible~~ · hecho el 15 de septiembre de 2026,
+   por el otro lado.** Un botón sin regla de foco propia pasa, y está bien:
+   `base.css` tiene un `:focus-visible` global con un anillo de 2 px en
+   `--live`. Lo que no había era nadie que comprobara que esa regla sigue ahí
+   —borrarla habría dejado el sitio entero sin anillo con los dos guardianes en
+   verde, porque ninguno APAGA nada—. Ahora se exige que exista y que su
+   `outline` mida algo. Los tres simuladores que declaran su propio anillo lo
+   pintan en `--d2` a 3,43:1 sobre el panel, por encima del 3:1 de 1.4.11.
+5. **~~`check-color.mjs` solo mide contra `--paper`~~ · hecho el 15 de
+   septiembre de 2026, y encontró más de lo que el apunte decía.**
+
+   El guion medía dos grupos —las seis series y los nueve acentos— contra una
+   superficie y a un solo listón. Ahora hay una tercera comprobación, **la capa
+   de tinta**: cada color que se usa como letra, contra el fondo real sobre el
+   que cae, en tres escenas —claro, oscuro y **pizarra**, cuyo remapeo se lee
+   del bloque `.hero, .banda` de `index.astro` en vez de copiarse—.
+
+   Lo que estaba publicado y nadie medía:
+
+   | token | daba | dónde |
+   |---|---|---|
+   | `--faint` | 3,43:1 y 3,74:1 | claro — y con él están escritos los rótulos y la meta de media interfaz |
+   | `--faint` | 4,42:1 | oscuro, sobre `--panel` |
+   | `--flag` | 4,18:1 | claro, sobre el papel |
+   | `--tiza-flag` | 4,20:1 | sobre el punto más claro de la pizarra |
+   | `--barra-justificar` | 3,50:1 | usado como color de texto |
+   | `--d2` | 3,15:1 | **124 rótulos** `<text fill="var(--d2)">` en 28 ficheros |
+
+   Los cuatro primeros se han corregido en el propio token, con el cambio
+   mínimo que llega a 4,5. Los dos últimos no se podían corregir ahí: uno es
+   el relleno de una franja de la barra de reparto y el otro es un color de
+   serie cuyo tono no admite oscurecerse sin juntarse con `--d3` o `--d5` bajo
+   dicromacia —se recorrió el espacio entero—. Por eso hay dos tokens nuevos,
+   `--marco` y `--d2-tinta`, que son esos mismos colores llevados a 4,5 y que
+   **solo** valen para letra.
+
+   Y lo que hace que esto no envejezca: **la lista de tintas no está escrita a
+   mano**. Se lee de `src/` —los `color:`, los `fill:` y los
+   `fill="var(--x)"` de los `<text>`, que es la forma que se me había escapado
+   y donde estaban los 124 rótulos— y una tinta sin fila en la tabla rompe el
+   guion. Al encenderlo saltaron dos series más que rotulan, `--d4` y `--d5`;
+   las dos pasan AA y ahora están declaradas.
+
+   De paso, dos cosas que aparecieron al abrir el fichero: `block(':root')`
+   casaba con la cita «el ÚNICO `:root{}` del repositorio» **del comentario de
+   cabecera**, y funcionaba de milagro; y la tabla de §06 de `CLAUDE.md`
+   publicaba tres hexadecimales caducados —`--live #0D6E6B`, `--flag
+   #B93A2B`—, que es §01 con otra cara. Los literales se han quitado de la
+   tabla: el valor de un token se lee en `tokens.css`.
+
+### 10.5 bis · La barra de reparto, medida y sin tocar (nuevo, 15 de septiembre)
+
+Al meter la capa de tinta en `check-color.mjs` salieron de paso los números de
+la barra apilada del examen, que no los tenía nadie. Se dejan **medidos y sin
+cambiar**, porque cambiarlos es rediseñar una pieza del brief §6 y eso no se
+improvisa de madrugada:
+
+| par | contraste |
+|---|---|
+| `--barra-reconocer` vs `--barra-calcular` | 2,92 |
+| `--barra-calcular` vs `--barra-justificar` | 1,77 |
+| `--barra-reconocer` vs `--barra-justificar` | 1,65 |
+
+Los tres segmentos son **contiguos** —la barra es un `flex` de tres cajas—, así
+que lo que importa es separarlos entre sí, y los tres pares quedan por debajo
+de 3:1. Contra el panel también hay dos flojos, cada uno en un tema:
+`--barra-reconocer` da 2,12 en claro y `--barra-calcular` 2,68 en oscuro.
+
+Lo que salva la pieza hoy es que **el color no es el único distintivo**: debajo
+de la barra va una fila por competencia con su cuadradito y su texto, y los
+tres anchos son distintos. Por eso no se ha metido en el guardián con un umbral
+rebajado a la medida de lo que hay, que sería exactamente el guardián que se
+apaga solo contra el que avisa la cabecera de ese fichero. La pregunta para
+Ionan es si la barra tiene que leerse a simple vista o le basta con la leyenda.
 
 ### 10.6 · Las cuatro duplicaciones de §01 cuyo próximo fallo es silencioso
 
@@ -728,8 +816,13 @@ En orden de rendimiento:
    `index.astro` la deriva: una clave sin etiqueta rompe el tipo, no el
    diseño.
 
-   Lo que **queda** de este punto: `ETIQUETA` y `FRASE_ESTADO` siguen siendo
-   la misma tabla dos veces, a cuatro líneas de distancia.
+   ~~Lo que **queda** de este punto: `ETIQUETA` y `FRASE_ESTADO` siguen siendo
+   la misma tabla dos veces, a cuatro líneas de distancia.~~ · **hecho el 15 de
+   septiembre de 2026**, y eran tres copias, no dos: además de las dos tablas,
+   la fila de una asignatura `ok` llevaba la palabra «entera» escrita a mano
+   dentro de la plantilla, así que cambiar la tabla habría dejado esa fila
+   diciendo lo de antes — que es justo el fallo silencioso que este punto
+   describe. Ahora hay una sola tabla, `ESTADO`, con `corta` y `larga`.
 4. **~~`revisa-ejercicios.mjs` diverge del esquema~~ · comprobado el 15 de
    septiembre: no diverge.** El guion exige `titulo` de 5 caracteres y el
    esquema también —`min(5)` en el objeto `ejercicio`—. Los `min(3)` que
@@ -755,6 +848,21 @@ que conviene decidir dos cosas: si el umbral entra en el suelo, y si la página
 de tema tiene que seguir sirviendo las 48 resoluciones de una vez. La segunda
 es arquitectura y no se improvisa; la primera es una línea de `package.json`.
 
+### 10.6 ter · Dos figuras mías recortadas (encontrado y arreglado el 15 de septiembre)
+
+Las tres figuras de Taylor que entraron el 15 de septiembre con el encargo 2 se
+verificaron a ojo, extrayendo los SVG de `dist/` y mirándolos. Dos de ellas
+**se salían del `viewBox`** y la barrida las cazó en cinco páginas —el tema 4 y
+las cuatro rutas que reutilizan la figura—: «eˣ» por la derecha en
+`ej-taylor-orden-dos`, y «0,1» y «0,2» por la izquierda en `ej-cota-del-resto`.
+
+La lección no es el arreglo —dos `viewBox` ensanchados— sino **por qué la
+comprobación a ojo no bastó**: un rótulo que se sale se ve recortado solo si
+miras el borde exacto, y en una captura de 300 px de ancho eso son dos píxeles.
+El guardián mide la caja de cada `<text>` contra el marco y no se le escapa. El
+orden bueno es al revés del que seguí: primero `humo.mjs`, y la mirada para lo
+que el guardián no puede juzgar —si la etiqueta estorba, si el color dice algo—.
+
 ### 10.7 · Lo suelto
 
 - **~~Cálculo~~ · hecho el 15 de septiembre de 2026.** El modelo de
@@ -774,17 +882,62 @@ es arquitectura y no se improvisa; la primera es una línea de `package.json`.
   que declara y no enlaza.
 - **Las 21 + 13 rampas** que `deuda.mjs` no cuenta: aplicar el cuarto criterio
   a **escalón** y no a bloque.
-- **`calculo-ord`**: `medidoSobre: 11` con 12 ordinarias transcritas.
+- **~~`calculo-ord`: `medidoSobre: 11` con 12 ordinarias transcritas~~ · hecho
+  el 15 de septiembre de 2026, y no era el número que había que cambiar.**
+
+  `medidoSobre: 11` es correcto, y la ruta ya lo decía: su `criterioDeOrden`
+  declara que **hay doce ordinarias transcritas y todo se cuenta sobre once**,
+  las contiguas de 2015-2016 a 2025-2026, porque la duodécima —2013-2014— está
+  suelta ocho años atrás, es de otro formato y ese año la global se llamaba
+  «sexta evaluación». Lo que estaba mal era que **tres bloques no respetaban
+  esa ventana**, y uno de ellos publicaba un número falso.
+
+  | bloque | publicaba | publica ahora | por qué |
+  |---|---|---|---|
+  | `fourier` | 10 de 11 | **11 de 11** | las once ordinarias de la ventana traen ejercicio de `t11`; el que faltaba en el recuento es el de 2019-2020 |
+  | `laplace` | 11 de 11, «de 2013-2014 a 2025-2026», «los doce» | 11 de 11, «de 2015-2016 a 2025-2026», **trece ejercicios en once años** | mezclaba un año de fuera y se dejaba los **dos** de 2019-2020 |
+  | `solidos` | 10 de 11, «superficie en cuatro», «centro de gravedad en dos» | 10 de 11, «en tres» y «en uno» | las dos pruebas que caían eran de 2013-2014, que la propia ruta declara fuera |
+  | `dibujar` | «20 de 45, 13 en el apartado a)» | **21 de 51, 14 en el apartado a)** | arrastraba el Fourier de menos, y la población no se pudo reproducir: contando ids del corpus en la ventana salen 51, no 45 |
+
+  Y como Fourier pasa a 11, empata con Laplace y **adelanta al sólido**, que es
+  lo que el criterio de esta ruta manda —«por rendimiento medido»—: los dos
+  bloques se han permutado. Comprobado con `diff` de los dos ficheros
+  ordenados: el multiconjunto de líneas es idéntico, solo se ha movido.
+
+  **La trampa que lo explica todo, y que conviene recordar**: 2019-2020 es la
+  única convocatoria cuyos ejercicios **no llevan `-ord-` en el id**. Son
+  `ex1920-1` … `ex1920-13`, porque ese año el examen vino en dos cuadernillos y
+  se numeró seguido. Cualquier recuento hecho buscando ese trozo se salta sus
+  trece ejercicios sin protestar — y 2019-2020 es exactamente el año que
+  faltaba en los dos recuentos que fallaban. Los del primer parcial no
+  fallaban, y se ve por qué: sus `fuente` enumeran los años uno a uno, así que
+  el olvido se habría visto al leerlas. **Un recuento que enumera se revisa; un
+  recuento que solo da el total, no.**
+
+  Queda dentro de `deuda.mjs` un guardián nuevo, **§6 bis**, que cierra la
+  clase: `medidoSobre` nunca puede ser MENOR que las convocatorias transcritas
+  de su propia `evaluacion` —mayor sí, Álgebra leyó ocho PDF y transcribió
+  cuatro—. Con `calculo-ord` arreglado, las quince rutas lo cumplen.
 - **Química**: las dos rutas prometen fecha de revisión por bloque y la tienen
   3 de 7 y 2 de 8.
 - **Un campo `pesoImpreso`** junto a `puntos`, o aceptar por escrito que se
   tira el reparto que Química y Fluidos **sí** imprimen.
 - **Los nueve `.readout` sin región viva** — *hecho el 13 de septiembre*.
-- **Código muerto medido**: `EXP_HW`, `fLisoKarman`, `subcapaRelativa`,
-  `ADIMENSIONAL`, `.rotulo--ink`, `--step`. Los dos de física con cuidado.
-- **`vitest` está en `dependencies`**, y cinco guiones no tienen entrada en
-  `package.json` —entre ellos `deuda.mjs`, que §04 declara la fuente oficial
-  de las cifras—.
+- **~~Código muerto medido~~ · hecho el 15 de septiembre de 2026, y la mitad
+  no estaba muerta.** `EXP_HW`, `fLisoKarman`, `subcapaRelativa` y
+  `ADIMENSIONAL` se usan las cuatro **dentro de su propio módulo**: lo muerto
+  no era el código sino el `export`, y eso es lo que se ha quitado. Los dos de
+  física, que era donde pedía cuidado, siguen calculando lo mismo. Muertos de
+  verdad y borrados: la clase `.rotulo--ink` y el token `--step`, que no los
+  nombraba nadie.
+- **~~`vitest` en `dependencies` y cinco guiones sin entrada~~ · hecho el 15
+  de septiembre de 2026.** `vitest` ha pasado a `devDependencies` —el
+  despliegue hace `npm ci` sin `--omit=dev`, así que sigue instalándose— y el
+  `package-lock.json` se ha regenerado para que no queden desincronizados, que
+  es lo que hace fallar a `npm ci`. Los cinco guiones tienen ya su línea:
+  `deuda`, `inventario`, `revisa`, `grafica` y `curvas`. El primero era el que
+  más molestaba: §04 lo declara la fuente oficial de las cifras y había que
+  saberse la ruta del fichero para invocarlo.
 
 ### 10.7 bis · Lo que añade la auditoría EXTERNA del 13 de septiembre
 
