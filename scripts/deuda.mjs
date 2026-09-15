@@ -367,6 +367,50 @@ console.log(`   Un falta[] vacío decía dos cosas incompatibles: «mirado y no 
    verdad está pendiente: bloques que no dicen ninguna de las dos.`);
 fila('de', `${bloques} bloques, ${sinFalta} sin decir nada (${Math.round((sinFalta / bloques) * 100)} %)`);
 
+/* ── 6 bis · rutas medidas sobre menos exámenes de los que el sitio publica ──
+ *
+ * `medidoSobre` dice cuántas convocatorias se leyeron para medir las
+ * frecuencias de una ruta, y la página lo publica tal cual: «medido sobre 11
+ * convocatorias». Puede ser MAYOR que lo transcrito —Álgebra leyó ocho PDF y
+ * transcribió cuatro, y eso es legítimo: se mide sobre lo leído—. Lo que no
+ * puede ser es MENOR, porque entonces el sitio publica un examen que la ruta
+ * que lo prepara no ha mirado, y todos sus «7 de 11» tienen un denominador
+ * que se quedó atrás.
+ *
+ * Nace el 15 de septiembre de 2026 de `calculo-ord`: 11 declaradas y 12
+ * ordinarias transcritas. Al tirar del hilo no era un número bajo sino DOS
+ * ventanas mezcladas —un bloque cuenta «las once» incluyendo 2013-2014 y otro
+ * «las once de 2015-2016 a 2025-2026»—, y eso este guion no lo puede ver. Lo
+ * que sí puede ver, y es lo que dispara la relectura, es el descuadre. */
+pinta('6 bis · Rutas que miden sobre menos convocatorias de las que hay transcritas');
+console.log(`   \`medidoSobre\` puede ser mayor que lo transcrito —se mide sobre lo
+   LEÍDO—, pero nunca menor: eso es una ruta que no ha mirado un examen que el
+   propio sitio publica, y un denominador que se quedó atrás.`);
+{
+  let cortas = 0;
+  for (const f of readdirSync(join(CONT, 'preparar'))) {
+    if (!f.endsWith('.yaml')) continue;
+    const r = yaml.load(readFileSync(join(CONT, 'preparar', f), 'utf8'));
+    const dir = join(CONT, r.asignatura, 'examenes');
+    if (!existsSync(dir)) continue;
+    /* Solo las de SU convocatoria. `tambienPrepara` no amplía la base de
+       medida: una ruta de 3.ª evaluación también prepara las dos
+       recuperaciones, y contarlas triplicaría el denominador sin que nadie
+       haya medido nada nuevo. */
+    let transcritas = 0;
+    for (const d of readdirSync(dir)) {
+      const p = join(dir, d, 'examen.yaml');
+      if (!existsSync(p)) continue;
+      if (yaml.load(readFileSync(p, 'utf8')).convocatoria === r.evaluacion) transcritas++;
+    }
+    if (transcritas > r.medidoSobre) {
+      cortas++;
+      fila(f.replace('.yaml', ''), `medidoSobre ${r.medidoSobre} · transcritas ${transcritas}`);
+    }
+  }
+  if (cortas === 0) fila('de', 'ninguna: cada ruta mide sobre al menos lo que su asignatura publica');
+}
+
 /* ── 3 · pasos que piden decimales sin ofrecer la forma exacta ──────── */
 pinta('3 · Pasos que ordenan dar decimales');
 console.log(`   §09: en el examen no hay calculadora, así que un enunciado nunca

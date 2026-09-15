@@ -67,7 +67,7 @@ export function fColebrook(Re: number, er: number): number {
 }
 
 /** Karman-Prandtl liso: Colebrook con rugosidad nula. */
-export const fLisoKarman = (Re: number) => fColebrook(Re, 0);
+const fLisoKarman = (Re: number) => fColebrook(Re, 0);
 
 /**
  * En qué zona del ábaco cae el punto.
@@ -154,7 +154,7 @@ export function sensibilidadRe(Re: number, er: number): number {
    comprueba, porque es el tipo de afirmación que no se publica sin medir. */
 
 /** Espesor de la subcapa laminar, relativo al diámetro. */
-export const subcapaRelativa = (Re: number, fv: number) => (5 * Math.SQRT2 * 2) / (Re * Math.sqrt(fv));
+const subcapaRelativa = (Re: number, fv: number) => (5 * Math.SQRT2 * 2) / (Re * Math.sqrt(fv));
 
 /**
  * Cuántas veces la rugosidad es más alta que la subcapa laminar.

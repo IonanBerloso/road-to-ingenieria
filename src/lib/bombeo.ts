@@ -17,7 +17,7 @@
  */
 
 /** El exponente de Hazen-Williams. Es de la fórmula, no un ajuste. */
-export const EXP_HW = 1.852;
+const EXP_HW = 1.852;
 
 /** `H = A - B·Q²`, la forma en que la escuela publica una curva de bomba. */
 export interface Bomba {

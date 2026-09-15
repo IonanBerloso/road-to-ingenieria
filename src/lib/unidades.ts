@@ -73,7 +73,7 @@ export interface Magnitud {
 
 const D = (M = 0, L = 0, T = 0, K = 0): Dim => ({ M, L, T, K });
 
-export const ADIMENSIONAL = D();
+const ADIMENSIONAL = D();
 
 /** Las dimensiones con nombre, para que los mensajes digan «una velocidad» y
  *  no «M⁰L¹T⁻¹». El orden importa: se busca la primera que coincida. */

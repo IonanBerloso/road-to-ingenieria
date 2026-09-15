@@ -337,6 +337,31 @@ console.log('\nAccesibilidad de la fuente');
   }
   if (apagones.length === 0) ok('nadie apaga el outline del foco');
   else fallo('Foco visible obligatorio: no se apaga el outline sin poner otra cosa', apagones.join('\n    '));
+
+  /* La otra mitad de la comprobación, añadida el 15 de septiembre de 2026.
+   *
+   * Lo de arriba caza a quien APAGA el foco. Pero un botón sin ninguna regla
+   * de foco propia también pasaba, y eso está bien —solo mientras exista la
+   * regla global que lo cubre—. La regla existe: `:focus-visible` con un
+   * outline de 2 px en `base.css`. Lo que no existía era nadie que lo
+   * comprobara: borrarla habría dejado el sitio entero sin anillo de foco y
+   * los dos guardianes habrían seguido en verde, porque ninguno APAGA nada.
+   *
+   * Es la misma clase de fallo que las exclusiones de `humo.mjs`: no da rojo,
+   * da verde sobre menos sitio del que dice. */
+  const BASE_CSS = join(SRC, 'styles/base.css');
+  const global = sinComentarios(leer(BASE_CSS)).match(/(^|\})\s*:focus-visible\s*\{([^}]*)\}/);
+  const anillo = global?.[2] ?? '';
+  const pinta = /outline\s*:\s*[^;]*\b(?:[1-9]\d*px|\.?\d*[1-9]\d*(?:rem|em))/.test(anillo);
+  if (pinta) ok('la regla global de `:focus-visible` pinta un anillo de verdad');
+  else
+    fallo(
+      'Foco visible obligatorio: la regla global tiene que pintar un anillo',
+      global
+        ? `base.css declara \`:focus-visible\` pero su outline no mide nada: «${anillo.trim()}»`
+        : 'base.css no declara ninguna regla `:focus-visible` a secas, así que un control ' +
+            'sin estilo propio de foco se queda sin anillo y nadie se entera',
+    );
 }
 
 /* ═══════════════════════════════════════════════════════════════════

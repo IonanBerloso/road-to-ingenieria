@@ -89,6 +89,21 @@ async function main() {
 
   const erroresConsola = [];
 
+  /* Escuchar los errores de JavaScript de una pestaña.
+   *
+   * Existe como función desde el 15 de septiembre de 2026, y la razón es el
+   * hueco que tapa: las dos pestañas que se abren fuera del bucle principal
+   * —la de 360 px y la de la portada— se abrían SIN escuchas. La segunda es
+   * justo la página con más JavaScript del sitio: el FLIP de los detalles,
+   * el `:target` y la paleta de mandos. O sea que la línea «cero errores de
+   * JavaScript en consola» se afirmaba sin haber mirado la página donde era
+   * más probable que los hubiera. */
+  const escucha = (p, etiqueta) => {
+    p.on('pageerror', (e) => erroresConsola.push(`${etiqueta} → ${e.message}`));
+    p.on('console', (m) => m.type() === 'error' && erroresConsola.push(`${etiqueta} → ${m.text()}`));
+    return p;
+  };
+
   /* Se recorre cada página de contenido, no solo una: el día que haya veinte
      temas, el fallo aparecerá en el que nadie miró.
 
@@ -268,8 +283,7 @@ async function main() {
        que falla al azar se acaba ignorando, que es lo que §11 prohíbe. */
     if (pagina && !pagina.isClosed()) await pagina.close().catch(() => {});
     pagina = await navegador.newPage({ viewport: { width: 1280, height: 1000 } });
-    pagina.on('pageerror', (e) => erroresConsola.push(`${ruta} → ${e.message}`));
-    pagina.on('console', (m) => m.type() === 'error' && erroresConsola.push(`${ruta} → ${m.text()}`));
+    escucha(pagina, ruta);
     await pagina.goto(`http://localhost:${PUERTO}${ruta}`, { waitUntil: 'load', timeout: 60000 });
     /* Esperar a que el navegador quede ocioso, no un tiempo fijo. El tema 1
        pinta doce lienzos del paso `verificar` en `requestIdleCallback`, y esa
@@ -802,7 +816,7 @@ async function main() {
       ...muestraDe(/\/t\d{2}-/, 6).map((u) => [u, '#ejercicios', 'tema']),
       ...muestraDe(/\/preparar\//, 3).map((u) => [u, '', 'ruta']),
     ];
-    const pagina = await navegador.newPage();
+    const pagina = escucha(await navegador.newPage(), '360 px');
     await pagina.setViewportSize({ width: 360, height: 900 });
     const desbordan = [];
     /* Cuántas resoluciones se han llegado a abrir de verdad. Sin este
@@ -859,7 +873,7 @@ async function main() {
      Nada de esto lo ve `verify.mjs`: el HTML publicado es correcto: el fallo
      nace de combinar un ancla con un clic. Por eso vive aquí. */
   {
-    const pagina = await navegador.newPage();
+    const pagina = escucha(await navegador.newPage(), 'portada');
     const mal = [];
     const abiertos = () =>
       pagina.evaluate(() =>

@@ -43,14 +43,17 @@ for (const a of asignaturas) {
 const cursos = [1, 2] as const;
 /* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
  * jerga de obra. «Entera» solo lo dice el catálogo, nunca esta página. */
-const ETIQUETA = { ok: 'entera', obra: 'la estamos escribiendo', prev: 'aún no' } as const;
-
-/* El detalle (brief §5b): el rótulo de tiza de la banda dice qué es esta
- * asignatura, con el estado en las palabras de la pizarra. */
-const FRASE_ESTADO = {
-  ok: 'asignatura entera',
-  obra: 'la estamos escribiendo',
-  prev: 'aún no',
+/* Cada estado dice lo mismo en dos sitios y con dos longitudes: `corta` en la
+ * fila de la lista, `larga` en el rótulo de tiza de la banda del detalle
+ * (brief §5b). Estaban en dos tablas separadas por cuatro líneas, y había una
+ * tercera copia todavía peor: la fila de una asignatura `ok` llevaba la
+ * palabra «entera» escrita a mano dentro de una plantilla, así que cambiar la
+ * tabla habría dejado esa fila diciendo lo de antes. Una tabla, tres usos.
+ * (§01, hecho el 15 de septiembre de 2026.) */
+const ESTADO = {
+  ok: { corta: 'entera', larga: 'asignatura entera' },
+  obra: { corta: 'la estamos escribiendo', larga: 'la estamos escribiendo' },
+  prev: { corta: 'aún no', larga: 'aún no' },
 } as const;
 
 /* Las etiquetas cortas de los botones de ruta. Presentación, no dato:
@@ -349,10 +352,10 @@ const enteras = asignaturas
                     <span class="nm" data-nombre>{a.data.nombre}</span>
                     <span class:list={['mano', 'ps', a.data.estado]}>
                       {a.data.estado === 'ok'
-                        ? `${a.data.temas.length} temas · ${examenesPorAsignatura.get(a.id)?.length ?? 0} exámenes — entera`
+                        ? `${a.data.temas.length} temas · ${examenesPorAsignatura.get(a.id)?.length ?? 0} exámenes — ${ESTADO.ok.corta}`
                         : a.data.estado === 'obra' && hechos(a) > 0
-                          ? `${hechos(a)} de ${a.data.temas.length} temas — ${ETIQUETA.obra}`
-                          : ETIQUETA[a.data.estado]}
+                          ? `${hechos(a)} de ${a.data.temas.length} temas — ${ESTADO.obra.corta}`
+                          : ESTADO[a.data.estado].corta}
                     </span>
                   </a>
                 ))}
@@ -397,7 +400,7 @@ const enteras = asignaturas
                 <p class="mano b-kicker">
                   {String(a.data.orden).padStart(2, '0')} ·{' '}
                   {a.data.curso === 1 ? '1.er curso' : '2.º curso'} ·{' '}
-                  {FRASE_ESTADO[a.data.estado]}
+                  {ESTADO[a.data.estado].larga}
                 </p>
                 {/* tabindex -1: al abrir el detalle el foco aterriza aquí, para
                     que el lector de pantalla anuncie dónde ha ido a parar. No
@@ -878,7 +881,14 @@ const enteras = asignaturas
   /* Sin tildes en las dos puntas: la clave que se arma aquí y la consulta de
      abajo. Antes se comparaba solo en minúscula y «entropia» no encontraba
      nada mientras «entropía» encontraba catorce cosas. */
-  const sinTildes = (t: string) => t.toLowerCase().normalize('NFD').replace(/p{M}/gu, '');
+  /* `\p{M}`, con la barra. Sin ella el literal es `/p{M}/gu`, que no es «una
+     marca diacrítica» sino «una p seguida de un cuantificador incompleto», y
+     el navegador lo rechaza AL EVALUARLO: la primera llamada a `sinTildes`
+     lanza, y con ella se cae el resto de este script — la paleta de mandos
+     entera. Se publicó así hasta el 15 de septiembre de 2026, y lo encontró
+     `humo.mjs` el día que se le pusieron escuchas de consola a la pestaña de
+     la portada, que hasta entonces se abría sin ellas. */
+  const sinTildes = (t: string) => t.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
   for (const x of indice) x.clave ??= sinTildes(`${x.nombre} ${x.sub}`);
 
   let visibles: Entrada[] = [];
