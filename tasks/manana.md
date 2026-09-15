@@ -10,6 +10,66 @@ está en el historial de este fichero: `git log -p tasks/manana.md`.
 
 ---
 
+## ▶ MAÑANA · 16 de septiembre de 2026 — por dónde seguir
+
+Escrito al cerrar el día 12. El suelo está **entero en verde** —build, verify,
+color, 1.936 tests y la barrida completa del navegador— y las seis asignaturas
+publicadas no tienen ninguna deuda que bloquee. Esto es el orden que
+recomiendo, y por qué.
+
+### 1 · Álgebra, las dos rutas por los criterios · §10.3
+
+**Es lo que más rinde por hora, y lo único de contenido que queda medido.**
+12 de sus 35 escalones ponen el ejercicio de examen delante de los de boletín,
+`revisado` está a cero en sus 12 bloques y de sus 14 `falta[]` hay nueve
+tachadas — o sea que declara cinco huecos abiertos en la asignatura que pide
+demostrar en el 75 % de sus ejercicios de examen. Son las rutas más cortas del
+sitio.
+
+Se entrega: los 12 escalones con su rampa delante, los 12 bloques con fecha de
+`revisado`, y los cinco `falta[]` resueltos o dichos. Se comprueba con
+`npm run deuda` —secciones 2, 2 bis, 5 y 6— y con la ruta abierta en el
+navegador.
+
+### 2 · La decisión que no puedo tomar yo · §10.6 bis y §10.5 bis
+
+Dos preguntas de diseño, las dos medidas y ninguna urgente:
+
+- **`/calculo/t05-integracion/` pesa 10,5 MB y tarda 4,6 s** en el Chromium
+  frenado de `peso.mjs`. Es la primera página del sitio que pasa de cuatro
+  segundos, y la causa es mía: t05 pasó de 32 a 48 ejercicios y cada uno lleva
+  su resolución entera en el HTML. Hay que decidir dos cosas — si `peso.mjs`
+  entra en `npm run suelo` (una línea de `package.json`) y si una página de
+  tema debe seguir sirviendo 48 resoluciones de una vez (arquitectura, no se
+  improvisa).
+- **La barra de reparto del examen** tiene sus tres segmentos contiguos a
+  2,92, 1,77 y 1,65 de contraste. Hoy la salva la leyenda con cuadraditos.
+  ¿Tiene que leerse a simple vista, o le basta con la leyenda?
+
+### 3 · Lo suelto de §10.7, por orden de lo que cuesta
+
+`calculo-ext` con `medidoSobre: 11` y su ventana sin declarar —la hermana del
+fallo que se arregló hoy en `calculo-ord`, y conviene mirarla ahora que se sabe
+qué buscar—; las dos rutas de Química, que prometen fecha de revisión por
+bloque y la tienen 3 de 7 y 2 de 8; los cinco parciales de Fluidos de 2019-2021
+sin ruta y sin decir por qué; y las 21 + 13 rampas que `deuda.mjs` no cuenta,
+cuyo apunte **está mal redactado** y hay que volver a leer antes de tocarlo:
+dice «aplicar el cuarto criterio a escalón y no a bloque» y hoy no he
+conseguido reconstruir a qué se refería.
+
+### 4 · El único encargo de Cálculo que sigue bloqueado
+
+**El simulacro con reloj** necesita un dato que solo tiene Ionan: **cuánto dura
+cada parcial**. No está impreso en ningún PDF de la carpeta ni en las normas de
+examen. Sin ese dato el reloj sería un número inventado, y §10 no lo permite.
+
+### Lo que NO toca mañana
+
+Abrir una séptima asignatura. §00 lo prohíbe mientras Térmica esté en `obra`, y
+lo sigue estando.
+
+---
+
 ## Fase 6 · Térmica, de `obra` a `ok`
 
 **Lo que le falta ya no es contenido.** Sus veinte convocatorias transcribibles
