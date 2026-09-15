@@ -1379,6 +1379,25 @@ const preparar = defineCollection({
       temas: z.array(z.string().regex(/^t\d{2}-[a-z0-9-]+$/)).min(1),
       /** Cuántas convocatorias se han leído para escribir esto. */
       medidoSobre: z.number().int().min(1),
+      /**
+       * Convocatorias transcritas que quedan FUERA de la ventana de medida.
+       *
+       * `calculo-ord` tiene doce ordinarias transcritas y mide sobre once: la
+       * de 2013-2014 está suelta ocho años atrás, trae seis ejercicios en vez
+       * de ocho y ese curso la global ni se llamaba así. La ruta lo explicaba
+       * en su `criterioDeOrden` desde el principio —y ahí es donde lo lee el
+       * alumno—, pero **el guardián de `deuda.mjs` no lee prosa**, así que
+       * avisaba de un descuadre legítimo en cada ejecución.
+       *
+       * Un aviso que suena siempre y siempre se ignora es peor que no tenerlo
+       * (§11): enseña a saltarse la sección entera. Este campo es el mismo
+       * dato en la forma que el guion entiende, y lleva su `porque` por lo
+       * mismo que todo lo demás aquí — una excepción sin motivo escrito es
+       * una excepción que nadie puede revisar.
+       */
+      fueraDeLaVentana: z
+        .array(z.object({ curso: z.string().regex(/^\d{4}-\d{4}$/), porque: z.string().min(30) }))
+        .optional(),
       /** Por qué los bloques van en este orden y no en el del temario. */
       criterioDeOrden: z.string().min(30),
       bloques: z.array(bloque).min(1),

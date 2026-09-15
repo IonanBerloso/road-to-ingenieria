@@ -403,9 +403,17 @@ console.log(`   \`medidoSobre\` puede ser mayor que lo transcrito —se mide sob
       if (!existsSync(p)) continue;
       if (yaml.load(readFileSync(p, 'utf8')).convocatoria === r.evaluacion) transcritas++;
     }
-    if (transcritas > r.medidoSobre) {
+    /* Las que la ruta declara fuera de su ventana no cuentan como descuadre.
+       Se restan aquí y no en la comparación de arriba para poder decir las dos
+       cifras si algún día no cuadran: lo que hay transcrito y lo que se mide. */
+    const excluidas = (r.fueraDeLaVentana ?? []).length;
+    if (transcritas - excluidas > r.medidoSobre) {
       cortas++;
-      fila(f.replace('.yaml', ''), `medidoSobre ${r.medidoSobre} · transcritas ${transcritas}`);
+      fila(
+        f.replace('.yaml', ''),
+        `medidoSobre ${r.medidoSobre} · transcritas ${transcritas}` +
+          (excluidas ? ` (${excluidas} declarada(s) fuera de la ventana)` : ''),
+      );
     }
   }
   if (cortas === 0) fila('de', 'ninguna: cada ruta mide sobre al menos lo que su asignatura publica');

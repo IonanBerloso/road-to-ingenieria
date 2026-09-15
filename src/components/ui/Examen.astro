@@ -178,6 +178,65 @@ const fueraHtml = await Promise.all(
         resoluciones están en la otra pestaña.
       </p>
 
+      {/* ── el simulacro ──────────────────────────────────────────────
+          Nace el 16 de septiembre de 2026. Los siete bloques «enteros» de las
+          rutas de Cálculo llevaban meses diciendo «siéntate con el papel en
+          blanco y con reloj», y el `falta[]` de cada uno reconocía que el
+          reloj lo ponía el alumno porque la página no lo tenía. Ahora lo
+          tiene, y la duración no se inventa: sale de la regla que declara el
+          catálogo (§10).
+
+          Sale `hidden` y lo enciende el script, que es la única forma honesta
+          de hacerlo en un sitio estático: sin JavaScript no hay cronómetro, y
+          entonces tampoco hay un mando que prometa uno. Lo demás de la página
+          —el enunciado, las resoluciones— sigue funcionando igual.
+
+          Elegir ejercicios no es un adorno: la ordinaria trae los dos
+          parciales en el mismo cuadernillo, y quien prepara el segundo quiere
+          sentarse con cuatro ejercicios y dos horas, no con ocho y cuatro.
+          Quitar los que no entran ajusta el reloj solo. */}
+      {duracion && (
+        <section
+          class="simulacro no-imprimir"
+          data-simulacro
+          data-minutos={minutosPorEjercicio}
+          hidden
+        >
+          <p class="rotulo s-tit">Hacerlo con reloj</p>
+          <p class="s-txt">
+            {minutosPorEjercicio} minutos por ejercicio, que para los {deCuantos} de este
+            cuadernillo son <strong data-previsto>{duracion}</strong>. Quita los que no
+            vayas a hacer y el reloj se ajusta.
+          </p>
+
+          <fieldset class="s-elige">
+            <legend class="rotulo">Qué entra</legend>
+            {hoja.map((e, i) => (
+              <label class="s-uno">
+                <input type="checkbox" checked value={String(i + 1)} data-entra />
+                <span>{i + 1}</span>
+              </label>
+            ))}
+          </fieldset>
+
+          <p class="s-mandos">
+            <button type="button" class="cta" data-empezar>Empezar</button>
+            <button type="button" class="cta" data-terminar hidden>He terminado</button>
+            <output class="s-reloj" data-reloj hidden aria-hidden="true">--:--</output>
+          </p>
+
+          {/* Las soluciones quedan tapadas mientras corre, y esto lo dice
+              antes de empezar: un mando que esconde algo sin avisar se vive
+              como un fallo. */}
+          <p class="s-letra">
+            Mientras corre, la pestaña de resoluciones queda cerrada. Se abre al
+            pulsar «He terminado» o cuando se acaba el tiempo, y el reloj
+            sobrevive a recargar la página.
+          </p>
+          <p class="s-estado" data-aviso role="status" aria-live="polite"></p>
+        </section>
+      )}
+
       {fuera.length > 0 && (
         <div class="aviso aviso--flag faltan">
           {/* Dos huecos distintos y dos frases distintas, desde el 14 de
@@ -238,7 +297,7 @@ const fueraHtml = await Promise.all(
       <ol class="hoja">
         {
           hoja.map((e, i) => (
-            <li>
+            <li data-n={i + 1}>
               <details class:list={['pregunta', { demo: esDemostracion(e.puntos) }]}>
                 <summary>
                   <span class="mano p-n" aria-hidden="true">{i + 1}</span>
@@ -347,6 +406,135 @@ const fueraHtml = await Promise.all(
 </div>
 
 <script>
+  /* ── el simulacro ────────────────────────────────────────────────────
+   *
+   * Tres cosas y ninguna más: un reloj que cuenta hacia atrás, unas casillas
+   * para dejar fuera los ejercicios que no vas a hacer —la ordinaria trae los
+   * dos parciales juntos—, y las resoluciones tapadas mientras corre.
+   *
+   * Lo que NO hace, dicho aquí para que nadie lo busque: no corrige, no
+   * guarda lo que escribes y no impide mirar. El sitio es estático y las
+   * resoluciones están en el HTML desde que carga la página; esto oculta, no
+   * cifra, igual que dice la cabecera del componente. El objetivo es no
+   * encontrártelas sin querer.
+   *
+   * El reloj sobrevive a recargar porque lo que se guarda no es el tiempo que
+   * queda sino **cuándo empezó y cuánto dura**: una cuenta atrás guardada como
+   * número se congela al cerrar la pestaña, y entonces el simulacro deja de
+   * medir lo que dice medir. */
+  const sim = document.querySelector<HTMLElement>('[data-simulacro]');
+
+  if (sim) {
+    const armazon = document.querySelector<HTMLElement>('[data-armazon]')!;
+    const reloj = sim.querySelector<HTMLOutputElement>('[data-reloj]')!;
+    const aviso = sim.querySelector<HTMLElement>('[data-aviso]')!;
+    const previsto = sim.querySelector<HTMLElement>('[data-previsto]')!;
+    const bEmpezar = sim.querySelector<HTMLButtonElement>('[data-empezar]')!;
+    const bTerminar = sim.querySelector<HTMLButtonElement>('[data-terminar]')!;
+    const casillas = [...sim.querySelectorAll<HTMLInputElement>('[data-entra]')];
+    const filas = [...document.querySelectorAll<HTMLElement>('.hoja > li[data-n]')];
+    const porEjercicio = Number(sim.dataset.minutos ?? '0');
+    const LLAVE = `simulacro:${location.pathname}`;
+
+    /* Sin JavaScript no hay cronómetro, así que el mando tampoco se enseña. */
+    sim.hidden = false;
+
+    const cuantos = () => casillas.filter((c) => c.checked).length;
+
+    const enPalabras = (min: number) =>
+      min < 60 ? `${min} min` : min % 60 === 0 ? `${min / 60} h` : `${Math.floor(min / 60)} h ${min % 60} min`;
+
+    const pinta = (seg: number) => {
+      const s = Math.max(0, Math.ceil(seg));
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      reloj.value = `${h > 0 ? `${h}:` : ''}${String(m).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    };
+
+    let tic: ReturnType<typeof setInterval> | null = null;
+    /* Los avisos se dicen UNA vez. Un `aria-live` que repite cada segundo es
+       inutilizable con lector de pantalla, y por eso el reloj va
+       `aria-hidden` y aquí solo entran los hitos. */
+    let dichos = new Set<number>();
+
+    function termina(porTiempo: boolean) {
+      if (tic) clearInterval(tic);
+      tic = null;
+      localStorage.removeItem(LLAVE);
+      armazon.removeAttribute('data-bloqueado');
+      bTerminar.hidden = true;
+      bEmpezar.hidden = false;
+      reloj.hidden = true;
+      for (const c of casillas) c.disabled = false;
+      for (const f of filas) f.hidden = false;
+      aviso.textContent = porTiempo
+        ? 'Se acabó el tiempo. Las resoluciones ya están abiertas.'
+        : 'Hecho. Las resoluciones ya están abiertas.';
+    }
+
+    function corre(hasta: number) {
+      const queda = () => (hasta - Date.now()) / 1000;
+      pinta(queda());
+      tic = setInterval(() => {
+        const q = queda();
+        pinta(q);
+        for (const hito of [600, 300, 60]) {
+          if (q <= hito && q > hito - 1 && !dichos.has(hito)) {
+            dichos.add(hito);
+            aviso.textContent = `Quedan ${hito / 60} minutos.`;
+          }
+        }
+        if (q <= 0) termina(true);
+      }, 1000);
+    }
+
+    function empieza(minutos: number, desde: number, ocultar: number[]) {
+      dichos = new Set();
+      for (const f of filas) f.hidden = ocultar.includes(Number(f.dataset.n));
+      for (const c of casillas) c.disabled = true;
+      armazon.dataset.bloqueado = 'si';
+      bEmpezar.hidden = true;
+      bTerminar.hidden = false;
+      reloj.hidden = false;
+      aviso.textContent = `En marcha: ${enPalabras(minutos)} para ${cuantos()} ejercicios.`;
+      corre(desde + minutos * 60000);
+    }
+
+    for (const c of casillas) {
+      c.addEventListener('change', () => {
+        if (cuantos() === 0) { c.checked = true; return; }   // al menos uno
+        previsto.textContent = enPalabras(cuantos() * porEjercicio);
+      });
+    }
+
+    bEmpezar.addEventListener('click', () => {
+      const fuera = casillas.filter((c) => !c.checked).map((c) => Number(c.value));
+      const minutos = cuantos() * porEjercicio;
+      const desde = Date.now();
+      localStorage.setItem(LLAVE, JSON.stringify({ desde, minutos, fuera }));
+      empieza(minutos, desde, fuera);
+    });
+
+    bTerminar.addEventListener('click', () => termina(false));
+
+    /* Retomar uno a medias. Si ya se pasó el tiempo mientras la pestaña estaba
+       cerrada, no se reanuda: se dice que se acabó. */
+    try {
+      const guardado = localStorage.getItem(LLAVE);
+      if (guardado) {
+        const { desde, minutos, fuera } = JSON.parse(guardado);
+        if (Date.now() < desde + minutos * 60000) {
+          for (const c of casillas) c.checked = !fuera.includes(Number(c.value));
+          previsto.textContent = enPalabras(cuantos() * porEjercicio);
+          empieza(minutos, desde, fuera);
+          aviso.textContent = `Simulacro retomado, con ${enPalabras(Math.ceil((desde + minutos * 60000 - Date.now()) / 60000))} por delante.`;
+        } else {
+          localStorage.removeItem(LLAVE);
+        }
+      }
+    } catch { /* localStorage puede estar bloqueado; el simulacro sigue funcionando sin recordar */ }
+  }
+
   /* Mismo mecanismo que en `Tema.astro`: sin JavaScript manda `:target`, con él
      no hay salto de scroll y se marca la pestaña activa. */
   const shell = document.querySelector<HTMLElement>('[data-armazon]');
@@ -367,6 +555,13 @@ const fueraHtml = await Promise.all(
     for (const a of enlaces) {
       a.addEventListener('click', (e) => {
         const destino = a.dataset.pestana!;
+        /* Con el simulacro en marcha, las resoluciones no se abren. El CSS ya
+           las apaga; esto es lo que impide llegar por teclado o por un enlace
+           «resolver guiado» de la propia hoja. */
+        if (destino === 'resoluciones' && shell!.dataset.bloqueado) {
+          e.preventDefault();
+          return;
+        }
         /* Los enlaces «resolver guiado» de la hoja cambian de panel Y saltan
            al ejercicio; los de la barra de pestañas solo cambian de panel. */
         const hash = a.getAttribute('href') ?? '';
@@ -449,6 +644,71 @@ const fueraHtml = await Promise.all(
     gap: .3rem;
     margin: 1.6rem 0 2rem;
     border-bottom: 1px solid var(--rule);
+  }
+
+  /* ── el simulacro ───────────────────────────────────────────────── */
+  .simulacro {
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-left: 4px solid var(--live);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .s-tit { color: var(--live); margin-bottom: .4rem; }
+  .s-txt { font-size: .9rem; margin: 0 0 .8rem; max-width: var(--measure); }
+
+  .s-elige {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    border: 0;
+    padding: 0;
+    margin: 0 0 .9rem;
+  }
+
+  .s-elige legend { float: left; margin-right: .7rem; color: var(--faint); }
+
+  .s-uno {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-family: var(--mono);
+    font-size: .8rem;
+    cursor: pointer;
+  }
+
+  .s-uno input:disabled + span { color: var(--faint); }
+
+  .s-mandos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .7rem;
+    margin: 0 0 .7rem;
+  }
+
+  /* Tabular para que el reloj no baile de ancho al cambiar de cifra. */
+  .s-reloj {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .s-letra { font-size: .78rem; color: var(--graphite); margin: 0; max-width: var(--measure); }
+  .s-estado { font-size: .82rem; color: var(--live); margin: .5rem 0 0; min-height: 1.2em; }
+
+  /* Con el simulacro en marcha, la pestaña de resoluciones se apaga. No se
+     esconde: que se vea apagada explica por qué no responde, y esconderla
+     movería la barra entera de sitio a media prueba. */
+  .shell[data-bloqueado] .pestanas a[data-pestana='resoluciones'],
+  .shell[data-bloqueado] .p-ir {
+    opacity: .4;
+    pointer-events: none;
   }
 
   .pestanas a {

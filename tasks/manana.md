@@ -19,35 +19,47 @@ Lo que pidió y en qué quedó. El orden es el suyo.
 | 0 | el sitio no se publica | **hecho** · ver el apartado de abajo; el JSON da 200, el formulario existe y la URL con barra da 404 |
 | 1 | los siete encargos | **verificados**; el 4 estaba a medias y se cerró la misma noche con los 30 min/ejercicio |
 | 2 | enganchar los problemas nuevos a los escalones | **hecho** · de 33 % a **97 %**, y 0 de 67 escalones por debajo de dos de práctica |
-| 3 | rúbricas desde el escalón donde caen | **pendiente** |
-| 4 | simulacro: soluciones tapadas, cronómetro, solo el segundo parcial | **pendiente** |
+| 3 | rúbricas desde el escalón donde caen | **hecho** · 16 rúbricas, las 7 rutas con al menos una, las 5 del primer cuatrimestre en el bloque de teoremas de 2ev |
+| 4 | simulacro: soluciones tapadas, cronómetro, solo el segundo parcial | **hecho**, con una discrepancia dicha abajo |
 | 5 | formulario en móvil | **hecho** · y eran dos formularios, no uno |
 | 6 | los 12 de boletín con `nivel: examen` | **hecho**; los otros dos puntos, abajo |
 
+### §4 · Lo único donde no he hecho lo que pedía, y por qué
+
+El simulacro está: reloj a treinta minutos por ejercicio, casillas para dejar
+fuera los que no entran —quitar del 1 al 4 en la ordinaria deja el segundo
+parcial y dos horas—, resoluciones cerradas mientras corre, y el reloj
+sobrevive a recargar porque se guarda **cuándo empezó y cuánto dura** y no el
+tiempo que queda: una cuenta atrás guardada como número se congela al cerrar
+la pestaña, y entonces el simulacro deja de medir lo que dice medir.
+
+**Lo que no he hecho es convertir el bloque «enteros» en 3 escalones**, que
+era la mitad de su criterio de aceptación. No es un olvido: está decidido por
+escrito desde que se diseñó la primera evaluación —«los bloques `enteros` y
+`formulario` se quedan como lista plana a propósito: no enseñan una
+herramienta, son simulacro y repaso; un escalón ahí sería la forma puesta
+donde no significa nada»—. Un escalón es *una herramienta con su escalera*, y
+hacer un examen entero no es una herramienta. Si Ionan prefiere la otra
+lectura, se cambia; pero cambiarlo sin decirlo habría borrado una decisión
+razonada porque alguien pidió otra cosa.
+
+De los `falta[]`, el del cronómetro se ha reescrito en las siete rutas —ya no
+falta el reloj, falta la **corrección**, que es verdad y seguirá siéndolo—, y
+el de la ordinaria que decía «no hay forma de abrir solo el segundo parcial»
+ya no es cierto y lo dice.
+
 ### Lo que queda, con lo que hay que saber antes de empezar
-
-**§3 · Rúbricas.** Fermat, Lagrange y punto fijo al bloque «Los teoremas,
-enunciados y demostrados» de `calculo-2ev`; factor integrante al escalón de
-exactas de `calculo-5ev`; jacobianos a `calculo-4ev`; y escribir una rúbrica
-nueva de Rolle/Darboux. Acepta: las 7 rutas con ≥ 1 rúbrica, el bloque de
-teoremas de 2ev con las cinco del primer cuatrimestre, y 16 `redactar` en
-Cálculo.
-
-**§4 · Simulacro.** Lo que falta no es el dato —ya está— sino el modo: tapar
-las soluciones hasta «he terminado», un cronómetro con la duración que la
-ficha ya calcula, y en la ordinaria poder abrir solo los temas 6-11. Acepta:
-el bloque «Los segundos parciales enteros, cronometrados» con 3 escalones y 0
-`falta[]` abiertos, y el mismo modo en los siete bloques «enteros».
 
 **§6 · Los dos que quedan.**
 
-- `deuda.mjs` §6 bis sigue avisando de `calculo-ord` —`medidoSobre: 11`,
-  transcritas 12—. **No es un error del contenido**: la ruta declara su
-  ventana en `criterioDeOrden` y 2013-2014 queda fuera a propósito. Lo que
-  falta es decirlo **donde el guardián lo lea**, porque un aviso que siempre
-  suena y siempre se ignora es peor que no tenerlo (§11). La forma limpia es
-  un campo opcional en la ruta —algo como `fueraDeLaVentana: ['2013-2014']`—
-  que el guardián reste antes de comparar.
+- ~~`deuda.mjs` §6 bis avisa de `calculo-ord`~~ · **hecho el 16 de
+  septiembre.** No era un error del contenido: la ruta declaraba su ventana en
+  `criterioDeOrden` y 2013-2014 queda fuera a propósito. Lo que faltaba era
+  decirlo **donde el guardián lo lee**, porque un aviso que suena siempre y
+  siempre se ignora enseña a saltarse la sección entera (§11). Ahora la ruta
+  lleva `fueraDeLaVentana`, con el curso y su `porque` —igual que todo lo demás
+  aquí, una excepción sin motivo escrito no se puede revisar—, y el guardián lo
+  resta. Las quince rutas en silencio, y el que suene volverá a significar algo.
 - La `fuente` de `duracionDelExamen` publica «Ionan, 15 de septiembre de
   2026: "…"», con su nombre en una página pública. **Lo decide él.** Si
   prefiere que no salga, la alternativa honesta es «dato del profesor de la
