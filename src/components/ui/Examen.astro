@@ -70,9 +70,16 @@ interface Props {
    *  ejercicios» de un examen de nueve sin decir una palabra, con el PDF
    *  original enlazado al lado. */
   fuera: { n: number; apartados?: string; motivo: string }[];
+  /** Cuántos minutos da la asignatura por ejercicio, si lo ha declarado.
+   *  No se recibe la duración ya hecha sino la regla, y se multiplica aquí
+   *  por los ejercicios que IMPRIME el cuadernillo — `deCuantos`, que suma los
+   *  transcritos y los que se dejaron fuera—. Guardar la duración examen por
+   *  examen serían 96 copias de esta multiplicación (§01). */
+  minutosPorEjercicio?: number;
 }
 
-const { eyebrow, titulo, fecha, pdfs, pdfEs, ruta, ejercicios, fuera } = Astro.props;
+const { eyebrow, titulo, fecha, pdfs, pdfEs, ruta, ejercicios, fuera, minutosPorEjercicio } =
+  Astro.props;
 const esResolucion = pdfEs === 'resolucion';
 /* Cuántos ejercicios trae el cuadernillo y cuántas resoluciones ofrece el
    sitio no siempre coinciden: en Térmica un ejercicio tiene cinco apartados
@@ -88,6 +95,18 @@ const piezas = ejercicios.length;
 const enteros = fuera.filter((f) => !f.apartados);
 const aMedias = fuera.filter((f) => f.apartados);
 const deCuantos = propios + enteros.length;
+
+/* La duración, dicha como se dice en voz alta: «2 h», «2 h 30 min», «30 min».
+   Sale de multiplicar, no de una tabla — ver `minutosPorEjercicio` arriba. */
+const minutos = minutosPorEjercicio ? minutosPorEjercicio * deCuantos : 0;
+const duracion =
+  minutos === 0
+    ? null
+    : minutos < 60
+      ? `${minutos} min`
+      : minutos % 60 === 0
+        ? `${minutos / 60} h`
+        : `${Math.floor(minutos / 60)} h ${minutos % 60} min`;
 
 const total = ejercicios.reduce(
   (s, e) => s + (e.puntos ? e.puntos.comp1 + e.puntos.comp2 + e.puntos.comp4 : 0),
@@ -142,7 +161,7 @@ const fueraHtml = await Promise.all(
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
           no lo hay, no se dice nada en vez de decir un número inventado
           (§10). */}
-      {fecha} · {enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : ''}
+      {fecha} · {enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : ''}{duracion ? ` · ${duracion} de reloj` : ''}
     </p>
 
     <nav class="pestanas" aria-label="Vistas del examen">

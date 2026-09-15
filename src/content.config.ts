@@ -139,6 +139,32 @@ const catalogo = defineCollection({
           normas: z.array(z.string().min(10)).min(1),
         })
         .optional(),
+      /**
+       * Cuánto dura un examen, en minutos por ejercicio.
+       *
+       * No se guarda la duración de cada convocatoria, sino **la regla con la
+       * que se arma**, y la página multiplica. El motivo es el de siempre
+       * (§01): la duración ya está determinada por algo que el corpus conoce
+       * —cuántos ejercicios imprime el cuadernillo—, así que escribirla examen
+       * por examen serían 96 copias de una multiplicación esperando a
+       * desincronizarse la primera vez que se corrija el número de ejercicios
+       * de uno.
+       *
+       * Es opcional porque **es una regla por asignatura**, y solo se sabe de
+       * las que lo han dicho. Una asignatura sin este campo no publica
+       * duración, que es mejor que publicar una inventada.
+       *
+       * `fuente` es obligatoria por lo mismo que en `normasDeExamen` y en
+       * `evaluacion`: este dato en concreto **no está impreso en ningún
+       * cuadernillo**, así que sin decir de dónde sale no hay forma de
+       * comprobarlo.
+       */
+      duracionDelExamen: z
+        .object({
+          minutosPorEjercicio: z.number().int().min(1),
+          fuente: z.string().min(20),
+        })
+        .optional(),
       descripcion: z.string().min(10).max(200),
       /** false = el temario está puesto a ojo y hay que sustituirlo por el oficial. */
       temarioOficial: z.boolean(),

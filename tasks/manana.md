@@ -57,11 +57,32 @@ cuyo apunte **está mal redactado** y hay que volver a leer antes de tocarlo:
 dice «aplicar el cuarto criterio a escalón y no a bloque» y hoy no he
 conseguido reconstruir a qué se refería.
 
-### 4 · El único encargo de Cálculo que sigue bloqueado
+### 4 · ~~El único encargo de Cálculo que sigue bloqueado~~ · desbloqueado y hecho la misma noche
 
-**El simulacro con reloj** necesita un dato que solo tiene Ionan: **cuánto dura
-cada parcial**. No está impreso en ningún PDF de la carpeta ni en las normas de
-examen. Sin ese dato el reloj sería un número inventado, y §10 no lo permite.
+Lo dijo Ionan al cerrar el día 12: **treinta minutos por ejercicio**, así que
+un cuadernillo de cuatro son dos horas. Yo lo tenía apuntado como «falta saber
+cuánto dura cada parcial», y era un mal planteamiento del problema: la
+duración **no es un dato por convocatoria, es una regla por asignatura**, y el
+corpus ya sabe cuántos ejercicios imprime cada cuadernillo.
+
+Así que lo que se guarda es la regla —`duracionDelExamen.minutosPorEjercicio`
+en el catálogo, con su fuente— y **la página multiplica**. Guardar la duración
+examen por examen serían 96 copias de una multiplicación esperando a
+desincronizarse (§01). El campo es opcional: una asignatura que no ha dicho su
+regla no publica duración, en vez de publicar una inventada.
+
+Publicado ya: cada ficha de examen de Cálculo dice «· 2 h de reloj» al lado de
+la fecha y los puntos, y el índice de exámenes lleva el desplegable con la
+regla y de dónde sale. Comprobado sobre tres convocatorias de distinto
+tamaño — 4 ejercicios → 2 h, 8 → 4 h, los 13 de mayo-junio de 2020 → 6 h 30
+min— y sobre Álgebra, que no declara la regla y sigue sin decir nada.
+
+**Lo que queda de este encargo**, y es pequeño: los siete bloques `enteros` de
+las rutas de Cálculo dicen «no hay cronómetro en la página, así que el reloj lo
+pones tú». Sigue siendo verdad y por eso no se ha tocado de madrugada, pero
+ahora se les puede añadir **cuánto** hay que poner en ese reloj. Y queda por
+decidir si el cronómetro de verdad —un contador en la propia página— merece la
+pena en un sitio estático.
 
 ### Lo que NO toca mañana
 
@@ -1355,10 +1376,14 @@ de paso `dibujar`, con su primer uso en el 7.3).
    `ej-taylor-orden-dos`, `ej-cota-del-resto` y `ej-componer-un-desarrollo`
    siguen explicando Taylor sin dibujo.
 
-**Bloqueado por un dato que solo tiene Ionan (§13 caso 5):** el simulacro
-cronometrado (encargo 4) necesita **cuánto dura cada parcial**, y no está
-impreso en ningún PDF de la carpeta ni en las normas de examen. Sin ese dato el
-reloj sería un número inventado.
+**~~Bloqueado por un dato que solo tiene Ionan (§13 caso 5)~~ · desbloqueado el
+15 de septiembre de 2026.** El simulacro cronometrado (encargo 4) necesitaba
+cuánto dura cada parcial, y no está impreso en ningún PDF ni en la normativa de
+examen — se buscó ahí primero—. Lo dijo Ionan: **treinta minutos por
+ejercicio**. Y estaba mal planteado por mi parte: no es un dato por
+convocatoria sino **una regla por asignatura**, porque el corpus ya sabe
+cuántos ejercicios imprime cada cuadernillo. Vive en el catálogo con su fuente
+y la página multiplica. Ver la fase de mañana, punto 4.
 
 **Y un hallazgo de paso, del sitio entero y no de Cálculo:** a 360 px los
 rótulos de las figuras SVG se renderizan a **7-7,6 px reales**. No es una
