@@ -10,6 +10,57 @@ está en el historial de este fichero: `git log -p tasks/manana.md`.
 
 ---
 
+## ⚠ El fallo que impedía publicar, y por qué mi suelo no lo veía
+
+Lo encontró la reauditoría del 15 de septiembre. **La web publicada llevaba una
+tanda entera sin actualizarse** y yo tenía `npm run suelo` en verde cada vez.
+
+La causa inmediata: `index.astro` escribía el `href` del índice de ejercicios
+con `ruta()` en vez de `archivo()`, y `ruta()` **añade barra final** porque
+todas las páginas del sitio son directorios. `indice-ejercicios.json/` con
+barra es un 404 en Pages. El comentario de `archivo()` describe exactamente
+este fallo desde que se escribió la función.
+
+Pero lo que hay que recordar no es el enlace, es **por qué el guardián lo dejó
+pasar en mi máquina y lo cazó en el CI**:
+
+```js
+join(DIST, '/indice-ejercicios.json/')   // → 'dist\indice-ejercicios.json\'
+existsSync('dist\\indice-ejercicios.json\\')  // true  en Windows
+existsSync('dist/indice-ejercicios.json/')    // false en Linux
+```
+
+`join` **no quita la barra final**, y `existsSync` de una ruta acabada en
+separador que apunta a un fichero responde distinto en cada sistema. O sea que
+el suelo daba verde en el portátil y rojo en el CI, que es el peor fallo
+posible en un guardián: el despliegue se para y en local no se ve nada.
+Arreglado decidiendo explícitamente —sin barra puede ser fichero, directorio o
+`.html`; **con barra tiene que ser un directorio con índice**—, y el guardián
+reprodujo el fallo del CI en Windows antes de arreglar el enlace.
+
+**Y tenía dos consecuencias más, las dos invisibles:**
+
+1. La paleta de mandos pedía ese mismo `href` con `fetch`, recibía un 404 y se
+   lo tragaba con su `catch`: **la búsqueda de ejercicios no encontraba
+   ninguno**, sin decir nada. `humo.mjs` escuchaba la consola y una respuesta
+   404 con `catch` no llega a la consola. Ahora escucha también las respuestas
+   4xx y 5xx de la red — «escuchar solo la consola es escuchar lo que el código
+   decide contar; un 404 lo cuenta el servidor».
+2. Al arreglar el 404 apareció lo que llevaba meses tapado: cada resultado de
+   ejercicio salía con la insignia **`Tundefined`**. La cadena de ternarios que
+   elige la insignia tenía el tema como caso por defecto, y el tema es el único
+   que usa `x.n`. Se había roto ya una vez por lo mismo, con las rutas. Ahora
+   es una tabla y el tema es un caso más: un `tipo` nuevo sin insignia sale con
+   un interrogante, no con un número inventado.
+
+**La lección, que vale para todo el repositorio:** un guardián que depende del
+sistema de ficheros puede responder distinto en Windows y en Linux, y el que
+manda es Linux porque es donde corre el CI. Cuando un guardián use `existsSync`
+sobre una ruta construida, hay que decidir la forma de la ruta antes de
+preguntar, no dejar que la decida `join`.
+
+---
+
 ## ▶ MAÑANA · 16 de septiembre de 2026 — por dónde seguir
 
 Escrito al cerrar el día 12. El suelo está **entero en verde** —build, verify,

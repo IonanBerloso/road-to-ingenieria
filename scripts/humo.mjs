@@ -101,6 +101,20 @@ async function main() {
   const escucha = (p, etiqueta) => {
     p.on('pageerror', (e) => erroresConsola.push(`${etiqueta} → ${e.message}`));
     p.on('console', (m) => m.type() === 'error' && erroresConsola.push(`${etiqueta} → ${m.text()}`));
+    /* Y las respuestas 4xx y 5xx de la red, que NO pasan por la consola si
+     * quien pide lleva su `catch`.
+     *
+     * Es la otra mitad del mismo agujero, y la encontró la reauditoría del 15
+     * de septiembre de 2026: la paleta de mandos pedía
+     * `indice-ejercicios.json/` —con barra final, un 404 en Pages—, el `catch`
+     * se lo tragaba y la búsqueda de ejercicios no encontraba nada. Cero
+     * errores en consola, cero avisos, y la función simplemente no existía
+     * para el lector. Escuchar solo la consola es escuchar lo que el código
+     * decide contar; una respuesta 404 la cuenta el servidor. */
+    p.on('response', (r) => {
+      if (r.status() < 400) return;
+      erroresConsola.push(`${etiqueta} → ${r.status()} al pedir ${r.url().replace(ORIGEN, '')}`);
+    });
     return p;
   };
 
@@ -938,8 +952,8 @@ async function main() {
   );
   comprueba(
     erroresConsola.length === 0,
-    'cero errores de JavaScript en consola',
-    erroresConsola.slice(0, 3).join(' | '),
+    'cero errores de JavaScript y cero respuestas 4xx/5xx',
+    erroresConsola.slice(0, 5).join('\n    '),
   );
 
   await navegador.close();

@@ -1145,12 +1145,39 @@ if (SOLO_FUENTE) {
       const limpio = href.split('#')[0].split('?')[0];
       const fragmento = href.includes('#') ? href.slice(href.indexOf('#') + 1) : '';
       const destino = limpio.slice(BASE.length);
-      const candidatos = [
-        join(DIST, destino),
-        join(DIST, destino, 'index.html'),
-        join(DIST, `${destino.replace(/\/$/, '')}.html`),
-      ];
-      if (!candidatos.some(existsSync)) { rotos.push(`${nombre} → ${href}`); continue; }
+      /* La barra final NO se puede normalizar antes de comprobar, y esto costó
+         que el sitio dejara de publicarse durante una tanda entera.
+         `/indice-ejercicios.json/` apunta a un FICHERO con barra detrás, que en
+         GitHub Pages es un 404. Pasaba en verde porque el primer candidato era
+         `join(DIST, destino)` y **`join` no quita la barra**: queda
+         `dist\indice-ejercicios.json\`, y `existsSync` de una ruta acabada en
+         separador devuelve `true` en Windows para un fichero y `false` en
+         Linux. O sea que el suelo daba verde en el portátil y rojo en el CI —
+         el peor fallo posible en un guardián, porque el sitio se queda sin
+         publicar y en local no se ve nada—. Lo encontró la reauditoría del 15
+         de septiembre de 2026.
+
+         Así que aquí se decide explícitamente: sin barra puede ser fichero,
+         directorio con índice o `.html`; **con barra tiene que ser un
+         directorio con índice**, que es lo que el servidor sabe servir. */
+      const conBarra = destino.endsWith('/');
+      const sinBarra = destino.replace(/\/+$/, '');
+      const comoFichero = join(DIST, sinBarra);
+      const comoDirectorio = join(DIST, sinBarra, 'index.html');
+      const comoHtml = join(DIST, `${sinBarra}.html`);
+      const esFichero = existsSync(comoFichero) && statSync(comoFichero).isFile();
+      const hayDirectorio = existsSync(comoDirectorio);
+      if (!esFichero && !hayDirectorio && !existsSync(comoHtml)) {
+        rotos.push(`${nombre} → ${href}`);
+        continue;
+      }
+      if (conBarra && esFichero && !hayDirectorio) {
+        rotos.push(
+          `${nombre} → ${href} (es un fichero y lleva barra final: usa archivo(), no ruta())`,
+        );
+        continue;
+      }
+      const candidatos = [comoFichero, comoDirectorio, comoHtml];
       /* Para el ancla hace falta **el fichero HTML**, no el directorio: la
          primera vez que se escribió esto se usó `candidatos.find(existsSync)`,
          que devuelve el directorio `dist/calculo/t01-complejos` porque existe,

@@ -15,7 +15,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
-import { ruta } from '../lib/rutas';
+import { archivo, ruta } from '../lib/rutas';
 import { mate } from '../lib/markdown.mjs';
 import {
   SUFIJO_CONV,
@@ -638,7 +638,14 @@ const enteras = asignaturas
   {/* La URL del índice de ejercicios se escribe aquí y no en el script porque
       el script no ve `import.meta.env.BASE_URL` con el prefijo del repositorio
       resuelto, y una URL a mano sería la enésima copia de la base (§01). */}
-  <link rel="prefetch" data-indice-ejercicios href={ruta('indice-ejercicios.json')} />
+  {/* `archivo()` y no `ruta()`: esto es un fichero de `public/`, no una página.
+      `ruta()` añade barra final —todas las páginas del sitio son directorios— y
+      con ella GitHub Pages devuelve 404. Estuvo mal desde que se escribió la
+      paleta, y costó **que el sitio no se publicara**: el mismo href lo usa el
+      `fetch` del índice, así que la búsqueda de ejercicios no encontraba nada,
+      y el guardián de enlaces no lo cazaba en Windows. Lo encontró la
+      reauditoría del 15 de septiembre de 2026. */}
+  <link rel="prefetch" data-indice-ejercicios href={archivo('indice-ejercicios.json')} />
 </Base>
 
 <script>
@@ -964,12 +971,21 @@ const enteras = asignaturas
       b.className = j === cursor ? 'hit cur' : 'hit';
       b.innerHTML =
         `<span class="k"></span><span class="nb"></span><span class="sb"></span>`;
-      /* La insignia: `##` para una asignatura, `→` para una ruta, `§` para un
-         concepto —que es un apartado dentro de un tema— y el número del tema
-         para el tema. Cada rama tiene que estar escrita: sin la de `r` salía
-         `TUndefined`, porque una ruta no tiene `n`, y un concepto tampoco. */
+      /* La insignia: `##` asignatura, `→` ruta, `§` concepto —un apartado
+         dentro de un tema—, `ej` ejercicio, y el número para el tema.
+         **El tema es el único que usa `x.n`, y por eso no puede ser el caso
+         por defecto.** Escrito como cadena de ternarios lo era, y la cola se
+         ha roto ya dos veces con el mismo síntoma: la primera al añadir las
+         rutas —`TUndefined`, porque una ruta no tiene `n`—, y otra vez al
+         añadir los ejercicios, que tampoco lo tienen. La segunda no se vio
+         durante semanas porque el índice de ejercicios llegaba con un 404 y
+         esa rama no se pintaba nunca; al arreglar el 404, el 15 de septiembre
+         de 2026, salió «Tundefined» en cada resultado.
+         Ahora es una tabla y el tema es un caso más: un `tipo` nuevo sin
+         insignia sale con un interrogante, no con un número inventado. */
+      const INSIGNIA: Record<string, string> = { a: '##', r: '→', c: '§', e: 'ej' };
       b.querySelector('.k')!.textContent =
-        x.tipo === 'a' ? '##' : x.tipo === 'r' ? '→' : x.tipo === 'c' ? '§' : `T${String(x.n).padStart(2, '0')}`;
+        x.tipo === 't' ? `T${String(x.n).padStart(2, '0')}` : (INSIGNIA[x.tipo] ?? '?');
       b.querySelector('.nb')!.textContent = x.nombre;
       b.querySelector('.sb')!.textContent = x.sub;
       b.addEventListener('mouseenter', () => {
