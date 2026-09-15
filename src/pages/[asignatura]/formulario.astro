@@ -201,6 +201,26 @@ const partes = await Promise.all(
   /* ── las hojas ─────────────────────────────────────────────────── */
   .hojas { display: grid; gap: 2.6rem; }
 
+  /* `min-width: 0` es lo que impide que esta página desborde en un teléfono, y
+     no es un retoque: **un hijo de grid vale por defecto `min-width: auto`**,
+     que significa «nunca más estrecho que mi contenido». Una tabla de
+     transformadas o un bloque de KaTeX miden lo que miden, así que la hoja se
+     plantaba en 779 px dentro de un hueco de 360 y arrastraba la página entera
+     a 798. Medido y confirmado el 16 de septiembre de 2026; lo encontró la
+     reauditoría, y es la misma trampa que §17 tiene anotada.
+
+     Con la hoja ya estrecha, lo ancho necesita adónde ir: cada fórmula
+     centrada y cada tabla se desplazan en su propia caja, que es la regla del
+     sitio para lo que no cabe — la página nunca se mueve de lado, el bloque
+     sí. */
+  .hoja { min-width: 0; }
+
+  .hoja :global(.katex-display),
+  .hoja :global(table) {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
   .hoja h2 {
     display: flex;
     align-items: baseline;

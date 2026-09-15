@@ -10,6 +10,61 @@ está en el historial de este fichero: `git log -p tasks/manana.md`.
 
 ---
 
+## ▶ La reauditoría del 15 de septiembre, punto por punto
+
+Lo que pidió y en qué quedó. El orden es el suyo.
+
+| § | qué pedía | estado |
+|---|---|---|
+| 0 | el sitio no se publica | **hecho** · ver el apartado de abajo; el JSON da 200, el formulario existe y la URL con barra da 404 |
+| 1 | los siete encargos | **verificados**; el 4 estaba a medias y se cerró la misma noche con los 30 min/ejercicio |
+| 2 | enganchar los problemas nuevos a los escalones | **hecho** · de 33 % a **97 %**, y 0 de 67 escalones por debajo de dos de práctica |
+| 3 | rúbricas desde el escalón donde caen | **pendiente** |
+| 4 | simulacro: soluciones tapadas, cronómetro, solo el segundo parcial | **pendiente** |
+| 5 | formulario en móvil | **hecho** · y eran dos formularios, no uno |
+| 6 | los 12 de boletín con `nivel: examen` | **hecho**; los otros dos puntos, abajo |
+
+### Lo que queda, con lo que hay que saber antes de empezar
+
+**§3 · Rúbricas.** Fermat, Lagrange y punto fijo al bloque «Los teoremas,
+enunciados y demostrados» de `calculo-2ev`; factor integrante al escalón de
+exactas de `calculo-5ev`; jacobianos a `calculo-4ev`; y escribir una rúbrica
+nueva de Rolle/Darboux. Acepta: las 7 rutas con ≥ 1 rúbrica, el bloque de
+teoremas de 2ev con las cinco del primer cuatrimestre, y 16 `redactar` en
+Cálculo.
+
+**§4 · Simulacro.** Lo que falta no es el dato —ya está— sino el modo: tapar
+las soluciones hasta «he terminado», un cronómetro con la duración que la
+ficha ya calcula, y en la ordinaria poder abrir solo los temas 6-11. Acepta:
+el bloque «Los segundos parciales enteros, cronometrados» con 3 escalones y 0
+`falta[]` abiertos, y el mismo modo en los siete bloques «enteros».
+
+**§6 · Los dos que quedan.**
+
+- `deuda.mjs` §6 bis sigue avisando de `calculo-ord` —`medidoSobre: 11`,
+  transcritas 12—. **No es un error del contenido**: la ruta declara su
+  ventana en `criterioDeOrden` y 2013-2014 queda fuera a propósito. Lo que
+  falta es decirlo **donde el guardián lo lea**, porque un aviso que siempre
+  suena y siempre se ignora es peor que no tenerlo (§11). La forma limpia es
+  un campo opcional en la ruta —algo como `fueraDeLaVentana: ['2013-2014']`—
+  que el guardián reste antes de comparar.
+- La `fuente` de `duracionDelExamen` publica «Ionan, 15 de septiembre de
+  2026: "…"», con su nombre en una página pública. **Lo decide él.** Si
+  prefiere que no salga, la alternativa honesta es «dato del profesor de la
+  asignatura, comunicado el 15 de septiembre de 2026», que sigue siendo
+  comprobable para quien va a clase y no nombra a nadie.
+
+### Lo que se midió de paso y no era trabajo
+
+Los **5 ejercicios de t06 que siguen sin escalón** son de regla de la cadena y
+cambio de variable en una EDP, y **no entran en ninguna ruta a propósito**: se
+buscó el hueco en las 118 convocatorias transcritas y **no cae en ninguna**.
+§14 dice que los huecos se cuentan contando exámenes, así que inventarles un
+escalón sería fabricar un hueco que no existe. Viven en el tema, que es donde
+les toca.
+
+---
+
 ## ⚠ El fallo que impedía publicar, y por qué mi suelo no lo veía
 
 Lo encontró la reauditoría del 15 de septiembre. **La web publicada llevaba una

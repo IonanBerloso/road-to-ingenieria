@@ -169,10 +169,17 @@ async function main() {
   const paginas = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
     [...html.matchAll(/href="([^"]+)"/g)]
       .map((m) => m[1])
+      /* `formulario` entra el 16 de septiembre de 2026, y es la tercera vez
+         que este filtro se queda corto por el mismo motivo: **enumera formas
+         de URL**, así que una clase de página nueva no entra hasta que alguien
+         se acuerda. Antes pasó con los exámenes y con los índices.
+         El formulario de Cálculo llevaba publicado desde el día 11 sin que un
+         navegador lo abriera nunca, y desbordaba a 798 px en un teléfono de
+         360 — lo encontró la reauditoría, no esto. */
       .filter(
         (h) =>
           h.startsWith(BASE) &&
-          /\/[a-z-]+\/(t\d{2}-|examenes\/(?:\d{4}-\d{4}|$)|preparar\/)/.test(h),
+          /\/[a-z-]+\/(t\d{2}-|examenes\/(?:\d{4}-\d{4}|$)|preparar\/|formulario\/)/.test(h),
       ),
   );
   /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
@@ -186,16 +193,45 @@ async function main() {
      se dispare. Se imprime cuáles son, para que un fallo se pueda reproducir.
      Y `HUMO_TODO=1` las abre todas: eso es lo que se pasa al cerrar una
      asignatura, no en cada commit. */
+  const enlacesPortada = [...new Set(
+    [...(await (await fetch(`${ORIGEN}/`)).text()).matchAll(/href="([^"]+)"/g)]
+      .map((m) => m[1])
+      .filter((h) => h.startsWith(BASE)),
+  )];
+
+  /* Los índices que acaban en un segmento suelto: `…/examenes/` y
+     `…/preparar/ord/`. De los primeros salen las 118 convocatorias de la
+     barrida completa. Anclarlo al principio —probado el 7 de septiembre de
+     2026— lo deja en cero: `/algebra/examenes/` tiene dos segmentos, no uno. */
+  const indices = enlacesPortada.filter((h) => /\/[a-z-]+\/$/.test(h.replace(BASE, '/')));
+
+  /* El SLUG de cada asignatura, que es el primer segmento. La portada no
+     enlaza la raíz `/calculo/` —enlaza `#calculo` y luego enlaces hondos—, así
+     que hay que sacarlo de lo que sí enlaza. */
+  const slugs = [...new Set(
+    enlacesPortada.map((h) => h.replace(BASE, '').split('/').filter(Boolean)[0]).filter(Boolean),
+  )];
+
+  /* El formulario de cada asignatura que lo tenga.
+   *
+   * Se pregunta uno a uno porque **no lo enlaza la portada**: cuelga de las
+   * rutas de estudio. Por eso el filtro de páginas no lo alcanzaba y el de
+   * Cálculo llevaba desde el día 11 publicado sin que un navegador lo abriera
+   * nunca — desbordando a 798 px en un teléfono. Lo encontró la reauditoría
+   * del 15 de septiembre de 2026, no este guion. */
+  const formularios = (
+    await Promise.all(
+      slugs.map(async (s) => {
+        const u = `${BASE}/${s}/formulario/`;
+        const r = await fetch(`${ORIGEN.replace(BASE, '')}${u}`).catch(() => null);
+        return r?.ok ? u : null;
+      }),
+    )
+  ).filter((u) => u !== null);
+
   const todosLosExamenes = [...new Set(
     (await Promise.all(
-      [...new Set([...(await (await fetch(`${ORIGEN}/`)).text())
-        .matchAll(/href="([^"]+)"/g)].map((m) => m[1])
-        /* Esto casa los índices `…/examenes/` de cada asignatura, que es de
-           donde salen las 106 convocatorias de la barrida completa. Anclarlo
-           al principio —probado el 7 de septiembre de 2026— lo deja en cero:
-           `/algebra/examenes/` tiene dos segmentos, no uno. */
-        .filter((h) => h.startsWith(BASE) && /\/[a-z-]+\/$/.test(h.replace(BASE, '/')))
-        .map((h) => h))]
+      indices
         .map(async (h) => {
           const html = await (await fetch(`${ORIGEN.replace(BASE, '')}${h}`)).text().catch(() => '');
           /* sin el fragmento: `#ej-…` no es otra página, y contarlo dejaba la
@@ -222,7 +258,7 @@ async function main() {
     }
   }
 
-  const rutas = [...new Set([...paginas, ...muestra])];
+  const rutas = [...new Set([...paginas, ...formularios, ...muestra])];
 
   comprueba(rutas.length > 0, `hay páginas de contenido que comprobar (${rutas.length})`);
   console.log(
@@ -829,6 +865,10 @@ async function main() {
       ...muestraDe(/\/examenes\/\d/, 4).map((u) => [u, '#resoluciones', 'examen']),
       ...muestraDe(/\/t\d{2}-/, 6).map((u) => [u, '#ejercicios', 'tema']),
       ...muestraDe(/\/preparar\//, 3).map((u) => [u, '', 'ruta']),
+      /* Y el formulario, que es la CUARTA clase de página y justo la que
+         desbordaba: 798 px dentro de un hueco de 360, por un hijo de grid sin
+         `min-width: 0`. Van todos los que haya, que hoy es uno. */
+      ...muestraDe(/\/formulario\//, 3).map((u) => [u, '', 'formulario']),
     ];
     const pagina = escucha(await navegador.newPage(), '360 px');
     await pagina.setViewportSize({ width: 360, height: 900 });
