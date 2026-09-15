@@ -394,7 +394,7 @@ src/
 scripts/
   verify.mjs               lee el HTML publicado (§11)
   humo.mjs                 lo abre en Chromium (§11)
-  check-color.mjs          contraste y daltonismo
+  check-color.mjs          contraste, daltonismo y la capa de tinta
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   recalcula.mjs            que las cuentas del corpus salgan (§11)
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
@@ -1016,9 +1016,16 @@ durante horas, las gráficas tienen que verse y el material se imprime.
 
 | token | significa |
 |---|---|
-| `--live` `#0D6E6B` | se toca, se comprueba, es interactivo |
-| `--flag` `#B93A2B` | esto te suspende: error típico, fallo físico |
-| `--alt` `#7A4FB5` | segundo objeto de una escena |
+| `--live` | se toca, se comprueba, es interactivo |
+| `--flag` | esto te suspende: error típico, fallo físico |
+| `--alt` | segundo objeto de una escena |
+
+> Esta tabla llevaba los hexadecimales al lado, y los tres estaban caducados:
+> decía `--live #0D6E6B` cuando vale `#1C6E51`, y `--flag #B93A2B` cuando vale
+> `#BE4B38`. Es §01 con otra cara — el mismo dato en dos sitios, y el que no
+> se ejecuta es el que miente. **El valor de un token se lee en
+> `tokens.css`**, que es el único fichero que puede llevar un color literal;
+> aquí se dice lo que significa, que es lo que el fichero no puede decir.
 
 **Seis colores de datos**, `--d1`…`--d6` (azul, naranja, verde, magenta, oro,
 pizarra), **solo** para series de gráficas.
@@ -1029,6 +1036,31 @@ pizarra), **solo** para series de gráficas.
   planteada: se parte, o se resalta una y el resto va en gris.
 - El color nunca es el único distintivo: etiqueta directa o marcador de forma.
   Verificado contra deuteranopía, protanopía y escala de grises.
+
+**Una serie es color de LÍNEA. Cuando rotula, es letra, y el listón sube.**
+Los seis se diseñaron contra el listón de objeto gráfico —3:1, WCAG 1.4.11—,
+pero el etiquetado directo pone el nombre de la curva en el color de la curva,
+y una letra se mide a 4,5:1. Cinco de los seis lo pasan. `--d2` no —3,15:1
+sobre el papel— y no hay ningún naranja que llegue a 4,5 sin juntarse con
+`--d3` o `--d5` bajo dicromacia: se recorrió el espacio de tonos entero. Por
+eso existe **`--d2-tinta`**, que es ese naranja oscurecido y **solo** vale para
+letra. La línea sigue siendo `--d2`.
+
+**`--marco`** es el otro token que nació de lo mismo: la anotación en tono
+«marco» y el título de la caja de lo que falta estaban pintados con
+`--barra-justificar`, que es el relleno de una franja de la barra de reparto y
+da 3,50:1. Los tres `--barra-*` no tocan texto; `--marco` es su oro llevado
+a 4,5.
+
+> **La capa de tinta la mide `check-color.mjs`** desde el 15 de septiembre de
+> 2026, en tres escenas —claro, oscuro y pizarra— y contra el fondo real de
+> cada una. La lista de tintas no está escrita a mano: se lee de `src/` —los
+> `color:`, los `fill:` y los `fill="var(--x)"` de los `<text>`— y una tinta
+> nueva sin medir rompe el guion.
+
+**Fondo sobre el que cae cada tinta.** No está en la hoja de estilos, está en
+el árbol del documento: por eso la tabla de `check-color.mjs` lo declara fila a
+fila, con su umbral y su razón. Si añades un color de texto, añade su fila.
 
 **Color de asignatura:** cada una tiene su acento, y vive **solo en el marco** —
 número, regla, migas, indicadores. En cuanto empieza el contenido vuelve la
