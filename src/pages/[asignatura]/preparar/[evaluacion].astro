@@ -839,10 +839,26 @@ const faltas = bloquesHtml.flatMap((b) =>
   .bcaja[open] .bflecha { transform: rotate(180deg); }
 
   .bcuerpo { padding: .3rem 1.2rem 1.2rem; }
+
+  /* A 360 px el cuerpo del bloque también se estrecha: es el tercero de los
+     cuatro recuadros que dejaban el texto en 232 px. Ver la nota larga en
+     `EjercicioGuiado.astro`, que es donde está el razonamiento entero. */
+  @media (max-width: 26rem) {
+    .bcuerpo { padding-inline: .45rem; }
+  }
   .bcuerpo :global(p) { margin-bottom: .9rem; }
-  /* `.pasos` queda fuera: es la escalera del ejercicio guiado, no una lista de
-     prosa, y sangrarla le robaba 19 px de columna en un teléfono. */
-  .bcuerpo :global(ul), .bcuerpo :global(ol:not(.material):not(.pasos)) { margin: 0 0 1rem 1.2rem; }
+  /* La sangría es de las listas de PROSA, y solo de esas.
+     Estaba escrita como «toda lista dentro del cuerpo del bloque», con dos
+     excepciones añadidas a mano —`.material` y `.pasos`— cuando se vio que una
+     de ellas robaba 19 px de columna en un teléfono. Medido el 16 de
+     septiembre de 2026 sobre la ruta de la ordinaria: de las **246 listas** que
+     hay dentro de los bloques, **5 son prosa**. Las otras 241 son maquinaria
+     —las opciones de un paso, la escalera, el montaje, las piezas— y estaban
+     sangradas para nada, cada una restando a un texto que a 360 px ya iba con
+     213 px de ancho.
+     Una lista de excepciones crece sin parar; acotarlo a `.prosa` dice lo que
+     la regla quería decir desde el principio. */
+  .bcuerpo :global(.prosa ul), .bcuerpo :global(.prosa ol) { margin: 0 0 1rem 1.2rem; }
 
   /* fórmulas en bloque: la caja que antes ponía Lectura */
   .bcuerpo :global(.katex-display) {
@@ -1112,9 +1128,15 @@ const faltas = bloquesHtml.flatMap((b) =>
      de 230 a **260**, contra los 279 que tienen en una página de tema. El
      borde superior del escalón se conserva: es lo que dice dónde empieza uno
      y acaba el otro. */
-  @media (max-width: 22.5rem) {
+  /* El corte sube de 22.5rem a 26rem, y el ejercicio pasa de .35rem a cero.
+     El 22.5 era exactamente 360 px, así que la regla se aplicaba justo en el
+     límite y ni un píxel por encima; y ese `.35rem` de aquí **ganaba en
+     especificidad** al `padding-inline: 0` del componente, que es la razón de
+     que la medida del 16 de septiembre siguiera dando 297 px donde tenía que
+     dar 309. Los dos aplanamientos son el mismo y ahora cortan a la vez. */
+  @media (max-width: 26rem) {
     .escalon { padding-inline: 0; border-inline: none; border-radius: 0; }
-    .escalon :global(.ejercicio) { padding-inline: .35rem; }
+    .escalon :global(.ejercicio) { padding-inline: 0; }
   }
 
   @media print {

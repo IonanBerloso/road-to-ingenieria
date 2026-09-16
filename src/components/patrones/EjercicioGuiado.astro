@@ -1904,6 +1904,46 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     .paso-cuerpo { padding-inline: .7rem; }
   }
 
+  /* ── el teléfono estrecho: las cajas dejan de ser cajas ──────────
+   *
+   * Medido el 16 de septiembre de 2026 en una ruta a 360 px: el texto de un
+   * paso se quedaba en **232 px de ancho**. No era una regla mal puesta, era
+   * la suma de cuatro recuadros dentro de otro — margen de página, caja del
+   * bloque, caja del ejercicio, caja del paso—, y entre los cuatro se comían
+   * 64 px de los 360. Recortar un poco cada uno no llega: para dejarle 300 px
+   * al texto no puede quedar ni un píxel de recuadro.
+   *
+   * Así que a esta anchura el ejercicio y el paso **dejan de dibujarse como
+   * tarjeta** y pasan a separarse con una línea. No se pierde la jerarquía
+   * —la cabecera de cada paso sigue ahí, y la numeración— y se recupera un
+   * tercio de línea de texto, que es lo que se lee en el autobús.
+   *
+   * El corte está en 26rem y no en 40: entre 416 y 640 px sí caben las
+   * tarjetas, y ahí se quedan. */
+  @media (max-width: 26rem) {
+    .ejercicio {
+      padding-inline: 0;
+      border-inline: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .paso { border-inline: 0; border-radius: 0; }
+    .paso-cuerpo { padding-inline: 0; }
+    .paso-cab { padding-inline: 0; }
+    /* Y la lista de opciones tampoco: son botones a ancho completo. */
+    .opciones { margin-inline: 0; padding-inline: 0; }
+    /* El enunciado conserva su barra de color —es lo que lo distingue del
+       resto— pero suelta el acolchado: 1,2rem a cada lado son 38 px de los
+       360, y el enunciado es el texto que más se lee de la página. */
+    .enunciado {
+      padding-inline: .5rem;
+      border-right: 0;
+      border-top: 0;
+      border-bottom: 0;
+      border-radius: 0;
+    }
+  }
+
   /* ── impresión: la resolución entera, sin controles (§11) ──────── */
   @media print {
     .no-imprimir { display: none !important; }
