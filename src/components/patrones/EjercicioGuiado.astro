@@ -205,7 +205,19 @@ const pasos = await Promise.all(
             porqueHtml: await mate(r.porque, PREFIJO),
           })),
         ),
-        figuraHtml: paso.figura ? await mate(paso.figura, PREFIJO) : null,
+        /* Prefijo PROPIO, distinto del del ejercicio, y esto es lo que hace
+           posible la migración de las figuras.
+           La figura buena de un paso `dibujar` es casi siempre la misma que ya
+           está en la resolución del ejercicio, y el esquema decía que había que
+           **moverla**. Pero moverla deja colgando la prosa de la resolución,
+           que la cita —«como se ve en la figura»—: comprobado el 17 de
+           septiembre de 2026 sobre los 77 candidatos, la citan.
+           Con un prefijo distinto, el mismo SVG puede estar en los dos sitios
+           sin chocar: `mate()` prefija los `id`, el `aria-labelledby`, los
+           `href="#…"` y los `url(#…)`, así que cada copia queda con su propio
+           juego de identificadores. Copiar en vez de mover deja la resolución
+           intacta. */
+        figuraHtml: paso.figura ? await mate(paso.figura, `${PREFIJO}-dib${i}`) : null,
         veredictoHtml: await mate(paso.veredicto, PREFIJO),
       };
     }

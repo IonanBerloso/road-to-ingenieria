@@ -128,6 +128,38 @@ preguntar, no dejar que la decida `join`.
 
 ---
 
+## ▶ La vara del «diez», medida sobre HEAD
+
+El documento `calculo-al-diez` puso diez dimensiones con criterio contable,
+medidas sobre `8ec8a4e`. Esto es lo mismo medido después de las tandas del 15 y
+el 16 de septiembre. **Ninguna cifra está estimada.**
+
+| | dimensión | el diez | hoy |
+|---|---|---|---|
+| A | cobertura del examen | todo transcrito, 0 sueltos | **llena** |
+| B | honestidad | verbatim, cuentas rehechas, erratas declaradas | **llena** — los 12 `nivel: examen` corregidos |
+| C | rampa | 156/156 con ejemplo → ≥2 práctica → examen | **156/156 con ejemplo** · 104 con ≥2 práctica · 99 los tres |
+| D | rendimiento móvil | ninguna página > 4 s | **ninguna** — t05 de 5,4 s a 2,7 |
+| E | COMP4 no calculable | cada `dibujar` con figura | 3/178 · **la dimensión más vacía** |
+| F | entrar de cero con figura | ejemplos y práctica con SVG | 11/65 ejemplos · **sin tocar** |
+| G | el día del examen | simulacro + reloj + solo el parcial | **llena** salvo la forma del bloque «enteros» |
+| H | saber dónde estás | intentos, pista, desarrollo, casilla de dominio | **sin tocar** |
+| I | encontrar y leer | índice y texto ≥ 300 px | índice ✓ · formulario ✓ · texto 297 px de mediana |
+| J | publicado y comprobable | web = repo, suelo verde, barrida < 30 min | web ✓ · suelo ✓ · **barrida ~40 min sin partir** |
+
+**Lo que queda, por lo que vale.** E y F juntas son 1,7 puntos y son el grueso
+del trabajo: **98 pasos `dibujar` sin figura en ninguna parte** —los otros 77
+ya tienen el SVG en la resolución del mismo ejercicio, así que son mover— y
+unos 105 ejemplos y prácticas sin dibujo. Después H, que es una función nueva,
+y los últimos flecos de C, I y J.
+
+**Y una salvedad que hay que resolver antes de dar D por buena**: mis medidas
+son de esta máquina. La reauditoría midió 11,4 s donde yo medía 5,4. Con esa
+proporción `t05` le seguiría dando ~5,5 s. **El criterio «< 4 s» no se puede
+comprobar sin decir en qué máquina**, y el único árbitro común es el CI.
+
+---
+
 ## ▶ MAÑANA · 16 de septiembre de 2026 — por dónde seguir
 
 Escrito al cerrar el día 13, con la reauditoría de Cálculo cerrada entera. El
