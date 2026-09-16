@@ -666,7 +666,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     | { tipo: 'justificar'; orden: number[]; trampa: number }
     | { tipo: 'verificar'; condicion: string; ventana: { x: [number, number]; y: [number, number] } };
 
-  /** Deja constancia de que este ejercicio está hecho.
+  /** Deja constancia de que este ejercicio está hecho, y de CÓMO.
    *
    *  En el navegador del alumno y en ningún sitio más: el sitio es estático y
    *  no tiene cuentas (§00). Mismo patrón que el modo de lectura y el tema
@@ -674,14 +674,26 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
    *  navegación privada `localStorage` puede lanzar al escribir y eso no puede
    *  tumbar un ejercicio.
    *
+   *  **Desde el 17 de septiembre de 2026 guarda tres datos más**, y el motivo
+   *  es que «hecho» y «dominado» no son lo mismo. Un ejercicio resuelto a la
+   *  primera y otro resuelto después de tres fallos y una pista cuentan igual
+   *  en la barra de progreso, y no valen igual la noche antes del examen. Se
+   *  anota cuántos fallos hubo, si se llegó a enseñar una pista y si se abrió
+   *  el desarrollo antes de terminar; con eso la ruta puede decir «a la
+   *  primera», «con pista» o «con desarrollo» en cada fila.
+   *
+   *  **Compatible con lo que ya hubiera guardado**: las entradas antiguas son
+   *  `true` a secas y se siguen leyendo como hechas, solo que sin detalle.
+   *  Nadie pierde su progreso por esto.
+   *
    *  Se avisa además con un evento, para que la ruta de estudio pueda pintar
    *  su progreso sin volver a leer el almacenamiento. */
-  function anota(id: string | undefined) {
+  function anota(id: string | undefined, como?: { i: number; p: boolean; d: boolean }) {
     if (!id) return;
     try {
       const hechos = JSON.parse(localStorage.getItem('rti:hechos') ?? '{}');
       if (hechos[id]) return;
-      hechos[id] = true;
+      hechos[id] = como ? { i: como.i, p: como.p, d: como.d } : true;
       localStorage.setItem('rti:hechos', JSON.stringify(hechos));
     } catch {}
     document.dispatchEvent(new CustomEvent('rti:hecho', { detail: { id } }));
@@ -718,7 +730,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
     /* ── utilidades ───────────────────────────────────────────────── */
 
+    /* Dos banderas por ejercicio, para que la ruta pueda decir CÓMO se ha
+     * resuelto y no solo que se ha resuelto. Ver `anota()`. */
+    let pistaVista = false;
+    let desarrolloVisto = false;
+
     const fb = (paso: HTMLElement, clase: string, titulo: string, cuerpo: string) => {
+      if (clase === 'pista') pistaVista = true;
       const caja = paso.querySelector<HTMLElement>('[data-fb]')!;
       caja.className = `fb ${clase}`;
       caja.innerHTML = `<p class="rotulo">${titulo}</p>${cuerpo}`;
@@ -771,7 +789,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           : hechos === pasos.length
             ? 'ejercicio completo'
             : `paso ${hechos + 1} de ${pasos.length}`;
-      if (hechos === pasos.length) anota(raiz.dataset.ejercicio);
+      if (hechos === pasos.length) {
+        anota(raiz.dataset.ejercicio, {
+          i: intentos.reduce((a, b) => a + b, 0),
+          p: pistaVista,
+          d: desarrolloVisto,
+        });
+      }
     }
 
     /* ── COMP1 · reconocer ────────────────────────────────────────── */
@@ -1401,6 +1425,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     const botonesModo = [...raiz.querySelectorAll<HTMLButtonElement>('[data-modo]')];
 
     function cambiaModo(nuevo: 'guiado' | 'completo') {
+      /* Abrir el modo completo ANTES de terminar es haber mirado el desarrollo.
+         Si ya está todo resuelto, no: entonces es repaso. */
+      if (nuevo === 'completo' && !resueltos.every(Boolean)) desarrolloVisto = true;
       modo = nuevo;
       raiz.dataset.modo = modo;
       for (const b of botonesModo) b.setAttribute('aria-pressed', String(b.dataset.modo === modo));

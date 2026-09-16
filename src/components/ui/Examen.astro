@@ -234,6 +234,29 @@ const fueraHtml = await Promise.all(
             sobrevive a recargar la página.
           </p>
           <p class="s-estado" data-aviso role="status" aria-live="polite"></p>
+
+          {/* La nota que te pones.
+              La página no corrige, así que el único que puede poner el número
+              eres tú —y ponerlo es la mitad del ejercicio: obliga a decidir si
+              lo que escribiste vale, en vez de mirar la resolución y pensar
+              «ah, sí, ya lo sabía». Se guarda con fecha para que el segundo
+              intento se pueda comparar con el primero. */}
+          <form class="s-nota" data-nota hidden>
+            <label class="rotulo" for="s-nota-valor">Qué nota te pones</label>
+            <input
+              id="s-nota-valor"
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              maxlength="5"
+              size="5"
+              placeholder="0–10"
+              data-nota-valor
+            />
+            <button type="submit" class="cta">Guardar</button>
+          </form>
+
+          <ul class="s-historial" data-historial hidden></ul>
         </section>
       )}
 
@@ -436,10 +459,54 @@ const fueraHtml = await Promise.all(
     const porEjercicio = Number(sim.dataset.minutos ?? '0');
     const LLAVE = `simulacro:${location.pathname}`;
 
+    const fNota = sim.querySelector<HTMLFormElement>('[data-nota]')!;
+    const iNota = sim.querySelector<HTMLInputElement>('[data-nota-valor]')!;
+    const uHist = sim.querySelector<HTMLElement>('[data-historial]')!;
+    const LLAVE_NOTAS = 'rti:notas';
+
     /* Sin JavaScript no hay cronómetro, así que el mando tampoco se enseña. */
     sim.hidden = false;
 
     const cuantos = () => casillas.filter((c) => c.checked).length;
+
+    /* El historial de notas propias.
+     *
+     * Una entrada por simulacro terminado: la fecha, el número que te pusiste
+     * y sobre cuántos ejercicios, porque un 7 sobre cuatro ejercicios y un 7
+     * sobre ocho no son el mismo 7. Vive en el mismo sitio que el resto del
+     * progreso —este navegador y nada más (§02)— y al lado de `rti:hechos`
+     * para que «borrar mi avance» de la ruta se lo lleve también algún día.
+     * Se guarda como texto ISO y se enseña en corto. */
+    type Nota = { f: string; n: number; de: number };
+
+    const leeNotas = (): Record<string, Nota[]> => {
+      try {
+        return JSON.parse(localStorage.getItem(LLAVE_NOTAS) ?? '{}');
+      } catch {
+        return {};
+      }
+    };
+
+    const enCorto = (iso: string) => {
+      const d = new Date(iso + 'T12:00:00');
+      return Number.isNaN(d.getTime())
+        ? iso
+        : d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+    };
+
+    const pintaHistorial = () => {
+      const mias = leeNotas()[location.pathname] ?? [];
+      uHist.textContent = '';
+      uHist.hidden = mias.length === 0;
+      for (const x of mias.slice(-5).reverse()) {
+        const li = document.createElement('li');
+        li.append(`${enCorto(x.f)} · `);
+        const b = document.createElement('b');
+        b.textContent = String(x.n).replace('.', ',');
+        li.append(b, ` sobre ${x.de} ${x.de === 1 ? 'ejercicio' : 'ejercicios'}`);
+        uHist.append(li);
+      }
+    };
 
     const enPalabras = (min: number) =>
       min < 60 ? `${min} min` : min % 60 === 0 ? `${min / 60} h` : `${Math.floor(min / 60)} h ${min % 60} min`;
@@ -470,6 +537,8 @@ const fueraHtml = await Promise.all(
       aviso.textContent = porTiempo
         ? 'Se acabó el tiempo. Las resoluciones ya están abiertas.'
         : 'Hecho. Las resoluciones ya están abiertas.';
+      fNota.hidden = false;
+      fNota.dataset.de = String(hechoDe);
     }
 
     function corre(hasta: number) {
@@ -488,8 +557,14 @@ const fueraHtml = await Promise.all(
       }, 1000);
     }
 
+    /* Cuántos ejercicios entraban en ESTE simulacro. Se apunta al empezar
+       porque al terminar las casillas vuelven a ser editables, y la nota tiene
+       que quedar anclada a lo que de verdad se hizo. */
+    let hechoDe = 0;
+
     function empieza(minutos: number, desde: number, ocultar: number[]) {
       dichos = new Set();
+      hechoDe = cuantos();
       for (const f of filas) f.hidden = ocultar.includes(Number(f.dataset.n));
       for (const c of casillas) c.disabled = true;
       armazon.dataset.bloqueado = 'si';
@@ -516,6 +591,32 @@ const fueraHtml = await Promise.all(
     });
 
     bTerminar.addEventListener('click', () => termina(false));
+
+    fNota.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const crudo = iNota.value.trim().replace(',', '.');
+      const n = Number(crudo);
+      if (crudo === '' || !Number.isFinite(n) || n < 0 || n > 10) {
+        aviso.textContent = 'La nota va de 0 a 10.';
+        iNota.focus();
+        return;
+      }
+      const todas = leeNotas();
+      const mias = todas[location.pathname] ?? [];
+      const h = new Date();
+      const hoy = `${h.getFullYear()}-${String(h.getMonth() + 1).padStart(2, '0')}-${String(h.getDate()).padStart(2, '0')}`;
+      mias.push({ f: hoy, n, de: Number(fNota.dataset.de ?? '0') });
+      todas[location.pathname] = mias;
+      try {
+        localStorage.setItem(LLAVE_NOTAS, JSON.stringify(todas));
+      } catch {}
+      iNota.value = '';
+      fNota.hidden = true;
+      pintaHistorial();
+      aviso.textContent = 'Anotada. La tienes abajo, con la fecha.';
+    });
+
+    pintaHistorial();
 
     /* Retomar uno a medias. Si ya se pasó el tiempo mientras la pestaña estaba
        cerrada, no se reanuda: se dice que se acabó. */
@@ -701,6 +802,46 @@ const fueraHtml = await Promise.all(
 
   .s-letra { font-size: .78rem; color: var(--graphite); margin: 0; max-width: var(--measure); }
   .s-estado { font-size: .82rem; color: var(--live); margin: .5rem 0 0; min-height: 1.2em; }
+
+  /* La nota propia. Aparece al terminar y se queda abajo como historial. */
+  .s-nota {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    margin: .7rem 0 0;
+  }
+
+  .s-nota .rotulo { color: var(--live); }
+
+  .s-nota input {
+    width: 5rem;
+    font: inherit;
+    font-family: var(--mono);
+    font-size: .9rem;
+    padding: .25rem .4rem;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+
+  .s-nota input:focus-visible { border-color: var(--live); }
+
+  .s-historial {
+    list-style: none;
+    margin: .7rem 0 0;
+    padding: .6rem 0 0;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--graphite);
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+  }
+
+  .s-historial b { color: var(--live); font-weight: 500; }
 
   /* Con el simulacro en marcha, la pestaña de resoluciones se apaga. No se
      esconde: que se vea apagada explica por qué no responde, y esconderla

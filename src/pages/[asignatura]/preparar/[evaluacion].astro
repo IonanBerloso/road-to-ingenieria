@@ -470,7 +470,15 @@ const faltas = bloquesHtml.flatMap((b) =>
                               : 'práctica'}
                         </span>
                         <span class="m-t">{x.titulo}</span>
-                        <span class="m-tick" data-tick aria-hidden="true">✓</span>
+                        {/* Cómo se resolvió, no solo que se resolvió. Lo rellena el
+                            guion leyendo `rti:hechos`; vacío hasta entonces. Va
+                            dentro de `.m-fin` junto a la palomita para que la fila
+                            siga teniendo tres celdas: la rejilla no cambia de forma
+                            según cuánto sepamos del ejercicio. */}
+                        <span class="m-fin">
+                          <span class="m-como rotulo" data-como hidden />
+                          <span class="m-tick" data-tick aria-hidden="true">✓</span>
+                        </span>
                       </a>
                       {x.notaHtml && <div class="prosa m-nota" set:html={x.notaHtml} />}
                     </li>
@@ -484,6 +492,14 @@ const faltas = bloquesHtml.flatMap((b) =>
                 <div class="e-dominio">
                   <p class="rotulo">Lo tienes cuando</p>
                   <div class="prosa" set:html={es.dominioHtml} />
+                  {/* El único juicio que esta página no puede hacer por ti: si
+                      lo sacarías con el papel en blanco y sin pistas. Se marca
+                      a mano. Nace oculta porque sin guion no se guardaría nada,
+                      y una casilla que se olvida al recargar miente. */}
+                  <label class="e-solo no-imprimir" data-solo hidden>
+                    <input type="checkbox" data-solo-caja />
+                    <span>Lo hago sin la app</span>
+                  </label>
                 </div>
               </section>
             ))}
@@ -492,10 +508,12 @@ const faltas = bloquesHtml.flatMap((b) =>
               <aside class="nota progreso no-imprimir" data-progreso hidden>
                 <p class="rotulo">Tu avance</p>
                 <p>
-                  Lo que vas resolviendo se marca aquí y se recuerda al volver.
-                  Se guarda <strong>solo en este navegador</strong>: no es una
-                  cuenta, no sale de tu ordenador, y desaparece si borras los
-                  datos del sitio.
+                  Lo que vas resolviendo se marca aquí, con cuántos intentos y
+                  si abriste la pista, y se recuerda al volver. También se
+                  guardan las casillas de «lo hago sin la app». Todo
+                  <strong>solo en este navegador</strong>: no es una cuenta, no
+                  sale de tu ordenador, y desaparece si borras los datos del
+                  sitio.
                 </p>
                 <button type="button" class="fantasma" data-borrar>Borrar mi avance</button>
               </aside>
@@ -688,12 +706,26 @@ const faltas = bloquesHtml.flatMap((b) =>
   if (escalones.length) {
     const aviso = document.querySelector<HTMLElement>('[data-progreso]');
 
-    const lee = (): Record<string, boolean> => {
+    const lee = (): Record<string, unknown> => {
       try {
         return JSON.parse(localStorage.getItem('rti:hechos') ?? '{}');
       } catch {
         return {};
       }
+    };
+
+    /* «Hecho» y «dominado» no son lo mismo, y hasta el 17 de septiembre de
+       2026 la ruta solo sabía lo primero. Ahora cada fila dice además CÓMO se
+       resolvió, leyendo el detalle que guarda el ejercicio guiado. Las
+       entradas antiguas son `true` a secas y no dicen nada: se pintan hechas y
+       sin marca, que es lo honesto. */
+    const comoSeHizo = (v: unknown): string | null => {
+      if (!v || v === true || typeof v !== 'object') return null;
+      const { i, p, d } = v as { i?: number; p?: boolean; d?: boolean };
+      if (d) return 'con desarrollo';
+      if (p) return 'con pista';
+      if ((i ?? 0) === 0) return 'a la primera';
+      return `con ${i} ${i === 1 ? 'fallo' : 'fallos'}`;
     };
 
     function pinta() {
@@ -702,8 +734,16 @@ const faltas = bloquesHtml.flatMap((b) =>
         const filas = [...es.querySelectorAll<HTMLElement>('[data-ej]')];
         let n = 0;
         for (const fila of filas) {
-          const hecho = Boolean(hechos[fila.dataset.ej!]);
+          const dato = hechos[fila.dataset.ej!];
+          const hecho = Boolean(dato);
           fila.classList.toggle('m--hecho', hecho);
+          const como = fila.querySelector<HTMLElement>('[data-como]');
+          if (como) {
+            const texto = hecho ? comoSeHizo(dato) : null;
+            como.textContent = texto ?? '';
+            como.hidden = !texto;
+            como.classList.toggle('m-como--limpio', texto === 'a la primera');
+          }
           if (hecho) n++;
         }
         const cuenta = es.querySelector<HTMLElement>('[data-cuenta]');
@@ -721,11 +761,56 @@ const faltas = bloquesHtml.flatMap((b) =>
     /* Un ejercicio incrustado en esta misma página se marca en el momento. */
     document.addEventListener('rti:hecho', pinta);
 
+    /* La casilla «lo hago sin la app».
+     *
+     * Vive aparte de `rti:hechos` porque no la escribe la app: la escribes
+     * tú. Resolver los ejercicios de un escalón con las pistas delante y
+     * saber hacerlo con el papel en blanco son dos cosas distintas, y solo
+     * la segunda sirve en el examen. La clave lleva la ruta delante porque
+     * dos asignaturas pueden tener un escalón llamado igual. */
+    const CLAVE_DOMINIO = 'rti:dominio';
+
+    const leeDominio = (): Record<string, boolean> => {
+      try {
+        return JSON.parse(localStorage.getItem(CLAVE_DOMINIO) ?? '{}');
+      } catch {
+        return {};
+      }
+    };
+
+    const pintaDominio = () => {
+      const marcados = leeDominio();
+      for (const es of escalones) {
+        const label = es.querySelector<HTMLElement>('[data-solo]');
+        const caja = es.querySelector<HTMLInputElement>('[data-solo-caja]');
+        if (!label || !caja) continue;
+        label.hidden = false;
+        caja.checked = marcados[`${location.pathname}#${es.dataset.escalon}`] === true;
+      }
+    };
+
+    pintaDominio();
+
+    for (const es of escalones) {
+      const caja = es.querySelector<HTMLInputElement>('[data-solo-caja]');
+      caja?.addEventListener('change', () => {
+        const clave = `${location.pathname}#${es.dataset.escalon}`;
+        const marcados = leeDominio();
+        if (caja.checked) marcados[clave] = true;
+        else delete marcados[clave];
+        try {
+          localStorage.setItem(CLAVE_DOMINIO, JSON.stringify(marcados));
+        } catch {}
+      });
+    }
+
     document.querySelector<HTMLButtonElement>('[data-borrar]')?.addEventListener('click', () => {
       try {
         localStorage.removeItem('rti:hechos');
+        localStorage.removeItem(CLAVE_DOMINIO);
       } catch {}
       pinta();
+      pintaDominio();
     });
   }
 </script>
@@ -1057,6 +1142,41 @@ const faltas = bloquesHtml.flatMap((b) =>
   .m--hecho .m-t { color: var(--graphite); }
   .m--hecho a { border-color: var(--live); }
 
+  /* La tercera celda de la fila: cómo se hizo, y la palomita. Van juntas
+     para que la rejilla siga siendo de tres columnas tanto si sabemos el
+     cómo como si no —los ejercicios resueltos antes de que existiera este
+     dato no lo tienen, y no por eso su fila se descuadra. */
+  .m-fin {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .5rem;
+    white-space: nowrap;
+  }
+
+  .m-como { color: var(--faint); }
+
+  /* «A la primera» es lo único que se celebra con color. Con pista, con
+     desarrollo o con fallos son formas legítimas de resolver y se cuentan
+     en gris: el dato está para que sepas a qué volver, no para regañar. */
+  .m-como--limpio { color: var(--live); }
+
+  /* La casilla de dominio: la pregunta que la app no puede contestar. */
+  .e-solo {
+    display: flex;
+    align-items: baseline;
+    gap: .45rem;
+    margin-top: .6rem;
+    font-family: var(--mono);
+    font-size: .74rem;
+    letter-spacing: .04em;
+    color: var(--faint);
+    cursor: pointer;
+  }
+
+  .e-solo input { margin: 0; accent-color: var(--live); }
+  .e-solo:hover { color: var(--ink); }
+  .e-solo:has(:checked) { color: var(--live); }
+
   .e-dominio {
     margin: 1rem 0 0;
     padding-top: .8rem;
@@ -1091,6 +1211,9 @@ const faltas = bloquesHtml.flatMap((b) =>
   @media (max-width: 40rem) {
     .m a { grid-template-columns: 4.2rem 1fr; }
     .m-pts { grid-column: 2; }
+    /* En dos columnas, «con desarrollo» no cabe en la primera y se salía de
+       su celda por 40 px. Ocupa la fila entera, que es lo que de verdad hace. */
+    .m-fin { grid-column: 1 / -1; }
     .m-nota { margin-left: 0; }
     .escalon { padding: .9rem .8rem 1rem; }
     .e-aprendes { margin-left: 0; }

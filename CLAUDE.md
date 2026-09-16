@@ -350,6 +350,32 @@ sobra el paquete o falta la fila: las dos cosas son un fallo.
 > depende la mitad del suelo de calidad. Una lista de dependencias que no es la
 > lista de dependencias incumple §10 dentro del propio fichero de reglas.
 
+### Lo que el sitio recuerda, y dónde
+
+Sin cuentas y sin servidor: todo lo que el sitio sabe de quien estudia vive en
+`localStorage`, en su navegador, y desaparece si borra los datos del sitio. La
+página lo dice en voz alta donde se usa, y **ninguna funcionalidad depende de
+que exista**: con el almacenamiento bloqueado el sitio se lee entero.
+
+| clave | qué guarda | quién la escribe |
+|---|---|---|
+| `rti:hechos` | por ejercicio, `{ i: intentos, p: pista abierta, d: desarrollo abierto }`. Las entradas viejas son `true` a secas y se siguen leyendo | `EjercicioGuiado.astro` |
+| `rti:dominio` | por escalón, la casilla «lo hago sin la app» que marcas tú | `[evaluacion].astro` |
+| `rti:notas` | por cuadernillo, las notas que te pones al terminar un simulacro, con fecha y sobre cuántos ejercicios | `Examen.astro` |
+| `simulacro:<ruta>` | el simulacro en marcha: cuándo empezó, cuánto dura y qué ejercicios dejaste fuera | `Examen.astro` |
+
+Tres reglas para cualquier clave nueva:
+
+1. **Se guarda el hecho, no el derivado.** El simulacro guarda cuándo empezó y
+   cuánto dura, no los segundos que quedan: una cuenta atrás guardada como
+   número se congela al cerrar la pestaña y entonces deja de medir lo que dice.
+2. **Lo que escribe la app y lo que escribes tú van en claves distintas.**
+   `rti:hechos` lo llena el ejercicio; `rti:dominio` y `rti:notas` los llenas
+   tú. Mezclarlos haría imposible saber quién dijo qué.
+3. **Toda lectura va en `try`/`catch` y toda escritura también.** El modo
+   privado de algunos navegadores lanza al escribir, y una excepción ahí no
+   puede llevarse por delante el resto del guion.
+
 ---
 
 ## 03 // Estructura
