@@ -12623,3 +12623,533 @@ ejercicios:
       debajo por la distancia entre los extremos, y esa comprobación cuesta
       cero. En los sólidos de revolución, el semieje que hace de radio es el
       **perpendicular** al eje de giro, y es el que aparece al cuadrado.
+  - id: ej-taylor-de-una-integral
+    titulo: El desarrollo de una función que no se puede escribir
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea
+      $$
+      F\left(x\right)=\int_{0}^{x} e^{-t^{2}}\,dt
+      $$
+      Hallar los primeros términos de su desarrollo de McLaurin.
+    pide: Los términos hasta el de grado tres.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $F$ no se puede escribir con funciones elementales. ¿Cómo se desarrolla entonces?
+        opciones:
+          - texto: Derivando con el teorema fundamental, que da $F'$ sin resolver la integral
+            correcta: true
+            mensaje: |
+              Eso es. El teorema fundamental dice que $F'(x)=e^{-x^{2}}$ sin
+              necesidad de conocer $F$. Y con las derivadas en el origen ya se
+              escribe el polinomio de Taylor.
+          - texto: Calculando primero la integral y desarrollando después
+            mensaje: |
+              No se puede: $e^{-t^{2}}$ no tiene primitiva elemental, que es
+              justamente por lo que este ejercicio existe. Si se pudiera, no
+              haría falta ningún método especial.
+          - texto: Aproximando la integral numéricamente en varios puntos
+            mensaje: |
+              Eso daría valores, no un polinomio. El desarrollo de Taylor sale de
+              las derivadas en un punto, y esas se pueden obtener exactamente.
+      - tipo: calcular
+        titulo: El coeficiente de grado tres
+        pregunta: |
+          Por el teorema fundamental, $F'(x)=e^{-x^{2}}$. Desarrollando esa
+          exponencial e integrando término a término, ¿cuál es el coeficiente de
+          $x^{3}$ en el desarrollo de $F$?
+        respuesta:
+          tipo: numero
+          valor: '-0.33333333'
+          tolerancia: 0.001
+          formato: en forma exacta, o con cuatro decimales
+        distractores:
+          - valor: '0.33333'
+            mensaje: |
+              Signo cambiado. El exponente es $-t^{2}$, así que el segundo
+              término del desarrollo de la exponencial es $-t^{2}$ y su integral
+              sale negativa.
+          - valor: '-1'
+            mensaje: |
+              Te has dejado el $\frac{1}{3}$ de integrar $t^{2}$. Al integrar
+              $-t^{2}$ entre $0$ y $x$ sale $-\frac{x^{3}}{3}$, no $-x^{3}$.
+        pista: |
+          Usa $e^{u}=1+u+\frac{u^{2}}{2}+\dots$ con $u=-t^{2}$, y después integra
+          cada término entre $0$ y $x$.
+        desarrollo: |
+          Con $u=-t^{2}$ en el desarrollo de la exponencial:
+
+          $$
+          e^{-t^{2}} = 1 - t^{2} + \frac{t^{4}}{2} - \cdots
+          $$
+
+          Integrando término a término entre $0$ y $x$ —que se puede, porque la
+          serie converge uniformemente en cualquier intervalo acotado—:
+
+          $$
+          F\left(x\right) = x - \frac{x^{3}}{3} + \frac{x^{5}}{10} - \cdots
+          $$
+
+          El coeficiente de $x^{3}$ es $-\frac{1}{3}\approx -0{,}3333$.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: El teorema fundamental da $F'(x)=e^{-x^{2}}$ sin necesidad de calcular la integral.
+          - texto: La exponencial se desarrolla sustituyendo $u=-t^{2}$ en la serie conocida.
+          - texto: La serie se integra término a término entre $0$ y $x$.
+          - texto: Queda $F(x)=x-\frac{x^{3}}{3}+\frac{x^{5}}{10}-\cdots$, con $F(0)=0$.
+          - texto: Antes de desarrollar hay que calcular la primitiva de $e^{-t^{2}}$.
+            trampa: true
+            mensaje: |
+              No existe en términos elementales, y ese es el punto entero del
+              ejercicio. Todo el método está construido para no necesitarla: se
+              trabaja con la derivada, que sí se conoce.
+    resolucion: |
+      La función $F$ **no se puede escribir** con funciones elementales, y aun así
+      su desarrollo es de los más fáciles del tema. La clave es no intentar
+      conocerla: basta conocer su derivada.
+
+      **El teorema fundamental** da $F'(x)=e^{-x^{2}}$, y además $F(0)=0$ porque
+      la integral de $0$ a $0$ vale cero.
+
+      **Dos caminos, el mismo resultado.** O se derivan sucesivamente a partir de
+      $F'$, o —más corto— se desarrolla el integrando y se integra:
+
+      $$
+      e^{-t^{2}} = 1 - t^{2} + \frac{t^{4}}{2} - \cdots
+      \;\Longrightarrow\;
+      F\left(x\right)=x-\frac{x^{3}}{3}+\frac{x^{5}}{10}-\cdots
+      $$
+
+      El coeficiente de $x^{3}$ es $-\frac{1}{3}$. Y obsérvese que el desarrollo
+      solo tiene potencias **impares**: tenía que ser así, porque $F$ es una
+      función impar — el integrando es par y la integral empieza en el origen.
+
+  - id: ej-longitud-de-arco-basica
+    titulo: La longitud de una curva, con números que salen
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular la longitud del arco de la curva
+      $$
+      y = \frac{2}{3}x^{3/2}
+      $$
+      entre $x=0$ y $x=3$.
+    pide: La longitud del arco.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿De dónde sale la fórmula de la longitud de arco?
+        opciones:
+          - texto: De sumar hipotenusas infinitesimales, con Pitágoras
+            correcta: true
+            mensaje: |
+              Eso es. Un trocito de curva es casi un segmento de catetos $dx$ y
+              $dy$, y su longitud es $\sqrt{dx^{2}+dy^{2}}$. Sacando $dx$ factor
+              común queda $\sqrt{1+\left(y'\right)^{2}}\,dx$.
+          - texto: De integrar la propia función
+            mensaje: |
+              Integrar la función da el **área** bajo la curva, no su longitud.
+              Son dos cosas distintas y se calculan con integrandos distintos.
+          - texto: De derivar la función y evaluarla en los extremos
+            mensaje: |
+              Eso da la pendiente en dos puntos, que no dice nada de lo que mide
+              la curva entre ellos. La longitud es una suma, o sea una integral.
+      - tipo: calcular
+        titulo: La longitud
+        pregunta: |
+          Con $y'=x^{1/2}$, el integrando es $\sqrt{1+x}$. ¿Cuánto vale
+          $\int_{0}^{3}\sqrt{1+x}\,dx$?
+        respuesta:
+          tipo: numero
+          valor: '4.66666667'
+          tolerancia: 0.001
+          formato: en forma exacta, o con tres decimales
+        distractores:
+          - valor: '3.1547'
+            mensaje: |
+              Eso es lo que sale si se olvida el $\frac{2}{3}$ al integrar la
+              raíz. La primitiva de $\sqrt{1+x}$ es
+              $\frac{2}{3}\left(1+x\right)^{3/2}$.
+          - valor: '3'
+            mensaje: |
+              Esa es la longitud del intervalo en el eje $x$, o sea la de la
+              cuerda horizontal. La curva sube, así que tiene que medir más que
+              eso — y es una buena comprobación de sentido común.
+        pista: |
+          La primitiva de $\left(1+x\right)^{1/2}$ es
+          $\frac{2}{3}\left(1+x\right)^{3/2}$. Evalúa entre $0$ y $3$.
+        desarrollo: |
+          $$
+          y'=x^{1/2}
+          \;\Longrightarrow\;
+          1+\left(y'\right)^{2}=1+x
+          $$
+
+          $$
+          L=\int_{0}^{3}\sqrt{1+x}\,dx
+          =\left[\frac{2}{3}\left(1+x\right)^{3/2}\right]_{0}^{3}
+          =\frac{2}{3}\left(8-1\right)
+          =\frac{14}{3}\approx 4{,}667
+          $$
+
+          Comprobación: la curva va de $(0,0)$ a $(3,2\sqrt{3})\approx(3;3{,}46)$,
+          cuya cuerda mide $\sqrt{9+12}\approx 4{,}58$. La curva mide algo más,
+          $4{,}67$, como tiene que ser.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Un trozo infinitesimal de curva mide $\sqrt{dx^{2}+dy^{2}}$, por Pitágoras.
+          - texto: Sacando $dx$ factor común queda el integrando $\sqrt{1+\left(y'\right)^{2}}$.
+          - texto: Aquí $y'=x^{1/2}$, así que el integrando se simplifica a $\sqrt{1+x}$.
+          - texto: La integral vale $14/3$, algo más que la cuerda que une los extremos.
+          - texto: La longitud tiene que salir menor que la distancia en línea recta entre los extremos.
+            trampa: true
+            mensaje: |
+              Es al revés, y es la comprobación que conviene hacer siempre: la
+              recta es el camino más corto, así que **cualquier** curva que una
+              dos puntos mide más que la cuerda. Si sale menos, hay un error.
+    resolucion: |
+      Este enunciado está elegido para que la raíz se simplifique, que es lo
+      excepcional: con casi cualquier otra función, $\sqrt{1+\left(y'\right)^{2}}$
+      no tiene primitiva elemental.
+
+      $$
+      y=\frac{2}{3}x^{3/2}
+      \;\Longrightarrow\;
+      y'=x^{1/2}
+      \;\Longrightarrow\;
+      1+\left(y'\right)^{2}=1+x
+      $$
+
+      $$
+      L=\int_{0}^{3}\sqrt{1+x}\,dx
+      =\left[\frac{2}{3}\left(1+x\right)^{3/2}\right]_{0}^{3}
+      =\frac{2}{3}\left(8-1\right)=\frac{14}{3}\approx 4{,}67
+      $$
+
+      **La comprobación que vale siempre**: la cuerda que une los extremos mide
+      $\sqrt{3^{2}+\left(2\sqrt{3}\right)^{2}}\approx 4{,}58$, y la curva mide
+      algo más. La recta es el camino más corto entre dos puntos, así que una
+      longitud de arco menor que la cuerda es siempre un error.
+
+  - id: ej-valor-medio-de-una-funcion
+    titulo: El valor medio, que es una altura
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar el valor medio de $f\left(x\right)=x^{2}$ en el intervalo
+      $\left[0,3\right]$.
+    pide: El valor medio, y qué significa geométricamente.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué es geométricamente el valor medio de una función en un intervalo?
+        opciones:
+          - texto: La altura del rectángulo que tiene la misma área que la función
+            correcta: true
+            mensaje: |
+              Eso es, y es la mejor forma de recordarlo. Se aplana la función
+              dejando el área igual: la altura que queda es el valor medio.
+          - texto: La media entre el valor mínimo y el máximo
+            mensaje: |
+              Eso sería cierto solo para una recta. Con $x^{2}$ en
+              $\left[0,3\right]$ daría $4{,}5$, y el valor medio es $3$: la
+              función pasa más tiempo abajo que arriba.
+          - texto: El valor de la función en el punto medio del intervalo
+            mensaje: |
+              Aquí sería $f(1{,}5)=2{,}25$, que tampoco es. Ese valor se alcanza
+              en algún punto —lo garantiza el teorema del valor medio— pero no
+              tiene por qué ser el centro.
+      - tipo: calcular
+        titulo: El valor medio
+        pregunta: |
+          Aplicando $\overline{f}=\frac{1}{b-a}\int_{a}^{b}f$, ¿cuánto vale el valor
+          medio de $x^{2}$ en $\left[0,3\right]$?
+        respuesta:
+          tipo: numero
+          valor: '3'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '9'
+            mensaje: |
+              Ese es el valor de la integral, $\int_{0}^{3}x^{2}dx=9$. Falta
+              dividir entre la longitud del intervalo, que es $3$.
+          - valor: '4.5'
+            mensaje: |
+              Esa es la media entre el mínimo $0$ y el máximo $9$, que solo
+              valdría si la función fuese una recta. $x^{2}$ crece despacio al
+              principio, así que su media queda por debajo.
+        pista: |
+          Calcula primero la integral y después divide entre la longitud del
+          intervalo. Son las dos operaciones de la fórmula, en ese orden.
+        desarrollo: |
+          $$
+          \int_{0}^{3}x^{2}\,dx=\left[\frac{x^{3}}{3}\right]_{0}^{3}=9
+          $$
+
+          $$
+          \overline{f}=\frac{1}{3-0}\cdot 9 = 3
+          $$
+
+          Geométricamente: el rectángulo de base $3$ y altura $3$ tiene área $9$,
+          la misma que encierra la parábola. Y ese valor $3$ lo alcanza la función
+          en $x=\sqrt{3}\approx 1{,}73$, que no es el centro del intervalo.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: El valor medio es la altura del rectángulo de la misma base que tiene el área de la función.
+          - texto: El área bajo $x^{2}$ entre $0$ y $3$ vale $9$.
+          - texto: Dividiendo entre la longitud del intervalo, que es $3$, sale un valor medio de $3$.
+          - texto: La función alcanza ese valor en $x=\sqrt{3}$, dentro del intervalo.
+          - texto: El valor medio es siempre el valor de la función en el punto medio del intervalo.
+            trampa: true
+            mensaje: |
+              Solo coincide si la función es una recta. El teorema del valor
+              medio garantiza que el valor medio **se alcanza** en algún punto,
+              pero no dice en cuál — aquí es $\sqrt{3}\approx 1{,}73$ y no $1{,}5$.
+    resolucion: |
+      La fórmula es corta y lo que hay que entender es lo que significa.
+
+      $$
+      \overline{f}=\frac{1}{b-a}\int_{a}^{b}f\left(x\right)dx
+      =\frac{1}{3}\int_{0}^{3}x^{2}dx
+      =\frac{9}{3}=3
+      $$
+
+      **La imagen que lo explica**: se aplana la función hasta dejarla horizontal,
+      sin cambiar el área que encierra. La altura que queda es el valor medio. Por
+      eso la fórmula es «área partido por base»: es despejar la altura de un
+      rectángulo.
+
+      **Dos avisos que caen en examen.** El valor medio no es la media entre el
+      máximo y el mínimo —aquí daría $4{,}5$—, y no se alcanza en el centro del
+      intervalo sino donde $x^{2}=3$, es decir en $\sqrt{3}\approx 1{,}73$. Que se
+      alcance en algún punto es lo que afirma el teorema del valor medio integral,
+      y hace falta que la función sea continua.
+
+  - id: ej-elegir-el-metodo-de-integracion
+    titulo: Mirar una integral y saber por dónde va
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Decidir qué método pide cada una de estas integrales, y calcular la
+      primera:
+      $$
+      \int x\,e^{x}\,dx,
+      \qquad
+      \int \frac{2x}{x^{2}+1}\,dx,
+      \qquad
+      \int \frac{1}{x^{2}-1}\,dx
+      $$
+    pide: El método de cada una, y el valor de la primera entre 0 y 1.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué método pide $\int x\,e^{x}\,dx$?
+        opciones:
+          - texto: Integración por partes
+            correcta: true
+            mensaje: |
+              Eso es. Hay un producto de dos funciones de familias distintas —un
+              polinomio y una exponencial— y ninguna es la derivada de la otra.
+              Esa es la firma de las partes.
+          - texto: Cambio de variable con $u=x^{2}$
+            mensaje: |
+              El cambio funciona cuando dentro está la derivada de algo, salvo
+              constantes. Aquí la derivada de $x^{2}$ es $2x$, que no aparece
+              multiplicando a la exponencial.
+          - texto: Fracciones simples
+            mensaje: |
+              Las fracciones simples son para cocientes de polinomios. Aquí no
+              hay ningún cociente.
+      - tipo: calcular
+        titulo: La primera, entre 0 y 1
+        pregunta: |
+          Integrando por partes con $u=x$ y $dv=e^{x}dx$, ¿cuánto vale
+          $\int_{0}^{1} x\,e^{x}\,dx$?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '1.718281'
+            mensaje: |
+              Ese es $e-1$, que es $\int_{0}^{1}e^{x}dx$ sin la $x$ delante. Te
+              has dejado el factor $x$ del integrando.
+          - valor: '2.718281'
+            mensaje: |
+              Ese es $e$. Al evaluar $\left[xe^{x}-e^{x}\right]$ en $1$ sale
+              $e-e=0$, y lo que queda es lo de la evaluación en $0$, que es $-(-1)$.
+        pista: |
+          Con $u=x$ y $dv=e^{x}dx$ queda $xe^{x}-\int e^{x}dx$. Evalúa la
+          primitiva completa entre $0$ y $1$ con cuidado en el extremo inferior.
+        desarrollo: |
+          $$
+          \int x e^{x}dx = x e^{x} - \int e^{x}dx = x e^{x} - e^{x} + C
+          $$
+
+          $$
+          \int_{0}^{1} x e^{x}dx
+          = \left[xe^{x}-e^{x}\right]_{0}^{1}
+          = \left(e - e\right) - \left(0 - 1\right)
+          = 1
+          $$
+
+          En $x=1$ los dos términos se cancelan, y todo el resultado viene del
+          extremo inferior. Es un caso donde equivocarse de signo en el $0$ cuesta
+          la respuesta entera.
+      - tipo: justificar
+        pregunta: |
+          Ordena el criterio para elegir método. Una pieza es falsa.
+        piezas:
+          - texto: Si dentro está la derivada de algo, salvo constantes, es cambio de variable — como en la segunda, con $u=x^{2}+1$.
+          - texto: Si hay un producto de familias distintas y ninguna es la derivada de la otra, son partes — como en la primera.
+          - texto: Si es un cociente de polinomios con el denominador factorizable, son fracciones simples — como en la tercera.
+          - texto: Y antes de todo eso conviene mirar si la integral es inmediata, que ahorra el método entero.
+          - texto: Ante la duda siempre se puede empezar por partes, porque funciona con cualquier integrando.
+            trampa: true
+            mensaje: |
+              No funciona con cualquiera, y además puede complicarla: aplicar
+              partes a la segunda integral daría algo peor que el original. El
+              criterio no es probar, es **mirar la forma** del integrando antes de
+              escribir nada.
+    resolucion: |
+      Lo que se entrena aquí no es integrar: es **decidir**. Las tres del
+      enunciado son de tres familias distintas y se reconocen por su forma.
+
+      | integral | qué se ve | método |
+      |---|---|---|
+      | $\int x e^{x}dx$ | producto de familias distintas | **por partes** |
+      | $\int \frac{2x}{x^{2}+1}dx$ | arriba está la derivada de abajo | **cambio de variable** |
+      | $\int \frac{1}{x^{2}-1}dx$ | cociente de polinomios, denominador factorizable | **fracciones simples** |
+
+      Y la primera, calculada:
+
+      $$
+      \int_{0}^{1}xe^{x}dx=\left[xe^{x}-e^{x}\right]_{0}^{1}=\left(e-e\right)-\left(-1\right)=1
+      $$
+
+      **El orden en que conviene mirar** es siempre el mismo: primero si es
+      inmediata, después si dentro está la derivada de algo, después si es un
+      cociente de polinomios, y solo entonces las partes. Probar a ciegas cuesta
+      el tiempo del examen.
+
+  - id: ej-mclaurin-por-dos-caminos
+    titulo: El mismo desarrollo por dos caminos
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Sea
+      $$
+      G\left(x\right)=\int_{0}^{x}\frac{\operatorname{sen}t}{t}\,dt
+      $$
+      Hallar el coeficiente de $x^{3}$ en su desarrollo de McLaurin.
+    pide: El coeficiente de x cubo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuál de los dos caminos es más corto aquí?
+        opciones:
+          - texto: Desarrollar el integrando e integrar término a término
+            correcta: true
+            mensaje: |
+              Eso es. La serie del seno se sabe de memoria, dividir entre $t$ es
+              bajar un grado a cada término, e integrar es subirlo otra vez. Tres
+              operaciones y está.
+          - texto: Derivar $G$ tres veces y evaluar en el origen
+            mensaje: |
+              Se puede y da lo mismo, pero la tercera derivada de
+              $\frac{\operatorname{sen}x}{x}$ es larga y el origen es un punto
+              delicado — el integrando ni siquiera está definido ahí sin
+              extenderlo por continuidad.
+          - texto: Calcular la integral y desarrollar el resultado
+            mensaje: |
+              No se puede: $\frac{\operatorname{sen}t}{t}$ no tiene primitiva
+              elemental. Su integral es una función con nombre propio, el seno
+              integral, precisamente porque no se puede escribir de otro modo.
+      - tipo: calcular
+        titulo: El coeficiente
+        pregunta: |
+          De $\operatorname{sen}t = t-\frac{t^{3}}{6}+\cdots$ sale
+          $\frac{\operatorname{sen}t}{t}=1-\frac{t^{2}}{6}+\cdots$. Integrando
+          entre $0$ y $x$, ¿cuál es el coeficiente de $x^{3}$?
+        respuesta:
+          tipo: numero
+          valor: '-0.05555556'
+          tolerancia: 0.0001
+          formato: en forma exacta, o con cinco decimales
+        distractores:
+          - valor: '-0.16667'
+            mensaje: |
+              Ese es $-\frac{1}{6}$, el coeficiente del integrando **antes** de
+              integrar. Al integrar $-\frac{t^{2}}{6}$ aparece un $3$ en el
+              denominador y queda $-\frac{1}{18}$.
+          - valor: '-0.33333'
+            mensaje: |
+              Ese sería el resultado de integrar $-t^{2}$ sin el $\frac{1}{6}$.
+              El seno trae ese sexto en su tercer término y hay que arrastrarlo.
+        pista: |
+          Divide la serie del seno entre $t$ y después integra: el término
+          $-\frac{t^{2}}{6}$ se convierte en $-\frac{x^{3}}{18}$.
+        desarrollo: |
+          $$
+          \operatorname{sen}t = t - \frac{t^{3}}{6} + \frac{t^{5}}{120}-\cdots
+          \;\Longrightarrow\;
+          \frac{\operatorname{sen}t}{t} = 1 - \frac{t^{2}}{6} + \frac{t^{4}}{120}-\cdots
+          $$
+
+          Integrando entre $0$ y $x$:
+
+          $$
+          G\left(x\right)= x - \frac{x^{3}}{18} + \frac{x^{5}}{600} - \cdots
+          $$
+
+          El coeficiente de $x^{3}$ es $-\frac{1}{18}\approx -0{,}05556$.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Se parte de la serie del seno, que se sabe de memoria.
+          - texto: Se divide entre $t$, lo que baja un grado a cada término.
+          - texto: Se integra término a término entre $0$ y $x$, lo que sube un grado y divide por el nuevo exponente.
+          - texto: El término $-\frac{t^{2}}{6}$ se convierte en $-\frac{x^{3}}{18}$.
+          - texto: El coeficiente de $x^{3}$ en $G$ es el mismo que en el integrando, porque integrar no cambia los coeficientes.
+            trampa: true
+            mensaje: |
+              Integrar sí los cambia: sube el exponente y divide por el nuevo.
+              Confundir el desarrollo del integrando con el de su integral es el
+              error de este tipo, y se detecta porque el grado no cuadra.
+    resolucion: |
+      Hay dos caminos y los dos son correctos; lo que se entrena es elegir el
+      corto.
+
+      **El camino corto: desarrollar e integrar.**
+
+      $$
+      \operatorname{sen}t=t-\frac{t^{3}}{6}+\cdots
+      \;\Longrightarrow\;
+      \frac{\operatorname{sen}t}{t}=1-\frac{t^{2}}{6}+\cdots
+      $$
+
+      $$
+      G\left(x\right)=\int_{0}^{x}\left(1-\frac{t^{2}}{6}+\cdots\right)dt
+      = x-\frac{x^{3}}{18}+\cdots
+      $$
+
+      El coeficiente de $x^{3}$ es $-\frac{1}{18}$.
+
+      **El camino largo** —derivar $G$ tres veces con el teorema fundamental y
+      evaluar en el origen— da lo mismo, pero obliga a derivar tres veces un
+      cociente y a tratar el $0$, donde el integrando solo está definido por
+      continuidad. En un examen con reloj, el primero.
+
+      Obsérvese además que $G$ solo tiene potencias impares, igual que el seno:
+      integrar una función par desde el origen siempre da una función impar.

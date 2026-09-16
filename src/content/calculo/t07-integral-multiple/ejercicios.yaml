@@ -10763,3 +10763,618 @@ ejercicios:
       endereza la elipse para el área de la tapa y para el planteamiento del
       área curva. Y cuando el enunciado dice «poniendo los límites de
       integración», los límites son la nota — no la primitiva.
+  - id: ej-cambiar-el-orden-que-desbloquea
+    titulo: El cambio de orden que desbloquea la integral
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular
+      $$
+      \int_{0}^{1}\int_{x}^{1} e^{y^{2}}\,dy\,dx
+      $$
+    pide: El valor de la integral.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por qué no se puede empezar por la integral de dentro?
+        opciones:
+          - texto: Porque $e^{y^{2}}$ no tiene primitiva elemental
+            correcta: true
+            mensaje: |
+              Eso es, y es la señal de este tipo de ejercicio. Cuando la integral
+              de dentro no se sabe hacer, la salida no es buscar más: es cambiar
+              el orden y ver si por el otro lado sí sale.
+          - texto: Porque los límites de dentro llevan una $x$
+            mensaje: |
+              Eso es normal y no impide nada: los límites de la integral interior
+              pueden depender de la variable exterior. El problema aquí es otro,
+              y está en el integrando.
+          - texto: Porque el recinto no está dibujado
+            mensaje: |
+              El recinto se dibuja a partir de los límites, y aquí se puede: es
+              el triángulo $0\le x\le y\le 1$. Dibujarlo es justo el paso
+              siguiente, pero no es lo que bloquea la integral.
+      - tipo: calcular
+        titulo: El valor
+        pregunta: |
+          El recinto es el triángulo $0\le x\le y\le 1$. Cambiando el orden queda
+          $\int_{0}^{1}\int_{0}^{y} e^{y^{2}}\,dx\,dy$. ¿Cuánto vale la integral?
+        respuesta:
+          tipo: numero
+          valor: '0.8591409'
+          tolerancia: 0.001
+          formato: en forma exacta, o con tres decimales
+        distractores:
+          - valor: '1.718281'
+            mensaje: |
+              Te has dejado el $\frac{1}{2}$ del cambio de variable. Al integrar
+              $y\,e^{y^{2}}$ aparece un $\frac{1}{2}$, porque la derivada de
+              $y^{2}$ es $2y$ y no $y$.
+          - valor: '0.5'
+            mensaje: |
+              Eso es lo que saldría si el integrando fuese solo $y$. La
+              exponencial sigue ahí, y al integrarla queda $e-1$ dividido entre
+              dos.
+        pista: |
+          Al integrar en $x$ primero, $e^{y^{2}}$ es una constante y sale
+          multiplicada por la longitud del tramo, que es $y$. Después el cambio
+          $u=y^{2}$ lo remata.
+        desarrollo: |
+          El recinto es el triángulo de vértices $(0,0)$, $(0,1)$ y $(1,1)$.
+          Leído en el otro orden: para cada $y$ entre $0$ y $1$, la $x$ va de $0$
+          a $y$.
+
+          $$
+          \int_{0}^{1}\!\!\int_{0}^{y} e^{y^{2}}\,dx\,dy
+          = \int_{0}^{1} y\,e^{y^{2}}\,dy
+          $$
+
+          Con $u=y^{2}$, $du=2y\,dy$:
+
+          $$
+          = \frac{1}{2}\int_{0}^{1} e^{u}\,du
+          = \frac{e-1}{2}
+          \approx 0{,}8591
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: La integral de dentro no se puede hacer, porque $e^{y^{2}}$ no tiene primitiva elemental.
+          - texto: Se dibuja el recinto a partir de los límites, y es el triángulo $0\le x\le y\le 1$.
+          - texto: Se relee el mismo triángulo con la otra pregunta, y queda la $x$ de $0$ a $y$.
+          - texto: Ahora la integral interior es inmediata y aparece un factor $y$, que es justo lo que faltaba.
+          - texto: Al cambiar el orden los límites se intercambian tal cual, sin volver a mirar el recinto.
+            trampa: true
+            mensaje: |
+              Ese es el error que cuesta el ejercicio entero. Los límites no se
+              intercambian: se vuelve a leer el mismo recinto haciendo la otra
+              pregunta. Aquí intercambiarlos daría $\int_{0}^{1}\int_{y}^{1}$,
+              que es el triángulo de al lado.
+    resolucion: |
+      El enunciado está escrito para que la integral de dentro **no se pueda
+      hacer**: $e^{y^{2}}$ no tiene primitiva elemental. Esa imposibilidad es la
+      pista, no un obstáculo.
+
+      **El recinto.** Los límites dicen $0\le x\le 1$ y $x\le y\le 1$: el
+      triángulo de vértices $(0,0)$, $(0,1)$ y $(1,1)$.
+
+      **La otra lectura.** Para cada $y$ fija entre $0$ y $1$, la $x$ recorre de
+      $0$ a $y$:
+
+      $$
+      \int_{0}^{1}\!\!\int_{0}^{y} e^{y^{2}}\,dx\,dy
+      = \int_{0}^{1} y\,e^{y^{2}}\,dy
+      = \frac{e-1}{2}\approx 0{,}8591
+      $$
+
+      El factor $y$ que aparece al integrar en $x$ es exactamente el que faltaba
+      para que el cambio $u=y^{2}$ funcione. Por eso este tipo de ejercicio se
+      reconoce por el integrando y se resuelve con el dibujo.
+
+  - id: ej-volumen-bajo-un-paraboloide
+    titulo: El volumen bajo un paraboloide
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Calcular el volumen del sólido limitado por el paraboloide
+      $z = 4 - x^{2} - y^{2}$ y el plano $z=0$.
+    pide: El volumen del sólido.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué coordenadas piden este sólido?
+        opciones:
+          - texto: Cilíndricas, porque la sombra es un círculo y todo depende de la distancia al eje
+            correcta: true
+            mensaje: |
+              Eso es. En cuanto aparece $x^{2}+y^{2}$, ese grupo es $r^{2}$ y la
+              expresión se acorta sola. Y la sombra del sólido sobre el plano
+              $XY$ es un disco, que en polares es un rectángulo.
+          - texto: Cartesianas, porque el integrando es un polinomio
+            mensaje: |
+              Se puede, pero los límites salen con raíces
+              —$y$ entre $\pm\sqrt{4-x^{2}}$— y la integral se complica mucho.
+              Lo que decide las coordenadas es la **forma del recinto**, no el
+              integrando.
+          - texto: Esféricas, porque hay una superficie curva
+            mensaje: |
+              Las esféricas van bien con esferas y conos, donde manda la
+              distancia al origen. Un paraboloide no tiene esa simetría: manda la
+              distancia al eje, que es lo que miden las cilíndricas.
+      - tipo: calcular
+        titulo: El volumen
+        pregunta: |
+          En cilíndricas el sólido es $0\le r\le 2$, $0\le\theta\le 2\pi$,
+          $0\le z\le 4-r^{2}$. ¿Cuánto vale el volumen?
+        respuesta:
+          tipo: numero
+          valor: '25.1327412'
+          tolerancia: 0.01
+          formato: en forma exacta, o con dos decimales
+        distractores:
+          - valor: '12.566'
+            mensaje: |
+              Ese es $4\pi$, la mitad. Sale de olvidar el jacobiano $r$: sin él,
+              la integral en $r$ da otra cosa.
+          - valor: '50.265'
+            mensaje: |
+              Ese es $16\pi$, el volumen del cilindro de radio $2$ y altura $4$.
+              El paraboloide se queda por debajo: su volumen es justo la mitad.
+        pista: |
+          No olvides el jacobiano: en cilíndricas $dV = r\,dz\,dr\,d\theta$. La
+          $r$ de más es lo que hace que la integral salga.
+        desarrollo: |
+          El paraboloide corta el plano $z=0$ donde $x^{2}+y^{2}=4$, o sea
+          $r=2$: la sombra es el disco de radio $2$.
+
+          $$
+          V=\int_{0}^{2\pi}\!\!\int_{0}^{2}\!\!\int_{0}^{4-r^{2}} r\,dz\,dr\,d\theta
+          = 2\pi\int_{0}^{2}\left(4-r^{2}\right)r\,dr
+          $$
+
+          $$
+          = 2\pi\left[2r^{2}-\frac{r^{4}}{4}\right]_{0}^{2}
+          = 2\pi\left(8-4\right)
+          = 8\pi \approx 25{,}13
+          $$
+
+          Comprobación: el cilindro que lo contiene, de radio $2$ y altura $4$,
+          mide $16\pi$. El paraboloide se queda exactamente en la mitad, que es
+          un resultado conocido y sirve de control.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Se busca dónde corta el paraboloide al plano $z=0$, y sale la circunferencia $x^{2}+y^{2}=4$.
+          - texto: Esa circunferencia es la sombra del sólido, así que en polares el radio va de $0$ a $2$.
+          - texto: Se monta la triple en cilíndricas, con la $z$ de $0$ hasta la superficie y el jacobiano $r$.
+          - texto: Sale $8\pi$, que es la mitad del cilindro de radio $2$ y altura $4$ que lo envuelve.
+          - texto: En cilíndricas el elemento de volumen es $dz\,dr\,d\theta$, sin ningún factor extra.
+            trampa: true
+            mensaje: |
+              Falta el jacobiano. Al pasar de cartesianas a cilíndricas aparece
+              un factor $r$, y olvidarlo es el error más repetido del tema: la
+              integral sale, da un número, y es el número equivocado.
+    resolucion: |
+      **Lo primero es la sombra.** El sólido está entre el plano $z=0$ y el
+      paraboloide, así que su sombra sobre el plano $XY$ es la región donde el
+      paraboloide está por encima del plano:
+
+      $$
+      4-x^{2}-y^{2}\ge 0 \;\Longleftrightarrow\; x^{2}+y^{2}\le 4
+      $$
+
+      el disco de radio $2$. Un disco en polares es un rectángulo, y el
+      integrando lleva $x^{2}+y^{2}$, que es $r^{2}$: las dos cosas piden
+      cilíndricas.
+
+      $$
+      V=\int_{0}^{2\pi}\!\!\int_{0}^{2}\!\!\int_{0}^{4-r^{2}} r\,dz\,dr\,d\theta
+      = 2\pi\int_{0}^{2}\left(4r-r^{3}\right)dr
+      = 2\pi\left(8-4\right)=8\pi
+      $$
+
+      **El jacobiano $r$ no es opcional.** Es el que convierte un rectángulo en
+      polares en el trozo de disco que de verdad representa, y es lo que más se
+      olvida. Comprobación: $8\pi$ es la mitad de $16\pi$, el cilindro que envuelve
+      al sólido — un paraboloide siempre se queda en la mitad de su cilindro.
+
+  - id: ej-plantear-sin-calcular
+    titulo: Escribir la integral y parar ahí
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Escribir —sin calcularla— la integral triple que da el volumen del sólido
+      limitado por el paraboloide $z=x^{2}+y^{2}$ y el plano $z=4$.
+    pide: Los límites de integración, en cilíndricas.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Qué hay que tener decidido antes de escribir una sola integral?
+        opciones:
+          - texto: El orden de integración y de dónde a dónde va cada variable
+            correcta: true
+            mensaje: |
+              Eso es, y es lo único que puntúa en este tipo de apartado. La
+              cuenta puede no hacerse; los límites tienen que estar bien, y salen
+              de mirar el sólido, no de manipular fórmulas.
+          - texto: La primitiva del integrando
+            mensaje: |
+              No hace falta, y ese es el sentido del apartado: se pide plantear,
+              no resolver. Muchos exámenes lo piden así precisamente porque la
+              cuenta es larga y lo que se evalúa es leer el sólido.
+          - texto: El valor aproximado del resultado
+            mensaje: |
+              No se pide ningún número. Dar uno aquí no suma y gasta el tiempo
+              que hace falta para los límites, que es lo que se corrige.
+      - tipo: calcular
+        titulo: El límite del radio
+        pregunta: |
+          El paraboloide y el plano se cortan donde $x^{2}+y^{2}=4$. En
+          cilíndricas, ¿hasta qué valor de $r$ llega el sólido?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '4'
+            mensaje: |
+              El $4$ es la altura del plano, y también $r^{2}$ en el corte. El
+              radio es su raíz cuadrada.
+          - valor: '16'
+            mensaje: |
+              Has elevado en vez de sacar la raíz. De $r^{2}=4$ sale $r=2$.
+        pista: |
+          Iguala las dos superficies: $r^{2}=4$. El radio del corte es la raíz de
+          ese número.
+        desarrollo: |
+          Igualando paraboloide y plano, $x^{2}+y^{2}=4$, o sea $r=2$. Para cada
+          punto de ese disco, la $z$ va **desde el paraboloide hasta el plano**:
+
+          $$
+          V=\int_{0}^{2\pi}\!\!\int_{0}^{2}\!\!\int_{r^{2}}^{4} r\,dz\,dr\,d\theta
+          $$
+
+          Y aquí se para: el apartado pide la integral escrita, no su valor.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Se igualan las dos superficies para hallar dónde se cortan, y sale $r=2$.
+          - texto: Esa circunferencia es la sombra del sólido, así que el radio va de $0$ a $2$ y el ángulo da la vuelta entera.
+          - texto: Para cada punto de la sombra, la $z$ va desde la superficie de abajo —el paraboloide— hasta la de arriba —el plano—.
+          - texto: Se escribe la triple con el jacobiano $r$ y se deja indicada.
+          - texto: La $z$ va de $0$ a $4$, porque el plano está a altura cuatro.
+            trampa: true
+            mensaje: |
+              El suelo del sólido no es $z=0$: es el propio paraboloide. Entre
+              $z=0$ y el paraboloide no hay sólido. Poner $0$ como límite inferior
+              mete un trozo que no pertenece al cuerpo, y es el error más común
+              del apartado.
+    resolucion: |
+      Este apartado se corrige por los límites, no por el resultado — y por eso
+      conviene hacerlo despacio.
+
+      **Dónde se cortan.** $x^{2}+y^{2}=4$, es decir $r=2$. Esa circunferencia es
+      el borde de la sombra del sólido.
+
+      **Qué hay arriba y qué abajo.** Dentro de esa sombra, el plano $z=4$ está
+      **por encima** del paraboloide $z=r^{2}$ — compruébese en un punto, por
+      ejemplo el eje, donde el paraboloide vale $0$ y el plano $4$. Así que la
+      $z$ va de $r^{2}$ a $4$.
+
+      $$
+      V=\int_{0}^{2\pi}\!\!\int_{0}^{2}\!\!\int_{r^{2}}^{4} r\,dz\,dr\,d\theta
+      $$
+
+      El error que más se ve es poner la $z$ desde $0$: entre el plano $z=0$ y el
+      paraboloide no hay sólido ninguno. El suelo del cuerpo es el paraboloide.
+
+  - id: ej-centro-del-medio-disco
+    titulo: El centro de gravedad de medio disco
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar el centro de gravedad de la lámina homogénea formada por el
+      semicírculo $x^{2}+y^{2}\le 1$, $y\ge 0$.
+    pide: Las dos coordenadas del centro de gravedad.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuántas integrales hay que calcular de verdad?
+        opciones:
+          - texto: 'Dos: el área y el momento respecto del eje $x$'
+            correcta: true
+            mensaje: |
+              Eso es. La coordenada $\overline{x}$ vale cero **por simetría** y no hay
+              que integrar nada para afirmarlo: la figura es simétrica respecto
+              del eje $y$. Decirlo y justificarlo puntúa igual que calcularlo.
+          - texto: 'Tres: el área y los dos momentos'
+            mensaje: |
+              Se puede, y sale cero. Pero calcular lo que la simetría ya contesta
+              es tiempo perdido en un examen, y el enunciado suele estar diseñado
+              para premiar que lo veas.
+          - texto: 'Una: basta con el área'
+            mensaje: |
+              El área sola no da el centro: es el denominador. Hace falta al
+              menos un momento para saber a qué altura está.
+      - tipo: calcular
+        titulo: La altura del centro
+        pregunta: |
+          Con área $\frac{\pi}{2}$ y momento
+          $M_{x}=\int\!\!\int y\,dA = \frac{2}{3}$, ¿cuánto vale $\overline{y}$?
+        respuesta:
+          tipo: numero
+          valor: '0.42441318'
+          tolerancia: 0.001
+          formato: en forma exacta, o con tres decimales
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              El centro de un semicírculo **no** está a media altura. Hay más
+              superficie cerca del diámetro que cerca del borde, así que el
+              centro queda por debajo de $0{,}5$.
+          - valor: '0.6667'
+            mensaje: |
+              Ese es el momento $M_{x}=2/3$ sin dividir por el área. El centro es
+              el momento **dividido** entre el área.
+        pista: |
+          $\overline{y}=M_{x}/A$. Con $A=\pi/2$ y $M_{x}=2/3$, sale
+          $\frac{2/3}{\pi/2}$.
+        desarrollo: |
+          En polares, con $0\le r\le 1$ y $0\le\theta\le\pi$:
+
+          $$
+          M_{x}=\int_{0}^{\pi}\!\!\int_{0}^{1}\left(r\operatorname{sen}\theta\right)r\,dr\,d\theta
+          = \int_{0}^{\pi}\operatorname{sen}\theta\,d\theta\int_{0}^{1}r^{2}dr
+          = 2\cdot\frac{1}{3}=\frac{2}{3}
+          $$
+
+          $$
+          \overline{y}=\frac{M_{x}}{A}=\frac{2/3}{\pi/2}=\frac{4}{3\pi}\approx 0{,}4244
+          $$
+
+          Y $\overline{x}=0$ por simetría respecto del eje $y$. El centro está en
+          $\left(0,\ \frac{4}{3\pi}\right)$, por debajo de la media altura.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: La figura es simétrica respecto del eje $y$, así que $\overline{x}=0$ sin integrar.
+          - texto: El área del semicírculo de radio uno es $\pi/2$.
+          - texto: El momento respecto del eje $x$ se calcula en polares y vale $2/3$.
+          - texto: Dividiendo el momento entre el área sale $\overline{y}=4/(3\pi)\approx 0{,}424$.
+          - texto: Como la lámina es homogénea, el centro de gravedad está en el centro de la circunferencia.
+            trampa: true
+            mensaje: |
+              Homogénea quiere decir que la densidad es la misma en todas partes,
+              no que el centro caiga en el centro de la circunferencia — eso solo
+              pasaría con el disco entero. Al quitar media figura, el centro se
+              desplaza hacia la mitad que queda.
+    resolucion: |
+      Del par de coordenadas, **una se contesta mirando y la otra se integra**.
+
+      **Por simetría, $\overline{x}=0$.** La figura es simétrica respecto del eje $y$ y
+      la densidad es constante, así que el momento respecto del eje $y$ se
+      cancela. Esto se escribe y se justifica; no se calcula.
+
+      **La otra, en polares.** Con $A=\pi/2$:
+
+      $$
+      M_{x}=\int_{0}^{\pi}\!\!\int_{0}^{1} r^{2}\operatorname{sen}\theta\,dr\,d\theta=\frac{2}{3}
+      \;\Longrightarrow\;
+      \overline{y}=\frac{2/3}{\pi/2}=\frac{4}{3\pi}\approx 0{,}424
+      $$
+
+      El resultado tiene sentido: está por **debajo** de la media altura, porque
+      cerca del diámetro hay más superficie que cerca del borde. Si sale por
+      encima de $0{,}5$, hay un error.
+
+  - id: ej-donde-se-cortan-dos-superficies
+    titulo: Dónde se cortan dos superficies
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar la curva en la que se cortan las superficies
+      $$
+      z = x^{2}+y^{2}
+      \qquad\text{y}\qquad
+      z = 2 - x^{2} - y^{2}
+      $$
+      y decir qué límites impone al montar la integral.
+    pide: La curva de corte y el radio que impone.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cómo se halla la curva donde se cortan dos superficies dadas por su $z$?
+        opciones:
+          - texto: Igualando las dos expresiones de $z$
+            correcta: true
+            mensaje: |
+              Eso es. Los puntos comunes son los que tienen la misma $z$ en las
+              dos, así que igualarlas da la proyección de la curva de corte sobre
+              el plano $XY$ — que es lo que hace falta para los límites.
+          - texto: Sumando las dos expresiones
+            mensaje: |
+              Sumarlas no significa nada geométrico. Lo que define el corte es
+              que las dos den el mismo valor, y eso se escribe con un igual.
+          - texto: Derivando las dos y comparando
+            mensaje: |
+              Derivar sirve para tangentes y pendientes, no para intersecciones.
+              Aquí se buscan puntos comunes, que es una condición de igualdad.
+      - tipo: calcular
+        titulo: El radio del corte
+        pregunta: |
+          Igualando las dos superficies y llamando $r^{2}=x^{2}+y^{2}$, ¿cuánto
+          vale el radio $r$ de la circunferencia de corte?
+        respuesta:
+          tipo: numero
+          valor: '1'
+          tolerancia: 0.001
+          formato: un número entero
+        distractores:
+          - valor: '2'
+            mensaje: |
+              El $2$ es la constante del enunciado. Al igualar sale
+              $2r^{2}=2$, y de ahí $r^{2}=1$.
+          - valor: '1.414'
+            mensaje: |
+              Esa es la raíz de dos, que saldría de $r^{2}=2$. Pero al igualar
+              quedan **dos** grupos $r^{2}$, uno de cada lado, y por eso el dos
+              se va.
+        pista: |
+          Iguala: $r^{2}=2-r^{2}$. Junta los dos términos del mismo lado antes de
+          despejar.
+        desarrollo: |
+          $$
+          x^{2}+y^{2} = 2-\left(x^{2}+y^{2}\right)
+          \;\Longrightarrow\;
+          2\left(x^{2}+y^{2}\right)=2
+          \;\Longrightarrow\;
+          x^{2}+y^{2}=1
+          $$
+
+          Es la circunferencia de radio $1$, a la altura $z=1$. Su proyección
+          sobre el plano $XY$ es el disco $r\le 1$, que es **el límite del radio**
+          al montar la integral: $0\le r\le 1$.
+
+          Y de paso queda decidido quién va arriba y quién abajo: en el eje
+          ($r=0$) el paraboloide de abajo vale $0$ y el de arriba vale $2$, así
+          que la $z$ va de $r^{2}$ a $2-r^{2}$.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: Los puntos comunes a las dos superficies son los que tienen la misma $z$, así que se igualan.
+          - texto: Sale $x^{2}+y^{2}=1$, la circunferencia de radio uno a la altura $z=1$.
+          - texto: Su proyección sobre el plano $XY$ da el límite del radio, de $0$ a $1$.
+          - texto: Comprobando en el eje se ve cuál de las dos superficies queda arriba dentro de ese disco.
+          - texto: La curva de corte está a altura $z=2$, porque es el valor que aparece en el enunciado.
+            trampa: true
+            mensaje: |
+              El $2$ es el valor de la superficie de arriba **en el eje**, no en
+              el corte. Sustituyendo $r=1$ en cualquiera de las dos sale $z=1$:
+              se cortan a media altura.
+    resolucion: |
+      Hallar dónde se cortan dos superficies es lo que da **el límite exterior**
+      de la integral, y por eso es siempre el primer paso.
+
+      $$
+      x^{2}+y^{2} = 2-\left(x^{2}+y^{2}\right)
+      \;\Longrightarrow\;
+      x^{2}+y^{2}=1
+      $$
+
+      La curva de corte es la circunferencia de radio $1$ situada a la altura
+      $z=1$ — se comprueba sustituyendo $r=1$ en cualquiera de las dos
+      superficies.
+
+      Eso da dos cosas a la vez:
+
+      - **El límite del radio**: $0\le r\le 1$, la sombra del sólido.
+      - **Quién va arriba**: basta mirar un punto de dentro. En el eje, la de
+        abajo vale $0$ y la de arriba $2$, así que $r^{2}\le z\le 2-r^{2}$.
+
+      Con eso la integral ya se puede escribir sin pensar más.
+
+  - id: ej-centro-de-la-semiesfera
+    titulo: A qué altura está el centro de media bola
+    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
+    nivel: ejemplo
+    enunciado: |
+      Hallar el centro de gravedad del sólido homogéneo formado por la
+      semiesfera $x^{2}+y^{2}+z^{2}\le 1$, $z\ge 0$.
+    pide: Las tres coordenadas del centro de gravedad.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuáles de las tres coordenadas se pueden contestar sin integrar?
+        opciones:
+          - texto: Las dos horizontales, por la simetría alrededor del eje $z$
+            correcta: true
+            mensaje: |
+              Eso es. El sólido es de revolución alrededor del eje $z$, así que
+              $\overline{x}=\overline{y}=0$ sin calcular nada. Solo queda una integral, la
+              de la altura.
+          - texto: 'Ninguna: hay que montar las cuatro integrales'
+            mensaje: |
+              Se pueden montar, y dos dan cero. Pero el enunciado está hecho para
+              premiar que veas la simetría: son dos integrales triples que no
+              hace falta escribir.
+          - texto: Las tres, porque el sólido es homogéneo
+            mensaje: |
+              Homogéneo quiere decir densidad constante, no que el centro esté en
+              un sitio evidente. La altura sí hay que calcularla: el sólido no es
+              simétrico respecto de ningún plano horizontal.
+      - tipo: calcular
+        titulo: La altura
+        pregunta: |
+          El volumen de la semiesfera de radio uno es $\frac{2\pi}{3}$ y el
+          momento respecto del plano $XY$ vale $\frac{\pi}{4}$. ¿A qué altura
+          está el centro de gravedad?
+        respuesta:
+          tipo: numero
+          valor: '0.375'
+          tolerancia: 0.001
+          formato: en forma exacta, o con tres decimales
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              La media altura sería el centro si el sólido fuese un cilindro. La
+              semiesfera es más ancha abajo, así que su centro baja por debajo de
+              la mitad.
+          - valor: '0.4244'
+            mensaje: |
+              Ese es $4/(3\pi)$, el centro de la lámina **plana** semicircular.
+              En tres dimensiones el reparto de materia es otro y sale $3/8$.
+        pista: |
+          $\overline{z}=M_{XY}/V$. Divide $\frac{\pi}{4}$ entre $\frac{2\pi}{3}$ y los
+          $\pi$ se van.
+        desarrollo: |
+          $$
+          \overline{z}=\frac{M_{XY}}{V}
+          =\frac{\pi/4}{2\pi/3}
+          =\frac{\pi}{4}\cdot\frac{3}{2\pi}
+          =\frac{3}{8}=0{,}375
+          $$
+
+          Y $\overline{x}=\overline{y}=0$ por ser un sólido de revolución alrededor del eje
+          $z$. El centro está en $\left(0,0,\frac{3}{8}\right)$: por debajo de la
+          media altura, como pide el sentido común — hay más bola abajo que
+          arriba.
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: El sólido es de revolución alrededor del eje $z$, así que $\overline{x}=\overline{y}=0$ sin integrar.
+          - texto: El volumen de media bola de radio uno es $\frac{2}{3}\pi$.
+          - texto: El momento respecto del plano $XY$ sale $\frac{\pi}{4}$.
+          - texto: Dividiendo, $\overline{z}=3/8$, por debajo de la media altura.
+          - texto: Como media bola es simétrica arriba y abajo, el centro está en $z=1/2$.
+            trampa: true
+            mensaje: |
+              No hay tal simetría: precisamente lo que se ha hecho es **cortar**
+              la bola por la mitad, y lo que queda es más ancho abajo que arriba.
+              Un sólido con más materia abajo tiene el centro por debajo de la
+              media altura.
+    resolucion: |
+      De las cuatro integrales del centro de gravedad, **tres se pueden ahorrar
+      o son una sola**.
+
+      **Las dos horizontales, por simetría.** El sólido es de revolución
+      alrededor del eje $z$, así que $\overline{x}=\overline{y}=0$. Se escribe, se justifica
+      con una frase, y no se integra.
+
+      **La altura sí se calcula.** Con $V=\frac{2\pi}{3}$ y
+      $M_{XY}=\iiint z\,dV=\frac{\pi}{4}$:
+
+      $$
+      \overline{z}=\frac{\pi/4}{2\pi/3}=\frac{3}{8}=0{,}375
+      $$
+
+      **La comprobación de sentido común**, que vale para cualquier sólido: si
+      hay más materia abajo, el centro baja. Media bola es más ancha en la base
+      que cerca del polo, así que $\overline{z}$ tiene que salir **menor** que $0{,}5$.
+      Si sale mayor, hay un error de signo o de límites.
