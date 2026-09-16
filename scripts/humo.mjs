@@ -487,6 +487,20 @@ async function main() {
        cajas en las páginas de examen. Necesita un reflujo entre una cosa y la
        otra. */
     await pagina.evaluate(() => {
+      /* La CUARTA forma de ocultar, desde el 16 de septiembre de 2026: un
+         `<template>`. Las resoluciones viajan dentro de uno para que la página
+         no construya 270.000 nodos que nadie mira, y su contenido no está
+         `[hidden]`, ni en un `<details>`, ni con `display:none` — no está en
+         el árbol. Quitar el atributo no lo saca; hay que materializarlo.
+
+         No se hace con una función de prueba metida en la página, sino
+         disparando **`beforeprint`**, que es un evento de verdad y que el
+         ejercicio guiado ya escucha porque al imprimir hace falta la
+         resolución entera. Así el guardián usa el mismo camino que el papel,
+         y si alguien rompe ese camino se entera aquí en vez de descubrirlo
+         imprimiendo la noche de antes. */
+      window.dispatchEvent(new Event('beforeprint'));
+
       window.__tapados = [];
       for (const e of document.querySelectorAll('[hidden]')) {
         e.removeAttribute('hidden');

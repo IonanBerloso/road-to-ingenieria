@@ -157,12 +157,23 @@ Ahora además hay herramienta para hacerlo rápido: el trabajo de hoy en Cálcul
 del primer ejercicio de examen de su escalón— es el mismo procedimiento, y
 `deuda.mjs` §2 y §2 bis lo comprueban solo.
 
-### 2 · Lo que la auditoría dejó abierto y no es trabajo mío
+### 2 · ~~El peso de la página de tema~~ · hecho el 16 de septiembre
 
-El **peso de `/calculo/t05-integracion/`** —10,5 MB y 4,6 s— y el **contraste
-de la barra de reparto** —tres segmentos contiguos a 2,92, 1,77 y 1,65—. Los
-dos están medidos y los dos son decisiones de diseño. Ver §10.6 bis y §10.5
-bis.
+Ninguna página pasa de 4 s. `t05` va de 284.977 nodos y 5,4 s a **102.451 y
+2,7 s**; `t01` de 4,1 a 2,5. Lo que empieza cerrado —la resolución y los
+desarrollos— viaja dentro de un `<template>` y se materializa al abrirlo. El
+razonamiento entero, con las tres alternativas medidas, está en §07 de
+`CLAUDE.md`.
+
+**Un aviso para la próxima medida**: estos números son de mi máquina. La
+reauditoría midió 11,4 s donde yo medía 5,4, o sea que su Chromium va la mitad
+de rápido; con esa proporción `t05` le seguiría dando ~5,7 s. **El criterio
+«< 4 s» no se puede comprobar sin decir en qué máquina**, y el único árbitro
+común que tenemos es el CI. Meter `peso.mjs` en `npm run suelo` obligaría a
+fijarlo ahí, y esa es la decisión que queda.
+
+Sigue abierto el **contraste de la barra de reparto** —tres segmentos
+contiguos a 2,92, 1,77 y 1,65—, que es decisión de diseño. Ver §10.5 bis.
 
 ### 3 · Lo suelto de §10.7, por coste
 

@@ -1102,6 +1102,50 @@ semántica estricta de arriba.
 > cada ordenador no es un asunto de estética. El precio son 118 ficheros de
 > fuente de KaTeX en el sitio; el navegador solo descarga los que usa.
 
+### El otro precio, y cómo se paga (16 de septiembre de 2026)
+
+`htmlAndMathml` cuesta **54 nodos por fórmula** — el dibujo para el ojo y el
+MathML para el lector de pantalla, los dos por fórmula—. En una página de tema
+con cincuenta ejercicios eso son **272.000 de los 285.000 nodos**, el 96 %. Y
+la página tardaba cinco segundos en un teléfono no por maquetar sino por
+**construir el DOM**: cuatro de esos cinco segundos.
+
+El dato que da la solución: **de las 5.081 fórmulas de esa página, al cargar
+solo se ven 17**. Las otras 5.064 están dentro de resoluciones y desarrollos
+cerrados. Así que **lo que empieza cerrado viaja dentro de un `<template>`** y
+se materializa al abrirlo. El contenido de un `<template>` se analiza en un
+fragmento inerte: se lee, pero no entra en el árbol ni en el cálculo de
+estilos.
+
+|  | antes | ahora |
+|---|---|---|
+| `/calculo/t05-integracion/` | 284.977 nodos · 5,4 s | **102.451 · 2,7 s** |
+| `/calculo/t01-complejos/` | 198.712 · 4,1 s | **84.035 · 2,5 s** |
+
+**Las tres reglas que esto impone**, y que hay que respetar al tocar
+`EjercicioGuiado.astro`:
+
+1. **Solo va a `<template>` lo que ya era inalcanzable sin JavaScript.** La
+   resolución y los desarrollos lo eran —los esconde `hidden` y los abre un
+   botón—, así que no se pierde nada. El enunciado y los pasos **no se tocan**:
+   sin JavaScript se siguen leyendo enteros.
+2. **Todo camino que enseñe algo llama antes a `materializa()`**, y son cuatro:
+   acertar un paso, terminar el ejercicio, el modo completo e imprimir. Es
+   idempotente porque ninguno puede dar por hecho que es el primero.
+3. **`beforeprint` es el camino oficial para materializarlo todo**, y por eso
+   `humo.mjs` lo dispara antes de medir figuras en vez de usar una función de
+   prueba: el guardián recorre el mismo camino que el papel, y si alguien lo
+   rompe se entera ahí en vez de descubrirlo imprimiendo la noche de antes.
+   Comprobado el día del cambio: el guardián mide **exactamente las mismas
+   etiquetas** que antes, página por página.
+
+> Se probaron tres caminos y se midieron los tres. Paginar los ejercicios rompía
+> los anclajes `#ej-…` que usan las siete rutas. `content-visibility: auto`
+> —que se queda, y ayuda— solo compraba medio segundo, porque se salta el
+> maquetado y no la construcción del DOM. Y borrar el contenido del todo era
+> **peor** que el `<template>`: 3.085 ms contra 2.092, porque el fragmento
+> inerte se salta también el cálculo de estilos.
+
 ---
 
 ## 08 // Contenido, derechos y estilo

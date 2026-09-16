@@ -423,11 +423,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                 <div class="msg" data-msg-pista hidden set:html={paso.pistaHtml} />
 
                 <div class="solucion" hidden>
-                  <p class="rotulo">Desarrollo</p>
-                  <div class="prosa" set:html={paso.desarrolloHtml} />
-                  {paso.veredictoHtml && (
-                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
-                  )}
+                  <template data-cuerpo>
+                    <p class="rotulo">Desarrollo</p>
+                    <div class="prosa" set:html={paso.desarrolloHtml} />
+                    {paso.veredictoHtml && (
+                      <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                    )}
+                  </template>
                 </div>
               </>
             )}
@@ -473,11 +475,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                 <div class="msg" data-msg-pista hidden set:html={paso.pistaHtml} />
 
                 <div class="solucion" hidden>
-                  <p class="rotulo">Desarrollo</p>
-                  <div class="prosa" set:html={paso.desarrolloHtml} />
-                  {paso.veredictoHtml && (
-                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
-                  )}
+                  <template data-cuerpo>
+                    <p class="rotulo">Desarrollo</p>
+                    <div class="prosa" set:html={paso.desarrolloHtml} />
+                    {paso.veredictoHtml && (
+                      <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                    )}
+                  </template>
                 </div>
               </>
             )}
@@ -502,18 +506,20 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                 </ul>
 
                 <div class="solucion" hidden>
-                  <p class="rotulo">El razonamiento, en orden</p>
-                  <ol class="orden-bueno">
-                    {paso
-                      .piezas!.filter((pieza) => !pieza.trampa)
-                      .sort((a, b) => a.orden - b.orden)
-                      .map((pieza) => (
-                        <li class="prosa" set:html={pieza.textoHtml} />
-                      ))}
-                  </ol>
-                  {paso.veredictoHtml && (
-                    <div class="prosa veredicto" set:html={paso.veredictoHtml} />
-                  )}
+                  <template data-cuerpo>
+                    <p class="rotulo">El razonamiento, en orden</p>
+                    <ol class="orden-bueno">
+                      {paso
+                        .piezas!.filter((pieza) => !pieza.trampa)
+                        .sort((a, b) => a.orden - b.orden)
+                        .map((pieza) => (
+                          <li class="prosa" set:html={pieza.textoHtml} />
+                        ))}
+                    </ol>
+                    {paso.veredictoHtml && (
+                      <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                    )}
+                  </template>
                 </div>
               </>
             )}
@@ -588,9 +594,31 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     }
   </ol>
 
+  {/* La resolución viaja dentro de un `<template>`, y esto es lo que hace que
+      la página más pesada del sitio baje de cinco segundos a menos de cuatro
+      en un teléfono. Medido el 16 de septiembre de 2026 sobre
+      `/calculo/t05-integracion/`:
+
+        original                     DOM 5.087 ms · load 5.565 ms · 284.977 nodos
+        resoluciones en <template>   DOM 2.092 ms · load 3.934 ms · 168.522 nodos
+
+      El diagnóstico que lo decide: de las **5.081 fórmulas de esa página, al
+      cargar solo se ven 17**; las otras 5.064 están en resoluciones cerradas.
+      Y el tiempo no se iba en maquetar sino en **construir el DOM** —cuatro de
+      los cinco segundos—, así que `content-visibility`, que se salta el
+      maquetado, solo compraba medio segundo. El contenido de un `<template>`
+      se analiza en un fragmento inerte: se lee, pero no entra en el árbol ni
+      en el cálculo de estilos.
+
+      Lo que NO cuesta esto: sin JavaScript la resolución ya era inalcanzable
+      —la esconde `hidden` y la abre un botón—, así que no se pierde nada que
+      antes se tuviera. Al imprimir se materializa sola, y también cuando el
+      guardián de figuras dispara `beforeprint` antes de medir. */}
   <div class="resolucion" data-resolucion hidden>
-    <p class="rotulo rotulo--live">Resolución completa</p>
-    <div class="prosa" set:html={resolucionHtml} />
+    <template data-cuerpo>
+      <p class="rotulo rotulo--live">Resolución completa</p>
+      <div class="prosa" set:html={resolucionHtml} />
+    </template>
   </div>
 
   {/* Siempre visible, no solo con la resolución abierta: un error se ve tanto
@@ -658,6 +686,18 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     const pasos = [...raiz.querySelectorAll<HTMLElement>('[data-paso]')];
     const avance = raiz.querySelector<HTMLElement>('[data-avance]')!;
     const resolucion = raiz.querySelector<HTMLElement>('[data-resolucion]')!;
+
+    /* Sacar la resolución de su `<template>`, una sola vez.
+     *
+     * Idempotente a propósito: la llaman los tres caminos que enseñan la
+     * resolución —terminar el ejercicio, el modo completo e imprimir— y no
+     * hay ninguno que pueda dar por hecho que es el primero. La razón de que
+     * la resolución viva ahí está en el comentario del marcado, arriba. */
+    const materializa = (donde: HTMLElement = resolucion) => {
+      for (const tpl of [...donde.querySelectorAll<HTMLTemplateElement>('template[data-cuerpo]')]) {
+        tpl.replaceWith(tpl.content.cloneNode(true));
+      }
+    };
     const modoPista = raiz.querySelector<HTMLElement>('[data-modo-pista]')!;
 
     const intentos = pasos.map(() => 0);
@@ -685,7 +725,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     function resuelve(i: number) {
       resueltos[i] = true;
       pasos[i].classList.add('resuelto');
-      pasos[i].querySelector<HTMLElement>('.solucion')?.removeAttribute('hidden');
+      const sol = pasos[i].querySelector<HTMLElement>('.solucion');
+      if (sol) { materializa(sol); sol.removeAttribute('hidden'); }
 
       const siguiente = pasos[i + 1];
       if (siguiente) {
@@ -704,6 +745,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             block: 'center',
           });
       } else {
+        materializa();
         resolucion.hidden = false;
       }
       pinta();
@@ -1352,7 +1394,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       for (const b of botonesModo) b.setAttribute('aria-pressed', String(b.dataset.modo === modo));
 
       const completo = modo === 'completo';
-      resolucion.hidden = !completo && !resueltos.every(Boolean);
+      const seVe = completo || resueltos.every(Boolean);
+      if (seVe) materializa();
+      resolucion.hidden = !seVe;
       modoPista.textContent = completo
         ? 'Resolución completa de un tirón. Se imprime bien y sirve para explicárselo a alguien.'
         : 'En modo guiado no verás la solución aunque falles: verás en qué paso te has ido y por qué.';
@@ -1360,7 +1404,11 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       pasos.forEach((paso, i) => {
         paso.classList.toggle('bloqueado', !completo && i > 0 && !resueltos[i - 1]);
         const solucion = paso.querySelector<HTMLElement>('.solucion');
-        if (solucion) solucion.hidden = !completo && !resueltos[i];
+        if (solucion) {
+          const seVe = completo || resueltos[i];
+          if (seVe) materializa(solucion);
+          solucion.hidden = !seVe;
+        }
       });
       pinta();
     }
@@ -1372,8 +1420,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     // Al imprimir, siempre la resolución entera: nadie repasa la noche antes
     // haciendo clic (§11).
     window.addEventListener('beforeprint', () => {
+      materializa();
       resolucion.hidden = false;
-      for (const s of raiz.querySelectorAll<HTMLElement>('.solucion')) s.hidden = false;
+      for (const s of raiz.querySelectorAll<HTMLElement>('.solucion')) { materializa(s); s.hidden = false; }
     });
     window.addEventListener('afterprint', () => cambiaModo(modo));
 
@@ -1389,6 +1438,41 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     margin: 2.5rem 0;
     background: var(--panel);
     box-shadow: var(--shadow-1);
+
+    /* ── por qué esto está aquí ──────────────────────────────────
+     *
+     * Medido el 16 de septiembre de 2026 sobre `/calculo/t05-integracion/`,
+     * la página más pesada del sitio: **284.977 nodos, y 272.606 son de
+     * KaTeX**. Son 5.081 fórmulas a 54 nodos cada una — MathML para el lector
+     * de pantalla y HTML para el ojo, las dos cosas por fórmula.
+     *
+     * Y el dato que decide el arreglo: **de esas 5.081, al cargar solo 17 se
+     * ven**. Las otras 5.064 están dentro de resoluciones y pasos cerrados.
+     * O sea que el navegador maquetaba un cuarto de millón de nodos que nadie
+     * estaba mirando, y por eso la página tardaba cinco segundos en un
+     * teléfono.
+     *
+     * `content-visibility: auto` le dice al navegador que se salte el
+     * maquetado y el pintado de lo que está fuera de la pantalla, y que lo
+     * haga cuando se acerque. Se eligió frente a las dos alternativas que se
+     * barajaron —paginar los ejercicios, o meterlos en un `<template>`—
+     * porque es la única que **no cambia el HTML publicado**: los anclajes
+     * `#ej-…` que usan las siete rutas siguen existiendo, la página sigue
+     * funcionando entera sin JavaScript, imprimir sigue saliendo completo, y
+     * `verify.mjs` sigue leyendo lo mismo. Las otras dos rompían alguna de
+     * esas cuatro.
+     *
+     * `contain-intrinsic-size` es la altura que el navegador supone mientras
+     * no lo ha maquetado. Sin ella la barra de desplazamiento salta al
+     * acercarse a cada ejercicio; con una estimación razonable, no. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+
+  /* Al imprimir no vale saltarse nada: el papel no tiene «fuera de la
+     pantalla», y sin esto los ejercicios salen en blanco. */
+  @media print {
+    .ejercicio { content-visibility: visible; }
   }
 
   .ej-meta {
