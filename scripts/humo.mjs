@@ -169,7 +169,7 @@ async function main() {
   const paginas = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
     [...html.matchAll(/href="([^"]+)"/g)]
       .map((m) => m[1])
-      /* `formulario` entra el 16 de septiembre de 2026, y es la tercera vez
+      /* `formulario` entra el 15 de septiembre de 2026, y es la tercera vez
          que este filtro se queda corto por el mismo motivo: **enumera formas
          de URL**, así que una clase de página nueva no entra hasta que alguien
          se acuerda. Antes pasó con los exámenes y con los índices.

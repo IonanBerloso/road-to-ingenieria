@@ -128,7 +128,7 @@ preguntar, no dejar que la decida `join`.
 
 ---
 
-## ▶ MAÑANA · 17 de septiembre de 2026 — por dónde seguir
+## ▶ MAÑANA · 16 de septiembre de 2026 — por dónde seguir
 
 Escrito al cerrar el día 13, con la reauditoría de Cálculo cerrada entera. El
 suelo está en verde y **el despliegue vuelve a funcionar**, que es lo que hoy
@@ -180,7 +180,7 @@ y lo sigue estando.
 
 ---
 
-## Fase del 16 de septiembre (cumplida)
+## Fase del 15 de septiembre (cumplida)
 
 Escrito al cerrar el día 12. Lo que se planeó aquella noche se cumplió a
 medias y por buenas razones: la reauditoría llegó por la mañana y mandaba
