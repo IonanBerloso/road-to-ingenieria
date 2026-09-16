@@ -2350,6 +2350,29 @@ Cosas que ya han costado horas. No son opiniones.
   y su caja seguía ahí, escrita «de 0,0 a 0,0» y saliéndose por la izquierda.
   **Regla: para quitar un texto se le pone `textContent = ''`**; la opacidad
   se reserva para lo que sí sigue estando, como una curva de referencia.
+- **Las figuras no se escriben a mano: se calculan.** Desde el 17 de
+  septiembre de 2026 vive en `scripts/figuras/` un lienzo —`lienzo.mjs`— que
+  convierte coordenadas de la asignatura en píxeles y emite el SVG con la
+  receta de siempre: `<title>` y `<desc>` que se leen solos, clases
+  prefijadas, rótulos con halo de papel. Cada tema tiene su generador
+  (`calculo-t01.mjs`, …) y `pegar.mjs` mete el resultado en el paso `dibujar`
+  que le toca sin tocar el resto del YAML. Tres cosas que impone y que no se
+  negocian:
+
+  1. **Nada se sale del `viewBox`, tampoco un rótulo.** El marco se comprueba
+     al generar, con la caja del texto estimada por lo alto, y el error dice
+     qué rótulo se sale y por dónde. Antes eso lo cazaba `humo.mjs` media hora
+     más tarde, o no lo cazaba nadie.
+  2. **Ni un `#rrggbb`.** Solo tokens, porque hay tres temas y
+     `check-color.mjs` los mide todos.
+  3. **Las figuras repetidas se copian, no se reescriben.** Nueve ejercicios de
+     examen piden el mismo dibujo que un ejemplo de su tema; `reetiqueta()`
+     copia la figura cambiándole el prefijo de ids. Escribirla dos veces es
+     tener dos versiones que algún día dejarán de coincidir.
+
+  Para mirarlas antes de pegarlas, `previsualiza.mjs` monta un contact sheet
+  en PNG con todas las de un generador, en claro o en oscuro. Eso sigue siendo
+  §16: lo que caza un error de dibujo es mirar la captura.
 - **Una figura de ejercicio se dibuja a la escala del resultado, no «a
   ojo».** Al redibujar el enunciado 2.19 —un tubo cerrado que mide el nivel
   comprimiendo su aire— el agua de dentro del tubo se puso, esquemáticamente,
