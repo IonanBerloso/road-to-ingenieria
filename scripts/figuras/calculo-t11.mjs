@@ -11,7 +11,7 @@
 import { lienzo } from './lienzo.mjs';
 import { pega } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t11-fourier/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t11-fourier/ejercicios.yaml';
 const P = Math.PI;
 
 export const figuras = [];

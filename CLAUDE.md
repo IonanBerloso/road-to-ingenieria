@@ -2408,6 +2408,15 @@ Cosas que ya han costado horas. No son opiniones.
      al generar, con la caja del texto estimada por lo alto, y el error dice
      qué rótulo se sale y por dónde. Antes eso lo cazaba `humo.mjs` media hora
      más tarde, o no lo cazaba nadie.
+
+     Y **por lo alto quiere decir con margen de verdad**: el paso de la fuente
+     mono no es el mismo en todas las máquinas. Con 6,7 píxeles por letra las
+     figuras cabían en Windows y tres se salían en el CI —veintisiete letras
+     que aquí medían 181 píxeles allí medían más de 205—. Se mide con 7,9, se
+     rechazan algunas que en realidad cabrían, y eso es lo correcto: mover un
+     rótulo cuesta un minuto y uno recortado en producción no lo ve nadie
+     hasta que un alumno no entiende el dibujo. La lección general: **un
+     guardián que solo vale en la máquina de quien lo escribió no vale.**
   2. **Ni un `#rrggbb`.** Solo tokens, porque hay tres temas y
      `check-color.mjs` los mide todos.
   3. **Las figuras repetidas se copian, no se reescriben.** Nueve ejercicios de

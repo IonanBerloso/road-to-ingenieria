@@ -14,7 +14,7 @@ import { pegaEnCampo } from './pegar.mjs';
 import { figuras as ejemplos } from './calculo-ejemplos.mjs';
 import { figuras as t05 } from './calculo-t05.mjs';
 
-const FICHERO = 'src/content/calculo/t05-integracion/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t05-integracion/ejercicios.yaml';
 const P = Math.PI;
 
 export const figuras = [];
@@ -64,11 +64,11 @@ fig('teorema-de-la-media',
       celdas: [
         panel('(a) 3x² en [−1,4] · media 13', (x) => 3 * x * x, [-1, 4], 13, [cA],
           [-1.6, 4.6], [-6, 52], [-1, 4], [13]),
-        panel('(b) |x−2| en [0,5] · media 1,3', (x) => Math.abs(x - 2), [0, 5], mB, [0.7, 3.3],
+        panel('(b) |x−2| · media 1,3', (x) => Math.abs(x - 2), [0, 5], mB, [0.7, 3.3],
           [-0.6, 5.6], [-0.6, 3.4], [2, 5], [[mB, '1,3']], 40),
         panel('(c) sen x en [0,2π] · media 0', Math.sin, [0, 2 * P], 0, [P],
           [-0.6, 2 * P + 0.6], [-1.5, 1.5], [[P, 'π'], [2 * P, '2π']], []),
-        panel('(d) sen x en [0,π] · media 2/π', Math.sin, [0, P], mD, [0.6901, P - 0.6901],
+        panel('(d) sen x · media 2/π', Math.sin, [0, P], mD, [0.6901, P - 0.6901],
           [-0.5, P + 0.5], [-0.45, 1.35], [[P, 'π']], [[mD, '2/π']]),
       ],
     });
@@ -406,7 +406,7 @@ const arcoParabola = (id) => {
   l.punto(-2, 0, { r: 4 });
   l.punto(1, 0, { r: 4 });
   l.punto(-0.5, -2.25, { clase: 'o', r: 4 });
-  l.rotulo(-0.5, -2.25, 'vértice (−0,5 ; −2,25)', { dx: 8, dy: 4, color: 'var(--flag)' });
+  l.rotulo(-0.5, -2.25, 'vértice', { dx: 8, dy: 4, color: 'var(--flag)' });
   return l.svg();
 };
 

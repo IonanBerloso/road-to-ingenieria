@@ -216,7 +216,7 @@ fig('2022-2023-ord', 'ex2223-ord-5-la-esfera-cortada-por-el-cilindro', () =>
         l.poli(aro(0, 2, 2), { clase: 'c' });
         l.punto(0, 4, { clase: 'o', r: 3.6 });
         l.punto(0, 0, { clase: 'o', r: 3.6 });
-        l.rotulo(2, 2, 'r = 4senθ', { dx: 2, dy: -6 });
+        l.rotulo(2, 2, 'r = 4senθ', { dx: -4, dy: -7, anclaje: 'end' });
       },
     },
   }));

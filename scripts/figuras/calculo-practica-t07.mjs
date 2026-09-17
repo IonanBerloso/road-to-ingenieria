@@ -13,7 +13,7 @@
 import { lienzo, mosaico } from './lienzo.mjs';
 import { pegaEnCampo } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t07-integral-multiple/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t07-integral-multiple/ejercicios.yaml';
 const P = Math.PI;
 
 export const figuras = [];
@@ -177,7 +177,7 @@ fig('boveda-de-viviani',
           l.poli(aro(0.5, 0, 0.5), { clase: 'c' });
           l.punto(0, 0, { clase: 'o', r: 3.4 });
           l.punto(1, 0, { clase: 'o', r: 3.4 });
-          l.rotulo(0.5, 0.5, 'r = a cos θ', { dx: 2, dy: -6 });
+          l.rotulo(0.5, 0.5, 'r = a cos θ', { dx: -4, dy: -7, anclaje: 'end' });
         },
       },
     }));
@@ -488,7 +488,7 @@ fig('el-cilindro-cortado-por-un-plano-inclinado',
           l.poli([[1, 0], [1, 2]], { clase: 'c2' });
           l.poli([[-1, 0], [1, 0]], { clase: 'c2' });
           l.punto(0, 3, { clase: 'o', r: 3.6 });
-          l.rotulo(0, 3, 'altura media 3', { dx: 6, dy: -6, color: 'var(--flag)' });
+          l.rotulo(0, 3, 'media 3', { dx: -6, dy: -7, anclaje: 'end', color: 'var(--flag)' });
         },
       },
       planta: disco(1, 'r ≤ 1'),

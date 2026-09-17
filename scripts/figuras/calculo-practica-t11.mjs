@@ -12,7 +12,7 @@
 import { lienzo, mosaico } from './lienzo.mjs';
 import { pegaEnCampo } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t11-fourier/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t11-fourier/ejercicios.yaml';
 const P = Math.PI;
 
 export const figuras = [];
@@ -225,7 +225,7 @@ fig('cuatro-desarrollos-del-boletin',
           },
         },
         {
-          etiqueta: '(e) T = 6 · rampa y meseta',
+          etiqueta: '(e) T = 6 · rampa',
           x: [-7, 10], y: [-1.8, 7.6], cuadrado: false,
           dibuja: (l) => {
             l.ejes({ nombreX: 't', nombreY: 'f', marcasX: [-3, 3, 6], marcasY: [6] });

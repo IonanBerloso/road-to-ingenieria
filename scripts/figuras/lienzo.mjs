@@ -128,14 +128,21 @@ export function lienzo({
     puntos.map(([px, py], i) => `${i ? 'L' : 'M'}${px} ${py}`).join('') + (cerrar ? 'Z' : '');
 
   /**
-   * Cuánto mide un rótulo, a ojo pero por lo alto.
+   * Cuánto mide un rótulo, a ojo y **por lo alto a propósito**.
    *
    * La familia es monoespaciada, así que el ancho es el número de letras por el
-   * paso de la fuente. Se redondea hacia arriba: equivocarse de más aprieta el
-   * margen, equivocarse de menos deja salir una palabra del marco y lo caza
-   * `humo.mjs` media hora después.
+   * paso de la fuente. Y aquí viene lo que costó: el paso no es el mismo en
+   * todas las máquinas. Con 6,7 píxeles por letra las figuras cabían en
+   * Windows y **tres se salían en el CI**, donde la mono se dibuja más ancha
+   * —27 letras que aquí medían 181 píxeles allí medían más de 205—. Un
+   * guardián que solo vale en la máquina de quien lo escribió no vale.
+   *
+   * Así que se mide con 7,9, que es lo peor que se ha visto, más un pelo. Se
+   * rechazan algunas figuras que en realidad cabrían; mover un rótulo cuesta
+   * un minuto y un rótulo recortado en producción no lo ve nadie hasta que un
+   * alumno no entiende el dibujo.
    */
-  const mideTexto = (texto, pequeno) => [...String(texto)].length * (pequeno ? 6.3 : 6.7);
+  const mideTexto = (texto, pequeno) => [...String(texto)].length * (pequeno ? 7.5 : 7.9);
 
   const encuadra = (px, py, texto, anclaje, pequeno) => {
     quien = `el rótulo «${texto}»`;
@@ -397,6 +404,17 @@ export function mosaico({ id, titulo, desc, columnas, celdas, ancho = 168, alto 
     const { piezas: dentro, clases: extra } = panel.partes();
     for (const [a, b] of extra) clases.set(a, b);
 
+    /* El rótulo del panel se mide contra el marco del mosaico entero, que es
+       el `viewBox` de verdad. No se medía, y por eso dos etiquetas de la
+       columna derecha se salían por la banda: la comprobación de `humo.mjs`
+       las cazó, pero solo en el CI. */
+    const anchoEtiqueta = [...String(celda.etiqueta)].length * 7.9;
+    if (dx + 2 + anchoEtiqueta > W + 0.5) {
+      throw new Error(
+        `${id}: la etiqueta «${celda.etiqueta}» se sale del mosaico por ` +
+          `${Math.ceil(dx + 2 + anchoEtiqueta - W)} px`,
+      );
+    }
     piezas.push(
       `<g transform="translate(${dx} ${dy + 16})">` +
         `<text class="${id}-l" x="2" y="-5" fill="var(--live)">${esc(celda.etiqueta)}</text>` +

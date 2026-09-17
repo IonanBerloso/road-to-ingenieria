@@ -11,7 +11,7 @@
 import { lienzo, mosaico, vista3d } from './lienzo.mjs';
 import { pega } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t05-integracion/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t05-integracion/ejercicios.yaml';
 
 export const figuras = [];
 const fig = (id, paso, hacer) => figuras.push({ id, paso, hacer });

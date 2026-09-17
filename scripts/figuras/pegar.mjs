@@ -212,3 +212,44 @@ export function quitaFigura(fichero, idEj, campo) {
   lineas.splice(desde, cierra - desde + 1);
   escribe(-(cierra - desde + 1), desde);
 }
+
+/**
+ * Quita la figura de un paso `dibujar`, para poder volver a pegarla.
+ *
+ * El hermano de `quitaFigura`, para el otro sitio donde vive una figura. El
+ * bloque va de `figura: |` hasta la siguiente clave del paso.
+ */
+export function quitaFiguraDePaso(fichero, idEj, cual = 0) {
+  const { lineas, escribe } = leeLineas(fichero);
+
+  const inicio = lineas.findIndex((l) => l === `  - id: ${idEj}`);
+  if (inicio < 0) throw new Error(`${fichero}: no está el ejercicio ${idEj}`);
+  let fin = lineas.length;
+  for (let i = inicio + 1; i < lineas.length; i++) {
+    if (/^  - id: /.test(lineas[i])) { fin = i; break; }
+  }
+
+  let visto = -1;
+  for (let i = inicio; i < fin; i++) {
+    if (!/^ {6}- tipo: dibujar\s*$/.test(lineas[i])) continue;
+    visto++;
+    if (visto !== cual) continue;
+
+    let abre = -1;
+    for (let j = i + 1; j < fin; j++) {
+      if (/^ {6}- /.test(lineas[j])) break;
+      if (/^ {8}figura: [|]/.test(lineas[j])) { abre = j; break; }
+    }
+    if (abre < 0) throw new Error(`${idEj}: el paso ${cual} no tiene figura`);
+
+    /* Acaba en la siguiente clave del paso, a ocho espacios. */
+    let cierra = fin;
+    for (let j = abre + 1; j < fin; j++) {
+      if (/^ {8}\S/.test(lineas[j]) || /^ {0,6}\S/.test(lineas[j])) { cierra = j; break; }
+    }
+    lineas.splice(abre, cierra - abre);
+    escribe(-(cierra - abre), abre);
+    return;
+  }
+  throw new Error(`${fichero}: ${idEj} no tiene un paso dibujar número ${cual}`);
+}

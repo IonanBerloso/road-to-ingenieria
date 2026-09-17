@@ -11,7 +11,7 @@
 import { lienzo, mosaico } from './lienzo.mjs';
 import { pega } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t01-complejos/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t01-complejos/ejercicios.yaml';
 const g = (grados) => (grados * Math.PI) / 180;
 const pol = (r, a) => [r * Math.cos(a), r * Math.sin(a)];
 
@@ -557,7 +557,7 @@ fig('ocho-regiones-del-boletin', 0, () => {
       },
     },
     {
-      etiqueta: '(h) elipse, eje mayor vertical',
+      etiqueta: '(h) elipse vertical',
       x: [-3.4, 3.4], y: [-5.6, 5.6],
       dibuja: (l) => {
         l.ejes({ marcasX: [3], marcasY: [5] });
@@ -621,7 +621,7 @@ fig('cuatro-regiones-de-argumento', 0, () => {
       },
     },
     {
-      etiqueta: '(d) circunferencia sin 1 y 3',
+      etiqueta: '(d) sin el 1 ni el 3',
       x: [-0.2, 4.2], y: [-1.6, 1.6],
       dibuja: (l) => {
         l.ejes({ marcasX: [1, 2, 3] });
@@ -765,7 +765,7 @@ fig('la-elipse-partida-por-la-bisectriz', 0, () => {
   l.punto(0, -1, { clase: 'o', r: 3.8 });
   l.punto(xc, xc, { r: 4 });
   l.punto(-xc, -xc, { r: 4 });
-  l.rotulo(xc, xc, '≈ (1,69 ; 1,69)', { dx: 6, dy: -6 });
+  l.rotulo(xc, xc, '≈ (1,69 ; 1,69)', { dx: -6, dy: -7, anclaje: 'end' });
   l.rotulo(-xc, -xc, '≈ (−1,69 ; −1,69)', { dx: 8, dy: 15 });
   l.rotulo(0, 1, 'i', { dx: 7, dy: -4, color: 'var(--flag)' });
   l.rotulo(0, -1, '−i', { dx: 7, dy: 13, color: 'var(--flag)' });

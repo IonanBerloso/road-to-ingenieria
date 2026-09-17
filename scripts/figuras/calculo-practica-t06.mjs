@@ -13,7 +13,7 @@
 import { lienzo, mosaico, reetiqueta } from './lienzo.mjs';
 import { pegaEnCampo } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t06-varias-variables/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t06-varias-variables/ejercicios.yaml';
 const P = Math.PI;
 
 export const figuras = [];
@@ -75,8 +75,8 @@ fig('monte-con-dos-direccionales',
     });
     l.ejes({ nombreX: 'x', nombreY: 'y', marcasX: [1, 2, 3], marcasY: [1, 2, 3] });
     l.punto(1, 2, { clase: 'o', r: 4.6 });
-    flechaDesde(l, [1, 2], [1, 0], 1, 'hacia (2,2): D = 2', { color: 'var(--alt)', clase: 'c2' });
-    flechaDesde(l, [1, 2], [0, -1], 1, 'hacia (1,1): D = −2', { color: 'var(--alt)', clase: 'c2', dy: 14 });
+    flechaDesde(l, [1, 2], [1, 0], 1, 'D = 2', { color: 'var(--alt)', clase: 'c2' });
+    flechaDesde(l, [1, 2], [0, -1], 1, 'D = −2', { color: 'var(--alt)', clase: 'c2', dy: 14 });
     flechaDesde(l, [1, 2], [2, 2], 0.42, '∇F = (2,2)', { color: 'var(--d1)', clase: 'c' });
     l.rotulo(1, 2, 'P(1,2)', { dx: -8, dy: 4, anclaje: 'end', color: 'var(--flag)' });
     return l.svg();

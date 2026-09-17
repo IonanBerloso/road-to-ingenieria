@@ -13,7 +13,7 @@
 import { lienzo, mosaico, vista3d } from './lienzo.mjs';
 import { pega } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t07-integral-multiple/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t07-integral-multiple/ejercicios.yaml';
 
 export const figuras = [];
 const fig = (id, paso, hacer) => figuras.push({ id, paso, hacer });
@@ -104,7 +104,7 @@ fig('volumen-entre-dos-paraboloides', 0, () =>
         l.curva((x) => 8 - x * x, [-2.8, 2.8], { clase: 'c2', n: 60 });
         l.punto(2, 4, { clase: 'o', r: 3.8 });
         l.punto(-2, 4, { clase: 'o', r: 3.8 });
-        l.rotulo(2, 4, 'z = 4', { dx: 6, dy: 4, color: 'var(--flag)' });
+        l.rotulo(2, 4, 'z = 4', { dx: -6, dy: -7, anclaje: 'end', color: 'var(--flag)' });
       },
     },
     proyeccion: {
@@ -418,7 +418,7 @@ fig('la-esfera-mordida-por-el-cilindro', 0, () =>
         l.poli(aro(1, 0, 1), { clase: 'c' });
         l.punto(2, 0, { clase: 'o', r: 3.6 });
         l.punto(0, 0, { clase: 'o', r: 3.6 });
-        l.rotulo(1, 1, 'r = 2cos θ', { dx: 4, dy: -6 });
+        l.rotulo(1, 1, 'r = 2cos θ', { dx: -4, dy: -7, anclaje: 'end' });
       },
     },
   }));

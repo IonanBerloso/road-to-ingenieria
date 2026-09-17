@@ -559,7 +559,7 @@ fig('t11-fourier', 'ej-paridad-antes-de-integrar',
             l.ejes({ nombreX: 't', nombreY: 'f', marcasX: [[-P, '−π'], [P, 'π']], marcasY: [[P * P, 'π²']] });
             for (const c of [-2, 0, 2]) l.curva((t) => [c * P + t, t * t], [-P + 0.02, P - 0.02], { clase: 'c', n: 40 });
             l.poli([[0, 0], [0, 11]], { clase: 'g' });
-            l.rotulo(0, 11, 'eje de simetría', { dx: 4, dy: 2, color: 'var(--faint)', pequeno: true });
+            l.rotulo(0, 11, 'simetría', { dx: 4, dy: 2, color: 'var(--faint)', pequeno: true });
           },
         },
         {

@@ -13,7 +13,7 @@
 import { lienzo } from './lienzo.mjs';
 import { pegaEnCampo } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t01-complejos/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t01-complejos/ejercicios.yaml';
 
 export const figuras = [];
 const fig = (id, pie, hacer) => figuras.push({ fichero: FICHERO, id, campo: 'resolucion', pie, hacer });

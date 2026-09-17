@@ -11,7 +11,7 @@
 import { lienzo, mosaico, vista3d } from './lienzo.mjs';
 import { pega } from './pegar.mjs';
 
-const FICHERO = 'src/content/calculo/t06-varias-variables/ejercicios.yaml';
+export const FICHERO = 'src/content/calculo/t06-varias-variables/ejercicios.yaml';
 
 export const figuras = [];
 const fig = (id, paso, hacer) => figuras.push({ id, paso, hacer });
@@ -213,7 +213,7 @@ fig('seis-familias-de-curvas-de-nivel', 0, () => {
         },
       },
       {
-        etiqueta: '(f) esferas, centro (0,2,0)',
+        etiqueta: '(f) esferas en (0,2,0)',
         x: [-4.4, 4.4], y: [-3.6, 3.6], cuadrado: false,
         dibuja: (l) => {
           l.poli([p3(-3.4, 0, 0), p3(3.4, 0, 0)], { clase: 'eje' });
