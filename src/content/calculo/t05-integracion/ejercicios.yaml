@@ -14532,3 +14532,274 @@ ejercicios:
       </svg>
       <figcaption>El integrando sen t / t no está definido en t = 0, pero su límite vale 1 y el hueco se tapa solo: por eso la curva de arriba pasa por (0,1) sin saltar. Integrándola sale G, cuyo coeficiente de x³ es −1/18, y el dibujo enseña de dónde viene esa forma tan plana.</figcaption>
       </figure>
+
+  - id: derivar-una-integral-de-limites-variables
+    titulo: Derivar una integral que no se sabe calcular
+    fuente: Ejercicio propio · Road to Ingeniería. De nivel de boletín, escrito para un escalón al que el boletín no da material. No es del boletín ni ha caído en examen.
+    nivel: practica
+    enunciado: |
+      Sea
+
+      $$
+      F(x)=\int_{x^{2}}^{x^{3}} e^{-t^{2}}\,dt
+      $$
+
+      Calcular $F'(x)$ y evaluar $F'(1)$.
+    pide: La expresión de $F'(x)$ y su valor en $x=1$.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La primitiva de $e^{-t^2}$ no es elemental: no hay forma de
+          escribirla con funciones conocidas. ¿Impide eso derivar $F$?
+        opciones:
+          - texto: No, porque el teorema fundamental da $F'$ sin necesidad de conocer la primitiva
+            correcta: true
+            mensaje: |
+              Ese es exactamente el motivo de que el teorema valga la pena.
+              Basta con que el integrando sea continuo, y $e^{-t^2}$ lo es en
+              todo $\mathbb{R}$.
+          - texto: Sí, sin primitiva no se puede hacer nada
+            mensaje: |
+              Entonces este ejercicio sería imposible, y es justo al revés: la
+              gracia del teorema es dar la derivada de algo que no se sabe
+              integrar.
+          - texto: Hay que desarrollar $e^{-t^2}$ en serie y derivar término a término
+            mensaje: |
+              Se puede, y da lo mismo, pero es dar una vuelta enorme. El
+              teorema lo resuelve en una línea.
+      - tipo: calcular
+        titulo: El valor en x = 1
+        pregunta: |
+          ¿Cuánto vale $F'(1)$?
+        respuesta:
+          tipo: numero
+          valor: '0.3678794'
+          tolerancia: 0.002
+          formato: un número; es 1/e
+        distractores:
+          - valor: '1.8393972'
+            mensaje: |
+              Has sumado los dos términos en vez de restarlos. El límite
+              **inferior** entra con signo menos: la regla es
+              $f(b(x))b'(x)-f(a(x))a'(x)$.
+          - valor: '0'
+            mensaje: |
+              Cero saldría si los dos límites fueran iguales o si los dos
+              términos se cancelasen. Aquí los factores son $3x^2$ y $2x$, que
+              en $x=1$ valen $3$ y $2$: no se cancelan.
+        pista: |
+          $F'(x)=e^{-x^6}\cdot3x^2-e^{-x^4}\cdot2x$, y en $x=1$ las dos
+          exponenciales valen $e^{-1}$.
+        desarrollo: |
+          $$
+          F'(1)=3e^{-1}-2e^{-1}=e^{-1}\approx0{,}3679
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el razonamiento. Una pieza es falsa.
+        piezas:
+          - texto: 'Se llama $G$ a una primitiva de $e^{-t^2}$, que existe por ser el integrando continuo aunque no se sepa escribir.'
+          - texto: 'Por la regla de Barrow, $F(x)=G(x^3)-G(x^2)$.'
+          - texto: 'Derivando con la regla de la cadena: $F''(x)=G''(x^3)\cdot3x^2-G''(x^2)\cdot2x$.'
+          - texto: 'Y como $G''=e^{-t^2}$: $F''(x)=3x^2e^{-x^6}-2xe^{-x^4}$.'
+          - texto: 'Existe $G$ porque toda función acotada tiene primitiva.'
+            trampa: true
+            mensaje: |
+              Acotada no basta: la función que vale 0 en los racionales y 1 en
+              los irracionales está acotada y no tiene primitiva. Lo que
+              garantiza la primitiva es la **continuidad**, que es la hipótesis
+              del teorema fundamental.
+        veredicto: |
+          Los dos factores $3x^2$ y $2x$ no son adorno: son la regla de la
+          cadena, y olvidarlos es el error más común del escalón.
+    resolucion: |
+      **Datos.** $F(x)=\displaystyle\int_{x^2}^{x^3} e^{-t^2}\,dt$.
+
+      ### 1 · Por qué se puede
+
+      $e^{-t^2}$ es continua en todo $\mathbb{R}$, así que por la primera parte
+      del teorema fundamental tiene primitiva, llamémosla $G$, con $G'=e^{-t^2}$.
+      Que $G$ no se pueda escribir con funciones elementales no importa: para
+      derivar solo hace falta saber que existe.
+
+      ### 2 · Escribir $F$ con esa primitiva
+
+      Por la regla de Barrow,
+
+      $$
+      F(x)=G(x^3)-G(x^2)
+      $$
+
+      ### 3 · Derivar con la regla de la cadena
+
+      $$
+      F'(x)=G'(x^3)\cdot 3x^2 - G'(x^2)\cdot 2x
+           = 3x^2e^{-x^6}-2xe^{-x^4}
+      $$
+
+      Los factores $3x^2$ y $2x$ son las derivadas de los límites. El inferior
+      entra restando.
+
+      ### 4 · Evaluar
+
+      $$
+      F'(1)=3e^{-1}-2e^{-1}=e^{-1}\approx0{,}3679
+      $$
+
+      ### 5 · Comprobación
+
+      El signo tiene sentido: cerca de $x=1$ el límite superior $x^3$ se mueve
+      más deprisa que el inferior $x^2$, así que el intervalo de integración se
+      ensancha y la integral de una función positiva crece. $F'(1)>0$, como
+      sale.
+
+      ### Resultado
+
+      $$
+      \boxed{\;F'(x)=3x^{2}e^{-x^{6}}-2xe^{-x^{4}},\qquad F'(1)=\frac1e\;}
+      $$
+
+      > **Lo que enseña.** La fórmula general es
+      > $\frac{d}{dx}\int_{a(x)}^{b(x)}f = f(b)b'-f(a)a'$, y los dos trozos que
+      > más se olvidan son el signo menos del límite inferior y los factores
+      > $b'$ y $a'$.
+
+  - id: la-funcion-integral-de-una-funcion-a-trozos
+    titulo: Cuando el integrando salta, ¿qué le pasa al teorema?
+    fuente: Ejercicio propio · Road to Ingeniería. De nivel de boletín, escrito para un escalón al que el boletín no da material. No es del boletín ni ha caído en examen.
+    nivel: practica
+    enunciado: |
+      Sea
+
+      $$
+      f(t)=\begin{cases} 1 & \text{si } 0\le t<1\\ 2 & \text{si } 1\le t\le 2\end{cases}
+      \qquad\text{y}\qquad
+      F(x)=\int_{0}^{x} f(t)\,dt \ \ \text{para } x\in[0,2]
+      $$
+
+      Escribir $F$ explícitamente, estudiar si es continua y si es derivable, y
+      decir dónde falla $F'(x)=f(x)$ y por qué.
+    pide: La expresión de $F$, su continuidad, su derivabilidad y la explicación.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El teorema fundamental dice que $F'(x)=f(x)$. ¿Qué pide a cambio?
+        opciones:
+          - texto: Que $f$ sea **continua** en el punto donde se deriva
+            correcta: true
+            mensaje: |
+              Esa es la hipótesis, y aquí se rompe justo en $x=1$. Fuera de ese
+              punto $f$ sí es continua y el teorema funciona con normalidad.
+          - texto: Que $f$ sea derivable
+            mensaje: |
+              No hace falta tanto: el teorema solo pide continuidad del
+              integrando. De hecho la gracia es que $F$ sale más suave que $f$,
+              no menos.
+          - texto: Que $f$ sea positiva
+            mensaje: |
+              El signo no interviene. Con $f$ negativa la integral resta área y
+              todo sigue valiendo.
+      - tipo: calcular
+        titulo: Un valor de F
+        pregunta: |
+          ¿Cuánto vale $F(1{,}5)$?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.02
+          formato: un número
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Eso es $2\times1{,}5$: has usado el valor $2$ en todo el
+              intervalo. Pero en $[0,1)$ la función vale $1$, no $2$.
+          - valor: '1.5'
+            mensaje: |
+              Y eso es usar $f\equiv1$ en todo el intervalo, olvidando el
+              segundo tramo.
+        pista: |
+          Área del primer rectángulo: $1\times1$. Del segundo: $2\times0{,}5$.
+        desarrollo: |
+          $$
+          F(1{,}5)=\int_0^1 1\,dt+\int_1^{1{,}5}2\,dt = 1+1 = 2
+          $$
+      - tipo: justificar
+        pregunta: |
+          Ordena el estudio de $F$. Una pieza es falsa.
+        piezas:
+          - texto: 'Acumulando área: $F(x)=x$ en $[0,1]$ y $F(x)=1+2(x-1)=2x-1$ en $[1,2]$.'
+          - texto: 'En $x=1$ los dos trozos valen lo mismo, $F(1)=1$, así que $F$ es continua en todo $[0,2]$.'
+          - texto: 'Pero las derivadas laterales valen $1$ y $2$, así que $F$ no es derivable en $x=1$.'
+          - texto: 'Ahí falla $F''=f$, y falla porque $f$ no es continua en $x=1$: es la hipótesis del teorema.'
+          - texto: 'Como $f$ no es continua en $x=1$, la integral $F(x)$ tampoco está definida ahí.'
+            trampa: true
+            mensaje: |
+              La integral está perfectamente definida: $f$ es acotada y con un
+              solo punto de discontinuidad, así que es integrable en $[0,2]$ y
+              $F(1)=1$. Lo que se pierde no es la integral, es la igualdad
+              $F'=f$ en ese punto.
+        veredicto: |
+          Integrable, continua y derivable son tres cosas distintas, y este
+          ejercicio las separa en dos líneas.
+    resolucion: |
+      **Datos.** $f$ vale $1$ en $[0,1)$ y $2$ en $[1,2]$; $F(x)=\int_0^x f$.
+
+      ### 1 · Escribir $F$
+
+      Para $x\in[0,1]$ solo interviene el primer tramo:
+
+      $$
+      F(x)=\int_0^x 1\,dt = x
+      $$
+
+      Para $x\in[1,2]$ se suma el área acumulada hasta $1$ más la del segundo
+      tramo:
+
+      $$
+      F(x)=1+\int_1^x 2\,dt = 1+2(x-1)=2x-1
+      $$
+
+      ### 2 · Continuidad
+
+      $$
+      \lim_{x\to1^-}F(x)=1, \qquad \lim_{x\to1^+}F(x)=2\cdot1-1=1, \qquad F(1)=1
+      $$
+
+      Los tres coinciden: **$F$ es continua en todo $[0,2]$**. Y no es
+      casualidad: la integral de una función acotada siempre lo es.
+
+      ### 3 · Derivabilidad
+
+      $$
+      F'(1^-)=1, \qquad F'(1^+)=2
+      $$
+
+      No coinciden, luego **$F$ no es derivable en $x=1$**. La gráfica de $F$
+      hace un pico: una recta de pendiente $1$ que se convierte en una de
+      pendiente $2$.
+
+      ### 4 · Dónde falla $F'=f$, y por qué
+
+      En todo punto de $[0,2]$ salvo $x=1$ se cumple $F'(x)=f(x)$, porque ahí
+      $f$ es continua. En $x=1$ no hay siquiera $F'(1)$, y el teorema
+      fundamental no se puede invocar: **su hipótesis es que $f$ sea continua
+      en el punto**, y no lo es.
+
+      ### 5 · Comprobación
+
+      Las derivadas laterales de $F$ valen $1$ y $2$, que son exactamente los
+      dos valores laterales de $f$. El teorema no desaparece: se parte en dos
+      mitades, una por cada lado.
+
+      ### Resultado
+
+      $$
+      \boxed{\;F(x)=\begin{cases}x & 0\le x\le1\\ 2x-1 & 1<x\le2\end{cases}
+      \quad\text{continua, no derivable en } x=1\;}
+      $$
+
+      > **Lo que enseña.** Integrar suaviza y derivar afila. Partiendo de una
+      > $f$ con un salto, $F$ sale continua pero con un pico; si $f$ tuviera un
+      > pico, $F$ saldría derivable. Cada escalón de suavidad que gana la
+      > integral es el que pierde la derivada.
+

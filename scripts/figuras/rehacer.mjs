@@ -26,6 +26,9 @@ const GENERADORES = [
   'calculo-practica-t09', 'calculo-practica-t09-familias',
   'calculo-practica-t10', 'calculo-practica-t10-sistemas',
   'calculo-practica-t11', 'calculo-practica-t11-mas',
+  /* Los ejercicios propios, que no vienen del boletín: dos de sus figuras
+     van en el `enunciado` porque son el dato, no la ilustración. */
+  'calculo-propios-t04',
 ];
 
 let n = 0;

@@ -23,17 +23,34 @@ parcial que no toca.
 
 ### C · «156/156 escalones con ejemplo, ≥2 práctica y examen»
 
-Hoy: **156 con ejemplo, 141 con dos prácticas o más, 147 con examen, 134 con
-las tres cosas** —eran 99 el 15 de septiembre—. Los 22 que faltan no se pueden
-cerrar enlazando: **el boletín no tiene material para ellos.** No hay ninguna
-serie telescópica, ninguno de leer una gráfica de derivada, ninguno de Fermat,
-ninguno que demuestre Barrow, ninguno de estudio completo de una función. Ocho
-de los que no acaban en examen son escalones de **suelo**, y el suelo no se
-examina solo: nadie pone un ejercicio de «di el módulo de este complejo».
+Hoy: **156 con ejemplo, 156 con dos prácticas o más, 152 con examen, 152 con
+las tres cosas** —eran 99 el 15 de septiembre y 134 ayer—.
 
-Lo que cerraría esos 22 es **escribir ejercicios propios de nivel boletín**, no
-enlazar. Es trabajo real y está por hacer; lo que no vale es apuntar a un
-problema que va de otra cosa para que el recuento suba.
+Lo que faltaba se ha hecho de las dos maneras que había:
+
+- **Seis ejercicios de examen estaban huérfanos** y se han enlazado. Son la
+  pregunta de complejos de las convocatorias de segunda evaluación: existían,
+  estaban transcritos, y como la ruta de complejos es la de la primera, no los
+  apuntaba nadie. Eso era un agujero de cobertura, no de rampa.
+- **Dieciséis ejercicios propios de nivel boletín**, escritos porque el boletín
+  no tiene material para esos escalones: no hay ninguna serie telescópica,
+  ninguno de leer una gráfica de derivada, ninguno de Fermat, ninguno que
+  demuestre Barrow, ninguno de estudio completo. Su `fuente` lo dice con todas
+  las letras —«Ejercicio propio · Road to Ingeniería»— y no se hacen pasar por
+  del boletín.
+
+#### Los cuatro que quedan, y por qué no se cierran
+
+`2ev/suelo/dominio`, `2ev/suelo/continuidad`, `2ev/suelo/derivada-definicion`
+y `2ev/derivada-aplicada/diferencial` **no tienen ejercicio de examen, y no lo
+van a tener**: en once convocatorias el examen no pide nunca calcular un
+dominio como ejercicio, ni parchear una continuidad, ni derivar por definición,
+y en vez del diferencial de primer orden va directo a Taylor. Son escalones de
+**suelo**: se examinan dentro de otros ejercicios, no por separado.
+
+Cerrar esos cuatro exigiría apuntar a un problema que va de otra cosa para que
+el recuento suba, que es exactamente lo que §10 prohíbe. **Se quedan abiertos a
+propósito, y esta es la anotación que lo dice.**
 
 ### G · «0 `falta[]` abiertos»
 
