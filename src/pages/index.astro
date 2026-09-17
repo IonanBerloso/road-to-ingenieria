@@ -16,6 +16,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { archivo, ruta } from '../lib/rutas';
+import { cuentaPorTema, pesoPublicado } from '../lib/peso';
 import { mate } from '../lib/markdown.mjs';
 import {
   SUFIJO_CONV,
@@ -39,6 +40,19 @@ for (const a of asignaturas) {
     if (m.nota) notaEvaluacion.set(`${a.id}·${m.nombre}`, await mate(m.nota, `eval-${a.id}`));
   }
 }
+
+/** El peso que se publica para un tema: el del catálogo si lo declara, y si
+ *  no el que sale de contar sus ejercicios de examen. `null` cuando esa
+ *  asignatura todavía no tiene exámenes transcritos, y entonces no se pinta
+ *  nada — que es mejor que publicar un nivel inventado. */
+const pesoDe = (asignatura: string, temaId: string, declarado?: 'alto' | 'medio' | 'bajo') => {
+  let cuenta = cuentaExamen.get(asignatura);
+  if (!cuenta) {
+    cuenta = cuentaPorTema(examenes, asignatura);
+    cuentaExamen.set(asignatura, cuenta);
+  }
+  return pesoPublicado(declarado, cuenta, temaId);
+};
 
 const cursos = [1, 2] as const;
 /* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
@@ -103,7 +117,16 @@ const enterasPorAsignatura = new Map<string, boolean>();
  *  original en PDF» de las seis, y en Ingeniería Térmica los veinte PDF son la
  *  resolución completa —de 14 a 32 páginas—. Ver `pdfEs` en content.config.ts. */
 const corregidoPorAsignatura = new Map<string, boolean>();
-for (const ex of await getCollection('examen')) {
+/** Cuántos ejercicios de examen tiene cada tema, por asignatura.
+ *
+ *  Es lo que hace que la pastilla de «peso» sea un recuento y no una etiqueta
+ *  puesta a ojo. Ver `src/lib/peso.ts`: el catálogo solo manda si declara una
+ *  excepción, y una asignatura sin exámenes transcritos no pinta pastilla en
+ *  vez de inventarse un nivel. */
+const examenes = await getCollection('examen');
+const cuentaExamen = new Map<string, Map<string, number>>();
+
+for (const ex of examenes) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
   lista.push({
     curso: ex.data.curso,
@@ -449,7 +472,7 @@ const enteras = asignaturas
                       <li style={`--i: ${j}`}>
                         <Etiqueta
                           class="tema"
-                          data-peso={t.peso}
+                          data-peso={pesoDe(a.id, t.id, t.peso)}
                           {/* «Todavía no escrito» y «no hay nada que escribir»
                               se veían igual, y no son lo mismo: del segundo no
                               va a llegar nunca nada, y el motivo va en el
@@ -465,7 +488,11 @@ const enteras = asignaturas
                             {/* Una etiqueta Caveat solo donde informa (§5b);
                                 sale del catálogo, no se deriva aquí. */}
                             {t.etiqueta && <span class="mano t-sim">{t.etiqueta}</span>}
-                            <span class:list={['pesop', t.peso]}>peso {t.peso}</span>
+                            {pesoDe(a.id, t.id, t.peso) && (
+                              <span class:list={['pesop', pesoDe(a.id, t.id, t.peso)]}>
+                                peso {pesoDe(a.id, t.id, t.peso)}
+                              </span>
+                            )}
                           </span>
                         </Etiqueta>
                         {/* Y el motivo, escrito y no en un `title`.
@@ -589,7 +616,7 @@ const enteras = asignaturas
                   </div>
                 )}
 
-                {a.data.temas.some((t) => t.peso === 'alto') && (
+                {a.data.temas.some((t) => pesoDe(a.id, t.id, t.peso) === 'alto') && (
                   <p class="mano nota-rojo">
                     el rojo de «peso alto» significa: esto decide notas
                   </p>

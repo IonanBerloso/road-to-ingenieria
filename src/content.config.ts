@@ -42,8 +42,21 @@ const lector = (tipo: string): ((s: string) => unknown | null) => {
   return (s: string) => leeComplejo(s) ?? evaluaNumero(s);
 };
 
-/** Peso de un tema en el examen. Tres niveles, nunca un porcentaje:
- *  el dato es estimado y un 12,5 % sería una precisión falsa (§10). */
+/** Peso de un tema en el examen. Tres niveles, nunca un porcentaje: aunque
+ *  ahora se cuente, un 19,5 % sería una precisión falsa para lo que el dato
+ *  sirve, que es decidir por dónde empezar (§10).
+ *
+ *  **Es opcional, y lo normal es no escribirlo.** Nació estimado, cuando no
+ *  había exámenes transcritos con los que contar. Con 88 convocatorias y 425
+ *  ejercicios etiquetados por tema, estimarlo es justo lo que §10 prohíbe:
+ *  poner a ojo un dato que se puede contar. Así que la portada lo **deriva**
+ *  del recuento —los cortes están escritos en `pesoDeTema`, en `src/lib`— y
+ *  el catálogo solo lo declara cuando quiere una excepción, que entonces hay
+ *  que poder defender.
+ *
+ *  Medido el 17 de septiembre de 2026: de los once temas de Cálculo, diez
+ *  coincidían con la etiqueta puesta a mano. El que no, `t10-laplace`, decía
+ *  «medio» con 24 ejercicios de examen, por debajo del corte. */
 const peso = z.enum(['alto', 'medio', 'bajo']);
 
 /** Los cinco patrones de §05, más el simulador cuando el tema lo pide. */
@@ -61,7 +74,7 @@ const tema = z.object({
   id: z.string().regex(/^t\d{2}-[a-z0-9-]+$/, 'formato tNN-slug, en minúscula y sin acentos'),
   titulo: z.string().min(3),
   descripcion: z.string().min(3).max(140),
-  peso,
+  peso: peso.optional(),
   patrones: z.array(patron).min(1),
   /** true solo cuando el tema existe como index.mdx y está terminado según §04. */
   hecho: z.boolean().default(false),
