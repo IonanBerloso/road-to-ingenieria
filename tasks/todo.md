@@ -21,6 +21,20 @@ Lo que sí faltaba de esa dimensión está hecho: el simulacro con reloj, las
 resoluciones tapadas mientras corre, y poder dejar fuera los ejercicios del
 parcial que no toca.
 
+### C · «156/156 escalones con ejemplo, ≥2 práctica y examen»
+
+Hoy: **156 con ejemplo, 141 con dos prácticas o más, 147 con examen, 134 con
+las tres cosas** —eran 99 el 15 de septiembre—. Los 22 que faltan no se pueden
+cerrar enlazando: **el boletín no tiene material para ellos.** No hay ninguna
+serie telescópica, ninguno de leer una gráfica de derivada, ninguno de Fermat,
+ninguno que demuestre Barrow, ninguno de estudio completo de una función. Ocho
+de los que no acaban en examen son escalones de **suelo**, y el suelo no se
+examina solo: nadie pone un ejercicio de «di el módulo de este complejo».
+
+Lo que cerraría esos 22 es **escribir ejercicios propios de nivel boletín**, no
+enlazar. Es trabajo real y está por hacer; lo que no vale es apuntar a un
+problema que va de otra cosa para que el recuento suba.
+
 ### G · «0 `falta[]` abiertos»
 
 Quedan 49 notas `falta[]` en las rutas de Cálculo, y **la mayoría no son
