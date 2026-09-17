@@ -54,15 +54,34 @@ propósito, y esta es la anotación que lo dice.**
 
 ### G · «0 `falta[]` abiertos»
 
-Quedan 49 notas `falta[]` en las rutas de Cálculo, y **la mayoría no son
+Quedan 50 notas `falta[]` en las rutas de Cálculo, y **la mayoría no son
 tareas**: son huecos declarados del material. «El temario oficial incluye
 métodos numéricos y de eso no hay nada en el corpus porque no ha caído nunca en
 un examen» no se cierra trabajando; se cierra mintiendo. Vaciar el campo para
 que el recuento dé cero es exactamente el fallo que §10 persigue.
 
-Lo que sí se puede hacer, y queda pendiente de una pasada: separar en dos las
-que son **descripción** de las que son **deuda**. Hoy conviven en el mismo
-campo, y eso hace que un recuento honesto parezca alarmante.
+#### Lo que sí había que hacer, y se hizo el 17 de septiembre de 2026
+
+**Tres de esas notas habían quedado falsas ese mismo día**, por el trabajo de
+la dimensión C. Decían, contando peldaños: «entre el ejemplo y los exámenes hay
+uno solo» en `ext/leer-una-funcion`, «un ejemplo, el nuestro y tres de examen»
+en `ord/leer-lo-dibujado`, y «no hay nada equivalente para Fermat» en
+`ext/los-teoremas`. Las tres cuentan ahora lo que hay.
+
+Es el mismo fallo que la propia nota de `ord/edo` tenía anotado desde el 8 de
+septiembre: **una nota de ausencia envejece igual que un número**, y estas
+envejecieron en el plazo de una tarde, escritas por quien acababa de dejarlas
+obsoletas. Merece la pena leerlas enteras cada vez que se toca un escalón.
+
+#### Lo que sigue pendiente
+
+Separar en dos las que son **descripción** de las que son **deuda**. Hoy
+conviven en el mismo campo, y eso hace que un recuento honesto parezca
+alarmante. Son **117 en las seis asignaturas** —álgebra 14, cálculo 50,
+fluidos 26, fundamentos 17, ingeniería térmica 7, mecánica 4—, y el cambio
+toca el esquema, la plantilla que las pinta y las 117 entradas: no es una
+pasada de un rato, y clasificarlas a ojo sin leerlas sería peor que dejarlas
+como están.
 
 ## Dónde está el proyecto · 7 de septiembre de 2026
 
