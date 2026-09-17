@@ -763,7 +763,24 @@ const ejercicio = z
   })
   .refine((e) => e.pasos.some((p) => p.tipo === 'justificar'), {
     message: 'falta el paso de COMP4, que vale entre 2 y 9 puntos (§09)',
-  });
+  })
+  /* Y dos pasos seguidos no pueden ser el mismo paso.
+   *
+   * Parece imposible escribirlo a mano, y lo es: esto lo mete un guión. El 16
+   * de septiembre de 2026 uno que añadía rúbricas de `redactar` las pegó dos
+   * veces en cuatro ejercicios —`serie-geometrica`, `segunda-derivada-inversa`,
+   * `ex1718-3ev-2-suma-de-la-geometrica` y
+   * `ex1819-3ev-5-sumas-y-una-integral-homogenea`—, y el sitio publicó la misma
+   * rúbrica dos veces seguidas. De las 25 que el recuento decía tener, 21 eran
+   * de verdad: el número publicado estaba inflado en cuatro.
+   *
+   * Se compara el paso entero, no su tipo: dos `calcular` seguidos son
+   * normales y dos idénticos no lo son nunca.
+   */
+  .refine(
+    (e) => e.pasos.every((p, i) => i === 0 || JSON.stringify(p) !== JSON.stringify(e.pasos[i - 1])),
+    { message: 'hay dos pasos seguidos idénticos: eso lo mete un guión que ha pegado dos veces, y se publica repetido' },
+  );
 
 /** Las convocatorias del curso, **en orden**, con todo lo que hay que saber de
  *  cada una: el trozo de URL que la identifica, cómo se abrevia en la portada

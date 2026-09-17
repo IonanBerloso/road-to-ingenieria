@@ -49,22 +49,40 @@ peso». Contado en el navegador sobre `/calculo/t05-integracion/`:
 fórmulas, y **un tercio de ellas es la copia MathML** que KaTeX emite al lado
 del HTML, invisible, para los lectores de pantalla.
 
-#### La única palanca grande que queda, y por qué no se ha tirado de ella
+#### La palanca que propuse, y que estaba mal — corregido el 17 de septiembre
 
-Emitir **solo** MathML —`output: 'mathml'`— quitaría dos tercios de los nodos
-de fórmula de un golpe, y además sería **mejor** para accesibilidad: MathML de
-verdad en vez de HTML con `aria-hidden` y una copia al lado.
+Escribí aquí que emitir **solo** MathML quitaría dos tercios de los nodos de
+fórmula y además sería mejor para accesibilidad, y lo dejé como «decisión de
+diseño pendiente». **No lo es: ya se decidió, el 20 de agosto de 2026, y en
+contra.** Está en §07 y yo no lo había leído entero antes de proponerlo.
 
-Lo que cambia es el aspecto. El MathML nativo se compone con las fuentes
-matemáticas del sistema, y sin una instalada se ve peor que la tipografía de
-KaTeX en un sitio donde el cuidado tipográfico es la mitad del trabajo. **Es
-una decisión de diseño de todo el sitio, no una optimización**, y por eso se
-deja escrita en vez de tomada.
+El motivo por el que se descartó no es estético. MathML delega el dibujo en la
+fuente matemática de cada máquina, y eso rompía fórmulas sin avisar: con las
+fuentes del sistema **desaparecía la barra del conjugado** —`z̄` se leía como
+`z`, justo lo contrario de lo que dice— y con STIX Two Math autoalojada
+desaparecían los radicales. En una asignatura cuyo primer tema es números
+complejos, publicar un conjugado que se lee como su opuesto no es un empate
+entre rendimiento y tipografía.
+
+#### Lo que sí queda por hacer
+
+§07 fija tres reglas al tocar `EjercicioGuiado.astro`, y la primera acota el
+terreno: **solo va a `<template>` lo que ya era inalcanzable sin JavaScript**.
+La resolución y los desarrollos lo eran; el enunciado y los pasos no, y por eso
+se quedaron fuera. Meter los pasos dentro rebajaría mucho los nodos y
+rompería §02: sin JavaScript no se leerían los ejercicios.
+
+Queda una vía que no rompe ninguna de las dos: **los ejercicios de un tema en
+su propia página**, o por bloques. §07 la descartó el 16 de septiembre porque
+«rompía los anclajes `#ej-…` que usan las siete rutas», y eso tiene respuesta:
+no se rompen si el enlace lo construye `rutas.ts` en vez de escribirse a mano.
+Es lo único que baja también los **megas** —11,4 MB en un móvil con datos son
+entre nueve y treinta segundos de descarga—, que `peso.mjs` hoy ni mira.
 
 Sigue pendiente la decisión hermana del 16 de septiembre: **meter `peso.mjs`
 en `npm run suelo`** para que el árbitro sea el CI y no la máquina de cada uno.
-Mientras no se haga, «menos de 4 s» no es una barra comprobable: la
-reauditoría midió 11,4 s donde aquí se medían 5,4.
+Mientras no se haga, «menos de 4 s» no es una barra comprobable: aquí t05 da
+4,3 s y en otra máquina 5,8.
 
 ### C · «156/156 escalones con ejemplo, ≥2 práctica y examen»
 
