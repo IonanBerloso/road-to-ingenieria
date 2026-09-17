@@ -21,6 +21,51 @@ Lo que sí faltaba de esa dimensión está hecho: el simulacro con reloj, las
 resoluciones tapadas mientras corre, y poder dejar fuera los ejercicios del
 parcial que no toca.
 
+### D · «ninguna página por encima de 4 s» — rota otra vez, y esta vez medida
+
+El 16 de septiembre de 2026 esta barra quedó llena: `t05` bajó de 284.977
+nodos y 5,4 s a 102.451 y 2,7 s, metiendo las resoluciones en `<template>` y
+poniendo `content-visibility: auto` en cada ejercicio.
+
+**Hoy, 17 de septiembre, `peso.mjs` da 109.935 nodos y 4,3 s.** Vuelve a estar
+por encima. El motivo no es ninguna regresión: es que la asignatura ha
+crecido —dieciocho ejercicios propios nuevos entre ayer y hoy— y esta página
+estaba al filo.
+
+#### De dónde salen los nodos, contados y no supuestos
+
+El propio guión avisa: «mira qué se ejecuta al cargar antes de culpar al
+peso». Contado en el navegador sobre `/calculo/t05-integracion/`:
+
+| qué | nodos vivos |
+|---|---|
+| total | 109.935 |
+| dentro de un `.katex` | **100.367** — el 91 % |
+| de esos, `.katex-mathml` | **32.147** |
+| SVG de figuras | **133** |
+| dentro de `<template>`, o sea no vivos | 192.129 |
+
+**Las figuras no son el problema**: 133 nodos de 109.935. Todo el peso son
+fórmulas, y **un tercio de ellas es la copia MathML** que KaTeX emite al lado
+del HTML, invisible, para los lectores de pantalla.
+
+#### La única palanca grande que queda, y por qué no se ha tirado de ella
+
+Emitir **solo** MathML —`output: 'mathml'`— quitaría dos tercios de los nodos
+de fórmula de un golpe, y además sería **mejor** para accesibilidad: MathML de
+verdad en vez de HTML con `aria-hidden` y una copia al lado.
+
+Lo que cambia es el aspecto. El MathML nativo se compone con las fuentes
+matemáticas del sistema, y sin una instalada se ve peor que la tipografía de
+KaTeX en un sitio donde el cuidado tipográfico es la mitad del trabajo. **Es
+una decisión de diseño de todo el sitio, no una optimización**, y por eso se
+deja escrita en vez de tomada.
+
+Sigue pendiente la decisión hermana del 16 de septiembre: **meter `peso.mjs`
+en `npm run suelo`** para que el árbitro sea el CI y no la máquina de cada uno.
+Mientras no se haga, «menos de 4 s» no es una barra comprobable: la
+reauditoría midió 11,4 s donde aquí se medían 5,4.
+
 ### C · «156/156 escalones con ejemplo, ≥2 práctica y examen»
 
 Hoy: **156 con ejemplo, 156 con dos prácticas o más, 152 con examen, 152 con
