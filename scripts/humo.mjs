@@ -29,7 +29,20 @@ import { chromium } from 'playwright';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const { default: astroConfig } = await import('../astro.config.mjs');
 const BASE = astroConfig.base.replace(/\/$/, '');
-const PUERTO = 4321;
+const PUERTO = Number(process.env.HUMO_PUERTO ?? 4321);
+
+/**
+ * Qué asignatura mirar, y quién levanta el servidor.
+ *
+ * La barrida completa tardaba más de una hora, y una hora es el tiempo en el
+ * que se deja de ejecutar un guardián. Partida por asignatura son nueve
+ * procesos que caben en paralelo, cada uno con su navegador, y entonces lo
+ * que tarda la tanda es lo que tarde la asignatura más lenta. `humo-todo.mjs`
+ * es quien los reparte; aquí solo se aceptan las dos variables que necesita:
+ * la asignatura a mirar y que el servidor ya está puesto y no hay que tocarlo.
+ */
+const SOLO = process.env.HUMO_ASIGNATURA ?? '';
+const SERVIDOR_FUERA = process.env.HUMO_SERVIDOR === 'fuera';
 const ORIGEN = `http://localhost:${PUERTO}${BASE}`;
 
 let fallos = 0;
@@ -43,11 +56,13 @@ const comprueba = (condicion, t, detalle) => (condicion ? ok(t) : fallo(t, detal
 
 /* ── servidor ───────────────────────────────────────────────────────── */
 
-const servidor = spawn(
-  process.execPath,
-  [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', '--port', String(PUERTO)],
-  { cwd: ROOT, stdio: 'ignore' },
-);
+const servidor = SERVIDOR_FUERA
+  ? null
+  : spawn(
+      process.execPath,
+      [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', '--port', String(PUERTO)],
+      { cwd: ROOT, stdio: 'ignore' },
+    );
 
 async function esperaServidor() {
   for (let i = 0; i < 60; i++) {
@@ -258,7 +273,18 @@ async function main() {
     }
   }
 
-  const rutas = [...new Set([...paginas, ...formularios, ...muestra])];
+  let rutas = [...new Set([...paginas, ...formularios, ...muestra])];
+
+  /* Con `HUMO_ASIGNATURA` se mira una sola asignatura. Esto solo filtra las
+     páginas de contenido: las tres fijas del principio —la portada, la portada
+     a 360 px y la entrada por ancla— las abre cada tanda, o sea siete veces.
+     Es redundante y se deja así a propósito: son tres páginas ligeras, y la
+     alternativa —dárselas a una sola tanda— haría que un fallo de la portada
+     apareciese en el registro de una asignatura cualquiera, que es peor. */
+  if (SOLO) {
+    rutas = rutas.filter((h) => h.replace(BASE, '').split('/').filter(Boolean)[0] === SOLO);
+    console.log(`  · solo ${SOLO}: ${rutas.length} páginas`);
+  }
 
   comprueba(rutas.length > 0, `hay páginas de contenido que comprobar (${rutas.length})`);
   console.log(
@@ -290,7 +316,11 @@ async function main() {
   console.log(`  · por asignatura: ${conContenido
     .map((a) => `${a} ${porAsignatura[a] ?? 0}`)
     .join(' · ')}`);
-  const mudas = conContenido.filter((a) => !porAsignatura[a]);
+  /* Este guardián NO se aplica cuando se está mirando una sola asignatura: ahí
+     las otras seis están mudas a propósito, y quien comprueba que ninguna se
+     queda fuera es `humo-todo.mjs`, que arranca una tanda por cada una. Sin
+     esta excepción la barrida partida fallaba siempre y en las siete. */
+  const mudas = SOLO ? [] : conContenido.filter((a) => !porAsignatura[a]);
   if (mudas.length) {
     console.error(
       `  ✗ ${mudas.length} asignatura(s) con páginas construidas que el navegador no abre: ${mudas.join(', ')}`,
@@ -999,8 +1029,13 @@ async function main() {
   }
 
   console.log('');
+  /* Mirando una sola asignatura esto no puede exigir las dos cosas: las barras
+     son el conjugado, y en Química no hay ni una. Lo que sí se puede exigir
+     ahí es que se haya medido ALGO —si no, el guardián de trazos estaría
+     pasando en vacío— y la suma de las dos cifras la hace `humo-todo.mjs`
+     leyendo esta misma línea de cada tanda. */
   comprueba(
-    medidos.raiz > 0 && medidos.barra > 0,
+    SOLO ? medidos.raiz + medidos.barra > 0 : medidos.raiz > 0 && medidos.barra > 0,
     `en todo el sitio hay raíces (${medidos.raiz}) y barras (${medidos.barra}) que medir`,
     'sin ninguna, la comprobación de trazos estaría pasando en vacío',
   );
@@ -1019,7 +1054,7 @@ try {
 } catch (e) {
   fallo('la comprobación no pudo completarse', String(e));
 } finally {
-  servidor.kill();
+  servidor?.kill();
 }
 
 console.log('');

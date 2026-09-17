@@ -65,7 +65,7 @@ fig('monte-con-dos-direccionales',
     const l = lienzo({
       id: 'f-pt6-monte',
       ancho: 320, alto: 245,
-      x: [-0.4, 3.4], y: [0.2, 3.6], cuadrado: true,
+      x: [-0.4, 3.4], y: [-0.5, 3.6], cuadrado: true,
       titulo: 'El punto (1,2) con las dos direcciones del enunciado y el gradiente que fijan',
       desc: 'Desde el punto (1,2) salen dos flechas: una hacia (2,2), que es la dirección del eje '
         + 'x, y otra hacia (1,1), que es la del eje y cambiada de signo. La primera da una '
@@ -246,7 +246,7 @@ const cuatroNiveles = (id) =>
     celdas: [
       {
         etiqueta: '(a) z = (x−y)²+2y−2 · P(1,2)',
-        x: [-1.6, 3.6], y: [0.2, 4.2], cuadrado: false,
+        x: [-1.6, 3.6], y: [-0.6, 4.2], cuadrado: false,
         dibuja: (l) => {
           /* (x−y)² + 2y − 2 = 3  ⟹  x = y ± √(5−2y). */
           const rama = (s) => (y) => [y + s * Math.sqrt(Math.max(0, 5 - 2 * y)), y];
@@ -269,7 +269,7 @@ const cuatroNiveles = (id) =>
       },
       {
         etiqueta: '(c) z = 0 · P(−1,3)',
-        x: [-2.6, 1.6], y: [-0.4, 4.2], cuadrado: false,
+        x: [-2.6, 1.6], y: [-0.9, 4.2], cuadrado: false,
         dibuja: (l) => {
           l.ejes({ nombreX: 'x', nombreY: 'y', marcasX: [-1, 1], marcasY: [1, 3] });
           l.curva((x) => 1 - 2 * x, [-1.6, 0.5], { clase: 'c' });
@@ -381,7 +381,7 @@ fig('la-velocidad-que-sale-del-plano-tangente',
     const l = lienzo({
       id: 'f-pt6-velocidad-plano',
       ancho: 320, alto: 245,
-      x: [-0.6, 4.6], y: [0.4, 5], cuadrado: true,
+      x: [-0.6, 4.6], y: [-0.5, 5], cuadrado: true,
       titulo: 'El gradiente deducido del plano tangente y la dirección de P a Q',
       desc: 'Desde el punto P, en (1,2), sale la flecha del gradiente, que vale menos un medio y '
         + 'menos tres cuartos y apunta abajo a la izquierda. La otra flecha va hacia Q, en (3,4), '

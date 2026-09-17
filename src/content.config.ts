@@ -1428,6 +1428,52 @@ const preparar = defineCollection({
     ),
 });
 
+/** LABORATORIO — las actividades con ordenador que la app no examina.
+ *
+ *  Cálculo tiene siete guiones de «Actividades de laboratorio con GeoGebra»
+ *  —temas 1, 2, 4, 5, 6, 8 y 11— y nueve programas `.ggb`. Eso es un cuarto
+ *  largo de la asignatura que este sitio **no toca**: no hay un solo ejercicio
+ *  de examen que salga de ahí, y por eso el corpus no los tenía; pero el
+ *  alumno los hace, se evalúan, y una preparación que no los nombra deja creer
+ *  que no existen.
+ *
+ *  Tres reglas que el esquema impone, y que son las de §08:
+ *
+ *  1. **No se transcribe el guion.** `trabajo` es un resumen nuestro de lo que
+ *     la actividad pide, no sus frases. El guion es de la asignatura.
+ *  2. **No se redistribuye ningún `.ggb`.** `programa` es solo el nombre del
+ *     fichero, para que se reconozca en el aula virtual.
+ *  3. **Aquí no se corrige nada**, y la página lo dice en voz alta. Esto es un
+ *     índice honesto de lo que hay, no una versión de laboratorio. */
+const laboratorio = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/laboratorio' }),
+  schema: z.object({
+    asignatura: z.string().min(3),
+    /** De dónde salen los guiones, citado como cualquier otra fuente. */
+    fuente: z.string().min(10),
+    /** Por qué esta página existe y qué NO hace. */
+    aviso: z.string().min(40),
+    actividades: z
+      .array(
+        z.object({
+          tema: z.number().int().min(1),
+          titulo: z.string().min(5),
+          /** El `.ggb` que usa, cuando el guion nombra uno. */
+          programa: z.string().optional(),
+          /** Qué deja ver el programa, en una frase. */
+          que: z.string().min(20),
+          /** Lo que la actividad pide, resumido por nosotros. */
+          trabajo: z.array(z.string().min(15)).min(2),
+          /** El apartado del sitio donde eso mismo está explicado. */
+          donde: z
+            .object({ tema: z.string().min(3), texto: z.string().min(5) })
+            .optional(),
+        }),
+      )
+      .min(1),
+  }),
+});
+
 /* Las siete colecciones de temas, DERIVADAS de `CON_TEMAS`.
  *
  * Estuvieron escritas una a una hasta el 13 de septiembre de 2026, y con
@@ -1472,4 +1518,5 @@ export const collections = {
   ejercicios,
   examen,
   preparar,
+  laboratorio,
 };

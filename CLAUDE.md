@@ -400,6 +400,12 @@ src/
     preparar/              una ruta de estudio por evaluación (§14).
                            Solo YAML: no enseña nada nuevo, ordena lo que
                            ya está y dice por qué en ese orden.
+    laboratorio/           lo que la asignatura evalúa y esta app NO
+                           examina: las sesiones con ordenador. Un YAML
+                           por asignatura, y de momento solo Cálculo.
+                           No transcribe el guion ni reparte ningún
+                           fichero: lo nombra, lo resume y enlaza el
+                           apartado donde está explicado (§08)
   components/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
     sim/                   PlanoComplejo (cálculo, modelo en lib/plano.ts
@@ -420,6 +426,11 @@ src/
 scripts/
   verify.mjs               lee el HTML publicado (§11)
   humo.mjs                 lo abre en Chromium (§11)
+  humo-todo.mjs            la barrida completa, partida por asignatura y
+                           en paralelo contra un solo servidor (§11)
+  figuras/                 el lienzo que calcula las figuras y un
+                           generador por tema; `previsualiza.mjs` monta
+                           el contact sheet para mirarlas (§16)
   check-color.mjs          contraste, daltonismo y la capa de tinta
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   recalcula.mjs            que las cuentas del corpus salgan (§11)
@@ -1454,6 +1465,40 @@ enterarse.**
 > 123 en la misma pestaña, clicaba las pestañas de modo dentro del mismo
 > `evaluate` que dispara `history.replaceState`, y medía sin esperar al trabajo
 > diferido. Un guardián que falla al azar se acaba ignorando.
+
+### `npm run humo:todo` — la misma barrida, partida y en paralelo
+
+La barrida completa en un solo navegador pasaba de **una hora**, y una hora es
+el tiempo a partir del cual un guardián se deja de ejecutar: se pospone «para
+luego», y luego es nunca. `scripts/humo-todo.mjs` levanta **un** servidor de
+vista previa y reparte las asignaturas entre varios procesos de `humo.mjs`,
+cada uno con su navegador y su `HUMO_ASIGNATURA`.
+
+- **Cuatro a la vez**, no siete. Cada proceso abre un Chromium con el montón de
+  JavaScript a 4 GB, y todos a la vez compiten por la memoria en vez de por el
+  reloj — que es el fallo que `--disable-dev-shm-usage` está ahí para evitar.
+  Se cambia con `HUMO_A_LA_VEZ`.
+- **El guardián de cobertura cambia de sitio.** `humo.mjs` comprueba que
+  ninguna asignatura con páginas construidas se queda sin abrir; mirando una
+  sola, esa comprobación falla por definición. Así que con `HUMO_ASIGNATURA`
+  se desactiva ahí y la hace el repartidor, que sí ve la lista entera. Sin eso
+  la barrida partida fallaba siempre y en las siete.
+- **Se enseña solo el registro de quien falla.** Siete registros entrelazados
+  no los lee nadie.
+- **Dos guardianes globales cambian de sitio, y no es un detalle.** Además del
+  de cobertura, el que exige que en el sitio haya raíces **y** barras que medir
+  —el conjugado— es falso mirando una sola: en Química hay veinte raíces y cero
+  barras, y en Térmica cuatro y cero. Mirando una asignatura se exige haber
+  medido *algo*; la suma la hace el repartidor leyendo esa misma línea de cada
+  tanda. La regla general: **un guardián que mide el sitio entero no se puede
+  partir sin decidir dónde vive su versión global**, y los dos primeros
+  intentos de esta barrida salieron en rojo por saltársela.
+
+Medido el 17 de septiembre de 2026 en esta máquina: **14,9 minutos** de
+principio a fin, de los cuales 14,9 son Cálculo —sus 108 páginas mandan sobre
+el total—. Las otras seis van de 2,2 a 6,6 y caben de sobra en ese hueco. Si
+algún día Cálculo pasa de treinta, lo que toca no es subir `HUMO_A_LA_VEZ`
+sino partirlo también a él.
 
 ### `npm run sim` — que un simulador se encuentre y diga la verdad
 

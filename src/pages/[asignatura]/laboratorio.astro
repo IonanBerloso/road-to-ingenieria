@@ -1,0 +1,221 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import { ruta } from '../../lib/rutas';
+import { mate } from '../../lib/markdown.mjs';
+
+/**
+ * El laboratorio: lo que la asignatura evalúa y esta app no examina.
+ *
+ * POR QUÉ EXISTE.
+ *
+ * Todo el sitio está construido sobre los exámenes escritos: se transcriben, se
+ * cuentan y se preparan. Pero Cálculo tiene además **siete sesiones de
+ * ordenador con GeoGebra** —temas 1, 2, 4, 5, 6, 8 y 11— con sus guiones y sus
+ * nueve programas, y eso también se evalúa. Ningún ejercicio de examen sale de
+ * ahí, así que el corpus no los tenía; el efecto era que quien preparaba la
+ * asignatura aquí podía terminar sin saber que existían. Un sitio que calla una
+ * parte de la asignatura miente por omisión, y §10 va justo de eso.
+ *
+ * LO QUE ESTA PÁGINA NO HACE, y lo dice ella misma arriba del todo:
+ *
+ *  - **No corrige.** No hay respuesta que teclear ni nada que comprobar. Es un
+ *    índice, no una versión de laboratorio.
+ *  - **No transcribe el guion.** Lo que se lee en `trabajo` es un resumen
+ *    nuestro de lo que la actividad pide (§08). El guion es de la asignatura y
+ *    se pide en el aula virtual.
+ *  - **No reparte ningún `.ggb`.** Del programa solo se dice el nombre, para
+ *    reconocerlo cuando se abra el aula virtual.
+ *
+ * Y lo que sí hace, que es lo único que este sitio puede aportar aquí: enlazar
+ * cada actividad con el apartado del tema donde eso mismo está explicado. La
+ * sesión de laboratorio se entiende mucho mejor con el apartado leído antes.
+ */
+export async function getStaticPaths() {
+  const catalogo = await getCollection('catalogo');
+  const laboratorios = await getCollection('laboratorio');
+
+  const salida = [];
+  for (const lab of laboratorios) {
+    const asignatura = catalogo.find((a) => a.id === lab.data.asignatura);
+    /* Sin asignatura en el catálogo no hay página: el acento, el nombre y la
+       miga de pan salen de ahí, y una página sin ellos sería otra cosa. */
+    if (!asignatura) continue;
+    salida.push({ params: { asignatura: asignatura.id }, props: { asignatura, lab } });
+  }
+  return salida;
+}
+
+const { asignatura, lab } = Astro.props;
+const crumb = `${asignatura.data.nombre} · laboratorio`;
+
+const avisoHtml = await mate(lab.data.aviso, 'lab-aviso');
+const fuenteHtml = await mate(lab.data.fuente, 'lab-fuente');
+
+const actividades = await Promise.all(
+  lab.data.actividades.map(async (a, i) => ({
+    ...a,
+    id: `lab-${a.tema}-${i}`,
+    queHtml: await mate(a.que, `lab-que-${i}`),
+    /* Los temas del catálogo son los que están publicados: si uno todavía no
+       lo está, la actividad se queda sin enlace en vez de apuntar a un 404. */
+    href: a.donde && asignatura.data.temas.some((t) => t.id === a.donde!.tema && t.hecho)
+      ? ruta(`${asignatura.id}/${a.donde.tema}`)
+      : null,
+  })),
+);
+
+const temas = [...new Set(actividades.map((a) => a.tema))];
+---
+
+<Base
+  titulo={`Laboratorio — ${asignatura.data.nombre}`}
+  descripcion={`Las ${actividades.length} actividades de laboratorio con GeoGebra de ${asignatura.data.nombre}: qué programa usa cada una, qué deja ver y dónde está explicado.`}
+  acento={asignatura.data.acento}
+  crumb={crumb}
+>
+  <Cabecera crumb={crumb} />
+
+  <main id="principal">
+    <div class="envoltorio">
+      <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre}</p>
+      <h1>El laboratorio</h1>
+      <p class="lede">
+        {actividades.length} actividades con GeoGebra repartidas en {temas.length} temas.
+        Es la parte de la asignatura que se hace delante de un ordenador, se
+        evalúa, y de la que no sale ningún ejercicio de examen — por eso el
+        resto de este sitio no la toca.
+      </p>
+
+      {/* El aviso va antes que nada y no en letra pequeña: alguien puede llegar
+          aquí buscando «el laboratorio resuelto», y lo honesto es decirle en la
+          primera pantalla que aquí no está. */}
+      <aside class="aviso aviso--flag lab-aviso">
+        <p class="rotulo">Qué es esto y qué no</p>
+        <div class="prosa" set:html={avisoHtml} />
+      </aside>
+
+      <ol class="lab-lista">
+        {actividades.map((a) => (
+          <li class="lab" id={a.id}>
+            <div class="lab-cab">
+              <span class="lab-n rotulo" aria-hidden="true">T{String(a.tema).padStart(2, '0')}</span>
+              <h2>{a.titulo}</h2>
+              {a.programa && <code class="lab-prog">{a.programa}</code>}
+            </div>
+
+            <div class="prosa lab-que" set:html={a.queHtml} />
+
+            <p class="rotulo lab-rot">Lo que se pide hacer</p>
+            <ul class="lab-trabajo">
+              {a.trabajo.map((t) => <li>{t}</li>)}
+            </ul>
+
+            {a.donde && (
+              a.href
+                ? <a class="lab-leer" href={a.href}>
+                    <span class="rotulo">leer antes</span>
+                    <span>{a.donde.texto}</span>
+                  </a>
+                : <p class="lab-leer lab-leer--sin"><span class="rotulo">leer antes</span> <span>{a.donde.texto}</span></p>
+            )}
+          </li>
+        ))}
+      </ol>
+
+      <p class="fuente rotulo">De dónde sale</p>
+      <div class="prosa fuente-cuerpo" set:html={fuenteHtml} />
+    </div>
+  </main>
+</Base>
+
+<style>
+  .envoltorio {
+    max-width: 58rem;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 6rem;
+  }
+
+  .eyebrow { margin-bottom: .2rem; }
+  h1 { max-width: var(--measure); }
+  .lede { max-width: 62ch; margin: .6rem 0 1.6rem; }
+
+  .lab-aviso { margin-bottom: 2.4rem; }
+  .lab-aviso .rotulo { margin: 0 0 .3rem; }
+  .lab-aviso .prosa { font-size: .95rem; }
+
+  .lab-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .lab {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.1rem 1.2rem 1.2rem;
+  }
+
+  .lab-cab {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: .2rem .7rem;
+  }
+
+  .lab-n { color: var(--live); }
+  .lab-cab h2 { margin: 0; font-size: 1.15rem; line-height: 1.3; }
+
+  /* El nombre del fichero, en mono y sin enlace: no lo repartimos, solo se
+     nombra para reconocerlo en el aula virtual. */
+  .lab-prog {
+    grid-column: 2;
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--faint);
+  }
+
+  .lab-que { margin: .7rem 0 0; font-size: .95rem; max-width: var(--measure); }
+  .lab-rot { margin: 1rem 0 .3rem; color: var(--live); }
+
+  .lab-trabajo {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: .93rem;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    max-width: var(--measure);
+  }
+
+  .lab-leer {
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    margin: 1rem 0 0;
+    padding: .5rem .7rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+    font-size: .92rem;
+  }
+
+  a.lab-leer:hover { border-color: var(--live); }
+  .lab-leer .rotulo { color: var(--live); white-space: nowrap; }
+  .lab-leer--sin { color: var(--faint); }
+
+  .fuente { margin: 2.6rem 0 .3rem; }
+  .fuente-cuerpo { font-size: .86rem; color: var(--graphite); max-width: var(--measure); }
+
+  @media (max-width: 30rem) {
+    .envoltorio { padding-inline: .7rem; }
+    .lab { padding: .9rem .8rem 1rem; }
+    .lab-cab { grid-template-columns: minmax(0, 1fr); }
+    .lab-prog { grid-column: 1; }
+  }
+</style>

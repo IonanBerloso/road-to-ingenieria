@@ -7,7 +7,7 @@ import { ruta } from '../lib/rutas';
  *
  * POR QUÉ NO VA DENTRO DE LA PORTADA, que es donde va todo lo demás.
  *
- * Los 1.073 títulos de ejercicio hacen falta: hasta el 14 de septiembre de
+ * Los 1.259 títulos de ejercicio hacen falta: hasta el 14 de septiembre de
  * 2026 la paleta no indexaba ninguno, y por eso «viga» no encontraba nada
  * teniendo el sitio un simulador de vigas y veinticuatro ejercicios de vigas.
  * Pero medido antes de dejarlos dentro: el índice pasaba de **27,9 a 65,8 KB
@@ -29,7 +29,14 @@ import { ruta } from '../lib/rutas';
  *
  * Formato compacto a propósito, que aquí sí compensa porque no hay HTML
  * alrededor que comprimir con él:
- *   [ { u: url del tema, s: «Tema · Asignatura», e: [[título, id], …] }, … ]
+ *   [ { u: url del tema, s: «Tema · Asignatura», e: [[título, id, ref, pide], …] }, … ]
+ *
+ * `ref` es el número del boletín —«5.1», «Problema 6»— sacado de la `fuente`,
+ * y `pide` es lo que el ejercicio pide. Los dos entran en la clave de búsqueda
+ * y ninguno se enseña: buscar «5.1» o «longitud de arco» tiene que encontrar
+ * el ejercicio aunque su título no diga ni una cosa ni la otra, que es el caso
+ * de casi todos. Cuando la fuente no lleva número —los ejemplos de entrada no
+ * lo llevan— `ref` va vacío y ocupa dos caracteres.
  */
 export const GET: APIRoute = async () => {
   const catalogo = await getCollection('catalogo');
@@ -44,7 +51,20 @@ export const GET: APIRoute = async () => {
     }
   }
 
-  const grupos: { u: string; s: string; e: [string, string][] }[] = [];
+  /**
+   * El número del boletín, tal y como lo escribe la `fuente`.
+   *
+   * Las fuentes empiezan por «Ejercicio 5.1 · …», «Ejercicios 5.7 y 5.8 · …»
+   * o «Problema 6 · …», y de ahí sale lo que alguien teclearía para buscarlo.
+   * Se queda con el tramo hasta el primer separador, que es donde acaba la
+   * referencia y empieza la procedencia.
+   */
+  const referencia = (fuente: string) => {
+    const cabeza = fuente.split('·')[0].trim();
+    return /[0-9]/.test(cabeza) && cabeza.length <= 40 ? cabeza : '';
+  };
+
+  const grupos: { u: string; s: string; e: [string, string, string, string][] }[] = [];
   for (const f of await getCollection('ejercicios')) {
     /* El id de la colección es «<asignatura>/<tema>/ejercicios». Los de examen
        viven en «<asignatura>/examenes/<convocatoria>/ejercicios» y se quedan
@@ -52,7 +72,10 @@ export const GET: APIRoute = async () => {
        portada, e indexarlos aquí duplicaría el mismo problema con otro nombre. */
     const donde = publicados.get(f.id.replace(/\/ejercicios$/, ''));
     if (!donde) continue;
-    const e = f.data.ejercicios.map((x) => [x.titulo, x.id] as [string, string]);
+    const e = f.data.ejercicios.map(
+      (x) =>
+        [x.titulo, x.id, referencia(x.fuente), x.pide] as [string, string, string, string],
+    );
     if (e.length) grupos.push({ u: donde.url, s: donde.sub, e });
   }
 

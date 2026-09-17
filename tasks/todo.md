@@ -1,5 +1,38 @@
 # Qué queda
 
+## Las dos barras del plan de los diez que NO se cumplen · 17 de septiembre de 2026
+
+El plan `calculo-al-diez-para-antigravity.md` pone diez dimensiones con un
+criterio contable. Ocho están llenas. Estas dos no, y en las dos la razón es la
+misma: **cumplir el criterio empeoraría el sitio**. Se dejan escritas para que
+la próxima auditoría no las cuente como olvido.
+
+### G · «los 7 bloques “enteros” con escalones»
+
+Los bloques `enteros` de las siete rutas no tienen escalones y **no se les van
+a poner**. Un escalón es «una herramienta, con su ejemplo, sus prácticas y su
+examen»; ese bloque es lo contrario: sentarse con el papel en blanco y hacer un
+cuadernillo entero, sin descomponerlo. Convertirlo en tres escalones —uno por
+convocatoria— duplicaría la página del examen dentro de la ruta y borraría la
+única cosa que ese bloque enseña, que es repartir el tiempo entre cuatro
+ejercicios que no vienen ordenados por dificultad.
+
+Lo que sí faltaba de esa dimensión está hecho: el simulacro con reloj, las
+resoluciones tapadas mientras corre, y poder dejar fuera los ejercicios del
+parcial que no toca.
+
+### G · «0 `falta[]` abiertos»
+
+Quedan 49 notas `falta[]` en las rutas de Cálculo, y **la mayoría no son
+tareas**: son huecos declarados del material. «El temario oficial incluye
+métodos numéricos y de eso no hay nada en el corpus porque no ha caído nunca en
+un examen» no se cierra trabajando; se cierra mintiendo. Vaciar el campo para
+que el recuento dé cero es exactamente el fallo que §10 persigue.
+
+Lo que sí se puede hacer, y queda pendiente de una pasada: separar en dos las
+que son **descripción** de las que son **deuda**. Hoy conviven en el mismo
+campo, y eso hace que un recuento honesto parezca alarmante.
+
 ## Dónde está el proyecto · 7 de septiembre de 2026
 
 **Cuatro asignaturas cerradas contra §15** —Cálculo, Álgebra, Mecánica de

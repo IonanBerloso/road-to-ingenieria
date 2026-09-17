@@ -170,19 +170,29 @@ export function lienzo({
       const [dx, dy] = P(enY, y1);
       piezas.push(`<path class="${id}-eje" d="M${ax} ${ay}L${bx} ${by}M${cx} ${cy}L${dx} ${dy}"/>`);
 
+      /* Las marcas de los ejes pasan por el mismo encuadre que los rótulos.
+         No lo hacían, y por eso el marco las dejaba salirse: la barrida del 17
+         de septiembre de 2026 encontró un «1», un «2» y un «3» recortados en
+         una figura que este guardián había dado por buena. Un guardián que
+         mide unas etiquetas y otras no es peor que ninguno, porque se confía
+         en él. */
       const notas = [];
       for (const m of marcasX) {
         const [u, texto] = Array.isArray(m) ? m : [m, String(m)];
         const [px, py] = P(u, enX);
         piezas.push(`<path class="${id}-eje" d="M${px} ${r1(py - 3.5)}L${px} ${r1(py + 3.5)}"/>`);
+        encuadra(px, py + 15, texto, 'middle', true);
         notas.push(`<text x="${px}" y="${r1(py + 15)}" text-anchor="middle">${esc(texto)}</text>`);
       }
       for (const m of marcasY) {
         const [v, texto] = Array.isArray(m) ? m : [m, String(m)];
         const [px, py] = P(enY, v);
         piezas.push(`<path class="${id}-eje" d="M${r1(px - 3.5)} ${py}L${r1(px + 3.5)} ${py}"/>`);
+        encuadra(px - 7, py + 3.6, texto, 'end', true);
         notas.push(`<text x="${r1(px - 7)}" y="${r1(py + 3.6)}" text-anchor="end">${esc(texto)}</text>`);
       }
+      encuadra(bx, by - 8, nombreX, 'end', true);
+      encuadra(dx + 6, dy + 10, nombreY, 'start', true);
       notas.push(`<text x="${bx}" y="${r1(by - 8)}" text-anchor="end">${esc(nombreX)}</text>`);
       notas.push(`<text x="${r1(dx + 6)}" y="${r1(dy + 10)}">${esc(nombreY)}</text>`);
       piezas.push(`<g class="${id}-n">${notas.join('')}</g>`);

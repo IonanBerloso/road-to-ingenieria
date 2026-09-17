@@ -1009,12 +1009,14 @@ const enteras = asignaturas
 
   /* Los ejercicios se piden la PRIMERA vez que se abre la paleta, no al cargar
      la portada.
-     Los 1.073 títulos pesan 38 KB comprimidos —medido: el índice pasa de 27,9
-     a 65,8—, y meterlos en la portada era triplicar el peso de la página más
-     visitada del sitio por una función que usa una minoría de las visitas. Se
-     piden al mismo origen, una sola vez, y si la petición falla la paleta
-     sigue buscando en lo que ya tiene: es un extra, no un requisito. Por eso
-     no hay estado de error, solo un `catch` que no hace nada. */
+     Son 1.259 entradas y el fichero pesa **63,6 KB comprimidos** —medido el 17
+     de septiembre de 2026, con el número de boletín y el `pide` dentro; antes,
+     solo con los títulos, eran 38—. Meter eso en la portada sería triplicar el
+     peso de la página más visitada del sitio por una función que usa una
+     minoría de las visitas. Se pide al mismo origen, una sola vez, y si la
+     petición falla la paleta sigue buscando en lo que ya tiene: es un extra,
+     no un requisito. Por eso no hay estado de error, solo un `catch` que no
+     hace nada. */
   let ejerciciosPedidos = false;
   async function traeEjercicios() {
     if (ejerciciosPedidos) return;
@@ -1024,16 +1026,20 @@ const enteras = asignaturas
       ?.getAttribute('href');
     if (!url) return;
     try {
-      const grupos: { u: string; s: string; e: [string, string][] }[] = await (
-        await fetch(url)
-      ).json();
+      const grupos: { u: string; s: string; e: [string, string, string, string][] }[] =
+        await (await fetch(url)).json();
       for (const g of grupos) {
-        for (const [titulo, id] of g.e) {
+        for (const [titulo, id, ref, pide] of g.e) {
           indice.push({
             tipo: 'e',
             nombre: titulo,
-            sub: g.s,
-            clave: sinTildes(`${titulo} ${g.s}`),
+            /* El número del boletín se enseña cuando lo hay: es como se busca
+               un ejercicio cuando lo tienes delante en papel. */
+            sub: ref ? `${ref} · ${g.s}` : g.s,
+            /* Y en la clave entra además lo que el ejercicio PIDE. Un título
+               como «La cota del error, que es media pregunta» no contiene la
+               palabra que alguien teclearía; su `pide` sí. */
+            clave: sinTildes(`${titulo} ${g.s} ${ref} ${pide}`),
             destino: `${g.u}#ej-${id}`,
           });
         }
