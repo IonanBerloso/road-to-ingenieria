@@ -17,7 +17,7 @@ const GENERADORES = [
   'calculo-ejemplos-t01-entrada', 'calculo-ejemplos-t02', 'calculo-ejemplos-t03', 'calculo-ejemplos-t04',
   'calculo-ejemplos-t08', 'calculo-ejemplos-t05-t07',
   'calculo-ejemplos-t09', 'calculo-ejemplos-t10',
-  'calculo-practica-t01', 'calculo-practica-t02', 'calculo-practica-t02-demostrar',
+  'calculo-practica-t01', 'calculo-practica-t01-lugares', 'calculo-practica-t02', 'calculo-practica-t02-demostrar',
   'calculo-practica-t03', 'calculo-practica-t03-aplicaciones',
   'calculo-practica-t04', 'calculo-practica-t04-optimizacion',
   'calculo-practica-t05', 'calculo-practica-t06',
@@ -25,7 +25,7 @@ const GENERADORES = [
   'calculo-practica-t08', 'calculo-practica-t08-apartados',
   'calculo-practica-t09', 'calculo-practica-t09-familias',
   'calculo-practica-t10', 'calculo-practica-t10-sistemas',
-  'calculo-practica-t11',
+  'calculo-practica-t11', 'calculo-practica-t11-mas',
 ];
 
 let n = 0;

@@ -2423,6 +2423,13 @@ Cosas que ya han costado horas. No son opiniones.
      examen piden el mismo dibujo que un ejemplo de su tema; `reetiqueta()`
      copia la figura cambiándole el prefijo de ids. Escribirla dos veces es
      tener dos versiones que algún día dejarán de coincidir.
+  4. **En el pie de una figura no hay Markdown.** El `<figcaption>` se emite
+     tal cual y no pasa por `mate()`, así que un `**así**` se publica con los
+     asteriscos a la vista. `verify` lo caza —lo ha cazado dos veces, el 17 de
+     septiembre de 2026 en `ej-inversa-con-signo` y en `la-integral-de-gauss`—,
+     pero llega después de construir el sitio entero: más barato es escribir
+     el pie en prosa llana desde el principio. El énfasis, si hace falta, va
+     en el texto del ejercicio, que sí se procesa.
 
   Para mirarlas antes de pegarlas, `previsualiza.mjs` monta un contact sheet
   en PNG con todas las de un generador, en claro o en oscuro. Eso sigue siendo
