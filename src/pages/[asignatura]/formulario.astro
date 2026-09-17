@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { recortaFormulario } from '../../lib/formulario';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/ui/Cabecera.astro';
 import { ruta } from '../../lib/rutas';
@@ -40,21 +41,12 @@ import { CON_TEMAS, type ConTemas } from '../../content.config';
  * en sus once temas, y la página no se genera para las que no lo tengan.
  */
 export async function getStaticPaths() {
-  /* `recorta` vive AQUÍ DENTRO y no en el frontmatter: Astro extrae
-     `getStaticPaths` a su propio módulo y no ve nada de fuera. El aviso está
-     escrito en la cabecera de `examenes/index.astro` desde que le pasó lo
-     mismo, y aun así el primer intento de esta página se cayó con
-     «recorta is not defined» al construir. */
-  const recorta = (mdx: string): string | null => {
-    const lineas = mdx.split('\n');
-    const i = lineas.findIndex((l) => /^##\s+Lo que hay que llevar sabido\s*$/.test(l));
-    if (i < 0) return null;
-    let j = lineas.length;
-    for (let k = i + 1; k < lineas.length; k++) {
-      if (/^##\s/.test(lineas[k])) { j = k; break; }
-    }
-    return lineas.slice(i + 1, j).join('\n').trim() || null;
-  };
+  /* La regla de qué es formulario vive en `src/lib/formulario.ts`, porque la
+     portada también la necesita para decidir si enlaza esta página. Estaba
+     aquí dentro —`getStaticPaths` se extrae a su propio módulo y no ve el
+     frontmatter de su página—, pero los `import` sí los ve, así que se puede
+     compartir sin repetir la regex en dos sitios. */
+  const recorta = recortaFormulario;
 
   const catalogo = await getCollection('catalogo');
   const salida = [];

@@ -17,6 +17,7 @@ import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { archivo, ruta } from '../lib/rutas';
 import { cuentaPorTema, pesoPublicado } from '../lib/peso';
+import { recortaFormulario } from '../lib/formulario';
 import { mate } from '../lib/markdown.mjs';
 import {
   SUFIJO_CONV,
@@ -41,18 +42,56 @@ for (const a of asignaturas) {
   }
 }
 
+/** Cuántos ejercicios propios tiene cada tema — los del `ejercicios.yaml` que
+ *  vive junto a su `index.mdx`, o sea los de boletín y los de entrada, sin
+ *  contar los de examen, que viven en `examenes/`.
+ *
+ *  Va a la ficha junto al recuento de examen porque los dos juntos contestan
+ *  la pregunta que trae quien la abre: cuánto cae de esto, y cuánto hay aquí
+ *  para practicarlo. Por separado ninguno de los dos dice nada. */
+const propiosPorTema = new Map<string, number>();
+for (const fich of await getCollection('ejercicios')) {
+  /* `calculo/t05-integracion/ejercicios`, y nada de `examenes/`. */
+  const trozos = fich.id.split('/');
+  if (trozos.length !== 3 || trozos[1] === 'examenes') continue;
+  propiosPorTema.set(`${trozos[0]}/${trozos[1]}`, fich.data.ejercicios.length);
+}
+
+/** Qué asignaturas tienen formulario, que es lo que decide si se enlaza.
+ *
+ *  La regla es la misma que usa la página: un tema aporta formulario si su
+ *  `index.mdx` trae la sección «Lo que hay que llevar sabido». Sin esta
+ *  comprobación la ficha enlazaba las nueve asignaturas y seis de esos
+ *  enlaces no llevaban a ninguna parte — lo cazó `verify.mjs` el 18 de
+ *  septiembre de 2026, antes de desplegar, que es justo para lo que está. */
+const conFormulario = new Set<string>();
+for (const id of CON_TEMAS) {
+  const temas = await getCollection(id as ConTemas);
+  if (temas.some((e) => recortaFormulario(e.body ?? '') !== null)) conFormulario.add(id);
+}
+
+/** Qué asignaturas tienen laboratorio, para enlazarlo desde su ficha. Hasta
+ *  hoy no se enlazaba desde ninguna parte de la portada: existía y no se
+ *  encontraba. */
+const conLaboratorio = new Set(
+  (await getCollection('laboratorio')).map((l) => l.id.split('/')[0]),
+);
+
 /** El peso que se publica para un tema: el del catálogo si lo declara, y si
  *  no el que sale de contar sus ejercicios de examen. `null` cuando esa
  *  asignatura todavía no tiene exámenes transcritos, y entonces no se pinta
  *  nada — que es mejor que publicar un nivel inventado. */
-const pesoDe = (asignatura: string, temaId: string, declarado?: 'alto' | 'medio' | 'bajo') => {
+const cuentaExamenDe = (asignatura: string) => {
   let cuenta = cuentaExamen.get(asignatura);
   if (!cuenta) {
     cuenta = cuentaPorTema(examenes, asignatura);
     cuentaExamen.set(asignatura, cuenta);
   }
-  return pesoPublicado(declarado, cuenta, temaId);
+  return cuenta;
 };
+
+const pesoDe = (asignatura: string, temaId: string, declarado?: 'alto' | 'medio' | 'bajo') =>
+  pesoPublicado(declarado, cuentaExamenDe(asignatura), temaId);
 
 const cursos = [1, 2] as const;
 /* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
@@ -460,6 +499,40 @@ const enteras = asignaturas
             </p>
           )}
 
+          {/* ── por dónde empezar, a todo el ancho ──────────────────────
+              Estaba dentro del carril derecho, en tercer lugar, y el botón
+              amarillo de la banda —«Por dónde empezar: elige tu evaluación
+              ↓»— apuntaba ahí: a 1.366 px eso caía a 1.250 px del principio,
+              o sea que el destino del único botón de la banda quedaba medio
+              metro por debajo del pliegue. Medido el 17 de septiembre de
+              2026 por la auditoría externa.
+
+              Aquí arriba y a todo el ancho, las siete rutas son lo primero
+              que se ve al abrir una ficha, que es lo que la banda promete. */}
+          {rutasPorAsignatura.has(a.id) && (
+            <div class="rutas-fila" id={`${a.id}-rutas`}>
+              <div class="rf-txt">
+                <p class="mano rc-tit">Por dónde empezar</p>
+                <p class="rc-sub">
+                  No empieces por el tema 1: cada evaluación tiene su ruta, con
+                  lo que cae ordenado por lo que rinde.
+                </p>
+              </div>
+              <div class="rf-grid">
+                {rutasPorAsignatura.get(a.id)!.map((r, i) => (
+                  <a
+                    class:list={['rc-btn', { dest: i === 0 }]}
+                    href={ruta(`${a.id}/preparar/${r.sufijo}`)}
+                    title={r.titulo}
+                  >
+                    {NOMBRE_RUTA[r.sufijo] ?? r.titulo}
+                    {i === 0 && ' →'}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           {a.data.temas.length > 0 ? (
             <div class="cuerpo">
               <div class="temario-col">
@@ -483,7 +556,22 @@ const enteras = asignaturas
                           {...(enlace ? { href: enlace } : { 'aria-disabled': 'true' })}
                         >
                           <span class="mano tn">{String(t.n).padStart(2, '0')}</span>
-                          <span class="t-tit">{t.titulo}</span>
+                          <span class="t-med">
+                            <span class="t-tit">{t.titulo}</span>
+                            {/* Los dos recuentos, juntos y en esta línea, porque
+                                por separado no dicen nada: «41 de examen» sin
+                                saber cuánto hay para practicarlo no ayuda a
+                                decidir, y «57 propios» sin saber cuánto cae,
+                                tampoco. La pregunta que trae quien abre la
+                                ficha es la de los dos a la vez. */}
+                            {(cuentaExamenDe(a.id).get(t.id) ?? 0) > 0 && (
+                              <span class="t-cuenta">
+                                {cuentaExamenDe(a.id).get(t.id)} de examen
+                                {(propiosPorTema.get(`${a.id}/${t.id}`) ?? 0) > 0 &&
+                                  ` · ${propiosPorTema.get(`${a.id}/${t.id}`)} para practicar`}
+                              </span>
+                            )}
+                          </span>
                           <span class="t-der">
                             {/* Una etiqueta Caveat solo donde informa (§5b);
                                 sale del catálogo, no se deriva aquí. */}
@@ -541,34 +629,23 @@ const enteras = asignaturas
                             salía con los asteriscos a la vista. Lo cazó
                             `verify.mjs` el 14 de septiembre de 2026 al
                             escribir los dos umbrales de Cálculo. */}
+                        {/* La nota, plegada. Las de Cálculo son los dos
+                            umbrales explicados —cinco líneas cada una— y
+                            estiraban esta caja hasta 984 px, o sea más de la
+                            mitad del carril derecho, empujando las rutas y
+                            los exámenes fuera de la pantalla. El porcentaje
+                            se lee de un vistazo; el umbral se lee cuando se
+                            necesita, que es una vez. Abierta sigue estando
+                            entera, y al imprimir se despliega sola. */}
                         {notaEvaluacion.has(`${a.id}·${m.nombre}`) && (
-                          <p class="nc-nota prosa" set:html={notaEvaluacion.get(`${a.id}·${m.nombre}`)} />
+                          <details class="nc-det">
+                            <summary>Los umbrales, y qué pasa si no llegas</summary>
+                            <div class="nc-nota prosa" set:html={notaEvaluacion.get(`${a.id}·${m.nombre}`)} />
+                          </details>
                         )}
                       </div>
                     ))}
                     <p class="nc-fuente">{a.data.evaluacion.fuente}</p>
-                  </div>
-                )}
-
-                {rutasPorAsignatura.has(a.id) && (
-                  <div class="rc" id={`${a.id}-rutas`}>
-                    <p class="mano rc-tit">Por dónde empezar</p>
-                    <p class="rc-sub">
-                      No empieces por el tema 1: cada evaluación tiene su ruta,
-                      con lo que cae ordenado por lo que rinde.
-                    </p>
-                    <div class="rc-grid">
-                      {rutasPorAsignatura.get(a.id)!.map((r, i) => (
-                        <a
-                          class:list={['rc-btn', { dest: i === 0 }]}
-                          href={ruta(`${a.id}/preparar/${r.sufijo}`)}
-                          title={r.titulo}
-                        >
-                          {NOMBRE_RUTA[r.sufijo] ?? r.titulo}
-                          {i === 0 && ' →'}
-                        </a>
-                      ))}
-                    </div>
                   </div>
                 )}
 
@@ -622,6 +699,42 @@ const enteras = asignaturas
                   </p>
                 )}
               </aside>
+
+              {/* ── las tres herramientas ───────────────────────────────
+                  El formulario y el laboratorio existían y no se enlazaban
+                  desde la ficha: había que saber la URL o llegar desde la
+                  página de un tema. Y el simulacro con reloj vive dentro de
+                  la página de cada convocatoria, que es todavía más difícil
+                  de adivinar. Van juntos y debajo del temario porque son lo
+                  que se usa DESPUÉS de haber elegido por dónde estudiar. */}
+              <div class="herr">
+                <p class="rotulo h-tit">Herramientas</p>
+                <div class="h-grid">
+                  {conFormulario.has(a.id) && (
+                    <a class="h-btn" href={ruta(`${a.id}/formulario`)}>
+                      <span class="h-n">Formulario</span>
+                      <span class="h-q">todo lo que hay que llevar sabido, junto</span>
+                    </a>
+                  )}
+                  {conLaboratorio.has(a.id) && (
+                    <a class="h-btn" href={ruta(`${a.id}/laboratorio`)}>
+                      <span class="h-n">Laboratorio</span>
+                      <span class="h-q">probar con números y ver qué cambia</span>
+                    </a>
+                  )}
+                  {examenesPorAsignatura.has(a.id) && (
+                    <a
+                      class="h-btn"
+                      href={ruta(`${a.id}/examenes/${examenesPorAsignatura.get(a.id)![0].slug}`)}
+                    >
+                      <span class="h-n">Simulacro con reloj</span>
+                      <span class="h-q">
+                        en la página de cada convocatoria: eliges ejercicios y cuenta atrás
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           ) : (
             <div class="pendiente">
@@ -1597,12 +1710,18 @@ const enteras = asignaturas
   }
 
   /* ── el cuerpo: temario a la izquierda, carril a la derecha ────── */
+  /* El tope de 80rem no es estética: a 1.920 px el temario se estiraba a
+     1.380 px de ancho para once títulos de cuatro palabras, y la vista se
+     iba a buscar el peso al otro extremo de la pantalla. `align-items:
+     start` ya estaba, y es lo que permite que el carril sea `sticky`. */
   .cuerpo {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(16rem, 25rem);
     gap: clamp(1.4rem, 3vw, 2.75rem);
     align-items: start;
     padding: 1.4rem var(--pad) 0;
+    max-width: 80rem;
+    margin-inline: auto;
   }
 
   .t-rotulo { color: var(--faint); margin-bottom: .5rem; }
@@ -1747,12 +1866,17 @@ const enteras = asignaturas
     scroll-margin-top: 5rem;
   }
 
-  .rc-tit { font-size: 1.5rem; color: var(--tiza-amarilla); margin: 0 0 .1rem; }
+  /* El bloque entero estaba escrito con la paleta de la pizarra —amarilla
+     de tiza para el título, tiza al 80 % para el subtítulo— y vive sobre el
+     papel de la ficha. El subtítulo salía casi invisible y el título daba
+     1,4:1. Son los mismos colores mal puestos que en `.rc-btn`, y vienen de
+     la misma pieza: se dibujó para la banda oscura y acabó sobre papel. */
+  .rc-tit { font-size: 1.5rem; color: var(--ink); margin: 0 0 .1rem; }
 
   .rc-sub {
     font-size: .8rem;
     line-height: 1.5;
-    color: var(--tiza-suave);
+    color: var(--faint);
     margin: 0 0 .8rem;
   }
 
@@ -1762,11 +1886,18 @@ const enteras = asignaturas
     gap: .4rem;
   }
 
+  /* Iba en `--tiza` y `--tiza-borde`, que son los colores de la pizarra, y
+     estos botones viven sobre el papel de la ficha: el texto daba **1,05:1**
+     contra el fondo y el borde era transparente. O sea que las seis rutas que
+     no son la destacada estaban publicadas invisibles, y son el destino del
+     único botón de la banda. Medido el 18 de septiembre de 2026; venía de
+     antes de moverlas aquí arriba, y se ve en cuanto se mide en vez de mirar.
+     `--live` es el token de «esto se toca» sobre papel y da 5,67:1. */
   .rc-btn {
     font-size: .78rem;
     font-weight: 700;
-    color: var(--tiza);
-    border: 1.5px solid var(--tiza-borde);
+    color: var(--live);
+    border: 1.5px solid var(--rule);
     border-radius: 8px;
     padding: .42rem .5rem;
     text-align: center;
@@ -1774,7 +1905,7 @@ const enteras = asignaturas
     transition: background .15s, color .15s, border-color .15s;
   }
 
-  .rc-btn:hover { background: var(--tiza-velo); border-color: var(--tiza); }
+  .rc-btn:hover { background: var(--live-soft); border-color: var(--live); }
 
   .rc-btn.dest {
     color: var(--piz-medio);
@@ -1786,6 +1917,90 @@ const enteras = asignaturas
 
   /* la única impar (extraordinaria) ocupa la fila entera */
   .rc-btn:last-child:nth-child(odd) { grid-column: span 2; }
+
+  /* ── por dónde empezar, a todo el ancho ────────────────────────
+     Las siete rutas en una fila bajo la banda. Cabe todo en una línea a
+     partir de unos 900 px; por debajo, las tarjetas se reparten solas y en
+     móvil quedan a dos por fila. El `span 2` de arriba no aplica aquí: en
+     una fila de siete, la impar no tiene que ocupar nada especial. */
+  .rutas-fila {
+    max-width: 80rem;
+    margin-inline: auto;
+    padding: 1.2rem var(--pad) 0;
+    display: grid;
+    gap: .7rem;
+    animation: entra-fila .4s var(--ease) both;
+    animation-delay: 90ms;
+  }
+
+  .rf-txt { max-width: 46ch; }
+
+  .rf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.4rem, 1fr));
+    gap: .45rem;
+  }
+
+  .rf-grid .rc-btn:last-child:nth-child(odd) { grid-column: auto; }
+
+  /* ── los dos recuentos de cada tema ────────────────────────────── */
+  .t-med { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
+
+  .t-cuenta {
+    font-family: var(--mono);
+    font-size: .68rem;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── las tres herramientas ───────────────────────────────────────
+     Es hijo de `.cuerpo` y no de la columna del temario, y eso tiene un
+     motivo de orden: en escritorio `grid-column: 1` lo deja justo debajo del
+     temario, que es donde se busca; en una sola columna cae el último, detrás
+     de «cómo se puntúa» y de los exámenes, que es el orden en que se
+     necesitan. Metido dentro de la columna izquierda salía en medio. */
+  .herr { grid-column: 1; margin-top: .4rem; }
+
+  .h-tit { color: var(--faint); margin-bottom: .5rem; }
+
+  .h-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: .5rem;
+  }
+
+  .h-btn {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+    padding: .55rem .65rem;
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .15s, border-color .15s;
+  }
+
+  .h-btn:hover { background: var(--live-soft); border-color: var(--live); }
+
+  .h-n { font-size: .82rem; font-weight: 700; color: var(--live); }
+
+  .h-q { font-size: .7rem; color: var(--faint); line-height: 1.3; }
+
+  /* ── la nota de evaluación, plegada ────────────────────────────── */
+  .nc-det > summary {
+    font-size: .74rem;
+    color: var(--live);
+    cursor: pointer;
+    padding: .3rem 0;
+  }
+
+  .nc-det > summary:hover { text-decoration: underline; }
+
+  /* En papel no hay «desplegar»: la nota sale entera. */
+  @media print {
+    .nc-det > summary { display: none; }
+    .nc-det { display: block; }
+  }
 
   /* ── la tarjeta de exámenes, en papel ──────────────────────────── */
   /* ── cómo se puntúa ─────────────────────────────────────────────
