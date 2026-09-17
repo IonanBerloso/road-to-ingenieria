@@ -14,8 +14,9 @@ import { pega, pegaEnCampo, quitaFigura, quitaFiguraDePaso } from './pegar.mjs';
 const GENERADORES = [
   'calculo-t01', 'calculo-t05', 'calculo-t06', 'calculo-t07', 'calculo-t11',
   'calculo-examenes', 'calculo-ejemplos',
-  'calculo-ejemplos-t02', 'calculo-ejemplos-t03', 'calculo-ejemplos-t04',
-  'calculo-ejemplos-t08', 'calculo-ejemplos-t09', 'calculo-ejemplos-t10',
+  'calculo-ejemplos-t01-entrada', 'calculo-ejemplos-t02', 'calculo-ejemplos-t03', 'calculo-ejemplos-t04',
+  'calculo-ejemplos-t08', 'calculo-ejemplos-t05-t07',
+  'calculo-ejemplos-t09', 'calculo-ejemplos-t10',
   'calculo-practica-t01', 'calculo-practica-t02', 'calculo-practica-t02-demostrar',
   'calculo-practica-t03', 'calculo-practica-t03-aplicaciones',
   'calculo-practica-t04', 'calculo-practica-t04-optimizacion',
