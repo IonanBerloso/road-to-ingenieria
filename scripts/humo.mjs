@@ -20,7 +20,7 @@
  * Abre el sitio construido en Chromium y sale con código != 0 si algo falla.
  */
 
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -55,6 +55,17 @@ const fallo = (t, detalle) => {
 const comprueba = (condicion, t, detalle) => (condicion ? ok(t) : fallo(t, detalle));
 
 /* ── servidor ───────────────────────────────────────────────────────── */
+
+/* `astro preview` es un demonio y sobrevive a quien lo lanza: si hay uno
+   suelto —el que deja `peso.mjs` en otro puerto, por ejemplo— el siguiente no
+   arranca. Se para antes, salvo cuando el servidor lo pone otro. */
+if (!SERVIDOR_FUERA) {
+  spawnSync(
+    process.execPath,
+    [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', 'stop'],
+    { cwd: ROOT, stdio: 'ignore' },
+  );
+}
 
 const servidor = SERVIDOR_FUERA
   ? null
@@ -1055,6 +1066,13 @@ try {
   fallo('la comprobación no pudo completarse', String(e));
 } finally {
   servidor?.kill();
+  if (!SERVIDOR_FUERA) {
+    spawnSync(
+      process.execPath,
+      [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', 'stop'],
+      { cwd: ROOT, stdio: 'ignore' },
+    );
+  }
 }
 
 console.log('');

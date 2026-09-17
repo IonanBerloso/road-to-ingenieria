@@ -25,7 +25,7 @@
  *     node scripts/humo-todo.mjs
  */
 
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -37,6 +37,24 @@ const PUERTO = Number(process.env.HUMO_PUERTO ?? 4321);
 const ORIGEN = `http://localhost:${PUERTO}`;
 const A_LA_VEZ = Number(process.env.HUMO_A_LA_VEZ ?? 4);
 
+/**
+ * Para cualquier vista previa que haya quedado suelta, y arranca la nuestra.
+ *
+ * `astro preview` es un **demonio**: se queda de fondo y sobrevive a que muera
+ * quien lo lanzó. Si ya hay uno —aunque sea en otro puerto, como el que deja
+ * `peso.mjs` en el 4408— el siguiente no arranca, solo imprime «already
+ * running» y se va; y entonces esta barrida se cae con «el servidor no ha
+ * arrancado en 30 s» sin decir por qué. Así que primero se para el que haya.
+ */
+function paraLaVistaPrevia() {
+  spawnSync(
+    process.execPath,
+    [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', 'stop'],
+    { cwd: ROOT, stdio: 'ignore' },
+  );
+}
+
+paraLaVistaPrevia();
 const servidor = spawn(
   process.execPath,
   [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', '--port', String(PUERTO)],
@@ -187,7 +205,9 @@ try {
   console.error('La barrida no pudo completarse:', String(e));
   codigoFinal = 1;
 } finally {
+  /* Matar al que lo lanzó no mata al demonio: hay que pedirle que pare. */
   servidor.kill();
+  paraLaVistaPrevia();
 }
 
 process.exit(codigoFinal);
