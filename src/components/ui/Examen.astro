@@ -36,6 +36,10 @@ export interface EjercicioDeExamen {
   pide: string;
   /** Título del tema al que pertenece, ya resuelto por la página. */
   tema: string;
+  /** 1 o 2 cuando la asignatura parte en cuatrimestres y el catálogo declara
+   *  dónde. Lo calcula la página contra el número del tema; aquí solo se usa
+   *  para agrupar las casillas del simulacro. */
+  cuatrimestre?: 1 | 2;
   puntos?: Puntos;
   /**
    * El número que tiene **en el cuadernillo**, cuando varias piezas guiadas
@@ -80,6 +84,12 @@ interface Props {
 
 const { eyebrow, titulo, fecha, pdfs, pdfEs, ruta, ejercicios, fuera, minutosPorEjercicio } =
   Astro.props;
+
+/** ¿Este cuadernillo trae los dos cuatrimestrales? Solo entonces tienen
+ *  sentido los preajustes: en el examen de una evaluación suelta, «solo el
+ *  primero» sería o todo o nada. */
+const hayDosCuatrimestres =
+  ejercicios.some((e) => e.cuatrimestre === 1) && ejercicios.some((e) => e.cuatrimestre === 2);
 const esResolucion = pdfEs === 'resolucion';
 /* Cuántos ejercicios trae el cuadernillo y cuántas resoluciones ofrece el
    sitio no siempre coinciden: en Térmica un ejercicio tiene cinco apartados
@@ -209,11 +219,36 @@ const fueraHtml = await Promise.all(
             vayas a hacer y el reloj se ajusta.
           </p>
 
+          {/* Los tres preajustes.
+              El cuadernillo de una convocatoria global trae los dos
+              cuatrimestrales seguidos —el de 2019-2020 son trece ejercicios y
+              seis horas y media—, y quien va a recuperar solo uno de los dos
+              no se sienta seis horas y media. Marcar trece casillas a mano
+              para quitar cinco es trabajo que el sitio puede hacer, y el dato
+              de qué ejercicio va en cada cuatrimestre ya lo tiene.
+
+              Solo salen si de verdad hay ejercicios de los dos lados: en un
+              cuadernillo de una sola evaluación no significarían nada. */}
+          {hayDosCuatrimestres && (
+            <p class="s-preajustes">
+              <span class="rotulo s-pre-tit">De golpe</span>
+              <button type="button" class="s-pre" data-preajuste="1">Solo el 1.er cuatrimestre</button>
+              <button type="button" class="s-pre" data-preajuste="2">Solo el 2.º</button>
+              <button type="button" class="s-pre" data-preajuste="0">Entero</button>
+            </p>
+          )}
+
           <fieldset class="s-elige">
             <legend class="rotulo">Qué entra</legend>
             {hoja.map((e, i) => (
               <label class="s-uno">
-                <input type="checkbox" checked value={String(i + 1)} data-entra />
+                <input
+                  type="checkbox"
+                  checked
+                  value={String(i + 1)}
+                  data-entra
+                  data-cuatri={e.cuatrimestre ?? ''}
+                />
                 <span>{i + 1}</span>
               </label>
             ))}
@@ -582,6 +617,27 @@ const fueraHtml = await Promise.all(
       });
     }
 
+    /* Los tres preajustes: marcan de golpe lo que entra y ajustan el reloj.
+     *
+     * No hacen nada que no se pueda hacer a mano; lo que quitan es marcar
+     * trece casillas para quitar cinco, que es justo el trabajo que hace que
+     * alguien acabe haciendo el simulacro entero por pereza y con el reloj
+     * equivocado. El 0 es «entero», que es volver al estado de partida. */
+    for (const b of sim.querySelectorAll<HTMLButtonElement>('[data-preajuste]')) {
+      b.addEventListener('click', () => {
+        const cual = b.dataset.preajuste;
+        for (const c of casillas) {
+          c.checked = cual === '0' || c.dataset.cuatri === cual;
+        }
+        /* Si un preajuste dejara todo sin marcar —no debería, porque solo se
+           pintan cuando hay de los dos—, se vuelve al cuadernillo entero en
+           vez de arrancar un reloj de cero minutos. */
+        if (cuantos() === 0) for (const c of casillas) c.checked = true;
+        previsto.textContent = enPalabras(cuantos() * porEjercicio);
+        aviso.textContent = `Entran ${cuantos()} de ${casillas.length} ejercicios.`;
+      });
+    }
+
     bEmpezar.addEventListener('click', () => {
       const fuera = casillas.filter((c) => !c.checked).map((c) => Number(c.value));
       const minutos = cuantos() * porEjercicio;
@@ -759,6 +815,32 @@ const fueraHtml = await Promise.all(
 
   .s-tit { color: var(--live); margin-bottom: .4rem; }
   .s-txt { font-size: .9rem; margin: 0 0 .8rem; max-width: var(--measure); }
+
+  /* ── los tres preajustes ──────────────────────────────────────── */
+  .s-preajustes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .4rem;
+    margin: 0 0 .7rem;
+  }
+
+  .s-pre-tit { color: var(--faint); margin-right: .2rem; }
+
+  .s-pre {
+    font: inherit;
+    font-size: .76rem;
+    font-weight: 700;
+    padding: .28rem .55rem;
+    border: 1.5px solid var(--rule);
+    border-radius: 7px;
+    background: none;
+    color: var(--live);
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+
+  .s-pre:hover { background: var(--live-soft); border-color: var(--live); }
 
   .s-elige {
     display: flex;

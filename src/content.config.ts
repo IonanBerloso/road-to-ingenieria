@@ -178,6 +178,34 @@ const catalogo = defineCollection({
           fuente: z.string().min(20),
         })
         .optional(),
+      /**
+       * Dónde parte la asignatura en dos cuatrimestres, cuando parte.
+       *
+       * POR QUÉ HACE FALTA. El cuadernillo de una convocatoria global trae los
+       * dos cuatrimestrales seguidos: el de 2019-2020 tiene **trece ejercicios
+       * y seis horas y media**. Quien va a la extraordinaria a recuperar solo
+       * el segundo cuatrimestre no se sienta seis horas y media con trece
+       * ejercicios, se sienta cuatro con ocho. Sin este dato el simulacro solo
+       * sabe ofrecer el cuadernillo entero, que para la mitad de los casos es
+       * el reloj equivocado.
+       *
+       * NO ESTÁ ESTIMADO. `corte` es el número del último tema del primer
+       * cuatrimestre, y en Cálculo lo confirman los propios cuadernillos:
+       * comprobado el 18 de septiembre de 2026 sobre **las 23 convocatorias
+       * globales transcritas**, todas reparten sus ejercicios en ese orden
+       * —primero todos los de los temas 1 a 5, después todos los de 6 a 11—
+       * sin una sola mezcla. Si algún día una convocatoria los mezclara, el
+       * reparto dejaría de ser cierto y habría que decirlo aquí.
+       *
+       * Es opcional: una asignatura de un solo cuatrimestre no lo lleva, y
+       * entonces el simulacro no ofrece preajustes en vez de inventárselos.
+       */
+      cuatrimestres: z
+        .object({
+          corte: z.number().int().min(1),
+          fuente: z.string().min(20),
+        })
+        .optional(),
       descripcion: z.string().min(10).max(200),
       /** false = el temario está puesto a ojo y hay que sustituirlo por el oficial. */
       temarioOficial: z.boolean(),

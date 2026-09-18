@@ -515,7 +515,25 @@ const faltas = bloquesHtml.flatMap((b) =>
                   sale de tu ordenador, y desaparece si borras los datos del
                   sitio.
                 </p>
-                <button type="button" class="fantasma" data-borrar>Borrar mi avance</button>
+                {/* Llevártelo a otro sitio.
+                    «Solo en este navegador» es una promesa de §02 —sin cuentas
+                    y sin servidor— y hasta hoy tenía un precio escondido: si
+                    estudiabas en el portátil y el fin de semana en el de casa,
+                    empezabas de cero, y si limpiabas el navegador lo perdías
+                    todo sin aviso. Un fichero que te descargas y vuelves a
+                    cargar resuelve las dos cosas sin romper la promesa: no hay
+                    cuenta, no hay servidor, el fichero es tuyo y lo mueves tú.
+                    Lleva las tres claves que hay —lo resuelto, las casillas de
+                    «lo hago sin la app» y las notas que te has puesto en los
+                    simulacros—, y no solo las de esta ruta: el avance es de la
+                    asignatura entera. */}
+                <p class="p-botones">
+                  <button type="button" class="fantasma" data-guardar>Guardar mi avance</button>
+                  <button type="button" class="fantasma" data-cargar>Cargar</button>
+                  <button type="button" class="fantasma" data-borrar>Borrar mi avance</button>
+                </p>
+                <input type="file" accept="application/json,.json" data-fichero hidden />
+                <p class="p-aviso" data-avance-aviso role="status" aria-live="polite"></p>
               </aside>
             )}
 
@@ -811,6 +829,91 @@ const faltas = bloquesHtml.flatMap((b) =>
       } catch {}
       pinta();
       pintaDominio();
+      avisa('Borrado. Lo que hicieras a partir de ahora vuelve a contarse desde cero.');
+    });
+
+    /* ── llevarte tu avance ────────────────────────────────────────────
+     *
+     * Las tres claves que guarda el sitio, y ninguna más: si algún día hay
+     * una cuarta, se añade aquí y el fichero viejo se sigue cargando, porque
+     * lo que no venga simplemente no se toca.
+     *
+     * El fichero lleva `version` por el mismo motivo: un formato sin número
+     * es un formato que no se puede cambiar sin romper los que ya existen. */
+    const CLAVES = ['rti:hechos', CLAVE_DOMINIO, 'rti:notas'] as const;
+    const avisoAvance = document.querySelector<HTMLElement>('[data-avance-aviso]');
+    const avisa = (texto: string) => { if (avisoAvance) avisoAvance.textContent = texto; };
+
+    document.querySelector<HTMLButtonElement>('[data-guardar]')?.addEventListener('click', () => {
+      const datos: Record<string, unknown> = {};
+      let cuantos = 0;
+      try {
+        for (const c of CLAVES) {
+          const bruto = localStorage.getItem(c);
+          if (!bruto) continue;
+          datos[c] = JSON.parse(bruto);
+          cuantos += Object.keys(datos[c] as object).length;
+        }
+      } catch { /* si una clave está corrupta, se guarda lo que sí se pueda */ }
+
+      if (cuantos === 0) {
+        avisa('Todavía no hay nada que guardar: resuelve algo primero.');
+        return;
+      }
+
+      const hoy = new Date().toISOString().slice(0, 10);
+      const blob = new Blob(
+        [JSON.stringify({ version: 1, guardado: hoy, datos }, null, 2)],
+        { type: 'application/json' },
+      );
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `mi-avance-${hoy}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      avisa(`Guardado: ${cuantos} marca(s) en mi-avance-${hoy}.json. Ese fichero es tuyo.`);
+    });
+
+    const fichero = document.querySelector<HTMLInputElement>('[data-fichero]');
+    document.querySelector<HTMLButtonElement>('[data-cargar]')?.addEventListener('click', () => {
+      fichero?.click();
+    });
+
+    fichero?.addEventListener('change', async () => {
+      const f = fichero.files?.[0];
+      if (!f) return;
+      try {
+        const leido = JSON.parse(await f.text());
+        if (!leido || typeof leido !== 'object' || !leido.datos) {
+          avisa('Ese fichero no es un avance guardado por este sitio.');
+          return;
+        }
+        /* Se FUNDE con lo que ya hay, no se sustituye. Cargar el avance del
+           portátil en el ordenador de casa no debe borrar lo que hiciste en
+           casa: las dos cosas son tuyas y las dos cuentan. */
+        let nuevas = 0;
+        for (const c of CLAVES) {
+          const entra = leido.datos[c];
+          if (!entra || typeof entra !== 'object') continue;
+          let actual: Record<string, unknown> = {};
+          try { actual = JSON.parse(localStorage.getItem(c) ?? '{}'); } catch {}
+          for (const [k, v] of Object.entries(entra)) {
+            if (!(k in actual)) nuevas++;
+            actual[k] = v;
+          }
+          localStorage.setItem(c, JSON.stringify(actual));
+        }
+        pinta();
+        pintaDominio();
+        avisa(nuevas > 0
+          ? `Cargado: ${nuevas} marca(s) que aquí no estaban. Lo que ya tenías sigue ahí.`
+          : 'Cargado. No había nada que este navegador no supiera ya.');
+      } catch {
+        avisa('No he podido leer ese fichero. ¿Es el JSON que descargaste?');
+      } finally {
+        fichero.value = '';
+      }
     });
   }
 </script>
@@ -1201,7 +1304,28 @@ const faltas = bloquesHtml.flatMap((b) =>
     cursor: pointer;
   }
 
-  .progreso button:hover { border-color: var(--flag); color: var(--flag); }
+  /* El hover en rojo lo hereda «borrar», que es el único destructivo; los
+     otros dos no destruyen nada y se quedan en el verde de «esto se toca». */
+  .progreso [data-borrar]:hover { border-color: var(--flag); color: var(--flag); }
+
+  .progreso [data-guardar]:hover,
+  .progreso [data-cargar]:hover { border-color: var(--live); color: var(--live); }
+
+  .p-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin: 0;
+  }
+
+  .p-aviso:empty { display: none; }
+
+  .p-aviso {
+    margin: .55rem 0 0;
+    font-size: .78rem;
+    line-height: 1.45;
+    color: var(--live);
+  }
 
   @media (max-width: 900px) {
     .dos-columnas { grid-template-columns: minmax(0, 1fr); }
