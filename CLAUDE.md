@@ -432,6 +432,9 @@ scripts/
                            generador por tema; `previsualiza.mjs` monta
                            el contact sheet para mirarlas (§16)
   check-color.mjs          contraste, daltonismo y la capa de tinta
+                           DECLARADOS en tokens.css
+  contraste.mjs            el contraste REAL del texto ya publicado, nodo a
+                           nodo y en los dos temas (§11)
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   recalcula.mjs            que las cuentas del corpus salgan (§11)
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
@@ -2867,6 +2870,9 @@ scripts/
                            generador por tema; `previsualiza.mjs` monta
                            el contact sheet para mirarlas (§16)
   check-color.mjs          contraste, daltonismo y la capa de tinta
+                           DECLARADOS en tokens.css
+  contraste.mjs            el contraste REAL del texto ya publicado, nodo a
+                           nodo y en los dos temas (§11)
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   recalcula.mjs            que las cuentas del corpus salgan (§11)
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
