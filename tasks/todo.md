@@ -21,68 +21,96 @@ Lo que sí faltaba de esa dimensión está hecho: el simulacro con reloj, las
 resoluciones tapadas mientras corre, y poder dejar fuera los ejercicios del
 parcial que no toca.
 
-### D · «ninguna página por encima de 4 s» — rota otra vez, y esta vez medida
+### D · «ninguna página por encima de 4 s» — y el número que engañaba
 
-El 16 de septiembre de 2026 esta barra quedó llena: `t05` bajó de 284.977
-nodos y 5,4 s a 102.451 y 2,7 s, metiendo las resoluciones en `<template>` y
-poniendo `content-visibility: auto` en cada ejercicio.
+**Está en verde, y la obra que parecía hacer falta no hace falta.** Esta
+sección se reescribe entera el 18 de septiembre de 2026 porque lo que decía
+antes estaba construido sobre una cifra mal leída, y la culpa era del propio
+guardián.
 
-**Hoy, 17 de septiembre, `peso.mjs` da 109.935 nodos y 4,3 s.** Vuelve a estar
-por encima. El motivo no es ninguna regresión: es que la asignatura ha
-crecido —dieciocho ejercicios propios nuevos entre ayer y hoy— y esta página
-estaba al filo.
+#### Lo que este fichero afirmaba, y por qué era falso
 
-#### De dónde salen los nodos, contados y no supuestos
+Decía que `t05` pesaba 11,4 MB y una auditoría externa concluyó, con toda la
+lógica del mundo, que «11 MB en un móvil con datos son 9–30 s de descarga a
+3–10 Mb/s» y que había que **partir las páginas de tema en dos** para bajar
+los megas.
 
-El propio guión avisa: «mira qué se ejecuta al cargar antes de culpar al
-peso». Contado en el navegador sobre `/calculo/t05-integracion/`:
+Medido contra el sitio publicado, con `curl` y tres valores de
+`Accept-Encoding`:
 
-| qué | nodos vivos |
+| lo que se pide | lo que llega |
 |---|---|
-| total | 109.935 |
-| dentro de un `.katex` | **100.367** — el 91 % |
-| de esos, `.katex-mathml` | **32.147** |
-| SVG de figuras | **133** |
-| dentro de `<template>`, o sea no vivos | 192.129 |
+| `Accept-Encoding: br, gzip` | **878 KB**, `Content-Encoding: gzip` |
+| `Accept-Encoding: gzip` | **878 KB**, `Content-Encoding: gzip` |
+| `Accept-Encoding: identity` | 11.937.430 bytes |
 
-**Las figuras no son el problema**: 133 nodos de 109.935. Todo el peso son
-fórmulas, y **un tercio de ellas es la copia MathML** que KaTeX emite al lado
-del HTML, invisible, para los lectores de pantalla.
+El HTML de KaTeX es tan repetitivo que **comprime al 2,6 %**. A 3 Mb/s eso son
+dos segundos y pico, no treinta. GitHub Pages no sirve brotli —pedirlo
+devuelve el mismo cuerpo que gzip— aunque con brotli bajaría a 290 KB.
 
-#### La palanca que propuse, y que estaba mal — corregido el 17 de septiembre
+O sea que la página no pesa once megas para quien la abre: pesa 878 KB. La
+rearquitectura habría resuelto un problema inexistente, y el número que la
+motivó lo publicaba `peso.mjs`.
 
-Escribí aquí que emitir **solo** MathML quitaría dos tercios de los nodos de
-fórmula y además sería mejor para accesibilidad, y lo dejé como «decisión de
-diseño pendiente». **No lo es: ya se decidió, el 20 de agosto de 2026, y en
-contra.** Está en §07 y yo no lo había leído entero antes de proponerlo.
+#### Dónde se va el tiempo, entonces
 
-El motivo por el que se descartó no es estético. MathML delega el dibujo en la
-fuente matemática de cada máquina, y eso rompía fórmulas sin avisar: con las
-fuentes del sistema **desaparecía la barra del conjugado** —`z̄` se leía como
-`z`, justo lo contrario de lo que dice— y con STIX Two Math autoalojada
-desaparecían los radicales. En una asignatura cuyo primer tema es números
-complejos, publicar un conjugado que se lee como su opuesto no es un empate
-entre rendimiento y tipografía.
+Perfilado a 390 px con la CPU cuatro veces más lenta:
 
-#### Lo que sí queda por hacer
+| | t05 |
+|---|---|
+| primer pintado (FCP) | **0,4 s** |
+| respuesta del servidor | 0,9 s |
+| construir el DOM hasta `domInteractive` | 1,8 s |
+| `load` completo | 2,8 s |
 
-§07 fija tres reglas al tocar `EjercicioGuiado.astro`, y la primera acota el
-terreno: **solo va a `<template>` lo que ya era inalcanzable sin JavaScript**.
-La resolución y los desarrollos lo eran; el enunciado y los pasos no, y por eso
-se quedaron fuera. Meter los pasos dentro rebajaría mucho los nodos y
-rompería §02: sin JavaScript no se leerían los ejercicios.
+**El primer pintado es 0,4 s.** Lo que cuesta es construir el DOM de 110.000
+nodos, y eso ocurre con la página ya pintada. El `<template>` del 16 de
+septiembre ya se llevó por delante los 192.000 nodos de resoluciones y
+desarrollos; lo que queda vivo son los enunciados y los pasos, que §07 deja
+fuera a propósito para que el sitio se lea sin JavaScript.
 
-Queda una vía que no rompe ninguna de las dos: **los ejercicios de un tema en
-su propia página**, o por bloques. §07 la descartó el 16 de septiembre porque
-«rompía los anclajes `#ej-…` que usan las siete rutas», y eso tiene respuesta:
-no se rompen si el enlace lo construye `rutas.ts` en vez de escribirse a mano.
-Es lo único que baja también los **megas** —11,4 MB en un móvil con datos son
-entre nueve y treinta segundos de descarga—, que `peso.mjs` hoy ni mira.
+#### La decisión, y por qué es no hacer nada
 
-Sigue pendiente la decisión hermana del 16 de septiembre: **meter `peso.mjs`
-en `npm run suelo`** para que el árbitro sea el CI y no la máquina de cada uno.
-Mientras no se haga, «menos de 4 s» no es una barra comprobable: aquí t05 da
-4,3 s y en otra máquina 5,8.
+**Partir los ejercicios a su propia página no reduce nada para quien va a
+estudiarlos**: mueve el peso de una página a otra. Quien abre un tema para
+leer la teoría se ahorraría la carga; quien lo abre para practicar —que es a
+lo que se viene— pagaría lo mismo en la segunda página. A cambio habría que
+tocar la generación de rutas, los enlaces de las siete rutas de estudio,
+`verify.mjs`, el humo y la impresión, con riesgo real de dejar anclajes rotos.
+
+La otra mitad de la propuesta —los ejercicios enteros, pasos incluidos, dentro
+de un `<template>`— **rompe §02**: sin JavaScript no se leerían 54 de los 55
+ejercicios de un tema. Eso no es una optimización, es cambiar lo que el sitio
+promete.
+
+Así que no se hace ninguna de las dos, y queda escrito el motivo para que la
+próxima auditoría no lo cuente como olvido.
+
+#### Lo que sí se ha hecho
+
+`peso.mjs` publica ahora **cinco columnas en vez de tres**: el HTML, lo que de
+verdad viaja por la red comprimido, los nodos, el primer pintado y el tiempo
+hasta `load`. Un guardián que publica la cifra que no es induce a la decisión
+que no es, y esta vez estuvo a punto de costar una obra entera.
+
+```
+página                                  HTML  por red   nodos   pinta   listo
+/calculo/t01-complejos/                  8.5 MB   636 KB   91531   0.4 s   2.6 s
+/calculo/t05-integracion/               11.4 MB   742 KB  109935   0.4 s   2.8 s
+/algebra/t07-diagonalizacion/            4.9 MB   319 KB   67959   0.5 s   1.5 s
+/calculo/preparar/ord/                   4.4 MB   397 KB   53340   0.3 s   1.6 s
+/calculo/examenes/2019-2020-ord/         2.5 MB   168 KB   26540   0.3 s   0.7 s
+/                                        0.3 MB    42 KB    1540   0.2 s   0.2 s
+```
+
+#### Lo único que sigue abierto aquí
+
+El «menos de 4 s» **sigue sin árbitro**. La misma página da 2,8 s en una
+corrida y 4,3 s en otra de la misma máquina según lo ocupada que esté, y 5,8 s
+en la máquina de la auditoría. Mientras `peso.mjs` no entre en `npm run suelo`
+—donde el árbitro sería el CI—, esa barra no se puede dar por cumplida ni por
+incumplida: solo por medida aquí. Es la decisión que quedó pendiente el 16 de
+septiembre y sigue pendiente.
 
 ### C · «156/156 escalones con ejemplo, ≥2 práctica y examen»
 

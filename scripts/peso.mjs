@@ -17,6 +17,7 @@
  *   npm run peso  [ruta...]
  */
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 import { dirname, join } from 'node:path';
 import { spawn } from 'node:child_process';
 
@@ -64,7 +65,7 @@ const nav = await chromium.launch();
 }
 
 console.log('Peso — Chromium a 390 px, CPU ×4 más lenta\n');
-console.log('página                                    HTML    nodos    listo');
+console.log('página                                  HTML  por red   nodos   pinta   listo');
 const filas = [];
 for (const ruta of PAGINAS) {
   const ctx = await nav.newContext({ viewport: { width: 390, height: 780 } });
@@ -85,13 +86,43 @@ for (const ruta of PAGINAS) {
     console.error(`\n${ruta}: el servidor devuelve ${resp?.status() ?? 'nada'}. Esa página no existe.`);
     await ctx.close(); await nav.close(); srv.kill(); process.exit(1);
   }
-  const { nodos, html } = await pag.evaluate(() => ({
-    nodos: document.getElementsByTagName('*').length,
-    html: document.documentElement.outerHTML.length,
-  }));
-  filas.push({ ruta, listo, nodos, html });
+  const { nodos, html, pinta } = await pag.evaluate(() => {
+    const p = performance.getEntriesByName('first-contentful-paint')[0];
+    return {
+      nodos: document.getElementsByTagName('*').length,
+      html: document.documentElement.outerHTML.length,
+      pinta: p ? p.startTime / 1000 : null,
+    };
+  });
+
+  /* Lo que de verdad viaja por el cable, que NO es el tamaño del HTML.
+   *
+   * Esta columna nació el 18 de septiembre de 2026, y nació de un error que
+   * este mismo guion provocó. Publicaba «11,4 MB» para t05 y una auditoría
+   * concluyó, razonablemente, que «11 MB en un móvil con datos son 9–30
+   * segundos de descarga» y que había que partir las páginas en dos. Medido
+   * contra el sitio publicado, GitHub Pages sirve esa página **con gzip: 878
+   * KB**. El HTML de KaTeX es tan repetitivo que comprime al 2,6 %.
+   *
+   * O sea que el número que este guion publicaba iba a costar una
+   * rearquitectura entera para arreglar un problema que no existe. Un
+   * guardián que publica la cifra que no es, induce a la decisión que no es.
+   *
+   * Se mide con gzip porque es lo que sirve GitHub Pages: pedirle brotli
+   * devuelve exactamente el mismo cuerpo, comprobado el mismo día. */
+  /* Se pide el HTML aparte en vez de sacarlo de la respuesta del navegador:
+     `resp.body()` se evapora en cuanto la pestaña navega a otro sitio, y el
+     bucle navega en cada vuelta. Un `fetch` al mismo servidor devuelve lo
+     mismo y no depende de la caché del inspector. */
+  const crudo = Buffer.from(await (await fetch(ORIGEN + ruta)).arrayBuffer());
+  const porRed = gzipSync(crudo, { level: 9 }).length;
+
+  filas.push({ ruta, listo, nodos, html, porRed, pinta });
   const aviso = listo > 4 ? '  ←' : '';
-  console.log(`${ruta.padEnd(40)} ${(html / 1048576).toFixed(1)} MB ${String(nodos).padStart(8)} ${(listo.toFixed(1) + ' s').padStart(8)}${aviso}`);
+  console.log(
+    `${ruta.padEnd(38)} ${(html / 1048576).toFixed(1).padStart(5)} MB ${(porRed / 1024).toFixed(0).padStart(5)} KB `
+    + `${String(nodos).padStart(7)} ${((pinta ?? 0).toFixed(1) + ' s').padStart(7)} ${(listo.toFixed(1) + ' s').padStart(7)}${aviso}`,
+  );
   await ctx.close();
 }
 await nav.close();
