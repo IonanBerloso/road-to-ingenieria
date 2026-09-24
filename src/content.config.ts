@@ -1570,6 +1570,92 @@ const temas = Object.fromEntries(
   ]),
 );
 
+/* ═══════════════════════════════════════════════════════════════════
+   El banco de preguntas de un test (CLAUDE.md §04)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/**
+ * Un banco de preguntas de opción múltiple, para el simulador de test.
+ *
+ * POR QUÉ NO SON EJERCICIOS. El Ejercicio guiado es una cosa distinta: lleva
+ * a alguien por los pasos de UN problema, con su pista y su desarrollo. Aquí
+ * no hay pasos ni problema: hay cien preguntas sueltas de las que se sacan
+ * veinticinco al azar, y lo que se entrena es otra cosa —reconocer rápido y
+ * decidir si arriesgar con penalización—. Meterlas como un ejercicio de cien
+ * pasos habría sido forzar el molde hasta romperlo.
+ *
+ * QUÉ GARANTIZA EL ESQUEMA, que es donde se cazan los errores de escribir
+ * cien preguntas a mano:
+ *
+ *   · **exactamente una correcta**, ni cero ni dos;
+ *   · **cuatro opciones**, como el examen real;
+ *   · **un porqué en cada opción**, también en la buena: un banco que solo
+ *     dice «fallaste» no enseña nada, y el porqué es la mitad del valor;
+ *   · **ids únicos** y un bloque declarado, para que el simulador pueda
+ *     repartir las preguntas como las reparte el examen de verdad.
+ */
+const banco = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/banco' }),
+  schema: z
+    .object({
+      asignatura: z.string().min(3),
+      /** El tema del que salen todas las preguntas. */
+      tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
+      titulo: z.string().min(8),
+      /** De dónde sale el banco y qué NO es. */
+      fuente: z.string().min(40),
+      /** Cómo puntúa el examen real, para que el simulador no se lo invente. */
+      puntuacion: z.object({
+        preguntas: z.number().int().min(1),
+        minutos: z.number().int().min(1),
+        acierto: z.number(),
+        fallo: z.number(),
+        /** La nota que hay que superar, sobre 10. */
+        aprueba: z.number().min(0).max(10),
+      }),
+      preguntas: z
+        .array(
+          z.object({
+            id: z.string().regex(/^[a-z0-9-]+$/),
+            /** A qué bloque del temario pertenece, para repartir como el
+             *  examen real: si once de veinticinco van de familias, el
+             *  simulacro tiene que sacar esa proporción y no una al azar. */
+            bloque: z.enum([
+              'familias', 'enlaces', 'cristalino', 'solidos',
+              'niveles', 'definiciones', 'avanzados',
+            ]),
+            pregunta: z.string().min(10),
+            opciones: z
+              .array(
+                z.object({
+                  texto: z.string().min(1),
+                  correcta: z.boolean().optional(),
+                  porque: z.string().min(15),
+                }),
+              )
+              .length(4, 'cuatro opciones, como el examen'),
+          }),
+        )
+        .min(1),
+    })
+    .superRefine((b, ctx) => {
+      const vistos = new Set<string>();
+      for (const p of b.preguntas) {
+        if (vistos.has(p.id)) {
+          ctx.addIssue({ code: 'custom', message: `id repetido: ${p.id}` });
+        }
+        vistos.add(p.id);
+        const buenas = p.opciones.filter((o) => o.correcta).length;
+        if (buenas !== 1) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `${p.id}: ${buenas} opciones marcadas como correctas, y tiene que haber una`,
+          });
+        }
+      }
+    }),
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -1577,4 +1663,5 @@ export const collections = {
   examen,
   preparar,
   laboratorio,
+  banco,
 };

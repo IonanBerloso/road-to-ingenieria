@@ -59,6 +59,20 @@ const BASE = process.env.ORIGEN ?? 'http://localhost:4321/road-to-ingenieria';
  */
 const CASOS = [
   {
+    /* El único que no comprueba un número de un examen, porque no publica
+       ninguno: sortea preguntas. Lo que sí es determinista —y lo que se
+       rompería sin avisar— es que saque las 25 que dice su banco y que el
+       reloj arranque. El reparto por bloques y la aritmética de la nota los
+       prueba el recorrido de extremo a extremo del 24 de septiembre de 2026. */
+    tema: 'ciencia-materiales/t01-introduccion',
+    sim: '[data-sim-test]',
+    nombre: 'el simulador del test de mínimos',
+    fuente: 'la cabecera del test del 27 de septiembre de 2024',
+    pruebas: [
+      { pulsa: '[data-empezar]', espera: { '[data-estado]': '25 preguntas. El reloj corre.' } },
+    ],
+  },
+  {
     tema: 'fluidos/t18-perdidas-carga',
     sim: '[data-moody]',
     nombre: 'el ábaco de Moody',

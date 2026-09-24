@@ -1,0 +1,457 @@
+---
+import { getCollection } from 'astro:content';
+
+/**
+ * El simulador del test de contenidos mínimos.
+ *
+ * POR QUÉ EXISTE, y no es «un test más». El test de mínimos de Ciencia de
+ * Materiales es un requisito para aprobar la asignatura y tiene tres cosas que
+ * no se entrenan leyendo el tema: **son 25 preguntas en 45 minutos**, **se
+ * resta 0,15 por cada fallo** y hace falta un 5,0. Con penalización, decidir
+ * si contestar una pregunta que no sabes es parte del examen, y eso solo se
+ * aprende haciéndolo con las reglas puestas.
+ *
+ * DE DÓNDE SALEN LAS REGLAS. No se inventan aquí: vienen en el propio banco
+ * de preguntas, en su campo `puntuacion`, copiadas de la cabecera del examen
+ * del 27 de septiembre de 2024. Si algún día la asignatura cambia el reparto,
+ * se cambia en el YAML y el simulador se entera solo (§01).
+ *
+ * POR QUÉ REPARTE POR BLOQUES Y NO AL AZAR. El examen de 2024 dedicó once de
+ * sus veinticinco preguntas a las familias de materiales. Un simulacro que
+ * sacara veinticinco al azar de las cien entrenaría un examen que no existe:
+ * saldrían cinco de familias y el alumno creería que va sobrado. El sorteo
+ * respeta la proporción del banco, que a su vez imita la del examen.
+ *
+ * SIN JAVASCRIPT no hay simulacro, y entonces no se enseña el mando: se
+ * enseña el aviso y un enlace a las preguntas como lista. Es la misma regla
+ * que el simulacro con reloj de la página de examen (§02).
+ */
+interface Opcion {
+  texto: string;
+  correcta?: boolean;
+  porque: string;
+}
+interface Pregunta {
+  id: string;
+  bloque: string;
+  pregunta: string;
+  opciones: Opcion[];
+}
+interface Props {
+  /** El fichero del banco, sin extensión: `ciencia-materiales-t01`. */
+  banco: string;
+}
+const { banco } = Astro.props as Props;
+
+/* El banco lo carga el componente y no lo recibe por props, porque quien lo
+   invoca es un MDX de tema y un MDX no consulta colecciones. Así el tema solo
+   tiene que decir cuál quiere. */
+const entrada = (await getCollection('banco')).find((b) => b.id === banco);
+if (!entrada) {
+  throw new Error(
+    `TestDeMinimos: no hay ningún banco que se llame "${banco}" en src/content/banco/.`,
+  );
+}
+const { titulo, fuente, puntuacion } = entrada.data;
+const preguntas = entrada.data.preguntas as Pregunta[];
+
+/* El reparto por bloques, calculado aquí y no en el navegador: es un dato del
+   banco, y el cliente solo tiene que sortear dentro de cada montón. */
+const porBloque: Record<string, number> = {};
+for (const p of preguntas) porBloque[p.bloque] = (porBloque[p.bloque] ?? 0) + 1;
+
+const cuantas = puntuacion.preguntas;
+const reparto = Object.entries(porBloque).map(([b, n]) => [
+  b,
+  Math.round((n / preguntas.length) * cuantas),
+]) as [string, number][];
+
+/* El redondeo puede dejar el total en 24 o en 26; se ajusta sobre el bloque
+   más grande, que es el que menos se nota. */
+let suma = reparto.reduce((a, [, n]) => a + n, 0);
+if (suma !== cuantas) {
+  reparto.sort((a, b) => b[1] - a[1]);
+  reparto[0][1] += cuantas - suma;
+  suma = cuantas;
+}
+
+const datos = JSON.stringify({ preguntas, puntuacion, reparto });
+---
+
+{/* `figure.sim` con id y `.sim-head h3` no es decoración: es el contrato
+    que `Tema.astro` lee para enseñar el «ir al simulador» de la cabecera y
+    marcarlo en el índice. Sin él, el simulador vive dentro de un apartado que
+    en modo guiado está `hidden`, y pasa lo que pasó con los cinco de Fluidos
+    el 2 de septiembre de 2026: publicados, correctos e invisibles. */}
+<figure class="sim" data-sim-test id="sim-test-de-minimos">
+  <figcaption class="sim-head">
+    <h3>{titulo}</h3>
+    <span class="rotulo hint">25 preguntas, 45 minutos, con penalización</span>
+  </figcaption>
+
+  <p class="s-txt">
+    <strong>{cuantas} preguntas</strong> en <strong>{puntuacion.minutos} minutos</strong>,
+    sacadas al azar de {preguntas.length} y repartidas como las reparte el examen.
+    Acertar suma <strong>{puntuacion.acierto.toFixed(2).replace('.', ',')}</strong> y
+    fallar resta <strong>{Math.abs(puntuacion.fallo).toFixed(2).replace('.', ',')}</strong>;
+    dejar en blanco, nada. Se aprueba con {puntuacion.aprueba},0.
+  </p>
+
+  {/* Sale oculto y lo enciende el script. Sin JavaScript no hay reloj ni
+      corrección, así que tampoco se enseña un botón que no haría nada. */}
+  <div class="s-mando" data-mando hidden>
+    <button type="button" class="cta" data-empezar>Empezar el simulacro</button>
+    <output class="s-reloj" data-reloj hidden aria-hidden="true">--:--</output>
+    <button type="button" class="cta" data-corregir hidden>Corregir</button>
+  </div>
+
+  <noscript>
+    <p class="s-aviso">
+      El simulacro necesita JavaScript para el reloj y la corrección. Sin él,
+      las preguntas del examen de 2024 están transcritas entre los ejercicios
+      de este tema y se pueden hacer en papel.
+    </p>
+  </noscript>
+
+  <p class="s-estado" data-estado role="status" aria-live="polite"></p>
+
+  <form class="s-preguntas" data-preguntas hidden></form>
+
+  <div class="s-resultado" data-resultado hidden></div>
+
+  <p class="s-fuente">{fuente}</p>
+</figure>
+
+<script is:inline set:html={`window.__testMinimos = ${datos};`} />
+
+<script>
+  /* ── el simulador ───────────────────────────────────────────────────
+   *
+   * Tres cosas y ninguna más: sortear respetando el reparto, contar hacia
+   * atrás, y corregir diciendo POR QUÉ estaba mal cada fallo.
+   *
+   * El reloj sobrevive a recargar por el mismo motivo que el de la página de
+   * examen: lo que se guarda no es el tiempo que queda sino cuándo empezó y
+   * cuánto dura. Un número guardado se congela al cerrar la pestaña, y
+   * entonces el simulacro deja de medir lo que dice medir. */
+  type Opcion = { texto: string; correcta?: boolean; porque: string };
+  type Pregunta = { id: string; bloque: string; pregunta: string; opciones: Opcion[] };
+
+  const raiz = document.querySelector<HTMLElement>('[data-sim-test]');
+  const datos = (window as unknown as { __testMinimos?: {
+    preguntas: Pregunta[];
+    puntuacion: { preguntas: number; minutos: number; acierto: number; fallo: number; aprueba: number };
+    reparto: [string, number][];
+  } }).__testMinimos;
+
+  if (raiz && datos) {
+    const mando = raiz.querySelector<HTMLElement>('[data-mando]')!;
+    const bEmpezar = raiz.querySelector<HTMLButtonElement>('[data-empezar]')!;
+    const bCorregir = raiz.querySelector<HTMLButtonElement>('[data-corregir]')!;
+    const reloj = raiz.querySelector<HTMLOutputElement>('[data-reloj]')!;
+    const estado = raiz.querySelector<HTMLElement>('[data-estado]')!;
+    const form = raiz.querySelector<HTMLFormElement>('[data-preguntas]')!;
+    const salida = raiz.querySelector<HTMLElement>('[data-resultado]')!;
+    const { puntuacion: P, reparto } = datos;
+    const LLAVE = `simtest:${location.pathname}`;
+
+    mando.hidden = false;
+
+    let elegidas: Pregunta[] = [];
+    let tic: number | undefined;
+
+    /* Baraja una copia, sin tocar el original.
+     *
+     * Sin genérico a propósito: dentro de un `<script>` de un `.astro`, un
+     * `<T,>` se parsea como JSX y el script entero se cae sin decir nada —el
+     * botón se quedaba oculto y no salía ningún error en consola—. */
+    const baraja = (xs) => {
+      const c = [...xs];
+      for (let i = c.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [c[i], c[j]] = [c[j], c[i]];
+      }
+      return c;
+    };
+
+    /** Las 25 del simulacro: tantas de cada bloque como dice el reparto.
+     *  Las opciones también se barajan, porque si la correcta sale siempre
+     *  en el mismo sitio se memoriza la posición y no la respuesta. */
+    const sortea = (): Pregunta[] => {
+      const fuera: Pregunta[] = [];
+      for (const [bloque, cuantas] of reparto) {
+        const delBloque = datos.preguntas.filter((p) => p.bloque === bloque);
+        fuera.push(...baraja(delBloque).slice(0, cuantas));
+      }
+      return baraja(fuera).map((p) => ({ ...p, opciones: baraja(p.opciones) }));
+    };
+
+    const pinta = () => {
+      form.innerHTML = '';
+      elegidas.forEach((p, i) => {
+        const bloque = document.createElement('fieldset');
+        bloque.className = 's-p';
+        bloque.dataset.p = String(i);
+        const leyenda = document.createElement('legend');
+        leyenda.innerHTML = `<span class="s-n">${i + 1}</span> ${p.pregunta}`;
+        bloque.append(leyenda);
+        p.opciones.forEach((o, j) => {
+          const label = document.createElement('label');
+          label.className = 's-o';
+          label.innerHTML =
+            `<input type="radio" name="p${i}" value="${j}"> <span>${o.texto}</span>`;
+          bloque.append(label);
+        });
+        form.append(bloque);
+      });
+      form.hidden = false;
+    };
+
+    const pintaReloj = (queda: number) => {
+      const s = Math.max(0, Math.ceil(queda / 1000));
+      const m = Math.floor(s / 60);
+      reloj.value = `${String(m).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+      /* El aria-hidden del reloj no es un descuido: un contador que se anuncia
+         cada segundo hace la página inusable con lector de pantalla. El aviso
+         de que se acaba el tiempo sí se anuncia, una vez. */
+      if (s === 300) estado.textContent = 'Quedan cinco minutos.';
+    };
+
+    const corre = (hasta: number) => {
+      clearInterval(tic);
+      tic = window.setInterval(() => {
+        const queda = hasta - Date.now();
+        pintaReloj(queda);
+        if (queda <= 0) {
+          clearInterval(tic);
+          corrige(true);
+        }
+      }, 250);
+      pintaReloj(hasta - Date.now());
+    };
+
+    const empieza = () => {
+      elegidas = sortea();
+      pinta();
+      salida.hidden = true;
+      salida.innerHTML = '';
+      bEmpezar.textContent = 'Empezar otro';
+      bCorregir.hidden = false;
+      reloj.hidden = false;
+      const hasta = Date.now() + P.minutos * 60000;
+      try {
+        localStorage.setItem(LLAVE, JSON.stringify({ hasta, ids: elegidas.map((p) => p.id) }));
+      } catch { /* sin localStorage el simulacro funciona igual, solo no sobrevive a recargar */ }
+      estado.textContent = `${elegidas.length} preguntas. El reloj corre.`;
+      corre(hasta);
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const corrige = (porTiempo = false) => {
+      clearInterval(tic);
+      reloj.hidden = true;
+      bCorregir.hidden = true;
+      try { localStorage.removeItem(LLAVE); } catch { /* da igual */ }
+
+      let aciertos = 0;
+      let fallos = 0;
+      let blancos = 0;
+      const malas: { n: number; p: Pregunta; marcada: Opcion | null; buena: Opcion }[] = [];
+
+      elegidas.forEach((p, i) => {
+        const marcado = form.querySelector<HTMLInputElement>(`input[name="p${i}"]:checked`);
+        const buena = p.opciones.find((o) => o.correcta)!;
+        const caja = form.querySelector<HTMLElement>(`[data-p="${i}"]`)!;
+        caja.classList.remove('bien', 'mal', 'blanco');
+        if (!marcado) {
+          blancos++;
+          caja.classList.add('blanco');
+          malas.push({ n: i + 1, p, marcada: null, buena });
+          return;
+        }
+        const marcada = p.opciones[Number(marcado.value)];
+        if (marcada.correcta) {
+          aciertos++;
+          caja.classList.add('bien');
+        } else {
+          fallos++;
+          caja.classList.add('mal');
+          malas.push({ n: i + 1, p, marcada, buena });
+        }
+      });
+
+      const nota = aciertos * P.acierto + fallos * P.fallo;
+      const aprobado = nota >= P.aprueba;
+
+      const partes = [
+        `<p class="r-nota ${aprobado ? 'ok' : 'no'}">`,
+        `<strong>${nota.toFixed(2).replace('.', ',')}</strong> sobre 10`,
+        aprobado ? ' · aprobado' : ` · hace falta ${P.aprueba},0`,
+        '</p>',
+        `<p class="r-cuentas">${aciertos} aciertos · ${fallos} fallos · ${blancos} en blanco`,
+        fallos > 0
+          ? ` — los fallos te han restado ${(fallos * Math.abs(P.fallo)).toFixed(2).replace('.', ',')}`
+          : '',
+        '</p>',
+      ];
+
+      if (porTiempo) partes.push('<p class="r-aviso">Se acabó el tiempo y se corrigió solo.</p>');
+
+      if (malas.length) {
+        partes.push('<p class="rotulo r-tit">Lo que falló, y por qué</p><ul class="r-lista">');
+        for (const m of malas) {
+          partes.push(
+            `<li><p class="r-preg"><span class="s-n">${m.n}</span> ${m.p.pregunta}</p>`,
+            m.marcada
+              ? `<p class="r-tuya">Marcaste «${m.marcada.texto}» — ${m.marcada.porque}</p>`
+              : '<p class="r-tuya">La dejaste en blanco.</p>',
+            `<p class="r-buena">Era «${m.buena.texto}» — ${m.buena.porque}</p></li>`,
+          );
+        }
+        partes.push('</ul>');
+      } else {
+        partes.push('<p class="r-tit">Las veinticinco. No hay nada que repasar.</p>');
+      }
+
+      salida.innerHTML = partes.join('');
+      salida.hidden = false;
+      estado.textContent = '';
+      salida.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    bEmpezar.addEventListener('click', empieza);
+    bCorregir.addEventListener('click', () => corrige(false));
+
+    /* Un simulacro a medias que sobrevivió a una recarga. */
+    try {
+      const crudo = localStorage.getItem(LLAVE);
+      if (crudo) {
+        const { hasta, ids } = JSON.parse(crudo);
+        if (hasta > Date.now() && Array.isArray(ids)) {
+          elegidas = ids
+            .map((id: string) => datos.preguntas.find((p) => p.id === id))
+            .filter(Boolean) as Pregunta[];
+          if (elegidas.length) {
+            pinta();
+            bEmpezar.textContent = 'Empezar otro';
+            bCorregir.hidden = false;
+            reloj.hidden = false;
+            estado.textContent = 'Simulacro recuperado: el reloj siguió corriendo.';
+            corre(hasta);
+          }
+        } else {
+          localStorage.removeItem(LLAVE);
+        }
+      }
+    } catch { /* si está corrupto, se empieza de cero */ }
+  }
+</script>
+
+<style>
+  .sim {
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    margin: 2rem 0;
+  }
+
+  .sim-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .6rem;
+    padding: .7rem 1.2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-head h3 { margin: 0; font-size: .9rem; font-weight: 600; }
+
+  .hint { color: var(--faint); }
+
+  .sim > :not(.sim-head) { margin-inline: 1.2rem; }
+
+  .sim > :last-child { margin-bottom: 1.1rem; }
+
+  .s-txt { font-size: .9rem; margin: 0 0 .9rem; max-width: var(--measure); }
+
+  .s-mando { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+
+  .s-reloj {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--flag);
+  }
+
+  .s-estado:empty { display: none; }
+  .s-estado { margin: .7rem 0 0; font-size: .82rem; color: var(--live); }
+
+  .s-aviso { font-size: .85rem; color: var(--faint); margin: .6rem 0 0; }
+
+  .s-preguntas { margin-top: 1.4rem; display: grid; gap: 1rem; }
+
+  .s-p {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: .8rem .9rem;
+    margin: 0;
+  }
+
+  .s-p legend { font-size: .9rem; font-weight: 700; padding: 0 .3rem; }
+
+  .s-n {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--faint);
+    margin-right: .3rem;
+  }
+
+  .s-o {
+    display: flex;
+    gap: .5rem;
+    align-items: baseline;
+    padding: .25rem 0;
+    font-size: .88rem;
+    cursor: pointer;
+  }
+
+  /* El resultado no se marca solo con color: el borde cambia de grosor y cada
+     fallo lleva su texto. Un color por sí solo no lo ve todo el mundo. */
+  .s-p.bien { border-color: var(--live); border-width: 2px; }
+  .s-p.mal { border-color: var(--flag); border-width: 2px; }
+  .s-p.blanco { border-style: dashed; }
+
+  .s-resultado { margin-top: 1.6rem; }
+
+  .r-nota { font-size: 1.5rem; margin: 0 0 .2rem; }
+  .r-nota.ok { color: var(--live); }
+  .r-nota.no { color: var(--flag); }
+
+  .r-cuentas { font-size: .85rem; color: var(--faint); margin: 0 0 1rem; }
+
+  .r-aviso { font-size: .85rem; color: var(--flag); margin: 0 0 1rem; }
+
+  .r-tit { color: var(--faint); margin: 1.2rem 0 .5rem; }
+
+  .r-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+
+  .r-lista li {
+    border-left: 3px solid var(--flag);
+    padding-left: .8rem;
+  }
+
+  .r-preg { font-size: .88rem; font-weight: 700; margin: 0 0 .25rem; }
+  .r-tuya { font-size: .84rem; color: var(--flag); margin: 0 0 .2rem; }
+  .r-buena { font-size: .84rem; color: var(--live); margin: 0; }
+
+  .s-fuente {
+    font-size: .72rem;
+    color: var(--faint);
+    line-height: 1.5;
+    margin: 1.4rem 0 0;
+    padding-top: .8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  @media print { .sim { display: none; } }
+</style>
