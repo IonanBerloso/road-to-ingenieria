@@ -280,7 +280,20 @@ async function main() {
 try {
   await main();
 } catch (e) {
-  fallo('el guardián de contraste no ha podido terminar', `    ${e.message}`);
+  /* Si el servidor se cae a media pasada, la causa casi siempre es que otro
+     guion ha hecho `astro preview stop` — el humo lo hace al arrancar, y eso
+     mata cualquier preview, incluido el de quien esté trabajando. Pasó el 24
+     de septiembre de 2026 al lanzar el humo de una asignatura mientras el
+     suelo corría. Decirlo ahorra buscar el fallo donde no está. */
+  const pista = /ERR_CONNECTION_REFUSED|ECONNREFUSED/.test(e.message)
+    ? [
+        '',
+        '    El servidor dejó de responder a media pasada. ¿Hay otro guion',
+        '    levantando `astro preview`? El humo lo para al arrancar, y se',
+        '    lleva por delante el de este guardián.',
+      ].join('\n')
+    : '';
+  fallo('el guardián de contraste no ha podido terminar', `    ${e.message}${pista}`);
 } finally {
   if (!SERVIDOR_FUERA) {
     spawnSync(process.execPath, [ASTRO, 'preview', 'stop'], { cwd: ROOT, stdio: 'ignore' });
