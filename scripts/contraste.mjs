@@ -199,10 +199,25 @@ async function main() {
   let transparentes = 0;
 
   for (const tema of ['claro', 'oscuro']) {
-    const ctx = await nav.newContext({ viewport: { width: 1366, height: 900 } });
+    /* El navegador dice preferir ese tema, como el sistema de quien lo usa:
+       así el script de la cabecera lo pone ANTES del primer pintado, que es
+       lo que ve un alumno con el oscuro puesto.
+
+       Hasta el 26 de septiembre de 2026 el tema se cambiaba al llegar
+       `DOMContentLoaded`, con la página ya pintada en claro, y en una máquina
+       lenta eso midió colores de paso: siete nodos de una opción de ejercicio
+       de la ruta de la 2.ª evaluación salían a 1,09:1, que es la tinta ya
+       oscura —el color no tiene transición— sobre el fondo del botón todavía
+       claro —ese sí, 0,15 s—. En esta máquina no pasaba nunca; en la de
+       GitHub, siempre, y tumbó los despliegues del 24 y del 26 de septiembre
+       con el suelo local en verde. Se reprodujo aquí frenando la CPU seis
+       veces (`Emulation.setCPUThrottlingRate`): el guardián viejo da los mismos
+       siete nodos, y este, verde. */
+    const ctx = await nav.newContext({
+      viewport: { width: 1366, height: 900 },
+      colorScheme: tema === 'oscuro' ? 'dark' : 'light',
+    });
     const pag = await ctx.newPage();
-    /* El tema se fija antes de que cargue nada, como lo haría alguien que ya
-       lo eligió: el atributo lo pone el script de la cabecera al arrancar. */
     await pag.addInitScript((t) => {
       document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.dataset.theme = t;
@@ -211,6 +226,11 @@ async function main() {
 
     for (const [nombre, r] of MUESTRA) {
       await pag.goto(ORIGEN + r, { waitUntil: 'load', timeout: 60000 });
+      /* Y sin transiciones mientras se mide: el contraste que importa es el
+         del color al que se llega, no el de un fotograma intermedio. */
+      await pag.addStyleTag({
+        content: '*, *::before, *::after { transition: none !important; animation: none !important; }',
+      });
       await pag.evaluate((t) => { document.documentElement.dataset.theme = t; }, tema);
       await pag.waitForTimeout(350);
 

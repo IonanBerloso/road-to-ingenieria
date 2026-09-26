@@ -1548,6 +1548,19 @@ con `check-color` en verde: la pareja estaba bien declarada y mal usada. Se
 salta los fondos con degradado y el texto transparente, que no tienen un
 contraste que medir.
 
+**Y mide el color al que se llega, no uno de paso.** El navegador prefiere el
+tema que se mide —el script de la cabecera lo pone antes del primer pintado,
+como a un alumno con el oscuro elegido— y las transiciones se apagan mientras
+mide. No era así hasta el 26 de septiembre de 2026, y en la máquina de GitHub,
+más lenta, leía un fotograma a medias: la tinta ya oscura sobre el fondo de un
+botón todavía claro, 1,09:1. **Los despliegues del 24 y del 26 cayeron por eso
+con el suelo local en verde**, y el del 24 dejó sin publicar el simulador del
+test de mínimos durante dos días sin que nadie mirara el resultado del
+despliegue. Se reprodujo aquí frenando la CPU seis veces. Dos lecciones: **un
+guardián que depende del tiempo no vale en una máquina distinta** (§17, las
+figuras en el CI), y **subir no es publicar: después de un `git push` se mira
+que el despliegue termine en verde** (`gh run list`).
+
 **Regla de este fichero: no se añade una comprobación por si acaso.** Se añade
 cuando algo se ha roto de verdad, y el comentario dice qué se rompió. Y toda
 comprobación nueva se valida al revés: se reintroduce el fallo y se confirma que
