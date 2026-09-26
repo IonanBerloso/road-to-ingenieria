@@ -22,19 +22,29 @@ auditoría encontró y no se arregló en el momento.
   Fluidos y si admite calculadora programable; qué se hizo en cada práctica de
   laboratorio; el criterio de la profesora de Materiales sobre el 4.19 (el
   sitio publica 55,2 % y explica el 44,8 % impreso).
+- **Expresión Gráfica, antes de escribir el primer tema** (del brief del 8 de
+  septiembre, §7): si las hojas EJERCICIO 52–55 del final de la colección son
+  exámenes y de qué año —es lo único parecido a una convocatoria—; el PDF de
+  la rúbrica de láminas, que en la carpeta es solo el enlace de eGela; si en
+  el examen de dibujo técnico se pueden usar las tablas ISO; y si el diédrico
+  se examina con la figura a escala o por coordenadas.
 
 ## Hacer
 
 ### La siguiente asignatura: Expresión Gráfica
 
-- **Sacarla de `prev`**: temario oficial y evaluación con la guía citada.
-  `manana.md` §10.8 anota diédrico 30 %, dibujo técnico 55 % y CAD 15 %, con
-  un 4 de mínimo en cada parte: se comprueba contra la guía antes de publicarlo.
-- **El diseño antes que el contenido**: su examen es un dibujo. Fuera del
-  repositorio hay un paquete (`Claude outputs/expresion-grafica-paquete.zip`:
-  65 láminas en JSON, un paso `construir`, cuatro ejercicios probados). Se lee
-  antes de escribir nada, y se contrasta con el paso `dibujar` y con el patrón
-  «figura fija» (§05).
+- **El diseño antes que el contenido**: su examen es un dibujo. El catálogo
+  ya salió de `prev` el 26 de septiembre de 2026, con el temario y la
+  evaluación de la guía 25976. Fuera del repositorio está el diseño aprobado
+  el 8 de septiembre: `Claude outputs/expresion-grafica-brief.md` y
+  `expresion-grafica-paquete-1.zip` (las 65 láminas en JSON, el extractor,
+  los pilotos del taller para SD3, SD5 y SD7 con sus comprobaciones, y
+  `sd1-ejemplo.yaml`). El orden que propone: `lib/diedrico.ts` mínimo con sus
+  pruebas y los valores de referencia de SD1, el componente `Taller` y el
+  paso `construir`; después SD4 y SD5, y solo entonces se cierra el patrón.
+- **Los criterios de corrección del profesor como datos**
+  (`Criterios_para_la_correcin_de_ejercicios_y_exmenes.pdf`): mínimos, errores
+  muy graves a −2 y típicos con su precio. Los usan el bloque 2 y las rúbricas.
 - **El material**: 51 ficheros, con colección resuelta y criterios de
   corrección; sin exámenes. Los dos de notas no se abren (CLAUDE.md, «Antes de
   nada»).
@@ -99,12 +109,9 @@ auditoría encontró y no se arregló en el momento.
 - **Duplicados** (Regla 0): el controlador de pestañas de `Tema` y `Examen`
   —ya se desincronizó una vez, en el `afterprint`—; el marco CSS de los
   simuladores, copiado en diez en dos familias; el formateador `num`, en
-  nueve; el reloj de `Examen` y de `TestDeMinimos`; la cuenta de ejercicios
-  de un cuadernillo, en tres sitios; `sinTildes`, en tres.
-- **Código muerto**: la prop `crumb` de `Base.astro` (seis páginas la pasan y
-  no se lee); `hayFormulario` (la portada lo reimplementa); `esFormulaQuimica`
-  (solo lo usan los tests); tres selectores de `print.css` sin elemento; el
-  panel «Tu avance», emitido en cada bloque de la ruta y usado solo el primero.
+  nueve —con variantes: unificarlo cambia salidas que `npm run sim` compara
+  carácter a carácter, así que va simulador a simulador—; el reloj de
+  `Examen` y de `TestDeMinimos`.
 - **Coherencia**: seis simuladores usan `data-caso` para sus preajustes y dos
   `data-accion`; `ALCANCE_CONV` del índice de exámenes está pensado para
   Cálculo; la plantilla de laboratorio dice «GeoGebra» y pinta `trabajo` sin

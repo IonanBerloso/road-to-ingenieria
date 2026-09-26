@@ -945,10 +945,10 @@ que la auditoría del 13 de septiembre marcó como el hueco no declarado de esta
 asignatura.
 
 **Las que quedan sin abrir.** El estado de cada asignatura lo decide
-`src/content/catalogo/*.json` y no esta página: al 13 de septiembre de 2026 son
-seis en `ok`, dos en `obra` —Materiales y Sistemas de Producción— y **una sola
-en `prev`**, Expresión Gráfica. Es §00 funcionando: no se abre una hasta cerrar
-la anterior.
+`src/content/catalogo/*.json` y no esta página: al 26 de septiembre de 2026 son
+seis en `ok`, tres en `obra` —Materiales, Sistemas de Producción y, desde ese
+día, Expresión Gráfica, con su temario y su evaluación copiados de la guía— y
+ninguna en `prev`. Hasta ese día decía «una sola en `prev`», con fecha del 13.
 
 > Aquí ponía «**las otras tres** siguen en `prev`, con cero contenido:
 > Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción», y era falso

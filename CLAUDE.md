@@ -124,7 +124,7 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 | Cálculo | 1.º | `ok` | la referencia de tamaño: §15 la mide |
 | Álgebra | 1.º | `ok` | un tema `soloEnClase` declarado |
 | Fundamentos Químicos | 1.º | `ok` | sin colección en cuatro temas, porque el material no la trae |
-| Expresión Gráfica | 1.º | `prev` | **la siguiente**, y antes que contenido necesita diseño: su examen es un dibujo |
+| Expresión Gráfica | 1.º | `obra` | **la siguiente**: temario y evaluación de la guía desde ese día; antes que temas necesita diseño, porque su examen es un dibujo |
 | Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
 | Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
 | Mecánica Aplicada | 2.º | `ok` | cinco convocatorias imposibles, solo en euskera |
@@ -287,9 +287,12 @@ src/
     plano.ts · moody.ts · bombeo.ts · compuertas.ts · canales.ts ·
     ariete.ts · viga.ts · catenaria.ts · mecanismo.ts
                            los modelos de los simuladores
-    rutas.ts · peso.ts · formulario.ts
-                           URLs, el peso de cada tema en la portada y qué
-                           parte de un tema es formulario
+    rutas.ts · peso.ts · formulario.ts · cuadernillo.ts · texto.ts
+                           URLs, el peso de cada tema en la portada, qué
+                           parte de un tema es formulario, cuántos
+                           ejercicios trae un examen y la clave de búsqueda
+                           sin tildes. Cada uno existe porque su regla
+                           estaba escrita en dos o tres páginas (§01)
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css

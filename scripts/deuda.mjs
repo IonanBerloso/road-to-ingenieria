@@ -827,7 +827,12 @@ const AFIRMACIONES = [
      sexta la caza el guion. */
   ['docs/como-vamos.md', new RegExp(`son\\s+${NUMERAL} en \`ok\``), 'asignaturasOk', 'asignaturas en ok'],
   ['docs/como-vamos.md', new RegExp(`en \`ok\`, ${NUMERAL} en \`obra\``), 'asignaturasObra', 'asignaturas en obra'],
-  ['docs/como-vamos.md', new RegExp(`${NUMERAL} sola?\\s+en \`prev\``), 'asignaturasPrev', 'asignaturas en prev'],
+  /* La de `prev` se busca en la MISMA frase que la de `ok`: con cero en
+     `prev` la frase dice «ninguna en `prev`», sin «sola», y buscada suelta
+     casaría con cualquier otra mención de `prev` del documento («siguen en
+     `prev`» no es un número). Ajustado el 26 de septiembre de 2026, al salir
+     Expresión Gráfica de `prev`. */
+  ['docs/como-vamos.md', new RegExp(`en \`ok\`[^.]*?\\s\\**${NUMERAL}(?: sola)?\\s+en \`prev\``), 'asignaturasPrev', 'asignaturas en prev'],
 ];
 
 pinta('10 · Cifras que la documentación publica sobre el propio proyecto');
