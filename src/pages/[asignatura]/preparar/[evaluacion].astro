@@ -368,13 +368,18 @@ const crumb = `${asignatura.data.nombre} · preparar`;
 const faltas = bloquesHtml.flatMap((b) =>
   b.faltaHtml.map((html) => ({ bloque: b.titulo, html })),
 );
+
+/* El panel «Tu avance» va UNA vez, en el primer bloque con escalones. Hasta
+   el 26 de septiembre de 2026 se emitía en cada uno —con sus botones y su
+   `<input type="file">`— y el guion solo encendía el primero: el resto era
+   marcado muerto, oculto, en cada ruta. */
+const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
 ---
 
 <Base
   titulo={`${d.titulo} — ${asignatura.data.nombre}`}
   descripcion={d.lede.slice(0, 160)}
   acento={asignatura.data.acento}
-  crumb={crumb}
 >
   <Cabecera crumb={crumb} />
 
@@ -504,7 +509,7 @@ const faltas = bloquesHtml.flatMap((b) =>
               </section>
             ))}
 
-            {b.escalones.length > 0 && (
+            {i === bloqueDelAvance && (
               <aside class="nota progreso no-imprimir" data-progreso hidden>
                 <p class="rotulo">Tu avance</p>
                 <p>

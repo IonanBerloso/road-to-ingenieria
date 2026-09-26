@@ -181,8 +181,14 @@ export function comparaFormula(escrito: string, esperado: string): VeredictoForm
   return { igual: false };
 }
 
-/** ¿El valor esperado es una fórmula? Lo usa el esquema para comprobar que el
- *  `formato` declarado dice en qué columna se contesta. */
+/** ¿El valor esperado es una fórmula, o un nombre?
+ *
+ *  Se escribió para que el esquema comprobara que el `formato` declarado dice
+ *  en qué columna se contesta, y ese guardián no llegó a escribirse: ningún
+ *  ejercicio lo ha necesitado, y §11 no admite comprobaciones por si acaso.
+ *  Este comentario decía que el esquema ya la usaba hasta el 26 de septiembre
+ *  de 2026. Hoy solo la llaman sus pruebas; se queda porque es la pieza que
+ *  hará falta el día que un `formato` diga la columna equivocada. */
 export function esFormulaQuimica(valor: string): boolean {
   const primera = leeFormula(alternativas(valor)[0] ?? '');
   return primera?.esFormula ?? false;

@@ -17,7 +17,8 @@ import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { archivo, ruta } from '../lib/rutas';
 import { cuentaPorTema, pesoPublicado } from '../lib/peso';
-import { recortaFormulario } from '../lib/formulario';
+import { hayFormulario } from '../lib/formulario';
+import { sinTildes } from '../lib/texto';
 import { mate } from '../lib/markdown.mjs';
 import {
   SUFIJO_CONV,
@@ -67,7 +68,7 @@ for (const fich of await getCollection('ejercicios')) {
 const conFormulario = new Set<string>();
 for (const id of CON_TEMAS) {
   const temas = await getCollection(id as ConTemas);
-  if (temas.some((e) => recortaFormulario(e.body ?? '') !== null)) conFormulario.add(id);
+  if (hayFormulario(temas.map((e) => e.body))) conFormulario.add(id);
 }
 
 /** Qué asignaturas tienen laboratorio, para enlazarlo desde su ficha. Hasta
@@ -275,9 +276,8 @@ for (const a of asignaturas) {
  *  publicada; seis daban «Nada con…».
  *
  *  Va en las dos puntas —la clave y la consulta— porque normalizar solo una
- *  las separa más todavía. */
-const sinTildes = (s: string) =>
-  s.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+ *  las separa más todavía. Por eso la función es una sola, `sinTildes` de
+ *  `lib/texto.ts`, para el build y para el guion de la paleta. */
 
 /** El índice de la paleta de comandos se arma aquí, no en el cliente:
  *  buscar tiene que funcionar con la primera pulsación, sin recorrer el DOM. */
@@ -804,6 +804,7 @@ const enteras = asignaturas
 </Base>
 
 <script>
+  import { sinTildes } from '../lib/texto';
   /* La portada ya funciona sin esto: las filas son anclas y `:target` abre el
      detalle. Lo que añade el script es no recargar, que el nombre viaje hasta
      el titular, y la paleta de comandos. */
@@ -1043,15 +1044,8 @@ const enteras = asignaturas
   );
   /* Sin tildes en las dos puntas: la clave que se arma aquí y la consulta de
      abajo. Antes se comparaba solo en minúscula y «entropia» no encontraba
-     nada mientras «entropía» encontraba catorce cosas. */
-  /* `\p{M}`, con la barra. Sin ella el literal es `/p{M}/gu`, que no es «una
-     marca diacrítica» sino «una p seguida de un cuantificador incompleto», y
-     el navegador lo rechaza AL EVALUARLO: la primera llamada a `sinTildes`
-     lanza, y con ella se cae el resto de este script — la paleta de mandos
-     entera. Se publicó así hasta el 15 de septiembre de 2026, y lo encontró
-     `humo.mjs` el día que se le pusieron escuchas de consola a la pestaña de
-     la portada, que hasta entonces se abría sin ellas. */
-  const sinTildes = (t: string) => t.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+     nada mientras «entropía» encontraba catorce cosas. La función es la del
+     build (`lib/texto.ts`), y su comentario cuenta la trampa del `\p{M}`. */
   for (const x of indice) x.clave ??= sinTildes(`${x.nombre} ${x.sub}`);
 
   let visibles: Entrada[] = [];
