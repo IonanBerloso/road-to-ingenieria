@@ -77,6 +77,17 @@ auditoría encontró y no se arregló en el momento.
   asignatura con las cifras de su día; se puso al día lo que era falso el 26
   de septiembre de 2026, no lo demás.
 
+### Despliegue
+
+- **Las acciones del flujo avisan de Node 20 obsoleto** (`checkout`,
+  `setup-node`, `cache`, `upload-pages-artifact`, `deploy-pages`, todas en
+  v4): hoy GitHub las fuerza a Node 24 y funcionan. Subirlas de versión
+  comprobando en su repositorio cuál es la primera que declara Node 24, no a
+  ojo.
+- **`ubuntu-latest` pasa a Ubuntu 26 el 19 de octubre de 2026**: mirar el
+  primer despliegue de después entero, y sobre todo `humo`, `contraste` y
+  las figuras, que ya han fallado antes por diferencias de máquina (§17).
+
 ### Código (auditoría del 26 de septiembre de 2026)
 
 - **Ficheros de más de 800 líneas**, uno por commit y con `npm run humo:todo`
