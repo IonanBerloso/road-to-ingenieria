@@ -130,7 +130,7 @@ const { id = 'cat' } = Astro.props;
     </div>
     <div class="cell">
       <span class="rotulo k">si la tratas de parábola</span>
-      <span class="v" data-err>−4,3 %</span>
+      <span class="v" data-err>+10,70 %</span>
       <span class="sub" data-err-sub>de error en la tensión máxima</span>
     </div>
   </div>
@@ -327,6 +327,14 @@ const { id = 'cat' } = Astro.props;
         for (const o of raiz.querySelectorAll<HTMLButtonElement>('[data-caso]')) {
           o.setAttribute('aria-pressed', String(o === b));
         }
+        /* `pinta()` estrecha el máximo de la sección al semivano del
+           momento, así que un preajuste que abre el vano escribía su x
+           contra el tope viejo y el navegador la recortaba: «cable tenso»
+           medía en x = 3 en vez de en el apoyo, o en x = 10, según qué se
+           hubiera pulsado antes. Se abre al tope del mando antes de aplicar
+           el caso, y `pinta()` lo vuelve a cerrar. Encontrado en la
+           auditoría del 26 de septiembre de 2026. */
+        sX.max = String(Number(sA.max) / 2);
         casos[b.dataset.caso as string]();
         pinta();
       });

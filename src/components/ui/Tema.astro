@@ -241,9 +241,12 @@ const indice = headings.filter((h) => h.depth === 2);
 
     // Al imprimir va todo: teoría y ejercicios, que es como se repasa (§11).
     window.addEventListener('beforeprint', () => (shell.dataset.panel = 'todo'));
-    window.addEventListener('afterprint', () =>
-      abre(location.hash.slice(1) === 'ejercicios' ? 'ejercicios' : 'teoria', false),
-    );
+    /* Y al terminar se vuelve con `panelDe`, la misma regla que al entrar.
+       Hasta el 26 de septiembre de 2026 aquí se miraba solo `#ejercicios`,
+       así que quien imprimía desde un enlace de ruta —todos son `#ej-…`—
+       volvía a la teoría. `Examen.astro` ya lo hacía bien: dos copias del
+       mismo controlador, y la que no se tocó se quedó atrás. */
+    window.addEventListener('afterprint', () => abre(panelDe(location.hash.slice(1)), false));
 
     /* ── El simulador del tema, si lo hay ────────────────────────────
        Se descubrió mirando: los cinco simuladores de Fluidos viven dentro de

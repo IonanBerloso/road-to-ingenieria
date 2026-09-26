@@ -266,6 +266,9 @@ function normaliza(entrada: string): string {
     .trim()
     .toLowerCase()
     .replace(/[−–—]/g, '-')
+    /* El teclado español escribe `º` (el ordinal, U+00BA) en la tecla de
+       grados, y hay quien usa `˚` (U+02DA): los dos son `°` (U+00B0). */
+    .replace(/[º˚]/g, '°')
     .replace(/[²]/g, '^2')
     .replace(/[³]/g, '^3')
     .replace(/[·⋅×]/g, '*')

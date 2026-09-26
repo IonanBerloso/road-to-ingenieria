@@ -1,9 +1,10 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from './lib/complejo';
+import { comparaComplejo, comparaConjunto, leeConjunto } from './lib/complejo';
 import { leeMatriz, leeVector } from './lib/algebra';
 import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
-import { evaluaNumero } from './lib/regiones';
+import { leeNumero } from './lib/numero';
+import { analiza } from './lib/regiones';
 import { comparaFormula, leeFormula } from './lib/quimica';
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -38,8 +39,12 @@ const lector = (tipo: string): ((s: string) => unknown | null) => {
      Salió el 5 de septiembre de 2026 con las constantes de equilibrio de
      Química: `1.08e-3` es una respuesta perfectamente legible en la página
      y tumbaba el build. Un guardián que no espeja lo que hace el producto
-     no está protegiendo el producto, está describiendo otro (§11). */
-  return (s: string) => leeComplejo(s) ?? evaluaNumero(s);
+     no está protegiendo el producto, está describiendo otro (§11).
+
+     Desde el 26 de septiembre de 2026 los dos viven en `lib/numero.ts`, y
+     de ahí los toman el componente y las tres comprobaciones de
+     distractores de más abajo, que seguían llamando solo al primero. */
+  return leeNumero;
 };
 
 /** Peso de un tema en el examen. Tres niveles, nunca un porcentaje: aunque
@@ -325,7 +330,16 @@ const pasoReconocer = z.object({
         mensaje: z.string().min(20),
       }),
     )
-    .min(3),
+    .min(3)
+    /* Exactamente una buena. El componente corrige con `findIndex`, así que
+       con cero el paso no se puede terminar nunca y con dos la segunda se
+       corrige como un fallo, con su mensaje de acierto debajo. El banco de
+       preguntas ya lo exigía y este paso no: lo encontró la auditoría del 26
+       de septiembre de 2026. Los 2.089 pasos del corpus tenían una, así que
+       no había nada roto — solo nada que lo impidiera. */
+    .refine((o) => o.filter((x) => x.correcta).length === 1, {
+      message: 'un paso reconocer lleva exactamente una opción correcta',
+    }),
 });
 
 /** COMP2 · el cálculo. La respuesta puede ser un complejo o un número real. */
@@ -433,7 +447,7 @@ const pasoCalcular = z.object({
       const t = p.respuesta.tipo;
       if (t !== 'magnitud' && t !== 'numero' && t !== 'complejo') return true;
       const tol = p.respuesta.tolerancia;
-      const lee = (s: string) => (t === 'magnitud' ? leeMagnitud(s) : leeComplejo(s));
+      const lee = (s: string) => (t === 'magnitud' ? leeMagnitud(s) : leeNumero(s));
       const iguales = (a: never, b: never) => {
         if (t === 'magnitud') return comparaMagnitud(a, b, Math.max(tol, 0.02)).igual;
         const v = b as { re: number; im: number };
@@ -496,10 +510,10 @@ const pasoCalcular = z.object({
         });
       }
       if (p.respuesta.tipo !== 'numero' && p.respuesta.tipo !== 'complejo') return true;
-      const buena = leeComplejo(p.respuesta.valor);
+      const buena = leeNumero(p.respuesta.valor);
       if (!buena) return true; // ya lo caza la regla anterior
       return p.distractores.every((d) => {
-        const mala = leeComplejo(d.valor);
+        const mala = leeNumero(d.valor);
         return !mala || !comparaComplejo(mala, buena, p.respuesta.tolerancia);
       });
     },
@@ -517,8 +531,15 @@ const pasoCalcular = z.object({
      La holgura se replica tal como la calcula EjercicioGuiado. */
   .refine(
     (p) => {
-      if (p.respuesta.tipo === 'conjunto') return true;
-      const leidos = p.distractores.map((d) => leeComplejo(d.valor));
+      /* Solo números. Un vector o una matriz tienen su propio lector, y con el
+         numérico se leían como otra cosa: `evaluaNumero` toma «, » por un
+         espacio y el espacio por un producto, así que «(1, 3)» valía 3 y dos
+         vectores distintos salían «confundibles». Con el lector binómico de
+         antes devolvían `null` y la regla no miraba nada; al unificar los
+         lectores el 26 de septiembre de 2026 salieron dos falsos positivos
+         en Álgebra, y el arreglo es decir para qué tipos es la regla. */
+      if (p.respuesta.tipo !== 'numero' && p.respuesta.tipo !== 'complejo') return true;
+      const leidos = p.distractores.map((d) => leeNumero(d.valor));
       const holgura = (v: { re: number; im: number } | null) =>
         Math.max((v ? Math.max(Math.abs(v.re), Math.abs(v.im)) : 1) * 0.02, p.respuesta.tolerancia);
       for (let i = 0; i < leidos.length; i++) {
@@ -604,8 +625,27 @@ const pasoJustificar = z.object({
 const pasoVerificar = z.object({
   tipo: z.literal('verificar'),
   pregunta: z.string().min(10),
-  /** La condición del enunciado, en función de `z`. Es la verdad de referencia. */
-  condicion: z.string().min(3),
+  /** La condición del enunciado, en función de `z`. Es la verdad de referencia.
+   *
+   *  Se analiza aquí con el mismo `analiza()` que usa el navegador. Hasta el
+   *  26 de septiembre de 2026 solo se exigía que tuviera tres letras, y una
+   *  condición mal escrita lanzaba en el navegador al montar el ejercicio:
+   *  la región de referencia no se dibujaba y, como todos los ejercicios de
+   *  una página se montaban en el mismo bucle, se paraban también los de
+   *  detrás. Las 33 del corpus se analizan bien; esto es para la siguiente. */
+  condicion: z
+    .string()
+    .min(3)
+    .superRefine((c, ctx) => {
+      try {
+        analiza(c);
+      } catch (e) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `la condición «${c}» no se puede analizar (${(e as Error).message}): el navegador no podría dibujar la región`,
+        });
+      }
+    }),
   /** Trozo de plano que se dibuja y sobre el que se comparan las dos regiones. */
   ventana: z
     .object({

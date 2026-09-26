@@ -341,12 +341,19 @@ const { id = 'viga' } = Astro.props;
     }
 
     function pinta() {
-      const v = viga();
-      /* Los apoyos no pueden cruzarse: B siempre a la derecha de A. */
-      if (v.xB - v.xA < L / 10) {
-        sXB.value = String(Math.min(L, v.xA + L / 10));
-        return pinta();
+      /* Los apoyos no pueden cruzarse: B siempre a la derecha de A, a L/10
+         como poco. Se corrige UNA vez y se sigue, sin volver a llamarse, y
+         con margen en la comparación: la resta de dos valores de paso 0,1 no
+         es exacta. Con L = 4, A en su máximo (2) y B arrastrado por debajo,
+         B pasaba a 2,4 y `2,4 − 2` daba 0,3999…, otra vez menor que 0,4: la
+         función se llamaba a sí misma hasta desbordar la pila y los
+         diagramas se congelaban. Lo encontró la auditoría del 26 de
+         septiembre de 2026 leyendo el código; ningún guardián lo tocaba. */
+      const separacion = L / 10;
+      if (Number(sXB.value) - Number(sXA.value) < separacion - 1e-9) {
+        sXB.value = String(Math.min(L, Number(sXA.value) + separacion));
       }
+      const v = viga();
       const { RA, RB } = reacciones(v);
       dibujaViga(v);
       const { MmaxPos, MmaxNeg, cortesV } = dibujaDiagramas(v);

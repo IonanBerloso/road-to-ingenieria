@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { mate } from '../../lib/markdown.mjs';
 
 /**
  * El simulador del test de contenidos mínimos.
@@ -53,7 +54,32 @@ if (!entrada) {
   );
 }
 const { titulo, fuente, puntuacion } = entrada.data;
-const preguntas = entrada.data.preguntas as Pregunta[];
+
+/* El texto de las preguntas se pinta en el navegador, pero se PROCESA aquí,
+   con el mismo `mate()` que el resto del sitio: así una pregunta con una
+   fórmula o una negrita se publica dibujada, y un «σ < 250 MPa» llega
+   escapado en vez de romper el `innerHTML` que lo pinta. Hasta el 26 de
+   septiembre de 2026 viajaba crudo; el banco de Materiales no traía ninguna
+   de las dos cosas, así que no se veía nada roto. Se quita el `<p>` de fuera
+   porque las preguntas van dentro de un `<legend>` y las opciones de un
+   `<label>`, que no admiten párrafos. */
+const enLinea = async (texto: string) => {
+  /* Si un texto trae dos párrafos, se juntan con un salto de línea: dentro de
+     un `<legend>` o de un `<label>` no cabe un `<p>`. El banco de Materiales
+     no trae ninguno, pero el siguiente puede. */
+  const html = (await mate(texto)).trim().replace(/<\/p>\s*<p>/g, '<br>');
+  const m = /^<p>([\s\S]*)<\/p>$/.exec(html);
+  return m ? m[1] : html;
+};
+const preguntas: Pregunta[] = await Promise.all(
+  (entrada.data.preguntas as Pregunta[]).map(async (p) => ({
+    ...p,
+    pregunta: await enLinea(p.pregunta),
+    opciones: await Promise.all(
+      p.opciones.map(async (o) => ({ ...o, texto: await enLinea(o.texto), porque: await enLinea(o.porque) })),
+    ),
+  })),
+);
 
 /* El reparto por bloques, calculado aquí y no en el navegador: es un dato del
    banco, y el cliente solo tiene que sortear dentro de cada montón. */
@@ -75,7 +101,9 @@ if (suma !== cuantas) {
   suma = cuantas;
 }
 
-const datos = JSON.stringify({ preguntas, puntuacion, reparto });
+/* El `<` se escapa para que ningún texto pueda cerrar el `<script>` que
+   lleva los datos: en una cadena de JavaScript, `<` sigue siendo `<`. */
+const datos = JSON.stringify({ preguntas, puntuacion, reparto }).replace(/</g, '\\u003c');
 ---
 
 {/* `figure.sim` con id y `.sim-head h3` no es decoración: es el contrato
@@ -83,10 +111,10 @@ const datos = JSON.stringify({ preguntas, puntuacion, reparto });
     marcarlo en el índice. Sin él, el simulador vive dentro de un apartado que
     en modo guiado está `hidden`, y pasa lo que pasó con los cinco de Fluidos
     el 2 de septiembre de 2026: publicados, correctos e invisibles. */}
-<figure class="sim" data-sim-test id="sim-test-de-minimos">
+<figure class="sim" data-sim-test id={`sim-test-${banco}`}>
   <figcaption class="sim-head">
     <h3>{titulo}</h3>
-    <span class="rotulo hint">25 preguntas, 45 minutos, con penalización</span>
+    <span class="rotulo hint">{cuantas} preguntas, {puntuacion.minutos} minutos, con penalización</span>
   </figcaption>
 
   <p class="s-txt">
@@ -310,7 +338,7 @@ const datos = JSON.stringify({ preguntas, puntuacion, reparto });
         }
         partes.push('</ul>');
       } else {
-        partes.push('<p class="r-tit">Las veinticinco. No hay nada que repasar.</p>');
+        partes.push(`<p class="r-tit">Las ${elegidas.length}, bien. No hay nada que repasar.</p>`);
       }
 
       salida.innerHTML = partes.join('');

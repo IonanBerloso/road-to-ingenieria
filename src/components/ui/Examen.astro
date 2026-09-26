@@ -562,7 +562,12 @@ const fueraHtml = await Promise.all(
     function termina(porTiempo: boolean) {
       if (tic) clearInterval(tic);
       tic = null;
-      localStorage.removeItem(LLAVE);
+      /* Con el almacenamiento bloqueado esto lanza, y lanzaba ANTES de quitar
+         `data-bloqueado`: las resoluciones se quedaban cerradas para
+         siempre. §02, regla 3 — auditoría del 26 de septiembre de 2026. */
+      try {
+        localStorage.removeItem(LLAVE);
+      } catch { /* sin almacenamiento no hay nada que olvidar */ }
       armazon.removeAttribute('data-bloqueado');
       bTerminar.hidden = true;
       bEmpezar.hidden = false;
@@ -642,7 +647,11 @@ const fueraHtml = await Promise.all(
       const fuera = casillas.filter((c) => !c.checked).map((c) => Number(c.value));
       const minutos = cuantos() * porEjercicio;
       const desde = Date.now();
-      localStorage.setItem(LLAVE, JSON.stringify({ desde, minutos, fuera }));
+      /* Recordarlo es un extra: si el navegador no deja escribir, el
+         simulacro empieza igual y solo se pierde al cerrar la pestaña. */
+      try {
+        localStorage.setItem(LLAVE, JSON.stringify({ desde, minutos, fuera }));
+      } catch { /* almacenamiento bloqueado: se sigue sin recordar */ }
       empieza(minutos, desde, fuera);
     });
 

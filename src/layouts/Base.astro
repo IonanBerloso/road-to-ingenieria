@@ -75,14 +75,17 @@ const estilo = [
 
     <script is:inline>
       // Antes del primer pintado, para que no haya destello al recargar.
+      // La lectura va en su propio try: si el almacenamiento está bloqueado,
+      // la preferencia del sistema tiene que seguir mirándose (§02, regla 3).
+      let guardado = null;
       try {
-        const guardado = localStorage.getItem('tema');
-        if (guardado === 'oscuro' || guardado === 'claro') {
-          document.documentElement.dataset.theme = guardado;
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.documentElement.dataset.theme = 'oscuro';
-        }
+        guardado = localStorage.getItem('tema');
       } catch {}
+      if (guardado === 'oscuro' || guardado === 'claro') {
+        document.documentElement.dataset.theme = guardado;
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.dataset.theme = 'oscuro';
+      }
     </script>
   </head>
 

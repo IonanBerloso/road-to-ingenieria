@@ -645,9 +645,10 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 </section>
 
 <script>
-  import { comparaComplejo, comparaConjunto, leeComplejo, leeConjunto } from '../../lib/complejo';
+  import { comparaComplejo, comparaConjunto, leeConjunto } from '../../lib/complejo';
   import { comparaMatriz, comparaVector, leeMatriz, leeVector } from '../../lib/algebra';
-  import { analiza, cumple, evaluaNumero, mismaRegion } from '../../lib/regiones';
+  import { analiza, cumple, mismaRegion } from '../../lib/regiones';
+  import { leeNumero } from '../../lib/numero';
   import { comparaMagnitud, leeMagnitud, nombreDim } from '../../lib/unidades';
   import { comparaFormula, leeFormula } from '../../lib/quimica';
 
@@ -699,8 +700,18 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     document.dispatchEvent(new CustomEvent('rti:hecho', { detail: { id } }));
   }
 
+  /* Cada ejercicio se monta por separado: si uno trae un dato que el
+     navegador no sabe leer, se queda sin interacción ÉL, no la página
+     entera. Hasta el 26 de septiembre de 2026 iban todos en el mismo bucle
+     sin protección, y la excepción del primero dejaba muertos los que venían
+     detrás. El error se sigue diciendo por consola, que es donde lo escucha
+     `humo.mjs`: aislar el fallo no es esconderlo. */
   for (const raiz of document.querySelectorAll<HTMLElement>('[data-ejercicio]')) {
-    montar(raiz);
+    try {
+      montar(raiz);
+    } catch (e) {
+      console.error(`El ejercicio ${raiz.id || '(sin id)'} no se ha podido montar:`, e);
+    }
   }
 
   function montar(raiz: HTMLElement) {
@@ -873,7 +884,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
          exacta —`pi/4`, `(e^2-1)/2`, `sqrt(3)/2`— tiene que valer igual que
          su decimal. Primero se prueba el lector binómico, que es el que
          entiende `-16-16i`; si no lo reconoce, se evalúa como expresión. */
-      const lee = (texto: string) => leeComplejo(texto) ?? evaluaNumero(texto);
+      const lee = leeNumero;
 
       const holgura = (objetivo: string) => {
         /* En una magnitud la tolerancia ya ES relativa, así que la holgura del
@@ -1493,13 +1504,16 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
      *
      * `content-visibility: auto` le dice al navegador que se salte el
      * maquetado y el pintado de lo que está fuera de la pantalla, y que lo
-     * haga cuando se acerque. Se eligió frente a las dos alternativas que se
-     * barajaron —paginar los ejercicios, o meterlos en un `<template>`—
-     * porque es la única que **no cambia el HTML publicado**: los anclajes
-     * `#ej-…` que usan las siete rutas siguen existiendo, la página sigue
-     * funcionando entera sin JavaScript, imprimir sigue saliendo completo, y
-     * `verify.mjs` sigue leyendo lo mismo. Las otras dos rompían alguna de
-     * esas cuatro.
+     * haga cuando se acerque. Se eligió primero frente a paginar los
+     * ejercicios, que rompía los anclajes `#ej-…` de las rutas.
+     *
+     * Y no bastó: solo compraba medio segundo de cinco, porque el tiempo se
+     * iba en construir el DOM y no en maquetarlo. Desde el 16 de septiembre
+     * de 2026 lo que empieza cerrado viaja además en un `<template>` —el
+     * comentario del marcado de la resolución lo cuenta, y §07—, y esto se
+     * queda porque sigue ayudando con lo que sí está en el árbol. Este
+     * comentario decía que el `<template>` se había descartado hasta el 26 de
+     * septiembre de 2026.
      *
      * `contain-intrinsic-size` es la altura que el navegador supone mientras
      * no lo ha maquetado. Sin ella la barra de desplazamiento salta al

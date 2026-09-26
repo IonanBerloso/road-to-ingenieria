@@ -766,8 +766,23 @@ const enteras = asignaturas
   <div class="paleta" data-paleta hidden>
     <div class="caja" role="dialog" aria-modal="true" aria-label="Buscar">
       <label class="solo-lectores" for="q">Asignatura, tema o concepto</label>
-      <input id="q" type="search" autocomplete="off" placeholder="Asignatura, tema o concepto…" />
-      <div class="res" data-res></div>
+      {/* El patrón de un buscador con lista: el campo es un `combobox` que
+          apunta a la lista, y el resultado marcado se anuncia con
+          `aria-activedescendant`. Hasta el 26 de septiembre de 2026 las
+          flechas solo cambiaban una clase de CSS, y un lector de pantalla no
+          decía nada al moverse. */}
+      <input
+        id="q"
+        type="search"
+        autocomplete="off"
+        placeholder="Asignatura, tema o concepto…"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="paleta-res"
+        aria-autocomplete="list"
+      />
+      <p class="solo-lectores" data-cuantos aria-live="polite"></p>
+      <div class="res" data-res id="paleta-res" role="listbox" aria-label="Resultados"></div>
       <div class="pie">
         <span>↑↓ moverse</span><span>⏎ abrir</span><span>esc cerrar</span>
       </div>
@@ -1022,6 +1037,7 @@ const enteras = asignaturas
   const paleta = document.querySelector<HTMLElement>('[data-paleta]')!;
   const campo = document.querySelector<HTMLInputElement>('#q')!;
   const panel = document.querySelector<HTMLElement>('[data-res]')!;
+  const cuantos = document.querySelector<HTMLElement>('[data-cuantos]')!;
   const indice: Entrada[] = JSON.parse(
     document.querySelector<HTMLElement>('[data-indice]')?.textContent ?? '[]',
   );
@@ -1079,6 +1095,10 @@ const enteras = asignaturas
         .sort((a, b) => ORDEN_TIPO[a.tipo] - ORDEN_TIPO[b.tipo]);
     }
     panel.textContent = '';
+    campo.removeAttribute('aria-activedescendant');
+    cuantos.textContent = visibles.length
+      ? `${visibles.length} ${visibles.length === 1 ? 'resultado' : 'resultados'}`
+      : `Nada con «${campo.value}».`;
 
     if (!visibles.length) {
       const p = document.createElement('p');
@@ -1103,12 +1123,22 @@ const enteras = asignaturas
         const t = document.createElement('p');
         t.className = 'rotulo grp';
         t.textContent = cual;
+        /* El rótulo del grupo es para el ojo: dentro de un `listbox` solo
+           caben opciones, y cada opción ya dice qué es con su insignia. */
+        t.setAttribute('aria-hidden', 'true');
         panel.appendChild(conAmbito(t));
       }
 
       const b = document.createElement('button');
       b.type = 'button';
       b.className = j === cursor ? 'hit cur' : 'hit';
+      /* Opción de la lista, fuera del orden de tabulación: se llega con las
+         flechas desde el campo, que es quien conserva el foco. */
+      b.id = `paleta-op-${j}`;
+      b.setAttribute('role', 'option');
+      b.setAttribute('aria-selected', String(j === cursor));
+      b.tabIndex = -1;
+      if (j === cursor) campo.setAttribute('aria-activedescendant', b.id);
       b.innerHTML =
         `<span class="k"></span><span class="nb"></span><span class="sb"></span>`;
       /* La insignia: `##` asignatura, `→` ruta, `§` concepto —un apartado
@@ -1235,6 +1265,12 @@ const enteras = asignaturas
 
     if (e.key === 'Escape') {
       cierraPaleta();
+    } else if (e.key === 'Tab') {
+      /* El diálogo es modal (`aria-modal`), así que el foco no sale de él. El
+         único elemento que lo recibe es el campo: las opciones se recorren
+         con las flechas. Sin esto, Tab dejaba el foco detrás de la capa. */
+      e.preventDefault();
+      campo.focus();
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       cursor = (cursor + 1) % visibles.length;

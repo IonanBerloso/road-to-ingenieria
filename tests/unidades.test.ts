@@ -229,6 +229,16 @@ describe('kelvin dentro de una unidad compuesta', () => {
     expect(lee('27 °C').valor).toBeCloseTo(300.15, 2);
     expect(leeMagnitud('1.0045 kJ/kg °C')).toBeNull();
   });
+
+  /* La tecla de «grados» de un teclado español escribe `º` —el indicador
+     ordinal, U+00BA—, no `°` (U+00B0). Hasta el 26 de septiembre de 2026 un
+     «178 ºC» recibía «no he entendido», y el propio corpus escribe `º` más
+     de cuatrocientas veces: quien copiaba la forma de la prosa, fallaba. */
+  it('acepta el º del teclado español y el ˚ como signo de grado', () => {
+    expect(lee('178 ºC').valor).toBeCloseTo(451.15, 2);
+    expect(lee('27 ˚C').valor).toBeCloseTo(300.15, 2);
+    expect(leeMagnitud('1.0045 kJ/kg ºC')).toBeNull();
+  });
 });
 
 /* Las de Ciencia de Materiales, 12 de septiembre de 2026: el módulo en GPa,
