@@ -70,3 +70,13 @@ con un índice de una línea por trampa que genera `npm run trampas` y vigila
 La usan los guiones del scratchpad que meten rúbricas —la última vez, el 18 de
 septiembre de 2026— y volverá a hacer falta. Lo que se temía de ella, pegar
 un paso dos veces, ya lo impide el esquema. 26 de septiembre de 2026.
+
+## Los números de un `calcular` de Expresión Gráfica se escriben, atados a la receta
+
+El brief del 8 de septiembre de 2026 proponía `valor: solucion.vm_PQ_mm`, que
+el YAML no llevara la cifra. No: el esquema comprueba de la respuesta y de los
+distractores más de diez cosas —que se leen, que ninguno cae dentro de la
+tolerancia, que no se confunden entre sí— y todas necesitan el número al
+validar. Se escribe la cifra y, al lado, la expresión de la receta de la que
+sale; `lib/construir.ts` exige que sea esa expresión redondeada como está
+escrita. Ningún número queda sin comprobar. 27 de septiembre de 2026.

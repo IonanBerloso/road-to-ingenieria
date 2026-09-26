@@ -6,6 +6,7 @@ import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
 import { leeNumero } from './lib/numero';
 import { analiza } from './lib/regiones';
 import { comparaFormula, leeFormula } from './lib/quimica';
+import { NOMBRE_EN_LAMINA, problemasDeLamina } from './lib/lamina';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -1696,6 +1697,63 @@ const banco = defineCollection({
     }),
 });
 
+/**
+ * Las láminas de Expresión Gráfica: la figura de cada ejercicio de la
+ * colección de diédrico, como datos y no como imagen (§08). Un fichero por
+ * lámina, con el nombre de su código (`sd1.json`).
+ *
+ * POR QUÉ SON UNA COLECCIÓN. La corrección de una construcción compara lo que
+ * marca el alumno con la geometría calculada desde estas coordenadas
+ * (`lib/diedrico-receta`), así que la figura es un dato del que depende la
+ * nota, igual que la respuesta de un `calcular`. Salen del extractor del
+ * paquete de diseño del 8 de septiembre de 2026 y **no entran sin cotejarlas**
+ * encima de su página del PDF (`scripts/lamina-sobre-pdf.mjs`): `revision`
+ * dice cuándo y qué se corrigió. Lo que se comprueba de cada una vive en
+ * `lib/lamina.ts`, con sus pruebas.
+ */
+const coordenada = z.tuple([z.number(), z.number()]);
+const laminas = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/laminas' }),
+  schema: z
+    .object({
+      codigo: z.string().regex(/^SD\d+[a-z]?$/),
+      /** La página del PDF de la colección, para cotejarla. */
+      pagina: z.number().int().min(1),
+      ejercicio: z.number().int().min(1),
+      /** El trozo de página que se dibuja, en pt. */
+      encuadre: z.object({ x: z.number(), y: z.number(), w: z.number().positive(), h: z.number().positive() }),
+      puntos: z.record(
+        z.string().regex(NOMBRE_EN_LAMINA),
+        z.object({
+          x: z.number(),
+          y: z.number(),
+          marca: z.enum(['cruz', 'vertice']).optional(),
+          rotulo: z.string().min(1).optional(),
+        }),
+      ),
+      segmentos: z
+        .array(
+          z.object({
+            nombre: z.string().regex(NOMBRE_EN_LAMINA).optional(),
+            a: coordenada,
+            b: coordenada,
+            tipo: z.enum(['c', 'o']),
+          }),
+        )
+        .min(1),
+      circulos: z.array(z.object({ c: coordenada, r: z.number().positive() })).default([]),
+      rotulos: z.array(z.object({ texto: z.string().min(1), x: z.number(), y: z.number() })).default([]),
+      revision: z.object({
+        fecha: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        /** Lo que se miró y lo que se corrigió respecto del extractor. */
+        notas: z.array(z.string().min(20)).min(1),
+      }),
+    })
+    .superRefine((d, ctx) => {
+      for (const message of problemasDeLamina(d)) ctx.addIssue({ code: 'custom', message });
+    }),
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -1704,4 +1762,5 @@ export const collections = {
   preparar,
   laboratorio,
   banco,
+  laminas,
 };

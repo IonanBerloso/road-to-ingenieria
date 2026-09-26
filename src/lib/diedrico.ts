@@ -46,8 +46,10 @@ export const PT_MM = 25.4 / 72;
 
 /** Cuánto pueden separarse, en pt, las dos proyecciones de un punto que
  *  vienen del extractor: su redondeo es de centésimas, y medio punto son
- *  0,18 mm, bastante por debajo de lo que distingue la regla. */
-const TOL_VERTICAL = 0.5;
+ *  0,18 mm, bastante por debajo de lo que distingue la regla. Es la holgura
+ *  de la lámina, y la misma sirve para decir que un punto del enunciado está
+ *  en un plano o en una recta. */
+export const TOL_VERTICAL = 0.5;
 
 const resta = (a: P3, b: P3): P3 => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
 const escalar = (a: P3, b: P3): number => a.x * b.x + a.y * b.y + a.z * b.z;
@@ -252,6 +254,112 @@ export const puntoEnSegmento = (A: P3, B: P3, s: number): P3 => ({
 /** La distancia de P al plano, en pt. Sirve para medir cuánto se separa del
  *  plano un vértice que el enunciado da por contenido en él. */
 export const distanciaAPlano = (P: P3, pl: Plano): number => Math.abs(escalar(pl.n, P) - pl.d);
+
+/* ─────────────── las rectas del espacio (SD5 y SD7, figuras planas) ─────── */
+
+/** Una recta del espacio: un punto suyo y su dirección unitaria. */
+export interface Recta3 {
+  readonly p: P3;
+  readonly d: P3;
+}
+
+const suma = (a: P3, b: P3): P3 => ({ x: a.x + b.x, y: a.y + b.y, z: a.z + b.z });
+const por = (a: P3, k: number): P3 => ({ x: a.x * k, y: a.y * k, z: a.z * k });
+
+/** La recta que pasa por A y B. Si son el mismo punto no hay una: lanza. */
+export function rectaPorPuntos(A: P3, B: P3): Recta3 {
+  const v = resta(B, A);
+  const l = modulo(v);
+  if (l < 1e-9) throw new Error('los dos puntos coinciden: no definen una recta');
+  return { p: A, d: por(v, 1 / l) };
+}
+
+/**
+ * La recta que tiene esas dos proyecciones, dadas como segmentos de la lámina.
+ * Cada proyección da una coordenada en función de la x —el alzado la cota, la
+ * planta el alejamiento—, así que dos x distintas dan dos puntos de la recta.
+ *
+ * Una recta de perfil tiene las dos proyecciones verticales y en la misma x:
+ * sus proyecciones no la fijan —hace falta la tercera vista, o dos puntos—, y
+ * una vertical o una de punta tienen una proyección reducida a un punto. Las
+ * tres lanzan: se dan por dos puntos, con `rectaPorPuntos`.
+ */
+export function rectaDesdeProyecciones(alzado: readonly [P2, P2], planta: readonly [P2, P2]): Recta3 {
+  const [a, b] = alzado;
+  const [c, e] = planta;
+  if (Math.abs(b[0] - a[0]) < 1e-9 || Math.abs(e[0] - c[0]) < 1e-9) {
+    throw new Error('la recta es de perfil, vertical o de punta: sus proyecciones no la fijan; dala por dos puntos');
+  }
+  const en = (x: number): P3 => ({
+    x,
+    y: c[1] + ((x - c[0]) * (e[1] - c[1])) / (e[0] - c[0]),
+    z: -(a[1] + ((x - a[0]) * (b[1] - a[1])) / (b[0] - a[0])),
+  });
+  return rectaPorPuntos(en(a[0]), en(b[0]));
+}
+
+/** El pie de la perpendicular desde P a la recta: su punto más cercano. */
+export const pieEnRecta = (P: P3, r: Recta3): P3 => suma(r.p, por(r.d, escalar(resta(P, r.p), r.d)));
+
+/** La distancia de P a la recta, en pt. */
+export const distanciaARecta = (P: P3, r: Recta3): number => vm(P, pieEnRecta(P, r));
+
+/** Si P está en la recta, con la holgura de la lámina. */
+export const enRecta = (P: P3, r: Recta3, tol = TOL_VERTICAL): boolean => distanciaARecta(P, r) <= tol;
+
+/**
+ * Los dos puntos de la recta a una distancia REAL de `desde`, uno a cada
+ * lado: el primero en el sentido de la dirección de la recta. Es llevar una
+ * longitud en verdadera magnitud sobre una recta oblicua, que en la lámina
+ * pide abatir; aquí es una suma.
+ *
+ * `desde` tiene que estar en la recta, con la holgura de la lámina, y se usa
+ * tal como está —así lo toma el compás del alumno—. Si no está, el enunciado
+ * dice otra cosa o el dato está mal transcrito: lanza con la distancia.
+ */
+export function puntosADistancia(r: Recta3, desde: P3, distancia: number): [P3, P3] {
+  const fuera = distanciaARecta(desde, r);
+  if (fuera > TOL_VERTICAL) {
+    throw new Error(`el punto de partida no está en la recta: queda a ${(fuera * PT_MM).toFixed(2)} mm`);
+  }
+  return [suma(desde, por(r.d, distancia)), suma(desde, por(r.d, -distancia))];
+}
+
+/** El simétrico de P respecto de O. */
+export const simetrico = (P: P3, O: P3): P3 => resta(por(O, 2), P);
+
+function rectaDelPlanoPor(P: P3, pl: Plano, eje: P3, cual: string, fallo: string): Recta3 {
+  if (!enPlano(P, pl)) {
+    throw new Error(`el punto no está en el plano: queda a ${(distanciaAPlano(P, pl) * PT_MM).toFixed(2)} mm`);
+  }
+  const v = vectorial(pl.n, eje);
+  const l = modulo(v);
+  if (l < 1e-9) throw new Error(`el plano es ${fallo}: todas sus rectas son ${cual}`);
+  return { p: P, d: por(v, 1 / l) };
+}
+
+/** La horizontal del plano que pasa por P: la que se ve en verdadera magnitud
+ *  en la planta. En un plano horizontal todas lo son: lanza. */
+export const horizontalPor = (P: P3, pl: Plano): Recta3 =>
+  rectaDelPlanoPor(P, pl, { x: 0, y: 0, z: 1 }, 'horizontales', 'horizontal');
+
+/** La frontal del plano que pasa por P: la que se ve en verdadera magnitud en
+ *  el alzado. En un plano frontal todas lo son: lanza. */
+export const frontalPor = (P: P3, pl: Plano): Recta3 =>
+  rectaDelPlanoPor(P, pl, { x: 0, y: 1, z: 0 }, 'frontales', 'frontal');
+
+/**
+ * El plano que tiene a r por línea de máxima pendiente: el que contiene a r y
+ * a las horizontales perpendiculares a r₁ en la planta. Es como se da un plano
+ * en SD7. Una recta horizontal no es la l.m.p. de ningún plano inclinado, y una
+ * vertical está en infinitos: las dos lanzan.
+ */
+export function planoPorLmp(r: Recta3): Plano {
+  if (Math.abs(r.d.z) < 1e-12) throw new Error('una recta horizontal no es la línea de máxima pendiente de ningún plano');
+  if (Math.hypot(r.d.x, r.d.y) < 1e-12) throw new Error('una recta vertical no fija el plano del que sería línea de máxima pendiente');
+  const horizontal: P3 = { x: -r.d.y, y: r.d.x, z: 0 };
+  return plano(r.p, suma(r.p, r.d), suma(r.p, horizontal));
+}
 
 /**
  * El abatimiento del plano proyectante de PQ sobre la planta: Q abatido queda

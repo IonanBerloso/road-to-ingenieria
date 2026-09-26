@@ -271,6 +271,10 @@ src/
                            apartado donde está explicado (§08)
     banco/                 bancos de preguntas de test, para el simulador
                            de test (§05). Uno: el de mínimos de Materiales
+    laminas/               las figuras de la colección de diédrico de
+                           Expresión Gráfica como DATOS, una por fichero
+                           (sd1.json), cotejadas con su página del PDF
+                           antes de entrar (scripts/lamina-sobre-pdf.mjs)
   components/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
     sim/                   los simuladores (§05, §10). Su modelo vive en
@@ -291,6 +295,18 @@ src/
                            Gráfica: la solución de una lámina se calcula
                            aquí, nunca se dibuja a mano. Crece con cada
                            ejercicio que la pida, con su prueba
+    diedrico-receta.ts     las recetas: la solución de una lámina y sus
+                           diagnósticos escritos como DATOS en el YAML,
+                           evaluados en el build, con las elecciones de
+                           las láminas que tienen dos soluciones buenas
+    diedrico-corrige.ts    la corrección de lo que marca el alumno: lo
+                           único del patrón que corre en la página, y por
+                           eso no importa nada de lo demás
+    lamina.ts · construir.ts
+                           qué se comprueba de una lámina, y el paso
+                           construir resuelto: la receta evaluada, sus
+                           objetivos compilados y cada error declarado
+                           construido a propósito con su ejemplo
     rutas.ts · peso.ts · formulario.ts · cuadernillo.ts · texto.ts
                            URLs, el peso de cada tema en la portada, qué
                            parte de un tema es formulario, cuántos
@@ -327,6 +343,9 @@ scripts/
                            bloque en el corpus: en un segundo, sin construir
   inventario-coleccion.mjs qué problemas de la colección de Fluidos faltan,
                            cruzando el volcado del PDF contra el corpus
+  lamina-sobre-pdf.mjs     una lámina de Expresión Gráfica dibujada encima
+                           de su página del PDF, a la misma escala o
+                           ampliada (--zoom), para cotejarla
   mide.mjs                 la tabla de docs/como-vamos.md, medida
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   diario.mjs               el diario en PDF
