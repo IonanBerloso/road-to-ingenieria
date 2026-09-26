@@ -89,6 +89,29 @@ export const vmPlanta = (P: P3, Q: P3): number => Math.hypot(Q.x - P.x, Q.y - P.
 /** Lo que mide PQ en el alzado: la verdadera magnitud solo si PQ es frontal. */
 export const vmAlzado = (P: P3, Q: P3): number => Math.hypot(Q.x - P.x, Q.z - P.z);
 
+/** La diferencia de cotas entre P y Q, en pt: lo que sube o baja, que se lee
+ *  en el alzado. */
+export const deltaCota = (P: P3, Q: P3): number => Math.abs(Q.z - P.z);
+
+/** La diferencia de alejamientos entre P y Q, en pt: lo que se acerca o se
+ *  aleja, que se lee en la planta. */
+export const deltaAlejamiento = (P: P3, Q: P3): number => Math.abs(Q.y - P.y);
+
+const GRADOS = 180 / Math.PI;
+
+/** El ángulo de la recta PQ con el plano horizontal, en grados: el que da la
+ *  verdadera magnitud frente a la planta. */
+export const anguloConPH = (P: P3, Q: P3): number => Math.atan2(deltaCota(P, Q), vmPlanta(P, Q)) * GRADOS;
+
+/** El ángulo de la recta PQ con el plano vertical, en grados: el que da la
+ *  verdadera magnitud frente al alzado. */
+export const anguloConPV = (P: P3, Q: P3): number => Math.atan2(deltaAlejamiento(P, Q), vmAlzado(P, Q)) * GRADOS;
+
+/** La pendiente de PQ como razón —lo que sube por lo que avanza en la
+ *  planta—, que es la tangente de su ángulo con el plano horizontal. En tanto
+ *  por ciento, por cien. */
+export const pendiente = (P: P3, Q: P3): number => deltaCota(P, Q) / vmPlanta(P, Q);
+
 /** El plano por tres puntos. Si están alineados no hay uno: lanza. */
 export function plano(A: P3, B: P3, C: P3): Plano {
   const n = vectorial(resta(B, A), resta(C, A));
@@ -138,6 +161,39 @@ export function lmpDir(pl: Plano): { sube: P2; baja: P2 } {
   if (Math.hypot(g[0], g[1]) < 1e-12) throw new Error('el plano es horizontal: no tiene línea de máxima pendiente');
   const sube = unitario2(g);
   return { sube, baja: [-sube[0], -sube[1]] };
+}
+
+/** La dirección de las frontales del plano, en el alzado (sentido
+ *  cualquiera). Una frontal se ve en verdadera magnitud en el alzado. En
+ *  coordenadas de la lámina: `[x, y del alzado]`. */
+export const frontalDir = (pl: Plano): P2 => unitario2([-pl.n.z, -pl.n.x]);
+
+/**
+ * La línea de máxima inclinación, en el alzado: perpendicular a las
+ * frontales, con sus dos sentidos. Es la hermana de la l.m.p. respecto del
+ * plano vertical. `sube` es el sentido en que crece la cota, que en la lámina
+ * es hacia arriba (y decreciente).
+ */
+export function lmiDir(pl: Plano): { sube: P2; baja: P2 } {
+  if (Math.abs(pl.n.y) < 1e-12) throw new Error('el plano es de canto: su máxima inclinación no se ve en el alzado');
+  const d = unitario2([pl.n.x, -pl.n.z]);
+  const sube: P2 = d[1] < 0 ? d : [-d[0], -d[1]];
+  return { sube, baja: [-sube[0], -sube[1]] };
+}
+
+/** El ángulo del plano con el plano horizontal, en grados: el de sus normales. */
+export const anguloPlanoConPH = (pl: Plano): number => Math.acos(Math.min(1, Math.abs(pl.n.z))) * GRADOS;
+
+/** El ángulo del plano con el plano vertical, en grados. */
+export const anguloPlanoConPV = (pl: Plano): number => Math.acos(Math.min(1, Math.abs(pl.n.y))) * GRADOS;
+
+/** El ángulo entre la recta PQ y la recta RS, en grados, entre 0 y 90: el de
+ *  dos rectas no tiene sentido. */
+export function anguloEntreRectas(P: P3, Q: P3, R: P3, S: P3): number {
+  const u = resta(Q, P);
+  const v = resta(S, R);
+  const c = Math.abs(escalar(u, v)) / (modulo(u) * modulo(v));
+  return Math.acos(Math.min(1, c)) * GRADOS;
 }
 
 /** Corte de la recta `p0 + t·d` con la recta que pasa por q0 y q1, en el
@@ -205,9 +261,21 @@ export const distanciaAPlano = (P: P3, pl: Plano): number => Math.abs(escalar(pl
  */
 export function abatidoPlanta(P: P3, Q: P3): [P2, P2] {
   const n = perpendicular2(unitario2([Q.x - P.x, Q.y - P.y]));
-  const h = Math.abs(Q.z - P.z);
+  const h = deltaCota(P, Q);
   return [
     [Q.x + n[0] * h, Q.y + n[1] * h],
     [Q.x - n[0] * h, Q.y - n[1] * h],
+  ];
+}
+
+/** Lo mismo sobre el alzado: Q abatido queda a |Δalejamiento| de Q₂,
+ *  perpendicular a P₂Q₂. En coordenadas de la lámina, la y del alzado es menos
+ *  la cota. */
+export function abatidoAlzado(P: P3, Q: P3): [P2, P2] {
+  const n = perpendicular2(unitario2([Q.x - P.x, P.z - Q.z]));
+  const h = deltaAlejamiento(P, Q);
+  return [
+    [Q.x + n[0] * h, -Q.z + n[1] * h],
+    [Q.x - n[0] * h, -Q.z - n[1] * h],
   ];
 }

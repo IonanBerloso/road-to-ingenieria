@@ -24,7 +24,12 @@ falta es traerlo al repositorio sin romper ninguna regla.
    Q₁, Q₂, G₂ y las cuatro longitudes— y dos caminos. Y ya enseñó algo: Q
    calculado por el plano del tejado y por el alero difiere 0,10 pt, porque el
    vértice B se separa 0,034 mm del plano de los otros tres; la solución es la
-   del alero, que es la que construye el alumno.
+   del alero, que es la que construye el alumno. Y esa misma noche, **SD3 y
+   SD4**: la biblioteca `G` del piloto entera, con treinta pruebas cotejadas
+   contra el propio piloto. Faltan SD5 y SD7, que no se resuelven con `G`
+   sino con aritmética suelta —el punto a una distancia real sobre una recta
+   dada por sus proyecciones, y dos soluciones válidas—: esas abstracciones son
+   parte del mismo diseño que la gramática de recetas del paso 4, y van con él.
 4. **El paso `construir` en el esquema y el componente `Taller`**, con SD1
    entero. Mirarlo en claro, en oscuro, a 360 px y fallando a propósito (§16).
 5. **SD4 y SD5**, que son los que más funciones piden. Con los tres hechos y
