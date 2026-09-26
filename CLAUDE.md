@@ -23,6 +23,7 @@ dato»**. No hay «solo para comprobar una cifra».
 | Cálculo | `TRABAJO_EN_GRUPO._NOTA_FINAL.pdf` | notas |
 | Cálculo | `DISTRIBUCIN_DE_GRUPOS_DE_PRCTICAS_DE_LABORATORIO.pdf` | nombres por grupo |
 | Cálculo | `CONVOCATORIA_EXTRAORDINARIA._PARCIALES_A_REALIZAR.pdf` | DNI |
+| Cálculo | `CDIGOS_SOCRATIVE.pdf` | DNI emparejados con códigos |
 | Mecánica Aplicada | `Notas_parcial_esttica.pdf` | notas |
 | Mecánica de Fluidos | `Grupos_Laboratorio_16A_2025-26_act._20260212.pdf` | nombres completos |
 | Expresión Gráfica | `CONVOCATORIA_EXTRAORDINARIA_-_NOTAS.pdf`, `CONVOCATORIA_ORDINARIA_-_CALIFICACIONES.pdf` | notas |
@@ -32,7 +33,7 @@ dato»**. No hay «solo para comprobar una cifra».
 | Ciencia de Materiales | lo que lleva «Grupo N» en el nombre, `RESULTADOS_DE_LA_PRACTICA_5-TRABAJO_EN_FRO_GL1`, `DATOS_DE_LA_PRCTICA_6_Y_MATERIAL_DE_APOYO_GL1` | presentaciones y resultados con nombres |
 | Sistemas de Producción | `Distribucin_grupos_prcticas.pdf` | nombres por grupo |
 
-Tres reglas prácticas, porque la lista nunca estará completa:
+Cuatro reglas prácticas, porque la lista nunca estará completa:
 
 1. **Un fichero con «notas», «calificaciones», «lista», «grupo» o
    «resultados» en el nombre se trata como personal** hasta que se demuestre
@@ -44,6 +45,11 @@ Tres reglas prácticas, porque la lista nunca estará completa:
    transcribe el enunciado. La foto enseña a quien la hizo —una mano, un
    cuaderno, un nombre— y eso no es nuestro. Así se hizo con el test de
    mínimos de Materiales de 2024.
+4. **Antes de volcar un PDF cuyo nombre no dice nada, se buscan en su texto
+   patrones de DNI** (`\b\d{8}[A-Z]\b`) sin leerlo, y si aparecen no se abre.
+   `CDIGOS_SOCRATIVE.pdf` no activaba ninguna de las otras tres reglas y la
+   auditoría externa del 27 de septiembre de 2026 lo abrió; no se reprodujo
+   nada, pero la lista no lo habría evitado.
 
 Si una tarea parece necesitar uno de estos ficheros, se para y se pregunta
 (§13, caso 5).
@@ -1217,6 +1223,14 @@ simulación.
   > «medio» con su ruta ya medida, cuando su catálogo prometía cambiarlo al
   > medirla—. Se corrigieron esos ocho y solo esos: donde las dos medidas no
   > coinciden, el caso está en `tasks/pendiente.md` para mirarlo tema a tema.
+- **La duración de un examen: manda la impresa.** Si el cuadernillo dice
+  cuánto dura, esa es la del simulacro, y va en su `examen.yaml` (`duracion`,
+  con la página donde está impresa). Donde no dice nada, la regla del catálogo
+  (`duracionDelExamen`): la base es de 25 a 30 minutos por ejercicio, porque
+  la duración real varía con los ejercicios de cada examen (dato de Ionan, 27
+  de septiembre de 2026), y el modo exigente usa el extremo corto. Donde no hay
+  ni lo uno ni lo otro, no se promete un reloj: la portada solo enseña el
+  botón del simulacro donde la página del examen lo tiene.
 
 ---
 
@@ -1639,6 +1653,15 @@ barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 
   > unas 180 seguían vivas. Los dos se congelaron ese día como archivo —se
   > siguen citando desde comentarios del código— y lo vivo pasó a los dos
   > ficheros nuevos.
+
+- **La prueba de utilidad.** Toda pieza nueva —componente, página, guardián,
+  herramienta— escribe antes cuatro cosas: **para quién** es (qué alumno, o
+  quien mantiene el proyecto), **cuándo** la usa, **qué gana** —en puntos de
+  examen o en horas— y **cómo se comprueba que sirve**: un caso, una medida,
+  una validación. Si no se pueden rellenar, no se construye. Lo pidió Ionan
+  el 27 de septiembre de 2026: «que cada idea que entre en el proyecto sea
+  realmente útil para alguien». Las cuatro respuestas van en el comentario de
+  cabecera de la pieza, que es donde las busca quien la quiera quitar.
 
 ### Cuando no hay nadie a quien preguntar
 

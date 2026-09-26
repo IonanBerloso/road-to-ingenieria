@@ -1346,6 +1346,30 @@ if (SOLO_FUENTE) {
   }
   grupo(faltan, `sin conexión: los ${recursos} recursos del CSS están en el sitio`, 'recursos que no se sirven desde aquí');
 
+  /* El botón «Simulacro con reloj» de la portada promete un reloj, y tiene
+     que llevar a una página que lo tenga. Hasta el 27 de septiembre de 2026
+     salía en toda asignatura con exámenes y solo Cálculo tenía reloj: una
+     promesa rota en seis asignaturas que ningún guardián miraba (auditoría
+     externa de ese día, A2). La duración sale de una regla del catálogo o de
+     lo que imprime el cuadernillo, y el botón solo sale donde hay una de las
+     dos; esto comprueba que las dos cosas siguen de acuerdo. */
+  {
+    const portada = leer(join(DIST, 'index.html'));
+    const sinReloj = [];
+    let botones = 0;
+    for (const m of portada.matchAll(/<a[^>]*href="([^"]+)"[^>]*>(?:(?!<\/a>)[\s\S])*?Simulacro con reloj/g)) {
+      botones++;
+      const ruta = (m[1].startsWith(BASE) ? m[1].slice(BASE.length) : m[1]).replace(/^\/+|\/+$/g, '');
+      const destino = join(DIST, ruta, 'index.html');
+      if (!existsSync(destino) || !leer(destino).includes('data-simulacro')) sinReloj.push(m[1]);
+    }
+    grupo(
+      sinReloj,
+      `los ${botones} botones «Simulacro con reloj» de la portada llevan a un examen con reloj`,
+      'botones de simulacro que llevan a una página sin reloj',
+    );
+  }
+
   resumen();
 }
 

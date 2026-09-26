@@ -181,7 +181,15 @@ const catalogo = defineCollection({
       duracionDelExamen: z
         .object({
           minutosPorEjercicio: z.number().int().min(1),
+          /** El modo exigente del simulacro: menos minutos por ejercicio,
+           *  para llegar al examen con margen. Sale del mismo dato que la base
+           *  —25 a 30 minutos por ejercicio, según Ionan el 27 de septiembre
+           *  de 2026— y por eso no lleva fuente propia. */
+          exigente: z.number().int().min(1).optional(),
           fuente: z.string().min(20),
+        })
+        .refine((d) => d.exigente === undefined || d.exigente < d.minutosPorEjercicio, {
+          message: 'el modo exigente da menos minutos por ejercicio que la base, no más',
         })
         .optional(),
       /**
@@ -1211,6 +1219,29 @@ const examen = defineCollection({
           }),
         )
         .default([]),
+      /**
+       * La duración que imprime el propio cuadernillo, cuando la imprime.
+       *
+       * POR QUÉ, SI YA ESTÁ `duracionDelExamen` EN EL CATÁLOGO. Aquello es una
+       * regla —minutos por ejercicio— para las asignaturas cuyos cuadernillos
+       * no dicen cuánto duran. Estos sí lo dicen: la cabecera de cada examen de
+       * Térmica imprime su duración, que cambia de un año a otro, y los de
+       * Química también. Un dato impreso manda sobre una regla (dato de Ionan,
+       * 27 de septiembre de 2026: la base de 25 a 30 minutos por ejercicio es
+       * para cuando no hay nada impreso). Hasta ese día la portada prometía un
+       * simulacro con reloj en toda asignatura con exámenes, y solo Cálculo lo
+       * tenía.
+       *
+       * El simulacro reparte esta duración entre los ejercicios del
+       * cuadernillo, para que quitar uno siga ajustando el reloj. `fuente` dice
+       * dónde está impresa: «cabecera del enunciado, pág. 1».
+       */
+      duracion: z
+        .object({
+          minutos: z.number().int().min(10).max(480),
+          fuente: z.string().min(15),
+        })
+        .optional(),
     })
     .refine((e) => new Set(e.ejercicios.map((x) => x.id)).size === e.ejercicios.length, {
       message: 'el examen repite un ejercicio',

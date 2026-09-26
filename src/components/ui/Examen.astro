@@ -81,10 +81,28 @@ interface Props {
    *  transcritos y los que se dejaron fuera—. Guardar la duración examen por
    *  examen serían 96 copias de esta multiplicación (§01). */
   minutosPorEjercicio?: number;
+  /** Los minutos por ejercicio del modo exigente, si la asignatura lo
+   *  declara (`duracionDelExamen.exigente`). */
+  minutosExigente?: number;
+  /** La duración que imprime este cuadernillo, si la imprime (`duracion` en
+   *  su `examen.yaml`). Manda sobre la regla por ejercicio: un dato impreso
+   *  gana a una regla (27 de septiembre de 2026). */
+  duracionImpresa?: { minutos: number; fuente: string };
 }
 
-const { eyebrow, titulo, fecha, pdfs, pdfEs, ruta, ejercicios, fuera, minutosPorEjercicio } =
-  Astro.props;
+const {
+  eyebrow,
+  titulo,
+  fecha,
+  pdfs,
+  pdfEs,
+  ruta,
+  ejercicios,
+  fuera,
+  minutosPorEjercicio,
+  minutosExigente,
+  duracionImpresa,
+} = Astro.props;
 
 /** ¿Este cuadernillo trae los dos cuatrimestrales? Solo entonces tienen
  *  sentido los preajustes: en el examen de una evaluación suelta, «solo el
@@ -104,8 +122,17 @@ const aMedias = fuera.filter((f) => f.apartados);
 const deCuantos = propios + enteros.length;
 
 /* La duración, dicha como se dice en voz alta: «2 h», «2 h 30 min», «30 min».
-   Sale de multiplicar, no de una tabla — ver `minutosPorEjercicio` arriba. */
-const minutos = minutosPorEjercicio ? minutosPorEjercicio * deCuantos : 0;
+   Si el cuadernillo imprime la suya, manda la impresa; si no, sale de
+   multiplicar la regla de la asignatura, no de una tabla — ver
+   `minutosPorEjercicio` arriba. */
+const minutos = duracionImpresa
+  ? duracionImpresa.minutos
+  : minutosPorEjercicio
+    ? minutosPorEjercicio * deCuantos
+    : 0;
+/* Lo que el reloj da a cada ejercicio. Con duración impresa, su parte
+   proporcional: quitar un ejercicio tiene que seguir ajustando el reloj. */
+const porEjercicio = duracionImpresa ? duracionImpresa.minutos / deCuantos : (minutosPorEjercicio ?? 0);
 const duracion =
   minutos === 0
     ? null
@@ -206,15 +233,34 @@ const fueraHtml = await Promise.all(
         <section
           class="simulacro no-imprimir"
           data-simulacro
-          data-minutos={minutosPorEjercicio}
+          data-minutos={porEjercicio}
+          data-exigente={duracionImpresa ? undefined : minutosExigente}
           hidden
         >
           <p class="rotulo s-tit">Hacerlo con reloj</p>
-          <p class="s-txt">
-            {minutosPorEjercicio} minutos por ejercicio, que para los {deCuantos} de este
-            cuadernillo son <strong data-previsto>{duracion}</strong>. Quita los que no
-            vayas a hacer y el reloj se ajusta.
-          </p>
+          {duracionImpresa ? (
+            <p class="s-txt">
+              El cuadernillo imprime <strong data-previsto>{duracion}</strong> para sus
+              {deCuantos} ejercicios ({duracionImpresa.fuente}). Quita los que no vayas a
+              hacer y el reloj se ajusta en proporción.
+            </p>
+          ) : (
+            <p class="s-txt">
+              {minutosPorEjercicio} minutos por ejercicio, que para los {deCuantos} de este
+              cuadernillo son <strong data-previsto>{duracion}</strong>. Quita los que no
+              vayas a hacer y el reloj se ajusta.
+            </p>
+          )}
+
+          {/* El modo exigente: los mismos ejercicios con menos reloj, para
+              llegar al examen con margen. Solo donde la duración sale de una
+              regla: si el cuadernillo imprime la suya, esa es la del examen. */}
+          {!duracionImpresa && minutosExigente && (
+            <label class="s-exigente">
+              <input type="checkbox" data-exigente-activo />
+              Modo exigente: {minutosExigente} minutos por ejercicio, para llegar con margen
+            </label>
+          )}
 
           {/* Los tres preajustes.
               El cuadernillo de una convocatoria global trae los dos
@@ -488,7 +534,13 @@ const fueraHtml = await Promise.all(
     const bTerminar = sim.querySelector<HTMLButtonElement>('[data-terminar]')!;
     const casillas = [...sim.querySelectorAll<HTMLInputElement>('[data-entra]')];
     const filas = [...document.querySelectorAll<HTMLElement>('.hoja > li[data-n]')];
-    const porEjercicio = Number(sim.dataset.minutos ?? '0');
+    /* Los minutos de cada ejercicio: la regla de la asignatura o, si el
+       cuadernillo imprime su duración, su parte proporcional —que no tiene
+       por qué ser entera, y por eso lo que se pinta se redondea—. */
+    const base = Number(sim.dataset.minutos ?? '0');
+    const exigente = Number(sim.dataset.exigente ?? '0');
+    const cExigente = sim.querySelector<HTMLInputElement>('[data-exigente-activo]');
+    let porEjercicio = base;
     const LLAVE = `simulacro:${location.pathname}`;
 
     const fNota = sim.querySelector<HTMLFormElement>('[data-nota]')!;
@@ -500,6 +552,7 @@ const fueraHtml = await Promise.all(
     sim.hidden = false;
 
     const cuantos = () => casillas.filter((c) => c.checked).length;
+    const minutosAhora = () => Math.round(cuantos() * porEjercicio);
 
     /* El historial de notas propias.
      *
@@ -570,6 +623,7 @@ const fueraHtml = await Promise.all(
       bEmpezar.hidden = false;
       reloj.hidden = true;
       for (const c of casillas) c.disabled = false;
+      if (cExigente) cExigente.disabled = false;
       for (const f of filas) f.hidden = false;
       aviso.textContent = porTiempo
         ? 'Se acabó el tiempo. Las resoluciones ya están abiertas.'
@@ -604,6 +658,7 @@ const fueraHtml = await Promise.all(
       hechoDe = cuantos();
       for (const f of filas) f.hidden = ocultar.includes(Number(f.dataset.n));
       for (const c of casillas) c.disabled = true;
+      if (cExigente) cExigente.disabled = true;
       armazon.dataset.bloqueado = 'si';
       bEmpezar.hidden = true;
       bTerminar.hidden = false;
@@ -615,7 +670,7 @@ const fueraHtml = await Promise.all(
     for (const c of casillas) {
       c.addEventListener('change', () => {
         if (cuantos() === 0) { c.checked = true; return; }   // al menos uno
-        previsto.textContent = enPalabras(cuantos() * porEjercicio);
+        previsto.textContent = enPalabras(minutosAhora());
       });
     }
 
@@ -635,14 +690,14 @@ const fueraHtml = await Promise.all(
            pintan cuando hay de los dos—, se vuelve al cuadernillo entero en
            vez de arrancar un reloj de cero minutos. */
         if (cuantos() === 0) for (const c of casillas) c.checked = true;
-        previsto.textContent = enPalabras(cuantos() * porEjercicio);
+        previsto.textContent = enPalabras(minutosAhora());
         aviso.textContent = `Entran ${cuantos()} de ${casillas.length} ejercicios.`;
       });
     }
 
     bEmpezar.addEventListener('click', () => {
       const fuera = casillas.filter((c) => !c.checked).map((c) => Number(c.value));
-      const minutos = cuantos() * porEjercicio;
+      const minutos = minutosAhora();
       const desde = Date.now();
       /* Recordarlo es un extra: si el navegador no deja escribir, el
          simulacro empieza igual y solo se pierde al cerrar la pestaña. */
@@ -653,6 +708,13 @@ const fueraHtml = await Promise.all(
     });
 
     bTerminar.addEventListener('click', () => termina(false));
+
+    /* El modo exigente cambia los minutos de cada ejercicio antes de
+       empezar; con el reloj en marcha queda bloqueado, como las casillas. */
+    cExigente?.addEventListener('change', () => {
+      porEjercicio = cExigente.checked && exigente > 0 ? exigente : base;
+      previsto.textContent = enPalabras(minutosAhora());
+    });
 
     fNota.addEventListener('submit', (ev) => {
       ev.preventDefault();
@@ -688,7 +750,7 @@ const fueraHtml = await Promise.all(
         const { desde, minutos, fuera } = JSON.parse(guardado);
         if (Date.now() < desde + minutos * 60000) {
           for (const c of casillas) c.checked = !fuera.includes(Number(c.value));
-          previsto.textContent = enPalabras(cuantos() * porEjercicio);
+          previsto.textContent = enPalabras(minutosAhora());
           empieza(minutos, desde, fuera);
           aviso.textContent = `Simulacro retomado, con ${enPalabras(Math.ceil((desde + minutos * 60000 - Date.now()) / 60000))} por delante.`;
         } else {
@@ -821,6 +883,17 @@ const fueraHtml = await Promise.all(
 
   .s-tit { color: var(--live); margin-bottom: .4rem; }
   .s-txt { font-size: .9rem; margin: 0 0 .8rem; max-width: var(--measure); }
+
+  /* ── el modo exigente ─────────────────────────────────────────── */
+  .s-exigente {
+    display: flex;
+    align-items: baseline;
+    gap: .45rem;
+    font-size: .84rem;
+    color: var(--graphite);
+    margin: -.3rem 0 .8rem;
+    cursor: pointer;
+  }
 
   /* ── los tres preajustes ──────────────────────────────────────── */
   .s-preajustes {

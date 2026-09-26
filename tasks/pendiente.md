@@ -9,34 +9,44 @@ Abierto el 26 de septiembre de 2026, al cerrar la auditoría completa, con lo
 vivo de `todo.md` y `manana.md` —congelados ese día como archivo— y lo que la
 auditoría encontró y no se arregló en el momento.
 
-## El orden de las fases (27 de septiembre de 2026)
+## El orden de las fases (auditoría externa del 27 de septiembre de 2026)
 
-Lo ordenan dos cosas. **El calendario**: en septiembre de 2027 quien entra en
-1.º empieza el diédrico de Expresión Gráfica en el primer cuatrimestre y el
-dibujo técnico en el segundo; Sistemas y Materiales son de 2.º. Y **que su
-examen es un dibujo**: sin el patrón que corrige una construcción no hay
-contenido que escribir, así que el patrón es el camino crítico.
+El encargo entero, con el «Acepta» de cada fase y sus pruebas, está fuera del
+repositorio: `2027 proyecto contenido/auditorias/2026-09-27/encargo-por-fases.md`.
+Lo ordena el calendario —lo que se examina en enero de 2028 va antes que lo
+del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
+Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
+sigue después tal cual.
 
-1. **El patrón de construcción verificada** — las recetas y los predicados
-   como datos, con sus pruebas (`lib/diedrico-receta.ts`); las láminas como
-   datos; el paso `construir` en el esquema; el componente `Taller`, aparte de
-   `EjercicioGuiado` y hablándole por eventos; SD1 en el tema 2 con su
-   comprobador en el suelo; después SD4 y SD5, y se documenta en §05. Hecho
-   cuando las tres funcionan mirándolas en claro, en oscuro, a 360 px y
-   fallando a propósito.
-2. **El bloque 1, diédrico** — los seis temas con prosa, figura y ejemplo
-   propio (PDF 10 a 80) y las 51 láminas por familias, de la A a la H.
-3. **El bloque 2, dibujo técnico** — vistas y cortes con la clave calculada
-   desde la pieza en 3D y validada contra los tres cortes con solución
-   oficial; acotación con los precios de los criterios; ajustes ISO como tipo
-   de respuesta; conjuntos con la rúbrica del profesor; temas 7 a 13.
-4. **Rutas y cierre de Expresión Gráfica** — con exámenes se miden; sin ellos
-   se ordenan por lo que repite la colección y se dice, como en Materiales.
-5. **La deuda de abajo, intercalada** en los huecos del suelo y del despliegue,
-   un commit por punto: primero los seis apartados de Térmica 2025-26, y las
-   acciones del despliegue antes del 19 de octubre.
-6. **Sistemas de Producción**, cuando se decida. 7. **El cierre de
-   Materiales**, cuando haya exámenes.
+- **A · Arreglos rápidos en todas las asignaturas** (~2 días): `siguiente.md`.
+- **B · Expresión Gráfica, fase 1 tal cual.** Ya están las recetas, la
+  corrección, la geometría, SD1 cotejada y el paso `construir` resuelto;
+  faltan el esquema, el `Taller`, SD1 en el tema 2 y su comprobador, y
+  después SD4, SD5 y el patrón en §05. El plan es el `siguiente.md` del
+  commit 479053d, y los borradores están en
+  `Claude outputs/fase-1-borradores/`.
+- **C · Mecánica**: las cinco convocatorias bilingües, las deducciones con
+  `redactar` y los diagramas con `dibujar` (6–8 días).
+- **D · Demostraciones en 1.º**: Álgebra y Cálculo, con rúbricas compartidas
+  y un guardián de COMP4 (4–5 días).
+- **E · Herramientas que pasan la prueba de utilidad** (§13): la calculadora
+  de «¿qué nota necesito?», la página de asignatura, el banco de test de
+  Cálculo, el peso de las páginas de tema, decimales y distractores, y el
+  inventario del material (3–4 días).
+- **F · Térmica**: tablas propias, los seis apartados de 2025-26, tema 7 y
+  prácticas (5–6 días).
+- **G · Química**: formulación, resoluciones oficiales y teoría que falta
+  (5–6 días).
+- **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
+- **I · Fluidos**: prácticas, los `fuera` recuperables y los criterios del
+  profesor (5–6 días).
+- **J · Sistemas de Producción** (~4 semanas).
+- **K · Expresión Gráfica después de la fase 1**: las hojas 52–55 son
+  exámenes y ordenan la fase 2 (familias B, E y G antes que A y H); el
+  bloque 2 apenas necesita `lib/vistas` y conviene que no espere a la fase 3.
+- **La deuda de abajo, intercalada** en los huecos del suelo y del
+  despliegue, un commit por punto: las acciones del despliegue antes del 19
+  de octubre.
 
 ## Lo decide quien mantiene el proyecto
 
@@ -47,16 +57,24 @@ contenido que escribir, así que el patrón es el camino crítico.
   entre franjas: ¿basta la leyenda, o se rediseña? (`manana.md`, 10.5 bis).
 - **Fluidos, cantidad de movimiento**: ¿se reescriben las 22 resoluciones para
   que nombren el volumen de control? (`todo.md`, «La reauditoría · 2»).
-- **Datos del mundo que el repositorio no tiene**: cuánto dura el examen de
-  Fluidos y si admite calculadora programable; qué se hizo en cada práctica de
+- **Datos del mundo que el repositorio no tiene**: si el examen de Fluidos
+  admite calculadora programable; qué se hizo en cada práctica de
   laboratorio; el criterio de la profesora de Materiales sobre el 4.19 (el
-  sitio publica 55,2 % y explica el 44,8 % impreso).
-- **Expresión Gráfica, antes de escribir el primer tema** (del brief del 8 de
-  septiembre, §7): si las hojas EJERCICIO 52–55 del final de la colección son
-  exámenes y de qué año —es lo único parecido a una convocatoria—; el PDF de
-  la rúbrica de láminas, que en la carpeta es solo el enlace de eGela; si en
-  el examen de dibujo técnico se pueden usar las tablas ISO; y si el diédrico
-  se examina con la figura a escala o por coordenadas.
+  sitio publica 55,2 % y explica el 44,8 % impreso). La duración de los
+  exámenes sin cuadernillo que la imprima ya la dio Ionan el 27 de septiembre
+  de 2026: entre 25 y 30 minutos por ejercicio.
+- **Expresión Gráfica** (del brief del 8 de septiembre, §7, y de la auditoría
+  del 27): de qué año son las hojas 52–55 del final de la colección —la
+  auditoría las da por exámenes: la 54 se titula «Azterketa / Examen»—; el
+  PDF de la rúbrica de láminas, que en la carpeta es solo el enlace de eGela;
+  si en el examen de dibujo técnico se pueden usar las tablas ISO; y si el
+  diédrico se examina con la figura a escala o por coordenadas.
+- **Las preguntas abiertas de la auditoría del 27 de septiembre**: si el
+  examen de Álgebra deja calculadora; qué entra en su examen de prácticas y
+  qué son los controles del 20 %; si el examen de Sistemas da las hojas del
+  catálogo Sandvik o los valores en el enunciado; los guiones del laboratorio
+  de Química; y una copia limpia de las preguntas guía de Materiales, porque
+  el fichero lleva «Grupos» en el nombre y no se abre.
 
 ## Hacer
 

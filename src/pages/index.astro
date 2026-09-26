@@ -166,14 +166,22 @@ const corregidoPorAsignatura = new Map<string, boolean>();
 const examenes = await getCollection('examen');
 const cuentaExamen = new Map<string, Map<string, number>>();
 
+/** La primera convocatoria de cada asignatura cuyo cuadernillo imprime su
+ *  duración, que es adonde lleva el botón del simulacro cuando el catálogo no
+ *  declara una regla por ejercicio. Hasta el 27 de septiembre de 2026 el botón
+ *  salía en toda asignatura con exámenes y solo Cálculo tenía reloj (auditoría
+ *  externa de ese día, A2): ahora sale donde hay duración, de una regla o
+ *  impresa, y lleva a una página donde el reloj está. */
+const primeraConReloj = new Map<string, string>();
+
 for (const ex of examenes) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
-  lista.push({
-    curso: ex.data.curso,
-    conv: ex.data.convocatoria,
-    slug: slugExamen(ex.data.curso, ex.data.convocatoria),
-  });
+  const slug = slugExamen(ex.data.curso, ex.data.convocatoria);
+  lista.push({ curso: ex.data.curso, conv: ex.data.convocatoria, slug });
   examenesPorAsignatura.set(ex.data.asignatura, lista);
+  if (ex.data.duracion && !primeraConReloj.has(ex.data.asignatura)) {
+    primeraConReloj.set(ex.data.asignatura, slug);
+  }
 
   const entera = (ex.data.fuera ?? []).length === 0;
   enterasPorAsignatura.set(
@@ -722,10 +730,14 @@ const enteras = asignaturas
                       <span class="h-q">probar con números y ver qué cambia</span>
                     </a>
                   )}
-                  {examenesPorAsignatura.has(a.id) && (
+                  {examenesPorAsignatura.has(a.id) && (a.data.duracionDelExamen || primeraConReloj.has(a.id)) && (
                     <a
                       class="h-btn"
-                      href={ruta(`${a.id}/examenes/${examenesPorAsignatura.get(a.id)![0].slug}`)}
+                      href={ruta(
+                        `${a.id}/examenes/${
+                          a.data.duracionDelExamen ? examenesPorAsignatura.get(a.id)![0].slug : primeraConReloj.get(a.id)
+                        }`,
+                      )}
                     >
                       <span class="h-n">Simulacro con reloj</span>
                       <span class="h-q">
