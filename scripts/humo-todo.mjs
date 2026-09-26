@@ -25,50 +25,27 @@
  *     node scripts/humo-todo.mjs
  */
 
-import { spawn, spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { BASE, ROOT, levanta } from './servidor.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const { default: astroConfig } = await import('../astro.config.mjs');
-const BASE = astroConfig.base.replace(/\/$/, '');
 const PUERTO = Number(process.env.HUMO_PUERTO ?? 4321);
 const ORIGEN = `http://localhost:${PUERTO}`;
 const A_LA_VEZ = Number(process.env.HUMO_A_LA_VEZ ?? 4);
 
 /**
- * Para cualquier vista previa que haya quedado suelta, y arranca la nuestra.
+ * Para cualquier vista previa que haya quedado suelta, y arranca la nuestra:
+ * **una**, que comparten todas las tandas con `HUMO_SERVIDOR=fuera`.
  *
  * `astro preview` es un **demonio**: se queda de fondo y sobrevive a que muera
- * quien lo lanzó. Si ya hay uno —aunque sea en otro puerto, como el que deja
- * `peso.mjs` en el 4408— el siguiente no arranca, solo imprime «already
- * running» y se va; y entonces esta barrida se cae con «el servidor no ha
- * arrancado en 30 s» sin decir por qué. Así que primero se para el que haya.
+ * quien lo lanzó. Si ya hay uno —aunque sea en otro puerto— el siguiente no
+ * arranca, solo imprime «already running» y se va. `servidor.mjs` para el que
+ * haya antes de levantar el suyo.
  */
-function paraLaVistaPrevia() {
-  spawnSync(
-    process.execPath,
-    [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', 'stop'],
-    { cwd: ROOT, stdio: 'ignore' },
-  );
-}
-
-paraLaVistaPrevia();
-const servidor = spawn(
-  process.execPath,
-  [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', '--port', String(PUERTO)],
-  { cwd: ROOT, stdio: 'ignore' },
-);
-
+let servidor = null;
 async function esperaServidor() {
-  for (let i = 0; i < 60; i++) {
-    try {
-      if ((await fetch(`${ORIGEN}${BASE}/`)).ok) return;
-    } catch {}
-    await new Promise((r) => setTimeout(r, 500));
-  }
-  throw new Error('El servidor de vista previa no ha arrancado en 30 s.');
+  servidor = await levanta({ puerto: PUERTO });
 }
 
 /**
@@ -205,9 +182,8 @@ try {
   console.error('La barrida no pudo completarse:', String(e));
   codigoFinal = 1;
 } finally {
-  /* Matar al que lo lanzó no mata al demonio: hay que pedirle que pare. */
-  servidor.kill();
-  paraLaVistaPrevia();
+  /* Matar al que lo lanzó no mata al demonio: `para()` le pide que pare. */
+  servidor?.para();
 }
 
 process.exit(codigoFinal);

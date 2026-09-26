@@ -324,6 +324,69 @@ console.log('\nTokens');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   2 quinquies · Ningún documento duplicado por un reemplazo con `$`
+   ═══════════════════════════════════════════════════════════════════ */
+console.log('\nLos documentos del repositorio');
+{
+  /* POR QUÉ EXISTE. Dos veces un `String.replace` con un `$` en el texto de
+     reemplazo se tragó un documento entero: la primera en `tasks/todo.md`,
+     que estuvo veintiún commits cortado a media frase; la segunda el 17 de
+     septiembre de 2026 en este `CLAUDE.md`, donde un `` $` `` —«inserta todo lo
+     que va antes»— lo duplicó entero y así estuvo nueve días, con 5.472
+     líneas de las que 2.434 eran copia. La regla contra eso ya estaba escrita
+     en §17 desde el primer accidente, y no evitó el segundo: una trampa que
+     se repite no se arregla con un párrafo más. Se arregla aquí.
+
+     Ninguno de estos ficheros se publica, así que ningún guardián del sitio
+     los miraba. Lo que se comprueba es la firma de ese accidente: una sección
+     numerada que aparece dos veces, o la primera línea del fichero repetida
+     más abajo. */
+  const docs = ['CLAUDE.md', ...[...archivos(join(ROOT, 'tasks'), ['.md'])].map(rel)];
+  const rotos = [];
+  for (const d of docs) {
+    const ruta = join(ROOT, d);
+    if (!existsSync(ruta)) continue;
+    const lineas = leer(ruta).split('\n');
+    const vistas = new Map();
+    for (const l of lineas) {
+      const m = l.match(/^## (\d\d) \/\//);
+      if (m) vistas.set(m[1], (vistas.get(m[1]) ?? 0) + 1);
+    }
+    for (const [n, veces] of vistas) if (veces > 1) rotos.push(`${d}: la sección §${n} aparece ${veces} veces`);
+    const primera = lineas.find((l) => l.trim().length > 20);
+    if (primera) {
+      const otra = lineas.findIndex((l, i) => i > 3 && l.includes(primera));
+      if (otra > 0) rotos.push(`${d}:${otra + 1}: la primera línea del fichero vuelve a aparecer`);
+    }
+  }
+  if (rotos.length) {
+    fallo(
+      'ningún documento duplicado por un reemplazo con `$`',
+      rotos.join('\n    ') + '\n    Casi seguro, un `String.replace` con `$` en el texto de reemplazo:'
+        + ' usa split/join o una función `() => nuevo` (§17).',
+    );
+  } else {
+    ok(`ningún documento duplicado por un reemplazo con \`$\` (${docs.length} revisados)`);
+  }
+
+  /* Y el índice de §17, que es una COPIA generada de la frase de cada trampa
+     (26 de septiembre de 2026). Si alguien añade una trampa sin regenerarlo,
+     el índice deja de decir cuántas hay y cuáles: se compara con lo que
+     generaría `indice-trampas.mjs`, con sus mismas funciones. */
+  const { trampas, indice, indiceEscrito } = await import('./indice-trampas.mjs');
+  const lineas = leer(join(ROOT, 'CLAUDE.md')).split('\n');
+  const escrito = indiceEscrito(lineas);
+  const debido = indice(trampas(lineas));
+  if (!escrito) {
+    fallo('el índice de trampas de CLAUDE.md §17', 'no tiene sus marcas: ponlas y pasa npm run trampas');
+  } else if (escrito.join('\n') !== debido.join('\n')) {
+    fallo('el índice de trampas de CLAUDE.md §17 está al día', 'no coincide con las entradas: npm run trampas lo regenera');
+  } else {
+    ok(`el índice de trampas de CLAUDE.md §17 está al día (${trampas(lineas).length} trampas)`);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    3 · Foco visible: nadie apaga el outline
    ═══════════════════════════════════════════════════════════════════ */
 console.log('\nAccesibilidad de la fuente');
@@ -802,8 +865,15 @@ console.log('\nContenido');
    serio.
    ═══════════════════════════════════════════════════════════════════ */
 {
+  /* El bloque se busca DENTRO de §04, no el primero del fichero: hasta el 26
+     de septiembre de 2026 valía el primer ```yaml de todo el documento, y
+     bastaba con que otra sección pusiera uno delante para que el guardián
+     validara un ejemplo distinto —o fallara por algo que no era el ejemplo—. */
   const md = leer(join(ROOT, 'CLAUDE.md'));
-  const bloque = md.match(/```yaml\n([\s\S]*?)```/);
+  const s04 = md.search(/^## 04 \/\//m);
+  const s05 = md.search(/^## 05 \/\//m);
+  const seccion = s04 >= 0 ? md.slice(s04, s05 > s04 ? s05 : undefined) : '';
+  const bloque = seccion.match(/```yaml\n([\s\S]*?)```/);
   const problemas = [];
 
   if (!bloque) {

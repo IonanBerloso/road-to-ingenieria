@@ -20,6 +20,18 @@ import yaml from 'js-yaml';
 const S = process.argv[2];
 const REPO = process.cwd();
 
+/* Sin carpeta, el guion intentaba leer `undefined/coleccion.txt` y caía con
+   un ENOENT que no decía qué faltaba. El volcado no está en el repositorio:
+   se genera con `pdftotext -enc UTF-8 -layout` a partir del PDF (§17). */
+if (!S || !fs.existsSync(path.join(S, 'coleccion.txt'))) {
+  console.error(
+    'Uso: node scripts/inventario-coleccion.mjs <carpeta>\n' +
+      '  <carpeta> tiene que contener coleccion.txt, el volcado de la colección de\n' +
+      '  Fluidos con pdftotext -enc UTF-8 -layout. No se versiona: es material ajeno.',
+  );
+  process.exit(1);
+}
+
 /* ── 1 · los 236 del PDF ─────────────────────────────────────────── */
 const lineas = fs.readFileSync(`${S}/coleccion.txt`, 'utf8').split('\n');
 const enPdf = [];

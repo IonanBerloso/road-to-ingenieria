@@ -20,15 +20,11 @@
  * Abre el sitio construido en Chromium y sale con código != 0 si algo falla.
  */
 
-import { spawn, spawnSync } from 'node:child_process';
 import { readdirSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { BASE, ROOT, levanta } from './servidor.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const { default: astroConfig } = await import('../astro.config.mjs');
-const BASE = astroConfig.base.replace(/\/$/, '');
 const PUERTO = Number(process.env.HUMO_PUERTO ?? 4321);
 
 /**
@@ -58,32 +54,11 @@ const comprueba = (condicion, t, detalle) => (condicion ? ok(t) : fallo(t, detal
 
 /* `astro preview` es un demonio y sobrevive a quien lo lanza: si hay uno
    suelto —el que deja `peso.mjs` en otro puerto, por ejemplo— el siguiente no
-   arranca. Se para antes, salvo cuando el servidor lo pone otro. */
-if (!SERVIDOR_FUERA) {
-  spawnSync(
-    process.execPath,
-    [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', 'stop'],
-    { cwd: ROOT, stdio: 'ignore' },
-  );
-}
-
-const servidor = SERVIDOR_FUERA
-  ? null
-  : spawn(
-      process.execPath,
-      [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', '--port', String(PUERTO)],
-      { cwd: ROOT, stdio: 'ignore' },
-    );
-
+   arranca. `servidor.mjs` lo para antes, salvo cuando el servidor lo pone
+   otro (`HUMO_SERVIDOR=fuera`, que es como lo llama `humo-todo`). */
+let servidor = null;
 async function esperaServidor() {
-  for (let i = 0; i < 60; i++) {
-    try {
-      const r = await fetch(`${ORIGEN}/`);
-      if (r.ok) return;
-    } catch {}
-    await new Promise((r) => setTimeout(r, 500));
-  }
-  throw new Error('El servidor de vista previa no ha arrancado en 30 s.');
+  servidor = await levanta({ puerto: PUERTO, fuera: SERVIDOR_FUERA });
 }
 
 /* ── comprobaciones ─────────────────────────────────────────────────── */
@@ -1065,14 +1040,7 @@ try {
 } catch (e) {
   fallo('la comprobación no pudo completarse', String(e));
 } finally {
-  servidor?.kill();
-  if (!SERVIDOR_FUERA) {
-    spawnSync(
-      process.execPath,
-      [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', 'stop'],
-      { cwd: ROOT, stdio: 'ignore' },
-    );
-  }
+  servidor?.para();
 }
 
 console.log('');

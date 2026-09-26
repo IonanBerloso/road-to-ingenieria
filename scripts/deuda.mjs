@@ -12,12 +12,24 @@
  * bloques. Una frase con un número dentro, escrita a ojo. §10 no lo admite, y la
  * salida buena es la misma que con `mide.mjs`: que la cuente un guion.
  *
- * NO ES UN GUARDIÁN. No falla nunca ni rompe el build: imprime el estado. Los
- * números que salgan de aquí son los que se pueden publicar en `tasks/todo.md`
- * o en `docs/como-vamos.md`, y se vuelven a sacar antes de tocar esa prosa.
+ * CASI TODO ES UN INFORME. Imprime el estado y no rompe nada. Los números que
+ * salgan de aquí son los que se pueden publicar en `tasks/` o en
+ * `docs/como-vamos.md`, y se vuelven a sacar antes de tocar esa prosa.
  *
- *   node scripts/deuda.mjs
+ * Salvo dos cosas, y solo con `--estricto`, que es como lo llama el suelo
+ * (`npm run cifras`): una nota PUBLICADA en una ruta con un número que ya no
+ * es, y una cifra de la documentación que este guion mide y no cuadra. Esas
+ * dos salen con código 1. El porqué está al final del fichero.
+ *
+ *   node scripts/deuda.mjs               el informe entero
+ *   node scripts/deuda.mjs --estricto    solo las cifras caducadas, y falla si las hay
  */
+const ESTRICTO = process.argv.includes('--estricto');
+/* En modo estricto el informe no se imprime: en el registro del suelo serían
+   ciento cincuenta líneas tapando lo único que importa ahí. Se restaura al
+   final, para el veredicto. */
+const imprime = console.log;
+if (ESTRICTO) console.log = () => {};
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -797,24 +809,18 @@ const MEDIDO = {
 /* Dónde se publica cada cifra. El patrón captura el número en $1; se compara
    con la medida y se dice el desfase. Un patrón que ya no case se dice
    también: significa que la frase se reescribió y esta fila sobra. */
+/* CLAUDE.md ya no tiene filas aquí, y no es un olvido. Desde el 26 de
+   septiembre de 2026 no escribe cifras en presente —las que lleva van
+   fechadas, y una cifra fechada es historia, no una afirmación que pueda
+   caducar—, así que sus nueve filas (los casos de física, las páginas del
+   humo y la tabla de tipos de paso de §04) se retiraron con las frases que
+   vigilaban. Si alguien vuelve a escribir allí un recuento en presente, lo
+   que toca es fecharlo o quitarlo, no añadir la fila. */
 const AFIRMACIONES = [
-  ['CLAUDE.md', /(\d[\d.]*) casos sacados del corpus/, 'casosFisica', 'casos de tests/fisica'],
-  ['CLAUDE.md', /\*\*(\d[\d.]*) al \d+ de \w+ de \d{4}\*\*/, 'paginas', 'páginas que abre HUMO_TODO'],
-  ['CLAUDE.md', /las (\d[\d.]*) páginas del sitio en un navegador/, 'paginas', 'páginas del sitio'],
   ['docs/como-vamos.md', /\*\*(\d[\d.]*) rutas\*\* \| \*\*[\d.]+\*\* \| \*\*[\d.]+\*\*/, 'rutas', 'rutas en la tabla total'],
   ['docs/como-vamos.md', /\*\*\d[\d.]* rutas\*\* \| \*\*(\d[\d.]*)\*\* \| \*\*[\d.]+\*\*/, 'bloques', 'bloques en la tabla total'],
   ['docs/como-vamos.md', /\*\*\d[\d.]* rutas\*\* \| \*\*[\d.]+\*\* \| \*\*(\d[\d.]*)\*\*/, 'escalones', 'escalones en la tabla total'],
   ['tests/fisica/README.md', /y (\d[\d.]*) casos/, 'casosFisica', 'casos de tests/fisica'],
-  /* La tabla de tipos de paso de §05. Es la que el propio CLAUDE.md declara
-     haber tenido desfasada TRES veces —«se recuenta al cerrar una asignatura
-     no basta cuando pasan semanas sin cerrar ninguna»—, así que sus seis
-     filas se comparan aquí y ya no hace falta acordarse. */
-  ['CLAUDE.md', /\| `reconocer` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoReconocer', 'pasos reconocer'],
-  ['CLAUDE.md', /\| `calcular` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoCalcular', 'pasos calcular'],
-  ['CLAUDE.md', /\| `justificar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoJustificar', 'pasos justificar'],
-  ['CLAUDE.md', /\| `verificar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoVerificar', 'pasos verificar'],
-  ['CLAUDE.md', /\| `redactar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoRedactar', 'pasos redactar'],
-  ['CLAUDE.md', /\| `dibujar` \|[^|]*\|[^|]*\| ([\d.]+) \|/, 'pasoDibujar', 'pasos dibujar'],
   /* Este trío es el que más veces ha caducado del repositorio: el párrafo de
      `como-vamos.md` que dice cuántas asignaturas hay en cada estado ha
      envejecido CINCO veces, y las cinco están confesadas debajo de él. La
@@ -843,3 +849,27 @@ for (const [rutaDoc, exp, clave, que] of AFIRMACIONES) {
 fila('afirmaciones caducadas', caducadas.length);
 for (const c of caducadas) fila('', '· ' + c);
 console.log('');
+
+/* ── el modo estricto: lo único de aquí que puede fallar ──────────────
+ *
+ * Todo lo de arriba informa, y así tiene que ser: un escalón con un solo
+ * ejercicio es una decisión, no un error. Pero dos clases de cosas no lo son.
+ * Una nota publicada en una ruta que dice un número que ya no es verdad
+ * (`desfasadas`), y una cifra de la documentación que el propio guion ha
+ * medido y no cuadra (`caducadas`). Las dos se encontraron caducadas una y
+ * otra vez con el guion informando y nadie leyéndolo: el 26 de septiembre de
+ * 2026 había tres notas del tema 9 de Cálculo publicando «cinco ejemplos»
+ * cuando eran seis desde el 17, y siete cifras de CLAUDE.md desfasadas. Una
+ * trampa que se repite no se arregla con un párrafo más: se arregla con un
+ * guardián, y este lo es solo para esas dos. */
+if (ESTRICTO) {
+  console.log = imprime;
+  const todas = [...desfasadas, ...caducadas];
+  if (todas.length) {
+    console.error(`\n${todas.length} cifra(s) publicada(s) que ya no son verdad:`);
+    for (const c of todas) console.error(`  ✗ ${c}`);
+    console.error('\nSe corrigen donde se publican: el número se cuenta, no se estima (§10).');
+    process.exit(1);
+  }
+  console.log('  ✓ ninguna cifra publicada caducada: ni en los falta[] de las rutas ni en la documentación');
+}

@@ -38,10 +38,15 @@
  * número lleva unidad detrás. Sin eso, veinte de treinta y tres avisos eran
  * ruido y el guardián se habría acabado ignorando (§11).
  *
+ * DÓNDE CORRE
+ * En `npm run suelo`, desde el 26 de septiembre de 2026, justo detrás de
+ * `verify`. Se había quedado fuera con el argumento de que tardaba; medido
+ * ese día, recorre las 5.737 cuentas del corpus en **un segundo** y sale
+ * limpio, así que dejarlo para «al cerrar una asignatura» era dejar que un
+ * error de cuenta viviera semanas publicado. Si un día da un falso positivo,
+ * se arregla aquí, como los de antes, y no se saca del suelo.
+ *
  * QUÉ NO HACE
- * No entra en `npm run suelo`: tarda, y §11 dice que un guardián que se
- * ignora es peor que ninguno. Se pasa al CERRAR una asignatura, junto con el
- * recuento de cifras de CLAUDE.md.
  *
  * Lo que no sabe evaluar lo declara como «no evaluable» y no lo cuenta como
  * fallo. Un falso positivo aquí enseñaría a saltarse el guion.

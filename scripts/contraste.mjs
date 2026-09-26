@@ -37,31 +37,19 @@
  *     node scripts/contraste.mjs            (levanta el servidor él mismo)
  *     CONTRASTE_SERVIDOR=fuera node scripts/contraste.mjs
  */
-import { spawn, spawnSync } from 'node:child_process';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
+import { levanta } from './servidor.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const astroConfig = JSON.parse(
-  JSON.stringify({ base: leeBase() }),
-);
-
-/** El `base` del sitio, leído del `astro.config`. Sin él las URLs dan 404 y
- *  la página carga sin CSS — que fue exactamente el error que llevó a medir
- *  «344 px de ancho de texto» el 17 de septiembre sobre una página sin
- *  estilos. Una medición con el CSS caído no mide nada. */
-function leeBase() {
-  const conf = readFileSync(join(ROOT, 'astro.config.mjs'), 'utf8');
-  const m = conf.match(/base:\s*'([^']+)'/) ?? conf.match(/base:\s*"([^"]+)"/);
-  return (m?.[1] ?? '').replace(/\/$/, '');
-}
-
+/* El servidor y el `base` los pone `servidor.mjs`, que los lee del propio
+   `astro.config`. Sin el `base` las URLs dan 404 y la página carga sin CSS —
+   que fue exactamente el error que llevó a medir «344 px de ancho de texto»
+   el 17 de septiembre sobre una página sin estilos. Hasta el 26 de
+   septiembre de 2026 este guion lo buscaba con una expresión regular en el
+   texto del fichero: la tercera forma distinta de leer el mismo dato. */
 const PUERTO = Number(process.env.CONTRASTE_PUERTO ?? 4331);
-const BASE = astroConfig.base;
-const ORIGEN = `http://localhost:${PUERTO}${BASE}`;
 const SERVIDOR_FUERA = process.env.CONTRASTE_SERVIDOR === 'fuera';
+let ORIGEN = '';
+let servidor = null;
 
 let fallos = 0;
 const ok = (t) => console.log(`  ✓ ${t}`);
@@ -73,22 +61,9 @@ const fallo = (t, detalle) => {
 
 /* ── servidor ───────────────────────────────────────────────────────── */
 
-const ASTRO = join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs');
-if (!SERVIDOR_FUERA) {
-  spawnSync(process.execPath, [ASTRO, 'preview', 'stop'], { cwd: ROOT, stdio: 'ignore' });
-}
-const servidor = SERVIDOR_FUERA
-  ? null
-  : spawn(process.execPath, [ASTRO, 'preview', '--port', String(PUERTO)], {
-      cwd: ROOT, stdio: 'ignore',
-    });
-
 async function esperaServidor() {
-  for (let i = 0; i < 60; i++) {
-    try { if ((await fetch(`${ORIGEN}/`)).ok) return; } catch { /* aún no */ }
-    await new Promise((r) => setTimeout(r, 500));
-  }
-  throw new Error('El servidor de vista previa no ha arrancado en 30 s.');
+  servidor = await levanta({ puerto: PUERTO, fuera: SERVIDOR_FUERA });
+  ORIGEN = servidor.origen;
 }
 
 /* ── la muestra ─────────────────────────────────────────────────────── */
@@ -295,10 +270,7 @@ try {
     : '';
   fallo('el guardián de contraste no ha podido terminar', `    ${e.message}${pista}`);
 } finally {
-  if (!SERVIDOR_FUERA) {
-    spawnSync(process.execPath, [ASTRO, 'preview', 'stop'], { cwd: ROOT, stdio: 'ignore' });
-    servidor?.kill();
-  }
+  servidor?.para();
 }
 
 if (fallos > 0) {

@@ -144,8 +144,11 @@ export function pegaEnCampo(fichero, idEj, campo, svg, pie) {
 /**
  * Añade un paso al final de la lista `pasos:` de un ejercicio.
  *
- * Lo usan los guiones que meten rúbricas nuevas: un paso `redactar` que la
- * asignatura no tenía, escrito a mano y pegado donde le toca.
+ * No lo llama ningún guion del repositorio: lo usan los del scratchpad que
+ * meten rúbricas nuevas —un paso `redactar` que la asignatura no tenía,
+ * escrito a mano y pegado donde le toca—, el último el 18 de septiembre de
+ * 2026. No comprueba si el paso ya estaba, y no hace falta: pegarlo dos veces
+ * deja dos pasos idénticos seguidos, y eso el esquema no lo compila.
  */
 export function anexaPaso(fichero, idEj, bloque) {
   const { lineas, escribe } = leeLineas(fichero);

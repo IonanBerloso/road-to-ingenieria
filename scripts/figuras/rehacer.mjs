@@ -37,7 +37,12 @@ for (const nombre of GENERADORES) {
   const mod = await import(`./${nombre}.mjs`);
   for (const f of mod.figuras ?? []) {
     const fichero = f.fichero ?? mod.FICHERO;
-    if (f.campo) {
+    /* `campo: 'paso'` no es un campo de texto: es la forma que tiene
+       `calculo-propios-t04` de decir «en el paso dibujar», igual que no poner
+       campo. Hasta el 26 de septiembre de 2026 esto lo trataba como un campo,
+       `quitaFigura` buscaba un `paso: |` que no existe y lanzaba: la pasada
+       moría tras 37 generadores y los tres últimos no se rehacían nunca. */
+    if (f.campo && f.campo !== 'paso') {
       quitaFigura(fichero, f.id, f.campo);
       pegaEnCampo(fichero, f.id, f.campo, f.svg, f.pie);
     } else {

@@ -25,6 +25,11 @@ import { readFileSync } from 'node:fs';
  * evaluación de 2023-2024.
  */
 const [png, X0, X1, Y0, Y1, ...XQ] = process.argv.slice(2);
+/* Sin los cuatro bordes todo sale NaN y el guion «mide» igual, sin avisar. */
+if (!png || [X0, X1, Y0, Y1].some((v) => v === undefined || Number.isNaN(+v))) {
+  console.error('Uso: node scripts/leer-curvas.mjs <png> <x0> <x1> <y0> <y1> [xq…]');
+  process.exit(1);
+}
 const x0 = +X0, x1 = +X1, y0 = +Y0, y1 = +Y1;
 const consultas = XQ.map(Number);
 

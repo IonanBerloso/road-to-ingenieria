@@ -16,32 +16,22 @@
  *
  *   npm run peso  [ruta...]
  */
-import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
-import { dirname, join } from 'node:path';
-import { spawn } from 'node:child_process';
+import { chromium } from 'playwright';
+import { levanta } from './servidor.mjs';
 
-const RAIZ = dirname(dirname(fileURLToPath(import.meta.url)));
-const { chromium } = await import(new URL('node_modules/playwright/index.mjs', `file:///${RAIZ.replace(/\\/g, '/')}/`).href);
-
-const PUERTO = 4408;
-const BASE = '/road-to-ingenieria';
-const ORIGEN = `http://localhost:${PUERTO}${BASE}`;
-
-const srv = spawn(process.execPath,
-  [join(RAIZ, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'preview', '--port', String(PUERTO)],
-  { cwd: RAIZ, stdio: 'ignore' });
-
-let vivo = false;
-for (let i = 0; i < 60; i++) {
-  try { if ((await fetch(`${ORIGEN}/`)).ok) { vivo = true; break; } } catch {}
-  await new Promise((r) => setTimeout(r, 500));
-}
-if (!vivo) {
-  console.error('El servidor de vista previa no arrancó. ¿Hay otro en el mismo puerto?');
-  srv.kill();
+/* El servidor y el `base` los pone `servidor.mjs`. Hasta el 26 de septiembre
+   de 2026 el `base` iba escrito a mano aquí, y al terminar solo se mataba el
+   proceso hijo: el demonio de `astro preview` se quedaba vivo en el 4408 y
+   el siguiente humo no arrancaba (§17). */
+let srv;
+try {
+  srv = await levanta({ puerto: 4408 });
+} catch (e) {
+  console.error(e.message);
   process.exit(1);
 }
+const ORIGEN = srv.origen;
 
 const PAGINAS = process.argv.slice(2).length ? process.argv.slice(2) : [
   '/calculo/t01-complejos/',
@@ -84,7 +74,7 @@ for (const ruta of PAGINAS) {
      medir. */
   if (!resp?.ok()) {
     console.error(`\n${ruta}: el servidor devuelve ${resp?.status() ?? 'nada'}. Esa página no existe.`);
-    await ctx.close(); await nav.close(); srv.kill(); process.exit(1);
+    await ctx.close(); await nav.close(); srv.para(); process.exit(1);
   }
   const { nodos, html, pinta } = await pag.evaluate(() => {
     const p = performance.getEntriesByName('first-contentful-paint')[0];
@@ -126,7 +116,7 @@ for (const ruta of PAGINAS) {
   await ctx.close();
 }
 await nav.close();
-srv.kill();
+srv.para();
 
 const lentas = filas.filter((f) => f.listo > 4);
 console.log(lentas.length

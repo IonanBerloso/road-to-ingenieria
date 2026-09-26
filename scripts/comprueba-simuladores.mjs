@@ -38,14 +38,28 @@
  * Un guardián que se cree más fuerte de lo que es hace más daño que uno que
  * falta: por eso esto se corrige aquí y no solo en el informe.
  *
- * No entra en `npm run suelo`: necesita el sitio levantado y tarda. Se pasa
- * al tocar un simulador, como `recalcula` al tocar el corpus.
+ * Entra en `npm run suelo` desde el 26 de septiembre de 2026. Hasta entonces
+ * se quedaba fuera porque necesitaba un servidor levantado a mano, y se pasaba
+ * «al tocar un simulador» — es decir, casi nunca: ese día la auditoría
+ * encontró leyendo el código tres fallos de simulador que este guion habría
+ * cazado con el caso adecuado, y ninguno estaba en su lista. Ahora levanta su
+ * propio servidor (`servidor.mjs`) y tarda en torno a un minuto.
  *
- *   npm run dev  &&  node scripts/comprueba-simuladores.mjs
+ *   npm run sim                          (levanta el servidor él mismo)
+ *   SIM_SERVIDOR=fuera SIM_PUERTO=4321 npm run sim   (con `npm run dev` ya en marcha)
  */
 import { chromium } from 'playwright';
+import { levanta } from './servidor.mjs';
 
-const BASE = process.env.ORIGEN ?? 'http://localhost:4321/road-to-ingenieria';
+/* Levanta su propio servidor desde el 26 de septiembre de 2026, como el humo,
+   y por eso puede estar en el suelo. Antes pedía uno ya levantado en el 4321
+   y llevaba el `base` escrito a mano. Con SIM_SERVIDOR=fuera usa el que haya
+   en SIM_PUERTO, que es lo cómodo mientras se trabaja con `npm run dev`. */
+const srv = await levanta({
+  puerto: Number(process.env.SIM_PUERTO ?? 4341),
+  fuera: process.env.SIM_SERVIDOR === 'fuera',
+});
+const BASE = srv.origen;
 
 /**
  * Cada caso dice qué pulsar y qué tiene que aparecer. Los valores **no** se
@@ -164,10 +178,12 @@ const CASOS = [
         },
       },
       /* Con el cable tenso la parábola deja de equivocarse, que es la
-         pregunta que el simulador contesta. */
+         pregunta que el simulador contesta. Y la sección tiene que quedar en
+         el apoyo, x = 20: el tope del mando la recortaba a 3 viniendo de la
+         figura (auditoría del 26 de septiembre de 2026). */
       {
         pulsa: '[data-caso="tenso"]',
-        espera: { '[data-err]': '+0,00 %' },
+        espera: { '[data-err]': '+0,00 %', '[data-out-x]': '20,0 m' },
       },
     ],
   },
@@ -211,6 +227,17 @@ const CASOS = [
           '[data-mapoyo]': '−6000',
         },
       },
+      /* Y la regresión que congelaba los diagramas: con L = 4, A en su
+         máximo y B arrastrado por debajo de A + L/10, la corrección de B se
+         llamaba a sí misma sin fin porque 2,4 − 2 da 0,3999… Encontrada en
+         la auditoría del 26 de septiembre de 2026. B tiene que quedarse en
+         2,4 y la página seguir viva: el `pageerror` de arriba caza el
+         desbordamiento de pila. */
+      {
+        pulsa: '[data-caso="ord25"]',
+        mueve: [['[data-xa]', '2'], ['[data-xb]', '2.2']],
+        espera: { '[data-out-xb]': '2,4' },
+      },
     ],
   },
 ];
@@ -221,11 +248,37 @@ const mal = (t) => {
   fallos++;
 };
 
+/** Los números que un simulador enseña, indexados por su primer atributo
+ *  `data-*`: solo hojas, que es donde vive un número. Se ejecuta dentro de la
+ *  página, con o sin JavaScript del sitio. */
+function leeNumeros(sel) {
+  const raiz = document.querySelector(sel);
+  const r = {};
+  if (!raiz) return r;
+  const vistos = {};
+  for (const el of raiz.querySelectorAll('*')) {
+    if (el.children.length) continue;
+    /* `data-astro-cid-…` lo pone Astro para acotar los estilos y no dice nada
+       del dato; tomarlo por clave emparejaba elementos que no son el mismo. */
+    const a = [...el.attributes].find((x) => x.name.startsWith('data-') && !x.name.startsWith('data-astro-'));
+    if (!a) continue;
+    const k = `[${a.name}]`;
+    vistos[k] = (vistos[k] ?? 0) + 1;
+    r[vistos[k] > 1 ? `${k} nº ${vistos[k]}` : k] = el.textContent.trim().replace(/\s+/g, ' ');
+  }
+  return r;
+}
+
 const nav = await chromium.launch();
 const ctx = await nav.newContext({ viewport: { width: 1200, height: 900 } });
 const pag = await ctx.newPage();
 pag.on('pageerror', (e) => mal(`error de JavaScript: ${e.message}`));
+/* La misma página sin el JavaScript del sitio: lo que ve quien lo tiene
+   apagado, y lo que se ve durante el primer instante antes de que cargue. */
+const ctxSin = await nav.newContext({ viewport: { width: 1200, height: 900 }, javaScriptEnabled: false });
+const pagSin = await ctxSin.newPage();
 
+try {
 for (const caso of CASOS) {
   console.log(`\n${caso.nombre} · ${caso.tema}`);
   console.log(`  contra ${caso.fuente}`);
@@ -266,6 +319,28 @@ for (const caso of CASOS) {
   if (!acceso.chip) mal('el índice no marca el apartado que lo contiene');
   else console.log('  ✓ el índice marca su apartado');
 
+  /* 1 bis · sin JavaScript no enseña números que el modelo no da.
+     Cada simulador trae escritos a mano los valores de su estado de partida,
+     para quien no tiene JavaScript y para el primer instante de la carga. Nada
+     los comparaba con el modelo, y la auditoría del 26 de septiembre de 2026
+     encontró tres simuladores publicando cifras que su propio modelo ya no
+     daba —la catenaria decía «−4,3 %» donde el modelo da «+10,7 %»—. Se
+     compara solo lo que lleva una cifra: un «--:--» o un hueco vacío que el
+     script rellena no afirman nada. */
+  await pagSin.goto(`${BASE}/${caso.tema}/`, { waitUntil: 'load' });
+  const sinJs = await pagSin.evaluate(leeNumeros, caso.sim);
+  const conJs = await pag.evaluate(leeNumeros, caso.sim);
+  const desfases = Object.entries(sinJs).filter(
+    ([k, v]) => /\d/.test(v) && k in conJs && conJs[k] !== v,
+  );
+  for (const [k, v] of desfases) {
+    mal(`sin JavaScript, ${k} dice «${v}» y el modelo, al cargar, «${conJs[k]}»`);
+  }
+  if (!desfases.length) {
+    const n = Object.values(sinJs).filter((v) => /\d/.test(v)).length;
+    console.log(`  ✓ sin JavaScript enseña lo mismo que el modelo (${n} cifras)`);
+  }
+
   /* Y se llega: se pulsa el aviso, como haría un lector. */
   await pag.click('[data-ir-sim]');
   await pag.waitForTimeout(700);
@@ -279,6 +354,20 @@ for (const caso of CASOS) {
   /* 2 · los números son los del examen */
   for (const prueba of caso.pruebas) {
     await pag.click(prueba.pulsa);
+    /* `mueve` pone un valor en un deslizador y dispara `input`, que es lo
+       que hace un dedo al arrastrarlo: sin esto, lo que solo pasa al mover
+       un mando —no al pulsar un preajuste— no lo probaba nadie. */
+    for (const [sel, valor] of prueba.mueve ?? []) {
+      await pag.evaluate(
+        ({ sim, sel, valor }) => {
+          const el = document.querySelector(sim)?.querySelector(sel);
+          if (!el) throw new Error(`no está ${sel}`);
+          el.value = valor;
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        },
+        { sim: caso.sim, sel, valor },
+      );
+    }
     await pag.waitForTimeout(350);
     const leido = await pag.evaluate(
       ({ sel, campos }) => {
@@ -299,8 +388,12 @@ for (const caso of CASOS) {
     }
   }
 }
-
-await nav.close();
+} catch (e) {
+  mal(`la comprobación no pudo terminar: ${e.message}`);
+} finally {
+  await nav.close();
+  srv.para();
+}
 
 console.log(
   fallos === 0

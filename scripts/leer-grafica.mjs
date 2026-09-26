@@ -20,6 +20,11 @@ import { readFileSync } from 'node:fs';
  */
 const [png, PY1, PY0, PYm1, PX0, PXREF, XREF, DESDE, HASTA, PASO] =
   process.argv.slice(2);
+/* Sin los seis obligatorios todo sale NaN y el guion «mide» igual, sin avisar. */
+if (!png || [PY1, PY0, PYm1, PX0, PXREF, XREF].some((v) => v === undefined || Number.isNaN(+v))) {
+  console.error('Uso: node scripts/leer-grafica.mjs <png> <py1> <py0> <py-1> <px0> <pxref> <xref> [desde hasta paso]');
+  process.exit(1);
+}
 const py1 = +PY1, py0 = +PY0, pym1 = +PYm1, px0 = +PX0, pxref = +PXREF, xref = +XREF;
 const desde = DESDE === undefined ? -0.275 : +DESDE;
 const hasta = HASTA === undefined ? 0.5 : +HASTA;
