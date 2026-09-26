@@ -9,6 +9,35 @@ Abierto el 26 de septiembre de 2026, al cerrar la auditoría completa, con lo
 vivo de `todo.md` y `manana.md` —congelados ese día como archivo— y lo que la
 auditoría encontró y no se arregló en el momento.
 
+## El orden de las fases (27 de septiembre de 2026)
+
+Lo ordenan dos cosas. **El calendario**: en septiembre de 2027 quien entra en
+1.º empieza el diédrico de Expresión Gráfica en el primer cuatrimestre y el
+dibujo técnico en el segundo; Sistemas y Materiales son de 2.º. Y **que su
+examen es un dibujo**: sin el patrón que corrige una construcción no hay
+contenido que escribir, así que el patrón es el camino crítico.
+
+1. **El patrón de construcción verificada** — las recetas y los predicados
+   como datos, con sus pruebas (`lib/diedrico-receta.ts`); las láminas como
+   datos; el paso `construir` en el esquema; el componente `Taller`, aparte de
+   `EjercicioGuiado` y hablándole por eventos; SD1 en el tema 2 con su
+   comprobador en el suelo; después SD4 y SD5, y se documenta en §05. Hecho
+   cuando las tres funcionan mirándolas en claro, en oscuro, a 360 px y
+   fallando a propósito.
+2. **El bloque 1, diédrico** — los seis temas con prosa, figura y ejemplo
+   propio (PDF 10 a 80) y las 51 láminas por familias, de la A a la H.
+3. **El bloque 2, dibujo técnico** — vistas y cortes con la clave calculada
+   desde la pieza en 3D y validada contra los tres cortes con solución
+   oficial; acotación con los precios de los criterios; ajustes ISO como tipo
+   de respuesta; conjuntos con la rúbrica del profesor; temas 7 a 13.
+4. **Rutas y cierre de Expresión Gráfica** — con exámenes se miden; sin ellos
+   se ordenan por lo que repite la colección y se dice, como en Materiales.
+5. **La deuda de abajo, intercalada** en los huecos del suelo y del despliegue,
+   un commit por punto: primero los seis apartados de Térmica 2025-26, y las
+   acciones del despliegue antes del 19 de octubre.
+6. **Sistemas de Producción**, cuando se decida. 7. **El cierre de
+   Materiales**, cuando haya exámenes.
+
 ## Lo decide quien mantiene el proyecto
 
 - **Los veinte PDF de Térmica que son la resolución completa del profesor**:
