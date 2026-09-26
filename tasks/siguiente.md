@@ -19,9 +19,12 @@ falta es traerlo al repositorio sin romper ninguna regla.
    piloto del taller, `sd1-ejemplo.yaml` y el extractor. No se copia nada sin
    leerlo, y el PDF de la colección no entra (§08): las láminas van como datos.
 3. **`lib/diedrico.ts` con lo que SD1 necesita, y sus pruebas antes que el
-   componente** (§10): los valores de referencia del brief —P₁ = (309,12,
-   438,13), VM(PQ) = 55,04 mm y los demás— entran el primer día, validados al
-   revés.
+   componente** (§10). **Hecho el 26 de septiembre de 2026**: doce pruebas en
+   `tests/geometria/sd1.test.ts` con los valores de referencia del brief —P₁,
+   Q₁, Q₂, G₂ y las cuatro longitudes— y dos caminos. Y ya enseñó algo: Q
+   calculado por el plano del tejado y por el alero difiere 0,10 pt, porque el
+   vértice B se separa 0,034 mm del plano de los otros tres; la solución es la
+   del alero, que es la que construye el alumno.
 4. **El paso `construir` en el esquema y el componente `Taller`**, con SD1
    entero. Mirarlo en claro, en oscuro, a 360 px y fallando a propósito (§16).
 5. **SD4 y SD5**, que son los que más funciones piden. Con los tres hechos y

@@ -287,6 +287,10 @@ src/
     plano.ts · moody.ts · bombeo.ts · compuertas.ts · canales.ts ·
     ariete.ts · viga.ts · catenaria.ts · mecanismo.ts
                            los modelos de los simuladores
+    diedrico.ts            la geometría del diédrico directo de Expresión
+                           Gráfica: la solución de una lámina se calcula
+                           aquí, nunca se dibuja a mano. Crece con cada
+                           ejercicio que la pida, con su prueba
     rutas.ts · peso.ts · formulario.ts · cuadernillo.ts · texto.ts
                            URLs, el peso de cada tema en la portada, qué
                            parte de un tema es formulario, cuántos
@@ -339,6 +343,9 @@ tests/
   verificacion/            cada respuesta de examen, recalculada por un
                            camino escrito aparte. Todas menos una, y la
                            que falta está dicha en npm run deuda
+  geometria/               una lámina de Expresión Gráfica por fichero, con
+                           los valores de referencia de su solución y las
+                           comprobaciones por dos caminos (§10)
 public/
   examenes/<asignatura>/   los enunciados originales en PDF. La ÚNICA
                            carpeta del repo donde entra un PDF ajeno (§08),
