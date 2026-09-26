@@ -2,6 +2,95 @@
 
 Reglas de este repositorio. Léelas enteras antes de tocar ningún fichero.
 
+El código vive en la carpeta `2027/` y se publica al subir a `main`
+(`IonanBerloso/road-to-ingenieria`, GitHub Pages). **El repositorio es
+público**: todo lo que se escribe aquí —código, datos, estos documentos, los
+mensajes de commit— lo puede leer cualquiera. De ahí sale la regla que va
+antes que todas las demás.
+
+## Antes de nada: los datos de terceros
+
+Parte del material de las asignaturas, que vive **fuera** del repositorio en
+la carpeta «2027 proyecto contenido», lleva datos de personas reales: notas,
+DNI, listas de clase, grupos de prácticas. Esos ficheros **no entran en el
+repositorio, no se citan, no se convierten y no se abren para «mirar un
+dato»**. No hay «solo para comprobar una cifra».
+
+| asignatura | fichero | qué lleva |
+|---|---|---|
+| Álgebra | `PRIMER_CONTROL._NOTAS.pdf` | DNI y notas |
+| Álgebra | `Subgrupos_para_prcticas_de_ordenador.pdf` | nombres por subgrupo |
+| Cálculo | `TRABAJO_EN_GRUPO._NOTA_FINAL.pdf` | notas |
+| Cálculo | `DISTRIBUCIN_DE_GRUPOS_DE_PRCTICAS_DE_LABORATORIO.pdf` | nombres por grupo |
+| Cálculo | `CONVOCATORIA_EXTRAORDINARIA._PARCIALES_A_REALIZAR.pdf` | DNI |
+| Mecánica Aplicada | `Notas_parcial_esttica.pdf` | notas |
+| Mecánica de Fluidos | `Grupos_Laboratorio_16A_2025-26_act._20260212.pdf` | nombres completos |
+| Expresión Gráfica | `CONVOCATORIA_EXTRAORDINARIA_-_NOTAS.pdf`, `CONVOCATORIA_ORDINARIA_-_CALIFICACIONES.pdf` | notas |
+| Fundamentos Químicos | `Lista_del_grupo_01_GL1…GL4_apellidos_*.php`, `Prctica_2._Resultados_01_GL1…GL4.php` | listas y resultados por persona |
+| Ingeniería Térmica | `20252026_Nota_Prcticas_de_Laboratorio.pdf`, `Notas_de_prcticas_de_aos_anteriores.pdf`, `Resultados_Test_1.1.pdf`, `Resultados_Test_2.1.pdf` | notas |
+| Ingeniería Térmica | `Normas_y_recomendaciones_para_seguir_la_asignatura.pdf` | **los apellidos del alumnado por subgrupo, en la última página** |
+| Ciencia de Materiales | lo que lleva «Grupo N» en el nombre, `RESULTADOS_DE_LA_PRACTICA_5-TRABAJO_EN_FRO_GL1`, `DATOS_DE_LA_PRCTICA_6_Y_MATERIAL_DE_APOYO_GL1` | presentaciones y resultados con nombres |
+| Sistemas de Producción | `Distribucin_grupos_prcticas.pdf` | nombres por grupo |
+
+Tres reglas prácticas, porque la lista nunca estará completa:
+
+1. **Un fichero con «notas», «calificaciones», «lista», «grupo» o
+   «resultados» en el nombre se trata como personal** hasta que se demuestre
+   lo contrario, y demostrarlo no exige abrirlo entero.
+2. **Al volcar un PDF nuevo de material, se mira el final antes de usar
+   nada.** Las normas de Térmica parecían un documento de la asignatura y
+   traían los apellidos en la última hoja.
+3. **Una foto o un escaneo de un examen que alguien pasa no se publica**: se
+   transcribe el enunciado. La foto enseña a quien la hizo —una mano, un
+   cuaderno, un nombre— y eso no es nuestro. Así se hizo con el test de
+   mínimos de Materiales de 2024.
+
+Si una tarea parece necesitar uno de estos ficheros, se para y se pregunta
+(§13, caso 5).
+
+### Lo que no se negocia, en una pantalla
+
+- **Un enunciado de examen se copia literal y nunca se inventa** (§08; §13,
+  caso 2).
+- **Un dato se mide o no se publica**, y un número dentro de una frase
+  publicada se cuenta con un guion antes de escribirlo (§10; §13, caso 1).
+- **`npm run suelo` en verde antes de subir**, y **nunca dos guiones que
+  levanten servidor a la vez**: cada uno para el del otro al arrancar (§11,
+  §17).
+- **Nada de `String.replace` con `$` en el texto de reemplazo, ni LaTeX ni
+  comillas invertidas a través del shell** (§17): las dos cosas ya han
+  destrozado ficheros de este repositorio.
+- **Si te ves escribiendo un guion que recorre muchos ficheros aplicando el
+  mismo cambio, para** (§01).
+
+### Dónde está cada cosa que cambia
+
+Este fichero lleva **reglas y sus porqués, no estado**. Una cifra en
+presente escrita aquí caduca el día que crece el corpus —pasó más de diez
+veces entre agosto y septiembre de 2026, y desde el 26 de septiembre lo
+vigila `npm run cifras`—, así que las que aparecen van fechadas.
+
+| qué | dónde |
+|---|---|
+| el estado de cada asignatura | `src/content/catalogo/<asignatura>.json`, campos `estado` y `motivo` |
+| las cifras del corpus | no se escriben: `npm run deuda` |
+| lo que queda por hacer | `tasks/pendiente.md` |
+| el plan de la próxima sesión | `tasks/siguiente.md`, que se sobrescribe cada vez |
+| lo que se decidió **no** hacer, y por qué | `docs/decisiones.md` |
+| qué pasó cada día | `diario/` |
+| por qué este fichero dice lo que dice | `docs/cronica.md` y el historial de git |
+
+**Y en este repositorio manda este fichero.** Las costumbres generales —las
+del asistente que trabaja aquí, las de otros proyectos— siguen valiendo donde
+no chocan: la prueba antes que el código en los lectores de respuesta y en los
+modelos de los simuladores (§10), la revisión antes de subir, el suelo en
+verde. Donde chocan, se sigue la regla de aquí y el choque se dice en el
+commit. Dos ya conocidos: aquí no se mide cobertura, se valida al revés cada
+guardián (§11), porque un porcentaje de líneas no dice si un dato publicado es
+verdad; y un `console.error` en un camino de error no es depuración olvidada
+sino lo que escucha `humo.mjs`, que falla con cualquier error de consola
+(§11).
+
 ---
 
 ## 00 // Qué es esto
@@ -16,274 +105,49 @@ nada. El objetivo, por tanto, no es «terminarlo» sino **ir un cuatrimestre por
 delante de quien lo usa**. Eso decide el orden más de lo que lo decide el
 temario.
 
-**El orden: Cálculo entera, luego Álgebra.** Y sigue en pie lo único que
-importaba de la regla vieja: **pocas excelentes antes que muchas a medias.** No
-se abre una asignatura hasta que la anterior está terminada según §15.
+**Pocas excelentes antes que muchas a medias.** No se abre una asignatura
+hasta que la anterior está terminada según §15 — con una excepción que ya se
+ha usado dos veces y conviene tener escrita: **una asignatura que no se puede
+cerrar por falta de material, y no de trabajo, no bloquea abrir la
+siguiente.** Ciencia de Materiales está así desde el 12 de septiembre de 2026
+—no hay exámenes de teoría y problemas entre el material—, y esperar a que
+aparezcan habría parado el proyecto entero. La excepción se declara en el
+`motivo` de su catálogo, no se aplica en silencio.
 
-> **Al 6 de septiembre de 2026 las cuatro abiertas están cerradas contra §15**:
-> Cálculo, Álgebra, Mecánica de Fluidos y Fundamentos Químicos. Son
-> **51 temas publicados** —más tres declarados `soloEnClase` con su motivo—,
-> **118 convocatorias** transcritas con su PDF, **doce rutas** y **1.270
-> ejercicios**. Quedaban entonces cinco asignaturas en `prev` —hoy cuatro, con
-> Térmica ya en `obra`—, y la regla de arriba dice qué hacer con ellas: se abre
-> una, y no se abre la siguiente hasta cerrarla.
->
-> **Al 10 de septiembre de 2026**, con Térmica dentro: **61 temas**,
-> **124 convocatorias** —las 118 de siempre más **seis de Térmica**, montadas
-> esa tarde con sus PDF, que Ionan decidió publicar—, **trece rutas** con 110
-> bloques y 295 escalones, y **1.332 ejercicios**. Las cifras de esta nota son
-> un corte con fecha, no un estado: se añade una línea nueva y no se reescribe
-> la anterior, para que se vea qué cambia y a qué velocidad.
->
-> Con eso Térmica deja de tener el hueco que la mantenía en `obra` **por
-> definición** —§15 exige el PDF original y no había ninguno— y pasa a tener
-> uno **medible**: de sus 22 convocatorias hay seis montadas y **dieciséis por
-> transcribir**, dos de ellas en euskera y por tanto fuera del alcance del
-> sitio (§00). Es un cambio de naturaleza más que de tamaño: antes faltaba una
-> decisión, ahora falta trabajo.
->
-> **Al 11 de septiembre de 2026, ese trabajo está hecho**: **61 temas**,
-> **138 convocatorias** —las 118 de siempre más las **veinte** de Térmica que
-> se pueden montar—, **trece rutas** y **1.352 ejercicios con 5.547 pasos**.
-> Las dieciséis que faltaban se cerraron en una tanda: catorce montadas esa
-> noche y **las dos de 2014-2015 declaradas imposibles** con su motivo, que es
-> lo que §15 pide de un hueco. Son un folio cada una, solo en euskera y sin
-> resolución: traducirlas sería inventarlas.
->
-> Lo que a Térmica le queda para cerrarse contra §15 ya no son convocatorias
-> sino **los ejercicios que cada una deja `fuera`**, y esos sí están contados,
-> uno a uno, el 11 de septiembre de 2026: son **28**, y no todos son deuda.
->
-> | por qué está fuera | cuántos |
-> |---|---|
-> | trabajo pendiente, con su resolución oficial detrás | 20 |
-> | ya cubierto por otro ejercicio del corpus, o repetido | 4 |
-> | fuera del temario actual — ciclos de potencia y R-134a | 3 |
-> | falta material: se resuelve leyendo el diagrama de Mollier | 1 |
->
-> La distinción importa porque solo la primera fila es trabajo. Los tres de
-> temario no se van a escribir nunca —los ciclos salieron del programa—, los
-> cuatro repetidos ya tienen su resolución en otra convocatoria, y el de
-> Mollier —la tobera del 30 de enero de 2023— necesita antes que alguien
-> redibuje ese diagrama, porque el del examen es de una editorial (§08).
->
-> **Al 12 de septiembre de 2026, la primera fila de esa tabla está a cero.**
-> Los veinte ejercicios con su resolución oficial detrás están escritos,
-> contrastados cifra a cifra y enganchados en la ruta: el corpus pasa a
-> **1.372 ejercicios y 5.661 pasos**, y Térmica a **57 resoluciones de
-> examen** en sus veinte convocatorias. Los ocho `fuera` que quedan son las
-> otras tres filas, y ninguna es trabajo. El contraste siguió encontrando
-> erratas —un factor mil de unidades, un calor específico escrito donde no
-> tocaba— y, por primera vez, **un error de concepto** en una resolución
-> oficial: el rendimiento exergético de una bomba dado en un 3,88 % cuando es
-> el 82,7 %, por dejar fuera el término v·ΔP de la entalpía de un líquido
-> (enero de 2021, ejercicio 3). El sitio publica el bueno y explica el otro.
->
-> Lo que le queda a Térmica para pasar a `ok` ya no es contenido, y está
-> escrito en `tasks/manana.md`, fase 6.
->
-> **Y ese mismo 12 de septiembre de 2026, Térmica pasa a `ok`**: la quinta
-> asignatura cerrada contra §15. Lo que le faltaba no era contenido, eran tres
-> cosas. La fuente de su evaluación citaba un documento con datos personales, y
-> se sustituyó por la guía docente pública, que además trae dos mínimos que el
-> sitio no decía: el 40 % del examen y el 25 % de cada ejercicio. Sus **183
-> respuestas de examen** se recalcularon en `tests/verificacion/`, y el pase
-> encontró seis casillas que corregían mal, todas arregladas (§17). Y los dos
-> escalones de un solo ejercicio que eran deuda tienen ya su caso de examen.
-> Siguen en pie sus huecos declarados: las dos convocatorias de 2014-2015, solo
-> en euskera, y los ocho `fuera` que no son trabajo.
->
-> La regla de arriba se aplica ahora a la sexta: se abre una, y no se abre la
-> siguiente hasta cerrarla. **Ninguna de las cuatro que quedan trae exámenes en
-> el material**, y eso decide por dónde se empieza; está en `tasks/manana.md`,
-> fase 7.
->
-> **Y la sexta se abre ese mismo día: Ciencia de Materiales**, por decisión de
-> Ionan —«haz materiales primero»—, no por la recomendación escrita, que era
-> Mecánica Aplicada. Queda en `obra` con su temario oficial de diez temas y su
-> evaluación, las dos copiadas de la guía del alumnado 2025-2026. Arranca con
-> dos huecos declarados desde el primer día: **no hay ni un examen** entre el
-> material, así que su ruta no se puede medir, y **los temas 7 a 10 no tienen
-> material de la profesora** —se trabajan con presentaciones de los alumnos,
-> que llevan sus nombres y no se abren—. El plan, tema a tema, está en
-> `tasks/manana.md`.
->
-> **Y la noche de ese 12 de septiembre de 2026, Materiales tiene escrito todo
-> lo que se puede escribir**: sus **diez temas publicados** —71 en el sitio—,
-> cada uno con prosa, figura y ejemplos propios, y **los 99 ejercicios de su
-> colección** resueltos paso a paso y contrastados contra su resultado
-> impreso. La asignatura suma 120 ejercicios y el corpus pasa a **1.492
-> ejercicios y 6.270 pasos**. Diez de esos 99 se leen de una curva de libro y
-> entraron cuando las curvas estuvieron redibujadas a escala: **dieciocho
-> figuras de libro** en los temas 2 a 6 (§08).
->
-> Sigue en `obra`, y ya no por trabajo: sin exámenes no hay ruta que medir
-> (§14) ni convocatorias que transcribir (§15). El contraste volvió a
-> encontrar erratas en un documento oficial —tres resultados impresos que la
-> figura no da, en los problemas 3.23, 3.26 b) y 3.27 b)— y se publicaron
-> como en Térmica: la lectura buena en la casilla y la impresa como
-> distractor explicado. Y queda **una pregunta para la profesora**, que no me
-> corresponde resolver: el 4.19 imprime un 44,8 % que sale de mezclar dos
-> temperaturas en la regla de la palanca, y el sitio publica el 55,2 %
-> coherente con la fórmula del tema y explica el otro. Está en
-> `tasks/manana.md`.
->
-> **Y esa misma noche se abre la séptima, Mecánica Aplicada**, por decisión
-> de Ionan —«sigue con el plan de la siguiente fase»— y con Materiales todavía
-> en `obra`. Es una excepción a la regla de arriba y conviene decirla como
-> tal: Materiales no se puede cerrar porque le falta material, no trabajo, y
-> esperar a que aparezcan sus exámenes habría parado el proyecto entero.
-> Mecánica Aplicada era la recomendación escrita, y al abrirla resultó que
-> **sí tiene exámenes** —ocho convocatorias, tres de ellas con el enunciado en
-> castellano— que la tabla del plan no veía porque se contó sobre una copia
-> parcial del material. El plan está en `tasks/manana.md`, fase 8.
->
-> **Y en la madrugada del 12 de septiembre de 2026, Mecánica Aplicada tiene
-> los doce temas escritos y sus tres convocatorias montadas.** Cada tema con
-> prosa, figura y dos ejemplos propios —**83 temas** en el sitio—, las tres
-> convocatorias del bloque 1 con su PDF y sus figuras redibujadas, y las
-> colecciones de los temas 1 y 2, 35 problemas guiados detrás de los ejemplos.
-> El corpus pasa a **1.571 ejercicios y 6.647 pasos**. Las diez colecciones
-> que faltan se quedaron a medias: los agentes que las transcribían se
-> pararon al agotarse el límite de sesión, y lo suyo está en el borrador, no
-> en el repositorio.
->
-> El contraste volvió a encontrar resultados impresos que no salen, cinco en
-> las dos colecciones montadas: **1.14** y **1.18** del tema 1 —un redondeo a
-> mitad de cuenta y una segunda solución que los datos admiten— y **2.1**,
-> **2.8** y **2.17** del tema 2 —el doble de lo que da la integral, dos
-> lecturas del enunciado y dos erratas de copia—. Publicados como siempre: la
-> cuenta buena en la casilla y la impresa como distractor explicado.
->
-> **Y una deuda que duró un día:** las **57 respuestas de examen** de Mecánica
-> entraron en `tests/verificacion/` el 13 de septiembre de 2026, sus tres
-> convocatorias en paralelo, sin una sola discrepancia. El sitio queda en
-> **1.480 de 1.481**, y la que falta es la de Fluidos que se deja fuera a
-> propósito.
->
-> **Y con eso, el 13 de septiembre de 2026 Mecánica Aplicada se cierra contra
-> §15: es la sexta terminada.** Sus doce temas escritos con figura y ejemplos
-> propios, sus doce colecciones —250 ejercicios—, las tres convocatorias
-> transcribibles con su PDF, tres simuladores con su modelo y sus pruebas, las
-> **dos rutas** y sus 57 respuestas recalculadas.
->
-> Los huecos, que es lo que §15 pide de verdad y no que no los haya:
->
-> - **Cinco convocatorias declaradas imposibles**: las de 2017-2018 y
->   2018-2019 están íntegramente en euskera y traducirlas sería inventar el
->   enunciado (§08). Es la misma decisión que las dos de Térmica. Sí se han
->   **leído para clasificar** qué tema pide cada hueco —eso no publica una
->   palabra de ellas— y de ahí sale la ruta del bloque 2.
-> - **El bloque 2 no tiene ninguna convocatoria en castellano**, así que su
->   ruta está medida sobre exámenes de 2018 y 2019: siete años de antigüedad,
->   y la ruta lo dice en su cabecera.
-> - **Dos huecos de material declarados en las rutas**: el círculo de Mohr y
->   la velocidad de sucesión del CIR se explican y no tienen dónde
->   practicarse, porque la colección no trae ni un problema de cada uno.
-> - Y los exámenes **no publican reparto por competencia**, así que sus
->   ejercicios van sin `puntos`: no se estima lo que no se imprime (§10).
->
-> **Y con Mecánica cerrada se abre la octava, Sistemas de Producción y
-> Fabricación**, el 13 de septiembre de 2026. Vuelve a ser la excepción de
-> arriba y conviene repetir por qué: Materiales sigue en `obra` y no se puede
-> cerrar —le falta material, no trabajo—, así que esperar a que aparezcan sus
-> exámenes pararía el proyecto entero.
->
-> Se eligió entre las dos que quedaban, y no por descarte: **Expresión Gráfica
-> es de 1.º y por §00 tendría que ir antes, pero su examen es un dibujo**. El
-> sitio no sabe corregir una vista ni un corte, el patrón «figura fija» sigue
-> sin construir y no hay tipo de respuesta para eso: necesita una fase de
-> diseño propia antes que contenido, y hacerla con prisa saldría mal.
->
-> Lo que tiene Sistemas, contado listando **sus dos carpetas** —que es la
-> lección que costó el inventario de Mecánica—: treinta y siete ficheros,
-> nueve juegos de diapositivas por proceso, la guía del estudiantado 25/26 y
-> una **colección de 54 problemas** con su resultado impreso. **Ningún
-> examen**, así que nace en `obra` como Materiales.
->
-> Y nace con dos cosas declaradas desde el primer día. La primera, que el
-> temario oficial son **cinco bloques** y el material son nueve juegos por
-> proceso: el catálogo publica los bloques de la guía y dice qué diapositivas
-> caen en cada uno. La segunda, que **«Tecnologías de unión» no tiene
-> material**: ni una diapositiva de soldadura entre los treinta y siete
-> ficheros, ni un problema en la colección. Va con `soloEnClase` y su motivo,
-> que es para lo que existe ese campo.
->
-> Un conflicto más, y está dentro de la propia guía: su tabla resumen da un
-> **20 %** a las prácticas y su apartado 8.1 les da un **30 %**. Se publica el
-> 30, que es el que suma 100 con el examen, y la `fuente` lo explica para que
-> nadie lo lea como una errata nuestra (§13 caso 3).
->
-> **Y esa misma mañana quedan transcritas las doce colecciones enteras.** La
-> asignatura pasa de 191 a **250 ejercicios** y el corpus a **1.742 ejercicios
-> y 7.468 pasos**. Cada resultado impreso se ha recalculado por un camino
-> independiente del desarrollo escrito, y eso ha destapado **más de treinta
-> que no salen**: seis en el tema 3, cuatro en el 4, siete en el 7, dos en el
-> 8, tres en el 9, tres en el 10 y seis en el 12. En todos se publica lo que
-> dan los datos, con el impreso de distractor explicado (§13).
->
-> Y algo que no había pasado hasta ahora: **las resoluciones oficiales del
-> profesor también fallan**, y no siempre del mismo lado. En el 12.17 encuadra
-> una raíz que sus propias ecuaciones no dan; en el 12.18 su fórmula del par
-> pierde una R y deja de ser dimensionalmente un par; y en el 10.1, al revés,
-> **el impreso acierta y la resolución se lleva un signo**. Cuando las dos
-> fuentes discrepan se publica la que reproducen las cuentas, y la fuente del
-> ejercicio dice cuál es.
->
-> **El primer simulador de la asignatura**, en el tema 6: la viga con sus
-> diagramas de cortante y flector, con los apoyos móviles. Responde a por qué
-> el peor flector de una viga con voladizo está en el apoyo y no en el vano,
-> donde la cortante no pasa por cero sino que salta. Su modelo vive en
-> `src/lib/viga.ts` y sus 19 pruebas lo atan a números publicados: los
-> ejercicios 6.2, 6.5 y 6.9 de la colección y el ejercicio 2 de la ordinaria
-> de 2025, cuyo flector máximo —49MgL/8 en x = 7L/4— sale de ese modelo.
->
-> «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
-> declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
-> tiene colección transcrita en cuatro de sus diez temas porque el material no
-> la trae; Fluidos tiene trece ejercicios de examen declarados `fuera` y sus
-> **veintisiete** prácticas de laboratorio sin material —decía «veintitrés»
-> hasta el 10 de septiembre de 2026, que es el número de la guía y no el que
-> numera el índice del guion; la ruta se corrigió el 8 y este fichero se
-> quedó atrás dos días—; y de las 1.241 respuestas
-> de examen comparables hay **una** que se deja sin verificar a propósito.
->
-> **Y el 7 de septiembre de 2026 se abrió la quinta, Ingeniería Térmica**, que
-> queda en `obra` y no en `ok`: sus **diez temas están escritos** —con su
-> figura y su ejemplo de entrada cada uno, que es lo que §15 pide— y su ruta
-> también, **medida sobre diecisiete convocatorias** — las comparables al
-> formato de hoy, de 2017-2018 en adelante, leídas una a una el 9 de
-> septiembre de 2026; decía «seis» hasta entonces. Lo que falta no es
-> trabajo: son
-> las **22 convocatorias sin transcribir**, y están paradas por §13 caso 5.
-> Veinte de los veintidós PDF llevan dentro la resolución completa del
-> profesor, así que publicarlos no es lo mismo que publicar un enunciado y la
-> decisión no me corresponde. Las tres salidas están escritas en
-> `tasks/todo.md`; mientras tanto los ejercicios de examen cuelgan de su tema
-> con su `fuente` diciendo de qué convocatoria salen, que funciona y no
-> requiere decidir nada.
+### El estado, a 26 de septiembre de 2026
 
-> Hasta el 24 de agosto de 2026 esta sección decía **«Piloto: Cálculo y Mecánica
-> de Fluidos»**, elegidas porque tensionan el sistema en direcciones opuestas —
-> una abstracta y de gráficas, la otra física y de esquemas de instalación—, y
-> prohibía abrir nada más hasta cerrar las dos. Se cambia por dos motivos y
-> conviene que los dos queden dichos.
->
-> El primero es que **el piloto ya ha rendido su diagnóstico sin escribir una
-> línea de Fluidos**: sabemos exactamente dónde se rompe la capa compartida
-> —`unidad` no existe en el esquema, la tolerancia es absoluta donde debería ser
-> relativa, y `EjercicioGuiado` importa los lectores de complejos directamente—.
-> Eso era lo que la segunda asignatura tenía que averiguar, y ya está averiguado.
->
-> El segundo es de coste, y salió al medir el temario real: **Fluidos son 25
-> temas**, la asignatura más cara de las nueve. Aprender sobre la más cara es
-> justo al revés. Álgebra son cinco bloques y ocho exámenes, rompe la misma capa
-> compartida por otro sitio —una **matriz** no es un número ni un conjunto de
-> puntos— y se termina en semanas. Fluidos entra después, ya con el lector de
-> respuestas separado del componente.
->
-> Lo que **no** cambia: la segunda asignatura sigue eligiéndose porque tensiona
-> el sistema por un sitio distinto, no porque toque en el temario.
+Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
+`npm run deuda`. Los cortes anteriores están en `docs/cronica.md`.
+
+| asignatura | curso | estado | lo que la define hoy |
+|---|---|---|---|
+| Cálculo | 1.º | `ok` | la referencia de tamaño: §15 la mide |
+| Álgebra | 1.º | `ok` | un tema `soloEnClase` declarado |
+| Fundamentos Químicos | 1.º | `ok` | sin colección en cuatro temas, porque el material no la trae |
+| Expresión Gráfica | 1.º | `prev` | **la siguiente**, y antes que contenido necesita diseño: su examen es un dibujo |
+| Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
+| Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
+| Mecánica Aplicada | 2.º | `ok` | cinco convocatorias imposibles, solo en euskera |
+| Ciencia de Materiales | 2.º | `obra` | escrita entera; sin exámenes de problemas no hay ruta ni cierre |
+| Sistemas de Producción | 2.º | `obra` | solo el catálogo: **se deja para más adelante** |
+
+El corpus, ese día: 83 temas publicados, 1.948 ejercicios y 8.487 pasos,
+141 convocatorias con 124 PDF, 15 rutas con 328 escalones y 10 simuladores.
+
+### El orden que queda
+
+Decidido por quien mantiene el proyecto, en septiembre de 2026: **Expresión
+Gráfica es la última asignatura de esta tanda y Sistemas de Producción se
+deja para más adelante.** Ciencia de Materiales se cierra el día que aparezcan
+sus exámenes, no antes. Lo que eso pide en detalle —el diseño del paso de
+dibujo, el paquete que ya existe fuera del repositorio— está en
+`tasks/pendiente.md`.
+
+Y lo que no cambia de cómo se elige: la asignatura siguiente se elige por lo
+que rompe del sistema, no por el orden del temario. Álgebra se abrió antes que
+Fluidos porque una **matriz** no es un número y rompía la capa compartida por
+otro sitio; Expresión Gráfica rompe la que queda, porque **un dibujo no se
+puede corregir** en un sitio estático (§04, el paso `dibujar`).
 
 ### Qué hace distinto a este proyecto
 
@@ -390,13 +254,12 @@ src/
                            rompe el build en vez de llegar a un alumno.
   content/
     catalogo/              una entrada .json por asignatura (las nueve)
-    calculo/
+    calculo/               una carpeta por asignatura con temas escritos
       t01-complejos/
         index.mdx          la prosa del tema
         ejercicios.yaml    los ejercicios como DATOS
       examenes/
         2024-2025-1ev/     examen.yaml (reparto) + ejercicios.yaml
-    fluidos/               todavía solo un README
     preparar/              una ruta de estudio por evaluación (§14).
                            Solo YAML: no enseña nada nuevo, ordena lo que
                            ya está y dice por qué en ese orden.
@@ -406,75 +269,88 @@ src/
                            No transcribe el guion ni reparte ningún
                            fichero: lo nombra, lo resume y enlaza el
                            apartado donde está explicado (§08)
+    banco/                 bancos de preguntas de test, para el simulador
+                           de test (§05). Uno: el de mínimos de Materiales
   components/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
-    sim/                   PlanoComplejo (cálculo, modelo en lib/plano.ts
-                           desde el 15 de septiembre de 2026) y los de fluidos:
-                           AbacoMoody · PuntoFuncionamiento · PrismaDePresiones
-                           SeccionDeCanal · GolpeDeAriete. Su física vive en
-                           lib/ para poder probarla (§10), nunca dentro
+    sim/                   los simuladores (§05, §10). Su modelo vive en
+                           lib/ para poder probarlo, nunca dentro del
+                           .astro; el de test lee su banco de content/banco
     ui/                    Cabecera · Tema · Examen · Reparto
   layouts/
     Base.astro             el ÚNICO layout
-  lib/                     markdown.mjs (el procesador, §07) · rutas.ts
-                           complejo.ts y regiones.ts (lectores de respuesta)
-                           plano.ts y los ocho modelos de los simuladores
+  lib/
+    markdown.mjs           el procesador de Markdown y fórmulas (§07)
+    numero.ts · complejo.ts · regiones.ts · algebra.ts · unidades.ts ·
+    quimica.ts             los lectores de respuesta. numero.ts es el que
+                           comparten el navegador y el esquema (§17)
+    plano.ts · moody.ts · bombeo.ts · compuertas.ts · canales.ts ·
+    ariete.ts · viga.ts · catenaria.ts · mecanismo.ts
+                           los modelos de los simuladores
+    rutas.ts · peso.ts · formulario.ts
+                           URLs, el peso de cada tema en la portada y qué
+                           parte de un tema es formulario
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
-  pages/                   index + [asignatura]/[tema] · examenes · preparar
+  pages/                   index · [asignatura]/[tema] · examenes ·
+                           preparar · formulario · laboratorio, y el
+                           índice de ejercicios que busca la paleta
 scripts/
   verify.mjs               lee el HTML publicado (§11)
-  humo.mjs                 lo abre en Chromium (§11)
-  humo-todo.mjs            la barrida completa, partida por asignatura y
-                           en paralelo contra un solo servidor (§11)
-  figuras/                 el lienzo que calcula las figuras y un
-                           generador por tema; `previsualiza.mjs` monta
-                           el contact sheet para mirarlas (§16)
+  recalcula.mjs            que las cuentas del corpus salgan (§11)
+  deuda.mjs                lo que queda, MEDIDO; con --estricto
+                           (npm run cifras) falla si una cifra publicada
+                           ha caducado (§11, §16)
   check-color.mjs          contraste, daltonismo y la capa de tinta
                            DECLARADOS en tokens.css
   contraste.mjs            el contraste REAL del texto ya publicado, nodo a
                            nodo y en los dos temas (§11)
-  leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
-  recalcula.mjs            que las cuentas del corpus salgan (§11)
+  humo.mjs                 lo abre en Chromium (§11)
+  humo-todo.mjs            la barrida completa, partida por asignatura y
+                           en paralelo contra un solo servidor (§11)
+  comprueba-simuladores.mjs  que un simulador se ENCUENTRE, que sus botones
+                           den los números de su fuente y que sin
+                           JavaScript no enseñe otros (§11)
+  servidor.mjs             la vista previa que necesitan humo, humo-todo,
+                           contraste, comprueba-simuladores y peso. Una
+                           sola forma de levantarla, no cinco
+  peso.mjs                 cuánto tarda una página en un móvil (§11)
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
                            bloque en el corpus: en un segundo, sin construir
-  inventario-coleccion.mjs qué problemas de la colección faltan, cruzando el
-                           volcado del PDF contra el corpus
-  comprueba-simuladores.mjs  que un simulador se ENCUENTRE y que sus botones
-                           den los números del examen (§10, §16)
-  peso.mjs                 cuánto tarda una página en un móvil (§11)
-  mide.mjs                 la tabla de docs/como-vamos.md, generada
-  deuda.mjs                lo que queda, MEDIDO: el tamaño del corpus, los
-                           escalones sin rampa, y los `falta[]` que publican
-                           un número ya caducado (§16)
+  inventario-coleccion.mjs qué problemas de la colección de Fluidos faltan,
+                           cruzando el volcado del PDF contra el corpus
+  mide.mjs                 la tabla de docs/como-vamos.md, medida
+  leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   diario.mjs               el diario en PDF
+  figuras/                 el lienzo que calcula las figuras (§17), un
+                           generador por tema, pegar.mjs, rehacer.mjs —que
+                           las vuelve a pegar todas— y previsualiza.mjs,
+                           que monta el contact sheet para mirarlas (§16)
 tests/
   *.test.ts                los lectores de respuesta, con vitest
-  fisica/                  casos con resultado conocido, uno por simulador:
-                           moody · bombeo · compuertas · canales · ariete ·
-                           viga · catenaria · mecanismo · plano, 9 ficheros y
-                           166 casos sacados del corpus, nunca de un libro
-                           (§10). Decía 86 y luego 107; desde el 13 de
-                           septiembre de 2026 la compara `deuda.mjs` §10, que
-                           es la única forma de que no vuelva a caducar. Y ojo
-                           al README de esa carpeta: solo 3 de los 8 comparan
-                           contra una convocatoria
+  fisica/                  casos con resultado conocido, uno por simulador,
+                           sacados del corpus y nunca de un libro (§10). El
+                           README dice contra qué compara cada uno; la
+                           cuenta de casos la da npm run deuda
+  verificacion/            cada respuesta de examen, recalculada por un
+                           camino escrito aparte. Todas menos una, y la
+                           que falta está dicha en npm run deuda
 public/
-  examenes/<asignatura>/   los enunciados originales en PDF —124 al 13 de
-                           septiembre de 2026: 85 de cálculo, 20 de térmica,
-                           8 de álgebra, 6 de química, 3 de mecánica y 2 de
-                           fluidos. La ÚNICA carpeta del repo donde entra un
-                           PDF ajeno (§08), y la única donde un fichero se
-                           publica por estar, no por estar enlazado: desde el
-                           13 de septiembre `verify.mjs` comprueba también el
-                           sentido disco→YAML, después de encontrar cuatro
-                           sueltos. Ojo a la
-                           asimetría de fluidos: sus 16 convocatorias caben en
-                           2 ficheros porque quince vienen en un cuadernillo
-                           único, así que aquí «un PDF» no es «una
+  examenes/<asignatura>/   los enunciados originales en PDF. La ÚNICA
+                           carpeta del repo donde entra un PDF ajeno (§08),
+                           y la única donde un fichero se publica por estar,
+                           no por estar enlazado: verify.mjs comprueba los
+                           dos sentidos, disco→YAML y YAML→disco. Ojo a
+                           Fluidos: quince convocatorias vienen en un
+                           cuadernillo único, así que «un PDF» no es «una
                            convocatoria»
-docs/ · tasks/ · referencia/ · diario/
+docs/                      como-vamos.md, cronica.md (la historia de este
+                           fichero), decisiones.md y las auditorías
+tasks/                     pendiente.md (lo vivo) y siguiente.md (la
+                           próxima sesión); todo.md, manana.md y
+                           mapa-examenes.md, congelados el 26-9-2026
+referencia/ · diario/
 CLAUDE.md
 ```
 
@@ -627,14 +503,18 @@ exactamente 1 pieza `trampa` en un `justificar`.
 
 Los **seis** tipos de paso, y qué competencia entrena cada uno:
 
-| `tipo` | qué hace | competencia | usos en el corpus |
-|---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 2.011 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 4.149 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.902 |
-| `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 33 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 28 |
-| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 178 |
+| `tipo` | qué hace | competencia |
+|---|---|---|
+| `reconocer` | elegir el concepto antes de calcular | COMP1 |
+| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 |
+| `justificar` | ordenar las piezas, con una trampa | COMP4 |
+| `verificar` | escribir una condición y compararla como región | COMP2·COMP4 |
+| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 |
+| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 |
+
+Los tres primeros van en todos los ejercicios —el esquema lo exige— y los
+otros tres son minoría a propósito: a 26 de septiembre de 2026 eran 33, 37 y
+179 pasos de 8.487.
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
 > de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
@@ -654,117 +534,11 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 > `calculo/t07-integral-multiple`, ejercicio `invertir-el-orden`: el que no se
 > puede hacer de cabeza.
 
-> Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
-> pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
-> agosto —decían 1.068 y 1.989 cuando eran 1.210 y 2.394—, que es la tercera
-> vez que pasa lo mismo con esta tabla. La regla de recontar al cerrar una
-> asignatura no basta cuando pasan semanas sin cerrar ninguna: **se recuenta
-> también al tocar el corpus en más de un fichero**.
->
-> Y otra vez el mismo día al abrir Fundamentos Químicos: **1.202 ejercicios y
-> 4.878 pasos**, en 43 temas de cuatro asignaturas. Los diez nuevos son seis
-> de examen y cuatro ejemplos introductorios; la regla de arriba funcionó a la
-> primera.
->
-> **Y una tercera vez el mismo día**, al escribir las nueve rampas que faltaban:
-> **1.267 ejercicios y 5.140 pasos**. Tres recuentos en un día es la señal de
-> que la regla estaba bien puesta y de que la tabla no debería escribirse a
-> mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
-> de deuda entera. La cifra se copia de su salida, no se estima.
->
-> Y el 6 de septiembre de 2026, **1.270 ejercicios y 5.154 pasos**: catorce pasos
-> más y tres ejercicios, y ninguno de examen. Son tres ejemplos de entrada
-> —el del diferencial, que cierra el último escalón de Cálculo con un solo
-> ejercicio; el de las dos líneas de alturas de una central; y el de decidir
-> cuál de dos curvas dibujadas es la derivada de la otra, que es el primero de
-> Cálculo con figura propia— más **cinco pasos con rúbrica**: los cuatro
-> primeros de Fluidos y el tercero de Álgebra, metidos **dentro** de
-> ejercicios de examen que ya estaban. Que el corpus pueda crecer por dentro
-> conviene que se note: no todo crecimiento es transcribir una convocatoria
-> más.
->
-> Y una tercera vez el mismo día, al terminar los diez temas de Química:
-> **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
-> aporta 36 ejercicios y 157 pasos, que es poco para diez temas y está bien
-> que se note: los suyos no tienen colección transcrita, solo los dos
-> ejemplos propios por tema y los dieciséis de examen. **El hueco está
-> declarado en `tasks/todo.md`, no disimulado en esta cifra.**
->
-> Y una cuarta, esa misma tarde, al cerrar la transcripción de Química:
-> **1.254 ejercicios y 5.086 pasos**. La asignatura pasa de 36 a **62
-> ejercicios** —20 ejemplos, 15 de colección y 27 de examen— y sus seis
-> convocatorias quedan enteras, sin un solo `fuera`. Cuatro recuentos en un
-> día es mucho, y es exactamente lo que la regla pretendía: **se recuenta al
-> tocar el corpus en más de un fichero**, no cuando alguien se acuerda.
->
-> Y el **7 de septiembre de 2026**, con Ingeniería Térmica escrita:
-> **1.310 ejercicios y 5.342 pasos en 61 temas**, con 423 figuras. Térmica
-> aporta 40 ejercicios y 256 pasos — tres de ellos escritos esa misma tarde
-> para cerrar tres `falta[]` de su ruta: Churchill y Chu, el rendimiento
-> exergético de un compresor y el difusor. La cifra sale de `node scripts/deuda.mjs`
-> y se copia de su salida, que es la regla desde el 5 de septiembre; ese día
-> el propio guion se saltaba Térmica **en silencio** porque llevaba la lista
-> de asignaturas escrita a mano, y ahora la saca del catálogo.
->
-> Y el **8 de septiembre de 2026**, **1.319 ejercicios y 5.388 pasos**. Los
-> nueve nuevos son todos peldaños: escalones que empezaban directamente por un
-> ejercicio de examen, que es lo que §14 dice que no puede pasar. Cinco de
-> Cálculo —longitud de arco por dos vías, área de superficie curva, Laplace con
-> coeficientes variables— y cuatro de Química —el puente del mol, los dos
-> órdenes de una configuración, el radio iónico y Nernst por electrodos—. Es la
-> forma de crecer que menos se nota en la cifra y más cambia el producto:
-> **ningún ejercicio nuevo de examen, y nueve entradas nuevas al corpus que ya
-> estaba.**
->
-> Y el **10 de septiembre de 2026**, **1.322 ejercicios y 5.403 pasos**. Los
-> tres nuevos son de Ingeniería Térmica —entre ellos el de las dos masas de
-> agua que se mezclan, que cierra el escalón de exergía destruida por los dos
-> caminos— y el ejercicio 9 de la ordinaria de Fluidos de 2026, que **no es
-> nuevo**: estaba en `fuera` y se recuperó al releer los `fuera` de formato
-> (§17). Conviene que esa distinción quede escrita, porque la cifra no la
-> hace: **un corpus puede crecer recuperando lo que ya había transcrito**, y
-> eso es más barato que cualquier otra forma de crecer.
->
-> Y esa misma tarde, **1.332 ejercicios y 5.449 pasos**, con la decisión de
-> Ionan de publicar los PDF de Térmica. Los nueve son de esa asignatura y de
-> tres orígenes distintos, que conviene distinguir porque cuestan cosas muy
-> diferentes: **tres de su colección** —los temas 2 y 4, la hoja de conducción
-> y el boletín de tema 3—, que no dependían de ninguna decisión y llevaban
-> ahí desde el principio; **dos ejemplos nuestros** para los escalones de
-> exergía; y **cuatro de examen**, las primeras convocatorias transcritas de
-> la asignatura. La forma más barata de las tres fue la primera, y era la que
-> nadie había mirado.
->
-> Y el **11 de septiembre de 2026**, de madrugada, **1.352 ejercicios y 5.547
-> pasos**: veinte ejercicios más, y **los veinte de examen de Térmica**, uno
-> por cada una de las catorce convocatorias montadas esa noche más los seis
-> que ya estaban. Es el crecimiento más caro por unidad —cada uno exige
-> resolver a ciegas, abrir la resolución manuscrita del profesor y contrastar
-> cifra a cifra— y el único que cierra un hueco de §15 en vez de mejorar el
-> corpus por dentro.
->
-> Conviene anotar lo que ese contraste encontró, porque es el argumento entero
-> de por qué se hace en ese orden: **cinco erratas en documentos oficiales**
-> —una masa escrita como 4 donde el enunciado dice 2, dos calores específicos
-> cambiados, dos temperaturas de referencia mal copiadas— y **cuatro
-> enunciados que se repiten literalmente** entre convocatorias separadas por
-> cuatro años o más. Nada de eso se ve leyendo la resolución primero.
->
-> Y entre el 11 y el 12 de septiembre de 2026, **1.372 ejercicios y 5.661
-> pasos**: veinte más, y los veinte de examen de Térmica, que son la fila
-> entera de «trabajo pendiente» de la tabla de §00. Ya no había convocatoria
-> que montar, solo el ejercicio que cada una dejaba fuera, y aun así cada uno
-> pidió lo mismo que los anteriores: resolver a ciegas, abrir la resolución y
-> contrastar. Lo que eso encontró —entre otras cosas, el primer error de
-> concepto en una resolución oficial— está en §00.
->
-> Y el 12 de septiembre de 2026, con Ciencia de Materiales escrita, **1.492
-> ejercicios y 6.270 pasos**: 120 ejercicios y 609 pasos más, todos de
-> Materiales. Es la primera asignatura sin un solo ejercicio de examen —99
-> de los 120 son de su colección, y el resto, ejemplos—, porque no hay
-> exámenes entre el material. Y la primera donde un problema no se podía
-> escribir hasta tener dibujada la figura de la que se lee: diez esperaron a
-> sus curvas.
+> **Los usos de cada tipo no se escriben aquí**: los da `npm run deuda`, en
+> «el tamaño del corpus». Esta tabla llevaba una columna con ellos y caducó
+> más de diez veces entre agosto y septiembre de 2026, cada vez que se tocaba
+> el corpus; la historia entera está en `docs/cronica.md`. La lección que
+> dejó es la de §16: **una cifra se cuenta con un guion, no se copia.**
 
 `redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
 encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
@@ -774,9 +548,10 @@ las dos demostraciones más pedidas de cada asignatura: Barrow y Lagrange en
 Cálculo, «esto es subespacio vectorial» y «núcleo trivial implica inyectiva»
 en Álgebra.
 
-Y sigue sin ser un patrón maduro: cinco usos de 4.826 pasos. Se pararon en
-cuatro **a propósito** (§13: el framework se destila del contenido). Antes de
-escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
+Y ese día seguía sin ser un patrón maduro: cinco usos de 4.826 pasos. Se
+pararon en cuatro **a propósito** (§13: el framework se destila del
+contenido). Antes de escribir más había que mirar cómo se leían, no seguir
+produciéndolas.
 
 > **Mirado el 6 de septiembre de 2026, y con el resultado escrito, que es lo
 > que faltaba para poder seguir.** Las cinco se leyeron enteras y se abrió una
@@ -867,23 +642,6 @@ casilla:
 > razonable». Los dos son §16 punto 1: probarlo a mano encontró lo que los
 > tests no buscaban.
 
-> Las cifras de esta tabla y las de §05 y §15 se quedaron en el corpus de
-> agosto y estuvieron desfasadas hasta el 28 de agosto de 2026: decían 1.022
-> pasos cuando eran 2.658, y 270 ejercicios cuando eran 683. **Regla que sale
-> de ahí: un número de este fichero se recalcula al cerrar cada asignatura, no
-> cuando alguien se acuerda.** El guion está en el scratchpad y son veinte
-> líneas: recorre las colecciones y cuenta.
->
-> Recontadas el **1 de septiembre de 2026**, al cerrar Fluidos: los pasos
-> pasaron de 3.092 a 4.142 y los ejercicios de 827 a 1.059, repartidos en 41
-> temas de tres asignaturas. La regla funcionó — las cifras llevaban cuatro
-> días desfasadas, desde el recuento del 28 de agosto, no una semana.
->
-> Y recontadas otra vez el **4 de septiembre**, al meter la colección de
-> Fluidos: **4.822 pasos y 1.192 ejercicios** en los mismos 41 temas. En tres
-> días el corpus ha crecido un 13 % sin abrir un tema nuevo, y eso lo hace
-> todo un solo trabajo: transcribir un boletín que ya existía.
-
 > Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
 > MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
 > `<Verificador>` que no existe. El de YAML no acertaba **un solo campo**: le
@@ -949,21 +707,42 @@ los cinco viven dentro de `EjercicioGuiado` como tipos de paso en vez de como
 componente propio. Eso no es deuda: es §13 funcionando —el framework se destila
 del contenido— y por eso la tabla va aquí antes que los patrones:
 
-| patrón | dónde vive de verdad | usos |
-|---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 83 temas |
-| **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.742 ejercicios |
-| **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.742 |
-| (*simulador*) | `sim/`, cuando el tema lo pide | 9 |
+| patrón | dónde vive de verdad |
+|---|---|
+| **1 · Lectura** | `patrones/Lectura.astro`, en todos los temas |
+| **2 · Figura fija** | **no construido** |
+| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro`, en todos los ejercicios |
+| **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` |
+| **5 · Demostración** | paso `justificar`, con su pieza trampa, en todos los ejercicios |
+| (*simulador*) | `sim/`, cuando el tema lo pide |
+
+A 26 de septiembre de 2026 eran 83 temas, 1.948 ejercicios guiados, 33 pasos
+`verificar` y 10 simuladores; la cifra al día la da `npm run deuda`.
 
 Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
 ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
-antes, porque un patrón diseñado en el vacío sale mal (§13).
+antes, porque un patrón diseñado en el vacío sale mal (§13). **Expresión
+Gráfica es la primera candidata a pedirlo**: su examen es una vista, un corte,
+una pieza que se lee de una sola figura que se transforma.
 
 Y el `simulador` del esquema no es un sexto patrón: es la puerta que §04 deja
-abierta para escribir código cuando un tema necesita algo que no existe.
+abierta para escribir código cuando un tema necesita algo que no existe. Hay
+dos clases, y conviene no confundirlas:
+
+- **Los de física**, uno por tema que lo pide, con su modelo en `lib/` y su
+  caso en `tests/fisica/` (§10). Responden a una pregunta que la prosa sola no
+  contesta: cuándo deja de importar el Reynolds, por qué el peor flector está
+  en el apoyo.
+- **El de test**, `sim/TestDeMinimos.astro`, que no simula física sino un
+  **examen**: saca las preguntas de un banco (`src/content/banco/`) con el
+  reparto por bloques del examen real, corre el reloj y corrige con la
+  penalización de verdad. Nace el 24 de septiembre de 2026 para el test de
+  mínimos de Materiales, donde lo que se entrena no es un contenido sino
+  decidir bajo penalización. Un banco no es una colección de ejercicios: no
+  hay pasos ni pista, y el esquema de `banco` exige cuatro opciones, una sola
+  correcta y un `porque` en cada una —también en la buena—. **Las preguntas
+  de un banco son propias y lo dicen en su `fuente`**: las del examen real se
+  transcriben como ejercicio, no se mezclan con las inventadas.
 
 **1 · Lectura.** Texto con una herramienta incrustada. Para contenido que se
 sostiene solo y la figura apoya.
@@ -1297,8 +1076,8 @@ puntos son demostración.
 > **La regla que sale de haberlo tenido mal dos veces:** este número no se
 > recalcula «cuando entren exámenes nuevos», porque eso deja la decisión al
 > criterio de alguien que está haciendo otra cosa. Se recalcula **al cerrar una
-> asignatura**, junto con las cifras de §04, §05 y §15, y se comprueba que la
-> tabla de aquí y lo que digan `docs/` y `tasks/` dicen lo mismo.
+> asignatura de las que publican reparto por competencia**, y la tabla de
+> arriba lleva su fecha: es un corte, no un estado.
 
 Todo ejercicio guiado entrena las tres: una pregunta de reconocimiento antes
 del cálculo, y una comprobación de justificación formal después. **Un componente
@@ -1390,13 +1169,60 @@ simulación.
 - Los datos que se publican como ciertos tienen que serlo. Si el peso de un
   tema en el examen es estimado, se muestran tres niveles —alto, medio, bajo—
   y no un porcentaje falsamente preciso.
+- **El peso de un tema se mide con su ruta**: alto si su bloque cae en más de
+  la mitad de las convocatorias medidas, medio si cae en alguna, bajo si casi
+  nunca. Se contrasta con las etiquetas de tema de los `examen.yaml`, que ven
+  otra cosa —el tema principal de cada ejercicio, no el que va dentro— y por
+  eso no bastan solas: el primer principio de Térmica casi nunca es el tema
+  principal y entra en dieciséis de diecisiete. Un tema que cae dentro de
+  otros lo dice su `etiqueta` («transversal: …») y conserva su peso. En
+  Cálculo lo cuenta el código (`lib/peso.ts`), porque sus 88 convocatorias
+  dan para contar ejercicios; en las demás el peso se declara en el catálogo
+  y **su `fuenteTemario` dice de dónde sale**. Con tres convocatorias por
+  cuatrimestre, como Química, la medida no distingue —todo cae en dos o en
+  tres—, y ahí manda el criterio declarado.
+
+  > El 26 de septiembre de 2026 había ocho pesos publicados en la portada que
+  > las dos medidas desmentían a la vez —el análisis exergético de Térmica en
+  > «medio» cayendo en quince de diecisiete; el bloque 2 de Mecánica entero en
+  > «medio» con su ruta ya medida, cuando su catálogo prometía cambiarlo al
+  > medirla—. Se corrigieron esos ocho y solo esos: donde las dos medidas no
+  > coinciden, el caso está en `tasks/pendiente.md` para mirarlo tema a tema.
 
 ---
 
 ## 11 // Suelo de calidad
 
-Son dos guardianes y comprueban cosas distintas. Los dos corren en CI y
-bloquean el despliegue.
+`npm run suelo` es una sola línea, la misma en local y en el despliegue —el
+flujo de GitHub Actions la llama tal cual—, y son nueve pasos en este orden.
+Si uno falla, no se publica.
+
+| paso | qué comprueba | dónde |
+|---|---|---|
+| `build` | que el sitio se construye y que cada dato pasa su esquema | `content.config.ts` |
+| `verify` | el HTML publicado y el origen: tokens, enlaces, fórmulas, accesibilidad, los documentos | `scripts/verify.mjs` |
+| `recalcula` | que las cuentas que el corpus escribe salgan | `scripts/recalcula.mjs` |
+| `cifras` | que ninguna cifra publicada haya caducado | `scripts/deuda.mjs --estricto` |
+| `color` | el contraste **declarado** en `tokens.css`, y el daltonismo | `scripts/check-color.mjs` |
+| `contraste` | el contraste **real** del texto publicado, en los dos temas | `scripts/contraste.mjs` |
+| `test` | lectores de respuesta, física de los simuladores y respuestas de examen recalculadas | `tests/`, con vitest |
+| `humo` | el sitio en Chromium: lo que leer el HTML no puede demostrar | `scripts/humo.mjs` |
+| `sim` | que cada simulador se encuentre y diga lo que dice su fuente | `scripts/comprueba-simuladores.mjs` |
+
+Los tres que abren un navegador —`contraste`, `humo` y `sim`— levantan su
+propia vista previa con `scripts/servidor.mjs`, y por eso **dos no pueden
+correr a la vez**: cada uno para el servidor del otro al arrancar. En el suelo
+van encadenados y no chocan; lanzar uno a mano mientras corre el suelo, sí
+(§17). El suelo entero tardó 26 minutos el 26 de septiembre de 2026, veinte
+de ellos en el humo: se lanza en segundo plano, con la salida a un fichero
+completo, y no se toca `dist/` mientras corre.
+
+> Esta sección decía «son dos guardianes» desde agosto, cuando ya eran seis
+> pasos. `recalcula`, `cifras` y `sim` entraron el 26 de septiembre de 2026:
+> los tres existían, los tres habían nacido de un fallo real, y los tres se
+> quedaban fuera del suelo con argumentos —«tarda», «necesita servidor», «es
+> un informe»— que al medirlos ese día no se sostenían: un segundo, un minuto
+> y 0,7 segundos.
 
 ### `scripts/verify.mjs` — lee el HTML publicado
 
@@ -1448,16 +1274,12 @@ En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
 muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
 que un fallo se pueda reproducir. En unas semanas pasan todas.
 
-Con `HUMO_TODO=1` las abre **todas** —**248 al 15 de septiembre de 2026**:
-108 de Cálculo, 41 de Fluidos, 32 de Térmica, 19 de Química, 19 de Álgebra,
-**18 de Mecánica Aplicada** y **10 de Ciencia de Materiales**—, y eso es lo que
-se pasa al cerrar una asignatura. Esta línea decía 227 y se dejaba fuera a
-Mecánica entera, cerrada el día antes; la compara `deuda.mjs` §10 desde el 13
-de septiembre. Térmica pasó de 11
-a 32 esa madrugada al montar sus veinte convocatorias, que es la subida más
-grande que ha tenido esta cifra de una vez. **La cifra se lee, no se ignora**:
-decía 123 y llevaba semanas sin actualizarse, que es justo el descuido que
-esta sección persigue en el guardián. La primera vez que se hizo, el 29 de agosto de 2026,
+Con `HUMO_TODO=1` las abre **todas** —249 el 26 de septiembre de 2026—, y eso
+es lo que se pasa al cerrar una asignatura. La barrida imprime al empezar
+cuántas páginas abre de cada asignatura, y **esa línea se lee, no se ignora**:
+un cero delata una asignatura que nadie ha abierto (§17). Esta frase llevaba
+el recuento escrito a mano, y caducó cuatro veces —123, 227, 248…— hasta que
+se dejó de escribir. La primera vez que se hizo, el 29 de agosto de 2026,
 encontró cuatro figuras marcadas… y las cuatro eran correctas: el guardián de
 `viewBox` daba falsos positivos con los círculos guía. Se estrechó la regla y
 se dejó dicho por qué. Ese es el uso: **la barrida no busca aprobar, busca
@@ -1505,8 +1327,12 @@ sino partirlo también a él.
 
 ### `npm run sim` — que un simulador se encuentre y diga la verdad
 
-Tampoco es un guardián del suelo: necesita el sitio levantado. Se pasa **al
-tocar un simulador**, como `recalcula` al tocar el corpus.
+En el suelo desde el 26 de septiembre de 2026. Hasta entonces necesitaba un
+servidor levantado a mano y se pasaba «al tocar un simulador», que en la
+práctica era casi nunca: ese día la auditoría encontró leyendo el código tres
+fallos de simulador —una recursión que congelaba los diagramas de la viga, un
+preajuste de la catenaria que se recortaba contra el tope del mando, y veinte
+cifras sin JavaScript que el modelo ya no daba— y ninguno estaba en su lista.
 
 Existe por un fallo concreto y caro. El 2 de septiembre de 2026 se publicaron
 cinco simuladores correctos y **completamente invisibles** —viven en un
@@ -1515,14 +1341,25 @@ en verde y las capturas de cada uno bien. `tests/fisica/` prueba la física;
 `humo.mjs` prueba que la página no reviente. **Nadie probaba el cable entre las
 dos cosas.**
 
-Comprueba dos cosas, y las dos habían fallado:
+Comprueba tres cosas, y las tres habían fallado:
 
 - que el simulador **se encuentre** aterrizando en la URL a pelo, sin ancla y
   sin `localStorage` — que la cabecera lo anuncie, que el índice marque su
   apartado y que el aviso **lleve**;
-- que cada botón de preajuste deje en la tabla **los valores que declara su
-  campo `fuente`**. No se recalculan aquí nunca: se copian de donde el `fuente`
-  diga (§10).
+- que cada botón de preajuste —y cada mando movido con `mueve`— deje en la
+  tabla **los valores que declara su campo `fuente`**. No se recalculan aquí
+  nunca: se copian de donde el `fuente` diga (§10);
+- que **sin JavaScript no enseñe otros números**. Cada simulador trae escritos
+  en el HTML los valores de su estado de partida, para quien no tiene
+  JavaScript y para el primer instante de la carga, y el guion los compara
+  cifra a cifra con lo que escribe el modelo al cargar. La primera vez, el 26
+  de septiembre de 2026, encontró **veinte desfasados en ocho simuladores**:
+  la catenaria decía «−4,3 %» donde su modelo da «+10,70 %».
+
+**Un caso nuevo se valida al revés**, como todo guardián: se reintroduce el
+fallo y se ve el rojo. Los dos del 26 de septiembre se validaron devolviendo
+la viga y la catenaria a su versión anterior: «Maximum call stack size
+exceeded» y una sección medida en 3,0 m en vez de 20,0.
 
 **Y de dónde salen esos valores no es lo mismo en los nueve.** Hasta el 13 de
 septiembre de 2026 aquí ponía «los valores que publica la convocatoria… están
@@ -1559,9 +1396,12 @@ tiempo muerto, 2,3 s.
 
 ### `npm run recalcula` — comprueba que las cuentas salen
 
-**No es un guardián: no entra en `npm run suelo` y no bloquea nada.** Se pasa
-al **cerrar una asignatura**, junto con el recuento de las cifras de §04, §05,
-§09 y §15.
+**En el suelo desde el 26 de septiembre de 2026**, justo detrás de `verify`.
+Se había quedado fuera con el argumento de que tardaba; medido ese día,
+recorre las 5.737 cuentas del corpus en **un segundo** y sale limpio. Dejarlo
+para «al cerrar una asignatura» era dejar que un error de cuenta viviera
+semanas publicado. Si da un falso positivo, se arregla el guion —como los de
+abajo—, no se saca del suelo.
 
 Existe porque el 28 de agosto de 2026 una auditoría que recalculaba las
 matemáticas encontró **ocho ejercicios que enseñaban algo falso** con los dos
@@ -1680,6 +1520,34 @@ descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusió
 que vale para la próxima vez: **esta clase de fallo no se caza con patrones en
 la prosa, se caza evaluando.**
 
+### `npm run cifras` — que ninguna cifra publicada haya caducado
+
+Es `deuda.mjs` en modo estricto. Todo lo que ese guion imprime es un informe
+—un escalón con un solo ejercicio es una decisión, no un fallo—, salvo dos
+cosas que sí son fallos y que con `--estricto` salen con código 1:
+
+- una nota **publicada** en una ruta, en su `falta[]`, con un número que ya no
+  es verdad («el tema 9 tiene cinco ejemplos de entrada» cuando son seis);
+- una cifra de la documentación que el guion mide y no cuadra.
+
+Nace el 26 de septiembre de 2026 porque las dos llevaban semanas caducando con
+el guion informándolo y nadie leyéndolo: ese día había tres notas del tema 9
+de Cálculo publicando un número de hacía nueve días, y siete cifras de este
+fichero desfasadas. La cura de fondo no es el guardián sino no escribir cifras
+en presente (arriba, «Dónde está cada cosa que cambia»); el guardián es para
+las que se escriben de todos modos.
+
+### `npm run contraste` — el contraste que se ve, no el que se declara
+
+`check-color.mjs` mide las parejas de tinta y fondo **declaradas**; este
+guion abre ocho páginas, una de cada tipo, en claro y en oscuro, y mide el
+texto **tal como se pinta**, nodo a nodo, contra el fondo que tiene detrás
+de verdad. Nace el 18 de septiembre de 2026, cuando el bloque de rutas de la
+portada salió con la paleta de la pizarra sobre el papel —1,05:1, ilegible—
+con `check-color` en verde: la pareja estaba bien declarada y mal usada. Se
+salta los fondos con degradado y el texto transparente, que no tienen un
+contraste que medir.
+
 **Regla de este fichero: no se añade una comprobación por si acaso.** Se añade
 cuando algo se ha roto de verdad, y el comentario dice qué se rompió. Y toda
 comprobación nueva se valida al revés: se reintroduce el fallo y se confirma que
@@ -1702,16 +1570,33 @@ barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 
 - **No se versionan binarios generados.** Los PDFs son artefactos de build.
 - Si un fichero pesa más de 1 MB, se justifica antes de añadirlo.
 - Nombres de fichero en minúscula, sin espacios ni acentos, con guiones.
-- Despliegue por GitHub Actions: build, `verify.mjs`, tests, y solo entonces
-  publicar.
+- Despliegue por GitHub Actions al subir a `main`: `npm run suelo` —la misma
+  línea que en local, §11— y, si pasa, el diario en PDF y la publicación.
+- **Un guion de un solo uso se borra en cuanto ha hecho su trabajo**, en el
+  mismo commit o en el siguiente: queda en el historial de git. Los doce de
+  `scripts/rampa/` —los que pusieron un ejemplo de entrada a cada escalón de
+  Cálculo— se quedaron vivos nueve días, y tres de ellos duplicaban dieciséis
+  ejercicios si alguien los volvía a lanzar. Se borraron el 26 de septiembre de
+  2026. Se quedan solo los que se vuelven a usar: los generadores de figuras,
+  porque `rehacer.mjs` los relanza cuando cambia el lienzo.
 
 ---
 
 ## 13 // Cómo trabajar aquí
 
-- **Plan primero.** Escribe `tasks/todo.md` antes de crear ficheros. Si hay
-  alguien a quien preguntar, espera el visto bueno; si no lo hay, lee el
-  apartado siguiente.
+- **Plan primero.** El de la sesión va en `tasks/siguiente.md` —se
+  sobrescribe cada vez, no se amplía— y lo que queda sin hacer en
+  `tasks/pendiente.md`, una línea por cosa, que se borra en el commit que la
+  cierra. La historia no va en ninguno de los dos: va en el mensaje del commit
+  y en `diario/`. Si hay alguien a quien preguntar, espera el visto bueno; si
+  no lo hay, lee el apartado siguiente.
+
+  > Hasta el 26 de septiembre de 2026 todo esto iba en `tasks/todo.md` y
+  > `tasks/manana.md`, que habían llegado a 6.138 y 1.704 líneas: se ampliaban
+  > por abajo, lo cerrado se tachaba en vez de borrarse, y de las 6.138 solo
+  > unas 180 seguían vivas. Los dos se congelaron ese día como archivo —se
+  > siguen citando desde comentarios del código— y lo vivo pasó a los dos
+  > ficheros nuevos.
 
 ### Cuando no hay nadie a quien preguntar
 
@@ -1726,7 +1611,7 @@ delante. Todo eso es trabajo, no política. Equivocarse ahí es barato: se ve al
 mirar el resultado y se cambia.
 
 **Para y pregunta —o si no puedes, PARA y escríbelo en `falta[]` o en
-`tasks/todo.md` en vez de resolverlo— solo en estos cinco casos:**
+`tasks/pendiente.md` en vez de resolverlo— solo en estos cinco casos:**
 
 1. **No tienes el dato y lo ibas a estimar.** Un porcentaje, un recuento de
    convocatorias, un peso. §10: se publica medido o no se publica. Un número
@@ -1883,7 +1768,7 @@ todos habría estropeado cinco: **10 tenían el `examen` colocado antes que la
 con el ejemplo introductorio, que en la ruta gemela abre el mismo escalón, y se
 movió; **5** son estos cierres deliberados, y lo que estaba mal era la regla,
 no ellos. Quedan **3** con un `ejemplo` en medio, que no son ninguna de las dos
-cosas y siguen en `tasks/manana.md`.
+cosas y siguen en `tasks/pendiente.md`.
 
 `deuda.mjs` §2 bis los cuenta ahora separados por esas tres formas, porque
 tratarlas como una sola es lo que llevaba a arreglar mal nueve de diecinueve.
@@ -1954,19 +1839,13 @@ nivel de arriba, que es el que se entrega.
 
 ### Cuánto es «una asignatura», medido
 
-Cálculo es la referencia, y ya está cerrada entera. Once temas dan **21.657
-palabras de prosa, 197 ejercicios de tema, 88 convocatorias con 425 ejercicios,
-156 escalones en 62 bloques de 7 rutas y 30 figuras.** Sirve para dimensionar,
-no como cuota: un tema que necesita ocho figuras lleva ocho.
-
-> Recontado el **8 de septiembre de 2026**, al repasar Cálculo, y **tres de las
-> seis cifras habían envejecido**: 21.545 → 21.657 palabras, 193 → 197
-> ejercicios de tema, 29 → 30 figuras. Ninguna se había escrito mal; las tres
-> se quedaron atrás el día que se añadió contenido y nadie volvió a pasar
-> `mide.mjs`. Convocatorias, ejercicios de examen y escalones sí cuadraban.
-> Es el aviso de dos párrafos más abajo cumpliéndose otra vez, así que se
-> vuelve a decir aquí: **esta tabla se recuenta al cerrar una asignatura, no
-> se copia.**
+Cálculo es la referencia, y está cerrada entera. Medida con `mide.mjs` el 26
+de septiembre de 2026: once temas con **21.657 palabras de prosa y 30
+figuras**, **399 ejercicios de tema** —91 de ellos ejemplos de entrada—,
+**88 convocatorias con 425 ejercicios** y **156 escalones en 62 bloques de 7
+rutas**. Sirve para dimensionar, no como cuota: un tema que necesita ocho
+figuras lleva ocho. Cómo envejeció esta misma cifra —decía 197 ejercicios de
+tema hasta ese día— está en `docs/cronica.md`.
 
 **La definición de «palabra» es la de `scripts/mide.mjs` y solo esa.** Este
 fichero decía 32.460 hasta el 29 de agosto de 2026 —el conteo crudo del MDX,
@@ -1974,11 +1853,6 @@ etiquetas y LaTeX incluidos— mientras `docs/como-vamos.md` publicaba 21.545
 con la definición del guion. Ninguna mentía, pero dos definiciones sin nombrar
 son un descuadre esperando a que alguien las compare. Manda la del guion,
 porque es la reproducible.
-
-> Esta cifra decía «cinco temas, 12.644 palabras, 127 ejercicios, 33 exámenes,
-> 56 escalones» hasta el 28 de agosto de 2026, es decir la mitad de la
-> asignatura contada cuando iba por la mitad. Quien la leyera para dimensionar
-> un trabajo se habría quedado corto por más del doble.
 
 ---
 
@@ -2102,21 +1976,19 @@ después de construir, y antes de dar nada por hecho:
 
 ### Y al cerrar una asignatura, cuatro cosas más
 
-El suelo se pasa en cada commit. Estas cuatro no —tardan, o dependen de la
-máquina— y por eso se pasan **al cerrar**, todas juntas, en el mismo commit que
-declara la asignatura terminada:
+El suelo se pasa en cada commit. Estas no —tardan, o dependen de la máquina,
+o necesitan ojos— y por eso se pasan **al cerrar**, todas juntas, en el mismo
+commit que declara la asignatura terminada:
 
 | | qué comprueba | qué pasó por no tenerlo |
 |---|---|---|
-| `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
-| `HUMO_TODO=1 npm run humo` | las 248 páginas del sitio en un navegador, 147 de ellas de examen | el navegador abría 8 de 96 durante meses |
+| `npm run humo:todo` | todas las páginas del sitio en un navegador, no la muestra del día | el navegador abría 8 de 96 durante meses |
 | `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
 | `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
-| `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |
+| releer a mano | las frases con número de los `falta[]` que `deuda.mjs` no sabe contar, y la primera sección de `docs/como-vamos.md` | abajo |
 
-Y con ellas, recontar las cifras de §04, §05, §09 y §15, que es lo que más se
-olvida: el 28 de agosto de 2026 llevaban una semana diciendo la mitad de la
-verdad.
+`recalcula` y las cifras de los `falta[]` estaban en esta tabla hasta el 26
+de septiembre de 2026; desde entonces van en el suelo, en cada commit.
 
 ### Y una clase de dato que envejece sin que nadie la mire: los `falta[]`
 
@@ -2172,6 +2044,69 @@ en **otra** asignatura.
 
 Cosas que ya han costado horas. No son opiniones.
 
+<!-- índice de trampas: lo genera un guion a partir de las entradas -->
+
+**Las 56, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
+
+- No escribas LaTeX a través del shell.
+- Un `: ` sin comillas dentro de un valor YAML rompe el fichero
+- `dist/` abierto con `file://` no tiene CSS.
+- No reconstruyas mientras `humo.mjs` está corriendo.
+- `max-width` y `overflow` NO hacen nada en una caja `display: inline`.
+- Un track `1fr` tiene `min-width: auto`, que es min-content y no cero.
+- Una tolerancia relativa sobre una temperatura es enorme.
+- Los ids de encabezado se generan por `render()`, no por documento.
+- En modo guiado, un enlace a un apartado que no es el visible no navega.
+- El servidor de desarrollo sirve colecciones de contenido viejas.
+- `replace()` con un `$` en el texto de reemplazo se traga el fichero.
+- Borrar «desde aquí hasta allí» se lleva por delante lo que se añadió en medio.
+- Un `IntersectionObserver` no sirve para diferir trabajo en modo guiado.
+- Una línea que empieza por `- ` parte en dos una fórmula que venía de la línea anterior.
+- Una `\frac{…}{…}` partida justo entre las dos llaves confunde a `recalcula`.
+- Un enunciado puede pedir un teorema o un método sin nombrarlo, y entonces ninguna búsqueda de texto lo encuentra.
+- Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.
+- Una anchura de texto medida en el navegador no es reproducible entre máquinas.
+- Astro acota los estilos, así que un elemento creado por el script se publica sin ninguno.
+- Ocultar un texto no es lo mismo que no tenerlo: `opacity: 0` sigue midiendo.
+- Las figuras no se escriben a mano: se calculan.
+- Una figura de ejercicio se dibuja a la escala del resultado, no «a ojo».
+- Una escala fija convierte una figura correcta en una figura ilegible.
+- Una normal apunta hacia arriba en cuanto la placa se inclina.
+- El humo corrige las transformadas y `getBBox()` no.
+- `astro preview` es un demonio y sobrevive al guion que lo arrancó.
+- El humo abre una muestra rotatoria de exámenes elegida por el día del año, así que un fallo latente aparece cualquier mañana sin que nadie haya tocado nada.
+- Un guardián puede dar verde sobre menos sitio del que dice, y eso no se ve nunca.
+- `| tail` en un guardián largo te quita justo la línea que hay que leer.
+- Insertar delante de un elemento de lista YAML deja su campo huérfano.
+- El prefijo `ex` de un id de examen no es una costumbre: está escrito dentro de un guardián.
+- Un id de ejercicio inventado suena igual que uno real.
+- ~~El esquema no tiene `unidad`~~ · resuelto el 30 de agosto de 2026.
+- `pdftotext` sin `-enc UTF-8` se come los signos.
+- Una tilde dentro de `$…$` se dibuja, y avisa en cada build.
+- El símbolo del euro no se puede dibujar dentro de una fórmula.
+- En el pie de una figura no hay fórmulas.
+- Un `var(--token)` que no existe no da error: pinta negro.
+- «No encaja en el formato» es la razón más fácil de escribir y la que menos se revisa.
+- Un fichero sin extensión no sale en ninguna búsqueda por tipo, y ahí puede haber una convocatoria entera.
+- La `e` de `1.8e-5` se leía como el número de Euler, y no daba error: daba otro número.
+- El esquema puede ser más estricto que el sitio, y entonces no protege nada.
+- Un `<path>` sin `fill="none"` se rellena de negro, y solo se nota cuando el camino tiene codo.
+- Un encabezado con LaTeX dentro produce un ancla que ninguna ruta puede enlazar.
+- El `$$` de una fórmula en bloque va en su propia línea, siempre.
+- `history.replaceState` no actualiza `:target`.
+- `titulo` y `fuente` son texto plano, sin `$…$`.
+- Ninguna construcción de markdown que necesite sus saltos de línea sobrevive dentro de un escalar plegado de YAML.
+- Una cita de markdown dentro de un escalar plegado de YAML publica sus «>».
+- Un rótulo destacado que dice lo contrario que el párrafo de debajo gana, porque es el que se lee.
+- Un campo que se pinta sin pasar por `mate()` publica los asteriscos.
+- La tolerancia de una respuesta `numero` es absoluta, y un `0.02` escrito ahí no significa un 2 %.
+- `evaluaNumero` lee «, » como un espacio, y el espacio como un producto.
+- Zod no corre las reglas de un objeto al que le falta un campo obligatorio.
+- Un deslizador recorta su `value` contra el `max` que tiene EN ESE MOMENTO.
+- Dos valores de un deslizador de paso 0,1 no se restan exacto, y un arreglo que se llama a sí mismo no para.
+
+<!-- fin del índice de trampas -->
+
 - **No escribas LaTeX a través del shell.** Ni heredocs, ni `node -e`, ni
   `sed`. Las barras se comen: `\\frac` llega como `\frac`, y `\f` se convierte
   en un carácter de avance de página **invisible** que rompe el YAML y no se
@@ -2186,6 +2121,16 @@ Cosas que ya han costado horas. No son opiniones.
   que salen de ahí: el reemplazo de `sed` nunca lleva una orden de LaTeX, y
   cuando un YAML falla por «non-printable», lo primero es
   `grep -c $'\a' fichero`.
+
+  **Y las comillas invertidas tampoco pasan.** Dentro de un `node -e "…"` entre
+  comillas dobles, bash toma cada `` `algo` `` por una orden que ejecutar y lo
+  sustituye por su salida —casi siempre, nada—. El 26 de septiembre de 2026 un
+  comentario que debía decir «viven en `lib/numero.ts`» quedó escrito «viven
+  en , y», sin un solo aviso salvo un «No such file or directory» que se leía
+  como ruido. Y en Markdown y en los comentarios de este repositorio hay
+  comillas invertidas en casi cada frase. **La regla, entera: el texto que va
+  a un fichero se escribe con la herramienta de edición o en un guion del
+  scratchpad; por la shell solo pasan órdenes.**
 - **Un `: ` sin comillas dentro de un valor YAML rompe el fichero**, y el error
   que da apunta a otra línea. Ojo con los apóstrofos de `f'`, que confunden a
   cualquier comprobador hecho con `grep`.
@@ -2254,17 +2199,31 @@ Cosas que ya han costado horas. No son opiniones.
   Si no está, se mata el proceso del puerto 4321 y se levanta otra vez.
 - **`replace()` con un `$` en el texto de reemplazo se traga el fichero.** En
   `String.prototype.replace`, el `$` de la cadena de reemplazo es un carácter
-  especial: `$&` es lo sustituido, `$1` un grupo, y **`$'` es todo lo que va
-  detrás**. Como aquí casi todo el texto lleva LaTeX entre dólares, un
-  reemplazo que contenga `$'`, `$&` o `$1` inserta trozos del propio fichero sin
-  avisar. Pasó en `tasks/todo.md`: quedó cortado a media frase, en el sitio
-  exacto donde había un `$x\sin x$`, con la versión anterior entera pegada
-  detrás, y así estuvo **veintiún commits** publicando recuentos viejos. Nadie
-  lo vio porque `verify.mjs` no lee `docs/` ni `tasks/`. **Regla: para insertar
-  texto literal se usa la función de reemplazo —`(...) => nuevo`— o se parte y
-  se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
-  cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
-  después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
+  especial, y son cinco las secuencias que muerden: `$&` es lo sustituido, `$1`
+  un grupo, **`$'` es todo lo que va detrás**, **`` $` `` es todo lo que va
+  delante** y **`$$` se queda en un solo `$`**, que rompe sin avisar cada
+  fórmula en bloque. Como aquí casi todo el texto lleva LaTeX entre dólares,
+  cualquiera de las cinco mete o quita trozos del propio fichero.
+
+  **Ha pasado dos veces, y la segunda con esta regla ya escrita.** La primera,
+  en `tasks/todo.md`: quedó cortado a media frase, en el sitio exacto donde
+  había un `$x\sin x$`, con la versión anterior entera pegada detrás, y así
+  estuvo **veintiún commits** publicando recuentos viejos. La segunda, el 17
+  de septiembre de 2026, en este mismo documento: un punto de §17 llevaba un
+  dólar pegado a una comilla invertida, el `` $` `` insertó **el `CLAUDE.md`
+  entero** en mitad de una frase, y así estuvo nueve días —5.472 líneas, de
+  las que 2.434 eran copia—, con las ediciones posteriores cayendo en una sola
+  de las dos mitades. Se vio en la auditoría del 26 de septiembre, al listar
+  las secciones y encontrarlas todas dos veces.
+
+  **Regla: para insertar texto literal se usa la función de reemplazo
+  —`(...) => nuevo`— o se parte y se vuelve a juntar con `split`/`join`,
+  nunca la cadena a pelo.** Después de cualquier reescritura de un fichero de
+  prosa, se cuenta: `wc -l` antes y después, y un `grep -c` de un encabezado
+  que solo puede aparecer una vez. Y como la regla escrita no evitó el
+  segundo accidente, ahora lo vigila `verify.mjs` en «Los documentos del
+  repositorio»: falla si una sección `## NN //` sale dos veces en `CLAUDE.md`
+  o en `tasks/`, o si la primera línea de un fichero reaparece más abajo.
 - **Borrar «desde aquí hasta allí» se lleva por delante lo que se añadió en
   medio.** Al podar una sección obsoleta de `tasks/todo.md` se ancló el
   corte en dos textos que estaban a 250 líneas de distancia, y entre ellos
@@ -2436,2441 +2395,7 @@ Cosas que ya han costado horas. No son opiniones.
 
   5. **Ni en el `titulo` de un paso hay LaTeX.** Es el mismo defecto por
      otro sitio: el título se emite tal cual, así que un
-     `titulo: El coeficiente de $x^3# CLAUDE.md — Road to Ingeniería
-
-Reglas de este repositorio. Léelas enteras antes de tocar ningún fichero.
-
----
-
-## 00 // Qué es esto
-
-Plataforma de estudio **gratuita** para alumnos de 1.º y 2.º de la Escuela de
-Ingeniería de Gipuzkoa (UPV/EHU). Sitio estático en GitHub Pages: sin backend,
-sin cuentas de usuario, sin base de datos. Solo en castellano.
-
-**El plazo es septiembre de 2027**, y no es una línea de meta: es el arranque de
-un curso. Quien entre entonces se topa con el tema 1 de todo, no con el 11 de
-nada. El objetivo, por tanto, no es «terminarlo» sino **ir un cuatrimestre por
-delante de quien lo usa**. Eso decide el orden más de lo que lo decide el
-temario.
-
-**El orden: Cálculo entera, luego Álgebra.** Y sigue en pie lo único que
-importaba de la regla vieja: **pocas excelentes antes que muchas a medias.** No
-se abre una asignatura hasta que la anterior está terminada según §15.
-
-> **Al 6 de septiembre de 2026 las cuatro abiertas están cerradas contra §15**:
-> Cálculo, Álgebra, Mecánica de Fluidos y Fundamentos Químicos. Son
-> **51 temas publicados** —más tres declarados `soloEnClase` con su motivo—,
-> **118 convocatorias** transcritas con su PDF, **doce rutas** y **1.270
-> ejercicios**. Quedaban entonces cinco asignaturas en `prev` —hoy cuatro, con
-> Térmica ya en `obra`—, y la regla de arriba dice qué hacer con ellas: se abre
-> una, y no se abre la siguiente hasta cerrarla.
->
-> **Al 10 de septiembre de 2026**, con Térmica dentro: **61 temas**,
-> **124 convocatorias** —las 118 de siempre más **seis de Térmica**, montadas
-> esa tarde con sus PDF, que Ionan decidió publicar—, **trece rutas** con 110
-> bloques y 295 escalones, y **1.332 ejercicios**. Las cifras de esta nota son
-> un corte con fecha, no un estado: se añade una línea nueva y no se reescribe
-> la anterior, para que se vea qué cambia y a qué velocidad.
->
-> Con eso Térmica deja de tener el hueco que la mantenía en `obra` **por
-> definición** —§15 exige el PDF original y no había ninguno— y pasa a tener
-> uno **medible**: de sus 22 convocatorias hay seis montadas y **dieciséis por
-> transcribir**, dos de ellas en euskera y por tanto fuera del alcance del
-> sitio (§00). Es un cambio de naturaleza más que de tamaño: antes faltaba una
-> decisión, ahora falta trabajo.
->
-> **Al 11 de septiembre de 2026, ese trabajo está hecho**: **61 temas**,
-> **138 convocatorias** —las 118 de siempre más las **veinte** de Térmica que
-> se pueden montar—, **trece rutas** y **1.352 ejercicios con 5.547 pasos**.
-> Las dieciséis que faltaban se cerraron en una tanda: catorce montadas esa
-> noche y **las dos de 2014-2015 declaradas imposibles** con su motivo, que es
-> lo que §15 pide de un hueco. Son un folio cada una, solo en euskera y sin
-> resolución: traducirlas sería inventarlas.
->
-> Lo que a Térmica le queda para cerrarse contra §15 ya no son convocatorias
-> sino **los ejercicios que cada una deja `fuera`**, y esos sí están contados,
-> uno a uno, el 11 de septiembre de 2026: son **28**, y no todos son deuda.
->
-> | por qué está fuera | cuántos |
-> |---|---|
-> | trabajo pendiente, con su resolución oficial detrás | 20 |
-> | ya cubierto por otro ejercicio del corpus, o repetido | 4 |
-> | fuera del temario actual — ciclos de potencia y R-134a | 3 |
-> | falta material: se resuelve leyendo el diagrama de Mollier | 1 |
->
-> La distinción importa porque solo la primera fila es trabajo. Los tres de
-> temario no se van a escribir nunca —los ciclos salieron del programa—, los
-> cuatro repetidos ya tienen su resolución en otra convocatoria, y el de
-> Mollier —la tobera del 30 de enero de 2023— necesita antes que alguien
-> redibuje ese diagrama, porque el del examen es de una editorial (§08).
->
-> **Al 12 de septiembre de 2026, la primera fila de esa tabla está a cero.**
-> Los veinte ejercicios con su resolución oficial detrás están escritos,
-> contrastados cifra a cifra y enganchados en la ruta: el corpus pasa a
-> **1.372 ejercicios y 5.661 pasos**, y Térmica a **57 resoluciones de
-> examen** en sus veinte convocatorias. Los ocho `fuera` que quedan son las
-> otras tres filas, y ninguna es trabajo. El contraste siguió encontrando
-> erratas —un factor mil de unidades, un calor específico escrito donde no
-> tocaba— y, por primera vez, **un error de concepto** en una resolución
-> oficial: el rendimiento exergético de una bomba dado en un 3,88 % cuando es
-> el 82,7 %, por dejar fuera el término v·ΔP de la entalpía de un líquido
-> (enero de 2021, ejercicio 3). El sitio publica el bueno y explica el otro.
->
-> Lo que le queda a Térmica para pasar a `ok` ya no es contenido, y está
-> escrito en `tasks/manana.md`, fase 6.
->
-> **Y ese mismo 12 de septiembre de 2026, Térmica pasa a `ok`**: la quinta
-> asignatura cerrada contra §15. Lo que le faltaba no era contenido, eran tres
-> cosas. La fuente de su evaluación citaba un documento con datos personales, y
-> se sustituyó por la guía docente pública, que además trae dos mínimos que el
-> sitio no decía: el 40 % del examen y el 25 % de cada ejercicio. Sus **183
-> respuestas de examen** se recalcularon en `tests/verificacion/`, y el pase
-> encontró seis casillas que corregían mal, todas arregladas (§17). Y los dos
-> escalones de un solo ejercicio que eran deuda tienen ya su caso de examen.
-> Siguen en pie sus huecos declarados: las dos convocatorias de 2014-2015, solo
-> en euskera, y los ocho `fuera` que no son trabajo.
->
-> La regla de arriba se aplica ahora a la sexta: se abre una, y no se abre la
-> siguiente hasta cerrarla. **Ninguna de las cuatro que quedan trae exámenes en
-> el material**, y eso decide por dónde se empieza; está en `tasks/manana.md`,
-> fase 7.
->
-> **Y la sexta se abre ese mismo día: Ciencia de Materiales**, por decisión de
-> Ionan —«haz materiales primero»—, no por la recomendación escrita, que era
-> Mecánica Aplicada. Queda en `obra` con su temario oficial de diez temas y su
-> evaluación, las dos copiadas de la guía del alumnado 2025-2026. Arranca con
-> dos huecos declarados desde el primer día: **no hay ni un examen** entre el
-> material, así que su ruta no se puede medir, y **los temas 7 a 10 no tienen
-> material de la profesora** —se trabajan con presentaciones de los alumnos,
-> que llevan sus nombres y no se abren—. El plan, tema a tema, está en
-> `tasks/manana.md`.
->
-> **Y la noche de ese 12 de septiembre de 2026, Materiales tiene escrito todo
-> lo que se puede escribir**: sus **diez temas publicados** —71 en el sitio—,
-> cada uno con prosa, figura y ejemplos propios, y **los 99 ejercicios de su
-> colección** resueltos paso a paso y contrastados contra su resultado
-> impreso. La asignatura suma 120 ejercicios y el corpus pasa a **1.492
-> ejercicios y 6.270 pasos**. Diez de esos 99 se leen de una curva de libro y
-> entraron cuando las curvas estuvieron redibujadas a escala: **dieciocho
-> figuras de libro** en los temas 2 a 6 (§08).
->
-> Sigue en `obra`, y ya no por trabajo: sin exámenes no hay ruta que medir
-> (§14) ni convocatorias que transcribir (§15). El contraste volvió a
-> encontrar erratas en un documento oficial —tres resultados impresos que la
-> figura no da, en los problemas 3.23, 3.26 b) y 3.27 b)— y se publicaron
-> como en Térmica: la lectura buena en la casilla y la impresa como
-> distractor explicado. Y queda **una pregunta para la profesora**, que no me
-> corresponde resolver: el 4.19 imprime un 44,8 % que sale de mezclar dos
-> temperaturas en la regla de la palanca, y el sitio publica el 55,2 %
-> coherente con la fórmula del tema y explica el otro. Está en
-> `tasks/manana.md`.
->
-> **Y esa misma noche se abre la séptima, Mecánica Aplicada**, por decisión
-> de Ionan —«sigue con el plan de la siguiente fase»— y con Materiales todavía
-> en `obra`. Es una excepción a la regla de arriba y conviene decirla como
-> tal: Materiales no se puede cerrar porque le falta material, no trabajo, y
-> esperar a que aparezcan sus exámenes habría parado el proyecto entero.
-> Mecánica Aplicada era la recomendación escrita, y al abrirla resultó que
-> **sí tiene exámenes** —ocho convocatorias, tres de ellas con el enunciado en
-> castellano— que la tabla del plan no veía porque se contó sobre una copia
-> parcial del material. El plan está en `tasks/manana.md`, fase 8.
->
-> **Y en la madrugada del 12 de septiembre de 2026, Mecánica Aplicada tiene
-> los doce temas escritos y sus tres convocatorias montadas.** Cada tema con
-> prosa, figura y dos ejemplos propios —**83 temas** en el sitio—, las tres
-> convocatorias del bloque 1 con su PDF y sus figuras redibujadas, y las
-> colecciones de los temas 1 y 2, 35 problemas guiados detrás de los ejemplos.
-> El corpus pasa a **1.571 ejercicios y 6.647 pasos**. Las diez colecciones
-> que faltan se quedaron a medias: los agentes que las transcribían se
-> pararon al agotarse el límite de sesión, y lo suyo está en el borrador, no
-> en el repositorio.
->
-> El contraste volvió a encontrar resultados impresos que no salen, cinco en
-> las dos colecciones montadas: **1.14** y **1.18** del tema 1 —un redondeo a
-> mitad de cuenta y una segunda solución que los datos admiten— y **2.1**,
-> **2.8** y **2.17** del tema 2 —el doble de lo que da la integral, dos
-> lecturas del enunciado y dos erratas de copia—. Publicados como siempre: la
-> cuenta buena en la casilla y la impresa como distractor explicado.
->
-> **Y una deuda que duró un día:** las **57 respuestas de examen** de Mecánica
-> entraron en `tests/verificacion/` el 13 de septiembre de 2026, sus tres
-> convocatorias en paralelo, sin una sola discrepancia. El sitio queda en
-> **1.480 de 1.481**, y la que falta es la de Fluidos que se deja fuera a
-> propósito.
->
-> **Y con eso, el 13 de septiembre de 2026 Mecánica Aplicada se cierra contra
-> §15: es la sexta terminada.** Sus doce temas escritos con figura y ejemplos
-> propios, sus doce colecciones —250 ejercicios—, las tres convocatorias
-> transcribibles con su PDF, tres simuladores con su modelo y sus pruebas, las
-> **dos rutas** y sus 57 respuestas recalculadas.
->
-> Los huecos, que es lo que §15 pide de verdad y no que no los haya:
->
-> - **Cinco convocatorias declaradas imposibles**: las de 2017-2018 y
->   2018-2019 están íntegramente en euskera y traducirlas sería inventar el
->   enunciado (§08). Es la misma decisión que las dos de Térmica. Sí se han
->   **leído para clasificar** qué tema pide cada hueco —eso no publica una
->   palabra de ellas— y de ahí sale la ruta del bloque 2.
-> - **El bloque 2 no tiene ninguna convocatoria en castellano**, así que su
->   ruta está medida sobre exámenes de 2018 y 2019: siete años de antigüedad,
->   y la ruta lo dice en su cabecera.
-> - **Dos huecos de material declarados en las rutas**: el círculo de Mohr y
->   la velocidad de sucesión del CIR se explican y no tienen dónde
->   practicarse, porque la colección no trae ni un problema de cada uno.
-> - Y los exámenes **no publican reparto por competencia**, así que sus
->   ejercicios van sin `puntos`: no se estima lo que no se imprime (§10).
->
-> **Y con Mecánica cerrada se abre la octava, Sistemas de Producción y
-> Fabricación**, el 13 de septiembre de 2026. Vuelve a ser la excepción de
-> arriba y conviene repetir por qué: Materiales sigue en `obra` y no se puede
-> cerrar —le falta material, no trabajo—, así que esperar a que aparezcan sus
-> exámenes pararía el proyecto entero.
->
-> Se eligió entre las dos que quedaban, y no por descarte: **Expresión Gráfica
-> es de 1.º y por §00 tendría que ir antes, pero su examen es un dibujo**. El
-> sitio no sabe corregir una vista ni un corte, el patrón «figura fija» sigue
-> sin construir y no hay tipo de respuesta para eso: necesita una fase de
-> diseño propia antes que contenido, y hacerla con prisa saldría mal.
->
-> Lo que tiene Sistemas, contado listando **sus dos carpetas** —que es la
-> lección que costó el inventario de Mecánica—: treinta y siete ficheros,
-> nueve juegos de diapositivas por proceso, la guía del estudiantado 25/26 y
-> una **colección de 54 problemas** con su resultado impreso. **Ningún
-> examen**, así que nace en `obra` como Materiales.
->
-> Y nace con dos cosas declaradas desde el primer día. La primera, que el
-> temario oficial son **cinco bloques** y el material son nueve juegos por
-> proceso: el catálogo publica los bloques de la guía y dice qué diapositivas
-> caen en cada uno. La segunda, que **«Tecnologías de unión» no tiene
-> material**: ni una diapositiva de soldadura entre los treinta y siete
-> ficheros, ni un problema en la colección. Va con `soloEnClase` y su motivo,
-> que es para lo que existe ese campo.
->
-> Un conflicto más, y está dentro de la propia guía: su tabla resumen da un
-> **20 %** a las prácticas y su apartado 8.1 les da un **30 %**. Se publica el
-> 30, que es el que suma 100 con el examen, y la `fuente` lo explica para que
-> nadie lo lea como una errata nuestra (§13 caso 3).
->
-> **Y esa misma mañana quedan transcritas las doce colecciones enteras.** La
-> asignatura pasa de 191 a **250 ejercicios** y el corpus a **1.742 ejercicios
-> y 7.468 pasos**. Cada resultado impreso se ha recalculado por un camino
-> independiente del desarrollo escrito, y eso ha destapado **más de treinta
-> que no salen**: seis en el tema 3, cuatro en el 4, siete en el 7, dos en el
-> 8, tres en el 9, tres en el 10 y seis en el 12. En todos se publica lo que
-> dan los datos, con el impreso de distractor explicado (§13).
->
-> Y algo que no había pasado hasta ahora: **las resoluciones oficiales del
-> profesor también fallan**, y no siempre del mismo lado. En el 12.17 encuadra
-> una raíz que sus propias ecuaciones no dan; en el 12.18 su fórmula del par
-> pierde una R y deja de ser dimensionalmente un par; y en el 10.1, al revés,
-> **el impreso acierta y la resolución se lleva un signo**. Cuando las dos
-> fuentes discrepan se publica la que reproducen las cuentas, y la fuente del
-> ejercicio dice cuál es.
->
-> **El primer simulador de la asignatura**, en el tema 6: la viga con sus
-> diagramas de cortante y flector, con los apoyos móviles. Responde a por qué
-> el peor flector de una viga con voladizo está en el apoyo y no en el vano,
-> donde la cortante no pasa por cero sino que salta. Su modelo vive en
-> `src/lib/viga.ts` y sus 19 pruebas lo atan a números publicados: los
-> ejercicios 6.2, 6.5 y 6.9 de la colección y el ejercicio 2 de la ordinaria
-> de 2025, cuyo flector máximo —49MgL/8 en x = 7L/4— sale de ese modelo.
->
-> «Cerrada» no quiere decir sin huecos: quiere decir **con los huecos
-> declarados**, que es lo que §15 pide. Los de hoy, nombrados: Química no
-> tiene colección transcrita en cuatro de sus diez temas porque el material no
-> la trae; Fluidos tiene trece ejercicios de examen declarados `fuera` y sus
-> **veintisiete** prácticas de laboratorio sin material —decía «veintitrés»
-> hasta el 10 de septiembre de 2026, que es el número de la guía y no el que
-> numera el índice del guion; la ruta se corrigió el 8 y este fichero se
-> quedó atrás dos días—; y de las 1.241 respuestas
-> de examen comparables hay **una** que se deja sin verificar a propósito.
->
-> **Y el 7 de septiembre de 2026 se abrió la quinta, Ingeniería Térmica**, que
-> queda en `obra` y no en `ok`: sus **diez temas están escritos** —con su
-> figura y su ejemplo de entrada cada uno, que es lo que §15 pide— y su ruta
-> también, **medida sobre diecisiete convocatorias** — las comparables al
-> formato de hoy, de 2017-2018 en adelante, leídas una a una el 9 de
-> septiembre de 2026; decía «seis» hasta entonces. Lo que falta no es
-> trabajo: son
-> las **22 convocatorias sin transcribir**, y están paradas por §13 caso 5.
-> Veinte de los veintidós PDF llevan dentro la resolución completa del
-> profesor, así que publicarlos no es lo mismo que publicar un enunciado y la
-> decisión no me corresponde. Las tres salidas están escritas en
-> `tasks/todo.md`; mientras tanto los ejercicios de examen cuelgan de su tema
-> con su `fuente` diciendo de qué convocatoria salen, que funciona y no
-> requiere decidir nada.
-
-> Hasta el 24 de agosto de 2026 esta sección decía **«Piloto: Cálculo y Mecánica
-> de Fluidos»**, elegidas porque tensionan el sistema en direcciones opuestas —
-> una abstracta y de gráficas, la otra física y de esquemas de instalación—, y
-> prohibía abrir nada más hasta cerrar las dos. Se cambia por dos motivos y
-> conviene que los dos queden dichos.
->
-> El primero es que **el piloto ya ha rendido su diagnóstico sin escribir una
-> línea de Fluidos**: sabemos exactamente dónde se rompe la capa compartida
-> —`unidad` no existe en el esquema, la tolerancia es absoluta donde debería ser
-> relativa, y `EjercicioGuiado` importa los lectores de complejos directamente—.
-> Eso era lo que la segunda asignatura tenía que averiguar, y ya está averiguado.
->
-> El segundo es de coste, y salió al medir el temario real: **Fluidos son 25
-> temas**, la asignatura más cara de las nueve. Aprender sobre la más cara es
-> justo al revés. Álgebra son cinco bloques y ocho exámenes, rompe la misma capa
-> compartida por otro sitio —una **matriz** no es un número ni un conjunto de
-> puntos— y se termina en semanas. Fluidos entra después, ya con el lector de
-> respuestas separado del componente.
->
-> Lo que **no** cambia: la segunda asignatura sigue eligiéndose porque tensiona
-> el sistema por un sitio distinto, no porque toque en el temario.
-
-### Qué hace distinto a este proyecto
-
-El material que los profesores reparten da el enunciado y la respuesta final.
-Nada entre medias. Un alumno que resuelve y le sale otra cosa **no tiene forma
-de saber dónde se equivocó**. Ese hueco es el producto entero. Todo lo que se
-construya aquí se justifica por él.
-
----
-
-## 01 // Regla 0
-
-> Si te ves escribiendo un script que recorre muchos ficheros aplicando el
-> mismo cambio, **para y avisa**. Ese script es la prueba de que algo que
-> debería estar en una capa compartida está duplicado.
->
-> Arregla la capa compartida. No escribas el script.
-
-El proyecto anterior (`upv-ehu-project`) acabó con 79 bloques `:root{}`
-duplicados, cuatro paletas de color conviviendo, dos versiones de KaTeX,
-366 MB de historial git y doce scripts de rediseño masivo en la raíz. No fueron
-doce errores: fue el mismo error doce veces. Todas las reglas de abajo se
-derivan de aquello.
-
----
-
-## 02 // Pila técnica
-
-**Astro + MDX + JavaScript plano.** Nada más.
-
-La decisión de usar Astro no es por comodidad: **impide la duplicación por
-construcción**. Con un único layout no hay dónde duplicar el `:root` aunque
-quieras. Una regla escrita se puede saltar; una estructura donde el error es
-imposible, no.
-
-Con tres límites estrictos:
-
-- **Nada de React, Vue ni Svelte.** Los componentes interactivos llevan
-  `<script>` plano dentro del `.astro`. Los prototipos ya funcionan así.
-- **Nada de librerías de gráficas** (Chart.js, Plotly, D3). Pesan, traen
-  estética ajena y pelearse con ellas para que respeten los tokens cuesta más
-  que escribir el SVG. SVG para esquemas y diagramas; Canvas solo cuando haya
-  miles de elementos.
-- **Cada dependencia nueva se justifica en el commit.** Esto lo mantiene una
-  persona durante años.
-
-Las dependencias, todas, y por qué está cada una:
-
-| paquete | para qué | quién la exige |
-|---|---|---|
-| `astro` · `@astrojs/mdx` | el sitio y la prosa | §02 |
-| `remark-math` · `rehype-katex` · `katex` | las fórmulas, dibujadas en el build | §07 |
-| `@fontsource/karla` · `@fontsource/caveat` · `@fontsource/ibm-plex-mono` | las tres familias, autoalojadas | §06 |
-| `vitest` | los tests | §11 |
-| `playwright` (solo desarrollo) | `humo.mjs`, y ver lo que se dibuja | §11, §16 |
-| `js-yaml` (solo desarrollo) | que el ejemplo de §04 compile de verdad | §11 |
-
-Y nada más. Si `npm ls --depth=0` devuelve algo que no está en esta tabla, o
-sobra el paquete o falta la fila: las dos cosas son un fallo.
-
-> Esta lista decía «dependencias previstas y suficientes» y se quedó sin
-> actualizar dos veces. Faltaban `katex` —que §07 nombra tres veces y llegó
-> como dependencia directa al fijar la versión única— y `playwright`, del que
-> depende la mitad del suelo de calidad. Una lista de dependencias que no es la
-> lista de dependencias incumple §10 dentro del propio fichero de reglas.
-
-### Lo que el sitio recuerda, y dónde
-
-Sin cuentas y sin servidor: todo lo que el sitio sabe de quien estudia vive en
-`localStorage`, en su navegador, y desaparece si borra los datos del sitio. La
-página lo dice en voz alta donde se usa, y **ninguna funcionalidad depende de
-que exista**: con el almacenamiento bloqueado el sitio se lee entero.
-
-| clave | qué guarda | quién la escribe |
-|---|---|---|
-| `rti:hechos` | por ejercicio, `{ i: intentos, p: pista abierta, d: desarrollo abierto }`. Las entradas viejas son `true` a secas y se siguen leyendo | `EjercicioGuiado.astro` |
-| `rti:dominio` | por escalón, la casilla «lo hago sin la app» que marcas tú | `[evaluacion].astro` |
-| `rti:notas` | por cuadernillo, las notas que te pones al terminar un simulacro, con fecha y sobre cuántos ejercicios | `Examen.astro` |
-| `simulacro:<ruta>` | el simulacro en marcha: cuándo empezó, cuánto dura y qué ejercicios dejaste fuera | `Examen.astro` |
-
-Tres reglas para cualquier clave nueva:
-
-1. **Se guarda el hecho, no el derivado.** El simulacro guarda cuándo empezó y
-   cuánto dura, no los segundos que quedan: una cuenta atrás guardada como
-   número se congela al cerrar la pestaña y entonces deja de medir lo que dice.
-2. **Lo que escribe la app y lo que escribes tú van en claves distintas.**
-   `rti:hechos` lo llena el ejercicio; `rti:dominio` y `rti:notas` los llenas
-   tú. Mezclarlos haría imposible saber quién dijo qué.
-3. **Toda lectura va en `try`/`catch` y toda escritura también.** El modo
-   privado de algunos navegadores lanza al escribir, y una excepción ahí no
-   puede llevarse por delante el resto del guion.
-
----
-
-## 03 // Estructura
-
-Esto es el repositorio tal como está, no como se planeó. Si al leerlo no
-coincide con lo que ves, **manda lo que ves** y se corrige aquí.
-
-```
-src/
-  content.config.ts        colecciones con esquema Zod. El fichero más
-                           importante del repo: es donde un dato malo
-                           rompe el build en vez de llegar a un alumno.
-  content/
-    catalogo/              una entrada .json por asignatura (las nueve)
-    calculo/
-      t01-complejos/
-        index.mdx          la prosa del tema
-        ejercicios.yaml    los ejercicios como DATOS
-      examenes/
-        2024-2025-1ev/     examen.yaml (reparto) + ejercicios.yaml
-    fluidos/               todavía solo un README
-    preparar/              una ruta de estudio por evaluación (§14).
-                           Solo YAML: no enseña nada nuevo, ordena lo que
-                           ya está y dice por qué en ese orden.
-    laboratorio/           lo que la asignatura evalúa y esta app NO
-                           examina: las sesiones con ordenador. Un YAML
-                           por asignatura, y de momento solo Cálculo.
-                           No transcribe el guion ni reparte ningún
-                           fichero: lo nombra, lo resume y enlaza el
-                           apartado donde está explicado (§08)
-  components/
-    patrones/              Lectura · EjercicioGuiado · ErrorTipico
-    sim/                   PlanoComplejo (cálculo, modelo en lib/plano.ts
-                           desde el 15 de septiembre de 2026) y los de fluidos:
-                           AbacoMoody · PuntoFuncionamiento · PrismaDePresiones
-                           SeccionDeCanal · GolpeDeAriete. Su física vive en
-                           lib/ para poder probarla (§10), nunca dentro
-    ui/                    Cabecera · Tema · Examen · Reparto
-  layouts/
-    Base.astro             el ÚNICO layout
-  lib/                     markdown.mjs (el procesador, §07) · rutas.ts
-                           complejo.ts y regiones.ts (lectores de respuesta)
-                           plano.ts y los ocho modelos de los simuladores
-  styles/
-    tokens.css             el ÚNICO :root del repositorio
-    base.css · print.css
-  pages/                   index + [asignatura]/[tema] · examenes · preparar
-scripts/
-  verify.mjs               lee el HTML publicado (§11)
-  humo.mjs                 lo abre en Chromium (§11)
-  humo-todo.mjs            la barrida completa, partida por asignatura y
-                           en paralelo contra un solo servidor (§11)
-  figuras/                 el lienzo que calcula las figuras y un
-                           generador por tema; `previsualiza.mjs` monta
-                           el contact sheet para mirarlas (§16)
-  check-color.mjs          contraste, daltonismo y la capa de tinta
-                           DECLARADOS en tokens.css
-  contraste.mjs            el contraste REAL del texto ya publicado, nodo a
-                           nodo y en los dos temas (§11)
-  leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
-  recalcula.mjs            que las cuentas del corpus salgan (§11)
-  revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
-                           bloque en el corpus: en un segundo, sin construir
-  inventario-coleccion.mjs qué problemas de la colección faltan, cruzando el
-                           volcado del PDF contra el corpus
-  comprueba-simuladores.mjs  que un simulador se ENCUENTRE y que sus botones
-                           den los números del examen (§10, §16)
-  peso.mjs                 cuánto tarda una página en un móvil (§11)
-  mide.mjs                 la tabla de docs/como-vamos.md, generada
-  deuda.mjs                lo que queda, MEDIDO: el tamaño del corpus, los
-                           escalones sin rampa, y los `falta[]` que publican
-                           un número ya caducado (§16)
-  diario.mjs               el diario en PDF
-tests/
-  *.test.ts                los lectores de respuesta, con vitest
-  fisica/                  casos con resultado conocido, uno por simulador:
-                           moody · bombeo · compuertas · canales · ariete ·
-                           viga · catenaria · mecanismo · plano, 9 ficheros y
-                           166 casos sacados del corpus, nunca de un libro
-                           (§10). Decía 86 y luego 107; desde el 13 de
-                           septiembre de 2026 la compara `deuda.mjs` §10, que
-                           es la única forma de que no vuelva a caducar. Y ojo
-                           al README de esa carpeta: solo 3 de los 8 comparan
-                           contra una convocatoria
-public/
-  examenes/<asignatura>/   los enunciados originales en PDF —124 al 13 de
-                           septiembre de 2026: 85 de cálculo, 20 de térmica,
-                           8 de álgebra, 6 de química, 3 de mecánica y 2 de
-                           fluidos. La ÚNICA carpeta del repo donde entra un
-                           PDF ajeno (§08), y la única donde un fichero se
-                           publica por estar, no por estar enlazado: desde el
-                           13 de septiembre `verify.mjs` comprueba también el
-                           sentido disco→YAML, después de encontrar cuatro
-                           sueltos. Ojo a la
-                           asimetría de fluidos: sus 16 convocatorias caben en
-                           2 ficheros porque quince vienen en un cuadernillo
-                           único, así que aquí «un PDF» no es «una
-                           convocatoria»
-docs/ · tasks/ · referencia/ · diario/
-CLAUDE.md
-```
-
-**De los cinco patrones de §05, solo tres son un componente**, y no es un
-descuido: ve a §05, que explica dónde vive cada uno.
-
-> El árbol de arriba prometía `FiguraFija`, `Verificador` y `Demostracion`
-> como ficheros, y no existían. Dos de los tres no faltan —viven dentro de
-> `EjercicioGuiado`—, pero el árbol no lo decía y §05 tampoco. Corregido el 24
-> de agosto de 2026, al preparar este fichero para que lo ejecute alguien que
-> no puede preguntar.
-
-Toda página nace de un patrón de `components/patrones/`. **Nunca copiando otra
-página existente**: así es como se propagan las variantes.
-
-### Catálogo
-
-1.º — Álgebra · Cálculo · Expresión Gráfica · Fundamentos Químicos de la
-Ingeniería
-2.º — Mecánica de Fluidos · Mecánica Aplicada · Ciencia de Materiales ·
-Ingeniería Térmica · Sistemas de Producción y Fabricación
-
-Las nueve existen desde el primer día con estado `ok`, `obra` o `prev`. El
-catálogo es una colección de contenido con esquema validado en el build: si
-falta un campo o un peso no suma, **el build falla**. Los datos no se comprueban
-a ojo.
-
----
-
-## 04 // Cómo se produce un tema
-
-Esta es la sección que decide si el proyecto llega a veinte temas o se queda en
-tres. **Un tema no se programa: se rellena.**
-
-> **Cómo se añade un ejercicio sin perder media hora.** Se escribe el bloque en
-> el scratchpad, se pasa `node scripts/revisa-ejercicios.mjs <fichero> --suelto`
-> y **solo entonces** se pega al `ejercicios.yaml`. El guion comprueba lo mismo
-> que el esquema —los tres pasos obligatorios, los mínimos de longitud, la
-> pieza trampa única, los distractores dentro de la tolerancia— en un segundo y
-> sin construir el sitio. Nace el 2 de septiembre de 2026 porque el primer
-> bloque de los 145 de Fluidos se pegó sin validar, rompió el YAML por un `: `
-> sin comillas (§17) y hubo que revertir el fichero entero.
->
-> El esquema sigue mandando: si los dos discrepan, el guion está mal.
-
-Un tema nuevo son dos ficheros:
-
-Los dos ejemplos de abajo están **copiados del repositorio**, no escritos para
-la ocasión. Si los copias, compilan. La autoridad sobre el formato es siempre
-`content.config.ts`, que además lleva comentado el motivo de cada regla rara.
-
-**`index.mdx`** — la prosa, con componentes incrustados donde hagan falta:
-
-```mdx
----
-asignatura: calculo
-tema: 1
-titulo: Números complejos
-descripcion: Forma binómica y polar, De Moivre, raíces
-peso: 8
-patron: lectura
----
-
-Un número complejo no tiene nada de imaginario...
-
-<ErrorTipico titulo="El argumento con arctan a secas">
-`arctan(1)` vale π/4 tanto si vienes del primer cuadrante como del tercero...
-</ErrorTipico>
-```
-
-**`ejercicios.yaml`** — los ejercicios como datos, nunca como código. Un
-ejercicio tiene cabecera y una lista de `pasos`, y **cada paso declara su
-`tipo`**:
-
-```yaml
-ejercicios:
-  - id: ej-punto-critico-clasificado
-    titulo: Un punto crítico, y decidir qué es
-    fuente: Ejemplo introductorio · Road to Ingeniería. No es de examen ni del boletín.
-    nivel: ejemplo          # ejemplo | practica | examen
-    enunciado: |
-      Para $f(x) = x^{3} - 3x$, encontrar sus puntos críticos y clasificarlos.
-    pide: Los puntos donde la derivada se anula y qué es cada uno.
-    pasos:
-      - tipo: reconocer     # COMP1 — antes de calcular nada
-        pregunta: |
-          Si $f'(c) = 0$, ¿qué se puede afirmar del punto $c$?
-        opciones:
-          - texto: Que es candidato a extremo, pero hay que decidirlo aparte
-            correcta: true
-            mensaje: |
-              Eso es. Fermat dice «extremo implica derivada nula», y el
-              recíproco es falso.
-          - texto: Que hay un máximo o un mínimo
-            mensaje: |
-              No necesariamente. En $f(x) = x^{3}$ la derivada se anula en el
-              origen y ahí no hay ni máximo ni mínimo.
-          - texto: Que la función vale cero en $c$
-            mensaje: |
-              Eso sería $f(c) = 0$, otra cosa. Aquí lo que se anula es la
-              **derivada**: la tangente es horizontal.
-
-      - tipo: calcular      # COMP2
-        titulo: El punto crítico positivo
-        pregunta: |
-          Resolviendo $f'(x) = 3x^{2} - 3 = 0$, ¿cuál es la solución positiva?
-        respuesta:
-          tipo: numero      # numero | complejo | conjunto
-          valor: '1'
-          tolerancia: 0.001
-          formato: un número       # texto plano, sin LaTeX
-        distractores:               # al menos uno, y son errores REALES
-          - valor: '1.7320508'
-            mensaje: |
-              Has sacado la raíz de 3. Divide primero entre 3 los dos lados.
-        pista: |
-          $3x^{2} = 3$, así que $x^{2} = 1$.
-        desarrollo: |
-          $$ f'(x) = 3x^{2}-3 = 0 \;\Longrightarrow\; x = \pm 1 $$
-
-      - tipo: justificar    # COMP4 — ordenar el argumento
-        pregunta: Ordena la respuesta. Una pieza es falsa.
-        piezas:
-          - texto: $f''(x) = 6x$, y $f''(1) > 0$, luego en $x=1$ hay un mínimo.
-          # ojo al `: ` de dentro — obliga a comillas o rompe el YAML (§17)
-          - texto: 'Son extremos **relativos**: la función no está acotada.'
-          - texto: Como la derivada se anula en dos puntos, los dos son mínimos.
-            trampa: true            # exactamente una por paso
-            mensaje: |
-              Anularse no dice de qué tipo es. Lo decide el signo de $f''$.
-    resolucion: |
-      **Los candidatos.** Se buscan donde la derivada se anula...
-      # …recortado aquí: el esquema exige 100 caracteres como mínimo.
-```
-
-**Tres reglas que el esquema impone y que no se ven leyendo el ejemplo.** Todo
-ejercicio necesita, sí o sí:
-
-- un paso **`reconocer`** — COMP1 antes de tocar números,
-- un paso **`calcular`** o **`verificar`** — COMP2,
-- un paso **`justificar`** — COMP4.
-
-No es burocracia: es §09 metida en el esquema. Un ejercicio que solo comprueba
-un número entrena la parte que menos se falla, y el build lo rechaza por eso.
-
-Y los mínimos, que se olvidan: `fuente` ≥ 10 caracteres, `enunciado` ≥ 10,
-`resolucion` ≥ 100, al menos 2 pasos, al menos 3 `opciones` en un `reconocer`
-con `mensaje` ≥ 20 en cada una, al menos 1 distractor en un `calcular` y
-exactamente 1 pieza `trampa` en un `justificar`.
-
-Los **seis** tipos de paso, y qué competencia entrena cada uno:
-
-| `tipo` | qué hace | competencia | usos en el corpus |
-|---|---|---|---|
-| `reconocer` | elegir el concepto antes de calcular | COMP1 | 2.011 |
-| `calcular` | introducir el resultado y recibir el diagnóstico | COMP2 | 4.149 |
-| `justificar` | ordenar las piezas, con una trampa | COMP4 | 1.902 |
-| `verificar` | escribir una condición y compararla como región | COMP2·COMP4 | 33 |
-| `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 | 28 |
-| `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 | 178 |
-
-> **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
-> de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
-> o esbozar algo** —el recinto de una integral doble, la región del plano
-> complejo, el sólido de revolución— y el sitio no pedía dibujar ni una vez.
-> Treinta y nueve tenían un paso que *menciona* el recinto; ninguno lo hacía
-> dibujar. Lo que se entrenaba en su lugar era el final: leer el enunciado,
-> saltar a los límites y calcular. En el examen, el que no dibuja el recinto
-> pone mal los límites, y eso no lo arregla calcular mejor.
->
-> Es hermano de `redactar` y comparte su límite honesto: el sitio es estático
-> (§02) y **no se puede corregir un dibujo**. No lo finge. Enseña la figura
-> buena y la lista de lo que tiene que tener, y la comparación la haces tú.
-> Su `figura` es opcional a propósito, para que el tipo se pudiera usar el
-> primer día en vez de esperar a mover las 188 figuras de las resoluciones.
-> El primer uso, y el molde para los demás, está en
-> `calculo/t07-integral-multiple`, ejercicio `invertir-el-orden`: el que no se
-> puede hacer de cabeza.
-
-> Recontadas el **5 de septiembre de 2026**: 1.192 ejercicios y **4.826
-> pasos**. Las dos primeras filas llevaban desfasadas desde el recuento de
-> agosto —decían 1.068 y 1.989 cuando eran 1.210 y 2.394—, que es la tercera
-> vez que pasa lo mismo con esta tabla. La regla de recontar al cerrar una
-> asignatura no basta cuando pasan semanas sin cerrar ninguna: **se recuenta
-> también al tocar el corpus en más de un fichero**.
->
-> Y otra vez el mismo día al abrir Fundamentos Químicos: **1.202 ejercicios y
-> 4.878 pasos**, en 43 temas de cuatro asignaturas. Los diez nuevos son seis
-> de examen y cuatro ejemplos introductorios; la regla de arriba funcionó a la
-> primera.
->
-> **Y una tercera vez el mismo día**, al escribir las nueve rampas que faltaban:
-> **1.267 ejercicios y 5.140 pasos**. Tres recuentos en un día es la señal de
-> que la regla estaba bien puesta y de que la tabla no debería escribirse a
-> mano: desde hoy la saca `node scripts/deuda.mjs`, que además mide la lista
-> de deuda entera. La cifra se copia de su salida, no se estima.
->
-> Y el 6 de septiembre de 2026, **1.270 ejercicios y 5.154 pasos**: catorce pasos
-> más y tres ejercicios, y ninguno de examen. Son tres ejemplos de entrada
-> —el del diferencial, que cierra el último escalón de Cálculo con un solo
-> ejercicio; el de las dos líneas de alturas de una central; y el de decidir
-> cuál de dos curvas dibujadas es la derivada de la otra, que es el primero de
-> Cálculo con figura propia— más **cinco pasos con rúbrica**: los cuatro
-> primeros de Fluidos y el tercero de Álgebra, metidos **dentro** de
-> ejercicios de examen que ya estaban. Que el corpus pueda crecer por dentro
-> conviene que se note: no todo crecimiento es transcribir una convocatoria
-> más.
->
-> Y una tercera vez el mismo día, al terminar los diez temas de Química:
-> **1.228 ejercicios y 4.983 pasos en 51 temas**, con 402 figuras. Química
-> aporta 36 ejercicios y 157 pasos, que es poco para diez temas y está bien
-> que se note: los suyos no tienen colección transcrita, solo los dos
-> ejemplos propios por tema y los dieciséis de examen. **El hueco está
-> declarado en `tasks/todo.md`, no disimulado en esta cifra.**
->
-> Y una cuarta, esa misma tarde, al cerrar la transcripción de Química:
-> **1.254 ejercicios y 5.086 pasos**. La asignatura pasa de 36 a **62
-> ejercicios** —20 ejemplos, 15 de colección y 27 de examen— y sus seis
-> convocatorias quedan enteras, sin un solo `fuera`. Cuatro recuentos en un
-> día es mucho, y es exactamente lo que la regla pretendía: **se recuenta al
-> tocar el corpus en más de un fichero**, no cuando alguien se acuerda.
->
-> Y el **7 de septiembre de 2026**, con Ingeniería Térmica escrita:
-> **1.310 ejercicios y 5.342 pasos en 61 temas**, con 423 figuras. Térmica
-> aporta 40 ejercicios y 256 pasos — tres de ellos escritos esa misma tarde
-> para cerrar tres `falta[]` de su ruta: Churchill y Chu, el rendimiento
-> exergético de un compresor y el difusor. La cifra sale de `node scripts/deuda.mjs`
-> y se copia de su salida, que es la regla desde el 5 de septiembre; ese día
-> el propio guion se saltaba Térmica **en silencio** porque llevaba la lista
-> de asignaturas escrita a mano, y ahora la saca del catálogo.
->
-> Y el **8 de septiembre de 2026**, **1.319 ejercicios y 5.388 pasos**. Los
-> nueve nuevos son todos peldaños: escalones que empezaban directamente por un
-> ejercicio de examen, que es lo que §14 dice que no puede pasar. Cinco de
-> Cálculo —longitud de arco por dos vías, área de superficie curva, Laplace con
-> coeficientes variables— y cuatro de Química —el puente del mol, los dos
-> órdenes de una configuración, el radio iónico y Nernst por electrodos—. Es la
-> forma de crecer que menos se nota en la cifra y más cambia el producto:
-> **ningún ejercicio nuevo de examen, y nueve entradas nuevas al corpus que ya
-> estaba.**
->
-> Y el **10 de septiembre de 2026**, **1.322 ejercicios y 5.403 pasos**. Los
-> tres nuevos son de Ingeniería Térmica —entre ellos el de las dos masas de
-> agua que se mezclan, que cierra el escalón de exergía destruida por los dos
-> caminos— y el ejercicio 9 de la ordinaria de Fluidos de 2026, que **no es
-> nuevo**: estaba en `fuera` y se recuperó al releer los `fuera` de formato
-> (§17). Conviene que esa distinción quede escrita, porque la cifra no la
-> hace: **un corpus puede crecer recuperando lo que ya había transcrito**, y
-> eso es más barato que cualquier otra forma de crecer.
->
-> Y esa misma tarde, **1.332 ejercicios y 5.449 pasos**, con la decisión de
-> Ionan de publicar los PDF de Térmica. Los nueve son de esa asignatura y de
-> tres orígenes distintos, que conviene distinguir porque cuestan cosas muy
-> diferentes: **tres de su colección** —los temas 2 y 4, la hoja de conducción
-> y el boletín de tema 3—, que no dependían de ninguna decisión y llevaban
-> ahí desde el principio; **dos ejemplos nuestros** para los escalones de
-> exergía; y **cuatro de examen**, las primeras convocatorias transcritas de
-> la asignatura. La forma más barata de las tres fue la primera, y era la que
-> nadie había mirado.
->
-> Y el **11 de septiembre de 2026**, de madrugada, **1.352 ejercicios y 5.547
-> pasos**: veinte ejercicios más, y **los veinte de examen de Térmica**, uno
-> por cada una de las catorce convocatorias montadas esa noche más los seis
-> que ya estaban. Es el crecimiento más caro por unidad —cada uno exige
-> resolver a ciegas, abrir la resolución manuscrita del profesor y contrastar
-> cifra a cifra— y el único que cierra un hueco de §15 en vez de mejorar el
-> corpus por dentro.
->
-> Conviene anotar lo que ese contraste encontró, porque es el argumento entero
-> de por qué se hace en ese orden: **cinco erratas en documentos oficiales**
-> —una masa escrita como 4 donde el enunciado dice 2, dos calores específicos
-> cambiados, dos temperaturas de referencia mal copiadas— y **cuatro
-> enunciados que se repiten literalmente** entre convocatorias separadas por
-> cuatro años o más. Nada de eso se ve leyendo la resolución primero.
->
-> Y entre el 11 y el 12 de septiembre de 2026, **1.372 ejercicios y 5.661
-> pasos**: veinte más, y los veinte de examen de Térmica, que son la fila
-> entera de «trabajo pendiente» de la tabla de §00. Ya no había convocatoria
-> que montar, solo el ejercicio que cada una dejaba fuera, y aun así cada uno
-> pidió lo mismo que los anteriores: resolver a ciegas, abrir la resolución y
-> contrastar. Lo que eso encontró —entre otras cosas, el primer error de
-> concepto en una resolución oficial— está en §00.
->
-> Y el 12 de septiembre de 2026, con Ciencia de Materiales escrita, **1.492
-> ejercicios y 6.270 pasos**: 120 ejercicios y 609 pasos más, todos de
-> Materiales. Es la primera asignatura sin un solo ejercicio de examen —99
-> de los 120 son de su colección, y el resto, ejemplos—, porque no hay
-> exámenes entre el material. Y la primera donde un problema no se podía
-> escribir hasta tener dibujada la figura de la que se lee: diez esperaron a
-> sus curvas.
-
-`redactar` pasó de **una** a **cinco** el 5 de septiembre de 2026, con el
-encargo 4 de la reauditoría. La razón de escribirlas es un dato, no una
-intuición: en Cálculo **50 de los 425 ejercicios de examen piden demostrar**
-—el 11,8 %— y en Álgebra, **24 de 32**, o sea el 75 %. Las cuatro nuevas son
-las dos demostraciones más pedidas de cada asignatura: Barrow y Lagrange en
-Cálculo, «esto es subespacio vectorial» y «núcleo trivial implica inyectiva»
-en Álgebra.
-
-Y sigue sin ser un patrón maduro: cinco usos de 4.826 pasos. Se pararon en
-cuatro **a propósito** (§13: el framework se destila del contenido). Antes de
-escribir más hay que mirar cómo se leen estas, no seguir produciéndolas.
-
-> **Mirado el 6 de septiembre de 2026, y con el resultado escrito, que es lo
-> que faltaba para poder seguir.** Las cinco se leyeron enteras y se abrió una
-> en el navegador. El patrón está bien resuelto y conviene no tocarlo: **no
-> hay casilla donde teclear**, y eso es deliberado —lo que corrige el examen
-> es un folio—; hay un botón que revela la rúbrica solo cuando dices que ya la
-> has escrito, y detrás un mensaje que dice qué hacer con ella. Lo que hace
-> que la rúbrica valga no es la lista de puntos sino el `porque` de cada uno:
-> nombra el fallo concreto, no la manía. «Continua y derivable en $[a,b]$
-> pierde el punto **y además es un teorema más débil**» enseña algo; «pon bien
-> las hipótesis» no.
->
-> Con eso, `redactar` pasa de cinco a **nueve**, y las cuatro nuevas son de
-> **Fluidos**, que era la asignatura con la demanda medida más alta y con cero
-> pasos de este tipo: **36 de sus 108 ejercicios de examen piden deducir,
-> demostrar o razonar** —el 33 %, y no hay una sola de las dieciséis
-> convocatorias que no lo pida—. Se han elegido las cuatro que más se repiten,
-> contadas una a una: **obtener los adimensionales, en diez de las dieciséis**
-> —dos de ellas nombrando el teorema de Vaschy-Buckingham, una «de uso
-> obligatorio»—, **razonar la semejanza absoluta, en nueve**, **la curva
-> característica de la instalación, en seis** y **la expresión del caudal de
-> un aparato deprimógeno, en cuatro**, que además vale para los tres disfraces
-> con que cae: venturímetro, vertedero y diafragma.
->
-> La regla de arriba no se levanta, se cumple: se miró antes de escribir más,
-> y las cuatro nuevas van donde el dato dice, no donde apetecía.
->
-> **Y una quinta, la primera de Álgebra desde el pase de agosto**, por la
-> misma razón medida: Álgebra pide demostrar en **24 de sus 32** ejercicios de
-> examen, la proporción más alta de las cuatro asignaturas, y solo tenía dos
-> rúbricas. Sus dos familias más pedidas ya estaban cubiertas, así que entra
-> la siguiente: **las propiedades de la norma en un espacio euclídeo**, que
-> abren el **ejercicio 3 de cuatro convocatorias** —Minkowsky, la identidad de
-> polarización, Pitágoras— y las cuatro empiezan igual, desarrollando
-> $\left\|\overline{x}+\overline{y}\right\|^{2}$ con el producto escalar.
-> Cambia lo que se pide al final, no el camino.
->
-> **Y la cifra de Álgebra cambia de 22 a 24, con su definición escrita**,
-> porque el 22 no lo reproduce ninguna cuenta que se le pueda hacer hoy al
-> corpus: buscando el verbo en el enunciado entero salen **29 de 32**, y
-> mirando solo el primer apartado —que es donde vive la demostración— salen
-> **24**. Se publica el 24 y se dice cómo se cuenta, que era lo que faltaba.
-> **Un número sin su definición al lado no se puede volver a comprobar**, y
-> entonces no se puede corregir: solo se puede sospechar de él.
->
-> **Y los tres números de este párrafo estuvieron mal durante una hora**, por
-> una trampa que §17 ya avisaba a medias y que ahora avisa entera: cargué el
-> YAML —que es lo que §17 pedía— pero busqué la frase sobre el valor **tal
-> cual**, y un bloque `>-` conserva los saltos de línea con los que se
-> escribió. «Curva característica de la instalación» partida en dos líneas no
-> casa con la frase escrita seguida. Salieron 5 donde había 6, y 4 donde había
-> 10. Cargar el YAML no basta: hay que **normalizar los espacios** antes de
-> buscar una frase.
-
-Y dentro de `calcular`, seis tipos de respuesta según lo que se escriba en la
-casilla:
-
-| `respuesta.tipo` | qué lee | tolerancia | dónde vive el lector |
-|---|---|---|---|
-| `numero` | un real, con forma exacta (`pi/4`, `sqrt(3)/2`, `1.8e-5`) | absoluta | `leeComplejo` y, si falla, `evaluaNumero` |
-| `complejo` | forma binómica | absoluta | `lib/complejo.ts` |
-| `conjunto` | varias soluciones, sin orden | absoluta | `lib/complejo.ts` |
-| `vector` | coordenadas **con** orden | absoluta | `lib/algebra.ts` |
-| `matriz` | filas y columnas | absoluta | `lib/algebra.ts` |
-| `magnitud` | número **con unidad**, comparado por dimensión | **relativa** | `lib/unidades.ts` |
-| `formula` | una fórmula química o el nombre de un compuesto | **ninguna** | `lib/quimica.ts` |
-
-> `formula` entra el 5 de septiembre de 2026, y su historia es el ejemplo
-> limpio de §13 funcionando. Cuando lo pedía **un** ejercicio se dejó sin
-> construir y se anotó; cuando apareció el **segundo** —la misma pregunta, en
-> el otro control del primer cuatrimestre— se escribió, y no antes.
->
-> Es el único tipo **sin tolerancia**: una fórmula se acierta o no. Lo que sí
-> tiene es normalización —`Fe₂O₃` vale igual que `Fe2O3`, y un nombre se
-> compara sin tildes ni conectores— y **sinónimos obligatorios**, porque la
-> nomenclatura admite dos formas válidas y el propio examen imprime las dos:
-> «Plomo(II) hidróxido / hidróxido plumboso». Dar una por mala sería corregir
-> peor que el profesor.
->
-> Sabe diagnosticar tres errores sin que haya que declararlos como distractor:
-> **mayúsculas** —`CO` es monóxido y `Co` es cobalto—, **subíndices** —los
-> elementos correctos en la proporción equivocada— y **columna equivocada**,
-> que es contestar con el nombre donde se pedía la fórmula.
->
-> Y una lección de método: los 32 tests pasaban y aun así, **al teclearlo en
-> el navegador**, `k2so4` en minúsculas recibía «has contestado en la otra
-> columna» y un compuesto erróneo recibía «ese número no sale de ninguna vía
-> razonable». Los dos son §16 punto 1: probarlo a mano encontró lo que los
-> tests no buscaban.
-
-> Las cifras de esta tabla y las de §05 y §15 se quedaron en el corpus de
-> agosto y estuvieron desfasadas hasta el 28 de agosto de 2026: decían 1.022
-> pasos cuando eran 2.658, y 270 ejercicios cuando eran 683. **Regla que sale
-> de ahí: un número de este fichero se recalcula al cerrar cada asignatura, no
-> cuando alguien se acuerda.** El guion está en el scratchpad y son veinte
-> líneas: recorre las colecciones y cuenta.
->
-> Recontadas el **1 de septiembre de 2026**, al cerrar Fluidos: los pasos
-> pasaron de 3.092 a 4.142 y los ejercicios de 827 a 1.059, repartidos en 41
-> temas de tres asignaturas. La regla funcionó — las cifras llevaban cuatro
-> días desfasadas, desde el recuento del 28 de agosto, no una semana.
->
-> Y recontadas otra vez el **4 de septiembre**, al meter la colección de
-> Fluidos: **4.822 pasos y 1.192 ejercicios** en los mismos 41 temas. En tres
-> días el corpus ha crecido un 13 % sin abrir un tema nuevo, y eso lo hace
-> todo un solo trabajo: transcribir un boletín que ya existía.
-
-> Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
-> MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
-> `<Verificador>` que no existe. El de YAML no acertaba **un solo campo**: le
-> faltaba el envoltorio `ejercicios:`, ponía `competencia` y `unidad` y
-> `solucion` en el paso —tres campos que el esquema no tiene— y omitía `tipo`,
-> que es lo primero que se lee. Un ejemplo de documentación que no compila es
-> peor que no tener ejemplo: se copia, falla, y enseña que el fichero miente.
-> Corregido el 24 de agosto de 2026 copiando del corpus. **Regla nueva: los
-> ejemplos de este fichero se copian del repositorio, nunca se escriben aquí.**
-
-**El componente `EjercicioGuiado` es genérico y se escribe una sola vez.** Lee
-el YAML y monta la interacción. Si para añadir un ejercicio hay que tocar
-JavaScript, algo está mal diseñado: vuelve atrás y generalízalo.
-
-Solo se escribe código nuevo cuando el tema necesita **un simulador que no
-existe**. Todo lo demás es prosa y datos.
-
-### En qué orden van los ejercicios dentro de un `ejercicios.yaml`
-
-**Primero los nuestros, y después los de la colección en el orden de la
-colección.** No por nivel.
-
-Lo pidió Ionan el 5 de septiembre de 2026 —«que estén distribuidos como están
-en lo que te enseñé»— y al medirlo tenía toda la razón: los catorce temas de
-Fluidos con problemas de la colección estaban **desordenados**. El tema 2
-abría con el 1.13, seguía con el 1.2 y luego el 1.12. Iban agrupados por
-nivel, y dentro de cada grupo en el orden en que se transcribieron, que no es
-un orden: es el azar de quien fue tecleando.
-
-El motivo de fondo, y por eso esto es una regla y no una manía: **la página de
-un tema es la referencia, y la ruta es la que enseña.** Quien abre el tema
-suele tener el PDF de la colección al lado y quiere encontrar el 6.14 donde
-está el 6.14. Quien quiere una rampa de dificultad va a la ruta, donde §14 ya
-manda que un escalón vaya de `ejemplo` a `practica` a `examen`. Ordenar el
-tema por nivel duplicaba mal el trabajo de la ruta y estropeaba la referencia.
-
-Los ejemplos introductorios nuestros van delante porque no tienen número que
-respetar (§08) y porque son la entrada. Todo lo demás, por su número.
-
-Al reordenar se cuenta (§16 punto 4): mismo conjunto de ids, mismo número de
-líneas y cada bloque idéntico byte a byte antes y después — solo movido. Y se
-releen los comentarios que hablan de posición: «el contrapunto de los tres
-anteriores» dejó de ser cierto en el tema 16 y hubo que reescribirlo.
-
-### Un tema está terminado cuando
-
-- La prosa está escrita y responde a una pregunta concreta, no describe.
-- Tiene al menos un ejercicio guiado con **distractores reales**, no inventados.
-- Tiene modo guiado y modo completo, y el completo se imprime bien.
-- Los errores típicos están marcados y salen de exámenes vistos, no de suponer.
-- Si tiene simulador, tiene su test de física en `tests/`.
-- `scripts/verify.mjs` pasa limpio.
-
----
-
-## 05 // Los cinco patrones
-
-Todo el contenido cae en uno de estos cinco. Si algo no encaja, es señal de que
-hay que pensarlo mejor, no de que haga falta un sexto.
-
-**Un patrón no es un fichero.** Es una forma de presentar contenido, y tres de
-los cinco viven dentro de `EjercicioGuiado` como tipos de paso en vez de como
-componente propio. Eso no es deuda: es §13 funcionando —el framework se destila
-del contenido— y por eso la tabla va aquí antes que los patrones:
-
-| patrón | dónde vive de verdad | usos |
-|---|---|---|
-| **1 · Lectura** | `patrones/Lectura.astro` | los 83 temas |
-| **2 · Figura fija** | **no construido** | 0 |
-| **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro` | 1.742 ejercicios |
-| **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` | 25 |
-| **5 · Demostración** | paso `justificar`, con su pieza trampa | 1.742 |
-| (*simulador*) | `sim/`, cuando el tema lo pide | 9 |
-
-Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
-ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
-antes, porque un patrón diseñado en el vacío sale mal (§13).
-
-Y el `simulador` del esquema no es un sexto patrón: es la puerta que §04 deja
-abierta para escribir código cuando un tema necesita algo que no existe.
-
-**1 · Lectura.** Texto con una herramienta incrustada. Para contenido que se
-sostiene solo y la figura apoya.
-
-**2 · Figura fija.** El dibujo se ancla y el texto pasa por delante
-transformándolo. Para contenido donde la figura *es* el contenido: plano
-complejo, diagramas de fases, ciclos termodinámicos. **Nunca es una secuencia
-de imágenes distintas**: es una sola que se transforma, y esa continuidad es lo
-que hace que la idea se acumule en vez de reiniciarse en cada apartado.
-
-**3 · Ejercicio guiado.** El alumno introduce su resultado y el sistema
-diagnostica **el error concreto**. Nunca dice «incorrecto». Cada paso lleva
-respuestas equivocadas reales asociadas a razonamientos equivocados reales.
-Nunca se da la solución al fallar: a los dos intentos aparece la pista, al
-tercero se abre el desarrollo.
-
-**4 · Verificador.** La figura no explica: **comprueba** lo que el alumno
-propone. Escribe su condición cruda y su versión simplificada, y si las dos
-regiones coinciden su álgebra está bien. O elige un contraejemplo y la gráfica
-valida si cumple las hipótesis. Es el patrón más diferencial del proyecto y
-apareció solo, construyendo contenido real.
-
-**5 · Demostración.** Ordenar las piezas del argumento, con **una pieza trampa**
-que encarna el error típico y no debe entrar. Existe porque una demostración
-escrita no se puede autocorregir, pero su estructura lógica sí.
-
-### La portada
-
-Es la pizarra de entrada (rediseño Pizarra, agosto 2026): héroe con el
-titular subrayado en tiza y la figura tocable de la tangente, el temario en
-dos columnas con **estados honestos del catálogo** —entera / la estamos
-escribiendo / aún no—, y la repisa con el lema. La portada **no supone
-itinerario**: son puertas, no un orden.
-
-Al elegir una asignatura, **el nombre pulsado viaja hasta convertirse en el
-título** de la vista de detalle (técnica FLIP: medir, invertir, animar), que
-es banda de pizarra + cuerpo de papel (brief §5b). Paleta de comandos con
-`/` o `⌘K` que busca asignaturas, temas, conceptos y rutas a la vez.
-
-Principio: **fluido no es tener animaciones, es no perder nunca el sitio.** El
-movimiento se ve una vez o bajo demanda; mientras se lee, nada se mueve.
-
-> Hasta el 29 de agosto de 2026 esta sección describía el selector anterior
-> —las nueve asignaturas como filas que crecen al posarse—. Se sustituyó por
-> el mundo Pizarra elegido por Ionan; el brief vive en
-> `referencia/rediseno-pizarra-brief.md`.
-
----
-
-## 06 // Diseño
-
-> Rediseño «Pizarra» (agosto 2026, brief aprobado por Ionan tras comparar
-> cuatro mundos visuales). Identidad: pizarra verde con tiza. Lectura larga:
-> papel cálido. La vara de medir la puso él: «lo futurista impresiona el
-> primer día y cansa la vista a la semana» — calidez antes que espectáculo.
-
-### Tipografía
-
-Karla para interfaz y cuerpo (400/500/600/700/800; el display es la misma
-familia en 800). Caveat **solo** para anotaciones manuscritas —rótulos de
-tiza, apuntes al margen, estados— nunca cuerpo de texto ni párrafos.
-IBM Plex Mono para datos, unidades y etiquetas. Las fórmulas no cambian:
-KaTeX en el build con sus propias fuentes (§07). Autoalojadas vía
-`@fontsource`.
-
-> Hasta agosto de 2026 eran Fraunces + IBM Plex Sans. Se sustituyeron con el
-> rediseño Pizarra; si un componente aún pide un peso que Karla no tiene
-> importado, el peso se añade en `Base.astro`, no se aproxima con otro.
-
-### La pizarra y el papel
-
-- **Pizarra** (tokens `--piz-*`, `--tiza*`, `--repisa`): la portada entera,
-  la barra superior de las páginas interiores, los recuadros de ErrorTipico,
-  los diagnósticos del ejercicio guiado y las figuras enmarcadas como
-  mini-pizarra. Es oscura por naturaleza: mismos valores en los dos temas.
-- **Papel cálido**: todo donde se lee o se trabaja durante horas — prosa,
-  ejercicios, exámenes, rutas. Motivo: fatiga visual e impresión (§11).
-- **El movimiento se ve una vez** (entrada, `forwards`, nunca `infinite`) **o
-  bajo demanda** (hover, arrastrar). Mientras se lee, nada se mueve.
-  `prefers-reduced-motion` lo apaga todo.
-- Nada de cuenta atrás al examen, nada de memoria de progreso en la portada,
-  y la portada no supone itinerario: cada alumno entra a lo suyo.
-
-### Color
-
-Claro por defecto, oscuro como opción. El claro manda porque esto se lee
-durante horas, las gráficas tienen que verse y el material se imprime.
-
-**Tres colores de interfaz, con significado fijo:**
-
-| token | significa |
-|---|---|
-| `--live` | se toca, se comprueba, es interactivo |
-| `--flag` | esto te suspende: error típico, fallo físico |
-| `--alt` | segundo objeto de una escena |
-
-> Esta tabla llevaba los hexadecimales al lado, y los tres estaban caducados:
-> decía `--live #0D6E6B` cuando vale `#1C6E51`, y `--flag #B93A2B` cuando vale
-> `#BE4B38`. Es §01 con otra cara — el mismo dato en dos sitios, y el que no
-> se ejecuta es el que miente. **El valor de un token se lee en
-> `tokens.css`**, que es el único fichero que puede llevar un color literal;
-> aquí se dice lo que significa, que es lo que el fichero no puede decir.
-
-**Seis colores de datos**, `--d1`…`--d6` (azul, naranja, verde, magenta, oro,
-pizarra), **solo** para series de gráficas.
-
-- Los semánticos nunca son serie de datos. Los de datos nunca van en interfaz.
-- Se usan en orden desde `--d1`.
-- **Máximo seis series por gráfica.** Más significa que la gráfica está mal
-  planteada: se parte, o se resalta una y el resto va en gris.
-- El color nunca es el único distintivo: etiqueta directa o marcador de forma.
-  Verificado contra deuteranopía, protanopía y escala de grises.
-
-**Una serie es color de LÍNEA. Cuando rotula, es letra, y el listón sube.**
-Los seis se diseñaron contra el listón de objeto gráfico —3:1, WCAG 1.4.11—,
-pero el etiquetado directo pone el nombre de la curva en el color de la curva,
-y una letra se mide a 4,5:1. Cinco de los seis lo pasan. `--d2` no —3,15:1
-sobre el papel— y no hay ningún naranja que llegue a 4,5 sin juntarse con
-`--d3` o `--d5` bajo dicromacia: se recorrió el espacio de tonos entero. Por
-eso existe **`--d2-tinta`**, que es ese naranja oscurecido y **solo** vale para
-letra. La línea sigue siendo `--d2`.
-
-**`--marco`** es el otro token que nació de lo mismo: la anotación en tono
-«marco» y el título de la caja de lo que falta estaban pintados con
-`--barra-justificar`, que es el relleno de una franja de la barra de reparto y
-da 3,50:1. Los tres `--barra-*` no tocan texto; `--marco` es su oro llevado
-a 4,5.
-
-> **La capa de tinta la mide `check-color.mjs`** desde el 15 de septiembre de
-> 2026, en tres escenas —claro, oscuro y pizarra— y contra el fondo real de
-> cada una. La lista de tintas no está escrita a mano: se lee de `src/` —los
-> `color:`, los `fill:` y los `fill="var(--x)"` de los `<text>`— y una tinta
-> nueva sin medir rompe el guion.
-
-**Fondo sobre el que cae cada tinta.** No está en la hoja de estilos, está en
-el árbol del documento: por eso la tabla de `check-color.mjs` lo declara fila a
-fila, con su umbral y su razón. Si añades un color de texto, añade su fila.
-
-**Color de asignatura:** cada una tiene su acento, y vive **solo en el marco** —
-número, regla, migas, indicadores. En cuanto empieza el contenido vuelve la
-semántica estricta de arriba.
-
-### Reglas de CSS
-
-- Todo el color y la tipografía en `src/styles/tokens.css`. **Un único
-  `:root{}` en todo el repositorio**, y `verify.mjs` lo comprueba.
-- Prohibido `<style>` con tokens dentro de páginas de contenido.
-- Prohibido un color literal (`#0D6E6B`, `rgb(...)`) fuera de `tokens.css`.
-  Siempre `var(--nombre)`.
-
----
-
-## 07 // Matemáticas
-
-- Se escriben en LaTeX, en el MDX del tema y en su `ejercicios.yaml`. Los dos
-  pasan por el **mismo** procesador, declarado una sola vez en
-  `src/lib/markdown.mjs`.
-- `remark-math` + `rehype-katex` con salida **`htmlAndMathml`**, generada en el
-  build: KaTeX dibuja la fórmula con sus propias fuentes y deja detrás el
-  MathML, oculto, para los lectores de pantalla.
-- **Prohibido KaTeX o MathJax en tiempo de ejecución.** Aquí KaTeX corre en el
-  build; al navegador no llega ni una línea de JavaScript de matemáticas.
-- **Una sola versión de KaTeX.** Suena a detalle y no lo es (§01): había dos
-  —la de la raíz y la anidada bajo `rehype-katex`—, las clases habían cambiado
-  de nombre entre ellas, y el CSS no casaba con el HTML que se generaba. Si
-  `npm ls katex` devuelve más de una, eso es el fallo.
-- **Cero CDN** en todo el sitio. Criterio de aceptación: desconecta la red,
-  recarga, y todo se ve igual — tipografías incluidas.
-
-> Hasta el 20 de agosto de 2026 la salida era **MathML puro**, por ser nativo y
-> no necesitar CSS. Se cambió porque MathML delega el dibujo en la fuente
-> matemática de cada máquina, y eso rompía fórmulas sin avisar: con las fuentes
-> del sistema desaparecía la barra del conjugado —`z̄` se leía como `z`, justo
-> lo contrario— y con STIX Two Math autoalojada desde `@fontsource`, que viene
-> subdividida, desaparecían los radicales. Una fórmula que se dibuja distinta en
-> cada ordenador no es un asunto de estética. El precio son 118 ficheros de
-> fuente de KaTeX en el sitio; el navegador solo descarga los que usa.
-
-### El otro precio, y cómo se paga (16 de septiembre de 2026)
-
-`htmlAndMathml` cuesta **54 nodos por fórmula** — el dibujo para el ojo y el
-MathML para el lector de pantalla, los dos por fórmula—. En una página de tema
-con cincuenta ejercicios eso son **272.000 de los 285.000 nodos**, el 96 %. Y
-la página tardaba cinco segundos en un teléfono no por maquetar sino por
-**construir el DOM**: cuatro de esos cinco segundos.
-
-El dato que da la solución: **de las 5.081 fórmulas de esa página, al cargar
-solo se ven 17**. Las otras 5.064 están dentro de resoluciones y desarrollos
-cerrados. Así que **lo que empieza cerrado viaja dentro de un `<template>`** y
-se materializa al abrirlo. El contenido de un `<template>` se analiza en un
-fragmento inerte: se lee, pero no entra en el árbol ni en el cálculo de
-estilos.
-
-|  | antes | ahora |
-|---|---|---|
-| `/calculo/t05-integracion/` | 284.977 nodos · 5,4 s | **102.451 · 2,7 s** |
-| `/calculo/t01-complejos/` | 198.712 · 4,1 s | **84.035 · 2,5 s** |
-
-**Las tres reglas que esto impone**, y que hay que respetar al tocar
-`EjercicioGuiado.astro`:
-
-1. **Solo va a `<template>` lo que ya era inalcanzable sin JavaScript.** La
-   resolución y los desarrollos lo eran —los esconde `hidden` y los abre un
-   botón—, así que no se pierde nada. El enunciado y los pasos **no se tocan**:
-   sin JavaScript se siguen leyendo enteros.
-2. **Todo camino que enseñe algo llama antes a `materializa()`**, y son cuatro:
-   acertar un paso, terminar el ejercicio, el modo completo e imprimir. Es
-   idempotente porque ninguno puede dar por hecho que es el primero.
-3. **`beforeprint` es el camino oficial para materializarlo todo**, y por eso
-   `humo.mjs` lo dispara antes de medir figuras en vez de usar una función de
-   prueba: el guardián recorre el mismo camino que el papel, y si alguien lo
-   rompe se entera ahí en vez de descubrirlo imprimiendo la noche de antes.
-   Comprobado el día del cambio: el guardián mide **exactamente las mismas
-   etiquetas** que antes, página por página.
-
-> Se probaron tres caminos y se midieron los tres. Paginar los ejercicios rompía
-> los anclajes `#ej-…` que usan las siete rutas. `content-visibility: auto`
-> —que se queda, y ayuda— solo compraba medio segundo, porque se salta el
-> maquetado y no la construcción del DOM. Y borrar el contenido del todo era
-> **peor** que el `<template>`: 3.085 ms contra 2.092, porque el fragmento
-> inerte se salta también el cálculo de estilos.
-
----
-
-## 08 // Contenido, derechos y estilo
-
-### Derechos
-
-La universidad ha dado permiso para usar el material docente. Aun así:
-
-- **No entra material de terceros en el repositorio.** Ni diapositivas, ni
-  colecciones escaneadas, ni figuras sacadas de manuales.
-- **Sí entran los enunciados de examen originales**, en `public/examenes/`,
-  para poder enlazarlos desde su resolución. Son documentos de la propia
-  escuela y están cubiertos por el permiso; ver la nota de abajo.
-- Hay un límite que la universidad no puede levantar: las figuras que los
-  profesores tienen escaneadas de manuales (Moody, tablas de propiedades,
-  esquemas de Çengel, White o Askeland) siguen siendo de las editoriales.
-  **Esas se redibujan**, nunca se recortan del PDF.
-- Los enunciados de examen se reproducen **tal cual**, sin cambiar los números.
-  El alumno estudia con el ejercicio que va a caer, no con una versión parecida;
-  y cuando compara con la solución oficial del boletín, los números tienen que
-  coincidir o la herramienta pierde toda la credibilidad.
-- Se cita siempre la procedencia exacta: «Ejercicio 1.1 · Problemas
-  complementarios, tema 1 · Cálculo, UPV/EHU (examen 2014/2015)».
-- Lo que sí es nuestro es **la resolución**: el desarrollo, los errores típicos
-  y el diagnóstico. Ahí está el valor, no en el enunciado.
-- Y desde el 23 de agosto de 2026, también son nuestros los **ejemplos
-  introductorios**: ejercicios cortos que escribimos para que alguien pueda
-  entrar de cero. Llevan `nivel: ejemplo` y su `fuente` lo dice con todas las
-  letras — «Ejemplo introductorio · Road to Ingeniería. No es de examen ni del
-  boletín» —, así que nunca se pueden confundir con lo que va a caer.
-
-> Esa última regla es nueva y contradice en parte lo de arriba, así que se
-> justifica. Se midió la dificultad del corpus y **no había por dónde entrar**:
-> en el bloque de lugares geométricos iba de 1,5 a 4,5 sobre 5 con la moda en
-> 3,5, el único abordable sin saber el tema estaba enterrado el décimo de
-> diecisiete, y las cuatro traducciones básicas que la propia prosa enumera no
-> tenían ni un ejercicio propio. Un sitio hecho para el que está atascado que
-> solo ofrece ejercicios de examen no sirve al que todavía no ha empezado.
->
-> Lo que **no** cambia: un enunciado de examen se reproduce tal cual y no se
-> inventa. Un ejemplo introductorio no es un enunciado de examen, y por eso
-> tiene que ir marcado en el dato, no solo en la intención.
-
-> Esta regla decía lo contrario hasta el 19 de agosto de 2026: reescribir los
-> enunciados y cambiar los números, para que no se pudiera buscar la solución
-> hecha. Se cambió a propósito. El precio asumido es que los ejercicios son
-> localizables; a cambio, lo que se estudia aquí es exactamente lo que se
-> examina.
-
-> Y hasta el 20 de agosto de 2026 la primera regla prohibía expresamente los
-> «exámenes en PDF». Se cambió al construir el apartado de exámenes, porque la
-> prohibición mezclaba dos cosas distintas. Una figura escaneada de Çengel es
-> de su editorial y no hay permiso que la libere; un examen de la Escuela de
-> Ingeniería de Gipuzkoa es de la propia escuela, y para eso está el permiso.
-> El motivo de conservar el original es de fondo: una resolución que no se
-> puede contrastar con el enunciado que la generó pide un acto de fe, y el
-> proyecto entero existe para lo contrario. Lo que **no** cambia es que las
-> figuras de terceros no entran: si un enunciado trae una, se redibuja en SVG.
-
-> Consecuencia práctica: `public/examenes/` es la **única** carpeta del
-> repositorio donde entra un PDF ajeno, y solo si es un enunciado oficial
-> citado por una resolución nuestra. Cualquier otro binario sigue vetado (§12).
-
-### Estilo de la prosa
-
-- Se tutea. Se escribe para alguien que está atascado, no para un tribunal.
-- **Primero la idea, después el formalismo.** «Multiplicar es girar y escalar»
-  antes que la fórmula de De Moivre.
-- Se nombra el error en voz alta. Los errores típicos no son un aviso al pie:
-  son contenido principal.
-- Nada de «simplemente», «obviamente» ni «basta con». Si fuera obvio, el alumno
-  no estaría ahí.
-- Frases cortas. Sin relleno.
-
----
-
-## 09 // Las tres competencias
-
-Los exámenes de Cálculo puntúan por competencias, y eso cambia el diseño de
-todo componente de ejercicios:
-
-| | qué evalúa | peso típico |
-|---|---|---|
-| **COMP 1** | reconocer los conceptos a aplicar | 1–2 puntos |
-| **COMP 2** | el cálculo | 6–7 puntos |
-| **COMP 4** | explicación formal: enunciados, definiciones, gráficos, hipótesis | 2–9 puntos |
-
-**Cuatro de cada diez puntos no son calcular.** Hay ejercicios enteros —como el
-de sucesiones del parcial del 20 de octubre de 2025, o los tres «enunciar y
-demostrar Barrow» de 2019, 2020 y 2021— donde COMP 2 vale cero y los diez
-puntos son demostración.
-
-> Esta sección decía «entre el 30 y el 40 %» hasta el 21 de agosto de 2026 y
-> **49,5 %** hasta el 28. Las dos veces por lo mismo: se midió sobre el corpus
-> que había en ese momento y no se volvió a mirar. Sobre las **88
-> convocatorias completas**, que son 4.255 puntos con su tema y su reparto:
->
-> | | puntos | del total |
-> |---|---|---|
-> | COMP 1 | 384,5 | **9,0 %** |
-> | COMP 2 | 2.438 | **57,3 %** |
-> | COMP 4 | 1.432,5 | **33,7 %** |
->
-> Es decir **42,7 %**, no 49,5. La tesis no cambia —la parte que no es cálculo
-> sigue siendo enorme y sigue siendo la que peor se prepara— pero el número
-> concreto se movió casi siete puntos al pasar de 33 exámenes a 88, y estuvo
-> publicado mal durante una semana.
->
-> **La regla que sale de haberlo tenido mal dos veces:** este número no se
-> recalcula «cuando entren exámenes nuevos», porque eso deja la decisión al
-> criterio de alguien que está haciendo otra cosa. Se recalcula **al cerrar una
-> asignatura**, junto con las cifras de §04, §05 y §15, y se comprueba que la
-> tabla de aquí y lo que digan `docs/` y `tasks/` dicen lo mismo.
-
-Todo ejercicio guiado entrena las tres: una pregunta de reconocimiento antes
-del cálculo, y una comprobación de justificación formal después. **Un componente
-que solo verifica un número entrena la parte que menos se falla.**
-
-### La calculadora, y en qué asignatura se puede
-
-**En Cálculo no se puede usar calculadora.** Lo dijo el alumno el 23 de agosto
-de 2026, y cambia cómo se escribe un paso de cálculo. La consecuencia no es cosmética: **la respuesta de un ejercicio no
-puede exigir un decimal que solo sale con una máquina**. Si un área vale
-$(e^{2}-1)/2$, pedir «cuatro decimales» es pedir algo que en el aula no se
-puede hacer.
-
-Se midió al descubrirlo: de las 380 respuestas numéricas del corpus, **128
-tenían tres decimales o más** y 87 sitios lo pedían con todas las letras.
-
-Las dos reglas que quedan:
-
-- **La forma exacta siempre vale.** El lector de respuestas evalúa expresiones
-  —`pi/4`, `(e^2-1)/2`, `sqrt(3)/2`, `2+3i`— además de decimales, y el valor
-  guardado puede seguir siendo el decimal: se comparan números, no cadenas.
-- **Un enunciado nunca ordena dar decimales.** Se escribe «en forma exacta, o
-  con cuatro decimales», en ese orden, porque ese es el orden en que el alumno
-  los va a tener.
-
-Y en la prosa, cuidado con dar por hecha la calculadora. El error del argumento
-con `arctan` no es un despiste de máquina: es que $\arctan(1) = \pi/4$ tanto si
-vienes del primer cuadrante como del tercero, y esa información no la pone
-nadie por ti.
-
-**Y no vale para todas las asignaturas.** El título de este apartado decía «en
-el examen no se puede usar calculadora», a secas, desde que se escribió, y era
-una regla de Cálculo publicada como si fuera del sitio entero. En **Ingeniería
-Térmica la calculadora sí está permitida**, y además se entrega un anexo de
-tablas y diagramas: los propios enunciados dan rugosidades, propiedades del
-aire a la temperatura de película y entalpías de vapor con cuatro cifras, y
-sin máquina no hay ejercicio. En Mecánica de Fluidos pasa lo mismo de hecho,
-porque medio examen es leer un ábaco e iterar Colebrook.
-
-Así que la regla se lee al revés de como estaba escrita: **la forma exacta
-siempre vale, en todas partes; ordenar decimales solo se prohíbe donde el aula
-no tiene con qué calcularlos.** Lo que no cambia en ninguna asignatura es lo
-de arriba: un enunciado no ordena decimales a secas, y la prosa no da por
-hecho que haya una máquina delante.
-
-Queda pendiente confirmarlo asignatura por asignatura con el alumno. Lo
-seguro, con fuente, es Cálculo (no), Ingeniería Térmica (sí, con anexo de
-tablas) y **Mecánica de Fluidos (sí)**, esta última desde el 10 de septiembre
-de 2026: su guía la pide en el apartado 9.1 entre los conocimientos previos
-necesarios —«habilidad y agilidad en el uso de la calculadora»—, así que deja
-de ser una inferencia del tipo de ejercicios y pasa a tener fuente. Lo que
-sigue sin respuesta escrita en las tres es si se admite **programable**.
-
-> Y de paso, la regla general que ninguna de las tres decía: la nota de la
-> UPV/EHU sobre evaluación de pruebas académicas invierte el supuesto. «Salvo
-> indicación expresa, se consideran prohibidos libros, notas o apuntes, así
-> como dispositivos telefónicos, electrónicos, informáticos o de cualquier
-> otro tipo.» El anexo de tablas de Térmica y el de cuadros y ábacos de
-> Fluidos no son una concesión: son **la indicación expresa**, y por eso van
-> impresos con el examen.
-
----
-
-## 10 // Física y datos
-
-Una simulación equivocada enseñando a cien alumnos es peor que no tener
-simulación.
-
-- Todo simulador lleva en `tests/fisica/` al menos un caso con resultado
-  conocido, verificado contra el ejercicio original o contra bibliografía.
-  Y **el caso va antes que el componente**, no después: se escribió así los
-  cinco de fluidos y las cinco veces el test cambió algo de la prosa.
-- **Su física vive en `lib/`, no dentro del `.astro`.** No es estilo: el
-  código de un `<script>` de Astro no se puede importar desde vitest, así que
-  un simulador con la física dentro **no se puede probar**, y la regla de
-  arriba se vuelve decorativa.
-- Las constantes van con nombre y unidades explícitas.
-- Si un resultado no cuadra con el original, se para y se revisa. **Nunca se
-  ajusta una constante para que salga el número esperado.**
-- **Un simulador que solo ilustra no vale la pena.** El listón, medido sobre
-  los cinco de fluidos, es que el test descubra algo que la prosa no dice o
-  dice mal: las fronteras del ábaco no son «exactamente 0,3 y 6» sino un rango
-  de 0,17 a 0,61; aplicar semejanza al punto de funcionamiento se equivoca un
-  52 %, no «algo»; la excentricidad del centro de presión sigue una ley exacta,
-  `e/L = L/(k·Y_G)`, que el tema no tenía; el óptimo de una sección de canal es
-  plano, así que un condicionante moderado sale casi gratis; y en la frontera
-  de Allievi-Michaud no hay salto, porque las dos coinciden ahí. **Los cinco
-  cambiaron la prosa**, y esa es la prueba de que servían.
-- Los datos que se publican como ciertos tienen que serlo. Si el peso de un
-  tema en el examen es estimado, se muestran tres niveles —alto, medio, bajo—
-  y no un porcentaje falsamente preciso.
-
----
-
-## 11 // Suelo de calidad
-
-Son dos guardianes y comprueban cosas distintas. Los dos corren en CI y
-bloquean el despliegue.
-
-### `scripts/verify.mjs` — lee el HTML publicado
-
-Comprueba:
-
-- Un solo `:root{}` en todo el repositorio.
-- Cero colores literales fuera de `tokens.css`.
-- Cero referencias a dominios externos.
-- `lang` en `<html>`, `alt` en toda imagen, exactamente un `<h1>` por página.
-- Foco visible en todo elemento interactivo.
-- `prefers-reduced-motion` respetado en toda animación.
-- `description`, `og:title` y `canonical` en toda página.
-- Cero enlaces internos rotos.
-- **Cero números rotos en el texto publicado** — ni `NaN`, ni `undefined`, ni
-  `Infinity`, ni `[object Object]`. Añadida el 4 de septiembre de 2026 después
-  de encontrar **`El NaN % de la nota` en negrita** en el panel principal de
-  tres de las diez rutas, con las dos asignaturas declaradas terminadas y el
-  suelo en verde. La causa era una división entre cero: Álgebra y Fluidos no
-  publican reparto por competencia y la página lo calculaba igual.
-- Responsive real hasta 360 px. **Ojo con lo que esta regla NO mira**: busca
-  anchos fijos en el CSS, y el 4 de septiembre de 2026 el sitio se desplazaba
-  en horizontal en toda página de tema a 360 px **sin un solo ancho fijo** —lo
-  producía una fila flex que no envolvía—. Un desborde de verdad se mide
-  abriendo la página, no leyendo el CSS.
-- Toda página de contenido con **modo guiado y modo completo**. Nadie repasa la
-  noche antes de un examen haciendo scroll por una narración; el modo completo
-  se imprime bien y sirve para explicárselo a alguien.
-
-### `scripts/humo.mjs` — abre el sitio en un navegador
-
-Leer el HTML demuestra que algo **está**, no que **funcione**. El 19 de agosto
-de 2026 se colaron tres fallos invisibles a `verify.mjs`: una raíz cuadrada con
-MathML correcto que el navegador no dibujaba —el enunciado decía −3/2 donde
-debía decir −√3/2—, unas pestañas que no enganchaban sus manejadores porque dos
-componentes usaban el mismo `data-tema`, y un `data-ir` compartido que habría
-ocultado los dos paneles.
-
-Comprueba, en Chromium y sobre cada página de tema:
-
-- Las raíces **dibujan su radical**, no solo su contenido.
-- Cambiar de pestaña abre el panel **y marca cuál está activa**.
-- Los controles de la lectura no tocan las pestañas.
-- Una respuesta equivocada recibe **un diagnóstico**, no un «incorrecto».
-- Cero errores de JavaScript en consola.
-
-### `HUMO_TODO=1 npm run humo` — la barrida completa
-
-En cada commit, `humo.mjs` abre las páginas que enlaza la portada más **una
-muestra rotatoria de ocho exámenes**, elegida por el día del año e impresa para
-que un fallo se pueda reproducir. En unas semanas pasan todas.
-
-Con `HUMO_TODO=1` las abre **todas** —**248 al 15 de septiembre de 2026**:
-108 de Cálculo, 41 de Fluidos, 32 de Térmica, 19 de Química, 19 de Álgebra,
-**18 de Mecánica Aplicada** y **10 de Ciencia de Materiales**—, y eso es lo que
-se pasa al cerrar una asignatura. Esta línea decía 227 y se dejaba fuera a
-Mecánica entera, cerrada el día antes; la compara `deuda.mjs` §10 desde el 13
-de septiembre. Térmica pasó de 11
-a 32 esa madrugada al montar sus veinte convocatorias, que es la subida más
-grande que ha tenido esta cifra de una vez. **La cifra se lee, no se ignora**:
-decía 123 y llevaba semanas sin actualizarse, que es justo el descuido que
-esta sección persigue en el guardián. La primera vez que se hizo, el 29 de agosto de 2026,
-encontró cuatro figuras marcadas… y las cuatro eran correctas: el guardián de
-`viewBox` daba falsos positivos con los círculos guía. Se estrechó la regla y
-se dejó dicho por qué. Ese es el uso: **la barrida no busca aprobar, busca
-enterarse.**
-
-> Y de paso arregló tres fallos del propio guardián, que llevaba dando
-> «Execution context was destroyed» en una página distinta cada vez: abría las
-> 123 en la misma pestaña, clicaba las pestañas de modo dentro del mismo
-> `evaluate` que dispara `history.replaceState`, y medía sin esperar al trabajo
-> diferido. Un guardián que falla al azar se acaba ignorando.
-
-### `npm run humo:todo` — la misma barrida, partida y en paralelo
-
-La barrida completa en un solo navegador pasaba de **una hora**, y una hora es
-el tiempo a partir del cual un guardián se deja de ejecutar: se pospone «para
-luego», y luego es nunca. `scripts/humo-todo.mjs` levanta **un** servidor de
-vista previa y reparte las asignaturas entre varios procesos de `humo.mjs`,
-cada uno con su navegador y su `HUMO_ASIGNATURA`.
-
-- **Cuatro a la vez**, no siete. Cada proceso abre un Chromium con el montón de
-  JavaScript a 4 GB, y todos a la vez compiten por la memoria en vez de por el
-  reloj — que es el fallo que `--disable-dev-shm-usage` está ahí para evitar.
-  Se cambia con `HUMO_A_LA_VEZ`.
-- **El guardián de cobertura cambia de sitio.** `humo.mjs` comprueba que
-  ninguna asignatura con páginas construidas se queda sin abrir; mirando una
-  sola, esa comprobación falla por definición. Así que con `HUMO_ASIGNATURA`
-  se desactiva ahí y la hace el repartidor, que sí ve la lista entera. Sin eso
-  la barrida partida fallaba siempre y en las siete.
-- **Se enseña solo el registro de quien falla.** Siete registros entrelazados
-  no los lee nadie.
-- **Dos guardianes globales cambian de sitio, y no es un detalle.** Además del
-  de cobertura, el que exige que en el sitio haya raíces **y** barras que medir
-  —el conjugado— es falso mirando una sola: en Química hay veinte raíces y cero
-  barras, y en Térmica cuatro y cero. Mirando una asignatura se exige haber
-  medido *algo*; la suma la hace el repartidor leyendo esa misma línea de cada
-  tanda. La regla general: **un guardián que mide el sitio entero no se puede
-  partir sin decidir dónde vive su versión global**, y los dos primeros
-  intentos de esta barrida salieron en rojo por saltársela.
-
-Medido el 17 de septiembre de 2026 en esta máquina: **14,9 minutos** de
-principio a fin, de los cuales 14,9 son Cálculo —sus 108 páginas mandan sobre
-el total—. Las otras seis van de 2,2 a 6,6 y caben de sobra en ese hueco. Si
-algún día Cálculo pasa de treinta, lo que toca no es subir `HUMO_A_LA_VEZ`
-sino partirlo también a él.
-
-### `npm run sim` — que un simulador se encuentre y diga la verdad
-
-Tampoco es un guardián del suelo: necesita el sitio levantado. Se pasa **al
-tocar un simulador**, como `recalcula` al tocar el corpus.
-
-Existe por un fallo concreto y caro. El 2 de septiembre de 2026 se publicaron
-cinco simuladores correctos y **completamente invisibles** —viven en un
-apartado que no es el primero, y el modo guiado tapa los demás— con el suelo
-en verde y las capturas de cada uno bien. `tests/fisica/` prueba la física;
-`humo.mjs` prueba que la página no reviente. **Nadie probaba el cable entre las
-dos cosas.**
-
-Comprueba dos cosas, y las dos habían fallado:
-
-- que el simulador **se encuentre** aterrizando en la URL a pelo, sin ancla y
-  sin `localStorage` — que la cabecera lo anuncie, que el índice marque su
-  apartado y que el aviso **lleve**;
-- que cada botón de preajuste deje en la tabla **los valores que declara su
-  campo `fuente`**. No se recalculan aquí nunca: se copian de donde el `fuente`
-  diga (§10).
-
-**Y de dónde salen esos valores no es lo mismo en los nueve.** Hasta el 13 de
-septiembre de 2026 aquí ponía «los valores que publica la convocatoria… están
-copiados del examen, que es lo único contra lo que tiene sentido comparar», y
-era verdad de **tres**: el ábaco de Moody, el punto de funcionamiento y los
-diagramas de viga. Los otros seis comparan contra la figura o el ejemplo del
-propio tema —sus `fuente` lo decían y nadie los había sumado—, así que ahí esto
-es una **regresión** y no una verificación: caza que el modelo se separe de la
-página, no que el número sea cierto. El reparto está tabulado fila por fila en
-`tests/fisica/README.md`: 3 con ancla externa, 2 mixtas, 4 propias. La cuarta
-propia es el plano complejo, que entró el 15 de septiembre de 2026 y con ella
-deja de haber un simulador que no compara nada.
-
-Validado al revés con dos regresiones reales: volver a poner `D/e = 40` en el
-golpe de ariete —que daba 215 mca donde **el tema publica 228**— y quitar el
-aviso de la cabecera. Las dos, rojas. Y ojo al ejemplo, que ilustra lo de
-arriba mejor que ninguno: ese 228 no sale de un examen, sale de
-`fluidos/t20-golpe-ariete/index.mdx:218`, prosa nuestra. La regresión de
-validación se validó contra nosotros mismos.
-
-### `npm run peso` — cuánto tarda una página en un móvil
-
-Tampoco es un guardián: el número depende de la máquina y tardaría demasiado
-en cada build. Se toma al cerrar una asignatura, como `recalcula`.
-
-Existe porque nada medía el peso y creció sin que nadie mirase. Y la lección
-de la primera medición vale más que el guion: **el tamaño del HTML explica
-menos de lo que parece**. El tema 5 pesa 7,2 MB y tardaba 2,6 s; el tema 1 pesa
-5,8 MB y tardaba **5,9 s**. La diferencia no era el peso, eran doce lienzos del
-paso `verificar` pintándose al cargar —360.000 píxeles cada uno—. Pasados a
-tiempo muerto, 2,3 s.
-
-**Antes de culpar al peso, mira qué se ejecuta al cargar.**
-
-### `npm run recalcula` — comprueba que las cuentas salen
-
-**No es un guardián: no entra en `npm run suelo` y no bloquea nada.** Se pasa
-al **cerrar una asignatura**, junto con el recuento de las cifras de §04, §05,
-§09 y §15.
-
-Existe porque el 28 de agosto de 2026 una auditoría que recalculaba las
-matemáticas encontró **ocho ejercicios que enseñaban algo falso** con los dos
-guardianes en verde y §15 cumplida. El signo de una antitransformada, la
-relación de distancias de Apolonio invertida, un contraejemplo que no era
-contraejemplo. Ninguno de esos fallos rompe nada: el sitio funciona
-perfectamente enseñando algo que no es verdad.
-
-Comprueba solo **lo que el propio contenido ya afirma**, nunca algo inventado:
-
-- cada «expresión $\approx$ decimal» **y cada «expresión = decimal»** de una
-  resolución o un desarrollo,
-- cada forma exacta que un `formato` declara entre paréntesis, contra su
-  `valor`,
-- que un `formato` que promete «un número entero» guarde un entero.
-
-Lo que no sabe evaluar lo declara **saltado**, y no lo cuenta como fallo.
-
-> **Su alcance, medido, y lo que le sigue quedando fuera.** Hasta el 4 de
-> septiembre de 2026 solo miraba los pares escritos con `\approx`, y eso
-> dejaba fuera a **Fluidos entera** —su corpus escribe `=`—, es decir la
-> asignatura con más aritmética del proyecto: 279 pares comprobados, los
-> 279 de Cálculo. Ese día se amplió a `=`. Medido después:
->
-> | | pares comprobados | saltados |
-> |---|---|---|
-> | Cálculo | 575 | 1.080 |
-> | Álgebra | **0** | 2 |
-> | Fluidos | **1.416** | 2.917 |
->
-> De 279 a 1.991, y con el primer pase **diez desajustes reales, cinco en
-> Fluidos y cinco en Cálculo** —una asignatura cerrada y dada por verificada—:
-> dos cifras transpuestas (`1{,}04234` por `1{,}04324`), una suma de tres
-> términos mal, un resto de Lagrange con un 25 % de error, un punto de millar
-> dentro de una fórmula y cinco redondeos. Ninguno rompía nada.
->
-> **Álgebra sigue en cero y seguirá**, y esa parte del límite no es un
-> defecto: sus respuestas son objetos exactos —vectores, matrices, bases— y
-> no hay decimales que recalcular.
->
-> Lo que costó la ampliación fueron los falsos positivos, que eran cuatro
-> clases y no tres: expresiones partidas por el salto de línea del YAML
-> —resuelto uniendo las líneas dentro de un `$$…$$` **sin mover las
-> posiciones**—, coeficientes tomados por resultados (`= 1{,}1\,\frac{v^2}{2g}`),
-> redondeos encadenados —resuelto propagando la incertidumbre de cada
-> literal decimal en vez de comparar contra media unidad del último dígito—
-> y cambios de unidad en la misma cadena.
->
-> **Y ese último obligó a una concesión que conviene tener presente.** Cuando
-> el número lleva unidad escrita, el guion acepta **cualquier potencia de
-> diez** como lectura posible, porque el corpus calcula en centímetros y
-> escribe en milímetros con toda naturalidad. Consecuencia: **un error de
-> factor mil pasa desapercibido si el número lleva unidad.** Se aceptó
-> porque sin ello los avisos de esa clase se comían el guardián —de 33
-> avisos, 20 eran esto— y §11 dice que un guardián que se ignora es peor que
-> ninguno.
-
-> **Y el 7 de septiembre de 2026, al cerrar Ingeniería Térmica, resultó que
-> el guardián no sabía leer castellano.** Dio **veinte desajustes, los veinte
-> falsos**, y todos por lo mismo: leía `110.735` —un Reynolds— como 110,735.
-> El punto de millar. La tentación era reescribir el contenido; lo correcto
-> era medir, y medido queda: de los **144 puntos que hay dentro de una
-> fórmula en todo el corpus, los 129 con exactamente tres dígitos detrás son
-> millares**, y los 15 con uno o dos son decimales de enunciados de examen
-> reproducidos tal cual (§08) —`$x = 0.5$`, `$z=1.6$`—. Se distinguen por la
-> forma, así que el guardián puede aprenderlo y el contenido no se toca. Es
-> §01 con otra cara: **el fallo estaba en la capa que mira, no en las
-> cuarenta y tres que se miran.**
->
-> Quitar los millares destapó de inmediato que **los resultados enteros no se
-> comprobaban nunca**: el número de la derecha tenía que llevar separador
-> decimal, y `= 135.000\ \text{W}` solo entraba porque el punto lo disfrazaba
-> de decimal —y entonces se comparaba 135 contra 135.000, que pasaba por la
-> concesión de la potencia de diez de arriba—. Al admitirlos, la cobertura
-> pasa de **2.444 a 3.819 pares**, un 56 % más.
->
-> Y admitirlos destapó a su vez **dos fallos del guardián que llevaban ahí
-> desde el principio y que ningún corpus había tocado**, los dos encontrados
-> por los 45 avisos falsos que salieron de golpe: la lista de «esto de la
-> derecha no es un resultado» usaba `\b`, y entre la `t` de `\cdot` y el `3`
-> de `\cdot3` no hay frontera de palabra —medio corpus lo escribe sin
-> espacio—; y el analizador leía el signo por debajo de la potencia, así que
-> **`-(1+1)^{2}` valía +4**. Los dos arreglados y validados al revés.
->
-> Lo que encontró de verdad, ya con todo eso limpio, fue **un desajuste real
-> en Fluidos**: `1744 - 5902 = -4159` en la pieza en Y, donde los dos
-> sumandos estaban redondeados y la resta arrastraba el redondeo al
-> resultado —son 1743,5 y 5901,3, y da −4157,8—. Más dos divisiones escritas
-> de forma ambigua, `K/p = 2{,}2\cdot 10^{9}/2{,}5\cdot 10^{6}`, que solo
-> significan lo que quieren decir si el lector agrupa por su cuenta: pasadas
-> a fracción.
-
-> **Y el 12 de septiembre de 2026 resultó que no comprobaba ningún porcentaje
-> con decimales.** Lo destapó al revés, con cinco avisos falsos en
-> Materiales, todos de la forma `\frac{5 - 2}{5}\cdot 100 = 60\ \%`: un `%`
-> detrás del resultado multiplicaba la expresión por cien aunque ya llevara
-> su `\cdot 100`. La misma forma con decimales —la cristalinidad del tema 9,
-> `\frac{0{,}070}{0{,}1222}\cdot 100 = 57{,}3\ \%`— no avisaba, y el motivo
-> era peor que el aviso: el margen de redondeo se medía contra el valor ya
-> multiplicado y salía del tamaño del propio valor, así que **pasaba
-> cualquier número**, y el marcador lo contaba como comprobado.
->
-> Arreglado admitiendo las dos lecturas de un porcentaje —la expresión es una
-> fracción, o ya está en tanto por ciento— con el margen medido en la escala
-> de la expresión. Al quitar el margen roto salieron tres avisos más, en
-> Fluidos, y los tres eran la segunda lectura: una interpolación entre
-> rendimientos de tabla y la fórmula de dilatación del primer parcial de
-> 2021, que el enunciado da en tanto por ciento. Validado al revés con un
-> 67,3 donde el tema 9 dice 57,3 —que antes pasaba— y un 70 donde el tema 3
-> dice 60: dos rojos, los dos. El precio es la concesión de las unidades en
-> pequeño: **un error de factor cien entre fracción y porcentaje ya no se
-> caza.**
-
-Antes de escribirlo se intentaron dos guardianes de texto y los dos se
-descartaron por ruidosos —26 avisos falsos de 323, y 8 de 10—. La conclusión,
-que vale para la próxima vez: **esta clase de fallo no se caza con patrones en
-la prosa, se caza evaluando.**
-
-**Regla de este fichero: no se añade una comprobación por si acaso.** Se añade
-cuando algo se ha roto de verdad, y el comentario dice qué se rompió. Y toda
-comprobación nueva se valida al revés: se reintroduce el fallo y se confirma que
-el guardián se pone rojo. Una comprobación que no falla cuando el fallo existe es
-peor que no tenerla, porque da confianza falsa.
-
-**Y se retira cuando su motivo desaparece**, con la misma exigencia de prueba
-con la que se añadió: se mide, se escribe la medición en el propio fichero y se
-deja dicha la fecha. Un guardián que salta cuando el fallo ya no existe empuja a
-escribir peor para contentarlo, y enseña a saltarse los guardianes — que es el
-daño de verdad. Pasó el 20 de agosto de 2026 con la regla de `\overline`: se
-escribió cuando la salida era MathML y la fuente del sistema no estiraba la
-barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 %.
-
----
-
-## 12 // Git y despliegue
-
-- Conventional Commits, mensaje en castellano.
-- **No se versionan binarios generados.** Los PDFs son artefactos de build.
-- Si un fichero pesa más de 1 MB, se justifica antes de añadirlo.
-- Nombres de fichero en minúscula, sin espacios ni acentos, con guiones.
-- Despliegue por GitHub Actions: build, `verify.mjs`, tests, y solo entonces
-  publicar.
-
----
-
-## 13 // Cómo trabajar aquí
-
-- **Plan primero.** Escribe `tasks/todo.md` antes de crear ficheros. Si hay
-  alguien a quien preguntar, espera el visto bueno; si no lo hay, lee el
-  apartado siguiente.
-
-### Cuando no hay nadie a quien preguntar
-
-Este fichero se escribió suponiendo una conversación. Cada vez más no la hay:
-se entrega el objetivo y el repositorio, y se ejecuta solo. Entonces la
-pregunta «¿pregunto o sigo?» no se puede dejar al criterio del momento.
-
-**Decide tú, sin preguntar, y déjalo escrito en el commit:** cómo se ordena un
-bloque, qué ejercicio va primero, cómo se redacta un distractor, qué figura
-hace falta, cómo se llama un apartado, si un ejercicio necesita un ejemplo
-delante. Todo eso es trabajo, no política. Equivocarse ahí es barato: se ve al
-mirar el resultado y se cambia.
-
-**Para y pregunta —o si no puedes, PARA y escríbelo en `falta[]` o en
-`tasks/todo.md` en vez de resolverlo— solo en estos cinco casos:**
-
-1. **No tienes el dato y lo ibas a estimar.** Un porcentaje, un recuento de
-   convocatorias, un peso. §10: se publica medido o no se publica. Un número
-   inventado con dos decimales es la mentira más creíble que puede producir
-   este proyecto.
-2. **Ibas a escribir un enunciado que no has leído.** §08. Si el PDF no está o
-   no se lee, el ejercicio no existe todavía. **Inventarlo es el peor fallo
-   posible aquí** y es también el más cómodo: sale plausible, encaja, y nadie
-   lo nota hasta que un alumno compara con el boletín y el sitio pierde toda
-   su credibilidad de golpe.
-3. **Una regla de este fichero te estorba.** No la ignores «solo por esta vez»
-   —§13 último punto—. Anótala como conflicto y sigue por otro lado.
-4. **Ibas a tocar la capa compartida para arreglar un caso.** `tokens.css`,
-   `Base.astro`, `markdown.mjs`, `content.config.ts`. Un cambio ahí afecta a
-   todo; si el motivo es un solo contenido, el fallo está en el contenido.
-5. **Un hecho del mundo que el repositorio no contiene.** Si en el examen se
-   puede usar calculadora, cuántas convocatorias hay al año, si un profesor
-   reparte formulario. Se pregunta o se anota como supuesto **declarado**,
-   nunca como hecho.
-
-La asimetría es a propósito: **decidir de más es recuperable, publicar un dato
-falso no.** Un sitio con el orden de los bloques mal se arregla en una tarde;
-un sitio con un enunciado inventado hay que auditarlo entero.
-- **El framework se destila del contenido, nunca al revés.** Los dos primeros
-  temas de cada asignatura se escriben completos antes de extraer ninguna
-  abstracción. El patrón «verificador» apareció así: construyendo contenido
-  real, no diseñando en el vacío.
-- **Empieza por el caso difícil.** Un componente probado primero con el
-  ejercicio cómodo enseña poco y genera la abstracción equivocada. El que rompe
-  el formato es el que enseña dónde están los límites.
-- Antes de construir una figura, escribe **la pregunta que responde**. Una
-  gráfica que no responde a una pregunta concreta no se construye. Un diagrama
-  de Moody bonito no enseña nada; uno donde el alumno mueve la rugosidad y ve
-  cuándo deja de importar el Reynolds, sí.
-- Código en inglés, documentación e interfaz en castellano.
-- Este fichero funciona como restricción, no como decoración. **La primera
-  excepción «solo por esta vez» es la que abre la puerta a las setenta y
-  nueve.** Si una regla estorba, se discute y se cambia aquí — no se ignora.
-
----
-
-## 14 // Cómo se produce una ruta de estudio
-
-Hermana del §04. Un tema responde «¿qué es esto?»; una ruta responde **«¿por
-dónde empiezo y cómo sé que he terminado?»**. Son preguntas distintas y por eso
-la ruta es un artefacto propio y no un índice del tema.
-
-Una ruta vive en `src/content/preparar/<asignatura>-<evaluacion>.yaml` y es
-**un solo fichero de datos**. La página se genera con el patrón `Lectura`; no
-hay componente propio ni plantilla que copiar. Lo primero que hay que entender
-es esto:
-
-> **Una ruta no contiene contenido. Contiene referencias y razones.**
-
-Si al escribir una ruta te ves explicando algo, para: ese algo va en la prosa
-del tema, y la ruta lo enlaza. La única excepción declarada es el bloque del
-formulario, que sí duplica hechos a propósito y lo dice en su propio `falta[]`.
-
-### De qué se compone
-
-Una ruta son cuatro campos de cabecera y una lista de bloques:
-
-- `lede` y `criterioDeOrden` — por qué los bloques van en ese orden y no en el
-  del temario. Se escribe una vez y explica la ruta entera.
-- `medidoSobre` — cuántas convocatorias se han leído. Es la base de todos los
-  recuentos y el esquema comprueba que ningún bloque diga haber caído en más
-  años de los que se han contado.
-- `bloques[]`.
-
-Y un bloque son seis cosas:
-
-| campo | qué es |
-|---|---|
-| `pide` | qué pide el examen, **con las palabras del examen** |
-| `porque` | por qué este bloque existe y va donde va, con el recuento |
-| `invariante` | la lectura humana que no se deriva de los datos, y su fuente |
-| `dominio` | cómo sabes que has terminado |
-| `material[]` | referencias a teoría, ejercicios y exámenes, por `id` |
-| `falta[]` | lo que el examen pide y el sitio todavía no enseña |
-
-`dominio` es el campo que separa una guía de una lista de enlaces. Se escribe
-en segunda persona y describe **lo que tienes que ser capaz de hacer**, no lo
-que tienes que haber leído: «dividir dos complejos y pasarlos a polar en menos
-de un minuto acertando el cuadrante a la primera». Una lista se acaba; un
-bloque se domina.
-
-### Cómo se decide un bloque
-
-Contando exámenes, nunca por intuición ni por el peso que el temario le dé.
-El procedimiento es literal: se leen las convocatorias publicadas, se agrupa
-por **hueco** —el sitio que ese ejercicio ocupa en el examen— y se ordena por
-lo que rinde. Que dos enunciados distintos sean «la misma propiedad con otro
-disfraz» es una lectura humana: se declara en `invariante` y se dice de dónde
-sale (§10).
-
-Un hueco no es un apartado del temario. «Regiones del plano complejo» es un
-hueco porque cae los once años en el mismo sitio; «números complejos» no lo es.
-
-### El orden
-
-Suelo → los huecos ordenados por rendimiento → simulacros → formulario.
-
-El **suelo** es el bloque que no se examina solo y sin el cual los demás no se
-terminan a tiempo. No da puntos y va primero. El **formulario** es lo que hay
-que llevar en la cabeza; va el último porque es repaso, no aprendizaje.
-
-### Qué se calcula y qué no
-
-Los porcentajes por competencia y el peso de la evaluación **se calculan en el
-build** sobre los exámenes de la colección. Nunca se escriben en el YAML: sería
-una cuarta fuente de verdad que envejece sola. Lo mismo con las URL, que salen
-de los `id`.
-
-Y una consecuencia del enlace por `id`: si la ruta apunta a un apartado de
-teoría, el build comprueba el anclaje contra los encabezados reales del `.mdx`.
-Renombrar un apartado **rompe el build**, que es exactamente lo que se quiere.
-
-### El escalón
-
-Un bloque no es una lista de enlaces: es una secuencia de **escalones**, y un
-escalón es **una herramienta con su escalera**. Lleva cuatro cosas, y las
-cuatro son obligatorias:
-
-| campo | qué es |
-|---|---|
-| `aprendes` | qué vas a saber **hacer** al acabarlo, en segunda persona |
-| `teoria` | dónde se explica, enlazado al apartado exacto |
-| `ejercicios` | de `ejemplo` a `practica` a `examen`, en ese orden — con **una** excepción, la de abajo |
-| `dominio` | cómo sabes que este escalón está cerrado |
-
-> Nace el 23 de agosto de 2026 de una crítica del alumno: «lo que has hecho es
-> mandar con un enlace directo a la teoría, y con eso no hacemos que nadie
-> aprenda nada». Tenía razón. Un bloque era una pila plana de una decena de
-> filas donde «leer» y «hacer» eran visualmente lo mismo, el `dominio` se
-> validaba y se tiraba sin pintarlo, y el primer ejercicio de cualquier bloque
-> ya era de nivel examen.
-
-La regla que lo resume: **si el primer ejercicio de un escalón no lo puede
-hacer alguien que acaba de leer la teoría, falta un ejemplo delante.**
-
-**Y la excepción, escrita el 13 de septiembre de 2026 en vez de saltársela.**
-Un `ejemplo` puede ir **al final** de un escalón cuando enseña *otro camino
-para lo mismo* que solo se aprecia después de haber hecho el principal: el
-tercer método de Cramer detrás de Gauss y del rango, Cayley-Hamilton detrás de
-la diagonalización, la válvula isoentálpica detrás de las otras filas de la
-tabla. Ahí el orden pedagógico va al revés que el orden por nivel, y quien lo
-mueve delante enseña un atajo antes de que haya nada de lo que atajar.
-
-Esto sale de una auditoría externa que contó **19 escalones desordenados**
-donde `deuda.mjs` decía «0 sin rampa» —solo miraba el primero—, y el recuento
-se reprodujo exacto. Pero los 19 no eran lo mismo, y el encargo de reordenarlos
-todos habría estropeado cinco: **10 tenían el `examen` colocado antes que la
-`practica`**, que es el fallo de verdad y se arreglaron ese día; **1** cerraba
-con el ejemplo introductorio, que en la ruta gemela abre el mismo escalón, y se
-movió; **5** son estos cierres deliberados, y lo que estaba mal era la regla,
-no ellos. Quedan **3** con un `ejemplo` en medio, que no son ninguna de las dos
-cosas y siguen en `tasks/manana.md`.
-
-`deuda.mjs` §2 bis los cuenta ahora separados por esas tres formas, porque
-tratarlas como una sola es lo que llevaba a arreglar mal nueve de diecinueve.
-
-### Una ruta está terminada cuando
-
-- Los bloques son **huecos del examen, medidos**, no apartados del temario.
-- Cada bloque dice **por qué** existe, con el recuento y su fuente.
-- Cada bloque tiene **criterio de dominio**, en segunda persona.
-- **Toda herramienta que el examen usa está presentada en la prosa del tema**,
-  no solo dentro de la resolución de un ejercicio. Esta es la que más cuesta y
-  la que decide si la ruta sirve a alguien que llega de cero: se comprueba
-  contando apariciones, no leyendo por encima.
-- Lo que falta está en `falta[]`, **no callado**. Un hueco declarado es
-  información; un hueco escondido es una promesa incumplida.
-- Los porcentajes se calculan, nunca se declaran.
-- `npm run suelo` en verde, con la ruta entre las páginas que `humo.mjs` abre.
-
----
-
-## 15 // Una asignatura está terminada cuando
-
-§04 dice cuándo está terminado un tema y §14 cuándo lo está una ruta. Falta el
-nivel de arriba, que es el que se entrega.
-
-- **Los temas del catálogo son el temario oficial**, no una lista plausible.
-  Con su fuente. Si no la tienes, el catálogo dice `prev` y no finge.
-- **Y si un tema del temario oficial no tiene material, se dice, no se
-  esconde.** Hay temas que solo se explican en clase y no aparecen ni en la
-  colección ni en ninguna convocatoria: de esos no hay nada que transcribir por
-  mucho que se trabaje. Se declaran con **`soloEnClase`** en el catálogo —una
-  cadena con el motivo **y su fuente**, no un booleano—, y entonces no impiden
-  cerrar la asignatura. Lo que sigue prohibido es lo de antes: marcarlos
-  `hecho` (miente) o borrarlos del catálogo (rompe la regla de arriba). El
-  esquema pone dos frenos: un tema no puede ser `hecho` y `soloEnClase` a la
-  vez, y **más de un tercio del temario así rompe el build** — media asignatura
-  «solo en clase» no es una asignatura terminada, es una lista de excusas.
-- **Todas las convocatorias publicadas están transcritas**, con su reparto por
-  competencia y su PDF original en `public/examenes/<asignatura>/`.
-- **Una ruta por evaluación**, cumpliendo §14 entera.
-- **Todo tema que una ruta enlaza tiene prosa**, no solo ejercicios. Enlazar a
-  un tema vacío es la forma más silenciosa de romper una ruta.
-- **Cada tema tiene al menos un ejemplo introductorio propio** (§08) y al menos
-  una figura que responde a una pregunta (§13).
-- **`tests/fisica/` tiene un caso por simulador**, si hay simuladores (§10).
-- **`falta[]` dice lo que no está.** Una asignatura terminada con huecos
-  declarados es un producto honesto; una sin huecos declarados es sospechosa.
-- **El catálogo dice cómo se puntúa**, en el campo `evaluacion`: las
-  modalidades, el peso de cada parte y el umbral si lo hay, **con la guía
-  docente citada**. Nace de la auditoría externa del 4 de septiembre de 2026,
-  que lo llamó «la mejora de más rendimiento» de todo el informe, y tenía
-  razón: el sitio enseñaba a resolver un examen sin decir en ninguna parte
-  cuánto vale. Los pesos de una modalidad **suman 100 o el build falla**, y si
-  la guía no está entre el material la `fuente` lo dice con esas palabras
-  (§10) — al 6 de septiembre de 2026 pasa en **dos de las cuatro**
-  asignaturas abiertas: las guías de Cálculo y de Álgebra las leyó la
-  auditoría externa y no están en el repositorio; las de Fluidos y Química sí,
-  y por eso las suyas van citadas literalmente.
-
-  > Decía «dos de las tres», y la cuenta seguía siendo dos pero las
-  > asignaturas ya eran cuatro. Peor: la `fuente` de Fluidos afirmaba ser «el
-  > único de los tres documentos que sí está entre el material», y eso **se
-  > publica en la portada** — dejó de ser cierto el día que entró Química con
-  > su guía. Corregido el 6 de septiembre de 2026. Es la misma clase de frase
-  > que §16 persigue: verdadera al escribirla, falsa al abrir la asignatura
-  > siguiente, y sin ningún guardián que la mire.
-- `npm run suelo` en verde con todas sus páginas dentro.
-
-### Cuánto es «una asignatura», medido
-
-Cálculo es la referencia, y ya está cerrada entera. Once temas dan **21.657
-palabras de prosa, 197 ejercicios de tema, 88 convocatorias con 425 ejercicios,
-156 escalones en 62 bloques de 7 rutas y 30 figuras.** Sirve para dimensionar,
-no como cuota: un tema que necesita ocho figuras lleva ocho.
-
-> Recontado el **8 de septiembre de 2026**, al repasar Cálculo, y **tres de las
-> seis cifras habían envejecido**: 21.545 → 21.657 palabras, 193 → 197
-> ejercicios de tema, 29 → 30 figuras. Ninguna se había escrito mal; las tres
-> se quedaron atrás el día que se añadió contenido y nadie volvió a pasar
-> `mide.mjs`. Convocatorias, ejercicios de examen y escalones sí cuadraban.
-> Es el aviso de dos párrafos más abajo cumpliéndose otra vez, así que se
-> vuelve a decir aquí: **esta tabla se recuenta al cerrar una asignatura, no
-> se copia.**
-
-**La definición de «palabra» es la de `scripts/mide.mjs` y solo esa.** Este
-fichero decía 32.460 hasta el 29 de agosto de 2026 —el conteo crudo del MDX,
-etiquetas y LaTeX incluidos— mientras `docs/como-vamos.md` publicaba 21.545
-con la definición del guion. Ninguna mentía, pero dos definiciones sin nombrar
-son un descuadre esperando a que alguien las compare. Manda la del guion,
-porque es la reproducible.
-
-> Esta cifra decía «cinco temas, 12.644 palabras, 127 ejercicios, 33 exámenes,
-> 56 escalones» hasta el 28 de agosto de 2026, es decir la mitad de la
-> asignatura contada cuando iba por la mitad. Quien la leyera para dimensionar
-> un trabajo se habría quedado corto por más del doble.
-
----
-
-## 16 // Cómo se comprueba lo que acabas de hacer
-
-La sección que más rinde de este fichero, y la última en escribirse.
-
-El suelo de calidad (§11) demuestra que el sitio **no está roto**. No demuestra
-que esté **bien**. La diferencia se midió en la tanda del 23 de agosto de 2026,
-cinco fallos reales:
-
-| lo que se rompió | ¿lo cazó un guardián? |
-|---|---|
-| distractores demasiado juntos, y uno dentro de la tolerancia | **sí**, el esquema |
-| **58 enlaces de teoría rotos** | no — build verde, `verify.mjs` verde |
-| una curva subiendo con la etiqueta «$f' < 0$» | no |
-| etiquetas cortadas en cuatro figuras | no |
-| un párrafo reescrito dos veces sobre sí mismo | no |
-
-**Cuatro de cinco.**
-
-> **Y el 4 de septiembre de 2026 volvió a pasar, peor y por lo mismo.** Se
-> pasó el día entero puliendo guardianes —`recalcula` ampliado, tildes,
-> `humo` completo, `peso`— y presentando sus verdes como si fueran calidad.
-> Bastó **abrir el sitio diez minutos** para encontrar esto:
->
-> | lo que estaba publicado | ¿lo cazaba algo? |
-> |---|---|
-> | **`El NaN % de la nota`, en negrita**, en 3 de las 10 rutas | no |
-> | «7 ejercicios» en un examen de 9, sin decir que faltan dos — en 9 convocatorias | no |
-> | la página se desplaza en horizontal a 360 px en **toda** página de tema | no |
-> | 5 de 7 pastillas de tema cortadas en cada examen | no |
-> | la columna de texto de un ejercicio en un móvil: **145 px**, tres palabras por línea | no |
-> | 12 fórmulas cortadas a media letra, sin decir que se desplazan | no |
->
-> **Seis de seis.** Los cuatro guardianes en verde, dos asignaturas
-> declaradas terminadas, y el producto roto por donde se usa. La lección no
-> es «hacen falta más guardianes» —cuatro de estos seis ya tienen el suyo
-> desde ese día—: es que **el orden estaba invertido**. Se mira primero y se
-> mide después; un guardián se escribe cuando mirar ha encontrado algo, no
-> para no tener que mirar.
-
-> **Y esa misma noche llegó la auditoría externa, que encontró cuatro cosas
-> más — ninguna de ellas vista por haber mirado.** Un fallo grave de
-> navegación que solo aparece **entrando con hash** (`…/#algebra`, o sea
-> abriendo un enlace compartido) y que por eso no se ve nunca por el camino
-> normal; un tema del programa oficial de Álgebra que faltaba en el catálogo;
-> ningún sitio donde se dijera **cuánto vale cada cosa** en el examen; y el
-> `<title>` repetido en las 112 páginas de examen.
->
-> La lección se apila sobre la de arriba y la afila: **mirar no basta si
-> miras por donde ya sabes que va bien.** Yo probaba la portada entrando sin
-> hash y leía el catálogo en vez de compararlo contra el programa oficial.
-> Los cuatro los encontró alguien de fuera entrando **como entra un alumno**.
-> De ahí sale el punto 7 de esta lista.
-
-> **Y el 10 de septiembre de 2026, el caso más barato de todos.** Se hizo una
-> captura de un ejercicio recién escrito —solo para ver que se dibujaba— y en
-> la casilla de respuesta ponía: «en kW/K, con tres cifras — **vale la forma
-> exacta: pi/4, sqrt(3)/2, (e^2-1)/2…**». La coletilla estaba escrita a fuego
-> en `EjercicioGuiado`, con Cálculo delante, cuando Cálculo era la única
-> asignatura. Medido al verlo: de los **2.695** pasos que llevan `formato`,
-> **944 la recibían siendo falsa para su tipo de respuesta** —872 `magnitud`,
-> 49 `vector`, 14 `matriz`, 9 `formula`—, el 35 %, y casi todos de Fluidos.
->
-> Lo que lo hace peor que un descuido de texto: en una respuesta `magnitud` la
-> única ayuda que importa es **que hay que escribir la unidad**, que es
-> exactamente el error que el lector sabe diagnosticar aparte. Se estaba
-> mandando al alumno al sitio equivocado justo en la asignatura donde la
-> unidad es media nota. Cuatro guardianes en verde, 1.616 tests, dos barridas
-> completas del navegador: ninguno mira **qué dice** un rótulo, solo que esté.
->
-> Arreglado en el componente y no en los 944 pasos (Regla 0), con la coletilla
-> dependiendo del tipo y comprobada contra `lib/algebra.ts` antes de escribir
-> la de vectores y matrices, que si no habría sido inventarse un formato.
-
-El build en verde no es una comprobación: es la ausencia de una. Así que
-después de construir, y antes de dar nada por hecho:
-
-1. **Míralo.** Levanta `npm run dev` y abre la página. Si has dibujado una
-   figura, **haz una captura y ábrela**: en claro, en oscuro y a 360 px. Una
-   etiqueta cortada o una curva con el signo cambiado no las ve ningún
-   guardián, y las dos han pasado. `scripts/leer-grafica.mjs` ayuda cuando no
-   puedes mirar, pero no sustituye a mirar.
-
-   **Y míralo como llega alguien que no sabe que está**: abriendo la URL del
-   tema a pelo, sin ancla, sin pulsar nada y sin `localStorage`. El 1 de
-   septiembre de 2026 se publicaron cinco simuladores y **no se veía ninguno**:
-   los cinco viven en un apartado que no es el primero, y en modo guiado los
-   demás están `hidden`. El sitio los servía, el suelo estaba en verde, las
-   capturas de cada simulador eran correctas — porque se habían tomado tras
-   pulsar «completo». Es el mismo fallo que los 58 enlaces de teoría: **el
-   destino existe y no llega.**
-
-   La regla que sale: una captura tomada después de tocar algo demuestra que
-   la cosa funciona, no que se encuentre. **Las dos comprobaciones son
-   distintas y hay que hacer las dos.**
-2. **Pulsa lo que has enlazado.** No compruebes que el `href` existe:
-   comprueba que **llega**. Los 58 enlaces rotos tenían destino válido y
-   apuntaban a un elemento oculto, así que el navegador no se movía.
-3. **Relee lo que acabas de escribir**, sobre todo si lo has generado con una
-   sustitución. El párrafo duplicado decía «en forma exacta o en forma exacta
-   o con cuatro decimales» y venía de una regla que casó dentro de su propio
-   resultado.
-4. **Cuenta antes y después.** Al reorganizar contenido, compara los conjuntos
-   de `id` contra `git show HEAD:<fichero>`. Es la única forma de saber que no
-   has perdido un ejercicio por el camino; se hizo en las tres rutas y por eso
-   se sabe que no se perdió ninguno.
-5. **Prueba una respuesta equivocada.** Un ejercicio nuevo no está probado
-   hasta que has escrito el error y has visto salir **su** diagnóstico. Que
-   acepte la buena no dice nada: los distractores son la mitad del producto.
-6. **Entra por donde no sueles entrar.** Con hash y sin él, desde un enlace
-   compartido, pulsando dos veces seguidas, dando marcha atrás. Los caminos
-   que pruebas son los que ya sabes que funcionan, y el fallo vive en los
-   otros: el de la auditoría del 4 de septiembre —dos asignaturas abiertas a
-   la vez y la portada en blanco— solo aparecía **entrando con hash**, que es
-   justo como llega alguien a quien le han pasado el enlace. Y lo mismo con
-   los datos: un catálogo se comprueba **contra el programa oficial**, no
-   releyéndolo.
-7. **Y solo entonces** `npm run suelo`.
-
-### Y al cerrar una asignatura, cuatro cosas más
-
-El suelo se pasa en cada commit. Estas cuatro no —tardan, o dependen de la
-máquina— y por eso se pasan **al cerrar**, todas juntas, en el mismo commit que
-declara la asignatura terminada:
-
-| | qué comprueba | qué pasó por no tenerlo |
-|---|---|---|
-| `npm run recalcula` | que las cuentas del corpus salgan | ocho ejercicios enseñaban algo falso con el suelo en verde |
-| `HUMO_TODO=1 npm run humo` | las 248 páginas del sitio en un navegador, 147 de ellas de examen | el navegador abría 8 de 96 durante meses |
-| `npm run peso` | que ninguna página pase de 4 s en un móvil | el tema 1 tardaba 5,9 s y nadie lo medía |
-| `npm run mide` | regenerar la tabla de `docs/como-vamos.md` | dos commits publicando una cifra vieja |
-| `node scripts/deuda.mjs` | que los `falta[]` no publiquen un número caducado | **once notas caducadas** el 8 de septiembre de 2026 |
-
-Y con ellas, recontar las cifras de §04, §05, §09 y §15, que es lo que más se
-olvida: el 28 de agosto de 2026 llevaban una semana diciendo la mitad de la
-verdad.
-
-### Y una clase de dato que envejece sin que nadie la mire: los `falta[]`
-
-Un `falta[]` **se publica** en la página de la ruta, y muchos llevan un número
-dentro: «el tema 9 tiene dos ejemplos de entrada propios», «una sola figura»,
-«sus dos ejercicios propios», «no hay ningún ejercicio guiado de X». Se
-escriben cuando son verdad, el contenido se añade después, y **nadie vuelve a
-leerlas**.
-
-Releídas todas a mano el 8 de septiembre de 2026: **once estaban caducadas**.
-El tema 8 decía dos ejemplos y una figura cuando eran cinco y dos; el tema 9,
-dos y una cuando eran cinco y tres; una nota pedía «un dibujo de qué hace
-Green» que llevaba meses dibujado; otra decía que no había ningún ejercicio de
-la matriz en otra base habiendo **seis**, cuatro de ellos sin enlazar desde
-ninguna ruta; otra que no había ninguno de orden cuatro habiendo cuatro.
-
-De ahí salen dos cosas.
-
-La primera es una regla, y es la que más rinde: **cuando una nota dice «no hay
-ningún ejercicio de X», eso se cuenta antes de escribir uno nuevo.** Las tres
-veces que se comprobó ese día, el contenido existía; lo que faltaba era la
-prosa que lo explicara o el escalón que llevara a él. Escribir el ejercicio
-habría duplicado contenido y dejado el hueco de verdad sin tocar.
-
-La segunda es que `deuda.mjs` lo cuenta desde ese día, y **encontró un
-duodécimo caso en su primera ejecución**: una nota corregida esa misma mañana
-—de «tres ejemplos» a «cuatro»— que volvió a quedarse vieja unas horas después,
-al añadir el quinto. Ni releerlas a conciencia basta, porque el commit
-siguiente las estropea.
-
-Lo que el guion **no** sabe comprobar lo dice también: 77 frases con número que
-no encajan en ningún patrón contable —«no hay ningún ejercicio de Cramer», «cae
-en once de dieciséis»—. Esas se releen a mano al cerrar una asignatura. Un
-guardián que finge cubrir lo que no cubre es peor que ninguno.
-
-**Y releer la primera sección de `docs/como-vamos.md`, «En una frase».** El
-guion regenera su tabla, no su prosa, y esa prosa dice **cuántas asignaturas
-hay terminadas**: es la frase más presente-continuo de todo el repositorio y
-envejece el día que se cierra cualquier otra. El 7 de septiembre de 2026
-llevaba desde el 6 diciendo «tres asignaturas terminadas» y «112
-convocatorias» cuando eran cuatro y 118 — el mismo fallo que el propio
-documento denuncia en su cabecera, cometido cuatro líneas después.
-No basta con la regla del «mismo commit»: lo que cambia esa frase suele estar
-en **otra** asignatura.
-
-> Si no puedes hacer el punto 1 —sin navegador, sin capturas—, dilo en el
-> commit. Un contenido visual sin mirar no es contenido terminado, es contenido
-> propuesto, y hay que decirlo con esa palabra.
-
----
-
-## 17 // Trampas conocidas
-
-Cosas que ya han costado horas. No son opiniones.
-
-- **No escribas LaTeX a través del shell.** Ni heredocs, ni `node -e`, ni
-  `sed`. Las barras se comen: `\\frac` llega como `\frac`, y `\f` se convierte
-  en un carácter de avance de página **invisible** que rompe el YAML y no se
-  ve al leer el fichero. Usa las herramientas de edición de ficheros. Pasó tres
-  veces en un día.
-
-  **Y el reemplazo de `sed` es peor que el patrón.** El 14 de septiembre de
-  2026, un `sed 's/\operatorname{arctg}/\arctan/'` dejó escrito un carácter
-  BEL en mitad de una fórmula: `\a` en el **lado derecho** de la sustitución
-  no es «barra + a», es el timbre. El fichero se veía bien en el editor y el
-  build cayó con «the stream contains non-printable characters». Dos reglas
-  que salen de ahí: el reemplazo de `sed` nunca lleva una orden de LaTeX, y
-  cuando un YAML falla por «non-printable», lo primero es
-  `grep -c $'\a' fichero`.
-- **Un `: ` sin comillas dentro de un valor YAML rompe el fichero**, y el error
-  que da apunta a otra línea. Ojo con los apóstrofos de `f'`, que confunden a
-  cualquier comprobador hecho con `grep`.
-- **`dist/` abierto con `file://` no tiene CSS.** Las variables salen vacías y
-  parece que los SVG no se dibujan. Levanta un servidor.
-- **No reconstruyas mientras `humo.mjs` está corriendo.** El navegador lee
-  `dist/` a través del servidor de vista previa, así que un `npm run build` por
-  debajo le arranca las páginas de las manos y devuelve 404 que no son del
-  sitio. Pasó el 13 de septiembre de 2026, con 55 y luego 130 fallos fantasma,
-  y **volvió a pasar el 14** mientras se arreglaba justo eso: una barrida
-  entera perdida. Una tanda en segundo plano a la vez, y nada que toque `dist/`
-  hasta que termine.
-
-  **Y si la barrida cae en el primer segundo diciendo «el servidor de vista
-  previa no ha arrancado en 30 s», no es el arranque: es que hay otro
-  servidor.** Astro guarda un `preview` **desprendido** entre ejecuciones y se
-  niega a levantar uno nuevo, con un mensaje que `humo.mjs` no ve porque lanza
-  el proceso con `stdio: 'ignore'`. Lo deja `peso.mjs` o
-  `comprueba-simuladores.mjs` si se cortan a medias, y puede estar en otro
-  puerto —4408, por ejemplo— así que mirar el 4321 con `netstat` no lo
-  encuentra. Pasó el 15 de septiembre de 2026 y costó dos barridas. Lo que lo
-  resuelve en diez segundos:
-
-  ```
-  node node_modules/astro/bin/astro.mjs preview status
-  node node_modules/astro/bin/astro.mjs preview stop
-  ```
-- **`max-width` y `overflow` NO hacen nada en una caja `display: inline`.** El
-  navegador los ignora en silencio, así que la regla se lee bien, pasa las
-  revisiones y no surte efecto. `.katex` es un `<span>`, o sea `inline` por
-  defecto: la regla que debía contener las fórmulas largas se escribió el 4 de
-  septiembre de 2026 y **estuvo diez días inerte**, con tres páginas de tema
-  yéndose de lado en un teléfono. Si una regla existe para arreglar algo
-  medido, hay que volver a medirlo después (§16); que esté escrita no es que
-  funcione.
-- **Un track `1fr` tiene `min-width: auto`, que es min-content y no cero.**
-  Cualquier hijo que no sepa encoger —una fila flex con `nowrap`, una tabla, una
-  fórmula— estira la columna entera y se lleva el documento con ella. En una
-  pantalla de 360 px la columna de un tema llegó a **771,8 px**. La cura es
-  `min-width: 0` en los hijos de la rejilla, y conviene ponerlo al escribir la
-  rejilla, no al descubrir el desborde.
-- **Una tolerancia relativa sobre una temperatura es enorme.** El lector de
-  magnitudes convierte los grados Celsius a kelvin antes de comparar, así que
-  el 2 % por defecto de una respuesta de 40 °C son **±6,3 K**: cualquier
-  distractor a menos de seis grados se da por bueno. Lo cazó el esquema el 7
-  de septiembre de 2026, en el primer ejercicio de Térmica cuya respuesta era
-  una temperatura. En una respuesta de tipo temperatura, la tolerancia se pone
-  a ojo mirando **cuántos kelvin** representa, no cuántos por ciento; 0,005
-  son un grado y medio, que es lo razonable.
-- **Los ids de encabezado se generan por `render()`, no por documento.** Astro
-  instancia el slugger en cada llamada, así que dos resoluciones con un `##
-  Resultado` producen dos `id="resultado"` en la misma página. Se prefijan en
-  `mate()`; si añades una salida de Markdown nueva, pásale su prefijo.
-- **En modo guiado, un enlace a un apartado que no es el visible no navega.**
-  El destino existe pero está oculto. Lo resuelve `abreElAncla()` en
-  `Lectura.astro`; si escribes otro componente con secciones, tenlo en cuenta.
-- **El servidor de desarrollo sirve colecciones de contenido viejas.** Si un
-  `.yaml` de `src/content/` lo escribe otro proceso —un script del scratchpad,
-  un `git checkout`— el vigilante de Astro puede no enterarse, y `npm run dev`
-  sigue devolviendo la versión anterior sin avisar de nada. El 26 de agosto de
-  2026 costó una medición falsa: la ruta de la 4.ª evaluación se comprobó en el
-  navegador con 48 enlaces nuevos ya escritos, y el navegador informó de 18
-  —los de antes— con todo en verde. **Antes de creerte cualquier medición sobre
-  el navegador, comprueba que el servidor ya sirve lo que acabas de escribir**:
-  un `curl` a la página y un `grep` de algo que solo esté en la versión nueva.
-  Si no está, se mata el proceso del puerto 4321 y se levanta otra vez.
-- **`replace()` con un `$` en el texto de reemplazo se traga el fichero.** En
-  `String.prototype.replace`, el `$` de la cadena de reemplazo es un carácter
-  especial: `$&` es lo sustituido, `$1` un grupo, y **`$'` es todo lo que va
-  detrás**. Como aquí casi todo el texto lleva LaTeX entre dólares, un
-  reemplazo que contenga `$'`, `$&` o `$1` inserta trozos del propio fichero sin
-  avisar. Pasó en `tasks/todo.md`: quedó cortado a media frase, en el sitio
-  exacto donde había un `$x\sin x$`, con la versión anterior entera pegada
-  detrás, y así estuvo **veintiún commits** publicando recuentos viejos. Nadie
-  lo vio porque `verify.mjs` no lee `docs/` ni `tasks/`. **Regla: para insertar
-  texto literal se usa la función de reemplazo —`(...) => nuevo`— o se parte y
-  se vuelve a juntar con `split`/`join`, nunca la cadena a pelo.** Y después de
-  cualquier reescritura de un fichero de prosa, se cuenta: `wc -l` antes y
-  después, y un `grep -c` de un encabezado que solo puede aparecer una vez.
-- **Borrar «desde aquí hasta allí» se lleva por delante lo que se añadió en
-  medio.** Al podar una sección obsoleta de `tasks/todo.md` se ancló el
-  corte en dos textos que estaban a 250 líneas de distancia, y entre ellos
-  habían crecido **cinco secciones nuevas** que desaparecieron sin avisar.
-  El fichero seguía compilando y el guardián no lee `tasks/`. La regla de
-  §16 —contar antes y después— lo cazó, pero contar líneas no basta:
-  `wc -l` solo dijo que faltaban 246, y eso podía ser lo esperado.
-  **Cuenta encabezados, no líneas** (`grep -c '^### '`), y mejor aún
-  compara la lista: `git diff -U0 fichero | grep '^-#'` dice exactamente
-  qué secciones se han ido. Y para acotar un bloque, ánclalo por **índice
-  de línea comprobando los dos bordes** antes de escribir, no por dos
-  cadenas lejanas.
-- **Un `IntersectionObserver` no sirve para diferir trabajo en modo guiado.**
-  Los paneles cerrados están en `display: none`, no intersecan nunca, y lo que
-  cuelgue del observador **no se ejecuta jamás**. Pasó el 28 de agosto de 2026
-  al diferir el pintado de los lienzos del paso `verificar`: la página cargaba
-  el doble de rápido y los seis lienzos se quedaban en blanco. Lo que sí vale
-  es `requestIdleCallback`, que no depende de la visibilidad. **Regla: al
-  diferir cualquier cosa, comprueba después que llega a ejecutarse** — que la
-  página vaya más rápido puede significar que ya no hace su trabajo.
-- **Una línea que empieza por `- ` parte en dos una fórmula que venía de la
-  línea anterior.** Dentro de un bloque `|` el texto es Markdown, y en
-  Markdown `- ` al principio de línea abre una lista: eso cierra el párrafo,
-  y el `$…$` que cruzaba el salto se queda sin pareja a cada lado. El
-  resultado son dos trozos de LaTeX publicados como texto crudo. Pasó el 31
-  de agosto de 2026 al escribir una `pista` con
-  `$NPSH_d = p_{at}/\gamma - p_v/\gamma - z_{asp}` y la continuación
-  `- h_{f,asp}$` en la línea siguiente. Lo caza `verify.mjs` —«LaTeX que ha
-  salido como texto»— pero se tarda menos en evitarlo: **al partir una
-  fórmula entre dos líneas, la segunda nunca empieza por un signo menos**;
-  se recoloca el corte o se pasa a `$$…$$`.
-
-  **Y no es solo el menos: en Markdown abren lista `-`, `*` y `+`.** El 3 de
-  septiembre de 2026 volvió a caer el suelo por lo mismo con un `+ ` — una
-  raíz partida como `$\sqrt{11471{,}5^{2}` y `+ 332{,}5^{2}}$` en la línea
-  siguiente. La regla completa: **la continuación de una fórmula no empieza
-  nunca por `-`, `*` ni `+`.** Y hay una forma de no tener que acordarse: si
-  la fórmula no cabe en una línea, va en `$$…$$` con las vallas en línea
-  propia, que es la forma que el corpus usa para todo lo demás.
-
-  **Y pasó dos veces el mismo día**, las dos con un `NPSH` y las dos
-  costando un suelo entero de doce minutos. El guardián está bien donde
-  está —`verify.mjs` lo caza— pero conviene barrer antes de lanzarlo: se
-  cargan los YAML, y en cada cadena se cuentan los `$` línea a línea; si
-  una línea deja una fórmula abierta y la siguiente empieza por `- `, ahí
-  está. Veinte líneas, y devuelve el fichero y el campo.
-- **Una `\frac{…}{…}` partida justo entre las dos llaves confunde a
-  `recalcula`.** El corpus corta las fórmulas a 80 columnas, y si el corte cae
-  entre el `}` del numerador y el `{` del denominador, `expresionAntesDe` se
-  queda **solo con el denominador**: avisa de que «4,6225·10⁻¹⁰ no vale
-  1,663·10⁹», que es verdad y no significa nada. Pasó el 7 de septiembre de
-  2026 con el Grashof del ejercicio de Churchill y Chu. Cortar por el
-  numerador sí funciona, así que la regla es corta: **la `\frac` se parte
-  dentro de una llave, nunca entre las dos.** Y si no cabe, se deja la línea
-  larga: ochenta columnas es una costumbre, un aviso falso cuesta diez
-  minutos.
-- **Un enunciado puede pedir un teorema o un método sin nombrarlo, y entonces
-  ninguna búsqueda de texto lo encuentra.** Es la trampa que más recuentos ha
-  estropeado, porque falla siempre **por defecto**: uno busca, sale cero, y se
-  queda tranquilo publicando una ausencia. Los dos casos del 10 de septiembre
-  de 2026, encontrados el mismo día y por caminos distintos:
-
-  - El ejercicio 2 de la ordinaria de 2016-2017 pide demostrar el teorema del
-    valor intermedio **enteramente en símbolos** —«$\forall H\in[m,M]\
-    \exists x\in[a,b] / y(x)=H$»—, sin la palabra «teorema», sin «Bolzano» y
-    sin «valor intermedio». Una búsqueda por esos tres términos da cero, y la
-    ruta publicaba correctamente «dos ordinarias» porque el recuento se había
-    hecho a mano. Es decir: **el guion habría empeorado el dato**.
-  - El ejercicio 5 de la tercera de 2018-2019 es integración numérica —ordenar
-    la suma por el extremo izquierdo, la del derecho y el valor exacto— y no
-    nombra ningún método. Ahí sí ganó el guion: tres rutas llevaban meses
-    publicando «un solo enunciado pide un método numérico» cuando son dos.
-
-  La regla, entonces, no es «busca mejor»: es **busca por el concepto y por su
-  descripción, y cuando el resultado sea un cero, ábrelo antes de publicarlo.**
-  Un cero es la única cifra que no se puede comprobar leyendo lo que ha salido.
-  Y su hermana práctica: al medir sobre `enunciado`, **quita las figuras**
-  —`<figure>…</figure>`—, porque el `<desc>` de un SVG redibujado dice
-  «trapecio» y «punto medio» hablando de geometría. En el barrido de ese día
-  eran dos falsos positivos de tres.
-
-- **Un `grep` por líneas no ve una frase partida dentro de un bloque YAML.**
-  Los valores `|` y `>-` se escriben a 80 columnas, así que «Da cuatro
-  decimales.» puede estar como «Da\n cuatro decimales.» y `grep "Da cuatro
-  decimales"` devuelve cero. El 28 de agosto de 2026 eso hizo que una auditoría
-  concluyera «cero enunciados ordenan dar decimales» cuando eran 32. **Regla:
-  para contar cualquier cosa dentro del contenido se carga el YAML y se busca
-  sobre la cadena ya parseada, nunca con `grep` sobre el fichero.** Vale igual
-  para los decimales, que van en LaTeX: `0{,}42865` no lo encuentra un `grep`
-  de `0,42865`.
-
-  **Y cargar el YAML tampoco basta**, que es la segunda mitad de la misma
-  trampa y costó tres números publicados mal el 6 de septiembre de 2026. Un
-  bloque `>-` o `|` **conserva los saltos de línea** con los que se escribió,
-  así que la cadena ya parseada trae «curva característica de la\ninstalación»
-  y una expresión regular con la frase seguida no casa. Salieron cinco
-  convocatorias donde había seis, y cuatro donde había diez — el error es
-  siempre **por defecto**, que es el peor sentido: uno se queda tranquilo. La
-  regla completa: se carga el YAML **y se normalizan los espacios**
-  —`.replace(/\s+/g, ' ')`— antes de buscar cualquier frase de más de una
-  palabra.
-- **Una anchura de texto medida en el navegador no es reproducible entre
-  máquinas.** La misma etiqueta SVG midió 285 unidades con la tipografía del
-  sitio cargada y 315 en otro entorno, y en el segundo se salía del `viewBox` y
-  en el primero no. Si `humo.mjs` da verde y alguien aporta una captura donde
-  el texto se corta, no se están contradiciendo: están midiendo con fuentes
-  distintas. **Regla: al informar de un desbordamiento de texto se dice con qué
-  familia se midió**, y al dejar margen en un `viewBox` se cuenta con que la
-  fuente puede no haber cargado todavía.
-
-  **Y la forma de que no vuelva: `textLength` con `lengthAdjust="spacingAndGlyphs"`.**
-  Fijar el ancho hace que la caja mida lo que dice el atributo **en cualquier
-  fuente**, así que la comprobación deja de depender de la máquina. Se pone en
-  las etiquetas largas —las de dos o tres términos con raíces— y se elige un
-  valor cercano al natural para no deformar los glifos.
-- **Astro acota los estilos, así que un elemento creado por el script se
-  publica sin ninguno.** Cada regla de un `<style>` de `.astro` se compila con
-  un `data-astro-cid-…` añadido al selector, y ese atributo lo pone el
-  compilador en el marcado del componente — no en lo que crea el navegador con
-  `createElement`. El 2 de septiembre de 2026 el chip «simulador» del índice
-  salió publicado como texto pegado a la última palabra del título, sin caja ni
-  color, y la regla estaba escrita y era correcta. **Regla: todo lo que el
-  script cree en tiempo de ejecución se estiliza con `:global(...)`**, y se
-  comprueba mirando, porque no falla nada: el elemento está, se lee, y solo se
-  ve mal.
-- **Ocultar un texto no es lo mismo que no tenerlo: `opacity: 0` sigue
-  midiendo.** Un `<text>` invisible conserva su caja, así que sigue contando
-  para el guardián de `viewBox` — y, peor, sigue diciendo lo que diga si
-  alguien lo lee con un lector de pantalla. Pasó el 1 de septiembre de 2026 en
-  el simulador de canales: el rótulo de la banda se apagaba en el semicírculo
-  y su caja seguía ahí, escrita «de 0,0 a 0,0» y saliéndose por la izquierda.
-  **Regla: para quitar un texto se le pone `textContent = ''`**; la opacidad
-  se reserva para lo que sí sigue estando, como una curva de referencia.
-- **Las figuras no se escriben a mano: se calculan.** Desde el 17 de
-  septiembre de 2026 vive en `scripts/figuras/` un lienzo —`lienzo.mjs`— que
-  convierte coordenadas de la asignatura en píxeles y emite el SVG con la
-  receta de siempre: `<title>` y `<desc>` que se leen solos, clases
-  prefijadas, rótulos con halo de papel. Cada tema tiene su generador
-  (`calculo-t01.mjs`, …) y `pegar.mjs` mete el resultado en el paso `dibujar`
-  que le toca sin tocar el resto del YAML. Tres cosas que impone y que no se
-  negocian:
-
-  1. **Nada se sale del `viewBox`, tampoco un rótulo.** El marco se comprueba
-     al generar, con la caja del texto estimada por lo alto, y el error dice
-     qué rótulo se sale y por dónde. Antes eso lo cazaba `humo.mjs` media hora
-     más tarde, o no lo cazaba nadie.
-
-     Y **por lo alto quiere decir con margen de verdad**: el paso de la fuente
-     mono no es el mismo en todas las máquinas. Con 6,7 píxeles por letra las
-     figuras cabían en Windows y tres se salían en el CI —veintisiete letras
-     que aquí medían 181 píxeles allí medían más de 205—. Se mide con 7,9, se
-     rechazan algunas que en realidad cabrían, y eso es lo correcto: mover un
-     rótulo cuesta un minuto y uno recortado en producción no lo ve nadie
-     hasta que un alumno no entiende el dibujo. La lección general: **un
-     guardián que solo vale en la máquina de quien lo escribió no vale.**
-  2. **Ni un `#rrggbb`.** Solo tokens, porque hay tres temas y
-     `check-color.mjs` los mide todos.
-  3. **Las figuras repetidas se copian, no se reescriben.** Nueve ejercicios de
-     examen piden el mismo dibujo que un ejemplo de su tema; `reetiqueta()`
-     copia la figura cambiándole el prefijo de ids. Escribirla dos veces es
-     tener dos versiones que algún día dejarán de coincidir.
-  4. **En el pie de una figura no hay Markdown.** El `<figcaption>` se emite
-     tal cual y no pasa por `mate()`, así que un `**así**` se publica con los
-     asteriscos a la vista. `verify` lo caza —lo ha cazado dos veces, el 17 de
-     septiembre de 2026 en `ej-inversa-con-signo` y en `la-integral-de-gauss`—,
-     pero llega después de construir el sitio entero: más barato es escribir
-     el pie en prosa llana desde el principio. El énfasis, si hace falta, va
- se publica con los dólares a la
+     `titulo: El coeficiente de $x^3$` se publica con los dólares a la
      vista. Pasó el 17 de septiembre de 2026 en
      `componer-tres-desarrollos-conocidos`, y lo cazó `verify` después de
      construir las 249 páginas. Un título de paso es una etiqueta corta en
@@ -4925,6 +2450,15 @@ Cosas que ya han costado horas. No son opiniones.
   antes de lanzar el humo**, y si un barrido se cae sin un solo `✗`, mira si
   hay un servidor tuyo dando vueltas antes de buscar el fallo en el sitio.
 
+  **Y lo contrario también rompe: dos guiones que levantan servidor, a la
+  vez.** Cada uno para cualquier `astro preview` al arrancar, incluido el del
+  otro, y el que iba primero se cae a media pasada con `ERR_CONNECTION_REFUSED`.
+  Pasó el 24 de septiembre de 2026 al lanzar un humo mientras corría el suelo:
+  fallos fantasma en páginas que estaban bien. Desde el 26 los cinco guiones
+  que abren el navegador arrancan el servidor con el mismo `servidor.mjs`, y
+  la regla es corta: **mientras corre el suelo, no se lanza nada que abra un
+  navegador.**
+
   **Y una tercera forma de rojo que no es del sitio**, vista el mismo día: una
   página suelta que falla con `ERR_NETWORK_ACCESS_DENIED` a media barrida, con
   las 4.183 líneas restantes en verde. No era la página —abierta a mano
@@ -4944,8 +2478,8 @@ Cosas que ya han costado horas. No son opiniones.
 
   Dos consecuencias prácticas. Una: **un CI rojo no significa que lo tuyo esté
   mal** — mira qué página falla antes de tocar tu cambio. Y dos: el verde de
-  `npm run suelo` cubre la muestra de hoy, no las 227; **para eso está
-  `HUMO_TODO=1 npm run humo`**, y conviene pasarlo una vez por tanda de
+  `npm run suelo` cubre la muestra de hoy, no el sitio entero; **para eso está
+  `npm run humo:todo`**, y conviene pasarlo una vez por tanda de
   trabajo, no una vez por commit.
 
 - **Un guardián puede dar verde sobre menos sitio del que dice, y eso no se ve
@@ -5437,6 +2971,40 @@ Cosas que ya han costado horas. No son opiniones.
   precisión y la cuenta exacta cae dentro. **Que una tolerancia sea estrecha
   no la hace mala; lo que la hace mala es que deje fuera la cuenta exacta.**
 
+- **`evaluaNumero` lee «, » como un espacio, y el espacio como un producto.**
+  Es lo que permite escribir `2 pi` o `3 sqrt(2)`, y tiene su precio: «(1, 3)»
+  vale 3, «(2, −1)» vale 1 y «(1, 2, 0, 1)» vale 0. Lo destapó el 26 de
+  septiembre de 2026 unificar los lectores del navegador y del esquema en
+  `lib/numero.ts`: la regla de «distractores confundibles» se aplicaba también
+  a los vectores, que el lector binómico devolvía como `null`, y con el
+  encadenado dos vectores distintos pasaron a ser el mismo número. **Regla: una
+  comprobación que lee con el lector numérico dice para qué tipos es**, y un
+  vector o una matriz se leen con el suyo. Y queda una holgura sabida en las
+  respuestas `numero`: quien escriba un par donde se pide un número puede
+  acertar por casualidad. Es rara, y no se ha visto en ningún ejercicio.
+- **Zod no corre las reglas de un objeto al que le falta un campo
+  obligatorio.** Un `.refine` se evalúa sobre un objeto que ya ha pasado su
+  forma; si falta `titulo` o `desarrollo`, el error sale por eso y la regla ni
+  se mira. Importa al **validar al revés** (§11): el ejercicio de prueba con el
+  fallo metido a propósito tiene que ser válido en todo lo demás, o el build
+  falla por otra cosa y parece que la regla funciona. Pasó el 26 de septiembre
+  de 2026: la primera prueba de la regla de distractores «falló» por un paso
+  sin `titulo`, y solo al completarlo salió el aviso que se buscaba.
+- **Un deslizador recorta su `value` contra el `max` que tiene EN ESE
+  MOMENTO.** Si un preajuste escribe primero la posición y el código ensancha
+  el tope después, el navegador ya la ha recortado sin avisar. Le pasó a la
+  catenaria: «cable tenso» ponía la sección en x = 20 con el tope aún en 3, y
+  medía en 3 o en 10 según qué se hubiera pulsado antes. **Regla: al aplicar
+  un preajuste, primero los topes y después los valores.** El caso está en
+  `comprueba-simuladores.mjs`.
+- **Dos valores de un deslizador de paso 0,1 no se restan exacto, y un
+  arreglo que se llama a sí mismo no para.** `2,4 − 2` da `0,3999…`: la
+  comprobación «los apoyos a L/10 como poco» seguía siendo cierta después de
+  corregir, la función de pintar se volvía a llamar para corregir otra vez, y
+  la viga se congelaba con la pila desbordada. **Dos reglas: las comparaciones
+  con valores de un mando llevan margen —`< minimo − 1e-9`—, y una corrección
+  del estado se aplica una vez y se sigue, nunca con `return pinta()`.**
+
 ---
 
 ## 18 // Las decisiones que ya se dieron la vuelta
@@ -5451,9 +3019,15 @@ está razonada en su sección.
 | 08 | prohibido meter exámenes en PDF | **entran los oficiales**, son la fuente | una resolución sin su enunciado pide un acto de fe |
 | 08 | nada de material propio | **ejemplos introductorios, marcados en el dato** | medir el corpus: no había por dónde entrar |
 | 07 | MathML puro, que es nativo | **KaTeX dibujado en el build** | la fórmula salía distinta en cada ordenador |
-| 09 | «entre el 30 y el 40 %» no es cálculo | **49,5 %**, contado sobre 1.440 puntos | la estimación se quedaba diez puntos corta |
+| 09 | «entre el 30 y el 40 %» no es cálculo | **42,7 %**, sobre los 4.255 puntos de 88 convocatorias | medir dos veces: la primera, sobre 33 exámenes, dio 49,5 % |
 | 14 | un bloque es una lista de material | **el escalón**, con su escalera | «con eso no hacemos que nadie aprenda nada» |
-| 09 | (no se contemplaba) | **en el examen no hay calculadora** | lo dijo el alumno; 128 respuestas a revisar |
+| 09 | (no se contemplaba) | **sin calculadora en Cálculo; con ella en Térmica y en Fluidos** | lo dijo el alumno; 128 respuestas a revisar, y una regla de Cálculo publicada como si fuera del sitio entero |
+
+> Dos filas de esta tabla —el porcentaje y la calculadora— siguieron diciendo
+> la versión vieja hasta el 26 de septiembre de 2026, semanas después de que su
+> sección se corrigiera: la tabla de las decisiones que se dieron la vuelta no
+> se había dado la vuelta a sí misma. Una tabla que resume otras secciones es
+> una segunda copia (§01), y se relee cada vez que cambia lo que resume.
 
 **Lo que tienen en común.** Ninguna era un descuido. Las siete optimizaban algo
 razonable —evitar problemas de derechos, usar el estándar nativo, ser breve, no

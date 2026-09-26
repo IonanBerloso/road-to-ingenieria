@@ -1,3 +1,9 @@
+> **Congelado el 26 de septiembre de 2026.** El análisis de exámenes del 21 de agosto. Es archivo: no se
+> amplía ni se corrige. Lo vivo está en `tasks/pendiente.md` —lo que queda— y
+> en `tasks/siguiente.md` —la próxima sesión—; por qué se congeló, en
+> CLAUDE.md §13. Se conserva entero porque muchos comentarios del código lo
+> citan, y lo que cuenta sigue siendo verdad de su fecha.
+
 # Mapa de exámenes · Cálculo, primer cuatrimestre
 
 Qué se pide de verdad, examen por examen y ejercicio por ejercicio. Sale de

@@ -1,3 +1,9 @@
+> **Congelado el 26 de septiembre de 2026.** Los planes de sesión del 12 al 18 de septiembre. Es archivo: no se
+> amplía ni se corrige. Lo vivo está en `tasks/pendiente.md` —lo que queda— y
+> en `tasks/siguiente.md` —la próxima sesión—; por qué se congeló, en
+> CLAUDE.md §13. Se conserva entero porque muchos comentarios del código lo
+> citan, y lo que cuenta sigue siendo verdad de su fecha.
+
 # Fases del 12 de septiembre de 2026
 
 Escritas al cerrar la deuda de ejercicios de Térmica, sobre lo que quedó

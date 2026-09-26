@@ -1,4 +1,4 @@
-# Cómo vamos · 12 de septiembre de 2026
+# Cómo vamos · 26 de septiembre de 2026
 
 Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **en el mismo commit** que cambia los números, no en el siguiente.
@@ -26,8 +26,11 @@ dos de Térmica y cinco de Mecánica, todas íntegramente en euskera.
 
 **Y una séptima con contenido, Ciencia de Materiales, escrita entera y en
 `obra`.** Sus diez temas y los 100 ejercicios de su colección están publicados
-desde el 12 de septiembre de 2026, pero no hay un solo examen entre su
-material, y sin exámenes no hay ruta que medir ni cierre posible (§14, §15). Lo que le falta
+desde el 12 de septiembre de 2026, pero no hay un solo examen de teoría y
+problemas entre su material, y sin exámenes no hay ruta que medir ni cierre
+posible (§14, §15). El único examen que hay es el test de mínimos del tema
+1, de 2024: está transcrito y tiene un banco de cien preguntas y un
+simulador desde el 24 de septiembre de 2026. Lo que le falta
 es material, no trabajo; está más abajo, en su propia sección.
 
 **Mecánica Aplicada se abrió el 12 de septiembre de 2026 y se cerró el 13**,
@@ -210,18 +213,18 @@ valorará la presentación».
 
 | tema | prosa | fig. | ejerc. propios | ejemplos | ejerc. de examen |
 |---|---|---|---|---|---|
-| t01 complejos | 2820 | 3 | 37 | 8 | 74 |
-| t02 sucesiones | 2020 | 3 | 19 | 4 | 32 |
-| t03 funciones reales | 1920 | 3 | 24 | 6 | 21 |
-| t04 estudio local | 2453 | 3 | 21 | 8 | 85 |
-| t05 integracion | 2104 | 4 | 31 | 5 | 49 |
-| t06 varias variables | 1993 | 2 | 12 | 4 | 20 |
-| t07 integral multiple | 1789 | 3 | 12 | 5 | 41 |
-| t08 integral curvilinea | 1163 | 2 | 10 | 5 | 26 |
-| t09 ecuaciones diferenciales | 1785 | 3 | 10 | 5 | 36 |
-| t10 laplace | 1675 | 2 | 11 | 5 | 24 |
-| t11 fourier | 1935 | 2 | 10 | 4 | 17 |
-| **total** | **21657** | **30** | **197** | **59** | **425** |
+| t01 complejos | 2820 | 3 | 57 | 18 | 74 |
+| t02 sucesiones | 2020 | 3 | 22 | 5 | 32 |
+| t03 funciones reales | 1920 | 3 | 28 | 7 | 21 |
+| t04 estudio local | 2453 | 3 | 33 | 11 | 85 |
+| t05 integracion | 2104 | 4 | 55 | 11 | 49 |
+| t06 varias variables | 1993 | 2 | 36 | 8 | 20 |
+| t07 integral multiple | 1789 | 3 | 61 | 11 | 41 |
+| t08 integral curvilinea | 1163 | 2 | 28 | 5 | 26 |
+| t09 ecuaciones diferenciales | 1785 | 3 | 28 | 6 | 36 |
+| t10 laplace | 1675 | 2 | 31 | 5 | 24 |
+| t11 fourier | 1935 | 2 | 20 | 4 | 17 |
+| **total** | **21657** | **30** | **399** | **91** | **425** |
 
 > **Esta tabla la genera `npm run mide`**, y ahí vive también la definición de
 > «palabra»: la prosa de un tema quitando la portada, los bloques `<svg>`, los
@@ -921,8 +924,11 @@ propios, y **los 100 ejercicios de su colección** están resueltos paso a paso 
 contrastados contra el resultado impreso —diez de ellos se leen de curvas de
 libro, que hubo que redibujar a escala antes (§08)—. Con los 20 ejemplos
 propios son 120. Está en `obra`, no en `ok`, por un motivo que no es trabajo:
-**no hay ni un examen** entre el material, así que §15 no se puede cumplir y la
-ruta de §14 no se puede medir.
+**no hay ni un examen** de teoría y problemas entre el material, así que §15
+no se puede cumplir y la ruta de §14 no se puede medir. El único que llegó,
+el 24 de septiembre de 2026, es el test de mínimos del tema 1 de 2024: se
+transcribió como ejercicio, y el tema tiene desde ese día un banco de cien
+preguntas propias y un simulador con las reglas del test de verdad.
 
 **Y una mitad más frágil que la otra, que hasta hoy no estaba dicha con
 números.** Los temas 7 a 10 no tienen material de la profesora —se trabajan con
@@ -1270,194 +1276,8 @@ porque media respuesta de fluidos sale de leer el ábaco de Moody a ojo.
 
 # El plan
 
-## Lo siguiente: las once extraordinarias
-
-Las ordinarias se cerraron el 26 de agosto de 2026. Lo que queda de la deuda 26
-son las once extraordinarias y los dos parciales de 2019-2020, y ya no bloquean
-ningún tema: **la muestra de Laplace y Fourier está completa**. Se transcriben
-porque §15 exige todas las convocatorias publicadas, no porque falte contenido
-que solo ellas puedan dar.
-
-Todo lo que las ordinarias bloqueaban se hizo el mismo día, y conviene ver la
-cadena entera porque es la mejor prueba de que medir rinde:
-
-1. se cerró la última ordinaria, la de 2013-2014;
-2. con las once, se rehízo `calculo-ord.yaml` sobre 45 ejercicios en vez de
-   sobre 2 —**deuda 33**—, y aparecieron dos bloques que no existían;
-3. rehacerla destapó que **el área de una superficie no estaba en el tema 7**
-   —deuda 37—, y arreglarlo destapó que tampoco lo estaba para la 4.ª
-   evaluación: siete ejercicios en total la pedían;
-4. arreglar el contador de la página de rutas destapó que **la ruta de la 4.ª
-   no enlazaba ni un examen de su convocatoria** —deuda 38—, escondido detrás
-   de un «0 de 29» que era falso en cinco rutas de seis;
-5. y con las once ordinarias leídas se pudieron **engordar los temas 10 y 11**,
-   los dos más flacos, con lo que dicen sus doce y diez ejercicios.
-
-Ninguna de esas cinco cosas estaba en el plan de por la mañana. Las cinco
-salieron de contar.
-
-Lo que queda por delante son las extraordinarias, y no bloquean nada. La
-primera ya está: **2024-2025**, y trae dos cosas que no se sabían.
-
-La primera es de formato: **la extraordinaria cambió de tamaño en 2023-2024**.
-Las de 2023-2024 y 2024-2025 tienen diez ejercicios y cien puntos, cinco por
-parcial —el examen más largo del corpus—; las de 2021-2022 y 2022-2023 tienen
-**ocho y ochenta**, cuatro por parcial. Y con cuatro huecos por parcial se
-quedan fuera temas enteros: en 2022-2023 no hay ni integral curvilínea ni
-varias variables.
-
-Y la de 2021-2022 trae una tercera hoja que no habíamos visto antes: además de
-los dos cuatrimestrales, el cuadernillo incluye un **examen global de seis
-ejercicios y sesenta puntos** para quien se examina de la asignatura entera. Sus
-seis son copia literal de seis de los ocho anteriores —se quedan fuera el
-pórtico y Fourier—, así que se transcriben los ocho y el global se documenta en
-el comentario en vez de duplicarlo.
-
-Y la segunda cambia lo que sabíamos de las repeticiones. **La extraordinaria
-reutiliza exámenes de evaluación continua de otros años**, y con dos
-transcritas ya son tres casos:
-
-| en la extraordinaria de… | es el mismo que… |
-|---|---|
-| 2024-2025, el alambre | el ejercicio 4 de la 2.ª evaluación de 2023-2024 |
-| 2024-2025, el sector que gira | el 4 de la 3.ª de 2022-2023 |
-| 2023-2024, el McLaurin de la integral | el 2 de la 3.ª de 2020-2021 |
-
-Hasta que entraron las extraordinarias, todos los repetidos que habíamos
-encontrado estaban dentro del mismo hueco y del mismo tipo de convocatoria. Los
-repetidos pasan de cuatro grupos y diez instancias a **siete y dieciséis**,
-sobre 341 ejercicios — y **los tres nuevos son globales reutilizando
-parciales**. Para una ruta de la extraordinaria eso es el dato más importante
-que hay: preparar la extraordinaria pasa por repasar los parciales de años
-anteriores, no solo las globales.
-
-El trabajo por examen, ya rodado:
-
-1. el PDF ya está en `public/examenes/calculo/` — los 85 están copiados;
-2. leerlo — `pdftotext -layout` para la estructura, y la página renderizada a
-   imagen para las fórmulas, que `pdftotext` se come o traduce mal;
-3. **comprobar cada resultado por dos caminos** antes de escribir una línea:
-   el analítico y el numérico, en un script del scratchpad;
-4. escribir `examen.yaml` y `ejercicios.yaml`, con los pasos
-   reconocer / calcular / justificar y los distractores sacados de errores
-   reales;
-5. redibujar en SVG toda figura del enunciado (§08), y mirarla en claro, en
-   oscuro y a 360 px antes de darla por buena;
-6. `node scripts/verify.mjs --solo-fuente` **antes** de `npm run build`,
-   recorrer los ejercicios en el navegador con `probar.mjs`, y `npm run suelo`.
-
-Lo aprendido en estas ocho ordinarias, que conviene no volver a tropezar:
-
-- **el cálculo analítico también se equivoca.** El volumen del sólido de
-  Viviani salió 38,58 por integración numérica y 19,29 por la fórmula cerrada
-  que escribí; la mala era la fórmula. Los dos caminos existen justo para esto,
-  y la lección es que **discrepar no significa que el numérico esté mal**;
-- **una figura redibujada hay que medirla sobre el original.** La primera
-  versión de las gráficas de $f$ y $g$ tenía la escala vertical a la mitad de
-  la horizontal y dos cortes de los que depende un paso quedaban invisibles. Se
-  rehízo midiendo un recorte a 600 dpi; y a 260 dpi había leído mal uno de los
-  ceros —3,05 en vez de 2,84—, lo que habría tirado el ejercicio entero;
-- **`fill-rule="evenodd"` no es «quitar un trozo».** Es diferencia simétrica: al
-  usarlo para descontar un disco de un semiplano, el trozo del disco que caía
-  **fuera** del semiplano se pintaba en vez de quitarse. La forma que ya usaba
-  el corpus es la buena: pintar la región y encima el hueco en `var(--paper)`,
-  recortado con un `clipPath`;
-- **una raya larga dentro de `$…$` la publica KaTeX como aviso y como
-  desastre.** Dos casos se colaron hasta el commit y hay guardián nuevo desde
-  hoy, con la familia entera de rayas y comillas medida —incluido el espacio
-  duro, que es invisible al leer el fichero—;
-- una etiqueta con `paint-order: stroke` y `stroke: var(--paper)` resuelve casi
-  todas las colisiones entre rótulos y curvas, y funciona igual en claro y en
-  oscuro;
-- **el signo del enunciado se lee en la página renderizada, no en el volcado de
-  texto.** El ejercicio de Laplace de 2013-2014 es `x'' − x + 2 = 0`, y del
-  `pdftotext` había salido como `x'' + x = 2`. Son dos problemas distintos:
-  con el más, senos; con el menos, exponenciales. Se cazó al mirar la imagen de
-  la página antes de escribir, que es el paso 2 de la lista de arriba y existe
-  exactamente para esto.
-
-## Los días siguientes
-
-| | trabajo | qué desbloquea |
-|---|---|---|
-| 1 | ~~Rehacer `calculo-ord.yaml`~~ | **hecho el 26 de agosto de 2026** |
-| 2 | ~~El área de una superficie en el tema 7~~ · ~~la ruta `4ev` sin ejercicios de examen~~ | las dos, hechas el mismo día |
-| 3 | **Engordar los temas 10 y 11** con lo que digan sus 12 y 10 ejercicios | los dos temas más flacos del sitio |
-| 4 | ~~Las 11 extraordinarias + el cuadernillo de 2019-2020~~ | **hecho el 26 de agosto de 2026: cierra la deuda 26** |
-| 5 | ~~Ruta de la extraordinaria~~ | **hecha el 26 de agosto de 2026: 12 bloques, 23 escalones** |
-| 6 | ~~Enganchar las cinco recuperaciones de la quinta~~ | **hecho el 26 de agosto de 2026: los catorce, en 1.ª y 2.ª** |
-| 7 | ~~Auditoría de Cálculo entera y cierre según §15~~ | **hecha el 26 de agosto de 2026** |
-| 8 | **Abrir Álgebra** | ⛔ **bloqueado: no hay material en el repositorio** |
-
-**Lo primero de la lista es ahora la fila 7, la auditoría.** Con el corpus
-cerrado, las siete rutas escritas y las recuperaciones enganchadas, lo que queda
-de Cálculo es trabajo de cierre y no de recogida de material. La tabla de §15 de
-más arriba ya solo tiene casillas verdes: es la primera vez.
-
-Y queda medido qué enlaza cada ruta y qué no. De los **425 ejercicios de
-examen**, las siete rutas llevan a **303**; los 122 que quedan son 71 de las
-ordinarias y 53 de las extraordinarias —cada ruta enlaza una selección y lo dice
-en su propia cabecera—, más tres que son de temas que su ruta no cubre y que
-están declarados en el `falta[]` de la ruta correspondiente: dos ejercicios de
-varias variables en terceras evaluaciones y uno de integral curvilínea en una
-cuarta. **Ninguno se queda sin enlazar por descuido**, que era lo que había que
-comprobar.
-
-Cuando entre Álgebra habrá que separar el lector de respuestas de
-`EjercicioGuiado`: una **matriz** no es un número ni un conjunto de puntos, y
-ese es el sitio por donde Álgebra tensiona el sistema. Es la razón por la que
-va antes que Fluidos, que son 25 temas y la asignatura más cara de las nueve.
-
-## Deudas abiertas que no bloquean
-
-Están todas en `tasks/todo.md` con su número. Las que siguen vivas y merecen
-una línea:
-
-- **26** — ~~las convocatorias sin transcribir~~. **Cerrada** el 26 de agosto
-  de 2026: los 85 cuadernillos leídos y las 88 convocatorias escritas.
-- **43** — el esquema admite un PDF por convocatoria y el cuadernillo doble de
-  2019-2020 son dos, así que los ocho ejercicios de su segundo cuatrimestral se
-  publican sin enlace a su enunciado original. Es el único PDF del repositorio
-  que ninguna convocatoria cita.
-- **31** — `invariante.fuente` se publica como texto plano, sin pasar por el
-  procesador, así que el LaTeX sale crudo. O se procesa, o §14 lo dice.
-- **32** — dos ejercicios del tema 9 duplican problemas que ahora también están
-  transcritos como examen.
-- **33** — ~~la ruta `ord` dice «medida sobre 2»~~. **Cerrada** el 26 de agosto
-  de 2026: rehecha sobre las once, con ocho bloques y diecinueve escalones.
-- **37** — ~~el área de una superficie curva no está en la prosa del tema 7~~.
-  **Cerrada** el 26 de agosto de 2026: apartado nuevo con la fórmula, la figura
-  de por qué lleva una raíz, el atajo de los cuerpos de revolución y un ejemplo
-  introductorio que se resuelve sin integrar.
-- **38** — ~~la ruta de la 4.ª evaluación no enlaza ni un ejercicio de examen de
-  su convocatoria~~. **Cerrada** el 26 de agosto de 2026: los veintiocho de los
-  veintinueve que son de los temas 6 y 7 cuelgan ya de sus escalones, y hay dos
-  escalones nuevos que la medición pedía —«plantear sin calcular» y «el área de
-  la superficie»—. El que falta es de integral curvilínea y está declarado.
-- **34** — esta medición se quedó atrás dos commits. Corregido, y de ahí sale la
-  regla del encabezado.
-- **35** — **los profesores repiten ejercicios entre convocatorias.** Medido
-  sobre los 321: cuatro problemas aparecen diez veces con el enunciado idéntico.
-  Y hay un quinto que el detector **no** puede ver: el sólido del ejercicio 3
-  de 2013-2014 es el mismo que el del 1 de 2021-2022 —paraboloide rematado en
-  cono, ocho años después— pero cada uno pregunta cosas distintas y el enunciado
-  cambia. Que un ejercicio se repita es la mejor señal de que va a caer, y hoy
-  el sitio no lo dice en ninguna parte.
-- **36** — el seno se escribe de dos maneras en el corpus: 511 veces en
-  castellano y **88 en inglés**, repartidas por 8 ficheros. Los exámenes
-  imprimen «sen», así que las inglesas incumplen §08 en lo tipográfico.
-- **39** — ~~nueve etiquetas de figura se publicaban recortadas~~.
-  **Cerrada** el 26 de agosto de 2026, y con guardián: `humo.mjs` mide la caja
-  de cada `<text>` contra el `viewBox` de su SVG. Nació rojo sobre dos fallos
-  que nadie había visto —«f(b) > 0» publicado como «f(b) >» en el tema 3— y al
-  día siguiente resultó que en las páginas de examen **medía en vacío**: 38
-  etiquetas y cero cajas medibles, porque `getBBox()` dentro de un
-  `display: none` devuelve ceros. Arreglado eso —destapar la página, medir en
-  un segundo paso, y contar—, el barrido de las 96 páginas encontró seis más, de
-  meses atrás. Todas arregladas.
-- **2** — ~~el temario de Fluidos está en el catálogo sin fuente verificada~~.
-  **Cerrada** el 30 de agosto de 2026: los 25 temas oficiales, tomados del
-  apartado 4 de la Guía de la asignatura, con `temarioOficial: true`.
-- **5** — el patrón «figura fija» sigue sin construir, a propósito: ningún
-  contenido lo ha pedido todavía.
-- **18** — el bloque del formulario duplica hechos que ya están en la prosa.
+Ya no vive aquí. Lo que queda está en `tasks/pendiente.md` y lo de la próxima
+sesión en `tasks/siguiente.md`, desde el 26 de septiembre de 2026. Esta
+sección era el plan del 26 de agosto —«abrir Álgebra», «las once
+extraordinarias»— y seguía publicado un mes después; está en el historial de
+git.
