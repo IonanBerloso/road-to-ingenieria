@@ -18,10 +18,9 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **C · Mecánica** (la siguiente; A y B están hechas): las cinco convocatorias bilingües, las deducciones con
-  `redactar` y los diagramas con `dibujar` (6–8 días).
-- **D · Demostraciones en 1.º**: Álgebra y Cálculo, con rúbricas compartidas
-  y un guardián de COMP4 (4–5 días).
+- **D · Demostraciones en 1.º** (la siguiente; A, B y C están hechas):
+  Álgebra y Cálculo, con rúbricas compartidas y un guardián de COMP4
+  (4–5 días).
 - **E · Herramientas que pasan la prueba de utilidad** (§13): la calculadora
   de «¿qué nota necesito?», la página de asignatura, el banco de test de
   Cálculo, el peso de las páginas de tema, decimales y distractores, y el

@@ -19,11 +19,10 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 **Seis asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos,
 Fundamentos Químicos, Ingeniería Térmica y Mecánica Aplicada.** Las seis
 cumplen §15 entera y las seis están en el catálogo como `ok`. Entre las seis,
-**143 convocatorias transcritas** —las 118 de las cuatro primeras, veinte de
-Térmica y cinco de Mecánica—, y el guardián de convocatorias huérfanas no
+**146 convocatorias transcritas** —las 118 de las cuatro primeras, veinte de
+Térmica y ocho de Mecánica—, y el guardián de convocatorias huérfanas no
 cuenta ninguna suelta. Las que quedan fuera están declaradas con su motivo:
-dos de Térmica, íntegramente en euskera, y tres de Mecánica, las del bloque 2,
-bilingües pero con el castellano en imagen, que falta transcribir a mano.
+dos de Térmica, íntegramente en euskera.
 
 **Y una séptima con contenido, Ciencia de Materiales, escrita entera y en
 `obra`.** Sus diez temas y los 100 ejercicios de su colección están publicados
@@ -45,13 +44,13 @@ diagramas, el centro instantáneo y la catenaria contra la parábola—, cada un
 con su modelo probado, y sus respuestas de examen recalculadas aparte, en
 `tests/verificacion/`.
 
-Sus dos rutas están medidas, y la del bloque 2 con una salvedad que conviene
-saber: **ese bloque no tiene ninguna convocatoria transcrita**. Sus tres
-exámenes son bilingües, pero el castellano va en imagen y pdftotext no lo
-saca, así que se ordenó leyéndolos **solo para clasificar** qué tema pide cada
-hueco —leer para clasificar no es transcribir—, y esos exámenes son de 2018 y
-2019. Las dos bilingües del bloque 1 se transcribieron el 27 de septiembre de
-2026; las tres del bloque 2 siguen sin transcribir, declaradas con su motivo.
+Sus dos rutas están medidas y cada bloque de las dos tiene ejercicios de
+examen. Las cinco convocatorias bilingües —dos del bloque 1 y las tres del
+bloque 2— llevan el castellano en imagen, que pdftotext no saca, y se
+transcribieron el 27 de septiembre de 2026 mirando la página renderizada,
+solo esa columna y sin traducir nada del euskera. La salvedad que queda es la
+del bloque 2: sus tres exámenes son de 2018 y 2019, así que su ruta está
+medida sobre siete años de antigüedad, la más antigua del sitio.
 
 **Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
 después de abrirse. Sus diez temas están escritos —cada uno con su figura y su
@@ -368,8 +367,8 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 122 declarados, **25 están tachados**
-y los **97** restantes siguen abiertos.
+documental pero infla el recuento. De los 125 declarados, **27 están tachados**
+y los **98** restantes siguen abiertos.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
 |---|---|---|---|---|---|
@@ -383,12 +382,12 @@ y los **97** restantes siguen abiertos.
 | Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
 | Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
 | Fluidos | ordinaria | 14 | 51 | 11 | 21 / 26 |
-| Mecánica | 1.er cuatrimestre | 7 | 19 | 5 | 1 / 2 |
-| Mecánica | 2.º cuatrimestre | 7 | 15 | 3 | 2 / 2 |
+| Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
+| Mecánica | 2.º cuatrimestre | 9 | 16 | 3 | 2 / 4 |
 | Química | 1.er cuatrimestre | 8 | 16 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 17 | 3 | 11 / 11 |
 | Térmica | ordinaria | 7 | 20 | 17 | 4 / 7 |
-| **total** | **15 rutas** | **126** | **329** | — | **97 / 122** |
+| **total** | **15 rutas** | **130** | **330** | — | **98 / 125** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
