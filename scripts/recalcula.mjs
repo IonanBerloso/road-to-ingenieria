@@ -166,8 +166,15 @@ function evaluaNormalizado(s) {
   if (!s) return null;
   /* si queda alguna letra que no sea una función conocida, PI o E, no es
      un número: puede llevar una x, una n, un subíndice… */
-  const restos = s.replace(/\b(?:PI|EULER)\b/g, '').replace(
-    new RegExp(`\\b(?:${Object.keys(FUNCIONES).join('|')})\\b`, 'g'), '');
+  /* Las fronteras son «no hay letra al lado», no `\b`. Entre un dígito y una
+     letra no hay frontera de palabra —los dos son de palabra—, así que con
+     `\b` un `2PI` o un `4sqrt(7)` conservaban sus letras aquí, la expresión
+     se daba por no numérica y el par se saltaba en silencio, aunque
+     `producto()` sabe multiplicar por yuxtaposición. Lo notaron dos de los
+     agentes que transcribieron el bloque 2 de Mecánica el 27 de septiembre
+     de 2026, que tuvieron que escribir `2\,\pi` para que se comprobara. */
+  const restos = s.replace(/(?<![A-Za-z])(?:PI|EULER)(?![A-Za-z])/g, '').replace(
+    new RegExp(`(?<![A-Za-z])(?:${Object.keys(FUNCIONES).join('|')})(?![A-Za-z])`, 'g'), '');
   if (/[A-Za-z\\]/.test(restos)) return null;
 
   let i = 0;
@@ -196,6 +203,13 @@ function evaluaNormalizado(s) {
     const num = /^\d+(?:\.\d+)?/.exec(s.slice(i));
     if (!num) throw 0;
     i += num[0].length;
+    /* Un número pegado a un nombre es un coeficiente y va con él antes que
+       con la división: «28/9pi» es 28/(9π), como lo lee cualquiera, y
+       `\frac{7}{2\pi}` llega aquí como `(7)/(2PI)`. Solo pegado: con un
+       espacio, o tras un paréntesis —`\frac{a}{2}\sqrt3` llega como
+       `(a)/(2)sqrt(3)` y es (a/2)·√3—, la yuxtaposición sigue siendo la de
+       `producto()`, al nivel de la multiplicación. */
+    if (/[A-Za-z]/.test(s[i] ?? '')) return parseFloat(num[0]) * potencia();
     return parseFloat(num[0]);
   }
   function potencia() {
