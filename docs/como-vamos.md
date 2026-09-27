@@ -367,13 +367,13 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 125 declarados, **27 están tachados**
-y los **98** restantes siguen abiertos.
+documental pero infla el recuento. De los 125 declarados, **28 están tachados**
+y los **97** restantes siguen abiertos.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
 |---|---|---|---|---|---|
-| Álgebra | extraordinaria | 6 | 17 | 8 | 3 / 7 |
-| Álgebra | ordinaria | 6 | 18 | 8 | 2 / 7 |
+| Álgebra | extraordinaria | 6 | 18 | 8 | 2 / 7 |
+| Álgebra | ordinaria | 6 | 19 | 8 | 2 / 7 |
 | Cálculo | 1.ª evaluación | 7 | 21 | 11 | 6 / 6 |
 | Cálculo | 2.ª evaluación | 8 | 17 | 11 | 2 / 2 |
 | Cálculo | 3.ª evaluación | 10 | 19 | 11 | 8 / 8 |
@@ -387,7 +387,7 @@ y los **98** restantes siguen abiertos.
 | Química | 1.er cuatrimestre | 8 | 16 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 17 | 3 | 11 / 11 |
 | Térmica | ordinaria | 7 | 20 | 17 | 4 / 7 |
-| **total** | **15 rutas** | **130** | **330** | — | **98 / 125** |
+| **total** | **15 rutas** | **130** | **332** | — | **97 / 125** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19

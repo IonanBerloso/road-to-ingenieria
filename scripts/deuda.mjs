@@ -888,7 +888,7 @@ console.log('');
  * techos tienen que ser cero, que es el «Acepta» del encargo. */
 pinta('11 · Demostraciones de examen sin paso redactar');
 const VERBO_DEMOSTRAR = /\b(demu[eé]str|demostr|deduc|dedu[zc]|razonad|razon[ae]|definir|defina|define\b|prob(ar|ad) que)\w*/i;
-const TECHO_REDACTAR = { algebra: 28, calculo: 47 };
+const TECHO_REDACTAR = { algebra: 0, calculo: 0 };
 const sinRedactar = {};
 for (const asig of ASIGS) {
   const suyos = [...EJ.values()].filter((e) => e.asig === asig && e.deExamen);

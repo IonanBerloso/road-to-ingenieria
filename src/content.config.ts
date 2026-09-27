@@ -1213,6 +1213,12 @@ const examen = defineCollection({
       convocatoria,
       /** Tal como viene impresa en la cabecera del examen. */
       fecha: z.string().min(8),
+      /** Las instrucciones que imprime la portada, tal cual. Entra el 27 de
+       *  septiembre de 2026 con la fase D de la auditoría: seis de los ocho
+       *  cuadernillos de Álgebra abren con «Razonar todas las respuestas
+       *  utilizando la teoría desarrollada en la asignatura», que es la regla
+       *  con la que se corrige todo lo demás, y el sitio no la enseñaba. */
+      instrucciones: z.string().min(10).optional(),
       /** Nombre del PDF dentro de `public/examenes/<asignatura>/`, o **la
        *  lista** cuando el examen viene en más de un cuadernillo.
        *  Que los ficheros existan de verdad se comprueba al generar la ruta.
@@ -1954,7 +1960,7 @@ const laminas = defineCollection({
  *  ejercicio (fase D0 de la auditoría del 27 de septiembre de 2026). El paso
  *  `redactar` que la usa pone su id en `rubrica`, y `EjercicioGuiado` la lee
  *  al construir la página; si el id no existe, la construcción falla con el
- *  ejercicio y el id, y `tests/contenido/rubricas.test.ts` lo caza antes. */
+ *  ejercicio y el id, y `tests/rubricas.test.ts` lo caza antes. */
 const rubricas = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/rubricas' }),
   schema: z.object({

@@ -55,6 +55,10 @@ interface Props {
   eyebrow: string;
   titulo: string;
   fecha: string;
+  /** Lo que imprime la portada del cuadernillo, tal cual, si imprime algo
+   *  (`instrucciones` en su `examen.yaml`). Va arriba del examen en blanco,
+   *  que es donde lo lee quien se examina. */
+  instrucciones?: string;
   /** Los cuadernillos originales, ya pasados por `archivo()`. Casi siempre es
    *  uno; el examen de mayo-junio de 2020 son dos, y entonces cada uno trae su
    *  `etiqueta` para poder distinguirlos. */
@@ -94,6 +98,7 @@ const {
   eyebrow,
   titulo,
   fecha,
+  instrucciones,
   pdfs,
   pdfEs,
   ruta,
@@ -211,6 +216,13 @@ const fueraHtml = await Promise.all(
         Empieza sin mirar: abre cada ejercicio cuando vayas a por él. Las
         resoluciones están en la otra pestaña.
       </p>
+
+      {instrucciones && (
+        <p class="portada">
+          <span class="rotulo">En la portada del examen</span>
+          <span class="portada-texto">«{instrucciones}»</span>
+        </p>
+      )}
 
       {/* ── el simulacro ──────────────────────────────────────────────
           Nace el 15 de septiembre de 2026. Los siete bloques «enteros» de las
@@ -1060,6 +1072,19 @@ const fueraHtml = await Promise.all(
   }
 
   .aviso--flag { border-left-color: var(--flag); background: var(--flag-soft); }
+
+  /* Lo que imprime la portada del cuadernillo: la regla con la que se corrige
+     todo el examen, citada tal cual. */
+  .portada {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    margin: -0.6rem 0 1.6rem;
+    padding: .6rem .8rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .portada-texto { font-style: italic; color: var(--ink); }
 
   /* El aviso de los ejercicios que faltan. Va en rojo y arriba del todo
      porque es lo que el alumno tiene que saber ANTES de empezar a contrastar
