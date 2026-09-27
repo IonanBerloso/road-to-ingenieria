@@ -49,36 +49,19 @@ sigue después tal cual.
 
 ## Lo decide quien mantiene el proyecto
 
-- **Los veinte PDF de Térmica que son la resolución completa del profesor**:
-  se publicaron el 10 de septiembre con un «publícalo todo» que quedó como
-  provisional. ¿Siguen? (`manana.md`, 10.7 bis §1).
-- **La barra de puntos de cada examen** tiene contrastes de 2,92, 1,77 y 1,65
-  entre franjas: ¿basta la leyenda, o se rediseña? (`manana.md`, 10.5 bis).
-- **Fluidos, cantidad de movimiento**: ¿se reescriben las 22 resoluciones para
-  que nombren el volumen de control? (`todo.md`, «La reauditoría · 2»).
-- **Datos del mundo que el repositorio no tiene**: si el examen de Fluidos
-  admite calculadora programable, y si el de Química admite calculadora
-  —ningún documento lo dice, y sus enunciados piden pH, ln K y
-  exponenciales—; qué se hizo en cada práctica de
-  laboratorio; el criterio de la profesora de Materiales sobre el 4.19 (el
-  sitio publica 55,2 % y explica el 44,8 % impreso). La duración de los
-  exámenes sin cuadernillo que la imprima ya la dio Ionan el 27 de septiembre
-  de 2026: entre 25 y 30 minutos por ejercicio.
-- **Expresión Gráfica** (del brief del 8 de septiembre, §7, y de la auditoría
-  del 27): de qué año son las hojas 52–55 del final de la colección —la
-  auditoría las da por exámenes: la 54 se titula «Azterketa / Examen»—; el
-  PDF de la rúbrica de láminas, que en la carpeta es solo el enlace de eGela;
-  si en el examen de dibujo técnico se pueden usar las tablas ISO —la nota
-  general de la UPV/EHU (`Nota_sobre_la_evaluacin_de_pruebas_acadmicas.pdf`,
-  pág. 2) prohíbe libros y apuntes salvo indicación expresa—; y si el
-  diédrico se examina con la figura a escala o por coordenadas.
-- **Las preguntas abiertas de la auditoría del 27 de septiembre**: qué entra
-  en el examen de prácticas de Álgebra (la calculadora y los controles del
-  20 % ya los contesta su guía: sin calculadora, y los controles son
-  ejercicios para entregar en clase); si el examen de Sistemas da las hojas del
-  catálogo Sandvik o los valores en el enunciado; los guiones del laboratorio
-  de Química; y una copia limpia de las preguntas guía de Materiales, porque
-  el fichero lleva «Grupos» en el nombre y no se abre.
+Preguntado uno a uno el 27 de septiembre de 2026; queda abierto lo que no se
+sabía:
+
+- **Expresión Gráfica**: si en el examen de dibujo técnico se pueden usar las
+  tablas ISO —lo va a preguntar; la nota general de la UPV/EHU
+  (`Nota_sobre_la_evaluacin_de_pruebas_acadmicas.pdf`, pág. 2) prohíbe libros
+  y apuntes salvo indicación expresa—; si el diédrico se examina con la
+  figura a escala o por coordenadas; y el PDF de la rúbrica de láminas, que
+  en la carpeta es solo el enlace de eGela.
+- **Sistemas**: si el examen da las hojas del catálogo Sandvik o los valores
+  de corte en el enunciado.
+- **Materiales**: una copia limpia de las preguntas guía, porque el fichero
+  lleva «Grupos» en el nombre y no se abre.
 
 ## Hacer
 
@@ -101,6 +84,25 @@ sigue después tal cual.
   nada»).
 
 ### Contenido
+
+Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
+
+- **Térmica, los veinte PDF que son la resolución completa del profesor**:
+  servir solo el enunciado, como en las otras convocatorias. Partir cada PDF,
+  y que el aviso de `Examen.astro` diga que la resolución del profesor está
+  en el material de la asignatura.
+- **La barra de puntos de cada examen**: rediseñarla, con borde entre franjas
+  y la cifra dentro, para que no dependa del color (contrastes de 2,92, 1,77
+  y 1,65).
+- **Fluidos, cantidad de movimiento**: reescribir las 22 resoluciones para
+  que empiecen nombrando el volumen de control y por qué.
+- **Calculadora**: en los exámenes de Fluidos y de Química se usa la Casio
+  fx-570SP CW, científica y no programable. Decirlo en sus fichas y no usar
+  en las resoluciones nada que ella no haga.
+- **Álgebra**: el examen de prácticas se hace con Maxima en ordenador.
+  Decirlo en la ficha; practicar los comandos cae en la fase D o la E.
+- **Expresión Gráfica, hojas 52–55**: nadie sabe de qué año son; se
+  transcriben como examen con fuente «sin fecha» (fase K).
 
 - **Química, la colección que sí está** (verificado el 27 de septiembre de
   2026, fase G): formulación, 180 compuestos en tres hojas con la clave
@@ -189,5 +191,7 @@ en J y la colección de Química en «Contenido».
 - **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
   teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no
   esperan: son la fase H.
-- **Fundamentos Químicos**: los guiones de las prácticas, que en la carpeta
-  son solo el enlace de eGela.
+
+Los guiones de las prácticas de Química ya no están aquí: esas prácticas se
+preparan en clase y el sitio no las cubre, por decisión del 27 de septiembre
+de 2026. Lo dicen sus bloques en las dos rutas.

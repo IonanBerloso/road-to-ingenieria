@@ -12,11 +12,15 @@ SD1, SD4 y SD5 en el tema 2 y el patrón «construcción verificada» en §05—
 El encargo está en `2027 proyecto contenido/auditorias/2026-09-27/`
 (`encargo-por-fases.md`, fase C, y `mecanica-aplicada.md` con las pruebas):
 
-1. **C1 · Las cinco convocatorias bilingües** (3–4 días). El castellano va en
-   la columna derecha como imágenes de palabra: se renderiza la página
-   (`pdftoppm`) y se transcribe mirando la imagen, nunca el volcado (§17, «El
-   volcado no es la página»). Se leen enteras antes de transcribir: la ruta
-   del bloque 2 se ordenó leyéndolas solo para clasificar.
+1. **C1 · Las cinco convocatorias bilingües** (3–4 días): 2017_18_MA_Din,
+   2018_19_MA_Din, 2018_19_MA_Din2, 2018_19_MA_Est y 2018_19_MA_Est2, en
+   `Exmenes_pasados/`. **Solo lo que está en castellano**, como pidió Ionan
+   el 27 de septiembre de 2026: se transcribe la columna derecha y nada se
+   traduce del euskera; si algún apartado estuviera solo en euskera, se queda
+   fuera, declarado. El castellano va como imágenes de palabra: se renderiza
+   la página (`pdftoppm`) y se transcribe mirando la imagen, nunca el volcado
+   (§17, «El volcado no es la página»). Se leen enteras antes de transcribir:
+   la ruta del bloque 2 se ordenó leyéndolas solo para clasificar.
 2. C2 · Las deducciones con `redactar`.
 3. C3 · Los diagramas con `dibujar`.
 4. C4 · Los huecos de prosa que ya han caído.
