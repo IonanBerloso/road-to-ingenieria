@@ -568,6 +568,11 @@ minoría a propósito: a 26 de septiembre de 2026, `verificar`, `redactar` y
 > declarado lleva un `ejemplo` que el build construye para ver que salta con
 > su mensaje (`lib/construir.ts`). Lo pinta `patrones/Taller.astro`, y una
 > cifra de un `calcular` puede atarse a la misma receta con `receta:`.
+> **Sin puntero no se construye**: las herramientas y la lista de puntos son
+> botones y llegan con teclado, pero trazar y marcar se hace pulsando en la
+> lámina. Es el mismo límite que `dibujar` tiene con el papel, y se resuelve
+> igual: la lámina, lo que se pide y la resolución completa siguen ahí, y el
+> modo completo dibuja la solución encima.
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
 > de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
@@ -1458,8 +1463,11 @@ Construye como un alumno, en claro y en oscuro, a 1280 y a 360 px: llega al
 taller resolviendo los pasos de antes —no con el modo completo, que ya dibuja
 la solución y haría verde la comprobación del quinto fallo sin mirar nada—,
 traza una vertical por cada objetivo, marca antes un punto un centímetro
-desplazado y después el bueno. Al final comprueba aparte, en una carga
-limpia, que el modo completo dibuja la solución.
+desplazado y después el bueno. En el primero deja además una recta a medias
+antes de marcar, para ver que marcar la abandona —lo encontró el revisor de
+código el mismo día, y el caso sale en rojo sin el arreglo—. Al final
+comprueba aparte, en una carga limpia, que el modo completo dibuja la
+solución.
 
 Validado al revés: con el evento `taller:fb` desenganchado a propósito en
 `EjercicioGuiado`, los cuatro objetivos de SD1 salen en rojo, bien y mal

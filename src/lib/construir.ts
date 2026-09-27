@@ -111,6 +111,14 @@ export function resuelveConstruir(paso: ConstruirDeclarado, lamina: Lamina, r: R
 
   const objetivos = paso.objetivos.map((o): ObjetivoResuelto => {
     const donde = `objetivo «${o.nombre}»`;
+    /* Solo el último puede ser `siempre`: uno antes recoge cualquier punto y
+       tapa a todos los de detrás, y si esos no llevan `ejemplo` —el último no
+       lo necesita— la comprobación de los ejemplos no lo vería (revisión del
+       27 de septiembre de 2026). */
+    const tapa = o.diagnosticos.slice(0, -1).findIndex((d) => d.si.trim() === 'siempre');
+    if (tapa >= 0) {
+      throw new Error(`${donde}, diagnóstico ${tapa + 1}: «siempre» solo puede ir el último, porque recoge cualquier punto y tapa a los de detrás`);
+    }
     let es: Objetivo;
     try {
       es = compilaObjetivo(o.es, lamina, r);

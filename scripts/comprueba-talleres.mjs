@@ -201,9 +201,31 @@ async function compruebaTaller(pagina, taller, quien) {
     }
     await herramienta('punto');
     await pulsa(bueno);
+    /* En el primero, además, se deja una recta a medias antes de marcar:
+       marcar tiene que abandonarla, como cambiar de herramienta, o el clic
+       siguiente la remataría desde un punto viejo (revisión del 27 de
+       septiembre de 2026). */
+    if (k === 0) {
+      await herramienta('recta');
+      await pulsa(malo);
+    }
     await marca(k, bueno);
     if ((await clase()).includes('bien')) ok(`${quien}: ${o.rotulo} bien marcado se da por bueno`);
     else mal(`${quien}: ${o.rotulo} en su sitio no se da por bueno (${await caja.innerText()})`);
+    if (k === 0) {
+      /* El clic de después, a un centímetro o más de los dos puntos que ya
+         hay: más cerca, a 360 px el enganche lo pega a uno de ellos, y con
+         dos puntos iguales no sale recta ni con el fallo. */
+      const { y: ey, h: eh } = datos.encuadre;
+      const lado = Math.sign(bueno[1] - malo[1]);
+      const y = [bueno[1] + lado * UN_CM, malo[1] - lado * UN_CM].find((v) => v > ey + 5 && v < ey + eh - 5);
+      const lineas = taller.locator('[data-capa="usuario"] line');
+      const antes = await lineas.count();
+      await pulsa([bueno[0], y]);
+      if ((await lineas.count()) === antes) ok(`${quien}: marcar un punto abandona la recta que estaba a medias`);
+      else mal(`${quien}: después de marcar, un clic remata la recta que se había dejado a medias`);
+      await herramienta('punto');
+    }
     if (o.es.eleccion !== undefined && elegidas[o.es.eleccion] === undefined) elegidas = { ...elegidas, [o.es.eleccion]: rama };
   }
   if ((await paso.getAttribute('class'))?.includes('resuelto')) ok(`${quien}: con todos los puntos, el paso queda resuelto`);

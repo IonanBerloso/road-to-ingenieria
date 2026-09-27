@@ -23,6 +23,11 @@
  *     estilos en un solo sitio. Y escucha uno, `taller:muestra`, con el que se
  *     le pide la solución dibujada sin haberla ganado: el modo completo y la
  *     impresión.
+ *   · **No tiene camino de teclado para construir.** Las herramientas y los
+ *     puntos de la solución son botones, pero trazar y marcar es pulsar en la
+ *     lámina. Es el límite de `dibujar` con el papel (CLAUDE.md §04), y quien
+ *     no puede usar un puntero tiene la resolución completa y el modo
+ *     completo, que dibuja la solución.
  *
  * La lámina se dibuja aquí, en el build, como SVG: se ve sin JavaScript y se
  * imprime. Lo que traza el alumno lo añade el script encima.
@@ -495,6 +500,12 @@ const datos = {
       b.addEventListener('click', () => {
         const k = Number(b.dataset.objetivo);
         if (hechos.has(k)) return;
+        /* Una construcción a medias se abandona, como al cambiar de
+           herramienta: si no, el primer clic después de marcar remataría
+           una recta que nadie ha pedido (revisión del 27 de septiembre de
+           2026). */
+        pendiente = [];
+        marca(null);
         objetivoActivo = k;
         for (const o of botonesObj) o.setAttribute('aria-pressed', String(o === b));
         estado.textContent = `marca ${datos.objetivos[k].rotulo}: pulsa el punto tuyo que crees que es`;

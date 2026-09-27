@@ -150,6 +150,17 @@ describe('el paso construir de SD1, resuelto', () => {
     ).toThrow(/objetivo «P1», diagnóstico 1 .*: su ejemplo lo recoge antes el diagnóstico 2|no lo recoge ningún diagnóstico/);
   });
 
+  it('un «siempre» antes del último taparía a los de detrás, aunque no lleven ejemplo', () => {
+    /* El último no necesita `ejemplo`, así que la comprobación de los ejemplos
+       no lo vería nunca tapado: se dice aparte (revisión del 27 de septiembre
+       de 2026). */
+    const [primero, siempre] = PASO.objetivos[0].diagnosticos;
+    const otro = { si: 'siempre', mensaje: 'Otro «siempre», que no se vería nunca.' };
+    expect(() => resuelveConstruir(conDiagnosticos('P1', [primero, siempre, otro]), SD1, r)).toThrow(
+      /objetivo «P1», diagnóstico 2: «siempre» solo puede ir el último/,
+    );
+  });
+
   it('una expresión que no evalúa dice en qué objetivo y en qué diagnóstico', () => {
     const [primero, siempre] = PASO.objetivos[0].diagnosticos;
     expect(() => resuelveConstruir(conDiagnosticos('P1', [{ ...primero, si: 'en_vertical_de(Z1)' }, siempre]), SD1, r)).toThrow(
