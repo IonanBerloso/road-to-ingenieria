@@ -21,7 +21,18 @@
  */
 import { PT_MM, type P2 } from './diedrico';
 import { acierta, cumple, type Elegidas, type Marcados, type Objetivo, type Predicado } from './diedrico-corrige';
-import { compilaObjetivo, compilaPredicado, compilaTrazado, type Lamina, type Resultado, type Trazado } from './diedrico-receta';
+import {
+  compilaObjetivo,
+  compilaPredicado,
+  compilaTrazado,
+  evaluaNumero,
+  evaluaReceta,
+  type Lamina,
+  type Receta,
+  type Resultado,
+  type Trazado,
+} from './diedrico-receta';
+import { laminaDe, type DatosLamina } from './lamina';
 
 export interface DiagnosticoDeclarado {
   readonly si: string;
@@ -184,4 +195,86 @@ export function cuadraConLaReceta(escrito: string, esperado: number): boolean {
   if (!Number.isFinite(v)) return false;
   const decimales = (limpio.split('.')[1] ?? '').length;
   return Math.abs(v - esperado) <= 0.5 * 10 ** -decimales + 1e-9;
+}
+
+/** Lo que un ejercicio de Expresión Gráfica declara de su receta. */
+export interface RecetaDeclarada extends Receta {
+  readonly lamina: string;
+}
+
+/** Una cifra de un `calcular` que puede ir atada a la receta. */
+interface CifraDeclarada {
+  readonly valor: string;
+  readonly receta?: string;
+}
+
+type PasoCalcular = { readonly tipo: 'calcular'; readonly respuesta: CifraDeclarada; readonly distractores: readonly CifraDeclarada[] };
+type PasoConstruir = { readonly tipo: 'construir' } & ConstruirDeclarado;
+
+/** Lo que `resuelveEjercicio` mira de un ejercicio: su receta y sus pasos. */
+export interface EjercicioConReceta {
+  readonly id: string;
+  readonly receta?: RecetaDeclarada;
+  readonly pasos: readonly (PasoConstruir | PasoCalcular | { readonly tipo: string })[];
+}
+
+type Paso = EjercicioConReceta['pasos'][number];
+const esConstruir = (p: Paso): p is PasoConstruir => p.tipo === 'construir';
+const esCalcular = (p: Paso): p is PasoCalcular => p.tipo === 'calcular';
+
+/** Las cifras de un `calcular` con lo que son, para decirlo al fallar. */
+const cifrasDe = (p: PasoCalcular) => [
+  { que: 'la respuesta', c: p.respuesta },
+  ...p.distractores.map((c, k) => ({ que: `el distractor ${k + 1}`, c })),
+];
+
+/**
+ * Todo lo que un ejercicio saca de su receta: sus pasos `construir`
+ * compilados, por su índice, y la comprobación de que cada cifra de un
+ * `calcular` que dice de qué expresión sale es esa expresión. Lanza con el
+ * ejercicio y el paso delante: `sd1-…, paso 2: objetivo «Q1»…`.
+ *
+ * Un ejercicio sin receta no puede tener pasos `construir` ni cifras atadas a
+ * ella. El esquema ya lo impide, y aquí se vuelve a decir por si alguien lo
+ * llama con datos que no han pasado por él.
+ */
+export function resuelveEjercicio(e: EjercicioConReceta, datosLamina: DatosLamina | undefined): Map<number, ConstruirResuelto> {
+  const resueltos = new Map<number, ConstruirResuelto>();
+  const atadas = e.pasos.some((p) => esConstruir(p) || (esCalcular(p) && cifrasDe(p).some(({ c }) => c.receta !== undefined)));
+  if (!e.receta) {
+    if (atadas) throw new Error(`${e.id}: tiene pasos que salen de una receta y no declara ninguna`);
+    return resueltos;
+  }
+  if (!datosLamina) throw new Error(`${e.id}: la lámina «${e.receta.lamina}» no está en src/content/laminas`);
+  const lamina = laminaDe(datosLamina);
+  let r: Resultado;
+  try {
+    r = evaluaReceta(lamina, e.receta);
+  } catch (err) {
+    throw new Error(`${e.id}, receta: ${(err as Error).message}`);
+  }
+  e.pasos.forEach((p, i) => {
+    const donde = `${e.id}, paso ${i + 1}`;
+    if (esConstruir(p)) {
+      try {
+        resueltos.set(i, resuelveConstruir(p, lamina, r));
+      } catch (err) {
+        throw new Error(`${donde}: ${(err as Error).message}`);
+      }
+    }
+    if (!esCalcular(p)) return;
+    for (const { que, c } of cifrasDe(p)) {
+      if (c.receta === undefined) continue;
+      let esperado: number;
+      try {
+        esperado = evaluaNumero(c.receta, lamina, r);
+      } catch (err) {
+        throw new Error(`${donde}, ${que}: ${(err as Error).message}`);
+      }
+      if (!cuadraConLaReceta(c.valor, esperado)) {
+        throw new Error(`${donde}: ${que} dice ${c.valor} y su receta («${c.receta}») da ${esperado.toFixed(4)}`);
+      }
+    }
+  });
+  return resueltos;
 }

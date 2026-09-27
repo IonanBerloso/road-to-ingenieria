@@ -1,0 +1,214 @@
+ejercicios:
+  - id: sd1-la-gota-sobre-el-tejado
+    titulo: La gota sobre el tejado
+    fuente: Ejercicio 1 (SD1) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    enunciado: |
+      Dibujar las proyecciones diédricas de la trayectoría que completaría una gota de agua
+      representada por el punto P hasta alcanzar el suelo.
+    pide: Dónde está la gota en la planta, por dónde deja el tejado en las dos vistas, dónde toca el suelo y cuánto recorre sobre el tejado.
+    receta:
+      lamina: sd1
+      escena:
+        suelo: linea(figura.segmento("suelo"))
+        L: 'punto3(alzado: figura.punto("L2"), planta: figura.punto("L1"))'
+        T: 'punto3(alzado: figura.punto("T2"), planta: figura.punto("T1"))'
+        R: 'punto3(alzado: figura.punto("R2"), planta: figura.punto("R1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        tejado: plano(L, T, R)
+        aleros: '[segmento3(L, B), segmento3(R, B)]'
+      solucion:
+        P: 'punto_en_plano(alzado: figura.punto("P2"), plano: tejado)'
+        bajada: 'lmp(tejado, por: P, sentido: descendente)'
+        Q: corte(bajada, aleros)
+        G: vertical_hasta(Q, suelo)
+        vm_PQ_mm: en_mm(vm(P, Q))
+      comprueba:
+        - en_plano(B, tejado)
+    pasos:
+      - tipo: reconocer
+        pregunta: Sobre un tejado inclinado, ¿por dónde baja una gota?
+        opciones:
+          - texto: Por la recta que une P con el punto más bajo del tejado
+            mensaje: |
+              Solo si ese punto cayera justo en la línea de máxima pendiente que pasa
+              por P, y no tiene por qué. La gota no busca un punto: sigue una
+              **dirección**, la de mayor pendiente, y esa es la misma en todo el plano.
+          - texto: Por la perpendicular al alero, trazada en el alzado
+            mensaje: |
+              Un ángulo recto solo se ve recto en la vista donde uno de sus lados está en
+              verdadera magnitud. El alero no es horizontal ni frontal, y en el alzado esa
+              perpendicular no significa nada.
+          - texto: 'Por la línea de máxima pendiente: perpendicular a las horizontales del plano, trazada en la planta'
+            correcta: true
+            mensaje: |
+              Eso es. Una horizontal del plano se ve en verdadera magnitud en la planta,
+              así que el ángulo recto con ella se ve recto ahí: la l.m.p. se traza en la
+              planta y se sube al alzado con líneas de referencia.
+
+      - tipo: construir
+        titulo: Construir la trayectoria
+        intro: |
+          P se da solo en el alzado. Construye su planta, la línea de máxima pendiente que
+          pasa por él, el punto por el que la gota deja el tejado —en las dos vistas— y
+          el punto donde toca el suelo. Los vértices del tejado son los extremos de sus
+          bordes; engánchate a ellos.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: P1
+            pide: la gota, en la planta
+            es: proy_planta(solucion.P)
+            bien: |
+              P₁ está bajo P₂ y sobre una horizontal del tejado: un punto que está en un
+              plano se sitúa con una recta de ese plano que pase por él.
+            diagnosticos:
+              - si: en_vertical_de(figura.punto("P2"))
+                mensaje: |
+                  Está bajo P₂, pero ¿a qué distancia? P está **en** el tejado, y eso solo lo
+                  fija una recta del plano que pase por P: la horizontal por P₂ corta dos
+                  bordes; bájalos a la planta, y P₁ está donde la recta que los une corta la
+                  vertical de P₂.
+                ejemplo: 'desplaza(proy_planta(solucion.P), dy: mm(10))'
+              - si: siempre
+                mensaje: |
+                  Las dos proyecciones de un punto van siempre en la **misma vertical**: P₁
+                  tiene que estar en la línea de referencia de P₂.
+          - nombre: Q1
+            pide: donde deja el tejado, en la planta
+            es: proy_planta(solucion.Q)
+            bien: |
+              Q₁ está en el alero delantero derecho, al final de la línea de máxima pendiente
+              que pasa por P₁. Por ahí sale la gota del tejado.
+            diagnosticos:
+              - si: en_recta(proy_planta(solucion.bajada)) && en_segmento(figura.segmento("LT1"), figura.segmento("TR1"))
+                mensaje: |
+                  La gota **no sube**. Estás en la l.m.p. que pasa por P₁, pero recorrida hacia
+                  arriba, hacia la cumbrera. Hacia abajo llega a uno de los aleros.
+                ejemplo: 'proy_planta(corte(lmp(tejado, por: solucion.P, sentido: ascendente), [segmento3(L, T), segmento3(T, R)]))'
+              - si: 'es_pie_perpendicular(desde: P1, sobre: figura.segmento("RB1"))'
+                mensaje: |
+                  Has trazado la perpendicular **al alero**. La línea de máxima pendiente es
+                  perpendicular a las **horizontales del plano**, y el alero no es una
+                  horizontal: sus dos extremos están a distinta altura.
+                ejemplo: pie_perpendicular(proy_planta(solucion.P), figura.segmento("RB1"))
+              - si: en_segmento(figura.segmento("BL1"))
+                mensaje: |
+                  Ese es el alero izquierdo, y la l.m.p. que pasa por P₁ no llega a él. Mira
+                  hacia dónde baja el tejado: con una horizontal del plano y su perpendicular.
+                ejemplo: punto_medio(figura.segmento("BL1"))
+              - si: en_recta(proy_planta(solucion.bajada))
+                mensaje: |
+                  Vas por la línea de máxima pendiente, pero la gota deja el tejado **en el
+                  alero**: Q₁ es el corte de la l.m.p. con el borde, ni antes ni después.
+                ejemplo: punto_medio(proy_planta(segmento3(solucion.P, solucion.Q)))
+              - si: siempre
+                mensaje: |
+                  Q₁ tiene que cumplir dos cosas a la vez: estar en la línea de máxima pendiente
+                  que pasa por P₁ y estar en el alero.
+          - nombre: Q2
+            pide: donde deja el tejado, en el alzado
+            es: proy_alzado(solucion.Q)
+            bien: |
+              Q₂ está sobre el alero en el alzado, en la vertical de Q₁: el mismo punto, visto
+              dos veces.
+            diagnosticos:
+              - si: '!en_vertical_de(Q1)'
+                mensaje: |
+                  Q₂ va en la **vertical de Q₁**: son el mismo punto visto dos veces. Antes de
+                  buscar Q₂ hace falta Q₁.
+                ejemplo: proy_alzado(solucion.P)
+              - si: siempre
+                mensaje: |
+                  Está en la vertical de Q₁, pero no sobre el alero. Q está en el borde del
+                  tejado, así que Q₂ está en el alzado de ese borde.
+                ejemplo: 'desplaza(proy_alzado(solucion.Q), dy: mm(8))'
+          - nombre: G2
+            pide: donde toca el suelo, en el alzado
+            es: proy_alzado(solucion.G)
+            bien: |
+              La gota cae en vertical: G₂ está en la vertical de Q₂, sobre la línea del suelo.
+              En la planta no se mueve, G₁ ≡ Q₁.
+            diagnosticos:
+              - si: '!en_vertical_de(Q2)'
+                mensaje: |
+                  Desde el alero la gota cae **en vertical**: G₂ tiene la misma x que Q₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.G), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  Cae hasta el **suelo**: la línea de abajo del alzado, donde acaban las
+                  paredes.
+                ejemplo: 'desplaza(proy_alzado(solucion.G), dy: mm(-10))'
+        trazado:
+          - proy_alzado(segmento3(solucion.P, solucion.Q))
+          - proy_alzado(segmento3(solucion.Q, solucion.G))
+          - proy_planta(segmento3(solucion.P, solucion.Q))
+        pista: |
+          (1) Horizontal por P₂: corta dos bordes del tejado. (2) Baja esos cortes a la
+          planta con verticales y únelos: es una horizontal del plano vista desde arriba.
+          (3) P₁ está en ella, en la vertical de P₂. (4) Por P₁, la perpendicular a esa
+          horizontal es la l.m.p. (5) Su corte con el alero es Q₁; sube a Q₂ y baja a G₂.
+        desarrollo: |
+          En verde claro, la trayectoria calculada: P₂Q₂ y la caída Q₂G₂ en el alzado, y
+          P₁Q₁ en la planta.
+
+      - tipo: calcular
+        titulo: Cuánto recorre sobre el tejado
+        pregunta: Longitud real del tramo PQ, el que la gota recorre sobre el tejado.
+        respuesta:
+          tipo: numero
+          valor: '55.04'
+          receta: vm_PQ_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '44.79'
+            receta: en_mm(vm_planta(P, Q))
+            mensaje: |
+              Eso es lo que mide **P₁Q₁ en la planta**. La planta acorta todo lo que tiene
+              pendiente: la verdadera magnitud es la hipotenusa de un triángulo con base P₁Q₁
+              y altura la diferencia de cotas.
+          - valor: '33.51'
+            receta: en_mm(vm_alzado(P, Q))
+            mensaje: |
+              Eso es **P₂Q₂ en el alzado**, y el alzado también acorta: PQ no es frontal.
+          - valor: '63.06'
+            receta: vm_PQ_mm + en_mm(vm(Q, G))
+            mensaje: |
+              Has sumado la **caída** vertical desde el alero. Se pedía solo el tramo sobre el
+              tejado.
+        pista: |
+          Base, P₁Q₁ medido en la planta; altura, la diferencia de cotas entre P₂ y Q₂ medida
+          en el alzado; la hipotenusa es la longitud de verdad.
+        desarrollo: |
+          $$ \overline{PQ} = \sqrt{\overline{P_1Q_1}^{\,2} + \Delta z^{2}} = \sqrt{44{,}79^{2} + 31{,}98^{2}} \approx 55{,}0 \text{ mm} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: P está en el tejado, así que P₁ se obtiene con una recta del plano que pase por P, no bajando P₂ a ojo.
+          - texto: La línea de máxima pendiente se traza en la planta, perpendicular a una horizontal del plano.
+          - texto: Como la l.m.p. es perpendicular al alero en el alzado, Q₂ se obtiene directamente ahí.
+            trampa: true
+            mensaje: |
+              En el alzado esa perpendicularidad **no existe**: el ángulo recto se ve en la
+              planta, y solo con horizontales. Q₂ se sube desde Q₁ por la línea de referencia.
+          - texto: 'Al llegar al alero, la gota cae en vertical: en el alzado baja hasta el suelo, y en la planta es el mismo punto.'
+
+    resolucion: |
+      **Dónde está P.** P se da solo en el alzado, pero está en el tejado. Por P₂ se traza
+      una horizontal del plano —paralela al suelo en el alzado—, que corta dos bordes del
+      tejado; bajados a la planta, la recta que los une es esa horizontal vista desde arriba,
+      y P₁ es su corte con la vertical de P₂.
+
+      **Por dónde baja.** La línea de máxima pendiente del tejado es perpendicular a sus
+      horizontales, y ese ángulo recto se ve en la planta, donde las horizontales están en
+      verdadera magnitud. Por P₁, perpendicular a la horizontal, y hacia abajo: corta el
+      alero delantero derecho en Q₁. Q₂ se sube por la línea de referencia hasta el alzado
+      de ese alero.
+
+      **Hasta el suelo.** Desde Q la gota cae en vertical: G₂ está en la vertical de Q₂ sobre
+      la línea del suelo, y en la planta G₁ ≡ Q₁.
+
+      **Cuánto recorre.** P₁Q₁ mide 44,79 mm en la planta y la diferencia de cotas entre P y Q
+      es de 31,98 mm; la verdadera magnitud de PQ es la hipotenusa: 55,0 mm.

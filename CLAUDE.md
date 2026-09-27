@@ -344,9 +344,13 @@ scripts/
   comprueba-simuladores.mjs  que un simulador se ENCUENTRE, que sus botones
                            den los números de su fuente y que sin
                            JavaScript no enseñe otros (§11)
+  comprueba-talleres.mjs   que cada taller de Expresión Gráfica se deje
+                           construir en un navegador, fallando a propósito
+                           (§11)
   servidor.mjs             la vista previa que necesitan humo, humo-todo,
-                           contraste, comprueba-simuladores y peso. Una
-                           sola forma de levantarla, no cinco
+                           contraste, comprueba-simuladores,
+                           comprueba-talleres y peso. Una sola forma de
+                           levantarla, no seis
   peso.mjs                 cuánto tarda una página en un móvil (§11)
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
                            bloque en el corpus: en un segundo, sin construir
@@ -539,7 +543,7 @@ Y los mínimos, que se olvidan: `fuente` ≥ 10 caracteres, `enunciado` ≥ 10,
 con `mensaje` ≥ 20 en cada una, al menos 1 distractor en un `calcular` y
 exactamente 1 pieza `trampa` en un `justificar`.
 
-Los **seis** tipos de paso, y qué competencia entrena cada uno:
+Los **siete** tipos de paso, y qué competencia entrena cada uno:
 
 | `tipo` | qué hace | competencia |
 |---|---|---|
@@ -549,10 +553,21 @@ Los **seis** tipos de paso, y qué competencia entrena cada uno:
 | `verificar` | escribir una condición y compararla como región | COMP2·COMP4 |
 | `redactar` | escribir en papel y contrastar con la rúbrica | COMP4 |
 | `dibujar` | dibujar en papel y contrastar con la figura y la lista | COMP4 |
+| `construir` | construir sobre la lámina y marcar los puntos de la solución | COMP2 |
 
-Los tres primeros van en todos los ejercicios —el esquema lo exige— y los
-otros tres son minoría a propósito: a 26 de septiembre de 2026 eran 33, 37 y
-179 pasos de 8.487.
+`reconocer` y `justificar` van en todos los ejercicios, y el COMP2 lo pone un
+`calcular`, un `verificar` o un `construir`: el esquema lo exige. Los demás son
+minoría a propósito: a 26 de septiembre de 2026, `verificar`, `redactar` y
+`dibujar` eran 33, 37 y 179 pasos de 8.487.
+
+> **`construir` nace el 27 de septiembre de 2026** con Expresión Gráfica,
+> cuyo examen es un dibujo. El alumno traza con herramientas de papel sobre la
+> figura exacta de la colección y marca los puntos de la solución por su
+> nombre; cada uno se corrige contra la geometría calculada en el build desde
+> la `receta` del ejercicio (`lib/diedrico-receta.ts`), y cada error
+> declarado lleva un `ejemplo` que el build construye para ver que salta con
+> su mensaje (`lib/construir.ts`). Lo pinta `patrones/Taller.astro`, y una
+> cifra de un `calcular` puede atarse a la misma receta con `receta:`.
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
 > de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
@@ -1240,7 +1255,7 @@ simulación.
 ## 11 // Suelo de calidad
 
 `npm run suelo` es una sola línea, la misma en local y en el despliegue —el
-flujo de GitHub Actions la llama tal cual—, y son nueve pasos en este orden.
+flujo de GitHub Actions la llama tal cual—, y son diez pasos en este orden.
 Si uno falla, no se publica.
 
 | paso | qué comprueba | dónde |
@@ -1254,10 +1269,11 @@ Si uno falla, no se publica.
 | `test` | lectores de respuesta, física de los simuladores y respuestas de examen recalculadas | `tests/`, con vitest |
 | `humo` | el sitio en Chromium: lo que leer el HTML no puede demostrar | `scripts/humo.mjs` |
 | `sim` | que cada simulador se encuentre y diga lo que dice su fuente | `scripts/comprueba-simuladores.mjs` |
+| `talleres` | que cada taller de Expresión Gráfica se deje construir, fallando a propósito | `scripts/comprueba-talleres.mjs` |
 
-Los tres que abren un navegador —`contraste`, `humo` y `sim`— levantan su
-propia vista previa con `scripts/servidor.mjs`, y por eso **dos no pueden
-correr a la vez**: cada uno para el servidor del otro al arrancar. En el suelo
+Los cuatro que abren un navegador —`contraste`, `humo`, `sim` y `talleres`—
+levantan su propia vista previa con `scripts/servidor.mjs`, y por eso **dos no
+pueden correr a la vez**: cada uno para el servidor del otro al arrancar. En el suelo
 van encadenados y no chocan; lanzar uno a mano mientras corre el suelo, sí
 (§17). El suelo entero tardó 26 minutos el 26 de septiembre de 2026, veinte
 de ellos en el humo: se lanza en segundo plano, con la salida a un fichero
@@ -1425,6 +1441,33 @@ aviso de la cabecera. Las dos, rojas. Y ojo al ejemplo, que ilustra lo de
 arriba mejor que ninguno: ese 228 no sale de un examen, sale de
 `fluidos/t20-golpe-ariete/index.mdx:218`, prosa nuestra. La regresión de
 validación se validó contra nosotros mismos.
+
+### `npm run talleres` — que un taller se deje construir
+
+En el suelo desde el 27 de septiembre de 2026, con el primer taller: SD1, en
+el tema 2 de Expresión Gráfica. La lógica de un paso `construir` ya la
+comprueba el build —`lib/construir.ts` construye cada error declarado y exige
+que salte con su diagnóstico—, y en un segundo `tests/geometria/
+construcciones.test.ts`, que resuelve todos los ejercicios con receta. Lo que
+ninguno de los dos ve es **el cableado**: que un clic en la lámina enganche al
+punto que toca, que la marca se corrija, que el mensaje llegue a la caja del
+paso, que la pista salga al tercer fallo y la solución al quinto, y que al
+terminar se abra el paso siguiente.
+
+Construye como un alumno, en claro y en oscuro, a 1280 y a 360 px: llega al
+taller resolviendo los pasos de antes —no con el modo completo, que ya dibuja
+la solución y haría verde la comprobación del quinto fallo sin mirar nada—,
+traza una vertical por cada objetivo, marca antes un punto un centímetro
+desplazado y después el bueno. Al final comprueba aparte, en una carga
+limpia, que el modo completo dibuja la solución.
+
+Validado al revés: con el evento `taller:fb` desenganchado a propósito en
+`EjercicioGuiado`, los cuatro objetivos de SD1 salen en rojo, bien y mal
+marcados, en las cuatro pasadas. Antes había salido en rojo por dos fallos
+suyos, que conviene no repetir en el siguiente guardián de navegador: buscaba
+la pestaña de ejercicios con un atributo que el sitio no usa —y un `catch`
+vacío se tragaba el error—, y el punto malo de Q₁ caía 0,24 pt fuera de la
+lámina.
 
 ### `npm run peso` — cuánto tarda una página en un móvil
 

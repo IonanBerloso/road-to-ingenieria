@@ -3,43 +3,41 @@
 Se sobrescribe cada vez; no se amplía. Lo que queda más allá está en
 `pendiente.md`, con las fases en orden arriba del todo.
 
-Escrito el 27 de septiembre de 2026, al cerrar la fase A de la auditoría
-externa. Toca la fase B, que es la fase 1 de Expresión Gráfica tal cual se
-aparcó el día antes (commit 479053d).
+Escrito el 27 de septiembre de 2026, a mitad de la fase B (la fase 1 de
+Expresión Gráfica). El paso `construir` ya está publicado con SD1.
 
-## Qué toca: el componente `Taller` y SD1 entero
+## Qué hay ya
 
-Lo que ya está, con sus pruebas en `tests/geometria/`:
+- El esquema: `pasoConstruir` y `receta` en `content.config.ts`, cifras de un
+  `calcular` atadas a la receta con `receta:`, y la regla de COMP2 en el
+  esquema y en `revisa-ejercicios.mjs`.
+- `lib/construir.ts` con `resuelveEjercicio`, y `evaluaNumero` en
+  `lib/diedrico-receta.ts`, con sus pruebas en `tests/geometria/`.
+- `patrones/Taller.astro`, cableado en `EjercicioGuiado` por eventos; el modo
+  completo y la impresión le piden la solución con `taller:muestra`.
+- SD1 en el tema 2, con su prosa. La tolerancia es la del brief, 1 mm: a esa
+  distancia la guarda sigue distinguiendo cada error de la solución.
+- La guarda del corpus (`tests/geometria/construcciones.test.ts`) y el
+  comprobador de navegador en el suelo (`npm run talleres`, CLAUDE.md §11).
 
-- `lib/diedrico.ts`: la geometría de SD1, SD3, SD4, SD5 y SD7, cotejada con
-  los pilotos.
-- `lib/diedrico-receta.ts`: las recetas como datos, con elecciones y firmas;
-  revisado dos veces por un agente.
-- `lib/diedrico-corrige.ts`: lo único que irá a la página.
-- `src/content/laminas/sd1.json`, cotejada con el PDF, y
-  `scripts/lamina-sobre-pdf.mjs` para las demás.
-- `lib/construir.ts`: el paso resuelto, con cada error construido a propósito.
+## Qué toca
 
-**Hay borradores de todo lo que sigue**, sin compilar, fuera del repositorio:
-`2027 proyecto contenido/Claude outputs/fase-1-borradores/`, con un README que
-dice adónde va cada uno y qué falta. Se meten en este orden:
+1. **SD4 y SD5** en su tema, con el mismo camino que SD1: la lámina cotejada
+   con `scripts/lamina-sobre-pdf.mjs`, la receta (SD5 con su elección), los
+   objetivos con un `ejemplo` por error, y la guarda y el comprobador en
+   verde. Los borradores de SD1 están en
+   `2027 proyecto contenido/Claude outputs/fase-1-borradores/`, y los valores
+   del piloto de SD5 y SD7, en `tests/geometria/sd5.test.ts` y `sd7.test.ts`.
+2. **El patrón en §05** como «construcción verificada», cuando SD4 y SD5
+   hayan confirmado que el camino de SD1 no era un caso único.
+3. **En el móvil, la lista de puntos va debajo de la lámina**: para marcar
+   hay que bajar a elegir el nombre y subir a pulsar el punto. La línea de
+   estado ya avisa del fallo; mirar si la lista cabe encima, o pegada, sin
+   tapar el dibujo.
+4. Al tema 2 le faltan la figura propia y el ejemplo propio de entrada (§15),
+   que son de la fase 2.
 
-1. **El esquema**: `pasoConstruir` y `receta` en `content.config.ts`, la regla
-   de COMP2 en el esquema y en `revisa-ejercicios.mjs`, y `evaluaNumero` y
-   `resuelveEjercicio` en `lib/`.
-2. **`Taller.astro`** y su sitio en `EjercicioGuiado`, que le pasa el paso
-   resuelto y escucha sus cinco eventos.
-3. **SD1 en el tema 2**, con su prosa (`expresion-grafica` en `CON_TEMAS`,
-   `hecho: true` en el catálogo), y la guarda que resuelve todos los
-   `construir` del corpus. Antes de pegarlo, arreglar la diferencia de cotas
-   del desarrollo (≈ 31,99 mm, no 31,53) y decidir la tolerancia.
-4. **`scripts/comprueba-talleres.mjs`** en el suelo, y mirarlo en claro, en
-   oscuro, a 360 px y fallando a propósito.
-5. Después SD4 y SD5, y el patrón en §05 como «construcción verificada».
-
-Antes de escribir cada pieza nueva, la prueba de utilidad de §13: para quién,
-cuándo, qué gana y cómo se comprueba.
-
-Mientras corren el suelo o el despliegue, la deuda de `pendiente.md`, un
-commit por punto, empezando por las acciones del despliegue, que tienen que
-estar antes del 19 de octubre.
+Antes de cada pieza nueva, la prueba de utilidad de §13. Mientras corren el
+suelo o el despliegue, la deuda de `pendiente.md`, un commit por punto,
+empezando por las acciones del despliegue, que tienen que estar antes del 19
+de octubre.

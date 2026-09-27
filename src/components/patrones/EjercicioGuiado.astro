@@ -14,9 +14,12 @@
  * Entrena las tres competencias de §09, no solo el número: reconocer (COMP1),
  * calcular (COMP2) y justificar (COMP4).
  */
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import { resuelveEjercicio } from '../../lib/construir';
+import type { DatosLamina } from '../../lib/lamina';
 import { mate } from '../../lib/markdown.mjs';
 import Reparto from '../ui/Reparto.astro';
+import Taller from './Taller.astro';
 
 interface Props {
   /** `id` del ejercicio dentro de algún ejercicios.yaml. */
@@ -56,6 +59,16 @@ if (encontrados.length > 1) {
 }
 
 const ejercicio = encontrados[0].e;
+
+/* Expresión Gráfica: la receta del ejercicio, evaluada sobre su lámina aquí,
+   en el build. Un objetivo que no compila, un diagnóstico que otro tapa o una
+   cifra que no es la de su receta rompen la construcción con el ejercicio y
+   el paso delante (`lib/construir`); los demás ejercicios no tienen receta y
+   no cuesta nada. */
+const datosLamina = ejercicio.receta
+  ? ((await getEntry('laminas', ejercicio.receta.lamina))?.data as DatosLamina | undefined)
+  : undefined;
+const construidos = resuelveEjercicio(ejercicio, datosLamina);
 
 /* ── «¿Esto está mal? Dilo» ───────────────────────────────────────────────
  *
@@ -109,6 +122,8 @@ const COMPETENCIA = {
      se puntúa no es la cuenta que venga después, es haber entendido la región
      antes de escribir un límite. */
   dibujar: 'COMP4',
+  /* En diédrico el cálculo es la construcción: COMP2, como `calcular`. */
+  construir: 'COMP2',
 } as const;
 
 /**
@@ -222,6 +237,21 @@ const pasos = await Promise.all(
       };
     }
 
+    /* `construir` tampoco lleva `pregunta`: lo que pide está en la lámina y
+       en la lista de puntos, y los dibuja el Taller. */
+    if (paso.tipo === 'construir') {
+      return {
+        i,
+        tipo: paso.tipo,
+        competencia: COMPETENCIA[paso.tipo],
+        titulo: paso.titulo,
+        preguntaHtml: '',
+        construir: construidos.get(i)!,
+        lamina: datosLamina!,
+        veredictoHtml: paso.veredicto ? await mate(paso.veredicto, PREFIJO) : null,
+      };
+    }
+
     const comun = {
       i,
       tipo: paso.tipo,
@@ -320,6 +350,11 @@ const datos = pasos.map((p) => {
      que se corrige un folio o un dibujo sería mentir sobre lo que un sitio
      estático puede hacer. */
   if (p.tipo === 'redactar' || p.tipo === 'dibujar') {
+    return { tipo: p.tipo };
+  }
+  /* `construir` corrige dentro del Taller, con sus propios datos; aquí solo
+     hace falta saber que el paso existe para escuchar sus eventos. */
+  if (p.tipo === 'construir') {
     return { tipo: p.tipo };
   }
   return {
@@ -599,6 +634,19 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
               </>
             )}
 
+            {paso.tipo === 'construir' && (
+              <>
+                <Taller prefijo={`${PREFIJO}-t${paso.i}`} paso={paso.construir!} lamina={paso.lamina!} />
+                {paso.veredictoHtml && (
+                  <div class="solucion" hidden>
+                    <template data-cuerpo>
+                      <div class="prosa veredicto" set:html={paso.veredictoHtml} />
+                    </template>
+                  </div>
+                )}
+              </>
+            )}
+
             <div class="fb" data-fb hidden aria-live="polite"></div>
           </div>
         </li>
@@ -665,7 +713,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     | { tipo: 'reconocer'; correcta: number }
     | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[] }
     | { tipo: 'justificar'; orden: number[]; trampa: number }
-    | { tipo: 'verificar'; condicion: string; ventana: { x: [number, number]; y: [number, number] } };
+    | { tipo: 'verificar'; condicion: string; ventana: { x: [number, number]; y: [number, number] } }
+    | { tipo: 'redactar' | 'dibujar' | 'construir' };
 
   /** Deja constancia de que este ejercicio está hecho, y de CÓMO.
    *
@@ -1431,6 +1480,33 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       });
     });
 
+    /* ── COMP2 · construir (Expresión Gráfica) ────────────────────── */
+
+    /* El Taller corrige solo y habla con eventos (`Taller.astro`). Aquí se
+       traducen a lo que hacen los demás pasos: la caja del diagnóstico, los
+       intentos, la pista y el desarrollo vistos, y resolver el paso. */
+    const talleres = pasos.map((paso, i) =>
+      datos[i].tipo === 'construir' ? paso.querySelector<HTMLElement>('[data-taller]') : null,
+    );
+    talleres.forEach((taller, i) => {
+      if (!taller) return;
+      const paso = pasos[i];
+      taller.addEventListener('taller:fb', (ev) => {
+        const d = (ev as CustomEvent<{ clase: string; titulo: string; html: string }>).detail;
+        fb(paso, d.clase, d.titulo, d.html);
+      });
+      taller.addEventListener('taller:fallo', () => intentos[i]++);
+      taller.addEventListener('taller:pista', () => (pistaVista = true));
+      taller.addEventListener('taller:desarrollo', () => (desarrolloVisto = true));
+      taller.addEventListener('taller:hecho', () => {
+        if (!resueltos[i]) resuelve(i);
+      });
+    });
+    /** Que cada Taller dibuje su solución encima: en modo completo y al imprimir. */
+    const muestraTalleres = () => {
+      for (const t of talleres) t?.dispatchEvent(new CustomEvent('taller:muestra'));
+    };
+
     /* ── modo guiado / completo ───────────────────────────────────── */
 
     const botonesModo = [...raiz.querySelectorAll<HTMLButtonElement>('[data-modo]')];
@@ -1444,6 +1520,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       for (const b of botonesModo) b.setAttribute('aria-pressed', String(b.dataset.modo === modo));
 
       const completo = modo === 'completo';
+      if (completo) muestraTalleres();
       const seVe = completo || resueltos.every(Boolean);
       if (seVe) materializa();
       resolucion.hidden = !seVe;
@@ -1471,6 +1548,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     // haciendo clic (§11).
     window.addEventListener('beforeprint', () => {
       materializa();
+      muestraTalleres();
       resolucion.hidden = false;
       for (const s of raiz.querySelectorAll<HTMLElement>('.solucion')) { materializa(s); s.hidden = false; }
     });

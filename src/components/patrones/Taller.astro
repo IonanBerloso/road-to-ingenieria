@@ -1,0 +1,868 @@
+---
+/**
+ * EL TALLER · el paso `construir` de Expresión Gráfica (patrón «construcción
+ * verificada», brief del 8 de septiembre de 2026).
+ *
+ * Portado del motor piloto (`taller/taller-base.html` del paquete de diseño).
+ * El alumno construye como en el papel —recta, paralela, perpendicular, línea
+ * de referencia, compás— con enganche a puntos, intersecciones y líneas, y lo
+ * que se corrige no es el dibujo: son los puntos de la solución con nombre
+ * (P₁, Q₁…), cada uno contra la geometría calculada en el build.
+ *
+ * LO QUE NO HACE, a propósito:
+ *
+ *   · **No calcula nada.** La receta se evalúa en el build (`lib/construir`,
+ *     que llama `EjercicioGuiado`) y aquí llega compilada: las posiciones que
+ *     valen y los diagnósticos como árboles. En la página solo se mide si un
+ *     punto cae donde tiene que caer (`lib/diedrico-corrige`).
+ *   · **No sabe nada del ejercicio que lo rodea.** Habla hacia fuera con
+ *     eventos que suben por el DOM: `taller:fb` con el mensaje que hay que
+ *     enseñar, `taller:fallo`, `taller:pista`, `taller:desarrollo` y
+ *     `taller:hecho`. Quien lo coloca decide dónde se ven y qué cuentan; así
+ *     la caja del diagnóstico es la misma que en los demás pasos, con sus
+ *     estilos en un solo sitio. Y escucha uno, `taller:muestra`, con el que se
+ *     le pide la solución dibujada sin haberla ganado: el modo completo y la
+ *     impresión.
+ *
+ * La lámina se dibuja aquí, en el build, como SVG: se ve sin JavaScript y se
+ * imprime. Lo que traza el alumno lo añade el script encima.
+ */
+import type { ConstruirResuelto } from '../../lib/construir';
+import type { DatosLamina } from '../../lib/lamina';
+import { mate } from '../../lib/markdown.mjs';
+
+interface Props {
+  /** Prefijo único en la página: el del ejercicio y el número de paso. */
+  prefijo: string;
+  paso: ConstruirResuelto;
+  lamina: DatosLamina;
+}
+
+const { prefijo, paso, lamina } = Astro.props;
+
+const NOMBRES: Record<string, string> = {
+  punto: 'punto',
+  recta: 'recta',
+  paralela: 'paralela',
+  perpendicular: 'perpendicular',
+  vertical: 'vertical',
+  horizontal: 'horizontal',
+  compas: 'compás',
+  radio: 'compás a medida',
+  medir: 'medir',
+  borrar: 'borrar',
+};
+
+const introHtml = await mate(paso.intro, prefijo);
+const pistaHtml = await mate(paso.pista, prefijo);
+const desarrolloHtml = await mate(paso.desarrollo, prefijo);
+const objetivos = await Promise.all(
+  paso.objetivos.map(async (o) => ({
+    rotulo: o.rotulo,
+    pideHtml: await mate(o.pide, prefijo),
+    bienHtml: await mate(o.bien, prefijo),
+    diagnosticosHtml: await Promise.all(o.diagnosticos.map((d) => mate(d.mensaje, prefijo))),
+  })),
+);
+
+const { x, y, w, h } = lamina.encuadre;
+const marcados = Object.entries(lamina.puntos).filter(([, p]) => p.marca !== undefined);
+
+/** Lo que el navegador necesita para corregir. Los mensajes no van aquí: ya
+ *  están en el DOM, pintados en el build, como en `EjercicioGuiado`. */
+const datos = {
+  tolerancia: paso.tolerancia,
+  encuadre: lamina.encuadre,
+  segmentos: lamina.segmentos.map((s) => [s.a, s.b]),
+  circulos: (lamina.circulos ?? []).map((c) => ({ c: c.c, r: c.r })),
+  puntos: marcados.map(([, p]) => ({ x: p.x, y: p.y, rotulo: p.rotulo ?? '' })),
+  objetivos: paso.objetivos.map((o) => ({ nombre: o.nombre, rotulo: o.rotulo, es: o.es, diagnosticos: o.diagnosticos.map((d) => d.si) })),
+  trazado: paso.trazado,
+};
+---
+
+<div class="taller" data-taller>
+  <div class="prosa t-intro" set:html={introHtml} />
+
+  <div class="t-cuerpo">
+    <div class="t-mesa">
+      <div class="t-herr no-imprimir" role="toolbar" aria-label="Herramientas de dibujo">
+        {
+          paso.herramientas.map((herr, k) => (
+            <button type="button" data-herr={herr} aria-pressed={k === 0 ? 'true' : 'false'}>
+              {NOMBRES[herr] ?? herr}
+            </button>
+          ))
+        }
+        <button type="button" class="t-deshacer" data-deshacer>deshacer</button>
+      </div>
+      <p class="t-estado rotulo no-imprimir" data-estado aria-live="polite">
+        Sin JavaScript no se puede construir: la lámina y lo que se pide siguen aquí, y la resolución completa, abajo.
+      </p>
+
+      <div class="t-lienzo">
+        <svg
+          viewBox={`${x} ${y} ${w} ${h}`}
+          style={`max-width:${Math.round(w * 1.7)}px`}
+          role="img"
+          aria-label={`La lámina ${lamina.codigo} de la colección, para construir sobre ella`}
+          data-lienzo
+        >
+          <g class="t-lamina">
+            {
+              lamina.segmentos.map((s) => (
+                <line x1={s.a[0]} y1={s.a[1]} x2={s.b[0]} y2={s.b[1]} class={s.tipo === 'o' ? 'oculta' : 'vista'} />
+              ))
+            }
+            {(lamina.circulos ?? []).map((c) => <circle cx={c.c[0]} cy={c.c[1]} r={c.r} class="vista" />)}
+            {
+              marcados.map(([, p]) => (
+                <g class="dado">
+                  {p.marca === 'cruz' && (
+                    <>
+                      <line x1={p.x - 3} y1={p.y} x2={p.x + 3} y2={p.y} />
+                      <line x1={p.x} y1={p.y - 3} x2={p.x} y2={p.y + 3} />
+                    </>
+                  )}
+                  {p.rotulo && (
+                    <text x={p.x + 4} y={p.y - 4}>
+                      {p.rotulo}
+                    </text>
+                  )}
+                </g>
+              ))
+            }
+            {
+              (lamina.rotulos ?? []).map((r) => (
+                <text x={r.x} y={r.y} class="dado">
+                  {r.texto}
+                </text>
+              ))
+            }
+          </g>
+          <g class="t-solucion" data-capa="solucion" />
+          <g class="t-usuario" data-capa="usuario" />
+          <g class="t-puntos" data-capa="puntos" />
+          <g class="t-ui" data-capa="ui" />
+        </svg>
+      </div>
+      <p class="t-medida rotulo no-imprimir" data-medida aria-live="polite"></p>
+    </div>
+
+    <div class="t-objetivos">
+      <p class="rotulo">Los puntos de la solución</p>
+      <ul>
+        {
+          objetivos.map((o, k) => (
+            <li>
+              <button type="button" class="t-obj" data-objetivo={k} aria-pressed="false">
+                <span class="t-k">{o.rotulo}</span>
+                <span class="prosa" set:html={o.pideHtml} />
+                <span class="t-ok" aria-hidden="true">✓</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="t-nota">
+        Traza con las herramientas y crea el punto donde crees que está. Luego elige aquí su nombre y pulsa el punto:
+        se comprueba al momento y, si no es, se te dice por dónde te has ido. Al tercer fallo, la pista; al quinto,
+        la solución dibujada encima.
+      </p>
+    </div>
+  </div>
+
+  <div hidden data-mensajes>
+    {
+      objetivos.map((o, k) => (
+        <>
+          <div data-bien={k} set:html={o.bienHtml} />
+          {o.diagnosticosHtml.map((m, d) => (
+            <div data-diag={`${k}-${d}`} set:html={m} />
+          ))}
+        </>
+      ))
+    }
+    <div data-pista set:html={pistaHtml} />
+    <div data-desarrollo set:html={desarrolloHtml} />
+  </div>
+
+  <script type="application/json" data-taller-datos set:html={JSON.stringify(datos)} />
+</div>
+
+<script>
+  import { acierta, cumple, type Objetivo, type Predicado, type Trazado } from '../../lib/diedrico-corrige';
+
+  type P2 = readonly [number, number];
+  interface Datos {
+    tolerancia: number;
+    encuadre: { x: number; y: number; w: number; h: number };
+    segmentos: [P2, P2][];
+    circulos: { c: P2; r: number }[];
+    puntos: { x: number; y: number; rotulo: string }[];
+    objetivos: { nombre: string; rotulo: string; es: Objetivo; diagnosticos: Predicado[] }[];
+    trazado: Trazado[];
+  }
+  interface Linea {
+    id: number;
+    dada: boolean;
+    tipo: 'dada' | 'u' | 'ref';
+    p: P2;
+    d: P2;
+    seg: boolean;
+  }
+  interface Circulo {
+    id: number;
+    dada: boolean;
+    c: P2;
+    r: number;
+  }
+  interface Punto {
+    id: number;
+    x: number;
+    y: number;
+    dado: boolean;
+    rotulo: string;
+    objetivo?: number;
+  }
+  type Enganche = { tipo: 'punto'; p: Punto } | { tipo: 'inter' | 'linea'; xy: P2 };
+
+  const NS = 'http://www.w3.org/2000/svg';
+  /** Radio de enganche en píxeles de pantalla: en el móvil, el dedo. */
+  const ENGANCHE_PX = 11;
+  const PT_MM = 25.4 / 72;
+
+  const AYUDA: Record<string, string> = {
+    punto: 'punto: pulsa una intersección o una línea',
+    recta: 'recta: pulsa dos puntos',
+    paralela: 'paralela: pulsa una línea y luego el punto por el que pasa',
+    perpendicular: 'perpendicular: pulsa una línea y luego el punto por el que pasa',
+    vertical: 'vertical (línea de referencia): pulsa un punto',
+    horizontal: 'horizontal: pulsa un punto',
+    compas: 'compás: pulsa dos puntos para tomar su distancia, y luego el centro',
+    radio: 'compás a medida: pulsa el centro y escribe el radio en mm',
+    medir: 'medir: pulsa dos puntos',
+    borrar: 'borrar: pulsa una línea o un punto tuyo',
+  };
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-taller]')) {
+    try {
+      monta(raiz);
+    } catch (e) {
+      console.error('El taller no se ha podido montar:', e);
+    }
+  }
+
+  function monta(raiz: HTMLElement) {
+    const datos: Datos = JSON.parse(raiz.querySelector('[data-taller-datos]')?.textContent ?? 'null');
+    const svg = raiz.querySelector<SVGSVGElement>('[data-lienzo]')!;
+    const capa = (n: string) => svg.querySelector<SVGGElement>(`[data-capa="${n}"]`)!;
+    const [gSol, gUsuario, gPuntos, gUi] = ['solucion', 'usuario', 'puntos', 'ui'].map(capa);
+    const estado = raiz.querySelector<HTMLElement>('[data-estado]')!;
+    const medida = raiz.querySelector<HTMLElement>('[data-medida]')!;
+    const botonesHerr = [...raiz.querySelectorAll<HTMLButtonElement>('[data-herr]')];
+    const botonesObj = [...raiz.querySelectorAll<HTMLButtonElement>('[data-objetivo]')];
+    const mensaje = (sel: string) => raiz.querySelector<HTMLElement>(`[data-mensajes] ${sel}`)?.innerHTML ?? '';
+    const avisa = (tipo: string, detail: object = {}) =>
+      raiz.dispatchEvent(new CustomEvent(`taller:${tipo}`, { bubbles: true, detail }));
+
+    const VB = datos.encuadre;
+    let nid = 0;
+    let lineas: Linea[] = datos.segmentos.map(([a, b]) => ({
+      id: ++nid,
+      dada: true,
+      tipo: 'dada',
+      p: a,
+      d: [b[0] - a[0], b[1] - a[1]],
+      seg: true,
+    }));
+    let circulos: Circulo[] = datos.circulos.map((c) => ({ id: ++nid, dada: true, c: c.c, r: c.r }));
+    let puntos: Punto[] = datos.puntos.map((p) => ({ id: ++nid, x: p.x, y: p.y, dado: true, rotulo: p.rotulo }));
+    let herr = botonesHerr[0]?.dataset.herr ?? 'punto';
+    let pendiente: (Punto | Linea)[] = [];
+    const historial: { l?: number; c?: number; p?: number }[] = [];
+    let objetivoActivo: number | null = null;
+    let fallos = 0;
+    const hechos = new Set<number>();
+    const elegidas: Record<string, number> = {};
+    estado.textContent = AYUDA[herr] ?? '';
+
+    const el = (tag: string, atributos: Record<string, string | number>, padre: SVGElement) => {
+      const e = document.createElementNS(NS, tag);
+      for (const [k, v] of Object.entries(atributos)) e.setAttribute(k, String(v));
+      padre.appendChild(e);
+      return e;
+    };
+
+    /* ── dibujar ─────────────────────────────────────────────────── */
+
+    /** Una recta infinita, recortada al encuadre. */
+    function extremos(l: Linea): [P2, P2] {
+      if (l.seg) return [l.p, [l.p[0] + l.d[0], l.p[1] + l.d[1]]];
+      const [px, py] = l.p;
+      const [dx, dy] = l.d;
+      const ts: number[] = [];
+      if (Math.abs(dx) > 1e-9) ts.push((VB.x - px) / dx, (VB.x + VB.w - px) / dx);
+      if (Math.abs(dy) > 1e-9) ts.push((VB.y - py) / dy, (VB.y + VB.h - py) / dy);
+      const dentro = (t: number) => {
+        const [qx, qy] = [px + dx * t, py + dy * t];
+        return qx >= VB.x - 1e-6 && qx <= VB.x + VB.w + 1e-6 && qy >= VB.y - 1e-6 && qy <= VB.y + VB.h + 1e-6;
+      };
+      const ok = ts.filter(dentro).sort((a, b) => a - b);
+      if (ok.length < 2) return [l.p, l.p];
+      const [t0, t1] = [ok[0], ok[ok.length - 1]];
+      return [
+        [px + dx * t0, py + dy * t0],
+        [px + dx * t1, py + dy * t1],
+      ];
+    }
+
+    function pinta() {
+      gUsuario.replaceChildren();
+      gPuntos.replaceChildren();
+      for (const l of lineas) {
+        if (l.dada) continue;
+        const [a, b] = extremos(l);
+        el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: l.tipo === 'ref' ? 't-ref' : 't-traza' }, gUsuario);
+      }
+      for (const c of circulos) if (!c.dada) el('circle', { cx: c.c[0], cy: c.c[1], r: c.r, class: 't-traza' }, gUsuario);
+      for (const p of puntos) {
+        if (p.dado) continue;
+        el('circle', { cx: p.x, cy: p.y, r: 2.4, class: p.objetivo === undefined ? 't-punto' : 't-punto t-asignado' }, gPuntos);
+        const t = el('text', { x: p.x + 4, y: p.y - 4, class: 't-rotulo' }, gPuntos);
+        t.textContent = p.rotulo;
+      }
+    }
+
+    const marca = (xy: P2 | null) => {
+      gUi.replaceChildren();
+      if (xy) el('circle', { cx: xy[0], cy: xy[1], r: 5, class: 't-marca' }, gUi);
+    };
+
+    /* ── enganchar ───────────────────────────────────────────────── */
+
+    /** Cuántos pt de la lámina son `ENGANCHE_PX` en la pantalla ahora mismo. */
+    const radio = () => {
+      const m = svg.getScreenCTM();
+      return m ? ENGANCHE_PX / Math.hypot(m.a, m.b) : 5;
+    };
+
+    function corte(l1: Linea, l2: Linea): P2 | null {
+      const e: P2 = [l2.d[0], l2.d[1]];
+      const det = l1.d[0] * -e[1] - l1.d[1] * -e[0];
+      if (Math.abs(det) < 1e-9) return null;
+      const r: P2 = [l2.p[0] - l1.p[0], l2.p[1] - l1.p[1]];
+      const t = (r[0] * -e[1] - r[1] * -e[0]) / det;
+      const s = (l1.d[0] * r[1] - l1.d[1] * r[0]) / det;
+      if (l1.seg && (t < -0.02 || t > 1.02)) return null;
+      if (l2.seg && (s < -0.02 || s > 1.02)) return null;
+      return [l1.p[0] + l1.d[0] * t, l1.p[1] + l1.d[1] * t];
+    }
+
+    function cortesCirculo(l: Linea, c: Circulo): P2[] {
+      const largo = Math.hypot(l.d[0], l.d[1]);
+      const u: P2 = [l.d[0] / largo, l.d[1] / largo];
+      const f: P2 = [l.p[0] - c.c[0], l.p[1] - c.c[1]];
+      const b = 2 * (f[0] * u[0] + f[1] * u[1]);
+      const disc = b * b - 4 * (f[0] ** 2 + f[1] ** 2 - c.r ** 2);
+      if (disc < 0) return [];
+      const raiz = Math.sqrt(disc);
+      return [(-b - raiz) / 2, (-b + raiz) / 2]
+        .filter((t) => !l.seg || (t >= -0.5 && t <= largo + 0.5))
+        .map((t) => [l.p[0] + u[0] * t, l.p[1] + u[1] * t] as P2);
+    }
+
+    function cortesCirculos(a: Circulo, b: Circulo): P2[] {
+      const d = Math.hypot(b.c[0] - a.c[0], b.c[1] - a.c[1]);
+      if (d > a.r + b.r || d < Math.abs(a.r - b.r) || d < 1e-9) return [];
+      const m = (a.r ** 2 - b.r ** 2 + d * d) / (2 * d);
+      const h = Math.sqrt(Math.max(0, a.r ** 2 - m * m));
+      const [ux, uy] = [(b.c[0] - a.c[0]) / d, (b.c[1] - a.c[1]) / d];
+      const [mx, my] = [a.c[0] + m * ux, a.c[1] + m * uy];
+      return [
+        [mx - h * uy, my + h * ux],
+        [mx + h * uy, my - h * ux],
+      ];
+    }
+
+    function proyecta(l: Linea, q: P2): P2 {
+      const largo = l.seg ? Math.hypot(l.d[0], l.d[1]) : 1;
+      const u: P2 = [l.d[0] / largo, l.d[1] / largo];
+      let t = (q[0] - l.p[0]) * u[0] + (q[1] - l.p[1]) * u[1];
+      if (l.seg) t = Math.max(0, Math.min(largo, t));
+      return [l.p[0] + u[0] * t, l.p[1] + u[1] * t];
+    }
+
+    const proyectaCirculo = (c: Circulo, q: P2): P2 => {
+      const d = Math.hypot(q[0] - c.c[0], q[1] - c.c[1]) || 1;
+      return [c.c[0] + ((q[0] - c.c[0]) / d) * c.r, c.c[1] + ((q[1] - c.c[1]) / d) * c.r];
+    };
+
+    const dist = (a: P2, b: P2) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+
+    /** Lo más cercano a lo que engancharse: un punto, un cruce o una línea. */
+    function engancha(q: P2): Enganche | null {
+      const r = radio();
+      let mejor: Enganche | null = null;
+      let dm = r * 1.4;
+      for (const p of puntos) {
+        const d = dist([p.x, p.y], q);
+        if (d < dm) [dm, mejor] = [d, { tipo: 'punto', p }];
+      }
+      if (mejor) return mejor;
+      const cruces: P2[] = [];
+      for (let a = 0; a < lineas.length; a++)
+        for (let b = a + 1; b < lineas.length; b++) {
+          const x = corte(lineas[a], lineas[b]);
+          if (x) cruces.push(x);
+        }
+      for (const l of lineas) for (const c of circulos) cruces.push(...cortesCirculo(l, c));
+      for (let a = 0; a < circulos.length; a++)
+        for (let b = a + 1; b < circulos.length; b++) cruces.push(...cortesCirculos(circulos[a], circulos[b]));
+      dm = r;
+      for (const x of cruces) {
+        const d = dist(x, q);
+        if (d < dm) [dm, mejor] = [d, { tipo: 'inter', xy: x }];
+      }
+      if (mejor) return mejor;
+      dm = r;
+      for (const l of lineas) {
+        const x = proyecta(l, q);
+        const d = dist(x, q);
+        if (d < dm) [dm, mejor] = [d, { tipo: 'linea', xy: x }];
+      }
+      for (const c of circulos) {
+        const x = proyectaCirculo(c, q);
+        const d = dist(x, q);
+        if (d < dm) [dm, mejor] = [d, { tipo: 'linea', xy: x }];
+      }
+      return mejor;
+    }
+
+    function lineaCerca(q: P2): Linea | null {
+      let mejor: Linea | null = null;
+      let dm = radio();
+      for (const l of lineas) {
+        const d = dist(proyecta(l, q), q);
+        if (d < dm) [dm, mejor] = [d, l];
+      }
+      return mejor;
+    }
+
+    function creaPunto(e: Enganche): Punto {
+      if (e.tipo === 'punto') return e.p;
+      const p: Punto = { id: ++nid, x: e.xy[0], y: e.xy[1], dado: false, rotulo: String(puntos.filter((x) => !x.dado).length + 1) };
+      puntos.push(p);
+      historial.push({ p: p.id });
+      return p;
+    }
+
+    const infinita = (p: P2, d: P2, tipo: 'u' | 'ref'): Linea => {
+      const l = Math.hypot(d[0], d[1]);
+      return { id: ++nid, dada: false, tipo, p, d: [d[0] / l, d[1] / l], seg: false };
+    };
+
+    const traza = (l: Linea) => {
+      lineas.push(l);
+      historial.push({ l: l.id });
+    };
+
+    /* ── herramientas ────────────────────────────────────────────── */
+
+    const eligeHerramienta = (nueva: string) => {
+      herr = nueva;
+      pendiente = [];
+      objetivoActivo = null;
+      marca(null);
+      for (const b of botonesHerr) b.setAttribute('aria-pressed', String(b.dataset.herr === herr));
+      for (const b of botonesObj) b.setAttribute('aria-pressed', 'false');
+      estado.textContent = AYUDA[herr] ?? '';
+    };
+    for (const b of botonesHerr) b.addEventListener('click', () => eligeHerramienta(b.dataset.herr!));
+
+    raiz.querySelector('[data-deshacer]')?.addEventListener('click', () => {
+      const h = historial.pop();
+      if (!h) return;
+      if (h.l) lineas = lineas.filter((x) => x.id !== h.l);
+      if (h.c) circulos = circulos.filter((x) => x.id !== h.c);
+      if (h.p) puntos = puntos.filter((x) => x.id !== h.p || x.objetivo !== undefined);
+      pendiente = [];
+      marca(null);
+      pinta();
+    });
+
+    for (const b of botonesObj) {
+      b.addEventListener('click', () => {
+        const k = Number(b.dataset.objetivo);
+        if (hechos.has(k)) return;
+        objetivoActivo = k;
+        for (const o of botonesObj) o.setAttribute('aria-pressed', String(o === b));
+        estado.textContent = `marca ${datos.objetivos[k].rotulo}: pulsa el punto tuyo que crees que es`;
+      });
+    }
+
+    function pideRadio(centro: Punto) {
+      estado.replaceChildren();
+      const etiqueta = document.createElement('label');
+      etiqueta.textContent = 'radio ';
+      const campo = document.createElement('input');
+      campo.inputMode = 'decimal';
+      campo.size = 5;
+      campo.placeholder = 'mm';
+      etiqueta.append(campo, ' mm ');
+      const ok = document.createElement('button');
+      ok.type = 'button';
+      ok.textContent = 'trazar';
+      estado.append(etiqueta, ok);
+      campo.focus();
+      const hecho = () => {
+        const mm = Number(campo.value.replace(',', '.'));
+        if (!(mm > 0)) {
+          campo.classList.add('mal');
+          return;
+        }
+        const c: Circulo = { id: ++nid, dada: false, c: [centro.x, centro.y], r: mm / PT_MM };
+        circulos.push(c);
+        historial.push({ c: c.id });
+        marca(null);
+        pinta();
+        estado.textContent = `arco de ${mm} mm trazado`;
+      };
+      ok.addEventListener('click', hecho);
+      campo.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') hecho();
+      });
+    }
+
+    svg.addEventListener('pointerdown', (ev) => {
+      const m = svg.getScreenCTM();
+      if (!m) return;
+      const t = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
+      const q: P2 = [t.x, t.y];
+
+      if (objetivoActivo !== null) {
+        const e = engancha(q);
+        if (e?.tipo === 'punto' && !e.p.dado && e.p.objetivo === undefined) comprueba(objetivoActivo, e.p);
+        else estado.textContent = 'pulsa uno de tus puntos: los círculos que has creado tú';
+        return;
+      }
+
+      if (herr === 'borrar') {
+        const e = engancha(q);
+        if (e?.tipo === 'punto' && !e.p.dado && e.p.objetivo === undefined) {
+          const id = e.p.id;
+          puntos = puntos.filter((x) => x.id !== id);
+        } else {
+          const l = lineaCerca(q);
+          if (l && !l.dada) lineas = lineas.filter((x) => x !== l);
+        }
+        pinta();
+        return;
+      }
+
+      if (herr === 'paralela' || herr === 'perpendicular') {
+        const base = pendiente[0] as Linea | undefined;
+        if (!base) {
+          const l = lineaCerca(q);
+          if (!l) {
+            estado.textContent = 'pulsa primero una línea';
+            return;
+          }
+          pendiente = [l];
+          estado.textContent = 'ahora el punto por el que pasa';
+          return;
+        }
+        const e = engancha(q);
+        if (!e) {
+          estado.textContent = 'pulsa un punto o una intersección';
+          return;
+        }
+        const p = creaPunto(e);
+        pendiente = [];
+        traza(infinita([p.x, p.y], herr === 'paralela' ? base.d : [-base.d[1], base.d[0]], 'u'));
+        pinta();
+        estado.textContent = `${herr} trazada`;
+        return;
+      }
+
+      const e = engancha(q);
+      if (!e) {
+        estado.textContent = 'ahí no hay nada a lo que engancharse: un punto, un cruce o una línea';
+        return;
+      }
+      const p = creaPunto(e);
+
+      if (herr === 'punto') {
+        pinta();
+        estado.textContent = e.tipo === 'inter' ? 'punto en el cruce' : e.tipo === 'linea' ? 'punto sobre la línea' : 'ese punto ya existía';
+        return;
+      }
+      if (herr === 'vertical' || herr === 'horizontal') {
+        traza(infinita([p.x, p.y], herr === 'vertical' ? [0, 1] : [1, 0], 'ref'));
+        pinta();
+        estado.textContent = herr === 'vertical' ? 'línea de referencia trazada' : 'horizontal trazada';
+        return;
+      }
+      if (herr === 'radio') {
+        marca([p.x, p.y]);
+        pinta();
+        pideRadio(p);
+        return;
+      }
+
+      pendiente.push(p);
+      marca([p.x, p.y]);
+      pinta();
+      const [a, b, c] = pendiente as Punto[];
+      if (herr === 'compas') {
+        if (pendiente.length === 1) estado.textContent = 'ahora el segundo punto: la distancia entre los dos es la abertura';
+        else if (pendiente.length === 2) estado.textContent = `abertura de ${(dist([a.x, a.y], [b.x, b.y]) * PT_MM).toFixed(1)} mm · ahora el centro`;
+        else {
+          const nuevo: Circulo = { id: ++nid, dada: false, c: [c.x, c.y], r: dist([a.x, a.y], [b.x, b.y]) };
+          circulos.push(nuevo);
+          historial.push({ c: nuevo.id });
+          pendiente = [];
+          marca(null);
+          pinta();
+          estado.textContent = 'distancia llevada';
+        }
+        return;
+      }
+      if (pendiente.length < 2) {
+        estado.textContent = 'ahora el segundo punto';
+        return;
+      }
+      pendiente = [];
+      marca(null);
+      if (a === b) {
+        estado.textContent = 'hacen falta dos puntos distintos';
+        return;
+      }
+      if (herr === 'recta') {
+        traza(infinita([a.x, a.y], [b.x - a.x, b.y - a.y], 'u'));
+        estado.textContent = 'recta trazada';
+      } else {
+        medida.textContent = `${a.rotulo} – ${b.rotulo}: ${(dist([a.x, a.y], [b.x, b.y]) * PT_MM).toFixed(1)} mm`;
+        estado.textContent = 'medido';
+      }
+      pinta();
+    });
+
+    /* ── corregir ────────────────────────────────────────────────── */
+
+    function marcadosAhora(): Record<string, P2> {
+      const m: Record<string, P2> = {};
+      for (const p of puntos) if (p.objetivo !== undefined) m[datos.objetivos[p.objetivo].nombre] = [p.x, p.y];
+      return m;
+    }
+
+    function comprueba(k: number, p: Punto) {
+      const o = datos.objetivos[k];
+      const xy: P2 = [p.x, p.y];
+      const r = acierta(o.es, xy, elegidas, datos.tolerancia);
+      if (r.bien) {
+        if (r.elige) elegidas[r.elige.eleccion] = r.elige.rama;
+        hechos.add(k);
+        p.objetivo = k;
+        p.rotulo = o.rotulo;
+        const i = historial.findIndex((h) => h.p === p.id);
+        if (i >= 0) historial.splice(i, 1);
+        objetivoActivo = null;
+        const boton = botonesObj[k];
+        boton.classList.add('hecho');
+        boton.setAttribute('aria-pressed', 'false');
+        boton.disabled = true;
+        pinta();
+        estado.textContent = `${o.rotulo} marcado`;
+        avisa('fb', { clase: 'bien', titulo: 'Eso es', html: mensaje(`[data-bien="${k}"]`) });
+        if (hechos.size === datos.objetivos.length) {
+          muestraSolucion();
+          avisa('hecho');
+        }
+        return;
+      }
+      fallos++;
+      avisa('fallo', { fallos });
+      /* El porqué va en la caja del paso, debajo del dibujo, y mientras se
+         construye suele quedar fuera de la pantalla —en el móvil, además,
+         detrás de la lista de puntos—. La línea de estado está junto a las
+         herramientas: aquí se dice que ha fallado y dónde mirar. */
+      estado.textContent = `${o.rotulo}: por ahí no · el porqué, debajo del dibujo`;
+      const marcados = marcadosAhora();
+      const d = o.diagnosticos.findIndex((si) => cumple(si, xy, marcados, datos.tolerancia, elegidas));
+      let html = d >= 0 ? mensaje(`[data-diag="${k}-${d}"]`) : '';
+      if (fallos === 3) avisa('pista');
+      if (fallos >= 3) html += `<p class="rotulo">Pista</p>${mensaje('[data-pista]')}`;
+      if (fallos >= 5) {
+        muestraSolucion();
+        html += `<p class="rotulo">Desarrollo</p>${mensaje('[data-desarrollo]')}`;
+        avisa('desarrollo');
+      }
+      avisa('fb', { clase: 'mal', titulo: 'Por ahí no', html });
+    }
+
+    /** La solución calculada, encima, en la rama que se haya elegido. */
+    function muestraSolucion() {
+      gSol.replaceChildren();
+      const rama = (e?: string) => (e !== undefined ? (elegidas[e] ?? 0) : 0);
+      for (const t of datos.trazado) {
+        for (const [a, b] of t.ramas[rama(t.eleccion)] ?? []) {
+          el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: 't-sol' }, gSol);
+        }
+      }
+      datos.objetivos.forEach((o) => {
+        const q = o.es.ramas[rama(o.es.eleccion)]?.[0];
+        if (!q) return;
+        el('circle', { cx: q[0], cy: q[1], r: 3, class: 't-sol-punto' }, gSol);
+        const texto = el('text', { x: q[0] + 5, y: q[1] + 10, class: 't-sol-rotulo' }, gSol);
+        texto.textContent = o.rotulo;
+      });
+    }
+
+    /* Quien coloca el Taller puede pedirle la solución sin que nadie la haya
+       ganado: el modo «resolución completa» y la impresión. */
+    raiz.addEventListener('taller:muestra', () => muestraSolucion());
+
+    pinta();
+  }
+</script>
+
+<style>
+  .taller { margin-top: .8rem; }
+
+  .t-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 17rem);
+    gap: 1rem;
+    align-items: start;
+    margin-top: .8rem;
+  }
+
+  @media (max-width: 52rem) {
+    .t-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .t-herr { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .45rem; }
+
+  .t-herr button,
+  .t-estado :global(button) {
+    font-family: var(--mono);
+    font-size: .74rem;
+    padding: .38rem .6rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--panel);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .t-herr button[aria-pressed='true'] {
+    border-color: var(--live);
+    color: var(--live);
+    background: var(--live-soft);
+    font-weight: 700;
+  }
+
+  .t-herr .t-deshacer { margin-left: auto; color: var(--graphite); }
+
+  .t-estado {
+    min-height: 1.4rem;
+    margin: 0 0 .45rem;
+    text-transform: none;
+    letter-spacing: .01em;
+    color: var(--live);
+  }
+
+  .t-estado :global(input) {
+    font-family: var(--mono);
+    font-size: .8rem;
+    width: 4.5rem;
+    padding: .15rem .4rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .t-estado :global(input.mal) { border-color: var(--flag); }
+
+  .t-lienzo {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--paper);
+    padding: .3rem;
+    overflow: auto;
+  }
+
+  .t-lienzo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    touch-action: none;
+    user-select: none;
+    cursor: crosshair;
+  }
+
+  /* La lámina, con la tinta del sitio: en oscuro se invierte sola. */
+  .t-lamina line,
+  .t-lamina circle { stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; fill: none; }
+  .t-lamina .oculta { stroke-width: .9; stroke-dasharray: 5 3; }
+  .t-lamina .dado line { stroke-width: 1; }
+  .t-lamina text { font-family: var(--mono); font-size: 9px; fill: var(--ink); }
+
+  /* Lo que traza el alumno lo crea el script: nace sin el atributo de ámbito
+     de Astro, y por eso va con :global (la misma trampa de §17). */
+  .taller :global(.t-traza) { stroke: var(--live); stroke-width: 1.2; fill: none; }
+  .taller :global(.t-ref) { stroke: var(--live); stroke-width: .8; stroke-dasharray: 6 2 1 2; opacity: .8; }
+  .taller :global(.t-punto) { fill: var(--panel); stroke: var(--live); stroke-width: 1.3; }
+  .taller :global(.t-asignado) { fill: var(--live); }
+  .taller :global(.t-rotulo) { font-family: var(--mono); font-size: 9px; fill: var(--live); }
+  .taller :global(.t-marca) { fill: none; stroke: var(--live); stroke-width: 1.5; }
+  .taller :global(.t-sol) { stroke: var(--tiza-menta); stroke-width: 4; opacity: .6; stroke-linecap: round; }
+  .taller :global(.t-sol-punto) { fill: var(--tiza-menta); stroke: var(--live); }
+  .taller :global(.t-sol-rotulo) { font-family: var(--mono); font-size: 9px; fill: var(--live); }
+
+  .t-medida { min-height: 1.1rem; margin-top: .35rem; text-transform: none; letter-spacing: .01em; }
+
+  .t-objetivos {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--paper);
+    padding: .6rem .7rem;
+  }
+
+  .t-objetivos ul { list-style: none; margin: .45rem 0 0; padding: 0; display: grid; gap: .35rem; }
+
+  .t-obj {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: .55rem;
+    text-align: left;
+    font-family: var(--body);
+    font-size: .84rem;
+    color: inherit;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    padding: .45rem .6rem;
+    cursor: pointer;
+  }
+
+  .t-obj:hover:not(:disabled) { border-color: var(--live); }
+  .t-obj[aria-pressed='true'] { border-color: var(--live); box-shadow: 0 0 0 2px var(--live-soft); }
+  .t-obj.hecho { border-color: var(--live); background: var(--live-soft); cursor: default; }
+  .t-obj :global(p) { margin: 0; }
+
+  .t-k { font-family: var(--mono); font-weight: 700; color: var(--live); min-width: 1.6rem; }
+  .t-ok { margin-left: auto; color: var(--live); visibility: hidden; }
+  .t-obj.hecho .t-ok { visibility: visible; }
+
+  .t-nota { font-size: .76rem; color: var(--graphite); margin: .6rem 0 0; }
+
+  @media print {
+    .t-objetivos { display: none; }
+    .t-lienzo { border: 0; padding: 0; }
+  }
+</style>

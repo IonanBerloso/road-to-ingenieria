@@ -2,8 +2,15 @@ import { describe, expect, it } from 'vitest';
 import sd1 from '../../src/content/laminas/sd1.json';
 import { PT_MM } from '../../src/lib/diedrico';
 import { acierta, cumple } from '../../src/lib/diedrico-corrige';
-import { evaluaReceta, type Lamina } from '../../src/lib/diedrico-receta';
-import { cuadraConLaReceta, resuelveConstruir, rotuloDe, type ConstruirDeclarado } from '../../src/lib/construir';
+import { evaluaNumero, evaluaReceta, type Lamina } from '../../src/lib/diedrico-receta';
+import {
+  cuadraConLaReceta,
+  resuelveConstruir,
+  resuelveEjercicio,
+  rotuloDe,
+  type ConstruirDeclarado,
+  type EjercicioConReceta,
+} from '../../src/lib/construir';
 import { laminaDe, type DatosLamina } from '../../src/lib/lamina';
 
 /* El paso `construir`, resuelto: SD1 con los objetivos y diagnósticos del
@@ -167,6 +174,18 @@ describe('los números de un calcular, atados a la receta', () => {
   it('el valor de SD1 sale de su receta', () => {
     expect(cuadraConLaReceta('55.04', r.numero('vm_PQ_mm'))).toBe(true);
   });
+
+  it('evaluaNumero da la cifra de una expresión sobre la receta', () => {
+    expect(evaluaNumero('vm_PQ_mm', SD1, r)).toBe(r.numero('vm_PQ_mm'));
+    /* Los distractores del borrador de SD1: la planta y el alzado de PQ. */
+    expect(cuadraConLaReceta('44.79', evaluaNumero('en_mm(vm_planta(P, Q))', SD1, r))).toBe(true);
+    expect(cuadraConLaReceta('33.51', evaluaNumero('en_mm(vm_alzado(P, Q))', SD1, r))).toBe(true);
+  });
+
+  it('y lanza, con la expresión delante, si no es un número o no existe', () => {
+    expect(() => evaluaNumero('P', SD1, r)).toThrow(/cifra «P»: .*espera un número/);
+    expect(() => evaluaNumero('vm_PX_mm', SD1, r)).toThrow(/cifra «vm_PX_mm»: no hay nada que se llame «vm_PX_mm»/);
+  });
 });
 
 describe('rótulos', () => {
@@ -237,6 +256,93 @@ describe('un paso con elección: SD5', () => {
 
   it('rama() cuenta desde 1 y no se sale', () => {
     expect(() => resuelveConstruir(paso('proy_planta(rama(solucion.C, 3))'), SD5, r5)).toThrow(/tiene 2 ramas, y se ha pedido la 3/);
+  });
+
+  it('una cifra de un calcular no puede depender de la elección', () => {
+    /* Todo lo de SD5 es simétrico respecto de A —D₂ cae sobre A₂—, así que
+       hace falta un punto que no lo sea: X, sobre s y a la derecha de A. B cae
+       a un lado o al otro de A, y su distancia a X cambia con la rama. */
+    const SD5X: Lamina = { ...SD5, puntos: { ...SD5.puntos, X1: [300, 519.36], X2: [300, 326.09] } };
+    const rx = evaluaReceta(SD5X, {
+      escena: {
+        s: 'recta3(alzado: figura.segmento("r2≡s2"), planta: figura.segmento("s1"))',
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))',
+        X: 'punto3(alzado: figura.punto("X2"), planta: figura.punto("X1"))',
+      },
+      solucion: { B: 'punto_a_distancia(s, desde: A, distancia: mm(20))' },
+    });
+    expect(() => evaluaNumero('en_mm(vm(solucion.B, X))', SD5X, rx)).toThrow(
+      /cifra «en_mm\(vm\(solucion\.B, X\)\)»: depende de una elección \(«B»\)/,
+    );
+    /* La distancia a A, en cambio, vale lo mismo en las dos: deja de ser elección. */
+    expect(evaluaNumero('en_mm(vm(A, solucion.B))', SD5X, rx)).toBeCloseTo(20, 9);
+  });
+});
+
+describe('un ejercicio entero, con su receta: resuelveEjercicio', () => {
+  const RECETA_SD1 = {
+    lamina: 'sd1',
+    escena: {
+      suelo: 'linea(figura.segmento("suelo"))',
+      L: 'punto3(alzado: figura.punto("L2"), planta: figura.punto("L1"))',
+      T: 'punto3(alzado: figura.punto("T2"), planta: figura.punto("T1"))',
+      R: 'punto3(alzado: figura.punto("R2"), planta: figura.punto("R1"))',
+      B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))',
+      tejado: 'plano(L, T, R)',
+      aleros: '[segmento3(L, B), segmento3(R, B)]',
+    },
+    solucion: {
+      P: 'punto_en_plano(alzado: figura.punto("P2"), plano: tejado)',
+      bajada: 'lmp(tejado, por: P, sentido: descendente)',
+      Q: 'corte(bajada, aleros)',
+      G: 'vertical_hasta(Q, suelo)',
+      vm_PQ_mm: 'en_mm(vm(P, Q))',
+    },
+    comprueba: ['en_plano(B, tejado)'],
+  };
+  const calcular = (valor: string, distractor = '44.79') => ({
+    tipo: 'calcular' as const,
+    respuesta: { valor, receta: 'vm_PQ_mm' },
+    distractores: [{ valor: distractor, receta: 'en_mm(vm_planta(P, Q))' }],
+  });
+  const ejercicio = (pasos: EjercicioConReceta['pasos'], receta: EjercicioConReceta['receta'] = RECETA_SD1): EjercicioConReceta => ({
+    id: 'sd1-prueba',
+    receta,
+    pasos,
+  });
+  const datosSd1 = sd1 as unknown as DatosLamina;
+
+  it('resuelve cada paso construir por su índice, y deja los demás', () => {
+    const resueltos = resuelveEjercicio(ejercicio([{ tipo: 'reconocer' }, { tipo: 'construir', ...PASO }, calcular('55.04')]), datosSd1);
+    expect([...resueltos.keys()]).toEqual([1]);
+    expect(resueltos.get(1)!.objetivos.map((o) => o.rotulo)).toEqual(['P₁', 'Q₁', 'Q₂', 'G₂']);
+  });
+
+  it('una cifra que no es la de su receta no llega a publicarse', () => {
+    expect(() => resuelveEjercicio(ejercicio([calcular('55.10')]), datosSd1)).toThrow(
+      /sd1-prueba, paso 1: la respuesta dice 55\.10 y su receta \(«vm_PQ_mm»\) da 55\.03\d\d/,
+    );
+    expect(() => resuelveEjercicio(ejercicio([calcular('55.04', '44.70')]), datosSd1)).toThrow(/paso 1: el distractor 1 dice 44\.70/);
+  });
+
+  it('un error de un paso construir sale con el ejercicio y el paso delante', () => {
+    const roto = { tipo: 'construir' as const, ...PASO, objetivos: [{ ...PASO.objetivos[0], es: 'proy_planta(solucion.X)' }] };
+    expect(() => resuelveEjercicio(ejercicio([{ tipo: 'reconocer' }, roto]), datosSd1)).toThrow(/sd1-prueba, paso 2: objetivo «P1»/);
+  });
+
+  it('sin receta, nada puede salir de una receta', () => {
+    const sinReceta = (pasos: EjercicioConReceta['pasos']): EjercicioConReceta => ({ id: 'sd1-prueba', pasos });
+    expect(resuelveEjercicio(sinReceta([{ tipo: 'reconocer' }]), undefined).size).toBe(0);
+    expect(() => resuelveEjercicio(sinReceta([{ tipo: 'construir', ...PASO }]), undefined)).toThrow(
+      /sd1-prueba: tiene pasos que salen de una receta y no declara ninguna/,
+    );
+    expect(() => resuelveEjercicio(sinReceta([calcular('55.04')]), undefined)).toThrow(/no declara ninguna/);
+  });
+
+  it('una receta sobre una lámina que no está, o que no evalúa, rompe con su nombre', () => {
+    expect(() => resuelveEjercicio(ejercicio([calcular('55.04')]), undefined)).toThrow(/la lámina «sd1» no está en src\/content\/laminas/);
+    const rota = { ...RECETA_SD1, solucion: { ...RECETA_SD1.solucion, Q: 'corte(bajada, tejado)' } };
+    expect(() => resuelveEjercicio(ejercicio([calcular('55.04')], rota), datosSd1)).toThrow(/sd1-prueba, receta: solucion\.Q/);
   });
 });
 

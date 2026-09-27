@@ -861,6 +861,22 @@ export function compilaObjetivo(src: string, lamina: Lamina, r: Resultado): Obje
   }
 }
 
+/** La cifra de una expresión sobre la receta: la que tiene que dar la
+ *  respuesta o un distractor de un `calcular` que dice de dónde sale. Si
+ *  depende de una elección no hay una cifra sino varias, y un `calcular` solo
+ *  corrige una. */
+export function evaluaNumero(src: string, lamina: Lamina, r: Resultado): number {
+  try {
+    const v = evalua(analiza(src), entornoDe(lamina, r));
+    if (v.k === 'ramas') {
+      throw new Error(`depende de una elección («${v.eleccion}»), y un calcular solo corrige una cifra`);
+    }
+    return comoNum(v, 'una cifra');
+  } catch (err) {
+    throw new Error(`cifra «${src}»: ${(err as Error).message}`);
+  }
+}
+
 /** Los segmentos de la lámina que hay en un valor: uno, o los de una lista. */
 function segmentosDe(v: Valor): (readonly [P2, P2])[] {
   if (v.k === 'seg2') return [[v.a, v.b]];

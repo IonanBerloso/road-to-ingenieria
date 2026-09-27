@@ -325,6 +325,10 @@ const catalogo = defineCollection({
 const distractor = z.object({
   valor: z.string().min(1),
   mensaje: z.string().min(30, 'un distractor sin explicación es un «incorrecto» disfrazado'),
+  /** Solo en Expresión Gráfica: la expresión de la receta de la que sale la
+   *  cifra. `lib/construir.ts` exige que `valor` sea esa expresión redondeada
+   *  como está escrita, así que un número a mano no llega a publicarse. */
+  receta: z.string().min(1).optional(),
 });
 
 /** COMP1 · reconocer qué herramienta pide el enunciado, antes de calcular. */
@@ -386,6 +390,8 @@ const pasoCalcular = z.object({
       .string()
       .refine((s) => !s.includes('$'), 'el formato es texto plano, sin LaTeX')
       .optional(),
+    /** Como en `distractor`: la expresión de la receta de la que sale. */
+    receta: z.string().min(1).optional(),
   }),
   distractores: z.array(distractor).min(1, 'sin distractores esto no diagnostica nada'),
   pista: z.string().min(10),
@@ -752,6 +758,89 @@ const pasoDibujar = z.object({
   veredicto: z.string().optional(),
 });
 
+/** COMP2 sobre la figura · construir en la lámina de Expresión Gráfica
+ *  (patrón «construcción verificada», brief del 8 de septiembre de 2026).
+ *
+ *  El alumno traza con herramientas de papel y marca los puntos de la
+ *  solución por su nombre; cada uno se corrige contra la geometría calculada
+ *  desde la lámina. Aquí solo se comprueba la forma. Que la receta evalúa, que
+ *  cada objetivo compila y que cada error declarado salta con su mensaje lo
+ *  comprueba `lib/construir.ts` al pintar el ejercicio —y
+ *  `tests/geometria/construcciones.test.ts`, sin construir el sitio—, porque
+ *  necesita la lámina, que es otra colección.
+ *
+ *  `.strict()` en todo: un campo mal escrito tiene que fallar, no quedarse en
+ *  un objetivo sin diagnósticos (§17). */
+const diagnosticoConstruir = z
+  .object({
+    /** La condición, en el lenguaje de las recetas: `en_vertical_de(Q1)`. */
+    si: z.string().min(3),
+    mensaje: z.string().min(20, 'un diagnóstico sin explicación es un «incorrecto» disfrazado'),
+    /** Un punto que comete este error, como expresión de la receta. El build
+     *  comprueba que no se da por bueno y que lo recoge este diagnóstico y no
+     *  otro anterior: es mirar el ejercicio fallando a propósito (§16). */
+    ejemplo: z.string().min(3).optional(),
+  })
+  .strict();
+
+const pasoConstruir = z
+  .object({
+    tipo: z.literal('construir'),
+    titulo: z.string().min(3),
+    /** Qué se construye, en dos frases, para el alumno. */
+    intro: z.string().min(20),
+    herramientas: z
+      .array(z.enum(['punto', 'recta', 'paralela', 'perpendicular', 'vertical', 'horizontal', 'compas', 'radio', 'medir', 'borrar']))
+      .min(2),
+    /** En mm: la de la regla. El profesor corrige con milímetros; menos de
+     *  medio no lo distingue nadie a mano, y más de dos da por buenas
+     *  construcciones equivocadas. Obligatoria y sin valor por defecto: la
+     *  guarda de `tests/geometria/construcciones.test.ts` lee el YAML sin
+     *  pasar por aquí, y con un valor por defecto vería otra cosa que el
+     *  build. */
+    tolerancia: z.number().min(0.5).max(2),
+    objetivos: z
+      .array(
+        z
+          .object({
+            /** Cómo lo llaman los diagnósticos (`Q1`); el rótulo sale solo (Q₁). */
+            nombre: z.string().regex(/^[A-Za-z][A-Za-z0-9_]*$/),
+            rotulo: z.string().min(1).optional(),
+            pide: z.string().min(10),
+            /** La posición buena, como expresión sobre la receta. */
+            es: z.string().min(3),
+            bien: z.string().min(20),
+            diagnosticos: z.array(diagnosticoConstruir).min(2, 'mínimo dos diagnósticos por objetivo, como los distractores'),
+          })
+          .strict()
+          .refine((o) => o.diagnosticos[o.diagnosticos.length - 1].si.trim() === 'siempre', {
+            message: 'el último diagnóstico de un objetivo es `siempre`: nadie se queda sin respuesta',
+          })
+          .refine((o) => o.diagnosticos.every((d) => d.si.trim() === 'siempre' || d.ejemplo !== undefined), {
+            message: 'cada diagnóstico que no es `siempre` lleva su `ejemplo`: un error que no se construye no se sabe si salta',
+          }),
+      )
+      .min(1)
+      .refine((os) => new Set(os.map((o) => o.nombre)).size === os.length, { message: 'dos objetivos con el mismo nombre' }),
+    /** Lo que se dibuja de la solución al quinto fallo: segmentos. */
+    trazado: z.array(z.string().min(3)).default([]),
+    pista: z.string().min(10),
+    desarrollo: z.string().min(20),
+    veredicto: z.string().optional(),
+  })
+  .strict();
+
+/** La receta de un ejercicio de Expresión Gráfica: su lámina y la solución
+ *  como datos (`lib/diedrico-receta.ts`). */
+const receta = z
+  .object({
+    lamina: z.string().regex(/^sd\d+[a-z]?$/),
+    escena: z.record(z.string(), z.string().min(1)).default({}),
+    solucion: z.record(z.string(), z.string().min(1)),
+    comprueba: z.array(z.string().min(3)).default([]),
+  })
+  .strict();
+
 const paso = z.discriminatedUnion('tipo', [
   pasoReconocer,
   pasoCalcular,
@@ -759,6 +848,7 @@ const paso = z.discriminatedUnion('tipo', [
   pasoVerificar,
   pasoRedactar,
   pasoDibujar,
+  pasoConstruir,
 ]);
 
 /** El reparto de puntos que el propio examen declara, por competencia.
@@ -841,6 +931,9 @@ const ejercicio = z
     /** Qué se pide exactamente, y en qué forma. */
     pide: z.string().min(5),
     pasos: z.array(paso).min(2),
+    /** Solo en Expresión Gráfica: la lámina y la solución como datos, de las
+     *  que salen los pasos `construir` y las cifras con `receta`. */
+    receta: receta.optional(),
     /** La resolución de examen final: hipótesis, pasos sin saltos, comprobación
      *  y resultado. Es lo que se ve en modo completo y lo que se imprime. */
     resolucion: z.string().min(100),
@@ -848,9 +941,21 @@ const ejercicio = z
   .refine((e) => e.pasos.some((p) => p.tipo === 'reconocer'), {
     message: 'falta el paso de COMP1: un ejercicio que solo calcula entrena la parte que menos se falla (§09)',
   })
-  .refine((e) => e.pasos.some((p) => p.tipo === 'calcular' || p.tipo === 'verificar'), {
-    message: 'falta el paso de COMP2: uno de cálculo o uno de verificación de región',
+  /* `construir` es COMP2 sobre la figura: en diédrico el cálculo ES la
+     construcción, y un ejercicio de lámina puede no tener ninguna cuenta. */
+  .refine((e) => e.pasos.some((p) => p.tipo === 'calcular' || p.tipo === 'verificar' || p.tipo === 'construir'), {
+    message: 'falta el paso de COMP2: uno de cálculo, uno de verificación de región o uno de construcción',
   })
+  .refine(
+    (e) =>
+      e.receta !== undefined ||
+      !e.pasos.some(
+        (p) =>
+          p.tipo === 'construir' ||
+          (p.tipo === 'calcular' && [p.respuesta, ...p.distractores].some((c) => c.receta !== undefined)),
+      ),
+    { message: 'un paso `construir` o una cifra con `receta` salen de la receta del ejercicio, y este no declara ninguna' },
+  )
   .refine((e) => e.pasos.some((p) => p.tipo === 'justificar'), {
     message: 'falta el paso de COMP4, que vale entre 2 y 9 puntos (§09)',
   })
@@ -1027,6 +1132,7 @@ export const CON_TEMAS = [
   'ingenieria-termica',
   'ciencia-materiales',
   'mecanica-aplicada',
+  'expresion-grafica',
 ] as const;
 export type ConTemas = (typeof CON_TEMAS)[number];
 

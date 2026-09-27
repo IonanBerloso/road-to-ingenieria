@@ -19,12 +19,10 @@ Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
 - **A · Arreglos rápidos en todas las asignaturas** (~2 días): `siguiente.md`.
-- **B · Expresión Gráfica, fase 1 tal cual.** Ya están las recetas, la
-  corrección, la geometría, SD1 cotejada y el paso `construir` resuelto;
-  faltan el esquema, el `Taller`, SD1 en el tema 2 y su comprobador, y
-  después SD4, SD5 y el patrón en §05. El plan es el `siguiente.md` del
-  commit 479053d, y los borradores están en
-  `Claude outputs/fase-1-borradores/`.
+- **B · Expresión Gráfica, fase 1 tal cual.** Publicados el paso
+  `construir`, el `Taller` y SD1 en el tema 2, con su guarda y su
+  comprobador en el suelo; faltan SD4, SD5 y el patrón en §05
+  (`siguiente.md`).
 - **C · Mecánica**: las cinco convocatorias bilingües, las deducciones con
   `redactar` y los diagramas con `dibujar` (6–8 días).
 - **D · Demostraciones en 1.º**: Álgebra y Cálculo, con rúbricas compartidas
@@ -97,9 +95,9 @@ sigue después tal cual.
   el 8 de septiembre: `Claude outputs/expresion-grafica-brief.md` y
   `expresion-grafica-paquete-1.zip` (las 65 láminas en JSON, el extractor,
   los pilotos del taller para SD3, SD5 y SD7 con sus comprobaciones, y
-  `sd1-ejemplo.yaml`). El orden que propone: `lib/diedrico.ts` mínimo con sus
-  pruebas y los valores de referencia de SD1, el componente `Taller` y el
-  paso `construir`; después SD4 y SD5, y solo entonces se cierra el patrón.
+  `sd1-ejemplo.yaml`). De su orden ya están `lib/diedrico.ts` con sus
+  pruebas, el componente `Taller` y el paso `construir` con SD1; quedan SD4 y
+  SD5, y solo entonces se cierra el patrón.
 - **Los criterios de corrección del profesor como datos**
   (`Criterios_para_la_correcin_de_ejercicios_y_exmenes.pdf`): mínimos, errores
   muy graves a −2 y típicos con su precio. Los usan el bloque 2 y las rúbricas.

@@ -20,7 +20,7 @@ import {
   type P2,
 } from '../../src/lib/diedrico';
 
-/* SD7 · un cuadrado sobre su diagonal. Ejercicio 7 de la colección de
+/* SD7 · un cuadrado sobre su diagonal. Ejercicio 6 de la colección de
    diédrico directo: «Dibujar las proyecciones diédricas del cuadrado de 5 cm
    de lado situado en el plano definido por la l.m.p. que se muestra. Datos: el
    centro del cuadrado es el punto O y una de las diagonales se encuentra sobre

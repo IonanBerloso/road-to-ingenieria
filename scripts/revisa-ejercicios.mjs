@@ -71,9 +71,17 @@ for (const e of ejercicios) {
 
   const tipos = pasos.map((p) => p.tipo);
   if (!tipos.includes('reconocer')) mal(id, 'sin paso `reconocer` (COMP1)');
-  if (!tipos.some((t) => t === 'calcular' || t === 'verificar')) {
-    mal(id, 'sin paso `calcular` ni `verificar` (COMP2)');
+  if (!tipos.some((t) => t === 'calcular' || t === 'verificar' || t === 'construir')) {
+    mal(id, 'sin paso `calcular`, `verificar` ni `construir` (COMP2)');
   }
+  /* Un `construir`, o una cifra atada a la receta, sin receta en el
+     ejercicio: el esquema lo rechaza igual, y aquí se dice antes. */
+  const atadas = pasos.some(
+    (p) =>
+      p.tipo === 'construir' ||
+      (p.tipo === 'calcular' && [p.respuesta, ...(p.distractores ?? [])].some((c) => c?.receta !== undefined)),
+  );
+  if (atadas && !e.receta) mal(id, 'tiene pasos que salen de una receta y no declara `receta`');
   if (!tipos.includes('justificar')) mal(id, 'sin paso `justificar` (COMP4)');
 
   for (const [i, p] of pasos.entries()) {
