@@ -2114,7 +2114,7 @@ Cosas que ya han costado horas. No son opiniones.
 
 <!-- índice de trampas: lo genera un guion a partir de las entradas -->
 
-**Las 57, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
+**Las 58, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
 
 - No escribas LaTeX a través del shell.
 - Un `: ` sin comillas dentro de un valor YAML rompe el fichero
@@ -2171,6 +2171,7 @@ Cosas que ya han costado horas. No son opiniones.
 - La tolerancia de una respuesta `numero` es absoluta, y un `0.02` escrito ahí no significa un 2 %.
 - `evaluaNumero` lee «, » como un espacio, y el espacio como un producto.
 - Zod no corre las reglas de un objeto al que le falta un campo obligatorio.
+- En Zod 4, un `z.record` con claves de un enum las exige todas.
 - Un deslizador recorta su `value` contra el `max` que tiene EN ESE MOMENTO.
 - Dos valores de un deslizador de paso 0,1 no se restan exacto, y un arreglo que se llama a sí mismo no para.
 
@@ -3076,6 +3077,14 @@ Cosas que ya han costado horas. No son opiniones.
   falla por otra cosa y parece que la regla funciona. Pasó el 26 de septiembre
   de 2026: la primera prueba de la regla de distractores «falló» por un paso
   sin `titulo`, y solo al completarlo salió el aviso que se buscaba.
+- **En Zod 4, un `z.record` con claves de un enum las exige todas.** En Zod 3
+  eran opcionales, y el código que lo daba por hecho sigue compilando: el
+  primer YAML que omite una clave falla con un «Required» por cada una, y por
+  la trampa de arriba las reglas propias del `superRefine`, con sus mensajes
+  en castellano, no llegan a correr. Pasó el 27 de septiembre de 2026 con el
+  `reparto` del banco de Materiales, donde un bloque sin nombrar tenía que
+  sacar cero; lo cazó el revisor de código antes de que ningún banco lo
+  pisara. **Regla: si las claves pueden faltar, `z.partialRecord`.**
 - **Un deslizador recorta su `value` contra el `max` que tiene EN ESE
   MOMENTO.** Si un preajuste escribe primero la posición y el código ensancha
   el tope después, el navegador ya la ha recortado sin avisar. Le pasó a la

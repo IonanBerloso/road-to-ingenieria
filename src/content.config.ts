@@ -1695,8 +1695,10 @@ const banco = defineCollection({
          *  real, contadas pregunta a pregunta. Sin él, el simulador reparte en
          *  proporción al banco, y redondeando se quedaba en 9 de familias
          *  donde el examen de 2024 puso 10 u 11 (auditoría del 27 de
-         *  septiembre de 2026). */
-        reparto: z.record(z.enum(BLOQUES_BANCO), z.number().int().min(0)).optional(),
+         *  septiembre de 2026). Un bloque que no se nombra saca cero: por
+         *  eso es `partialRecord`, porque en Zod 4 un `record` con claves de
+         *  un enum las exige todas (§17). */
+        reparto: z.partialRecord(z.enum(BLOQUES_BANCO), z.number().int().min(0)).optional(),
       }),
       preguntas: z
         .array(
@@ -1737,6 +1739,14 @@ const banco = defineCollection({
             ctx.addIssue({ code: 'custom', message: `el reparto pide ${n} de ${bloque} y el banco tiene ${hay}` });
           }
         }
+      } else if (b.puntuacion.preguntas > b.preguntas.length) {
+        /* Sin reparto, el simulador reparte en proporción al banco, y con más
+           preguntas pedidas que las que hay sacaría un examen más corto que
+           el que anuncia, sin avisar. */
+        ctx.addIssue({
+          code: 'custom',
+          message: `el simulacro saca ${b.puntuacion.preguntas} y el banco tiene ${b.preguntas.length}`,
+        });
       }
       const vistos = new Set<string>();
       for (const p of b.preguntas) {
