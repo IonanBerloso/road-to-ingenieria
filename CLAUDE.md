@@ -605,7 +605,11 @@ minoría a propósito: a 26 de septiembre de 2026, `verificar`, `redactar` y
 > `tests/rubricas.test.ts` caza un id que no existe, y la sección 11 de
 > `npm run deuda` cuenta los ejercicios de examen que piden una demostración
 > y no tienen `redactar`, con un trinquete en el modo estricto: el techo no
-> sube, y cuando baja hay que bajarlo.
+> sube, y cuando baja hay que bajarlo. Un ejercicio que pide dos
+> demostraciones de familias distintas lleva dos pasos, cada uno con la suya
+> (el primero, `ex1617-3ev-2`), y `scripts/revisa-ejercicios.mjs` dibuja la
+> consigna y cada punto de la rúbrica, la compartida incluida, antes de
+> construir.
 
 > **Los usos de cada tipo no se escriben aquí**: los da `npm run deuda`, en
 > «el tamaño del corpus». Esta tabla llevaba una columna con ellos y caducó

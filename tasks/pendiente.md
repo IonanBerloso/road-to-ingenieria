@@ -18,13 +18,10 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **D · Demostraciones en 1.º** (la siguiente; A, B y C están hechas):
-  Álgebra y Cálculo, con rúbricas compartidas y un guardián de COMP4
-  (4–5 días).
-- **E · Herramientas que pasan la prueba de utilidad** (§13): la calculadora
-  de «¿qué nota necesito?», la página de asignatura, el banco de test de
-  Cálculo, el peso de las páginas de tema, decimales y distractores, y el
-  inventario del material (3–4 días).
+- **E · Herramientas que pasan la prueba de utilidad** (§13; la siguiente,
+  con A, B, C y D hechas): la calculadora de «¿qué nota necesito?», la
+  página de asignatura, el banco de test de Cálculo, el peso de las páginas
+  de tema, decimales y distractores, y el inventario del material (3–4 días).
 - **F · Térmica**: tablas propias, los seis apartados de 2025-26, tema 7 y
   prácticas (5–6 días).
 - **G · Química**: formulación, resoluciones oficiales y teoría que falta
@@ -139,6 +136,12 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   Cálculo t02, t03 y t04; Fluidos t03, t21 y t23.
 - **«Cortante» en Mecánica**: ya está en la prosa del t06 y en 216 pasos;
   falta, si acaso, un apartado propio. Acotar antes de escribir.
+- **Cálculo, `punto-fijo-del-coseno`** (t03): su `calcular` pide $g(1)$ con
+  tres decimales y la pista dice «con la calculadora en radianes», y en
+  Cálculo no hay calculadora (§09). Con la fase E5, la de los decimales.
+- **Cálculo, 11.8 `extension-par-de-t`** (t11): el enunciado define $f$ en
+  $[0,\pi)$ y la resolución da $f(\pi)=\pi$. Decir que es el valor que la
+  extensión toma por continuidad, o que $f$ no está definida ahí.
 - Menores: `normaliza()` no lee el ⁴; once `\sin` sueltos en el corpus; KaTeX
   sigue enviando las fuentes ttf y woff además de woff2.
 

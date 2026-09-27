@@ -1668,6 +1668,19 @@ const preparar = defineCollection({
     .refine((r) => new Set(r.bloques.map((b) => b.id)).size === r.bloques.length, {
       message: 'hay dos bloques con el mismo id',
     })
+    /* Y dos escalones con el mismo id, aunque estén en bloques distintos: la
+       página pinta cada uno como `<h3 id="esc-…">`, así que el ancla sale
+       dos veces y un enlace a ella lleva siempre al primero. Pasó el 28 de
+       septiembre de 2026 con `la-norma-y-sus-desigualdades`, que estaba en el
+       hueco 3 de las dos rutas de Álgebra y volvió a entrar en el bloque de
+       las demostraciones; el suelo no lo habría visto. */
+    .refine(
+      (r) => {
+        const ids = r.bloques.flatMap((b) => (b.escalones ?? []).map((e) => e.id));
+        return new Set(ids).size === ids.length;
+      },
+      { message: 'hay dos escalones con el mismo id: la página los pinta como esc-<id> y el ancla se duplica' },
+    )
     /* Dos veces el mismo ejercicio incrustado produce dos `<h3 id="ej-…">`
        iguales: el índice llevaría siempre al primero y `humo.mjs` probaría el
        mismo dos veces creyendo que son dos distintos. */

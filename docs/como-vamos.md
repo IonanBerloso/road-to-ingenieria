@@ -359,7 +359,7 @@ alta.
 
 ## Rutas de estudio
 
-Las quince, no solo las de Cálculo. Recontadas el 27 de septiembre de 2026.
+Las quince, no solo las de Cálculo. Recontadas el 28 de septiembre de 2026.
 Desde el 13 `node scripts/deuda.mjs` §10 compara la fila de totales con lo
 que hay —entre el 10 y el 13 esta tabla se quedó sin las dos rutas de Mecánica
 y siguió publicando 13 · 110 · 295—, pero solo rutas, bloques y escalones:
@@ -367,14 +367,15 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 125 declarados, **28 están tachados**
-y los **97** restantes siguen abiertos.
+documental pero infla el recuento. De los 127 declarados, **31 están tachados**
+y los **96** restantes siguen abiertos. La fila de la 1.ª evaluación de Cálculo
+decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
 |---|---|---|---|---|---|
-| Álgebra | extraordinaria | 6 | 18 | 8 | 2 / 7 |
-| Álgebra | ordinaria | 6 | 19 | 8 | 2 / 7 |
-| Cálculo | 1.ª evaluación | 7 | 21 | 11 | 6 / 6 |
+| Álgebra | extraordinaria | 7 | 26 | 8 | 2 / 8 |
+| Álgebra | ordinaria | 7 | 27 | 8 | 2 / 8 |
+| Cálculo | 1.ª evaluación | 7 | 21 | 11 | 5 / 6 |
 | Cálculo | 2.ª evaluación | 8 | 17 | 11 | 2 / 2 |
 | Cálculo | 3.ª evaluación | 10 | 19 | 11 | 8 / 8 |
 | Cálculo | 4.ª evaluación | 3 | 12 | 11 | 4 / 4 |
@@ -387,7 +388,7 @@ y los **97** restantes siguen abiertos.
 | Química | 1.er cuatrimestre | 8 | 16 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 17 | 3 | 11 / 11 |
 | Térmica | ordinaria | 7 | 20 | 17 | 4 / 7 |
-| **total** | **15 rutas** | **130** | **332** | — | **97 / 125** |
+| **total** | **15 rutas** | **132** | **348** | — | **96 / 127** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
