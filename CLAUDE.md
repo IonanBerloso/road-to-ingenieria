@@ -136,7 +136,7 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 | Expresión Gráfica | 1.º | `obra` | **la siguiente**: temario y evaluación de la guía desde ese día; antes que temas necesita diseño, porque su examen es un dibujo |
 | Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
 | Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
-| Mecánica Aplicada | 2.º | `ok` | cinco convocatorias bilingües sin transcribir: el castellano va en imagen |
+| Mecánica Aplicada | 2.º | `ok` | las tres convocatorias bilingües del bloque 2, aún sin transcribir: el castellano va en imagen |
 | Ciencia de Materiales | 2.º | `obra` | escrita entera; sin exámenes de problemas no hay ruta ni cierre |
 | Sistemas de Producción | 2.º | `obra` | solo el catálogo: **se deja para más adelante** |
 

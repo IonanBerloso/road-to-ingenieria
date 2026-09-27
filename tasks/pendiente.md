@@ -119,8 +119,8 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   (1e y 2b a 2f), con la resolución oficial en el PDF. Después, contar
   apartados en las otras diecinueve convocatorias (`manana.md` 10.1).
 - **Pesos de tema donde la ruta y las etiquetas no coinciden** (CLAUDE.md §10):
-  Fluidos t07, t17, t18, t19 y t23; Térmica t08 y t10; Mecánica t01 (cae en
-  dos de tres, como t03 y t06, y dice medio) y t02 (una de tres, dice bajo).
+  Fluidos t07, t17, t18, t19 y t23; Térmica t08 y t10. Los de Mecánica del
+  bloque 1 se revisaron con las cinco convocatorias.
 - **`revisado` en los 26 bloques de Álgebra y Fluidos**: pasarlos por los
   criterios de hueco de su `criterioDeOrden` y entonces sí fecharlos. Es un día
   de trabajo; sellar la fecha sin hacerlo sería inventar (`manana.md` 10.7).
