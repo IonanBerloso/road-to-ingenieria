@@ -1042,6 +1042,19 @@ if (SOLO_FUENTE) {
       latexCrudo.push(`${nombre} → KaTeX no sabe dibujarla: ${m[1].replace(/&#x27;/g, "'")}…`);
     }
 
+    /* Y el cuarto, que la regla de arriba tampoco veía: un comando que KaTeX
+       no conoce, dentro de una fórmula que por lo demás está bien. Eso no da
+       `katex-error`: KaTeX dibuja el resto y pinta el comando con su color de
+       error, #cc0000, en un `<span>` normal. Lo notaron el 27 de septiembre
+       de 2026 dos de los agentes que escribieron las rúbricas de la fase D,
+       comprobando lo suyo con `mate()`; al buscarlo en el sitio construido
+       salió uno publicado, un `\arcsen` en la extraordinaria de Cálculo de
+       2013-2014. El `katex-error` de arriba lleva el mismo color, y se
+       excluye para no contar dos veces el mismo fallo. */
+    for (const m of html.matchAll(/<span(?![^>]*katex-error)[^>]*style="[^"]*color:\s*#cc0000[^"]*"[^>]*>(?:<span[^>]*>)?([^<]{0,60})/gi)) {
+      latexCrudo.push(`${nombre} → KaTeX no conoce este comando y lo pinta en rojo: ${m[1]}`);
+    }
+
     /* Y el tercer hermano, el más silencioso: una barra invertida que se
        convirtió en el carácter de control que nombraba. `\text{max}` escrito
        a través del shell llega como TAB + «ext{max}», y a partir de ahí

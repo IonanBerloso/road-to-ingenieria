@@ -15,9 +15,30 @@
  *
  * `--suelto` es para un trozo que todavía no lleva la cabecera `ejercicios:`.
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import yaml from 'js-yaml';
 import { comparaMagnitud, leeMagnitud } from '../src/lib/unidades.ts';
+
+/* Las rúbricas compartidas de los pasos `redactar` (fase D de la auditoría
+   del 27 de septiembre de 2026). Se leen una vez por id: `null` si el fichero
+   no existe, `{ roto }` si existe y no se puede leer. */
+const DIR_RUBRICAS = new URL('../src/content/rubricas/', import.meta.url);
+const rubricasLeidas = new Map();
+const rubricaCompartida = (id) => {
+  if (!rubricasLeidas.has(id)) {
+    const f = new URL(`${id}.yaml`, DIR_RUBRICAS);
+    let valor = null;
+    if (existsSync(f)) {
+      try {
+        valor = yaml.load(readFileSync(f, 'utf8'));
+      } catch (err) {
+        valor = { roto: String(err).split('\n')[0] };
+      }
+    }
+    rubricasLeidas.set(id, valor);
+  }
+  return rubricasLeidas.get(id);
+};
 
 const [ruta, ...banderas] = process.argv.slice(2);
 const suelto = banderas.includes('--suelto');
@@ -289,6 +310,32 @@ for (const e of ejercicios) {
         if ((t.mensaje ?? '').length < 20) mal(dónde, 'la pieza trampa no explica por qué lo es');
       }
     }
+
+    /* `redactar` llega con la fase D de la auditoría del 27 de septiembre de
+       2026 y este guion no lo miraba: una rúbrica mal escrita pasaba aquí en
+       verde y la tumbaba el esquema un build después, que es justo lo que
+       este guion existe para evitar. Se mira lo mismo que el esquema, y lo
+       que el esquema no ve porque lee cada fichero por separado: que exista
+       la rúbrica compartida que el paso nombra. */
+    if (p.tipo === 'redactar') {
+      if ((p.consigna ?? '').length < 20) mal(dónde, '`consigna` con menos de 20 caracteres');
+      if (p.que !== undefined && !['demostracion', 'deduccion', 'definicion'].includes(p.que)) {
+        mal(dónde, `\`que\` raro: ${p.que}`);
+      }
+      if (typeof p.rubrica === 'string') {
+        const r = rubricaCompartida(p.rubrica);
+        if (!r) mal(dónde, `no hay src/content/rubricas/${p.rubrica}.yaml`);
+        else if (r.roto) mal(dónde, `la rúbrica ${p.rubrica} no se puede leer: ${r.roto}`);
+      } else if (Array.isArray(p.rubrica)) {
+        if (p.rubrica.length < 3) mal(dónde, `rúbrica de ${p.rubrica.length} puntos, hacen falta 3`);
+        for (const [k, q] of p.rubrica.entries()) {
+          if ((q?.punto ?? '').length < 10) mal(dónde, `el punto ${k + 1} de la rúbrica tiene menos de 10 caracteres`);
+          if ((q?.porque ?? '').length < 20) mal(dónde, `el punto ${k + 1} de la rúbrica no dice por qué cuenta`);
+        }
+      } else {
+        mal(dónde, 'sin `rubrica`: ni la lista de puntos ni el id de una compartida');
+      }
+    }
   }
 
   /* ── §17 · LaTeX que se va a publicar como texto ── */
@@ -320,8 +367,22 @@ for (const e of ejercicios) {
 const camposDeProsa = (e) => {
   const salida = [['enunciado', e.enunciado], ['resolucion', e.resolucion]];
   for (const [i, p] of (e.pasos ?? []).entries()) {
-    for (const c of ['pregunta', 'pista', 'desarrollo', 'titulo']) {
+    for (const c of ['pregunta', 'pista', 'desarrollo', 'titulo', 'consigna', 'veredicto']) {
       if (typeof p?.[c] === 'string') salida.push([`paso ${i + 1} · ${c}`, p[c]]);
+    }
+    /* Y la rúbrica de un `redactar`, la escrita en el paso o la compartida
+       que el paso nombra: las dos se dibujan con este mismo procesador. La
+       compartida se revisa con cada fichero que la usa, así que un fallo en
+       ella sale en cualquiera de sus ejercicios. Hasta el 27 de septiembre de
+       2026 aquí no entraban, y una fórmula rota en un `porque` solo se veía
+       en el suelo; lo dijeron los dos agentes que escribieron las de la
+       fase D. */
+    const compartida = typeof p?.rubrica === 'string';
+    const puntos = compartida ? rubricaCompartida(p.rubrica)?.puntos : p?.rubrica;
+    const de = compartida ? ` «${p.rubrica}»` : '';
+    for (const [k, q] of (Array.isArray(puntos) ? puntos : []).entries()) {
+      if (typeof q?.punto === 'string') salida.push([`paso ${i + 1} · rúbrica${de}, punto ${k + 1}`, q.punto]);
+      if (typeof q?.porque === 'string') salida.push([`paso ${i + 1} · rúbrica${de}, porqué ${k + 1}`, q.porque]);
     }
     /* Los `mensaje` van también, y no es un detalle: el fallo que obligó a
        escribir la comprobación del LaTeX crudo vivía en el `mensaje` de una
@@ -388,6 +449,17 @@ try {
       if (html.includes('katex-error')) {
         const motivo = /title="ParseError: ([^"]{0,110})/.exec(html)?.[1] ?? 'KaTeX no ha sabido dibujarla';
         mal(e.id ?? '(sin id)', `${dónde}: fórmula que no se dibuja — ${motivo}`);
+        continue;
+      }
+      /* Un comando que KaTeX no conoce no da `katex-error`: KaTeX dibuja el
+         resto de la fórmula y pinta el comando en rojo, #cc0000, en un
+         `<span>` normal. Así se publicó un `\arcsen` en la extraordinaria de
+         Cálculo de 2013-2014; lo cazó `verify.mjs` el 27 de septiembre de
+         2026, y aquí se mira con la misma expresión. */
+      const rojo =
+        /<span(?![^>]*katex-error)[^>]*style="[^"]*color:\s*#cc0000[^"]*"[^>]*>(?:<span[^>]*>)?([^<]{0,60})/i.exec(html);
+      if (rojo) {
+        mal(e.id ?? '(sin id)', `${dónde}: KaTeX no conoce este comando y lo pinta en rojo — ${rojo[1]}`);
         continue;
       }
       /* Y el fallo hermano, que NO produce error de KaTeX porque el LaTeX no
