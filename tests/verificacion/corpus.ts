@@ -17,6 +17,15 @@ import { expect } from 'vitest';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
+/* La tolerancia que el sitio usa cuando el YAML no la declara: el `default`
+   de `respuesta.tolerancia` en `src/content.config.ts`, relativa en una
+   `magnitud`. Aquí se lee el YAML crudo, sin pasar por el esquema, así que el
+   `default` no llega y hay que ponerlo a mano. Hasta el 27 de septiembre de
+   2026 ponía 0,02: el test daba por buena una magnitud con un 2 % de error
+   que el sitio, con su 0,1 %, le habría corregido como mal a quien la
+   calculara exacta. */
+const TOLERANCIA_POR_DEFECTO = 0.001;
+
 type Paso = {
   titulo?: string;
   respuesta?: { tipo?: string; valor?: string; tolerancia?: number };
@@ -195,11 +204,11 @@ export function convocatoria(asignatura: string, carpeta: string) {
     const publicado = leeMagnitud(valor);
     if (!mio) throw new Error(`${id} · ${titulo}: no sé leer «${calculado} ${unidad}»`);
     if (!publicado) throw new Error(`${id} · ${titulo}: no sé leer el valor publicado «${valor}»`);
-    const v = comparaMagnitud(mio, publicado, tol || 0.02);
+    const v = comparaMagnitud(mio, publicado, tol || TOLERANCIA_POR_DEFECTO);
     const donde = `${id} · ${titulo}: recalculado ${calculado} ${unidad}, publicado ${valor}`;
     if (v.otraDimension)
       throw new Error(`${donde} — son magnitudes distintas (${nombreDim(mio.dim)} contra ${nombreDim(publicado.dim)})`);
-    expect(v.igual, `${donde} (tolerancia relativa ${tol || 0.02})`).toBe(true);
+    expect(v.igual, `${donde} (tolerancia relativa ${tol || TOLERANCIA_POR_DEFECTO})`).toBe(true);
   };
 
   return cuadra;
