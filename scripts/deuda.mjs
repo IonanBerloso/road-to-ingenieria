@@ -66,8 +66,12 @@ for (const asig of ASIGS) {
         if (e.isDirectory()) ficheros.push(join(dir, e.name, 'ejercicios.yaml'));
     for (const f of ficheros) {
       if (!existsSync(f)) continue;
+      /* Qué es el PDF de la convocatoria: en Térmica, la resolución completa
+         del profesor, y entonces cada pieza se contrasta contra ella. */
+      const cab = join(dirname(f), 'examen.yaml');
+      const pdfEs = existsSync(cab) ? yaml.load(readFileSync(cab, 'utf8'))?.pdfEs : undefined;
       for (const e of yaml.load(readFileSync(f, 'utf8'))?.ejercicios ?? [])
-        EJ.set(e.id, { ...e, asig, deExamen: f.includes('examenes') });
+        EJ.set(e.id, { ...e, asig, deExamen: f.includes('examenes'), pdfEs });
     }
   }
 }
@@ -77,7 +81,7 @@ const fila = (a, b) => console.log(`   ${String(a).padEnd(28)} ${b}`);
 
 /* ── 1 · contra qué se contrasta cada resolución de examen ──────────── */
 pinta('1 · Las resoluciones de examen, y contra qué se pueden contrastar');
-console.log(`   Las tres categorías son las que importan, y no son dos: hay una
+console.log(`   Las cuatro categorías son las que importan, y no son dos: hay una
    diferencia real entre no tener nada y tener el número final.`);
 const CONTRA = {
   'el resultado publicado': /publica los resultados pero no la resoluci|publica el resultado|publica la tabla resuel|publica el razo|publica que todas/i,
@@ -88,15 +92,21 @@ let totalNada = 0, totalEj = 0;
 for (const asig of ASIGS) {
   const suyos = [...EJ.values()].filter((e) => e.asig === asig && e.deExamen);
   if (!suyos.length) continue;
-  const c = { 'el resultado publicado': 0, 'el boletín': 0, nada: 0 };
+  const c = { 'la resolución del profesor': 0, 'el resultado publicado': 0, 'el boletín': 0, nada: 0 };
   for (const e of suyos) {
     const f = e.fuente ?? '';
-    const clave = Object.keys(CONTRA).find((k) => CONTRA[k].test(f)) ?? 'nada';
+    const clave =
+      e.pdfEs === 'resolucion'
+        ? 'la resolución del profesor'
+        : (Object.keys(CONTRA).find((k) => CONTRA[k].test(f)) ?? 'nada');
     c[clave]++;
   }
   totalNada += c.nada;
   totalEj += suyos.length;
-  fila(asig, `${suyos.length} · resultado ${c['el resultado publicado']} · boletín ${c['el boletín']} · nada ${c.nada}`);
+  fila(
+    asig,
+    `${suyos.length} · resolución ${c['la resolución del profesor']} · resultado ${c['el resultado publicado']} · boletín ${c['el boletín']} · nada ${c.nada}`,
+  );
 }
 fila('TOTAL', `${totalEj} resoluciones, ${totalNada} sin nada contra lo que comprobar (${Math.round((totalNada / totalEj) * 100)} %)`);
 

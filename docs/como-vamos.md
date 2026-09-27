@@ -22,7 +22,8 @@ cumplen §15 entera y las seis están en el catálogo como `ok`. Entre las seis,
 **141 convocatorias transcritas** —las 118 de las cuatro primeras, veinte de
 Térmica y tres de Mecánica—, y el guardián de convocatorias huérfanas no
 cuenta ninguna suelta. Las que quedan fuera están declaradas con su motivo:
-dos de Térmica y cinco de Mecánica, todas íntegramente en euskera.
+dos de Térmica, íntegramente en euskera, y cinco de Mecánica, bilingües pero
+con el castellano en imagen, que falta transcribir a mano.
 
 **Y una séptima con contenido, Ciencia de Materiales, escrita entera y en
 `obra`.** Sus diez temas y los 100 ejercicios de su colección están publicados
@@ -36,7 +37,7 @@ es material, no trabajo; está más abajo, en su propia sección.
 **Mecánica Aplicada se abrió el 12 de septiembre de 2026 y se cerró el 13**,
 que es lo más rápido que ha ido una asignatura en este proyecto. Sus **doce
 temas están escritos** —prosa, figura y dos ejemplos propios cada uno—, sus
-**tres convocatorias con enunciado en castellano** están transcritas con su
+**tres de sus ocho convocatorias** están transcritas con su
 PDF —enero de 2024, la ordinaria y la extraordinaria de 2025, las tres del
 bloque 1— y **las doce colecciones están enteras**: 250 ejercicios con su
 figura redibujada. Estrena además **tres simuladores** —la viga y sus
@@ -44,11 +45,12 @@ diagramas, el centro instantáneo y la catenaria contra la parábola—, cada un
 con su modelo probado, y sus **57 respuestas de examen recalculadas**.
 
 Sus dos rutas están medidas, y la del bloque 2 con una salvedad que conviene
-saber: **ese bloque no tiene ninguna convocatoria en castellano**, así que se
-ordenó leyendo los tres exámenes en euskera **solo para clasificar** qué tema
-pide cada hueco —leer para clasificar no es transcribir—, y esos exámenes son
-de 2018 y 2019. Las cinco convocatorias en euskera siguen sin transcribirse y
-declaradas con su motivo, como las dos de Térmica.
+saber: **ese bloque no tiene ninguna convocatoria transcrita**. Sus tres
+exámenes son bilingües, pero el castellano va en imagen y pdftotext no lo
+saca, así que se ordenó leyéndolos **solo para clasificar** qué tema pide cada
+hueco —leer para clasificar no es transcribir—, y esos exámenes son de 2018 y
+2019. Las cinco convocatorias bilingües siguen sin transcribir, declaradas con
+su motivo.
 
 **Ingeniería Térmica se cerró el 12 de septiembre de 2026**, cinco días
 después de abrirse. Sus diez temas están escritos —cada uno con su figura y su
@@ -357,15 +359,16 @@ alta.
 
 ## Rutas de estudio
 
-Las quince, no solo las de Cálculo. Recontadas el 13 de septiembre de 2026, y
-desde ese día `node scripts/deuda.mjs` §10 compara la fila de totales con lo
-que hay: entre el 10 y el 13 esta tabla se quedó sin las dos rutas de Mecánica
-y siguió publicando 13 · 110 · 295.
+Las quince, no solo las de Cálculo. Recontadas el 27 de septiembre de 2026.
+Desde el 13 `node scripts/deuda.mjs` §10 compara la fila de totales con lo
+que hay —entre el 10 y el 13 esta tabla se quedó sin las dos rutas de Mecánica
+y siguió publicando 13 · 110 · 295—, pero solo rutas, bloques y escalones:
+la columna de huecos no la vigila nada, y se había quedado atrás.
 
-La columna de huecos lleva ahora **dos** números, y la diferencia importa: un
+La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 115 declarados, **22 están tachados**
-y los **93** restantes siguen abiertos.
+documental pero infla el recuento. De los 122 declarados, **24 están tachados**
+y los **98** restantes siguen abiertos.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
 |---|---|---|---|---|---|
@@ -376,15 +379,15 @@ y los **93** restantes siguen abiertos.
 | Cálculo | 3.ª evaluación | 10 | 19 | 11 | 8 / 8 |
 | Cálculo | 4.ª evaluación | 3 | 12 | 11 | 4 / 4 |
 | Cálculo | 5.ª evaluación | 3 | 12 | 10 | 5 / 7 |
-| Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 10 |
-| Cálculo | ordinaria | 15 | 37 | 11 | 10 / 12 |
+| Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
+| Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
 | Fluidos | ordinaria | 14 | 51 | 11 | 21 / 26 |
-| Mecánica | 1.er cuatrimestre | 7 | 18 | 3 | 1 / 1 |
-| Mecánica | 2.º cuatrimestre | 7 | 15 | 3 | 1 / 1 |
-| Química | 1.er cuatrimestre | 7 | 16 | 3 | 8 / 8 |
-| Química | 2.º cuatrimestre | 8 | 17 | 3 | 9 / 9 |
+| Mecánica | 1.er cuatrimestre | 7 | 18 | 3 | 2 / 2 |
+| Mecánica | 2.º cuatrimestre | 7 | 15 | 3 | 2 / 2 |
+| Química | 1.er cuatrimestre | 8 | 16 | 3 | 10 / 10 |
+| Química | 2.º cuatrimestre | 9 | 17 | 3 | 11 / 11 |
 | Térmica | ordinaria | 7 | 20 | 17 | 4 / 7 |
-| **total** | **15 rutas** | **124** | **328** | — | **93 / 115** |
+| **total** | **15 rutas** | **126** | **328** | — | **98 / 122** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19

@@ -17,11 +17,10 @@ import { mate } from '../../lib/markdown.mjs';
  * del 27 de septiembre de 2024. Si algún día la asignatura cambia el reparto,
  * se cambia en el YAML y el simulador se entera solo (§01).
  *
- * POR QUÉ REPARTE POR BLOQUES Y NO AL AZAR. El examen de 2024 dedicó once de
- * sus veinticinco preguntas a las familias de materiales. Un simulacro que
- * sacara veinticinco al azar de las cien entrenaría un examen que no existe:
- * saldrían cinco de familias y el alumno creería que va sobrado. El sorteo
- * respeta la proporción del banco, que a su vez imita la del examen.
+ * POR QUÉ REPARTE POR BLOQUES Y NO AL AZAR. Un simulacro que sacara
+ * veinticinco al azar de las cien entrenaría otro examen: el reparto por
+ * bloques es el del examen de 2024, contado pregunta a pregunta y declarado en
+ * el YAML del banco (`puntuacion.reparto`), y dentro de cada bloque se sortea.
  *
  * SIN JAVASCRIPT no hay simulacro, y entonces no se enseña el mando: se
  * enseña el aviso y un enlace a las preguntas como lista. Es la misma regla
@@ -87,18 +86,23 @@ const porBloque: Record<string, number> = {};
 for (const p of preguntas) porBloque[p.bloque] = (porBloque[p.bloque] ?? 0) + 1;
 
 const cuantas = puntuacion.preguntas;
-const reparto = Object.entries(porBloque).map(([b, n]) => [
-  b,
-  Math.round((n / preguntas.length) * cuantas),
-]) as [string, number][];
 
-/* El redondeo puede dejar el total en 24 o en 26; se ajusta sobre el bloque
-   más grande, que es el que menos se nota. */
-let suma = reparto.reduce((a, [, n]) => a + n, 0);
-if (suma !== cuantas) {
-  reparto.sort((a, b) => b[1] - a[1]);
-  reparto[0][1] += cuantas - suma;
-  suma = cuantas;
+/* Si el banco declara el reparto del examen, se usa tal cual: el esquema ya
+   comprueba que suma lo que saca el simulacro. Si no lo declara, se reparte
+   en proporción al banco por restos mayores. Hasta el 27 de septiembre de
+   2026 se redondeaba cada bloque y el que sobraba se le quitaba al más
+   grande, y eso dejaba las familias en 9 donde el examen puso 10 u 11. */
+let reparto: [string, number][];
+if (puntuacion.reparto) {
+  reparto = Object.entries(puntuacion.reparto).map(([b, n]) => [b, n ?? 0]);
+} else {
+  const exactas = Object.entries(porBloque).map(([b, n]) => [b, (n / preguntas.length) * cuantas] as const);
+  reparto = exactas.map(([b, x]) => [b, Math.floor(x)]);
+  const faltan = cuantas - reparto.reduce((a, [, n]) => a + n, 0);
+  const porResto = exactas
+    .map(([, x], i) => [i, x - Math.floor(x)] as const)
+    .sort((a, b) => b[1] - a[1]);
+  for (let k = 0; k < faltan; k++) reparto[porResto[k][0]][1]++;
 }
 
 /* El `<` se escapa para que ningún texto pueda cerrar el `<script>` que

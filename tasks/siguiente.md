@@ -3,56 +3,43 @@
 Se sobrescribe cada vez; no se amplía. Lo que queda más allá está en
 `pendiente.md`, con las fases en orden arriba del todo.
 
-Escrito el 27 de septiembre de 2026 a las 02:00, a mitad de la fase A: se
-paró por límite de uso.
+Escrito el 27 de septiembre de 2026, al cerrar la fase A de la auditoría
+externa. Toca la fase B, que es la fase 1 de Expresión Gráfica tal cual se
+aparcó el día antes (commit 479053d).
 
-## Antes de nada: el último commit está sin construir y sin subir
+## Qué toca: el componente `Taller` y SD1 entero
 
-Es local. Antes de subirlo: `npm run build` —ojo al MDX de
-`calculo/t04-estudio-local`, que ahora lleva `$-1<x<1$`: si MDX toma el `<x`
-por una etiqueta, se escribe con `\lt`—, después `npm run suelo`, y solo
-entonces `git push` y mirar que el despliegue acabe en verde. Falta también
-el diario del 27 de septiembre.
+Lo que ya está, con sus pruebas en `tests/geometria/`:
 
-## Qué toca: seguir con la fase A de la auditoría externa
+- `lib/diedrico.ts`: la geometría de SD1, SD3, SD4, SD5 y SD7, cotejada con
+  los pilotos.
+- `lib/diedrico-receta.ts`: las recetas como datos, con elecciones y firmas;
+  revisado dos veces por un agente.
+- `lib/diedrico-corrige.ts`: lo único que irá a la página.
+- `src/content/laminas/sd1.json`, cotejada con el PDF, y
+  `scripts/lamina-sobre-pdf.mjs` para las demás.
+- `lib/construir.ts`: el paso resuelto, con cada error construido a propósito.
 
-El encargo —fases A a K, con su «Acepta»— y sus pruebas están en
-`2027 proyecto contenido/auditorias/2026-09-27/` (`encargo-por-fases.md`,
-`00-resumen.md` y un fichero por asignatura). Regla 1: cada punto se verifica
-contra su fuente antes de tocarlo, y lo que no se sostiene se dice en el
-commit y no se hace.
+**Hay borradores de todo lo que sigue**, sin compilar, fuera del repositorio:
+`2027 proyecto contenido/Claude outputs/fase-1-borradores/`, con un README que
+dice adónde va cada uno y qué falta. Se meten en este orden:
 
-**Hecho** (en el commit local):
+1. **El esquema**: `pasoConstruir` y `receta` en `content.config.ts`, la regla
+   de COMP2 en el esquema y en `revisa-ejercicios.mjs`, y `evaluaNumero` y
+   `resuelveEjercicio` en `lib/`.
+2. **`Taller.astro`** y su sitio en `EjercicioGuiado`, que le pasa el paso
+   resuelto y escucha sus cinco eventos.
+3. **SD1 en el tema 2**, con su prosa (`expresion-grafica` en `CON_TEMAS`,
+   `hecho: true` en el catálogo), y la guarda que resuelve todos los
+   `construir` del corpus. Antes de pegarlo, arreglar la diferencia de cotas
+   del desarrollo (≈ 31,99 mm, no 31,53) y decidir la tolerancia.
+4. **`scripts/comprueba-talleres.mjs`** en el suelo, y mirarlo en claro, en
+   oscuro, a 360 px y fallando a propósito.
+5. Después SD4 y SD5, y el patrón en §05 como «construcción verificada».
 
-- A6: `CDIGOS_SOCRATIVE.pdf` en la tabla de CLAUDE.md y la cuarta regla
-  práctica, la de buscar DNI antes de volcar un PDF.
-- A7: la prueba de utilidad (§13) y la duración impresa (§10).
-- A2 en código: `duracion` por convocatoria en `examen.yaml`, que manda sobre
-  la regla; el modo exigente (`duracionDelExamen.exigente`); el botón de la
-  portada solo donde hay reloj, y `verify` comprobándolo. Base de 30 min con
-  exigente de 25 en Álgebra, Fluidos y Mecánica (comprobado que sus
-  cuadernillos no imprimen duración) y exigente en Cálculo.
-- A1 y A5 de Cálculo, verificados: el plazo de renuncia (18 semanas desde el
-  curso, guía pág. 4), el distractor de Fourier, la convergencia de ln(1+x) y
-  de la binómica en la prosa y en el formulario, y las tres propiedades de
-  Laplace en sus dos sitios.
+Antes de escribir cada pieza nueva, la prueba de utilidad de §13: para quién,
+cuándo, qué gana y cómo se comprueba.
 
-**Falta**, por este orden:
-
-1. Verificar el resto contra las fuentes —se paró a medias—: Álgebra (A1
-   laboratorio, A4 los siete recuentos y t03), Química (A1 laboratorio, A2
-   duraciones impresas, A3 rótulo, A4 «sin material» y «sin calculadora»),
-   Térmica (A1, A2 duraciones impresas, A3 la etiqueta de la resolución y
-   `deuda` §1, A4 exergía, A5 seis puntos), Materiales (A1 evaluación, A5
-   cinco puntos), Mecánica (A4 bilingües, A5 la g), Fluidos (A4 laboratorio),
-   Sistemas (A1) y Expresión Gráfica (A1 ficha). Un verificador por
-   asignatura, que solo lee y lleva la tabla de vetados de CLAUDE.md.
-2. Aplicar lo que se sostenga; los minutos impresos de Térmica y Química en
-   sus `examen.yaml`.
-3. A4: reescribir «Bloqueado por material» en `pendiente.md`, y la trampa
-   «el volcado no es la página» en §17 (`npm run trampas`).
-4. Suelo, subir, despliegue en verde.
-
-**Al acabar la fase A**, este fichero vuelve a ser la fase 1 de Expresión
-Gráfica: está en el commit 479053d, y sus borradores en
-`2027 proyecto contenido/Claude outputs/fase-1-borradores/`.
+Mientras corren el suelo o el despliegue, la deuda de `pendiente.md`, un
+commit por punto, empezando por las acciones del despliegue, que tienen que
+estar antes del 19 de octubre.

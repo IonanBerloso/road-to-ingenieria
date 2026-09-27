@@ -38,9 +38,15 @@ sigue después tal cual.
 - **G · Química**: formulación, resoluciones oficiales y teoría que falta
   (5–6 días).
 - **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
+  Antes del simulacro, la evaluación final: la guía (pág. 12) pide examen
+  escrito y práctico con un 5,0 en cada uno, y la diapositiva 15 da un 4,0
+  al escrito.
 - **I · Fluidos**: prácticas, los `fuera` recuperables y los criterios del
   profesor (5–6 días).
-- **J · Sistemas de Producción** (~4 semanas).
+- **J · Sistemas de Producción** (~4 semanas). Su colección trae cinco
+  problemas fechados como examen (T2 P7, P8 y P9; T3 P5 y P6), que dan para
+  medir la ruta de la ordinaria; los de CNC piden un tipo de respuesta para
+  código.
 - **K · Expresión Gráfica después de la fase 1**: las hojas 52–55 son
   exámenes y ordenan la fase 2 (familias B, E y G antes que A y H); el
   bloque 2 apenas necesita `lib/vistas` y conviene que no espere a la fase 3.
@@ -58,7 +64,9 @@ sigue después tal cual.
 - **Fluidos, cantidad de movimiento**: ¿se reescriben las 22 resoluciones para
   que nombren el volumen de control? (`todo.md`, «La reauditoría · 2»).
 - **Datos del mundo que el repositorio no tiene**: si el examen de Fluidos
-  admite calculadora programable; qué se hizo en cada práctica de
+  admite calculadora programable, y si el de Química admite calculadora
+  —ningún documento lo dice, y sus enunciados piden pH, ln K y
+  exponenciales—; qué se hizo en cada práctica de
   laboratorio; el criterio de la profesora de Materiales sobre el 4.19 (el
   sitio publica 55,2 % y explica el 44,8 % impreso). La duración de los
   exámenes sin cuadernillo que la imprima ya la dio Ionan el 27 de septiembre
@@ -67,11 +75,14 @@ sigue después tal cual.
   del 27): de qué año son las hojas 52–55 del final de la colección —la
   auditoría las da por exámenes: la 54 se titula «Azterketa / Examen»—; el
   PDF de la rúbrica de láminas, que en la carpeta es solo el enlace de eGela;
-  si en el examen de dibujo técnico se pueden usar las tablas ISO; y si el
+  si en el examen de dibujo técnico se pueden usar las tablas ISO —la nota
+  general de la UPV/EHU (`Nota_sobre_la_evaluacin_de_pruebas_acadmicas.pdf`,
+  pág. 2) prohíbe libros y apuntes salvo indicación expresa—; y si el
   diédrico se examina con la figura a escala o por coordenadas.
-- **Las preguntas abiertas de la auditoría del 27 de septiembre**: si el
-  examen de Álgebra deja calculadora; qué entra en su examen de prácticas y
-  qué son los controles del 20 %; si el examen de Sistemas da las hojas del
+- **Las preguntas abiertas de la auditoría del 27 de septiembre**: qué entra
+  en el examen de prácticas de Álgebra (la calculadora y los controles del
+  20 % ya los contesta su guía: sin calculadora, y los controles son
+  ejercicios para entregar en clase); si el examen de Sistemas da las hojas del
   catálogo Sandvik o los valores en el enunciado; los guiones del laboratorio
   de Química; y una copia limpia de las preguntas guía de Materiales, porque
   el fichero lleva «Grupos» en el nombre y no se abre.
@@ -98,6 +109,17 @@ sigue después tal cual.
 
 ### Contenido
 
+- **Química, la colección que sí está** (verificado el 27 de septiembre de
+  2026, fase G): formulación, 180 compuestos en tres hojas con la clave
+  completa de la tercera; tema 2, resueltos del 4 al 11 y 35 propuestos;
+  tema 3, el Born-Haber del LiF con siete preguntas y cuatro de enlace
+  intermolecular; tema 4, dos de Clausius-Clapeyron con respuesta y seis de
+  test de gases; tema 6, los n.º 3 y 8 de la hoja del tema 5; tema 10,
+  catorce ajustes por ion-electrón y cuatro problemas resueltos de pilas con
+  siete propuestos con solución (`Tema_10.2`, págs. 27–39).
+- **Fluidos, el aviso de la resolución**: sus piezas con resultado publicado
+  llevan el «el examen no publica solución» de `Examen.astro`, y no es
+  cierto: los enunciados traen los resultados. Fase I.
 - **Térmica, ordinaria de 2025-2026**: seis apartados declarados en su `fuera`
   (1e y 2b a 2f), con la resolución oficial en el PDF. Después, contar
   apartados en las otras diecinueve convocatorias (`manana.md` 10.1).
@@ -124,8 +146,7 @@ sigue después tal cual.
 - **«Cortante» en Mecánica**: ya está en la prosa del t06 y en 216 pasos;
   falta, si acaso, un apartado propio. Acotar antes de escribir.
 - Menores: `normaliza()` no lee el ⁴; once `\sin` sueltos en el corpus; KaTeX
-  sigue enviando las fuentes ttf y woff además de woff2; el catálogo de
-  Sistemas tiene un tema sin clave `hecho`.
+  sigue enviando las fuentes ttf y woff además de woff2.
 
 ### Documentación
 
@@ -166,15 +187,14 @@ sigue después tal cual.
 
 ## Bloqueado por material
 
-- **Ciencia de Materiales**: ruta y cierre, hasta que haya exámenes de teoría
-  y problemas.
-- **Sistemas de Producción**: todo, y se deja para más adelante (§00). Dos
-  cosas que mirar al abrirla: si su colección trae fechas de examen
-  («Ordinaria 2021-22»), que darían para medir una ruta, y que los problemas
-  de CNC piden un tipo de respuesta para código.
-- **Fundamentos Químicos**: la colección de los temas 3, 4, 6 y 10.
-- **Mecánica de Fluidos**: doce problemas de la colección, trece ejercicios de
-  examen `fuera` y las veintisiete prácticas de laboratorio.
-- **Ingeniería Térmica**: ocho `fuera` que no son trabajo (temario, repetidos
-  y un diagrama de Mollier de editorial).
-- **Mecánica Aplicada**: cinco convocatorias solo en euskera.
+Solo lo que la carpeta no trae, mirado en la página renderizada (CLAUDE.md
+§17, «El volcado no es la página»). Lo que parecía bloqueado y es trabajo
+está en su fase: las convocatorias bilingües de Mecánica en C1, la tobera de
+Térmica en F1, las prácticas y siete `fuera` de Fluidos en I1 e I2, Sistemas
+en J y la colección de Química en «Contenido».
+
+- **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
+  teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no
+  esperan: son la fase H.
+- **Fundamentos Químicos**: los guiones de las prácticas, que en la carpeta
+  son solo el enlace de eGela.

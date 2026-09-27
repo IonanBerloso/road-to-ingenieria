@@ -118,7 +118,10 @@ cerrar por falta de material, y no de trabajo, no bloquea abrir la
 siguiente.** Ciencia de Materiales está así desde el 12 de septiembre de 2026
 —no hay exámenes de teoría y problemas entre el material—, y esperar a que
 aparezcan habría parado el proyecto entero. La excepción se declara en el
-`motivo` de su catálogo, no se aplica en silencio.
+`motivo` de su catálogo, no se aplica en silencio. Y cubre el cierre, no el
+trabajo: lo que se puede hacer sin el material que falta —en Materiales, el
+formulario, el simulacro y el laboratorio— no espera, y tiene su fase en
+`tasks/pendiente.md`.
 
 ### El estado, a 26 de septiembre de 2026
 
@@ -129,11 +132,11 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 |---|---|---|---|
 | Cálculo | 1.º | `ok` | la referencia de tamaño: §15 la mide |
 | Álgebra | 1.º | `ok` | un tema `soloEnClase` declarado |
-| Fundamentos Químicos | 1.º | `ok` | sin colección en cuatro temas, porque el material no la trae |
+| Fundamentos Químicos | 1.º | `ok` | sin colección transcrita en cuatro temas, aunque el material la trae, y el laboratorio sin guiones |
 | Expresión Gráfica | 1.º | `obra` | **la siguiente**: temario y evaluación de la guía desde ese día; antes que temas necesita diseño, porque su examen es un dibujo |
 | Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
 | Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
-| Mecánica Aplicada | 2.º | `ok` | cinco convocatorias imposibles, solo en euskera |
+| Mecánica Aplicada | 2.º | `ok` | cinco convocatorias bilingües sin transcribir: el castellano va en imagen |
 | Ciencia de Materiales | 2.º | `obra` | escrita entera; sin exámenes de problemas no hay ruta ni cierre |
 | Sistemas de Producción | 2.º | `obra` | solo el catálogo: **se deja para más adelante** |
 
@@ -2111,7 +2114,7 @@ Cosas que ya han costado horas. No son opiniones.
 
 <!-- índice de trampas: lo genera un guion a partir de las entradas -->
 
-**Las 56, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
+**Las 57, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
 
 - No escribas LaTeX a través del shell.
 - Un `: ` sin comillas dentro de un valor YAML rompe el fichero
@@ -2147,6 +2150,7 @@ Cosas que ya han costado horas. No son opiniones.
 - Un id de ejercicio inventado suena igual que uno real.
 - ~~El esquema no tiene `unidad`~~ · resuelto el 30 de agosto de 2026.
 - `pdftotext` sin `-enc UTF-8` se come los signos.
+- El volcado no es la página.
 - Una tilde dentro de `$…$` se dibuja, y avisa en cada build.
 - El símbolo del euro no se puede dibujar dentro de una fórmula.
 - En el pie de una figura no hay fórmulas.
@@ -2691,6 +2695,23 @@ Cosas que ya han costado horas. No son opiniones.
   no para los signos.** Y al revés para los boletines con matrices: el volcado
   de texto destroza las matrices y la imagen las conserva; ahí manda la
   imagen y el texto solo sirve para los signos.
+- **El volcado no es la página.** Lo que `pdftotext` no saca puede estar
+  impreso igual: un texto metido como imagen no aparece en el volcado, y el
+  volcado no avisa. La auditoría externa del 27 de septiembre de 2026 encontró
+  **seis asignaturas** con material que el proyecto daba por inexistente por
+  haber mirado solo el texto extraído. Las dos más caras: cinco convocatorias
+  de Mecánica Aplicada publicadas como «solo en euskera», que son bilingües
+  —el castellano va en la columna derecha, **cada palabra una imagen**—, y una
+  ruta de Térmica que decía «la colección no trae ni un problema de
+  exergía» cuando las diapositivas del tema 7 traen los ejercicios 7.1 a 7.14
+  resueltos, también como imagen. Es la misma lección que la del idioma de
+  Térmica del 10 de septiembre —mirar una página no es mirar el documento—,
+  un escalón más abajo: **mirar el volcado no es mirar la página.** **Regla:
+  si una columna sale vacía, si `pdfimages -list` da imágenes donde debería
+  haber texto, o si el volcado trae menos de lo que el nombre del fichero
+  promete, se renderiza la página (`pdftoppm -r 150`) antes de afirmar que
+  falta algo. Y un «no hay», un «falta» o un «no se reproduce» se escribe
+  citando la página renderizada que lo comprueba.**
 - **Una tilde dentro de `$…$` se dibuja, y avisa en cada build.** KaTeX pinta
   perfectamente `P_{útil}` o `k_{válv}` —no hay error, no queda ningún `$`
   suelto, el suelo da verde— pero emite un `unicodeTextInMathMode` por consola

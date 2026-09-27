@@ -1630,8 +1630,8 @@ const laboratorio = defineCollection({
  * septiembre; Ingeniería Térmica el 7, la primera cuyo material publica **la
  * resolución oficial** de cada examen y no solo el resultado; Ciencia de
  * Materiales el 12, la primera que entra **sin ningún examen** entre el
- * material; y Mecánica Aplicada el 12 también, con tres convocatorias en
- * castellano y cinco solo en euskera. */
+ * material; y Mecánica Aplicada el 12 también, con tres convocatorias
+ * transcritas y cinco bilingües sin transcribir. */
 const temas = Object.fromEntries(
   CON_TEMAS.map((id) => [
     id,
@@ -1666,6 +1666,13 @@ const temas = Object.fromEntries(
  *   · **ids únicos** y un bloque declarado, para que el simulador pueda
  *     repartir las preguntas como las reparte el examen de verdad.
  */
+/** Los bloques del temario de un banco, en un solo sitio: los usan las
+ *  preguntas y el reparto del examen. */
+const BLOQUES_BANCO = [
+  'familias', 'enlaces', 'cristalino', 'solidos',
+  'niveles', 'definiciones', 'avanzados',
+] as const;
+
 const banco = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/banco' }),
   schema: z
@@ -1684,6 +1691,12 @@ const banco = defineCollection({
         fallo: z.number(),
         /** La nota que hay que superar, sobre 10. */
         aprueba: z.number().min(0).max(10),
+        /** Cuántas preguntas saca el simulacro de cada bloque: las del examen
+         *  real, contadas pregunta a pregunta. Sin él, el simulador reparte en
+         *  proporción al banco, y redondeando se quedaba en 9 de familias
+         *  donde el examen de 2024 puso 10 u 11 (auditoría del 27 de
+         *  septiembre de 2026). */
+        reparto: z.record(z.enum(BLOQUES_BANCO), z.number().int().min(0)).optional(),
       }),
       preguntas: z
         .array(
@@ -1692,10 +1705,7 @@ const banco = defineCollection({
             /** A qué bloque del temario pertenece, para repartir como el
              *  examen real: si once de veinticinco van de familias, el
              *  simulacro tiene que sacar esa proporción y no una al azar. */
-            bloque: z.enum([
-              'familias', 'enlaces', 'cristalino', 'solidos',
-              'niveles', 'definiciones', 'avanzados',
-            ]),
+            bloque: z.enum(BLOQUES_BANCO),
             pregunta: z.string().min(10),
             opciones: z
               .array(
@@ -1711,6 +1721,23 @@ const banco = defineCollection({
         .min(1),
     })
     .superRefine((b, ctx) => {
+      /* El reparto declarado tiene que sumar lo que saca el simulacro, y
+         ningún bloque puede pedir más preguntas de las que tiene. */
+      if (b.puntuacion.reparto) {
+        const suma = Object.values(b.puntuacion.reparto).reduce((a, n) => a + (n ?? 0), 0);
+        if (suma !== b.puntuacion.preguntas) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `el reparto suma ${suma} y el simulacro saca ${b.puntuacion.preguntas}`,
+          });
+        }
+        for (const [bloque, n] of Object.entries(b.puntuacion.reparto)) {
+          const hay = b.preguntas.filter((p) => p.bloque === bloque).length;
+          if ((n ?? 0) > hay) {
+            ctx.addIssue({ code: 'custom', message: `el reparto pide ${n} de ${bloque} y el banco tiene ${hay}` });
+          }
+        }
+      }
       const vistos = new Set<string>();
       for (const p of b.preguntas) {
         if (vistos.has(p.id)) {
