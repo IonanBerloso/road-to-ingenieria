@@ -16,13 +16,16 @@
  * salgan de aquí son los que se pueden publicar en `tasks/` o en
  * `docs/como-vamos.md`, y se vuelven a sacar antes de tocar esa prosa.
  *
- * Salvo dos cosas, y solo con `--estricto`, que es como lo llama el suelo
+ * Salvo tres cosas, y solo con `--estricto`, que es como lo llama el suelo
  * (`npm run cifras`): una nota PUBLICADA en una ruta con un número que ya no
- * es, y una cifra de la documentación que este guion mide y no cuadra. Esas
- * dos salen con código 1. El porqué está al final del fichero.
+ * es, una cifra de la documentación que este guion mide y no cuadra, y el
+ * trinquete de las demostraciones de examen sin `redactar` (sección 11, desde
+ * el 27 de septiembre de 2026). Salen con código 1. El porqué está en cada
+ * sección y al final del fichero.
  *
  *   node scripts/deuda.mjs               el informe entero
- *   node scripts/deuda.mjs --estricto    solo las cifras caducadas, y falla si las hay
+ *   node scripts/deuda.mjs --lista       y además qué ejercicios faltan en la sección 11
+ *   node scripts/deuda.mjs --estricto    solo lo que puede fallar, y falla si lo hay
  */
 const ESTRICTO = process.argv.includes('--estricto');
 /* En modo estricto el informe no se imprime: en el registro del suelo serían
@@ -865,6 +868,50 @@ fila('afirmaciones caducadas', caducadas.length);
 for (const c of caducadas) fila('', '· ' + c);
 console.log('');
 
+/* ── 11 · las demostraciones de examen que no se escriben nunca ──────────
+ *
+ * La fase D de la auditoría del 27 de septiembre de 2026. En Álgebra 29 de
+ * los 32 ejercicios de examen dicen «demostrar» y la mitad de la nota es
+ * escribir una demostración; en Cálculo COMP4 es un tercio de los puntos. Un
+ * paso `justificar` ordena piezas hechas, y eso enseña a reconocer una
+ * demostración, no a escribirla: lo que la entrena es un `redactar` con su
+ * rúbrica. Aquí se cuentan los ejercicios de examen que la piden y no lo
+ * tienen, con el criterio del encargo: en Álgebra, por el verbo del
+ * enunciado; en Cálculo, los que valen 6 o más puntos de COMP4. Las demás
+ * asignaturas solo informan: en Fluidos «justificar» es casi siempre «di por
+ * qué sale este número», y eso no es una demostración.
+ *
+ * Y un trinquete, que es lo único de esta sección que puede fallar: el techo
+ * es lo que había al medir, y el modo estricto no deja que suba —un examen
+ * nuevo con su demostración sin `redactar`— ni que baje sin bajar el techo,
+ * para que lo ganado no se pueda volver a perder. Al acabar la fase D los dos
+ * techos tienen que ser cero, que es el «Acepta» del encargo. */
+pinta('11 · Demostraciones de examen sin paso redactar');
+const VERBO_DEMOSTRAR = /\b(demu[eé]str|demostr|deduc|dedu[zc]|razonad|razon[ae]|definir|defina|define\b|prob(ar|ad) que)\w*/i;
+const TECHO_REDACTAR = { algebra: 28, calculo: 47 };
+const sinRedactar = {};
+for (const asig of ASIGS) {
+  const suyos = [...EJ.values()].filter((e) => e.asig === asig && e.deExamen);
+  if (!suyos.length) continue;
+  const sin = suyos.filter((e) => {
+    if ((e.pasos ?? []).some((p) => p.tipo === 'redactar')) return false;
+    if (asig === 'calculo') return (e.puntos?.comp4 ?? 0) >= 6;
+    return VERBO_DEMOSTRAR.test(String(e.enunciado ?? '').replace(/<svg[\s\S]*?<\/svg>/g, ''));
+  });
+  sinRedactar[asig] = sin.map((e) => e.id);
+  const criterio = asig === 'calculo' ? 'con COMP4 ≥ 6' : 'por el verbo';
+  const techo = TECHO_REDACTAR[asig];
+  fila(asig, `${sin.length} sin redactar (${criterio})${techo !== undefined ? ` · techo ${techo}` : ' · solo informa'}`);
+}
+const trinquete = [];
+for (const [asig, techo] of Object.entries(TECHO_REDACTAR)) {
+  const n = sinRedactar[asig]?.length ?? 0;
+  if (n > techo) trinquete.push(`${asig}: ${n} ejercicios de examen con demostración y sin redactar, y el techo es ${techo} (los que faltan salen con «node scripts/deuda.mjs --lista»)`);
+  if (n < techo) trinquete.push(`${asig}: ahora son ${n} y el techo sigue en ${techo}: bájalo en TECHO_REDACTAR de scripts/deuda.mjs, para que lo ganado no se pierda`);
+}
+if (process.argv.includes('--lista')) for (const [a, ids] of Object.entries(sinRedactar)) for (const id of ids) fila(a, '· ' + id);
+console.log('');
+
 /* ── el modo estricto: lo único de aquí que puede fallar ──────────────
  *
  * Todo lo de arriba informa, y así tiene que ser: un escalón con un solo
@@ -879,6 +926,11 @@ console.log('');
  * guardián, y este lo es solo para esas dos. */
 if (ESTRICTO) {
   console.log = imprime;
+  if (trinquete.length) {
+    console.error(`\nEl trinquete de las demostraciones sin redactar (sección 11):`);
+    for (const c of trinquete) console.error(`  ✗ ${c}`);
+    process.exit(1);
+  }
   const todas = [...desfasadas, ...caducadas];
   if (todas.length) {
     console.error(`\n${todas.length} cifra(s) publicada(s) que ya no son verdad:`);

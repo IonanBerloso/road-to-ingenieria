@@ -593,6 +593,20 @@ minoría a propósito: a 26 de septiembre de 2026, `verificar`, `redactar` y
 > `calculo/t07-integral-multiple`, ejercicio `invertir-el-orden`: el que no se
 > puede hacer de cabeza.
 
+> **Las rúbricas de `redactar` se comparten desde el 27 de septiembre de
+> 2026** (fase D0 de la auditoría). Cuando la misma demostración cae en varios
+> ejercicios, su rúbrica vive una sola vez en `src/content/rubricas/<id>.yaml`
+> y el paso pone `rubrica: <id>`; escrita en el paso sigue valiendo para las
+> que no se repiten. Cada punto puede llevar `minimo: true` —lo que el
+> corrector exige para darla por buena— y `peso`, y la página los pinta como
+> casillas que el alumno marca comparando su folio, con la cuenta y el aviso
+> de los mínimos que faltan: no corrigen nada, cuentan. `que` dice si es una
+> demostración, una deducción o una definición, y pone el título del paso.
+> `tests/rubricas.test.ts` caza un id que no existe, y la sección 11 de
+> `npm run deuda` cuenta los ejercicios de examen que piden una demostración
+> y no tienen `redactar`, con un trinquete en el modo estricto: el techo no
+> sube, y cuando baja hay que bajarlo.
+
 > **Los usos de cada tipo no se escriben aquí**: los da `npm run deuda`, en
 > «el tamaño del corpus». Esta tabla llevaba una columna con ellos y caducó
 > más de diez veces entre agosto y septiembre de 2026, cada vez que se tocaba

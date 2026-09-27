@@ -695,21 +695,40 @@ const pasoVerificar = z.object({
  *
  *  No es un sexto patrón (§05): es un tipo de paso dentro del Ejercicio
  *  guiado, como `verificar`. */
+/** Un punto de rúbrica: **qué** se mira y **por qué** cuenta. `minimo` marca
+ *  los que el corrector exige para dar la demostración por buena —sin ellos
+ *  no hay nota, por bien que esté el resto—, y `peso` reparte los puntos
+ *  cuando no valen todos lo mismo; sin él, cada punto vale uno. Los dos
+ *  entran el 27 de septiembre de 2026 con la fase D0 de la auditoría, que
+ *  pedía la rúbrica «como casillas que cuentan puntos y marcan los mínimos». */
+const puntoRubrica = z.object({
+  punto: z.string().min(10),
+  porque: z.string().min(20),
+  minimo: z.boolean().optional(),
+  peso: z.number().positive().optional(),
+});
+
 const pasoRedactar = z.object({
   tipo: z.literal('redactar'),
+  /** Qué se escribe, que es lo que pone el título del paso. En Álgebra y
+   *  Cálculo casi siempre una demostración; en Mecánica caen deducciones
+   *  —«obtener de forma razonada»— y definiciones, y llamarlas demostración
+   *  era decir otra cosa. */
+  que: z.enum(['demostracion', 'deduccion', 'definicion']).default('demostracion'),
   /** Qué hay que escribir, exactamente. */
   consigna: z.string().min(20),
   /** Los puntos que un corrector busca, en el orden en que se escriben.
    *  Cada uno dice **qué** se mira y **por qué** cuenta: una rúbrica que solo
-   *  enumera se lee como una lista de manías. */
-  rubrica: z
-    .array(
-      z.object({
-        punto: z.string().min(10),
-        porque: z.string().min(20),
-      }),
-    )
-    .min(3),
+   *  enumera se lee como una lista de manías.
+   *
+   *  O, cuando la misma demostración cae en varios ejercicios, el id de una
+   *  rúbrica de `src/content/rubricas/`. Copiar la misma rúbrica en nueve
+   *  ejercicios es tener nueve rúbricas que el día que se corrija una dejan
+   *  de coincidir (Regla 0 del encargo de la auditoría). */
+  rubrica: z.union([
+    z.array(puntoRubrica).min(3),
+    z.string().regex(/^[a-z0-9-]+$/, 'el id de una rúbrica de src/content/rubricas'),
+  ]),
   veredicto: z.string().optional(),
 });
 
@@ -1931,6 +1950,21 @@ const laminas = defineCollection({
     }),
 });
 
+/** Las rúbricas compartidas: una por demostración que cae en más de un
+ *  ejercicio (fase D0 de la auditoría del 27 de septiembre de 2026). El paso
+ *  `redactar` que la usa pone su id en `rubrica`, y `EjercicioGuiado` la lee
+ *  al construir la página; si el id no existe, la construcción falla con el
+ *  ejercicio y el id, y `tests/contenido/rubricas.test.ts` lo caza antes. */
+const rubricas = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/rubricas' }),
+  schema: z.object({
+    titulo: z.string().min(5),
+    /** Qué demuestra y dónde cae, para quien vaya a reutilizarla. */
+    cuando: z.string().min(20),
+    puntos: z.array(puntoRubrica).min(3),
+  }),
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -1940,4 +1974,5 @@ export const collections = {
   laboratorio,
   banco,
   laminas,
+  rubricas,
 };
