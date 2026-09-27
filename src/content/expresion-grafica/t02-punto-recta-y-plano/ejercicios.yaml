@@ -212,3 +212,534 @@ ejercicios:
 
       **Cuánto recorre.** P₁Q₁ mide 44,79 mm en la planta y la diferencia de cotas entre P y Q
       es de 31,98 mm; la verdadera magnitud de PQ es la hipotenusa: 55,0 mm.
+
+  - id: sd4-el-poste-y-sus-tres-cables
+    titulo: El poste y sus tres cables
+    fuente: Ejercicio 4 (SD4) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    enunciado: |
+      Se presenta el alzado y la planta de un poste que está fijado por los cables tensores AB, CD y
+      EF. Calcular lo siguiente:
+
+      a) Longitud de los cables.
+
+      b) Pendiente de los cables.
+    pide: La longitud real y la pendiente de cada cable, construyendo antes su verdadera magnitud.
+    receta:
+      lamina: sd4
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+      solucion:
+        vm_AB_mm: en_mm(vm(A, B))
+        vm_CD_mm: en_mm(vm(C, D))
+        vm_EF_mm: en_mm(vm(E, F))
+    pasos:
+      - tipo: reconocer
+        pregunta: Ninguno de los tres cables es horizontal ni frontal. ¿Dónde está su longitud real?
+        opciones:
+          - texto: En el alzado, que es donde se ve cuánto suben
+            mensaje: |
+              El alzado solo da en verdadera magnitud un segmento **frontal**, paralelo al plano
+              vertical, y estos cables se acercan o se alejan mientras suben: el alzado los acorta.
+          - texto: En la planta, que es donde se ve cuánto avanzan
+            mensaje: |
+              La planta solo da en verdadera magnitud un segmento **horizontal**, y estos cables
+              suben: la planta los acorta, y tanto más cuanto más inclinados.
+          - texto: En ninguna de las dos vistas; es la hipotenusa del triángulo que forman la planta y la diferencia de cotas
+            correcta: true
+            mensaje: |
+              Eso es. Se construye abatiendo el plano proyectante del cable: por un extremo de la
+              planta, perpendicular a ella, se lleva la diferencia de cotas de sus extremos, que se
+              mide en el alzado.
+
+      - tipo: construir
+        titulo: Abatir los tres cables
+        intro: |
+          Para cada cable, traza por un extremo de su planta la perpendicular a ella, lleva
+          sobre esa perpendicular la diferencia de cotas de sus dos extremos —mídela en el
+          alzado— y marca el extremo abatido. Vale cualquiera de los dos extremos, a cualquiera
+          de los dos lados, y también abatir sobre el alzado.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: AB
+            rotulo: (AB)
+            pide: el cable AB, abatido
+            es: '[abatido_planta(A, B), abatido_planta(B, A), abatido_alzado(A, B), abatido_alzado(B, A)]'
+            bien: |
+              Ese es un extremo abatido de AB: la recta que lo une con el otro extremo de la planta
+              es el cable en verdadera magnitud.
+            diagnosticos:
+              - si: 'a_distancia(de: figura.punto("B1"), d: vm_alzado(A, B))'
+                mensaje: |
+                  Has llevado lo que mide **A₂B₂ en el alzado**, y el alzado también acorta. El
+                  cateto que va en la perpendicular es la **diferencia de cotas** de A y B: la
+                  distancia vertical entre A₂ y B₂.
+                ejemplo: 'desplaza(figura.punto("B1"), dx: vm_alzado(A, B))'
+              - si: 'a_distancia(de: figura.punto("B1"), d: diferencia_de_cotas(A, B))'
+                mensaje: |
+                  La distancia es la buena, pero va en la **perpendicular a A₁B₁** por B₁: el
+                  triángulo de la verdadera magnitud es rectángulo en B₁.
+                ejemplo: 'desplaza(figura.punto("B1"), dy: diferencia_de_cotas(A, B))'
+              - si: siempre
+                mensaje: |
+                  El abatido de B está en la perpendicular a A₁B₁ por B₁, a la diferencia de cotas
+                  de A y B; el de A, lo mismo por A₁.
+          - nombre: CD
+            rotulo: (CD)
+            pide: el cable CD, abatido
+            es: '[abatido_planta(C, D), abatido_planta(D, C), abatido_alzado(C, D), abatido_alzado(D, C)]'
+            bien: |
+              Ese es un extremo abatido de CD: la recta que lo une con el otro extremo de la planta
+              es el cable en verdadera magnitud.
+            diagnosticos:
+              - si: 'a_distancia(de: figura.punto("C1"), d: vm_alzado(C, D))'
+                mensaje: |
+                  Has llevado lo que mide **C₂D₂ en el alzado**, y el alzado también acorta. El
+                  cateto que va en la perpendicular es la **diferencia de cotas** de C y D.
+                ejemplo: 'desplaza(figura.punto("C1"), dy: vm_alzado(C, D))'
+              - si: 'a_distancia(de: figura.punto("C1"), d: diferencia_de_cotas(C, D))'
+                mensaje: |
+                  La distancia es la buena, pero va en la **perpendicular a C₁D₁** por C₁: el
+                  triángulo de la verdadera magnitud es rectángulo en C₁.
+                ejemplo: 'desplaza(figura.punto("C1"), dx: diferencia_de_cotas(C, D))'
+              - si: siempre
+                mensaje: |
+                  El abatido de C está en la perpendicular a C₁D₁ por C₁, a la diferencia de cotas
+                  de C y D; el de D, lo mismo por D₁.
+          - nombre: EF
+            rotulo: (EF)
+            pide: el cable EF, abatido
+            es: '[abatido_planta(E, F), abatido_planta(F, E), abatido_alzado(E, F), abatido_alzado(F, E)]'
+            bien: |
+              Ese es un extremo abatido de EF: la recta que lo une con el otro extremo de la planta
+              es el cable en verdadera magnitud.
+            diagnosticos:
+              - si: 'a_distancia(de: figura.punto("E1"), d: vm_alzado(E, F))'
+                mensaje: |
+                  Has llevado lo que mide **E₂F₂ en el alzado**, y el alzado también acorta. El
+                  cateto que va en la perpendicular es la **diferencia de cotas** de E y F.
+                ejemplo: 'desplaza(figura.punto("E1"), dx: vm_alzado(E, F))'
+              - si: 'a_distancia(de: figura.punto("E1"), d: diferencia_de_cotas(E, F))'
+                mensaje: |
+                  La distancia es la buena, pero va en la **perpendicular a E₁F₁** por E₁: el
+                  triángulo de la verdadera magnitud es rectángulo en E₁.
+                ejemplo: 'desplaza(figura.punto("E1"), dy: diferencia_de_cotas(E, F))'
+              - si: siempre
+                mensaje: |
+                  El abatido de E está en la perpendicular a E₁F₁ por E₁, a la diferencia de cotas
+                  de E y F; el de F, lo mismo por F₁.
+        pista: |
+          (1) En el alzado, mide la diferencia de cotas del cable: la distancia vertical entre sus
+          dos extremos, con una horizontal por el más bajo. (2) Por el extremo de la planta que
+          elijas, traza la perpendicular a la planta del cable. (3) Lleva sobre ella esa
+          diferencia con el compás: ahí está el extremo abatido.
+        desarrollo: |
+          En la lámina, un extremo abatido de cada cable sobre la planta. La recta que lo une con
+          el otro extremo es el cable en verdadera magnitud, y el ángulo que forma con la planta
+          del cable es el que forma el cable con el suelo.
+
+      - tipo: calcular
+        titulo: La longitud de AB
+        pregunta: Longitud real del cable AB.
+        respuesta:
+          tipo: numero
+          valor: '57.02'
+          receta: vm_AB_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '41.09'
+            receta: en_mm(vm_planta(A, B))
+            mensaje: |
+              Eso es lo que mide **A₁B₁ en la planta**: el cateto horizontal del triángulo. La
+              longitud real es la hipotenusa.
+          - valor: '54.38'
+            receta: en_mm(vm_alzado(A, B))
+            mensaje: |
+              Eso es **A₂B₂ en el alzado**, y el alzado también acorta: AB se aleja mientras sube,
+              así que no es frontal.
+          - valor: '39.54'
+            receta: en_mm(diferencia_de_cotas(A, B))
+            mensaje: |
+              Eso es la **diferencia de cotas** de A y B: el cateto vertical del triángulo, no el
+              cable.
+        pista: |
+          Es la hipotenusa del triángulo que acabas de abatir: mide el segmento que une el extremo
+          abatido con el otro extremo de la planta.
+        desarrollo: |
+          $$ \overline{AB} = \sqrt{\overline{A_1B_1}^{\,2} + \Delta z^{2}} = \sqrt{41{,}09^{2} + 39{,}54^{2}} \approx 57{,}02 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: La pendiente de AB, en grados
+        pregunta: Ángulo que forma el cable AB con el plano horizontal.
+        respuesta:
+          tipo: numero
+          valor: '43.90'
+          receta: angulo_con_ph(segmento3(A, B))
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '46.10'
+            receta: 90 - angulo_con_ph(segmento3(A, B))
+            mensaje: |
+              Ese es el ángulo con la **vertical**, el complementario. En el triángulo abatido, el
+              ángulo con el suelo es el que está en el extremo de abajo, entre la planta y el cable.
+          - valor: '17.50'
+            receta: angulo_con_pv(segmento3(A, B))
+            mensaje: |
+              Ese es el ángulo con el **plano vertical**, el que da el abatimiento sobre el alzado.
+              La pendiente se mide contra el suelo, el plano horizontal.
+          - valor: '0.96'
+            receta: pendiente(A, B)
+            mensaje: |
+              Esa es la pendiente **en tanto por uno**, la tangente del ángulo. Aquí se pide el
+              ángulo mismo, en grados.
+        pista: |
+          Es el ángulo del triángulo abatido en el extremo de abajo: su tangente es la diferencia
+          de cotas partida por lo que mide la planta.
+        desarrollo: |
+          $$ \alpha = \arctan\frac{\Delta z}{\overline{A_1B_1}} = \arctan\frac{39{,}54}{41{,}09} \approx 43{,}9^{\circ} $$
+
+      - tipo: calcular
+        titulo: La longitud de CD
+        pregunta: Longitud real del cable CD.
+        respuesta:
+          tipo: numero
+          valor: '47.97'
+          receta: vm_CD_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '38.72'
+            receta: en_mm(vm_planta(C, D))
+            mensaje: |
+              Eso es lo que mide **C₁D₁ en la planta**, el cateto horizontal. La longitud real es
+              la hipotenusa.
+          - valor: '31.13'
+            receta: en_mm(vm_alzado(C, D))
+            mensaje: |
+              Eso es **C₂D₂ en el alzado**. CD es el cable que más se aleja: el alzado lo acorta más
+              que a ningún otro.
+          - valor: '28.32'
+            receta: en_mm(diferencia_de_cotas(C, D))
+            mensaje: |
+              Eso es la **diferencia de cotas** de C y D, el cateto vertical, no el cable.
+        pista: |
+          La hipotenusa del triángulo de CD: planta C₁D₁ y diferencia de cotas.
+        desarrollo: |
+          $$ \overline{CD} = \sqrt{38{,}72^{2} + 28{,}32^{2}} \approx 47{,}97 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: La pendiente de CD, en tanto por uno
+        pregunta: Pendiente del cable CD, en tanto por uno.
+        respuesta:
+          tipo: numero
+          valor: '0.73'
+          receta: pendiente(C, D)
+          tolerancia: 0.02
+          formato: un número, lo que sube por lo que avanza
+        distractores:
+          - valor: '0.59'
+            receta: diferencia_de_cotas(C, D) / vm(C, D)
+            mensaje: |
+              Has partido la diferencia de cotas por la **longitud real**, y eso es el seno. La
+              pendiente es lo que sube partido por lo que **avanza**, que es la planta.
+          - valor: '36.19'
+            receta: angulo_con_ph(segmento3(C, D))
+            mensaje: |
+              Ese es el **ángulo** con el suelo, en grados. La pendiente en tanto por uno es su
+              tangente.
+          - valor: '73.15'
+            receta: pendiente(C, D) * 100
+            mensaje: |
+              Esa es la pendiente **en porcentaje**. En tanto por uno es la misma cifra partida
+              por cien.
+        pista: |
+          Lo que sube, la diferencia de cotas, partido por lo que avanza, lo que mide la planta.
+        desarrollo: |
+          $$ p = \frac{\Delta z}{\overline{C_1D_1}} = \frac{28{,}32}{38{,}72} \approx 0{,}73 $$
+
+      - tipo: calcular
+        titulo: La longitud de EF
+        pregunta: Longitud real del cable EF.
+        respuesta:
+          tipo: numero
+          valor: '54.68'
+          receta: vm_EF_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '36.87'
+            receta: en_mm(vm_planta(E, F))
+            mensaje: |
+              Eso es lo que mide **E₁F₁ en la planta**, el cateto horizontal. La longitud real es
+              la hipotenusa.
+          - valor: '50.42'
+            receta: en_mm(vm_alzado(E, F))
+            mensaje: |
+              Eso es **E₂F₂ en el alzado**, que también acorta: EF no es frontal.
+          - valor: '40.39'
+            receta: en_mm(diferencia_de_cotas(E, F))
+            mensaje: |
+              Eso es la **diferencia de cotas** de E y F, el cateto vertical, no el cable.
+        pista: |
+          La hipotenusa del triángulo de EF: planta E₁F₁ y diferencia de cotas.
+        desarrollo: |
+          $$ \overline{EF} = \sqrt{36{,}87^{2} + 40{,}39^{2}} \approx 54{,}7 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: La pendiente de EF, en porcentaje
+        pregunta: Pendiente del cable EF, en porcentaje.
+        respuesta:
+          tipo: numero
+          valor: '109.55'
+          receta: pendiente(E, F) * 100
+          tolerancia: 1
+          formato: un número, en %
+        distractores:
+          - valor: '1.10'
+            receta: pendiente(E, F)
+            mensaje: |
+              Esa es la pendiente **en tanto por uno**. En porcentaje es la misma cifra por cien.
+          - valor: '73.86'
+            receta: diferencia_de_cotas(E, F) / vm(E, F) * 100
+            mensaje: |
+              Has partido la diferencia de cotas por la **longitud real**, y eso es el seno. La
+              pendiente es lo que sube partido por lo que avanza, la planta.
+          - valor: '47.61'
+            receta: angulo_con_ph(segmento3(E, F))
+            mensaje: |
+              Ese es el **ángulo** con el suelo, en grados. En porcentaje es cien veces su
+              tangente.
+        pista: |
+          Más del cien por cien no es un error: EF sube más de lo que avanza, porque está a más de
+          45° del suelo.
+        desarrollo: |
+          $$ p = \frac{40{,}39}{36{,}87} \cdot 100 \approx 109{,}5\ \% $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Ningún cable es horizontal ni frontal, así que ni la planta ni el alzado lo dan en verdadera magnitud.
+          - texto: Se abate el plano proyectante de cada cable, llevando la diferencia de cotas en la perpendicular a su planta por un extremo.
+          - texto: La recta del extremo abatido al otro extremo es la verdadera magnitud, y su ángulo con la planta es el ángulo con el suelo.
+          - texto: 'La pendiente es la tangente de ese ángulo: la diferencia de cotas partida por lo que mide la planta.'
+          - texto: La pendiente es la diferencia de cotas partida por la longitud real del cable.
+            trampa: true
+            mensaje: |
+              Eso es el **seno** del ángulo, no la pendiente. La pendiente compara lo que sube con
+              lo que avanza, y lo que avanza es la planta.
+
+    resolucion: |
+      **Por qué hace falta abatir.** Ninguno de los tres cables es horizontal —su alzado no lo
+      es— ni frontal —su planta tampoco—, así que las dos vistas los acortan. La longitud real es
+      la hipotenusa de un triángulo rectángulo cuyos catetos son la planta del cable y la
+      diferencia de cotas de sus extremos, que se mide en el alzado. Se construye abatiendo el
+      plano proyectante del cable: por un extremo de la planta, en la perpendicular a ella, se
+      lleva la diferencia de cotas.
+
+      **AB.** La planta mide 41,09 mm y la diferencia de cotas, 39,54 mm: AB mide 57,02 mm, y
+      forma con el suelo un ángulo de 43,9°, que es una pendiente de 0,962 en tanto por uno.
+
+      **CD.** 38,72 mm en la planta y 28,32 mm de diferencia de cotas: CD mide 47,97 mm, con una
+      pendiente de 0,73 en tanto por uno, 36,2° con el suelo.
+
+      **EF.** 36,87 mm en la planta y 40,39 mm de diferencia de cotas: EF mide 54,68 mm. Sube más
+      de lo que avanza, y por eso su pendiente pasa del cien por cien: 109,5 %, o 47,6° con el
+      suelo.
+
+      **Las tres formas de dar una pendiente** son la misma cifra: el ángulo con el plano
+      horizontal, su tangente en tanto por uno y esa tangente por cien. Este ejercicio pide cada
+      cable en una, para practicar las tres.
+
+  - id: sd5-un-cuadrado-entre-dos-rectas
+    titulo: Un cuadrado entre dos rectas
+    fuente: Ejercicio 5 (SD5) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    enunciado: |
+      Dibujar las proyecciones diédricas de un cuadrado. Datos: el punto A es un vértice del
+      cuadrado, un lado está situado sobre la recta r y el lado opuesto en la recta s.
+    pide: Los otros tres vértices del cuadrado en las dos vistas, y lo que mide su lado.
+    receta:
+      lamina: sd5
+      escena:
+        r: 'recta3(alzado: figura.segmento("r2≡s2"), planta: figura.segmento("r1"))'
+        s: 'recta3(alzado: figura.segmento("r2≡s2"), planta: figura.segmento("s1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+      solucion:
+        D: pie_perpendicular(A, r)
+        lado: vm(A, D)
+        B: 'punto_a_distancia(s, desde: A, distancia: lado)'
+        C: pie_perpendicular(B, r)
+        lado_mm: en_mm(lado)
+        B_mitad: 'punto_a_distancia(s, desde: A, distancia: lado / 2)'
+    pasos:
+      - tipo: reconocer
+        pregunta: Las plantas de r y de s son horizontales. ¿Qué dice eso de las dos rectas?
+        opciones:
+          - texto: Que son horizontales, y se ven en verdadera magnitud en la planta
+            mensaje: |
+              Una recta horizontal tiene horizontal el **alzado**, porque lo que no cambia es la
+              cota. Aquí lo horizontal es la planta: lo que no cambia es el alejamiento.
+          - texto: 'Que son frontales: paralelas al plano vertical, y en verdadera magnitud en el alzado'
+            correcta: true
+            mensaje: |
+              Eso es. Y de ahí sale todo el ejercicio: un ángulo recto con una frontal se ve recto
+              en el alzado, y las distancias sobre r y s se miden en el alzado sin acortar.
+          - texto: Que son de punta, porque sus plantas son paralelas
+            mensaje: |
+              Una recta de punta se ve como un **punto** en el alzado, y r₂ ≡ s₂ es una recta.
+              Que dos plantas sean paralelas dice que las rectas pueden serlo, no cómo están.
+
+      - tipo: construir
+        titulo: Construir el cuadrado
+        intro: |
+          Marca los vértices que faltan: D, el que está sobre r junto a A; B, el otro extremo del
+          lado que va por s; y C, el que cierra el cuadrado sobre r. B puede salir a un lado o
+          al otro de A, y los dos cuadrados valen: C va al mismo lado que B.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: D1
+            pide: el vértice D, en la planta
+            es: proy_planta(solucion.D)
+            bien: |
+              D₁ está en r₁, en la vertical de A₁. El lado AD es perpendicular a r, que es frontal,
+              así que el ángulo recto se ve en el alzado: AD queda de punta, y D₂ coincide con A₂.
+            diagnosticos:
+              - si: en_recta(figura.segmento("r1"))
+                mensaje: |
+                  D₁ está en r₁, pero **en la vertical de A₁**: el lado AD es perpendicular a una
+                  frontal, así que en el alzado se reduce a un punto, y D₂ cae sobre A₂.
+                ejemplo: 'desplaza(proy_planta(solucion.D), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  D está sobre r: D₁ tiene que estar en r₁, y en la vertical de D₂, que coincide con
+                  A₂ porque AD es de punta.
+          - nombre: B2
+            pide: el vértice B, en el alzado
+            es: proy_alzado(solucion.B)
+            bien: |
+              B₂ está sobre s₂ a la longitud del lado desde A₂, en verdadera magnitud porque s es
+              frontal. Y C₂ coincide con B₂, por lo mismo que D₂ con A₂.
+            diagnosticos:
+              - si: en_recta(figura.segmento("r2≡s2"))
+                mensaje: |
+                  B₂ va sobre s₂, pero a la **longitud del lado** desde A₂. El lado es AD, que está en
+                  verdadera magnitud en la planta: lo que mide A₁D₁ se lleva sobre s₂ con el compás.
+                ejemplo: proy_alzado(rama(solucion.B_mitad, 1))
+              - si: siempre
+                mensaje: |
+                  B está en s: B₂ tiene que estar sobre s₂, a la longitud del lado desde A₂.
+          - nombre: B1
+            pide: el vértice B, en la planta
+            es: proy_planta(solucion.B)
+            bien: |
+              B₁ está en s₁, en la vertical de B₂. La planta acorta el lado AB, porque s sube.
+            diagnosticos:
+              - si: '!en_vertical_de(B2)'
+                mensaje: |
+                  B₁ va en la **vertical de B₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.B, 1)), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Está en la vertical de B₂, pero B es de s: B₁ tiene que estar en s₁.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.B, 1)), dy: mm(-8))'
+          - nombre: C1
+            pide: el vértice C, en la planta
+            es: proy_planta(solucion.C)
+            bien: |
+              C₁ está en r₁, en la vertical de B₁: el lado BC es de punta, como AD, y C₂ coincide
+              con B₂.
+            diagnosticos:
+              - si: en_recta(figura.segmento("r1")) && cerca_de(otra_rama(proy_planta(solucion.C)))
+                mensaje: |
+                  Ese es el vértice del **otro** cuadrado: C va al mismo lado que B. Con B a un lado
+                  de A y C al otro, la figura se cruza y no es un cuadrado.
+                ejemplo: proy_planta(rama(solucion.C, 2))
+              - si: '!en_vertical_de(B1)'
+                mensaje: |
+                  C₁ va en la **vertical de B₁**: el lado BC es de punta, igual que AD, y en el alzado
+                  C₂ cae sobre B₂.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.C, 1)), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  C₁ tiene que estar sobre r₁ y en la vertical de B₁.
+        trazado:
+          - proy_alzado(segmento3(A, solucion.B))
+          - proy_planta(segmento3(A, solucion.B))
+          - proy_planta(segmento3(solucion.B, solucion.C))
+          - proy_planta(segmento3(solucion.C, solucion.D))
+          - proy_planta(segmento3(solucion.D, A))
+        pista: |
+          (1) D₁: en r₁, en la vertical de A₁. (2) El lado mide lo que A₁D₁ en la planta. (3) Llévalo
+          con el compás desde A₂ sobre s₂: ese es B₂. (4) Baja B₂ a s₁ y tienes B₁. (5) C₁, en r₁ en la
+          vertical de B₁.
+        desarrollo: |
+          En verde claro, el cuadrado calculado: el lado AB en el alzado, donde C₂ ≡ B₂ y
+          D₂ ≡ A₂, y los cuatro lados en la planta.
+
+      - tipo: calcular
+        titulo: El lado del cuadrado
+        pregunta: ¿Cuánto mide el lado del cuadrado?
+        respuesta:
+          tipo: numero
+          valor: '25.02'
+          receta: lado_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '21.66'
+            receta: en_mm(vm_planta(A, solucion.B))
+            mensaje: |
+              Eso es lo que mide **A₁B₁ en la planta**, y s sube: la planta acorta AB. En verdadera
+              magnitud están A₁D₁ en la planta y A₂B₂ en el alzado.
+          - valor: '35.38'
+            receta: en_mm(vm(A, solucion.C))
+            mensaje: |
+              Eso es la **diagonal** AC, el lado por raíz de dos. El lado es AD, o AB.
+          - valor: '0'
+            receta: en_mm(vm_alzado(A, solucion.D))
+            mensaje: |
+              Eso es lo que mide **A₂D₂ en el alzado**: nada, porque AD es de punta y se ve como un
+              punto. Su verdadera magnitud está en la planta.
+        pista: |
+          El lado AD es de punta: en la planta se ve entero, de r₁ a s₁.
+        desarrollo: |
+          El lado es la distancia de r₁ a s₁ medida en la planta, porque AD es de punta:
+          25,02 mm. En el alzado, A₂B₂ mide lo mismo, porque s es frontal.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'Las plantas de r y de s son horizontales: son frontales, y se ven en verdadera magnitud en el alzado.'
+          - texto: 'AD es perpendicular a r, y con una frontal el ángulo recto se ve en el alzado: AD queda de punta, y D₂ coincide con A₂.'
+          - texto: El lado mide lo que A₁D₁ en la planta, y se lleva desde A₂ sobre s₂ para tener B₂.
+          - texto: C sale de B como D de A, y va al mismo lado que B.
+          - texto: El lado se mide en el alzado, entre r₂ y s₂, porque las dos rectas son frontales.
+            trampa: true
+            mensaje: |
+              En el alzado r₂ y s₂ **coinciden**: la distancia entre ellas se ve como cero. El lado AD
+              es de punta, y está en verdadera magnitud en la planta.
+
+    resolucion: |
+      **Qué son r y s.** Sus plantas son horizontales, así que las dos son frontales: paralelas
+      al plano vertical, en verdadera magnitud en el alzado. Y sus alzados coinciden, r₂ ≡ s₂:
+      las dos están en un plano de canto sobre el alzado.
+
+      **El lado AD.** D es el vértice que está sobre r junto a A, y AD es perpendicular a r.
+      Como r es frontal, ese ángulo recto se ve en el alzado: AD es perpendicular a r₂ y, como
+      A₂ está sobre r₂, se reduce a un punto. AD es de punta: D₂ coincide con A₂, D₁ está en r₁
+      en la vertical de A₁, y el lado se ve en verdadera magnitud en la planta, 25,02 mm.
+
+      **B y C.** B está en s a la longitud del lado desde A. Como s es frontal, se lleva en el
+      alzado sin acortar: B₂ está sobre s₂ a 25,02 mm de A₂, a un lado o al otro, y los dos
+      cuadrados valen. B₁ está en s₁, en su vertical: la planta acorta AB a 21,66 mm porque s
+      sube. C sale de B igual que D de A: C₂ coincide con B₂, y C₁ está en r₁ en la vertical de
+      B₁, al mismo lado que B.

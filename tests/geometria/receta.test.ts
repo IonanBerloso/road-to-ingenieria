@@ -237,3 +237,77 @@ describe('los objetivos y los diagnósticos, como los usará el taller', () => {
     );
   });
 });
+
+/* Las funciones que pide SD4, el poste y sus tres cables: la verdadera
+   magnitud por abatimiento y la pendiente. Con el cable AB del piloto, cuyos
+   valores fija tests/geometria/sd4.test.ts; la lámina va en línea hasta que
+   SD4 entre en la colección. */
+describe('el abatimiento y la pendiente, para SD4', () => {
+  const SD4: Lamina = {
+    puntos: {
+      A1: [168, 447.48], A2: [168, 381],
+      B1: [273.84, 496.08], B2: [273.84, 268.92],
+      /* Lo alto y lo bajo del eje del poste: la misma planta. */
+      Arriba1: [297.48, 496.08], Arriba2: [297.48, 261.84],
+      Abajo1: [297.48, 496.08], Abajo2: [297.48, 403.92],
+    },
+    segmentos: {},
+  };
+  const escena = {
+    A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))',
+    B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))',
+  };
+  const r4 = evaluaReceta(SD4, {
+    escena,
+    solucion: {
+      B0: 'abatido_planta(A, B)',
+      B0_alzado: 'abatido_alzado(A, B)',
+      dz_AB_mm: 'en_mm(diferencia_de_cotas(A, B))',
+      pend_AB: 'pendiente(A, B)',
+    },
+  });
+  const dist = (a: readonly number[], b: readonly number[]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+
+  it('la diferencia de cotas y la pendiente de AB, las del piloto', () => {
+    expect(r4.numero('dz_AB_mm')).toBeCloseTo(39.5393, 3);
+    expect(r4.numero('pend_AB')).toBeCloseTo(0.96235, 5);
+  });
+
+  it('B abatido sobre la planta: los dos lados, y los dos a la verdadera magnitud de A₁', () => {
+    const b0 = r4.valores.get('B0');
+    expect(b0?.k).toBe('lista');
+    if (b0?.k !== 'lista') return;
+    expect(b0.v).toHaveLength(2);
+    for (const lado of b0.v) {
+      expect(lado.k).toBe('p2');
+      if (lado.k === 'p2') expect(dist(SD4.puntos.A1, lado.v) * PT_MM).toBeCloseTo(57.0214, 3);
+    }
+  });
+
+  it('y sobre el alzado, a la misma verdadera magnitud de A₂', () => {
+    const b0 = r4.valores.get('B0_alzado');
+    if (b0?.k !== 'lista') throw new Error('B0_alzado tendría que ser una lista');
+    for (const lado of b0.v) if (lado.k === 'p2') expect(dist(SD4.puntos.A2, lado.v) * PT_MM).toBeCloseTo(57.0214, 3);
+  });
+
+  it('un abatido es una lista y no una elección: el lado no cambia nada de lo que viene después', () => {
+    /* Así un objetivo acepta todos los abatidos que valen —de B o de A, a un
+       lado o al otro, en la planta o en el alzado— sin fijar ninguna rama. */
+    const todos = compilaObjetivo('[abatido_planta(A, B), abatido_planta(B, A), abatido_alzado(A, B), abatido_alzado(B, A)]', SD4, r4);
+    expect(todos.eleccion).toBeUndefined();
+    expect(todos.ramas).toHaveLength(1);
+    expect(todos.ramas[0]).toHaveLength(8);
+  });
+
+  it('la pendiente de una recta vertical no existe, y lo dice', () => {
+    expect(() =>
+      evaluaReceta(SD4, {
+        escena: {
+          arriba: 'punto3(alzado: figura.punto("Arriba2"), planta: figura.punto("Arriba1"))',
+          abajo: 'punto3(alzado: figura.punto("Abajo2"), planta: figura.punto("Abajo1"))',
+        },
+        solucion: { p: 'pendiente(arriba, abajo)' },
+      }),
+    ).toThrow(/solucion\.p: pendiente\(\): la recta es vertical/);
+  });
+});

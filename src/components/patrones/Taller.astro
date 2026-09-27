@@ -116,7 +116,7 @@ const datos = {
           <g class="t-lamina">
             {
               lamina.segmentos.map((s) => (
-                <line x1={s.a[0]} y1={s.a[1]} x2={s.b[0]} y2={s.b[1]} class={s.tipo === 'o' ? 'oculta' : 'vista'} />
+                <line x1={s.a[0]} y1={s.a[1]} x2={s.b[0]} y2={s.b[1]} class={s.tipo === 'o' ? 'oculta' : s.tipo === 'e' ? 'eje' : 'vista'} />
               ))
             }
             {(lamina.circulos ?? []).map((c) => <circle cx={c.c[0]} cy={c.c[1]} r={c.r} class="vista" />)}
@@ -722,10 +722,26 @@ const datos = {
         }
       }
       datos.objetivos.forEach((o) => {
-        const q = o.es.ramas[rama(o.es.eleccion)]?.[0];
+        /* De las posiciones que valen, la primera que cae dentro de la
+           lámina con margen para el círculo y el rótulo: un abatido de SD4
+           puede salir fuera por un lado y dentro por el otro, y el que se
+           enseña tiene que verse entero. Sin margen, el de CD quedaba a
+           2,4 pt del borde y su círculo se salía (lo cazó el humo). */
+        const posiciones = o.es.ramas[rama(o.es.eleccion)] ?? [];
+        const M = 12;
+        const q =
+          posiciones.find(([x, y]) => x >= VB.x + M && x <= VB.x + VB.w - M && y >= VB.y + M && y <= VB.y + VB.h - M) ??
+          posiciones[0];
         if (!q) return;
         el('circle', { cx: q[0], cy: q[1], r: 3, class: 't-sol-punto' }, gSol);
-        const texto = el('text', { x: q[0] + 5, y: q[1] + 10, class: 't-sol-rotulo' }, gSol);
+        /* Cerca del borde derecho el rótulo se escribe a la izquierda del
+           punto: si no, se sale del dibujo y no se ve (el (CD) de SD4). */
+        const aLaIzquierda = q[0] > VB.x + VB.w - 30;
+        const texto = el(
+          'text',
+          { x: aLaIzquierda ? q[0] - 5 : q[0] + 5, y: q[1] + 10, 'text-anchor': aLaIzquierda ? 'end' : 'start', class: 't-sol-rotulo' },
+          gSol,
+        );
         texto.textContent = o.rotulo;
       });
     }
@@ -819,6 +835,8 @@ const datos = {
   .t-lamina line,
   .t-lamina circle { stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; fill: none; }
   .t-lamina .oculta { stroke-width: .9; stroke-dasharray: 5 3; }
+  /* El eje, de trazo y punto como en el PDF (entró con el poste de SD4). */
+  .t-lamina .eje { stroke-width: .6; stroke-dasharray: 9 2 1.5 2; }
   .t-lamina .dado line { stroke-width: 1; }
   .t-lamina text { font-family: var(--mono); font-size: 9px; fill: var(--ink); }
 

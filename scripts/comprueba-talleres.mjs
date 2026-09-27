@@ -81,7 +81,16 @@ try {
         const talleres = pagina.locator('[data-taller]');
         const n = await talleres.count();
         if (n === 0) mal(`${ruta}: la página dice tener un taller y no se encuentra ninguno`);
-        for (let t = 0; t < n; t++) await compruebaTaller(pagina, talleres.nth(t), `${ruta} · taller ${t + 1}`);
+        /* Un taller que revienta se apunta como fallo y se sigue con el
+           siguiente: el guion no puede caerse a medias sin decir qué vio. */
+        for (let t = 0; t < n; t++) {
+          const quien = `${ruta} · taller ${t + 1}`;
+          try {
+            await compruebaTaller(pagina, talleres.nth(t), quien);
+          } catch (e) {
+            mal(`${quien}: se interrumpió la comprobación: ${e.message}`);
+          }
+        }
 
         /* El modo completo, en una carga limpia: dibuja la solución sin que
            nadie la haya ganado, que es lo que pide quien lo abre. */
@@ -158,14 +167,18 @@ async function compruebaTaller(pagina, taller, quien) {
   };
   const herramienta = (h) => taller.locator(`[data-herr="${h}"]`).click();
 
-  /** Una vertical en la x dada, enganchada a un segmento de la lámina que la cruce. */
-  const vertical = async (x) => {
-    const s = datos.segmentos.find(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) + 1 && x <= Math.max(a[0], b[0]) - 1);
-    if (!s) throw new Error(`ningún segmento de la lámina cruza x = ${x}`);
-    const [a, b] = s;
-    const y = a[1] + ((x - a[0]) * (b[1] - a[1])) / (b[0] - a[0]);
+  /** Una vertical por el punto dado, enganchada al segmento de la lámina que
+   *  la cruce más lejos de él: el enganche deja un punto donde se pulsa, y si
+   *  queda cerca del que se va a marcar después, el clic se pega a ese punto
+   *  viejo (pasó con EF en SD4, a 8,9 pt). */
+  const vertical = async ([x, yObjetivo]) => {
+    const cortes = datos.segmentos
+      .filter(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) + 1 && x <= Math.max(a[0], b[0]) - 1)
+      .map(([a, b]) => a[1] + ((x - a[0]) * (b[1] - a[1])) / (b[0] - a[0]))
+      .sort((p, q) => Math.abs(q - yObjetivo) - Math.abs(p - yObjetivo));
+    if (!cortes.length) throw new Error(`ningún segmento de la lámina cruza x = ${x}`);
     await herramienta('vertical');
-    await pulsa([x, y]);
+    await pulsa([x, cortes[0]]);
   };
   const marca = async (k, xy) => {
     await taller.locator(`[data-objetivo="${k}"]`).click();
@@ -173,15 +186,40 @@ async function compruebaTaller(pagina, taller, quien) {
   };
   const clase = async () => (await caja.getAttribute('class')) ?? '';
 
+  /* De las posiciones que valen para un objetivo, la primera que cae dentro
+     de la lámina con margen y que cruza algún segmento, para poder enganchar
+     la vertical: los abatidos de SD4 valen en ocho sitios y alguno sale del
+     dibujo, donde no se puede pulsar. */
+  const { x: ex, y: ey, w: ew, h: eh } = datos.encuadre;
+  const cruza = (x) => datos.segmentos.some(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) + 1 && x <= Math.max(a[0], b[0]) - 1);
+  const dentro = ([x, y]) => x > ex + 5 && x < ex + ew - 5 && y > ey + 5 && y < ey + eh - 5;
+  /* Y lejos de lo que atrae el enganche: los cruces de su vertical con la
+     lámina y los puntos dados. A 360 px el enganche abarca unos 9 pt, y un
+     objetivo a 8,9 pt de un cruce —el abatido de F en el alzado, junto al
+     cable CD— no se puede marcar: el clic se va al cruce. Un alumno haría lo
+     mismo que aquí: construir otra de las posiciones que valen. Encima de un
+     cruce sí vale, y es lo normal —Q₁ está en el alero, los vértices de SD5
+     en sus rectas—: ahí el enganche ayuda. */
+  const lejos = (d) => d < 0.5 || d > 15;
+  const libre = ([x, y]) =>
+    datos.segmentos
+      .filter(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) && x <= Math.max(a[0], b[0]))
+      .every(([a, b]) => lejos(Math.abs(a[1] + ((x - a[0]) * (b[1] - a[1])) / (b[0] - a[0]) - y))) &&
+    datos.puntos.every((p) => lejos(Math.hypot(p.x - x, p.y - y)));
+
   let elegidas = {};
   for (const [k, o] of datos.objetivos.entries()) {
     const rama = o.es.eleccion !== undefined ? (elegidas[o.es.eleccion] ?? 0) : 0;
-    const bueno = o.es.ramas[rama][0];
+    const bueno = o.es.ramas[rama].find((q) => dentro(q) && cruza(q[0]) && libre(q));
+    if (!bueno) {
+      mal(`${quien}: ${o.rotulo} no tiene ninguna posición buena dentro de la lámina que se pueda construir con una vertical`);
+      continue;
+    }
     /* Un centímetro más abajo, salvo que se salga de la lámina: Q₁ de SD1
        está a 28 pt del borde inferior, y el clic caía fuera del dibujo. */
     const abajo = bueno[1] + UN_CM;
     const malo = [bueno[0], abajo < datos.encuadre.y + datos.encuadre.h - 5 ? abajo : bueno[1] - UN_CM];
-    await vertical(bueno[0]);
+    await vertical(bueno);
     await herramienta('punto');
     await pulsa(malo);
     if (k === 0) {

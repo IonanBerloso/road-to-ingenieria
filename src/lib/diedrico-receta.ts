@@ -46,11 +46,14 @@
 import {
   PT_MM,
   TOL_VERTICAL,
+  abatidoAlzado,
+  abatidoPlanta,
   anguloConPH,
   anguloConPV,
   anguloPlanoConPH,
   anguloPlanoConPV,
   corteConSegmentos,
+  deltaCota,
   distanciaAPlano,
   distanciaARecta,
   enPlano,
@@ -58,6 +61,7 @@ import {
   frontalPor,
   horizontalPor,
   lmpDir,
+  pendiente as pendienteDe,
   pieEnRecta,
   plano as planoPor,
   planoPorLmp,
@@ -553,6 +557,43 @@ const FUNCIONES: Readonly<Record<string, Funcion>> = {
   vm: { posicion: 2, hace: ([a, b]) => ({ k: 'num', v: vmDe(comoP3(a, 'vm()'), comoP3(b, 'vm()')) }) },
   vm_planta: { posicion: 2, hace: ([a, b]) => ({ k: 'num', v: vmPlanta(comoP3(a, 'vm_planta()'), comoP3(b, 'vm_planta()')) }) },
   vm_alzado: { posicion: 2, hace: ([a, b]) => ({ k: 'num', v: vmAlzado(comoP3(a, 'vm_alzado()'), comoP3(b, 'vm_alzado()')) }) },
+  /* La diferencia de cotas de dos puntos, en pt: el cateto del triángulo de
+     la verdadera magnitud que se mide en el alzado. */
+  diferencia_de_cotas: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'num', v: deltaCota(comoP3(a, 'diferencia_de_cotas()'), comoP3(b, 'diferencia_de_cotas()')) }),
+  },
+  /* Lo que sube por lo que avanza: la tangente del ángulo con el plano
+     horizontal. Una recta vertical no avanza, y no se inventa un número. */
+  pendiente: {
+    posicion: 2,
+    hace: ([a, b]) => {
+      const [p, q] = [comoP3(a, 'pendiente()'), comoP3(b, 'pendiente()')];
+      if (vmPlanta(p, q) < 1e-9) throw new Error('pendiente(): la recta es vertical, y su pendiente no es un número');
+      return { k: 'num', v: pendienteDe(p, q) };
+    },
+  },
+  /* Q abatido sobre la planta, con el plano proyectante de PQ: a |Δcota| de
+     Q₁ y perpendicular a P₁Q₁, y los dos lados valen. Es una LISTA y no una
+     elección como la de punto_a_distancia: el lado no cambia nada de lo que
+     viene después —la distancia de P₁ a cualquiera de los dos es la
+     verdadera magnitud de PQ—, así que un objetivo los acepta todos sin
+     fijar ninguna rama. */
+  abatido_planta: {
+    posicion: 2,
+    hace: ([a, b]) => {
+      const [x, y] = abatidoPlanta(comoP3(a, 'abatido_planta()'), comoP3(b, 'abatido_planta()'));
+      return { k: 'lista', v: [{ k: 'p2', v: x }, { k: 'p2', v: y }] };
+    },
+  },
+  /* Lo mismo sobre el alzado: a |Δalejamiento| de Q₂, perpendicular a P₂Q₂. */
+  abatido_alzado: {
+    posicion: 2,
+    hace: ([a, b]) => {
+      const [x, y] = abatidoAlzado(comoP3(a, 'abatido_alzado()'), comoP3(b, 'abatido_alzado()'));
+      return { k: 'lista', v: [{ k: 'p2', v: x }, { k: 'p2', v: y }] };
+    },
+  },
   en_mm: { posicion: 1, hace: ([x]) => ({ k: 'num', v: comoNum(x, 'en_mm()') * PT_MM }) },
   mm: { posicion: 1, hace: ([x]) => ({ k: 'num', v: comoNum(x, 'mm()') / PT_MM }) },
   raiz: {

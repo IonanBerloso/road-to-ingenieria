@@ -396,8 +396,9 @@ referencia/ · diario/
 CLAUDE.md
 ```
 
-**De los cinco patrones de §05, solo tres son un componente**, y no es un
-descuido: ve a §05, que explica dónde vive cada uno.
+**De los cinco patrones de §05, solo tres son un componente propio**
+—`Lectura`, `EjercicioGuiado` y `Taller`—, y no es un descuido: ve a §05, que
+explica dónde vive cada uno.
 
 > El árbol de arriba prometía `FiguraFija`, `Verificador` y `Demostracion`
 > como ficheros, y no existían. Dos de los tres no faltan —viven dentro de
@@ -768,7 +769,7 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 | patrón | dónde vive de verdad |
 |---|---|
 | **1 · Lectura** | `patrones/Lectura.astro`, en todos los temas |
-| **2 · Figura fija** | **no construido** |
+| **2 · Construcción verificada** | paso `construir` + `patrones/Taller.astro`, en Expresión Gráfica |
 | **3 · Ejercicio guiado** | `patrones/EjercicioGuiado.astro`, en todos los ejercicios |
 | **4 · Verificador** | paso `verificar` + `sim/PlanoComplejo.astro` |
 | **5 · Demostración** | paso `justificar`, con su pieza trampa, en todos los ejercicios |
@@ -777,11 +778,15 @@ del contenido— y por eso la tabla va aquí antes que los patrones:
 A 26 de septiembre de 2026 eran 83 temas, 1.948 ejercicios guiados, 33 pasos
 `verificar` y 10 simuladores; la cifra al día la da `npm run deuda`.
 
-Solo **Figura fija** está sin construir, y sigue sin construirse a propósito:
-ningún tema lo ha pedido todavía. El día que un contenido lo exija se hace; no
-antes, porque un patrón diseñado en el vacío sale mal (§13). **Expresión
-Gráfica es la primera candidata a pedirlo**: su examen es una vista, un corte,
-una pieza que se lee de una sola figura que se transforma.
+El patrón 2 era la **figura fija**, y estuvo sin construir desde agosto de 2026
+a propósito: ningún tema lo pedía, y un patrón diseñado en el vacío sale mal
+(§13). Lo pidió Expresión Gráfica, cuyo examen es un dibujo, y se construyó
+como **construcción verificada** el 27 de septiembre de 2026. Se cerró con tres
+láminas que piden cosas distintas y no con una: SD1 una trayectoria, SD4 un
+abatimiento que vale en ocho posiciones y SD5 un cuadrado con dos soluciones.
+Lo que la figura fija prometía para la prosa —un dibujo anclado que el texto
+transforma al pasar, en el plano complejo o en un diagrama de fases— sigue
+sin pedirlo ningún tema.
 
 Y el `simulador` del esquema no es un sexto patrón: es la puerta que §04 deja
 abierta para escribir código cuando un tema necesita algo que no existe. Hay
@@ -805,11 +810,26 @@ dos clases, y conviene no confundirlas:
 **1 · Lectura.** Texto con una herramienta incrustada. Para contenido que se
 sostiene solo y la figura apoya.
 
-**2 · Figura fija.** El dibujo se ancla y el texto pasa por delante
-transformándolo. Para contenido donde la figura *es* el contenido: plano
-complejo, diagramas de fases, ciclos termodinámicos. **Nunca es una secuencia
-de imágenes distintas**: es una sola que se transforma, y esa continuidad es lo
-que hace que la idea se acumule en vez de reiniciarse en cada apartado.
+**2 · Construcción verificada.** La figura exacta de la colección se ancla y
+el alumno la transforma construyendo sobre ella con herramientas de papel. Lo
+que se corrige no es el trazo: son los puntos de la solución, por su nombre,
+contra la geometría calculada en el build desde la `receta` del ejercicio
+(§04). **Nunca es una secuencia de imágenes distintas**: es una sola lámina
+que se transforma, y la solución se dibuja encima de ella al quinto fallo o en
+el modo completo. Tres reglas que salieron de hacerlo:
+
+- **Cada error declarado se construye.** Todo diagnóstico que no es `siempre`
+  lleva un `ejemplo`, y el build comprueba que ese punto no se da por bueno y
+  que lo recoge su diagnóstico y no otro anterior. Un error que no se
+  construye no se sabe si salta.
+- **Lista o elección, según lo que venga después.** Si el lado no cambia nada
+  —los abatidos de SD4—, las posiciones buenas son una lista y valen todas. Si
+  lo cambia —el cuadrado de SD5, donde C va al mismo lado que B—, es una
+  elección, y la primera marca fija la rama.
+- **La lámina se coteja encima del PDF** (`scripts/lamina-sobre-pdf.mjs`)
+  antes de escribir el primer objetivo, y sus correcciones van en
+  `revision.notas`. Un segmento desplazado un milímetro convierte una solución
+  buena en un diagnóstico falso.
 
 **3 · Ejercicio guiado.** El alumno introduce su resultado y el sistema
 diagnostica **el error concreto**. Nunca dice «incorrecto». Cada paso lleva

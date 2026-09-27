@@ -18,12 +18,7 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **A · Arreglos rápidos en todas las asignaturas** (~2 días): `siguiente.md`.
-- **B · Expresión Gráfica, fase 1 tal cual.** Publicados el paso
-  `construir`, el `Taller` y SD1 en el tema 2, con su guarda y su
-  comprobador en el suelo; faltan SD4, SD5 y el patrón en §05
-  (`siguiente.md`).
-- **C · Mecánica**: las cinco convocatorias bilingües, las deducciones con
+- **C · Mecánica** (la siguiente; A y B están hechas): las cinco convocatorias bilingües, las deducciones con
   `redactar` y los diagramas con `dibujar` (6–8 días).
 - **D · Demostraciones en 1.º**: Álgebra y Cálculo, con rúbricas compartidas
   y un guardián de COMP4 (4–5 días).
@@ -95,9 +90,9 @@ sigue después tal cual.
   el 8 de septiembre: `Claude outputs/expresion-grafica-brief.md` y
   `expresion-grafica-paquete-1.zip` (las 65 láminas en JSON, el extractor,
   los pilotos del taller para SD3, SD5 y SD7 con sus comprobaciones, y
-  `sd1-ejemplo.yaml`). De su orden ya están `lib/diedrico.ts` con sus
-  pruebas, el componente `Taller` y el paso `construir` con SD1; quedan SD4 y
-  SD5, y solo entonces se cierra el patrón.
+  `sd1-ejemplo.yaml`). Su fase 1 está hecha: el paso `construir`, el
+  `Taller`, SD1, SD4 y SD5 en el tema 2, y el patrón en §05. Lo que sigue es
+  la fase K: las familias A, B y C enteras, en el orden de la colección.
 - **Los criterios de corrección del profesor como datos**
   (`Criterios_para_la_correcin_de_ejercicios_y_exmenes.pdf`): mínimos, errores
   muy graves a −2 y típicos con su precio. Los usan el bloque 2 y las rúbricas.

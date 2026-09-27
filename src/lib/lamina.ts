@@ -29,8 +29,10 @@ export interface SegmentoDeLamina {
   readonly nombre?: string;
   readonly a: P2;
   readonly b: P2;
-  /** Continuo u oculto, como en el PDF: la colección no usa otros. */
-  readonly tipo: 'c' | 'o';
+  /** Como en el PDF: continuo, oculto o eje de trazo y punto. El eje entró
+   *  con SD4, cuyo poste lo lleva en las dos vistas; hasta entonces aquí
+   *  ponía que la colección no usaba más que los otros dos. */
+  readonly tipo: 'c' | 'o' | 'e';
 }
 
 export interface DatosLamina {

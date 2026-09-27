@@ -68,7 +68,9 @@ const peso = z.enum(['alto', 'medio', 'bajo']);
 /** Los cinco patrones de §05, más el simulador cuando el tema lo pide. */
 const patron = z.enum([
   'lectura',
-  'figura-fija',
+  /* La construcción verificada, el patrón 2: era `figura-fija`, que ningún
+     tema llegó a declarar. */
+  'construccion',
   'ejercicio',
   'verificador',
   'demostracion',
@@ -1911,7 +1913,8 @@ const laminas = defineCollection({
             nombre: z.string().regex(NOMBRE_EN_LAMINA).optional(),
             a: coordenada,
             b: coordenada,
-            tipo: z.enum(['c', 'o']),
+            /** Continuo, oculto o eje de trazo y punto (`lib/lamina.ts`). */
+            tipo: z.enum(['c', 'o', 'e']),
           }),
         )
         .min(1),
