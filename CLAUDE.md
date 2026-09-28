@@ -21,6 +21,7 @@ dato»**. No hay «solo para comprobar una cifra».
 | Álgebra | `PRIMER_CONTROL._NOTAS.pdf` | DNI y notas |
 | Álgebra | `Subgrupos_para_prcticas_de_ordenador.pdf` | nombres por subgrupo |
 | Cálculo | `TRABAJO_EN_GRUPO._NOTA_FINAL.pdf` | notas |
+| Cálculo | `TRABAJO_PERSONAL._NOTA_FINAL.pdf` | notas, y lleva DNI; lo encontró el inventario del material el 28 de septiembre de 2026 |
 | Cálculo | `DISTRIBUCIN_DE_GRUPOS_DE_PRCTICAS_DE_LABORATORIO.pdf` | nombres por grupo |
 | Cálculo | `CONVOCATORIA_EXTRAORDINARIA._PARCIALES_A_REALIZAR.pdf` | DNI |
 | Cálculo | `CDIGOS_SOCRATIVE.pdf` | DNI emparejados con códigos |
@@ -37,7 +38,8 @@ Cuatro reglas prácticas, porque la lista nunca estará completa:
 
 1. **Un fichero con «notas», «calificaciones», «lista», «grupo» o
    «resultados» en el nombre se trata como personal** hasta que se demuestre
-   lo contrario, y demostrarlo no exige abrirlo entero.
+   lo contrario, y demostrarlo no exige abrirlo entero. **También en
+   singular**: `TRABAJO_PERSONAL._NOTA_FINAL.pdf` dice «NOTA».
 2. **Al volcar un PDF nuevo de material, se mira el final antes de usar
    nada.** Las normas de Térmica parecían un documento de la asignatura y
    traían los apellidos en la última hoja.
@@ -289,7 +291,8 @@ src/
     sim/                   los simuladores (§05, §10). Su modelo vive en
                            lib/ para poder probarlo, nunca dentro del
                            .astro; el de test lee su banco de content/banco
-    ui/                    Cabecera · Tema · Examen · Reparto
+    ui/                    Cabecera · Tema · Examen · Reparto ·
+                           QueNotaNecesito
   layouts/
     Base.astro             el ÚNICO layout
   lib/
@@ -322,12 +325,16 @@ src/
                            ejercicios trae un examen y la clave de búsqueda
                            sin tildes. Cada uno existe porque su regla
                            estaba escrita en dos o tres páginas (§01)
+    nota.ts · estado.ts    la cuenta de «¿qué nota necesito?», con su
+                           prueba, y los estados de una asignatura en las
+                           palabras de la pizarra
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
-  pages/                   index · [asignatura]/[tema] · examenes ·
-                           preparar · formulario · laboratorio, y el
-                           índice de ejercicios que busca la paleta
+  pages/                   index · [asignatura] · [asignatura]/[tema] ·
+                           examenes · preparar · formulario ·
+                           laboratorio, y el índice de ejercicios que
+                           busca la paleta
 scripts/
   verify.mjs               lee el HTML publicado (§11)
   recalcula.mjs            que las cuentas del corpus salgan (§11)
@@ -352,6 +359,11 @@ scripts/
                            comprueba-talleres y peso. Una sola forma de
                            levantarla, no seis
   peso.mjs                 cuánto tarda una página en un móvil (§11)
+  muestra-distractores.mjs diez diagnósticos al azar para revisarlos a mano
+                           (§13)
+  inventario-material.mjs  qué trae cada PDF del material y qué usa el
+                           sitio de él, sin abrir los vetados; la tabla se
+                           guarda junto al material, no aquí
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
                            bloque en el corpus: en un segundo, sin construir
   inventario-coleccion.mjs qué problemas de la colección de Fluidos faltan,
@@ -1761,6 +1773,16 @@ barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 
   el 27 de septiembre de 2026: «que cada idea que entre en el proyecto sea
   realmente útil para alguien». Las cuatro respuestas van en el comentario de
   cabecera de la pieza, que es donde las busca quien la quiera quitar.
+
+- **Diez diagnósticos por sesión, revisados por quien no los escribió.** Los
+  tests recalculan las respuestas buenas y nadie mira los mensajes: un
+  distractor que explica un error que no da ese número, o una pieza trampa que
+  no es falsa, pasan todos los guardianes en verde. `node
+  scripts/muestra-distractores.mjs` saca diez al azar de los tres montones
+  —distractores, opciones equivocadas y piezas trampa—, con la fecha como
+  semilla para que todos miren los mismos; los revisa alguien que no los haya
+  escrito, lo que esté mal se corrige, y el resultado va en el diario del día.
+  Lo pidió la auditoría del 27 de septiembre de 2026 (fase E5).
 
 ### Cuando no hay nadie a quien preguntar
 

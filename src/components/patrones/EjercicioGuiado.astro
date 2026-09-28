@@ -180,6 +180,59 @@ function ayudaDelTipo(tipo: string): string {
   }
 }
 
+/**
+ * El `formato` de una respuesta, con la forma exacta **delante** cuando la
+ * respuesta es numérica y el formato habla de decimales.
+ *
+ * §09 lo pide así: «se escribe "en forma exacta, o con cuatro decimales", en
+ * ese orden, porque ese es el orden en que el alumno los va a tener». El
+ * lector de respuestas acepta la forma exacta en todo paso numérico, así que
+ * la oferta se escribe aquí, una vez, y no en cada `formato`.
+ *
+ * Es la Regla 0 con nombre y fecha: el 28 de septiembre de 2026, con la fase
+ * E5 de la auditoría, se reescribieron con un guion 81 formatos de Cálculo que
+ * decían «con seis decimales» o «con cuatro decimales» a secas, y se deshizo
+ * el mismo día. El guion era la prueba de que esto iba en la capa compartida.
+ */
+const CON_DECIMALES = /con (una|dos|tres|cuatro|cinco|seis|siete|ocho|\d+) (cifras )?decimales/i;
+
+/**
+ * Lo que va entre paréntesis justo detrás de «exacta» no se enseña.
+ *
+ * En 193 formatos —casi todos de Cálculo— ese paréntesis era **la respuesta**:
+ * «en forma exacta (8/5)», con la casilla al lado esperando un 1,6. Lo vio el
+ * revisor de la muestra de diagnósticos del 28 de septiembre de 2026 (fase
+ * E5), mirando otra cosa. Se quita aquí y no en los 193 (Regla 0): el dato no
+ * molesta mientras no se pinte, y así no vuelve a pintarse aunque alguien lo
+ * copie. Los paréntesis se cuentan, porque hay respuestas con paréntesis
+ * dentro: «(sqrt(2))».
+ */
+function sinLaRespuesta(formato: string): string {
+  const m = /exact\w*\s*\(/i.exec(formato);
+  if (!m) return formato;
+  const abre = m.index + m[0].length - 1;
+  let nivel = 0;
+  for (let i = abre; i < formato.length; i++) {
+    if (formato[i] === '(') nivel++;
+    else if (formato[i] === ')' && --nivel === 0) {
+      return sinLaRespuesta(formato.slice(0, abre).replace(/\s+$/, '') + formato.slice(i + 1));
+    }
+  }
+  return formato;
+}
+
+function formatoConExacta(tipo: string, formatoDelDato: string): string {
+  const numerica = tipo === 'numero' || tipo === 'complejo' || tipo === 'conjunto';
+  const formato = sinLaRespuesta(formatoDelDato);
+  if (!numerica) return formato + ayudaDelTipo(tipo);
+  const ejemplos = ' — por ejemplo pi/4, sqrt(3)/2, (e^2-1)/2…';
+  if (/exact/i.test(formato)) return formato + ejemplos;
+  /* Con una función y no con una cadena de reemplazo: un `$` en el formato no
+     se puede leer como un patrón (§17). */
+  if (CON_DECIMALES.test(formato)) return formato.replace(CON_DECIMALES, (m) => `en forma exacta o ${m}`) + ejemplos;
+  return formato + ayudaDelTipo(tipo);
+}
+
 /* Todo el texto del YAML pasa por el mismo procesador que el MDX, así que las
    fórmulas salen en MathML generado en el build (§07). */
 /* Prefijo único de esta instancia. Sin él, las treinta resoluciones que
@@ -480,8 +533,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                   />
                   {paso.respuesta!.formato && (
                     <span class="formato rotulo">
-                      {paso.respuesta!.formato}
-                      {ayudaDelTipo(paso.respuesta!.tipo)}
+                      {formatoConExacta(paso.respuesta!.tipo, paso.respuesta!.formato)}
                     </span>
                   )}
                   <button type="button" class="comprobar" data-comprobar>

@@ -446,22 +446,42 @@ console.log(`   \`medidoSobre\` puede ser mayor que lo transcrito —se mide sob
 
 /* ── 3 · pasos que piden decimales sin ofrecer la forma exacta ──────── */
 pinta('3 · Pasos que ordenan dar decimales');
-console.log(`   §09: en el examen no hay calculadora, así que un enunciado nunca
-   ordena decimales a secas. Se cuenta como fallo solo si NI la pregunta NI el
-   formato ofrecen la forma exacta — dar el valor exacto dentro de la pregunta
-   y pedir su decimal es correcto.`);
+console.log(`   §09: en Cálculo y en Álgebra no hay calculadora, así que un paso nunca
+   ordena decimales a secas. En una respuesta numérica la forma exacta la
+   ofrece siempre la página —\`EjercicioGuiado\` la escribe delante de los
+   decimales—, así que cuenta como fallo el resto: una pregunta o un formato
+   que piden decimales sin ofrecerla. En las asignaturas con calculadora
+   pedir decimales es lo normal, y no se miran.`);
+/* Hasta el 28 de septiembre de 2026 este recuento miraba solo la `pregunta`, y
+   un `$` cualquiera en ella contaba como forma exacta ofrecida; y miraba todas
+   las asignaturas, cuando en Térmica o Fluidos la calculadora está permitida
+   (auditoría del 27 de septiembre, fase E5). La oferta de la forma exacta en
+   los pasos numéricos no se escribe en cada `formato`: la pone el componente,
+   una vez (Regla 0). */
+const SIN_CALCULADORA = new Set(['calculo', 'algebra']);
+const NUMERICA = new Set(['numero', 'complejo', 'conjunto']);
 let pasos = 0;
 const detDec = [];
-for (const [id, e] of EJ)
+const muchos = [];
+for (const [id, e] of EJ) {
+  if (!SIN_CALCULADORA.has(e.asig)) continue;
   for (const p of e.pasos ?? []) {
     pasos++;
     const preg = String(p.pregunta ?? '');
     const fmt = String(p.formato ?? p.respuesta?.formato ?? '');
-    const ofreceExacta = /exact/i.test(preg) || /exact/i.test(fmt) || /\$/.test(preg);
-    if (/\bdecimales?\b/i.test(preg) && !ofreceExacta) detDec.push(`${e.asig} · ${id}`);
+    const texto = `${preg} ${fmt}`;
+    const pide = /\bdecimales?\b/i.test(texto);
+    const ofreceExacta = NUMERICA.has(p.respuesta?.tipo) || /exact/i.test(texto);
+    if (pide && !ofreceExacta) detDec.push(`${e.asig} · ${id}`);
+    /* Y aparte, solo para que se vea: los que piden cinco decimales o más.
+       Con la forma exacta delante no son una orden imposible, pero quien los
+       quiera sacar a mano no puede. */
+    if (/\b(cinco|seis|siete|ocho|[5-9])\s+(cifras\s+)?decimales/i.test(texto)) muchos.push(`${e.asig} · ${id}`);
   }
-fila('de', `${pasos} pasos, ${detDec.length}`);
+}
+fila('de', `${pasos} pasos de Cálculo y Álgebra, ${detDec.length}`);
 detDec.forEach((d) => fila('', d));
+fila('que piden 5+ decimales', `${muchos.length} (con la forma exacta delante; se dice por si alguien los quiere rebajar)`);
 
 /* ── 1 bis · cuántas respuestas se han vuelto a calcular ────────────── */
 pinta('1 bis · Respuestas de examen recalculadas en tests/verificacion/');

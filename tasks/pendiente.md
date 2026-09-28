@@ -136,9 +136,11 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   Cálculo t02, t03 y t04; Fluidos t03, t21 y t23.
 - **«Cortante» en Mecánica**: ya está en la prosa del t06 y en 216 pasos;
   falta, si acaso, un apartado propio. Acotar antes de escribir.
-- **Cálculo, `punto-fijo-del-coseno`** (t03): su `calcular` pide $g(1)$ con
-  tres decimales y la pista dice «con la calculadora en radianes», y en
-  Cálculo no hay calculadora (§09). Con la fase E5, la de los decimales.
+- **Los pasos bloqueados se leen**: `EjercicioGuiado` los pinta atenuados, y
+  las piezas de un `justificar` repiten a veces las cifras de los `calcular`
+  de antes (`ex1617-3ev-3`, `colfq1-2`, `ejflu14-col42`). Decidir si el cuerpo
+  de un paso bloqueado se oculta con JavaScript, sin romper la página sin él.
+  Lo vio la revisión de la muestra del 28 de septiembre de 2026.
 - **Cálculo, 11.8 `extension-par-de-t`** (t11): el enunciado define $f$ en
   $[0,\pi)$ y la resolución da $f(\pi)=\pi$. Decir que es el valor que la
   extensión toma por continuidad, o que $f$ no está definida ahí.
