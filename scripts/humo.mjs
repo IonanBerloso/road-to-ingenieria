@@ -262,10 +262,16 @@ async function main() {
     temas.map(async (h) => {
       const html = await (await fetch(`${ORIGEN.replace(BASE, '')}${h}`)).text().catch(() => '');
       const suyos = [...new Set([...html.matchAll(/href="([^"#]+\/ejercicios\/\d+\/)"/g)].map((m) => m[1]))];
-      return { tema: h, bloques: suyos, conIndice: html.includes('data-bloque') };
+      /* Y su página de cuestiones, si la tiene (fase E3): tampoco la enlaza
+         la portada, y sin esto sus opciones no las marcaría nadie. */
+      const cuestiones = [
+        ...new Set([...html.matchAll(/href="([^"#]+\/t\d{2}-[^/"#]+\/cuestiones\/)"/g)].map((m) => m[1])),
+      ];
+      return { tema: h, bloques: suyos, cuestiones, conIndice: html.includes('data-bloque') };
     }),
   );
   const bloques = bloquesPorTema.flatMap((t) => t.bloques);
+  const paginasDeCuestiones = [...new Set(bloquesPorTema.flatMap((t) => t.cuestiones))];
   const temasSinBloques = bloquesPorTema.filter((t) => t.conIndice && t.bloques.length === 0);
   comprueba(
     temasSinBloques.length === 0,
@@ -290,7 +296,7 @@ async function main() {
     }
   }
 
-  let rutas = [...new Set([...paginas, ...bloques, ...formularios, ...muestra])];
+  let rutas = [...new Set([...paginas, ...bloques, ...paginasDeCuestiones, ...formularios, ...muestra])];
 
   /* Con `HUMO_ASIGNATURA` se mira una sola asignatura. Esto solo filtra las
      páginas de contenido: las tres fijas del principio —la portada, la portada
@@ -908,6 +914,52 @@ async function main() {
         prueba.mudos.length ? `sin diagnosticar: ${prueba.mudos.join(', ')}` : '',
       );
     }
+
+    /* 5 · Las cuestiones de un banco de práctica (fase E3, 28 de septiembre
+       de 2026): cada opción de cada cuestión, marcada, dice si es la buena y
+       por qué, con el mismo porqué que la lista plegada que se lee sin
+       JavaScript. Se marcan TODAS, no una de muestra, por lo mismo que los
+       distractores de arriba: una opción que no respondiera dejaría al alumno
+       sin la mitad del valor del banco, y eso no se ve leyendo el YAML. */
+    const cuestiones = await pagina.evaluate(async () => {
+      const raiz = document.querySelector('[data-cuestiones]');
+      if (!raiz) return null;
+      const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+      const mal = [];
+      let probadas = 0;
+      const cajas = [...raiz.querySelectorAll('[data-cuestion]')];
+      for (const caja of cajas) {
+        const id = caja.dataset.cuestion;
+        const fb = caja.querySelector('[data-fb]');
+        /* Con varias ciertas a propósito, cada opción dice «cierta» o
+           «falsa», y hacen falta al menos dos ciertas. */
+        const varias = caja.dataset.varias !== undefined;
+        const buenas = caja.querySelectorAll('[data-porque].ok').length;
+        if (varias ? buenas < 2 : buenas !== 1) mal.push(`${id}: ${buenas} opciones buenas en su lista`);
+        for (const r of caja.querySelectorAll('input[type="radio"]')) {
+          r.click();
+          await espera(0);
+          probadas++;
+          const li = caja.querySelector(`[data-porque="${r.value}"]`);
+          const razon = (li?.querySelector('.cq-razon')?.textContent ?? '').trim().slice(0, 40);
+          const dicho = (fb?.textContent ?? '').trim();
+          const letra = 'ABCDEF'[Number(r.value)];
+          if (!fb || fb.hidden || !razon || !dicho.includes(razon)) {
+            mal.push(`${id} · ${letra}: no dice su porqué`);
+          } else if (li.classList.contains('ok') !== dicho.startsWith(varias ? 'Es cierta' : 'Es la buena')) {
+            mal.push(`${id} · ${letra}: el veredicto no casa con la lista`);
+          }
+        }
+      }
+      return { total: cajas.length, probadas, mal };
+    });
+    if (cuestiones) {
+      comprueba(
+        cuestiones.probadas > 0 && cuestiones.mal.length === 0,
+        `las ${cuestiones.total} cuestiones responden: cada opción dice si es la buena y por qué (${cuestiones.probadas})`,
+        cuestiones.mal.slice(0, 5).join(' · '),
+      );
+    }
     break;
     } catch (e) {
       const seCayo = /Execution context was destroyed|Target (page|closed)|has been closed|crashed/i
@@ -955,6 +1007,11 @@ async function main() {
       /* Y los bloques de ejercicios de la fase E4, que es donde viven ahora
          las resoluciones de tema: el índice del tema ya no abre ninguna. */
       ...muestraDe(/\/ejercicios\/\d+\/$/, 6).map((u) => [u, '', 'bloque']),
+      /* Y las cuestiones (fase E3), con sus porqués desplegados: los
+         `<details>` se abren abajo, igual que los de una ruta. Van TODAS: con
+         una muestra de tres, t04 y t05 desbordaban el 28 de septiembre de
+         2026 sin que esto lo viera, y medir once cuesta cinco segundos. */
+      ...muestraDe(/\/cuestiones\/$/, Infinity).map((u) => [u, '', 'cuestiones']),
       ...muestraDe(/\/preparar\//, 3).map((u) => [u, '', 'ruta']),
       /* Y el formulario, que es la CUARTA clase de página y justo la que
          desbordaba: 798 px dentro de un hueco de 360, por un hijo de grid sin
@@ -997,7 +1054,7 @@ async function main() {
 
     comprueba(
       desbordan.length === 0,
-      `a 360 px no desborda ninguna: ${objetivo.length} páginas de examen, tema, bloque y ruta, con ${abiertas} resoluciones abiertas`,
+      `a 360 px no desborda ninguna: ${objetivo.length} páginas de examen, tema, bloque, cuestiones y ruta, con ${abiertas} resoluciones abiertas`,
       desbordan.join(', '),
     );
     comprueba(

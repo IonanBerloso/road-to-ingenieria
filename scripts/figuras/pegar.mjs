@@ -142,6 +142,41 @@ export function pegaEnCampo(fichero, idEj, campo, svg, pie) {
 }
 
 /**
+ * Pega la figura de una pregunta de un banco de test (`src/content/banco/`),
+ * justo antes de sus `opciones:`.
+ *
+ * Nace el 28 de septiembre de 2026 con las cuestiones de las diapositivas de
+ * Cálculo (fase E3): muchas traen un dibujo, y en muchas las opciones SON
+ * dibujos, que van todos en la misma figura rotulados con su letra. Como
+ * `pega`, no pisa una figura que ya esté: se quita antes a mano.
+ *
+ * @param {string} fichero  ruta del banco
+ * @param {string} id       id de la pregunta
+ * @param {string} svg      el SVG ya generado
+ */
+export function pegaEnPregunta(fichero, id, svg) {
+  const { lineas, escribe } = leeLineas(fichero);
+
+  const inicio = lineas.findIndex((l) => l === `  - id: ${id}`);
+  if (inicio < 0) throw new Error(`${fichero}: no está la pregunta ${id}`);
+
+  let fin = lineas.length;
+  for (let i = inicio + 1; i < lineas.length; i++) {
+    if (/^  - id: /.test(lineas[i]) || /^\S/.test(lineas[i])) { fin = i; break; }
+  }
+
+  if (lineas.slice(inicio, fin).some((l) => /^ {4}figura:/.test(l))) {
+    throw new Error(`${id}: ya tiene figura`);
+  }
+  const opciones = lineas.findIndex((l, i) => i > inicio && i < fin && l === '    opciones:');
+  if (opciones < 0) throw new Error(`${id}: no encuentro sus opciones`);
+
+  const bloque = ['    figura: |', ...paraYaml(svg, 6).split(LF)];
+  lineas.splice(opciones, 0, ...bloque);
+  escribe(bloque.length, opciones);
+}
+
+/**
  * Añade un paso al final de la lista `pasos:` de un ejercicio.
  *
  * No lo llama ningún guion del repositorio: lo usan los del scratchpad que
@@ -255,4 +290,28 @@ export function quitaFiguraDePaso(fichero, idEj, cual = 0) {
     return;
   }
   throw new Error(`${fichero}: ${idEj} no tiene un paso dibujar número ${cual}`);
+}
+
+/**
+ * Quita todas las figuras de un banco de test, para volver a pegarlas.
+ *
+ * El tercer hermano, para los bancos: `rehacer.mjs` lo pasa antes de cada
+ * guion de cuestiones, porque esos guiones pegan al importarse todas las
+ * figuras de su banco y `pegaEnPregunta` no pisa ninguna. Quitarlas todas es
+ * seguro porque en un banco no hay figuras escritas a mano: el 28 de
+ * septiembre de 2026 los diez guiones rehicieron sus bancos byte a byte.
+ */
+export function quitaFigurasDeBanco(fichero) {
+  for (;;) {
+    const { lineas, escribe } = leeLineas(fichero);
+    const abre = lineas.findIndex((l) => /^ {4}figura: [|]/.test(l));
+    if (abre < 0) return;
+    /* Acaba en la siguiente clave de la pregunta, a cuatro espacios. */
+    let cierra = lineas.length;
+    for (let i = abre + 1; i < lineas.length; i++) {
+      if (/^ {0,4}\S/.test(lineas[i])) { cierra = i; break; }
+    }
+    lineas.splice(abre, cierra - abre);
+    escribe(-(cierra - abre), abre);
+  }
 }

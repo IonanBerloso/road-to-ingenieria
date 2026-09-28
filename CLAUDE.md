@@ -280,8 +280,10 @@ src/
                            No transcribe el guion ni reparte ningún
                            fichero: lo nombra, lo resume y enlaza el
                            apartado donde está explicado (§08)
-    banco/                 bancos de preguntas de test, para el simulador
-                           de test (§05). Uno: el de mínimos de Materiales
+    banco/                 bancos de preguntas de test (§05): el de mínimos
+                           de Materiales, que alimenta un simulacro, y las
+                           cuestiones de las diapositivas de Cálculo, uno
+                           por tema, cada uno con su página
     laminas/               las figuras de la colección de diédrico de
                            Expresión Gráfica como DATOS, una por fichero
                            (sd1.json), cotejadas con su página del PDF
@@ -290,9 +292,10 @@ src/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
     sim/                   los simuladores (§05, §10). Su modelo vive en
                            lib/ para poder probarlo, nunca dentro del
-                           .astro; el de test lee su banco de content/banco
-    ui/                    Cabecera · Tema · BloqueDeEjercicios · Seguir ·
-                           Examen · Reparto · QueNotaNecesito
+                           .astro. El de test y el de cuestiones leen su
+                           banco de content/banco
+    ui/                    Cabecera · Tema · BloqueDeEjercicios · Armazon ·
+                           Seguir · Examen · Reparto · QueNotaNecesito
   layouts/
     Base.astro             el ÚNICO layout
   lib/
@@ -331,13 +334,17 @@ src/
     nota.ts · estado.ts    la cuenta de «¿qué nota necesito?», con su
                            prueba, y los estados de una asignatura en las
                            palabras de la pizarra
+    banco.ts · banco-texto.ts
+                           un banco de test con sus textos ya dibujados,
+                           para los dos componentes que los leen, y sus
+                           reglas de texto, con su prueba
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
-  pages/                   index · [asignatura] · [asignatura]/[tema] y sus
-                           bloques de ejercicios · examenes · preparar ·
-                           formulario · laboratorio, y el índice de
-                           ejercicios que busca la paleta
+  pages/                   index · [asignatura] · [asignatura]/[tema] con sus
+                           bloques de ejercicios y sus cuestiones ·
+                           examenes · preparar · formulario · laboratorio,
+                           y el índice de ejercicios que busca la paleta
 scripts/
   verify.mjs               lee el HTML publicado (§11)
   recalcula.mjs            que las cuentas del corpus salgan (§11)
@@ -371,6 +378,9 @@ scripts/
                            guarda junto al material, no aquí
   revisa-ejercicios.mjs    lo que pide §04, comprobado ANTES de pegar el
                            bloque en el corpus: en un segundo, sin construir
+  revisa-banco.mjs         lo mismo para un banco de test: la forma, el
+                           recuento de diapositivas, las fórmulas y las
+                           figuras
   inventario-coleccion.mjs qué problemas de la colección de Fluidos faltan,
                            cruzando el volcado del PDF contra el corpus
   lamina-sobre-pdf.mjs     una lámina de Expresión Gráfica dibujada encima
@@ -837,10 +847,34 @@ dos clases, y conviene no confundirlas:
   penalización de verdad. Nace el 24 de septiembre de 2026 para el test de
   mínimos de Materiales, donde lo que se entrena no es un contenido sino
   decidir bajo penalización. Un banco no es una colección de ejercicios: no
-  hay pasos ni pista, y el esquema de `banco` exige cuatro opciones, una sola
-  correcta y un `porque` en cada una —también en la buena—. **Las preguntas
-  de un banco son propias y lo dicen en su `fuente`**: las del examen real se
-  transcriben como ejercicio, no se mezclan con las inventadas.
+  hay pasos ni pista, y el esquema de `banco` exige una sola correcta —salvo
+  en las preguntas `varias` de las cuestiones, abajo—, un `porque` en cada
+  opción —también en la buena— y las opciones que tiene el original, de dos
+  a seis (el de Materiales fija cuatro). **Cada banco dice en su `fuente` de
+  dónde salen sus preguntas**: las de Materiales son propias; las de Cálculo,
+  las de las diapositivas de clase, con la respuesta y el porqué nuestros. Las
+  de un examen real se transcriben como ejercicio, no como banco.
+- **Las cuestiones**, `sim/Cuestiones.astro`, que no simulan nada: son un
+  banco sin `puntuacion`, y se contestan una a una, sin reloj ni nota, con el
+  porqué de cada opción al marcarla. Nacen el 28 de septiembre de 2026 (fase
+  E3) para las preguntas tipo test de las diapositivas de Cálculo, que se
+  debaten en grupo dentro del 20 % de trabajo en equipo y son el oral de la
+  final. Cada banco tiene su página, `…/tNN-…/cuestiones/`, enlazada desde el
+  tema y desde el temario de la asignatura. Si sale de unas diapositivas, el
+  esquema exige que **cada diapositiva sea una pregunta o esté en
+  `sinPregunta` con su motivo**: es el recuento contra el PDF, hecho regla.
+  Hay diapositivas que preguntan «¿cuál es cierta?» y tienen más de una —a
+  veces a propósito, para debatirlo; a veces porque una cota holgada también
+  es una cota—: esas llevan `varias: true`, cada opción dice si es cierta o
+  falsa, y un simulacro no las admite porque no sabría puntuarlas.
+  Se transcriben con `scripts/revisa-banco.mjs` detrás, las figuras se
+  redibujan con el lienzo (`scripts/figuras/calculo-cuestiones-tNN.mjs`) y
+  los decimales van con coma, `0{,}5`, como en el resto del corpus. Lo que
+  una diapositiva deja abierto —dos lecturas defendibles, un dibujo que no
+  casa con sus opciones— no se esconde: la pregunta lleva encima un
+  comentario `# Decisión:` que dice qué se marca y por qué, y el porqué de
+  la opción descartada lo reconoce. Un dibujo impreciso se redibuja con lo
+  que las opciones dan por hecho, y el comentario dice qué se ha cambiado.
 
 **1 · Lectura.** Texto con una herramienta incrustada. Para contenido que se
 sostiene solo y la figura apoya.
@@ -992,7 +1026,10 @@ a 4,5.
 
 **Fondo sobre el que cae cada tinta.** No está en la hoja de estilos, está en
 el árbol del documento: por eso la tabla de `check-color.mjs` lo declara fila a
-fila, con su umbral y su razón. Si añades un color de texto, añade su fila.
+fila, con su umbral y su razón. Si añades un color de texto, añade su fila. Un
+relleno de figura también cuenta, porque el guion no distingue el `fill:` de
+una letra del de una forma: el dorso de las mallas 3D, en `--rule`, tiene la
+suya, medida contra las líneas que lleva encima.
 
 **Color de asignatura:** cada una tiene su acento, y vive **solo en el marco** —
 número, regla, migas, indicadores. En cuanto empieza el contenido vuelve la
@@ -2412,7 +2449,11 @@ Cosas que ya han costado horas. No son opiniones.
   fórmula— estira la columna entera y se lleva el documento con ella. En una
   pantalla de 360 px la columna de un tema llegó a **771,8 px**. La cura es
   `min-width: 0` en los hijos de la rejilla, y conviene ponerlo al escribir la
-  rejilla, no al descubrir el desborde.
+  rejilla, no al descubrir el desborde. Y una rejilla **sin columnas
+  declaradas** no se libra: su columna implícita es `auto`, que se comporta
+  igual. El 28 de septiembre de 2026 la leyenda de una cuestión, con una
+  fórmula de 420 px, sacaba así la página a 478; se declara
+  `grid-template-columns: minmax(0, 1fr)`.
 - **Una tolerancia relativa sobre una temperatura es enorme.** El lector de
   magnitudes convierte los grados Celsius a kelvin antes de comparar, así que
   el 2 % por defecto de una respuesta de 40 °C son **±6,3 K**: cualquier

@@ -18,13 +18,8 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **E · Herramientas que pasan la prueba de utilidad** (§13; en curso, con
-  A, B, C y D hechas): queda **el banco de test de Cálculo** (E3). Hechas la
-  calculadora de «¿qué nota necesito?», la página de asignatura, el peso de
-  las páginas de tema, decimales y distractores, y el inventario del
-  material.
-- **F · Térmica**: tablas propias, los seis apartados de 2025-26, tema 7 y
-  prácticas (5–6 días).
+- **F · Térmica** (la siguiente: A, B, C, D y E hechas): tablas propias, los
+  seis apartados de 2025-26, tema 7 y prácticas (5–6 días).
 - **G · Química**: formulación, resoluciones oficiales y teoría que falta
   (5–6 días).
 - **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
@@ -180,8 +175,9 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   si los incrustados pasan a enlazar su bloque o la ruta se parte.
 - **Duplicados** (Regla 0): el controlador de pestañas de `Tema` y `Examen`
   —ya se desincronizó una vez, en el `afterprint`—; el CSS del armazón y del
-  carril, copiado de `Tema` en `BloqueDeEjercicios` porque en `Tema` va
-  enredado con las reglas de las pestañas; el marco CSS de los
+  carril, que vive en `Armazon` (lo usan los bloques de ejercicios y las
+  cuestiones) y otra vez en `Tema`, donde va enredado con las reglas de las
+  pestañas; el marco CSS de los
   simuladores, copiado en diez en dos familias; el formateador `num`, en
   nueve —con variantes: unificarlo cambia salidas que `npm run sim` compara
   carácter a carácter, así que va simulador a simulador—; el reloj de
@@ -189,7 +185,9 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Coherencia**: seis simuladores usan `data-caso` para sus preajustes y dos
   `data-accion`; `ALCANCE_CONV` del índice de exámenes está pensado para
   Cálculo; la plantilla de laboratorio dice «GeoGebra» y pinta `trabajo` sin
-  `mate()`.
+  `mate()`; y `TestDeMinimos` no alinea como `Cuestiones` una opción que es
+  solo una fórmula, que desde E3 llega en bloque (`aTamanoDeFormula`): hoy
+  no se nota porque el banco de Materiales no trae fórmulas.
 
 ## Bloqueado por material
 

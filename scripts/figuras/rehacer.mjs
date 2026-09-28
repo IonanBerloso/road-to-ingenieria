@@ -9,7 +9,8 @@
  *
  *     node scripts/figuras/rehacer.mjs
  */
-import { pega, pegaEnCampo, quitaFigura, quitaFiguraDePaso } from './pegar.mjs';
+import { readFileSync } from 'node:fs';
+import { pega, pegaEnCampo, quitaFigura, quitaFiguraDePaso, quitaFigurasDeBanco } from './pegar.mjs';
 
 const GENERADORES = [
   'calculo-t01', 'calculo-t05', 'calculo-t06', 'calculo-t07', 'calculo-t11',
@@ -52,5 +53,17 @@ for (const nombre of GENERADORES) {
     n++;
   }
   console.log(`${nombre}: ${(mod.figuras ?? []).length}`);
+}
+
+/* Las cuestiones de las diapositivas (fase E3) no exportan `figuras`: cada
+   guion pega al importarse todas las de su banco. Se le quitan antes, y el
+   destino es el de por defecto aunque quien lanza esto tenga puesto `BANCO`,
+   que mandaría los diez guiones al mismo fichero. */
+delete process.env.BANCO;
+for (const t of ['t01', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10', 't11']) {
+  const banco = `src/content/banco/calculo-${t}.yaml`;
+  quitaFigurasDeBanco(banco);
+  await import(`./calculo-cuestiones-${t}.mjs`);
+  n += (readFileSync(banco, 'utf8').match(/^ {4}figura: [|]/gm) ?? []).length;
 }
 console.log(`\n${n} figuras rehechas`);

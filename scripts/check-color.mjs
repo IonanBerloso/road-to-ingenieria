@@ -325,6 +325,18 @@ const TINTAS = [
     umbral: AA_TEXTO,
     porque: 'la letra del CTA de tiza amarilla',
   },
+  /* No es letra: rellena el dorso de las mallas 3D de las cuestiones de
+     Cálculo (t06, desde el 28 de septiembre de 2026), para que se vea por
+     dónde se mira la superficie. Contra el papel apenas contrasta, y no
+     tiene que hacerlo: la forma la dan sus líneas, en --d1, que van encima
+     de este relleno. Eso es lo que se mide, con el listón de objeto. */
+  {
+    token: '--rule',
+    escenas: PAPEL,
+    sobre: ['--d1'],
+    umbral: AA_OBJETO,
+    porque: 'el dorso de las mallas 3D, bajo sus líneas en --d1',
+  },
   /* Las series como rótulo. §06 las diseñó como colores de LÍNEA, y por eso el
      listón de los seis es el de objeto gráfico; pero tres de ellas rotulan su
      propia curva, y un rótulo es letra. `--d1` y `--d3` pasan AA de sobra.

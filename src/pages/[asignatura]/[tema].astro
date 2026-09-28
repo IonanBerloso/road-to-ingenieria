@@ -117,6 +117,17 @@ const bloques = Array.from({ length: ejercicios.length ? numPaginas(ejercicios.l
   ejercicios: listaEjercicios.slice(k * POR_PAGINA, (k + 1) * POR_PAGINA),
 }));
 
+/* Las cuestiones de las diapositivas del tema, si tiene banco de práctica
+   (fase E3): se enlazan desde la pestaña de ejercicios y desde el final. */
+const bancoDelTema = (await getCollection('banco')).find(
+  (b) => b.data.asignatura === asignatura.id && b.data.tema === ficha.id && !b.data.puntuacion,
+);
+const cuestiones = bancoDelTema && {
+  href: ruta(`${asignatura.id}/${ficha.id}/cuestiones`),
+  titulo: bancoDelTema.data.titulo,
+  cuantas: bancoDelTema.data.preguntas.length,
+};
+
 /** La tarjeta «practica lo que acabas de leer» (brief §6) enlaza al primer
  *  ejercicio de nivel ejemplo: el que puede hacer alguien que acaba de leer
  *  la teoría. Si el tema no tiene ninguno, la tarjeta no se dibuja — una
@@ -207,6 +218,7 @@ const navegacion = {
       headings={headings}
       ejercicios={listaEjercicios}
       bloques={bloques}
+      cuestiones={cuestiones}
       fuente={entrada.data.fuente}
       competencias={entrada.data.competencias}
       navegacion={navegacion}

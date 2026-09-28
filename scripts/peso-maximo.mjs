@@ -13,9 +13,10 @@
  */
 export const PESO_MAXIMO = 3 * 1024 * 1024;
 
-/** Las páginas a las que se exige: la de cada tema y la de cada bloque de
- *  ejercicios, dadas como ruta dentro de `dist/` o como URL sin base. Las
- *  demás —rutas de estudio, exámenes— se avisan y no se paran: el encargo
- *  era de tema, y una ruta que incrusta ejercicios es otra decisión. */
+/** Las páginas a las que se exige: la de cada tema, la de cada bloque de
+ *  ejercicios y la de sus cuestiones (fase E3), dadas como ruta dentro de
+ *  `dist/` o como URL sin base. Las demás —rutas de estudio, exámenes— se
+ *  avisan y no se paran: el encargo era de tema, y una ruta que incrusta
+ *  ejercicios es otra decisión. */
 export const esDeEstudio = (camino) =>
-  /(^|\/)[a-z-]+\/t\d{2}-[^/]+\/(ejercicios\/\d+\/)?(index\.html)?$/.test(camino);
+  /(^|\/)[a-z-]+\/t\d{2}-[^/]+\/(ejercicios\/\d+\/|cuestiones\/)?(index\.html)?$/.test(camino);

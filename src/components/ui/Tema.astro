@@ -34,6 +34,9 @@ interface Props {
     desde: number;
     ejercicios: { id: string; titulo: string; href: string }[];
   }[];
+  /** Las cuestiones tipo test del tema, si tiene banco de práctica (fase E3):
+   *  las de las diapositivas de Cálculo, con su página propia. */
+  cuestiones?: { href: string; titulo: string; cuantas: number };
   fuente?: string;
   competencias: string[];
   /** A dónde se puede ir desde aquí.
@@ -56,7 +59,7 @@ interface Props {
   };
 }
 
-const { eyebrow, titulo, descripcion, headings, ejercicios, bloques, fuente, competencias, navegacion } =
+const { eyebrow, titulo, descripcion, headings, ejercicios, bloques, cuestiones, fuente, competencias, navegacion } =
   Astro.props;
 /* Para el script: un enlace viejo, `…/t05-integracion/#ej-…`, de antes de que
    los ejercicios salieran de esta página, se manda a su subpágina. */
@@ -69,6 +72,9 @@ const anterior = ant && { href: ant.href, rotulo: `← tema ${nn(ant.n)}`, titul
 const siguiente = sig && { href: sig.href, rotulo: `tema ${nn(sig.n)} →`, titulo: sig.titulo };
 const otros = [
   ...rutas.map((r) => ({ href: r.href, rotulo: 'ruta de estudio', titulo: r.titulo })),
+  ...(cuestiones
+    ? [{ href: cuestiones.href, rotulo: 'cuestiones', titulo: `${cuestiones.titulo}, ${cuestiones.cuantas} preguntas` }]
+    : []),
   /* Solo si hay alguna. Una asignatura recién abierta tiene temas antes que
      convocatorias —Ingeniería Térmica lo fue el 7 de septiembre de 2026— y
      hasta entonces este enlace apuntaba a una página que no se construye:
@@ -161,6 +167,14 @@ const otros = [
           <p class="sin-nada">
             Todavía no hay ejercicios de este tema. La teoría está escrita; los
             ejercicios se añaden de uno en uno, resueltos enteros.
+          </p>
+        )
+      }
+      {
+        cuestiones && (
+          <p class="be-cuestiones">
+            <a href={cuestiones.href}>{cuestiones.titulo}</a>: {cuestiones.cuantas} preguntas tipo
+            test, con la respuesta y el porqué de cada opción.
           </p>
         )
       }
@@ -492,6 +506,17 @@ const otros = [
     max-width: var(--measure);
     padding: 2rem 0;
   }
+
+  .be-cuestiones {
+    max-width: var(--measure);
+    margin: .6rem 0 1.4rem;
+    padding: .7rem .9rem;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    background: var(--panel);
+    font-size: .92rem;
+  }
+  .be-cuestiones a { color: var(--live); font-weight: 600; }
 
   /* El índice de ejercicios, bloque a bloque: cada bloque es una subpágina. */
   .bloque-ej { margin-top: 1.8rem; max-width: var(--measure); }

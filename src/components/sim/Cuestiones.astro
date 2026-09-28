@@ -1,0 +1,332 @@
+---
+/**
+ * Las cuestiones de un banco de práctica: las preguntas tipo test de las
+ * diapositivas de un tema, en su orden y por apartados, cada opción con su
+ * porqué (fase E3 de la auditoría del 27 de septiembre de 2026).
+ *
+ * La prueba de utilidad de §13:
+ *   · Para quién: el alumno de evaluación continua, que debate estas
+ *     cuestiones en grupo dentro del 20 % de trabajo en equipo, y quien va a
+ *     la final o a la extraordinaria, cuyo oral del 5 % son «cuestiones
+ *     acerca de las diapositivas» (guía docente, págs. 2 y 4).
+ *   · Cuándo: al terminar la teoría de un tema, y la semana del oral.
+ *   · Qué gana: las diapositivas no traen solución, y aquí cada opción dice
+ *     por qué es la buena o dónde está la trampa, que es lo que se defiende
+ *     en voz alta.
+ *   · Cómo se comprueba: el esquema exige una sola correcta, un porqué en
+ *     cada opción y todas las diapositivas del PDF contadas; `humo.mjs`
+ *     marca cada opción de cada cuestión y exige que diga lo suyo.
+ *
+ * POR QUÉ NO ES EL SIMULACRO. `TestDeMinimos` imita un examen: reloj, sorteo
+ * y penalización. Estas no se examinan así, así que se contestan una a una,
+ * sin nota, y marcar otra opción después de acertar sigue explicando: la
+ * pregunta del oral no es cuál es la buena, sino por qué las otras no.
+ *
+ * SIN JAVASCRIPT se leen enteras: debajo de cada una, plegada, va la
+ * respuesta con el porqué de cada opción. Con JavaScript, marcar una opción
+ * lo dice en el momento.
+ */
+import { anclaDeBloque as ancla, preparaBanco } from '../../lib/banco';
+
+interface Props {
+  /** El fichero del banco, sin extensión: `calculo-t01`. */
+  banco: string;
+}
+
+const { banco } = Astro.props;
+const { entrada, preguntas } = await preparaBanco(banco, 'Cuestiones');
+const { bloques, fuente, diapositivas } = entrada.data;
+
+const LETRAS = 'ABCDEF';
+/** El número de cada cuestión es su orden en el banco, que es el de las
+ *  diapositivas: así «la 7» es la misma para todo el grupo. */
+const numero = new Map(preguntas.map((p, i) => [p.id, i + 1]));
+const grupos = bloques
+  .map((b) => ({ ...b, preguntas: preguntas.filter((p) => p.bloque === b.id) }))
+  .filter((g) => g.preguntas.length > 0);
+/** Lo que se dice de una opción: «la buena» si hay una sola cierta; «cierta»
+ *  o «falsa» si hay varias. El script usa las mismas palabras. */
+const veredicto = (varias: boolean | undefined, correcta: boolean | undefined) =>
+  varias ? (correcta ? 'Es cierta.' : 'Es falsa.') : correcta ? 'Es la buena.' : 'No.';
+---
+
+<div class="cuestiones" data-cuestiones>
+  <p class="rotulo cq-cuenta" data-cuenta aria-live="polite" hidden></p>
+
+  {
+    grupos.map((g) => (
+      <section class="cq-apartado" id={ancla(g.id)} aria-labelledby={`${ancla(g.id)}-t`}>
+        <h2 id={`${ancla(g.id)}-t`}>
+          {/* El número del apartado solo si es un número, «1.2»: un id de
+              palabras, `lugares`, es interno y no se enseña. */}
+          {/^\d/.test(g.id) && <span class="rotulo cq-num">{g.id}</span>} {g.titulo}
+        </h2>
+        {/* `prosa` le da a sus fórmulas en línea la regla de `base.css` que las
+            desplaza de lado cuando no caben: en t04 una tabla y en t05 tres
+            integrales seguidas sacaban la página de un móvil de 360. */}
+        {g.preguntas.map((p) => (
+          <fieldset
+            class="cq prosa"
+            data-cuestion={p.id}
+            data-varias={p.varias ? '' : undefined}
+            id={`pregunta-${p.id}`}
+          >
+            <legend>
+              <span class="cq-n">{numero.get(p.id)}</span> <span set:html={p.pregunta} />
+            </legend>
+            {p.varias && (
+              <p class="rotulo cq-varias">En esta hay más de una cierta: ve marcándolas.</p>
+            )}
+            {p.figura && <div class="cq-figura" set:html={p.figura} />}
+            <div class="cq-opciones">
+              {p.opciones.map((o, j) => (
+                <label class="cq-o">
+                  <input type="radio" name={`r-${p.id}`} value={j} />
+                  <span class="cq-letra" aria-hidden="true">{LETRAS[j]}</span>
+                  <span class="cq-texto" set:html={o.texto} />
+                </label>
+              ))}
+            </div>
+            <p class="cq-fb" data-fb role="status" hidden />
+            <details class="cq-porques">
+              <summary>
+                La respuesta, y por qué cada opción
+                {diapositivas && p.diapositiva && <span class="cq-diapo"> · diapositiva {p.diapositiva}</span>}
+              </summary>
+              <ul class="cq-lista">
+                {p.opciones.map((o, j) => (
+                  <li class={o.correcta ? 'ok' : 'no'} data-porque={j}>
+                    <span class="cq-letra">{LETRAS[j]}</span>
+                    <span class="cq-veredicto">{veredicto(p.varias, o.correcta)}</span>{' '}
+                    <span class="cq-razon" set:html={o.porque} />
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </fieldset>
+        ))}
+      </section>
+    ))
+  }
+
+  <p class="cq-fuente">{fuente}</p>
+</div>
+
+<script>
+  /* Marcar una opción dice al momento si es la buena y por qué, con el mismo
+     porqué que la lista plegada: se lee de ella y no se repite en la página.
+     La cuenta de arriba solo cuenta la primera vez que se acierta cada una. */
+  const raiz = document.querySelector<HTMLElement>('[data-cuestiones]');
+  if (raiz) {
+    const cajas = [...raiz.querySelectorAll<HTMLFieldSetElement>('[data-cuestion]')];
+    const cuenta = raiz.querySelector<HTMLElement>('[data-cuenta]')!;
+    let resueltas = 0;
+    let alaPrimera = 0;
+    const pintaCuenta = () => {
+      cuenta.hidden = false;
+      cuenta.textContent =
+        `${resueltas} de ${cajas.length} resueltas` + (resueltas ? ` · ${alaPrimera} a la primera` : '');
+    };
+
+    for (const caja of cajas) {
+      const fb = caja.querySelector<HTMLElement>('[data-fb]')!;
+      /* Con varias ciertas, la cuestión se da por resuelta cuando se han
+         marcado todas, y «a la primera» es sin marcar antes ninguna falsa. */
+      const varias = caja.dataset.varias !== undefined;
+      const ciertas = caja.querySelectorAll('[data-porque].ok').length;
+      const halladas = new Set<string>();
+      let fallos = 0;
+      let resuelta = false;
+      caja.addEventListener('change', (e) => {
+        const marcada = e.target as HTMLInputElement;
+        if (marcada.type !== 'radio') return;
+        const li = caja.querySelector<HTMLElement>(`[data-porque="${marcada.value}"]`);
+        if (!li) return;
+        const buena = li.classList.contains('ok');
+        const razon = li.querySelector('.cq-razon')?.innerHTML ?? '';
+        const dicho = varias ? (buena ? 'Es cierta.' : 'Es falsa.') : buena ? 'Es la buena.' : 'No.';
+        const quedan = varias && buena ? ciertas - halladas.size - (halladas.has(marcada.value) ? 0 : 1) : 0;
+        fb.innerHTML =
+          `<strong>${dicho}</strong> ${razon}` +
+          (quedan > 0 ? ` <em>Queda${quedan > 1 ? 'n' : ''} ${quedan} cierta${quedan > 1 ? 's' : ''} más.</em>` : '');
+        fb.classList.toggle('bien', buena);
+        fb.classList.toggle('mal', !buena);
+        fb.hidden = false;
+        if (resuelta) return;
+        if (!buena) {
+          fallos++;
+          return;
+        }
+        halladas.add(marcada.value);
+        if (halladas.size === ciertas) {
+          resuelta = true;
+          resueltas++;
+          if (fallos === 0) alaPrimera++;
+          caja.classList.add('resuelta');
+          pintaCuenta();
+        }
+      });
+    }
+
+    /* Al imprimir va todo desplegado, que es como se repasa para el oral. Un
+       `<details>` cerrado no se imprime aunque el CSS lo pida, así que se
+       abren al empezar y se cierran al terminar los que estaban cerrados. */
+    let abiertos: HTMLDetailsElement[] = [];
+    window.addEventListener('beforeprint', () => {
+      abiertos = [...raiz.querySelectorAll<HTMLDetailsElement>('details:not([open])')];
+      for (const d of abiertos) d.open = true;
+    });
+    window.addEventListener('afterprint', () => {
+      for (const d of abiertos) d.open = false;
+      abiertos = [];
+    });
+  }
+</script>
+
+<style>
+  .cuestiones { display: grid; gap: 2.2rem; }
+
+  .cq-cuenta { color: var(--live); }
+
+  .cq-apartado { display: grid; gap: 1rem; }
+
+  .cq-apartado h2 {
+    font-size: 1.05rem;
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    padding-bottom: .4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cq-num { color: var(--faint); }
+
+  /* La columna, `minmax(0, 1fr)` y no la implícita, que es `auto`: con ella
+     la leyenda, sin `min-width`, estiraba la columna hasta lo que mide su
+     fórmula más larga, y la regla de `base.css` que la desplaza de lado
+     nunca llegaba a actuar. En t03 una fórmula de 420 px sacaba la página a
+     478 en un móvil de 360 (humo, 28 de septiembre de 2026). */
+  .cq {
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    padding: .9rem 1.1rem 1rem;
+    margin: 0;
+    background: var(--panel);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: .7rem;
+    min-width: 0;
+  }
+
+  /* Resuelta se dice con el borde y con su grosor, no solo con el color. */
+  .cq.resuelta { border-color: var(--live); border-width: 2px; }
+
+  /* Flotando, la leyenda deja de ir montada sobre el borde, que es como la
+     pinta el navegador, y pasa a ser la primera pieza de la caja: con una
+     pregunta de tres líneas, montada sobre el borde se partía entre fuera y
+     dentro. Sigue siendo la leyenda del grupo para el lector de pantalla. */
+  .cq legend {
+    float: left;
+    width: 100%;
+    font-size: .95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    padding: 0;
+    max-width: var(--measure);
+  }
+
+  .cq-n {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--faint);
+    margin-right: .25rem;
+  }
+
+  .cq-varias { color: var(--live); margin: 0; }
+
+  .cq-figura { overflow-x: auto; }
+  .cq-figura :global(svg) { max-width: 100%; height: auto; }
+
+  .cq-opciones { display: grid; gap: .35rem; }
+
+  .cq-o {
+    display: flex;
+    gap: .55rem;
+    align-items: baseline;
+    padding: .35rem .5rem;
+    border-radius: 6px;
+    font-size: .92rem;
+    cursor: pointer;
+    min-width: 0;
+  }
+
+  .cq-o:hover { background: var(--live-soft); }
+
+  .cq-letra {
+    font-family: var(--mono);
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--live);
+  }
+
+  .cq-texto { min-width: 0; overflow-x: auto; }
+
+  /* Una opción que es solo una fórmula llega en bloque (`aTamanoDeFormula`),
+     para desplazarse con su aviso si no cabe; se queda a la izquierda, como el
+     texto de las demás, y sin el margen de una fórmula aparte. */
+  .cq-texto :global(.katex-display) { margin: 0; }
+  .cq-texto :global(.katex-display > .katex) { text-align: left; }
+
+  .cq-fb {
+    font-size: .88rem;
+    line-height: 1.55;
+    margin: 0;
+    padding: .55rem .8rem;
+    border-left: 3px solid var(--rule);
+    max-width: var(--measure);
+  }
+
+  .cq-fb.bien { border-left-color: var(--live); }
+  .cq-fb.mal { border-left-color: var(--flag); }
+
+  .cq-porques summary {
+    font-size: .8rem;
+    color: var(--graphite);
+    cursor: pointer;
+  }
+
+  .cq-diapo { color: var(--faint); font-family: var(--mono); font-size: .72rem; }
+
+  /* La misma columna que `.cq`, por lo mismo: el porqué de la buena en la
+     regla de Simpson de t05 lleva una fórmula que no cabe en un móvil. */
+  .cq-lista {
+    list-style: none;
+    margin: .6rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: .5rem;
+    font-size: .86rem;
+    line-height: 1.55;
+    max-width: var(--measure);
+  }
+
+  .cq-lista li { padding-left: .7rem; border-left: 3px solid var(--rule); }
+  .cq-lista li.ok { border-left-color: var(--live); }
+  .cq-veredicto { font-weight: 700; }
+  .cq-lista li.ok .cq-veredicto { color: var(--live); }
+
+  .cq-fuente {
+    font-size: .72rem;
+    color: var(--faint);
+    line-height: 1.5;
+    padding-top: .8rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+
+  /* Al imprimir, sin los mandos: las respuestas las despliega el script. */
+  @media print {
+    .cq-o input, .cq-fb, .cq-cuenta { display: none; }
+  }
+</style>

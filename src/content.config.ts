@@ -1885,19 +1885,23 @@ const temas = Object.fromEntries(
  * cien preguntas a mano:
  *
  *   · **exactamente una correcta**, ni cero ni dos;
- *   · **cuatro opciones**, como el examen real;
+ *   · **las opciones que tiene el original**: de dos a seis, y exactamente
+ *     las que diga `opciones` cuando el banco lo fija —el test de mínimos de
+ *     Materiales trae siempre cuatro—;
  *   · **un porqué en cada opción**, también en la buena: un banco que solo
  *     dice «fallaste» no enseña nada, y el porqué es la mitad del valor;
  *   · **ids únicos** y un bloque declarado, para que el simulador pueda
- *     repartir las preguntas como las reparte el examen de verdad.
+ *     repartir las preguntas como las reparte el examen de verdad;
+ *   · y, si el banco sale de unas diapositivas, **que no falte ninguna**:
+ *     cada diapositiva del PDF es una pregunta o está en `sinPregunta` con su
+ *     motivo. Es «el recuento contra los PDF» de la auditoría, hecho regla.
+ *
+ * DOS USOS. Con `puntuacion`, el banco alimenta un simulacro con reloj y
+ * penalización (`TestDeMinimos`). Sin ella es un banco de práctica: las
+ * cuestiones de las diapositivas de Cálculo (fase E3 de la auditoría del 27 de
+ * septiembre de 2026), que no se examinan con reloj sino en grupo y en el
+ * oral de la final, y tienen su página en `…/tNN-…/cuestiones/`.
  */
-/** Los bloques del temario de un banco, en un solo sitio: los usan las
- *  preguntas y el reparto del examen. */
-const BLOQUES_BANCO = [
-  'familias', 'enlaces', 'cristalino', 'solidos',
-  'niveles', 'definiciones', 'avanzados',
-] as const;
-
 const banco = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/banco' }),
   schema: z
@@ -1908,7 +1912,36 @@ const banco = defineCollection({
       titulo: z.string().min(8),
       /** De dónde sale el banco y qué NO es. */
       fuente: z.string().min(40),
-      /** Cómo puntúa el examen real, para que el simulador no se lo invente. */
+      /** Los apartados del banco. Vivían en una constante del esquema, con los
+       *  siete de Materiales; con un banco por tema de Cálculo cada uno trae
+       *  los suyos —los rótulos de sus diapositivas, «1.2 Argumento»— y el
+       *  esquema comprueba que cada pregunta nombre uno que existe. */
+      bloques: z
+        .array(
+          z.object({
+            id: z.string().regex(/^[a-z0-9.-]+$/),
+            titulo: z.string().min(3),
+          }),
+        )
+        .min(1),
+      /** Cuántas opciones trae cada pregunta cuando el original lo fija. */
+      opciones: z.number().int().min(2).max(6).optional(),
+      /** Cuántas diapositivas tiene el PDF del que sale el banco, si sale de
+       *  unas: entonces cada pregunta dice la suya y ninguna se queda fuera
+       *  sin decir por qué. */
+      diapositivas: z.number().int().min(1).optional(),
+      sinPregunta: z
+        .array(
+          z.object({
+            diapositiva: z.number().int().min(1),
+            /** Por qué no es una pregunta: portada, la respuesta de la
+             *  anterior, una que no se puede reproducir… */
+            motivo: z.string().min(10),
+          }),
+        )
+        .default([]),
+      /** Cómo puntúa el examen real, para que el simulador no se lo invente.
+       *  Sin ella, el banco es de práctica y no se simula ningún examen. */
       puntuacion: z.object({
         preguntas: z.number().int().min(1),
         minutos: z.number().int().min(1),
@@ -1920,11 +1953,10 @@ const banco = defineCollection({
          *  real, contadas pregunta a pregunta. Sin él, el simulador reparte en
          *  proporción al banco, y redondeando se quedaba en 9 de familias
          *  donde el examen de 2024 puso 10 u 11 (auditoría del 27 de
-         *  septiembre de 2026). Un bloque que no se nombra saca cero: por
-         *  eso es `partialRecord`, porque en Zod 4 un `record` con claves de
-         *  un enum las exige todas (§17). */
-        reparto: z.partialRecord(z.enum(BLOQUES_BANCO), z.number().int().min(0)).optional(),
-      }),
+         *  septiembre de 2026). Un bloque que no se nombra saca cero; los
+         *  que se nombran tienen que estar en `bloques`. */
+        reparto: z.record(z.string(), z.number().int().min(0)).optional(),
+      }).optional(),
       preguntas: z
         .array(
           z.object({
@@ -1932,8 +1964,20 @@ const banco = defineCollection({
             /** A qué bloque del temario pertenece, para repartir como el
              *  examen real: si once de veinticinco van de familias, el
              *  simulacro tiene que sacar esa proporción y no una al azar. */
-            bloque: z.enum(BLOQUES_BANCO),
+            bloque: z.string(),
+            /** El número de la diapositiva, cuando el banco sale de unas. */
+            diapositiva: z.number().int().min(1).optional(),
+            /** Más de una opción cierta, a propósito: hay diapositivas que
+             *  preguntan «¿cuál es cierta?» con tres ciertas, para debatirlo.
+             *  Entonces cada opción dice si es cierta o falsa, y hacen falta
+             *  al menos dos marcadas como correctas. Un simulacro no las
+             *  admite, porque no sabría puntuarlas. */
+            varias: z.boolean().optional(),
             pregunta: z.string().min(10),
+            /** La figura de la diapositiva, redibujada (§08): un SVG en línea,
+             *  como las de los ejercicios. Si las opciones son imágenes, van
+             *  todas en ella, rotuladas con su letra. */
+            figura: z.string().min(20).optional(),
             opciones: z
               .array(
                 z.object({
@@ -1942,50 +1986,70 @@ const banco = defineCollection({
                   porque: z.string().min(15),
                 }),
               )
-              .length(4, 'cuatro opciones, como el examen'),
+              .min(2)
+              .max(6),
           }),
         )
         .min(1),
     })
     .superRefine((b, ctx) => {
+      const aviso = (message: string) => ctx.addIssue({ code: 'custom', message });
+      const ids = new Set(b.bloques.map((x) => x.id));
+      if (ids.size !== b.bloques.length) aviso('hay dos bloques con el mismo id');
+
       /* El reparto declarado tiene que sumar lo que saca el simulacro, y
          ningún bloque puede pedir más preguntas de las que tiene. */
-      if (b.puntuacion.reparto) {
-        const suma = Object.values(b.puntuacion.reparto).reduce((a, n) => a + (n ?? 0), 0);
+      if (b.puntuacion?.reparto) {
+        const suma = Object.values(b.puntuacion.reparto).reduce((a, n) => a + n, 0);
         if (suma !== b.puntuacion.preguntas) {
-          ctx.addIssue({
-            code: 'custom',
-            message: `el reparto suma ${suma} y el simulacro saca ${b.puntuacion.preguntas}`,
-          });
+          aviso(`el reparto suma ${suma} y el simulacro saca ${b.puntuacion.preguntas}`);
         }
         for (const [bloque, n] of Object.entries(b.puntuacion.reparto)) {
+          if (!ids.has(bloque)) aviso(`el reparto nombra el bloque «${bloque}», que no está en bloques`);
           const hay = b.preguntas.filter((p) => p.bloque === bloque).length;
-          if ((n ?? 0) > hay) {
-            ctx.addIssue({ code: 'custom', message: `el reparto pide ${n} de ${bloque} y el banco tiene ${hay}` });
-          }
+          if (n > hay) aviso(`el reparto pide ${n} de ${bloque} y el banco tiene ${hay}`);
         }
-      } else if (b.puntuacion.preguntas > b.preguntas.length) {
+      } else if (b.puntuacion && b.puntuacion.preguntas > b.preguntas.length) {
         /* Sin reparto, el simulador reparte en proporción al banco, y con más
            preguntas pedidas que las que hay sacaría un examen más corto que
            el que anuncia, sin avisar. */
-        ctx.addIssue({
-          code: 'custom',
-          message: `el simulacro saca ${b.puntuacion.preguntas} y el banco tiene ${b.preguntas.length}`,
-        });
+        aviso(`el simulacro saca ${b.puntuacion.preguntas} y el banco tiene ${b.preguntas.length}`);
       }
+
       const vistos = new Set<string>();
       for (const p of b.preguntas) {
-        if (vistos.has(p.id)) {
-          ctx.addIssue({ code: 'custom', message: `id repetido: ${p.id}` });
-        }
+        if (vistos.has(p.id)) aviso(`id repetido: ${p.id}`);
         vistos.add(p.id);
-        const buenas = p.opciones.filter((o) => o.correcta).length;
-        if (buenas !== 1) {
-          ctx.addIssue({
-            code: 'custom',
-            message: `${p.id}: ${buenas} opciones marcadas como correctas, y tiene que haber una`,
-          });
+        if (!ids.has(p.bloque)) aviso(`${p.id}: el bloque «${p.bloque}» no está en bloques`);
+        if (b.opciones && p.opciones.length !== b.opciones) {
+          aviso(`${p.id}: trae ${p.opciones.length} opciones y el banco dice ${b.opciones}`);
         }
+        const buenas = p.opciones.filter((o) => o.correcta).length;
+        if (p.varias) {
+          if (buenas < 2) aviso(`${p.id}: dice tener varias ciertas y tiene ${buenas}`);
+          if (b.puntuacion) aviso(`${p.id}: un simulacro no puede puntuar una pregunta con varias ciertas`);
+        } else if (buenas !== 1) {
+          aviso(`${p.id}: ${buenas} opciones marcadas como correctas, y tiene que haber una`);
+        }
+      }
+
+      /* El recuento contra el PDF: cada diapositiva, una pregunta o un motivo. */
+      if (b.diapositivas) {
+        const vistas = new Map<number, string>();
+        const anota = (n: number, quien: string) => {
+          if (n > b.diapositivas!) aviso(`${quien}: la diapositiva ${n} no existe, el PDF tiene ${b.diapositivas}`);
+          if (vistas.has(n)) aviso(`la diapositiva ${n} la cuentan ${vistas.get(n)} y ${quien}`);
+          vistas.set(n, quien);
+        };
+        for (const p of b.preguntas) {
+          if (p.diapositiva === undefined) aviso(`${p.id}: el banco sale de diapositivas y esta no dice la suya`);
+          else anota(p.diapositiva, p.id);
+        }
+        for (const s of b.sinPregunta) anota(s.diapositiva, `sinPregunta (${s.motivo.slice(0, 30)}…)`);
+        const faltan = Array.from({ length: b.diapositivas }, (_, i) => i + 1).filter((n) => !vistas.has(n));
+        if (faltan.length) aviso(`faltan las diapositivas ${faltan.join(', ')}: ni pregunta ni motivo`);
+      } else if (b.sinPregunta.length || b.preguntas.some((p) => p.diapositiva !== undefined)) {
+        aviso('hay diapositivas numeradas pero el banco no dice cuántas tiene el PDF (`diapositivas`)');
       }
     }),
 });

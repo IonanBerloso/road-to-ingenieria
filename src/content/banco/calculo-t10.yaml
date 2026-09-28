@@ -1,0 +1,542 @@
+asignatura: calculo
+tema: t10-laplace
+titulo: Las cuestiones de las diapositivas del tema 10
+fuente: >-
+  Las diapositivas de clase del tema 10 de Cálculo, «Transformada de Laplace»
+  (UPV/EHU): catorce preguntas tipo test para las cuestiones en grupo y para
+  el oral de la final y de la extraordinaria. Las diapositivas no traen la
+  solución: la respuesta y el porqué de cada opción son de este sitio, y las
+  figuras están redibujadas.
+diapositivas: 14
+bloques:
+  - { id: '10.1-10.2', titulo: Transformada de Laplace de una función }
+  - { id: '10.4', titulo: Propiedades de la transformada de Laplace }
+  - { id: '10.5', titulo: Convolución }
+  - { id: '10.6', titulo: Sistemas lineales }
+preguntas:
+  - id: derivadas-iguales
+    bloque: '10.1-10.2'
+    diapositiva: 1
+    pregunta: |
+      ¿Es cierta la siguiente propiedad?
+
+      *“Sean $f(t)$ y $g(t)$ dos funciones tales que $f'(t)=g'(t)$. Sean
+      $\mathcal{L}(f(t))=F(s)$, $\mathcal{L}(g(t))=G(s)$.*
+
+      *Entonces, a medida que el valor de $s$ aumenta, los valores de $F(s)$ y
+      $G(s)$ se hacen cada vez más próximos”*
+    opciones:
+      - texto: La propiedad es cierta en general.
+        correcta: true
+        porque: |-
+          Con $f'=g'$, las dos funciones se diferencian en una constante:
+          $f=g+C$. Por linealidad, $F(s)=G(s)+\frac{C}{s}$, y la distancia
+          entre ellas, $\frac{|C|}{s}$, se hace tan pequeña como se quiera al
+          crecer $s$.
+      - texto: La propiedad no es cierta en general.
+        porque: |-
+          Tienta pensar que, si $f$ y $g$ son distintas, sus transformadas
+          seguirán separadas. Pero con $f'=g'$ solo se diferencian en una
+          constante $C$, y la transformada de esa diferencia, $\frac{C}{s}$,
+          tiende a cero.
+
+  - id: transformada-de-una-funcion-a-trozos
+    bloque: '10.1-10.2'
+    diapositiva: 2
+    pregunta: |
+      Calcular la transformada de Laplace $F(s)$ de la siguiente función:
+
+      $$
+      f(t)=\begin{cases}1 & t\in(0,1)\\ e^{2t} & t\in(1,\infty)\end{cases}
+      $$
+    opciones:
+      - texto: '$F(s)=\begin{cases}\frac{1}{s} & s\in(0,1)\\ \frac{1}{s-2} & s\in(1,\infty)\end{cases}$'
+        porque: |-
+          Transforma cada trozo por separado y reparte los resultados por
+          intervalos de $s$, pero $(0,1)$ y $(1,\infty)$ son intervalos de
+          $t$. $F(s)$ es una sola integral sobre todo $t\ge0$, y los dos trozos
+          cuentan a la vez para cada $s$.
+      - texto: '$F(s)=\frac{1}{s}-\frac{e^{-s}}{s}+\frac{1}{(s-2)e^{s-2}}$'
+        correcta: true
+        porque: |-
+          Se parte la integral en $t=1$: $\int_0^1e^{-st}\,dt=\frac{1-e^{-s}}{s}$
+          y $\int_1^\infty e^{(2-s)t}\,dt=\frac{e^{2-s}}{s-2}$, que converge
+          para $s>2$. Sumadas dan esta expresión.
+      - texto: '$f(t)$ no tiene transformada de Laplace'
+        porque: |-
+          $e^{2t}$ crece, pero no más que una exponencial: $e^{2t}e^{-st}$ se
+          integra en $(1,\infty)$ en cuanto $s>2$. Solo fallaría con algo que
+          crezca más deprisa que cualquier exponencial, como $e^{t^2}$.
+
+  - id: un-pulso-entre-2-y-4
+    bloque: '10.1-10.2'
+    diapositiva: 3
+    pregunta: |
+      Calcular la transformada de Laplace $F(s)$ de la función $f(t)$ cuya
+      gráfica se muestra.
+    figura: |
+      <svg viewBox="0 0 340 170" role="img" width="340" height="170"
+           aria-labelledby="cq10-pulso-t cq10-pulso-d">
+        <title id="cq10-pulso-t">La función f(t), un pulso entre t = 2 y t = 4</title>
+        <desc id="cq10-pulso-d">La gráfica de f(t): vale cero desde t igual a cero hasta t igual a dos, uno entre t igual a dos y t igual a cuatro, y cero otra vez a partir de cuatro.</desc>
+        <style>
+            .cq10-pulso-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+            .cq10-pulso-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+            .cq10-pulso-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+            .cq10-pulso-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+            .cq10-pulso-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+            .cq10-pulso-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+            .cq10-pulso-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+            .cq10-pulso-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+            .cq10-pulso-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+            .cq10-pulso-pt { fill: var(--live); }
+            .cq10-pulso-punta { fill: var(--live); stroke: none; }
+            .cq10-pulso-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+            .cq10-pulso-o { fill: var(--flag); }
+            .cq10-pulso-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+            .cq10-pulso-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+            .cq10-pulso-rej { stroke: var(--rule); stroke-width: 1; fill: none; stroke-dasharray: 4 3; }
+        </style>
+        <path class="cq10-pulso-rej" d="M92.1 140.6L92.1 29.4"/>
+        <path class="cq10-pulso-rej" d="M139.3 140.6L139.3 29.4"/>
+        <path class="cq10-pulso-rej" d="M186.5 140.6L186.5 29.4"/>
+        <path class="cq10-pulso-rej" d="M233.7 140.6L233.7 29.4"/>
+        <path class="cq10-pulso-rej" d="M281 140.6L281 29.4"/>
+        <path class="cq10-pulso-rej" d="M30.7 56.3L309.3 56.3"/>
+        <path class="cq10-pulso-eje" d="M26 123.8L314 123.8M44.9 144L44.9 26"/>
+        <path class="cq10-pulso-eje" d="M92.1 120.3L92.1 127.3"/>
+        <path class="cq10-pulso-eje" d="M139.3 120.3L139.3 127.3"/>
+        <path class="cq10-pulso-eje" d="M186.5 120.3L186.5 127.3"/>
+        <path class="cq10-pulso-eje" d="M233.7 120.3L233.7 127.3"/>
+        <path class="cq10-pulso-eje" d="M281 120.3L281 127.3"/>
+        <path class="cq10-pulso-eje" d="M41.4 56.3L48.4 56.3"/>
+        <g class="cq10-pulso-n"><text x="92.1" y="138.8" text-anchor="middle">1</text><text x="139.3" y="138.8" text-anchor="middle">2</text><text x="186.5" y="138.8" text-anchor="middle">3</text><text x="233.7" y="138.8" text-anchor="middle">4</text><text x="281" y="138.8" text-anchor="middle">5</text><text x="37.9" y="59.9" text-anchor="end">1</text><text x="314" y="115.8" text-anchor="end">t</text><text x="50.9" y="36">y</text></g>
+        <path class="cq10-pulso-c" d="M44.9 123.8L139.3 123.8"/>
+        <path class="cq10-pulso-c" d="M139.3 56.3L233.7 56.3"/>
+        <path class="cq10-pulso-c" d="M233.7 123.8L309.3 123.8"/>
+        <text class="cq10-pulso-l" x="186.5" y="47.3" text-anchor="middle" fill="var(--live)">f(t)</text>
+      </svg>
+    opciones:
+      - texto: '$F(s)=\begin{cases}0 & s\in(0,2)\\ \frac{1}{s} & s\in(2,4)\\ 0 & s\in(4,\infty)\end{cases}$'
+        porque: |-
+          Copia la forma de $f$ en la variable $s$, como si los intervalos de
+          $t$ lo fueran de $s$. La transformada integra la función entera para
+          cada $s$ y da una sola expresión, no un trozo por intervalo.
+      - texto: '$F(s)=\frac{e^{-4s}-e^{-2s}}{(s-2)(s-4)}$'
+        porque: |-
+          Mete los instantes del salto, 2 y 4, en el denominador, como si
+          fueran traslaciones en $s$. Y para $s>4$ sale negativa, cuando la
+          transformada de una función que nunca es negativa es positiva.
+      - texto: '$F(s)=\frac{e^{-2s}-e^{-4s}}{s}$'
+        correcta: true
+        porque: |-
+          $F(s)=\int_2^4e^{-st}\,dt=\frac{e^{-2s}-e^{-4s}}{s}$. Es lo mismo que
+          escribir $f=u(t-2)-u(t-4)$ con el escalón y transformar cada uno:
+          $\frac{e^{-2s}}{s}-\frac{e^{-4s}}{s}$.
+
+  - id: invertir-la-transformada
+    bloque: '10.1-10.2'
+    diapositiva: 4
+    pregunta: |
+      Resolver la siguiente ecuación:
+
+      $$
+      \int_0^\infty e^{-st}y(t)dt=\frac{1}{(s+1)(s-3)}
+      $$
+    opciones:
+      - texto: '$y(t)=\int_0^\infty\frac{e^{st}ds}{(s+1)(s-3)}$'
+        porque: |-
+          Imita la definición cambiando el signo del exponente e integrando en
+          $s$, pero la transformada no se invierte así. Esa integral ni
+          siquiera existe: el integrando crece como $e^{st}$ y tiene un polo
+          en $s=3$.
+      - texto: '$y(t)=\frac{1}{4}e^{-3t}-\frac{1}{4}e^{t}$'
+        porque: |-
+          Tiene los exponentes con el signo cambiado. $\frac{1}{s-a}$ es la
+          transformada de $e^{at}$: el factor $s-3$ da $e^{3t}$ y el $s+1$,
+          $e^{-t}$.
+      - texto: '$y(t)=\frac{1}{4}e^{3t}-\frac{1}{4}e^{-t}$'
+        correcta: true
+        porque: |-
+          La integral es la transformada de $y$, así que se busca la función
+          cuya transformada es $\frac{1}{(s+1)(s-3)}$. En fracciones simples
+          es $\frac{1/4}{s-3}-\frac{1/4}{s+1}$, y la tabla da
+          $\frac14e^{3t}-\frac14e^{-t}$.
+      - texto: '$y(t)=\frac{1}{5}e^{3t}-\frac{1}{5}e^{-t}$'
+        porque: |-
+          Los exponentes son los buenos, pero no el coeficiente. En
+          $\frac{1}{(s+1)(s-3)}=\frac{A}{s-3}+\frac{B}{s+1}$, tapando $s-3$ y
+          poniendo $s=3$ sale $A=\frac{1}{3+1}=\frac14$, no $\frac15$.
+
+  # La curva del original, y la redibujada, es y = C·e^(2t) − e^(−t) con
+  # C = 3·10⁻⁶: por eso se dispara hacia t = 6. Su y(0) es −1 a la precisión
+  # del dibujo, que es lo que la pregunta pide leer.
+  - id: transformar-una-edo
+    bloque: '10.1-10.2'
+    diapositiva: 5
+    pregunta: |
+      Supongamos que la función $y(t)$ cuya gráfica se muestra, verifica la
+      EDO
+
+      $$
+      \frac{dy}{dt}=2y+3e^{-t}
+      $$
+
+      ¿Cuál de las siguientes ecuaciones verifica
+      $\mathcal{L}\left(y(t)\right)=Y(s)$?
+    figura: |
+      <svg viewBox="0 0 340 230" role="img" width="340" height="230"
+           aria-labelledby="cq10-solucion-t cq10-solucion-d">
+        <title id="cq10-solucion-t">La gráfica de y(t)</title>
+        <desc id="cq10-solucion-d">La curva empieza sobre el eje vertical, en y igual a menos uno, sube despacio acercándose a cero, lo cruza hacia t igual a cuatro y a partir de t igual a cinco se dispara hacia arriba: vale casi dos y medio poco antes de t igual a siete.</desc>
+        <style>
+            .cq10-solucion-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+            .cq10-solucion-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+            .cq10-solucion-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+            .cq10-solucion-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+            .cq10-solucion-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+            .cq10-solucion-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+            .cq10-solucion-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+            .cq10-solucion-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+            .cq10-solucion-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+            .cq10-solucion-pt { fill: var(--live); }
+            .cq10-solucion-punta { fill: var(--live); stroke: none; }
+            .cq10-solucion-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+            .cq10-solucion-o { fill: var(--flag); }
+            .cq10-solucion-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+            .cq10-solucion-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+            .cq10-solucion-rej { stroke: var(--rule); stroke-width: 1; fill: none; stroke-dasharray: 4 3; }
+        </style>
+        <path class="cq10-solucion-rej" d="M40.3 202.6L40.3 28.9"/>
+        <path class="cq10-solucion-rej" d="M68.8 202.6L68.8 28.9"/>
+        <path class="cq10-solucion-rej" d="M125.8 202.6L125.8 28.9"/>
+        <path class="cq10-solucion-rej" d="M154.3 202.6L154.3 28.9"/>
+        <path class="cq10-solucion-rej" d="M182.8 202.6L182.8 28.9"/>
+        <path class="cq10-solucion-rej" d="M211.3 202.6L211.3 28.9"/>
+        <path class="cq10-solucion-rej" d="M239.9 202.6L239.9 28.9"/>
+        <path class="cq10-solucion-rej" d="M268.4 202.6L268.4 28.9"/>
+        <path class="cq10-solucion-rej" d="M296.9 202.6L296.9 28.9"/>
+        <path class="cq10-solucion-rej" d="M28.9 189.6L311.1 189.6"/>
+        <path class="cq10-solucion-rej" d="M28.9 160.9L311.1 160.9"/>
+        <path class="cq10-solucion-rej" d="M28.9 132.2L311.1 132.2"/>
+        <path class="cq10-solucion-rej" d="M28.9 74.8L311.1 74.8"/>
+        <path class="cq10-solucion-rej" d="M28.9 46.1L311.1 46.1"/>
+        <path class="cq10-solucion-c" d="M97.3 132.2L98.5 131L99.7 129.9L100.9 128.8L102.1 127.7L103.3 126.7L104.6 125.8L105.8 124.8L107 124L108.2 123.1L109.4 122.3L110.6 121.5L111.8 120.8L113 120L114.2 119.4L115.5 118.7L116.7 118.1L117.9 117.5L119.1 116.9L120.3 116.3L121.5 115.8L122.7 115.3L123.9 114.8L125.1 114.3L126.4 113.9L127.6 113.4L128.8 113L130 112.6L131.2 112.3L132.4 111.9L133.6 111.5L134.8 111.2L136 110.9L137.3 110.6L138.5 110.3L139.7 110L140.9 109.7L142.1 109.5L143.3 109.2L144.5 109L145.7 108.8L146.9 108.5L148.2 108.3L149.4 108.1L150.6 107.9L151.8 107.8L153 107.6L154.2 107.4L155.4 107.2L156.6 107.1L157.8 106.9L159.1 106.8L160.3 106.7L161.5 106.5L162.7 106.4L163.9 106.3L165.1 106.2L166.3 106.1L167.5 105.9L168.8 105.8L170 105.7L171.2 105.7L172.4 105.6L173.6 105.5L174.8 105.4L176 105.3L177.2 105.2L178.4 105.2L179.7 105.1L180.9 105L182.1 105L183.3 104.9L184.5 104.8L185.7 104.8L186.9 104.7L188.1 104.7L189.3 104.6L190.6 104.5L191.8 104.5L193 104.4L194.2 104.4L195.4 104.4L196.6 104.3L197.8 104.3L199 104.2L200.2 104.2L201.5 104.1L202.7 104.1L203.9 104L205.1 104L206.3 104L207.5 103.9L208.7 103.9L209.9 103.8L211.1 103.8L212.4 103.7L213.6 103.7L214.8 103.7L216 103.6L217.2 103.6L218.4 103.5L219.6 103.5L220.8 103.4L222 103.3L223.3 103.3L224.5 103.2L225.7 103.1L226.9 103.1L228.1 103L229.3 102.9L230.5 102.8L231.7 102.7L232.9 102.6L234.2 102.5L235.4 102.4L236.6 102.2L237.8 102.1L239 101.9L240.2 101.8L241.4 101.6L242.6 101.4L243.8 101.2L245.1 100.9L246.3 100.7L247.5 100.4L248.7 100.1L249.9 99.8L251.1 99.5L252.3 99.1L253.5 98.7L254.7 98.2L256 97.8L257.2 97.2L258.4 96.7L259.6 96L260.8 95.4L262 94.6L263.2 93.8L264.4 93L265.6 92L266.9 91L268.1 89.9L269.3 88.6L270.5 87.3L271.7 85.9L272.9 84.3L274.1 82.6L275.3 80.7L276.6 78.7L277.8 76.5L279 74.1L280.2 71.5L281.4 68.6L282.6 65.5L283.8 62.2L285 58.5L286.2 54.5L287.5 50.1L288.7 45.4L289.9 40.2L291.1 34.6"/>
+        <path class="cq10-solucion-eje" d="M26 103.5L314 103.5M97.3 204L97.3 26"/>
+        <path class="cq10-solucion-eje" d="M40.3 100L40.3 107"/>
+        <path class="cq10-solucion-eje" d="M68.8 100L68.8 107"/>
+        <path class="cq10-solucion-eje" d="M125.8 100L125.8 107"/>
+        <path class="cq10-solucion-eje" d="M154.3 100L154.3 107"/>
+        <path class="cq10-solucion-eje" d="M182.8 100L182.8 107"/>
+        <path class="cq10-solucion-eje" d="M211.3 100L211.3 107"/>
+        <path class="cq10-solucion-eje" d="M239.9 100L239.9 107"/>
+        <path class="cq10-solucion-eje" d="M268.4 100L268.4 107"/>
+        <path class="cq10-solucion-eje" d="M296.9 100L296.9 107"/>
+        <path class="cq10-solucion-eje" d="M93.8 189.6L100.8 189.6"/>
+        <path class="cq10-solucion-eje" d="M93.8 160.9L100.8 160.9"/>
+        <path class="cq10-solucion-eje" d="M93.8 132.2L100.8 132.2"/>
+        <path class="cq10-solucion-eje" d="M93.8 74.8L100.8 74.8"/>
+        <path class="cq10-solucion-eje" d="M93.8 46.1L100.8 46.1"/>
+        <g class="cq10-solucion-n"><text x="40.3" y="118.5" text-anchor="middle">-2</text><text x="68.8" y="118.5" text-anchor="middle">-1</text><text x="125.8" y="118.5" text-anchor="middle">1</text><text x="154.3" y="118.5" text-anchor="middle">2</text><text x="182.8" y="118.5" text-anchor="middle">3</text><text x="211.3" y="118.5" text-anchor="middle">4</text><text x="239.9" y="118.5" text-anchor="middle">5</text><text x="268.4" y="118.5" text-anchor="middle">6</text><text x="296.9" y="118.5" text-anchor="middle">7</text><text x="90.3" y="193.2" text-anchor="end">-3</text><text x="90.3" y="164.5" text-anchor="end">-2</text><text x="90.3" y="135.8" text-anchor="end">-1</text><text x="90.3" y="78.4" text-anchor="end">1</text><text x="90.3" y="49.7" text-anchor="end">2</text><text x="314" y="95.5" text-anchor="end">t</text><text x="103.3" y="36">y</text></g>
+      </svg>
+    opciones:
+      - texto: '$-1-sY(s)=2Y(s)+\frac{3}{s-1}$'
+        porque: |-
+          Es la transformada de $y'$ cambiada de signo, $-(sY+1)$, y con
+          $\frac{3}{s-1}$, que corresponde a $3e^{t}$ y no a $3e^{-t}$.
+      - texto: '$1+sY(s)=2Y(s)+\frac{3}{s+1}$'
+        correcta: true
+        porque: |-
+          $\mathcal{L}(y')=sY-y(0)$ y $\mathcal{L}(e^{-t})=\frac{1}{s+1}$. En
+          la gráfica, $y(0)=-1$, así que $sY+1=2Y+\frac{3}{s+1}$.
+      - texto: '$sY(s)=1+2Y(s)+\frac{3}{s-1}$'
+        porque: |-
+          Pasando el 1 al otro lado queda $sY-1$, que corresponde a $y(0)=1$,
+          y la gráfica sale de $-1$. Además $\frac{3}{s-1}$ es la transformada
+          de $3e^{t}$, no de $3e^{-t}$.
+      - texto: '$s+sY(s)=2Y(s)+\frac{3}{s+1}$'
+        porque: |-
+          Multiplica el valor inicial por $s$, como en la transformada de
+          $y''$, $s^2Y-s\,y(0)-y'(0)$. En la de $y'$ va solo:
+          $sY-y(0)=sY+1$.
+
+  - id: funcion-retrasada
+    bloque: '10.1-10.2'
+    diapositiva: 6
+    pregunta: |
+      Sea $Y(s)=\mathcal{L}(y(t))$. Construimos una nueva función $h(t)$ del
+      siguiente modo:
+
+      $$
+      h(t)=\begin{cases}0 & \text{si } t<a\\ y(t-a) & \text{si } t>a\end{cases}
+      $$
+
+      Siendo $a>0$. ¿Cuál será $\mathcal{L}(h(t))=H(s)$?
+    opciones:
+      - texto: '$H(s)=Y(s-a)$'
+        porque: |-
+          Es la otra traslación: $Y(s-a)$ es la transformada de $e^{at}y(t)$.
+          Multiplicar por una exponencial en $t$ traslada en $s$; retrasar en
+          $t$ multiplica por una exponencial en $s$.
+      - texto: '$H(s)=\frac{Y(s)}{a}$'
+        porque: |-
+          Dividir entre $a$ recuerda al cambio de escala,
+          $\mathcal{L}(y(at))=\frac1aY\left(\frac sa\right)$, pero aquí no se
+          cambia la escala del tiempo: la función se retrasa $a$ unidades.
+      - texto: '$H(s)=e^{a}Y(s)$'
+        porque: |-
+          $e^{a}$ es una constante: sería la transformada de $e^{a}y(t)$, la
+          misma función multiplicada por un número. El retraso deja un factor
+          que depende de $s$.
+      - texto: '$H(s)=e^{-sa}Y(s)$'
+        correcta: true
+        porque: |-
+          $H(s)=\int_a^\infty e^{-st}y(t-a)\,dt$, y con $\tau=t-a$ queda
+          $\int_0^\infty e^{-s(\tau+a)}y(\tau)\,d\tau=e^{-sa}Y(s)$: retrasar la
+          función $a$ unidades multiplica su transformada por $e^{-as}$.
+
+  - id: condicion-inicial-en-la-derivada
+    bloque: '10.1-10.2'
+    diapositiva: 7
+    pregunta: |
+      Calcular la transformada de Laplace $Y(s)$ de la función $y(t)$ que
+      verifica la EDO
+
+      $$
+      \frac{dy}{dt}=5y+3e^{-3t},\quad y'(0)=-7
+      $$
+    opciones:
+      - texto: '$Y(s)=\frac{3s+2}{(s-3)(s+5)}$'
+        porque: |-
+          Los factores del denominador llevan los signos cambiados: el $5y$ da
+          $s-5$, y el $3e^{-3t}$, $\frac{3}{s+3}$. Aquí salen $s-3$ y $s+5$.
+      - texto: '$Y(s)=-\frac{2s+3}{(s+3)(s-5)}$'
+        correcta: true
+        porque: |-
+          El dato es $y'(0)$, y la transformada de $y'$ pide $y(0)$: se saca
+          de la propia EDO en $t=0$, $-7=5y(0)+3$, así que $y(0)=-2$. Entonces
+          $sY+2=5Y+\frac{3}{s+3}$, y despejando, $Y=-\frac{2s+3}{(s+3)(s-5)}$.
+      - texto: '$Y(s)=\frac{s+4}{(s-1)(s+5)}$'
+        porque: |-
+          Su denominador no sale de esta ecuación: el $5y$ da el factor $s-5$
+          y el $3e^{-3t}$, el $s+3$. Con $s-1$ y $s+5$ sería otra EDO.
+      - texto: '$Y(s)=-\frac{s+4}{(s+3)(s-5)}$'
+        porque: |-
+          El denominador es el bueno, pero el numerador no sale con ningún
+          valor inicial: con $y(0)=y_0$, $(s-5)Y=y_0+\frac{3}{s+3}$, y el
+          numerador es $y_0(s+3)+3$. Para que empiece por $-s$ hace falta
+          $y_0=-1$, y entonces queda $-s$, no $-(s+4)$.
+
+  - id: funciones-iguales-desde-a
+    bloque: '10.1-10.2'
+    diapositiva: 8
+    pregunta: |
+      Supongamos que $u(t)$ y $v(t)$ son idénticas en el intervalo
+      $(a,\infty)$. Calcular la transformada de Laplace de $u(t)-v(t)$.
+    opciones:
+      - texto: '$\int_0^\infty e^{st}(u(t)-v(t))dt$'
+        porque: |-
+          Lleva $e^{st}$, con el signo del exponente cambiado: no es la
+          transformada. Con $e^{-st}$ y los límites de 0 a $\infty$ sí lo
+          sería.
+      - texto: '$\int_0^a e^{-st}(u(t)-v(t))ds$'
+        porque: |-
+          Integra en $s$, y la variable de integración es $t$: $s$ es la de la
+          transformada. Así escrita, la integral da una función de $t$, no de
+          $s$.
+      - texto: '$\int_a^\infty e^{-st}(u(t)-v(t))dt$'
+        porque: |-
+          Es justo el trozo que vale cero: en $(a,\infty)$, $u=v$ y el
+          integrando se anula. Lo que queda de la transformada es la integral
+          de 0 a $a$.
+      - texto: '$\int_0^a e^{-st}(u(t)-v(t))dt$'
+        correcta: true
+        porque: |-
+          $\mathcal{L}(u-v)=\int_0^\infty e^{-st}(u-v)\,dt$, y de $a$ en
+          adelante $u-v=0$: la integral se queda en la de 0 a $a$.
+
+  - id: una-ecuacion-integral
+    bloque: '10.4'
+    diapositiva: 9
+    pregunta: |
+      Resolver la ecuación $\int_0^t u(z)dz+u(t)=2t$
+    opciones:
+      - texto: '$u(t)=1-e^{2t}$'
+        porque: |-
+          Cumple $u(0)=0$, que es lo que la ecuación da en $t=0$, pero nada
+          más. Derivando la ecuación, $u+u'=2$, y aquí $u+u'=1-3e^{2t}$.
+      - texto: '$u(t)=\cos 2t+e^t$'
+        porque: |-
+          En $t=0$ la integral vale cero y el segundo miembro también, así que
+          $u(0)=0$. Esta da $u(0)=\cos0+e^0=2$.
+      - texto: '$u(t)=2-2e^{-t}$'
+        correcta: true
+        porque: |-
+          La integral de 0 a $t$ se transforma en $\frac{U}{s}$:
+          $\frac{U}{s}+U=\frac{2}{s^2}$, así que
+          $U=\frac{2}{s(s+1)}=\frac2s-\frac{2}{s+1}$ y $u=2-2e^{-t}$. Se
+          comprueba: $\int_0^t(2-2e^{-z})\,dz=2t-2+2e^{-t}$, y sumándole $u$
+          da $2t$.
+      - texto: '$u(t)=2-2e^{-z}$'
+        porque: |-
+          Tiene la forma de la solución, pero con la letra equivocada: $z$ es
+          la variable de integración, y fuera de la integral no existe. La
+          solución es una función de $t$.
+
+  - id: ecuacion-integral-con-t
+    bloque: '10.4'
+    diapositiva: 10
+    pregunta: |
+      Resolver la ecuación $\int_0^t zu(z)dz=1+tu(t)-e^t$
+    opciones:
+      - texto: '$u(t)=\operatorname{sen}t-\cos t$'
+        porque: |-
+          Derivando la ecuación, $tu=u+tu'-e^t$, y en $t=0$ queda $u(0)=1$.
+          Esta da $u(0)=\operatorname{sen}0-\cos0=-1$.
+      - texto: '$u(t)=e^t$'
+        correcta: true
+        porque: |-
+          Con la transformada, $\mathcal{L}(tu)=-U'(s)$, y la integral de 0 a
+          $t$ divide entre $s$: $-\frac{U'}{s}=\frac1s-U'-\frac{1}{s-1}$.
+          Despejando, $U'=-\frac{1}{(s-1)^2}$, así que $U=\frac{1}{s-1}$ (sin
+          constante, porque $U\to0$) y $u=e^t$. Se comprueba:
+          $\int_0^tze^z\,dz=te^t-e^t+1$.
+      - texto: '$u(t)=e^t\cos t$'
+        porque: |-
+          Empieza bien, $u(0)=1$, pero se anula en $t=\frac{\pi}{2}$, y ahí el
+          segundo miembro vale $1-e^{\pi/2}<0$, mientras que el primero es la
+          integral de $ze^z\cos z$, positiva en $\left(0,\frac{\pi}{2}\right)$.
+      - texto: '$u(t)=e^{2t}-e^t$'
+        porque: |-
+          Derivando la ecuación y poniendo $t=0$ sale $u(0)=1$, y esta da
+          $u(0)=1-1=0$.
+
+  - id: multiplicar-por-t
+    bloque: '10.4'
+    diapositiva: 11
+    pregunta: |
+      La figura muestra la transformada de Laplace $Y(s)$ de cierta función
+      $y(t)$. Considerar la nueva función $h(t)=ty(t)$. ¿Cuál de las gráficas
+      corresponde a la de la transformada $H(s)$ de $h(t)$?
+    figura: |
+      <svg viewBox="0 0 340 414" role="img" width="340" height="414"
+           aria-labelledby="cq10-por-t-t cq10-por-t-d">
+        <title id="cq10-por-t-t">La transformada Y(s) y dos candidatas a H(s)</title>
+        <desc id="cq10-por-t-d">Tres gráficas con el mismo eje s, de cero a cinco. En la primera, Y(s): empieza en cero coma tres, sube hasta un máximo de casi cero coma ocho cerca de s igual a uno y luego baja despacio, hasta cero coma tres en s igual a cinco. En A, una curva que empieza en cero coma nueve, baja, corta el eje cerca de s igual a uno, se queda un poco por debajo y se acerca a cero desde abajo. En B, la simétrica de A: empieza en menos cero coma nueve, sube, corta el eje cerca de s igual a uno, llega a unos cero coma dieciocho hacia s igual a uno coma ocho y baja despacio hacia cero.</desc>
+        <style>
+            .cq10-por-t-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+            .cq10-por-t-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+            .cq10-por-t-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+            .cq10-por-t-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+            .cq10-por-t-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+            .cq10-por-t-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+            .cq10-por-t-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+            .cq10-por-t-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+            .cq10-por-t-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+            .cq10-por-t-pt { fill: var(--live); }
+            .cq10-por-t-punta { fill: var(--live); stroke: none; }
+            .cq10-por-t-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+            .cq10-por-t-o { fill: var(--flag); }
+            .cq10-por-t-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+            .cq10-por-t-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+            .cq10-por-t-rej { stroke: var(--rule); stroke-width: 1; fill: none; stroke-dasharray: 4 3; }
+        </style>
+        <g transform="translate(0 16)"><text class="cq10-por-t-l" x="2" y="-5" fill="var(--live)">Y(s)</text><path class="cq10-por-t-rej" d="M88.8 98.2L88.8 19.8"/><path class="cq10-por-t-rej" d="M141.2 98.2L141.2 19.8"/><path class="cq10-por-t-rej" d="M193.6 98.2L193.6 19.8"/><path class="cq10-por-t-rej" d="M246 98.2L246 19.8"/><path class="cq10-por-t-rej" d="M298.4 98.2L298.4 19.8"/><path class="cq10-por-t-rej" d="M20.6 94.7L316.8 94.7"/><path class="cq10-por-t-rej" d="M20.6 23.3L316.8 23.3"/><path class="cq10-por-t-c" d="M36.3 47.9L38.3 46.6L40.2 45.4L42.1 44.3L44.1 43.2L46 42.1L47.9 41L49.8 40L51.8 39.1L53.7 38.2L55.6 37.4L57.6 36.6L59.5 35.9L61.4 35.3L63.3 34.7L65.3 34.1L67.2 33.7L69.1 33.3L71.1 32.9L73 32.6L74.9 32.3L76.8 32.1L78.8 31.9L80.7 31.8L82.6 31.7L84.5 31.6L86.5 31.6L88.4 31.6L90.3 31.6L92.3 31.7L94.2 31.7L96.1 31.8L98 31.9L100 32.1L101.9 32.2L103.8 32.4L105.8 32.6L107.7 32.8L109.6 33L111.5 33.2L113.5 33.4L115.4 33.6L117.3 33.8L119.3 34L121.2 34.3L123.1 34.5L125 34.7L127 35L128.9 35.2L130.8 35.4L132.7 35.7L134.7 35.9L136.6 36.2L138.5 36.4L140.5 36.6L142.4 36.9L144.3 37.1L146.2 37.3L148.2 37.6L150.1 37.8L152 38L154 38.2L155.9 38.4L157.8 38.7L159.7 38.9L161.7 39.1L163.6 39.3L165.5 39.5L167.5 39.7L169.4 39.9L171.3 40.1L173.2 40.3L175.2 40.5L177.1 40.7L179 40.9L181 41L182.9 41.2L184.8 41.4L186.7 41.6L188.7 41.8L190.6 41.9L192.5 42.1L194.4 42.3L196.4 42.4L198.3 42.6L200.2 42.7L202.2 42.9L204.1 43L206 43.2L207.9 43.3L209.9 43.5L211.8 43.6L213.7 43.8L215.7 43.9L217.6 44L219.5 44.2L221.4 44.3L223.4 44.4L225.3 44.6L227.2 44.7L229.2 44.8L231.1 44.9L233 45.1L234.9 45.2L236.9 45.3L238.8 45.4L240.7 45.5L242.6 45.6L244.6 45.8L246.5 45.9L248.4 46L250.4 46.1L252.3 46.2L254.2 46.3L256.1 46.4L258.1 46.5L260 46.6L261.9 46.7L263.9 46.8L265.8 46.9L267.7 47L269.6 47.1L271.6 47.1L273.5 47.2L275.4 47.3L277.4 47.4L279.3 47.5L281.2 47.6L283.1 47.7L285.1 47.7L287 47.8L288.9 47.9L290.9 48L292.8 48.1L294.7 48.1L296.6 48.2L298.6 48.3L300.5 48.4L302.4 48.4L304.3 48.5L306.3 48.6"/><path class="cq10-por-t-eje" d="M18 59L322 59M36.3 100L36.3 18"/><path class="cq10-por-t-eje" d="M88.8 55.5L88.8 62.5"/><path class="cq10-por-t-eje" d="M141.2 55.5L141.2 62.5"/><path class="cq10-por-t-eje" d="M193.6 55.5L193.6 62.5"/><path class="cq10-por-t-eje" d="M246 55.5L246 62.5"/><path class="cq10-por-t-eje" d="M298.4 55.5L298.4 62.5"/><path class="cq10-por-t-eje" d="M32.8 94.7L39.8 94.7"/><path class="cq10-por-t-eje" d="M32.8 23.3L39.8 23.3"/><g class="cq10-por-t-n"><text x="88.8" y="74" text-anchor="middle">1</text><text x="141.2" y="74" text-anchor="middle">2</text><text x="193.6" y="74" text-anchor="middle">3</text><text x="246" y="74" text-anchor="middle">4</text><text x="298.4" y="74" text-anchor="middle">5</text><text x="29.3" y="98.3" text-anchor="end">-1</text><text x="29.3" y="26.9" text-anchor="end">1</text><text x="322" y="51" text-anchor="end">s</text><text x="42.3" y="28"></text></g></g>
+        <g transform="translate(0 156)"><text class="cq10-por-t-l" x="2" y="-5" fill="var(--live)">A</text><path class="cq10-por-t-rej" d="M88.8 98.2L88.8 19.8"/><path class="cq10-por-t-rej" d="M141.2 98.2L141.2 19.8"/><path class="cq10-por-t-rej" d="M193.6 98.2L193.6 19.8"/><path class="cq10-por-t-rej" d="M246 98.2L246 19.8"/><path class="cq10-por-t-rej" d="M298.4 98.2L298.4 19.8"/><path class="cq10-por-t-rej" d="M20.6 94.7L316.8 94.7"/><path class="cq10-por-t-rej" d="M20.6 23.3L316.8 23.3"/><path class="cq10-por-t-c" d="M36.3 25.6L38.3 26.2L40.2 26.9L42.1 27.8L44.1 28.9L46 30.1L47.9 31.4L49.8 32.8L51.8 34.2L53.7 35.8L55.6 37.3L57.6 38.9L59.5 40.6L61.4 42.2L63.3 43.8L65.3 45.3L67.2 46.8L69.1 48.3L71.1 49.7L73 51.1L74.9 52.4L76.8 53.6L78.8 54.7L80.7 55.8L82.6 56.8L84.5 57.7L86.5 58.6L88.4 59.4L90.3 60.1L92.3 60.8L94.2 61.4L96.1 61.9L98 62.4L100 62.9L101.9 63.3L103.8 63.6L105.8 63.9L107.7 64.2L109.6 64.4L111.5 64.7L113.5 64.8L115.4 65L117.3 65.1L119.3 65.2L121.2 65.3L123.1 65.4L125 65.4L127 65.5L128.9 65.5L130.8 65.5L132.7 65.5L134.7 65.5L136.6 65.4L138.5 65.4L140.5 65.4L142.4 65.3L144.3 65.3L146.2 65.2L148.2 65.2L150.1 65.1L152 65.1L154 65L155.9 64.9L157.8 64.9L159.7 64.8L161.7 64.7L163.6 64.6L165.5 64.6L167.5 64.5L169.4 64.4L171.3 64.3L173.2 64.3L175.2 64.2L177.1 64.1L179 64L181 63.9L182.9 63.9L184.8 63.8L186.7 63.7L188.7 63.7L190.6 63.6L192.5 63.5L194.4 63.4L196.4 63.4L198.3 63.3L200.2 63.2L202.2 63.2L204.1 63.1L206 63L207.9 63L209.9 62.9L211.8 62.9L213.7 62.8L215.7 62.7L217.6 62.7L219.5 62.6L221.4 62.6L223.4 62.5L225.3 62.5L227.2 62.4L229.2 62.4L231.1 62.3L233 62.3L234.9 62.2L236.9 62.2L238.8 62.1L240.7 62.1L242.6 62L244.6 62L246.5 61.9L248.4 61.9L250.4 61.9L252.3 61.8L254.2 61.8L256.1 61.7L258.1 61.7L260 61.7L261.9 61.6L263.9 61.6L265.8 61.5L267.7 61.5L269.6 61.5L271.6 61.4L273.5 61.4L275.4 61.4L277.4 61.3L279.3 61.3L281.2 61.3L283.1 61.2L285.1 61.2L287 61.2L288.9 61.2L290.9 61.1L292.8 61.1L294.7 61.1L296.6 61L298.6 61L300.5 61L302.4 61L304.3 60.9L306.3 60.9"/><path class="cq10-por-t-eje" d="M18 59L322 59M36.3 100L36.3 18"/><path class="cq10-por-t-eje" d="M88.8 55.5L88.8 62.5"/><path class="cq10-por-t-eje" d="M141.2 55.5L141.2 62.5"/><path class="cq10-por-t-eje" d="M193.6 55.5L193.6 62.5"/><path class="cq10-por-t-eje" d="M246 55.5L246 62.5"/><path class="cq10-por-t-eje" d="M298.4 55.5L298.4 62.5"/><path class="cq10-por-t-eje" d="M32.8 94.7L39.8 94.7"/><path class="cq10-por-t-eje" d="M32.8 23.3L39.8 23.3"/><g class="cq10-por-t-n"><text x="88.8" y="74" text-anchor="middle">1</text><text x="141.2" y="74" text-anchor="middle">2</text><text x="193.6" y="74" text-anchor="middle">3</text><text x="246" y="74" text-anchor="middle">4</text><text x="298.4" y="74" text-anchor="middle">5</text><text x="29.3" y="98.3" text-anchor="end">-1</text><text x="29.3" y="26.9" text-anchor="end">1</text><text x="322" y="51" text-anchor="end">s</text><text x="42.3" y="28"></text></g></g>
+        <g transform="translate(0 296)"><text class="cq10-por-t-l" x="2" y="-5" fill="var(--live)">B</text><path class="cq10-por-t-rej" d="M88.8 98.2L88.8 19.8"/><path class="cq10-por-t-rej" d="M141.2 98.2L141.2 19.8"/><path class="cq10-por-t-rej" d="M193.6 98.2L193.6 19.8"/><path class="cq10-por-t-rej" d="M246 98.2L246 19.8"/><path class="cq10-por-t-rej" d="M298.4 98.2L298.4 19.8"/><path class="cq10-por-t-rej" d="M20.6 94.7L316.8 94.7"/><path class="cq10-por-t-rej" d="M20.6 23.3L316.8 23.3"/><path class="cq10-por-t-c" d="M36.3 92.4L38.3 91.8L40.2 91.1L42.1 90.2L44.1 89.1L46 87.9L47.9 86.6L49.8 85.2L51.8 83.8L53.7 82.2L55.6 80.7L57.6 79.1L59.5 77.4L61.4 75.8L63.3 74.2L65.3 72.7L67.2 71.2L69.1 69.7L71.1 68.3L73 66.9L74.9 65.6L76.8 64.4L78.8 63.3L80.7 62.2L82.6 61.2L84.5 60.3L86.5 59.4L88.4 58.6L90.3 57.9L92.3 57.2L94.2 56.6L96.1 56.1L98 55.6L100 55.1L101.9 54.7L103.8 54.4L105.8 54.1L107.7 53.8L109.6 53.6L111.5 53.3L113.5 53.2L115.4 53L117.3 52.9L119.3 52.8L121.2 52.7L123.1 52.6L125 52.6L127 52.5L128.9 52.5L130.8 52.5L132.7 52.5L134.7 52.5L136.6 52.6L138.5 52.6L140.5 52.6L142.4 52.7L144.3 52.7L146.2 52.8L148.2 52.8L150.1 52.9L152 52.9L154 53L155.9 53.1L157.8 53.1L159.7 53.2L161.7 53.3L163.6 53.4L165.5 53.4L167.5 53.5L169.4 53.6L171.3 53.7L173.2 53.7L175.2 53.8L177.1 53.9L179 54L181 54.1L182.9 54.1L184.8 54.2L186.7 54.3L188.7 54.3L190.6 54.4L192.5 54.5L194.4 54.6L196.4 54.6L198.3 54.7L200.2 54.8L202.2 54.8L204.1 54.9L206 55L207.9 55L209.9 55.1L211.8 55.1L213.7 55.2L215.7 55.3L217.6 55.3L219.5 55.4L221.4 55.4L223.4 55.5L225.3 55.5L227.2 55.6L229.2 55.6L231.1 55.7L233 55.7L234.9 55.8L236.9 55.8L238.8 55.9L240.7 55.9L242.6 56L244.6 56L246.5 56.1L248.4 56.1L250.4 56.1L252.3 56.2L254.2 56.2L256.1 56.3L258.1 56.3L260 56.3L261.9 56.4L263.9 56.4L265.8 56.5L267.7 56.5L269.6 56.5L271.6 56.6L273.5 56.6L275.4 56.6L277.4 56.7L279.3 56.7L281.2 56.7L283.1 56.8L285.1 56.8L287 56.8L288.9 56.8L290.9 56.9L292.8 56.9L294.7 56.9L296.6 57L298.6 57L300.5 57L302.4 57L304.3 57.1L306.3 57.1"/><path class="cq10-por-t-eje" d="M18 59L322 59M36.3 100L36.3 18"/><path class="cq10-por-t-eje" d="M88.8 55.5L88.8 62.5"/><path class="cq10-por-t-eje" d="M141.2 55.5L141.2 62.5"/><path class="cq10-por-t-eje" d="M193.6 55.5L193.6 62.5"/><path class="cq10-por-t-eje" d="M246 55.5L246 62.5"/><path class="cq10-por-t-eje" d="M298.4 55.5L298.4 62.5"/><path class="cq10-por-t-eje" d="M32.8 94.7L39.8 94.7"/><path class="cq10-por-t-eje" d="M32.8 23.3L39.8 23.3"/><g class="cq10-por-t-n"><text x="88.8" y="74" text-anchor="middle">1</text><text x="141.2" y="74" text-anchor="middle">2</text><text x="193.6" y="74" text-anchor="middle">3</text><text x="246" y="74" text-anchor="middle">4</text><text x="298.4" y="74" text-anchor="middle">5</text><text x="29.3" y="98.3" text-anchor="end">-1</text><text x="29.3" y="26.9" text-anchor="end">1</text><text x="322" y="51" text-anchor="end">s</text><text x="42.3" y="28"></text></g></g>
+      </svg>
+    opciones:
+      - texto: La gráfica A
+        porque: |-
+          Es la gráfica de $Y'(s)$, positiva donde $Y$ crece. Pero multiplicar
+          $y(t)$ por $t$ es derivar su transformada y cambiarle el signo,
+          $H(s)=-Y'(s)$: la simétrica de esta respecto del eje $s$.
+      - texto: La gráfica B
+        correcta: true
+        porque: |-
+          $\mathcal{L}(ty(t))=-Y'(s)$. Donde $Y$ crece, hasta su máximo cerca
+          de $s=1$, $H$ es negativa; en el máximo se anula; y después, donde
+          $Y$ baja despacio, $H$ es positiva y pequeña.
+
+  - id: convolucion-con-t
+    bloque: '10.5'
+    diapositiva: 12
+    pregunta: |
+      Calcular $\mathcal{L}(u(t))$ siendo $u(t)$ una función que verifica la
+      ecuación:
+
+      $$
+      u'(t)=t*u(t),\quad u(0)=1
+      $$
+    opciones:
+      - texto: '$\mathcal{L}(u(t))=\frac{s^2}{s^3-1}$'
+        correcta: true
+        porque: |-
+          El asterisco es la convolución, que se transforma en un producto:
+          $\mathcal{L}(t*u)=\frac{1}{s^2}U$. Con $\mathcal{L}(u')=sU-1$ queda
+          $sU-1=\frac{U}{s^2}$, y $U=\frac{s^2}{s^3-1}$.
+      - texto: '$\mathcal{L}(u(t))=\frac{s^3}{s^2-1}$'
+        porque: |-
+          Intercambia los exponentes, y así crece como $s$ cuando
+          $s\to\infty$. Una transformada de Laplace tiende a cero.
+      - texto: '$\mathcal{L}(u(t))=\frac{s^2-4}{s^3+1}$'
+        porque: |-
+          El $s^3+1$ saldría de $sU-1=-\frac{U}{s^2}$, es decir, de
+          $u'=-t*u$, con el signo cambiado. Y el numerador no cuadra con
+          ningún dato: con $u(0)=1$ es $s^2$.
+      - texto: '$\mathcal{L}(u(t))=\frac{s^2+3}{s^4-1}$'
+        porque: |-
+          El $s^4-1$ aparece si se transforma $u'$ como si fuera $u''$, con
+          $s^2U-s$. La de $u'$ es $sU-1$, y lleva a $(s^3-1)U=s^2$.
+
+  - id: ecuacion-lineal-con-convolucion
+    bloque: '10.5'
+    diapositiva: 13
+    pregunta: |
+      Resolver: $ay'(t)+by(t)=u(t)\quad(a\neq0)$
+    opciones:
+      - texto: '$y(t)=\frac{1}{a}u(t)*e^{-\frac{bt}{a}}+y(0)e^{-\frac{bt}{a}}$'
+        correcta: true
+        porque: |-
+          Transformando, $a(sY-y(0))+bY=U$, así que
+          $Y=\frac1a\,U\cdot\frac{1}{s+b/a}+\frac{y(0)}{s+b/a}$. El producto
+          vuelve como convolución, y $\frac{1}{s+b/a}$ es la transformada de
+          $e^{-bt/a}$.
+      - texto: '$y(t)=u(t)e^{\frac{bt}{a}}+au(0)e^{\frac{bt}{a}}$'
+        porque: |-
+          Tiene tres fallos: multiplica donde va una convolución, porque el
+          producto de transformadas no es la transformada del producto; el
+          exponente lleva el signo cambiado; y usa $u(0)$ en vez de $y(0)$.
+      - texto: '$y(t)=u(t)*e^{\frac{bt}{a}}+\frac{u(0)}{a}e^{\frac{bt}{a}}$'
+        porque: |-
+          Acierta con la convolución, pero no con la exponencial: el polo de
+          $\frac{1}{as+b}$ está en $s=-\frac ba$, y da $e^{-bt/a}$. Además le
+          falta el $\frac1a$, y el valor inicial que entra al transformar $y'$
+          es el de $y$, no el de $u$.
+
+  - id: sistema-equivalente
+    bloque: '10.6'
+    diapositiva: 14
+    pregunta: |
+      Considerar la EDO de orden 2 siguiente:
+
+      $$
+      x''(t)-x'(t)-2x(t)=4,\quad x(0)=3,\ x'(0)=1
+      $$
+
+      ¿Cuál de los sistemas de EDO indicados es equivalente a la EDO?
+    opciones:
+      - texto: |-
+          $\begin{cases}x'(t)=y(t)\\ y'(t)=4+2x(t)+y(t)\\ y(0)=1\\ x(0)=3\end{cases}$
+        correcta: true
+        porque: |-
+          Se llama $y$ a la derivada, $y=x'$. Entonces
+          $y'=x''=4+x'+2x=4+2x+y$, y las condiciones pasan tal cual:
+          $x(0)=3$ e $y(0)=x'(0)=1$.
+      - texto: |-
+          $\begin{cases}y'(t)=x(t)\\ x'(t)=4+2x(t)+y(t)\\ y(0)=3\\ x(0)=1\end{cases}$
+        porque: |-
+          Cambia los papeles: aquí la incógnita es $y$, con $y(0)=3$, y su
+          derivada es $x$, con $x(0)=1$. Pero entonces la segunda ecuación
+          dice $y''=4+2y'+y$, que no es la EDO; para serlo tendría que ser
+          $x'=4+x+2y$.

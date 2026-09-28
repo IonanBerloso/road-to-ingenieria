@@ -81,6 +81,9 @@ const MUESTRA = [
      actual en el color de la asignatura— que la muestra no tenía. */
   ['el índice de ejercicios de un tema', '/calculo/t02-sucesiones/#ejercicios'],
   ['un bloque de ejercicios', '/calculo/t02-sucesiones/ejercicios/1/'],
+  /* Las cuestiones de las diapositivas de un tema (fase E3), con sus
+     letras, sus rótulos de apartado y la lista de porqués. */
+  ['las cuestiones de un tema', '/calculo/t01-complejos/cuestiones/'],
   ['una ruta de estudio', '/calculo/preparar/2ev/'],
   ['el índice de exámenes', '/calculo/examenes/'],
   ['una convocatoria', '/calculo/examenes/2019-2020-ord/'],

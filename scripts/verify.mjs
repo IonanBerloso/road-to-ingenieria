@@ -801,7 +801,29 @@ console.log('\nContenido');
     }
   }
 
-  if (pegas.length === 0) ok('ningún apóstrofo suelto en opciones ni piezas');
+  /* Y los bancos de test (fase E3, 28 de septiembre de 2026), que se quedaban
+     fuera por no llamarse `ejercicios.yaml`: los de Cálculo están llenos de
+     derivadas. En un banco se lee todo —pregunta, opciones y porqués—, y las
+     fórmulas en bloque se quitan antes, porque `SIN_MATE` no sabe de `$$`. */
+  const SIN_BLOQUE = /\$\$[\s\S]*?\$\$/g;
+  for (const f of archivos(join(SRC, 'content', 'banco'), ['.yaml'])) {
+    let datos;
+    try {
+      datos = load(leer(f));
+    } catch {
+      continue;
+    }
+    for (const p of datos?.preguntas ?? []) {
+      const textos = [p.pregunta, ...(p.opciones ?? []).flatMap((o) => [o.texto, o.porque])];
+      for (const t of textos) {
+        if (SUELTO.test(String(t ?? '').replace(SIN_BLOQUE, '').replace(SIN_MATE, ''))) {
+          pegas.push(`${rel(f)} · ${p.id}: «${String(t).slice(0, 56)}…»`);
+        }
+      }
+    }
+  }
+
+  if (pegas.length === 0) ok('ningún apóstrofo suelto en opciones, piezas ni bancos');
   else
     fallo(
       'Un apóstrofo fuera de $…$ se publica como comilla curva: usa \\prime o escríbelo con palabras',

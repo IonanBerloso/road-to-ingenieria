@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecera from '../../../components/ui/Cabecera.astro';
+import Armazon from '../../../components/ui/Armazon.astro';
+import Seguir from '../../../components/ui/Seguir.astro';
+import Cuestiones from '../../../components/sim/Cuestiones.astro';
+import { ruta } from '../../../lib/rutas';
+import { anclaDeBloque } from '../../../lib/banco';
+import { caminoDeBloque } from '../../../lib/ejercicios';
+
+/**
+ * Las cuestiones de un tema: una página por cada banco de práctica, los que
+ * no simulan ningún examen porque no llevan `puntuacion` (fase E3 de la
+ * auditoría del 27 de septiembre de 2026). Hoy, las preguntas tipo test de
+ * las diapositivas de clase de Cálculo, una por tema.
+ *
+ * Los bancos con simulacro se enseñan donde se explica su examen, dentro de
+ * la teoría: el test de mínimos de Materiales vive en su tema 1.
+ *
+ * Un banco de un tema que no está publicado rompe el build, en vez de
+ * publicar una página que no cuelga de ninguna (§03).
+ */
+export async function getStaticPaths() {
+  const catalogo = await getCollection('catalogo');
+  const bancos = (await getCollection('banco')).filter((b) => !b.data.puntuacion);
+  return bancos.map((banco) => {
+    const asignatura = catalogo.find((a) => a.id === banco.data.asignatura);
+    const ficha = asignatura?.data.temas.find((t) => t.id === banco.data.tema);
+    if (!asignatura || !ficha?.hecho) {
+      throw new Error(
+        `El banco "${banco.id}" es de «${banco.data.asignatura} · ${banco.data.tema}», y ese tema ` +
+          `no está publicado: su página de cuestiones no colgaría de ninguna.`,
+      );
+    }
+    return { params: { asignatura: asignatura.id, tema: ficha.id }, props: { banco, asignatura, ficha } };
+  });
+}
+
+const { banco, asignatura, ficha } = Astro.props;
+const nn = String(ficha.n).padStart(2, '0');
+const { preguntas, bloques, titulo } = banco.data;
+const apartados = bloques.filter((b) => preguntas.some((p) => p.bloque === b.id));
+const tema = ruta(`${asignatura.id}/${ficha.id}`);
+const hayEjercicios = (await getCollection('ejercicios')).some(
+  (f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios` && f.data.ejercicios.length > 0,
+);
+---
+
+<Base
+  titulo={`Cuestiones · ${ficha.titulo} — ${asignatura.data.nombre}`}
+  descripcion={`${titulo}: las ${preguntas.length} preguntas tipo test del tema ${ficha.n} de ${asignatura.data.nombre}, «${ficha.titulo}», con la respuesta y el porqué de cada opción.`}
+  acento={asignatura.data.acento}
+>
+  <Cabecera crumb={`${asignatura.data.nombre} · tema ${nn} · cuestiones`} />
+
+  <main id="principal">
+    <Armazon carril="Apartados de las cuestiones">
+      <Fragment slot="carril">
+        <h2 class="rotulo">Apartados</h2>
+        <ol data-sin-numero>
+          {apartados.map((b) => (
+            <li>
+              <a href={`#${anclaDeBloque(b.id)}`}>{b.titulo}</a>
+            </li>
+          ))}
+        </ol>
+      </Fragment>
+
+      <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre} · tema {nn}</p>
+      <h1>{ficha.titulo}</h1>
+      <p class="lede">
+        {titulo}: {preguntas.length} preguntas tipo test, en el orden del original. Marca una
+        opción y la página te dice si es la buena y por qué; la teoría y los ejercicios están
+        en <a href={tema}>la página del tema</a>.
+      </p>
+
+      <Cuestiones banco={banco.id} />
+
+      <Seguir
+        otros={[
+          { href: tema, rotulo: 'teoría', titulo: ficha.titulo },
+          ...(hayEjercicios
+            ? [{ href: ruta(caminoDeBloque(asignatura.id, ficha.id, 1)), rotulo: 'ejercicios', titulo: 'Los ejercicios del tema, guiados paso a paso' }]
+            : []),
+        ]}
+      />
+    </Armazon>
+  </main>
+</Base>
