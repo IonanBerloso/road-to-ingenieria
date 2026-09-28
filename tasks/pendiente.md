@@ -93,8 +93,8 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Fluidos, cantidad de movimiento**: reescribir las 22 resoluciones para
   que empiecen nombrando el volumen de control y por qué.
 - **Calculadora**: en los exámenes de Fluidos y de Química se usa la Casio
-  fx-570SP CW, científica y no programable. Decirlo en sus fichas y no usar
-  en las resoluciones nada que ella no haga.
+  fx-570SP CW, científica y no programable. Sus páginas de asignatura ya lo
+  dicen; falta no usar en las resoluciones nada que ella no haga.
 - **Álgebra**: el examen de prácticas se hace con Maxima en ordenador.
   Decirlo en la ficha; practicar los comandos cae en la fase D o la E.
 - **Expresión Gráfica, hojas 52–55**: nadie sabe de qué año son; se

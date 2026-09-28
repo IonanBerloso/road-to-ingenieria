@@ -1219,13 +1219,20 @@ no tiene con qué calcularlos.** Lo que no cambia en ninguna asignatura es lo
 de arriba: un enunciado no ordena decimales a secas, y la prosa no da por
 hecho que haya una máquina delante.
 
-Queda pendiente confirmarlo asignatura por asignatura con el alumno. Lo
-seguro, con fuente, es Cálculo (no), Ingeniería Térmica (sí, con anexo de
+Lo seguro, con fuente, es Cálculo (no), Ingeniería Térmica (sí, con anexo de
 tablas) y **Mecánica de Fluidos (sí)**, esta última desde el 10 de septiembre
 de 2026: su guía la pide en el apartado 9.1 entre los conocimientos previos
 necesarios —«habilidad y agilidad en el uso de la calculadora»—, así que deja
-de ser una inferencia del tipo de ejercicios y pasa a tener fuente. Lo que
-sigue sin respuesta escrita en las tres es si se admite **programable**.
+de ser una inferencia del tipo de ejercicios y pasa a tener fuente.
+
+Desde el 28 de septiembre de 2026 lo dice la página de cada asignatura, en
+«Qué puedes llevar al examen», que lee el campo `alExamen` del catálogo:
+Fluidos y Química usan la **Casio fx-570SP CW**, científica y no programable
+(lo contestó Ionan el 27); Materiales pide «calculadora científica, regla»
+como materiales de uso obligatorio (guía, pág. 11), y Mecánica, «solo
+calculadora» (guía). De Álgebra, Expresión Gráfica y Sistemas no hay nada
+escrito, y la página cita en su lugar la norma de la UPV/EHU: nada salvo
+indicación expresa.
 
 > Y de paso, la regla general que ninguna de las tres decía: la nota de la
 > UPV/EHU sobre evaluación de pruebas académicas invierte el supuesto. «Salvo

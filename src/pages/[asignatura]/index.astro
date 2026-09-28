@@ -1,0 +1,405 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import QueNotaNecesito from '../../components/ui/QueNotaNecesito.astro';
+import { ruta } from '../../lib/rutas';
+import { mate, sinMarcas } from '../../lib/markdown.mjs';
+import { hayFormulario } from '../../lib/formulario';
+import { ESTADO } from '../../lib/estado';
+import { modelo } from '../../lib/nota';
+import { ORDEN_CONV, SUFIJO_CONV, CON_TEMAS, type ConTemas } from '../../content.config';
+
+/**
+ * La página de una asignatura: `/calculo/`, `/fluidos/`… (fase E2 de la
+ * auditoría del 27 de septiembre de 2026). Hasta ese día las nueve daban 404.
+ *
+ * La prueba de utilidad de §13:
+ *   · Para quién: quien entra por un enlace compartido, o escribe
+ *     `/calculo/` porque es lo natural, y quien llega de la portada queriendo
+ *     saber cómo se aprueba antes de ponerse a estudiar.
+ *   · Cuándo: al empezar la asignatura, y otra vez a mitad de curso, con notas
+ *     parciales y el plazo de renuncia a la vista.
+ *   · Qué gana: saber de un vistazo cómo se aprueba y **qué parte de la nota
+ *     no prepara este sitio**. Nadie avisaba, por ejemplo, de que el
+ *     laboratorio de Química suspende aunque saques un 10 en el escrito, ni de
+ *     que el 32 % de Térmica son prácticas de ordenador que aquí no están.
+ *   · Cómo se comprueba: la barra de cada modalidad suma 100 (lo exige el
+ *     esquema del catálogo), cada parte que no se prepara aquí entera dice qué
+ *     buscar fuera (también el esquema), y la calculadora reproduce los
+ *     ejemplos de las guías (`tests/nota.test.ts`).
+ *
+ * No escribe nada propio: todo sale del catálogo —la evaluación, lo que se
+ * puede llevar al examen, el temario— y de las colecciones de rutas,
+ * exámenes y laboratorio. Una frase escrita aquí sería una segunda copia de
+ * algo que ya tiene sitio (§01).
+ */
+export async function getStaticPaths() {
+  const catalogo = await getCollection('catalogo');
+  return catalogo.map((asignatura) => ({ params: { asignatura: asignatura.id }, props: { asignatura } }));
+}
+
+const { asignatura } = Astro.props;
+const a = asignatura.data;
+const id = asignatura.id;
+
+const rutas = (await getCollection('preparar'))
+  .filter((r) => r.data.asignatura === id)
+  .sort((x, y) => ORDEN_CONV.indexOf(x.data.evaluacion) - ORDEN_CONV.indexOf(y.data.evaluacion))
+  .map((r) => ({
+    titulo: r.data.titulo,
+    /* El lede es markdown y aquí va dentro de un <a>, donde un <p> no cabe. */
+    lede: sinMarcas(r.data.lede),
+    sufijo: SUFIJO_CONV[r.data.evaluacion],
+  }));
+
+const numExamenes = (await getCollection('examen')).filter((e) => e.data.asignatura === id).length;
+const conTemas = (CON_TEMAS as readonly string[]).includes(id);
+const conFormulario = conTemas && hayFormulario((await getCollection(id as ConTemas)).map((e) => e.body));
+const conLaboratorio = (await getCollection('laboratorio')).some((l) => l.id.split('/')[0] === id);
+
+const modalidades = a.evaluacion?.modalidades ?? [];
+const notasHtml = await Promise.all(modalidades.map((m) => (m.nota ? mate(m.nota, `nota-${id}`) : null)));
+const normasHtml = await Promise.all((a.normasDeExamen?.normas ?? []).map((n, i) => mate(n, `norma-${i}`)));
+
+const ENTRENA = { si: 'aquí se prepara', parcial: 'aquí, en parte', no: 'fuera de aquí' } as const;
+
+/** La frase de encima de cada barra: cuánto de esa nota prepara el sitio. */
+function resumen(partes: { peso: number; entrena: 'si' | 'parcial' | 'no' }[]) {
+  const suma = (e: string) => partes.filter((p) => p.entrena === e).reduce((s, p) => s + p.peso, 0);
+  const [si, parcial, no] = [suma('si'), suma('parcial'), suma('no')];
+  if (si === 100) return 'Este sitio prepara toda esta nota.';
+  if (no === 100) return 'Este sitio todavía no prepara nada de esta nota.';
+  const trozos: string[] = [];
+  if (si) trozos.push(`entero el ${si} %`);
+  if (parcial) trozos.push(si ? `en parte otro ${parcial} %` : `en parte el ${parcial} %`);
+  const cola = no ? `, y el ${no} % hay que prepararlo fuera` : '';
+  return `De esta nota, este sitio prepara ${trozos.join(', ')}${cola}.`;
+}
+
+/* La calculadora solo tiene sentido con dos casillas o más: con una sola, la
+   nota que hace falta es el 5 y no hay nada que calcular. */
+const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
+---
+
+<Base
+  titulo={a.nombre}
+  descripcion={`Cómo se aprueba ${a.nombre}, qué parte de la nota prepara este sitio y cuál no, qué se puede llevar al examen y por dónde empezar.`}
+  acento={a.acento}
+>
+  <Cabecera crumb={a.nombre} />
+
+  <main id="principal">
+    <div class="shell">
+      <p class="rotulo rotulo--live eyebrow">
+        {a.curso === 1 ? '1.er curso' : '2.º curso'} · {ESTADO[a.estado].larga}
+      </p>
+      <h1>{a.nombre}</h1>
+      <p class="lede">{a.descripcion}</p>
+      {a.estado !== 'ok' && a.motivo && <p class="aviso">{a.motivo}</p>}
+
+      <nav class="saltos" aria-label="En esta página">
+        <a href="#como-se-aprueba">Cómo se aprueba</a>
+        <a href="#al-examen">Qué llevar al examen</a>
+        <a href="#por-donde-empezar">Por dónde empezar</a>
+      </nav>
+
+      <section id="como-se-aprueba" aria-labelledby="h-aprueba">
+        <h2 id="h-aprueba">Cómo se aprueba</h2>
+        {
+          modalidades.length ? (
+            <>
+              <p class="fuente">{a.evaluacion!.fuente}</p>
+              {modalidades.map((m, i) => (
+                <div class="modalidad">
+                  <h3>{m.nombre}</h3>
+                  <p class="resumen">{resumen(m.partes)}</p>
+                  <div class="barra" aria-hidden="true">
+                    {m.partes.map((p) => (
+                      <span class:list={['tramo', `tramo--${p.entrena}`]} style={`flex-grow: ${p.peso}`}>
+                        {p.peso >= 10 && <span class="t-cifra">{p.peso} %</span>}
+                      </span>
+                    ))}
+                  </div>
+                  <ul class="partes">
+                    {m.partes.map((p) => (
+                      <li class="parte">
+                        <span class="p-peso">{p.peso} %</span>
+                        <span class="p-que">{p.que}</span>
+                        <span class:list={['chip', `chip--${p.entrena}`]}>{ENTRENA[p.entrena]}</span>
+                        {p.fuera && <p class="p-fuera">{p.fuera}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                  {notasHtml[i] && <div class="prosa m-nota" set:html={notasHtml[i]} />}
+                  {conCalculadora[i] && <QueNotaNecesito modalidad={m} prefijo={`qnn-${i}`} />}
+                </div>
+              ))}
+            </>
+          ) : (
+            <p class="vacio">
+              Todavía no tenemos la guía docente de esta asignatura, así que aquí no se dice cómo se
+              aprueba: publicarlo sin ella sería inventárselo.
+            </p>
+          )
+        }
+      </section>
+
+      <section id="al-examen" aria-labelledby="h-examen">
+        <h2 id="h-examen">Qué puedes llevar al examen</h2>
+        {
+          a.normasDeExamen ? (
+            <>
+              <ul class="normas">
+                {normasHtml.map((n) => (
+                  <li class="prosa" set:html={n} />
+                ))}
+              </ul>
+              <p class="fuente">{a.normasDeExamen.fuente}</p>
+            </>
+          ) : a.alExamen ? (
+            <>
+              <p class="al-examen">{a.alExamen.texto}</p>
+              <p class="fuente">{a.alExamen.fuente}</p>
+            </>
+          ) : (
+            <>
+              <p class="al-examen">
+                Ni la guía ni el material lo dicen. Y la norma general de la UPV/EHU va al revés de lo
+                que se suele suponer: «salvo indicación expresa, se consideran prohibidos libros,
+                notas o apuntes, así como dispositivos telefónicos, electrónicos, informáticos o de
+                cualquier otro tipo». Hasta que el profesorado diga otra cosa, cuenta con eso.
+              </p>
+              <p class="fuente">
+                Nota sobre la evaluación de pruebas académicas de la UPV/EHU, pág. 2, punto d. La
+                reparten con su material Expresión Gráfica, Mecánica de Fluidos y Ciencia de
+                Materiales.
+              </p>
+            </>
+          )
+        }
+      </section>
+
+      <section id="por-donde-empezar" aria-labelledby="h-empezar">
+        <h2 id="h-empezar">Por dónde empezar</h2>
+        {
+          rutas.length > 0 && (
+            <>
+              <p class="lede-s">
+                No empieces por el tema 1: cada evaluación tiene su ruta, con lo que cae ordenado por
+                lo que rinde.
+              </p>
+              <nav class="rutas" aria-label="Rutas de estudio">
+                {rutas.map((r) => (
+                  <a href={ruta(`${id}/preparar/${r.sufijo}`)} class="r">
+                    <span class="r-t">{r.titulo}</span>
+                    <span class="r-d">{r.lede}</span>
+                    <span class="r-ir rotulo" aria-hidden="true">→</span>
+                  </a>
+                ))}
+              </nav>
+            </>
+          )
+        }
+
+        {
+          (numExamenes > 0 || conFormulario || conLaboratorio) && (
+            <ul class="enlaces">
+              {numExamenes > 0 && (
+                <li>
+                  <a href={ruta(`${id}/examenes`)}>Los exámenes</a>: {numExamenes} convocatorias, con su
+                  enunciado original y la resolución guiada.
+                </li>
+              )}
+              {conFormulario && (
+                <li>
+                  <a href={ruta(`${id}/formulario`)}>El formulario</a>: lo que hay que llevar sabido de
+                  cada tema, en una página que se imprime.
+                </li>
+              )}
+              {conLaboratorio && (
+                <li>
+                  <a href={ruta(`${id}/laboratorio`)}>El laboratorio</a>: las actividades con ordenador
+                  que este sitio no examina, y dónde está su material.
+                </li>
+              )}
+            </ul>
+          )
+        }
+
+        {
+          a.temas.length > 0 && (
+            <>
+              <h3>El temario</h3>
+              <ol class="temario">
+                {a.temas.map((t) => (
+                  <li>
+                    <span class="t-n">{t.n}</span>
+                    {t.hecho ? <a href={ruta(`${id}/${t.id}`)}>{t.titulo}</a> : <span>{t.titulo}</span>}
+                    {!t.hecho && <span class="t-estado">{t.soloEnClase ? 'solo en clase' : 'todavía no'}</span>}
+                  </li>
+                ))}
+              </ol>
+            </>
+          )
+        }
+      </section>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .shell {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2.5rem) 6rem;
+  }
+
+  .eyebrow { margin-bottom: .6rem; font-size: .72rem; letter-spacing: .11em; }
+  .lede { max-width: var(--measure); }
+  .lede-s { max-width: var(--measure); color: var(--graphite); }
+
+  .aviso {
+    margin: 1.4rem 0 0;
+    padding: .6rem .8rem;
+    border-left: 2px solid var(--acento);
+    color: var(--graphite);
+    max-width: var(--measure);
+  }
+
+  .saltos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem 1.2rem;
+    margin: 1.6rem 0 0;
+    font-size: .9rem;
+  }
+
+  section { margin-top: 3rem; }
+  h2 { margin-bottom: .8rem; }
+  h3 { margin: 2rem 0 .4rem; }
+
+  .fuente { font-size: .74rem; color: var(--faint); max-width: var(--measure); }
+  .vacio, .al-examen { max-width: var(--measure); }
+
+  .modalidad { margin-top: 1.4rem; padding-top: .2rem; }
+  .resumen { color: var(--graphite); margin: .2rem 0 .6rem; }
+
+  /* La barra: cada parte con su ancho, y el color dice si el sitio la prepara.
+     No lleva texto que haya que leer para entenderla —la lista de debajo lo
+     repite todo—, así que va oculta a los lectores de pantalla. */
+  .barra {
+    display: flex;
+    height: 1.6rem;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+
+  .tramo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    border-right: 2px solid var(--panel);
+    font-family: var(--mono);
+    font-size: .72rem;
+  }
+
+  .tramo:last-child { border-right: none; }
+  .tramo--si { background: var(--live); color: var(--panel); }
+  .tramo--parcial { background: var(--marco); color: var(--panel); }
+  .tramo--no { background: var(--rule); color: var(--ink); }
+  .t-cifra { white-space: nowrap; overflow: hidden; padding: 0 .3rem; }
+
+  .partes { list-style: none; margin: .7rem 0 0; }
+
+  .parte {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+    gap: .2rem .8rem;
+    align-items: baseline;
+    padding: .55rem 0;
+    border-top: 1px solid var(--grid);
+  }
+
+  .p-peso { font-family: var(--mono); font-size: .9rem; color: var(--acento); }
+  .p-que { color: var(--ink); }
+
+  .chip {
+    font-size: .72rem;
+    padding: .1rem .45rem;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    color: var(--graphite);
+    white-space: nowrap;
+  }
+
+  .chip::before {
+    content: '';
+    display: inline-block;
+    width: .55rem;
+    height: .55rem;
+    margin-right: .35rem;
+    border-radius: 50%;
+    vertical-align: .02rem;
+  }
+
+  .chip--si::before { background: var(--live); }
+  .chip--parcial::before { background: var(--marco); }
+  .chip--no::before { background: var(--rule); border: 1px solid var(--faint); }
+
+  .p-fuera {
+    grid-column: 2 / -1;
+    margin: .1rem 0 0;
+    font-size: .86rem;
+    color: var(--graphite);
+    max-width: var(--measure);
+  }
+
+  .m-nota { margin-top: 1rem; font-size: .92rem; }
+
+  .normas { max-width: var(--measure); padding-left: 1.2rem; display: grid; gap: .45rem; }
+  .normas li :global(p) { margin: 0; }
+
+  .rutas { max-width: var(--measure); margin: .8rem 0 0; }
+
+  .r {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .2rem .9rem;
+    padding: .9rem 1rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--acento);
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .r + .r { margin-top: .5rem; }
+  .r:hover { border-color: var(--live); border-left-color: var(--live); }
+  .r-t { font-weight: 600; }
+  .r-d { grid-column: 1; font-size: .85rem; color: var(--graphite); }
+  .r-ir { grid-row: 1 / span 2; align-self: center; color: var(--acento); }
+
+  .enlaces { margin: 1.4rem 0 0; padding-left: 1.2rem; max-width: var(--measure); display: grid; gap: .35rem; }
+
+  .temario { list-style: none; max-width: var(--measure); }
+
+  .temario li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    gap: .6rem;
+    align-items: baseline;
+    padding: .4rem 0;
+    border-top: 1px solid var(--grid);
+  }
+
+  .t-n { font-family: var(--mono); font-size: .82rem; color: var(--faint); }
+  .t-estado { font-size: .74rem; color: var(--faint); }
+
+  @media (max-width: 640px) {
+    .parte { grid-template-columns: 3rem minmax(0, 1fr); }
+    .chip { grid-column: 2; justify-self: start; }
+  }
+</style>

@@ -1,0 +1,260 @@
+---
+/**
+ * «¿Qué nota necesito?» (fase E1 de la auditoría del 27 de septiembre de
+ * 2026): una caja por modalidad de evaluación en la página de la asignatura.
+ *
+ * La prueba de utilidad de §13 está en la cabecera de `lib/nota.ts`, que es
+ * donde viven las cuentas; aquí solo se pintan. Para quién: el alumno a mitad
+ * de curso con notas parciales. Qué gana: enterarse antes del plazo de
+ * renuncia de que la media no es la única condición. Cómo se comprueba:
+ * `tests/nota.test.ts`, con el ejemplo que publica la propia Ciencia de
+ * Materiales.
+ *
+ * Las reglas salen del catálogo, las mismas que la página escribe encima en
+ * prosa. Lo que no es un número —el test de mínimos de Materiales, las
+ * condiciones para liberar un cuatrimestre— no entra en la cuenta, y la caja
+ * lo dice.
+ */
+import { modelo, type Modalidad } from '../../lib/nota';
+
+interface Props {
+  modalidad: Modalidad;
+  /** Único en la página: una asignatura tiene varias modalidades. */
+  prefijo: string;
+}
+
+const { modalidad, prefijo } = Astro.props;
+const mo = modelo(modalidad);
+const nombreDeParte = new Map(mo.partes.map((p) => [p.id, p]));
+
+const cifra = (n: number) => n.toLocaleString('es-ES', { maximumFractionDigits: 1 });
+
+const hojas = mo.hojas.map((h) => {
+  const parte = nombreDeParte.get(h.parte)!;
+  const sola = h.id === h.parte;
+  return {
+    id: h.id,
+    etiqueta: h.que,
+    grupo: sola ? null : parte.que,
+    peso: cifra(Math.round(h.peso * 1000) / 10),
+    minimo: sola ? parte.minimo : h.minimo,
+  };
+});
+
+/* Lo que necesita el script: las reglas, sin la prosa. */
+const datos = JSON.stringify({
+  nombre: modalidad.nombre,
+  partes: modalidad.partes.map(({ id, que, peso, minimo, tope, sub }) => ({ id, que, peso, minimo, tope, sub })),
+  aprueba: modalidad.aprueba,
+  grupos: modalidad.grupos,
+});
+---
+
+<div class="qnn" data-qnn={datos}>
+  <p class="rotulo qnn-t">¿Qué nota necesito?</p>
+  <p class="qnn-como">
+    Escribe las notas que ya tienes, sobre 10, y deja en blanco lo que te falta: te digo qué
+    necesitas en ello para aprobar, con los mínimos de la guía y no solo con la media.
+  </p>
+  <div class="qnn-hojas">
+    {
+      hojas.map((h) => (
+        <label class="qnn-h" for={`${prefijo}-${h.id}`}>
+          <span class="qnn-e">
+            {h.grupo && <span class="qnn-g">{h.grupo}</span>}
+            <span class="qnn-n">{h.etiqueta}</span>
+            <span class="qnn-p">
+              {h.peso} % de la nota
+              {h.minimo !== undefined && ` · mínimo ${cifra(h.minimo)}`}
+            </span>
+          </span>
+          <input
+            id={`${prefijo}-${h.id}`}
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            data-hoja={h.id}
+            placeholder="—"
+          />
+        </label>
+      ))
+    }
+  </div>
+  <output class="qnn-r" aria-live="polite"></output>
+  <p class="qnn-nota">
+    Lo que no es un número —un test que hay que aprobar aparte, las condiciones para liberar o
+    guardar una parte— no entra en la cuenta: está escrito arriba.
+  </p>
+</div>
+
+<script>
+  import { modelo, evalua, necesito, type Modalidad } from '../../lib/nota';
+
+  const una = (n: number) => n.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const dos = (n: number) => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const enumera = (xs: string[]) =>
+    xs.length === 1 ? xs[0] : `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}`;
+
+  /** Un párrafo hecho de trozos de texto y cifras en negrita. Se construye con
+   *  nodos y no con innerHTML: las etiquetas salen del catálogo, pero no hay
+   *  por qué fiarse de que nunca lleven un «<». */
+  function parrafo(...trozos: (string | { b: string })[]) {
+    const p = document.createElement('p');
+    for (const t of trozos) {
+      if (typeof t === 'string') p.append(t);
+      else {
+        const b = document.createElement('strong');
+        b.textContent = t.b;
+        p.append(b);
+      }
+    }
+    return p;
+  }
+
+  for (const caja of document.querySelectorAll<HTMLElement>('.qnn')) {
+    const m = JSON.parse(caja.dataset.qnn!) as Modalidad;
+    const mo = modelo(m);
+    const salida = caja.querySelector('output')!;
+    const entradas = [...caja.querySelectorAll<HTMLInputElement>('input[data-hoja]')];
+    const nombre = new Map(
+      entradas.map((e) => [e.dataset.hoja!, `«${e.closest('label')!.querySelector('.qnn-n')!.textContent!.trim()}»`]),
+    );
+    const aprueba = una(mo.aprueba);
+
+    const pinta = () => {
+      const notas: Record<string, number | undefined> = {};
+      const malas: string[] = [];
+      for (const e of entradas) {
+        const id = e.dataset.hoja!;
+        const t = e.value.trim().replace(',', '.');
+        if (t === '') {
+          notas[id] = undefined;
+          e.removeAttribute('aria-invalid');
+          continue;
+        }
+        const n = Number(t);
+        if (!Number.isFinite(n) || n < 0 || n > 10) {
+          malas.push(nombre.get(id)!);
+          e.setAttribute('aria-invalid', 'true');
+          continue;
+        }
+        e.removeAttribute('aria-invalid');
+        notas[id] = n;
+      }
+
+      const lineas: HTMLElement[] = [];
+      if (malas.length) {
+        lineas.push(parrafo(`Las notas van de 0 a 10: revisa ${enumera(malas)}.`));
+      } else if (Object.values(notas).some((v) => v !== undefined)) {
+        const n = necesito(mo, notas);
+        if (!n.huecos.length) {
+          const r = evalua(mo, notas as Record<string, number>);
+          if (r.aprueba) {
+            lineas.push(parrafo('La media es ', { b: dos(r.media) }, ' y se cumplen todos los mínimos: apruebas.'));
+          } else {
+            if (r.media < mo.aprueba) {
+              lineas.push(parrafo('La media es ', { b: dos(r.media) }, `: no llega al ${aprueba}.`));
+            } else {
+              lineas.push(parrafo('La media es ', { b: dos(r.media) }, ', pero no basta:'));
+            }
+            for (const f of r.minimosQueFallan) {
+              lineas.push(parrafo(`«${f.que}» pide un ${una(f.minimo)} y tiene un ${una(f.nota)}.`));
+            }
+            for (const g of r.gruposQueFallan) {
+              lineas.push(parrafo(`${g.que}: suman ${dos(g.suma)}.`));
+            }
+            if (r.final < r.media) {
+              lineas.push(parrafo('Con la media por encima, la guía deja el acta en ', { b: una(r.final) }, '.'));
+            }
+          }
+        } else if (n.yaFallan.length) {
+          lineas.push(parrafo('Con lo que ya tienes no se aprueba, saques lo que saques en lo que falta:'));
+          for (const f of n.yaFallan) {
+            lineas.push(parrafo(`«${f.que}» pide un ${una(f.minimo)} y tiene un ${una(f.nota)}.`));
+          }
+        } else if (n.nota === null) {
+          lineas.push(
+            parrafo(
+              'Ni con un 10 en lo que falta se llega: lo impide ',
+              n.manda.tipo === 'media' ? 'la media' : `«${n.manda.que}»`,
+              '.',
+            ),
+          );
+        } else if (n.nota === 0) {
+          lineas.push(parrafo('Con lo que ya tienes, las cuentas no piden una nota mínima en lo que falta.'));
+        } else {
+          const donde = n.huecos.map((id) => nombre.get(id)!);
+          lineas.push(
+            n.huecos.length === 1
+              ? parrafo('Necesitas al menos un ', { b: una(n.nota) }, ` en ${donde[0]}.`)
+              : parrafo('Necesitas al menos un ', { b: una(n.nota) }, ` en cada una de estas: ${enumera(donde)}.`),
+          );
+          lineas.push(
+            parrafo(
+              'Lo decide ',
+              n.manda.tipo === 'media'
+                ? `la media: tiene que llegar al ${aprueba}`
+                : n.manda.tipo === 'minimo'
+                  ? `el mínimo de «${n.manda.que}»`
+                  : `«${n.manda.que}»`,
+              '.',
+            ),
+          );
+        }
+      }
+      salida.replaceChildren(...lineas);
+    };
+
+    caja.addEventListener('input', pinta);
+  }
+</script>
+
+<style>
+  .qnn {
+    margin-top: 1.2rem;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+
+  .qnn-t { color: var(--live); margin-bottom: .35rem; }
+  .qnn-como { font-size: .9rem; color: var(--graphite); max-width: var(--measure); margin: 0 0 .9rem; }
+
+  .qnn-hojas { display: grid; gap: .45rem; }
+
+  .qnn-h {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 5.2rem;
+    align-items: center;
+    gap: .8rem;
+    padding: .35rem 0;
+    border-top: 1px solid var(--grid);
+  }
+
+  .qnn-e { display: flex; flex-direction: column; gap: .05rem; min-width: 0; }
+  .qnn-g { font-size: .72rem; color: var(--faint); }
+  .qnn-n { font-size: .92rem; color: var(--ink); }
+  .qnn-p { font-size: .74rem; color: var(--faint); font-family: var(--mono); }
+
+  .qnn-h input {
+    width: 100%;
+    padding: .35rem .5rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-family: var(--mono);
+    text-align: right;
+  }
+
+  .qnn-h input:focus-visible { outline: 2px solid var(--live); outline-offset: 1px; }
+  .qnn-h input[aria-invalid='true'] { border-color: var(--flag); background: var(--flag-soft); }
+
+  .qnn-r { display: block; margin-top: .9rem; min-height: 1.5rem; }
+  .qnn-r :global(p) { margin: .15rem 0; font-size: .95rem; color: var(--ink); }
+  .qnn-r :global(strong) { font-family: var(--mono); color: var(--live); }
+
+  .qnn-nota { margin: .8rem 0 0; font-size: .74rem; color: var(--faint); max-width: var(--measure); }
+</style>

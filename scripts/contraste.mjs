@@ -80,6 +80,12 @@ const MUESTRA = [
   ['una convocatoria', '/calculo/examenes/2019-2020-ord/'],
   ['el formulario', '/calculo/formulario/'],
   ['el laboratorio', '/calculo/laboratorio/'],
+  /* La página de la asignatura (fase E2, 28 de septiembre de 2026), dos veces:
+     su barra pinta cifras sobre tres fondos —lo que el sitio prepara, lo que
+     prepara en parte y lo que no— y ninguna asignatura rotula los tres. Cálculo
+     rotula el primero y el tercero; Materiales, el segundo y el tercero. */
+  ['la página de una asignatura', '/calculo/'],
+  ['la página de otra asignatura', '/ciencia-materiales/'],
 ];
 
 /* ── la medida, dentro del navegador ────────────────────────────────── */

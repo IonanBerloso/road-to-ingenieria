@@ -112,6 +112,53 @@ const tema = z.object({
   message: 'un tema no puede estar hecho y no tener material a la vez: elige',
 });
 
+/** Una parte de la nota, en la `evaluacion` de una asignatura.
+ *
+ *  `entrena`, `minimo`, `tope` y `sub` entran el 28 de septiembre de 2026 con
+ *  la fase E de la auditoría. `entrena` dice si este sitio prepara esa parte
+ *  —la página de la asignatura lo pinta en la barra de la nota—, y cuando no
+ *  la prepara entera, `fuera` dice qué buscar fuera y dónde: «nadie avisa de
+ *  que el laboratorio de Química suspende aunque saques un 10 en el escrito».
+ *  `minimo`, `tope` y `sub` son las reglas que cuenta `lib/nota.ts` para la
+ *  calculadora de «¿qué nota necesito?», y solo se escriben si la guía las da:
+ *  un mínimo inventado es exactamente lo que §10 prohíbe. */
+const subparteEvaluacion = z
+  .object({
+    id: z.string().regex(/^[a-z0-9-]+$/),
+    que: z.string().min(3).max(80),
+    /** Porcentaje dentro de su parte. */
+    peso: z.number().int().min(1).max(100),
+    /** La nota mínima, sobre 10, que pide la guía en esta subparte. */
+    minimo: z.number().min(0).max(10).optional(),
+    /** La nota más alta del acta si ese mínimo no se cumple, si la guía la da. */
+    tope: z.number().min(0).max(10).optional(),
+  })
+  .refine((s) => s.tope === undefined || s.minimo !== undefined, {
+    message: 'un tope sin mínimo no se aplica nunca',
+  });
+
+const parteEvaluacion = z
+  .object({
+    id: z.string().regex(/^[a-z0-9-]+$/),
+    que: z.string().min(3).max(80),
+    /** Porcentaje sobre la nota de esa modalidad. */
+    peso: z.number().int().min(1).max(100),
+    entrena: z.enum(['si', 'parcial', 'no']),
+    fuera: z.string().min(20).optional(),
+    minimo: z.number().min(0).max(10).optional(),
+    tope: z.number().min(0).max(10).optional(),
+    sub: z.array(subparteEvaluacion).min(2).optional(),
+  })
+  .refine((p) => p.entrena === 'si' || Boolean(p.fuera), {
+    message: 'una parte que el sitio no prepara entera tiene que decir en `fuera` qué buscar fuera',
+  })
+  .refine((p) => !p.sub || p.sub.reduce((s, x) => s + x.peso, 0) === 100, {
+    message: 'las subpartes de una parte suman 100',
+  })
+  .refine((p) => p.tope === undefined || p.minimo !== undefined, {
+    message: 'un tope sin mínimo no se aplica nunca',
+  });
+
 const catalogo = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/catalogo' }),
   schema: z
@@ -266,17 +313,24 @@ const catalogo = defineCollection({
               z.object({
                 /** «Evaluación continua», «Evaluación final»… */
                 nombre: z.string().min(4).max(40),
-                partes: z
-                  .array(
-                    z.object({
-                      que: z.string().min(3).max(80),
-                      /** Porcentaje sobre la nota de esa modalidad. */
-                      peso: z.number().int().min(1).max(100),
-                    }),
-                  )
-                  .min(1),
+                partes: z.array(parteEvaluacion).min(1),
                 /** Umbrales y condiciones que no son un porcentaje. */
                 nota: z.string().min(20).optional(),
+                /** La nota con la que se aprueba, si no es un 5. */
+                aprueba: z.number().min(0).max(10).optional(),
+                /** Sumas ponderadas **sin renormalizar** que tienen que llegar
+                 *  a unos puntos: en Materiales, el examen y los trabajos, que
+                 *  valen 8 puntos entre los dos, tienen que sumar 5. Las cuenta
+                 *  `lib/nota.ts`. */
+                grupos: z
+                  .array(
+                    z.object({
+                      que: z.string().min(10),
+                      partes: z.array(z.string()).min(1),
+                      puntos: z.number().positive().max(10),
+                    }),
+                  )
+                  .optional(),
               }),
             )
             .min(1),
@@ -291,8 +345,33 @@ const catalogo = defineCollection({
                 message: `los pesos de «${m.nombre}» suman ${suma}, no 100`,
               });
             }
+            const ids = m.partes.map((p) => p.id);
+            if (new Set(ids).size !== ids.length) {
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: `dos partes de «${m.nombre}» con el mismo id` });
+            }
+            for (const g of m.grupos ?? []) {
+              for (const id of g.partes.filter((x) => !ids.includes(x))) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: `el grupo «${g.que}» de «${m.nombre}» nombra la parte «${id}», que no existe`,
+                });
+              }
+            }
           }
         }),
+      /** Qué se puede llevar al examen, con su fuente (fase E2 de la auditoría
+       *  del 27 de septiembre de 2026). Sin este campo la página de la
+       *  asignatura no se lo inventa: cita la norma de la UPV/EHU, que prohíbe
+       *  todo salvo indicación expresa. */
+      alExamen: z
+        .object({
+          /* Mínimo corto a propósito: «Solo calculadora.» es la respuesta
+             entera de Mecánica, y alargarla para contentar al esquema sería
+             escribir peor (§11). */
+          texto: z.string().min(10),
+          fuente: z.string().min(20),
+        })
+        .optional(),
     })
     .refine((a) => a.estado === 'prev' || a.temas.length > 0, {
       message: 'una asignatura en obra o terminada necesita temario',

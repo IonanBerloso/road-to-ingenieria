@@ -19,6 +19,7 @@ import { archivo, ruta } from '../lib/rutas';
 import { cuentaPorTema, pesoPublicado } from '../lib/peso';
 import { hayFormulario } from '../lib/formulario';
 import { sinTildes } from '../lib/texto';
+import { ESTADO } from '../lib/estado';
 import { mate } from '../lib/markdown.mjs';
 import {
   SUFIJO_CONV,
@@ -95,20 +96,6 @@ const pesoDe = (asignatura: string, temaId: string, declarado?: 'alto' | 'medio'
   pesoPublicado(declarado, cuentaExamenDe(asignatura), temaId);
 
 const cursos = [1, 2] as const;
-/* Estados en el lenguaje de la pizarra (brief Pizarra, §06): honestos y sin
- * jerga de obra. «Entera» solo lo dice el catálogo, nunca esta página. */
-/* Cada estado dice lo mismo en dos sitios y con dos longitudes: `corta` en la
- * fila de la lista, `larga` en el rótulo de tiza de la banda del detalle
- * (brief §5b). Estaban en dos tablas separadas por cuatro líneas, y había una
- * tercera copia todavía peor: la fila de una asignatura `ok` llevaba la
- * palabra «entera» escrita a mano dentro de una plantilla, así que cambiar la
- * tabla habría dejado esa fila diciendo lo de antes. Una tabla, tres usos.
- * (§01, hecho el 15 de septiembre de 2026.) */
-const ESTADO = {
-  ok: { corta: 'entera', larga: 'asignatura entera' },
-  obra: { corta: 'la estamos escribiendo', larga: 'la estamos escribiendo' },
-  prev: { corta: 'aún no', larga: 'aún no' },
-} as const;
 
 /* Las etiquetas cortas de los botones de ruta. Presentación, no dato:
  * el título completo («Preparar la primera evaluación») no cabe en la
@@ -496,6 +483,13 @@ const enteras = asignaturas
                     Por dónde empezar: elige tu evaluación ↓
                   </a>
                 )}
+                {/* La página de la asignatura (fase E2): cómo se aprueba, qué
+                    parte de la nota no prepara este sitio y la calculadora de
+                    «¿qué nota necesito?». Hasta el 28 de septiembre de 2026
+                    `/calculo/` daba 404 en las nueve. */}
+                <a class="b-pagina" href={ruta(a.id)}>
+                  Cómo se aprueba, y qué no prepara este sitio →
+                </a>
               </div>
             </div>
           </div>
@@ -1648,6 +1642,16 @@ const enteras = asignaturas
   }
 
   .b-cta:hover { background: var(--tiza-amarilla-hover); transform: translateY(-1px); }
+
+  .b-pagina {
+    display: inline-block;
+    font-size: .88rem;
+    color: var(--tiza-suave);
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+
+  .b-pagina:hover { color: var(--tiza); }
 
   /* Con JavaScript la clase manda; sin él, el ancla. En los dos casos la
      lista se retira en vez de quedarse debajo empujando.

@@ -180,7 +180,14 @@ async function main() {
       .filter(
         (h) =>
           h.startsWith(BASE) &&
-          /\/[a-z-]+\/(t\d{2}-|examenes\/(?:\d{4}-\d{4}|$)|preparar\/|formulario\/)/.test(h),
+          (/\/[a-z-]+\/(t\d{2}-|examenes\/(?:\d{4}-\d{4}|$)|preparar\/|formulario\/)/.test(h) ||
+            /* Y la página de la asignatura, `/calculo/`, que entra el 28 de
+               septiembre de 2026 con la fase E2 y lleva el script de la
+               calculadora. Pasó lo que el comentario de arriba avisa: era una
+               forma de URL nueva y el filtro no la conocía, así que el guardián
+               de asignaturas mudas cayó con Sistemas, cuya única página
+               construida es esa. */
+            /^\/[a-z-]+\/$/.test(h.slice(BASE.length))),
       ),
   );
   /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
