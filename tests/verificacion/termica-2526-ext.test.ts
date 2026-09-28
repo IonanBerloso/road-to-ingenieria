@@ -3,11 +3,19 @@
  * no cuadran y ninguna por la física: el Reynolds de los cascos se publica con
  * una tolerancia absoluta de 0,02 sobre 84.900, y la exergía destruida del
  * intercambiador pide un 0,5 % que los datos redondeados del propio paso no
- * dan. Donde el ejercicio no trae la tabla —los cp, las entropías del vapor—
- * se usa lo que el paso le da al alumno, y se dice.
+ * dan. El vapor del ejercicio 1 se lee en las tablas del sitio (fase F1), que
+ * son las mismas que usa la resolución; donde el ejercicio no trae tabla —los
+ * cp del ejercicio 2— se usa lo que el paso le da al alumno, y se dice.
  */
+/** [p, T, v', v'', h', h'', s', s''] de la tabla de saturación por presión. */
+const sat = (p: number) => {
+  const f = tablas.saturacionP.filas.find((r) => r[0] === p);
+  if (!f) throw new Error(`no hay fila de ${p} bar`);
+  return f;
+};
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
 
 const cuadra = convocatoria('ingenieria-termica', '2025-2026-ext');
 const K = 273.15;
@@ -15,27 +23,26 @@ const K = 273.15;
 describe('1a · la resistencia dentro del tanque', () => {
   const id = 'exter2526-ext-1-la-resistencia-dentro-del-tanque';
   const [m, P1, h1, t] = [1.5, 200, 1654, 10 * 60];
-  // saturación a 200 kPa: h' y h'' de la pregunta, v' y v'' de la resolución
-  const [hf, hg, vf, vg] = [504.7, 2706.2, 0.0010605, 0.88568];
+  // saturación a 200 kPa, de las tablas: la pregunta da h' y h''
+  const [vf, vg, hf, hg] = sat(2).slice(2, 6);
   const x1 = (h1 - hf) / (hg - hf);
   const v1 = vf + x1 * (vg - vf);
 
   it('el vapor entra con título 0,522', () => cuadra(id, 'El título inicial', x1));
 
   it('y acaba a 4 bar, la fila de saturación cuyo v″ es el suyo', () => {
-    /* La tabla del ejercicio solo trae v'' a 2 bar (0,88568, en la resolución)
-       y a 3,5 bar (0,5243, en un distractor). Entre filas de saturación v'' va
-       casi como una potencia de P, así que se interpola en escala doble
-       logarítmica y se extrapola hasta el v1 de este vapor. No sustituye a la
-       tabla: comprueba que la fila de 4 bar es la que toca. */
+    /* v'' cae entre las filas de 3,5 y 4 bar, pegado a la de 4: se interpola
+       en la tabla, que es lo que hace el alumno. */
     expect(Math.abs(v1 - 0.46288) / 0.46288).toBeLessThan(1e-4); // el v1 que da la pregunta
-    const pendiente = Math.log(0.5243 / vg) / Math.log(3.5 / 2);
-    const P2 = 3.5 * Math.exp(Math.log(v1 / 0.5243) / pendiente);
+    const [a, b] = [sat(3.5), sat(4)];
+    expect(v1).toBeLessThan(a[3]);
+    expect(v1).toBeGreaterThan(b[3]);
+    const P2 = 3.5 + (0.5 * (a[3] - v1)) / (a[3] - b[3]);
     cuadra.magnitud(id, 'La presión final', P2, 'bar');
   });
 
   it('la resistencia da 2,48 kW', () => {
-    const hg4 = 2738.1; // h'' a 4 bar, de la resolución: la fila en que acaba el vapor
+    const hg4 = sat(4)[5]; // h'' a 4 bar: la fila en que acaba el vapor
     const u1 = h1 - P1 * v1;
     const u2 = hg4 - 400 * v1; // rígido: v2 = v1
     // las dos energías internas que da la pregunta
@@ -49,8 +56,10 @@ describe('1b · lo que cuesta calentar con una resistencia', () => {
   const id = 'exter2526-ext-1-lo-que-cuesta-calentar-con-una-resistencia';
   const [m, We] = [1.5, 1487.3];
   const T0 = 25 + K;
-  // las entropías del vapor, de la pregunta: el ejercicio no trae la tabla
-  const [s1, s2] = [4.4515, 6.8959];
+  /* Las entropías del vapor, de las tablas y con el título de la pregunta,
+     0,522: las mismas que la resolución oficial, que opera mal la primera. */
+  const s1 = 0.522 * sat(2)[7] + (1 - 0.522) * sat(2)[6];
+  const s2 = sat(4)[7];
   const SG = m * (s2 - s1); // aislado: toda la entropía que gana el vapor es generada
   /* La exergía que gana el vapor, por su definición: rígido y aislado, ΔU es
      el trabajo eléctrico y P0·ΔV vale cero; queda −T0·ΔS. */
@@ -65,6 +74,22 @@ describe('1b · lo que cuesta calentar con una resistencia', () => {
 
   it('y el vapor se queda con el 26,5 % de la electricidad', () =>
     cuadra(id, 'El rendimiento exergético', ganaVapor / We));
+
+  it('la resolución oficial escribe s₁ = 4,4855 donde la cuenta da 4,4517, y de ahí sus 1.077,3 kJ', () => {
+    expect(s1).toBeCloseTo(4.4517, 4);
+    /* Su camino, el de las exergías de los dos estados, con sus números: el
+       agua de referencia a 25 °C con el modelo incompresible y T0 = 298 K. */
+    const [u0, v0, s0, T0r] = [104.65, 0.001, 0.367, 298];
+    const [u1, u2, v] = [1561.4, 2552.9, 0.46288];
+    const A = (u: number, s: number) => m * (u - u0 + 100 * (v - v0) - T0r * (s - s0));
+    const oficial = We - (A(u2, s2) - A(u1, 4.4855));
+    const bueno = We - (A(u2, s2) - A(u1, s1));
+    expect(oficial).toBeCloseTo(1077.3, 0);
+    expect((A(u2, s2) - A(u1, 4.4855)) / We).toBeCloseTo(0.2757, 4);
+    // con la entropía bien operada, su camino y el de T0·Sgen dan lo mismo
+    expect(Math.abs(bueno - T0r * SG)).toBeLessThan(0.2);
+    cuadra.magnitud(id, 'La exergía destruida', bueno, 'kJ');
+  });
 });
 
 describe('2 · el intercambiador que pierde un diez por ciento', () => {

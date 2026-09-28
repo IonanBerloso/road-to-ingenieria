@@ -186,11 +186,18 @@ Aquí ya no aparece el término $P_0\,\Delta V$: en un volumen de control con
 fronteras fijas no hay atmósfera que apartar.
 
 <ErrorTipico titulo="Olvidar la exergía del estado de referencia">
-La exergía de flujo se cuenta **respecto del estado muerto**, así que lo que
-entra en los balances no es $a_f$ sino $a_f - a_{f0}$.
+La exergía de flujo se cuenta **respecto del estado muerto**: la de una
+corriente es $a_f - a_{f0}$, y no $a_f$ a secas.
 
-Ese $a_{f0}$ casi nunca vale cero, y en la resolución oficial de enero de 2026
-sale negativo:
+En una resta entre dos estados de la misma corriente, $a_{f2} - a_{f1}$, el
+$a_{f0}$ se va solo, y en un balance con varias corrientes también, porque la
+masa que entra es la que sale. Donde **no** se va es cuando se usa la exergía
+de una corriente sola: la que trae el vapor a una válvula, la que sale de una
+cámara de mezcla. Los rendimientos del tipo «lo que sale entre lo que entra»
+se escriben con esas, y ahí olvidarlo cambia el número.
+
+Y casi nunca vale cero. En la resolución oficial de enero de 2026 sale
+negativo:
 
 $$
 h_0 = c_p\,\theta_0 = 4{,}186\cdot 15 = 62{,}79
@@ -201,10 +208,10 @@ $$
 a_{f0} = 62{,}79 - 288\cdot 0{,}2239 = -1{,}69\ \frac{\text{kJ}}{\text{kg}}
 $$
 
-Que salga negativo no significa nada raro: es consecuencia de que las
-referencias de $h$ y de $s$ del modelo incompresible son distintas —0 °C para
-la entalpía, 273 K para la entropía—. Lo que importa es restarlo siempre, y
-restarlo a las dos corrientes.
+Que salga negativo no significa nada raro: $a_f = h - T_0\,s$ se mide desde el
+cero de la tabla —el modelo incompresible pone $h = 0$ y $s = 0$ a 0 °C—, y
+ese cero no es el estado muerto. Su signo no dice nada; lo que importa es
+restarlo siempre que se use la exergía de una corriente sola.
 </ErrorTipico>
 
 ## El rendimiento exergético
@@ -244,7 +251,7 @@ ideales distintos:
   Es un rendimiento termodinámico: dice cuánto potencial se está tirando.
 
 En la bomba del ejercicio 2 de enero de 2026 los dos se calculan sobre el
-mismo aparato y salen distintos: **61,6 %** el isentrópico y **69,55 %** el
+mismo aparato y salen distintos: **61,5 %** el isentrópico y **69,5 %** el
 exergético. Ninguno es «el bueno»; contestan a preguntas distintas, y el
 examen pide los dos por separado.
 </ErrorTipico>
@@ -270,7 +277,7 @@ medio, y el volumen que gana el sistema lo pierde el medio—:
 $$
 \Delta Ex_{MC} = \left(1-\frac{T_0}{T_{MC}}\right)Q
 - \big[W - P_0\,\Delta V_{MC}\big]
-= \left(1-\frac{288}{293}\right)240 - \big[-314{,}25 - 100\cdot(-1{,}125)\big]
+= \left(1-\frac{288}{293}\right)240 - \big[-314{,}25 - 100\cdot(-1{,}1255)\big]
 $$
 $$
 = 4{,}10 + 201{,}70 = 205{,}79\ \text{kJ}
@@ -292,3 +299,36 @@ $$
 
 Los mismos 69,6 kJ, calculados por dos caminos independientes. Cuando en un
 ejercicio de este tema los dos números coinciden, el ejercicio está bien.
+
+## Lo que hay que llevar sabido
+
+- Exergía: el máximo trabajo que se puede sacar de una energía; lo que no se
+  puede sacar es anergia. El trabajo es exergía entera. Un calor a $T$ lleva
+  $Ex_Q = Q\left(1 - T_0/T\right)$, con el factor de Carnot: vale más cuanto
+  más caliente está.
+- La referencia $(T_0, P_0)$ la da el enunciado, y la exergía se mide respecto
+  del estado muerto: el del sistema en equilibrio con el ambiente.
+- Sistema cerrado: $a = (u - u_0) + P_0\,(v - v_0) - T_0\,(s - s_0)$.
+- Su balance:
+  $a_2 - a_1 = \left(1 - T_0/T\right)q - \big[w - P_0(v_2 - v_1)\big] - T_0\,s_G$.
+  El trabajo que cuenta es el útil: $w$ menos lo que se gasta en apartar la
+  atmósfera.
+- Guy-Stodola: $Ex_D = T_0\,S_G \ge 0$. La exergía no se conserva: un balance
+  que cuadra sin $Ex_D$ es de un proceso reversible o le falta algo, y una
+  $Ex_D$ negativa es un error.
+- Volumen de control: $a_f = h - T_0\,s$ y, en régimen estacionario,
+  $\dot m\,(a_{f2} - a_{f1}) = \left(1 - T_0/T\right)\dot Q - \dot W - \dot{Ex}_D$,
+  sin el término $P_0\,\Delta V$.
+- La exergía de una corriente se cuenta respecto del estado muerto,
+  $a_f - a_{f0}$, y $a_{f0}$ casi nunca vale cero. En una resta entre dos
+  estados se va solo; en la exergía de una corriente sola, no.
+- Rendimiento exergético, arriba lo que se obtiene y abajo lo que se paga.
+  Turbina: $\eta_{ex} = \dot W/[\dot m\,(a_{f1} - a_{f2})]$. Compresor:
+  $\eta_{ex} = \dot m\,(a_{f2} - a_{f1})/\dot W$. Intercambiador: la exergía
+  que gana el fluido frío entre la que pierde el caliente.
+- Isentrópico y exergético no son lo mismo. El isentrópico compara con el
+  adiabático reversible entre las mismas presiones; el exergético, con todo el
+  trabajo que la corriente podía dar. El examen pide los dos.
+- En el medio circundante, los signos van cambiados. El universo está aislado:
+  su exergía solo puede bajar, y baja $Ex_D = T_0\,S_G$. Si las dos cuentas
+  coinciden, el ejercicio está bien.

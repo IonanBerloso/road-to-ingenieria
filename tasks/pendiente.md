@@ -18,8 +18,6 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **F · Térmica** (en curso: A, B, C, D, E y F1 hechas): los seis apartados
-  de 2025-26, tema 7 y prácticas (3–4 días).
 - **G · Química**: formulación, resoluciones oficiales y teoría que falta
   (5–6 días).
 - **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
@@ -107,21 +105,23 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Fluidos, el aviso de la resolución**: sus piezas con resultado publicado
   llevan el «el examen no publica solución» de `Examen.astro`, y no es
   cierto: los enunciados traen los resultados. Fase I.
-- **Térmica, ordinaria de 2025-2026**: seis apartados declarados en su `fuera`
-  (1e y 2b a 2f), con la resolución oficial en el PDF. Después, contar
-  apartados en las otras diecinueve convocatorias (`manana.md` 10.1).
-- **Térmica, el 3.2 de la colección** (`ejter-el-deposito-rigido-que-se-calienta`):
-  publica a), b) y c), y la colección pide también d) y e) —seguir
-  calentando hasta vapor saturado seco, y el calor total— y el dibujo T-v.
-  Con las tablas del sitio ya se pueden resolver.
+- **Térmica, contar apartados** en las diecinueve convocatorias que no son la
+  ordinaria de 2025-2026, como se hizo con ella (`manana.md` 10.1).
+- **Térmica, lo que queda de la colección de T9 y T10**: 9.4, 9.10, 9.12,
+  9.15, 10.4, 10.5 y 10.7. Se dejaron fuera en F3 por motivos que conviene
+  mirar antes de montarlos. Tres tienen erratas en la resolución (9.10, 9.15
+  y 10.5, que invierte las temperaturas del enunciado). El 9.4 repite
+  Churchill-Chu, que ya cubren un ejemplo y tres exámenes; el 9.12 da las
+  cotas solo en una figura; el 10.4 pide pérdidas por metro sin dar el
+  diámetro, y el 10.7 necesita la transformación triángulo-estrella.
 - **Pesos de tema donde la ruta y las etiquetas no coinciden** (CLAUDE.md §10):
   Fluidos t07, t17, t18, t19 y t23; Térmica t08 y t10. Los de Mecánica del
   bloque 1 se revisaron con las cinco convocatorias.
 - **`revisado` en los 26 bloques de Álgebra y Fluidos**: pasarlos por los
   criterios de hueco de su `criterioDeOrden` y entonces sí fecharlos. Es un día
   de trabajo; sellar la fecha sin hacerlo sería inventar (`manana.md` 10.7).
-- **Tres escalones con un `ejemplo` en medio** (`npm run deuda`, §2 bis): dos
-  en `fundamentos-quimicos-2c` y uno en `ingenieria-termica-ord`.
+- **Dos escalones con un `ejemplo` en medio** (`npm run deuda`, §2 bis), los
+  dos en `fundamentos-quimicos-2c`.
 - **Nueve `fuente` que esconden una discrepancia** que su resolución sí
   explica (`manana.md` 10.2).
 - **Ruta de Fluidos**: decir por qué los cinco parciales no tienen ruta propia

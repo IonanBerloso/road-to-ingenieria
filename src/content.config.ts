@@ -1804,6 +1804,15 @@ const laboratorio = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/laboratorio' }),
   schema: z.object({
     asignatura: z.string().min(3),
+    /** Con qué se hacen las actividades, tal como entra en la entradilla y en
+     *  la descripción: «con GeoGebra». Estuvo escrito en la página hasta el 28
+     *  de septiembre de 2026, cuando llegó Térmica, que no usa GeoGebra. */
+    herramienta: z.string().min(5),
+    /** Lo que sigue al recuento en la entradilla: qué es esta parte de la
+     *  asignatura y qué hace el sitio con ella. Cada asignatura tiene la suya,
+     *  porque la de Cálculo —«no sale ningún ejercicio de examen»— no vale
+     *  para todas. */
+    entradilla: z.string().min(40),
     /** De dónde salen los guiones, citado como cualquier otra fuente. */
     fuente: z.string().min(10),
     /** Por qué esta página existe y qué NO hace. */

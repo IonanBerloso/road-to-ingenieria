@@ -1,14 +1,17 @@
 /**
  * La ordinaria de Ingeniería Térmica de enero de 2026, la más cercana a quien
- * se examine en 2027. Sus tres ejercicios van partidos en siete piezas que se
+ * se examine en 2027. Sus tres ejercicios van partidos en ocho piezas que se
  * pasan los resultados como dato; aquí se rehace la cadena desde el primer
  * enunciado y se comprueba que esos datos son los que salen. Una respuesta no
  * cuadra, y no por la física: el Reynolds del ejercicio 3 está bien y se
  * publica con una tolerancia absoluta de 0,02 que ningún alumno alcanza.
+ * Los trece apartados están resueltos desde la fase F2; los de la bomba se
+ * comprueban además contra IAPWS-95, porque restan números casi iguales.
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
 import tablas from '../../src/content/tablas/vapor-de-agua.json';
+import { estadoDePT, saturacionDeP } from '../../src/lib/iapws95';
 import { integra } from './numerico';
 
 const cuadra = convocatoria('ingenieria-termica', '2025-2026-ord');
@@ -126,6 +129,13 @@ describe('1c · la exergía que el universo destruye', () => {
     expect(Math.abs(T0 * 0.2415 - porBalance) / porBalance).toBeLessThan(0.01);
     cuadra.magnitud(id, 'La exergía destruida', porBalance, 'kJ');
   });
+
+  it('su rendimiento exergético es del 74,7 %: lo que gana el medio entre lo que pierde el sistema', () => {
+    const eta = medio / -sistema;
+    expect(Math.abs(eta - (1 + (sistema + medio) / -sistema))).toBeLessThan(1e-12);
+    expect(eta).toBeLessThan(1);
+    cuadra(id, 'El rendimiento exergético', eta);
+  });
 });
 
 describe('2a · cuánta agua hace falta para condensar un kilo de vapor', () => {
@@ -157,18 +167,94 @@ describe('2a · cuánta agua hace falta para condensar un kilo de vapor', () => 
   });
 });
 
-describe('2b · la bomba, y el signo de un trabajo que entra', () => {
+describe('2b · el condensador, que tira cuatro quintas partes de la exergía del vapor', () => {
+  const id = 'exter2526-ord-2-la-exergia-que-destruye-el-condensador';
+  const sat = tablas.saturacionP.filas.find((r) => r[0] === 0.5)!; // [p, T, v', v'', h', h'', s', s'']
+  const [vf, vg, hf, hg, sf, sg] = sat.slice(2);
+  const [m1, cp, T0] = [0.7, 4.186, 288]; // T0 = 288 K, como la resolución
+  const x1 = (3 - vf) / (vg - vf);
+  const [h1, s1] = [hf + x1 * (hg - hf), sf + x1 * (sg - sf)];
+  const [h2, s2] = [hf, sf];
+  const mw = (m1 * (h1 - h2)) / (cp * (35 - 18));
+  const pierdeVapor = m1 * (h1 - h2 - T0 * (s1 - s2));
+  const [Te, Ts] = [18 + 273, 35 + 273];
+  const ganaAgua = mw * (cp * (Ts - Te) - T0 * cp * Math.log(Ts / Te));
+
+  it('el vapor pierde 280,08 kW de exergía, de 1.493,7 kW de energía', () => {
+    expect(pierdeVapor).toBeLessThan(0.2 * m1 * (h1 - h2));
+    cuadra.magnitud(id, 'La exergía que pierde el vapor', pierdeVapor, 'kW');
+  });
+
+  it('el agua gana 56,97 kW', () => cuadra.magnitud(id, 'La exergía que gana el agua', ganaAgua, 'kW'));
+
+  it('se destruyen 223,12 kW, los mismos por el balance y por Guy-Stodola', () => {
+    const porBalance = pierdeVapor - ganaAgua;
+    const SG = m1 * (s2 - s1) + mw * cp * Math.log(Ts / Te);
+    expect(m1 * (s2 - s1)).toBeLessThan(0); // el vapor solo pierde entropía
+    expect(Math.abs(porBalance - T0 * SG)).toBeLessThan(1e-9 * porBalance);
+    cuadra.magnitud(id, 'La exergía destruida', porBalance, 'kW');
+  });
+
+  it('y su rendimiento exergético es del 20,3 %', () =>
+    cuadra(id, 'El rendimiento exergético del condensador', ganaAgua / pierdeVapor));
+});
+
+describe('2c · la bomba, del signo de su trabajo a sus dos rendimientos', () => {
   const id = 'exter2526-ord-2-la-bomba-que-consume-seis-kilovatios';
-  // líquido saturado a 0,5 bar, de las tablas del sitio: h' = 340,54
-  const h2 = tablas.saturacionP.filas.find((r) => r[0] === 0.5)![4];
-  const m = 0.7;
+  // líquido saturado a 0,5 bar, de las tablas del sitio: h' = 340,54 y s' = 1,0912
+  const sat = tablas.saturacionP.filas.find((r) => r[0] === 0.5)!;
+  const [h2, s2] = [sat[4], sat[6]];
+  const [m, T0] = [0.7, 288];
   const W = -6; // consume: el trabajo entra
   const h3 = h2 - W / m;
+  /* La tabla de líquido comprimido a 50 bar, [T, v, u, h, s]: la salida ideal
+     y la real caen las dos entre las filas de 80 y 100 °C. */
+  const filas = tablas.liquido.bloques.find((b) => b.p === 50)!.filas;
+  const [a, b] = [filas.find((f) => f[0] === 80)!, filas.find((f) => f[0] === 100)!];
+  const h3s = a[3] + ((s2 - a[4]) / (b[4] - a[4])) * (b[3] - a[3]);
+  const s3 = a[4] + ((h3 - a[3]) / (b[3] - a[3])) * (b[4] - a[4]);
+  const etaS = (h3s - h2) / (h3 - h2);
+  const destruida = T0 * m * (s3 - s2);
+  const etaEx = (m * (h3 - h2 - T0 * (s3 - s2))) / -W;
 
   it('el agua sale con 349,11 kJ/kg, más de lo que le daría una bomba ideal', () => {
-    // v·ΔP con el volumen del líquido que usa la resolución, 0,00103 m³/kg
-    expect(0.00103 * (5000 - 50)).toBeLessThan(h3 - h2);
+    expect(h3s).toBeLessThan(h3);
     cuadra.magnitud(id, 'La entalpía de salida', h3, 'kJ/kg');
+  });
+
+  it('la ideal saldría con 345,81 kJ/kg: la fila de la entropía de 0,5 bar, no la de 1 bar que escribe la resolución', () => {
+    cuadra.magnitud(id, 'La entalpía de salida ideal', h3s, 'kJ/kg');
+    // con s = 1,3028, la de 1 bar, saldría casi a 100 °C
+    const conLaDe1bar = a[3] + ((1.3028 - a[4]) / (b[4] - a[4])) * (b[3] - a[3]);
+    expect(conLaDe1bar).toBeGreaterThan(420);
+    expect(tablas.saturacionP.filas.find((r) => r[0] === 1)![6]).toBe(1.3028);
+  });
+
+  it('el rendimiento interno es del 61,5 %, y la destruida 1,83 kW, con la tabla', () => {
+    cuadra(id, 'El rendimiento interno', etaS);
+    cuadra.magnitud(id, 'La exergía destruida en la bomba', destruida, 'kW');
+    cuadra(id, 'El rendimiento exergético de la bomba', etaEx);
+    // y por el balance: lo que no se destruye es lo que gana el agua
+    expect(Math.abs(-W - destruida - etaEx * -W)).toBeLessThan(1e-9);
+  });
+
+  it('con la formulación completa salen 59,4 %, 1,97 kW y 67 %, y las casillas los aceptan', () => {
+    /* Sin interpolar: la isentrópica de verdad desde el líquido saturado a
+       0,5 bar, y el estado real a 50 bar con h3. Newton en T, en K y MPa. */
+    const s = saturacionDeP(0.05).liquido;
+    const aT = (f: (T: number) => number, T: number) => {
+      for (let k = 0; k < 50; k++) T -= f(T) / ((f(T + 0.01) - f(T)) / 0.01);
+      return T;
+    };
+    const Tis = aT((T) => estadoDePT(5, T).s - s.s, 355);
+    const Tr = aT((T) => estadoDePT(5, T).h - (s.h + 6 / 0.7), 355);
+    const eta = (estadoDePT(5, Tis).h - s.h) / (6 / 0.7);
+    const Exd = T0 * m * (estadoDePT(5, Tr).s - s.s);
+    expect(eta).toBeCloseTo(0.594, 3);
+    expect(Exd).toBeCloseTo(1.97, 2);
+    cuadra(id, 'El rendimiento interno', eta);
+    cuadra.magnitud(id, 'La exergía destruida en la bomba', Exd, 'kW');
+    cuadra(id, 'El rendimiento exergético de la bomba', 1 - Exd / 6);
   });
 });
 

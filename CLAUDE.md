@@ -276,7 +276,9 @@ src/
                            ya está y dice por qué en ese orden.
     laboratorio/           lo que la asignatura evalúa y esta app NO
                            examina: las sesiones con ordenador. Un YAML
-                           por asignatura, y de momento solo Cálculo.
+                           por asignatura: Cálculo (GeoGebra) y Térmica
+                           (Termograf y TermoLagun). La herramienta y la
+                           frase de la entradilla salen del YAML.
                            No transcribe el guion ni reparte ningún
                            fichero: lo nombra, lo resume y enlaza el
                            apartado donde está explicado (§08)
@@ -423,7 +425,10 @@ tests/
                            la da npm run deuda
   verificacion/            cada respuesta de examen, recalculada por un
                            camino escrito aparte. Todas menos una, y la
-                           que falta está dicha en npm run deuda
+                           que falta está dicha en npm run deuda. Y la
+                           colección del tema 7 de Térmica, que lee las
+                           tablas de vapor: corpus.ts tiene tema() además
+                           de convocatoria()
   geometria/               una lámina de Expresión Gráfica por fichero, con
                            los valores de referencia de su solución y las
                            comprobaciones por dos caminos (§10)

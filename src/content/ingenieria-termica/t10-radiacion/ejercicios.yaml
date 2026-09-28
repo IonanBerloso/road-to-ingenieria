@@ -169,14 +169,255 @@ ejercicios:
       se puede despreciar en un horno aunque sea despreciable en un radiador
       de calefacción, y por eso es el único de los tres mecanismos que no es
       lineal con la temperatura.
+  - id: ejter-col101-la-carretera-al-sol
+    titulo: La carretera al sol, y la ecuación de cuarto grado que se resuelve tanteando
+    fuente: >-
+      Ejercicio 10.1 de las diapositivas del Tema 10, «Transmisión de calor
+      por radiación térmica» · Ingeniería Térmica, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Las diapositivas traen su resolución, y el
+      desarrollo está contrastado contra ella. La lámina 29 acaba en 331,5 K,
+      58,5 °C, pero la raíz de su propia ecuación es 331,3 K, 58,3 °C: sus
+      iteraciones segunda y tercera se desvían unas décimas. Aquí se publica
+      la raíz, y las dos caben en la tolerancia.
+    nivel: practica
+    enunciado: |
+      Una carretera de asfalto negro absorbe $1.103{,}75\ \text{W/m}^{2}$ de
+      energía por radiación térmica en verano. La temperatura del aire es de
+      $32\ \text{°C}$. El coef. de convección entre el aire y la carretera es
+      de $16\ \text{W/m}^{2}\text{·°C}$. Calcúlese la temperatura de la
+      carretera.
+
+      *La resolución de las diapositivas trata el asfalto como cuerpo negro
+      —absorbe todo lo que le llega y emite $\sigma T^{4}$—, con
+      $\sigma = 5{,}67\cdot 10^{-8}\ \text{W/(m}^{2}\text{·K}^{4})$ y
+      $T = \theta + 273$.*
+    pide: La temperatura a la que se estabiliza la carretera.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La carretera ni se calienta ni se enfría: está en régimen
+          estacionario. ¿Qué balance fija su temperatura?
+        opciones:
+          - texto: >-
+              Lo que absorbe se va por dos caminos: por convección al aire y
+              por radiación, $\sigma T^{4}$, por ser negra
+            correcta: true
+            mensaje: |
+              Eso es: $G = h\,(T - T_{aire}) + \sigma T^{4}$. Y como un
+              término es lineal en $T$ y el otro de cuarto grado, la ecuación
+              no se despeja a mano: se busca su raíz.
+          - texto: >-
+              Lo que absorbe se lo lleva todo el aire, por convección
+            mensaje: |
+              Eso olvida que la carretera, caliente, también radia. Es la
+              primera aproximación de la resolución y sirve solo para
+              arrancar: da 101 °C, y a esa temperatura la carretera emitiría
+              más de lo que absorbe.
+          - texto: >-
+              Que se pone a la temperatura del aire, 32 °C, porque está en
+              equilibrio con él
+            mensaje: |
+              Estacionario no es equilibrio con el aire: la carretera recibe
+              1.103,75 W por metro cuadrado, y para deshacerse de ellos tiene
+              que estar más caliente que lo que la rodea.
+
+      - tipo: calcular
+        titulo: La primera aproximación, sin la emisión
+        pregunta: |
+          Para arrancar, la resolución desprecia la emisión:
+          $G = h\,(T_0 - T_{aire})$. ¿Cuánto vale $T_0$?
+        respuesta:
+          tipo: magnitud
+          valor: '101 °C'
+          tolerancia: 0.005
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '69 °C'
+            mensaje: |
+              Eso es el **salto**, $G/h = 69$ °C. La temperatura de la
+              carretera es la del aire más ese salto: 32 + 69.
+          - valor: '374 °C'
+            mensaje: |
+              Ese número es la temperatura en **kelvin**: 374 K son 101 °C. Se
+              puede contestar en cualquiera de las dos escalas, pero el número
+              tiene que ir con la suya.
+        pista: |
+          $T_0 = T_{aire} + G/h$.
+        desarrollo: |
+          $$
+          T_0 = (32+273) + \frac{1.103{,}75}{16} = 374\ \text{K}
+          $$
+
+          Es decir, 101 °C. Demasiado, y se ve sin seguir: a 374 K la
+          carretera emitiría $\sigma T_0^{4} = 1.109\ \text{W/m}^{2}$, más de
+          lo que absorbe.
+
+      - tipo: calcular
+        titulo: La temperatura de la carretera
+        pregunta: |
+          Con Newton-Raphson sobre
+          $f(T) = \sigma T^{4} + h\,T - (G + h\,T_{aire})$, partiendo de
+          374 K, ¿a qué temperatura se estabiliza la carretera?
+        respuesta:
+          tipo: magnitud
+          valor: '58.3 °C'
+          # Relativa sobre kelvin (§17): 0,005 son 1,7 K. Acepta el 58,5 °C de
+          # la lámina 29 y el 58,2 de quien use 273,15.
+          tolerancia: 0.005
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '101 °C'
+            mensaje: |
+              Esa es la primera aproximación, sin la emisión: el punto de
+              partida de Newton-Raphson, no el resultado. A esa temperatura la
+              carretera emitiría más de lo que absorbe.
+          - valor: '77.9 °C'
+            mensaje: |
+              Has puesto la radiación como intercambio con un entorno a 32 °C,
+              $\sigma\,(T^{4} - T_{aire}^{4})$. El enunciado ya da lo que la
+              carretera **absorbe**, 1.103,75 W/m²: lo que le llega de fuera
+              está dentro de ese número, y lo que sale es su emisión entera,
+              $\sigma T^{4}$.
+          - valor: '331.3 °C'
+            mensaje: |
+              Ese número es la temperatura en kelvin: 331,3 K son 58,3 °C.
+        pista: |
+          $T_{n+1} = T_n - f(T_n)/f'(T_n)$, con $f'(T) = 4\sigma T^{3} + h$. En
+          tres vueltas ya no cambia la décima.
+        desarrollo: |
+          $$
+          f(T) = 5{,}67\cdot 10^{-8}\,T^{4} + 16\,T - 5.983{,}75
+          \qquad
+          f'(T) = 4\cdot 5{,}67\cdot 10^{-8}\,T^{3} + 16
+          $$
+
+          $$
+          T_1 = 374 - \frac{1.109{,}6}{27{,}86} = 334{,}2\ \text{K}
+          \qquad
+          T_2 = 334{,}2 - \frac{70{,}76}{24{,}47} = 331{,}3\ \text{K}
+          $$
+
+          La tercera vuelta ya no mueve la décima: 331,3 K, que son
+          **58,3 °C**. La lámina 29 acaba en 331,5 K por dos deslices de unas
+          décimas: su segunda vuelta escribe 331,2 donde sale 331,3, y la
+          tercera, 331,5 donde desde 331,2 saldría otra vez 331,3. La
+          diferencia cabe en la tolerancia.
+
+      - tipo: calcular
+        titulo: Por dónde se va lo que absorbe
+        pregunta: |
+          A esa temperatura, ¿qué fracción de los 1.103,75 W/m² que absorbe la
+          carretera vuelve a salir por radiación?
+        respuesta:
+          tipo: numero
+          valor: '0.619'
+          tolerancia: 0.01
+          formato: una fracción entre 0 y 1
+        distractores:
+          - valor: '0.381'
+            mensaje: |
+              Esa es la parte que se lleva el **aire**, $h\,(T - T_{aire})/G$.
+              La pregunta es la otra: la que sale radiada.
+          - valor: '1.005'
+            mensaje: |
+              Has usado la primera aproximación, 374 K: con ella la carretera
+              emitiría el 100,5 % de lo que absorbe, y encima tendría que ceder
+              calor al aire. Imposible, y por eso esa temperatura hay que
+              corregirla.
+        pista: |
+          $\sigma T^{4}/G$, con $T = 331{,}3\ \text{K}$.
+        desarrollo: |
+          $$
+          \sigma T^{4} = 5{,}67\cdot 10^{-8}\cdot 331{,}3^{4} = 683{,}1\ \frac{\text{W}}{\text{m}^{2}}
+          \qquad
+          h\,(T-T_{aire}) = 16\cdot(331{,}3-305) = 420{,}8\ \frac{\text{W}}{\text{m}^{2}}
+          $$
+
+          $$
+          \frac{683{,}1}{1.103{,}75} = 0{,}619
+          $$
+
+          Seis de cada diez vatios salen radiados, y cuatro se los lleva el
+          aire. Los dos juntos suman lo que entra, que es la comprobación.
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En régimen estacionario, lo que absorbe la carretera sale por
+              convección y por radiación: $G = h\,(T-T_{aire}) + \sigma T^{4}$.
+          - texto: >-
+              La ecuación es de cuarto grado y no se despeja a mano: se arranca
+              sin la emisión, 374 K, y Newton-Raphson la baja a 331,3 K.
+          - texto: >-
+              A 58,3 °C, el 62 % de lo absorbido se va por radiación y el 38 %
+              por convección.
+          - texto: >-
+              Como la carretera está solo 26 °C por encima del aire, la
+              radiación es despreciable frente a la convección.
+            trampa: true
+            mensaje: |
+              Es al revés: la radiación se lleva 683 W/m² y la convección, 421.
+              La radiación no va con el salto sino con la cuarta potencia de la
+              temperatura **absoluta** de la carretera, y 331 K a la cuarta es
+              mucho aunque el salto con el aire sea pequeño. Despreciarla daría
+              101 °C.
+    resolucion: |
+      **El balance.** La carretera está en régimen estacionario: lo que
+      absorbe del sol, $G$, sale por convección al aire y por radiación. Como
+      es negra, emite $\sigma T^{4}$:
+
+      $$
+      G = h\,(T - T_{aire}) + \sigma T^{4}
+      \;\Longrightarrow\;
+      5{,}67\cdot 10^{-8}\,T^{4} + 16\,T - 5.983{,}75 = 0
+      $$
+
+      con $T_{aire} = 305\ \text{K}$ y $5.983{,}75 = 1.103{,}75 + 16\cdot 305$.
+
+      **La raíz, por Newton-Raphson.** Se arranca sin la emisión:
+
+      $$
+      T_0 = 305 + \frac{1.103{,}75}{16} = 374\ \text{K}
+      $$
+
+      y se itera con $T_{n+1} = T_n - f(T_n)/f'(T_n)$,
+      $f'(T) = 4\sigma T^{3} + 16$:
+
+      $$
+      T_1 = 374 - \frac{1.109{,}6}{27{,}86} = 334{,}2
+      \qquad
+      T_2 = 334{,}2 - \frac{70{,}76}{24{,}47} = 331{,}3
+      $$
+
+      La tercera ya no cambia la décima. La carretera se estabiliza a
+      331,3 K, **58,3 °C**. Las diapositivas llegan a 331,5 K, 58,5 °C, por
+      dos deslices de unas décimas: su segunda vuelta escribe 331,2 donde la
+      cuenta da 331,3, y la tercera, 331,5 donde desde 331,2 saldría otra vez
+      331,3.
+
+      **La comprobación.** A 331,3 K la carretera emite
+      $\sigma T^{4} = 683{,}1\ \text{W/m}^{2}$ y cede al aire
+      $16\cdot 26{,}3 = 420{,}8\ \text{W/m}^{2}$. Suman los 1.103,75 que
+      absorbe, y el 62 % sale radiado.
+
+      **Lo que hay que llevarse.** Es el caso del último párrafo del tema:
+      convección y radiación sobre la misma superficie. La convección es
+      lineal en la temperatura y la radiación va a la cuarta, así que la
+      ecuación **no se despeja a mano**. Se arranca de una aproximación con
+      sentido —aquí, sin la emisión— y se corrige; y ese arranque ya avisa de
+      que despreciar la radiación no vale: daría 101 °C donde son 58.
+
   - id: ejter-dos-placas-y-una-pantalla
     titulo: Dos placas, y qué cambia poner una pantalla
     fuente: >-
       Ejercicio 10.2 de la colección de problemas del Tema 10 · Ingeniería
-      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El material no
-      publica sus resultados; el desarrollo es nuestro y sale de las fórmulas
-      del propio tema, con la comprobación de que los tres casos ordenan como
-      la física exige.
+      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). Las diapositivas
+      del tema lo resuelven en las láminas 30 a 33, con 273 en vez de 273,15,
+      y el desarrollo está contrastado contra ellas: sus 128,66 y
+      64,33 kW/m² coinciden con los de aquí dentro de la tolerancia. En b)
+      la lámina 32 escribe 55,944 kW/m², y su propia fórmula da 55,14: es una
+      errata.
     nivel: practica
     enunciado: |
       Dos placas paralelas se encuentran muy próximas entre sí. Una está a
@@ -404,9 +645,10 @@ ejercicios:
     titulo: El conducto dentro del conducto, y la fórmula corta que no vale
     fuente: >-
       Ejercicio 10.3 de la colección de problemas del Tema 10 · Ingeniería
-      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). El material no
-      publica sus resultados; el desarrollo es nuestro, con el circuito
-      completo de resistencias del propio tema.
+      Térmica, Escuela de Ingeniería de Gipuzkoa (UPV/EHU). Las diapositivas
+      del tema lo resuelven en las láminas 34 a 36, con el circuito completo
+      de resistencias, y el desarrollo está contrastado contra ellas: sus
+      3,074 y 1,393 kW/m, y la reducción del 54,68 %, se reproducen.
     nivel: practica
     enunciado: |
       Un conducto transporta un líquido caliente. Su diámetro exterior es de
@@ -598,4 +840,303 @@ ejercicios:
       y aquí un metro contra ochenta centímetros no lo es. El aviso está en el
       propio enunciado: si te dan la emisividad de la superficie exterior, es
       porque hace falta.
+
+  - id: ejter-col106-el-techo-radiante-y-la-fachada-de-vidrio
+    titulo: El techo radiante y la fachada de vidrio, con paredes que devuelven lo que reciben
+    fuente: >-
+      Ejercicio 10.6 de las diapositivas del Tema 10, «Transmisión de calor
+      por radiación térmica» · Ingeniería Térmica, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Las diapositivas traen su resolución, y el
+      desarrollo está contrastado contra ella: sus tres resultados, 911,29 W,
+      2.653,22 W y 1.642 W, se reproducen.
+    nivel: practica
+    enunciado: |
+      Un local comercial de dimensiones $7 \times 5 \times 3{,}7\ \text{m}$
+      (largo-ancho-alto) tiene toda la fachada acristalada. El local se
+      calefacta mediante paneles radiantes a $35\ \text{°C}$ cubren toda la
+      superficie del techo. Si el resto de paredes se mantiene a
+      $20\ \text{°C}$, salvo el frontal de la fachada que está a
+      $2\ \text{°C}$, calcúlese el flujo neto de calor entre el techo y la
+      fachada si:
+
+      a) Todos los planos son negros
+
+      b) Todas las paredes son refractarias salvo techo y fachada, que son
+      negros.
+
+      c) El techo es un plano gris de emisividad $0{,}8$ y la fachada
+      acristalada es un plano gris de emisividad $0{,}6$. El resto de paredes
+      son refractarias.
+
+      *La fachada es la pared de 5 m de ancho y 3,7 m de alto, y comparte con
+      el techo, de 7 × 5 m, la arista de 5 m. El factor de visión entre los
+      dos se lee en el ábaco de rectángulos perpendiculares con una arista
+      común: entrando con $a/b = 3{,}7/5 = 0{,}74$ y $c/b = 7/5 = 1{,}4$, la
+      resolución lee $F_{12} = 0{,}14$. Toma también
+      $\sigma = 5{,}67\cdot 10^{-8}\ \text{W/(m}^{2}\text{·K}^{4})$ y
+      $T = \theta + 273$.*
+    pide: El intercambio neto de radiación entre el techo y la fachada en los tres casos.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En a) todas las superficies son negras y cada una está a su
+          temperatura. ¿Qué parte del circuito interviene en el intercambio
+          **neto** entre techo y fachada?
+        opciones:
+          - texto: >-
+              Solo la resistencia directa, $1/(A_1F_{12})$: lo que el techo
+              manda a las paredes lo absorben ellas, que son negras, y no se lo
+              devuelven a la fachada
+            correcta: true
+            mensaje: |
+              Eso es. Una superficie negra no refleja nada: el techo intercambia
+              con las paredes y las paredes con la fachada, pero son
+              intercambios distintos. Entre techo y fachada solo cuenta lo que
+              va directo.
+          - texto: >-
+              Las tres resistencias, porque parte de lo que sale del techo llega
+              a la fachada rebotando en las paredes
+            mensaje: |
+              Rebotar es reflejar, y una superficie negra no refleja nada. Eso
+              sí pasará en b), con las paredes refractarias: devolverán todo lo
+              que reciban.
+          - texto: >-
+              Ninguna: con las superficies negras no hay resistencias
+            mensaje: |
+              Desaparecen las superficiales, $(1-\varepsilon)/(\varepsilon A)$,
+              que valen cero con $\varepsilon = 1$. Las geométricas,
+              $1/(A_iF_{ij})$, dependen solo de la geometría y siguen ahí.
+
+      - tipo: calcular
+        titulo: Con todas las superficies negras
+        pregunta: |
+          ¿Cuánto vale el intercambio neto entre techo y fachada en a)?
+        respuesta:
+          tipo: magnitud
+          valor: '911.3 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '0.4169 W'
+            mensaje: |
+              Has metido las temperaturas en grados Celsius. En radiación,
+              kelvin siempre: con 35 y 2 el resultado sale más de dos mil veces
+              menor.
+          - valor: '6509 W'
+            mensaje: |
+              Has tomado $F_{12} = 1$, como si toda la radiación del techo fuera
+              a parar a la fachada. Le llega el 14 %: el resto va a las paredes
+              y al suelo.
+          - valor: '481.7 W'
+            mensaje: |
+              Has multiplicado $F_{12}$ por el área de la **fachada**. $F_{12}$
+              es la fracción de lo que sale del **techo** que llega a la
+              fachada, y va con $A_1$; la reciprocidad lo dice:
+              $A_1F_{12} = A_2F_{21}$.
+        pista: |
+          $\dot Q_{12} = A_1\,F_{12}\,\sigma\left(T_1^{4}-T_2^{4}\right)$, con
+          $A_1 = 7\cdot 5\ \text{m}^{2}$ y las temperaturas en kelvin.
+        desarrollo: |
+          $$
+          \dot Q_{12} = (7\cdot 5)\cdot 0{,}14\cdot 5{,}67\cdot 10^{-8}\left(308^{4}-275^{4}\right) = 911{,}3\ \text{W}
+          $$
+
+          Los 20 °C de las paredes no entran en la cuenta: el intercambio de
+          cada una con el techo y con la fachada es otro asunto.
+
+      - tipo: calcular
+        titulo: Lo que la fachada ve de las paredes
+        pregunta: |
+          Para b) hace falta $F_{23}$, la fracción de lo que sale de la
+          fachada que llega a las paredes. Con la reciprocidad y la suma a
+          uno, ¿cuánto vale?
+        respuesta:
+          tipo: numero
+          valor: '0.7351'
+          tolerancia: 0.01
+          formato: un factor de visión, entre 0 y 1
+        distractores:
+          - valor: '0.86'
+            mensaje: |
+              Esa es $F_{13}$, lo que el **techo** ve de las paredes. La suma a
+              uno se hace sobre una misma superficie emisora: para la fachada,
+              $F_{21} + F_{23} = 1$, y $F_{21}$ no es 0,14.
+          - valor: '0.926'
+            mensaje: |
+              Has aplicado la reciprocidad al revés, $F_{21} = A_2F_{12}/A_1$.
+              Es $A_1F_{12} = A_2F_{21}$: la fachada es más pequeña que el
+              techo, así que ve más techo del que el techo ve de ella.
+        pista: |
+          Primero $F_{21} = A_1F_{12}/A_2$; la fachada solo ve techo y
+          paredes, así que $F_{21} + F_{23} = 1$.
+        desarrollo: |
+          $$
+          F_{21} = \frac{A_1}{A_2}\,F_{12} = \frac{7\cdot 5}{5\cdot 3{,}7}\cdot 0{,}14 = 0{,}2649
+          \qquad
+          F_{23} = 1 - 0{,}2649 = 0{,}7351
+          $$
+
+          Y para el techo, $F_{13} = 1 - 0{,}14 = 0{,}86$.
+
+      - tipo: calcular
+        titulo: Con las paredes refractarias
+        pregunta: |
+          En b), con techo y fachada negros y el resto refractario, ¿cuánto
+          vale el intercambio neto entre techo y fachada?
+        respuesta:
+          tipo: magnitud
+          valor: '2653 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '911.3 W'
+            mensaje: |
+              Ese es el de a): solo el camino directo. Con las paredes
+              refractarias hay un segundo camino, porque todo lo que les llega
+              del techo lo devuelven, y parte va a la fachada.
+          - valor: '598.3 W'
+            mensaje: |
+              Has puesto los dos caminos en serie. Los dos van del techo a la
+              fachada, entre los mismos nodos: están en paralelo, y la
+              resistencia equivalente es **menor** que cualquiera de las dos.
+        pista: |
+          Una superficie refractaria no gana ni pierde calor neto: su
+          radiosidad es igual a su poder emisivo y su nodo queda libre. El
+          calor va del techo a la fachada por dos caminos en paralelo: el
+          directo, $1/(A_1F_{12})$, y el que pasa por las paredes,
+          $1/(A_1F_{13}) + 1/(A_2F_{23})$.
+        desarrollo: |
+          $$
+          \frac{1}{A_1F_{12}} = \frac{1}{35\cdot 0{,}14} = 0{,}2041
+          \qquad
+          \frac{1}{A_1F_{13}} + \frac{1}{A_2F_{23}} = \frac{1}{35\cdot 0{,}86} + \frac{1}{18{,}5\cdot 0{,}7351} = 0{,}1068
+          $$
+
+          $$
+          R = \frac{0{,}2041\cdot 0{,}1068}{0{,}2041 + 0{,}1068} = 0{,}0701
+          \qquad
+          \dot Q_{12} = \frac{5{,}67\cdot 10^{-8}\left(308^{4}-275^{4}\right)}{0{,}0701} = 2.653\ \text{W}
+          $$
+
+          Casi el triple que en a). Y las resistencias van en
+          $\text{m}^{-2}$, porque aquí el potencial es un poder emisivo, en
+          W/m².
+
+      - tipo: calcular
+        titulo: Con techo y fachada grises
+        pregunta: |
+          En c), con el techo gris de emisividad 0,8, la fachada gris de 0,6 y
+          el resto refractario, ¿cuánto vale el intercambio neto?
+        respuesta:
+          tipo: magnitud
+          valor: '1642 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '188.5 W'
+            mensaje: |
+              Has escrito las resistencias superficiales sin el área,
+              $(1-\varepsilon)/\varepsilon$. Tienen que ir en las mismas
+              unidades que la $R$ de b), en $\text{m}^{-2}$:
+              $(1-\varepsilon)/(\varepsilon A)$.
+          - valor: '1812 W'
+            mensaje: |
+              Has cruzado las emisividades: 0,8 es la del techo y 0,6 la de la
+              fachada. Con la emisividad baja en la superficie pequeña, que es
+              lo que pasa de verdad, la resistencia superficial pesa más y el
+              intercambio sale menor.
+          - valor: '2408 W'
+            mensaje: |
+              Te has dejado la resistencia superficial de la fachada, 0,0360.
+              Es la mayor de las dos, porque el vidrio tiene la emisividad más
+              baja y la fachada es la superficie más pequeña.
+        pista: |
+          A cada lado de la $R$ de b) se añade la resistencia superficial de
+          su superficie, $(1-\varepsilon)/(\varepsilon A)$, en serie.
+        desarrollo: |
+          $$
+          \frac{1-0{,}8}{0{,}8\cdot 35} = 0{,}00714
+          \qquad
+          \frac{1-0{,}6}{0{,}6\cdot 18{,}5} = 0{,}03604
+          $$
+
+          $$
+          \dot Q_{12} = \frac{5{,}67\cdot 10^{-8}\left(308^{4}-275^{4}\right)}{0{,}00714 + 0{,}0701 + 0{,}03604} = 1.642\ \text{W}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la comparación de los tres casos. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Con todo negro, entre techo y fachada solo cuenta el camino
+              directo: 911 W.
+          - texto: >-
+              Si las paredes son refractarias, devuelven todo lo que reciben y
+              abren un segundo camino en paralelo: 2.653 W, casi el triple.
+          - texto: >-
+              Con techo y fachada grises se añaden sus resistencias
+              superficiales, en serie, y el intercambio baja a 1.642 W.
+          - texto: >-
+              Como las paredes refractarias no intercambian calor neto, no
+              cambian nada respecto de a).
+            trampa: true
+            mensaje: |
+              No intercambian calor **neto**, que no es lo mismo que no
+              intervenir: reciben radiación del techo y la reemiten, y parte
+              llega a la fachada. Por eso el intercambio entre techo y fachada
+              casi se triplica, de 911 a 2.653 W.
+    resolucion: |
+      **La geometría.** Techo, $A_1 = 7\cdot 5 = 35\ \text{m}^{2}$; fachada,
+      $A_2 = 5\cdot 3{,}7 = 18{,}5\ \text{m}^{2}$; y el resto —suelo y tres
+      paredes— forma la superficie 3. Con $F_{12} = 0{,}14$ del ábaco, la suma
+      a uno y la reciprocidad dan el resto:
+
+      $$
+      F_{13} = 1 - 0{,}14 = 0{,}86
+      \qquad
+      F_{21} = \frac{35}{18{,}5}\cdot 0{,}14 = 0{,}2649
+      \qquad
+      F_{23} = 1 - 0{,}2649 = 0{,}7351
+      $$
+
+      El potencial entre techo y fachada es siempre el mismo:
+      $\sigma\left(308^{4}-275^{4}\right) = 186{,}0\ \text{W/m}^{2}$.
+
+      **a) Todo negro.** Solo el camino directo:
+
+      $$
+      \dot Q_{12} = 35\cdot 0{,}14\cdot 186{,}0 = 911{,}3\ \text{W}
+      $$
+
+      **b) Paredes refractarias.** Una superficie **refractaria** es la que
+      no intercambia calor neto: todo lo que le llega lo devuelve. En el
+      circuito, su radiosidad es igual a su poder emisivo y su nodo queda
+      libre, sin fuente, así que abre un segundo camino entre techo y
+      fachada, en paralelo con el directo:
+
+      $$
+      R = \frac{0{,}2041\cdot 0{,}1068}{0{,}2041 + 0{,}1068} = 0{,}0701
+      \qquad
+      \dot Q_{12} = \frac{186{,}0}{0{,}0701} = 2.653\ \text{W}
+      $$
+
+      **c) Techo y fachada grises.** Sus resistencias superficiales, en
+      serie con la $R$ de b):
+
+      $$
+      \dot Q_{12} = \frac{186{,}0}{0{,}00714 + 0{,}0701 + 0{,}03604} = 1.642\ \text{W}
+      $$
+
+      **Un aviso sobre los 20 °C del enunciado.** No se usan en ningún
+      apartado. En a) porque el intercambio neto entre techo y fachada no
+      depende de las paredes, que son negras; en b) y c) porque una pared
+      refractaria no se mantiene a ninguna temperatura: toma la que resulte
+      del balance.
+
+      **Lo que hay que llevarse.** Las paredes refractarias no ganan ni
+      pierden calor, y aun así casi triplican el intercambio entre techo y
+      fachada: lo que les llega lo reemiten, y parte va a parar a la
+      fachada. «No intercambia calor neto» no quiere decir «no interviene».
+      Y el orden de los tres resultados tiene sentido: los caminos en
+      paralelo suman, las resistencias superficiales en serie restan.
 

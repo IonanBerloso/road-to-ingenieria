@@ -92,7 +92,20 @@ export const matriz = (t: string): number[][] =>
 
 /** Todos los ejercicios de una convocatoria, indexados por su id. */
 export function convocatoria(asignatura: string, carpeta: string) {
-  const f = join(RAIZ, 'src', 'content', asignatura, 'examenes', carpeta, 'ejercicios.yaml');
+  return lector(join(RAIZ, 'src', 'content', asignatura, 'examenes', carpeta, 'ejercicios.yaml'), carpeta);
+}
+
+/**
+ * Los ejercicios de un tema —ejemplos y colección—, con el mismo lector que
+ * los de una convocatoria. Entró el 28 de septiembre de 2026 con la colección
+ * del tema 7 de Térmica, cuyas cifras salen de las tablas de vapor del sitio:
+ * si un día se regeneran y una cuenta deja de salir, esto es lo que avisa.
+ */
+export function tema(asignatura: string, carpeta: string) {
+  return lector(join(RAIZ, 'src', 'content', asignatura, carpeta, 'ejercicios.yaml'), carpeta);
+}
+
+function lector(f: string, carpeta: string) {
   const doc = yaml.load(readFileSync(f, 'utf8')) as { ejercicios: Ejercicio[] };
   const porId = new Map(doc.ejercicios.map((e) => [e.id, e]));
 

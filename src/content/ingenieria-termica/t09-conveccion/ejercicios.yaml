@@ -383,6 +383,332 @@ ejercicios:
       Aquí no hay escapatoria: lo que se pide es precisamente el calor que
       sale de la superficie, así que no se puede entrar por el otro extremo.
       Y el precio de saltarse la comprobación está medido: **un 19 %**.
+  - id: ejter-col91-la-misma-placa-girada-cede-otro-calor
+    titulo: La misma placa, girada, cede otro calor
+    fuente: >-
+      Ejercicio 9.1 de las diapositivas del Tema 9, «Transmisión de calor por
+      convección» · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU). Las diapositivas traen su resolución, y el desarrollo está
+      contrastado contra ella. Sus dos resultados, 1,52·10⁴ W y 8.928 W, se
+      reproducen; la lámina 13 escribe Nu = 2586 en a), pero el que usa en la
+      lámina siguiente es 2856, el que sale de la cuenta.
+    nivel: practica
+    enunciado: |
+      El aire a una presión de $1\ \text{atm}$ y una temperatura de
+      $20\ \text{°C}$ fluye a una velocidad de $7\ \text{m/s}$ sobre una
+      lámina plana de $1{,}5\ \text{m} \times 6\ \text{m}$ y a una temperatura
+      superficial de $140\ \text{°C}$. Calcular el flujo de calor desde la
+      lámina, para las siguientes disposiciones de placas:
+
+      a) flujo de aire paralelo al lado más largo de la placa
+
+      b) flujo de aire paralelo al lado más corto de la placa.
+
+      *Las propiedades del aire salen de las tablas a la temperatura de
+      película, $(140+20)/2 = 80\ \text{°C}$: $k = 0{,}02953\ \text{W/(m·K)}$,
+      $\nu = 2{,}097\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 0{,}7154$. El paso de laminar a turbulento se toma en
+      $\text{Re} = 5\cdot 10^{5}$, como en la resolución.*
+    pide: El calor que cede la lámina con el aire paralelo al lado largo y con el aire paralelo al lado corto.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En a) el aire recorre los 6 m de la placa. Antes de elegir
+          correlación, ¿qué hay que mirar?
+        opciones:
+          - texto: >-
+              Dónde se hace turbulenta la capa límite, la distancia crítica, y
+              si la placa es más larga o más corta que ella
+            correcta: true
+            mensaje: |
+              Eso es. Si la placa es más larga que $x_{cr}$, el primer tramo es
+              laminar y el resto turbulento: flujo **mixto**, con su propia
+              correlación. Si no llega, es laminar entera.
+          - texto: >-
+              El Reynolds con la longitud total, y si pasa de 5·10⁵ se usa la
+              correlación turbulenta
+            mensaje: |
+              Pasar de $5\cdot 10^{5}$ dice que la capa límite **acaba**
+              turbulenta, no que lo sea desde el borde. La turbulenta a secas
+              supone lo segundo y sobreestima; el $-871$ de la correlación
+              mixta es justamente la corrección del tramo laminar.
+          - texto: >-
+              La velocidad del aire, que a 7 m/s mantiene el flujo laminar
+            mensaje: |
+              El régimen no lo decide la velocidad sola sino el Reynolds,
+              $c\,x/\nu$, que crece con la distancia al borde. El mismo aire a
+              7 m/s es laminar en el primer metro y medio de placa y
+              turbulento después.
+          - texto: >-
+              Nada: el calor depende del área, que es la misma en las dos
+              disposiciones
+            mensaje: |
+              El área es la misma, 9 m², pero $h$ no: depende de cuánta placa
+              recorre el aire antes de que la capa límite se haga turbulenta.
+              Por eso el enunciado pregunta dos veces.
+
+      - tipo: calcular
+        titulo: La distancia crítica
+        pregunta: |
+          ¿A qué distancia del borde de ataque se hace turbulenta la capa
+          límite?
+        respuesta:
+          tipo: magnitud
+          valor: '1.498 m'
+          tolerancia: 0.02
+          formato: una longitud, con su unidad
+        distractores:
+          - valor: '0.00629 m'
+            mensaje: |
+              Has usado 2.100, el Reynolds a partir del cual el flujo por
+              dentro de una **tubería** es turbulento. En una placa plana la
+              transición está en $5\cdot 10^{5}$; con 2.100 la capa límite se
+              haría turbulenta a seis milímetros del borde.
+          - valor: '73.4 m'
+            mensaje: |
+              Has multiplicado por la velocidad en vez de dividir. De
+              $\text{Re} = c\,x/\nu$ se despeja $x = \text{Re}\,\nu/c$: a más
+              velocidad, la transición llega **antes**.
+        pista: |
+          $x_{cr} = \text{Re}_{cr}\,\nu/c$, con $\text{Re}_{cr} = 5\cdot 10^{5}$.
+        desarrollo: |
+          $$
+          x_{cr} = \frac{\text{Re}_{cr}\,\nu}{c}
+          = \frac{5\cdot 10^{5}\cdot 2{,}097\cdot 10^{-5}}{7} = 1{,}498\ \text{m}
+          $$
+
+          Metro y medio: justo el lado corto de la placa. En a) la capa
+          límite es laminar en la cuarta parte de la placa y turbulenta en el
+          resto; en b) no llega a hacerse turbulenta.
+
+      - tipo: calcular
+        titulo: El Nusselt con el aire paralelo al lado largo
+        pregunta: |
+          En a), con $\text{Re}_L = 7\cdot 6/(2{,}097\cdot 10^{-5})$, ¿cuánto
+          vale el número de Nusselt?
+        respuesta:
+          tipo: numero
+          valor: '2860'
+          # Absoluta. Cuarenta es un 1,4 %: acepta el 2856 de la lámina, que
+          # redondea el Reynolds a 2·10^6, y el 2860 del Reynolds exacto.
+          tolerancia: 40
+          formato: un número
+        distractores:
+          - valor: '3639'
+            mensaje: |
+              Esa es la correlación turbulenta a secas,
+              $0{,}037\,\text{Re}_L^{0{,}8}\,\text{Pr}^{1/3}$, que supone la capa
+              límite turbulenta desde el borde. Aquí el primer metro y medio es
+              laminar, y el $-871$ lo descuenta: sin él el Nusselt sale un 27 %
+              más alto.
+          - valor: '840.4'
+            mensaje: |
+              Esa es la laminar, $0{,}664\,\text{Re}_L^{1/2}\,\text{Pr}^{1/3}$,
+              con un Reynolds de dos millones: muy fuera de su rango, que acaba
+              en $5\cdot 10^{5}$.
+          - valor: '3198'
+            mensaje: |
+              Te has dejado el factor $\text{Pr}^{1/3} = 0{,}8944$. El paréntesis
+              entero, $0{,}037\,\text{Re}_L^{0{,}8} - 871$, va multiplicado por
+              él.
+        pista: |
+          La placa es cuatro veces más larga que $x_{cr}$: flujo mixto,
+          $\text{Nu} = \left(0{,}037\,\text{Re}_L^{0{,}8} - 871\right)\text{Pr}^{1/3}$.
+        desarrollo: |
+          $$
+          \text{Re}_L = \frac{7\cdot 6}{2{,}097\cdot 10^{-5}} = 2{,}003\cdot 10^{6}
+          \qquad
+          \text{Re}_L^{0{,}8} = 109.982
+          $$
+
+          $$
+          \text{Nu} = \left(0{,}037\cdot 109.982 - 871\right)\cdot 0{,}8944 = 2.860
+          $$
+
+          La lámina 13 escribe 2586 y en la siguiente usa 2856: la buena es la
+          segunda, que es la que sale con el Reynolds redondeado a
+          $2\cdot 10^{6}$. El 2586 es una errata con dos cifras cambiadas de
+          sitio.
+
+      - tipo: calcular
+        titulo: El calor con el aire paralelo al lado largo
+        pregunta: |
+          ¿Cuánto calor cede la lámina en a)?
+        respuesta:
+          tipo: magnitud
+          valor: '15200 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '17740 W'
+            mensaje: |
+              Has multiplicado por 140, la temperatura de la superficie. La ley
+              de Newton va con el **salto**, $\theta_s - \theta_f = 120$ °C.
+          - valor: '7602 W'
+            mensaje: |
+              Has usado el salto entre la película y el aire, 80 − 20 = 60 °C.
+              La temperatura de película solo sirve para leer las propiedades;
+              el calor va con $\theta_s - \theta_f$.
+          - valor: '60820 W'
+            mensaje: |
+              Has dividido por 1,5 m al pasar del Nusselt a $h$. En a) la
+              longitud característica es la del recorrido del aire, 6 m, la
+              misma con la que se ha calculado el Reynolds.
+        pista: |
+          $h = \text{Nu}\,k/L$ y $\dot Q = h\,A\,(\theta_s-\theta_f)$, con
+          $A = 1{,}5\cdot 6 = 9\ \text{m}^{2}$.
+        desarrollo: |
+          $$
+          h = \frac{2.860\cdot 0{,}02953}{6} = 14{,}08\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \dot Q = 14{,}08\cdot 9\cdot (140-20) = 15.206\ \text{W}
+          $$
+
+          Es decir, $1{,}52\cdot 10^{4}$ W, lo mismo que las diapositivas.
+
+      - tipo: calcular
+        titulo: El calor con el aire paralelo al lado corto
+        pregunta: |
+          Ahora el aire va paralelo al lado corto: recorre 1,5 m. ¿Cuánto calor
+          cede la lámina?
+        respuesta:
+          tipo: magnitud
+          valor: '8935 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '15200 W'
+            mensaje: |
+              Es el de a). Girar la placa no cambia el área, pero sí el
+              coeficiente de película: ahora el aire recorre 1,5 m, la capa
+              límite no llega a hacerse turbulenta y $h$ baja de 14,1 a 8,3.
+          - valor: '25530 W'
+            mensaje: |
+              Has usado la turbulenta,
+              $0{,}037\,\text{Re}_L^{0{,}8}\,\text{Pr}^{1/3}$. Con 1,5 m la placa
+              acaba justo en $x_{cr}$: la capa límite es laminar entera.
+          - valor: '2234 W'
+            mensaje: |
+              Has dividido por 6 m al pasar del Nusselt a $h$. En b) el aire
+              recorre 1,5 m, y esa es la longitud característica, la misma del
+              Reynolds.
+        pista: |
+          $\text{Re}_L = 7\cdot 1{,}5/(2{,}097\cdot 10^{-5})$. La placa acaba
+          en $x_{cr}$, así que es laminar:
+          $\text{Nu} = 0{,}664\,\text{Re}_L^{1/2}\,\text{Pr}^{1/3}$.
+        desarrollo: |
+          $$
+          \text{Re}_L = \frac{7\cdot 1{,}5}{2{,}097\cdot 10^{-5}} = 5{,}007\cdot 10^{5}
+          $$
+
+          Justo en la frontera. La capa límite es laminar en toda la placa, y
+          en ese punto la correlación laminar y la mixta dan casi lo mismo,
+          420 y 422: para eso está el $-871$, para que las dos empalmen en
+          $5\cdot 10^{5}$.
+
+          $$
+          \text{Nu} = 0{,}664\cdot\left(5{,}007\cdot 10^{5}\right)^{1/2}\cdot 0{,}8944 = 420{,}2
+          $$
+
+          $$
+          h = \frac{420{,}2\cdot 0{,}02953}{1{,}5} = 8{,}272\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          \qquad
+          \dot Q = 8{,}272\cdot 9\cdot 120 = 8.934\ \text{W}
+          $$
+
+          Las diapositivas, con el Reynolds redondeado a $5\cdot 10^{5}$, dan
+          8.928 W.
+
+      - tipo: justificar
+        pregunta: Ordena la comparación de las dos disposiciones. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La capa límite se hace turbulenta a $x_{cr} = 1{,}5\ \text{m}$ del
+              borde de ataque.
+          - texto: >-
+              En a) el aire recorre 6 m: el primer cuarto de la placa es
+              laminar y el resto turbulento, flujo mixto, con
+              $h = 14{,}1\ \text{W/(m}^{2}\text{·K)}$.
+          - texto: >-
+              En b) recorre 1,5 m: la placa acaba donde empezaría la
+              turbulencia, es laminar entera y $h = 8{,}3$.
+          - texto: >-
+              Por eso a) cede 15,2 kW y b) 8,9 kW: un 70 % más con la misma
+              placa, el mismo aire y la misma área.
+          - texto: >-
+              Y a) cede más porque el aire, al recorrer más placa, se calienta
+              más por el camino.
+            trampa: true
+            mensaje: |
+              Si el aire se calentara por el camino, el salto con la placa
+              bajaría y cedería **menos**, no más. La diferencia está en la
+              capa límite: en a) tres cuartas partes de la placa están en
+              régimen turbulento, que mezcla mucho mejor que el laminar, y en
+              b) ninguna.
+    resolucion: |
+      **Las propiedades.** A la temperatura de película,
+      $(140+20)/2 = 80\ \text{°C}$: $k = 0{,}02953$,
+      $\nu = 2{,}097\cdot 10^{-5}$ y $\text{Pr} = 0{,}7154$, así que
+      $\text{Pr}^{1/3} = 0{,}8944$.
+
+      **Dónde se hace turbulenta la capa límite.**
+
+      $$
+      x_{cr} = \frac{5\cdot 10^{5}\cdot 2{,}097\cdot 10^{-5}}{7} = 1{,}498\ \text{m}
+      $$
+
+      **a) El aire recorre 6 m.** La placa es cuatro veces más larga que
+      $x_{cr}$: flujo mixto.
+
+      $$
+      \text{Re}_L = \frac{7\cdot 6}{2{,}097\cdot 10^{-5}} = 2{,}003\cdot 10^{6}
+      $$
+
+      $$
+      \text{Nu} = \left(0{,}037\cdot 109.982 - 871\right)\cdot 0{,}8944 = 2.860
+      $$
+
+      $$
+      h = \frac{2.860\cdot 0{,}02953}{6} = 14{,}08\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \dot Q = 14{,}08\cdot 9\cdot 120 = 15.206\ \text{W}
+      $$
+
+      Las diapositivas dan $1{,}52\cdot 10^{4}\ \text{W}$. Su lámina 13
+      escribe $\text{Nu} = 2586$, pero la 14 usa 2856, que es lo que sale con
+      el Reynolds redondeado a $2\cdot 10^{6}$: el 2586 es una errata.
+
+      **b) El aire recorre 1,5 m.**
+
+      $$
+      \text{Re}_L = \frac{7\cdot 1{,}5}{2{,}097\cdot 10^{-5}} = 5{,}007\cdot 10^{5}
+      $$
+
+      La placa acaba justo en $x_{cr}$: laminar entera.
+
+      $$
+      \text{Nu} = 0{,}664\cdot\left(5{,}007\cdot 10^{5}\right)^{1/2}\cdot 0{,}8944 = 420{,}2
+      $$
+
+      $$
+      h = \frac{420{,}2\cdot 0{,}02953}{1{,}5} = 8{,}272\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \dot Q = 8{,}272\cdot 9\cdot 120 = 8.934\ \text{W}
+      $$
+
+      Las diapositivas, con el Reynolds redondeado a $5\cdot 10^{5}$, dan
+      8.928 W.
+
+      **Lo que hay que llevarse.** La misma placa cede un 70 % más con el aire
+      paralelo al lado largo. No es el área, que es la misma, ni el aire, que
+      es el mismo: es la capa límite. Con 6 m de recorrido, tres cuartas
+      partes de la placa están en régimen turbulento; con 1,5 m, ninguna. Por
+      eso en placa plana lo primero no es el Reynolds sino **dónde cae
+      $x_{cr}$ respecto de la placa**: eso decide si la correlación es la
+      laminar, la mixta o la turbulenta.
+
   - id: ejter-cuanta-tuberia-para-calentar-el-agua
     titulo: Cuánta tubería hace falta para calentar el agua
     fuente: >-
@@ -422,9 +748,10 @@ ejercicios:
               A la de película, la media entre la pared y el fluido:
               $(82+38)/2 = 60\ \text{°C}$
             mensaje: |
-              Esa es la de las otras tres correlaciones del tema —placa plana,
-              exterior de tubería y convección natural—, y por eso el error es
-              tan fácil. Dittus-Boelter es la excepción: propiedades a la
+              Esa es la de casi todas las demás correlaciones del tema —placa
+              plana, exterior de tubería, convección natural en cilindros y
+              placas—, y por eso el error es tan fácil. Dittus-Boelter es,
+              con la esfera, una de las dos excepciones: propiedades a la
               temperatura del fluido.
           - texto: >-
               A la de la pared, 82 °C, porque es donde ocurre el intercambio
@@ -614,4 +941,1384 @@ ejercicios:
       dicen expresamente que **no** se emplea la diferencia media logarítmica.
       Con ella el salto sería 37,23 °C y la longitud, 20,9 m —un 18 % más—.
       Los dos números son defendibles; el del curso es el primero.
+
+  - id: ejter-col93-el-tubo-de-vapor-y-el-viento-de-la-calle
+    titulo: El tubo de vapor y el viento de la calle
+    fuente: >-
+      Ejercicio 9.3 de las diapositivas del Tema 9, «Transmisión de calor por
+      convección» · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU). Las diapositivas traen su resolución, y el desarrollo está
+      contrastado contra ella. Su resultado, 1.093 W/m, se reproduce: aquí
+      sale 1.098 porque se arrastra Nu = 124,5 en vez de 124 y el perímetro
+      exacto en vez de 0,314 m. El paso de la correlación alternativa es
+      nuestro: las diapositivas solo usan Churchill-Bernstein.
+    nivel: practica
+    enunciado: |
+      La superficie exterior de un tubo de vapor largo con un diámetro
+      exterior de $10\ \text{cm}$ está a una temperatura de $110\ \text{°C}$.
+      El tubo discurre por la calle. Calcula el flujo de calor a través del
+      tubo por unidad de longitud, si el aire está a una presión de
+      $1\ \text{atm}$ y $10\ \text{°C}$ y la velocidad del viento es de
+      $8\ \text{m/s}$.
+
+      *Las propiedades del aire salen de las tablas a la temperatura de
+      película, $(110+10)/2 = 60\ \text{°C}$:
+      $k = 0{,}02808\ \text{W/(m·K)}$,
+      $\nu = 1{,}896\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 0{,}7202$.*
+    pide: El calor que pierde el tubo por metro de longitud.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El viento incide perpendicular al tubo. ¿A qué temperatura hay que
+          leer las propiedades del aire?
+        opciones:
+          - texto: >-
+              A la de película, la media entre la superficie y el aire: 60 °C
+            correcta: true
+            mensaje: |
+              Eso es: flujo transversal a un tubo, con $\Pi = D$ y las
+              propiedades a la de película, igual que en la placa plana. Por
+              **dentro** del tubo sería otra cosa: Dittus-Boelter las pide a la
+              del fluido.
+          - texto: >-
+              A la del aire, 10 °C, porque es el fluido que se mueve
+            mensaje: |
+              A la del fluido las lee Dittus-Boelter, que es para el flujo
+              **por dentro** de un tubo. Por fuera, Churchill y Bernstein pide
+              la de película, a medio camino entre la pared y el aire.
+          - texto: >-
+              A la de la superficie, 110 °C, porque es donde se transmite el
+              calor
+            mensaje: |
+              El calor atraviesa la capa límite, que está a temperaturas entre
+              110 y 10 °C. Por eso la de película es la media de las dos, y
+              ninguna correlación del tema las lee a la de la pared sola.
+
+      - tipo: calcular
+        titulo: El número de Reynolds
+        pregunta: |
+          ¿Cuánto vale el número de Reynolds?
+        respuesta:
+          tipo: numero
+          valor: '42194'
+          # Absoluta: cuatrocientos es un 0,95 %.
+          tolerancia: 400
+          formato: un número grande, sin unidades
+        distractores:
+          - valor: '21097'
+            mensaje: |
+              Has usado el radio. La longitud característica de un tubo en
+              flujo transversal es el **diámetro**, 0,1 m.
+          - valor: '4219409'
+            mensaje: |
+              Has metido el diámetro en centímetros. Con 10 en vez de 0,1 el
+              Reynolds sale cien veces mayor: más de cuatro millones.
+        pista: |
+          $\text{Re} = c\,D/\nu$, con el diámetro en metros.
+        desarrollo: |
+          $$
+          \text{Re} = \frac{c\,D}{\nu} = \frac{8\cdot 0{,}1}{1{,}896\cdot 10^{-5}} = 42.194
+          $$
+
+          Churchill y Bernstein vale para cualquier Reynolds, así que no hay
+          nada que comprobar para usarla. Y este cae además en el primer tramo
+          de las alternativas del anexo, entre 1.000 y $2\cdot 10^{5}$.
+
+      - tipo: calcular
+        titulo: El Nusselt de Churchill y Bernstein
+        pregunta: |
+          ¿Cuánto vale el número de Nusselt con Churchill y Bernstein?
+        respuesta:
+          tipo: numero
+          valor: '124.5'
+          # Absoluta: dos es un 1,6 %, y acepta el 124 de la lámina.
+          tolerancia: 2
+          formato: un número
+        distractores:
+          - valor: '100.6'
+            mensaje: |
+              Te has dejado el último corchete,
+              $\left[1+(\text{Re}/282.000)^{5/8}\right]^{4/5} = 1{,}237$. Con este
+              Reynolds no es despreciable: sin él el Nusselt baja un 19 %.
+          - valor: '84.60'
+            mensaje: |
+              Has dejado el corchete del Prandtl sin su raíz cuarta:
+              $1+(0{,}4/0{,}7202)^{2/3} = 1{,}676$ va elevado a $1/4$, y entonces
+              vale 1,138.
+          - valor: '131.2'
+            mensaje: |
+              Has dejado el último corchete sin elevar a $4/5$:
+              $1+(\text{Re}/282.000)^{5/8} = 1{,}305$, y elevado a $4/5$ se queda
+              en 1,237.
+        pista: |
+          $\text{Nu} = 0{,}3 + \dfrac{0{,}62\,\text{Re}^{1/2}\,\text{Pr}^{1/3}}{\left[1+(0{,}4/\text{Pr})^{2/3}\right]^{1/4}}\left[1+\left(\dfrac{\text{Re}}{282.000}\right)^{5/8}\right]^{4/5}$.
+          Por partes: el numerador, el corchete del Prandtl y el último
+          corchete.
+        desarrollo: |
+          $$
+          0{,}62\,\text{Re}^{1/2}\,\text{Pr}^{1/3} = 0{,}62\cdot 205{,}41\cdot 0{,}8964 = 114{,}16
+          $$
+
+          $$
+          \left[1+\left(\frac{0{,}4}{0{,}7202}\right)^{2/3}\right]^{1/4} = 1{,}1378
+          \qquad
+          \left[1+\left(\frac{42.194}{282.000}\right)^{5/8}\right]^{4/5} = 1{,}2374
+          $$
+
+          $$
+          \text{Nu} = 0{,}3 + \frac{114{,}16}{1{,}1378}\cdot 1{,}2374 = 124{,}5
+          $$
+
+      - tipo: calcular
+        titulo: El calor por metro de tubo
+        pregunta: |
+          ¿Cuánto calor pierde el tubo por metro de longitud?
+        respuesta:
+          tipo: magnitud
+          valor: '1098 W/m'
+          tolerancia: 0.02
+          formato: una potencia por unidad de longitud, con su unidad
+        distractores:
+          - valor: '549 W/m'
+            mensaje: |
+              Has puesto el radio en el perímetro. El área lateral por metro de
+              tubo es $\pi D$, no $\pi r$: la mitad de área, la mitad de calor.
+          - valor: '349.5 W/m'
+            mensaje: |
+              Te has dejado el $\pi$: el perímetro de un tubo de 10 cm de
+              diámetro es 0,314 m, no 0,1.
+          - valor: '1208 W/m'
+            mensaje: |
+              Has multiplicado por 110, la temperatura de la superficie. El
+              calor va con el salto entre la superficie y el aire, 100 °C.
+        pista: |
+          $h = \text{Nu}\,k/D$ y, por metro de tubo,
+          $\dot q' = h\,\pi D\,(\theta_s - \theta_f)$.
+        desarrollo: |
+          $$
+          h = \frac{124{,}5\cdot 0{,}02808}{0{,}1} = 34{,}96\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \dot q' = 34{,}96\cdot\pi\cdot 0{,}1\cdot(110-10) = 1.098\ \frac{\text{W}}{\text{m}}
+          $$
+
+          Las diapositivas dan 1.093 W/m porque arrastran Nu = 124 y un
+          perímetro de 0,314 m. Es la misma cuenta, redondeada antes.
+
+      - tipo: calcular
+        titulo: El Nusselt con la alternativa del anexo
+        pregunta: |
+          Con $\text{Re} = 42.194$, el anexo da también una alternativa corta
+          para el tramo $1.000 < \text{Re} < 2\cdot 10^{5}$. ¿Cuánto vale el
+          Nusselt con ella?
+        respuesta:
+          tipo: numero
+          valor: '138.9'
+          tolerancia: 2
+          formato: un número
+        distractores:
+          - valor: '117.8'
+            mensaje: |
+              Esa es la del segundo tramo,
+              $0{,}076\,\text{Re}^{0{,}7}\,\text{Pr}^{1/3}$, que empieza en
+              $2\cdot 10^{5}$. Con 42.194 la que toca es la del primero.
+          - valor: '154.9'
+            mensaje: |
+              Te has dejado el factor $\text{Pr}^{1/3} = 0{,}8964$: las dos
+              alternativas del anexo lo llevan.
+        pista: |
+          $\text{Nu} = 0{,}26\,\text{Re}^{0{,}6}\,\text{Pr}^{1/3}$.
+        desarrollo: |
+          $$
+          \text{Nu} = 0{,}26\cdot 42.194^{0{,}6}\cdot 0{,}7202^{1/3}
+          = 0{,}26\cdot 595{,}9\cdot 0{,}8964 = 138{,}9
+          $$
+
+          Un 11,6 % más que Churchill y Bernstein, y la diferencia pasa entera
+          al calor: con ella saldrían 1.225 W/m en vez de 1.098. Las dos son
+          válidas en este tramo y no dan lo mismo.
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Flujo exterior a un tubo: $\Pi = D$ y las propiedades a la
+              temperatura de película, 60 °C.
+          - texto: >-
+              Con $\text{Re} = 42.194$, Churchill y Bernstein da
+              $\text{Nu} = 124{,}5$ y $h = 35\ \text{W/(m}^{2}\text{·K)}$.
+          - texto: >-
+              Por metro de tubo, $\dot q' = h\,\pi D\,\Delta\theta = 1.098\ \text{W/m}$.
+          - texto: >-
+              La alternativa $0{,}26\,\text{Re}^{0{,}6}\,\text{Pr}^{1/3}$ daría
+              lo mismo, porque las dos describen el mismo fenómeno.
+            trampa: true
+            mensaje: |
+              Describen el mismo fenómeno y no dan lo mismo: 138,9 frente a
+              124,5, un 11,6 % más, que pasa entero al calor. Son dos ajustes
+              distintos de medidas experimentales, y cuando las dos valen hay
+              que decir cuál se ha usado.
+    resolucion: |
+      **Las propiedades.** Flujo exterior a un tubo, así que $\Pi = D$ y
+      temperatura de película: $(110+10)/2 = 60\ \text{°C}$. A ella,
+      $k = 0{,}02808$, $\nu = 1{,}896\cdot 10^{-5}$ y $\text{Pr} = 0{,}7202$.
+
+      **El Reynolds.**
+
+      $$
+      \text{Re} = \frac{8\cdot 0{,}1}{1{,}896\cdot 10^{-5}} = 42.194
+      $$
+
+      **Churchill y Bernstein**, por partes:
+
+      $$
+      \text{Nu} = 0{,}3 + \frac{0{,}62\cdot 205{,}41\cdot 0{,}8964}{1{,}1378}\cdot 1{,}2374 = 124{,}5
+      $$
+
+      **El calor.**
+
+      $$
+      h = \frac{124{,}5\cdot 0{,}02808}{0{,}1} = 34{,}96\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \dot q' = 34{,}96\cdot\pi\cdot 0{,}1\cdot 100 = 1.098\ \frac{\text{W}}{\text{m}}
+      $$
+
+      Las diapositivas dan 1.093 W/m: redondean el Nusselt a 124 y el
+      perímetro a 0,314 m antes de multiplicar.
+
+      **Y con la alternativa del anexo**, que también vale en este tramo:
+
+      $$
+      \text{Nu} = 0{,}26\cdot 42.194^{0{,}6}\cdot 0{,}7202^{1/3} = 138{,}9
+      $$
+
+      Un 11,6 % más, que daría 1.225 W/m.
+
+      **Lo que hay que llevarse.** Dos cosas. La primera, que por fuera de un
+      tubo las propiedades van a la temperatura de **película**, y por dentro,
+      con Dittus-Boelter, a la del fluido: confundirlas es el error más caro
+      del tema. La segunda, que Churchill y
+      Bernstein y las alternativas por tramos no coinciden. Aquí la de
+      referencia se puede aplicar directamente, porque el Reynolds se conoce;
+      las alternativas se ganan su sitio cuando lo que se busca es el
+      Reynolds, que es cuando se pide la velocidad del viento.
+
+  - id: ejter-col95-la-placa-caliente-en-tres-posiciones
+    titulo: La placa caliente en tres posiciones, y el Rayleigh que cambia de correlación
+    fuente: >-
+      Ejercicio 9.5 de las diapositivas del Tema 9, «Transmisión de calor por
+      convección» · Ingeniería Térmica, Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU). Las diapositivas traen su resolución, y el desarrollo está
+      contrastado contra ella. Los apartados a) y c), 99,19 W y 64,2 W, se
+      reproducen; en b) la resolución usa la correlación del tramo de 10⁴ a
+      10⁷ con un Rayleigh de 1,195·10⁷, fuera de él, y da 128 W: aquí se
+      publican 138,6 W, los de la correlación del tramo de 10⁷ a 10¹¹, que es
+      la que le corresponde según el anexo.
+    nivel: practica
+    enunciado: |
+      En una habitación a $30\ \text{°C}$ se dispone de una placa cuadrada de
+      $0{,}6\ \text{m} \times 0{,}6\ \text{m}$. Un lado de la placa se mantiene
+      a una temperatura constante de $90\ \text{°C}$; el otro lado se
+      encuentra aislado térmicamente. Calcula el flujo de calor por convección
+      natural a partir de la placa si su disposición es:
+
+      a) vertical
+
+      b) horizontal, con la superficie caliente hacia arriba
+
+      c) horizontal, con la superficie caliente hacia abajo.
+
+      *Las propiedades del aire salen de las tablas a la temperatura de
+      película, $(90+30)/2 = 60\ \text{°C}$:
+      $k = 0{,}02808\ \text{W/(m·K)}$,
+      $\nu = 1{,}896\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 0{,}7202$. La resolución toma
+      $g = 9{,}8\ \text{m/s}^{2}$ y, para el aire como gas ideal,
+      $\beta = 1/T = 1/333\ \text{K}^{-1}$.*
+    pide: El calor que cede la placa por convección natural en las tres posiciones.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En b) y c) la placa está horizontal. ¿Qué longitud característica
+          pide el anexo?
+        opciones:
+          - texto: >-
+              El área partida por el perímetro: 0,36/2,4 = 0,15 m
+            correcta: true
+            mensaje: |
+              Eso es. En horizontal no hay una altura a lo largo de la cual
+              suba el aire: sube desde toda la superficie y entra o sale por
+              los bordes, y la escala es $A/P$. En vertical, en cambio, $\Pi$
+              es la altura, 0,6 m.
+          - texto: >-
+              El lado, 0,6 m, igual que en vertical
+            mensaje: |
+              Esa es la de la placa vertical, donde el aire recorre la altura.
+              En horizontal el anexo pide $A/P$, que en un cuadrado es la
+              cuarta parte del lado.
+          - texto: >-
+              El área, 0,36 m²
+            mensaje: |
+              Un área no puede ser una longitud característica: el Rayleigh
+              lleva $\Pi^{3}$, y con metros cuadrados las unidades no se
+              cancelan. Lo que pide el anexo es el área **partida por el
+              perímetro**.
+
+      - tipo: calcular
+        titulo: El Rayleigh de la placa vertical
+        pregunta: |
+          En a), ¿cuánto vale el número de Rayleigh?
+        respuesta:
+          tipo: numero
+          valor: '7.641e8'
+          # Absoluta: 1,5·10^7 es un 2 %, y acepta el 7,649·10^8 de la lámina.
+          tolerancia: 15000000
+          formato: un número, en notación científica si quieres
+        distractores:
+          - valor: '1.061e9'
+            mensaje: |
+              Ese es el **Grashof**. $\text{Ra} = \text{Gr}\cdot\text{Pr}$, y el
+              0,7202 importa: sin él pasarías de $10^{9}$ y cambiarías de
+              correlación.
+          - valor: '4.241e9'
+            mensaje: |
+              Has usado $\beta = 1/60$, con la temperatura de película en
+              grados Celsius. Para un gas ideal $\beta = 1/T$ con $T$
+              **absoluta**: $1/333$.
+          - valor: '1.194e7'
+            mensaje: |
+              Has usado $\Pi = A/P = 0{,}15\ \text{m}$, que es la de la placa
+              horizontal. En vertical el aire sube a lo largo de la altura, y
+              $\Pi = L = 0{,}6\ \text{m}$.
+        pista: |
+          $\text{Ra} = \dfrac{g\,\beta\,(\theta_s-\theta_f)\,L^{3}}{\nu^{2}}\,\text{Pr}$,
+          con $L = 0{,}6\ \text{m}$ y $\beta = 1/333$.
+        desarrollo: |
+          $$
+          \text{Ra} = \frac{9{,}8\cdot\frac{1}{333}\cdot 60\cdot 0{,}6^{3}}{\left(1{,}896\cdot 10^{-5}\right)^{2}}\cdot 0{,}7202 = 7{,}641\cdot 10^{8}
+          $$
+
+          Entre $10^{4}$ y $10^{9}$: la correlación es
+          $\text{Nu} = 0{,}59\,\text{Ra}_L^{1/4}$.
+
+      - tipo: calcular
+        titulo: El calor con la placa vertical
+        pregunta: |
+          ¿Cuánto calor cede la placa en vertical?
+        respuesta:
+          tipo: magnitud
+          valor: '99.16 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '198.3 W'
+            mensaje: |
+              Has contado las dos caras. El enunciado dice que la otra está
+              aislada: el calor sale solo por la de 90 °C,
+              $A = 0{,}36\ \text{m}^{2}$.
+          - valor: '92.42 W'
+            mensaje: |
+              Has usado $0{,}1\,\text{Ra}_L^{1/3}$, la del tramo de $10^{9}$ a
+              $10^{13}$. Con $\text{Ra} = 7{,}6\cdot 10^{8}$ la que toca es
+              $0{,}59\,\text{Ra}_L^{1/4}$.
+        pista: |
+          $\text{Nu} = 0{,}59\,\text{Ra}_L^{1/4}$, $h = \text{Nu}\,k/L$ y
+          $\dot Q = h\,A\,(\theta_s-\theta_f)$.
+        desarrollo: |
+          $$
+          \text{Nu} = 0{,}59\cdot\left(7{,}641\cdot 10^{8}\right)^{1/4} = 98{,}09
+          \qquad
+          h = \frac{98{,}09\cdot 0{,}02808}{0{,}6} = 4{,}591\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \dot Q = 4{,}591\cdot 0{,}36\cdot 60 = 99{,}17\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: El Rayleigh de la placa horizontal
+        pregunta: |
+          En b) y c) la placa está horizontal. ¿Cuánto vale ahora el número de
+          Rayleigh?
+        respuesta:
+          tipo: numero
+          valor: '1.194e7'
+          # Absoluta: 2,5·10^5 es un 2 %.
+          tolerancia: 250000
+          formato: un número, en notación científica si quieres
+        distractores:
+          - valor: '7.641e8'
+            mensaje: |
+              Has usado el lado, 0,6 m, que es la de la vertical. En horizontal
+              $\Pi = A/P = 0{,}15\ \text{m}$, y como el Rayleigh va con
+              $\Pi^{3}$ el error es de un factor 64.
+          - valor: '1.658e7'
+            mensaje: |
+              Ese es el Grashof: falta multiplicar por $\text{Pr} = 0{,}7202$.
+        pista: |
+          La misma cuenta que en a), con
+          $\Pi = A/P = 0{,}36/(4\cdot 0{,}6) = 0{,}15\ \text{m}$.
+        desarrollo: |
+          $$
+          \text{Ra} = \frac{9{,}8\cdot\frac{1}{333}\cdot 60\cdot 0{,}15^{3}}{\left(1{,}896\cdot 10^{-5}\right)^{2}}\cdot 0{,}7202 = 1{,}194\cdot 10^{7}
+          $$
+
+          Por encima de $10^{7}$, aunque sea poco. Y eso decide la
+          correlación de b).
+
+      - tipo: calcular
+        titulo: El calor con la cara caliente hacia arriba
+        pregunta: |
+          ¿Cuánto calor cede la placa en horizontal, con la cara caliente
+          hacia arriba?
+        respuesta:
+          tipo: magnitud
+          valor: '138.6 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '128.4 W'
+            mensaje: |
+              Has usado $0{,}54\,\text{Ra}_L^{1/4}$, la del tramo de $10^{4}$ a
+              $10^{7}$, y el Rayleigh sale $1{,}19\cdot 10^{7}$: fuera. Es lo
+              que hace la resolución de las diapositivas. El tramo se ha pasado
+              por poco, pero se ha pasado, y con la que toca,
+              $0{,}15\,\text{Ra}_L^{1/3}$, el calor es un 8 % mayor.
+          - valor: '64.18 W'
+            mensaje: |
+              Esa es la de la cara caliente hacia **abajo**,
+              $0{,}27\,\text{Ra}_L^{1/4}$. En b) mira hacia arriba: el calor
+              sube, y la correlación es la del flujo ascendente.
+        pista: |
+          Cara caliente hacia arriba y $\text{Ra} > 10^{7}$:
+          $\text{Nu} = 0{,}15\,\text{Ra}_L^{1/3}$, y $h = \text{Nu}\,k/\Pi$ con
+          $\Pi = 0{,}15\ \text{m}$.
+        desarrollo: |
+          $$
+          \text{Nu} = 0{,}15\cdot\left(1{,}194\cdot 10^{7}\right)^{1/3} = 34{,}28
+          \qquad
+          h = \frac{34{,}28\cdot 0{,}02808}{0{,}15} = 6{,}417\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \dot Q = 6{,}417\cdot 0{,}36\cdot 60 = 138{,}6\ \text{W}
+          $$
+
+          Un detalle de esta correlación: con el exponente $1/3$, $h$ no
+          depende de $\Pi$, porque el $\Pi^{3}$ del Rayleigh, elevado a
+          $1/3$, se cancela con el $\Pi$ de $h = \text{Nu}\,k/\Pi$.
+
+      - tipo: calcular
+        titulo: El calor con la cara caliente hacia abajo
+        pregunta: |
+          ¿Y con la cara caliente hacia abajo?
+        respuesta:
+          tipo: magnitud
+          valor: '64.18 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '128.4 W'
+            mensaje: |
+              Has usado $0{,}54\,\text{Ra}_L^{1/4}$, que es de la cara caliente
+              hacia **arriba**, y además fuera de su tramo. Hacia abajo el
+              anexo da una sola correlación, $0{,}27\,\text{Ra}_L^{1/4}$, de
+              $10^{5}$ a $10^{11}$.
+          - valor: '138.6 W'
+            mensaje: |
+              Ese es el de b): $0{,}15\,\text{Ra}_L^{1/3}$ es de la cara caliente
+              hacia **arriba**. Con la cara hacia abajo el aire calentado queda
+              debajo de la placa y la correlación es otra,
+              $0{,}27\,\text{Ra}_L^{1/4}$.
+          - valor: '45.38 W'
+            mensaje: |
+              Has usado el lado, 0,6 m, como longitud característica. En
+              horizontal, mire hacia donde mire la cara caliente,
+              $\Pi = A/P = 0{,}15\ \text{m}$.
+        pista: |
+          Cara caliente hacia abajo: $\text{Nu} = 0{,}27\,\text{Ra}_L^{1/4}$,
+          con el mismo Rayleigh de b).
+        desarrollo: |
+          $$
+          \text{Nu} = 0{,}27\cdot\left(1{,}194\cdot 10^{7}\right)^{1/4} = 15{,}87
+          \qquad
+          h = \frac{15{,}87\cdot 0{,}02808}{0{,}15} = 2{,}971\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \dot Q = 2{,}971\cdot 0{,}36\cdot 60 = 64{,}17\ \text{W}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la comparación de las tres posiciones. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En vertical, $\Pi = 0{,}6\ \text{m}$ y
+              $\text{Ra} = 7{,}6\cdot 10^{8}$, en el tramo laminar: la placa
+              cede 99,2 W.
+          - texto: >-
+              Con la cara caliente hacia arriba, $\Pi = A/P = 0{,}15\ \text{m}$ y
+              $\text{Ra} = 1{,}19\cdot 10^{7}$, por encima de $10^{7}$: con
+              $0{,}15\,\text{Ra}^{1/3}$ cede 138,6 W.
+          - texto: >-
+              Con la cara caliente hacia abajo, el aire calentado queda debajo
+              de la placa y tiene que escapar por los bordes: cede 64,2 W,
+              menos de la mitad que hacia arriba.
+          - texto: >-
+              Como $1{,}19\cdot 10^{7}$ apenas pasa de $10^{7}$, en b) da igual
+              usar $0{,}54\,\text{Ra}^{1/4}$ que $0{,}15\,\text{Ra}^{1/3}$.
+            trampa: true
+            mensaje: |
+              No da igual: 128,4 W frente a 138,6, un 8 %. Las dos
+              correlaciones no empalman en $10^{7}$ —en ese punto la del tramo
+              alto ya da un 6 % más que la del tramo bajo—, así que el tramo se
+              comprueba y se obedece aunque se pase por poco.
+    resolucion: |
+      **Las propiedades.** Convección natural sobre placas: temperatura de
+      película, $(90+30)/2 = 60\ \text{°C}$, con $k = 0{,}02808$,
+      $\nu = 1{,}896\cdot 10^{-5}$, $\text{Pr} = 0{,}7202$ y
+      $\beta = 1/333\ \text{K}^{-1}$. La placa cede solo por una cara,
+      $A = 0{,}36\ \text{m}^{2}$, con un salto de 60 °C.
+
+      **a) Vertical.** $\Pi = L = 0{,}6\ \text{m}$.
+
+      $$
+      \text{Ra} = \frac{9{,}8\cdot\frac{1}{333}\cdot 60\cdot 0{,}6^{3}}{\left(1{,}896\cdot 10^{-5}\right)^{2}}\cdot 0{,}7202 = 7{,}641\cdot 10^{8}
+      $$
+
+      Entre $10^{4}$ y $10^{9}$:
+
+      $$
+      \text{Nu} = 0{,}59\cdot\left(7{,}641\cdot 10^{8}\right)^{1/4} = 98{,}09
+      \qquad
+      h = 4{,}591\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \dot Q = 4{,}591\cdot 0{,}36\cdot 60 = 99{,}17\ \text{W}
+      $$
+
+      **b) Horizontal, cara caliente hacia arriba.**
+      $\Pi = A/P = 0{,}36/2{,}4 = 0{,}15\ \text{m}$, y el Rayleigh baja en un
+      factor $4^{3} = 64$:
+
+      $$
+      \text{Ra} = \frac{7{,}641\cdot 10^{8}}{64} = 1{,}194\cdot 10^{7}
+      $$
+
+      Por encima de $10^{7}$, así que con el flujo de calor ascendente la
+      correlación es la del segundo tramo:
+
+      $$
+      \text{Nu} = 0{,}15\cdot\left(1{,}194\cdot 10^{7}\right)^{1/3} = 34{,}28
+      \qquad
+      h = 6{,}417\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \dot Q = 6{,}417\cdot 0{,}36\cdot 60 = 138{,}6\ \text{W}
+      $$
+
+      **Aquí hay que decir algo de la resolución de las diapositivas.** Usa
+      $0{,}54\,\text{Ra}^{1/4}$, que el anexo da para
+      $10^{4} < \text{Ra} < 10^{7}$, con $\text{Ra} = 1{,}195\cdot 10^{7}$, y
+      llega a 128 W. El Rayleigh se sale del tramo por poco, pero se sale, y
+      la correlación que le corresponde da un 8 % más. Se dice en voz alta
+      porque un alumno que compruebe el tramo y obtenga 138,6 W va a pensar
+      que se ha equivocado él.
+
+      **c) Horizontal, cara caliente hacia abajo.** Mismo $\Pi$ y mismo
+      Rayleigh, y una sola correlación, de $10^{5}$ a $10^{11}$:
+
+      $$
+      \text{Nu} = 0{,}27\cdot\left(1{,}194\cdot 10^{7}\right)^{1/4} = 15{,}87
+      \qquad
+      h = 2{,}971\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      \dot Q = 2{,}971\cdot 0{,}36\cdot 60 = 64{,}17\ \text{W}
+      $$
+
+      **Lo que hay que llevarse.** La misma placa, a la misma temperatura y
+      en el mismo aire, cede 138,6 W, 99,2 W o 64,2 W según hacia dónde mire.
+      Con la cara caliente hacia arriba el aire calentado sube y se aleja sin
+      estorbo; hacia abajo se queda debajo de la placa y tiene que salir por
+      los bordes, y el calor baja a menos de la mitad. Y dos costumbres que
+      este ejercicio pone a prueba: en horizontal la longitud característica
+      es $A/P$, no el lado, y **el Rayleigh se compara con el tramo antes de
+      elegir la correlación**, aunque se pase por poco.
+
+  - id: ejter-col913-el-viento-que-hace-falta-para-enfriar-el-agua
+    titulo: El viento que hace falta para enfriar el agua, y la correlación que se tantea
+    fuente: >-
+      Ejercicio 9.13 de las diapositivas del Tema 9, «Transmisión de calor
+      por convección» · Ingeniería Térmica, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Las diapositivas traen su resolución —la de b),
+      solo en su hoja de cálculo—, y el desarrollo está contrastado contra
+      ella. Tres cosas no se reproducen, y las tres se explican en la
+      resolución: la lámina 54 escribe 0,15·4.274,5·30 = 19.287 W y el
+      producto es 19.235; las láminas calculan con el Prandtl elevado a 0,37
+      donde el anexo pone 1/3; y la lámina 62 escribe el Reynolds aceptado,
+      678.222, pero da la velocidad del que la lámina 61 descarta, 818.468:
+      52,38 m/s, cuando con el suyo salen 43,4. Aquí se publican 42,3 m/s en
+      a) y 12,96 m/s en b).
+    nivel: practica
+    enunciado: |
+      Por una tubería de $5\ \text{m}$ de longitud circulan
+      $0{,}15\ \text{kg/s}$ de agua. Al inicio del tramo de tubería, la
+      temperatura del agua es de $150\ \text{°C}$. El diámetro interior y
+      exterior de la tubería es de $15\ \text{cm}$ y $25\ \text{cm}$
+      respectivamente. La conductividad del material de la tubería es de
+      $32\ \text{W/mK}$. El aire del exterior de la tubería se encuentra a
+      $0\ \text{°C}$. Calcúlese a que velocidad deberá pasar el aire sobre la
+      superficie exterior de la tubería, si la temperatura del agua al final
+      del tramo de tubería ha de ser:
+
+      a) $120\ \text{°C}$
+
+      b) $130\ \text{°C}$
+
+      *Las propiedades que toma la resolución de las diapositivas. En a), el
+      agua a su temperatura media, $(150+120)/2 = 135\ \text{°C}$:
+      $\rho = 928{,}15\ \text{kg/m}^{3}$,
+      $c_p = 4.274{,}5\ \text{J/(kg·K)}$, $k = 0{,}6835\ \text{W/(m·K)}$,
+      $\nu = 2{,}2082\cdot 10^{-7}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 1{,}285$; y el aire a la temperatura de película,
+      29,15 °C: $k = 0{,}02582\ \text{W/(m·K)}$,
+      $\nu = 1{,}6001\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 0{,}7284$. En b), el agua a 140 °C:
+      $\rho = 921{,}7\ \text{kg/m}^{3}$, $c_p = 4.286\ \text{J/(kg·K)}$,
+      $k = 0{,}683\ \text{W/(m·K)}$,
+      $\nu = 2{,}1374\cdot 10^{-7}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 1{,}24$; y el aire a 44,88 °C:
+      $k = 0{,}02698\ \text{W/(m·K)}$,
+      $\nu = 1{,}7488\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 0{,}7241$.*
+    pide: La velocidad del aire que hace falta para que el agua salga a 120 °C, y la que hace falta para que salga a 130 °C.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El enunciado fija las dos temperaturas del agua y pregunta por la
+          velocidad del aire. ¿Por dónde se entra en el problema?
+        opciones:
+          - texto: >-
+              Por el agua: el balance da el calor, el circuito deja despejar la
+              resistencia exterior, de ella sale $h_{ext}$, de $h_{ext}$ el
+              Nusselt, y del Nusselt el Reynolds y la velocidad
+            correcta: true
+            mensaje: |
+              Eso es: el problema se recorre al revés de lo habitual. Lo único
+              que no se puede calcular de entrada es lo que se pregunta, y todo
+              lo demás lo fija el agua.
+          - texto: >-
+              Suponiendo una velocidad del aire, calculando el calor y
+              corrigiendo hasta que el agua salga a 120 °C
+            mensaje: |
+              Llegarías, pero dando vueltas sin necesidad: aquí el calor se
+              conoce desde el principio, porque el agua tiene sus dos
+              temperaturas fijadas. Lo que sí hay que tantear es otra cosa, al
+              final: cuál de las dos correlaciones del cilindro vale.
+          - texto: >-
+              Con Churchill y Bernstein, despejando el Reynolds del Nusselt
+              exterior
+            mensaje: |
+              Por ahí no se puede **empezar**: el Nusselt exterior todavía no se
+              conoce, sale al final de la cadena del agua. Y cuando se llega a
+              él, Churchill y Bernstein no se despeja directamente —el Reynolds
+              aparece en dos sitios, con exponentes distintos, y habría que
+              tantearlo—; por eso la resolución usa las dos alternativas por
+              tramos del anexo, que sí se despejan.
+
+      - tipo: calcular
+        titulo: El calor que pierde el agua
+        pregunta: |
+          En a), ¿cuánto calor pierde el agua en los 5 m de tubería?
+        respuesta:
+          tipo: magnitud
+          valor: '19235 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '96180 W'
+            mensaje: |
+              Has multiplicado por 150 °C, el salto entre el agua a la entrada
+              y el aire. Eso mezcla el balance del agua con el circuito: el
+              calor que pierde el agua sale de **su** salto, de 150 a 120 °C.
+          - valor: '86560 W'
+            mensaje: |
+              Has multiplicado por 135 °C, la temperatura media del agua. El
+              calor que pierde es el de su **salto**, de 150 a 120: 30 °C.
+        pista: |
+          $\dot Q = \dot m\,c_p\,(\theta_e - \theta_s)$.
+        desarrollo: |
+          $$
+          \dot Q = 0{,}15\cdot 4.274{,}5\cdot(150-120) = 19.235\ \text{W}
+          $$
+
+          La lámina 54 escribe 19.287 W: con su propio $c_p$ el producto es
+          19.235. Los 19.287 serían los de $c_p = 4.286$, que es el valor a
+          140 °C, el de b).
+
+      - tipo: calcular
+        titulo: El coeficiente de película del agua
+        pregunta: |
+          El agua va por dentro. ¿Cuánto vale su coeficiente de película?
+        respuesta:
+          tipo: magnitud
+          valor: '122.4 W/m2 K'
+          tolerancia: 0.02
+          formato: un coeficiente de película, con su unidad
+        distractores:
+          - valor: '48.79 W/m2 K'
+            mensaje: |
+              Has usado el diámetro exterior, 25 cm. El agua va por dentro: su
+              sección, su Reynolds y su $h$ van con el **interior**, 15 cm.
+          - valor: '26.85 W/m2 K'
+            mensaje: |
+              Ese es el número de Nusselt, que es adimensional. Para pasar a
+              $h$ falta multiplicar por $k/D_1$: la unidad lo delata.
+        pista: |
+          $c = \dot m/(\rho\,\pi D_1^{2}/4)$, $\text{Re} = c\,D_1/\nu$, y
+          Dittus-Boelter con $n = 0{,}3$, porque el agua se enfría.
+        desarrollo: |
+          $$
+          c = \frac{0{,}15}{928{,}15\cdot\pi\cdot 0{,}15^{2}/4} = 0{,}009145\ \frac{\text{m}}{\text{s}}
+          \qquad
+          \text{Re} = \frac{0{,}009145\cdot 0{,}15}{2{,}2082\cdot 10^{-7}} = 6.212
+          $$
+
+          Turbulento, aunque por debajo de 10.000: Dittus-Boelter se admite
+          desde 2.100, y es lo que hace la resolución.
+
+          $$
+          \text{Nu} = 0{,}023\cdot 6.212^{0{,}8}\cdot 1{,}285^{0{,}3} = 26{,}854
+          \qquad
+          h_{int} = \frac{26{,}854\cdot 0{,}6835}{0{,}15} = 122{,}4\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          El agua va a menos de un centímetro por segundo, y eso se nota: es
+          un coeficiente bajo para un líquido.
+
+      - tipo: calcular
+        titulo: El coeficiente de película del aire
+        pregunta: |
+          Con el circuito agua–pared–aire,
+          $\dot Q = (\theta_{agua} - \theta_{aire})/(R_1+R_2+R_3)$, y el agua a
+          su temperatura media, 135 °C, ¿cuánto tiene que valer $h_{ext}$?
+        respuesta:
+          tipo: magnitud
+          valor: '83.72 W/m2 K'
+          tolerancia: 0.02
+          formato: un coeficiente de película, con su unidad
+        distractores:
+          - valor: '66.63 W/m2 K'
+            mensaje: |
+              Has puesto el agua a 150 °C, la de entrada. El curso toma la
+              temperatura **media** del agua, 135 °C, como la del nodo de
+              dentro del circuito.
+          - valor: '71.73 W/m2 K'
+            mensaje: |
+              Te has dejado la resistencia de la pared, $R_2 = 0{,}000508$
+              K/W. Es pequeña, pero $R_3$ sale de una resta, y lo que falta en
+              ella se nota: un 14 %.
+          - valor: '139.5 W/m2 K'
+            mensaje: |
+              Has usado el área **interior** en la resistencia exterior. El
+              aire toca la cara de fuera: $R_3 = 1/(h_{ext}\,\pi D_2 L)$, con
+              $D_2 = 0{,}25$ m.
+        pista: |
+          $R_1 = 1/(h_{int}\,\pi D_1 L)$ y $R_2 = \ln(D_2/D_1)/(2\pi k L)$; $R_3$
+          es lo que falta hasta $135/\dot Q$, y $h_{ext} = 1/(R_3\,\pi D_2 L)$.
+        desarrollo: |
+          $$
+          R_1 = \frac{1}{122{,}4\cdot\pi\cdot 0{,}15\cdot 5} = 0{,}003468\ \frac{\text{K}}{\text{W}}
+          \qquad
+          R_2 = \frac{\ln(25/15)}{2\pi\cdot 32\cdot 5} = 0{,}000508\ \frac{\text{K}}{\text{W}}
+          $$
+
+          $$
+          R_3 = \frac{135-0}{19.235} - 0{,}003468 - 0{,}000508 = 0{,}003042\ \frac{\text{K}}{\text{W}}
+          $$
+
+          $$
+          h_{ext} = \frac{1}{0{,}003042\cdot\pi\cdot 0{,}25\cdot 5} = 83{,}72\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $R_1$ es la mayor de las tres: la convección del agua, lenta, es lo
+          que más frena el calor.
+
+      - tipo: calcular
+        titulo: La velocidad del viento en a)
+        pregunta: |
+          La superficie exterior queda a
+          $\theta_2 = 135 - \dot Q\,(R_1+R_2) = 58{,}5\ \text{°C}$, y el aire
+          se lee a la película de unos 29 °C. Tanteando las dos alternativas
+          del cilindro, ¿a qué velocidad tiene que soplar?
+        respuesta:
+          tipo: magnitud
+          valor: '42.27 m/s'
+          # Relativa: 3 %. La velocidad va con h_ext elevado a 1/0,7, y h_ext
+          # sale de una resta; el exponente del Prandtl que usan las láminas,
+          # 0,37 en vez del 1/3 del anexo, mueve el resultado un 1,7 %, y el
+          # calor de la lámina 54 otro 0,9 %. Con 3 % se aceptan esos caminos.
+          tolerancia: 0.03
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '50.78 m/s'
+            mensaje: |
+              Has sacado la velocidad con el Reynolds de
+              $0{,}26\,\text{Re}^{0{,}6}\text{Pr}^{1/3}$, que da
+              $7{,}9\cdot 10^{5}$: fuera de su tramo, que acaba en
+              $2\cdot 10^{5}$. Esa correlación se descarta, y con ella su
+              Reynolds: la velocidad sale del de la otra.
+          - valor: '52.38 m/s'
+            mensaje: |
+              Es el número de la lámina 62, y sale del Reynolds de la
+              correlación que se descarta: 818.468, el de
+              $0{,}26\,\text{Re}^{0{,}6}$ con los números de las diapositivas,
+              que elevan el Prandtl a 0,37 y toman un calor de 19.287 W. La
+              lámina escribe al lado el Reynolds bueno, 678.222, pero el
+              resultado no es el suyo: con él salen 43,4 m/s.
+          - valor: '38.00 m/s'
+            mensaje: |
+              Has despejado el Reynolds de Churchill y Bernstein, tanteándolo.
+              No es un error de cuentas: es otra correlación, válida para
+              cualquier Reynolds, que aquí no coincide con las del anexo por
+              tramos y da un 10 % menos. La resolución usa las alternativas
+              porque se despejan directamente, y su resultado es el que se
+              publica.
+        pista: |
+          $\text{Nu} = h_{ext}D_2/k$. Prueba
+          $0{,}26\,\text{Re}^{0{,}6}\text{Pr}^{1/3}$, despeja Re y mira si cae
+          por debajo de $2\cdot 10^{5}$; si no,
+          $0{,}076\,\text{Re}^{0{,}7}\text{Pr}^{1/3}$. Luego
+          $c = \text{Re}\,\nu/D_2$.
+        desarrollo: |
+          $$
+          \text{Nu} = \frac{83{,}72\cdot 0{,}25}{0{,}02582} = 810{,}6
+          $$
+
+          Primer tanteo, la del tramo bajo:
+
+          $$
+          \text{Re} = \left(\frac{810{,}6}{0{,}26\cdot 0{,}7284^{1/3}}\right)^{1/0{,}6} = 7{,}93\cdot 10^{5}
+          $$
+
+          Mayor que $2\cdot 10^{5}$: fuera de su tramo, no vale. Con la otra:
+
+          $$
+          \text{Re} = \left(\frac{810{,}6}{0{,}076\cdot 0{,}7284^{1/3}}\right)^{1/0{,}7} = 6{,}60\cdot 10^{5}
+          $$
+
+          Dentro de su tramo, entre $2\cdot 10^{5}$ y $10^{6}$. Y la
+          velocidad:
+
+          $$
+          c = \frac{6{,}60\cdot 10^{5}\cdot 1{,}6001\cdot 10^{-5}}{0{,}25} = 42{,}2\ \frac{\text{m}}{\text{s}}
+          $$
+
+          Con el Reynolds sin redondear, 660.424, salen 42,27 m/s: unos
+          150 km/h de viento. Churchill y Bernstein, resuelta a tanteo, daría
+          $\text{Re} = 5{,}94\cdot 10^{5}$ y 38,0 m/s: las correlaciones no
+          coinciden, y aquí se sigue a la resolución, que usa las del anexo
+          por tramos.
+
+      - tipo: calcular
+        titulo: La velocidad del viento en b)
+        pregunta: |
+          Repite la cadena para que el agua salga a 130 °C, con las
+          propiedades de b). ¿A qué velocidad tiene que soplar ahora?
+        respuesta:
+          tipo: magnitud
+          valor: '12.96 m/s'
+          # Relativa: 3 %, por lo mismo que en a). La hoja de cálculo de las
+          # diapositivas, con el Prandtl a 0,37, da 13,23, un 2,1 % más.
+          tolerancia: 0.03
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '21.60 m/s'
+            mensaje: |
+              Has dividido por el diámetro interior. El aire rodea el tubo por
+              fuera: $c = \text{Re}\,\nu/D_2$, con $D_2 = 0{,}25$ m.
+          - valor: '10.87 m/s'
+            mensaje: |
+              Has puesto el agua a 150 °C, la de entrada. En b) su temperatura
+              media es $(150+130)/2 = 140$ °C, y es la que va en el circuito.
+          - valor: '11.53 m/s'
+            mensaje: |
+              Te has dejado la resistencia de la pared, $R_2$. Pesa menos que
+              en a), pero $R_3$ sigue saliendo de una resta y la velocidad
+              amplifica lo que falte.
+        pista: |
+          Ahora $\dot Q = 0{,}15\cdot 4.286\cdot 20$ y el agua está a 140 °C de
+          media. Ojo al tanteo: esta vez el Reynolds cae cerca de
+          $2\cdot 10^{5}$.
+        desarrollo: |
+          $$
+          \dot Q = 0{,}15\cdot 4.286\cdot(150-130) = 12.858\ \text{W}
+          $$
+
+          Por dentro, $c = 0{,}009209$ m/s y $\text{Re} = 6.463$, con
+          $\text{Nu} = 27{,}42$ y $h_{int} = 124{,}9$, así que
+          $R_1 = 0{,}003399$ K/W. Por fuera:
+
+          $$
+          R_3 = \frac{140}{12.858} - 0{,}003399 - 0{,}000508 = 0{,}006981\ \frac{\text{K}}{\text{W}}
+          \qquad
+          h_{ext} = \frac{1}{0{,}006981\cdot\pi\cdot 0{,}25\cdot 5} = 36{,}48\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          $$
+          \theta_2 = 140 - 12.858\cdot(0{,}003399 + 0{,}000508) = 89{,}76\ \text{°C}
+          \qquad
+          \text{Nu} = \frac{36{,}48\cdot 0{,}25}{0{,}02698} = 338{,}0
+          $$
+
+          Esta vez la del tramo alto da $\text{Re} = 1{,}90\cdot 10^{5}$, por
+          debajo de $2\cdot 10^{5}$ donde empieza su tramo: no vale. La del
+          bajo:
+
+          $$
+          \text{Re} = \left(\frac{338{,}0}{0{,}26\cdot 0{,}7241^{1/3}}\right)^{1/0{,}6} = 1{,}853\cdot 10^{5}
+          \qquad
+          c = \frac{1{,}853\cdot 10^{5}\cdot 1{,}7488\cdot 10^{-5}}{0{,}25} = 12{,}96\ \frac{\text{m}}{\text{s}}
+          $$
+
+          Las dos correlaciones dan casi lo mismo aquí, porque están cerca de
+          la frontera que las separa: es justo donde empalman.
+
+      - tipo: justificar
+        pregunta: Ordena la lectura de los dos apartados. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En a) el agua pierde 19.235 W, y la resistencia que más pesa es
+              la de dentro, $R_1 = 0{,}0035\ \text{K/W}$: el agua va a menos de
+              un centímetro por segundo.
+          - texto: >-
+              Para sacar ese calor el aire tiene que dejar $R_3$ en
+              0,0030 K/W, y eso pide $h_{ext} = 84\ \text{W/(m}^{2}\text{·K)}$
+              y un viento de 42 m/s.
+          - texto: >-
+              En b) basta con 12.858 W; ahora manda la resistencia de fuera,
+              $R_3 = 0{,}0070\ \text{K/W}$, y 13 m/s son suficientes.
+          - texto: >-
+              Como en a) hay que sacar un 50 % más de calor que en b), basta
+              con que el viento sople un 50 % más fuerte.
+            trampa: true
+            mensaje: |
+              Hace falta más del triple: 42,3 m/s frente a 12,96. El calor sube
+              un 50 %, pero $R_1$ no cambia con el viento, así que todo el
+              ajuste recae sobre $R_3$, que tiene que bajar a menos de la
+              mitad; y como el Reynolds va con el Nusselt elevado a más de uno,
+              la velocidad se dispara. Es lo que pasa cuando la resistencia que
+              manda no es la que estás tocando.
+    resolucion: |
+      **El planteamiento.** Las dos temperaturas del agua están fijadas, así
+      que el calor se conoce desde el principio. El circuito es
+      agua–convección interior–pared–convección exterior–aire, con el agua a
+      su temperatura media, que es el criterio del curso:
+
+      $$
+      \dot Q = \frac{\theta_{agua} - \theta_{aire}}{R_1 + R_2 + R_3}
+      \qquad
+      R_1 = \frac{1}{h_{int}\,\pi D_1 L}
+      \qquad
+      R_2 = \frac{\ln(D_2/D_1)}{2\pi k L}
+      \qquad
+      R_3 = \frac{1}{h_{ext}\,\pi D_2 L}
+      $$
+
+      De él se despeja $R_3$, de $R_3$ sale $h_{ext}$, y de $h_{ext}$ el
+      Reynolds del aire y su velocidad.
+
+      **a) El agua sale a 120 °C.**
+
+      $$
+      \dot Q = 0{,}15\cdot 4.274{,}5\cdot 30 = 19.235\ \text{W}
+      $$
+
+      Por dentro, $\text{Re} = 6.212$ —turbulento, y Dittus-Boelter se
+      admite desde 2.100— y el agua se enfría, $n = 0{,}3$:
+
+      $$
+      \text{Nu} = 0{,}023\cdot 6.212^{0{,}8}\cdot 1{,}285^{0{,}3} = 26{,}854
+      \qquad
+      h_{int} = 122{,}4\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      \qquad
+      R_1 = 0{,}003468\ \frac{\text{K}}{\text{W}}
+      $$
+
+      Con $R_2 = 0{,}000508$ K/W:
+
+      $$
+      R_3 = \frac{135}{19.235} - 0{,}003468 - 0{,}000508 = 0{,}003042\ \frac{\text{K}}{\text{W}}
+      \qquad
+      h_{ext} = 83{,}72\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+      $$
+
+      La superficie exterior queda a 58,5 °C, y el aire se lee a la película
+      de unos 29 °C: $\text{Nu} = 83{,}72\cdot 0{,}25/0{,}02582 = 810{,}6$.
+      La correlación del tramo bajo da $\text{Re} = 7{,}93\cdot 10^{5}$, fuera
+      de él; la del tramo alto da $6{,}60\cdot 10^{5}$, dentro. Así que
+
+      $$
+      c = \frac{660.424\cdot 1{,}6001\cdot 10^{-5}}{0{,}25} = 42{,}27\ \frac{\text{m}}{\text{s}}
+      $$
+
+      **b) El agua sale a 130 °C.** La misma cadena, con el agua a 140 °C:
+      $\dot Q = 12.858$ W, $R_1 = 0{,}003399$ y $R_3 = 0{,}006981$ K/W,
+      $h_{ext} = 36{,}48\ \text{W/(m}^{2}\text{·K)}$ y $\text{Nu} = 338{,}0$.
+      Ahora la del tramo alto da $1{,}90\cdot 10^{5}$, por debajo de donde
+      empieza su tramo, y la del bajo, $1{,}853\cdot 10^{5}$, dentro del suyo:
+
+      $$
+      c = \frac{1{,}853\cdot 10^{5}\cdot 1{,}7488\cdot 10^{-5}}{0{,}25} = 12{,}96\ \frac{\text{m}}{\text{s}}
+      $$
+
+      **Lo que no se reproduce de las diapositivas, y por qué.** Tres cosas.
+      La lámina 54 da 19.287 W como producto de
+      $0{,}15\cdot 4.274{,}5\cdot 30$, que son 19.235; los 19.287
+      corresponden al $c_p$ de 140 °C. Las láminas escriben las correlaciones
+      del cilindro con $\text{Pr}^{1/3}$, como el anexo, pero sus números
+      salen de elevar el Prandtl a 0,37: así llegan en a) a un Reynolds de
+      678.222, y su hoja de cálculo da en b) 13,23 m/s. Y la lámina 62
+      escribe ese 678.222 en la cuenta de la velocidad, pero el resultado que
+      pone, 52,38 m/s, es el que sale con 818.468, el Reynolds de la
+      correlación que la lámina 61 acaba de descartar. Con el suyo habrían
+      sido 43,4 m/s, dentro de la tolerancia de la respuesta de aquí.
+
+      Y una cuarta, que no es de las diapositivas: Churchill y Bernstein,
+      resuelta a tanteo, daría en a) 38,0 m/s y en b) 13,24. Las
+      correlaciones no coinciden, y el ejercicio sigue a la resolución, que
+      usa las alternativas por tramos porque se despejan directamente.
+
+      **Lo que hay que llevarse.** Sacar un 50 % más de calor —de 12.858 a
+      19.235 W— pide soplar más del triple, de 13 a 42 m/s. En b) manda la
+      resistencia de fuera, y el viento la baja con facilidad; en a) ya
+      manda la de dentro, que el viento no toca, y todo el esfuerzo tiene que
+      salir de una resistencia exterior cada vez más pequeña. Es la pregunta
+      que la última lámina deja al alumno —cuál es la resistencia
+      dominante—, y la respuesta cambia entre los dos apartados. Y de método:
+      cuando se despeja el Reynolds, **se tantea una correlación y se
+      comprueba su tramo**; la velocidad sale del Reynolds de la que pasa la
+      comprobación, no de la otra.
+
+  - id: ejter-col916-el-deposito-esferico-que-obliga-a-iterar
+    titulo: El depósito esférico, y el coeficiente que depende de lo que se busca
+    fuente: >-
+      Ejercicio 9.16 de las diapositivas del Tema 9, «Transmisión de calor
+      por convección» · Ingeniería Térmica, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Las diapositivas traen su resolución, y el
+      desarrollo está contrastado contra ella: sus seis iteraciones se
+      reproducen en temperaturas y coeficientes, y sus calores salen un
+      0,05 % más bajos porque su hoja de cálculo toma π = 3,14. Sus
+      resultados, 466,77 W y 45,91 °C, caben en la tolerancia de los de aquí,
+      466,9 W y 45,94 °C. La lámina
+      74 escribe 4π·10·0,5·0,3 en la resistencia del depósito y k1 en la del
+      aislamiento, pero los valores que da, 0,02388 y 0,3062 K/W, son los de
+      0,5·0,2 y k2.
+    nivel: practica
+    enunciado: |
+      La temperatura constante de la superficie interior de un tanque
+      esférico con una conductividad térmica de $10\ \text{W/mK}$ y un radio
+      interior de $20\ \text{cm}$ es de $200\ \text{°C}$. El depósito esférico
+      tiene un espesor de $30\ \text{cm}$. El depósito está cubierto con una
+      capa de aislamiento con una conductividad térmica de
+      $0{,}02\ \text{W/mK}$ y un espesor de $2\ \text{cm}$. Si el aire
+      exterior está en reposo y su temperatura es de $15\ \text{°C}$,
+      calcúlese:
+
+      a) Flujo de calor.
+
+      b) Temperatura de la superficie exterior del aislamiento.
+
+      *La resolución de las diapositivas toma las propiedades del aire a
+      15 °C, la temperatura del fluido, que es la que el anexo pide para la
+      esfera en convección natural: $k = 0{,}02476\ \text{W/(m·K)}$,
+      $\nu = 1{,}47\cdot 10^{-5}\ \text{m}^{2}/\text{s}$ y
+      $\text{Pr} = 0{,}7323$, con $\beta = 1/288 = 0{,}0034722\ \text{K}^{-1}$
+      y $g = 9{,}81\ \text{m/s}^{2}$.*
+    pide: El calor que pierde el depósito y la temperatura de la cara exterior del aislamiento.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Para calcular $h_{ext}$ hace falta el Grashof, y el Grashof lleva
+          $\theta_3 - \theta_f$, con $\theta_3$ la temperatura de la cara
+          exterior del aislamiento, que no se conoce. ¿Qué implica eso?
+        opciones:
+          - texto: >-
+              Que hay que iterar: se supone $\theta_3$, se calcula $h_{ext}$ y el
+              calor, de ahí sale una $\theta_3$ nueva, y se repite hasta que no
+              cambie
+            correcta: true
+            mensaje: |
+              Eso es. En convección natural el coeficiente depende del salto
+              de temperatura, y el salto depende del calor, que depende del
+              coeficiente. La resolución empieza con 20 °C y en seis vueltas se
+              queda quieta.
+          - texto: >-
+              Que $\theta_3$ se puede tomar igual a la del aire, 15 °C, porque
+              el aislamiento es muy bueno
+            mensaje: |
+              Con la cara exterior a 15 °C no habría salto con el aire, y por
+              ella no saldría calor ninguno, valiera lo que valiera $h_{ext}$: el
+              depósito no podría perder nada. El aislamiento baja mucho la
+              temperatura de fuera, pero no hasta la del aire; aquí se queda en
+              46 °C.
+          - texto: >-
+              Que faltan datos: sin $\theta_3$ el problema no tiene solución
+            mensaje: |
+              Tiene solución, y una sola: hay tantas ecuaciones como incógnitas
+              —el calor, $\theta_3$ y $h_{ext}$—. Lo que no hay es una forma de
+              despejarlas de golpe, porque la correlación no es lineal. Por eso
+              se itera.
+
+      - tipo: calcular
+        titulo: Las resistencias de conducción
+        pregunta: |
+          ¿Cuánto suman las resistencias de conducción del depósito y del
+          aislamiento?
+        respuesta:
+          tipo: magnitud
+          valor: '0.3299 K/W'
+          tolerancia: 0.02
+          formato: una resistencia térmica, con su unidad
+        distractores:
+          - valor: '0.02449 K/W'
+            mensaje: |
+              Has puesto $k = 10$ también en el aislamiento. Es lo que escribe
+              la fórmula de la lámina 74, aunque el valor que da, 0,3062, es el
+              de $k = 0{,}02$. El aislamiento conduce quinientas veces peor que
+              el depósito, y por eso pesa tanto.
+          - valor: '4.146 K/W'
+            mensaje: |
+              Te has dejado el $4\pi$. La resistencia de una capa esférica es
+              $(r_2-r_1)/(4\pi k\,r_1 r_2)$: sin él sale doce veces y media
+              mayor.
+        pista: |
+          Capa esférica: $R = (r_2 - r_1)/(4\pi k\,r_1 r_2)$. El depósito va de
+          0,2 a 0,5 m y el aislamiento, de 0,5 a 0,52 m.
+        desarrollo: |
+          $$
+          R_1 = \frac{0{,}5-0{,}2}{4\pi\cdot 10\cdot 0{,}2\cdot 0{,}5} = 0{,}02387\ \frac{\text{K}}{\text{W}}
+          \qquad
+          R_2 = \frac{0{,}52-0{,}5}{4\pi\cdot 0{,}02\cdot 0{,}5\cdot 0{,}52} = 0{,}3061\ \frac{\text{K}}{\text{W}}
+          $$
+
+          $$
+          R_1 + R_2 = 0{,}3299\ \frac{\text{K}}{\text{W}}
+          $$
+
+          Dos centímetros de aislamiento pesan casi trece veces más que
+          treinta centímetros de depósito.
+
+      - tipo: calcular
+        titulo: El coeficiente exterior en la primera vuelta
+        pregunta: |
+          Primera vuelta: con $\theta_3 = 20\ \text{°C}$, como la resolución,
+          ¿cuánto vale $h_{ext}$?
+        respuesta:
+          tipo: magnitud
+          valor: '2.440 W/m2 K'
+          tolerancia: 0.02
+          formato: un coeficiente de película, con su unidad
+        distractores:
+          - valor: '2.701 W/m2 K'
+            mensaje: |
+              Has metido el Grashof en la correlación en lugar del Rayleigh:
+              falta multiplicar por $\text{Pr} = 0{,}7323$. La de la esfera va
+              con Ra, como todas las de convección natural del anexo.
+          - valor: '1.041 W/m2 K'
+            mensaje: |
+              Te has dejado la potencia $1/0{,}816$ del corchete. Sin ella el
+              Nusselt sale 43,7 en vez de 102,5: el corchete entero va elevado
+              a 1,225.
+          - valor: '6.470 W/m2 K'
+            mensaje: |
+              Has usado $\beta = 1/15$, con la temperatura del aire en grados
+              Celsius. Para un gas ideal $\beta = 1/T$ con $T$ absoluta:
+              $1/288$.
+        pista: |
+          $\text{Gr} = g\,\beta\,(\theta_3-\theta_f)\,D_3^{3}/\nu^{2}$ con
+          $D_3 = 1{,}04\ \text{m}$; $\text{Ra} = \text{Gr}\cdot\text{Pr}$;
+          $\text{Nu} = \left[2^{0{,}816} + 0{,}152\,\text{Ra}^{0{,}277}\right]^{1/0{,}816}$;
+          y $h = \text{Nu}\,k/D_3$.
+        desarrollo: |
+          $$
+          \text{Gr} = \frac{9{,}81\cdot 0{,}0034722\cdot(20-15)\cdot 1{,}04^{3}}{\left(1{,}47\cdot 10^{-5}\right)^{2}} = 8{,}866\cdot 10^{8}
+          \qquad
+          \text{Ra} = 8{,}866\cdot 10^{8}\cdot 0{,}7323 = 6{,}492\cdot 10^{8}
+          $$
+
+          $$
+          \text{Nu} = \left[2^{0{,}816} + 0{,}152\cdot\left(6{,}492\cdot 10^{8}\right)^{0{,}277}\right]^{1/0{,}816} = 102{,}5
+          \qquad
+          h_{ext} = \frac{102{,}5\cdot 0{,}02476}{1{,}04} = 2{,}440\ \frac{\text{W}}{\text{m}^{2}\text{K}}
+          $$
+
+          Con él, $R_3 = 1/(2{,}440\cdot 4\pi\cdot 0{,}52^{2}) = 0{,}1206$ K/W,
+          el calor sale 410,6 W y la $\theta_3$ nueva,
+          $200 - 410{,}6\cdot 0{,}3299 = 64{,}5$ °C: muy lejos de los 20
+          supuestos. Hay que seguir.
+
+      - tipo: calcular
+        titulo: El calor, una vez convergido
+        pregunta: |
+          Iterando hasta que $\theta_3$ deje de cambiar, ¿cuánto calor pierde
+          el depósito?
+        respuesta:
+          tipo: magnitud
+          valor: '466.9 W'
+          tolerancia: 0.02
+          formato: una potencia, con su unidad
+        distractores:
+          - valor: '410.6 W'
+            mensaje: |
+              Ese es el de la primera vuelta, con $\theta_3 = 20$ °C. Con esa
+              temperatura el salto con el aire es de solo 5 °C y el coeficiente
+              sale bajo; en cuanto se corrige $\theta_3$, sube.
+          - valor: '560.7 W'
+            mensaje: |
+              Te has dejado la resistencia exterior: es lo que saldría con la
+              superficie del aislamiento a 15 °C, como si la convección no
+              frenara nada. Frena, y bastante: una sexta parte del total.
+        pista: |
+          Cada vuelta: $R_3 = 1/(h_{ext}\,4\pi r_3^{2})$,
+          $\dot Q = (200-15)/(R_1+R_2+R_3)$ y
+          $\theta_3 = 200 - \dot Q\,(R_1+R_2)$, que es la de la vuelta
+          siguiente.
+        desarrollo: |
+          Las vueltas, empezando por 20 °C como la resolución:
+
+          | vuelta | $\theta_3$ supuesta (°C) | $h_{ext}$ (W/m²K) | $\dot Q$ (W) | $\theta_3$ nueva (°C) |
+          |---|---|---|---|---|
+          | 1 | 20 | 2,440 | 410,6 | 64,52 |
+          | 2 | 64,52 | 5,191 | 478,5 | 42,13 |
+          | 3 | 42,13 | 4,252 | 463,5 | 47,08 |
+          | 4 | 47,08 | 4,495 | 467,9 | 45,63 |
+          | 5 | 45,63 | 4,427 | 466,7 | 46,02 |
+          | 6 | 46,02 | 4,446 | 467,0 | 45,92 |
+
+          Las temperaturas y los coeficientes son los de la lámina 76. Sus
+          calores salen un 0,05 % más bajos —410,40 en la primera vuelta,
+          466,77 en la sexta— porque su hoja toma π = 3,14; $\theta_3$ y
+          $h_{ext}$ no cambian, porque las tres resistencias llevan π.
+
+          La iteración oscila y se va cerrando, y unas vueltas más allá se
+          queda quieta en $h_{ext} = 4{,}442\ \text{W/(m}^{2}\text{·K)}$ y
+          $R_3 = 0{,}06626$ K/W:
+
+          $$
+          \dot Q = \frac{200-15}{0{,}32994 + 0{,}06626} = 466{,}9\ \text{W}
+          $$
+
+      - tipo: calcular
+        titulo: La temperatura de fuera del aislamiento
+        pregunta: |
+          ¿A qué temperatura queda la cara exterior del aislamiento?
+        respuesta:
+          tipo: magnitud
+          valor: '45.94 °C'
+          tolerancia: 0.005
+          formato: una temperatura, con su unidad
+        distractores:
+          - valor: '64.52 °C'
+            mensaje: |
+              Esa es la $\theta_3$ que sale de la primera vuelta. Con ella el
+              Grashof se multiplica casi por diez y el coeficiente sube: hay que
+              seguir iterando hasta que la temperatura que entra y la que sale
+              coincidan.
+          - valor: '188.9 °C'
+            mensaje: |
+              Esa es $\theta_2$, la de la cara exterior del **depósito**, bajo
+              el aislamiento: $200 - \dot Q\,R_1$. La que se pide es la de fuera
+              del aislamiento, y hay que restar también $\dot Q\,R_2$.
+        pista: |
+          $\theta_3 = 200 - \dot Q\,(R_1+R_2)$, con el calor ya convergido.
+        desarrollo: |
+          $$
+          \theta_3 = 200 - 466{,}94\cdot 0{,}32994 = 45{,}94\ \text{°C}
+          $$
+
+          Las diapositivas se paran en la sexta vuelta, en 45,92 °C —la
+          lámina 77 escribe 45,91—; seguir iterando la lleva a 45,94.
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El coeficiente exterior depende de $\theta_3$ a través del
+              Grashof, y $\theta_3$ depende del calor: se itera desde un valor
+              razonable, 20 °C.
+          - texto: >-
+              La iteración oscila y se cierra, y converge en 466,9 W y
+              45,9 °C.
+          - texto: >-
+              El aislamiento es el 77 % de la resistencia total, y la
+              convección exterior, el 17 %.
+          - texto: >-
+              Como el aislamiento manda, se puede despreciar la convección
+              exterior y tomar la superficie a 15 °C con un error pequeño.
+            trampa: true
+            mensaje: |
+              Despreciarla da 560,7 W frente a 466,9: un 20 % más. Que una
+              resistencia sea la mayor no convierte a las demás en
+              despreciables, y aquí la exterior es una sexta parte del total.
+    resolucion: |
+      **El circuito.** Tres resistencias en serie entre los 200 °C de dentro
+      y los 15 °C del aire: la del depósito, la del aislamiento y la de la
+      convección exterior.
+
+      $$
+      R_1 = \frac{0{,}5-0{,}2}{4\pi\cdot 10\cdot 0{,}2\cdot 0{,}5} = 0{,}02387\ \frac{\text{K}}{\text{W}}
+      \qquad
+      R_2 = \frac{0{,}52-0{,}5}{4\pi\cdot 0{,}02\cdot 0{,}5\cdot 0{,}52} = 0{,}3061\ \frac{\text{K}}{\text{W}}
+      \qquad
+      R_3 = \frac{1}{h_{ext}\,4\pi\cdot 0{,}52^{2}}
+      $$
+
+      **La correlación.** Convección natural alrededor de una esfera, con
+      $\Pi = D_3 = 1{,}04$ m y las propiedades a la temperatura del
+      **fluido**, 15 °C, que es lo que el anexo pide para la esfera:
+
+      $$
+      \text{Nu} = \left[2^{0{,}816} + 0{,}152\,\text{Ra}^{0{,}277}\right]^{1/0{,}816}
+      \qquad
+      \text{Ra} = \frac{g\,\beta\,(\theta_3-15)\,D_3^{3}}{\nu^{2}}\,\text{Pr}
+      $$
+
+      **Por qué hay que iterar.** El Rayleigh lleva $\theta_3$, que depende
+      del calor, que depende de $h_{ext}$. Se supone $\theta_3 = 20$ °C, se
+      calcula $h_{ext}$, el calor y una $\theta_3$ nueva, y se repite.
+
+      | vuelta | $\theta_3$ supuesta (°C) | $h_{ext}$ (W/m²K) | $\dot Q$ (W) | $\theta_3$ nueva (°C) |
+      |---|---|---|---|---|
+      | 1 | 20 | 2,440 | 410,6 | 64,52 |
+      | 2 | 64,52 | 5,191 | 478,5 | 42,13 |
+      | 3 | 42,13 | 4,252 | 463,5 | 47,08 |
+      | 4 | 47,08 | 4,495 | 467,9 | 45,63 |
+      | 5 | 45,63 | 4,427 | 466,7 | 46,02 |
+      | 6 | 46,02 | 4,446 | 467,0 | 45,92 |
+
+      Las temperaturas y los coeficientes son los de la lámina 76; sus
+      calores salen un 0,05 % más bajos porque su hoja toma π = 3,14.
+
+      **El resultado.** Unas vueltas más allá, la iteración se queda quieta
+      en $h_{ext} = 4{,}442\ \text{W/(m}^{2}\text{·K)}$ y
+      $R_3 = 0{,}06626$ K/W:
+
+      $$
+      \dot Q = \frac{185}{0{,}32994 + 0{,}06626} = 466{,}9\ \text{W}
+      \qquad
+      \theta_3 = 200 - 466{,}94\cdot 0{,}32994 = 45{,}94\ \text{°C}
+      $$
+
+      Las diapositivas dan 466,77 W y 45,91 °C: se paran en la sexta vuelta,
+      y sus calores llevan el π = 3,14 de la hoja. Las dos cosas juntas son
+      menos de un 0,1 %.
+
+      **Lo que hay que llevarse.** Dos cosas. La primera, que en convección
+      natural el coeficiente depende de lo que se busca, y eso obliga a
+      iterar: se parte de una temperatura razonable y se corrige hasta que la
+      que entra y la que sale coinciden. La segunda, que el aislamiento, con
+      dos centímetros, se lleva el 77 % de la resistencia, pero la convección
+      exterior no es despreciable: una sexta parte. Suponer la superficie a
+      la temperatura del aire da un 20 % más de pérdidas.
 
