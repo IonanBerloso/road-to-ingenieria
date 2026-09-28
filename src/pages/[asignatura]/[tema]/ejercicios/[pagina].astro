@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import Cabecera from '../../../../components/ui/Cabecera.astro';
+import BloqueDeEjercicios from '../../../../components/ui/BloqueDeEjercicios.astro';
+import EjercicioGuiado from '../../../../components/patrones/EjercicioGuiado.astro';
+import { ruta } from '../../../../lib/rutas';
+import {
+  POR_PAGINA,
+  caminoDeBloque,
+  limitesDeBloque,
+  numPaginas,
+  rotuloDeBloque,
+  tramoDeBloque,
+} from '../../../../lib/ejercicios';
+
+/**
+ * Los ejercicios de un tema, de diez en diez: `…/t05-integracion/ejercicios/2/`
+ * (fase E4 de la auditoría del 27 de septiembre de 2026). La página del tema
+ * se queda con la teoría y el índice; aquí vive cada ejercicio entero.
+ *
+ * No repite las comprobaciones de `[tema].astro` —que el catálogo y el tema
+ * escrito casen, que el número coincida—: esa página se construye en el mismo
+ * build con los mismos temas y ya rompe si no casan. Un tema sin ejercicios no
+ * tiene bloques, y su índice lo dice.
+ */
+export async function getStaticPaths() {
+  const catalogo = await getCollection('catalogo');
+  const ficheros = await getCollection('ejercicios');
+
+  return catalogo.flatMap((asignatura) =>
+    asignatura.data.temas
+      .filter((t) => t.hecho)
+      .flatMap((ficha) => {
+        const ejercicios =
+          ficheros.find((f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios`)?.data.ejercicios ?? [];
+        if (ejercicios.length === 0) return [];
+        return Array.from({ length: numPaginas(ejercicios.length) }, (_, k) => ({
+          params: { asignatura: asignatura.id, tema: ficha.id, pagina: String(k + 1) },
+          props: {
+            asignatura,
+            ficha,
+            pagina: k + 1,
+            total: ejercicios.length,
+            ejercicios: ejercicios
+              .slice(k * POR_PAGINA, (k + 1) * POR_PAGINA)
+              .map((e) => ({ id: e.id, titulo: e.titulo })),
+          },
+        }));
+      }),
+  );
+}
+
+const { asignatura, ficha, pagina, total, ejercicios } = Astro.props;
+
+const nn = String(ficha.n).padStart(2, '0');
+const rotulo = rotuloDeBloque(pagina, total);
+const paginas = numPaginas(total);
+const hrefBloque = (p: number) => ruta(caminoDeBloque(asignatura.id, ficha.id, p));
+const vecino = (p: number) =>
+  p >= 1 && p <= paginas ? { href: hrefBloque(p), rotulo: rotuloDeBloque(p, total) } : undefined;
+---
+
+<Base
+  titulo={`Ejercicios ${rotulo} · ${ficha.titulo} — ${asignatura.data.nombre}`}
+  descripcion={`Los ejercicios ${rotulo} del tema ${ficha.n} de ${asignatura.data.nombre}, «${ficha.titulo}», guiados paso a paso: cada respuesta equivocada recibe su diagnóstico.`}
+  acento={asignatura.data.acento}
+>
+  <Cabecera crumb={`${asignatura.data.nombre} · tema ${nn} · ejercicios`} />
+
+  <main id="principal">
+    <BloqueDeEjercicios
+      eyebrow={`${asignatura.data.nombre} · tema ${nn}`}
+      titulo={ficha.titulo}
+      rotulo={rotulo}
+      total={total}
+      desde={limitesDeBloque(pagina, total).desde}
+      ejercicios={ejercicios}
+      bloques={Array.from({ length: paginas }, (_, k) => ({
+        href: hrefBloque(k + 1),
+        tramo: tramoDeBloque(k + 1, total),
+        actual: k + 1 === pagina,
+      }))}
+      anterior={vecino(pagina - 1)}
+      siguiente={vecino(pagina + 1)}
+      tema={ruta(`${asignatura.id}/${ficha.id}`)}
+    >
+      {ejercicios.map((e) => <EjercicioGuiado id={e.id} />)}
+    </BloqueDeEjercicios>
+  </main>
+</Base>

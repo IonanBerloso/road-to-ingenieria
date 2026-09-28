@@ -291,8 +291,8 @@ src/
     sim/                   los simuladores (§05, §10). Su modelo vive en
                            lib/ para poder probarlo, nunca dentro del
                            .astro; el de test lee su banco de content/banco
-    ui/                    Cabecera · Tema · Examen · Reparto ·
-                           QueNotaNecesito
+    ui/                    Cabecera · Tema · BloqueDeEjercicios · Seguir ·
+                           Examen · Reparto · QueNotaNecesito
   layouts/
     Base.astro             el ÚNICO layout
   lib/
@@ -325,16 +325,19 @@ src/
                            ejercicios trae un examen y la clave de búsqueda
                            sin tildes. Cada uno existe porque su regla
                            estaba escrita en dos o tres páginas (§01)
+    ejercicios.ts          en qué bloque de diez vive cada ejercicio de
+                           tema, y la dirección de cualquier ejercicio
+                           (§07, «de diez en diez»)
     nota.ts · estado.ts    la cuenta de «¿qué nota necesito?», con su
                            prueba, y los estados de una asignatura en las
                            palabras de la pizarra
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
-  pages/                   index · [asignatura] · [asignatura]/[tema] ·
-                           examenes · preparar · formulario ·
-                           laboratorio, y el índice de ejercicios que
-                           busca la paleta
+  pages/                   index · [asignatura] · [asignatura]/[tema] y sus
+                           bloques de ejercicios · examenes · preparar ·
+                           formulario · laboratorio, y el índice de
+                           ejercicios que busca la paleta
 scripts/
   verify.mjs               lee el HTML publicado (§11)
   recalcula.mjs            que las cuentas del corpus salgan (§11)
@@ -359,6 +362,8 @@ scripts/
                            comprueba-talleres y peso. Una sola forma de
                            levantarla, no seis
   peso.mjs                 cuánto tarda una página en un móvil (§11)
+  peso-maximo.mjs          el listón de 3 MB de las páginas de estudio, que
+                           exige verify.mjs y marca peso.mjs (§07)
   muestra-distractores.mjs diez diagnósticos al azar para revisarlos a mano
                            (§13)
   inventario-material.mjs  qué trae cada PDF del material y qué usa el
@@ -1072,6 +1077,50 @@ estilos.
 > maquetado y no la construcción del DOM. Y borrar el contenido del todo era
 > **peor** que el `<template>`: 3.085 ms contra 2.092, porque el fragmento
 > inerte se salta también el cálculo de estilos.
+>
+> La paginación volvió doce días después, resolviendo lo de los anclajes: es
+> la sección siguiente.
+
+### Los ejercicios de tema, de diez en diez (28 de septiembre de 2026)
+
+El `<template>` bajó los nodos, no los bytes: el contenido de una plantilla
+viaja y se analiza igual. La auditoría del 27 de septiembre midió la página del
+tema 5 de Cálculo en **11,5 MB y unos siete segundos** con la CPU a un cuarto,
+y **diecinueve páginas de tema pasaban de 3 MB**. El 97 % eran los ejercicios.
+
+Desde la fase E4 cada ejercicio de tema vive en un **bloque de diez**,
+`…/t05-integracion/ejercicios/2/`, y la página del tema se queda con la teoría
+y el índice de los ejercicios, agrupado por bloque. Medido con `npm run peso`
+el mismo día, a 390 px y con la CPU a un cuarto:
+
+|  | HTML | nodos | lista en |
+|---|---|---|---|
+| `/calculo/t05-integracion/`, antes (auditoría) | 11,5 MB | 110.000 | ~7 s |
+| `/calculo/t05-integracion/`, ahora | **0,4 MB** | **9.367** | **0,9 s** |
+| el bloque más pesado, `…/t05-integracion/ejercicios/3/` | 2,8 MB | 22.461 | 0,7 s |
+
+Lo que hay que saber:
+
+1. **`src/lib/ejercicios.ts` es la única fuente del reparto.** La página del
+   tema, la de cada bloque, las rutas de estudio y el índice de la paleta
+   preguntan ahí dónde vive cada ejercicio (`paginaDeEjercicio`); nadie quita
+   el `/ejercicios` de un id por su cuenta. Los de examen no se parten: un
+   examen no pasa de quince ejercicios.
+2. **Diez por número, no por peso.** Así la dirección de un ejercicio no cambia
+   cuando se reescribe la resolución de otro. Sí cambia si se **inserta** uno
+   delante: un enlace escrito a mano en un YAML, `…/ejercicios/3/#ej-…`, se
+   queda apuntando al bloque viejo, y `verify.mjs` lo caza porque el ancla ya
+   no aterriza en un id que exista. Se arregla el número del bloque; no se
+   quita la comprobación.
+3. **Los enlaces viejos siguen llegando.** Un `…/t05-integracion/#ej-…` de
+   antes del cambio lo manda `Tema.astro` a su bloque con `location.replace`,
+   leyendo las direcciones que la propia página publica en
+   `data-direcciones`. Sin JavaScript se abre la pestaña del índice.
+4. **El listón de 3 MB es un guardián.** `verify.mjs` no deja publicar una
+   página de tema ni un bloque que pase de 3 MB (`scripts/peso-maximo.mjs`,
+   un solo número para él y para `peso.mjs`). Las demás páginas se avisan y no
+   se paran: tres rutas de estudio incrustan ejercicios y pasan de 3 MB, y
+   partirlas es otra decisión, apuntada en `tasks/pendiente.md`.
 
 ---
 
@@ -1384,7 +1433,10 @@ debía decir −√3/2—, unas pestañas que no enganchaban sus manejadores por
 componentes usaban el mismo `data-tema`, y un `data-ir` compartido que habría
 ocultado los dos paneles.
 
-Comprueba, en Chromium y sobre cada página de tema:
+Comprueba, en Chromium y sobre cada página de tema y cada bloque de sus
+ejercicios —los bloques no los enlaza la portada, así que los saca de la página
+de cada tema, y un tema cuyo índice lista ejercicios sin enlazar ningún bloque
+es un fallo—:
 
 - Las raíces **dibujan su radical**, no solo su contenido.
 - Cambiar de pestaña abre el panel **y marca cuál está activa**.
@@ -2232,7 +2284,7 @@ Cosas que ya han costado horas. No son opiniones.
 
 <!-- índice de trampas: lo genera un guion a partir de las entradas -->
 
-**Las 58, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
+**Las 59, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
 
 - No escribas LaTeX a través del shell.
 - Un `: ` sin comillas dentro de un valor YAML rompe el fichero
@@ -2292,6 +2344,7 @@ Cosas que ya han costado horas. No son opiniones.
 - En Zod 4, un `z.record` con claves de un enum las exige todas.
 - Un deslizador recorta su `value` contra el `max` que tiene EN ESE MOMENTO.
 - Dos valores de un deslizador de paso 0,1 no se restan exacto, y un arreglo que se llama a sí mismo no para.
+- `content-visibility: auto` mueve la página mientras la mides.
 
 <!-- fin del índice de trampas -->
 
@@ -3217,6 +3270,18 @@ Cosas que ya han costado horas. No son opiniones.
   la viga se congelaba con la pila desbordada. **Dos reglas: las comparaciones
   con valores de un mando llevan margen —`< minimo − 1e-9`—, y una corrección
   del estado se aplica una vez y se sigue, nunca con `return pinta()`.**
+- **`content-visibility: auto` mueve la página mientras la mides.** Cada
+  ejercicio lo lleva, y uno sin maquetar ocupa los 900 px que supone
+  `contain-intrinsic-size`. Cualquier medida —un `getBBox()`, un
+  `getBoundingClientRect()`— obliga a maquetar alguno y lo de debajo se
+  desplaza: una posición tomada antes de medir ya no vale después. Así
+  `humo.mjs` vio, el 28 de septiembre de 2026, rótulos de tres figuras
+  seiscientos píxeles por debajo de su propio `<svg>`, en las páginas de
+  bloque de la fase E4; en la del tema las mismas figuras medían bien por
+  pura suerte de orden. **Regla: antes de medir, `content-visibility:
+  visible` en todo lo que lleve `auto`, igual que al imprimir; y el fallo se
+  reproduce copiando los pasos del guardián, no abriendo la página a mano,
+  que con otro orden de maquetado no falla.**
 
 ---
 

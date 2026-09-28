@@ -20,6 +20,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, extname, dirname, posix, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PESO_MAXIMO, esDeEstudio } from './peso-maximo.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
@@ -966,10 +967,22 @@ if (SOLO_FUENTE) {
   const anclasFuera = [];
   const anclasRotas = [];
   const idsPorPagina = new Map();
+  const pesadas = [];
+  const pesadasOtras = [];
 
   for (const f of paginas) {
     const html = leer(f);
     const nombre = rel(f);
+
+    /* El peso de las páginas de estudio (fase E4, 28 de septiembre de 2026).
+       Diecinueve páginas de tema pasaban de 3 MB y la del tema 5 de Cálculo
+       llegaba a 11,5: los ejercicios se fueron a sus bloques de diez y esto
+       vigila que ninguna vuelva a crecer así sin que se note. Se mide el
+       fichero, no el texto, porque lo que pesa son los bytes. */
+    const bytes = statSync(f).size;
+    if (bytes > PESO_MAXIMO) {
+      (esDeEstudio(nombre) ? pesadas : pesadasOtras).push(`${nombre} (${(bytes / 1048576).toFixed(2)} MB)`);
+    }
 
     /* dominios externos */
     for (const m of html.matchAll(/https?:\/\/[^"'\s)>]+/g)) {
@@ -1331,6 +1344,17 @@ if (SOLO_FUENTE) {
     'toda figura se publica entera dentro de su <svg>',
     'figuras partidas al publicarse: una línea en blanco dentro del <svg> cierra el bloque de HTML crudo y lo de detrás se pierde',
   );
+  grupo(
+    pesadas,
+    `ninguna página de tema ni bloque de ejercicios pasa de ${PESO_MAXIMO / 1048576} MB`,
+    'páginas de estudio que un teléfono tarda en construir',
+  );
+  if (pesadasOtras.length) {
+    aviso(
+      `${pesadasOtras.length} página(s) de otro tipo pasan de ${PESO_MAXIMO / 1048576} MB`,
+      pesadasOtras.join('\n    '),
+    );
+  }
 
   /* prefers-reduced-motion en el CSS publicado */
   const hojas = [...archivos(DIST, ['.css'])];

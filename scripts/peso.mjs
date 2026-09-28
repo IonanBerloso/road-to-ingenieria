@@ -19,6 +19,7 @@
 import { gzipSync } from 'node:zlib';
 import { chromium } from 'playwright';
 import { levanta } from './servidor.mjs';
+import { PESO_MAXIMO, esDeEstudio } from './peso-maximo.mjs';
 
 /* El servidor y el `base` los pone `servidor.mjs`. Hasta el 26 de septiembre
    de 2026 el `base` iba escrito a mano aquí, y al terminar solo se mataba el
@@ -33,9 +34,14 @@ try {
 }
 const ORIGEN = srv.origen;
 
+/* Desde la fase E4 (28 de septiembre de 2026) los ejercicios de tema viven en
+   bloques de diez, así que se mide la página del tema —la teoría y el
+   índice— y además el bloque más pesado del sitio, que es donde ahora está el
+   peso que antes cargaba la página entera. */
 const PAGINAS = process.argv.slice(2).length ? process.argv.slice(2) : [
   '/calculo/t01-complejos/',
   '/calculo/t05-integracion/',
+  '/calculo/t05-integracion/ejercicios/3/',
   '/algebra/t07-diagonalizacion/',
   '/calculo/preparar/ord/',
   '/calculo/examenes/2019-2020-ord/',
@@ -107,8 +113,11 @@ for (const ruta of PAGINAS) {
   const crudo = Buffer.from(await (await fetch(ORIGEN + ruta)).arrayBuffer());
   const porRed = gzipSync(crudo, { level: 9 }).length;
 
-  filas.push({ ruta, listo, nodos, html, porRed, pinta });
-  const aviso = listo > 4 ? '  ←' : '';
+  /* El listón de 3 MB se mide sobre los bytes servidos, no sobre el
+     `outerHTML`: aquel cuenta caracteres y lo que el script ya haya añadido. */
+  const pesada = esDeEstudio(ruta) && crudo.length > PESO_MAXIMO;
+  filas.push({ ruta, listo, nodos, html, porRed, pinta, pesada });
+  const aviso = [listo > 4 ? '  ← más de 4 s' : '', pesada ? `  ← más de ${PESO_MAXIMO / 1048576} MB` : ''].join('');
   console.log(
     `${ruta.padEnd(38)} ${(html / 1048576).toFixed(1).padStart(5)} MB ${(porRed / 1024).toFixed(0).padStart(5)} KB `
     + `${String(nodos).padStart(7)} ${((pinta ?? 0).toFixed(1) + ' s').padStart(7)} ${(listo.toFixed(1) + ' s').padStart(7)}${aviso}`,
@@ -122,3 +131,7 @@ const lentas = filas.filter((f) => f.listo > 4);
 console.log(lentas.length
   ? `\n${lentas.length} página(s) por encima de 4 s. Mira qué se ejecuta al cargar antes de culpar al peso: el tamaño del HTML explica menos de lo que parece.`
   : '\nNinguna página pasa de 4 s.');
+const pesadas = filas.filter((f) => f.pesada);
+console.log(pesadas.length
+  ? `${pesadas.length} página(s) de estudio por encima de ${PESO_MAXIMO / 1048576} MB: ${pesadas.map((f) => f.ruta).join(', ')}. \`verify.mjs\` no las deja publicar.`
+  : `Ninguna página de estudio medida pasa de ${PESO_MAXIMO / 1048576} MB.`);

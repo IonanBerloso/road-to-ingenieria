@@ -75,6 +75,12 @@ const MUESTRA = [
   ['la portada', '/'],
   ['la portada con una ficha abierta', '/#calculo'],
   ['un tema', '/calculo/t02-sucesiones/'],
+  /* Desde la fase E4 (28 de septiembre de 2026) la pestaña de ejercicios de un
+     tema es un índice, y los ejercicios viven en su bloque de diez: dos
+     páginas con CSS propio —los rótulos del índice, la fila de bloques con el
+     actual en el color de la asignatura— que la muestra no tenía. */
+  ['el índice de ejercicios de un tema', '/calculo/t02-sucesiones/#ejercicios'],
+  ['un bloque de ejercicios', '/calculo/t02-sucesiones/ejercicios/1/'],
   ['una ruta de estudio', '/calculo/preparar/2ev/'],
   ['el índice de exámenes', '/calculo/examenes/'],
   ['una convocatoria', '/calculo/examenes/2019-2020-ord/'],

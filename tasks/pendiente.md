@@ -18,10 +18,11 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **E · Herramientas que pasan la prueba de utilidad** (§13; la siguiente,
-  con A, B, C y D hechas): la calculadora de «¿qué nota necesito?», la
-  página de asignatura, el banco de test de Cálculo, el peso de las páginas
-  de tema, decimales y distractores, y el inventario del material (3–4 días).
+- **E · Herramientas que pasan la prueba de utilidad** (§13; en curso, con
+  A, B, C y D hechas): queda **el banco de test de Cálculo** (E3). Hechas la
+  calculadora de «¿qué nota necesito?», la página de asignatura, el peso de
+  las páginas de tema, decimales y distractores, y el inventario del
+  material.
 - **F · Térmica**: tablas propias, los seis apartados de 2025-26, tema 7 y
   prácticas (5–6 días).
 - **G · Química**: formulación, resoluciones oficiales y teoría que falta
@@ -173,8 +174,14 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   `lib/corrige.ts`, que así se puede probar), `content.config.ts` (las
   constantes de convocatorias a `lib/`), `preparar/[evaluacion].astro` (el
   avance a `lib/avance.ts`) y `ui/Examen.astro` (el simulacro aparte).
+- **Tres rutas de estudio pasan de 3 MB**: `calculo/preparar/ord` (4,4),
+  `fluidos/preparar/ord` (3,6) y `calculo/preparar/ext` (3,3), porque
+  incrustan ejercicios guiados. `verify.mjs` las avisa sin pararlas: decidir
+  si los incrustados pasan a enlazar su bloque o la ruta se parte.
 - **Duplicados** (Regla 0): el controlador de pestañas de `Tema` y `Examen`
-  —ya se desincronizó una vez, en el `afterprint`—; el marco CSS de los
+  —ya se desincronizó una vez, en el `afterprint`—; el CSS del armazón y del
+  carril, copiado de `Tema` en `BloqueDeEjercicios` porque en `Tema` va
+  enredado con las reglas de las pestañas; el marco CSS de los
   simuladores, copiado en diez en dos familias; el formateador `num`, en
   nueve —con variantes: unificarlo cambia salidas que `npm run sim` compara
   carácter a carácter, así que va simulador a simulador—; el reloj de

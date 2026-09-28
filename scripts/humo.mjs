@@ -249,6 +249,30 @@ async function main() {
     )).flat(),
   )].filter((h) => h.startsWith(BASE));
 
+  /* Los bloques de ejercicios de cada tema, `…/t05-integracion/ejercicios/2/`,
+     desde el 28 de septiembre de 2026 (fase E4). Es la cuarta vez que el
+     filtro de arriba se queda corto por enumerar formas de URL, y esta vez se
+     vio venir: los ejercicios de tema salieron de su página para que pesara
+     menos, la portada no enlaza los bloques, y sin esto el suelo habría dejado
+     de probar más de mil ejercicios diciendo «en verde». Se sacan de la página
+     de cada tema, que es quien los enlaza, y un tema cuyo índice lista
+     ejercicios sin enlazar ningún bloque es un fallo, no un tema vacío. */
+  const temas = paginas.filter((h) => /\/t\d{2}-[^/]+\/$/.test(h));
+  const bloquesPorTema = await Promise.all(
+    temas.map(async (h) => {
+      const html = await (await fetch(`${ORIGEN.replace(BASE, '')}${h}`)).text().catch(() => '');
+      const suyos = [...new Set([...html.matchAll(/href="([^"#]+\/ejercicios\/\d+\/)"/g)].map((m) => m[1]))];
+      return { tema: h, bloques: suyos, conIndice: html.includes('data-bloque') };
+    }),
+  );
+  const bloques = bloquesPorTema.flatMap((t) => t.bloques);
+  const temasSinBloques = bloquesPorTema.filter((t) => t.conIndice && t.bloques.length === 0);
+  comprueba(
+    temasSinBloques.length === 0,
+    `cada tema con ejercicios enlaza sus bloques (${bloques.length} bloques de ${temas.length} temas)`,
+    temasSinBloques.map((t) => t.tema.replace(BASE, '')).join(', '),
+  );
+
   const yaAbiertos = new Set(paginas);
   const candidatos = todosLosExamenes.filter((h) => !yaAbiertos.has(h)).sort();
   const TODO = process.env.HUMO_TODO === '1';
@@ -266,7 +290,7 @@ async function main() {
     }
   }
 
-  let rutas = [...new Set([...paginas, ...formularios, ...muestra])];
+  let rutas = [...new Set([...paginas, ...bloques, ...formularios, ...muestra])];
 
   /* Con `HUMO_ASIGNATURA` se mira una sola asignatura. Esto solo filtra las
      páginas de contenido: las tres fijas del principio —la portada, la portada
@@ -542,9 +566,30 @@ async function main() {
         window.__tapados.push([e, 'details']);
       }
       for (const e of document.querySelectorAll('body *')) {
-        if (getComputedStyle(e).display === 'none') {
+        const estilo = getComputedStyle(e);
+        if (estilo.display === 'none') {
           e.style.display = 'block';
           window.__tapados.push([e, 'display']);
+        }
+        /* Y la QUINTA, desde el 28 de septiembre de 2026: `content-visibility:
+           auto`, que cada ejercicio lleva para que el navegador no maquete lo
+           que está fuera de la pantalla. No oculta nada, pero mientras un
+           ejercicio no se ha maquetado ocupa los 900 px que supone
+           `contain-intrinsic-size`, y cada medida de abajo obliga a maquetar
+           alguno: la página se mueve **a mitad de medir una figura**. La
+           posición del `<svg>` se toma una vez y la de cada rótulo después,
+           así que los rótulos salían seiscientos píxeles más abajo que su
+           propia figura y el guardián los daba por recortados.
+
+           Lo destapó la fase E4, al pasar los ejercicios a bloques de diez:
+           tres figuras de resolución que en la página del tema medían bien
+           salieron fuera en su bloque —«50», «100» y «150» a 769 de alto en
+           un viewBox de 235—. Reproducido con estos mismos pasos, y con esta
+           línea las tres miden lo mismo que antes. Al imprimir ya se hace lo
+           mismo (`EjercicioGuiado.astro`, `@media print`). */
+        if (estilo.contentVisibility === 'auto') {
+          e.style.contentVisibility = 'visible';
+          window.__tapados.push([e, 'cv']);
         }
       }
     });
@@ -637,6 +682,7 @@ async function main() {
       for (const [e, que] of tapados) {
         if (que === 'hidden') e.hidden = true;
         else if (que === 'details') e.removeAttribute('open');
+        else if (que === 'cv') e.style.contentVisibility = '';
         else e.style.display = '';
       }
       /* Solo cuentan como figura los SVG que llevan alguna etiqueta dentro:
@@ -682,11 +728,16 @@ async function main() {
        los exámenes se quedó esperando un `data-pestana="ejercicios"` que en
        esa página no existe. Se busca por lo que la pestaña CONTIENE, que es lo
        que de verdad importa, y así el guardián sobrevive a la siguiente
-       plantilla que se invente. */
+       plantilla que se invente.
+
+       Y desde la fase E4 (28 de septiembre de 2026) lo que contiene la pestaña
+       de ejercicios de un tema es el ÍNDICE de sus bloques —`[data-bloque]`—,
+       no los ejercicios. Buscando solo `[data-ejercicio]` esta comprobación se
+       habría saltado en todas las páginas de tema sin decir nada. */
     const nombres = await pagina.evaluate(() => {
       const enlaces = [...document.querySelectorAll('.pestanas a[data-pestana]')];
       const conEjercicios = enlaces.find((a) =>
-        document.getElementById(a.dataset.pestana)?.querySelector('[data-ejercicio]'),
+        document.getElementById(a.dataset.pestana)?.querySelector('[data-ejercicio], [data-bloque]'),
       );
       const otra = enlaces.find((a) => a !== conEjercicios);
       return { ejercicios: conEjercicios?.dataset.pestana, otra: otra?.dataset.pestana };
@@ -900,7 +951,10 @@ async function main() {
     const muestraDe = (patron, n) => rutas.filter((u) => patron.test(u)).slice(0, n);
     const objetivo = [
       ...muestraDe(/\/examenes\/\d/, 4).map((u) => [u, '#resoluciones', 'examen']),
-      ...muestraDe(/\/t\d{2}-/, 6).map((u) => [u, '#ejercicios', 'tema']),
+      ...muestraDe(/\/t\d{2}-[^/]+\/$/, 6).map((u) => [u, '#ejercicios', 'tema']),
+      /* Y los bloques de ejercicios de la fase E4, que es donde viven ahora
+         las resoluciones de tema: el índice del tema ya no abre ninguna. */
+      ...muestraDe(/\/ejercicios\/\d+\/$/, 6).map((u) => [u, '', 'bloque']),
       ...muestraDe(/\/preparar\//, 3).map((u) => [u, '', 'ruta']),
       /* Y el formulario, que es la CUARTA clase de página y justo la que
          desbordaba: 798 px dentro de un hueco de 360, por un hijo de grid sin
@@ -943,7 +997,7 @@ async function main() {
 
     comprueba(
       desbordan.length === 0,
-      `a 360 px no desborda ninguna: ${objetivo.length} páginas de examen, tema y ruta, con ${abiertas} resoluciones abiertas`,
+      `a 360 px no desborda ninguna: ${objetivo.length} páginas de examen, tema, bloque y ruta, con ${abiertas} resoluciones abiertas`,
       desbordan.join(', '),
     );
     comprueba(

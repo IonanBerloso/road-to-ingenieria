@@ -118,10 +118,16 @@ try {
 console.log(fallos.length ? `\n${fallos.length} fallos en los talleres.` : '\nTalleres: en verde.');
 process.exit(fallos.length ? 1 : 0);
 
-/** Carga la página y abre la pestaña de ejercicios, que es donde viven. */
+/** Carga la página y, si los ejercicios van detrás de una pestaña, la abre.
+ *
+ *  Hasta el 28 de septiembre de 2026 los talleres vivían en la pestaña de
+ *  ejercicios de su tema, y este guion la pulsaba siempre. Desde la fase E4
+ *  viven en su bloque de diez, a la vista y sin pestaña, y pulsarla a ciegas
+ *  esperaba treinta segundos a un botón que ya no existe y tumbaba el suelo. */
 async function abre(pagina, ruta) {
   await pagina.goto(`${origen}/${ruta}/`, { waitUntil: 'load' });
-  await pagina.locator('[data-pestana="ejercicios"]').first().click();
+  const pestana = pagina.locator('[data-pestana="ejercicios"]');
+  if (await pestana.count()) await pestana.first().click();
 }
 
 /** Resuelve, como un alumno, los pasos de antes del taller. Solo sabe de

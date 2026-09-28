@@ -4,8 +4,15 @@ import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/ui/Cabecera.astro';
 import Tema from '../../components/ui/Tema.astro';
 import Lectura from '../../components/patrones/Lectura.astro';
-import EjercicioGuiado from '../../components/patrones/EjercicioGuiado.astro';
 import { ruta } from '../../lib/rutas';
+import {
+  POR_PAGINA,
+  caminoDeBloque,
+  caminoDeEjercicio,
+  limitesDeBloque,
+  numPaginas,
+  rotuloDeBloque,
+} from '../../lib/ejercicios';
 import { SUFIJO_CONV, CON_TEMAS, type ConTemas } from '../../content.config';
 
 /**
@@ -98,12 +105,25 @@ const ficheroEjercicios = (await getCollection('ejercicios')).find(
 );
 const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
 
+/* Los ejercicios ya no se pintan aquí: van de diez en diez a su subpágina
+   (fase E4, `lib/ejercicios.ts`), y esta página los enlaza. */
+const hrefDe = (i: number, id: string) =>
+  `${ruta(caminoDeEjercicio(asignatura.id, ficha.id, i))}#ej-${id}`;
+const listaEjercicios = ejercicios.map((e, i) => ({ id: e.id, titulo: e.titulo, href: hrefDe(i, e.id) }));
+const bloques = Array.from({ length: ejercicios.length ? numPaginas(ejercicios.length) : 0 }, (_, k) => ({
+  href: ruta(caminoDeBloque(asignatura.id, ficha.id, k + 1)),
+  rotulo: rotuloDeBloque(k + 1, ejercicios.length),
+  desde: limitesDeBloque(k + 1, ejercicios.length).desde,
+  ejercicios: listaEjercicios.slice(k * POR_PAGINA, (k + 1) * POR_PAGINA),
+}));
+
 /** La tarjeta «practica lo que acabas de leer» (brief §6) enlaza al primer
  *  ejercicio de nivel ejemplo: el que puede hacer alguien que acaba de leer
  *  la teoría. Si el tema no tiene ninguno, la tarjeta no se dibuja — una
  *  invitación a practicar que aterriza en un ejercicio de examen sería la
  *  queja del escalón (§14) con otra cara. */
 const primerEjemplo = ejercicios.find((e) => e.nivel === 'ejemplo');
+const hrefPrimerEjemplo = primerEjemplo ? hrefDe(ejercicios.indexOf(primerEjemplo), primerEjemplo.id) : '';
 
 /** A dónde se puede seguir desde este tema.
  *
@@ -185,7 +205,8 @@ const navegacion = {
       titulo={entrada.data.titulo}
       descripcion={entrada.data.descripcion}
       headings={headings}
-      ejercicios={ejercicios.map((e) => ({ id: e.id, titulo: e.titulo }))}
+      ejercicios={listaEjercicios}
+      bloques={bloques}
       fuente={entrada.data.fuente}
       competencias={entrada.data.competencias}
       navegacion={navegacion}
@@ -200,14 +221,10 @@ const navegacion = {
               Ejemplo introductorio, para entrar de cero. Cada paso equivocado
               recibe su diagnóstico, no un «incorrecto».
             </p>
-            <a class="pr-cta" href={`#ej-${primerEjemplo.id}`}>Hacer el ejercicio →</a>
+            <a class="pr-cta" href={hrefPrimerEjemplo}>Hacer el ejercicio →</a>
           </div>
         )}
       </Lectura>
-
-      <Fragment slot="ejercicios">
-        {ejercicios.map((e) => <EjercicioGuiado id={e.id} />)}
-      </Fragment>
     </Tema>
   </main>
 </Base>

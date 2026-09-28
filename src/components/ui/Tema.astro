@@ -15,6 +15,7 @@
  * JavaScript no hay recarga ni salto de scroll.
  */
 import type { MarkdownHeading } from 'astro';
+import Seguir from './Seguir.astro';
 
 interface Props {
   eyebrow: string;
@@ -22,8 +23,17 @@ interface Props {
   descripcion: string;
   /** Encabezados de la teoría, para el índice lateral. */
   headings: MarkdownHeading[];
-  /** Título de cada ejercicio del tema, para el índice de la otra pestaña. */
-  ejercicios: { id: string; titulo: string }[];
+  /** Cada ejercicio del tema, con la dirección de la subpágina donde vive
+   *  (fase E4: van de diez en diez fuera de esta página, `lib/ejercicios.ts`). */
+  ejercicios: { id: string; titulo: string; href: string }[];
+  /** Los mismos, agrupados por subpágina, para la pestaña de ejercicios. */
+  bloques: {
+    href: string;
+    rotulo: string;
+    /** El número del primer ejercicio del bloque, para que la lista no vuelva a empezar en 1. */
+    desde: number;
+    ejercicios: { id: string; titulo: string; href: string }[];
+  }[];
   fuente?: string;
   competencias: string[];
   /** A dónde se puede ir desde aquí.
@@ -46,12 +56,40 @@ interface Props {
   };
 }
 
-const { eyebrow, titulo, descripcion, headings, ejercicios, fuente, competencias, navegacion } =
+const { eyebrow, titulo, descripcion, headings, ejercicios, bloques, fuente, competencias, navegacion } =
   Astro.props;
+/* Para el script: un enlace viejo, `…/t05-integracion/#ej-…`, de antes de que
+   los ejercicios salieran de esta página, se manda a su subpágina. */
+const direcciones = JSON.stringify(Object.fromEntries(ejercicios.map((e) => [`ej-${e.id}`, e.href])));
 const indice = headings.filter((h) => h.depth === 2);
+
+const nn = (n: number) => String(n).padStart(2, '0');
+const { anterior: ant, siguiente: sig, rutas, examenes } = navegacion;
+const anterior = ant && { href: ant.href, rotulo: `← tema ${nn(ant.n)}`, titulo: ant.titulo };
+const siguiente = sig && { href: sig.href, rotulo: `tema ${nn(sig.n)} →`, titulo: sig.titulo };
+const otros = [
+  ...rutas.map((r) => ({ href: r.href, rotulo: 'ruta de estudio', titulo: r.titulo })),
+  /* Solo si hay alguna. Una asignatura recién abierta tiene temas antes que
+     convocatorias —Ingeniería Térmica lo fue el 7 de septiembre de 2026— y
+     hasta entonces este enlace apuntaba a una página que no se construye:
+     enlace roto en todos sus temas, y el rótulo diciendo «Las 0
+     convocatorias». Las cuatro asignaturas anteriores entraron con sus
+     exámenes desde el primer día, así que el caso no se había dado nunca. */
+  ...(examenes.cuantos > 0
+    ? [
+        {
+          href: examenes.href,
+          rotulo: 'exámenes',
+          titulo: `Las ${examenes.cuantos} convocatorias, ${
+            examenes.enteras ? 'resueltas enteras' : 'con su enunciado original y las resueltas que hay'
+          }`,
+        },
+      ]
+    : []),
+];
 ---
 
-<div class="shell" data-armazon>
+<div class="shell" data-armazon data-direcciones={direcciones}>
   <nav class="rail" aria-label="Índice del tema">
     <div class="rail-bloque" data-de="teoria">
       <h2 class="rotulo">En este tema</h2>
@@ -78,7 +116,7 @@ const indice = headings.filter((h) => h.depth === 2);
         {
           ejercicios.map((e) => (
             <li>
-              <a href={`#ej-${e.id}`}>{e.titulo}</a>
+              <a href={e.href}>{e.titulo}</a>
             </li>
           ))
         }
@@ -126,51 +164,29 @@ const indice = headings.filter((h) => h.depth === 2);
           </p>
         )
       }
-      <slot name="ejercicios" />
+      {/* Los ejercicios no se pintan aquí desde el 28 de septiembre de 2026
+          (fase E4): la página del tema 5 de Cálculo pesaba 11,5 MB, y el 97 %
+          eran ellos. Van de diez en diez a su subpágina, y aquí queda el
+          índice. */}
+      {
+        bloques.map((b) => (
+          <div class="bloque-ej" data-bloque>
+            <p class="rotulo be-cab">
+              <a href={b.href}>Ejercicios {b.rotulo}</a>
+            </p>
+            <ol class="be-lista" start={b.desde}>
+              {b.ejercicios.map((e) => (
+                <li>
+                  <a href={e.href}>{e.titulo}</a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))
+      }
     </section>
 
-    <nav class="seguir no-imprimir" aria-label="Seguir desde aquí">
-      <div class="s-lados">
-        {navegacion.anterior ? (
-          <a class="s-tema s-ant" href={navegacion.anterior.href}>
-            <span class="rotulo">← tema {String(navegacion.anterior.n).padStart(2, '0')}</span>
-            <span class="s-t">{navegacion.anterior.titulo}</span>
-          </a>
-        ) : <span />}
-        {navegacion.siguiente && (
-          <a class="s-tema s-sig" href={navegacion.siguiente.href}>
-            <span class="rotulo">tema {String(navegacion.siguiente.n).padStart(2, '0')} →</span>
-            <span class="s-t">{navegacion.siguiente.titulo}</span>
-          </a>
-        )}
-      </div>
-      <div class="s-otros">
-        {navegacion.rutas.map((r) => (
-          <a class="s-otro" href={r.href}>
-            <span class="rotulo">ruta de estudio</span>
-            <span class="s-t">{r.titulo}</span>
-          </a>
-        ))}
-        {/* Solo si hay alguna. Una asignatura recién abierta tiene temas
-            antes que convocatorias —Ingeniería Térmica lo fue el 7 de
-            septiembre de 2026— y hasta entonces este enlace apuntaba a una
-            página que no se construye: enlace roto en todos sus temas, y el
-            rótulo diciendo «Las 0 convocatorias». Las cuatro asignaturas
-            anteriores entraron con sus exámenes desde el primer día, así que
-            el caso no se había dado nunca. */}
-        {navegacion.examenes.cuantos > 0 && (
-          <a class="s-otro" href={navegacion.examenes.href}>
-            <span class="rotulo">exámenes</span>
-            <span class="s-t">
-              Las {navegacion.examenes.cuantos} convocatorias,{' '}
-              {navegacion.examenes.enteras
-                ? 'resueltas enteras'
-                : 'con su enunciado original y las resueltas que hay'}
-            </span>
-          </a>
-        )}
-      </div>
-    </nav>
+    <Seguir anterior={anterior} siguiente={siguiente} otros={otros} />
 
     <footer class="pie">
       <p class="rotulo">Entrena {competencias.join(' · ')}</p>
@@ -184,7 +200,26 @@ const indice = headings.filter((h) => h.depth === 2);
      no saltar el scroll al cambiar de pestaña y marcar cuál está activa. */
   const shell = document.querySelector<HTMLElement>('[data-armazon]');
 
-  if (shell) {
+  /* Un enlace de antes de la fase E4 (28 de septiembre de 2026), que lleve a
+     `…/t05-integracion/#ej-…`: el ejercicio ya no está en esta página sino en
+     su subpágina de diez, así que se manda allí, sin dejar el salto en el
+     historial. Sin JavaScript el ancla no llega, pero la pestaña de ejercicios
+     se abre igual con `:target` y enseña el índice con el enlace bueno. */
+  const direcciones: Record<string, string> = JSON.parse(shell?.dataset.direcciones || '{}');
+  const aSuBloque = (hash: string) => {
+    /* Un ancla mal formada —un `%` suelto tecleado a mano— hace saltar a
+       `decodeURIComponent`, y aquí arriba eso tumbaría las pestañas enteras. */
+    let id = hash;
+    try {
+      id = decodeURIComponent(hash);
+    } catch {}
+    const destino = direcciones[id];
+    if (!destino || document.getElementById(id)) return false;
+    location.replace(destino);
+    return true;
+  };
+
+  if (shell && !aSuBloque(location.hash.slice(1))) {
     const enlaces = [...shell.querySelectorAll<HTMLAnchorElement>('[data-pestana]')];
 
     function abre(cual: string, empujarHistorial: boolean) {
@@ -203,43 +238,26 @@ const indice = headings.filter((h) => h.depth === 2);
       });
     }
 
-    /** Un enlace a un ejercicio concreto (#ej-…) abre la pestaña de ejercicios. */
+    /** Un enlace viejo a un ejercicio (#ej-…) que no se ha podido mandar a su
+     *  bloque —uno que ya no existe— abre al menos la pestaña del índice. */
     const panelDe = (hash: string) =>
       hash === 'ejercicios' || hash.startsWith('ej-') ? 'ejercicios' : 'teoria';
 
     // Entrar con el enlace puesto, o volver atrás, deja la misma pestaña.
     abre(panelDe(location.hash.slice(1)), false);
 
-    /* Y al ENTRAR con el ancla puesta hay que saltar a mano igual que al
-       cambiarla, cosa que este fichero hacía solo en `hashchange`.
-       Consecuencia, medida el 4 de septiembre de 2026 abriendo treinta
-       enlaces de la ruta de Fluidos: **cinco no llegaban**, y los cinco eran
-       enlaces a un ejercicio —los más valiosos de una ruta—. El panel se
-       abría bien, el ejercicio estaba a 1.892 px, y la página se quedaba
-       arriba. Es el fallo de los 58 enlaces de teoría de agosto con otra
-       cara: el destino existe y no llega (§16 punto 2).
-
-       Se espera a las fuentes porque KaTeX cambia la altura de media página
-       al dibujar, y sin eso el salto aterriza en el sitio equivocado. */
-    {
-      const h = location.hash.slice(1);
-      if (h.startsWith('ej-')) {
-        const salta = () =>
-          document.getElementById(decodeURIComponent(h))?.scrollIntoView({ block: 'start' });
-        if (document.fonts?.ready) document.fonts.ready.then(() => requestAnimationFrame(salta));
-        else requestAnimationFrame(salta);
-      }
-    }
+    /* El salto a mano a un `#ej-…` —el de los cinco enlaces de la ruta de
+       Fluidos que no llegaban, 4 de septiembre de 2026— se fue con los
+       ejercicios a la página de cada bloque (`BloqueDeEjercicios.astro`): aquí
+       ya no hay ninguno al que saltar. */
     window.addEventListener('hashchange', () => {
       const h = location.hash.slice(1);
+      if (aSuBloque(h)) return;
       abre(panelDe(h), false);
-      /* El navegador ya intentó saltar al ancla con el panel aún oculto, y
-         un elemento sin caja no se puede desplazar (§17). Mismo remedio que
-         en Examen.astro: ahora que el panel está visible, se salta a mano. */
-      if (h.startsWith('ej-')) document.getElementById(h)?.scrollIntoView({ block: 'start' });
     });
 
-    // Al imprimir va todo: teoría y ejercicios, que es como se repasa (§11).
+    /* Al imprimir va todo: la teoría y el índice de ejercicios, que es como se
+       repasa (§11). Los ejercicios se imprimen desde su subpágina. */
     window.addEventListener('beforeprint', () => (shell.dataset.panel = 'todo'));
     /* Y al terminar se vuelve con `panelDe`, la misma regla que al entrar.
        Hasta el 26 de septiembre de 2026 aquí se miraba solo `#ejercicios`,
@@ -475,43 +493,15 @@ const indice = headings.filter((h) => h.depth === 2);
     padding: 2rem 0;
   }
 
-  /* ── seguir desde aquí ─────────────────────────────────────────── */
-  .seguir {
-    margin-top: 3rem;
-    padding-top: 1.6rem;
-    border-top: 1px solid var(--rule);
-    display: grid;
-    gap: .8rem;
-  }
-  .s-lados {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .8rem;
-  }
-  .s-tema,
-  .s-otro {
-    display: grid;
-    gap: .2rem;
-    padding: .75rem .9rem;
-    border: 1.5px solid var(--rule);
-    border-radius: 10px;
-    text-decoration: none;
-    color: var(--ink);
-    background: var(--panel);
-    transition: border-color .15s;
-  }
-  .s-tema:hover,
-  .s-otro:hover { border-color: var(--live); }
-  .s-tema .rotulo,
-  .s-otro .rotulo { color: var(--live); }
-  .s-sig { text-align: right; }
-  .s-t { font-size: .94rem; font-weight: 600; line-height: 1.3; }
-  .s-otros { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .8rem; }
-
-  @media (max-width: 40rem) {
-    .s-lados { grid-template-columns: 1fr; }
-    .s-sig { text-align: left; }
-  }
+  /* El índice de ejercicios, bloque a bloque: cada bloque es una subpágina. */
+  .bloque-ej { margin-top: 1.8rem; max-width: var(--measure); }
+  .bloque-ej:first-child { margin-top: .6rem; }
+  .be-cab { margin-bottom: .45rem; }
+  .be-cab a { color: var(--live); text-decoration: none; }
+  .be-cab a:hover { text-decoration: underline; }
+  .be-lista { padding-left: 1.6rem; display: grid; gap: .35rem; }
+  .be-lista a { color: var(--ink); text-underline-offset: .2em; }
+  .be-lista a:hover { color: var(--live); }
 
   /* ── pie ───────────────────────────────────────────────────────── */
   .pie {

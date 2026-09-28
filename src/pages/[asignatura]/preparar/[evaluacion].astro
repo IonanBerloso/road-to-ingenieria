@@ -6,6 +6,7 @@ import EjercicioGuiado from '../../../components/patrones/EjercicioGuiado.astro'
 import Reparto from '../../../components/ui/Reparto.astro';
 import { mate } from '../../../lib/markdown.mjs';
 import { ruta } from '../../../lib/rutas';
+import { paginaDeEjercicio } from '../../../lib/ejercicios';
 import { SUFIJO_CONV, slugExamen, type ConTemas } from '../../../content.config';
 
 /**
@@ -45,13 +46,14 @@ export async function getStaticPaths() {
     }
   >();
   for (const f of ficheros) {
-    /* El id del fichero **es** la página donde vive el ejercicio:
-       `calculo/t01-complejos/ejercicios` → `/calculo/t01-complejos/`, y
+    /* El id del fichero dice la página donde vive el ejercicio:
+       `calculo/t01-complejos/ejercicios` → el bloque de diez que le toca,
+       `/calculo/t01-complejos/ejercicios/2/` (fase E4), y
        `calculo/examenes/2025-2026-1ev/ejercicios` → su página de examen. Así
        un ejercicio que la ruta no incrusta se enlaza a donde sí está, en vez
        de a un ancla de esta página que no existiría. */
-    const pagina = f.id.replace(/\/ejercicios$/, '');
-    for (const e of f.data.ejercicios) {
+    for (const [i, e] of f.data.ejercicios.entries()) {
+      const pagina = paginaDeEjercicio(f.id, i);
       if (porId.has(e.id)) {
         throw new Error(
           `Hay dos ejercicios con el id "${e.id}". Los ids son únicos en todo el ` +

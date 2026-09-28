@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { ruta } from '../lib/rutas';
+import { paginaDeEjercicio } from '../lib/ejercicios';
 
 /**
  * El índice de ejercicios de la paleta de comandos, aparte de la portada.
@@ -29,7 +30,7 @@ import { ruta } from '../lib/rutas';
  *
  * Formato compacto a propósito, que aquí sí compensa porque no hay HTML
  * alrededor que comprimir con él:
- *   [ { u: url del tema, s: «Tema · Asignatura», e: [[título, id, ref, pide], …] }, … ]
+ *   [ { u: url del bloque de diez, s: «Tema · Asignatura», e: [[título, id, ref, pide], …] }, … ]
  *
  * `ref` es el número del boletín —«5.1», «Problema 6»— sacado de la `fuente`,
  * y `pide` es lo que el ejercicio pide. Los dos entran en la clave de búsqueda
@@ -40,14 +41,10 @@ import { ruta } from '../lib/rutas';
  */
 export const GET: APIRoute = async () => {
   const catalogo = await getCollection('catalogo');
-  const publicados = new Map<string, { sub: string; url: string }>();
+  const publicados = new Map<string, string>();
   for (const a of catalogo) {
     for (const t of a.data.temas) {
-      if (!t.hecho) continue;
-      publicados.set(`${a.id}/${t.id}`, {
-        sub: `${t.titulo} · ${a.data.nombre}`,
-        url: ruta(`${a.id}/${t.id}`),
-      });
+      if (t.hecho) publicados.set(`${a.id}/${t.id}`, `${t.titulo} · ${a.data.nombre}`);
     }
   }
 
@@ -70,13 +67,17 @@ export const GET: APIRoute = async () => {
        viven en «<asignatura>/examenes/<convocatoria>/ejercicios» y se quedan
        fuera: se buscan por su convocatoria, que ya está en el índice de la
        portada, e indexarlos aquí duplicaría el mismo problema con otro nombre. */
-    const donde = publicados.get(f.id.replace(/\/ejercicios$/, ''));
-    if (!donde) continue;
-    const e = f.data.ejercicios.map(
-      (x) =>
-        [x.titulo, x.id, referencia(x.fuente), x.pide] as [string, string, string, string],
-    );
-    if (e.length) grupos.push({ u: donde.url, s: donde.sub, e });
+    const sub = publicados.get(f.id.replace(/\/ejercicios$/, ''));
+    if (!sub) continue;
+    /* Un grupo por bloque de diez y no por tema: desde la fase E4 los
+       ejercicios viven en `…/ejercicios/2/` y no en la página del tema, y así
+       la paleta sigue componiendo `u#ej-id` sin saber nada de bloques. */
+    const porBloque = new Map<string, [string, string, string, string][]>();
+    for (const [i, x] of f.data.ejercicios.entries()) {
+      const u = ruta(paginaDeEjercicio(f.id, i));
+      porBloque.set(u, [...(porBloque.get(u) ?? []), [x.titulo, x.id, referencia(x.fuente), x.pide]]);
+    }
+    for (const [u, e] of porBloque) grupos.push({ u, s: sub, e });
   }
 
   return new Response(JSON.stringify(grupos), {
