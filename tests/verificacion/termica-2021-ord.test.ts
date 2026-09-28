@@ -20,6 +20,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
 
 const cuadra = convocatoria('ingenieria-termica', '2020-2021-ord');
 const K = 273.15;
@@ -121,13 +122,18 @@ describe('3 · la bomba del 82,7 %, y la cámara de mezcla', () => {
     expect((100 * bombaOficial(etaInterno)) / b.w).toBeLessThan(4.5);
   });
 
-  // la cámara, con los valores de tabla de la nota del enunciado
-  const [h1, s1, h3, s3] = [104.89, 0.3674, 3270.3, 7.7079];
-  const [hf, hg, sf, sg] = [670.56, 2756.8, 1.9312, 6.76];
+  /* La cámara, con las tablas del sitio, la rejilla del anexo (fase F1): el
+     enunciado ya no da ningún valor. El agua a 25 °C, con h ≈ h'(T) y
+     s ≈ s'(T), como se lee un líquido que no está en la tabla de comprimido. */
+  const sat25 = tablas.saturacionT.filas.find((r) => r[0] === 25)!;
+  const vapor = tablas.sobrecalentado.bloques.find((x) => x.p === 6)!.filas.find((r) => r[0] === 400)!;
+  const sat6 = tablas.saturacionP.filas.find((r) => r[0] === 6)!;
+  const [h1, s1, h3, s3] = [sat25[4], sat25[6], vapor[3], vapor[4]];
+  const [hf, hg, sf, sg] = [sat6[4], sat6[5], sat6[6], sat6[7]];
   const h2 = h1 + b.w;
   const h4 = (m1 * h2 + h3) / (m1 + 1);
 
-  it('la mezcla sale con 2.310,9 kJ/kg', () => cuadra.magnitud(id, 'La entalpía de la mezcla', h4, 'kJ/kg'));
+  it('la mezcla sale con 2.311,3 kJ/kg', () => cuadra.magnitud(id, 'La entalpía de la mezcla', h4, 'kJ/kg'));
 
   it('y la cámara destruye 101 kW, más de dos mil veces lo de la bomba', () => {
     expect(h4).toBeGreaterThan(hf);

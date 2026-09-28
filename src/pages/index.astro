@@ -72,6 +72,9 @@ for (const id of CON_TEMAS) {
   if (hayFormulario(temas.map((e) => e.body))) conFormulario.add(id);
 }
 
+/** Qué asignaturas tienen tablas de propiedades (fase F1: hoy, Térmica). */
+const conTablas = new Set((await getCollection('tablas')).map((t) => t.data.asignatura));
+
 /** Qué asignaturas tienen laboratorio, para enlazarlo desde su ficha. Hasta
  *  hoy no se enlazaba desde ninguna parte de la portada: existía y no se
  *  encontraba. */
@@ -716,6 +719,12 @@ const enteras = asignaturas
                     <a class="h-btn" href={ruta(`${a.id}/formulario`)}>
                       <span class="h-n">Formulario</span>
                       <span class="h-q">todo lo que hay que llevar sabido, junto</span>
+                    </a>
+                  )}
+                  {conTablas.has(a.id) && (
+                    <a class="h-btn" href={ruta(`${a.id}/tablas`)}>
+                      <span class="h-n">Tablas de vapor</span>
+                      <span class="h-q">las del anexo, con su rejilla, para practicar con ellas</span>
                     </a>
                   )}
                   {conLaboratorio.has(a.id) && (

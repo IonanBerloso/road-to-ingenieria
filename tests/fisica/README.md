@@ -4,7 +4,7 @@ Todo simulador con física dentro lleva aquí al menos un caso con resultado
 conocido. Nunca se ajusta una constante para que salga el número esperado
 (CLAUDE.md §10).
 
-**Nueve ficheros y 166 casos**, para nueve simuladores. La cifra la da
+**Diez ficheros y 187 casos**: nueve simuladores y las tablas de vapor. La cifra la da
 `node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
 la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
 y estuvo tres días diciéndolo con ocho ficheros en la carpeta.
@@ -31,6 +31,7 @@ daño que uno que falta.
 | `canales.test.ts` | 27 | `SeccionDeCanal` (t21) | las tres secciones de 4 m² de la figura del propio tema, con sus perímetros publicados | propia |
 | `ariete.test.ts` | 25 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus **cuatro** números: los dos buenos y los dos equivocados | propia |
 | `plano.test.ts` | 13 | `PlanoComplejo` (cálculo t01) | el error típico del propio tema: con z = −1 − i, arctan devuelve π/4 y el argumento es −3π/4 | propia |
+| `vapor.test.ts` | 21 | las tablas de vapor y el diagrama de Mollier de Térmica, no un simulador | los valores de verificación que publican IAPWS-95 e IF97, con nueve cifras; las dos formulaciones entre sí, y el anexo de tablas del curso | **externa** |
 
 **Los nueve simuladores tienen ya su fichero.** El último en llegar fue
 `PlanoComplejo`, el 15 de septiembre de 2026: hasta entonces era el único cuyo

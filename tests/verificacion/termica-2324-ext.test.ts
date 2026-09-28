@@ -8,6 +8,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
 
 const cuadra = convocatoria('ingenieria-termica', '2023-2024-ext');
 const K = 273.15;
@@ -92,5 +93,18 @@ describe('2 · el separador mal aislado', () => {
     const porBalance = m1 * b(h1, s1) - mL * b(hL, sL) - mV * b(hV, sV) - qPerdido * (1 - T0 / Tsup);
     expect(Math.abs(porBalance - T0 * SG)).toBeLessThan(1e-9 * porBalance);
     cuadra.magnitud(id, 'La exergía destruida', porBalance, 'kW');
+  });
+
+  it('con las tablas del sitio, que siguen el anexo, las tres respuestas caben igual', () => {
+    const fila = tablas.sobrecalentado.bloques.find((x) => x.p === 2)!.filas.find((f) => f[0] === 250)!;
+    const sat = tablas.saturacionP.filas.find((r) => r[0] === 2)!; // [p, T, v', v'', h', h'', s', s'']
+    const [h1t, s1t] = [fila[3], fila[4]];
+    const [hLt, hVt, sLt, sVt] = [sat[4], sat[5], sat[6], sat[7]];
+    expect([h1t, s1t, hVt, sLt, sVt]).toEqual([2971.2, 7.71, 2706.2, 1.5302, 7.1269]); // lo que dice la nota
+    const q = m1 * h1t - mL * hLt - mV * hVt;
+    const sg = mL * sLt + mV * sVt - m1 * s1t + q / Tsup;
+    cuadra.magnitud(id, 'El calor perdido', q, 'kW');
+    cuadra.magnitud(id, 'La entropía generada', sg, 'kW/K');
+    cuadra.magnitud(id, 'La exergía destruida', T0 * sg, 'kW');
   });
 });

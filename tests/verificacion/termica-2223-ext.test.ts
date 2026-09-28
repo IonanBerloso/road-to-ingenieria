@@ -1,16 +1,117 @@
 /**
  * La extraordinaria de Ingeniería Térmica del 30 de enero de 2023.
  *
- * El nitrógeno llega sin R ni calores específicos en el enunciado: se toman de
- * la resolución, que es de donde los toma el corpus, y aquí se comprueba al
- * menos que casan entre sí. La tubería defiende una cifra en la que el sitio
- * se aparta de la oficial: el Nusselt es 341,8, no 371,7.
+ * La tobera se rehace desde las tablas del sitio, con la doble interpolación
+ * que enseña el ejercicio, y se contrasta con la formulación completa: la
+ * resolución oficial la lee en el Mollier. El nitrógeno llega sin R ni
+ * calores específicos en el enunciado: se toman de la resolución, que es de
+ * donde los toma el corpus, y aquí se comprueba al menos que casan entre sí.
+ * La tubería defiende una cifra en la que el sitio se aparta de la oficial: el
+ * Nusselt es 341,8, no 371,7.
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
+import { estadoDePT } from '../../src/lib/iapws95';
 
 const cuadra = convocatoria('ingenieria-termica', '2022-2023-ext');
 const K = 273.15; // la resolución usa 273
+
+describe('1 · la tobera de 600 m/s, y el volumen que el Mollier no dice', () => {
+  const id = 'exter2223-ext-1-la-tobera-y-el-volumen-que-el-mollier-no-dice';
+  const [m, c2] = [2, 600];
+  const bloque = (p: number) => {
+    const b = tablas.sobrecalentado.bloques.find((x) => x.p === p);
+    if (!b || b.Tsat == null || !b.saturado) throw new Error(`no hay isobara de ${p} bar`);
+    return b;
+  };
+  // [T, v, u, h, s] de la fila de 300 °C a 20 bar
+  const entrada = bloque(20).filas.find((f) => f[0] === 300)!;
+  const [v1, h1, s1] = [entrada[1], entrada[3], entrada[4]];
+  const h2 = h1 - c2 ** 2 / 2 / 1000;
+
+  /* El punto de una isobara con s = s1, entre sus dos filas vecinas; la de
+     saturación entra como una fila más, a Tsat. `Tsat` deja probar la
+     cabecera errada del anexo. */
+  const conEntropia = (p: number, s: number, Tsat?: number) => {
+    const b = bloque(p);
+    const filas = [[Tsat ?? b.Tsat!, ...b.saturado!], ...b.filas];
+    const i = filas.findIndex((f, j) => j < filas.length - 1 && s >= f[4] && s <= filas[j + 1][4]);
+    if (i < 0) throw new Error(`s = ${s} no cae en la isobara de ${p} bar`);
+    const [a, c] = [filas[i], filas[i + 1]];
+    const f = (s - a[4]) / (c[4] - a[4]);
+    return { T: a[0] + f * (c[0] - a[0]), v: a[1] + f * (c[1] - a[1]), h: a[3] + f * (c[3] - a[3]) };
+  };
+  const salida = (s: number, Tsat8?: number) => {
+    const [a, b] = [conEntropia(8, s, Tsat8), conEntropia(10, s)];
+    const w = (h2 - a.h) / (b.h - a.h);
+    return { p: 8 + 2 * w, T: a.T + w * (b.T - a.T), v: a.v + w * (b.v - a.v), w };
+  };
+  const s2 = salida(s1);
+
+  it('el vapor sale con h = 2844,2 kJ/kg: 600 m/s son 180 kJ/kg', () =>
+    cuadra.magnitud(id, 'La entalpía de salida', h2, 'kJ/kg'));
+
+  it('se expande hasta 9,14 bar, entre las isobaras de 8 y 10', () => {
+    expect(s2.w).toBeGreaterThan(0);
+    expect(s2.w).toBeLessThan(1); // 2844,2 cae entre las dos entalpías
+    cuadra.magnitud(id, 'La presión de salida', s2.p, 'bar');
+  });
+
+  it('sale a 205,0 °C, 95 grados más frío y todavía sobrecalentado', () => {
+    // a 9 bar el agua satura a 175,35 °C: por encima de eso es vapor
+    const sat9 = tablas.saturacionP.filas.find((r) => r[0] === 9)!;
+    expect(s2.T).toBeGreaterThan(sat9[1] + 25);
+    expect(300 - s2.T).toBeCloseTo(95, 0);
+    cuadra.magnitud(id, 'La temperatura de salida', s2.T, '°C');
+  });
+
+  it('y la sección de salida es de 7,72 cm²', () =>
+    cuadra.magnitud(id, 'El área de salida', (m * s2.v) / c2, 'm^2'));
+
+  it('la formulación completa, sin interpolar, da lo mismo salvo un 1 % en el volumen', () => {
+    // Newton en (p, T) sobre h = h2 y s = s1, en MPa y K
+    let [p, T] = [s2.p / 10, s2.T + K];
+    for (let k = 0; k < 30; k++) {
+      const [e, ep, eT] = [estadoDePT(p, T), estadoDePT(p * 1.0001, T), estadoDePT(p, T + 0.01)];
+      const [a, b] = [(ep.h - e.h) / (p * 1e-4), (eT.h - e.h) / 0.01];
+      const [c, d] = [(ep.s - e.s) / (p * 1e-4), (eT.s - e.s) / 0.01];
+      const [F, G] = [e.h - h2, e.s - s1];
+      const det = a * d - b * c;
+      p -= (F * d - G * b) / det;
+      T -= (G * a - F * c) / det;
+    }
+    const exacto = estadoDePT(p, T);
+    expect(Math.abs(exacto.h - h2)).toBeLessThan(1e-6);
+    expect(Math.abs(p * 10 - s2.p)).toBeLessThan(0.005); // 9,140 frente a 9,141 bar
+    expect(Math.abs(T - K - s2.T)).toBeLessThan(0.5); // 204,6 frente a 205,0 °C
+    expect(s2.v / exacto.v - 1).toBeGreaterThan(0.005);
+    expect(s2.v / exacto.v - 1).toBeLessThan(0.015);
+  });
+
+  it('la resolución oficial: v a 205 °C y 9,2 bar da 0,23086 m³/kg y 7,695 cm²', () => {
+    const fila = (p: number, T: number) => bloque(p).filas.find((f) => f[0] === T)!;
+    const lerp = (x: number, x0: number, x1: number, y0: number, y1: number) =>
+      y0 + ((x - x0) / (x1 - x0)) * (y1 - y0);
+    const vA = (p: number) => lerp(205, 200, 250, fila(p, 200)[1], fila(p, 250)[1]);
+    const v = lerp(9.2, 8, 10, vA(8), vA(10));
+    expect(v).toBeCloseTo(0.23086, 5);
+    expect(((m * v) / c2) * 1e4).toBeCloseTo(7.695, 3);
+  });
+
+  it('su s1 = 6,784 es el 6,7684 con una cifra caída, y llevaría la salida a 8,8 bar', () => {
+    expect(s1).toBe(6.7684);
+    expect(salida(6.784).p).toBeCloseTo(8.83, 2);
+  });
+
+  it('con la cabecera errada del anexo, 143,61 °C a 8 bar, la salida sale a 201,4 °C', () => {
+    expect(bloque(8).Tsat).toBe(170.41);
+    expect(salida(s1, 143.61).T).toBeCloseTo(201.4, 1);
+  });
+
+  it('con el volumen de la entrada, la sección saldría casi a la mitad', () =>
+    expect((m * s2.v) / c2 / ((m * v1) / c2)).toBeGreaterThan(1.8));
+});
 
 describe('2 · el nitrógeno que se reparte, y la irreversibilidad que manda', () => {
   const id = 'exter2223-ext-2-el-nitrogeno-que-se-reparte-y-la-irreversibilidad-que-manda';

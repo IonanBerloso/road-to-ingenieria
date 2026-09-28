@@ -18,8 +18,8 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **F · Térmica** (la siguiente: A, B, C, D y E hechas): tablas propias, los
-  seis apartados de 2025-26, tema 7 y prácticas (5–6 días).
+- **F · Térmica** (en curso: A, B, C, D, E y F1 hechas): los seis apartados
+  de 2025-26, tema 7 y prácticas (3–4 días).
 - **G · Química**: formulación, resoluciones oficiales y teoría que falta
   (5–6 días).
 - **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
@@ -110,6 +110,10 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Térmica, ordinaria de 2025-2026**: seis apartados declarados en su `fuera`
   (1e y 2b a 2f), con la resolución oficial en el PDF. Después, contar
   apartados en las otras diecinueve convocatorias (`manana.md` 10.1).
+- **Térmica, el 3.2 de la colección** (`ejter-el-deposito-rigido-que-se-calienta`):
+  publica a), b) y c), y la colección pide también d) y e) —seguir
+  calentando hasta vapor saturado seco, y el calor total— y el dibujo T-v.
+  Con las tablas del sitio ya se pueden resolver.
 - **Pesos de tema donde la ruta y las etiquetas no coinciden** (CLAUDE.md §10):
   Fluidos t07, t17, t18, t19 y t23; Térmica t08 y t10. Los de Mecánica del
   bloque 1 se revisaron con las cinco convocatorias.
@@ -193,9 +197,9 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 
 Solo lo que la carpeta no trae, mirado en la página renderizada (CLAUDE.md
 §17, «El volcado no es la página»). Lo que parecía bloqueado y es trabajo
-está en su fase: las convocatorias bilingües de Mecánica en C1, la tobera de
-Térmica en F1, las prácticas y siete `fuera` de Fluidos en I1 e I2, Sistemas
-en J y la colección de Química en «Contenido».
+está en su fase: las convocatorias bilingües de Mecánica en C1, las prácticas
+y siete `fuera` de Fluidos en I1 e I2, Sistemas en J y la colección de
+Química en «Contenido».
 
 - **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
   teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no

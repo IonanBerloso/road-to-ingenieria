@@ -57,6 +57,9 @@ const numExamenes = (await getCollection('examen')).filter((e) => e.data.asignat
 const conTemas = (CON_TEMAS as readonly string[]).includes(id);
 const conFormulario = conTemas && hayFormulario((await getCollection(id as ConTemas)).map((e) => e.body));
 const conLaboratorio = (await getCollection('laboratorio')).some((l) => l.id.split('/')[0] === id);
+/* Las tablas de propiedades calculadas con la rejilla del anexo del curso
+   (fase F1): hoy solo Térmica. Se enlazan si existen, como el formulario. */
+const conTablas = (await getCollection('tablas')).some((t) => t.data.asignatura === id);
 /* Los temas con cuestiones de práctica —las de las diapositivas de Cálculo,
    fase E3—, que tienen su página en `…/tNN-…/cuestiones/`. Los bancos con
    simulacro no cuentan: viven dentro de la teoría de su tema. */
@@ -211,7 +214,7 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
         }
 
         {
-          (numExamenes > 0 || conFormulario || conLaboratorio || conCuestiones.size > 0) && (
+          (numExamenes > 0 || conFormulario || conTablas || conLaboratorio || conCuestiones.size > 0) && (
             <ul class="enlaces">
               {numExamenes > 0 && (
                 <li>
@@ -223,6 +226,12 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
                 <li>
                   <a href={ruta(`${id}/formulario`)}>El formulario</a>: lo que hay que llevar sabido de
                   cada tema, en una página que se imprime.
+                </li>
+              )}
+              {conTablas && (
+                <li>
+                  <a href={ruta(`${id}/tablas`)}>Las tablas de vapor</a>: las del anexo del curso, con
+                  su misma rejilla y calculadas, y en qué se aparta de ellas el anexo.
                 </li>
               )}
               {conLaboratorio && (

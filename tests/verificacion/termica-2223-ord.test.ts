@@ -8,6 +8,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
 
 const cuadra = convocatoria('ingenieria-termica', '2022-2023-ord');
 const K = 273.15; // la resolución usa 273; que las dos entren es parte de la prueba
@@ -52,23 +53,33 @@ describe('2 · la turbina que es mala, y hay que decirlo', () => {
   const lerp = (x: number, x0: number, x1: number, y0: number, y1: number) =>
     y0 + ((x - x0) / (x1 - x0)) * (y1 - y0);
 
-  // la tabla del enunciado: a 80 °C entre 0,06 y 0,35 bar
-  const f = (0.1 - 0.06) / (0.35 - 0.06);
-  const h2 = lerp(0.1, 0.06, 0.35, 2650.1, 2645.6);
-  const s2 = lerp(0.1, 0.06, 0.35, 8.5804, 7.7564);
+  /* Las tablas del sitio, con la rejilla del anexo del curso (fase F1): el
+     enunciado ya no da ningún valor, como el examen, que se hace con el
+     anexo delante. [T, v, u, h, s] de cada fila. */
+  const fila = (p: number, T: number) => {
+    const bloque = tablas.sobrecalentado.bloques.find((b) => b.p === p);
+    const f = bloque?.filas.find((r) => r[0] === T);
+    if (!f) throw new Error(`no hay fila de ${T} °C a ${p} bar`);
+    return f;
+  };
+  // la salida, sobrecalentada a 0,1 bar: entre las filas de 50 y 100 °C
+  const h2 = lerp(80, 50, 100, fila(0.1, 50)[3], fila(0.1, 100)[3]);
+  const s2 = lerp(80, 50, 100, fila(0.1, 50)[4], fila(0.1, 100)[4]);
   // el balance da h1, y con 20 bar ya hay dos propiedades para la tabla
   const h1 = W / m + h2;
-  const th1 = lerp(h1, 2976.4, 3069.5, 280, 320);
-  const s1 = lerp(th1, 280, 320, 6.6828, 6.8452);
-  // saturación a 0,1 bar
-  const [hf, hg, sf, sg] = [191.83, 2584.7, 0.6493, 8.1502];
+  const th1 = lerp(h1, fila(20, 300)[3], fila(20, 350)[3], 300, 350);
+  const s1 = lerp(th1, 300, 350, fila(20, 300)[4], fila(20, 350)[4]);
+  // saturación a 0,1 bar: [p, T, v', v'', h', h'', s', s'']
+  const sat = tablas.saturacionP.filas.find((r) => r[0] === 0.1)!;
+  const [hf, hg, sf, sg] = [sat[4], sat[5], sat[6], sat[7]];
   const x2s = (s1 - sf) / (sg - sf);
   const h2s = hf + x2s * (hg - hf);
   const af = (h: number, s: number) => h - T0 * s;
 
-  it('0,1 bar cae a un 13,8 % del intervalo', () => cuadra(id, 'Dónde cae 0,1 bar entre las dos filas', f));
+  it('el vapor sale a 0,1 bar y 80 °C con h = 2649,3 kJ/kg', () =>
+    cuadra.magnitud(id, 'La entalpía de salida', h2, 'kJ/kg'));
 
-  it('el vapor entra a 311,4 °C', () => cuadra.magnitud(id, 'La temperatura de entrada', th1, '°C'));
+  it('el vapor entra a 311,1 °C', () => cuadra.magnitud(id, 'La temperatura de entrada', th1, '°C'));
 
   it('el rendimiento interno es del 44,8 %: una turbina mala', () => {
     expect(x2s).toBeGreaterThan(0);
@@ -78,8 +89,7 @@ describe('2 · la turbina que es mala, y hay que decirlo', () => {
     cuadra(id, 'El rendimiento interno', eta);
   });
 
-  it('destruye 238,5 kW, los mismos por el balance de exergía que por Guy-Stodola', () => {
-    // s2 sale de la tabla del enunciado, no del 8,4667 que da la pregunta
+  it('destruye 220,1 kW, los mismos por el balance de exergía que por Guy-Stodola', () => {
     const porBalance = m * (af(h1, s1) - af(h2, s2)) - W;
     const porGuyStodola = T0 * m * (s2 - s1);
     expect(Math.abs(porBalance - porGuyStodola)).toBeLessThan(1e-9 * porGuyStodola);
@@ -87,8 +97,24 @@ describe('2 · la turbina que es mala, y hay que decirlo', () => {
     cuadra.magnitud(id, 'La exergía destruida', porGuyStodola, 'kW');
   });
 
-  it('y su rendimiento exergético es del 45,6 %', () =>
+  it('y su rendimiento exergético es del 47,6 %', () =>
     cuadra(id, 'El rendimiento exergético', W / (m * (af(h1, s1) - af(h2, s2)))));
+
+  it('la resolución oficial da un 8 % más porque interpola la entropía en presión', () => {
+    /* Sus dos filas, a 80 °C, de las tablas del Moran: s = 8,5804 a 0,06 bar
+       y 7,7564 a 0,35. En línea recta en p sale el 8,4667 de la resolución;
+       en ln p, que es como va la entropía de un vapor, sale lo del anexo. */
+    const enP = lerp(0.1, 0.06, 0.35, 8.5804, 7.7564);
+    const enLnP = lerp(Math.log(0.1), Math.log(0.06), Math.log(0.35), 8.5804, 7.7564);
+    expect(enP).toBeCloseTo(8.4667, 4);
+    expect(Math.abs(enLnP - s2)).toBeLessThan(0.005);
+    expect(enP - s2).toBeGreaterThan(0.12);
+    // con la s2 oficial, la exergía destruida sube un 8 %
+    const oficial = T0 * m * (enP - s1);
+    const exacta = T0 * m * (s2 - s1);
+    expect(oficial / exacta - 1).toBeGreaterThan(0.075);
+    expect(oficial / exacta - 1).toBeLessThan(0.09);
+  });
 });
 
 describe('3 · la tubería que mide el viento', () => {

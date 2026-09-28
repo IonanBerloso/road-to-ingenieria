@@ -2127,6 +2127,76 @@ const rubricas = defineCollection({
   }),
 });
 
+/** Las tablas de propiedades de una asignatura: hoy, las del agua y su vapor
+ *  de Térmica (fase F1 de la auditoría del 27 de septiembre de 2026). No se
+ *  escriben a mano: las genera `scripts/tablas-vapor.mjs` con la rejilla del
+ *  anexo del curso y la formulación IAPWS-95, y `tests/fisica/vapor.test.ts`
+ *  comprueba que el JSON publicado es lo que saldría hoy de allí. Este
+ *  esquema vigila la forma: cada fila con tantas celdas como columnas. */
+const formatoDeColumna = z.union([
+  z.object({ cifras: z.number().int().min(1) }),
+  z.object({ decimales: z.number().int().min(0) }),
+  z.object({ exacto: z.literal(true) }),
+]);
+const columnaDeTabla = z.object({
+  id: z.string().min(1),
+  titulo: z.string().min(1),
+  unidad: z.string().min(1),
+  formato: formatoDeColumna,
+});
+const tablaDeFilas = z.object({
+  columnas: z.array(columnaDeTabla).min(2),
+  filas: z.array(z.array(z.number())).min(1),
+});
+const tablaDeBloques = z.object({
+  columnas: z.array(columnaDeTabla).min(2),
+  bloques: z
+    .array(
+      z.object({
+        p: z.number().positive(),
+        Tsat: z.number().nullable(),
+        saturado: z.array(z.number()).nullable(),
+        filas: z.array(z.array(z.number())).min(1),
+      }),
+    )
+    .min(1),
+});
+const tablas = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/tablas' }),
+  schema: z
+    .object({
+      asignatura: z.string().min(1),
+      titulo: z.string().min(5),
+      formulacion: z.string().min(1),
+      saturacionT: tablaDeFilas,
+      saturacionP: tablaDeFilas,
+      sobrecalentado: tablaDeBloques,
+      liquido: tablaDeBloques,
+    })
+    .superRefine((d, ctx) => {
+      for (const nombre of ['saturacionT', 'saturacionP'] as const) {
+        const n = d[nombre].columnas.length;
+        d[nombre].filas.forEach((f, i) => {
+          if (f.length !== n) ctx.addIssue({ code: 'custom', message: `${nombre}, fila ${i + 1}: ${f.length} celdas para ${n} columnas` });
+        });
+      }
+      for (const nombre of ['sobrecalentado', 'liquido'] as const) {
+        const n = d[nombre].columnas.length;
+        for (const b of d[nombre].bloques) {
+          b.filas.forEach((f, i) => {
+            if (f.length !== n) ctx.addIssue({ code: 'custom', message: `${nombre} a ${b.p} bar, fila ${i + 1}: ${f.length} celdas para ${n} columnas` });
+          });
+          if (b.saturado && b.saturado.length !== n - 1) {
+            ctx.addIssue({ code: 'custom', message: `${nombre} a ${b.p} bar: la fila de saturación no tiene ${n - 1} celdas` });
+          }
+          if ((b.Tsat === null) !== (b.saturado === null)) {
+            ctx.addIssue({ code: 'custom', message: `${nombre} a ${b.p} bar: Tsat y la fila de saturación van juntas` });
+          }
+        }
+      }
+    }),
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -2137,4 +2207,5 @@ export const collections = {
   banco,
   laminas,
   rubricas,
+  tablas,
 };

@@ -367,8 +367,8 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 127 declarados, **31 están tachados**
-y los **96** restantes siguen abiertos. La fila de la 1.ª evaluación de Cálculo
+documental pero infla el recuento. De los 127 declarados, **33 están tachados**
+y los **94** restantes siguen abiertos. La fila de la 1.ª evaluación de Cálculo
 decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
@@ -387,8 +387,8 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Mecánica | 2.º cuatrimestre | 9 | 16 | 3 | 2 / 4 |
 | Química | 1.er cuatrimestre | 8 | 16 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 17 | 3 | 11 / 11 |
-| Térmica | ordinaria | 7 | 20 | 17 | 4 / 7 |
-| **total** | **15 rutas** | **132** | **348** | — | **96 / 127** |
+| Térmica | ordinaria | 7 | 21 | 17 | 2 / 7 |
+| **total** | **15 rutas** | **132** | **349** | — | **94 / 127** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19

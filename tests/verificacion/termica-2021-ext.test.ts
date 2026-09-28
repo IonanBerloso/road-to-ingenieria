@@ -8,6 +8,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
 
 const cuadra = convocatoria('ingenieria-termica', '2020-2021-ext');
 const K = 273.15; // la resolución usa 273
@@ -76,9 +77,15 @@ describe('3 · la esfera en la corriente, y dos correlaciones que no coinciden',
 describe('1 · el depósito que triplica su presión y sigue siendo mezcla', () => {
   const id = 'exter2021-ext-1-el-deposito-que-triplica-la-presion-y-sigue-siendo-mezcla';
   const m = 2;
-  // la nota del enunciado, a 2 bar y a 6 bar
-  const a2 = { vf: 0.0010605, vg: 0.8857, uf: 504.49, ug: 2529.5, sf: 1.5301, sg: 7.1271 };
-  const a6 = { vf: 0.001101, vg: 0.3157, uf: 669.9, ug: 2567.4, sf: 1.9312, sg: 6.76 };
+  /* Las tablas del sitio, con la rejilla del anexo (fase F1): el enunciado ya
+     no da ningún valor. La tabla de saturación no trae u, y sale de
+     u = h − p·v, con p en kPa, como la saca el alumno con el anexo. */
+  const fase = (p: number) => {
+    const [, , vf, vg, hf, hg, sf, sg] = tablas.saturacionP.filas.find((r) => r[0] === p)!;
+    const kPa = p * 100;
+    return { vf, vg, uf: hf - kPa * vf, ug: hg - kPa * vg, sf, sg };
+  };
+  const [a2, a6] = [fase(2), fase(6)];
   const lee = (f: number, g: number, x: number) => f + x * (g - f);
   const x1 = 0.2;
   const v = lee(a2.vf, a2.vg, x1); // rígido: el mismo al principio y al final
@@ -89,11 +96,14 @@ describe('1 · el depósito que triplica su presión y sigue siendo mezcla', () 
 
   it('el volumen específico es 0,178 m³/kg', () => cuadra.magnitud(id, 'El volumen específico', v, 'm^3/kg'));
 
-  it('a 6 bar ese volumen cae dentro de la campana: título 0,5623 y 158,9 °C sin más cuentas', () => {
+  it('a 6 bar ese volumen cae dentro de la campana: título 0,5625 y 158,8 °C sin más cuentas', () => {
     expect(x2).toBeGreaterThan(0);
     expect(x2).toBeLessThan(1);
     cuadra(id, 'El título final', x2);
   });
+
+  it('su energía interna de partida es 909,4 kJ/kg', () =>
+    cuadra.magnitud(id, 'La energía interna del principio', lee(a2.uf, a2.ug, x1), 'kJ/kg'));
 
   it('el agua recibe 1.654,8 kJ', () => cuadra.magnitud(id, 'El calor aportado', Q, 'kJ'));
 

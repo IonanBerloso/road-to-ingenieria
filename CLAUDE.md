@@ -288,6 +288,13 @@ src/
                            Expresión Gráfica como DATOS, una por fichero
                            (sd1.json), cotejadas con su página del PDF
                            antes de entrar (scripts/lamina-sobre-pdf.mjs)
+    tablas/                las tablas del agua de Térmica con la rejilla
+                           del anexo del curso, y su diagrama de Mollier.
+                           Calculadas, nunca copiadas (§08): el JSON lo
+                           escribe scripts/tablas-vapor.mjs y el SVG
+                           figuras/termica-mollier.mjs. No se editan a
+                           mano; tests/fisica/vapor.test.ts comprueba que
+                           no se han quedado atrás
   components/
     patrones/              Lectura · EjercicioGuiado · ErrorTipico
     sim/                   los simuladores (§05, §10). Su modelo vive en
@@ -338,13 +345,21 @@ src/
                            un banco de test con sus textos ya dibujados,
                            para los dos componentes que los leen, y sus
                            reglas de texto, con su prueba
+    iapws95.ts · if97.ts · tablas-vapor.ts · anexo-vapor.ts
+                           el agua según IAPWS-95, que es la formulación
+                           del anexo y la de las tablas; IF97, que la
+                           contrasta y ninguna página usa; la rejilla del
+                           anexo y cómo se escribe cada columna; y en qué
+                           se aparta el anexo de ellas, con sus erratas.
+                           No importan nada: node los lee tal cual
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
   pages/                   index · [asignatura] · [asignatura]/[tema] con sus
                            bloques de ejercicios y sus cuestiones ·
-                           examenes · preparar · formulario · laboratorio,
-                           y el índice de ejercicios que busca la paleta
+                           examenes · preparar · formulario · laboratorio ·
+                           tablas, y el índice de ejercicios que busca la
+                           paleta
 scripts/
   verify.mjs               lee el HTML publicado (§11)
   recalcula.mjs            que las cuentas del corpus salgan (§11)
@@ -387,18 +402,25 @@ scripts/
                            de su página del PDF, a la misma escala o
                            ampliada (--zoom), para cotejarla
   mide.mjs                 la tabla de docs/como-vamos.md, medida
+  tablas-vapor.mjs         escribe las tablas de vapor de Térmica en
+                           content/tablas, con lib/iapws95.ts (§10)
   leer-grafica.mjs · leer-curvas.mjs   comprobar una figura sin ojos
   diario.mjs               el diario en PDF
   figuras/                 el lienzo que calcula las figuras (§17), un
                            generador por tema, pegar.mjs, rehacer.mjs —que
                            las vuelve a pegar todas— y previsualiza.mjs,
-                           que monta el contact sheet para mirarlas (§16)
+                           que monta el contact sheet para mirarlas (§16).
+                           termica-mollier.mjs no pega nada: escribe su
+                           SVG en content/tablas, que la página de tablas
+                           mete en línea
 tests/
   *.test.ts                los lectores de respuesta, con vitest
   fisica/                  casos con resultado conocido, uno por simulador,
-                           sacados del corpus y nunca de un libro (§10). El
-                           README dice contra qué compara cada uno; la
-                           cuenta de casos la da npm run deuda
+                           sacados del corpus y nunca de un libro (§10), y
+                           las tablas de vapor, contra los valores de
+                           verificación de la propia IAPWS. El README dice
+                           contra qué compara cada uno; la cuenta de casos
+                           la da npm run deuda
   verificacion/            cada respuesta de examen, recalculada por un
                            camino escrito aparte. Todas menos una, y la
                            que falta está dicha en npm run deuda

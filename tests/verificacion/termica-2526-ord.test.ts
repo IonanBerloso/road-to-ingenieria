@@ -8,6 +8,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { convocatoria } from './corpus';
+import tablas from '../../src/content/tablas/vapor-de-agua.json';
 import { integra } from './numerico';
 
 const cuadra = convocatoria('ingenieria-termica', '2025-2026-ord');
@@ -130,8 +131,10 @@ describe('1c · la exergía que el universo destruye', () => {
 describe('2a · cuánta agua hace falta para condensar un kilo de vapor', () => {
   const id = 'exter2526-ord-2-cuanta-agua-para-condensar-un-kilo';
   const [m1, v1] = [0.7, 3];
-  // la tabla de saturación a 0,5 bar del enunciado
-  const [vf, vg, hf, hg] = [0.0010299, 3.24, 340.54, 2645.2];
+  /* La tabla de saturación a 0,5 bar de las tablas del sitio, la rejilla del
+     anexo (fase F1): el enunciado ya no da los valores. [p, T, v', v'', h', h'', s', s''] */
+  const sat = tablas.saturacionP.filas.find((r) => r[0] === 0.5)!;
+  const [vf, vg, hf, hg] = [sat[2], sat[3], sat[4], sat[5]];
   const cp = 4.186;
   const x1 = (v1 - vf) / (vg - vf);
   const h1 = x1 * hg + (1 - x1) * hf;
@@ -156,7 +159,9 @@ describe('2a · cuánta agua hace falta para condensar un kilo de vapor', () => 
 
 describe('2b · la bomba, y el signo de un trabajo que entra', () => {
   const id = 'exter2526-ord-2-la-bomba-que-consume-seis-kilovatios';
-  const [h2, m] = [340.54, 0.7];
+  // líquido saturado a 0,5 bar, de las tablas del sitio: h' = 340,54
+  const h2 = tablas.saturacionP.filas.find((r) => r[0] === 0.5)![4];
+  const m = 0.7;
   const W = -6; // consume: el trabajo entra
   const h3 = h2 - W / m;
 
