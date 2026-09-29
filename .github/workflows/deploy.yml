@@ -43,6 +43,13 @@ jobs:
         if: steps.cache-navegador.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
+      # pdftotext, para el guardián de las notas impresas de Fluidos
+      # (verify.mjs, 29 de septiembre de 2026): vuelca el cuadernillo y
+      # comprueba que cada «NOTA:» de un ejercicio transcrito está en su
+      # enunciado. Sin él, el suelo falla; no se salta en silencio.
+      - name: Instalar poppler
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+
       # UNA sola línea, y es exactamente la que se escribe en local (§01).
       # Hasta el 13 de septiembre de 2026 este fichero repetía los cinco
       # pasos de `suelo` sueltos —build, verify, color, test, humo—, y eso

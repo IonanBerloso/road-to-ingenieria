@@ -83,6 +83,11 @@ for (const e of ejercicios) {
   if ((e.titulo ?? '').length < 5) mal(id, '`titulo` con menos de 5 caracteres');
   if ((e.fuente ?? '').length < 10) mal(id, '`fuente` con menos de 10 caracteres');
   if ((e.enunciado ?? '').length < 10) mal(id, '`enunciado` con menos de 10 caracteres');
+  /* Las notas impresas del cuadernillo (fase I): una cadena por bloque. */
+  if (e.notas !== undefined) {
+    if (!Array.isArray(e.notas)) mal(id, '`notas` tiene que ser una lista, una cadena por bloque impreso');
+    else for (const n of e.notas) if (typeof n !== 'string' || n.length < 10) mal(id, 'una `nota` vacía o con menos de 10 caracteres');
+  }
   if ((e.resolucion ?? '').length < 100) mal(id, '`resolucion` con menos de 100 caracteres');
   if (!e.pide) mal(id, 'falta `pide`');
   if (!['ejemplo', 'practica', 'examen'].includes(e.nivel)) mal(id, `nivel raro: ${e.nivel}`);
@@ -366,6 +371,9 @@ for (const e of ejercicios) {
    segundo y cubre cualquier fórmula rota, no solo esta forma. */
 const camposDeProsa = (e) => {
   const salida = [['enunciado', e.enunciado], ['resolucion', e.resolucion]];
+  for (const [i, n] of (Array.isArray(e.notas) ? e.notas : []).entries()) {
+    if (typeof n === 'string') salida.push([`nota ${i + 1}`, n]);
+  }
   for (const [i, p] of (e.pasos ?? []).entries()) {
     for (const c of ['pregunta', 'pista', 'desarrollo', 'titulo', 'consigna', 'veredicto']) {
       if (typeof p?.[c] === 'string') salida.push([`paso ${i + 1} · ${c}`, p[c]]);

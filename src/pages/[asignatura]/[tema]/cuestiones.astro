@@ -20,6 +20,10 @@ import { caminoDeBloque } from '../../../lib/ejercicios';
  *
  * Un banco de un tema que no está publicado rompe el build, en vez de
  * publicar una página que no cuelga de ninguna (§03).
+ *
+ * Un banco `propio` (29 de septiembre de 2026, Materiales, temas 7 a 10) no
+ * tiene original ni un solo tema: la página se titula con el banco, dice que
+ * las preguntas son nuestras y por qué orden van, y enlaza todos sus temas.
  */
 export async function getStaticPaths() {
   const catalogo = await getCollection('catalogo');
@@ -33,13 +37,27 @@ export async function getStaticPaths() {
           `no está publicado: su página de cuestiones no colgaría de ninguna.`,
       );
     }
-    return { params: { asignatura: asignatura.id, tema: ficha.id }, props: { banco, asignatura, ficha } };
+    const cubiertos = (banco.data.propio?.temas ?? [banco.data.tema]).map((id) => {
+      const t = asignatura.data.temas.find((x) => x.id === id);
+      if (!t?.hecho) throw new Error(`El banco "${banco.id}" cubre «${id}», que no está publicado.`);
+      return t;
+    });
+    return { params: { asignatura: asignatura.id, tema: ficha.id }, props: { banco, asignatura, ficha, cubiertos } };
   });
 }
 
-const { banco, asignatura, ficha } = Astro.props;
+const { banco, asignatura, ficha, cubiertos } = Astro.props;
 const nn = String(ficha.n).padStart(2, '0');
-const { preguntas, bloques, titulo } = banco.data;
+const { preguntas, bloques, titulo, propio } = banco.data;
+/* «temas 7 a 10» si son seguidos; si no, «temas 3, 5 y 7». */
+const ns = cubiertos.map((t) => t.n);
+const seguidos = ns.every((n, i) => i === 0 || n === ns[i - 1] + 1);
+const deLosTemas = seguidos
+  ? `temas ${ns[0]} a ${ns.at(-1)}`
+  : `temas ${ns.slice(0, -1).join(', ')} y ${ns.at(-1)}`;
+const deLosTemasNN = seguidos
+  ? `temas ${String(ns[0]).padStart(2, '0')} a ${String(ns.at(-1)).padStart(2, '0')}`
+  : deLosTemas;
 const apartados = bloques.filter((b) => preguntas.some((p) => p.bloque === b.id));
 const tema = ruta(`${asignatura.id}/${ficha.id}`);
 const hayEjercicios = (await getCollection('ejercicios')).some(
@@ -48,11 +66,13 @@ const hayEjercicios = (await getCollection('ejercicios')).some(
 ---
 
 <Base
-  titulo={`Cuestiones · ${ficha.titulo} — ${asignatura.data.nombre}`}
-  descripcion={`${titulo}: las ${preguntas.length} preguntas tipo test del tema ${ficha.n} de ${asignatura.data.nombre}, «${ficha.titulo}», con la respuesta y el porqué de cada opción.`}
+  titulo={`Cuestiones · ${propio ? titulo : ficha.titulo} — ${asignatura.data.nombre}`}
+  descripcion={propio
+    ? `${titulo}: ${preguntas.length} preguntas tipo test de los ${deLosTemas} de ${asignatura.data.nombre}, escritas por nosotros, con la respuesta y el porqué de cada opción.`
+    : `${titulo}: las ${preguntas.length} preguntas tipo test del tema ${ficha.n} de ${asignatura.data.nombre}, «${ficha.titulo}», con la respuesta y el porqué de cada opción.`}
   acento={asignatura.data.acento}
 >
-  <Cabecera crumb={`${asignatura.data.nombre} · tema ${nn} · cuestiones`} />
+  <Cabecera crumb={`${asignatura.data.nombre} · ${propio ? deLosTemasNN : `tema ${nn}`} · cuestiones`} />
 
   <main id="principal">
     <Armazon carril="Apartados de las cuestiones">
@@ -67,19 +87,38 @@ const hayEjercicios = (await getCollection('ejercicios')).some(
         </ol>
       </Fragment>
 
-      <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre} · tema {nn}</p>
-      <h1>{ficha.titulo}</h1>
-      <p class="lede">
-        {titulo}: {preguntas.length} preguntas tipo test, en el orden del original. Marca una
-        opción y la página te dice si es la buena y por qué; la teoría y los ejercicios están
-        en <a href={tema}>la página del tema</a>.
-      </p>
+      <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre} · {propio ? deLosTemasNN : `tema ${nn}`}</p>
+      {propio ? (
+        <>
+          <h1>{titulo}</h1>
+          <p class="lede">
+            {preguntas.length} preguntas tipo test escritas por nosotros, {propio.orden}. Marca una
+            opción y la página te dice si es la buena y por qué; la teoría está en las páginas de los
+            temas{' '}
+            {cubiertos.map((t, i) => (
+              <>
+                {i > 0 && (i === cubiertos.length - 1 ? ' y ' : ', ')}
+                <a href={ruta(`${asignatura.id}/${t.id}`)}>{t.n}</a>
+              </>
+            ))}.
+          </p>
+        </>
+      ) : (
+        <>
+          <h1>{ficha.titulo}</h1>
+          <p class="lede">
+            {titulo}: {preguntas.length} preguntas tipo test, en el orden del original. Marca una
+            opción y la página te dice si es la buena y por qué; la teoría y los ejercicios están
+            en <a href={tema}>la página del tema</a>.
+          </p>
+        </>
+      )}
 
       <Cuestiones banco={banco.id} />
 
       <Seguir
         otros={[
-          { href: tema, rotulo: 'teoría', titulo: ficha.titulo },
+          ...cubiertos.map((t) => ({ href: ruta(`${asignatura.id}/${t.id}`), rotulo: 'teoría', titulo: t.titulo })),
           ...(hayEjercicios
             ? [{ href: ruta(caminoDeBloque(asignatura.id, ficha.id, 1)), rotulo: 'ejercicios', titulo: 'Los ejercicios del tema, guiados paso a paso' }]
             : []),

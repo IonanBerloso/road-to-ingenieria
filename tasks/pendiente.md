@@ -100,9 +100,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 
 - **Química, los problemas 5, 6 y 7 de la hoja del tema 5**: un isóbaro y dos
   isotermos, sin transcribir. La ruta del segundo cuatrimestre lo declara.
-- **Fluidos, el aviso de la resolución**: sus piezas con resultado publicado
-  llevan el «el examen no publica solución» de `Examen.astro`, y no es
-  cierto: los enunciados traen los resultados. Fase I.
 - **Térmica, contar apartados** en las diecinueve convocatorias que no son la
   ordinaria de 2025-2026, como se hizo con ella (`manana.md` 10.1).
 - **Térmica, lo que queda de la colección de T9 y T10**: 9.4, 9.10, 9.12,
@@ -189,10 +186,16 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   del 2.16). Se leen bien porque `--faint` está medido, pero no salen del
   color que dice el código. Arreglarlo cambia figuras publicadas: regenerar
   y mirar las que cambien.
+- **La hoja de impresión no cambia los colores**: en `tokens.css`, el bloque
+  `@media print { html {…} }` nunca se aplica, porque `html` pesa menos que
+  `:root`, y en tema oscuro se imprimiría texto claro. Lo comprobó en
+  Chromium, emulando la impresión, el revisor del laboratorio de Materiales
+  el 29 de septiembre de 2026. Un arreglo es `html[lang]`, y toca todo el
+  sitio: mirar la impresión de un tema, un examen y un formulario antes y
+  después.
 - **Coherencia**: seis simuladores usan `data-caso` para sus preajustes y dos
   `data-accion`; `ALCANCE_CONV` del índice de exámenes está pensado para
-  Cálculo; la plantilla de laboratorio dice «GeoGebra» y pinta `trabajo` sin
-  `mate()`; y `TestDeMinimos` no alinea como `Cuestiones` una opción que es
+  Cálculo; y `TestDeMinimos` no alinea como `Cuestiones` una opción que es
   solo una fórmula, que desde E3 llega en bloque (`aTamanoDeFormula`): hoy
   no se nota porque el banco de Materiales no trae fórmulas.
 

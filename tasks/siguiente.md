@@ -16,7 +16,22 @@ entera:
   colección del curso entera en los temas 2 a 10, enlazada desde las dos
   rutas.
 
-## Qué toca: H, Ciencia de Materiales
+## Dónde se quedó, a 29 de septiembre por la noche
+
+- **H1, H4 y H5, integrados**: la prosa y los ejercicios de los temas 2 a 6,
+  las secciones nuevas de los temas 7 a 10 con su banco de 65 preguntas
+  (`propio`, en `/ciencia-materiales/t07-aleaciones-metalicas/cuestiones/`) y
+  el formulario de los temas 1 a 6.
+- **H2, el laboratorio**: revisado; su autor aplica la revisión. Al
+  integrarlo, los ejercicios van al final de t02, t03 y t06, y el YAML lleva
+  `enIndice`, `practica`, `ejercicios` y `donde.apartado`.
+- **H3, el simulacro 40/60**: sin empezar (abajo).
+- **Fase I, tanda 0, hecha**: `notas`, `pdfEs: enunciado-con-resultados`,
+  `puntosImpresos` en %, la página del laboratorio para prácticas de verdad y
+  el guardián de las notas en `verify.mjs` (avisa de 29). Tanda 1 en marcha:
+  i-t02-t04, i-t13 e i-lab; falta i-rub.
+
+## Lo que queda de H, Ciencia de Materiales
 
 El encargo está en `2027 proyecto contenido/auditorias/2026-09-27/`
 (`encargo-por-fases.md`, fase H, y `ciencia-materiales.md`). El plan por

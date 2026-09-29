@@ -243,6 +243,9 @@ function formatoConExacta(tipo: string, formatoDelDato: string): string {
 const PREFIJO = `ej-${ejercicio.id}`;
 
 const enunciadoHtml = await mate(ejercicio.enunciado, PREFIJO);
+/* Las notas que imprime el cuadernillo, aparte del enunciado y tal cual
+   (content.config.ts, `notas`): son lo que dice cómo se corrige. */
+const notasHtml = await Promise.all((ejercicio.notas ?? []).map((n) => mate(n, PREFIJO)));
 const pideHtml = await mate(ejercicio.pide, PREFIJO);
 const resolucionHtml = await mate(ejercicio.resolucion, PREFIJO);
 
@@ -483,6 +486,14 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   <div class="enunciado">
     <p class="rotulo">Enunciado</p>
     <div class="prosa" set:html={enunciadoHtml} />
+    {
+      notasHtml.length > 0 && (
+        <div class="notas-impresas">
+          <p class="rotulo">{notasHtml.length === 1 ? 'Nota del enunciado' : 'Notas del enunciado'}</p>
+          {notasHtml.map((h) => <div class="prosa" set:html={h} />)}
+        </div>
+      )
+    }
     <div class="prosa pide" set:html={pideHtml} />
   </div>
 
@@ -1841,6 +1852,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   }
 
   .enunciado .rotulo { margin-bottom: .5rem; }
+  .notas-impresas {
+    margin-top: .8rem;
+    padding: .6rem .8rem;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+  }
+  .notas-impresas .rotulo { margin-bottom: .3rem; }
   .pide { font-weight: 500; margin-top: .6rem; }
 
   /* ── la escalera de pasos, con sus tres estados a la vista ─────── */

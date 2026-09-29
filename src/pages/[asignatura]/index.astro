@@ -56,18 +56,22 @@ const rutas = (await getCollection('preparar'))
 const numExamenes = (await getCollection('examen')).filter((e) => e.data.asignatura === id).length;
 const conTemas = (CON_TEMAS as readonly string[]).includes(id);
 const conFormulario = conTemas && hayFormulario((await getCollection(id as ConTemas)).map((e) => e.body));
-const conLaboratorio = (await getCollection('laboratorio')).some((l) => l.id.split('/')[0] === id);
+const laboratorio = (await getCollection('laboratorio')).find((l) => l.id.split('/')[0] === id);
+const conLaboratorio = laboratorio !== undefined;
 /* Las tablas de propiedades calculadas con la rejilla del anexo del curso
    (fase F1): hoy solo Térmica. Se enlazan si existen, como el formulario. */
 const conTablas = (await getCollection('tablas')).some((t) => t.data.asignatura === id);
 /* Los temas con cuestiones de práctica —las de las diapositivas de Cálculo,
    fase E3—, que tienen su página en `…/tNN-…/cuestiones/`. Los bancos con
    simulacro no cuentan: viven dentro de la teoría de su tema. */
-const conCuestiones = new Set(
-  (await getCollection('banco'))
-    .filter((b) => b.data.asignatura === id && !b.data.puntuacion)
-    .map((b) => b.data.tema),
+const bancosDePractica = (await getCollection('banco')).filter((b) => b.data.asignatura === id && !b.data.puntuacion);
+/* Cada tema con cuestiones, y el tema donde vive su página: un banco `propio`
+   cubre varios y vive en el primero. */
+const conCuestiones = new Map(
+  bancosDePractica.flatMap((b) => (b.data.propio?.temas ?? [b.data.tema]).map((t) => [t, b.data.tema] as const)),
 );
+const cuestionesPropias = bancosDePractica.some((b) => b.data.propio);
+const cuestionesDeDiapositivas = bancosDePractica.some((b) => !b.data.propio);
 
 const modalidades = a.evaluacion?.modalidades ?? [];
 const notasHtml = await Promise.all(modalidades.map((m) => (m.nota ? mate(m.nota, `nota-${id}`) : null)));
@@ -236,13 +240,16 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
               )}
               {conLaboratorio && (
                 <li>
-                  <a href={ruta(`${id}/laboratorio`)}>El laboratorio</a>: las actividades con ordenador
-                  que este sitio no examina, y dónde está su material.
+                  <a href={ruta(`${id}/laboratorio`)}>El laboratorio</a>: {laboratorio!.data.enIndice}
                 </li>
               )}
               {conCuestiones.size > 0 && (
                 <li>
-                  Las cuestiones de las diapositivas: las preguntas tipo test de {conCuestiones.size}{' '}
+                  {cuestionesDeDiapositivas && !cuestionesPropias
+                    ? 'Las cuestiones de las diapositivas'
+                    : cuestionesPropias && !cuestionesDeDiapositivas
+                      ? 'Las cuestiones, escritas por nosotros'
+                      : 'Las cuestiones, de las diapositivas y escritas por nosotros'}: las preguntas tipo test de {conCuestiones.size}{' '}
                   {conCuestiones.size === 1 ? 'tema' : 'temas'}, con la respuesta y el porqué de cada
                   opción. Van marcadas en el temario de abajo.
                 </li>
@@ -262,7 +269,7 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
                     {t.hecho ? <a href={ruta(`${id}/${t.id}`)}>{t.titulo}</a> : <span>{t.titulo}</span>}
                     {!t.hecho && <span class="t-estado">{t.soloEnClase ? 'solo en clase' : 'todavía no'}</span>}
                     {t.hecho && conCuestiones.has(t.id) && (
-                      <a class="t-cq" href={ruta(`${id}/${t.id}/cuestiones`)}>cuestiones</a>
+                      <a class="t-cq" href={ruta(`${id}/${conCuestiones.get(t.id)}/cuestiones`)}>cuestiones</a>
                     )}
                   </li>
                 ))}

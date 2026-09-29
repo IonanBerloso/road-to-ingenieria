@@ -119,11 +119,16 @@ const bloques = Array.from({ length: ejercicios.length ? numPaginas(ejercicios.l
 
 /* Las cuestiones de las diapositivas del tema, si tiene banco de práctica
    (fase E3): se enlazan desde la pestaña de ejercicios y desde el final. */
+/* Un banco `propio` que cubre varios temas vive en la página del primero y
+   se enlaza desde todos. */
 const bancoDelTema = (await getCollection('banco')).find(
-  (b) => b.data.asignatura === asignatura.id && b.data.tema === ficha.id && !b.data.puntuacion,
+  (b) =>
+    b.data.asignatura === asignatura.id &&
+    !b.data.puntuacion &&
+    (b.data.tema === ficha.id || (b.data.propio?.temas.includes(ficha.id) ?? false)),
 );
 const cuestiones = bancoDelTema && {
-  href: ruta(`${asignatura.id}/${ficha.id}/cuestiones`),
+  href: ruta(`${asignatura.id}/${bancoDelTema.data.tema}/cuestiones`),
   titulo: bancoDelTema.data.titulo,
   cuantas: bancoDelTema.data.preguntas.length,
 };

@@ -832,6 +832,93 @@ console.log('\nContenido');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Las notas que imprime el cuadernillo de Fluidos, en el enunciado
+
+   Se añade el 29 de septiembre de 2026 (fase I, tanda 0). Un enunciado
+   transcrito conserva los números y pierde las notas, y en Fluidos las notas
+   puntúan: «Los resultados sin deducción de la expresión NO SON VÁLIDOS»,
+   «IMPRESCINDIBLE: indicar el tipo de flujo», «se penalizará no indicar los
+   pasos». La auditoría del 27 de septiembre no encontró ninguna en el sitio.
+
+   Vuelca cada PDF con pdftotext, parte el cuadernillo por la fecha de cada
+   examen y cada examen por sus ejercicios, y comprueba que cada bloque de
+   nota de un ejercicio transcrito está en sus `notas` (la regla está en
+   `scripts/notas-impresas.mjs`). Un ejercicio que está en `fuera` no se mira.
+
+   Solo Fluidos: antes de extenderlo hay que medir cuántos bloques de nota
+   traen los PDF de las demás. Y sin pdftotext FALLA: un guardián que se salta
+   cuando falta la herramienta no guarda nada (poppler se instala en el CI).
+
+   AVISA Y NO BLOQUEA mientras las unidades de examen de la fase I las van
+   transcribiendo: nace midiendo 29 notas sin transcribir. Cuando llegue a
+   cero, `NOTAS_BLOQUEAN` pasa a true y desde ahí es un fallo.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const NOTAS_BLOQUEAN = false;
+  const { load } = await import('js-yaml');
+  const { spawnSync } = await import('node:child_process');
+  const n = await import('./notas-impresas.mjs');
+  const dirEx = join(SRC, 'content', 'fluidos', 'examenes');
+  const dirPdf = join(ROOT, 'public', 'examenes', 'fluidos');
+
+  const prueba = spawnSync('pdftotext', ['-v']);
+  if (prueba.error) {
+    fallo(
+      'Hace falta pdftotext (poppler) para comprobar las notas impresas de Fluidos',
+      'en Windows viene con Git (mingw64); en el CI lo instala deploy.yml',
+    );
+  } else {
+    const volcados = new Map();
+    const sinNota = [];
+    const sinCasar = [];
+    let bloques = 0;
+    for (const d of readdirSync(dirEx).sort()) {
+      const yamlEx = join(dirEx, d, 'examen.yaml');
+      if (!existsSync(yamlEx)) continue;
+      const ex = load(leer(yamlEx));
+      if (!ex?.pdf) continue;
+      if (!volcados.has(ex.pdf)) {
+        const r = spawnSync('pdftotext', ['-enc', 'UTF-8', '-layout', join(dirPdf, ex.pdf), '-'], {
+          encoding: 'utf8',
+          maxBuffer: 256 * 1024 * 1024,
+        });
+        volcados.set(ex.pdf, r.status === 0 ? n.partePorExamen(r.stdout) : null);
+      }
+      const examenes = volcados.get(ex.pdf);
+      const texto = examenes?.get(String(ex.fecha).toLowerCase());
+      if (!texto) {
+        sinCasar.push(`${d}: «${ex.fecha}» no está en ${ex.pdf}`);
+        continue;
+      }
+      const yamlEj = join(dirEx, d, 'ejercicios.yaml');
+      const porId = new Map((load(leer(yamlEj))?.ejercicios ?? []).map((e) => [e.id, e]));
+      const porNumero = new Map();
+      for (const ref of ex.ejercicios ?? []) {
+        const e = porId.get(ref.id) ?? ref;
+        porNumero.set(n.numeroImpreso(e), [...(porNumero.get(n.numeroImpreso(e)) ?? []), e]);
+      }
+      for (const [num, trozo] of n.partePorEjercicio(texto)) {
+        const suyos = porNumero.get(num);
+        if (!suyos) continue; // fuera, o no transcrito
+        const notas = suyos.flatMap((e) => e.notas ?? []);
+        for (const b of n.bloquesDeNota(trozo)) {
+          bloques++;
+          if (n.cobertura(b, notas) < n.UMBRAL) sinNota.push(`${d} · ${num}: «${b.slice(0, 70)}…»`);
+        }
+      }
+    }
+
+    if (sinCasar.length) fallo('Un examen de Fluidos cuya fecha no está en su PDF', sinCasar.join('\n    '));
+    if (sinNota.length === 0) ok(`las ${bloques} notas impresas de los exámenes de Fluidos están en sus enunciados`);
+    else
+      (NOTAS_BLOQUEAN ? fallo : aviso)(
+        `${sinNota.length} de ${bloques} notas impresas de Fluidos no están en las «notas» de su ejercicio`,
+        sinNota.slice(0, NOTAS_BLOQUEAN ? 12 : 3).join('\n    '),
+      );
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    LaTeX dentro de un <figure>, que no lo procesa nadie
 
    Se añade el 25 de agosto de 2026, después de publicarlo de verdad. El pie

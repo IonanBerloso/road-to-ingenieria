@@ -68,7 +68,7 @@ interface Props {
    *  profesor, de 14 a 32 páginas, con el enunciado citado arriba. Llamarlas
    *  igual era una afirmación falsa publicada en cinco sitios: ver el campo
    *  `pdfEs` en content.config.ts. */
-  pdfEs: 'enunciado' | 'resolucion';
+  pdfEs: 'enunciado' | 'resolucion' | 'enunciado-con-resultados';
   /** La ruta de estudio que prepara esta convocatoria, si la hay. Sale de
    *  `evaluacion` o de `tambienPrepara` en el YAML de la ruta. */
   ruta: { href: string; titulo: string } | null;
@@ -96,7 +96,7 @@ interface Props {
   sinPdf?: string;
   /** Lo que vale cada ejercicio según el cuadernillo, por su número, cuando
    *  lo imprime sin reparto por competencias (`puntosImpresos`). */
-  puntosImpresos?: { fuente: string; reparto: { n: number; puntos: number }[] };
+  puntosImpresos?: { fuente: string; unidad?: 'puntos' | '%'; reparto: { n: number; puntos: number }[] };
 }
 
 const {
@@ -122,6 +122,8 @@ const {
 const hayDosCuatrimestres =
   ejercicios.some((e) => e.cuatrimestre === 1) && ejercicios.some((e) => e.cuatrimestre === 2);
 const esResolucion = pdfEs === 'resolucion';
+/* Fluidos: el cuadernillo trae el resultado de cada apartado, sin resolverlo. */
+const conResultados = pdfEs === 'enunciado-con-resultados';
 /* Cuántos ejercicios trae el cuadernillo y cuántas resoluciones ofrece el
    sitio no siempre coinciden: en Térmica un ejercicio tiene cinco apartados
    que cruzan tres temas y se parte en varias piezas guiadas. Cuando las
@@ -152,6 +154,11 @@ const totalImpreso =
     : 0;
 /** «3,50», «2», «0,50»: como los imprime el cuadernillo, con coma. */
 const enPuntos = (p: number) => (Number.isInteger(p) ? String(p) : p.toFixed(2).replace('.', ','));
+/* Fluidos imprime porcentajes, «1. (10%)», y no siempre suman 100: se
+   publican en su unidad, tal como vienen (content.config.ts, `unidad`). */
+const enPorcentaje = puntosImpresos?.unidad === '%';
+const conUnidad = (p: number, corto = false) =>
+  enPorcentaje ? `${enPuntos(p)} %` : `${enPuntos(p)} ${corto ? 'pts' : 'puntos'}`;
 
 /* Qué es la unidad del simulacro. Con piezas, cada casilla es una pieza y no
    un ejercicio, y el aviso lo dice así. */
@@ -214,6 +221,7 @@ const hoja = await Promise.all(
   ejercicios.map(async (e) => ({
     ...e,
     enunciadoHtml: await mate(e.enunciado, `hoja-${e.id}`),
+    notasHtml: await Promise.all((e.notas ?? []).map((n) => mate(n, `hoja-${e.id}`))),
     pideHtml: await mate(e.pide, `hoja-${e.id}`),
   })),
 );
@@ -233,7 +241,7 @@ const fueraHtml = await Promise.all(
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
           no lo hay, no se dice nada en vez de decir un número inventado
           (§10). */}
-      {fecha} · {enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : totalImpreso > 0 ? ` · ${enPuntos(totalImpreso)} puntos` : ''}{duracion ? ` · ${duracion} de reloj` : ''}
+      {fecha} · {enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : totalImpreso > 0 && !enPorcentaje ? ` · ${enPuntos(totalImpreso)} puntos` : ''}{duracion ? ` · ${duracion} de reloj` : ''}
     </p>
 
     <nav class="pestanas" aria-label="Vistas del examen">
@@ -437,7 +445,9 @@ const fueraHtml = await Promise.all(
           <p class="f-pie">
             {sinPdf
               ? 'Esta convocatoria no publica su PDF, y el recuadro de la derecha dice por qué. Cada ejercicio que falta dice ahí arriba por qué no está resuelto aquí.'
-              : esResolucion
+              : conResultados
+                ? 'Están en el PDF original, el mismo que se repartió en el aula, con el resultado de cada apartado impreso. Si los echas de menos al contrastar, no es un descuido: cada uno dice ahí arriba por qué todavía no está resuelto aquí.'
+                : esResolucion
                 ? 'Están en el PDF de la escuela, que aquí es el examen corregido por el profesor. Si los echas de menos al contrastar, no es un descuido: cada uno dice ahí arriba por qué todavía no está resuelto aquí.'
                 : 'Están en el PDF original, que es el mismo que se repartió en el aula. Si los echas de menos al contrastar, no es un descuido: cada uno dice ahí arriba por qué todavía no está resuelto aquí.'}
           </p>
@@ -471,7 +481,7 @@ const fueraHtml = await Promise.all(
                       que son del ejercicio entero: repartirlos sería inventar. */}
                   {!e.puntos && filas[i].primera && puntosDe.has(filas[i].n) && (
                     <span class="p-pts">
-                      <strong>{enPuntos(puntosDe.get(filas[i].n)!)} pts</strong>
+                      <strong>{conUnidad(puntosDe.get(filas[i].n)!, true)}</strong>
                       {piezasDe(filas[i].n) > 1 && ` todo el ${filas[i].n}`}
                     </span>
                   )}
@@ -480,6 +490,12 @@ const fueraHtml = await Promise.all(
 
                 <div class="p-cuerpo">
                   <div class="prosa" set:html={e.enunciadoHtml} />
+                  {e.notasHtml.length > 0 && (
+                    <div class="p-notas">
+                      <p class="rotulo">{e.notasHtml.length === 1 ? 'Nota del enunciado' : 'Notas del enunciado'}</p>
+                      {e.notasHtml.map((h) => <div class="prosa" set:html={h} />)}
+                    </div>
+                  )}
                   <div class="prosa pide" set:html={e.pideHtml} />
 
                   {e.puntos && <Reparto puntos={e.puntos} />}
@@ -489,7 +505,9 @@ const fueraHtml = await Promise.all(
                       Resolver guiado →
                     </a>
                     <span class="p-nota">
-                      {esResolucion
+                      {conResultados
+                        ? 'El examen publica los resultados, no la resolución: la resolución guiada es nuestra y llega a ellos, o dice dónde no.'
+                        : esResolucion
                         ? sinPdf
                           ? 'La resolución guiada es nuestra, contrastada con la del profesor, que esta página no publica.'
                           : 'La resolución guiada es nuestra, contrastada con la del profesor que trae el PDF.'
@@ -506,7 +524,9 @@ const fueraHtml = await Promise.all(
 
     <section id="resoluciones" class="panel" aria-label="Resoluciones">
       <p class="aviso aviso--flag rotulo">
-        {esResolucion
+        {conResultados
+          ? 'El examen publica el resultado de cada apartado, no la resolución. Estas resoluciones son nuestras y llegan a esos resultados, o dicen dónde no.'
+          : esResolucion
           ? sinPdf
             ? 'Estas resoluciones son nuestras, contrastadas con la resolución del profesor, que esta página no publica.'
             : 'Estas resoluciones son nuestras, contrastadas con la resolución completa del profesor: es el PDF de esta página.'
@@ -526,7 +546,9 @@ const fueraHtml = await Promise.all(
             {p.etiqueta ? ` · ${p.etiqueta}` : ''}
           </p>
           <p class="pdf-sub">
-            {esResolucion
+            {conResultados
+              ? 'El PDF de la escuela, tal cual se repartió en el aula, con el resultado de cada apartado impreso. Úsalo para comprobar después de intentarlo.'
+              : esResolucion
               ? 'El PDF de la escuela, y aquí no es el cuadernillo en blanco: es la corrección del profesor, con el enunciado citado arriba y su desarrollo debajo. Ábrelo después de intentarlo, no antes.'
               : 'El PDF de la escuela, tal cual se repartió en el aula. Estudia con lo que cayó, y contrasta cada resolución con su enunciado.'}
           </p>
@@ -555,10 +577,13 @@ const fueraHtml = await Promise.all(
             .sort((a, b) => a - b)
             .map((n) => (
               <p class="rep-fila">
-                <strong>{n}.</strong> {puntosDe.has(n) ? `${enPuntos(puntosDe.get(n)!)} puntos` : 'no se sabe'}
+                <strong>{n}.</strong> {puntosDe.has(n) ? conUnidad(puntosDe.get(n)!) : 'no se sabe'}
               </p>
             ))}
           <p class="rep-nota">Lo imprime el cuadernillo, {puntosImpresos.fuente}.</p>
+          {enPorcentaje && totalImpreso > 0 && Math.abs(totalImpreso - 100) > 0.01 && (
+            <p class="rep-nota">Los porcentajes impresos suman {enPuntos(totalImpreso)} %, no 100: se publican como vienen.</p>
+          )}
         </div>
       )
     }
@@ -1193,6 +1218,13 @@ const fueraHtml = await Promise.all(
 
   /* ── la hoja: filas plegables (brief §6) ───────────────────────── */
   .hoja { list-style: none; }
+  .p-notas {
+    margin-top: .7rem;
+    padding: .55rem .75rem;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+  }
+  .p-notas .rotulo { margin-bottom: .3rem; }
 
   .pregunta {
     border: 1.5px solid var(--rule);

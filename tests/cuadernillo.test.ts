@@ -72,6 +72,20 @@ describe('queEsElPdf', () => {
     expect(queEsElPdf([resolucion, resolucion])).toBe('el PDF corregido de la escuela');
   });
 
+  /* Fluidos: el cuadernillo trae impreso el resultado de cada apartado, sin
+     resolverlo. Nace el 29 de septiembre de 2026 (fase I, tanda 0). */
+  const conResultados = { pdf: 'c.pdf', pdfEs: 'enunciado-con-resultados' as const };
+
+  it('todas con el enunciado y los resultados impresos', () => {
+    expect(queEsElPdf([conResultados, conResultados])).toBe('su enunciado original en PDF, con los resultados impresos');
+  });
+
+  it('enunciados, unos con resultados y otros sin, y ninguna corrección', () => {
+    expect(queEsElPdf([enunciado, conResultados])).toBe(
+      'su enunciado original en PDF, que en algunas trae los resultados impresos',
+    );
+  });
+
   it('mezcladas, y una que no publica PDF', () => {
     expect(queEsElPdf([enunciado, resolucion, sinPdf])).toBe(
       'el PDF de la escuela, que es el enunciado o, en alguna, la corrección del profesor, salvo una que no lo publica y dice por qué',
@@ -86,6 +100,16 @@ describe('avisoDeResoluciones', () => {
 
   it('con todas, se dice contra qué están contrastadas', () => {
     expect(avisoDeResoluciones([{ pdfEs: 'resolucion' }, { pdfEs: 'resolucion' }])).toMatch(/contrastadas con la resolución del profesor/);
+  });
+
+  it('todas con los resultados impresos: las nuestras llegan a ellos', () => {
+    const a = avisoDeResoluciones([{ pdfEs: 'enunciado-con-resultados' }, { pdfEs: 'enunciado-con-resultados' }]);
+    expect(a).toMatch(/^Los exámenes publican los resultados, no la resolución/);
+  });
+
+  it('unas con resultados y otras sin, ninguna oficial', () => {
+    const a = avisoDeResoluciones([{ pdfEs: 'enunciado' }, { pdfEs: 'enunciado-con-resultados' }]);
+    expect(a).toMatch(/algunos traen los resultados impresos/);
   });
 
   it('mezcladas, se dicen las dos cosas', () => {

@@ -59,7 +59,7 @@ export function filasDelCuadernillo(ejercicios: readonly { n?: number | null }[]
   });
 }
 
-type ConPdf = { pdf?: unknown; pdfEs: 'enunciado' | 'resolucion' };
+type ConPdf = { pdf?: unknown; pdfEs: 'enunciado' | 'resolucion' | 'enunciado-con-resultados' };
 
 /**
  * Qué PDF acompaña a un conjunto de convocatorias, dicho en media frase:
@@ -78,7 +78,11 @@ export function queEsElPdf(exs: readonly ConPdf[]): string {
     ? 'el PDF corregido de la escuela'
     : conPdf.every((e) => e.pdfEs === 'enunciado')
       ? 'su enunciado original en PDF'
-      : 'el PDF de la escuela, que es el enunciado o, en alguna, la corrección del profesor';
+      : conPdf.every((e) => e.pdfEs === 'enunciado-con-resultados')
+        ? 'su enunciado original en PDF, con los resultados impresos'
+        : conPdf.every((e) => e.pdfEs !== 'resolucion')
+          ? 'su enunciado original en PDF, que en algunas trae los resultados impresos'
+          : 'el PDF de la escuela, que es el enunciado o, en alguna, la corrección del profesor';
   if (sin === 0) return base;
   return sin === 1
     ? `${base}, salvo una que no lo publica y dice por qué`
@@ -98,6 +102,11 @@ export function queEsElPdf(exs: readonly ConPdf[]): string {
  */
 export function avisoDeResoluciones(exs: readonly Pick<ConPdf, 'pdfEs'>[]): string {
   const oficiales = exs.filter((e) => e.pdfEs === 'resolucion').length;
+  const conResultados = exs.filter((e) => e.pdfEs === 'enunciado-con-resultados').length;
+  if (oficiales === 0 && conResultados === exs.length)
+    return 'Los exámenes publican los resultados, no la resolución: las resoluciones son nuestras y llegan a esos resultados, o dicen dónde no.';
+  if (oficiales === 0 && conResultados > 0)
+    return 'Los exámenes no publican la resolución, y algunos traen los resultados impresos: las resoluciones son nuestras, y donde hay resultado llegan a él o dicen dónde no.';
   if (oficiales === 0)
     return 'Los exámenes no publican solución: las resoluciones son propuesta nuestra y están pendientes de revisión.';
   if (oficiales === exs.length)

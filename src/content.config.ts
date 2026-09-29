@@ -1037,6 +1037,20 @@ const ejercicio = z
      *  trece caracteres y es un enunciado completo. El minimo solo esta para
      *  cazar un campo vacio o un marcador de posicion. */
     enunciado: z.string().min(10),
+    /**
+     * Las notas que el cuadernillo imprime junto al enunciado —«NOTA»,
+     * «Nota importante», «IMPRESCINDIBLE»…—, tal cual, una cadena por bloque.
+     *
+     * POR QUÉ EXISTE (fase I, 29 de septiembre de 2026). En Fluidos las notas
+     * dicen cómo se corrige: «limitar a 3 iteraciones», el coste del kWh, la
+     * penalización por saltarse los cinco pasos. Transcritas dentro del
+     * enunciado se perdían entre los datos, y fuera de él no estaban: un
+     * enunciado transcrito conservaba los números y perdía las notas.
+     * - Para quién: el alumno de 2.º que prepara el examen con el sitio.
+     * - Qué gana: los puntos que se pierden con la cuenta bien hecha.
+     * - Cómo se comprueba: el guardián de las notas contra el PDF.
+     */
+    notas: z.array(z.string().min(10)).optional(),
     /** Qué se pide exactamente, y en qué forma. */
     pide: z.string().min(5),
     pasos: z.array(paso).min(2),
@@ -1367,7 +1381,11 @@ const examen = defineCollection({
        *  declarada aquí y anotada en `tasks/manana.md` para que Ionan la tome
        *  por escrito. Lo que sí me toca es que la página no llame enunciado a
        *  lo que no lo es. */
-      pdfEs: z.enum(['enunciado', 'resolucion']).default('enunciado'),
+      /* El tercer valor, del 29 de septiembre de 2026: los cuadernillos de
+         Fluidos imprimen el resultado de cada apartado, sin la resolución. No
+         son la corrección del profesor ni un enunciado a secas, y el aviso
+         «el examen no publica solución» era falso para ellos. */
+      pdfEs: z.enum(['enunciado', 'resolucion', 'enunciado-con-resultados']).default('enunciado'),
       ejercicios: z
         .array(
           z.object({
@@ -1502,6 +1520,9 @@ const examen = defineCollection({
       puntosImpresos: z
         .object({
           fuente: z.string().min(15),
+          /** Fluidos imprime porcentajes, «1. (10%)», y no siempre suman 100:
+           *  se publican como vienen, en su unidad, sin convertirlos. */
+          unidad: z.enum(['puntos', '%']).default('puntos'),
           reparto: z
             .array(z.object({ n: z.number().int().positive(), puntos: z.number().positive() }))
             .min(1),
@@ -1873,6 +1894,12 @@ const laboratorio = defineCollection({
      *  porque la de Cálculo —«no sale ningún ejercicio de examen»— no vale
      *  para todas. */
     entradilla: z.string().min(40),
+    /** Lo que dice el índice de la asignatura detrás de «El laboratorio:».
+     *  Estuvo escrito en la plantilla —«las actividades con ordenador que este
+     *  sitio no examina»— hasta el 29 de septiembre de 2026: con Fluidos y
+     *  Materiales dejó de ser verdad, porque sus prácticas no son de ordenador
+     *  y el escrito pregunta por ellas. En minúscula y con su punto final. */
+    enIndice: z.string().min(20).regex(/^\p{Ll}.*\.$/su, 'en minúscula y con punto final'),
     /** De dónde salen los guiones, citado como cualquier otra fuente. */
     fuente: z.string().min(10),
     /** Por qué esta página existe y qué NO hace. */
@@ -1888,10 +1915,17 @@ const laboratorio = defineCollection({
           que: z.string().min(20),
           /** Lo que la actividad pide, resumido por nosotros. */
           trabajo: z.array(z.string().min(15)).min(2),
-          /** El apartado del sitio donde eso mismo está explicado. */
+          /** El apartado del sitio donde eso mismo está explicado; con
+           *  `apartado`, el slug de su `##`, para enlazarlo. */
           donde: z
-            .object({ tema: z.string().min(3), texto: z.string().min(5) })
+            .object({ tema: z.string().min(3), texto: z.string().min(5), apartado: z.string().min(3).optional() })
             .optional(),
+          /** Fluidos (fase I): el número de la práctica en el guion y la sesión
+           *  de la guía en que se hace, para rotular y agrupar. */
+          practica: z.number().int().positive().optional(),
+          sesion: z.number().int().positive().optional(),
+          /** Los ejercicios del sitio que usan esta práctica, por id. */
+          ejercicios: z.array(z.string().regex(/^[a-z0-9-]+$/)).optional(),
         }),
       )
       .min(1),
@@ -1993,6 +2027,22 @@ const banco = defineCollection({
           }),
         )
         .min(1),
+      /** Un banco escrito por nosotros, que no transcribe unas diapositivas
+       *  ni un examen. Nace el 29 de septiembre de 2026 con el de Materiales
+       *  para el test de los temas 7 a 10: colgado solo de `tema`, su página
+       *  decía «tema 7» y «en el orden del original», y no hay original y son
+       *  cuatro temas. Con él, la página dice de quién son las preguntas, por
+       *  qué orden van y todos los temas que cubren, y cada uno de esos temas
+       *  enlaza el banco. */
+      propio: z
+        .object({
+          /** Los temas que cubre, en orden y empezando por el de `tema`. */
+          temas: z.array(z.string().regex(/^t\d{2}-[a-z0-9-]+$/)).min(2),
+          /** Por qué orden van las preguntas, detrás de «… escritas por
+           *  nosotros, »: «ordenadas por los doce temas de las presentaciones». */
+          orden: z.string().min(10),
+        })
+        .optional(),
       /** Cuántas opciones trae cada pregunta cuando el original lo fija. */
       opciones: z.number().int().min(2).max(6).optional(),
       /** Cuántas diapositivas tiene el PDF del que sale el banco, si sale de
@@ -2065,6 +2115,8 @@ const banco = defineCollection({
       const aviso = (message: string) => ctx.addIssue({ code: 'custom', message });
       const ids = new Set(b.bloques.map((x) => x.id));
       if (ids.size !== b.bloques.length) aviso('hay dos bloques con el mismo id');
+      if (b.propio && b.propio.temas[0] !== b.tema) aviso('`propio.temas` empieza por el tema del banco');
+      if (b.propio && b.diapositivas !== undefined) aviso('un banco propio no sale de unas diapositivas');
 
       /* El reparto declarado tiene que sumar lo que saca el simulacro, y
          ningún bloque puede pedir más preguntas de las que tiene. */

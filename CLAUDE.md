@@ -274,18 +274,26 @@ src/
     preparar/              una ruta de estudio por evaluación (§14).
                            Solo YAML: no enseña nada nuevo, ordena lo que
                            ya está y dice por qué en ese orden.
-    laboratorio/           lo que la asignatura evalúa y esta app NO
-                           examina: las sesiones con ordenador. Un YAML
-                           por asignatura: Cálculo (GeoGebra) y Térmica
-                           (Termograf y TermoLagun). La herramienta y la
-                           frase de la entradilla salen del YAML.
-                           No transcribe el guion ni reparte ningún
-                           fichero: lo nombra, lo resume y enlaza el
+    laboratorio/           las prácticas de la asignatura, que esta app
+                           no corrige. Un YAML por asignatura: Cálculo
+                           (GeoGebra) y Térmica (Termograf), de ordenador;
+                           Materiales y Fluidos, de laboratorio de verdad,
+                           y en Fluidos el escrito pregunta por ellas. La
+                           herramienta, la entradilla y la línea del índice
+                           de la asignatura (`enIndice`) salen del YAML.
+                           Con `practica` se rotula «P01»; con `sesion`,
+                           se agrupa (todas o ninguna); `donde.apartado` y
+                           `ejercicios` se enlazan y rompen el build si no
+                           existen. No transcribe el guion ni reparte
+                           ningún fichero: lo nombra, lo resume y enlaza el
                            apartado donde está explicado (§08)
     banco/                 bancos de preguntas de test (§05): el de mínimos
-                           de Materiales, que alimenta un simulacro, y las
+                           de Materiales, que alimenta un simulacro; las
                            cuestiones de las diapositivas de Cálculo, uno
-                           por tema, cada uno con su página
+                           por tema, cada uno con su página; y el de los
+                           temas 7 a 10 de Materiales, `propio`: escrito
+                           por nosotros, vive en la página del primer tema
+                           que cubre y lo enlazan todos
     laminas/               las figuras de la colección de diédrico de
                            Expresión Gráfica como DATOS, una por fichero
                            (sd1.json), cotejadas con su página del PDF
@@ -802,6 +810,18 @@ JavaScript, algo está mal diseñado: vuelve atrás y generalízalo.
 
 Solo se escribe código nuevo cuando el tema necesita **un simulador que no
 existe**. Todo lo demás es prosa y datos.
+
+### Las notas del enunciado
+
+Lo que un cuadernillo imprime como «NOTA», «Nota importante», «NOTA 1»,
+«IMPRESCINDIBLE» o «Notas a tener en cuenta» va, entero y tal cual, en el
+campo `notas` del ejercicio, una cadena por bloque, y sale del `enunciado`.
+La página lo pinta en su caja, «Nota del enunciado», y se imprime. Lo que
+añadimos nosotros va en un párrafo final del enunciado que empieza por
+«**Notas nuestras.**», nunca dentro de una frase impresa. Entró el 29 de
+septiembre de 2026 con Fluidos, donde las notas puntúan —«los resultados sin
+deducción de la expresión NO SON VÁLIDOS»— y ningún ejercicio las llevaba; en
+Fluidos lo vigila `verify.mjs` contra el PDF (§11).
 
 ### En qué orden van los ejercicios dentro de un `ejercicios.yaml`
 
@@ -1458,7 +1478,12 @@ simulación.
   la `fuente` de dónde están. Nunca se reparte un número impreso entre
   competencias ni entre las piezas de un ejercicio: eso es inventar (§10). Y
   el total solo se publica si el cuadernillo da los puntos de todos sus
-  ejercicios.
+  ejercicios. Fluidos imprime porcentajes, «1. (10%)»: van con `unidad: '%'`,
+  como vienen, y si no suman 100 la página lo dice en vez de corregirlos.
+- **Qué es el PDF de un examen (`pdfEs`).** `enunciado`, `resolucion` o, desde
+  el 29 de septiembre de 2026, `enunciado-con-resultados`: el cuadernillo de
+  Fluidos trae el resultado de cada apartado sin resolverlo, y la página dice
+  que las resoluciones son nuestras y llegan a esos resultados, o dónde no.
 - **Una convocatoria sin PDF dice por qué.** El esquema exige `pdf` o
   `sinPdf`, nunca ninguno. Entró el 28 de septiembre de 2026 con las dos
   resoluciones oficiales de Química: una es un escaneado, y los escaneados de
@@ -1541,6 +1566,15 @@ Comprueba:
 - Toda página de contenido con **modo guiado y modo completo**. Nadie repasa la
   noche antes de un examen haciendo scroll por una narración; el modo completo
   se imprime bien y sirve para explicárselo a alguien.
+- **Las notas impresas de Fluidos, en sus enunciados** (29 de septiembre de
+  2026). Vuelca cada PDF de examen con `pdftotext`, lo parte por la fecha de
+  cada examen y por ejercicios, y comprueba que cada «NOTA:» de un ejercicio
+  transcrito está en sus `notas` (§04; la regla, en
+  `scripts/notas-impresas.mjs`, con sus tests). Nació avisando de 29 sin
+  transcribir, y `NOTAS_BLOQUEAN` pasa a `true` cuando lleguen a cero. Sin
+  `pdftotext` falla, no se salta: en Windows viene con Git, y en el CI lo
+  instala `deploy.yml` (poppler-utils), la única herramienta del sistema que
+  el suelo pide además de Node y Chromium.
 
 ### `scripts/humo.mjs` — abre el sitio en un navegador
 
@@ -2402,7 +2436,7 @@ Cosas que ya han costado horas. No son opiniones.
 
 <!-- índice de trampas: lo genera un guion a partir de las entradas -->
 
-**Las 59, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
+**Las 60, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
 
 - No escribas LaTeX a través del shell.
 - Un `: ` sin comillas dentro de un valor YAML rompe el fichero
@@ -2463,6 +2497,7 @@ Cosas que ya han costado horas. No son opiniones.
 - Un deslizador recorta su `value` contra el `max` que tiene EN ESE MOMENTO.
 - Dos valores de un deslizador de paso 0,1 no se restan exacto, y un arreglo que se llama a sí mismo no para.
 - `content-visibility: auto` mueve la página mientras la mides.
+- Un enunciado transcrito conserva los números y pierde las notas.
 
 <!-- fin del índice de trampas -->
 
@@ -3416,6 +3451,17 @@ Cosas que ya han costado horas. No son opiniones.
   visible` en todo lo que lleve `auto`, igual que al imprimir; y el fallo se
   reproduce copiando los pasos del guardián, no abriendo la página a mano,
   que con otro orden de maquetado no falla.**
+
+- **Un enunciado transcrito conserva los números y pierde las notas.** Los 108
+  ejercicios de examen de Fluidos que había el 29 de septiembre de 2026
+  estaban transcritos con cada dato bien y sin una sola de sus «NOTA:», y ahí
+  iban cosas que puntúan: que se penaliza no seguir los cinco pasos, que sin
+  deducción la expresión no vale, que se itera como mucho tres veces. Quien
+  preparaba con el sitio hacía bien la cuenta y perdía los puntos. No se vio
+  porque el cotejo se hacía número a número. Lo encontró la auditoría del 27
+  de septiembre de 2026. **Regla: al cotejar un enunciado, se coteja
+  también lo que no es un número; y lo que se puede comprobar contra el PDF,
+  lo comprueba un guardián (§11).**
 
 ---
 
