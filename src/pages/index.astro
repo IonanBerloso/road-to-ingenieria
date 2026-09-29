@@ -21,6 +21,7 @@ import { hayFormulario } from '../lib/formulario';
 import { sinTildes } from '../lib/texto';
 import { ESTADO } from '../lib/estado';
 import { mate } from '../lib/markdown.mjs';
+import { queEsElPdf } from '../lib/cuadernillo';
 import {
   SUFIJO_CONV,
   CONVOCATORIAS,
@@ -142,11 +143,12 @@ const examenesPorAsignatura = new Map<
  *  corpus cambia, el sitio empieza a afirmar algo falso y no hay guardián que
  *  compare una frase con los datos. Se calcula. */
 const enterasPorAsignatura = new Map<string, boolean>();
-/** Y por el mismo motivo, qué asignaturas publican como PDF la corrección del
- *  profesor en vez del cuadernillo en blanco. Aquí se decía «con su enunciado
- *  original en PDF» de las seis, y en Ingeniería Térmica los veinte PDF son la
- *  resolución completa —de 14 a 32 páginas—. Ver `pdfEs` en content.config.ts. */
-const corregidoPorAsignatura = new Map<string, boolean>();
+/** Y por el mismo motivo, qué PDF acompaña a los exámenes de cada asignatura.
+ *  Aquí se decía «con su enunciado original en PDF» de las seis, y en
+ *  Ingeniería Térmica los veinte PDF son la resolución completa —de 14 a 32
+ *  páginas—. Desde el 28 de septiembre de 2026 Química tiene de las dos cosas
+ *  y una convocatoria sin PDF, y la frase la escribe `queEsElPdf`. */
+const pdfsPorAsignatura = new Map<string, { pdf?: unknown; pdfEs: 'enunciado' | 'resolucion' }[]>();
 /** Cuántos ejercicios de examen tiene cada tema, por asignatura.
  *
  *  Es lo que hace que la pastilla de «peso» sea un recuento y no una etiqueta
@@ -178,10 +180,7 @@ for (const ex of examenes) {
     ex.data.asignatura,
     (enterasPorAsignatura.get(ex.data.asignatura) ?? true) && entera,
   );
-  corregidoPorAsignatura.set(
-    ex.data.asignatura,
-    (corregidoPorAsignatura.get(ex.data.asignatura) ?? true) && ex.data.pdfEs === 'resolucion',
-  );
+  pdfsPorAsignatura.set(ex.data.asignatura, [...(pdfsPorAsignatura.get(ex.data.asignatura) ?? []), ex.data]);
 }
 
 /** Las rutas de estudio, para poder ofrecerlas antes que los exámenes sueltos:
@@ -661,9 +660,7 @@ const enteras = asignaturas
                       {(() => {
                         const n = examenesPorAsignatura.get(a.id)!.length;
                         const enteras = enterasPorAsignatura.get(a.id);
-                        const elPdf = corregidoPorAsignatura.get(a.id)
-                          ? 'el PDF corregido de la escuela'
-                          : 'su enunciado original en PDF';
+                        const elPdf = queEsElPdf(pdfsPorAsignatura.get(a.id) ?? []);
                         if (n === 1) {
                           return enteras
                             ? `Una convocatoria, con ${elPdf} y resuelta entera.`

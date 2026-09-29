@@ -1137,8 +1137,14 @@ if (SOLO_FUENTE) {
 
        La regla es tonta a propósito: en el texto visible de este sitio no hay
        ningún motivo legítimo para que aparezca `NaN`, `undefined`, `Infinity`
-       ni un `[object Object]`. */
-    for (const m of visible.matchAll(/.{0,40}(NaN|undefined|Infinity|\[object Object\]).{0,40}/g)) {
+       ni un `[object Object]`.
+
+       Con una excepción que apareció el 28 de septiembre de 2026: el nitrato
+       sódico se escribe NaNO₃, y la tabla de sales del tema 9 de Química lo
+       lleva. Por eso `NaN` solo cuenta como palabra suelta, sin una letra, un
+       dígito o un subíndice pegados detrás: un NaN de verdad no los lleva, y
+       una fórmula siempre. */
+    for (const m of visible.matchAll(/.{0,40}((?<![A-Za-z])NaN(?![A-Za-z0-9₀-₉])|undefined|Infinity|\[object Object\]).{0,40}/g)) {
       numeroRoto.push(`${nombre} → …${m[0].replace(/\s+/g, ' ').trim()}…`);
     }
 
@@ -1220,6 +1226,18 @@ if (SOLO_FUENTE) {
         .match(/<(path|circle|rect|line|polygon|polyline|ellipse|g|use|text)[\s>]/);
       if (fuera) svgComoTexto.push(`${nombre} → «${fuera[1]}» fuera de todo <svg>`);
     }
+    /* Y fuera de un <figure>, desde el 29 de septiembre de 2026. Las figuras
+       de los pasos `dibujar` van sueltas, sin <figure>, y esta comprobación
+       solo miraba dentro de uno: 94 páginas publicaban el <svg> vacío dentro
+       de un párrafo y el título, la descripción y los rótulos fuera, y aquí
+       salía todo en verde. Ahora se mira la página entera: un <svg> cerrado
+       sin nada dentro, o una forma o un <desc> fuera de todo <svg>, que en
+       HTML no existen y solo pueden venir de una figura partida. */
+    const sinSvgs = html.replace(/<svg\b[\s\S]*?<\/svg>/g, '');
+    const suelta = sinSvgs.match(/<(path|circle|polygon|polyline|ellipse|desc)[\s>]/);
+    if (suelta) svgComoTexto.push(`${nombre} → «${suelta[1]}» fuera de todo <svg>`);
+    const vacio = html.match(/<svg\b[^>]*>\s*<\/svg>/);
+    if (vacio) svgComoTexto.push(`${nombre} → un <svg> vacío: ${vacio[0].slice(0, 60)}…`);
     for (const m of html.matchAll(/<pre[^>]*>([\s\S]*?)<\/pre>/g)) {
       const dentro = m[1].replace(/<[^>]*>/g, '');
       if (!/&#x3C;(svg|g |path|circle|rect|text |use |defs|line |polygon)/.test(dentro)) continue;

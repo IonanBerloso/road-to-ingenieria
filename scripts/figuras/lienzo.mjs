@@ -339,8 +339,10 @@ export function lienzo({
         .join('\n');
 
       return [
-        `<svg viewBox="0 0 ${ancho} ${alto}" role="img" width="${ancho}" height="${alto}"`,
-        `     aria-labelledby="${id}-t ${id}-d">`,
+        /* En un solo renglón: un <svg> suelto solo abre un bloque de HTML
+           crudo en Markdown si su etiqueta cabe entera en la primera línea
+           (`pegaElSvg` en `src/lib/markdown.mjs`, 29 de septiembre de 2026). */
+        `<svg viewBox="0 0 ${ancho} ${alto}" role="img" width="${ancho}" height="${alto}" aria-labelledby="${id}-t ${id}-d">`,
         `  <title id="${id}-t">${esc(titulo)}</title>`,
         `  <desc id="${id}-d">${esc(desc)}</desc>`,
         '  <style>',
@@ -426,8 +428,7 @@ export function mosaico({ id, titulo, desc, columnas, celdas, ancho = 168, alto 
   const css = [...clases].map(([k, v]) => `      .${id}-${k} { ${v} }`).join('\n');
 
   return [
-    `<svg viewBox="0 0 ${W} ${H}" role="img" width="${W}" height="${H}"`,
-    `     aria-labelledby="${id}-t ${id}-d">`,
+    `<svg viewBox="0 0 ${W} ${H}" role="img" width="${W}" height="${H}" aria-labelledby="${id}-t ${id}-d">`,
     `  <title id="${id}-t">${esc(titulo)}</title>`,
     `  <desc id="${id}-d">${esc(desc)}</desc>`,
     '  <style>',

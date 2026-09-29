@@ -386,9 +386,9 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
 | Mecánica | 2.º cuatrimestre | 9 | 16 | 3 | 2 / 4 |
 | Química | 1.er cuatrimestre | 8 | 16 | 3 | 10 / 10 |
-| Química | 2.º cuatrimestre | 9 | 17 | 3 | 11 / 11 |
+| Química | 2.º cuatrimestre | 9 | 18 | 3 | 11 / 11 |
 | Térmica | ordinaria | 7 | 21 | 17 | 2 / 7 |
-| **total** | **15 rutas** | **132** | **349** | — | **94 / 127** |
+| **total** | **15 rutas** | **132** | **350** | — | **94 / 127** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19

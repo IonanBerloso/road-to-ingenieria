@@ -889,14 +889,28 @@ async function main() {
               .textContent.trim()
               .slice(0, 40);
 
-            paso.querySelector('input').value = datos[i].distractores[k];
-            paso.querySelector('[data-comprobar]').click();
-            await espera(60);
-            probados++;
+            /* En una fórmula, el valor de un distractor puede traer variantes
+               separadas por «|» —«hidróxido ferroso | hidróxido de
+               hierro(II)»—, igual que la respuesta. Quien se equivoca escribe
+               una sola, así que se prueba cada una por separado: escribir el
+               valor entero, con la barra, no es algo que teclee nadie, y así
+               se dieron por mudos el 29 de septiembre de 2026 sesenta y seis
+               distractores de las hojas de formulación que sí diagnosticaban. */
+            const escritos =
+              datos[i].respuesta.tipo === 'formula'
+                ? datos[i].distractores[k].split('|').map((v) => v.trim()).filter(Boolean)
+                : [datos[i].distractores[k]];
 
-            const dicho = (paso.querySelector('[data-fb]').textContent ?? '').trim();
-            if (!dicho.includes(esperado)) {
-              mudos.push(`${datos[i].distractores[k]} (paso ${i + 1})`);
+            for (const escrito of escritos) {
+              paso.querySelector('input').value = escrito;
+              paso.querySelector('[data-comprobar]').click();
+              await espera(60);
+              probados++;
+
+              const dicho = (paso.querySelector('[data-fb]').textContent ?? '').trim();
+              if (!dicho.includes(esperado)) {
+                mudos.push(`${escrito} (paso ${i + 1})`);
+              }
             }
           }
         }

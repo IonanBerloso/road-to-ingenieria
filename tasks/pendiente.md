@@ -52,6 +52,12 @@ sabía:
   de corte en el enunciado.
 - **Materiales**: una copia limpia de las preguntas guía, porque el fichero
   lleva «Grupos» en el nombre y no se abre.
+- **Química, la resolución de 2013**: si se publica como PDF de su
+  convocatoria (`2012-2013-ord`), como se hizo con las veinte de Térmica el
+  10 de septiembre de 2026. Es la corrección del profesor, mecanografiada y
+  sin datos personales, y §08 solo deja entrar enunciados sin una decisión
+  expresa: hasta entonces la página lleva `sinPdf`. El modelo de 2024-2025 no
+  entra en la pregunta: es un escaneado con su letra, y esos no se publican.
 
 ## Hacer
 
@@ -120,8 +126,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **`revisado` en los 26 bloques de Álgebra y Fluidos**: pasarlos por los
   criterios de hueco de su `criterioDeOrden` y entonces sí fecharlos. Es un día
   de trabajo; sellar la fecha sin hacerlo sería inventar (`manana.md` 10.7).
-- **Dos escalones con un `ejemplo` en medio** (`npm run deuda`, §2 bis), los
-  dos en `fundamentos-quimicos-2c`.
 - **Nueve `fuente` que esconden una discrepancia** que su resolución sí
   explica (`manana.md` 10.2).
 - **Ruta de Fluidos**: decir por qué los cinco parciales no tienen ruta propia

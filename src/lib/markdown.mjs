@@ -125,10 +125,24 @@ export function sinMarcas(texto) {
  * recorriera los 52 sería la prueba de que el problema no está en ellos: nadie
  * que escriba una figura tiene por qué saber que un renglón en blanco se la
  * come. Los ficheros se quedan legibles y es la tubería la que se ocupa.
+ *
+ * Y pega también **la etiqueta de apertura** en un solo renglón, desde el 29
+ * de septiembre de 2026. Un `<svg>` suelto, sin un `<figure>` alrededor, solo
+ * abre un bloque de HTML crudo si su etiqueta cabe entera en la primera
+ * línea. `scripts/figuras/lienzo.mjs` la escribe en dos —el `aria-labelledby`
+ * en la segunda—, y así se publicaban 94 de las 98 páginas con figura en un
+ * paso `dibujar`: el `<svg>` cerrado y vacío dentro de un párrafo, y el
+ * título, la descripción y los rótulos fuera, a la vista. Dentro de un
+ * `<figure>` no pasaba, porque el bloque lo abre el `<figure>`. Lo prueba
+ * `tests/markdown.test.ts`.
  */
 const pegaElSvg = (texto) =>
   texto.replace(/<svg\b[\s\S]*?<\/svg>/g, (bloque) =>
-    bloque.split('\n').filter((l) => l.trim()).join('\n'));
+    bloque
+      .replace(/^<svg\b[^>]*>/, (apertura) => apertura.replace(/\s*\n\s*/g, ' '))
+      .split('\n')
+      .filter((l) => l.trim())
+      .join('\n'));
 
 /** Antepone `prefijo-` a todo id del HTML y a todo lo que apunte a un id. */
 function prefija(html, prefijo) {

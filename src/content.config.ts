@@ -575,15 +575,24 @@ const pasoCalcular = z.object({
      respuesta para el lector, y `óxido de sodio` y `Óxido sodio` también, así
      que un distractor escrito con otra grafía **es** la respuesta buena y se
      daría por acertado. Se comprueba contra la respuesta y entre distractores.
-     Validado al revés poniendo `Fe₂O₃` de distractor de `Fe2O3`. */
+     Validado al revés poniendo `Fe₂O₃` de distractor de `Fe2O3`.
+
+     Variante a variante desde el 28 de septiembre de 2026. Las hojas de
+     formulación escriben el mismo error en tradicional y en Stock dentro de
+     un solo distractor —`sulfito cuproso | sulfito de cobre(I)`—, y el
+     componente los parte por ` | ` al corregir; esta comprobación comparaba
+     la cadena entera, que no se parece a nada, así que una variante igual a
+     la respuesta buena pasaba sin que nadie lo viera. */
   .refine(
     (p) => {
       if (p.respuesta.tipo !== 'formula') return true;
+      const variantes = (v: string) => v.split('|').map((s) => s.trim()).filter(Boolean);
       const vs = p.distractores.map((d) => d.valor);
-      if (vs.some((v) => comparaFormula(v, p.respuesta.valor).igual)) return false;
+      if (vs.some((v) => variantes(v).some((x) => comparaFormula(x, p.respuesta.valor).igual)))
+        return false;
       for (let i = 0; i < vs.length; i++)
         for (let j = i + 1; j < vs.length; j++)
-          if (comparaFormula(vs[i], vs[j]).igual) return false;
+          if (variantes(vs[i]).some((x) => comparaFormula(x, vs[j]).igual)) return false;
       return true;
     },
     {
@@ -1208,6 +1217,12 @@ export const CONVOCATORIAS = {
     boton: 'Extraord. 2.º cuatr.',
     larga: 'extraordinaria del segundo cuatrimestre',
   },
+  /** Un examen que la asignatura reparte como modelo, sin convocatoria
+   *  detrás. Entra el 28 de septiembre de 2026 con el «Examen 5» de Química
+   *  de 2024-2025, que es el único documento de ese curso con la resolución
+   *  del profesor. No cuenta en la medida de ninguna ruta: una ruta mide las
+   *  convocatorias de su evaluación, y esta no es de ninguna. */
+  modelo: { url: 'modelo', corta: 'modelo', boton: 'Modelo', larga: 'modelo de examen' },
 } as const;
 
 /** Las claves de la tabla, en su orden. Es el orden en que se listan. */
@@ -1311,10 +1326,23 @@ const examen = defineCollection({
        *  contrastar**, que es justo lo que §08 existe para impedir. Lo
        *  encontró la auditoría de §15, contando qué PDF de `public/` no
        *  enlazaba nadie. */
-      pdf: z.union([
-        z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones'),
-        z.array(z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones')).min(1),
-      ]),
+      pdf: z
+        .union([
+          z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones'),
+          z.array(z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones')).min(1),
+        ])
+        .optional(),
+      /** Por qué la convocatoria **no** enlaza PDF, cuando no lo enlaza. Es
+       *  obligatorio en ese caso: o `pdf` o `sinPdf`, nunca ninguno.
+       *
+       *  Entra el 28 de septiembre de 2026 con el modelo de examen de Química
+       *  de 2024-2025, cuyo único documento es un **escaneado** con la
+       *  resolución del profesor escrita a mano encima del enunciado. Los
+       *  escaneados y las fotos de exámenes no se publican nunca (regla de
+       *  datos del proyecto), así que el enunciado transcrito es la única
+       *  versión que ve el alumno, y la página tiene que decirlo en vez de
+       *  dejar el hueco del botón sin explicar. */
+      sinPdf: z.string().min(40).optional(),
       /** QUÉ es ese PDF, porque no es lo mismo en todas las asignaturas y el
        *  sitio llevaba meses diciendo que sí.
        *
@@ -1454,10 +1482,42 @@ const examen = defineCollection({
           fuente: z.string().min(15),
         })
         .optional(),
+      /**
+       * Lo que vale cada ejercicio **según el cuadernillo**, cuando lo imprime
+       * sin repartirlo por competencias: «4. EJERCICIO (2.50 puntos)».
+       *
+       * POR QUÉ NO ES `puntos`. `puntos`, en el ejercicio, es el reparto por
+       * competencias de Cálculo —comp1, comp2, comp4— y exigirlo aquí
+       * obligaría a inventar un reparto que la hoja no da (§10). Los
+       * cuadernillos de Química y de Fluidos imprimen un número por ejercicio
+       * y nada más, y el sitio lo tiraba: la cabecera de la final de
+       * 2024-2025 decía «5 ejercicios» de un examen que imprime 3,50 · 2 · 2 ·
+       * 0,50 · 2, y el alumno no sabía que el primero vale siete veces el
+       * cuarto. Apuntado el 13 de septiembre de 2026; entra el 28 (fase G4).
+       *
+       * Va por número del cuadernillo y no por entrada porque un ejercicio
+       * partido en piezas tiene un solo valor impreso: repartirlo entre sus
+       * piezas sería inventar. Solo se declaran los que el cuadernillo trae.
+       */
+      puntosImpresos: z
+        .object({
+          fuente: z.string().min(15),
+          reparto: z
+            .array(z.object({ n: z.number().int().positive(), puntos: z.number().positive() }))
+            .min(1),
+        })
+        .optional(),
     })
     .refine((e) => new Set(e.ejercicios.map((x) => x.id)).size === e.ejercicios.length, {
       message: 'el examen repite un ejercicio',
-    }),
+    })
+    .refine((e) => (e.pdf === undefined) !== (e.sinPdf === undefined), {
+      message: 'o `pdf` o `sinPdf`: una convocatoria sin PDF dice por qué, y una con PDF no necesita decirlo',
+    })
+    .refine(
+      (e) => !e.puntosImpresos || new Set(e.puntosImpresos.reparto.map((r) => r.n)).size === e.puntosImpresos.reparto.length,
+      { message: '`puntosImpresos` repite un ejercicio' },
+    ),
 });
 
 /** El trozo de URL que identifica a cada convocatoria.

@@ -4,7 +4,7 @@
  * Los casos NO son inventados: los veinte compuestos salen de los dos
  * ejercicios de nombrar y formular que hay en el corpus —el 2 del control de
  * 2023-2024 y el 5 del de 2024-2025—, que son los dos que motivaron escribir
- * este lector. Los demás casos son los tres errores que tiene que saber
+ * este lector. Los demás casos son los errores que tiene que saber
  * diagnosticar.
  */
 import { describe, expect, it } from 'vitest';
@@ -85,7 +85,7 @@ describe('compara contra las formas aceptadas', () => {
   });
 });
 
-describe('diagnostica los tres errores que sabe distinguir', () => {
+describe('diagnostica los errores que sabe distinguir', () => {
   it('mayúsculas: CO no es Co, y son sustancias distintas', () => {
     const v = comparaFormula('CO', 'Co');
     expect(v.igual).toBe(false);
@@ -144,5 +144,65 @@ describe('la caja gana a la columna, que salió probándolo en el navegador', ()
 
   it('los espacios de más no estorban', () => {
     expect(comparaFormula('  K2SO4  ', 'K2SO4').igual).toBe(true);
+  });
+});
+
+describe('lo que cazaron las hojas de formulación, el 28 de septiembre de 2026', () => {
+  /* Tres agentes que transcribían las 180 fórmulas de las hojas del curso
+     dieron, cada uno por su lado, con el mismo patrón mal cortado: bastaba una
+     mayúscula al principio para ser fórmula. «Amoniaco» con la mayúscula que
+     pone el móvil recibía «has contestado en la otra columna», y «(NH4)2SO3»,
+     que empieza por paréntesis, se comparaba como un nombre, sin caja. */
+  it('un nombre de una palabra con mayúscula sigue siendo un nombre', () => {
+    for (const n of ['Metano', 'Amoniaco', 'Agua', 'Fosfina', 'Silano', 'Oxidano'])
+      expect(leeFormula(n)!.esFormula).toBe(false);
+    expect(comparaFormula('Amoniaco', 'amoniaco').igual).toBe(true);
+    expect(comparaFormula('Metano', 'metano').igual).toBe(true);
+  });
+
+  it('y se acepta aunque venga entero en mayúsculas', () => {
+    expect(comparaFormula('METANO', 'metano').igual).toBe(true);
+    expect(comparaFormula('ÓXIDO DE SODIO', 'óxido de sodio').igual).toBe(true);
+  });
+
+  it('una fórmula puede empezar por paréntesis', () => {
+    expect(leeFormula('(NH4)2SO3')!.esFormula).toBe(true);
+    expect(leeFormula('(NH₄)₃AsO₄')!.clave).toBe('(NH4)3AsO4');
+    expect(comparaFormula('(NH4)2SO3', '(NH4)2SO3').igual).toBe(true);
+  });
+
+  it('y entonces se compara con caja, como las demás', () => {
+    const v = comparaFormula('(nh4)2so3', '(NH4)2SO3');
+    expect(v.igual).toBe(false);
+    expect(v.fallo).toBe('mayusculas');
+    expect(comparaFormula('sulfito amónico', '(NH4)2SO3').fallo).toBe('genero-cambiado');
+  });
+
+  it('las fórmulas de siempre siguen siéndolo', () => {
+    for (const f of ['Fe2O3', 'H2O2', 'NaHCO3', 'Cu(OH)2', 'CuSO4·5H2O', 'KMnO4', 'Si', 'Co'])
+      expect(leeFormula(f)!.esFormula).toBe(true);
+  });
+});
+
+describe('los paréntesis que faltan no son un error de mayúsculas', () => {
+  /* `CuOH2` por `Cu(OH)2` recibía «cuidado con las mayúsculas», porque esa
+     comprobación quitaba los paréntesis antes de comparar. El alumno había
+     escrito bien todas las mayúsculas. */
+  it('sin paréntesis', () => {
+    expect(comparaFormula('CuOH2', 'Cu(OH)2').fallo).toBe('parentesis');
+    expect(comparaFormula('Al2SO43', 'Al2(SO4)3').fallo).toBe('parentesis');
+    expect(comparaFormula('NH42SO4', '(NH4)2SO4').fallo).toBe('parentesis');
+  });
+
+  it('o con los paréntesis en otro sitio', () => {
+    expect(comparaFormula('Cu(OH2)', 'Cu(OH)2').fallo).toBe('parentesis');
+  });
+
+  it('cuando fallan la caja y los paréntesis, primero la caja', () => {
+    expect(comparaFormula('cuoh2', 'Cu(OH)2').fallo).toBe('mayusculas');
+  });
+
+  it('y CO por Co sigue siendo de mayúsculas', () => {
+    expect(comparaFormula('CO', 'Co').fallo).toBe('mayusculas');
   });
 });

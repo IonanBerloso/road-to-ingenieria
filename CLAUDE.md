@@ -762,16 +762,29 @@ casilla:
 > «Plomo(II) hidróxido / hidróxido plumboso». Dar una por mala sería corregir
 > peor que el profesor.
 >
-> Sabe diagnosticar tres errores sin que haya que declararlos como distractor:
-> **mayúsculas** —`CO` es monóxido y `Co` es cobalto—, **subíndices** —los
-> elementos correctos en la proporción equivocada— y **columna equivocada**,
-> que es contestar con el nombre donde se pedía la fórmula.
+> Sabe diagnosticar cuatro errores sin que haya que declararlos como
+> distractor: **mayúsculas** —`CO` es monóxido y `Co` es cobalto—,
+> **paréntesis** —`CuOH2` por `Cu(OH)2`—, **subíndices** —los elementos
+> correctos en la proporción equivocada— y **columna equivocada**, que es
+> contestar con el nombre donde se pedía la fórmula.
 >
 > Y una lección de método: los 32 tests pasaban y aun así, **al teclearlo en
 > el navegador**, `k2so4` en minúsculas recibía «has contestado en la otra
 > columna» y un compuesto erróneo recibía «ese número no sale de ninguna vía
 > razonable». Los dos son §16 punto 1: probarlo a mano encontró lo que los
 > tests no buscaban.
+>
+> La segunda vez fue el 28 de septiembre de 2026, y la encontraron los 180
+> compuestos de las hojas de formulación. Tres agentes que las transcribían
+> por separado dieron con el mismo patrón mal cortado: para ser fórmula
+> bastaba empezar por mayúscula. «Amoniaco», con la mayúscula que pone el
+> móvil, recibía «has contestado en la otra columna»; «(NH4)2SO3» se comparaba
+> como un nombre, sin caja; y `CuOH2` recibía «cuidado con las mayúsculas» con
+> todas bien puestas. Veinte compuestos de dos controles no tenían ningún
+> nombre de una sola palabra ni ninguna sal de amonio al principio: **un
+> lector se prueba con el corpus que va a corregir, no con el que lo motivó.**
+> Ese mismo día el aviso de la otra columna dejó de decir «lo que has escrito
+> es correcto como compuesto», que el lector nunca ha comprobado.
 
 > Estos dos ejemplos eran inventados y **ninguno de los dos compilaba**. El de
 > MDX declaraba `patron: figura-fija`, que no tiene componente, e incrustaba un
@@ -1425,6 +1438,28 @@ simulación.
   ni lo uno ni lo otro, no se promete un reloj: la portada solo enseña el
   botón del simulacro donde la página del examen lo tiene.
 
+  Y el reloj reparte por **ejercicio**, no por pieza: cuando un ejercicio se
+  parte en varias piezas guiadas (`n` en el `examen.yaml`), sus piezas se
+  reparten sus minutos. Hasta el 28 de septiembre de 2026 cada casilla valía
+  un ejercicio entero, y tres convocatorias de Mecánica Aplicada arrancaban un
+  reloj más largo que el que anunciaban (4 h para 3 h 30 min).
+- **Los puntos de un examen: los que imprime el cuadernillo.** Si reparte por
+  competencias, como Cálculo, van en el `puntos` de cada ejercicio. Si solo
+  imprime un número por ejercicio —«EJERCICIO (3.50 puntos)», como Química—,
+  van en `puntosImpresos` del `examen.yaml`, por número del cuadernillo y con
+  la `fuente` de dónde están. Nunca se reparte un número impreso entre
+  competencias ni entre las piezas de un ejercicio: eso es inventar (§10). Y
+  el total solo se publica si el cuadernillo da los puntos de todos sus
+  ejercicios.
+- **Una convocatoria sin PDF dice por qué.** El esquema exige `pdf` o
+  `sinPdf`, nunca ninguno. Entró el 28 de septiembre de 2026 con las dos
+  resoluciones oficiales de Química: una es un escaneado, y los escaneados de
+  exámenes no se publican; la otra es la corrección del profesor, y §08 solo
+  deja entrar en `public/examenes/` enunciados oficiales —la de Térmica se
+  publicó por una decisión expresa de Ionan, y esta no la tiene—. El
+  enunciado se transcribe tal cual igual, y la página dice en el sitio del
+  botón por qué no hay PDF.
+
 ---
 
 ## 11 // Suelo de calidad
@@ -1453,6 +1488,17 @@ van encadenados y no chocan; lanzar uno a mano mientras corre el suelo, sí
 (§17). El suelo entero tardó 26 minutos el 26 de septiembre de 2026, veinte
 de ellos en el humo: se lanza en segundo plano, con la salida a un fichero
 completo, y no se toca `dist/` mientras corre.
+
+> **En el Windows de desarrollo, el compilador de Astro va en WebAssembly.**
+> Desde el 28 de septiembre de 2026, Smart App Control bloquea el binario
+> nativo sin firmar de `@astrojs/compiler-binding` (error 4551 al cargar
+> `astro.win32-x64-msvc.node`), y `astro build` no arranca. Esa misma tarde lo
+> había dejado pasar. El cargador del paquete prueba la versión WASI si la
+> nativa falla, pero npm no la instala fuera de su plataforma. Se instala sin
+> tocar `package.json` ni el lockfile —`npm install --no-save --force
+> @astrojs/compiler-binding-wasm32-wasi@<la versión de compiler-binding>`— y se
+> construye con `NAPI_RS_FORCE_WASI=1`. Un `npm ci` la quita, y hay que volver
+> a ponerla. El despliegue, en Linux, no lo necesita.
 
 > Esta sección decía «son dos guardianes» desde agosto, cuando ya eran seis
 > pasos. `recalcula`, `cifras` y `sim` entraron el 26 de septiembre de 2026:
@@ -2710,6 +2756,18 @@ Cosas que ya han costado horas. No son opiniones.
      construir las 249 páginas. Un título de paso es una etiqueta corta en
      prosa —«El coeficiente del término cúbico»—; la fórmula va en la
      `pregunta`, que sí pasa por `mate()`.
+
+  6. **La etiqueta de apertura del `<svg>`, en un solo renglón.** Un `<svg>`
+     suelto —el de la `figura` de un paso `dibujar` no lleva `<figure>`
+     alrededor— solo abre un bloque de HTML crudo en Markdown si su etiqueta
+     cabe entera en la primera línea. El lienzo la escribía en dos, y del 17
+     al 29 de septiembre de 2026 se publicaron así **94 de las 98 páginas**
+     con una figura de `dibujar`: el `<svg>` vacío dentro de un párrafo y el
+     título, la descripción y los rótulos a la vista como texto. El guardián
+     de `verify` solo miraba dentro de `<figure>`, y todo daba verde. Lo vio
+     un agente que dibujaba las suyas en una línea y comparó. Desde ese día
+     el lienzo la escribe en una, `pegaElSvg` la pega igualmente si llega
+     partida, y `verify` mira la página entera.
 
   Para mirarlas antes de pegarlas, `previsualiza.mjs` monta un contact sheet
   en PNG con todas las de un generador, en claro o en oscuro. Eso sigue siendo

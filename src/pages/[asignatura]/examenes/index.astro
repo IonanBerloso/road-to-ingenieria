@@ -4,7 +4,7 @@ import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
 import { sinMarcas, mate } from '../../../lib/markdown.mjs';
-import { ejerciciosDelCuadernillo } from '../../../lib/cuadernillo';
+import { avisoDeResoluciones, ejerciciosDelCuadernillo, queEsElPdf } from '../../../lib/cuadernillo';
 import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, slugExamen } from '../../../content.config';
 
 /**
@@ -172,9 +172,7 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
       Encontrado en la auditoría del 26 de septiembre de 2026. */}
   descripcion={`Los exámenes de ${asignatura.data.nombre} ${
     sinResolver + ejerciciosAMedias === 0 ? 'resueltos enteros' : 'resueltos, y con lo que falta dicho en cada convocatoria'
-  }, con ${
-    lista.every((ex) => ex.data.pdfEs === 'resolucion') ? 'el PDF corregido de la escuela' : 'el enunciado original'
-  }${[...datos.values()].some((d) => d.total > 0) ? ' y el reparto de puntos por competencia' : ''}.`}
+  }, con ${queEsElPdf(lista.map((ex) => ex.data))}${[...datos.values()].some((d) => d.total > 0) ? ' y el reparto de puntos por competencia' : ''}.`}
   acento={asignatura.data.acento}
 >
   <Cabecera crumb={crumb} />
@@ -188,15 +186,19 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
           citado arriba, y este sitio lo llamaba enunciado en cinco lugares.
           Lo encontró una auditoría externa el 13 de septiembre de 2026. */}
       <p class="lede">
-        {lista.every((ex) => ex.data.pdfEs === 'resolucion')
+        {lista.every((ex) => ex.data.pdfEs === 'resolucion' && ex.data.pdf !== undefined)
           ? 'Los de verdad, con el PDF de la escuela detrás: aquí es el examen corregido por el profesor, no el cuadernillo en blanco. Cada convocatoria abre en blanco para que te la hagas antes de mirar nada.'
-          : 'Los de verdad, con su enunciado original en PDF. Cada uno abre en blanco para que te lo hagas antes de mirar nada.'}
+          : `Los de verdad, con ${queEsElPdf(lista.map((ex) => ex.data))}. Cada uno abre en blanco para que te lo hagas antes de mirar nada.`}
       </p>
 
-      <p class="aviso rotulo">
-        Los exámenes no publican solución: las resoluciones son propuesta
-        nuestra y están pendientes de revisión.
-      </p>
+      {/* Este aviso era una frase fija —«Los exámenes no publican solución:
+          las resoluciones son propuesta nuestra y están pendientes de
+          revisión»— y se publicaba también en Ingeniería Térmica, cuyas veinte
+          convocatorias están contrastadas con la resolución completa del
+          profesor. La página de cada examen ya lo condicionaba; esta no.
+          Encontrado el 28 de septiembre de 2026, al entrar las primeras
+          resoluciones oficiales de Química. */}
+      <p class="aviso rotulo">{avisoDeResoluciones(lista.map((ex) => ex.data))}</p>
 
       {/* Lo que el aula exige y no se aprende estudiando. Va aquí porque es la
           página que se abre para practicar, y porque una de las normas
@@ -337,7 +339,8 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                     mayo-junio de 2020 son dos y hay que enlazar los dos, o el
                     segundo cuatrimestral se queda sin enunciado que
                     contrastar (§08). */}
-                {(Array.isArray(ex.data.pdf) ? ex.data.pdf : [ex.data.pdf]).map((f, i, todos) => (
+                {ex.data.pdf === undefined && <span class="pdf rotulo">sin PDF</span>}
+                {(ex.data.pdf === undefined ? [] : Array.isArray(ex.data.pdf) ? ex.data.pdf : [ex.data.pdf]).map((f, i, todos) => (
                   <a
                     class="pdf rotulo"
                     href={archivo(`examenes/${asignatura.id}/${f}`)}

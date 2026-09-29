@@ -24,8 +24,8 @@
  * cobalto y `CO` es monóxido de carbono. Un nombre, en cambio, se compara sin
  * tildes, sin mayúsculas y sin los conectores —«óxido de sodio» y «oxido
  * sodio» son la misma respuesta—. Cuál de las dos cosas es se decide por la
- * forma del texto esperado, no por un campo aparte: una fórmula no lleva
- * espacios y empieza por mayúscula.
+ * forma del texto esperado, no por un campo aparte: una fórmula es una
+ * sucesión de símbolos de elemento, sin espacios (ver `PINTA_DE_FORMULA`).
  *
  * LOS SINÓNIMOS SON OBLIGATORIOS EN LOS NOMBRES. La nomenclatura admite dos
  * formas válidas para el mismo compuesto —la de stock y la tradicional— y el
@@ -59,10 +59,19 @@ const aDigitos = (s: string) => s.replace(/[₀-₉⁰-⁹]/g, (c) => DIGITOS[c]
 
 /** ¿Esto tiene pinta de fórmula química y no de nombre?
  *
- *  Una fórmula es una cadena de símbolos de elemento —mayúscula y opcional
- *  minúscula— con dígitos, paréntesis y puntos de hidratación, y **sin
- *  espacios**. Cualquier otra cosa se trata como nombre. */
-const PINTA_DE_FORMULA = /^[A-Z][A-Za-z0-9()·.]*$/;
+ *  Una fórmula es una **sucesión** de símbolos de elemento —una mayúscula y
+ *  como mucho una minúscula—, cada uno con su número, más paréntesis y puntos
+ *  de hidratación, y **sin espacios**. Cualquier otra cosa se trata como
+ *  nombre.
+ *
+ *  Hasta el 28 de septiembre de 2026 bastaba con empezar por mayúscula y no
+ *  llevar espacios, y eso fallaba por los dos lados. «Amoniaco», con la
+ *  mayúscula que pone el móvil, era una fórmula y recibía «has contestado en
+ *  la otra columna»; y «(NH4)2SO3», que empieza por paréntesis, era un nombre
+ *  y se comparaba sin caja. Lo encontraron los tres agentes que transcribían
+ *  las hojas de formulación, cada uno por su lado. Ahora dos minúsculas
+ *  seguidas —las tiene cualquier palabra— ya no caben en una fórmula. */
+const PINTA_DE_FORMULA = /^(?=.*[A-Z])(?:[A-Z][a-z]?\d*|[()·.]\d*)+$/;
 
 /** Los conectores que no cambian el significado de un nombre. Se quitan para
  *  que «óxido de sodio» y «óxido sodio» valgan lo mismo, que es lo que el
@@ -97,20 +106,25 @@ export function leeFormula(entrada: string): Formula | null {
     return { clave, esFormula: true, elementos: simbolos(clave) };
   }
 
-  /* Nombre: fuera tildes, mayúsculas y conectores. */
-  const palabras = sinTildes(pegado.toLowerCase())
+  const clave = comoNombre(pegado);
+  if (!clave) return null;
+  return { clave, esFormula: false, elementos: [] };
+}
+
+/** Un texto normalizado como nombre: fuera tildes, mayúsculas y conectores.
+ *  Devuelve la cadena vacía si no queda nada. */
+function comoNombre(pegado: string): string {
+  return sinTildes(pegado.toLowerCase())
     .replace(/[^a-z0-9()\s]/g, ' ')
     .split(/\s+/)
-    .filter((p) => p && !CONECTORES.has(p));
-
-  if (palabras.length === 0) return null;
-  return { clave: palabras.join(' '), esFormula: false, elementos: [] };
+    .filter((p) => p && !CONECTORES.has(p))
+    .join(' ');
 }
 
 export interface VeredictoFormula {
   igual: boolean;
   /** Qué ha fallado, cuando se puede decir algo mejor que «no es». */
-  fallo?: 'mayusculas' | 'subindices' | 'genero-cambiado';
+  fallo?: 'mayusculas' | 'parentesis' | 'subindices' | 'genero-cambiado';
 }
 
 /** Separa las formas aceptadas de un `valor`. */
@@ -130,6 +144,9 @@ const alternativas = (valor: string) =>
  * - `mayusculas` — los mismos caracteres pero con otra caja. Es el error de
  *   escribir `CO` por `Co`, y merece su propio aviso porque son dos sustancias
  *   distintas y el alumno cree que ha acertado.
+ * - `parentesis` — los mismos caracteres con los paréntesis de menos o en
+ *   otro sitio: `CuOH2` por `Cu(OH)2`. El número de detrás multiplica un
+ *   grupo o un solo átomo, y eso es otra proporción.
  * - `subindices` — los mismos elementos en el mismo orden pero con otros
  *   números. El compuesto es el que toca y la proporción no.
  * - `genero-cambiado` — ha escrito un nombre donde se pedía una fórmula, o al
@@ -146,24 +163,45 @@ export function comparaFormula(escrito: string, esperado: string): VeredictoForm
 
   if (formas.some((b) => b.clave === a.clave)) return { igual: true };
 
-  /* La caja se comprueba ANTES que la columna, y ese orden importa.
-     ─────────────────────────────────────────────────────────────
-     `k2so4` en minúsculas no pasa el patrón de fórmula —un símbolo de
-     elemento empieza por mayúscula— así que se lee como si fuera un nombre,
-     y sin esta comprobación se diagnosticaba «has contestado en la otra
-     columna»: falso, y encima desorientador, porque el alumno ha escrito la
-     fórmula correcta con el teclado en minúsculas. Salió al probarlo a mano
-     en el navegador, no al pasar los tests.
-
-     Se compara sobre el texto crudo sin puntuación, porque `a.clave` ya está
-     normalizado como nombre y ha perdido la caja original. */
-  const soloAlfanum = (s: string) => aDigitos(s).replace(/[^A-Za-z0-9]/g, '');
-  const crudo = soloAlfanum(escrito ?? '');
-  for (const b of formas) {
-    if (!b.esFormula) continue;
-    if (crudo.toLowerCase() === soloAlfanum(b.clave).toLowerCase())
-      return { igual: false, fallo: 'mayusculas' };
+  /* Un nombre no tiene caja, tampoco cuando parece una fórmula. «METANO», con
+     el bloqueo de mayúsculas puesto, son seis símbolos seguidos —M, E, T, A,
+     N, O— y es el metano. Si se espera un nombre, se prueba a leerlo como
+     nombre antes de decir que no es. */
+  if (a.esFormula) {
+    const n = comoNombre(aDigitos((escrito ?? '').trim()));
+    if (n && formas.some((b) => !b.esFormula && b.clave === n)) return { igual: true };
   }
+
+  /* Los paréntesis, la caja y la columna, en ese orden, y el orden importa.
+     ─────────────────────────────────────────────────────────────
+     La caja va ANTES que la columna. `k2so4` en minúsculas no pasa el patrón
+     de fórmula —un símbolo de elemento empieza por mayúscula— así que se lee
+     como si fuera un nombre, y sin esta comprobación se diagnosticaba «has
+     contestado en la otra columna»: falso, y encima desorientador, porque el
+     alumno ha escrito la fórmula correcta con el teclado en minúsculas. Salió
+     al probarlo a mano en el navegador, no al pasar los tests.
+
+     Y los paréntesis van antes que la caja. Hasta el 28 de septiembre de 2026
+     la caja se comparaba quitando también los paréntesis, así que `CuOH2` por
+     `Cu(OH)2` recibía «cuidado con las mayúsculas» con todas las mayúsculas
+     bien puestas. Cuando fallan las dos cosas —`cuoh2`— se avisa primero de
+     la caja, que es la que hace ilegible todo lo demás.
+
+     Se compara sobre el texto crudo, porque `a.clave` puede estar normalizado
+     como nombre y haber perdido la caja original. */
+  const crudo = aDigitos(escrito ?? '').replace(/[^A-Za-z0-9()]/g, '');
+  const sinParentesis = (s: string) => s.replace(/[()]/g, '');
+  const deFormula = formas.filter((b) => b.esFormula);
+  if (deFormula.some((b) => crudo !== b.clave && sinParentesis(crudo) === sinParentesis(b.clave)))
+    return { igual: false, fallo: 'parentesis' };
+  if (
+    deFormula.some(
+      (b) =>
+        crudo.toLowerCase() === b.clave.toLowerCase() ||
+        sinParentesis(crudo).toLowerCase() === sinParentesis(b.clave).toLowerCase(),
+    )
+  )
+    return { igual: false, fallo: 'mayusculas' };
 
   /* ¿Ha contestado en la columna equivocada? */
   if (formas.length && formas.every((b) => b.esFormula !== a.esFormula))

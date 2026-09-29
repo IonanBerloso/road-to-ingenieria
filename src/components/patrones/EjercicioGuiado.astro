@@ -528,6 +528,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     type="text"
                     inputmode="text"
                     autocomplete="off"
+                    autocapitalize="off"
+                    autocorrect="off"
                     spellcheck="false"
                     placeholder="…"
                   />
@@ -587,6 +589,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     class="ancho"
                     type="text"
                     autocomplete="off"
+                    autocapitalize="off"
+                    autocorrect="off"
                     spellcheck="false"
                     placeholder="(x-1)^2 + y^2 < 4"
                   />
@@ -796,7 +800,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   import { analiza, cumple, mismaRegion } from '../../lib/regiones';
   import { leeNumero } from '../../lib/numero';
   import { comparaMagnitud, leeMagnitud, nombreDim } from '../../lib/unidades';
-  import { comparaFormula, leeFormula } from '../../lib/quimica';
+  import { comparaFormula, esFormulaQuimica, leeFormula } from '../../lib/quimica';
 
   /* Los siete tipos del esquema. Estaba con dos desde antes de Álgebra y se ha
      ido quedando corto sin romper nada, porque el script de un `.astro` no se
@@ -1122,7 +1126,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
            general— y antes del «no es la respuesta», porque decirle «está mal»
            a quien ha hecho toda la física bien y se ha dejado el «bar» es
            mentirle sobre lo que le falta por aprender. */
-        /* Los tres errores que el lector químico sabe distinguir, y que no hay
+        /* Los cuatro errores que el lector químico sabe distinguir, y que no hay
            que declarar como distractor en cada compuesto: son los mismos en
            los veinte del corpus. */
         if (respuesta.tipo === 'formula') {
@@ -1139,23 +1143,46 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             return;
           }
 
+          if (v.fallo === 'parentesis') {
+            fb(paso, 'mal', 'Mira los paréntesis',
+              '<p>Las letras y los números son los que tocan, y en su orden; lo que ' +
+                'no está bien son los paréntesis, que faltan o están en otro sitio.</p>' +
+                '<p><strong>Un número detrás de un paréntesis multiplica el grupo ' +
+                'entero</strong>; sin paréntesis multiplica solo al símbolo que tiene ' +
+                'delante. <code>Cu(OH)₂</code> lleva dos O y dos H; <code>CuOH₂</code> ' +
+                'llevaría un O y dos H, que es otra proporción.</p>');
+            return;
+          }
+
           if (v.fallo === 'subindices') {
+            /* El segundo párrafo decía solo lo de cruzar cargas, y el 29 de
+               septiembre de 2026 entró la primera fórmula empírica que se corrige
+               con este lector: ahí los subíndices salen de los moles, no de las
+               valencias. */
             fb(paso, 'mal', 'Los elementos están bien; la proporción no',
               '<p>Has acertado qué átomos entran y en qué orden, así que el compuesto ' +
                 'lo tienes identificado. Lo que falla son los subíndices, es decir ' +
                 '<strong>cuántos de cada uno</strong>.</p>' +
-                '<p>Salen de igualar las cargas: la valencia de uno pasa a ser el ' +
-                'subíndice del otro, y después se simplifica si se puede.</p>');
+                '<p>En un compuesto que se formula por sus cargas, salen de igualarlas: ' +
+                'la valencia de uno pasa a ser el subíndice del otro, y después se ' +
+                'simplifica si se puede. En una fórmula empírica, salen de dividir los ' +
+                'moles de cada elemento entre el menor.</p>');
             return;
           }
 
+          /* Hasta el 28 de septiembre de 2026 este aviso empezaba «Lo que has
+             escrito es correcto como compuesto», y el lector no lo comprueba:
+             solo sabe que ha llegado un nombre donde se esperaba una fórmula, o
+             al revés. A quien escribía «óxido ferroso» por Fe₂O₃ se le decía
+             que había acertado el compuesto. */
           if (v.fallo === 'genero-cambiado') {
+            const pideFormula = esFormulaQuimica(respuesta.valor);
             fb(paso, 'mal', 'Has contestado en la otra columna',
-              '<p>Lo que has escrito es correcto como compuesto, pero aquí se pide ' +
-                'la otra forma: si te dan el nombre hay que escribir la fórmula, y si ' +
-                'te dan la fórmula hay que escribir el nombre.</p>' +
-                '<p>Es el despiste más común de este ejercicio, porque el enunciado ' +
-                'trae las dos columnas juntas.</p>');
+              (pideFormula
+                ? '<p>Aquí te dan el nombre y se pide la <strong>fórmula</strong>, y has escrito un nombre.</p>'
+                : '<p>Aquí te dan la fórmula y se pide el <strong>nombre</strong>, y has escrito una fórmula.</p>') +
+                '<p>Es un despiste frecuente cuando la lista trae las dos columnas ' +
+                'juntas, como en los controles.</p>');
             return;
           }
         }
@@ -1204,19 +1231,25 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
              publicaría con los dólares y todo. Es la deuda 31 asomando por
              otro sitio, y no lo caza ningún guardián porque el texto no existe
              hasta que el alumno se equivoca. */
+          /* Hasta el 28 de septiembre de 2026 los dos avisos hablaban solo de
+             coordenadas y de bases, que es de donde salieron. Ese día entraron
+             los ajustes redox de Química, que se contestan como la lista de
+             coeficientes de la ecuación, y a quien los escribía en otro orden
+             se le hablaba de «vectores de la base». Ahora dicen las dos cosas. */
           if (r && r.longitudDistinta) {
-            fb(paso, 'mal', 'Faltan o sobran coordenadas',
-              `<p>La respuesta tiene <strong>${b!.length}</strong> coordenadas y has escrito ` +
-                `${a!.length}. Un vector tiene exactamente una coordenada por cada vector de ` +
-                'la base — y las que valen cero también se escriben.</p>');
+            fb(paso, 'mal', 'Faltan o sobran números',
+              `<p>La respuesta tiene <strong>${b!.length}</strong> números y has escrito ` +
+                `${a!.length}. Cada puesto de la lista es uno —una coordenada por cada vector ` +
+                'de la base, un coeficiente por cada especie de la ecuación— y los que valen ' +
+                'cero, o uno, también se escriben.</p>');
             return;
           }
           if (r && r.soloOrden) {
             fb(paso, 'mal', 'Los números están bien; el orden, no',
-              '<p>Son exactamente las coordenadas correctas, pero cambiadas de sitio. ' +
-                'En una base <strong>el orden es parte de la respuesta</strong>: cada ' +
-                'coordenada multiplica al vector de la base que ocupa su mismo puesto, y la ' +
-                'base te la han dado escrita en un orden concreto.</p>');
+              '<p>Son exactamente los números correctos, pero cambiados de sitio. ' +
+                '<strong>El orden es parte de la respuesta</strong>: cada número va con lo que ' +
+                'ocupa su mismo puesto —el vector de la base, la especie de la ecuación—, y ' +
+                'ese orden te lo han dado escrito.</p>');
             return;
           }
         }
