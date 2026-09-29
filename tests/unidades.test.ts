@@ -59,6 +59,12 @@ describe('leeMagnitud · las formas en que se escribe una magnitud a mano', () =
     /* Los apuntes redondean el torr a 133,3 Pa; con ρ(Hg) = 13595,1 y g = 9,8
        sale 133,23. La diferencia es del 0,05 % y la tolerancia se la come. */
     expect(lee('1 torr').valor).toBeCloseTo(133.23, 1);
+    /* Las tres grafías del milímetro de mercurio que traen los enunciados. */
+    expect(lee('760 mmHg').valor).toBeCloseTo(lee('760 mm Hg').valor, 9);
+    expect(lee('760 mm de Hg').valor).toBeCloseTo(lee('760 mmHg').valor, 9);
+    /* Con g = 9,8, el convenio del lector, 760 mmHg son 0,9993 atm: un 0,07 %
+       que cualquier tolerancia de Química absorbe. */
+    expect(lee('760 mmHg').valor / lee('1 atm').valor).toBeCloseTo(1, 2);
     expect(lee('1 kg/cm2').valor / lee('1 mca').valor).toBeCloseTo(10, 3); // apuntes
     expect(lee('1 bar').valor / lee('1 mca').valor).toBeCloseTo(10.2, 2); // apuntes
   });

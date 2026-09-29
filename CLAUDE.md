@@ -134,7 +134,7 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 |---|---|---|---|
 | Cálculo | 1.º | `ok` | la referencia de tamaño: §15 la mide |
 | Álgebra | 1.º | `ok` | un tema `soloEnClase` declarado |
-| Fundamentos Químicos | 1.º | `ok` | sin colección transcrita en cuatro temas, aunque el material la trae, y el laboratorio sin guiones |
+| Fundamentos Químicos | 1.º | `ok` | desde el 29 de septiembre (fase G), la colección del curso entera, las tres hojas de formulación y las dos resoluciones oficiales; el laboratorio no se cubre, por decisión |
 | Expresión Gráfica | 1.º | `obra` | **la siguiente**: temario y evaluación de la guía desde ese día; antes que temas necesita diseño, porque su examen es un dibujo |
 | Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
 | Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
@@ -824,6 +824,14 @@ tema por nivel duplicaba mal el trabajo de la ruta y estropeaba la referencia.
 
 Los ejemplos introductorios nuestros van delante porque no tienen número que
 respetar (§08) y porque son la entrada. Todo lo demás, por su número.
+
+Con una excepción: los ejercicios de práctica nuestros que **no** son la
+entrada —los de teoría escrita que existen para practicar un `redactar`,
+como los de Materiales, o los propios de Cálculo t04— van **al final**,
+detrás de la colección. No tienen número que respetar, pero tampoco abren el
+tema, y delante romperían la referencia: el primer ejercicio dejaría de ser
+el de la hoja. Se escribió el 29 de septiembre de 2026, con la teoría del tema
+2 de Materiales; `calculo/t04` y `mecanica-aplicada/t06` ya lo hacían.
 
 Al reordenar se cuenta (§16 punto 4): mismo conjunto de ids, mismo número de
 líneas y cada bloque idéntico byte a byte antes y después — solo movido. Y se

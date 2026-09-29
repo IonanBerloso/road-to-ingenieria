@@ -18,8 +18,6 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **G · Química**: formulación, resoluciones oficiales y teoría que falta
-  (5–6 días).
 - **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
   Antes del simulacro, la evaluación final: la guía (pág. 12) pide examen
   escrito y práctico con un 5,0 en cada uno, y la diapositiva 15 da un 4,0
@@ -100,14 +98,8 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Expresión Gráfica, hojas 52–55**: nadie sabe de qué año son; se
   transcriben como examen con fuente «sin fecha» (fase K).
 
-- **Química, la colección que sí está** (verificado el 27 de septiembre de
-  2026, fase G): formulación, 180 compuestos en tres hojas con la clave
-  completa de la tercera; tema 2, resueltos del 4 al 11 y 35 propuestos;
-  tema 3, el Born-Haber del LiF con siete preguntas y cuatro de enlace
-  intermolecular; tema 4, dos de Clausius-Clapeyron con respuesta y seis de
-  test de gases; tema 6, los n.º 3 y 8 de la hoja del tema 5; tema 10,
-  catorce ajustes por ion-electrón y cuatro problemas resueltos de pilas con
-  siete propuestos con solución (`Tema_10.2`, págs. 27–39).
+- **Química, los problemas 5, 6 y 7 de la hoja del tema 5**: un isóbaro y dos
+  isotermos, sin transcribir. La ruta del segundo cuatrimestre lo declara.
 - **Fluidos, el aviso de la resolución**: sus piezas con resultado publicado
   llevan el «el examen no publica solución» de `Examen.astro`, y no es
   cierto: los enunciados traen los resultados. Fase I.
@@ -190,6 +182,13 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   nueve —con variantes: unificarlo cambia salidas que `npm run sim` compara
   carácter a carácter, así que va simulador a simulador—; el reloj de
   `Examen` y de `TestDeMinimos`.
+- **El lienzo pisa el color de los rótulos pequeños**: la clase `n` de
+  `scripts/figuras/lienzo.mjs` fija `fill: var(--faint)` en CSS, y eso gana
+  al color que pide cada rótulo `pequeno` (201 en los generadores; lo vio el
+  agente de Materiales el 29 de septiembre de 2026, con la punta de flecha
+  del 2.16). Se leen bien porque `--faint` está medido, pero no salen del
+  color que dice el código. Arreglarlo cambia figuras publicadas: regenerar
+  y mirar las que cambien.
 - **Coherencia**: seis simuladores usan `data-caso` para sus preajustes y dos
   `data-accion`; `ALCANCE_CONV` del índice de exámenes está pensado para
   Cálculo; la plantilla de laboratorio dice «GeoGebra» y pinta `trabajo` sin

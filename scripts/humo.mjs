@@ -627,6 +627,13 @@ async function main() {
             continue;
           }
           if (!b.width) continue;
+          /* Lo que vive dentro de un `<pattern>`, un `<marker>`, un
+             `<clipPath>`, una `<mask>` o un `<symbol>` no se pinta en esas
+             coordenadas: es una plantilla que el navegador repite o recorta en
+             otro sitio. Medido con la matriz de la trama —una rotación— daba
+             cajas en x negativa, y el 29 de septiembre de 2026 paró tres
+             microestructuras de Materiales que estaban bien dibujadas. */
+          if (t.closest('pattern, marker, clipPath, mask, symbol')) continue;
           /* Los círculos solo cuentan si son MARCADORES CORTADOS: radio
              pequeño y centro dentro del marco. Al abrir las 96 páginas de
              examen por primera vez —29 de agosto de 2026— la regla marcó

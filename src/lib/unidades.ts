@@ -272,7 +272,12 @@ function normaliza(entrada: string): string {
     .replace(/[²]/g, '^2')
     .replace(/[³]/g, '^3')
     .replace(/[·⋅×]/g, '*')
-    .replace(/\s+/g, ' ');
+    .replace(/\s+/g, ' ')
+    /* «mm Hg» y «mm de Hg» son como los escriben los enunciados de Química,
+       y el alumno los copia tal cual. Lo cazó el 29 de septiembre de 2026 la
+       revisión de la colección del tema 4: cuatro respuestas que el lector
+       devolvía como ilegibles. */
+    .replace(/\bmm (?:de )?hg\b/g, 'mmhg');
 }
 
 /** Parte «12,5 kN/m^2» en número y unidad. La coma decimal se acepta porque es
