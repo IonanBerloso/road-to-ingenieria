@@ -1,6 +1,12 @@
 /**
- * La ordinaria de Mecánica de Fluidos de 2024-2025. Diecisiete respuestas en
- * siete ejercicios.
+ * La ordinaria de Mecánica de Fluidos de 2024-2025. Treinta y una respuestas en
+ * los nueve ejercicios: el 1 y el 9 entraron el 30 de septiembre de 2026.
+ *
+ * El 1 se comprueba integrando las presiones cara a cara, sin el atajo de la
+ * resolución —la resultante del arco pasa por A— ni el volumen ficticio: si
+ * el atajo estuviera mal, la integral no aterrizaría en π/4 − 1/3. Y el 9,
+ * con las lecturas del anexo que publica el propio enunciado y Hazen-Williams
+ * en unidades del SI, que es otra forma de escribir la misma J₁.
  *
  * Dos de ellos son de los que más rinde recalcular, y por motivos opuestos.
  *
@@ -20,7 +26,7 @@
  */
 import { describe, it } from 'vitest';
 import { convocatoria } from './corpus';
-import { raiz } from './numerico';
+import { integra, raiz } from './numerico';
 
 const cuadra = convocatoria('fluidos', '2024-2025-ord');
 
@@ -35,6 +41,69 @@ function colebrook(Re: number, rugosidadRelativa: number) {
   return f;
 }
 const manning = (A: number, P: number, n: number, J: number) => (1 / n) * A * (A / P) ** (2 / 3) * Math.sqrt(J);
+
+describe('1 · el cuarto de cilindro y la compuerta triangular', () => {
+  const id = 'exflu2425-ord-1-el-cuarto-de-cilindro-y-la-compuerta-triangular';
+  /* Todo en unidades de γ = R = b = 1: los resultados son los coeficientes de
+     γR²b. O1 = (0, 0), A = (1, 0), y la lámina libre en y = 0, así que la
+     presión en un punto es −y. El arco tiene su centro en A y va de O1, a la
+     izquierda, al punto (1, −1), debajo de A. */
+  const punto = (t: number) => [1 + Math.cos(t), Math.sin(t)]; // t de π a 3π/2
+  /* En cada elemento del arco, la presión empuja hacia el cuerpo, es decir
+     hacia A: fuerza = p·(−cos t, −sin t)·ds, con ds = dt. */
+  const fx = integra((t) => -punto(t)[1] * -Math.cos(t), Math.PI, 1.5 * Math.PI);
+  const fy = integra((t) => -punto(t)[1] * -Math.sin(t), Math.PI, 1.5 * Math.PI);
+
+  it('la pared curva recibe γR²b/2 en horizontal', () => cuadra(id, 'La componente horizontal sobre la pared curva', fx));
+  it('y πγR²b/4 en vertical, hacia arriba', () => {
+    if (!(fy > 0)) throw new Error('el empuje vertical debería ir hacia arriba');
+    cuadra(id, 'La componente vertical sobre la pared curva', fy);
+  });
+
+  /* Momento respecto de O1 (antihorario positivo), elemento a elemento. */
+  const momentoArco = integra((t) => {
+    const [x, y] = punto(t);
+    const p = -y;
+    const [Fx, Fy] = [p * -Math.cos(t), p * -Math.sin(t)];
+    return x * Fy - y * Fx;
+  }, Math.PI, 1.5 * Math.PI);
+  /* La cara vertical x = 1, mojada por el agua del hueco, que empuja hacia −x
+     con p = −y: dM = x·0 − y·(−p) = −y². */
+  const momentoCara = integra((y) => -y * y, -1, 0);
+  /* El tope empuja hacia abajo en A, con brazo 1: R_A equilibra lo demás. */
+  const RA = momentoArco + momentoCara;
+
+  it('el tope sujeta A con 0,452γR²b, hacia abajo', () => {
+    /* La comprobación del atajo de la resolución: el momento del arco tiene
+       que ser π/4, el de su componente vertical con brazo R, porque su
+       resultante pasa por A. */
+    if (Math.abs(momentoArco - Math.PI / 4) > 1e-9) throw new Error(`el arco da ${momentoArco}, no π/4`);
+    if (!(RA > 0)) throw new Error('el tope debería empujar hacia abajo');
+    cuadra(id, 'La reacción del tope en A', RA);
+  });
+
+  it('y el triángulo la iguala con α = 36,4°', () => {
+    /* Triángulo con B = (−L, 0), C = (−L, −1), O2 = (0, 0) y L = 1/tg α. Se
+       integra la presión en la cara vertical y en la hipotenusa, y el momento
+       respecto de O2 da R_B·L. */
+    const RB = (alfaGrados: number) => {
+      const L = 1 / Math.tan((alfaGrados * Math.PI) / 180);
+      // cara vertical x = −L, empuje hacia +x: dM = x·0 − y·(p·1)
+      const mVert = integra((y) => -y * -y, -1, 0);
+      // hipotenusa de C a O2, parámetro s de 0 a 1; normal hacia el cuerpo
+      const largo = Math.hypot(L, 1);
+      const n = [-1 / largo, L / largo]; // hacia arriba y a la izquierda
+      const mHip = integra((s) => {
+        const [x, y] = [-L + s * L, -1 + s];
+        const p = -y;
+        return (x * p * n[1] - y * p * n[0]) * largo;
+      }, 0, 1);
+      return -(mVert + mHip) / L; // el tope, hacia abajo en B, equilibra
+    };
+    const alfa = raiz((a) => RB(a) - RA, 10, 80);
+    cuadra(id, 'El ángulo que iguala las dos reacciones', alfa);
+  });
+});
 
 describe('2 · el piezómetro que miente por capilaridad', () => {
   const id = 'exflu2425-ord-2-el-piezometro-que-miente-por-capilaridad';
@@ -267,5 +336,86 @@ describe('8 · el diafragma y su líquido manométrico', () => {
     if (!(factor(candidatos.mercurio) > 40 * factor(candidatos.agua)))
       throw new Error('el mercurio debería ser malísimo aquí');
     cuadra(id, 'El factor de sensibilidad del agua', factor(candidatos.agua));
+  });
+});
+
+describe('9 · la bomba leída en su anexo de curvas', () => {
+  const id = 'exflu2425-ord-9-la-bomba-leida-en-su-anexo-de-curvas';
+  /* Hazen-Williams en el SI, J = 10,7·Q^1,852/(C^1,852·D^4,87) con Q en m³/s
+     y D en m, que es la misma fórmula que la J₁ del cuadro n.º 25 escrita en
+     otras unidades. El coeficiente se pasa a l/s para compararlo. Fundición,
+     ε = 0,026 cm (cuadro n.º 20): ε/D cae en la banda de C = 120 en los dos
+     tramos. */
+  const hw = (L: number, D: number, C: number) => (10.7 * L) / (C ** 1.852 * D ** 4.87);
+  for (const D of [0.2, 0.15]) {
+    const r = 0.00026 / D;
+    if (!(r > 1e-3 && r < 4e-3)) throw new Error(`ε/D = ${r} no está en la banda de C = 120`);
+  }
+  const K = (hw(15, 0.2, 120) + hw(150, 0.15, 120)) * 0.001 ** 1.852;
+  const hAsp = (q: number) => hw(15, 0.2, 120) * (q / 1000) ** 1.852;
+  const instalacion = (q: number) => 32 + K * q ** 1.852;
+
+  it('la curva de la instalación lleva 6,64·10⁻³ delante de Q^1,852', () =>
+    cuadra(id, 'El coeficiente de la curva de la instalación', K));
+
+  /* Las lecturas del anexo que publica el propio enunciado, bajo «Notas
+     nuestras»: la altura del rodete de 214 mm, y dónde lo cortan las curvas
+     de igual rendimiento. */
+  const alturaBomba: [number, number][] = [[70, 58.1], [75, 56.5], [80, 54.7], [85, 52.4], [90, 49.6]];
+  const lineal = (t: [number, number][], q: number) => {
+    for (let i = 0; i < t.length - 1; i++)
+      if (t[i][0] <= q && q <= t[i + 1][0]) return t[i][1] + ((q - t[i][0]) / (t[i + 1][0] - t[i][0])) * (t[i + 1][1] - t[i][1]);
+    throw new Error(`${q} l/s está fuera de la tabla`);
+  };
+  const Q = raiz((q) => lineal(alturaBomba, q) - instalacion(q), 70, 90);
+  const H = instalacion(Q);
+  const eta = 80 - (3 * (Q - 76.6)) / (86.1 - 76.6); // entre la marca de 80 % y la de 77 %
+
+  it('el punto de funcionamiento está en 80,5 l/s', () => cuadra.magnitud(id, 'El caudal del punto de funcionamiento', Q, 'l/s'));
+  it('y 54,5 m', () => cuadra.magnitud(id, 'La altura del punto de funcionamiento', H, 'm'));
+  it('con un rendimiento de 78,7 %', () => {
+    /* Y cae a la derecha del óptimo: más caudal que el de la marca de 80. */
+    if (!(Q > 76.6)) throw new Error('el punto debería estar a la derecha del rendimiento máximo');
+    cuadra(id, 'El rendimiento en el punto de funcionamiento', eta);
+  });
+  it('y absorbe 54,63 kW', () =>
+    cuadra.magnitud(id, 'La potencia absorbida', (GAMMA * (Q / 1000) * H) / (eta / 100), 'W'));
+  /* El NPSH requerido, de la misma tabla de lecturas, en el caudal del cruce. */
+  const npshReq: [number, number][] = [[75, 4.0], [80, 4.5], [85, 5.2]];
+  it('y pide unos 4,7 m de NPSH', () => cuadra.magnitud(id, 'El NPSH requerido', lineal(npshReq, Q), 'm'));
+
+  /* De aquí en adelante, con el punto impreso, que es el que usan los
+     apartados c), d) y e) del cuadernillo. */
+  const [Qi, Hi, etai] = [80.5, 54.5, 0.787];
+  const patm = (1.04 * 101325) / GAMMA;
+
+  it('el NPSH disponible son 5,41 m, por encima del requerido', () => {
+    const npsh = patm - 0.2 - 4.6 - hAsp(Qi);
+    /* 4,7 m es el requerido que imprime el cuadernillo, y 0,5 m el margen que
+       pide el anexo: se cumplen los dos. */
+    if (!(npsh > 4.7 + 0.5)) throw new Error('con este NPSH la bomba cavitaría');
+    cuadra.magnitud(id, 'El NPSH disponible', npsh, 'm');
+  });
+
+  const ve = Qi / 1000 / area(0.2);
+  const vs = Qi / 1000 / area(0.15);
+  const pEntrada = patm - 4.6 - hAsp(Qi) - (ve * ve) / (2 * G); // m, absoluta
+
+  it('el Bourdon marca 388,2 torr, en absolutas', () =>
+    cuadra.magnitud(id, 'La lectura del Bourdon de la aspiración', pEntrada * GAMMA, 'Pa'));
+
+  it('y el de fuelle 0,473 MPa, en manométricas', () => {
+    const salida = pEntrada - patm + Hi + (ve * ve - vs * vs) / (2 * G);
+    /* Por el otro lado de la bomba tiene que salir lo mismo: de la brida de
+       salida a la lámina de arriba, 32 − 4,6 m más la pérdida de la
+       impulsión, menos la altura cinética. */
+    const porArriba = 32 - 4.6 + (K * Qi ** 1.852 - hAsp(Qi)) - (vs * vs) / (2 * G);
+    if (Math.abs(salida - porArriba) > 0.1) throw new Error(`por la bomba ${salida} m, por la impulsión ${porArriba} m`);
+    cuadra.magnitud(id, 'La lectura del manómetro de fuelle', salida * GAMMA, 'Pa');
+  });
+
+  it('y un día cuesta 105,31 €', () => {
+    const kW = (GAMMA * (Qi / 1000) * Hi) / etai / 0.83 / 1000;
+    cuadra(id, 'El coste diario de la instalación', kW * 16 * 0.1);
   });
 });

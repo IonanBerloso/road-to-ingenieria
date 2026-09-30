@@ -1353,6 +1353,13 @@ if (SOLO_FUENTE) {
       const refs = [...html.matchAll(/(?:url\(#|\sxlink:href="#|\shref="#)([^)"]+)/g)].map((m) => m[1]);
       for (const r of new Set(refs)) {
         if (!r || ids.has(r)) continue;
+        /* Un enlace de Markdown a un apartado con tilde sale codificado,
+           `#c%C3%B3mo-se-corrige`, y el navegador lo descodifica para buscar
+           el id: se compara igual que en las anclas a otra página (30 de
+           septiembre de 2026, el «Cómo se corrige» de Fluidos). */
+        let decod = r;
+        try { decod = decodeURIComponent(r); } catch { /* se deja como viene */ }
+        if (ids.has(decod)) continue;
         refsRotas.push(`${nombre} → #${r}`);
       }
     }

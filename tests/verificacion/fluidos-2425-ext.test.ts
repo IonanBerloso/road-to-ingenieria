@@ -1,6 +1,8 @@
 /**
- * La extraordinaria de Mecánica de Fluidos de 2024-2025. Veinticuatro
- * respuestas en ocho ejercicios.
+ * La extraordinaria de Mecánica de Fluidos de 2024-2025. Treinta y dos
+ * respuestas en nueve ejercicios: el 3 entró el 30 de septiembre de 2026,
+ * cuando la figura, mirada entera, dejó ver el tubo en U que ponía la cámara
+ * en depresión.
  *
  * Es la convocatoria con más unidades raras del corpus —dyn/cm², UTM/m³,
  * kg/cm², mbar, mca frente a metros de petróleo— y ese es justamente su
@@ -102,6 +104,18 @@ describe('2 · la bomba y la válvula que hay que cerrar', () => {
     cuadra.magnitud(id, 'La altura de la instalación en el punto de funcionamiento', altura, 'm');
   });
 
+  it('y 1 m/s en la impulsión son 70,69 l/s', () =>
+    /* El punto que se lleva al anexo 1 para escoger la bomba: la velocidad la
+       fija el enunciado en la impulsión, la de 300 mm. */
+    cuadra.magnitud(id, 'El caudal para un metro por segundo en la impulsión', 1 * area(0.3) * 1000, 'l/s'));
+
+  it('y en el punto impreso la bomba absorbe 10,02 kW', () => {
+    /* La solución impresa da Q, H, η y el NPSH requerido, pero no la potencia
+       absorbida que también pide el apartado c): sale de las otras tres. */
+    const P = (GAMMA * (Q / 1000) * 10.76) / 0.804;
+    cuadra.magnitud(id, 'La potencia absorbida', P / 1000, 'kW');
+  });
+
   it('y hay 11,17 m de NPSH, así que no cavita', () => {
     /* La bomba está en la cota 27 y la lámina de aspiración en la 30: está
        **por debajo**, así que los 3 m suman en vez de restar. Ese signo es
@@ -120,6 +134,50 @@ describe('2 · la bomba y la válvula que hay que cerrar', () => {
     const k = (altura - nuevoIndependiente - sinValvula) / cineticaImp;
     if (!(k > 6)) throw new Error('con menos presión la válvula tiene que cerrarse, no abrirse');
     cuadra(id, 'El nuevo factor de paso de la válvula', k);
+  });
+});
+
+describe('3 · la cámara en depresión y el manómetro dudoso', () => {
+  const id = 'exflu2425-ext-3-la-camara-en-depresion-y-el-manometro-dudoso';
+  /* El barómetro está FUERA de la cámara: 760 mmHg son la atmósfera del
+     exterior, en mca con el 13,6 de los enunciados. */
+  const atm = 0.76 * 13.6;
+  /* Y el tubo en U tiene el líquido más alto en la rama de la cámara: la
+     cámara está por debajo de la atmósfera en s_m·R. Sin este término salen
+     12,03 mca, y por eso el ejercicio estuvo fuera hasta 2026. */
+  const camara = atm - 8 * 0.2;
+  const A = 1.66e4 / GAMMA;
+  const B = 1.13 * 10; // 1 kg/cm² son 10 mca
+
+  it('la cámara está a 8,736 mca absolutos', () => {
+    if (!(camara < atm)) throw new Error('con el líquido más alto en su rama, la cámara tiene que estar en depresión');
+    cuadra.magnitud(id, 'La presión absoluta de la cámara', camara, 'mca');
+  });
+
+  it('y el manómetro absoluto D marcaría 10,43 mca', () =>
+    /* A mide contra lo que tiene alrededor, que es la cámara. */
+    cuadra.magnitud(id, 'La lectura del manómetro absoluto D', camara + A, 'mca'));
+
+  it('y B no puede medir absolutas', () => {
+    const diferencia = B - (camara + A);
+    /* Entre la tapa y B hay H − h0 = 1,4 m de líquido, y el más ligero es de
+       s = 4: como poco 5,6 mca. Si la diferencia cupiera, B podría ser
+       absoluto y el apartado b) no tendría respuesta. */
+    if (!(diferencia < (1.5 - 0.1) * 4)) throw new Error('la diferencia cabe: B podría medir absolutas');
+    cuadra.magnitud(id, 'La diferencia entre B y A si B midiera absolutas', diferencia, 'mca');
+  });
+
+  /* B manométrico mide contra la cámara, igual que A: al restar las dos
+     lecturas la cámara se va. B − A = 4x + 9(y − 0,1), con x + y = 1,5. */
+  const y = (B - A + 9 * 0.1 - 4 * 1.5) / (9 - 4);
+  const x = 1.5 - y;
+
+  it('y la capa de abajo mide 90,12 cm', () =>
+    cuadra.magnitud(id, 'La altura y de la capa inferior', y * 100, 'cm'));
+
+  it('y la de arriba, 59,88 cm', () => {
+    if (Math.abs(4 * x + 9 * (y - 0.1) - (B - A)) > 1e-9) throw new Error('las dos capas no pesan lo que marcan A y B');
+    cuadra.magnitud(id, 'La altura x de la capa superior', x * 100, 'cm');
   });
 });
 
@@ -170,7 +228,7 @@ describe('5 · el bombeo de petróleo en el desierto', () => {
   const id = 'exflu2425-ext-5-el-bombeo-de-petroleo-en-el-desierto';
   const s = 0.86;
   const NU = 7e-6;
-  const EPS = 2.5e-4; // hierro fundido
+  const EPS = 2.6e-4; // hierro fundido: 0,026 cm, valor de diseño del cuadro 20
 
   /* La conversión que decide el ejercicio: los 1,46 son metros de columna de
      **agua**, o sea presión, y todo lo demás se cuenta en columna de petróleo.
@@ -328,6 +386,16 @@ describe('9 · el pitot del avión que se bloquea', () => {
     const dinamica = 0.5 * 0.61 * (250 / 3.6) ** 2;
     const R = dinamica / ((13600 - 0.61) * G);
     cuadra.magnitud(id, 'La lectura a 9000 metros', R * 1000, 'mm');
+  });
+
+  it('y en la pista el manómetro averiado se va a 52,7 cm de mercurio', () => {
+    /* El Pitot de L recibe la presión de la pista y la rama tapada sigue con
+       la de 9000 m. Es casi cincuenta veces el desnivel de vuelo, y el dibujo
+       del apartado c) lo enseña a la misma escala. */
+    const R = (1.01e5 - 0.308e5) / ((13600 - 1.2) * G);
+    const vuelo = (0.5 * 0.61 * (250 / 3.6) ** 2) / ((13600 - 0.61) * G);
+    if (!(R > 40 * vuelo)) throw new Error('la lectura averiada debería ser decenas de veces la de vuelo');
+    cuadra.magnitud(id, 'La lectura del sistema averiado en tierra', R * 1000, 'mm');
   });
 
   it('y en la pista, parado, el sistema averiado marca 342 m/s', () => {
