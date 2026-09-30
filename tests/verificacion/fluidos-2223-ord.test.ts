@@ -1,6 +1,7 @@
 /**
- * La ordinaria de Mecánica de Fluidos de 2022-2023. Veintitrés respuestas en
- * nueve ejercicios.
+ * La ordinaria de Mecánica de Fluidos de 2022-2023. Veintisiete respuestas en
+ * nueve ejercicios (la cabecera decía veintitrés, y eran veinticinco antes de
+ * que entrara el apartado e) del 9, el 30 de septiembre de 2026).
  *
  * Dos ejercicios de esta convocatoria enseñan lo mismo por dos caminos: **lo
  * que decide no es la cota, es la altura piezométrica**. En el 8, un depósito
@@ -296,4 +297,28 @@ describe('9 · el circuito cerrado de filtrado', () => {
   });
 
   it('y la bomba da ahí 9,496 m', () => cuadra.magnitud(id, 'La altura del punto de funcionamiento', bomba(Q0), 'm'));
+
+  /* e) La cota máxima de la bomba. La aspiración es solo L1, 10 de los 41 m
+     (la válvula va detrás de la bomba), recorrida por el caudal del punto de
+     funcionamiento. */
+  const perdidaAspiracion = (rozamiento / 1000 ** 1.852) * (10 / 41) * Q0 ** 1.852;
+
+  it('la aspiración pierde 0,80 m', () =>
+    cuadra.magnitud(id, 'Las pérdidas de la aspiración', perdidaAspiracion, 'm'));
+
+  it('y con el margen de diseño la bomba no pasa de la cota 14,47', () => {
+    /* Se diseña con NPSHdisp > 1,3·NPSHreq (tema 25, diapositivas 21 y 22).
+       Sin el 1,3 tienen que salir los 15,52 m que daba la reconstrucción
+       anterior, la que dejaba este apartado fuera: si no salen, la cuenta de
+       aquí no es la misma y la explicación del metro de diferencia no vale.
+       Las presiones van por separado y en pascales: la atmósfera con 1 atm =
+       101 325 Pa, la de vapor en mbar y el requerido con 1 kg/cm² = 98 000 Pa. */
+    const lamina = 10;
+    const disponibleEnLaLamina = (0.97 * 101325 - 20e2) / GAMMA - perdidaAspiracion;
+    const requerido = (0.35 * 98000) / GAMMA;
+    const cota = (margen: number) => lamina + disponibleEnLaLamina - margen * requerido;
+    if (Math.abs(cota(1) - 15.52) > 0.005) throw new Error('sin el margen no salen los 15,52 m de la reconstrucción anterior');
+    if (!(cota(1.3) > lamina)) throw new Error('la bomba quedaría por debajo de la lámina, y la figura la pone encima');
+    cuadra.magnitud(id, 'La cota máxima de la turbobomba', cota(1.3), 'm');
+  });
 });

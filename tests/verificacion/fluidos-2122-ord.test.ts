@@ -1,15 +1,20 @@
 /**
- * La ordinaria de Mecánica de Fluidos de 2021-2022. Veintiséis respuestas en
- * once ejercicios: la convocatoria más larga de todo el corpus.
+ * La ordinaria de Mecánica de Fluidos de 2021-2022. Veintiocho respuestas en
+ * once ejercicios: la convocatoria más larga de todo el corpus. (Esta línea
+ * decía «veintiséis» hasta el 30 de septiembre de 2026; contadas, son 28.)
  *
  * El ejercicio 5 tiene la geometría que más costó leer, y por eso el test la
  * comprueba entera antes de usarla. La compuerta es un cuarto de cilindro con
  * el centro en 0, y el agua queda **por debajo** de su cara curva: empuja
- * hacia la derecha y hacia **arriba**, no hacia abajo. Que sea hacia arriba es
- * lo que hace que la reacción vertical en la articulación salga exactamente
- * cero, y ese cero no es casualidad: sale de que la resultante del agua pasa
- * por 0 y de que 0 está a la misma altura que A. El test integra la presión
- * sobre el arco y comprueba las dos cosas.
+ * hacia la derecha y hacia **arriba**, no hacia abajo. Y la reacción vertical
+ * en la articulación sale exactamente cero, que no es casualidad: la
+ * resultante del agua pasa por 0, y todas las verticales menos la de A —la de
+ * F₁, la del agua y la del suelo en B— actúan sobre la vertical de 0, a la
+ * distancia R de A; si sus momentos respecto de A se anulan, su suma también.
+ * (Hasta el 30 de septiembre de 2026 esto atribuía el cero a que el empuje
+ * fuera hacia arriba; con él hacia abajo también saldría cero.) El test
+ * integra la presión sobre el arco y comprueba el sentido y que la resultante
+ * pasa por 0.
  *
  * Y el ejercicio 7 regala tres avisos: un dato que **sobra** —el coeficiente
  * de contracción, porque el enunciado ya da el diámetro del chorro—, un ángulo
@@ -80,21 +85,37 @@ describe('2 · el océano que se comprime', () => {
   it('sin compresibilidad son 15,07 MPa', () =>
     cuadra.magnitud(id, 'La presión sin compresibilidad', sinComprimir / 1e6, 'MPa'));
 
-  /* Con el agua compresible la densidad crece con la presión, así que hay que
-     integrar dp = ρ(p)·g·dh. Se resuelve buscando la raíz de la relación
-     implícita p − p²/(2K) = ρ₀gh, sin pasar por la ecuación de segundo grado. */
-  const conComprimir = raiz((p) => p - (p * p) / (2 * K) - sinComprimir, 1e6, K);
+  /* Con el agua compresible la densidad crece con la presión según la
+     definición del módulo, K = ρ·dp/dρ, así que hay que integrar
+     dp = ρ(p)·g·dh con ρ = ρ₀·e^(p/K). Se integra numéricamente, paso a paso
+     con Runge-Kutta, sin usar la forma cerrada p = −K·ln(1 − ρ₀gh/K) que da la
+     resolución. Hasta el 30 de septiembre de 2026 se usaba aquí la
+     aproximación p − p²/(2K) = ρ₀gh con ρ = ρ₀/(1 − p/K): da la misma presión,
+     pero la densidad sale 1032,59 y no los 1032,56 impresos. */
+  const densidad = (p: number) => rho0 * Math.exp(p / K);
+  let conComprimir = 0;
+  const pasos = 20000;
+  const dz = h / pasos;
+  for (let i = 0; i < pasos; i++) {
+    const f = (p: number) => densidad(p) * G;
+    const k1 = f(conComprimir);
+    const k2 = f(conComprimir + (k1 * dz) / 2);
+    const k3 = f(conComprimir + (k2 * dz) / 2);
+    const k4 = f(conComprimir + k3 * dz);
+    conComprimir += (dz * (k1 + 2 * k2 + 2 * k3 + k4)) / 6;
+  }
 
   it('y con ella, 15,12 MPa', () => {
     if (!(conComprimir > sinComprimir)) throw new Error('comprimir debería subir la presión');
     cuadra(id, 'La presión con el agua comprimida', conComprimir / 1e6);
   });
 
-  it('y el agua se queda en 1.032,6 kg/m³', () => {
+  it('y el agua se queda en 1.032,56 kg/m³', () => {
     /* Un 0,74 % más densa, que es lo que se comprime kilómetro y medio de
-       océano. */
-    const rho = rho0 / (1 - conComprimir / K);
+       océano. Y la forma cerrada tiene que dar lo mismo que la integral. */
+    const rho = densidad(conComprimir);
     if (rho / rho0 - 1 > 0.01) throw new Error('se estaría comprimiendo más de lo razonable');
+    if (Math.abs(rho - rho0 / (1 - sinComprimir / K)) > 1e-6) throw new Error('la forma cerrada no cuadra con la integral');
     cuadra(id, 'La densidad a esa profundidad', rho);
   });
 });
@@ -141,14 +162,23 @@ describe('4 · los dos depósitos y el helio', () => {
   const [s1, s2] = [10, 3];
   const patm = 0.735 * 13.6 * GAMMA;
 
-  it('el barómetro da 97.949 Pa', () => cuadra.magnitud(id, 'La presión atmosférica del lugar', patm, 'Pa'));
+  it('el barómetro da 97.961 Pa', () => cuadra.magnitud(id, 'La presión atmosférica del lugar', patm, 'Pa'));
 
   it('y el manómetro absoluto de A marca 5,52 kg/cm²', () => {
     /* Recorriendo desde el manómetro de E: se baja por el pesado, se sube R
-       por el ligero y se vuelve a bajar por el pesado. Las cotas de los
-       meniscos se cancelan solas y solo sobrevive el desnivel R. */
+       por el ligero y se sigue por el pesado hasta la superficie de A. Las
+       cotas de los meniscos se cancelan solas y solo sobrevive el desnivel R.
+       Camino distinto del desarrollo, que usa la fórmula ya cancelada: aquí se
+       recorre punto a punto con una cota cualquiera para los meniscos, y se
+       comprueba que no influye. */
     const [zE, zB, R] = [10, 6, 0.3];
-    const pA = 0.3e5 + s1 * GAMMA * (zE - zB + R) - s2 * GAMMA * R;
+    const recorre = (zC: number) => {
+      const pD = 0.3e5 + s1 * GAMMA * (zE - (zC - R)); // bajando por el pesado hasta D
+      const pC = pD - s2 * GAMMA * R; // subiendo R por el ligero hasta C
+      return pC - s1 * GAMMA * (zB - zC); // y por el pesado hasta la superficie de A
+    };
+    if (Math.abs(recorre(1) - recorre(3)) > 1e-6) throw new Error('la cota de los meniscos no se cancela');
+    const pA = recorre(1);
     /* Y el helio, que se puede despreciar pero conviene demostrarlo. */
     const delHelio = 9.67e-4 * GAMMA * (8 - 6);
     if (delHelio / pA > 1e-4) throw new Error('el helio no es despreciable');
@@ -362,9 +392,11 @@ describe('11 · la boquilla y la válvula que se cierra', () => {
     cuadra.magnitud(id, 'El punto de funcionamiento', Q0, 'l/s'));
 
   it('y la bomba no puede subir de la cota 4,58', () => {
-    /* NPSH disponible por encima del requerido con el margen habitual del
-       30 %. La aspiración es tan corta y tan ancha que apenas pierde
-       dieciséis milímetros: lo que limita es la propia máquina. */
+    /* Dónde debe instalarse la bomba es una pregunta de diseño, así que el
+       NPSH disponible tiene que superar 1,3 veces al requerido (diapositiva 21
+       del tema 25; sin el factor, que es el criterio de una instalación en
+       funcionamiento, saldrían 5,78 m). La aspiración es tan corta y tan ancha
+       que apenas pierde dieciséis milímetros: lo que limita es la máquina. */
     const perdidaAspiracion = (hazenWilliams(5, Q0 / 1000, 0.35, CHW));
     if (perdidaAspiracion > 0.05) throw new Error('la aspiración pierde más de lo que debería');
     cuadra.magnitud(id, 'La cota máxima de la bomba', 10 - 0.2 - perdidaAspiracion - 1.3 * 4, 'm');

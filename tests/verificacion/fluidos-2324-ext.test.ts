@@ -1,6 +1,7 @@
 /**
- * La extraordinaria de Mecánica de Fluidos de 2023-2024. Veinticuatro
- * respuestas en siete ejercicios.
+ * La extraordinaria de Mecánica de Fluidos de 2023-2024. Treinta respuestas
+ * en los ocho ejercicios: el 8 entró el 30 de septiembre de 2026,
+ * cuando se vio que los 5,25 mca de su bomba son de columna de agua.
  *
  * El ejercicio 2 es el mejor del corpus para lo que este pase intenta hacer,
  * porque **cada apartado usa una ley distinta y ninguna se hereda de la
@@ -12,8 +13,8 @@
  *
  * Y el 4 lleva un dato que sobra —los 27 cm de desnivel entre las tomas— que
  * es justamente la trampa: el manómetro diferencial ya mide **altura
- * piezométrica**, que lleva la cota dentro. Sumarla otra vez da un caudal un
- * 80 % mayor. El test lo mide en vez de contarlo.
+ * piezométrica**, que lleva la cota dentro. Sumarla otra vez da un caudal casi
+ * un 60 % mayor. El test lo mide en vez de contarlo.
  */
 import { describe, it } from 'vitest';
 import { coeficienteHW } from './tablas';
@@ -254,6 +255,18 @@ describe('6 · la bomba que cavita y la que no', () => {
   const rendimientoB = (Q: number) => (4.22 * Q - 0.052 * Q * Q) / 100;
   const puntoB = raiz((Q) => bombaB(Q) - instalacion(Q), 10, 120);
 
+  it('las boquillas piden 58,31 l/s para tener 5 mca de presión dinámica', () => {
+    /* Por otro camino que la resolución: la presión dinámica como presión,
+       ½ρv², igualada a 5 mca = 5·9800 Pa. Y a ese caudal las dos bombas dan
+       más altura de la que pide la instalación, que es la primera frase del
+       resultado impreso. */
+    const v = Math.sqrt((2 * 5 * GAMMA) / 1000);
+    const demandado = 3 * area(0.05) * v * 1000;
+    if (!(bombaA(demandado) > instalacion(demandado) && bombaB(demandado) > instalacion(demandado)))
+      throw new Error('alguna bomba no llega al caudal demandado');
+    cuadra.magnitud(id, 'El caudal que piden las boquillas', demandado, 'l/s');
+  });
+
   it('la bomba B se planta en 60,64 l/s', () => {
     if (C[0] !== 140 || C[1] !== 140) throw new Error('el PVC ya no cae en la banda de 140');
     cuadra.magnitud(id, 'El punto de funcionamiento de la bomba B', puntoB, 'l/s');
@@ -330,5 +343,63 @@ describe('7 · la calzada como canal', () => {
     const y = raiz((t) => manning(seccion(t).A, seccion(t).P) - 0.25, R + 0.01, 1);
     if (!(y > R)) throw new Error('el agua de invierno debería rebasar la calzada');
     cuadra.magnitud(id, 'La altura de los bordes', (y + 0.05) * 100, 'cm');
+  });
+});
+
+describe('8 · el tramo laminar que fija el caudal', () => {
+  const id = 'exflu2324-ext-8-el-tramo-laminar-que-fija-el-caudal';
+  /* Por otro camino que la resolución, que va por velocidades y alturas:
+     aquí todo se escribe en caudal y en pascales (revisión de la unidad). */
+  const gamma = 10290;
+  const mu = 3.15e-3;
+  const rho = gamma / G;
+  const [D1, L1, D2, L2] = [0.04, 200, 0.014, 30];
+  const epsCobre = 1.5e-6; // cuadro 20: 0,00015 cm
+
+  /* «Máxima diferencia de presiones» y «laminar en el conducto 1» son la misma
+     condición. Re = 4ρQ/(πDμ) = 2000, despejado en Q sin pasar por la
+     velocidad. */
+  const Q = (2000 * Math.PI * D1 * mu) / (4 * rho);
+
+  it('el límite laminar deja pasar 0,1885 l/s', () => cuadra.magnitud(id, 'El caudal en el límite laminar', Q * 1000, 'l/s'));
+
+  const Re2 = (4 * Q) / (Math.PI * D2 * (mu / rho));
+
+  it('y en el cobre, liso, el factor de fricción es 0,0363', () => {
+    /* Colebrook con la rugosidad del cobre, iterado, tiene que caer en la
+       casilla de Blasius, que es lo que usa la resolución: los dos caminos
+       tienen que dar lo mismo a la precisión que pide el paso. */
+    let fCol = 0.03;
+    for (let i = 0; i < 40; i++) fCol = (-2 * Math.log10(epsCobre / D2 / 3.71 + 2.51 / (Re2 * Math.sqrt(fCol)))) ** -2;
+    const blasius = 0.316 / Re2 ** 0.25;
+    if (!(Re2 > 4000)) throw new Error('la tubería 2 debería ser turbulenta');
+    if (Math.abs(fCol - blasius) > 0.0005) throw new Error('Colebrook ya no cae en la casilla de Blasius');
+    cuadra(id, 'El factor de fricción de la tubería de cobre', fCol);
+  });
+
+  /* Las pérdidas escritas en caudal: Hagen-Poiseuille y Blasius. */
+  const hf1 = (128 * mu * L1 * Q) / (Math.PI * gamma * D1 ** 4);
+  const hf2 = (0.316 * (mu / rho) ** 0.25 * L2 * ((4 * Q) / Math.PI) ** 1.75) / (2 * G * D2 ** 4.75);
+
+  it('y se pierden 5,958 m en la tubería de cobre', () => {
+    /* La corta pierde mucho más que la larga: el diámetro pesa más que la
+       longitud, y la de cobre es turbulenta. */
+    if (!(hf2 > 20 * hf1)) throw new Error('la tubería 2 debería dominar la pérdida');
+    cuadra.magnitud(id, 'La pérdida en la tubería de cobre', hf2, 'm');
+  });
+
+  /* La bomba, como presión: 5,25 mca son 5,25·9800 Pa, sea cual sea el fluido. */
+  const pBomba = 5.25 * GAMMA;
+
+  it('la bomba da 5,00 m de columna del fluido', () => cuadra.magnitud(id, 'La altura de la bomba en columna del fluido', pBomba / gamma, 'm'));
+
+  it('y la máxima diferencia de presiones son 11,75 kPa', () => {
+    /* El balance en pascales, de lámina a lámina, las dos en la cota 15 y
+       quietas. Y la comprobación de que la conversión de los mca es la clave:
+       leída como 5,25 m de este fluido, sale otro número, fuera de la casilla. */
+    const dp = gamma * (hf1 + hf2) - pBomba;
+    const sinConvertir = gamma * (hf1 + hf2 - 5.25);
+    if (Math.abs(sinConvertir / dp - 1) < 0.1) throw new Error('sin convertir los mca debería salir otro número');
+    cuadra.magnitud(id, 'La máxima diferencia de presiones', dp / 1000, 'kPa');
   });
 });

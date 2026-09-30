@@ -120,9 +120,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Ruta de Fluidos**: decir por qué los cinco parciales no tienen ruta propia
   (sus 21 ejercicios están enlazados; `tambienPrepara` solo nombra la
   extraordinaria).
-- **La única respuesta de examen sin recalcular**: Fluidos 2022-2023-ext,
-  ejercicio 6 (`npm run deuda`, §1 bis). Ampliar la tolerancia, pasarla a
-  `fuera` o releerla.
 - **Térmica**: su ruta mide sobre 17 de 20 convocatorias y no lista las tres
   anteriores a 2017 en `fueraDeLaVentana`, como sí hace `calculo-ord`.
 - **Seis títulos de tema** del `.mdx` que no coinciden con el catálogo:

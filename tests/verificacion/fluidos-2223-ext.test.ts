@@ -13,21 +13,21 @@
  * en vez de decirlo, rehaciendo el resultado con la marea alta y con la baja y
  * comprobando que sale el mismo número.
  *
- * UN PASO QUE SE DEJA FUERA, Y POR QUÉ
- * El apartado (c) del ejercicio 6 —la longitud de la tubería 3— **no se cubre
- * aquí**. La cadena de ese ejercicio es hipersensible y la propia resolución lo
- * advierte: el punto cae en turbulencia casi completa, donde el factor de
- * fricción apenas depende del Reynolds, así que la ecuación que despeja el
- * caudal es casi degenerada. Un solve independiente aterriza en 49,18 l/s
- * frente a los 48,32 publicados —un 1,8 %, que la tolerancia del 2 % absorbe—,
- * pero la longitud del tramo 3 sale de **restar** la altura de la bomba menos
- * dos pérdidas casi tan grandes como ella, y ahí ese 1,8 % se convierte en un
- * 8,8 %: 32,35 m frente a los 35,49 m publicados.
+ * EL APARTADO (c) DEL 6, Y DE DÓNDE PARTE
+ * La cadena de ese ejercicio es hipersensible y la propia resolución lo
+ * advierte: en la tubería 2 el factor de fricción apenas depende del Reynolds,
+ * así que la ecuación que despeja el caudal está mal condicionada —un 0,1 % en
+ * f₂ mueve el caudal un 2,3 %—. Un solve independiente aterriza en 49,18 l/s
+ * frente a los 48,32 publicados, un 1,8 % que la tolerancia del 2 % absorbe;
+ * pero la longitud del tramo 3 sale de **restar** a la altura de la bomba dos
+ * pérdidas que crecen con el caudal, y con ese caudal saldrían 32,35 m frente
+ * a los 35,49 publicados.
  *
- * No es un error de aritmética del corpus: es que **el enunciado no determina
- * esa longitud con la precisión con la que está publicada**. Queda anotado en
- * `tasks/todo.md` para decidir qué hacer con la tolerancia de ese paso, y
- * mientras tanto el test no lo da por verificado.
+ * Hasta el 30 de septiembre de 2026 ese paso quedaba sin cubrir, y era la
+ * única respuesta de examen sin recalcular (`tasks/pendiente.md`). Desde ese
+ * día el paso da como dato los valores publicados del (b), 48,32 l/s y
+ * 64,24 m, y el test recalcula el (c) desde ellos: 35,70 m, un 0,6 % del
+ * impreso. El (b) se sigue comprobando por su cuenta, desde el enunciado.
  */
 import { describe, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -237,6 +237,23 @@ describe('6 · los dos ramales con el mismo caudal', () => {
     /* Los 24 kW ya son la potencia **útil**: el rendimiento del 46 % serviría
        para la factura, no para esto. */
     cuadra.magnitud(id, 'La altura manométrica', Hm, 'm');
+  });
+
+  it('y con el (b) publicado la tubería 3 mide 35,7 m', () => {
+    /* El paso da como dato los valores publicados del (b): con los de arriba
+       (Colebrook, 49,18 l/s) la resta del (c) caería a 32,35 m, y eso no es un
+       error de nadie sino lo mal condicionada que está la cadena. Circuito
+       cerrado: la bomba se gasta entera en la 1, el paralelo —la pérdida de
+       UN ramal— y la 3; y la 3 es igual que la 1, así que cada metro de las
+       dos cuesta lo mismo. */
+    const [Qpub, Hpub] = [48.32e-3, 64.24];
+    const v1 = Qpub / A2;
+    const f1 = colebrook(v1 * (0.075 / nu), 7e-6 / 0.075);
+    const porMetro = ((f1 / 0.075) * v1 * v1) / (2 * G);
+    const v4 = Qpub / 2 / A4;
+    const h4 = ((f4 * (135 / 0.1)) * v4 * v4) / (2 * G);
+    if (!(Hpub - 15 * porMetro - 2 * h4 > 0)) throw new Error('ni sumando los dos ramales quedaría carga para la 3');
+    cuadra.magnitud(id, 'La longitud que falta', (Hpub - 15 * porMetro - h4) / porMetro, 'm');
   });
 });
 

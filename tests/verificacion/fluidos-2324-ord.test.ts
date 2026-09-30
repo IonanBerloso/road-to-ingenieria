@@ -1,6 +1,6 @@
 /**
- * La ordinaria de Mecánica de Fluidos de 2023-2024. Veintiuna respuestas en
- * ocho ejercicios.
+ * La ordinaria de Mecánica de Fluidos de 2023-2024. Veinticuatro respuestas
+ * en ocho ejercicios.
  *
  * Esta convocatoria tiene el mejor par de casos límite del corpus, y están en
  * dos ejercicios seguidos. En el 2, una pieza con dos boquillas donde **el 99 %
@@ -281,11 +281,15 @@ describe('7 · el canal de Donostia a Barcelona', () => {
   });
 
   it('y haría falta un líquido 99 veces menos viscoso', () => {
-    /* Reynolds y Froude a la vez con la misma gravedad: la escala de
-       velocidades queda fijada por Froude y entonces Reynolds pide que la
-       viscosidad vaya como la escala a la 3/2. */
-    const lambda = 10 / 0.4675;
-    cuadra(id, 'La relación de viscosidades que haría falta', lambda ** 1.5);
+    /* Reynolds y Froude a la vez con la misma gravedad. Con la escala como la
+       escribe el resultado impreso, λ = Lm/Lp, Froude fija vm/vp = λ^(1/2) y
+       Reynolds pide νm/νp = (vm/vp)·λ = λ^(3/2). Se hace por los dos números
+       y no con la fórmula, y el paso pregunta νp/νm. */
+    const lambda = 0.4675 / 10;
+    const relacionV = Math.sqrt(lambda); // Froude: vm²/(g Lm) = vp²/(g Lp)
+    const nuModeloEntreProto = relacionV * lambda; // Reynolds: vm Lm/νm = vp Lp/νp
+    if (Math.abs(nuModeloEntreProto - lambda ** 1.5) > 1e-12) throw new Error('la combinación no da λ^(3/2)');
+    cuadra(id, 'La relación de viscosidades que haría falta', 1 / nuModeloEntreProto);
   });
 });
 
@@ -316,6 +320,12 @@ describe('8 · el codo y su longitud equivalente', () => {
     const sinConvertir = raiz((x) => perdidaRecta(x) - (1 - enElCodo), 0.1, 20) * area(D) * 1000;
     if (Math.abs(sinConvertir / (v * area(D) * 1000) - 1) < 0.05)
       throw new Error('la conversión no cambia lo suficiente como para ser la trampa que dice el enunciado');
+    /* Y el camino de la resolución, que no itera —la NOTA pide iterar solo si
+       es obligatorio—: con la pérdida como dato, Re·√f sale de los datos y
+       Colebrook da f de una vez. Tiene que llevar a la misma velocidad. */
+    const reRaizF = (D / nu) * Math.sqrt((2 * G * D * enElTuboRecto) / L);
+    const invRaizF = -2 * Math.log10(eps / D / 3.7 + 2.51 / reRaizF);
+    if (Math.abs((reRaizF * invRaizF * nu) / D / v - 1) > 1e-6) throw new Error('el tipo II sin iterar no da la misma velocidad');
     cuadra.magnitud(id, 'El caudal', v * area(D) * 1000, 'l/s');
   });
 

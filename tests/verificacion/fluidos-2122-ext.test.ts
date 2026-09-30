@@ -1,6 +1,6 @@
 /**
- * La extraordinaria de Mecánica de Fluidos de 2021-2022. Once respuestas en
- * ocho ejercicios cortos.
+ * La extraordinaria de Mecánica de Fluidos de 2021-2022. Dieciocho respuestas
+ * en los nueve ejercicios; las cuatro del 9 se leen en una gráfica.
  *
  * El primero es el mejor ejemplo del corpus de **un cálculo que sale «mal» y
  * por eso enseña**: modelar el ascenso de la savia como capilaridad pura exige
@@ -232,5 +232,53 @@ describe('8 · la cota máxima de la aspiración', () => {
     const barometrica = (0.75 * 13600 * G) / GAMMA;
     const reserva = (0.12335e5 + 1e4) / GAMMA;
     cuadra.magnitud(id, 'La cota máxima de la bomba', barometrica - reserva - porLaTuberia - porLaValvula - cinetica, 'm');
+  });
+});
+
+describe('9 · cuatro lecturas en una gráfica', () => {
+  const id = 'exflu2122-ext-9-cuatro-lecturas-en-una-grafica';
+  /* Las lecturas que publica el enunciado bajo «Notas nuestras», tomadas de
+     la gráfica del cuadernillo con su rejilla: [Q (l/s), bomba (m),
+     instalación (m)]. Entre dos filas se interpola en línea recta, que es lo
+     que se hace con la gráfica delante. */
+  const tabla = [
+    [0, 49.9, 9.9], [1, 49.6, 10.4], [2, 48.7, 11.6], [3, 47.2, 13.6], [4, 45.1, 16.5], [5, 42.4, 20.2],
+    [6, 39.1, 24.7], [7, 35.3, 30.1], [8, 30.8, 36.3], [9, 25.7, 43.3], [10, 20.1, 51.1],
+  ];
+  const lee = (col: 1 | 2, q: number) => {
+    for (let i = 0; i < tabla.length - 1; i++) {
+      const [a, b] = [tabla[i], tabla[i + 1]];
+      if (a[0] <= q && q <= b[0]) return a[col] + ((q - a[0]) / (b[0] - a[0])) * (b[col] - a[col]);
+    }
+    throw new Error(`Q = ${q} fuera de la gráfica`);
+  };
+  const bomba = (q: number) => lee(1, q);
+  const instalacion = (q: number) => lee(2, q);
+  const Q = raiz((q) => bomba(q) - instalacion(q), 6, 9);
+  /* A caudal nulo no hay pérdidas: donde la instalación corta el eje está su
+     altura estática, los 5 m de cota de B más su presión. */
+  const estatica = instalacion(0);
+
+  it('la bomba da 7,5 l/s, donde se cortan las dos curvas', () => {
+    cuadra.magnitud(id, 'El caudal bombeado', Q, 'l/s');
+  });
+
+  it('y se pierden 23 m por encima de la altura estática', () => {
+    if (Math.abs(estatica - 10) > 0.2) throw new Error('la instalación ya no arranca en unos 10 m');
+    cuadra.magnitud(id, 'Las pérdidas de la instalación', bomba(Q) - estatica, 'm');
+  });
+
+  it('el depósito B está a 5 mca', () => {
+    cuadra.magnitud(id, 'La presión del depósito B', estatica - 5, 'mca');
+  });
+
+  it('y para bajar a 7 l/s la válvula tiene que perder 5,2 m', () => {
+    /* La bomba es la misma, así que el punto nuevo está en su curva: la
+       válvula gasta lo que la bomba da a 7 l/s y la instalación no pide. El
+       error que se comete sin dibujar es restar la instalación a 7,5 y a 7
+       —3 m—, como si la bomba siguiera en el punto viejo. */
+    const valvula = bomba(7) - instalacion(7);
+    if (!(valvula > instalacion(Q) - instalacion(7) + 1)) throw new Error('la bomba no sube al bajar el caudal');
+    cuadra.magnitud(id, 'La pérdida que tiene que dar la válvula', valvula, 'm');
   });
 });
