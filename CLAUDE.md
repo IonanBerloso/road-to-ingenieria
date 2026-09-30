@@ -139,7 +139,7 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 | Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
 | Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
 | Mecánica Aplicada | 2.º | `ok` | ocho convocatorias, cinco transcritas de la imagen de su columna en castellano; el bloque 2 se mide sobre exámenes de 2018 y 2019 |
-| Ciencia de Materiales | 2.º | `obra` | escrita entera; sin exámenes de problemas no hay ruta ni cierre |
+| Ciencia de Materiales | 2.º | `obra` | escrita entera, y desde el 29 de septiembre (fase H) con laboratorio, formulario, el banco del test de 7 a 10 y tres simulacros nuestros; sin exámenes de problemas no hay ruta ni cierre |
 | Sistemas de Producción | 2.º | `obra` | solo el catálogo: **se deja para más adelante** |
 
 El corpus, ese día: 83 temas publicados, 1.948 ejercicios y 8.487 pasos,
@@ -271,6 +271,16 @@ src/
         ejercicios.yaml    los ejercicios como DATOS
       examenes/
         2024-2025-1ev/     examen.yaml (reparto) + ejercicios.yaml
+      simulacros/          simulacros NUESTROS (Materiales, fase H3): un
+        2025-2026-simulacro/  examen.yaml sin ejercicios.yaml al lado, que
+                           cita ejercicios de tema por su id. Convocatoria
+                           `propia` (`esPropia` en content.config.ts):
+                           misma página que un examen —reloj, hoja,
+                           resoluciones—, pero fuera de todo lo que cuenta
+                           convocatorias; por eso vive fuera de examenes/,
+                           donde la recorren mide, deuda y verify. Sus
+                           partes (40/60) salen del catálogo, no se
+                           escriben otra vez (src/lib/simulacro.ts)
     preparar/              una ruta de estudio por evaluación (§14).
                            Solo YAML: no enseña nada nuevo, ordena lo que
                            ya está y dice por qué en ese orden.

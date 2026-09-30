@@ -5,7 +5,7 @@ import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
 import { sinMarcas, mate } from '../../../lib/markdown.mjs';
 import { avisoDeResoluciones, ejerciciosDelCuadernillo, queEsElPdf } from '../../../lib/cuadernillo';
-import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, slugExamen } from '../../../content.config';
+import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, esPropia, slugExamen } from '../../../content.config';
 
 /**
  * El índice de exámenes de una asignatura. Solo existe si esa asignatura tiene
@@ -18,7 +18,9 @@ export async function getStaticPaths() {
      latente desde que la ruta pasó a ser curso + convocatoria: mientras no
      hubo dos exámenes del mismo curso, este segundo criterio de orden no
      llegaba a evaluarse nunca. */
-  const examenes = await getCollection('examen');
+  /* Los simulacros nuestros no son convocatorias: los enlaza el índice de
+     la asignatura, no esta lista (fase H3). */
+  const examenes = (await getCollection('examen')).filter((e) => !esPropia(e.data.convocatoria));
   const catalogo = await getCollection('catalogo');
   const rutas = await getCollection('preparar');
 

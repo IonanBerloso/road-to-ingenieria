@@ -7,6 +7,7 @@ import Examen from '../../../components/ui/Examen.astro';
 import { archivo, ruta } from '../../../lib/rutas';
 import { ejerciciosDelCuadernillo } from '../../../lib/cuadernillo';
 import { CONVOCATORIAS, slugExamen } from '../../../content.config';
+import { partesDelSimulacro } from '../../../lib/simulacro';
 
 /**
  * Una página por convocatoria. Un examen cruza temas, así que no cabe dentro
@@ -168,6 +169,17 @@ export async function getStaticPaths() {
       }
     }
 
+    /* Un simulacro nuestro: sus partes, con el peso, el mínimo y el tope
+       que declara el catálogo (`partesDelSimulacro` rompe el build si una
+       parte no existe o si una fila no cae en ninguna). */
+    const propio = ex.data.propio && {
+      aviso: ex.data.propio.aviso,
+      conApuntes: ex.data.propio.conApuntes,
+      partes: ex.data.propio.partes
+        ? partesDelSimulacro(asignatura.data.evaluacion, ex.data.propio.partes, ejercicios.length, `${idAsig} · ${carpeta}`)
+        : undefined,
+    };
+
     const suRuta = rutas.find(
       (r) =>
         r.data.asignatura === idAsig &&
@@ -181,6 +193,7 @@ export async function getStaticPaths() {
         examen: ex,
         ejercicios,
         cuadernillos,
+        propio,
         ruta: suRuta
           ? { sufijo: CONVOCATORIAS[suRuta.data.evaluacion].url, titulo: suRuta.data.titulo }
           : null,
@@ -189,13 +202,15 @@ export async function getStaticPaths() {
   });
 }
 
-const { asignatura, examen, ejercicios, cuadernillos, ruta: suRuta } = Astro.props;
+const { asignatura, examen, ejercicios, cuadernillos, propio, ruta: suRuta } = Astro.props;
 
 const conv = CONVOCATORIAS[examen.data.convocatoria as keyof typeof CONVOCATORIAS].larga;
-const crumb = `${asignatura.data.nombre} · exámenes`;
+const crumb = `${asignatura.data.nombre} · ${examen.data.propio ? 'simulacro' : 'exámenes'}`;
 /* El titular dice QUÉ convocatoria es, no solo el curso (brief §6): con
    hasta siete exámenes por curso, «Examen 2024-2025» no identifica nada. */
-const titulo = `${conv[0].toUpperCase()}${conv.slice(1)} · ${examen.data.curso}`;
+const titulo = examen.data.propio
+  ? examen.data.propio.titulo
+  : `${conv[0].toUpperCase()}${conv.slice(1)} · ${examen.data.curso}`;
 
 /* Casi todos los exámenes son un cuadernillo; el de mayo-junio de 2020 son dos.
    Se les da nombre —«1.er cuatrimestral», «2.º»— solo cuando hay más de uno:
@@ -221,7 +236,9 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
       `<meta>` seguía diciendo lo contrario, que es la misma frase en dos
       sitios diciendo cosas distintas (§01). Encontrado el 14 de septiembre
       de 2026, al construir el propio mecanismo que lo declara. */}
-  descripcion={`Los ${ejerciciosDelCuadernillo(examen.data.ejercicios)} ejercicios de la ${conv} de ${asignatura.data.nombre} del curso ${examen.data.curso}, ${
+  descripcion={examen.data.propio
+    ? `${examen.data.propio.titulo}, de ${asignatura.data.nombre}: ${ejercicios.length} ejercicios del curso con reloj, montados por nosotros y resueltos paso a paso.`
+    : `Los ${ejerciciosDelCuadernillo(examen.data.ejercicios)} ejercicios de la ${conv} de ${asignatura.data.nombre} del curso ${examen.data.curso}, ${
     examen.data.fuera.length === 0 ? 'resueltos enteros' : 'con lo que falta dicho ejercicio por ejercicio'
   }${ejercicios.some((e) => e.puntos) || examen.data.puntosImpresos ? ' y con el reparto de puntos del examen' : ''}.`}
   acento={asignatura.data.acento}
@@ -244,6 +261,7 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
       duracionImpresa={examen.data.duracion}
       sinPdf={examen.data.sinPdf}
       puntosImpresos={examen.data.puntosImpresos}
+      propio={propio}
     />
   </main>
 </Base>

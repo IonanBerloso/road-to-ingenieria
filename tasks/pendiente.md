@@ -18,10 +18,10 @@ del segundo cuatrimestre—, con una excepción decidida por Ionan: la fase 1 de
 Expresión Gráfica se pausa dos días para hacer antes los arreglos rápidos, y
 sigue después tal cual.
 
-- **H · Materiales**: laboratorio, simulacro 40/60 y test de 7–10 (5–6 días).
-  Antes del simulacro, la evaluación final: la guía (pág. 12) pide examen
-  escrito y práctico con un 5,0 en cada uno, y la diapositiva 15 da un 4,0
-  al escrito.
+- **H · Materiales**: hecha el 29 de septiembre de 2026 (laboratorio,
+  simulacros, test de 7–10, formulario y la evaluación final con su
+  discrepancia dicha). Queda lo que no depende del sitio: la ruta medida, sin
+  exámenes de teoría y problemas, y la copia limpia de las preguntas guía.
 - **I · Fluidos**: prácticas, los `fuera` recuperables y los criterios del
   profesor (5–6 días).
 - **J · Sistemas de Producción** (~4 semanas). Su colección trae cinco

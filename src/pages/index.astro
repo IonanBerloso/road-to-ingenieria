@@ -27,6 +27,7 @@ import {
   CONVOCATORIAS,
   ORDEN_CONV,
   CON_TEMAS,
+  esPropia,
   slugExamen,
   type ConTemas,
 } from '../content.config';
@@ -155,7 +156,8 @@ const pdfsPorAsignatura = new Map<string, { pdf?: unknown; pdfEs: 'enunciado' | 
  *  puesta a ojo. Ver `src/lib/peso.ts`: el catálogo solo manda si declara una
  *  excepción, y una asignatura sin exámenes transcritos no pinta pastilla en
  *  vez de inventarse un nivel. */
-const examenes = await getCollection('examen');
+/* Los simulacros nuestros no son convocatorias: no cuentan aquí. */
+const examenes = (await getCollection('examen')).filter((e) => !esPropia(e.data.convocatoria));
 const cuentaExamen = new Map<string, Map<string, number>>();
 
 /** La primera convocatoria de cada asignatura cuyo cuadernillo imprime su

@@ -8,7 +8,7 @@ import { mate, sinMarcas } from '../../lib/markdown.mjs';
 import { hayFormulario } from '../../lib/formulario';
 import { ESTADO } from '../../lib/estado';
 import { modelo } from '../../lib/nota';
-import { ORDEN_CONV, SUFIJO_CONV, CON_TEMAS, type ConTemas } from '../../content.config';
+import { ORDEN_CONV, SUFIJO_CONV, CON_TEMAS, esPropia, slugExamen, type ConTemas } from '../../content.config';
 
 /**
  * La página de una asignatura: `/calculo/`, `/fluidos/`… (fase E2 de la
@@ -53,7 +53,18 @@ const rutas = (await getCollection('preparar'))
     sufijo: SUFIJO_CONV[r.data.evaluacion],
   }));
 
-const numExamenes = (await getCollection('examen')).filter((e) => e.data.asignatura === id).length;
+const examenesDeAqui = (await getCollection('examen')).filter((e) => e.data.asignatura === id);
+const numExamenes = examenesDeAqui.filter((e) => !esPropia(e.data.convocatoria)).length;
+/* Los simulacros nuestros (fase H3): no son convocatorias, así que no van en
+   la lista de exámenes, y se enlazan aquí, cada uno con su título. */
+const simulacros = examenesDeAqui
+  .filter((e) => esPropia(e.data.convocatoria))
+  .sort((x, y) => ORDEN_CONV.indexOf(x.data.convocatoria) - ORDEN_CONV.indexOf(y.data.convocatoria))
+  .map((e) => ({
+    href: ruta(`${id}/examenes/${slugExamen(e.data.curso, e.data.convocatoria)}`),
+    titulo: e.data.propio!.titulo,
+    conApuntes: e.data.propio!.conApuntes,
+  }));
 const conTemas = (CON_TEMAS as readonly string[]).includes(id);
 const conFormulario = conTemas && hayFormulario((await getCollection(id as ConTemas)).map((e) => e.body));
 const laboratorio = (await getCollection('laboratorio')).find((l) => l.id.split('/')[0] === id);
@@ -218,7 +229,7 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
         }
 
         {
-          (numExamenes > 0 || conFormulario || conTablas || conLaboratorio || conCuestiones.size > 0) && (
+          (numExamenes > 0 || simulacros.length > 0 || conFormulario || conTablas || conLaboratorio || conCuestiones.size > 0) && (
             <ul class="enlaces">
               {numExamenes > 0 && (
                 <li>
@@ -226,6 +237,12 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
                   enunciado original y la resolución guiada.
                 </li>
               )}
+              {simulacros.map((s) => (
+                <li>
+                  <a href={s.href}>{s.titulo}</a>: montado por nosotros con ejercicios del curso, con
+                  reloj{s.conApuntes ? ', con apuntes como el de verdad,' : ''} y resuelto paso a paso.
+                </li>
+              ))}
               {conFormulario && (
                 <li>
                   <a href={ruta(`${id}/formulario`)}>El formulario</a>: lo que hay que llevar sabido de

@@ -1237,7 +1237,43 @@ export const CONVOCATORIAS = {
    *  del profesor. No cuenta en la medida de ninguna ruta: una ruta mide las
    *  convocatorias de su evaluación, y esta no es de ninguna. */
   modelo: { url: 'modelo', corta: 'modelo', boton: 'Modelo', larga: 'modelo de examen' },
+  /** Los simulacros NUESTROS: no son convocatorias, los montamos nosotros con
+   *  ejercicios de tema ya publicados. Entran el 29 de septiembre de 2026 con
+   *  Ciencia de Materiales (fase H3), que no tiene un solo examen de teoría y
+   *  problemas entre el material y cuyo examen pide un 40 % de teoría y un
+   *  60 % de problemas con un mínimo en cada parte. Usan la misma página que
+   *  un examen —el reloj, la hoja en blanco, las resoluciones— y por eso son
+   *  una convocatoria; pero `propia` las saca de todo lo que cuenta
+   *  convocatorias (`esPropia`, abajo), porque un simulacro nuestro no es un
+   *  examen que haya caído. */
+  simulacro: {
+    url: 'simulacro',
+    corta: 'simulacro',
+    boton: 'Simulacro',
+    larga: 'simulacro nuestro del examen',
+    propia: true,
+  },
+  'simulacro-entregable-1': {
+    url: 'sim-entregable-1',
+    corta: 'sim. entregable 1',
+    boton: 'Simulacro del 1.er entregable',
+    larga: 'simulacro nuestro del primer entregable',
+    propia: true,
+  },
+  'simulacro-entregable-2': {
+    url: 'sim-entregable-2',
+    corta: 'sim. entregable 2',
+    boton: 'Simulacro del 2.º entregable',
+    larga: 'simulacro nuestro del segundo entregable',
+    propia: true,
+  },
 } as const;
+
+/** ¿Es un simulacro nuestro y no una convocatoria? Todo lo que cuenta
+ *  convocatorias —la portada, el índice de la asignatura, los temas, `mide`,
+ *  `deuda`, `verify`— pregunta aquí antes de contar. */
+export const esPropia = (convocatoria: string): boolean =>
+  'propia' in (CONVOCATORIAS[convocatoria as keyof typeof CONVOCATORIAS] ?? {});
 
 /** Las claves de la tabla, en su orden. Es el orden en que se listan. */
 export const ORDEN_CONV = Object.keys(CONVOCATORIAS) as (keyof typeof CONVOCATORIAS)[];
@@ -1319,14 +1355,33 @@ const examen = defineCollection({
        *  case con lo que declara el fichero. */
       curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'),
       convocatoria,
-      /** Tal como viene impresa en la cabecera del examen. */
-      fecha: z.string().min(8),
+      /** Tal como viene impresa en la cabecera del examen. Un simulacro
+       *  nuestro no tiene: no ha caído ningún día. */
+      fecha: z.string().min(8).optional(),
       /** Las instrucciones que imprime la portada, tal cual. Entra el 27 de
        *  septiembre de 2026 con la fase D de la auditoría: seis de los ocho
        *  cuadernillos de Álgebra abren con «Razonar todas las respuestas
        *  utilizando la teoría desarrollada en la asignatura», que es la regla
        *  con la que se corrige todo lo demás, y el sitio no la enseñaba. */
       instrucciones: z.string().min(10).optional(),
+      /** Solo en un simulacro nuestro (`esPropia`), y en él obligatorio. */
+      propio: z
+        .object({
+          /** El título de la página: «Simulacro del examen de los temas 1 a 6». */
+          titulo: z.string().min(10),
+          /** Qué es y qué no, arriba del todo: no es un examen que haya caído. */
+          aviso: z.string().min(40),
+          /** Los controles con apuntes, como los entregables de Materiales. */
+          conApuntes: z.boolean().default(false),
+          /** Las partes del examen de verdad, por el `id` de su `sub` en la
+           *  `evaluacion` del catálogo: el peso, el mínimo y el tope salen de
+           *  ahí y no se escriben otra vez (§01). `n` son las filas de la hoja
+           *  que forman cada parte. */
+          partes: z
+            .array(z.object({ sub: z.string().min(2), n: z.array(z.number().int().positive()).min(1) }))
+            .optional(),
+        })
+        .optional(),
       /** Nombre del PDF dentro de `public/examenes/<asignatura>/`, o **la
        *  lista** cuando el examen viene en más de un cuadernillo.
        *  Que los ficheros existan de verdad se comprueba al generar la ruta.
@@ -1538,7 +1593,16 @@ const examen = defineCollection({
     .refine(
       (e) => !e.puntosImpresos || new Set(e.puntosImpresos.reparto.map((r) => r.n)).size === e.puntosImpresos.reparto.length,
       { message: '`puntosImpresos` repite un ejercicio' },
-    ),
+    )
+    .refine((e) => esPropia(e.convocatoria) === (e.propio !== undefined), {
+      message: 'un simulacro nuestro lleva `propio`, y solo él',
+    })
+    .refine((e) => esPropia(e.convocatoria) || e.fecha !== undefined, {
+      message: 'una convocatoria de verdad lleva su `fecha`',
+    })
+    .refine((e) => !esPropia(e.convocatoria) || e.pdf === undefined, {
+      message: 'un simulacro nuestro no tiene cuadernillo: lleva `sinPdf`',
+    }),
 });
 
 /** El trozo de URL que identifica a cada convocatoria.

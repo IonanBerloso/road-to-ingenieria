@@ -27,6 +27,7 @@ import { mate } from '../../lib/markdown.mjs';
 import { ejerciciosDelCuadernillo, filasDelCuadernillo } from '../../lib/cuadernillo';
 import EjercicioGuiado from '../patrones/EjercicioGuiado.astro';
 import Reparto, { type Puntos } from './Reparto.astro';
+import type { ParteDelSimulacro } from '../../lib/simulacro';
 
 export type { Puntos };
 
@@ -54,7 +55,8 @@ export interface EjercicioDeExamen {
 interface Props {
   eyebrow: string;
   titulo: string;
-  fecha: string;
+  /** Un simulacro nuestro no tiene fecha: no ha caído ningún día. */
+  fecha?: string;
   /** Lo que imprime la portada del cuadernillo, tal cual, si imprime algo
    *  (`instrucciones` en su `examen.yaml`). Va arriba del examen en blanco,
    *  que es donde lo lee quien se examina. */
@@ -97,6 +99,9 @@ interface Props {
   /** Lo que vale cada ejercicio según el cuadernillo, por su número, cuando
    *  lo imprime sin reparto por competencias (`puntosImpresos`). */
   puntosImpresos?: { fuente: string; unidad?: 'puntos' | '%'; reparto: { n: number; puntos: number }[] };
+  /** Un simulacro nuestro (`esPropia`): qué es, si es con apuntes, y sus
+   *  partes con el peso, el mínimo y el tope del catálogo. */
+  propio?: { aviso: string; conApuntes: boolean; partes?: ParteDelSimulacro[] };
 }
 
 const {
@@ -114,7 +119,17 @@ const {
   duracionImpresa,
   sinPdf,
   puntosImpresos,
+  propio,
 } = Astro.props;
+
+const propioAvisoHtml = propio ? await mate(propio.aviso, 'propio') : '';
+/** «1 y 2», «3 a 6», «1, 3 y 5»: las filas de una parte, como se dicen. */
+const filasDeParte = (ns: number[]) =>
+  ns.length > 2 && ns.every((n, i) => i === 0 || n === ns[i - 1] + 1)
+    ? `del ${ns[0]} al ${ns.at(-1)}`
+    : ns.length === 1
+      ? `el ${ns[0]}`
+      : `${ns.slice(0, -1).join(', ')} y ${ns.at(-1)}`;
 
 /** ¿Este cuadernillo trae los dos cuatrimestrales? Solo entonces tienen
  *  sentido los preajustes: en el examen de una evaluación suelta, «solo el
@@ -233,7 +248,9 @@ const fueraHtml = await Promise.all(
 
 <div class="shell" data-armazon>
   <div class="col">
-    <p class="mano honesta">tal cual cayó — sin cambiar un número</p>
+    <p class="mano honesta">
+      {propio ? 'montado por nosotros — ejercicios del curso, sin cambiar un número' : 'tal cual cayó — sin cambiar un número'}
+    </p>
     <p class="rotulo rotulo--live eyebrow">{eyebrow}</p>
     <h1>{titulo}</h1>
     <p class="lede">
@@ -241,7 +258,7 @@ const fueraHtml = await Promise.all(
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
           no lo hay, no se dice nada en vez de decir un número inventado
           (§10). */}
-      {fecha} · {enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : totalImpreso > 0 && !enPorcentaje ? ` · ${enPuntos(totalImpreso)} puntos` : ''}{duracion ? ` · ${duracion} de reloj` : ''}
+      {fecha && `${fecha} · `}{enteros.length > 0 ? `${propios} de los ${deCuantos} ejercicios` : `${propios} ejercicios`}{aMedias.length > 0 ? `, ${aMedias.length} a medias` : ''}{piezas > propios ? ` · ${piezas} resoluciones` : ''}{total > 0 ? ` · ${total} puntos` : totalImpreso > 0 && !enPorcentaje ? ` · ${enPuntos(totalImpreso)} puntos` : ''}{duracion ? ` · ${duracion} de reloj` : ''}
     </p>
 
     <nav class="pestanas" aria-label="Vistas del examen">
@@ -257,6 +274,32 @@ const fueraHtml = await Promise.all(
         Empieza sin mirar: abre cada ejercicio cuando vayas a por él. Las
         resoluciones están en la otra pestaña.
       </p>
+
+      {/* Un simulacro nuestro dice qué es antes que nada: quien llega desde
+          la lista de exámenes podría tomarlo por uno que ha caído. */}
+      {propio && (
+        <aside class="aviso aviso--flag propio">
+          <p class="rotulo">Qué es esto</p>
+          <div class="prosa" set:html={propioAvisoHtml} />
+          {propio.conApuntes && (
+            <p class="propio-linea">
+              <strong>Con apuntes.</strong> El control de verdad es con apuntes: tenlos a mano, y
+              el formulario del tema también.
+            </p>
+          )}
+          {propio.partes && (
+            <ul class="propio-partes">
+              {propio.partes.map((p) => (
+                <li>
+                  <strong>{p.titulo}, {p.peso} %</strong>: {p.n.length === 1 ? 'el ejercicio' : 'los ejercicios'}{' '}
+                  {filasDeParte(p.n)}.
+                  {p.minimo !== undefined && ` Un mínimo de ${enPuntos(p.minimo)}${p.tope !== undefined ? `; sin él, la nota se queda como mucho en un ${enPuntos(p.tope)}` : ''}.`}
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+      )}
 
       {instrucciones && (
         <p class="portada">
@@ -393,6 +436,35 @@ const fueraHtml = await Promise.all(
         </section>
       )}
 
+      {/* La nota por partes de un simulacro nuestro. La página no corrige:
+          pones tú lo que sacas en cada parte y la cuenta aplica la regla de
+          la asignatura, con el tope si una parte no llega al mínimo. La regla
+          vive en `src/lib/simulacro.ts` y la prueban sus tests; aquí solo se
+          lee de los `data-`. */}
+      {propio?.partes && (
+        <form class="s-partes no-imprimir" data-partes aria-label="Tu nota por partes">
+          <p class="rotulo">Tu nota, por partes</p>
+          {propio.partes.map((p, i) => (
+            <label class="s-parte">
+              <span>{p.titulo} ({p.peso} %)</span>
+              <input
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                maxlength="5"
+                size="5"
+                placeholder="0–10"
+                data-parte={i}
+                data-peso={p.peso}
+                data-minimo={p.minimo ?? ''}
+                data-tope={p.tope ?? ''}
+              />
+            </label>
+          ))}
+          <output class="s-partes-total" data-partes-total aria-live="polite"></output>
+        </form>
+      )}
+
       {fuera.length > 0 && (
         <div class="aviso aviso--flag faltan">
           {/* Dos huecos distintos y dos frases distintas, desde el 14 de
@@ -505,7 +577,9 @@ const fueraHtml = await Promise.all(
                       Resolver guiado →
                     </a>
                     <span class="p-nota">
-                      {conResultados
+                      {propio
+                        ? 'Es un ejercicio del curso: la resolución guiada es la de su tema, la misma que en su página.'
+                        : conResultados
                         ? 'El examen publica los resultados, no la resolución: la resolución guiada es nuestra y llega a ellos, o dice dónde no.'
                         : esResolucion
                         ? sinPdf
@@ -524,7 +598,9 @@ const fueraHtml = await Promise.all(
 
     <section id="resoluciones" class="panel" aria-label="Resoluciones">
       <p class="aviso aviso--flag rotulo">
-        {conResultados
+        {propio
+          ? 'Son ejercicios del curso, y estas son las resoluciones guiadas de sus temas, las mismas que en cada página de tema.'
+          : conResultados
           ? 'El examen publica el resultado de cada apartado, no la resolución. Estas resoluciones son nuestras y llegan a esos resultados, o dicen dónde no.'
           : esResolucion
           ? sinPdf
@@ -621,6 +697,8 @@ const fueraHtml = await Promise.all(
 </div>
 
 <script>
+  import { notaPorPartes } from '../../lib/simulacro';
+
   /* ── el simulacro ────────────────────────────────────────────────────
    *
    * Tres cosas y ninguna más: un reloj que cuenta hacia atrás, unas casillas
@@ -637,6 +715,36 @@ const fueraHtml = await Promise.all(
    * queda sino **cuándo empezó y cuánto dura**: una cuenta atrás guardada como
    * número se congela al cerrar la pestaña, y entonces el simulacro deja de
    * medir lo que dice medir. */
+  /* ── la nota por partes de un simulacro nuestro ─────────────────────
+   * La cuenta es `notaPorPartes` (src/lib/simulacro.ts), con sus tests. */
+  const formPartes = document.querySelector<HTMLFormElement>('[data-partes]');
+  if (formPartes) {
+    const entradas = [...formPartes.querySelectorAll<HTMLInputElement>('[data-parte]')];
+    const salida = formPartes.querySelector<HTMLOutputElement>('[data-partes-total]')!;
+    const numero = (s: string | undefined) => (s === undefined || s === '' ? undefined : Number(s));
+    const calcula = () => {
+      const notas = entradas.map((x) => Number(x.value.replace(',', '.')));
+      if (entradas.some((x) => x.value.trim() === '') || notas.some((n) => !Number.isFinite(n) || n < 0 || n > 10)) {
+        salida.textContent = '';
+        return;
+      }
+      const r = notaPorPartes(
+        entradas.map((x, i) => ({
+          peso: Number(x.dataset.peso),
+          minimo: numero(x.dataset.minimo),
+          tope: numero(x.dataset.tope),
+          nota: notas[i],
+        })),
+      );
+      const bonita = (n: number) => n.toFixed(2).replace('.', ',');
+      salida.textContent = r.topada
+        ? `Te quedaría un ${bonita(r.nota)}: con las partes haces un ${bonita(r.sinTope)}, pero una no llega al mínimo.`
+        : `Te quedaría un ${bonita(r.nota)}.`;
+    };
+    formPartes.addEventListener('input', calcula);
+    formPartes.addEventListener('submit', (ev) => ev.preventDefault());
+  }
+
   const sim = document.querySelector<HTMLElement>('[data-simulacro]');
 
   if (sim) {
@@ -1225,6 +1333,26 @@ const fueraHtml = await Promise.all(
     border-radius: 6px;
   }
   .p-notas .rotulo { margin-bottom: .3rem; }
+
+  .propio { margin: 0 0 1.2rem; }
+  .propio .rotulo { margin: 0 0 .3rem; }
+  .propio :global(.prosa p + p) { margin-top: .6rem; }
+  .propio-linea, .propio-partes { font-size: .92rem; margin: .5rem 0 0; }
+  .propio-partes { padding-left: 1.1rem; display: flex; flex-direction: column; gap: .25rem; }
+
+  .s-partes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .5rem 1rem;
+    margin: 1rem 0;
+    padding: .7rem .8rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+  .s-partes .rotulo { flex-basis: 100%; margin: 0; }
+  .s-parte { display: flex; align-items: baseline; gap: .5rem; font-size: .92rem; }
+  .s-partes-total { flex-basis: 100%; font-size: .95rem; }
 
   .pregunta {
     border: 1.5px solid var(--rule);

@@ -22,44 +22,37 @@ entera:
   las secciones nuevas de los temas 7 a 10 con su banco de 65 preguntas
   (`propio`, en `/ciencia-materiales/t07-aleaciones-metalicas/cuestiones/`) y
   el formulario de los temas 1 a 6.
-- **H2, el laboratorio**: revisado; su autor aplica la revisión. Al
-  integrarlo, los ejercicios van al final de t02, t03 y t06, y el YAML lleva
-  `enIndice`, `practica`, `ejercicios` y `donde.apartado`.
-- **H3, el simulacro 40/60**: sin empezar (abajo).
+- **H2, el laboratorio**: integrado, con su revisión: la página y ocho
+  ejercicios al final de t02, t03 y t06.
+- **H3, los simulacros**: integrados. El del examen de los temas 1 a 6
+  (40/60, con la nota por partes y el tope de 4,0) y los de los dos
+  entregables, con apuntes. Viven en `ciencia-materiales/simulacros/`.
 - **Fase I, tanda 0, hecha**: `notas`, `pdfEs: enunciado-con-resultados`,
   `puntosImpresos` en %, la página del laboratorio para prácticas de verdad y
-  el guardián de las notas en `verify.mjs` (avisa de 29). Tanda 1 en marcha:
-  i-t02-t04, i-t13 e i-lab; falta i-rub.
+  el guardián de las notas en `verify.mjs` (avisa de 29). Tanda 1: i-t02-t04
+  integrada; i-t13 revisada, y entra en el mismo commit que el rescate de
+  2526-ord-4 (i-ex-2526); i-lab e i-rub, en revisión. Los avisos para las
+  unidades de examen están en el scratchpad (`i/avisos-para-unidades.md`).
 
-## Lo que queda de H, Ciencia de Materiales
+## Lo que queda: la fase I, Fluidos, y después J
 
-El encargo está en `2027 proyecto contenido/auditorias/2026-09-27/`
-(`encargo-por-fases.md`, fase H, y `ciencia-materiales.md`). El plan por
-unidades, hecho el 29 de septiembre, está en el scratchpad de esa sesión
-(`h/PLAN-H.md`); lo esencial:
+H está hecha salvo lo que no depende de nosotros: la ruta medida (no hay
+exámenes de teoría y problemas) y la copia limpia de las preguntas guía del
+test de 7 a 10, que tiene que dar Ionan (`pendiente.md`).
 
-1. **H1 · Escritura y dibujo.**
-   - **Hecho:** los temas 2 y 4, con su revisión independiente aplicada.
-   - **En marcha:** los temas 3, 5 y 6.
-   - Los ejercicios de teoría escrita van al final del tema (§04).
-2. **H2 · Laboratorio:** la página, en la colección `laboratorio`, y unos ocho
-   ejercicios. En marcha.
-3. **H3 · Simulacro 40/60.** Lo hace la sesión principal, y falta decidir cómo:
-   - un `examen.yaml` puede citar ejercicios de tema por su id (la página los
-     busca en todos los `ejercicios.yaml`), así que un simulacro de problemas
-     del listado no obliga a duplicar nada;
-   - lo que sí pide es un tipo de convocatoria que diga que no es un examen,
-     y que no cuente en las cifras de convocatorias;
-   - la calculadora de «¿qué nota necesito?» ya tiene la regla de la
-     diapositiva 20: basta con enlazarla.
-4. **H4 · Test de 7–10:** los 12 temas de presentación, la prosa que falta
-   (alótropos del carbono, aluminosilicatos, copolímeros) y un banco de unas
-   60 preguntas. En marcha.
-5. **H5 · Formulario:** «Lo que hay que llevar sabido» en T1–T6. En marcha.
+La fase I sigue el plan del scratchpad de esta sesión (`i/PLAN-I.md`, §5):
+tandas de cuatro unidades, cada una con su revisión independiente, y la
+sesión principal lee el diff de cada revisión antes de integrar.
 
-Cada entrega de un agente pasa por una revisión independiente antes de
-integrarse, y la sesión principal lee entero el diff de lo que la revisión
-cambia.
+1. **Tanda 1**: integrar i-lab e i-rub cuando pasen su revisión. Cada
+   rúbrica entra con su primer ejercicio, porque `tests/rubricas.test.ts`
+   exige que la use alguno.
+2. **Tanda 2**: i-ex-2526 (con el rescate de 2526-ord-4 y t13 en el mismo
+   commit), i-t01-formulario, i-ex-2425-ord e i-ex-2425-ext.
+3. **Tandas 3 a 5** y el cierre (§3.4 a §3.7 del plan: ruta, catálogo,
+   CLAUDE.md, simuladores, `NOTAS_BLOQUEAN` a true).
+4. **Fase J**, Sistemas: el plan está en `j/PLAN-J.md`. Antes, confirmar con
+   Ionan que se abre (CLAUDE.md §00 dice que se deja para más adelante).
 
 ## Lo que quedó apuntado de G
 
