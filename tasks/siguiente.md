@@ -51,8 +51,10 @@ sesión principal lee el diff de cada revisión antes de integrar.
    commit), i-t01-formulario, i-ex-2425-ord e i-ex-2425-ext.
 3. **Tandas 3 a 5** y el cierre (§3.4 a §3.7 del plan: ruta, catálogo,
    CLAUDE.md, simuladores, `NOTAS_BLOQUEAN` a true).
-4. **Fase J**, Sistemas: el plan está en `j/PLAN-J.md`. Antes, confirmar con
-   Ionan que se abre (CLAUDE.md §00 dice que se deja para más adelante).
+4. **Después de Fluidos, Expresión Gráfica (fase K) y la deuda.** Sistemas
+   (fase J) se deja para más adelante, confirmado por Ionan el 30 de
+   septiembre de 2026 (CLAUDE.md §00); su plan ya escrito está en el
+   scratchpad de esa sesión (`j/PLAN-J.md`).
 
 ## Lo que quedó apuntado de G
 
