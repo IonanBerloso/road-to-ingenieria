@@ -136,7 +136,7 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 | Álgebra | 1.º | `ok` | un tema `soloEnClase` declarado |
 | Fundamentos Químicos | 1.º | `ok` | desde el 29 de septiembre (fase G), la colección del curso entera, las tres hojas de formulación y las dos resoluciones oficiales; el laboratorio no se cubre, por decisión |
 | Expresión Gráfica | 1.º | `obra` | **la siguiente**: temario y evaluación de la guía desde ese día; antes que temas necesita diseño, porque su examen es un dibujo |
-| Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase` y trece ejercicios de examen `fuera` |
+| Mecánica de Fluidos | 2.º | `ok` | la de más temas; dos `soloEnClase`, un ejercicio de examen `fuera` y un apartado |
 | Ingeniería Térmica | 2.º | `ok` | dos convocatorias imposibles, solo en euskera |
 | Mecánica Aplicada | 2.º | `ok` | ocho convocatorias, cinco transcritas de la imagen de su columna en castellano; el bloque 2 se mide sobre exámenes de 2018 y 2019 |
 | Ciencia de Materiales | 2.º | `obra` | escrita entera, y desde el 29 de septiembre (fase H) con laboratorio, formulario, el banco del test de 7 a 10 y tres simulacros nuestros; sin exámenes de problemas no hay ruta ni cierre |
@@ -1581,7 +1581,8 @@ Comprueba:
   cada examen y por ejercicios, y comprueba que cada «NOTA:» de un ejercicio
   transcrito está en sus `notas` (§04; la regla, en
   `scripts/notas-impresas.mjs`, con sus tests). Nació avisando de 29 sin
-  transcribir, y `NOTAS_BLOQUEAN` pasa a `true` cuando lleguen a cero. Sin
+  transcribir y bloquea desde el 30 de septiembre de 2026, cuando las 37
+  notas de los dieciséis exámenes quedaron dentro (`NOTAS_BLOQUEAN`). Sin
   `pdftotext` falla, no se salta: en Windows viene con Git, y en el CI lo
   instala `deploy.yml` (poppler-utils), la única herramienta del sistema que
   el suelo pide además de Node y Chromium.
@@ -2446,7 +2447,7 @@ Cosas que ya han costado horas. No son opiniones.
 
 <!-- índice de trampas: lo genera un guion a partir de las entradas -->
 
-**Las 60, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
+**Las 61, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:
 
 - No escribas LaTeX a través del shell.
 - Un `: ` sin comillas dentro de un valor YAML rompe el fichero
@@ -2482,6 +2483,7 @@ Cosas que ya han costado horas. No son opiniones.
 - Un id de ejercicio inventado suena igual que uno real.
 - ~~El esquema no tiene `unidad`~~ · resuelto el 30 de agosto de 2026.
 - `pdftotext` sin `-enc UTF-8` se come los signos.
+- En esta máquina hay dos `pdftotext`, y no vuelcan igual.
 - El volcado no es la página.
 - Una tilde dentro de `$…$` se dibuja, y avisa en cada build.
 - El símbolo del euro no se puede dibujar dentro de una fórmula.
@@ -3046,6 +3048,16 @@ Cosas que ya han costado horas. No son opiniones.
   no para los signos.** Y al revés para los boletines con matrices: el volcado
   de texto destroza las matrices y la imagen las conserva; ahí manda la
   imagen y el texto solo sirve para los signos.
+- **En esta máquina hay dos `pdftotext`, y no vuelcan igual.** El de Git
+  (`mingw64`) es el de **xpdf 4.06**; el que instaló winget es **poppler
+  25.07**, y es el que encuentra PowerShell, y por tanto el suelo. El CI
+  instala poppler. El 30 de septiembre de 2026 el guardián de las notas
+  impresas daba las 37 dentro desde Git Bash y una fuera en el suelo: poppler
+  no deja línea en blanco entre la nota del 1 de la ordinaria de 2025 y su
+  «DATO:», y la regla solo cortaba en «DATOS». Mientras avisaba no se vio;
+  al pasar a bloquear, paró el suelo. **Regla: lo que dependa del volcado se
+  prueba con los dos** (`PATH="<poppler>/bin:$PATH"` delante del comando), y
+  si discrepan, manda poppler, que es el del CI.
 - **El volcado no es la página.** Lo que `pdftotext` no saca puede estar
   impreso igual: un texto metido como imagen no aparece en el volcado, y el
   volcado no avisa. La auditoría externa del 27 de septiembre de 2026 encontró
@@ -3130,6 +3142,25 @@ Cosas que ya han costado horas. No son opiniones.
   que no era la buena— y se ha corregido. **Que la regla nueva confirme un
   «no» es tan resultado como que desbloquee un «sí»**; lo que no vale es no
   volver a mirar.
+
+  **Y los motivos de material tampoco envejecen bien.** La frase de arriba
+  sobre los de material se escribió el 5 de septiembre de 2026 y la desmintió
+  la fase I, el 30. De los trece ejercicios de Fluidos que estaban en
+  `fuera`, doce tenían un motivo de material —«la figura no acota», «falta
+  la tabla», «son cartas de catálogo», «el resultado publicado no se
+  reproduce»— y **los doce eran falsos**. La tabla de aceites estaba en la
+  imagen incrustada de la página; las cotas del elevador y de los depósitos
+  anidados, en la figura a 300 ppp o en los datos del enunciado; las curvas
+  de catálogo se leen y se tabulan sin reproducir la hoja; y los resultados
+  «irreproducibles» salían en cuanto se leía bien la figura. El único que se
+  queda es el 7 de la final de 2021, por formato: se volvió a leer entero y
+  no trae ninguna cuenta, y su motivo enlaza ahora la prosa de los temas 12,
+  13 y 23, que enseña lo que pregunta. Lo que envejece bien no es el tipo de
+  motivo, es haberlo comprobado sobre la página renderizada —«El volcado no
+  es la página», en esta misma lista—.
+
+  **Regla: todo `fuera` se relee contra la página renderizada, a 300 ppp si
+  hay figura, antes de darlo por bueno, sea de formato o de material.**
 
 - **Un fichero sin extensión no sale en ninguna búsqueda por tipo, y ahí puede
   haber una convocatoria entera.** El 5 de septiembre de 2026 se dio por

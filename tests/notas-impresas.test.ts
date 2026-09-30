@@ -49,6 +49,18 @@ describe('partePorEjercicio y bloquesDeNota', () => {
     ]);
   });
 
+  it('una nota pegada a su «DATO:» acaba en el dato, como la vuelca poppler', () => {
+    const trozo = [
+      '1. (10%) Una compuerta de cuarto de círculo…',
+      'NOTA: A la hora de calcular cualquier fuerza hidrostática, es OBLIGATORIO dibujar el',
+      'correspondiente prisma de presiones acotado.',
+      'DATO: Centroide del cuarto de círculo: xG=4·R/(3·).',
+    ].join('\n');
+    expect(n.bloquesDeNota(trozo)).toEqual([
+      'NOTA: A la hora de calcular cualquier fuerza hidrostática, es OBLIGATORIO dibujar el correspondiente prisma de presiones acotado.',
+    ]);
+  });
+
   it('una lista tras dos puntos se recoge entera, saltándose el pie de página', () => {
     expect(n.bloquesDeNota(ej.get(3))).toEqual([
       'IMPRESCINDIBLE: - Indicar el tipo de flujo y la expresión empleada. - En caso de realizar iteraciones, el cambio debe ser menor al 5%.',

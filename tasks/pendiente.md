@@ -22,9 +22,13 @@ sigue después tal cual.
   simulacros, test de 7–10, formulario y la evaluación final con su
   discrepancia dicha). Queda lo que no depende del sitio: la ruta medida, sin
   exámenes de teoría y problemas, y la copia limpia de las preguntas guía.
-- **I · Fluidos**: prácticas, los `fuera` recuperables y los criterios del
-  profesor (5–6 días).
-- **J · Sistemas de Producción** (~4 semanas). Su colección trae cinco
+- **I · Fluidos**: hecha el 30 de septiembre de 2026 (las prácticas, con su
+  página y su bloque en la ruta; los exámenes cotejados palabra por palabra,
+  con sus notas impresas; los `fuera` recuperables, rescatados; «Cómo se
+  corrige» y los formularios). Quedan fuera el 7 de la final de 2021, por
+  formato, y el b) del 3 de la extraordinaria de 2023, por material.
+- **J · Sistemas de Producción** (~4 semanas): aplazada por Ionan el 30 de
+  septiembre de 2026, se hará más adelante; K va antes. Su colección trae cinco
   problemas fechados como examen (T2 P7, P8 y P9; T3 P5 y P6), que dan para
   medir la ruta de la ordinaria; los de CNC piden un tipo de respuesta para
   código.
@@ -196,13 +200,31 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   solo una fórmula, que desde E3 llega en bloque (`aTamanoDeFormula`): hoy
   no se nota porque el banco de Materiales no trae fórmulas.
 
+### Lo que dejó abierto la fase I (Fluidos)
+
+- **`src/lib/unidades.ts` lee «mN» como meganewton.** Hoy no muerde: todas
+  las preguntas piden N. Es una trampa para la primera que pida milinewton.
+- **`scripts/revisa-ejercicios.mjs` no valida los pasos `dibujar`**: uno con
+  dos puntos de `comprueba` pasa sin aviso.
+- **El guardián de las notas impresas no ve una «Nota:» a media línea** (la
+  del 4 de la extraordinaria de 2023, transcrita a mano): la regla de
+  `scripts/notas-impresas.mjs` exige que empiece la línea. Ampliarla sin
+  traer falsos positivos, midiendo antes cuántos saca.
+- **La frase de la ruta de Fluidos sobre la colección** («224 problemas
+  transcritos y esta ruta enlaza 94», contada el 8 de septiembre): un
+  recuento de hoy por ids da 216 y 86. Contar con el mismo criterio que
+  entonces antes de cambiarla.
+- **Los metadatos de los PDF de Fluidos** en `public/examenes/fluidos/`
+  llevan un nombre en el campo Author. Preguntado a Ionan si se borra (no
+  cambia la página); sin respuesta.
+
 ## Bloqueado por material
 
 Solo lo que la carpeta no trae, mirado en la página renderizada (CLAUDE.md
 §17, «El volcado no es la página»). Lo que parecía bloqueado y es trabajo
-está en su fase: las convocatorias bilingües de Mecánica en C1, las prácticas
-y siete `fuera` de Fluidos en I1 e I2, Sistemas en J y la colección de
-Química en «Contenido».
+está en su fase: las convocatorias bilingües de Mecánica en C1, Sistemas en J
+y la colección de Química en «Contenido». Los `fuera` de Fluidos que se
+daban por bloqueados salieron en la fase I: todos menos uno eran trabajo.
 
 - **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
   teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no

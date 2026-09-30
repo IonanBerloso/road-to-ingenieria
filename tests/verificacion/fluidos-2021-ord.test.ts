@@ -1,5 +1,9 @@
 /**
- * La ordinaria de Mecánica de Fluidos de 2020-2021. Dieciséis respuestas.
+ * La ordinaria de Mecánica de Fluidos de 2020-2021. Veinticinco respuestas.
+ *
+ * Desde el 30 de septiembre de 2026 están también el c) del 4 —el codo
+ * convergente, que cuadra con lo impreso en ejes según sus dos ramas— y el 5,
+ * el elevador de taller, cuya figura sí acota las cotas.
  *
  * El ejercicio 1 es el que más enseña de toda la asignatura y su moraleja no
  * es una fórmula: **la subpresión del terreno vale más que las dos fuerzas del
@@ -127,7 +131,7 @@ describe('3 · el aliviadero de dos rampas', () => {
   });
 });
 
-describe('4 · el sifón que cavita arriba y el ariete que mide', () => {
+describe('4 · el sifón que cavita arriba, el ariete que mide y el codo', () => {
   const id = 'exflu2021-ord-4-el-ariete-con-la-longitud-por-incognita';
   const gamma = 940 * G;
   const [D, e] = [0.4, 0.002];
@@ -154,6 +158,72 @@ describe('4 · el sifón que cavita arriba y el ariete que mide', () => {
     const total = (70 * G * 3) / (2 * v);
     if (!((2 * total) / c < 3)) throw new Error('el cierre no sería lento');
     cuadra.magnitud(id, 'La longitud del tramo BC', total - 140, 'm');
+  });
+
+  /* c) El codo convergente de B. Se plantea en ejes horizontal y vertical,
+     con la entrada subiendo α = 30° y la salida bajando β = 60° —así los
+     rotula el detalle B—, y después se proyecta la fuerza sobre las dos
+     ramas. Como α + β = 90°, las ramas son perpendiculares y las proyecciones
+     son p₁A₁ + ρQv₁ y p₂A₂ + ρQv₂ sea cual sea el ángulo de la entrada: lo
+     impreso no distingue entre 30° y 60°, solo lo hacen las componentes
+     horizontal y vertical (2488 y 4239 N con 30° a la entrada; 36 y 4915 N al
+     revés). El test comprueba que las ramas son perpendiculares. */
+  const codo = (() => {
+    const Q = 0.07;
+    const [A1, A2] = [area(0.4), area(0.3)];
+    const [v1, v2] = [Q / A1, Q / A2];
+    const p1 = 1.2e5 + gamma * (215 - 224 - 2.5e-3 * 140) - (940 * v1 * v1) / 2;
+    const p2 = p1 + (940 * (v1 * v1 - v2 * v2)) / 2;
+    const rad = Math.PI / 180;
+    const e1 = [Math.cos(30 * rad), Math.sin(30 * rad)];
+    const e2 = [Math.cos(60 * rad), -Math.sin(60 * rad)];
+    /* Fuerza del codo sobre el fluido (la de los anclajes):
+       R = ρQ(v2·e2 − v1·e1) − p1A1·e1 + p2A2·e2 */
+    const R = [0, 1].map((k) => 940 * Q * (v2 * e2[k] - v1 * e1[k]) - p1 * A1 * e1[k] + p2 * A2 * e2[k]);
+    const segun = (e: number[]) => R[0] * e[0] + R[1] * e[1];
+    return { R, x: -segun(e1), y: segun(e2), modulo: Math.hypot(R[0], R[1]) };
+  })();
+
+  it('y los anclajes del codo hacen 4274 N según AB', () => {
+    if (Math.abs(Math.hypot(codo.x, codo.y) - codo.modulo) > 1e-6)
+      throw new Error('las dos ramas no son perpendiculares');
+    if (!(codo.R[0] < 0 && codo.R[1] < 0)) throw new Error('los anclajes deberían empujar hacia atrás y hacia abajo');
+    cuadra.magnitud(id, 'La fuerza de los anclajes a lo largo del tramo AB', codo.x, 'N');
+  });
+
+  it('y 2426 N según BC', () =>
+    cuadra.magnitud(id, 'La fuerza de los anclajes a lo largo del tramo BC', codo.y, 'N'));
+});
+
+describe('5 · el elevador que no llega arriba', () => {
+  const id = 'exflu2021-ord-5-el-elevador-que-no-llega-arriba';
+  const A = area(0.05);
+  const gAceite = 0.9 * GAMMA;
+  /* Cotas de la figura: B en la 0, el pistón parte de C en la 20 y sube 10 m
+     hasta D. La lectura de B es el peso entre el área más la columna de
+     aceite hasta la cara del pistón. */
+  const lectura = (masa: number, zPiston: number) => (masa * G) / A + gAceite * (zPiston - 0);
+
+  it('la columna de 20 m suma 1,764 bar', () =>
+    cuadra.magnitud(id, 'La columna de aceite entre B y el pistón', (gAceite * 20) / 1e5, 'bar'));
+
+  it('B marca 75,38 bar al empezar y 76,26 arriba', () => {
+    cuadra.magnitud(id, 'La lectura de B cuando empieza a subir', lectura(1475, 20) / 1e5, 'bar');
+    cuadra.magnitud(id, 'La lectura de B con el coche arriba', lectura(1475, 30) / 1e5, 'bar');
+  });
+
+  it('con el operario, 80,51 bar arriba: más que la válvula', () => {
+    const arriba = lectura(1475 + 85, 30);
+    if (!(lectura(1475 + 85, 20) < 80e5 && arriba > 80e5))
+      throw new Error('el coche con el operario debería arrancar y no llegar');
+    cuadra.magnitud(id, 'La lectura de B arriba, con el operario encima', arriba / 1e5, 'bar');
+  });
+
+  it('y se para a 4,25 m de C', () => {
+    /* Se busca la cota del pistón a la que B llega a 80 bar, por bisección,
+       en vez de despejarla. */
+    const z = raiz((zp) => lectura(1475 + 85, zp) - 80e5, 20, 30);
+    cuadra.magnitud(id, 'La altura a la que se para el coche', z - 20, 'm');
   });
 });
 
@@ -192,7 +262,9 @@ describe('8 · la boquilla con bomba y sin ella', () => {
   const [dBoq, D, L] = [0.04, 0.2, 90];
   const salto = 22 - 5;
   const nu = 1e-6;
-  const epsAcero = 4.6e-5;
+  /* Acero comercial: 0,006 cm, el valor de diseño del cuadro n.º 20. Con los
+     0,0046 cm del diagrama de Moody el caudal cambia en la cuarta cifra. */
+  const epsAcero = 6e-5;
 
   /* a) Con la bomba apagada, por Darcy-Weisbach. */
   const porDarcy = (Q: number) => {
@@ -231,5 +303,14 @@ describe('8 · la boquilla con bomba y sin ella', () => {
     const disponible = 22 + Hm(Q);
     const pedido = 5 + 20 + 1.1 * porHW(Q);
     cuadra.magnitud(id, 'La válvula que baja el chorro a veinte metros', disponible - pedido, 'm');
+  });
+
+  it('y el NPSH disponible, 10,96 m, sobra', () => {
+    /* d) Con el caudal del b), el mayor. La bomba está un metro por debajo
+       de la lámina y las pérdidas menores están en la impulsión. La curva del
+       catálogo pide unos 3,5 mca a 100 m³/h. */
+    const npsh = 1e5 / GAMMA + (22 - 21) - hazenWilliams(10, Qencendida, D, 130) - 0.2;
+    if (!(npsh > 1.3 * 3.5)) throw new Error('con este NPSH habría riesgo de cavitación');
+    cuadra.magnitud(id, 'El NPSH disponible', npsh, 'm');
   });
 });

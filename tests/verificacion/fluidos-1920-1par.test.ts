@@ -1,6 +1,6 @@
 /**
- * El primer parcial de Mecánica de Fluidos de 2019-2020. Trece respuestas, y
- * las primeras de la asignatura que entran aquí.
+ * El primer parcial de Mecánica de Fluidos de 2019-2020. Diecisiete respuestas,
+ * y las primeras de la asignatura que entraron aquí.
  *
  * FLUIDOS NO ES COMO LAS OTRAS TRES, y conviene decirlo antes de nada: sus
  * exámenes **publican el resultado**. Así que estas resoluciones ya tenían un
@@ -91,6 +91,14 @@ describe('2 · el laboratorio submarino', () => {
        presión del aire. */
     cuadra.magnitud(id, 'La profundidad máxima', raiz((z) => patm + gamma * (z - H) - pLab, 10, 200), 'm');
   });
+
+  it('y el agua que lo inundaría a 39,5 m pesa 1059,75 kp/m³', () => {
+    /* Con la base en Z y la misma presión de aire, el menisco en el borde del
+       acceso, a Z − H de profundidad. El enunciado da y pide el peso
+       específico en «kg/m³», kilopondios: se divide entre g. */
+    const pesoEspecifico = raiz((g) => patm + g * (Z - H) - pLab, 5000, 20000);
+    cuadra(id, 'El peso específico límite', pesoEspecifico / G);
+  });
 });
 
 describe('3 · la boquilla alimentada por dos depósitos', () => {
@@ -178,11 +186,28 @@ describe('4 · el tubo de helio que tiende a abrirse', () => {
   });
 
   it('y a 200 m la junta aguanta 10.819 kN', () => {
-    /* Ahora el mar gana y la resultante aprieta hacia dentro; el contacto en B
-       y la articulación en A se reparten la mitad cada uno. */
+    /* Ahora el mar gana y la resultante aprieta hacia dentro. Momentos en A:
+       todas las presiones son normales al arco y su resultante pasa por el
+       centro O, a R por debajo de A, así que la horizontal tiene brazo R y la
+       vertical, ninguno; el contacto B está a 2R, y el peso de la media caña
+       (50 kp por metro de tubo), a 3R/5 en horizontal. Se integra el momento
+       de las presiones sobre el arco en vez de dar por sabido que pasa por O. */
+    const W = 50 * L * G;
+    const pNeta = (y: number) => gamma * (200 + R - y) - pHe; // y hacia arriba desde O
+    let momento = 0;
+    const n = 20000;
+    for (let k = 0; k < n; k++) {
+      const th = -Math.PI / 2 + (Math.PI * (k + 0.5)) / n; // media caña derecha
+      const [x, y] = [R * Math.cos(th), R * Math.sin(th)];
+      const dA = R * (Math.PI / n) * L;
+      const [fx, fy] = [-pNeta(y) * Math.cos(th) * dA, -pNeta(y) * Math.sin(th) * dA];
+      momento += x * fy - (y - R) * fx; // respecto de A, en (0, R)
+    }
     const F = (enElEje(200) - pHe) * 2 * R * L;
-    if (!(F > 0)) throw new Error('a 200 m la resultante debería apretar hacia dentro');
-    cuadra.magnitud(id, 'La fuerza sobre la junta a doscientos metros', F / 2 / 1000, 'kN');
+    if (Math.abs(momento + F * R) > 1e-6 * F * R) throw new Error('la resultante no pasa por O');
+    /* R_B·2R = F·R + W·3R/5 */
+    const RB = (F * R + W * ((3 * R) / 5)) / (2 * R);
+    cuadra.magnitud(id, 'La fuerza sobre la junta a doscientos metros', RB / 1000, 'kN');
   });
 });
 

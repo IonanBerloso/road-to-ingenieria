@@ -34,8 +34,11 @@ const EJERCICIO = /^\s{0,12}(\d{1,2})\.\s*\(\s*[\d%]/;
 const NOTA = /^\s*(?:NOTA\s*\d*\s*:|Notas?(?:\s+importante|\s+\d)?\s*:|IMPRESCINDIBLE|Notas a tener en cuenta)/;
 
 /** Dónde acaba una nota: una línea en blanco, los resultados, las soluciones,
- *  los datos o un apartado nuevo. */
-const FIN_DE_NOTA = /^\s*$|^\s*(?:Resultados|RESULTADOS|Soluciones|DATOS)\b|^\s*[a-h]\)\s/;
+ *  los datos o un apartado nuevo. «DATO», en singular, porque el poppler del CI
+ *  no deja línea en blanco entre la nota del 1 de la ordinaria de 2025 y su
+ *  «DATO: Centroide…», y el xpdf que trae Git sí: con él pasaba en local y
+ *  fallaba en el suelo (30 de septiembre de 2026). */
+const FIN_DE_NOTA = /^\s*$|^\s*(?:Resultados|RESULTADOS|Soluciones|DATOS?|Datos?)\b|^\s*[a-h]\)\s/;
 
 /** El pie y la cabecera de cada página, que el volcado mete donde caiga el
  *  salto: «Departamento de Ingeniería Energética … 28», «2º Curso. Grados…» y

@@ -851,10 +851,12 @@ console.log('\nContenido');
 
    AVISA Y NO BLOQUEA mientras las unidades de examen de la fase I las van
    transcribiendo: nace midiendo 29 notas sin transcribir. Cuando llegue a
-   cero, `NOTAS_BLOQUEAN` pasa a true y desde ahí es un fallo.
+   cero, `NOTAS_BLOQUEAN` pasa a true y desde ahí es un fallo. Llegó a cero
+   el 30 de septiembre de 2026, al cerrar la fase I, con las 37 notas de los
+   dieciséis exámenes dentro: desde ese día bloquea.
    ═══════════════════════════════════════════════════════════════════ */
 {
-  const NOTAS_BLOQUEAN = false;
+  const NOTAS_BLOQUEAN = true;
   const { load } = await import('js-yaml');
   const { spawnSync } = await import('node:child_process');
   const n = await import('./notas-impresas.mjs');

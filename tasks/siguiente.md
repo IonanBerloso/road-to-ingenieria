@@ -3,70 +3,46 @@
 Se sobrescribe cada vez; no se amplía. Lo que queda más allá está en
 `pendiente.md`, con las fases en orden arriba del todo.
 
-Escrito el 29 de septiembre de 2026, al cerrar la fase G. Química la tiene
+Escrito el 30 de septiembre de 2026, al cerrar la fase I. Fluidos la tiene
 entera:
 
-- **G1**: las tres hojas de formulación, en las dos direcciones, y la
-  orgánica en la prosa.
-- **G2**: la ordinaria de 2013 y el modelo de 2024-2025, los dos sin PDF y con
-  sus casos en `tests/verificacion/`.
-- **G3**: la teoría que el programa pide (gases, coligativas,
-  Clausius-Clapeyron, cinética, pH, ion-electrón…).
-- **G4**: `puntosImpresos`, `dibujar` y `redactar` en los seis exámenes, y la
-  colección del curso entera en los temas 2 a 10, enlazada desde las dos
-  rutas.
+- **Las prácticas**: la página del laboratorio con las 27, cada una con su
+  apartado en la prosa y los ejercicios de examen que se resuelven con lo que
+  mide; y un bloque en la ruta de la ordinaria, un escalón por sesión.
+- **Los dieciséis exámenes**, cotejados palabra por palabra contra el
+  cuadernillo, con sus notas impresas en `notas` (el guardián de
+  `verify.mjs` ya bloquea), `puntosImpresos` en % y los `dibujar` y
+  `redactar` que piden. De los trece ejercicios que estaban en `fuera`, doce
+  eran recuperables y entraron; queda el 7 de la final de 2021, por formato.
+- **«Cómo se corrige»** en el tema 1 y como primer escalón de la ruta, y los
+  formularios de cada tema.
+- **La ruta, recontada**: con los rescates, cuatro bloques caen las once
+  finales (análisis dimensional, bombeo, fuerzas y estática) y el orden
+  cambia con ellos. Los recuentos salen de un guion sobre el `tema` de cada
+  `examen.yaml`, y cada `porque` dice sus números.
+- **CLAUDE.md §17**: los motivos de material de un `fuera` tampoco envejecen
+  bien; todo `fuera` se relee contra la página renderizada.
 
-## Dónde se quedó, a 29 de septiembre por la noche
+## Lo que sigue: K · Expresión Gráfica
 
-- **H1, H4 y H5, integrados**: la prosa y los ejercicios de los temas 2 a 6,
-  las secciones nuevas de los temas 7 a 10 con su banco de 65 preguntas
-  (`propio`, en `/ciencia-materiales/t07-aleaciones-metalicas/cuestiones/`) y
-  el formulario de los temas 1 a 6.
-- **H2, el laboratorio**: integrado, con su revisión: la página y ocho
-  ejercicios al final de t02, t03 y t06.
-- **H3, los simulacros**: integrados. El del examen de los temas 1 a 6
-  (40/60, con la nota por partes y el tope de 4,0) y los de los dos
-  entregables, con apuntes. Viven en `ciencia-materiales/simulacros/`.
-- **Fase I, tanda 0, hecha**: `notas`, `pdfEs: enunciado-con-resultados`,
-  `puntosImpresos` en %, la página del laboratorio para prácticas de verdad y
-  el guardián de las notas en `verify.mjs` (avisa de 29). Tanda 1: i-t02-t04
-  integrada; i-t13 revisada, y entra en el mismo commit que el rescate de
-  2526-ord-4 (i-ex-2526); i-lab e i-rub, en revisión. Los avisos para las
-  unidades de examen están en el scratchpad (`i/avisos-para-unidades.md`).
+Sistemas (fase J) se deja para más adelante, confirmado por Ionan el 30 de
+septiembre de 2026. Lo siguiente es K, con lo que dice el encargo:
 
-## Lo que queda: la fase I, Fluidos, y después J
+1. **Planificarla antes de lanzar nada**, en unidades del tamaño de las de la
+   fase I y en tandas de cuatro, cada una con su revisión independiente.
+2. **Las hojas 52–55 son exámenes** (fuente «sin fecha») y ordenan la fase 2:
+   las familias B, E y G antes que A y H.
+3. **El bloque 2, normalización (55 %), no espera a la fase 3**: los
+   *Criterios* como datos; t13 con `dibujar` y `redactar`; t12 con
+   `calcular` y µm; t10 con `calcular` de tipo `conjunto`; t07 y t11 con
+   `reconocer`.
 
-H está hecha salvo lo que no depende de nosotros: la ruta medida (no hay
-exámenes de teoría y problemas) y la copia limpia de las preguntas guía del
-test de 7 a 10, que tiene que dar Ionan (`pendiente.md`).
+Después, la deuda de `pendiente.md` (Térmica, contar apartados; lo que queda
+de la colección de T9 y T10; lo que dejó abierto la fase I) y repetir la
+auditoría.
 
-La fase I sigue el plan del scratchpad de esta sesión (`i/PLAN-I.md`, §5):
-tandas de cuatro unidades, cada una con su revisión independiente, y la
-sesión principal lee el diff de cada revisión antes de integrar.
+## Una pregunta sin contestar
 
-1. **Tanda 1**: integrar i-lab e i-rub cuando pasen su revisión. Cada
-   rúbrica entra con su primer ejercicio, porque `tests/rubricas.test.ts`
-   exige que la use alguno.
-2. **Tanda 2**: i-ex-2526 (con el rescate de 2526-ord-4 y t13 en el mismo
-   commit), i-t01-formulario, i-ex-2425-ord e i-ex-2425-ext.
-3. **Tandas 3 a 5** y el cierre (§3.4 a §3.7 del plan: ruta, catálogo,
-   CLAUDE.md, simuladores, `NOTAS_BLOQUEAN` a true).
-4. **Después de Fluidos, Expresión Gráfica (fase K) y la deuda.** Sistemas
-   (fase J) se deja para más adelante, confirmado por Ionan el 30 de
-   septiembre de 2026 (CLAUDE.md §00); su plan ya escrito está en el
-   scratchpad de esa sesión (`j/PLAN-J.md`).
-
-## Lo que quedó apuntado de G
-
-- **Humo prueba cada variante de un distractor de fórmula por separado**
-  (`«a | b»`): con la barra entera daba por mudos distractores que sí
-  diagnosticaban.
-- **El lector de unidades entiende «mm Hg» y «mm de Hg»**, que es como lo
-  escriben los enunciados de Química.
-- **La muestra rotatoria de humo cambia cada día** (ocho exámenes). Un fallo
-  que no salió ayer puede salir hoy sin que nada haya cambiado: el «3R» de
-  Mecánica 2018-2019-ext salió así.
-- **Lo que queda de Química**, dicho en las rutas: los problemas 5, 6 y 7 de la
-  hoja del tema 5, y dos preguntas de temperatura de fusión que se dejaron
-  fuera porque la regla del curso contradice los datos medidos. Y la
-  decisión sobre el PDF de la resolución de 2013, en `pendiente.md`.
+Los PDF de exámenes de Fluidos en `public/examenes/fluidos/` llevan un nombre
+de persona en el campo Author de sus metadatos. Se preguntó a Ionan si se
+borra; no cambia la página. Está en `pendiente.md`.
