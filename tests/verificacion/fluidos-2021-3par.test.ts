@@ -1,5 +1,7 @@
 /**
- * El tercer parcial de Mecánica de Fluidos de 2020-2021. Diez respuestas.
+ * El tercer parcial de Mecánica de Fluidos de 2020-2021. Veintidós
+ * respuestas en los seis ejercicios (decía «diez», y eran trece antes de
+ * rescatar el 6 y el apartado c) del 4).
  *
  * El ejercicio 1 es un «rellenar los huecos» de teoría, y su paso numérico
  * —cuántos elementos tiene la turbina que toca— **no se puede recalcular**:
@@ -14,6 +16,12 @@
  * inclinadas cerrando una V. Que las losas sean cuadradas obliga a que la V
  * sea un triángulo **equilátero**, y de ahí sale todo lo demás. El test lo
  * comprueba en vez de darlo por leído.
+ *
+ * El ejercicio 6 se resuelve sobre una gráfica de catálogo que el sitio no
+ * reproduce: publica sus lecturas en una tabla del enunciado, y el test
+ * trabaja con esa tabla, interpolando en recta entre dos filas, que es lo que
+ * se hace con la gráfica delante. La curva de la instalación, en cambio, se
+ * rehace entera desde las tablas de la figura y los cuadros 20 y 25.
  */
 import { describe, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -131,6 +139,22 @@ describe('4 · la tubería que se ha corroído', () => {
     cuadra.magnitud(id, 'El caudal con el tubo nuevo', raiz(desajuste, 0.01, 1) * 1000, 'l/s');
   });
 
+  it('con polietileno, la válvula necesita un factor de paso de 7', () => {
+    /* A 200 l/s y con ε/D = 4·10⁻⁶ el tubo es liso. El cuadernillo lee el
+       ábaco —f ≈ 0,0116, k = 7,029— y Colebrook da f = 0,01174 y k = 6,82:
+       la casilla acepta los dos, y el test comprueba que los dos caen dentro
+       y que Blasius, que aquí ya no vale, cae fuera. */
+    const v = 0.2 / A;
+    const cinetica = (v * v) / (2 * G);
+    const Re = (v * D) / nu;
+    const kDe = (f: number) => salto / cinetica - (f * Leq) / D;
+    let f = 0.02;
+    for (let i = 0; i < 200; i++) f = 1 / (-2 * Math.log10(1e-6 / (3.7 * D) + 2.51 / (Re * Math.sqrt(f)))) ** 2;
+    if (Math.abs(kDe(0.0116) - 7.029) > 0.25) throw new Error('la lectura del ábaco ya no cae en la casilla');
+    if (Math.abs(kDe(0.316 / Re ** 0.25) - 7.029) <= 0.25) throw new Error('Blasius fuera de su rango caería dentro, y no debe');
+    cuadra(id, 'El factor de paso de la válvula con el tubo de polietileno', kDe(f));
+  });
+
   it('y por debajo de 2.880 l/h no se sabe si es laminar', () => {
     /* La banda de duda va de Reynolds 2.000 a 4.000. El extremo alto es el que
        pregunta el paso. */
@@ -195,5 +219,71 @@ describe('5 · la red de canales de losas cuadradas', () => {
     };
     const teorico = 2 * raiz((R) => caudal(R) - 3, 0.2, 5);
     cuadra.magnitud(id, 'El diámetro de la media caña', Math.ceil(teorico / 0.5) * 0.5, 'm');
+  });
+});
+
+describe('6 · las cuatro boquillas y la bomba que cavita', () => {
+  const id = 'exflu2021-3par-6-las-cuatro-boquillas-y-la-bomba-que-cavita';
+  /* Hazen-Williams con Q en l/s y D en mm, y el coeficiente por la banda de
+     rugosidad relativa del cuadro n.º 25, con el extremo de arriba dentro. */
+  const J1 = (C: number, Dmm: number) => 1.2117e10 / (C ** 1.852 * Dmm ** 4.87);
+  const banda = (r: number) => (r <= 1.5e-5 ? 150 : r <= 2e-4 ? 140 : r <= 1e-3 ? 130 : r <= 4e-3 ? 120 : r <= 1.5e-2 ? 110 : 100);
+  /* Cuadro n.º 20: PVC 0,0007 cm; acero comercial 0,006 cm. */
+  const C1 = banda(0.007 / 80);
+  const C2 = banda(0.06 / 50);
+  const aspiracion = (70 + 2.5) * J1(C1, 80);
+  const b = aspiracion + (50 + 3 * 4) * J1(C2, 50);
+  /* Cuatro boquillas de 10 mm en paralelo, con k = 2 y su chorro: por cada
+     una va Q/4. */
+  const vPorLs = 1e-3 / 4 / area(0.01);
+  const a = ((1 + 2) * vPorLs * vPorLs) / (2 * G);
+  const instalacion = (q: number) => 10 + b * q ** 1.852 + a * q * q;
+  /* La tabla del enunciado, leída de la gráfica: [Q (l/s), 25/4 (m), 25/6
+     (m), NPSH requerido (m)]. */
+  const tabla = [
+    [3, 79.5, 119.1, 0.86], [4, 77.3, 115.9, 1.13], [5, 74.5, 111.8, 1.51], [6, 70.9, 106.6, 2.04],
+    [7, 66.5, 100.0, 2.72], [8, 61.0, 91.9, 3.51], [9, 54.6, 82.2, 4.42], [9.72, 49.4, 74.3, 5.14],
+  ];
+  const lee = (col: 1 | 2 | 3, q: number) => {
+    for (let i = 0; i < tabla.length - 1; i++) {
+      const [p, s] = [tabla[i], tabla[i + 1]];
+      if (p[0] <= q && q <= s[0]) return p[col] + ((q - p[0]) / (s[0] - p[0])) * (s[col] - p[col]);
+    }
+    throw new Error(`Q = ${q} fuera de la tabla`);
+  };
+  const disponible = (q: number) => 101325 / (1000 * G) - 2330 / (1000 * G) - (21.75 - 15) - aspiracion * q ** 1.852;
+  const Q = raiz((q) => lee(2, q) - instalacion(q), 6, 8);
+
+  it('la curva de la instalación es la impresa', () => {
+    if (C1 !== 140 || C2 !== 120) throw new Error(`las bandas dan ${C1} y ${C2}, y deberían dar 140 y 120`);
+    cuadra(id, 'El coeficiente de las tuberías', b);
+    cuadra(id, 'El coeficiente de las boquillas', a);
+  });
+
+  it('a 6 l/s pide 82,8 m: la 25/4 no llega y la 25/6 sí', () => {
+    if (!(lee(1, 6) < instalacion(6) && lee(2, 6) > instalacion(6)))
+      throw new Error('la 25/6 ya no es la menor que llega a 6 l/s');
+    cuadra.magnitud(id, 'La altura que pide la instalación a 6 l/s', instalacion(6), 'm');
+  });
+
+  it('la 25/6 trabaja en 6,75 l/s y 101,7 m', () => {
+    cuadra.magnitud(id, 'El caudal del punto de funcionamiento', Q, 'l/s');
+    cuadra.magnitud(id, 'La altura del punto de funcionamiento', instalacion(Q), 'm');
+  });
+
+  it('y en ese punto cavita', () => {
+    /* Criterio de instalación en funcionamiento (tema 25): basta con que el
+       disponible supere al requerido, y aquí no llega ni a eso. */
+    if (!(disponible(Q) < lee(3, Q))) throw new Error('el disponible supera al requerido: no cavitaría');
+    cuadra.magnitud(id, 'El NPSH disponible en el punto de funcionamiento', disponible(Q), 'm');
+    cuadra.magnitud(id, 'El NPSH requerido en el punto de funcionamiento', lee(3, Q), 'm');
+  });
+
+  it('y cerrando V2 hasta 6 l/s sigue cavitando, por muy poco', () => {
+    /* El apartado e): las dos curvas de NPSH se cortan antes de 6 l/s, así
+       que ninguna maniobra de V2 da los 6 sin cavitación. */
+    const corte = raiz((q) => disponible(q) - lee(3, q), 3, 9);
+    if (!(corte < 6)) throw new Error(`el disponible y el requerido se cortan en ${corte} l/s, por encima de 6`);
+    cuadra.magnitud(id, 'El NPSH disponible a 6 l/s', disponible(6), 'm');
   });
 });

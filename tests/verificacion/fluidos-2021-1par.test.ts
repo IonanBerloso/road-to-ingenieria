@@ -1,5 +1,5 @@
 /**
- * El primer parcial de Mecánica de Fluidos de 2020-2021. Doce respuestas.
+ * El primer parcial de Mecánica de Fluidos de 2020-2021. Trece respuestas.
  *
  * El ejercicio 3 tiene la idea más bonita de la asignatura y por eso el test la
  * comprueba en vez de usarla: **todas las presiones sobre un arco circular
@@ -67,6 +67,15 @@ describe('2 · el micromanómetro que hay que diseñar', () => {
     /* 755 mm de mercurio menos los 42 mm de columna de agua del vacío. */
     const barometro = 0.755 * 13600 * G;
     cuadra(id, 'La presión absoluta del depósito', (barometro - 0.042 * GAMMA) / 1e5);
+  });
+
+  it('y con un milímetro de lectura se aprecian 1,47 Pa', () => {
+    /* El grado de sensibilidad del guion: la expresión del b) con R = 1 mm.
+       Se comprueba antes que un tubo en U de agua, con el mismo milímetro,
+       necesitaría casi siete veces más presión. */
+    const minima = 0.001 * elegida.salto * GAMMA;
+    if (!(0.001 * GAMMA > 6 * minima)) throw new Error('el micromanómetro no amplifica lo que debería');
+    cuadra.magnitud(id, 'La presión de vacío mínima que se puede medir', minima, 'Pa');
   });
 
   it('y el tubo inclinado equivalente va a 10,8 grados', () => {
@@ -175,7 +184,10 @@ describe('4 · el depósito que se dilata', () => {
     const conQueroseno = rho0 * Math.exp(manometrica / K) * G * dilatado;
     /* Y de paso el porqué del apartado: con butano pesaría sesenta veces
        menos, así que el tejado lo dimensiona el queroseno. */
-    const conButano = (((4e5 + patm) / 101325) * 58) / (0.082 * 293) * G * geometrico * 1.04;
+    /* Con 4 bar la fórmula da un 0,041 % de dilatación, no un 4 %: el
+       resultado de la fórmula ya está en tanto por ciento. */
+    const dilataButano = 1 + (Math.exp(4 / 100) - 1) / 100;
+    const conButano = (((4e5 + patm) / 101325) * 58) / (0.082 * 293) * G * geometrico * dilataButano;
     if (!(conQueroseno > 50 * conButano)) throw new Error('el butano no queda tan lejos como debería');
     cuadra(id, 'El peso máximo del depósito lleno', conQueroseno / 1000);
   });

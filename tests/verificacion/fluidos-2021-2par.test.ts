@@ -1,5 +1,5 @@
 /**
- * El segundo parcial de Mecánica de Fluidos de 2020-2021. Once respuestas.
+ * El segundo parcial de Mecánica de Fluidos de 2020-2021. Catorce respuestas.
  *
  * El ejercicio 1 tiene la lección de red más útil del corpus: el depósito D
  * está **por debajo** del nudo —cota 6 frente a una altura piezométrica de
@@ -30,12 +30,20 @@ describe('1 · la embotelladora de diez boquillas', () => {
   const Q2 = 10 * vBoq * area(dBoq);
   const v2 = Q2 / area(D2);
   /* Remontando de la línea de llenado hasta el nudo. Los 60 W de rozamiento
-     del conducto 2 se pasan a metros con la propia potencia. */
+     del conducto 2 se pasan a metros con la propia potencia. Cada válvula V,
+     de 100 mm, lleva la décima parte del caudal. */
+  const vValvula = Q2 / 10 / area(0.1);
+  const valvula = 0.73 * ((vValvula * vValvula) / (2 * G));
   const energiaN =
-    12 + 2.5 + 60 / (gamma * Q2) + 2 * 0.84 * ((v2 * v2) / (2 * G)) + 0.12 * ((vBoq * vBoq) / (2 * G));
+    12 + 2.5 + 60 / (gamma * Q2) + 2 * 0.84 * ((v2 * v2) / (2 * G)) + valvula + 0.12 * ((vBoq * vBoq) / (2 * G));
 
-  it('en el nudo hay 169,4 kJ/m³', () => {
+  it('en el nudo hay 169,38 kJ/m³', () => {
     if (Math.abs(vBoq - 7) > 1e-9) throw new Error('la presión dinámica no da 7 m/s');
+    /* Los 169.381,66 J/m³ impresos solo salen con la válvula: sin ella, la
+       energía queda 73 J/m³ por debajo. Se comprueba al julio, más fino que
+       la casilla. */
+    if (Math.abs(energiaN * gamma - 169381.66) > 1) throw new Error('la energía del nudo no es la impresa');
+    if (Math.abs((energiaN - valvula) * gamma - 169381.66) < 50) throw new Error('sin la válvula saldría lo mismo');
     cuadra(id, 'La energía del nudo', (energiaN * gamma) / 1000);
   });
 
@@ -57,6 +65,17 @@ describe('1 · la embotelladora de diez boquillas', () => {
 
   it('y el rendimiento es del 57,4 %', () =>
     cuadra(id, 'El rendimiento de la bomba', ((gamma * Q1 * Hm) / 8176) * 100));
+
+  it('y el depósito D está a 128,07 kPa', () => {
+    /* El caudal sale de D, así que D tiene la energía del nudo más las
+       pérdidas del conducto 3: el metro de columna de s = 2, pasado a
+       columna de mirinda, y el codo, con la velocidad del conducto 3. */
+    const Q3 = Q2 - Q1;
+    const v3 = Q3 / area(0.125);
+    const pD = gamma * (energiaN + 2 / 1.04 + 0.84 * ((v3 * v3) / (2 * G)) - 6);
+    if (Math.abs(pD / 1000 - 128.07) > 0.01) throw new Error('la presión de D no es la impresa');
+    cuadra.magnitud(id, 'La presión del depósito D', pD / 1000, 'kPa');
+  });
 });
 
 describe('2 · el Pitot y el piezómetro juntos', () => {
@@ -69,6 +88,8 @@ describe('2 · el Pitot y el piezómetro juntos', () => {
   const vTuberia = Q / area(D);
 
   it('circulan 102 l/s de gasolina', () => cuadra.magnitud(id, 'El caudal circulante', Q * 1000, 'l/s'));
+
+  it('y por la tubería van a 0,81 m/s', () => cuadra.magnitud(id, 'La velocidad en la tubería', vTuberia, 'm/s'));
 
   it('y el venturímetro marca 0,504 m', () => {
     /* El manómetro en U invertida está lleno de **aire**, así que su lectura es
@@ -99,14 +120,40 @@ describe('3 · el carro con el álabe', () => {
   it('la barra del depósito aguanta 7,33 N', () => cuadra(id, 'La tensión de la barra del depósito', 1000 * Q * v));
 
   it('y con sesenta grados el álabe recibe justo ρQv', () => {
-    /* El chorro entra y sale con la misma velocidad, desviado θ. El módulo del
-       cambio de velocidad es v·√(2(1−cos θ)), y a 60° ese factor vale
-       exactamente 1: se comprueba componiendo los dos vectores. */
-    const theta = Math.PI / 3;
+    /* El chorro entra horizontal y sale con la misma velocidad, desviado
+       hacia abajo el ángulo α de la figura. El módulo del cambio de velocidad
+       es v·√(2(1−cos α)), y a 60° ese factor vale exactamente 1: se
+       comprueba componiendo los dos vectores. Y de paso, que lo impreso,
+       ρ·Q·v·√2·(1−cos α), con la raíz solo sobre el 2, no da lo mismo. */
+    const alfa = Math.PI / 3;
     const entra = [v, 0];
-    const sale = [v * Math.cos(theta), v * Math.sin(theta)];
+    const sale = [v * Math.cos(alfa), -v * Math.sin(alfa)];
     const cambio = Math.hypot(sale[0] - entra[0], sale[1] - entra[1]);
+    if (Math.abs(Math.SQRT2 * (1 - Math.cos(alfa)) - cambio / v) < 0.1)
+      throw new Error('la errata del impreso daría lo mismo, y no debería');
     cuadra(id, 'La reacción del álabe con sesenta grados', cambio / v);
+  });
+
+  it('y unidos, la barra trabaja a tracción con T₁', () => {
+    /* La resultante sobre el conjunto es nula, pero la barra es interior:
+       se corta. El depósito aislado pierde ρQv por el orificio. El carro
+       aislado recibe ρQv y no deja salir nada, porque el líquido desviado cae
+       dentro: el álabe se lleva ρQv(1 − cos α) y el aterrizaje, ρQv·cos α.
+       Se comprueba con varios ángulos que el carro pide lo mismo que el
+       depósito antes de usar el valor. */
+    /* Lo que pide el depósito, con la expresión impresa de T₁. */
+    const deposito = 1000 * G * ((Math.PI * d * d) / 2) * Cc * Cv * Cv * H;
+    for (const a of [Math.PI / 6, Math.PI / 3, Math.PI / 2, (2 * Math.PI) / 3]) {
+      /* Lo que pide el carro, por cantidad de movimiento: el álabe cambia la
+         velocidad del chorro de (v, 0) a (v cos α, −v sen α), y el líquido
+         que sale del álabe cae al carro y se para. */
+      const sale = [v * Math.cos(a), -v * Math.sin(a)];
+      const alabe = 1000 * Q * (v - sale[0]);
+      const aterriza = 1000 * Q * sale[0];
+      if (Math.abs(alabe + aterriza - deposito) > 1e-6 * deposito)
+        throw new Error('el carro no pide lo mismo que el depósito');
+    }
+    cuadra(id, 'La tensión de la barra que une el depósito y el carro', deposito);
   });
 });
 
