@@ -367,8 +367,8 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 128 declarados, **33 están tachados**
-y los **95** restantes siguen abiertos. La fila de la 1.ª evaluación de Cálculo
+documental pero infla el recuento. De los 124 declarados, **33 están tachados**
+y los **91** restantes siguen abiertos. La fila de la 1.ª evaluación de Cálculo
 decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
@@ -382,13 +382,13 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Cálculo | 5.ª evaluación | 3 | 12 | 10 | 5 / 7 |
 | Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
 | Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
-| Fluidos | ordinaria | 14 | 51 | 11 | 21 / 26 |
+| Fluidos | ordinaria | 15 | 57 | 11 | 17 / 22 |
 | Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
 | Mecánica | 2.º cuatrimestre | 9 | 16 | 3 | 2 / 4 |
 | Química | 1.er cuatrimestre | 8 | 21 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 21 | 3 | 12 / 12 |
 | Térmica | ordinaria | 7 | 21 | 17 | 2 / 7 |
-| **total** | **15 rutas** | **132** | **358** | — | **95 / 128** |
+| **total** | **15 rutas** | **133** | **364** | — | **91 / 124** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
@@ -397,12 +397,11 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 > declarados de cuatro filas eran menos de los que hay. Corregida el 10 de
 > septiembre de 2026 midiendo los trece ficheros.
 >
-> Y una lectura que solo aparece al verlas juntas: **Fluidos declara 26 huecos,
-> casi la cuarta parte de los 113 del sitio**, con una sola ruta. No es que
-> esté peor hecha —es la asignatura con más corpus y la única con laboratorio
-> sin material—, es que ahí se ha mirado más. Un número alto de huecos
-> declarados es una señal buena, y conviene decirlo porque la tabla invita a
-> leerlo al revés.
+> Y una lectura que solo aparece al verlas juntas: **Fluidos declara 22 de
+> los 124 huecos del sitio**, con una sola ruta. No es que esté peor hecha
+> —es la asignatura con más corpus—, es que ahí se ha mirado más. Un número
+> alto de huecos declarados es una señal buena: cada uno dice qué falta y
+> por qué.
 
 **La de la ordinaria se rehizo el 26 de agosto de 2026**, el mismo día que se
 cerró la última convocatoria que le faltaba. Decía estar medida sobre 2 y ahora

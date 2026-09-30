@@ -329,3 +329,24 @@ describe('la sección circular parcialmente llena', () => {
     }
   });
 });
+
+/* La ordinaria de 2026, ejercicio 5: un canal semicircular de hormigón en
+   bruto (n = 0,015, cuadro 26) con pendiente de 1,2 milésimas y una berma de
+   0,22·R. El agua llega a 0,78·R desde el fondo, un calado relativo de 0,39
+   sobre el círculo entero. El examen publica R = 1,0075 m para 5400 m³/h
+   (fase I, 30 de septiembre de 2026): un ancla externa. */
+describe('la ordinaria de 2026: el canal con berma', () => {
+  const n = 0.015;
+  const J = 0.0012;
+  const y = (1 - 0.22) / 2;
+
+  it('con R = 1,0075 m lleva los 5400 m³/h impresos', () => {
+    const D = 2 * 1.0075;
+    cerca(caudalLleno(D, n, J) * relacionCaudal(y), 5400 / 3600, 0.002);
+  });
+
+  it('y con un radio un 1 % menor ya no llega: el caudal va con D^(8/3)', () => {
+    const D = 2 * 1.0075 * 0.99;
+    expect(caudalLleno(D, n, J) * relacionCaudal(y)).toBeLessThan(1.5 * 0.98);
+  });
+});

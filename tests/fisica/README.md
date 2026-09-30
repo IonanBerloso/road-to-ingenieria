@@ -4,17 +4,17 @@ Todo simulador con física dentro lleva aquí al menos un caso con resultado
 conocido. Nunca se ajusta una constante para que salga el número esperado
 (CLAUDE.md §10).
 
-**Diez ficheros y 187 casos**: nueve simuladores y las tablas de vapor. La cifra la da
+**Diez ficheros y 192 casos**: nueve simuladores y las tablas de vapor. La cifra la da
 `node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
 la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
 y estuvo tres días diciéndolo con ocho ficheros en la carpeta.
 
 **Y una distinción que hay que leer antes que la tabla.** «Verificado» no
-significa lo mismo en todas las filas. En **tres** de las nueve el número contra
-el que se compara sale de una **convocatoria**; en **dos** sale de nuestra
-propia figura pero hay además una **invariante matemática independiente** que
-el test comprueba aparte; y en las **tres** restantes sale solo de nuestra
-prosa o de nuestra figura, y entonces el test comprueba que el modelo y la
+significa lo mismo en todas las filas. En **cinco** de las nueve el número
+contra el que se compara sale de una **convocatoria** o de la **colección de la
+escuela**; en **dos** sale de nuestra propia figura pero hay además una
+**invariante matemática independiente** que el test comprueba aparte; y en las
+**dos** restantes sale solo de nuestra prosa o de nuestra figura, y entonces el test comprueba que el modelo y la
 página digan lo mismo, no que digan la verdad. Es una prueba de regresión, que
 también sirve, pero no es un ancla. Lo encontró la auditoría del 13 de septiembre de 2026, y
 está dicho aquí porque un guardián que se cree más fuerte de lo que es hace más
@@ -28,8 +28,8 @@ daño que uno que falta.
 | `catenaria.test.ts` | 14 | `LaCatenaria` (mecánica t05) | la figura del propio tema — pero con la invariante y² = c² + s² comprobada aparte, que sí es independiente | mixta |
 | `mecanismo.test.ts` | 10 | `CentroInstantaneo` (mecánica t08) | la figura del propio tema — con la velocidad contrastada contra la derivada numérica de la posición, que sí es independiente | mixta |
 | `compuertas.test.ts` | 16 | `PrismaDePresiones` (t07) | los dos ejemplos introductorios del propio tema, la compuerta vertical y la misma inclinada 60° | propia |
-| `canales.test.ts` | 27 | `SeccionDeCanal` (t21) | las tres secciones de 4 m² de la figura del propio tema, con sus perímetros publicados | propia |
-| `ariete.test.ts` | 25 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus **cuatro** números: los dos buenos y los dos equivocados | propia |
+| `canales.test.ts` | 29 | `SeccionDeCanal` (t21) | las tres secciones de 4 m² de la figura del propio tema, y el canal con berma de la ordinaria de 2025-2026 (R = 1,0075 m para 5400 m³/h) | **externa** |
+| `ariete.test.ts` | 28 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus cuatro números, y los ejercicios 7.3 y 7.7 de la colección con sus resultados publicados (955 y 1840 kPa; 199,56 y 249,08 mca) | **externa** |
 | `plano.test.ts` | 13 | `PlanoComplejo` (cálculo t01) | el error típico del propio tema: con z = −1 − i, arctan devuelve π/4 y el argumento es −3π/4 | propia |
 | `vapor.test.ts` | 21 | las tablas de vapor y el diagrama de Mollier de Térmica, no un simulador | los valores de verificación que publican IAPWS-95 e IF97, con nueve cifras; las dos formulaciones entre sí, y el anexo de tablas del curso | **externa** |
 

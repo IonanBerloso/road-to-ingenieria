@@ -236,3 +236,30 @@ describe('la onda en la válvula', () => {
     expect(Math.abs(ondaEnValvula(T * 9.5, L, a, dH, 0.2))).toBeLessThan(dH / 2);
   });
 });
+
+/* Dos ejercicios de la colección de la escuela, con sus números publicados:
+   son un ancla externa, no nuestra figura (fase I, 30 de septiembre de 2026).
+   Los datos son los del enunciado; la k de Allievi, la de la tabla del tema. */
+describe('dos de la colección, con sus números publicados', () => {
+  it('7.3 · acero de 400 mm y 8 de espesor, 1200 m: 955 kPa cerrando en 4 s', () => {
+    const a = celeridad(0.5, 0.4, 0.008);
+    const v = 0.2 / ((Math.PI * 0.4 ** 2) / 4);
+    expect(clasifica(1200, a, 4)).toBe('lento');
+    cerca(michaud(1200, v, 4) * 9800, 955e3, 0.005);
+  });
+
+  it('7.3 · y cerrando en 2 s el cierre ya es rápido: 1840 kPa', () => {
+    const a = celeridad(0.5, 0.4, 0.008);
+    const v = 0.2 / ((Math.PI * 0.4 ** 2) / 4);
+    expect(clasifica(1200, a, 2)).toBe('rapido');
+    cerca(allievi(a, v) * 9800, 1840e3, 0.005);
+  });
+
+  it('7.7 · hormigón de 250 mm y 25 de espesor: 199,56 mca lento, 249,08 de techo', () => {
+    const a = celeridad(5, 0.25, 0.025);
+    const v = 0.12 / ((Math.PI * 0.25 ** 2) / 4);
+    expect(clasifica(1400, a, 3.5)).toBe('lento');
+    cerca(michaud(1400, v, 3.5), 199.56, 0.002);
+    cerca(allievi(a, v), 249.08, 0.002);
+  });
+});
