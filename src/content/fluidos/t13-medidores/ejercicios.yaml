@@ -1,7 +1,9 @@
 ejercicios:
-  # ── Los tres son NUESTROS (§08). El capítulo 3 de la colección arranca con
-  #    instalaciones completas; estos tres aíslan cada aparato para que la
-  #    receta —Bernoulli, hidrostática, igualar— se use una vez por separado.
+  # ── Los cuatro son NUESTROS (§08). El capítulo 3 de la colección arranca con
+  #    instalaciones completas; el primero, el segundo y el cuarto aíslan cada
+  #    aparato para que la receta —Bernoulli, hidrostática, igualar— se use una
+  #    vez por separado, y el tercero, detrás del venturímetro, lo calibra con
+  #    las medidas del laboratorio.
   - id: ejflu13-el-tubo-de-pitot
     titulo: La velocidad que marca un tubo de Pitot
     fuente: >-
@@ -268,6 +270,251 @@ ejercicios:
       > velocidades; y la hidrostática traduce la lectura del manómetro. La
       > fórmula del formulario es el resultado de juntar esas tres, y merece
       > la pena saber deducirla porque el examen a veces pide justo eso.
+
+  - id: ejflu13-calibrar-el-venturimetro
+    titulo: Calibrar un venturímetro, o sacar su coeficiente de dos caudales
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería, con las dimensiones del
+      venturímetro de la práctica 14 del guion de prácticas y el coeficiente
+      de su rotámetro; las lecturas son nuestras. No es de examen ni de la
+      colección de problemas.
+    nivel: ejemplo
+    enunciado: |
+      En el banco de la práctica 14 hay un venturímetro horizontal de
+      $D_1 = 41{,}25\ \text{mm}$ a la entrada y $D_2 = 20\ \text{mm}$ en la
+      garganta, con un tubo piezométrico en cada toma. Para un caudal de agua
+      se anota:
+
+      - el rotámetro de la instalación marca $2400\ \text{l/h}$, y su
+        coeficiente de corrección es $C_{\text{rot}} = 0{,}944$;
+      - el piezómetro de la entrada marca $h_1 = 520\ \text{mm}$ y el de la
+        garganta, $h_2 = 310\ \text{mm}$.
+
+      a) Calcular el caudal real.
+
+      b) Calcular el caudal teórico que da la fórmula del venturímetro.
+
+      c) Calcular el coeficiente del venturímetro, $C_v$.
+
+      Tomar $g = 9{,}8\ \text{m/s}^{2}$.
+    pide: El caudal real, el teórico y el coeficiente del venturímetro.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El coeficiente del venturímetro es $C_v = Q_r/Q_t$. ¿Qué hace falta
+          medir para calibrarlo?
+        opciones:
+          - texto: >-
+              El caudal por un camino que no dependa del venturímetro, y la
+              lectura del propio venturímetro
+            correcta: true
+            mensaje: |
+              Eso es. El caudal real lo da otro aparato —aquí el rotámetro;
+              en las prácticas 10 y 17, un depósito tarado y un
+              cronómetro—, y el teórico sale de la lectura del venturímetro
+              con la fórmula ideal. El coeficiente es el cociente de los dos.
+          - texto: >-
+              Solo la lectura del venturímetro, con mucha precisión
+            mensaje: |
+              Con la lectura sola sale el caudal **teórico**, el de
+              Bernoulli sin pérdidas. Para saber cuánto se aparta el de
+              verdad hace falta medir el de verdad por otro lado.
+          - texto: >-
+              La pérdida de carga entre la entrada y la salida del aparato
+            mensaje: |
+              Esa pérdida se mide en la misma práctica, con el tercer
+              piezómetro, pero es otra cosa: la del aparato entero, difusor
+              incluido. El coeficiente habla del tramo que va de la entrada
+              a la garganta, y sale de comparar dos caudales.
+
+      - tipo: calcular
+        titulo: El caudal real
+        pregunta: |
+          ¿Qué caudal circula de verdad, en l/s?
+        respuesta:
+          tipo: magnitud
+          valor: '0.6293 l/s'
+          tolerancia: 0.01
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '0.6667 l/s'
+            mensaje: |
+              Es la lectura del rotámetro tal cual, $2400\ \text{l/h}$. Su
+              escala no da el caudal real hasta corregirla, y para eso el
+              guion da su coeficiente: el caudal real es la lectura **por**
+              $0{,}944$.
+          - valor: '0.7062 l/s'
+            mensaje: |
+              Has dividido la lectura entre $0{,}944$ en vez de
+              multiplicarla. El coeficiente de corrección es
+              $Q_{\text{real}}/Q_{\text{leído}}$, y la práctica 17 lo mide
+              justo así: el real en ordenadas, lo leído en abscisas, y la
+              pendiente es el coeficiente.
+        pista: |
+          Q real = 0,944 · 2400 l/h, y una hora son 3600 s.
+        desarrollo: |
+          $$
+          Q_r = C_{\text{rot}}\cdot Q_{\text{leído}} = 0{,}944\cdot2400
+          = 2265{,}6\ \text{l/h} = \frac{2265{,}6}{3600} = 0{,}6293\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: El caudal teórico
+        pregunta: |
+          ¿Qué caudal da la fórmula ideal del venturímetro con esas dos
+          lecturas, en l/s?
+        respuesta:
+          tipo: magnitud
+          valor: '0.6557 l/s'
+          tolerancia: 0.01
+          formato: un caudal, con su unidad
+        distractores:
+          - valor: '0.6374 l/s'
+            mensaje: |
+              Te has dejado el denominador $\sqrt{1-(A_2/A_1)^{2}}$. Aquí
+              $A_2/A_1 = 0{,}235$ y el denominador vale $0{,}972$: sin él, el
+              teórico sale un 3 % bajo y el coeficiente un 3 % alto.
+          - valor: '0.7288 l/s'
+            mensaje: |
+              Has puesto la relación de **diámetros**, $20/41{,}25 = 0{,}485$,
+              donde va la de **áreas**, $(20/41{,}25)^{2} = 0{,}235$. La
+              continuidad reparte el caudal entre secciones, y una sección va
+              con el diámetro al cuadrado.
+          - valor: '2.328 l/s'
+            mensaje: |
+              Has multiplicado $R$ por $12{,}6$, como si hubiera un manómetro
+              de mercurio. Aquí no lo hay: cada toma tiene su piezómetro de
+              agua, así que $h_1 - h_2$ ya es la diferencia de alturas
+              piezométricas en columna del propio fluido. El factor
+              $(\gamma_0/\gamma - 1)$ solo aparece cuando el manómetro lleva
+              otro líquido.
+        pista: |
+          R = h₁ − h₂ = 0,21 m de agua. A₂/A₁ = (20/41,25)² = 0,2351. v₂ = √(2·g·R) / √(1 − 0,2351²), y Q = v₂ · A₂.
+        desarrollo: |
+          $$
+          R = h_1 - h_2 = 0{,}520 - 0{,}310 = 0{,}21\ \text{m}
+          \qquad
+          \frac{A_2}{A_1} = \left(\frac{20}{41{,}25}\right)^{2} = 0{,}2351
+          $$
+          $$
+          v_{2t} = \frac{\sqrt{2\cdot9{,}8\cdot0{,}21}}{\sqrt{1-0{,}2351^{2}}}
+          = \frac{2{,}029}{0{,}972} = 2{,}087\ \text{m/s}
+          $$
+          $$
+          Q_t = v_{2t}\,A_2 = 2{,}087\cdot\frac{\pi\cdot0{,}020^{2}}{4}
+          = 6{,}557\cdot10^{-4}\ \text{m}^{3}/\text{s} = 0{,}6557\ \text{l/s}
+          $$
+
+      - tipo: calcular
+        titulo: El coeficiente del venturímetro
+        pregunta: |
+          ¿Cuánto vale $C_v$?
+        respuesta:
+          tipo: numero
+          valor: '0.960'
+          tolerancia: 0.01
+          formato: un número sin unidades
+        distractores:
+          - valor: '1.017'
+            mensaje: |
+              Un coeficiente mayor que uno diría que por el aparato pasa más
+              agua de la que permite Bernoulli sin pérdidas, y eso no puede
+              ser. Has tomado como real la lectura del rotámetro sin
+              corregirla con su $0{,}944$.
+          - valor: '1.042'
+            mensaje: |
+              Has dividido al revés, $Q_t/Q_r$. El coeficiente es lo que
+              pasa de verdad sobre lo que predice la fórmula, y por eso no
+              llega a uno.
+          - valor: '0.270'
+            mensaje: |
+              Sale de un teórico con el factor $12{,}6$ del mercurio, que
+              aquí no hay: las lecturas son de piezómetros de agua y
+              $h_1 - h_2$ ya es la diferencia de alturas piezométricas.
+        pista: |
+          Cv = Q real / Q teórico, con los dos en las mismas unidades.
+        desarrollo: |
+          $$
+          C_v = \frac{Q_r}{Q_t} = \frac{0{,}6293}{0{,}6557} = 0{,}960
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          Ordena la calibración. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              El caudal real lo da un aparato ajeno al venturímetro: el
+              rotámetro corregido, $0{,}944\cdot2400 = 2265{,}6\ \text{l/h}$,
+              que son $0{,}6293\ \text{l/s}$.
+          - texto: >-
+              Con piezómetros de agua, $R = h_1 - h_2 = 0{,}21\ \text{m}$ es
+              ya la diferencia de alturas piezométricas: no hay factor de
+              líquido manométrico.
+          - texto: >-
+              Con $A_2/A_1 = 0{,}2351$, la fórmula ideal da
+              $Q_t = 0{,}6557\ \text{l/s}$.
+          - texto: >-
+              $C_v = Q_r/Q_t = 0{,}960$, menor que uno, como tiene que ser.
+          - texto: >-
+              Como el coeficiente es una propiedad del aparato, con un solo
+              caudal basta: a cualquier otro caudal saldrá el mismo $0{,}960$.
+            trampa: true
+            mensaje: |
+              El coeficiente **depende del Reynolds**. El ábaco 13 del
+              anexo de cuadros lo dibuja: por debajo de unos $10^{4}$ cae
+              deprisa, y por encima de $10^{5}$ se aplana, de unos $0{,}98$ a
+              $0{,}99$ o algo más.
+              Por eso el guion pide seis caudales y la curva de $C_v$ frente
+              a $Re$: un venturímetro calibrado con caudales grandes miente
+              con los pequeños.
+
+    resolucion: |
+      **El caudal real**, del rotámetro con su corrección:
+
+      $$
+      Q_r = 0{,}944\cdot2400 = 2265{,}6\ \text{l/h} = 0{,}6293\ \text{l/s}
+      $$
+
+      **El caudal teórico**, de la lectura del venturímetro. Los dos
+      piezómetros son de agua, así que su diferencia es directamente la
+      diferencia de alturas piezométricas, sin factor de manómetro:
+
+      $$
+      R = h_1 - h_2 = 0{,}21\ \text{m}
+      \qquad
+      \frac{A_2}{A_1} = \left(\frac{20}{41{,}25}\right)^{2} = 0{,}2351
+      $$
+      $$
+      v_{2t} = \frac{\sqrt{2\cdot9{,}8\cdot0{,}21}}{\sqrt{1-0{,}2351^{2}}} = 2{,}087\ \text{m/s}
+      \qquad
+      Q_t = v_{2t}\,A_2 = 0{,}6557\ \text{l/s}
+      $$
+
+      **El coeficiente**:
+
+      $$
+      \boxed{C_v = \frac{Q_r}{Q_t} = \frac{0{,}6293}{0{,}6557} = 0{,}960}
+      $$
+
+      **Dónde cae en la curva.** El Reynolds se calcula en la tubería, con
+      la $\nu = 10^{-6}\ \text{m}^{2}/\text{s}$ que da el guion:
+
+      $$
+      V_1 = \frac{Q_r}{A_1} = \frac{0{,}6293\cdot10^{-3}}{\pi\cdot0{,}04125^{2}/4} = 0{,}471\ \text{m/s}
+      \qquad
+      Re_1 = \frac{V_1 D_1}{\nu} = 1{,}94\cdot10^{4}
+      $$
+
+      Con ese Reynolds, las curvas del ábaco 13 andan entre $0{,}95$ y
+      $0{,}97$, así que el $0{,}960$ es un valor razonable. La práctica
+      repite esto con seis caudales y dibuja los seis puntos: la curva de
+      $C_v$ frente a $Re_1$ sube y se aplana, como la del ábaco.
+
+      > **Lo que se ha hecho, en una línea.** Un coeficiente no se deduce:
+      > se mide dividiendo el caudal que pasa de verdad entre el que dice la
+      > fórmula ideal. Todo lo demás del ejercicio es sacar bien esos dos
+      > caudales.
 
   - id: ejflu13-orificio-y-vaciado
     titulo: Un orificio, sus coeficientes y cuánto tarda en vaciarse el depósito
@@ -4185,3 +4432,359 @@ ejercicios:
       que es justo para lo que se usa. La segunda, el ángulo: los 60º son la
       abertura **completa** de la escotadura, y en la fórmula entra
       $\tan(\alpha/2)$.
+
+  # ── NUESTRO, y al final (§04): no es de la colección y no abre el tema.
+  #    Es el dibujo que piden los guiones de las prácticas 10 y 11 —«se
+  #    dibujará un esquema de la práctica», en la 10, y «Dibujar un esquema de
+  #    la práctica», en la 11—, con la cuenta de la 11.
+  - id: ejflu13-el-pitot-en-la-tuberia-y-en-el-chorro
+    titulo: El Pitot de las prácticas 10 y 11, en una tubería y en un chorro
+    fuente: >-
+      Ejercicio propio · Road to Ingeniería, sobre las prácticas 10 y 11
+      del guion de prácticas de Mecánica de Fluidos (UPV/EHU). No es de examen
+      ni de la colección de problemas.
+    nivel: practica
+    enunciado: |
+      En el laboratorio se mide la presión dinámica de dos maneras.
+
+      - En la **práctica 10**, en una tubería horizontal de agua, con un
+        piezómetro abierto y un tubo de Pitot cuya boca está en la misma
+        sección.
+      - En la **práctica 11**, a la salida de un conducto de aire comprimido
+        que descarga a la atmósfera, con un tubo de Pitot en el centro del
+        chorro conectado a un manómetro en U de agua. Se anotan también el
+        barómetro y el termómetro del laboratorio.
+
+      a) Dibuja los dos montajes y di qué presión mide cada toma.
+
+      b) En el chorro, el manómetro marca $R = 25\ \text{mm}$ de agua, el
+      barómetro $1013\ \text{mbar}$ y el termómetro 20 °C. Calcula la
+      densidad del aire y la velocidad del chorro a la salida.
+
+      c) Explica por qué en el chorro basta un Pitot y en la tubería no.
+
+      Datos: $R_{\text{aire}} = 287$ J/(kg·K);
+      $\rho_{\text{agua}} = 1000\ \text{kg/m}^{3}$;
+      $g = 9{,}81\ \text{m/s}^{2}$.
+    pide: Los dos montajes dibujados, la densidad del aire, la velocidad del chorro y por qué allí basta un Pitot.
+
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En el chorro de la práctica 11 solo hay un Pitot y una U con la
+          otra rama abierta al aire. ¿Qué hace de toma de presión estática?
+        opciones:
+          - texto: >-
+              La propia atmósfera: en un chorro libre la presión estática es
+              la atmosférica, y la rama abierta la lleva al manómetro
+            correcta: true
+            mensaje: |
+              Eso es. A la salida de la tobera las líneas de corriente son
+              paralelas y el chorro está rodeado de aire en reposo, así que
+              su presión estática es la de fuera. La rama abierta de la U
+              compara la total del Pitot con esa presión, y la diferencia es
+              la dinámica.
+          - texto: >-
+              Nada: el Pitot solo mide la total, y sin estática la velocidad
+              no sale
+            mensaje: |
+              Sin estática no saldría, es verdad, pero aquí sí la hay: está
+              en la rama abierta. Un chorro que descarga a la atmósfera tiene
+              la presión estática de la atmósfera, y esa rama la recoge sin
+              necesidad de otra toma.
+          - texto: >-
+              El barómetro, cuya lectura se resta después a la del manómetro
+            mensaje: |
+              El barómetro da la presión **absoluta** del aire del
+              laboratorio, y sirve para otra cosa: sacar su densidad con
+              $\rho = p/(R_{\text{aire}}\,T)$. La U ya compara con la
+              atmósfera por sí sola; no hay nada que restarle.
+
+      - tipo: dibujar
+        consigna: |
+          a) Dibuja los dos montajes uno al lado del otro. A la izquierda, la
+          tubería de la práctica 10 con el piezómetro y el Pitot y el agua en
+          los dos tubos. A la derecha, la tobera de la práctica 11 con el
+          chorro, el Pitot y la U de agua, con el desnivel de $25\ \text{mm}$
+          acotado. Escribe junto a cada toma qué presión mide.
+        comprueba:
+          - punto: >-
+              El Pitot entra en el conducto y se dobla, con la boca abierta en
+              el eje y de cara al fluido que llega.
+            porque: >-
+              Es lo que hace de él un Pitot: frena el fluido hasta pararlo en
+              su boca y marca la presión total. Una toma que abre en la pared,
+              o en el costado de una sonda paralela al flujo, no lo frena y
+              marca la estática, aunque entre en el tubo.
+          - punto: >-
+              El piezómetro sale de un agujero de la pared, enrasado y sin
+              meterse en el flujo, en la misma sección que la boca del Pitot.
+            porque: >-
+              No frena nada, así que marca la estática. Si estuviera en otra
+              sección, la diferencia de niveles llevaría dentro la pérdida de
+              carga del tramo que los separa: es justo lo que la práctica 10
+              mide aparte, entre el piezómetro y el tubo estático.
+          - punto: >-
+              En la tubería el agua sube más en el Pitot que en el piezómetro,
+              y la diferencia está rotulada como la altura cinética.
+            porque: >-
+              Total menos estática es $v^{2}/2g$. Dibujarlo al revés sería
+              decir que el Pitot marca menos que la estática, y la altura
+              cinética no puede ser negativa.
+          - punto: >-
+              En el chorro, la boca del Pitot en el centro y cerca de la
+              salida, mirando a la tobera, y la otra rama de la U abierta al
+              aire.
+            porque: >-
+              El guion pide centrarlo en el tubo de salida. Lejos de la salida
+              el chorro se abre y se frena, y ya no es el de la tobera. La
+              rama abierta es la toma estática, porque el chorro está a la
+              presión atmosférica.
+          - punto: >-
+              En la U, el agua más baja en la rama del Pitot y más alta en la
+              abierta, con los 25 mm entre las dos acotados como R.
+            porque: >-
+              La total del Pitot es mayor que la atmosférica y empuja el agua
+              hacia abajo en su rama. Ese desnivel es la lectura de la que
+              sale la velocidad en el apartado b).
+          - punto: >-
+              El barómetro y el termómetro, anotados junto al montaje del
+              chorro.
+            porque: >-
+              Sin ellos no hay densidad del aire, y la velocidad depende de
+              ella: el agua del manómetro pesa unas 830 veces más que el aire
+              que lo empuja.
+        figura: |
+          <svg viewBox="0 0 420 280" role="img" width="420" height="280" aria-labelledby="ejflu13-montajes-t ejflu13-montajes-d">
+            <title id="ejflu13-montajes-t">Los dos montajes para medir la presión dinámica: en la tubería de la práctica 10 y en el chorro de aire de la práctica 11</title>
+            <desc id="ejflu13-montajes-d">A la izquierda, una tubería horizontal de agua con el flujo de izquierda a derecha. En la pared de arriba sale un piezómetro, un tubo vertical enrasado con la pared, y en la misma sección está la boca de un tubo de Pitot, en el eje y mirando de frente al agua; el Pitot se dobla hacia arriba un poco más adelante. El agua sube más en el Pitot que en el piezómetro, y la diferencia entre los dos niveles está acotada como v al cuadrado partido por 2g: el piezómetro marca la estática y el Pitot la total. A la derecha, una tobera por la que sale un chorro de aire a la atmósfera. En el centro del chorro, cerca de la salida, está la boca de un Pitot, mirando a la tobera, y su tubo baja hasta una rama de un manómetro en U de agua; la otra rama está abierta al aire. En la rama del Pitot el agua está más baja y en la abierta más alta, y el desnivel acotado es R, 25 mm. Junto al Pitot pone «total» y encima de la rama abierta, «estática»: el chorro sale a la atmósfera, y esa rama hace de toma estática. Al lado del montaje pone «+ barómetro» y «+ termómetro», que se anotan para sacar la densidad del aire.</desc>
+            <style>
+                .ejflu13-montajes-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+                .ejflu13-montajes-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+                .ejflu13-montajes-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+                .ejflu13-montajes-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .ejflu13-montajes-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .ejflu13-montajes-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+                .ejflu13-montajes-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+                .ejflu13-montajes-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+                .ejflu13-montajes-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+                .ejflu13-montajes-pt { fill: var(--live); }
+                .ejflu13-montajes-punta { stroke: none; }
+                .ejflu13-montajes-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+                .ejflu13-montajes-o { fill: var(--flag); }
+                .ejflu13-montajes-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+                .ejflu13-montajes-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+                .ejflu13-montajes-tubo { stroke: var(--ink); stroke-width: 1.8; fill: none; stroke-linejoin: round; }
+                .ejflu13-montajes-fino { stroke: var(--ink); stroke-width: 1.3; fill: none; stroke-linejoin: round; }
+                .ejflu13-montajes-agua { fill: var(--d1); fill-opacity: .14; stroke: none; }
+                .ejflu13-montajes-col { fill: var(--d1); fill-opacity: .38; stroke: none; }
+                .ejflu13-montajes-nivel { stroke: var(--d1); stroke-width: 1.6; fill: none; }
+                .ejflu13-montajes-guia { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 4 3; }
+                .ejflu13-montajes-cota { stroke: var(--faint); stroke-width: 1.1; fill: none; }
+                .ejflu13-montajes-flujo { stroke: var(--live); stroke-width: 1.8; fill: none; }
+                .ejflu13-montajes-aire { stroke: var(--faint); stroke-width: 1.2; fill: none; stroke-dasharray: 2 3; }
+                .ejflu13-montajes-agujero { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
+            </style>
+            <path class="ejflu13-montajes-agua" d="M6 170L200 170L200 210L6 210Z"/>
+            <path class="ejflu13-montajes-tubo" d="M6 170L200 170"/>
+            <path class="ejflu13-montajes-tubo" d="M6 210L200 210"/>
+            <path class="ejflu13-montajes-flujo" d="M12 190L40 190"/>
+            <path class="ejflu13-montajes-punta" fill="var(--live)" d="M40 190L33.6 187.1L33.6 192.9Z"/>
+            <rect class="ejflu13-montajes-col" x="72" y="104" width="8" height="66"/>
+            <path class="ejflu13-montajes-nivel" d="M69 104L83 104"/>
+            <path class="ejflu13-montajes-tubo" d="M72 34L72 170"/>
+            <path class="ejflu13-montajes-tubo" d="M80 34L80 170"/>
+            <path class="ejflu13-montajes-tubo" d="M128 34L128 194L76 194"/>
+            <path class="ejflu13-montajes-tubo" d="M120 34L120 186L76 186"/>
+            <rect class="ejflu13-montajes-col" x="120" y="64" width="8" height="106"/>
+            <path class="ejflu13-montajes-nivel" d="M117 64L131 64"/>
+            <path class="ejflu13-montajes-guia" d="M76 172L76 208"/>
+            <path class="ejflu13-montajes-guia" d="M66 104L144 104"/>
+            <path class="ejflu13-montajes-cota" d="M140 84L140 64"/>
+            <path class="ejflu13-montajes-punta" fill="var(--faint)" d="M140 64L138 68.6L142 68.6Z"/>
+            <path class="ejflu13-montajes-cota" d="M140 84L140 104"/>
+            <path class="ejflu13-montajes-punta" fill="var(--faint)" d="M140 104L142 99.4L138 99.4Z"/>
+            <text class="ejflu13-montajes-l" x="146" y="88" text-anchor="start" fill="var(--d1)">v²/2g</text>
+            <text class="ejflu13-montajes-l" x="68" y="24" text-anchor="middle" fill="var(--ink)">piezómetro</text>
+            <text class="ejflu13-montajes-l" x="134" y="24" text-anchor="start" fill="var(--ink)">Pitot</text>
+            <text class="ejflu13-montajes-l" x="76" y="230" text-anchor="middle" fill="var(--faint)">estática</text>
+            <text class="ejflu13-montajes-l" x="142" y="230" text-anchor="middle" fill="var(--d1)">total</text>
+            <text class="ejflu13-montajes-l" x="8" y="268" text-anchor="start" fill="var(--live)">práctica 10: tubería</text>
+            <path class="ejflu13-montajes-tubo" d="M214 52L238 52L262 62"/>
+            <path class="ejflu13-montajes-tubo" d="M214 88L238 88L262 78"/>
+            <path class="ejflu13-montajes-aire" d="M264 65L412 65"/>
+            <path class="ejflu13-montajes-aire" d="M264 70L412 70"/>
+            <path class="ejflu13-montajes-aire" d="M264 75L412 75"/>
+            <path class="ejflu13-montajes-flujo" d="M218 70L246 70"/>
+            <path class="ejflu13-montajes-punta" fill="var(--live)" d="M246 70L239.6 67.1L239.6 72.9Z"/>
+            <text class="ejflu13-montajes-n" x="268" y="54" text-anchor="start" fill="var(--faint)">aire a la atmósfera</text>
+            <path class="ejflu13-montajes-tubo" d="M282 66L304 66L304 232"/>
+            <path class="ejflu13-montajes-tubo" d="M282 74L296 74L296 232"/>
+            <path class="ejflu13-montajes-tubo" d="M352 112L352 232"/>
+            <path class="ejflu13-montajes-tubo" d="M360 112L360 240"/>
+            <path class="ejflu13-montajes-tubo" d="M296 232L296 240L360 240"/>
+            <path class="ejflu13-montajes-tubo" d="M304 232L352 232"/>
+            <rect class="ejflu13-montajes-col" x="296" y="188" width="8" height="52"/>
+            <rect class="ejflu13-montajes-col" x="304" y="232" width="48" height="8"/>
+            <rect class="ejflu13-montajes-col" x="352" y="148" width="8" height="92"/>
+            <path class="ejflu13-montajes-nivel" d="M293 188L307 188"/>
+            <path class="ejflu13-montajes-nivel" d="M349 148L363 148"/>
+            <path class="ejflu13-montajes-guia" d="M307 188L380 188"/>
+            <path class="ejflu13-montajes-guia" d="M363 148L380 148"/>
+            <path class="ejflu13-montajes-cota" d="M376 168L376 148"/>
+            <path class="ejflu13-montajes-punta" fill="var(--faint)" d="M376 148L374 152.6L378 152.6Z"/>
+            <path class="ejflu13-montajes-cota" d="M376 168L376 188"/>
+            <path class="ejflu13-montajes-punta" fill="var(--faint)" d="M376 188L378 183.4L374 183.4Z"/>
+            <text class="ejflu13-montajes-l" x="382" y="164" text-anchor="start" fill="var(--ink)">R</text>
+            <text class="ejflu13-montajes-n" x="382" y="178" text-anchor="start" fill="var(--faint)">25 mm</text>
+            <text class="ejflu13-montajes-n" x="356" y="104" text-anchor="middle" fill="var(--faint)">abierta</text>
+            <text class="ejflu13-montajes-l" x="290" y="100" text-anchor="end" fill="var(--ink)">Pitot</text>
+            <text class="ejflu13-montajes-l" x="290" y="114" text-anchor="end" fill="var(--d1)">total</text>
+            <text class="ejflu13-montajes-l" x="356" y="90" text-anchor="middle" fill="var(--faint)">estática</text>
+            <text class="ejflu13-montajes-l" x="222" y="268" text-anchor="start" fill="var(--live)">práctica 11: chorro</text>
+            <text class="ejflu13-montajes-n" x="222" y="140" text-anchor="start" fill="var(--faint)">+ barómetro</text>
+            <text class="ejflu13-montajes-n" x="222" y="153" text-anchor="start" fill="var(--faint)">+ termómetro</text>
+          </svg>
+
+      - tipo: calcular
+        titulo: La densidad del aire
+        pregunta: |
+          b) ¿Qué densidad tiene el aire del laboratorio, con 1013 mbar y
+          20 °C?
+        respuesta:
+          tipo: magnitud
+          valor: '1.204 kg/m3'
+          tolerancia: 0.01
+          formato: una densidad, con su unidad
+        distractores:
+          - valor: '17.65 kg/m3'
+            mensaje: |
+              Has puesto la temperatura en grados Celsius. La ecuación de
+              los gases va con la temperatura absoluta: 20 °C son
+              $293{,}15\ \text{K}$.
+          - valor: '0.01204 kg/m3'
+            mensaje: |
+              Has dejado la presión en milibares. Para que las unidades
+              cierren con $287$ J/(kg·K) va en pascales:
+              $1013\ \text{mbar} = 101\,300\ \text{Pa}$.
+        pista: |
+          ρ = p / (R·T), con p en Pa y T en K.
+        desarrollo: |
+          $$
+          \rho_{\text{aire}} = \frac{p}{R_{\text{aire}}\,T}
+          = \frac{101\,300}{287\cdot293{,}15} = 1{,}204\ \text{kg/m}^{3}
+          $$
+
+      - tipo: calcular
+        titulo: La velocidad del chorro
+        pregunta: |
+          b) ¿A qué velocidad sale el aire?
+        respuesta:
+          tipo: magnitud
+          valor: '20.17 m/s'
+          tolerancia: 0.02
+          formato: una velocidad, con su unidad
+        distractores:
+          - valor: '0.7004 m/s'
+            mensaje: |
+              Es $\sqrt{2gR}$ con los $25\ \text{mm}$ tal cual, como si la
+              columna fuera del propio aire. Es de agua, y el agua pesa unas
+              830 veces más: la presión que mide vale 830 veces más columna de
+              aire.
+          - valor: '5.225 m/s'
+            mensaje: |
+              Viene de una densidad del aire calculada con la temperatura en
+              grados Celsius. En kelvin, 20 °C son $293{,}15\ \text{K}$, y la
+              densidad baja a $1{,}204\ \text{kg/m}^{3}$.
+          - valor: '201.8 m/s'
+            mensaje: |
+              Viene de una densidad cien veces menor, la de dejar la
+              presión en milibares. Con $101\,300\ \text{Pa}$ sale
+              $1{,}204\ \text{kg/m}^{3}$.
+        pista: |
+          v = √(2·g·R·(ρ_agua/ρ_aire − 1)), con R = 0,025 m.
+        desarrollo: |
+          $$
+          \frac{\rho_{\text{agua}}}{\rho_{\text{aire}}} - 1
+          = \frac{1000}{1{,}204} - 1 = 829{,}5
+          $$
+          $$
+          v = \sqrt{2gR\left(\frac{\rho_{\text{agua}}}{\rho_{\text{aire}}}-1\right)}
+          = \sqrt{2\cdot9{,}81\cdot0{,}025\cdot829{,}5} = 20{,}17\ \text{m/s}
+          $$
+
+      - tipo: justificar
+        pregunta: |
+          c) Ordena la explicación. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              En la tubería, la presión estática del agua es la que imponga
+              la instalación, mayor o menor que la atmosférica, y hay que
+              medirla en la misma sección que el Pitot, con un piezómetro o
+              un tubo estático.
+          - texto: >-
+              En el chorro libre, a la salida de la tobera, las líneas de
+              corriente son paralelas y la presión en todo el chorro es la
+              atmosférica.
+          - texto: >-
+              Así que la rama abierta de la U hace de toma estática: el
+              manómetro compara la total del Pitot con la atmosférica, y eso
+              es la dinámica.
+          - texto: >-
+              La velocidad sale de
+              $v = \sqrt{2gR\,(\rho_{\text{agua}}/\rho_{\text{aire}}-1)}$,
+              con la densidad del aire del barómetro y el termómetro:
+              $20{,}17\ \text{m/s}$.
+          - texto: >-
+              Y por la misma razón, en la tubería también bastaría abrir la
+              otra rama a la atmósfera: el agua que circula está a la presión
+              atmosférica.
+            trampa: true
+            mensaje: |
+              El agua de una tubería está a la presión que le dé la
+              instalación —la bomba, el depósito, las pérdidas—, y casi
+              nunca es la atmosférica. Solo un chorro que ya ha salido al
+              aire está a la presión de fuera. Por eso la práctica 10 lleva
+              piezómetro y la 11 no.
+
+    resolucion: |
+      **a) Los montajes.** En los dos, el Pitot entra en el conducto y abre
+      su boca de cara al fluido que llega: marca la presión **total**. Lo que
+      cambia es de dónde sale la **estática**:
+
+      - en la tubería de la práctica 10, de un piezómetro enrasado en la
+        pared en la misma sección, y la diferencia de niveles entre los dos
+        tubos es la altura cinética, $v^{2}/2g$, con el Pitot más alto;
+      - en el chorro de la práctica 11, de la atmósfera, por la rama abierta
+        de la U. El agua baja en la rama del Pitot y sube en la abierta.
+
+      **b) La densidad del aire**, con la temperatura absoluta y la presión
+      en pascales:
+
+      $$
+      \rho_{\text{aire}} = \frac{101\,300}{287\cdot293{,}15} = 1{,}204\ \text{kg/m}^{3}
+      $$
+
+      **La velocidad.** El manómetro compara dos presiones de aire con una
+      columna de agua, así que el factor es el de las dos densidades:
+
+      $$
+      \frac{v^{2}}{2g} = R\left(\frac{\rho_{\text{agua}}}{\rho_{\text{aire}}}-1\right)
+      \quad\Longrightarrow\quad
+      v = \sqrt{2\cdot9{,}81\cdot0{,}025\cdot829{,}5} = 20{,}17\ \text{m/s}
+      $$
+
+      Aquí el $-1$ no pesa nada: quitarlo cambia la velocidad un 0,06 %. Lo
+      que sí pesa es la densidad del aire, y por eso el guion pide barómetro
+      y termómetro.
+
+      **c) Por qué basta un Pitot.** Un chorro que ha salido al aire tiene la
+      presión estática de la atmósfera, y la rama abierta de la U la recoge.
+      En una tubería no: su presión la fija la instalación, y hay que
+      medirla aparte, en la misma sección que el Pitot.
+
+      > **El mismo razonamiento, en el examen.** En un esquema, lo primero es
+      > mirar hacia dónde abre cada toma: la que mira al flujo marca la
+      > total; la que está en la pared o abre de costado, la estática. Y si
+      > una toma no se ve porque el manómetro tiene una rama abierta, mira si
+      > el fluido está al aire libre en esa sección.

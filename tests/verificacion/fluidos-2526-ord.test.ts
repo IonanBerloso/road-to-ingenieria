@@ -2,8 +2,8 @@
  * La ordinaria de Mecánica de Fluidos de 2025-2026, que es la última
  * convocatoria del corpus y la que cierra este pase.
  *
- * Veinte respuestas en ocho ejercicios, y una decisión de método que conviene
- * dejar dicha: en el ejercicio 1 los tres resultados se recalculan **en
+ * Veintitrés respuestas en los nueve ejercicios, y una decisión de método que
+ * conviene dejar dicha: en el ejercicio 1 los tres resultados se recalculan **en
  * pascales** y se comparan contra los kg/cm² y los bar que publica el corpus,
  * en vez de convertirlos aquí. La conversión la hace el mismo comparador que
  * corrige al alumno en la página, así que si la tabla de unidades se
@@ -14,6 +14,14 @@
  * cuenta y la tenía en el propio enunciado, en el aviso de que cada fallo
  * resta lo que suma un acierto. De ahí sale lo más útil del ejercicio, que es
  * cuándo compensa dejar un hueco en blanco.
+ *
+ * El 4 salió de `fuera` el 29 de septiembre de 2026 por lo mismo, un escalón
+ * más abajo: se daba por irreproducible leyendo como estática una toma que es
+ * un Pitot. Aquí se recalcula en pascales, con ρ y γ por separado, y no en
+ * columnas como la resolución: la ecuación es la misma —no hay otra, porque
+ * la máquina T/B no se conoce—, pero las conversiones de kg/cm² y de mca van
+ * por otro lado. Y se comprueba de paso que la lectura equivocada cae fuera
+ * de la tolerancia publicada.
  */
 import { describe, it } from 'vitest';
 import { coeficienteHW } from './tablas';
@@ -79,17 +87,17 @@ describe('2 · elegir la bomba entre tres', () => {
   it('la bomba 3 se planta en 16,55 l/s', () =>
     cuadra.magnitud(id, 'El caudal con la bomba 3', raiz((Q) => bomba3(Q) - instalacion(Q), 5, 40), 'l/s'));
 
-  /* El enunciado da el punto de la bomba 2 —15,81 l/s— y aquí se usa tal cual,
-     porque es un dato del enunciado y no un resultado. Rehacerlo con la tabla
-     da 15,71, un 0,6 % de diferencia que es la precisión con la que se leen
-     estas curvas. */
-  const puntoB2 = 15.81;
+  /* El punto de la bomba 2 se rehace con la tabla: 15,71 l/s, el que da la
+     pregunta del paso. Hasta el 30 de septiembre de 2026 la pregunta decía
+     15,81 y este test lo tomaba por un dato del enunciado; no lo es —el
+     cuadernillo no lo imprime— y era el punto con C = 150, el coeficiente que
+     la resolución descarta. */
+  const puntoB2 = raiz((Q) => 83 - 0.155 * Q * Q - instalacion(Q), 5, 40);
   const npshDisponible = (Q: number) => 10 - 0.2 - 5 - hazenWilliams(100, Q / 1000, 0.15, C);
 
   it('y la bomba 2 solo dispone de 4,27 mca de NPSH', () => {
-    const rehecho = raiz((Q) => 83 - 0.155 * Q * Q - instalacion(Q), 5, 40);
-    if (Math.abs(rehecho / puntoB2 - 1) > 0.01)
-      throw new Error(`el punto de la bomba 2 sale ${rehecho}, y el enunciado dice ${puntoB2}`);
+    if (Math.abs(puntoB2 - 15.71) > 0.05)
+      throw new Error(`el punto de la bomba 2 sale ${puntoB2}, y la pregunta del paso dice 15,71`);
     cuadra.magnitud(id, 'El NPSH disponible de la bomba 2', npshDisponible(puntoB2), 'mca');
   });
 
@@ -127,6 +135,51 @@ describe('3 · el globo aerostático', () => {
     const densidadDentro = densidad - carga / 4000;
     if (!(densidadDentro < densidad)) throw new Error('el aire de dentro tiene que pesar menos, o no sube');
     cuadra(id, 'La temperatura del aire interior', p / (287 * densidadDentro) - 273.15);
+  });
+});
+
+describe('4 · el depósito y sus dos sondas', () => {
+  const id = 'exflu2526-ord-4-el-deposito-y-sus-dos-sondas';
+  const KGCM2 = 10 * GAMMA; // 1 kg/cm² son 10 m de columna de agua
+  const rho1 = 1.5 * 1000;
+  const gamma1 = 1.5 * GAMMA;
+  const [pA, pB] = [0.1 * KGCM2, 0.8 * KGCM2];
+  const [h1, k, a] = [0.5, 3, 0.1];
+  const perdida = 0.24 * GAMMA; // Pa: los mca son de agua
+  /* El caudal lo fija el chorro, con el Cc en el área. */
+  const Q = 0.6 * area(0.05) * 10;
+  const v1 = Q / area(0.1);
+  const v2 = Q / area(0.2);
+
+  it('los 0,24 mca del tramo son 0,16 m del fluido', () =>
+    /* Un mca es una columna de agua: la misma presión en pascales, dividida
+       por el peso específico del fluido que circula. */
+    cuadra.magnitud(id, 'La pérdida del tramo, en columna del fluido', perdida / gamma1, 'm'));
+
+  it('el depósito tiene 5,67 m de fluido sobre el eje de D1', () => {
+    /* La sonda B es un Pitot: bajo el aire de su cámara sostiene la columna
+       h1, así que en su boca hay la presión de estancamiento. La estática del
+       eje es esa menos la dinámica, y el balance de energía se escribe en
+       pascales de la lámina a la boca. */
+    const estancamiento = pB + gamma1 * h1;
+    const estatica = estancamiento - (rho1 * v1 * v1) / 2;
+    const H = (estatica + (rho1 * v1 * v1) / 2 + (k * rho1 * v1 * v1) / 2 + perdida - pA) / gamma1;
+    /* Y la lectura que tuvo el ejercicio fuera: tomar la sonda por estática
+       suma otra vez la dinámica. Tiene que quedar fuera de la tolerancia, o
+       el distractor no distinguiría nada. */
+    const comoEstatica = (estancamiento + (rho1 * v1 * v1) / 2 + (k * rho1 * v1 * v1) / 2 + perdida - pA) / gamma1;
+    if (!(comoEstatica / H - 1 > 0.01)) throw new Error('leer B como estática debería apartarse más del 1 %');
+    cuadra.magnitud(id, 'La altura del fluido en el depósito', H, 'm');
+  });
+
+  it('y el líquido manométrico tiene s = 1,61', () => {
+    /* El tubo de Prandtl de D2 pone en la U la diferencia entre estancamiento
+       y estática, ρ1·v2²/2, y la U la equilibra con la diferencia de
+       densidades porque la otra rama está llena del fluido que circula. */
+    const dinamica = (rho1 * v2 * v2) / 2;
+    const rhoM = rho1 + dinamica / (G * a);
+    if (!(rhoM > rho1)) throw new Error('el líquido manométrico tiene que pesar más que el que circula');
+    cuadra(id, 'La densidad relativa del líquido manométrico', rhoM / 1000);
   });
 });
 
