@@ -51,6 +51,7 @@ import {
   apice,
   cambioPlano,
   poligonoRegular,
+  puntoATresDistancias,
   corteRectaPlano,
   cuadradoPorDiagonal,
   distanciaRectas,
@@ -549,6 +550,34 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
       const h = comoNum(n.altura, 'apice(altura:)');
       if (n.sentido) return { k: 'p3', v: apice(vs, h, lado(n.sentido, 'apice(sentido:)')) };
       return eleccion(e, 'apice()', [1, -1].map((l) => ({ k: 'p3', v: apice(vs, h, l as 1 | -1) })));
+    },
+  },
+  /* El extremo común de tres varillas fijas en tres puntos, con sus
+     longitudes (SD23): `punto_a_tres_distancias(A, mm(40), B, mm(70), C,
+     mm(60), sentido: descendente)`. Sin sentido, las dos soluciones, una a
+     cada lado del plano de los tres puntos, son una elección; si coinciden,
+     es un punto. */
+  punto_a_tres_distancias: {
+    posicion: 6,
+    nombres: { sentido: 'opcional' },
+    hace: ([A, dA, B, dB, C, dC], n, e) => {
+      const q = 'punto_a_tres_distancias()';
+      const una = (l: 1 | -1) => ({
+        k: 'p3' as const,
+        v: puntoATresDistancias(
+          comoP3(A, `${q} (el primer punto)`),
+          comoNum(dA, `${q} (la distancia al primero)`),
+          comoP3(B, `${q} (el segundo punto)`),
+          comoNum(dB, `${q} (la distancia al segundo)`),
+          comoP3(C, `${q} (el tercer punto)`),
+          comoNum(dC, `${q} (la distancia al tercero)`),
+          l,
+        ),
+      });
+      if (n.sentido) return una(lado(n.sentido, 'punto_a_tres_distancias(sentido:)'));
+      const [sube, baja] = [una(1), una(-1)];
+      if (vmDe(sube.v, baja.v) <= TOL_VERTICAL) return sube;
+      return eleccion(e, q, [sube, baja]);
     },
   },
   /* ── la construcción paso a paso: lo que se traza con el compás ── */

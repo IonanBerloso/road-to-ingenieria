@@ -309,6 +309,33 @@ type Paso = EjercicioConReceta['pasos'][number];
 const esConstruir = (p: Paso): p is PasoConstruir => p.tipo === 'construir';
 const esCalcular = (p: Paso): p is PasoCalcular => p.tipo === 'calcular';
 
+/* Un objetivo encima de un punto dado de la lámina no se puede marcar: el
+   imán del Taller engancha antes que nada los puntos, a 1,4 veces su radio de
+   11 px (`ENGANCHE_PX`), y uno dado no se deja marcar. Con la lámina al
+   máximo —1,7 px por pt, `data-ancho-max`— y la lupa a ×4, ese alcance es
+   1,4 · 11 / 6,8 ≈ 2,3 pt: más cerca, no hay manera. El guardián de talleres
+   no lo ve, porque esos puntos los crea por su puerta de pruebas (k-l-e2, 1
+   de octubre de 2026). Basta con que cada rama tenga una posición libre. */
+const PEGADO_A_UN_DADO = (1.4 * 11) / (1.7 * 4);
+
+function compruebaMarcables(c: ConstruirResuelto, d: DatosLamina): void {
+  const dados = Object.entries(d.puntos).filter(([, p]) => p.marca !== undefined);
+  if (dados.length === 0) return;
+  const masCerca = (q: P2) =>
+    dados.map(([n, p]) => ({ n, d: Math.hypot(p.x - q[0], p.y - q[1]) })).reduce((a, b) => (b.d < a.d ? b : a));
+  for (const o of c.objetivos) {
+    o.es.ramas.forEach((rama, i) => {
+      const cercas = rama.map(masCerca);
+      if (cercas.length === 0 || cercas.some((x) => x.d >= PEGADO_A_UN_DADO)) return;
+      const { n, d: dist } = cercas[0];
+      const cual = o.es.ramas.length > 1 ? `, en su rama ${i + 1},` : '';
+      throw new Error(
+        `objetivo «${o.nombre}»${cual} cae a ${(dist * PT_MM).toFixed(2)} mm del punto dado ${n} de la lámina: el Taller engancha el punto dado y no deja marcar el objetivo, ni con la lupa`,
+      );
+    });
+  }
+}
+
 /** Las cifras de un `calcular` con lo que son, para decirlo al fallar. */
 const cifrasDe = (p: PasoCalcular) => [
   { que: 'la respuesta', c: p.respuesta },
@@ -344,7 +371,9 @@ export function resuelveEjercicio(e: EjercicioConReceta, datosLamina: DatosLamin
     const donde = `${e.id}, paso ${i + 1}`;
     if (esConstruir(p)) {
       try {
-        resueltos.set(i, resuelveConstruir(p, lamina, r));
+        const c = resuelveConstruir(p, lamina, r);
+        compruebaMarcables(c, datosLamina);
+        resueltos.set(i, c);
       } catch (err) {
         throw new Error(`${donde}: ${(err as Error).message}`);
       }

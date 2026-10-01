@@ -675,3 +675,38 @@ export function poligonoRegular(pl: Plano, centro: P3, vertice: P3, lados: numbe
   const eje: Recta3 = { p: centro, d: normalQueSube(pl) };
   return Array.from({ length: lados }, (_, k) => gira(vertice, eje, (360 * k) / lados));
 }
+
+/* ─────── el lote 1 de la fase K: el punto a tres distancias (SD23) ─────── */
+
+/**
+ * El punto que está a `dA`, `dB` y `dC` pt de A, B y C: el extremo común de
+ * tres varillas fijas en esos puntos (SD23, el Ejercicio 18 de la colección).
+ * Las tres esferas se cortan en dos puntos, simétricos respecto al plano ABC;
+ * `lado` 1 da el que queda hacia donde sube ese plano (`normalQueSube`), −1 el
+ * otro. Si las varillas solo se tocan en el plano, los dos coinciden. Si no
+ * llegan a juntarse, o si A, B y C están alineados, lanza.
+ */
+export function puntoATresDistancias(A: P3, dA: number, B: P3, dB: number, C: P3, dC: number, lado: 1 | -1): P3 {
+  for (const [d, n] of [[dA, 'A'], [dB, 'B'], [dC, 'C']] as const) {
+    if (!(d > 0)) throw new Error(`la distancia a ${n} tiene que ser positiva`);
+  }
+  const pl = plano(A, B, C);
+  // Ejes en el plano ABC: x de A hacia B, y hacia C.
+  const ex = unitario3(resta(B, A));
+  const AC = resta(C, A);
+  const i = escalar(ex, AC);
+  const ey = unitario3(resta(AC, por(ex, i)));
+  const j = escalar(ey, AC);
+  const d = vm(A, B);
+  const x = (dA * dA - dB * dB + d * d) / (2 * d);
+  const y = (dA * dA - dC * dC + i * i + j * j) / (2 * j) - (i / j) * x;
+  // z² es lo que le sobra a la varilla de A sobre su pie en el plano; esa
+  // potencia es la misma para las tres, y si es negativa no llegan.
+  const z2 = dA * dA - x * x - y * y;
+  if (z2 < 0) {
+    const falta = Math.sqrt(Math.min(dA, dB, dC) ** 2 - z2) - Math.min(dA, dB, dC);
+    if (falta > TOL_VERTICAL) throw new Error(`las tres distancias no se alcanzan: les faltan ${(falta * PT_MM).toFixed(2)} mm para juntarse`);
+  }
+  const pie = suma(A, suma(por(ex, x), por(ey, y)));
+  return suma(pie, por(normalQueSube(pl), lado * Math.sqrt(Math.max(0, z2))));
+}

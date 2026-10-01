@@ -630,6 +630,1988 @@ ejercicios:
       **La comprobación.** Los seis caminos dan los mismos tres lados. Si dos métodos tuyos no
       coinciden en un lado, uno de los dos está mal construido.
 
+  - id: sd16-las-otras-dos-palas-del-molino
+    titulo: Las otras dos palas del molino
+    fuente: Ejercicio 13 (SD16) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: «120º» tal cual, con la «o» volada de la página (como el «60º»
+    # de la hoja 53): quiere decir grados.
+    enunciado: |
+      El trapecio ABCD representa una de las tres palas de un molino de viento. Representar las otras
+      dos palas sabiendo que el conjunto gira 120º alrededor del eje OP.
+
+      **Notas nuestras.** La figura es la de la colección, a escala 1:1. Arriba, el alzado de la pala:
+      A₂B₂ y C₂D₂ son horizontales, B₂C₂ es oblicuo, y A₂D₂ es vertical y sigue hacia abajo hasta la
+      cruz O₂ ≡ P₂, que es el eje OP visto de punta. Abajo, la planta: la pala se ve como el segmento
+      A₁B₁, con C₁ en él y A₁ ≡ D₁ ≡ O₁ en su extremo izquierdo, y el eje como una recta de trazo y
+      punto que sube desde O₁ por P₁. Llamamos A′B′C′D′ y A″B″C″D″ a las otras dos palas; esos
+      nombres son nuestros. El enunciado solo pide dibujar: la pregunta del radio del giro de B
+      también es nuestra.
+    pide: Las otras dos palas en el alzado y en la planta; y, como pregunta nuestra, el radio de la circunferencia que recorre la punta B al girar.
+    receta:
+      lamina: sd16
+      escena:
+        O: 'punto3(alzado: figura.punto("O2"), planta: figura.punto("O1"))'
+        P: 'punto3(alzado: figura.punto("P2"), planta: figura.punto("P1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        # El eje, de O hacia P: hacia el plano vertical, porque P₁ está por encima
+        # de O₁ en la planta (menos alejamiento).
+        ejeOP: segmento3(O, P)
+      solucion:
+        # Decisión: el enunciado pide las dos palas y no fija cuál es cuál. Llamamos
+        # A′B′C′D′ a la que sale de girar ABCD 120° en sentido antihorario visto de
+        # frente, en el alzado, y A″B″C″D″ a la de 120° en sentido horario, que es
+        # también la segunda girada otros 120° en el mismo sentido: el «conjunto
+        # gira 120°» lleva cada pala al sitio de la siguiente. Lo dice el intro de
+        # cada paso. `gira` sin sentido da los dos giros como una elección, y su
+        # rama 1 es el del ángulo con su signo, que alrededor de un eje orientado
+        # de O hacia P (hacia el plano vertical) es el antihorario del alzado. Lo
+        # comprueba el segundo camino, que gira el alzado en el papel alrededor de
+        # O₂ sin pasar por el espacio.
+        Ap: 'rama(gira(A, ejeOP, angulo: 120), 1)'
+        Bp: 'rama(gira(B, ejeOP, angulo: 120), 1)'
+        Cp: 'rama(gira(C, ejeOP, angulo: 120), 1)'
+        Dp: 'rama(gira(D, ejeOP, angulo: 120), 1)'
+        App: 'rama(gira(A, ejeOP, angulo: 120), 2)'
+        Bpp: 'rama(gira(B, ejeOP, angulo: 120), 2)'
+        Cpp: 'rama(gira(C, ejeOP, angulo: 120), 2)'
+        Dpp: 'rama(gira(D, ejeOP, angulo: 120), 2)'
+        # Errores, para los ejemplos de los diagnósticos. Girar 60°: la recta de
+        # 30° del cartabón trazada por encima de la horizontal y no por debajo.
+        A60: 'rama(gira(A, ejeOP, angulo: 60), 1)'
+        A60h: 'rama(gira(A, ejeOP, angulo: 60), 2)'
+        # Un punto de la circunferencia de cada vértice que no es el bueno: a 90°
+        # en sentido antihorario y a 140° en el horario (a 90° se saldría del
+        # encuadre por la derecha).
+        A90: 'rama(gira(A, ejeOP, angulo: 90), 1)'
+        A140h: 'rama(gira(A, ejeOP, angulo: 140), 2)'
+        B90: 'rama(gira(B, ejeOP, angulo: 90), 1)'
+        B140h: 'rama(gira(B, ejeOP, angulo: 140), 2)'
+        C90: 'rama(gira(C, ejeOP, angulo: 90), 1)'
+        C140h: 'rama(gira(C, ejeOP, angulo: 140), 2)'
+        D90: 'rama(gira(D, ejeOP, angulo: 90), 1)'
+        D140h: 'rama(gira(D, ejeOP, angulo: 140), 2)'
+        # Girar también la planta, alrededor de O₁, como si el eje fuera vertical.
+        # A está en la vertical de O (A₁ ≡ O₁), así que OA es un eje vertical; su
+        # rama 2 es el giro antihorario visto en la planta.
+        ejeV: segmento3(O, A)
+        Bv: 'rama(gira(B, ejeV, angulo: 120), 2)'
+        Cv: 'rama(gira(C, ejeV, angulo: 120), 2)'
+        # El radio del giro de B: su distancia al eje, desde el pie de la
+        # perpendicular. Con el eje de punta se ve entera en el alzado, O₂B₂.
+        radio_B_mm: en_mm(vm(B, pie_perpendicular(B, recta3(O, P))))
+        # Los extremos de las rectas largas de la construcción paso a paso: en el
+        # papel se trazan más allá del punto que van a dar, y no paran en él.
+        L_OA: 'uno(medir_sobre(segmento2(figura.punto("O2"), proy_alzado(Ap)), desde: figura.punto("O2"), distancia: vm_alzado(O, A) + mm(8)), 1)'
+        L_AB: 'uno(medir_sobre(segmento2(proy_alzado(Ap), proy_alzado(Bp)), desde: proy_alzado(Ap), distancia: vm_alzado(A, B) + mm(8)), 1)'
+        L_DC: 'uno(medir_sobre(segmento2(proy_alzado(Dp), proy_alzado(Cp)), desde: proy_alzado(Dp), distancia: vm_alzado(D, C) + mm(8)), 1)'
+        L_OApp: 'uno(medir_sobre(segmento2(figura.punto("O2"), proy_alzado(App)), desde: figura.punto("O2"), distancia: vm_alzado(O, A) + mm(8)), 1)'
+        L_ABpp: 'uno(medir_sobre(segmento2(proy_alzado(App), proy_alzado(Bpp)), desde: proy_alzado(App), distancia: vm_alzado(A, B) + mm(8)), 1)'
+        L_DCpp: 'uno(medir_sobre(segmento2(proy_alzado(Dpp), proy_alzado(Cpp)), desde: proy_alzado(Dpp), distancia: vm_alzado(D, C) + mm(8)), 1)'
+      comprueba:
+        # O está en la recta AD: la pala arranca del eje.
+        - en_recta(O, recta3(A, D))
+    pasos:
+      - tipo: reconocer
+        pregunta: El eje OP es de punta, O₂ ≡ P₂. Al girar la pala alrededor de él, ¿qué se conserva de cada punto?
+        opciones:
+          - texto: Su alejamiento; en el alzado gira alrededor de O₂, y en la planta se mueve en horizontal
+            correcta: true
+            mensaje: |
+              Eso es. Cada punto gira en un plano perpendicular al eje, y con el eje de punta ese
+              plano es frontal: el alzado recorre una circunferencia de centro O₂ en verdadera
+              magnitud, y la distancia al plano vertical no cambia.
+          - texto: Su cota; en la planta gira alrededor de O₁, y en el alzado se mueve en horizontal
+            mensaje: |
+              Esa es la regla del eje **vertical**. Este es de punta: lo ves como un punto en el
+              alzado, O₂ ≡ P₂, y en la planta es la recta de trazo y punto. La vista donde el eje es
+              un punto es la que gira.
+          - texto: Su distancia a O; las dos proyecciones giran 120°, la planta alrededor de O₁ y el alzado alrededor de O₂
+            mensaje: |
+              Solo gira la vista donde el eje es un punto. En la planta el eje es una recta, y
+              los puntos no giran alrededor de O₁: se mueven en horizontal, porque su alejamiento
+              no cambia.
+
+      # Decisión: dos pasos construir, uno por pala, de ocho puntos cada uno (sus
+      # cuatro vértices en las dos vistas). Las dos salen de ABCD y no dependen
+      # una de otra, así que el segundo paso no obliga a rehacer el primero.
+      - tipo: construir
+        titulo: La segunda pala, girada 120° en sentido antihorario
+        intro: |
+          El eje OP es de punta: en el alzado es el punto O₂ ≡ P₂, y cada punto de la pala gira
+          alrededor de él sin cambiar de alejamiento. Aquí, A′B′C′D′ es la pala que sale de girar
+          ABCD 120° en sentido **antihorario visto de frente**, en el alzado; la del sentido horario
+          es la del paso siguiente. Marca sus cuatro vértices en las dos vistas.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A2p
+            rotulo: A₂′
+            pide: la punta A de la segunda pala, en el alzado
+            es: proy_alzado(solucion.Ap)
+            bien: |
+              A₂′ está en la circunferencia de centro O₂ que pasa por A₂, 120° más allá en sentido
+              antihorario: la recta O₂A₂′ baja 30° por debajo de la horizontal, hacia la izquierda.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.App))
+                mensaje: |
+                  Esa es la otra pala, la del giro **horario**: la construyes en el paso siguiente.
+                  Aquí va la del antihorario: de A₂, arriba, gira hacia la izquierda.
+                ejemplo: proy_alzado(solucion.App)
+              - si: cerca_de(proy_alzado(solucion.A60))
+                mensaje: |
+                  Has girado **60°**, no 120°: la recta de 30° del cartabón va por debajo de la
+                  horizontal, no por encima. Desde la vertical que sube, 90° llevan a la horizontal,
+                  y 30° más la bajan.
+                ejemplo: proy_alzado(solucion.A60)
+              - si: en_horizontal_de(figura.punto("A2"))
+                mensaje: |
+                  Has dejado A a su altura, y eso es lo que pasa con un eje **vertical**. Este es de
+                  punta: lo que no cambia es el alejamiento, y en el alzado A₂ gira alrededor de O₂.
+                ejemplo: 'desplaza(figura.punto("A2"), dx: mm(-20))'
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, A))'
+                mensaje: |
+                  Estás en la circunferencia de centro O₂ que pasa por A₂, pero no a 120°. Desde la
+                  vertical que sube hasta A₂, en sentido antihorario: la recta de 30° por debajo de la
+                  horizontal, hacia la izquierda.
+                ejemplo: proy_alzado(solucion.A90)
+              - si: siempre
+                mensaje: |
+                  A₂′ tiene que quedar a la misma distancia de O₂ que A₂: en un giro de eje de punta,
+                  el alzado de cada punto recorre una circunferencia de centro O₂. Pincha el compás
+                  en O₂ y ábrelo hasta A₂.
+          - nombre: D2p
+            rotulo: D₂′
+            pide: el vértice D de la segunda pala, en el alzado
+            es: proy_alzado(solucion.Dp)
+            bien: |
+              D₂′ está en la misma recta que A₂′, a la distancia de O₂ a la que estaba D₂: A, D y O
+              están alineados, y siguen alineados después del giro.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Dpp))
+                mensaje: |
+                  Ese es D en la otra pala, la del giro horario. Esta pala sale hacia la izquierda,
+                  como A₂′.
+                ejemplo: proy_alzado(solucion.Dpp)
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, D))'
+                mensaje: |
+                  El radio es el bueno, O₂D₂, pero D₂′ va en la recta O₂A₂′: A, D y O están en la
+                  misma vertical en el alzado de partida, y el giro los deja en la misma recta.
+                ejemplo: proy_alzado(solucion.D90)
+              - si: siempre
+                mensaje: |
+                  D₂′ está en la recta O₂A₂′, a la distancia O₂D₂ de O₂: con el compás en O₂, el arco
+                  que pasa por D₂ corta esa recta en D₂′.
+          - nombre: B2p
+            rotulo: B₂′
+            pide: la punta B de la segunda pala, en el alzado
+            es: proy_alzado(solucion.Bp)
+            bien: |
+              B₂′ está en la circunferencia de centro O₂ que pasa por B₂ y en la perpendicular a O₂A₂′
+              por A₂′: A₂B₂ era perpendicular a A₂D₂, y un giro no cambia los ángulos.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Bpp))
+                mensaje: |
+                  Ese es B en la otra pala, la del giro horario. Aquí, la pala que sale hacia la
+                  izquierda.
+                ejemplo: proy_alzado(solucion.Bpp)
+              - si: 'cerca_de(desplaza(proy_alzado(solucion.Ap), dx: vm_alzado(A, B)))'
+                mensaje: |
+                  Has llevado A₂′B₂′ en horizontal, como estaba A₂B₂. Pero el lado AB gira con la
+                  pala: A₂′B₂′ es perpendicular a O₂A₂′, no horizontal.
+                ejemplo: 'desplaza(proy_alzado(solucion.Ap), dx: vm_alzado(A, B))'
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm(O, B))'
+                mensaje: |
+                  Has tomado de radio la **verdadera magnitud** de OB, y no es la distancia de B al
+                  eje: B y O no tienen el mismo alejamiento. El radio del giro es lo que B dista del
+                  eje, y con el eje de punta eso se ve en el alzado: O₂B₂.
+                ejemplo: 'uno(medir_sobre(segmento2(figura.punto("O2"), proy_alzado(solucion.Bp)), desde: figura.punto("O2"), distancia: vm(O, B)), 1)'
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, B))'
+                mensaje: |
+                  Estás en la circunferencia de B, pero no en su sitio. Lo fija la perpendicular a
+                  O₂A₂′ por A₂′, una recta de 60°: el lado AB gira con la pala.
+                ejemplo: proy_alzado(solucion.B90)
+              - si: siempre
+                mensaje: |
+                  B₂′ está a la distancia O₂B₂ de O₂, en la perpendicular a O₂A₂′ por A₂′. Con el
+                  compás en O₂ y abierto hasta B₂, el arco corta esa perpendicular en B₂′.
+          - nombre: C2p
+            rotulo: C₂′
+            pide: el vértice C de la segunda pala, en el alzado
+            es: proy_alzado(solucion.Cp)
+            bien: |
+              C₂′ está en la circunferencia de centro O₂ que pasa por C₂ y en la paralela a A₂′B₂′ por
+              D₂′. B₂′C₂′ mide lo mismo que B₂C₂: es el mismo trapecio, girado.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Cpp))
+                mensaje: |
+                  Ese es C en la otra pala, la del giro horario.
+                ejemplo: proy_alzado(solucion.Cpp)
+              - si: 'cerca_de(desplaza(proy_alzado(solucion.Dp), dx: vm_alzado(D, C)))'
+                mensaje: |
+                  Has llevado D₂′C₂′ en horizontal, como estaba D₂C₂. D₂C₂ es paralelo a A₂B₂, y los
+                  dos giran con la pala: D₂′C₂′ es paralelo a A₂′B₂′.
+                ejemplo: 'desplaza(proy_alzado(solucion.Dp), dx: vm_alzado(D, C))'
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, C))'
+                mensaje: |
+                  Estás en la circunferencia de C, pero no en su sitio: C₂′ está también en la
+                  paralela a A₂′B₂′ que pasa por D₂′.
+                ejemplo: proy_alzado(solucion.C90)
+              - si: siempre
+                mensaje: |
+                  C₂′ está a la distancia O₂C₂ de O₂, en la paralela a A₂′B₂′ por D₂′.
+          - nombre: A1p
+            rotulo: A₁′
+            pide: la punta A de la segunda pala, en la planta
+            es: proy_planta(solucion.Ap)
+            bien: |
+              A₁′ está en la vertical de A₂′ y en la horizontal de A₁: con el eje de punta, el
+              alejamiento no cambia.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.App))
+                mensaje: |
+                  Esa es la planta de A en la otra pala, la del giro horario. A₁′ va en la vertical
+                  de tu A₂′.
+                ejemplo: proy_planta(solucion.App)
+              - si: en_vertical_de(A2p)
+                mensaje: |
+                  Está en la vertical de A₂′, pero más arriba o más abajo de lo que toca. El
+                  alejamiento no cambia al girar alrededor de un eje de punta: A₁′ está en la
+                  horizontal de A₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Ap), dy: mm(-10))'
+              - si: en_horizontal_de(figura.punto("A1"))
+                mensaje: |
+                  Bien la horizontal de A₁, porque el alejamiento no cambia. Falta la x: A₁′ está en
+                  la vertical de A₂′.
+                ejemplo: 'desplaza(proy_planta(solucion.Ap), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  A₁′ cumple dos cosas: está en la vertical de A₂′ y en la horizontal de A₁ ≡ O₁.
+          - nombre: D1p
+            rotulo: D₁′
+            pide: el vértice D de la segunda pala, en la planta
+            es: proy_planta(solucion.Dp)
+            bien: |
+              D₁′ está en la vertical de D₂′ y en la horizontal de D₁ ≡ O₁, como A₁′. Ya no coinciden:
+              A y D dejaron de estar en una vertical.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Dpp))
+                mensaje: |
+                  Esa es la planta de D en la otra pala, la del giro horario. D₁′ va en la vertical de
+                  tu D₂′.
+                ejemplo: proy_planta(solucion.Dpp)
+              - si: en_vertical_de(D2p)
+                mensaje: |
+                  Está en la vertical de D₂′, pero el alejamiento no cambia: D₁′ está en la horizontal
+                  de D₁ ≡ O₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Dp), dy: mm(-10))'
+              - si: en_horizontal_de(figura.punto("D1"))
+                mensaje: |
+                  Bien la horizontal de D₁ ≡ O₁, porque el alejamiento no cambia. Falta la x: D₁′ está
+                  en la vertical de D₂′. Si has caído en A₁′, es esta misma horizontal, pero la
+                  vertical de A₂′.
+                ejemplo: 'desplaza(proy_planta(solucion.Dp), dx: mm(-8))'
+              - si: siempre
+                mensaje: |
+                  D₁′ está en la vertical de D₂′ y en la horizontal de D₁ ≡ O₁. Si has caído en A₁′,
+                  es esa misma horizontal, pero la vertical de A₂′.
+          - nombre: B1p
+            rotulo: B₁′
+            pide: la punta B de la segunda pala, en la planta
+            es: proy_planta(solucion.Bp)
+            bien: |
+              B₁′ está en la vertical de B₂′ y en la horizontal de B₁.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Bpp))
+                mensaje: |
+                  Esa es la planta de B en la otra pala, la del giro horario. B₁′ va en la vertical de
+                  tu B₂′.
+                ejemplo: proy_planta(solucion.Bpp)
+              - si: cerca_de(proy_planta(solucion.Bv))
+                mensaje: |
+                  Has girado también la **planta** alrededor de O₁. Eso es un giro de eje vertical.
+                  Con el eje de punta solo gira el alzado; en la planta, B₁ se mueve en horizontal
+                  hasta la vertical de B₂′.
+                ejemplo: proy_planta(solucion.Bv)
+              - si: en_vertical_de(B2p)
+                mensaje: |
+                  Está en la vertical de B₂′, pero el alejamiento no cambia: B₁′ está en la horizontal
+                  de B₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Bp), dy: mm(10))'
+              - si: en_horizontal_de(figura.punto("B1"))
+                mensaje: |
+                  Bien la horizontal de B₁. Falta la x: B₁′ está en la vertical de B₂′.
+                ejemplo: 'desplaza(proy_planta(solucion.Bp), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  B₁′ está en la vertical de B₂′ y en la horizontal de B₁.
+          - nombre: C1p
+            rotulo: C₁′
+            pide: el vértice C de la segunda pala, en la planta
+            es: proy_planta(solucion.Cp)
+            bien: |
+              C₁′ está en la vertical de C₂′ y en la horizontal de C₁. La pala girada ya no se ve
+              como un segmento en la planta: su plano ha dejado de ser vertical.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Cpp))
+                mensaje: |
+                  Esa es la planta de C en la otra pala, la del giro horario.
+                ejemplo: proy_planta(solucion.Cpp)
+              - si: cerca_de(proy_planta(solucion.Cv))
+                mensaje: |
+                  Has girado también la **planta** alrededor de O₁, como si el eje fuera vertical.
+                  En la planta, C₁ solo se mueve en horizontal, hasta la vertical de C₂′.
+                ejemplo: proy_planta(solucion.Cv)
+              - si: en_vertical_de(C2p)
+                mensaje: |
+                  Está en la vertical de C₂′, pero el alejamiento no cambia: C₁′ está en la horizontal
+                  de C₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Cp), dy: mm(10))'
+              - si: siempre
+                mensaje: |
+                  C₁′ está en la vertical de C₂′ y en la horizontal de C₁.
+        trazado:
+          - segmento2(proy_alzado(solucion.Ap), proy_alzado(solucion.Bp))
+          - segmento2(proy_alzado(solucion.Bp), proy_alzado(solucion.Cp))
+          - segmento2(proy_alzado(solucion.Cp), proy_alzado(solucion.Dp))
+          - segmento2(figura.punto("O2"), proy_alzado(solucion.Ap))
+          - segmento2(figura.punto("O1"), proy_planta(solucion.Dp))
+          - segmento2(proy_planta(solucion.Ap), proy_planta(solucion.Bp))
+          - segmento2(proy_planta(solucion.Bp), proy_planta(solucion.Cp))
+          - segmento2(proy_planta(solucion.Cp), proy_planta(solucion.Dp))
+          - segmento2(proy_planta(solucion.Dp), proy_planta(solucion.Ap))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("O2"), solucion.L_OA)
+            guia: figura.segmento("CD2")
+            porque: |
+              Se empieza por la recta O₂A₂D₂, que es vertical y lleva dos vértices: la pala arranca
+              del eje. Girada 120° en sentido antihorario, la vertical que sube pasa la horizontal y
+              baja 30° por debajo de ella, hacia la izquierda. Los 30° los da el cartabón, con la
+              escuadra apoyada en una horizontal de la lámina, C₂D₂. Se traza larga, más allá de
+              donde caerá A₂′.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("A2"), desde: figura.punto("A2"), hasta: proy_alzado(solucion.Ap))'
+            porque: |
+              A gira en un plano perpendicular al eje, y con el eje de punta ese plano es frontal: en
+              el alzado, A₂ recorre una circunferencia de centro O₂ sin deformarse. Por eso el compás
+              se pincha en O₂ y se abre hasta A₂, y el arco se lleva hasta la recta de 30°.
+          - con: marca
+            traza: proy_alzado(solucion.Ap)
+            rotulo: A₂′
+            porque: |
+              A₂′ es el corte del arco con la recta de 30°: está a la distancia de O₂ que tenía A₂, y
+              girado 120°.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("D2"), desde: figura.punto("D2"), hasta: proy_alzado(solucion.Dp))'
+            porque: |
+              D gira alrededor del mismo eje y el mismo ángulo, con su radio O₂D₂. Cae en la misma
+              recta, porque A, D y O siguen alineados después del giro.
+          - con: marca
+            traza: proy_alzado(solucion.Dp)
+            rotulo: D₂′
+            porque: |
+              D₂′, el corte de ese arco con la recta de 30°, entre O₂ y A₂′.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Ap), solucion.L_AB)
+            guia: segmento2(figura.punto("O2"), proy_alzado(solucion.Ap))
+            porque: |
+              A₂B₂ era perpendicular a A₂D₂, y un giro no cambia los ángulos de la figura. Así que B₂′
+              está en la perpendicular a O₂A₂′ por A₂′: la escuadra, apoyada en O₂A₂′, la da. Larga,
+              más allá de donde caerá B₂′.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("B2"), desde: figura.punto("B2"), hasta: proy_alzado(solucion.Bp))'
+            porque: |
+              B gira con radio O₂B₂, que es su distancia al eje. La circunferencia de centro O₂ corta
+              la perpendicular dos veces, una a cada lado de A₂′; vale el corte del lado trazado,
+              hacia donde sale el lado AB, porque al otro lado quedaría la pala reflejada, no girada.
+          - con: marca
+            traza: proy_alzado(solucion.Bp)
+            rotulo: B₂′
+            porque: |
+              B₂′, en la perpendicular por A₂′ y a la distancia O₂B₂ de O₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Dp), solucion.L_DC)
+            guia: segmento2(proy_alzado(solucion.Ap), proy_alzado(solucion.Bp))
+            porque: |
+              D₂C₂ es paralelo a A₂B₂, y el giro conserva el paralelismo. Por D₂′, la paralela a
+              A₂′B₂′, deslizando la escuadra sobre el cartabón. Larga, más allá de donde caerá C₂′.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("C2"), desde: figura.punto("C2"), hasta: proy_alzado(solucion.Cp))'
+            porque: |
+              C gira con su radio O₂C₂ hasta esa paralela, por la misma razón que B.
+          - con: marca
+            traza: proy_alzado(solucion.Cp)
+            rotulo: C₂′
+            porque: |
+              C₂′, en la paralela por D₂′ y a la distancia O₂C₂ de O₂.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.Bp), proy_alzado(solucion.Cp))
+            porque: |
+              B₂′C₂′ une los dos vértices que faltaban y cierra la pala en el alzado. Sirve de
+              comprobación: mide lo mismo que B₂C₂, porque el giro no deforma la figura.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.Ap), desplaza(proy_planta(solucion.Ap), dy: mm(6))), segmento2(proy_alzado(solucion.Dp), desplaza(proy_planta(solucion.Dp), dy: mm(6))), segmento2(proy_alzado(solucion.Bp), desplaza(proy_planta(solucion.Bp), dy: mm(6))), segmento2(proy_alzado(solucion.Cp), desplaza(proy_planta(solucion.Cp), dy: mm(6)))]'
+            guia: figura.segmento("DA2")
+            porque: |
+              Las dos proyecciones de un punto están siempre en la misma vertical. Por cada alzado
+              girado, la línea de referencia hasta la planta, paralela a A₂D₂; larga, porque todavía
+              no se sabe dónde corta.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), desplaza(proy_planta(solucion.Ap), dx: mm(-4))), segmento2(figura.punto("B1"), desplaza(proy_planta(solucion.Bp), dx: mm(-4))), segmento2(figura.punto("C1"), desplaza(proy_planta(solucion.Cp), dx: mm(-4)))]'
+            guia: figura.segmento("AB2")
+            porque: |
+              Con el eje de punta el **alejamiento no cambia**, así que en la planta cada punto se
+              mueve en horizontal: por A₁ ≡ D₁ ≡ O₁, por B₁ y por C₁, la paralela a A₂B₂, hacia la
+              izquierda y más allá de las líneas de referencia.
+          - con: marca
+            traza: proy_planta(solucion.Ap)
+            rotulo: A₁′
+            porque: |
+              A₁′ cumple las dos condiciones a la vez: el cruce de la vertical de A₂′ con la
+              horizontal de A₁.
+          - con: marca
+            traza: proy_planta(solucion.Dp)
+            rotulo: D₁′
+            porque: |
+              D₁′, en la misma horizontal, porque A y D tenían el mismo alejamiento, y en la vertical
+              de D₂′.
+          - con: marca
+            traza: proy_planta(solucion.Bp)
+            rotulo: B₁′
+            porque: |
+              B₁′, el cruce de la horizontal de B₁ con la vertical de B₂′.
+          - con: marca
+            traza: proy_planta(solucion.Cp)
+            rotulo: C₁′
+            porque: |
+              C₁′, el cruce de la horizontal de C₁ con la vertical de C₂′.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.Ap), proy_planta(solucion.Bp)), segmento2(proy_planta(solucion.Bp), proy_planta(solucion.Cp)), segmento2(proy_planta(solucion.Cp), proy_planta(solucion.Dp))]'
+            porque: |
+              La pala girada en la planta, uniendo sus cuatro vértices (D₁′A₁′ ya está en la
+              horizontal). Ya no es un segmento: la pala de partida estaba en un plano vertical, y
+              al girar alrededor de un eje de punta su plano se inclina.
+        pista: |
+          (1) En el alzado, la recta O₂A₂D₂ es vertical: girada 120° en sentido antihorario, baja 30°
+          por debajo de la horizontal, hacia la izquierda. (2) Con el compás en O₂, lleva A₂ y D₂ a
+          esa recta. (3) Por A₂′, la perpendicular; por D₂′, la paralela a ella. (4) Con el compás en
+          O₂, B₂ y C₂ a esas rectas. (5) Cada planta, en la vertical de su alzado y en la horizontal de
+          su planta de partida. Sin cartabón, los 120° salen con el compás: el radio cabe seis veces
+          en la circunferencia, así que desde A₂, con el radio O₂A₂, dos arcos seguidos sobre ella
+          dan el punto a 120°.
+        desarrollo: |
+          En verde claro, la segunda pala: en el alzado, el trapecio girado 120° alrededor de O₂, con
+          la recta O₂A₂′ a 30° por debajo de la horizontal; en la planta, el cuadrilátero A₁′B₁′C₁′D₁′,
+          con cada vértice en la horizontal de su planta de partida.
+
+      - tipo: construir
+        titulo: La tercera pala, girada 120° en sentido horario
+        intro: |
+          Ahora A″B″C″D″, la pala que sale de girar ABCD 120° en sentido **horario visto de frente**.
+          Es también la segunda girada otros 120° en sentido antihorario: el conjunto gira 120°, y
+          cada pala va al sitio de la siguiente. Marca sus cuatro vértices en las dos vistas. En la
+          planta, B₁″ cae a menos de 4 mm de la cruz B₁ y C₁″, a 2,6 mm de la recta del eje: amplía
+          la lámina con la lupa antes de marcarlos, para que el imán no te lleve a la cruz o al eje.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A2pp
+            rotulo: A₂″
+            pide: la punta A de la tercera pala, en el alzado
+            es: proy_alzado(solucion.App)
+            bien: |
+              A₂″ está en la circunferencia de centro O₂ que pasa por A₂, 120° en sentido horario: la
+              recta O₂A₂″ baja 30° por debajo de la horizontal, hacia la derecha.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Ap))
+                mensaje: |
+                  Esa es la segunda pala, la del giro antihorario, que ya construiste. La tercera
+                  sale hacia la derecha.
+                ejemplo: proy_alzado(solucion.Ap)
+              - si: cerca_de(proy_alzado(solucion.A60h))
+                mensaje: |
+                  Has girado **60°**, no 120°: la recta de 30° va por debajo de la horizontal, no por
+                  encima.
+                ejemplo: proy_alzado(solucion.A60h)
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, A))'
+                mensaje: |
+                  Estás en la circunferencia de A, pero no a 120°: en sentido horario, desde la
+                  vertical que sube hasta A₂, la recta de 30° por debajo de la horizontal, hacia la
+                  derecha.
+                ejemplo: proy_alzado(solucion.A140h)
+              - si: siempre
+                mensaje: |
+                  A₂″ está a la distancia O₂A₂ de O₂: el compás, en O₂ y abierto hasta A₂.
+          - nombre: D2pp
+            rotulo: D₂″
+            pide: el vértice D de la tercera pala, en el alzado
+            es: proy_alzado(solucion.Dpp)
+            bien: |
+              D₂″ está en la recta O₂A₂″, a la distancia O₂D₂ de O₂.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Dp))
+                mensaje: |
+                  Ese es D en la segunda pala. La tercera sale hacia la derecha.
+                ejemplo: proy_alzado(solucion.Dp)
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, D))'
+                mensaje: |
+                  El radio es el bueno, pero D₂″ va en la recta O₂A₂″: A, D y O siguen alineados.
+                ejemplo: proy_alzado(solucion.D140h)
+              - si: siempre
+                mensaje: |
+                  D₂″ está en la recta O₂A₂″, a la distancia O₂D₂ de O₂.
+          - nombre: B2pp
+            rotulo: B₂″
+            pide: la punta B de la tercera pala, en el alzado
+            es: proy_alzado(solucion.Bpp)
+            bien: |
+              B₂″ está en la circunferencia de B y en la perpendicular a O₂A₂″ por A₂″. Es el vértice
+              más bajo de las tres palas.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Bp))
+                mensaje: |
+                  Ese es B en la segunda pala. La tercera sale hacia la derecha.
+                ejemplo: proy_alzado(solucion.Bp)
+              - si: 'cerca_de(desplaza(proy_alzado(solucion.App), dx: vm_alzado(A, B)))'
+                mensaje: |
+                  Has llevado A₂″B₂″ en horizontal, como estaba A₂B₂. El lado AB gira con la pala:
+                  A₂″B₂″ es perpendicular a O₂A₂″.
+                ejemplo: 'desplaza(proy_alzado(solucion.App), dx: vm_alzado(A, B))'
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, B))'
+                mensaje: |
+                  Estás en la circunferencia de B, pero no en su sitio: B₂″ está en la perpendicular
+                  a O₂A₂″ por A₂″.
+                ejemplo: proy_alzado(solucion.B140h)
+              - si: siempre
+                mensaje: |
+                  B₂″ está a la distancia O₂B₂ de O₂, en la perpendicular a O₂A₂″ por A₂″.
+          - nombre: C2pp
+            rotulo: C₂″
+            pide: el vértice C de la tercera pala, en el alzado
+            es: proy_alzado(solucion.Cpp)
+            bien: |
+              C₂″ está en la circunferencia de C y en la paralela a A₂″B₂″ por D₂″.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Cp))
+                mensaje: |
+                  Ese es C en la segunda pala.
+                ejemplo: proy_alzado(solucion.Cp)
+              - si: 'a_distancia(de: figura.punto("O2"), d: vm_alzado(O, C))'
+                mensaje: |
+                  Estás en la circunferencia de C, pero no en su sitio: C₂″ está en la paralela a
+                  A₂″B₂″ por D₂″.
+                ejemplo: proy_alzado(solucion.C140h)
+              - si: siempre
+                mensaje: |
+                  C₂″ está a la distancia O₂C₂ de O₂, en la paralela a A₂″B₂″ por D₂″.
+          - nombre: A1pp
+            rotulo: A₁″
+            pide: la punta A de la tercera pala, en la planta
+            es: proy_planta(solucion.App)
+            bien: |
+              A₁″ está en la vertical de A₂″ y en la horizontal de A₁.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Ap))
+                mensaje: |
+                  Esa es la planta de A en la segunda pala. A₁″ va en la vertical de tu A₂″.
+                ejemplo: proy_planta(solucion.Ap)
+              - si: en_vertical_de(A2pp)
+                mensaje: |
+                  Está en la vertical de A₂″, pero el alejamiento no cambia: A₁″ está en la
+                  horizontal de A₁.
+                ejemplo: 'desplaza(proy_planta(solucion.App), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  A₁″ está en la vertical de A₂″ y en la horizontal de A₁ ≡ O₁.
+          - nombre: D1pp
+            rotulo: D₁″
+            pide: el vértice D de la tercera pala, en la planta
+            es: proy_planta(solucion.Dpp)
+            bien: |
+              D₁″ está en la vertical de D₂″ y en la horizontal de D₁ ≡ O₁.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Dp))
+                mensaje: |
+                  Esa es la planta de D en la segunda pala. D₁″ va en la vertical de tu D₂″.
+                ejemplo: proy_planta(solucion.Dp)
+              - si: en_vertical_de(D2pp)
+                mensaje: |
+                  Está en la vertical de D₂″, pero el alejamiento no cambia: D₁″ está en la
+                  horizontal de D₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Dpp), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  D₁″ está en la vertical de D₂″ y en la horizontal de D₁ ≡ O₁.
+          - nombre: B1pp
+            rotulo: B₁″
+            pide: la punta B de la tercera pala, en la planta
+            es: proy_planta(solucion.Bpp)
+            bien: |
+              B₁″ está en la vertical de B₂″ y en la horizontal de B₁, a poco menos de 4 mm de B₁.
+            diagnosticos:
+              - si: en_vertical_de(B2pp)
+                mensaje: |
+                  Está en la vertical de B₂″, pero el alejamiento no cambia: B₁″ está en la horizontal
+                  de B₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Bpp), dy: mm(10))'
+              - si: en_horizontal_de(figura.punto("B1"))
+                mensaje: |
+                  Bien la horizontal de B₁. Falta la x: B₁″ está en la vertical de B₂″, 3,7 mm a la
+                  izquierda de la cruz B₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Bpp), dx: mm(-8))'
+              - si: siempre
+                mensaje: |
+                  B₁″ está en la vertical de B₂″ y en la horizontal de B₁.
+          - nombre: C1pp
+            rotulo: C₁″
+            pide: el vértice C de la tercera pala, en la planta
+            es: proy_planta(solucion.Cpp)
+            bien: |
+              C₁″ está en la vertical de C₂″ y en la horizontal de C₁, muy cerca del eje en la
+              planta.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Cp))
+                mensaje: |
+                  Esa es la planta de C en la segunda pala. C₁″ va en la vertical de tu C₂″.
+                ejemplo: proy_planta(solucion.Cp)
+              - si: en_vertical_de(C2pp)
+                mensaje: |
+                  Está en la vertical de C₂″, pero el alejamiento no cambia: C₁″ está en la
+                  horizontal de C₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Cpp), dy: mm(10))'
+              - si: en_horizontal_de(figura.punto("C1"))
+                mensaje: |
+                  Bien la horizontal de C₁. Falta la x: C₁″ está en la vertical de C₂″, 2,6 mm a la
+                  derecha de la recta del eje. Si has marcado el cruce de la horizontal con el eje,
+                  el imán te ha llevado a él: amplía con la lupa.
+                ejemplo: 'pie_perpendicular(figura.punto("C1"), figura.segmento("OP1"))'
+              - si: siempre
+                mensaje: |
+                  C₁″ está en la vertical de C₂″ y en la horizontal de C₁.
+        trazado:
+          - segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
+          - segmento2(proy_alzado(solucion.Bpp), proy_alzado(solucion.Cpp))
+          - segmento2(proy_alzado(solucion.Cpp), proy_alzado(solucion.Dpp))
+          - segmento2(figura.punto("O2"), proy_alzado(solucion.App))
+          - segmento2(figura.punto("O1"), proy_planta(solucion.Dpp))
+          - segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp))
+          - segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp))
+          - segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp))
+          - segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("O2"), solucion.L_OApp)
+            guia: figura.segmento("CD2")
+            porque: |
+              Otra vez la recta O₂A₂D₂, ahora girada 120° en sentido horario: pasa la horizontal por
+              la derecha y baja 30° por debajo de ella. El cartabón da los 30°, con la escuadra sobre
+              la horizontal C₂D₂. Larga, más allá de donde caerá A₂″.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("A2"), desde: figura.punto("A2"), hasta: proy_alzado(solucion.App))'
+            porque: |
+              A₂ sigue girando en su circunferencia de centro O₂, ahora hacia la derecha: el compás
+              en O₂, abierto hasta A₂, hasta la recta de 30°.
+          - con: marca
+            traza: proy_alzado(solucion.App)
+            rotulo: A₂″
+            porque: |
+              A₂″, el corte del arco con la recta de 30°.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("D2"), desde: figura.punto("D2"), hasta: proy_alzado(solucion.Dpp))'
+            porque: |
+              D, con su radio O₂D₂, a la misma recta: A, D y O siguen alineados.
+          - con: marca
+            traza: proy_alzado(solucion.Dpp)
+            rotulo: D₂″
+            porque: |
+              D₂″, el corte del arco de D con la recta de 30°, entre O₂ y A₂″.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.App), solucion.L_ABpp)
+            guia: segmento2(figura.punto("O2"), proy_alzado(solucion.App))
+            porque: |
+              El lado AB sigue perpendicular a AD, porque el giro no cambia los ángulos: por A₂″, la
+              perpendicular a O₂A₂″, larga.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("B2"), desde: figura.punto("B2"), hasta: proy_alzado(solucion.Bpp))'
+            porque: |
+              B, con su radio O₂B₂, hasta esa perpendicular. La circunferencia la corta dos veces, a
+              un lado y otro de A₂″; vale el corte del lado trazado, que es hacia donde sale el lado
+              AB.
+          - con: marca
+            traza: proy_alzado(solucion.Bpp)
+            rotulo: B₂″
+            porque: |
+              B₂″, el corte del arco de B con la perpendicular por A₂″: el punto más bajo del molino.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Dpp), solucion.L_DCpp)
+            guia: segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
+            porque: |
+              D₂C₂ sigue paralelo a A₂B₂: por D₂″, la paralela a A₂″B₂″, larga.
+          - con: compas
+            traza: 'arco(figura.punto("O2"), por: figura.punto("C2"), desde: figura.punto("C2"), hasta: proy_alzado(solucion.Cpp))'
+            porque: |
+              C, con su radio O₂C₂, hasta esa paralela.
+          - con: marca
+            traza: proy_alzado(solucion.Cpp)
+            rotulo: C₂″
+            porque: |
+              C₂″, en la paralela por D₂″ y a la distancia O₂C₂ de O₂.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.Bpp), proy_alzado(solucion.Cpp))
+            porque: |
+              B₂″C₂″ cierra la tercera pala. Las tres quedan a 120° unas de otras alrededor de O₂,
+              como pide el enunciado.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.App), desplaza(proy_planta(solucion.App), dy: mm(6))), segmento2(proy_alzado(solucion.Dpp), desplaza(proy_planta(solucion.Dpp), dy: mm(6))), segmento2(proy_alzado(solucion.Bpp), desplaza(proy_planta(solucion.Bpp), dy: mm(6))), segmento2(proy_alzado(solucion.Cpp), desplaza(proy_planta(solucion.Cpp), dy: mm(6)))]'
+            guia: figura.segmento("DA2")
+            porque: |
+              Las líneas de referencia desde cada alzado hasta la planta, paralelas a A₂D₂: las dos
+              proyecciones de un punto van en la misma vertical.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), desplaza(proy_planta(solucion.App), dx: mm(4))), segmento2(figura.punto("B1"), desplaza(proy_planta(solucion.Bpp), dx: mm(-4))), segmento2(figura.punto("C1"), desplaza(proy_planta(solucion.Cpp), dx: mm(-4)))]'
+            guia: figura.segmento("AB2")
+            porque: |
+              El alejamiento no cambia: las horizontales de A₁, B₁ y C₁, paralelas a A₂B₂, hasta más
+              allá de las líneas de referencia. La de B₁ es corta: B₁″ cae a menos de 4 mm de B₁.
+          - con: marca
+            traza: proy_planta(solucion.App)
+            rotulo: A₁″
+            porque: |
+              A₁″, el cruce de la horizontal de A₁ con la vertical de A₂″.
+          - con: marca
+            traza: proy_planta(solucion.Dpp)
+            rotulo: D₁″
+            porque: |
+              D₁″, en la misma horizontal y en la vertical de D₂″.
+          - con: marca
+            traza: proy_planta(solucion.Bpp)
+            rotulo: B₁″
+            porque: |
+              B₁″, el cruce de la horizontal de B₁ con la vertical de B₂″.
+          - con: marca
+            traza: proy_planta(solucion.Cpp)
+            rotulo: C₁″
+            porque: |
+              C₁″, el cruce de la horizontal de C₁ con la vertical de C₂″.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp)), segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp)), segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp))]'
+            porque: |
+              La tercera pala en la planta, que se cruza con la primera. Las dos van en continuo: la
+              primera está entera por encima del eje y la tercera, entera por debajo, y la primera,
+              que es vertical, se ve como una línea y no tapa nada.
+        pista: |
+          Como la segunda pala, al otro lado: la recta O₂A₂″ baja 30° por debajo de la horizontal,
+          hacia la derecha. A₂″ y D₂″ con el compás en O₂; por A₂″ la perpendicular y por D₂″ la
+          paralela; B₂″ y C₂″ con el compás en O₂. Las plantas, en las horizontales de las de partida.
+          Los 120° hacia el otro lado salen igual con el compás: dos veces el radio O₂A₂ sobre la
+          circunferencia, desde A₂ hacia la derecha.
+        desarrollo: |
+          En verde claro, la tercera pala: en el alzado, abajo a la derecha de O₂, y en la planta,
+          a la derecha del eje, pasando por debajo de la primera. B₁″ queda en la horizontal de B₁, a
+          3,7 mm a su izquierda.
+
+      # Decisión: el enunciado solo pide dibujar. Este calcular, atado a la receta,
+      # pregunta lo que decide el compás de cada punto: el radio del giro es la
+      # distancia al eje, que con el eje de punta se ve en el alzado, y no la
+      # verdadera magnitud de OB. B es el vértice donde más se apartan.
+      - tipo: calcular
+        titulo: El radio del giro de la punta B
+        pregunta: Al girar, el vértice B recorre una circunferencia alrededor del eje OP. ¿Cuánto mide de verdad su radio?
+        respuesta:
+          tipo: numero
+          valor: '66.74'
+          receta: radio_B_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '68.95'
+            receta: en_mm(vm(O, B))
+            mensaje: |
+              Eso es la **verdadera magnitud de OB**, y no es el radio: B y O no tienen el mismo
+              alejamiento, así que OB no es perpendicular al eje. El radio es la distancia de B al
+              eje, y con el eje de punta se ve entera en el alzado: O₂B₂.
+          - valor: '39.25'
+            receta: en_mm(vm_planta(O, B))
+            mensaje: |
+              Eso es **O₁B₁ en la planta**. En la planta el eje es una recta, no un punto, y ahí no
+              se ve ninguna circunferencia: B gira en un plano frontal, que en la planta se ve de
+              canto.
+        pista: |
+          B gira en un plano perpendicular al eje. Con el eje de punta, ese plano es frontal: ¿en qué
+          vista se ve sin deformar la circunferencia que recorre B? Mide en ella con «medir» del
+          Taller, en uno de los pasos anteriores, o en tu lámina de papel.
+        desarrollo: |
+          El eje es de punta, así que B gira en un plano frontal y su circunferencia se ve en
+          verdadera magnitud en el alzado, con centro en O₂. En el alzado, B₂ está 35,22 mm a la
+          derecha de O₂ (lo que mide A₂B₂) y 56,68 mm por encima (lo que mide O₂A₂):
+
+          $$ r = \overline{O_2B_2} = \sqrt{35{,}22^{2} + 56{,}68^{2}} \approx 66{,}7 \text{ mm} $$
+
+          OB mide más, 68,95 mm, porque además se acerca al plano vertical: esa diferencia de
+          alejamientos va a lo largo del eje, y no cuenta en el radio.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento para la segunda pala. Una pieza no debe entrar.
+        piezas:
+          - texto: El eje OP es de punta, así que cada punto gira en un plano frontal y en el alzado recorre una circunferencia de centro O₂.
+          - texto: La vertical O₂A₂D₂ gira 120° y queda a 30° por debajo de la horizontal; A₂′ y D₂′ salen con el compás en O₂.
+          - texto: B₂′ y C₂′ salen igual, con la perpendicular y la paralela por A₂′ y D₂′, porque el giro no cambia los ángulos de la pala.
+          - texto: El alejamiento no cambia, así que cada planta va en la horizontal de su planta de partida y en la vertical de su alzado girado.
+          - texto: La planta también gira 120°, alrededor de O₁, y cada alzado se mueve en horizontal hasta la vertical de su planta.
+            trampa: true
+            mensaje: |
+              Eso es un giro de eje vertical. Aquí el eje es de punta: el que gira es el alzado, y
+              en la planta cada punto solo se mueve en horizontal.
+
+    resolucion: |
+      **Qué gira y alrededor de qué.** El eje OP es de punta: en el alzado es el punto O₂ ≡ P₂, y en
+      la planta, la recta de trazo y punto por O₁ y P₁. Cada punto de la pala gira en un plano
+      perpendicular al eje, que es frontal: en el alzado recorre una circunferencia de centro O₂ en
+      verdadera magnitud, y su alejamiento no cambia. Las otras dos palas son la primera girada 120°
+      en un sentido y en el otro.
+
+      **El alzado.** A, D y O están en la misma vertical: la pala arranca del eje. Girada 120° en
+      sentido antihorario, esa vertical baja 30° por debajo de la horizontal, hacia la izquierda, y
+      el compás en O₂ lleva A₂ y D₂ a ella. A₂′B₂′ es la perpendicular por A₂′ y D₂′C₂′ la paralela
+      por D₂′, porque el giro no cambia los ángulos; el compás en O₂ lleva B₂ y C₂ a ellas. La tercera
+      pala es igual hacia la derecha, girando 120° en sentido horario, que es lo mismo que girar la
+      segunda otros 120° en sentido antihorario.
+
+      **La planta.** Cada vértice girado va en la vertical de su alzado y en la horizontal de su
+      planta de partida. La pala de partida estaba en un plano vertical y en la planta era un
+      segmento; las giradas no lo están, y se ven como cuadriláteros. B₁″ cae a 3,7 mm de B₁, en su
+      misma horizontal.
+
+      **La visibilidad.** En el alzado, las tres palas ocupan sectores distintos alrededor de O₂ y no
+      se tapan. En la planta, la tercera pala queda debajo de la primera: la primera está entera por
+      encima de O y la tercera, entera por debajo (lo hemos comprobado comparando las cotas). La
+      primera, vertical, se ve como una línea y no tapa nada, así que todo va en trazo continuo.
+
+      **El radio.** La punta B gira con radio O₂B₂ = 66,74 mm, que se mide en el alzado. La
+      verdadera magnitud de OB, 68,95 mm, es más larga porque OB no es perpendicular al eje.
+
+  - id: sd17-el-cuadrado-y-la-barra-tras-dos-giros
+    titulo: El cuadrado y la barra, tras dos giros de 60°
+    fuente: Ejercicio 14 (SD17) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: la figura no es un cuadrado exacto: su alzado, que es su
+    # verdadera magnitud porque es frontal, mide 31,54 × 27,26 mm. Manda el
+    # material: se gira tal como está dibujada, y las notas nuestras lo dicen
+    # para que nadie busque un error en su lámina.
+    enunciado: |
+      Una barra MN soporta un cuadrado vertical ABCD (M es el punto medio de CD). Se pide
+      dibujar la posición final del cuadrado y la barra tras sufrir dos giros consecutivos:
+
+      a) Giro de 60° alrededor del eje e, de punta al plano horizontal por el punto N. Sentido antihorario.
+
+      b) Giro de 60° alrededor del eje j, de punta al plano vertical por el punto P. Sentido horario.
+
+      **Notas nuestras.** La figura es la de la colección, a escala 1:1. Arriba, el alzado: el
+      cuadrado se ve como un rectángulo, con A₂B₂ arriba y D₂C₂ abajo; N₂ ≡ M₂ está en el punto
+      medio de D₂C₂, y la cruz P₂, encima, en la misma vertical. Abajo, la planta: el cuadrado se ve
+      como el segmento horizontal que va de A₁ ≡ D₁ a B₁ ≡ C₁, y la barra como el segmento vertical
+      que baja desde M₁, el punto medio de ese segmento, hasta P₁ ≡ N₁. El cuadrado es frontal y la barra, de punta, perpendicular
+      a él; P está en la vertical de N. Como el cuadrado es frontal, el alzado es su verdadera
+      magnitud, y en la figura mide 31,5 mm de ancho por 27,3 mm de alto: no es un cuadrado exacto,
+      y se gira tal como está dibujado. A la izquierda de la página hay un croquis en perspectiva
+      con el cuadrado, la barra, los ejes e y j y dos arcos que señalan los dos giros, sin cifras;
+      es una ilustración y no da datos. Llamamos A′, B′… a las posiciones tras el primer giro y A″,
+      B″… a las de tras el segundo; esos nombres son nuestros. El enunciado solo pide dibujar: la
+      visibilidad y el ángulo final de la barra con el plano horizontal son preguntas nuestras.
+    pide: El cuadrado y la barra tras el primer giro y en su posición final, en las dos vistas; y, como preguntas nuestras, su visibilidad y el ángulo que forma al final la barra con el plano horizontal.
+    receta:
+      lamina: sd17
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        M: 'punto3(alzado: figura.punto("M2"), planta: figura.punto("M1"))'
+        N: 'punto3(alzado: figura.punto("N2"), planta: figura.punto("N1"))'
+        P: 'punto3(alzado: figura.punto("P2"), planta: figura.punto("P1"))'
+        # Otro punto del eje j: j es de punta, así que todos sus puntos tienen el
+        # alzado P₂; este tiene el alejamiento de M.
+        Pj: 'punto3(alzado: figura.punto("P2"), planta: figura.punto("M1"))'
+        # Decisión: el sentido de cada giro se lee en la vista donde su eje es un
+        # punto, como se ve en el papel: el de e (vertical) en la planta, desde
+        # arriba, y el de j (de punta) en el alzado, de frente. El croquis de la
+        # página casa con esa lectura: la barra girada que dibuja en N y la recta
+        # PN girada que dibuja en P van en esos sentidos. Lo dice el intro de cada
+        # paso.
+        # Los ejes van orientados para que el ángulo positivo sea el del
+        # enunciado: e, de P hacia abajo (hacia N), y j, desde el alejamiento de M
+        # hacia el de P (hacia el observador). `gira` sin sentido da los dos
+        # giros como una elección, y su rama 1 es la del ángulo con su signo. Lo
+        # comprueba el segundo camino, que gira la planta y el alzado en el papel.
+        eje_e: segmento3(P, N)
+        eje_j: segmento3(Pj, P)
+      solucion:
+        # a) 60° alrededor de e, antihorario en la planta. N está en e y no se mueve.
+        Ap: 'rama(gira(A, eje_e, angulo: 60), 1)'
+        Bp: 'rama(gira(B, eje_e, angulo: 60), 1)'
+        Cp: 'rama(gira(C, eje_e, angulo: 60), 1)'
+        Dp: 'rama(gira(D, eje_e, angulo: 60), 1)'
+        Mp: 'rama(gira(M, eje_e, angulo: 60), 1)'
+        # b) 60° alrededor de j, horario en el alzado, desde la posición que dejó a).
+        App: 'rama(gira(Ap, eje_j, angulo: 60), 1)'
+        Bpp: 'rama(gira(Bp, eje_j, angulo: 60), 1)'
+        Cpp: 'rama(gira(Cp, eje_j, angulo: 60), 1)'
+        Dpp: 'rama(gira(Dp, eje_j, angulo: 60), 1)'
+        Mpp: 'rama(gira(Mp, eje_j, angulo: 60), 1)'
+        Npp: 'rama(gira(N, eje_j, angulo: 60), 1)'
+        # Errores, para los ejemplos de los diagnósticos.
+        # El primer giro en sentido horario, visto en la planta (el de B cae fuera
+        # del marco de la página).
+        Ap_h: 'rama(gira(A, eje_e, angulo: 60), 2)'
+        Mp_h: 'rama(gira(M, eje_e, angulo: 60), 2)'
+        # Un punto de la circunferencia que no es el bueno: a 30°.
+        A30: 'rama(gira(A, eje_e, angulo: 30), 1)'
+        B30: 'rama(gira(B, eje_e, angulo: 30), 1)'
+        M30: 'rama(gira(M, eje_e, angulo: 30), 1)'
+        # El segundo giro aplicado a la posición de partida y no a la del primero
+        # (el de M es N″, porque M₂ ≡ N₂: lo recoge su diagnóstico).
+        Ad: 'rama(gira(A, eje_j, angulo: 60), 1)'
+        Bd: 'rama(gira(B, eje_j, angulo: 60), 1)'
+        Cd: 'rama(gira(C, eje_j, angulo: 60), 1)'
+        Dd: 'rama(gira(D, eje_j, angulo: 60), 1)'
+        # El segundo giro en sentido antihorario (A y B: los demás caen fuera del
+        # marco de la página).
+        App_h: 'rama(gira(Ap, eje_j, angulo: 60), 2)'
+        Bpp_h: 'rama(gira(Bp, eje_j, angulo: 60), 2)'
+        # Un punto de la circunferencia de centro P₂ que no es el bueno: a 30°.
+        A30b: 'rama(gira(Ap, eje_j, angulo: 30), 1)'
+        B30b: 'rama(gira(Bp, eje_j, angulo: 30), 1)'
+        C30b: 'rama(gira(Cp, eje_j, angulo: 30), 1)'
+        D30b: 'rama(gira(Dp, eje_j, angulo: 30), 1)'
+        M30b: 'rama(gira(Mp, eje_j, angulo: 30), 1)'
+        N30b: 'rama(gira(N, eje_j, angulo: 30), 1)'
+        # Lo que el primer giro alejó del plano vertical cada punto (A, B y M),
+        # para el error de llevar la planta final a la horizontal de partida.
+        # La cota no cambia en el primer giro, así que vm_alzado es la diferencia
+        # de x, y lo que queda es la diferencia de alejamientos.
+        dyA: 'raiz(vm_planta(A, Ap) * vm_planta(A, Ap) - vm_alzado(A, Ap) * vm_alzado(A, Ap))'
+        dyB: 'raiz(vm_planta(B, Bp) * vm_planta(B, Bp) - vm_alzado(B, Bp) * vm_alzado(B, Bp))'
+        dyM: 'raiz(vm_planta(M, Mp) * vm_planta(M, Mp) - vm_alzado(M, Mp) * vm_alzado(M, Mp))'
+        # El ángulo de la barra con el plano horizontal al final, y el que se ve
+        # en el alzado: el de un segmento frontal con el mismo alzado que M″N″
+        # (Mfr tiene el alzado de N″ y el alejamiento de M″).
+        ang_barra_ph: angulo_con_ph(segmento3(Mpp, Npp))
+        Mfr: 'punto3(alzado: proy_alzado(Npp), planta: pie_perpendicular(proy_planta(Npp), perpendicular(por: proy_planta(Mpp), a: figura.segmento("MN1"))))'
+        ang_barra_alzado: angulo_con_ph(segmento3(Mpp, Mfr))
+        # Donde la planta de la barra cruza el lado A₁″D₁″: el punto de la barra
+        # que está en el plano vertical de ese lado. De ahí a M₁″ la barra queda
+        # debajo del cuadrado (lo decide el segundo camino comparando cotas), y
+        # el trazado solo pinta el tramo visto.
+        Dpp_arriba: 'punto3(alzado: desplaza(proy_alzado(Dpp), dy: mm(-10)), planta: proy_planta(Dpp))'
+        Xb: corte_recta_plano(recta3(Mpp, Npp), plano(Dpp, App, Dpp_arriba))
+        # Los extremos de las rectas largas de la construcción paso a paso: en el
+        # papel se trazan más allá del punto que van a dar, y no paran en él.
+        L_NM: 'uno(medir_sobre(segmento2(figura.punto("N1"), proy_planta(Mp)), desde: figura.punto("N1"), distancia: vm_planta(N, M) + mm(10)), 1)'
+        L_MA: 'uno(medir_sobre(segmento2(proy_planta(Mp), proy_planta(Ap)), desde: proy_planta(Mp), distancia: vm_planta(M, A) + mm(8)), 1)'
+        L_MB: 'uno(medir_sobre(segmento2(proy_planta(Mp), proy_planta(Bp)), desde: proy_planta(Mp), distancia: vm_planta(M, B) + mm(8)), 1)'
+        L_PN: 'uno(medir_sobre(segmento2(figura.punto("P2"), proy_alzado(Npp)), desde: figura.punto("P2"), distancia: vm_alzado(P, N) + mm(10)), 1)'
+        L_ND: 'uno(medir_sobre(segmento2(proy_alzado(Npp), proy_alzado(Dpp)), desde: proy_alzado(Npp), distancia: vm_alzado(N, Dp) + mm(8)), 1)'
+        L_DA: 'uno(medir_sobre(segmento2(proy_alzado(Dpp), proy_alzado(App)), desde: proy_alzado(Dpp), distancia: vm_alzado(Dp, Ap) + mm(8)), 1)'
+        L_CB: 'uno(medir_sobre(segmento2(proy_alzado(Cpp), proy_alzado(Bpp)), desde: proy_alzado(Cpp), distancia: vm_alzado(Cp, Bp) + mm(8)), 1)'
+      comprueba:
+        # M está en CD (el enunciado dice que es su punto medio).
+        - en_recta(M, recta3(C, D))
+    pasos:
+      - tipo: reconocer
+        pregunta: El primer giro es de eje vertical por N; el segundo, de eje de punta por P. ¿Qué no cambia en cada uno?
+        opciones:
+          - texto: En el primero, las cotas, y gira la planta; en el segundo, los alejamientos, y gira el alzado
+            correcta: true
+            mensaje: |
+              Eso es. Cada giro mueve los puntos en planos perpendiculares a su eje. Con el eje
+              vertical son planos horizontales: la planta gira alrededor de N₁ sin deformarse y
+              cada alzado se mueve en horizontal. Con el eje de punta son frontales: el alzado gira
+              alrededor de P₂ y cada planta se mueve en horizontal.
+          - texto: En el primero, los alejamientos; en el segundo, las cotas
+            mensaje: |
+              Al revés. «De punta al plano horizontal» es perpendicular a él: el eje e es vertical,
+              se ve como un punto en la planta, y lo que no cambia es la cota. El eje j, de punta
+              al plano vertical, es el que conserva los alejamientos.
+          - texto: Nada; en cada giro las dos vistas giran 60° a la vez
+            mensaje: |
+              Solo gira la vista donde el eje es un punto. En la otra el eje es una recta, y cada
+              punto solo se mueve en horizontal: conserva su cota o su alejamiento.
+
+      # Decisión: un paso construir por giro. El Taller no pasa las marcas de un
+      # paso al siguiente, así que el segundo pide rehacer el primero en su
+      # lámina, como el apartado 2 del Ejercicio 53; su construcción paso a paso
+      # lo rehace al principio, en tres trazados y sus marcas. Doce puntos en el
+      # segundo paso, el máximo que ya tiene el corpus (la hoja 54·1 a).
+      - tipo: construir
+        titulo: El primer giro, alrededor del eje vertical por N
+        intro: |
+          El eje e es vertical y pasa por N: en la planta es el punto N₁, y la planta gira alrededor
+          de él sin deformarse; las cotas no cambian. El sentido antihorario se ve **desde arriba,
+          en la planta**, donde el eje es un punto. Marca el cuadrado y la barra tras este giro: en
+          la planta, A₁′ ≡ D₁′, B₁′ ≡ C₁′ y M₁′; en el alzado, A₂′, B₂′, C₂′, D₂′ y M₂′. N está en
+          el eje y no se mueve.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: M1p
+            rotulo: M₁′
+            pide: el punto M, el extremo de la barra, en la planta
+            es: proy_planta(solucion.Mp)
+            bien: |
+              M₁′ está en la circunferencia de centro N₁ que pasa por M₁, 60° en sentido antihorario:
+              la barra, que subía en vertical desde N₁, queda a 30° sobre la horizontal, hacia la
+              izquierda.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Mp_h))
+                mensaje: |
+                  Has girado en sentido **horario** visto desde arriba. Antihorario en la planta: la
+                  barra, que sube de N₁ a M₁, se inclina hacia la izquierda.
+                ejemplo: proy_planta(solucion.Mp_h)
+              - si: 'a_distancia(de: figura.punto("N1"), d: vm_planta(N, M))'
+                mensaje: |
+                  Estás en la circunferencia de centro N₁ que pasa por M₁, pero no a 60°. Desde la
+                  vertical que sube hasta M₁, en sentido antihorario: la recta de 30° sobre la
+                  horizontal, hacia la izquierda, que da el cartabón.
+                ejemplo: proy_planta(solucion.M30)
+              - si: siempre
+                mensaje: |
+                  M₁′ está a la misma distancia de N₁ que M₁: con el eje vertical, la planta gira
+                  alrededor de N₁ sin deformarse. Pincha el compás en N₁ y ábrelo hasta M₁.
+          - nombre: A1p
+            rotulo: A₁′ ≡ D₁′
+            pide: los vértices A y D, que siguen coincidiendo en la planta
+            es: proy_planta(solucion.Ap)
+            bien: |
+              A₁′ ≡ D₁′ está en la perpendicular a N₁M₁′ por M₁′, que es la planta del cuadrado, y en
+              la circunferencia de centro N₁ que pasa por A₁. El cuadrado sigue perpendicular a la
+              barra y sigue siendo vertical: en la planta, un segmento.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Ap_h))
+                mensaje: |
+                  Has girado en sentido **horario** visto desde arriba. El cuadrado gira con la barra,
+                  en sentido antihorario.
+                ejemplo: proy_planta(solucion.Ap_h)
+              - si: cerca_de(proy_planta(solucion.Bp))
+                mensaje: |
+                  Ese es B₁′ ≡ C₁′, el otro extremo. A₁ está a la izquierda de M₁ en la planta de
+                  partida; al girar 60° en sentido antihorario, A₁′ baja hacia la izquierda de M₁′.
+                ejemplo: proy_planta(solucion.Bp)
+              - si: 'a_distancia(de: figura.punto("N1"), d: vm_planta(N, A))'
+                mensaje: |
+                  Estás en la circunferencia de centro N₁ que pasa por A₁, pero no en su sitio. Lo
+                  fija la planta del cuadrado: la perpendicular a N₁M₁′ por M₁′.
+                ejemplo: proy_planta(solucion.A30)
+              - si: siempre
+                mensaje: |
+                  A₁′ ≡ D₁′ está en la perpendicular a N₁M₁′ por M₁′, a la distancia N₁A₁ de N₁.
+          - nombre: B1p
+            rotulo: B₁′ ≡ C₁′
+            pide: los vértices B y C, que siguen coincidiendo en la planta
+            es: proy_planta(solucion.Bp)
+            bien: |
+              B₁′ ≡ C₁′ está en la misma perpendicular, al otro lado de M₁′, y en la circunferencia de
+              centro N₁ que pasa por B₁. M₁′ es el punto medio de A₁′B₁′.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Ap))
+                mensaje: |
+                  Ese es A₁′ ≡ D₁′, el otro extremo de la planta del cuadrado. B₁ está a la derecha de
+                  M₁ en la planta de partida; al girar 60° en sentido antihorario, B₁′ sube hacia la
+                  derecha de M₁′.
+                ejemplo: proy_planta(solucion.Ap)
+              - si: 'a_distancia(de: figura.punto("N1"), d: vm_planta(N, B))'
+                mensaje: |
+                  Estás en la circunferencia de centro N₁ que pasa por B₁, pero no en su sitio: B₁′
+                  está en la perpendicular a N₁M₁′ por M₁′, al otro lado de A₁′.
+                ejemplo: proy_planta(solucion.B30)
+              - si: siempre
+                mensaje: |
+                  B₁′ ≡ C₁′ está en la perpendicular a N₁M₁′ por M₁′, a la distancia N₁B₁ de N₁.
+          - nombre: A2p
+            rotulo: A₂′
+            pide: el vértice A tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Ap)
+            bien: |
+              A₂′ está a la altura de A₂, porque la cota no cambia, y en la vertical de A₁′.
+            diagnosticos:
+              - si: en_vertical_de(A1p)
+                mensaje: |
+                  Está en la vertical de A₁′, pero has cambiado la cota. Con el eje vertical cada
+                  punto gira en un plano horizontal: A₂′ sigue a la altura de A₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.Ap), dy: mm(-10))'
+              - si: en_horizontal_de(figura.punto("A2"))
+                mensaje: |
+                  Bien la altura, porque la cota no cambia. Falta la x: A₂′ está en la vertical de
+                  A₁′.
+                ejemplo: 'desplaza(proy_alzado(solucion.Ap), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  A₂′ está a la altura de A₂ y en la vertical de A₁′.
+          - nombre: D2p
+            rotulo: D₂′
+            pide: el vértice D tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Dp)
+            bien: |
+              D₂′ está a la altura de D₂ y en la vertical de A₁′ ≡ D₁′, debajo de A₂′.
+            diagnosticos:
+              - si: en_vertical_de(A1p)
+                mensaje: |
+                  Está en la vertical de D₁′, pero has cambiado la cota: D₂′ sigue a la altura de D₂,
+                  en el lado de abajo.
+                ejemplo: 'desplaza(proy_alzado(solucion.Dp), dy: mm(10))'
+              - si: en_horizontal_de(figura.punto("D2"))
+                mensaje: |
+                  Bien la altura. Falta la x: D₂′ está en la vertical de A₁′ ≡ D₁′.
+                ejemplo: 'desplaza(proy_alzado(solucion.Dp), dx: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  D₂′ está a la altura de D₂ y en la vertical de D₁′.
+          - nombre: B2p
+            rotulo: B₂′
+            pide: el vértice B tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Bp)
+            bien: |
+              B₂′ está a la altura de B₂ y en la vertical de B₁′ ≡ C₁′. El cuadrado se ve ahora más
+              estrecho en el alzado: ya no es frontal.
+            diagnosticos:
+              - si: en_vertical_de(B1p)
+                mensaje: |
+                  Está en la vertical de B₁′, pero has cambiado la cota: B₂′ sigue a la altura de B₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.Bp), dy: mm(-10))'
+              - si: en_horizontal_de(figura.punto("B2"))
+                mensaje: |
+                  Bien la altura. Falta la x: B₂′ está en la vertical de B₁′ ≡ C₁′.
+                ejemplo: 'desplaza(proy_alzado(solucion.Bp), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  B₂′ está a la altura de B₂ y en la vertical de B₁′.
+          - nombre: C2p
+            rotulo: C₂′
+            pide: el vértice C tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Cp)
+            bien: |
+              C₂′ está a la altura de C₂ y en la vertical de B₁′ ≡ C₁′, debajo de B₂′.
+            diagnosticos:
+              - si: en_vertical_de(B1p)
+                mensaje: |
+                  Está en la vertical de C₁′, pero has cambiado la cota: C₂′ sigue a la altura de C₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.Cp), dy: mm(10))'
+              - si: en_horizontal_de(figura.punto("C2"))
+                mensaje: |
+                  Bien la altura. Falta la x: C₂′ está en la vertical de B₁′ ≡ C₁′.
+                ejemplo: 'desplaza(proy_alzado(solucion.Cp), dx: mm(10))'
+              - si: siempre
+                mensaje: |
+                  C₂′ está a la altura de C₂ y en la vertical de C₁′.
+          - nombre: M2p
+            rotulo: M₂′
+            pide: el punto M tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Mp)
+            bien: |
+              M₂′ está en el lado D₂′C₂′, en su punto medio y en la vertical de M₁′. La barra N₂M₂′ se
+              ve ahora horizontal en el alzado, en la prolongación de ese lado.
+            diagnosticos:
+              - si: cerca_de(figura.punto("M2"))
+                mensaje: |
+                  Ese es M₂ sin mover. N no se mueve, porque está en el eje, pero M sí: M₂′ está en la
+                  vertical de M₁′.
+                ejemplo: figura.punto("M2")
+              - si: en_vertical_de(M1p)
+                mensaje: |
+                  Está en la vertical de M₁′, pero has cambiado la cota: M₂′ sigue a la altura de M₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.Mp), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  M₂′ está a la altura de M₂ y en la vertical de M₁′: el punto medio de D₂′C₂′.
+        trazado:
+          - segmento2(figura.punto("N1"), proy_planta(solucion.Mp))
+          - segmento2(proy_planta(solucion.Ap), proy_planta(solucion.Bp))
+          - segmento2(proy_alzado(solucion.Ap), proy_alzado(solucion.Bp))
+          - segmento2(proy_alzado(solucion.Bp), proy_alzado(solucion.Cp))
+          - segmento2(proy_alzado(solucion.Cp), proy_alzado(solucion.Dp))
+          - segmento2(proy_alzado(solucion.Dp), proy_alzado(solucion.Ap))
+          - segmento2(proy_alzado(solucion.Mp), figura.punto("N2"))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("N1"), solucion.L_NM)
+            guia: figura.segmento("AB1")
+            porque: |
+              El eje e es vertical: en la planta es el punto N₁, y la planta gira alrededor de él sin
+              deformarse. Se empieza por la barra, que sube en vertical de N₁ a M₁: girada 60° en
+              sentido antihorario, queda a 30° sobre la horizontal, hacia la izquierda. Los 30° los da
+              el cartabón, con la escuadra sobre la horizontal A₁B₁. Larga, más allá de donde caerá M₁′.
+          - con: compas
+            traza: 'arco(figura.punto("N1"), por: figura.punto("M1"), desde: figura.punto("M1"), hasta: proy_planta(solucion.Mp))'
+            porque: |
+              M gira en un plano horizontal, y en la planta recorre una circunferencia de centro N₁.
+              Por eso el compás se pincha en N₁ y se abre hasta M₁, y el arco se lleva hasta la recta.
+          - con: marca
+            traza: proy_planta(solucion.Mp)
+            rotulo: M₁′
+            porque: |
+              M₁′, el corte del arco con la recta de 30°: el extremo de la barra girada.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.Mp), solucion.L_MA), segmento2(proy_planta(solucion.Mp), solucion.L_MB)]'
+            guia: segmento2(figura.punto("N1"), proy_planta(solucion.Mp))
+            porque: |
+              El cuadrado es perpendicular a la barra, y el giro no cambia los ángulos: su planta es la
+              perpendicular a N₁M₁′ por M₁′. La escuadra, apoyada en N₁M₁′, la da; a los dos lados de
+              M₁′, larga.
+          - con: compas
+            traza: 'arco(figura.punto("N1"), por: figura.punto("A1"), desde: figura.punto("A1"), hasta: proy_planta(solucion.Ap))'
+            porque: |
+              A₁ y B₁ están a la misma distancia de N₁, 38,5 mm, porque N₁M₁ es perpendicular a A₁B₁
+              por su punto medio: una sola circunferencia de centro N₁ sirve para los dos. El arco
+              que sale de A₁ y gira 60° en sentido antihorario corta la planta del cuadrado dos
+              veces: primero en B₁′ y, al final, en A₁′.
+          - con: marca
+            traza: proy_planta(solucion.Ap)
+            rotulo: A₁′ ≡ D₁′
+            porque: |
+              A₁′ ≡ D₁′, donde acaba el arco, a los 60°, sobre la planta del cuadrado. El cuadrado
+              sigue siendo vertical, así que A y D siguen coincidiendo en la planta.
+          - con: marca
+            traza: proy_planta(solucion.Bp)
+            rotulo: B₁′ ≡ C₁′
+            porque: |
+              B₁′ ≡ C₁′, el primer corte del arco con la planta del cuadrado, al otro lado de M₁′.
+              M₁′ queda en el punto medio de A₁′B₁′, como M₁ en A₁B₁: es la comprobación.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.Ap), desplaza(proy_alzado(solucion.Ap), dy: mm(-8))), segmento2(proy_planta(solucion.Bp), desplaza(proy_alzado(solucion.Bp), dy: mm(-8))), segmento2(proy_planta(solucion.Mp), desplaza(proy_alzado(solucion.Mp), dy: mm(-8)))]'
+            guia: figura.segmento("MN1")
+            porque: |
+              Las dos proyecciones de un punto van en la misma vertical: por cada planta girada, la
+              línea de referencia hacia el alzado, paralela a M₁N₁, larga.
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), desplaza(proy_alzado(solucion.Ap), dx: mm(-8))), segmento2(figura.punto("D2"), desplaza(proy_alzado(solucion.Dp), dx: mm(-8)))]'
+            porque: |
+              Con el eje vertical la **cota no cambia**: cada punto del alzado se mueve en horizontal.
+              Los vértices de arriba se quedan en la recta A₂B₂ y los de abajo, con M, en la recta
+              D₂C₂: se prolongan las dos con la regla hacia la izquierda, más allá de las líneas de
+              referencia.
+          - con: marca
+            traza: proy_alzado(solucion.Ap)
+            rotulo: A₂′
+            porque: |
+              A₂′, el cruce de A₂B₂ prolongada con la vertical de A₁′.
+          - con: marca
+            traza: proy_alzado(solucion.Dp)
+            rotulo: D₂′
+            porque: |
+              D₂′, el cruce de D₂C₂ prolongada con la misma vertical.
+          - con: marca
+            traza: proy_alzado(solucion.Bp)
+            rotulo: B₂′
+            porque: |
+              B₂′, el cruce de A₂B₂ prolongada con la vertical de B₁′.
+          - con: marca
+            traza: proy_alzado(solucion.Cp)
+            rotulo: C₂′
+            porque: |
+              C₂′, el cruce de D₂C₂ prolongada con la misma vertical.
+          - con: marca
+            traza: proy_alzado(solucion.Mp)
+            rotulo: M₂′
+            porque: |
+              M₂′, el cruce de D₂C₂ prolongada con la vertical de M₁′. N₂ no se ha movido, porque N
+              está en el eje, y la barra se ve ahora horizontal, de N₂ a M₂′, en la recta del lado de
+              abajo.
+        pista: |
+          (1) En la planta, la recta de 30° por N₁ hacia la izquierda: es la barra girada 60° en
+          sentido antihorario; con el compás en N₁, M₁ va a ella. (2) La perpendicular por M₁′ es la
+          planta del cuadrado; el arco de centro N₁ que sale de A₁ la corta en B₁′ y en A₁′. (3) Sube
+          cada punto a la altura que tenía en el alzado. Sin cartabón, los 60° salen con el compás:
+          con centro en M₁ y radio N₁M₁, el arco corta la circunferencia de M justo a 60°.
+        desarrollo: |
+          En verde claro, la posición tras el primer giro: en la planta, la barra N₁M₁′ y el cuadrado
+          A₁′B₁′, perpendicular a ella; en el alzado, el cuadrado más estrecho, a la izquierda del de
+          partida y a la misma altura, y la barra horizontal de N₂ a M₂′.
+
+      - tipo: construir
+        titulo: El segundo giro, alrededor del eje de punta por P
+        intro: |
+          El eje j es de punta y pasa por P: en el alzado es el punto P₂, y el alzado gira alrededor
+          de él; los alejamientos no cambian. El sentido horario se ve **de frente, en el alzado**.
+          El giro se aplica a la posición que dejó el primero: rehaz el primer giro en esta lámina y
+          gira desde ahí. Marca la posición final en las dos vistas; esta vez N también se mueve,
+          porque no está en j. N₂ ≡ M₂ no lleva marca en la lámina: está en D₂C₂, en la vertical de
+          P₂.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: N2pp
+            rotulo: N₂″
+            pide: el extremo N de la barra, en su posición final, en el alzado
+            es: proy_alzado(solucion.Npp)
+            bien: |
+              N₂″ está en la circunferencia de centro P₂ que pasa por N₂, 60° en sentido horario: P₂N₂
+              era vertical, y P₂N₂″ baja 30° por debajo de la horizontal, hacia la izquierda.
+            diagnosticos:
+              - si: cerca_de(figura.punto("N2"))
+                mensaje: |
+                  Ese es N₂ sin mover. N está en el eje e, y por eso no se movió en el primer giro;
+                  pero no está en j, y en el segundo gira alrededor de P₂.
+                ejemplo: figura.punto("N2")
+              - si: 'a_distancia(de: figura.punto("P2"), d: vm_alzado(P, N))'
+                mensaje: |
+                  Estás en la circunferencia de centro P₂ que pasa por N₂, pero no a 60° en sentido
+                  horario: desde la vertical que baja de P₂, la recta de 30° por debajo de la
+                  horizontal, hacia la izquierda.
+                ejemplo: proy_alzado(solucion.N30b)
+              - si: siempre
+                mensaje: |
+                  N₂″ está a la misma distancia de P₂ que N₂: con el eje de punta, el alzado gira
+                  alrededor de P₂ sin deformarse.
+          - nombre: M2pp
+            rotulo: M₂″
+            pide: el punto M en su posición final, en el alzado
+            es: proy_alzado(solucion.Mpp)
+            bien: |
+              M₂″ está en la circunferencia de centro P₂ que pasa por M₂′ y en la recta que sube 60°
+              desde N₂″: la barra N₂M₂′, que era horizontal, girada 60° en sentido horario.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Npp))
+                mensaje: |
+                  Ese es N₂″. M₂ y N₂ coincidían al principio, pero M se movió en el primer giro y N
+                  no: lo que gira ahora es M₂′. Si has girado M₂, la posición de partida, caes aquí.
+                ejemplo: proy_alzado(solucion.Npp)
+              - si: 'a_distancia(de: figura.punto("P2"), d: vm_alzado(P, Mp))'
+                mensaje: |
+                  Estás en la circunferencia de centro P₂ que pasa por M₂′, pero no en su sitio. M₂″
+                  está también en la recta que sube 60° hacia la izquierda desde N₂″: la barra
+                  girada.
+                ejemplo: proy_alzado(solucion.M30b)
+              - si: siempre
+                mensaje: |
+                  M₂″ está a la distancia P₂M₂′ de P₂, en la recta de 60° que sube desde N₂″.
+          - nombre: D2pp
+            rotulo: D₂″
+            pide: el vértice D en su posición final, en el alzado
+            es: proy_alzado(solucion.Dpp)
+            bien: |
+              D₂″ está en la misma recta que N₂″ y M₂″: N₂, M₂′, C₂′ y D₂′ estaban en una horizontal,
+              y el giro los deja en una recta.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Dd))
+                mensaje: |
+                  Has girado D₂, la posición de partida. El segundo giro se aplica a D₂′.
+                ejemplo: proy_alzado(solucion.Dd)
+              - si: 'a_distancia(de: figura.punto("P2"), d: vm_alzado(P, Dp))'
+                mensaje: |
+                  Estás en la circunferencia de centro P₂ que pasa por D₂′, pero no en su sitio: D₂″
+                  está en la recta que sube 60° desde N₂″.
+                ejemplo: proy_alzado(solucion.D30b)
+              - si: siempre
+                mensaje: |
+                  D₂″ está a la distancia P₂D₂′ de P₂, en la recta de 60° que sube desde N₂″.
+          - nombre: C2pp
+            rotulo: C₂″
+            pide: el vértice C en su posición final, en el alzado
+            es: proy_alzado(solucion.Cpp)
+            bien: |
+              C₂″ está en la recta de N₂″, entre N₂″ y M₂″: la barra se ve en la prolongación del lado
+              C₂″D₂″, como antes del giro.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Cd))
+                mensaje: |
+                  Has girado C₂, la posición de partida. El segundo giro se aplica a C₂′.
+                ejemplo: proy_alzado(solucion.Cd)
+              - si: 'a_distancia(de: figura.punto("P2"), d: vm_alzado(P, Cp))'
+                mensaje: |
+                  Estás en la circunferencia de centro P₂ que pasa por C₂′, pero no en su sitio: C₂″
+                  está en la recta que sube 60° desde N₂″.
+                ejemplo: proy_alzado(solucion.C30b)
+              - si: siempre
+                mensaje: |
+                  C₂″ está a la distancia P₂C₂′ de P₂, en la recta de 60° que sube desde N₂″.
+          - nombre: A2pp
+            rotulo: A₂″
+            pide: el vértice A en su posición final, en el alzado
+            es: proy_alzado(solucion.App)
+            bien: |
+              A₂″ está en la circunferencia de centro P₂ que pasa por A₂′ y en la perpendicular por D₂″
+              a la recta de la barra: A₂′D₂′ era vertical, perpendicular a la horizontal de D₂′C₂′.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Ad))
+                mensaje: |
+                  Has girado A₂, la posición de partida. El segundo giro se aplica a A₂′.
+                ejemplo: proy_alzado(solucion.Ad)
+              - si: cerca_de(proy_alzado(solucion.App_h))
+                mensaje: |
+                  Has girado en sentido **antihorario**. El segundo giro es horario, visto de frente:
+                  lo que estaba debajo de P₂ se va hacia la izquierda.
+                ejemplo: proy_alzado(solucion.App_h)
+              - si: 'a_distancia(de: figura.punto("P2"), d: vm_alzado(P, Ap))'
+                mensaje: |
+                  Estás en la circunferencia de centro P₂ que pasa por A₂′, pero no en su sitio: A₂″
+                  está en la perpendicular a la recta de la barra por D₂″.
+                ejemplo: proy_alzado(solucion.A30b)
+              - si: siempre
+                mensaje: |
+                  A₂″ está a la distancia P₂A₂′ de P₂, en la perpendicular a N₂″D₂″ por D₂″.
+          - nombre: B2pp
+            rotulo: B₂″
+            pide: el vértice B en su posición final, en el alzado
+            es: proy_alzado(solucion.Bpp)
+            bien: |
+              B₂″ está en la circunferencia de centro P₂ que pasa por B₂′ y en la perpendicular a la
+              recta de la barra por C₂″. A₂″B₂″ es paralelo a D₂″C₂″.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Bd))
+                mensaje: |
+                  Has girado B₂, la posición de partida. El segundo giro se aplica a B₂′.
+                ejemplo: proy_alzado(solucion.Bd)
+              - si: cerca_de(proy_alzado(solucion.Bpp_h))
+                mensaje: |
+                  Has girado en sentido **antihorario**. El segundo giro es horario, visto de frente.
+                ejemplo: proy_alzado(solucion.Bpp_h)
+              - si: 'a_distancia(de: figura.punto("P2"), d: vm_alzado(P, Bp))'
+                mensaje: |
+                  Estás en la circunferencia de centro P₂ que pasa por B₂′, pero no en su sitio: B₂″
+                  está en la perpendicular a la recta de la barra por C₂″.
+                ejemplo: proy_alzado(solucion.B30b)
+              - si: siempre
+                mensaje: |
+                  B₂″ está a la distancia P₂B₂′ de P₂, en la perpendicular a N₂″C₂″ por C₂″.
+          - nombre: N1pp
+            rotulo: N₁″
+            pide: el extremo N de la barra, en su posición final, en la planta
+            es: proy_planta(solucion.Npp)
+            bien: |
+              N₁″ está en la vertical de N₂″ y en la horizontal de N₁: el alejamiento no cambia.
+            diagnosticos:
+              - si: cerca_de(figura.punto("N1"))
+                mensaje: |
+                  Ese es N₁ sin mover. En el segundo giro N se mueve: su planta va en horizontal hasta
+                  la vertical de N₂″.
+                ejemplo: figura.punto("N1")
+              - si: en_vertical_de(N2pp)
+                mensaje: |
+                  Está en la vertical de N₂″, pero el alejamiento no cambia con el eje de punta: N₁″
+                  está en la horizontal de N₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Npp), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  N₁″ está en la vertical de N₂″ y en la horizontal de N₁.
+          - nombre: M1pp
+            rotulo: M₁″
+            pide: el punto M en su posición final, en la planta
+            es: proy_planta(solucion.Mpp)
+            bien: |
+              M₁″ está en la vertical de M₂″ y en la horizontal de M₁′, el alejamiento que dejó el
+              primer giro.
+            diagnosticos:
+              - si: en_horizontal_de(figura.punto("M1"))
+                mensaje: |
+                  Has usado la horizontal de M₁, la de partida. El alejamiento que se conserva en el
+                  segundo giro es el que dejó el primero: M₁″ está en la horizontal de M₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Mpp), dy: 0 - solucion.dyM)'
+              - si: en_vertical_de(M2pp)
+                mensaje: |
+                  Está en la vertical de M₂″, pero a otro alejamiento: M₁″ está en la horizontal de
+                  M₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Mpp), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  M₁″ está en la vertical de M₂″ y en la horizontal de M₁′.
+          - nombre: D1pp
+            rotulo: D₁″
+            pide: el vértice D en su posición final, en la planta
+            es: proy_planta(solucion.Dpp)
+            bien: |
+              D₁″ está en la vertical de D₂″ y en la horizontal de A₁′ ≡ D₁′. A y D ya no coinciden en
+              la planta: el cuadrado ha dejado de ser vertical.
+            diagnosticos:
+              - si: en_horizontal_de(figura.punto("D1"))
+                mensaje: |
+                  Has usado la horizontal de D₁, la de partida. El alejamiento que se conserva es el
+                  que dejó el primer giro: D₁″ está en la horizontal de A₁′ ≡ D₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Dpp), dy: 0 - solucion.dyA)'
+              - si: en_vertical_de(D2pp)
+                mensaje: |
+                  Está en la vertical de D₂″, pero a otro alejamiento: D₁″ está en la horizontal de
+                  D₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Dpp), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  D₁″ está en la vertical de D₂″ y en la horizontal de D₁′.
+          - nombre: C1pp
+            rotulo: C₁″
+            pide: el vértice C en su posición final, en la planta
+            es: proy_planta(solucion.Cpp)
+            bien: |
+              C₁″ está en la vertical de C₂″ y en la horizontal de B₁′ ≡ C₁′.
+            diagnosticos:
+              - si: en_horizontal_de(figura.punto("C1"))
+                mensaje: |
+                  Has usado la horizontal de C₁, la de partida, que está muy cerca. El alejamiento que
+                  se conserva es el que dejó el primer giro: C₁″ está en la horizontal de C₁′, 4 mm
+                  más abajo.
+                ejemplo: 'desplaza(proy_planta(solucion.Cpp), dy: 0 - solucion.dyB)'
+              - si: en_vertical_de(C2pp)
+                mensaje: |
+                  Está en la vertical de C₂″, pero a otro alejamiento: C₁″ está en la horizontal de
+                  C₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Cpp), dy: mm(10))'
+              - si: siempre
+                mensaje: |
+                  C₁″ está en la vertical de C₂″ y en la horizontal de C₁′.
+          - nombre: A1pp
+            rotulo: A₁″
+            pide: el vértice A en su posición final, en la planta
+            es: proy_planta(solucion.App)
+            bien: |
+              A₁″ está en la vertical de A₂″ y en la horizontal de A₁′ ≡ D₁′, como D₁″.
+            diagnosticos:
+              - si: en_horizontal_de(figura.punto("A1"))
+                mensaje: |
+                  Has usado la horizontal de A₁, la de partida. El alejamiento que se conserva es el
+                  que dejó el primer giro: A₁″ está en la horizontal de A₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.App), dy: 0 - solucion.dyA)'
+              - si: en_vertical_de(A2pp)
+                mensaje: |
+                  Está en la vertical de A₂″, pero a otro alejamiento: A₁″ está en la horizontal de
+                  A₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.App), dy: mm(-10))'
+              - si: siempre
+                mensaje: |
+                  A₁″ está en la vertical de A₂″ y en la horizontal de A₁′.
+          - nombre: B1pp
+            rotulo: B₁″
+            pide: el vértice B en su posición final, en la planta
+            es: proy_planta(solucion.Bpp)
+            bien: |
+              B₁″ está en la vertical de B₂″ y en la horizontal de B₁′ ≡ C₁′, como C₁″.
+            diagnosticos:
+              - si: en_horizontal_de(figura.punto("B1"))
+                mensaje: |
+                  Has usado la horizontal de B₁, la de partida, que está muy cerca. El alejamiento que
+                  se conserva es el que dejó el primer giro: B₁″ está en la horizontal de B₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Bpp), dy: 0 - solucion.dyB)'
+              - si: en_vertical_de(B2pp)
+                mensaje: |
+                  Está en la vertical de B₂″, pero a otro alejamiento: B₁″ está en la horizontal de
+                  B₁′.
+                ejemplo: 'desplaza(proy_planta(solucion.Bpp), dy: mm(10))'
+              - si: siempre
+                mensaje: |
+                  B₁″ está en la vertical de B₂″ y en la horizontal de B₁′.
+        trazado:
+          - segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
+          - segmento2(proy_alzado(solucion.Bpp), proy_alzado(solucion.Cpp))
+          - segmento2(proy_alzado(solucion.Cpp), proy_alzado(solucion.Dpp))
+          - segmento2(proy_alzado(solucion.Dpp), proy_alzado(solucion.App))
+          - segmento2(proy_alzado(solucion.Mpp), proy_alzado(solucion.Npp))
+          - segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp))
+          - segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp))
+          - segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp))
+          - segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App))
+          - segmento2(proy_planta(solucion.Xb), proy_planta(solucion.Npp))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("N1"), solucion.L_NM)
+            guia: figura.segmento("AB1")
+            porque: |
+              El segundo giro parte de la posición que deja el primero, así que primero se rehace el
+              primero, como en el paso anterior. En la planta, la barra girada: la recta de 30° por N₁,
+              hacia la izquierda.
+          - con: compas
+            traza: 'arco(figura.punto("N1"), por: figura.punto("M1"), desde: figura.punto("M1"), hasta: proy_planta(solucion.Mp))'
+            porque: |
+              M₁ gira alrededor de N₁ hasta esa recta.
+          - con: marca
+            traza: proy_planta(solucion.Mp)
+            rotulo: M₁′
+            porque: |
+              M₁′, el corte del arco con la recta de 30°: el extremo de la barra tras el primer giro.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.Mp), solucion.L_MA), segmento2(proy_planta(solucion.Mp), solucion.L_MB)]'
+            guia: segmento2(figura.punto("N1"), proy_planta(solucion.Mp))
+            porque: |
+              La planta del cuadrado, perpendicular a la barra por M₁′.
+          - con: compas
+            traza: 'arco(figura.punto("N1"), por: figura.punto("A1"), desde: figura.punto("A1"), hasta: proy_planta(solucion.Ap))'
+            porque: |
+              A₁ y B₁ están a la misma distancia de N₁: el arco de centro N₁ que sale de A₁ corta la
+              planta del cuadrado primero en B₁′ y, a los 60°, en A₁′.
+          - con: marca
+            traza: proy_planta(solucion.Ap)
+            rotulo: A₁′ ≡ D₁′
+            porque: |
+              A₁′ ≡ D₁′, donde acaba el arco, a los 60°, sobre la planta del cuadrado.
+          - con: marca
+            traza: proy_planta(solucion.Bp)
+            rotulo: B₁′ ≡ C₁′
+            porque: |
+              B₁′ ≡ C₁′, el primer corte del arco con la planta del cuadrado.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.Ap), desplaza(proy_alzado(solucion.Ap), dy: mm(-8))), segmento2(proy_planta(solucion.Bp), desplaza(proy_alzado(solucion.Bp), dy: mm(-8))), segmento2(proy_planta(solucion.Mp), desplaza(proy_alzado(solucion.Mp), dy: mm(-8)))]'
+            guia: figura.segmento("MN1")
+            porque: |
+              Las dos proyecciones de un punto van en la misma vertical: por cada planta girada, la
+              línea de referencia hacia el alzado, larga.
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), desplaza(proy_alzado(solucion.Ap), dx: mm(-8))), segmento2(figura.punto("D2"), desplaza(proy_alzado(solucion.Dp), dx: mm(-8)))]'
+            porque: |
+              Las cotas no cambian en el primer giro: A₂B₂ y D₂C₂ prolongadas hacia la izquierda.
+          - con: marca
+            traza: proy_alzado(solucion.Ap)
+            rotulo: A₂′
+            porque: |
+              A₂′, el cruce de A₂B₂ prolongada con la vertical de A₁′.
+          - con: marca
+            traza: proy_alzado(solucion.Bp)
+            rotulo: B₂′
+            porque: |
+              B₂′, el cruce de A₂B₂ prolongada con la vertical de B₁′.
+          - con: marca
+            traza: proy_alzado(solucion.Cp)
+            rotulo: C₂′
+            porque: |
+              C₂′, el cruce de D₂C₂ prolongada con la vertical de B₁′ ≡ C₁′.
+          - con: marca
+            traza: proy_alzado(solucion.Dp)
+            rotulo: D₂′
+            porque: |
+              D₂′, el cruce de D₂C₂ prolongada con la vertical de A₁′ ≡ D₁′.
+          - con: marca
+            traza: proy_alzado(solucion.Mp)
+            rotulo: M₂′
+            porque: |
+              M₂′, el cruce de D₂C₂ prolongada con la vertical de M₁′. Ahora N₂, M₂′, C₂′ y D₂′ están
+              en una misma horizontal, la de abajo, y eso va a ahorrar trabajo en el segundo giro.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("P2"), desplaza(figura.punto("N2"), dy: mm(6)))'
+            guia: figura.segmento("MN1")
+            porque: |
+              N₂ ≡ M₂ no lleva marca en la lámina, y el compás del segundo giro tiene que abrirse
+              hasta él. P está en el eje e, en la vertical de N (P₁ ≡ N₁): la vertical por P₂,
+              paralela a M₁N₁, corta el lado D₂C₂ en N₂. Larga, más abajo del lado.
+          - con: marca
+            traza: figura.punto("N2")
+            rotulo: N₂ ≡ M₂
+            porque: |
+              N₂ ≡ M₂, el cruce de la vertical de P₂ con D₂C₂: su punto medio, que es donde el
+              enunciado pone M.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("P2"), solucion.L_PN)
+            guia: figura.segmento("CD2")
+            porque: |
+              El segundo giro. El eje j es de punta: en el alzado es el punto P₂, y el alzado gira
+              alrededor de él. N está debajo de P, así que P₂N₂ es vertical; girada 60° en sentido
+              horario, baja 30° por debajo de la horizontal, hacia la izquierda. El cartabón da los
+              30°, con la escuadra sobre la horizontal C₂D₂. Larga, más allá de donde caerá N₂″.
+          - con: compas
+            traza: 'arco(figura.punto("P2"), por: figura.punto("N2"), desde: figura.punto("N2"), hasta: proy_alzado(solucion.Npp))'
+            porque: |
+              N gira en un plano frontal, y en el alzado recorre una circunferencia de centro P₂: el
+              compás en P₂, abierto hasta N₂, hasta la recta de 30°.
+          - con: marca
+            traza: proy_alzado(solucion.Npp)
+            rotulo: N₂″
+            porque: |
+              N₂″, el corte del arco con la recta de 30°. En el primer giro N no se movió, porque
+              estaba en e; en este sí, porque no está en j.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Npp), solucion.L_ND)
+            guia: segmento2(figura.punto("P2"), proy_alzado(solucion.Npp))
+            porque: |
+              P₂N₂ era vertical y la horizontal de abajo, la de N₂, M₂′, C₂′ y D₂′, perpendicular a
+              ella. El giro no cambia los ángulos: esa horizontal girada es la perpendicular a P₂N₂″
+              por N₂″. Larga, más allá de donde caerá D₂″, el más lejano.
+          - con: compas
+            traza: '[arco(figura.punto("P2"), por: proy_alzado(solucion.Mp), desde: proy_alzado(solucion.Mp), hasta: proy_alzado(solucion.Mpp)), arco(figura.punto("P2"), por: proy_alzado(solucion.Cp), desde: proy_alzado(solucion.Cp), hasta: proy_alzado(solucion.Cpp)), arco(figura.punto("P2"), por: proy_alzado(solucion.Dp), desde: proy_alzado(solucion.Dp), hasta: proy_alzado(solucion.Dpp))]'
+            porque: |
+              M, C y D giran alrededor de P₂ con sus radios P₂M₂′, P₂C₂′ y P₂D₂′, y caen en esa
+              recta. Cada circunferencia corta la recta de la barra dos veces, una a cada lado de
+              N₂″; vale el corte del lado trazado, de N₂″ hacia arriba, que es donde los deja el
+              giro de 60° en sentido horario. El otro corte no es un giro de 60°.
+          - con: marca
+            traza: proy_alzado(solucion.Mpp)
+            rotulo: M₂″
+            porque: |
+              M₂″, el corte del arco de M con la recta de la barra: el extremo de la barra girada.
+          - con: marca
+            traza: proy_alzado(solucion.Cpp)
+            rotulo: C₂″
+            porque: |
+              C₂″, el corte del arco de C con la recta de la barra, entre N₂″ y M₂″: la barra sigue en
+              la prolongación del lado C₂″D₂″.
+          - con: marca
+            traza: proy_alzado(solucion.Dpp)
+            rotulo: D₂″
+            porque: |
+              D₂″, el corte del arco de D con la recta de la barra, al otro lado de M₂″, que es el
+              punto medio de C₂″D₂″.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.Dpp), solucion.L_DA), segmento2(proy_alzado(solucion.Cpp), solucion.L_CB)]'
+            guia: segmento2(proy_alzado(solucion.Npp), proy_alzado(solucion.Dpp))
+            porque: |
+              A₂′D₂′ y B₂′C₂′ eran verticales, perpendiculares a la horizontal de abajo, y lo siguen
+              siendo después del giro: por D₂″ y por C₂″, las perpendiculares a la recta de la barra.
+              Largas, más allá de donde caerán A₂″ y B₂″.
+          - con: compas
+            traza: '[arco(figura.punto("P2"), por: proy_alzado(solucion.Ap), desde: proy_alzado(solucion.Ap), hasta: proy_alzado(solucion.App)), arco(figura.punto("P2"), por: proy_alzado(solucion.Bp), desde: proy_alzado(solucion.Bp), hasta: proy_alzado(solucion.Bpp))]'
+            porque: |
+              A y B giran alrededor de P₂ con sus radios P₂A₂′ y P₂B₂′ hasta esas perpendiculares.
+          - con: marca
+            traza: proy_alzado(solucion.App)
+            rotulo: A₂″
+            porque: |
+              A₂″, el corte del arco de A con la perpendicular por D₂″.
+          - con: marca
+            traza: proy_alzado(solucion.Bpp)
+            rotulo: B₂″
+            porque: |
+              B₂″, el corte del arco de B con la perpendicular por C₂″.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
+            porque: |
+              A₂″B₂″ une los dos vértices de arriba y cierra el alzado del cuadrado. Comprobación:
+              sale paralelo a D₂″C₂″, porque el rectángulo del primer giro gira entero, sin
+              deformarse.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.Npp), desplaza(proy_planta(solucion.Npp), dy: mm(5))), segmento2(proy_alzado(solucion.Mpp), desplaza(proy_planta(solucion.Mpp), dy: mm(8))), segmento2(proy_alzado(solucion.Dpp), desplaza(proy_planta(solucion.Dpp), dy: mm(8))), segmento2(proy_alzado(solucion.Cpp), desplaza(proy_planta(solucion.Cpp), dy: mm(8))), segmento2(proy_alzado(solucion.App), desplaza(proy_planta(solucion.App), dy: mm(8))), segmento2(proy_alzado(solucion.Bpp), desplaza(proy_planta(solucion.Bpp), dy: mm(8)))]'
+            guia: figura.segmento("MN1")
+            porque: |
+              Las líneas de referencia, desde cada alzado final hacia la planta, paralelas a M₁N₁.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("N1"), desplaza(proy_planta(solucion.Npp), dx: mm(-5))), segmento2(proy_planta(solucion.Mp), desplaza(proy_planta(solucion.Mpp), dx: mm(-5))), segmento2(proy_planta(solucion.Ap), desplaza(proy_planta(solucion.Dpp), dx: mm(-5))), segmento2(proy_planta(solucion.Bp), desplaza(proy_planta(solucion.Cpp), dx: mm(-5)))]'
+            guia: figura.segmento("AB1")
+            porque: |
+              Con el eje de punta el **alejamiento no cambia**, y el que vale es el que dejó el primer
+              giro. Por N₁, M₁′, A₁′ ≡ D₁′ y B₁′ ≡ C₁′, las paralelas a A₁B₁ hacia la izquierda, más
+              allá de las líneas de referencia.
+          - con: marca
+            traza: proy_planta(solucion.Npp)
+            rotulo: N₁″
+            porque: |
+              N₁″, el cruce de la horizontal de N₁ con la vertical de N₂″.
+          - con: marca
+            traza: proy_planta(solucion.Mpp)
+            rotulo: M₁″
+            porque: |
+              M₁″, en la horizontal de M₁′ y la vertical de M₂″.
+          - con: marca
+            traza: proy_planta(solucion.Dpp)
+            rotulo: D₁″
+            porque: |
+              D₁″, en la horizontal de A₁′ ≡ D₁′ y la vertical de D₂″.
+          - con: marca
+            traza: proy_planta(solucion.App)
+            rotulo: A₁″
+            porque: |
+              A₁″, en la misma horizontal que D₁″, porque A y D tienen el mismo alejamiento, y en la
+              vertical de A₂″.
+          - con: marca
+            traza: proy_planta(solucion.Cpp)
+            rotulo: C₁″
+            porque: |
+              C₁″, en la horizontal de B₁′ ≡ C₁′ y la vertical de C₂″.
+          - con: marca
+            traza: proy_planta(solucion.Bpp)
+            rotulo: B₁″
+            porque: |
+              B₁″, en la misma horizontal que C₁″ y la vertical de B₂″.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp)), segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp)), segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp)), segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App)), segmento2(proy_planta(solucion.Mpp), proy_planta(solucion.Npp))]'
+            porque: |
+              La posición final en la planta, uniendo los vértices: el cuadrado ya no es vertical y se
+              ve como un paralelogramo. La barra pasa por debajo de él desde M₁″ hasta el lado A₁″D₁″
+              (el cuadrado está más alto en ese tramo), y ese tramo, en tu lámina, va en trazo
+              discontinuo.
+        pista: |
+          (1) Rehaz el primer giro: lo necesitas, porque el segundo gira desde ahí. (2) La vertical
+          por P₂ corta D₂C₂ en N₂ ≡ M₂. En el alzado, la recta de 30° por P₂ hacia la izquierda y abajo;
+          con el compás en P₂, N₂ va a ella; sin cartabón, el arco de radio P₂N₂ con centro en N₂
+          corta la circunferencia de N justo a 60°. (3) Por
+          N₂″, la recta de 60° hacia arriba; los arcos de centro P₂ por M₂′, C₂′ y D₂′ la cortan. (4)
+          Por D₂″ y C₂″, las perpendiculares; los arcos por A₂′ y B₂′. (5) Las plantas, en las
+          horizontales que dejó el primer giro.
+        desarrollo: |
+          En verde claro, la posición final. En el alzado, el rectángulo del primer giro girado 60°
+          alrededor de P₂, con la barra en la prolongación del lado D₂″C₂″; en la planta, el
+          cuadrado como un paralelogramo y el tramo de la barra que se ve, del lado A₁″D₁″ a N₁″.
+          El tramo oculto, por debajo del cuadrado, lo enseña el paso siguiente.
+
+      # Decisión: el enunciado no pide la visibilidad con estas palabras, pero un
+      # dibujo de diédrico la lleva, y aquí hay un tramo oculto. La decide el
+      # segundo camino comparando cotas en el cruce aparente de la barra con el
+      # cuadrado en la planta; la figura sale de figuras/eg-sd17-visibilidad.mjs.
+      - tipo: dibujar
+        consigna: |
+          Este paso es nuestro: el enunciado no pide la visibilidad con estas palabras. Dibuja en tu
+          lámina la posición final del cuadrado y de la barra en las dos vistas, con lo que se ve en
+          continua y lo que queda oculto en discontinua. El cuadrado es una placa opaca y la barra,
+          una varilla.
+        comprueba:
+          - punto: >-
+              En el alzado, el cuadrado A₂″B₂″C₂″D₂″ entero en continua, y la barra N₂″M₂″ también,
+              en la prolongación del lado D₂″C₂″.
+            porque: >-
+              La barra y el lado CD están en un mismo plano de punta, el que el giro de eje de punta
+              ha dejado así, y en el alzado caen en una recta: la barra no pasa por delante ni por
+              detrás de la placa.
+          - punto: >-
+              En la planta, el cuadrado A₁″B₁″C₁″D₁″, un paralelogramo, entero en continua.
+            porque: >-
+              Ya no es vertical, así que en la planta se ve como una placa. Nada pasa por encima de
+              ella: la barra sale por debajo.
+          - punto: >-
+              En la planta, la barra en discontinua desde M₁″ hasta el lado A₁″D₁″, y en continua de
+              ahí a N₁″.
+            porque: >-
+              En ese tramo la planta de la barra cae dentro de la del cuadrado, y el cuadrado está
+              más alto: a mitad del tramo, 18 mm por encima. La placa la tapa. Pasado el lado A₁″D₁″
+              ya no hay placa encima.
+          - punto: >-
+              M₁″ en el lado C₁″D₁″, en su punto medio, y M₂″ en el punto medio de D₂″C₂″.
+            porque: >-
+              La barra sale del punto medio de CD, y eso no lo cambia ningún giro: es la
+              comprobación de que el cuadrado y la barra se han movido juntos.
+        figura: |
+          <figure>
+          <svg viewBox="0 0 300 560" role="img" width="300" height="560" aria-labelledby="egsd17v-t egsd17v-d">
+            <title id="egsd17v-t">El cuadrado y la barra en su posición final: lo que se ve y lo que se oculta</title>
+            <desc id="egsd17v-d">Arriba el alzado y abajo la planta, en las mismas verticales; la planta, más cerca del alzado que en la lámina, porque en diédrico directo esa distancia no es un dato. En el alzado, el cuadrado se ve como un rectángulo girado, A₂″B₂″C₂″D₂″, en continua, y la barra va de M₂″, punto medio de D₂″C₂″, a N₂″, en la prolongación de ese lado, también en continua. En la planta, el cuadrado se ve como un paralelogramo, A₁″B₁″C₁″D₁″, en continua. La barra sale de M₁″, punto medio de C₁″D₁″, y pasa por debajo del cuadrado hasta el lado A₁″D₁″: ese tramo, el 78 % de la barra, va en discontinua; de ahí a N₁″, fuera del cuadrado, en continua.</desc>
+            <style>
+                .egsd17v-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+                .egsd17v-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+                .egsd17v-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+                .egsd17v-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .egsd17v-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .egsd17v-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+                .egsd17v-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+                .egsd17v-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+                .egsd17v-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+                .egsd17v-pt { fill: var(--live); }
+                .egsd17v-punta { fill: var(--live); stroke: none; }
+                .egsd17v-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+                .egsd17v-o { fill: var(--flag); }
+                .egsd17v-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+                .egsd17v-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+                .egsd17v-v { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+                .egsd17v-h { stroke: var(--ink); stroke-width: 1.2; fill: none; stroke-dasharray: 4 3; }
+                .egsd17v-bv { stroke: var(--live); stroke-width: 2.2; fill: none; stroke-linecap: round; }
+                .egsd17v-bh { stroke: var(--live); stroke-width: 1.8; fill: none; stroke-dasharray: 4 3; }
+                .egsd17v-ref { stroke: var(--faint); stroke-width: 0.7; fill: none; stroke-dasharray: 1.5 2.5; }
+            </style>
+            <path class="egsd17v-ref" d="M193.4 43.4L193.4 496.9"/>
+            <path class="egsd17v-ref" d="M234.7 115L234.7 353.8"/>
+            <path class="egsd17v-ref" d="M111 186.4L111 353.8"/>
+            <path class="egsd17v-ref" d="M69.7 114.8L69.7 496.9"/>
+            <path class="egsd17v-ref" d="M90.4 150.7L90.4 425.3"/>
+            <path class="egsd17v-ref" d="M170.2 288.9L170.2 517.4"/>
+            <path class="egsd17v-v" d="M193.4 43.4L234.7 115L111 186.4L69.7 114.8Z"/>
+            <path class="egsd17v-v" d="M193.4 496.9L234.7 353.8L111 353.8L69.7 496.9Z"/>
+            <path class="egsd17v-bv" d="M90.4 150.7L170.2 288.9"/>
+            <path class="egsd17v-bh" d="M90.4 425.3L152.4 496.9"/>
+            <path class="egsd17v-bv" d="M152.4 496.9L170.2 517.4"/>
+            <text class="egsd17v-l" x="193.4" y="36.4" text-anchor="middle" fill="var(--ink)">A₂″</text>
+            <text class="egsd17v-l" x="241.7" y="119" text-anchor="start" fill="var(--ink)">B₂″</text>
+            <text class="egsd17v-l" x="118" y="195.4" text-anchor="start" fill="var(--ink)">C₂″</text>
+            <text class="egsd17v-l" x="62.7" y="114.8" text-anchor="end" fill="var(--ink)">D₂″</text>
+            <text class="egsd17v-l" x="83.4" y="158.7" text-anchor="end" fill="var(--live)">M₂″</text>
+            <text class="egsd17v-l" x="177.2" y="296.9" text-anchor="start" fill="var(--live)">N₂″</text>
+            <text class="egsd17v-l" x="199.4" y="510.9" text-anchor="start" fill="var(--ink)">A₁″</text>
+            <text class="egsd17v-l" x="240.7" y="348.8" text-anchor="start" fill="var(--ink)">B₁″</text>
+            <text class="egsd17v-l" x="105" y="348.8" text-anchor="end" fill="var(--ink)">C₁″</text>
+            <text class="egsd17v-l" x="62.7" y="500.9" text-anchor="end" fill="var(--ink)">D₁″</text>
+            <text class="egsd17v-l" x="83.4" y="429.3" text-anchor="end" fill="var(--live)">M₁″</text>
+            <text class="egsd17v-l" x="177.2" y="521.4" text-anchor="start" fill="var(--live)">N₁″</text>
+            <circle class="egsd17v-pt" cx="90.4" cy="150.7" r="2.2"/>
+            <circle class="egsd17v-pt" cx="90.4" cy="425.3" r="2.2"/>
+            <circle class="egsd17v-pt" cx="170.2" cy="288.9" r="2.2"/>
+            <circle class="egsd17v-pt" cx="170.2" cy="517.4" r="2.2"/>
+          </svg>
+          </figure>
+      # Decisión: el enunciado solo pide dibujar. Este calcular comprueba la
+      # posición final con una cifra atada a la receta, y caza el error que el
+      # dibujo invita a cometer: leer el ángulo en el alzado, donde la barra se
+      # ve a 60° sin ser frontal. Se resuelve con el triángulo del tema 2.
+      - tipo: calcular
+        titulo: El ángulo de la barra con el plano horizontal, al final
+        pregunta: Con la barra en su posición final, ¿qué ángulo forma con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '48.59'
+          receta: ang_barra_ph
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '60'
+            receta: ang_barra_alzado
+            mensaje: |
+              Ese es el ángulo que **ves en el alzado**, entre N₂″M₂″ y la horizontal: el del giro.
+              Pero la barra no es frontal —se acerca al plano vertical a la vez que sube—, y el
+              alzado no da su ángulo de verdad.
+          - valor: '41.41'
+            receta: 90 - ang_barra_ph
+            mensaje: |
+              Ese es el **complementario**: el ángulo de la barra con la vertical. Con el plano
+              horizontal es el otro ángulo agudo del triángulo.
+          - valor: '30'
+            receta: angulo_con_pv(segmento3(solucion.Mpp, solucion.Npp))
+            mensaje: |
+              Ese es el ángulo de la barra con el plano **vertical**, el que dejó el primer giro: el
+              segundo, de eje de punta, no lo cambia. Se pedía con el plano horizontal.
+        pista: |
+          La barra no cambia de longitud al girar: mide lo que medía su planta de partida, M₁N₁,
+          porque era horizontal. Su diferencia de cotas al final se lee en el alzado, entre M₂″ y
+          N₂″. Con esos dos datos, el triángulo del tema 2.
+        desarrollo: |
+          La barra mide 35,18 mm: era horizontal y de punta, así que su planta de partida está en
+          verdadera magnitud. Al final, M₂″ queda 26,38 mm por encima de N₂″ en el alzado. En el
+          triángulo de la verdadera magnitud, esa diferencia de cotas es el cateto opuesto al ángulo
+          con el plano horizontal:
+
+          $$ \sin\alpha = \frac{26{,}38}{35{,}18} \quad\Rightarrow\quad \alpha \approx 48{,}6^{\circ} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El eje e es vertical, así que en el primer giro la planta gira 60° en sentido antihorario alrededor de N₁ y cada alzado se mueve en horizontal.
+          - texto: N está en e y no se mueve en el primer giro; M y el cuadrado sí.
+          - texto: El eje j es de punta, así que en el segundo giro el alzado que dejó el primero gira 60° en sentido horario alrededor de P₂, y cada planta se mueve en horizontal.
+          - texto: En el segundo giro N también se mueve, porque no está en j, y cada planta conserva el alejamiento que dejó el primer giro.
+          - texto: Los dos giros se pueden hacer en cualquier orden, porque el resultado es el mismo.
+            trampa: true
+            mensaje: |
+              En general no se pueden cambiar de orden, y estos tampoco: si giras primero alrededor
+              de j, N sale del eje e, y el giro alrededor de e también lo mueve. La barra y el
+              cuadrado acaban en otro sitio, entre 27 y 63 mm más allá.
+
+    resolucion: |
+      **Los dos ejes.** e es vertical por N («de punta al plano horizontal»): en la planta es el
+      punto N₁. j es de punta por P: en el alzado es el punto P₂. P está en la vertical de N, así que
+      P también está en e. Cada giro mueve los puntos en planos perpendiculares a su eje, y su sentido
+      se ve en la vista donde el eje es un punto: el primero, desde arriba; el segundo, de frente.
+
+      **El primer giro.** La planta gira 60° en sentido antihorario alrededor de N₁ sin deformarse:
+      la barra, que subía en vertical, queda a 30° sobre la horizontal, hacia la izquierda, y el
+      cuadrado sigue perpendicular a ella, A₁′ ≡ D₁′ y B₁′ ≡ C₁′, porque sigue siendo vertical. Las
+      cotas no cambian: cada alzado se mueve en horizontal hasta la vertical de su planta girada. El
+      cuadrado se ve ahora más estrecho en el alzado, y la barra, horizontal, en la prolongación de su
+      lado de abajo. N no se mueve.
+
+      **El segundo giro.** Gira el alzado que dejó el primero, 60° en sentido horario alrededor de
+      P₂. P₂N₂ era vertical y baja 30° por debajo de la horizontal; la horizontal de la barra y del
+      lado de abajo sube 60° desde N₂″, y los lados verticales quedan a 30°. Los alejamientos no
+      cambian: cada planta va en la horizontal que dejó el primer giro y en la vertical de su alzado
+      final. Al final, el cuadrado no es vertical: en la planta se ve como un paralelogramo.
+
+      **La visibilidad.** En la planta final, la barra cruza el cuadrado desde M₁″ hasta el lado
+      A₁″D₁″, y en ese tramo el cuadrado está más alto: hemos comparado las cotas de los dos en un
+      mismo punto de la planta, a mitad de ese tramo, y el cuadrado queda 18 mm por encima. Ese
+      tramo de la barra va en discontinuo. En el alzado la barra cae en la prolongación de D₂″C₂″ y
+      no tapa nada.
+
+      **El ángulo de la barra.** Mide 35,18 mm, como al principio, y M₂″ queda 26,38 mm por encima
+      de N₂″: forma 48,6° con el plano horizontal. En el alzado se ve a 60°, pero no es frontal.
+
   - id: sd25-tres-caras-de-un-bloque-cortado
     titulo: Tres caras de un bloque cortado, cada una por su método
     fuente: Ejercicio 19 (SD25) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU

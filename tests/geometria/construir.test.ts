@@ -355,6 +355,30 @@ describe('un ejercicio entero, con su receta: resuelveEjercicio', () => {
     const rota = { ...RECETA_SD1, solucion: { ...RECETA_SD1.solucion, Q: 'corte(bajada, tejado)' } };
     expect(() => resuelveEjercicio(ejercicio([calcular('55.04')], rota), datosSd1)).toThrow(/sd1-prueba, receta: solucion\.Q/);
   });
+
+  it('un objetivo encima de un punto dado de la lámina rompe el build: el Taller no deja marcarlo', () => {
+    /* P₂ es una cruz de SD1. A 2 pt, el imán engancha la cruz incluso con la
+       lupa a ×4; a 3 pt, ya no. */
+    const sobre = (dx: number) => ({
+      tipo: 'construir' as const,
+      ...PASO,
+      objetivos: [
+        {
+          nombre: 'X',
+          pide: 'un punto junto a P₂',
+          es: `desplaza(figura.punto("P2"), dx: ${dx})`,
+          bien: 'Bien.',
+          diagnosticos: [{ si: 'siempre', mensaje: 'No es ahí.' }],
+        },
+      ],
+      trazado: [],
+    });
+    expect(() => resuelveEjercicio(ejercicio([sobre(0)]), datosSd1)).toThrow(
+      /sd1-prueba, paso 1: objetivo «X» cae a 0\.00 mm del punto dado P2 de la lámina: el Taller engancha el punto dado/,
+    );
+    expect(() => resuelveEjercicio(ejercicio([sobre(2)]), datosSd1)).toThrow(/del punto dado P2/);
+    expect(resuelveEjercicio(ejercicio([sobre(3)]), datosSd1).size).toBe(1);
+  });
 });
 
 describe('dos ramas que no se distinguen', () => {
