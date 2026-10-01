@@ -1,0 +1,631 @@
+ejercicios:
+  # Decisión: «Plano en VM» va el primero. No es de la colección —no tiene
+  # número que respetar (§04)— ni es nuestro: es la hoja de clase con que el
+  # curso practica los tres métodos sobre el mismo triángulo, y por eso es la
+  # entrada del tema. Los de la colección (7 a 10, 13, 14, 16 a 21, 48 y 49) van
+  # detrás, en el orden de la colección, a medida que se escriben.
+  - id: pvm-el-plano-abc-por-seis-caminos
+    titulo: El plano ABC en verdadera magnitud, por seis caminos
+    fuente: Ejercicio «Plano en VM» (hoja de clase Ejercicio_PlanoVM.pdf, 1 pág.) · Expresión Gráfica, Escuela de Ingeniería de Gipuzkoa · UPV/EHU. No es de la colección de ejercicios ni de examen; la figura se redibuja desde sus coordenadas.
+    nivel: practica
+    # Decisión: el texto impreso tal cual, en el orden de la página: primero la
+    # columna de la izquierda, con sus seis métodos, y después la frase de la
+    # esquina derecha. Se conserva la errata «qe» del método 6 (§08). Cada
+    # método va en su párrafo para que el Markdown no los junte en una línea.
+    enunciado: |
+      Encontrar la VM del plano ABC mediante:
+
+      1.- Cambio de plano empezando por un cambio de plano vertical
+
+      2.- Cambio de plano empezando por un cambio de plano horizontal
+
+      3.- Giros empezando por un giro de eje vertical
+
+      4.- Giros empezando por un giro de eje horizontal
+
+      5.- Abatimiento poniendo como charnela una recta horizontal que pase por C
+
+      6.- Abatimiento poniendo como charnela una recta frontal qe pase por C
+
+      Escribir esquemáticamente los pasos a seguir:
+
+      **Notas nuestras.** La figura es la de la hoja, a escala 1:1: el triángulo ABC con el
+      alzado arriba y la planta abajo, y nada más; la hoja deja en blanco el sitio de los
+      pasos. Aquí los métodos 5 y 6, cuyas charnelas fija el enunciado, se construyen sobre la
+      lámina y se corrigen punto a punto; los pasos de los seis se escriben en papel y se
+      comparan con su rúbrica. «VM» es verdadera magnitud.
+    pide: Los abatidos de A y de B con las dos charnelas por C que da el enunciado, la longitud real de los tres lados y los pasos de los seis métodos.
+    receta:
+      lamina: pvm
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        abc: plano(A, B, C)
+      solucion:
+        # Las dos charnelas que da el enunciado: la horizontal y la frontal del
+        # plano que pasan por C. No son una elección.
+        hC: horizontal_por(C, abc)
+        fC: frontal_por(C, abc)
+        # Método 5. A abatido a cualquiera de los dos lados de la charnela (una
+        # elección: la primera marca fija el lado) y B con el mismo giro, para
+        # que el triángulo caiga entero del mismo lado. C está en la charnela.
+        A_h: abatido_a_elegir(A, hC, abc)
+        B_h: 'abatido_junto(B, hC, abc, con: A_h, de: A)'
+        MA: pie_perpendicular(A, hC)
+        MB: pie_perpendicular(B, hC)
+        perpA: 'perpendicular(por: figura.punto("A1"), a: proy_planta(hC))'
+        perpB: 'perpendicular(por: figura.punto("B1"), a: proy_planta(hC))'
+        # Método 6, lo mismo con la frontal por C: lo abatido se ve en el alzado.
+        A_f: abatido_a_elegir(A, fC, abc)
+        B_f: 'abatido_junto(B, fC, abc, con: A_f, de: A)'
+        NA: pie_perpendicular(A, fC)
+        NB: pie_perpendicular(B, fC)
+        perpA2: 'perpendicular(por: figura.punto("A2"), a: proy_alzado(fC))'
+        perpB2: 'perpendicular(por: figura.punto("B2"), a: proy_alzado(fC))'
+        # La diferencia de alejamientos de A (y de B) con la charnela frontal: el
+        # cateto que se mide en la planta. Las recetas no exponen todavía la
+        # diferencia de alejamientos (`deltaAlejamiento` de lib/diedrico no está
+        # en FUNCIONES), así que sale del radio y del cateto del alzado, por
+        # Pitágoras. Cuando la expongan, estas dos líneas pasan a llamarla.
+        dyA: 'raiz(vm(A, NA) * vm(A, NA) - vm_alzado(A, NA) * vm_alzado(A, NA))'
+        dyB: 'raiz(vm(B, NB) * vm(B, NB) - vm_alzado(B, NB) * vm_alzado(B, NB))'
+        vm_AB_mm: en_mm(vm(A, B))
+        vm_BC_mm: en_mm(vm(B, C))
+        vm_CA_mm: en_mm(vm(C, A))
+      comprueba:
+        # C es el vértice más bajo y el de menor alejamiento (el más próximo al
+        # plano vertical): las dos charnelas por C dejan
+        # el triángulo entero a un lado, y A y B se abaten hacia el mismo.
+        - en_recta(C, hC)
+        - en_recta(C, fC)
+    pasos:
+      - tipo: reconocer
+        pregunta: Los seis métodos del enunciado acaban en lo mismo. ¿Qué tienen que conseguir para que el triángulo se vea en verdadera magnitud?
+        opciones:
+          - texto: Que el plano ABC quede paralelo a uno de los planos de proyección, o tumbado sobre uno
+            correcta: true
+            mensaje: |
+              Eso es. Una vista solo enseña sin acortar lo que es paralelo a ella. El cambio de
+              plano trae una vista nueva paralela al plano; el giro mueve el plano hasta ponerlo
+              paralelo a una vista que ya existe; el abatimiento lo tumba sobre un plano
+              horizontal o frontal alrededor de una recta suya.
+          - texto: Que el plano quede de canto, visto como una recta
+            mensaje: |
+              Ese es el paso de en medio, no el final. De canto se ve lo inclinado que está el
+              plano, pero el triángulo se reduce a un segmento: su forma no se ve. Hace falta
+              un segundo paso que lo ponga paralelo a una vista.
+          - texto: Que cada lado se mida en la vista donde se ve más largo
+            mensaje: |
+              Ningún lado de ABC es horizontal ni frontal, así que las dos vistas acortan los
+              tres. La más larga de dos medidas cortas sigue siendo corta: la verdadera magnitud
+              no está en ninguna de las dos vistas.
+
+      - tipo: construir
+        titulo: Método 5, con la horizontal por C de charnela
+        intro: |
+          La charnela es la horizontal del plano que pasa por C. Su alzado h₂ es la horizontal
+          por C₂. Para su planta, prolonga A₂B₂ hasta que corte a h₂ y baja ese punto a la
+          prolongación de A₁B₁: h₁ es la recta que lo une con C₁. Abate A y B sobre el plano
+          horizontal de la charnela. Vale cualquiera de los dos lados de h₁, pero los dos al
+          mismo; C está en la charnela y no se mueve.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A0
+            pide: el vértice A, abatido sobre el plano horizontal de la charnela
+            es: proy_planta(solucion.A_h)
+            bien: |
+              A₀ está en la perpendicular a h₁ que pasa por A₁, a la distancia real de A a la
+              charnela. Esa distancia es la hipotenusa de un triángulo rectángulo: un cateto es
+              lo que separa A₁ de h₁ en la planta y el otro, lo que A está más alto que C.
+            diagnosticos:
+              - si: cerca_de(figura.punto("A1"))
+                mensaje: |
+                  Ese es A₁, la planta de A sin abatir. Al abatir, A gira alrededor de la
+                  charnela hasta quedar a la cota de C, y en la planta se aparta de h₁.
+                ejemplo: figura.punto("A1")
+              - si: 'en_recta(solucion.perpA) && a_distancia(de: proy_planta(solucion.MA), d: diferencia_de_cotas(A, C))'
+                mensaje: |
+                  Vas por la perpendicular a h₁, pero has llevado solo **lo que A está más alto
+                  que C**. Eso es un cateto. El radio del abatimiento es la hipotenusa: ese cateto
+                  y lo que separa A₁ de h₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpA, desde: proy_planta(solucion.MA), distancia: diferencia_de_cotas(A, C)), 1)'
+              - si: 'en_recta(solucion.perpA) && a_distancia(de: proy_planta(solucion.MA), d: vm_planta(A, solucion.MA))'
+                mensaje: |
+                  Has llevado lo que separa A₁ de h₁ **en la planta**, y la planta acorta: A está
+                  más alto que la charnela. Con ese cateto y la diferencia de cotas de A y C se
+                  forma el triángulo cuya hipotenusa es el radio.
+                ejemplo: 'uno(medir_sobre(solucion.perpA, desde: proy_planta(solucion.MA), distancia: vm_planta(A, solucion.MA)), 1)'
+              - si: 'en_recta(solucion.perpA) && a_distancia(de: proy_planta(solucion.MA), d: raiz(vm_planta(A, solucion.MA) * vm_planta(A, solucion.MA) + solucion.dyA * solucion.dyA))'
+                mensaje: |
+                  El segundo cateto no es el bueno: has llevado la diferencia de **alejamientos**,
+                  que es la del abatimiento sobre el plano frontal. Sobre el plano horizontal, A
+                  baja hasta la cota de C, y lo que cuenta es la diferencia de **cotas**, que se
+                  mide en el alzado.
+                ejemplo: 'uno(medir_sobre(solucion.perpA, desde: proy_planta(solucion.MA), distancia: raiz(vm_planta(A, solucion.MA) * vm_planta(A, solucion.MA) + solucion.dyA * solucion.dyA)), 1)'
+              - si: '!en_recta(solucion.perpA)'
+                mensaje: |
+                  Al abatir, A gira alrededor de la charnela en un plano perpendicular a ella, y
+                  ese plano es vertical: en la planta, A₀ se mueve por la **perpendicular a h₁
+                  que pasa por A₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.A_h, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a h₁ por A₁, pero no en su sitio. O la distancia no
+                  es la buena —el radio es la hipotenusa de lo que separa A₁ de h₁ en la planta y
+                  de lo que A está más alto que C, que se mide en el alzado—, o has abatido A al
+                  otro lado de h₁ del que ya fijaste con B₀.
+          - nombre: B0
+            pide: el vértice B, abatido sobre el plano horizontal de la charnela
+            es: proy_planta(solucion.B_h)
+            bien: |
+              B₀ está en la perpendicular a h₁ por B₁, del mismo lado que A₀ y a la distancia
+              real de B a la charnela. Comprobación por afinidad: las rectas A₁B₁ y A₀B₀ se
+              cortan sobre h₁.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.B_h)))
+                mensaje: |
+                  Ese es B abatido **al otro lado** de la charnela. El plano gira entero, como
+                  una tapa, y A y B están al mismo lado de h: si A₀ ha caído a un lado de h₁, B₀
+                  cae al mismo. Con cada punto a un lado, el triángulo abatido sale deformado.
+                ejemplo: proy_planta(rama(solucion.B_h, 2))
+              - si: cerca_de(figura.punto("B1"))
+                mensaje: |
+                  Ese es B₁ sin abatir. B también gira alrededor de la charnela, y se aparta de
+                  h₁ por la perpendicular que pasa por B₁.
+                ejemplo: figura.punto("B1")
+              - si: 'en_recta(solucion.perpB) && a_distancia(de: proy_planta(solucion.MB), d: diferencia_de_cotas(B, C))'
+                mensaje: |
+                  Has llevado solo **lo que B está más alto que C**: un cateto. El radio es la
+                  hipotenusa de ese cateto y de lo que separa B₁ de h₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpB, desde: proy_planta(solucion.MB), distancia: diferencia_de_cotas(B, C)), 1)'
+              - si: 'en_recta(solucion.perpB) && a_distancia(de: proy_planta(solucion.MB), d: vm_planta(B, solucion.MB))'
+                mensaje: |
+                  Has llevado lo que separa B₁ de h₁ **en la planta**, que acorta. Falta la
+                  diferencia de cotas de B y C como segundo cateto.
+                ejemplo: 'uno(medir_sobre(solucion.perpB, desde: proy_planta(solucion.MB), distancia: vm_planta(B, solucion.MB)), 1)'
+              - si: 'en_recta(solucion.perpB) && a_distancia(de: proy_planta(solucion.MB), d: raiz(vm_planta(B, solucion.MB) * vm_planta(B, solucion.MB) + solucion.dyB * solucion.dyB))'
+                mensaje: |
+                  El segundo cateto es la diferencia de **cotas** de B y C, no la de
+                  alejamientos: esa es la del abatimiento sobre el plano frontal.
+                ejemplo: 'uno(medir_sobre(solucion.perpB, desde: proy_planta(solucion.MB), distancia: raiz(vm_planta(B, solucion.MB) * vm_planta(B, solucion.MB) + solucion.dyB * solucion.dyB)), 1)'
+              - si: '!en_recta(solucion.perpB)'
+                mensaje: |
+                  B₀ va por la **perpendicular a h₁ que pasa por B₁**, como A₀ por la suya.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.B_h, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a h₁ por B₁, pero no a la distancia buena. Hazlo como
+                  con A, o por afinidad: prolonga A₁B₁ hasta h₁; la recta que une ese punto con
+                  A₀ corta la perpendicular por B₁ en B₀.
+        trazado:
+          - proy_alzado(segmento3(C, solucion.MB))
+          - proy_planta(segmento3(C, solucion.MB))
+          - proy_planta(segmento3(solucion.MA, solucion.A_h))
+          - proy_planta(segmento3(solucion.MB, solucion.B_h))
+          - segmento2(figura.punto("C1"), proy_planta(solucion.A_h))
+          - segmento2(proy_planta(solucion.A_h), proy_planta(solucion.B_h))
+          - segmento2(proy_planta(solucion.B_h), figura.punto("C1"))
+        pista: |
+          (1) h₂: la horizontal por C₂; corta a la prolongación de A₂B₂ en un punto que bajas a
+          A₁B₁ prolongada, y h₁ va de C₁ a él. (2) Por A₁, la perpendicular a h₁, que la corta en
+          M. (3) Por A₁, perpendicular a A₁M, lleva lo que A está más alto que C (mídelo en el
+          alzado): la distancia de M a ese punto es el radio. (4) Con centro en M y ese radio,
+          corta la perpendicular: A₀. (5) B₀ igual, del mismo lado.
+        desarrollo: |
+          En verde claro, la charnela en las dos vistas, el camino de A y de B por sus
+          perpendiculares y el triángulo C₁A₀B₀ abatido: es ABC en verdadera magnitud. En esta
+          lámina h₁ sale casi horizontal (se aparta 0,16°), así que cada punto se abate casi por
+          su propia línea de referencia.
+
+      - tipo: construir
+        titulo: Método 6, con la frontal por C de charnela
+        intro: |
+          Ahora la charnela es la frontal del plano que pasa por C. Su planta f₁ es la
+          horizontal por C₁. Para su alzado, prolonga A₁B₁ hasta que corte a f₁ y sube ese punto
+          a la prolongación de A₂B₂: f₂ es la recta que lo une con C₂. Abate A y B sobre el plano
+          frontal de la charnela; lo abatido se ve en el alzado. Vale cualquiera de los dos
+          lados de f₂, pero los dos al mismo.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A0
+            pide: el vértice A, abatido sobre el plano frontal de la charnela
+            es: proy_alzado(solucion.A_f)
+            bien: |
+              A₀ está en la perpendicular a f₂ por A₂, a la distancia real de A a la charnela:
+              la hipotenusa de lo que separa A₂ de f₂ en el alzado y de lo que el alejamiento de A
+              supera al de C, que se mide en la planta.
+            diagnosticos:
+              - si: cerca_de(figura.punto("A2"))
+                mensaje: |
+                  Ese es A₂, el alzado de A sin abatir. Al abatir sobre el plano frontal, A gira
+                  alrededor de f hasta quedar al alejamiento de C, y en el alzado se aparta de f₂.
+                ejemplo: figura.punto("A2")
+              - si: 'en_recta(solucion.perpA2) && a_distancia(de: proy_alzado(solucion.NA), d: solucion.dyA)'
+                mensaje: |
+                  Has llevado solo la **diferencia de alejamientos** de A y C, que es un cateto.
+                  El radio es la hipotenusa de ese cateto y de lo que separa A₂ de f₂ en el
+                  alzado.
+                ejemplo: 'uno(medir_sobre(solucion.perpA2, desde: proy_alzado(solucion.NA), distancia: solucion.dyA), 1)'
+              - si: 'en_recta(solucion.perpA2) && a_distancia(de: proy_alzado(solucion.NA), d: vm_alzado(A, solucion.NA))'
+                mensaje: |
+                  Has llevado lo que separa A₂ de f₂ **en el alzado**, y el alzado acorta: A está
+                  más lejos del plano vertical que la charnela. Falta la diferencia de
+                  alejamientos como segundo cateto.
+                ejemplo: 'uno(medir_sobre(solucion.perpA2, desde: proy_alzado(solucion.NA), distancia: vm_alzado(A, solucion.NA)), 2)'
+              - si: 'en_recta(solucion.perpA2) && a_distancia(de: proy_alzado(solucion.NA), d: raiz(vm_alzado(A, solucion.NA) * vm_alzado(A, solucion.NA) + diferencia_de_cotas(A, C) * diferencia_de_cotas(A, C)))'
+                mensaje: |
+                  Has llevado la diferencia de **cotas**, la del método 5. Sobre el plano frontal,
+                  A se mueve hasta el alejamiento de C, y lo que cuenta es la diferencia de
+                  **alejamientos**, que se mide en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpA2, desde: proy_alzado(solucion.NA), distancia: raiz(vm_alzado(A, solucion.NA) * vm_alzado(A, solucion.NA) + diferencia_de_cotas(A, C) * diferencia_de_cotas(A, C))), 1)'
+              - si: '!en_recta(solucion.perpA2)'
+                mensaje: |
+                  A gira alrededor de la frontal en un plano perpendicular a ella, que es de canto
+                  sobre el alzado: en el alzado, A₀ se mueve por la **perpendicular a f₂ que pasa
+                  por A₂**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.A_f, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a f₂ por A₂, pero no en su sitio. O la distancia no es
+                  la buena —el radio es la hipotenusa de lo que separa A₂ de f₂ en el alzado y de lo
+                  que el alejamiento de A supera al de C, que se lee en la planta—, o has abatido A
+                  al otro lado de f₂ del que ya fijaste con B₀.
+          - nombre: B0
+            pide: el vértice B, abatido sobre el plano frontal de la charnela
+            es: proy_alzado(solucion.B_f)
+            bien: |
+              B₀ está en la perpendicular a f₂ por B₂, del mismo lado que A₀. Y C₂A₀B₀ es el mismo
+              triángulo que salió con la horizontal: la verdadera magnitud no depende del método.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_alzado(solucion.B_f)))
+                mensaje: |
+                  Ese es B abatido **al otro lado** de f₂. El plano gira entero: B₀ va al mismo lado
+                  que A₀.
+                ejemplo: proy_alzado(rama(solucion.B_f, 2))
+              - si: cerca_de(figura.punto("B2"))
+                mensaje: |
+                  Ese es B₂ sin abatir. B gira alrededor de f y se aparta de f₂ por la
+                  perpendicular que pasa por B₂.
+                ejemplo: figura.punto("B2")
+              - si: 'en_recta(solucion.perpB2) && a_distancia(de: proy_alzado(solucion.NB), d: solucion.dyB)'
+                mensaje: |
+                  Has llevado solo la diferencia de alejamientos de B y C: un cateto. Falta el
+                  otro, lo que separa B₂ de f₂ en el alzado.
+                ejemplo: 'uno(medir_sobre(solucion.perpB2, desde: proy_alzado(solucion.NB), distancia: solucion.dyB), 1)'
+              - si: 'en_recta(solucion.perpB2) && a_distancia(de: proy_alzado(solucion.NB), d: vm_alzado(B, solucion.NB))'
+                mensaje: |
+                  Has llevado lo que separa B₂ de f₂ en el alzado, que acorta. Falta la diferencia
+                  de alejamientos de B y C.
+                ejemplo: 'uno(medir_sobre(solucion.perpB2, desde: proy_alzado(solucion.NB), distancia: vm_alzado(B, solucion.NB)), 2)'
+              - si: 'en_recta(solucion.perpB2) && a_distancia(de: proy_alzado(solucion.NB), d: raiz(vm_alzado(B, solucion.NB) * vm_alzado(B, solucion.NB) + diferencia_de_cotas(B, C) * diferencia_de_cotas(B, C)))'
+                mensaje: |
+                  Ese segundo cateto es la diferencia de **cotas**, la del método 5. Aquí toca la
+                  de **alejamientos**.
+                ejemplo: 'uno(medir_sobre(solucion.perpB2, desde: proy_alzado(solucion.NB), distancia: raiz(vm_alzado(B, solucion.NB) * vm_alzado(B, solucion.NB) + diferencia_de_cotas(B, C) * diferencia_de_cotas(B, C))), 1)'
+              - si: '!en_recta(solucion.perpB2)'
+                mensaje: |
+                  B₀ va por la **perpendicular a f₂ que pasa por B₂**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.B_f, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a f₂ por B₂, pero no a la distancia buena. Hazlo como
+                  con A, o por afinidad: las rectas A₂B₂ y A₀B₀ se cortan sobre f₂.
+        trazado:
+          - proy_planta(segmento3(C, solucion.NB))
+          - proy_alzado(segmento3(C, solucion.NB))
+          - proy_alzado(segmento3(solucion.NA, solucion.A_f))
+          - proy_alzado(segmento3(solucion.NB, solucion.B_f))
+          - segmento2(figura.punto("C2"), proy_alzado(solucion.A_f))
+          - segmento2(proy_alzado(solucion.A_f), proy_alzado(solucion.B_f))
+          - segmento2(proy_alzado(solucion.B_f), figura.punto("C2"))
+        pista: |
+          Es el método 5 con las vistas cambiadas. (1) f₁: la horizontal por C₁; f₂, por el punto
+          donde f₁ corta a A₁B₁ prolongada, subido a A₂B₂. (2) Por A₂, la perpendicular a f₂. (3)
+          El radio, con los catetos «lo que separa A₂ de f₂», medido en el alzado, y «lo que el
+          alejamiento de A supera al de C», medido en la planta. (4) B₀ igual, del mismo lado.
+        desarrollo: |
+          En verde claro, la frontal en las dos vistas, el camino de A y de B y el triángulo
+          C₂A₀B₀ abatido sobre el plano frontal de C. Mide lo mismo que el del método 5: es el
+          mismo triángulo, en verdadera magnitud.
+
+      - tipo: calcular
+        titulo: La longitud real de AB
+        pregunta: ¿Cuánto mide de verdad el lado AB?
+        respuesta:
+          tipo: numero
+          valor: '44.44'
+          receta: vm_AB_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '33.78'
+            receta: en_mm(vm_planta(A, B))
+            mensaje: |
+              Eso es lo que mide **A₁B₁ en la planta**. AB sube de B a A, y la planta lo acorta.
+              Mídelo en el triángulo abatido, entre A₀ y B₀.
+          - valor: '37.96'
+            receta: en_mm(vm_alzado(A, B))
+            mensaje: |
+              Eso es **A₂B₂ en el alzado**, que también acorta: AB se aleja del plano vertical
+              mientras sube, y no es frontal.
+          - valor: '28.87'
+            receta: en_mm(diferencia_de_cotas(A, B))
+            mensaje: |
+              Eso es lo que A está más alto que B, la **diferencia de cotas**: un cateto del
+              triángulo de la verdadera magnitud, no el lado.
+        pista: |
+          Mide A₀B₀ con «medir» del Taller, en el paso anterior, o en tu lámina de papel, en
+          cualquiera de los dos abatimientos: los dos dan lo mismo.
+        desarrollo: |
+          $$ \overline{AB} = \sqrt{\overline{A_1B_1}^{\,2} + \Delta z^{2}} = \sqrt{33{,}78^{2} + 28{,}87^{2}} \approx 44{,}44 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: La longitud real de BC
+        pregunta: ¿Cuánto mide de verdad el lado BC?
+        respuesta:
+          tipo: numero
+          valor: '52.77'
+          receta: vm_BC_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '49.67'
+            receta: en_mm(vm_planta(B, C))
+            mensaje: |
+              Eso es **B₁C₁ en la planta**. BC sube poco, y por eso la planta lo acorta poco,
+              pero lo acorta: unos 3 mm.
+          - valor: '50.85'
+            receta: en_mm(vm_alzado(B, C))
+            mensaje: |
+              Eso es **B₂C₂ en el alzado**. BC tampoco es frontal: la diferencia es pequeña, y
+              por eso es la trampa del ejercicio. Ni la planta ni el alzado dan la verdadera
+              magnitud de un lado oblicuo.
+          - valor: '17.82'
+            receta: en_mm(diferencia_de_cotas(B, C))
+            mensaje: |
+              Eso es lo que B está más alto que C: la diferencia de cotas, un cateto. El lado es
+              la hipotenusa.
+        pista: |
+          Mide B₀C₁ en el abatimiento del método 5, o B₀C₂ en el del 6, con «medir» del Taller en
+          el paso anterior o en tu lámina de papel.
+        desarrollo: |
+          $$ \overline{BC} = \sqrt{\overline{B_1C_1}^{\,2} + \Delta z^{2}} = \sqrt{49{,}67^{2} + 17{,}82^{2}} \approx 52{,}77 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: La longitud real de CA
+        pregunta: ¿Cuánto mide de verdad el lado CA?
+        respuesta:
+          tipo: numero
+          valor: '63.98'
+          receta: vm_CA_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '43.74'
+            receta: en_mm(vm_planta(C, A))
+            mensaje: |
+              Eso es **C₁A₁ en la planta**. CA es el lado más inclinado del triángulo, y la
+              planta lo acorta casi un tercio.
+          - valor: '52.05'
+            receta: en_mm(vm_alzado(C, A))
+            mensaje: |
+              Eso es **C₂A₂ en el alzado**, que acorta: CA se aleja del plano vertical mientras
+              sube.
+          - valor: '59.75'
+            receta: en_mm(vm(A, solucion.MA))
+            mensaje: |
+              Eso es el **radio** con que se abate A en el método 5: la distancia de A a la
+              charnela, medida desde su pie M. El lado CA va de C₁, que está en la charnela, a A₀.
+        pista: |
+          C está en las dos charnelas y no se mueve al abatir: CA en verdadera magnitud va de C₁
+          a A₀ en el método 5, o de C₂ a A₀ en el 6. Mídelo con «medir» del Taller en el paso
+          anterior o en tu lámina de papel.
+        desarrollo: |
+          $$ \overline{CA} = \sqrt{\overline{C_1A_1}^{\,2} + \Delta z^{2}} = \sqrt{43{,}74^{2} + 46{,}69^{2}} \approx 63{,}98 \text{ mm} $$
+
+      # Decisión: los pasos de los seis métodos van en tres `redactar`, uno por
+      # método, con sus dos variantes «empezando por…», porque es lo que pide la
+      # hoja: «Escribir esquemáticamente los pasos a seguir». Son los pasos de un
+      # método, ni una demostración ni una deducción: `que: procedimiento`.
+      - tipo: redactar
+        que: procedimiento
+        consigna: |
+          En papel, como en la hoja: **los pasos de los métodos 1 y 2**, el cambio de plano
+          empezando por uno vertical y empezando por uno horizontal. Un renglón por paso, con la
+          recta del plano que usas, dónde va cada línea nueva y qué distancia llevas.
+        rubrica:
+          - punto: |
+              **Método 1, primer cambio, vertical.** Una horizontal del plano, por ejemplo la que
+              pasa por C, y la línea nueva perpendicular a h₁, a la distancia que se quiera. Cada
+              punto sale de su planta por la perpendicular a la línea nueva y se aparta de ella su
+              cota contada desde la de C. A₄, B₄ y C₄ quedan alineados: el plano, de canto.
+            porque: |
+              La horizontal es la recta del plano que un cambio vertical puede ver de punta, porque
+              su planta está en verdadera magnitud. Vista de punta la horizontal, todo el plano se
+              ve de canto. Sin decir qué recta se usa, la línea nueva queda al azar.
+            minimo: true
+          - punto: |
+              **Método 1, segundo cambio, horizontal.** La línea nueva, paralela al canto A₄B₄C₄.
+              Cada punto sale de la vista 4 por la perpendicular y se aparta lo que separaba su
+              planta de la primera línea nueva. A₅B₅C₅ es el triángulo en verdadera magnitud.
+            porque: |
+              Una vista paralela al plano lo enseña sin acortar. La distancia que se lleva es la
+              del sistema que se deja atrás, la planta; llevar otra vez la cota es un error típico
+              del segundo cambio.
+            minimo: true
+          - punto: |
+              **Método 2, primer cambio, horizontal.** Una frontal del plano, por ejemplo la que
+              pasa por C, la línea nueva perpendicular a f₂, y cada punto desde su alzado a su
+              alejamiento contado desde el de C. El plano sale de canto en la vista 4.
+            porque: |
+              Es el método 1 con las vistas cambiadas: la frontal está en verdadera magnitud en el
+              alzado, y un cambio horizontal la ve de punta.
+            minimo: true
+          - punto: |
+              **Método 2, segundo cambio, vertical.** La línea nueva paralela al canto, y cada
+              punto a lo que separaba su alzado de la primera línea nueva. Sale el triángulo en
+              verdadera magnitud.
+            porque: |
+              Igual que en el método 1, la distancia es la de la vista que se deja: aquí, el
+              alzado.
+          - punto: |
+              **Primero de canto, después paralelo**, en los dos métodos, y la referencia
+              (C₄ ≡ h₄, C₄ ≡ f₄) dicha en cada cambio.
+            porque: |
+              Un solo cambio no da la forma de un plano oblicuo: lo pone de canto o lo deja
+              oblicuo. En diédrico directo no hay línea de tierra, y lo que fija la vista nueva es
+              el punto que se toma de referencia.
+
+      - tipo: redactar
+        que: procedimiento
+        consigna: |
+          En papel: **los pasos de los métodos 3 y 4**, los giros empezando por uno de eje
+          vertical y empezando por uno de eje horizontal. Un renglón por paso, con el eje, hasta
+          dónde se gira y qué se queda quieto en cada giro.
+        rubrica:
+          - punto: |
+              **Método 3, giro de eje vertical.** Un eje vertical por un punto del plano, por
+              ejemplo por C. Se gira la planta alrededor de C₁ hasta que la horizontal por C
+              quede de punta, con la planta perpendicular a la horizontal del papel. Las cotas no
+              cambian: cada alzado se mueve en horizontal. El plano queda de canto en el alzado.
+            porque: |
+              Un giro de eje vertical mueve cada punto en un plano horizontal: la planta gira sin
+              deformarse y las cotas se quedan. Llevar la horizontal a de punta es lo que pone el
+              plano de canto, igual que en el cambio de plano.
+            minimo: true
+          - punto: |
+              **Método 3, giro de eje de punta.** Un eje de punta por un punto del canto. Se gira
+              el alzado hasta que el canto quede horizontal. Los alejamientos no cambian: cada
+              planta se mueve en horizontal. La planta nueva es el triángulo en verdadera
+              magnitud.
+            porque: |
+              El plano de canto gira alrededor de una recta perpendicular al plano vertical hasta
+              quedar horizontal, y una figura horizontal se ve en verdadera magnitud en la planta.
+            minimo: true
+          - punto: |
+              **Método 4.** Primero un giro de eje de punta hasta que la frontal por C quede
+              vertical, con el plano de canto en la planta. Después, uno de eje vertical hasta que
+              el canto de la planta quede horizontal. El triángulo sale en verdadera magnitud en
+              el alzado.
+            porque: |
+              Es el método 3 con cota y alejamiento cambiados de papel: la frontal hace de
+              horizontal, y el plano acaba frontal en vez de horizontal.
+            minimo: true
+          - punto: |
+              **El «eje horizontal» del enunciado es un eje de punta**: horizontal y además
+              perpendicular al plano vertical.
+            porque: |
+              Con un eje horizontal cualquiera, cada punto giraría en un plano que no es paralelo a
+              ninguno de los dos planos de proyección, y su trayectoria no se vería como una
+              circunferencia en ninguna de las dos vistas. Las diapositivas de giros lo dicen así:
+              «De punta (perpendicular) al plano de proyección vertical. [horizontal]» (págs. 10 y
+              11).
+          - punto: |
+              **Todos los puntos giran alrededor del mismo eje, el mismo ángulo y en el mismo
+              sentido.**
+            porque: |
+              Así el triángulo se mueve entero, como un sólido. Si un punto gira otro ángulo, la
+              figura se deforma y lo que se mide al final no es su verdadera magnitud.
+
+      - tipo: redactar
+        que: procedimiento
+        consigna: |
+          En papel: **los pasos de los métodos 5 y 6**, los abatimientos con la horizontal y con la
+          frontal por C de charnela. Son los que acabas de construir: escríbelos como los
+          entregarías.
+        rubrica:
+          - punto: |
+              **La charnela, en las dos vistas.** Método 5: h₂ horizontal por C₂, y h₁ por C₁ y por
+              un segundo punto de h, que sale de cortar h₂ con la prolongación de A₂B₂ y bajarlo a
+              la prolongación de A₁B₁. Método 6: f₁ horizontal por C₁, y f₂ por el punto que sale de
+              cortar f₁ con la prolongación de A₁B₁ y subirlo a la de A₂B₂.
+            porque: |
+              La charnela tiene que ser una recta del plano, y sin su segunda proyección no hay
+              perpendiculares que trazar. Una horizontal cualquiera del papel por C₁ no es la
+              charnela del método 5, aunque en esta lámina casi coincida con ella.
+            minimo: true
+          - punto: |
+              **Cada punto va por la perpendicular a la charnela que pasa por su proyección**, a un
+              radio que es la hipotenusa de dos catetos: lo que separa esa proyección de la
+              charnela y la diferencia de cotas con C (método 5) o de alejamientos (método 6).
+            porque: |
+              El punto gira alrededor de la charnela en un plano perpendicular a ella. Ese plano es
+              vertical en el método 5 y de canto en el 6: por eso el camino es una perpendicular en
+              la planta o en el alzado. El radio es la distancia real a la charnela, que ninguna
+              vista da sin el triángulo.
+            minimo: true
+          - punto: |
+              **A₀ y B₀, al mismo lado de la charnela**, y C, que está en ella, no se mueve. B₀ se
+              comprueba por afinidad: A₁B₁ y A₀B₀ se cortan sobre h₁ (A₂B₂ y A₀B₀, sobre f₂).
+            porque: |
+              El plano gira entero, como una tapa sobre su bisagra: todos sus puntos giran en el
+              mismo sentido. Aquí A y B están al mismo lado de las dos charnelas, y por eso caen
+              juntos; si una charnela cortara el triángulo, cada parte caería a su lado. La
+              afinidad da el segundo punto sin otro triángulo y comprueba el primero.
+          - punto: |
+              **El triángulo abatido es la verdadera magnitud**: en la planta en el método 5, en el
+              alzado en el 6, y miden lo mismo.
+            porque: |
+              Abatir es tumbar el plano sobre un plano horizontal o frontal, y lo que está en uno
+              de esos planos se ve sin acortar en su vista.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento del método 5. Una pieza no debe entrar.
+        piezas:
+          - texto: La charnela es la horizontal del plano por C, y su planta se saca con un segundo punto de h, bajado desde el alzado.
+          - texto: A gira alrededor de la charnela en un plano vertical, así que A₀ está en la perpendicular a h₁ que pasa por A₁.
+          - texto: El radio de A es la hipotenusa de lo que separa A₁ de h₁ en la planta y de lo que A está más alto que C.
+          - texto: B₀ sale igual, del mismo lado que A₀, y C no se mueve; C₁A₀B₀ es el triángulo en verdadera magnitud.
+          - texto: El radio de A es lo que A está más alto que C, que se lee directamente en el alzado.
+            trampa: true
+            mensaje: |
+              Eso es solo un cateto. A también está apartado de la charnela en horizontal, y eso se
+              ve en la planta: la distancia real es la hipotenusa de los dos.
+
+    resolucion: |
+      **Qué se busca.** Ningún lado de ABC es horizontal ni frontal, y las dos vistas acortan los
+      tres: la verdadera magnitud hay que construirla. C es el vértice más bajo y el de menor
+      alejamiento, el más próximo al plano vertical: A está 46,69 mm más alto que C y B, 17,82 mm;
+      A tiene 37,21 mm más de alejamiento que C, y B, 14,10 mm.
+
+      **El plano de esta hoja.** Al trazar la horizontal por C sale una sorpresa: su planta h₁
+      es casi horizontal en el papel, y la frontal por C, también en el alzado. El plano ABC es
+      casi paralelo a la línea de tierra: forma 51,4° con el plano horizontal y 38,6° con el
+      vertical, que suman 90°. Suman eso porque su normal es casi perpendicular a la línea de
+      tierra, se aparta 0,12°, y cuando lo es del todo los dos ángulos son complementarios. Por
+      eso, en los abatimientos, cada punto se abate casi por su propia línea de referencia. Y por
+      eso aquí la horizontal del papel por C₁ casi coincide con h₁, a 0,06 mm al pie de A y a
+      0,13 mm al de B, y el Taller da por buenos los abatidos construidos con ese atajo. En otra
+      lámina no vale: h₁ sale siempre de un segundo punto de h.
+
+      **Método 5, horizontal por C.** h₂ es la horizontal por C₂; corta a la prolongación de
+      A₂B₂ en un punto que, bajado a A₁B₁, da la planta h₁. A₁ está a 37,27 mm de h₁ y A, 46,69 mm
+      más alto que C: el radio es la hipotenusa, 59,75 mm, llevado desde el pie M por la
+      perpendicular a h₁. Para B, 14,23 mm y 17,82 mm dan 22,80 mm. Los dos al mismo lado, y C
+      no se mueve.
+
+      **Método 6, frontal por C.** Lo mismo en el alzado: A₂ está a 46,61 mm de f₂, y el
+      alejamiento de A supera al de C en 37,21 mm, así que el radio es de 59,65 mm; el de B, de
+      22,60 mm. El triángulo C₂A₀B₀ mide lo mismo que C₁A₀B₀.
+
+      **Los lados en verdadera magnitud.** AB = 44,44 mm, BC = 52,77 mm y CA = 63,98 mm. BC es la
+      trampa: mide 49,67 mm en la planta y 50,85 mm en el alzado, y los dos se quedan cortos.
+
+      **Métodos 1 y 2, cambios de plano.** En el 1, la línea nueva va perpendicular a h₁ y lleva
+      las cotas desde la de C: el plano sale de canto, con su ángulo de 51,4° con el plano
+      horizontal a la vista. La segunda línea nueva, paralela a ese canto, lleva lo que cada
+      planta distaba de la primera línea nueva (los «alejamientos» de las diapositivas, contados
+      desde esa línea), y da el triángulo en verdadera magnitud. El 2 es lo mismo con la frontal y
+      las vistas cambiadas: el canto enseña los 38,6° con el plano vertical. Como h₁ es casi
+      horizontal en el papel, la primera vista auxiliar del método 1 es casi una vista de perfil.
+
+      **Métodos 3 y 4, giros.** En el 3, un giro de eje vertical por C de unos 90° deja la
+      horizontal por C de punta, y el plano, de canto en el alzado. Uno de eje de punta de 51,4°
+      lo deja horizontal, y la planta es la verdadera magnitud. En el 4, un giro de eje de punta
+      de unos 90° deja la frontal vertical, y uno de eje vertical de 38,6° deja el plano frontal.
+
+      **La comprobación.** Los seis caminos dan los mismos tres lados. Si dos métodos tuyos no
+      coinciden en un lado, uno de los dos está mal construido.

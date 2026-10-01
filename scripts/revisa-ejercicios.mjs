@@ -324,7 +324,7 @@ for (const e of ejercicios) {
        la rúbrica compartida que el paso nombra. */
     if (p.tipo === 'redactar') {
       if ((p.consigna ?? '').length < 20) mal(dónde, '`consigna` con menos de 20 caracteres');
-      if (p.que !== undefined && !['demostracion', 'deduccion', 'definicion'].includes(p.que)) {
+      if (p.que !== undefined && !['demostracion', 'deduccion', 'definicion', 'procedimiento'].includes(p.que)) {
         mal(dónde, `\`que\` raro: ${p.que}`);
       }
       if (typeof p.rubrica === 'string') {
