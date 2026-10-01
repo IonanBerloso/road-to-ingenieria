@@ -340,7 +340,9 @@ src/
     diedrico-receta.ts     las recetas: la solución de una lámina y sus
                            diagnósticos escritos como DATOS en el YAML,
                            evaluados en el build, con las elecciones de
-                           las láminas que tienen dos soluciones buenas
+                           las láminas que tienen dos soluciones buenas.
+                           Con -sintaxis, -valores y -funciones al lado;
+                           una función nueva va en -funciones
     diedrico-corrige.ts    la corrección de lo que marca el alumno: lo
                            único del patrón que corre en la página, y por
                            eso no importa nada de lo demás
