@@ -327,7 +327,10 @@ src/
                            mano; tests/fisica/vapor.test.ts comprueba que
                            no se han quedado atrás
   components/
-    patrones/              Lectura · EjercicioGuiado · ErrorTipico
+    patrones/              Lectura · EjercicioGuiado · ErrorTipico ·
+                           Taller (con su lupa) · Construccion (la
+                           construcción paso a paso de un `construir`,
+                           con sus instrumentos y su porqué)
     sim/                   los simuladores (§05, §10). Su modelo vive en
                            lib/ para poder probarlo, nunca dentro del
                            .astro. El de test y el de cuestiones leen su
@@ -1767,6 +1770,23 @@ suyos, que conviene no repetir en el siguiente guardián de navegador: buscaba
 la pestaña de ejercicios con un atributo que el sitio no usa —y un `catch`
 vacío se tragaba el error—, y el punto malo de Q₁ caía 0,24 pt fuera de la
 lámina.
+
+**Las láminas densas** (1 de octubre de 2026, con los Ejercicios 53 a 55 de
+la colección, los primeros talleres en una página de examen). Tres cosas:
+- en un examen los ejercicios van en la pestaña de resoluciones, y el guion
+  la abre;
+- el Taller tiene una **lupa** (×1 a ×4) y el guion la usa lo justo para
+  que el imán separe cada objetivo de sus vecinos. Su radio se mide con la
+  escala de la pantalla, no con un número fijo, y la línea de apoyo de cada
+  punto se engancha a un cruce sin otro al lado, o a una horizontal si la
+  vertical no lo tiene;
+- si aun así el punto construido no queda en su sitio —el imán se lo lleva
+  a otra cosa de la lámina—, se crea por la **puerta de pruebas** del Taller
+  (el evento `taller:punto`, sin botón: el alumno no la ve) y se avisa sin
+  bloquear. Lo único que falla es un punto exacto que el Taller no acepta.
+
+`TALLERES_SOLO=ejercicio-54 npm run talleres` prueba solo las páginas cuya
+ruta lo contiene.
 
 ### `npm run peso` — cuánto tarda una página en un móvil
 

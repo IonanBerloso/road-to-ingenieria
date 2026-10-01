@@ -1,0 +1,412 @@
+---
+/**
+ * La construcción paso a paso de un paso `construir` (Expresión Gráfica,
+ * petición de Ionan del 1 de octubre de 2026): la lámina del enunciado y,
+ * paso a paso, cada trazo de la solución hecho con su instrumento —la regla,
+ * la escuadra y el cartabón, el compás, el transportador— y por qué se hace.
+ *
+ * Prueba de utilidad (§13):
+ * - **Para quién:** el alumno del bloque 1 que se ha atascado en una lámina, o
+ *   que la ha resuelto y quiere ver si su camino es el del curso.
+ * - **Cuándo:** con la lámina de la semana, y antes del examen de noviembre,
+ *   que es a mano y con estos instrumentos.
+ * - **Qué gana:** ver el orden y el porqué de cada trazo, y con qué
+ *   instrumento se hace, que es lo que la solución dibujada no enseña.
+ * - **Cómo se comprueba:** cada trazo sale de la receta, como la solución:
+ *   nada se dibuja a mano. `lib/construir.ts` hace fallar el build si la
+ *   construcción no acaba marcando todos los puntos de la solución.
+ *
+ * Va cerrada: abrirla es ver la solución, y el Taller está para intentarlo
+ * antes. Sin JavaScript se ve la lista de pasos, con su porqué.
+ */
+import { mate } from '../../lib/markdown.mjs';
+import type { ConstruirResuelto } from '../../lib/construir';
+import type { DatosLamina } from '../../lib/lamina';
+
+interface Props {
+  paso: ConstruirResuelto;
+  lamina: DatosLamina;
+  prefijo: string;
+}
+
+const { paso, lamina, prefijo } = Astro.props;
+const pasos = paso.construccion ?? [];
+const porques = await Promise.all(pasos.map((p, i) => mate(p.porque, `${prefijo}-c${i}`)));
+const { x, y, w, h } = lamina.encuadre;
+const marcados = Object.entries(lamina.puntos).filter(([, p]) => p.marca !== undefined);
+const NOMBRE = {
+  regla: 'regla',
+  'escuadra-cartabon': 'escuadra y cartabón',
+  compas: 'compás',
+  transportador: 'transportador',
+  marca: 'lápiz',
+} as const;
+const datos = {
+  encuadre: lamina.encuadre,
+  pasos: pasos.map((p) => ({ con: p.con, dibujos: p.dibujos.ramas[0] ?? [], guia: p.guia, toma: p.toma, rotulo: p.rotulo })),
+};
+---
+
+{
+  pasos.length > 0 && (
+    <details class="cons" data-construccion>
+      <summary>
+        <span class="rotulo rotulo--live">Ver cómo se construye</span>
+        <span class="cons-n">{pasos.length} pasos, con sus instrumentos y su porqué</span>
+      </summary>
+      <div class="cons-cuerpo">
+        <div class="cons-lienzo">
+          <svg viewBox={`${x} ${y} ${w} ${h}`} style={`max-width:${Math.round(w * 1.7)}px`} role="img" aria-label={`La lámina ${lamina.codigo}, con la construcción hasta el paso que se está viendo`} data-cons-svg>
+            <g class="cons-lamina">
+              {lamina.segmentos.map((s) => <line x1={s.a[0]} y1={s.a[1]} x2={s.b[0]} y2={s.b[1]} class={s.tipo === 'o' ? 'oculta' : s.tipo === 'e' ? 'eje' : 'vista'} />)}
+              {(lamina.circulos ?? []).map((c) => <circle cx={c.c[0]} cy={c.c[1]} r={c.r} class="vista" />)}
+              {marcados.map(([, p]) => (
+                <g class="dado">
+                  {p.marca === 'cruz' && (
+                    <>
+                      <line x1={p.x - 3} y1={p.y} x2={p.x + 3} y2={p.y} />
+                      <line x1={p.x} y1={p.y - 3} x2={p.x} y2={p.y + 3} />
+                    </>
+                  )}
+                  {p.rotulo && <text x={p.x + 4} y={p.y - 4}>{p.rotulo}</text>}
+                </g>
+              ))}
+              {(lamina.rotulos ?? []).map((r) => <text x={r.x} y={r.y} class="dado">{r.texto}</text>)}
+            </g>
+            <g class="cons-trazos" data-cons-trazos />
+            <g class="cons-instrumento" data-cons-instrumento aria-hidden="true" />
+          </svg>
+        </div>
+        <div class="cons-mandos no-imprimir" role="group" aria-label="La construcción, paso a paso">
+          <button type="button" data-cons="inicio" aria-label="Volver al principio">⏮</button>
+          <button type="button" data-cons="atras" aria-label="Paso anterior">◀</button>
+          <output class="cons-cuenta" data-cons-cuenta aria-live="polite">Paso 0 de {pasos.length}</output>
+          <button type="button" data-cons="adelante" aria-label="Paso siguiente">▶</button>
+          <button type="button" data-cons="todo" aria-label="Reproducir toda la construcción">▶▶</button>
+        </div>
+        <ol class="cons-pasos" data-cons-pasos>
+          {pasos.map((p, i) => (
+            <li data-cons-paso={i}>
+              <p class="cons-con rotulo">{NOMBRE[p.con]}{p.rotulo && ` · ${p.rotulo}`}</p>
+              <div class="prosa cons-porque" set:html={porques[i]} />
+            </li>
+          ))}
+        </ol>
+      </div>
+      <script type="application/json" data-cons-datos set:html={JSON.stringify(datos)} />
+    </details>
+  )
+}
+
+<script>
+  type P2 = readonly [number, number];
+  type Dibujo =
+    | { tipo: 'segmento'; a: P2; b: P2 }
+    | { tipo: 'arco'; c: P2; r: number; desde: number; hasta: number }
+    | { tipo: 'punto'; p: P2 };
+  interface Paso {
+    con: 'regla' | 'escuadra-cartabon' | 'compas' | 'transportador' | 'marca';
+    dibujos: Dibujo[];
+    guia?: [P2, P2];
+    toma?: [P2, P2];
+    rotulo?: string;
+  }
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el = (tag: string, attrs: Record<string, string | number>, padre?: Element) => {
+    const e = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    padre?.append(e);
+    return e;
+  };
+  const espera = (ms: number) => new Promise<void>((r) => setTimeout(r, quieto ? 0 : ms));
+  /** Un valor que va de 0 a 1 en `ms`, suave al principio y al final. */
+  const anima = (ms: number, cada: (t: number) => void) =>
+    new Promise<void>((fin) => {
+      if (quieto) {
+        cada(1);
+        return fin();
+      }
+      const t0 = performance.now();
+      const paso = (ahora: number) => {
+        const t = Math.min(1, (ahora - t0) / ms);
+        cada(t < 0.5 ? 2 * t * t : 1 - 2 * (1 - t) * (1 - t));
+        if (t < 1) requestAnimationFrame(paso);
+        else fin();
+      };
+      requestAnimationFrame(paso);
+    });
+  const rad = (g: number) => (g * Math.PI) / 180;
+  const deg = (r: number) => (r * 180) / Math.PI;
+  const sobre = (c: P2, r: number, g: number): P2 => [c[0] + r * Math.cos(rad(g)), c[1] + r * Math.sin(rad(g))];
+  /** El barrido de un arco por el camino corto, o la vuelta entera. */
+  const barrido = (d: { desde: number; hasta: number }) => {
+    let s = d.hasta - d.desde;
+    if (Math.abs(s) >= 359.9) return s > 0 ? 360 : -360;
+    s = ((s % 360) + 540) % 360 - 180;
+    return s;
+  };
+  const caminoArco = (c: P2, r: number, desde: number, s: number) => {
+    if (Math.abs(s) >= 359.9) {
+      const [a, b] = [sobre(c, r, desde), sobre(c, r, desde + 180)];
+      return `M${a[0]} ${a[1]}A${r} ${r} 0 1 1 ${b[0]} ${b[1]}A${r} ${r} 0 1 1 ${a[0]} ${a[1]}`;
+    }
+    const [a, b] = [sobre(c, r, desde), sobre(c, r, desde + s)];
+    return `M${a[0]} ${a[1]}A${r} ${r} 0 ${Math.abs(s) > 180 ? 1 : 0} ${s > 0 ? 1 : 0} ${b[0]} ${b[1]}`;
+  };
+
+  for (const caja of document.querySelectorAll<HTMLDetailsElement>('[data-construccion]')) {
+    const datos = JSON.parse(caja.querySelector('[data-cons-datos]')!.textContent!) as { encuadre: { x: number; y: number; w: number; h: number }; pasos: Paso[] };
+    const svg = caja.querySelector<SVGSVGElement>('[data-cons-svg]')!;
+    const gTrazos = svg.querySelector<SVGGElement>('[data-cons-trazos]')!;
+    const gInst = svg.querySelector<SVGGElement>('[data-cons-instrumento]')!;
+    const cuenta = caja.querySelector<HTMLOutputElement>('[data-cons-cuenta]')!;
+    const items = [...caja.querySelectorAll<HTMLLIElement>('[data-cons-paso]')];
+    const botones = Object.fromEntries([...caja.querySelectorAll<HTMLButtonElement>('[data-cons]')].map((b) => [b.dataset.cons!, b]));
+    /** El tamaño de los instrumentos, a la escala de la lámina. */
+    const U = Math.max(datos.encuadre.w, datos.encuadre.h) / 9;
+    let hechos = 0;
+    let ocupado = false;
+
+    /** Un trazo ya hecho, sin animar. */
+    const dibuja = (d: Dibujo, rotulo?: string) => {
+      if (d.tipo === 'segmento') el('line', { x1: d.a[0], y1: d.a[1], x2: d.b[0], y2: d.b[1], class: 'cons-t' }, gTrazos);
+      else if (d.tipo === 'arco') el('path', { d: caminoArco(d.c, d.r, d.desde, barrido(d)), class: 'cons-t cons-arco' }, gTrazos);
+      else {
+        el('circle', { cx: d.p[0], cy: d.p[1], r: 2.6, class: 'cons-p' }, gTrazos);
+        if (rotulo) el('text', { x: d.p[0] + 4, y: d.p[1] - 4, class: 'cons-r' }, gTrazos).textContent = rotulo;
+      }
+    };
+    /** El mismo trazo, dibujándose: una línea que crece o un arco que gira. */
+    const traza = async (d: Dibujo, ms: number, cada?: (t: number) => void) => {
+      if (d.tipo === 'punto') return;
+      const e =
+        d.tipo === 'segmento'
+          ? el('line', { x1: d.a[0], y1: d.a[1], x2: d.a[0], y2: d.a[1], class: 'cons-t cons-nuevo' }, gTrazos)
+          : el('path', { d: '', class: 'cons-t cons-arco cons-nuevo' }, gTrazos);
+      await anima(ms, (t) => {
+        if (d.tipo === 'segmento') {
+          e.setAttribute('x2', String(d.a[0] + (d.b[0] - d.a[0]) * t));
+          e.setAttribute('y2', String(d.a[1] + (d.b[1] - d.a[1]) * t));
+        } else e.setAttribute('d', caminoArco(d.c, d.r, d.desde, barrido(d) * t));
+        cada?.(t);
+      });
+      e.classList.remove('cons-nuevo');
+    };
+
+    /* ── los instrumentos, como siluetas a la escala de la lámina ── */
+    const regla = (a: P2, b: P2) => {
+      const L = Math.hypot(b[0] - a[0], b[1] - a[1]) + U * 0.8;
+      const g = el('g', { class: 'inst' }, gInst);
+      el('rect', { x: -U * 0.4, y: 0, width: L, height: U * 0.32, rx: 2 }, g);
+      for (let s = 0; s <= L; s += U / 6) el('line', { x1: s - U * 0.4, y1: 0, x2: s - U * 0.4, y2: U * (s % (U / 2) < 0.01 ? 0.12 : 0.07), class: 'inst-marca' }, g);
+      g.setAttribute('transform', `translate(${a[0]} ${a[1]}) rotate(${deg(Math.atan2(b[1] - a[1], b[0] - a[0]))})`);
+      return g;
+    };
+    /** La escuadra (45°) con un cateto sobre la recta que se va a trazar. */
+    const escuadra = () => {
+      const g = el('g', { class: 'inst' }, gInst);
+      el('path', { d: `M0 0L${U * 1.6} 0L0 ${U * 1.6}Z` }, g);
+      el('path', { d: `M${U * 0.3} ${U * 0.3}L${U * 0.95} ${U * 0.3}L${U * 0.3} ${U * 0.95}Z`, class: 'inst-hueco' }, g);
+      return g;
+    };
+    /** El cartabón (30°-60°), donde apoya la escuadra para deslizar. */
+    const cartabon = () => {
+      const g = el('g', { class: 'inst inst-2' }, gInst);
+      el('path', { d: `M0 0L${U * 2.4} 0L0 ${U * 1.4}Z` }, g);
+      return g;
+    };
+    const compas = () => {
+      const g = el('g', { class: 'inst inst-compas' }, gInst);
+      const pata1 = el('line', {}, g);
+      const pata2 = el('line', {}, g);
+      const bisagra = el('circle', { r: U * 0.09 }, g);
+      const mango = el('line', { class: 'inst-mango' }, g);
+      /** El compás con la punta en c y el lápiz en q. */
+      const pon = (c: P2, q: P2) => {
+        const m: P2 = [(c[0] + q[0]) / 2, (c[1] + q[1]) / 2];
+        const d = Math.hypot(q[0] - c[0], q[1] - c[1]);
+        const alto = Math.sqrt(Math.max(0, (U * 1.5) ** 2 - (d / 2) ** 2)) || U * 0.2;
+        const n: P2 = d > 1e-6 ? [(c[1] - q[1]) / d, (q[0] - c[0]) / d] : [0, -1];
+        const s = n[1] > 0 ? -1 : 1;
+        const H: P2 = [m[0] + s * n[0] * alto, m[1] + s * n[1] * alto];
+        pata1.setAttribute('x1', String(H[0])); pata1.setAttribute('y1', String(H[1]));
+        pata1.setAttribute('x2', String(c[0])); pata1.setAttribute('y2', String(c[1]));
+        pata2.setAttribute('x1', String(H[0])); pata2.setAttribute('y1', String(H[1]));
+        pata2.setAttribute('x2', String(q[0])); pata2.setAttribute('y2', String(q[1]));
+        bisagra.setAttribute('cx', String(H[0])); bisagra.setAttribute('cy', String(H[1]));
+        mango.setAttribute('x1', String(H[0])); mango.setAttribute('y1', String(H[1]));
+        mango.setAttribute('x2', String(H[0] + s * n[0] * U * 0.35)); mango.setAttribute('y2', String(H[1] + s * n[1] * U * 0.35));
+      };
+      return { g, pon };
+    };
+    const transportador = (c: P2, giro: number) => {
+      const g = el('g', { class: 'inst' }, gInst);
+      const R = U * 1.3;
+      el('path', { d: `M${-R} 0A${R} ${R} 0 0 1 ${R} 0Z` }, g);
+      for (let k = 0; k <= 180; k += 10) {
+        const [p, q] = [sobre([0, 0], R, -k), sobre([0, 0], R * (k % 30 ? 0.9 : 0.82), -k)];
+        el('line', { x1: p[0], y1: p[1], x2: q[0], y2: q[1], class: 'inst-marca' }, g);
+      }
+      g.setAttribute('transform', `translate(${c[0]} ${c[1]}) rotate(${giro})`);
+      return g;
+    };
+    const quita = (g: Element) => (quieto ? g.remove() : anima(220, (t) => g.setAttribute('opacity', String(1 - t))).then(() => g.remove()));
+    const aparece = (g: Element) => anima(220, (t) => g.setAttribute('opacity', String(t)));
+
+    /** Un paso entero, con su instrumento. */
+    async function haz(p: Paso) {
+      for (const d of p.dibujos) {
+        if (p.con === 'marca' || d.tipo === 'punto') {
+          dibuja(d, p.rotulo);
+          continue;
+        }
+        if (d.tipo === 'segmento' && p.con === 'regla') {
+          const g = regla(d.a, d.b);
+          await aparece(g);
+          await traza(d, 700);
+          await quita(g);
+        } else if (d.tipo === 'segmento' && p.con === 'escuadra-cartabon') {
+          /* La escuadra con un cateto sobre la recta guía y el otro apoyado
+             en el cartabón; desliza hasta la recta que se traza, que queda
+             paralela a la guía. Sin guía, se apoya directamente. */
+          const ang = deg(Math.atan2(d.b[1] - d.a[1], d.b[0] - d.a[0]));
+          const desde: P2 = p.guia ? p.guia[0] : d.a;
+          const offset = (q: P2) => {
+            const u = [Math.cos(rad(ang)), Math.sin(rad(ang))];
+            const t = (q[0] - d.a[0]) * u[0] + (q[1] - d.a[1]) * u[1];
+            return [q[0] - t * u[0], q[1] - t * u[1]] as P2;
+          };
+          const inicio = p.guia ? offset(desde) : d.a;
+          const esc = escuadra();
+          const car = cartabon();
+          const pon = (q: P2) => esc.setAttribute('transform', `translate(${q[0]} ${q[1]}) rotate(${ang})`);
+          const n = [-Math.sin(rad(ang)), Math.cos(rad(ang))];
+          const cBase: P2 = [inicio[0] - n[0] * U * 0.02, inicio[1] - n[1] * U * 0.02];
+          car.setAttribute('transform', `translate(${cBase[0]} ${cBase[1]}) rotate(${ang - 90})`);
+          pon(inicio);
+          await Promise.all([aparece(esc), aparece(car)]);
+          if (p.guia) await anima(700, (t) => pon([inicio[0] + (d.a[0] - inicio[0]) * t, inicio[1] + (d.a[1] - inicio[1]) * t]));
+          await traza(d, 700, (t) => pon([d.a[0] + (d.b[0] - d.a[0]) * t * 0.6, d.a[1] + (d.b[1] - d.a[1]) * t * 0.6]));
+          await Promise.all([quita(esc), quita(car)]);
+        } else if (d.tipo === 'arco' && (p.con === 'compas' || p.con === 'escuadra-cartabon' || p.con === 'regla')) {
+          const k = compas();
+          const s = barrido(d);
+          if (p.toma) {
+            /* Primero se toma la distancia entre dos puntos de la lámina, y
+               con esa abertura se pincha en el centro. */
+            const [a, b] = p.toma;
+            k.pon(a, a);
+            await aparece(k.g);
+            await anima(500, (t) => k.pon(a, [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]));
+            await espera(250);
+            const v: P2 = [b[0] - a[0], b[1] - a[1]];
+            const fin = sobre(d.c, d.r, d.desde);
+            await anima(600, (t) => {
+              const c: P2 = [a[0] + (d.c[0] - a[0]) * t, a[1] + (d.c[1] - a[1]) * t];
+              const q: P2 = [c[0] + v[0] + (fin[0] - d.c[0] - v[0]) * t, c[1] + v[1] + (fin[1] - d.c[1] - v[1]) * t];
+              k.pon(c, q);
+            });
+          } else {
+            k.pon(d.c, d.c);
+            await aparece(k.g);
+            await anima(450, (t) => k.pon(d.c, sobre(d.c, d.r * t, d.desde)));
+          }
+          await traza(d, 900, (t) => k.pon(d.c, sobre(d.c, d.r, d.desde + s * t)));
+          await quita(k.g);
+        } else if (d.tipo === 'arco' && p.con === 'transportador') {
+          const g = transportador(d.c, d.desde);
+          await aparece(g);
+          await traza(d, 800);
+          await quita(g);
+        } else dibuja(d);
+      }
+    }
+
+    const pintaHasta = (n: number) => {
+      gTrazos.replaceChildren();
+      gInst.replaceChildren();
+      for (const p of datos.pasos.slice(0, n)) for (const d of p.dibujos) dibuja(d, p.rotulo);
+      hechos = n;
+      marca();
+    };
+    const marca = () => {
+      cuenta.textContent = `Paso ${hechos} de ${datos.pasos.length}`;
+      items.forEach((li, i) => {
+        li.classList.toggle('actual', i === hechos - 1);
+        li.classList.toggle('hecho', i < hechos - 1);
+      });
+      botones.inicio.disabled = botones.atras.disabled = ocupado || hechos === 0;
+      botones.adelante.disabled = botones.todo.disabled = ocupado || hechos === datos.pasos.length;
+      items[hechos - 1]?.scrollIntoView({ block: 'nearest' });
+    };
+    const adelante = async () => {
+      if (ocupado || hechos >= datos.pasos.length) return;
+      ocupado = true;
+      hechos++;
+      marca();
+      await haz(datos.pasos[hechos - 1]);
+      ocupado = false;
+      marca();
+    };
+    botones.adelante.addEventListener('click', adelante);
+    botones.atras.addEventListener('click', () => !ocupado && pintaHasta(Math.max(0, hechos - 1)));
+    botones.inicio.addEventListener('click', () => !ocupado && pintaHasta(0));
+    botones.todo.addEventListener('click', async () => {
+      while (hechos < datos.pasos.length) {
+        await adelante();
+        await espera(500);
+      }
+    });
+    pintaHasta(0);
+  }
+</script>
+
+<style>
+  .cons { margin: 1rem 0 0; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); }
+  .cons > summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .8rem; padding: .6rem .8rem; cursor: pointer; list-style: none; }
+  .cons > summary::-webkit-details-marker { display: none; }
+  .cons > summary::before { content: '▸'; color: var(--live); }
+  .cons[open] > summary::before { content: '▾'; }
+  .cons > summary:focus-visible { outline: 2px solid var(--live); outline-offset: 2px; }
+  .cons-n { font-size: .85rem; color: var(--graphite); }
+  .cons-cuerpo { padding: 0 .8rem .8rem; }
+
+  .cons-lienzo { border: 1px solid var(--grid); border-radius: 6px; background: var(--paper); padding: .3rem; overflow: auto; }
+  .cons-lienzo svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+  .cons-lamina line, .cons-lamina circle { stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; fill: none; }
+  .cons-lamina .oculta { stroke-width: .9; stroke-dasharray: 5 3; }
+  .cons-lamina .eje { stroke-width: .7; stroke-dasharray: 9 3 2 3; }
+  .cons-lamina text, .cons-lamina .dado text { font-family: var(--mono); font-size: 9px; fill: var(--ink); }
+  .cons-lamina .dado line { stroke: var(--ink); stroke-width: 1; }
+
+  .cons-trazos :global(.cons-t) { stroke: var(--live); stroke-width: 1.3; fill: none; stroke-linecap: round; }
+  .cons-trazos :global(.cons-nuevo) { stroke-width: 1.8; }
+  .cons-trazos :global(.cons-p) { fill: var(--live); }
+  .cons-trazos :global(.cons-r) { font-family: var(--mono); font-size: 9px; font-weight: 700; fill: var(--live); }
+
+  .cons-instrumento :global(.inst) { fill: color-mix(in srgb, var(--graphite) 16%, transparent); stroke: var(--graphite); stroke-width: .8; }
+  .cons-instrumento :global(.inst-2) { fill: color-mix(in srgb, var(--graphite) 10%, transparent); }
+  .cons-instrumento :global(.inst-hueco) { fill: var(--paper); }
+  .cons-instrumento :global(.inst-marca) { stroke-width: .5; }
+  .cons-instrumento :global(.inst-compas line) { stroke-width: 1.6; stroke-linecap: round; }
+  .cons-instrumento :global(.inst-compas circle) { fill: var(--graphite); }
+  .cons-instrumento :global(.inst-mango) { stroke-width: 2.4; }
+
+  .cons-mandos { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .6rem 0; }
+  .cons-mandos button { min-width: 2.4rem; padding: .3rem .5rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
+  .cons-mandos button:hover:not(:disabled) { border-color: var(--live); }
+  .cons-mandos button:disabled { opacity: .45; cursor: default; }
+  .cons-mandos button:focus-visible { outline: 2px solid var(--live); outline-offset: 2px; }
+  .cons-cuenta { font-family: var(--mono); font-size: .85rem; color: var(--graphite); min-width: 7.5rem; text-align: center; }
+
+  .cons-pasos { margin: 0; padding-left: 1.4rem; display: flex; flex-direction: column; gap: .45rem; max-height: 22rem; overflow: auto; }
+  .cons-pasos li { color: var(--graphite); }
+  .cons-pasos li.actual { color: var(--ink); }
+  .cons-pasos li.actual::marker { color: var(--live); font-weight: 700; }
+  .cons-con { margin: 0; color: var(--faint); }
+  .cons-pasos li.actual .cons-con { color: var(--live); }
+  .cons-porque { font-size: .92rem; }
+  .cons-porque :global(p) { margin: .1rem 0; }
+</style>

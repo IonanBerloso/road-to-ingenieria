@@ -60,7 +60,7 @@ import { analiza } from './diedrico-receta-sintaxis';
 import type { Operador, Nodo } from './diedrico-receta-sintaxis';
 import { compruebaFirma, FUNCIONES, PREDICADOS, PALABRAS } from './diedrico-receta-funciones';
 import type { Entorno, Funcion } from './diedrico-receta-funciones';
-import type { Objetivo, Predicado, Puntos, Trazado } from './diedrico-corrige';
+import type { Dibujo, Dibujos, Objetivo, Predicado, Puntos, Trazado } from './diedrico-corrige';
 
 export type { Trazado } from './diedrico-corrige';
 export type { Lamina, Valor } from './diedrico-receta-valores';
@@ -311,6 +311,26 @@ export function compilaTrazado(src: string, lamina: Lamina, r: Resultado): Traza
     return { ramas: [segmentosDe(v)] };
   } catch (err) {
     throw new Error(`trazado «${src}»: ${(err as Error).message}`);
+  }
+}
+
+function dibujosDe(v: Valor): Dibujo[] {
+  if (v.k === 'seg2') return [{ tipo: 'segmento', a: v.a, b: v.b }];
+  if (v.k === 'arco2') return [{ tipo: 'arco', c: v.c, r: v.r, desde: v.desde, hasta: v.hasta }];
+  if (v.k === 'p2') return [{ tipo: 'punto', p: v.v }];
+  if (v.k === 'lista') return v.v.flatMap(dibujosDe);
+  throw new Error(`un paso de la construcción dibuja segmentos, arcos o puntos de la lámina, y ha recibido ${QUE[v.k]}`);
+}
+
+/** Lo que dibuja un paso de la construcción paso a paso: segmentos, arcos y
+ *  puntos de la lámina, uno por rama si dependen de una elección. */
+export function compilaDibujos(src: string, lamina: Lamina, r: Resultado): Dibujos {
+  try {
+    const v = evalua(analiza(src), entornoDe(lamina, r));
+    if (v.k === 'ramas') return { eleccion: v.eleccion, ramas: v.v.map(dibujosDe) };
+    return { ramas: [dibujosDe(v)] };
+  } catch (err) {
+    throw new Error(`construcción «${src}»: ${(err as Error).message}`);
   }
 }
 

@@ -53,6 +53,19 @@ export interface Trazado {
   readonly ramas: readonly (readonly (readonly [P2, P2])[])[];
 }
 
+/** Un trazo de la construcción paso a paso: un segmento, un arco de compás o
+ *  un punto que se marca. */
+export type Dibujo =
+  | { readonly tipo: 'segmento'; readonly a: P2; readonly b: P2 }
+  | { readonly tipo: 'arco'; readonly c: P2; readonly r: number; readonly desde: number; readonly hasta: number }
+  | { readonly tipo: 'punto'; readonly p: P2 };
+
+/** Los trazos de un paso, una lista por rama si dependen de una elección. */
+export interface Dibujos {
+  readonly eleccion?: string;
+  readonly ramas: readonly (readonly Dibujo[])[];
+}
+
 /** Unos puntos a los que se refiere un diagnóstico: fijos, lo que el alumno
  *  marcó con ese nombre, o los de una elección —los de la rama elegida, o con
  *  `otra` los de las demás—. */

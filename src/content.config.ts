@@ -801,8 +801,10 @@ const pasoRedactar = z.object({
   /** Qué se escribe, que es lo que pone el título del paso. En Álgebra y
    *  Cálculo casi siempre una demostración; en Mecánica caen deducciones
    *  —«obtener de forma razonada»— y definiciones, y llamarlas demostración
-   *  era decir otra cosa. */
-  que: z.enum(['demostracion', 'deduccion', 'definicion']).default('demostracion'),
+   *  era decir otra cosa. En Expresión Gráfica, los pasos de un método
+   *  («escribir esquemáticamente los pasos a seguir», Ejercicio_PlanoVM):
+   *  `procedimiento`. */
+  que: z.enum(['demostracion', 'deduccion', 'definicion', 'procedimiento']).default('demostracion'),
   /** Qué hay que escribir, exactamente. */
   consigna: z.string().min(20),
   /** Los puntos que un corrector busca, en el orden en que se escriben.
@@ -933,6 +935,26 @@ const pasoConstruir = z
       .refine((os) => new Set(os.map((o) => o.nombre)).size === os.length, { message: 'dos objetivos con el mismo nombre' }),
     /** Lo que se dibuja de la solución al quinto fallo: segmentos. */
     trazado: z.array(z.string().min(3)).default([]),
+    /** La construcción paso a paso (petición de Ionan, 1 de octubre de
+     *  2026): cada trazo de la solución con su instrumento y su porqué. Cada
+     *  `traza` sale de la receta, como la solución: nada se dibuja a mano, y
+     *  `lib/construir.ts` hace fallar el build si no acaba marcando todos los
+     *  puntos de la solución. */
+    construccion: z
+      .array(
+        z
+          .object({
+            con: z.enum(['regla', 'escuadra-cartabon', 'compas', 'transportador', 'marca']),
+            traza: z.string().min(3),
+            guia: z.string().min(3).optional(),
+            toma: z.string().min(3).optional(),
+            rotulo: z.string().min(1).optional(),
+            porque: z.string().min(15),
+          })
+          .strict(),
+      )
+      .min(2)
+      .optional(),
     pista: z.string().min(10),
     desarrollo: z.string().min(20),
     veredicto: z.string().optional(),

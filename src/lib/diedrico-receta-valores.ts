@@ -39,7 +39,11 @@ export type Valor =
   | { k: 'seg3'; a: P3; b: P3 }
   | { k: 'semirrecta'; origen: P3; dir: P2 }
   | { k: 'lista'; v: Valor[] }
-  | { k: 'ramas'; eleccion: string; v: Valor[] };
+  | { k: 'ramas'; eleccion: string; v: Valor[] }
+  /** Un arco de compás de la lámina, para la construcción paso a paso:
+   *  centro, radio y de qué ángulo a qué ángulo (en grados, con la y de la
+   *  lámina hacia abajo), por el camino corto o la vuelta entera. */
+  | { k: 'arco2'; c: P2; r: number; desde: number; hasta: number };
 
 export const RESERVADAS: Readonly<Record<string, Valor>> = {
   descendente: { k: 'sentido', v: 'descendente' },
@@ -61,6 +65,7 @@ export const QUE: Record<Valor['k'], string> = {
   semirrecta: 'una semirrecta',
   lista: 'una lista',
   ramas: 'una elección',
+  arco2: 'un arco de compás',
 };
 
 export function espera<K extends Valor['k']>(v: Valor | undefined, k: K, quien: string): Extract<Valor, { k: K }> {

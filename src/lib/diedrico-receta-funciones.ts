@@ -535,6 +535,48 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
       return eleccion(e, 'apice()', [1, -1].map((l) => ({ k: 'p3', v: apice(vs, h, l as 1 | -1) })));
     },
   },
+  /* ── la construcción paso a paso: lo que se traza con el compás ── */
+  /* Un arco de compás con centro en un punto de la lámina, que pasa por
+     `por` (el radio) y va de la dirección de `desde` a la de `hasta`, por el
+     camino corto. Sin `desde` ni `hasta`, la vuelta entera. */
+  arco: {
+    posicion: 1,
+    nombres: { por: 'obligatorio', desde: 'opcional', hasta: 'opcional' },
+    hace: ([c], n) => {
+      const centro = espera(c, 'p2', 'arco()').v;
+      const por = espera(n.por, 'p2', 'arco(por:)').v;
+      const r = Math.hypot(por[0] - centro[0], por[1] - centro[1]);
+      if (r < 0.01) throw new Error('arco(): el punto por el que pasa es el centro; el radio es cero');
+      const angulo = (q: P2) => (Math.atan2(q[1] - centro[1], q[0] - centro[0]) * 180) / Math.PI;
+      if (!n.desde !== !n.hasta) throw new Error('arco() lleva `desde` y `hasta`, o ninguno de los dos');
+      const desde = n.desde ? angulo(espera(n.desde, 'p2', 'arco(desde:)').v) : angulo(por);
+      const hasta = n.hasta ? angulo(espera(n.hasta, 'p2', 'arco(hasta:)').v) : desde + 360;
+      return { k: 'arco2', c: centro, r, desde, hasta };
+    },
+  },
+  /* Los cortes, en la planta, de una recta del espacio con unos segmentos:
+     el primero hacia cada lado de su punto. Es lo que se hace al trazar la
+     horizontal de un plano por un punto y llevarla hasta sus bordes. */
+  cortes: {
+    posicion: 2,
+    hace: ([recta, lista]) => {
+      const r = rectaDe(recta, 'cortes()');
+      const segs = espera(lista, 'lista', 'cortes()').v.map((x) => espera(x, 'seg3', 'cortes() en su lista'));
+      const planta = segs.map((g) => [proyPlanta(g.a), proyPlanta(g.b)] as const);
+      const origen = proyPlanta(r.p);
+      const d: P2 = [r.d.x, r.d.y];
+      if (Math.hypot(d[0], d[1]) < 1e-9) throw new Error('cortes(): la recta es vertical; en la planta es un punto');
+      return {
+        k: 'lista',
+        v: [d, [-d[0], -d[1]] as P2].map((dir) => {
+          const golpe = corteConSegmentos(origen, dir, planta);
+          if (!golpe) throw new Error('cortes(): hacia uno de los lados la recta no corta ninguno de los segmentos');
+          const g = segs[golpe.indice];
+          return { k: 'p3', v: puntoEnSegmento(g.a, g.b, golpe.s) } as Valor;
+        }),
+      };
+    },
+  },
   /* ── el lote 1 de la fase K: lo que pidieron los Ejercicios 53 y 55 de la
      colección, y el cambio de plano, que piden el tema 3 y los Ejercicios 17
      a 21 ── */

@@ -20,8 +20,9 @@
  * rama, que es lo que tiene delante quien llega a ese objetivo.
  */
 import { PT_MM, type P2 } from './diedrico';
-import { acierta, cumple, type Elegidas, type Marcados, type Objetivo, type Predicado } from './diedrico-corrige';
+import { acierta, cumple, type Dibujos, type Elegidas, type Marcados, type Objetivo, type Predicado } from './diedrico-corrige';
 import {
+  compilaDibujos,
   compilaObjetivo,
   compilaPredicado,
   compilaTrazado,
@@ -57,8 +58,35 @@ export interface ConstruirDeclarado {
   readonly tolerancia: number;
   readonly objetivos: readonly ObjetivoDeclarado[];
   readonly trazado?: readonly string[];
+  readonly construccion?: readonly PasoDeConstruccionDeclarado[];
   readonly pista: string;
   readonly desarrollo: string;
+}
+
+/** Con qué se hace un paso de la construcción paso a paso. */
+export type Instrumento = 'regla' | 'escuadra-cartabon' | 'compas' | 'transportador' | 'marca';
+
+export interface PasoDeConstruccionDeclarado {
+  readonly con: Instrumento;
+  /** Lo que se traza: una expresión de la receta que da segmentos, arcos o
+   *  puntos de la lámina. */
+  readonly traza: string;
+  /** Escuadra y cartabón: la recta de la que se parte para trazar la
+   *  paralela (un segmento de la lámina). */
+  readonly guia?: string;
+  /** Compás: la distancia que se toma antes de pinchar (un segmento). */
+  readonly toma?: string;
+  readonly rotulo?: string;
+  readonly porque: string;
+}
+
+export interface PasoDeConstruccion {
+  readonly con: Instrumento;
+  readonly dibujos: Dibujos;
+  readonly guia?: readonly [P2, P2];
+  readonly toma?: readonly [P2, P2];
+  readonly rotulo?: string;
+  readonly porque: string;
 }
 
 export interface ObjetivoResuelto {
@@ -78,6 +106,7 @@ export interface ConstruirResuelto {
   readonly tolerancia: number;
   readonly objetivos: readonly ObjetivoResuelto[];
   readonly trazado: readonly Trazado[];
+  readonly construccion?: readonly PasoDeConstruccion[];
   readonly pista: string;
   readonly desarrollo: string;
 }
@@ -176,6 +205,7 @@ export function resuelveConstruir(paso: ConstruirDeclarado, lamina: Lamina, r: R
   });
 
   const trazado = (paso.trazado ?? []).map((src) => compilaTrazado(src, lamina, r));
+  const construccion = paso.construccion ? resuelveConstruccion(paso.construccion, objetivos, lamina, r, tol) : undefined;
   return {
     titulo: paso.titulo,
     intro: paso.intro,
@@ -183,9 +213,58 @@ export function resuelveConstruir(paso: ConstruirDeclarado, lamina: Lamina, r: R
     tolerancia: tol,
     objetivos,
     trazado,
+    ...(construccion ? { construccion } : {}),
     pista: paso.pista,
     desarrollo: paso.desarrollo,
   };
+}
+
+/** Un segmento de la lámina, para la guía de la escuadra o la abertura del
+ *  compás. */
+function segmentoDe(src: string, lamina: Lamina, r: Resultado, quien: string): readonly [P2, P2] {
+  const d = compilaDibujos(src, lamina, r).ramas[0];
+  if (d?.length !== 1 || d[0].tipo !== 'segmento') throw new Error(`${quien} «${src}» tiene que ser un segmento de la lámina`);
+  return [d[0].a, d[0].b];
+}
+
+/**
+ * La construcción paso a paso, compilada, y su guardián: tiene que acabar
+ * marcando cada punto de la solución. Una construcción que no llega a uno de
+ * ellos enseñaría un camino que no termina, y eso se caza aquí, en el build.
+ * Se mira la primera rama de cada elección, que es la que se reproduce.
+ */
+function resuelveConstruccion(
+  pasos: readonly PasoDeConstruccionDeclarado[],
+  objetivos: readonly ObjetivoResuelto[],
+  lamina: Lamina,
+  r: Resultado,
+  tol: number,
+): PasoDeConstruccion[] {
+  const resueltos = pasos.map((p, i) => {
+    const quien = `construcción, paso ${i + 1}`;
+    try {
+      return {
+        con: p.con,
+        dibujos: compilaDibujos(p.traza, lamina, r),
+        ...(p.guia ? { guia: segmentoDe(p.guia, lamina, r, 'su guía') } : {}),
+        ...(p.toma ? { toma: segmentoDe(p.toma, lamina, r, 'lo que toma el compás') } : {}),
+        ...(p.rotulo ? { rotulo: p.rotulo } : {}),
+        porque: p.porque,
+      };
+    } catch (err) {
+      throw new Error(`${quien}: ${(err as Error).message}`);
+    }
+  });
+  const marcas = resueltos
+    .filter((p) => p.con === 'marca')
+    .flatMap((p) => (p.dibujos.ramas[0] ?? []).filter((d) => d.tipo === 'punto').map((d) => (d as { p: P2 }).p));
+  for (const o of objetivos) {
+    const buenos = o.es.ramas[0] ?? [];
+    if (!buenos.some((q) => marcas.some((m) => Math.hypot(m[0] - q[0], m[1] - q[1]) <= tol))) {
+      throw new Error(`la construcción paso a paso no marca ${o.rotulo}: acaba sin llegar a un punto de la solución`);
+    }
+  }
+  return resueltos;
 }
 
 /**
