@@ -50,6 +50,7 @@ import {
   anguloRectas,
   apice,
   cambioPlano,
+  poligonoRegular,
   corteRectaPlano,
   cuadradoPorDiagonal,
   distanciaRectas,
@@ -523,6 +524,21 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
       v: cuadradoPorDiagonal(comoPlano(pl, 'cuadrado_por_diagonal()'), comoP3(a, 'cuadrado_por_diagonal()'), comoP3(b, 'cuadrado_por_diagonal()')).map(
         (v): Valor => ({ k: 'p3', v }),
       ),
+    }),
+  },
+  /* El polígono regular de un plano, dados su centro y un vértice: una lista
+     de vértices, empezando por el dado. */
+  poligono_regular: {
+    posicion: 3,
+    nombres: { lados: 'obligatorio' },
+    hace: ([pl, c, v], n) => ({
+      k: 'lista',
+      v: poligonoRegular(
+        comoPlano(pl, 'poligono_regular()'),
+        comoP3(c, 'poligono_regular() (el centro)'),
+        comoP3(v, 'poligono_regular() (un vértice)'),
+        comoNum(n.lados, 'poligono_regular(lados:)'),
+      ).map((p): Valor => ({ k: 'p3', v: p })),
     }),
   },
   apice: {

@@ -629,3 +629,2001 @@ ejercicios:
 
       **La comprobación.** Los seis caminos dan los mismos tres lados. Si dos métodos tuyos no
       coinciden en un lado, uno de los dos está mal construido.
+
+  - id: sd25-tres-caras-de-un-bloque-cortado
+    titulo: Tres caras de un bloque cortado, cada una por su método
+    fuente: Ejercicio 19 (SD25) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, con sus dos erratas: «eta» (la «y»
+    # del euskera, que se quedó en la versión castellana) y «mediamente» por
+    # «mediante», dos veces (§08). Cada apartado en su párrafo para que el
+    # Markdown no los junte en una línea.
+    enunciado: |
+      Representar gráficamente la verdadera magnitud de los planos α, β eta δ.
+
+      a) Plano α mediamente abatimiento.
+
+      b) Plano β mediamente cambio de plano.
+
+      c) Plano δ mediante giro.
+
+      **Notas nuestras.** La figura son tres vistas de un bloque cortado, a escala 1:1: el alzado
+      arriba a la izquierda, el perfil a su derecha y la planta debajo del alzado. La línea de
+      trazos del alzado es una arista oculta. α y β están rotulados en la planta, y δ en el
+      perfil. La figura no nombra ningún vértice; aquí los llamamos así. α es el hexágono grande
+      de la planta: A y B son los extremos de su lado inclinado de arriba a la izquierda (A el de
+      abajo, B el de arriba), y los dos están en el suelo; siguiendo el contorno, C es la esquina
+      de arriba a la derecha, D el vértice del borde derecho donde empieza la diagonal, E el otro
+      extremo de la diagonal y F la esquina de abajo a la izquierda. β es el triángulo pequeño de
+      debajo de α: F, E y G, que es el vértice de abajo, en el borde delantero. δ es la cara
+      delantera del bloque, la que en la planta se ve como el borde inclinado de abajo: H está en
+      el suelo, debajo de F; J es la esquina de abajo a la derecha de la planta, en el suelo, y K,
+      la que tiene encima, arriba del todo; los otros dos vértices de δ son G y F. En la planta
+      coinciden F₁ y H₁, y J₁ y K₁; en el alzado, E₂ y G₂. «Eta» es la «y» del euskera, y «mediamente»
+      quiere decir «mediante»: son erratas de la hoja, y se dejan como están.
+    pide: α abatida, β en la vista nueva de un cambio de plano y δ girada hasta quedar frontal, y dos longitudes que se miden en esas verdaderas magnitudes.
+    receta:
+      lamina: sd25
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        H: 'punto3(alzado: figura.punto("H2"), planta: figura.punto("H1"))'
+        J: 'punto3(alzado: figura.punto("J2"), planta: figura.punto("J1"))'
+        K: 'punto3(alzado: figura.punto("K2"), planta: figura.punto("K1"))'
+        alfa: plano(A, B, D)
+        beta: plano(F, E, G)
+        delta: plano(H, J, K)
+      solucion:
+        # Decisión: a) α, abatido sobre el suelo con la charnela AB, que el
+        # enunciado no fija: es la horizontal de α que está en el suelo. C se abate a
+        # cualquiera de los dos lados (una elección: la primera marca fija el
+        # lado), y los demás con el mismo giro, para que α caiga entera.
+        charnela: recta3(A, B)
+        C_ab: abatido_a_elegir(C, charnela, alfa)
+        D_ab: 'abatido_junto(D, charnela, alfa, con: C_ab, de: C)'
+        E_ab: 'abatido_junto(E, charnela, alfa, con: C_ab, de: C)'
+        F_ab: 'abatido_junto(F, charnela, alfa, con: C_ab, de: C)'
+        MC: pie_perpendicular(C, charnela)
+        MD: pie_perpendicular(D, charnela)
+        ME: pie_perpendicular(E, charnela)
+        MF: pie_perpendicular(F, charnela)
+        perpC: 'perpendicular(por: figura.punto("C1"), a: figura.segmento("AB1"))'
+        perpD: 'perpendicular(por: figura.punto("D1"), a: figura.segmento("AB1"))'
+        perpE: 'perpendicular(por: figura.punto("E1"), a: figura.segmento("AB1"))'
+        perpF: 'perpendicular(por: figura.punto("F1"), a: figura.segmento("AB1"))'
+        # Para la construcción paso a paso: el triángulo del radio de C (la cota
+        # de C llevada desde C₁, paralela a A₁B₁) y los puntos de la charnela
+        # por los que pasan CD y EF y sus abatidas (afinidad).
+        TC: 'uno(medir_sobre(perpendicular(por: figura.punto("C1"), a: perpC), desde: figura.punto("C1"), distancia: diferencia_de_cotas(C, A)), 1)'
+        Xcd: pie_comun(recta3(C, D), charnela)
+        Xef: pie_comun(recta3(E, F), charnela)
+        # Decisión: b) β, por UN cambio de plano horizontal, con la línea nueva
+        # de la lámina (paralela a β₂ y a 15 mm, que fija el ejercicio porque el
+        # enunciado no la da) y F de referencia. β es de canto: con uno basta.
+        Fv: 'cambio_plano_horizontal(F, figura.segmento("nueva"), ref: F)'
+        Ev: 'cambio_plano_horizontal(E, figura.segmento("nueva"), ref: F)'
+        Gv: 'cambio_plano_horizontal(G, figura.segmento("nueva"), ref: F)'
+        perpF2: 'perpendicular(por: figura.punto("F2"), a: figura.segmento("nueva"))'
+        perpE2: 'perpendicular(por: figura.punto("E2"), a: figura.segmento("nueva"))'
+        # Decisión: c) δ, girada alrededor de la arista vertical HF (el eje,
+        # que fija el ejercicio) lo justo para quedar frontal: lo que forma con el plano
+        # vertical. Con el eje hacia arriba, el giro bueno es el negativo (la
+        # rama 2), el que lleva J₁ a la derecha de H₁. El otro sentido, 180°
+        # más, también la deja frontal, pero lleva J₁ a x = 31, pegado al marco
+        # de la hoja y fuera de la lámina, y por eso no es una elección.
+        eje: recta3(H, F)
+        giro: angulo_con_pv(delta)
+        G_g: 'rama(gira(G, eje, angulo: giro), 2)'
+        K_g: 'rama(gira(K, eje, angulo: giro), 2)'
+        J_g: 'rama(gira(J, eje, angulo: giro), 2)'
+        BE_mm: en_mm(vm(B, E))
+        FG_mm: en_mm(vm(F, G))
+      comprueba:
+        - en_plano(C, alfa)
+        - en_plano(E, alfa)
+        - en_plano(F, alfa)
+        - en_plano(F, delta)
+        - en_plano(G, delta)
+    pasos:
+      - tipo: reconocer
+        pregunta: Antes de elegir cómo se hace cada uno, ¿en qué posición está cada plano?
+        opciones:
+          - texto: 'α es oblicuo; β es de canto, una recta en el alzado; δ es vertical, una recta en la planta'
+            correcta: true
+            mensaje: |
+              Eso es. α se ve como un hexágono en las dos vistas, deformado en las dos. β se reduce
+              a la recta F₂E₂ en el alzado: es perpendicular al plano vertical. δ se reduce al borde
+              H₁J₁ en la planta: es perpendicular al horizontal. Por eso a β le basta un cambio de
+              plano y a δ un giro, mientras que α pide el método completo.
+          - texto: Los tres son oblicuos, porque ninguno es horizontal ni frontal
+            mensaje: |
+              No ser horizontal ni frontal no hace oblicuo a un plano. β se ve como una recta en el
+              alzado y δ como una recta en la planta: los dos son proyectantes. Solo α no se reduce a
+              una recta en ninguna vista.
+          - texto: β es vertical y δ es de canto
+            mensaje: |
+              Al revés. El plano que se ve como una recta en el alzado es el de canto, y ese es β,
+              con F₂E₂. El que se ve como una recta en la planta es vertical, y ese es δ, con H₁J₁.
+
+      - tipo: construir
+        titulo: α, abatido con la charnela AB
+        intro: |
+          El enunciado no dice alrededor de qué recta se abate α. Lo fijamos nosotros: la charnela
+          es AB, el lado de α que está en el suelo. En la planta es A₁B₁, el lado inclinado de arriba
+          a la izquierda, y en el alzado está en la línea del suelo: es una horizontal de α, y α se
+          abate sobre el suelo. A y B están en la charnela y no se mueven. Marca C, D, E y F
+          abatidos. Vale cualquiera de los dos lados de A₁B₁, pero todos al mismo. La recta de trazo y
+          punto de arriba a la izquierda es la línea nueva del cambio de plano de β: aquí no se usa.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: C0
+            pide: el vértice C, abatido
+            es: proy_planta(solucion.C_ab)
+            bien: |
+              C₀ está en la perpendicular a A₁B₁ que pasa por C₁, a la distancia real de C a la
+              charnela: la hipotenusa de lo que separa C₁ de A₁B₁ en la planta y de la cota de C, que
+              se mide en el alzado desde la línea del suelo.
+            diagnosticos:
+              - si: cerca_de(figura.punto("C1"))
+                mensaje: |
+                  Ese es C₁, la planta de C sin abatir. Al abatir, C gira alrededor de AB hasta quedar
+                  en el suelo, y en la planta se aparta de A₁B₁ por la perpendicular.
+                ejemplo: figura.punto("C1")
+              - si: 'en_recta(solucion.perpC) && a_distancia(de: proy_planta(solucion.MC), d: diferencia_de_cotas(C, A))'
+                mensaje: |
+                  Vas por la perpendicular a A₁B₁, pero has llevado solo **la cota de C**. Eso es un
+                  cateto. El radio del abatimiento es la hipotenusa de ese cateto y de lo que separa C₁
+                  de A₁B₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpC, desde: proy_planta(solucion.MC), distancia: diferencia_de_cotas(C, A)), 1)'
+              - si: 'en_recta(solucion.perpC) && a_distancia(de: proy_planta(solucion.MC), d: vm_planta(C, solucion.MC))'
+                mensaje: |
+                  Has llevado al otro lado de la charnela lo que C₁ dista de ella **en la planta**, y la
+                  planta acorta: C está 30 mm por encima del suelo. Con esa distancia y la cota de C se
+                  forma el triángulo cuya hipotenusa es el radio.
+                ejemplo: 'uno(medir_sobre(solucion.perpC, desde: proy_planta(solucion.MC), distancia: vm_planta(C, solucion.MC)), 1)'
+              - si: '!en_recta(solucion.perpC)'
+                mensaje: |
+                  C gira alrededor de la charnela en un plano perpendicular a ella, y ese plano es
+                  vertical, porque la charnela es horizontal: en la planta, C₀ se mueve por la
+                  **perpendicular a A₁B₁ que pasa por C₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.C_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a A₁B₁ por C₁, pero no a la distancia buena. El radio es la
+                  hipotenusa del triángulo que tiene por catetos lo que separa C₁ de A₁B₁ en la planta y
+                  la cota de C, que es lo que C₂ está por encima de la línea del suelo.
+          - nombre: D0
+            pide: el vértice D, abatido
+            es: proy_planta(solucion.D_ab)
+            bien: |
+              D₀ está en la perpendicular a A₁B₁ por D₁, del mismo lado que C₀. D y E son los puntos
+              más altos de α, y por eso los que más se apartan: 55 mm de la charnela.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.D_ab)))
+                mensaje: |
+                  Ese es D abatido **al otro lado** de la charnela. α gira entera, como una tapa sobre
+                  su bisagra, y C y D están al mismo lado de AB: si C₀ ha caído a un lado de A₁B₁, D₀ cae
+                  al mismo.
+                ejemplo: proy_planta(rama(solucion.D_ab, 2))
+              - si: cerca_de(figura.punto("D1"))
+                mensaje: |
+                  Ese es D₁ sin abatir. D también gira alrededor de AB, y se aparta de A₁B₁ por la
+                  perpendicular que pasa por D₁.
+                ejemplo: figura.punto("D1")
+              - si: 'en_recta(solucion.perpD) && a_distancia(de: proy_planta(solucion.MD), d: diferencia_de_cotas(D, A))'
+                mensaje: |
+                  Has llevado solo **la cota de D**, 45 mm: un cateto. El radio es la hipotenusa de ese
+                  cateto y de lo que separa D₁ de A₁B₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpD, desde: proy_planta(solucion.MD), distancia: diferencia_de_cotas(D, A)), 1)'
+              - si: '!en_recta(solucion.perpD)'
+                mensaje: |
+                  D₀ va por la **perpendicular a A₁B₁ que pasa por D₁**, como C₀ por la suya.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.D_ab, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a A₁B₁ por D₁, pero no a la distancia buena. Hazlo como con
+                  C: el radio es la hipotenusa de lo que separa D₁ de A₁B₁ en la planta y de la cota de
+                  D.
+          - nombre: E0
+            pide: el vértice E, abatido
+            es: proy_planta(solucion.E_ab)
+            bien: |
+              E₀ está en la perpendicular a A₁B₁ por E₁, del mismo lado. Está a la misma distancia de
+              la charnela que D₀, porque DE es otra horizontal de α, paralela a AB: D₀E₀ sale
+              paralela a A₁B₁.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.E_ab)))
+                mensaje: |
+                  Ese es E abatido **al otro lado** de la charnela. Toda α cae al mismo lado: el de C₀
+                  y D₀.
+                ejemplo: proy_planta(rama(solucion.E_ab, 2))
+              - si: cerca_de(figura.punto("E1"))
+                mensaje: |
+                  Ese es E₁ sin abatir. E gira alrededor de AB, y se aparta de A₁B₁ por la
+                  perpendicular que pasa por E₁.
+                ejemplo: figura.punto("E1")
+              - si: 'en_recta(solucion.perpE) && a_distancia(de: proy_planta(solucion.ME), d: diferencia_de_cotas(E, A))'
+                mensaje: |
+                  Has llevado solo **la cota de E**: un cateto. Falta el otro, lo que separa E₁ de A₁B₁
+                  en la planta, para tener el radio.
+                ejemplo: 'uno(medir_sobre(solucion.perpE, desde: proy_planta(solucion.ME), distancia: diferencia_de_cotas(E, A)), 1)'
+              - si: '!en_recta(solucion.perpE)'
+                mensaje: |
+                  E₀ va por la **perpendicular a A₁B₁ que pasa por E₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.E_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a A₁B₁ por E₁, pero no a la distancia buena. Hazlo como con
+                  C, o por afinidad: DE es paralela a AB, así que D₀E₀ es paralela a A₁B₁.
+          - nombre: F0
+            pide: el vértice F, abatido
+            es: proy_planta(solucion.F_ab)
+            bien: |
+              F₀ está en la perpendicular a A₁B₁ por F₁, del mismo lado, y cierra el hexágono abatido:
+              A₁B₁C₀D₀E₀F₀ es α en verdadera magnitud, con todos sus ángulos de 120°.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.F_ab)))
+                mensaje: |
+                  Ese es F abatido **al otro lado** de la charnela. F₀ va al mismo lado que los demás.
+                ejemplo: proy_planta(rama(solucion.F_ab, 2))
+              - si: cerca_de(figura.punto("F1"))
+                mensaje: |
+                  Ese es F₁ sin abatir. F está 15 mm por encima del suelo, y también se aparta de A₁B₁.
+                ejemplo: figura.punto("F1")
+              - si: 'en_recta(solucion.perpF) && a_distancia(de: proy_planta(solucion.MF), d: diferencia_de_cotas(F, A))'
+                mensaje: |
+                  Has llevado solo **la cota de F**, 15 mm: un cateto. El radio es la hipotenusa de ese
+                  cateto y de lo que separa F₁ de A₁B₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpF, desde: proy_planta(solucion.MF), distancia: diferencia_de_cotas(F, A)), 1)'
+              - si: '!en_recta(solucion.perpF)'
+                mensaje: |
+                  F₀ va por la **perpendicular a A₁B₁ que pasa por F₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.F_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a A₁B₁ por F₁, pero no a la distancia buena. Comprueba por
+                  afinidad: la recta E₁F₁ y la recta E₀F₀ se cortan sobre la charnela, en la
+                  prolongación de A₁B₁.
+        trazado:
+          - proy_planta(segmento3(solucion.MC, solucion.C_ab))
+          - proy_planta(segmento3(solucion.MD, solucion.D_ab))
+          - proy_planta(segmento3(solucion.ME, solucion.E_ab))
+          - proy_planta(segmento3(solucion.MF, solucion.F_ab))
+          - segmento2(figura.punto("B1"), proy_planta(solucion.C_ab))
+          - segmento2(proy_planta(solucion.C_ab), proy_planta(solucion.D_ab))
+          - segmento2(proy_planta(solucion.D_ab), proy_planta(solucion.E_ab))
+          - segmento2(proy_planta(solucion.E_ab), proy_planta(solucion.F_ab))
+          - segmento2(proy_planta(solucion.F_ab), figura.punto("A1"))
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("B1"), desplaza(proy_planta(solucion.Xcd), dx: 8, dy: -8)), segmento2(figura.punto("A1"), desplaza(proy_planta(solucion.Xef), dx: -8, dy: 8))]'
+            rotulo: charnela
+            porque: |
+              La **charnela**, A₁B₁, prolongada con la regla hacia los dos lados, larga: ahí caen M, el
+              pie de cada vértice, y los puntos fijos de la afinidad. Hacia arriba cruza la línea del
+              suelo del alzado y sube por dentro de él: no la confundas con sus aristas.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("C1"), desplaza(proy_planta(rama(solucion.C_ab, 1)), dx: 5.66, dy: 5.66)), segmento2(figura.punto("C1"), desplaza(proy_planta(rama(solucion.C_ab, 2)), dx: -5.66, dy: -5.66))]'
+            guia: figura.segmento("AB1")
+            porque: |
+              Por C₁, la **perpendicular a A₁B₁**, larga y hacia los dos lados: al abatir, C gira
+              alrededor de la charnela en un plano vertical, y en la planta se mueve por esa recta.
+              Corta la charnela en M, el pie de C.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("C1"), desplaza(solucion.TC, dx: 5.66, dy: -5.66))'
+            guia: figura.segmento("AB1")
+            porque: |
+              Por C₁, la paralela a A₁B₁, larga. Sobre ella se lleva la cota de C, y sale el triángulo
+              del radio, rectángulo en C₁. Su extremo cae dentro del perfil: no lo confundas con sus
+              aristas.
+          - con: compas
+            traza: 'arco(figura.punto("C1"), por: solucion.TC, desde: desplaza(solucion.TC, dx: 4.24, dy: 4.24), hasta: desplaza(solucion.TC, dx: -4.24, dy: -4.24))'
+            toma: segmento2(figura.punto("C2"), figura.punto("J2"))
+            porque: |
+              Con el compás, la **cota de C**: lo que C₂ está por encima de la esquina de abajo del
+              alzado, 30 mm, que es lo que C está por encima de la charnela. Se lleva desde C₁ sobre la
+              paralela.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.MC), solucion.TC)
+            rotulo: r
+            porque: |
+              La hipotenusa, de M al punto que acabas de llevar, es la **distancia real de C a la
+              charnela**: el radio con que C se abate, 36,7 mm.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.MC), por: solucion.TC, desde: solucion.TC, hasta: proy_planta(solucion.C_ab))'
+            toma: segmento2(proy_planta(solucion.MC), solucion.TC)
+            porque: |
+              Con centro en M, que está en la charnela, y ese radio, el arco hasta la perpendicular: C
+              cae al suelo girando alrededor de AB.
+          - con: marca
+            traza: proy_planta(solucion.C_ab)
+            rotulo: C₀
+            porque: |
+              C₀, C abatido. Aquí cae del lado de la planta; al otro lado también valdría, con todo lo
+              demás al mismo lado.
+          - con: regla
+            traza: segmento2(figura.punto("D1"), proy_planta(solucion.Xcd))
+            porque: |
+              Los demás vértices salen por **afinidad**. La recta D₁C₁, prolongada, corta la charnela en
+              un punto que no se mueve al abatir. Esa prolongación va por la misma vertical que la arista
+              derecha del alzado, y el punto cae sobre ella.
+          - con: regla
+            traza: 'segmento2(proy_planta(solucion.Xcd), desplaza(proy_planta(solucion.D_ab), dx: 2.07, dy: 7.73))'
+            porque: |
+              La recta CD abatida, larga: pasa por ese punto y por C₀, porque una recta del plano y su
+              abatida se cortan en la charnela.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("D1"), proy_planta(solucion.D_ab))
+            guia: figura.segmento("AB1")
+            porque: |
+              Por D₁, la perpendicular a A₁B₁. D₀ está donde corta la abatida de CD.
+          - con: marca
+            traza: proy_planta(solucion.D_ab)
+            rotulo: D₀
+            porque: |
+              D₀, del mismo lado que C₀: α se tumba entera.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.D_ab), desplaza(proy_planta(solucion.E_ab), dx: -5.66, dy: 5.66))'
+            guia: figura.segmento("AB1")
+            porque: |
+              DE es otra horizontal de α, paralela a AB, y su abatida también lo es: por D₀, la
+              paralela a A₁B₁, larga.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("E1"), proy_planta(solucion.E_ab))
+            guia: figura.segmento("AB1")
+            porque: |
+              Por E₁, la perpendicular a A₁B₁, hasta la paralela que sale de D₀.
+          - con: marca
+            traza: proy_planta(solucion.E_ab)
+            rotulo: E₀
+            porque: |
+              E₀, a la misma distancia de la charnela que D₀.
+          - con: regla
+            traza: segmento2(figura.punto("E1"), proy_planta(solucion.Xef))
+            porque: |
+              La recta E₁F₁, prolongada, corta la charnela en otro punto fijo.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.Xef), proy_planta(solucion.E_ab))
+            porque: |
+              La abatida de EF va de ese punto a E₀, y F₀ está en ella.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F1"), proy_planta(solucion.F_ab))
+            guia: figura.segmento("AB1")
+            porque: |
+              Por F₁, la perpendicular a A₁B₁, hasta la abatida de EF.
+          - con: marca
+            traza: proy_planta(solucion.F_ab)
+            rotulo: F₀
+            porque: |
+              F₀, el último vértice que se mueve.
+          - con: regla
+            traza: '[segmento2(figura.punto("B1"), proy_planta(rama(solucion.C_ab, 1))), segmento2(proy_planta(rama(solucion.F_ab, 1)), figura.punto("A1"))]'
+            porque: |
+              Los dos lados que faltan, B₁C₀ y F₀A₁: A₁B₁C₀D₀E₀F₀ es α en verdadera magnitud, con cuatro
+              lados de 21,2 mm, dos de 42,4 y todos los ángulos de 120°.
+        pista: |
+          (1) Por C₁, la perpendicular a A₁B₁; la corta en M. (2) Por C₁, perpendicular a C₁M, lleva
+          la cota de C, que es lo que C₂ está por encima de la línea del suelo: la distancia de M a ese
+          punto es el radio. (3) Con centro en M y ese radio, corta la perpendicular: C₀. (4) D, E y F
+          igual, del mismo lado.
+        desarrollo: |
+          En verde claro, el camino de cada vértice por su perpendicular a la charnela y el hexágono
+          A₁B₁C₀D₀E₀F₀: es α en verdadera magnitud. Tiene cuatro lados de 21,2 mm y dos de 42,4, BC y
+          EF, que son opuestos, y todos los ángulos de 120°.
+
+      - tipo: construir
+        titulo: β, con un cambio de plano
+        intro: |
+          β es de canto: en el alzado se ve como la recta F₂E₂, y G₂ coincide con E₂. Un cambio de
+          plano horizontal con la línea nueva paralela a F₂E₂ pone el plano nuevo paralelo a β, y la
+          vista nueva lo da sin acortar. El enunciado no dice dónde va la línea nueva: la hemos fijado
+          nosotros y ya está dibujada, la de trazo y punto de arriba a la izquierda, a 15 mm de F₂E₂. La
+          referencia es F, que cae en la línea nueva. Marca los tres vértices de β en la vista nueva.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: F4
+            pide: el vértice F, en la vista nueva
+            es: solucion.Fv
+            bien: |
+              F₄ está en la línea nueva, al pie de la perpendicular que sale de F₂: F es la referencia,
+              y su alejamiento es el que se cuenta como cero.
+            diagnosticos:
+              - si: 'en_recta(figura.segmento("nueva")) && en_vertical_de(figura.punto("F2"))'
+                mensaje: |
+                  Has subido F₂ en vertical hasta la línea nueva. Las líneas de referencia de un cambio
+                  de plano van **perpendiculares a la línea nueva**, no verticales: la vertical solo une
+                  el alzado con la planta.
+                # Decisión: el ejemplo va en cifras (pt): el punto de la línea nueva
+                # (x + y = 369,48) en la vertical de F₂, 60,12 pt por encima.
+                ejemplo: 'desplaza(figura.punto("F2"), dy: -60.12)'
+              - si: '!en_recta(solucion.perpF2)'
+                mensaje: |
+                  F₄ sale de F₂ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.Fv, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular que sale de F₂, pero F es la referencia: su alejamiento cuenta
+                  como cero, y F₄ cae **en la línea nueva**.
+                ejemplo: 'desplaza(solucion.Fv, dx: mm(-5), dy: mm(-5))'
+          - nombre: E4
+            pide: el vértice E, en la vista nueva
+            es: solucion.Ev
+            bien: |
+              E₄ también cae en la línea nueva: E tiene el mismo alejamiento que F, porque FE es una
+              frontal de β. F₄E₄ mide 42,4 mm, como F₂E₂: FE ya estaba en verdadera magnitud en el
+              alzado.
+            diagnosticos:
+              - si: '!en_recta(solucion.perpE2)'
+                mensaje: |
+                  E₄ sale de E₂ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.Ev, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular que sale de E₂, pero E está tan lejos como F: E₁ y F₁ están a
+                  la misma altura en la planta. Lleva cero, y E₄ cae en la línea nueva.
+                ejemplo: 'desplaza(solucion.Ev, dx: mm(-5), dy: mm(-5))'
+          - nombre: G4
+            pide: el vértice G, en la vista nueva
+            es: solucion.Gv
+            bien: |
+              G₄ está en la misma perpendicular que E₄, porque G₂ coincide con E₂, y 10 mm más allá de
+              la línea nueva: lo que G está más cerca que F, que en la planta es lo que G₁ está por
+              debajo de F₁. F₄E₄G₄ es β en verdadera magnitud, con el ángulo recto en E.
+            diagnosticos:
+              - si: cerca_de(E4)
+                mensaje: |
+                  G₄ no coincide con E₄. En el alzado G₂ y E₂ coinciden, porque EG es de punta, pero G está
+                  10 mm más cerca que E: en la vista nueva esos 10 mm se ven.
+                ejemplo: solucion.Ev
+              - si: 'en_recta(solucion.perpE2) && a_distancia(de: solucion.Ev, d: diferencia_de_cotas(G, F))'
+                mensaje: |
+                  Has llevado la diferencia de **cotas** de G y F, 30 mm. Un cambio de plano horizontal
+                  sale del alzado y lleva **alejamientos**: lo que G está más cerca que F, que se mide en
+                  la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpE2, desde: solucion.Ev, distancia: diferencia_de_cotas(G, F)), 1)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.perpE2, desde: solucion.Ev, distancia: vm(G, E)), 1))'
+                mensaje: |
+                  Has llevado los 10 mm **hacia el alzado**. La vista nueva queda al otro lado de la
+                  línea nueva, y un punto que está más cerca que la referencia se aparta de la línea hacia
+                  fuera, no hacia el alzado.
+                ejemplo: 'uno(medir_sobre(solucion.perpE2, desde: solucion.Ev, distancia: vm(G, E)), 1)'
+              - si: '!en_recta(solucion.perpE2)'
+                mensaje: |
+                  G₄ sale de G₂ por la **perpendicular a la línea nueva**, y G₂ coincide con E₂: es la
+                  misma perpendicular que la de E₄.
+                ejemplo: 'desplaza(solucion.Gv, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena. G₄ se aparta de la línea
+                  nueva lo que G está más cerca que F: en la planta, lo que G₁ está por debajo de F₁, 10
+                  mm.
+        trazado:
+          - segmento2(figura.punto("F2"), solucion.Fv)
+          - segmento2(figura.punto("E2"), solucion.Gv)
+          - segmento2(solucion.Fv, solucion.Ev)
+          - segmento2(solucion.Ev, solucion.Gv)
+          - segmento2(solucion.Gv, solucion.Fv)
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F2"), solucion.Fv)
+            guia: figura.segmento("nueva")
+            porque: |
+              Por F₂, la **perpendicular a la línea nueva**, hasta ella: las líneas de referencia de un
+              cambio de plano van siempre perpendiculares a la línea nueva.
+          - con: marca
+            traza: solucion.Fv
+            rotulo: F₄
+            porque: |
+              F es la referencia: su alejamiento cuenta como cero, y F₄ cae en la línea nueva.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("E2"), desplaza(solucion.Gv, dx: -5.66, dy: -5.66))'
+            guia: figura.segmento("nueva")
+            porque: |
+              Por E₂, que coincide con G₂, la otra perpendicular, larga, más allá de la línea nueva:
+              sirve para E y para G.
+          - con: marca
+            traza: solucion.Ev
+            rotulo: E₄
+            porque: |
+              E está tan lejos como F, porque E₁ y F₁ están a la misma altura en la planta: E₄ cae donde
+              la perpendicular corta la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.Ev, por: solucion.Gv, desde: desplaza(solucion.Gv, dx: 2.12, dy: -2.12), hasta: desplaza(solucion.Gv, dx: -2.12, dy: 2.12))'
+            toma: figura.segmento("EG1")
+            porque: |
+              Con el compás, en la planta, **lo que G está más cerca que F**: de E₁ a G₁, 10 mm. Se lleva
+              desde E₄ hacia fuera de la línea nueva, lejos del alzado.
+          - con: marca
+            traza: solucion.Gv
+            rotulo: G₄
+            porque: |
+              G₄, 10 mm más allá de la línea nueva.
+          - con: regla
+            traza: segmento2(solucion.Fv, solucion.Gv)
+            porque: |
+              F₄E₄G₄ es β en verdadera magnitud: rectángulo en E, con FG de 43,5 mm.
+        pista: |
+          (1) Por F₂ y por E₂, las perpendiculares a la línea nueva. (2) F es la referencia: F₄ en la
+          línea. E tiene el alejamiento de F: E₄ también en la línea. (3) En la planta, G₁ está 10 mm
+          por debajo de F₁: G está 10 mm más cerca. Lleva esos 10 mm desde E₄, hacia fuera: G₄.
+        desarrollo: |
+          En verde claro, las dos líneas de referencia y el triángulo F₄E₄G₄: β en verdadera magnitud,
+          rectángulo en E, con catetos de 42,4 y 10 mm y la hipotenusa FG de 43,5 mm.
+
+      - tipo: construir
+        titulo: δ, girada hasta quedar frontal
+        intro: |
+          δ es vertical: en la planta se ve como el borde inclinado H₁J₁. Un giro de eje vertical que
+          deje esa recta horizontal pone δ frontal, y el alzado la da en verdadera magnitud. El
+          enunciado no fija el eje; lo fijamos nosotros: la arista vertical de δ que va de H a F, que en
+          la planta es el punto H₁ ≡ F₁ y en el alzado, el tramo bajo del borde izquierdo. H y F no se
+          mueven. Gira lo justo para que H₁J₁ quede horizontal, con J y K a la derecha, unos 18°.
+          Girando hacia el otro lado también quedaría frontal, pero J y K quedarían pegados al marco de
+          la hoja, fuera de la lámina. Marca
+          G y K girados, en la planta y en el alzado. La recta de trazo y punto de arriba a la izquierda
+          es la línea nueva del cambio de plano de β: aquí no se usa.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: G1p
+            rotulo: G₁′
+            pide: el vértice G girado, en la planta
+            es: proy_planta(solucion.G_g)
+            bien: |
+              G₁′ está en la horizontal que pasa por F₁, a la misma distancia de F₁ que G₁: la planta
+              gira alrededor de F₁ sin deformarse.
+            diagnosticos:
+              - si: cerca_de(figura.punto("G1"))
+                mensaje: |
+                  Ese es G₁, sin girar. G gira alrededor del eje, que en la planta es F₁, hasta que δ
+                  queda frontal: G₁′ en la horizontal por F₁.
+                ejemplo: figura.punto("G1")
+              - si: cerca_de(figura.punto("E1"))
+                mensaje: |
+                  Has subido G₁ **en vertical** hasta la horizontal por F₁: eso no es girar, es acortar.
+                  En un giro de eje vertical cada punto se mueve por un arco con centro en el eje, F₁, y
+                  conserva su distancia a él. Ese punto, además, es E₁.
+                ejemplo: figura.punto("E1")
+              - si: 'cerca_de(proy_planta(simetrico(solucion.G_g, respecto: F)))'
+                mensaje: |
+                  Has girado hacia el otro lado, unos 162°, y δ también queda frontal: la distancia a F₁
+                  es la buena. Aquí va el giro corto, con J y K a la derecha, que es el que fija este
+                  paso: con el largo, J₁′ y K₁′ quedarían pegados al marco de la hoja, fuera de la lámina.
+                ejemplo: 'proy_planta(simetrico(solucion.G_g, respecto: F))'
+              - si: '!en_recta(figura.segmento("FE1"))'
+                mensaje: |
+                  δ frontal tiene la planta **horizontal**, y pasa por el eje: G₁′ está en la horizontal
+                  que pasa por F₁, la prolongación de F₁E₁.
+                ejemplo: 'desplaza(proy_planta(solucion.G_g), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la horizontal por F₁, pero no a la distancia buena. Con centro en F₁ y radio
+                  F₁G₁, el arco corta esa horizontal en G₁′.
+          - nombre: G2p
+            rotulo: G₂′
+            pide: el vértice G girado, en el alzado
+            es: proy_alzado(solucion.G_g)
+            bien: |
+              G₂′ está en la vertical de G₁′ y a la altura de G₂: en un giro de eje vertical las cotas no
+              cambian. Se ha corrido 1,6 mm a la derecha de G₂: δ estaba casi frontal.
+            diagnosticos:
+              - si: '!en_vertical_de(G1p)'
+                mensaje: |
+                  G₂′ va en la **vertical de G₁′**: son el mismo punto girado, visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.G_g), dx: mm(6))'
+              - si: '!en_horizontal_de(figura.punto("G2"))'
+                mensaje: |
+                  Has cambiado la cota de G. Con el eje vertical, G gira en un plano horizontal: en el
+                  alzado solo se mueve en horizontal, y G₂′ queda a la altura de G₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.G_g), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  G₂′ está en la vertical de G₁′ y a la altura de G₂, arriba del todo del alzado.
+          - nombre: K1p
+            rotulo: K₁′
+            pide: el vértice K girado, en la planta, que es también J girado
+            es: proy_planta(solucion.K_g)
+            bien: |
+              K₁′ ≡ J₁′ está en la horizontal por F₁, a la distancia F₁J₁, 47,4 mm: es lo que mide H₁J₁,
+              el borde de δ en el suelo, que ya estaba en verdadera magnitud porque es horizontal.
+            diagnosticos:
+              - si: cerca_de(figura.punto("K1"))
+                mensaje: |
+                  Ese es K₁ ≡ J₁, sin girar. Con δ frontal, J₁ queda en la horizontal que pasa por F₁.
+                ejemplo: figura.punto("K1")
+              - si: 'cerca_de(pie_perpendicular(figura.punto("K1"), figura.segmento("FE1")))'
+                mensaje: |
+                  Has subido J₁ **en vertical** hasta la horizontal por F₁: eso acorta δ. J gira con
+                  centro en F₁ y conserva su distancia a él, 47,4 mm.
+                ejemplo: 'pie_perpendicular(figura.punto("K1"), figura.segmento("FE1"))'
+              - si: '!en_recta(figura.segmento("FE1"))'
+                mensaje: |
+                  Con δ frontal, toda su planta está en la horizontal que pasa por F₁: K₁′ también.
+                ejemplo: 'desplaza(proy_planta(solucion.K_g), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la horizontal por F₁, pero no a la distancia buena: con centro en F₁ y radio
+                  F₁J₁, el arco la corta en J₁′ ≡ K₁′.
+          - nombre: K2p
+            rotulo: K₂′
+            pide: el vértice K girado, en el alzado
+            es: proy_alzado(solucion.K_g)
+            bien: |
+              K₂′ está en la vertical de K₁′, arriba del todo, a la cota de K. Con H₂, J₂′, K₂′, G₂′ y
+              F₂ queda δ en verdadera magnitud: un pentágono con tres ángulos rectos, en H, J y K.
+            diagnosticos:
+              - si: '!en_vertical_de(K1p)'
+                mensaje: |
+                  K₂′ va en la **vertical de K₁′**.
+                ejemplo: 'desplaza(proy_alzado(solucion.K_g), dx: mm(6))'
+              - si: '!en_horizontal_de(figura.punto("K2"))'
+                mensaje: |
+                  La cota de K no cambia al girar: K₂′ está a la altura de K₂, arriba del todo del
+                  alzado. La que está en el suelo es J₂′, debajo.
+                ejemplo: proy_alzado(solucion.J_g)
+              - si: siempre
+                mensaje: |
+                  K₂′ está en la vertical de K₁′ y a la altura de K₂.
+        trazado:
+          - segmento2(figura.punto("F1"), proy_planta(solucion.K_g))
+          - segmento2(proy_planta(solucion.G_g), proy_alzado(solucion.G_g))
+          - segmento2(proy_planta(solucion.K_g), proy_alzado(solucion.K_g))
+          - segmento2(figura.punto("H2"), proy_alzado(solucion.J_g))
+          - segmento2(proy_alzado(solucion.J_g), proy_alzado(solucion.K_g))
+          - segmento2(proy_alzado(solucion.K_g), proy_alzado(solucion.G_g))
+          - segmento2(proy_alzado(solucion.G_g), figura.punto("F2"))
+        construccion:
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("F1"), desplaza(proy_planta(solucion.K_g), dx: 10))'
+            porque: |
+              Por F₁, que es el eje, la horizontal, larga: ahí queda la planta de δ cuando es frontal.
+              Es la prolongación de F₁E₁.
+          - con: compas
+            traza: 'arco(figura.punto("F1"), por: figura.punto("G1"), desde: figura.punto("G1"), hasta: proy_planta(solucion.G_g))'
+            porque: |
+              Con centro en el eje, F₁, y radio F₁G₁, el arco hasta la horizontal: en un giro de eje
+              vertical la planta gira sin deformarse.
+          - con: marca
+            traza: proy_planta(solucion.G_g)
+            rotulo: G₁′
+            porque: |
+              G₁′, G girado en la planta, 1,6 mm a la derecha de E₁.
+          - con: compas
+            traza: 'arco(figura.punto("F1"), por: figura.punto("K1"), desde: figura.punto("K1"), hasta: proy_planta(solucion.K_g))'
+            porque: |
+              Lo mismo con J₁ ≡ K₁: el mismo centro y el mismo giro, unos 18°.
+          - con: marca
+            traza: proy_planta(solucion.K_g)
+            rotulo: J₁′ ≡ K₁′
+            porque: |
+              J₁′ ≡ K₁′, a 47,4 mm de F₁: lo que mide H₁J₁, que ya estaba en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("K2"), desplaza(proy_alzado(solucion.K_g), dx: 10)), segmento2(figura.punto("J2"), desplaza(proy_alzado(solucion.J_g), dx: 10))]'
+            porque: |
+              K₂′ y J₂′ van a caer 2,4 mm a la derecha del alzado. Antes se prolongan hacia la derecha la
+              arista de arriba y la línea del suelo, que son las horizontales a la cota de K y a la de J:
+              las cotas no cambian en un giro de eje vertical.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.G_g), proy_alzado(solucion.G_g)), segmento2(proy_planta(solucion.K_g), proy_alzado(solucion.K_g))]'
+            porque: |
+              Las líneas de referencia, verticales, desde G₁′ y K₁′ hasta el alzado: G₂′ cae en la arista
+              de arriba, y K₂′ y J₂′, en las dos prolongaciones.
+          - con: marca
+            traza: proy_alzado(solucion.G_g)
+            rotulo: G₂′
+            porque: |
+              G₂′, a la altura de G₂ y en la vertical de G₁′.
+          - con: marca
+            traza: proy_alzado(solucion.K_g)
+            rotulo: K₂′
+            porque: |
+              K₂′, a la altura de K₂ y en la vertical de K₁′.
+          - con: marca
+            traza: proy_alzado(solucion.J_g)
+            rotulo: J₂′
+            porque: |
+              J₂′, en la línea del suelo prolongada y en la misma vertical.
+          - con: regla
+            traza: '[segmento2(figura.punto("H2"), proy_alzado(solucion.J_g)), segmento2(proy_alzado(solucion.K_g), proy_alzado(solucion.G_g)), segmento2(proy_alzado(solucion.G_g), figura.punto("F2"))]'
+            porque: |
+              El pentágono H₂J₂′K₂′G₂′F₂ es δ en verdadera magnitud; el lado J₂′K₂′ ya está trazado, en
+              la línea de referencia de K.
+        pista: |
+          (1) Con centro en F₁, arcos de radio F₁G₁ y F₁J₁ hasta la horizontal por F₁: G₁′ y J₁′ ≡ K₁′.
+          (2) Súbelos por sus verticales. (3) Las cotas no cambian: G₂′ y K₂′ arriba del todo, a la
+          altura de G₂ y K₂; J₂′ en la línea del suelo.
+        desarrollo: |
+          En verde claro, δ girada: en la planta, la recta F₁J₁′, horizontal; en el alzado, el pentágono
+          H₂J₂′K₂′G₂′F₂, que es δ en verdadera magnitud. El giro es de 18,4°, y por eso δ cambia poco:
+          estaba casi frontal.
+
+      - tipo: calcular
+        titulo: La diagonal BE de α
+        pregunta: ¿Cuánto mide de verdad la diagonal BE de α? Mídela en α abatida.
+        respuesta:
+          tipo: numero
+          valor: '56.13'
+          receta: BE_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '33.55'
+            receta: en_mm(vm_planta(B, E))
+            mensaje: |
+              Eso es lo que mide **B₁E₁ en la planta**. BE sube 45 mm de B a E, y la planta lo acorta
+              mucho. En α abatida, B₀ es B₁, porque B está en la charnela: mide de B₁ a E₀.
+          - valor: '47.43'
+            receta: en_mm(vm_alzado(B, E))
+            mensaje: |
+              Eso es **B₂E₂ en el alzado**, que también acorta: BE se acerca mientras sube, y no es
+              frontal.
+          - valor: '45.00'
+            receta: en_mm(diferencia_de_cotas(B, E))
+            mensaje: |
+              Eso es lo que E está más alto que B, la **diferencia de cotas**: un cateto del triángulo
+              de la verdadera magnitud, no la diagonal.
+        pista: |
+          B está en la charnela y no se mueve: la diagonal en verdadera magnitud va de B₁ a E₀.
+        desarrollo: |
+          $$ \overline{BE} = \sqrt{\overline{B_1E_1}^{\,2} + \Delta z^{2}} = \sqrt{33{,}55^{2} + 45{,}00^{2}} \approx 56{,}13 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: La arista común a β y δ
+        pregunta: FG es lado de β y de δ. ¿Cuánto mide de verdad? Mídelo en β y en δ, y comprueba que da lo mismo.
+        respuesta:
+          tipo: numero
+          valor: '43.55'
+          receta: FG_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '42.39'
+            receta: en_mm(vm_alzado(F, G))
+            mensaje: |
+              Eso es **F₂G₂ en el alzado**, y FG no es frontal: G está 10 mm más cerca que F. La
+              diferencia es poca, y por eso engaña. F₄G₄ en la vista nueva, o F₂G₂′ con δ girada, dan la
+              verdadera magnitud.
+          - valor: '31.59'
+            receta: en_mm(vm_planta(F, G))
+            mensaje: |
+              Eso es **F₁G₁ en la planta**. FG sube 30 mm, y la planta lo acorta.
+          - valor: '29.97'
+            receta: en_mm(diferencia_de_cotas(F, G))
+            mensaje: |
+              Eso es lo que G está más alto que F, la **diferencia de cotas**: un cateto, no la arista.
+        pista: |
+          En β es la hipotenusa F₄G₄ del triángulo de la vista nueva; en δ, el lado F₂G₂′ del pentágono
+          girado. Si no te dan lo mismo, uno de los dos está mal.
+        desarrollo: |
+          $$ \overline{FG} = \sqrt{\overline{F_2E_2}^{\,2} + \overline{E_4G_4}^{\,2}} = \sqrt{42{,}39^{2} + 9{,}99^{2}} \approx 43{,}55 \text{ mm} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: α es oblicuo, y se abate sobre el suelo alrededor de AB, una horizontal suya que ya está en el suelo.
+          - texto: Cada vértice de α se abate por la perpendicular a A₁B₁, con un radio que es la hipotenusa de lo que dista de A₁B₁ en la planta y de su cota.
+          - texto: 'β es de canto: un solo cambio de plano horizontal, con la línea nueva paralela a F₂E₂, lo enseña sin acortar, y cada punto lleva su alejamiento contado desde el de F.'
+          - texto: 'δ es vertical: un giro de eje vertical que deje su planta horizontal la pone frontal, y como las cotas no cambian, el alzado la da en verdadera magnitud.'
+          - texto: β es de canto, así que su alzado F₂E₂G₂ ya está en verdadera magnitud.
+            trampa: true
+            mensaje: |
+              De canto quiere decir lo contrario: el alzado ve β de lado, como una recta, y el triángulo
+              entero se reduce a un segmento. Lo que está en verdadera magnitud en el alzado es solo
+              FE, que es frontal; la forma de β hace falta verla desde una vista paralela a ella.
+    resolucion: |
+      **Qué es cada plano.** El bloque es un cubo de 45 mm cortado por tres planos. α se ve como un
+      hexágono en las dos vistas: es oblicuo, a 54,8° del plano horizontal. β se reduce a la recta
+      F₂E₂ en el alzado: es de canto. δ se reduce al borde H₁J₁ en la planta: es vertical, y está a
+      18,4° del plano frontal. El método lo fija el enunciado para cada uno, y la recta que hace falta
+      (charnela, línea nueva o eje) la fija el ejercicio, porque el enunciado no la da.
+
+      **α, abatido.** AB es una horizontal de α que está en el suelo: con ella de charnela, α se tumba
+      sobre el suelo. Cada vértice va por la perpendicular a A₁B₁, con un radio que es la hipotenusa de
+      lo que dista de A₁B₁ en la planta y de su cota: 36,7 mm para C, 55,1 para D y E y 18,4 para F. Todos
+      al mismo lado. El hexágono abatido tiene cuatro lados de 21,2 mm y dos de 42,4, BC y EF, opuestos,
+      y todos los ángulos de 120°; su diagonal BE mide 56,13 mm.
+
+      **β, por cambio de plano.** Con la línea nueva paralela a F₂E₂ y F de referencia, F₄ y E₄ caen en
+      la línea, porque E y F están igual de lejos, y G₄ se aparta 10 mm, lo que G está más cerca. El
+      triángulo es rectángulo en E: FE mide 42,39 mm, EG 9,99 y FG 43,55.
+
+      **δ, por giro.** Con el eje vertical por H y F, la planta gira 18,4° alrededor de F₁ hasta que
+      H₁J₁ queda horizontal; G₁′ y J₁′ ≡ K₁′ se llevan con el compás. Las cotas no cambian, y el alzado
+      H₂J₂′K₂′G₂′F₂ es δ en verdadera magnitud: 47,39 mm abajo, 45,00 a la derecha, 15,80 arriba, 43,55
+      el lado inclinado y 15,03 a la izquierda.
+
+      **La comprobación.** FG es lado de β y de δ, y mide 43,55 mm en las dos construcciones, que se
+      han hecho por métodos distintos. Si no coincidieran, una de las dos estaría mal.
+
+  - id: sd26-el-plano-oblicuo-abcdefgh-por-tres-metodos
+    titulo: El plano oblicuo ABCDEFGH, por los tres métodos
+    fuente: Ejercicio 20 (SD26) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    enunciado: |
+      Dibujar la verdadera magnitud del plano oblicuo ABCDEFGH aplicando los métodos de cambio de
+      plano, abatimientos y giros.
+
+      **Notas nuestras.** La figura es el octógono ABCDEFGH en el alzado, arriba, y en la planta,
+      debajo, a escala 1:1, con sus vértices rotulados. Las rectas que van desde la figura hasta el
+      borde izquierdo son las aristas de un prisma que el plano corta: no hacen falta para el
+      ejercicio. «Verdadera magnitud» es la forma real de la figura, sin acortar.
+    pide: La figura en verdadera magnitud por dos cambios de plano, por un abatimiento y por dos giros, el ángulo en D y la distancia de C a G, que tienen que salir iguales por los tres caminos.
+    receta:
+      lamina: sd26
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        H: 'punto3(alzado: figura.punto("H2"), planta: figura.punto("H1"))'
+        abc: plano(C, D, E)
+      solucion:
+        # Decisión: 1 · Dos cambios de plano, con las dos líneas nuevas de la
+        # lámina (que fija el ejercicio, porque el enunciado no las da) y C de referencia en los dos: el vertical,
+        # perpendicular a las horizontales, deja el plano de canto (vista 4); el
+        # horizontal, paralelo a ese canto, lo deja en verdadera magnitud (5).
+        A_4: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: C)'
+        G_4: 'cambio_plano_vertical(G, figura.segmento("nueva1"), ref: C)'
+        C_4: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: C)'
+        A_5: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        B_5: 'cambio_plano_vertical(B, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        C_5: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        D_5: 'cambio_plano_vertical(D, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        E_5: 'cambio_plano_vertical(E, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        F_5: 'cambio_plano_vertical(F, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        G_5: 'cambio_plano_vertical(G, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        H_5: 'cambio_plano_vertical(H, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"))'
+        perpA1: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("nueva1"))'
+        perpG1: 'perpendicular(por: figura.punto("G1"), a: figura.segmento("nueva1"))'
+        pieA1: 'pie_perpendicular(figura.punto("A1"), figura.segmento("nueva1"))'
+        pieG1: 'pie_perpendicular(figura.punto("G1"), figura.segmento("nueva1"))'
+        perpC4: 'perpendicular(por: C_4, a: figura.segmento("nueva2"))'
+        perpA4: 'perpendicular(por: A_4, a: figura.segmento("nueva2"))'
+        perpG4: 'perpendicular(por: G_4, a: figura.segmento("nueva2"))'
+        pieA4: 'pie_perpendicular(A_4, figura.segmento("nueva2"))'
+        pieG4: 'pie_perpendicular(G_4, figura.segmento("nueva2"))'
+        # Lo que A está más cerca que C, que lleva el error de cambiar cotas
+        # por alejamientos en el primer cambio: Pitágoras, porque la receta no
+        # expone todavía la diferencia de alejamientos.
+        dyAC: 'raiz(vm(A, C) * vm(A, C) - vm_alzado(A, C) * vm_alzado(A, C))'
+        # Para la construcción paso a paso: la paralela a la primera línea nueva
+        # por C₁. Lo que la planta de un punto está más lejos de la línea que C₁
+        # es su distancia a esa paralela, medida por su horizontal.
+        parC1: 'perpendicular(por: figura.punto("C1"), a: figura.segmento("D1C1"))'
+        pieE1c: 'pie_perpendicular(figura.punto("E1"), parC1)'
+        pieG1c: 'pie_perpendicular(figura.punto("G1"), parC1)'
+        pieB1c: 'pie_perpendicular(figura.punto("B1"), parC1)'
+        # Decisión: 2 · Abatimiento con la charnela CD, la horizontal más baja, que fija el
+        # ejercicio. E se abate a cualquiera de los dos lados (una elección) y
+        # los demás con el mismo giro.
+        charnela: recta3(C, D)
+        E_ab: abatido_a_elegir(E, charnela, abc)
+        G_ab: 'abatido_junto(G, charnela, abc, con: E_ab, de: E)'
+        H_ab: 'abatido_junto(H, charnela, abc, con: E_ab, de: E)'
+        B_ab: 'abatido_junto(B, charnela, abc, con: E_ab, de: E)'
+        A_ab: 'abatido_junto(A, charnela, abc, con: E_ab, de: E)'
+        F_ab: 'abatido_junto(F, charnela, abc, con: E_ab, de: E)'
+        ME: pie_perpendicular(E, charnela)
+        MG: pie_perpendicular(G, charnela)
+        MH: pie_perpendicular(H, charnela)
+        MB: pie_perpendicular(B, charnela)
+        perpE: 'perpendicular(por: figura.punto("E1"), a: figura.segmento("D1C1"))'
+        perpG: 'perpendicular(por: figura.punto("G1"), a: figura.segmento("D1C1"))'
+        perpH: 'perpendicular(por: figura.punto("H1"), a: figura.segmento("D1C1"))'
+        perpB: 'perpendicular(por: figura.punto("B1"), a: figura.segmento("D1C1"))'
+        # Para la construcción paso a paso: el triángulo del radio de E (lo que E
+        # está más alto que CD, llevado desde E₁ paralelo a C₁D₁, hacia abajo,
+        # porque hacia arriba iría encima del lado E₁F₁) y el punto de
+        # la charnela por el que pasan EG y su abatida (afinidad).
+        TE: 'uno(medir_sobre(perpendicular(por: figura.punto("E1"), a: perpE), desde: figura.punto("E1"), distancia: diferencia_de_cotas(E, C)), 1)'
+        Xeg: pie_comun(recta3(E, G), charnela)
+        # Decisión: 3 · Dos giros, los dos con el eje por C, que fija el
+        # ejercicio.
+        # El primero, de eje vertical, lo justo para que CD (horizontal) quede
+        # de punta: el ángulo de CD con la recta de punta por C. Con el eje hacia
+        # abajo, la rama 1 es el giro corto, que deja D₁ debajo de C₁. Girar
+        # 180° más también deja CD de punta, pero mete la figura en el alzado:
+        # se fija el corto.
+        Cv: 'punto3(alzado: desplaza(figura.punto("C2"), dy: 50), planta: figura.punto("C1"))'
+        Cp: 'punto3(alzado: figura.punto("C2"), planta: desplaza(figura.punto("C1"), dy: 50))'
+        vertical: recta3(C, Cv)
+        punta: recta3(C, Cp)
+        giro1: angulo_rectas(charnela, punta)
+        A_g: 'rama(gira(A, vertical, angulo: giro1), 1)'
+        B_g: 'rama(gira(B, vertical, angulo: giro1), 1)'
+        D_g: 'rama(gira(D, vertical, angulo: giro1), 1)'
+        E_g: 'rama(gira(E, vertical, angulo: giro1), 1)'
+        F_g: 'rama(gira(F, vertical, angulo: giro1), 1)'
+        G_g: 'rama(gira(G, vertical, angulo: giro1), 1)'
+        H_g: 'rama(gira(H, vertical, angulo: giro1), 1)'
+        canto: plano(D_g, E_g, G_g)
+        # Decisión: el segundo, de eje de punta por C, lleva el canto hasta el plano
+        # horizontal de C. Es el mismo movimiento que abatir ese plano de canto
+        # con la recta de punta por C de charnela, y abatido_a_elegir da los dos
+        # sentidos, que valen los dos: G se gira a cualquiera de los dos lados
+        # (una elección) y los demás con el mismo giro.
+        G_gg: abatido_a_elegir(G_g, punta, canto)
+        E_gg: 'abatido_junto(E_g, punta, canto, con: G_gg, de: G_g)'
+        B_gg: 'abatido_junto(B_g, punta, canto, con: G_gg, de: G_g)'
+        A_gg: 'abatido_junto(A_g, punta, canto, con: G_gg, de: G_g)'
+        F_gg: 'abatido_junto(F_g, punta, canto, con: G_gg, de: G_g)'
+        H_gg: 'abatido_junto(H_g, punta, canto, con: G_gg, de: G_g)'
+        D_gg: 'abatido_junto(D_g, punta, canto, con: G_gg, de: G_g)'
+        verticalC1: 'perpendicular(por: figura.punto("C1"), a: figura.segmento("B1C1"))'
+        # Las dos cifras, que valen lo mismo por los tres caminos.
+        angulo_D: 180 - angulo_rectas(recta3(D, C), recta3(D, E))
+        Eh: 'punto3(alzado: pie_perpendicular(figura.punto("E2"), figura.segmento("D2C2")), planta: figura.punto("E1"))'
+        Cf: 'punto3(alzado: figura.punto("C2"), planta: pie_perpendicular(figura.punto("C1"), figura.segmento("E1D1")))'
+        CG_mm: en_mm(vm(C, G))
+      comprueba:
+        - en_plano(A, abc)
+        - en_plano(B, abc)
+        - en_plano(F, abc)
+        - en_plano(G, abc)
+        - en_plano(H, abc)
+    pasos:
+      - tipo: reconocer
+        pregunta: AB, CD, EF y GH tienen el alzado horizontal, y BC, DE, FG y HA, la planta horizontal. ¿Qué son esas rectas para el plano?
+        opciones:
+          - texto: Las primeras son horizontales del plano, y las segundas, frontales
+            correcta: true
+            mensaje: |
+              Eso es. Un alzado horizontal dice que la recta no cambia de cota: es horizontal, y su
+              planta está en verdadera magnitud. Una planta horizontal dice que no cambia de
+              alejamiento: es frontal. Con ellas se hace todo: la línea nueva perpendicular a una
+              horizontal pone el plano de canto, y una horizontal sirve de charnela.
+          - texto: Las primeras son frontales, y las segundas, horizontales
+            mensaje: |
+              Al revés. Lo que una recta conserva se ve en la vista contraria: si su alzado es
+              horizontal, la cota no cambia, y es una horizontal del plano. Las frontales son las de
+              planta horizontal: no cambian de alejamiento.
+          - texto: Son líneas de máxima pendiente del plano
+            mensaje: |
+              Una línea de máxima pendiente es perpendicular a las horizontales en la planta, y no
+              tiene ninguna vista horizontal: sube todo lo que el plano deja. Aquí cada recta tiene una
+              vista horizontal, así que son horizontales o frontales.
+
+      - tipo: construir
+        titulo: Por dos cambios de plano
+        intro: |
+          Dos cambios, como el método 1 de la hoja «Plano en VM». El enunciado no dice dónde van las
+          líneas nuevas ni qué referencia se toma: lo hemos fijado nosotros. Las dos ya están
+          dibujadas, de trazo y punto, y la referencia es C en los dos cambios. La primera, a la derecha
+          del alzado, es perpendicular a las horizontales del plano: con un cambio vertical,
+          que lleva cotas, el plano sale de canto en la vista 4. La segunda es paralela a ese canto: con
+          un cambio horizontal, que lleva lo que la planta de cada punto distaba de la primera línea
+          nueva, la vista 5 es la verdadera magnitud. Marca el canto y cuatro vértices de la vista 5.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A4
+            rotulo: A₄ ≡ B₄
+            pide: A en la vista 4, que coincide con B, E y F
+            es: solucion.A_4
+            bien: |
+              A₄ está en la perpendicular a la primera línea nueva que pasa por A₁, y 22 mm por fuera:
+              lo que A está más alto que C. B, E y F caen en el mismo punto, porque están en la misma
+              horizontal del plano, que la vista 4 ve de punta.
+            diagnosticos:
+              - si: cerca_de(solucion.pieA1)
+                mensaje: |
+                  Te has quedado en la línea nueva. Ahí cae C, que es la referencia; A está 22 mm más
+                  alta que C, y su cota se lleva desde la línea hacia fuera.
+                ejemplo: solucion.pieA1
+              - si: 'en_recta(solucion.perpA1) && a_distancia(de: solucion.pieA1, d: solucion.dyAC)'
+                mensaje: |
+                  Has llevado lo que A está **más cerca** que C, el alejamiento. Un cambio de plano
+                  vertical sale de la planta y lleva **cotas**: lo que A₂ está por encima de C₂.
+                ejemplo: 'uno(medir_sobre(solucion.perpA1, desde: solucion.pieA1, distancia: solucion.dyAC), 2)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.perpA1, desde: solucion.pieA1, distancia: diferencia_de_cotas(A, C)), 1))'
+                mensaje: |
+                  La distancia es la buena, pero hacia el lado de la planta. La vista nueva queda al otro
+                  lado de la línea nueva, y un punto más alto que la referencia se aparta de la línea
+                  hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.perpA1, desde: solucion.pieA1, distancia: diferencia_de_cotas(A, C)), 1)'
+              - si: '!en_recta(solucion.perpA1)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**: es la dirección desde la que
+                  mira la vista 4, la de las horizontales del plano.
+                ejemplo: 'desplaza(solucion.A_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena. A₄ se aparta de la línea
+                  nueva lo que A está más alto que C, que se mide en el alzado: 22 mm.
+          - nombre: G4
+            rotulo: G₄ ≡ H₄
+            pide: G en la vista 4, que coincide con H
+            es: solucion.G_4
+            bien: |
+              G₄ está 44 mm por fuera de la línea nueva, lo que G está más alto que C. C₄, A₄ y G₄ quedan
+              en una recta: el plano, de canto, y su ángulo con la línea nueva es el del plano con el
+              horizontal, 67,4°.
+            diagnosticos:
+              - si: cerca_de(solucion.pieG1)
+                mensaje: |
+                  Te has quedado en la línea nueva: G está 44 mm más alto que C, la referencia.
+                ejemplo: solucion.pieG1
+              - si: 'en_recta(solucion.perpG1) && a_distancia(de: solucion.pieG1, d: diferencia_de_cotas(G, A))'
+                mensaje: |
+                  Has contado la cota de G desde la de A. La referencia de este cambio es C, la que cae en
+                  la línea nueva, y todas las cotas se cuentan desde la suya.
+                ejemplo: 'uno(medir_sobre(solucion.perpG1, desde: solucion.pieG1, distancia: diferencia_de_cotas(G, A)), 2)'
+              - si: '!en_recta(solucion.perpG1)'
+                mensaje: |
+                  G₄ sale de G₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.G_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena: 44 mm por fuera de la
+                  línea, lo que G₂ está por encima de C₂. Comprueba que C₄, A₄ y G₄ salen en línea.
+          - nombre: D5
+            rotulo: D₅
+            pide: D en la vista 5
+            es: solucion.D_5
+            bien: |
+              D₅ está en la perpendicular a la segunda línea nueva que pasa por D₄ ≡ C₄, a 59,5 mm de
+              ella: lo que D₁ estaba más lejos de la primera línea nueva que C₁. C₅D₅ es CD en verdadera
+              magnitud, que ya lo era en la planta.
+            diagnosticos:
+              - si: en_recta(figura.segmento("nueva2"))
+                mensaje: |
+                  Has llevado otra vez **la cota**. D tiene la cota de C, y con ella se queda en la línea.
+                  En el segundo cambio se lleva la distancia de la vista que se deja atrás, la planta: lo
+                  que D₁ estaba más lejos de la primera línea nueva que C₁.
+                ejemplo: solucion.C_5
+              - si: 'cerca_de(uno(medir_sobre(solucion.perpC4, desde: solucion.C_5, distancia: vm_planta(C, D)), 2))'
+                mensaje: |
+                  La distancia es la buena, pero hacia la vista 4. La vista 5 queda al otro lado de la
+                  segunda línea nueva.
+                ejemplo: 'uno(medir_sobre(solucion.perpC4, desde: solucion.C_5, distancia: vm_planta(C, D)), 2)'
+              - si: '!en_recta(solucion.perpC4)'
+                mensaje: |
+                  D₅ sale de D₄, que coincide con C₄, por la **perpendicular a la segunda línea nueva**.
+                ejemplo: 'desplaza(solucion.D_5, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena: lo que D₁ estaba más
+                  lejos de la primera línea nueva que C₁, que es lo que mide C₁D₁, 59,5 mm.
+          - nombre: E5
+            rotulo: E₅
+            pide: E en la vista 5
+            es: solucion.E_5
+            bien: |
+              E₅ está en la perpendicular a la segunda línea nueva por E₄ ≡ A₄, a lo que E₁ estaba más
+              lejos de la primera línea nueva que C₁. D₅E₅ mide 24,6 mm, como D₂E₂: DE es frontal.
+            diagnosticos:
+              - si: 'en_recta(solucion.perpA4) && a_distancia(de: solucion.pieA4, d: diferencia_de_cotas(E, C))'
+                mensaje: |
+                  Has llevado otra vez **la cota** de E, 22 mm. En el segundo cambio se lleva lo que E₁
+                  estaba más lejos de la primera línea nueva que C₁: se mide en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpA4, desde: solucion.pieA4, distancia: diferencia_de_cotas(E, C)), 1)'
+              - si: '!en_recta(solucion.perpA4)'
+                mensaje: |
+                  E₅ sale de E₄, que coincide con A₄, por la **perpendicular a la segunda línea nueva**.
+                ejemplo: 'desplaza(solucion.E_5, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular que sale de A₄ ≡ E₄. Sobre ella caen A₅, B₅, E₅ y F₅, cada uno
+                  a lo que su planta estaba más lejos de la primera línea nueva que C₁: E es el que más.
+          - nombre: G5
+            rotulo: G₅
+            pide: G en la vista 5
+            es: solucion.G_5
+            bien: |
+              G₅ está en la perpendicular a la segunda línea nueva por G₄ ≡ H₄. E₅F₅ y G₅H₅ salen
+              paralelas a C₅D₅: son horizontales del plano, como CD.
+            diagnosticos:
+              - si: 'en_recta(solucion.perpG4) && a_distancia(de: solucion.pieG4, d: diferencia_de_cotas(G, C))'
+                mensaje: |
+                  Has llevado otra vez **la cota** de G, 44 mm. En el segundo cambio se lleva lo que G₁
+                  estaba más lejos de la primera línea nueva que C₁.
+                ejemplo: 'uno(medir_sobre(solucion.perpG4, desde: solucion.pieG4, distancia: diferencia_de_cotas(G, C)), 1)'
+              - si: '!en_recta(solucion.perpG4)'
+                mensaje: |
+                  G₅ sale de G₄, que coincide con H₄, por la **perpendicular a la segunda línea nueva**.
+                ejemplo: 'desplaza(solucion.G_5, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular que sale de G₄ ≡ H₄, pero no a la distancia buena: lo que G₁
+                  estaba más lejos de la primera línea nueva que C₁.
+          - nombre: B5
+            rotulo: B₅
+            pide: B en la vista 5
+            es: solucion.B_5
+            bien: |
+              B₅ está en la perpendicular por A₄ ≡ B₄, y muy cerca de la segunda línea nueva: B₁ está
+              casi tan cerca de la primera línea como C₁. B₅C₅ es paralela a D₅E₅, y A₅B₅, a C₅D₅.
+            diagnosticos:
+              - si: 'en_recta(solucion.perpA4) && a_distancia(de: solucion.pieA4, d: diferencia_de_cotas(B, C))'
+                mensaje: |
+                  Has llevado otra vez **la cota** de B, 22 mm. En el segundo cambio se lleva lo que B₁
+                  estaba más lejos de la primera línea nueva que C₁: muy poco.
+                ejemplo: 'uno(medir_sobre(solucion.perpA4, desde: solucion.pieA4, distancia: diferencia_de_cotas(B, C)), 1)'
+              - si: '!en_recta(solucion.perpA4)'
+                mensaje: |
+                  B₅ sale de B₄, que coincide con A₄, por la **perpendicular a la segunda línea nueva**.
+                ejemplo: 'desplaza(solucion.B_5, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena: lo que B₁ estaba más
+                  lejos de la primera línea nueva que C₁.
+        trazado:
+          - segmento2(solucion.C_4, solucion.G_4)
+          - segmento2(solucion.C_5, solucion.D_5)
+          - segmento2(solucion.D_5, solucion.E_5)
+          - segmento2(solucion.E_5, solucion.F_5)
+          - segmento2(solucion.F_5, solucion.G_5)
+          - segmento2(solucion.G_5, solucion.H_5)
+          - segmento2(solucion.H_5, solucion.A_5)
+          - segmento2(solucion.A_5, solucion.B_5)
+          - segmento2(solucion.B_5, solucion.C_5)
+        construccion:
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("C1"), desplaza(solucion.C_4, dx: 5.55, dy: -8.32)), segmento2(figura.punto("B1"), desplaza(solucion.A_4, dx: 5.55, dy: -8.32)), segmento2(figura.punto("H1"), desplaza(solucion.G_4, dx: 5.55, dy: -8.32))]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              Desde la planta, las perpendiculares a la primera línea nueva, largas, más allá de ella.
+              Como la línea es perpendicular a las horizontales del plano, cada perpendicular es una
+              horizontal prolongada: la de C₁D₁, la de E₁F₁A₁B₁ y la de G₁H₁, y los puntos de cada una
+              caen juntos. Cruzan el alzado: la de B₁ pasa justo por C₂, y la de H₁ corta C₂D₂ y B₂C₂.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄ ≡ D₄
+            porque: |
+              C es la referencia, y cae en la línea nueva; D, con la misma cota, también.
+          - con: compas
+            traza: 'arco(solucion.pieA1, por: solucion.A_4, desde: desplaza(solucion.A_4, dx: 4.99, dy: 3.33), hasta: desplaza(solucion.A_4, dx: -4.99, dy: -3.33))'
+            toma: segmento2(figura.punto("F2"), figura.punto("D2"))
+            porque: |
+              Con el compás, en el alzado, **lo que A está más alto que C**: 22 mm, lo mismo que de D₂ a
+              F₂. Se lleva desde la línea nueva hacia fuera, lejos de la planta.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄ ≡ B₄
+            porque: |
+              A₄, y con él B₄, E₄ y F₄: los cuatro están en la misma horizontal del plano.
+          - con: compas
+            traza: 'arco(solucion.pieG1, por: solucion.G_4, desde: desplaza(solucion.G_4, dx: 4.99, dy: 3.33), hasta: desplaza(solucion.G_4, dx: -4.99, dy: -3.33))'
+            toma: segmento2(figura.punto("H2"), figura.punto("D2"))
+            porque: |
+              Lo mismo con G, que está 44 mm más alto que C: de D₂ a H₂.
+          - con: marca
+            traza: solucion.G_4
+            rotulo: G₄ ≡ H₄
+            porque: |
+              G₄, y con él H₄.
+          - con: regla
+            traza: segmento2(solucion.C_4, solucion.G_4)
+            rotulo: canto
+            porque: |
+              C₄, A₄ y G₄ quedan en una recta: el plano, de canto. Su ángulo con la línea nueva es el del
+              plano con el horizontal, 67,4°.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.C_4, desplaza(solucion.D_5, dx: 7.85, dy: 1.54)), segmento2(solucion.A_4, desplaza(solucion.E_5, dx: 7.85, dy: 1.54)), segmento2(solucion.G_4, desplaza(solucion.G_5, dx: 7.85, dy: 1.54))]'
+            guia: figura.segmento("nueva2")
+            porque: |
+              Desde C₄, A₄ y G₄, las perpendiculares a la segunda línea nueva, que es paralela al canto:
+              largas, más allá de ella.
+          - con: marca
+            traza: solucion.C_5
+            rotulo: C₅
+            porque: |
+              C₅, donde la perpendicular de C₄ corta la segunda línea nueva: C es también la referencia
+              del segundo cambio.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.pieG1c)
+            guia: figura.segmento("nueva1")
+            porque: |
+              Por C₁, la paralela a la primera línea nueva, hasta la horizontal de G₁. En el segundo
+              cambio cada punto lleva lo que su planta está más lejos de la primera línea que C₁, y eso
+              es su distancia a esta paralela, medida por su horizontal.
+          - con: compas
+            traza: 'arco(solucion.C_5, por: solucion.D_5, desde: desplaza(solucion.D_5, dx: -1.16, dy: 5.89), hasta: desplaza(solucion.D_5, dx: 1.16, dy: -5.89))'
+            toma: figura.segmento("D1C1")
+            porque: |
+              D₁ está en la horizontal de C₁, así que su distancia a la paralela es C₁D₁, 59,5 mm. Con esa
+              abertura, desde C₅, hacia fuera.
+          - con: marca
+            traza: solucion.D_5
+            rotulo: D₅
+            porque: |
+              D₅. C₅D₅ es CD en verdadera magnitud, que ya lo era en la planta.
+          - con: compas
+            traza: 'arco(solucion.pieA4, por: solucion.E_5, desde: desplaza(solucion.E_5, dx: -1.15, dy: 5.89), hasta: desplaza(solucion.E_5, dx: 1.15, dy: -5.89))'
+            toma: segmento2(figura.punto("E1"), solucion.pieE1c)
+            porque: |
+              La distancia de E₁ a la paralela, por su horizontal, se lleva sobre la perpendicular que
+              sale de A₄ ≡ E₄, desde donde corta la segunda línea nueva.
+          - con: marca
+            traza: solucion.E_5
+            rotulo: E₅
+            porque: |
+              E₅, el vértice más alejado de la segunda línea nueva.
+          - con: compas
+            traza: 'arco(solucion.pieG4, por: solucion.G_5, desde: desplaza(solucion.G_5, dx: -1.15, dy: 5.89), hasta: desplaza(solucion.G_5, dx: 1.15, dy: -5.89))'
+            toma: segmento2(figura.punto("G1"), solucion.pieG1c)
+            porque: |
+              Lo mismo con G, sobre la perpendicular que sale de G₄ ≡ H₄.
+          - con: marca
+            traza: solucion.G_5
+            rotulo: G₅
+            porque: |
+              G₅, donde el arco corta la perpendicular que sale de G₄ ≡ H₄.
+          - con: compas
+            traza: 'arco(solucion.pieA4, por: solucion.B_5, desde: desplaza(solucion.B_5, dx: -0.48, dy: 2.45), hasta: desplaza(solucion.B_5, dx: 0.48, dy: -2.45))'
+            toma: segmento2(figura.punto("B1"), solucion.pieB1c)
+            porque: |
+              Y con B, que está casi tan cerca de la primera línea como C: B₅ cae muy cerca de la
+              segunda.
+          - con: marca
+            traza: solucion.B_5
+            rotulo: B₅
+            porque: |
+              B₅, en la misma perpendicular que E₅.
+          - con: regla
+            traza: '[segmento2(solucion.D_5, solucion.E_5), segmento2(solucion.B_5, solucion.C_5)]'
+            porque: |
+              Los lados D₅E₅ y B₅C₅, que son frontales del plano y van a servir de guía para las
+              paralelas.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.G_5, solucion.F_5)
+            guia: segmento2(solucion.D_5, solucion.E_5)
+            porque: |
+              FG es frontal, como DE, y dos rectas paralelas siguen paralelas en la verdadera magnitud:
+              por G₅, la paralela a D₅E₅, hasta la perpendicular que sale de A₄.
+          - con: marca
+            traza: solucion.F_5
+            rotulo: F₅
+            porque: |
+              F₅, entre E₅ y B₅.
+          - con: compas
+            traza: 'arco(solucion.B_5, por: solucion.A_5, desde: desplaza(solucion.A_5, dx: -1.16, dy: 5.89), hasta: desplaza(solucion.A_5, dx: 1.16, dy: -5.89))'
+            toma: figura.segmento("A1B1")
+            porque: |
+              AB es horizontal, así que A₁B₁ ya es su verdadera magnitud: con esa abertura, desde B₅,
+              sobre la misma perpendicular.
+          - con: marca
+            traza: solucion.A_5
+            rotulo: A₅
+            porque: |
+              A₅, entre B₅ y F₅.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.A_5, solucion.H_5)
+            guia: segmento2(solucion.B_5, solucion.C_5)
+            porque: |
+              HA es frontal, como BC: por A₅, la paralela a B₅C₅, hasta la perpendicular que sale de G₄.
+          - con: marca
+            traza: solucion.H_5
+            rotulo: H₅
+            porque: |
+              H₅, en la misma perpendicular que G₅.
+          - con: regla
+            traza: '[segmento2(solucion.C_5, solucion.D_5), segmento2(solucion.D_5, solucion.E_5), segmento2(solucion.E_5, solucion.F_5), segmento2(solucion.F_5, solucion.G_5), segmento2(solucion.G_5, solucion.H_5), segmento2(solucion.H_5, solucion.A_5), segmento2(solucion.A_5, solucion.B_5), segmento2(solucion.B_5, solucion.C_5)]'
+            porque: |
+              Repasado, el octógono C₅D₅E₅F₅G₅H₅A₅B₅ es el plano en verdadera magnitud.
+        pista: |
+          (1) Por cada vértice de la planta, la perpendicular a la primera línea nueva: los de una misma
+          horizontal comparten perpendicular. (2) C₄ en la línea; A₄ y G₄, a 22 y 44 mm, lo que están
+          más altos que C. (3) Por C₄, A₄ y G₄, las perpendiculares a la segunda línea. (4) Cada punto,
+          a lo que su planta estaba más lejos de la primera línea nueva que C₁.
+        desarrollo: |
+          En verde claro, el canto de la vista 4 y el octógono de la vista 5: ABCDEFGH en verdadera
+          magnitud.
+
+      - tipo: construir
+        titulo: Por abatimiento, con la charnela CD
+        intro: |
+          Abate el plano sobre el plano horizontal de CD, con CD de charnela. El enunciado no dice qué
+          charnela; la fijamos nosotros: CD es una horizontal del plano, la más baja. C y D no se
+          mueven. Marca E, G, H y B abatidos; F y A caen en la recta E₀B₀, que sale paralela a C₁D₁.
+          Vale cualquiera de los dos lados de C₁D₁, pero todos al mismo. Las dos rectas de trazo y punto
+          de la derecha son las líneas nuevas de los cambios de plano: aquí no se usan.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: E0
+            pide: el vértice E, abatido
+            es: proy_planta(solucion.E_ab)
+            bien: |
+              E₀ está en la perpendicular a C₁D₁ que pasa por E₁, a la distancia real de E a la
+              charnela, 23,8 mm: la hipotenusa de lo que separa E₁ de C₁D₁ en la planta y de lo que E
+              está más alto que CD.
+            diagnosticos:
+              - si: cerca_de(figura.punto("E1"))
+                mensaje: |
+                  Ese es E₁, sin abatir. E gira alrededor de CD hasta quedar a la cota de CD, y en la
+                  planta se aparta de C₁D₁ por la perpendicular.
+                ejemplo: figura.punto("E1")
+              - si: 'cerca_de(medir_sobre(solucion.perpE, desde: proy_planta(solucion.ME), distancia: diferencia_de_cotas(E, C)))'
+                mensaje: |
+                  Vas por la perpendicular a C₁D₁, pero has llevado solo **lo que E está más alto que
+                  CD**: un cateto. El radio es la hipotenusa de ese cateto y de lo que separa E₁ de C₁D₁
+                  en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpE, desde: proy_planta(solucion.ME), distancia: diferencia_de_cotas(E, C)), 1)'
+              - si: '!en_recta(solucion.perpE)'
+                mensaje: |
+                  E gira alrededor de CD en un plano vertical, perpendicular a CD: en la planta, E₀ se
+                  mueve por la **perpendicular a C₁D₁ que pasa por E₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.E_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a C₁D₁ por E₁, pero no a la distancia buena. El radio es la
+                  hipotenusa de lo que separa E₁ de C₁D₁ en la planta y de lo que E₂ está por encima de
+                  C₂D₂.
+          - nombre: G0
+            pide: el vértice G, abatido
+            es: proy_planta(solucion.G_ab)
+            bien: |
+              G₀ está en la perpendicular a C₁D₁ por G₁, del mismo lado que E₀ y al doble de distancia,
+              47,6 mm: G está el doble de lejos de CD que E: el doble de alto y el doble de apartado en la planta.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.G_ab)))
+                mensaje: |
+                  Ese es G abatido **al otro lado** de la charnela. El plano gira entero, como una tapa
+                  sobre su bisagra: todo cae al lado de E₀.
+                ejemplo: proy_planta(rama(solucion.G_ab, 2))
+              - si: cerca_de(figura.punto("G1"))
+                mensaje: |
+                  Ese es G₁, sin abatir. G gira alrededor de CD y se aparta de C₁D₁ por la
+                  perpendicular que pasa por G₁.
+                ejemplo: figura.punto("G1")
+              - si: 'en_recta(solucion.perpG) && a_distancia(de: proy_planta(solucion.MG), d: diferencia_de_cotas(G, C))'
+                mensaje: |
+                  Has llevado solo **lo que G está más alto que CD**, 44 mm: un cateto. Falta el otro, lo
+                  que separa G₁ de C₁D₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpG, desde: proy_planta(solucion.MG), distancia: diferencia_de_cotas(G, C)), 1)'
+              - si: '!en_recta(solucion.perpG)'
+                mensaje: |
+                  G₀ va por la **perpendicular a C₁D₁ que pasa por G₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.G_ab, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a C₁D₁ por G₁, pero no a la distancia buena: hazlo como con E.
+          - nombre: H0
+            pide: el vértice H, abatido
+            es: proy_planta(solucion.H_ab)
+            bien: |
+              H₀ está en la perpendicular a C₁D₁ por H₁, a la misma distancia que G₀: GH es horizontal,
+              y G₀H₀ sale paralela a C₁D₁.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.H_ab)))
+                mensaje: |
+                  Ese es H abatido **al otro lado** de la charnela: va al lado de E₀ y G₀.
+                ejemplo: proy_planta(rama(solucion.H_ab, 2))
+              - si: cerca_de(figura.punto("H1"))
+                mensaje: |
+                  Ese es H₁, sin abatir. H se aparta de C₁D₁ por la perpendicular que pasa por H₁.
+                ejemplo: figura.punto("H1")
+              - si: '!en_recta(solucion.perpH)'
+                mensaje: |
+                  H₀ va por la **perpendicular a C₁D₁ que pasa por H₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.H_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a C₁D₁ por H₁, pero no a la distancia buena: la de G₀, porque
+                  GH es una horizontal del plano y G₀H₀ es paralela a C₁D₁.
+          - nombre: B0
+            pide: el vértice B, abatido
+            es: proy_planta(solucion.B_ab)
+            bien: |
+              B₀ está en la recta de E₀, paralela a C₁D₁: E, F, A y B están en la misma horizontal del
+              plano. C₁D₁E₀F₀G₀H₀A₀B₀ es el plano en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.B_ab)))
+                mensaje: |
+                  Ese es B abatido **al otro lado** de la charnela: va al lado de E₀.
+                ejemplo: proy_planta(rama(solucion.B_ab, 2))
+              - si: cerca_de(figura.punto("B1"))
+                mensaje: |
+                  Ese es B₁, sin abatir. B se aparta de C₁D₁ por la perpendicular que pasa por B₁.
+                ejemplo: figura.punto("B1")
+              - si: 'cerca_de(medir_sobre(solucion.perpB, desde: proy_planta(solucion.MB), distancia: diferencia_de_cotas(B, C)))'
+                mensaje: |
+                  Has llevado solo **lo que B está más alto que CD**: un cateto. El radio es la
+                  hipotenusa de ese cateto y de lo que separa B₁ de C₁D₁ en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.perpB, desde: proy_planta(solucion.MB), distancia: diferencia_de_cotas(B, C)), 1)'
+              - si: '!en_recta(solucion.perpB)'
+                mensaje: |
+                  B₀ va por la **perpendicular a C₁D₁ que pasa por B₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.B_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a C₁D₁ por B₁, pero no a la distancia buena: B₀ está en la
+                  paralela a C₁D₁ que pasa por E₀.
+        trazado:
+          - segmento2(figura.punto("D1"), proy_planta(solucion.E_ab))
+          - segmento2(proy_planta(solucion.E_ab), proy_planta(solucion.F_ab))
+          - segmento2(proy_planta(solucion.F_ab), proy_planta(solucion.G_ab))
+          - segmento2(proy_planta(solucion.G_ab), proy_planta(solucion.H_ab))
+          - segmento2(proy_planta(solucion.H_ab), proy_planta(solucion.A_ab))
+          - segmento2(proy_planta(solucion.A_ab), proy_planta(solucion.B_ab))
+          - segmento2(proy_planta(solucion.B_ab), figura.punto("C1"))
+        construccion:
+          - con: regla
+            traza: 'segmento2(figura.punto("D1"), desplaza(proy_planta(solucion.Xeg), dx: -5.55, dy: 8.32))'
+            rotulo: charnela
+            porque: |
+              La **charnela**, C₁D₁, prolongada con la regla más allá de D₁, larga: ahí caen el pie de E
+              y el punto fijo de la afinidad de EG.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("E1"), desplaza(proy_planta(rama(solucion.E_ab, 1)), dx: -6.66, dy: -4.44)), segmento2(figura.punto("E1"), desplaza(proy_planta(rama(solucion.E_ab, 2)), dx: 6.66, dy: 4.44))]'
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por E₁, la **perpendicular a C₁D₁**, larga y hacia los dos lados: E gira alrededor de CD en
+              un plano vertical, y en la planta se mueve por esa recta. Corta la charnela en M, el pie de
+              E.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("E1"), desplaza(solucion.TE, dx: -4.44, dy: 6.66))'
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por E₁, la paralela a C₁D₁, larga, para el triángulo del radio, rectángulo en E₁. Como EF
+              también es horizontal, esa paralela es la recta F₁E₁: se lleva hacia abajo, por su
+              prolongación, para no montar el cateto encima del lado E₁F₁.
+          - con: compas
+            traza: 'arco(figura.punto("E1"), por: solucion.TE, desde: desplaza(solucion.TE, dx: -4.99, dy: -3.33), hasta: desplaza(solucion.TE, dx: 4.99, dy: 3.33))'
+            toma: segmento2(figura.punto("F2"), figura.punto("D2"))
+            porque: |
+              Con el compás, en el alzado, **lo que E está más alto que CD**: 22 mm, lo mismo que de D₂ a
+              F₂. Se lleva desde E₁ sobre la paralela.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.ME), solucion.TE)
+            rotulo: r
+            porque: |
+              La hipotenusa, de M a ese punto, es la distancia real de E a la charnela: el radio, 23,8
+              mm.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.ME), por: solucion.TE, desde: solucion.TE, hasta: proy_planta(solucion.E_ab))'
+            toma: segmento2(proy_planta(solucion.ME), solucion.TE)
+            porque: |
+              Con centro en M, en la charnela, y ese radio, el arco hasta la perpendicular.
+          - con: marca
+            traza: proy_planta(solucion.E_ab)
+            rotulo: E₀
+            porque: |
+              E₀, E abatido, hacia el lado de la figura; al otro lado también valdría.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.E_ab), desplaza(proy_planta(solucion.B_ab), dx: 4.44, dy: -6.66))'
+            guia: figura.segmento("D1C1")
+            porque: |
+              E, F, A y B están en la misma horizontal del plano, paralela a CD: sus abatidos, en la
+              paralela a C₁D₁ que pasa por E₀, larga.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), proy_planta(solucion.B_ab))
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por B₁, la perpendicular a C₁D₁, hasta esa paralela.
+          - con: marca
+            traza: proy_planta(solucion.B_ab)
+            rotulo: B₀
+            porque: |
+              B₀, en la paralela de E₀.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F1"), proy_planta(solucion.F_ab))
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por F₁, la perpendicular a C₁D₁, hasta la misma paralela.
+          - con: marca
+            traza: proy_planta(solucion.F_ab)
+            rotulo: F₀
+            porque: |
+              F₀, que no se pide pero cierra la figura.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), proy_planta(solucion.A_ab))
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por A₁, la perpendicular a C₁D₁, hasta la misma paralela.
+          - con: marca
+            traza: proy_planta(solucion.A_ab)
+            rotulo: A₀
+            porque: |
+              A₀, entre F₀ y B₀.
+          - con: regla
+            traza: segmento2(figura.punto("G1"), proy_planta(solucion.Xeg))
+            porque: |
+              G sale por **afinidad**. La recta G₁E₁, prolongada, corta la charnela prolongada en un punto
+              que no se mueve.
+          - con: regla
+            traza: 'segmento2(proy_planta(solucion.Xeg), desplaza(proy_planta(solucion.G_ab), dx: -3.55, dy: -7.17))'
+            porque: |
+              La abatida de EG, larga: pasa por ese punto y por E₀.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("G1"), proy_planta(solucion.G_ab))
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por G₁, la perpendicular a C₁D₁, hasta la abatida de EG.
+          - con: marca
+            traza: proy_planta(solucion.G_ab)
+            rotulo: G₀
+            porque: |
+              G₀, al doble de distancia de la charnela que E₀.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.G_ab), desplaza(proy_planta(solucion.H_ab), dx: 4.44, dy: -6.66))'
+            guia: figura.segmento("D1C1")
+            porque: |
+              GH es otra horizontal: por G₀, la paralela a C₁D₁, larga.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("H1"), proy_planta(solucion.H_ab))
+            guia: figura.segmento("D1C1")
+            porque: |
+              Por H₁, la perpendicular a C₁D₁, hasta la paralela de G₀.
+          - con: marca
+            traza: proy_planta(solucion.H_ab)
+            rotulo: H₀
+            porque: |
+              H₀, en la misma paralela que G₀.
+          - con: regla
+            traza: '[segmento2(figura.punto("D1"), proy_planta(rama(solucion.E_ab, 1))), segmento2(proy_planta(rama(solucion.F_ab, 1)), proy_planta(rama(solucion.G_ab, 1))), segmento2(proy_planta(rama(solucion.H_ab, 1)), proy_planta(rama(solucion.A_ab, 1))), segmento2(proy_planta(rama(solucion.B_ab, 1)), figura.punto("C1"))]'
+            porque: |
+              Los lados que faltan: C₁D₁E₀F₀G₀H₀A₀B₀ es el plano en verdadera magnitud.
+        pista: |
+          (1) Por E₁, la perpendicular a C₁D₁; la corta en M. (2) Por E₁, perpendicular a E₁M, lleva lo
+          que E₂ está por encima de C₂D₂: la distancia de M a ese punto es el radio. (3) Con centro en M,
+          corta la perpendicular: E₀. (4) G y H igual; B, por la paralela a C₁D₁ que pasa por E₀.
+        desarrollo: |
+          En verde claro, el octógono abatido C₁D₁E₀F₀G₀H₀A₀B₀: el plano en verdadera magnitud, en un
+          solo paso.
+
+      - tipo: construir
+        titulo: Por dos giros, con los ejes por C
+        intro: |
+          Dos giros, como el método 3 de la hoja «Plano en VM». El enunciado no fija los ejes; los
+          fijamos nosotros, los dos por C. Primero, eje vertical por C: gira la planta alrededor de C₁
+          hasta que CD, que es horizontal, quede de punta, con D₁ debajo de C₁; las cotas no cambian, y
+          el plano queda de canto en el alzado. Después, eje de punta por C: gira ese canto alrededor de
+          C₂ hasta que quede horizontal; los alejamientos no cambian, y la planta sale en verdadera
+          magnitud. Este segundo giro vale hacia los dos lados. Marca D y G tras el primer giro, y G, E y
+          B tras el segundo. Las dos rectas de trazo y punto de la derecha son las líneas nuevas de
+          los cambios de plano: aquí no se usan.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Dp1
+            rotulo: D₁′
+            pide: D tras el primer giro, en la planta
+            es: proy_planta(solucion.D_g)
+            bien: |
+              D₁′ está en la vertical de C₁, debajo, a 59,5 mm: lo que mide C₁D₁, porque la planta gira
+              sin deformarse. El giro es de 33,7°.
+            diagnosticos:
+              - si: 'cerca_de(proy_planta(simetrico(solucion.D_g, respecto: C)))'
+                mensaje: |
+                  Has girado hacia el otro lado, 146,3°, y CD también queda de punta. Aquí el giro va
+                  hacia abajo, el corto, que es el que fija este paso: hacia arriba, la
+                  figura girada se mete en el alzado.
+                ejemplo: 'proy_planta(simetrico(solucion.D_g, respecto: C))'
+              - si: cerca_de(pie_perpendicular(figura.punto("D1"), solucion.verticalC1))
+                mensaje: |
+                  Has llevado D₁ en horizontal hasta la vertical de C₁: eso no es girar, es acortar. D₁
+                  se mueve por un arco con centro en C₁, y conserva su distancia a él.
+                ejemplo: pie_perpendicular(figura.punto("D1"), solucion.verticalC1)
+              - si: '!en_recta(solucion.verticalC1)'
+                mensaje: |
+                  CD de punta tiene la planta perpendicular a la horizontal del papel: D₁′ está en la
+                  **vertical de C₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.D_g), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de C₁, pero no a la distancia buena: con centro en C₁ y radio C₁D₁,
+                  59,5 mm, el arco la corta en D₁′.
+          - nombre: Gp1
+            rotulo: G₁′
+            pide: G tras el primer giro, en la planta
+            es: proy_planta(solucion.G_g)
+            bien: |
+              G₁′ está a la misma distancia de C₁ que G₁, girado los mismos 33,7° que D. Toda la planta
+              gira como un sólido: G₁′ es a D₁′ lo que G₁ es a D₁.
+            diagnosticos:
+              - si: cerca_de(figura.punto("G1"))
+                mensaje: |
+                  Ese es G₁, sin girar. Todos los puntos giran alrededor de C₁ el mismo ángulo que D.
+                ejemplo: figura.punto("G1")
+              - si: 'cerca_de(proy_planta(simetrico(solucion.G_g, respecto: C)))'
+                mensaje: |
+                  Has girado G hacia el otro lado. Todos los puntos giran en el mismo sentido que D,
+                  hacia abajo: si no, la figura se deforma.
+                ejemplo: 'proy_planta(simetrico(solucion.G_g, respecto: C))'
+              - si: '!a_distancia(de: figura.punto("C1"), d: vm_planta(C, G))'
+                mensaje: |
+                  G se mueve por un arco con centro en C₁: G₁′ está **a la misma distancia de C₁** que G₁.
+                ejemplo: 'desplaza(proy_planta(solucion.G_g), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás a la buena distancia de C₁, pero no has girado el mismo ángulo que D. Un camino
+                  limpio: G₁D₁ gira con la figura, así que lleva la distancia D₁G₁ desde D₁′ con el compás
+                  y corta el arco.
+          - nombre: Gp2
+            rotulo: G₂′
+            pide: G tras el primer giro, en el alzado
+            es: proy_alzado(solucion.G_g)
+            bien: |
+              G₂′ está en la vertical de G₁′ y a la altura de G₂. C₂, los alzados de A, B, E y F, y G₂′
+              quedan en una recta: el canto, a 67,4° del horizontal.
+            diagnosticos:
+              - si: 'cerca_de(pie_perpendicular(figura.punto("G2"), perpendicular(por: proy_planta(simetrico(solucion.G_g, respecto: C)), a: figura.segmento("B1C1"))))'
+                mensaje: |
+                  Ese es G₂′ con el primer giro hecho hacia el otro lado, 146,3°. CD también queda de
+                  punta, pero aquí el giro es el corto, con D₁ debajo de C₁, y G₂′ va en la vertical del
+                  G₁′ de ese giro.
+                ejemplo: 'pie_perpendicular(figura.punto("G2"), perpendicular(por: proy_planta(simetrico(solucion.G_g, respecto: C)), a: figura.segmento("B1C1")))'
+              - si: '!en_vertical_de(Gp1)'
+                mensaje: |
+                  G₂′ va en la **vertical de G₁′**.
+                ejemplo: 'desplaza(proy_alzado(solucion.G_g), dx: mm(6))'
+              - si: '!en_horizontal_de(figura.punto("G2"))'
+                mensaje: |
+                  Con el eje vertical las cotas no cambian: G₂′ queda a la altura de G₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.G_g), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  G₂′ está en la vertical de G₁′ y a la altura de G₂.
+          - nombre: Gx1
+            rotulo: G₁″
+            pide: G tras el segundo giro, en la planta
+            es: proy_planta(solucion.G_gg)
+            bien: |
+              G₁″ está a la altura de G₁′, porque el giro de eje de punta no cambia los alejamientos, y
+              en la vertical de G₂″: el canto girado hasta la horizontal de C₂, con radio C₂G₂′.
+            diagnosticos:
+              - si: cerca_de(Gp1)
+                mensaje: |
+                  Ese es G₁′, antes del segundo giro. Ahora el canto gira alrededor de C₂ hasta quedar
+                  horizontal, y G₁′ se mueve en horizontal hasta la vertical de G₂″.
+                ejemplo: proy_planta(solucion.G_g)
+              - si: '!en_horizontal_de(Gp1)'
+                mensaje: |
+                  Con el eje de punta los alejamientos no cambian: en la planta, G₁″ se mueve **en
+                  horizontal** desde G₁′.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.G_gg, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás a la altura de G₁′, pero no en la buena vertical. En el alzado, con centro en C₂ y
+                  radio C₂G₂′, lleva G₂′ hasta la horizontal de C₂: G₂″. G₁″ está en su vertical.
+          - nombre: Ex1
+            rotulo: E₁″
+            pide: E tras el segundo giro, en la planta
+            es: proy_planta(solucion.E_gg)
+            bien: |
+              E₁″ está a la altura de E₁′ y del mismo lado que G₁″. D₁″E₁″ mide 24,6 mm, como D₂E₂.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.E_gg)))
+                mensaje: |
+                  Ese es E girado **hacia el otro lado**. El canto gira entero alrededor de C₂: E va al
+                  mismo lado que G.
+                ejemplo: proy_planta(rama(solucion.E_gg, 2))
+              - si: '!en_horizontal_de(proy_planta(solucion.E_g))'
+                mensaje: |
+                  Con el eje de punta los alejamientos no cambian: E₁″ está a la altura de E₁′, el
+                  punto de E tras el primer giro.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.E_gg, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás a la altura de E₁′, pero no en la buena vertical: la de E₂″, que es E₂′ girado
+                  alrededor de C₂ hasta la horizontal de C₂.
+          - nombre: Bx1
+            rotulo: B₁″
+            pide: B tras el segundo giro, en la planta
+            es: proy_planta(solucion.B_gg)
+            bien: |
+              B₁″ está en la misma vertical que E₁″: tras el primer giro, E, F, A y B forman una
+              horizontal de punta, y el canto los lleva juntos. C₁D₁″E₁″F₁″G₁″H₁″A₁″B₁″ es el plano en
+              verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.B_gg)))
+                mensaje: |
+                  Ese es B girado **hacia el otro lado**: va al lado de G y E.
+                ejemplo: proy_planta(rama(solucion.B_gg, 2))
+              - si: '!en_horizontal_de(proy_planta(solucion.B_g))'
+                mensaje: |
+                  B₁″ está a la altura de B₁′: el giro de eje de punta no cambia los alejamientos.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.B_gg, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás a la altura de B₁′, pero no en la buena vertical: la misma que E₁″, porque B₂′ y
+                  E₂′ coinciden en el alzado.
+        trazado:
+          - proy_alzado(segmento3(C, solucion.G_g))
+          - proy_planta(segmento3(C, solucion.D_gg))
+          - proy_planta(segmento3(solucion.D_gg, solucion.E_gg))
+          - proy_planta(segmento3(solucion.E_gg, solucion.F_gg))
+          - proy_planta(segmento3(solucion.F_gg, solucion.G_gg))
+          - proy_planta(segmento3(solucion.G_gg, solucion.H_gg))
+          - proy_planta(segmento3(solucion.H_gg, solucion.A_gg))
+          - proy_planta(segmento3(solucion.A_gg, solucion.B_gg))
+          - proy_planta(segmento3(solucion.B_gg, C))
+        construccion:
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("C1"), desplaza(proy_planta(solucion.D_g), dy: 25))'
+            porque: |
+              Primer giro, de eje vertical por C. Por C₁, la vertical, larga, hacia abajo: CD de punta
+              tiene la planta perpendicular a la horizontal del papel.
+          - con: compas
+            traza: 'arco(figura.punto("C1"), por: figura.punto("D1"), desde: figura.punto("D1"), hasta: proy_planta(solucion.D_g))'
+            porque: |
+              Con centro en C₁, en el eje, y radio C₁D₁, el arco hasta esa vertical: así CD queda de
+              punta.
+          - con: marca
+            traza: proy_planta(solucion.D_g)
+            rotulo: D₁′
+            porque: |
+              D₁′, a 59,5 mm de C₁: la planta gira sin deformarse. El giro es de 33,7°.
+          - con: compas
+            traza: 'arco(figura.punto("C1"), por: figura.punto("G1"), desde: figura.punto("G1"), hasta: proy_planta(solucion.D_g))'
+            porque: |
+              Todos los puntos giran alrededor de C₁ el mismo ángulo. G, por su arco con centro en C₁,
+              largo, hasta la vertical de C₁: dónde para G₁′ lo dice el paso siguiente.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.D_g), por: proy_planta(solucion.G_g), desde: desplaza(proy_planta(solucion.G_g), dx: 2.31, dy: -5.54), hasta: desplaza(proy_planta(solucion.G_g), dx: -2.31, dy: 5.54))'
+            toma: segmento2(figura.punto("D1"), figura.punto("G1"))
+            porque: |
+              G₁′ está a la misma distancia de D₁′ que G₁ de D₁: con esa abertura, desde D₁′, se corta el
+              arco.
+          - con: marca
+            traza: proy_planta(solucion.G_g)
+            rotulo: G₁′
+            porque: |
+              G₁′, G tras el primer giro.
+          - con: compas
+            traza: '[arco(figura.punto("C1"), por: figura.punto("E1"), desde: figura.punto("E1"), hasta: proy_planta(solucion.D_g)), arco(figura.punto("C1"), por: figura.punto("B1"), desde: figura.punto("B1"), hasta: proy_planta(solucion.D_g))]'
+            porque: |
+              Lo mismo con E y con B, por sus arcos con centro en C₁, largos, hasta la vertical de C₁.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.D_g), por: proy_planta(solucion.E_g), desde: desplaza(proy_planta(solucion.E_g), dx: -1.66, dy: -2.5), hasta: desplaza(proy_planta(solucion.E_g), dx: 1.66, dy: 2.5))'
+            toma: segmento2(figura.punto("D1"), figura.punto("E1"))
+            porque: |
+              E₁′, a la distancia D₁E₁ de D₁′.
+          - con: marca
+            traza: proy_planta(solucion.E_g)
+            rotulo: E₁′
+            porque: |
+              E₁′, E tras el primer giro.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.D_g), por: proy_planta(solucion.B_g), desde: desplaza(proy_planta(solucion.B_g), dx: 5.91, dy: -1.01), hasta: desplaza(proy_planta(solucion.B_g), dx: -5.91, dy: 1.01))'
+            toma: segmento2(figura.punto("D1"), figura.punto("B1"))
+            porque: |
+              Y B₁′, a la distancia D₁B₁ de D₁′.
+          - con: marca
+            traza: proy_planta(solucion.B_g)
+            rotulo: B₁′
+            porque: |
+              B₁′, B tras el primer giro.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("H2"), desplaza(proy_alzado(solucion.G_g), dx: 10))'
+            porque: |
+              G₂′ va a caer 14,7 mm a la derecha de H₂. Antes se prolonga hacia la derecha la arista de
+              arriba del alzado, G₂H₂, que es la horizontal a la cota de G: con el eje vertical las cotas
+              no cambian.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.G_g), proy_alzado(solucion.G_g))
+            porque: |
+              Desde G₁′, la línea de referencia hasta esa horizontal prolongada.
+          - con: marca
+            traza: proy_alzado(solucion.G_g)
+            rotulo: G₂′
+            porque: |
+              G₂′, G tras el primer giro, en el alzado.
+          - con: regla
+            traza: segmento2(figura.punto("C2"), proy_alzado(solucion.G_g))
+            rotulo: canto
+            porque: |
+              De C₂ a G₂′, el canto: el plano tras el primer giro, de canto, a 67,4° del horizontal.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.E_g), proy_alzado(solucion.E_g))
+            porque: |
+              Desde E₁′, la línea de referencia, que pasa por B₁′, hasta el canto: E₂′, donde esa vertical
+              corta el canto, y B₂′ coincide con él.
+          - con: marca
+            traza: proy_alzado(solucion.E_g)
+            rotulo: E₂′
+            porque: |
+              E₂′ ≡ B₂′, en el canto.
+          - con: compas
+            traza: 'arco(figura.punto("C2"), por: proy_alzado(solucion.G_g), desde: proy_alzado(solucion.G_g), hasta: proy_alzado(solucion.G_gg))'
+            porque: |
+              Segundo giro, de eje de punta por C. Con centro en C₂, en el eje, G₂′ gira hasta la
+              horizontal de C₂, la línea C₂D₂. Hacia la izquierda es el giro corto; hacia la derecha
+              también valdría.
+          - con: marca
+            traza: proy_alzado(solucion.G_gg)
+            rotulo: G₂″
+            porque: |
+              G₂″, donde el arco corta la horizontal C₂D₂: ahí acaba el giro de G.
+          - con: compas
+            traza: 'arco(figura.punto("C2"), por: proy_alzado(solucion.E_g), desde: proy_alzado(solucion.E_g), hasta: proy_alzado(solucion.E_gg))'
+            porque: |
+              Lo mismo con E₂′: el canto gira entero.
+          - con: marca
+            traza: proy_alzado(solucion.E_gg)
+            rotulo: E₂″
+            porque: |
+              E₂″ ≡ B₂″, en C₂D₂.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.G_g), desplaza(proy_planta(rama(solucion.G_gg, 1)), dx: -8))'
+            porque: |
+              Los alejamientos no cambian: por G₁′, la horizontal, larga, hacia el lado del giro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.G_gg), proy_planta(solucion.G_gg))
+            porque: |
+              Desde G₂″, la vertical hasta esa horizontal: G₁″ está donde se cortan. Por el camino pasa
+              por H₁″, que se construye más abajo.
+          - con: marca
+            traza: proy_planta(solucion.G_gg)
+            rotulo: G₁″
+            porque: |
+              G₁″, G tras los dos giros.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.E_g), desplaza(proy_planta(rama(solucion.E_gg, 1)), dx: -8)), segmento2(proy_planta(solucion.B_g), desplaza(proy_planta(rama(solucion.B_gg, 1)), dx: -8))]'
+            porque: |
+              Lo mismo con E y con B: por E₁′ y por B₁′, las horizontales, largas.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.E_gg), proy_planta(solucion.E_gg))
+            porque: |
+              Desde E₂″, que coincide con B₂″, la vertical hasta la horizontal de E₁′: corta la de B₁′ en
+              B₁″ y para en E₁″. Por el camino pasa por A₁″ y F₁″, que se construyen después.
+          - con: marca
+            traza: proy_planta(solucion.E_gg)
+            rotulo: E₁″
+            porque: |
+              E₁″, en la vertical de E₂″ y a la altura de E₁′.
+          - con: marca
+            traza: proy_planta(solucion.B_gg)
+            rotulo: B₁″
+            porque: |
+              B₁″, en la misma vertical y a la altura de B₁′.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.D_gg), proy_planta(rama(solucion.E_gg, 1))), segmento2(proy_planta(rama(solucion.B_gg, 1)), figura.punto("C1"))]'
+            porque: |
+              Los lados D₁″E₁″ y B₁″C₁, que son frontales del plano y van a servir de guía. C no se mueve
+              en ningún giro, y D₁″ es D₁′, porque D está en el segundo eje.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.G_gg), proy_planta(solucion.F_gg))
+            guia: segmento2(proy_planta(solucion.D_gg), proy_planta(rama(solucion.E_gg, 1)))
+            porque: |
+              FG es frontal, como DE: por G₁″, la paralela a D₁″E₁″, hasta la vertical de E₂″.
+          - con: marca
+            traza: proy_planta(solucion.F_gg)
+            rotulo: F₁″
+            porque: |
+              F₁″, entre E₁″ y B₁″.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.B_gg), por: proy_planta(solucion.A_gg), desde: desplaza(proy_planta(solucion.A_gg), dx: -6), hasta: desplaza(proy_planta(solucion.A_gg), dx: 6))'
+            toma: figura.segmento("A1B1")
+            porque: |
+              AB es horizontal, así que A₁B₁ ya es su verdadera magnitud: con esa abertura, desde B₁″,
+              sobre la misma vertical.
+          - con: marca
+            traza: proy_planta(solucion.A_gg)
+            rotulo: A₁″
+            porque: |
+              A₁″, entre B₁″ y F₁″.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.A_gg), proy_planta(solucion.H_gg))
+            guia: segmento2(proy_planta(rama(solucion.B_gg, 1)), figura.punto("C1"))
+            porque: |
+              HA es frontal, como BC: por A₁″, la paralela a B₁″C₁, hasta la vertical de G₂″.
+          - con: marca
+            traza: proy_planta(solucion.H_gg)
+            rotulo: H₁″
+            porque: |
+              H₁″, en la misma vertical que G₁″.
+          - con: regla
+            traza: '[proy_planta(segmento3(C, solucion.D_gg)), proy_planta(segmento3(solucion.D_gg, rama(solucion.E_gg, 1))), proy_planta(segmento3(rama(solucion.E_gg, 1), rama(solucion.F_gg, 1))), proy_planta(segmento3(rama(solucion.F_gg, 1), rama(solucion.G_gg, 1))), proy_planta(segmento3(rama(solucion.G_gg, 1), rama(solucion.H_gg, 1))), proy_planta(segmento3(rama(solucion.H_gg, 1), rama(solucion.A_gg, 1))), proy_planta(segmento3(rama(solucion.A_gg, 1), rama(solucion.B_gg, 1))), proy_planta(segmento3(rama(solucion.B_gg, 1), C))]'
+            porque: |
+              Repasado, el octógono de la planta es el plano en verdadera magnitud.
+        pista: |
+          (1) Con centro en C₁, D₁ hasta la vertical de C₁, abajo: D₁′. Los demás, el mismo ángulo:
+          cada uno conserva su distancia a C₁ y a D₁. (2) Sube cada punto a su cota: el canto. (3) Con
+          centro en C₂, el canto hasta la horizontal de C₂. (4) Baja cada punto a la altura de su planta
+          girada.
+        desarrollo: |
+          En verde claro, el canto tras el primer giro y el octógono tras el segundo: el plano en
+          verdadera magnitud, en la planta.
+
+      - tipo: calcular
+        titulo: El ángulo en D
+        pregunta: ¿Cuánto mide de verdad el ángulo del octógono en D, entre DC y DE? Mídelo con el transportador en cualquiera de las tres construcciones.
+        respuesta:
+          tipo: numero
+          valor: '104.36'
+          receta: angulo_D
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '75.64'
+            receta: angulo_rectas(recta3(D, C), recta3(D, E))
+            mensaje: |
+              Ese es el ángulo **agudo** entre las dos rectas, el suplementario. El del octógono en D es
+              el obtuso: DE sale hacia atrás respecto de DC.
+          - valor: '123.68'
+            receta: 180 - angulo_rectas(recta3(D, C), recta3(D, solucion.Eh))
+            mensaje: |
+              Ese es el ángulo **en la planta**, entre D₁C₁ y D₁E₁. La planta deforma los ángulos de
+              una figura que no es horizontal: hay que medirlo en la verdadera magnitud.
+          - valor: '116.57'
+            receta: 180 - angulo_rectas(recta3(D, solucion.Cf), recta3(D, E))
+            mensaje: |
+              Ese es el ángulo **en el alzado**, entre D₂C₂ y D₂E₂. El alzado también lo deforma: el
+              plano no es frontal.
+        pista: |
+          En la verdadera magnitud, entre C₅D₅ y D₅E₅, o entre C₁D₁ y D₁E₀, o entre C₁D₁″ y D₁″E₁″: los
+          tres tienen que dar lo mismo.
+        desarrollo: |
+          El ángulo de DC con DE en el espacio es de 104,36°; los tres métodos lo conservan. En la
+          planta se ve de 123,68° y en el alzado, de 116,57°.
+
+      - tipo: calcular
+        titulo: La distancia de C a G
+        pregunta: ¿Cuánto mide de verdad CG, la distancia entre los dos vértices más alejados? Mídela en las tres construcciones; tiene que dar lo mismo.
+        respuesta:
+          tipo: numero
+          valor: '70.40'
+          receta: CG_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '54.97'
+            receta: en_mm(vm_planta(C, G))
+            mensaje: |
+              Eso es lo que mide **C₁G₁ en la planta**. CG sube 44 mm, y la planta lo acorta: mídelo en
+              la verdadera magnitud.
+          - valor: '62.20'
+            receta: en_mm(vm_alzado(C, G))
+            mensaje: |
+              Eso es **C₂G₂ en el alzado**, que también acorta: CG se acerca mientras sube.
+          - valor: '43.98'
+            receta: en_mm(diferencia_de_cotas(C, G))
+            mensaje: |
+              Eso es lo que G está más alto que C, la **diferencia de cotas**: un cateto, no la
+              distancia.
+        pista: |
+          C₅G₅ en la vista 5, C₁G₀ en el abatimiento o C₁G₁″ tras los giros.
+        desarrollo: |
+          $$ \overline{CG} = \sqrt{\overline{C_1G_1}^{\,2} + \Delta z^{2}} = \sqrt{54{,}97^{2} + 43{,}98^{2}} \approx 70{,}40 \text{ mm} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El plano es oblicuo, así que un cambio de plano o un giro solo lo dejan de canto, y hacen falta dos; el abatimiento lo deja en verdadera magnitud de una vez.
+          - texto: 'Primer cambio, vertical, con la línea nueva perpendicular a las horizontales: el plano sale de canto. Segundo, horizontal, con la línea paralela al canto: la vista 5 es la verdadera magnitud.'
+          - texto: Con CD de charnela, cada vértice se abate por la perpendicular a C₁D₁, con un radio que es la hipotenusa de lo que dista en la planta y de lo que está por encima de CD.
+          - texto: Con un giro de eje vertical que deja CD de punta y otro de eje de punta que deja el canto horizontal, la planta final es la verdadera magnitud.
+          - texto: 'Los tres caminos dan la misma figura: el mismo ángulo en D y la misma distancia de C a G.'
+          - texto: En el segundo cambio de plano, cada punto lleva otra vez su cota, contada desde la de C.
+            trampa: true
+            mensaje: |
+              Cada cambio lleva la distancia de la vista que se deja atrás. En el segundo se deja la
+              planta, y lo que se lleva es lo que la planta de cada punto distaba de la primera línea
+              nueva. Con la cota otra vez, D se quedaría en la línea y la figura saldría deformada.
+    resolucion: |
+      **Qué plano es.** AB, CD, EF y GH tienen el alzado horizontal: son horizontales del plano, y en la
+      planta van todas en la misma dirección. BC, DE, FG y HA tienen la planta horizontal: son
+      frontales. Ninguna vista lo reduce a una recta: el plano es oblicuo, a 67,4° del plano
+      horizontal. E, F, A y B están en la misma horizontal, 22 mm por encima de CD, y G y H, 44 mm.
+
+      **Por dos cambios de plano.** La primera línea nueva, perpendicular a las horizontales, ve cada
+      horizontal de punta: los ocho vértices caen en tres puntos, C₄ ≡ D₄ en la línea (C es la
+      referencia), A₄ ≡ B₄ ≡ E₄ ≡ F₄ a 22 mm y G₄ ≡ H₄ a 44 mm, en una recta: el canto. La segunda línea,
+      paralela al canto, lleva lo que la planta de cada punto distaba de la primera: D₅ a 59,5 mm, lo
+      que mide C₁D₁, y los demás a lo suyo. La vista 5 es el octógono en verdadera magnitud.
+
+      **Por abatimiento.** Con CD de charnela, E, F, A y B se abaten a 23,8 mm de ella y G y H a 47,6, todos
+      al mismo lado y cada uno por la perpendicular a C₁D₁ que pasa por su planta. E₀F₀A₀B₀ y G₀H₀ salen
+      paralelas a C₁D₁.
+
+      **Por dos giros.** Con el eje vertical por C, la planta gira 33,7° hasta que D₁ queda debajo de C₁:
+      CD de punta, y el alzado, de canto. Con el eje de punta por C, el canto gira hasta la horizontal
+      de C₂ (112,6° hacia la derecha o 67,4° hacia la izquierda: los dos valen), y la planta queda en
+      verdadera magnitud.
+
+      **La comprobación.** Los tres caminos dan la misma figura: lados de 19,8, 24,6 y 59,5 mm, el ángulo
+      en D de 104,36° y CG de 70,40 mm. En la planta ese ángulo se ve de 123,68° y en el alzado de
+      116,57°, y CG de 54,97 y 62,20 mm: ninguna vista da la verdadera magnitud.

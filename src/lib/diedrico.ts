@@ -654,3 +654,24 @@ export function cambioPlano(P: P3, tipo: CambioDePlano, linea: Recta2, R: P3, lu
   const primera = cambia(tipo === 'vertical' ? planta : alzado, linea, R, 'el primer cambio');
   return (luego ? cambia(primera, luego, R2, 'el segundo cambio') : primera).proyeccion(P);
 }
+
+/* ─────── el lote 2 de la fase K: las figuras regulares en un plano ─────── */
+
+/**
+ * Los vértices del polígono regular de `lados` lados que está en el plano,
+ * tiene su centro en `centro` y uno de sus vértices en `vertice`, en orden:
+ * el primero es `vertice`, y los demás siguen girando alrededor de la normal
+ * del plano que sube (`normalQueSube`). Lo piden el triángulo equilátero del
+ * Ejercicio 21 (SD28), el rombo, el cuadrado y el hexágono de los
+ * ejercicios 7 a 10, 48 y 49 de la colección. El centro y el vértice tienen
+ * que estar en el plano.
+ */
+export function poligonoRegular(pl: Plano, centro: P3, vertice: P3, lados: number): P3[] {
+  if (!Number.isInteger(lados) || lados < 3) throw new Error('un polígono regular tiene tres lados o más');
+  for (const [Q, n] of [[centro, 'el centro'], [vertice, 'el vértice']] as const) {
+    if (!enPlano(Q, pl)) throw new Error(`${n} no está en el plano: queda a ${(distanciaAPlano(Q, pl) * PT_MM).toFixed(2)} mm`);
+  }
+  if (vm(centro, vertice) < 1e-6) throw new Error('el vértice es el centro: el polígono no tiene tamaño');
+  const eje: Recta3 = { p: centro, d: normalQueSube(pl) };
+  return Array.from({ length: lados }, (_, k) => gira(vertice, eje, (360 * k) / lados));
+}

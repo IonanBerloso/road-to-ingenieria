@@ -201,12 +201,20 @@ async function compruebaTaller(pagina, taller, quien) {
       let q = aPantalla();
       const r = marco.getBoundingClientRect();
       if (q.x < r.left + 12 || q.x > r.right - 12 || q.y < r.top + 12 || q.y > r.bottom - 12) {
-        marco.scrollLeft += q.x - (r.left + r.width / 2);
-        marco.scrollTop += q.y - (r.top + r.height / 2);
+        /* Sin animar: con `scroll-behavior: smooth` el desplazamiento llega
+           después de medir, y el clic caería donde estaba el punto. */
+        marco.scrollBy({ left: q.x - (r.left + r.width / 2), top: q.y - (r.top + r.height / 2), behavior: 'instant' });
         q = aPantalla();
       }
-      if (q.y < 12 || q.y > innerHeight - 12) {
-        scrollBy(0, q.y - innerHeight / 2);
+      /* Y si algo lo tapa —la cabecera fija de la página, a 40 px del borde
+         con la lupa a ×4 en SD26—, el clic se lo llevaría eso: la página se
+         mueve hasta dejar el punto en medio de la pantalla. */
+      const tapado = () => {
+        const el = document.elementFromPoint(q.x, q.y);
+        return !el || !svg.contains(el);
+      };
+      if (q.y < 12 || q.y > innerHeight - 12 || tapado()) {
+        scrollBy({ top: q.y - innerHeight / 2, behavior: 'instant' });
         q = aPantalla();
       }
       return q;
