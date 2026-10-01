@@ -6,7 +6,7 @@ import Cabecera from '../../../components/ui/Cabecera.astro';
 import Examen from '../../../components/ui/Examen.astro';
 import { archivo, ruta } from '../../../lib/rutas';
 import { ejerciciosDelCuadernillo } from '../../../lib/cuadernillo';
-import { CONVOCATORIAS, slugExamen } from '../../../content.config';
+import { CONVOCATORIAS, slugExamen, cursoDe } from '../../../content.config';
 import { partesDelSimulacro } from '../../../lib/simulacro';
 
 /**
@@ -25,7 +25,7 @@ export async function getStaticPaths() {
   const rutas = await getCollection('preparar');
 
   return examenes.map((ex) => {
-    const { asignatura: idAsig, curso, convocatoria, pdf, puntosImpresos, fuera } = ex.data;
+    const { asignatura: idAsig, curso, convocatoria, pdf, puntosImpresos, fuera, hoja } = ex.data;
 
     /* La carpeta ES la URL. Un curso tiene hasta siete exámenes —cinco
        evaluaciones y dos convocatorias—, así que el curso solo ya no
@@ -35,7 +35,7 @@ export async function getStaticPaths() {
     /* El id es «calculo/examenes/2015-2016-1ev/examen»: la carpeta es el
        penúltimo segmento, porque el último es el nombre del fichero. */
     const carpeta = ex.id.split('/').at(-2) ?? '';
-    const esperado = slugExamen(curso, convocatoria);
+    const esperado = slugExamen(curso, convocatoria, hoja);
     if (carpeta !== esperado) {
       throw new Error(
         `El examen de la carpeta "${carpeta}" declara curso ${curso} y convocatoria ` +
@@ -210,7 +210,9 @@ const crumb = `${asignatura.data.nombre} · ${examen.data.propio ? 'simulacro' :
    hasta siete exámenes por curso, «Examen 2024-2025» no identifica nada. */
 const titulo = examen.data.propio
   ? examen.data.propio.titulo
-  : `${conv[0].toUpperCase()}${conv.slice(1)} · ${examen.data.curso}`;
+  : examen.data.convocatoria === 'hoja'
+    ? `Hoja de examen ${examen.data.hoja} · sin fecha`
+    : `${conv[0].toUpperCase()}${conv.slice(1)} · ${examen.data.curso}`;
 
 /* Casi todos los exámenes son un cuadernillo; el de mayo-junio de 2020 son dos.
    Se les da nombre —«1.er cuatrimestral», «2.º»— solo cuando hay más de uno:
@@ -238,7 +240,7 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
       de 2026, al construir el propio mecanismo que lo declara. */}
   descripcion={examen.data.propio
     ? `${examen.data.propio.titulo}, de ${asignatura.data.nombre}: ${ejercicios.length} ejercicios del curso con reloj, montados por nosotros y resueltos paso a paso.`
-    : `Los ${ejerciciosDelCuadernillo(examen.data.ejercicios)} ejercicios de la ${conv} de ${asignatura.data.nombre} del curso ${examen.data.curso}, ${
+    : `Los ${ejerciciosDelCuadernillo(examen.data.ejercicios)} ejercicios de la ${conv} de ${asignatura.data.nombre}${examen.data.curso ? ` del curso ${examen.data.curso}` : examen.data.hoja ? ` número ${examen.data.hoja}` : ''}, ${
     examen.data.fuera.length === 0 ? 'resueltos enteros' : 'con lo que falta dicho ejercicio por ejercicio'
   }${ejercicios.some((e) => e.puntos) || examen.data.puntosImpresos ? ' y con el reparto de puntos del examen' : ''}.`}
   acento={asignatura.data.acento}
@@ -249,7 +251,7 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
     <Examen
       eyebrow={`${asignatura.data.nombre} · ${conv}`}
       titulo={titulo}
-      fecha={examen.data.fecha}
+      fecha={examen.data.fecha ?? (examen.data.convocatoria === 'hoja' ? 'Sin fecha' : undefined)}
       instrucciones={examen.data.instrucciones}
       pdfs={pdfs}
       pdfEs={examen.data.pdfEs}
@@ -260,6 +262,7 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
       minutosExigente={asignatura.data.duracionDelExamen?.exigente}
       duracionImpresa={examen.data.duracion}
       sinPdf={examen.data.sinPdf}
+      sinFecha={examen.data.sinFecha}
       puntosImpresos={examen.data.puntosImpresos}
       propio={propio}
     />

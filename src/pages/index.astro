@@ -29,6 +29,8 @@ import {
   CON_TEMAS,
   esPropia,
   slugExamen,
+  cursoDe,
+  cursoParaOrdenar,
   type ConTemas,
 } from '../content.config';
 
@@ -170,8 +172,8 @@ const primeraConReloj = new Map<string, string>();
 
 for (const ex of examenes) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
-  const slug = slugExamen(ex.data.curso, ex.data.convocatoria);
-  lista.push({ curso: ex.data.curso, conv: ex.data.convocatoria, slug });
+  const slug = slugExamen(ex.data.curso, ex.data.convocatoria, ex.data.hoja);
+  lista.push({ curso: cursoDe(ex.data.curso), orden: cursoParaOrdenar(ex.data.curso), conv: ex.data.convocatoria, slug });
   examenesPorAsignatura.set(ex.data.asignatura, lista);
   if (ex.data.duracion && !primeraConReloj.has(ex.data.asignatura)) {
     primeraConReloj.set(ex.data.asignatura, slug);
@@ -215,7 +217,7 @@ for (const lista of rutasPorAsignatura.values()) {
 for (const lista of examenesPorAsignatura.values()) {
   lista.sort(
     (a, b) =>
-      b.curso.localeCompare(a.curso) ||
+      b.orden.localeCompare(a.orden) ||
       ORDEN_CONV.indexOf(a.conv) - ORDEN_CONV.indexOf(b.conv),
   );
 }

@@ -5,7 +5,7 @@ import Cabecera from '../../components/ui/Cabecera.astro';
 import { ruta } from '../../lib/rutas';
 import { mate, sinMarcas } from '../../lib/markdown.mjs';
 import { paginaDeEjercicio } from '../../lib/ejercicios';
-import { CONVOCATORIAS, slugExamen, type ConTemas } from '../../content.config';
+import { CONVOCATORIAS, slugExamen, cursoDe, type ConTemas } from '../../content.config';
 
 /**
  * El laboratorio: lo que la asignatura evalúa y esta app no examina.
@@ -70,8 +70,8 @@ const crumb = `${asignatura.data.nombre} · laboratorio`;
 const examenes = (await getCollection('examen')).filter((e) => e.data.asignatura === asignatura.id);
 const nombreDeExamen = new Map(
   examenes.map((e) => [
-    slugExamen(e.data.curso, e.data.convocatoria),
-    `${CONVOCATORIAS[e.data.convocatoria as keyof typeof CONVOCATORIAS].boton} ${e.data.curso}`,
+    slugExamen(e.data.curso, e.data.convocatoria, e.data.hoja),
+    `${CONVOCATORIAS[e.data.convocatoria as keyof typeof CONVOCATORIAS].boton} ${cursoDe(e.data.curso)}`,
   ]),
 );
 const ejercicioPorId = new Map<string, { titulo: string; pagina: string; examen?: string }>();

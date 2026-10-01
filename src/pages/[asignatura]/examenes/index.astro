@@ -5,7 +5,7 @@ import Cabecera from '../../../components/ui/Cabecera.astro';
 import { ruta, archivo } from '../../../lib/rutas';
 import { sinMarcas, mate } from '../../../lib/markdown.mjs';
 import { avisoDeResoluciones, ejerciciosDelCuadernillo, queEsElPdf } from '../../../lib/cuadernillo';
-import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, esPropia, slugExamen } from '../../../content.config';
+import { SUFIJO_CONV, CONVOCATORIAS, ORDEN_CONV, esPropia, slugExamen, cursoDe, cursoParaOrdenar } from '../../../content.config';
 
 /**
  * El índice de exámenes de una asignatura. Solo existe si esa asignatura tiene
@@ -39,11 +39,13 @@ export async function getStaticPaths() {
     /* Del más reciente al más antiguo: es el orden en que sirven para
        estudiar, porque el examen que viene se parece al del año pasado. Y
        dentro de un mismo curso, por convocatoria, que es el orden en que se
-       hacen: primera en octubre, segunda en diciembre, tercera en enero. */
+       hacen: primera en octubre, segunda en diciembre, tercera en enero. Las
+       hojas sin fecha de Expresión Gráfica van al final, por su número. */
     lista.sort(
       (a, b) =>
-        b.data.curso.localeCompare(a.data.curso) ||
-        ORDEN_CONV.indexOf(a.data.convocatoria) - ORDEN_CONV.indexOf(b.data.convocatoria),
+        cursoParaOrdenar(b.data.curso).localeCompare(cursoParaOrdenar(a.data.curso)) ||
+        ORDEN_CONV.indexOf(a.data.convocatoria) - ORDEN_CONV.indexOf(b.data.convocatoria) ||
+        (a.data.hoja ?? 0) - (b.data.hoja ?? 0),
     );
     /* Las rutas de estudio de esta asignatura, en el mismo orden de
        convocatoria que los exámenes. Puede no haber ninguna: la sección de
@@ -307,10 +309,10 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                 <a
                   class="ex"
                   href={ruta(
-                    `${asignatura.id}/examenes/${slugExamen(ex.data.curso, ex.data.convocatoria)}`,
+                    `${asignatura.id}/examenes/${slugExamen(ex.data.curso, ex.data.convocatoria, ex.data.hoja)}`,
                   )}
                 >
-                  <span class="curso">{ex.data.curso}</span>
+                  <span class="curso">{cursoDe(ex.data.curso)}</span>
                   <span class="txt">
                     <span class="conv">
                       {NOMBRE_CONV[ex.data.convocatoria]}

@@ -1243,6 +1243,17 @@ export const CONVOCATORIAS = {
    *  del profesor. No cuenta en la medida de ninguna ruta: una ruta mide las
    *  convocatorias de su evaluación, y esta no es de ninguna. */
   modelo: { url: 'modelo', corta: 'modelo', boton: 'Modelo', larga: 'modelo de examen' },
+  /** Una hoja de examen sin fecha ni curso. Entra el 1 de octubre de 2026 con
+   *  las hojas 52-55 de la colección de Expresión Gráfica, que son exámenes
+   *  de verdad —la 54 se titula «Azterketa / Examen»— y no dicen de qué año
+   *  son. No es un simulacro (`esPropia`) ni un modelo: son las únicas
+   *  preguntas de examen del bloque 1 que hay. Su carpeta es `hoja-55`, no
+   *  `<curso>-hoja` (`slugExamen`). Prueba de utilidad (§13): para el alumno
+   *  del bloque 1, cuando prepara el control de diédrico; gana trece
+   *  preguntas de examen con corrección paso a paso; se comprueba en que las
+   *  cuatro hojas construyen y salen en el índice con «sin fecha», y un examen
+   *  con curso sigue exigiéndolo. */
+  hoja: { url: 'hoja', corta: 'hoja', boton: 'Hoja de examen', larga: 'hoja de examen sin fecha' },
   /** Los simulacros NUESTROS: no son convocatorias, los montamos nosotros con
    *  ejercicios de tema ya publicados. Entran el 29 de septiembre de 2026 con
    *  Ciencia de Materiales (fase H3), que no tiene un solo examen de teoría y
@@ -1359,8 +1370,14 @@ const examen = defineCollection({
        *  exámenes por curso y tres páginas no caben en una ruta. Ahora la
        *  carpeta es `2024-2025-2ev` y `SUFIJO_CONV` comprueba que el nombre
        *  case con lo que declara el fichero. */
-      curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'),
+      curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA').optional(),
       convocatoria,
+      /** Solo en una `hoja`: su número en la colección (52-55), que da la
+       *  carpeta, `hoja-55`. */
+      hoja: z.number().int().min(1).optional(),
+      /** Solo en una `hoja`, y en ella obligatorio: por qué no tiene fecha ni
+       *  curso, dicho para el alumno. */
+      sinFecha: z.string().min(40).optional(),
       /** Tal como viene impresa en la cabecera del examen. Un simulacro
        *  nuestro no tiene: no ha caído ningún día. */
       fecha: z.string().min(8).optional(),
@@ -1603,7 +1620,13 @@ const examen = defineCollection({
     .refine((e) => esPropia(e.convocatoria) === (e.propio !== undefined), {
       message: 'un simulacro nuestro lleva `propio`, y solo él',
     })
-    .refine((e) => esPropia(e.convocatoria) || e.fecha !== undefined, {
+    .refine((e) => (e.convocatoria === 'hoja') === (e.curso === undefined), {
+      message: 'una `hoja` no tiene curso, y cualquier otra convocatoria lo tiene',
+    })
+    .refine((e) => (e.convocatoria === 'hoja') === (e.hoja !== undefined && e.sinFecha !== undefined), {
+      message: 'una `hoja` lleva su número (`hoja`) y por qué no tiene fecha (`sinFecha`), y solo ella',
+    })
+    .refine((e) => esPropia(e.convocatoria) || e.convocatoria === 'hoja' || e.fecha !== undefined, {
       message: 'una convocatoria de verdad lleva su `fecha`',
     })
     .refine((e) => !esPropia(e.convocatoria) || e.pdf === undefined, {
@@ -1628,8 +1651,14 @@ export const SUFIJO_CONV: Record<string, string> = Object.fromEntries(
  *  es el **autocontrol** que comprueba que la carpeta y los datos del examen
  *  casan: estaba escrito contra una copia de la fórmula que quería vigilar,
  *  así que un cambio en la plantilla se le habría colado sin protestar. */
-export const slugExamen = (curso: string, convocatoria: string): string =>
-  `${curso}-${SUFIJO_CONV[convocatoria]}`;
+export const slugExamen = (curso: string | undefined, convocatoria: string, hoja?: number): string =>
+  convocatoria === 'hoja' ? `hoja-${hoja}` : `${curso}-${SUFIJO_CONV[convocatoria]}`;
+
+/** El curso tal como se enseña: «2024-2025», o «sin fecha» en una hoja. */
+export const cursoDe = (curso: string | undefined): string => curso ?? 'sin fecha';
+
+/** El curso para ordenar: una hoja va detrás de todo lo que tiene fecha. */
+export const cursoParaOrdenar = (curso: string | undefined): string => curso ?? '0000-0000';
 
 /* ═══════════════════════════════════════════════════════════════════════
    Rutas de estudio

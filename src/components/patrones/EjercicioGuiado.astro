@@ -89,6 +89,13 @@ const construidos = resuelveEjercicio(ejercicio, datosLamina);
  * página no habla con GitHub — es el navegador del alumno cuando pulsa.
  */
 const asignaturaDelEjercicio = encontrados[0].en.split('/')[0];
+/** En Álgebra y Cálculo un `conjunto` son las raíces de una ecuación, y sus
+ *  ayudas hablan de forma exacta y de «grado n». En las demás es una lista de
+ *  elementos —los cruces de una lámina de líneas, las cotas que sobran de un
+ *  plano—, y esas ayudas no dicen nada. Entra el 1 de octubre de 2026 con los
+ *  primeros `conjunto` de Expresión Gráfica (t07 y t10). */
+const CONJUNTO_DE_RAICES = new Set(['algebra', 'calculo']);
+const sonRaices = CONJUNTO_DE_RAICES.has(asignaturaDelEjercicio);
 const REPO = 'https://github.com/IonanBerloso/road-to-ingenieria';
 /* `Astro.url` en un build estático es la URL final de la página, así que el
    aviso llega diciendo desde dónde se mandó sin que haya que pasarlo a mano. */
@@ -221,9 +228,10 @@ function sinLaRespuesta(formato: string): string {
   return formato;
 }
 
-function formatoConExacta(tipo: string, formatoDelDato: string): string {
-  const numerica = tipo === 'numero' || tipo === 'complejo' || tipo === 'conjunto';
+function formatoConExacta(tipo: string, formatoDelDato: string, raices = true): string {
   const formato = sinLaRespuesta(formatoDelDato);
+  if (tipo === 'conjunto' && !raices) return formato;
+  const numerica = tipo === 'numero' || tipo === 'complejo' || tipo === 'conjunto';
   if (!numerica) return formato + ayudaDelTipo(tipo);
   const ejemplos = ' — por ejemplo pi/4, sqrt(3)/2, (e^2-1)/2…';
   if (/exact/i.test(formato)) return formato + ejemplos;
@@ -424,6 +432,7 @@ const datos = pasos.map((p) => {
       tipo: p.tipo,
       respuesta: p.respuesta,
       distractores: p.distractores!.map((d) => d.valor),
+      raices: sonRaices,
     };
   }
   if (p.tipo === 'verificar') {
@@ -546,7 +555,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                   />
                   {paso.respuesta!.formato && (
                     <span class="formato rotulo">
-                      {formatoConExacta(paso.respuesta!.tipo, paso.respuesta!.formato)}
+                      {formatoConExacta(paso.respuesta!.tipo, paso.respuesta!.formato, sonRaices)}
                     </span>
                   )}
                   <button type="button" class="comprobar" data-comprobar>
@@ -824,7 +833,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   };
   type Dato =
     | { tipo: 'reconocer'; correcta: number }
-    | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[] }
+    | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[]; raices?: boolean }
     | { tipo: 'justificar'; orden: number[]; trampa: number }
     | { tipo: 'verificar'; condicion: string; ventana: { x: [number, number]; y: [number, number] } }
     | { tipo: 'redactar' | 'dibujar' | 'construir' };
@@ -1005,6 +1014,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       const campo = paso.querySelector<HTMLInputElement>('input')!;
       const { respuesta, distractores } = dato;
+      const lista = respuesta.tipo === 'conjunto' && dato.raices === false;
 
       /** Distancia tolerante: los distractores se reconocen con más holgura que
        *  la respuesta buena, porque lo que importa es identificar el
@@ -1099,6 +1109,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                   'misma magnitud: si la respuesta está en pascales, <code>1 bar</code> ' +
                   'también cuenta. Los exponentes se escriben <code>m^3</code> o ' +
                   '<code>m3</code>.</p>'
+            : lista
+              ? '<p>Escribe <strong>todos</strong> los números separados por comas, ' +
+                  'por ejemplo <code>2, 4</code>.</p>'
             : respuesta.tipo === 'conjunto'
               ? '<p>Escribe <strong>todas</strong> las soluciones separadas por comas, ' +
                   'por ejemplo <code>1, -1+i, -1-i</code>.</p>'
@@ -1291,10 +1304,14 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             paso,
             'mal',
             'Están bien, pero no están todas',
-            `<p>Las que has escrito son correctas y te ${
-              cuenta.faltan === 1 ? 'falta una' : `faltan ${cuenta.faltan}`
-            }. Una ecuación de grado n tiene n soluciones en los complejos, y ` +
-              'todas cuentan en la respuesta.</p>',
+            lista
+              ? `<p>Los que has escrito están bien y te ${
+                  cuenta.faltan === 1 ? 'falta uno' : `faltan ${cuenta.faltan}`
+                }: la respuesta los pide todos.</p>`
+              : `<p>Las que has escrito son correctas y te ${
+                  cuenta.faltan === 1 ? 'falta una' : `faltan ${cuenta.faltan}`
+                }. Una ecuación de grado n tiene n soluciones en los complejos, y ` +
+                'todas cuentan en la respuesta.</p>',
           );
           return;
         }
