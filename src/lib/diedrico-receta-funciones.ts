@@ -42,6 +42,23 @@ import {
   vmAlzado,
   vmPlanta,
   type P2,
+  abatido,
+  anguloDiedro,
+  anguloPlanos,
+  anguloRectaPlano,
+  anguloRectas,
+  apice,
+  corteRectaPlano,
+  cuadradoPorDiagonal,
+  distanciaRectas,
+  gira,
+  paraleloADistancia,
+  perpendicularAPlano,
+  pieComun,
+  pieEnPlano,
+  planoMediador,
+  planoPerpendicularARecta,
+  type Recta3,
 } from './diedrico';
 import { propio, QUE, espera, comoNum, comoP3, comoPlano, comoRecta3, comoRecta2 } from './diedrico-receta-valores';
 import type { Lamina, Valor } from './diedrico-receta-valores';
@@ -118,6 +135,21 @@ export function angulo(x: Valor | undefined, con: 'ph' | 'pv'): Valor {
     return { k: 'num', v: dePuntos(p, { x: p.x + d.x, y: p.y + d.y, z: p.z + d.z }) };
   }
   throw new Error(`${quien} espera un plano, una recta o un segmento del espacio, y ha recibido ${x ? QUE[x.k] : 'nada'}`);
+}
+
+/** Una recta del espacio, dada como recta o como segmento. */
+function rectaDe(v: Valor | undefined, quien: string): Recta3 {
+  if (v?.k === 'seg3') return rectaPorPuntos(v.a, v.b);
+  return comoRecta3(v, quien);
+}
+
+/** `ascendente` es 1 (el lado que gana cota) y `descendente`, −1. */
+const lado = (v: Valor | undefined, quien: string): 1 | -1 => (espera(v, 'sentido', quien).v === 'ascendente' ? 1 : -1);
+
+/** Dos soluciones buenas: una elección con el nombre de su línea. */
+function eleccion(e: Entorno, quien: string, v: Valor[]): Valor {
+  if (!e.linea) throw new Error(`${quien} da dos soluciones, que son una elección: se declara en una línea de la receta, con nombre, o se le da un sentido`);
+  return { k: 'ramas', eleccion: e.linea, v };
 }
 
 /** Lo que una receta puede llamar. Cada entrada es una función de
@@ -384,6 +416,120 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
     hace: ([p, r]) => {
       const [P, recta] = [comoP3(p, 'en_recta()'), comoRecta3(r, 'en_recta()')];
       return { k: 'bool', v: enRecta(P, recta), detalle: `queda a ${(distanciaARecta(P, recta) * PT_MM).toFixed(2)} mm de la recta` };
+    },
+  },
+  /* ── el lote 0 de la fase K (1 de octubre de 2026): ángulos, distancias,
+     perpendiculares, abatimientos y giros. Las rectas se aceptan como recta
+     o como segmento del espacio. Las que tienen dos soluciones buenas
+     (gira, paralelo_a_distancia y apice, si no se les da sentido) devuelven
+     una elección, como punto_a_distancia: se declaran en una línea con
+     nombre. `sentido: ascendente` es el lado que gana cota. ── */
+  angulo_rectas: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'num', v: anguloRectas(rectaDe(a, 'angulo_rectas()'), rectaDe(b, 'angulo_rectas()')) }),
+  },
+  angulo_recta_plano: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'num', v: anguloRectaPlano(rectaDe(a, 'angulo_recta_plano()'), comoPlano(b, 'angulo_recta_plano()')) }),
+  },
+  angulo_planos: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'num', v: anguloPlanos(comoPlano(a, 'angulo_planos()'), comoPlano(b, 'angulo_planos()')) }),
+  },
+  angulo_diedro: {
+    posicion: 3,
+    hace: ([a, arista, b]) => ({
+      k: 'num',
+      v: anguloDiedro(comoP3(a, 'angulo_diedro()'), rectaDe(arista, 'angulo_diedro()'), comoP3(b, 'angulo_diedro()')),
+    }),
+  },
+  pie_en_plano: {
+    posicion: 2,
+    hace: ([q, pl]) => ({ k: 'p3', v: pieEnPlano(comoP3(q, 'pie_en_plano()'), comoPlano(pl, 'pie_en_plano()')) }),
+  },
+  distancia_a_plano: {
+    posicion: 2,
+    hace: ([q, pl]) => ({ k: 'num', v: distanciaAPlano(comoP3(q, 'distancia_a_plano()'), comoPlano(pl, 'distancia_a_plano()')) }),
+  },
+  pie_comun: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'p3', v: pieComun(rectaDe(a, 'pie_comun()'), rectaDe(b, 'pie_comun()')) }),
+  },
+  distancia_rectas: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'num', v: distanciaRectas(rectaDe(a, 'distancia_rectas()'), rectaDe(b, 'distancia_rectas()')) }),
+  },
+  plano_mediador: {
+    posicion: 2,
+    hace: ([a, b]) => ({ k: 'plano', v: planoMediador(comoP3(a, 'plano_mediador()'), comoP3(b, 'plano_mediador()')) }),
+  },
+  corte_recta_plano: {
+    posicion: 2,
+    hace: ([a, pl]) => ({ k: 'p3', v: corteRectaPlano(rectaDe(a, 'corte_recta_plano()'), comoPlano(pl, 'corte_recta_plano()')) }),
+  },
+  perpendicular_a_plano: {
+    posicion: 2,
+    hace: ([q, pl]) => ({ k: 'recta3', v: perpendicularAPlano(comoP3(q, 'perpendicular_a_plano()'), comoPlano(pl, 'perpendicular_a_plano()')) }),
+  },
+  plano_perpendicular_a_recta: {
+    posicion: 2,
+    hace: ([q, a]) => ({
+      k: 'plano',
+      v: planoPerpendicularARecta(comoP3(q, 'plano_perpendicular_a_recta()'), rectaDe(a, 'plano_perpendicular_a_recta()')),
+    }),
+  },
+  paralelo_a_distancia: {
+    posicion: 2,
+    nombres: { sentido: 'opcional' },
+    hace: ([pl, d], n, e) => {
+      const [plano, dist] = [comoPlano(pl, 'paralelo_a_distancia()'), comoNum(d, 'paralelo_a_distancia()')];
+      if (n.sentido) return { k: 'plano', v: paraleloADistancia(plano, dist, lado(n.sentido, 'paralelo_a_distancia(sentido:)')) };
+      return eleccion(e, 'paralelo_a_distancia()', [1, -1].map((l) => ({ k: 'plano', v: paraleloADistancia(plano, dist, l as 1 | -1) })));
+    },
+  },
+  /* Una LISTA con los dos lados, como abatido_planta: cualquiera vale. Que
+     varios puntos abatidos caigan del mismo lado lo hará el lote 1 (abatir
+     respecto de uno ya abatido); hasta entonces, un objetivo los acepta
+     todos. */
+  abatido: {
+    posicion: 3,
+    hace: ([q, charnela, pl]) => {
+      const [a, b] = abatido(comoP3(q, 'abatido()'), rectaDe(charnela, 'abatido()'), comoPlano(pl, 'abatido()'));
+      return { k: 'lista', v: [{ k: 'p3', v: a }, { k: 'p3', v: b }] };
+    },
+  },
+  gira: {
+    posicion: 2,
+    nombres: { angulo: 'obligatorio', sentido: 'opcional' },
+    hace: ([q, eje], n, e) => {
+      const [P, r, ang] = [comoP3(q, 'gira()'), rectaDe(eje, 'gira()'), comoNum(n.angulo, 'gira(angulo:)')];
+      const [a, b] = [gira(P, r, ang), gira(P, r, -ang)];
+      if (n.sentido) {
+        /* el que queda con más cota (ascendente) o con menos (descendente) */
+        const sube = lado(n.sentido, 'gira(sentido:)') === 1;
+        if (Math.abs(a.z - b.z) < 1e-9) throw new Error('gira(): los dos giros dejan el punto a la misma cota; el sentido no decide');
+        return { k: 'p3', v: (a.z > b.z) === sube ? a : b };
+      }
+      return eleccion(e, 'gira()', [{ k: 'p3', v: a }, { k: 'p3', v: b }]);
+    },
+  },
+  cuadrado_por_diagonal: {
+    posicion: 3,
+    hace: ([pl, a, b]) => ({
+      k: 'lista',
+      v: cuadradoPorDiagonal(comoPlano(pl, 'cuadrado_por_diagonal()'), comoP3(a, 'cuadrado_por_diagonal()'), comoP3(b, 'cuadrado_por_diagonal()')).map(
+        (v): Valor => ({ k: 'p3', v }),
+      ),
+    }),
+  },
+  apice: {
+    posicion: 1,
+    nombres: { altura: 'obligatorio', sentido: 'opcional' },
+    hace: ([base], n, e) => {
+      const vs = espera(base, 'lista', 'apice()').v.map((v) => comoP3(v, 'apice() (un vértice de la base)'));
+      const h = comoNum(n.altura, 'apice(altura:)');
+      if (n.sentido) return { k: 'p3', v: apice(vs, h, lado(n.sentido, 'apice(sentido:)')) };
+      return eleccion(e, 'apice()', [1, -1].map((l) => ({ k: 'p3', v: apice(vs, h, l as 1 | -1) })));
     },
   },
 };

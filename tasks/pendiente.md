@@ -50,6 +50,12 @@ sabía:
   y apuntes salvo indicación expresa—; si el diédrico se examina con la
   figura a escala o por coordenadas; y el PDF de la rúbrica de láminas, que
   en la carpeta es solo el enlace de eGela.
+- **Expresión Gráfica, la hoja de *Criterios*** (`src/content/criterios/`),
+  tres cosas que no dice: si en el precio compuesto de la escala el medio
+  punto del cajetín se cobra una vez o por pieza (se ha supuesto una vez:
+  dos piezas, −1,5; por pieza serían −2); si un error muy grave repetido —dos
+  ejes cortados a lo largo— cuesta −2 una vez o por caso; y si los dos muy
+  graves de la escala que se solapan se suman.
 - **Sistemas**: si el examen da las hojas del catálogo Sandvik o los valores
   de corte en el enunciado.
 - **Materiales**: una copia limpia de las preguntas guía, porque el fichero

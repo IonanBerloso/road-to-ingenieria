@@ -2382,6 +2382,158 @@ const tablas = defineCollection({
     }),
 });
 
+/** Los criterios de corrección de una asignatura como DATOS: hoy, la hoja
+ *  «Criterios para la corrección de ejercicios y exámenes» de Expresión
+ *  Gráfica, que es la que dice qué te deja sin corregir un despiece y cuánto
+ *  cuesta cada error (fase K, unidad k-crit).
+ *
+ *  Prueba de utilidad (§13):
+ *  - **Para quién:** el alumno del bloque 2 de Expresión Gráfica, 1.º,
+ *    segundo cuatrimestre.
+ *  - **Cuándo:** al acabar un despiece o una lámina de práctica, y la semana
+ *    del control del bloque 2 (el 20 de abril en 2025-26, según la
+ *    presentación del segundo cuatrimestre, pág. 5) y la del examen.
+ *  - **Qué gana:** no perder el ejercicio entero por un mínimo —si no los
+ *    cumple, no se corrige—, y saber que cada error muy grave le cuesta 2 de
+ *    sus puntos.
+ *  - **Cómo se comprueba:** el esquema acepta la hoja entera (10 mínimos, 6
+ *    muy graves y 9 típicos), y `tests/criterios.test.ts` carga el fichero y
+ *    encuentra el precio compuesto de la escala de una pieza.
+ *
+ *  Cuatro reglas:
+ *  1. **`texto` es la línea impresa, tal cual.** Los demás campos repiten en
+ *     datos lo que el texto ya dice, para que una página pueda contar; el
+ *     test comprueba que cada número sale en su texto, en su sitio.
+ *  2. **Los precios son negativos.** `puntoRubrica.peso` es positivo y
+ *     reparte puntos; aquí se quitan.
+ *  3. **`por` solo cuando la hoja lo imprime**: «por cada caso», «por cada
+ *     una», «por cada vista principal extra», «por cada» a secas (en el de
+ *     los ejes) y, en un muy grave, «por pieza». Sin `por`, la hoja no
+ *     imprime repetición, y el componente lo cobra una vez: es una lectura
+ *     nuestra, por contraste con «(-2 por pieza)». La hoja no dice si un muy
+ *     grave repetido —dos ejes cortados a lo largo— se cobra dos veces.
+ *  4. **`donde` es el id completo de un tema**, con la misma regex que las
+ *     demás referencias a temas de este fichero. Que el tema exista en el
+ *     catálogo de esa asignatura, que no sea `soloEnClase` y, en Expresión
+ *     Gráfica, que sea del bloque 2 (t07 a t13), lo comprueba
+ *     `tests/criterios.test.ts`: el esquema mira cada fichero por separado.
+ *
+ *  `.strict()` en todo: Zod quita en silencio lo que no conoce, y un
+ *  `topeen` mal escrito dejaría un error sin tope sin que nadie lo viera
+ *  (§17). */
+const temaDelCatalogo = z.string().regex(/^t\d{2}-[a-z0-9-]+$/, 'el id completo de un tema del catálogo, como t10-acotacion');
+const idDeCriterio = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'un id en minúsculas y con guiones, estable: lo citarán los ejercicios');
+const textoImpreso = z.string().min(10);
+
+const minimo = z
+  .object({
+    id: idDeCriterio,
+    /** El apartado de la hoja en el que está: «Vistas:», «Acotación:» o
+     *  «Tolerancias:». */
+    bloque: z.enum(['vistas', 'acotacion', 'tolerancias']),
+    texto: textoImpreso,
+    donde: temaDelCatalogo,
+  })
+  .strict();
+
+const muyGrave = z
+  .object({
+    id: idDeCriterio,
+    texto: textoImpreso,
+    /** La hoja los cobra todos a −2: «se penalizarán con -2 puntos». */
+    precio: z.literal(-2),
+    por: z.literal('pieza').optional(),
+    donde: temaDelCatalogo,
+  })
+  .strict();
+
+/** Un precio que la hoja parte en dos: el de la escala de una pieza, «[si
+ *  falta en la pieza -0,5] + [si falta en el cajetín -0,5]». La hoja no dice
+ *  cuántas veces se cobra cada parte. Lectura nuestra (PLAN-K §3.3), sin
+ *  confirmar: la de la pieza, por cada pieza en la que falta, y la del
+ *  cajetín, una vez. Si cada pieza puede costar −0,5 + −0,5, dos piezas dan
+ *  −2 y no −1,5. Pendiente en `tasks/pendiente.md` (§13, caso 5). */
+const parteDePrecio = z
+  .object({
+    precio: z.number().negative(),
+    donde: z.enum(['pieza', 'cajetin']),
+  })
+  .strict();
+
+const tipico = z
+  .object({
+    id: idDeCriterio,
+    texto: textoImpreso,
+    precio: z.union([
+      z.number().negative(),
+      z
+        .array(parteDePrecio)
+        .min(2)
+        .refine((ps) => new Set(ps.map((p) => p.donde)).size === ps.length, { message: 'dos partes del precio con el mismo `donde`' }),
+    ]),
+    /** Por qué se repite el precio, cuando la hoja lo dice: «por cada caso»
+     *  (`caso`), «por cada una» (`cada-una`), «por cada vista principal
+     *  extra» (`vista`) y «por cada» a secas (`cada`). Ningún típico imprime
+     *  «por pieza» detrás de su precio —sí en dos topes—, y por eso `pieza`
+     *  no está aquí. */
+    por: z.enum(['caso', 'cada-una', 'cada', 'vista']).optional(),
+    /** Lo más que se quita por este error, negativo: «máximo -1,5», «hasta
+     *  -2». */
+    tope: z.number().negative().optional(),
+    /** Sobre qué se cuenta el tope: «por pieza» (`pieza`), «en todo el
+     *  plano» (`plano`) o, cuando la hoja no lo dice, sobre la suma
+     *  (`total`). */
+    topeEn: z.enum(['pieza', 'plano', 'total']).optional(),
+    donde: temaDelCatalogo,
+  })
+  .strict()
+  .refine((t) => (t.tope === undefined) === (t.topeEn === undefined), {
+    message: '`tope` y `topeEn` van juntos: un tope sin decir sobre qué no se puede contar',
+  })
+  .refine(
+    (t) => {
+      if (t.tope === undefined) return true;
+      const unaVez = typeof t.precio === 'number' ? t.precio : t.precio.reduce((s, p) => s + p.precio, 0);
+      return t.tope < unaVez;
+    },
+    { message: 'un tope que no pasa del precio de una vez no topa nada' },
+  );
+
+const esquemaCriterios = z
+  .object({
+    /** De dónde sale la hoja, citada por su título y su escuela: sin nombres
+     *  de persona. */
+    fuente: z.string().min(20),
+    /** El párrafo que abre la hoja, tal cual. */
+    entradilla: z.string().min(40),
+    /** Las cuatro frases impresas que abren y cierran las listas, tal cual.
+     *  `siSeCumplen` es la regla de los mínimos. */
+    rotulos: z
+      .object({
+        minimos: textoImpreso,
+        siSeCumplen: textoImpreso,
+        muyGraves: textoImpreso,
+        tipicos: textoImpreso,
+      })
+      .strict(),
+    minimos: z.array(minimo).min(1),
+    muyGraves: z.array(muyGrave).min(1),
+    tipicos: z.array(tipico).min(1),
+  })
+  .strict()
+  .superRefine((d, ctx) => {
+    const vistos = new Set<string>();
+    for (const c of [...d.minimos, ...d.muyGraves, ...d.tipicos]) {
+      if (vistos.has(c.id)) ctx.addIssue({ code: 'custom', message: `dos criterios con el id «${c.id}»` });
+      vistos.add(c.id);
+    }
+  });
+
+const criterios = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/criterios' }),
+  schema: esquemaCriterios,
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -2393,4 +2545,5 @@ export const collections = {
   laminas,
   rubricas,
   tablas,
+  criterios,
 };

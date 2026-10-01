@@ -387,3 +387,155 @@ export function abatidoAlzado(P: P3, Q: P3): [P2, P2] {
     [Q.x - n[0] * h, -Q.z - n[1] * h],
   ];
 }
+
+/* ─────── el lote 0 de la fase K: ángulos, distancias, perpendiculares, ─────
+   abatimientos y giros. Lo piden las hojas de examen 52-55 y las láminas de
+   ángulos y distancias (SD47-SD63). Cada función con su prueba por dos caminos
+   en tests/geometria/lote0.test.ts. */
+
+const unitario3 = (a: P3): P3 => {
+  const l = modulo(a);
+  if (l < 1e-12) throw new Error('un vector nulo no tiene dirección');
+  return por(a, 1 / l);
+};
+const angulo01 = (c: number): number => Math.acos(Math.max(-1, Math.min(1, c))) * GRADOS;
+
+/** La normal del plano que apunta hacia donde gana cota; en un plano
+ *  vertical, hacia donde gana alejamiento; en uno de perfil, hacia la x. Es lo
+ *  que da sentido a «por encima» de un plano en las recetas. */
+export function normalQueSube(pl: Plano): P3 {
+  const { n } = pl;
+  const s = Math.abs(n.z) > 1e-9 ? Math.sign(n.z) : Math.abs(n.y) > 1e-9 ? Math.sign(n.y) : Math.sign(n.x);
+  return por(n, s);
+}
+
+/** El ángulo entre dos rectas del espacio, de 0 a 90°. */
+export const anguloRectas = (r: Recta3, s: Recta3): number => angulo01(Math.abs(escalar(r.d, s.d)));
+
+/** El ángulo de una recta con un plano, de 0 a 90°: el complementario del que
+ *  forma con la normal. */
+export const anguloRectaPlano = (r: Recta3, pl: Plano): number =>
+  Math.asin(Math.min(1, Math.abs(escalar(r.d, pl.n)))) * GRADOS;
+
+/** El ángulo entre dos planos, de 0 a 90°: el de sus normales. */
+export const anguloPlanos = (a: Plano, b: Plano): number => angulo01(Math.abs(escalar(a.n, b.n)));
+
+/**
+ * El ángulo diedro, de 0 a 180°: el de dos semiplanos que comparten la arista,
+ * cada uno dado por un punto suyo fuera de ella. Es el que mide el
+ * transportador sobre la sección recta del diedro, y no se queda en 90°.
+ */
+export function anguloDiedro(A: P3, arista: Recta3, B: P3): number {
+  const u = resta(A, pieEnRecta(A, arista));
+  const v = resta(B, pieEnRecta(B, arista));
+  if (modulo(u) < 1e-9 || modulo(v) < 1e-9) throw new Error('un punto de cara está en la arista: no fija su semiplano');
+  return angulo01(escalar(u, v) / (modulo(u) * modulo(v)));
+}
+
+/** El pie de la perpendicular desde P al plano. */
+export const pieEnPlano = (P: P3, pl: Plano): P3 => resta(P, por(pl.n, escalar(pl.n, P) - pl.d));
+
+/**
+ * El pie en r de la perpendicular común a r y s; con los argumentos al revés,
+ * el de s. Dos rectas paralelas tienen infinitas perpendiculares comunes:
+ * lanza.
+ */
+export function pieComun(r: Recta3, s: Recta3): P3 {
+  const b = escalar(r.d, s.d);
+  const den = 1 - b * b;
+  if (den < 1e-12) throw new Error('las rectas son paralelas: tienen infinitas perpendiculares comunes');
+  const w = resta(r.p, s.p);
+  const t = (b * escalar(s.d, w) - escalar(r.d, w)) / den;
+  return suma(r.p, por(r.d, t));
+}
+
+/** La distancia entre dos rectas, en pt: si se cruzan, la de su perpendicular
+ *  común; si son paralelas, la de un punto de una a la otra. */
+export function distanciaRectas(r: Recta3, s: Recta3): number {
+  const c = vectorial(r.d, s.d);
+  const l = modulo(c);
+  if (l < 1e-9) return distanciaARecta(r.p, s);
+  return Math.abs(escalar(resta(s.p, r.p), c)) / l;
+}
+
+/** El plano mediador de AB: el de los puntos que equidistan de los dos. */
+export function planoMediador(A: P3, B: P3): Plano {
+  const n = unitario3(resta(B, A));
+  return { n, d: escalar(n, por(suma(A, B), 0.5)) };
+}
+
+/** El punto donde la recta corta al plano. Si es paralela, no lo corta: lanza. */
+export function corteRectaPlano(r: Recta3, pl: Plano): P3 {
+  const c = escalar(pl.n, r.d);
+  if (Math.abs(c) < 1e-12) throw new Error('la recta es paralela al plano: no lo corta');
+  return suma(r.p, por(r.d, (pl.d - escalar(pl.n, r.p)) / c));
+}
+
+/** La perpendicular al plano por P. */
+export const perpendicularAPlano = (P: P3, pl: Plano): Recta3 => ({ p: P, d: pl.n });
+
+/** El plano perpendicular a la recta por P. */
+export const planoPerpendicularARecta = (P: P3, r: Recta3): Plano => ({ n: r.d, d: escalar(r.d, P) });
+
+/** El plano paralelo a una distancia `d` en pt: `lado` 1, hacia donde sube
+ *  (`normalQueSube`); −1, al otro lado. */
+export function paraleloADistancia(pl: Plano, d: number, lado: 1 | -1): Plano {
+  const m = normalQueSube(pl);
+  const dm = escalar(m, pl.n) > 0 ? pl.d : -pl.d;
+  return { n: m, d: dm + lado * d };
+}
+
+/**
+ * El abatimiento de P, que está en el plano, alrededor de una charnela del
+ * plano: P abatido queda a su misma distancia de la charnela, en el plano
+ * horizontal que la contiene si es una horizontal, o en el frontal si es una
+ * frontal. Los dos lados valen, como en la lámina. Una charnela que no es ni
+ * horizontal ni frontal no abate sobre ningún plano de proyección: lanza.
+ */
+export function abatido(P: P3, charnela: Recta3, pl: Plano): [P3, P3] {
+  if (!enPlano(P, pl)) throw new Error(`el punto no está en el plano: queda a ${(distanciaAPlano(P, pl) * PT_MM).toFixed(2)} mm`);
+  const fuera = Math.max(distanciaAPlano(charnela.p, pl), distanciaAPlano(suma(charnela.p, charnela.d), pl));
+  if (fuera > TOL_VERTICAL) throw new Error('la charnela no está en el plano');
+  const sobre: P3 | null =
+    Math.abs(charnela.d.z) < 1e-9 ? { x: 0, y: 0, z: 1 } : Math.abs(charnela.d.y) < 1e-9 ? { x: 0, y: 1, z: 0 } : null;
+  if (!sobre) throw new Error('la charnela no es horizontal ni frontal: no abate sobre un plano de proyección');
+  const pie = pieEnRecta(P, charnela);
+  const r = vm(P, pie);
+  const dir = unitario3(vectorial(sobre, charnela.d));
+  return [suma(pie, por(dir, r)), suma(pie, por(dir, -r))];
+}
+
+/** P girado `angulo` grados alrededor del eje, en el sentido de la regla de
+ *  la mano derecha respecto de la dirección del eje (Rodrigues). */
+export function gira(P: P3, eje: Recta3, angulo: number): P3 {
+  const k = eje.d;
+  const v = resta(P, eje.p);
+  const a = angulo / GRADOS;
+  const [c, s] = [Math.cos(a), Math.sin(a)];
+  const giro = suma(suma(por(v, c), por(vectorial(k, v), s)), por(k, escalar(k, v) * (1 - c)));
+  return suma(eje.p, giro);
+}
+
+/** El cuadrado del plano que tiene EF por diagonal: [E, G, F, H], en orden.
+ *  E y F tienen que estar en el plano. */
+export function cuadradoPorDiagonal(pl: Plano, E: P3, F: P3): [P3, P3, P3, P3] {
+  for (const [Q, n] of [[E, 'E'], [F, 'F']] as const) {
+    if (!enPlano(Q, pl)) throw new Error(`${n} no está en el plano: queda a ${(distanciaAPlano(Q, pl) * PT_MM).toFixed(2)} mm`);
+  }
+  const O = por(suma(E, F), 0.5);
+  const h = vm(E, F) / 2;
+  const w = unitario3(vectorial(pl.n, resta(F, E)));
+  return [E, suma(O, por(w, h)), F, suma(O, por(w, -h))];
+}
+
+/** El ápice de una pirámide recta: sobre el centro de la base (la media de
+ *  sus vértices, que en un polígono regular es su centro), a `altura` pt de su
+ *  plano; `lado` 1, hacia donde sube (`normalQueSube`). */
+export function apice(base: readonly P3[], altura: number, lado: 1 | -1): P3 {
+  if (base.length < 3) throw new Error('una base necesita tres vértices al menos');
+  const pl = plano(base[0], base[1], base[2]);
+  const fuera = base.find((V) => !enPlano(V, pl));
+  if (fuera) throw new Error('los vértices de la base no están en un plano');
+  const c = por(base.reduce((a, V) => suma(a, V), { x: 0, y: 0, z: 0 }), 1 / base.length);
+  return suma(c, por(normalQueSube(pl), lado * altura));
+}

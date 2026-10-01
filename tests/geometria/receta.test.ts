@@ -93,8 +93,10 @@ describe('una receta que no evalúa no pasa en silencio', () => {
   });
 
   it('una función que no existe', () => {
-    expect(() => evaluaReceta(SD1, { escena: ESCENA, solucion: { X: 'gira(L)' } })).toThrow(
-      /solucion\.X: la función «gira» no existe/,
+    /* Era «gira» hasta el 1 de octubre de 2026, cuando el lote 0 de la fase K
+       la añadió: el ejemplo tiene que ser un nombre que no vaya a existir. */
+    expect(() => evaluaReceta(SD1, { escena: ESCENA, solucion: { X: 'teletransporta(L)' } })).toThrow(
+      /solucion\.X: la función «teletransporta» no existe/,
     );
   });
 
