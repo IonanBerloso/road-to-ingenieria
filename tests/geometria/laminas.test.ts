@@ -21,6 +21,18 @@ const BASE: DatosLamina = {
   segmentos: [{ nombre: 'r2', a: [0, 50], b: [100, 50], tipo: 'c' }],
 };
 
+describe('una lámina sin segmentos', () => {
+  it('vale si tiene alguna cruz, como SD23', () => {
+    const cruces: DatosLamina = { ...BASE, segmentos: [] };
+    expect(problemasDeLamina(cruces)).toEqual([]);
+  });
+
+  it('no vale si tampoco tiene cruces: no hay nada que dibujar', () => {
+    const vacia: DatosLamina = { ...BASE, segmentos: [], puntos: { A2: { x: 10, y: 10 } } };
+    expect(problemasDeLamina(vacia).join(' ')).toMatch(/nada que dibujar/);
+  });
+});
+
 describe('las láminas de la colección', () => {
   it('hay al menos una, y cada fichero se llama como su código', () => {
     expect(LAMINAS.length).toBeGreaterThan(0);

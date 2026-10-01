@@ -37,8 +37,10 @@ export interface SegmentoDeLamina {
 
 export interface DatosLamina {
   readonly codigo: string;
+  readonly origen?: 'coleccion' | 'hoja' | 'otro-pdf' | 'nuestra';
+  readonly pdf?: string;
   readonly pagina: number;
-  readonly ejercicio: number;
+  readonly ejercicio?: number;
   readonly encuadre: { readonly x: number; readonly y: number; readonly w: number; readonly h: number };
   readonly puntos: Readonly<Record<string, PuntoDeLamina>>;
   readonly segmentos: readonly SegmentoDeLamina[];
@@ -69,6 +71,9 @@ export function problemasDeLamina(d: DatosLamina): string[] {
     if (Math.hypot(s.b[0] - s.a[0], s.b[1] - s.a[1]) < 0.01) problemas.push(`${quien} tiene longitud cero`);
     if (fuera(s.a) || fuera(s.b)) problemas.push(`${quien} se sale del encuadre`);
   });
+  if (d.segmentos.length === 0 && !Object.values(d.puntos).some((p) => p.marca === 'cruz')) {
+    problemas.push('la lámina no tiene ni un segmento ni una cruz: no hay nada que dibujar');
+  }
   for (const c of d.circulos ?? []) {
     if (fuera([c.c[0] - c.r, c.c[1] - c.r]) || fuera([c.c[0] + c.r, c.c[1] + c.r])) {
       problemas.push(`el círculo de centro (${c.c[0]}, ${c.c[1]}) se sale del encuadre`);

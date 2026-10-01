@@ -939,11 +939,17 @@ const pasoConstruir = z
   })
   .strict();
 
+/** El código de una lámina: `SD5` (colección), `EX55-1AB` (hoja 55, ejercicio
+ *  1, apartados a y b), `PVM` (otro PDF del curso) o `RI1` (nuestra). El
+ *  fichero se llama como el código en minúscula, y así la cita la receta. */
+const CODIGO_DE_LAMINA = /^(SD\d+[a-z]?|EX5[2-5]-\d+[A-Z]*|PVM|RI\d+)$/;
+const CODIGO_DE_LAMINA_MIN = /^(sd\d+[a-z]?|ex5[2-5]-\d+[a-z]*|pvm|ri\d+)$/;
+
 /** La receta de un ejercicio de Expresión Gráfica: su lámina y la solución
  *  como datos (`lib/diedrico-receta.ts`). */
 const receta = z
   .object({
-    lamina: z.string().regex(/^sd\d+[a-z]?$/),
+    lamina: z.string().regex(CODIGO_DE_LAMINA_MIN, 'el código de una lámina, en minúscula: sd5, ex55-1ab, pvm, ri1'),
     escena: z.record(z.string(), z.string().min(1)).default({}),
     solucion: z.record(z.string(), z.string().min(1)),
     comprueba: z.array(z.string().min(3)).default([]),
@@ -2244,6 +2250,18 @@ const banco = defineCollection({
  * colección de diédrico, como datos y no como imagen (§08). Un fichero por
  * lámina, con el nombre de su código (`sd1.json`).
  *
+ * NO SOLO LA COLECCIÓN (1 de octubre de 2026, fase K). Las hojas de examen
+ * 52-55, el ejercicio del plano por su v.m. y las láminas nuestras también
+ * son láminas: `origen` dice de dónde sale cada una, `ejercicio` solo se
+ * exige a las de la colección y las hojas, y `pdf` dice de qué PDF es la
+ * página cuando no es la colección. Y una lámina puede no tener ningún
+ * segmento si tiene alguna cruz: SD23 son seis cruces, y la 55·3, una recta y
+ * dos puntos. Prueba de utilidad (§13): para el alumno que construye sobre
+ * una hoja de examen o sobre SD23; cuando prepara el control de diédrico; gana
+ * que esas láminas existan sin trazos inventados; y se comprueba en
+ * `tests/geometria/laminas.test.ts`, que acepta una lámina de cruces sola y
+ * rechaza una sin segmentos ni cruces.
+ *
  * POR QUÉ SON UNA COLECCIÓN. La corrección de una construcción compara lo que
  * marca el alumno con la geometría calculada desde estas coordenadas
  * (`lib/diedrico-receta`), así que la figura es un dato del que depende la
@@ -2258,10 +2276,16 @@ const laminas = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/laminas' }),
   schema: z
     .object({
-      codigo: z.string().regex(/^SD\d+[a-z]?$/),
-      /** La página del PDF de la colección, para cotejarla. */
+      codigo: z.string().regex(CODIGO_DE_LAMINA, 'SD5, EX55-1AB, PVM o RI1'),
+      /** De dónde sale: la colección de diédrico, una hoja de examen (52-55),
+       *  otro PDF del curso o una lámina nuestra. */
+      origen: z.enum(['coleccion', 'hoja', 'otro-pdf', 'nuestra']).default('coleccion'),
+      /** El PDF de la página, dentro del material, cuando no es la colección. */
+      pdf: z.string().min(5).optional(),
+      /** La página del PDF, para cotejarla. */
       pagina: z.number().int().min(1),
-      ejercicio: z.number().int().min(1),
+      /** El número de ejercicio en la colección o en la hoja. */
+      ejercicio: z.number().int().min(1).optional(),
       /** El trozo de página que se dibuja, en pt. */
       encuadre: z.object({ x: z.number(), y: z.number(), w: z.number().positive(), h: z.number().positive() }),
       puntos: z.record(
@@ -2282,8 +2306,7 @@ const laminas = defineCollection({
             /** Continuo, oculto o eje de trazo y punto (`lib/lamina.ts`). */
             tipo: z.enum(['c', 'o', 'e']),
           }),
-        )
-        .min(1),
+        ),
       circulos: z.array(z.object({ c: coordenada, r: z.number().positive() })).default([]),
       rotulos: z.array(z.object({ texto: z.string().min(1), x: z.number(), y: z.number() })).default([]),
       revision: z.object({
@@ -2294,6 +2317,12 @@ const laminas = defineCollection({
     })
     .superRefine((d, ctx) => {
       for (const message of problemasDeLamina(d)) ctx.addIssue({ code: 'custom', message });
+      if ((d.origen === 'coleccion' || d.origen === 'hoja') && d.ejercicio === undefined) {
+        ctx.addIssue({ code: 'custom', message: 'una lámina de la colección o de una hoja lleva su `ejercicio`' });
+      }
+      if (d.origen !== 'coleccion' && d.pdf === undefined) {
+        ctx.addIssue({ code: 'custom', message: 'una lámina que no es de la colección dice de qué `pdf` es su página' });
+      }
     }),
 });
 
