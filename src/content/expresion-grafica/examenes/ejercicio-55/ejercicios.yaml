@@ -1,0 +1,1280 @@
+ejercicios:
+  # ── 1 a y b · El prisma de bases horizontales. Lo que enseña: α no pide
+  #    abatir nada, porque AB y BC están en un plano horizontal; β sí, porque
+  #    BB′ no está en verdadera magnitud en ninguna vista.
+  - id: exeg-h55-1ab-dos-angulos-del-prisma-oblicuo
+    titulo: Dos ángulos de un prisma oblicuo, y cuál de los dos pide abatir
+    fuente: >-
+      Ejercicio 55, apartado 1 (a y b) · Colección de ejercicios de Geometría
+      Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y
+      Proyectos de Ingeniería, EIG · UPV/EHU. El 55 (págs. 64-66; este
+      apartado, en las 64 y 65) es uno de los cuatro ejercicios de varios
+      apartados con que cierra la colección, todos sin fecha, y de ellos solo el
+      54 se titula «Examen». Se transcribe el castellano; la figura se redibuja
+      desde sus coordenadas.
+    nivel: examen
+    # Decisión: el castellano de la pág. 64 tal cual, con la cabecera del
+    # apartado 1 en las dos piezas y sin su «1.» (el número lo dice la fuente,
+    # y un «1.» a principio de línea el Markdown lo convierte en lista). Las
+    # primas van como ′: la capa de texto las guarda como ’, pero la página
+    # dibuja una prima. α, β, d y t van en $…$ porque la hoja los compone como
+    # variables, en cursiva. El volcado pone «(α )» con un espacio que la
+    # página no tiene.
+    enunciado: |
+      En la figura en escala 1:1 que se muestra, se pide determinar gráficamente:
+
+      a. El ángulo entre las rectas AB y BC ($\alpha$).
+
+      b. El ángulo entre el plano A′B′C′ y la recta BB′ ($\beta$).
+
+      **Notas nuestras.** La figura es la de arriba de la segunda página del
+      Ejercicio 55: un prisma triangular, con las bases ABC y A′B′C′ y las aristas
+      laterales AA′, BB′ y CC′, en alzado (arriba) y en planta (abajo). La hoja
+      dibuja todas las aristas en continua; en la planta, A′₁C′₁ quedaría oculta.
+      La hoja trae arriba a la derecha una casilla para escribir $\alpha$,
+      $\beta$, $d$ y $t$. Escala 1:1 quiere decir que lo que mides en la lámina,
+      en milímetros, es el resultado. La hoja no dice cuál de los dos ángulos
+      suplementarios que forman AB y BC es $\alpha$: aquí se da el menor, que es
+      el convenio del ángulo entre dos rectas; el del triángulo en B es su
+      suplementario.
+    pide: El ángulo α entre AB y BC y el ángulo β de la arista BB′ con la base A′B′C′, en grados, con el abatimiento que da β.
+    receta:
+      lamina: ex55-1ab
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        Ap: 'punto3(alzado: figura.punto("A2p"), planta: figura.punto("A1p"))'
+        Bp: 'punto3(alzado: figura.punto("B2p"), planta: figura.punto("B1p"))'
+        Cp: 'punto3(alzado: figura.punto("C2p"), planta: figura.punto("C1p"))'
+        base_inferior: plano(Ap, Bp, Cp)
+      solucion:
+        alfa: angulo_rectas(segmento3(A, B), segmento3(B, C))
+        beta: angulo_recta_plano(segmento3(B, Bp), base_inferior)
+        # El punto con el alzado de B′ y el alejamiento de B: B y él forman un
+        # segmento frontal con el mismo alzado que BB′, y su ángulo con el
+        # plano horizontal es el que se lee en el alzado (un distractor de β).
+        Bp_frontal: 'punto3(alzado: figura.punto("B2p"), planta: pie_perpendicular(figura.punto("B1"), perpendicular(por: figura.punto("B2p"), a: figura.segmento("ApBpCp2"))))'
+        # La horizontal por B perpendicular a B₁B′₁ en la planta (la horizontal
+        # del plano perpendicular a BB′), y sobre ella los puntos a lo que mide
+        # B₂B′₂: el ejemplo del error de llevar el alzado en vez de la
+        # diferencia de cotas, por la perpendicular buena.
+        horizontal_por_B: horizontal_por(B, plano_perpendicular_a_recta(B, segmento3(B, Bp)))
+        B_a_vm_alzado: 'punto_a_distancia(horizontal_por_B, desde: B, distancia: vm_alzado(B, Bp))'
+    pasos:
+      - tipo: reconocer
+        pregunta: A₂, B₂ y C₂ caen en una misma horizontal del alzado. ¿Dónde se mide α, el ángulo entre AB y BC?
+        opciones:
+          - texto: En la planta, directamente, porque el plano ABC es horizontal y se ve en verdadera magnitud desde arriba
+            correcta: true
+            mensaje: |
+              Eso es. Un ángulo está en verdadera magnitud en la vista donde lo está el plano
+              de sus dos rectas, y un plano horizontal lo está en la planta. Se mide en B₁, sin
+              construir nada.
+          - texto: Abatiendo el plano ABC, porque dos rectas que no son ni horizontales ni frontales no dan su ángulo en ninguna vista
+            mensaje: |
+              Abatir sirve cuando el plano de las dos rectas está inclinado. Aquí AB y BC son
+              horizontales —sus alzados están a la misma altura—, así que el plano ABC ya está
+              en verdadera magnitud en la planta: abatirlo sobre un plano horizontal lo deja
+              donde está.
+          - texto: En el alzado, que es donde se ven A₂, B₂ y C₂
+            mensaje: |
+              En el alzado el plano ABC se ve **de canto**: A₂, B₂ y C₂ caen en una recta, y el
+              ángulo se aplasta a 0° o a 180°. Un plano horizontal, que en el alzado se ve de
+              canto, está en verdadera magnitud en la planta.
+
+      - tipo: construir
+        titulo: Abatir la arista BB′
+        intro: |
+          α no necesita construcción: se mide en la planta. Para β, abate sobre la planta el
+          plano proyectante de BB′: por B₁ o por B′₁, perpendicular a B₁B′₁, lleva la
+          diferencia de cotas de B y B′, que se mide en el alzado, y marca el extremo
+          abatido. Vale por cualquiera de los dos extremos y a cualquiera de los dos lados.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: BBp
+            rotulo: (B) o (B′)
+            pide: un extremo de BB′, abatido sobre la planta
+            es: '[abatido_planta(Bp, B), abatido_planta(B, Bp)]'
+            bien: |
+              Ese es un extremo abatido de BB′: la recta que lo une con el otro extremo de la
+              planta es BB′ en verdadera magnitud, y el ángulo que forma con B₁B′₁ es β.
+            diagnosticos:
+              # Decisión: el ejemplo va en cifras (pt) porque la receta no tiene una
+              # función que dé un solo extremo abatido sobre el alzado; es el de B′,
+              # el único de los cuatro que cae dentro del encuadre. Sale de un
+              # cálculo aparte, con álgebra de vectores sobre las coordenadas de la
+              # lámina, y tests/geometria/hoja-55.test.ts comprueba ese punto.
+              - si: 'cerca_de([abatido_alzado(B, Bp), abatido_alzado(Bp, B)])'
+                mensaje: |
+                  Has abatido **sobre el alzado**, llevando la diferencia de alejamientos. Ese
+                  triángulo da el ángulo de BB′ con el plano vertical. β se mide contra A′B′C′,
+                  que es horizontal: el triángulo va en la planta, con la diferencia de cotas.
+                ejemplo: 'desplaza(figura.punto("B2p"), dx: -159.91, dy: 64.53)'
+              - si: 'a_distancia(de: [figura.punto("B1"), figura.punto("B1p")], d: vm_alzado(B, Bp))'
+                mensaje: |
+                  Has llevado lo que mide **B₂B′₂ en el alzado**, y el alzado también acorta: BB′
+                  no es frontal. El cateto que va en la perpendicular es la **diferencia de
+                  cotas** de B y B′, la distancia vertical entre las dos horizontales del alzado.
+                ejemplo: proy_planta(rama(solucion.B_a_vm_alzado, 1))
+              - si: 'a_distancia(de: [figura.punto("B1"), figura.punto("B1p")], d: diferencia_de_cotas(B, Bp))'
+                mensaje: |
+                  La distancia es la buena, pero va en la **perpendicular a B₁B′₁**: el triángulo
+                  de la verdadera magnitud es rectángulo en el extremo de la planta.
+                ejemplo: 'desplaza(figura.punto("B1"), dy: diferencia_de_cotas(B, Bp))'
+              - si: 'en_recta(perpendicular(por: figura.punto("B1"), a: figura.segmento("BB1")))'
+                mensaje: |
+                  Vas por la perpendicular a B₁B′₁ en B₁, pero a otra distancia. Lo que se lleva
+                  es la diferencia de cotas de B y B′, que se mide en el alzado entre la
+                  horizontal de A₂B₂C₂ y la de A′₂B′₂C′₂.
+                ejemplo: 'pie_perpendicular(desplaza(figura.punto("B1"), dx: mm(15)), perpendicular(por: figura.punto("B1"), a: figura.segmento("BB1")))'
+              - si: 'en_recta(perpendicular(por: figura.punto("B1p"), a: figura.segmento("BB1")))'
+                mensaje: |
+                  Vas por la perpendicular a B₁B′₁ en B′₁, pero a otra distancia. Lo que se lleva
+                  es la diferencia de cotas de B y B′, que se mide en el alzado entre las dos
+                  horizontales de las bases.
+                ejemplo: 'pie_perpendicular(desplaza(figura.punto("B1p"), dx: mm(15)), perpendicular(por: figura.punto("B1p"), a: figura.segmento("BB1")))'
+              - si: siempre
+                mensaje: |
+                  El extremo abatido está en la perpendicular a B₁B′₁ por B₁ o por B′₁, a la
+                  diferencia de cotas de B y B′.
+        pista: |
+          (1) En el alzado, mide la diferencia de cotas de B y B′: la distancia entre las dos
+          horizontales de las bases. (2) Por B₁ —o por B′₁—, traza la perpendicular a B₁B′₁.
+          (3) Lleva sobre ella esa diferencia con el compás: ahí está el extremo abatido.
+        desarrollo: |
+          El extremo abatido está a 40,39 mm de B₁ (o de B′₁), en la perpendicular a B₁B′₁. Con
+          el otro extremo de la planta forma BB′ en verdadera magnitud, 74,82 mm, y el ángulo
+          del triángulo en el extremo que no se ha movido es β.
+
+      - tipo: calcular
+        titulo: El ángulo α
+        # Decisión: dos rectas que se cortan forman dos ángulos suplementarios, y se
+        # pide el menor, que es el convenio de «ángulo entre rectas» (y el de
+        # angulo_rectas, de 0 a 90°). El ángulo del triángulo en B, 110,77°, va de
+        # distractor con un mensaje que reconoce que la construcción es la misma.
+        # La hoja no dice cuál de los dos espera el corrector, y el ejercicio lo
+        # declara en las «Notas nuestras», en ese mensaje, en la resolución y en
+        # el justificar. Es una pregunta abierta para Ionan (tasks/pendiente.md).
+        pregunta: α, el ángulo entre las rectas AB y BC; de los dos que forman, el menor.
+        respuesta:
+          tipo: numero
+          valor: '69.23'
+          receta: alfa
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '110.77'
+            receta: 180 - alfa
+            mensaje: |
+              Ese es el ángulo del triángulo ABC en B, de B₁A₁ a B₁C₁, y la construcción es la
+              buena. La hoja no dice cuál de los dos ángulos suplementarios espera; aquí se pide
+              el menor, que es el convenio del ángulo entre dos rectas: 180° − 110,8° = 69,2°.
+          - valor: '20.77'
+            receta: 90 - alfa
+            mensaje: |
+              Ese es el **complementario** de α, lo que le falta para 90°. α se mide entre B₁A₁
+              y B₁C₁, o sus prolongaciones, no contra la perpendicular a una de ellas.
+        pista: |
+          AB y BC son horizontales: mide el ángulo en la planta, en B₁. Si sale más de 90°, el
+          de las rectas es su suplementario.
+        desarrollo: |
+          B₁ está en la mediatriz de A₁C₁, 11,98 mm por debajo de ese lado, que mide 34,71 mm,
+          así que el triángulo tiene en B un ángulo de $2\arctan\frac{17{,}36}{11{,}98} = 110{,}77^{\circ}$, y las rectas forman
+          $$ \alpha = 180^{\circ} - 110{,}77^{\circ} = 69{,}23^{\circ} $$
+
+      - tipo: calcular
+        titulo: El ángulo β
+        pregunta: β, el ángulo entre el plano A′B′C′ y la recta BB′.
+        respuesta:
+          tipo: numero
+          valor: '32.67'
+          receta: beta
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '57.33'
+            receta: 90 - beta
+            mensaje: |
+              Ese es el ángulo de BB′ con la **vertical**, la perpendicular al plano A′B′C′: el
+              complementario de β. En el triángulo abatido, β es el ángulo del extremo que no
+              se ha movido, entre la planta y la verdadera magnitud.
+          - valor: '68.02'
+            receta: angulo_con_ph(segmento3(B, solucion.Bp_frontal))
+            mensaje: |
+              Es lo que forma **B₂B′₂ con la recta A′₂C′₂ en el alzado**. Ahí el plano A′B′C′ se
+              ve de canto, pero BB′ no es frontal y el alzado deforma su ángulo: solo sería β
+              si BB′ fuera paralela al plano vertical.
+          - valor: '54.40'
+            receta: angulo_con_pv(segmento3(B, Bp))
+            mensaje: |
+              Ese es el ángulo de BB′ con el **plano vertical**, el que da el triángulo abatido
+              sobre el alzado. β se mide contra A′B′C′, que es horizontal: el triángulo va en la
+              planta, con la diferencia de cotas.
+        pista: |
+          Es el ángulo del triángulo abatido en el extremo que no se ha movido: su tangente es
+          la diferencia de cotas partida por lo que mide la planta de BB′.
+        desarrollo: |
+          $$ \beta = \arctan\frac{\Delta z}{\overline{B_1B'_1}} = \arctan\frac{40{,}39}{62{,}98} \approx 32{,}67^{\circ} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'A₂, B₂ y C₂ están en una horizontal del alzado: el plano ABC es horizontal, y la planta lo da en verdadera magnitud.'
+          - texto: α se mide en la planta, en B₁; de los dos ángulos suplementarios que forman las rectas se da el menor, que es el convenio del ángulo entre rectas.
+          - texto: A′B′C′ también es horizontal, así que el ángulo de BB′ con ese plano es el que forma BB′ con el plano horizontal.
+          - texto: Se abate el plano proyectante de BB′ sobre la planta, con la diferencia de cotas de B y B′ en la perpendicular a B₁B′₁, y el ángulo del triángulo en el extremo fijo es β.
+          - texto: β se mide en el alzado, entre B₂B′₂ y la recta A′₂C′₂, porque ahí el plano A′B′C′ se ve de canto.
+            trampa: true
+            mensaje: |
+              Que el plano se vea de canto no basta: hace falta además que BB′ esté en
+              verdadera magnitud en esa vista, y BB′ no es frontal. Ese ángulo mide 68,0°, y β,
+              32,7°.
+
+    resolucion: |
+      **Qué es horizontal.** A₂, B₂ y C₂ están en una misma horizontal del alzado, y A′₂, B′₂
+      y C′₂ en otra: las dos bases del prisma son planos horizontales. Las aristas laterales
+      son paralelas entre sí y oblicuas: no son horizontales ni frontales.
+
+      **α, en la planta.** AB y BC están en la base ABC, que es horizontal, así que la planta
+      da el triángulo en verdadera magnitud y el ángulo se mide en B₁, sin construir nada.
+      El triángulo tiene en B 110,8°. Dos rectas que se cortan forman dos ángulos
+      suplementarios, y el ángulo entre las rectas es el menor: α = 69,2°. La hoja no
+      precisa cuál de los dos quiere: el menor es el convenio del ángulo entre rectas, y es
+      el que se pide aquí; el del triángulo, 110,8°, sale de la misma medida.
+
+      **β, abatiendo.** BB′ corta a la base A′B′C′ en B′, y como esa base es horizontal, el
+      ángulo de BB′ con ella es el que forma con el plano horizontal. Ni el alzado ni la
+      planta dan BB′ en verdadera magnitud: se abate su plano proyectante sobre la planta,
+      llevando en la perpendicular a B₁B′₁ la diferencia de cotas de B y B′, 40,39 mm, que se
+      mide en el alzado. El triángulo rectángulo tiene por catetos la planta, 62,98 mm, y esa
+      diferencia; su hipotenusa es BB′ en verdadera magnitud, 74,82 mm, y su ángulo en el
+      extremo fijo es β = 32,7°.
+
+      **Lo que no es β.** En el alzado, B₂B′₂ forma 68,0° con la recta A′₂C′₂, pero BB′ no es
+      frontal y ese ángulo está deformado. Abatiendo sobre el alzado sale 54,4°, que es el
+      ángulo de BB′ con el plano vertical, y 57,3° es el que forma con la vertical.
+
+  # ── 1 c y d · Las dos distancias. Lo que enseña: la perpendicular a un
+  #    plano se traza contra sus horizontales y sus frontales, no contra una
+  #    arista; y dos rectas cuyas proyecciones se cortan pueden cruzarse.
+  - id: exeg-h55-1cd-distancias-a-una-cara-y-entre-dos-rectas
+    titulo: La distancia de un punto a una cara, y la de dos rectas que se cruzan
+    fuente: >-
+      Ejercicio 55, apartado 1 (c y d) · Colección de ejercicios de Geometría
+      Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y
+      Proyectos de Ingeniería, EIG · UPV/EHU. El 55 (págs. 64-66; este
+      apartado, en las 64 y 65) es uno de los cuatro ejercicios de varios
+      apartados con que cierra la colección, todos sin fecha, y de ellos solo el
+      54 se titula «Examen». Se transcribe el castellano; la figura se redibuja
+      desde sus coordenadas.
+    nivel: examen
+    # Decisión: como en la pieza de a y b. «ente» es errata de la hoja, y se
+    # conserva (§08).
+    enunciado: |
+      En la figura en escala 1:1 que se muestra, se pide determinar gráficamente:
+
+      c. La distancia mínima entre el punto Z′ y el plano BCB′C′ ($d$) indicando posición y magnitud.
+
+      d. La distancia mínima ente las rectas BB′ y ZZ′ ($t$) indicando posición y magnitud.
+
+      **Notas nuestras.** La figura es la de abajo de la segunda página del
+      Ejercicio 55: el mismo prisma de 1 a y 1 b, con la recta ZZ′ añadida, en
+      alzado (arriba) y en planta (abajo). La hoja dibuja todas las aristas en
+      continua; en la planta, A′₁C′₁ quedaría oculta. «Posición» quiere decir
+      dónde está el segmento de la distancia mínima en las dos vistas; la versión
+      en euskera de 1 c lo dice aparte: que se señale en las vistas
+      dadas. La hoja trae arriba a la derecha, junto a la figura de 1 a y
+      1 b, la casilla de $\alpha$, $\beta$, $d$ y $t$. Escala 1:1: lo que mides
+      en la lámina, en milímetros, es el resultado. «ente», en 1 d, es
+      errata de la hoja por «entre», y se deja tal como está impresa.
+    pide: El pie de la perpendicular desde Z′ a la cara BCB′C′ y la distancia d; los extremos de la perpendicular común a BB′ y ZZ′ y la distancia t; todo en las dos vistas.
+    receta:
+      lamina: ex55-1cd
+      escena:
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        Bp: 'punto3(alzado: figura.punto("B2p"), planta: figura.punto("B1p"))'
+        Cp: 'punto3(alzado: figura.punto("C2p"), planta: figura.punto("C1p"))'
+        Z: 'punto3(alzado: figura.punto("Z2"), planta: figura.punto("Z1"))'
+        Zp: 'punto3(alzado: figura.punto("Z2p"), planta: figura.punto("Z1p"))'
+        cara: plano(B, C, Bp)
+        BBp: recta3(B, Bp)
+        ZZp: recta3(Z, Zp)
+      solucion:
+        perp: perpendicular_a_plano(Zp, cara)
+        H: pie_en_plano(Zp, cara)
+        d_mm: en_mm(distancia_a_plano(Zp, cara))
+        N: pie_comun(ZZp, BBp)
+        M: pie_comun(BBp, ZZp)
+        t_mm: en_mm(distancia_rectas(BBp, ZZp))
+        # El plano vertical que contiene BB′: su corte con ZZ′ es el punto de ZZ′
+        # cuya planta cae en B₁B′₁, el cruce aparente de las dos plantas.
+        vertical_de_BB: 'plano(B, Bp, punto3(alzado: desplaza(figura.punto("B2"), dy: mm(-10)), planta: figura.punto("B1")))'
+        cruce: corte_recta_plano(ZZp, vertical_de_BB)
+      comprueba:
+        - en_plano(Cp, cara)
+    pasos:
+      - tipo: reconocer
+        pregunta: ¿Cómo se trazan las proyecciones de la perpendicular desde Z′ al plano BCB′C′?
+        opciones:
+          - texto: En la planta, perpendicular a las horizontales del plano; en el alzado, perpendicular a sus frontales
+            correcta: true
+            mensaje: |
+              Eso es. Una perpendicular a un plano lo es a todas sus rectas, y el ángulo recto
+              se ve recto en la vista donde la recta del plano está en verdadera magnitud: la
+              horizontal en la planta y la frontal en el alzado. Aquí BC es una horizontal del
+              plano, así que en la planta va perpendicular a B₁C₁.
+          - texto: En las dos vistas, perpendicular a las proyecciones de la arista BB′
+            mensaje: |
+              BB′ no es horizontal ni frontal, y el ángulo recto con ella no se ve recto en
+              ninguna de las dos vistas. Se usan las rectas del plano que sí están en verdadera
+              magnitud en cada vista: una horizontal y una frontal.
+          - texto: En la planta, perpendicular a B₁C₁, y en el alzado, perpendicular a B₂C₂
+            mensaje: |
+              En la planta, sí: BC es horizontal. En el alzado una horizontal se ve como una
+              recta horizontal, y su perpendicular sería vertical, que no es la buena. En el
+              alzado manda la **frontal** del plano, no la horizontal.
+
+      - tipo: construir
+        titulo: Los pies de las dos distancias
+        intro: |
+          Llamamos H al pie de la perpendicular desde Z′ al plano BCB′C′, y M y N a los
+          extremos de la perpendicular común, M en BB′ y N en ZZ′. Marca H en el alzado y en la
+          planta, y después N y M en las dos vistas.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: H2
+            pide: el pie de la perpendicular desde Z′ al plano, en el alzado
+            es: proy_alzado(solucion.H)
+            bien: |
+              H₂ está en la perpendicular al plano por Z′₂, donde corta al plano. H cae fuera de
+              la cara, al otro lado de la arista BB′: el plano no se acaba en sus aristas.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(pie_perpendicular(Zp, BBp)))
+                mensaje: |
+                  Ese es el pie de la perpendicular desde Z′ a la **arista BB′**, no al plano.
+                  Aquí caen cerca, porque H queda muy cerca de esa arista, pero no son el mismo
+                  punto: la perpendicular a una recta de la cara no es la perpendicular a la cara.
+                ejemplo: proy_alzado(pie_perpendicular(Zp, BBp))
+              - si: en_vertical_de(figura.punto("Z2p"))
+                mensaje: |
+                  Has trazado en el alzado la perpendicular a B₂C₂, que es horizontal, y te ha
+                  salido vertical. En el alzado la perpendicular va contra las **frontales** del
+                  plano: busca dos puntos de BB′ y de CC′ con el mismo alejamiento.
+                ejemplo: 'desplaza(figura.punto("Z2p"), dy: mm(-20))'
+              - si: en_recta(proy_alzado(solucion.perp))
+                mensaje: |
+                  Vas por la perpendicular al plano, pero H es donde esa perpendicular **corta**
+                  al plano, ni antes ni después. El corte se encuentra con un plano auxiliar
+                  proyectante que la contenga, o poniendo el plano de canto con un cambio de plano.
+                ejemplo: punto_medio(proy_alzado(segmento3(Zp, solucion.H)))
+              - si: siempre
+                mensaje: |
+                  H₂ está en la perpendicular al plano por Z′₂ —perpendicular a las frontales del
+                  plano— y en el plano: donde esa recta lo corta.
+          - nombre: H1
+            pide: el pie de la perpendicular desde Z′ al plano, en la planta
+            es: proy_planta(solucion.H)
+            bien: |
+              H₁ está en la vertical de H₂, sobre la perpendicular a B₁C₁ por Z′₁.
+            diagnosticos:
+              - si: 'es_pie_perpendicular(desde: figura.punto("Z1p"), sobre: figura.segmento("CB1"))'
+                mensaje: |
+                  Ese es el pie sobre la **prolongación de B₁C₁**, en la planta. La perpendicular
+                  va bien, perpendicular a B₁C₁, pero H no es donde toca la planta de esa
+                  horizontal: es donde la perpendicular corta al plano, y eso lo dice H₂.
+                ejemplo: pie_perpendicular(figura.punto("Z1p"), figura.segmento("CB1"))
+              - si: '!en_vertical_de(H2)'
+                mensaje: |
+                  H₁ va en la **vertical de H₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.H), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes H₂: H₁ está en su vertical, sobre la perpendicular a B₁C₁ que pasa
+                  por Z′₁.
+          - nombre: N1
+            pide: el extremo de la perpendicular común sobre ZZ′, en la planta
+            es: proy_planta(solucion.N)
+            bien: |
+              N₁ está en Z₁Z′₁, al pie de la perpendicular común: la recta que corta a BB′ y a
+              ZZ′ formando ángulo recto con las dos.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.cruce))
+                mensaje: |
+                  Ahí se cortan B₁B′₁ y Z₁Z′₁ en la planta, pero ese cruce es **aparente**: en el
+                  alzado las dos rectas se cortan en otra vertical. BB′ y ZZ′ se cruzan, no tienen
+                  ningún punto común, y la distancia mínima es la de la perpendicular común.
+                ejemplo: proy_planta(solucion.cruce)
+              - si: cerca_de(proy_planta(pie_perpendicular(Bp, ZZp)))
+                mensaje: |
+                  Esa es la perpendicular desde **B′** a ZZ′, desde un punto cualquiera de BB′. La
+                  común tiene que ser perpendicular a las dos rectas a la vez; con BB′ de punta
+                  —dos cambios de plano— se ve en verdadera magnitud.
+                ejemplo: proy_planta(pie_perpendicular(Bp, ZZp))
+              - si: en_segmento(figura.segmento("ZZ1"))
+                mensaje: |
+                  N está en ZZ′, pero en un punto concreto: el pie de la perpendicular común.
+                  Pon BB′ de punta con dos cambios de plano; desde ese punto, la perpendicular a
+                  la nueva proyección de ZZ′ da N.
+                ejemplo: punto_medio(figura.segmento("ZZ1"))
+              - si: siempre
+                mensaje: |
+                  N es un punto de ZZ′: N₁ tiene que estar en Z₁Z′₁, al pie de la perpendicular
+                  común.
+          - nombre: N2
+            pide: el extremo de la perpendicular común sobre ZZ′, en el alzado
+            es: proy_alzado(solucion.N)
+            bien: |
+              N₂ está en Z₂Z′₂, en la vertical de N₁.
+            diagnosticos:
+              - si: '!en_vertical_de(N1)'
+                mensaje: |
+                  N₂ va en la **vertical de N₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.N), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes N₁: N₂ está en su vertical, donde esa vertical corta a Z₂Z′₂.
+          - nombre: M1
+            pide: el extremo de la perpendicular común sobre BB′, en la planta
+            es: proy_planta(solucion.M)
+            bien: |
+              M₁ está en B₁B′₁, al otro extremo de la perpendicular común. MN es perpendicular a
+              BB′ y a ZZ′, y su verdadera magnitud es t.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.cruce))
+                mensaje: |
+                  Ahí se cortan B₁B′₁ y Z₁Z′₁ en la planta, pero el cruce es **aparente**: en el
+                  alzado se cortan en otra vertical. BB′ y ZZ′ se cruzan, y M es el pie de la
+                  perpendicular común, no un punto común.
+                ejemplo: proy_planta(solucion.cruce)
+              - si: cerca_de(proy_planta(pie_perpendicular(Zp, BBp)))
+                mensaje: |
+                  Esa es la perpendicular desde **Z′** a BB′, desde un extremo de ZZ′. La común es
+                  perpendicular a las dos rectas, y sale de N, no de Z′.
+                ejemplo: proy_planta(pie_perpendicular(Zp, BBp))
+              - si: en_segmento(figura.segmento("BB1"))
+                mensaje: |
+                  M está en BB′, pero en un punto concreto: el otro extremo de la perpendicular
+                  común. Sale de N, perpendicular a BB′ en la vista donde BB′ está en verdadera
+                  magnitud.
+                ejemplo: punto_medio(figura.segmento("BB1"))
+              - si: siempre
+                mensaje: |
+                  M es un punto de BB′: M₁ tiene que estar en B₁B′₁, al pie de la perpendicular
+                  común.
+          - nombre: M2
+            pide: el extremo de la perpendicular común sobre BB′, en el alzado
+            es: proy_alzado(solucion.M)
+            bien: |
+              M₂ está en B₂B′₂, en la vertical de M₁.
+            diagnosticos:
+              - si: '!en_vertical_de(M1)'
+                mensaje: |
+                  M₂ va en la **vertical de M₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.M), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes M₁: M₂ está en su vertical, donde esa vertical corta a B₂B′₂.
+        trazado:
+          - proy_alzado(segmento3(Zp, solucion.H))
+          - proy_planta(segmento3(Zp, solucion.H))
+          - proy_alzado(segmento3(solucion.M, solucion.N))
+          - proy_planta(segmento3(solucion.M, solucion.N))
+        pista: |
+          (1) Para H: un cambio de plano con la línea de tierra nueva perpendicular a B₁C₁ pone
+          el plano de canto, porque BC es horizontal; ahí la perpendicular desde Z′ se ve en
+          verdadera magnitud, y su pie se devuelve a las dos vistas. (2) Para M y N: dos cambios
+          de plano ponen BB′ de punta; desde ese punto, la perpendicular a la nueva proyección de
+          ZZ′ da N y mide t; M sale de N, perpendicular a BB′.
+        desarrollo: |
+          En verde claro, Z′H y MN en las dos vistas. H queda fuera de la cara, al otro lado de
+          BB′; M, en BB′ a algo más de un cuarto desde B; N, en ZZ′ a unos tres quintos desde Z.
+
+      - tipo: calcular
+        titulo: La distancia d
+        pregunta: d, la distancia mínima entre el punto Z′ y el plano BCB′C′.
+        respuesta:
+          tipo: numero
+          valor: '30.85'
+          receta: d_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '17.36'
+            receta: en_mm(vm_planta(Zp, solucion.H))
+            mensaje: |
+              Eso es lo que mide **Z′₁H₁ en la planta**. Z′H no es horizontal —Z′ y H tienen
+              distinta cota—, así que la planta lo acorta: hace falta su verdadera magnitud.
+          - valor: '27.34'
+            receta: en_mm(vm_alzado(Zp, solucion.H))
+            mensaje: |
+              Eso es lo que mide **Z′₂H₂ en el alzado**, que también acorta: Z′H no es frontal.
+              Su verdadera magnitud sale abatiéndolo, o leída en la vista del cambio de plano
+              donde el plano está de canto.
+        pista: |
+          Es la verdadera magnitud de Z′H. En la vista del cambio de plano, con el plano de
+          canto, se lee directamente; si no, abate Z′H como cualquier segmento.
+        desarrollo: |
+          $$ d = \overline{Z'H} = \sqrt{\overline{Z'_1H_1}^{\,2} + \Delta z^{2}} = \sqrt{17{,}36^{2} + 25{,}50^{2}} \approx 30{,}85 \text{ mm} $$
+
+          Hasta la arista BB′ sale 30,94 mm, casi lo mismo por casualidad: no es d, y su pie
+          está a más de 2 mm de H.
+
+      - tipo: calcular
+        titulo: La distancia t
+        pregunta: t, la distancia mínima entre las rectas BB′ y ZZ′.
+        respuesta:
+          tipo: numero
+          valor: '20.20'
+          receta: t_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '14.45'
+            receta: en_mm(vm_planta(solucion.M, solucion.N))
+            mensaje: |
+              Eso es lo que mide **M₁N₁ en la planta**. La perpendicular común no es horizontal,
+              y la planta la acorta.
+          - valor: '16.50'
+            receta: en_mm(vm_alzado(solucion.M, solucion.N))
+            mensaje: |
+              Eso es lo que mide **M₂N₂ en el alzado**, que también acorta. En verdadera magnitud
+              está en la vista con BB′ de punta.
+          - valor: '30.94'
+            receta: en_mm(vm(Zp, pie_perpendicular(Zp, BBp)))
+            mensaje: |
+              Esa es una distancia desde **Z′**, un extremo de ZZ′: hasta la arista BB′ mide
+              30,94 mm, y hasta la cara BCB′C′, 30,85 mm, que es d. Ninguna es la mínima entre
+              las rectas: esa va por la perpendicular común, que es perpendicular a las dos y no
+              tiene por qué pasar por Z′.
+        pista: |
+          Con BB′ de punta, la perpendicular común se ve en verdadera magnitud: es la distancia
+          del punto en que se ve BB′ a la proyección de ZZ′ en esa vista.
+        desarrollo: |
+          $$ t = \overline{MN} = \sqrt{\overline{M_1N_1}^{\,2} + \Delta z^{2}} = \sqrt{14{,}45^{2} + 14{,}12^{2}} \approx 20{,}20 \text{ mm} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: La perpendicular al plano por Z′ se traza en la planta perpendicular a B₁C₁, porque BC es una horizontal del plano, y en el alzado perpendicular a sus frontales.
+          - texto: H es donde esa perpendicular corta al plano, y d es la verdadera magnitud de Z′H, que no está en ninguna de las dos vistas.
+          - texto: 'B₁B′₁ y Z₁Z′₁ se cortan en la planta, y B₂B′₂ y Z₂Z′₂ en el alzado, pero en verticales distintas: las rectas se cruzan.'
+          - texto: La distancia mínima es la de la perpendicular común MN, que corta a las dos rectas en ángulo recto, y t es su verdadera magnitud.
+          - texto: El punto donde se cortan B₁B′₁ y Z₁Z′₁ en la planta es común a las dos rectas, así que la distancia mínima entre ellas es cero.
+            trampa: true
+            mensaje: |
+              Ese cruce es aparente: en el alzado las dos rectas se cortan en otra vertical, así
+              que no es el mismo punto del espacio. Las rectas se cruzan, y su distancia es la de
+              la perpendicular común, 20,2 mm.
+
+    resolucion: |
+      **El plano y su perpendicular.** BC es una horizontal del plano BCB′C′ —B₂C₂ está en la
+      horizontal de arriba del alzado—, así que la planta de la perpendicular por Z′ es
+      perpendicular a B₁C₁. En el alzado va perpendicular a una frontal del plano, que se
+      obtiene uniendo dos puntos de BB′ y de CC′ con el mismo alejamiento.
+
+      **H, el pie.** Con un cambio de plano de línea de tierra perpendicular a B₁C₁, el plano
+      queda de canto —BC es horizontal, así que basta uno— y la perpendicular desde Z′ se ve
+      en verdadera magnitud; su pie se devuelve a la planta, sobre la perpendicular a B₁C₁
+      por Z′₁, y al alzado con su cota. Sin cambio de plano se llega igual: el plano vertical
+      que contiene la planta de la perpendicular corta a BB′ y a la prolongación de CC′, más
+      allá de C′, en dos puntos del plano,
+      la recta que los une corta el alzado de la perpendicular en H₂, y H₁ baja por su
+      vertical. H cae fuera de la cara, al otro lado de la arista BB′: el plano no se acaba
+      en sus aristas.
+
+      **d.** Z′H mide 17,36 mm en la planta y 27,34 mm en el alzado, y en verdadera magnitud
+      d = 30,85 mm. La distancia de Z′ a la arista BB′ sale casi igual, 30,94 mm, porque H
+      queda muy cerca de esa arista; pero no es la que se pide, y su pie está a más de 2 mm
+      de H en cada vista.
+
+      **Las rectas se cruzan.** B₁B′₁ y Z₁Z′₁ se cortan en la planta, y B₂B′₂ y Z₂Z′₂ en el
+      alzado, pero los dos cruces no están en la misma vertical: no hay un punto común. La
+      distancia mínima es la de la perpendicular común MN, que corta a las dos en ángulo
+      recto.
+
+      **t.** Con dos cambios de plano, BB′ queda de punta: se ve como un punto, y la
+      perpendicular desde él a la nueva proyección de ZZ′ es la perpendicular común en
+      verdadera magnitud, t = 20,20 mm. Su pie es N; M sale de N, perpendicular a BB′ en la
+      vista donde BB′ está en verdadera magnitud, y los dos se devuelven a las vistas dadas.
+      M queda en BB′ a algo más de un cuarto desde B, y N en ZZ′ a unos tres quintos desde Z;
+      MN mide 14,45 mm en la planta y 16,50 mm en el alzado.
+
+  # ── 2 · La pirámide de mayor cota sobre un plano oblicuo. Lo que enseña:
+  #    el cuadrado se construye con el plano en verdadera magnitud, la altura
+  #    sale de una horizontal (BC), y en el alzado la lámina tapa la pirámide,
+  #    que queda detrás de ella.
+  - id: exeg-h55-2-la-piramide-de-mayor-cota
+    titulo: La pirámide de mayor cota sobre un plano oblicuo, y lo que tapa la lámina
+    fuente: >-
+      Ejercicio 55, apartado 2 · Colección de ejercicios de Geometría
+      Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y
+      Proyectos de Ingeniería, EIG · UPV/EHU. El 55 (págs. 64-66; este
+      apartado, en las 64 y 66) es uno de los cuatro ejercicios de varios
+      apartados con que cierra la colección, todos sin fecha, y de ellos solo el
+      54 se titula «Examen». Se transcribe el castellano; la figura se redibuja
+      desde sus coordenadas.
+    nivel: examen
+    # Decisión: el castellano de la pág. 64 tal cual, sin el «2.» del apartado
+    # (lo dice la fuente). «se haya» es errata de la hoja, y se conserva (§08).
+    enunciado: |
+      Dibujar la pirámide cuya base cuadrada se haya en el plano ABCD. Una diagonal de la base cuadrada es la recta EF. La altura de la pirámide es el doble de la longitud de la recta BC. Dibujar la pirámide de mayor cota, diferenciando zonas visibles y ocultas.
+
+      **Notas nuestras.** La figura es la mitad izquierda de la tercera página
+      del Ejercicio 55: el plano ABCD y la recta EF, que va de AB a DC, en alzado
+      (arriba) y en planta (abajo). AD y BC son horizontales. «Se haya» es
+      errata de la hoja por «se halla», y se deja tal como está impresa. La
+      hoja no da escala para este apartado: las longitudes se dan en
+      milímetros de la lámina. La hoja tampoco dice si el plano ABCD es una
+      lámina opaca o solo un plano; aquí se toma como lámina opaca, y eso
+      cambia la visibilidad del alzado.
+    pide: Los dos vértices de la base que faltan y el vértice de la pirámide, en las dos vistas; la pirámide con sus aristas vistas y ocultas; su altura y el lado de la base.
+    receta:
+      lamina: ex55-2
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        cara: plano(A, B, D)
+      solucion:
+        base: cuadrado_por_diagonal(cara, E, F)
+        O: punto_medio(segmento3(E, F))
+        eje: perpendicular_a_plano(O, cara)
+        # cuadrado_por_diagonal da [E, G, F, H]: en esta lámina el segundo es el
+        # vértice de mayor cota de los dos que faltan (G) y el cuarto el de menor
+        # (H). tests/geometria/hoja-55.test.ts comprueba esas posiciones.
+        G: uno(base, 2)
+        H: uno(base, 4)
+        altura: 2 * vm(B, C)
+        V: 'apice(base, altura: altura, sentido: ascendente)'
+        altura_mm: en_mm(altura)
+        lado_mm: en_mm(vm(E, G))
+        # Los errores. La pirámide de menor cota; la altura sin doblar; y el
+        # cuadrado dibujado en la planta sobre E₁F₁, como si EF estuviera en
+        # verdadera magnitud: el de diagonal EF₀ en el plano horizontal de E,
+        # con F₀ la planta de F a la cota de E (dos posiciones, una elección).
+        V_baja: 'apice(base, altura: altura, sentido: descendente)'
+        V_altura_BC: 'apice(base, altura: vm(B, C), sentido: ascendente)'
+        V_tres_cuartos: 'apice(base, altura: altura * 0.75, sentido: ascendente)'
+        horizontal_E: 'plano(E, punto3(alzado: figura.punto("E2"), planta: desplaza(figura.punto("E1"), dy: 10)), punto3(alzado: desplaza(figura.punto("E2"), dx: 10), planta: desplaza(figura.punto("E1"), dx: 10)))'
+        F_a_cota_de_E: 'punto_en_plano(planta: figura.punto("F1"), plano: horizontal_E)'
+        cuadrado_en_planta: 'gira(F_a_cota_de_E, perpendicular_a_plano(punto_medio(segmento3(E, F_a_cota_de_E)), horizontal_E), angulo: 90)'
+      comprueba:
+        - en_plano(C, cara)
+        - en_plano(E, cara)
+        - en_plano(F, cara)
+    pasos:
+      - tipo: reconocer
+        pregunta: El plano ABCD es oblicuo. ¿Dónde se dibuja el cuadrado de diagonal EF con su forma verdadera?
+        opciones:
+          - texto: Con el plano en verdadera magnitud, abatido o en una vista nueva, y después se devuelve a las dos vistas
+            correcta: true
+            mensaje: |
+              Eso es. AD y BC son horizontales del plano, así que basta un cambio de plano con
+              la línea de tierra perpendicular a A₁D₁ para ponerlo de canto, o abatirlo con
+              charnela AD. Con el plano en verdadera magnitud, el cuadrado se dibuja como en
+              un papel, y G y H se devuelven a las vistas.
+          - texto: En la planta, sobre E₁F₁, porque ahí se ve el ángulo recto de las diagonales
+            mensaje: |
+              El ángulo recto entre las diagonales solo se ve recto en la planta si una de las
+              dos es horizontal, y aquí ninguna lo es. Además E₁F₁ está acortada: mide
+              56,12 mm, y EF, 57,10. Un cuadrado dibujado sobre E₁F₁ no está en el plano.
+          - texto: En el alzado, porque A₂D₂ y B₂C₂ salen horizontales
+            mensaje: |
+              Que A₂D₂ y B₂C₂ sean horizontales dice que AD y BC son horizontales del plano:
+              se ven en verdadera magnitud en la planta, no en el alzado. El alzado acorta EF
+              hasta 17,34 mm.
+
+      - tipo: construir
+        titulo: La base y el vértice
+        intro: |
+          Llamamos G y H a los dos vértices de la base que faltan, G el de mayor cota y H el
+          de menor, y V al vértice de la pirámide. Marca G, H y V en la planta y en el
+          alzado. La pirámide es la de mayor cota: V queda por encima del plano ABCD.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: G1
+            pide: el vértice G de la base, el de mayor cota, en la planta
+            es: proy_planta(solucion.G)
+            bien: |
+              G₁ es el vértice de la base del lado de A₁D₁. G cae fuera de la lámina ABCD, al
+              otro lado de AD: el cuadrado no cabe entero en ella.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.H))
+                mensaje: |
+                  Ese es el otro vértice que falta, H, el de menor cota. Aquí G es el de mayor
+                  cota: el que queda más arriba en el alzado.
+                ejemplo: proy_planta(solucion.H)
+              - si: cerca_de(proy_planta(solucion.cuadrado_en_planta))
+                mensaje: |
+                  Has dibujado el cuadrado en la planta, sobre E₁F₁, como si EF estuviera en
+                  verdadera magnitud y el plano fuera horizontal. El plano ABCD está inclinado:
+                  el cuadrado se construye con el plano abatido o de canto, y se devuelve.
+                ejemplo: proy_planta(rama(solucion.cuadrado_en_planta, 1))
+              - si: siempre
+                mensaje: |
+                  G está en el plano ABCD, en la otra diagonal del cuadrado: perpendicular a EF
+                  por su punto medio y del mismo largo, medido con el plano en verdadera
+                  magnitud.
+          - nombre: G2
+            pide: el vértice G de la base, en el alzado
+            es: proy_alzado(solucion.G)
+            bien: |
+              G₂ está en la vertical de G₁ y en el plano: sale con la horizontal del plano que
+              pasa por G₁, paralela a A₁D₁ en la planta y horizontal en el alzado.
+            diagnosticos:
+              - si: '!en_vertical_de(G1)'
+                mensaje: |
+                  G₂ va en la **vertical de G₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.G), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes G₁: G₂ está en su vertical y en el plano. Traza por G₁ una
+                  paralela a A₁D₁, que es una horizontal del plano, y súbela al alzado.
+          - nombre: H1
+            pide: el vértice H de la base, el de menor cota, en la planta
+            es: proy_planta(solucion.H)
+            bien: |
+              H₁ es el vértice de la base del lado de B₁C₁. H también cae fuera de la lámina,
+              al otro lado de BC.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.G))
+                mensaje: |
+                  Ese es G, el de mayor cota, que ya tienes. H es el otro extremo de la misma
+                  diagonal, al otro lado de EF.
+                ejemplo: proy_planta(solucion.G)
+              - si: cerca_de(proy_planta(solucion.cuadrado_en_planta))
+                mensaje: |
+                  Has dibujado el cuadrado en la planta, sobre E₁F₁, como si EF estuviera en
+                  verdadera magnitud. El plano está inclinado: el cuadrado se construye con el
+                  plano abatido o de canto.
+                ejemplo: proy_planta(rama(solucion.cuadrado_en_planta, 2))
+              - si: siempre
+                mensaje: |
+                  H está en el plano, en la otra diagonal del cuadrado, al otro lado de EF que G
+                  y a la misma distancia del centro.
+          - nombre: H2
+            pide: el vértice H de la base, en el alzado
+            es: proy_alzado(solucion.H)
+            bien: |
+              H₂ está en la vertical de H₁, sobre la horizontal del plano que pasa por H.
+            diagnosticos:
+              - si: '!en_vertical_de(H1)'
+                mensaje: |
+                  H₂ va en la **vertical de H₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.H), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes H₁: H₂ está en su vertical y en el plano, sobre la horizontal del
+                  plano que pasa por H₁.
+          - nombre: V1
+            pide: el vértice de la pirámide, en la planta
+            es: proy_planta(solucion.V)
+            bien: |
+              V₁ está en la perpendicular al plano por el centro de la base —perpendicular a
+              A₁D₁ en la planta—, a la altura de dos veces BC y del lado de arriba del plano.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.V_baja))
+                mensaje: |
+                  Esa es la pirámide de **menor cota**: la perpendicular al plano, pero hacia
+                  abajo. El enunciado pide la de mayor cota, con V por encima del plano ABCD.
+                ejemplo: proy_planta(solucion.V_baja)
+              - si: cerca_de(proy_planta(solucion.V_altura_BC))
+                mensaje: |
+                  Has llevado BC como altura, y la altura es **el doble** de BC: 108,03 mm.
+                ejemplo: proy_planta(solucion.V_altura_BC)
+              - si: en_recta(proy_planta(solucion.eje))
+                mensaje: |
+                  Vas por la perpendicular al plano por el centro, pero a otra distancia. La
+                  altura, dos veces BC, se lleva donde esa perpendicular está en verdadera
+                  magnitud: en la vista con el plano de canto.
+                ejemplo: proy_planta(solucion.V_tres_cuartos)
+              - si: siempre
+                mensaje: |
+                  V está en la perpendicular al plano ABCD por el centro de la base: en la planta,
+                  perpendicular a las horizontales del plano, que son paralelas a A₁D₁.
+          - nombre: V2
+            pide: el vértice de la pirámide, en el alzado
+            es: proy_alzado(solucion.V)
+            bien: |
+              V₂ está en la vertical de V₁, sobre la perpendicular al plano por el centro de la
+              base, que en el alzado es perpendicular a las frontales del plano.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.V_baja))
+                mensaje: |
+                  Esa es la pirámide de **menor cota**. El enunciado pide la de mayor cota: V queda
+                  por encima del plano, y en el alzado, arriba.
+                ejemplo: proy_alzado(solucion.V_baja)
+              - si: '!en_vertical_de(V1)'
+                mensaje: |
+                  V₂ va en la **vertical de V₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.V), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes V₁: V₂ está en su vertical, sobre la perpendicular al plano por el
+                  centro de la base, que en el alzado va perpendicular a las frontales.
+        trazado:
+          - proy_planta(segmento3(E, solucion.G))
+          - proy_planta(segmento3(solucion.G, F))
+          - proy_planta(segmento3(F, solucion.H))
+          - proy_planta(segmento3(solucion.H, E))
+          - proy_planta(segmento3(solucion.V, E))
+          - proy_planta(segmento3(solucion.V, solucion.G))
+          - proy_planta(segmento3(solucion.V, F))
+          - proy_planta(segmento3(solucion.V, solucion.H))
+          - proy_alzado(segmento3(E, solucion.G))
+          - proy_alzado(segmento3(solucion.G, F))
+          - proy_alzado(segmento3(F, solucion.H))
+          - proy_alzado(segmento3(solucion.H, E))
+          - proy_alzado(segmento3(solucion.V, E))
+          - proy_alzado(segmento3(solucion.V, solucion.G))
+          - proy_alzado(segmento3(solucion.V, F))
+          - proy_alzado(segmento3(solucion.V, solucion.H))
+        pista: |
+          (1) AD y BC son horizontales: un cambio de plano con la línea de tierra
+          perpendicular a A₁D₁ pone el plano de canto, o se abate con charnela AD. (2) Con el
+          plano en verdadera magnitud, la otra diagonal del cuadrado: perpendicular a EF por
+          su punto medio O y del mismo largo. (3) Devuelve G y H a las dos vistas. (4) BC es
+          horizontal: mídela en la planta; la altura es el doble. (5) V está en la
+          perpendicular al plano por O, del lado de arriba, a esa altura.
+        desarrollo: |
+          En verde claro, la base EGFH y las cuatro aristas que suben a V, en las dos vistas.
+          G cae fuera de la lámina ABCD por el lado de AD, y H por el de BC.
+
+      # Decisión: la hoja no dice si ABCD es lámina opaca; se toma opaca (con el
+      # plano transparente, en el alzado solo VE iría oculta). Pregunta abierta
+      # para Ionan (tasks/pendiente.md).
+      - tipo: dibujar
+        consigna: |
+          Repasa la pirámide en la planta y en el alzado, con las aristas vistas en continua y
+          las ocultas en discontinua, y también los bordes de la lámina ABCD. Toma el plano
+          ABCD como una lámina opaca.
+        comprueba:
+          - punto: En la planta, ocultas FH, HE y VH; vistas VE, VG, VF, EG y GF.
+            porque: >-
+              Desde arriba se ven las caras que miran hacia arriba. V₁ cae fuera de la base,
+              a la derecha, y H₁ queda dentro del contorno de la pirámide: las tres aristas
+              que llegan a H van por debajo de las caras VEG y VGF. En el cruce aparente de
+              V₁G₁ con H₁E₁, VG va 60,8 mm por encima.
+          - punto: En la planta, la pirámide tapa la mayor parte de B₁C₁ y un tramo de D₁A₁ cerca de G₁.
+            porque: >-
+              La pirámide está encima de la lámina, del lado que mira hacia arriba, así que lo
+              que de los bordes de ABCD queda debajo de ella va en discontinua.
+          - punto: En el alzado, la lámina tapa las aristas de la base que caen dentro de A₂B₂C₂D₂, y un tramo corto de V₂H₂ junto a C₂.
+            porque: >-
+              El lado de mayor cota del plano ABCD mira hacia atrás, lejos del observador del
+              alzado, así que la pirámide entera queda detrás de la lámina. Lo que de ella cae
+              dentro del contorno de la lámina, en el alzado, no se ve.
+          - punto: En el alzado, VE oculta; VG, VF y VH vistas, salvo ese tramo de VH.
+            porque: >-
+              VE queda detrás de la cara VGF: en el cruce aparente de V₂E₂ con G₂F₂, GF va
+              50,2 mm por delante.
+          - punto: Los cuatro bordes de la lámina, vistos en el alzado.
+            porque: >-
+              La pirámide está detrás de la lámina: nada la tapa por delante.
+        figura: |
+          <figure>
+          <svg viewBox="0 0 300 600" role="img" width="300" height="600" aria-labelledby="h55-2-vis-t h55-2-vis-d">
+            <title id="h55-2-vis-t">La pirámide de mayor cota y la lámina ABCD, con lo visto y lo oculto</title>
+            <desc id="h55-2-vis-d">Arriba el alzado y abajo la planta. La lámina ABCD es un paralelogramo con AD y BC horizontales; la base de la pirámide, el cuadrado EGFH, tiene G fuera de la lámina por el lado de AD y H por el de BC, y el vértice V sube a la derecha. En la planta van en discontinua las aristas FH, HE y VH, que quedan debajo de las caras VEG y VGF, y los tramos de los bordes BC y DA de la lámina que quedan debajo de la pirámide. En el alzado la pirámide queda detrás de la lámina: van en discontinua VE, que está detrás de la cara VGF, los tramos de las aristas de la base que caen dentro de la lámina y un tramo corto de VH junto a C; los bordes de la lámina se ven enteros.</desc>
+            <style>
+                .h55-2-vis-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+                .h55-2-vis-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+                .h55-2-vis-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+                .h55-2-vis-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .h55-2-vis-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .h55-2-vis-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+                .h55-2-vis-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+                .h55-2-vis-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+                .h55-2-vis-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+                .h55-2-vis-pt { fill: var(--live); }
+                .h55-2-vis-punta { fill: var(--live); stroke: none; }
+                .h55-2-vis-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+                .h55-2-vis-o { fill: var(--flag); }
+                .h55-2-vis-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+                .h55-2-vis-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+                .h55-2-vis-pv { stroke: var(--d1); stroke-width: 2; fill: none; stroke-linecap: round; }
+                .h55-2-vis-po { stroke: var(--d1); stroke-width: 1.4; fill: none; stroke-dasharray: 5 3; }
+                .h55-2-vis-lv { stroke: var(--alt); stroke-width: 1.3; fill: none; stroke-linecap: round; }
+                .h55-2-vis-lo { stroke: var(--alt); stroke-width: 1.1; fill: none; stroke-dasharray: 4 3; }
+            </style>
+            <path class="h55-2-vis-po" d="M102.3 283.7L62.9 235.9"/>
+            <path class="h55-2-vis-pv" d="M62.9 235.9L57 228.7"/>
+            <path class="h55-2-vis-pv" d="M57 228.7L78.8 235.9"/>
+            <path class="h55-2-vis-po" d="M78.8 235.9L139.2 255.6"/>
+            <path class="h55-2-vis-po" d="M139.2 255.6L175.5 299.7"/>
+            <path class="h55-2-vis-pv" d="M175.5 299.7L184.5 310.6"/>
+            <path class="h55-2-vis-pv" d="M184.5 310.6L151.3 299.7"/>
+            <path class="h55-2-vis-po" d="M151.3 299.7L102.3 283.7"/>
+            <path class="h55-2-vis-po" d="M262.6 32.3L102.3 283.7"/>
+            <path class="h55-2-vis-pv" d="M262.6 32.3L57 228.7"/>
+            <path class="h55-2-vis-pv" d="M262.6 32.3L139.2 255.6"/>
+            <path class="h55-2-vis-pv" d="M262.6 32.3L188.8 295.1"/>
+            <path class="h55-2-vis-po" d="M188.8 295.1L187.5 299.7"/>
+            <path class="h55-2-vis-pv" d="M187.5 299.7L184.5 310.6"/>
+            <path class="h55-2-vis-lv" d="M42.3 235.9L122.4 299.7"/>
+            <path class="h55-2-vis-lv" d="M122.4 299.7L194.5 299.7"/>
+            <path class="h55-2-vis-lv" d="M194.5 299.7L114.3 235.9"/>
+            <path class="h55-2-vis-lv" d="M114.3 235.9L42.3 235.9"/>
+            <path class="h55-2-vis-pv" d="M102.3 404.3L57 485.2"/>
+            <path class="h55-2-vis-pv" d="M57 485.2L139.2 549.5"/>
+            <path class="h55-2-vis-po" d="M139.2 549.5L184.5 468.7"/>
+            <path class="h55-2-vis-po" d="M184.5 468.7L102.3 404.3"/>
+            <path class="h55-2-vis-pv" d="M262.6 395.1L102.3 404.3"/>
+            <path class="h55-2-vis-pv" d="M262.6 395.1L57 485.2"/>
+            <path class="h55-2-vis-pv" d="M262.6 395.1L139.2 549.5"/>
+            <path class="h55-2-vis-po" d="M262.6 395.1L184.5 468.7"/>
+            <path class="h55-2-vis-lv" d="M42.3 439L122.4 392.7"/>
+            <path class="h55-2-vis-lv" d="M122.4 392.7L128.3 402.8"/>
+            <path class="h55-2-vis-lo" d="M128.3 402.8L182 495.9"/>
+            <path class="h55-2-vis-lv" d="M182 495.9L194.5 517.5"/>
+            <path class="h55-2-vis-lv" d="M194.5 517.5L114.3 563.7"/>
+            <path class="h55-2-vis-lv" d="M114.3 563.7L78.3 501.3"/>
+            <path class="h55-2-vis-lo" d="M78.3 501.3L63.2 475.1"/>
+            <path class="h55-2-vis-lv" d="M63.2 475.1L42.3 439"/>
+            <text class="h55-2-vis-n" x="38.3" y="246.9" text-anchor="end" fill="var(--ink)">A₂</text>
+            <text class="h55-2-vis-n" x="116.3" y="229.9" text-anchor="middle" fill="var(--ink)">D₂</text>
+            <text class="h55-2-vis-n" x="120.4" y="312.7" text-anchor="middle" fill="var(--ink)">B₂</text>
+            <text class="h55-2-vis-n" x="199.5" y="303.7" text-anchor="start" fill="var(--ink)">C₂</text>
+            <text class="h55-2-vis-n" x="98.3" y="293.7" text-anchor="end" fill="var(--ink)">E₂</text>
+            <text class="h55-2-vis-n" x="145.2" y="257.6" text-anchor="start" fill="var(--ink)">F₂</text>
+            <text class="h55-2-vis-n" x="53" y="223.7" text-anchor="end" fill="var(--ink)">G₂</text>
+            <text class="h55-2-vis-n" x="189.5" y="321.6" text-anchor="start" fill="var(--ink)">H₂</text>
+            <text class="h55-2-vis-n" x="268.6" y="36.3" text-anchor="start" fill="var(--ink)">V₂</text>
+            <text class="h55-2-vis-n" x="37.3" y="443" text-anchor="end" fill="var(--ink)">A₁</text>
+            <text class="h55-2-vis-n" x="122.4" y="386.7" text-anchor="middle" fill="var(--ink)">B₁</text>
+            <text class="h55-2-vis-n" x="200.5" y="522.5" text-anchor="start" fill="var(--ink)">C₁</text>
+            <text class="h55-2-vis-n" x="110.3" y="577.7" text-anchor="middle" fill="var(--ink)">D₁</text>
+            <text class="h55-2-vis-n" x="98.3" y="400.3" text-anchor="end" fill="var(--ink)">E₁</text>
+            <text class="h55-2-vis-n" x="145.2" y="559.5" text-anchor="start" fill="var(--ink)">F₁</text>
+            <text class="h55-2-vis-n" x="52" y="489.2" text-anchor="end" fill="var(--ink)">G₁</text>
+            <text class="h55-2-vis-n" x="190.5" y="478.7" text-anchor="start" fill="var(--ink)">H₁</text>
+            <text class="h55-2-vis-n" x="268.6" y="399.1" text-anchor="start" fill="var(--ink)">V₁</text>
+          </svg>
+          <figcaption>La pirámide de mayor cota con la lámina ABCD opaca: en continua lo visto y en discontinua lo oculto, en el alzado arriba y en la planta abajo. En azul la pirámide y en violeta los bordes de la lámina.</figcaption>
+          </figure>
+        veredicto: >-
+          Si tu dibujo tiene ocultas FH, HE y VH en la planta, y en el alzado VE y lo que
+          queda dentro de la lámina, la visibilidad está bien. Si has tomado ABCD como un
+          plano transparente, en el alzado solo VE va oculta: la hoja no lo precisa, y aquí
+          se toma opaca.
+
+      - tipo: calcular
+        titulo: La altura
+        pregunta: La altura de la pirámide.
+        respuesta:
+          tipo: numero
+          valor: '108.03'
+          receta: altura_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '54.02'
+            receta: en_mm(vm(B, C))
+            mensaje: |
+              Eso es BC, sin doblar; y también lo que sale doblando B₂C₂ del alzado, que es la
+              mitad de BC. BC es horizontal: su longitud está en la planta, B₁C₁, y la altura es
+              el doble.
+          - valor: '111.74'
+            receta: en_mm(vm(solucion.V, E))
+            mensaje: |
+              Esa es una **arista lateral**, de V a un vértice de la base. La altura es la
+              distancia de V al plano de la base, por la perpendicular al centro.
+        pista: |
+          BC es horizontal —B₂C₂ es horizontal en el alzado—, así que se ve en verdadera
+          magnitud en la planta. La altura es el doble.
+        desarrollo: |
+          $$ h = 2\,\overline{BC} = 2\,\overline{B_1C_1} = 2 \cdot 54{,}016 \approx 108{,}03 \text{ mm} $$
+
+      - tipo: calcular
+        titulo: El lado de la base
+        pregunta: El lado de la base cuadrada, en verdadera magnitud.
+        respuesta:
+          tipo: numero
+          valor: '40.37'
+          receta: lado_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '57.10'
+            receta: en_mm(vm(E, F))
+            mensaje: |
+              Esa es la **diagonal** EF, en verdadera magnitud. El lado es la diagonal partida
+              por raíz de dos.
+          - valor: '34.73'
+            receta: en_mm(vm_planta(E, solucion.G))
+            mensaje: |
+              Eso es lo que mide **E₁G₁ en la planta**. El lado EG no es horizontal, y la planta
+              lo acorta.
+          - valor: '39.09'
+            receta: en_mm(vm_planta(solucion.G, F))
+            mensaje: |
+              Eso es lo que mide **G₁F₁ en la planta**: se parece al lado, pero GF no es
+              horizontal y la planta la acorta.
+          - valor: '26.68'
+            receta: en_mm(vm_alzado(E, solucion.G))
+            mensaje: |
+              Eso es lo que mide **E₂G₂ en el alzado**, que también acorta: EG no es frontal.
+        pista: |
+          Con el plano en verdadera magnitud, EF es la diagonal del cuadrado: el lado es EF
+          partido por raíz de dos.
+        desarrollo: |
+          $$ \ell = \frac{\overline{EF}}{\sqrt{2}} = \frac{57{,}095}{\sqrt{2}} \approx 40{,}37 \text{ mm} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'AD y BC son horizontales del plano: con un cambio de plano perpendicular a A₁D₁ el plano queda de canto, o se abate con charnela AD.'
+          - texto: Con el plano en verdadera magnitud se dibuja el cuadrado de diagonal EF, y G y H se devuelven a las dos vistas.
+          - texto: BC es horizontal, así que su longitud se mide en la planta, y la altura es el doble, 108,03 mm.
+          - texto: V está en la perpendicular al plano por el centro de la base, del lado de mayor cota.
+          - texto: El cuadrado se dibuja en la planta sobre E₁F₁, porque la planta da EF casi en verdadera magnitud.
+            trampa: true
+            mensaje: |
+              Casi no basta: E₁F₁ mide 56,12 mm y EF, 57,10. Y sobre todo, el ángulo recto de las
+              diagonales solo se vería recto en la planta si una de las dos fuera horizontal, y
+              ninguna lo es: en la planta forman unos 83°. Además G₁H₁ sale aún más corta,
+              48,16 mm. El cuadrado dibujado en la planta no está en el plano.
+
+    resolucion: |
+      **El plano.** A₂D₂ y B₂C₂ son horizontales: AD y BC son horizontales del plano ABCD, y en
+      la planta A₁D₁ y B₁C₁ son paralelas. El plano es oblicuo, y ni la planta ni el alzado
+      lo dan en verdadera magnitud.
+
+      **La base.** Con un cambio de plano de línea de tierra perpendicular a A₁D₁ el plano queda
+      de canto —basta uno, porque AD es horizontal—, y con otro, o abatiéndolo con charnela
+      AD, en verdadera magnitud. Ahí EF mide 57,10 mm, y el cuadrado tiene la otra diagonal
+      perpendicular a EF por su punto medio O, del mismo largo: el lado mide 40,37 mm. G y H
+      se devuelven a las dos vistas; en la planta, cada uno sobre su horizontal del plano.
+      Llamamos G al de mayor cota y H al de menor. Los dos caen fuera de la lámina ABCD: G al
+      otro lado de AD y H al otro lado de BC.
+
+      **La altura y el vértice.** BC es horizontal, y su longitud se mide en la planta: 54,02 mm.
+      La altura es el doble, 108,03 mm. V está en la perpendicular al plano por O —en la
+      planta, perpendicular a A₁D₁; en el alzado, perpendicular a las frontales— y del lado de
+      mayor cota, que es el de arriba. En la vista con el plano de canto la perpendicular está
+      en verdadera magnitud, y ahí se lleva la altura. La de menor cota tendría el vértice
+      abajo, fuera del marco de la hoja.
+
+      **La visibilidad.** En la planta se ven las caras que miran hacia arriba: V₁ cae fuera de la
+      base y H₁ queda dentro del contorno, así que FH, HE y VH van ocultas, y la pirámide tapa
+      parte de los bordes B₁C₁ y D₁A₁ de la lámina. En el alzado, el lado de mayor cota del
+      plano mira hacia atrás, y la pirámide queda detrás de la lámina: con la lámina opaca, lo
+      que de la pirámide cae dentro de A₂B₂C₂D₂ va oculto, y VE queda además detrás de la cara
+      VGF. Si se toma el plano como transparente, en el alzado solo VE va oculta.
+
+  # ── 3 · Las dos tuberías. Lo que enseña: el lugar de los puntos que
+  #    equidistan de dos puntos es el plano mediador, no la mediatriz de una
+  #    proyección; y un punto de una recta en un plano sale por intersección.
+  - id: exeg-h55-3-dos-tuberias-iguales-hasta-el-colector
+    titulo: Dos tuberías de igual longitud hasta un colector
+    fuente: >-
+      Ejercicio 55, apartado 3 · Colección de ejercicios de Geometría
+      Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y
+      Proyectos de Ingeniería, EIG · UPV/EHU. El 55 (págs. 64-66; este
+      apartado, en las 64 y 66) es uno de los cuatro ejercicios de varios
+      apartados con que cierra la colección, todos sin fecha, y de ellos solo el
+      54 se titula «Examen». Se transcribe el castellano; la figura se redibuja
+      desde sus coordenadas.
+    nivel: examen
+    # Decisión: el castellano de la pág. 64 tal cual, sin el «3.». La «Nota:»
+    # impresa va entera a `notas` (§04), con su frase en negrita.
+    enunciado: |
+      Se desean unir dos depósitos de agua representados por los puntos A y B, mediante sendas tuberías rectas de igual longitud, que concurran en un punto P del colector definido por la recta r.
+
+      Dibujar las proyecciones diédricas de las dos tuberías.
+
+      **Notas nuestras.** La figura es la mitad derecha de la tercera página del
+      Ejercicio 55: los depósitos A y B, dados por sus cruces, y el colector r, en
+      alzado (arriba) y en planta (abajo). La hoja no da escala para este
+      apartado: las longitudes se dan en milímetros de la lámina.
+    notas:
+      - >-
+        Nota: Para que dos segmentos (tuberías) tengan la misma longitud y se
+        unan en un punto común sobre una recta (punto P), ese punto debe cumplir
+        con una condición de equidistancia respecto a los puntos A y B. **Esto
+        significa que la solución se encuentra en la intersección entre la recta
+        r y un plano equidistante a los puntos A y B.**
+    pide: El punto P del colector en las dos vistas, y lo que mide cada tubería.
+    receta:
+      lamina: ex55-3
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        r: 'recta3(alzado: figura.segmento("r2"), planta: figura.segmento("r1"))'
+      solucion:
+        mediador: plano_mediador(A, B)
+        P: corte_recta_plano(r, mediador)
+        largo_mm: en_mm(vm(P, A))
+        # Los errores: la mediatriz de A₁B₁ en la planta (el plano mediador de A
+        # y de B llevado a la cota de A, que es vertical) y la de A₂B₂ en el
+        # alzado (B llevado al alejamiento de A: el plano es de canto).
+        horizontal_A: 'plano(A, punto3(alzado: figura.punto("A2"), planta: desplaza(figura.punto("A1"), dy: 10)), punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10)))'
+        B_a_cota_de_A: 'punto_en_plano(planta: figura.punto("B1"), plano: horizontal_A)'
+        P_mediatriz_planta: corte_recta_plano(r, plano_mediador(A, B_a_cota_de_A))
+        frontal_A: 'plano(A, punto3(alzado: desplaza(figura.punto("A2"), dy: -10), planta: figura.punto("A1")), punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10)))'
+        B_a_alejamiento_de_A: 'punto_en_plano(alzado: figura.punto("B2"), plano: frontal_A)'
+        P_mediatriz_alzado: corte_recta_plano(r, plano_mediador(A, B_a_alejamiento_de_A))
+        pie_desde_M: pie_perpendicular(punto_medio(segmento3(A, B)), r)
+      comprueba:
+        - en_plano(P, mediador)
+        - en_recta(P, r)
+    pasos:
+      - tipo: reconocer
+        pregunta: ¿Dónde están los puntos del espacio que equidistan de A y de B?
+        opciones:
+          - texto: En el plano mediador de AB, perpendicular a AB por su punto medio
+            correcta: true
+            mensaje: |
+              Eso es: es lo que dice la nota del enunciado con otras palabras. P está en ese plano
+              y en r, así que es el corte de los dos.
+          - texto: En la mediatriz de A₁B₁, dibujada en la planta
+            mensaje: |
+              Esa mediatriz es la traza del plano vertical que equidista de las **plantas** de A y
+              de B, y solo coincide con el plano mediador si AB es horizontal. Aquí A y B tienen
+              distinta cota.
+          - texto: En la recta AB, a mitad de camino
+            mensaje: |
+              En AB solo hay un punto que equidiste de A y de B, el punto medio. Los demás están
+              fuera de AB: forman un plano, perpendicular a AB por ese punto medio.
+
+      - tipo: construir
+        titulo: El punto P
+        intro: |
+          Marca P, el punto del colector r que equidista de A y de B, en el alzado y en la
+          planta. Las tuberías son PA y PB.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: P2
+            pide: el punto P del colector, en el alzado
+            es: proy_alzado(solucion.P)
+            bien: |
+              P₂ está en r₂, donde r corta al plano mediador de AB.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.P_mediatriz_alzado))
+                mensaje: |
+                  Has cortado r₂ con la mediatriz de A₂B₂, dibujada en el alzado. El plano mediador
+                  no se ve así: A₂B₂ no está en verdadera magnitud, porque AB no es frontal. El
+                  plano mediador se da por una horizontal y una frontal por el punto medio de AB.
+                ejemplo: proy_alzado(solucion.P_mediatriz_alzado)
+              - si: cerca_de(proy_alzado(solucion.pie_desde_M))
+                mensaje: |
+                  Ese es el punto de r más cercano al punto medio de AB. P no es el más cercano:
+                  es el que está a la misma distancia de A que de B, el corte de r con el plano
+                  mediador.
+                ejemplo: proy_alzado(solucion.pie_desde_M)
+              - si: en_recta(figura.segmento("r2"))
+                mensaje: |
+                  P está en r, pero en un punto concreto: donde r corta al plano mediador de AB.
+                  El corte se encuentra con un plano auxiliar proyectante que contenga a r.
+                ejemplo: pie_perpendicular(figura.punto("A2"), figura.segmento("r2"))
+              - si: siempre
+                mensaje: |
+                  P es un punto de r: P₂ tiene que estar en r₂, donde r corta al plano mediador.
+          - nombre: P1
+            pide: el punto P del colector, en la planta
+            es: proy_planta(solucion.P)
+            bien: |
+              P₁ está en r₁, en la vertical de P₂.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.P_mediatriz_planta))
+                mensaje: |
+                  Has cortado r₁ con la mediatriz de A₁B₁, dibujada en la planta. Eso solo valdría
+                  si AB fuera horizontal: A y B tienen distinta cota, y la planta acorta AB.
+                ejemplo: proy_planta(solucion.P_mediatriz_planta)
+              - si: cerca_de(proy_planta(solucion.pie_desde_M))
+                mensaje: |
+                  Ese es el punto de r más cercano al punto medio de AB, y no el que equidista de A
+                  y de B.
+                ejemplo: proy_planta(solucion.pie_desde_M)
+              - si: '!en_vertical_de(P2)'
+                mensaje: |
+                  P₁ va en la **vertical de P₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.P), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes P₂: P₁ está en su vertical, sobre r₁.
+        trazado:
+          - proy_alzado(segmento3(A, solucion.P))
+          - proy_alzado(segmento3(B, solucion.P))
+          - proy_planta(segmento3(A, solucion.P))
+          - proy_planta(segmento3(B, solucion.P))
+        pista: |
+          (1) El punto medio M de AB, en las dos vistas. (2) El plano mediador, por una
+          horizontal y una frontal que pasen por M: la horizontal, perpendicular a A₁B₁ en la
+          planta; la frontal, perpendicular a A₂B₂ en el alzado. (3) El corte de r con ese
+          plano, con un plano auxiliar proyectante que contenga a r: ahí está P.
+        desarrollo: |
+          En verde claro, las dos tuberías PA y PB en las dos vistas. P queda casi a mitad del
+          tramo de r dibujado.
+
+      - tipo: calcular
+        titulo: Lo que mide cada tubería
+        pregunta: Las dos tuberías miden lo mismo. ¿Cuánto, en milímetros de la lámina?
+        respuesta:
+          tipo: numero
+          valor: '49.02'
+          receta: largo_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '33.58'
+            receta: en_mm(vm_alzado(solucion.P, A))
+            mensaje: |
+              Eso es lo que mide **P₂A₂ en el alzado**. PA cambia mucho de alejamiento —casi
+              36 mm— y apenas de cota: no es frontal, y el alzado la acorta. Hace falta su
+              verdadera magnitud.
+          - valor: '17.17'
+            receta: en_mm(vm_planta(solucion.P, B))
+            mensaje: |
+              Eso es lo que mide **P₁B₁ en la planta**. PB sube mucho, y la planta la acorta.
+        pista: |
+          Es la verdadera magnitud de PA, o de PB, que sale igual: abate uno de los dos
+          segmentos, con su planta y su diferencia de cotas.
+        desarrollo: |
+          $$ \overline{PA} = \overline{PB} \approx 49{,}02 \text{ mm} $$
+
+          PA es casi horizontal y PB casi frontal, así que P₁A₁ (48,85 mm) y P₂B₂ (48,84 mm)
+          miden casi lo mismo que la verdadera magnitud: es una casualidad de esta figura.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Los puntos que equidistan de A y de B forman el plano mediador de AB, perpendicular a AB por su punto medio.
+          - texto: 'El plano mediador se da por una horizontal y una frontal por el punto medio: la horizontal, perpendicular a A₁B₁ en la planta, y la frontal, perpendicular a A₂B₂ en el alzado.'
+          - texto: P es el corte de r con ese plano, y se encuentra con un plano auxiliar proyectante que contenga a r.
+          - texto: Las tuberías son PA y PB, y miden lo mismo, 49,02 mm.
+          - texto: P está donde la mediatriz de A₁B₁ corta a r₁ en la planta.
+            trampa: true
+            mensaje: |
+              Eso valdría si AB fuera horizontal. A y B tienen distinta cota, y esa mediatriz
+              corta a r en otro punto, a unos 36 mm del bueno en la planta.
+
+    resolucion: |
+      **Dónde está P.** P está a la misma distancia de A que de B, así que está en el plano
+      mediador de AB, el perpendicular a AB por su punto medio M. Y está en r. Es el corte de
+      r con ese plano, que es lo que dice la nota del enunciado.
+
+      **El plano mediador.** Se da por dos rectas suyas que pasan por M. Su horizontal es
+      perpendicular a AB, y el ángulo recto se ve en la planta, donde ella está en verdadera
+      magnitud: perpendicular a A₁B₁ por M₁. Su frontal, igual en el alzado: perpendicular a
+      A₂B₂ por M₂.
+
+      **El corte con r.** El plano vertical que contiene a r corta al plano mediador en una
+      recta; su alzado corta a r₂ en P₂, y P₁ baja por la vertical hasta r₁. P queda casi a
+      mitad del tramo de r dibujado.
+
+      **Las tuberías.** PA y PB miden lo mismo, 49,02 mm en verdadera magnitud. PA es casi
+      horizontal y PB casi frontal, así que P₁A₁ y P₂B₂ salen casi iguales a esa cifra, pero
+      es una casualidad de la figura: P₂A₂ mide 33,58 mm y P₁B₁, 17,17 mm.
+
+      **Lo que no es P.** La mediatriz de A₁B₁ en la planta solo equidista de las plantas: daría
+      un punto de r a unos 36 mm del bueno. Y el punto de r más cercano a M tampoco es P.

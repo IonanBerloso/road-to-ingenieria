@@ -1,0 +1,1511 @@
+ejercicios:
+  # ── 1 · La columna cortada por el plano de dos horizontales. Lo que enseña:
+  #    mirar la planta antes de construir. B₁, C₁, E₁ e I₁ caen sobre s₁, así que
+  #    la cara BCEI es vertical y contiene a s: dos vértices de la sección están
+  #    en s sin hacer nada, y con s de charnela no se mueven al abatir.
+  - id: exeg-h53-1-la-columna-cortada-por-el-plano-de-r-y-s
+    titulo: La columna cortada por el plano de r y s, y su sección en verdadera magnitud
+    fuente: >-
+      Apartado 1 · Ejercicio 53 de la Colección de ejercicios de
+      Geometría Descriptiva, Sistema Diédrico Directo (págs. 58-60; el apartado
+      1, en las 58 y 59) · Dpto. de Expresión Gráfica y Proyectos de
+      Ingeniería, EIG · UPV/EHU. Sin fecha: es uno de los cuatro ejercicios
+      bilingües con que cierra la colección, del 52 al 55, y de ellos solo el 54
+      se titula «Examen»; el 53 lleva cajetín de lámina. Se transcribe el
+      castellano; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    # Decisión: el castellano de la pág. 58 tal cual (es texto en trazos: se ha
+    # leído renderizado a 150 y a 300 ppp), con la negrita que imprime en
+    # «método de abatimientos» y sin la cabecera «ARIKETA 1 / EJERCICIO 1»: la
+    # fuente ya dice que es el apartado 1 del Ejercicio 53. Sus partes van con su
+    # letra, «A.» y «B.», como en la página.
+    enunciado: |
+      El plano definido por las rectas paralelas r y s secciona la columna que tiene por bases
+      los rectángulos ABCD y EFGI. Se pide dibujar:
+
+      A. La intersección entre el plano y la columna.
+
+      B. La verdadera magnitud de la intersección mediante el **método de abatimientos**.
+
+      **Notas nuestras.** La figura es la mitad izquierda de la primera página de figuras del
+      ejercicio: el alzado arriba y la planta abajo. La columna va de la base ABCD, abajo, a la
+      EFGI, arriba, y sus aristas laterales son AG, BI, CE y DF; la figura solo dibuja el
+      arranque de cada una junto a su base, y el resto lo completas tú. El plano se dibuja
+      como una franja entre r y s, cortada a los lados con líneas de rotura onduladas que
+      aquí no están: dicen que sigue, no son datos. Llamamos K, L, M y N a los puntos donde
+      el plano corta las aristas AG, BI, CE y DF; esos nombres son nuestros.
+    pide: Los cuatro vértices de la sección en las dos vistas, sus abatidos con s de charnela, lo que mide de verdad el lado KL y qué se ve y qué se oculta de la columna y la placa.
+    receta:
+      lamina: ex53-1
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        I: 'punto3(alzado: figura.punto("I2"), planta: figura.punto("I1"))'
+        r: 'recta3(alzado: figura.segmento("r2"), planta: figura.segmento("r1"))'
+        s: 'recta3(alzado: figura.segmento("s2"), planta: figura.segmento("s1"))'
+        # El plano de r y s por tres de sus puntos: dos de r y uno de s. Los pies
+        # desde A y G son solo una manera de tener puntos de esas rectas; cualquier
+        # otro daría el mismo plano.
+        plano_rs: plano(pie_perpendicular(A, r), pie_perpendicular(G, r), pie_perpendicular(A, s))
+      solucion:
+        K: corte_recta_plano(segmento3(A, G), plano_rs)
+        L: corte_recta_plano(segmento3(B, I), plano_rs)
+        M: corte_recta_plano(segmento3(C, E), plano_rs)
+        N: corte_recta_plano(segmento3(D, F), plano_rs)
+        # Decisión: la charnela es s, aunque r también valdría. L y M están en s (la
+        # cara BCEI la contiene: lo comprueba `comprueba`), así que no se mueven, y
+        # solo hay que abatir K y N. (K) sale por su definición —en la horizontal
+        # perpendicular a s por el pie, a la distancia real de K a s—, y es una
+        # elección: la primera marca fija el lado. (N) sale con el mismo giro que
+        # llevó K a (K), así que hereda esa elección y la figura abatida cae junta.
+        pieK: pie_perpendicular(K, s)
+        pieN: pie_perpendicular(N, s)
+        Ka: 'punto_a_distancia(horizontal_por(pieK, plano_perpendicular_a_recta(K, s)), desde: pieK, distancia: vm(K, pieK))'
+        Na: 'abatido_junto(N, s, plano_rs, con: Ka, de: K)'
+        # El error de llevar la diferencia de cotas en vez de la distancia real:
+        # solo para escribir su ejemplo.
+        Kdz: 'punto_a_distancia(horizontal_por(pieK, plano_perpendicular_a_recta(K, s)), desde: pieK, distancia: diferencia_de_cotas(K, pieK))'
+        vm_KL_mm: en_mm(vm(K, L))
+      comprueba:
+        - en_recta(L, s)
+        - en_recta(M, s)
+        # KN es una horizontal del plano: lo dicen el paso 2 y la resolución.
+        - en_recta(N, horizontal_por(K, plano_rs))
+    pasos:
+      - tipo: reconocer
+        pregunta: r₂ y s₂ son dos horizontales del alzado, y r₁ y s₁ dos rectas paralelas de la planta. ¿Qué dice eso del plano?
+        opciones:
+          - texto: Que r y s son horizontales del plano, y cualquiera de las dos sirve de charnela para abatirlo sobre un plano horizontal
+            correcta: true
+            mensaje: |
+              Eso es. Una recta con el alzado horizontal no cambia de cota: es una horizontal,
+              y se ve en verdadera magnitud en la planta. Abatir el plano alrededor de una
+              horizontal suya lo deja sobre el plano horizontal que la contiene, y lo abatido
+              se ve sin deformar en la planta.
+          - texto: Que el plano es horizontal, porque las dos rectas lo son
+            mensaje: |
+              Para eso r y s tendrían que estar a la misma cota, y r₂ va más arriba que s₂.
+              Son dos horizontales a distinta altura: el plano sube de s hacia r, y está
+              inclinado.
+          - texto: Que el plano es de canto sobre el alzado, porque sus rectas se ven horizontales
+            mensaje: |
+              Un plano de canto se ve en el alzado como **una sola** recta: todos sus puntos
+              caen en ella. Aquí r₂ y s₂ son dos rectas distintas, y los puntos de la franja
+              ocupan todo lo que hay entre ellas.
+
+      - tipo: construir
+        titulo: Los cuatro vértices de la sección
+        intro: |
+          Marca, en las dos vistas, los puntos donde el plano corta las aristas laterales: L en
+          BI, M en CE, K en AG y N en DF. Las aristas solo están empezadas, y r₂ y s₂ tienen un
+          hueco donde va la columna: prolonga lo que haga falta, cada arista hasta el vértice de
+          la otra base. Antes de trazar nada, mira dónde caen B₁, C₁, E₁ e I₁.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: L2
+            pide: el corte de la arista BI, en el alzado
+            es: proy_alzado(solucion.L)
+            bien: |
+              L₂ está donde B₂I₂ corta a s₂. B₁ e I₁ caen sobre s₁: la arista BI está en el
+              plano vertical de s, y corta al plano de la franja en un punto de s.
+            diagnosticos:
+              - si: en_recta(figura.segmento("BI2"))
+                mensaje: |
+                  Estás en la arista B₂I₂, pero a otra altura. Mira la planta: B₁ e I₁ están
+                  sobre s₁, así que BI y s están en el mismo plano vertical y se cortan. El
+                  corte con el plano es ese punto, a la altura de s₂.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.L), dy: mm(-10)), figura.segmento("BI2"))'
+              - si: en_recta(figura.segmento("s2"))
+                mensaje: |
+                  Estás en s₂, pero no en la arista BI. Prolonga el arranque que sale de B₂
+                  hasta I₂: L₂ es donde esa arista corta a s₂. Cuidado con D₂F₂, que también
+                  cruza s₂ en el alzado: DF va por detrás y no toca a s.
+                ejemplo: 'desplaza(proy_alzado(solucion.L), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  L₂ tiene que estar a la vez en la arista B₂I₂ y en s₂: BI está en el plano
+                  vertical de s, y lo corta en un punto de s.
+          - nombre: L1
+            pide: el corte de la arista BI, en la planta
+            es: proy_planta(solucion.L)
+            bien: |
+              L₁ está sobre s₁, en la vertical de L₂: B₁I₁ cae entera sobre s₁.
+            diagnosticos:
+              - si: '!en_vertical_de(L2)'
+                mensaje: |
+                  L₁ va en la **vertical de L₂**: son el mismo punto visto dos veces. Sobre s₁
+                  hay muchos puntos; el tuyo es el que está debajo de L₂.
+                ejemplo: 'desplaza(proy_planta(solucion.L), dx: mm(6), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes L₂: está en su vertical, pero no sobre s₁. L está en la arista BI, y
+                  B₁I₁ está sobre s₁: L₁ también.
+                ejemplo: 'desplaza(proy_planta(solucion.L), dy: mm(-8))'
+          - nombre: M2
+            pide: el corte de la arista CE, en el alzado
+            es: proy_alzado(solucion.M)
+            bien: |
+              M₂ está donde C₂E₂ corta a s₂: C₁ y E₁ también caen sobre s₁, y CE corta al plano
+              en s, igual que BI.
+            diagnosticos:
+              - si: en_recta(figura.segmento("CE2"))
+                mensaje: |
+                  Estás en la arista C₂E₂, pero a otra altura. C₁ y E₁ están sobre s₁: CE y s
+                  están en el mismo plano vertical, y el corte con el plano es el de CE con s,
+                  a la altura de s₂.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.M), dy: mm(-10)), figura.segmento("CE2"))'
+              - si: en_recta(figura.segmento("s2"))
+                mensaje: |
+                  Estás en s₂, pero no en la arista CE. Prolonga el arranque que sale de C₂
+                  hasta E₂: M₂ es donde corta a s₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.M), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  M₂ tiene que estar a la vez en la arista C₂E₂ y en s₂.
+          - nombre: M1
+            pide: el corte de la arista CE, en la planta
+            es: proy_planta(solucion.M)
+            bien: |
+              M₁ está sobre s₁, en la vertical de M₂. El lado LM de la sección está sobre s, y
+              en la planta se ve en verdadera magnitud: s es horizontal.
+            diagnosticos:
+              - si: '!en_vertical_de(M2)'
+                mensaje: |
+                  M₁ va en la **vertical de M₂**: el mismo punto, visto desde arriba.
+                ejemplo: 'desplaza(proy_planta(solucion.M), dx: mm(-6), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes M₂: está en su vertical, pero no sobre s₁. C₁E₁ está sobre s₁: M₁
+                  también.
+                ejemplo: 'desplaza(proy_planta(solucion.M), dy: mm(-8))'
+          - nombre: K2
+            pide: el corte de la arista AG, en el alzado
+            es: proy_alzado(solucion.K)
+            bien: |
+              K₂ está en A₂G₂, donde la corta la recta que une los puntos en que el plano
+              vertical de AG corta a r y a s. Es el método general: una arista, un plano
+              auxiliar que la contenga, y su recta común con el plano dado.
+            diagnosticos:
+              - si: en_recta(figura.segmento("s2"))
+                mensaje: |
+                  K no está en s. Solo BI y CE están en el plano vertical de s; A₁G₁ se aparta
+                  de s₁, y AG corta al plano más arriba. Haz pasar por AG un plano vertical:
+                  corta a r y a s en dos puntos, y la recta que los une corta a A₂G₂ en K₂.
+                ejemplo: 'proy_alzado(vertical_hasta(solucion.K, linea(figura.segmento("s2"))))'
+              - si: en_recta(figura.segmento("r2"))
+                mensaje: |
+                  K no está en r: A₁G₁ no toca a r₁, y r va por detrás de la columna. El corte
+                  se busca con un plano vertical por AG, que corta a r y a s en dos puntos que
+                  se suben al alzado.
+                ejemplo: 'proy_alzado(vertical_hasta(solucion.K, linea(figura.segmento("r2"))))'
+              - si: en_recta(figura.segmento("AG2"))
+                mensaje: |
+                  Estás en la arista A₂G₂, pero no en el corte. En la planta, prolonga A₁G₁
+                  hasta r₁ y hasta s₁; sube esos dos puntos a r₂ y a s₂ y únelos. Esa recta es
+                  la común del plano dado y el plano vertical de AG, y corta a A₂G₂ en K₂.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.K), dy: mm(-12)), figura.segmento("AG2"))'
+              - si: siempre
+                mensaje: |
+                  K₂ está en la arista A₂G₂. Para saber dónde, el plano vertical que contiene a
+                  AG: sus cortes con r y con s, subidos al alzado, dan una recta que corta a
+                  A₂G₂ en K₂.
+          - nombre: K1
+            pide: el corte de la arista AG, en la planta
+            es: proy_planta(solucion.K)
+            bien: |
+              K₁ está en A₁G₁, en la vertical de K₂.
+            diagnosticos:
+              - si: '!en_vertical_de(K2)'
+                mensaje: |
+                  K₁ va en la **vertical de K₂**: baja K₂ con una vertical hasta A₁G₁.
+                ejemplo: 'desplaza(proy_planta(solucion.K), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes K₂: está en su vertical, pero no en la arista. Prolonga el arranque que
+                  sale de A₁ hasta G₁: K₁ está sobre esa recta.
+                ejemplo: 'desplaza(proy_planta(solucion.K), dy: mm(-8))'
+          - nombre: N2
+            pide: el corte de la arista DF, en el alzado
+            es: proy_alzado(solucion.N)
+            bien: |
+              N₂ está en D₂F₂ y a la altura de K₂. La cara ADFG tiene dos horizontales
+              paralelas a r, AD y GF, así que el plano la corta según otra horizontal: KN.
+            diagnosticos:
+              - si: en_recta(figura.segmento("s2"))
+                mensaje: |
+                  N no está en s. DF está detrás, y su planta se aparta de s₁: corta al plano
+                  más arriba. Hazlo como con AG, o fíjate en que N está a la altura de K₂.
+                ejemplo: 'proy_alzado(vertical_hasta(solucion.N, linea(figura.segmento("s2"))))'
+              - si: en_recta(figura.segmento("r2"))
+                mensaje: |
+                  N no está en r. Con un plano vertical por DF: sus cortes con r y con s, subidos
+                  al alzado, dan la recta que corta a D₂F₂ en N₂.
+                ejemplo: 'proy_alzado(vertical_hasta(solucion.N, linea(figura.segmento("r2"))))'
+              - si: en_recta(figura.segmento("DF2"))
+                mensaje: |
+                  Estás en la arista D₂F₂, pero no en el corte. AD y GF son paralelas a r₁ en la
+                  planta y horizontales en el alzado: el plano corta la cara ADFG por una
+                  horizontal, y N₂ está a la altura de K₂.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.N), dy: mm(-12)), figura.segmento("DF2"))'
+              - si: siempre
+                mensaje: |
+                  N₂ está en la arista D₂F₂, a la altura de K₂: KN es una horizontal del plano.
+          - nombre: N1
+            pide: el corte de la arista DF, en la planta
+            es: proy_planta(solucion.N)
+            bien: |
+              N₁ está en D₁F₁, en la vertical de N₂, y K₁N₁ sale paralela a r₁ y a s₁: es una
+              horizontal del plano.
+            diagnosticos:
+              - si: '!en_vertical_de(N2)'
+                mensaje: |
+                  N₁ va en la **vertical de N₂**: baja N₂ hasta D₁F₁.
+                ejemplo: 'desplaza(proy_planta(solucion.N), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes N₂: está en su vertical, pero no en la arista. Prolonga el arranque que
+                  sale de D₁ hacia F₁: N₁ está sobre esa recta, y K₁N₁ queda paralela a s₁.
+                ejemplo: 'desplaza(proy_planta(solucion.N), dy: mm(8))'
+        trazado:
+          - proy_alzado(segmento3(solucion.K, solucion.L))
+          - proy_alzado(segmento3(solucion.L, solucion.M))
+          - proy_alzado(segmento3(solucion.M, solucion.N))
+          - proy_alzado(segmento3(solucion.N, solucion.K))
+          - proy_planta(segmento3(solucion.K, solucion.L))
+          - proy_planta(segmento3(solucion.L, solucion.M))
+          - proy_planta(segmento3(solucion.M, solucion.N))
+          - proy_planta(segmento3(solucion.N, solucion.K))
+        pista: |
+          (1) B₁, C₁, E₁ e I₁ caen sobre s₁: BI y CE cortan al plano en s, y L₂ y M₂ son sus
+          cortes con s₂. (2) Para AG, prolonga A₁G₁ hasta r₁ y s₁, sube los dos puntos a r₂ y s₂
+          y únelos: esa recta corta a A₂G₂ en K₂. (3) N₂ está en D₂F₂ a la altura de K₂.
+          (4) Baja los cuatro a la planta, cada uno a su arista.
+        desarrollo: |
+          En verde claro, la sección en las dos vistas: un trapecio con el lado LM sobre s y el
+          lado KN horizontal, paralelo a s, a la altura de K₂.
+
+      - tipo: construir
+        titulo: La sección abatida, con s de charnela
+        intro: |
+          Abate la sección sobre el plano horizontal de s, con s de charnela: L y M están en s y
+          no se mueven. Lleva K y N por la perpendicular a s₁ que pasa por K₁ y por N₁, a su
+          distancia real a s. Vale a cualquiera de los dos lados de s₁, pero los dos al mismo.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Kab
+            rotulo: (K)
+            pide: el vértice K, abatido
+            es: proy_planta(solucion.Ka)
+            bien: |
+              (K) está en la perpendicular a s₁ por K₁, a la distancia real de K a s: la
+              hipotenusa del triángulo que tiene por catetos lo que separa K₁ de s₁ en la
+              planta y la diferencia de cotas de K y s, que se mide en el alzado.
+            diagnosticos:
+              - si: cerca_de(proy_planta(abatido(solucion.K, r, plano_rs)))
+                mensaje: |
+                  Ese es K abatido con **r** de charnela. En un examen también valdría, pero
+                  aquí la charnela es s: así L y M se quedan donde están y solo hay que mover K
+                  y N.
+                ejemplo: 'proy_planta(gira(solucion.K, r, angulo: angulo_con_ph(plano_rs), sentido: ascendente))'
+              - si: '!en_recta(perpendicular(por: proy_planta(solucion.K), a: figura.segmento("s1")))'
+                mensaje: |
+                  Al abatir, K gira alrededor de s en un plano perpendicular a s, y ese plano es
+                  vertical: en la planta, (K) se mueve por la **perpendicular a s₁ que pasa por
+                  K₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Ka, 1)), dx: mm(6), dy: mm(-6))'
+              - si: cerca_de(proy_planta(solucion.K))
+                mensaje: |
+                  Ese es K₁, sin abatir. Al abatir, K gira alrededor de s y se aparta de s₁ hasta
+                  su distancia real, 25,6 mm, por la perpendicular a s₁.
+                ejemplo: proy_planta(solucion.K)
+              - si: 'a_distancia(de: proy_planta(solucion.pieK), d: vm_planta(solucion.K, solucion.pieK))'
+                mensaje: |
+                  Has llevado lo que separa K₁ de s₁ **en la planta**, y la planta acorta: K está
+                  más alto que s. La distancia real es la hipotenusa del triángulo con ese
+                  cateto y la diferencia de cotas de K y s.
+                ejemplo: 'proy_planta(simetrico(solucion.K, respecto: solucion.pieK))'
+              - si: 'a_distancia(de: proy_planta(solucion.pieK), d: diferencia_de_cotas(solucion.K, solucion.pieK))'
+                mensaje: |
+                  Has llevado la **diferencia de cotas** de K y s, que se lee en el alzado: es solo
+                  un cateto. Falta el otro, lo que separa K₁ de s₁ en la planta; la distancia
+                  real es la hipotenusa.
+                ejemplo: proy_planta(rama(solucion.Kdz, 1))
+              - si: siempre
+                mensaje: |
+                  (K) está en la perpendicular a s₁ por K₁, a la distancia real de K a s: con la
+                  separación de K₁ y s₁ en la planta y la diferencia de cotas de K y s, la
+                  hipotenusa.
+          - nombre: Nab
+            rotulo: (N)
+            pide: el vértice N, abatido
+            es: proy_planta(solucion.Na)
+            bien: |
+              (N) está en la perpendicular a s₁ por N₁, al mismo lado que (K), y (K)(N) sale
+              paralela a s₁: KN es horizontal y paralela a la charnela, y eso no cambia al
+              abatir.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.Na)))
+                mensaje: |
+                  Ese es N abatido **al otro lado** de s₁: (K) lo has llevado al contrario. Toda la
+                  figura abatida va al mismo lado de la charnela, o deja de ser la sección.
+                ejemplo: proy_planta(rama(solucion.Na, 2))
+              - si: cerca_de(proy_planta(abatido(solucion.N, r, plano_rs)))
+                mensaje: |
+                  Ese es N abatido con **r** de charnela. Aquí la charnela es s, la misma que has
+                  usado para K.
+                ejemplo: 'proy_planta(gira(solucion.N, r, angulo: angulo_con_ph(plano_rs), sentido: ascendente))'
+              - si: '!en_recta(perpendicular(por: proy_planta(solucion.N), a: figura.segmento("s1")))'
+                mensaje: |
+                  (N) se mueve por la **perpendicular a s₁ que pasa por N₁**, como (K) por la de
+                  K₁. Y hay un atajo: (N) está también en la paralela a s₁ que pasa por (K).
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Na, 1)), dx: mm(6), dy: mm(-6))'
+              - si: cerca_de(proy_planta(solucion.N))
+                mensaje: |
+                  Ese es N₁, sin abatir. Al abatir, N gira alrededor de s y se aparta de s₁ hasta
+                  su distancia real, 25,6 mm, por la perpendicular a s₁, al mismo lado que (K).
+                ejemplo: proy_planta(solucion.N)
+              - si: 'a_distancia(de: proy_planta(solucion.pieN), d: vm_planta(solucion.N, solucion.pieN))'
+                mensaje: |
+                  Has llevado lo que separa N₁ de s₁ en la planta, que acorta. N está a la misma
+                  altura que K y a la misma distancia de s: (N) va a la altura de (K), en la
+                  paralela a s₁.
+                ejemplo: 'proy_planta(simetrico(solucion.N, respecto: solucion.pieN))'
+              - si: siempre
+                mensaje: |
+                  (N) está en la perpendicular a s₁ por N₁ y en la paralela a s₁ por (K): KN es
+                  paralela a la charnela, y al abatir sigue siéndolo.
+        trazado:
+          - proy_planta(segmento3(solucion.Ka, solucion.L))
+          - proy_planta(segmento3(solucion.L, solucion.M))
+          - proy_planta(segmento3(solucion.M, solucion.Na))
+          - proy_planta(segmento3(solucion.Na, solucion.Ka))
+        pista: |
+          (1) Por K₁, la perpendicular a s₁; su pie en s₁ es el centro del giro. (2) La distancia
+          real de K a s: un triángulo con la separación de K₁ y s₁ en la planta y la diferencia de
+          cotas de K₂ y s₂ en el alzado. (3) Llévala con el compás desde el pie, por esa
+          perpendicular. (4) (N), en la perpendicular por N₁ y en la paralela a s₁ por (K).
+        desarrollo: |
+          En verde claro, la sección abatida, (K) L₁ M₁ (N): un trapecio con (K)(N) paralela a s₁.
+          K y N quedan a 25,6 mm de la charnela.
+
+      - tipo: calcular
+        titulo: El lado KL, en verdadera magnitud
+        pregunta: ¿Cuánto mide de verdad el lado KL de la sección?
+        respuesta:
+          tipo: numero
+          valor: '25.67'
+          receta: vm_KL_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '17.47'
+            receta: en_mm(vm_planta(K, L))
+            mensaje: |
+              Eso es lo que mide **K₁L₁ en la planta**. KL sube de L a K, y la planta lo acorta;
+              en verdadera magnitud está en el abatimiento, de (K) a L₁. Si has medido algo más
+              de 18, puede que sea la diferencia de cotas de K y L, 18,81: tampoco es el lado.
+          - valor: '21.52'
+            receta: en_mm(vm_alzado(K, L))
+            mensaje: |
+              Eso es **K₂L₂ en el alzado**, que también acorta: KL no es frontal, porque K y L no
+              están a la misma distancia del plano vertical (K₁L₁ no sale horizontal en el papel).
+          - valor: '18.81'
+            receta: en_mm(diferencia_de_cotas(K, L))
+            mensaje: |
+              Eso es la **diferencia de cotas** de K y L, lo que sube el lado: un cateto, no el
+              lado.
+        pista: |
+          Mídelo en la sección abatida, de (K) a L₁: L está en la charnela y no se ha movido.
+        desarrollo: |
+          En la sección abatida, de (K) a L₁ se miden 25,7 mm: 25,69 a un lado de s₁ y 25,80 al
+          otro, porque L se aparta de s 0,08 mm, el redondeo del dibujo. El triángulo lo
+          confirma, con K₁L₁ de la planta y la diferencia de cotas del alzado:
+          $$ \overline{KL} = \sqrt{\overline{K_1L_1}^{\,2} + \Delta z^{2}} = \sqrt{17{,}47^{2} + 18{,}81^{2}} \approx 25{,}67 \text{ mm} $$
+
+      # Decisión: la visibilidad toma la franja entre r y s como una placa opaca que
+      # sigue a los lados (eso dicen las líneas de rotura), y la columna como un sólido.
+      # No se ha decidido a ojo: sale de un segundo camino, con un rayo hacia el
+      # observador desde cada punto de cada línea, recortado contra la columna (seis
+      # caras planas, convexa) y contra la franja. El enunciado no pide la visibilidad: el
+      # paso es nuestro, y la consigna lo dice.
+      - tipo: dibujar
+        consigna: |
+          El enunciado no pide la visibilidad con estas palabras: este paso es nuestro. En las
+          diapositivas de intersecciones del curso, cada intersección se termina situándola con
+          líneas continuas y discontinuas, y aquí se decide con una convención que fijamos
+          nosotros: la franja entre r y s es una placa opaca. Dibuja en las dos vistas la
+          columna entera, la franja y la sección, con lo que se ve en continua y lo que se
+          oculta en discontinua. La placa tapa lo que queda debajo en la planta y lo que queda
+          detrás en el alzado.
+        comprueba:
+          - punto: >-
+              En la planta, la base ABCD y los tramos de las aristas laterales que van de la
+              base a la sección están ocultos: en discontinua, salvo los que caen sobre s₁ (el
+              punto siguiente).
+            porque: >-
+              Toda la planta de la columna cae dentro de la franja, entre r₁ y s₁, y lo que está
+              por debajo del plano queda tapado por la placa. Del corte para arriba la columna
+              asoma por el agujero y se ve, con la base EFGI entera.
+          - punto: >-
+              En la planta, B₁C₁, B₁L₁ y C₁M₁ caen sobre s₁, y van en continua.
+            porque: >-
+              Están ocultas, pero en la misma recta que s₁, que se ve: lo visto manda. Es la cara
+              BCEI, vertical, vista de canto.
+          - punto: >-
+              En el alzado, A₂G₂ en continua hasta s₂, en discontinua de s₂ a K₂ y otra vez en
+              continua de K₂ a G₂.
+            porque: >-
+              Entre s y K, la arista AG está por debajo del plano, y la placa, que baja hacia el
+              observador, le pasa por delante. Por debajo de s ya no hay placa, y por encima de K
+              la arista ha salido del plano.
+          - punto: >-
+              En el alzado, D₂F₂ entera en discontinua, y de la sección K₂L₂ y L₂M₂ en continua,
+              M₂N₂ y N₂K₂ en discontinua.
+            porque: >-
+              DF es la arista de atrás y la tapa la propia columna. Los lados MN y NK están en las
+              caras de atrás, CDFE y DAGF; KL y LM, en las de delante.
+          - punto: >-
+              En el alzado, r₂ en discontinua entre A₂G₂ y C₂E₂, y s₂ en continua de punta a
+              punta.
+            porque: >-
+              r es el borde de atrás de la placa y pasa por detrás de la columna. s es el borde de
+              delante, y el lado LM de la sección está en él.
+        figura: |
+          <figure>
+          <svg viewBox="0 0 340 590" role="img" width="340" height="590" aria-labelledby="egex531-t egex531-d">
+            <title id="egex531-t">La columna cortada por el plano de r y s: lo que se ve y lo que se oculta</title>
+            <desc id="egex531-d">Alzado arriba y planta abajo, en las mismas verticales. La columna va de la base ABCD, abajo, a la EFGI, arriba, con las aristas AG, BI, CE y DF; el plano es la franja entre las horizontales r y s. La sección es el trapecio KLMN, en verde: L y M sobre s, K y N a la misma altura. En la planta, la base ABCD y las aristas hasta la sección quedan ocultas, en discontinua, salvo lo que cae sobre s₁; de la sección para arriba, en continua. En el alzado, la arista AG va en continua hasta s, en discontinua de s a K y en continua de K a G; la arista DF va entera en discontinua, y también los lados MN y NK de la sección; r va en discontinua por detrás de la columna, y s en continua. Por delante de s₁, abajo a la derecha, en violeta, la sección abatida con s de charnela: L y M no se mueven, y K y N llegan por la perpendicular a s₁, con (K)(N) paralela a s₁.</desc>
+            <style>
+                .egex531-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+                .egex531-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+                .egex531-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+                .egex531-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .egex531-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .egex531-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+                .egex531-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+                .egex531-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+                .egex531-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+                .egex531-pt { fill: var(--live); }
+                .egex531-punta { fill: var(--live); stroke: none; }
+                .egex531-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+                .egex531-o { fill: var(--flag); }
+                .egex531-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+                .egex531-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+                .egex531-v { stroke: var(--ink); stroke-width: 1.3; fill: none; stroke-linecap: round; }
+                .egex531-h { stroke: var(--ink); stroke-width: 1; fill: none; stroke-dasharray: 3.5 2.5; }
+                .egex531-sv { stroke: var(--live); stroke-width: 2; fill: none; stroke-linecap: round; }
+                .egex531-sh { stroke: var(--live); stroke-width: 1.5; fill: none; stroke-dasharray: 3.5 2.5; }
+                .egex531-ab { stroke: var(--alt); stroke-width: 1.6; fill: none; stroke-linejoin: round; }
+                .egex531-ref { stroke: var(--faint); stroke-width: 0.8; fill: none; stroke-dasharray: 1.5 2; }
+            </style>
+            <path class="egex531-f" d="M132.1 140.2L163.9 197.3L227.9 197.2L184 140.2Z"/>
+            <path class="egex531-f" d="M132.1 471.8L163.9 514.3L227.9 450.1L184 419.9Z"/>
+            <path class="egex531-h" d="M115.5 197.5L132.1 140.2"/>
+            <path class="egex531-h" d="M176.9 234L184 140.2"/>
+            <path class="egex531-h" d="M184 140.2L192.7 27.5"/>
+            <path class="egex531-sh" d="M227.9 197.2L184 140.2"/>
+            <path class="egex531-sh" d="M184 140.2L132.1 140.2"/>
+            <path class="egex531-h" d="M148.5 85.1L214.1 85.1"/>
+            <path class="egex531-h" d="M104.9 462.2L132.1 471.8"/>
+            <path class="egex531-h" d="M160.4 517.7L163.9 514.3"/>
+            <path class="egex531-h" d="M232.3 445.7L227.9 450.1"/>
+            <path class="egex531-h" d="M176.9 390.3L184 419.9"/>
+            <path class="egex531-h" d="M104.9 462.2L160.4 517.7"/>
+            <path class="egex531-h" d="M160.4 517.7L232.3 445.7"/>
+            <path class="egex531-h" d="M232.3 445.7L176.9 390.3"/>
+            <path class="egex531-h" d="M176.9 390.3L104.9 462.2"/>
+            <path class="egex531-v" d="M104.9 234L115.5 197.5"/>
+            <path class="egex531-v" d="M132.1 140.2L164.8 27.5"/>
+            <path class="egex531-v" d="M160.4 234L163.9 197.3"/>
+            <path class="egex531-v" d="M163.9 197.3L179.8 27.5"/>
+            <path class="egex531-v" d="M232.3 234L227.9 197.2"/>
+            <path class="egex531-v" d="M227.9 197.2L207.7 27.5"/>
+            <path class="egex531-v" d="M104.9 234L160.4 234"/>
+            <path class="egex531-v" d="M160.4 234L232.3 234"/>
+            <path class="egex531-v" d="M232.3 234L176.9 234"/>
+            <path class="egex531-v" d="M176.9 234L104.9 234"/>
+            <path class="egex531-v" d="M207.7 27.5L192.7 27.5"/>
+            <path class="egex531-v" d="M192.7 27.5L164.8 27.5"/>
+            <path class="egex531-v" d="M164.8 27.5L179.8 27.5"/>
+            <path class="egex531-v" d="M179.8 27.5L207.7 27.5"/>
+            <path class="egex531-sv" d="M132.1 140.2L163.9 197.3"/>
+            <path class="egex531-sv" d="M163.9 197.3L227.9 197.2"/>
+            <path class="egex531-v" d="M15.8 85.1L148.5 85.1"/>
+            <path class="egex531-v" d="M214.1 85.1L253.8 85.1"/>
+            <path class="egex531-v" d="M56.1 197.5L321 197.5"/>
+            <path class="egex531-v" d="M132.1 471.8L164.8 483.4"/>
+            <path class="egex531-v" d="M163.9 514.3L179.8 498.4"/>
+            <path class="egex531-v" d="M227.9 450.1L207.7 470.5"/>
+            <path class="egex531-v" d="M184 419.9L192.7 455.5"/>
+            <path class="egex531-v" d="M207.7 470.5L192.7 455.5"/>
+            <path class="egex531-v" d="M192.7 455.5L164.8 483.4"/>
+            <path class="egex531-v" d="M164.8 483.4L179.8 498.4"/>
+            <path class="egex531-v" d="M179.8 498.4L207.7 470.5"/>
+            <path class="egex531-sv" d="M132.1 471.8L163.9 514.3"/>
+            <path class="egex531-sv" d="M163.9 514.3L227.9 450.1"/>
+            <path class="egex531-sv" d="M227.9 450.1L184 419.9"/>
+            <path class="egex531-sv" d="M184 419.9L132.1 471.8"/>
+            <path class="egex531-v" d="M43.4 488.9L201.9 330.4"/>
+            <path class="egex531-v" d="M128.4 550L286.9 391.5"/>
+            <path class="egex531-ref" d="M132.1 471.8L224.4 564.1"/>
+            <path class="egex531-ref" d="M184 419.9L276.3 512.1"/>
+            <path class="egex531-ab" d="M224.4 564.1L163.9 514.3L227.9 450.1L276.3 512.1Z"/>
+            <path class="egex531-f2" d="M224.4 564.1L163.9 514.3L227.9 450.1L276.3 512.1Z"/>
+            <text class="egex531-n" x="104.6" y="78.8" text-anchor="start" fill="var(--ink)">r₂</text>
+            <text class="egex531-n" x="93.6" y="188.1" text-anchor="start" fill="var(--ink)">s₂</text>
+            <text class="egex531-n" x="161.4" y="23.5" text-anchor="start" fill="var(--ink)">G₂</text>
+            <text class="egex531-n" x="178.2" y="22.6" text-anchor="start" fill="var(--ink)">I₂</text>
+            <text class="egex531-n" x="194.7" y="23" text-anchor="start" fill="var(--ink)">F₂</text>
+            <text class="egex531-n" x="207.9" y="23.5" text-anchor="start" fill="var(--ink)">E₂</text>
+            <text class="egex531-n" x="98.8" y="245.3" text-anchor="start" fill="var(--ink)">A₂</text>
+            <text class="egex531-n" x="154" y="246.2" text-anchor="start" fill="var(--ink)">B₂</text>
+            <text class="egex531-n" x="172.6" y="246.7" text-anchor="start" fill="var(--ink)">D₂</text>
+            <text class="egex531-n" x="226.8" y="246.1" text-anchor="start" fill="var(--ink)">C₂</text>
+            <text class="egex531-n" x="168" y="353" text-anchor="start" fill="var(--ink)">r₁</text>
+            <text class="egex531-n" x="265.2" y="424.6" text-anchor="start" fill="var(--ink)">s₁</text>
+            <text class="egex531-n" x="185.5" y="391.7" text-anchor="start" fill="var(--ink)">D₁</text>
+            <text class="egex531-n" x="230.1" y="438.3" text-anchor="start" fill="var(--ink)">C₁</text>
+            <text class="egex531-n" x="177" y="455.8" text-anchor="start" fill="var(--ink)">F₁</text>
+            <text class="egex531-n" x="92.1" y="471.1" text-anchor="start" fill="var(--ink)">A₁</text>
+            <text class="egex531-n" x="155.4" y="475.6" text-anchor="start" fill="var(--ink)">G₁</text>
+            <text class="egex531-n" x="205.3" y="486" text-anchor="start" fill="var(--ink)">E₁</text>
+            <text class="egex531-n" x="182" y="510.9" text-anchor="start" fill="var(--ink)">I₁</text>
+            <text class="egex531-n" x="137.9" y="521.3" text-anchor="start" fill="var(--ink)">B₁</text>
+            <text class="egex531-l" x="126.1" y="138.2" text-anchor="end" fill="var(--live)">K₂</text>
+            <text class="egex531-l" x="159.9" y="210.3" text-anchor="end" fill="var(--live)">L₂</text>
+            <text class="egex531-l" x="232.9" y="193.2" text-anchor="start" fill="var(--live)">M₂</text>
+            <text class="egex531-l" x="189" y="136.2" text-anchor="start" fill="var(--live)">N₂</text>
+            <text class="egex531-l" x="126.1" y="468.8" text-anchor="end" fill="var(--live)">K₁</text>
+            <text class="egex531-l" x="170.9" y="518.3" text-anchor="start" fill="var(--live)">L₁</text>
+            <text class="egex531-l" x="233.9" y="454.1" text-anchor="start" fill="var(--live)">M₁</text>
+            <text class="egex531-l" x="189" y="415.9" text-anchor="start" fill="var(--live)">N₁</text>
+            <text class="egex531-l" x="220.4" y="577.1" text-anchor="end" fill="var(--alt)">(K)</text>
+            <text class="egex531-l" x="282.3" y="516.1" text-anchor="start" fill="var(--alt)">(N)</text>
+            <circle class="egex531-pt" cx="132.1" cy="140.2" r="2.2"/>
+            <circle class="egex531-pt" cx="132.1" cy="471.8" r="2.2"/>
+            <circle class="egex531-pt" cx="163.9" cy="197.3" r="2.2"/>
+            <circle class="egex531-pt" cx="163.9" cy="514.3" r="2.2"/>
+            <circle class="egex531-pt" cx="227.9" cy="197.2" r="2.2"/>
+            <circle class="egex531-pt" cx="227.9" cy="450.1" r="2.2"/>
+            <circle class="egex531-pt" cx="184" cy="140.2" r="2.2"/>
+            <circle class="egex531-pt" cx="184" cy="419.9" r="2.2"/>
+          </svg>
+          </figure>
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: B₁, C₁, E₁ e I₁ caen sobre s₁; la cara BCEI es vertical y contiene a s, así que BI y CE cortan al plano en s.
+          - texto: Para AG, un plano vertical que la contenga corta a r y a s en dos puntos; la recta que los une, en el alzado, corta a A₂G₂ en K₂.
+          - texto: La cara ADFG tiene dos horizontales paralelas a r, AD y GF; el plano la corta por otra horizontal, y N está a la altura de K.
+          - texto: Con s de charnela, L y M no se mueven, y K y N se llevan por la perpendicular a s₁, a su distancia real a s y al mismo lado.
+          - texto: La distancia de K a la charnela se mide en la planta, de K₁ a s₁, porque s es horizontal.
+            trampa: true
+            mensaje: |
+              Que s sea horizontal no hace horizontal a la distancia: K está más alto que s. En la
+              planta se ve solo un cateto; la distancia real es la hipotenusa, con la diferencia
+              de cotas.
+    resolucion: |
+      **Mirar antes de construir.** r₂ y s₂ son horizontales: r y s son dos horizontales del
+      plano, a distinta cota, y el plano sube de s hacia r. Y en la planta, B₁, C₁, E₁ e I₁ caen
+      sobre s₁: la cara BCEI de la columna es vertical y contiene a s.
+
+      **La sección.** Las aristas BI y CE están en ese plano vertical, así que cortan al plano
+      dado en puntos de s: L₂ y M₂ son sus cortes con s₂, y L₁ y M₁ caen sobre s₁. Para AG hace
+      falta un plano auxiliar: el vertical que la contiene corta a r y a s en dos puntos; subidos
+      al alzado, la recta que los une corta a A₂G₂ en K₂, y K₁ se baja a A₁G₁. La cara ADFG tiene
+      dos horizontales paralelas a r, AD y GF, y el plano la corta por otra horizontal: N₂ está
+      en D₂F₂ a la altura de K₂. La sección es un trapecio, con LM sobre s y KN horizontal.
+
+      **La verdadera magnitud.** Con s de charnela, L y M no se mueven. K está a 25,6 mm de s:
+      17,34 mm de separación en la planta y 18,87 mm de diferencia de cotas, y la distancia real
+      es la hipotenusa. (K) va por la perpendicular a s₁ que pasa por K₁, a esa distancia, y (N)
+      al mismo lado, en la paralela a s₁ por (K). LM mide 29,85 mm y KN 24,18 mm, los dos ya en
+      verdadera magnitud en la planta porque son horizontales; KL mide 25,67 mm y MN 25,69 mm.
+
+      **Lo que se ve.** La placa es opaca. En la planta tapa toda la parte de la columna que
+      queda por debajo del plano: la base ABCD y las aristas hasta la sección van en
+      discontinua, salvo B₁C₁, B₁L₁ y C₁M₁, que caen sobre s₁ y quedan en continua. En el
+      alzado, la placa baja hacia ti y tapa el tramo de A₂G₂ entre s₂ y K₂;
+      DF, la arista de atrás, va entera en discontinua, igual que r₂ por detrás de la columna.
+
+  # ── 2 · La ventana que gira sobre AB. Lo que enseña: la pared no es vertical
+  #    (sus bordes 1-4 y 2-3 son de perfil), así que el cuadrado no se ve en
+  #    verdadera magnitud en ninguna vista; y AB es horizontal, así que el giro
+  #    pasa en planos verticales y en la planta todo se mueve por la
+  #    perpendicular a A₁B₁.
+  - id: exeg-h53-2-la-ventana-que-gira-sobre-ab
+    titulo: La ventana que gira sobre su lado AB, cerrada y abierta 60°
+    fuente: >-
+      Apartado 2 · Ejercicio 53 de la Colección de ejercicios de
+      Geometría Descriptiva, Sistema Diédrico Directo (págs. 58-60; el apartado
+      2, en las 58 y 59) · Dpto. de Expresión Gráfica y Proyectos de
+      Ingeniería, EIG · UPV/EHU. Sin fecha: es uno de los cuatro ejercicios
+      bilingües con que cierra la colección, del 52 al 55, y de ellos solo el 54
+      se titula «Examen»; el 53 lleva cajetín de lámina. Se transcribe el
+      castellano; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    # Decisión: «60º» tal cual. En la página es una «o» volada sin subrayar, y no
+    # se distingue de «°»; se deja como se teclea en castellano, y quiere decir
+    # grados.
+    enunciado: |
+      Una ventana cuadrada de lado AB se sitúa cerrada en la pared 1234. La ventana gira
+      alrededor del lado AB. Se pide dibujar:
+
+      A. Las proyecciones diédricas de la ventana cuando está cerrada.
+
+      B. Las proyecciones diédricas de la ventana cuando está abierta hacia fuera de la pared un
+      ángulo de 60º.
+
+      **Notas nuestras.** La figura es la mitad derecha de la primera página de figuras del
+      ejercicio: la pared 1234 en el alzado, arriba, que se ve como un rectángulo, y en la planta,
+      abajo, que se ve como un paralelogramo; y el lado AB de la ventana, que la figura da solo en
+      el alzado. Los bordes 1-4 y 2-3 tienen sus dos proyecciones en la misma vertical: son de
+      perfil, y la pared está inclinada, no es vertical. «Hacia fuera» lo tomamos como el lado de
+      la pared que se ve en las dos vistas, el que mira hacia ti y hacia arriba. Llamamos C y D a
+      los otros dos vértices de la ventana, C junto a B, y C′ y D′ a los de la ventana abierta;
+      esos nombres son nuestros.
+    pide: A y B en la planta, C y D en las dos vistas con la ventana cerrada, C′ y D′ con la ventana abierta 60° hacia fuera, y cuánto sube el borde de abajo al abrirla.
+    receta:
+      lamina: ex53-2
+      escena:
+        V1: 'punto3(alzado: figura.punto("1_2"), planta: figura.punto("1_1"))'
+        V2: 'punto3(alzado: figura.punto("2_2"), planta: figura.punto("2_1"))'
+        V3: 'punto3(alzado: figura.punto("3_2"), planta: figura.punto("3_1"))'
+        V4: 'punto3(alzado: figura.punto("4_2"), planta: figura.punto("4_1"))'
+        pared: plano(V1, V2, V4)
+      solucion:
+        A: 'punto_en_plano(alzado: figura.punto("A2"), plano: pared)'
+        B: 'punto_en_plano(alzado: figura.punto("B2"), plano: pared)'
+        # La ventana cerrada, por debajo de AB: B girado 90° alrededor de la
+        # normal a la pared por A da D, y A girado alrededor de la de B da C.
+        D: 'gira(B, perpendicular_a_plano(A, pared), angulo: 90, sentido: descendente)'
+        C: 'gira(A, perpendicular_a_plano(B, pared), angulo: 90, sentido: descendente)'
+        # Decisión: «hacia fuera» es el lado de la pared que se ve en las dos
+        # vistas: su normal apunta hacia el observador del alzado (más alejamiento)
+        # y hacia el de la planta (más cota). Abrir hacia ese lado sube C más que
+        # abrir hacia el otro (25,85 mm frente a 5,21: comprobado por un segundo
+        # camino), así que aquí «hacia fuera» es `sentido: ascendente`.
+        Cp: 'gira(C, segmento3(A, B), angulo: 60, sentido: ascendente)'
+        Dp: 'gira(D, segmento3(A, B), angulo: 60, sentido: ascendente)'
+        # Dos errores, para sus diagnósticos: abrir hacia dentro, y dejar la
+        # ventana a 60° del plano horizontal en vez de a 60° de la pared.
+        Cin: 'gira(C, segmento3(A, B), angulo: 60, sentido: descendente)'
+        Din: 'gira(D, segmento3(A, B), angulo: 60, sentido: descendente)'
+        C60h: 'gira(C, segmento3(A, B), angulo: angulo_con_ph(pared) - 60, sentido: ascendente)'
+        sube_C_mm: en_mm(diferencia_de_cotas(C, Cp))
+      comprueba:
+        - en_plano(V3, pared)
+        - en_plano(C, pared)
+        - en_plano(D, pared)
+    pasos:
+      - tipo: reconocer
+        pregunta: Los bordes 1-4 y 2-3 de la pared tienen sus dos proyecciones en la misma vertical. ¿Dónde se ve la ventana cerrada en verdadera magnitud?
+        opciones:
+          - texto: En ninguna de las dos vistas; la pared está inclinada, y el cuadrado se construye con un cambio de plano o abatiendo la pared
+            correcta: true
+            mensaje: |
+              Eso es. Unos bordes de perfil dicen que la pared no es vertical ni frontal: se
+              inclina hacia atrás. Lo único que está en verdadera magnitud es AB en la planta,
+              porque es horizontal; el cuadrado entero, solo con la pared de canto o abatida.
+          - texto: En el alzado, porque la pared se ve como un rectángulo
+            mensaje: |
+              Un rectángulo en el alzado no hace frontal a la pared: para serlo, su planta tendría
+              que ser una recta horizontal, y es un paralelogramo. El alzado acorta todo lo que se
+              inclina hacia ti, y aquí la pared se inclina.
+          - texto: En la planta, porque AB es horizontal
+            mensaje: |
+              AB sí está en verdadera magnitud en la planta, y el ángulo recto en B también se ve
+              recto ahí. Pero los lados BC y AD bajan por la pared, y la planta los acorta: el
+              cuadrado se ve como un rectángulo más bajo.
+
+      - tipo: construir
+        titulo: La ventana cerrada
+        intro: |
+          La ventana cerrada está en la pared, por debajo de AB (por encima no cabe: sobre AB solo
+          quedan 11 mm de pared, y el lado mide 33). Marca A₁ y B₁ —A y B están en la pared, y la
+          figura solo da su alzado— y los otros dos vértices, C junto a B y D junto a A, en las dos
+          vistas. Los bordes 1-4 y 2-3 son de perfil y no sirven para bajar puntos: usa
+          otra recta de la pared, como la diagonal 1-3.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A1
+            pide: el vértice A, en la planta
+            es: proy_planta(solucion.A)
+            bien: |
+              A₁ está en la vertical de A₂, sobre la planta de la horizontal de la pared que pasa
+              por A: paralela a 1₁2₁, porque las horizontales de un plano son paralelas.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("A2"))'
+                mensaje: |
+                  A₁ va en la **vertical de A₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.A), dx: mm(6))'
+              # Decisión: el ejemplo va en cifras (pt): el punto de 1₁2₁ en la
+              # vertical de A₂, sacado por un segundo camino.
+              - si: en_recta(figura.segmento("p12_1"))
+                mensaje: |
+                  Has puesto A₁ en 1₁2₁, el borde de arriba, y A está más bajo: A₂B₂ va por debajo
+                  de 1₂2₂. A está en otra horizontal de la pared, paralela a esa. Para situarla,
+                  la diagonal 1-3: su alzado corta a la recta A₂B₂; baja ese punto a 1₁3₁, y por él
+                  va la paralela a 1₁2₁.
+                ejemplo: 'desplaza(figura.punto("1_1"), dx: 50.76, dy: -11.9163)'
+              - si: siempre
+                mensaje: |
+                  A₁ está en la vertical de A₂ y en la planta de la horizontal de la pared que pasa
+                  por A. Esa horizontal se sitúa con otra recta de la pared, como la diagonal 1-3:
+                  corta a A₂B₂ en el alzado, ese punto se baja a 1₁3₁, y por él va la paralela a
+                  1₁2₁.
+          - nombre: B1
+            pide: el vértice B, en la planta
+            es: proy_planta(solucion.B)
+            bien: |
+              B₁ está en la misma horizontal que A₁, en la vertical de B₂. A₁B₁ es AB en verdadera
+              magnitud: mide 33,27 mm, más que A₂B₂.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("B2"))'
+                mensaje: |
+                  B₁ va en la **vertical de B₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.B), dx: mm(-6))'
+              - si: en_recta(figura.segmento("p12_1"))
+                mensaje: |
+                  Has puesto B₁ en 1₁2₁, y B está a la altura de A, más abajo que el borde 1-2. B₁
+                  está en la misma horizontal que A₁, la paralela a 1₁2₁ que pasa por A₁.
+                ejemplo: 'desplaza(figura.punto("1_1"), dx: 142.56, dy: -33.4675)'
+              - si: siempre
+                mensaje: |
+                  B₁ está en la vertical de B₂ y en la horizontal de A₁, la paralela a 1₁2₁ que
+                  pasa por A₁: AB es una horizontal de la pared.
+          - nombre: C2
+            pide: el vértice C, en el alzado
+            es: proy_alzado(solucion.C)
+            bien: |
+              C₂ está por debajo de B₂ y algo corrido hacia la derecha: el cuadrado se deforma en el
+              alzado porque la pared está inclinada.
+            diagnosticos:
+              - si: 'cerca_de(desplaza(figura.punto("B2"), dy: vm_alzado(A, B)))'
+                mensaje: |
+                  Has dibujado el cuadrado en el alzado como si la pared fuera frontal: C₂ en la
+                  vertical de B₂, a lo que mide A₂B₂. La pared se inclina, y el cuadrado no se ve en
+                  verdadera magnitud en esta vista. Ponla de canto con un cambio de plano, con la
+                  línea nueva perpendicular a A₁B₁: ahí BC se ve entero.
+                ejemplo: 'desplaza(figura.punto("B2"), dy: vm_alzado(A, B))'
+              - si: 'en_recta(perpendicular(por: figura.punto("B2"), a: figura.segmento("AB2")))'
+                mensaje: |
+                  C₂ no va en la vertical de B₂. El ángulo recto en B se ve recto en la planta,
+                  porque AB es horizontal, pero no en el alzado: BC baja por la pared inclinada y se
+                  tuerce al proyectarse.
+                ejemplo: 'desplaza(figura.punto("B2"), dy: mm(25))'
+              - si: siempre
+                mensaje: |
+                  C está en la pared, a la distancia AB de B y en la perpendicular a AB. Con un
+                  cambio de plano que deje la pared de canto —línea nueva perpendicular a A₁B₁—, la
+                  pared se ve como una recta, y C está sobre ella a 33,27 mm de B; luego se vuelve
+                  al alzado con la cota.
+          - nombre: C1
+            pide: el vértice C, en la planta
+            es: proy_planta(solucion.C)
+            bien: |
+              C₁ está en la vertical de C₂ y en la perpendicular a A₁B₁ por B₁: el ángulo recto en
+              B se ve recto en la planta, porque AB es horizontal.
+            diagnosticos:
+              - si: '!en_vertical_de(C2)'
+                mensaje: |
+                  C₁ va en la **vertical de C₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.C), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes C₂: está en su vertical, pero no en la perpendicular a A₁B₁ por B₁.
+                  AB es horizontal, así que el ángulo recto en B se ve recto en la planta.
+                ejemplo: 'desplaza(proy_planta(solucion.C), dy: mm(8))'
+          - nombre: D2
+            pide: el vértice D, en el alzado
+            es: proy_alzado(solucion.D)
+            bien: |
+              D₂ está a la altura de C₂, y A₂D₂ es igual y paralela a B₂C₂: el lado DC es otra
+              horizontal de la pared.
+            diagnosticos:
+              - si: 'cerca_de(desplaza(figura.punto("A2"), dy: vm_alzado(A, B)))'
+                mensaje: |
+                  Has dibujado el cuadrado en el alzado como si la pared fuera frontal. Se inclina, y
+                  el cuadrado se deforma: D₂ va a la altura de C₂, y corrido respecto de A₂ lo mismo
+                  que C₂ respecto de B₂.
+                ejemplo: 'desplaza(figura.punto("A2"), dy: vm_alzado(A, B))'
+              - si: '!en_horizontal_de(C2)'
+                mensaje: |
+                  D₂ va a la **altura de C₂**: DC es paralela a AB, otra horizontal de la pared.
+                ejemplo: 'desplaza(proy_alzado(solucion.D), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  D₂ está a la altura de C₂, y A₂D₂ es igual y paralela a B₂C₂: en un cuadrado los
+                  lados opuestos lo son, y una proyección paralela lo conserva.
+          - nombre: D1
+            pide: el vértice D, en la planta
+            es: proy_planta(solucion.D)
+            bien: |
+              D₁ está en la vertical de D₂, y A₁D₁ es igual y paralela a B₁C₁.
+            diagnosticos:
+              - si: '!en_vertical_de(D2)'
+                mensaje: |
+                  D₁ va en la **vertical de D₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.D), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes D₂: está en su vertical, pero no en la perpendicular a A₁B₁ por A₁.
+                  A₁D₁ es igual y paralela a B₁C₁.
+                ejemplo: 'desplaza(proy_planta(solucion.D), dy: mm(8))'
+        trazado:
+          - proy_planta(segmento3(solucion.A, solucion.B))
+          - proy_planta(segmento3(solucion.B, solucion.C))
+          - proy_planta(segmento3(solucion.C, solucion.D))
+          - proy_planta(segmento3(solucion.D, solucion.A))
+          - proy_alzado(segmento3(solucion.B, solucion.C))
+          - proy_alzado(segmento3(solucion.C, solucion.D))
+          - proy_alzado(segmento3(solucion.D, solucion.A))
+        pista: |
+          (1) Diagonal 1-3: su alzado corta a la recta A₂B₂; baja el corte a 1₁3₁ y traza por él la
+          paralela a 1₁2₁. A₁ y B₁ están en ella. (2) Cambio de plano con la línea nueva
+          perpendicular a A₁B₁: la pared se ve de canto, AB como un punto. (3) Lleva 33,27 mm desde
+          ese punto, por la pared y hacia abajo: es C (y D). (4) Vuelve a la planta por la
+          perpendicular a A₁B₁, y al alzado con la cota.
+        desarrollo: |
+          En verde claro, la ventana cerrada: un rectángulo en la planta, más bajo que el cuadrado,
+          y un paralelogramo en el alzado. A₁B₁ mide 33,27 mm, lo que mide AB de verdad, y A₂B₂
+          32,39.
+
+      - tipo: construir
+        titulo: La ventana abierta 60° hacia fuera
+        intro: |
+          La ventana gira alrededor de AB, que es horizontal: C y D se mueven en planos verticales
+          perpendiculares a AB, y en la planta, por la perpendicular a A₁B₁. «Hacia fuera» es el
+          lado de la pared que ves en las dos vistas. Marca C′ y D′ con la ventana abierta 60°.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Cp2
+            rotulo: C′₂
+            pide: el vértice C de la ventana abierta, en el alzado
+            es: proy_alzado(solucion.Cp)
+            bien: |
+              C′₂ está casi a la altura de AB: la pared forma 69° con el plano horizontal, y al
+              abrir la ventana 60° hacia fuera queda a solo 9° por debajo del horizontal.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Cin))
+                mensaje: |
+                  Esa es la ventana abierta **hacia dentro**: el giro va al lado contrario. Hacia
+                  fuera es el lado que ves en las dos vistas; abriendo hacia ese lado, el borde de
+                  abajo sube mucho más.
+                ejemplo: proy_alzado(solucion.Cin)
+              - si: cerca_de(proy_alzado(solucion.C))
+                mensaje: |
+                  Ese es C con la ventana **cerrada**. Ahora gira 60° alrededor de AB.
+                ejemplo: proy_alzado(solucion.C)
+              - si: cerca_de(proy_alzado(solucion.C60h))
+                mensaje: |
+                  Has dejado la ventana a 60° del **plano horizontal**. Los 60° se cuentan desde la
+                  pared, que es donde estaba la ventana cerrada, y la pared forma 69° con el
+                  horizontal: abierta, la ventana queda a 9° por debajo de él.
+                ejemplo: proy_alzado(solucion.C60h)
+              - si: siempre
+                mensaje: |
+                  C gira alrededor de AB en el plano perpendicular a AB. Con la pared de canto (el
+                  cambio de plano de antes), AB se ve como un punto y la ventana como un segmento:
+                  gíralo 60° hacia fuera con el transportador y vuelve a las dos vistas.
+          - nombre: Cp1
+            rotulo: C′₁
+            pide: el vértice C de la ventana abierta, en la planta
+            es: proy_planta(solucion.Cp)
+            bien: |
+              C′₁ está en la perpendicular a A₁B₁ que pasa por B₁, la misma que lleva C₁: el giro
+              alrededor de una horizontal pasa en un plano vertical.
+            diagnosticos:
+              - si: '!en_vertical_de(Cp2)'
+                mensaje: |
+                  C′₁ va en la **vertical de C′₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.Cp), dx: mm(6))'
+              - si: '!en_recta(perpendicular(por: proy_planta(solucion.B), a: proy_planta(segmento3(A, B))))'
+                mensaje: |
+                  C′₁ está en la **perpendicular a A₁B₁ por B₁**: C gira alrededor de AB, que es
+                  horizontal, en un plano vertical, y ese plano se ve en la planta como esa recta.
+                ejemplo: 'desplaza(proy_planta(solucion.Cp), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes C′₂: C′₁ está en su vertical y en la perpendicular a A₁B₁ por B₁.
+          - nombre: Dp2
+            rotulo: D′₂
+            pide: el vértice D de la ventana abierta, en el alzado
+            es: proy_alzado(solucion.Dp)
+            bien: |
+              D′₂ está a la altura de C′₂: D′C′ sigue siendo paralela a AB, y horizontal.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Din))
+                mensaje: |
+                  Esa es la ventana abierta **hacia dentro**: D gira hacia el mismo lado que C, el que
+                  se ve en las dos vistas.
+                ejemplo: proy_alzado(solucion.Din)
+              - si: '!en_horizontal_de(Cp2)'
+                mensaje: |
+                  D′₂ va a la **altura de C′₂**: el lado D′C′ sigue paralelo a AB, que es horizontal.
+                ejemplo: 'desplaza(proy_alzado(solucion.Dp), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  D′₂ está a la altura de C′₂ y en la vertical de D′₁; A₂D′₂ es igual y paralela a
+                  B₂C′₂.
+          - nombre: Dp1
+            rotulo: D′₁
+            pide: el vértice D de la ventana abierta, en la planta
+            es: proy_planta(solucion.Dp)
+            bien: |
+              D′₁ está en la perpendicular a A₁B₁ por A₁, y A₁D′₁ es igual y paralela a B₁C′₁.
+            diagnosticos:
+              - si: '!en_vertical_de(Dp2)'
+                mensaje: |
+                  D′₁ va en la **vertical de D′₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.Dp), dx: mm(6))'
+              - si: '!en_recta(perpendicular(por: proy_planta(solucion.A), a: proy_planta(segmento3(A, B))))'
+                mensaje: |
+                  D′₁ está en la **perpendicular a A₁B₁ por A₁**: D gira en un plano vertical, igual
+                  que C.
+                ejemplo: 'desplaza(proy_planta(solucion.Dp), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes D′₂: D′₁ está en su vertical y en la perpendicular a A₁B₁ por A₁.
+        trazado:
+          - proy_planta(segmento3(solucion.A, solucion.B))
+          - proy_planta(segmento3(solucion.B, solucion.Cp))
+          - proy_planta(segmento3(solucion.Cp, solucion.Dp))
+          - proy_planta(segmento3(solucion.Dp, solucion.A))
+          - proy_alzado(segmento3(solucion.B, solucion.Cp))
+          - proy_alzado(segmento3(solucion.Cp, solucion.Dp))
+          - proy_alzado(segmento3(solucion.Dp, solucion.A))
+        pista: |
+          (1) Con la pared de canto, AB es un punto y la ventana cerrada, un segmento de 33,27 mm.
+          (2) Gíralo 60° alrededor de ese punto, hacia fuera: hacia el lado que ves en las dos
+          vistas. (3) Vuelve a la planta por la perpendicular a A₁B₁ y al alzado con la cota.
+        desarrollo: |
+          En verde claro, la ventana abierta. C y D suben 25,85 mm, y quedan a 5,21 mm por debajo
+          de AB: la ventana abierta está a 9° del plano horizontal.
+
+      - tipo: calcular
+        titulo: Cuánto sube el borde de abajo
+        pregunta: Al abrir la ventana 60° hacia fuera, ¿cuánto sube el borde DC desde su posición cerrada?
+        respuesta:
+          tipo: numero
+          valor: '25.85'
+          receta: sube_C_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '5.21'
+            receta: en_mm(diferencia_de_cotas(C, Cin))
+            mensaje: |
+              Eso es lo que sube abriéndola **hacia dentro**; o bien lo que queda C′ por debajo de AB
+              con la ventana abierta hacia fuera. Se pregunta lo que sube el borde: de C₂ a C′₂, no de
+              C′₂ a A₂B₂.
+          - valor: '2.25'
+            receta: en_mm(diferencia_de_cotas(C, C60h))
+            mensaje: |
+              Eso sale dejando la ventana a 60° del **plano horizontal**. Los 60° se miden desde la
+              pared, que forma 69° con el horizontal.
+          - valor: '33.27'
+            receta: en_mm(vm(C, Cp))
+            mensaje: |
+              Eso es lo que **recorre** C en línea recta, de la posición cerrada a la abierta: con un
+              giro de 60°, la cuerda es igual al lado. Se pregunta lo que sube, la diferencia de
+              cotas.
+        pista: |
+          Es la diferencia de cotas de C₂ y C′₂, que se mide en el alzado.
+        desarrollo: |
+          C₂ queda 31,06 mm por debajo de A₂B₂ con la ventana cerrada, y C′₂ a 5,21 mm: sube
+          $31{,}06 - 5{,}21 = 25{,}85$ mm.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Los bordes 1-4 y 2-3 son de perfil, así que la pared está inclinada y el cuadrado no se ve en verdadera magnitud en ninguna vista.
+          - texto: A y B se sitúan en la planta con otra recta de la pared, como la diagonal 1-3, y AB sale horizontal, en verdadera magnitud en la planta.
+          - texto: Con la pared de canto, AB se ve como un punto; la ventana cerrada es un segmento tan largo como AB, y abierta, ese segmento girado 60° hacia fuera.
+          - texto: AB es horizontal, así que C y D giran en planos verticales, y en la planta se mueven por la perpendicular a A₁B₁.
+          - texto: Como la pared se ve como un rectángulo en el alzado, la ventana se dibuja ahí en verdadera magnitud y se baja a la planta.
+            trampa: true
+            mensaje: |
+              El rectángulo del alzado engaña: la planta de la pared es un paralelogramo, no una
+              recta horizontal, así que la pared no es frontal. La ventana se deforma en las dos
+              vistas.
+    resolucion: |
+      **La pared.** Sus bordes 1-4 y 2-3 son de perfil, y 1-2 y 4-3 son horizontales: la pared es
+      un plano inclinado, a 69° del plano horizontal, con la cara que ves en las dos vistas
+      mirando hacia ti y hacia arriba. Ninguna figura suya se ve en verdadera magnitud.
+
+      **A y B.** La figura da solo A₂B₂. Como están en la pared, se sitúan con una recta de la pared:
+      la diagonal 1-3 corta a la horizontal de A y B en el alzado; ese punto se baja a 1₁3₁, y por
+      él va la paralela a 1₁2₁, que lleva A₁ y B₁. AB es horizontal: A₁B₁ mide 33,27 mm, el lado
+      de la ventana, y A₂B₂ solo 32,39.
+
+      **La ventana cerrada.** Con un cambio de plano de línea nueva perpendicular a A₁B₁ la pared
+      se ve de canto y AB como un punto; C y D están sobre ella, 33,27 mm por debajo. En la planta,
+      C₁ y D₁ caen en las perpendiculares a A₁B₁ por B₁ y por A₁, porque el ángulo recto con una
+      horizontal se ve recto ahí. El cuadrado se ve deformado en las dos vistas, y DC queda 31,06
+      mm por debajo de AB.
+
+      **La ventana abierta.** En esa misma vista auxiliar, la ventana gira 60° alrededor de AB,
+      hacia fuera. Como la pared forma 69° con el horizontal, la ventana abierta queda a 9° por
+      debajo de él: C′ y D′ están solo 5,21 mm por debajo de AB, y el borde DC ha subido 25,85 mm.
+      En la planta, C′₁ y D′₁ siguen en las perpendiculares a A₁B₁, más hacia ti.
+
+  # ── 3 · El tejado ABC-ABD. El ejercicio dibuja la figura dos veces, una
+  #    para A y otra para B; son la misma (la de la derecha, trasladada 561,96 pt), y van
+  #    con una sola lámina.
+  - id: exeg-h53-3a-el-angulo-entre-los-dos-planos-del-tejado
+    titulo: El ángulo entre los dos planos del tejado
+    fuente: >-
+      Apartado 3 A · Ejercicio 53 de la Colección de ejercicios de
+      Geometría Descriptiva, Sistema Diédrico Directo (págs. 58-60; el apartado
+      3, en las 58 y 60) · Dpto. de Expresión Gráfica y Proyectos de
+      Ingeniería, EIG · UPV/EHU. Sin fecha: es uno de los cuatro ejercicios
+      bilingües con que cierra la colección, del 52 al 55, y de ellos solo el 54
+      se titula «Examen»; el 53 lleva cajetín de lámina. Se transcribe el
+      castellano; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    enunciado: |
+      Los planos ABC y ABD, representados mediante proyecciones diédricas, definen un tejado. Se
+      pide:
+
+      A. Calcular gráficamente el ángulo entre los dos planos.
+
+      **Notas nuestras.** La figura es la de la segunda página de figuras del ejercicio, que
+      la dibuja dos veces, una para A y otra para B: son la misma. Las dos caras del tejado son los
+      triángulos ABC y ABD, que comparten la cumbrera AB. Dos planos que se cortan forman dos
+      ángulos suplementarios, y el enunciado no dice cuál quiere. Aquí se da el menor, que es el
+      convenio del ángulo entre dos planos, como el de dos rectas en el Ejercicio 55. El de las
+      dos aguas, entre las caras ABC y ABD por donde están C y D, es su suplementario. Llamamos F
+      y X a dos puntos de la construcción; esos nombres son nuestros.
+    pide: El ángulo entre los planos ABC y ABD, el menor de los dos, en grados, medido en un plano perpendicular a AB.
+    receta:
+      lamina: ex53-3
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+      solucion:
+        # La sección perpendicular a AB por C: F, el pie de la perpendicular desde
+        # C a AB, y X, donde ese plano corta a AD. El ángulo CFX es el de las caras.
+        F: pie_perpendicular(C, recta3(A, B))
+        X: corte_recta_plano(segmento3(A, D), plano_perpendicular_a_recta(C, recta3(A, B)))
+        angulo: angulo_planos(plano(A, B, C), plano(A, B, D))
+        diedro: angulo_diedro(C, segmento3(A, B), D)
+        # El error de medir la sección en la planta, sin abatirla: el ángulo de
+        # F₁C₁ y F₁X₁, con los tres puntos llevados a una misma cota.
+        horizontal: 'linea(segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dx: 10)))'
+        visto_en_planta: angulo_rectas(segmento3(vertical_hasta(F, horizontal), vertical_hasta(C, horizontal)), segmento3(vertical_hasta(F, horizontal), vertical_hasta(X, horizontal)))
+    pasos:
+      - tipo: reconocer
+        pregunta: Los planos ABC y ABD se cortan en AB. ¿Dónde se ve en verdadera magnitud el ángulo que forman?
+        opciones:
+          - texto: En un plano perpendicular a AB, que corta a los dos planos según dos rectas; abatido, o con AB de punta, el ángulo de esas rectas es el de los planos
+            correcta: true
+            mensaje: |
+              Eso es. El ángulo de dos planos se mide en la sección perpendicular a su recta común.
+              Con dos cambios de plano AB queda de punta y los dos planos se ven de canto: el ángulo
+              aparece entero, y se mide con el transportador.
+          - texto: Entre dos rectas cualesquiera de los planos que salgan de un mismo punto de AB, como AC y AD
+            mensaje: |
+              AC y AD no son perpendiculares a AB, y su ángulo depende de cuáles tomes. Solo las
+              perpendiculares a la arista, una en cada plano, dan el ángulo de los planos.
+          - texto: En la planta, porque las dos caras miran hacia arriba
+            mensaje: |
+              En la planta las dos caras se ven, pero deformadas: ninguna es horizontal, y AB
+              tampoco. La sección perpendicular a AB, vista en la planta sin abatir, da un ángulo
+              de más de 150°.
+
+      - tipo: construir
+        titulo: La sección perpendicular a AB que pasa por C
+        intro: |
+          El ángulo se mide en un plano perpendicular a AB; aquí, el que pasa por C. Marca F, donde
+          ese plano corta a AB (el pie de la perpendicular desde C a AB), y X, donde corta a AD, en
+          las dos vistas. CF y FX son las dos rectas cuyo ángulo es el de los planos. AB no es
+          horizontal ni frontal: para trazar la perpendicular desde C, ponla antes en verdadera
+          magnitud con un cambio de plano de línea nueva paralela a A₁B₁.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: F2
+            pide: F, el pie de la perpendicular desde C a AB, en el alzado
+            es: proy_alzado(solucion.F)
+            bien: |
+              F₂ está en A₂B₂. El ángulo recto en F no se ve recto en el alzado, porque AB no es
+              frontal: se ve en la vista auxiliar donde AB está en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(pie_perpendicular(figura.punto("C2"), figura.segmento("AB2")))
+                mensaje: |
+                  Has bajado la perpendicular a A₂B₂ desde C₂ **en el alzado**. Un ángulo recto solo
+                  se ve recto donde uno de sus lados está en verdadera magnitud, y AB no es frontal.
+                  Ponla en verdadera magnitud con un cambio de plano y traza ahí la perpendicular.
+                ejemplo: pie_perpendicular(figura.punto("C2"), figura.segmento("AB2"))
+              - si: en_recta(figura.segmento("AB2"))
+                mensaje: |
+                  Estás en A₂B₂, pero no en el pie de la perpendicular desde C. Con AB en verdadera
+                  magnitud (línea nueva paralela a A₁B₁), la perpendicular desde la nueva C da F, y
+                  F se vuelve al alzado por su referencia.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.F), dx: mm(6)), figura.segmento("AB2"))'
+              - si: siempre
+                mensaje: |
+                  F está en AB, en el pie de la perpendicular desde C. Se ve con AB en verdadera
+                  magnitud, en una vista auxiliar.
+          - nombre: F1
+            pide: F, el pie de la perpendicular desde C a AB, en la planta
+            es: proy_planta(solucion.F)
+            bien: |
+              F₁ está en A₁B₁, en la vertical de F₂.
+            diagnosticos:
+              - si: cerca_de(pie_perpendicular(figura.punto("C1"), figura.segmento("BA1")))
+                mensaje: |
+                  Has bajado la perpendicular a A₁B₁ desde C₁ **en la planta**. El ángulo recto en F
+                  solo se vería recto ahí si AB fuera horizontal, y AB sube de A a B.
+                ejemplo: pie_perpendicular(figura.punto("C1"), figura.segmento("BA1"))
+              - si: '!en_vertical_de(F2)'
+                mensaje: |
+                  F₁ va en la **vertical de F₂**, sobre A₁B₁.
+                ejemplo: 'desplaza(proy_planta(solucion.F), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes F₂: F₁ está en su vertical, sobre A₁B₁.
+          - nombre: X2
+            pide: X, donde la sección corta a AD, en el alzado
+            es: proy_alzado(solucion.X)
+            bien: |
+              X₂ está en A₂D₂, cerca de D₂. FX es la recta que la sección deja en el plano ABD.
+            diagnosticos:
+              - si: en_recta(figura.segmento("AD2"))
+                mensaje: |
+                  Estás en A₂D₂, pero no en el corte con la sección. El plano perpendicular a AB por C
+                  se ve de canto en la vista auxiliar donde AB está en verdadera magnitud: ahí corta a
+                  AD en X, que se vuelve al alzado por su referencia.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.X), dx: mm(-8)), figura.segmento("AD2"))'
+              - si: siempre
+                mensaje: |
+                  X está en AD, donde la corta el plano perpendicular a AB que pasa por C.
+          - nombre: X1
+            pide: X, donde la sección corta a AD, en la planta
+            es: proy_planta(solucion.X)
+            bien: |
+              X₁ está en A₁D₁, en la vertical de X₂.
+            diagnosticos:
+              - si: '!en_vertical_de(X2)'
+                mensaje: |
+                  X₁ va en la **vertical de X₂**, sobre A₁D₁.
+                ejemplo: 'desplaza(proy_planta(solucion.X), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes X₂: X₁ está en su vertical, sobre A₁D₁.
+        trazado:
+          - proy_alzado(segmento3(C, solucion.F))
+          - proy_alzado(segmento3(solucion.F, solucion.X))
+          - proy_planta(segmento3(C, solucion.F))
+          - proy_planta(segmento3(solucion.F, solucion.X))
+        pista: |
+          (1) Cambio de plano con la línea nueva paralela a A₁B₁: AB queda en verdadera magnitud.
+          (2) Ahí, la perpendicular desde la nueva C a la nueva AB: su pie es F, y esa perpendicular
+          es la traza de la sección. (3) Donde corta a la nueva AD está X. (4) Vuelve F y X al alzado
+          y a la planta por sus referencias.
+        desarrollo: |
+          En verde claro, la sección en las dos vistas: CF en el plano ABC y FX en el plano ABD. En
+          las vistas de la hoja el ángulo CFX se deforma; en verdadera magnitud, abatido o con AB de
+          punta, mide 93,90°.
+
+      - tipo: calcular
+        titulo: El ángulo entre los dos planos
+        # Decisión: dos planos que se cortan forman dos ángulos suplementarios, y se
+        # pide el menor, que es el convenio de «ángulo entre planos» (y el de
+        # angulo_planos, de 0 a 90°), como en el Ejercicio 55 con dos rectas. El
+        # ángulo entre las caras, 93,90°, va de distractor con un mensaje que
+        # reconoce que la construcción es la buena. El enunciado no dice cuál de los
+        # dos espera el corrector, y el ejercicio lo declara en las «Notas nuestras»,
+        # en ese mensaje, en la resolución y en el justificar. Es una pregunta
+        # abierta para Ionan (tasks/pendiente.md).
+        pregunta: ¿Qué ángulo forman los planos ABC y ABD? De los dos ángulos suplementarios que forman, el menor.
+        respuesta:
+          tipo: numero
+          valor: '86.10'
+          receta: angulo
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '93.90'
+            receta: diedro
+            mensaje: |
+              Ese es el ángulo entre las **caras** ABC y ABD, por dentro del tejado, por donde están C
+              y D, y la construcción es la buena. Dos planos que se cortan forman dos ángulos
+              suplementarios. El enunciado pide el de los planos, y aquí se da el menor, como el de
+              dos rectas en el Ejercicio 55: 180° − 93,9° = 86,1°.
+          - valor: '67.26'
+            receta: angulo_rectas(segmento3(A, C), segmento3(A, D))
+            mensaje: |
+              Ese es el ángulo entre **AC y AD**, dos rectas de los planos que salen de A. No son
+              perpendiculares a AB, y su ángulo no es el de los planos.
+          - valor: '89.90'
+            receta: angulo_con_ph(plano(A, B, C)) + angulo_con_ph(plano(A, B, D))
+            mensaje: |
+              Has sacado el ángulo de las **pendientes** de las dos aguas, 44,1° y 45,8°: su suma,
+              89,9°, o 180° menos su suma, 90,1°. Eso solo vale si la cumbrera es horizontal, y AB
+              sube de A a B.
+          - valor: '26.19'
+            receta: visto_en_planta
+            mensaje: |
+              Ese es el ángulo que forman **F₁C₁ y F₁X₁ en la planta**: 153,8°, o su suplementario,
+              26,2°. Es la sección vista sin abatir, y la planta la deforma, porque el plano de la
+              sección no es horizontal. Hay que abatirla, o dejar AB de punta.
+        pista: |
+          Con dos cambios de plano: el primero, con la línea nueva paralela a A₁B₁, deja AB frontal;
+          el segundo, perpendicular a esa AB, la deja de punta. Ahí los dos planos se ven de canto, y
+          de los dos ángulos que forman se da el menor.
+        desarrollo: |
+          Con AB de punta, los planos ABC y ABD se ven como dos rectas que salen del punto AB, una
+          hacia C y otra hacia D. El ángulo entre ellas, por donde están C y D, es de 93,90°: el de
+          las caras. Dos planos forman dos ángulos suplementarios, y el ángulo entre planos es el
+          menor, 86,10°.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El ángulo de dos planos se mide en un plano perpendicular a su recta común, aquí AB.
+          - texto: Con un cambio de plano AB queda frontal, y con otro, de punta; entonces los dos planos se ven de canto.
+          - texto: El ángulo entre esas dos rectas, por el lado de C y de D, es el de las caras, 93,9°; el de los planos es el menor de los dos, su suplementario, 86,1°.
+          - texto: Como las pendientes de las aguas son 44,1° y 45,8°, el ángulo entre los planos es su suma.
+            trampa: true
+            mensaje: |
+              Eso solo vale si la cumbrera es horizontal: entonces la sección perpendicular a AB es
+              vertical, y las pendientes se ven en ella. Aquí AB sube, y la sección está inclinada.
+    resolucion: |
+      **Dónde se mide.** El ángulo de dos planos se ve en la sección perpendicular a su recta
+      común. Aquí los planos ABC y ABD comparten AB, que no es horizontal ni frontal. La sección
+      que pasa por C corta a AB en F, el pie de la perpendicular desde C, y a AD en X: CF y FX son
+      las dos rectas. Para verlas en verdadera magnitud hace falta un cambio de plano que deje AB
+      frontal —línea nueva paralela a A₁B₁— y otro que la deje de punta —línea nueva
+      perpendicular a la nueva proyección de AB—.
+
+      **El ángulo.** Con AB de punta, cada plano se ve como una recta que sale del punto AB: una
+      pasa por C y otra por D. El ángulo entre ellas, por donde están C y D, es de 93,90°: el de las
+      caras, por dentro del tejado. Dos planos forman dos ángulos suplementarios, y el ángulo entre
+      planos es el menor, 86,10°.
+
+      **Por qué no vale la cuenta de las pendientes.** Las dos aguas tienen pendientes de 44,1° y
+      45,8°; su suma da 89,9°, y 180° menos su suma, 90,1°. Esa cuenta solo es cierta con la
+      cumbrera horizontal, y AB sube 15,07 mm de A a B.
+
+  - id: exeg-h53-3b-el-refuerzo-entre-ad-y-bc
+    titulo: El refuerzo entre AD y BC, y la distancia mínima entre dos rectas que se cruzan
+    fuente: >-
+      Apartado 3 B · Ejercicio 53 de la Colección de ejercicios de
+      Geometría Descriptiva, Sistema Diédrico Directo (págs. 58-60; el apartado
+      3, en las 58 y 60) · Dpto. de Expresión Gráfica y Proyectos de
+      Ingeniería, EIG · UPV/EHU. Sin fecha: es uno de los cuatro ejercicios
+      bilingües con que cierra la colección, del 52 al 55, y de ellos solo el 54
+      se titula «Examen»; el 53 lleva cajetín de lámina. Se transcribe el
+      castellano; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    enunciado: |
+      Los planos ABC y ABD, representados mediante proyecciones diédricas, definen un tejado. Se
+      pide:
+
+      B. Se quiere colocar un refuerzo tensado entre los lados AD y BC. Determinar la distancia
+      mínima entre las rectas AD y BC y dibujar las proyecciones diédricas del refuerzo.
+
+      **Notas nuestras.** La figura es la de la segunda página de figuras del ejercicio, que
+      la dibuja dos veces, una para A y otra para B: son la misma. Llamamos P y Q a los extremos del
+      refuerzo, P en AD y Q en BC; esos nombres son nuestros.
+    pide: Los extremos P y Q del refuerzo en las dos vistas, y su longitud, que es la distancia mínima entre AD y BC.
+    receta:
+      lamina: ex53-3
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+      solucion:
+        P: pie_comun(segmento3(A, D), segmento3(B, C))
+        Q: pie_comun(segmento3(B, C), segmento3(A, D))
+        dist_mm: en_mm(distancia_rectas(segmento3(A, D), segmento3(B, C)))
+    pasos:
+      - tipo: reconocer
+        pregunta: AD y BC se cruzan sin cortarse. ¿Qué es la distancia mínima entre ellas?
+        opciones:
+          - texto: La longitud de su perpendicular común, el único segmento que es perpendicular a las dos
+            correcta: true
+            mensaje: |
+              Eso es. Se ve en verdadera magnitud dejando una de las dos de punta, con dos cambios de
+              plano: entonces la perpendicular común es la perpendicular desde ese punto a la otra
+              recta.
+          - texto: La distancia entre los puntos donde se cruzan sus proyecciones en el alzado
+            mensaje: |
+              A₂D₂ y B₂C₂ se cruzan en el papel, pero AD y BC no se tocan: en ese cruce, AD va por
+              detrás de BC. Un cruce de proyecciones no es un punto común.
+          - texto: La perpendicular desde un extremo de una de ellas, como A, a la otra
+            mensaje: |
+              Esa es perpendicular a una sola de las dos. La distancia mínima la da la que es
+              perpendicular a las dos a la vez, y sus extremos no tienen por qué ser A, B, C ni D.
+
+      - tipo: construir
+        titulo: Los extremos del refuerzo
+        intro: |
+          El refuerzo es la perpendicular común de AD y BC. Marca sus extremos, P en AD y Q en BC, en
+          las dos vistas. Un camino: un cambio de plano con la línea nueva paralela a A₁D₁ deja AD
+          frontal; otro, perpendicular a esa AD, la deja de punta. Ahí la perpendicular común es la
+          perpendicular desde el punto AD a la recta BC, y se vuelve a las dos vistas.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: P2
+            pide: el extremo del refuerzo en AD, en el alzado
+            es: proy_alzado(solucion.P)
+            bien: |
+              P₂ está en A₂D₂, cerca de D₂: el refuerzo arranca de AD a cuatro quintos de su
+              longitud desde A.
+            diagnosticos:
+              # Decisión: el cruce aparente de A₂D₂ y B₂C₂ va en cifras (pt), desde
+              # A₂: no hay función que corte dos rectas del papel. Sale de un segundo
+              # camino.
+              - si: 'cerca_de(desplaza(figura.punto("A2"), dx: 80.1265, dy: 22.8933))'
+                mensaje: |
+                  Ese es el **cruce de A₂D₂ y B₂C₂** en el alzado. AD y BC no se tocan: ahí AD va por
+                  detrás de BC. El refuerzo no sale de un cruce aparente, sino de la perpendicular
+                  común.
+                ejemplo: 'desplaza(figura.punto("A2"), dx: 80.1265, dy: 22.8933)'
+              - si: en_recta(figura.segmento("AD2"))
+                mensaje: |
+                  Estás en A₂D₂, pero no en el pie de la perpendicular común. Con AD de punta, la
+                  perpendicular común es la perpendicular desde ese punto a BC; su pie en BC es Q, y
+                  P se recupera llevando Q a AD por la perpendicular común, de vuelta en las vistas.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.P), dx: mm(-10)), figura.segmento("AD2"))'
+              - si: siempre
+                mensaje: |
+                  P está en AD, en el pie de la perpendicular común con BC. Se ve dejando AD de punta
+                  con dos cambios de plano.
+          - nombre: P1
+            pide: el extremo del refuerzo en AD, en la planta
+            es: proy_planta(solucion.P)
+            bien: |
+              P₁ está en A₁D₁, en la vertical de P₂.
+            diagnosticos:
+              - si: '!en_vertical_de(P2)'
+                mensaje: |
+                  P₁ va en la **vertical de P₂**, sobre A₁D₁.
+                ejemplo: 'desplaza(proy_planta(solucion.P), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes P₂: está en su vertical, pero no en A₁D₁. P es un punto de AD.
+                ejemplo: 'desplaza(proy_planta(solucion.P), dy: mm(8))'
+          - nombre: Q2
+            pide: el extremo del refuerzo en BC, en el alzado
+            es: proy_alzado(solucion.Q)
+            bien: |
+              Q₂ está en B₂C₂, algo antes de la mitad desde B. P₂Q₂ no es perpendicular a A₂D₂ ni a
+              B₂C₂: el ángulo recto solo se ve recto con una recta de punta o en verdadera magnitud.
+            diagnosticos:
+              - si: 'cerca_de(desplaza(figura.punto("A2"), dx: 80.1265, dy: 22.8933))'
+                mensaje: |
+                  Ese es el **cruce de A₂D₂ y B₂C₂**, que no es un punto común: ahí BC va por delante
+                  de AD.
+                ejemplo: 'desplaza(figura.punto("A2"), dx: 80.1265, dy: 22.8933)'
+              - si: en_recta(figura.segmento("BC2"))
+                mensaje: |
+                  Estás en B₂C₂, pero no en el pie de la perpendicular común. Con AD de punta, Q es el
+                  pie de la perpendicular desde el punto AD a la recta BC.
+                ejemplo: 'pie_perpendicular(desplaza(proy_alzado(solucion.Q), dx: mm(10)), figura.segmento("BC2"))'
+              - si: siempre
+                mensaje: |
+                  Q está en BC, en el pie de la perpendicular común con AD.
+          - nombre: Q1
+            pide: el extremo del refuerzo en BC, en la planta
+            es: proy_planta(solucion.Q)
+            bien: |
+              Q₁ está en B₁C₁, en la vertical de Q₂.
+            diagnosticos:
+              - si: '!en_vertical_de(Q2)'
+                mensaje: |
+                  Q₁ va en la **vertical de Q₂**, sobre B₁C₁.
+                ejemplo: 'desplaza(proy_planta(solucion.Q), dx: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Si ya tienes Q₂: está en su vertical, pero no en B₁C₁. Q es un punto de BC.
+                ejemplo: 'desplaza(proy_planta(solucion.Q), dy: mm(-8))'
+        trazado:
+          - proy_alzado(segmento3(solucion.P, solucion.Q))
+          - proy_planta(segmento3(solucion.P, solucion.Q))
+        pista: |
+          (1) Línea nueva paralela a A₁D₁: AD queda frontal, en verdadera magnitud. (2) Línea nueva
+          perpendicular a esa AD: AD queda de punta. (3) Desde ese punto, la perpendicular a la nueva
+          BC: su pie es Q, y su longitud, la distancia. (4) Vuelve Q a las vistas por sus
+          referencias; P sale en la vista anterior, con PQ perpendicular a la AD frontal.
+        desarrollo: |
+          En verde claro, el refuerzo PQ en las dos vistas: de A₂D₂ a B₂C₂ en el alzado y de A₁D₁ a
+          B₁C₁ en la planta.
+
+      - tipo: calcular
+        titulo: La distancia mínima entre AD y BC
+        pregunta: ¿Cuánto mide el refuerzo, que es la distancia mínima entre AD y BC?
+        respuesta:
+          tipo: numero
+          valor: '36.05'
+          receta: dist_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '34.95'
+            receta: en_mm(vm_planta(P, Q))
+            mensaje: |
+              Eso es lo que mide **P₁Q₁ en la planta**. El refuerzo sube de P a Q, y la planta lo
+              acorta un poco; en verdadera magnitud se ve con AD de punta.
+          - valor: '10.61'
+            receta: en_mm(vm_alzado(P, Q))
+            mensaje: |
+              Eso es **P₂Q₂ en el alzado**, que acorta mucho: el refuerzo va casi de atrás hacia
+              delante.
+          - valor: '45.47'
+            receta: en_mm(vm(A, pie_perpendicular(A, recta3(B, C))))
+            mensaje: |
+              Esa es la distancia de **A a la recta BC**: perpendicular a BC, pero no a AD. La
+              mínima es la de la perpendicular común, que no sale de A.
+        pista: |
+          Es la longitud de la perpendicular desde el punto AD a la recta BC, en la vista donde AD
+          queda de punta.
+        desarrollo: |
+          Con AD de punta, el refuerzo se ve en verdadera magnitud: 36,05 mm. En la planta mide
+          34,95: casi lo mismo, porque el refuerzo es casi horizontal, pero no es la verdadera
+          magnitud. En el alzado, P₂Q₂ mide 10,61. Cuidado: la perpendicular desde D a BC mide
+          36,7 mm, casi lo mismo por casualidad, pero no es perpendicular a AD y no es la distancia
+          mínima.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AD y BC se cruzan sin cortarse; la distancia mínima entre ellas es su perpendicular común.
+          - texto: Con un cambio de plano AD queda frontal, y con otro, de punta.
+          - texto: Con AD de punta, la perpendicular común es la perpendicular desde ese punto a BC, y se ve en verdadera magnitud.
+          - texto: Sus pies, P en AD y Q en BC, se vuelven a la planta y al alzado por sus referencias.
+          - texto: Los extremos del refuerzo están en el punto donde A₂D₂ y B₂C₂ se cruzan en el alzado.
+            trampa: true
+            mensaje: |
+              Ese cruce es solo del papel: en él, AD va por detrás de BC, y las dos rectas no se
+              tocan. El refuerzo sale de la perpendicular común.
+    resolucion: |
+      **Qué se pide.** AD y BC se cruzan: no son paralelas ni se cortan, aunque sus alzados se
+      crucen en el papel. La distancia mínima entre ellas es la longitud de su perpendicular común,
+      y el refuerzo es ese segmento.
+
+      **Cómo se construye.** Un cambio de plano con la línea nueva paralela a A₁D₁ deja AD frontal;
+      otro, perpendicular a esa nueva proyección de AD, la deja de punta. En esa vista la
+      perpendicular común es la perpendicular desde el punto AD a la recta BC: su pie es Q, y su
+      longitud, la distancia. P está en AD, y en la vista anterior PQ sale perpendicular a la AD
+      frontal. Los dos se vuelven a la planta y al alzado por sus referencias.
+
+      **El resultado.** El refuerzo mide 36,05 mm. P está en AD a cuatro quintos de A, cerca de D, y
+      Q en BC, algo antes de la mitad desde B. En la planta P₁Q₁ mide 34,95 mm y en el alzado P₂Q₂,
+      10,61: el refuerzo va casi de atrás hacia delante.

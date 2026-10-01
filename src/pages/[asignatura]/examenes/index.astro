@@ -158,6 +158,11 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
   segunda: { temas: 'temas 3–4', peso: '10 %' },
   tercera: { temas: 'temas 1–5', peso: '17,5 %' },
 };
+/* Expresión Gráfica no tiene convocatorias con fecha: lo que hay son los
+   Ejercicios 52 a 55 de su colección, con formato de examen (auditoría del 1
+   de octubre de 2026). Su entrada y su aviso no hablan del PDF de la escuela,
+   que no lo hay. */
+const soloColeccion = lista.length > 0 && lista.every((ex) => ex.data.convocatoria === 'hoja');
 ---
 
 <Base
@@ -190,7 +195,9 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
           citado arriba, y este sitio lo llamaba enunciado en cinco lugares.
           Lo encontró una auditoría externa el 13 de septiembre de 2026. */}
       <p class="lede">
-        {lista.every((ex) => ex.data.pdfEs === 'resolucion' && ex.data.pdf !== undefined)
+        {soloColeccion
+          ? <>Los ejercicios de varios apartados de la Colección de ejercicios ({lista.map((ex) => ex.data.hoja).join(', ')}), con su formato de examen: no tienen fecha, y solo el 54 se titula «Examen». Cada uno abre en blanco para que te lo hagas antes de mirar nada. Toda la colección, también los ejercicios de una lámina, está en <a href={ruta(`${asignatura.id}/coleccion`)}>la Colección de ejercicios</a>.</>
+          : lista.every((ex) => ex.data.pdfEs === 'resolucion' && ex.data.pdf !== undefined)
           ? 'Los de verdad, con el PDF de la escuela detrás: aquí es el examen corregido por el profesor, no el cuadernillo en blanco. Cada convocatoria abre en blanco para que te la hagas antes de mirar nada.'
           : `Los de verdad, con ${queEsElPdf(lista.map((ex) => ex.data))}. Cada uno abre en blanco para que te lo hagas antes de mirar nada.`}
       </p>
@@ -202,7 +209,7 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
           profesor. La página de cada examen ya lo condicionaba; esta no.
           Encontrado el 28 de septiembre de 2026, al entrar las primeras
           resoluciones oficiales de Química. */}
-      <p class="aviso rotulo">{avisoDeResoluciones(lista.map((ex) => ex.data))}</p>
+      <p class="aviso rotulo">{soloColeccion ? 'La colección no publica solución: las resoluciones son propuesta nuestra y están pendientes de revisión.' : avisoDeResoluciones(lista.map((ex) => ex.data))}</p>
 
       {/* Lo que el aula exige y no se aprende estudiando. Va aquí porque es la
           página que se abre para practicar, y porque una de las normas
@@ -301,8 +308,12 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                esto se comporta como siempre (las 118 convocatorias anteriores). */
             const propios = ejerciciosDelCuadernillo(ex.data.ejercicios);
             const piezas = ex.data.ejercicios.length;
+            /* Un ejercicio de la colección no trae «ejercicios»: trae
+               apartados (el 55 los rotula «Ejercicio 1, 2, 3» dentro de sí). */
+            const deColeccion = ex.data.convocatoria === 'hoja';
+            const unidad = deColeccion ? 'apartados' : 'ejercicios';
             const cuantos =
-              (fuera ? `${propios} de ${propios + fuera} ejercicios` : `${propios} ejercicios`) +
+              (fuera ? `${propios} de ${propios + fuera} ${unidad}` : `${propios} ${unidad}`) +
               (piezas > propios ? ` · ${piezas} resoluciones` : '');
             return (
               <li>
@@ -312,10 +323,10 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                     `${asignatura.id}/examenes/${slugExamen(ex.data.curso, ex.data.convocatoria, ex.data.hoja)}`,
                   )}
                 >
-                  <span class="curso">{cursoDe(ex.data.curso)}</span>
+                  <span class="curso">{deColeccion ? `Ej. ${ex.data.hoja}` : cursoDe(ex.data.curso)}</span>
                   <span class="txt">
                     <span class="conv">
-                      {NOMBRE_CONV[ex.data.convocatoria]}
+                      {deColeccion ? `Ejercicio ${ex.data.hoja} de la Colección de ejercicios` : NOMBRE_CONV[ex.data.convocatoria]}
                       {
                         ALCANCE_CONV[ex.data.convocatoria] && (
                           <>
@@ -329,7 +340,7 @@ const ALCANCE_CONV: Record<string, { temas: string; peso: string }> = {
                         )
                       }
                     </span>
-                    <span class="fecha">{ex.data.fecha}</span>
+                    <span class="fecha">{ex.data.fecha ?? (deColeccion ? 'Sin fecha' : '')}</span>
                   </span>
                   <span class="der">
                     <span class="rotulo pts">

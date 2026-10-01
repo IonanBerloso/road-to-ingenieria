@@ -52,6 +52,14 @@ sabía:
   2026-27 es la misma que la de 2025-26, que es la que se ha transcrito (la
   carpeta de eGela de este curso, añadida el 1 de octubre de 2026, no la
   trae). La rúbrica de láminas ya está: viene en esa carpeta.
+- **Expresión Gráfica, los Ejercicios 53 y 55 de la colección**, cuatro cosas
+  que el enunciado no dice y se han supuesto, cada una declarada en su
+  ejercicio: en el 55·1, que α es el menor de los dos ángulos entre AB y BC;
+  en el 55·2, que el plano ABCD es una lámina opaca, que es lo que decide la
+  visibilidad del alzado; en el 53·3 A, que «el ángulo entre los dos planos»
+  es el menor, 86,10°, y no el de las caras, 93,90°, que se da como
+  distractor sin castigar; y en el 53·3 B, la visibilidad del refuerzo, que
+  el enunciado no pide y no se afirma.
 - **Expresión Gráfica, la hoja de *Criterios*** (`src/content/criterios/`),
   tres cosas que no dice: si en el precio compuesto de la escala el medio
   punto del cajetín se cobra una vez o por pieza (se ha supuesto una vez:
