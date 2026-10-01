@@ -899,7 +899,7 @@ const pasoConstruir = z
     /** Qué se construye, en dos frases, para el alumno. */
     intro: z.string().min(20),
     herramientas: z
-      .array(z.enum(['punto', 'recta', 'paralela', 'perpendicular', 'vertical', 'horizontal', 'compas', 'radio', 'medir', 'borrar']))
+      .array(z.enum(['punto', 'recta', 'paralela', 'perpendicular', 'vertical', 'horizontal', 'compas', 'radio', 'medir', 'transportador', 'borrar']))
       .min(2),
     /** En mm: la de la regla. El profesor corrige con milímetros; menos de
      *  medio no lo distingue nadie a mano, y más de dos da por buenas

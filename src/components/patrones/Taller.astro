@@ -55,6 +55,7 @@ const NOMBRES: Record<string, string> = {
   compas: 'compás',
   radio: 'compás a medida',
   medir: 'medir',
+  transportador: 'transportador',
   borrar: 'borrar',
 };
 
@@ -196,7 +197,7 @@ const datos = {
 </div>
 
 <script>
-  import { acierta, cumple, type Objetivo, type Predicado, type Trazado } from '../../lib/diedrico-corrige';
+  import { acierta, anguloEnVertice, cumple, type Objetivo, type Predicado, type Trazado } from '../../lib/diedrico-corrige';
 
   type P2 = readonly [number, number];
   interface Datos {
@@ -247,6 +248,7 @@ const datos = {
     compas: 'compás: pulsa dos puntos para tomar su distancia, y luego el centro',
     radio: 'compás a medida: pulsa el centro y escribe el radio en mm',
     medir: 'medir: pulsa dos puntos',
+    transportador: 'transportador: pulsa el vértice y luego un punto de cada lado',
     borrar: 'borrar: pulsa una línea o un punto tuyo',
   };
 
@@ -636,6 +638,27 @@ const datos = {
           marca(null);
           pinta();
           estado.textContent = 'distancia llevada';
+        }
+        return;
+      }
+      /* El transportador (1 de octubre de 2026, fase K): el vértice y un punto
+         de cada lado. Prueba de utilidad (§13): para quien resuelve en
+         pantalla una lámina de ángulos (las hojas 52 a 55, SD59-SD63); cuando
+         lee el ángulo de su construcción; gana medirlo como en el papel; se
+         comprueba en tests/geometria/transportador.test.ts. */
+      if (herr === 'transportador') {
+        if (pendiente.length === 1) estado.textContent = 'ahora un punto de un lado';
+        else if (pendiente.length === 2) estado.textContent = 'ahora un punto del otro lado';
+        else {
+          pendiente = [];
+          marca(null);
+          const ang = anguloEnVertice([a.x, a.y], [b.x, b.y], [c.x, c.y]);
+          if (Number.isNaN(ang)) estado.textContent = 'el vértice y los puntos de los lados tienen que ser distintos';
+          else {
+            medida.textContent = `ángulo ${b.rotulo} ${a.rotulo} ${c.rotulo}: ${ang.toFixed(1)}°`;
+            estado.textContent = 'medido';
+          }
+          pinta();
         }
         return;
       }

@@ -21,6 +21,23 @@
  */
 import type { P2 } from './diedrico';
 
+/**
+ * El ángulo en el vértice `v` entre las semirrectas que van a `a` y a `b`,
+ * en grados, de 0 a 180: lo que mide el transportador del Taller. Se mide en
+ * el plano de la lámina, así que es el ángulo de verdad solo si los dos lados
+ * están en verdadera magnitud —abatidos, girados o en un cambio de plano—,
+ * como en el papel. Si un lado tiene longitud cero no hay ángulo: NaN.
+ */
+export function anguloEnVertice(v: P2, a: P2, b: P2): number {
+  const u = [a[0] - v[0], a[1] - v[1]];
+  const w = [b[0] - v[0], b[1] - v[1]];
+  const lu = Math.hypot(u[0], u[1]);
+  const lw = Math.hypot(w[0], w[1]);
+  if (lu < 1e-9 || lw < 1e-9) return NaN;
+  const c = (u[0] * w[0] + u[1] * w[1]) / (lu * lw);
+  return (Math.acos(Math.max(-1, Math.min(1, c))) * 180) / Math.PI;
+}
+
 /** Las posiciones que valen para un objetivo. Sin elección, una sola rama
  *  con todas las posiciones buenas (los abatidos de SD4 valen en ocho); con
  *  elección, una rama por solución, y vale la de la rama elegida. */
