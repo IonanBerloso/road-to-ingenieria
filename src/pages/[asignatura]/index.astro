@@ -1,7 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/ui/Cabecera.astro';
+import Criterios from '../../components/ui/Criterios.astro';
 import QueNotaNecesito from '../../components/ui/QueNotaNecesito.astro';
 import { ruta } from '../../lib/rutas';
 import { mate, sinMarcas } from '../../lib/markdown.mjs';
@@ -54,7 +55,10 @@ const rutas = (await getCollection('preparar'))
   }));
 
 const examenesDeAqui = (await getCollection('examen')).filter((e) => e.data.asignatura === id);
-const numExamenes = examenesDeAqui.filter((e) => !esPropia(e.data.convocatoria)).length;
+/* Los ejercicios de varios apartados de una colección (convocatoria `hoja`) no
+   son convocatorias: se cuentan y se enlazan en la colección. */
+const numExamenes = examenesDeAqui.filter((e) => !esPropia(e.data.convocatoria) && e.data.convocatoria !== 'hoja').length;
+const conColeccion = (await getEntry('coleccion', id)) !== undefined;
 /* Los simulacros nuestros (fase H3): no son convocatorias, así que no van en
    la lista de exámenes, y se enlazan aquí, cada uno con su título. */
 const simulacros = examenesDeAqui
@@ -83,6 +87,10 @@ const conCuestiones = new Map(
 );
 const cuestionesPropias = bancosDePractica.some((b) => b.data.propio);
 const cuestionesDeDiapositivas = bancosDePractica.some((b) => !b.data.propio);
+
+/* La hoja de criterios de corrección, si la asignatura la tiene (fase K): hoy
+   solo Expresión Gráfica. Va en su propia sección, debajo de cómo se aprueba. */
+const conCriterios = (await getEntry('criterios', id)) !== undefined;
 
 const modalidades = a.evaluacion?.modalidades ?? [];
 const notasHtml = await Promise.all(modalidades.map((m) => (m.nota ? mate(m.nota, `nota-${id}`) : null)));
@@ -126,6 +134,7 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
 
       <nav class="saltos" aria-label="En esta página">
         <a href="#como-se-aprueba">Cómo se aprueba</a>
+        {conCriterios && <a href="#como-se-corrige">Cómo se corrige</a>}
         <a href="#al-examen">Qué llevar al examen</a>
         <a href="#por-donde-empezar">Por dónde empezar</a>
       </nav>
@@ -170,6 +179,15 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
           )
         }
       </section>
+
+      {
+        conCriterios && (
+          <section id="como-se-corrige" aria-labelledby="h-corrige">
+            <h2 id="h-corrige">Cómo se corrige un ejercicio</h2>
+            <Criterios asignatura={id} />
+          </section>
+        )
+      }
 
       <section id="al-examen" aria-labelledby="h-examen">
         <h2 id="h-examen">Qué puedes llevar al examen</h2>
@@ -229,8 +247,14 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
         }
 
         {
-          (numExamenes > 0 || simulacros.length > 0 || conFormulario || conTablas || conLaboratorio || conCuestiones.size > 0) && (
+          (numExamenes > 0 || conColeccion || simulacros.length > 0 || conFormulario || conTablas || conLaboratorio || conCuestiones.size > 0) && (
             <ul class="enlaces">
+              {conColeccion && (
+                <li>
+                  <a href={ruta(`${id}/coleccion`)}>La Colección de ejercicios</a>: los ejercicios de la
+                  colección por su número, qué pide cada uno y cuáles se corrigen aquí.
+                </li>
+              )}
               {numExamenes > 0 && (
                 <li>
                   <a href={ruta(`${id}/examenes`)}>Los exámenes</a>: {numExamenes} convocatorias, con su

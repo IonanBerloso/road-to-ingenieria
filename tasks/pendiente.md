@@ -48,14 +48,19 @@ sabía:
   tablas ISO —lo va a preguntar; la nota general de la UPV/EHU
   (`Nota_sobre_la_evaluacin_de_pruebas_acadmicas.pdf`, pág. 2) prohíbe libros
   y apuntes salvo indicación expresa—; si el diédrico se examina con la
-  figura a escala o por coordenadas; y el PDF de la rúbrica de láminas, que
-  en la carpeta es solo el enlace de eGela.
+  figura a escala o por coordenadas; y si la Colección de ejercicios de
+  2026-27 es la misma que la de 2025-26, que es la que se ha transcrito (la
+  carpeta de eGela de este curso, añadida el 1 de octubre de 2026, no la
+  trae). La rúbrica de láminas ya está: viene en esa carpeta.
 - **Expresión Gráfica, la hoja de *Criterios*** (`src/content/criterios/`),
   tres cosas que no dice: si en el precio compuesto de la escala el medio
   punto del cajetín se cobra una vez o por pieza (se ha supuesto una vez:
   dos piezas, −1,5; por pieza serían −2); si un error muy grave repetido —dos
   ejes cortados a lo largo— cuesta −2 una vez o por caso; y si los dos muy
-  graves de la escala que se solapan se suman.
+  graves de la escala que se solapan se suman. Y una cuarta, que el componente
+  de la página supone: si un mínimo cuyo elemento no tiene la pieza (la rosca,
+  en una pieza sin roscas) cuenta como cumplido, como dice el del eje, «si lo
+  tiene».
 - **Sistemas**: si el examen da las hojas del catálogo Sandvik o los valores
   de corte en el enunciado.
 - **Materiales**: una copia limpia de las preguntas guía, porque el fichero
@@ -80,9 +85,6 @@ sabía:
   `sd1-ejemplo.yaml`). Su fase 1 está hecha: el paso `construir`, el
   `Taller`, SD1, SD4 y SD5 en el tema 2, y el patrón en §05. Lo que sigue es
   la fase K: las familias A, B y C enteras, en el orden de la colección.
-- **Los criterios de corrección del profesor como datos**
-  (`Criterios_para_la_correcin_de_ejercicios_y_exmenes.pdf`): mínimos, errores
-  muy graves a −2 y típicos con su precio. Los usan el bloque 2 y las rúbricas.
 - **El material**: 51 ficheros, con colección resuelta y criterios de
   corrección; sin exámenes. Los dos de notas no se abren (CLAUDE.md, «Antes de
   nada»).

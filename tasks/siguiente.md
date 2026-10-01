@@ -37,6 +37,26 @@ septiembre de 2026. Lo siguiente es K, con lo que dice el encargo:
    `calcular` y µm; t10 con `calcular` de tipo `conjunto`; t07 y t11 con
    `reconocer`.
 
+**Cambio de orden, 1 de octubre de 2026.** La auditoría de la Colección de
+ejercicios (`auditorias/2026-10-01/coleccion-de-ejercicios.md`, fuera del
+repositorio) y un dato de Ionan: el examen de la primera evaluación es sobre
+los ejercicios de la colección, y la presentación de 2026-27 dice que el
+bloque 1 se libera en noviembre. Lo que queda de K va en este orden:
+
+1. La página de la Colección de ejercicios, con los 55 por su número. Las
+   «hojas 52–55» son los Ejercicios 52 a 55 de la colección (solo el 54 se
+   titula examen), y así se rotulan.
+2. Publicar lo hecho: los *Criterios* en la ficha, los lotes de funciones, el
+   Ejercicio 55, y terminar el 53 y el 54.
+3. El tema 3 entero (cambios de plano, giros y abatimientos), con sus 14
+   ejercicios de la colección.
+4. Los temas 6 y 5, con el Ejercicio 52.
+5. El `Taller` con aristas vistas y ocultas, y el tema 4.
+6. Lo que falta del tema 2, y el tema 1.
+7. Lo que queda del bloque 2, después de noviembre: su control es en abril.
+
+Dos agentes a la vez como máximo (Ionan, 1 de octubre).
+
 Después, la deuda de `pendiente.md` (Térmica, contar apartados; lo que queda
 de la colección de T9 y T10; lo que dejó abierto la fase I) y repetir la
 auditoría.

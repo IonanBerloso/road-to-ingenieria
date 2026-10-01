@@ -23,6 +23,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 import { describe, expect, it } from 'vitest';
+import { descuentoDe } from '../src/lib/criterios';
 
 type ParteDePrecio = { precio: number; donde: 'pieza' | 'cajetin' };
 type Minimo = { id: string; bloque: 'vistas' | 'acotacion' | 'tolerancias'; texto: string; donde: string };
@@ -152,9 +153,8 @@ describe('la hoja de Expresión Gráfica', () => {
   });
 
   it('con la lectura del plan (§3.3), que la hoja no confirma —la parte del cajetín se cobra una vez—: dos piezas y el cajetín, −1,5; cinco piezas, −2', () => {
-    /* La cuenta que hará el componente de los Criterios (PLAN-K, §3.3),
-       escrita aquí solo para comprobar que los datos bastan para hacerla.
-       Cuando exista su función en lib/, este caso la usa a ella.
+    /* La cuenta del componente de los Criterios, la de `lib/criterios.ts`; sus
+       demás casos están en tests/criterios-cuenta.test.ts.
 
        Es una lectura, no lo que dice la hoja: «[si falta en la pieza -0,5] +
        [si falta en el cajetín -0,5], como máximo -2 aunque se produzca en más
@@ -162,11 +162,7 @@ describe('la hoja de Expresión Gráfica', () => {
        puede costar −0,5 + −0,5, dos piezas dan −2 y no −1,5. Está pendiente
        de preguntar (tasks/pendiente.md; §13, caso 5). */
     const escala = eg!.hoja.tipicos.find((t) => t.id === 'escala-de-una-pieza')!;
-    const partes = escala.precio as ParteDePrecio[];
-    const descuento = (piezas: number, cajetin: boolean) => {
-      const suma = partes.reduce((s, p) => s + (p.donde === 'pieza' ? piezas * p.precio : cajetin ? p.precio : 0), 0);
-      return Math.max(suma, escala.tope!);
-    };
+    const descuento = (piezas: number, cajetin: boolean) => descuentoDe(escala, { piezas, cajetin }, 5).descuento;
     expect(descuento(2, true)).toBe(-1.5);
     expect(descuento(5, true)).toBe(-2);
     expect(descuento(1, false)).toBe(-0.5);

@@ -297,6 +297,17 @@ src/
                            existen. No transcribe el guion ni reparte
                            ningún fichero: lo nombra, lo resume y enlaza el
                            apartado donde está explicado (§08)
+    coleccion/             la Colección de ejercicios de una asignatura
+                           como DATOS, en el orden de su PDF: hoy los 55
+                           de diédrico de Expresión Gráfica, cada uno con
+                           su número, su lámina y su página. La página
+                           [asignatura]/coleccion calcula cuáles se
+                           corrigen aquí desde los ejercicios que existen
+    criterios/             la hoja de criterios de corrección de una
+                           asignatura como DATOS, tal cual impresa:
+                           mínimos, errores muy graves y típicos con su
+                           precio y su tope. Hoy, Expresión Gráfica. La
+                           pinta ui/Criterios, nunca una paráfrasis
     banco/                 bancos de preguntas de test (§05): el de mínimos
                            de Materiales, que alimenta un simulacro; las
                            cuestiones de las diapositivas de Cálculo, uno
@@ -322,7 +333,9 @@ src/
                            .astro. El de test y el de cuestiones leen su
                            banco de content/banco
     ui/                    Cabecera · Tema · BloqueDeEjercicios · Armazon ·
-                           Seguir · Examen · Reparto · QueNotaNecesito
+                           Seguir · Examen · Reparto · QueNotaNecesito ·
+                           Criterios (la hoja de corrección con su cuenta,
+                           en la página de la asignatura y en el despiece)
   layouts/
     Base.astro             el ÚNICO layout
   lib/
@@ -363,6 +376,10 @@ src/
     nota.ts · estado.ts    la cuenta de «¿qué nota necesito?», con su
                            prueba, y los estados de una asignatura en las
                            palabras de la pizarra
+    criterios.ts           la cuenta de los criterios de corrección: si
+                           una lámina se corrige y cuánto se le quita,
+                           con sus topes y las lecturas que la hoja no
+                           confirma (tests/criterios-cuenta.test.ts)
     banco.ts · banco-texto.ts
                            un banco de test con sus textos ya dibujados,
                            para los dos componentes que los leen, y sus

@@ -1,0 +1,457 @@
+---
+/**
+ * Los criterios de corrección de una asignatura, en la página (fase K, PLAN-K
+ * §3.3): la hoja entera, con una casilla por mínimo y un contador por error,
+ * y si la lámina se corregiría y cuánto se le quitaría. Va en la página de la
+ * asignatura («Cómo se corrige») y en el tema del despiece.
+ *
+ * La prueba de utilidad de §13 está en la cabecera de `lib/criterios.ts`, que
+ * es donde viven las cuentas; aquí solo se pintan. Los textos salen de
+ * `src/content/criterios/<asignatura>.yaml` tal cual, sin parafrasear: son la
+ * hoja impresa, y escribirlos aquí otra vez sería tenerlos dos veces.
+ *
+ * Lo que la hoja no dice y aquí se supone (cuatro lecturas, pendientes de
+ * preguntar en `tasks/pendiente.md`) se avisa donde se marca, no al pie: quien
+ * cuenta errores lo tiene que leer antes de contar. El resultado, además,
+ * queda en una línea fija al pie de la pantalla mientras se cuenta: la hoja
+ * entera son unas cinco pantallas de móvil, y el detalle está al final.
+ */
+import { getEntry } from 'astro:content';
+import { ruta } from '../../lib/rutas';
+import { formaDe, type Fallo, type HojaDeCriterios } from '../../lib/criterios';
+
+interface Props {
+  asignatura: string;
+  /** Único en la página, para los `id` de los controles. */
+  prefijo?: string;
+}
+
+const { asignatura, prefijo = 'crit' } = Astro.props;
+const entrada = await getEntry('criterios', asignatura);
+if (!entrada) throw new Error(`Criterios: no hay hoja de criterios para «${asignatura}» en src/content/criterios/`);
+const hoja = entrada.data;
+const catalogo = await getEntry('catalogo', asignatura);
+if (!catalogo) throw new Error(`Criterios: «${asignatura}» no está en el catálogo`);
+
+/** Los temas con página, para enlazar el `donde` de cada criterio: un tema
+ *  sin hacer no se construye, y su enlace daría 404. */
+const conPagina = new Set(catalogo.data.temas.filter((t) => t.hecho).map((t) => t.id));
+const donde = (id: string) =>
+  conPagina.has(id) ? { href: ruta(`${asignatura}/${id}`), texto: `tema ${Number(id.slice(1, 3))}` } : null;
+
+/** Lo más que deja contar el despiece: uno de examen tiene dos o tres piezas,
+ *  y el polipasto de la colección, seis que se dibujan. */
+const MAX_PIEZAS = 8;
+const piezas = Array.from({ length: MAX_PIEZAS }, (_, i) => i + 1);
+
+const bloques = (['vistas', 'acotacion', 'tolerancias'] as const).map((b) => ({
+  rotulo: hoja.rotulos.bloques[b],
+  minimos: hoja.minimos.filter((m) => m.bloque === b),
+}));
+
+const fallo = (e: Fallo) => ({ e, forma: formaDe(e), donde: donde(e.donde), porPieza: 'por' in e && e.por === 'pieza' });
+const grupos = [
+  {
+    rotulo: hoja.rotulos.muyGraves,
+    fallos: hoja.muyGraves.map(fallo),
+    aviso: 'Cada uno se cobra una vez aunque se repita, salvo el que dice «por pieza»: la hoja no dice que se repitan.',
+  },
+  { rotulo: hoja.rotulos.tipicos, fallos: hoja.tipicos.map(fallo), aviso: null },
+];
+/* Los dos muy graves de la escala que se solapan: el aviso va debajo del
+   segundo. Si algún día la hoja cambia y no están, el aviso no sale. */
+const SOLAPADOS = ['acotar-o-dibujar-sin-escala', 'dibujar-sin-escala-por-pieza'];
+const conSolape = SOLAPADOS.every((id) => hoja.muyGraves.some((e) => e.id === id));
+const conEscalaEnCajetin = hoja.muyGraves.some((e) => e.id === 'escala-en-el-cajetin');
+
+const datos = JSON.stringify({ minimos: hoja.minimos, muyGraves: hoja.muyGraves, tipicos: hoja.tipicos } satisfies HojaDeCriterios);
+---
+
+<div class="crit" data-crit={datos} data-max-piezas={MAX_PIEZAS}>
+  <p class="rotulo rotulo--live crit-t">¿Se corregiría tu lámina?</p>
+  <p class="crit-como">
+    Repasa tu lámina contra la hoja de criterios de la asignatura: marca los mínimos que cumple y
+    cuenta los errores. Te digo si se corregiría y cuánto te quitarían, en la línea fija de abajo y, con
+    el detalle, al final de la hoja.
+  </p>
+  <blockquote class="crit-entradilla">{hoja.entradilla}</blockquote>
+
+  <fieldset class="crit-g">
+    <legend>{hoja.rotulos.minimos}</legend>
+    <p class="crit-aviso">
+      Si tu pieza no tiene el elemento de un mínimo (una rosca, por ejemplo), márcalo como cumplido: la
+      hoja lo dice así en el del eje, «si lo tiene», y aquí se lee igual en los demás.
+    </p>
+    {
+      bloques.map((b) => (
+        <div class="crit-bloque">
+          <p class="crit-b">{b.rotulo}</p>
+          {b.minimos.map((m) => {
+            const d = donde(m.donde);
+            return (
+              <div class="crit-linea">
+                <label class="crit-m" for={`${prefijo}-m-${m.id}`}>
+                  <input id={`${prefijo}-m-${m.id}`} type="checkbox" data-minimo={m.id} />
+                  <span class="crit-x">{m.texto}</span>
+                </label>
+                {d && <a class="crit-donde" href={d.href}>{d.texto}</a>}
+              </div>
+            );
+          })}
+        </div>
+      ))
+    }
+    <p class="crit-regla">{hoja.rotulos.siSeCumplen}</p>
+  </fieldset>
+
+  <label class="crit-piezas" for={`${prefijo}-piezas`}>
+    <span>Piezas que dibujas en el despiece</span>
+    <input id={`${prefijo}-piezas`} type="text" inputmode="numeric" autocomplete="off" value="1" data-piezas />
+  </label>
+
+  {
+    grupos.map((g) => (
+      <fieldset class="crit-g">
+        <legend>{g.rotulo}</legend>
+        {g.aviso && <p class="crit-aviso">{g.aviso}</p>}
+        {g.fallos.map(({ e, forma, donde: d, porPieza }) => {
+          const base = `${prefijo}-${e.id}`;
+          const enlace = d && <a class="crit-donde" href={d.href}>{d.texto}</a>;
+          const texto = <span class="crit-x" id={`${base}-t`}>{e.texto}</span>;
+          return (
+            <div class="crit-e">
+              {forma === 'una-vez' && (
+                <div class="crit-linea">
+                  <label class="crit-m" for={base}>
+                    <input id={base} type="checkbox" data-error={e.id} />
+                    {texto}
+                  </label>
+                  {enlace}
+                </div>
+              )}
+              {forma === 'veces' && (
+                <div role="group" aria-labelledby={`${base}-t`} class="crit-fila">
+                  <span class="crit-x-con">{texto} {enlace}</span>
+                  <label class="crit-n" for={base}>
+                    <span>{porPieza ? 'En cuántas piezas' : 'Cuántas veces'}</span>
+                    <input id={base} type="text" inputmode="numeric" autocomplete="off" placeholder="0" data-error={e.id} />
+                  </label>
+                </div>
+              )}
+              {forma === 'por-pieza' && (
+                <div role="group" aria-labelledby={`${base}-t`}>
+                  <span class="crit-x-con">{texto} {enlace}</span>
+                  <div class="crit-pp">
+                    {piezas.map((i) => (
+                      <label class="crit-n" for={`${base}-${i}`} data-pieza={i} hidden={i > 1}>
+                        <span>Pieza {i}</span>
+                        <input
+                          id={`${base}-${i}`}
+                          type="text"
+                          inputmode="numeric"
+                          autocomplete="off"
+                          placeholder="0"
+                          data-error={e.id}
+                          data-en-pieza={i}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {forma === 'compuesto' && (
+                <div role="group" aria-labelledby={`${base}-t`}>
+                  <span class="crit-x-con">{texto} {enlace}</span>
+                  <div class="crit-pp">
+                    <label class="crit-n" for={`${base}-piezas`}>
+                      <span>En cuántas piezas falta</span>
+                      <input
+                        id={`${base}-piezas`}
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        placeholder="0"
+                        data-error={e.id}
+                        data-parte="piezas"
+                      />
+                    </label>
+                    <label class="crit-m crit-caj" for={`${base}-cajetin`}>
+                      <input id={`${base}-cajetin`} type="checkbox" data-error={e.id} data-parte="cajetin" />
+                      <span>Falta en el cajetín</span>
+                    </label>
+                  </div>
+                  <p class="crit-aviso">
+                    El medio punto del cajetín se cobra aquí una vez, aunque falten las escalas de varias piezas: la
+                    hoja no lo aclara, y si se cobrara por pieza, dos piezas costarían −2 y no −1,5.
+                    {conEscalaEnCajetin &&
+                      ' Si en el cajetín no hay ninguna escala, esto se solapa con el error muy grave «No indicar la escala en el cajetín», y la hoja no dice si se suman: aquí se suma lo que marques.'}
+                  </p>
+                </div>
+              )}
+              {conSolape && e.id === SOLAPADOS[1] && (
+                <p class="crit-aviso">
+                  Esta línea y la de encima se solapan: «dibujar sin tener en cuenta la escala» está en las
+                  dos, y la hoja no dice si se suman. Aquí se suma lo que marques; si solo has dibujado sin
+                  escala, cuéntalo en esta, que es la que dice «por pieza».
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </fieldset>
+    ))
+  }
+
+  <output class="crit-r" id={`${prefijo}-detalle`}></output>
+  <p class="crit-nota">
+    Lo que la hoja no dice y aquí se supone está avisado donde se marca. Son cuatro cosas, y están
+    pendientes de preguntar a la asignatura: si responde otra cosa, se corregirá aquí.
+  </p>
+  <p class="crit-fuente">{hoja.fuente}</p>
+
+  <p class="crit-pie" aria-live="polite">
+    <span class="crit-pie-t">Marca los mínimos que cumple tu lámina.</span>
+    <a class="crit-pie-a" href={`#${prefijo}-detalle`}>el detalle</a>
+  </p>
+</div>
+
+<script>
+  import { corrige, formaDe, type Cuenta, type Fallo, type HojaDeCriterios } from '../../lib/criterios';
+
+  /** Un descuento como se escribe: signo menos de verdad y coma decimal. */
+  const puntos = (x: number) => `${x < 0 ? '−' : ''}${Math.abs(x).toLocaleString('es-ES', { maximumFractionDigits: 2 })}`;
+
+  type Trozo = string | { b: string; mal?: boolean };
+  function parrafo(...trozos: Trozo[]) {
+    const p = document.createElement('p');
+    for (const t of trozos) {
+      if (typeof t === 'string') p.append(t);
+      else {
+        const b = document.createElement('strong');
+        b.textContent = t.b;
+        if (t.mal) b.className = 'mal';
+        p.append(b);
+      }
+    }
+    return p;
+  }
+
+  for (const caja of document.querySelectorAll<HTMLElement>('.crit')) {
+    const hoja = JSON.parse(caja.dataset.crit!) as HojaDeCriterios;
+    const maxPiezas = Number(caja.dataset.maxPiezas);
+    const fallos: Fallo[] = [...hoja.muyGraves, ...hoja.tipicos];
+    const salida = caja.querySelector('output')!;
+    const pie = caja.querySelector<HTMLElement>('.crit-pie-t')!;
+    const campoPiezas = caja.querySelector<HTMLInputElement>('[data-piezas]')!;
+    const de = (id: string, extra = '') => [...caja.querySelectorAll<HTMLInputElement>(`input[data-error="${id}"]${extra}`)];
+
+    /** Un entero de `min` a `max` escrito con una o dos cifras (en blanco vale
+     *  `enBlanco`), o null si no lo es; marca el campo en rojo cuando no vale.
+     *  `Number()` daría por buenos «0x2», «+2», «2.» o «1e3». */
+    const entero = (campo: HTMLInputElement, max: number, enBlanco = 0, min = 0): number | null => {
+      const t = campo.value.trim();
+      const n = t === '' ? enBlanco : /^\d{1,2}$/.test(t) ? Number(t) : NaN;
+      const vale = Number.isInteger(n) && n >= min && n <= max;
+      if (vale) campo.removeAttribute('aria-invalid');
+      else campo.setAttribute('aria-invalid', 'true');
+      return vale ? n : null;
+    };
+
+    /** Si se ha tocado algo: sin nada marcado, la hoja aún no dice nada. */
+    const tocada = () =>
+      [...caja.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')].some((c) => c.checked) ||
+      [...caja.querySelectorAll<HTMLInputElement>('input[type="text"]')].some((c) => c !== campoPiezas && c.value.trim() !== '') ||
+      !['', '1'].includes(campoPiezas.value.trim());
+
+    const pinta = () => {
+      const piezas = entero(campoPiezas, maxPiezas, 1, 1);
+      for (const l of caja.querySelectorAll<HTMLElement>('[data-pieza]')) l.hidden = Number(l.dataset.pieza) > (piezas ?? 1);
+      if (!tocada()) {
+        pie.textContent = 'Marca los mínimos que cumple tu lámina.';
+        salida.replaceChildren();
+        return;
+      }
+
+      const n = piezas ?? maxPiezas;
+      let malas = piezas === null;
+      const errores: Record<string, Cuenta> = {};
+      for (const e of fallos) {
+        const forma = formaDe(e);
+        if (forma === 'una-vez') {
+          errores[e.id] = de(e.id)[0].checked ? 1 : 0;
+        } else if (forma === 'veces') {
+          const c = entero(de(e.id)[0], 'por' in e && e.por === 'pieza' ? n : 99);
+          if (c === null) malas = true;
+          else errores[e.id] = c;
+        } else if (forma === 'por-pieza') {
+          const cs = de(e.id, '[data-en-pieza]')
+            .filter((c) => Number(c.dataset.enPieza) <= n)
+            .map((c) => entero(c, 99));
+          if (cs.some((c) => c === null)) malas = true;
+          else errores[e.id] = cs as number[];
+        } else {
+          const c = entero(de(e.id, '[data-parte="piezas"]')[0], n);
+          if (c === null) malas = true;
+          else errores[e.id] = { piezas: c, cajetin: de(e.id, '[data-parte="cajetin"]')[0].checked };
+        }
+      }
+
+      if (malas) {
+        pie.textContent = 'Revisa lo que está en rojo.';
+        salida.replaceChildren(
+          parrafo(
+            `Revisa lo que está en rojo: las piezas van de 1 a ${maxPiezas}, cada cuenta es un número entero de una o dos cifras, y un error no puede estar en más piezas de las que dibujas.`,
+          ),
+        );
+        return;
+      }
+
+      const cumple = [...caja.querySelectorAll<HTMLInputElement>('input[data-minimo]')].filter((c) => c.checked).map((c) => c.dataset.minimo!);
+      const r = corrige(hoja, { cumple, piezas: n, errores });
+      const f = r.faltan.length;
+      const faltan = f === 1 ? 'falta un mínimo' : `faltan ${f} mínimos`;
+      pie.textContent = r.seCorrige
+        ? r.total < 0
+          ? `Se corrige, y te quitarían ${puntos(r.total)}.`
+          : 'Se corrige, y no te quitan nada.'
+        : `No se corrige: ${faltan}.`;
+
+      const lineas: HTMLElement[] = [];
+      if (r.seCorrige) lineas.push(parrafo({ b: 'Se corrige' }, ': cumple los mínimos.'));
+      else {
+        lineas.push(
+          parrafo(
+            { b: 'No se corrige', mal: true },
+            `: ${faltan} de los ${hoja.minimos.length}, ${f === 1 ? 'el que está' : 'los que están'} sin marcar.`,
+          ),
+        );
+      }
+      if (r.total < 0) {
+        lineas.push(parrafo(r.seCorrige ? 'Te quitarían ' : 'Si se corrigiera, te quitarían ', { b: puntos(r.total), mal: true }, ':'));
+        const ul = document.createElement('ul');
+        for (const l of r.lineas) {
+          const li = document.createElement('li');
+          const b = document.createElement('strong');
+          b.className = 'mal';
+          b.textContent = puntos(l.descuento);
+          li.append(b, l.topado ? ' (con su tope)' : '', ` · ${l.error.texto}`);
+          ul.append(li);
+        }
+        lineas.push(ul);
+      } else if (r.seCorrige) {
+        lineas.push(parrafo('Y por los errores de la hoja no te quitan nada.'));
+      }
+      salida.replaceChildren(...lineas);
+    };
+
+    caja.addEventListener('input', pinta);
+    /* Al volver atrás desde un tema enlazado, el navegador puede devolver las
+       casillas marcadas: se vuelve a contar. */
+    window.addEventListener('pageshow', pinta);
+    pinta();
+  }
+</script>
+
+<style>
+  .crit {
+    margin-top: 1.2rem;
+    padding: 1rem 1.1rem 0;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+
+  .crit-t { margin-bottom: .35rem; }
+  .crit-como { font-size: .9rem; color: var(--graphite); max-width: var(--measure); margin: 0 0 .7rem; }
+  .crit-entradilla {
+    margin: 0 0 1rem;
+    padding-left: .8rem;
+    border-left: 2px solid var(--rule);
+    font-size: .88rem;
+    color: var(--graphite);
+    max-width: var(--measure);
+  }
+
+  .crit-g { margin: 0 0 1rem; padding: 0; border: 0; min-width: 0; }
+  .crit-g legend { padding: 0; margin-bottom: .4rem; font-size: .95rem; font-weight: 600; color: var(--ink); }
+  .crit-bloque { margin-bottom: .5rem; }
+  .crit-b { margin: .3rem 0 .15rem; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); }
+
+  .crit-linea { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; }
+  .crit-m { display: flex; align-items: flex-start; gap: .55rem; padding: .3rem 0; cursor: pointer; flex: 1 1 14rem; min-width: 0; }
+  .crit-m input { flex: none; width: 1.05rem; height: 1.05rem; margin: .18rem 0 0; accent-color: var(--live); }
+  .crit-x { font-size: .9rem; color: var(--ink); min-width: 0; }
+  .crit-x-con { min-width: 0; }
+  .crit-donde { font-size: .78rem; font-family: var(--mono); color: var(--live); white-space: nowrap; }
+
+  .crit-e { padding: .35rem 0; border-top: 1px solid var(--grid); }
+  .crit-fila { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: .4rem .8rem; }
+  .crit-pp { display: flex; flex-wrap: wrap; gap: .4rem .7rem; margin-top: .35rem; }
+  .crit-n { display: flex; flex-direction: column; gap: .1rem; font-size: .72rem; color: var(--faint); }
+  .crit-n[hidden] { display: none; }
+  .crit-caj { align-self: flex-end; flex: 0 1 auto; }
+  .crit-caj span { font-size: .85rem; color: var(--ink); }
+
+  .crit-piezas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .4rem .8rem;
+    margin: 0 0 1rem;
+    padding: .55rem .7rem;
+    border-radius: 6px;
+    background: var(--live-soft);
+    font-size: .9rem;
+    color: var(--ink);
+  }
+
+  .crit input[type='text'] {
+    width: 4.6rem;
+    padding: .3rem .45rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-family: var(--mono);
+    font-size: .9rem;
+    text-align: right;
+  }
+
+  .crit input:focus-visible { outline: 2px solid var(--live); outline-offset: 1px; }
+  .crit input[aria-invalid='true'] { border-color: var(--flag); background: var(--flag-soft); }
+
+  .crit-regla { margin: .5rem 0 0; font-size: .85rem; color: var(--graphite); }
+  .crit-aviso { margin: .2rem 0 .4rem; font-size: .78rem; color: var(--graphite); max-width: var(--measure); }
+
+  .crit-r { display: block; margin-top: .4rem; min-height: 1.5rem; scroll-margin-top: 1rem; }
+  .crit-r :global(p) { margin: .15rem 0; font-size: .95rem; color: var(--ink); }
+  .crit-r :global(ul) { margin: .3rem 0 0; padding-left: 1.1rem; }
+  .crit-r :global(li) { margin: .2rem 0; font-size: .85rem; color: var(--graphite); }
+  .crit-r :global(strong) { font-family: var(--mono); color: var(--live); }
+  .crit-r :global(strong.mal) { color: var(--flag); }
+
+  .crit-nota,
+  .crit-fuente { margin: .8rem 0 0; font-size: .74rem; color: var(--faint); max-width: var(--measure); }
+
+  /* La línea del resultado, fija al pie de la pantalla mientras la hoja está a
+     la vista: así se ve qué pasa con la nota mientras se cuenta. */
+  .crit-pie {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .2rem .8rem;
+    margin: 1rem -1.1rem 0;
+    padding: .6rem 1.1rem;
+    border-top: 1px solid var(--rule);
+    border-radius: 0 0 8px 8px;
+    background: var(--panel);
+    font-size: .92rem;
+    color: var(--ink);
+  }
+  .crit-pie-a { font-size: .8rem; color: var(--live); }
+</style>

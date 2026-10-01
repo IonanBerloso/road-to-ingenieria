@@ -1,0 +1,283 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import { ruta } from '../../lib/rutas';
+import { sinMarcas } from '../../lib/markdown.mjs';
+import { paginaDeEjercicio } from '../../lib/ejercicios';
+import { slugExamen } from '../../content.config';
+
+/**
+ * La Colección de ejercicios de una asignatura: los 55 de diédrico de
+ * Expresión Gráfica, en el orden de su PDF (auditoría del 1 de octubre de
+ * 2026). La prueba de utilidad está en el comentario de la colección
+ * `coleccion` de content.config.ts.
+ *
+ * POR QUÉ EXISTE. La colección es lo que se entrega como láminas y sobre lo
+ * que se examina el bloque 1, y el alumno conoce cada ejercicio por su número.
+ * En el sitio, los ejercicios viven en su tema, y sin esta página no había
+ * forma de llegar a «el Ejercicio 17» sin saber de qué tema es.
+ *
+ * Qué ejercicio se corrige aquí no se escribe en ningún sitio: se calcula. Una
+ * lámina SD se corrige si algún ejercicio de tema la usa en su receta; un
+ * ejercicio de varios apartados (52 a 55), si existe su examen. Así la página
+ * no puede prometer un ejercicio que no está.
+ */
+export async function getStaticPaths() {
+  const catalogo = await getCollection('catalogo');
+  const colecciones = await getCollection('coleccion');
+  return colecciones.flatMap((c) => {
+    const asignatura = catalogo.find((a) => a.id === c.id);
+    return asignatura ? [{ params: { asignatura: asignatura.id }, props: { asignatura, coleccion: c } }] : [];
+  });
+}
+
+const { asignatura, coleccion } = Astro.props;
+const id = asignatura.id;
+const { titulo, fuente, ejercicios } = coleccion.data;
+
+/* Los ejercicios de tema que usan cada lámina, por su código en minúscula. */
+const usos = new Map<string, { titulo: string; href: string }[]>();
+for (const f of await getCollection('ejercicios')) {
+  if (!f.id.startsWith(`${id}/`) || f.id.split('/')[1] === 'examenes') continue;
+  for (const [i, e] of f.data.ejercicios.entries()) {
+    const lamina = e.receta?.lamina;
+    if (!lamina) continue;
+    usos.set(lamina, [...(usos.get(lamina) ?? []), { titulo: sinMarcas(e.titulo), href: `${ruta(paginaDeEjercicio(f.id, i))}#ej-${e.id}` }]);
+  }
+}
+/* Los ejercicios de varios apartados que ya tienen su página de examen. */
+const conExamen = new Set(
+  (await getCollection('examen'))
+    .filter((e) => e.data.asignatura === id && e.data.convocatoria === 'hoja' && e.data.hoja !== undefined)
+    .map((e) => e.data.hoja!),
+);
+
+const temaDe = new Map(asignatura.data.temas.map((t) => [t.id, t]));
+const lista = ejercicios.map((e) => {
+  const temas = e.temas.map((t) => {
+    const tema = temaDe.get(t);
+    if (!tema) throw new Error(`La colección de ${id}, ejercicio ${e.n}, nombra el tema «${t}», que no está en el catálogo.`);
+    return { texto: `tema ${Number(t.slice(1, 3))}`, titulo: tema.titulo, href: tema.hecho ? ruta(`${id}/${t}`) : null };
+  });
+  const aqui = e.codigo
+    ? (usos.get(e.codigo.toLowerCase()) ?? [])
+    : conExamen.has(e.n)
+      ? [{ titulo: `Ejercicio ${e.n}, apartado por apartado`, href: ruta(`${id}/examenes/${slugExamen(undefined, 'hoja', e.n)}`) }]
+      : [];
+  return {
+    ...e,
+    ancla: `ejercicio-${e.n}`,
+    pagina: e.paginas.length === 1 ? `pág. ${e.paginas[0]}` : `págs. ${e.paginas[0]}–${e.paginas[1]}`,
+    temas,
+    aqui,
+  };
+});
+const laminas = lista.filter((e) => e.codigo);
+const hojas = lista.filter((e) => !e.codigo);
+const corregidos = lista.filter((e) => e.aqui.length > 0).length;
+const crumb = `${asignatura.data.nombre} · colección de ejercicios`;
+---
+
+<Base
+  titulo={`${titulo} — ${asignatura.data.nombre}`}
+  descripcion={`Los ${lista.length} ejercicios de la colección de diédrico de ${asignatura.data.nombre}, por su número: qué pide cada uno, en qué tema está y cuáles se corrigen aquí.`}
+  acento={asignatura.data.acento}
+>
+  <Cabecera crumb={crumb} />
+
+  <main id="principal">
+    <div class="envoltorio">
+      <p class="rotulo rotulo--live eyebrow">{asignatura.data.nombre}</p>
+      <h1>{titulo}</h1>
+      <p class="lede">
+        Los {lista.length} ejercicios de la colección de diédrico, en el orden del PDF: del 1 al {laminas.length}, uno
+        por lámina; del {hojas[0]?.n} al {hojas.at(-1)?.n}, hojas de varios apartados. Es lo que se entrega como láminas y
+        sobre lo que se examina el bloque 1. <strong>{corregidos} de {lista.length}</strong> se corrigen ya aquí, paso a
+        paso; de los demás se dice en qué tema están explicados.
+      </p>
+
+      <form class="ir" role="search" aria-label="Ir a un ejercicio de la colección">
+        <label for="ir-n">Ir al ejercicio</label>
+        <input id="ir-n" type="text" autocomplete="off" placeholder="17 o SD22" />
+        <button type="submit">Ir</button>
+        <output class="ir-aviso" aria-live="polite"></output>
+      </form>
+
+      {
+        [
+          { rotulo: 'Una lámina por ejercicio', items: laminas },
+          { rotulo: 'Hojas de varios apartados', items: hojas },
+        ].map((g) => (
+          <section class="col-grupo">
+            <h2>{g.rotulo}</h2>
+            <ol class="col-lista">
+              {g.items.map((e) => (
+                <li class="col" id={e.ancla} tabindex="-1" data-n={e.n} data-codigo={e.codigo ?? ''}>
+                  <p class="col-num">
+                    <span class="col-n">{e.n}</span>
+                    {e.codigo && <span class="col-sd">{e.codigo}</span>}
+                  </p>
+                  <div class="col-cuerpo">
+                    <p class="col-pide">
+                      {e.pide}
+                      {e.titulado && <span class="col-titulado"> El PDF lo titula «{e.titulado}».</span>}
+                    </p>
+                    <p class="col-meta">
+                      <span>{e.pagina}</span>
+                      {e.temas.map((t) => (
+                        <span>
+                          {' · '}
+                          {t.href ? <a href={t.href} title={t.titulo}>{t.texto}</a> : <span title={t.titulo}>{t.texto}</span>}
+                        </span>
+                      ))}
+                    </p>
+                    {e.aqui.length > 0 ? (
+                      e.aqui.map((u) => (
+                        <a class="col-aqui" href={u.href}>
+                          <span class="rotulo">se corrige aquí</span>
+                          <span>{u.titulo}</span>
+                        </a>
+                      ))
+                    ) : (
+                      <p class="col-todavia">Todavía no se corrige aquí.</p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
+      }
+
+      <p class="fuente rotulo">De dónde sale</p>
+      <p class="fuente-cuerpo">
+        {fuente} El número y la lámina de cada ejercicio son los del PDF; la línea de qué pide es nuestra, y el enunciado
+        entero está en el ejercicio, cuando ya se corrige aquí.
+      </p>
+    </div>
+  </main>
+</Base>
+
+<script>
+  /* Ir a un ejercicio por su número («17») o por su lámina («SD22»). */
+  for (const form of document.querySelectorAll<HTMLFormElement>('form.ir')) {
+    const campo = form.querySelector('input')!;
+    const aviso = form.querySelector('output')!;
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const t = campo.value.trim().toUpperCase().replace(/\s+/g, '');
+      const destino = /^SD\d+$/.test(t)
+        ? document.querySelector<HTMLElement>(`.col[data-codigo="${t}"]`)
+        : /^\d+$/.test(t)
+          ? document.querySelector<HTMLElement>(`.col[data-n="${Number(t)}"]`)
+          : null;
+      if (!destino) {
+        aviso.textContent = t ? `No hay ningún ejercicio «${campo.value.trim()}» en la colección.` : '';
+        return;
+      }
+      aviso.textContent = '';
+      history.replaceState(null, '', `#${destino.id}`);
+      destino.scrollIntoView({ block: 'start' });
+      destino.focus({ preventScroll: true });
+    });
+  }
+</script>
+
+<style>
+  .envoltorio {
+    max-width: 58rem;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 6rem;
+  }
+
+  .eyebrow { margin-bottom: .2rem; }
+  h1 { max-width: var(--measure); }
+  .lede { max-width: 62ch; margin: .6rem 0 1.4rem; }
+
+  .ir {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem .7rem;
+    margin: 0 0 2.2rem;
+    padding: .6rem .8rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--panel);
+  }
+  .ir label { font-size: .92rem; color: var(--ink); }
+  .ir input {
+    width: 7.5rem;
+    padding: .35rem .5rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-family: var(--mono);
+  }
+  .ir button {
+    padding: .35rem .8rem;
+    border: 1px solid var(--live);
+    border-radius: 4px;
+    background: var(--live);
+    color: var(--paper);
+    font: inherit;
+    font-size: .9rem;
+    cursor: pointer;
+  }
+  .ir input:focus-visible, .ir button:focus-visible { outline: 2px solid var(--live); outline-offset: 2px; }
+  .ir-aviso { flex-basis: 100%; font-size: .85rem; color: var(--flag); }
+  .ir-aviso:empty { display: none; }
+
+  .col-grupo + .col-grupo { margin-top: 2.6rem; }
+  .col-grupo h2 { font-size: 1.25rem; margin: 0 0 .9rem; }
+
+  .col-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+
+  .col {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    gap: .2rem .9rem;
+    padding: .85rem 0;
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: 1rem;
+  }
+  .col:target, .col:focus-visible { background: var(--live-soft); }
+
+  .col-num { margin: 0; display: flex; flex-direction: column; align-items: flex-start; }
+  .col-n { font-family: var(--mono); font-size: 1.35rem; font-weight: 600; line-height: 1.1; color: var(--ink); }
+  .col-sd { font-family: var(--mono); font-size: .72rem; color: var(--faint); }
+
+  .col-cuerpo { min-width: 0; }
+  .col-pide { margin: 0; font-size: .97rem; color: var(--ink); max-width: var(--measure); }
+  .col-titulado { color: var(--graphite); }
+  .col-meta { margin: .2rem 0 0; font-size: .8rem; font-family: var(--mono); color: var(--faint); }
+  .col-meta a { color: var(--live); }
+
+  .col-aqui {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .2rem .6rem;
+    margin: .5rem .5rem 0 0;
+    padding: .35rem .6rem;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: .9rem;
+  }
+  .col-aqui:hover { border-color: var(--live); }
+  .col-aqui .rotulo { color: var(--live); }
+  .col-todavia { margin: .4rem 0 0; font-size: .85rem; color: var(--faint); }
+
+  .fuente { margin: 2.6rem 0 .3rem; }
+  .fuente-cuerpo { font-size: .86rem; color: var(--graphite); max-width: var(--measure); }
+
+  @media (max-width: 30rem) {
+    .envoltorio { padding-inline: .9rem; }
+    .col { grid-template-columns: 2.6rem minmax(0, 1fr); gap: .2rem .6rem; }
+  }
+</style>

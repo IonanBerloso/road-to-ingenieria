@@ -1243,17 +1243,20 @@ export const CONVOCATORIAS = {
    *  del profesor. No cuenta en la medida de ninguna ruta: una ruta mide las
    *  convocatorias de su evaluación, y esta no es de ninguna. */
   modelo: { url: 'modelo', corta: 'modelo', boton: 'Modelo', larga: 'modelo de examen' },
-  /** Una hoja de examen sin fecha ni curso. Entra el 1 de octubre de 2026 con
-   *  las hojas 52-55 de la colección de Expresión Gráfica, que son exámenes
-   *  de verdad —la 54 se titula «Azterketa / Examen»— y no dicen de qué año
-   *  son. No es un simulacro (`esPropia`) ni un modelo: son las únicas
-   *  preguntas de examen del bloque 1 que hay. Su carpeta es `hoja-55`, no
-   *  `<curso>-hoja` (`slugExamen`). Prueba de utilidad (§13): para el alumno
+  /** Un ejercicio de varios apartados de la Colección de ejercicios, sin
+   *  fecha ni curso. Entra el 1 de octubre de 2026 con los Ejercicios 52 a 55
+   *  de la colección de Expresión Gráfica: hojas bilingües con el formato de
+   *  un examen, de las que solo la 54 se titula «Azterketa / Examen», y que no
+   *  dicen de qué año son. No es un simulacro (`esPropia`) ni un modelo: son
+   *  las únicas preguntas con formato de examen del bloque 1 que hay. La
+   *  clave interna sigue siendo `hoja`, pero lo que se ve dice «Ejercicio 55 ·
+   *  Colección de ejercicios» (auditoría del 1 de octubre de 2026), y su
+   *  carpeta es `ejercicio-55`, no `<curso>-hoja` (`slugExamen`). Prueba de utilidad (§13): para el alumno
    *  del bloque 1, cuando prepara el control de diédrico; gana trece
    *  preguntas de examen con corrección paso a paso; se comprueba en que las
    *  cuatro hojas construyen y salen en el índice con «sin fecha», y un examen
    *  con curso sigue exigiéndolo. */
-  hoja: { url: 'hoja', corta: 'hoja', boton: 'Hoja de examen', larga: 'hoja de examen sin fecha' },
+  hoja: { url: 'hoja', corta: 'colección', boton: 'Ejercicio de la colección', larga: 'ejercicio de la Colección de ejercicios, sin fecha' },
   /** Los simulacros NUESTROS: no son convocatorias, los montamos nosotros con
    *  ejercicios de tema ya publicados. Entran el 29 de septiembre de 2026 con
    *  Ciencia de Materiales (fase H3), que no tiene un solo examen de teoría y
@@ -1652,7 +1655,7 @@ export const SUFIJO_CONV: Record<string, string> = Object.fromEntries(
  *  casan: estaba escrito contra una copia de la fórmula que quería vigilar,
  *  así que un cambio en la plantilla se le habría colado sin protestar. */
 export const slugExamen = (curso: string | undefined, convocatoria: string, hoja?: number): string =>
-  convocatoria === 'hoja' ? `hoja-${hoja}` : `${curso}-${SUFIJO_CONV[convocatoria]}`;
+  convocatoria === 'hoja' ? `ejercicio-${hoja}` : `${curso}-${SUFIJO_CONV[convocatoria]}`;
 
 /** El curso tal como se enseña: «2024-2025», o «sin fecha» en una hoja. */
 export const cursoDe = (curso: string | undefined): string => curso ?? 'sin fecha';
@@ -2569,6 +2572,10 @@ const esquemaCriterios = z
     rotulos: z
       .object({
         minimos: textoImpreso,
+        /** Los tres apartados de los mínimos, tal cual: «Vistas:»… */
+        bloques: z
+          .object({ vistas: z.string().min(3), acotacion: z.string().min(3), tolerancias: z.string().min(3) })
+          .strict(),
         siSeCumplen: textoImpreso,
         muyGraves: textoImpreso,
         tipicos: textoImpreso,
@@ -2592,6 +2599,61 @@ const criterios = defineCollection({
   schema: esquemaCriterios,
 });
 
+/** La Colección de ejercicios de una asignatura como DATOS, en el orden de su
+ *  PDF (auditoría del 1 de octubre de 2026): hoy, la de diédrico de Expresión
+ *  Gráfica, con sus 55 ejercicios. Es lo que se entrega como láminas y sobre
+ *  lo que se examina el bloque 1, y el alumno conoce cada ejercicio por su
+ *  número («Ejercicio 17», o su lámina, SD22).
+ *
+ *  Prueba de utilidad (§13):
+ *  - **Para quién:** el alumno del bloque 1 de Expresión Gráfica.
+ *  - **Cuándo:** con la lámina de la semana delante, y antes del examen del
+ *    bloque, que se libera en noviembre.
+ *  - **Qué gana:** encontrar el ejercicio por su número y saber si aquí se
+ *    corrige, dónde, y en qué tema está explicado.
+ *  - **Cómo se comprueba:** `tests/coleccion.test.ts`: los 55 seguidos, cada
+ *    lámina publicada con su número y su página, y cada tema en el catálogo.
+ *
+ *  Si un ejercicio se corrige en el sitio no se escribe aquí: la página lo
+ *  calcula desde los ejercicios y los exámenes que existen (Regla 0). */
+const ejercicioDeColeccion = z
+  .object({
+    /** El número que imprime el PDF: «EJERCICIO 17». */
+    n: z.number().int().min(1),
+    /** El código de la lámina, «(SD22)». Los Ejercicios 52 a 55 no tienen. */
+    codigo: z.string().regex(/^SD\d+$/, 'el código de la lámina, como SD22').optional(),
+    /** La página del PDF, o la primera y la última si son varias. */
+    paginas: z.array(z.number().int().min(1)).min(1).max(2),
+    /** Una línea nuestra que resume el enunciado, para encontrarlo. */
+    pide: z.string().min(20).max(160),
+    temas: z.array(temaDelCatalogo).min(1),
+    /** Lo que el PDF dice que es, si no es un ejercicio más: «Examen». */
+    titulado: z.literal('Examen').optional(),
+  })
+  .strict()
+  .refine((e) => e.paginas.length === 1 || e.paginas[1] > e.paginas[0], { message: 'la última página va después de la primera' });
+
+const esquemaColeccion = z
+  .object({
+    titulo: z.string().min(5),
+    /** De dónde sale, por su título y su departamento: sin nombres de persona. */
+    fuente: z.string().min(40),
+    ejercicios: z.array(ejercicioDeColeccion).min(1),
+  })
+  .strict()
+  .superRefine((d, ctx) => {
+    d.ejercicios.forEach((e, i) => {
+      if (e.n !== i + 1) ctx.addIssue({ code: 'custom', message: `el ejercicio ${i + 1} dice ser el ${e.n}: van seguidos desde el 1` });
+    });
+    const codigos = d.ejercicios.flatMap((e) => (e.codigo ? [e.codigo] : []));
+    if (new Set(codigos).size !== codigos.length) ctx.addIssue({ code: 'custom', message: 'dos ejercicios con la misma lámina' });
+  });
+
+const coleccion = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/coleccion' }),
+  schema: esquemaColeccion,
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -2604,4 +2666,5 @@ export const collections = {
   rubricas,
   tablas,
   criterios,
+  coleccion,
 };
