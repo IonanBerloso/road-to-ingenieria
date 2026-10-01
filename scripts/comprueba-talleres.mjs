@@ -49,13 +49,18 @@ function paginasConTaller(dir = DIST) {
 }
 
 const fallos = [];
+/** Lo que no falla pero se dice: objetivos de una lámina densa creados por la
+ *  puerta de pruebas del Taller. */
+const avisos = [];
 const ok = (m) => console.log(`  ✓ ${m}`);
 const mal = (m) => {
   fallos.push(m);
   console.log(`  ✗ ${m}`);
 };
 
-const paginas = paginasConTaller();
+/* `TALLERES_SOLO=ejercicio-54 npm run talleres` prueba solo las páginas cuya
+   ruta contiene eso: para mirar un fallo sin esperar a todas. */
+const paginas = paginasConTaller().filter((r) => !process.env.TALLERES_SOLO || r.includes(process.env.TALLERES_SOLO));
 if (paginas.length === 0) {
   console.log('No hay ningún taller publicado: nada que comprobar.');
   process.exit(0);
@@ -99,9 +104,13 @@ try {
           const taller = pagina.locator('[data-taller]').nth(t);
           const quien = `${ruta} · taller ${t + 1}`;
           const antes = await taller.locator('[data-capa="solucion"] > *').count();
-          await taller.locator('xpath=ancestor::section[@data-ejercicio][1]').locator('[data-modo="completo"]').click();
+          const boton = taller.locator('xpath=ancestor::section[@data-ejercicio][1]').locator('[data-modo="completo"]');
+          /* Con dos talleres en el mismo ejercicio, el botón ya se pulsó para
+             el primero y dibujó los dos. */
+          const yaPulsado = (await boton.getAttribute('aria-pressed')) === 'true';
+          if (!yaPulsado) await boton.click();
           const despues = await taller.locator('[data-capa="solucion"] > *').count();
-          if (antes === 0 && despues > 0) ok(`${quien}: el modo completo dibuja la solución`);
+          if ((antes === 0 || yaPulsado) && despues > 0) ok(`${quien}: el modo completo dibuja la solución`);
           else mal(`${quien}: el modo completo no dibuja la solución (antes ${antes}, después ${despues})`);
         }
 
@@ -115,6 +124,8 @@ try {
   para();
 }
 
+const unicos = [...new Set(avisos)];
+if (unicos.length) console.log(`\n${unicos.length} aviso(s), que no bloquean:\n  · ${unicos.join('\n  · ')}`);
 console.log(fallos.length ? `\n${fallos.length} fallos en los talleres.` : '\nTalleres: en verde.');
 process.exit(fallos.length ? 1 : 0);
 
@@ -126,8 +137,17 @@ process.exit(fallos.length ? 1 : 0);
  *  esperaba treinta segundos a un botón que ya no existe y tumbaba el suelo. */
 async function abre(pagina, ruta) {
   await pagina.goto(`${origen}/${ruta}/`, { waitUntil: 'load' });
-  const pestana = pagina.locator('[data-pestana="ejercicios"]');
-  if (await pestana.count()) await pestana.first().click();
+  /* Desde el 1 de octubre de 2026 también hay talleres en las páginas de
+     examen —los ejercicios de varios apartados de la colección de Expresión
+     Gráfica—, y ahí los ejercicios van en la pestaña de resoluciones: sin
+     abrirla, ningún botón se ve y cada clic espera treinta segundos. */
+  for (const nombre of ['ejercicios', 'resoluciones']) {
+    const pestana = pagina.locator(`[data-pestana="${nombre}"]`);
+    if (await pestana.count()) {
+      await pestana.first().click();
+      break;
+    }
+  }
 }
 
 /** Resuelve, como un alumno, los pasos de antes del taller. Solo sabe de
@@ -135,6 +155,10 @@ async function abre(pagina, ruta) {
 async function llegaAlPaso(ejercicio, indice) {
   const datos = JSON.parse(await ejercicio.locator('[data-datos]').textContent());
   for (let i = 0; i < indice; i++) {
+    /* Un ejercicio con dos talleres (los de varios apartados de la colección
+       de Expresión Gráfica, 1 de octubre de 2026): el primero ya se ha
+       construido entero antes de llegar al segundo, y su paso está resuelto. */
+    if ((await ejercicio.locator(`li[data-paso="${i}"]`).getAttribute('class'))?.includes('resuelto')) continue;
     if (datos[i].tipo !== 'reconocer') {
       throw new Error(`el paso ${i + 1}, de tipo ${datos[i].tipo}, va antes del taller y el comprobador no sabe resolverlo`);
     }
@@ -165,26 +189,97 @@ async function compruebaTaller(pagina, taller, quien) {
   /** Pulsa en la lámina en coordenadas suyas (pt), con el lienzo a la vista. */
   const pulsa = async ([x, y]) => {
     await lienzo.scrollIntoViewIfNeeded();
+    /* Con la lupa puesta, el punto puede quedar fuera del marco o de la
+       pantalla: se mueve el marco y, si hace falta, la página, como haría un
+       alumno con el dedo. */
     const punto = await lienzo.evaluate((svg, [px, py]) => {
-      const m = svg.getScreenCTM();
-      return { x: m.a * px + m.c * py + m.e, y: m.b * px + m.d * py + m.f };
+      const marco = svg.parentElement;
+      const aPantalla = () => {
+        const m = svg.getScreenCTM();
+        return { x: m.a * px + m.c * py + m.e, y: m.b * px + m.d * py + m.f };
+      };
+      let q = aPantalla();
+      const r = marco.getBoundingClientRect();
+      if (q.x < r.left + 12 || q.x > r.right - 12 || q.y < r.top + 12 || q.y > r.bottom - 12) {
+        marco.scrollLeft += q.x - (r.left + r.width / 2);
+        marco.scrollTop += q.y - (r.top + r.height / 2);
+        q = aPantalla();
+      }
+      if (q.y < 12 || q.y > innerHeight - 12) {
+        scrollBy(0, q.y - innerHeight / 2);
+        q = aPantalla();
+      }
+      return q;
     }, [x, y]);
     await pagina.mouse.click(punto.x, punto.y);
   };
   const herramienta = (h) => taller.locator(`[data-herr="${h}"]`).click();
 
+  /* El imán del Taller engancha a un punto a 1,4·r y a un cruce a r, con
+     r = 11 px de pantalla en pt de la lámina (`ENGANCHE_PX` en Taller.astro).
+     A 1280 px son unos 5 pt y a 360 px unos 12: la holgura se mide con el del
+     ancho en que se prueba, no con el del móvil para los dos. */
+  await lienzo.scrollIntoViewIfNeeded();
+  const radioAhora = () =>
+    lienzo.evaluate((svg) => {
+      const m = svg.getScreenCTM();
+      return m ? 11 / Math.hypot(m.a, m.b) : 5;
+    });
+  let r = await radioAhora();
+  let umbral = 1.4 * r + 1;
+  const corte2 = ([a, b], [c, e]) => {
+    const u = [b[0] - a[0], b[1] - a[1]], v = [e[0] - c[0], e[1] - c[1]];
+    const den = u[0] * v[1] - u[1] * v[0];
+    if (Math.abs(den) < 1e-9) return null;
+    const t = ((c[0] - a[0]) * v[1] - (c[1] - a[1]) * v[0]) / den;
+    const w = ((c[0] - a[0]) * u[1] - (c[1] - a[1]) * u[0]) / den;
+    return t >= 0 && t <= 1 && w >= 0 && w <= 1 ? [a[0] + t * u[0], a[1] + t * u[1]] : null;
+  };
+  const cruces = [];
+  for (let i = 0; i < datos.segmentos.length; i++)
+    for (let j = i + 1; j < datos.segmentos.length; j++) {
+      const x = corte2(datos.segmentos[i], datos.segmentos[j]);
+      if (x) cruces.push(x);
+    }
+  /** Si un clic en q engancharía a q y no a otra cosa de la lámina. */
+  const sinVecinos = (q) =>
+    cruces.every((x) => { const d = Math.hypot(x[0] - q[0], x[1] - q[1]); return d < 0.5 || d > umbral; }) &&
+    datos.puntos.every((pt) => { const d = Math.hypot(pt.x - q[0], pt.y - q[1]); return d < 0.5 || d > umbral; });
+
   /** Una vertical por el punto dado, enganchada al segmento de la lámina que
    *  la cruce más lejos de él: el enganche deja un punto donde se pulsa, y si
    *  queda cerca del que se va a marcar después, el clic se pega a ese punto
    *  viejo (pasó con EF en SD4, a 8,9 pt). */
-  const vertical = async ([x, yObjetivo]) => {
-    const cortes = datos.segmentos
-      .filter(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) + 1 && x <= Math.max(a[0], b[0]) - 1)
-      .map(([a, b]) => a[1] + ((x - a[0]) * (b[1] - a[1])) / (b[0] - a[0]))
-      .sort((p, q) => Math.abs(q - yObjetivo) - Math.abs(p - yObjetivo));
-    if (!cortes.length) throw new Error(`ningún segmento de la lámina cruza x = ${x}`);
-    await herramienta('vertical');
-    await pulsa([x, cortes[0]]);
+  /** Dónde cruzan los segmentos de la lámina la vertical x = v (o la
+   *  horizontal y = v), del más lejano al más cercano a `cerca`. */
+  const cortesDe = (eje, v, cerca) => {
+    const [i, j] = eje === 'x' ? [0, 1] : [1, 0];
+    return datos.segmentos
+      .filter(([a, b]) => Math.abs(b[i] - a[i]) > 1 && v >= Math.min(a[i], b[i]) + 1 && v <= Math.max(a[i], b[i]) - 1)
+      .map(([a, b]) => a[j] + ((v - a[i]) * (b[j] - a[j])) / (b[i] - a[i]))
+      .sort((p, q) => Math.abs(q - cerca) - Math.abs(p - cerca));
+  };
+  const conHorizontal = (await taller.locator('[data-herr="horizontal"]').count()) > 0;
+  /** El apoyo de la línea que lleva al punto bueno: la vertical por su x,
+   *  enganchada al cruce más lejano que no tenga otro al lado —en una lámina
+   *  densa, el imán se llevaba la vertical al cruce vecino, a 4 pt, y el
+   *  punto caía 3 pt fuera de su sitio (L₂ del Ejercicio 53)—; si no hay
+   *  ninguno, la horizontal por su y. Un objetivo que cae donde ningún
+   *  segmento cruza su vertical (un abatido, el vértice de una pirámide) se
+   *  construye así, como lo haría un alumno con la otra regla. */
+  const apoyo = ([x, y]) => {
+    const v = cortesDe('x', x, y).find((c) => sinVecinos([x, c]));
+    if (v !== undefined) return { herr: 'vertical', en: [x, v], libre: true };
+    const h = conHorizontal ? cortesDe('y', y, x).find((c) => sinVecinos([c, y])) : undefined;
+    if (h !== undefined) return { herr: 'horizontal', en: [h, y], libre: true };
+    const v0 = cortesDe('x', x, y)[0];
+    return v0 !== undefined ? { herr: 'vertical', en: [x, v0], libre: false } : null;
+  };
+  const vertical = async (q) => {
+    const a = apoyo(q);
+    if (!a) throw new Error(`ningún segmento de la lámina cruza la vertical ni la horizontal de (${q.map((v) => v.toFixed(1)).join(', ')})`);
+    await herramienta(a.herr);
+    await pulsa(a.en);
   };
   const marca = async (k, xy) => {
     await taller.locator(`[data-objetivo="${k}"]`).click();
@@ -197,7 +292,8 @@ async function compruebaTaller(pagina, taller, quien) {
      la vertical: los abatidos de SD4 valen en ocho sitios y alguno sale del
      dibujo, donde no se puede pulsar. */
   const { x: ex, y: ey, w: ew, h: eh } = datos.encuadre;
-  const cruza = (x) => datos.segmentos.some(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) + 1 && x <= Math.max(a[0], b[0]) - 1);
+  /** Si hay dónde apoyar la línea que lleva a q (ver `apoyo`). */
+  const cruzaQ = (q) => apoyo(q) !== null;
   const dentro = ([x, y]) => x > ex + 5 && x < ex + ew - 5 && y > ey + 5 && y < ey + eh - 5;
   /* Y lejos de lo que atrae el enganche: los cruces de su vertical con la
      lámina y los puntos dados. A 360 px el enganche abarca unos 9 pt, y un
@@ -206,28 +302,80 @@ async function compruebaTaller(pagina, taller, quien) {
      mismo que aquí: construir otra de las posiciones que valen. Encima de un
      cruce sí vale, y es lo normal —Q₁ está en el alero, los vértices de SD5
      en sus rectas—: ahí el enganche ayuda. */
-  const lejos = (d) => d < 0.5 || d > 15;
-  const libre = ([x, y]) =>
-    datos.segmentos
-      .filter(([a, b]) => Math.abs(b[0] - a[0]) > 1 && x >= Math.min(a[0], b[0]) && x <= Math.max(a[0], b[0]))
-      .every(([a, b]) => lejos(Math.abs(a[1] + ((x - a[0]) * (b[1] - a[1])) / (b[0] - a[0]) - y))) &&
-    datos.puntos.every((p) => lejos(Math.hypot(p.x - x, p.y - y)));
+  const lejos = (d) => d < 0.5 || d > umbral;
+  const libre = ([x, y]) => {
+    const a = apoyo([x, y]);
+    const [eje, v, c] = a?.herr === 'horizontal' ? ['y', y, x] : ['x', x, y];
+    return (
+      cortesDe(eje, v, c).every((k) => lejos(Math.abs(k - c))) &&
+      datos.puntos.every((p) => lejos(Math.hypot(p.x - x, p.y - y)))
+    );
+  };
+
+  /* La lupa, lo justo para que cada objetivo tenga una posición buena que se
+     pueda marcar sin que el imán se vaya a un vecino: las láminas SD no la
+     necesitan; los ejercicios de varios apartados de la colección, sí. */
+  /* Marcable: dentro de la lámina, con un apoyo sin vecinos para su línea y
+     lejos de lo que atrae el imán a lo largo de ella. */
+  const marcables = () =>
+    datos.objetivos.every((o) => o.es.ramas.some((rama) => rama.some((q) => dentro(q) && apoyo(q)?.libre && libre(q))));
+  const ampliar = taller.locator('[data-lupa="1"]');
+  for (let n = 1; n < 4 && !marcables() && (await ampliar.count()) && !(await ampliar.isDisabled()); n++) {
+    await ampliar.click();
+    r = await radioAhora();
+    umbral = 1.4 * r + 1;
+  }
 
   let elegidas = {};
+  const densos = [];
   for (const [k, o] of datos.objetivos.entries()) {
     const rama = o.es.eleccion !== undefined ? (elegidas[o.es.eleccion] ?? 0) : 0;
-    const bueno = o.es.ramas[rama].find((q) => dentro(q) && cruza(q[0]) && libre(q));
+    /* La posición buena que se puede construir como un alumno: con una línea
+       de apoyo sin vecinos y lejos de lo que atrae el imán. Si no hay
+       ninguna —una lámina densa—, la primera dentro de la lámina, y sus
+       puntos se crean por la puerta de pruebas del Taller (`taller:punto`):
+       se comprueba igual que se corrigen y hablan, y se avisa. Solo falla si
+       la solución cae fuera de la lámina, porque entonces nadie la marcaría. */
+    const construible = o.es.ramas[rama].find((q) => dentro(q) && apoyo(q)?.libre && libre(q));
+    const bueno = construible ?? o.es.ramas[rama].find((q) => dentro(q));
     if (!bueno) {
-      mal(`${quien}: ${o.rotulo} no tiene ninguna posición buena dentro de la lámina que se pueda construir con una vertical`);
+      mal(`${quien}: ${o.rotulo} no tiene ninguna posición buena dentro de la lámina`);
       continue;
     }
+    const porLaPuerta = !construible;
+    if (porLaPuerta) densos.push(o.rotulo);
+    const porPuerta = (q) => taller.evaluate((el, [x, y]) => el.dispatchEvent(new CustomEvent('taller:punto', { detail: { x, y } })), q);
+    const masCerca = (q) =>
+      taller.locator('[data-capa="puntos"] circle').evaluateAll(
+        (cs, [x, y]) => cs.map((c) => Math.hypot(Number(c.getAttribute('cx')) - x, Number(c.getAttribute('cy')) - y)).sort((a, b) => a - b)[0] ?? Infinity,
+        q,
+      );
+    /* Se construye como un alumno; si el punto no queda donde toca —el imán
+       lo ha llevado a otra cosa de una lámina densa, quizá a un punto que este
+       mismo guion dejó antes—, se crea por la puerta de pruebas y se avisa.
+       Así lo único que falla es un punto exacto que el Taller no acepta. */
+    const creaEn = async (q) => {
+      if (porLaPuerta) return porPuerta(q);
+      await herramienta('punto');
+      await pulsa(q);
+      if ((await masCerca(q)) > 0.5) {
+        await porPuerta(q);
+        if (!densos.includes(o.rotulo)) densos.push(o.rotulo);
+      }
+    };
     /* Un centímetro más abajo, salvo que se salga de la lámina: Q₁ de SD1
        está a 28 pt del borde inferior, y el clic caía fuera del dibujo. */
-    const abajo = bueno[1] + UN_CM;
-    const malo = [bueno[0], abajo < datos.encuadre.y + datos.encuadre.h - 5 ? abajo : bueno[1] - UN_CM];
-    await vertical(bueno);
-    await herramienta('punto');
-    await pulsa(malo);
+    /* El punto malo, un centímetro más allá sobre la misma línea que lleva
+       al bueno: más abajo en la vertical, o a un lado en la horizontal, sin
+       salirse de la lámina. Fuera de la línea no se puede crear: el imán no
+       tiene nada a lo que engancharse. */
+    const enHorizontal = apoyo(bueno)?.herr === 'horizontal';
+    const [iB, lo, ancho] = enHorizontal ? [0, datos.encuadre.x, datos.encuadre.w] : [1, datos.encuadre.y, datos.encuadre.h];
+    const mas = bueno[iB] + UN_CM;
+    const coord = mas < lo + ancho - 5 ? mas : bueno[iB] - UN_CM;
+    const malo = enHorizontal ? [coord, bueno[1]] : [bueno[0], coord];
+    if (!porLaPuerta) await vertical(bueno);
+    await creaEn(malo);
     if (k === 0) {
       for (let i = 0; i < 4; i++) await marca(k, malo);
       if ((await solucion.count()) === 0) ok(`${quien}: a los cuatro fallos la solución sigue sin dibujarse`);
@@ -243,8 +391,7 @@ async function compruebaTaller(pagina, taller, quien) {
       if ((await solucion.count()) > 0) ok(`${quien}: al quinto fallo la solución se dibuja encima`);
       else mal(`${quien}: al quinto fallo la solución no se dibuja`);
     }
-    await herramienta('punto');
-    await pulsa(bueno);
+    await creaEn(bueno);
     /* En el primero, además, se deja una recta a medias antes de marcar:
        marcar tiene que abandonarla, como cambiar de herramienta, o el clic
        siguiente la remataría desde un punto viejo (revisión del 27 de
@@ -255,7 +402,15 @@ async function compruebaTaller(pagina, taller, quien) {
     }
     await marca(k, bueno);
     if ((await clase()).includes('bien')) ok(`${quien}: ${o.rotulo} bien marcado se da por bueno`);
-    else mal(`${quien}: ${o.rotulo} en su sitio no se da por bueno (${await caja.innerText()})`);
+    else {
+      /* Dónde está de verdad el punto más cercano al bueno: si no cayó en su
+         sitio, el fallo es del clic, no del ejercicio. */
+      const cerca = await taller.locator('[data-capa="puntos"] circle').evaluateAll(
+        (cs, [x, y]) => cs.map((c) => Math.hypot(Number(c.getAttribute('cx')) - x, Number(c.getAttribute('cy')) - y)).sort((a, b) => a - b)[0] ?? -1,
+        bueno,
+      );
+      mal(`${quien}: ${o.rotulo} en su sitio no se da por bueno (el punto más cercano está a ${cerca.toFixed(1)} pt; ${(await caja.innerText()).slice(0, 90)})`);
+    }
     if (k === 0) {
       /* El clic de después, a un centímetro o más de los dos puntos que ya
          hay: más cerca, a 360 px el enganche lo pega a uno de ellos, y con
@@ -271,6 +426,9 @@ async function compruebaTaller(pagina, taller, quien) {
       await herramienta('punto');
     }
     if (o.es.eleccion !== undefined && elegidas[o.es.eleccion] === undefined) elegidas = { ...elegidas, [o.es.eleccion]: rama };
+  }
+  if (densos.length) {
+    avisos.push(`${quien}: ${densos.join(', ')}, en una lámina tan densa que se crearon por la puerta de pruebas`);
   }
   if ((await paso.getAttribute('class'))?.includes('resuelto')) ok(`${quien}: con todos los puntos, el paso queda resuelto`);
   else mal(`${quien}: con todos los puntos marcados, el paso no se resuelve`);

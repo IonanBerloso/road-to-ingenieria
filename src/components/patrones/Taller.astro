@@ -100,6 +100,11 @@ const datos = {
             </button>
           ))
         }
+        <span class="t-lupa" role="group" aria-label="Lupa">
+          <button type="button" data-lupa="-1" aria-label="Reducir la lámina" disabled>−</button>
+          <output data-lupa-nivel aria-live="polite">×1</output>
+          <button type="button" data-lupa="1" aria-label="Ampliar la lámina">+</button>
+        </span>
         <button type="button" class="t-deshacer" data-deshacer>deshacer</button>
       </div>
       <p class="t-estado rotulo no-imprimir" data-estado aria-live="polite">
@@ -110,6 +115,7 @@ const datos = {
         <svg
           viewBox={`${x} ${y} ${w} ${h}`}
           style={`max-width:${Math.round(w * 1.7)}px`}
+          data-ancho-max={Math.round(w * 1.7)}
           role="img"
           aria-label={`La lámina ${lamina.codigo}${(lamina.origen ?? 'coleccion') === 'coleccion' ? ' de la colección' : ''}, para construir sobre ella`}
           data-lienzo
@@ -487,6 +493,42 @@ const datos = {
     };
     for (const b of botonesHerr) b.addEventListener('click', () => eligeHerramienta(b.dataset.herr!));
 
+    /* ── la lupa ─────────────────────────────────────────────────────
+       En una lámina densa —los ejercicios de varios apartados de la
+       colección—, o en el móvil, dos cosas a menos de un dedo no se
+       distinguen: el imán engancha la que no es. La lupa agranda la lámina
+       dentro de su marco, que se mueve con el dedo o con la barra, y el imán
+       se afina solo, porque mide su radio con la escala de la pantalla. */
+    const marco = svg.parentElement!;
+    const nivelLupa = raiz.querySelector<HTMLOutputElement>('[data-lupa-nivel]');
+    const botonesLupa = [...raiz.querySelectorAll<HTMLButtonElement>('[data-lupa]')];
+    const anchoMax = Number(svg.dataset.anchoMax) || 0;
+    const MAX_LUPA = 4;
+    let lupa = 1;
+    const ponLupa = (n: number) => {
+      const nuevo = Math.min(MAX_LUPA, Math.max(1, n));
+      if (nuevo === lupa) return;
+      /* El punto de la lámina que estaba en el centro del marco sigue en el
+         centro: ampliar no te lleva a otra parte del dibujo. */
+      const r = marco.getBoundingClientRect();
+      const m = svg.getScreenCTM();
+      const centro = m ? new DOMPoint(r.left + r.width / 2, r.top + r.height / 2).matrixTransform(m.inverse()) : null;
+      lupa = nuevo;
+      svg.style.width = `${100 * lupa}%`;
+      if (anchoMax) svg.style.maxWidth = `${anchoMax * lupa}px`;
+      svg.classList.toggle('ampliada', lupa > 1);
+      if (nivelLupa) nivelLupa.textContent = `×${lupa}`;
+      for (const b of botonesLupa) b.disabled = Number(b.dataset.lupa) < 0 ? lupa === 1 : lupa === MAX_LUPA;
+      const m2 = svg.getScreenCTM();
+      if (centro && m2) {
+        const q = new DOMPoint(centro.x, centro.y).matrixTransform(m2);
+        const r2 = marco.getBoundingClientRect();
+        marco.scrollLeft += q.x - (r2.left + r2.width / 2);
+        marco.scrollTop += q.y - (r2.top + r2.height / 2);
+      }
+    };
+    for (const b of botonesLupa) b.addEventListener('click', () => ponLupa(lupa + Number(b.dataset.lupa)));
+
     raiz.querySelector('[data-deshacer]')?.addEventListener('click', () => {
       const h = historial.pop();
       if (!h) return;
@@ -547,7 +589,7 @@ const datos = {
       });
     }
 
-    svg.addEventListener('pointerdown', (ev) => {
+    svg.addEventListener('click', (ev) => {
       const m = svg.getScreenCTM();
       if (!m) return;
       const t = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
@@ -772,6 +814,18 @@ const datos = {
     /* Quien coloca el Taller puede pedirle la solución sin que nadie la haya
        ganado: el modo «resolución completa» y la impresión. */
     raiz.addEventListener('taller:muestra', () => muestraSolucion());
+    /* La puerta de pruebas de `scripts/comprueba-talleres.mjs`: un punto del
+       alumno en unas coordenadas exactas, como si se hubiera enganchado a una
+       línea. El guardián construye como un alumno siempre que puede; en una
+       lámina tan densa que su construcción a ciegas no es fiable (los
+       ejercicios de varios apartados de la colección), crea así los puntos
+       para comprobar todo lo demás: que se corrijan, que hablen y que el paso
+       se resuelva. El alumno no la ve: no hay ningún botón que la dispare. */
+    raiz.addEventListener('taller:punto', (ev) => {
+      const { x, y } = (ev as CustomEvent<{ x: number; y: number }>).detail;
+      creaPunto({ tipo: 'linea', xy: [x, y] });
+      pinta();
+    });
 
     pinta();
   }
@@ -813,7 +867,7 @@ const datos = {
     font-weight: 700;
   }
 
-  .t-herr .t-deshacer { margin-left: auto; color: var(--graphite); }
+  .t-herr .t-deshacer { color: var(--graphite); }
 
   .t-estado {
     min-height: 1.4rem;
@@ -849,10 +903,20 @@ const datos = {
     width: 100%;
     height: auto;
     margin: 0 auto;
-    touch-action: none;
+    touch-action: manipulation;
     user-select: none;
     cursor: crosshair;
   }
+
+  /* Ampliada, la lámina no cabe: el marco se queda del alto de la pantalla y
+     se mueve con el dedo (pan) o con la barra. */
+  .t-lienzo:has(svg.ampliada) { max-height: 80vh; }
+  .t-lienzo svg.ampliada { touch-action: pan-x pan-y; }
+
+  .t-lupa { display: inline-flex; align-items: center; gap: .2rem; margin-left: auto; }
+  .t-lupa button { min-width: 2rem; font-family: var(--mono); }
+  .t-lupa button:disabled { opacity: .45; cursor: default; }
+  .t-lupa output { font-family: var(--mono); font-size: .78rem; color: var(--graphite); min-width: 1.8rem; text-align: center; }
 
   /* La lámina, con la tinta del sitio: en oscuro se invierte sola. */
   .t-lamina line,
