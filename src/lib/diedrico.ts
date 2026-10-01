@@ -539,3 +539,118 @@ export function apice(base: readonly P3[], altura: number, lado: 1 | -1): P3 {
   const c = por(base.reduce((a, V) => suma(a, V), { x: 0, y: 0, z: 0 }), 1 / base.length);
   return suma(c, por(normalQueSube(pl), lado * altura));
 }
+
+/* ─────── el lote 1 de la fase K: abatir una figura entera del mismo lado ─── */
+
+/**
+ * El abatimiento de P con el mismo giro que llevó Q a `Qab`: así toda una
+ * figura abatida cae junta, y no cada punto por su lado. No basta «del mismo
+ * lado que Qab»: si P y Q están a lados distintos de la charnela en su plano,
+ * abatidos también lo están. Lo que se conserva es el giro.
+ *
+ * Q tiene que estar fuera de la charnela (si no, no fija el giro) y `Qab`
+ * tiene que ser uno de los dos abatidos de Q (`abatido`): eso comprueba de una
+ * vez que Q está en el plano, que la charnela es horizontal o frontal y que
+ * Qab cae en el plano de proyección. Así una errata en una receta —`con: B`
+ * en vez de `con: Bab`— lanza en vez de dar la figura sin abatir. P tiene que
+ * estar en el plano. Lo pidieron k-ex53a (la sección abatida de la hoja
+ * 53) y el comentario de `abatido` en las recetas.
+ */
+export function abatidoJunto(P: P3, charnela: Recta3, pl: Plano, Qab: P3, Q: P3): P3 {
+  if (!enPlano(P, pl)) throw new Error(`el punto no está en el plano: queda a ${(distanciaAPlano(P, pl) * PT_MM).toFixed(2)} mm`);
+  const pie = pieEnRecta(Q, charnela);
+  const u = resta(Q, pie);
+  const w = resta(Qab, pieEnRecta(Qab, charnela));
+  if (modulo(u) < 1e-9) throw new Error('el punto de referencia está en la charnela: no fija el giro');
+  if (!abatido(Q, charnela, pl).some((X) => vm(X, Qab) <= TOL_VERTICAL)) {
+    throw new Error('el abatido de referencia no es ninguno de los dos abatidos de su punto');
+  }
+  const angulo = Math.atan2(escalar(charnela.d, vectorial(u, w)), escalar(u, w)) * GRADOS;
+  return gira(P, charnela, angulo);
+}
+
+/* ─────── el lote 1 de la fase K: el cambio de plano del diédrico directo ─── */
+
+/** Una recta de la lámina: un punto suyo y su dirección, en pt. */
+export interface Recta2 {
+  readonly p: P2;
+  readonly d: P2;
+}
+
+/** Desde qué vista se hace el cambio de plano: el vertical sale de la planta y
+ *  lleva cotas; el horizontal sale del alzado y lleva alejamientos. */
+export type CambioDePlano = 'vertical' | 'horizontal';
+
+/** Una vista de dos: cómo se lee la proyección de un punto en ella, y qué
+ *  distancia lleva ese punto a la vista nueva. */
+interface Vista {
+  readonly proyeccion: (P: P3) => P2;
+  readonly distancia: (P: P3) => number;
+}
+
+const pie2 = (Q: P2, r: Recta2): P2 => {
+  const u = unitario2(r.d);
+  const t = (Q[0] - r.p[0]) * u[0] + (Q[1] - r.p[1]) * u[1];
+  return [r.p[0] + u[0] * t, r.p[1] + u[1] * t];
+};
+
+/** La normal a la línea nueva hacia el lado contrario al de la vista de
+ *  partida, que es donde va la vista nueva. La referencia decide el lado: su
+ *  proyección no puede caer en la línea. */
+function haciaFuera(linea: Recta2, desde: P2, quien: string): P2 {
+  if (Math.hypot(linea.d[0], linea.d[1]) < 1e-9) throw new Error(`${quien}: la línea nueva no tiene dirección`);
+  const n = perpendicular2(unitario2(linea.d));
+  const lado = (desde[0] - linea.p[0]) * n[0] + (desde[1] - linea.p[1]) * n[1];
+  if (Math.abs(lado) < TOL_VERTICAL) throw new Error(`${quien}: la línea nueva pasa por la proyección de la referencia, y no se sabe hacia qué lado va la vista nueva`);
+  return lado > 0 ? [-n[0], -n[1]] : n;
+}
+
+/** Un cambio de plano: la vista nueva que sale de `vista`, con la línea nueva y
+ *  la referencia R, que cae en la línea. Devuelve la vista nueva, para poder
+ *  encadenar el segundo cambio. */
+function cambia(vista: Vista, linea: Recta2, R: P3, quien: string): Vista {
+  const n = haciaFuera(linea, vista.proyeccion(R), quien);
+  const proyeccion = (P: P3): P2 => {
+    const pie = pie2(vista.proyeccion(P), linea);
+    const h = vista.distancia(P) - vista.distancia(R);
+    return [pie[0] + n[0] * h, pie[1] + n[1] * h];
+  };
+  /* En el sistema nuevo, la distancia que llevaría un segundo cambio es la de
+     la proyección de partida a la línea nueva, contada hacia la vista de
+     partida: es el alejamiento (o la cota) del sistema nuevo. */
+  const distancia = (P: P3): number => {
+    const Q = vista.proyeccion(P);
+    return -((Q[0] - linea.p[0]) * n[0] + (Q[1] - linea.p[1]) * n[1]);
+  };
+  return { proyeccion, distancia };
+}
+
+/**
+ * La proyección de P en la vista auxiliar de un cambio de plano, como lo
+ * enseñan las diapositivas del curso («Cambios de plano», §3): en diédrico
+ * directo no hay línea de tierra, así que la vista nueva se fija con una
+ * referencia R, que cae en la línea nueva, y los demás puntos llevan su cota (o
+ * su alejamiento) contada desde la de R.
+ *
+ * - `vertical`: cada punto sale de su planta por la perpendicular a la línea
+ *   nueva y se aparta de ella su cota menos la de R, hacia el lado contrario a
+ *   la planta.
+ * - `horizontal`: lo mismo desde el alzado, con el alejamiento.
+ * - `luego`, una segunda línea: el segundo cambio, del tipo contrario, que
+ *   sale de la vista auxiliar. Así se pasa un plano oblicuo a proyectante y
+ *   después a paralelo, y se ve en verdadera magnitud. La distancia que lleva
+ *   es la de la proyección de partida a la primera línea.
+ * - `R2`, la referencia del segundo cambio, si no es la del primero: las
+ *   diapositivas usan B en los dos cambios en un ejemplo (diap. 13) y A en el
+ *   primero y B en el segundo en otro (diap. 14).
+ *
+ * Lo pidieron la prosa del tema 3 y los Ejercicios 17, 19, 20 y 21 de la
+ * colección (SD22, SD25, SD26, SD28), que piden la verdadera magnitud de un
+ * plano por cambio de plano.
+ */
+export function cambioPlano(P: P3, tipo: CambioDePlano, linea: Recta2, R: P3, luego?: Recta2, R2: P3 = R): P2 {
+  const planta: Vista = { proyeccion: proyPlanta, distancia: (Q) => Q.z };
+  const alzado: Vista = { proyeccion: proyAlzado, distancia: (Q) => Q.y };
+  const primera = cambia(tipo === 'vertical' ? planta : alzado, linea, R, 'el primer cambio');
+  return (luego ? cambia(primera, luego, R2, 'el segundo cambio') : primera).proyeccion(P);
+}

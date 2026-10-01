@@ -43,11 +43,13 @@ import {
   vmPlanta,
   type P2,
   abatido,
+  abatidoJunto,
   anguloDiedro,
   anguloPlanos,
   anguloRectaPlano,
   anguloRectas,
   apice,
+  cambioPlano,
   corteRectaPlano,
   cuadradoPorDiagonal,
   distanciaRectas,
@@ -487,10 +489,11 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
       return eleccion(e, 'paralelo_a_distancia()', [1, -1].map((l) => ({ k: 'plano', v: paraleloADistancia(plano, dist, l as 1 | -1) })));
     },
   },
-  /* Una LISTA con los dos lados, como abatido_planta: cualquiera vale. Que
-     varios puntos abatidos caigan del mismo lado lo hará el lote 1 (abatir
-     respecto de uno ya abatido); hasta entonces, un objetivo los acepta
-     todos. */
+  /* Una LISTA con los dos lados, como abatido_planta: cualquiera vale, y
+     `uno()` escoge uno. Para que el alumno pueda abatir hacia cualquiera de
+     los dos lados y el resto de la figura caiga con él, el primer punto se
+     abate con `abatido_a_elegir` (una elección) y los demás con
+     `abatido_junto`, que la hereda. */
   abatido: {
     posicion: 3,
     hace: ([q, charnela, pl]) => {
@@ -531,6 +534,96 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
       if (n.sentido) return { k: 'p3', v: apice(vs, h, lado(n.sentido, 'apice(sentido:)')) };
       return eleccion(e, 'apice()', [1, -1].map((l) => ({ k: 'p3', v: apice(vs, h, l as 1 | -1) })));
     },
+  },
+  /* ── el lote 1 de la fase K: lo que pidieron los Ejercicios 53 y 55 de la
+     colección, y el cambio de plano, que piden el tema 3 y los Ejercicios 17
+     a 21 ── */
+  /* Los dos abatidos de un punto como una ELECCIÓN, no como una lista: así el
+     alumno abate hacia el lado que quiera y, con `abatido_junto`, toda la
+     figura cae con él. */
+  abatido_a_elegir: {
+    posicion: 3,
+    hace: ([q, charnela, pl], _n, e) => {
+      const [a, b] = abatido(comoP3(q, 'abatido_a_elegir()'), rectaDe(charnela, 'abatido_a_elegir()'), comoPlano(pl, 'abatido_a_elegir()'));
+      return eleccion(e, 'abatido_a_elegir()', [{ k: 'p3', v: a }, { k: 'p3', v: b }]);
+    },
+  },
+  /* El cambio de plano del diédrico directo: la proyección de un punto en la
+     vista auxiliar, con la línea nueva y la referencia que cae en ella fijadas
+     por el ejercicio. Con `luego:`, el segundo cambio, del tipo contrario, y
+     con `ref2:`, su referencia, si no es la del primero. */
+  cambio_plano_vertical: {
+    posicion: 2,
+    nombres: { ref: 'obligatorio', luego: 'opcional', ref2: 'opcional' },
+    hace: ([q, l], n) => ({
+      k: 'p2',
+      v: cambioPlano(
+        comoP3(q, 'cambio_plano_vertical()'),
+        'vertical',
+        comoRecta2(l, 'cambio_plano_vertical()'),
+        comoP3(n.ref, 'cambio_plano_vertical(ref:)'),
+        n.luego ? comoRecta2(n.luego, 'cambio_plano_vertical(luego:)') : undefined,
+        n.ref2 ? comoP3(n.ref2, 'cambio_plano_vertical(ref2:)') : undefined,
+      ),
+    }),
+  },
+  cambio_plano_horizontal: {
+    posicion: 2,
+    nombres: { ref: 'obligatorio', luego: 'opcional', ref2: 'opcional' },
+    hace: ([q, l], n) => ({
+      k: 'p2',
+      v: cambioPlano(
+        comoP3(q, 'cambio_plano_horizontal()'),
+        'horizontal',
+        comoRecta2(l, 'cambio_plano_horizontal()'),
+        comoP3(n.ref, 'cambio_plano_horizontal(ref:)'),
+        n.luego ? comoRecta2(n.luego, 'cambio_plano_horizontal(luego:)') : undefined,
+        n.ref2 ? comoP3(n.ref2, 'cambio_plano_horizontal(ref2:)') : undefined,
+      ),
+    }),
+  },
+  /* El elemento i de una lista, desde 1: el `rama()` de las listas. Así un
+     `ejemplo` puede nombrar uno de los dos abatidos de `abatido_planta` sin
+     escribirlo en cifras. */
+  uno: {
+    posicion: 2,
+    hace: ([l, i]) => {
+      const lista = espera(l, 'lista', 'uno()').v;
+      const n = comoNum(i, 'uno()');
+      if (!Number.isInteger(n) || n < 1 || n > lista.length) {
+        throw new Error(`uno(): la lista tiene ${lista.length} elementos y se ha pedido el ${n}`);
+      }
+      const v = lista[n - 1];
+      if (v.k === 'ramas') throw new Error('uno(): ese elemento es una elección; se nombra por su línea');
+      return v;
+    },
+  },
+  /* Un segmento de la lámina entre dos puntos de la lámina, para el `trazado`
+     de una solución: el triángulo abatido de la 55·1, por ejemplo. */
+  segmento2: {
+    posicion: 2,
+    hace: ([a, b]) => {
+      const [p, q] = [espera(a, 'p2', 'segmento2()').v, espera(b, 'p2', 'segmento2()').v];
+      if (Math.hypot(q[0] - p[0], q[1] - p[1]) < 0.01) throw new Error('segmento2(): los dos puntos coinciden; tiene longitud cero');
+      return { k: 'seg2', a: p, b: q };
+    },
+  },
+  /* P abatido con el mismo giro que llevó `de` a `con`: toda una figura
+     abatida cae junta. Si `con` es una elección, el resultado la hereda rama
+     a rama, y la figura entera es una sola elección. */
+  abatido_junto: {
+    posicion: 3,
+    nombres: { con: 'obligatorio', de: 'obligatorio' },
+    hace: ([q, charnela, pl], n) => ({
+      k: 'p3',
+      v: abatidoJunto(
+        comoP3(q, 'abatido_junto()'),
+        rectaDe(charnela, 'abatido_junto()'),
+        comoPlano(pl, 'abatido_junto()'),
+        comoP3(n.con, 'abatido_junto(con:)'),
+        comoP3(n.de, 'abatido_junto(de:)'),
+      ),
+    }),
   },
 };
 
