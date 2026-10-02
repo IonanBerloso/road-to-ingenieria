@@ -14,8 +14,11 @@ renueve el límite semanal. La fase K, Expresión Gráfica, sigue a medias.
   - **Colección:** 21 de los 55 ejercicios: SD1, SD4, SD5, del 7 al 10, el 13,
     el 14, del 16 al 21, el 47, el 48, el 49, y el 53, el 54 y el 55.
   - **Construcción paso a paso:** la llevan todos.
-- **Cortado por el límite, fuera del repositorio** (en la carpeta de trabajo de
-  la sesión, con su registro `integracion-k.md`):
+- **El kit de trabajo**, fuera del repositorio, en la carpeta del material
+  (`fase-k\`, con su LEEME): la chuleta, las plantillas de encargo, el modelo,
+  las herramientas (`comprueba-todo` las junta todas) y la deuda que encontró
+  al estrenarse.
+- **Cortado por el límite**, también en `fase-k\`:
   - el tema 5 con el Ejercicio 38 (unidad `k-t05a`): entregado y sin revisar;
   - el Ejercicio 52, apartados 3 y 4 (unidad `k-ex52a`): al autor le faltaban
     las últimas comprobaciones. El 1 y el 2 van en `fuera` hasta que haya dos
@@ -33,9 +36,12 @@ renueve el límite semanal. La fase K, Expresión Gráfica, sigue a medias.
    - los apartados 1 y 2 del Ejercicio 52.
 3. **La deuda**:
    - las acciones del despliegue, antes del 19 de octubre;
-   - las mejoras apuntadas: que `sigue-papel` lea todos los ejercicios de un
-     fichero y distinga los radios del enunciado; un desplazamiento de rótulo
-     por punto en el reproductor, que arreglaría el roce de SD4.
+   - lo que encontró `comprueba-todo` en lo publicado: 12 porqués de marcas
+     en SD25 y SD26 que no dicen dónde cae el punto, y medidas del dibujo que
+     dan la respuesta por casualidad sin que el `desarrollo` lo avise (SD22,
+     «Plano en VM»…). La lista está en el LEEME de `fase-k\`;
+   - un desplazamiento de rótulo por punto en el reproductor, que arreglaría
+     el roce de SD4.
 4. **Pedir la auditoría** con el diédrico cerrado. El bloque 2 de Expresión
    Gráfica, Sistemas (fase J), Cónicas y los dos temas de Fluidos se declaran
    como fase siguiente.
@@ -47,7 +53,7 @@ gastó al 93 % en dos días. El 82 % lo gastaron los agentes, y casi todo fue
 releer contexto. Cada agente costó unos 10 millones de tokens equivalentes, y
 la calidad salió de las revisiones: casi todas encontraron algo serio.
 
-1. **Primero, una mañana de preparación** (sesión principal, sin agentes):
+1. **La preparación, hecha el 2 de octubre** en `fase-k\`:
    - una **chuleta** de dos páginas con las reglas que de verdad usa un
      ejercicio de la colección, en lugar de INSTRUCCIONES-K, PLAN-K y las
      secciones de CLAUDE.md;
