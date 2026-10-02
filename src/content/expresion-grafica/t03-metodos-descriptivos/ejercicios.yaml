@@ -928,6 +928,1131 @@ ejercicios:
       **La comprobación.** Los seis caminos dan los mismos tres lados. Si dos métodos tuyos no
       coinciden en un lado, uno de los dos está mal construido.
 
+  - id: sd9-el-rombo-de-lado-horizontal-y-lado-frontal
+    titulo: El rombo con un lado horizontal y otro frontal, y su ángulo con el plano horizontal
+    fuente: Ejercicio 7 (SD9) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU. La página no trae figura; la lámina es nuestra, sacada de las coordenadas del enunciado.
+    nivel: practica
+    # Decisión: el texto impreso tal cual (§08). La página no trae figura, solo
+    # las coordenadas: la lámina sd9 es nuestra (la línea de tierra, el origen
+    # y A y C situados a escala 1:1, lo primero que haría el alumno en el
+    # papel), y lo dicen las Notas nuestras, el intro del primer paso y
+    # revision.notas. Las coordenadas van con el convenio de la diapositiva 8
+    # del tema de punto, recta y plano: (desplazamiento, alejamiento, cota), con
+    # el desplazamiento positivo hacia la izquierda del origen. El enunciado no
+    # impone método: B sale de abatir el plano frontal de BC sobre el
+    # horizontal de AB, y el ángulo, de un cambio de plano vertical con la
+    # línea nueva perpendicular a A₁B₁; la línea nueva y la referencia se fijan
+    # en el intro del paso.
+    enunciado: |
+      Dibujar las proyecciones diédricas de un rombo y calcular el ángulo que forma con el plano
+      horizontal. Datos: la diagonal AC, un lado es el segmento de recta horizontal AB y el otro el
+      segmento de recta frontal BC, A(-20,40,70) y C(40,10,30).
+
+      **Notas nuestras.** La colección no trae figura: solo las coordenadas. La lámina es nuestra,
+      sacada de ellas: la línea de tierra, el origen O y A y C en sus dos proyecciones, a escala 1:1.
+      Las coordenadas van en el orden del curso, (x, y, z): x, el desplazamiento sobre la línea de
+      tierra, positivo hacia la izquierda de O; y, el alejamiento, hacia abajo en la planta; z, la
+      cota, hacia arriba en el alzado. Así, A está 20 mm a la derecha de O, y C, 40 mm a la izquierda.
+      Llamamos D al cuarto vértice del rombo.
+    pide: Las proyecciones de B y de D, el cuarto vértice, y el ángulo que forma el rombo con el plano horizontal.
+    receta:
+      lamina: sd9
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        # l: la recta de los puntos que tienen la cota de A y el alejamiento de
+        # C, paralela a la línea de tierra. En el alzado, la horizontal de A₂;
+        # en la planta, la de C₁.
+        hA2: 'segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dx: -50))'
+        hC1: 'segmento2(figura.punto("C1"), desplaza(figura.punto("C1"), dx: 50))'
+        LA: 'punto3(alzado: figura.punto("A2"), planta: pie_perpendicular(figura.punto("A1"), hC1))'
+        LC: 'punto3(alzado: pie_perpendicular(figura.punto("C2"), hA2), planta: figura.punto("C1"))'
+        l: recta3(LA, LC)
+      solucion:
+        # B: en l (AB horizontal, BC frontal) y a la misma distancia de A que de
+        # C (rombo): en el plano mediador de AC. D cierra el paralelogramo.
+        B: corte_recta_plano(l, plano_mediador(A, C))
+        D: 'simetrico(B, respecto: punto_medio(segmento3(A, C)))'
+        rombo: plano(A, B, C)
+        angulo: angulo_con_ph(rombo)
+        lado_mm: en_mm(vm(A, B))
+        # ── Decisión: B por abatimiento. El plano frontal de BC (contiene l y C)
+        # se abate sobre el plano horizontal de AB con l de charnela: C₀ cae en
+        # la vertical de C₁, a lo que C está más bajo que A (40 mm). Hacia
+        # arriba caería justo en C₂ (por los datos: 10 + 2·30 = 70), y el
+        # Taller no deja marcar encima de un punto dado; se fija hacia abajo,
+        # el segundo de la lista. B₁ equidista de A₁ y de C₀: la mediatriz.
+        frontalBC: plano(LA, LC, C)
+        C_abs: abatido(C, l, frontalBC)
+        C_ab: uno(C_abs, 2)
+        K2: pie_perpendicular(figura.punto("C2"), hA2)
+        K2mas: 'uno(medir_sobre(hA2, desde: K2, distancia: mm(6)), 1)'
+        C0mas: 'uno(medir_sobre(segmento2(figura.punto("C1"), proy_planta(C_ab)), desde: proy_planta(C_ab), distancia: mm(6)), 1)'
+        # La mediatriz de A₁C₀, con el compás abierto A₁C₀: los dos cortes, P
+        # arriba y Q abajo, a √3/2 de A₁C₀ de su punto medio.
+        mAC0: punto_medio(segmento2(figura.punto("A1"), proy_planta(C_ab)))
+        medAC0: 'perpendicular(por: mAC0, a: segmento2(figura.punto("A1"), proy_planta(C_ab)))'
+        PQ: 'medir_sobre(medAC0, desde: mAC0, distancia: vm_planta(A, C_ab) * raiz(3) / 2)'
+        Pm: uno(PQ, 1)
+        Qm: uno(PQ, 2)
+        B1mas: 'uno(medir_sobre(hC1, desde: proy_planta(B), distancia: mm(10)), 1)'
+        # D: AD frontal (D₁ en la horizontal de A₁) y CD horizontal (D₁ en la
+        # paralela a A₁B₁ por C₁, y D₂ en la horizontal de C₂).
+        AB1: segmento2(figura.punto("A1"), proy_planta(B))
+        hA1: 'segmento2(figura.punto("A1"), desplaza(figura.punto("A1"), dx: -50))'
+        hC2: 'segmento2(figura.punto("C2"), desplaza(figura.punto("C2"), dx: 50))'
+        parC1: 'perpendicular(por: figura.punto("C1"), a: perpendicular(por: figura.punto("C1"), a: AB1))'
+        D1masC: 'uno(medir_sobre(segmento2(figura.punto("C1"), proy_planta(D)), desde: proy_planta(D), distancia: mm(6)), 1)'
+        D1masA: 'uno(medir_sobre(hA1, desde: proy_planta(D), distancia: mm(6)), 1)'
+        D2mas: 'uno(medir_sobre(hC2, desde: proy_alzado(D), distancia: mm(6)), 1)'
+        # Los errores de B₁, todos sobre l: igualar las distancias de la planta
+        # (A₁B₁ = B₁C₁), las del alzado (A₂B₂ = B₂C₂), o abatir C con 30 mm.
+        Cmisma: 'punto3(alzado: K2, planta: figura.punto("C1"))'
+        Calej: 'punto3(alzado: figura.punto("C2"), planta: pie_perpendicular(figura.punto("C1"), hA1))'
+        C30: 'punto3(alzado: K2, planta: desplaza(figura.punto("C1"), dy: mm(30)))'
+        Bplanta: corte_recta_plano(l, plano_mediador(A, Cmisma))
+        Balzado: corte_recta_plano(l, plano_mediador(A, Calej))
+        B30: corte_recta_plano(l, plano_mediador(A, C30))
+        # ── Decisión: el ángulo con un cambio de plano vertical. Línea nueva,
+        # perpendicular a A₁B₁ por A₁, el vértice de abajo a la derecha de la
+        # planta; la vista 4 cae abajo a la derecha, donde hay sitio.
+        # Referencia, C (la más baja, con D): todo cae hacia fuera.
+        # AB y CD, horizontales, se ven de punta: A₄ ≡ B₄ y C₄ ≡ D₄.
+        nueva: 'perpendicular(por: figura.punto("A1"), a: AB1)'
+        A_4: 'cambio_plano_vertical(A, nueva, ref: C)'
+        B_4: 'cambio_plano_vertical(B, nueva, ref: C)'
+        C_4: 'cambio_plano_vertical(C, nueva, ref: C)'
+        D_4: 'cambio_plano_vertical(D, nueva, ref: C)'
+        A4mas: 'uno(medir_sobre(segmento2(proy_planta(B), figura.punto("A1")), desde: A_4, distancia: mm(6)), 1)'
+        nuevaFin: 'uno(medir_sobre(segmento2(figura.punto("A1"), C_4), desde: C_4, distancia: mm(10)), 1)'
+        nuevaIni: 'uno(medir_sobre(segmento2(figura.punto("A1"), C_4), desde: figura.punto("A1"), distancia: mm(8)), 2)'
+        lineaB1A1: segmento2(proy_planta(B), figura.punto("A1"))
+        C4fuera30: 'uno(medir_sobre(segmento2(figura.punto("C1"), C_4), desde: C_4, distancia: mm(30)), 1)'
+        C4dentro40: 'uno(medir_sobre(segmento2(figura.punto("C1"), C_4), desde: C_4, distancia: diferencia_de_cotas(A, C)), 2)'
+        A4con70: 'uno(medir_sobre(lineaB1A1, desde: figura.punto("A1"), distancia: mm(70)), 1)'
+        A4con30: 'uno(medir_sobre(lineaB1A1, desde: figura.punto("A1"), distancia: mm(30)), 1)'
+        A4dentro: 'uno(medir_sobre(lineaB1A1, desde: figura.punto("A1"), distancia: diferencia_de_cotas(A, C)), 2)'
+      comprueba:
+        # B con la cota de A y el alejamiento de C, y AB = BC.
+        - en_recta(B, l)
+        - en_plano(B, plano_mediador(A, C))
+        - en_plano(D, rombo)
+    pasos:
+      - tipo: reconocer
+        pregunta: AB es horizontal y BC es frontal. ¿Qué dice eso de B antes de dibujar nada?
+        opciones:
+          - texto: Que B tiene la cota de A y el alejamiento de C
+            correcta: true
+            mensaje: |
+              Eso es. Una horizontal tiene todos sus puntos a la misma cota, así que B₂ está en la
+              horizontal de A₂; una frontal, al mismo alejamiento, así que B₁ está en la paralela a la
+              línea de tierra por C₁. B está en la recta que cumple las dos cosas, paralela a la línea de
+              tierra; solo falta saber dónde.
+          - texto: Que B tiene la cota de C y el alejamiento de A
+            mensaje: |
+              Ese es D, el cuarto vértice: AD es paralelo a BC, y por eso frontal, con el alejamiento de A;
+              CD es paralelo a AB, horizontal, con la cota de C. B está en la horizontal que sale de A,
+              así que tiene la cota de A.
+          - texto: Nada; para dibujar el rombo hace falta además la medida de su lado o de su ángulo
+            mensaje: |
+              No hace falta. B tiene la cota de A y el alejamiento de C, y en un rombo los lados AB y BC
+              miden lo mismo: eso fija el único punto de esa recta que vale. La medida del lado sale, no
+              se da.
+
+      - tipo: construir
+        titulo: B y D, abatiendo el plano frontal de BC
+        intro: |
+          La lámina es nuestra: la colección no trae figura, y la hemos sacado de las coordenadas del
+          enunciado, como lo haría el alumno en el papel. B tiene la cota de A y el alejamiento de C: está
+          en la recta l, paralela a la línea de tierra, cuyo alzado es la horizontal de A₂ y cuya planta,
+          la de C₁. Falta dónde: AB tiene que medir lo que BC. El enunciado no impone método, y el que
+          proponemos compara las dos en la misma vista. AB es horizontal y se ve en verdadera magnitud en
+          la planta; BC no. Abate el plano frontal de BC, que contiene l y C, sobre el plano horizontal de
+          A, con l de charnela: C₀ cae en la vertical de C₁, a lo que C está más bajo que A, y B₁, que no
+          se mueve porque está en la charnela, equidista de A₁ y de C₀. Lleva C₀ hacia abajo: hacia arriba
+          caería justo encima de C₂, y ese punto no se deja marcar. D cierra el paralelogramo. Marca C₀,
+          B₁, B₂, D₁ y D₂.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: C0
+            pide: C abatido sobre el plano horizontal de A, con l de charnela
+            es: proy_planta(solucion.C_ab)
+            bien: |
+              C₀ está en la vertical de C₁, 40 mm por debajo: lo que C está más bajo que l, que es la
+              distancia de C₂ a la horizontal de A₂. C₁ está en l₁, así que el radio es solo esa diferencia
+              de cotas.
+            diagnosticos:
+              - si: 'cerca_de(desplaza(figura.punto("C1"), dy: mm(30)))'
+                mensaje: |
+                  Has llevado 30 mm, que es la cota de C contada desde la línea de tierra (y también lo que C
+                  está más cerca que A del plano vertical). La charnela es l, a la cota de A: el radio es lo que C está más bajo
+                  que l, 70 − 30 = 40 mm, de C₂ a la horizontal de A₂.
+                ejemplo: 'desplaza(figura.punto("C1"), dy: mm(30))'
+              - si: '!en_vertical_de(figura.punto("C1"))'
+                mensaje: |
+                  Al abatir, C gira alrededor de l en un plano perpendicular a ella. l es paralela a la línea
+                  de tierra, así que ese plano es de perfil, y en la planta C₀ se mueve por la **vertical de
+                  C₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.C_ab), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de C₁, pero no a la distancia buena: lo que C está más bajo que A, que
+                  se mide en el alzado, de C₂ a la horizontal de A₂.
+          - nombre: B1
+            pide: la planta de B
+            es: proy_planta(B)
+            bien: |
+              B₁ está en l₁, la paralela a la línea de tierra por C₁, donde la corta la mediatriz de A₁C₀:
+              A₁B₁ es la verdadera magnitud de AB, y B₁C₀, la de BC abatido. Las dos miden 46,7 mm.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Bplanta))
+                mensaje: |
+                  Has igualado A₁B₁ con B₁C₁, lo que miden **en la planta**. A₁B₁ sí es la verdadera magnitud
+                  de AB, que es horizontal; B₁C₁ no lo es de BC, que baja 40 mm de B a C. Por eso se abate C:
+                  B₁C₀ sí mide lo que BC.
+                ejemplo: proy_planta(solucion.Bplanta)
+              - si: cerca_de(proy_planta(solucion.Balzado))
+                mensaje: |
+                  Has igualado A₂B₂ con B₂C₂, lo que miden **en el alzado**, y has bajado ese punto a l₁.
+                  B₂C₂ sí es la verdadera magnitud de BC, que es frontal, pero A₂B₂ no lo es de AB: AB se
+                  acerca 30 mm de A a B, y el alzado lo acorta.
+                ejemplo: proy_planta(solucion.Balzado)
+              - si: cerca_de(proy_planta(solucion.B30))
+                mensaje: |
+                  La mediatriz está bien trazada, pero C₀ no: está a 30 mm de C₁. El radio con que C se abate
+                  es lo que C está más bajo que l, 40 mm.
+                ejemplo: proy_planta(solucion.B30)
+              - si: '!en_recta(hC1)'
+                mensaje: |
+                  BC es frontal, así que B tiene el alejamiento de C: B₁ va en la **paralela a la línea de
+                  tierra por C₁**.
+                ejemplo: 'desplaza(proy_planta(B), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en l₁, pero no en la mediatriz de A₁C₀. B₁ tiene que estar a la misma distancia de A₁
+                  que de C₀: con el compás abierto A₁C₀, dos arcos desde A₁ y dos desde C₀; la recta que une
+                  sus cortes corta l₁ en B₁.
+          - nombre: B2
+            pide: el alzado de B
+            es: proy_alzado(B)
+            bien: |
+              B₂ está en la vertical de B₁, en la horizontal de A₂: AB es horizontal.
+            diagnosticos:
+              - si: '!en_vertical_de(B1)'
+                mensaje: |
+                  B₂ va en la **vertical de B₁**.
+                ejemplo: 'desplaza(proy_alzado(B), dx: mm(6))'
+              - si: cerca_de(pie_perpendicular(proy_alzado(B), solucion.hC2))
+                mensaje: |
+                  Ese punto tiene la cota de C. AB es horizontal: B tiene la cota de A, y B₂ va en la
+                  horizontal de A₂.
+                ejemplo: pie_perpendicular(proy_alzado(B), solucion.hC2)
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de B₁, pero no a la altura buena: B₂ está en la horizontal de A₂.
+          - nombre: D1
+            pide: la planta de D, el cuarto vértice
+            es: proy_planta(D)
+            bien: |
+              D₁ está donde la paralela a la línea de tierra por A₁ corta la paralela a A₁B₁ por C₁: AD es
+              paralelo a BC, frontal, y CD paralelo a AB, horizontal.
+            diagnosticos:
+              - si: '!en_recta(solucion.hA1)'
+                mensaje: |
+                  AD es paralelo a BC, que es frontal: D tiene el alejamiento de A, y D₁ va en la **paralela a
+                  la línea de tierra por A₁**.
+                ejemplo: 'desplaza(proy_planta(D), dy: mm(6))'
+              - si: '!en_recta(solucion.parC1)'
+                mensaje: |
+                  Estás en la paralela a la línea de tierra por A₁, pero CD es paralelo a AB: D₁ va también en
+                  la **paralela a A₁B₁ por C₁**.
+                ejemplo: 'desplaza(proy_planta(D), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  D₁ está donde la paralela a la línea de tierra por A₁ corta la paralela a A₁B₁ por C₁.
+          - nombre: D2
+            pide: el alzado de D
+            es: proy_alzado(D)
+            bien: |
+              D₂ está en la vertical de D₁, en la horizontal de C₂: CD es horizontal. A₂D₂ sale paralela a
+              B₂C₂, y eso lo comprueba.
+            diagnosticos:
+              - si: '!en_vertical_de(D1)'
+                mensaje: |
+                  D₂ va en la **vertical de D₁**.
+                ejemplo: 'desplaza(proy_alzado(D), dx: mm(6))'
+              - si: cerca_de(pie_perpendicular(proy_alzado(D), hA2))
+                mensaje: |
+                  Ese punto tiene la cota de A. CD es paralelo a AB, horizontal: D tiene la cota de C, y D₂ va
+                  en la horizontal de C₂.
+                ejemplo: pie_perpendicular(proy_alzado(D), hA2)
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de D₁, pero no a la altura buena: D₂ está en la horizontal de C₂.
+        trazado:
+          - segmento2(figura.punto("A1"), proy_planta(B))
+          - segmento2(proy_planta(B), figura.punto("C1"))
+          - segmento2(figura.punto("C1"), proy_planta(D))
+          - segmento2(proy_planta(D), figura.punto("A1"))
+          - segmento2(figura.punto("A2"), proy_alzado(B))
+          - segmento2(proy_alzado(B), figura.punto("C2"))
+          - segmento2(figura.punto("C2"), proy_alzado(D))
+          - segmento2(proy_alzado(D), figura.punto("A2"))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.K2mas)
+            guia: figura.segmento("LT")
+            rotulo: l₂
+            porque: |
+              Por A₂, la paralela a la línea de tierra, hacia la izquierda y larga, hasta pasar la vertical
+              de C₂: es l₂, el alzado de l (nombre nuestro: la recta de los puntos con la cota de A y el
+              alejamiento de C). AB es horizontal, así que B tiene la cota de A, y B₂ está en ella.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.K2)
+            guia: figura.segmento("LT")
+            porque: |
+              Por C₂, la vertical hacia arriba, hasta l₂: ese trozo es lo que C está más bajo que A, 40 mm,
+              y será el radio con que C se abate.
+          - con: marca
+            traza: solucion.K2
+            rotulo: K₂
+            porque: |
+              K₂ (nombre nuestro), donde la vertical de C₂ corta l₂: el punto de l que está en la vertical de
+              C. C₂K₂ mide 40 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.B1mas)
+            guia: figura.segmento("LT")
+            rotulo: l₁
+            porque: |
+              Por C₁, la paralela a la línea de tierra, hacia la derecha y larga: es l₁. BC es frontal, así
+              que B tiene el alejamiento de C, y B₁ está en ella. C₁ también: C está en el plano frontal de
+              l.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.C0mas)
+            guia: figura.segmento("LT")
+            porque: |
+              Por C₁, la perpendicular a l₁, hacia abajo y larga, que es la vertical de C₁. Se abate el plano
+              frontal de BC sobre el horizontal de A, con l de charnela: C gira en un plano perpendicular a
+              l, y en la planta se mueve por esta recta.
+          - con: compas
+            traza: 'arco(figura.punto("C1"), por: proy_planta(solucion.C_ab), desde: desplaza(proy_planta(solucion.C_ab), dx: -6), hasta: desplaza(proy_planta(solucion.C_ab), dx: 6))'
+            toma: segmento2(figura.punto("C2"), solucion.K2)
+            porque: |
+              Con el compás, C₂K₂, lo que C está más bajo que l, y con centro en C₁. C₁ está en la charnela en
+              la planta, así que el radio no necesita triángulo: es esa diferencia de cotas. El arco corta la
+              vertical de C₁ arriba y abajo; arriba cae justo en C₂, y se toma el corte de abajo.
+          - con: marca
+            traza: proy_planta(solucion.C_ab)
+            rotulo: C₀
+            porque: |
+              C₀, donde el arco corta la vertical de C₁, 40 mm por debajo: C abatido. B₁C₀ medirá lo que BC
+              de verdad. Hacia arriba caería justo encima de C₂.
+          - con: compas
+            traza: '[arco(figura.punto("A1"), por: solucion.Pm, desde: desplaza(solucion.Pm, dx: 6.18, dy: -5.08), hasta: desplaza(solucion.Pm, dx: -6.18, dy: 5.08)), arco(figura.punto("A1"), por: solucion.Qm, desde: desplaza(solucion.Qm, dx: -7.49, dy: -2.81), hasta: desplaza(solucion.Qm, dx: 7.49, dy: 2.81))]'
+            toma: segmento2(figura.punto("A1"), proy_planta(solucion.C_ab))
+            porque: |
+              La mediatriz de A₁C₀. Con el compás abierto A₁C₀ y centro en A₁, un arco arriba y otro abajo:
+              más de la mitad de A₁C₀, para que se corten con los de C₀.
+          - con: compas
+            traza: '[arco(proy_planta(solucion.C_ab), por: solucion.Pm, desde: desplaza(solucion.Pm, dx: 7.49, dy: 2.81), hasta: desplaza(solucion.Pm, dx: -7.49, dy: -2.81)), arco(proy_planta(solucion.C_ab), por: solucion.Qm, desde: desplaza(solucion.Qm, dx: -6.18, dy: 5.08), hasta: desplaza(solucion.Qm, dx: 6.18, dy: -5.08))]'
+            toma: segmento2(figura.punto("A1"), proy_planta(solucion.C_ab))
+            porque: |
+              Con la misma abertura y centro en C₀, otros dos arcos, que cortan a los primeros arriba y
+              abajo.
+          - con: marca
+            traza: solucion.Pm
+            rotulo: P
+            porque: |
+              P (nombre nuestro), donde se cortan los dos arcos de arriba: está a la misma distancia de A₁
+              que de C₀.
+          - con: marca
+            traza: solucion.Qm
+            rotulo: Q
+            porque: |
+              Q (nombre nuestro), donde se cortan los dos arcos de abajo, también a la misma distancia de A₁
+              que de C₀.
+          - con: regla
+            traza: segmento2(solucion.Pm, solucion.Qm)
+            porque: |
+              PQ es la mediatriz de A₁C₀: todos sus puntos están a la misma distancia de A₁ que de C₀. Cruza
+              l₁ entre P y Q.
+          - con: marca
+            traza: proy_planta(B)
+            rotulo: B₁
+            porque: |
+              B₁, donde la mediatriz corta l₁: B está en la charnela y no se ha movido, y B₁A₁ = B₁C₀, que es
+              decir AB = BC.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(B), proy_alzado(B))
+            guia: figura.segmento("LT")
+            porque: |
+              Por B₁, la vertical hasta l₂: B tiene la cota de A.
+          - con: marca
+            traza: proy_alzado(B)
+            rotulo: B₂
+            porque: |
+              B₂, donde la vertical de B₁ corta l₂, la horizontal de A₂.
+          - con: regla
+            traza: solucion.AB1
+            porque: |
+              A₁B₁, la planta del lado AB: hace falta su dirección para el lado opuesto, CD, que es paralelo.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.D1masC)
+            guia: solucion.AB1
+            porque: |
+              Por C₁, la paralela a A₁B₁, larga: CD es paralelo a AB, y D₁ está en ella.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.D1masA)
+            guia: figura.segmento("LT")
+            porque: |
+              Por A₁, la paralela a la línea de tierra, hacia la izquierda: AD es paralelo a BC, frontal, así
+              que D tiene el alejamiento de A.
+          - con: marca
+            traza: proy_planta(D)
+            rotulo: D₁
+            porque: |
+              D₁ (D es nombre nuestro), donde se cortan la paralela a A₁B₁ por C₁ y la paralela a la línea
+              de tierra por A₁.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.D2mas)
+            guia: figura.segmento("LT")
+            porque: |
+              Por C₂, la paralela a la línea de tierra, hacia la derecha: CD es horizontal, así que D tiene
+              la cota de C.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(D), proy_alzado(D))
+            guia: figura.segmento("LT")
+            porque: |
+              Por D₁, la vertical hasta la horizontal de C₂.
+          - con: marca
+            traza: proy_alzado(D)
+            rotulo: D₂
+            porque: |
+              D₂, donde la vertical de D₁ corta la horizontal de C₂.
+          - con: regla
+            traza: '[segmento2(figura.punto("A1"), proy_planta(B)), segmento2(proy_planta(B), figura.punto("C1")), segmento2(figura.punto("C1"), proy_planta(D)), segmento2(proy_planta(D), figura.punto("A1")), segmento2(figura.punto("A2"), proy_alzado(B)), segmento2(proy_alzado(B), figura.punto("C2")), segmento2(figura.punto("C2"), proy_alzado(D)), segmento2(proy_alzado(D), figura.punto("A2"))]'
+            porque: |
+              A₁B₁C₁D₁ y A₂B₂C₂D₂, las proyecciones del rombo. A₂D₂ sale paralela a B₂C₂: la comprobación.
+        pista: |
+          (1) l₂, la horizontal de A₂, y l₁, la paralela a la línea de tierra por C₁: B está en l. (2) C₀, en
+          la vertical de C₁, 40 mm por debajo (de C₂ a l₂). (3) La mediatriz de A₁C₀ corta l₁ en B₁; B₂, en la
+          vertical, sobre l₂. (4) D₁, donde la paralela a A₁B₁ por C₁ corta la horizontal de A₁; D₂, en la
+          horizontal de C₂.
+        desarrollo: |
+          En verde claro, las dos proyecciones del rombo. Ninguna de las dos es un rombo en el papel: el
+          rombo no es horizontal ni frontal.
+
+      - tipo: construir
+        titulo: El rombo de canto, con un cambio de plano
+        intro: |
+          Empieza por B₁, como en el paso anterior. Después, el ángulo con el plano horizontal: el tema lo
+          saca con un cambio de plano vertical, con la línea nueva perpendicular a una horizontal del plano,
+          y aquí hay una dibujada, AB. El enunciado no dice dónde va la línea nueva ni qué referencia se
+          toma: lo fijamos nosotros. La línea nueva, perpendicular a A₁B₁ por A₁, el vértice de abajo a la
+          derecha de la planta; baja hacia la izquierda, y la vista 4 cae abajo a la derecha, donde hay
+          sitio. La referencia, C, el punto más bajo, con la misma cota que D: todo cae hacia fuera. AB y CD
+          se ven de punta en la vista 4, así que A₄ ≡ B₄ y C₄ ≡ D₄, y el rombo, de canto. La perpendicular a
+          la línea nueva que pasa por A₁ es la propia A₁B₁ prolongada, y la que pasa por C₁ es la paralela a
+          A₁B₁, que pasaría por D₁, el del paso anterior. Marca C₄ y A₄; con el transportador, el ángulo del
+          canto con la línea nueva.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: C4
+            rotulo: C₄
+            pide: C y D en la vista 4, que caen en el mismo punto
+            es: solucion.C_4
+            bien: |
+              C₄ ≡ D₄ está en la línea nueva, donde la corta la paralela a A₁B₁ por C₁: C es la referencia, y
+              D tiene su misma cota.
+            diagnosticos:
+              - si: cerca_de(solucion.C4fuera30)
+                mensaje: |
+                  Has apartado C₄ 30 mm de la línea nueva, su cota contada desde la línea de tierra. En diédrico
+                  directo las cotas se cuentan desde la referencia, y C es la referencia: cae en la línea nueva.
+                ejemplo: solucion.C4fuera30
+              - si: cerca_de(solucion.C4dentro40)
+                mensaje: |
+                  Has tomado A de referencia, como si C₄ tuviera que quedar 40 mm por debajo de ella, hacia la
+                  planta. Aquí la referencia es C: cae en la línea nueva, y A y B se apartan hacia fuera.
+                ejemplo: solucion.C4dentro40
+              - si: '!en_recta(solucion.parC1)'
+                mensaje: |
+                  C₄ sale de C₁ por la **perpendicular a la línea nueva**, que es la paralela a A₁B₁ por C₁: la
+                  línea nueva es perpendicular a A₁B₁.
+                ejemplo: 'uno(medir_sobre(segmento2(figura.punto("A1"), solucion.C_4), desde: solucion.C_4, distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a A₁B₁ por C₁, pero no en la línea nueva: C es la referencia, y su
+                  proyección nueva cae en ella.
+          - nombre: A4
+            rotulo: A₄
+            pide: A y B en la vista 4, que caen en el mismo punto
+            es: solucion.A_4
+            bien: |
+              A₄ ≡ B₄ está en la prolongación de B₁A₁, 40 mm más allá de A₁, hacia fuera: lo que A está más
+              alto que C, la referencia. C₄A₄ es el canto del rombo.
+            diagnosticos:
+              - si: cerca_de(solucion.A4con70)
+                mensaje: |
+                  Has llevado 70 mm, la cota de A desde la línea de tierra. Se lleva lo que A está más alto que
+                  la referencia, C: 70 − 30 = 40 mm.
+                ejemplo: solucion.A4con70
+              - si: cerca_de(solucion.A4con30)
+                mensaje: |
+                  Has llevado 30 mm, lo que A está más lejos que C: la diferencia de **alejamientos**. Un cambio
+                  de plano vertical sale de la planta y lleva **cotas**: lo que A₂ está por encima de la
+                  horizontal de C₂, 40 mm.
+                ejemplo: solucion.A4con30
+              - si: cerca_de(solucion.A4dentro)
+                mensaje: |
+                  La distancia es la buena, pero hacia la planta. La vista nueva va al otro lado de la línea
+                  nueva, y un punto más alto que la referencia se aparta de ella hacia fuera.
+                ejemplo: solucion.A4dentro
+              - si: '!en_recta(solucion.lineaB1A1)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**, que es la prolongación de B₁A₁. A₁
+                  está en la línea nueva, y desde ahí se lleva la cota.
+                ejemplo: 'desplaza(solucion.A_4, dx: mm(4), dy: mm(-4))'
+              - si: siempre
+                mensaje: |
+                  Estás en la prolongación de B₁A₁, pero no a la distancia buena: desde A₁, hacia fuera, lo que
+                  A está más alto que C, de A₂ a la horizontal de C₂.
+        trazado:
+          - segmento2(figura.punto("A1"), solucion.C_4)
+          - segmento2(solucion.C_4, solucion.A_4)
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.K2mas)
+            guia: figura.segmento("LT")
+            rotulo: l₂
+            porque: |
+              Primero, B₁, como en el paso anterior. Por A₂, la paralela a la línea de tierra, hacia la
+              izquierda y larga: l₂, el alzado de l (nombre nuestro), con la cota de A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.K2)
+            guia: figura.segmento("LT")
+            porque: |
+              Por C₂, la vertical hasta l₂: lo que C está más bajo que A, que servirá dos veces.
+          - con: marca
+            traza: solucion.K2
+            rotulo: K₂
+            porque: |
+              K₂ (nombre nuestro), donde la vertical de C₂ corta l₂: C₂K₂ mide 40 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.B1mas)
+            guia: figura.segmento("LT")
+            rotulo: l₁
+            porque: |
+              Por C₁, la paralela a la línea de tierra, hacia la derecha: l₁, con el alejamiento de C.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.C0mas)
+            guia: figura.segmento("LT")
+            porque: |
+              Por C₁, la vertical hacia abajo: el camino de C al abatir el plano frontal de BC con l de
+              charnela.
+          - con: compas
+            traza: 'arco(figura.punto("C1"), por: proy_planta(solucion.C_ab), desde: desplaza(proy_planta(solucion.C_ab), dx: -6), hasta: desplaza(proy_planta(solucion.C_ab), dx: 6))'
+            toma: segmento2(figura.punto("C2"), solucion.K2)
+            porque: |
+              Con centro en C₁ y radio C₂K₂, el corte de abajo: el de arriba cae justo en C₂.
+          - con: marca
+            traza: proy_planta(solucion.C_ab)
+            rotulo: C₀
+            porque: |
+              C₀, donde el arco corta la vertical de C₁: C abatido, 40 mm por debajo de C₁.
+          - con: compas
+            traza: '[arco(figura.punto("A1"), por: solucion.Pm, desde: desplaza(solucion.Pm, dx: 6.18, dy: -5.08), hasta: desplaza(solucion.Pm, dx: -6.18, dy: 5.08)), arco(figura.punto("A1"), por: solucion.Qm, desde: desplaza(solucion.Qm, dx: -7.49, dy: -2.81), hasta: desplaza(solucion.Qm, dx: 7.49, dy: 2.81))]'
+            toma: segmento2(figura.punto("A1"), proy_planta(solucion.C_ab))
+            porque: |
+              La mediatriz de A₁C₀: con el compás abierto A₁C₀ y centro en A₁, un arco arriba y otro abajo.
+          - con: compas
+            traza: '[arco(proy_planta(solucion.C_ab), por: solucion.Pm, desde: desplaza(solucion.Pm, dx: 7.49, dy: 2.81), hasta: desplaza(solucion.Pm, dx: -7.49, dy: -2.81)), arco(proy_planta(solucion.C_ab), por: solucion.Qm, desde: desplaza(solucion.Qm, dx: -6.18, dy: 5.08), hasta: desplaza(solucion.Qm, dx: 6.18, dy: -5.08))]'
+            toma: segmento2(figura.punto("A1"), proy_planta(solucion.C_ab))
+            porque: |
+              Con la misma abertura y centro en C₀, los otros dos.
+          - con: marca
+            traza: solucion.Pm
+            rotulo: P
+            porque: |
+              P (nombre nuestro), el corte de los arcos de arriba.
+          - con: marca
+            traza: solucion.Qm
+            rotulo: Q
+            porque: |
+              Q (nombre nuestro), el corte de los arcos de abajo.
+          - con: regla
+            traza: segmento2(solucion.Pm, solucion.Qm)
+            porque: |
+              PQ, la mediatriz de A₁C₀, que cruza l₁.
+          - con: marca
+            traza: proy_planta(B)
+            rotulo: B₁
+            porque: |
+              B₁, donde la mediatriz corta l₁: A₁B₁ = B₁C₀.
+          - con: regla
+            traza: segmento2(proy_planta(B), solucion.A4mas)
+            porque: |
+              A₁B₁, prolongada con la regla más allá de A₁, larga: AB es horizontal, y la línea nueva se traza
+              perpendicular a ella. En esta prolongación caerá A₄.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), solucion.nuevaFin), segmento2(figura.punto("A1"), solucion.nuevaIni)]'
+            guia: solucion.AB1
+            rotulo: línea nueva
+            porque: |
+              La **línea nueva**, perpendicular a A₁B₁ por A₁, larga hacia abajo a la izquierda: vista desde
+              la dirección de AB, la horizontal se ve de punta, y el rombo entero, de canto.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.C_4)
+            guia: solucion.AB1
+            porque: |
+              Por C₁, la paralela a A₁B₁, que es la perpendicular a la línea nueva, hasta ella. Pasaría por D₁,
+              la del paso anterior: CD es paralelo a AB.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄ ≡ D₄, donde la paralela a A₁B₁ por C₁ corta la línea nueva: C es la referencia, y su
+              proyección nueva cae en la línea; D tiene su misma cota.
+          - con: compas
+            traza: 'arco(figura.punto("A1"), por: solucion.A_4, desde: desplaza(solucion.A_4, dx: -3.85, dy: 4.6), hasta: desplaza(solucion.A_4, dx: 3.85, dy: -4.6))'
+            toma: segmento2(figura.punto("C2"), solucion.K2)
+            porque: |
+              Con el compás, otra vez C₂K₂, lo que A está más alto que C, la referencia. Con centro en A₁, que
+              está en la línea nueva, el arco corta la recta B₁A₁ a los dos lados: vale el de fuera, en la
+              prolongación, porque A está más alto que la referencia y se aparta de la planta.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄ ≡ B₄, donde el arco corta la prolongación de B₁A₁, 40 mm por fuera de la línea nueva: A y B
+              tienen la misma cota.
+          - con: regla
+            traza: segmento2(solucion.C_4, solucion.A_4)
+            rotulo: canto
+            porque: |
+              C₄A₄ es el rombo **de canto**: la vista 4 mira a lo largo de AB y de CD, que se ven de punta, y
+              el plano entero se ve como una recta.
+          - con: transportador
+            traza: 'arco(solucion.C_4, por: figura.punto("A1"), desde: figura.punto("A1"), hasta: solucion.A_4)'
+            porque: |
+              Con el transportador en C₄, el ángulo del canto con la línea nueva: es el que forma el rombo con
+              el plano horizontal, porque la línea nueva hace de línea de tierra de una vista que mira el
+              plano de canto.
+        pista: |
+          (1) B₁, como en el paso anterior. (2) Prolonga B₁A₁; la línea nueva, perpendicular a ella por A₁.
+          (3) La paralela a A₁B₁ por C₁ corta la línea nueva en C₄ ≡ D₄. (4) A₄ ≡ B₄, en la prolongación de
+          B₁A₁, 40 mm por fuera de A₁, con el compás abierto C₂K₂.
+        desarrollo: |
+          En verde claro, la línea nueva y el canto C₄A₄. El ángulo que forman es el del rombo con el plano
+          horizontal.
+
+      - tipo: calcular
+        titulo: El ángulo del rombo con el plano horizontal
+        pregunta: ¿Qué ángulo forma el rombo con el plano horizontal? Mídelo con el transportador en la vista 4 del paso anterior.
+        respuesta:
+          tipo: numero
+          valor: '68.80'
+          receta: angulo
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '21.20'
+            receta: 90 - angulo
+            mensaje: |
+              Ese es el **complementario**: el ángulo del canto con la perpendicular a la línea nueva. El del
+              plano con el horizontal es el que forma el canto con la propia línea nueva, que hace de línea
+              de tierra de la vista 4.
+          - valor: '58.86'
+            receta: angulo_con_ph(segmento3(B, C))
+            mensaje: |
+              Ese es el ángulo de **BC** con el plano horizontal, el que se ve en el alzado porque BC es
+              frontal. BC está en el rombo, pero no es su recta de máxima pendiente, y el ángulo del plano
+              es el de esa recta: el mayor de todas las suyas.
+          - valor: '30.81'
+            receta: angulo_con_ph(segmento3(A, C))
+            mensaje: |
+              Ese es el ángulo de la diagonal **AC** con el plano horizontal: el que forma con A₁C₁ la
+              hipotenusa del triángulo de catetos A₁C₁ y los 40 mm de diferencia de cotas. AC tampoco es de
+              máxima pendiente.
+          - valor: '44.37'
+            receta: angulo_con_pv(rombo)
+            mensaje: |
+              Ese es el ángulo del rombo con el plano **vertical**, el que daría un cambio de plano
+              horizontal con la línea nueva perpendicular a B₂C₂.
+        pista: |
+          En la vista 4, el rombo es la recta C₄A₄: el ángulo es el de esa recta con la línea nueva. También
+          sale de la cuenta: A₄ está 40 mm por fuera de la línea nueva, y C₄ queda a 15,5 mm de A₁ sobre ella.
+        desarrollo: |
+          En la vista 4, el canto sube 40 mm (lo que A está más alto que C) mientras avanza 15,51 mm sobre la
+          línea nueva, que es lo que separa las plantas de AB y de CD:
+
+          $$ \tan\alpha = \frac{40}{15{,}51} \;\Longrightarrow\; \alpha \approx 68{,}80^\circ $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AB es horizontal y BC frontal, así que B tiene la cota de A y el alejamiento de C, y está en una recta paralela a la línea de tierra.
+          - texto: AB se ve en verdadera magnitud en la planta, y BC no; abatido el plano frontal de BC sobre el horizontal de A, B₁C₀ sí mide lo que BC.
+          - texto: B₁ está en la mediatriz de A₁C₀, donde corta la paralela a la línea de tierra por C₁; D cierra el paralelogramo con AD frontal y CD horizontal.
+          - texto: Con la línea nueva perpendicular a A₁B₁, AB y CD se ven de punta y el rombo de canto; el canto forma con la línea nueva el ángulo con el plano horizontal.
+          - texto: B₁ es el punto de la paralela a la línea de tierra por C₁ que está a la misma distancia de A₁ que de C₁.
+            trampa: true
+            mensaje: |
+              En la planta, A₁B₁ es la verdadera magnitud de AB, que es horizontal, pero B₁C₁ no lo es de BC,
+              que baja 40 mm. Ese punto cae 13,3 mm a la derecha de B₁, y el cuadrilátero que da no es un
+              rombo: AB mediría 37,5 mm y BC, 54,8.
+    resolucion: |
+      **Lo que dan los datos.** Con el convenio del curso (desplazamiento positivo hacia la izquierda del
+      origen), A está 20 mm a la derecha de O, a 70 mm de cota y 40 de alejamiento, y C, 40 mm a la
+      izquierda, a 30 de cota y 10 de alejamiento. AB horizontal da a B la cota de A; BC frontal, el
+      alejamiento de C: B está en la recta l, paralela a la línea de tierra, con l₂ en la horizontal de A₂ y
+      l₁ en la de C₁.
+
+      **B.** En un rombo AB = BC. AB, horizontal, está en verdadera magnitud en la planta; BC no. Se abate
+      el plano frontal de BC sobre el horizontal de A, con l de charnela: C₁ ya está en l₁, así que C₀ cae en
+      su vertical, 40 mm por debajo, lo que C está más bajo que A. B, en la charnela, no se mueve, y B₁ es
+      donde la mediatriz de A₁C₀ corta l₁. Queda B(15,83; 10; 70): 15,83 mm a la izquierda de O. El lado
+      mide 46,73 mm.
+
+      **D.** AD es paralelo a BC, frontal, y CD paralelo a AB, horizontal: D₁ está donde la paralela a la
+      línea de tierra por A₁ corta la paralela a A₁B₁ por C₁, y D₂ en la horizontal de C₂. D(4,17; 40; 30).
+
+      **El ángulo.** Con un cambio de plano vertical, línea nueva perpendicular a A₁B₁ por A₁ y C de
+      referencia, AB y CD se ven de punta: C₄ ≡ D₄ en la línea nueva y A₄ ≡ B₄ 40 mm por fuera. El canto
+      C₄A₄ forma con la línea nueva 68,80°: el ángulo del rombo con el plano horizontal. BC, que es frontal,
+      forma 58,86° con él, y la diagonal AC, 30,81°: menos, porque no son de máxima pendiente.
+
+  - id: sd10-el-triangulo-equilatero-con-el-lado-opuesto-sobre-r
+    titulo: El triángulo equilátero con un vértice en A y el lado opuesto sobre r
+    fuente: Ejercicio 8 (SD10) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual (§08). El enunciado no impone método:
+    # r es horizontal (r₂ es horizontal en el papel), así que abatir alrededor
+    # de r es lo que haría el alumno: B y C están en la charnela y no se
+    # mueven. A₀ vale a los dos lados (lista). Cuál de los dos vértices de r es
+    # B lo decide la primera marca (elección): el enunciado no los nombra. No
+    # se usa poligono_regular, para que la receta siga a la construcción: el
+    # alumno no busca el centro (en AM, a 2/3 desde A), sino que lleva sobre r,
+    # desde el pie M, la mitad del lado, altura/√3; la receta hace lo mismo,
+    # con punto_a_distancia.
+    enunciado: |
+      Dibujar las proyecciones diédricas de un triángulo equilátero sabiendo que el punto A es uno de sus
+      vértices y que el lado opuesto está sobre la recta r.
+
+      **Notas nuestras.** La figura es el punto A, con las cruces de A₂ arriba y de A₁ debajo, y la recta
+      r, con r₂ horizontal entre las dos cruces y r₁ inclinada, bajando hacia la derecha por debajo de A₁,
+      a escala 1:1. Como r₂ es horizontal, r es una recta horizontal. Llamamos B y C a los otros dos
+      vértices, los que están sobre r; cuál es cada uno lo decides tú al marcar el primero.
+    pide: Las proyecciones de los vértices B y C, que están sobre r, y, como pregunta nuestra, la medida real del lado.
+    receta:
+      lamina: sd10
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        r: 'recta3(alzado: figura.segmento("r2"), planta: figura.segmento("r1"))'
+        Ri: 'punto3(alzado: figura.punto("Ri2"), planta: figura.punto("Ri1"))'
+        Rd: 'punto3(alzado: figura.punto("Rd2"), planta: figura.punto("Rd1"))'
+        tri: plano(A, Ri, Rd)
+      solucion:
+        # M, el pie de la altura: la perpendicular desde A a r. B y C están en
+        # r, a la mitad del lado de M (altura/√3), uno a cada lado: cuál es B
+        # es una elección.
+        M: pie_perpendicular(A, r)
+        h: vm(A, M)
+        B: 'punto_a_distancia(r, desde: M, distancia: h / raiz(3))'
+        C: 'simetrico(B, respecto: M)'
+        lado_mm: en_mm(vm(B, C))
+        # ── Decisión: abatimiento con r de charnela sobre su plano horizontal.
+        # A se abate a cualquiera de los dos lados (lista); el primero, debajo
+        # de r₁ a la izquierda, es el de la construcción, lejos de A₁ y de r₂.
+        A_abs: abatido(A, r, tri)
+        A_ab: uno(A_abs, 1)
+        M1: proy_planta(M)
+        K2: pie_perpendicular(figura.punto("A2"), figura.segmento("r2"))
+        perpA1: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("r1"))'
+        A0mas: 'uno(medir_sobre(segmento2(M1, proy_planta(A_ab)), desde: proy_planta(A_ab), distancia: mm(6)), 1)'
+        # El triángulo del radio, rectángulo en M₁: sobre la charnela, desde M₁
+        # y hacia la derecha, lo que A está más alto que r; A₁T es el radio.
+        T: 'uno(medir_sobre(figura.segmento("r1"), desde: M1, distancia: diferencia_de_cotas(A, M)), 1)'
+        # El ángulo de 30° con el compás: el triángulo equilátero A₀M₁P (P a la
+        # derecha de A₀M₁) y la perpendicular por A₀ a M₁P, que es su bisectriz
+        # en A₀ y corta r₁ en el vértice de la derecha (la rama 1 de B).
+        mAM: punto_medio(segmento2(proy_planta(A_ab), M1))
+        P: 'uno(medir_sobre(perpendicular(por: mAM, a: segmento2(proy_planta(A_ab), M1)), desde: mAM, distancia: h * raiz(3) / 2), 1)'
+        MP: segmento2(M1, P)
+        Bmas: 'uno(medir_sobre(segmento2(proy_planta(A_ab), proy_planta(rama(B, 1))), desde: proy_planta(rama(B, 1)), distancia: mm(9)), 1)'
+        # Los errores. A₀ con un solo cateto: la cota (a los dos lados) o lo que
+        # A₁ dista de r₁, llevado al otro lado (en el lado de A₁ cae en A₁).
+        A0cota: 'medir_sobre(perpA1, desde: M1, distancia: diferencia_de_cotas(A, M))'
+        A0planta: 'uno(medir_sobre(perpA1, desde: M1, distancia: vm_planta(A, M)), 1)'
+        # B y C con la altura de la planta (el triángulo dibujado en la planta,
+        # sin abatir) o con la diferencia de cotas sola.
+        Bplanta: 'medir_sobre(figura.segmento("r1"), desde: M1, distancia: vm_planta(A, M) / raiz(3))'
+        Bcota: 'medir_sobre(figura.segmento("r1"), desde: M1, distancia: diferencia_de_cotas(A, M) / raiz(3))'
+      comprueba:
+        - en_recta(B, r)
+        - en_recta(C, r)
+        # Equilátero: B a la misma distancia de A que de C, y C de A que de B.
+        - en_plano(B, plano_mediador(A, C))
+        - en_plano(C, plano_mediador(A, B))
+    pasos:
+      - tipo: reconocer
+        pregunta: r₂ es horizontal en el papel. ¿Por qué eso decide cómo se resuelve el ejercicio?
+        opciones:
+          - texto: Porque r es una horizontal del plano del triángulo, y sirve de charnela para abatirlo sin mover B ni C
+            correcta: true
+            mensaje: |
+              Eso es. A y r definen el plano del triángulo, y r es una horizontal suya: se abate sobre el
+              plano horizontal de r con ella de charnela. B y C están en r, así que abatidos no se mueven:
+              B₀ ≡ B₁ y C₀ ≡ C₁. Solo hay que abatir A.
+          - texto: Porque entonces la planta del triángulo está en verdadera magnitud
+            mensaje: |
+              No: lo estaría si el plano del triángulo fuera horizontal, y no lo es, porque A está 30 mm más
+              alto que r. Lo que está en verdadera magnitud en la planta es r, y con ella el lado BC; los
+              otros dos lados salen acortados.
+          - texto: Porque r es frontal, y el triángulo se ve en verdadera magnitud en el alzado
+            mensaje: |
+              r no es frontal: una frontal tiene la planta paralela a la horizontal del papel, y aquí es r₂
+              la que lo es. r es horizontal, y su verdadera magnitud está en la planta.
+
+      - tipo: construir
+        titulo: Por abatimiento, con r de charnela
+        intro: |
+          El enunciado no impone método. El que haría el alumno es abatir el plano del triángulo, el de A y
+          r, sobre el plano horizontal de r, con r de charnela, porque r es horizontal: B y C, que están en
+          ella, no se mueven al abatir, y solo hay que abatir A. Para el radio, el triángulo rectángulo en
+          M₁, el pie de la perpendicular a r₁ por A₁: un cateto es A₁M₁ y el otro, lo que A está más alto que
+          r. Abatido, A₀M₁ es la altura del triángulo en verdadera magnitud, y los lados que salen de A₀
+          forman 30° con ella: con el compás, el triángulo equilátero A₀M₁P da 60° en A₀, y la perpendicular
+          por A₀ a M₁P lo parte en dos. A₀ vale a cualquiera de los dos lados de r₁. Cuál de los dos vértices
+          de r es B lo decides tú al marcarlo. La vertical de A₂, que es la de A₁, pasa a 1,2 mm del vértice
+          de la derecha, en la planta y en el alzado, y M₁P prolongada corta r₂ a 1,2 mm del alzado del de la
+          izquierda: amplía con la lupa antes de marcarlos. Marca A₀, B₁, C₁, B₂ y C₂.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A0
+            pide: A abatido sobre el plano horizontal de r, con r de charnela
+            es: proy_planta(solucion.A_abs)
+            bien: |
+              A₀ está en la perpendicular a r₁ por A₁, a 39,1 mm de M₁: la distancia real de A a r, la
+              hipotenusa de A₁M₁ (25,1 mm) y de lo que A está más alto que r (30,0 mm). Vale a los dos lados.
+            diagnosticos:
+              - si: cerca_de(solucion.A0cota)
+                mensaje: |
+                  Vas por la perpendicular a r₁, pero has llevado solo **lo que A está más alto que r**, A₂K₂.
+                  Eso es un cateto. El radio es la hipotenusa de ese cateto y de lo que A₁ dista de r₁ en la
+                  planta.
+                ejemplo: uno(solucion.A0cota, 1)
+              - si: cerca_de(solucion.A0planta)
+                mensaje: |
+                  Has llevado al otro lado de r₁ lo que A₁ dista de ella **en la planta**, y la planta acorta:
+                  A está 30 mm más alto que r. Con esa distancia y la diferencia de cotas se forma el triángulo
+                  cuya hipotenusa es el radio.
+                ejemplo: solucion.A0planta
+              - si: '!en_recta(solucion.perpA1)'
+                mensaje: |
+                  A gira alrededor de r en un plano perpendicular a ella, que es vertical: en la planta, A₀ se
+                  mueve por la **perpendicular a r₁ que pasa por A₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.A_ab), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a r₁ por A₁, pero no a la distancia buena. El radio es la
+                  hipotenusa de A₁M₁ y de lo que A₂ está por encima de r₂.
+          - nombre: B1
+            pide: la planta de B, un vértice de los que están en r
+            es: proy_planta(solucion.B)
+            bien: |
+              B₁ ≡ B₀ está en r₁, a 22,6 mm de M₁: la mitad del lado, que es la altura entre √3. B está en la
+              charnela, y abatido no se mueve.
+            diagnosticos:
+              - si: cerca_de(solucion.Bplanta)
+                mensaje: |
+                  Has dibujado el triángulo **en la planta**, con A₁ de vértice y A₁M₁ de altura. La planta
+                  acorta A₁M₁, porque A está 30 mm más alto que r: la altura de verdad es A₀M₁, y sale de
+                  abatir A.
+                ejemplo: uno(solucion.Bplanta, 1)
+              - si: cerca_de(solucion.Bcota)
+                mensaje: |
+                  Has tomado de altura solo lo que A está más alto que r, un cateto. La altura es A₀M₁, la
+                  hipotenusa, con A₁M₁ de otro cateto.
+                ejemplo: uno(solucion.Bcota, 1)
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  B está en r: B₁ va **en r₁**. Como está en la charnela, B₀ y B₁ son el mismo punto.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.B, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en r₁, pero no a la distancia buena de M₁. Por A₀, la recta que forma 30° con A₀M₁:
+                  con el triángulo equilátero A₀M₁P, la perpendicular por A₀ a M₁P. Donde corta r₁, un
+                  vértice.
+          - nombre: C1
+            pide: la planta de C, el otro vértice de r
+            es: proy_planta(solucion.C)
+            bien: |
+              C₁ ≡ C₀ está en r₁, al otro lado de M₁, a la misma distancia que B₁: la altura cae en el punto
+              medio del lado BC. B₁C₁ mide 45,2 mm, el lado, en verdadera magnitud: r es horizontal.
+            diagnosticos:
+              - si: cerca_de(solucion.Bplanta)
+                mensaje: |
+                  Ese punto sale del triángulo dibujado en la planta, con A₁M₁ de altura. La altura de verdad
+                  es A₀M₁: C₁ está al otro lado de M₁, a lo mismo que B₁.
+                ejemplo: uno(solucion.Bplanta, 2)
+              - si: cerca_de(solucion.Bcota)
+                mensaje: |
+                  Ese punto sale de tomar de altura solo la diferencia de cotas. C₁ está al otro lado de M₁, a
+                  la misma distancia que B₁: con el compás abierto M₁B₁.
+                ejemplo: uno(solucion.Bcota, 2)
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  C está en r: C₁ va **en r₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.C, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en r₁, pero no donde toca: al otro lado de M₁, a la distancia M₁B₁. Con centro en M₁ y
+                  esa abertura, el arco corta r₁ en C₁.
+          - nombre: B2
+            pide: el alzado de B
+            es: proy_alzado(solucion.B)
+            bien: |
+              B₂ está en r₂, en la vertical de B₁.
+            diagnosticos:
+              - si: '!en_vertical_de(B1)'
+                mensaje: |
+                  B₂ va en la **vertical de B₁**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.B, 1)), dx: mm(5))'
+              - si: '!en_recta(figura.segmento("r2"))'
+                mensaje: |
+                  B está en r: B₂ va **en r₂**, donde la corta la vertical de B₁.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.B, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  B₂ está donde la vertical de B₁ corta r₂.
+          - nombre: C2
+            pide: el alzado de C
+            es: proy_alzado(solucion.C)
+            bien: |
+              C₂ está en r₂, en la vertical de C₁. B₂C₂ está en r₂, y A₂B₂C₂ es el alzado del triángulo.
+            diagnosticos:
+              - si: '!en_vertical_de(C1)'
+                mensaje: |
+                  C₂ va en la **vertical de C₁**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.C, 1)), dx: mm(5))'
+              - si: '!en_recta(figura.segmento("r2"))'
+                mensaje: |
+                  C está en r: C₂ va **en r₂**, donde la corta la vertical de C₁.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.C, 1)), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  C₂ está donde la vertical de C₁ corta r₂.
+        trazado:
+          - segmento2(proy_planta(solucion.A_ab), proy_planta(solucion.B))
+          - segmento2(proy_planta(solucion.A_ab), proy_planta(solucion.C))
+          - segmento2(figura.punto("A1"), proy_planta(solucion.B))
+          - segmento2(figura.punto("A1"), proy_planta(solucion.C))
+          - segmento2(proy_planta(solucion.B), proy_planta(solucion.C))
+          - segmento2(figura.punto("A2"), proy_alzado(solucion.B))
+          - segmento2(figura.punto("A2"), proy_alzado(solucion.C))
+          - segmento2(proy_alzado(solucion.B), proy_alzado(solucion.C))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.K2)
+            guia: figura.segmento("r2")
+            porque: |
+              Por A₂, la vertical hasta r₂: ese trozo es lo que A está más alto que r. r es horizontal, y toda
+              ella tiene la misma cota, la de r₂.
+          - con: marca
+            traza: solucion.K2
+            porque: |
+              K₂ (nombre nuestro), donde la vertical de A₂ corta r₂: A₂K₂ mide 30 mm. Va sin rótulo, porque el
+              alzado del vértice de la derecha caerá a 1,2 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.A0mas)
+            guia: figura.segmento("r1")
+            porque: |
+              Por A₁, la perpendicular a la charnela r₁, larga, cruzándola: al abatir, A gira alrededor de r en
+              un plano perpendicular a ella, que es vertical, y en la planta se mueve por esta recta.
+          - con: marca
+            traza: solucion.M1
+            rotulo: M₁
+            porque: |
+              M₁ (nombre nuestro), donde la perpendicular por A₁ corta r₁: el pie de A en la charnela. Será el
+              pie de la altura del triángulo.
+          - con: compas
+            traza: 'arco(solucion.M1, por: solucion.T, desde: desplaza(solucion.T, dx: -3.86, dy: 4.6), hasta: desplaza(solucion.T, dx: 3.86, dy: -4.6))'
+            toma: segmento2(figura.punto("A2"), solucion.K2)
+            porque: |
+              El triángulo del radio, rectángulo en M₁. Con el compás, A₂K₂, lo que A está más alto que r, y
+              con centro en M₁, sobre la charnela. Corta r₁ a los dos lados de M₁, y los dos dan el mismo
+              radio; tomamos el de la derecha, que queda libre.
+          - con: marca
+            traza: solucion.T
+            rotulo: T
+            porque: |
+              T (nombre nuestro), donde el arco corta r₁: M₁T es la diferencia de cotas, y A₁M₁, el otro cateto.
+          - con: regla
+            traza: segmento2(figura.punto("A1"), solucion.T)
+            porque: |
+              La hipotenusa, de A₁ a T, es la distancia real de A a la charnela: el radio con que A se abate,
+              39,1 mm. Como el lado opuesto a A está en r, es también la altura del triángulo.
+          - con: compas
+            traza: 'arco(solucion.M1, por: proy_planta(solucion.A_ab), desde: desplaza(proy_planta(solucion.A_ab), dx: -4.6, dy: -3.86), hasta: desplaza(proy_planta(solucion.A_ab), dx: 4.6, dy: 3.86))'
+            toma: segmento2(figura.punto("A1"), solucion.T)
+            porque: |
+              Con centro en M₁ y radio A₁T, el arco que corta la perpendicular al otro lado de r₁: A cae al
+              plano horizontal de r girando alrededor de la charnela. Del lado de A₁ también valdría.
+          - con: marca
+            traza: proy_planta(solucion.A_ab)
+            rotulo: A₀
+            porque: |
+              A₀, donde el arco de centro M₁ corta la perpendicular por A₁, debajo de r₁: A abatido. A₀M₁ es la
+              altura del triángulo en verdadera magnitud.
+          - con: compas
+            traza: '[arco(proy_planta(solucion.A_ab), por: solucion.P, desde: desplaza(solucion.P, dx: -1.39, dy: 7.88), hasta: desplaza(solucion.P, dx: 1.39, dy: -7.88)), arco(solucion.M1, por: solucion.P, desde: desplaza(solucion.P, dx: -7.52, dy: 2.74), hasta: desplaza(solucion.P, dx: 7.52, dy: -2.74))]'
+            toma: segmento2(proy_planta(solucion.A_ab), solucion.M1)
+            porque: |
+              El ángulo de 60°, con el compás: con radio A₀M₁ y centro en A₀ y en M₁, dos arcos que se cortan a
+              los dos lados de A₀M₁. Tomamos el corte de la derecha; el de la izquierda también vale, y daría
+              primero el vértice de la izquierda.
+          - con: marca
+            traza: solucion.P
+            rotulo: P
+            porque: |
+              P (nombre nuestro), donde se cortan los dos arcos: A₀M₁P es equilátero, y el ángulo en A₀ mide
+              60°.
+          - con: regla
+            traza: solucion.MP
+            porque: |
+              M₁P, el lado del triángulo equilátero auxiliar opuesto a A₀.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.A_ab), solucion.Bmas)
+            guia: solucion.MP
+            porque: |
+              Por A₀, la perpendicular a M₁P, hasta cruzar r₁: en el triángulo equilátero A₀M₁P es la bisectriz
+              del ángulo en A₀, así que forma 30° con la altura A₀M₁. En el triángulo pedido, la altura parte en
+              dos el ángulo de 60° de A₀: esta recta es un lado. En el papel, el cartabón la da de una vez.
+          - con: marca
+            traza: proy_planta(solucion.B)
+            rotulo: B₁
+            porque: |
+              B₁ ≡ B₀, donde esa recta corta r₁: B está en la charnela, y abatido no se mueve. Aquí es el de la
+              derecha; el otro valdría igual, y entonces sería C.
+          - con: compas
+            traza: 'arco(solucion.M1, por: proy_planta(solucion.C), desde: desplaza(proy_planta(solucion.C), dx: 3.86, dy: -4.6), hasta: desplaza(proy_planta(solucion.C), dx: -3.86, dy: 4.6))'
+            toma: segmento2(solucion.M1, proy_planta(rama(solucion.B, 1)))
+            porque: |
+              Con centro en M₁ y radio M₁B₁, el arco que corta r₁ al otro lado: la altura cae en el punto
+              medio del lado BC.
+          - con: marca
+            traza: proy_planta(solucion.C)
+            rotulo: C₁
+            porque: |
+              C₁ ≡ C₀, donde el arco corta r₁ al otro lado de M₁.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.A_ab), proy_planta(solucion.C))
+            porque: |
+              A₀C₁ cierra el triángulo abatido A₀B₁C₁, en verdadera magnitud: sus tres lados miden 45,2 mm.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(rama(solucion.B, 1)), proy_alzado(rama(solucion.B, 1))), segmento2(proy_planta(rama(solucion.C, 1)), proy_alzado(rama(solucion.C, 1)))]'
+            guia: figura.segmento("r2")
+            porque: |
+              Por B₁ y por C₁, las verticales hasta r₂: B y C están en r.
+          - con: marca
+            traza: proy_alzado(solucion.B)
+            rotulo: B₂
+            porque: |
+              B₂, donde la vertical de B₁ corta r₂, a 1,2 mm de K₂.
+          - con: marca
+            traza: proy_alzado(solucion.C)
+            rotulo: C₂
+            porque: |
+              C₂, donde la vertical de C₁ corta r₂.
+          - con: regla
+            traza: '[segmento2(figura.punto("A1"), proy_planta(rama(solucion.B, 1))), segmento2(figura.punto("A1"), proy_planta(rama(solucion.C, 1))), segmento2(figura.punto("A2"), proy_alzado(rama(solucion.B, 1))), segmento2(figura.punto("A2"), proy_alzado(rama(solucion.C, 1)))]'
+            porque: |
+              A₁B₁C₁ y A₂B₂C₂, las proyecciones del triángulo; sus lados BC están sobre r₁ y r₂.
+        pista: |
+          (1) Por A₁, la perpendicular a r₁: M₁. (2) El radio: sobre r₁, desde M₁, lo que A₂ está por encima
+          de r₂; la hipotenusa hasta A₁. (3) A₀, con centro en M₁ y ese radio. (4) Con radio A₀M₁ y centros
+          en A₀ y M₁, P; por A₀, la perpendicular a M₁P corta r₁ en un vértice. (5) El otro, al otro lado de
+          M₁, a la misma distancia. (6) Los alzados, en r₂.
+        desarrollo: |
+          En verde claro, el triángulo abatido A₀B₁C₁, en verdadera magnitud, y sus dos proyecciones. B y C
+          están en la charnela: no se mueven al abatir.
+
+      - tipo: calcular
+        titulo: El lado del triángulo
+        pregunta: ¿Cuánto mide de verdad el lado del triángulo equilátero?
+        respuesta:
+          tipo: numero
+          valor: '45.18'
+          receta: lado_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '39.13'
+            receta: en_mm(h)
+            mensaje: |
+              Eso es la **altura**, A₀M₁: la distancia real de A a r. El lado es más largo, 2/√3 veces la
+              altura, porque la altura es un cateto del triángulo que forma con medio lado.
+          - valor: '28.98'
+            receta: en_mm(vm_planta(A, M) * 2 / raiz(3))
+            mensaje: |
+              Es el lado del triángulo que tiene de altura A₁M₁, la de la **planta**. La planta acorta esa
+              altura, porque A está 30 mm más alto que r: la buena es A₀M₁, la abatida.
+          - valor: '30.04'
+            receta: en_mm(vm_alzado(A, rama(B, 1)))
+            mensaje: |
+              Eso es lo que mide en el **alzado** el lado que va al vértice de la derecha. Ese lado no es
+              frontal, y el alzado lo acorta. El lado en verdadera magnitud está en la planta, sobre r: B₁C₁.
+          - valor: '33.77'
+            receta: en_mm(vm_planta(A, B))
+            mensaje: |
+              Eso es lo que mide **A₁B₁ en la planta**. AB sube 30 mm de B a A, y la planta lo acorta. El lado
+              que sí se ve en verdadera magnitud en la planta es B₁C₁: está sobre r, que es horizontal.
+        pista: |
+          Mide B₁C₁ con «medir»: BC está sobre r, que es horizontal, y la planta la da en verdadera magnitud.
+          También A₀B₁, en el abatimiento.
+        desarrollo: |
+          La altura es la distancia real de A a r, 39,13 mm, y el lado de un triángulo equilátero es 2/√3
+          veces su altura:
+
+          $$ \ell = \frac{2}{\sqrt{3}}\, \overline{A_0M_1} = \frac{2}{\sqrt{3}} \cdot 39{,}13 \approx 45{,}18 \text{ mm} $$
+
+          En el alzado, el lado que va al vértice de la izquierda mide 44,93 mm, casi lo mismo por
+          casualidad, y el de la derecha, 30,04: ninguno está en verdadera magnitud, porque ni AB ni AC son
+          frontales.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: A y r definen el plano del triángulo, y r es horizontal, porque r₂ lo es en el papel; sirve de charnela.
+          - texto: A se abate por la perpendicular a r₁, con un radio que es la hipotenusa de A₁M₁ y de lo que A está más alto que r; A₀M₁ es la altura en verdadera magnitud.
+          - texto: B y C están en r, a cada lado de M₁, y los lados A₀B₁ y A₀C₁ forman 30° con la altura A₀M₁.
+          - texto: B y C están en la charnela y no se mueven al abatir, así que B₁ y C₁ ya son sus plantas; los alzados, en r₂, en la vertical.
+          - texto: La altura del triángulo es A₁M₁, lo que A₁ dista de r₁ en la planta, y el triángulo se dibuja allí mismo.
+            trampa: true
+            mensaje: |
+              A₁M₁ es una proyección: A está 30 mm más alto que r, y la planta acorta la altura, de 39,1 a 25,1
+              mm. Un triángulo dibujado en la planta con esa altura tiene 29,0 mm de lado, y el de verdad,
+              45,2.
+    resolucion: |
+      **Lo que dan los datos.** r₂ es horizontal en el papel: r es una recta horizontal, y con A define el
+      plano del triángulo. El lado BC está en r, y A es el vértice opuesto: la altura del triángulo es la
+      distancia de A a r.
+
+      **El abatimiento.** Con r de charnela, el plano se abate sobre el plano horizontal de r, y B y C, que
+      están en ella, no se mueven. A se abate por la perpendicular a r₁ que pasa por A₁, que la corta en M₁.
+      El radio es la hipotenusa de A₁M₁, 25,10 mm en la planta, y de lo que A está más alto que r, 30,01 mm
+      en el alzado: 39,13 mm. Esa es la altura del triángulo.
+
+      **El triángulo.** En verdadera magnitud, los lados que salen de A₀ forman 30° con la altura A₀M₁: con
+      el triángulo equilátero auxiliar A₀M₁P, la perpendicular por A₀ a M₁P corta r₁ en un vértice, y el
+      otro está al otro lado de M₁, a la misma distancia, 22,59 mm, la mitad del lado. B₁ y C₁ son esos dos
+      puntos, y B₂ y C₂ están en r₂, en sus verticales. El lado mide 45,18 mm; B₁C₁ lo da en la planta,
+      porque r es horizontal, y A₁B₁, que no lo es, mide 33,77.
+
   - id: sd16-las-otras-dos-palas-del-molino
     titulo: Las otras dos palas del molino
     fuente: Ejercicio 13 (SD16) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
