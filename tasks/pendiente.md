@@ -65,6 +65,11 @@ sabía:
   depósito, que es la lectura literal que se ha tomado, o como la sección
   de un tubo de sección cuadrada. La página no da cifra para «a»: se ha
   tomado el segmento dibujado, de 20 mm, y el ejercicio lo dice.
+- **Expresión Gráfica, el Ejercicio 47 de la colección (SD63)**, dos cosas: si
+  el triángulo ABC se toma opaco para la visibilidad de la recta, como se ha
+  supuesto y declarado; y si en el examen vale dar el ángulo de la recta con
+  el plano por el complementario, sin construir la posición de la recta
+  perpendicular.
 - **Expresión Gráfica, la hoja de *Criterios*** (`src/content/criterios/`),
   tres cosas que no dice: si en el precio compuesto de la escala el medio
   punto del cajetín se cobra una vez o por pieza (se ha supuesto una vez:
