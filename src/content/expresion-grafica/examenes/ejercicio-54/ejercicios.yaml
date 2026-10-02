@@ -157,7 +157,7 @@ ejercicios:
           empezadas: complétalas de un extremo al otro. El plano horizontal de cada arista corta
           VA, VB, VC y VD a su altura; bájalos a la planta y únelos, que forman un cuadrado. La
           planta de la arista corta ese cuadrado en sus dos puntos, y se suben al alzado.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, medir, borrar]
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, borrar]
         tolerancia: 1
         objetivos:
           - nombre: H1
@@ -450,6 +450,226 @@ ejercicios:
           - 'proy_planta([segmento3(solucion.Ae, solucion.Be), segmento3(solucion.Be, solucion.Ce), segmento3(solucion.Ce, solucion.De), segmento3(solucion.De, solucion.Ae)])'
           - 'proy_planta([segmento3(solucion.Af, solucion.Bf), segmento3(solucion.Bf, solucion.Cf), segmento3(solucion.Cf, solucion.Df), segmento3(solucion.Df, solucion.Af)])'
           - 'proy_planta([segmento3(solucion.Ag, solucion.Bg), segmento3(solucion.Bg, solucion.Cg), segmento3(solucion.Cg, solucion.Dg), segmento3(solucion.Dg, solucion.Ag)])'
+        # Decisión: la pista baja a la planta los cuatro vértices de cada cuadrado;
+        # la construcción paso a paso baja uno solo, el de VB, y saca con paralelas a
+        # los lados de la base los otros dos que hacen falta (la sección horizontal
+        # es semejante a la base, con el centro en V₁). Son menos trazos, y bajando
+        # los tres que hacen falta chocarían en el alzado De₂ con el rótulo de N₂ y
+        # Dg₂ con el de T₂. El cuarto vértice no hace falta de ninguna de las dos
+        # maneras: de cada cuadrado se trazan solo los dos lados que cruza la
+        # arista. El trazado de la solución los dibuja enteros.
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("E2"), figura.punto("E2p")), segmento2(figura.punto("F2"), figura.punto("F2p")), segmento2(figura.punto("G2"), figura.punto("G2p"))]'
+            porque: |
+              Las tres aristas del prisma en el alzado, completas con la regla de un extremo al otro: e₂
+              de E₂ a E′₂, f₂ de F₂ a F′₂ y g₂ de G₂ a G′₂. La lámina solo dibuja su arranque, y los
+              cortes con la pirámide están en ellas.
+          - con: regla
+            traza: '[segmento2(figura.punto("E1"), figura.punto("E1p")), segmento2(figura.punto("F1"), figura.punto("F1p")), segmento2(figura.punto("G1"), figura.punto("G1p"))]'
+            porque: |
+              Y en la planta, igual: e₁, f₁ y g₁, cada una de su extremo izquierdo al derecho.
+          - con: marca
+            traza: proy_alzado(solucion.Be)
+            rotulo: 1₂
+            porque: |
+              La arista e es horizontal, así que está en un plano horizontal, y ese plano corta la
+              pirámide en un cuadrado que la planta da sin deformar. En el alzado, el plano es la propia
+              e₂: 1₂, donde e₂ corta V₂B₂, es su corte con la arista VB. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Be), proy_planta(solucion.Be))
+            guia: figura.segmento("base2")
+            porque: |
+              Se baja a la planta por su línea de referencia, perpendicular a la base, hasta V₁B₁,
+              porque 1 está en la arista VB.
+          - con: marca
+            traza: proy_planta(solucion.Be)
+            rotulo: 1₁
+            porque: |
+              1₁, donde la vertical de 1₂ corta V₁B₁: un vértice del cuadrado de la sección horizontal
+              de e.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Be), proy_planta(solucion.Ce))
+            guia: figura.segmento("BC1")
+            porque: |
+              La pista baja a la planta los cuatro vértices del cuadrado; aquí basta con uno, porque la
+              sección horizontal de una pirámide es semejante a la base y tiene los lados paralelos a
+              los suyos: los demás vértices salen con la escuadra, sin bajar más puntos. e₁ pasa por
+              detrás de V₁, y corta los lados de las caras de atrás, VBC y VCD. Por 1₁, la paralela a
+              B₁C₁, hasta V₁C₁: el lado del cuadrado en la cara VBC.
+          - con: marca
+            traza: proy_planta(solucion.Ce)
+            rotulo: 2₁
+            porque: |
+              2₁, donde esa paralela corta V₁C₁: otro vértice del cuadrado de e. Es un nombre nuestro,
+              como 1.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Ce), proy_planta(solucion.De))
+            guia: figura.segmento("CD1")
+            porque: |
+              Por 2₁, la paralela a C₁D₁, hasta V₁D₁: el lado en la cara VCD. Los otros dos lados del
+              cuadrado no hacen falta, porque e₁ no los cruza.
+          - con: marca
+            traza: proy_planta(solucion.De)
+            rotulo: 3₁
+            porque: |
+              3₁, donde esa paralela corta V₁D₁, el tercer vértice del cuadrado de e. Es un nombre nuestro.
+          - con: marca
+            traza: proy_planta(solucion.H)
+            rotulo: H₁
+            porque: |
+              H₁, donde e₁ corta el lado 1₁2₁: la arista e entra en la pirámide por la cara VBC.
+          - con: marca
+            traza: proy_planta(solucion.N)
+            rotulo: N₁
+            porque: |
+              N₁, donde e₁ corta el lado 2₁3₁: e sale de la pirámide por la cara VCD.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.H), proy_alzado(solucion.H)), segmento2(proy_planta(solucion.N), proy_alzado(solucion.N))]'
+            guia: figura.segmento("base2")
+            porque: |
+              H y N están en la arista e, que es horizontal: se suben por sus líneas de referencia hasta
+              e₂.
+          - con: marca
+            traza: proy_alzado(solucion.H)
+            rotulo: H₂
+            porque: |
+              H₂, donde la vertical de H₁ corta e₂. No es el cruce de e₂ con V₂B₂, que es 1₂: ahí e pasa
+              por detrás de VB sin tocarla.
+          - con: marca
+            traza: proy_alzado(solucion.N)
+            rotulo: N₂
+            porque: |
+              N₂, donde la vertical de N₁ corta e₂, un poco antes de su cruce con V₂D₂.
+          - con: marca
+            traza: proy_alzado(solucion.Bf)
+            rotulo: 4₂
+            porque: |
+              Con f, igual: su plano horizontal corta la arista VB donde f₂ cruza V₂B₂, en 4₂. Es un
+              nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Bf), proy_planta(solucion.Bf))
+            guia: figura.segmento("base2")
+            porque: |
+              Su línea de referencia, hasta V₁B₁, porque 4 está en la arista VB.
+          - con: marca
+            traza: proy_planta(solucion.Bf)
+            rotulo: 4₁
+            porque: |
+              4₁, donde la vertical de 4₂ corta V₁B₁: un vértice del cuadrado de f, que es mayor que el
+              de e porque f va más baja.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Bf), proy_planta(solucion.Af))
+            guia: figura.segmento("AB1")
+            porque: |
+              f₁ pasa por delante de V₁, y corta los lados de las caras de delante, VAB y VDA. Por 4₁, la
+              paralela a A₁B₁, hasta V₁A₁: el lado del cuadrado de f en la cara VAB.
+          - con: marca
+            traza: proy_planta(solucion.Af)
+            rotulo: 5₁
+            porque: |
+              5₁, donde esa paralela corta V₁A₁. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Af), proy_planta(solucion.Df))
+            guia: figura.segmento("DA1")
+            porque: |
+              Por 5₁, la paralela a D₁A₁, hasta V₁D₁: el lado en la cara VDA.
+          - con: marca
+            traza: proy_planta(solucion.Df)
+            rotulo: 6₁
+            porque: |
+              6₁, donde esa paralela corta V₁D₁. Es un nombre nuestro.
+          - con: marca
+            traza: proy_planta(solucion.K)
+            rotulo: K₁
+            porque: |
+              K₁, donde f₁ corta el lado 4₁5₁: f entra en la pirámide por la cara VAB.
+          - con: marca
+            traza: proy_planta(solucion.Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde f₁ corta el lado 5₁6₁: f sale por la cara VDA.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.K), proy_alzado(solucion.K)), segmento2(proy_planta(solucion.Q), proy_alzado(solucion.Q))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se suben K y Q por sus líneas de referencia hasta f₂, porque están en la arista f.
+          - con: marca
+            traza: proy_alzado(solucion.K)
+            rotulo: K₂
+            porque: |
+              K₂, donde la vertical de K₁ corta f₂, a la derecha de su cruce con V₂B₂: f pasa por delante
+              de VB.
+          - con: marca
+            traza: proy_alzado(solucion.Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta f₂, bastante antes de su cruce con V₂D₂.
+          - con: marca
+            traza: proy_alzado(solucion.Bg)
+            rotulo: 7₂
+            porque: |
+              Y con g: 7₂, donde g₂ cruza V₂B₂, el corte de su plano horizontal con VB. Es un nombre
+              nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Bg), proy_planta(solucion.Bg))
+            guia: figura.segmento("base2")
+            porque: |
+              Su línea de referencia, hasta V₁B₁, porque 7 está en la arista VB.
+          - con: marca
+            traza: proy_planta(solucion.Bg)
+            porque: |
+              7₁, donde la vertical de 7₂ corta V₁B₁: el vértice del mayor de los tres cuadrados, porque g
+              es la arista más baja. Va sin rótulo, porque pisaría el de 4₁: es el punto de V₁B₁ más
+              cercano a B₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Bg), proy_planta(solucion.Cg))
+            guia: figura.segmento("BC1")
+            porque: |
+              g₁ pasa por detrás de V₁, como e₁, y corta los lados de las caras VBC y VCD. Por 7₁, la
+              paralela a B₁C₁, hasta V₁C₁.
+          - con: marca
+            traza: proy_planta(solucion.Cg)
+            rotulo: 8₁
+            porque: |
+              8₁, donde esa paralela corta V₁C₁. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Cg), proy_planta(solucion.Dg))
+            guia: figura.segmento("CD1")
+            porque: |
+              Por 8₁, la paralela a C₁D₁, hasta V₁D₁: el lado del cuadrado de g en la cara VCD, por
+              donde g sale de la pirámide.
+          - con: marca
+            traza: proy_planta(solucion.Dg)
+            porque: |
+              9₁, donde esa paralela corta V₁D₁, el punto de V₁D₁ más cercano a D₁. Es un nombre nuestro, y
+              va sin rótulo porque pisaría el de 6₁.
+          - con: marca
+            traza: proy_planta(solucion.M)
+            rotulo: M₁
+            porque: |
+              M₁, donde g₁ corta el lado 7₁8₁: g entra en la pirámide por la cara VBC.
+          - con: marca
+            traza: proy_planta(solucion.T)
+            rotulo: T₁
+            porque: |
+              T₁, donde g₁ corta el lado 8₁9₁: g sale por la cara VCD.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.M), proy_alzado(solucion.M)), segmento2(proy_planta(solucion.T), proy_alzado(solucion.T))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se suben M y T por sus líneas de referencia hasta g₂, porque están en la arista g.
+          - con: marca
+            traza: proy_alzado(solucion.M)
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta g₂.
+          - con: marca
+            traza: proy_alzado(solucion.T)
+            rotulo: T₂
+            porque: |
+              T₂, donde la vertical de T₁ corta g₂. Cada arista entra por la izquierda y sale por la
+              derecha: dos polígonos, no uno.
         pista: |
           (1) En el alzado, la horizontal de e₂ corta V₂A₂, V₂B₂, V₂C₂ y V₂D₂. (2) Baja esos cuatro
           puntos a la planta, cada uno a su arista, y únelos: es un cuadrado con el centro en V₁.
@@ -469,7 +689,7 @@ ejercicios:
           VB; P y R, los de VD. El plano de canto que contiene VB (en el alzado, la propia
           V₂B₂) corta e₂, f₂ y g₂ en tres puntos; bajados a e₁, f₁ y g₁, forman un triángulo, y
           V₁B₁ corta dos de sus lados en J₁ y L₁, que se suben a V₂B₂. Con VD, igual.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, medir, borrar]
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, borrar]
         tolerancia: 1
         objetivos:
           - nombre: J1
@@ -680,6 +900,154 @@ ejercicios:
         trazado:
           - 'proy_planta([segmento3(solucion.TeB, solucion.TfB), segmento3(solucion.TfB, solucion.TgB), segmento3(solucion.TgB, solucion.TeB)])'
           - 'proy_planta([segmento3(solucion.TeD, solucion.TfD), segmento3(solucion.TfD, solucion.TgD), segmento3(solucion.TgD, solucion.TeD)])'
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("E2"), figura.punto("E2p")), segmento2(figura.punto("F2"), figura.punto("F2p")), segmento2(figura.punto("G2"), figura.punto("G2p"))]'
+            porque: |
+              El Taller no guarda los trazos del paso anterior, y aquí hacen falta las aristas del prisma
+              enteras: en el alzado, e₂, f₂ y g₂ con la regla, de un extremo al otro.
+          - con: regla
+            traza: '[segmento2(figura.punto("E1"), figura.punto("E1p")), segmento2(figura.punto("F1"), figura.punto("F1p")), segmento2(figura.punto("G1"), figura.punto("G1p"))]'
+            porque: |
+              Y en la planta, e₁, f₁ y g₁.
+          - con: marca
+            traza: proy_alzado(solucion.TeB)
+            rotulo: 10₂
+            porque: |
+              VB atraviesa el prisma. Para cortarla con sus caras, un plano auxiliar que la contenga: el
+              de canto, perpendicular al alzado, que en el alzado es la propia V₂B₂. Ese plano corta la
+              arista e donde e₂ cruza V₂B₂: 10₂. Es un nombre nuestro.
+          - con: marca
+            traza: proy_alzado(solucion.TfB)
+            rotulo: 11₂
+            porque: |
+              11₂, donde f₂ cruza V₂B₂: el corte del plano de canto con la arista f. Es un nombre nuestro.
+          - con: marca
+            traza: proy_alzado(solucion.TgB)
+            rotulo: 12₂
+            porque: |
+              12₂, donde g₂ cruza V₂B₂: el corte con la arista g. Es un nombre nuestro. Su rótulo
+              quedará justo debajo de L₂, que va sin rótulo: el rótulo 12₂ es de este punto, el de g₂.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.TeB), proy_planta(solucion.TeB)), segmento2(proy_alzado(solucion.TfB), proy_planta(solucion.TfB)), segmento2(proy_alzado(solucion.TgB), proy_planta(solucion.TgB))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se bajan a la planta por sus líneas de referencia, cada uno hasta la planta de su arista: 10
+              está en e, 11 en f y 12 en g. No se paran en V₁B₁: son puntos del prisma, no de VB.
+          - con: marca
+            traza: proy_planta(solucion.TeB)
+            rotulo: 10₁
+            porque: |
+              10₁, donde la vertical de 10₂ corta e₁.
+          - con: marca
+            traza: proy_planta(solucion.TfB)
+            rotulo: 11₁
+            porque: |
+              11₁, donde la vertical de 11₂ corta f₁.
+          - con: marca
+            traza: proy_planta(solucion.TgB)
+            rotulo: 12₁
+            porque: |
+              12₁, donde la vertical de 12₂ corta g₁.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.TeB), proy_planta(solucion.TfB)), segmento2(proy_planta(solucion.TfB), proy_planta(solucion.TgB)), segmento2(proy_planta(solucion.TgB), proy_planta(solucion.TeB))]'
+            porque: |
+              Unidos con la regla, son el triángulo que el plano de canto corta en el prisma. VB está en
+              ese plano, así que atraviesa el prisma donde V₁B₁ cruza el triángulo.
+          - con: marca
+            traza: proy_planta(solucion.J)
+            rotulo: J₁
+            porque: |
+              J₁, donde V₁B₁ corta el lado de 10₁ a 11₁, el de la cara de e a f: VB entra en el prisma por la
+              cara de arriba.
+          - con: marca
+            traza: proy_planta(solucion.L)
+            porque: |
+              L₁, donde V₁B₁ corta el lado de 11₁ a 12₁, el de la cara de f a g: VB sale por la de abajo. Va sin
+              rótulo, porque pisaría el de J₁: de los dos cortes de V₁B₁, L₁ es el más cercano a B₁.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.J), proy_alzado(solucion.J)), segmento2(proy_planta(solucion.L), proy_alzado(solucion.L))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se suben J y L por sus líneas de referencia hasta V₂B₂, porque están en la arista VB.
+          - con: marca
+            traza: proy_alzado(solucion.J)
+            rotulo: J₂
+            porque: |
+              J₂, donde la vertical de J₁ corta V₂B₂, entre e₂ y f₂.
+          - con: marca
+            traza: proy_alzado(solucion.L)
+            porque: |
+              L₂, donde la vertical de L₁ corta V₂B₂, entre f₂ y g₂, justo debajo de 11₂: va sin rótulo,
+              porque el punto 11₂ lo taparía. El rótulo que tiene debajo es el de 12₂, el punto de g₂.
+          - con: marca
+            traza: proy_alzado(solucion.TeD)
+            porque: |
+              Con VD, igual: su plano de canto es V₂D₂ en el alzado, y corta la arista e donde e₂ cruza
+              V₂D₂, en 13₂. Es un nombre nuestro, y va sin rótulo porque pisaría el de P₂, que cae justo
+              debajo.
+          - con: marca
+            traza: proy_alzado(solucion.TfD)
+            rotulo: 14₂
+            porque: |
+              14₂, donde f₂ cruza V₂D₂. Es un nombre nuestro.
+          - con: marca
+            traza: proy_alzado(solucion.TgD)
+            porque: |
+              15₂, donde g₂ cruza V₂D₂. Es un nombre nuestro, y va sin rótulo porque pisaría el de R₂, que
+              cae justo encima.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.TeD), proy_planta(solucion.TeD)), segmento2(proy_alzado(solucion.TfD), proy_planta(solucion.TfD)), segmento2(proy_alzado(solucion.TgD), proy_planta(solucion.TgD))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Sus líneas de referencia, cada una hasta la planta de su arista: 13 a e₁, 14 a f₁ y 15 a g₁.
+          - con: marca
+            traza: proy_planta(solucion.TeD)
+            rotulo: 13₁
+            porque: |
+              13₁, donde la vertical de 13₂ corta e₁.
+          - con: marca
+            traza: proy_planta(solucion.TfD)
+            rotulo: 14₁
+            porque: |
+              14₁, donde la vertical de 14₂ corta f₁.
+          - con: marca
+            traza: proy_planta(solucion.TgD)
+            rotulo: 15₁
+            porque: |
+              15₁, donde la vertical de 15₂ corta g₁.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.TeD), proy_planta(solucion.TfD)), segmento2(proy_planta(solucion.TfD), proy_planta(solucion.TgD)), segmento2(proy_planta(solucion.TgD), proy_planta(solucion.TeD))]'
+            porque: |
+              El triángulo que el plano de canto de VD corta en el prisma, con la regla: VD está en ese
+              plano, así que atraviesa el prisma donde V₁D₁ cruza el triángulo.
+          - con: marca
+            traza: proy_planta(solucion.P)
+            rotulo: P₁
+            porque: |
+              P₁, donde V₁D₁ corta el lado de 13₁ a 14₁, el de la cara de e a f: VD entra en el prisma por arriba.
+          - con: marca
+            traza: proy_planta(solucion.R)
+            rotulo: R₁
+            porque: |
+              R₁, donde V₁D₁ corta el lado de 14₁ a 15₁, el de la cara de f a g: VD sale por abajo.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.P), proy_alzado(solucion.P)), segmento2(proy_planta(solucion.R), proy_alzado(solucion.R))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se suben P y R por sus líneas de referencia hasta V₂D₂, porque están en la arista VD.
+          - con: marca
+            traza: proy_alzado(solucion.P)
+            rotulo: P₂
+            porque: |
+              P₂, donde la vertical de P₁ corta V₂D₂, entre e₂ y f₂. De los dos puntos juntos, P₂ es el
+              de abajo, el del rótulo; el de arriba, sin rótulo y sobre e₂, es 13₂.
+          - con: marca
+            traza: proy_alzado(solucion.R)
+            rotulo: R₂
+            porque: |
+              R₂, donde la vertical de R₁ corta V₂D₂, entre f₂ y g₂. Entre J y L, y entre P y R, las
+              aristas van por dentro del prisma.
         pista: |
           (1) En el alzado, V₂B₂ cruza e₂, f₂ y g₂. (2) Baja cada cruce a la planta de su arista: e₁,
           f₁ y g₁. (3) Une los tres: es el triángulo que el plano de canto de VB corta en el prisma.
@@ -1016,6 +1384,19 @@ ejercicios:
         horizontal_A1: 'perpendicular(por: figura.punto("A1"), a: segmento2(figura.punto("V2"), figura.punto("V1")))'
         B_frontal: 'punto3(alzado: figura.punto("B2"), planta: pie_perpendicular(figura.punto("B1"), horizontal_A1))'
         V_frontal: 'punto3(alzado: figura.punto("V2"), planta: pie_perpendicular(figura.punto("V1"), horizontal_A1))'
+        # Para la construcción paso a paso: T, en la línea de la base del alzado, a
+        # lo que separa V₁ de A₁B₁ en la planta desde O₂. Con V₂ y O₂ forma el
+        # triángulo rectángulo cuya hipotenusa, V₂T, es la distancia real de V a AB.
+        # Decisión: el triángulo se dibuja en el alzado, sobre el eje V₂O₂ de la
+        # pirámide, que ya es el cateto de 100 mm. En la planta, esos 100 mm
+        # llevados desde V₁ por la paralela a A₁B₁ se salen de la lámina hacia
+        # abajo, o se meten en el alzado hacia arriba. T va a la derecha de O₂, del
+        # lado de (V); a la izquierda valdría igual.
+        T_hip: 'uno(medir_sobre(figura.segmento("base2"), desde: proy_alzado(O), distancia: vm_planta(V, pie)), 1)'
+        # Los extremos de la perpendicular a A₁B₁ por V₁ en la construcción paso a
+        # paso: en el papel se traza más allá de (V) y de A₁B₁, y no para en ellos.
+        L_Vab: 'uno(medir_sobre(segmento2(proy_planta(pie), figura.punto("V1")), desde: proy_planta(pie), distancia: vm(V, pie) + mm(6)), 1)'
+        L_pie: 'uno(medir_sobre(segmento2(proy_planta(pie), figura.punto("V1")), desde: proy_planta(pie), distancia: mm(4)), 2)'
     pasos:
       - tipo: reconocer
         pregunta: AB es un lado de la base, y AV una arista lateral. ¿Qué se abate, y alrededor de qué, para ver el ángulo de AB y AV?
@@ -1092,6 +1473,71 @@ ejercicios:
           - 'segmento2(figura.punto("A1"), proy_planta(solucion.V_ab))'
           - 'segmento2(figura.punto("B1"), proy_planta(solucion.V_ab))'
           - 'segmento2(figura.punto("V1"), proy_planta(solucion.V_ab))'
+        construccion:
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("V1"), solucion.L_Vab), segmento2(figura.punto("V1"), solucion.L_pie)]'
+            guia: figura.segmento("AB1")
+            porque: |
+              La cara VAB se abate alrededor de AB, que es horizontal: A y B no se mueven, y V gira en
+              un plano perpendicular a AB, que es vertical. En la planta, (V) se mueve por la
+              **perpendicular a A₁B₁ que pasa por V₁**. Se traza con la escuadra apoyada en el
+              cartabón, larga hacia los dos lados: hasta pasar A₁B₁, donde está el centro del giro, y
+              mucho más allá de V₁, que es hacia donde se abate.
+          - con: marca
+            traza: proy_planta(solucion.pie)
+            rotulo: M₁
+            porque: |
+              M₁, donde la perpendicular corta A₁B₁: el pie de V en la charnela, el centro del giro.
+              Cae en el punto medio de A₁B₁, porque la pirámide es regular. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V2"), proy_alzado(O))
+            guia: figura.segmento("base2")
+            porque: |
+              El radio del giro es la **distancia real de V a AB**, y la planta no la da: V está mucho
+              más alto que AB. Lo que sube se lee en el alzado: por V₂, la perpendicular a la línea de
+              la base, hasta cortarla. Es el eje de la pirámide.
+          - con: marca
+            traza: proy_alzado(O)
+            rotulo: O₂
+            porque: |
+              O₂, donde el eje corta la línea de la base: el centro de la base, visto de frente. V₂O₂
+              mide lo que V está más alto que AB, 100 mm, porque AB está en la base. Es un nombre
+              nuestro.
+          - con: compas
+            traza: 'arco(proy_alzado(O), por: solucion.T_hip, desde: desplaza(solucion.T_hip, dy: -12), hasta: desplaza(solucion.T_hip, dy: 12))'
+            toma: segmento2(figura.punto("V1"), proy_planta(solucion.pie))
+            porque: |
+              Con el compás se toma en la planta lo que separa V₁ de A₁B₁, de V₁ a M₁, y se lleva
+              desde O₂ sobre la línea de la base: es el otro cateto. La circunferencia corta esa línea
+              a los dos lados de O₂, y cualquiera vale; se toma el de la derecha, del lado de (V).
+          - con: marca
+            traza: solucion.T_hip
+            rotulo: T
+            porque: |
+              T, donde el arco corta la línea de la base. El triángulo V₂ O₂ T es rectángulo en O₂: un
+              cateto es lo que V está más alto que AB y el otro, lo que V₁ se aparta de A₁B₁ en la
+              planta. Es un nombre nuestro.
+          - con: regla
+            traza: segmento2(figura.punto("V2"), solucion.T_hip)
+            porque: |
+              La hipotenusa V₂T es la **distancia real de V a la charnela**, 103,1 mm: el radio con que
+              V se abate. No es una arista, aunque vaya por dentro del alzado de la pirámide. La planta
+              sola daría el cateto V₁M₁, 25,0 mm.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.pie), por: proy_planta(solucion.V_ab), desde: desplaza(proy_planta(solucion.V_ab), dx: -6, dy: -10.4), hasta: desplaza(proy_planta(solucion.V_ab), dx: 6, dy: 10.4))'
+            toma: segmento2(figura.punto("V2"), solucion.T_hip)
+            porque: |
+              Con el compás abierto a V₂T y el centro en M₁, que está en la charnela, el arco hasta la
+              perpendicular. La circunferencia la corta dos veces, una a cada lado de A₁B₁, y las dos
+              darían el mismo ángulo. Se toma la del lado de V₁, como pide el paso: la otra cae fuera
+              de la lámina.
+          - con: marca
+            traza: proy_planta(solucion.V_ab)
+            rotulo: (V)
+            porque: |
+              (V), donde el arco corta la perpendicular a A₁B₁: V abatido, a 103,1 mm de la charnela.
+              A₁ B₁ (V) es la cara VAB en verdadera magnitud, y el ángulo en A₁, entre A₁B₁ y A₁(V), es
+              el que forman AB y AV.
         pista: |
           (1) Por V₁, la perpendicular a A₁B₁; su pie es el punto medio de A₁B₁, porque la pirámide
           es regular. (2) La distancia real de V a AB: un triángulo rectángulo con lo que separa V₁
@@ -1238,6 +1684,11 @@ ejercicios:
         vertical_papel: 'segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dy: 10))'
         papel_AB: 'perpendicular(por: proy_planta(R_AB), a: vertical_papel)'
         papel_DC: 'perpendicular(por: proy_planta(R_DC), a: vertical_papel)'
+        # Los extremos de las plantas de las dos horizontales en la construcción
+        # paso a paso: en el papel se trazan más allá de B₁ y de C₁, y no paran en
+        # ellos.
+        L_hAB: 'uno(medir_sobre(segmento2(proy_planta(R_AB), proy_planta(B)), desde: proy_planta(B), distancia: mm(4)), 1)'
+        L_hDC: 'uno(medir_sobre(segmento2(proy_planta(R_DC), proy_planta(C)), desde: proy_planta(C), distancia: mm(4)), 1)'
       comprueba:
         - en_recta(B, horizontal_por(A, plano_t))
         - en_recta(C, horizontal_por(D, plano_t))
@@ -1269,7 +1720,7 @@ ejercicios:
           horizontales del plano. La de AB corta a r₂ a la altura de A₂; baja ese punto a r₁ y
           traza por él la perpendicular a r₁. A₁ y B₁ están en ella, en la vertical de A₂ y de B₂.
           Con DC, igual.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, medir, borrar]
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, borrar]
         tolerancia: 1
         objetivos:
           - nombre: A1
@@ -1375,6 +1826,103 @@ ejercicios:
           - 'proy_planta([segmento3(solucion.A, solucion.B), segmento3(solucion.B, solucion.C), segmento3(solucion.C, solucion.D), segmento3(solucion.D, solucion.A)])'
           - proy_planta(segmento3(solucion.R_AB, solucion.B))
           - proy_planta(segmento3(solucion.R_DC, solucion.C))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("A2"), proy_alzado(solucion.R_AB))
+            porque: |
+              A₂B₂ es horizontal en el alzado: AB es una **horizontal del plano**, y corta a r en el
+              punto de r que está a su cota. Se prolonga A₂B₂ con la regla, desde A₂ hacia la
+              izquierda, hasta r₂.
+          - con: marca
+            traza: proy_alzado(solucion.R_AB)
+            rotulo: 1₂
+            porque: |
+              1₂, donde la prolongación de A₂B₂ corta r₂: el punto de r que está a la cota de AB. Es
+              un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.R_AB), proy_planta(solucion.R_AB))
+            guia: figura.segmento("AB2")
+            porque: |
+              Se baja a la planta por su línea de referencia, perpendicular a A₂B₂, hasta r₁: 1 está en
+              r, así que 1₁ cae en r₁.
+          - con: marca
+            traza: proy_planta(solucion.R_AB)
+            rotulo: 1₁
+            porque: |
+              1₁, donde la vertical de 1₂ corta r₁: por ahí pasa, en la planta, la horizontal AB.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.R_AB), solucion.L_hAB)
+            guia: figura.segmento("r1")
+            porque: |
+              r es la línea de máxima pendiente, perpendicular a las horizontales del plano, y ese
+              ángulo recto se ve en la planta, donde la horizontal está en verdadera magnitud. Por 1₁,
+              la **perpendicular a r₁**, con la escuadra apoyada en el cartabón: es la planta de la
+              horizontal AB. Larga, hasta pasar la vertical de B₂.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A2"), proy_planta(solucion.A)), segmento2(figura.punto("B2"), proy_planta(solucion.B))]'
+            guia: figura.segmento("AB2")
+            porque: |
+              A y B están en esa horizontal: por A₂ y por B₂, sus líneas de referencia, hasta cortarla.
+          - con: marca
+            traza: proy_planta(solucion.A)
+            rotulo: A₁
+            porque: |
+              A₁, donde la vertical de A₂ corta la planta de la horizontal AB.
+          - con: marca
+            traza: proy_planta(solucion.B)
+            rotulo: B₁
+            porque: |
+              B₁, donde la vertical de B₂ corta la misma horizontal. A₁B₁ mide 30,0 mm, en verdadera
+              magnitud, porque AB es horizontal.
+          - con: regla
+            traza: segmento2(figura.punto("D2"), proy_alzado(solucion.R_DC))
+            porque: |
+              Con DC, igual: D₂C₂ también es horizontal en el alzado, y DC es otra horizontal del
+              plano. Se prolonga con la regla desde D₂ hasta r₂.
+          - con: marca
+            traza: proy_alzado(solucion.R_DC)
+            rotulo: 2₂
+            porque: |
+              2₂, donde la prolongación de D₂C₂ corta r₂: el punto de r que está a la cota de DC. Es
+              un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.R_DC), proy_planta(solucion.R_DC))
+            guia: figura.segmento("AB2")
+            porque: |
+              Su línea de referencia, hasta r₁, porque 2 también está en r.
+          - con: marca
+            traza: proy_planta(solucion.R_DC)
+            rotulo: 2₁
+            porque: |
+              2₁, donde la vertical de 2₂ corta r₁: por ahí pasa, en la planta, la horizontal DC.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.R_DC), solucion.L_hDC)
+            guia: figura.segmento("r1")
+            porque: |
+              Por 2₁, la perpendicular a r₁: la planta de la horizontal DC, paralela a la de AB porque
+              las dos son perpendiculares a r₁. Larga, hasta pasar la vertical de C₂.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("D2"), proy_planta(solucion.D)), segmento2(figura.punto("C2"), proy_planta(solucion.C))]'
+            guia: figura.segmento("AB2")
+            porque: |
+              D y C están en esa horizontal: por D₂ y por C₂, sus líneas de referencia, hasta cortarla.
+          - con: marca
+            traza: proy_planta(solucion.D)
+            rotulo: D₁
+            porque: |
+              D₁, donde la vertical de D₂ corta la planta de la horizontal DC.
+          - con: marca
+            traza: proy_planta(solucion.C)
+            rotulo: C₁
+            porque: |
+              C₁, donde la vertical de C₂ corta la misma horizontal. D₁C₁ mide 60,0 mm, también en
+              verdadera magnitud.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.B), proy_planta(solucion.C)), segmento2(proy_planta(solucion.D), proy_planta(solucion.A))]'
+            porque: |
+              La planta del trapecio se cierra con la regla, B₁C₁ y D₁A₁; los otros dos lados ya están,
+              sobre las horizontales. A₁B₁ y D₁C₁ salen paralelas, como los lados paralelos de un
+              trapecio.
         pista: |
           (1) En el alzado, prolonga A₂B₂ hasta r₂, y D₂C₂ también. (2) Baja esos dos puntos a r₁. (3)
           Por cada uno, la perpendicular a r₁: son las plantas de las horizontales AB y DC. (4) Baja
@@ -1477,6 +2025,45 @@ ejercicios:
         vertical_papel: 'segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dy: 10))'
         papel_AB: 'perpendicular(por: proy_planta(corte_recta_plano(r, cota_AB)), a: vertical_papel)'
         papel_DC: 'perpendicular(por: proy_planta(corte_recta_plano(r, cota_DC)), a: vertical_papel)'
+        # Para la construcción paso a paso: los puntos de r a la cota de AB y a la de
+        # DC, por donde pasan, en la planta, las dos horizontales (como en el
+        # apartado 2 a).
+        R_AB: corte_recta_plano(r, cota_AB)
+        R_DC: corte_recta_plano(r, cota_DC)
+        # Para la construcción paso a paso: dónde corta A₂ su vertical a D₂C₂. De A₂
+        # a ese punto, lo que A está más alto que DC.
+        A_DC: 'proy_alzado(vertical_hasta(A, linea(figura.segmento("DC2"))))'
+        # Para la construcción paso a paso, el camino de la pista: la frontal del
+        # plano por A, que da en el alzado la dirección de la perpendicular, y un
+        # punto de la perpendicular con su triángulo. Z es donde la frontal de A
+        # corta r (el punto 3 de la construcción): frontal_A es el plano frontal
+        # que pasa por A.
+        frontal_A: 'plano(A, punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(proy_planta(A), dx: 10)), punto3(alzado: desplaza(figura.punto("A2"), dy: -10), planta: proy_planta(A)))'
+        Z: corte_recta_plano(r, frontal_A)
+        # Decisión: el punto cualquiera de la perpendicular por A que pide la pista
+        # es X, el que está a la cota de DC (el punto 4 de la construcción): en el
+        # alzado cae donde la perpendicular corta D₂C₂, y su diferencia de cotas
+        # con A ya está medida en la vertical de A₂. Está por debajo de A, así que
+        # los 30 mm se llevan al otro lado de A₁, hacia arriba. Xab es X en el
+        # triángulo, a esa diferencia de cotas de X₁ por la perpendicular a r₁,
+        # hacia la derecha, para que (E) caiga a la izquierda, donde la lámina está
+        # libre; y Eab, E en el triángulo, en la prolongación de Xab A₁, a 30 mm
+        # de A₁.
+        X: corte_recta_plano(perp_A, cota_DC)
+        Xab: 'uno(medir_sobre(perpendicular(por: proy_planta(X), a: figura.segmento("r1")), desde: proy_planta(X), distancia: diferencia_de_cotas(A, X)), 1)'
+        Eab: 'uno(medir_sobre(segmento2(Xab, proy_planta(A)), desde: proy_planta(A), distancia: mm(30)), 1)'
+        # Los extremos de las rectas largas de la construcción paso a paso: en el
+        # papel se trazan más allá del punto que van a dar, y no paran en él.
+        L_hA: 'uno(medir_sobre(segmento2(proy_planta(R_AB), proy_planta(A)), desde: proy_planta(A), distancia: mm(4)), 1)'
+        L_hC: 'uno(medir_sobre(segmento2(proy_planta(R_DC), proy_planta(C)), desde: proy_planta(C), distancia: mm(4)), 1)'
+        L_pA_bajo: 'uno(medir_sobre(segmento2(figura.punto("A2"), proy_alzado(X)), desde: proy_alzado(X), distancia: mm(4)), 1)'
+        L_pA_alto: 'uno(medir_sobre(segmento2(figura.punto("A2"), proy_alzado(E)), desde: proy_alzado(E), distancia: mm(4)), 1)'
+        L_A_X: 'uno(medir_sobre(segmento2(proy_planta(A), proy_planta(X)), desde: proy_planta(X), distancia: mm(4)), 1)'
+        L_A_E: 'uno(medir_sobre(segmento2(proy_planta(A), proy_planta(E)), desde: proy_planta(E), distancia: mm(4)), 1)'
+        L_Xab: 'uno(medir_sobre(segmento2(proy_planta(X), Xab), desde: Xab, distancia: mm(4)), 1)'
+        L_Eab: 'uno(medir_sobre(segmento2(Xab, Eab), desde: Eab, distancia: mm(6)), 1)'
+        L_rC: 'uno(medir_sobre(segmento2(proy_planta(C), proy_planta(F)), desde: proy_planta(F), distancia: mm(4)), 1)'
+        L_pC: 'uno(medir_sobre(segmento2(figura.punto("C2"), proy_alzado(F)), desde: proy_alzado(F), distancia: mm(4)), 1)'
     pasos:
       - tipo: reconocer
         pregunta: ¿Cómo se ven en las dos vistas las rectas perpendiculares al plano del trapecio, como AE y CF?
@@ -1655,6 +2242,245 @@ ejercicios:
           - 'proy_planta([segmento3(A, B), segmento3(B, C), segmento3(C, D), segmento3(D, A)])'
           - 'proy_planta([segmento3(A, C), segmento3(C, solucion.F), segmento3(solucion.F, solucion.E), segmento3(solucion.E, A)])'
           - 'proy_alzado([segmento3(A, C), segmento3(C, solucion.F), segmento3(solucion.F, solucion.E), segmento3(solucion.E, A)])'
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("A2"), proy_alzado(solucion.R_AB))
+            porque: |
+              Primero A₁, como en el apartado 2 a. A₂B₂ es horizontal: AB es una horizontal del plano y
+              corta a r en el punto de r que está a su cota. Se prolonga A₂B₂ con la regla, desde A₂
+              hasta r₂.
+          - con: marca
+            traza: proy_alzado(solucion.R_AB)
+            rotulo: 1₂
+            porque: |
+              1₂, donde la prolongación de A₂B₂ corta r₂: el punto de r a la cota de AB. Es un nombre
+              nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.R_AB), proy_planta(solucion.R_AB))
+            guia: figura.segmento("AB2")
+            porque: |
+              Su línea de referencia, perpendicular a A₂B₂, hasta r₁: 1 está en r, así que 1₁ cae en r₁.
+          - con: marca
+            traza: proy_planta(solucion.R_AB)
+            rotulo: 1₁
+            porque: |
+              1₁, donde la vertical de 1₂ corta r₁: por ahí pasa, en la planta, la horizontal AB.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.R_AB), solucion.L_hA)
+            guia: figura.segmento("r1")
+            porque: |
+              Por 1₁, la **perpendicular a r₁**: r es la línea de máxima pendiente, perpendicular a las
+              horizontales, y el ángulo recto se ve en la planta. Es la planta de la horizontal AB, y se
+              traza hasta pasar la vertical de A₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), proy_planta(A))
+            guia: figura.segmento("AB2")
+            porque: |
+              Por A₂, su línea de referencia, hasta la horizontal de AB. Por el camino corta D₂C₂, y lo
+              que hay de A₂ a ese cruce es lo que A está más alto que DC: se va a usar más adelante.
+          - con: marca
+            traza: proy_planta(A)
+            rotulo: A₁
+            porque: |
+              A₁, donde la vertical de A₂ corta la planta de la horizontal AB.
+          - con: regla
+            traza: segmento2(figura.punto("D2"), proy_alzado(solucion.R_DC))
+            porque: |
+              C₁, igual, con la horizontal DC: se prolonga D₂C₂ con la regla, desde D₂ hasta r₂.
+          - con: marca
+            traza: proy_alzado(solucion.R_DC)
+            rotulo: 2₂
+            porque: |
+              2₂, donde la prolongación de D₂C₂ corta r₂: el punto de r a la cota de DC. Es un nombre
+              nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.R_DC), proy_planta(solucion.R_DC))
+            guia: figura.segmento("AB2")
+            porque: |
+              Su línea de referencia, hasta r₁, porque 2 también está en r.
+          - con: marca
+            traza: proy_planta(solucion.R_DC)
+            rotulo: 2₁
+            porque: |
+              2₁, donde la vertical de 2₂ corta r₁: por ahí pasa, en la planta, la horizontal DC.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.R_DC), solucion.L_hC)
+            guia: figura.segmento("r1")
+            porque: |
+              Por 2₁, la perpendicular a r₁: la planta de la horizontal DC. Larga, hasta pasar la
+              vertical de C₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), proy_planta(C))
+            guia: figura.segmento("AB2")
+            porque: |
+              Por C₂, su línea de referencia, hasta la horizontal de DC, porque C está en ella.
+          - con: marca
+            traza: proy_planta(C)
+            rotulo: C₁
+            porque: |
+              C₁, donde la vertical de C₂ corta la planta de la horizontal DC.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(A), proy_planta(solucion.Z))
+            guia: figura.segmento("AB2")
+            porque: |
+              Ahora la perpendicular al plano por A. En el alzado va perpendicular a las **frontales** del
+              plano, así que hace falta una. Una frontal está a alejamiento constante, y en la planta va
+              horizontal en el papel: por A₁, la paralela a A₂B₂, hacia la izquierda, hasta r₁.
+          - con: marca
+            traza: proy_planta(solucion.Z)
+            rotulo: 3₁
+            porque: |
+              3₁, donde esa frontal corta r₁: el punto de r que está en la frontal de A. Es un nombre
+              nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Z), proy_alzado(solucion.Z))
+            guia: figura.segmento("AB2")
+            porque: |
+              Su línea de referencia, hasta r₂, porque 3 está en r.
+          - con: marca
+            traza: proy_alzado(solucion.Z)
+            rotulo: 3₂
+            porque: |
+              3₂, donde la vertical de 3₁ corta r₂.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), proy_alzado(solucion.Z))
+            porque: |
+              A₂3₂ es la frontal de A en el alzado, en verdadera magnitud, porque es frontal.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A2"), solucion.L_pA_alto), segmento2(figura.punto("A2"), solucion.L_pA_bajo)]'
+            guia: segmento2(figura.punto("A2"), proy_alzado(solucion.Z))
+            porque: |
+              La perpendicular al plano es perpendicular a la frontal, y el ángulo recto se ve en el
+              alzado, donde la frontal está en verdadera magnitud. Por A₂, la perpendicular a A₂3₂, con
+              la escuadra apoyada en ella: hacia arriba, larga, porque E va a estar en ella, y hacia
+              abajo, hasta pasar D₂C₂.
+          - con: marca
+            traza: proy_alzado(solucion.X)
+            rotulo: 4₂
+            porque: |
+              4₂, donde la perpendicular corta D₂C₂: un punto cualquiera de la perpendicular, elegido a
+              la cota de DC para que su diferencia de cotas con A ya esté medida, de A₂ a D₂C₂. Es un
+              nombre nuestro.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(A), solucion.L_A_X), segmento2(proy_planta(A), solucion.L_A_E)]'
+            guia: figura.segmento("r1")
+            porque: |
+              En la planta, la perpendicular al plano va **paralela a r₁**, porque es perpendicular a las
+              horizontales: por A₁, con la escuadra, larga hacia los dos lados.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.X), proy_planta(solucion.X))
+            guia: figura.segmento("AB2")
+            porque: |
+              Por 4₂, su línea de referencia, hasta la paralela a r₁ por A₁, porque 4 está en la
+              perpendicular.
+          - con: marca
+            traza: proy_planta(solucion.X)
+            rotulo: 4₁
+            porque: |
+              4₁, donde la vertical de 4₂ corta la paralela a r₁ por A₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.X), solucion.L_Xab)
+            guia: figura.segmento("r1")
+            porque: |
+              El triángulo de la verdadera magnitud del tramo de A a 4: un cateto es A₁4₁, su planta, y
+              el otro, lo que 4 está más bajo que A, en perpendicular. Por 4₁, la perpendicular a A₁4₁,
+              con la escuadra, hacia la derecha, para que lo que salga al otro lado de A₁ caiga donde la
+              lámina está libre.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.X), por: solucion.Xab, desde: desplaza(solucion.Xab, dx: 2.6, dy: -6), hasta: desplaza(solucion.Xab, dx: -2.6, dy: 6))'
+            toma: segmento2(figura.punto("A2"), solucion.A_DC)
+            porque: |
+              Con el compás se toma en el alzado lo que 4 está más bajo que A, de A₂ a D₂C₂, y se lleva
+              desde 4₁ sobre esa perpendicular: es el otro cateto. Hacia la izquierda también valdría,
+              pero la perpendicular solo se ha trazado hacia la derecha, y el arco la corta una vez.
+          - con: marca
+            traza: solucion.Xab
+            rotulo: (4)
+            porque: |
+              (4), donde el arco corta la perpendicular: el tercer vértice del triángulo, rectángulo en
+              4₁.
+          - con: regla
+            traza: segmento2(solucion.Xab, solucion.L_Eab)
+            porque: |
+              La hipotenusa (4)A₁ es la perpendicular al plano en verdadera magnitud, abatida sobre la
+              planta. Se traza con la regla y se prolonga más allá de A₁, porque 4 está por debajo de A y
+              E va por encima, al otro lado de A.
+          - con: compas
+            traza: 'arco(proy_planta(A), por: solucion.Eab, desde: desplaza(solucion.Eab, dx: -1.6, dy: -10), hasta: desplaza(solucion.Eab, dx: 1.6, dy: 10))'
+            porque: |
+              Los 30 mm del enunciado, con el compás, desde A₁ sobre la prolongación. La circunferencia
+              corta la recta a los dos lados de A₁; vale el de la izquierda, el que se aleja de (4),
+              porque el rectángulo va en la parte superior del trapecio.
+          - con: marca
+            traza: solucion.Eab
+            rotulo: (E)
+            porque: |
+              (E), E abatido, donde el arco corta la prolongación: a 30 mm de A₁ en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Eab, proy_planta(solucion.E))
+            guia: figura.segmento("r1")
+            porque: |
+              Se deshace el abatimiento: E vuelve por la perpendicular a A₁4₁, hasta la paralela a r₁
+              por A₁, que es la planta de AE.
+          - con: marca
+            traza: proy_planta(solucion.E)
+            rotulo: E₁
+            porque: |
+              E₁, donde esa perpendicular corta la paralela a r₁ por A₁: a 16,0 mm de A₁, porque la planta
+              acorta la perpendicular al plano.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.E), proy_alzado(solucion.E))
+            guia: figura.segmento("AB2")
+            porque: |
+              Por E₁, su línea de referencia hacia el alzado, hasta la perpendicular por A₂, porque E
+              está en ella.
+          - con: marca
+            traza: proy_alzado(solucion.E)
+            rotulo: E₂
+            porque: |
+              E₂, donde la vertical de E₁ corta la perpendicular por A₂: 25,4 mm por encima de A₂B₂.
+          - con: regla
+            traza: segmento2(proy_planta(A), proy_planta(C))
+            porque: |
+              F se saca del rectángulo: AE y CF son iguales y paralelas, así que E₁F₁ es igual y paralela
+              a A₁C₁. Repetir el triángulo en C, como dice la pista, también vale; con las paralelas se ahorra.
+              Primero la diagonal A₁C₁, el lado del rectángulo, con la regla.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(C), solucion.L_rC)
+            guia: figura.segmento("r1")
+            porque: |
+              Por C₁, la paralela a r₁, hacia abajo y larga: la planta de la perpendicular al plano por
+              C, donde está F₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.E), proy_planta(solucion.F))
+            guia: segmento2(proy_planta(A), proy_planta(C))
+            porque: |
+              Por E₁, la paralela a A₁C₁, deslizando la escuadra sobre el cartabón, hasta la paralela a
+              r₁ por C₁.
+          - con: marca
+            traza: proy_planta(solucion.F)
+            rotulo: F₁
+            porque: |
+              F₁, donde la paralela a A₁C₁ por E₁ corta la paralela a r₁ por C₁. C₁F₁ es igual a A₁E₁.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.L_pC)
+            guia: segmento2(figura.punto("A2"), solucion.L_pA_alto)
+            porque: |
+              En el alzado, la perpendicular al plano por C es paralela a la de A: por C₂, la paralela a
+              A₂E₂, hacia arriba y larga.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.F), proy_alzado(solucion.F))
+            guia: figura.segmento("AB2")
+            porque: |
+              Por F₁, su línea de referencia hacia el alzado, hasta la perpendicular por C₂, porque F está
+              en ella.
+          - con: marca
+            traza: proy_alzado(solucion.F)
+            rotulo: F₂
+            porque: |
+              F₂, donde la vertical de F₁ corta la perpendicular por C₂. A₂C₂F₂E₂ es el alzado del
+              rectángulo, un paralelogramo: E₂F₂ sale igual y paralela a A₂C₂, pero el ángulo recto no se
+              ve, porque el rectángulo no es frontal.
         pista: |
           (1) A₁ y C₁, como en el apartado 2 a. (2) Por A₁, la paralela a r₁; por A₂, la
           perpendicular a las frontales del plano. (3) Toma un punto cualquiera de esa perpendicular,
@@ -1754,6 +2580,44 @@ ejercicios:
         Q0: pie_comun(s, t)
         cota_alta: 'plano(Ti, Td, punto3(alzado: desplaza(punto_medio(figura.segmento("t2")), dy: mm(-40)), planta: desplaza(punto_medio(figura.segmento("t1")), dy: 10)))'
         cruce: corte_recta_plano(s, cota_alta)
+        # Para la construcción paso a paso. Los extremos izquierdos de t₂ y de t₁
+        # (en cifras, pt, desde sus puntos medios), y E₂, 40 mm por encima del de
+        # t₂: un punto de t′₂, la recta del punto más alto del tren.
+        T2i: 'desplaza(punto_medio(figura.segmento("t2")), dx: -81.48)'
+        T1i: 'desplaza(punto_medio(figura.segmento("t1")), dx: -81.48)'
+        E2: 'desplaza(T2i, dy: mm(-40))'
+        # S, el extremo derecho del cable, el de la lámina (en cifras, pt, desde los
+        # puntos medios de s₂ y s₁); y G, en la vertical de S a la altura de t′: de
+        # S₂ a G₂, lo que S está más alto que t′.
+        S: 'punto3(alzado: desplaza(punto_medio(figura.segmento("s2")), dx: 107.4, dy: -40.44), planta: desplaza(punto_medio(figura.segmento("s1")), dx: 107.4, dy: -34.8))'
+        G: 'vertical_hasta(S, linea(segmento2(E2, desplaza(E2, dx: 10))))'
+        # Decisión: el cambio de plano de la construcción paso a paso, con la
+        # línea nueva perpendicular a t₁ como dice el intro, va a la izquierda de
+        # la planta, a 236,49 pt (83,4 mm) de S₁, y S es la referencia: es el punto
+        # más alto de los que se usan, así que todo lo demás cae hacia la planta,
+        # en el hueco entre t₁ y s₁, y nada se sale de la lámina. Con la
+        # referencia en t′, el punto más cercano del cable caería fuera; y a la
+        # derecha de la planta no hay sitio. El segundo punto de s en la vista
+        # nueva es el cruce, que está a la altura de t′ y se lleva con la misma
+        # abertura del compás.
+        S4pos: 'desplaza(proy_planta(S), dx: -236.49)'
+        nueva: 'perpendicular(por: S4pos, a: figura.segmento("t1"))'
+        # Las proyecciones en la vista nueva, la de perfil: t′ de punta (Ti es un
+        # punto suyo), S en la línea nueva, el cruce y Q.
+        S_4: 'cambio_plano_vertical(S, nueva, ref: S)'
+        t_4: 'cambio_plano_vertical(Ti, nueva, ref: S)'
+        C_4: 'cambio_plano_vertical(cruce, nueva, ref: S)'
+        Q_4: 'cambio_plano_vertical(Q, nueva, ref: S)'
+        # Donde las referencias de t′ y del cruce cortan la línea nueva: los
+        # centros del compás.
+        F_t: 'pie_perpendicular(proy_planta(Ti), nueva)'
+        F_C: 'pie_perpendicular(proy_planta(cruce), nueva)'
+        # Los extremos de las rectas largas de la construcción paso a paso: en el
+        # papel se trazan más allá del punto que van a dar, y no paran en él.
+        L_perpE: 'desplaza(T2i, dy: mm(-46))'
+        L_tpd: 'desplaza(proy_alzado(G), dx: mm(2))'
+        L_nueva_arr: 'desplaza(S4pos, dy: mm(-16))'
+        L_nueva_ab: 'desplaza(S4pos, dy: mm(20))'
       comprueba:
         - en_plano(Td, cota_alta)
     pasos:
@@ -1883,6 +2747,172 @@ ejercicios:
           - 'segmento2(desplaza(punto_medio(figura.segmento("t2")), dx: -81.48, dy: mm(-40)), desplaza(punto_medio(figura.segmento("t2")), dx: 81.48, dy: mm(-40)))'
           - proy_alzado(segmento3(solucion.P, solucion.Q))
           - proy_planta(segmento3(solucion.P, solucion.Q))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.T2i, solucion.L_perpE)
+            guia: figura.segmento("t2")
+            porque: |
+              El punto más alto del tren va 4 m por encima de su trayectoria: a escala 1:100, 40 mm por
+              encima de t₂, con la misma planta. Para llevar esa distancia, por el extremo izquierdo de
+              t₂, la perpendicular a t₂, con la escuadra apoyada en el cartabón, hacia arriba y larga,
+              más allá de los 40 mm.
+          - con: compas
+            traza: 'arco(solucion.T2i, por: solucion.E2, desde: desplaza(solucion.E2, dx: -10), hasta: desplaza(solucion.E2, dx: 10))'
+            porque: |
+              Con el compás abierto a 40 mm, los 4 m del enunciado a escala, y el centro en el extremo
+              de t₂, el arco sobre la perpendicular. La cortaría también por debajo de t₂; vale el corte
+              de arriba, porque el punto más alto del tren va por encima de las ruedas.
+          - con: marca
+            traza: solucion.E2
+            rotulo: E₂
+            porque: |
+              E₂, donde el arco corta la perpendicular: 40 mm por encima del extremo de t₂, un punto de
+              la recta que recorre el punto más alto del tren. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.E2, solucion.L_tpd)
+            guia: figura.segmento("t2")
+            rotulo: t′₂
+            porque: |
+              Por E₂, la **paralela a t₂**, deslizando la escuadra sobre el cartabón: es t′₂, el alzado
+              de t′, la recta del punto más alto del tren. Su planta es t₁. Se traza hacia la derecha,
+              hasta pasar la vertical del extremo derecho de s₂.
+          - con: marca
+            traza: proy_alzado(solucion.cruce)
+            rotulo: C₂
+            porque: |
+              C₂, donde s₂ corta t′₂. C es el punto del cable que está a la altura de t′, y va a servir
+              de segundo punto de s en la vista nueva; no es el más cercano, porque ahí el cable va por
+              delante. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.cruce), proy_planta(solucion.cruce))
+            guia: figura.segmento("t2")
+            porque: |
+              Por C₂, su línea de referencia hasta s₁, porque C está en el cable.
+          - con: marca
+            traza: proy_planta(solucion.cruce)
+            rotulo: C₁
+            porque: |
+              C₁, donde la vertical de C₂ corta s₁.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.S), proy_planta(solucion.S))
+            porque: |
+              Llamamos S al extremo derecho del cable, el punto más alto de los que se van a usar. Su
+              línea de referencia, con la regla, del extremo de s₂ al de s₁. Corta t′₂.
+          - con: marca
+            traza: proy_alzado(solucion.G)
+            rotulo: G₂
+            porque: |
+              G₂, donde la vertical de S corta t′₂. Lo que hay de S₂ a G₂ es lo que S está más alto que
+              t′: se va a llevar con el compás. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.S), solucion.S4pos)
+            guia: figura.segmento("t1")
+            porque: |
+              **El cambio de plano**: con la línea nueva perpendicular a t₁, t′ queda de punta y la vista
+              nueva es una vista de perfil. Las referencias van paralelas a t₁. Por S₁, la de S, hacia la
+              izquierda, hasta el sitio de la línea nueva, que fijamos nosotros a la izquierda de la
+              planta.
+          - con: marca
+            traza: solucion.S_4
+            rotulo: S₄
+            porque: |
+              S₄, el extremo de la referencia de S: ahí va la línea nueva, y S es la referencia, así que S₄
+              cae en ella. S es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.S4pos, solucion.L_nueva_arr), segmento2(solucion.S4pos, solucion.L_nueva_ab)]'
+            guia: figura.segmento("t1")
+            porque: |
+              Por S₄, la línea nueva, perpendicular a t₁, larga hacia arriba y hacia abajo. Cada punto
+              irá en la vista nueva por su referencia, apartado de la línea nueva lo que está más alto o
+              más bajo que S: hacia la planta, porque todos están más bajos.
+          - con: regla
+            traza: segmento2(solucion.T1i, solucion.F_t)
+            porque: |
+              Las referencias van paralelas a t₁, y la de t′ pasa por su planta, que es t₁: es la propia
+              t₁. Se prolonga con la regla, desde su extremo izquierdo hasta la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.F_t, por: solucion.t_4, desde: desplaza(solucion.t_4, dy: -10), hasta: desplaza(solucion.t_4, dy: 10))'
+            toma: segmento2(proy_alzado(solucion.S), proy_alzado(solucion.G))
+            porque: |
+              Con el compás se toma de S₂ a G₂ lo que t′ está más baja que S, y se lleva desde la línea
+              nueva sobre t₁. La circunferencia corta la recta de t₁ a los dos lados de la línea nueva;
+              vale el corte de la derecha, hacia la planta, porque t′ está más baja que S.
+          - con: marca
+            traza: solucion.t_4
+            rotulo: t′₄
+            porque: |
+              t′₄, donde el arco corta t₁: t′ vista de punta, como un punto. Cae sobre t₁ porque t₁ es su
+              referencia. El punto P del tren, que está en t′, también cae aquí.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.cruce), solucion.F_C)
+            guia: figura.segmento("t1")
+            porque: |
+              Por C₁, la referencia de C, paralela a t₁, hasta la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.F_C, por: solucion.C_4, desde: desplaza(solucion.C_4, dy: -10), hasta: desplaza(solucion.C_4, dy: 10))'
+            toma: segmento2(proy_alzado(solucion.S), proy_alzado(solucion.G))
+            porque: |
+              C está a la misma altura que t′, así que se aparta de la línea nueva lo mismo: con la misma
+              abertura del compás, desde la línea nueva sobre la referencia de C. Vale el corte de la
+              derecha, hacia la planta, como el de t′₄.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄, donde el arco corta la referencia de C: justo debajo de t′₄, porque C y t′ están a la
+              misma altura.
+          - con: regla
+            traza: segmento2(solucion.S_4, solucion.C_4)
+            porque: |
+              S₄C₄ es el cable en la vista de perfil: s₄. Desde ahí, t′ es un punto y s una recta, y la
+              distancia entre los dos se ve en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.t_4, solucion.Q_4)
+            guia: segmento2(solucion.S_4, solucion.C_4)
+            porque: |
+              La perpendicular común a t′ y a s es la **perpendicular desde t′₄ a s₄**: con t′ de punta,
+              toda recta perpendicular a t′ se ve en verdadera magnitud. Con la escuadra apoyada en s₄,
+              hasta cortarla.
+          - con: marca
+            traza: solucion.Q_4
+            rotulo: Q₄
+            porque: |
+              Q₄, el pie de esa perpendicular en s₄: el punto del cable más cercano. t′₄Q₄ mide 24,2 mm,
+              2,42 m a escala: menos de los 3 m de la ley.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Q_4, proy_planta(solucion.Q))
+            guia: figura.segmento("t1")
+            porque: |
+              Se vuelve a la planta por la referencia de Q₄, paralela a t₁, hasta s₁, porque Q está en el
+              cable.
+          - con: marca
+            traza: proy_planta(solucion.Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde la referencia de Q₄ corta s₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Q), proy_alzado(solucion.Q))
+            guia: figura.segmento("t1")
+            porque: |
+              La perpendicular común es de perfil, perpendicular a t₁, así que P y Q tienen la misma
+              vertical. Por Q₁, la línea de referencia hacia arriba, hasta s₂: corta t₁, t′₂ y s₂.
+          - con: marca
+            traza: proy_planta(solucion.P)
+            rotulo: P₁
+            porque: |
+              P₁, donde la vertical de Q₁ corta t₁: el punto más alto del tren tiene la planta de la
+              trayectoria.
+          - con: marca
+            traza: proy_alzado(solucion.P)
+            rotulo: P₂
+            porque: |
+              P₂, donde la misma vertical corta t′₂, 40 mm por encima de t₂.
+          - con: marca
+            traza: proy_alzado(solucion.Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical corta s₂. P₂Q₂ y P₁Q₁ van en la misma vertical del papel, porque PQ
+              es de perfil.
         pista: |
           (1) t′₂, la paralela a t₂ 40 mm más arriba. (2) Una vista de perfil: t′ se ve como un punto
           y s como una recta. (3) Desde el punto, la perpendicular a s: su pie es Q en esa vista. (4)
