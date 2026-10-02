@@ -60,6 +60,11 @@ sabía:
   es el menor, 86,10°, y no el de las caras, 93,90°, que se da como
   distractor sin castigar; y en el 53·3 B, la visibilidad del refuerzo, que
   el enunciado no pide y no se afirma.
+- **Expresión Gráfica, el Ejercicio 49 de la colección (SD65)**: si en clase
+  se resuelve como el agujero cuadrado de lado a en la cara inclinada del
+  depósito, que es la lectura literal que se ha tomado, o como la sección
+  de un tubo de sección cuadrada. La página no da cifra para «a»: se ha
+  tomado el segmento dibujado, de 20 mm, y el ejercicio lo dice.
 - **Expresión Gráfica, la hoja de *Criterios*** (`src/content/criterios/`),
   tres cosas que no dice: si en el precio compuesto de la escala el medio
   punto del cajetín se cobra una vez o por pieza (se ha supuesto una vez:
