@@ -305,6 +305,25 @@ ejercicios:
         vm_AB_mm: en_mm(vm(A, B))
         vm_CD_mm: en_mm(vm(C, D))
         vm_EF_mm: en_mm(vm(E, F))
+        # Para la construcción paso a paso. Donde la horizontal por el extremo
+        # más bajo de cada cable corta la vertical del más alto, en el alzado:
+        # de ese punto al alzado del extremo alto va la diferencia de cotas,
+        # que se toma con el compás. La de B₂ es el borde izquierdo del poste.
+        H_AB: 'pie_perpendicular(figura.punto("B2"), perpendicular(por: figura.punto("A2"), a: segmento2(figura.punto("B2"), figura.punto("B1"))))'
+        J_CD: 'pie_perpendicular(figura.punto("C2"), perpendicular(por: figura.punto("D2"), a: segmento2(figura.punto("C2"), figura.punto("C1"))))'
+        K_EF: 'pie_perpendicular(figura.punto("E2"), perpendicular(por: figura.punto("F2"), a: segmento2(figura.punto("E2"), figura.punto("E1"))))'
+        # Los extremos de las perpendiculares a cada planta por su extremo de
+        # arriba: en el papel se trazan más allá del extremo abatido, hacia el
+        # lado donde hay sitio, y no paran en él.
+        L_B: 'uno(medir_sobre(perpendicular(por: figura.punto("B1"), a: figura.segmento("AB1")), desde: figura.punto("B1"), distancia: diferencia_de_cotas(A, B) + mm(8)), 1)'
+        L_C: 'uno(medir_sobre(perpendicular(por: figura.punto("C1"), a: figura.segmento("CD1")), desde: figura.punto("C1"), distancia: diferencia_de_cotas(C, D) + mm(5)), 1)'
+        L_E: 'uno(medir_sobre(perpendicular(por: figura.punto("E1"), a: figura.segmento("EF1")), desde: figura.punto("E1"), distancia: diferencia_de_cotas(E, F) + mm(8)), 1)'
+        # El extremo abatido de cada cable que dibuja la construcción: el de
+        # arriba, girado hasta la cota del de abajo, hacia el lado de las
+        # perpendiculares anteriores.
+        B_ab: uno(abatido_planta(A, B), 1)
+        C_ab: uno(abatido_planta(D, C), 2)
+        E_ab: uno(abatido_planta(F, E), 2)
     pasos:
       - tipo: reconocer
         pregunta: Ninguno de los tres cables es horizontal ni frontal. ¿Dónde está su longitud real?
@@ -401,6 +420,130 @@ ejercicios:
                 mensaje: |
                   El abatido de E está en la perpendicular a E₁F₁ por E₁, a la diferencia de cotas
                   de E y F; el de F, lo mismo por F₁.
+        construccion:
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("A2"), desplaza(solucion.H_AB, dx: mm(6)))'
+            guia: segmento2(figura.punto("B2"), figura.punto("B1"))
+            porque: |
+              **El cable AB.** Su longitud real es la hipotenusa de un triángulo rectángulo: un
+              cateto es la planta A₁B₁ y el otro, la **diferencia de cotas** de A y B, que se mide
+              en el alzado. Para medirla, por A₂, el extremo más bajo, la horizontal: la escuadra
+              apoyada en el cartabón, perpendicular a la vertical de B₂, y larga, hasta pasar esa
+              vertical.
+          - con: marca
+            traza: solucion.H_AB
+            rotulo: H
+            porque: |
+              H, donde la horizontal de A₂ corta la vertical de B₂. B₂ está en el borde izquierdo
+              del poste, así que esa vertical es el borde, que ya está dibujado. B₂H es lo que B
+              está más alto que A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.L_B)
+            guia: figura.segmento("AB1")
+            porque: |
+              Se **abate el plano proyectante** de AB, el plano vertical que lo contiene, sobre el
+              plano horizontal de A: la charnela es la horizontal de ese plano que pasa por A, y su
+              planta es A₁B₁. B gira alrededor de ella y cae en la **perpendicular a A₁B₁ por B₁**:
+              la escuadra, apoyada en A₁B₁, la da. Larga, hacia abajo, que es donde hay sitio.
+          - con: compas
+            traza: 'arco(figura.punto("B1"), por: solucion.B_ab, desde: desplaza(solucion.B_ab, dx: 10.90, dy: 4.33), hasta: desplaza(solucion.B_ab, dx: -10.39, dy: -5.45))'
+            toma: segmento2(figura.punto("B2"), solucion.H_AB)
+            porque: |
+              Con el compás se toma B₂H en el alzado, la diferencia de cotas, y se lleva desde B₁
+              sobre la perpendicular. Al otro lado de B₁ valdría igual: el triángulo saldría
+              reflejado, con la misma hipotenusa.
+          - con: marca
+            traza: solucion.B_ab
+            rotulo: (B)
+            porque: |
+              (B), donde el arco corta la perpendicular por B₁: B abatido, el extremo que se pide del
+              cable AB, a la diferencia de cotas de A y B desde B₁.
+          - con: regla
+            traza: segmento2(figura.punto("A1"), solucion.B_ab)
+            porque: |
+              A₁(B) es el cable AB en **verdadera magnitud**, 57,0 mm, y el ángulo que forma en A₁
+              con A₁B₁ es el que forma el cable con el suelo: lo que piden los pasos siguientes.
+          - con: regla
+            traza: segmento2(figura.punto("C2"), figura.punto("C1"))
+            porque: |
+              **El cable CD**, igual. Su extremo alto es C, y su vertical no está dibujada: es la
+              **línea de referencia** de C₂ a C₁, porque las dos proyecciones de un punto van en la
+              misma vertical. Con la regla, uniendo C₂ y C₁.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("D2"), desplaza(solucion.J_CD, dx: mm(-6)))'
+            guia: segmento2(figura.punto("C2"), figura.punto("C1"))
+            porque: |
+              Por D₂, el extremo más bajo, la horizontal: perpendicular a C₂C₁, hacia la izquierda
+              y más allá de esa vertical.
+          - con: marca
+            traza: solucion.J_CD
+            rotulo: J
+            porque: |
+              J, donde la horizontal de D₂ corta la vertical de C₂: C₂J es la diferencia de cotas de
+              C y D.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_C)
+            guia: figura.segmento("CD1")
+            porque: |
+              El plano proyectante de CD se abate sobre el plano horizontal de D, con la charnela en
+              C₁D₁: C cae en la **perpendicular a C₁D₁ por C₁**. Larga, hacia la izquierda, porque a
+              la derecha se juntaría con el cable EF.
+          - con: compas
+            traza: 'arco(figura.punto("C1"), por: solucion.C_ab, desde: desplaza(solucion.C_ab, dx: 4.47, dy: 10.27), hasta: desplaza(solucion.C_ab, dx: -3.00, dy: -10.79))'
+            toma: segmento2(figura.punto("C2"), solucion.J_CD)
+            porque: |
+              El compás toma C₂J en el alzado y la lleva desde C₁ sobre la perpendicular.
+          - con: marca
+            traza: solucion.C_ab
+            rotulo: (C)
+            porque: |
+              (C), donde el arco corta la perpendicular por C₁: C abatido, el extremo que se pide del
+              cable CD, a la diferencia de cotas de C y D desde C₁.
+          - con: regla
+            traza: segmento2(figura.punto("D1"), solucion.C_ab)
+            porque: |
+              D₁(C) es el cable CD en verdadera magnitud, 48,0 mm. Cruza el triángulo de AB, pero
+              cada uno se lee entre sus propios puntos.
+          - con: regla
+            traza: segmento2(figura.punto("E2"), figura.punto("E1"))
+            porque: |
+              **El cable EF.** Su extremo alto es E: la línea de referencia de E₂ a E₁, con la regla,
+              es su vertical.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("F2"), desplaza(solucion.K_EF, dx: mm(-6)))'
+            guia: segmento2(figura.punto("E2"), figura.punto("E1"))
+            porque: |
+              Por F₂, el extremo más bajo, la horizontal, perpendicular a E₂E₁, hasta pasar esa
+              vertical.
+          - con: marca
+            traza: solucion.K_EF
+            rotulo: K
+            porque: |
+              K, donde la horizontal de F₂ corta la vertical de E₂: E₂K es la diferencia de cotas de
+              E y F.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("E1"), solucion.L_E)
+            guia: figura.segmento("EF1")
+            porque: |
+              El plano proyectante de EF se abate sobre el plano horizontal de F, con la charnela en
+              E₁F₁: E cae en la **perpendicular a E₁F₁ por E₁**. Larga, hacia abajo, porque hacia
+              arriba caería en el alzado.
+          - con: compas
+            traza: 'arco(figura.punto("E1"), por: solucion.E_ab, desde: desplaza(solucion.E_ab, dx: 9.44, dy: -7.38), hasta: desplaza(solucion.E_ab, dx: -10.16, dy: 6.36))'
+            toma: segmento2(figura.punto("E2"), solucion.K_EF)
+            porque: |
+              El compás toma E₂K en el alzado y la lleva desde E₁ sobre la perpendicular.
+          - con: marca
+            traza: solucion.E_ab
+            rotulo: (E)
+            porque: |
+              (E), donde el arco corta la perpendicular por E₁: E abatido, el extremo que se pide del
+              cable EF, a la diferencia de cotas de E y F desde E₁.
+          - con: regla
+            traza: segmento2(figura.punto("F1"), solucion.E_ab)
+            porque: |
+              F₁(E) es el cable EF en verdadera magnitud, 54,7 mm. Es el más empinado: su cateto
+              vertical, la diferencia de cotas, es más largo que la planta.
         pista: |
           (1) En el alzado, mide la diferencia de cotas del cable: la distancia vertical entre sus
           dos extremos, con una horizontal por el más bajo. (2) Por el extremo de la planta que
@@ -744,6 +887,58 @@ ejercicios:
           - proy_planta(segmento3(solucion.B, solucion.C))
           - proy_planta(segmento3(solucion.C, solucion.D))
           - proy_planta(segmento3(solucion.D, A))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              El lado AD es perpendicular a r, y r es **frontal**: el ángulo recto se ve en el
+              alzado. Como A₂ está sobre r₂, el alzado de AD, perpendicular a r₂ y con D₂ en r₂, se
+              queda en un punto: AD es **de punta**, y D₂ coincide con A₂. Así que D₁ está en la vertical de A₂, que es la
+              línea de referencia de A: con la regla, de A₂ a A₁.
+          - con: marca
+            traza: proy_planta(solucion.D)
+            rotulo: D₁
+            porque: |
+              D₁, donde la línea de referencia de A corta r₁: D está sobre r y en la vertical de
+              D₂ ≡ A₂.
+          - con: compas
+            traza: 'arco(figura.punto("A2"), por: proy_alzado(solucion.B), desde: desplaza(proy_alzado(solucion.B), dx: -7.09, dy: -10.12), hasta: desplaza(proy_alzado(solucion.B), dx: 5.23, dy: 11.20))'
+            toma: segmento2(figura.punto("A1"), proy_planta(solucion.D))
+            porque: |
+              AD es de punta, así que en la planta se ve entero: A₁D₁ es el **lado en verdadera
+              magnitud**, 25,0 mm. Se toma con el compás y se lleva desde A₂ sobre s₂, que también
+              está en verdadera magnitud porque s es frontal. La circunferencia corta s₂ dos veces,
+              una a cada lado de A₂, y los dos cuadrados valen; aquí, el de la derecha.
+          - con: marca
+            traza: proy_alzado(solucion.B)
+            rotulo: B₂
+            porque: |
+              B₂, donde el arco corta s₂: B está en s, a la longitud del lado desde A. Y C₂
+              coincide con B₂, porque BC es de punta como AD.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_alzado(solucion.B), desplaza(proy_planta(solucion.B), dy: mm(4)))'
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por B₂, la línea de referencia hasta la planta, paralela a la de A: las dos
+              proyecciones de un punto van en la misma vertical. Larga, hasta pasar s₁; corta antes
+              r₁.
+          - con: marca
+            traza: proy_planta(solucion.B)
+            rotulo: B₁
+            porque: |
+              B₁, donde esa vertical corta s₁: B es un punto de s.
+          - con: marca
+            traza: proy_planta(solucion.C)
+            rotulo: C₁
+            porque: |
+              C₁, donde la misma vertical corta r₁: C está sobre r y en la vertical de C₂ ≡ B₂, al
+              mismo lado que B.
+          - con: regla
+            traza: '[segmento2(figura.punto("A1"), proy_planta(rama(solucion.B, 1))), segmento2(proy_planta(rama(solucion.B, 1)), proy_planta(rama(solucion.C, 1))), segmento2(proy_planta(rama(solucion.C, 1)), proy_planta(solucion.D)), segmento2(proy_planta(solucion.D), figura.punto("A1"))]'
+            porque: |
+              El cuadrado en la planta se ve como un rectángulo: A₁D₁ y B₁C₁, de punta, en
+              verdadera magnitud; A₁B₁ y D₁C₁ acortados a 21,7 mm, porque s y r suben. En el alzado
+              ya está: A₂B₂ sobre s₂, con D₂ ≡ A₂ y C₂ ≡ B₂.
         pista: |
           (1) D₁: en r₁, en la vertical de A₁. (2) El lado mide lo que A₁D₁ en la planta. (3) Llévalo
           con el compás desde A₂ sobre s₂: ese es B₂. (4) Baja B₂ a s₁ y tienes B₁. (5) C₁, en r₁ en la

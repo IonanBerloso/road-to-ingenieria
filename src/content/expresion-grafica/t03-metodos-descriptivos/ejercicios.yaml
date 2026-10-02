@@ -73,6 +73,42 @@ ejercicios:
         vm_AB_mm: en_mm(vm(A, B))
         vm_BC_mm: en_mm(vm(B, C))
         vm_CA_mm: en_mm(vm(C, A))
+        # Para la construcción paso a paso de los métodos 5 y 6. El punto 1,
+        # donde la recta AB corta cada charnela: da la segunda proyección de la
+        # charnela, y es el punto fijo de la afinidad que lleva de A₀ a B₀.
+        X_h: pie_comun(recta3(A, B), hC)
+        X_f: pie_comun(recta3(A, B), fC)
+        # K, en la línea de referencia de C, a la altura de A₂ (método 5) o de
+        # A₁ (método 6): de C₂ o de C₁ a K va la diferencia de cotas o de
+        # alejamientos de A y C, que se toma con el compás.
+        K_h: 'pie_perpendicular(figura.punto("A2"), segmento2(figura.punto("C1"), figura.punto("C2")))'
+        K_f: 'pie_perpendicular(figura.punto("A1"), segmento2(figura.punto("C1"), figura.punto("C2")))'
+        # T, el otro extremo del cateto del triángulo del radio de A: por A₁ (o
+        # por A₂), paralelo a la charnela y a esa diferencia. MT (o NT) es el
+        # radio del abatimiento.
+        T_h: 'uno(medir_sobre(perpendicular(por: figura.punto("A1"), a: perpA), desde: figura.punto("A1"), distancia: diferencia_de_cotas(A, C)), 1)'
+        T_f: 'uno(medir_sobre(perpendicular(por: figura.punto("A2"), a: perpA2), desde: figura.punto("A2"), distancia: dyA), 1)'
+        # Los extremos de las rectas largas de la construcción: en el papel se
+        # trazan más allá del punto que van a dar, y no paran en él.
+        L_hC: 'desplaza(K_h, dy: mm(-5))'
+        L_hA: 'desplaza(K_h, dx: mm(5))'
+        L_hAB2: 'uno(medir_sobre(figura.segmento("AB2"), desde: proy_alzado(X_h), distancia: mm(6)), 1)'
+        L_h2: 'desplaza(proy_alzado(X_h), dx: mm(-6))'
+        L_hAB1: 'uno(medir_sobre(figura.segmento("AB1"), desde: proy_planta(X_h), distancia: mm(6)), 1)'
+        L_href: 'desplaza(proy_planta(X_h), dy: mm(6))'
+        L_hpA: 'uno(medir_sobre(perpA, desde: proy_planta(rama(A_h, 1)), distancia: mm(6)), 1)'
+        L_hT: 'uno(medir_sobre(perpendicular(por: figura.punto("A1"), a: perpA), desde: figura.punto("A1"), distancia: diferencia_de_cotas(A, C) + mm(6)), 1)'
+        L_hpB: 'uno(medir_sobre(perpB, desde: proy_planta(rama(B_h, 1)), distancia: mm(6)), 1)'
+        L_fC: 'desplaza(K_f, dy: mm(5))'
+        L_fA: 'desplaza(K_f, dx: mm(5))'
+        L_fAB1: 'uno(medir_sobre(figura.segmento("AB1"), desde: proy_planta(X_f), distancia: mm(6)), 1)'
+        L_f1: 'desplaza(proy_planta(X_f), dx: mm(-6))'
+        L_fAB2: 'uno(medir_sobre(figura.segmento("AB2"), desde: proy_alzado(X_f), distancia: mm(6)), 1)'
+        L_fref: 'desplaza(proy_alzado(X_f), dy: mm(-6))'
+        L_fpN: 'uno(medir_sobre(perpA2, desde: proy_alzado(NA), distancia: mm(5)), 2)'
+        L_fpA: 'uno(medir_sobre(perpA2, desde: proy_alzado(rama(A_f, 1)), distancia: mm(6)), 1)'
+        L_fT: 'uno(medir_sobre(perpendicular(por: figura.punto("A2"), a: perpA2), desde: figura.punto("A2"), distancia: dyA + mm(6)), 1)'
+        L_fpB: 'uno(medir_sobre(perpB2, desde: proy_alzado(rama(B_f, 1)), distancia: mm(6)), 1)'
       comprueba:
         # C es el vértice más bajo y el de menor alejamiento (el más próximo al
         # plano vertical): las dos charnelas por C dejan
@@ -207,6 +243,140 @@ ejercicios:
           - segmento2(figura.punto("C1"), proy_planta(solucion.A_h))
           - segmento2(proy_planta(solucion.A_h), proy_planta(solucion.B_h))
           - segmento2(proy_planta(solucion.B_h), figura.punto("C1"))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("C1"), solucion.L_hC)
+            porque: |
+              La **línea de referencia** de C, de C₁ a C₂ y larga hacia arriba, hasta pasar la altura
+              de A₂. En diédrico directo no hay línea de tierra: una horizontal se traza en el
+              alzado perpendicular a las líneas de referencia, y esta hace de guía. Además, en ella
+              se va a medir la cota de A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.L_hA)
+            guia: segmento2(figura.punto("C1"), figura.punto("C2"))
+            porque: |
+              Por A₂, la perpendicular a la línea de referencia de C, hacia la derecha y más allá de
+              ella: la horizontal de la altura de A.
+          - con: marca
+            traza: solucion.K_h
+            rotulo: K
+            porque: |
+              K, donde esa horizontal corta la línea de referencia de C. De C₂ a K va **lo que A
+              está más alto que C**, la diferencia de cotas: 46,7 mm.
+          - con: regla
+            traza: segmento2(figura.punto("B2"), solucion.L_hAB2)
+            porque: |
+              **La charnela** es la horizontal del plano que pasa por C, y hacen falta sus dos
+              proyecciones. Su segundo punto sale de la recta AB: primero se prolonga A₂B₂ con la
+              regla, más allá de B₂, larga.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.L_h2)
+            guia: segmento2(figura.punto("C1"), figura.punto("C2"))
+            rotulo: h₂
+            porque: |
+              h₂, la horizontal por C₂: perpendicular a la línea de referencia de C, hacia la
+              izquierda, hasta cortar A₂B₂ prolongada y pasarla.
+          - con: marca
+            traza: proy_alzado(solucion.X_h)
+            rotulo: 1₂
+            porque: |
+              1₂, donde h₂ corta A₂B₂ prolongada. El punto 1 es de la recta AB y de la charnela a la
+              vez: las dos son rectas del plano ABC.
+          - con: regla
+            traza: segmento2(figura.punto("B1"), solucion.L_hAB1)
+            porque: |
+              En la planta, A₁B₁ prolongada con la regla más allá de B₁, larga: ahí va a caer 1₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.X_h), solucion.L_href)
+            guia: segmento2(figura.punto("C1"), figura.punto("C2"))
+            porque: |
+              Por 1₂, la línea de referencia hasta la planta, paralela a la de C: las dos
+              proyecciones de un punto van en la misma vertical.
+          - con: marca
+            traza: proy_planta(solucion.X_h)
+            rotulo: 1₁
+            porque: |
+              1₁, donde esa línea de referencia corta A₁B₁ prolongada: la planta del punto 1.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.X_h), figura.punto("C1"))
+            rotulo: h₁
+            porque: |
+              h₁, de 1₁ a C₁: la planta de la charnela. Sale casi horizontal en el papel, pero no del
+              todo, se aparta 0,16°: se traza por sus dos puntos, no con la escuadra.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.L_hpA)
+            guia: segmento2(proy_planta(solucion.X_h), figura.punto("C1"))
+            porque: |
+              Al abatir, A gira alrededor de la charnela en un plano perpendicular a ella, que es
+              vertical: en la planta, A se mueve por la **perpendicular a h₁ por A₁**. Larga hacia
+              arriba, cruzando h₁: A se va a abatir al otro lado de la charnela. Hacia abajo valdría
+              igual; lo que no vale es mezclar los dos lados.
+          - con: marca
+            traza: proy_planta(solucion.MA)
+            rotulo: M
+            porque: |
+              M, el pie de A en la charnela, donde la perpendicular corta h₁: es el centro del giro
+              de A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.L_hT)
+            guia: segmento2(proy_planta(solucion.X_h), figura.punto("C1"))
+            porque: |
+              El radio es la hipotenusa de un triángulo rectángulo en A₁: un cateto es A₁M, lo que A₁
+              se aparta de h₁ en la planta; el otro, la diferencia de cotas, se lleva por A₁
+              perpendicular a A₁M, es decir, paralela a h₁. Hacia la derecha, larga.
+          - con: compas
+            traza: 'arco(figura.punto("A1"), por: solucion.T_h, desde: desplaza(solucion.T_h, dx: -0.69, dy: -13.84), hasta: desplaza(solucion.T_h, dx: -0.76, dy: 13.83))'
+            toma: segmento2(figura.punto("C2"), solucion.K_h)
+            porque: |
+              Con el compás, C₂K, la diferencia de cotas de A y C, llevada desde A₁ sobre esa
+              paralela.
+          - con: marca
+            traza: solucion.T_h
+            rotulo: T
+            porque: |
+              T, donde el arco corta la paralela a h₁ por A₁: A₁T es lo que A está más alto que C.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.MA), solucion.T_h)
+            porque: |
+              La hipotenusa MT es la **distancia real de A a la charnela**, 59,7 mm: el radio con que
+              gira A.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.MA), por: proy_planta(solucion.A_h), desde: desplaza(proy_planta(solucion.A_h), dx: -14.76, dy: 0.60), hasta: desplaza(proy_planta(solucion.A_h), dx: 14.76, dy: 0.68))'
+            toma: segmento2(proy_planta(solucion.MA), solucion.T_h)
+            porque: |
+              El compás, abierto de M a T, con la punta en M: el arco corta la perpendicular de A₁.
+              La circunferencia la corta dos veces, una a cada lado de h₁, y las dos valen; aquí se
+              toma la de arriba, la del lado trazado.
+          - con: marca
+            traza: proy_planta(solucion.A_h)
+            rotulo: A₀
+            porque: |
+              A₀, donde el arco de centro M corta la perpendicular de A₁, al otro lado de h₁: A
+              abatido sobre el plano horizontal de C, a 59,7 mm de M. Cae dentro del alzado del
+              triángulo, pero es otro dibujo: la planta abatida, que no tiene nada que ver con
+              A₂B₂C₂.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.X_h), proy_planta(solucion.A_h))
+            porque: |
+              B₀ sale por **afinidad**. El punto 1 está en la charnela y no se mueve al abatir, así
+              que la recta AB abatida pasa por 1₁ y por A₀: con la regla, de 1₁ a A₀.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.L_hpB)
+            guia: segmento2(proy_planta(solucion.X_h), figura.punto("C1"))
+            porque: |
+              B gira como A: en la planta, por la perpendicular a h₁ por B₁, hacia arriba, del mismo
+              lado que A₀.
+          - con: marca
+            traza: proy_planta(solucion.B_h)
+            rotulo: B₀
+            porque: |
+              B₀, donde esa perpendicular corta la recta 1₁A₀. Con su propio triángulo, como A,
+              saldría lo mismo: un radio de 22,8 mm.
+          - con: regla
+            traza: '[segmento2(figura.punto("C1"), proy_planta(rama(solucion.A_h, 1))), segmento2(proy_planta(rama(solucion.B_h, 1)), figura.punto("C1"))]'
+            porque: |
+              C está en la charnela y no se mueve: C₁A₀B₀ es el triángulo ABC en **verdadera
+              magnitud**. Sus lados miden 44,4, 52,8 y 64,0 mm.
         pista: |
           (1) h₂: la horizontal por C₂; corta a la prolongación de A₂B₂ en un punto que bajas a
           A₁B₁ prolongada, y h₁ va de C₁ a él. (2) Por A₁, la perpendicular a h₁, que la corta en
@@ -321,6 +491,134 @@ ejercicios:
           - segmento2(figura.punto("C2"), proy_alzado(solucion.A_f))
           - segmento2(proy_alzado(solucion.A_f), proy_alzado(solucion.B_f))
           - segmento2(proy_alzado(solucion.B_f), figura.punto("C2"))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("C2"), solucion.L_fC)
+            porque: |
+              Es el método 5 con las vistas cambiadas. Primero, la **línea de referencia** de C, de
+              C₂ a C₁ y larga hacia abajo, hasta pasar la altura de A₁: las frontales se trazan en
+              la planta perpendiculares a ella, y en ella se mide el alejamiento de A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.L_fA)
+            guia: segmento2(figura.punto("C1"), figura.punto("C2"))
+            porque: |
+              Por A₁, la perpendicular a la línea de referencia de C, hacia la derecha y más allá de
+              ella.
+          - con: marca
+            traza: solucion.K_f
+            rotulo: K
+            porque: |
+              K, donde esa recta corta la línea de referencia de C. De C₁ a K va **lo que el
+              alejamiento de A supera al de C**, la diferencia de alejamientos: 37,2 mm.
+          - con: regla
+            traza: segmento2(figura.punto("B1"), solucion.L_fAB1)
+            porque: |
+              **La charnela** es ahora la frontal del plano que pasa por C. Su segundo punto sale
+              otra vez de la recta AB: A₁B₁ prolongada con la regla más allá de B₁, larga.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_f1)
+            guia: segmento2(figura.punto("C1"), figura.punto("C2"))
+            rotulo: f₁
+            porque: |
+              f₁, la planta de la frontal por C: perpendicular a la línea de referencia de C, hacia
+              la izquierda, hasta cortar A₁B₁ prolongada y pasarla.
+          - con: marca
+            traza: proy_planta(solucion.X_f)
+            rotulo: 1₁
+            porque: |
+              1₁, donde f₁ corta A₁B₁ prolongada: el punto 1 es de la recta AB y de la frontal a la
+              vez.
+          - con: regla
+            traza: segmento2(figura.punto("B2"), solucion.L_fAB2)
+            porque: |
+              En el alzado, A₂B₂ prolongada con la regla más allá de B₂, larga: ahí va a caer 1₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.X_f), solucion.L_fref)
+            guia: segmento2(figura.punto("C1"), figura.punto("C2"))
+            porque: |
+              Por 1₁, la línea de referencia hasta el alzado, paralela a la de C: las dos
+              proyecciones de un punto van en la misma vertical.
+          - con: marca
+            traza: proy_alzado(solucion.X_f)
+            rotulo: 1₂
+            porque: |
+              1₂, donde esa línea de referencia corta A₂B₂ prolongada: el alzado del punto 1.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.X_f), figura.punto("C2"))
+            rotulo: f₂
+            porque: |
+              f₂, de 1₂ a C₂: el alzado de la charnela, en verdadera magnitud porque es frontal. Casi
+              horizontal en el papel, se aparta 0,20°, pero se traza por sus dos puntos.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A2"), solucion.L_fpN), segmento2(figura.punto("A2"), solucion.L_fpA)]'
+            guia: segmento2(proy_alzado(solucion.X_f), figura.punto("C2"))
+            porque: |
+              A gira alrededor de la frontal en un plano perpendicular a ella, que es de canto sobre
+              el alzado: en el alzado, A se mueve por la **perpendicular a f₂ por A₂**. Larga hacia
+              los dos lados: hacia abajo, hasta cortar f₂, y hacia arriba, más allá de A₂: A se va a
+              abatir de este lado de la charnela, el de A₂, porque al otro caería encima de la
+              planta.
+          - con: marca
+            traza: proy_alzado(solucion.NA)
+            rotulo: N
+            porque: |
+              N, el pie de A en la charnela, donde la perpendicular corta f₂: el centro del giro de A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.L_fT)
+            guia: segmento2(proy_alzado(solucion.X_f), figura.punto("C2"))
+            porque: |
+              El triángulo del radio, rectángulo en A₂: un cateto es A₂N, en el alzado; el otro, la
+              diferencia de alejamientos, se lleva por A₂ paralela a f₂. Hacia la derecha, larga.
+          - con: compas
+            traza: 'arco(figura.punto("A2"), por: solucion.T_f, desde: desplaza(solucion.T_f, dx: -0.74, dy: -12.86), hasta: desplaza(solucion.T_f, dx: -0.83, dy: 12.85))'
+            toma: segmento2(figura.punto("C1"), solucion.K_f)
+            porque: |
+              Con el compás, C₁K, la diferencia de alejamientos de A y C, que se mide en la planta,
+              llevada desde A₂ sobre esa paralela.
+          - con: marca
+            traza: solucion.T_f
+            rotulo: T
+            porque: |
+              T, donde el arco corta la paralela a f₂ por A₂: A₂T es lo que el alejamiento de A
+              supera al de C.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.NA), solucion.T_f)
+            porque: |
+              NT es la **distancia real de A a la charnela**, 59,6 mm: el radio con que gira A.
+          - con: compas
+            traza: 'arco(proy_alzado(solucion.NA), por: proy_alzado(solucion.A_f), desde: desplaza(proy_alzado(solucion.A_f), dx: -14.74, dy: 0.59), hasta: desplaza(proy_alzado(solucion.A_f), dx: 14.73, dy: 0.69))'
+            toma: segmento2(proy_alzado(solucion.NA), solucion.T_f)
+            porque: |
+              El compás, abierto de N a T, con la punta en N: el arco corta la perpendicular de A₂
+              por encima de A₂. La circunferencia la corta también por debajo de f₂, al otro lado:
+              las dos valen, y aquí se toma la de arriba, la del lado trazado.
+          - con: marca
+            traza: proy_alzado(solucion.A_f)
+            rotulo: A₀
+            porque: |
+              A₀, donde el arco de centro N corta la perpendicular de A₂, por encima de A₂: A abatido
+              sobre el plano frontal de C, a 59,6 mm de N.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.X_f), proy_alzado(solucion.A_f))
+            porque: |
+              B₀ sale por **afinidad**: el punto 1 está en la charnela y no se mueve, así que AB
+              abatida pasa por 1₂ y por A₀.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B2"), solucion.L_fpB)
+            guia: segmento2(proy_alzado(solucion.X_f), figura.punto("C2"))
+            porque: |
+              Por B₂, la perpendicular a f₂, hacia arriba, del mismo lado que A₀.
+          - con: marca
+            traza: proy_alzado(solucion.B_f)
+            rotulo: B₀
+            porque: |
+              B₀, donde esa perpendicular corta la recta 1₂A₀. Con su propio triángulo, como A, el
+              radio saldría de 22,6 mm.
+          - con: regla
+            traza: '[segmento2(figura.punto("C2"), proy_alzado(rama(solucion.A_f, 1))), segmento2(proy_alzado(rama(solucion.B_f, 1)), figura.punto("C2"))]'
+            porque: |
+              C₂A₀B₀ es el triángulo en verdadera magnitud, abatido sobre el plano frontal de C.
+              Mide lo mismo que C₁A₀B₀ en el método 5: es el mismo triángulo.
         pista: |
           Es el método 5 con las vistas cambiadas. (1) f₁: la horizontal por C₁; f₂, por el punto
           donde f₁ corta a A₁B₁ prolongada, subido a A₂B₂. (2) Por A₂, la perpendicular a f₂. (3)
