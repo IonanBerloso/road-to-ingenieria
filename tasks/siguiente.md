@@ -40,10 +40,41 @@ renueve el límite semanal. La fase K, Expresión Gráfica, sigue a medias.
    Gráfica, Sistemas (fase J), Cónicas y los dos temas de Fluidos se declaran
    como fase siguiente.
 
-**Para gastar menos límite:** encargos de cuatro ejercicios en vez de dos, con un
-solo revisor por encargo. Dos agentes a la vez como máximo (Ionan, 1 de
-octubre). Cada ejercicio nuevo pasa ya por `choques-rotulos` y por la guarda de
-puntos dados del build.
+## Cómo trabajar para gastar menos límite sin perder calidad
+
+Medido del 30 de septiembre a las 20:00 al 2 de octubre: el límite semanal se
+gastó al 93 % en dos días. El 82 % lo gastaron los agentes, y casi todo fue
+releer contexto. Cada agente costó unos 10 millones de tokens equivalentes, y
+la calidad salió de las revisiones: casi todas encontraron algo serio.
+
+1. **Primero, una mañana de preparación** (sesión principal, sin agentes):
+   - una **chuleta** de dos páginas con las reglas que de verdad usa un
+     ejercicio de la colección, en lugar de INSTRUCCIONES-K, PLAN-K y las
+     secciones de CLAUDE.md;
+   - un **paquete de modelo**: un solo ejercicio ejemplar ya revisado (SD22),
+     con su lámina, en vez de mandar a leer el `ejercicios.yaml` del tema 3,
+     que pasa de 13.000 líneas;
+   - un **`comprueba-todo`** que junte `comprueba-receta`, `choques-rotulos` y
+     `sigue-papel` (este, para todos los ejercicios de un fichero y aceptando
+     los radios del enunciado), y que avise además de dos cosas que hoy
+     encuentran los revisores a mano: una marca cuyo porqué no dice dónde cae
+     el punto, y otra medida del dibujo que cae dentro de la tolerancia de la
+     respuesta.
+2. **Encargos de tres o cuatro ejercicios del mismo tema**, con un revisor por
+   encargo, centrado en lo que no ven las herramientas: la geometría por un
+   segundo camino, el enunciado contra la página, la verdad de cada porqué y
+   de cada mensaje, y las lecturas que hay que declarar.
+3. **Los arreglos de una revisión, con un modelo más barato** (Sonnet), cuando
+   el revisor da el texto exacto. Autores de ejercicios nuevos y revisores,
+   con Opus.
+4. **Un suelo por cada dos encargos integrados**, no uno por encargo: tarda ya
+   más de una hora.
+5. **El orden, por lo que más ayuda a aprobar:** el diédrico de noviembre
+   primero (temas 5 y 6, el `Taller` con aristas y el tema 4, el tema 1, el
+   Ejercicio 52), y después el bloque 2, que pesa más en la nota y se examina
+   en abril.
+
+Dos agentes a la vez como máximo (Ionan, 1 de octubre).
 
 ## Una pregunta sin contestar
 
