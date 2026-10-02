@@ -3,63 +3,47 @@
 Se sobrescribe cada vez; no se amplía. Lo que queda más allá está en
 `pendiente.md`, con las fases en orden arriba del todo.
 
-Escrito el 30 de septiembre de 2026, al cerrar la fase I. Fluidos la tiene
-entera:
+Escrito el 2 de octubre de 2026, al dejar el proyecto en pausa hasta que se
+renueve el límite semanal. La fase K, Expresión Gráfica, sigue a medias.
 
-- **Las prácticas**: la página del laboratorio con las 27, cada una con su
-  apartado en la prosa y los ejercicios de examen que se resuelven con lo que
-  mide; y un bloque en la ruta de la ordinaria, un escalón por sesión.
-- **Los dieciséis exámenes**, cotejados palabra por palabra contra el
-  cuadernillo, con sus notas impresas en `notas` (el guardián de
-  `verify.mjs` ya bloquea), `puntosImpresos` en % y los `dibujar` y
-  `redactar` que piden. De los trece ejercicios que estaban en `fuera`, doce
-  eran recuperables y entraron; queda el 7 de la final de 2021, por formato.
-- **«Cómo se corrige»** en el tema 1 y como primer escalón de la ruta, y los
-  formularios de cada tema.
-- **La ruta, recontada**: con los rescates, cuatro bloques caen las once
-  finales (análisis dimensional, bombeo, fuerzas y estática) y el orden
-  cambia con ellos. Los recuentos salen de un guion sobre el `tema` de cada
-  `examen.yaml`, y cada `porque` dice sus números.
-- **CLAUDE.md §17**: los motivos de material de un `fuera` tampoco envejecen
-  bien; todo `fuera` se relee contra la página renderizada.
+## Dónde está K
 
-## Lo que sigue: K · Expresión Gráfica
+- **Publicado**:
+  - **Diédrico:** el tema 3 entero, con sus 14 ejercicios de la colección, y el
+    tema 6, ángulos, con el Ejercicio 47.
+  - **Colección:** 21 de los 55 ejercicios: SD1, SD4, SD5, del 7 al 10, el 13,
+    el 14, del 16 al 21, el 47, el 48, el 49, y el 53, el 54 y el 55.
+  - **Construcción paso a paso:** la llevan todos.
+- **Cortado por el límite, fuera del repositorio** (en la carpeta de trabajo de
+  la sesión, con su registro `integracion-k.md`):
+  - el tema 5 con el Ejercicio 38 (unidad `k-t05a`): entregado y sin revisar;
+  - el Ejercicio 52, apartados 3 y 4 (unidad `k-ex52a`): al autor le faltaban
+    las últimas comprobaciones. El 1 y el 2 van en `fuera` hasta que haya dos
+    funciones nuevas.
+  - Si esa carpeta ya no está, se rehacen desde PLAN-K.
 
-Sistemas (fase J) se deja para más adelante, confirmado por Ionan el 30 de
-septiembre de 2026. Lo siguiente es K, con lo que dice el encargo:
+## Lo que sigue, en este orden
 
-1. **Planificarla antes de lanzar nada**, en unidades del tamaño de las de la
-   fase I y en tandas de cuatro, cada una con su revisión independiente.
-2. **Las hojas 52–55 son exámenes** (fuente «sin fecha») y ordenan la fase 2:
-   las familias B, E y G antes que A y H.
-3. **El bloque 2, normalización (55 %), no espera a la fase 3**: los
-   *Criterios* como datos; t13 con `dibujar` y `redactar`; t12 con
-   `calcular` y µm; t10 con `calcular` de tipo `conjunto`; t07 y t11 con
-   `reconocer`.
+1. **Cerrar lo empezado:** la revisión del tema 5 y el Ejercicio 52 (3 y 4).
+2. **El resto del diédrico**, que entra en el examen de noviembre:
+   - el tema 5: los otros 10 ejercicios de la colección;
+   - el tema 6: los otros 6;
+   - el `Taller` con aristas vistas y ocultas, y el tema 4 con sus ejercicios;
+   - el tema 1 y lo que falta del tema 2;
+   - los apartados 1 y 2 del Ejercicio 52.
+3. **La deuda**:
+   - las acciones del despliegue, antes del 19 de octubre;
+   - las mejoras apuntadas: que `sigue-papel` lea todos los ejercicios de un
+     fichero y distinga los radios del enunciado; un desplazamiento de rótulo
+     por punto en el reproductor, que arreglaría el roce de SD4.
+4. **Pedir la auditoría** con el diédrico cerrado. El bloque 2 de Expresión
+   Gráfica, Sistemas (fase J), Cónicas y los dos temas de Fluidos se declaran
+   como fase siguiente.
 
-**Cambio de orden, 1 de octubre de 2026.** La auditoría de la Colección de
-ejercicios (`auditorias/2026-10-01/coleccion-de-ejercicios.md`, fuera del
-repositorio) y un dato de Ionan: el examen de la primera evaluación es sobre
-los ejercicios de la colección, y la presentación de 2026-27 dice que el
-bloque 1 se libera en noviembre. Lo que queda de K va en este orden:
-
-1. La página de la Colección de ejercicios, con los 55 por su número. Las
-   «hojas 52–55» son los Ejercicios 52 a 55 de la colección (solo el 54 se
-   titula examen), y así se rotulan.
-2. Publicar lo hecho: los *Criterios* en la ficha, los lotes de funciones, el
-   Ejercicio 55, y terminar el 53 y el 54.
-3. El tema 3 entero (cambios de plano, giros y abatimientos), con sus 14
-   ejercicios de la colección.
-4. Los temas 6 y 5, con el Ejercicio 52.
-5. El `Taller` con aristas vistas y ocultas, y el tema 4.
-6. Lo que falta del tema 2, y el tema 1.
-7. Lo que queda del bloque 2, después de noviembre: su control es en abril.
-
-Dos agentes a la vez como máximo (Ionan, 1 de octubre).
-
-Después, la deuda de `pendiente.md` (Térmica, contar apartados; lo que queda
-de la colección de T9 y T10; lo que dejó abierto la fase I) y repetir la
-auditoría.
+**Para gastar menos límite:** encargos de cuatro ejercicios en vez de dos, con un
+solo revisor por encargo. Dos agentes a la vez como máximo (Ionan, 1 de
+octubre). Cada ejercicio nuevo pasa ya por `choques-rotulos` y por la guarda de
+puntos dados del build.
 
 ## Una pregunta sin contestar
 
