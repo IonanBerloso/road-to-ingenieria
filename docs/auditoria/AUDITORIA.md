@@ -110,10 +110,11 @@ producción; **bajo**, higiene.
 | M6 | `src/content/ingenieria-termica/**` | **Térmica no usa el campo `notas`**: siete notas impresas siguen dentro del `enunciado` (2021-2022-ext `:19`, `:250`; 2021-2022-ord `:329`; 2023-2024-ord `:482`; 2024-2025-ext `:21`, `:217`; 2024-2025-ord `:571`). La regla de §04 entró con Fluidos y no se extendió, y el guardián de las notas impresas solo mira Fluidos. |
 | M7 | `src/content/calculo/t10-laplace/ejercicios.yaml:5628-5630` y `src/lib/regiones.ts:154` | El paso del RLC pide «cuatro decimales» de una expresión con $e^{-1}$, cos 1 y sen 1, en una asignatura sin calculadora, y **la forma exacta no se puede teclear**: el lector solo conoce `re, im, arg, abs, conj, sqrt, exp, ln`. Otros cinco pasos del t10 ordenan «con cuatro decimales» sin ofrecer la forma exacta (`:2448`, `:2650`, `:3834`, `:5415`, `:6102`), contra §09. |
 | M8 | contenido, varios | Los medios de la muestra, uno por línea en «Contenido por asignatura»: una trampa cuyo «contraejemplo» no lo es (Álgebra t05), un criterio de diagonalización sin «raíces reales» (Álgebra t07), dos recuentos publicados sin medir (Álgebra t07, Cálculo t10), un ErrorTipico mal explicado (Cálculo t08), una casilla que pide «la dirección» y exige un representante (Álgebra t07), supuestos presentados como datos del enunciado («aire en reposo», «pared de cobre»), una afirmación falsa sobre el redondeo de ΔG y una pieza que contradice a su resolución (Química), dos retoques del enunciado sin declarar (Química) y una docena de cifras de prosa o de mensaje que no son las de la cuenta (Fluidos t18, Térmica t04 y t09, Química t06 y t09). |
-| M9 | `.github/workflows/deploy.yml` | **Cada despliegue tarda alrededor de una hora** (ejecuciones 594–597 del 2 de octubre: 56, 57, 63 y 64 minutos), y dos *push* seguidos dejan cancelada la primera ejecución (598 y 599). Un commit de solo `tasks/` o `diario/` paga el suelo entero. En local el suelo ha tardado lo que dice [El suelo](#el-suelo-hoy). |
+| M9 | `.github/workflows/deploy.yml` | **Cada despliegue tarda alrededor de una hora** (ejecuciones 594–597 del 2 de octubre: 56, 57, 63 y 64 minutos), y dos *push* seguidos dejan cancelada la primera ejecución (598 y 599). Un commit de solo `tasks/` o `diario/` paga el suelo entero. En el despliegue del 2 de octubre, el paso del suelo fueron 62 de sus 63 minutos; aquí, 1 h 4 min ([El suelo](#el-suelo-hoy)). |
 | M10 | `CLAUDE.md` | **218 KB y 3.583 líneas que lee entero cada agente.** `tasks/siguiente.md` midió que el 82 % del límite semanal se fue en agentes, «casi todo releyendo contexto», y la salida que propone —una chuleta fuera del repositorio— es una segunda copia de las reglas. §17 tiene 1.065 líneas; `docs/decisiones.md` pide repensarlo a las 1.200. Ver `IDEAS.md`, 4. |
 | M11 | `dist/index.html`, de `src/pages/index.astro:808` | **El 60 % de la portada es el índice de la paleta**: 224 KB de 374 KB son un JSON en línea que solo se usa al abrir la búsqueda. Comprimido son 53 KB en total, así que no es grave en red, pero es la primera página que ve todo el mundo y el índice de ejercicios ya se carga aparte (`indice-ejercicios.json`). |
 | M12 | `public/examenes/**/*.pdf`, metadatos | **La pregunta de los metadatos no es solo de Fluidos.** `pendiente.md` la abre para los PDF de Fluidos, que llevan un nombre en el campo Author. Contado con `pdfinfo` (sin copiar ningún valor aquí): **102 de los 129 PDF** tienen el campo Author relleno —Cálculo 77 de 85, Mecánica 8 de 8, Química 6 de 6, Álgebra 6 de 8, Fluidos 2 de 2, Térmica 3 de 20— y **al menos 11** tienen forma de nombre y apellidos (dos o tres palabras con mayúscula). Son autores de documentos oficiales, no alumnado, pero el repositorio es público y la decisión pendiente debería tomarse para los 129 a la vez. |
+| M13 | `scripts/comprueba-talleres.mjs`, salida de hoy | **Dónde no se puede construir con el dedo.** En las láminas densas, el guardián no consigue que un punto construido a clics quede en su sitio (el imán se lo lleva a otra cosa) y lo crea por la puerta de pruebas del Taller, avisando sin parar. Es el comportamiento diseñado (§11, «Las láminas densas»), pero el aviso es la medida de lo difícil que lo tendrá un alumno: **76 avisos con 255 puntos en 7 páginas**, casi todos en los dos bloques del tema 3 (46 avisos) y en los Ejercicios 53, 54 y 55 (22). Merece mirar esas láminas en un móvil antes de seguir con las del tema 5. |
 
 ### Bajo
 
@@ -284,9 +285,10 @@ escribe a mano y se podría calcular (M5) y lo que el revisor recalcula.
 
 **Lo que frena a las dos, y a todo lo que venga**:
 
-1. **El ciclo de comprobación**: el suelo tarda una hora en el CI y más de lo
-   que ya era en local; `siguiente.md` ya se ha resignado a «un suelo por
-   cada dos encargos». Ver `IDEAS.md`, 11.
+1. **El ciclo de comprobación**: el suelo tarda una hora en el CI (62 minutos
+   de los 63 del despliegue del 2 de octubre) y 1 h 4 min aquí, el 91 % en
+   `humo` y `talleres`; `siguiente.md` ya se ha resignado a «un
+   suelo por cada dos encargos». Ver `IDEAS.md`, 11.
 2. **El contexto de cada agente**: CLAUDE.md entero en cada uno (M10). Ver
    `IDEAS.md`, 4.
 3. **Las cifras a mano en los mensajes** (M5). Ver `IDEAS.md`, 12.
@@ -305,9 +307,13 @@ escribe a mano y se podría calcular (M5) y lo que el revisor recalcula.
 | `color` | verde | menos de 1 s |
 | `contraste` | verde | 22 s |
 | `test` | verde: 171 ficheros, 2.997 tests | 15 s |
-| `humo` | en marcha al escribir esto: 361 páginas abiertas, ningún fallo | — |
-| `sim` | pendiente de `humo` | — |
-| `talleres` | pendiente de `humo` | — |
+| `humo` | verde: 361 páginas, 5.417 comprobaciones, cero errores de JavaScript | 34 min 47 s |
+| `sim` | verde | 34 s |
+| `talleres` | verde: 3.648 comprobaciones; 76 avisos que no bloquean (M13) | 23 min 28 s |
+| **total** | **los diez en verde** | **1 h 4 min** |
+
+El 91 % del suelo son `humo` y `talleres`, los dos que abren un navegador
+página a página; es lo que la idea 11 propone repartir.
 
 Chromium: el que trae el contenedor (141, revisión 1194) enlazado como la
 1234 que pide Playwright 1.62; no se descargó ningún navegador.

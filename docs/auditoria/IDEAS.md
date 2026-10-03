@@ -289,13 +289,16 @@ rellenos, junto al de GitHub.
 **El problema.** Cada despliegue tarda **alrededor de una hora** (las
 ejecuciones 596 y 597 del 2 de octubre: 63 y 64 minutos), y un *push* que
 llega mientras otro corre deja la anterior cancelada (598 y 599). Un commit
-que solo toca `tasks/` o `diario/` paga el suelo entero. En local,
-`humo:todo` ya sabe partirse por asignatura con un solo servidor (§11).
+que solo toca `tasks/` o `diario/` paga el suelo entero. El suelo son 62 de
+esos 63 minutos, y medido aquí, el **91 %** del suelo son `humo` (35 min) y
+`talleres` (23 min). En local, `humo:todo` ya sabe partirse por asignatura
+con un solo servidor (§11).
 
 - **Para quién**: quien mantiene el proyecto.
 - **Cuándo**: en cada *push* a `main`.
-- **Qué gana**: un despliegue en un tercio del tiempo, y los de
-  documentación en minutos.
+- **Qué gana**: con `humo` y `talleres` repartidos en cuatro trabajos, el
+  despliegue bajaría a cerca de un tercio (estimación: el 9 % que no se
+  reparte más una cuarta parte del 91 %, un 32 %); y los de documentación, a minutos.
 - **Cómo se comprueba**: la duración de las ejecuciones antes y después
   (`gh run list`), y que un fallo de humo en una asignatura sigue parando el
   despliegue.
