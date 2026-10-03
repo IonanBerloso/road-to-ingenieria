@@ -112,4 +112,6 @@ parte del sitio publicado.
 ## Avisar de un error
 
 Si un enunciado, una cifra o una corrección están mal, abre un *issue* con la
-plantilla que corresponda: el sitio vive de que lo que dice sea verdad.
+plantilla que corresponda: el sitio vive de que lo que dice sea verdad. Sin
+cuenta de GitHub, cada ejercicio tiene al lado de «¿Esto está mal? Dilo» un
+enlace por correo, con el ejercicio y la página ya puestos.

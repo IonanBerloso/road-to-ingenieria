@@ -849,12 +849,21 @@ async function main() {
           if (!href.includes('/issues/new')) return { id, mal: 'el enlace no va al formulario' };
           if (id && suyo !== id) return { id, mal: `el enlace nombra a «${suyo}»` };
           if (!/[?&]pagina=http/.test(href)) return { id, mal: 'el enlace no dice desde qué página' };
+          /* Y el de correo, para quien no tiene cuenta de GitHub (idea 10 de
+             la auditoría de octubre de 2026): el mismo id en el asunto y la
+             página en el cuerpo, por lo mismo que arriba. */
+          const correo = caja.querySelector('a[data-avisar-correo]')?.getAttribute('href') ?? '';
+          if (!correo.startsWith('mailto:')) return { id, mal: 'no tiene enlace por correo' };
+          const asunto = decodeURIComponent((correo.match(/[?&]subject=([^&]*)/) ?? [, ''])[1]);
+          const cuerpo = decodeURIComponent((correo.match(/[?&]body=([^&]*)/) ?? [, ''])[1]);
+          if (id && !asunto.endsWith(` ${id}`)) return { id, mal: `el correo nombra a «${asunto}»` };
+          if (!/Página: http/.test(cuerpo)) return { id, mal: 'el correo no dice desde qué página' };
           return null;
         }).filter(Boolean),
       );
       comprueba(
         avisos.length === 0,
-        `cada ejercicio puede avisar de un error, con su id dentro (${cuantos})`,
+        `cada ejercicio puede avisar de un error, por GitHub y por correo, con su id dentro (${cuantos})`,
         avisos.map((a) => `${a.id}: ${a.mal}`).join(' · '),
       );
     }

@@ -106,6 +106,22 @@ const avisar =
   `&title=${encodeURIComponent(`[${asignaturaDelEjercicio}] ${id}: `)}` +
   `&ejercicio=${encodeURIComponent(id)}` +
   `&pagina=${encodeURIComponent(paginaDelAviso)}`;
+/* Y por correo, para quien no tiene cuenta de GitHub (idea 10 de la
+   auditoría de octubre de 2026). Abrir un issue pide registrarse, eso no se
+   puede dar por hecho en 1.º, y el repositorio no había recibido ningún
+   aviso. Es un `mailto:` con el asunto y el cuerpo ya rellenos —el
+   ejercicio y la página—, así que el aviso llega identificado igual que el
+   de GitHub. Tampoco es una petición: lo abre el programa de correo de quien
+   lo pulsa. La dirección es la de quien mantiene el proyecto, publicada con
+   su permiso el 3 de octubre de 2026; vive solo aquí. */
+const CORREO = 'ionanberloso@gmail.com';
+const avisarPorCorreo =
+  `mailto:${CORREO}` +
+  `?subject=${encodeURIComponent(`[Road to Ingeniería] [${asignaturaDelEjercicio}] ${id}`)}` +
+  `&body=${encodeURIComponent(
+    `Ejercicio: ${id}\r\nPágina: ${paginaDelAviso}\r\n\r\n` +
+      'Qué está mal, y dónde (el paso, el número o la frase):\r\n\r\n',
+  )}`;
 
 /** Barajado estable: el orden de las piezas no puede cambiar entre builds, o
  *  cada despliegue generaría un diff distinto sin que nadie haya tocado nada. */
@@ -819,6 +835,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       tiene por qué llegar al final para poder decirlo. */}
   <p class="avisar">
     <a href={avisar} rel="noopener" data-avisar>¿Esto está mal? Dilo →</a>
+    <a href={avisarPorCorreo} data-avisar-correo>o por correo, sin cuenta →</a>
     <span class="avisar-nota">La resolución es nuestra y puede tener fallos. El enunciado es el original.</span>
   </p>
 
