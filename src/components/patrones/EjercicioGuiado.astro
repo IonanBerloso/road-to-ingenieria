@@ -772,7 +772,15 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
               </>
             )}
 
-            <div class="fb" data-fb hidden aria-live="polite"></div>
+            {/* La región viva es la envoltura, que está siempre en el árbol de
+                accesibilidad; la caja de dentro es la que se enseña y se
+                oculta. Cuando la región era la propia caja, nacía `hidden` y
+                se rellenaba y se mostraba en el mismo instante, y un lector de
+                pantalla podía no anunciar el diagnóstico, que es el producto
+                (A6 de la auditoría de octubre de 2026). */}
+            <div aria-live="polite" aria-atomic="true">
+              <div class="fb" data-fb hidden></div>
+            </div>
           </div>
         </li>
       ))
@@ -937,7 +945,29 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     const html = (paso: HTMLElement, selector: string) =>
       paso.querySelector<HTMLElement>(selector)?.innerHTML ?? '';
 
-    function resuelve(i: number) {
+    /* Un control deshabilitado con el foco encima lo suelta al <body>, y quien
+     * va con teclado o con lector de pantalla pierde el sitio justo cuando le
+     * llega el diagnóstico (A6 de la auditoría de octubre de 2026). Así que:
+     * - una opción fallada o una pieza ya puesta no se deshabilitan, se marcan
+     *   con `aria-disabled`: siguen en el orden de tabulación, se leen como no
+     *   disponibles, el clic no hace nada y el foco se queda donde estaba;
+     * - una casilla o un botón que se deshabilitan al resolver el paso dicen
+     *   si tenían el foco, y entonces `resuelve` lo lleva al paso siguiente.
+     *   Solo entonces: con ratón o con el dedo el foco no está en la casilla,
+     *   y moverlo abriría el teclado del móvil sin que nadie lo pida. */
+    const apaga = (boton: HTMLButtonElement) => boton.setAttribute('aria-disabled', 'true');
+    const apagado = (boton: HTMLButtonElement) => boton.getAttribute('aria-disabled') === 'true';
+    const desactiva = (control: HTMLInputElement | HTMLButtonElement) => {
+      const teniaFoco = document.activeElement === control;
+      control.disabled = true;
+      return teniaFoco;
+    };
+    /* Los controles del paso, no sus enlaces: una pregunta que enlaza la
+       teoría se llevaría el foco antes que la casilla. */
+    const ENFOCABLE =
+      'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled):not([aria-disabled="true"])';
+
+    function resuelve(i: number, devuelveFoco = false) {
       resueltos[i] = true;
       pasos[i].classList.add('resuelto');
       const sol = pasos[i].querySelector<HTMLElement>('.solucion');
@@ -959,9 +989,18 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
             block: 'center',
           });
+        if (devuelveFoco) {
+          const destino = siguiente.querySelector<HTMLElement>(ENFOCABLE) ?? siguiente;
+          if (destino === siguiente) siguiente.tabIndex = -1;
+          destino.focus({ preventScroll: modo === 'guiado' });
+        }
       } else {
         materializa();
         resolucion.hidden = false;
+        if (devuelveFoco) {
+          resolucion.tabIndex = -1;
+          resolucion.focus();
+        }
       }
       pinta();
     }
@@ -991,7 +1030,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       for (const boton of paso.querySelectorAll<HTMLButtonElement>('[data-opcion]')) {
         boton.addEventListener('click', () => {
-          if (resueltos[i]) return;
+          if (resueltos[i] || apagado(boton)) return;
           const k = Number(boton.dataset.opcion);
           const mensaje = html(paso, `[data-msg-opcion="${k}"]`);
 
@@ -1001,7 +1040,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             resuelve(i);
           } else {
             boton.classList.add('fallada');
-            boton.disabled = true;
+            apaga(boton);
             intentos[i]++;
             fb(paso, 'mal', 'Por ahí no', mensaje);
           }
@@ -1137,8 +1176,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
         if (coincide(escrito, respuesta.valor, respuesta.tolerancia)) {
           limpiaFb(paso);
-          campo.disabled = true;
-          resuelve(i);
+          resuelve(i, desactiva(campo));
           return;
         }
 
@@ -1484,8 +1522,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
         if (r.iguales) {
           limpiaFb(paso);
-          campo.disabled = true;
-          resuelve(i);
+          resuelve(i, desactiva(campo));
           return;
         }
 
@@ -1567,7 +1604,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       for (const boton of botones) {
         boton.addEventListener('click', () => {
-          if (resueltos[i]) return;
+          if (resueltos[i] || apagado(boton)) return;
           const k = Number(boton.dataset.pieza);
 
           if (k === dato.trampa) {
@@ -1589,7 +1626,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             return;
           }
 
-          boton.disabled = true;
+          apaga(boton);
           boton.classList.add('puesta');
           puestas++;
           dibujaMontaje();
@@ -1637,9 +1674,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
       boton.addEventListener('click', () => {
         rubrica.hidden = false;
-        boton.disabled = true;
+        const foco = desactiva(boton);
         fb(paso, 'bien', mensaje[0], mensaje[1]);
-        resuelve(i);
+        resuelve(i, foco);
       });
     });
 
@@ -1956,7 +1993,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     transition: border-color .15s, background .15s;
   }
 
-  .opcion:hover:not(:disabled) { border-color: var(--live); }
+  .opcion:hover:not(:disabled):not([aria-disabled='true']) { border-color: var(--live); }
+  .opcion[aria-disabled='true'] { cursor: default; }
   .opcion.acertada { border-color: var(--live); background: var(--live-soft); }
   .opcion.fallada { border-color: var(--flag); background: var(--flag-soft); opacity: .75; }
 
@@ -2074,7 +2112,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     transition: border-color .15s, opacity .15s;
   }
 
-  .pieza:hover:not(:disabled) { border-color: var(--live); }
+  .pieza:hover:not(:disabled):not([aria-disabled='true']) { border-color: var(--live); }
+  .pieza[aria-disabled='true'] { cursor: default; }
   .pieza.puesta { opacity: .45; border-style: solid; }
   .pieza.fallada { border-color: var(--flag); background: var(--flag-soft); }
 
