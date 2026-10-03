@@ -13,6 +13,12 @@
  * una trampa, se vuelve a pasar:
  *
  *   npm run trampas
+ *
+ * Desde el 3 de octubre de 2026 las entradas viven en
+ * `docs/porques/17-trampas.md` y en CLAUDE.md §17 queda solo el índice: §17
+ * entero eran 72 KB de los 218 que lee cada sesión (`docs/decisiones.md`,
+ * «CLAUDE.md en dos niveles»). Las entradas se leen de allí y el índice se
+ * escribe aquí.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -21,29 +27,26 @@ import { fileURLToPath } from 'node:url';
 export const MARCA_INI = '<!-- índice de trampas: lo genera un guion a partir de las entradas -->';
 export const MARCA_FIN = '<!-- fin del índice de trampas -->';
 
-/** Los límites de §17 en las líneas de CLAUDE.md: [primera, primera fuera]. */
-function limites(lineas) {
-  const ini = lineas.findIndex((x) => x === '## 17 // Trampas conocidas');
-  const fin = lineas.findIndex((x, i) => i > ini && /^## \d\d \/\//.test(x));
-  if (ini < 0 || fin < 0) throw new Error('CLAUDE.md no tiene §17 donde se espera');
-  return [ini, fin];
-}
+/** Dónde viven las entradas, relativo a la raíz del repositorio. */
+export const ENTRADAS = 'docs/porques/17-trampas.md';
 
-/** La frase en negrita de cada entrada de §17, en orden. Una entrada es una
- *  línea que empieza por «- **» sin sangría; su frase puede partirse en varias
- *  líneas, así que se juntan hasta que se cierra el `**`. */
+/** La frase en negrita de cada entrada, en orden, sobre las líneas de
+ *  `ENTRADAS`. Una entrada es una línea que empieza por «- **» sin sangría; su
+ *  frase puede partirse en varias líneas, así que se juntan hasta que se
+ *  cierra el `**`. */
 export function trampas(lineas) {
-  const [ini, fin] = limites(lineas);
+  const fin = lineas.length;
   const salida = [];
-  for (let i = ini; i < fin; i++) {
+  for (let i = 0; i < fin; i++) {
     if (!lineas[i].startsWith('- **')) continue;
     let texto = lineas[i].slice(4);
     let j = i;
     while (!texto.includes('**') && j + 1 < fin) texto += ' ' + lineas[++j].trim();
     const cierre = texto.indexOf('**');
-    if (cierre < 0) throw new Error(`CLAUDE.md:${i + 1}: una trampa sin cerrar su negrita`);
+    if (cierre < 0) throw new Error(`${ENTRADAS}:${i + 1}: una trampa sin cerrar su negrita`);
     salida.push(texto.slice(0, cierre).trim());
   }
+  if (salida.length === 0) throw new Error(`${ENTRADAS} no tiene ninguna trampa`);
   return salida;
 }
 
@@ -52,7 +55,7 @@ export function indice(lista) {
   return [
     MARCA_INI,
     '',
-    `**Las ${lista.length}, en una línea cada una** —el detalle y el porqué, en su entrada, más abajo y en este mismo orden—:`,
+    `**Las ${lista.length}, en una línea cada una** —el detalle y el porqué, en su entrada de [\`${ENTRADAS}\`](${ENTRADAS}) y en este mismo orden—:`,
     '',
     ...lista.map((t) => `- ${t}`),
     '',
@@ -69,9 +72,10 @@ export function indiceEscrito(lineas) {
 
 /* Ejecutado directamente, reescribe el índice. */
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  const F = join(dirname(fileURLToPath(import.meta.url)), '..', 'CLAUDE.md');
+  const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
+  const F = join(RAIZ, 'CLAUDE.md');
   const lineas = readFileSync(F, 'utf8').split('\n');
-  const nuevo = indice(trampas(lineas));
+  const nuevo = indice(trampas(readFileSync(join(RAIZ, ENTRADAS), 'utf8').split('\n')));
   const a = lineas.indexOf(MARCA_INI);
   const b = lineas.indexOf(MARCA_FIN);
   if (a < 0 || b < a) throw new Error('CLAUDE.md §17 no tiene las marcas del índice: ponlas debajo de su primera frase');
