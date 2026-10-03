@@ -1837,6 +1837,9 @@ barra, y siguió viva después de que KaTeX pasara a dibujarla él mismo al 100 
 - Nombres de fichero en minúscula, sin espacios ni acentos, con guiones.
 - Despliegue por GitHub Actions al subir a `main`: `npm run suelo` —la misma
   línea que en local, §11— y, si pasa, el diario en PDF y la publicación.
+  Un push que solo toca `tasks/`, `diario/` o `docs/` no despliega: lo
+  comprueba `documentos.yml` —`verify --solo-fuente` y `npm run cifras`—, y el
+  diario en PDF se pone al día en el siguiente despliegue entero.
 - **Un guion de un solo uso se borra en cuanto ha hecho su trabajo**, en el
   mismo commit o en el siguiente: queda en el historial de git. Los doce de
   `scripts/rampa/` —los que pusieron un ejemplo de entrada a cada escalón de
