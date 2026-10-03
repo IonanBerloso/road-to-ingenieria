@@ -537,7 +537,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
                 <p class="p-botones">
                   <button type="button" class="fantasma" data-guardar>Guardar mi avance</button>
                   <button type="button" class="fantasma" data-cargar>Cargar</button>
-                  <button type="button" class="fantasma" data-borrar>Borrar mi avance</button>
+                  <button type="button" class="fantasma" data-borrar>Borrar todo mi avance</button>
                 </p>
                 <input type="file" accept="application/json,.json" data-fichero hidden />
                 <p class="p-aviso" data-avance-aviso role="status" aria-live="polite"></p>
@@ -829,14 +829,30 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
       });
     }
 
+    /* Las dos claves son de todo el sitio, no de esta ruta: borrar aquí se
+       lleva lo resuelto y las casillas de todas las asignaturas. Hasta
+       octubre de 2026 lo hacía sin preguntar y sin deshacer, a un botón del
+       de cargar (A7 de la auditoría). Ahora pregunta, diciendo eso, y el
+       botón dice «todo». Si el navegador bloquea el diálogo, `confirm`
+       devuelve false y no se borra nada, que es el lado seguro. */
     document.querySelector<HTMLButtonElement>('[data-borrar]')?.addEventListener('click', () => {
+      const seguro = confirm(
+        'Esto borra de este navegador tu avance de TODAS las asignaturas, no solo de esta ruta: ' +
+          'los ejercicios resueltos y las casillas de «lo hago sin la app». ' +
+          'Las notas de los simulacros se quedan.\n\n' +
+          'No se puede deshacer, salvo que antes lo guardes con «Guardar mi avance». ¿Lo borro?',
+      );
+      if (!seguro) {
+        avisa('No he borrado nada.');
+        return;
+      }
       try {
         localStorage.removeItem('rti:hechos');
         localStorage.removeItem(CLAVE_DOMINIO);
       } catch {}
       pinta();
       pintaDominio();
-      avisa('Borrado. Lo que hicieras a partir de ahora vuelve a contarse desde cero.');
+      avisa('Borrado tu avance de todas las asignaturas. Lo que hagas a partir de ahora vuelve a contarse desde cero.');
     });
 
     /* ── llevarte tu avance ────────────────────────────────────────────
