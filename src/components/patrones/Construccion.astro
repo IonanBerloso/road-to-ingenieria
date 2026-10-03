@@ -163,6 +163,18 @@ const datos = {
     const gInst = svg.querySelector<SVGGElement>('[data-cons-instrumento]')!;
     const cuenta = caja.querySelector<HTMLOutputElement>('[data-cons-cuenta]')!;
     const items = [...caja.querySelectorAll<HTMLLIElement>('[data-cons-paso]')];
+    const lista = caja.querySelector<HTMLOListElement>('[data-cons-pasos]')!;
+    /* El paso actual, a la vista dentro de la lista, que tiene su propio
+       scroll. Solo se mueve la lista: `scrollIntoView` movía también la
+       página, y al reproducir todo seguido el dibujo se iba hacia arriba en
+       cada paso. */
+    const muestraPaso = (li: HTMLLIElement | undefined) => {
+      if (!li) return;
+      const r = li.getBoundingClientRect();
+      const c = lista.getBoundingClientRect();
+      if (r.top < c.top) lista.scrollTop += r.top - c.top;
+      else if (r.bottom > c.bottom) lista.scrollTop += r.bottom - c.bottom;
+    };
     const botones = Object.fromEntries([...caja.querySelectorAll<HTMLButtonElement>('[data-cons]')].map((b) => [b.dataset.cons!, b]));
     /** El tamaño de los instrumentos, a la escala de la lámina. */
     const U = Math.max(datos.encuadre.w, datos.encuadre.h) / 9;
@@ -339,7 +351,7 @@ const datos = {
       });
       botones.inicio.disabled = botones.atras.disabled = ocupado || hechos === 0;
       botones.adelante.disabled = botones.todo.disabled = ocupado || hechos === datos.pasos.length;
-      items[hechos - 1]?.scrollIntoView({ block: 'nearest' });
+      muestraPaso(items[hechos - 1]);
     };
     const adelante = async () => {
       if (ocupado || hechos >= datos.pasos.length) return;
