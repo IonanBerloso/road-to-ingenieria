@@ -421,24 +421,33 @@ fig('trabajo-con-el-area-dada',
   () => {
     /* La curva dibujada es *una* L₁ cualquiera, no la del boletín: el
        enunciado solo fija los extremos, el sentido y el área. Dibujar una
-       concreta y decir que es la del enunciado sería inventarse un dato. */
-    const l1 = (x) => 3.2 * (1 - x * x) * (1 + 0.42 * x);
+       concreta y decir que es la del enunciado sería inventarse un dato.
+
+       Lo que sí fija es el sentido, y por eso la curva va **por debajo** del
+       eje. De A a B por arriba y de vuelta por el eje es el sentido horario, y
+       con esa figura el trabajo sale −90, no 90: hasta el 3 de octubre de 2026
+       se dibujaba así, contradiciendo al enunciado y a la resolución. El
+       examen de origen también lleva L₁ por debajo. */
+    const l1 = (x) => -3.2 * (1 - x * x) * (1 + 0.42 * x);
     const l = lienzo({
       id: 'f-trabajo-area-dada',
       ancho: 330, alto: 235,
-      x: [-1.55, 1.75], y: [-0.85, 3.9], cuadrado: false,
+      x: [-1.55, 1.75], y: [-3.9, 0.85], cuadrado: false,
       titulo: 'Una trayectoria cualquiera de A a B, y el área que encierra al cerrarla por el eje x',
-      desc: 'Del punto A, de coordenadas menos uno y cero, sale una curva que sube, se abomba '
-        + 'hacia arriba y vuelve a bajar hasta el punto B, de coordenadas uno y cero. El '
-        + 'segmento del eje x que va de B a A cierra la figura. La región encerrada está '
-        + 'sombreada y lleva escrito dentro que su área vale diez. Flechas sobre la curva y '
-        + 'sobre el segmento marcan el recorrido: por la curva de A a B, y por el eje de vuelta '
-        + 'de B a A, que es el sentido positivo. Sobre el segmento hay una nota que dice que '
-        + 'ahí la integral aporta cero. La forma concreta de la curva es inventada: el enunciado '
-        + 'solo fija los extremos, el sentido y el área.',
+      desc: 'Del punto A, de coordenadas menos uno y cero, sale una curva que baja, se abomba '
+        + 'hacia abajo y vuelve a subir hasta el punto B, de coordenadas uno y cero. El '
+        + 'segmento del eje x que va de B a A cierra la figura por arriba. La región encerrada '
+        + 'está sombreada y lleva escrito dentro que su área vale diez. Flechas sobre la curva y '
+        + 'sobre el segmento marcan el recorrido: por la curva de A a B, por debajo del eje, y '
+        + 'por el eje de vuelta de B a A. Es el sentido positivo, el contrario al de las agujas '
+        + 'del reloj: la región queda siempre a la izquierda. Sobre el segmento hay una nota que '
+        + 'dice que ahí la integral aporta cero. La forma concreta de la curva es inventada: el '
+        + 'enunciado solo fija los extremos, el sentido y el área.',
     });
     l.poli(param((x) => [x, l1(x)], -1, 1, 90), { clase: 'f', cerrar: true });
-    l.ejes({ nombreX: 'x', nombreY: 'y', marcasX: [-1, 1] });
+    /* Sin marcas en x: irían debajo del eje, encima de la curva, y los
+       rótulos de A y B ya dicen dónde están el −1 y el 1. */
+    l.ejes({ nombreX: 'x', nombreY: 'y' });
     l.curva((x) => l1(x), [-1, 1], { clase: 'c', n: 90 });
     l.poli([[1, 0], [-1, 0]], { clase: 'c2' });
     l.flecha([-0.72, l1(-0.72)], [-0.52, l1(-0.52)], { clase: 'c' });
@@ -447,9 +456,9 @@ fig('trabajo-con-el-area-dada',
     l.punto(1, 0, { clase: 'o', r: 4.2 });
     l.rotulo(-1, 0, 'A(−1,0)', { dx: -7, dy: -6, anclaje: 'end', color: 'var(--flag)' });
     l.rotulo(1, 0, 'B(1,0)', { dx: 6, dy: -6, color: 'var(--flag)' });
-    l.rotulo(0.05, 1.5, 'S = 10', { dx: 0, dy: 0, anclaje: 'middle' });
-    l.rotulo(-0.35, 0, 'aquí aporta 0', { dx: 0, dy: 28, anclaje: 'middle', color: 'var(--alt)', pequeno: true });
-    l.rotulo(-0.2, l1(-0.2), 'L₁', { dx: 0, dy: -7, anclaje: 'middle' });
+    l.rotulo(0.05, -1.5, 'S = 10', { dx: 0, dy: 0, anclaje: 'middle' });
+    l.rotulo(-0.5, 0, 'aquí aporta 0', { dx: 0, dy: -9, anclaje: 'middle', color: 'var(--alt)', pequeno: true });
+    l.rotulo(-0.2, l1(-0.2), 'L₁', { dx: 0, dy: 17, anclaje: 'middle' });
     return l.svg();
   });
 
