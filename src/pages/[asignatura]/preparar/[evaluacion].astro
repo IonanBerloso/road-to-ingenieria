@@ -922,6 +922,21 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
           let actual: Record<string, unknown> = {};
           try { actual = JSON.parse(localStorage.getItem(c) ?? '{}'); } catch {}
           for (const [k, v] of Object.entries(entra)) {
+            /* Las notas de los simulacros son una lista por cuadernillo, y
+               sustituirla borraba las de este navegador: lo contrario de lo
+               que promete el comentario de arriba (M1 de la auditoría de
+               octubre de 2026). Se juntan las dos listas, sin repetir las
+               entradas idénticas —cargar dos veces el mismo fichero no las
+               duplica— y por fecha. */
+            const aqui = actual[k];
+            if (Array.isArray(v) && Array.isArray(aqui)) {
+              const juntas = new Map<string, unknown>();
+              for (const x of [...aqui, ...v]) juntas.set(JSON.stringify(x), x);
+              nuevas += juntas.size - aqui.length;
+              const fecha = (x: unknown) => String((x as { f?: unknown })?.f ?? '');
+              actual[k] = [...juntas.values()].sort((x, y) => fecha(x).localeCompare(fecha(y)));
+              continue;
+            }
             if (!(k in actual)) nuevas++;
             actual[k] = v;
           }
