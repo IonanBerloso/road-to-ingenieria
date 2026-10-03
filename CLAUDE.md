@@ -338,7 +338,10 @@ src/
     ui/                    Cabecera · Tema · BloqueDeEjercicios · Armazon ·
                            Seguir · Examen · Reparto · QueNotaNecesito ·
                            Criterios (la hoja de corrección con su cuenta,
-                           en la página de la asignatura y en el despiece)
+                           en la página de la asignatura y en el despiece) ·
+                           EnlaceAsignatura (el nombre de la asignatura en
+                           el rótulo de cada página suya, enlazado a su
+                           detalle en la portada)
   layouts/
     Base.astro             el ÚNICO layout
   lib/

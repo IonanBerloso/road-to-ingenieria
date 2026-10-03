@@ -1,0 +1,42 @@
+---
+/**
+ * El nombre de la asignatura, como enlace a su detalle en la portada.
+ *
+ * Para quién: cualquiera que esté dentro de una asignatura —un tema, un
+ * bloque de ejercicios, un examen, una ruta— y quiera ir a otro sitio de
+ * ella, que es casi todo el uso. Cuándo: en cada cambio de tema o de examen.
+ * Qué gana: un toque, en vez de ir a la portada, volver a elegir la
+ * asignatura y bajar. Cómo se comprueba: `humo.mjs` mira que toda página de
+ * una asignatura lo lleve y que el enlace aterrice con ella abierta.
+ *
+ * Nace con M3 de la auditoría de octubre de 2026 (idea 3): desde un tema, un
+ * bloque o un examen solo se podía ir a la portada, sin la asignatura
+ * elegida, y «Cálculo · tema 05» era texto. Va a `/#<asignatura>` y no a la
+ * ficha porque la vista de detalle de la portada pone el temario bajo el
+ * primer pantallazo; la portada sabe abrirla con el ancla desde el arreglo de
+ * `:target` de §17.
+ *
+ * Va en el rótulo de la cabecera de la página y no en la barra de arriba: en
+ * un móvil la barra no tiene sitio y sus migas se ocultan.
+ */
+import { ruta } from '../../lib/rutas';
+
+interface Props {
+  id: string;
+  nombre: string;
+}
+
+const { id, nombre } = Astro.props;
+---
+
+<a class="asignatura" href={`${ruta()}#${id}`} data-asignatura={id}>{nombre}</a>
+
+<style>
+  .asignatura {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: .2em;
+  }
+  .asignatura:hover { text-decoration-thickness: 2px; }
+</style>

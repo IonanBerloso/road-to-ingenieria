@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Cabecera from '../../../components/ui/Cabecera.astro';
+import EnlaceAsignatura from '../../../components/ui/EnlaceAsignatura.astro';
 import EjercicioGuiado from '../../../components/patrones/EjercicioGuiado.astro';
 import Reparto from '../../../components/ui/Reparto.astro';
 import { mate } from '../../../lib/markdown.mjs';
@@ -388,6 +389,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
   <main id="principal" class="envoltorio">
     <div class="dos-columnas">
     <div class="camino-col">
+    <p class="rotulo rotulo--live eyebrow"><EnlaceAsignatura id={asignatura.id} nombre={asignatura.data.nombre} /> · preparar</p>
     <p class="mano kicker">
       medido sobre {d.medidoSobre} convocatorias — nada por intuición
     </p>
@@ -537,7 +539,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
                 <p class="p-botones">
                   <button type="button" class="fantasma" data-guardar>Guardar mi avance</button>
                   <button type="button" class="fantasma" data-cargar>Cargar</button>
-                  <button type="button" class="fantasma" data-borrar>Borrar mi avance</button>
+                  <button type="button" class="fantasma" data-borrar>Borrar todo mi avance</button>
                 </p>
                 <input type="file" accept="application/json,.json" data-fichero hidden />
                 <p class="p-aviso" data-avance-aviso role="status" aria-live="polite"></p>
@@ -829,14 +831,30 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
       });
     }
 
+    /* Las dos claves son de todo el sitio, no de esta ruta: borrar aquí se
+       lleva lo resuelto y las casillas de todas las asignaturas. Hasta
+       octubre de 2026 lo hacía sin preguntar y sin deshacer, a un botón del
+       de cargar (A7 de la auditoría). Ahora pregunta, diciendo eso, y el
+       botón dice «todo». Si el navegador bloquea el diálogo, `confirm`
+       devuelve false y no se borra nada, que es el lado seguro. */
     document.querySelector<HTMLButtonElement>('[data-borrar]')?.addEventListener('click', () => {
+      const seguro = confirm(
+        'Esto borra de este navegador tu avance de TODAS las asignaturas, no solo de esta ruta: ' +
+          'los ejercicios resueltos y las casillas de «lo hago sin la app». ' +
+          'Las notas de los simulacros se quedan.\n\n' +
+          'No se puede deshacer, salvo que antes lo guardes con «Guardar mi avance». ¿Lo borro?',
+      );
+      if (!seguro) {
+        avisa('No he borrado nada.');
+        return;
+      }
       try {
         localStorage.removeItem('rti:hechos');
         localStorage.removeItem(CLAVE_DOMINIO);
       } catch {}
       pinta();
       pintaDominio();
-      avisa('Borrado. Lo que hicieras a partir de ahora vuelve a contarse desde cero.');
+      avisa('Borrado tu avance de todas las asignaturas. Lo que hagas a partir de ahora vuelve a contarse desde cero.');
     });
 
     /* ── llevarte tu avance ────────────────────────────────────────────
@@ -906,6 +924,21 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
           let actual: Record<string, unknown> = {};
           try { actual = JSON.parse(localStorage.getItem(c) ?? '{}'); } catch {}
           for (const [k, v] of Object.entries(entra)) {
+            /* Las notas de los simulacros son una lista por cuadernillo, y
+               sustituirla borraba las de este navegador: lo contrario de lo
+               que promete el comentario de arriba (M1 de la auditoría de
+               octubre de 2026). Se juntan las dos listas, sin repetir las
+               entradas idénticas —cargar dos veces el mismo fichero no las
+               duplica— y por fecha. */
+            const aqui = actual[k];
+            if (Array.isArray(v) && Array.isArray(aqui)) {
+              const juntas = new Map<string, unknown>();
+              for (const x of [...aqui, ...v]) juntas.set(JSON.stringify(x), x);
+              nuevas += juntas.size - aqui.length;
+              const fecha = (x: unknown) => String((x as { f?: unknown })?.f ?? '');
+              actual[k] = [...juntas.values()].sort((x, y) => fecha(x).localeCompare(fecha(y)));
+              continue;
+            }
             if (!(k in actual)) nuevas++;
             actual[k] = v;
           }
@@ -941,6 +974,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
     align-items: start;
   }
 
+  .eyebrow { margin-bottom: .4rem; }
   .kicker { font-size: 1.3rem; color: var(--live); margin-bottom: .1rem; }
   h1 { max-width: var(--measure); }
   .lede { max-width: 68ch; margin: .6rem 0 1.6rem; }
