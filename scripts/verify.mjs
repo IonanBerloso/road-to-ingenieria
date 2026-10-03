@@ -342,7 +342,13 @@ console.log('\nLos documentos del repositorio');
      los miraba. Lo que se comprueba es la firma de ese accidente: una sección
      numerada que aparece dos veces, o la primera línea del fichero repetida
      más abajo. */
-  const docs = ['CLAUDE.md', ...[...archivos(join(ROOT, 'tasks'), ['.md'])].map(rel)];
+  const docs = [
+    'CLAUDE.md',
+    ...[...archivos(join(ROOT, 'tasks'), ['.md'])].map(rel),
+    /* Las historias y las trampas que salieron de CLAUDE.md el 3 de octubre de
+       2026 son el mismo texto en otro sitio, y se editan igual. */
+    ...[...archivos(join(ROOT, 'docs', 'porques'), ['.md'])].map(rel),
+  ];
   const rotos = [];
   for (const d of docs) {
     const ruta = join(ROOT, d);
@@ -373,17 +379,20 @@ console.log('\nLos documentos del repositorio');
   /* Y el índice de §17, que es una COPIA generada de la frase de cada trampa
      (26 de septiembre de 2026). Si alguien añade una trampa sin regenerarlo,
      el índice deja de decir cuántas hay y cuáles: se compara con lo que
-     generaría `indice-trampas.mjs`, con sus mismas funciones. */
-  const { trampas, indice, indiceEscrito } = await import('./indice-trampas.mjs');
+     generaría `indice-trampas.mjs`, con sus mismas funciones. Desde el 3 de
+     octubre de 2026 las entradas están en `docs/porques/17-trampas.md` y el
+     índice sigue en CLAUDE.md. */
+  const { trampas, indice, indiceEscrito, ENTRADAS } = await import('./indice-trampas.mjs');
   const lineas = leer(join(ROOT, 'CLAUDE.md')).split('\n');
+  const entradas = trampas(leer(join(ROOT, ENTRADAS)).split('\n'));
   const escrito = indiceEscrito(lineas);
-  const debido = indice(trampas(lineas));
+  const debido = indice(entradas);
   if (!escrito) {
     fallo('el índice de trampas de CLAUDE.md §17', 'no tiene sus marcas: ponlas y pasa npm run trampas');
   } else if (escrito.join('\n') !== debido.join('\n')) {
-    fallo('el índice de trampas de CLAUDE.md §17 está al día', 'no coincide con las entradas: npm run trampas lo regenera');
+    fallo('el índice de trampas de CLAUDE.md §17 está al día', `no coincide con las entradas de ${ENTRADAS}: npm run trampas lo regenera`);
   } else {
-    ok(`el índice de trampas de CLAUDE.md §17 está al día (${trampas(lineas).length} trampas)`);
+    ok(`el índice de trampas de CLAUDE.md §17 está al día (${entradas.length} trampas, en ${ENTRADAS})`);
   }
 }
 
