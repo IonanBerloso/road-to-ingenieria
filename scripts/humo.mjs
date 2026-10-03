@@ -354,6 +354,11 @@ async function main() {
   /** Recuento global de trazos: ver el comentario de más abajo. */
   const medidos = { raiz: 0, barra: 0, etiqueta: 0 };
 
+  /** Las páginas de una asignatura que se han mirado, y las que no la
+   *  enlazan: ver el caso 0 de más abajo. Conjuntos y no cuentas, porque una
+   *  página que se cae a medias se repite y no debe contar dos veces. */
+  const conAsignatura = { vistas: new Set(), sin: new Set() };
+
   for (const ruta of rutas) {
     /* Cada página va en su propio try. Antes, un fallo de infraestructura en
        una —una navegación a destiempo, un tiempo de espera— abortaba el
@@ -398,6 +403,25 @@ async function main() {
       espera(() => listo(), { timeout: 8000 });
     })).catch(() => {});
     await pagina.waitForTimeout(400);
+
+    /* 0 · La página lleva a su asignatura. Desde un tema, un bloque o un
+       examen solo se podía ir a la portada, sin la asignatura elegida, y
+       «Cálculo · tema 05» era texto (M3 de la auditoría de octubre de 2026,
+       idea 3). Toda página que vive dentro de una asignatura —dos segmentos
+       o más; la ficha es la propia asignatura— lleva su nombre enlazado a
+       `/#<asignatura>`. Se dice en una sola línea al final: cuatrocientas
+       marcas iguales no las lee nadie. */
+    {
+      const trozos = ruta.replace(BASE, '').split('/').filter(Boolean);
+      if (trozos.length >= 2 && conContenido.includes(trozos[0])) {
+        conAsignatura.vistas.add(ruta);
+        const href = await pagina.evaluate(
+          (a) => document.querySelector(`a[data-asignatura="${a}"]`)?.getAttribute('href') ?? '',
+          trozos[0],
+        );
+        if (!href.endsWith(`/#${trozos[0]}`)) conAsignatura.sin.add(ruta);
+      }
+    }
 
     /* 1 · Los signos que se estiran se DIBUJAN, no solo existen en el DOM.
        Las fórmulas las dibuja KaTeX en el build, con sus propias fuentes: la
@@ -995,6 +1019,19 @@ async function main() {
     }
   }
 
+  /* El caso 0, sumado: si alguna página de asignatura no enlaza la suya,
+     se dice cuáles. Mirar cero páginas también es un fallo —el guardián
+     estaría pasando en vacío (§11)—, salvo mirando una sola asignatura:
+     Sistemas de Producción no tiene más página que su ficha, y su tanda de
+     la barrida partida no tiene nada que mirar aquí. */
+  comprueba(
+    (SOLO || conAsignatura.vistas.size > 0) && conAsignatura.sin.size === 0,
+    `toda página de una asignatura enlaza su asignatura (${conAsignatura.vistas.size})`,
+    conAsignatura.vistas.size === 0
+      ? 'no se ha mirado ninguna página de asignatura'
+      : `sin enlace: ${[...conAsignatura.sin].slice(0, 5).join(' · ')}`,
+  );
+
   /* ── 360 px con las resoluciones abiertas ─────────────────────────
      Se añade el 24 de agosto de 2026, después de encontrar el fallo. Las
      páginas de examen desbordaban a lo ancho en un móvil —651 px de scroll
@@ -1151,6 +1188,35 @@ async function main() {
       'entrar por un enlace con almohadilla y cambiar de asignatura',
       mal.join(' · '),
     );
+  }
+
+  /* ── y volver a la asignatura desde dentro ───────────────────────
+     El caso 0 mira que el enlace esté; este, que aterrice: pulsado desde un
+     tema, la portada tiene que abrirse con esa asignatura y solo esa. Es el
+     mismo camino que el de arriba —una navegación que llega con
+     almohadilla— visto desde el otro lado (M3, idea 3). Se hace con
+     Cálculo, que es la que más páginas tiene, y se cae si el tema 1 no
+     existe en vez de saltarse el paso. */
+  {
+    const pagina = escucha(await navegador.newPage(), 'volver a la asignatura');
+    const mal = [];
+    await pagina.goto(`http://localhost:${PUERTO}${BASE}/calculo/t01-complejos/`, { waitUntil: 'load' });
+    const enlace = pagina.locator('a[data-asignatura="calculo"]').first();
+    if (!(await enlace.count()) || !(await enlace.isVisible())) {
+      mal.push('el tema 1 de Cálculo no enseña ningún enlace visible a su asignatura');
+    } else {
+      await enlace.click();
+      await pagina.waitForURL(/#calculo$/, { timeout: 15000 }).catch(() => {});
+      await pagina.waitForTimeout(400);
+      const abiertos = await pagina.evaluate(() =>
+        [...document.querySelectorAll('.detalle')]
+          .filter((d) => d.getBoundingClientRect().height > 0)
+          .map((d) => d.id),
+      );
+      if (abiertos.join() !== 'calculo') mal.push(`aterriza en ${pagina.url()} con [${abiertos}] abierto`);
+    }
+    await pagina.close();
+    comprueba(mal.length === 0, 'desde un tema, su asignatura se abre con un clic', mal.join(' · '));
   }
 
   console.log('');

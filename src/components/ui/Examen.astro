@@ -27,6 +27,7 @@ import { mate } from '../../lib/markdown.mjs';
 import { ejerciciosDelCuadernillo, filasDelCuadernillo } from '../../lib/cuadernillo';
 import EjercicioGuiado from '../patrones/EjercicioGuiado.astro';
 import Reparto, { type Puntos } from './Reparto.astro';
+import EnlaceAsignatura from './EnlaceAsignatura.astro';
 import type { ParteDelSimulacro } from '../../lib/simulacro';
 
 export type { Puntos };
@@ -53,7 +54,9 @@ export interface EjercicioDeExamen {
 }
 
 interface Props {
+  /** Lo que va detrás del nombre de la asignatura: la convocatoria. */
   eyebrow: string;
+  asignatura: { id: string; nombre: string };
   titulo: string;
   /** Un simulacro nuestro no tiene fecha: no ha caído ningún día. */
   fecha?: string;
@@ -108,6 +111,7 @@ interface Props {
 
 const {
   eyebrow,
+  asignatura,
   titulo,
   fecha,
   instrucciones,
@@ -259,7 +263,7 @@ const fueraHtml = await Promise.all(
           ? 'tal cual está en la colección — sin cambiar un número'
           : 'tal cual cayó — sin cambiar un número'}
     </p>
-    <p class="rotulo rotulo--live eyebrow">{eyebrow}</p>
+    <p class="rotulo rotulo--live eyebrow"><EnlaceAsignatura {...asignatura} /> · {eyebrow}</p>
     <h1>{titulo}</h1>
     <p class="lede">
       {/* «0 puntos» sería una afirmación falsa: los ocho cuadernillos de
