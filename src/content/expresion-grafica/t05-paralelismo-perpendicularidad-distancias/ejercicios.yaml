@@ -1,0 +1,607 @@
+ejercicios:
+  # Decisión: el tema 5 abre con el Ejercicio 38 (SD54) porque es, a 2 de
+  # octubre de 2026, el único de los suyos escrito. Los demás de la colección
+  # que son de este tema entran cada uno en su sitio del orden de la colección
+  # (§04): el 12, el 33 y del 35 al 37, delante de este; del 39 al 42 y el 51,
+  # detrás.
+  - id: sd54-la-recta-paralela-al-plano-y-su-distancia
+    titulo: La recta r paralela al plano ABC por P, y su distancia al plano
+    fuente: Ejercicio 38 (SD54) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 39).
+    # Cada apartado en su párrafo, para que el Markdown no los junte. Los
+    # nombres M, N, D, E, F, G, H y los puntos 1, 2 y 3 son nuestros.
+    enunciado: |
+      Se presentan las proyecciones diédricas del plano ABC y el punto P, así como la proyección
+      horizontal de la recta r que pasa por P. Se pide:
+
+      a) Representar la recta r paralela al plano que pase por el punto P.
+
+      b) Calcular la distancia entre la recta r y el plano ABC.
+
+      **Notas nuestras.** La figura es el triángulo ABC, con el alzado arriba y la planta debajo, y el punto P, con su cruz en las dos vistas, por encima del triángulo en las dos. r₁, la
+      planta de r, es una recta horizontal en el papel que pasa por P₁, por encima de la planta del
+      triángulo; r₂ no está dibujada, y es lo que pide a). Escala 1:1: lo que mides en la lámina, en
+      milímetros, es el resultado. Llamamos M₁ y N₁ a los extremos izquierdo y derecho de r₁, y M y N a
+      los puntos de r que tienen esas plantas: r₂ se representa de M₂ a N₂. Los nombres M, N, D, E, F,
+      G y H, y los de los puntos 1, 2 y 3, son nuestros.
+    pide: r₂, de M₂ a N₂; el plano de canto en la vista nueva de un cambio de plano, con A₄, B₄ y C₄, y el pie H₄ de la perpendicular desde P₄; la distancia de r al plano, en mm.
+    receta:
+      lamina: sd54
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        P: 'punto3(alzado: figura.punto("P2"), planta: figura.punto("P1"))'
+        abc: plano(A, B, C)
+      solucion:
+        # a) r₁ es horizontal: r es frontal, con el alejamiento de P. Paralela
+        # al plano, tiene la dirección de las frontales del plano. Se construye
+        # con la frontal por C, que corta AB en D (la horizontal del papel por
+        # C₁ corta A₁B₁ en D₁). Para la receta, r es la recta del plano
+        # paralelo a ABC por P que tiene la planta r₁: M y N, sus puntos sobre
+        # los extremos de r₁.
+        f: frontal_por(C, abc)
+        D: pie_comun(recta3(A, B), f)
+        par: plano_perpendicular_a_recta(P, perpendicular_a_plano(P, abc))
+        M: 'punto_en_plano(planta: figura.punto("M1"), plano: par)'
+        N: 'punto_en_plano(planta: figura.punto("N1"), plano: par)'
+        r: recta3(M, N)
+        r2: segmento2(proy_alzado(M), proy_alzado(N))
+        f2: segmento2(figura.punto("C2"), proy_alzado(D))
+        # b) La distancia de r al plano es la de cualquier punto de r, P.
+        H: pie_en_plano(P, abc)
+        d_mm: en_mm(distancia_a_plano(P, abc))
+        # Decisión: el método es el de las diapositivas de distancias (pág. 9):
+        # el plano proyectante con un cambio de plano. Como r es frontal y
+        # paralela a las frontales del plano, un cambio HORIZONTAL con la línea
+        # nueva perpendicular a r₂ deja de punta a r y a la frontal CD, y de
+        # canto al plano. El enunciado no dice dónde va la línea nueva: la
+        # fijamos en el intro perpendicular a r₂ por el punto de r₂ prolongada
+        # que está 10 mm más allá de N₂, con P de referencia, que cae en ese
+        # mismo punto: P₄. Más cerca, la vertical de N₁ cortaría el canto junto
+        # a B₄.
+        P_4: 'uno(medir_sobre(r2, desde: proy_alzado(N), distancia: mm(10)), 1)'
+        nueva: 'perpendicular(por: P_4, a: r2)'
+        A_4: 'cambio_plano_horizontal(A, nueva, ref: P)'
+        B_4: 'cambio_plano_horizontal(B, nueva, ref: P)'
+        C_4: 'cambio_plano_horizontal(C, nueva, ref: P)'
+        D_4: 'cambio_plano_horizontal(D, nueva, ref: P)'
+        canto: segmento2(B_4, A_4)
+        H_4: pie_perpendicular(P_4, canto)
+        # Los pies de C₂, A₂ y B₂ en la línea nueva (los puntos 1, 2 y 3), desde
+        # los que el compás lleva lo que cada alejamiento supera al de P. Como
+        # r es frontal, ese exceso se lee en la planta: de C₁, A₁ y B₁ a r₁, por
+        # su vertical (E, F y G).
+        K1: 'pie_perpendicular(figura.punto("C2"), nueva)'
+        K2: 'pie_perpendicular(figura.punto("A2"), nueva)'
+        K3: 'pie_perpendicular(figura.punto("B2"), nueva)'
+        E: 'pie_perpendicular(figura.punto("C1"), figura.segmento("r1"))'
+        F: 'pie_perpendicular(figura.punto("A1"), figura.segmento("r1"))'
+        G: 'pie_perpendicular(figura.punto("B1"), figura.segmento("r1"))'
+        lleva_C: 'vm_planta(C, punto3(alzado: E, planta: E))'
+        lleva_A: 'vm_planta(A, punto3(alzado: F, planta: F))'
+        lleva_B: 'vm_planta(B, punto3(alzado: G, planta: G))'
+        projA: 'perpendicular(por: figura.punto("A2"), a: nueva)'
+        projB: 'perpendicular(por: figura.punto("B2"), a: nueva)'
+        perpP: 'perpendicular(por: P_4, a: canto)'
+        # Los errores. r₂ paralela a C₂B₂, que es lo que sale si D₁ se sube a
+        # C₂B₂ en vez de a A₂B₂.
+        parCB: 'perpendicular(por: figura.punto("P2"), a: perpendicular(por: figura.punto("P2"), a: figura.segmento("CB2")))'
+        # P₄ llevado al canto por la paralela a r₂ (en alejamiento): el punto
+        # del plano con el alzado de P, en la vista nueva.
+        Y: 'punto_en_plano(alzado: figura.punto("P2"), plano: abc)'
+        X_4: 'cambio_plano_horizontal(Y, nueva, ref: P)'
+        # La separación de r₂ y f₂ en el alzado: el pie de P₂ en f₂, como punto
+        # del plano, para medirla con vm_alzado.
+        Xg: 'punto_en_plano(alzado: pie_perpendicular(figura.punto("P2"), f2), plano: abc)'
+        # Los extremos de las rectas largas de la construcción: en el papel se
+        # trazan más allá del punto que van a dar, y no paran en él.
+        L_f1: 'desplaza(proy_planta(D), dx: mm(4))'
+        L_vD: 'desplaza(proy_alzado(D), dy: mm(-4))'
+        L_rI: 'uno(medir_sobre(r2, desde: proy_alzado(M), distancia: mm(4)), 2)'
+        L_rD: 'uno(medir_sobre(r2, desde: P_4, distancia: mm(4)), 1)'
+        L_vM: 'desplaza(proy_alzado(M), dy: mm(-4))'
+        L_vN: 'desplaza(proy_alzado(N), dy: mm(-4))'
+        n_a: 'uno(medir_sobre(nueva, desde: P_4, distancia: mm(4)), 2)'
+        n_b: 'uno(medir_sobre(nueva, desde: K3, distancia: mm(4)), 1)'
+        L_pC: 'uno(medir_sobre(f2, desde: C_4, distancia: mm(3)), 1)'
+        L_pA: 'uno(medir_sobre(segmento2(figura.punto("A2"), A_4), desde: A_4, distancia: mm(3)), 1)'
+        L_pB: 'uno(medir_sobre(segmento2(figura.punto("B2"), B_4), desde: B_4, distancia: mm(3)), 1)'
+        L_E: 'desplaza(E, dy: mm(-3))'
+        L_F: 'desplaza(F, dy: mm(-3))'
+        L_G: 'desplaza(G, dy: mm(-3))'
+        L_H: 'uno(medir_sobre(segmento2(P_4, H_4), desde: H_4, distancia: mm(2)), 1)'
+      comprueba:
+        # D está en AB y en el plano; P, en r; H, en el plano.
+        - en_plano(D, abc)
+        - en_recta(P, r)
+        - en_plano(H, abc)
+    pasos:
+      - tipo: reconocer
+        pregunta: r₁ es horizontal en el papel. ¿Qué dice eso de r, y a qué rectas del plano tiene que ser paralela para serlo al plano?
+        opciones:
+          - texto: r es frontal, y tiene que ser paralela a las frontales del plano; r₂ va paralela a f₂
+            correcta: true
+            mensaje: |
+              Eso es. Con r₁ horizontal en el papel, todos los puntos de r tienen el mismo alejamiento: es
+              una frontal. Una recta es paralela a un plano si lo es a una recta del plano, y una frontal
+              solo puede serlo a otra frontal, porque las demás rectas del plano no tienen la planta
+              horizontal. r₂ va, por tanto, paralela a f₂, el alzado de una frontal del plano.
+          - texto: r es horizontal, y tiene que ser paralela a las horizontales del plano; r₂ va horizontal, como h₂
+            mensaje: |
+              Una horizontal tiene horizontal el **alzado**, porque lo que no cambia es la cota. Aquí lo
+              horizontal es la planta: lo que no cambia es el alejamiento, y r es frontal. Las
+              horizontales de este plano tienen la planta inclinada, y r₁ no puede ser paralela a ellas.
+          - texto: Basta con que r₂ sea paralela a un lado del triángulo en el alzado, por ejemplo a C₂B₂, porque r₁ ya viene dada
+            mensaje: |
+              Para que r sea paralela a un lado, tiene que serlo en las dos vistas: r₁ también tendría que
+              ser paralela a la planta de ese lado, y ninguno de los tres tiene la planta horizontal, como
+              r₁. La recta del plano que sí la tiene es la frontal, y esa hay que construirla.
+
+      # Decisión: un solo paso construir, con r₂ y el cambio de plano. El
+      # reproductor arranca cada paso desde la lámina, y la línea nueva se
+      # traza perpendicular a r₂ y se fija desde N₂. P₄ no es objetivo: lo
+      # fija el intro (P es la referencia y cae en el punto que fija la línea
+      # nueva), y va como marca de la construcción. Sin paso dibujar: r no se
+      # cruza con el triángulo en ninguna de las dos vistas (segundo camino),
+      # así que no hay tramo oculto.
+      - tipo: construir
+        titulo: r₂, y el plano de canto en un cambio de plano
+        intro: |
+          a) r₁ es horizontal: r es frontal, y paralela al plano solo si lo es a sus frontales. Traza la
+          frontal del plano por C, que corta AB en D, y por P₂ la paralela a f₂ = C₂D₂: es r₂. Marca sus
+          extremos M₂ y N₂, en las verticales de M₁ y N₁, los extremos de r₁. b) Para la distancia, el
+          plano se pone proyectante con un cambio de plano horizontal: con la línea nueva perpendicular a
+          r₂, la vista nueva deja de punta a r y a las frontales del plano, y de canto al plano. El
+          enunciado no dice dónde va: la fijamos perpendicular a r₂ por el punto de r₂ prolongada que está
+          10 mm más allá de N₂, y P es la referencia, así que P₄ cae ahí mismo. Cada punto sale de su
+          alzado por la paralela a r₂ y se aparta de la línea nueva, hacia fuera, lo que su alejamiento
+          supera al de P, que es el de toda r: en la planta, lo que el punto está por debajo de r₁. Marca
+          C₄ (que es también D₄), A₄ y B₄, y H₄, el pie de la perpendicular desde P₄ al canto. Avisos para
+          el imán: H₄ cae a 3,8 mm de C₄; B₄, a 3,3 mm de donde la paralela a r₂ por B₂ corta la línea nueva, y la paralela a r₂ por
+          A₂ cruza la vertical de N₁ a 4,9 mm de N₂. Amplía con la lupa (×4) antes de marcarlos.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: M2
+            pide: el extremo izquierdo de r₂, en la vertical de M₁
+            es: proy_alzado(solucion.M)
+            bien: |
+              M₂ está en la vertical de M₁, sobre la paralela a f₂ por P₂. r₂ baja hacia la derecha a
+              30,7° en el papel, como f₂, y r₁ es horizontal, como f₁: r y la frontal CD son paralelas.
+            diagnosticos:
+              - si: en_recta(solucion.parCB)
+                mensaje: |
+                  Has trazado r₂ paralela a **C₂B₂**, que es lo que sale si D₁ se sube a C₂B₂. D₁ está en
+                  A₁B₁, y su alzado, en A₂B₂. Además, para que r fuera paralela a CB, r₁ tendría que ser
+                  paralela a C₁B₁, y es horizontal: la recta del plano con la planta horizontal es la
+                  **frontal** CD.
+                ejemplo: 'uno(medir_sobre(solucion.parCB, desde: figura.punto("P2"), distancia: mm(39)), 1)'
+              - si: 'en_horizontal_de(figura.punto("P2"))'
+                mensaje: |
+                  Con r₂ horizontal, r sería paralela a los dos planos de proyección, y el plano ABC no tiene
+                  ninguna recta así: no sería paralela al plano. Lo horizontal de r es la planta; el alzado
+                  va paralelo a f₂, el de la frontal del plano.
+                ejemplo: 'desplaza(figura.punto("P2"), dx: mm(-28))'
+              - si: '!en_vertical_de(figura.punto("M1"))'
+                mensaje: |
+                  M₂ va en la **vertical de M₁**: es el punto de r que tiene por planta el extremo izquierdo
+                  de r₁.
+                ejemplo: 'uno(medir_sobre(solucion.r2, desde: proy_alzado(solucion.M), distancia: mm(5)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de M₁, pero no en r₂. r₂ pasa por P₂, paralela a f₂: donde corta esa
+                  vertical está M₂.
+          - nombre: N2
+            pide: el extremo derecho de r₂, en la vertical de N₁
+            es: proy_alzado(solucion.N)
+            bien: |
+              N₂ está en la vertical de N₁, sobre la paralela a f₂ por P₂. M₂N₂ es r₂: con r₁, la recta r,
+              paralela al plano ABC.
+            diagnosticos:
+              - si: en_recta(solucion.parCB)
+                mensaje: |
+                  Has trazado r₂ paralela a **C₂B₂**, que es lo que sale si D₁ se sube a C₂B₂. D₁ está en
+                  A₁B₁, y su alzado, en A₂B₂. Para que r fuera paralela a CB, r₁ tendría que ser paralela a
+                  C₁B₁, y es horizontal: la recta del plano con la planta horizontal es la **frontal** CD.
+                ejemplo: 'uno(medir_sobre(solucion.parCB, desde: figura.punto("P2"), distancia: mm(65)), 2)'
+              - si: 'en_horizontal_de(figura.punto("P2"))'
+                mensaje: |
+                  Con r₂ horizontal, r sería paralela a los dos planos de proyección, y el plano ABC no tiene
+                  ninguna recta así. Lo horizontal de r es la planta; el alzado va paralelo a f₂.
+                ejemplo: 'desplaza(figura.punto("P2"), dx: mm(49))'
+              - si: '!en_vertical_de(figura.punto("N1"))'
+                mensaje: |
+                  N₂ va en la **vertical de N₁**: es el punto de r que tiene por planta el extremo derecho de
+                  r₁.
+                ejemplo: 'uno(medir_sobre(solucion.r2, desde: proy_alzado(solucion.N), distancia: mm(5)), 2)'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de N₁, pero no en r₂. r₂ pasa por P₂, paralela a f₂: donde corta esa
+                  vertical está N₂.
+          - nombre: C4
+            pide: C en la vista nueva, que es también D, porque la frontal CD se ve de punta
+            es: solucion.C_4
+            bien: |
+              C₄ ≡ D₄ está en f₂ prolongada, que es la paralela a r₂ por C₂ y por D₂, a 15,24 mm de la línea
+              nueva, hacia fuera: lo que C₁ está por debajo de r₁, C₁E. La frontal CD se ve de punta, como r.
+            diagnosticos:
+              - si: cerca_de(solucion.K1)
+                mensaje: |
+                  Has dejado C₄ en la línea nueva, como si C fuera la referencia. La referencia es P: C se
+                  aparta de la línea lo que su alejamiento supera al de P, que en la planta es C₁E.
+                ejemplo: solucion.K1
+              - si: 'en_recta(solucion.f2) && a_distancia(de: solucion.K1, d: diferencia_de_cotas(C, P))'
+                mensaje: |
+                  Has llevado lo que C está **más bajo** que P, su diferencia de cotas. En un cambio de plano
+                  horizontal la vista nueva sale del alzado, y lo que se lleva es lo que el alzado no enseña:
+                  el **alejamiento**, que está en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.f2, desde: solucion.K1, distancia: diferencia_de_cotas(C, P)), 1)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.f2, desde: solucion.K1, distancia: solucion.lleva_C), 2))'
+                mensaje: |
+                  Llevas bien lo que C supera a P en alejamiento, pero **hacia el alzado**. Cada punto se
+                  aparta de la línea nueva hacia fuera, al lado contrario del alzado, lo que su alejamiento
+                  supera al de la referencia; C tiene más que P, y va hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.f2, desde: solucion.K1, distancia: solucion.lleva_C), 2)'
+              - si: '!en_recta(solucion.f2)'
+                mensaje: |
+                  C₄ sale de C₂ por la perpendicular a la línea nueva, que es la paralela a r₂ por C₂: f₂
+                  prolongada, porque f₂ es paralela a r₂. D₄ sale por la misma recta, y cae en el mismo punto.
+                ejemplo: 'desplaza(solucion.C_4, dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en f₂ prolongada, pero no a la distancia buena de la línea nueva: lo que C₁ está por
+                  debajo de r₁, C₁E, con el compás desde el punto 1, hacia fuera.
+          - nombre: A4
+            pide: A en la vista nueva
+            es: solucion.A_4
+            bien: |
+              A₄ está en la paralela a r₂ por A₂, a 32,68 mm de la línea nueva, hacia fuera: lo que A₁ está
+              por debajo de r₁, A₁F.
+            diagnosticos:
+              - si: cerca_de(solucion.K2)
+                mensaje: |
+                  Has dejado A₄ en la línea nueva, como si A fuera la referencia. La referencia es P: A se
+                  aparta lo que su alejamiento supera al de P, A₁F en la planta.
+                ejemplo: solucion.K2
+              - si: 'en_recta(solucion.projA) && a_distancia(de: solucion.K2, d: diferencia_de_cotas(A, P))'
+                mensaje: |
+                  Has llevado lo que A está más bajo que P, su diferencia de cotas. En un cambio horizontal se
+                  lleva el **alejamiento**, que se mide en la planta: A₁F.
+                ejemplo: 'uno(medir_sobre(solucion.projA, desde: solucion.K2, distancia: diferencia_de_cotas(A, P)), 2)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.projA, desde: solucion.K2, distancia: solucion.lleva_A), 1))'
+                mensaje: |
+                  Llevas bien A₁F, pero **hacia el alzado**. A tiene más alejamiento que P, y se aparta de la
+                  línea nueva hacia fuera, al lado contrario del alzado.
+                ejemplo: 'uno(medir_sobre(solucion.projA, desde: solucion.K2, distancia: solucion.lleva_A), 1)'
+              - si: '!en_recta(solucion.projA)'
+                mensaje: |
+                  A₄ sale de A₂ por la **perpendicular a la línea nueva**, que es la paralela a r₂ por A₂.
+                ejemplo: 'desplaza(solucion.A_4, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a r₂ por A₂, pero no a la distancia buena: A₁F, con el compás desde el
+                  punto 2, hacia fuera.
+          - nombre: B4
+            pide: B en la vista nueva
+            es: solucion.B_4
+            bien: |
+              B₄ está en la paralela a r₂ por B₂, a 3,26 mm de la línea nueva, hacia fuera: lo que B₁ está por
+              debajo de r₁, B₁G. A₄, B₄ y C₄ quedan en línea: el plano, de canto.
+            diagnosticos:
+              - si: cerca_de(solucion.K3)
+                mensaje: |
+                  Ese es el punto 3, en la línea nueva: B quedaría con el alejamiento de P. B₁ está 3,26 mm por
+                  debajo de r₁, y B₄ se aparta eso de la línea, hacia fuera.
+                ejemplo: solucion.K3
+              - si: 'en_recta(solucion.projB) && a_distancia(de: solucion.K3, d: diferencia_de_cotas(B, P))'
+                mensaje: |
+                  Has llevado lo que B está más bajo que P, su diferencia de cotas, 58,8 mm. En un cambio
+                  horizontal se lleva el **alejamiento**: B₁G, en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.projB, desde: solucion.K3, distancia: diferencia_de_cotas(B, P)), 2)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.projB, desde: solucion.K3, distancia: solucion.lleva_B), 1))'
+                mensaje: |
+                  Llevas bien B₁G, pero **hacia el alzado**. B tiene más alejamiento que P, y va hacia fuera,
+                  como A y C: los tres quedan del mismo lado de la línea nueva.
+                ejemplo: 'uno(medir_sobre(solucion.projB, desde: solucion.K3, distancia: solucion.lleva_B), 1)'
+              - si: '!en_recta(solucion.projB)'
+                mensaje: |
+                  B₄ sale de B₂ por la **perpendicular a la línea nueva**, que es la paralela a r₂ por B₂.
+                ejemplo: 'desplaza(solucion.B_4, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a r₂ por B₂, pero no a la distancia buena: B₁G, con el compás desde el
+                  punto 3, hacia fuera.
+          - nombre: H4
+            pide: el pie de la perpendicular desde P₄ al canto del plano
+            es: solucion.H_4
+            bien: |
+              H₄ está en el canto B₄A₄, al pie de la perpendicular desde P₄. P₄ es la recta r entera y el canto,
+              el plano entero: P₄H₄ es su distancia en verdadera magnitud, 25,76 mm.
+            diagnosticos:
+              - si: cerca_de(solucion.X_4)
+                mensaje: |
+                  Has ido de P₄ al canto prolongado por la paralela a r₂, que es la dirección en que se llevan
+                  los alejamientos. Así se mide la distancia de frente, no la más corta: esa va por la
+                  **perpendicular al canto**.
+                ejemplo: solucion.X_4
+              - si: en_recta(solucion.canto)
+                mensaje: |
+                  Estás en el canto, pero no al pie de la perpendicular desde P₄. Con la escuadra apoyada en el
+                  canto, la perpendicular por P₄: donde lo corta está H₄.
+                ejemplo: 'uno(medir_sobre(solucion.canto, desde: solucion.H_4, distancia: mm(6)), 1)'
+              - si: en_recta(solucion.perpP)
+                mensaje: |
+                  Vas por la perpendicular al canto desde P₄, pero H₄ es donde lo corta, ni antes ni después.
+                ejemplo: punto_medio(segmento2(solucion.P_4, solucion.H_4))
+              - si: siempre
+                mensaje: |
+                  H₄ está en el canto B₄A₄, que pasa por C₄, y en la perpendicular a él que pasa por P₄.
+        trazado:
+          - solucion.r2
+          - solucion.canto
+          - segmento2(solucion.P_4, solucion.H_4)
+        construccion:
+          - con: marca
+            traza: figura.punto("M1")
+            rotulo: M₁
+            porque: |
+              **a) r₂.** M₁ y N₁, nombres nuestros, son los extremos de r₁. M₁, el izquierdo: r₂ se dibujará
+              entre las verticales de los dos.
+          - con: marca
+            traza: figura.punto("N1")
+            rotulo: N₁
+            porque: |
+              N₁, el extremo derecho de r₁. r₁ es horizontal en el papel: todos los puntos de r tienen el
+              alejamiento de P, y r es una frontal.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_f1)
+            guia: figura.segmento("r1")
+            rotulo: f₁
+            porque: |
+              r es frontal, y una frontal solo es paralela a otra frontal, así que hace falta una **frontal del plano**. f₁,
+              su planta por C₁: la paralela a r₁, horizontal en el papel, hasta pasar A₁B₁.
+          - con: marca
+            traza: proy_planta(solucion.D)
+            rotulo: D₁
+            porque: |
+              D₁, nombre nuestro, donde f₁ corta A₁B₁: D es el punto de AB con el alejamiento de C.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.D), solucion.L_vD)
+            guia: figura.segmento("r1")
+            porque: |
+              Por D₁, la vertical hasta el alzado, más allá de A₂B₂: D está en AB, y su alzado, en A₂B₂.
+          - con: marca
+            traza: proy_alzado(solucion.D)
+            rotulo: D₂
+            porque: |
+              D₂, donde la vertical de D₁ corta A₂B₂.
+          - con: regla
+            traza: solucion.f2
+            rotulo: f₂
+            porque: |
+              f₂, de C₂ a D₂: el alzado de la frontal CD del plano, que el alzado enseña en verdadera
+              magnitud. r tiene que ser paralela a ella.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("P2"), solucion.L_rI), segmento2(figura.punto("P2"), solucion.L_rD)]'
+            guia: solucion.f2
+            rotulo: r₂
+            porque: |
+              Por P₂, la paralela a f₂: es r₂. r₁ es paralela a f₁ y r₂ a f₂, así que r es paralela a la
+              frontal CD, que está en el plano. Larga hacia los dos lados: a la derecha hará falta prolongada.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("M1"), solucion.L_vM), segmento2(figura.punto("N1"), solucion.L_vN)]'
+            guia: figura.segmento("r1")
+            porque: |
+              Por M₁ y por N₁, las verticales hasta pasar r₂: los extremos de r₂ están encima de los de r₁.
+          - con: marca
+            traza: proy_alzado(solucion.M)
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta r₂.
+          - con: marca
+            traza: proy_alzado(solucion.N)
+            rotulo: N₂
+            porque: |
+              N₂, donde la vertical de N₁ corta r₂. M₂N₂ y M₁N₁ son r, paralela al plano ABC.
+          - con: compas
+            traza: 'arco(proy_alzado(solucion.N), por: solucion.P_4, desde: uno(medir_sobre(solucion.nueva, desde: solucion.P_4, distancia: mm(1.5)), 1), hasta: uno(medir_sobre(solucion.nueva, desde: solucion.P_4, distancia: mm(1.5)), 2))'
+            porque: |
+              **b) La distancia.** El plano se pone proyectante con un cambio de plano horizontal, y la
+              línea nueva va perpendicular a r₂. Donde va lo fijamos: con el compás abierto 10 mm sobre la
+              regla y centro en N₂, el arco que corta r₂ prolongada, más allá de N₂.
+          - con: marca
+            traza: solucion.P_4
+            rotulo: P₄
+            porque: |
+              P₄, donde el arco corta r₂ prolongada. P es la referencia, así que P₄ cae en la línea nueva; y sale de P₂ por
+              la paralela a r₂, que es r₂ misma: P₄ es este punto.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.P_4, solucion.n_a), segmento2(solucion.P_4, solucion.n_b)]'
+            guia: solucion.r2
+            rotulo: línea nueva
+            porque: |
+              La **línea nueva**, perpendicular a r₂ por P₄, larga hacia abajo. La vista nueva mira a lo largo de r₂,
+              perpendicular a la línea nueva: r se reduce a un punto, y las frontales del plano también, así que el plano se
+              verá de canto.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.D), solucion.L_pC), segmento2(figura.punto("A2"), solucion.L_pA), segmento2(figura.punto("B2"), solucion.L_pB)]'
+            guia: solucion.r2
+            porque: |
+              Desde el alzado, las perpendiculares a la línea nueva, que son las paralelas a r₂: la de C y D
+              es f₂ prolongada desde D₂, y las otras dos, por A₂ y por B₂. Largas, más allá de la línea nueva.
+          - con: marca
+            traza: solucion.K1
+            rotulo: '1'
+            porque: |
+              1, nombre nuestro, donde f₂ prolongada corta la línea nueva: desde aquí se llevará el
+              alejamiento de C, y el de D, que es el mismo.
+          - con: marca
+            traza: solucion.K2
+            porque: |
+              2, nombre nuestro, donde la paralela a r₂ por A₂ corta la línea nueva. Va sin rótulo, porque
+              P₄, a 4,2 mm, lo taparía.
+          - con: marca
+            traza: solucion.K3
+            rotulo: '3'
+            porque: |
+              3, nombre nuestro, donde la paralela a r₂ por B₂ corta la línea nueva.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("C1"), solucion.L_E), segmento2(figura.punto("A1"), solucion.L_F), segmento2(figura.punto("B1"), solucion.L_G)]'
+            guia: figura.segmento("r1")
+            porque: |
+              Lo que lleva cada punto es su alejamiento contado desde el de P, que es el de toda r: en la
+              planta, lo que está por debajo de r₁. Por C₁, A₁ y B₁, las verticales hasta pasar r₁.
+          - con: marca
+            traza: solucion.E
+            rotulo: E
+            porque: |
+              E, nombre nuestro, donde la vertical de C₁ corta r₁: C₁E es lo que el alejamiento de C supera al
+              de P, 15,24 mm.
+          - con: marca
+            traza: solucion.F
+            rotulo: F
+            porque: |
+              F, nombre nuestro, donde la vertical de A₁ corta r₁: A₁F, 32,68 mm.
+          - con: marca
+            traza: solucion.G
+            rotulo: G
+            porque: |
+              G, nombre nuestro, donde la vertical de B₁ corta r₁: B₁G, 3,26 mm. B es el vértice con menos
+              alejamiento, el que más se acerca a r en la planta.
+          - con: compas
+            traza: 'arco(solucion.K1, por: solucion.C_4, desde: uno(medir_sobre(perpendicular(por: solucion.C_4, a: solucion.f2), desde: solucion.C_4, distancia: mm(2)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.C_4, a: solucion.f2), desde: solucion.C_4, distancia: mm(2)), 2))'
+            toma: segmento2(figura.punto("C1"), solucion.E)
+            porque: |
+              Con el compás, C₁E, y centro en 1: el arco corta f₂ prolongada a los dos lados de la línea
+              nueva, y vale el de fuera, el contrario al alzado, porque C tiene más alejamiento que P.
+          - con: marca
+            traza: solucion.C_4
+            porque: |
+              C₄ ≡ D₄, donde el arco corta f₂ prolongada por fuera: la frontal CD, vista de punta. Va sin
+              rótulo, porque H₄ caerá a 3,8 mm.
+          - con: compas
+            traza: 'arco(solucion.K2, por: solucion.A_4, desde: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.projA), desde: solucion.A_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.projA), desde: solucion.A_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("A1"), solucion.F)
+            porque: |
+              Con el compás, A₁F, y centro en 2, por fuera: A también tiene más alejamiento que P.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la paralela a r₂ por A₂, por fuera de la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.K3, por: solucion.B_4, desde: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.projB), desde: solucion.B_4, distancia: mm(0.5)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.projB), desde: solucion.B_4, distancia: mm(0.5)), 2))'
+            toma: segmento2(figura.punto("B1"), solucion.G)
+            porque: |
+              Con el compás, B₁G, que es corto, y centro en 3, por fuera, como los otros dos.
+          - con: marca
+            traza: solucion.B_4
+            rotulo: B₄
+            porque: |
+              B₄, donde el arco corta la paralela a r₂ por B₂, por fuera de la línea nueva.
+          - con: regla
+            traza: solucion.canto
+            porque: |
+              B₄A₄, y pasa por C₄: los tres vértices en línea son el plano visto **de canto**. Si no salieran
+              en línea, algún alejamiento estaría mal llevado.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.P_4, solucion.L_H)
+            guia: solucion.canto
+            porque: |
+              Por P₄, la perpendicular al canto, hasta pasarlo. En esta vista P₄ es toda la recta r y el canto
+              es todo el plano, y la perpendicular entre los dos está en verdadera magnitud.
+          - con: marca
+            traza: solucion.H_4
+            rotulo: H₄
+            porque: |
+              H₄, nombre nuestro, donde la perpendicular corta el canto: P₄H₄ es la distancia de r al plano,
+              25,76 mm, la que se mide con la regla.
+        pista: |
+          (1) Por C₁, la horizontal hasta A₁B₁: D₁; súbelo a A₂B₂ y une C₂D₂, que es f₂. (2) Por P₂, la
+          paralela a f₂: r₂, entre las verticales de M₁ y N₁. (3) La línea nueva, perpendicular a r₂ 10 mm
+          más allá de N₂: ahí cae P₄. (4) Por D₂, A₂ y B₂, las paralelas a r₂; desde la línea nueva, hacia
+          fuera, lo que cada planta está por debajo de r₁. (5) A₄, B₄ y C₄ salen en línea: el canto. (6) Por
+          P₄, la perpendicular al canto: H₄.
+        desarrollo: |
+          En verde, r₂ entre M₂ y N₂, el canto B₄A₄, con C₄ ≡ D₄ en él, y P₄H₄, la distancia en verdadera
+          magnitud. r₂ es paralela a f₂ y r₁ a f₁: r y la frontal CD son paralelas en el espacio, y por eso r
+          es paralela al plano.
+
+      - tipo: calcular
+        titulo: La distancia de r al plano
+        pregunta: ¿Cuánto mide la distancia entre la recta r y el plano ABC?
+        respuesta:
+          tipo: numero
+          valor: '25.76'
+          receta: d_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '21.11'
+            receta: en_mm(vm_alzado(P, Xg))
+            mensaje: |
+              Es lo que separa r₂ de f₂ **en el alzado**. Las dos son frontales, pero cada una con su alejamiento: r está
+              15,24 mm más cerca del plano vertical que la frontal CD, y el alzado no lo enseña. Y aun contándolo saldría lo
+              que separa r de la frontal CD, 26,04 mm, que tampoco es la distancia al plano: esa va por la perpendicular al
+              plano, P₄H₄ en la vista nueva.
+          - valor: '18.48'
+            receta: en_mm(vm_alzado(P, H))
+            mensaje: |
+              Es lo que mide **en el alzado** PH, la perpendicular desde P al plano: H₂ está en la
+              perpendicular a f₂ por P₂. PH no es frontal, y el alzado la acorta. Su verdadera magnitud es la
+              hipotenusa de P₁H₁ y de la diferencia de cotas, o P₄H₄ en la vista nueva.
+          - valor: '36.98'
+            receta: en_mm(vm_planta(P, Y))
+            mensaje: |
+              Has llevado P₄ al canto prolongado por la paralela a r₂, la dirección en que se llevan los
+              alejamientos. Eso es la distancia de P al plano medida de frente, en alejamiento; la más corta
+              va por la perpendicular al canto, P₄H₄.
+        pista: |
+          Mide P₄H₄ con «medir»: en la vista nueva, P₄ es la recta r entera y el canto es el plano entero, y la
+          perpendicular entre ellos está en verdadera magnitud.
+        desarrollo: |
+          En la vista 4, r se ve como el punto P₄ y el plano como la recta B₄A₄. La distancia es la
+          perpendicular de P₄ al canto, en verdadera magnitud, porque la vista nueva es paralela a ella:
+
+          $$ d = \overline{P_4H_4} \approx 25{,}76 \text{ mm} $$
+
+          Por otro camino sale lo mismo: el pie H de la perpendicular desde P al plano está a 20,28 mm de P
+          en la planta y 15,89 mm más bajo, y la hipotenusa de esos dos catetos es 25,76 mm.
+
+          Dos cifras que la casilla no distingue, dentro de la tolerancia. De P₄ a C₄ hay 26,04 mm, solo 0,28 más: es la
+          distancia de r a la frontal CD, no al plano; C₄ queda a 3,78 mm de H₄, y la que manda es la perpendicular al
+          canto. Y de D₂ al punto 1, sobre f₂ prolongada, hay 25,07 mm, 0,69 menos: es solo lo que D₂ dista de la línea
+          nueva, una casualidad del sitio donde la hemos puesto, y no mide nada del espacio.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'r₁ es horizontal en el papel: todos los puntos de r tienen el alejamiento de P, y r es una frontal.'
+          - texto: 'Paralela al plano, r lo es a una recta del plano con la planta horizontal, como r₁: la frontal CD. Por eso r₂ va paralela a f₂.'
+          - texto: 'Con la línea nueva perpendicular a r₂, la vista nueva mira a lo largo de las frontales: r se ve como el punto P₄ y el plano, como el canto B₄A₄.'
+          - texto: 'La perpendicular de P₄ al canto está en verdadera magnitud: P₄H₄, 25,76 mm, es la distancia.'
+          - texto: 'Como r₂ y f₂ son paralelas en el papel, la distancia es la separación de las dos en el alzado.'
+            trampa: true
+            mensaje: |
+              r₂ y f₂ son paralelas, pero la separación del papel, 21,11 mm, es una proyección: el alzado no enseña los
+              15,24 mm que r y la frontal CD se separan en alejamiento. Y aun contándolos saldría lo que separa r de la
+              frontal CD, 26,04 mm, no la distancia al plano, que va por la perpendicular al plano: P₄H₄, 25,76 mm.
+    resolucion: |
+      **Lo que dan los datos.** r₁ es horizontal en el papel: todos los puntos de r tienen el mismo
+      alejamiento, el de P, y r es una recta frontal. Una recta es paralela a un plano si lo es a una recta
+      del plano, y una frontal solo puede serlo a otra frontal.
+
+      **a) r₂.** La frontal del plano por C tiene la planta horizontal: corta A₁B₁ en D₁, y D₂ está en
+      A₂B₂, en su vertical. C₂D₂ es f₂, y baja hacia la derecha a 30,7° en el papel. r₂ es la paralela a
+      f₂ por P₂, y se representa entre M₂ y N₂, en las verticales de los extremos de r₁. r no corta al
+      triángulo en ninguna de las dos vistas, así que no hay nada oculto.
+
+      **b) La distancia.** La distancia de r al plano es la de cualquier punto de r, P. Con un cambio de
+      plano horizontal y la línea nueva perpendicular a r₂, r y las frontales del plano se ven de punta, y
+      el plano, de canto. Cada punto lleva lo que su alejamiento supera al de P, que se lee en la planta
+      por debajo de r₁: C, 15,24 mm; A, 32,68, y B, 3,26. A₄, B₄ y C₄ salen en línea, y la perpendicular de
+      P₄ a esa recta, P₄H₄, mide 25,76 mm. Es la distancia en verdadera magnitud. La separación de r₂ y f₂ en el alzado, 21,11 mm, no es su proyección (la
+      de PH en el alzado mide 18,48): es la de lo que separa r de la frontal CD, 26,04 mm, y la distancia a una recta
+      del plano no es la distancia al plano.
