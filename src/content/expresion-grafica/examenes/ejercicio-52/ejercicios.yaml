@@ -1,0 +1,1327 @@
+ejercicios:
+  # ── 3 · La pirámide ABCV. Lo que enseña: cuatro ángulos de cuatro clases, y
+  #    un camino distinto para cada uno. La base se ve de canto en el alzado, y
+  #    eso da gratis el primero y deja frontal la perpendicular del tercero; el
+  #    segundo pide abatir una cara, y el cuarto, poner una arista de punta.
+  - id: exeg-h52-3-cuatro-angulos-de-una-piramide
+    titulo: Cuatro ángulos de una pirámide, y qué camino pide cada uno
+    fuente: >-
+      Apartado 3 · Ejercicio 52 de la Colección de ejercicios de Geometría
+      Descriptiva, Sistema Diédrico Directo (págs. 53-57; el apartado 3, en las
+      53 y 56) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Sin fecha: es uno de los cuatro ejercicios bilingües de varios
+      apartados con que cierra la colección, del 52 al 55, y de ellos solo el 54
+      se titula «Examen». Se transcribe el castellano; la figura se redibuja
+      desde sus coordenadas.
+    nivel: examen
+    # Decisión: el castellano de la pág. 53 tal cual, sin la cabecera «3. ARIKETA
+    # / EJERCICIO 3» (el número lo dice la fuente), con los cuatro guiones como
+    # lista y sin punto en el último, como en la página.
+    enunciado: |
+      Se representan las proyecciones de una pirámide. Determinar la verdadera magnitud de los siguientes ángulos:
+
+      - De la cara ABC con el plano horizontal.
+      - De la arista BV con la arista CV.
+      - De la arista AV con la cara ABC.
+      - El ángulo entre las caras AVB y AVC
+
+      **Notas nuestras.** La figura es la tercera de las cuatro páginas de figuras del
+      ejercicio: la pirámide de base ABC y vértice V, en alzado (arriba) y planta (abajo), sin
+      línea de tierra, como toda la colección. V₂C₂ va en discontinua porque la arista VC queda
+      detrás. A₂, B₂ y C₂ caen en una misma recta del alzado: la base se ve de canto. La hoja no
+      da escala, y los ángulos no dependen de ella. Dos rectas que se cortan forman dos ángulos
+      suplementarios; el de BV con CV es el menor, que aquí es el de la cara BVC en V. El ángulo
+      entre las caras AVB y AVC es el diedro que abarcan por dentro de la pirámide; aquí es
+      agudo, así que es también el ángulo entre sus dos planos. Llamamos M, N, O y Q a cuatro
+      puntos de la construcción, V₀ a V abatido y T al pie de la perpendicular desde V a la
+      base; esos nombres son nuestros.
+    pide: Los cuatro ángulos en verdadera magnitud, en grados, y la cara VBC abatida, que da el segundo.
+    receta:
+      lamina: ex52-3
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        base: plano(A, B, C)
+        cara_vbc: plano(V, B, C)
+      solucion:
+        # 1 · La base con el plano horizontal. Se ve de canto en el alzado: C₂
+        # queda a 0,02 pt de B₂A₂ (tests/geometria/hoja-52.test.ts).
+        a1: angulo_con_ph(base)
+        # 2 · BV con CV, abatiendo la cara VBC alrededor de su horizontal por
+        # B. M, donde esa horizontal corta VC; O, el pie de V en la charnela; N,
+        # el punto de la vertical de V a la cota de la charnela; Q, el otro
+        # extremo del cateto que se lleva en el alzado para el radio.
+        a2: angulo_rectas(segmento3(V, B), segmento3(V, C))
+        horizontal_B: 'plano(B, punto3(alzado: figura.punto("B2"), planta: desplaza(figura.punto("B1"), dy: 10)), punto3(alzado: desplaza(figura.punto("B2"), dx: 10), planta: desplaza(figura.punto("B1"), dx: 10)))'
+        M: corte_recta_plano(segmento3(V, C), horizontal_B)
+        charnela: recta3(B, M)
+        O: pie_perpendicular(V, charnela)
+        h2: 'linea(segmento2(figura.punto("B2"), desplaza(figura.punto("B2"), dx: 10)))'
+        N: vertical_hasta(V, h2)
+        # Decisión: el triángulo del radio se arma en el alzado, sobre la
+        # horizontal de B₂, con el cateto de la planta llevado desde N₂ hacia la
+        # derecha, fuera del alzado de la pirámide. En la planta caería encima
+        # de la base.
+        Q: 'uno(medir_sobre(h2, desde: proy_alzado(N), distancia: vm_planta(V, O)), 1)'
+        # Decisión: la construcción paso a paso abate V al otro lado de la
+        # charnela (el segundo de los dos que da abatido), entre las dos vistas,
+        # donde la lámina está libre; el del lado de V₁ cae dentro de la planta
+        # de la base. Los dos valen y dan el mismo ángulo.
+        V_ab: uno(abatido(V, charnela, cara_vbc), 2)
+        perp_charnela: 'perpendicular(por: figura.punto("V1"), a: segmento2(figura.punto("B1"), proy_planta(M)))'
+        # Los errores del segundo ángulo: en la planta (B, V y C a la cota de B),
+        # en el alzado (B y C llevados al alejamiento de V) y con el radio igual
+        # a la diferencia de cotas, abatido al mismo lado.
+        Ch: vertical_hasta(C, h2)
+        frontal_V: 'perpendicular(por: figura.punto("V1"), a: segmento2(figura.punto("V2"), figura.punto("V1")))'
+        B_fr: 'punto3(alzado: figura.punto("B2"), planta: pie_perpendicular(figura.punto("B1"), frontal_V))'
+        C_fr: 'punto3(alzado: figura.punto("C2"), planta: pie_perpendicular(figura.punto("C1"), frontal_V))'
+        V0_dz: 'punto_en_plano(planta: uno(medir_sobre(perp_charnela, desde: proy_planta(O), distancia: diferencia_de_cotas(V, M)), 2), plano: horizontal_B)'
+        # Los ejemplos de error de M: donde la horizontal de B₂ corta V₂A₂, y
+        # donde la vertical de M₂ corta C₁A₁ (el plano de perfil de M con CA).
+        M_en_VA: corte_recta_plano(segmento3(V, A), horizontal_B)
+        perfil_M: 'plano(M, punto3(alzado: desplaza(proy_alzado(M), dy: 10), planta: proy_planta(M)), punto3(alzado: proy_alzado(M), planta: desplaza(proy_planta(M), dy: 10)))'
+        M_en_CA: corte_recta_plano(segmento3(C, A), perfil_M)
+        # 3 · AV con la base.
+        a3: angulo_recta_plano(segmento3(A, V), base)
+        # 4 · El diedro de las caras AVB y AVC, en la arista AV, y el error de
+        # la sección que no es perpendicular a AV: X, el pie de B en AV, unido
+        # con C.
+        a4: angulo_diedro(B, segmento3(A, V), C)
+        X: pie_perpendicular(B, recta3(A, V))
+        # Los extremos de las rectas largas de la construcción paso a paso: en el
+        # papel se trazan más allá del punto que van a dar, y no paran en él.
+        L_h2: 'desplaza(Q, dx: mm(4))'
+        L_vM: 'desplaza(proy_planta(M), dy: mm(4))'
+        L_perp: 'uno(medir_sobre(segmento2(figura.punto("V1"), proy_planta(O)), desde: proy_planta(V_ab), distancia: mm(5)), 1)'
+    pasos:
+      - tipo: reconocer
+        pregunta: Son cuatro ángulos de cuatro clases distintas. ¿Qué camino sirve para cada uno?
+        opciones:
+          - texto: La base, en el alzado, donde se ve de canto; BV con CV, abatiendo la cara VBC; AV con la base, con la perpendicular desde V, que es frontal; el diedro, con la arista AV de punta
+            correcta: true
+            mensaje: |
+              Eso es. A₂, B₂ y C₂ están alineados: la base es perpendicular al plano vertical, y
+              su ángulo con el horizontal se lee en el alzado. BV y CV se cortan en V y forman la
+              cara VBC, que se abate. El ángulo de AV con la base está en el triángulo de AV, la
+              perpendicular desde V y la proyección de AV sobre la base; con la base de canto, esa
+              perpendicular es frontal. Y el de dos caras se ve con su arista de punta, tras dos
+              cambios de plano.
+          # Las incorrectas, tan concretas y tan largas como la buena (164, 198 y
+          # 184 caracteres frente a 177): cada una es un método con su porqué.
+          - texto: 'Los cuatro en el alzado, porque la base se ve de canto: su ángulo con el horizontal en B₂A₂, el de AV con ella entre A₂V₂ y A₂B₂, y los de las caras laterales en V₂'
+            mensaje: |
+              Que la base se vea de canto da sin construir nada el primero, y nada más. Para el de
+              AV con la base haría falta además que AV fuera frontal, y no lo es: A y V no tienen el
+              mismo alejamiento, y los 46,3° que forman A₂V₂ y A₂B₂ en el alzado no son ese ángulo.
+              Las caras laterales no se ven ni de canto ni en verdadera magnitud, y los 41,1° que
+              forman V₂B₂ y V₂C₂ en V₂ tampoco son el de BV con CV.
+          - texto: 'Los cuatro abatiendo una cara cada uno, la base, VBC, AVB y AVC: abatida, una cara queda en verdadera magnitud, y con ella el ángulo de dos aristas, el de la cara con el horizontal y el de su vecina'
+            mensaje: |
+              Abatir una cara da en verdadera magnitud lo que está dentro de ella: el ángulo de BV
+              con CV, que está en la cara VBC. El de una cara con el plano horizontal, el de una
+              recta con un plano y el de dos caras no están dentro de ninguna cara, y abatir una
+              no los enseña.
+          - texto: 'Los cuatro en la planta, porque desde arriba se ve toda la pirámide, con V₁ dentro de A₁B₁C₁: el transportador da en V₁ el de BV con CV y en A₁, entre A₁V₁ y A₁B₁, el de AV con la base'
+            mensaje: |
+              Verse no es verse en verdadera magnitud. Ninguna cara es horizontal, y la planta
+              deforma sus ángulos: los 85,3° que forman V₁B₁ y V₁C₁ en V₁ no son el de BV con CV. Y
+              el de AV con la base no es un ángulo con AB, sino con la proyección de AV sobre la
+              base: los 29,2° que forman A₁V₁ y A₁B₁ en A₁ no lo dan.
+
+      - tipo: construir
+        titulo: La cara VBC, abatida sobre su horizontal por B
+        intro: |
+          Para el ángulo de BV con CV se abate la cara VBC alrededor de su horizontal por B: B no se
+          mueve, y la horizontal corta VC en M, que tampoco. Marca M en el alzado y en la planta, y
+          después V₀, V abatido: en la planta va por la perpendicular a B₁M₁ que pasa por V₁, a la
+          distancia de V a la charnela en verdadera magnitud. Vale hacia los dos lados de la
+          charnela. M₁ cae a 4,6 mm de donde la vertical de M₂ cruza C₁A₁: amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: M2
+            pide: M, donde la horizontal de la cara por B corta VC, en el alzado
+            es: proy_alzado(solucion.M)
+            bien: |
+              M₂ está en V₂C₂, la discontinua, a la altura de B₂: M es el punto de VC con la cota de
+              B, y BM es la horizontal de la cara VBC que pasa por B.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.M_en_VA))
+                mensaje: |
+                  Ese punto está en V₂A₂, la arista VA. M está en VC, la arista que va de V₂ a C₂ en
+                  discontinua porque queda detrás.
+                ejemplo: proy_alzado(solucion.M_en_VA)
+              - si: en_recta(figura.segmento("VC2"))
+                mensaje: |
+                  Estás en V₂C₂, pero no a la altura de B₂. M es el punto de VC con la cota de B: por
+                  B₂, la horizontal, hasta V₂C₂.
+                ejemplo: proy_alzado(punto_medio(segmento3(V, C)))
+              - si: en_horizontal_de(figura.punto("B2"))
+                mensaje: |
+                  Vas por la horizontal de B₂, pero M está donde corta V₂C₂, la discontinua.
+                ejemplo: proy_alzado(solucion.N)
+              - si: siempre
+                mensaje: |
+                  M₂ está donde la horizontal de B₂ corta V₂C₂: el punto de VC a la cota de B.
+          - nombre: M1
+            pide: M, en la planta
+            es: proy_planta(solucion.M)
+            bien: |
+              M₁ está en V₁C₁, en la vertical de M₂. B₁M₁ es la charnela: la planta de la horizontal
+              BM, en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.M_en_CA))
+                mensaje: |
+                  Ese punto está en C₁A₁. La vertical de M₂ cruza C₁A₁ un poco antes de llegar a
+                  V₁C₁, pero M está en la arista VC: su planta va en V₁C₁.
+                ejemplo: proy_planta(solucion.M_en_CA)
+              - si: '!en_vertical_de(M2)'
+                mensaje: |
+                  M₁ va en la **vertical de M₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.M), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  M₁ está en la vertical de M₂, sobre V₁C₁, porque M está en VC.
+          - nombre: V0
+            pide: el vértice V, abatido con BM de charnela
+            es: '[proy_planta(solucion.V_ab), proy_planta(uno(abatido(V, solucion.charnela, cara_vbc), 1))]'
+            bien: |
+              V₀ está en la perpendicular a B₁M₁ por V₁, a 39,5 mm de la charnela: la hipotenusa del
+              triángulo que tiene por catetos lo que V₁ se aparta de B₁M₁, 20,5 mm, y lo que V está
+              más alto que la charnela, 33,8 mm. El ángulo en V₀, entre V₀B₁ y V₀M₁, es el de BV
+              con CV.
+            diagnosticos:
+              - si: 'a_distancia(de: proy_planta(solucion.O), d: vm_planta(V, solucion.O))'
+                mensaje: |
+                  Has llevado lo que V₁ se aparta de B₁M₁ **en la planta**, y la planta acorta: V
+                  está 33,8 mm más alto que la charnela. Si has caído en V₁, esa es la planta de V,
+                  no su abatido. La distancia de verdad es la hipotenusa del triángulo con ese
+                  cateto y la diferencia de cotas.
+                ejemplo: figura.punto("V1")
+              - si: '!en_recta(solucion.perp_charnela)'
+                mensaje: |
+                  Al abatir, V gira alrededor de BM en un plano perpendicular a ella, que es vertical
+                  porque BM es horizontal: en la planta, V₀ se mueve por la **perpendicular a B₁M₁
+                  que pasa por V₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.V_ab), dx: mm(6), dy: mm(-6))'
+              - si: 'a_distancia(de: proy_planta(solucion.O), d: diferencia_de_cotas(V, solucion.M))'
+                mensaje: |
+                  Has llevado la **diferencia de cotas** de V y la charnela, 33,8 mm, que es solo un
+                  cateto. Falta el otro, lo que V₁ se aparta de B₁M₁ en la planta: el radio es la
+                  hipotenusa, 39,5 mm.
+                ejemplo: 'uno(medir_sobre(solucion.perp_charnela, desde: proy_planta(solucion.O), distancia: diferencia_de_cotas(V, solucion.M)), 2)'
+              - si: siempre
+                mensaje: |
+                  V₀ está en la perpendicular a B₁M₁ por V₁, a la distancia real de V a la charnela:
+                  la hipotenusa del triángulo con lo que V₁ se aparta de B₁M₁ y lo que V está más
+                  alto que ella.
+        trazado:
+          - proy_alzado(segmento3(B, solucion.M))
+          - proy_planta(segmento3(B, solucion.M))
+          - 'segmento2(figura.punto("B1"), proy_planta(solucion.V_ab))'
+          - 'segmento2(proy_planta(solucion.V_ab), proy_planta(solucion.M))'
+        construccion:
+          - con: regla
+            traza: 'segmento2(figura.punto("V2"), figura.punto("V1"))'
+            porque: |
+              La línea de referencia de V, de V₂ a V₁, con la regla. Da la dirección de las
+              verticales, que la escuadra necesita para trazar horizontales y verticales, y sobre
+              ella se va a leer lo que V está más alto que la charnela.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("B2"), solucion.L_h2)'
+            guia: 'segmento2(figura.punto("V2"), figura.punto("V1"))'
+            porque: |
+              BV y CV se cortan en V y forman la cara VBC: su ángulo se ve abatiendo la cara. La
+              charnela más cómoda es una **horizontal** de la cara, y la que pasa por B ya tiene un
+              punto. Por B₂, perpendicular a la referencia de V, la horizontal, larga hacia la
+              derecha: corta V₂C₂ y la referencia de V, y más allá de V₂A₂ servirá para el
+              triángulo del radio.
+          - con: marca
+            traza: proy_alzado(solucion.M)
+            rotulo: M₂
+            porque: |
+              M₂, donde la horizontal de B₂ corta V₂C₂, la discontinua: M es el punto de la arista
+              VC con la cota de B, y BM es la charnela. Es un nombre nuestro.
+          - con: marca
+            traza: proy_alzado(solucion.N)
+            rotulo: N₂
+            porque: |
+              N₂, donde la horizontal de B₂ corta la referencia de V: el punto que está debajo de V, a
+              la cota de la charnela. V₂N₂ es lo que V está más alto que ella, 33,8 mm. Es un nombre
+              nuestro.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_alzado(solucion.M), solucion.L_vM)'
+            guia: 'segmento2(figura.punto("V2"), figura.punto("V1"))'
+            porque: |
+              Por M₂, la vertical, paralela a la referencia de V, hasta pasar V₁C₁: M está en VC, así
+              que su planta cae en V₁C₁. Por el camino cruza C₁A₁, que no es.
+          - con: marca
+            traza: proy_planta(solucion.M)
+            rotulo: M₁
+            porque: |
+              M₁, donde la vertical de M₂ corta V₁C₁, un poco por debajo de su cruce con C₁A₁.
+          - con: regla
+            traza: 'segmento2(figura.punto("B1"), proy_planta(solucion.M))'
+            porque: |
+              B₁M₁, con la regla: la planta de la horizontal BM, la **charnela**. Es horizontal, así
+              que en la planta está en verdadera magnitud, y B y M no se mueven al abatir.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("V1"), solucion.L_perp)'
+            guia: 'segmento2(figura.punto("B1"), proy_planta(solucion.M))'
+            porque: |
+              Al abatir, V gira alrededor de BM en un plano perpendicular a ella, y como BM es
+              horizontal, ese plano es vertical: en la planta, V₀ va por la **perpendicular a B₁M₁
+              que pasa por V₁**. Con la escuadra apoyada en B₁M₁, larga, hasta pasar la charnela y
+              bastante más allá, hacia arriba, donde la lámina está libre.
+          - con: marca
+            traza: proy_planta(solucion.O)
+            rotulo: O₁
+            porque: |
+              O₁, donde la perpendicular corta B₁M₁: el pie de V en la charnela, el centro del giro.
+              V₁O₁ es lo que V se aparta de la charnela en la planta, 20,5 mm. Es un nombre nuestro.
+          - con: compas
+            traza: 'arco(proy_alzado(solucion.N), por: solucion.Q, desde: desplaza(solucion.Q, dy: -8), hasta: desplaza(solucion.Q, dy: 8))'
+            toma: 'segmento2(figura.punto("V1"), proy_planta(solucion.O))'
+            porque: |
+              El radio del giro es la distancia de V a la charnela en verdadera magnitud, y la
+              planta no la da, porque V está más alto. Su triángulo se arma en el alzado: un cateto
+              es V₂N₂, lo que V sube, y el otro, V₁O₁, que se toma con el compás en la planta y se
+              lleva desde N₂ sobre la horizontal. La circunferencia la corta a los dos lados de N₂;
+              se toma el de la derecha, fuera del alzado de la pirámide.
+          - con: marca
+            traza: solucion.Q
+            rotulo: Q
+            porque: |
+              Q, donde el arco corta la horizontal de B₂, a la derecha. El triángulo V₂ N₂ Q es
+              rectángulo en N₂. Es un nombre nuestro.
+          - con: regla
+            traza: 'segmento2(figura.punto("V2"), solucion.Q)'
+            porque: |
+              La hipotenusa V₂Q es la distancia de V a la charnela en verdadera magnitud, 39,5 mm: el
+              radio con que V se abate. No es una arista, aunque cruce el alzado de la pirámide.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.O), por: proy_planta(solucion.V_ab), desde: desplaza(proy_planta(solucion.V_ab), dx: 7.7, dy: -6.4), hasta: desplaza(proy_planta(solucion.V_ab), dx: -7.7, dy: 6.4))'
+            toma: 'segmento2(figura.punto("V2"), solucion.Q)'
+            porque: |
+              Con el compás abierto a V₂Q y el centro en O₁, que está en la charnela, el arco hasta la
+              perpendicular. La circunferencia la corta dos veces, una a cada lado de B₁M₁, y los dos
+              abatidos dan el mismo ángulo; se toma el de arriba, al otro lado de la charnela, donde
+              la lámina está libre.
+          - con: marca
+            traza: proy_planta(solucion.V_ab)
+            rotulo: V₀
+            porque: |
+              V₀, donde el arco corta la perpendicular por encima de B₁M₁: V abatido, a 39,5 mm de la
+              charnela. B₁, M₁ y V₀ están en verdadera magnitud.
+          - con: regla
+            traza: '[segmento2(figura.punto("B1"), proy_planta(solucion.V_ab)), segmento2(proy_planta(solucion.V_ab), proy_planta(solucion.M))]'
+            porque: |
+              V₀B₁ es la arista VB abatida, y V₀M₁, la arista VC, porque M está en VC. El ángulo entre
+              ellas, en V₀, es el de BV con CV en verdadera magnitud: se mide con el transportador,
+              56,7°.
+        pista: |
+          (1) Por B₂, la horizontal hasta V₂C₂: ahí está M₂, y M₁ en su vertical, sobre V₁C₁. B₁M₁
+          es la charnela. (2) Por V₁, la perpendicular a B₁M₁. (3) El radio: un triángulo rectángulo
+          con lo que V₁ se aparta de B₁M₁ y lo que V₂ está por encima de la horizontal de B₂. (4)
+          Llévalo con el compás desde el pie, por la perpendicular.
+        desarrollo: |
+          En verde claro, la cara abatida: B₁, M₁ y V₀, con la charnela B₁M₁; y en el alzado, la misma
+          charnela, B₂M₂, que es una línea auxiliar y no una arista: va marcada aunque quede detrás de
+          la cara VAB. V₁ queda a 20,49 mm de la charnela y V, 33,82 mm más alto, así que V₀ cae a
+          39,55 mm de ella. Al otro lado de la charnela también vale, y el ángulo en V₀ es el mismo.
+
+      - tipo: calcular
+        titulo: La cara ABC con el plano horizontal
+        pregunta: ¿Qué ángulo forma la cara ABC con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '20.57'
+          receta: a1
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '69.43'
+            receta: 90 - a1
+            mensaje: |
+              Ese es el **complementario**: el ángulo de la cara con la vertical, el que forma B₂A₂
+              con la línea de referencia. El de la cara con el plano horizontal es el que forma B₂A₂
+              con la horizontal del papel.
+          - valor: '89.99'
+            receta: angulo_con_pv(base)
+            mensaje: |
+              Ese es el ángulo de la cara con el **plano vertical**: verse de canto en el alzado
+              quiere decir que la cara es perpendicular al plano vertical. Con el horizontal forma
+              lo que B₂A₂ con la horizontal del papel.
+          - valor: '11.76'
+            receta: angulo_con_ph(segmento3(A, C))
+            mensaje: |
+              Esa es la inclinación del lado **AC**, no la de la cara. Una cara se inclina lo que su
+              línea de máxima pendiente, la recta de más pendiente que contiene; aquí es frontal, y
+              se ve en el alzado, a lo largo de B₂A₂.
+        pista: |
+          A₂, B₂ y C₂ están en una recta: la base se ve de canto en el alzado, y ahí se ve su ángulo
+          con el horizontal.
+        desarrollo: |
+          La base es perpendicular al plano vertical: sus horizontales son de punta y su línea de
+          máxima pendiente es frontal, así que el alzado la da de canto. B₂A₂ avanza 67,69 mm y baja
+          25,40 mm:
+          $$ \arctan\frac{25{,}40}{67{,}69} \approx 20{,}57^{\circ} $$
+          En el Taller, el transportador lo da en B₂, entre B₂A₂ y la horizontal de B₂ que se trazó
+          para la charnela en el paso anterior: es esta misma medida. El lado AB forma con el
+          horizontal 20,24°, dentro del medio grado: aquí, medir ese lado en vez de la cara no se
+          distingue, pero es otro ángulo, y en otra cara no daría lo mismo.
+
+      - tipo: calcular
+        titulo: BV con CV
+        pregunta: ¿Qué ángulo forman las aristas BV y CV?
+        respuesta:
+          tipo: numero
+          valor: '56.66'
+          receta: a2
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '85.34'
+            receta: angulo_rectas(segmento3(solucion.N, B), segmento3(solucion.N, solucion.Ch))
+            mensaje: |
+              Ese es el ángulo **en la planta**, entre V₁B₁ y V₁C₁. La cara VBC no es horizontal, y
+              la planta deforma sus ángulos: el de verdad está en la cara abatida, en V₀.
+          - valor: '41.06'
+            receta: angulo_rectas(segmento3(V, solucion.B_fr), segmento3(V, solucion.C_fr))
+            mensaje: |
+              Ese es el ángulo **en el alzado**, entre V₂B₂ y V₂C₂. Ni VB ni VC son frontales, y el
+              alzado también deforma: el ángulo de verdad está en la cara abatida, en V₀.
+          - valor: '123.34'
+            receta: 180 - a2
+            mensaje: |
+              Has medido el ángulo del otro lado de V₀, entre V₀B₁ y la prolongación de V₀M₁. Dos
+              rectas que se cortan forman dos ángulos suplementarios, y el de las rectas es el
+              menor; aquí, además, es el de la cara: 180° − 123,3° = 56,7°.
+          - valor: '63.21'
+            receta: angulo_rectas(segmento3(solucion.V0_dz, B), segmento3(solucion.V0_dz, solucion.M))
+            mensaje: |
+              Has abatido V con un radio igual a la **diferencia de cotas**, 33,8 mm, que es solo un
+              cateto. El radio es la hipotenusa, con lo que V₁ se aparta de la charnela en la
+              planta: 39,5 mm, y con él el ángulo en V₀ sale menor.
+        pista: |
+          Mídelo en la cara abatida, en V₀, entre V₀B₁ y V₀M₁: B y M están en la charnela y no se han
+          movido.
+        desarrollo: |
+          En la cara abatida, V₀ está a 39,55 mm de la charnela, y el ángulo en V₀ entre V₀B₁ y V₀M₁
+          mide 56,66°. Se comprueba sin abatir con los tres lados de la cara en verdadera magnitud:
+          VB mide 54,84 mm, VC 55,78 mm y BC 52,50 mm, y el triángulo con esos lados tiene en V
+          56,66°.
+
+      - tipo: calcular
+        titulo: AV con la cara ABC
+        pregunta: ¿Qué ángulo forma la arista AV con la cara ABC?
+        respuesta:
+          tipo: numero
+          valor: '43.34'
+          receta: a3
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '46.66'
+            receta: 90 - a3
+            mensaje: |
+              Ese es el **complementario**: el ángulo de AV con la perpendicular a la base, el del
+              triángulo VTA en V. El de la recta con el plano está en A, donde la recta toca la base.
+              Y si has medido en el alzado, entre A₂V₂ y A₂B₂, sale 46,3°, casi lo mismo por
+              casualidad: ahí la base se ve de canto, pero AV no es frontal, y el alzado deforma su
+              ángulo.
+          - valor: '60.85'
+            receta: angulo_con_ph(segmento3(A, V))
+            mensaje: |
+              Ese es el ángulo de AV con el **plano horizontal**, el del triángulo de su verdadera
+              magnitud. La base no es horizontal: forma 20,6° con él, y el ángulo de AV se mide
+              contra la base.
+          - valor: '45.49'
+            receta: angulo_rectas(segmento3(A, V), segmento3(A, B))
+            mensaje: |
+              Ese es el ángulo de AV con la arista **AB**, una recta de la base que pasa por A. El
+              ángulo de una recta con un plano es el menor de los que forma con las rectas del plano,
+              el de su proyección AT: con cualquier otra, como AB, sale mayor.
+        pista: |
+          La base es de canto: la perpendicular desde V es frontal, y en el alzado se traza
+          perpendicular a B₂A₂ y se mide entera. Con ella y AV en verdadera magnitud, el triángulo
+          VTA es rectángulo en T.
+        desarrollo: |
+          En el alzado, la perpendicular desde V₂ a B₂A₂ tiene su pie en T₂ y mide 46,54 mm, que es
+          lo que mide VT, porque es frontal. AV mide 67,81 mm (su planta y su diferencia de cotas, en
+          el triángulo del tema 2). El triángulo VTA es rectángulo en T:
+          $$ \sin\delta = \frac{46{,}54}{67{,}81} \;\Longrightarrow\; \delta \approx 43{,}34^{\circ} $$
+          Abatiendo ese triángulo alrededor de VT, que es frontal, A cae en la prolongación de
+          B₂A₂, y el ángulo se mide ahí, en el alzado.
+
+      - tipo: calcular
+        titulo: El diedro de las caras AVB y AVC
+        pregunta: ¿Qué ángulo forman las caras AVB y AVC?
+        respuesta:
+          tipo: numero
+          valor: '61.03'
+          receta: a4
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '118.97'
+            receta: 180 - a4
+            mensaje: |
+              Ese es el **suplementario**. Con la arista AV de punta, las caras se ven como dos
+              rectas que salen del punto en que se ve la arista: forman 61,0° por el lado de la
+              pirámide, donde están B y C, y 119,0° entre una cara y la prolongación de la otra. Las
+              caras abarcan el primero.
+          - valor: '56.66'
+            receta: a2
+            mensaje: |
+              Ese es el ángulo de la cara BVC en V, entre las aristas VB y VC. El de dos caras no
+              está en ninguna cara: se mide en un plano perpendicular a su arista común, AV.
+          - valor: '61.95'
+            receta: angulo_rectas(segmento3(solucion.X, B), segmento3(solucion.X, C))
+            mensaje: |
+              Si has bajado desde B la perpendicular a AV y has unido su pie con C, esa segunda recta
+              no es perpendicular a AV, y el ángulo sale casi un grado mayor, 61,95°: las dos rectas
+              del corte tienen que ser perpendiculares a la arista, y eso lo da un plano perpendicular
+              a AV, o la arista de punta. Si lo has medido con la arista de punta, la diferencia es de
+              medida: repasa los dos cambios de plano y el transportador, que aquí cuenta medio grado.
+        pista: |
+          Con un cambio de plano de línea nueva paralela a A₁V₁, AV queda en verdadera magnitud; con
+          otro, de línea nueva perpendicular a la nueva AV, queda de punta. Ahí las dos caras se ven
+          de canto.
+        desarrollo: |
+          Con AV de punta, las caras AVB y AVC se ven como dos rectas que salen del punto en que se
+          ve la arista, una hacia B y otra hacia C, y el ángulo entre ellas, por donde está la
+          pirámide, es el diedro: 61,03°. Es agudo, así que es también el ángulo entre los dos
+          planos; su suplementario, 118,97°, es el de una cara con la prolongación de la otra.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'A₂, B₂ y C₂ están alineados: la base se ve de canto en el alzado, y su ángulo con el plano horizontal se lee ahí, 20,6°.'
+          - texto: BV y CV se cortan en V; se abate la cara VBC alrededor de su horizontal por B, y el ángulo en V₀ mide 56,7°.
+          - texto: 'La perpendicular desde V a la base es frontal, porque la base es de canto: el triángulo VTA, rectángulo en T, da en A el ángulo de AV con la base, 43,3°.'
+          - texto: El diedro de las caras AVB y AVC se ve con la arista AV de punta, tras dos cambios de plano; mide 61,0°, y como es agudo, es también el ángulo entre los dos planos.
+          - texto: Como la base se ve de canto en el alzado, el ángulo de AV con ella se mide ahí, entre A₂V₂ y A₂B₂.
+            trampa: true
+            mensaje: |
+              Hace falta además que AV esté en verdadera magnitud en esa vista, y AV no es frontal:
+              en el alzado sale 46,3°, y el ángulo mide 43,3°.
+    resolucion: |
+      **La base.** A₂, B₂ y C₂ están en una recta: la base ABC es perpendicular al plano
+      vertical, sus horizontales son de punta y su línea de máxima pendiente es frontal. El alzado
+      la da de canto, y su ángulo con el plano horizontal es el de B₂A₂ con la horizontal del papel:
+      20,57°.
+
+      **BV con CV.** Las dos aristas forman la cara VBC, que se abate alrededor de su horizontal
+      por B. Esa horizontal corta VC en M; B₁M₁ es la charnela. V₁ queda a 20,49 mm de ella en la
+      planta y V, 33,82 mm más alto, así que V₀ cae en la perpendicular a B₁M₁ por V₁, a 39,55 mm. El
+      ángulo en V₀ entre V₀B₁ y V₀M₁ es 56,66°. La planta daría 85,3° y el alzado 41,1°.
+
+      **AV con la base.** El ángulo de una recta con un plano es el de la recta con su proyección:
+      se baja desde V la perpendicular a la base, de pie T, y el triángulo VTA es rectángulo en T.
+      Con la base de canto, la perpendicular es frontal: en el alzado va perpendicular a B₂A₂ y mide
+      VT, 46,54 mm. Con AV, 67,81 mm, el ángulo en A es de 43,34°. En el alzado, A₂V₂ y A₂B₂ forman
+      46,3°, que no es: AV no es frontal.
+
+      **El diedro.** El ángulo de dos caras se ve con su arista de punta. Un cambio de plano de línea
+      nueva paralela a A₁V₁ deja AV en verdadera magnitud, y otro, perpendicular a la nueva AV, la
+      pone de punta: las caras AVB y AVC se ven como dos rectas que salen de un punto, y forman
+      61,03° por donde está la pirámide. Es agudo, así que el ángulo entre los dos planos es el
+      mismo; su suplementario, 118,97°, es el de una cara con la prolongación de la otra.
+
+  # ── 4 · La chapa paralela. Lo que enseña: la distancia entre dos planos se
+  #    lleva por la perpendicular, en verdadera magnitud; y la segunda chapa es
+  #    la primera trasladada, así que basta un vértice y paralelas.
+  - id: exeg-h52-4-la-chapa-paralela-a-25-mm
+    titulo: Una chapa igual y paralela a 25 mm, por encima
+    fuente: >-
+      Apartado 4 · Ejercicio 52 de la Colección de ejercicios de Geometría
+      Descriptiva, Sistema Diédrico Directo (págs. 53-57; el apartado 4, en las
+      53 y 57) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Sin fecha: es uno de los cuatro ejercicios bilingües de varios
+      apartados con que cierra la colección, del 52 al 55, y de ellos solo el 54
+      se titula «Examen». Se transcribe el castellano; la figura se redibuja
+      desde sus coordenadas.
+    nivel: examen
+    # Decisión: el enunciado no dice cómo se coloca la segunda chapa, salvo que
+    # es igual, paralela, a 25 mm y por encima. Aquí va justo encima: cada
+    # vértice en la perpendicular al plano por el de abajo, como las dos caras de
+    # un prisma recto. Es la única colocación que fija cada vértice; una chapa
+    # corrida en su plano también cumpliría la letra, y los diagnósticos de
+    # «subida en vertical» lo reconocen. Los 25 mm son de la lámina: la hoja no
+    # da escala. «Por encima» es del lado del plano hacia donde sube la cota.
+    enunciado: |
+      A una chapa triangular ABC hay que colocarle otra exactamente igual en paralelo, a 25 mm de distancia. Representar ambas chapas teniendo en cuenta que la segunda debe quedar por encima de la primera.
+
+      **Notas nuestras.** La figura es la cuarta de las cuatro páginas de figuras del ejercicio:
+      la chapa ABC en alzado (arriba) y planta (abajo), sin línea de tierra. La hoja no da escala:
+      los 25 mm se miden en la lámina. Tampoco dice cómo se coloca la segunda chapa, además de
+      igual, paralela y a 25 mm: aquí va justo encima de la primera, cada vértice en la
+      perpendicular al plano por el de abajo, como las dos caras de un prisma recto de 25 mm de
+      altura. Una chapa igual y paralela, a 25 mm pero corrida en su plano, también cumpliría la
+      letra del enunciado; la que va justo encima es la única que fija cada vértice. «Por encima»
+      es del lado del plano hacia donde sube la cota. Para la visibilidad, las dos chapas se toman
+      opacas. Llamamos A′, B′ y C′ a los vértices de la chapa nueva, y 1, 2, K y X a cuatro puntos
+      de la construcción; esos nombres son nuestros.
+    pide: Los vértices A′, B′ y C′ de la chapa nueva en las dos vistas, las dos chapas con lo visto y lo oculto, y, como pregunta nuestra, lo que sube cada vértice.
+    receta:
+      lamina: ex52-4
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        chapa: plano(A, B, C)
+      solucion:
+        # La chapa nueva, en el plano paralelo a 25 mm hacia donde sube la cota;
+        # cada vértice, en la perpendicular al plano por el de abajo. La de
+        # debajo es un diagnóstico.
+        arriba: 'paralelo_a_distancia(chapa, mm(25), sentido: ascendente)'
+        abajo: 'paralelo_a_distancia(chapa, mm(25), sentido: descendente)'
+        Ap: pie_en_plano(A, arriba)
+        Bp: pie_en_plano(B, arriba)
+        Cp: pie_en_plano(C, arriba)
+        Aa: pie_en_plano(A, abajo)
+        Ba: pie_en_plano(B, abajo)
+        Ca: pie_en_plano(C, abajo)
+        perp_A: perpendicular_a_plano(A, chapa)
+        perp_B: perpendicular_a_plano(B, chapa)
+        perp_C: perpendicular_a_plano(C, chapa)
+        sube_mm: en_mm(diferencia_de_cotas(A, Ap))
+        # Los errores. La chapa subida en vertical hasta el plano paralelo (a 25
+        # mm, pero corrida); y los 25 mm llevados sobre una proyección de la
+        # perpendicular, hacia arriba (el primero de los dos que da medir_sobre).
+        A_vert: 'corte_recta_plano(recta3(A, punto3(alzado: desplaza(figura.punto("A2"), dy: -10), planta: figura.punto("A1"))), arriba)'
+        B_vert: 'corte_recta_plano(recta3(B, punto3(alzado: desplaza(figura.punto("B2"), dy: -10), planta: figura.punto("B1"))), arriba)'
+        C_vert: 'corte_recta_plano(recta3(C, punto3(alzado: desplaza(figura.punto("C2"), dy: -10), planta: figura.punto("C1"))), arriba)'
+        A_25_planta: 'uno(medir_sobre(proy_planta(perp_A), desde: figura.punto("A1"), distancia: mm(25)), 1)'
+        B_25_planta: 'uno(medir_sobre(proy_planta(perp_B), desde: figura.punto("B1"), distancia: mm(25)), 1)'
+        C_25_planta: 'uno(medir_sobre(proy_planta(perp_C), desde: figura.punto("C1"), distancia: mm(25)), 1)'
+        A_25_alzado: 'uno(medir_sobre(proy_alzado(perp_A), desde: figura.punto("A2"), distancia: mm(25)), 1)'
+        B_25_alzado: 'uno(medir_sobre(proy_alzado(perp_B), desde: figura.punto("B2"), distancia: mm(25)), 1)'
+        C_25_alzado: 'uno(medir_sobre(proy_alzado(perp_C), desde: figura.punto("C2"), distancia: mm(25)), 1)'
+        # Para la construcción paso a paso. P1, el punto 1: donde la horizontal
+        # del plano por C corta AB. P2, el punto 2: donde la frontal por A corta
+        # BC. X, el punto de la perpendicular por A a la cota de C; K, el de la
+        # vertical de A a esa cota.
+        horizontal_C: 'plano(C, punto3(alzado: figura.punto("C2"), planta: desplaza(figura.punto("C1"), dy: 10)), punto3(alzado: desplaza(figura.punto("C2"), dx: 10), planta: desplaza(figura.punto("C1"), dx: 10)))'
+        frontal_A: 'plano(A, punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10)), punto3(alzado: desplaza(figura.punto("A2"), dy: -10), planta: figura.punto("A1")))'
+        P1: corte_recta_plano(segmento3(A, B), horizontal_C)
+        P2: corte_recta_plano(segmento3(B, C), frontal_A)
+        X: corte_recta_plano(perp_A, horizontal_C)
+        K: 'vertical_hasta(A, linea(segmento2(figura.punto("C2"), desplaza(figura.punto("C2"), dx: 10))))'
+        # Decisión: el punto auxiliar de la perpendicular es X, el que está a la
+        # cota de C: en el alzado cae en la horizontal de C₂, que ya se ha
+        # trazado, y su diferencia de cotas con A es A₂K₂. X0, X en el triángulo,
+        # a esa diferencia de X₁ por la perpendicular a A₁X₁, hacia la izquierda,
+        # donde la lámina está libre; Ap0, A′ en el triángulo, a 25 mm de A₁
+        # sobre la hipotenusa.
+        X0: 'uno(medir_sobre(perpendicular(por: proy_planta(X), a: segmento2(figura.punto("A1"), proy_planta(X))), desde: proy_planta(X), distancia: diferencia_de_cotas(A, X)), 1)'
+        Ap0: 'uno(medir_sobre(segmento2(figura.punto("A1"), X0), desde: figura.punto("A1"), distancia: mm(25)), 1)'
+        # Los extremos de las rectas largas de la construcción paso a paso: en el
+        # papel se trazan más allá del punto que van a dar, y no paran en él.
+        L_vA: 'desplaza(proy_alzado(K), dy: mm(-4))'
+        L_h2: 'desplaza(proy_alzado(X), dx: mm(-4))'
+        L_v1: 'desplaza(proy_planta(P1), dy: mm(4))'
+        L_f1: 'desplaza(proy_planta(P2), dx: mm(4))'
+        L_v2: 'desplaza(proy_alzado(P2), dy: mm(-4))'
+        L_pA1: 'uno(medir_sobre(segmento2(figura.punto("A1"), proy_planta(X)), desde: proy_planta(X), distancia: mm(4)), 1)'
+        L_pA2: 'uno(medir_sobre(segmento2(figura.punto("A2"), proy_alzado(X)), desde: proy_alzado(X), distancia: mm(4)), 1)'
+        L_vX: 'desplaza(proy_planta(X), dy: mm(4))'
+        L_pX: 'uno(medir_sobre(segmento2(proy_planta(X), X0), desde: X0, distancia: mm(4)), 1)'
+        L_Ap0: 'uno(medir_sobre(segmento2(Ap0, proy_planta(Ap)), desde: proy_planta(Ap), distancia: mm(3)), 1)'
+        L_vAp: 'desplaza(proy_alzado(Ap), dy: mm(-3))'
+        L_pB1: 'uno(medir_sobre(segmento2(figura.punto("B1"), proy_planta(Bp)), desde: proy_planta(Bp), distancia: mm(4)), 1)'
+        L_aB1: 'uno(medir_sobre(segmento2(proy_planta(Ap), proy_planta(Bp)), desde: proy_planta(Bp), distancia: mm(4)), 1)'
+        L_pC1: 'uno(medir_sobre(segmento2(figura.punto("C1"), proy_planta(Cp)), desde: proy_planta(Cp), distancia: mm(4)), 1)'
+        L_aC1: 'uno(medir_sobre(segmento2(proy_planta(Ap), proy_planta(Cp)), desde: proy_planta(Cp), distancia: mm(4)), 1)'
+        L_pB2: 'uno(medir_sobre(segmento2(figura.punto("B2"), proy_alzado(Bp)), desde: proy_alzado(Bp), distancia: mm(4)), 1)'
+        L_vB: 'desplaza(proy_alzado(Bp), dy: mm(-4))'
+        L_pC2: 'uno(medir_sobre(segmento2(figura.punto("C2"), proy_alzado(Cp)), desde: proy_alzado(Cp), distancia: mm(4)), 1)'
+        L_vC: 'desplaza(proy_alzado(Cp), dy: mm(-4))'
+    pasos:
+      - tipo: reconocer
+        pregunta: La chapa nueva es igual que ABC, paralela a ella, a 25 mm de distancia y por encima. ¿Cómo se llevan sus vértices?
+        opciones:
+          - texto: Por la perpendicular al plano ABC, 25 mm en verdadera magnitud; en la planta va perpendicular a las horizontales del plano, y en el alzado, a sus frontales
+            correcta: true
+            mensaje: |
+              Eso es. La distancia entre dos planos paralelos se mide por su perpendicular común.
+              Cada vértice se lleva por la perpendicular al plano, 25 mm hacia donde sube la cota.
+              La perpendicular no es horizontal ni frontal, así que los 25 mm se llevan en
+              verdadera magnitud; y en cada vista la chapa sale trasladada, con A′B′ igual y
+              paralela a AB.
+          # Las incorrectas, tan concretas como la buena (145 y 177 caracteres
+          # frente a 155): cada una es un método con su porqué.
+          - texto: 'Subiendo cada vértice 25 mm en vertical, porque «por encima» es más cota: el alzado sube 25 mm por las líneas de referencia y la planta no cambia'
+            mensaje: |
+              Así la chapa queda en un plano paralelo, pero a 17,0 mm, no a 25: la distancia entre
+              planos se mide por la perpendicular, y el plano está inclinado 47,3°. En vertical
+              habría que subirla 36,8 mm, y aun así quedaría corrida respecto de ABC.
+          - texto: 'Por la perpendicular a un lado, AB por ejemplo, porque la chapa se separa de él lo mismo que del plano: por cada vértice, perpendicular a A₁B₁ en la planta y a A₂B₂ en el alzado'
+            mensaje: |
+              Por un punto pasan infinitas perpendiculares a AB, y solo una es perpendicular al
+              plano; la que sale de trazar el ángulo recto con A₁B₁ y con A₂B₂ ni siquiera es
+              perpendicular a AB, porque el ángulo recto con AB solo se vería en una vista si AB
+              fuera horizontal o frontal. La perpendicular al plano se traza contra sus horizontales
+              y sus frontales.
+
+      - tipo: construir
+        titulo: Los vértices de la chapa nueva
+        intro: |
+          Marca A′, B′ y C′ en la planta y en el alzado. Por A, la perpendicular al plano ABC: en la
+          planta, perpendicular a las horizontales del plano; en el alzado, a sus frontales. Sobre
+          ella, 25 mm en verdadera magnitud hacia donde sube la cota: toma un punto X de la
+          perpendicular a la cota de C y arma el triángulo de A a X con su planta y su diferencia de
+          cotas. B′ y C′ salen trasladando: A′B′ y A′C′ son iguales y paralelas a AB y AC en cada
+          vista. B′₁ cae a 5,1 mm de donde su vertical cruza A₁B₁: amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Ap1
+            rotulo: A′₁
+            pide: el vértice A′ de la chapa nueva, en la planta
+            es: proy_planta(solucion.Ap)
+            bien: |
+              A′₁ está en la perpendicular a las horizontales del plano por A₁, del lado por donde
+              baja el plano, que es hacia donde se inclina la perpendicular que sube, a 18,4 mm de A₁:
+              lo que ocupan en la planta 25 mm de una recta que forma 42,7° con el plano horizontal.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Aa))
+                mensaje: |
+                  Ese es el vértice de la chapa de **debajo**. El enunciado la quiere por encima: la
+                  perpendicular, desde A, hacia donde sube la cota.
+                ejemplo: proy_planta(solucion.Aa)
+              - si: cerca_de(figura.punto("A1"))
+                mensaje: |
+                  Te has quedado en A₁: eso es subir la chapa **en vertical**, que no cambia la
+                  planta. Subida 25 mm en vertical, quedaría a 17,0 mm de la primera; para que quede
+                  a 25 habría que subirla 36,8 mm, y aun así iría corrida, no justo encima. Cada
+                  vértice va por la perpendicular al plano.
+                ejemplo: figura.punto("A1")
+              - si: 'a_distancia(de: figura.punto("A1"), d: mm(25)) && en_recta(proy_planta(solucion.perp_A))'
+                mensaje: |
+                  Has llevado los 25 mm **en la planta**, y la planta acorta la perpendicular: no es
+                  horizontal. Los 25 mm van en verdadera magnitud; en la planta se quedan en 18,4 mm.
+                ejemplo: solucion.A_25_planta
+              - si: '!en_recta(proy_planta(solucion.perp_A))'
+                mensaje: |
+                  En la planta, la perpendicular al plano por A va **perpendicular a las horizontales
+                  del plano**: es perpendicular a todas sus rectas, y el ángulo recto se ve en la
+                  planta contra las que son horizontales.
+                ejemplo: 'desplaza(proy_planta(solucion.Ap), dx: mm(6), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  A′₁ está en la perpendicular a las horizontales del plano por A₁, pero a otra
+                  distancia. Lleva los 25 mm en verdadera magnitud, con el triángulo de un tramo de
+                  la perpendicular: su planta y su diferencia de cotas.
+          - nombre: Ap2
+            rotulo: A′₂
+            pide: el vértice A′, en el alzado
+            es: proy_alzado(solucion.Ap)
+            bien: |
+              A′₂ está en la vertical de A′₁, sobre la perpendicular a las frontales por A₂, 17,0 mm
+              por encima de A₂: lo que sube un segmento de 25 mm que forma 42,7° con el plano
+              horizontal.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Aa))
+                mensaje: |
+                  Ese es el vértice de la chapa de **debajo**. Va por encima: A′ queda más alto que A.
+                ejemplo: proy_alzado(solucion.Aa)
+              - si: 'cerca_de(desplaza(figura.punto("A2"), dy: mm(-25)))'
+                mensaje: |
+                  Has subido A 25 mm **en vertical**. Así la chapa queda a 17,0 mm de la primera, no
+                  a 25: la distancia entre dos planos se mide por la perpendicular, y el plano está
+                  inclinado 47,3°.
+                ejemplo: 'desplaza(figura.punto("A2"), dy: mm(-25))'
+              - si: cerca_de(proy_alzado(solucion.A_vert))
+                mensaje: |
+                  Esa chapa sí está a 25 mm de la primera, pero subida en vertical: queda corrida
+                  respecto de ABC, no justo encima. Aquí va justo encima, cada vértice en la
+                  perpendicular al plano, como dicen las notas: A′₂ cae en la perpendicular a las
+                  frontales por A₂.
+                ejemplo: proy_alzado(solucion.A_vert)
+              - si: 'a_distancia(de: figura.punto("A2"), d: mm(25)) && en_recta(proy_alzado(solucion.perp_A))'
+                mensaje: |
+                  Has llevado los 25 mm **en el alzado**, y el alzado también acorta: la
+                  perpendicular no es frontal. A₂A′₂ mide 19,8 mm.
+                ejemplo: solucion.A_25_alzado
+              - si: '!en_vertical_de(Ap1)'
+                mensaje: |
+                  A′₂ va en la **vertical de A′₁**.
+                ejemplo: 'proy_alzado(punto_medio(segmento3(A, solucion.Ap)))'
+              - si: siempre
+                mensaje: |
+                  A′₂ va en la vertical de A′₁, sobre la perpendicular a las frontales del plano por
+                  A₂, 17,0 mm por encima de A₂.
+          - nombre: Bp1
+            rotulo: B′₁
+            pide: el vértice B′ de la chapa nueva, en la planta
+            es: proy_planta(solucion.Bp)
+            bien: |
+              B′₁ está en la paralela a A₁A′₁ por B₁, y A′₁B′₁ sale igual y paralela a A₁B₁: la chapa
+              nueva es ABC, trasladada.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Ba))
+                mensaje: |
+                  Ese es el vértice de la chapa de **debajo**. Va por encima, como A′.
+                ejemplo: proy_planta(solucion.Ba)
+              - si: cerca_de(figura.punto("B1"))
+                mensaje: |
+                  Te has quedado en B₁: eso es subir la chapa en vertical, que no cambia la planta.
+                  Cada vértice va por la perpendicular al plano: B′₁, en la paralela a A₁A′₁ por B₁.
+                ejemplo: figura.punto("B1")
+              - si: 'a_distancia(de: figura.punto("B1"), d: mm(25)) && en_recta(proy_planta(solucion.perp_B))'
+                mensaje: |
+                  Has llevado los 25 mm **en la planta**, que acorta: B′₁ va a 18,4 mm de B₁, lo
+                  mismo que A′₁ de A₁.
+                ejemplo: solucion.B_25_planta
+              - si: '!en_recta(proy_planta(solucion.perp_B))'
+                mensaje: |
+                  B′₁ va en la **paralela a A₁A′₁ por B₁**: todos los vértices se trasladan igual,
+                  por la perpendicular al plano.
+                ejemplo: 'desplaza(proy_planta(solucion.Bp), dx: mm(6), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  B′₁ está en la paralela a A₁A′₁ por B₁, a lo mismo que A′₁ de A₁: A′₁B′₁ sale igual
+                  y paralela a A₁B₁.
+          - nombre: Bp2
+            rotulo: B′₂
+            pide: el vértice B′, en el alzado
+            es: proy_alzado(solucion.Bp)
+            bien: |
+              B′₂ está en la vertical de B′₁, 17,0 mm por encima de B₂, como A′₂ sobre A₂: A′₂B′₂ sale
+              igual y paralela a A₂B₂.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Ba))
+                mensaje: |
+                  Ese es el vértice de la chapa de **debajo**. B′ queda más alto que B.
+                ejemplo: proy_alzado(solucion.Ba)
+              - si: 'cerca_de(desplaza(figura.punto("B2"), dy: mm(-25)))'
+                mensaje: |
+                  Has subido B 25 mm **en vertical**. Así la chapa queda a 17,0 mm de la primera, no
+                  a 25.
+                ejemplo: 'desplaza(figura.punto("B2"), dy: mm(-25))'
+              - si: cerca_de(proy_alzado(solucion.B_vert))
+                mensaje: |
+                  Esa chapa está a 25 mm, pero subida en vertical, corrida respecto de ABC. Aquí va
+                  justo encima, como dicen las notas: B′₂ cae en la paralela a A₂A′₂ por B₂.
+                ejemplo: proy_alzado(solucion.B_vert)
+              - si: 'a_distancia(de: figura.punto("B2"), d: mm(25)) && en_recta(proy_alzado(solucion.perp_B))'
+                mensaje: |
+                  Has llevado los 25 mm **en el alzado**, que también acorta: B₂B′₂ mide 19,8 mm,
+                  como A₂A′₂.
+                ejemplo: solucion.B_25_alzado
+              - si: '!en_vertical_de(Bp1)'
+                mensaje: |
+                  B′₂ va en la **vertical de B′₁**.
+                ejemplo: 'proy_alzado(punto_medio(segmento3(B, solucion.Bp)))'
+              - si: siempre
+                mensaje: |
+                  B′₂ va en la vertical de B′₁ y en la paralela a A₂A′₂ por B₂, 17,0 mm por encima de B₂.
+          - nombre: Cp1
+            rotulo: C′₁
+            pide: el vértice C′ de la chapa nueva, en la planta
+            es: proy_planta(solucion.Cp)
+            bien: |
+              C′₁ está en la paralela a A₁A′₁ por C₁, y A′₁C′₁ sale igual y paralela a A₁C₁.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Ca))
+                mensaje: |
+                  Ese es el vértice de la chapa de **debajo**. Va por encima, como A′ y B′.
+                ejemplo: proy_planta(solucion.Ca)
+              - si: cerca_de(figura.punto("C1"))
+                mensaje: |
+                  Te has quedado en C₁: eso es subir la chapa en vertical, que no cambia la planta.
+                  C′₁ va en la paralela a A₁A′₁ por C₁.
+                ejemplo: figura.punto("C1")
+              - si: 'a_distancia(de: figura.punto("C1"), d: mm(25)) && en_recta(proy_planta(solucion.perp_C))'
+                mensaje: |
+                  Has llevado los 25 mm **en la planta**, que acorta: C′₁ va a 18,4 mm de C₁.
+                ejemplo: solucion.C_25_planta
+              - si: '!en_recta(proy_planta(solucion.perp_C))'
+                mensaje: |
+                  C′₁ va en la **paralela a A₁A′₁ por C₁**: todos los vértices se trasladan igual.
+                ejemplo: 'desplaza(proy_planta(solucion.Cp), dx: mm(6), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  C′₁ está en la paralela a A₁A′₁ por C₁, a lo mismo que A′₁ de A₁: A′₁C′₁ sale igual
+                  y paralela a A₁C₁.
+          - nombre: Cp2
+            rotulo: C′₂
+            pide: el vértice C′, en el alzado
+            es: proy_alzado(solucion.Cp)
+            bien: |
+              C′₂ está en la vertical de C′₁, 17,0 mm por encima de C₂.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Ca))
+                mensaje: |
+                  Ese es el vértice de la chapa de **debajo**. C′ queda más alto que C.
+                ejemplo: proy_alzado(solucion.Ca)
+              - si: 'cerca_de(desplaza(figura.punto("C2"), dy: mm(-25)))'
+                mensaje: |
+                  Has subido C 25 mm **en vertical**. Así la chapa queda a 17,0 mm de la primera, no
+                  a 25.
+                ejemplo: 'desplaza(figura.punto("C2"), dy: mm(-25))'
+              - si: cerca_de(proy_alzado(solucion.C_vert))
+                mensaje: |
+                  Esa chapa está a 25 mm, pero subida en vertical, corrida respecto de ABC. Aquí va
+                  justo encima, como dicen las notas: C′₂ cae en la paralela a A₂A′₂ por C₂.
+                ejemplo: proy_alzado(solucion.C_vert)
+              - si: 'a_distancia(de: figura.punto("C2"), d: mm(25)) && en_recta(proy_alzado(solucion.perp_C))'
+                mensaje: |
+                  Has llevado los 25 mm **en el alzado**, que también acorta: C₂C′₂ mide 19,8 mm.
+                ejemplo: solucion.C_25_alzado
+              - si: '!en_vertical_de(Cp1)'
+                mensaje: |
+                  C′₂ va en la **vertical de C′₁**.
+                ejemplo: 'proy_alzado(punto_medio(segmento3(C, solucion.Cp)))'
+              - si: siempre
+                mensaje: |
+                  C′₂ va en la vertical de C′₁ y en la paralela a A₂A′₂ por C₂, 17,0 mm por encima de C₂.
+        trazado:
+          - 'proy_planta([segmento3(solucion.Ap, solucion.Bp), segmento3(solucion.Bp, solucion.Cp), segmento3(solucion.Cp, solucion.Ap)])'
+          - 'proy_alzado([segmento3(solucion.Ap, solucion.Bp), segmento3(solucion.Bp, solucion.Cp), segmento3(solucion.Cp, solucion.Ap)])'
+          - 'proy_planta([segmento3(A, solucion.Ap), segmento3(B, solucion.Bp), segmento3(C, solucion.Cp)])'
+          # Decisión: en el alzado, sin BB′. B₂B′₂ cae entero dentro de A′₂B′₂C′₂ y
+          # por detrás de la chapa nueva, que es opaca: no se ve, y el trazado no
+          # pinta en continua nada oculto. Los otros cinco tramos se ven enteros
+          # (guiones/segundo-camino.mjs).
+          - 'proy_alzado([segmento3(A, solucion.Ap), segmento3(C, solucion.Cp)])'
+        construccion:
+          - con: regla
+            traza: 'segmento2(figura.punto("A1"), solucion.L_vA)'
+            porque: |
+              La línea de referencia de A, con la regla, de A₁ por A₂ y prolongada hacia arriba. Da
+              la dirección de las verticales para la escuadra, y sobre ella se va a medir lo que un
+              punto de la perpendicular sube respecto de A; por eso se prolonga ya, antes de trazar
+              la horizontal que la va a cortar.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("C2"), solucion.L_h2)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              La perpendicular al plano se dibuja contra sus horizontales y sus frontales, y no hay
+              ninguna dibujada. Por C₂, perpendicular a la referencia, la horizontal del plano que
+              pasa por C, larga hacia la izquierda: corta A₂B₂ y la referencia de A, y más allá la
+              cortará la perpendicular por A₂.
+          - con: marca
+            traza: proy_alzado(solucion.P1)
+            rotulo: 1₂
+            porque: |
+              1₂, donde la horizontal de C₂ corta A₂B₂: el punto de AB a la cota de C. Cae en el punto
+              medio de A₂B₂. Es un nombre nuestro.
+          - con: marca
+            traza: proy_alzado(solucion.K)
+            rotulo: K₂
+            porque: |
+              K₂, donde la horizontal de C₂ corta la referencia de A: A₂K₂ es lo que la cota de C
+              supera a la de A, 30,0 mm. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_alzado(solucion.P1), solucion.L_v1)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Por 1₂, la vertical, hasta pasar A₁B₁: 1 está en AB, así que 1₁ cae en A₁B₁.
+          - con: marca
+            traza: proy_planta(solucion.P1)
+            rotulo: 1₁
+            porque: |
+              1₁, donde la vertical de 1₂ corta A₁B₁.
+          - con: regla
+            traza: 'segmento2(figura.punto("C1"), proy_planta(solucion.P1))'
+            porque: |
+              C₁1₁, con la regla: la planta de la horizontal del plano por C, en verdadera magnitud.
+              En la planta, la perpendicular al plano va perpendicular a ella.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("A1"), solucion.L_f1)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Ahora una frontal, que da la dirección de la perpendicular en el alzado. Una frontal
+              tiene todos sus puntos con el mismo alejamiento: en la planta va perpendicular a la
+              referencia. Por A₁, hacia la derecha, hasta pasar B₁C₁.
+          - con: marca
+            traza: proy_planta(solucion.P2)
+            rotulo: 2₁
+            porque: |
+              2₁, donde la frontal de A corta B₁C₁: el punto de BC con el alejamiento de A. Es un
+              nombre nuestro.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.P2), solucion.L_v2)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Por 2₁, la vertical, hasta pasar B₂C₂, porque 2 está en BC. Por el camino cruza C₂A₂, que
+              no es.
+          - con: marca
+            traza: proy_alzado(solucion.P2)
+            rotulo: 2₂
+            porque: |
+              2₂, donde la vertical de 2₁ corta B₂C₂.
+          - con: regla
+            traza: 'segmento2(figura.punto("A2"), proy_alzado(solucion.P2))'
+            porque: |
+              A₂2₂, con la regla: la frontal del plano por A, en verdadera magnitud en el alzado. En el
+              alzado, la perpendicular al plano va perpendicular a ella.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("A1"), solucion.L_pA1)'
+            guia: 'segmento2(figura.punto("C1"), proy_planta(solucion.P1))'
+            porque: |
+              La perpendicular al plano es perpendicular a todas sus rectas, y el ángulo recto se ve
+              donde la otra recta está en verdadera magnitud: en la planta, contra la horizontal. Por
+              A₁, con la escuadra apoyada en C₁1₁, la perpendicular, larga hacia abajo a la izquierda:
+              la que sale del plano hacia arriba se inclina hacia el lado por donde el plano baja, el
+              de A.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("A2"), solucion.L_pA2)'
+            guia: 'segmento2(figura.punto("A2"), proy_alzado(solucion.P2))'
+            porque: |
+              En el alzado, contra la frontal: por A₂, la perpendicular a A₂2₂, hacia arriba a la
+              izquierda, hasta pasar la horizontal de C₂.
+          - con: marca
+            traza: proy_alzado(solucion.X)
+            rotulo: X₂
+            porque: |
+              X₂, donde la perpendicular por A₂ corta la horizontal de C₂: X es un punto de la
+              perpendicular con la cota de C, elegido ahí porque su diferencia de cotas con A ya está
+              medida, A₂K₂. Es un nombre nuestro.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_alzado(solucion.X), solucion.L_vX)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Por X₂, la vertical, hasta pasar la perpendicular por A₁ de la planta, porque X está en
+              ella.
+          - con: marca
+            traza: proy_planta(solucion.X)
+            rotulo: X₁
+            porque: |
+              X₁, donde la vertical de X₂ corta la perpendicular por A₁.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.X), solucion.L_pX)'
+            guia: 'segmento2(figura.punto("A1"), proy_planta(solucion.X))'
+            porque: |
+              El triángulo de la verdadera magnitud de AX: un cateto es A₁X₁, su planta, y el otro, lo
+              que X sube sobre A, en perpendicular. Por X₁, la perpendicular a A₁X₁, hacia la
+              izquierda, donde la lámina está libre.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.X), por: solucion.X0, desde: desplaza(solucion.X0, dx: 3.9, dy: -5.8), hasta: desplaza(solucion.X0, dx: -3.9, dy: 5.8))'
+            toma: 'segmento2(figura.punto("A2"), proy_alzado(solucion.K))'
+            porque: |
+              Con el compás se toma en el alzado A₂K₂, lo que X está más alto que A, y se lleva desde X₁
+              sobre esa perpendicular. Solo se ha trazado hacia la izquierda, y el arco la corta una
+              vez.
+          - con: marca
+            traza: solucion.X0
+            rotulo: X₀
+            porque: |
+              X₀, donde el arco corta la perpendicular: X abatido, el tercer vértice del triángulo,
+              rectángulo en X₁.
+          - con: regla
+            traza: 'segmento2(figura.punto("A1"), solucion.X0)'
+            porque: |
+              La hipotenusa A₁X₀ es AX en verdadera magnitud, 44,2 mm: la perpendicular al plano,
+              abatida sobre la planta. Sobre ella ya se pueden medir los 25 mm.
+          - con: compas
+            traza: 'arco(figura.punto("A1"), por: solucion.Ap0, desde: desplaza(solucion.Ap0, dx: 1.7, dy: 7), hasta: desplaza(solucion.Ap0, dx: -1.7, dy: -7))'
+            porque: |
+              Los 25 mm del enunciado, con el compás, desde A₁ sobre A₁X₀. X está más alto que A, así
+              que hacia X₀ es hacia arriba; la misma recta, al otro lado de A₁, daría la chapa de
+              debajo.
+          - con: marca
+            traza: solucion.Ap0
+            rotulo: A′₀
+            porque: |
+              A′₀, donde el arco corta A₁X₀: A′ abatido, a 25 mm de A₁ en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: 'segmento2(solucion.Ap0, solucion.L_Ap0)'
+            guia: 'segmento2(proy_planta(solucion.X), solucion.X0)'
+            porque: |
+              Se deshace el abatimiento: A′ vuelve por la paralela a X₁X₀, con la escuadra deslizando
+              sobre el cartabón, hasta la perpendicular por A₁.
+          - con: marca
+            traza: proy_planta(solucion.Ap)
+            rotulo: A′₁
+            porque: |
+              A′₁, donde esa paralela corta la perpendicular por A₁: a 18,4 mm de A₁, porque la planta
+              acorta la perpendicular al plano.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.Ap), solucion.L_vAp)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Por A′₁, la vertical, hasta la perpendicular por A₂, porque A′ está en ella.
+          - con: marca
+            traza: proy_alzado(solucion.Ap)
+            rotulo: A′₂
+            porque: |
+              A′₂, donde la vertical de A′₁ corta la perpendicular por A₂: 17,0 mm por encima de A₂.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("B1"), solucion.L_pB1)'
+            guia: 'segmento2(figura.punto("A1"), proy_planta(solucion.Ap))'
+            porque: |
+              B′ y C′ salen trasladando: la chapa nueva es ABC corrida por la perpendicular,
+              igual para los tres vértices. Por B₁, la paralela a A₁A′₁, larga.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.Ap), solucion.L_aB1)'
+            guia: figura.segmento("BA1")
+            porque: |
+              Por A′₁, la paralela a A₁B₁, hasta cortar la anterior: A′B′ es igual y paralela a AB.
+          - con: marca
+            traza: proy_planta(solucion.Bp)
+            rotulo: B′₁
+            porque: |
+              B′₁, donde se cortan la paralela a A₁A′₁ por B₁ y la paralela a A₁B₁ por A′₁.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("C1"), solucion.L_pC1)'
+            guia: 'segmento2(figura.punto("A1"), proy_planta(solucion.Ap))'
+            porque: |
+              Lo mismo con C: por C₁, la paralela a A₁A′₁, larga.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.Ap), solucion.L_aC1)'
+            guia: figura.segmento("AC1")
+            porque: |
+              Por A′₁, la paralela a A₁C₁, hasta cortarla: A′C′ es igual y paralela a AC.
+          - con: marca
+            traza: proy_planta(solucion.Cp)
+            rotulo: C′₁
+            porque: |
+              C′₁, donde se cortan la paralela a A₁A′₁ por C₁ y la paralela a A₁C₁ por A′₁.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("B2"), solucion.L_pB2)'
+            guia: 'segmento2(figura.punto("A2"), proy_alzado(solucion.Ap))'
+            porque: |
+              En el alzado, la traslación es A₂A′₂: por B₂, su paralela, larga hacia arriba.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.Bp), solucion.L_vB)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Por B′₁, la vertical, hasta pasar esa paralela.
+          - con: marca
+            traza: proy_alzado(solucion.Bp)
+            rotulo: B′₂
+            porque: |
+              B′₂, donde la vertical de B′₁ corta la paralela a A₂A′₂ por B₂.
+          - con: escuadra-cartabon
+            traza: 'segmento2(figura.punto("C2"), solucion.L_pC2)'
+            guia: 'segmento2(figura.punto("A2"), proy_alzado(solucion.Ap))'
+            porque: |
+              Por C₂, la paralela a A₂A′₂, larga hacia arriba.
+          - con: escuadra-cartabon
+            traza: 'segmento2(proy_planta(solucion.Cp), solucion.L_vC)'
+            guia: 'segmento2(figura.punto("A1"), figura.punto("A2"))'
+            porque: |
+              Por C′₁, la vertical, hasta pasar esa paralela.
+          - con: marca
+            traza: proy_alzado(solucion.Cp)
+            rotulo: C′₂
+            porque: |
+              C′₂, donde la vertical de C′₁ corta la paralela a A₂A′₂ por C₂.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.Ap), proy_planta(solucion.Bp)), segmento2(proy_planta(solucion.Bp), proy_planta(solucion.Cp)), segmento2(proy_planta(solucion.Cp), proy_planta(solucion.Ap))]'
+            porque: |
+              La chapa nueva en la planta, con la regla: A′₁B′₁C′₁, igual que A₁B₁C₁ y corrida 18,4 mm.
+          - con: regla
+            traza: '[segmento2(proy_alzado(solucion.Ap), proy_alzado(solucion.Bp)), segmento2(proy_alzado(solucion.Bp), proy_alzado(solucion.Cp)), segmento2(proy_alzado(solucion.Cp), proy_alzado(solucion.Ap))]'
+            porque: |
+              Y en el alzado: A′₂B′₂C′₂, igual que A₂B₂C₂ y corrida 19,8 mm hacia arriba a la izquierda.
+        pista: |
+          (1) Una horizontal del plano (por C) y una frontal (por A). (2) Por A₁, la perpendicular a la
+          horizontal; por A₂, la perpendicular a la frontal. (3) Un punto X de la perpendicular, a la
+          cota de C: con su planta y su diferencia de cotas con A, el triángulo de la verdadera
+          magnitud, y sobre su hipotenusa, 25 mm desde A. (4) De vuelta a las dos vistas: es A′. (5) B′
+          y C′, con paralelas: la chapa se traslada entera.
+        desarrollo: |
+          En verde claro, la chapa nueva en las dos vistas, y los tramos AA′, BB′ y CC′ de las
+          perpendiculares, salvo B₂B′₂ en el alzado: cae entero dentro de A′₂B′₂C′₂, por detrás de la
+          chapa nueva, que es opaca, y no se ve. El plano forma 47,3° con el horizontal, y sus
+          perpendiculares, 42,7°: los 25 mm ocupan 18,4 mm en la planta y 19,8 mm en el alzado, y
+          suben 17,0 mm.
+
+      - tipo: dibujar
+        consigna: |
+          Repasa las dos chapas en la planta y en el alzado, con lo visto en continua y lo oculto en
+          discontinua. Toma las dos chapas como opacas.
+        comprueba:
+          - punto: En la planta, la chapa A′B′C′ se ve entera.
+            porque: >-
+              Desde arriba se ve lo que tiene más cota, y la chapa nueva está por encima de ABC en
+              todos sus puntos: en los dos cruces aparentes de su contorno con A₁C₁, va 36,8 mm más
+              alta.
+          - punto: En la planta, A₁C₁ va en discontinua entre sus cruces con A′₁B′₁ y con B′₁C′₁; A₁B₁ y B₁C₁ se ven enteras.
+            porque: >-
+              Ese tramo de AC queda debajo de la chapa nueva, que es opaca. Los otros dos lados de ABC
+              caen fuera del contorno de A′₁B′₁C′₁.
+          - punto: En el alzado, la chapa A′B′C′ se ve entera.
+            porque: >-
+              La perpendicular que sube desde el plano va también hacia delante, porque gana
+              alejamiento: la chapa nueva queda delante de ABC. En los cruces aparentes de C′₂A′₂ con
+              A₂B₂ y con B₂C₂, va 40,9 mm por delante.
+          - punto: En el alzado, la esquina de B queda tapada; A₂B₂ y B₂C₂ van en discontinua desde sus cruces con C′₂A′₂ hasta B₂, y C₂A₂ se ve entera.
+            porque: >-
+              B₂ cae dentro del contorno de A′₂B′₂C′₂, y B está detrás de la chapa nueva: lo que de los
+              dos lados que llegan a B queda dentro de ese contorno no se ve.
+        figura: |
+          <figure>
+          <svg viewBox="0 0 320 600" role="img" width="320" height="600" aria-labelledby="egex524-t egex524-d">
+            <title id="egex524-t">Las dos chapas, con lo que tapa la nueva</title>
+            <desc id="egex524-d">Alzado arriba y planta abajo, en las mismas verticales. La chapa ABC, en violeta, y la chapa nueva A′B′C′, en azul, igual que ABC y trasladada por la perpendicular al plano: 25 mm por encima, hacia arriba a la izquierda en el alzado y hacia abajo a la izquierda en la planta. La chapa nueva se ve entera en las dos vistas, porque está por encima de ABC y, en el alzado, también delante. En la planta va en discontinua el tramo de A₁C₁ que queda debajo de A′₁B′₁C′₁, entre sus cruces con A′₁B′₁ y con B′₁C′₁. En el alzado van en discontinua los dos tramos de A₂B₂ y B₂C₂ que llegan a B₂, desde sus cruces con C′₂A′₂: la esquina de B queda detrás de la chapa nueva.</desc>
+            <style>
+                .egex524-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
+                .egex524-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
+                .egex524-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
+                .egex524-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .egex524-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
+                .egex524-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
+                .egex524-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+                .egex524-f { fill: var(--live); fill-opacity: .12; stroke: none; }
+                .egex524-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
+                .egex524-pt { fill: var(--live); }
+                .egex524-punta { fill: var(--live); stroke: none; }
+                .egex524-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
+                .egex524-o { fill: var(--flag); }
+                .egex524-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+                .egex524-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
+                .egex524-pv { stroke: var(--d1); stroke-width: 2; fill: none; stroke-linecap: round; }
+                .egex524-lv { stroke: var(--alt); stroke-width: 1.6; fill: none; stroke-linecap: round; }
+                .egex524-lo { stroke: var(--alt); stroke-width: 1.3; fill: none; stroke-dasharray: 4 3; }
+                .egex524-pf { fill: var(--d1); fill-opacity: .10; stroke: none; }
+                .egex524-lf { fill: var(--alt); fill-opacity: .06; stroke: none; }
+                .egex524-pp { fill: var(--d1); }
+            </style>
+            <path class="egex524-lf" d="M64.5 250.6L171.5 90.1L278.5 170.4Z"/>
+            <path class="egex524-lf" d="M64.5 464.6L171.5 357.6L278.5 518Z"/>
+            <path class="egex524-pf" d="M37.3 205.3L144.2 44.7L251.2 125Z"/>
+            <path class="egex524-pf" d="M37.3 505.5L144.2 398.5L251.2 558.9Z"/>
+            <path class="egex524-lo" d="M113.9 176.5L171.5 90.1"/>
+            <path class="egex524-lo" d="M171.5 90.1L229.1 133.3"/>
+            <path class="egex524-lo" d="M213.1 501.7L75.4 467.3"/>
+            <path class="egex524-lv" d="M64.5 250.6L113.9 176.5"/>
+            <path class="egex524-lv" d="M229.1 133.3L278.5 170.4"/>
+            <path class="egex524-lv" d="M278.5 170.4L64.5 250.6"/>
+            <path class="egex524-pv" d="M37.3 205.3L144.2 44.7"/>
+            <path class="egex524-pv" d="M144.2 44.7L251.2 125"/>
+            <path class="egex524-pv" d="M251.2 125L229.1 133.3"/>
+            <path class="egex524-pv" d="M229.1 133.3L113.9 176.5"/>
+            <path class="egex524-pv" d="M113.9 176.5L37.3 205.3"/>
+            <path class="egex524-lv" d="M64.5 464.6L171.5 357.6"/>
+            <path class="egex524-lv" d="M171.5 357.6L278.5 518"/>
+            <path class="egex524-lv" d="M278.5 518L213.1 501.7"/>
+            <path class="egex524-lv" d="M75.4 467.3L64.5 464.6"/>
+            <path class="egex524-pv" d="M37.3 505.5L75.4 467.3"/>
+            <path class="egex524-pv" d="M75.4 467.3L144.2 398.5"/>
+            <path class="egex524-pv" d="M144.2 398.5L213.1 501.7"/>
+            <path class="egex524-pv" d="M213.1 501.7L251.2 558.9"/>
+            <path class="egex524-pv" d="M251.2 558.9L37.3 505.5"/>
+            <text class="egex524-n" x="171.6" y="77.2" text-anchor="start" fill="var(--alt)">B₂</text>
+            <text class="egex524-n" x="287.8" y="176.4" text-anchor="start" fill="var(--alt)">C₂</text>
+            <text class="egex524-n" x="45.5" y="250.6" text-anchor="start" fill="var(--alt)">A₂</text>
+            <text class="egex524-n" x="187" y="361.2" text-anchor="start" fill="var(--alt)">B₁</text>
+            <text class="egex524-n" x="45.9" y="473.4" text-anchor="start" fill="var(--alt)">A₁</text>
+            <text class="egex524-n" x="289" y="518.4" text-anchor="start" fill="var(--alt)">C₁</text>
+            <circle class="egex524-pp" cx="37.3" cy="205.3" r="2.2"/>
+            <text class="egex524-l" x="32.3" y="208.3" text-anchor="end" fill="var(--d1)">A′₂</text>
+            <circle class="egex524-pp" cx="144.2" cy="44.7" r="2.2"/>
+            <text class="egex524-l" x="150.2" y="46.7" text-anchor="start" fill="var(--d1)">B′₂</text>
+            <circle class="egex524-pp" cx="251.2" cy="125" r="2.2"/>
+            <text class="egex524-l" x="257.2" y="123" text-anchor="start" fill="var(--d1)">C′₂</text>
+            <circle class="egex524-pp" cx="37.3" cy="505.5" r="2.2"/>
+            <text class="egex524-l" x="32.3" y="509.5" text-anchor="end" fill="var(--d1)">A′₁</text>
+            <circle class="egex524-pp" cx="144.2" cy="398.5" r="2.2"/>
+            <text class="egex524-l" x="138.2" y="394.5" text-anchor="end" fill="var(--d1)">B′₁</text>
+            <circle class="egex524-pp" cx="251.2" cy="558.9" r="2.2"/>
+            <text class="egex524-l" x="256.2" y="567.9" text-anchor="start" fill="var(--d1)">C′₁</text>
+          </svg>
+          <figcaption>Las dos chapas, opacas: en continua lo visto y en discontinua lo oculto, en el alzado arriba y en la planta abajo. En violeta la chapa ABC y en azul la nueva, A′B′C′, que se ve entera.</figcaption>
+          </figure>
+        veredicto: >-
+          Si tu dibujo tiene en discontinua un tramo de A₁C₁ en la planta y la esquina de B en el
+          alzado, con la chapa nueva entera en continua en las dos vistas, la visibilidad está
+          bien.
+
+      - tipo: calcular
+        titulo: Lo que sube cada vértice
+        pregunta: ¿Cuántos milímetros está cada vértice de la chapa nueva más alto que el de la chapa ABC? Por ejemplo, A′ sobre A.
+        respuesta:
+          tipo: numero
+          valor: '16.97'
+          receta: sube_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '25'
+            mensaje: |
+              Esa es la distancia entre las dos chapas, que se mide por la perpendicular al plano. La
+              perpendicular forma 47,3° con la vertical, el mismo ángulo que el plano con el
+              horizontal, y de sus 25 mm solo sube 25 · cos 47,3° = 17,0 mm.
+          - valor: '19.79'
+            receta: en_mm(vm_alzado(A, solucion.Ap))
+            mensaje: |
+              Eso es lo que mide **A₂A′₂ en el alzado**. La pregunta es lo que sube: la diferencia de
+              alturas entre A₂ y A′₂, en vertical, no la longitud del tramo, que va inclinado.
+          - valor: '23.10'
+            receta: en_mm(mm(25) * diferencia_de_cotas(A, solucion.Ap) / vm_planta(A, solucion.Ap))
+            mensaje: |
+              Has llevado los 25 mm **sobre la planta** de la perpendicular, y la planta acorta: así
+              A′ sube 23,1 mm, y la chapa queda a 34,0 mm de la primera.
+          - valor: '21.44'
+            receta: en_mm(mm(25) * diferencia_de_cotas(A, solucion.Ap) / vm_alzado(A, solucion.Ap))
+            mensaje: |
+              Has llevado los 25 mm **sobre el alzado** de la perpendicular, que también acorta: A′
+              sube 21,4 mm, y la chapa queda a 31,6 mm de la primera.
+          - valor: '36.84'
+            receta: en_mm(diferencia_de_cotas(A, solucion.A_vert))
+            mensaje: |
+              Esa es la distancia **en vertical** entre los dos planos. Subida así, la chapa queda a
+              25 mm, pero corrida respecto de ABC. Aquí va justo encima, por la perpendicular, como
+              dicen las notas, y cada vértice sube menos: 25 · cos 47,3° = 17,0 mm.
+        pista: |
+          La perpendicular al plano forma con la vertical el mismo ángulo que el plano con el
+          horizontal, 47,3°: de sus 25 mm, lo que sube es su proyección sobre la vertical. En el
+          paso de construir, mide A′₀A′₁ en el triángulo: es el cateto de lo que sube.
+        desarrollo: |
+          El plano forma 47,26° con el horizontal, y su perpendicular, 47,26° con la vertical. Cada
+          vértice sube
+          $$ 25 \cos 47{,}26^{\circ} \approx 16{,}97 \text{ mm} $$
+          y se corre 18,36 mm en la planta. En el alzado, A₂A′₂ mide 19,79 mm.
+
+          En la construcción se lee en el triángulo: A′₀A′₁, paralela a X₁X₀, es lo que A′ está más
+          alto que A, porque el triángulo de AA′ es el de AX en pequeño. En la misma lámina hay otras
+          dos medidas que caen dentro del milímetro por casualidad: C₂2₂, el tramo de B₂C₂ entre C₂ y
+          el punto 2, mide 16,66 mm, y A′₂K₂, de A′₂ al punto K₂ de la referencia de A, 16,55 mm. La
+          primera es un trozo del lado BC visto en el alzado, inclinado, y la segunda une dos puntos
+          que no están en ninguna recta del dibujo: ninguna mide lo que sube nada. La casilla no las
+          distingue, pero lo que sube A′ es A′₀A′₁, o lo que A′₂ está por encima de la horizontal de
+          A₂.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'La chapa nueva está en un plano paralelo a ABC y a 25 mm: cada vértice se lleva por la perpendicular al plano.'
+          - texto: En la planta, la perpendicular va perpendicular a las horizontales del plano; en el alzado, a sus frontales.
+          - texto: Los 25 mm se llevan en verdadera magnitud, con el triángulo de un tramo de la perpendicular, porque no es horizontal ni frontal, y hacia donde sube la cota, porque va por encima.
+          - texto: B′ y C′ salen trasladando, porque A′B′ y A′C′ son iguales y paralelas a AB y AC en cada vista.
+          - texto: Se sube cada vértice 25 mm en el alzado, en vertical, y la planta no cambia.
+            trampa: true
+            mensaje: |
+              Subiendo en vertical, la chapa queda en un plano paralelo, pero a 17,0 mm: la distancia
+              entre planos se mide por la perpendicular, y el plano está inclinado 47,3°.
+    resolucion: |
+      **La chapa nueva.** Es igual que ABC, está en un plano paralelo a 25 mm y va por encima.
+      Aquí va justo encima: cada vértice en la perpendicular al plano por el mismo vértice de ABC,
+      como dicen las notas. Así la chapa nueva es ABC trasladada, y basta construir un vértice.
+
+      **La perpendicular.** Se traza contra una horizontal y una frontal del plano. La horizontal
+      por C corta AB en su punto medio, 1; la frontal por A corta BC en 2. Por A₁, la perpendicular a
+      C₁1₁; por A₂, la perpendicular a A₂2₂. La que sale hacia arriba se inclina, en la planta, hacia
+      el lado por donde baja el plano.
+
+      **Los 25 mm.** La perpendicular forma 42,7° con el plano horizontal (el plano, 47,3°), así que
+      los 25 mm se llevan en verdadera magnitud: con X, el punto de la perpendicular a la cota de C,
+      se arma el triángulo de AX, 44,2 mm, y sobre su hipotenusa se miden 25 mm desde A. De vuelta a
+      las vistas, A′₁ queda a 18,4 mm de A₁ y A′₂, 17,0 mm por encima de A₂. Un cambio de plano con la
+      línea nueva perpendicular a la horizontal, que deja el plano de canto, daría lo mismo.
+
+      **B′ y C′.** Por paralelas: B′₁ en la paralela a A₁A′₁ por B₁ y en la paralela a A₁B₁ por A′₁; en
+      el alzado, en la vertical de B′₁ y en la paralela a A₂A′₂ por B₂. Igual C′.
+
+      **Lo que se ve.** La chapa nueva está por encima de ABC y, como la perpendicular que sube va
+      también hacia delante, delante de ella: se ve entera en las dos vistas. De ABC quedan ocultos
+      un tramo de A₁C₁ en la planta y la esquina de B en el alzado.
