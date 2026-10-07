@@ -671,6 +671,20 @@ minoría a propósito: a 26 de septiembre de 2026, `verificar`, `redactar` y
 > lámina. Es el mismo límite que `dibujar` tiene con el papel, y se resuelve
 > igual: la lámina, lo que se pide y la resolución completa siguen ahí, y el
 > modo completo dibuja la solución encima.
+>
+> **La visibilidad, desde el 7 de octubre de 2026**: un `construir` puede
+> llevar `tramos`, cada arista partida donde cambia de vista a oculta, con su
+> `tipo` y el `porque` que lee quien la pasa del otro tipo. El alumno los
+> pasa a limpio con «arista vista» y «arista oculta» (`visto` y `oculto` en
+> `herramientas`), y se corrigen al momento (`casaTramo`, en
+> `lib/diedrico-corrige`): un trazo de punta a punta de tramos seguidos del
+> mismo tipo vale de un tirón. Los cambios se escriben con
+> `cruce_aparente(r, s)`, el cruce en el papel de dos rectas de la lámina, y
+> la construcción paso a paso pasa a limpio cada tramo con `con:
+> arista-vista` o `arista-oculta`; el build exige que estén todos, que ninguno
+> se pise con otro y que ninguno dependa de una elección. El primero es la
+> 55·2, cuyo `dibujar` de visibilidad sustituye: lo que piden 5 de las 13
+> preguntas de las hojas 52-55 ya no se compara a ojo.
 
 > **`dibujar` nace el 14 de septiembre de 2026**, y el motivo es una cifra:
 > de los 425 ejercicios de examen de Cálculo, **186 piden dibujar, representar
@@ -1787,6 +1801,11 @@ la colección, los primeros talleres en una página de examen). Tres cosas:
   a otra cosa de la lámina—, se crea por la **puerta de pruebas** del Taller
   (el evento `taller:punto`, sin botón: el alumno no la ve) y se avisa sin
   bloquear. Lo único que falla es un punto exacto que el Taller no acepta.
+
+**Las aristas** (7 de octubre de 2026): cada tramo se prueba dos veces, por
+la puerta de pruebas `taller:arista` con el tipo cambiado —tiene que decir su
+porqué y no quedarse dibujado— y como un alumno, con su herramienta y sus dos
+extremos; si el imán se lleva un extremo, por la puerta, y se avisa.
 
 `TALLERES_SOLO=ejercicio-54 npm run talleres` prueba solo las páginas cuya
 ruta lo contiene.

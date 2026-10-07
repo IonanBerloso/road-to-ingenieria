@@ -695,6 +695,22 @@ export const FUNCIONES: Readonly<Record<string, Funcion>> = {
       return { k: 'seg2', a: p, b: q };
     },
   },
+  /* El cruce aparente de dos rectas de la lámina: donde se cortan en el
+     papel, aunque en el espacio se crucen sin tocarse. Es donde una arista
+     puede cambiar de vista a oculta (el Taller con segmentos, 7 de octubre de
+     2026). Las rectas se toman enteras, prolongadas. */
+  cruce_aparente: {
+    posicion: 2,
+    hace: ([r, s]) => {
+      const a = comoRecta2(r, 'cruce_aparente()');
+      const b = comoRecta2(s, 'cruce_aparente()');
+      const det = a.d[0] * b.d[1] - a.d[1] * b.d[0];
+      const escala = Math.hypot(...a.d) * Math.hypot(...b.d);
+      if (escala < 1e-12 || Math.abs(det) < 1e-9 * escala) throw new Error('cruce_aparente(): las dos rectas son paralelas, y no se cruzan');
+      const t = ((b.p[0] - a.p[0]) * b.d[1] - (b.p[1] - a.p[1]) * b.d[0]) / det;
+      return { k: 'p2', v: [a.p[0] + t * a.d[0], a.p[1] + t * a.d[1]] };
+    },
+  },
   /* P abatido con el mismo giro que llevó `de` a `con`: toda una figura
      abatida cae junta. Si `con` es una elección, el resultado la hereda rama
      a rama, y la figura entera es una sola elección. */

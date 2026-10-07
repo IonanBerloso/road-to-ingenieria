@@ -1180,6 +1180,18 @@ ejercicios:
         L_vP: 'desplaza(proy_alzado(P), dy: mm(-3))'
         L_eje2: 'uno(medir_sobre(proy_alzado(segmento3(O, V)), desde: proy_alzado(V), distancia: mm(5)), 1)'
         L_vV: 'desplaza(proy_alzado(V), dy: mm(-5))'
+        # La visibilidad: los cruces aparentes donde una arista pasa de vista a
+        # oculta, cada uno con la arista que lo da (k_<borde>_<arista>).
+        k_BC_VE: 'cruce_aparente(figura.segmento("BC1"), segmento2(proy_planta(V), figura.punto("E1")))'
+        k_BC_VF: 'cruce_aparente(figura.segmento("BC1"), segmento2(proy_planta(V), figura.punto("F1")))'
+        k_AD_GF: 'cruce_aparente(figura.segmento("AD1"), segmento2(proy_planta(G), figura.punto("F1")))'
+        k_AD_EG: 'cruce_aparente(figura.segmento("AD1"), segmento2(figura.punto("E1"), proy_planta(G)))'
+        k_VH_DC: 'cruce_aparente(segmento2(proy_alzado(V), proy_alzado(H)), figura.segmento("DC2"))'
+        k_VH_BC: 'cruce_aparente(segmento2(proy_alzado(V), proy_alzado(H)), figura.segmento("BC2"))'
+        k_EG_AD: 'cruce_aparente(segmento2(figura.punto("E2"), proy_alzado(G)), figura.segmento("AD2"))'
+        k_GF_AD: 'cruce_aparente(segmento2(proy_alzado(G), figura.punto("F2")), figura.segmento("AD2"))'
+        k_FH_BC: 'cruce_aparente(segmento2(figura.punto("F2"), proy_alzado(H)), figura.segmento("BC2"))'
+        k_HE_BC: 'cruce_aparente(segmento2(proy_alzado(H), figura.punto("E2")), figura.segmento("BC2"))'
       comprueba:
         - en_plano(C, cara)
         - en_plano(E, cara)
@@ -1207,12 +1219,20 @@ ejercicios:
               hasta 17,34 mm.
 
       - tipo: construir
-        titulo: La base y el vértice
+        titulo: La base, el vértice y lo que se ve
         intro: |
           Llamamos G y H a los dos vértices de la base que faltan, G el de mayor cota y H el
           de menor, y V al vértice de la pirámide. Marca G, H y V en la planta y en el
           alzado. La pirámide es la de mayor cota: V queda por encima del plano ABCD.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+
+          Después, pásala a limpio en las dos vistas con «arista vista» y «arista oculta», y
+          también los bordes de la lámina que la pirámide tapa en parte, B₁C₁ y D₁A₁ en la
+          planta; los demás bordes se ven enteros y ya están dibujados. Cada arista se corta
+          solo donde cambia su visibilidad: para tener ese punto, traza antes con la recta la
+          arista que la cruza. Tomamos ABCD como una lámina opaca, que la hoja no lo precisa;
+          con el plano transparente, en el alzado solo VE iría oculta. El tramo oculto de VH,
+          junto a C₂, mide 1,8 mm: amplía con la lupa.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: G1
@@ -1335,23 +1355,96 @@ ejercicios:
                 mensaje: |
                   Si ya tienes V₁: V₂ está en su vertical, sobre la perpendicular al plano por el
                   centro de la base, que en el alzado va perpendicular a las frontales.
-        trazado:
-          - proy_planta(segmento3(E, solucion.G))
-          - proy_planta(segmento3(solucion.G, F))
-          - proy_planta(segmento3(F, solucion.H))
-          - proy_planta(segmento3(solucion.H, E))
-          - proy_planta(segmento3(solucion.V, E))
-          - proy_planta(segmento3(solucion.V, solucion.G))
-          - proy_planta(segmento3(solucion.V, F))
-          - proy_planta(segmento3(solucion.V, solucion.H))
-          - proy_alzado(segmento3(E, solucion.G))
-          - proy_alzado(segmento3(solucion.G, F))
-          - proy_alzado(segmento3(F, solucion.H))
-          - proy_alzado(segmento3(solucion.H, E))
-          - proy_alzado(segmento3(solucion.V, E))
-          - proy_alzado(segmento3(solucion.V, solucion.G))
-          - proy_alzado(segmento3(solucion.V, F))
-          - proy_alzado(segmento3(solucion.V, solucion.H))
+        # Decisión: la hoja no dice si ABCD es una lámina opaca; se toma opaca (con el
+        # plano transparente, en el alzado solo VE iría oculta). Pregunta abierta
+        # para Ionan (tasks/pendiente.md). La visibilidad sale de un cálculo de
+        # líneas ocultas aparte, por rayos contra las caras, con la base apoyada
+        # sobre la lámina; cada cambio, en el cruce aparente que dice su tramo.
+        tramos:
+          - traza: segmento2(proy_planta(solucion.V), figura.punto("E1"))
+            tipo: visto
+            porque: 'VE es contorno de la planta: separa la cara VEG, que mira hacia arriba, de la VHE, que mira hacia abajo. Desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.V), proy_planta(solucion.G))
+            tipo: visto
+            porque: 'VG separa las caras VEG y VGF, las dos que miran hacia arriba: desde arriba se ve. En el cruce aparente de V₁G₁ con H₁E₁, VG va 60,8 mm por encima.'
+          - traza: segmento2(proy_planta(solucion.V), figura.punto("F1"))
+            tipo: visto
+            porque: 'VF es contorno de la planta: separa la cara VGF, que mira hacia arriba, de la VFH, que mira hacia abajo. Desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("E1"), proy_planta(solucion.G))
+            tipo: visto
+            porque: 'EG es contorno de la planta, arista de la cara VEG, que mira hacia arriba: desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.G), figura.punto("F1"))
+            tipo: visto
+            porque: 'GF es contorno de la planta, arista de la cara VGF, que mira hacia arriba: desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.V), proy_planta(solucion.H))
+            tipo: oculto
+            porque: 'H₁ cae dentro del contorno de la planta: VH separa dos caras que miran hacia abajo, VFH y VHE, y desde arriba la tapa la cara VGF.'
+          - traza: segmento2(proy_planta(solucion.H), figura.punto("E1"))
+            tipo: oculto
+            porque: 'HE va por debajo de las caras VEG y VGF: sus dos caras, la base y VHE, miran hacia abajo. En el cruce aparente de H₁E₁ con V₁G₁, VG va 60,8 mm por encima.'
+          - traza: segmento2(figura.punto("F1"), proy_planta(solucion.H))
+            tipo: oculto
+            porque: 'FH va por debajo de la cara VGF: sus dos caras, la base y VFH, miran hacia abajo, y H₁ cae dentro del contorno de la planta.'
+          - traza: segmento2(figura.punto("B1"), solucion.k_BC_VE)
+            tipo: visto
+            porque: 'De B₁ al cruce con V₁E₁, el borde BC queda fuera de la planta de la pirámide: desde arriba nada lo tapa.'
+          - traza: segmento2(solucion.k_BC_VE, solucion.k_BC_VF)
+            tipo: oculto
+            porque: 'Entre los cruces con V₁E₁ y V₁F₁, el contorno de la planta, BC queda debajo de la pirámide, que está apoyada encima de la lámina, del lado que mira hacia arriba.'
+          - traza: segmento2(solucion.k_BC_VF, figura.punto("C1"))
+            tipo: visto
+            porque: 'Del cruce con V₁F₁ a C₁, el borde BC vuelve a quedar fuera de la planta de la pirámide: desde arriba nada lo tapa.'
+          - traza: segmento2(figura.punto("D1"), solucion.k_AD_GF)
+            tipo: visto
+            porque: 'De D₁ al cruce con G₁F₁, el borde DA queda fuera de la planta de la pirámide: desde arriba nada lo tapa.'
+          - traza: segmento2(solucion.k_AD_GF, solucion.k_AD_EG)
+            tipo: oculto
+            porque: 'Entre los cruces con G₁F₁ y E₁G₁, DA queda debajo de la base, cerca de G: la pirámide está encima de la lámina.'
+          - traza: segmento2(solucion.k_AD_EG, figura.punto("A1"))
+            tipo: visto
+            porque: 'Del cruce con E₁G₁ a A₁, el borde DA queda fuera de la planta de la pirámide: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.V), proy_alzado(solucion.G))
+            tipo: visto
+            porque: 'VG queda entera por encima de A₂D₂, fuera del alzado de la lámina, y es contorno del alzado de la pirámide: nada la tapa por delante.'
+          - traza: segmento2(proy_alzado(solucion.V), figura.punto("F2"))
+            tipo: visto
+            porque: 'VF separa las caras VGF y VFH, que miran las dos hacia delante, y su alzado queda fuera del de la lámina: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.V), figura.punto("E2"))
+            tipo: oculto
+            porque: 'VE separa dos caras que miran hacia atrás, VEG y VHE, y queda detrás de la cara VGF: en el cruce aparente de V₂E₂ con G₂F₂, GF va 50,2 mm por delante. Cerca de E, la tapa además la lámina.'
+          - traza: segmento2(proy_alzado(solucion.V), solucion.k_VH_DC)
+            tipo: visto
+            porque: 'De V₂ a C₂D₂, VH queda fuera del alzado de la lámina, y es contorno del alzado de la pirámide: nada la tapa.'
+          - traza: segmento2(solucion.k_VH_DC, solucion.k_VH_BC)
+            tipo: oculto
+            porque: 'Entre C₂D₂ y B₂C₂, VH cae dentro del alzado de la lámina, y la pirámide está detrás de ella: la lámina tapa ese tramo corto, junto a C₂.'
+          - traza: segmento2(solucion.k_VH_BC, proy_alzado(solucion.H))
+            tipo: visto
+            porque: 'Por debajo de B₂C₂, VH sale del alzado de la lámina, camino de H, que está fuera de ella: nada la tapa.'
+          - traza: segmento2(figura.punto("E2"), solucion.k_EG_AD)
+            tipo: oculto
+            porque: 'De E₂ a A₂D₂, EG cae dentro del alzado de la lámina, y la base está detrás, en el plano ABCD, del lado de la pirámide: la lámina la tapa.'
+          - traza: segmento2(solucion.k_EG_AD, proy_alzado(solucion.G))
+            tipo: visto
+            porque: 'Pasada A₂D₂, EG sale del alzado de la lámina, porque G queda fuera de ella, y nada la tapa por delante.'
+          - traza: segmento2(proy_alzado(solucion.G), solucion.k_GF_AD)
+            tipo: visto
+            porque: 'De G₂ a A₂D₂, GF queda fuera del alzado de la lámina, y nada la tapa por delante.'
+          - traza: segmento2(solucion.k_GF_AD, figura.punto("F2"))
+            tipo: oculto
+            porque: 'De A₂D₂ a F₂, GF cae dentro del alzado de la lámina, y está detrás de ella: la lámina la tapa.'
+          - traza: segmento2(figura.punto("F2"), solucion.k_FH_BC)
+            tipo: oculto
+            porque: 'De F₂ a B₂C₂, FH cae dentro del alzado de la lámina, y está detrás de ella: la lámina la tapa.'
+          - traza: segmento2(solucion.k_FH_BC, proy_alzado(solucion.H))
+            tipo: visto
+            porque: 'Pasada B₂C₂, FH sale del alzado de la lámina, porque H queda fuera de ella, y nada la tapa por delante.'
+          - traza: segmento2(proy_alzado(solucion.H), solucion.k_HE_BC)
+            tipo: visto
+            porque: 'De H₂ a B₂C₂, HE queda fuera del alzado de la lámina, y es contorno del alzado de la pirámide: nada la tapa.'
+          - traza: segmento2(solucion.k_HE_BC, figura.punto("E2"))
+            tipo: oculto
+            porque: 'De B₂C₂ a E₂, HE cae dentro del alzado de la lámina, y está detrás de ella: la lámina la tapa.'
         construccion:
           - con: escuadra-cartabon
             traza: segmento2(figura.punto("E2"), solucion.L_vE)
@@ -1706,143 +1799,54 @@ ejercicios:
             porque: |
               V₂, donde la vertical de V₁ corta el alzado de la perpendicular: arriba del todo, porque
               V es el vértice de la pirámide de mayor cota.
-          - con: regla
-            traza: '[proy_planta(segmento3(E, solucion.G)), proy_planta(segmento3(solucion.G, F)), proy_planta(segmento3(F, solucion.H)), proy_planta(segmento3(solucion.H, E)), proy_planta(segmento3(solucion.V, E)), proy_planta(segmento3(solucion.V, solucion.G)), proy_planta(segmento3(solucion.V, F)), proy_planta(segmento3(solucion.V, solucion.H))]'
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.V), figura.punto("E1")), segmento2(proy_planta(solucion.V), proy_planta(solucion.G)), segmento2(proy_planta(solucion.V), figura.punto("F1")), segmento2(figura.punto("E1"), proy_planta(solucion.G)), segmento2(proy_planta(solucion.G), figura.punto("F1"))]'
             porque: |
-              La pirámide en la planta: la base E₁G₁F₁H₁ y las cuatro aristas que suben a V₁. Lo visto y
-              lo oculto se decide en el paso siguiente.
-          - con: regla
-            traza: '[proy_alzado(segmento3(E, solucion.G)), proy_alzado(segmento3(solucion.G, F)), proy_alzado(segmento3(F, solucion.H)), proy_alzado(segmento3(solucion.H, E)), proy_alzado(segmento3(solucion.V, E)), proy_alzado(segmento3(solucion.V, solucion.G)), proy_alzado(segmento3(solucion.V, F)), proy_alzado(segmento3(solucion.V, solucion.H))]'
+              **Lo visto y lo oculto, en la planta.** Desde arriba se ven las caras que miran hacia
+              arriba, VEG y VGF: sus aristas VE, VG, VF, EG y GF, en continua. VE, VF, EG y GF son
+              además el contorno de la planta.
+          - con: arista-oculta
+            traza: '[segmento2(proy_planta(solucion.V), proy_planta(solucion.H)), segmento2(proy_planta(solucion.H), figura.punto("E1")), segmento2(figura.punto("F1"), proy_planta(solucion.H))]'
             porque: |
-              Y en el alzado: la base E₂G₂F₂H₂ y las aristas que van a V₂.
+              H₁ cae dentro del contorno de la planta, y las tres aristas que llegan a H van por debajo
+              de las caras VEG y VGF: VH, HE y FH, a trazos.
+          - con: arista-oculta
+            traza: '[segmento2(solucion.k_BC_VE, solucion.k_BC_VF), segmento2(solucion.k_AD_GF, solucion.k_AD_EG)]'
+            porque: |
+              Lo que de los bordes de la lámina queda debajo de la pirámide, a trazos: B₁C₁ entre los
+              cruces con V₁E₁ y V₁F₁, y D₁A₁ entre los cruces con G₁F₁ y E₁G₁.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("B1"), solucion.k_BC_VE), segmento2(solucion.k_BC_VF, figura.punto("C1")), segmento2(figura.punto("D1"), solucion.k_AD_GF), segmento2(solucion.k_AD_EG, figura.punto("A1"))]'
+            porque: |
+              Y el resto de esos dos bordes, en continua: queda fuera de la planta de la pirámide.
+              A₁B₁ y C₁D₁ se ven enteros, y ya están dibujados.
+          - con: arista-vista
+            traza: '[segmento2(proy_alzado(solucion.V), proy_alzado(solucion.G)), segmento2(proy_alzado(solucion.V), figura.punto("F2")), segmento2(proy_alzado(solucion.V), solucion.k_VH_DC), segmento2(solucion.k_VH_BC, proy_alzado(solucion.H)), segmento2(solucion.k_EG_AD, proy_alzado(solucion.G)), segmento2(proy_alzado(solucion.G), solucion.k_GF_AD), segmento2(solucion.k_FH_BC, proy_alzado(solucion.H)), segmento2(proy_alzado(solucion.H), solucion.k_HE_BC)]'
+            porque: |
+              **En el alzado**, la pirámide queda detrás de la lámina, y se ve lo que cae fuera del
+              contorno de A₂B₂C₂D₂: VG y VF enteras, VH salvo un tramo corto junto a C₂, y los tramos
+              de la base que salen de la lámina por G y por H.
+          - con: arista-oculta
+            traza: '[segmento2(proy_alzado(solucion.V), figura.punto("E2")), segmento2(solucion.k_VH_DC, solucion.k_VH_BC), segmento2(figura.punto("E2"), solucion.k_EG_AD), segmento2(solucion.k_GF_AD, figura.punto("F2")), segmento2(figura.punto("F2"), solucion.k_FH_BC), segmento2(solucion.k_HE_BC, figura.punto("E2"))]'
+            porque: |
+              Y a trazos: VE, que queda detrás de la cara VGF; el tramo corto de VH entre C₂D₂ y B₂C₂;
+              y lo que de la base cae dentro de la lámina. Los cuatro bordes de la lámina se ven
+              enteros.
         pista: |
           (1) AD y BC son horizontales: un cambio de plano con la línea de tierra
           perpendicular a A₁D₁ pone el plano de canto, o se abate con charnela AD. (2) Con el
           plano en verdadera magnitud, la otra diagonal del cuadrado: perpendicular a EF por
           su punto medio O y del mismo largo. (3) Devuelve G y H a las dos vistas. (4) BC es
           horizontal: mídela en la planta; la altura es el doble. (5) V está en la
-          perpendicular al plano por O, del lado de arriba, a esa altura.
+          perpendicular al plano por O, del lado de arriba, a esa altura. (6) En la planta se
+          ven las caras que miran hacia arriba; en el alzado, la pirámide queda detrás de la
+          lámina, y se ve lo que cae fuera de su contorno.
         desarrollo: |
-          En verde claro, la base EGFH y las cuatro aristas que suben a V, en las dos vistas.
-          G cae fuera de la lámina ABCD por el lado de AD, y H por el de BC.
-
-      # Decisión: la hoja no dice si ABCD es lámina opaca; se toma opaca (con el
-      # plano transparente, en el alzado solo VE iría oculta). Pregunta abierta
-      # para Ionan (tasks/pendiente.md).
-      - tipo: dibujar
-        consigna: |
-          Repasa la pirámide en la planta y en el alzado, con las aristas vistas en continua y
-          las ocultas en discontinua, y también los bordes de la lámina ABCD. Toma el plano
-          ABCD como una lámina opaca.
-        comprueba:
-          - punto: En la planta, ocultas FH, HE y VH; vistas VE, VG, VF, EG y GF.
-            porque: >-
-              Desde arriba se ven las caras que miran hacia arriba. V₁ cae fuera de la base,
-              a la derecha, y H₁ queda dentro del contorno de la pirámide: las tres aristas
-              que llegan a H van por debajo de las caras VEG y VGF. En el cruce aparente de
-              V₁G₁ con H₁E₁, VG va 60,8 mm por encima.
-          - punto: En la planta, la pirámide tapa la mayor parte de B₁C₁ y un tramo de D₁A₁ cerca de G₁.
-            porque: >-
-              La pirámide está encima de la lámina, del lado que mira hacia arriba, así que lo
-              que de los bordes de ABCD queda debajo de ella va en discontinua.
-          - punto: En el alzado, la lámina tapa las aristas de la base que caen dentro de A₂B₂C₂D₂, y un tramo corto de V₂H₂ junto a C₂.
-            porque: >-
-              El lado de mayor cota del plano ABCD mira hacia atrás, lejos del observador del
-              alzado, así que la pirámide entera queda detrás de la lámina. Lo que de ella cae
-              dentro del contorno de la lámina, en el alzado, no se ve.
-          - punto: En el alzado, VE oculta; VG, VF y VH vistas, salvo ese tramo de VH.
-            porque: >-
-              VE queda detrás de la cara VGF: en el cruce aparente de V₂E₂ con G₂F₂, GF va
-              50,2 mm por delante.
-          - punto: Los cuatro bordes de la lámina, vistos en el alzado.
-            porque: >-
-              La pirámide está detrás de la lámina: nada la tapa por delante.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 300 600" role="img" width="300" height="600" aria-labelledby="h55-2-vis-t h55-2-vis-d">
-            <title id="h55-2-vis-t">La pirámide de mayor cota y la lámina ABCD, con lo visto y lo oculto</title>
-            <desc id="h55-2-vis-d">Arriba el alzado y abajo la planta. La lámina ABCD es un paralelogramo con AD y BC horizontales; la base de la pirámide, el cuadrado EGFH, tiene G fuera de la lámina por el lado de AD y H por el de BC, y el vértice V sube a la derecha. En la planta van en discontinua las aristas FH, HE y VH, que quedan debajo de las caras VEG y VGF, y los tramos de los bordes BC y DA de la lámina que quedan debajo de la pirámide. En el alzado la pirámide queda detrás de la lámina: van en discontinua VE, que está detrás de la cara VGF, los tramos de las aristas de la base que caen dentro de la lámina y un tramo corto de VH junto a C; los bordes de la lámina se ven enteros.</desc>
-            <style>
-                .h55-2-vis-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .h55-2-vis-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .h55-2-vis-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .h55-2-vis-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .h55-2-vis-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .h55-2-vis-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .h55-2-vis-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .h55-2-vis-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .h55-2-vis-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .h55-2-vis-pt { fill: var(--live); }
-                .h55-2-vis-punta { fill: var(--live); stroke: none; }
-                .h55-2-vis-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .h55-2-vis-o { fill: var(--flag); }
-                .h55-2-vis-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .h55-2-vis-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .h55-2-vis-pv { stroke: var(--d1); stroke-width: 2; fill: none; stroke-linecap: round; }
-                .h55-2-vis-po { stroke: var(--d1); stroke-width: 1.4; fill: none; stroke-dasharray: 5 3; }
-                .h55-2-vis-lv { stroke: var(--alt); stroke-width: 1.3; fill: none; stroke-linecap: round; }
-                .h55-2-vis-lo { stroke: var(--alt); stroke-width: 1.1; fill: none; stroke-dasharray: 4 3; }
-            </style>
-            <path class="h55-2-vis-po" d="M102.3 283.7L62.9 235.9"/>
-            <path class="h55-2-vis-pv" d="M62.9 235.9L57 228.7"/>
-            <path class="h55-2-vis-pv" d="M57 228.7L78.8 235.9"/>
-            <path class="h55-2-vis-po" d="M78.8 235.9L139.2 255.6"/>
-            <path class="h55-2-vis-po" d="M139.2 255.6L175.5 299.7"/>
-            <path class="h55-2-vis-pv" d="M175.5 299.7L184.5 310.6"/>
-            <path class="h55-2-vis-pv" d="M184.5 310.6L151.3 299.7"/>
-            <path class="h55-2-vis-po" d="M151.3 299.7L102.3 283.7"/>
-            <path class="h55-2-vis-po" d="M262.6 32.3L102.3 283.7"/>
-            <path class="h55-2-vis-pv" d="M262.6 32.3L57 228.7"/>
-            <path class="h55-2-vis-pv" d="M262.6 32.3L139.2 255.6"/>
-            <path class="h55-2-vis-pv" d="M262.6 32.3L188.8 295.1"/>
-            <path class="h55-2-vis-po" d="M188.8 295.1L187.5 299.7"/>
-            <path class="h55-2-vis-pv" d="M187.5 299.7L184.5 310.6"/>
-            <path class="h55-2-vis-lv" d="M42.3 235.9L122.4 299.7"/>
-            <path class="h55-2-vis-lv" d="M122.4 299.7L194.5 299.7"/>
-            <path class="h55-2-vis-lv" d="M194.5 299.7L114.3 235.9"/>
-            <path class="h55-2-vis-lv" d="M114.3 235.9L42.3 235.9"/>
-            <path class="h55-2-vis-pv" d="M102.3 404.3L57 485.2"/>
-            <path class="h55-2-vis-pv" d="M57 485.2L139.2 549.5"/>
-            <path class="h55-2-vis-po" d="M139.2 549.5L184.5 468.7"/>
-            <path class="h55-2-vis-po" d="M184.5 468.7L102.3 404.3"/>
-            <path class="h55-2-vis-pv" d="M262.6 395.1L102.3 404.3"/>
-            <path class="h55-2-vis-pv" d="M262.6 395.1L57 485.2"/>
-            <path class="h55-2-vis-pv" d="M262.6 395.1L139.2 549.5"/>
-            <path class="h55-2-vis-po" d="M262.6 395.1L184.5 468.7"/>
-            <path class="h55-2-vis-lv" d="M42.3 439L122.4 392.7"/>
-            <path class="h55-2-vis-lv" d="M122.4 392.7L128.3 402.8"/>
-            <path class="h55-2-vis-lo" d="M128.3 402.8L182 495.9"/>
-            <path class="h55-2-vis-lv" d="M182 495.9L194.5 517.5"/>
-            <path class="h55-2-vis-lv" d="M194.5 517.5L114.3 563.7"/>
-            <path class="h55-2-vis-lv" d="M114.3 563.7L78.3 501.3"/>
-            <path class="h55-2-vis-lo" d="M78.3 501.3L63.2 475.1"/>
-            <path class="h55-2-vis-lv" d="M63.2 475.1L42.3 439"/>
-            <text class="h55-2-vis-n" x="38.3" y="246.9" text-anchor="end" fill="var(--ink)">A₂</text>
-            <text class="h55-2-vis-n" x="116.3" y="229.9" text-anchor="middle" fill="var(--ink)">D₂</text>
-            <text class="h55-2-vis-n" x="120.4" y="312.7" text-anchor="middle" fill="var(--ink)">B₂</text>
-            <text class="h55-2-vis-n" x="199.5" y="303.7" text-anchor="start" fill="var(--ink)">C₂</text>
-            <text class="h55-2-vis-n" x="98.3" y="293.7" text-anchor="end" fill="var(--ink)">E₂</text>
-            <text class="h55-2-vis-n" x="145.2" y="257.6" text-anchor="start" fill="var(--ink)">F₂</text>
-            <text class="h55-2-vis-n" x="53" y="223.7" text-anchor="end" fill="var(--ink)">G₂</text>
-            <text class="h55-2-vis-n" x="189.5" y="321.6" text-anchor="start" fill="var(--ink)">H₂</text>
-            <text class="h55-2-vis-n" x="268.6" y="36.3" text-anchor="start" fill="var(--ink)">V₂</text>
-            <text class="h55-2-vis-n" x="37.3" y="443" text-anchor="end" fill="var(--ink)">A₁</text>
-            <text class="h55-2-vis-n" x="122.4" y="386.7" text-anchor="middle" fill="var(--ink)">B₁</text>
-            <text class="h55-2-vis-n" x="200.5" y="522.5" text-anchor="start" fill="var(--ink)">C₁</text>
-            <text class="h55-2-vis-n" x="110.3" y="577.7" text-anchor="middle" fill="var(--ink)">D₁</text>
-            <text class="h55-2-vis-n" x="98.3" y="400.3" text-anchor="end" fill="var(--ink)">E₁</text>
-            <text class="h55-2-vis-n" x="145.2" y="559.5" text-anchor="start" fill="var(--ink)">F₁</text>
-            <text class="h55-2-vis-n" x="52" y="489.2" text-anchor="end" fill="var(--ink)">G₁</text>
-            <text class="h55-2-vis-n" x="190.5" y="478.7" text-anchor="start" fill="var(--ink)">H₁</text>
-            <text class="h55-2-vis-n" x="268.6" y="399.1" text-anchor="start" fill="var(--ink)">V₁</text>
-          </svg>
-          <figcaption>La pirámide de mayor cota con la lámina ABCD opaca: en continua lo visto y en discontinua lo oculto, en el alzado arriba y en la planta abajo. En azul la pirámide y en violeta los bordes de la lámina.</figcaption>
-          </figure>
-        veredicto: >-
-          Si tu dibujo tiene ocultas FH, HE y VH en la planta, y en el alzado VE y lo que
-          queda dentro de la lámina, la visibilidad está bien. Si has tomado ABCD como un
-          plano transparente, en el alzado solo VE va oculta: la hoja no lo precisa, y aquí
-          se toma opaca.
+          En verde claro, la pirámide en las dos vistas, con lo oculto a trazos, y los tramos de
+          los bordes de la lámina que tapa. G cae fuera de la lámina ABCD por el lado de AD, y H
+          por el de BC. En la planta van ocultas FH, HE y VH, que quedan debajo de las caras VEG
+          y VGF, y lo que de B₁C₁ y D₁A₁ queda debajo de la pirámide. En el alzado van ocultas VE,
+          detrás de la cara VGF, y lo que de la pirámide cae dentro de la lámina.
 
       - tipo: calcular
         titulo: La altura

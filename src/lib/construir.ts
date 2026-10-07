@@ -20,7 +20,17 @@
  * rama, que es lo que tiene delante quien llega a ese objetivo.
  */
 import { PT_MM, type P2 } from './diedrico';
-import { acierta, cumple, type Dibujos, type Elegidas, type Marcados, type Objetivo, type Predicado } from './diedrico-corrige';
+import {
+  acierta,
+  casaTramo,
+  cumple,
+  type Dibujos,
+  type Elegidas,
+  type Marcados,
+  type Objetivo,
+  type Predicado,
+  type Tramo,
+} from './diedrico-corrige';
 import {
   compilaDibujos,
   compilaObjetivo,
@@ -50,6 +60,15 @@ export interface ObjetivoDeclarado {
   readonly diagnosticos: readonly DiagnosticoDeclarado[];
 }
 
+/** Un tramo de arista con su visibilidad (el `Taller` con segmentos, 7 de
+ *  octubre de 2026): `traza` es una expresión de la receta que da un solo
+ *  segmento, y `porque` lo que se le dice a quien lo pasa del otro tipo. */
+export interface TramoDeclarado {
+  readonly traza: string;
+  readonly tipo: Tramo['tipo'];
+  readonly porque: string;
+}
+
 export interface ConstruirDeclarado {
   readonly titulo: string;
   readonly intro: string;
@@ -57,14 +76,17 @@ export interface ConstruirDeclarado {
   /** En mm, la de la regla. */
   readonly tolerancia: number;
   readonly objetivos: readonly ObjetivoDeclarado[];
+  readonly tramos?: readonly TramoDeclarado[];
   readonly trazado?: readonly string[];
   readonly construccion?: readonly PasoDeConstruccionDeclarado[];
   readonly pista: string;
   readonly desarrollo: string;
 }
 
-/** Con qué se hace un paso de la construcción paso a paso. */
-export type Instrumento = 'regla' | 'escuadra-cartabon' | 'compas' | 'transportador' | 'marca';
+/** Con qué se hace un paso de la construcción paso a paso. Las dos aristas
+ *  son la regla al pasar a limpio: un tramo visto, en continua gruesa, o uno
+ *  oculto, a trazos. */
+export type Instrumento = 'regla' | 'escuadra-cartabon' | 'compas' | 'transportador' | 'marca' | 'arista-vista' | 'arista-oculta';
 
 export interface PasoDeConstruccionDeclarado {
   readonly con: Instrumento;
@@ -98,6 +120,10 @@ export interface ObjetivoResuelto {
   readonly diagnosticos: readonly { readonly si: Predicado; readonly mensaje: string }[];
 }
 
+export interface TramoResuelto extends Tramo {
+  readonly porque: string;
+}
+
 export interface ConstruirResuelto {
   readonly titulo: string;
   readonly intro: string;
@@ -105,6 +131,7 @@ export interface ConstruirResuelto {
   /** En pt, que es en lo que corrige la página. */
   readonly tolerancia: number;
   readonly objetivos: readonly ObjetivoResuelto[];
+  readonly tramos: readonly TramoResuelto[];
   readonly trazado: readonly Trazado[];
   readonly construccion?: readonly PasoDeConstruccion[];
   readonly pista: string;
@@ -204,19 +231,72 @@ export function resuelveConstruir(paso: ConstruirDeclarado, lamina: Lamina, r: R
     return { nombre: o.nombre, rotulo: o.rotulo ?? rotuloDe(o.nombre), pide: o.pide, bien: o.bien, es, diagnosticos };
   });
 
+  const tramos = resuelveTramos(paso.tramos ?? [], objetivos, lamina, r, tol);
   const trazado = (paso.trazado ?? []).map((src) => compilaTrazado(src, lamina, r));
-  const construccion = paso.construccion ? resuelveConstruccion(paso.construccion, objetivos, lamina, r, tol) : undefined;
+  const construccion = paso.construccion ? resuelveConstruccion(paso.construccion, objetivos, tramos, lamina, r, tol) : undefined;
   return {
     titulo: paso.titulo,
     intro: paso.intro,
     herramientas: paso.herramientas,
     tolerancia: tol,
     objetivos,
+    tramos,
     trazado,
     ...(construccion ? { construccion } : {}),
     pista: paso.pista,
     desarrollo: paso.desarrollo,
   };
+}
+
+/**
+ * Los tramos de la visibilidad, compilados. Cada uno es un solo segmento, sin
+ * elección (la visibilidad de una rama no es la de la otra, y todavía no hay
+ * ejercicio que lo pida), más largo que la tolerancia, que es lo que separa un
+ * trazo de un punto al corregir (el tramo oculto de VH en la 55·2 mide 1,8 mm);
+ * y dos tramos no se pisan, porque un trazo encima de los dos no
+ * sabría de cuál es.
+ */
+function resuelveTramos(
+  declarados: readonly TramoDeclarado[],
+  objetivos: readonly ObjetivoResuelto[],
+  lamina: Lamina,
+  r: Resultado,
+  tol: number,
+): TramoResuelto[] {
+  const tramos = declarados.map((t, i): TramoResuelto => {
+    const quien = `tramo ${i + 1}`;
+    let d: Dibujos;
+    try {
+      d = compilaDibujos(t.traza, lamina, r);
+    } catch (err) {
+      throw new Error(`${quien}: ${(err as Error).message}`);
+    }
+    if (d.eleccion !== undefined) throw new Error(`${quien} «${t.traza}» depende de una elección, y un tramo tiene que ser uno solo`);
+    const seg = d.ramas[0];
+    if (seg?.length !== 1 || seg[0].tipo !== 'segmento') throw new Error(`${quien} «${t.traza}» tiene que ser un solo segmento`);
+    const { a, b } = seg[0];
+    if (Math.hypot(b[0] - a[0], b[1] - a[1]) <= tol) {
+      throw new Error(`${quien} «${t.traza}» no llega a la tolerancia: no se distingue de un punto`);
+    }
+    return { a, b, tipo: t.tipo, porque: t.porque };
+  });
+  tramos.forEach((t, i) =>
+    tramos.forEach((u, j) => {
+      if (j > i && casaTramo(u.a, u.b, u.tipo, [t], tol).que !== 'fuera') {
+        throw new Error(`los tramos ${i + 1} y ${j + 1} se pisan: un trazo encima de los dos no diría de cuál es`);
+      }
+    }),
+  );
+  for (const o of objetivos) {
+    if (o.es.eleccion === undefined) continue;
+    const posiciones = o.es.ramas.flat();
+    tramos.forEach((t, i) => {
+      if ([t.a, t.b].some((x) => posiciones.some((q) => Math.hypot(q[0] - x[0], q[1] - x[1]) <= tol))) {
+        throw new Error(`el tramo ${i + 1} acaba en ${o.rotulo}, que depende de una elección: la visibilidad sería la de una sola rama`);
+      }
+    });
+  }
+  return tramos;
 }
 
 /** Un segmento de la lámina, para la guía de la escuadra o la abertura del
@@ -236,6 +316,7 @@ function segmentoDe(src: string, lamina: Lamina, r: Resultado, quien: string): r
 function resuelveConstruccion(
   pasos: readonly PasoDeConstruccionDeclarado[],
   objetivos: readonly ObjetivoResuelto[],
+  tramos: readonly TramoResuelto[],
   lamina: Lamina,
   r: Resultado,
   tol: number,
@@ -264,6 +345,25 @@ function resuelveConstruccion(
       throw new Error(`la construcción paso a paso no marca ${o.rotulo}: acaba sin llegar a un punto de la solución`);
     }
   }
+  /* Y pasa a limpio cada tramo con su tipo: cada arista que traza es un
+     trazo que el Taller daría por bueno. */
+  const pasados = new Set<number>();
+  resueltos.forEach((p, i) => {
+    if (p.con !== 'arista-vista' && p.con !== 'arista-oculta') return;
+    const tipo = p.con === 'arista-vista' ? 'visto' : 'oculto';
+    for (const d of p.dibujos.ramas[0] ?? []) {
+      const quien = `construcción, paso ${i + 1}`;
+      if (d.tipo !== 'segmento') throw new Error(`${quien}: una arista se pasa a limpio con un segmento`);
+      const casa = casaTramo(d.a, d.b, tipo, tramos, tol);
+      if (casa.que === 'tipo') throw new Error(`${quien}: pasa el tramo ${casa.tramo + 1} como ${tipo}, y va ${tramos[casa.tramo].tipo}`);
+      if (casa.que !== 'bien') {
+        throw new Error(`${quien}: esa arista no casa con los tramos (${casa.que === 'corte' ? 'empieza o acaba donde no cambia nada' : 'no va por ninguno'})`);
+      }
+      for (const k of casa.tramos) pasados.add(k);
+    }
+  });
+  const sin = tramos.findIndex((_, k) => !pasados.has(k));
+  if (sin >= 0) throw new Error(`la construcción paso a paso no pasa a limpio el tramo ${sin + 1}`);
   return resueltos;
 }
 

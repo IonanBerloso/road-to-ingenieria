@@ -29,6 +29,9 @@ import {
   vmPlanta,
   type P3,
 } from '../../src/lib/diedrico';
+import yaml from 'js-yaml';
+import { resuelveEjercicio, type EjercicioConReceta } from '../../src/lib/construir';
+import { casaTramo } from '../../src/lib/diedrico-corrige';
 import type { DatosLamina } from '../../src/lib/lamina';
 
 /* El Ejercicio 55 de la Colección de ejercicios de diédrico (Dpto. de
@@ -286,5 +289,84 @@ describe('Ejercicio 55 · apartado 3, las dos tuberías (ex55-3)', () => {
     expect(vmPlanta(P, B) * PT_MM).toBeCloseTo(17.1714, 3);
     expect(vmPlanta(P, A) * PT_MM).toBeCloseTo(48.8534, 3);
     expect(vmAlzado(P, B) * PT_MM).toBeCloseTo(48.8375, 3);
+  });
+});
+
+describe('Ejercicio 55 · apartado 2, la visibilidad en el Taller (los tramos)', () => {
+  /* Lo visto y lo oculto, de un cálculo de líneas ocultas hecho aparte el 7 de
+     octubre de 2026, sin src/lib: cada arista muestreada y mirada por rayos
+     contra las caras opacas —la lámina ABCD y las cinco de la pirámide, con la
+     base apoyada encima de la lámina—, y cada cambio afinado por bisección.
+     Coordenadas en pt de la lámina; los cambios, con la holgura de medio pt de
+     la lámina «gruesa» del cálculo. Junto a F, que cae justo sobre CD, el
+     cálculo daba dos restos de menos de 1 pt, que son redondeo y no tramos.
+     Los bordes de la lámina que se ven enteros no son tramos: ya están
+     dibujados. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'BC', 'visto', [155.73, 430.44], [161.92, 441.17]],
+    ['planta', 'BC', 'oculto', [161.92, 441.17], [219.04, 540.09]],
+    ['planta', 'BC', 'visto', [219.04, 540.09], [232.29, 563.04]],
+    ['planta', 'DA', 'visto', [147.09, 612.12], [109.28, 546.58]],
+    ['planta', 'DA', 'oculto', [109.28, 546.58], [92.54, 517.57]],
+    ['planta', 'DA', 'visto', [92.54, 517.57], [70.65, 479.64]],
+    ['planta', 'EG', 'visto', [134.37, 442.8], [86.24, 528.68]],
+    ['planta', 'GF', 'visto', [86.24, 528.68], [173.49, 597]],
+    ['planta', 'FH', 'oculto', [173.49, 597], [221.62, 511.12]],
+    ['planta', 'HE', 'oculto', [221.62, 511.12], [134.37, 442.8]],
+    ['planta', 'VE', 'visto', [304.56, 433.04], [134.37, 442.8]],
+    ['planta', 'VG', 'visto', [304.56, 433.04], [86.24, 528.68]],
+    ['planta', 'VF', 'visto', [304.56, 433.04], [173.49, 597]],
+    ['planta', 'VH', 'oculto', [304.56, 433.04], [221.62, 511.12]],
+    ['alzado', 'EG', 'oculto', [134.37, 314.64], [92.64, 264.04]],
+    ['alzado', 'EG', 'visto', [92.64, 264.04], [86.24, 256.29]],
+    ['alzado', 'GF', 'visto', [86.24, 256.29], [109.88, 264.03]],
+    ['alzado', 'GF', 'oculto', [109.88, 264.03], [173.49, 284.88]],
+    ['alzado', 'FH', 'oculto', [173.49, 284.88], [212.22, 331.84]],
+    ['alzado', 'FH', 'visto', [212.22, 331.84], [221.62, 343.23]],
+    ['alzado', 'HE', 'visto', [221.62, 343.23], [186.87, 331.84]],
+    ['alzado', 'HE', 'oculto', [186.87, 331.84], [134.37, 314.64]],
+    ['alzado', 'VE', 'oculto', [304.56, 47.68], [134.37, 314.64]],
+    ['alzado', 'VG', 'visto', [304.56, 47.68], [86.24, 256.29]],
+    ['alzado', 'VF', 'visto', [304.56, 47.68], [173.49, 284.88]],
+    ['alzado', 'VH', 'visto', [304.56, 47.68], [226.16, 327.04]],
+    ['alzado', 'VH', 'oculto', [226.16, 327.04], [224.81, 331.84]],
+    ['alzado', 'VH', 'visto', [224.81, 331.84], [221.62, 343.23]],
+  ];
+  const ej = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/examenes/ejercicio-55/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('exeg-h55-2'))!;
+  const pasos = resuelveEjercicio(ej, lamina('ex55-2'));
+  const [indice, paso] = [...pasos.entries()][0];
+  const tol = paso.tolerancia;
+  const cerca = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+
+  it('el paso construir lleva 28 tramos, y son los del cálculo aparte, con su tipo', () => {
+    expect(indice).toBe(1);
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = paso.tramos.find((x) => (cerca(x.a, a) && cerca(x.b, b)) || (cerca(x.a, b) && cerca(x.b, a)));
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, tramo a tramo y de un tirón donde no cambia', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+    // VG y VE en la planta, enteras de un tirón: no cambian
+    expect(casaTramo([304.56, 433.04], [86.24, 528.68], 'visto', paso.tramos, tol).que).toBe('bien');
+  });
+
+  it('y rechaza una arista cambiada de tipo, con el porqué de su tramo', () => {
+    const ve = casaTramo([304.56, 433.04], [134.37, 442.8], 'oculto', paso.tramos, tol);
+    expect(ve.que).toBe('tipo');
+    if (ve.que === 'tipo') expect(paso.tramos[ve.tramo].porque).toMatch(/contorno de la planta/);
+    // el borde BC de la planta entero en continua: el tramo de debajo de la pirámide va a trazos
+    const bc = casaTramo([155.73, 430.44], [232.29, 563.04], 'visto', paso.tramos, tol);
+    expect(bc.que).toBe('tipo');
+    if (bc.que === 'tipo') expect(paso.tramos[bc.tramo].tipo).toBe('oculto');
+    // VH del alzado entera en continua: el tramo corto junto a C₂ va oculto
+    expect(casaTramo([304.56, 47.68], [221.62, 343.23], 'visto', paso.tramos, tol).que).toBe('tipo');
+    // y cortada donde no cambia nada
+    expect(casaTramo([304.56, 47.68], [260, 200], 'visto', paso.tramos, tol).que).toBe('corte');
   });
 });

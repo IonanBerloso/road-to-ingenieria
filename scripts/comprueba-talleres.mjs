@@ -435,6 +435,29 @@ async function compruebaTaller(pagina, taller, quien) {
     }
     if (o.es.eleccion !== undefined && elegidas[o.es.eleccion] === undefined) elegidas = { ...elegidas, [o.es.eleccion]: rama };
   }
+  /* Las aristas (el Taller con segmentos, 7 de octubre de 2026). Cada tramo,
+     primero con el tipo cambiado por la puerta de pruebas (`taller:arista`):
+     tiene que decir su porqué y no quedarse dibujado. Después con el suyo,
+     como un alumno: la herramienta y sus dos extremos; si el imán se lleva
+     un extremo a otra cosa de una lámina densa, por la puerta, y se avisa. */
+  const aristas = taller.locator('[data-capa="usuario"] line.t-arista');
+  const porLaPuertaA = (d) => taller.evaluate((el, x) => el.dispatchEvent(new CustomEvent('taller:arista', { detail: x })), d);
+  for (const [k, t] of (datos.tramos ?? []).entries()) {
+    const antes = await aristas.count();
+    await porLaPuertaA({ a: t.a, b: t.b, tipo: t.tipo === 'visto' ? 'oculto' : 'visto' });
+    if ((await clase()).includes('mal') && (await caja.innerText()).trim().length > 20 && (await aristas.count()) === antes) {
+      ok(`${quien}: el tramo ${k + 1}, cambiado de tipo, recibe su porqué y no se queda`);
+    } else mal(`${quien}: el tramo ${k + 1}, cambiado de tipo, no dice nada o se queda dibujado`);
+    await herramienta(t.tipo);
+    await pulsa(t.a);
+    await pulsa(t.b);
+    if ((await aristas.count()) === antes) {
+      densos.push(`el tramo ${k + 1}`);
+      await porLaPuertaA({ a: t.a, b: t.b, tipo: t.tipo });
+    }
+    if ((await clase()).includes('bien') && (await aristas.count()) === antes + 1) ok(`${quien}: el tramo ${k + 1}, con su tipo, se da por bueno`);
+    else mal(`${quien}: el tramo ${k + 1}, con su tipo, no se da por bueno (${(await caja.innerText()).slice(0, 90)})`);
+  }
   if (densos.length) {
     avisos.push(`${quien}: ${densos.join(', ')}, en una lámina tan densa que se crearon por la puerta de pruebas`);
   }

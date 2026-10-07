@@ -40,6 +40,8 @@ const NOMBRE = {
   compas: 'compás',
   transportador: 'transportador',
   marca: 'lápiz',
+  'arista-vista': 'regla · arista vista',
+  'arista-oculta': 'regla · arista oculta',
 } as const;
 const datos = {
   encuadre: lamina.encuadre,
@@ -105,7 +107,7 @@ const datos = {
     | { tipo: 'arco'; c: P2; r: number; desde: number; hasta: number }
     | { tipo: 'punto'; p: P2 };
   interface Paso {
-    con: 'regla' | 'escuadra-cartabon' | 'compas' | 'transportador' | 'marca';
+    con: 'regla' | 'escuadra-cartabon' | 'compas' | 'transportador' | 'marca' | 'arista-vista' | 'arista-oculta';
     dibujos: Dibujo[];
     guia?: [P2, P2];
     toma?: [P2, P2];
@@ -181,9 +183,12 @@ const datos = {
     let hechos = 0;
     let ocupado = false;
 
+    /** Una arista pasada a limpio se pinta como en el papel: más gruesa, y
+     *  la oculta a trazos. */
+    const extraDe = (con: Paso['con']) => (con === 'arista-vista' ? ' cons-arista' : con === 'arista-oculta' ? ' cons-arista cons-oculta' : '');
     /** Un trazo ya hecho, sin animar. */
-    const dibuja = (d: Dibujo, rotulo?: string) => {
-      if (d.tipo === 'segmento') el('line', { x1: d.a[0], y1: d.a[1], x2: d.b[0], y2: d.b[1], class: 'cons-t' }, gTrazos);
+    const dibuja = (d: Dibujo, rotulo?: string, extra = '') => {
+      if (d.tipo === 'segmento') el('line', { x1: d.a[0], y1: d.a[1], x2: d.b[0], y2: d.b[1], class: `cons-t${extra}` }, gTrazos);
       else if (d.tipo === 'arco') el('path', { d: caminoArco(d.c, d.r, d.desde, barrido(d)), class: 'cons-t cons-arco' }, gTrazos);
       else {
         el('circle', { cx: d.p[0], cy: d.p[1], r: 2.6, class: 'cons-p' }, gTrazos);
@@ -191,11 +196,11 @@ const datos = {
       }
     };
     /** El mismo trazo, dibujándose: una línea que crece o un arco que gira. */
-    const traza = async (d: Dibujo, ms: number, cada?: (t: number) => void) => {
+    const traza = async (d: Dibujo, ms: number, cada?: (t: number) => void, extra = '') => {
       if (d.tipo === 'punto') return;
       const e =
         d.tipo === 'segmento'
-          ? el('line', { x1: d.a[0], y1: d.a[1], x2: d.a[0], y2: d.a[1], class: 'cons-t cons-nuevo' }, gTrazos)
+          ? el('line', { x1: d.a[0], y1: d.a[1], x2: d.a[0], y2: d.a[1], class: `cons-t cons-nuevo${extra}` }, gTrazos)
           : el('path', { d: '', class: 'cons-t cons-arco cons-nuevo' }, gTrazos);
       await anima(ms, (t) => {
         if (d.tipo === 'segmento') {
@@ -274,10 +279,10 @@ const datos = {
           dibuja(d, p.rotulo);
           continue;
         }
-        if (d.tipo === 'segmento' && p.con === 'regla') {
+        if (d.tipo === 'segmento' && (p.con === 'regla' || p.con === 'arista-vista' || p.con === 'arista-oculta')) {
           const g = regla(d.a, d.b);
           await aparece(g);
-          await traza(d, 700);
+          await traza(d, 700, undefined, extraDe(p.con));
           await quita(g);
         } else if (d.tipo === 'segmento' && p.con === 'escuadra-cartabon') {
           /* La escuadra con un cateto sobre la recta guía y el otro apoyado
@@ -339,7 +344,7 @@ const datos = {
     const pintaHasta = (n: number) => {
       gTrazos.replaceChildren();
       gInst.replaceChildren();
-      for (const p of datos.pasos.slice(0, n)) for (const d of p.dibujos) dibuja(d, p.rotulo);
+      for (const p of datos.pasos.slice(0, n)) for (const d of p.dibujos) dibuja(d, p.rotulo, extraDe(p.con));
       hechos = n;
       marca();
     };
@@ -395,6 +400,8 @@ const datos = {
 
   .cons-trazos :global(.cons-t) { stroke: var(--live); stroke-width: 1.3; fill: none; stroke-linecap: round; }
   .cons-trazos :global(.cons-nuevo) { stroke-width: 1.8; }
+  .cons-trazos :global(.cons-arista) { stroke-width: 2.2; }
+  .cons-trazos :global(.cons-oculta) { stroke-width: 1.5; stroke-dasharray: 5 3; stroke-linecap: butt; }
   .cons-trazos :global(.cons-p) { fill: var(--live); }
   .cons-trazos :global(.cons-r) { font-family: var(--mono); font-size: 9px; font-weight: 700; fill: var(--live); }
 

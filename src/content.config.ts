@@ -901,7 +901,23 @@ const pasoConstruir = z
     /** Qué se construye, en dos frases, para el alumno. */
     intro: z.string().min(20),
     herramientas: z
-      .array(z.enum(['punto', 'recta', 'paralela', 'perpendicular', 'vertical', 'horizontal', 'compas', 'radio', 'medir', 'transportador', 'borrar']))
+      .array(
+        z.enum([
+          'punto',
+          'recta',
+          'paralela',
+          'perpendicular',
+          'vertical',
+          'horizontal',
+          'compas',
+          'radio',
+          'medir',
+          'transportador',
+          'visto',
+          'oculto',
+          'borrar',
+        ]),
+      )
       .min(2),
     /** En mm: la de la regla. El profesor corrige con milímetros; menos de
      *  medio no lo distingue nadie a mano, y más de dos da por buenas
@@ -931,8 +947,27 @@ const pasoConstruir = z
             message: 'cada diagnóstico que no es `siempre` lleva su `ejemplo`: un error que no se construye no se sabe si salta',
           }),
       )
-      .min(1)
       .refine((os) => new Set(os.map((o) => o.nombre)).size === os.length, { message: 'dos objetivos con el mismo nombre' }),
+    /** La visibilidad (el `Taller` con segmentos, 7 de octubre de 2026): cada
+     *  tramo de arista, de cambio a cambio, con su tipo. El alumno los pasa a
+     *  limpio con «arista vista» y «arista oculta», y a quien pasa uno del
+     *  otro tipo se le dice su `porque`: qué cara lo tapa, o por qué nada.
+     *  Prueba de utilidad (§13): para el alumno del bloque 1, en las
+     *  intersecciones (t04) y en los sólidos; gana que se le corrija la
+     *  visibilidad, que piden 5 de las 13 preguntas de las hojas 52-55, en vez
+     *  de compararla él con un `dibujar`; lo comprueban
+     *  `tests/geometria/tramos.test.ts` y el guardián de talleres. */
+    tramos: z
+      .array(
+        z
+          .object({
+            traza: z.string().min(3),
+            tipo: z.enum(['visto', 'oculto']),
+            porque: z.string().min(20, 'el porqué de un tramo es lo que lee quien lo pasa del otro tipo'),
+          })
+          .strict(),
+      )
+      .optional(),
     /** Lo que se dibuja de la solución al quinto fallo: segmentos. */
     trazado: z.array(z.string().min(3)).default([]),
     /** La construcción paso a paso (petición de Ionan, 1 de octubre de
@@ -944,7 +979,7 @@ const pasoConstruir = z
       .array(
         z
           .object({
-            con: z.enum(['regla', 'escuadra-cartabon', 'compas', 'transportador', 'marca']),
+            con: z.enum(['regla', 'escuadra-cartabon', 'compas', 'transportador', 'marca', 'arista-vista', 'arista-oculta']),
             traza: z.string().min(3),
             guia: z.string().min(3).optional(),
             toma: z.string().min(3).optional(),
@@ -959,7 +994,16 @@ const pasoConstruir = z
     desarrollo: z.string().min(20),
     veredicto: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .refine((p) => p.objetivos.length + (p.tramos?.length ?? 0) > 0, {
+    message: 'un paso construir pide al menos un punto o un tramo',
+  })
+  .refine((p) => (p.tramos?.length ?? 0) > 0 === (p.herramientas.includes('visto') && p.herramientas.includes('oculto')), {
+    message: 'con tramos van las dos herramientas de arista, «visto» y «oculto», y sin tramos ninguna',
+  })
+  .refine((p) => p.herramientas.includes('visto') === p.herramientas.includes('oculto'), {
+    message: 'las herramientas de arista van las dos o ninguna',
+  });
 
 /** El código de una lámina: `SD5` (colección), `EX55-1AB` (hoja 55, ejercicio
  *  1, apartados a y b), `PVM` (otro PDF del curso) o `RI1` (nuestra). El

@@ -188,3 +188,69 @@ function evalua(d: Predicado, p: P2, marcados: Marcados, tol: number, elegidas: 
  *  y se pasa al siguiente. */
 export const cumple = (d: Predicado, p: P2, marcados: Marcados, tol: number, elegidas: Elegidas = {}): boolean =>
   evalua(d, p, marcados, tol, elegidas) === true;
+
+/* ── Los tramos: la visibilidad ────────────────────────────────────────── */
+
+/** Un tramo de arista con su visibilidad, de cambio a cambio: lo que el
+ *  alumno pasa a limpio con las herramientas «arista vista» y «arista
+ *  oculta». Una arista se parte donde cambia de vista a oculta, y en ningún
+ *  otro sitio. */
+export interface Tramo {
+  readonly a: P2;
+  readonly b: P2;
+  readonly tipo: 'visto' | 'oculto';
+}
+
+/** Lo que es un trazo del alumno contra los tramos de la solución:
+ *  - `bien`: cubre de punta a punta esos tramos, seguidos y en el orden en
+ *    que se trazó, y todos son de su tipo;
+ *  - `tipo`: los cubre, pero ese —el primero desde donde empezó— es del otro;
+ *  - `corte`: va por una arista, pero empieza o acaba donde no cambia nada,
+ *    o salta un hueco;
+ *  - `fuera`: no va por ninguna arista. */
+export type Casa =
+  | { readonly que: 'bien'; readonly tramos: readonly number[] }
+  | { readonly que: 'tipo'; readonly tramo: number }
+  | { readonly que: 'corte' }
+  | { readonly que: 'fuera' };
+
+/**
+ * Casa el trazo de `a` a `b`, del tipo de la herramienta, con los tramos de la
+ * solución. Se miran los tramos que caen enteros sobre el trazo; ordenados
+ * desde `a`, cada uno tiene que empezar donde acaba el anterior, el primero
+ * en `a` y el último en `b`, todo con la tolerancia de la regla.
+ */
+export function casaTramo(a: P2, b: P2, tipo: Tramo['tipo'], tramos: readonly Tramo[], tol: number): Casa {
+  if (distancia(a, b) <= tol) return { que: 'fuera' };
+  const largo = distancia(a, b);
+  /* Cada tramo que cae sobre el trazo, con sus extremos en el orden de a a b,
+     medidos como fracción del trazo. */
+  const sobre = tramos
+    .map((t, i) => {
+      const [s, u] = [parametro(t.a, a, b), parametro(t.b, a, b)];
+      return { i, t, desde: Math.min(s, u), hasta: Math.max(s, u) };
+    })
+    .filter(({ t }) => distanciaASegmento(t.a, a, b) <= tol && distanciaASegmento(t.b, a, b) <= tol)
+    .sort((x, y) => x.desde - y.desde);
+  const holgura = tol / largo;
+  let llega = 0;
+  for (const s of sobre) {
+    if (Math.abs(s.desde - llega) > holgura) break;
+    llega = s.hasta;
+  }
+  const cubre = sobre.length > 0 && Math.abs(sobre[0].desde) <= holgura && Math.abs(llega - 1) <= holgura;
+  if (cubre && sobre.every((s, k) => k === 0 || Math.abs(s.desde - sobre[k - 1].hasta) <= holgura)) {
+    const malo = sobre.find((s) => s.t.tipo !== tipo);
+    return malo ? { que: 'tipo', tramo: malo.i } : { que: 'bien', tramos: sobre.map((s) => s.i) };
+  }
+  /* No los cubre: ¿va al menos por la recta de una arista, solapándose con
+     ella? Entonces el fallo es dónde empieza o acaba. */
+  const porUnaArista = tramos.some((t) => {
+    const d: P2 = [t.b[0] - t.a[0], t.b[1] - t.a[1]];
+    if (distanciaARecta(a, t.a, d) > tol || distanciaARecta(b, t.a, d) > tol) return false;
+    const [s, u] = [parametro(a, t.a, t.b), parametro(b, t.a, t.b)];
+    const solapa = Math.min(1, Math.max(s, u)) - Math.max(0, Math.min(s, u));
+    return solapa * distancia(t.a, t.b) > tol;
+  });
+  return porUnaArista ? { que: 'corte' } : { que: 'fuera' };
+}

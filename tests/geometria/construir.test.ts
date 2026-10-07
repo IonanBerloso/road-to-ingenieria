@@ -398,3 +398,59 @@ describe('dos ramas que no se distinguen', () => {
     );
   });
 });
+
+describe('los tramos de la visibilidad', () => {
+  /* La trayectoria de la gota en el alzado, pasada a limpio: de P₂ a Q₂
+     vista y de Q₂ a G₂ oculta. La visibilidad es inventada (la gota no se
+     tapa con nada): solo se prueba el mecanismo. */
+  const TRAMOS = [
+    { traza: 'proy_alzado(segmento3(solucion.P, solucion.Q))', tipo: 'visto' as const, porque: 'Sobre el tejado, por delante de todo.' },
+    { traza: 'proy_alzado(segmento3(solucion.Q, solucion.G))', tipo: 'oculto' as const, porque: 'Por detrás del alero, que la tapa.' },
+  ];
+  const MARCAS = [
+    { con: 'marca' as const, traza: 'proy_planta(solucion.P)', porque: 'P₁, donde la horizontal baja a la planta.' },
+    { con: 'marca' as const, traza: 'proy_planta(solucion.Q)', porque: 'Q₁, donde la l.m.p. corta el alero.' },
+    { con: 'marca' as const, traza: 'proy_alzado(solucion.Q)', porque: 'Q₂, en la vertical de Q₁ sobre el alero.' },
+    { con: 'marca' as const, traza: 'proy_alzado(solucion.G)', porque: 'G₂, en la vertical de Q₂ sobre el suelo.' },
+  ];
+  const ARISTAS = [
+    { con: 'arista-vista' as const, traza: 'proy_alzado(segmento3(solucion.P, solucion.Q))', porque: 'De P₂ a Q₂, vista.' },
+    { con: 'arista-oculta' as const, traza: 'proy_alzado(segmento3(solucion.Q, solucion.G))', porque: 'De Q₂ a G₂, oculta.' },
+  ];
+
+  it('compila cada tramo a su segmento, con su tipo y su porqué', () => {
+    const paso = resuelveConstruir({ ...PASO, tramos: TRAMOS, construccion: [...MARCAS, ...ARISTAS] }, SD1, r);
+    expect(paso.tramos.map((t) => t.tipo)).toEqual(['visto', 'oculto']);
+    expect(paso.tramos[0].b).toEqual(paso.tramos[1].a);
+    expect(paso.tramos[1].porque).toMatch(/alero/);
+  });
+
+  it('sin tramos, la lista está vacía', () => {
+    expect(resuelveConstruir(PASO, SD1, r).tramos).toEqual([]);
+  });
+
+  it('dos tramos que se pisan rompen el build', () => {
+    const pisados = [TRAMOS[0], { ...TRAMOS[0], tipo: 'oculto' as const }];
+    expect(() => resuelveConstruir({ ...PASO, tramos: pisados }, SD1, r)).toThrow(/los tramos 1 y 2 se pisan/);
+  });
+
+  it('un tramo que no es un segmento, o que es casi un punto, también', () => {
+    expect(() => resuelveConstruir({ ...PASO, tramos: [{ ...TRAMOS[0], traza: 'proy_alzado(solucion.Q)' }] }, SD1, r)).toThrow(
+      /tramo 1 .* tiene que ser un solo segmento/,
+    );
+    const corto = 'segmento2(proy_alzado(solucion.Q), desplaza(proy_alzado(solucion.Q), dx: mm(0.5)))';
+    expect(() => resuelveConstruir({ ...PASO, tramos: [{ ...TRAMOS[0], traza: corto }] }, SD1, r)).toThrow(/no llega a la tolerancia/);
+  });
+
+  it('la construcción paso a paso tiene que pasar a limpio cada tramo, con su tipo', () => {
+    expect(() => resuelveConstruir({ ...PASO, tramos: TRAMOS, construccion: [...MARCAS, ARISTAS[0]] }, SD1, r)).toThrow(
+      /no pasa a limpio el tramo 2/,
+    );
+    const cambiada = [ARISTAS[0], { ...ARISTAS[1], con: 'arista-vista' as const }];
+    expect(() => resuelveConstruir({ ...PASO, tramos: TRAMOS, construccion: [...MARCAS, ...cambiada] }, SD1, r)).toThrow(
+      /pasa el tramo 2 como visto, y va oculto/,
+    );
+    const deUnTiron = { con: 'arista-vista' as const, traza: 'proy_alzado(segmento3(solucion.P, solucion.G))', porque: 'De P₂ a G₂ de un tirón.' };
+    expect(() => resuelveConstruir({ ...PASO, tramos: TRAMOS, construccion: [...MARCAS, deUnTiron] }, SD1, r)).toThrow(/no casa con los tramos/);
+  });
+});
