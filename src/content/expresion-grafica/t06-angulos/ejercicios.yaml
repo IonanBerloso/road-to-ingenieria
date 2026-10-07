@@ -1,9 +1,1363 @@
 ejercicios:
-  # Decisión: el tema 6 abre con el Ejercicio 47 (SD63) porque es, a 2 de
-  # octubre de 2026, el único de los suyos escrito. Los demás de la colección
-  # que son de este tema (15, 43 a 46 y 50) entran después, cada uno en su
-  # sitio del orden de la colección (§04): el 15 delante de este, y del 43 al
-  # 46, también delante; el 50, detrás.
+  # Decisión: los ejercicios del tema 6 van en el orden de la colección (§04).
+  # A 7 de octubre de 2026 están escritos el 43 (SD59), el 44 (SD60), el 45
+  # (SD61) y el 47 (SD63). Los demás de la colección que son de este tema
+  # (15, 46 y 50) entran después, cada uno en su sitio: el 15, delante del 43;
+  # el 46, entre el 45 y el 47, y el 50, detrás del 47.
+  - id: sd59-el-nudo-de-la-grua
+    titulo: El nudo del cable de la grúa cuando el contrapeso toca el suelo
+    fuente: Ejercicio 43 (SD59) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 44),
+    # con su doble numeración «a) 1.», que es del original. Lo que la página
+    # no dice —qué es el suelo, cómo baja P, qué se gira y alrededor de qué—
+    # va en las Notas nuestras.
+    enunciado: |
+      Se presenta una grúa mediante el alzado y la planta. Se pide:
+
+      a) 1. Determinar gráficamente la posición del nudo N cuando el contrapeso P alcance el suelo.
+
+      b) 2. Calcular la longitud real del cable entre el nudo N y el extremo P.
+
+      c) 3. Calcular el ángulo formado por NQ y QP.
+
+      **Notas nuestras.** La figura es la grúa en alzado, arriba, y en planta, debajo: la cabina
+      con el tambor, la pluma, que acaba en Q, y el cable, que sale del tambor, pasa por el nudo N,
+      llega a Q y baja en vertical hasta el contrapeso P (P₁ ≡ Q₁: QP es vertical). El suelo es la
+      recta rayada del alzado, a la altura de la base de la cabina. Leemos que P llega al suelo
+      porque el tambor suelta cable: el cable corre por la polea de Q sin estirarse, P baja en
+      vertical y cada punto del tramo del tambor a Q, también el nudo, avanza hacia Q lo mismo que
+      P baja. Por eso el cable de N a P mide lo mismo antes y después. No leemos que la pluma
+      bascule: la figura no dibuja dónde se articularía, y sin ese eje la posición de N no se
+      podría determinar. Para medir sobre el cable en verdadera magnitud lo giramos alrededor del
+      eje vertical por Q, que es el propio tramo QP: Q y P no se mueven, N no cambia de cota, y el
+      cable queda frontal. N está a la misma altura que P, así que el triángulo NQP es rectángulo
+      en P y su plano es vertical. La lámina no da escala: las longitudes se dan en milímetros de
+      la lámina. Los nombres P′ y N′ (P en el suelo y el nudo entonces) y (N) y (N′) (girados) son
+      nuestros.
+    pide: El nudo N con el contrapeso en el suelo, N′, en las dos vistas, construido con un giro de eje vertical; la longitud real del cable de N a P, en mm, y el ángulo de NQ y QP, en grados.
+    receta:
+      lamina: sd59
+      escena:
+        Q: 'punto3(alzado: figura.punto("Q2"), planta: figura.punto("Q1"))'
+        P: 'punto3(alzado: figura.punto("P2"), planta: figura.punto("P1"))'
+        N: 'punto3(alzado: figura.punto("N2"), planta: figura.punto("N1"))'
+        cable: recta3(Q, N)
+      solucion:
+        # P en el suelo: baja en vertical hasta la recta rayada del alzado.
+        Ps: 'vertical_hasta(P, linea(figura.segmento("suelo")))'
+        baja: diferencia_de_cotas(P, Ps)
+        # Decisión: el cable no se estira y corre por la polea de Q: N avanza
+        # hacia Q lo que baja P. N′ está en QN a |QN| − baja de Q (rama 1, la
+        # que va de Q hacia N).
+        NNs: 'punto_a_distancia(cable, desde: Q, distancia: vm(Q, N) - baja)'
+        Nn: rama(NNs, 1)
+        # Decisión: el giro tiene el eje vertical por Q, que es la recta QP.
+        # (N) es N girado hasta que QN queda frontal: a la cota de N y en la
+        # horizontal de Q₁, a Q₁N₁ de Q₁. Kn es el punto del eje a la cota de
+        # N (aquí, P mismo: N está a su altura). Los dos lados valen: es una
+        # elección, y la construcción va por la derecha (rama 1), donde el
+        # alzado está libre.
+        Kn: 'punto3(alzado: pie_perpendicular(figura.punto("N2"), figura.segmento("QP2")), planta: figura.punto("Q1"))'
+        Kx: 'punto3(alzado: desplaza(proy_alzado(Kn), dx: 10), planta: desplaza(figura.punto("Q1"), dx: 10))'
+        Ng: 'punto_a_distancia(recta3(Kn, Kx), desde: Kn, distancia: vm_planta(Q, N))'
+        # (N′)₂: lo que baja P, llevado desde (N)₂ hacia Q₂ sobre el cable
+        # girado, que es frontal: en el alzado, en verdadera magnitud.
+        Nn_g2: 'uno(medir_sobre(segmento2(proy_alzado(Ng), figura.punto("Q2")), desde: proy_alzado(Ng), distancia: baja), 1)'
+        # Para los diagnósticos y la construcción: la horizontal de Q₁, el
+        # extremo de la prolongación de Q₂P₂ bajo el suelo, y los extremos
+        # largos de las rectas que se trazan más allá del punto que dan.
+        horQ1: 'perpendicular(por: figura.punto("Q1"), a: figura.segmento("QP2"))'
+        Ps2mas: 'desplaza(proy_alzado(Ps), dy: mm(1.5))'
+        Lh1: 'desplaza(proy_planta(rama(Ng, 1)), dx: mm(4))'
+        Lv1: 'desplaza(proy_alzado(rama(Ng, 1)), dy: mm(-3))'
+        Lh2: 'desplaza(proy_alzado(rama(Ng, 1)), dx: mm(4))'
+        LhN: 'desplaza(proy_alzado(Nn), dx: mm(-2))'
+        LvN: 'desplaza(proy_planta(Nn), dy: mm(2))'
+        # Los errores, construidos: el radio del giro tomado en el alzado, lo
+        # que baja P llevado desde Q₂ o hacia fuera, o sobre Q₂N₂ sin girar.
+        Ng1_alz: 'medir_sobre(horQ1, desde: figura.punto("Q1"), distancia: vm_alzado(Q, N))'
+        Nng2_Q: 'uno(medir_sobre(segmento2(figura.punto("Q2"), proy_alzado(Ng)), desde: figura.punto("Q2"), distancia: baja), 1)'
+        Nng2_fuera: 'uno(medir_sobre(segmento2(proy_alzado(Ng), figura.punto("Q2")), desde: proy_alzado(Ng), distancia: baja), 2)'
+        Nn2_alz: 'uno(medir_sobre(figura.segmento("cable2"), desde: figura.punto("N2"), distancia: baja), 1)'
+        # El ángulo que se ve en el alzado, para un distractor: N llevado al
+        # plano frontal de Q sin cambiar su alzado.
+        Nf: 'punto3(alzado: figura.punto("N2"), planta: pie_perpendicular(figura.punto("N1"), horQ1))'
+      comprueba:
+        # N y Q están en el cable que dibuja la lámina, y el punto del eje a
+        # la cota de N está en QP, que es vertical (P₁ ≡ Q₁).
+        - 'en_recta(N, recta3(alzado: figura.segmento("cable2"), planta: figura.segmento("cable1")))'
+        - 'en_recta(Q, recta3(alzado: figura.segmento("cable2"), planta: figura.segmento("cable1")))'
+        - en_recta(Kn, recta3(Q, P))
+    pasos:
+      - tipo: reconocer
+        pregunta: El tambor suelta cable y el contrapeso P baja hasta el suelo. ¿Qué le pasa al nudo N?
+        opciones:
+          - texto: Baja en vertical lo mismo que P, porque los dos cuelgan del mismo cable
+            mensaje: |
+              N no cuelga: está en el tramo que va del tambor a Q, que sube en diagonal hasta la polea.
+              Ese tramo no se mueve de sitio; el cable corre a lo largo de él, y N con el cable, por la
+              misma recta.
+          - texto: Avanza por el cable hacia Q lo mismo que baja P, porque el cable no se estira
+            correcta: true
+            mensaje: |
+              Eso es. El cable corre por la polea de Q: lo que el tambor suelta pasa por N y por Q y
+              baja con P. Cada punto del tramo del tambor a Q avanza hacia Q lo que baja P, y el nudo
+              también. Por eso el cable de N a P mide lo mismo antes y después.
+          - texto: No se mueve, porque al soltar el tambor solo se alarga el tramo vertical QP del que cuelga el contrapeso
+            mensaje: |
+              El tramo QP se alarga, pero con cable que viene de detrás: del tambor, pasando por N y
+              por la polea. El nudo va con ese cable, y avanza hacia Q justo lo que se alarga QP.
+
+      # Decisión: un solo paso construir, con el giro y la vuelta. El giro es
+      # el método del tema de giros: eje vertical por Q, el cable queda
+      # frontal. La pregunta b) y la c) se leen en ese mismo dibujo.
+      - tipo: construir
+        titulo: El nudo con el contrapeso en el suelo, girando el cable
+        intro: |
+          Primero, P en el suelo: P baja en vertical, por la prolongación de Q₂P₂, hasta la recta
+          rayada; marca P′₂. Después gira el cable alrededor del eje vertical por Q —el propio QP, que
+          no se mueve— hasta que QN quede frontal: N₁ va por un arco de centro Q₁ hasta la horizontal
+          de Q₁, (N)₁, y (N)₂ queda en su vertical, a la altura de N₂. Q₂(N)₂ es el cable en
+          verdadera magnitud. Lleva sobre él, desde (N)₂ hacia Q₂, lo que baja P: es (N′)₂, el nudo
+          con P en el suelo, todavía girado. Deshaz el giro: N′₂ a la misma altura, sobre Q₂N₂, y N′₁
+          en su vertical, sobre Q₁N₁. Gira hacia el lado que quieras; aquí, a la derecha. Avisos para
+          el imán: P′₂ cae entre las rayas del suelo, y N′₂ a medio milímetro de una arista de la
+          pluma que va casi pegada al cable; amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Ps2
+            rotulo: P′₂
+            pide: el contrapeso P apoyado en el suelo, en el alzado
+            es: proy_alzado(solucion.Ps)
+            bien: |
+              P′₂ está en la prolongación de Q₂P₂, sobre la recta rayada del suelo. P baja 25,9 mm,
+              lo que mide P₂P′₂; en la planta no se mueve: P′₁ ≡ P₁.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("P2"))'
+                mensaje: |
+                  P cuelga de Q y baja en vertical: P′₂ está en la **prolongación de Q₂P₂**, debajo de
+                  P₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.Ps), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("suelo"))'
+                mensaje: |
+                  El suelo es la **recta rayada** de la derecha del alzado, a la altura de la base de la
+                  cabina. P baja hasta tocarla.
+                ejemplo: 'desplaza(proy_alzado(solucion.Ps), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  P′₂ está donde la prolongación de Q₂P₂ corta la recta rayada del suelo.
+          - nombre: Ng1
+            rotulo: (N)₁
+            pide: N girado hasta que el cable QN quede frontal, en la planta
+            es: proy_planta(solucion.Ng)
+            bien: |
+              (N)₁ está en la horizontal de Q₁, a Q₁N₁ de Q₁, 58,6 mm: con el eje vertical por Q, N
+              describe en la planta una circunferencia de centro Q₁, y QN queda frontal cuando su
+              planta es horizontal.
+            diagnosticos:
+              - si: cerca_de(solucion.Ng1_alz)
+                mensaje: |
+                  Has tomado de radio **Q₂N₂**, lo que mide el cable en el alzado. En un giro de eje
+                  vertical, N gira en un plano horizontal, y en la planta su radio es **Q₁N₁**.
+                ejemplo: uno(solucion.Ng1_alz, 1)
+              - si: '!en_recta(solucion.horQ1)'
+                mensaje: |
+                  (N)₁ va en la **horizontal de Q₁**: el cable girado es frontal, y la planta de una
+                  frontal es horizontal en el papel.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Ng, 1)), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la horizontal de Q₁, pero no a la distancia buena. Con centro en Q₁ y radio
+                  Q₁N₁, el arco que sale de N₁ corta esa horizontal en (N)₁.
+          - nombre: Ng2
+            rotulo: (N)₂
+            pide: N girado, en el alzado
+            es: proy_alzado(solucion.Ng)
+            bien: |
+              (N)₂ está en la vertical de (N)₁ y a la altura de N₂, que es también la de P₂: el giro
+              de eje vertical no cambia la cota. Q₂(N)₂ es el cable QN en verdadera magnitud, 64,1 mm.
+            diagnosticos:
+              - si: '!en_vertical_de(Ng1)'
+                mensaje: |
+                  (N)₂ va en la **vertical de (N)₁**: es el mismo punto girado, visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.Ng, 1)), dx: mm(6))'
+              - si: '!en_horizontal_de(figura.punto("N2"))'
+                mensaje: |
+                  Un giro de eje vertical **no cambia la cota**: (N)₂ está a la altura de N₂, en la
+                  recta que va de N₂ a P₂.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.Ng, 1)), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  (N)₂ está donde la vertical de (N)₁ corta la horizontal de N₂.
+          - nombre: Nng2
+            rotulo: (N′)₂
+            pide: el nudo con P en el suelo, todavía girado, en el alzado
+            es: solucion.Nn_g2
+            bien: |
+              (N′)₂ está en Q₂(N)₂, a 25,9 mm de (N)₂ hacia Q₂: lo que baja P. El cable girado es
+              frontal, y en el alzado se mide de verdad.
+            diagnosticos:
+              - si: cerca_de(solucion.Nng2_Q)
+                mensaje: |
+                  Has llevado lo que baja P **desde Q₂**. Lo que baja P lo avanza el nudo: se lleva
+                  desde (N)₂, hacia Q₂.
+                ejemplo: rama(solucion.Nng2_Q, 1)
+              - si: cerca_de(solucion.Nng2_fuera)
+                mensaje: |
+                  Has llevado lo que baja P hacia fuera, más allá de (N)₂. Al bajar P, el cable pasa por
+                  la polea hacia P: el nudo **se acerca** a Q, no se aleja.
+                ejemplo: rama(solucion.Nng2_fuera, 1)
+              - si: siempre
+                mensaje: |
+                  (N′)₂ está en Q₂(N)₂, a lo que baja P —de P₂ a P′₂— desde (N)₂, hacia Q₂. Tómalo con el
+                  compás y pincha en (N)₂.
+          - nombre: Nn2
+            rotulo: N′₂
+            pide: el nudo con P en el suelo, en el alzado
+            es: proy_alzado(solucion.Nn)
+            bien: |
+              N′₂ está en Q₂N₂, a la altura de (N′)₂: al deshacer el giro, la cota no cambia. N′ queda
+              a 38,1 mm de Q por el cable.
+            diagnosticos:
+              - si: cerca_de(solucion.Nn2_alz)
+                mensaje: |
+                  Has llevado lo que baja P **sobre Q₂N₂**, en el alzado. Q₂N₂ no es la verdadera
+                  magnitud del cable, que no es frontal: el alzado lo acorta de 64,1 a 34,9 mm. Por eso se
+                  gira, y N′₂ sale de (N′)₂ por su horizontal.
+                ejemplo: solucion.Nn2_alz
+              - si: '!en_recta(figura.segmento("cable2"))'
+                mensaje: |
+                  N′ sigue en el cable: N′₂ está **en Q₂N₂**.
+                ejemplo: 'desplaza(proy_alzado(solucion.Nn), dx: mm(-5))'
+              - si: '!en_horizontal_de(Nng2)'
+                mensaje: |
+                  Al deshacer el giro el punto vuelve **sin cambiar de cota**: N′₂ está a la altura de
+                  (N′)₂.
+                ejemplo: 'uno(medir_sobre(figura.segmento("cable2"), desde: proy_alzado(solucion.Nn), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  N′₂ está donde la horizontal de (N′)₂ corta Q₂N₂.
+          - nombre: Nn1
+            rotulo: N′₁
+            pide: el nudo con P en el suelo, en la planta
+            es: proy_planta(solucion.Nn)
+            bien: |
+              N′₁ está en Q₁N₁, en la vertical de N′₂. También sale deshaciendo el giro en la planta:
+              con centro en Q₁, de vuelta desde la horizontal de Q₁ hasta Q₁N₁.
+            diagnosticos:
+              - si: '!en_vertical_de(Nn2)'
+                mensaje: |
+                  N′₁ va en la **vertical de N′₂**.
+                ejemplo: 'uno(medir_sobre(figura.segmento("cable1"), desde: proy_planta(solucion.Nn), distancia: mm(6)), 1)'
+              - si: '!en_recta(figura.segmento("cable1"))'
+                mensaje: |
+                  N′ sigue en el cable: N′₁ está **en Q₁N₁**, donde la corta la vertical de N′₂.
+                ejemplo: 'desplaza(proy_planta(solucion.Nn), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  N′₁ está donde la vertical de N′₂ corta Q₁N₁.
+        trazado:
+          - segmento2(figura.punto("P2"), proy_alzado(solucion.Ps))
+          - segmento2(figura.punto("Q1"), proy_planta(solucion.Ng))
+          - segmento2(figura.punto("Q2"), proy_alzado(solucion.Ng))
+          - segmento2(solucion.Nn_g2, proy_alzado(solucion.Nn))
+          - segmento2(proy_alzado(solucion.Nn), proy_planta(solucion.Nn))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("P2"), solucion.Ps2mas)
+            porque: |
+              En el alzado, Q₂P₂ prolongada con la regla hacia abajo, hasta pasar la recta rayada del
+              suelo: P cuelga de Q y baja en vertical, por la prolongación del tramo QP.
+          - con: marca
+            traza: proy_alzado(solucion.Ps)
+            rotulo: P′₂
+            porque: |
+              P′₂, donde la prolongación de Q₂P₂ corta la recta del suelo: el contrapeso apoyado. P baja
+              lo que mide P₂P′₂, 25,9 mm. P′ es nombre nuestro, y en la planta P′₁ ≡ P₁.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("Q1"), solucion.Lh1)
+            porque: |
+              Por Q₁, la horizontal hacia la derecha, larga. El eje del giro es la vertical por Q: en la
+              planta, el punto Q₁; en el alzado, la recta Q₂P₂. Cuando QN quede frontal, su planta irá
+              por esta horizontal.
+          - con: compas
+            traza: 'arco(figura.punto("Q1"), por: figura.punto("N1"), desde: figura.punto("N1"), hasta: desplaza(proy_planta(rama(solucion.Ng, 1)), dy: 6))'
+            porque: |
+              Con centro en Q₁ y radio Q₁N₁, el arco desde N₁ hasta pasar la horizontal: N gira
+              alrededor del eje vertical por Q y en la planta describe una circunferencia de centro Q₁.
+              Hacia la izquierda valdría igual; aquí, a la derecha, donde el alzado está libre.
+          - con: marca
+            traza: proy_planta(solucion.Ng)
+            rotulo: (N)₁
+            porque: |
+              (N)₁, donde el arco corta la horizontal de Q₁: la planta de N con el cable girado hasta
+              quedar frontal, a 58,6 mm de Q₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Ng), solucion.Lv1)
+            porque: |
+              Por (N)₁, la vertical hasta el alzado, larga, hasta pasar la altura de N₂: el giro no
+              cambia la cota de N.
+          - con: regla
+            traza: segmento2(figura.punto("N2"), solucion.Lh2)
+            porque: |
+              En el alzado, la recta de N₂ a P₂, prolongada con la regla hacia la derecha hasta pasar la
+              vertical de (N)₁. N₂ y P₂ están a la misma altura: es la horizontal de N₂, y N girado sigue
+              en ella.
+          - con: marca
+            traza: proy_alzado(solucion.Ng)
+            rotulo: (N)₂
+            porque: |
+              (N)₂, donde la vertical de (N)₁ corta la horizontal de N₂: el alzado de N girado.
+          - con: regla
+            traza: segmento2(figura.punto("Q2"), proy_alzado(solucion.Ng))
+            porque: |
+              Q₂(N)₂, el tramo QN del cable girado: es frontal, y su alzado es su verdadera magnitud,
+              64,1 mm. Con Q₂P₂, el cable de N a P se ve entero de verdad, y el ángulo en Q₂ entre los dos
+              tramos es el de NQ y QP.
+          - con: compas
+            traza: 'arco(proy_alzado(solucion.Ng), por: solucion.Nn_g2, desde: desplaza(solucion.Nn_g2, dx: 2.4, dy: -5.5), hasta: desplaza(solucion.Nn_g2, dx: -2.4, dy: 5.5))'
+            toma: segmento2(figura.punto("P2"), proy_alzado(solucion.Ps))
+            porque: |
+              Con el compás, lo que baja P, de P₂ a P′₂, y centro en (N)₂: el arco corta Q₂(N)₂ entre
+              (N)₂ y Q₂. El cable no se estira: lo que gana QP lo pierde NQ, y el nudo avanza hacia Q lo
+              que baja P.
+          - con: marca
+            traza: solucion.Nn_g2
+            rotulo: (N′)₂
+            porque: |
+              (N′)₂, donde el arco corta Q₂(N)₂: el nudo con P en el suelo, todavía girado, a 38,1 mm de
+              Q₂.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Nn_g2, solucion.LhN)
+            porque: |
+              Se deshace el giro: el nudo vuelve a su sitio sin cambiar de cota. Por (N′)₂, la
+              horizontal hacia la izquierda, hasta pasar Q₂N₂.
+          - con: marca
+            traza: proy_alzado(solucion.Nn)
+            rotulo: N′₂
+            porque: |
+              N′₂, donde esa horizontal corta Q₂N₂, el alzado del cable. N′ es nombre nuestro: el nudo
+              cuando P toca el suelo.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Nn), solucion.LvN)
+            porque: |
+              Por N′₂, la vertical hasta la planta, hasta pasar Q₁N₁.
+          - con: marca
+            traza: proy_planta(solucion.Nn)
+            rotulo: N′₁
+            porque: |
+              N′₁, donde la vertical de N′₂ corta Q₁N₁, la planta del cable.
+          - con: transportador
+            traza: 'arco(figura.punto("Q2"), por: figura.punto("P2"), desde: figura.punto("P2"), hasta: proy_alzado(rama(solucion.Ng, 1)))'
+            porque: |
+              El transportador con el centro en Q₂, desde Q₂P₂ hasta Q₂(N)₂: NQ y QP forman 66,1°. Es el
+              ángulo del cable en la polea, que no cambia al bajar P.
+        pista: |
+          (1) P′₂: la prolongación de Q₂P₂ hasta la recta rayada. (2) El giro: con centro en Q₁ y radio
+          Q₁N₁, de N₁ a la horizontal de Q₁, (N)₁; (N)₂ en su vertical y a la altura de N₂. (3) Sobre
+          Q₂(N)₂, lo que baja P desde (N)₂ hacia Q₂: (N′)₂. (4) Sin cambiar de altura, a Q₂N₂: N′₂; en su
+          vertical, sobre Q₁N₁: N′₁.
+        desarrollo: |
+          En verde claro, la bajada de P, el cable girado Q₂(N)₂ y su planta Q₁(N)₁, y la vuelta de N′.
+          P baja 25,9 mm; el tramo QN mide 64,1 mm de verdad, y con P en el suelo, QN′ mide 38,1 mm.
+
+      - tipo: calcular
+        titulo: El cable de N a P
+        pregunta: ¿Cuánto mide de verdad el cable entre el nudo N y el extremo P?
+        respuesta:
+          tipo: numero
+          valor: '89.96'
+          receta: en_mm(vm(N, Q) + vm(Q, P))
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '64.05'
+            receta: en_mm(vm(N, Q))
+            mensaje: |
+              Eso es solo el tramo **NQ**, Q₂(N)₂ en el giro. El cable sigue de Q a P: hay que sumarle
+              Q₂P₂, 25,9 mm, que es vertical y ya está en verdadera magnitud en el alzado.
+          - valor: '60.85'
+            receta: en_mm(vm_alzado(N, Q) + vm(Q, P))
+            mensaje: |
+              Has sumado Q₂P₂ y **Q₂N₂ en el alzado**, sin girar. QN no es frontal, y el alzado lo acorta
+              de 64,1 a 34,9 mm. Girado alrededor del eje vertical por Q, Q₂(N)₂ da su verdadera
+              magnitud.
+          - valor: '84.49'
+            receta: en_mm(vm_planta(N, Q) + vm(Q, P))
+            mensaje: |
+              Has sumado Q₂P₂ y **Q₁N₁ en la planta**. QN sube de N a Q, y la planta también lo acorta:
+              mide 58,6 mm, y de verdad 64,1.
+          - valor: '58.58'
+            receta: en_mm(vm(N, P))
+            mensaje: |
+              Eso es la distancia **en línea recta de N a P**: los dos están a la misma altura, y NP es
+              horizontal. El cable no va recto: sube de N a la polea de Q y baja a P.
+          - valor: '115.87'
+            receta: en_mm(vm(N, Q) + vm(Q, Ps))
+            mensaje: |
+              Has mezclado las dos posiciones: NQ de antes y QP′ de después, con P en el suelo. Al bajar
+              P, el nudo avanza hacia Q, y el cable de N′ a P′ mide lo mismo que el de N a P.
+        pista: |
+          En el paso anterior, o en tu lámina: Q₂(N)₂ más Q₂P₂, los dos tramos en verdadera magnitud.
+          Con P en el suelo, Q₂(N′)₂ más Q₂P′₂ da lo mismo.
+        desarrollo: |
+          El triángulo NQP es rectángulo en P: N está a la altura de P y QP es vertical. Con Q₁N₁ =
+          58,58 mm y QP = 25,91 mm:
+
+          $$ \overline{NQ} = \sqrt{58{,}58^{2} + 25{,}91^{2}} \approx 64{,}05 \text{ mm}, \qquad \overline{NQ} + \overline{QP} \approx 64{,}05 + 25{,}91 = 89{,}96 \text{ mm} $$
+
+          Con P en el suelo sale lo mismo: QN′ = 38,14 mm y QP′ = 51,82 mm.
+
+      - tipo: calcular
+        titulo: El ángulo de NQ y QP
+        pregunta: ¿Cuántos grados forman los tramos NQ y QP del cable?
+        respuesta:
+          tipo: numero
+          valor: '66.14'
+          receta: angulo_rectas(cable, recta3(Q, P))
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '42.15'
+            receta: angulo_rectas(recta3(Q, Nf), recta3(Q, P))
+            mensaje: |
+              Es lo que forman Q₂N₂ y Q₂P₂ **en el alzado**. El plano NQP es vertical, pero no frontal, y
+              el alzado deforma su ángulo. Girado hasta quedar frontal, se mide entre Q₂(N)₂ y Q₂P₂.
+          - valor: '23.86'
+            receta: angulo_con_ph(cable)
+            mensaje: |
+              Ese es el ángulo del cable NQ con el **plano horizontal**, el de (N)₂ en el triángulo
+              girado: el complementario del que se pide. El ángulo de NQ y QP está en Q₂, entre Q₂(N)₂ y
+              la vertical Q₂P₂.
+          - valor: '113.86'
+            receta: 180 - angulo_rectas(cable, recta3(Q, P))
+            mensaje: |
+              Ese es el **suplementario**: el de NQ con la prolongación de PQ por encima de Q. El ángulo
+              de los dos tramos del cable es el que abarcan desde Q, entre QN y QP, y es agudo.
+        pista: |
+          Con el transportador del Taller en el paso anterior, o en tu lámina: en Q₂, entre Q₂P₂ y
+          Q₂(N)₂, el cable girado. En Q₂N₂, sin girar, el ángulo sale deformado.
+        desarrollo: |
+          En el triángulo NQP, rectángulo en P, el cateto opuesto al ángulo de Q es NP, la planta Q₁N₁,
+          y el contiguo, QP:
+
+          $$ \operatorname{tg}\widehat{Q} = \frac{58{,}58}{25{,}91} \approx 2{,}261, \qquad \widehat{Q} \approx 66{,}14^{\circ} $$
+
+          Con P en el suelo el ángulo no cambia: N′ sigue en la misma recta QN. En (N)₂, la vertical de
+          (N)₁ y el cable girado forman el mismo ángulo, porque esa vertical es paralela a QP. Y una
+          casualidad de esta lámina: en Q₁, Q₁N₁ y la horizontal de Q₁ forman 66,4°, que no es el
+          ángulo pedido (es lo que giraría el cable hacia la izquierda; hacia la derecha, como aquí,
+          gira 113,6°); quien midiera ese tendría una cifra que la casilla da por buena, y no se puede
+          distinguir.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: P baja en vertical, por la prolongación de Q₂P₂, hasta la recta rayada del suelo; baja lo que mide P₂P′₂, 25,9 mm.
+          - texto: El cable no se estira y corre por la polea de Q, así que el nudo N avanza hacia Q, por el cable, lo mismo que baja P.
+          - texto: Girado alrededor del eje vertical por Q, que es el propio QP, el tramo QN queda frontal sin que N cambie de cota, y Q₂(N)₂ es su verdadera magnitud.
+          - texto: Sobre Q₂(N)₂, (N′)₂ a 25,9 mm de (N)₂; deshecho el giro, N′₂ está a su altura sobre Q₂N₂, y N′₁ en su vertical sobre Q₁N₁.
+          - texto: N′₂ está sobre Q₂N₂ a 25,9 mm de N₂, medidos directamente en el alzado.
+            trampa: true
+            mensaje: |
+              Q₂N₂ no es la verdadera magnitud del cable: QN no es frontal, y el alzado lo acorta de 64,1
+              a 34,9 mm. Medido ahí, N′₂ caería 11,8 mm más allá, hacia Q₂. Hay que girarlo antes.
+    resolucion: |
+      **Qué pasa.** El tambor suelta cable, que corre por la polea de Q sin estirarse: P baja en
+      vertical hasta la recta rayada del suelo, a la altura de la base de la cabina, y el nudo N
+      avanza hacia Q, por el cable, lo mismo que baja P. P₂P′₂ mide 25,9 mm.
+
+      **El giro.** El tramo QN no es frontal ni horizontal. Se gira alrededor del eje vertical por Q,
+      que es el propio tramo QP: con centro en Q₁ y radio Q₁N₁, 58,6 mm, N₁ va hasta la horizontal de
+      Q₁, (N)₁, y (N)₂ queda en su vertical a la altura de N₂, que es también la de P₂. Q₂(N)₂ es QN
+      en verdadera magnitud, 64,1 mm.
+
+      **El nudo.** Sobre Q₂(N)₂, desde (N)₂ hacia Q₂, los 25,9 mm que baja P: (N′)₂, a 38,1 mm de Q₂.
+      Deshecho el giro, a la misma altura, N′₂ cae en Q₂N₂, y N′₁ en su vertical, sobre Q₁N₁.
+
+      **El cable.** De N a P mide QN + QP = 64,05 + 25,91 = 89,96 mm, y con P en el suelo,
+      38,14 + 51,82, lo mismo. **El ángulo.** El triángulo NQP es rectángulo en P y su plano es
+      vertical; girado, se ve de verdad en el alzado, y en Q₂ mide 66,1°. En el alzado sin girar se ve
+      de 42,2°.
+
+  - id: sd60-la-cara-cdgh-y-el-diedro-de-alfa-y-beta
+    titulo: La cara CDGH en verdadera magnitud, su pendiente y el ángulo de las caras α y β
+    fuente: Ejercicio 44 (SD60) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 45),
+    # con su doble numeración «a) 1.», que es del original. El método de la
+    # verdadera magnitud no lo impone: abatimos con la charnela CH, y lo dice
+    # el intro. «El ángulo formado por las caras» se lee como el diedro que
+    # abarcan las caras por dentro de la pieza, y pasa de 90°; el de los
+    # planos, el menor, es un distractor.
+    enunciado: |
+      Se presenta el alzado y la vista en planta de una pieza. Se pide:
+
+      a) 1. Dibujar gráficamente la verdadera magnitud de la cara CDGH.
+
+      b) 2. Calcular la pendiente de la cara CDGH en grados.
+
+      c) 3. Calcular el ángulo formado por las caras α y β.
+
+      **Notas nuestras.** La figura es la pieza en alzado, arriba, y en planta, debajo: una base
+      horizontal, una cara de arriba también horizontal, 45,0 mm más alta, y entre las dos, una cara
+      vertical, la de la derecha, y cuatro inclinadas. α es la cara ABDC y β, la ABFE, simétricas
+      respecto del plano frontal que contiene la arista AB. La cara CDGH tiene dos lados, CH y DG,
+      que son horizontales y frontales a la vez, y GH les es perpendicular. Por pendiente de la cara
+      entendemos el ángulo que forma con el plano horizontal, el de su línea de máxima pendiente.
+      Por el ángulo formado por las caras α y β, el diedro que abarcan por dentro de la pieza, como
+      el que mediría un transportador apoyado en ella en ángulo recto con la arista AB: pasa de 90°.
+      Si se leyera el ángulo entre los planos de las dos caras, el menor de los dos que forman,
+      saldría su suplementario. K es nombre nuestro.
+    pide: La cara CDGH abatida sobre el plano de la base, que es su verdadera magnitud; su pendiente en grados, y el ángulo de las caras α y β en grados.
+    receta:
+      lamina: sd60
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        H: 'punto3(alzado: figura.punto("H2"), planta: figura.punto("H1"))'
+        cara: plano(C, H, G)
+        alfa: plano(A, B, C)
+        beta: plano(A, B, E)
+        arista: recta3(A, B)
+      solucion:
+        # Decisión: la verdadera magnitud, abatiendo la cara sobre el plano
+        # de la base con la charnela CH, que está en él. G se abate con el
+        # triángulo de GH, que es perpendicular a CH; D cae con el mismo giro.
+        # Los dos lados valen: es una elección, y la construcción va hacia
+        # abajo (rama 1), fuera de la planta.
+        ch: recta3(C, H)
+        Gab: abatido_a_elegir(G, ch, cara)
+        Dab: 'abatido_junto(D, ch, cara, con: Gab, de: G)'
+        sube: diferencia_de_cotas(G, H)
+        # K: desde G₁, sobre la paralela a la charnela (la prolongación de
+        # D₁G₁), lo que G sube sobre H. Vale a los dos lados: es una lista.
+        Ks: 'medir_sobre(figura.segmento("DG1"), desde: figura.punto("G1"), distancia: sube)'
+        Kp: uno(Ks, 1)
+        # Las cifras.
+        pendiente_cara: angulo_con_ph(cara)
+        diedro: angulo_diedro(C, arista, E)
+        entre_planos: angulo_planos(alfa, beta)
+        # Para los distractores: CD vista en el alzado como si fuera frontal
+        # (D llevado al plano frontal de C sin cambiar su alzado) y el plano
+        # frontal que contiene a AB, el de simetría de la pieza.
+        Df: 'punto3(alzado: figura.punto("D2"), planta: pie_perpendicular(figura.punto("D1"), figura.segmento("CH1")))'
+        Ax: 'punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10))'
+        simetria: plano(A, B, Ax)
+        # Los errores del radio, construidos: la cota sola y la planta sola.
+        G0_cota: 'medir_sobre(figura.segmento("der1"), desde: figura.punto("H1"), distancia: sube)'
+        G0_planta: 'uno(medir_sobre(figura.segmento("der1"), desde: figura.punto("H1"), distancia: vm_planta(G, H)), 1)'
+        D0_cota: 'medir_sobre(perpendicular(por: figura.punto("D1"), a: figura.segmento("CH1")), desde: pie_perpendicular(figura.punto("D1"), figura.segmento("CH1")), distancia: sube)'
+        K_planta: 'medir_sobre(figura.segmento("DG1"), desde: figura.punto("G1"), distancia: vm_planta(G, H))'
+        perpD1: 'perpendicular(por: figura.punto("D1"), a: figura.segmento("CH1"))'
+        # Los extremos de las rectas largas de la construcción.
+        Kmas: 'desplaza(Kp, dx: mm(3))'
+        Lder: 'desplaza(proy_planta(rama(Gab, 1)), dy: mm(3))'
+        LD: 'desplaza(proy_planta(rama(Dab, 1)), dy: mm(3))'
+        LG: 'desplaza(proy_planta(rama(Dab, 1)), dx: mm(-3))'
+      comprueba:
+        # D está en el plano de C, H y G, y la cara α, en el de A, B y C (D),
+        # como la β (F): la pieza es de caras planas.
+        - en_plano(D, cara)
+        - en_plano(D, alfa)
+        - en_plano(F, beta)
+    pasos:
+      - tipo: reconocer
+        pregunta: El apartado c) pide «el ángulo formado por las caras α y β». ¿Qué ángulo es?
+        opciones:
+          - texto: El que forman los planos de las dos caras, el menor de los dos, entre 0 y 90°
+            mensaje: |
+              Ese es el ángulo entre dos planos, y aquí no se pide el de dos planos sino el de dos caras
+              de una pieza: el que abarcan por donde está la pieza. Con la arista AB de punta se ven los
+              dos, que suman 180°; el menor es 86,2°, por fuera de la pieza.
+          - texto: El que abarcan las dos caras por dentro de la pieza, aunque pase de 90°
+            correcta: true
+            mensaje: |
+              Eso es. Es el diedro de las caras: el que mediría un transportador apoyado en la pieza en
+              ángulo recto con la arista AB, por dentro. Aquí pasa de 90°, y su suplementario, el menor
+              de los dos que forman los planos, es otro número.
+          - texto: El que forman α₁ y β₁ en la planta, que es donde las dos caras se ven enteras y sin solaparse
+            mensaje: |
+              La planta enseña de verdad el ángulo de las aristas de la base, AC y AE, que son
+              horizontales: 90°. Las caras están inclinadas, y su ángulo se mide en un plano
+              perpendicular a la arista común AB, con AB de punta.
+
+      # Decisión: un solo paso construir, el del apartado a). La pendiente se
+      # lee en su triángulo del radio, y el diedro, en el calcular.
+      - tipo: construir
+        titulo: La cara CDGH abatida sobre el plano de la base
+        intro: |
+          Abate la cara CDGH sobre el plano horizontal de la base, con la charnela CH: C y H están en
+          ella y no se mueven. GH es perpendicular a CH, así que G gira por la prolongación de G₁H₁. Su
+          radio sale de un triángulo rectángulo: arma en G₁, sobre la prolongación de D₁G₁, que es la
+          paralela a la charnela, lo que G está más alto que H, G₂H₂; ese punto es K, y H₁K es el radio.
+          Con centro en H₁, G₀; D₀, en la perpendicular a la charnela por D₁ y a la altura de G₀,
+          porque DG es paralela a CH. C₁H₁G₀D₀ es la verdadera magnitud. Abate hacia el lado que
+          quieras; aquí, hacia abajo, fuera de la planta (hacia arriba, G₀ y D₀ caen sobre la planta,
+          a 4,6 mm de un vértice cada uno: amplía con la lupa, ×4). Marca K, G₀ y D₀.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: K
+            pide: el punto del triángulo del radio, a lo que G sube sobre H desde G₁
+            es: solucion.Ks
+            bien: |
+              K está en la prolongación de D₁G₁, a 45,0 mm de G₁: lo que G está más alto que H. El
+              triángulo H₁G₁K es rectángulo en G₁, y su hipotenusa H₁K, 46,6 mm, es la distancia real
+              de G a la charnela. A la izquierda de G₁ también valdría.
+            diagnosticos:
+              - si: cerca_de(solucion.K_planta)
+                mensaje: |
+                  Has llevado G₁H₁, lo que G₁ dista de la charnela **en la planta**: ese es el otro cateto,
+                  que ya está dibujado. Sobre la paralela a la charnela va lo que G está **más alto** que
+                  H, G₂H₂ en el alzado.
+                ejemplo: uno(solucion.K_planta, 1)
+              - si: '!en_recta(figura.segmento("DG1"))'
+                mensaje: |
+                  K va en la **paralela a la charnela por G₁**, que es la prolongación de D₁G₁: el
+                  triángulo es rectángulo en G₁.
+                ejemplo: 'desplaza(solucion.Kp, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la prolongación de D₁G₁, pero no a la distancia buena: con el compás, G₂H₂, la
+                  altura de la pieza, y centro en G₁.
+          - nombre: G0
+            pide: el vértice G abatido
+            es: proy_planta(solucion.Gab)
+            bien: |
+              G₀ está en la prolongación de G₁H₁, a H₁K de H₁, 46,6 mm: G gira alrededor de la
+              charnela, por un plano perpendicular a ella, hasta el plano de la base.
+            diagnosticos:
+              - si: cerca_de(solucion.G0_cota)
+                mensaje: |
+                  Has abatido G con lo que sube sobre H, 45,0 mm: es solo un cateto. El radio es la
+                  hipotenusa, H₁K, que tiene por otro cateto lo que G₁ dista de la charnela en la planta.
+                ejemplo: uno(solucion.G0_cota, 1)
+              - si: cerca_de(solucion.G0_planta)
+                mensaje: |
+                  Has llevado al otro lado de H₁ lo que G₁ dista de la charnela **en la planta**. La cara
+                  está inclinada y la planta la acorta: el radio es H₁K, la distancia real.
+                ejemplo: solucion.G0_planta
+              - si: '!en_recta(figura.segmento("der1"))'
+                mensaje: |
+                  G gira en un plano perpendicular a la charnela, que en la planta es la **prolongación de
+                  G₁H₁**: GH es perpendicular a CH.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Gab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la prolongación de G₁H₁, pero no a la distancia buena: con centro en H₁ y radio
+                  H₁K, el arco que sale de K la corta en G₀.
+          - nombre: D0
+            pide: el vértice D abatido
+            es: proy_planta(solucion.Dab)
+            bien: |
+              D₀ está en la perpendicular a la charnela por D₁ y a la altura de G₀: D₀G₀ es paralela a
+              C₁H₁. C₁H₁G₀D₀ es la cara CDGH en verdadera magnitud, un trapecio rectángulo.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_planta(solucion.Dab)))
+                mensaje: |
+                  Ese es D abatido **al otro lado** de la charnela. La cara gira entera, como una tapa
+                  sobre su bisagra: D₀ cae del mismo lado que G₀.
+                ejemplo: proy_planta(rama(solucion.Dab, 2))
+              - si: cerca_de(solucion.D0_cota)
+                mensaje: |
+                  Has abatido D con lo que sube sobre la base, 45,0 mm, que es un cateto. D está a la
+                  misma distancia de la charnela que G: D₀ va a la altura de G₀.
+                ejemplo: uno(solucion.D0_cota, 1)
+              - si: '!en_recta(solucion.perpD1)'
+                mensaje: |
+                  D gira en un plano perpendicular a la charnela: D₀ está en la **perpendicular a C₁H₁ por
+                  D₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Dab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  D₀ está donde la paralela a la charnela por G₀ corta la perpendicular a la charnela por
+                  D₁.
+        trazado:
+          - segmento2(figura.punto("G1"), solucion.Kp)
+          - segmento2(figura.punto("H1"), solucion.Kp)
+          - segmento2(figura.punto("H1"), proy_planta(solucion.Gab))
+          - segmento2(proy_planta(solucion.Gab), proy_planta(solucion.Dab))
+          - segmento2(figura.punto("C1"), proy_planta(solucion.Dab))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("G1"), solucion.Kmas)
+            porque: |
+              En la planta, D₁G₁ prolongada con la regla hacia la derecha, larga: DG es paralela a la
+              charnela CH, y esta recta es la paralela a la charnela por G₁, donde se arma el triángulo
+              del radio.
+          - con: compas
+            traza: 'arco(figura.punto("G1"), por: solucion.Kp, desde: desplaza(solucion.Kp, dy: -6), hasta: desplaza(solucion.Kp, dy: 6))'
+            toma: segmento2(figura.punto("G2"), figura.punto("H2"))
+            porque: |
+              Con el compás, en el alzado, lo que G está más alto que H: G₂H₂, la altura de la pieza,
+              45,0 mm. Con centro en G₁, sobre la paralela, hacia la derecha.
+          - con: marca
+            traza: solucion.Kp
+            rotulo: K
+            porque: |
+              K, nombre nuestro, donde el arco corta la paralela por G₁: G₁K es lo que G está más alto
+              que la charnela.
+          - con: regla
+            traza: segmento2(figura.punto("H1"), solucion.Kp)
+            porque: |
+              H₁K, la hipotenusa del triángulo rectángulo H₁G₁K: la distancia real de G a la charnela,
+              46,6 mm, que es el radio con que G se abate. El ángulo del triángulo en H₁ es la pendiente
+              de la cara: GH es su línea de máxima pendiente.
+          - con: regla
+            traza: segmento2(figura.punto("H1"), solucion.Lder)
+            porque: |
+              G₁H₁ prolongada con la regla hacia abajo, larga: es la perpendicular a la charnela por G₁,
+              y por ella se mueve G al abatirse.
+          - con: compas
+            traza: 'arco(figura.punto("H1"), por: solucion.Kp, desde: solucion.Kp, hasta: desplaza(proy_planta(rama(solucion.Gab, 1)), dx: -6))'
+            porque: |
+              Con centro en H₁ y radio H₁K, el arco desde K hasta pasar la prolongación de G₁H₁: G gira
+              alrededor de la charnela y cae al plano de la base. Hacia arriba, sobre la planta, también
+              valdría; aquí, hacia abajo, donde hay sitio.
+          - con: marca
+            traza: proy_planta(solucion.Gab)
+            rotulo: G₀
+            porque: |
+              G₀, donde el arco corta la prolongación de G₁H₁: G abatido, a 46,6 mm de H₁.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("D1"), solucion.LD)
+            guia: figura.segmento("CH1")
+            porque: |
+              Por D₁, la perpendicular a la charnela, hacia abajo y larga: D se abate como G, por un
+              plano perpendicular a CH. Cruza C₁H₁ en el pie de D.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Gab), solucion.LG)
+            guia: figura.segmento("CH1")
+            porque: |
+              Por G₀, la paralela a la charnela hacia la izquierda: DG es paralela a CH, y abatida lo
+              sigue siendo, a la misma distancia.
+          - con: marca
+            traza: proy_planta(solucion.Dab)
+            rotulo: D₀
+            porque: |
+              D₀, donde la paralela por G₀ corta la perpendicular a la charnela por D₁: D abatido.
+          - con: regla
+            traza: segmento2(figura.punto("C1"), proy_planta(solucion.Dab))
+            porque: |
+              C₁D₀, el lado CD abatido: C está en la charnela y no se mueve. C₁H₁G₀D₀ es la cara CDGH en
+              verdadera magnitud, un trapecio rectángulo en H₁ y en G₀: CH mide 35,0 mm, DG 30,0, GH 46,6
+              y CD 46,8.
+          - con: transportador
+            traza: 'arco(figura.punto("H1"), por: figura.punto("G1"), desde: figura.punto("G1"), hasta: solucion.Kp)'
+            porque: |
+              El transportador con el centro en H₁, de H₁G₁ a H₁K: 75,1°, la pendiente de la cara, el
+              ángulo de su línea de máxima pendiente GH con el plano horizontal.
+        pista: |
+          (1) En G₁, sobre la prolongación de D₁G₁, G₂H₂ con el compás: K. (2) H₁K es el radio. (3) Con
+          centro en H₁, a la prolongación de G₁H₁: G₀. (4) Por D₁, la perpendicular a C₁H₁; por G₀, la
+          paralela: D₀. (5) C₁H₁G₀D₀ es la cara de verdad.
+        desarrollo: |
+          En verde claro, el triángulo del radio, H₁G₁K, y la cara abatida C₁H₁G₀D₀: CH = 35,0 mm, DG =
+          30,0 mm, GH = 46,6 mm y CD = 46,8 mm, con ángulos rectos en H₁ y en G₀. El ángulo del
+          triángulo en H₁ es la pendiente de la cara.
+
+      - tipo: calcular
+        titulo: La pendiente de la cara CDGH
+        pregunta: ¿Cuántos grados mide la pendiente de la cara CDGH, su ángulo con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '75.09'
+          receta: pendiente_cara
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '14.91'
+            receta: 90 - pendiente_cara
+            mensaje: |
+              Ese es el **complementario**: el ángulo de la cara con la vertical, el de K en el triángulo
+              H₁G₁K. La pendiente está en H₁, entre H₁G₁, la planta de GH, y H₁K, GH de verdad.
+          - valor: '73.91'
+            receta: angulo_con_ph(segmento3(C, D))
+            mensaje: |
+              Es el ángulo de la arista **CD** con el plano horizontal. CD no es perpendicular a CH, así
+              que no es una recta de máxima pendiente, y sube menos que la cara. La de máxima pendiente
+              es GH, perpendicular a las horizontales CH y DG.
+          - valor: '83.67'
+            receta: angulo_con_ph(segmento3(C, Df))
+            mensaje: |
+              Es lo que C₂D₂ forma con la horizontal **en el alzado**. CD no es frontal y el alzado
+              deforma su ángulo; y tampoco es la recta de máxima pendiente. La pendiente sale del
+              triángulo de GH.
+          - valor: '375.62'
+            receta: pendiente(H, G) * 100
+            mensaje: |
+              Esa es la pendiente **en tanto por ciento**: lo que sube por cada cien que avanza, 45,0
+              entre 12,0 por cien. Se pide en grados: el ángulo cuya tangente es 3,756.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en H₁, entre H₁G₁ y H₁K. GH es
+          perpendicular a las horizontales de la cara, CH y DG.
+        desarrollo: |
+          GH es la recta de máxima pendiente de la cara. Sube 45,00 mm, G₂H₂, y avanza en la planta
+          11,98 mm, G₁H₁:
+
+          $$ \operatorname{tg} i = \frac{45{,}00}{11{,}98} \approx 3{,}756, \qquad i \approx 75{,}09^{\circ} $$
+
+          Por la normal de la cara sale lo mismo. Las caras α y β son casi igual de empinadas, 75,0°.
+
+      - tipo: calcular
+        titulo: El ángulo de las caras α y β
+        pregunta: ¿Cuántos grados forman las caras α y β, por dentro de la pieza?
+        respuesta:
+          tipo: numero
+          valor: '93.78'
+          receta: diedro
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '86.22'
+            receta: entre_planos
+            mensaje: |
+              Ese es el **suplementario**, el ángulo entre los planos de las dos caras, el menor de los
+              dos que forman: el que queda por fuera de la pieza. Se pide el de las caras, el que
+              abarcan por dentro, y pasa de 90°.
+          - valor: '89.96'
+            receta: angulo_rectas(recta3(A, C), recta3(A, E))
+            mensaje: |
+              Es el ángulo de las aristas de la base, AC y AE, que en la planta se ve de verdad porque son
+              horizontales: es el de α₁ y β₁. Las caras están inclinadas; su ángulo se mide en un plano
+              perpendicular a la arista AB, con AB de punta.
+          - valor: '46.91'
+            receta: angulo_planos(alfa, simetria)
+            mensaje: |
+              Es lo que forma **una sola cara** con el plano de simetría de la pieza, el frontal de AB.
+              Con AB de punta por un cambio de plano horizontal, ese plano se ve como la recta por A₄
+              paralela a la línea nueva (la propia línea nueva, si la referencia es A): has medido
+              entre el canto de una cara y esa recta. El de las caras es el que forman los dos cantos,
+              el doble.
+        pista: |
+          AB es frontal: A₁B₁ es horizontal en el papel. Un cambio de plano horizontal con la línea
+          nueva perpendicular a A₂B₂ pone AB de punta, y las dos caras se ven de canto: mide entre los
+          dos cantos, por el lado de la pieza.
+        desarrollo: |
+          AB es frontal, y A₂B₂ su verdadera magnitud, 48,1 mm. Con un cambio de plano horizontal, la
+          línea nueva perpendicular a A₂B₂ y la referencia en A, la arista queda de punta, A₄ ≡ B₄,
+          sobre la línea nueva, y α y β se ven como dos rectas, A₄C₄ y A₄E₄, simétricas respecto de
+          ella. Por el otro camino, con u y v, las perpendiculares a AB desde C y desde E, de 36,98 y
+          36,95 mm:
+
+          $$ \cos\theta = \frac{\vec u \cdot \vec v}{|\vec u|\,|\vec v|} = \frac{-90{,}13}{36{,}98 \cdot 36{,}95} \approx -0{,}0660, \qquad \theta \approx 93{,}78^{\circ} $$
+
+          Con D y F en vez de C y E sale 93,9°: la diferencia es el redondeo de la lámina, y la
+          casilla da por buenos los dos. Los planos de las caras forman 86,2°, su suplementario.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: CH y DG son horizontales y frontales a la vez, así que la cara CDGH se abate alrededor de CH sobre el plano de la base, y C y H no se mueven.
+          - texto: GH es perpendicular a CH; G₁H₁ y lo que G sube, G₂H₂, son los catetos de un triángulo cuyo ángulo en H₁ es la pendiente de la cara, 75,1°, y cuya hipotenusa es el radio de G.
+          - texto: G₀ cae en la prolongación de G₁H₁, a ese radio de H₁, y D₀ en la perpendicular a CH por D₁, a la altura de G₀; C₁H₁G₀D₀ es la cara en verdadera magnitud.
+          - texto: Con la arista AB de punta, α y β se ven de canto, y el ángulo que abarcan por dentro de la pieza, 93,8°, es el que forman las caras.
+          - texto: El ángulo de las caras α y β es el de α₁ y β₁ en la planta, 90°, porque las dos caras salen de A en ángulo recto.
+            trampa: true
+            mensaje: |
+              La planta enseña de verdad el ángulo de las aristas de la base, que son horizontales, pero
+              no el de las caras, que están inclinadas: ese se mide perpendicular a la arista AB, y es
+              93,8°.
+    resolucion: |
+      **La cara CDGH.** CH y DG son horizontales y frontales a la vez, y GH les es perpendicular: es la
+      recta de máxima pendiente de la cara. Se abate la cara sobre el plano de la base con la charnela
+      CH. El radio de G es la hipotenusa del triángulo de catetos G₁H₁, 12,0 mm, y lo que G sube sobre
+      H, G₂H₂, 45,0 mm: 46,6 mm. G₀ cae en la prolongación de G₁H₁, y D₀ en la perpendicular a C₁H₁
+      por D₁, a la altura de G₀. C₁H₁G₀D₀ es un trapecio rectángulo con CH = 35,0 mm, DG = 30,0 mm,
+      GH = 46,6 mm y CD = 46,8 mm.
+
+      **La pendiente.** El ángulo de ese triángulo en H₁: tg i = 45,00/11,98, i = 75,1°. No es la de
+      la arista CD, 73,9°, que no es de máxima pendiente.
+
+      **El ángulo de α y β.** La arista común AB es frontal, y un solo cambio de plano horizontal, con
+      la línea nueva perpendicular a A₂B₂, la pone de punta: α y β se ven de canto, y por dentro de la
+      pieza forman 93,8°. Los planos de las caras forman 86,2°, el suplementario; se pide el de las
+      caras, que pasa de 90°. En la planta, α₁ y β₁ salen de A₁ en ángulo recto, que es el de las
+      aristas de la base, no el de las caras.
+
+  - id: sd61-el-tripode-del-tren-de-aterrizaje
+    titulo: El trípode del tren de aterrizaje, el brazo AB y el ángulo de AD y AC
+    fuente: Ejercicio 45 (SD61) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 46).
+    # Los métodos no los impone: AB, con su triángulo rectángulo levantado en
+    # B₁; el ángulo de AD y AC, abatiendo el plano ACD con la charnela CD. Un
+    # paso construir para cada construcción y un calcular para cada cifra.
+    enunciado: |
+      Dadas las vistas del trípode de un tren de aterrizaje, se pide:
+
+      a) Determinar gráficamente la longitud del brazo AB y el ángulo que forma con el plano horizontal.
+
+      b) Determinar gráficamente el ángulo que forman los brazos AD y AC.
+
+      **Notas nuestras.** La figura es el tren en alzado, arriba, y en planta, debajo: la rueda, en
+      un eje de punta que sale de A (en el alzado, su centro cae en A₂), y tres brazos que van de A
+      a B, C y D, los tres a la misma altura, donde el tren se fija al avión. La rueda es adorno.
+      A₁D₁ es horizontal en el papel: AD es frontal. La lámina no da escala, y las longitudes se dan
+      en milímetros de la lámina. Construimos AB con su triángulo rectángulo levantado en B₁, y el
+      ángulo de AD y AC abatiendo el plano ACD alrededor de CD, que es una horizontal del plano
+      porque C y D están a la misma cota. B₀, M, K y A₀ son nombres nuestros.
+    pide: La longitud real del brazo AB, en mm, y su ángulo con el plano horizontal, y el ángulo de los brazos AD y AC, en grados, con las dos construcciones que los dan.
+    receta:
+      lamina: sd61
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        acd: plano(A, C, D)
+      solucion:
+        # AB: B abatido sobre la planta con el plano vertical de AB, a lo que
+        # B sube sobre A de B₁, en la perpendicular a A₁B₁. Los dos lados valen
+        # (una lista); la construcción va hacia abajo a la izquierda (el 1).
+        Bab_s: abatido_planta(A, B)
+        Bab1: uno(Bab_s, 1)
+        sube: diferencia_de_cotas(A, B)
+        perpB1: 'perpendicular(por: figura.punto("B1"), a: figura.segmento("AB1"))'
+        # La horizontal de B₂, C₂ y D₂, y el punto de ella en la vertical de
+        # A₂: A₂Ah2 es lo que B, C y D están más altos que A.
+        Ah2: 'pie_perpendicular(figura.punto("A2"), segmento2(figura.punto("D2"), figura.punto("B2")))'
+        # Decisión: AD y AC, abatiendo el plano ACD sobre el plano horizontal
+        # de C y D con la charnela CD. A abatido es una elección; la
+        # construcción va al lado contrario de A₁ (rama 1), porque al otro A₀
+        # cae encima del neumático de la planta.
+        ch: recta3(D, C)
+        Mch: pie_perpendicular(A, ch)
+        Aab: abatido_a_elegir(A, ch, acd)
+        perpA1: 'perpendicular(por: figura.punto("A1"), a: segmento2(figura.punto("D1"), figura.punto("C1")))'
+        paraA1: 'perpendicular(por: figura.punto("A1"), a: perpA1)'
+        Kc: 'uno(medir_sobre(paraA1, desde: figura.punto("A1"), distancia: diferencia_de_cotas(A, C)), 2)'
+        # Las cifras.
+        AB_mm: en_mm(vm(A, B))
+        angAB: angulo_con_ph(segmento3(A, B))
+        angDAC: angulo_rectas(recta3(A, D), recta3(A, C))
+        # Para los distractores: B, C y D llevados a la cota de A (lo que se
+        # ve en la planta) o al plano frontal de A (lo que se ve en el alzado),
+        # y el triángulo abatido con el radio mal, igual a la cota.
+        horA2: 'segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dx: 10))'
+        Bf: 'punto3(alzado: figura.punto("B2"), planta: pie_perpendicular(figura.punto("B1"), figura.segmento("AD1")))'
+        Ch: 'punto3(alzado: pie_perpendicular(figura.punto("C1"), horA2), planta: figura.punto("C1"))'
+        Dh: 'punto3(alzado: pie_perpendicular(figura.punto("D1"), horA2), planta: figura.punto("D1"))'
+        Cf: 'punto3(alzado: figura.punto("C2"), planta: pie_perpendicular(figura.punto("C2"), figura.segmento("AD1")))'
+        A0x2: 'uno(medir_sobre(perpA1, desde: proy_planta(Mch), distancia: diferencia_de_cotas(A, C)), 1)'
+        A0x: 'punto3(alzado: pie_perpendicular(A0x2, segmento2(figura.punto("D2"), figura.punto("B2"))), planta: A0x2)'
+        # Los errores de las construcciones: B₀ con la diferencia de
+        # alejamientos, A abatido en A₁ en vez de B en B₁, y A₀ con el radio
+        # igual a la cota o a lo que dista en la planta.
+        B0_dy: 'medir_sobre(perpB1, desde: figura.punto("B1"), distancia: raiz(vm(A, B) * vm(A, B) - vm_alzado(A, B) * vm_alzado(A, B)))'
+        A0_enA1: 'medir_sobre(perpendicular(por: figura.punto("A1"), a: figura.segmento("AB1")), desde: figura.punto("A1"), distancia: sube)'
+        A0_cota: 'medir_sobre(perpA1, desde: proy_planta(Mch), distancia: diferencia_de_cotas(A, C))'
+        A0_planta: 'uno(medir_sobre(perpA1, desde: proy_planta(Mch), distancia: vm_planta(A, Mch)), 1)'
+        # Los extremos de las rectas largas de la construcción.
+        LvA2: 'desplaza(Ah2, dy: mm(-2))'
+        LB0: 'uno(medir_sobre(perpB1, desde: Bab1, distancia: mm(3)), 1)'
+        LA0: 'uno(medir_sobre(perpA1, desde: proy_planta(rama(Aab, 1)), distancia: mm(3)), 1)'
+        LK: 'uno(medir_sobre(paraA1, desde: Kc, distancia: mm(3)), 2)'
+        # El plano horizontal de C, para comprobar que B y D están a su cota.
+        Cx: 'punto3(alzado: desplaza(figura.punto("C2"), dx: 10), planta: desplaza(figura.punto("C1"), dx: 10))'
+        Cy: 'punto3(alzado: figura.punto("C2"), planta: desplaza(figura.punto("C1"), dy: 10))'
+        horC: plano(C, Cx, Cy)
+      comprueba:
+        # B, C y D están a la misma cota: CD es una horizontal del plano ACD,
+        # y M, el pie de A, está en la charnela y en el plano.
+        - en_plano(B, horC)
+        - en_plano(D, horC)
+        - en_plano(Mch, acd)
+    pasos:
+      - tipo: reconocer
+        pregunta: El brazo AB no es horizontal ni frontal. ¿Qué construcción da a la vez su longitud y su ángulo con el plano horizontal?
+        opciones:
+          - texto: A₂B₂ y el ángulo que forma con la horizontal, los dos en el alzado
+            mensaje: |
+              AB no es frontal —A₁B₁ no es horizontal en el papel—, así que el alzado lo acorta y
+              deforma su ángulo: A₂B₂ mide 35,3 mm y forma 55,7° con la horizontal, y AB mide 37,0 mm y
+              forma 52,0° con el plano horizontal.
+          - texto: El triángulo de catetos A₂B₂ y la diferencia de alejamientos, con la hipotenusa y el ángulo en A₂
+            mensaje: |
+              Su hipotenusa sí es AB de verdad, pero su ángulo en A₂ es el de AB con el plano
+              **vertical**, 17,6°: ese triángulo abate el plano de canto de AB sobre el alzado. El ángulo
+              con el horizontal sale del triángulo de la planta.
+          - texto: El triángulo rectángulo de catetos A₁B₁ y lo que B está más alto que A, con la hipotenusa y el ángulo en A₁
+            correcta: true
+            mensaje: |
+              Eso es. Es el plano vertical que contiene a AB, abatido sobre la planta: A₁B₁ es lo que AB
+              avanza en horizontal y la diferencia de cotas, lo que sube. El ángulo con el plano
+              horizontal es el de AB con su planta, en A₁.
+
+      - tipo: construir
+        titulo: El brazo AB en verdadera magnitud
+        intro: |
+          En B₁, la perpendicular a A₁B₁, y sobre ella lo que B está más alto que A: en el alzado, de
+          A₂ a la horizontal de B₂, que pasa también por C₂ y D₂. Ese punto es B₀, B abatido sobre la
+          planta con el plano vertical de AB. A₁B₀ es AB de verdad, y el ángulo en A₁, entre A₁B₁ y
+          A₁B₀, el de AB con el plano horizontal. Hacia cualquiera de los dos lados de B₁ vale; aquí,
+          hacia abajo a la izquierda. Marca B₀.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: B0
+            pide: el extremo B del brazo, abatido sobre la planta
+            es: solucion.Bab_s
+            bien: |
+              B₀ está en la perpendicular a A₁B₁ por B₁, a 29,2 mm de B₁: lo que B está más alto que A.
+              A₁B₀ mide 37,0 mm, la longitud del brazo, y forma con A₁B₁ 52,0°, su ángulo con el plano
+              horizontal.
+            diagnosticos:
+              - si: cerca_de(solucion.B0_dy)
+                mensaje: |
+                  Has llevado lo que B está **más lejos** que A, la diferencia de alejamientos. Sobre la
+                  planta se lleva lo que **sube**: de A₂ a la horizontal de B₂, en el alzado.
+                ejemplo: uno(solucion.B0_dy, 1)
+              - si: cerca_de(solucion.A0_enA1)
+                mensaje: |
+                  Has levantado la diferencia de cotas en A₁, no en B₁. Ese triángulo también da la
+                  longitud, pero aquí se pide B abatido: la perpendicular a A₁B₁ va por B₁.
+                ejemplo: uno(solucion.A0_enA1, 1)
+              - si: '!en_recta(solucion.perpB1)'
+                mensaje: |
+                  B₀ va en la **perpendicular a A₁B₁ por B₁**: el plano vertical de AB gira alrededor de
+                  A₁B₁ hasta la planta, y B se mueve perpendicular a ella.
+                ejemplo: 'desplaza(solucion.Bab1, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular por B₁, pero no a la distancia buena: con el compás, de A₂ a la
+                  horizontal de B₂, y centro en B₁.
+        trazado:
+          - segmento2(figura.punto("B1"), solucion.Bab1)
+          - segmento2(figura.punto("A1"), solucion.Bab1)
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("D2"), figura.punto("B2"))
+            porque: |
+              En el alzado, la recta de D₂ a B₂, que pasa por C₂: los tres extremos están a la misma
+              altura, y es la horizontal de las fijaciones al avión.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.LvA2)
+            porque: |
+              Por A₂, la vertical hacia arriba, hasta pasar la horizontal de B₂: el trozo entre A₂ y esa
+              horizontal es lo que B, C y D están más altos que A, 29,2 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.LB0)
+            guia: figura.segmento("AB1")
+            porque: |
+              En la planta, por B₁, la perpendicular a A₁B₁, hacia abajo a la izquierda y larga: el
+              plano vertical de AB se abate sobre la planta girando alrededor de A₁B₁, y B se mueve por
+              esta recta.
+          - con: compas
+            traza: 'arco(figura.punto("B1"), por: solucion.Bab1, desde: desplaza(solucion.Bab1, dx: 5.2, dy: 2.9), hasta: desplaza(solucion.Bab1, dx: -5.2, dy: -2.9))'
+            toma: segmento2(figura.punto("A2"), solucion.Ah2)
+            porque: |
+              Con el compás, en el alzado, lo que B está más alto que A: de A₂ a la horizontal de B₂.
+              Con centro en B₁, sobre la perpendicular.
+          - con: marca
+            traza: solucion.Bab1
+            rotulo: B₀
+            porque: |
+              B₀, donde el arco corta la perpendicular por B₁: B abatido, nombre nuestro.
+          - con: regla
+            traza: segmento2(figura.punto("A1"), solucion.Bab1)
+            porque: |
+              A₁B₀, la hipotenusa del triángulo rectángulo A₁B₁B₀: el brazo AB en verdadera magnitud,
+              37,0 mm.
+          - con: transportador
+            traza: 'arco(figura.punto("A1"), por: figura.punto("B1"), desde: figura.punto("B1"), hasta: solucion.Bab1)'
+            porque: |
+              El transportador con el centro en A₁, de A₁B₁ a A₁B₀: 52,0°, el ángulo de AB con su
+              planta, que es el que forma con el plano horizontal.
+        pista: |
+          (1) La horizontal de B₂, C₂ y D₂, y la vertical de A₂ hasta ella: lo que B sube sobre A. (2)
+          En B₁, la perpendicular a A₁B₁, y sobre ella esa altura: B₀. (3) A₁B₀ es AB, y el ángulo en
+          A₁, el del plano horizontal.
+        desarrollo: |
+          En verde claro, el triángulo A₁B₁B₀, rectángulo en B₁: A₁B₁ = 22,8 mm, B₁B₀ = 29,2 mm y A₁B₀
+          = 37,0 mm, la longitud del brazo. Su ángulo en A₁ es el de AB con el plano horizontal.
+
+      - tipo: construir
+        titulo: El ángulo de AD y AC, abatiendo su plano
+        intro: |
+          C y D están a la misma cota, así que CD es una horizontal del plano ACD: es la charnela, y C
+          y D no se mueven. Abate A: en la planta, la perpendicular a C₁D₁ por A₁ corta la charnela en
+          M, el pie de A. El radio es la hipotenusa del triángulo de catetos MA₁ y lo que C y D están
+          más altos que A: arma en A₁, sobre la paralela a la charnela, esa altura, K, y MK es el
+          radio. Con centro en M, A₀ en la perpendicular. El ángulo D₁A₀C₁ es el de AD y AC. Abate
+          hacia el lado contrario de A₁: hacia A₁ también vale, pero A₀ cae encima del neumático,
+          entre sus rayas (si vas por ahí, amplía con la lupa, ×4).
+          Marca M y A₀.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: M
+            pide: el pie de A en la charnela CD, en la planta
+            es: proy_planta(solucion.Mch)
+            bien: |
+              M está en C₁D₁, al pie de la perpendicular por A₁: CD es horizontal, y la perpendicular a
+              ella se ve perpendicular en la planta. A gira alrededor de CD con centro en M.
+            diagnosticos:
+              - si: '!en_recta(segmento2(figura.punto("D1"), figura.punto("C1")))'
+                mensaje: |
+                  M está **en la charnela**, la recta C₁D₁: es el centro del giro de A.
+                ejemplo: 'desplaza(proy_planta(solucion.Mch), dx: mm(4), dy: mm(-3))'
+              - si: '!en_recta(solucion.perpA1)'
+                mensaje: |
+                  M es el pie de la **perpendicular a C₁D₁ por A₁**: A gira en un plano perpendicular a
+                  la charnela.
+                ejemplo: 'uno(medir_sobre(segmento2(figura.punto("D1"), figura.punto("C1")), desde: proy_planta(solucion.Mch), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  M está donde la perpendicular a C₁D₁ por A₁ corta C₁D₁.
+          - nombre: A0
+            pide: el vértice A abatido
+            es: proy_planta(solucion.Aab)
+            bien: |
+              A₀ está en la perpendicular a la charnela por A₁, a 37,4 mm de M: la distancia real de A a
+              CD. El ángulo D₁A₀C₁ es el de AD y AC, 39,4°.
+            diagnosticos:
+              - si: cerca_de(solucion.A0_cota)
+                mensaje: |
+                  Has abatido A con lo que C y D están más altos que A, 29,2 mm: es solo un cateto. El
+                  radio es la hipotenusa MK, que tiene por otro cateto lo que A₁ dista de la charnela en
+                  la planta, MA₁.
+                ejemplo: uno(solucion.A0_cota, 1)
+              - si: cerca_de(solucion.A0_planta)
+                mensaje: |
+                  Has llevado al otro lado de M lo que A₁ dista de la charnela **en la planta**, MA₁. A
+                  está más bajo que la charnela, y la distancia real es la hipotenusa MK.
+                ejemplo: solucion.A0_planta
+              - si: '!en_recta(solucion.perpA1)'
+                mensaje: |
+                  A gira en un plano perpendicular a la charnela: A₀ está en la **perpendicular a C₁D₁
+                  por A₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Aab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular por A₁, pero no a la distancia buena: con centro en M y radio
+                  MK, el arco que sale de K la corta en A₀.
+        trazado:
+          - segmento2(figura.punto("D1"), figura.punto("C1"))
+          - segmento2(figura.punto("A1"), proy_planta(solucion.Aab))
+          - segmento2(proy_planta(solucion.Aab), figura.punto("D1"))
+          - segmento2(proy_planta(solucion.Aab), figura.punto("C1"))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("D1"), figura.punto("C1"))
+            porque: |
+              En la planta, C₁D₁ con la regla: la charnela. C y D están a la misma altura en el alzado,
+              y CD es una horizontal del plano ACD.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.LA0)
+            guia: segmento2(figura.punto("D1"), figura.punto("C1"))
+            porque: |
+              Por A₁, la perpendicular a la charnela, larga, más allá de C₁D₁ y hacia abajo a la
+              izquierda: A gira alrededor de CD en un plano perpendicular a ella, y en la planta se
+              mueve por esta recta.
+          - con: marca
+            traza: proy_planta(solucion.Mch)
+            rotulo: M
+            porque: |
+              M, nombre nuestro, donde la perpendicular por A₁ corta la charnela: el pie de A, centro de
+              su giro.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.LK)
+            guia: segmento2(figura.punto("D1"), figura.punto("C1"))
+            porque: |
+              Por A₁, la paralela a la charnela, hacia abajo a la derecha: en ella se arma el triángulo
+              del radio, rectángulo en A₁.
+          - con: regla
+            traza: segmento2(figura.punto("D2"), figura.punto("B2"))
+            porque: |
+              En el alzado, la recta de D₂ a B₂, que pasa por C₂: la horizontal de los tres extremos.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.LvA2)
+            porque: |
+              Por A₂, la vertical hasta pasar esa horizontal: el trozo entre las dos es lo que C y D
+              están más altos que A, 29,2 mm.
+          - con: compas
+            traza: 'arco(figura.punto("A1"), por: solucion.Kc, desde: desplaza(solucion.Kc, dx: 4.8, dy: -3.6), hasta: desplaza(solucion.Kc, dx: -4.8, dy: 3.6))'
+            toma: segmento2(figura.punto("A2"), solucion.Ah2)
+            porque: |
+              Con el compás, esa altura, y centro en A₁: el arco corta la paralela a la charnela.
+          - con: marca
+            traza: solucion.Kc
+            rotulo: K
+            porque: |
+              K, nombre nuestro, donde el arco corta la paralela por A₁: A₁K es lo que A está más bajo
+              que la charnela.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.Mch), solucion.Kc)
+            porque: |
+              MK, la hipotenusa del triángulo rectángulo M A₁ K: la distancia real de A a la charnela,
+              37,4 mm, que es el radio con que A se abate.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.Mch), por: solucion.Kc, desde: solucion.Kc, hasta: desplaza(proy_planta(rama(solucion.Aab, 1)), dx: -3.6, dy: -4.8))'
+            porque: |
+              Con centro en M y radio MK, el arco desde K, por debajo de M, hasta pasar la perpendicular
+              al otro lado de la charnela: A gira alrededor de CD y cae al plano horizontal de C y D.
+          - con: marca
+            traza: proy_planta(solucion.Aab)
+            rotulo: A₀
+            porque: |
+              A₀, donde el arco corta la perpendicular por A₁, al otro lado de la charnela: A abatido, a
+              37,4 mm de M.
+          - con: regla
+            traza: '[segmento2(proy_planta(rama(solucion.Aab, 1)), figura.punto("D1")), segmento2(proy_planta(rama(solucion.Aab, 1)), figura.punto("C1"))]'
+            porque: |
+              A₀D₁ y A₀C₁: los brazos AD y AC abatidos. D y C están en la charnela y no se mueven; el
+              triángulo A₀D₁C₁ es ACD en verdadera magnitud.
+          - con: transportador
+            traza: 'arco(proy_planta(solucion.Aab), por: figura.punto("D1"), desde: figura.punto("D1"), hasta: figura.punto("C1"))'
+            porque: |
+              El transportador con el centro en A₀, de A₀D₁ a A₀C₁: 39,4°, el ángulo de los brazos AD y
+              AC.
+        pista: |
+          (1) La charnela C₁D₁, y por A₁ su perpendicular: M. (2) Por A₁, la paralela a la charnela, y
+          sobre ella lo que A está más bajo que C y D, de A₂ a la horizontal de C₂ y D₂: K. (3) Con
+          centro en M y radio MK, a la perpendicular, al otro lado: A₀. (4) El ángulo en A₀, entre A₀D₁
+          y A₀C₁.
+        desarrollo: |
+          En verde claro, la charnela, el camino de A y el triángulo A₀D₁C₁, que es ACD en verdadera
+          magnitud: AD = 41,3 mm, AC = 38,6 mm y CD = 27,1 mm. MA₁ mide 23,4 mm, y la hipotenusa MK, el
+          radio, 37,4 mm.
+
+      - tipo: calcular
+        titulo: La longitud del brazo AB
+        pregunta: ¿Cuánto mide de verdad el brazo AB?
+        respuesta:
+          tipo: numero
+          valor: '37.03'
+          receta: AB_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '35.31'
+            receta: en_mm(vm_alzado(A, B))
+            mensaje: |
+              Eso es **A₂B₂, en el alzado**. AB no es frontal —A₁B₁ no es horizontal en el papel—, y el
+              alzado lo acorta. Su verdadera magnitud es A₁B₀, la hipotenusa del triángulo.
+          - valor: '22.82'
+            receta: en_mm(vm_planta(A, B))
+            mensaje: |
+              Eso es **A₁B₁, en la planta**: lo que el brazo avanza en horizontal. Es un cateto del
+              triángulo; la longitud es la hipotenusa.
+          - valor: '29.17'
+            receta: en_mm(sube)
+            mensaje: |
+              Eso es lo que B está **más alto** que A, el otro cateto. La longitud del brazo es la
+              hipotenusa A₁B₀, con los dos catetos.
+        pista: |
+          Mide A₁B₀ en el paso anterior, con «medir» del Taller, o en tu lámina: la hipotenusa del
+          triángulo A₁B₁B₀.
+        desarrollo: |
+          Con A₁B₁ = 22,82 mm y la diferencia de cotas, 29,17 mm:
+
+          $$ \overline{AB} = \sqrt{22{,}82^{2} + 29{,}17^{2}} \approx 37{,}03 \text{ mm} $$
+
+          Una casualidad de esta lámina: en la construcción del ángulo de AD y AC, el radio MK, que es
+          lo que A dista de la charnela CD, mide 37,39 mm, dentro de la tolerancia de AB. No es el
+          brazo, y la casilla no lo distingue.
+
+      - tipo: calcular
+        titulo: El ángulo de AB con el plano horizontal
+        pregunta: ¿Cuántos grados forma el brazo AB con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '51.96'
+          receta: angAB
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '55.70'
+            receta: angulo_con_ph(segmento3(A, Bf))
+            mensaje: |
+              Es lo que forma A₂B₂ con la horizontal **en el alzado**. AB no es frontal, y el alzado
+              deforma su ángulo. El de verdad está en A₁, entre A₁B₁ y A₁B₀.
+          - valor: '38.04'
+            receta: 90 - angAB
+            mensaje: |
+              Ese es el **complementario**, el ángulo de AB con la vertical, el de B₀ en el triángulo.
+              El del plano horizontal está en A₁, entre la hipotenusa y la planta A₁B₁.
+          - valor: '17.56'
+            receta: angulo_con_pv(segmento3(A, B))
+            mensaje: |
+              Es el ángulo de AB con el plano **vertical**: sale del triángulo armado sobre A₂B₂ con la
+              diferencia de alejamientos. El del horizontal sale del triángulo de la planta, con la
+              diferencia de cotas.
+        pista: |
+          Con el transportador en el paso del brazo AB, o en tu lámina: en A₁, entre A₁B₁ y A₁B₀.
+        desarrollo: |
+          En el triángulo A₁B₁B₀, rectángulo en B₁:
+
+          $$ \operatorname{tg}\alpha = \frac{29{,}17}{22{,}82} \approx 1{,}278, \qquad \alpha \approx 51{,}96^{\circ} $$
+
+      - tipo: calcular
+        titulo: El ángulo de los brazos AD y AC
+        pregunta: ¿Cuántos grados forman los brazos AD y AC?
+        respuesta:
+          tipo: numero
+          valor: '39.44'
+          receta: angDAC
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '59.05'
+            receta: angulo_rectas(recta3(A, Dh), recta3(A, Ch))
+            mensaje: |
+              Es lo que forman A₁D₁ y A₁C₁ **en la planta**. El plano ACD no es horizontal —A está más
+              bajo que C y D—, y la planta deforma su ángulo. Hay que abatirlo.
+          - valor: '21.03'
+            receta: angulo_rectas(recta3(A, D), recta3(A, Cf))
+            mensaje: |
+              Es lo que forman A₂D₂ y A₂C₂ **en el alzado**. AD es frontal y se ve de verdad, pero AC
+              no, y el plano ACD tampoco: el alzado deforma el ángulo.
+          - valor: '49.13'
+            receta: angulo_rectas(recta3(A0x, D), recta3(A0x, C))
+            mensaje: |
+              Has abatido A con un radio igual a lo que C y D están más altos que A, 29,2 mm, que es solo
+              un cateto: A₀ cae demasiado cerca de la charnela y el ángulo sale abierto. El radio es la
+              hipotenusa MK, 37,4 mm.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en A₀, entre A₀D₁ y A₀C₁.
+        desarrollo: |
+          En el triángulo ACD, con AD = 41,28 mm, AC = 38,59 mm y CD = 27,07 mm, por el teorema del
+          coseno:
+
+          $$ \cos\widehat{A} = \frac{41{,}28^{2} + 38{,}59^{2} - 27{,}07^{2}}{2 \cdot 41{,}28 \cdot 38{,}59} \approx 0{,}7723, \qquad \widehat{A} \approx 39{,}44^{\circ} $$
+
+          Otra casualidad: en la construcción del brazo AB, A₁B₀ y A₁C₁ forman 39,7°, dentro de la
+          tolerancia. No es nada del ángulo pedido, que está en A₀, y la casilla no lo distingue.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AB no es horizontal ni frontal; A₁B₁ y lo que B sube sobre A son los catetos de un triángulo rectángulo cuya hipotenusa es AB y cuyo ángulo en A₁ es el de AB con el plano horizontal.
+          - texto: Levantado en B₁, ese triángulo da A₁B₀ = 37,0 mm, y en A₁, 52,0°.
+          - texto: C y D están a la misma cota, así que CD es una horizontal del plano ACD y sirve de charnela para abatirlo; C y D no se mueven.
+          - texto: A₀ cae en la perpendicular a C₁D₁ por A₁, a la distancia real de A a CD, y el ángulo D₁A₀C₁, 39,4°, es el de AD y AC.
+          - texto: El ángulo de AD y AC se mide en el alzado, entre A₂D₂ y A₂C₂, porque AD es frontal.
+            trampa: true
+            mensaje: |
+              AD es frontal, pero AC no, y el plano ACD tampoco: el alzado deforma el ángulo. Ahí se
+              ve de 21,0°, y de verdad mide 39,4°.
+    resolucion: |
+      **El brazo AB.** No es horizontal ni frontal. Su planta, A₁B₁, mide 22,8 mm, y B está 29,2 mm
+      más alto que A: de A₂ a la horizontal de B₂, C₂ y D₂, que están a la misma altura. Con esos dos
+      catetos, levantado en B₁, el triángulo A₁B₁B₀ da AB = 37,0 mm, la hipotenusa, y en A₁ su ángulo
+      con el plano horizontal, 52,0°. En el alzado, A₂B₂ se ve de 35,3 mm y de 55,7°: AB no es
+      frontal.
+
+      **El ángulo de AD y AC.** C y D están a la misma cota, así que CD es una horizontal del plano
+      ACD: la charnela. La perpendicular a C₁D₁ por A₁ la corta en M. A₁ dista de ella 23,4 mm en la
+      planta y A está 29,2 mm más bajo: el radio de A es la hipotenusa, 37,4 mm, y A₀ cae en esa
+      perpendicular, al otro lado de la charnela. El triángulo A₀D₁C₁ es ACD de verdad, y en A₀ mide
+      39,4°. En la planta el ángulo se ve de 59,1°, y en el alzado de 21,0°.
+
   - id: sd63-el-angulo-de-r-con-el-plano-abc
     titulo: El ángulo de la recta r con el plano ABC, en magnitud y posición
     fuente: Ejercicio 47 (SD63) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
