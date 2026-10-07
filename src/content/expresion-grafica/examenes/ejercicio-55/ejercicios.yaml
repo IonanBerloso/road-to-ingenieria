@@ -388,6 +388,8 @@ ejercicios:
         P: 'uno(medir_sobre(prB1, desde: figura.punto("B1"), distancia: mm(48)), 2)'
         nueva1: 'perpendicular(por: P, a: prB1)'
         n1_a: 'uno(medir_sobre(nueva1, desde: P, distancia: mm(6)), 1)'
+        arcP_a: 'uno(medir_sobre(nueva1, desde: P, distancia: mm(4)), 1)'
+        arcP_b: 'uno(medir_sobre(nueva1, desde: P, distancia: mm(4)), 2)'
         n1_b: 'uno(medir_sobre(nueva1, desde: P, distancia: vm_planta(B, Bp) + mm(6)), 2)'
         B_4: 'cambio_plano_vertical(B, nueva1, ref: Bp)'
         Bp_4: 'cambio_plano_vertical(Bp, nueva1, ref: Bp)'
@@ -402,6 +404,8 @@ ejercicios:
         # B5 es donde la corta B₄B′₄ prolongada.
         B5: 'uno(medir_sobre(segmento2(Bp_4, B_4), desde: B_4, distancia: mm(15)), 1)'
         nueva2: 'perpendicular(por: B5, a: segmento2(Bp_4, B_4))'
+        arcB5_a: 'uno(medir_sobre(nueva2, desde: B5, distancia: mm(3)), 1)'
+        arcB5_b: 'uno(medir_sobre(nueva2, desde: B5, distancia: mm(3)), 2)'
         Z_5: 'cambio_plano_vertical(Z, nueva1, ref: Bp, luego: nueva2, ref2: B)'
         Zp_5: 'cambio_plano_vertical(Zp, nueva1, ref: Bp, luego: nueva2, ref2: B)'
         N_5: 'cambio_plano_vertical(N, nueva1, ref: Bp, luego: nueva2, ref2: B)'
@@ -456,7 +460,7 @@ ejercicios:
               se ve recto en la vista donde la recta del plano está en verdadera magnitud: la
               horizontal en la planta y la frontal en el alzado. Aquí BC es una horizontal del
               plano, así que en la planta va perpendicular a B₁C₁.
-          - texto: En las dos vistas, perpendicular a las proyecciones de la arista BB′
+          - texto: En las dos vistas, perpendicular a las proyecciones de la arista BB′, que es una recta del plano
             mensaje: |
               BB′ no es horizontal ni frontal, y el ángulo recto con ella no se ve recto en
               ninguna de las dos vistas. Se usan las rectas del plano que sí están en verdadera
@@ -706,22 +710,42 @@ ejercicios:
               H₁, donde esa vertical corta la planta de la perpendicular. Z′H es la distancia d, que
               no está en verdadera magnitud en ninguna de las dos vistas: mide 30,85 mm.
           - con: escuadra-cartabon
-            traza: segmento2(solucion.n1_a, solucion.n1_b)
+            traza: segmento2(figura.punto("B1"), solucion.L_pB)
             guia: figura.segmento("BB1")
-            rotulo: primera línea nueva
             porque: |
               **La distancia t.** BB′ y ZZ′ se cruzan, y la distancia mínima va por su perpendicular
               común, que se ve en verdadera magnitud con BB′ de punta: hacen falta dos **cambios de
               plano**. El primero, vertical, sale de la planta y lleva cotas. Su línea nueva va
               paralela a B₁B′₁, para que BB′ salga en verdadera magnitud, y a la derecha de la
-              planta, donde hay sitio: aquí, a 48 mm de B₁B′₁.
+              planta, donde hay sitio. Antes, la perpendicular a B₁B′₁ por B₁, larga: sobre ella se
+              mide lo que la línea nueva dista de B₁, y en ella caerá B₄.
+          - con: compas
+            traza: 'arco(figura.punto("B1"), por: solucion.P, desde: solucion.arcP_a, hasta: solucion.arcP_b)'
+            porque: |
+              Con el compás, la punta en B₁ y abierto 48 mm, un arco que corta esa perpendicular: es
+              lo que la línea nueva va a distar de B₁B′₁. Los 48 mm son nuestros: dejan la vista
+              nueva a la derecha de la planta, donde hay sitio.
+          - con: marca
+            traza: solucion.P
+            rotulo: P
+            porque: |
+              P, donde el arco corta la perpendicular de B₁: a 48 mm de B₁, sobre la proyectante de B.
+              Por P pasa la línea nueva, y desde él se lleva la cota de B.
           - con: escuadra-cartabon
-            traza: '[segmento2(figura.punto("B1"), solucion.L_pB), segmento2(figura.punto("B1p"), solucion.L_pBp), segmento2(figura.punto("Z1"), solucion.L_pZ), segmento2(figura.punto("Z1p"), solucion.L_pZp)]'
+            traza: '[segmento2(solucion.P, solucion.n1_a), segmento2(solucion.P, solucion.n1_b)]'
+            guia: figura.segmento("BB1")
+            rotulo: primera línea nueva
+            porque: |
+              La **primera línea nueva**, por P y paralela a B₁B′₁ (perpendicular a la proyectante de
+              B₁): un poco más allá de P, y larga hacia abajo, hasta pasar las proyectantes de B′₁ y
+              de Z′₁, que se trazan ahora.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("B1p"), solucion.L_pBp), segmento2(figura.punto("Z1"), solucion.L_pZ), segmento2(figura.punto("Z1p"), solucion.L_pZp)]'
             guia: figura.segmento("BB1")
             porque: |
-              Desde la planta, las perpendiculares a la línea nueva por B₁, B′₁, Z₁ y Z′₁, largas, más
-              allá de ella. La de Z′₁ pasa a 1 mm de Z₁, casi encima de Z₁Z′₁: en la planta, ZZ′ es casi
-              perpendicular a BB′.
+              Desde la planta, las perpendiculares a la línea nueva por B′₁, Z₁ y Z′₁, largas, más
+              allá de ella; la de B₁ ya está. La de Z′₁ pasa a 1 mm de Z₁, casi encima de Z₁Z′₁: en la
+              planta, ZZ′ es casi perpendicular a BB′.
           - con: marca
             traza: solucion.Bp_4
             rotulo: B′₄
@@ -734,11 +758,6 @@ ejercicios:
             porque: |
               Z′₄, donde la perpendicular de Z′₁ corta la línea nueva: Z′ tiene la cota de B′, porque
               Z′₂ está a la altura de A′₂C′₂, y cae en ella como la referencia.
-          - con: marca
-            traza: solucion.P
-            rotulo: P
-            porque: |
-              P, donde la perpendicular de B₁ corta la línea nueva: desde ahí se lleva la cota de B.
           - con: escuadra-cartabon
             traza: segmento2(figura.punto("B2"), solucion.L_J)
             guia: figura.segmento("ABC2")
@@ -781,21 +800,27 @@ ejercicios:
             traza: segmento2(solucion.Zp_4, solucion.Z_4)
             porque: |
               Z₄Z′₄, la recta ZZ′ en la vista nueva.
-          - con: escuadra-cartabon
-            traza: segmento2(solucion.n2_a, solucion.n2_b)
-            guia: segmento2(solucion.Bp_4, solucion.B_4)
-            rotulo: segunda línea nueva
+          - con: compas
+            traza: 'arco(solucion.B_4, por: solucion.B5, desde: solucion.arcB5_a, hasta: solucion.arcB5_b)'
             porque: |
               El segundo cambio sale de esta vista y lleva lo que cada planta distaba de la primera
-              línea nueva. Su línea nueva, perpendicular a B₄B′₄, para ver BB′ de punta; aquí, 15 mm
-              más allá de B₄.
+              línea nueva. Su línea nueva va perpendicular a B₄B′₄, para ver BB′ de punta, y a
+              15 mm de B₄: con el compás, la punta en B₄ y abierto 15 mm, un arco que corta B₄B′₄
+              prolongada. Los 15 mm son nuestros.
           - con: marca
             traza: solucion.B5
             rotulo: B₅
             porque: |
-              B₅, donde B₄B′₄ prolongada corta la segunda línea nueva. B es la referencia del segundo
+              B₅, donde el arco corta B₄B′₄ prolongada, a 15 mm de B₄. B es la referencia del segundo
               cambio, y B′ cae en el mismo punto, porque BB′ se ve **de punta**; M, que es de BB′,
               también: B₅ ≡ B′₅ ≡ M₅.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.B5, solucion.n2_a), segmento2(solucion.B5, solucion.n2_b)]'
+            guia: segmento2(solucion.Bp_4, solucion.B_4)
+            rotulo: segunda línea nueva
+            porque: |
+              La **segunda línea nueva**, por B₅ y perpendicular a B₄B′₄, larga hacia los dos lados: ha
+              de llegar a las paralelas a B₄B′₄ que se trazan ahora por Z₄ y por Z′₄.
           - con: escuadra-cartabon
             traza: '[segmento2(solucion.Z_4, solucion.L_pRa), segmento2(solucion.Z_4, solucion.L_pRb), segmento2(solucion.Zp_4, solucion.L_pS)]'
             guia: segmento2(solucion.Bp_4, solucion.B_4)
@@ -968,6 +993,12 @@ ejercicios:
           Hasta la arista BB′ sale 30,94 mm, casi lo mismo por casualidad: no es d, y su pie
           está a más de 2 mm de H.
 
+          Otras tres longitudes del dibujo caen también dentro de la tolerancia, por casualidad, y
+          ninguna es d. En el alzado, B′₂M₂ mide 31,72 mm, el alzado de B′M; en la planta, B₁1₁ mide 30,72,
+          la planta del trozo de BB′ que va de B al punto 1, y 1₁2₁, 30,41, la del segmento 12. Ninguna
+          está en verdadera magnitud, porque las tres son de rectas inclinadas. d es Z′H, y sale de Z′₁H₁
+          y de la diferencia de cotas, como arriba.
+
       - tipo: calcular
         titulo: La distancia t
         pregunta: t, la distancia mínima entre las rectas BB′ y ZZ′.
@@ -1000,6 +1031,14 @@ ejercicios:
           del punto en que se ve BB′ a la proyección de ZZ′ en esa vista.
         desarrollo: |
           $$ t = \overline{MN} = \sqrt{\overline{M_1N_1}^{\,2} + \Delta z^{2}} = \sqrt{14{,}45^{2} + 14{,}12^{2}} \approx 20{,}20 \text{ mm} $$
+
+          Hay en el dibujo otras longitudes a menos de 1 mm de t, por casualidad, y ninguna es t. En la
+          planta, los lados de las bases, que ahí están en verdadera magnitud: A₁B₁ y B₁C₁ miden 21,09 mm;
+          B′₁C′₁, 21,07, y A′₁B′₁, 21,03. También en la planta, 1₁K₁ mide 19,90 mm, C′₁K₁ 20,56 y Z′₁N₁
+          19,46: son las plantas de un trozo inclinado de BB′, de la frontal KC′ y del trozo Z′N de ZZ′, y
+          la planta los acorta. En la vista con BB′ en verdadera magnitud, B₄M₄ mide 20,33 mm: es BM, el
+          trozo de BB′ hasta el pie M, no la perpendicular MN; y Z₄Z₅, 20,91 mm, es lo que separan las
+          dos vistas nuevas de Z sobre su línea de referencia. t se mide con BB′ de punta, de B₅ a N₅.
 
       - tipo: justificar
         pregunta: Ordena el razonamiento. Una pieza no debe entrar.
@@ -1212,7 +1251,7 @@ ejercicios:
               El ángulo recto entre las diagonales solo se ve recto en la planta si una de las
               dos es horizontal, y aquí ninguna lo es. Además E₁F₁ está acortada: mide
               56,12 mm, y EF, 57,10. Un cuadrado dibujado sobre E₁F₁ no está en el plano.
-          - texto: En el alzado, porque A₂D₂ y B₂C₂ salen horizontales
+          - texto: En el alzado, porque A₂D₂ y B₂C₂ salen horizontales y eso deja al plano ABCD paralelo al plano del alzado, con todo en verdadera magnitud
             mensaje: |
               Que A₂D₂ y B₂C₂ sean horizontales dice que AD y BC son horizontales del plano:
               se ven en verdadera magnitud en la planta, no en el alzado. El alzado acorta EF
@@ -1875,6 +1914,10 @@ ejercicios:
         desarrollo: |
           $$ h = 2\,\overline{BC} = 2\,\overline{B_1C_1} = 2 \cdot 54{,}016 \approx 108{,}03 \text{ mm} $$
 
+          En el alzado, la arista V₂H₂ mide 108,29 mm, a 0,26 mm de la altura por casualidad: es el
+          alzado de la arista lateral VH, que mide 111,74 mm, no la altura. La altura es el doble de
+          B₁C₁, y en el dibujo está de O₁ a V₀, en el abatimiento del eje.
+
       - tipo: calcular
         titulo: El lado de la base
         pregunta: El lado de la base cuadrada, en verdadera magnitud.
@@ -1909,6 +1952,12 @@ ejercicios:
           partido por raíz de dos.
         desarrollo: |
           $$ \ell = \frac{\overline{EF}}{\sqrt{2}} = \frac{57{,}095}{\sqrt{2}} \approx 40{,}37 \text{ mm} $$
+
+          En la planta hay dos longitudes que caen dentro de la tolerancia por casualidad. H₁V₁, la
+          planta de la arista HV, mide 40,19 mm, y D₁S₀, sobre la charnela, 39,63 mm. Ninguna es el lado:
+          HV no está en verdadera magnitud, y D₁S₀ no es un lado de la base, sino lo que queda de la
+          charnela entre D₁ y el punto S₀ del abatimiento de la altura. El lado sale de la diagonal
+          abatida E₀F₀, partida por raíz de dos.
 
       - tipo: justificar
         pregunta: Ordena el razonamiento. Una pieza no debe entrar.
@@ -2043,12 +2092,12 @@ ejercicios:
             mensaje: |
               Eso es: es lo que dice la nota del enunciado con otras palabras. P está en ese plano
               y en r, así que es el corte de los dos.
-          - texto: En la mediatriz de A₁B₁, dibujada en la planta
+          - texto: En la mediatriz de A₁B₁, dibujada en la planta, como en geometría plana
             mensaje: |
               Esa mediatriz es la traza del plano vertical que equidista de las **plantas** de A y
               de B, y solo coincide con el plano mediador si AB es horizontal. Aquí A y B tienen
               distinta cota.
-          - texto: En la recta AB, a mitad de camino
+          - texto: En la recta AB, a mitad de camino entre A y B, porque los puntos que equidistan de los dos extremos están sobre el segmento que los une
             mensaje: |
               En AB solo hay un punto que equidiste de A y de B, el punto medio. Los demás están
               fuera de AB: forman un plano, perpendicular a AB por ese punto medio.
