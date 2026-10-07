@@ -16,13 +16,17 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Cada acción va en la primera versión mayor que declara Node 24 en su
+# action.yml (mirado el 7 de octubre de 2026). upload-pages-artifact es
+# compuesta: su v5 es la primera cuyo upload-artifact interno (v7) lo hace,
+# y desde la v4 deja fuera los ficheros que empiezan por punto (dist no tiene).
 jobs:
   construir:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
@@ -34,7 +38,7 @@ jobs:
       # suelo termina en `humo`, que lo necesita.
       - name: Caché del navegador
         id: cache-navegador
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
@@ -69,7 +73,7 @@ jobs:
           npm run diario
           cp diario/diario-road-to-ingenieria.pdf dist/diario.pdf
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -82,4 +86,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

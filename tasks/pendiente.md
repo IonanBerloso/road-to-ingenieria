@@ -36,8 +36,8 @@ sigue después tal cual.
   exámenes y ordenan la fase 2 (familias B, E y G antes que A y H); el
   bloque 2 apenas necesita `lib/vistas` y conviene que no espere a la fase 3.
 - **La deuda de abajo, intercalada** en los huecos del suelo y del
-  despliegue, un commit por punto: las acciones del despliegue antes del 19
-  de octubre.
+  despliegue, un commit por punto: mirar entero el primer despliegue después
+  del 19 de octubre, cuando `ubuntu-latest` pase a Ubuntu 26.
 
 ## Lo decide quien mantiene el proyecto
 
@@ -176,11 +176,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 
 ### Despliegue
 
-- **Las acciones del flujo avisan de Node 20 obsoleto** (`checkout`,
-  `setup-node`, `cache`, `upload-pages-artifact`, `deploy-pages`, todas en
-  v4): hoy GitHub las fuerza a Node 24 y funcionan. Subirlas de versión
-  comprobando en su repositorio cuál es la primera que declara Node 24, no a
-  ojo.
 - **`ubuntu-latest` pasa a Ubuntu 26 el 19 de octubre de 2026**: mirar el
   primer despliegue de después entero, y sobre todo `humo`, `contraste` y
   las figuras, que ya han fallado antes por diferencias de máquina (§17).
