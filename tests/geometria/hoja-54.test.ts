@@ -28,6 +28,9 @@ import {
   type P3,
 } from '../../src/lib/diedrico';
 import { problemasDeLamina, type DatosLamina } from '../../src/lib/lamina';
+import yaml from 'js-yaml';
+import { resuelveEjercicio, type EjercicioConReceta } from '../../src/lib/construir';
+import { casaTramo } from '../../src/lib/diedrico-corrige';
 
 /* El Ejercicio 54 de la Colección de ejercicios de diédrico (Dpto. de
    Expresión Gráfica y Proyectos de Ingeniería, EIG, UPV/EHU), págs. 61-63: sin
@@ -306,5 +309,108 @@ describe('Ejercicio 54 · apartado 3', () => {
   it('los errores: sin subir los 4 m saldrían 5,03 m, y restándolos después, 1,03 m', () => {
     expect(metros(distanciaRectas(t3, s3))).toBeCloseTo(5.026, 3);
     expect(metros(distanciaRectas(t3, s3)) - 4).toBeCloseTo(1.026, 3);
+  });
+});
+
+describe('Ejercicio 54 · apartado 1 a, la visibilidad en el Taller (los tramos)', () => {
+  /* Lo visto y lo oculto, de un cálculo de líneas ocultas hecho aparte el 8 de
+     octubre de 2026, sin src/lib, con la pirámide y el prisma como una sola
+     pieza maciza: lo que de una arista cae dentro del otro sólido no se dibuja,
+     y lo demás va oculto si el rayo hacia el observador atraviesa una cara de
+     cualquiera de los dos que no sea de las suyas. Coordenadas en pt de la
+     lámina. Da la misma visibilidad que el paso dibujar que había antes. Los
+     tramos van en el segundo construir, el de J, L, P y R. V₂A₂, la base del
+     alzado, V₁A₁, V₁C₁ y los extremos del prisma se ven enteros y ya están en
+     la lámina, y V₂C₂ y E₂G₂, enteras ocultas, ya vienen a trazos: no son
+     tramos. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'VB', 'visto', [477.45, 533.88], [423.76, 519.51]],
+    ['planta', 'VB', 'oculto', [413.14, 516.67], [380.61, 507.96]],
+    ['planta', 'VD', 'visto', [477.45, 533.88], [526.07, 546.91]],
+    ['planta', 'VD', 'oculto', [544.86, 551.94], [574.17, 559.8]],
+    ['planta', 'AB', 'visto', [451.53, 630.6], [397.21, 536.66]],
+    ['planta', 'AB', 'oculto', [397.21, 536.66], [380.61, 507.96]],
+    ['planta', 'BC', 'oculto', [380.61, 507.96], [430.21, 479.31]],
+    ['planta', 'BC', 'visto', [430.21, 479.31], [503.37, 437.04]],
+    ['planta', 'CD', 'visto', [503.37, 437.04], [563.61, 541.49]],
+    ['planta', 'CD', 'oculto', [563.61, 541.49], [574.17, 559.8]],
+    ['planta', 'DA', 'oculto', [574.17, 559.8], [517.29, 592.64]],
+    ['planta', 'DA', 'visto', [517.29, 592.64], [451.53, 630.6]],
+    ['planta', 'e', 'visto', [356.97, 456.84], [460.28, 505]],
+    ['planta', 'e', 'visto', [513.96, 530.02], [613.89, 576.6]],
+    ['planta', 'f', 'visto', [333.57, 507], [438.7, 556.01]],
+    ['planta', 'f', 'visto', [488.25, 579.1], [590.49, 626.76]],
+    ['planta', 'g', 'visto', [361.41, 447.24], [452.08, 489.5]],
+    ['planta', 'g', 'visto', [532.39, 526.94], [618.33, 567]],
+    ['planta', 'HJ', 'visto', [460.28, 505], [423.76, 519.51]],
+    ['planta', 'JK', 'visto', [423.76, 519.51], [438.7, 556.01]],
+    ['planta', 'KL', 'oculto', [438.7, 556.01], [413.13, 516.66]],
+    ['planta', 'LM', 'oculto', [413.13, 516.66], [452.08, 489.5]],
+    ['planta', 'MH', 'visto', [452.08, 489.5], [460.28, 505]],
+    ['planta', 'NP', 'visto', [513.99, 530.03], [526.07, 546.91]],
+    ['planta', 'PQ', 'visto', [526.07, 546.91], [488.27, 579.11]],
+    ['planta', 'QR', 'oculto', [488.27, 579.11], [544.86, 551.95]],
+    ['planta', 'RT', 'oculto', [544.86, 551.95], [532.42, 526.96]],
+    ['planta', 'TN', 'visto', [532.42, 526.96], [513.99, 530.03]],
+    ['alzado', 'VB', 'visto', [477.45, 52.68], [423.76, 209.88]],
+    ['alzado', 'VB', 'visto', [413.14, 240.99], [380.61, 336.24]],
+    ['alzado', 'VD', 'visto', [477.45, 52.68], [526.07, 195.21]],
+    ['alzado', 'VD', 'visto', [544.86, 250.3], [574.17, 336.24]],
+    ['alzado', 'e', 'visto', [356.97, 187.08], [431.55, 187.08]],
+    ['alzado', 'e', 'oculto', [431.55, 187.08], [460.3, 187.08]],
+    ['alzado', 'e', 'oculto', [513.96, 187.08], [523.29, 187.08]],
+    ['alzado', 'e', 'visto', [523.29, 187.08], [613.89, 187.08]],
+    ['alzado', 'f', 'visto', [333.57, 231.24], [438.7, 231.24]],
+    ['alzado', 'f', 'visto', [488.25, 231.24], [590.49, 231.24]],
+    ['alzado', 'g', 'visto', [361.41, 257.16], [407.62, 257.16]],
+    ['alzado', 'g', 'oculto', [407.62, 257.16], [452.1, 257.16]],
+    ['alzado', 'g', 'oculto', [532.39, 257.16], [547.2, 257.16]],
+    ['alzado', 'g', 'visto', [547.2, 257.16], [618.33, 257.16]],
+    ['alzado', 'HJ', 'oculto', [460.28, 187.08], [423.76, 209.88]],
+    ['alzado', 'JK', 'visto', [423.76, 209.88], [438.7, 231.24]],
+    ['alzado', 'KL', 'visto', [438.7, 231.24], [413.13, 241.01]],
+    ['alzado', 'LM', 'oculto', [413.13, 241.01], [452.08, 257.16]],
+    ['alzado', 'MH', 'oculto', [452.08, 257.16], [460.28, 187.08]],
+    ['alzado', 'NP', 'oculto', [513.99, 187.08], [526.07, 195.21]],
+    ['alzado', 'PQ', 'visto', [526.07, 195.21], [488.27, 231.24]],
+    ['alzado', 'QR', 'visto', [488.27, 231.24], [544.86, 250.32]],
+    ['alzado', 'RT', 'oculto', [544.86, 250.32], [532.42, 257.16]],
+    ['alzado', 'TN', 'oculto', [532.42, 257.16], [513.99, 187.08]],
+  ];
+  const ej = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/examenes/ejercicio-54/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('exeg-h54-1a'))!;
+  const pasos = resuelveEjercicio(ej, L);
+  const paso = pasos.get(2)!;
+  const tol = paso.tolerancia;
+  const junto = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+
+  it('el segundo construir lleva 52 tramos, y son los del cálculo aparte, con su tipo', () => {
+    expect([...pasos.entries()].filter(([, p]) => p.tramos.length > 0).map(([i]) => i).join()).toBe('2');
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = paso.tramos.find((x) => (junto(x.a, a) && junto(x.b, b)) || (junto(x.a, b) && junto(x.b, a)));
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, tramo a tramo', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+  });
+
+  it('y rechaza una arista cambiada de tipo, con el porqué de su tramo', () => {
+    // K₁L₁ en continua: va en la cara de f a g, que mira hacia abajo
+    const kl = casaTramo([438.7, 556.01], [413.13, 516.66], 'visto', paso.tramos, tol);
+    expect(kl.que).toBe('tipo');
+    if (kl.que === 'tipo') expect(paso.tramos[kl.tramo].porque).toMatch(/mira hacia abajo/);
+    // V₁D₁ de R₁ a D₁ en continua: el prisma le pasa por encima
+    const rd = casaTramo([544.86, 551.95], [574.17, 559.8], 'visto', paso.tramos, tol);
+    expect(rd.que).toBe('tipo');
+    if (rd.que === 'tipo') expect(paso.tramos[rd.tramo].porque).toMatch(/4,3 mm/);
+    // e₂ de E₂ a H₂ en continua: de su cruce con V₂B₂ a H₂ va por detrás de la pirámide
+    expect(casaTramo([356.97, 187.08], [460.28, 187.08], 'visto', paso.tramos, tol).que).toBe('tipo');
+    // V₂B₂ entera, de V₂ a B₂: salta lo que va por dentro del prisma
+    expect(casaTramo([477.45, 52.68], [380.61, 336.24], 'visto', paso.tramos, tol).que).toBe('corte');
   });
 });

@@ -1,9 +1,509 @@
 ejercicios:
   # Decisión: los ejercicios del tema 6 van en el orden de la colección (§04).
-  # A 7 de octubre de 2026 están escritos el 43 (SD59), el 44 (SD60), el 45
-  # (SD61) y el 47 (SD63). Los demás de la colección que son de este tema
-  # (15, 46 y 50) entran después, cada uno en su sitio: el 15, delante del 43;
-  # el 46, entre el 45 y el 47, y el 50, detrás del 47.
+  # A 8 de octubre de 2026 están escritos todos los suyos: el 15 (SD18), del 43
+  # al 47 (SD59 a SD63) y el 50 (SD66).
+  - id: sd18-la-placa-triangular-soldada-a-60
+    titulo: La placa triangular soldada a 60° sobre la pieza angular
+    fuente: Ejercicio 15 (SD18) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 16),
+    # con sus dos erratas («ìeza», «traingular») y su «60º» de «o» volada; las
+    # erratas se señalan en la nota en cursiva. La perspectiva no se reproduce:
+    # lo que dice de la placa (qué lado apoya, hacia dónde se levanta) se
+    # declara en las Notas nuestras como lectura nuestra.
+    enunciado: |
+      En una ìeza angular ABCDEF se necesita soldar una placa traingular equilátera PQR de 70 mm de
+      lado, formando 60º con el ala horizontal, tal como se indica en la perspectiva. Representar
+      dicha placa situando P a 30 mm a la derecha de D.
+
+      *«ìeza» y «traingular» son erratas del original, por «pieza» y «triangular»; se dejan como
+      están impresas.*
+
+      **Notas nuestras.** La figura es la pieza en el alzado, arriba, y en la planta, debajo, a escala
+      1:1. El ala vertical ABCD es frontal: en el alzado se ve entera, un rectángulo de 120 × 60 mm, y
+      en la planta, de canto, como la recta A₁B₁ ≡ D₁C₁. El ala horizontal DCFE se ve entera en la
+      planta, de 120 × 55 mm, y de canto en el alzado, como D₂C₂ ≡ E₂F₂. Las dos se juntan en la
+      arista DC. La perspectiva de la hoja, que aquí no se reproduce, pone P sobre la arista DC, el lado
+      PQ apoyado en el ala horizontal, a la derecha de P, y R levantado y apoyado en el ala vertical; y
+      marca el ángulo de 60° entre la altura del triángulo que baja de R y su planta, que es el ángulo
+      de la placa con el ala horizontal. Esa lectura es nuestra, y con ella la placa queda fijada.
+      Con otras dos no cabe en la pieza: si fuera el lado PR el que formase 60°, R subiría 60,6 mm,
+      por encima del borde AB del ala, que mide 60, y la placa quedaría de pie, en el propio ala
+      vertical, con Q en la arista; y con R a la izquierda de P quedaría 16,3 mm a la
+      izquierda de D, fuera del ala. Toda la placa se ve en las dos vistas: está delante del ala
+      vertical y encima de la horizontal. X, Z, M y W son nombres nuestros, los de un triángulo
+      auxiliar.
+    pide: Las proyecciones de la placa, sus vértices P, Q y R en el alzado y en la planta, y, como pregunta nuestra, el ángulo que forma su lado PR con el ala horizontal.
+    receta:
+      lamina: sd18
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        vertical: plano(A, B, D)
+        horizontal: plano(D, C, E)
+      solucion:
+        # P, en la arista DC, 30 mm a la derecha de D (rama 1, hacia C).
+        DC: recta3(D, C)
+        Pd: 'punto_a_distancia(DC, desde: D, distancia: mm(30))'
+        P: rama(Pd, 1)
+        # Decisión: la cota de R sale de la línea de máxima pendiente de la
+        # placa, que es su altura desde R (PQ es horizontal): 70·√3/2 mm,
+        # inclinada 60°. Se construye en el alzado con un triángulo equilátero
+        # auxiliar de 70 mm, P X Z, con la base sobre D₂C₂: P₂Z₂ va a 60° y Z₂M
+        # es la altura; llevada desde P₂ sobre P₂Z₂ da W, que está a la cota de
+        # R. El método no lo impone el enunciado y se declara en el intro.
+        Xd: 'punto_a_distancia(DC, desde: P, distancia: mm(70))'
+        X: rama(Xd, 1)
+        Pdelante: 'punto3(alzado: proy_alzado(P), planta: desplaza(proy_planta(P), dy: 10))'
+        ejeP: recta3(P, Pdelante)
+        Z: 'gira(X, ejeP, angulo: 60, sentido: ascendente)'
+        M: punto_medio(segmento3(P, X))
+        Wd: 'punto_a_distancia(recta3(P, Z), desde: P, distancia: vm(Z, M))'
+        W: rama(Wd, 1)
+        Wx: 'punto3(alzado: desplaza(proy_alzado(W), dx: 10), planta: desplaza(proy_planta(W), dx: 10))'
+        hW: recta3(W, Wx)
+        Pw: pie_perpendicular(P, hW)
+        # R, en el ala vertical, a la cota de W y a 70 mm de P: PR es frontal y
+        # el alzado la da entera. A la derecha (rama 1); a la izquierda queda
+        # fuera de la pieza.
+        Rd: 'punto_a_distancia(hW, desde: Pw, distancia: raiz(mm(70) * mm(70) - vm(P, Pw) * vm(P, Pw)))'
+        R: rama(Rd, 1)
+        Rizq: rama(Rd, 2)
+        # Q, en el ala horizontal, a 70 mm de P y de R. Como R está a la misma
+        # altura sobre P y sobre Q, las plantas de RP y RQ miden lo mismo: Q₁
+        # está a R₁P₁ de R₁ (Rp es el pie de R en DC, en la planta R₁). Delante
+        # del ala vertical (ascendente: el plano PRRp es frontal, y su normal
+        # «que sube» gana alejamiento).
+        Rp: pie_perpendicular(R, DC)
+        Q: 'punto_a_tres_distancias(P, mm(70), R, mm(70), Rp, vm(Rp, P), sentido: ascendente)'
+        Qdetras: 'punto_a_tres_distancias(P, mm(70), R, mm(70), Rp, vm(Rp, P), sentido: descendente)'
+        placa: plano(P, Q, R)
+        # Los errores: P medido desde C; Q₁ con 70 mm también desde R₁; Q₁
+        # girado alrededor de la vertical de P (a 70 mm de P₁, no a R₁P₁ de R₁).
+        Pdesde_C: 'rama(punto_a_distancia(DC, desde: C, distancia: mm(30)), 2)'
+        P1R1medio: 'punto_medio(segmento2(proy_planta(P), proy_planta(R)))'
+        perpPR1: 'perpendicular(por: P1R1medio, a: figura.segmento("DC1"))'
+        QR70: 'uno(medir_sobre(perpPR1, desde: P1R1medio, distancia: raiz(mm(70) * mm(70) - vm(P, Rp) * vm(P, Rp) / 4)), 1)'
+        Parriba: 'punto3(alzado: desplaza(proy_alzado(P), dy: -10), planta: proy_planta(P))'
+        Qg: 'gira(Q, recta3(P, Parriba), angulo: 9)'
+        horW2: segmento2(proy_alzado(W), proy_alzado(R))
+        # Las cifras del calcular.
+        angPR: angulo_con_ph(segmento3(P, R))
+        angPlaca: angulo_planos(placa, horizontal)
+        # Los extremos de las rectas largas y de los arcos de la construcción.
+        Rmas: 'desplaza(proy_alzado(R), dx: 9)'
+        arcoX0: 'desplaza(proy_alzado(X), dy: 5)'
+        arcoZ1: 'desplaza(proy_alzado(Z), dx: -9)'
+      comprueba:
+        - en_plano(P, horizontal)
+        - en_plano(P, vertical)
+        - en_plano(R, vertical)
+        - en_plano(Q, horizontal)
+        - en_plano(W, vertical)
+    pasos:
+      - tipo: reconocer
+        pregunta: PQ apoya en el ala horizontal y R en la vertical. ¿Qué medidas de la placa se ven de verdad sin construir nada?
+        opciones:
+          - texto: 'Ninguna: la placa está inclinada'
+            mensaje: |
+              La placa sí, pero dos de sus lados no. PQ va en el ala horizontal, así que es horizontal, y
+              la planta lo da entero; PR va en el ala vertical, que es frontal, y el alzado lo da entero.
+              Con eso se construye casi todo.
+          - texto: PR en el alzado y PQ en la planta
+            correcta: true
+            mensaje: |
+              Eso es. PR está en el ala vertical, que es frontal: P₂R₂ mide los 70 mm. PQ está en el ala
+              horizontal: P₁Q₁ los mide también. Lo que no se ve en ninguna vista es el lado RQ, ni la
+              altura de la placa, que es la que forma los 60°.
+          - texto: Los tres lados en el alzado, porque el ala vertical es frontal y la placa se apoya en ella
+            mensaje: |
+              Solo R se apoya en el ala vertical, y con P, el lado PR. Q está en el ala horizontal, 45,8 mm
+              por delante: PQ y RQ se acercan al observador, y el alzado los acorta.
+          - texto: La altura del triángulo desde R, en el alzado, porque R está en el ala vertical y la altura baja hasta PQ
+            mensaje: |
+              La altura va de R al punto medio de PQ, que está en el ala horizontal, 22,9 mm por delante
+              de la arista: no es frontal, y el alzado la acorta. Es la línea de máxima pendiente de la
+              placa, la que forma los 60°, y se ve entera en una vista con PQ de punta.
+
+      - tipo: construir
+        titulo: La placa, por su cota y sus dos lados apoyados
+        intro: |
+          PQ es horizontal, así que la altura del triángulo desde R, perpendicular a PQ, es la línea de
+          máxima pendiente de la placa: mide 70·√3/2 mm y forma 60° con el ala horizontal. Lo que sube es
+          la cota de R. La sacamos en el alzado con un triángulo equilátero auxiliar de 70 mm, P X Z, con
+          la base sobre D₂C₂: P₂Z₂ va a 60° y Z₂M es la altura; llevada desde P₂ sobre P₂Z₂ da W, que está
+          a la cota de R. El método es nuestro, porque el enunciado no lo impone. R₂ está a esa altura y a
+          70 mm de P₂, porque PR es frontal; Q₁, a 70 mm de P₁ y a R₁P₁ de R₁. Marca P₂, P₁, R₂, R₁, Q₁ y
+          Q₂.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: P2
+            pide: el vértice P en el alzado, 30 mm a la derecha de D
+            es: proy_alzado(P)
+            bien: |
+              P₂ está en D₂C₂, a 30 mm de D₂: P está en la arista DC, que en el alzado es la recta de
+              abajo del rectángulo.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Pdesde_C))
+                mensaje: |
+                  Has llevado los 30 mm desde C₂. El enunciado los cuenta desde D, el extremo de la
+                  izquierda: P queda a 30 mm a la derecha de D₂.
+                ejemplo: proy_alzado(solucion.Pdesde_C)
+              - si: '!en_recta(figura.segmento("DC2"))'
+                mensaje: |
+                  P está en la arista DC, donde se juntan las dos alas: en el alzado, en la recta D₂C₂.
+                ejemplo: 'desplaza(proy_alzado(P), dy: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en D₂C₂, pero no a la distancia buena: con el compás, 30 mm desde D₂, hacia la
+                  derecha.
+          - nombre: P1
+            pide: el vértice P en la planta
+            es: proy_planta(P)
+            bien: |
+              P₁ está en D₁C₁, en la vertical de P₂: en la planta, la arista DC es la recta de arriba del
+              rectángulo.
+            diagnosticos:
+              - si: '!en_vertical_de(P2)'
+                mensaje: |
+                  P₁ va en la vertical de P₂: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(P), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("DC1"))'
+                mensaje: |
+                  P está en la arista DC, que en la planta es la recta A₁B₁ ≡ D₁C₁.
+                ejemplo: 'desplaza(proy_planta(P), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  P₁ está donde la vertical de P₂ corta D₁C₁.
+          - nombre: R2
+            pide: el vértice R en el alzado
+            es: proy_alzado(R)
+            bien: |
+              R₂ está a la altura de W, 52,5 mm sobre D₂C₂, y a 70 mm de P₂: PR va en el ala vertical, que
+              es frontal, y el alzado lo da entero.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Z))
+                mensaje: |
+                  Ese es Z, el vértice del triángulo auxiliar: está a 60,6 mm de D₂C₂, la altura entera del
+                  triángulo. Ahí estaría R con la placa de pie, a 90°, o si fuera el lado PR el que formase
+                  60°. La altura de la placa está inclinada 60°, y R sube menos: lo que marca W.
+                ejemplo: proy_alzado(solucion.Z)
+              - si: cerca_de(proy_alzado(solucion.W))
+                mensaje: |
+                  Ese es W, el punto auxiliar: da la cota de R, pero no es R. R está a esa misma altura y a
+                  70 mm de P₂, sobre el arco de centro P₂.
+                ejemplo: proy_alzado(solucion.W)
+              - si: cerca_de(proy_alzado(solucion.Rizq))
+                mensaje: |
+                  Has tomado el corte de la izquierda. Ahí R quedaría 16,3 mm a la izquierda de D, fuera del
+                  ala vertical: R está a la derecha de P, como en la perspectiva.
+                ejemplo: proy_alzado(solucion.Rizq)
+              - si: '!en_recta(solucion.horW2)'
+                mensaje: |
+                  R₂ va a la altura de W: la cota de R es lo que sube la altura de la placa, 60,6 mm
+                  inclinados 60°, y eso es lo que W está por encima de D₂C₂.
+                ejemplo: 'desplaza(proy_alzado(R), dy: mm(-5))'
+              - si: '!a_distancia(de: proy_alzado(P), d: mm(70))'
+                mensaje: |
+                  Estás a la altura buena, pero no a 70 mm de P₂. PR está en el ala vertical, que es
+                  frontal: P₂R₂ mide el lado entero, y R₂ está en el arco de centro P₂ y radio 70 mm.
+                ejemplo: 'desplaza(proy_alzado(R), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  R₂ está donde la horizontal de W corta el arco de centro P₂ y radio 70 mm, a la derecha.
+          - nombre: R1
+            pide: el vértice R en la planta
+            es: proy_planta(R)
+            bien: |
+              R₁ está en D₁C₁, en la vertical de R₂: R está en el ala vertical, que en la planta se ve de
+              canto.
+            diagnosticos:
+              - si: '!en_vertical_de(R2)'
+                mensaje: |
+                  R₁ va en la vertical de R₂.
+                ejemplo: 'desplaza(proy_planta(R), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("DC1"))'
+                mensaje: |
+                  R está en el ala vertical, y el ala vertical se ve en la planta como la recta A₁B₁ ≡ D₁C₁:
+                  R₁ cae en ella, aunque R esté a 52,5 mm de altura.
+                ejemplo: 'desplaza(proy_planta(R), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  R₁ está donde la vertical de R₂ corta D₁C₁.
+          - nombre: Q1
+            pide: el vértice Q en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está a 70 mm de P₁, porque PQ es horizontal, y a R₁P₁ de R₁, porque RP y RQ suben lo mismo
+              con la misma longitud. Por delante de D₁C₁: Q está en el ala horizontal.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Qdetras))
+                mensaje: |
+                  Has tomado el corte de arriba. Ese Q queda detrás del ala vertical, donde no hay ala
+                  horizontal en la que apoyarse: Q₁ es el corte de abajo, delante de D₁C₁.
+                ejemplo: proy_planta(solucion.Qdetras)
+              - si: cerca_de(solucion.QR70)
+                mensaje: |
+                  Has llevado 70 mm también desde R₁. RQ no es horizontal, y su planta mide menos que el
+                  lado: lo mismo que R₁P₁, 46,3 mm, porque RQ y RP suben lo mismo, 52,5 mm, en 70 mm.
+                ejemplo: solucion.QR70
+              - si: '!a_distancia(de: proy_planta(P), d: mm(70))'
+                mensaje: |
+                  Q₁ está a 70 mm de P₁: PQ apoya en el ala horizontal, es horizontal, y la planta lo da
+                  entero.
+                ejemplo: 'desplaza(proy_planta(Q), dx: mm(5))'
+              - si: '!a_distancia(de: proy_planta(R), d: vm_planta(R, P))'
+                mensaje: |
+                  Estás a 70 mm de P₁, pero no a la distancia buena de R₁. La planta de RQ mide lo mismo que
+                  la de RP: con centro en R₁ y radio R₁P₁, el arco corta al de P₁ en Q₁.
+                ejemplo: proy_planta(rama(solucion.Qg, 1))
+              - si: siempre
+                mensaje: |
+                  Q₁ está donde se cortan el arco de centro P₁ y radio 70 mm y el de centro R₁ y radio R₁P₁,
+                  delante de D₁C₁.
+          - nombre: Q2
+            pide: el vértice Q en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en D₂C₂, en la vertical de Q₁: Q está en el ala horizontal, que en el alzado se ve de
+              canto.
+            diagnosticos:
+              - si: '!en_vertical_de(Q1)'
+                mensaje: |
+                  Q₂ va en la vertical de Q₁.
+                ejemplo: 'desplaza(proy_alzado(Q), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("DC2"))'
+                mensaje: |
+                  Q está en el ala horizontal, que en el alzado es la recta D₂C₂ ≡ E₂F₂: Q₂ cae en ella.
+                ejemplo: 'desplaza(proy_alzado(Q), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Q₂ está donde la vertical de Q₁ corta D₂C₂.
+        trazado:
+          - segmento2(proy_alzado(P), proy_alzado(R))
+          - segmento2(proy_alzado(R), proy_alzado(Q))
+          - segmento2(proy_alzado(P), proy_alzado(Q))
+          - segmento2(proy_planta(P), proy_planta(Q))
+          - segmento2(proy_planta(Q), proy_planta(R))
+          - segmento2(proy_planta(P), proy_planta(R))
+        construccion:
+          - con: compas
+            traza: 'arco(figura.punto("D2"), por: proy_alzado(P), desde: desplaza(proy_alzado(P), dy: -6), hasta: desplaza(proy_alzado(P), dy: 6))'
+            porque: |
+              Con centro en D₂ y radio 30 mm, el que da el enunciado, un arco corto que corta D₂C₂: P está
+              en la arista DC, 30 mm a la derecha de D.
+          - con: marca
+            traza: proy_alzado(P)
+            rotulo: P₂
+            porque: |
+              P₂, donde el arco corta D₂C₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(P), proy_planta(P))
+            porque: |
+              Por P₂, la vertical hasta D₁C₁: en la planta, la arista DC es la recta de arriba del
+              rectángulo.
+          - con: marca
+            traza: proy_planta(P)
+            rotulo: P₁
+            porque: |
+              P₁, donde la vertical de P₂ corta D₁C₁.
+          - con: compas
+            traza: 'arco(proy_alzado(P), por: proy_alzado(X), desde: solucion.arcoX0, hasta: solucion.arcoZ1)'
+            porque: |
+              Con centro en P₂ y radio 70 mm, el lado de la placa, un arco que sale de debajo de D₂C₂, a la
+              derecha, y sube hasta pasar los 60°. Sirve dos veces: para el triángulo auxiliar y, más tarde,
+              para R₂, porque PR es frontal y mide 70 mm en el alzado.
+          - con: marca
+            traza: proy_alzado(X)
+            rotulo: X
+            porque: |
+              X, nombre nuestro, donde el arco corta D₂C₂, a 70 mm de P₂: la base del triángulo
+              auxiliar.
+          - con: compas
+            traza: 'arco(proy_alzado(X), por: proy_alzado(Z), desde: desplaza(proy_alzado(Z), dx: -5, dy: 3), hasta: desplaza(proy_alzado(Z), dx: 5, dy: -3))'
+            porque: |
+              Con centro en X y el mismo radio, 70 mm, un arco corto que corta el anterior arriba: el
+              tercer vértice del triángulo equilátero auxiliar.
+          - con: marca
+            traza: proy_alzado(Z)
+            rotulo: Z
+            porque: |
+              Z, nombre nuestro, donde se cortan los dos arcos de 70 mm. P₂XZ es equilátero, y su lado
+              P₂Z sale de P₂ a 60° de D₂C₂.
+          - con: regla
+            traza: segmento2(proy_alzado(P), proy_alzado(Z))
+            porque: |
+              P₂Z, el lado del triángulo auxiliar que va a 60°: en él se llevará la altura de la placa.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(Z), proy_alzado(M))
+            porque: |
+              Por Z, la vertical hasta D₂C₂: es la altura del triángulo auxiliar, que mide lo mismo que la
+              de la placa, 60,6 mm.
+          - con: marca
+            traza: proy_alzado(M)
+            rotulo: M
+            porque: |
+              M, nombre nuestro, el pie de la vertical de Z en D₂C₂: el punto medio de P₂X.
+          - con: compas
+            traza: 'arco(proy_alzado(P), por: proy_alzado(W), desde: desplaza(proy_alzado(W), dx: 4, dy: 3), hasta: desplaza(proy_alzado(W), dx: -4, dy: -3))'
+            toma: segmento2(proy_alzado(Z), proy_alzado(M))
+            porque: |
+              Con el compás, ZM, la altura de la placa; con centro en P₂, un arco corto sobre P₂Z: la
+              altura queda inclinada 60°, como la de la placa.
+          - con: marca
+            traza: proy_alzado(W)
+            rotulo: W
+            porque: |
+              W, nombre nuestro, donde el arco corta P₂Z. Está 52,5 mm por encima de D₂C₂: lo que sube la
+              altura de la placa, que es la cota de R.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(W), solucion.Rmas)
+            guia: figura.segmento("DC2")
+            porque: |
+              Por W, la paralela a D₂C₂, hacia la derecha y larga, hasta pasar el arco de 70 mm: R está a
+              esta altura.
+          - con: marca
+            traza: proy_alzado(R)
+            rotulo: R₂
+            porque: |
+              R₂, donde la horizontal de W corta el arco de centro P₂ y radio 70 mm, a la derecha de P₂: R
+              está en el ala vertical, y PR se ve entero.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(R), proy_planta(R))
+            porque: |
+              Por R₂, la vertical hasta D₁C₁: R está en el ala vertical, que en la planta se ve de canto.
+          - con: marca
+            traza: proy_planta(R)
+            rotulo: R₁
+            porque: |
+              R₁, donde la vertical de R₂ corta D₁C₁.
+          - con: compas
+            traza: 'arco(proy_planta(P), por: proy_planta(Q), desde: desplaza(proy_planta(Q), dx: 5, dy: -6), hasta: desplaza(proy_planta(Q), dx: -5, dy: 6))'
+            porque: |
+              Con centro en P₁ y radio 70 mm, un arco corto delante de D₁C₁: PQ es horizontal, y la planta
+              lo da entero.
+          - con: compas
+            traza: 'arco(proy_planta(R), por: proy_planta(Q), desde: desplaza(proy_planta(Q), dx: -6, dy: -2), hasta: desplaza(proy_planta(Q), dx: 6, dy: 2))'
+            toma: segmento2(proy_planta(R), proy_planta(P))
+            porque: |
+              Con el compás, R₁P₁; con centro en R₁, otro arco corto. RQ y RP suben lo mismo, 52,5 mm, con
+              la misma longitud, así que sus plantas miden lo mismo.
+          - con: marca
+            traza: proy_planta(Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde se cortan los dos arcos, delante de D₁C₁. La circunferencia entera los cortaría
+              también detrás, encima de D₁C₁, pero ahí no hay ala horizontal.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(Q), proy_alzado(Q))
+            porque: |
+              Por Q₁, la vertical hasta D₂C₂: Q está en el ala horizontal, que en el alzado se ve de canto.
+          - con: marca
+            traza: proy_alzado(Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta D₂C₂.
+          - con: regla
+            traza: '[segmento2(proy_alzado(P), proy_alzado(R)), segmento2(proy_alzado(R), proy_alzado(Q)), segmento2(proy_planta(P), proy_planta(Q)), segmento2(proy_planta(Q), proy_planta(R))]'
+            porque: |
+              Los lados de la placa: P₂R₂ y R₂Q₂ en el alzado, P₁Q₁ y Q₁R₁ en la planta. P₂Q₂ va sobre D₂C₂ y
+              P₁R₁ sobre D₁C₁, porque cada uno está en un ala.
+          - con: transportador
+            traza: 'arco(proy_alzado(P), por: proy_alzado(M), desde: proy_alzado(M), hasta: proy_alzado(R))'
+            porque: |
+              El transportador con el centro en P₂, de D₂C₂ a P₂R₂: el ángulo del lado PR con el ala
+              horizontal, que se ve de verdad porque PR es frontal.
+        pista: |
+          (1) P₂ a 30 mm de D₂ sobre D₂C₂, y P₁ en su vertical. (2) El triángulo equilátero auxiliar de
+          70 mm con la base sobre D₂C₂ desde P₂: P₂Z va a 60° y ZM es la altura. (3) ZM llevada sobre P₂Z
+          desde P₂ da W, a la cota de R. (4) R₂ a esa altura y a 70 mm de P₂; R₁ en D₁C₁. (5) Q₁ a 70 mm
+          de P₁ y a R₁P₁ de R₁, delante; Q₂ en D₂C₂.
+        desarrollo: |
+          En verde claro, la placa en las dos vistas. La altura de la placa, 60,62 mm, inclinada 60°,
+          sube 52,50 mm y avanza 30,31 mm: R está 52,5 mm por encima del ala horizontal. P₂R₂ mide 70 mm,
+          y R₁ queda 46,30 mm a la derecha de P₁; Q₁, 45,83 mm por delante de D₁C₁. En el alzado, P₂Q₂ y
+          R₂Q₂ se ven acortados, y en la planta P₁R₁ y R₁Q₁: solo PR y PQ se ven enteros.
+
+      - tipo: calcular
+        titulo: El ángulo del lado PR con el ala horizontal
+        pregunta: Como pregunta nuestra, ¿cuántos grados forma el lado PR de la placa con el ala horizontal?
+        respuesta:
+          tipo: numero
+          valor: '48.59'
+          receta: angPR
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '60.00'
+            receta: angPlaca
+            mensaje: |
+              Ese es el ángulo de la **placa** con el ala horizontal, el de su línea de máxima pendiente,
+              la altura desde R. PR es otra recta de la placa, no perpendicular a PQ, y de todas las rectas
+              de un plano la de máxima pendiente es la que más se inclina: PR forma menos.
+          - valor: '41.41'
+            receta: 90 - angPR
+            mensaje: |
+              Ese es el **complementario**: el ángulo de PR con la vertical, el que queda en R₂. El del ala
+              horizontal está en P₂, entre D₂C₂ y P₂R₂.
+          - valor: '30.00'
+            receta: 90 - angPlaca
+            mensaje: |
+              Es el complementario de los 60° de la placa, el de su altura con la vertical. Ni es el de la
+              placa ni el de PR: PR es frontal, y su ángulo con el ala horizontal se mide en el alzado, en
+              P₂.
+        pista: |
+          PR está en el ala vertical, que es frontal: el alzado la da en verdadera magnitud. Mide en P₂, con
+          el transportador del Taller en el paso anterior o en tu lámina, el ángulo entre D₂C₂ y P₂R₂.
+        desarrollo: |
+          R está 52,5 mm por encima de P, y PR mide 70 mm:
+
+          $$ \operatorname{sen}\alpha = \frac{52{,}5}{70} = 0{,}75, \qquad \alpha \approx 48{,}59^{\circ} $$
+
+          RQ forma lo mismo, por la misma cuenta: los dos lados que salen de R bajan 52,5 mm en 70 mm. La
+          altura de la placa, que es su línea de máxima pendiente, forma 60°, y ninguna recta de la
+          placa forma más. En la construcción el mismo ángulo se lee también en R₂, entre R₂P₂ y la
+          horizontal de W: son alternos, porque esa horizontal es paralela a D₂C₂.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: PQ apoya en el ala horizontal, así que es horizontal, y la altura de la placa desde R, perpendicular a PQ, es su línea de máxima pendiente; forma 60° con el ala horizontal.
+          - texto: La altura mide 70·√3/2 = 60,6 mm; inclinada 60°, sube 52,5 mm, y esa es la cota de R.
+          - texto: PR está en el ala vertical, que es frontal, así que R₂ está a 70 mm de P₂ y a 52,5 mm de D₂C₂.
+          - texto: PQ se ve entero en la planta, y la planta de RQ mide lo mismo que la de RP, porque los dos suben 52,5 mm en 70 mm; Q₁ está en el cruce de los dos arcos.
+          - texto: Como la placa forma 60° con el ala horizontal, P₂R₂ se traza a 60° de D₂C₂, con 70 mm.
+            trampa: true
+            mensaje: |
+              Los 60° son los de la placa, los de su línea de máxima pendiente. PR no lo es, y forma
+              48,6°. Trazado a 60°, R subiría 60,6 mm, por encima del borde AB del ala vertical, que mide 60.
+    resolucion: |
+      **Qué fija el enunciado.** La pieza es un ángulo de dos alas: la vertical ABCD, frontal, y la
+      horizontal DCFE, que se juntan en la arista DC. Leemos en la perspectiva que el lado PQ apoya en el
+      ala horizontal, con P en la arista y Q a la derecha, y que R se levanta hasta apoyarse en el ala
+      vertical; los 60° son los de la placa con el ala horizontal.
+
+      **La cota de R.** PQ es horizontal, así que la altura del triángulo desde R, que le es
+      perpendicular, es la línea de máxima pendiente de la placa: mide 70·√3/2 = 60,62 mm y forma 60°
+      con el ala horizontal. R está, por tanto, 60,62·sen 60° = 52,5 mm por encima de ella. En la lámina
+      se construye con un triángulo equilátero auxiliar de 70 mm, P₂XZ, con la base sobre D₂C₂: P₂Z va a
+      60°, ZM es la altura, y llevada desde P₂ sobre P₂Z da W, a 52,5 mm de D₂C₂.
+
+      **R.** PR está en el ala vertical, que es frontal: P₂R₂ mide 70 mm. R₂ está donde la horizontal de
+      W corta el arco de centro P₂ y radio 70 mm, a la derecha; a la izquierda quedaría fuera de la pieza.
+      R₁ cae en D₁C₁, porque el ala vertical se ve de canto en la planta: 46,30 mm a la derecha de P₁.
+
+      **Q.** PQ apoya en el ala horizontal, así que P₁Q₁ mide 70 mm. RQ y RP bajan lo mismo, 52,5 mm,
+      con la misma longitud, y sus plantas miden igual: R₁Q₁ = R₁P₁. Los dos arcos se cortan delante de
+      D₁C₁ en Q₁, 45,83 mm por delante de la arista; Q₂ cae en D₂C₂.
+
+      **La comprobación.** PQ = QR = RP = 70 mm, y la placa forma 60,0° con el ala horizontal. Su lado
+      PR, que se ve entero en el alzado, forma 48,6°: sen α = 52,5/70.
+
   - id: sd59-el-nudo-de-la-grua
     titulo: El nudo del cable de la grúa cuando el contrapeso toca el suelo
     fuente: Ejercicio 43 (SD59) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
@@ -1358,6 +1858,721 @@ ejercicios:
       perpendicular, al otro lado de la charnela. El triángulo A₀D₁C₁ es ACD de verdad, y en A₀ mide
       39,4°. En la planta el ángulo se ve de 59,1°, y en el alzado de 21,0°.
 
+  - id: sd62-los-angulos-de-la-cabria
+    titulo: Los ángulos de la cabria, entre sus patas, entre sus planos y con el plano horizontal
+    fuente: Ejercicio 46 (SD62) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 47),
+    # con su doble numeración «a) 1 .» y el espacio antes del punto del primer
+    # apartado. Los métodos no los impone: AVB, abatiendo su plano con la
+    # charnela AB; los planos, con un cambio de plano que pone VB de punta; CV,
+    # con su triángulo. Un construir por apartado y un calcular por cifra.
+    enunciado: |
+      Se presentan la planta y el alzado de una cabria para la elevación de pesos que consta de tres
+      patas (VA, VB y VC). Calcular:
+
+      a) 1 . El ángulo AVB existente entre las patas VA y VB.
+
+      b) 2. El ángulo existente entre los planos AVB y CVB formados por las patas.
+
+      c) 3. El ángulo que presentan las patas CV y BV con el plano horizontal.
+
+      **Notas nuestras.** La figura es la cabria en el alzado, arriba, y en la planta, debajo, junto
+      al borde de un edificio: la cubierta y la pared, rayadas, son el sitio donde apoyan las patas.
+      La perspectiva de la hoja no se reproduce. A, B y C están a la misma altura, la de la cubierta,
+      y A₂ ≡ C₂. En la planta, V₁B₁ es horizontal en el papel, así que VB es frontal, y A₁ y C₁
+      quedan a los dos lados de V₁B₁, a la misma distancia: la cabria es simétrica respecto del plano
+      frontal de VB. La lámina no da escala, y las longitudes se dan en milímetros de la lámina. En
+      el apartado b), dos planos que se cortan forman dos ángulos suplementarios, y el enunciado no
+      dice cuál quiere. Aquí se da el menor, 67,77°, que es el convenio del ángulo entre dos planos,
+      como en el apartado 3 del Ejercicio 53; el que abarcan las dos caras de la cabria, por donde
+      están A y C, es su suplementario, 112,23°, y se da como distractor, con un mensaje que
+      reconoce la construcción. Los métodos son nuestros:
+      el enunciado solo pide calcular. M, K, V₀, N, V′ y la vista 4 son nuestros.
+    pide: El ángulo AVB entre las patas VA y VB, el ángulo entre los planos AVB y CVB (el menor de los dos que forman) y los ángulos de las patas CV y BV con el plano horizontal, todos en grados, con las construcciones que los dan.
+    receta:
+      lamina: sd62
+      escena:
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        # A₂ ≡ C₂: el alzado de C es la misma cruz.
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        avb: plano(A, V, B)
+        cvb: plano(C, V, B)
+      solucion:
+        # a) A y B están a la misma cota: AB es una horizontal del plano AVB y
+        # sirve de charnela. V abatido es una elección; la construcción va del
+        # lado de V₁ (rama 1).
+        ch: recta3(A, B)
+        Mv: pie_perpendicular(V, ch)
+        Vab: abatido_a_elegir(V, ch, avb)
+        A1B1: 'segmento2(figura.punto("A1"), figura.punto("B1"))'
+        perpV1: 'perpendicular(por: figura.punto("V1"), a: A1B1)'
+        parV1: 'perpendicular(por: figura.punto("V1"), a: perpV1)'
+        # K, en la paralela a la charnela por V₁, a lo que V está más alto que
+        # A: MK es el radio. N₂ es el pie de V₂ en la horizontal de A₂ y B₂.
+        cotaV: diferencia_de_cotas(V, A)
+        K: 'uno(medir_sobre(parV1, desde: figura.punto("V1"), distancia: cotaV), 1)'
+        N2: 'pie_perpendicular(figura.punto("V2"), figura.segmento("AB2"))'
+        angAVB: angulo_rectas(recta3(V, A), recta3(V, B))
+        # Los errores del radio: solo la cota, o MV₁ llevado al otro lado.
+        V0cota: 'medir_sobre(perpV1, desde: proy_planta(Mv), distancia: cotaV)'
+        V0planta: 'uno(medir_sobre(perpV1, desde: proy_planta(Mv), distancia: vm_planta(V, Mv)), 2)'
+        # Lo que se ve de AVB en la planta (A y B llevados a la cota de V) y
+        # en el alzado (A llevado al alejamiento de V; B ya lo tiene).
+        horV2: 'segmento2(figura.punto("V2"), desplaza(figura.punto("V2"), dx: 10))'
+        Ah: 'punto3(alzado: pie_perpendicular(figura.punto("A1"), horV2), planta: figura.punto("A1"))'
+        Bh: 'punto3(alzado: pie_perpendicular(figura.punto("B1"), horV2), planta: figura.punto("B1"))'
+        Af: 'punto3(alzado: figura.punto("A2"), planta: pie_perpendicular(figura.punto("A2"), figura.segmento("VB1")))'
+        Cf: 'punto3(alzado: figura.punto("C2"), planta: pie_perpendicular(figura.punto("C2"), figura.segmento("VB1")))'
+        angPlantaAVB: angulo_rectas(recta3(V, Ah), recta3(V, Bh))
+        angAlzadoAVB: angulo_rectas(recta3(V, Af), recta3(V, B))
+        # b) Decisión: un cambio de plano horizontal con la línea nueva de la
+        # lámina, perpendicular a V₂B₂, y V de referencia: VB es frontal y
+        # queda de punta, V₄ ≡ B₄ en la línea, y los planos AVB y CVB se ven de
+        # canto. A está 40,8 pt más atrás que V y C lo mismo más adelante: A₄
+        # cae hacia el alzado y C₄ hacia fuera.
+        V_4: 'cambio_plano_horizontal(V, figura.segmento("nueva"), ref: V)'
+        B_4: 'cambio_plano_horizontal(B, figura.segmento("nueva"), ref: V)'
+        A_4: 'cambio_plano_horizontal(A, figura.segmento("nueva"), ref: V)'
+        C_4: 'cambio_plano_horizontal(C, figura.segmento("nueva"), ref: V)'
+        pieA4: 'pie_perpendicular(figura.punto("A2"), figura.segmento("nueva"))'
+        paraA2: 'perpendicular(por: figura.punto("A2"), a: figura.segmento("nueva"))'
+        N1: 'pie_perpendicular(figura.punto("A1"), figura.segmento("VB1"))'
+        # El menor de los dos ángulos de los planos, y el de las caras, que
+        # abarcan A y C.
+        angPlanos: angulo_planos(avb, cvb)
+        diedro: angulo_diedro(A, recta3(V, B), C)
+        # Los errores: cada cara con el plano frontal de VB, que en la vista
+        # nueva es la propia línea (la mitad del diedro); y A₄ y C₄ con la cota
+        # en vez del alejamiento. Los puntos de la vista nueva se suben a una
+        # misma cota para medir su ángulo en el papel con angulo_rectas.
+        Varriba: 'punto3(alzado: desplaza(figura.punto("V2"), dy: -10), planta: figura.punto("V1"))'
+        frontalVB: plano(V, B, Varriba)
+        angCaraFrontal: angulo_planos(avb, frontalVB)
+        A4cota: 'medir_sobre(paraA2, desde: pieA4, distancia: cotaV)'
+        horRef: 'segmento2(figura.punto("A2"), figura.punto("B2"))'
+        V4z: 'punto3(alzado: pie_perpendicular(V_4, horRef), planta: V_4)'
+        Acz: 'punto3(alzado: pie_perpendicular(uno(A4cota, 1), horRef), planta: uno(A4cota, 1))'
+        Ccz: 'punto3(alzado: pie_perpendicular(uno(A4cota, 2), horRef), planta: uno(A4cota, 2))'
+        angCotas: angulo_rectas(recta3(V4z, Acz), recta3(V4z, Ccz))
+        # c) CV, con su triángulo levantado en V₁ (V abatido sobre la planta
+        # con el plano vertical de CV, a lo que V sube sobre C): una lista, los
+        # dos lados valen; la construcción va abajo a la izquierda (el 2). BV
+        # es frontal: su ángulo se ve en el alzado.
+        VabCV: abatido_planta(C, V)
+        perpV1c: 'perpendicular(por: figura.punto("V1"), a: figura.segmento("VC1"))'
+        angCV: angulo_con_ph(segmento3(C, V))
+        angBV: angulo_con_ph(segmento3(B, V))
+        Vp_dy: 'medir_sobre(perpV1c, desde: figura.punto("V1"), distancia: raiz(vm(C, V) * vm(C, V) - vm_alzado(C, V) * vm_alzado(C, V)))'
+        Vp_enC1: 'medir_sobre(perpendicular(por: figura.punto("C1"), a: figura.segmento("VC1")), desde: figura.punto("C1"), distancia: cotaV)'
+        # Los extremos de las rectas largas y de los arcos de la construcción.
+        L_ch: 'uno(medir_sobre(A1B1, desde: proy_planta(Mv), distancia: 8), 2)'
+        L_V0: 'uno(medir_sobre(perpV1, desde: proy_planta(rama(Vab, 1)), distancia: 8), 1)'
+        L_M: 'uno(medir_sobre(perpV1, desde: proy_planta(Mv), distancia: 6), 2)'
+        L_K: 'uno(medir_sobre(parV1, desde: K, distancia: 6), 1)'
+        L_hA2: 'desplaza(N2, dx: -8)'
+        L_vV2: 'desplaza(N2, dy: 6)'
+        L_V4: 'uno(medir_sobre(figura.segmento("VB2"), desde: V_4, distancia: 6), 2)'
+        L_C4: 'uno(medir_sobre(paraA2, desde: C_4, distancia: 6), 1)'
+        L_prolC4: 'uno(medir_sobre(segmento2(C_4, V_4), desde: V_4, distancia: 30), 1)'
+        T_V4: 'uno(medir_sobre(segmento2(V_4, A_4), desde: V_4, distancia: 15), 1)'
+        L_Vp: 'uno(medir_sobre(perpV1c, desde: uno(VabCV, 2), distancia: 6), 1)'
+        T_C1: 'uno(medir_sobre(figura.segmento("VC1"), desde: figura.punto("C1"), distancia: 20), 2)'
+        T_B2: 'desplaza(figura.punto("B2"), dx: -20)'
+        # El plano horizontal de A, para comprobar que B y C están a su cota.
+        Ax: 'punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10))'
+        Ay: 'punto3(alzado: figura.punto("A2"), planta: desplaza(figura.punto("A1"), dy: 10))'
+        horA: plano(A, Ax, Ay)
+      comprueba:
+        # B y C están a la cota de A: AB es una horizontal del plano AVB y
+        # sirve de charnela; y el pie de V en ella está en el plano.
+        - en_plano(B, horA)
+        - en_plano(C, horA)
+        - en_plano(Mv, avb)
+        - en_plano(B, frontalVB)
+    pasos:
+      - tipo: reconocer
+        pregunta: En la planta, V₁B₁ es horizontal en el papel. ¿Qué se gana con eso?
+        opciones:
+          - texto: Que VB es frontal y el alzado la da entera
+            correcta: true
+            mensaje: |
+              Eso es. VB está a la misma distancia del plano vertical en toda su longitud: V₂B₂ mide lo
+              que la pata, 48,3 mm, y su ángulo con la horizontal del papel es el que forma con el plano
+              horizontal. Y como es frontal, un solo cambio de plano, con la línea nueva perpendicular a
+              V₂B₂, la pone de punta: es la arista de los planos AVB y CVB, que así se ven de canto.
+          - texto: Que VB es horizontal, y su ángulo con el plano horizontal se mide en la planta, entre V₁B₁ y la horizontal del papel
+            mensaje: |
+              Horizontal sería si V₂B₂ fuera horizontal en el alzado, y no lo es: V₂ está 21,6 mm más alto
+              que B₂. V₁B₁ horizontal en el papel dice que VB no se acerca ni se aleja del plano vertical:
+              es frontal, y su ángulo con el plano horizontal se ve en el alzado.
+          - texto: Que VB es de punta, y los planos AVB y CVB ya se ven de canto en el alzado, como dos rectas que salen de V₂
+            mensaje: |
+              De punta sería un punto en una de las vistas, y VB se ve como un segmento en las dos. En el
+              alzado, A₂ ≡ C₂ está fuera de V₂B₂: los planos no se ven de canto. Hace falta un cambio de
+              plano que la ponga de punta, y basta uno porque es frontal.
+
+      - tipo: construir
+        titulo: El ángulo AVB, abatiendo su plano
+        intro: |
+          A y B están a la misma altura, así que AB es una horizontal del plano AVB: es la charnela, y A y
+          B no se mueven. Abate V: en la planta, la perpendicular a A₁B₁ por V₁ corta la charnela,
+          prolongada más allá de A₁, en M, el pie de V. El radio es la hipotenusa del triángulo de catetos
+          MV₁ y lo que V está más alto que A: arma en V₁, sobre la paralela a la charnela, esa altura, K,
+          y MK es el radio. Con centro en M, V₀ en la perpendicular. El ángulo A₁V₀B₁ es el de las patas
+          VA y VB. Vale abatir hacia cualquiera de los dos lados; aquí, hacia el de V₁. Marca M y V₀.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: M
+            pide: el pie de V en la charnela AB, en la planta
+            es: proy_planta(solucion.Mv)
+            bien: |
+              M está en A₁B₁ prolongada, al pie de la perpendicular por V₁: AB es horizontal, y la
+              perpendicular a ella se ve perpendicular en la planta. V gira alrededor de AB con centro en M.
+            diagnosticos:
+              - si: '!en_recta(solucion.A1B1)'
+                mensaje: |
+                  M está **en la charnela**, la recta A₁B₁, prolongada más allá de A₁: es el centro del giro
+                  de V.
+                ejemplo: 'uno(medir_sobre(solucion.perpV1, desde: proy_planta(solucion.Mv), distancia: mm(4)), 1)'
+              - si: '!en_recta(solucion.perpV1)'
+                mensaje: |
+                  M es el pie de la **perpendicular a A₁B₁ por V₁**: V gira en un plano perpendicular a la
+                  charnela.
+                ejemplo: 'uno(medir_sobre(solucion.A1B1, desde: proy_planta(solucion.Mv), distancia: mm(6)), 2)'
+              - si: siempre
+                mensaje: |
+                  M está donde la perpendicular a A₁B₁ por V₁ corta la charnela prolongada.
+          - nombre: V0
+            pide: el vértice V abatido
+            es: proy_planta(solucion.Vab)
+            bien: |
+              V₀ está en la perpendicular a la charnela por V₁, a 32,2 mm de M: la distancia real de V a AB.
+              El ángulo A₁V₀B₁ es el de las patas VA y VB.
+            diagnosticos:
+              - si: cerca_de(solucion.V0cota)
+                mensaje: |
+                  Has abatido V con lo que está más alto que A, 21,6 mm: es solo un cateto. El radio es la
+                  hipotenusa MK, que tiene por otro cateto lo que V₁ dista de la charnela en la
+                  planta, 23,9 mm.
+                ejemplo: uno(solucion.V0cota, 1)
+              - si: cerca_de(solucion.V0planta)
+                mensaje: |
+                  Has llevado al otro lado de M lo que V₁ dista de la charnela **en la planta**, MV₁. V está
+                  más alto que la charnela, y su distancia real a ella es la hipotenusa MK.
+                ejemplo: solucion.V0planta
+              - si: '!en_recta(solucion.perpV1)'
+                mensaje: |
+                  V gira en un plano perpendicular a la charnela: V₀ está en la **perpendicular a A₁B₁ por
+                  V₁**.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Vab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular por V₁, pero no a la distancia buena: con centro en M y radio MK,
+                  el arco que sale de K la corta en V₀.
+        trazado:
+          - segmento2(solucion.L_ch, figura.punto("B1"))
+          - segmento2(figura.punto("V1"), proy_planta(solucion.Vab))
+          - segmento2(proy_planta(solucion.Vab), figura.punto("A1"))
+          - segmento2(proy_planta(solucion.Vab), figura.punto("B1"))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("B1"), solucion.L_ch)
+            rotulo: charnela
+            porque: |
+              En la planta, A₁B₁ con la regla, prolongada más allá de A₁: la charnela. A₂ y B₂ están a la
+              misma altura en el alzado, y AB es una horizontal del plano AVB.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("V1"), solucion.L_V0), segmento2(figura.punto("V1"), solucion.L_M)]'
+            guia: solucion.A1B1
+            porque: |
+              Por V₁, la perpendicular a la charnela, larga hacia los dos lados: arriba, hasta pasar A₁B₁
+              prolongada; abajo, más allá de V₁. V gira alrededor de AB en un plano perpendicular a ella, y
+              en la planta se mueve por esta recta.
+          - con: marca
+            traza: proy_planta(solucion.Mv)
+            rotulo: M
+            porque: |
+              M, nombre nuestro, donde la perpendicular por V₁ corta la charnela prolongada, 10 mm más allá
+              de A₁: el pie de V, centro de su giro.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), solucion.L_K)
+            guia: solucion.A1B1
+            porque: |
+              Por V₁, la paralela a la charnela, hacia arriba a la izquierda: en ella se arma el triángulo
+              del radio, rectángulo en V₁.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), solucion.L_hA2)
+            porque: |
+              En el alzado, la recta de B₂ y A₂ prolongada hacia la izquierda, hasta pasar la vertical de
+              V₂: es la horizontal de la cubierta, la cota de A, B y C.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V2"), solucion.L_vV2)
+            porque: |
+              Por V₂, la vertical hasta pasar esa horizontal: el trozo entre V₂ y ella, N, es lo que V está
+              más alto que A, 21,6 mm.
+          - con: compas
+            traza: 'arco(figura.punto("V1"), por: solucion.K, desde: desplaza(solucion.K, dx: -3.3, dy: 5), hasta: desplaza(solucion.K, dx: 3.3, dy: -5))'
+            toma: segmento2(figura.punto("V2"), solucion.N2)
+            porque: |
+              Con el compás, V₂N, lo que V está más alto que A; con centro en V₁, el arco corta la paralela a
+              la charnela.
+          - con: marca
+            traza: solucion.K
+            rotulo: K
+            porque: |
+              K, nombre nuestro, donde el arco corta la paralela a la charnela por V₁: V₁K es lo que V está
+              más alto que la charnela.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.Mv), solucion.K)
+            porque: |
+              MK, la hipotenusa del triángulo rectángulo M V₁ K: la distancia real de V a la charnela,
+              32,2 mm, que es el radio con que V se abate.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.Mv), por: solucion.K, desde: solucion.K, hasta: desplaza(proy_planta(rama(solucion.Vab, 1)), dx: 5, dy: 3))'
+            porque: |
+              Con centro en M y radio MK, el arco desde K, hacia abajo, hasta pasar la perpendicular por
+              V₁: V gira alrededor de AB y cae al plano horizontal de la cubierta. La circunferencia entera
+              la cortaría también arriba, al otro lado de la charnela, y ese V₀ también valdría.
+          - con: marca
+            traza: proy_planta(rama(solucion.Vab, 1))
+            rotulo: V₀
+            porque: |
+              V₀, donde el arco corta la perpendicular por V₁, más allá de V₁: V abatido, a 32,2 mm de M.
+          - con: regla
+            traza: '[segmento2(proy_planta(rama(solucion.Vab, 1)), figura.punto("A1")), segmento2(proy_planta(rama(solucion.Vab, 1)), figura.punto("B1"))]'
+            porque: |
+              V₀A₁ y V₀B₁: las patas VA y VB abatidas. A y B están en la charnela y no se mueven; el
+              triángulo A₁V₀B₁ es AVB en verdadera magnitud.
+          - con: transportador
+            traza: 'arco(proy_planta(rama(solucion.Vab, 1)), por: figura.punto("A1"), desde: figura.punto("A1"), hasta: figura.punto("B1"))'
+            porque: |
+              El transportador con el centro en V₀, de V₀A₁ a V₀B₁: el ángulo AVB de las patas.
+        pista: |
+          (1) La charnela A₁B₁, prolongada, y por V₁ su perpendicular: M. (2) Por V₁, la paralela a la
+          charnela, y sobre ella lo que V está más alto que A, de V₂ a la horizontal de A₂B₂: K. (3) Con
+          centro en M y radio MK, a la perpendicular: V₀. (4) El ángulo en V₀, entre V₀A₁ y V₀B₁.
+        desarrollo: |
+          En verde claro, la charnela, el camino de V y el triángulo A₁V₀B₁, que es AVB en verdadera
+          magnitud: VA = 33,8 mm, VB = 48,3 mm y AB = 26,0 mm. MV₁ mide 23,9 mm, y la hipotenusa MK, el
+          radio, 32,2 mm.
+
+      - tipo: calcular
+        titulo: El ángulo AVB entre las patas VA y VB
+        pregunta: ¿Cuántos grados forman las patas VA y VB?
+        respuesta:
+          tipo: numero
+          valor: '30.91'
+          receta: angAVB
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '33.69'
+            receta: angPlantaAVB
+            mensaje: |
+              Es lo que forman V₁A₁ y V₁B₁ **en la planta**. El plano AVB no es horizontal —V está más alto
+              que A y B—, y la planta deforma su ángulo. Hay que abatirlo.
+          - valor: '18.46'
+            receta: angAlzadoAVB
+            mensaje: |
+              Es lo que forman V₂A₂ y V₂B₂ **en el alzado**. VB es frontal y se ve entera, pero VA no, y el
+              plano AVB tampoco: el alzado deforma el ángulo.
+          - valor: '149.09'
+            receta: 180 - angAVB
+            mensaje: |
+              Ese es el **suplementario**: el que forma V₀A₁ con la prolongación de B₁V₀ más allá de V₀. Las
+              patas salen de V hacia A y hacia B, y el ángulo que abarcan es el del triángulo, en V₀.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en V₀, entre V₀A₁ y V₀B₁.
+        desarrollo: |
+          En el triángulo AVB, con VA = 33,76 mm, VB = 48,31 mm y AB = 25,98 mm, por el teorema del
+          coseno:
+
+          $$ \cos\widehat{V} = \frac{33{,}76^{2} + 48{,}31^{2} - 25{,}98^{2}}{2 \cdot 33{,}76 \cdot 48{,}31} \approx 0{,}8580, \qquad \widehat{V} \approx 30{,}91^{\circ} $$
+
+      - tipo: construir
+        titulo: Los planos AVB y CVB, con VB de punta
+        intro: |
+          VB es frontal, así que un solo cambio de plano la pone de punta. La línea nueva, de trazo y
+          punto, ya está dibujada arriba a la izquierda, perpendicular a V₂B₂; la referencia es V, y el
+          cambio es horizontal: sale del alzado y lleva alejamientos. V₄ ≡ B₄ cae en la línea, donde la
+          corta V₂B₂ prolongada. A₂ ≡ C₂ sale por la paralela a V₂B₂, y A₄ y C₄ se apartan de la línea lo
+          que A₁ y C₁ están por encima y por debajo de V₁B₁ en la planta, 14,4 mm: A, que está más atrás
+          que V, hacia el alzado, y C hacia fuera. V₄A₄ y V₄C₄ son los planos de canto. Marca V₄ ≡ B₄, A₄ y
+          C₄.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: V4
+            rotulo: V₄ ≡ B₄
+            pide: la arista VB, de punta en la vista nueva
+            es: solucion.V_4
+            bien: |
+              V₄ ≡ B₄ está en la línea nueva, donde la corta V₂B₂ prolongada: V es la referencia, y B tiene
+              su mismo alejamiento. La arista se ve como un punto.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("nueva"))'
+                mensaje: |
+                  V es la referencia del cambio: cae **en la línea nueva**. B también, porque VB es frontal y
+                  tiene el mismo alejamiento en toda su longitud.
+                ejemplo: 'uno(medir_sobre(figura.segmento("VB2"), desde: solucion.V_4, distancia: mm(5)), 2)'
+              - si: '!en_recta(figura.segmento("VB2"))'
+                mensaje: |
+                  V₄ sale de V₂ por la perpendicular a la línea nueva, y esa perpendicular es la propia V₂B₂,
+                  prolongada: V₄ ≡ B₄ está donde corta la línea.
+                ejemplo: 'uno(medir_sobre(figura.segmento("nueva"), desde: solucion.V_4, distancia: mm(5)), 1)'
+              - si: siempre
+                mensaje: |
+                  V₄ ≡ B₄ está donde V₂B₂ prolongada corta la línea nueva.
+          - nombre: A4
+            pide: el pie A de la pata VA en la vista nueva
+            es: solucion.A_4
+            bien: |
+              A₄ está en la paralela a V₂B₂ por A₂, 14,4 mm antes de la línea nueva, hacia el alzado: A₁ está
+              por encima de V₁B₁ en la planta, y A está más atrás que V.
+            diagnosticos:
+              - si: cerca_de(solucion.C_4)
+                mensaje: |
+                  Ese es el lado de C. A₁ está por encima de V₁B₁ en la planta: A está más atrás que V, la
+                  referencia, y en la vista nueva queda del lado del alzado, entre la línea y A₂.
+                ejemplo: solucion.C_4
+              - si: cerca_de(solucion.A4cota)
+                mensaje: |
+                  Has llevado lo que A está más bajo que V, la cota. Este cambio sale del alzado y lleva
+                  **alejamientos**: lo que A₁ está por encima de V₁B₁ en la planta, 14,4 mm.
+                ejemplo: uno(solucion.A4cota, 1)
+              - si: '!en_recta(solucion.paraA2)'
+                mensaje: |
+                  A₄ sale de A₂ por la **perpendicular a la línea nueva**, que es la paralela a V₂B₂.
+                ejemplo: 'desplaza(solucion.A_4, dx: mm(4), dy: mm(-3))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a V₂B₂ por A₂, pero no a la distancia buena: A₄ se aparta de la línea
+                  nueva lo que A₁ está por encima de V₁B₁, hacia el alzado.
+          - nombre: C4
+            pide: el pie C de la pata VC en la vista nueva
+            es: solucion.C_4
+            bien: |
+              C₄ está en la misma paralela, al otro lado de la línea nueva y a la misma distancia: C₁ está
+              por debajo de V₁B₁ lo mismo que A₁ por encima. V₄A₄ y V₄C₄ son los planos AVB y CVB de canto.
+            diagnosticos:
+              - si: cerca_de(solucion.A4cota)
+                mensaje: |
+                  Has llevado la cota de C en vez de su alejamiento. El cambio sale del alzado: C₄ se aparta
+                  de la línea lo que C₁ está por debajo de V₁B₁ en la planta, 14,4 mm.
+                ejemplo: uno(solucion.A4cota, 2)
+              - si: '!en_recta(solucion.paraA2)'
+                mensaje: |
+                  C₂ es la misma cruz que A₂: C₄ sale por la misma paralela a V₂B₂, la perpendicular a la
+                  línea nueva.
+                ejemplo: 'desplaza(solucion.C_4, dx: mm(4), dy: mm(-3))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela por A₂ ≡ C₂, pero no a la distancia buena: C₄ se aparta de la línea, hacia
+                  fuera, lo que C₁ está por debajo de V₁B₁.
+        trazado:
+          - segmento2(figura.punto("V2"), solucion.V_4)
+          - segmento2(figura.punto("A2"), solucion.C_4)
+          - segmento2(solucion.V_4, solucion.A_4)
+          - segmento2(solucion.C_4, solucion.L_prolC4)
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("V2"), solucion.L_V4)
+            porque: |
+              V₂B₂ prolongada con la regla más allá de V₂, hasta pasar la línea nueva: es perpendicular a
+              ella, y por ella sale V₄, y también B₄.
+          - con: marca
+            traza: solucion.V_4
+            rotulo: V₄ ≡ B₄
+            porque: |
+              V₄ ≡ B₄, donde V₂B₂ prolongada corta la línea nueva: V es la referencia, y B tiene su mismo
+              alejamiento. VB, de punta.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.L_C4)
+            guia: figura.segmento("VB2")
+            porque: |
+              Por A₂ ≡ C₂, la paralela a V₂B₂, que es la perpendicular a la línea nueva, larga, hasta pasarla
+              bien: por ella salen A₄ y C₄.
+          - con: compas
+            traza: '[arco(solucion.pieA4, por: solucion.A_4, desde: desplaza(solucion.A_4, dx: -2.7, dy: 5.4), hasta: desplaza(solucion.A_4, dx: 2.7, dy: -5.4)), arco(solucion.pieA4, por: solucion.C_4, desde: desplaza(solucion.C_4, dx: -2.7, dy: 5.4), hasta: desplaza(solucion.C_4, dx: 2.7, dy: -5.4))]'
+            toma: segmento2(figura.punto("A1"), solucion.N1)
+            porque: |
+              Con el compás, en la planta, lo que A₁ está por encima de V₁B₁, 14,4 mm, que es lo mismo que C₁
+              está por debajo. Con centro donde la paralela corta la línea nueva, un arco a cada lado.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la paralela del lado del alzado: A está más atrás que V.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄, donde el arco corta la paralela al otro lado de la línea nueva: C está más adelante que V.
+          - con: regla
+            traza: '[segmento2(solucion.V_4, solucion.A_4), segmento2(solucion.C_4, solucion.L_prolC4)]'
+            porque: |
+              V₄A₄ y V₄C₄, los planos AVB y CVB de canto. C₄V₄ se prolonga más allá de V₄: entre esa
+              prolongación y V₄A₄ queda el menor de los dos ángulos.
+          - con: transportador
+            traza: 'arco(solucion.V_4, por: solucion.T_V4, desde: solucion.A_4, hasta: solucion.L_prolC4)'
+            porque: |
+              El transportador con el centro en V₄, de V₄A₄ a la prolongación de C₄V₄: el ángulo entre los
+              planos, el menor. El de V₄A₄ a V₄C₄, por donde están A y C, es su suplementario.
+        pista: |
+          (1) V₂B₂ prolongada hasta la línea nueva: V₄ ≡ B₄. (2) Por A₂ ≡ C₂, la paralela a V₂B₂. (3) Sobre
+          ella, a cada lado de la línea, lo que A₁ y C₁ están por encima y por debajo de V₁B₁: A₄ hacia el
+          alzado y C₄ hacia fuera. (4) El ángulo en V₄.
+        desarrollo: |
+          En verde claro, la vista con VB de punta: las dos rectas V₄A₄ y V₄C₄ son los planos AVB y CVB de
+          canto, simétricos respecto de la línea nueva, que en esta vista es el plano frontal de VB. Cada
+          uno forma 56,1° con ella: las caras abarcan 112,2°, y los planos, el menor, 67,8°.
+
+      - tipo: calcular
+        titulo: El ángulo entre los planos AVB y CVB
+        # Decisión: dos planos que se cortan forman dos ángulos suplementarios, y se
+        # da el menor, el convenio de «ángulo entre planos» (y el de angulo_planos),
+        # como en el 53·3 A. El de las caras, 112,23°, va de distractor con un mensaje
+        # que reconoce la construcción. El enunciado no dice cuál de los dos espera el
+        # corrector: es la pregunta abierta para Ionan del 53·3 A (tasks/pendiente.md).
+        pregunta: ¿Cuántos grados forman los planos AVB y CVB? Del par de ángulos suplementarios que forman, el menor.
+        respuesta:
+          tipo: numero
+          valor: '67.77'
+          receta: angPlanos
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '112.23'
+            receta: diedro
+            mensaje: |
+              Es el ángulo de las **caras**, el que abarcan por donde están A y C, de V₄A₄ a V₄C₄, y
+              la construcción es la buena. Dos planos que se cortan forman dos ángulos
+              suplementarios; el enunciado pide el de los planos, y aquí se da el menor, como en el
+              apartado 3 del Ejercicio 53: 180° − 112,23° = 67,77°.
+          - valor: '56.11'
+            receta: angCaraFrontal
+            mensaje: |
+              Es lo que forma **una** cara con la línea nueva, que en esta vista es el plano frontal que
+              contiene a VB: la mitad del ángulo de las caras. El ángulo de los planos está entre V₄A₄ y la
+              prolongación de V₄C₄.
+          - valor: '48.24'
+            receta: angCotas
+            mensaje: |
+              Sale de llevar a la vista nueva las **cotas** de A y C en vez de sus alejamientos. El cambio
+              sale del alzado, así que lleva lo que A₁ y C₁ están por encima y por debajo de V₁B₁ en la
+              planta, 14,4 mm, no los 21,6 mm que V está más alto.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en V₄, entre V₄A₄ y la prolongación de
+          C₄V₄ más allá de V₄.
+        desarrollo: |
+          Con VB de punta, A₄ y C₄ quedan a 14,4 mm a cada lado de la línea nueva, y la paralela que los
+          une está a 9,67 mm de V₄. Cada cara forma con la línea un ángulo de tangente 14,4/9,67:
+
+          $$ 2\arctan\frac{14{,}39}{9{,}67} \approx 112{,}23^{\circ}, \qquad 180^{\circ} - 112{,}23^{\circ} = 67{,}77^{\circ} $$
+
+          Dos casualidades de esta lámina, dentro de la tolerancia: en la planta, V₁A₁ y V₁C₁ forman 67,4°;
+          y en la construcción del ángulo AVB, la charnela A₁B₁ y su paralela por V₁ forman 67,3° con
+          V₁A₁. Ninguna es el ángulo de los planos —ni su arista VB es vertical ni los planos lo son—, y la
+          casilla no las distingue.
+
+      - tipo: construir
+        titulo: Las patas CV y BV con el plano horizontal
+        intro: |
+          BV es frontal: su ángulo con el plano horizontal se ve en el alzado, entre V₂B₂ y la horizontal
+          de la cubierta. CV no es horizontal ni frontal: en V₁, la perpendicular a C₁V₁, y sobre ella lo
+          que V está más alto que C, de V₂ a la horizontal de A₂ ≡ C₂. Ese punto es V′, V abatido sobre la
+          planta con el plano vertical de CV; el ángulo en C₁, entre C₁V₁ y C₁V′, es el de CV con el plano
+          horizontal. Hacia cualquiera de los dos lados de V₁ vale; aquí, hacia abajo a la izquierda.
+          Marca V′.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Vp
+            rotulo: V′
+            pide: el extremo V de la pata CV, abatido sobre la planta
+            es: solucion.VabCV
+            bien: |
+              V′ está en la perpendicular a C₁V₁ por V₁, a 21,6 mm de V₁: lo que V está más alto que C.
+              C₁V′ mide 33,8 mm, la longitud de la pata, y forma con C₁V₁ su ángulo con el plano horizontal.
+            diagnosticos:
+              - si: cerca_de(solucion.Vp_dy)
+                mensaje: |
+                  Has llevado lo que V está **más atrás** que C, la diferencia de alejamientos. Sobre la
+                  planta se lleva lo que **sube**: de V₂ a la horizontal de A₂ ≡ C₂, en el alzado.
+                ejemplo: uno(solucion.Vp_dy, 1)
+              - si: cerca_de(solucion.Vp_enC1)
+                mensaje: |
+                  Has levantado la diferencia de cotas en C₁, no en V₁. Ese triángulo también da la
+                  longitud, pero aquí se pide V abatido: la perpendicular a C₁V₁ va por V₁.
+                ejemplo: uno(solucion.Vp_enC1, 1)
+              - si: '!en_recta(solucion.perpV1c)'
+                mensaje: |
+                  V′ va en la **perpendicular a C₁V₁ por V₁**: el plano vertical de CV gira alrededor de C₁V₁
+                  hasta la planta, y V se mueve perpendicular a ella.
+                ejemplo: 'desplaza(uno(solucion.VabCV, 2), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular por V₁, pero no a la distancia buena: con el compás, de V₂ a la
+                  horizontal de A₂ ≡ C₂, y centro en V₁.
+        trazado:
+          - segmento2(figura.punto("V1"), uno(solucion.VabCV, 2))
+          - segmento2(figura.punto("C1"), uno(solucion.VabCV, 2))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), solucion.L_Vp)
+            guia: figura.segmento("VC1")
+            porque: |
+              En la planta, por V₁, la perpendicular a C₁V₁, hacia abajo a la izquierda y larga: el plano
+              vertical de CV se abate sobre la planta girando alrededor de C₁V₁, y V se mueve por esta
+              recta.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), solucion.L_hA2)
+            porque: |
+              En el alzado, la recta de B₂ y A₂ ≡ C₂ prolongada hacia la izquierda, hasta pasar la vertical
+              de V₂: la horizontal de la cubierta, la cota de C.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V2"), solucion.L_vV2)
+            porque: |
+              Por V₂, la vertical hasta pasar esa horizontal: el trozo entre V₂ y ella, N, es lo que V está
+              más alto que C, 21,6 mm.
+          - con: compas
+            traza: 'arco(figura.punto("V1"), por: uno(solucion.VabCV, 2), desde: desplaza(uno(solucion.VabCV, 2), dx: 4.2, dy: 2.8), hasta: desplaza(uno(solucion.VabCV, 2), dx: -4.2, dy: -2.8))'
+            toma: segmento2(figura.punto("V2"), solucion.N2)
+            porque: |
+              Con el compás, en el alzado, V₂N, lo que V está más alto que C. Con centro en V₁, sobre la
+              perpendicular.
+          - con: marca
+            traza: uno(solucion.VabCV, 2)
+            rotulo: V′
+            porque: |
+              V′, nombre nuestro, donde el arco corta la perpendicular por V₁: V abatido sobre la planta
+              con el plano vertical de CV.
+          - con: regla
+            traza: segmento2(figura.punto("C1"), uno(solucion.VabCV, 2))
+            porque: |
+              C₁V′, la hipotenusa del triángulo rectángulo C₁V₁V′: la pata CV en verdadera magnitud, 33,8 mm.
+          - con: transportador
+            traza: 'arco(figura.punto("C1"), por: solucion.T_C1, desde: figura.punto("V1"), hasta: uno(solucion.VabCV, 2))'
+            porque: |
+              El transportador con el centro en C₁, de C₁V₁ a C₁V′: el ángulo de CV con su planta, que es
+              el que forma con el plano horizontal.
+          - con: transportador
+            traza: 'arco(figura.punto("B2"), por: solucion.T_B2, desde: solucion.T_B2, hasta: figura.punto("V2"))'
+            porque: |
+              Y en el alzado, el transportador con el centro en B₂, de la horizontal B₂A₂ a B₂V₂: BV es
+              frontal, y el alzado da su ángulo con el plano horizontal sin construir nada.
+        pista: |
+          (1) BV: en el alzado, en B₂, entre la horizontal y B₂V₂. (2) CV: en V₁, la perpendicular a C₁V₁,
+          y sobre ella lo que V sube sobre C, de V₂ a la horizontal de A₂ ≡ C₂: V′. (3) El ángulo en C₁,
+          entre C₁V₁ y C₁V′.
+        desarrollo: |
+          En verde claro, el triángulo C₁V₁V′, rectángulo en V₁: C₁V₁ = 25,9 mm, V₁V′ = 21,6 mm y C₁V′ =
+          33,8 mm, la longitud de la pata. AV forma el mismo ángulo que CV: la cabria es simétrica.
+
+      - tipo: calcular
+        titulo: El ángulo de la pata CV con el plano horizontal
+        pregunta: ¿Cuántos grados forma la pata CV con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '39.76'
+          receta: angCV
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '45.00'
+            receta: angulo_con_ph(segmento3(V, Cf))
+            mensaje: |
+              Es lo que forma V₂C₂ con la horizontal **en el alzado**. CV no es frontal —C₁ no está en la
+              horizontal de V₁—, y el alzado deforma su ángulo. El de verdad está en C₁, entre C₁V₁ y C₁V′.
+          - valor: '50.24'
+            receta: 90 - angCV
+            mensaje: |
+              Ese es el **complementario**, el ángulo de CV con la vertical, el de V′ en el triángulo. El del
+              plano horizontal está en C₁, entre la hipotenusa y la planta C₁V₁.
+          - valor: '83.21'
+            receta: pendiente(C, V) * 100
+            mensaje: |
+              Es la **pendiente** de CV en tanto por ciento: lo que sube, 21,6 mm, por lo que avanza, 25,9 mm.
+              Es la tangente del ángulo, no el ángulo.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en C₁, entre C₁V₁ y C₁V′.
+        desarrollo: |
+          En el triángulo C₁V₁V′, rectángulo en V₁:
+
+          $$ \operatorname{tg}\alpha = \frac{21{,}59}{25{,}95} \approx 0{,}832, \qquad \alpha \approx 39{,}76^{\circ} $$
+
+      - tipo: calcular
+        titulo: El ángulo de la pata BV con el plano horizontal
+        pregunta: ¿Cuántos grados forma la pata BV con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '26.54'
+          receta: angBV
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '63.46'
+            receta: 90 - angBV
+            mensaje: |
+              Ese es el **complementario**, el que forma V₂B₂ con la vertical. El del plano horizontal está
+              en B₂, entre la horizontal de la cubierta y B₂V₂.
+          - valor: '49.95'
+            receta: pendiente(B, V) * 100
+            mensaje: |
+              Es la **pendiente** de BV en tanto por ciento: sube 21,6 mm en 43,2 mm, casi la mitad. Es la
+              tangente del ángulo, no el ángulo.
+          - valor: '39.76'
+            receta: angCV
+            mensaje: |
+              Ese es el ángulo de **CV**, o el de AV, que es el mismo. BV es la pata frontal: su ángulo se mide
+              en el alzado, en B₂, y es menor, porque llega más lejos con la misma altura.
+        pista: |
+          BV es frontal: con el transportador en el alzado, en B₂, entre la horizontal B₂A₂ y B₂V₂.
+        desarrollo: |
+          V está 21,59 mm más alto que B, y BV avanza 43,22 mm en horizontal; como es frontal, el alzado da
+          las dos medidas:
+
+          $$ \operatorname{tg}\beta = \frac{21{,}59}{43{,}22} \approx 0{,}4995, \qquad \beta \approx 26{,}54^{\circ} $$
+
+          En la vista de los planos, la paralela a V₂B₂ por A₂ forma el mismo ángulo con la horizontal de la
+          cubierta: es paralela a V₂B₂, y el ángulo es el mismo.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: A y B están a la misma cota, así que AB es una horizontal del plano AVB; con ella de charnela, V abatido da el ángulo AVB, 30,9°.
+          - texto: VB es frontal, porque V₁B₁ es horizontal en el papel; un solo cambio de plano, con la línea nueva perpendicular a V₂B₂, la pone de punta.
+          - texto: Con VB de punta, los planos AVB y CVB se ven de canto; sus caras abarcan 112,2°, y los planos forman el menor, 67,8°.
+          - texto: BV se ve entera en el alzado, con su ángulo con el plano horizontal, 26,5°; el de CV sale de su triángulo, 39,8°.
+          - texto: El ángulo de los planos AVB y CVB se mide en la planta, entre V₁A₁ y V₁C₁, porque desde arriba se ven las dos patas.
+            trampa: true
+            mensaje: |
+              La planta no enseña el ángulo de dos planos que no son verticales: hay que ver de punta su
+              arista, VB. Aquí sale 67,4°, cerca de los 67,8° por casualidad; en otra cabria no se
+              parecerían.
+    resolucion: |
+      **Qué fija la figura.** A, B y C están a la misma altura, la de la cubierta, y A₂ ≡ C₂. V₁B₁ es
+      horizontal en el papel: VB es frontal. A₁ y C₁ están a 14,4 mm a cada lado de V₁B₁: la cabria es
+      simétrica respecto del plano frontal de VB. V está 21,6 mm más alto que A, B y C.
+
+      **a) El ángulo AVB.** AB es una horizontal del plano AVB y sirve de charnela. La perpendicular a
+      A₁B₁ por V₁ la corta, prolongada, en M. MV₁ mide 23,9 mm y V está 21,6 mm más alto: el radio es
+      la hipotenusa, 32,2 mm, y V₀ cae en esa perpendicular. El triángulo A₁V₀B₁ es AVB de verdad, y en
+      V₀ mide 30,9°. En la planta se ve de 33,7° y en el alzado de 18,5°.
+
+      **b) Los planos AVB y CVB.** Se cortan en VB, que es frontal. Un cambio de plano con la línea nueva
+      perpendicular a V₂B₂ y V de referencia la pone de punta: V₄ ≡ B₄ en la línea, y A₄ y C₄ en la
+      paralela a V₂B₂ por A₂ ≡ C₂, a 14,4 mm a cada lado. V₄A₄ y V₄C₄ son los planos de canto: las
+      caras abarcan 112,2° por donde están A y C, y los planos forman el menor de los dos ángulos,
+      67,8°, que es el que se da: el enunciado no dice cuál de los dos quiere.
+
+      **c) Las patas con el plano horizontal.** BV es frontal, y el alzado da su ángulo: 26,5°. CV,
+      con su triángulo: C₁V₁ = 25,9 mm y 21,6 mm de altura dan 39,8°, el mismo que AV.
+
   - id: sd63-el-angulo-de-r-con-el-plano-abc
     titulo: El ángulo de la recta r con el plano ABC, en magnitud y posición
     fuente: Ejercicio 47 (SD63) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
@@ -2205,3 +3420,1099 @@ ejercicios:
 
       **La comprobación.** El triángulo abatido es recto en T₁, y T₁P₀ mide lo mismo que PT de verdad.
       Y sen δ = PT/PR = 59,28/70,78 da los mismos 56,88°.
+
+  - id: sd66-el-mastil-sobre-el-tejado
+    titulo: El mástil sobre el tejado, sus anclajes y sus ángulos
+    fuente: Ejercicio 50 (SD66) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 51, A3
+    # girada). El a), con un construir: el alzado de cada anclaje por una
+    # horizontal de su faldón. El b) y el d), de una misma vista nueva con la
+    # cumbrera de punta, y el c), abatiendo el plano ACE con la charnela AC,
+    # que es frontal: dos construir más, y un calcular por apartado.
+    enunciado: |
+      Un mástil colocado verticalmente sobre un tejado, apoyando su extremo B en el faldón, se
+      sostiene por tres barras rectas AC, AE y AD ancladas al tejado en los puntos C, D y E, tal como
+      se indica en las proyecciones diédricas alzado y planta. Se pide determinar gráficamente:
+
+      a) Puntos de intersección C, D y E.
+
+      b) Ángulo entre los dos faldones del tejado.
+
+      c) Ángulo entre barras AC y AE.
+
+      d) Ángulo que forma la barra AD con el faldón.
+
+      **Notas nuestras.** La figura es el tejado a dos aguas, con el mástil AB, en el alzado, arriba, y
+      en la planta, debajo, girada. Los dos aleros están a la misma altura y la cumbrera es
+      horizontal; en la planta, la cumbrera va paralela a los aleros, mucho más cerca del de atrás:
+      el faldón trasero es estrecho y empinado, y el delantero, ancho. Las barras solo están dadas en la
+      planta, de A₁ a C₁, D₁ y E₁; en el alzado solo está el mástil. «Puntos de intersección» quiere
+      decir dónde se clavan las barras en el tejado: el alzado de C, D y E, que son puntos del tejado.
+      Los tres caen en la planta por delante de la cumbrera, y están en el faldón delantero, el mismo
+      en que apoya el mástil. Por eso leemos «el faldón» del apartado d) como el delantero: es en el que se
+      ancla D. Con el trasero, que AD no toca, el ángulo sería otro, y también se da. B₂ queda 0,4 mm
+      por encima del faldón: es del original, y no se usa. F y G son los extremos de la cumbrera, H y J
+      las esquinas del alero delantero y K y L las del trasero; ellos, los puntos 1, 2 y 3, M, N, T, Y,
+      Z, E⁰, D′ y la vista 4 son nuestros. La lámina no da escala: las medidas son de la lámina. Los
+      métodos son nuestros: el enunciado pide determinar gráficamente, sin decir cómo. El del
+      apartado d) es el triángulo PTR del tema con la barra: P es A, R es D, que ya está en el
+      faldón, y T es el pie de la perpendicular t desde A; ese triángulo, rectángulo en T, se pone
+      en verdadera magnitud girando D alrededor de t. El atajo del tema, abatir el plano de AD y t y
+      restar de 90° el ángulo en A, da lo mismo.
+    pide: El alzado de los anclajes C, D y E, y, en grados, el ángulo entre los dos faldones, el de las barras AC y AE y el de la barra AD con el faldón en el que se ancla, con las construcciones que los dan.
+    receta:
+      lamina: sd66
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        H: 'punto3(alzado: figura.punto("H2"), planta: figura.punto("H1"))'
+        J: 'punto3(alzado: figura.punto("J2"), planta: figura.punto("J1"))'
+        K: 'punto3(alzado: figura.punto("K2"), planta: figura.punto("K1"))'
+        L: 'punto3(alzado: figura.punto("L2"), planta: figura.punto("L1"))'
+        delantero: plano(F, G, H)
+        trasero: plano(F, G, L)
+      solucion:
+        # a) Los anclajes, en el faldón delantero: sus plantas caen por delante
+        # de la cumbrera. Cada uno, por la horizontal del faldón que pasa por
+        # él, paralela a la cumbrera en la planta, hasta el borde del faldón
+        # más cercano: el de la derecha (JG) para C y E, el de la izquierda
+        # (HF) para D. Los puntos 1, 2 y 3 son esos cortes.
+        C: 'punto_en_plano(planta: figura.punto("C1"), plano: delantero)'
+        D: 'punto_en_plano(planta: figura.punto("D1"), plano: delantero)'
+        E: 'punto_en_plano(planta: figura.punto("E1"), plano: delantero)'
+        Uc: pie_comun(recta3(J, G), horizontal_por(C, delantero))
+        Ud: pie_comun(recta3(H, F), horizontal_por(D, delantero))
+        Ue: pie_comun(recta3(J, G), horizontal_por(E, delantero))
+        vC1: 'segmento2(figura.punto("C1"), desplaza(figura.punto("C1"), dy: -10))'
+        vD1: 'segmento2(figura.punto("D1"), desplaza(figura.punto("D1"), dy: -10))'
+        vE1: 'segmento2(figura.punto("E1"), desplaza(figura.punto("E1"), dy: -10))'
+        hC2: segmento2(proy_alzado(Uc), proy_alzado(C))
+        hD2: segmento2(proy_alzado(Ud), proy_alzado(D))
+        hE2: segmento2(proy_alzado(Ue), proy_alzado(E))
+        # Los errores: tomar el borde del faldón en la vertical del punto, o el
+        # alero.
+        Cborde: 'cruce_aparente(vC1, figura.segmento("JG2"))'
+        Dborde: 'cruce_aparente(vD1, figura.segmento("HF2"))'
+        Ealero: 'cruce_aparente(vE1, figura.segmento("HJ2"))'
+        # b) y d) Decisión: un cambio de plano vertical con la línea nueva de la
+        # lámina, perpendicular a la cumbrera, y H de referencia: los aleros
+        # caen en la línea, la cumbrera sale de punta (F₄ ≡ G₄) y los dos
+        # faldones se ven de canto.
+        F_4: 'cambio_plano_vertical(F, figura.segmento("nueva"), ref: H)'
+        H_4: 'cambio_plano_vertical(H, figura.segmento("nueva"), ref: H)'
+        L_4: 'cambio_plano_vertical(L, figura.segmento("nueva"), ref: H)'
+        A_4: 'cambio_plano_vertical(A, figura.segmento("nueva"), ref: H)'
+        D_4: 'cambio_plano_vertical(D, figura.segmento("nueva"), ref: H)'
+        pieF: 'pie_perpendicular(figura.punto("F1"), figura.segmento("nueva"))'
+        pieA: 'pie_perpendicular(figura.punto("A1"), figura.segmento("nueva"))'
+        F2b: 'pie_perpendicular(figura.punto("F2"), figura.segmento("HJ2"))'
+        A2b: 'pie_perpendicular(figura.punto("A2"), figura.segmento("HJ2"))'
+        canto: segmento2(F_4, H_4)
+        projA: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("nueva"))'
+        projD: 'perpendicular(por: figura.punto("D1"), a: figura.segmento("nueva"))'
+        angFaldones: angulo_planos(delantero, trasero)
+        diedroF: angulo_diedro(H, recta3(F, G), L)
+        # d) Decisión: el ángulo de AD con el faldón, girando D alrededor de la
+        # perpendicular t al faldón por A hasta el plano paralelo a la vista 4:
+        # el giro deja D en el faldón y no cambia el ángulo, y entonces AD se
+        # ve en verdadera magnitud y el faldón de canto. T es el pie de t, que
+        # cae en el plano del faldón 2,0 mm más allá de la cumbrera. D′ (Dg)
+        # está en la línea de máxima pendiente del faldón por T, a TD de T, del
+        # lado de D (rama 1: Tm está por delante de T).
+        T: pie_en_plano(A, delantero)
+        Tdel2: 'uno(medir_sobre(perpendicular(por: proy_planta(T), a: figura.segmento("cumbrera1")), desde: proy_planta(T), distancia: 20), 1)'
+        Tm: 'punto_en_plano(planta: Tdel2, plano: delantero)'
+        Dgd: 'punto_a_distancia(recta3(T, Tm), desde: T, distancia: vm(T, D))'
+        Dg: rama(Dgd, 1)
+        T_4: 'cambio_plano_vertical(T, figura.segmento("nueva"), ref: H)'
+        Dg_4: 'cambio_plano_vertical(Dg, figura.segmento("nueva"), ref: H)'
+        # Lo que D está más lejos de la línea nueva que A, en la planta: A₁Y,
+        # con Y en la paralela a la cumbrera por A₁, a la altura de D₁. Z, en la
+        # perpendicular al canto por D₄, a esa distancia: T₄Z = TD.
+        Y: 'cruce_aparente(perpendicular(por: figura.punto("D1"), a: figura.segmento("cumbrera1")), projA)'
+        Y3: 'punto3(alzado: pie_perpendicular(Y, figura.segmento("HJ2")), planta: Y)'
+        prof: vm_planta(A, Y3)
+        perpD4: 'perpendicular(por: D_4, a: canto)'
+        Z: 'uno(medir_sobre(perpD4, desde: D_4, distancia: prof), 2)'
+        angAD: angulo_recta_plano(recta3(A, D), delantero)
+        angADtrasero: angulo_recta_plano(recta3(A, D), trasero)
+        angADph: angulo_con_ph(segmento3(A, D))
+        # Los errores de la vista 4: la cumbrera hacia el lado de la planta; A₄
+        # con la altura del mástil sobre B; D′ con solo lo que D está más lejos;
+        # y el ángulo de A₄D₄ con el canto, sin girar.
+        F4mal: 'uno(medir_sobre(figura.segmento("cumbrera1"), desde: pieF, distancia: diferencia_de_cotas(F, H)), 2)'
+        A4mal: 'medir_sobre(projA, desde: pieA, distancia: diferencia_de_cotas(A, punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))))'
+        Dprof: 'medir_sobre(canto, desde: T_4, distancia: prof)'
+        Dg4s: 'medir_sobre(canto, desde: T_4, distancia: vm(T, D))'
+        horRef: 'segmento2(figura.punto("H2"), figura.punto("J2"))'
+        D4z: 'punto3(alzado: pie_perpendicular(D_4, horRef), planta: D_4)'
+        A4z: 'punto3(alzado: pie_perpendicular(A_4, horRef), planta: A_4)'
+        F4z: 'punto3(alzado: pie_perpendicular(F_4, horRef), planta: F_4)'
+        angVista4: angulo_rectas(recta3(D4z, A4z), recta3(D4z, F4z))
+        # Lo que se ve de los faldones en el alzado: el hastial de la izquierda,
+        # en F₂, entre F₂H₂ y F₂L₂ (los puntos llevados al alejamiento de F).
+        horF1: 'segmento2(figura.punto("F1"), desplaza(figura.punto("F1"), dx: 10))'
+        Hf: 'punto3(alzado: figura.punto("H2"), planta: pie_perpendicular(figura.punto("H2"), horF1))'
+        Lf: 'punto3(alzado: figura.punto("L2"), planta: pie_perpendicular(figura.punto("L2"), horF1))'
+        angHastial: angulo_rectas(recta3(F, Hf), recta3(F, Lf))
+        pendDelantero: angulo_con_ph(delantero)
+        # c) Decisión: AC es frontal (A₁C₁ es horizontal en el papel), así que
+        # sirve de charnela para abatir el plano ACE sobre el plano frontal de
+        # AC, en el alzado. E abatido es una elección; la charnela va de C a A
+        # para que la rama 1 sea la de arriba a la derecha, lejos del tejado.
+        ace: plano(A, C, E)
+        chAC: recta3(C, A)
+        Me: pie_perpendicular(E, chAC)
+        Eab: abatido_a_elegir(E, chAC, ace)
+        lAC2: segmento2(figura.punto("A2"), proy_alzado(C))
+        perpE2: 'perpendicular(por: proy_alzado(E), a: lAC2)'
+        paraE2: 'perpendicular(por: proy_alzado(E), a: perpE2)'
+        Kc: 'uno(medir_sobre(paraE2, desde: proy_alzado(E), distancia: vm_planta(A, E)), 2)'
+        angCAE: angulo_rectas(recta3(A, C), recta3(A, E))
+        E0alzado: 'uno(medir_sobre(perpE2, desde: proy_alzado(Me), distancia: vm_alzado(E, Me)), 2)'
+        E0alej: 'medir_sobre(perpE2, desde: proy_alzado(Me), distancia: vm_planta(A, E))'
+        horA2: 'segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dx: 10))'
+        Ch: 'punto3(alzado: pie_perpendicular(figura.punto("C1"), horA2), planta: figura.punto("C1"))'
+        Eh: 'punto3(alzado: pie_perpendicular(figura.punto("E1"), horA2), planta: figura.punto("E1"))'
+        Ef: 'punto3(alzado: proy_alzado(E), planta: pie_perpendicular(proy_alzado(E), figura.segmento("AC1")))'
+        angPlantaCAE: angulo_rectas(recta3(A, Ch), recta3(A, Eh))
+        angAlzadoCAE: angulo_rectas(recta3(A, C), recta3(A, Ef))
+        # Los extremos de las rectas largas y de los arcos de la construcción.
+        L_pC: 'uno(medir_sobre(segmento2(figura.punto("C1"), proy_planta(Uc)), desde: proy_planta(Uc), distancia: 5), 1)'
+        L_pD: 'uno(medir_sobre(segmento2(figura.punto("D1"), proy_planta(Ud)), desde: proy_planta(Ud), distancia: 5), 1)'
+        L_pE: 'uno(medir_sobre(segmento2(figura.punto("E1"), proy_planta(Ue)), desde: proy_planta(Ue), distancia: 5), 1)'
+        L_vC: 'desplaza(proy_alzado(C), dy: -6)'
+        L_vD: 'desplaza(proy_alzado(D), dy: -6)'
+        L_vE: 'desplaza(proy_alzado(E), dy: -6)'
+        L_hC: 'desplaza(proy_alzado(C), dx: -6)'
+        L_hD: 'desplaza(proy_alzado(D), dx: 6)'
+        L_hE: 'desplaza(proy_alzado(E), dx: -6)'
+        L_F4: 'uno(medir_sobre(figura.segmento("cumbrera1"), desde: F_4, distancia: 8), 1)'
+        L_H4: 'uno(medir_sobre(figura.segmento("HJ1"), desde: H_4, distancia: 6), 1)'
+        L_L4: 'uno(medir_sobre(figura.segmento("KL1"), desde: L_4, distancia: 6), 2)'
+        L_F2b: 'desplaza(F2b, dy: 6)'
+        L_A2b: 'desplaza(A2b, dy: 6)'
+        L_canto: 'uno(medir_sobre(canto, desde: F_4, distancia: 14), 2)'
+        T_F4: 'uno(medir_sobre(canto, desde: F_4, distancia: 20), 1)'
+        L_A4: 'uno(medir_sobre(projA, desde: A_4, distancia: 6), 2)'
+        L_Yb: 'uno(medir_sobre(projA, desde: Y, distancia: 6), 1)'
+        L_D4: 'uno(medir_sobre(projD, desde: D_4, distancia: 6), 2)'
+        L_T4: 'uno(medir_sobre(perpendicular(por: A_4, a: canto), desde: T_4, distancia: 5), 1)'
+        L_Y: 'uno(medir_sobre(segmento2(figura.punto("D1"), Y), desde: Y, distancia: 5), 1)'
+        L_Z: 'uno(medir_sobre(perpD4, desde: Z, distancia: 5), 2)'
+        T_Dg: 'uno(medir_sobre(canto, desde: Dg_4, distancia: 20), 2)'
+        L_AC: 'uno(medir_sobre(lAC2, desde: proy_alzado(Me), distancia: 6), 1)'
+        L_E0: 'uno(medir_sobre(perpE2, desde: proy_alzado(rama(Eab, 1)), distancia: 6), 2)'
+        L_Kc: 'uno(medir_sobre(paraE2, desde: Kc, distancia: 6), 2)'
+        T_A2: 'uno(medir_sobre(lAC2, desde: figura.punto("A2"), distancia: 25), 1)'
+      comprueba:
+        # J está en el faldón delantero y K en el trasero: el tejado es plano.
+        # La cumbrera y los aleros son horizontales, y D′ sigue en el faldón.
+        - en_plano(J, delantero)
+        - en_plano(K, trasero)
+        - en_plano(Dg, delantero)
+        - en_plano(T, delantero)
+    pasos:
+      - tipo: reconocer
+        pregunta: En la planta, C₁, D₁ y E₁ caen los tres por delante de la cumbrera. ¿Qué dice eso, y cómo se saca el alzado de los anclajes?
+        opciones:
+          - texto: Que están en el faldón delantero, y su alzado está en la vertical de su planta, donde corta el borde del tejado que se ve en el alzado
+            mensaje: |
+              En el faldón delantero sí, pero el borde del tejado en el alzado es el contorno del faldón,
+              no el faldón. C, por ejemplo, está dentro: en la vertical de C₁, la arista J₂G₂ queda 6,2 mm
+              más abajo que C₂. La altura de cada punto sale de una horizontal del faldón que pase por él.
+          - texto: Que están a la misma altura que B, el pie del mástil, porque el mástil se apoya en el mismo faldón
+            mensaje: |
+              El mismo faldón no quiere decir la misma altura: el faldón está inclinado, y cuanto más cerca
+              de la cumbrera, más alto. D está 23,6 mm por encima del alero, C 28,1 y E, junto al alero
+              delantero, solo 2,6.
+          - texto: Que los tres están en el faldón delantero, y el alzado de cada uno sale de una horizontal de ese faldón, paralela a la cumbrera en la planta y horizontal en el alzado, que se lleva hasta un borde del faldón
+            correcta: true
+            mensaje: |
+              Eso es. Un punto de un plano se pone por una recta del plano que pase por él. La horizontal
+              es la más cómoda: en la planta va paralela a la cumbrera, y corta el borde del faldón, la
+              arista del hastial, en un punto que se sube al alzado; a esa altura, la vertical de la
+              planta da el punto.
+
+      - tipo: construir
+        titulo: Los anclajes C, D y E, por las horizontales del faldón
+        intro: |
+          Los tres anclajes están en el faldón delantero. Para cada uno, en la planta, la paralela a la
+          cumbrera por su planta, que es una horizontal del faldón, hasta el borde más cercano: J₁G₁ para
+          C₁ y E₁, F₁H₁ para D₁. Ese punto (1, 2 o 3) se sube por su vertical al mismo borde en el alzado,
+          J₂G₂ o F₂H₂, y la horizontal que pasa por él corta la vertical del anclaje en su alzado. Después,
+          las barras: A₂C₂, A₂D₂ y A₂E₂. Marca C₂, D₂ y E₂. Avisos para el imán: 3₁ cae a 3 mm de
+          J₁; E₂, a 2,6 mm del alero; C₂, a 3,6 mm de 1₂, y D₂, a 2,7 mm de 2₂; amplía con la lupa
+          (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: C2
+            pide: el anclaje C, en el alzado
+            es: proy_alzado(C)
+            bien: |
+              C₂ está en la vertical de C₁, a la altura de 1₂: 28,1 mm por encima del alero. La horizontal
+              del faldón por C, paralela a la cumbrera en la planta, lleva esa altura.
+            diagnosticos:
+              - si: cerca_de(solucion.Cborde)
+                mensaje: |
+                  Ese punto está en la arista J₂G₂, el borde del faldón: es el punto del borde que cae en la
+                  vertical de C₁, no C. C está dentro del faldón, más cerca de la cumbrera, y su altura sale
+                  de la horizontal por C, que corta el borde en 1.
+                ejemplo: solucion.Cborde
+              - si: '!en_recta(solucion.vC1)'
+                mensaje: |
+                  C₂ va en la **vertical de C₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(C), dx: mm(5))'
+              - si: '!en_recta(solucion.hC2)'
+                mensaje: |
+                  Estás en la vertical de C₁, pero no a la altura buena. C₂ está en la horizontal de 1₂, el
+                  punto donde la paralela a la cumbrera por C₁ corta J₁G₁, subido a J₂G₂.
+                ejemplo: 'desplaza(proy_alzado(C), dy: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  C₂ está donde la vertical de C₁ corta la horizontal de 1₂.
+          - nombre: D2
+            pide: el anclaje D, en el alzado
+            es: proy_alzado(D)
+            bien: |
+              D₂ está en la vertical de D₁, a la altura de 2₂: 23,6 mm por encima del alero. 2 es el punto
+              del borde F H del faldón que está en la horizontal de D.
+            diagnosticos:
+              - si: cerca_de(solucion.Dborde)
+                mensaje: |
+                  Ese punto está en la arista F₂H₂, el borde del faldón: está en la vertical de D₁, pero no es
+                  D. D está dentro del faldón, 4,6 mm más abajo: su altura la da la horizontal por D, que
+                  corta el borde en 2.
+                ejemplo: solucion.Dborde
+              - si: '!en_recta(solucion.vD1)'
+                mensaje: |
+                  D₂ va en la **vertical de D₁**.
+                ejemplo: 'desplaza(proy_alzado(D), dx: mm(5))'
+              - si: '!en_recta(solucion.hD2)'
+                mensaje: |
+                  Estás en la vertical de D₁, pero no a la altura buena. D₂ está en la horizontal de 2₂, el
+                  punto donde la paralela a la cumbrera por D₁ corta F₁H₁, subido a F₂H₂.
+                ejemplo: 'desplaza(proy_alzado(D), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  D₂ está donde la vertical de D₁ corta la horizontal de 2₂.
+          - nombre: E2
+            pide: el anclaje E, en el alzado
+            es: proy_alzado(E)
+            bien: |
+              E₂ está en la vertical de E₁, que es la del mástil, a la altura de 3₂: 2,6 mm por encima del
+              alero, porque E está cerca del alero delantero.
+            diagnosticos:
+              - si: cerca_de(solucion.Ealero)
+                mensaje: |
+                  Ese punto está en el alero. E está muy cerca de él en la planta, pero no encima: el faldón
+                  ya ha subido 2,6 mm. La horizontal por E corta el borde J G en 3, y 3₂ da la altura.
+                ejemplo: solucion.Ealero
+              - si: '!en_recta(solucion.vE1)'
+                mensaje: |
+                  E₂ va en la **vertical de E₁**, que es la misma del mástil: A₁E₁ es vertical en el papel.
+                ejemplo: 'desplaza(proy_alzado(E), dx: mm(5))'
+              - si: '!en_recta(solucion.hE2)'
+                mensaje: |
+                  Estás en la vertical de E₁, pero no a la altura buena. E₂ está en la horizontal de 3₂, el
+                  punto donde la paralela a la cumbrera por E₁ corta J₁G₁, subido a J₂G₂.
+                ejemplo: 'desplaza(proy_alzado(E), dy: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  E₂ está donde la vertical de E₁ corta la horizontal de 3₂.
+        trazado:
+          - segmento2(figura.punto("A2"), proy_alzado(C))
+          - segmento2(figura.punto("A2"), proy_alzado(D))
+          - segmento2(figura.punto("A2"), proy_alzado(E))
+          - segmento2(figura.punto("C1"), proy_planta(solucion.Uc))
+          - segmento2(figura.punto("D1"), proy_planta(solucion.Ud))
+          - segmento2(figura.punto("E1"), proy_planta(solucion.Ue))
+          - segmento2(proy_alzado(solucion.Uc), proy_alzado(C))
+          - segmento2(proy_alzado(solucion.Ud), proy_alzado(D))
+          - segmento2(proy_alzado(solucion.Ue), proy_alzado(E))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_pC)
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              Por C₁, la paralela a la cumbrera, hacia la derecha, hasta pasar J₁G₁: es la horizontal del
+              faldón delantero que pasa por C.
+          - con: marca
+            traza: proy_planta(solucion.Uc)
+            porque: |
+              El punto 1, nombre nuestro, donde la paralela por C₁ corta J₁G₁, el borde derecho del
+              faldón: un punto del faldón a la altura de C, en una arista dibujada en las dos vistas. Va sin
+              rótulo, que pisaría el de C₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Uc), proy_alzado(solucion.Uc))
+            porque: |
+              Por 1₁, la vertical hasta J₂G₂, el mismo borde en el alzado.
+          - con: marca
+            traza: proy_alzado(solucion.Uc)
+            porque: |
+              1₂, donde la vertical de 1₁ corta J₂G₂. Va sin rótulo, que pisaría el de C₂, 3,6 mm a la
+              izquierda.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_vC)
+            porque: |
+              Por C₁, la vertical hacia arriba, larga, hasta pasar la altura de 1₂ en el alzado.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Uc), solucion.L_hC)
+            guia: figura.segmento("HJ2")
+            porque: |
+              Por 1₂, la horizontal hacia la izquierda, hasta pasar la vertical de C₁: es la horizontal del
+              faldón por C, en el alzado.
+          - con: marca
+            traza: proy_alzado(C)
+            porque: |
+              C₂, donde la vertical de C₁ corta la horizontal de 1₂. Va sin rótulo: 1₂, a 3,6 mm, lo
+              taparía.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("D1"), solucion.L_pD)
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              Por D₁, la paralela a la cumbrera, hacia arriba a la izquierda, hasta pasar F₁H₁, el borde
+              izquierdo del faldón, que está a 3 mm.
+          - con: marca
+            traza: proy_planta(solucion.Ud)
+            porque: |
+              El punto 2, nombre nuestro: 2₁, donde la paralela por D₁ corta F₁H₁. Va sin rótulo, que
+              pisaría el de D₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Ud), proy_alzado(solucion.Ud))
+            porque: |
+              Por 2₁, la vertical hasta F₂H₂, el borde izquierdo en el alzado.
+          - con: marca
+            traza: proy_alzado(solucion.Ud)
+            porque: |
+              2₂, donde la vertical de 2₁ corta F₂H₂. Va sin rótulo, que pisaría el de D₂, 2,7 mm a la
+              derecha.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("D1"), solucion.L_vD)
+            porque: |
+              Por D₁, la vertical hacia arriba, larga, hasta pasar la altura de 2₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Ud), solucion.L_hD)
+            guia: figura.segmento("HJ2")
+            porque: |
+              Por 2₂, la horizontal hacia la derecha, hasta pasar la vertical de D₁.
+          - con: marca
+            traza: proy_alzado(D)
+            rotulo: D₂
+            porque: |
+              D₂, donde la vertical de D₁ corta la horizontal de 2₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("E1"), solucion.L_pE)
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              Por E₁, la paralela a la cumbrera, hacia abajo a la derecha, hasta pasar J₁G₁, cerca de J₁.
+          - con: marca
+            traza: proy_planta(solucion.Ue)
+            rotulo: 3₁
+            porque: |
+              3₁, nombre nuestro, donde la paralela por E₁ corta J₁G₁, 3 mm antes de J₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Ue), proy_alzado(solucion.Ue))
+            porque: |
+              Por 3₁, la vertical hasta J₂G₂, cerca de su pie en el alero.
+          - con: marca
+            traza: proy_alzado(solucion.Ue)
+            rotulo: 3₂
+            porque: |
+              3₂, donde la vertical de 3₁ corta J₂G₂, 2,6 mm por encima del alero.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("E1"), solucion.L_vE)
+            porque: |
+              Por E₁, la vertical hacia arriba: pasa por A₁ ≡ B₁, porque A₁E₁ es vertical en el papel, y
+              sigue hasta pasar la altura de 3₂ en el alzado.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Ue), solucion.L_hE)
+            guia: figura.segmento("HJ2")
+            porque: |
+              Por 3₂, la horizontal hacia la izquierda, hasta pasar la vertical de E₁.
+          - con: marca
+            traza: proy_alzado(E)
+            rotulo: E₂
+            porque: |
+              E₂, donde la vertical de E₁ corta la horizontal de 3₂, debajo de B₂.
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), proy_alzado(C)), segmento2(figura.punto("A2"), proy_alzado(D)), segmento2(figura.punto("A2"), proy_alzado(E))]'
+            porque: |
+              Las barras en el alzado: de A₂ a C₂, D₂ y E₂. A₂E₂ va sobre el mástil y lo prolonga, porque AE
+              está en el plano de perfil del mástil.
+        pista: |
+          (1) Por la planta del anclaje, la paralela a la cumbrera hasta el borde del faldón: 1₁, 2₁ o 3₁.
+          (2) Su vertical, al mismo borde en el alzado. (3) La horizontal por ahí corta la vertical del
+          anclaje en su alzado.
+        desarrollo: |
+          En verde claro, las tres horizontales del faldón y las barras en el alzado. Por encima del
+          alero, C está a 28,1 mm, D a 23,6 mm y E a 2,6 mm; la cumbrera, a 34,8 mm. A₂E₂ cae sobre la
+          vertical del mástil: AE es una recta de perfil, como el propio mástil.
+
+      - tipo: construir
+        titulo: La cumbrera de punta, los faldones de canto y la barra AD girada
+        intro: |
+          La cumbrera es horizontal, así que un solo cambio de plano la pone de punta: la línea nueva, de
+          trazo y punto, ya está dibujada abajo a la derecha, perpendicular a la cumbrera en la planta. El
+          cambio es vertical, sale de la planta y lleva cotas; la referencia es H, la esquina del alero,
+          así que los aleros caen en la línea. Cada punto sale por la paralela a la cumbrera y se aparta de
+          la línea lo que está más alto que el alero. F₄ ≡ G₄ es la cumbrera de punta, y F₄H₄ y F₄L₄, los
+          faldones de canto: su ángulo es el del apartado b). Para el d), A₄ y D₄; por A₄, la
+          perpendicular al canto delantero, t, con su pie T₄; y D girado alrededor de t hasta que AD queda
+          paralela a la vista: D′₄, en el canto, a la distancia real de T a D, que es la hipotenusa de
+          T₄D₄ y de lo que D está más lejos de la línea que A (A₁Y en la planta). Vale hacia
+          cualquiera de los dos lados de T₄; aquí, hacia D₄. El ángulo en D′₄, entre
+          el canto y D′₄A₄, es el de AD con el faldón. El giro es nuestro: pone en verdadera
+          magnitud el triángulo ATD, rectángulo en T, que es el PTR del tema. Marca F₄, A₄, D₄ y D′₄. Aviso para el imán: T₄ cae a
+          2 mm de F₄; amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: F4
+            rotulo: F₄ ≡ G₄
+            pide: la cumbrera, de punta en la vista nueva
+            es: solucion.F_4
+            bien: |
+              F₄ ≡ G₄ está en la cumbrera prolongada, 34,8 mm más allá de la línea nueva: lo que la cumbrera
+              está más alta que el alero, que es la referencia.
+            diagnosticos:
+              - si: cerca_de(solucion.F4mal)
+                mensaje: |
+                  La distancia es la buena, pero hacia el lado de la planta. La vista nueva queda al otro lado
+                  de la línea, y la cumbrera, más alta que el alero, se aparta de ella hacia fuera.
+                ejemplo: solucion.F4mal
+              - si: '!en_recta(figura.segmento("cumbrera1"))'
+                mensaje: |
+                  F₄ sale de F₁ y G₁ por la perpendicular a la línea nueva, y esa perpendicular es la propia
+                  cumbrera, prolongada: la cumbrera se ve de punta en ella.
+                ejemplo: 'desplaza(solucion.F_4, dx: mm(4), dy: mm(-4))'
+              - si: siempre
+                mensaje: |
+                  Estás en la cumbrera prolongada, pero no a la distancia buena: 34,8 mm desde la línea
+                  nueva, lo que F₂ está por encima del alero en el alzado.
+          - nombre: A4
+            pide: el extremo A del mástil en la vista nueva
+            es: solucion.A_4
+            bien: |
+              A₄ está en la paralela a la cumbrera por A₁, 65,5 mm más allá de la línea nueva: lo que A
+              está más alto que el alero.
+            diagnosticos:
+              - si: cerca_de(solucion.A4mal)
+                mensaje: |
+                  Has llevado la altura del mástil, AB, que se cuenta desde B. La referencia es el alero: A₄
+                  se aparta de la línea lo que A₂ está por encima del alero, 65,5 mm.
+                ejemplo: uno(solucion.A4mal, 1)
+              - si: '!en_recta(solucion.projA)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**, que es la paralela a la cumbrera.
+                ejemplo: 'desplaza(solucion.A_4, dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a la cumbrera por A₁, pero no a la distancia buena: de A₂ al alero, en
+                  el alzado, 65,5 mm, llevados desde la línea hacia fuera.
+          - nombre: D4
+            pide: el anclaje D en la vista nueva
+            es: solucion.D_4
+            bien: |
+              D₄ está en el canto del faldón delantero, donde lo corta la paralela a la cumbrera por D₁: D
+              está en ese faldón, y el faldón se ve como esa recta.
+            diagnosticos:
+              - si: '!en_recta(solucion.projD)'
+                mensaje: |
+                  D₄ sale de D₁ por la paralela a la cumbrera, la perpendicular a la línea nueva.
+                ejemplo: 'uno(medir_sobre(solucion.canto, desde: solucion.D_4, distancia: mm(5)), 1)'
+              - si: '!en_recta(solucion.canto)'
+                mensaje: |
+                  D está en el faldón delantero, y en esta vista el faldón es la recta F₄H₄: D₄ cae en ella,
+                  sin llevar ninguna distancia.
+                ejemplo: 'uno(medir_sobre(solucion.projD, desde: solucion.D_4, distancia: mm(5)), 1)'
+              - si: siempre
+                mensaje: |
+                  D₄ está donde la paralela a la cumbrera por D₁ corta F₄H₄.
+          - nombre: Dp
+            rotulo: D′₄
+            pide: el anclaje D girado alrededor de la perpendicular t, en la vista nueva
+            es: solucion.Dg4s
+            bien: |
+              D′₄ está en el canto, a 35,4 mm de T₄: la distancia real de T a D, hipotenusa de T₄D₄ y de lo
+              que D está más lejos de la línea nueva que A. Girado así, AD se ve de verdad, y el ángulo en
+              D′₄ es el de AD con el faldón.
+            diagnosticos:
+              - si: cerca_de(solucion.Dprof)
+                mensaje: |
+                  Has llevado desde T₄ solo lo que D está más lejos de la línea que A, A₁Y: es un cateto. La
+                  distancia real de T a D es la hipotenusa T₄Z, con el otro cateto, T₄D₄.
+                ejemplo: uno(solucion.Dprof, 1)
+              - si: '!en_recta(solucion.canto)'
+                mensaje: |
+                  D gira alrededor de t, que es perpendicular al faldón: se queda en el faldón, y en esta
+                  vista el faldón es la recta F₄H₄. D′₄ está en ella.
+                ejemplo: 'desplaza(solucion.Dg_4, dx: mm(3), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en el canto, pero no a la distancia buena: con centro en T₄ y radio T₄Z, la
+                  hipotenusa del triángulo T₄D₄Z.
+        trazado:
+          - segmento2(solucion.H_4, solucion.L_canto)
+          - segmento2(solucion.L_4, solucion.F_4)
+          - segmento2(figura.punto("G1"), solucion.F_4)
+          - segmento2(solucion.A_4, solucion.T_4)
+          - segmento2(solucion.T_4, solucion.Z)
+          - segmento2(solucion.A_4, solucion.Dg_4)
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("G1"), solucion.L_F4)
+            porque: |
+              En la planta, la cumbrera F₁G₁ prolongada con la regla más allá de G₁, larga, hasta pasar la
+              línea nueva bien: es perpendicular a ella, y por ella sale F₄ ≡ G₄.
+          - con: regla
+            traza: segmento2(figura.punto("J1"), solucion.L_H4)
+            porque: |
+              El alero delantero H₁J₁ prolongado más allá de J₁ hasta pasar la línea nueva: también es
+              paralelo a la cumbrera.
+          - con: regla
+            traza: segmento2(figura.punto("K1"), solucion.L_L4)
+            porque: |
+              El alero trasero L₁K₁ prolongado más allá de K₁ hasta pasar la línea nueva.
+          - con: marca
+            traza: solucion.H_4
+            rotulo: H₄ ≡ J₄
+            porque: |
+              H₄, donde el alero delantero prolongado corta la línea nueva: H es la referencia, y el alero
+              entero, que está a su altura, se ve como este punto.
+          - con: marca
+            traza: solucion.L_4
+            rotulo: L₄ ≡ K₄
+            porque: |
+              L₄, donde el alero trasero prolongado corta la línea nueva: está a la altura de la
+              referencia.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F2"), solucion.L_F2b)
+            porque: |
+              En el alzado, por F₂, la vertical hasta pasar el alero: el trozo entre F₂ y el alero es lo que
+              la cumbrera está más alta que él, 34,8 mm.
+          - con: compas
+            traza: 'arco(solucion.pieF, por: solucion.F_4, desde: desplaza(solucion.F_4, dx: 2.8, dy: -5.3), hasta: desplaza(solucion.F_4, dx: -2.8, dy: 5.3))'
+            toma: segmento2(figura.punto("F2"), solucion.F2b)
+            porque: |
+              Con el compás, esa altura; con centro donde la cumbrera prolongada corta la línea nueva, un
+              arco hacia fuera, lejos de la planta: la cumbrera es más alta que la referencia.
+          - con: marca
+            traza: solucion.F_4
+            porque: |
+              F₄ ≡ G₄, donde el arco corta la cumbrera prolongada: la cumbrera, de punta. Va sin rótulo: T₄,
+              que se marca después a 2 mm, lo taparía.
+          - con: regla
+            traza: '[segmento2(solucion.H_4, solucion.L_canto), segmento2(solucion.L_4, solucion.F_4)]'
+            porque: |
+              F₄H₄ y F₄L₄, los faldones de canto. El delantero se prolonga 5 mm más allá de F₄, porque ahí
+              cae el pie de la perpendicular desde A.
+          - con: transportador
+            traza: 'arco(solucion.F_4, por: solucion.T_F4, desde: solucion.H_4, hasta: solucion.L_4)'
+            porque: |
+              El transportador con el centro en F₄, de F₄H₄ a F₄L₄: el ángulo entre los dos faldones, por
+              debajo del tejado.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), solucion.L_A4), segmento2(figura.punto("A1"), solucion.L_Yb)]'
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              Por A₁, la paralela a la cumbrera, larga hacia los dos lados: hacia la línea nueva y más allá,
+              porque por ella sale A₄; y hacia atrás, hasta pasar la perpendicular a la cumbrera por
+              D₁, porque en ella se mide lo
+              que D está más lejos de la línea que A.
+          - con: regla
+            traza: segmento2(figura.punto("B2"), solucion.L_A2b)
+            porque: |
+              En el alzado, el mástil prolongado más allá de B₂ hasta pasar el alero: el trozo de A₂ al
+              alero es lo que A está más alto que él, 65,5 mm.
+          - con: compas
+            traza: 'arco(solucion.pieA, por: solucion.A_4, desde: desplaza(solucion.A_4, dx: 2.8, dy: -5.3), hasta: desplaza(solucion.A_4, dx: -2.8, dy: 5.3))'
+            toma: segmento2(figura.punto("A2"), solucion.A2b)
+            porque: |
+              Con el compás, esa altura; con centro donde la paralela por A₁ corta la línea nueva, un arco
+              hacia fuera.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la paralela a la cumbrera por A₁.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("D1"), solucion.L_D4)
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              Por D₁, la paralela a la cumbrera, hasta pasar el canto del faldón delantero: D está en el
+              faldón, y su vista nueva cae en el canto, sin llevar distancias.
+          - con: marca
+            traza: solucion.D_4
+            rotulo: D₄
+            porque: |
+              D₄, donde la paralela por D₁ corta el canto F₄H₄.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.A_4, solucion.L_T4)
+            guia: solucion.canto
+            porque: |
+              Por A₄, la perpendicular al canto delantero, hasta pasar su prolongación más allá de F₄: es t,
+              la perpendicular al faldón desde A, que en esta vista se ve de verdad.
+          - con: marca
+            traza: solucion.T_4
+            rotulo: T₄
+            porque: |
+              T₄, nombre nuestro, donde t corta la prolongación del canto, 2 mm más allá de F₄: el pie de la
+              perpendicular desde A al plano del faldón. A₄T₄, 37,8 mm, es lo que A dista del faldón.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("D1"), solucion.L_Y)
+            guia: figura.segmento("nueva")
+            porque: |
+              En la planta, por D₁, la paralela a la línea nueva, hasta pasar la paralela a la cumbrera por
+              A₁, a 8 mm.
+          - con: marca
+            traza: solucion.Y
+            rotulo: Y
+            porque: |
+              Y, nombre nuestro, donde la paralela a la línea nueva por D₁ corta la paralela a la cumbrera
+              por A₁. A₁Y, 29,3 mm, es lo que D está más lejos de la línea nueva que A.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.D_4, solucion.L_Z)
+            guia: solucion.canto
+            porque: |
+              En la vista nueva, por D₄, la perpendicular al canto, hacia el lado de A₄: paralela a t.
+          - con: compas
+            traza: 'arco(solucion.D_4, por: solucion.Z, desde: desplaza(solucion.Z, dx: -5.5, dy: 2.4), hasta: desplaza(solucion.Z, dx: 5.5, dy: -2.4))'
+            toma: segmento2(figura.punto("A1"), solucion.Y)
+            porque: |
+              Con el compás, A₁Y; con centro en D₄, un arco que corta esa perpendicular.
+          - con: marca
+            traza: solucion.Z
+            rotulo: Z
+            porque: |
+              Z, nombre nuestro, donde el arco corta la perpendicular al canto por D₄. El triángulo T₄D₄Z es
+              rectángulo en D₄.
+          - con: regla
+            traza: segmento2(solucion.T_4, solucion.Z)
+            porque: |
+              T₄Z, la hipotenusa: la distancia real de T a D, 35,4 mm. Es el radio con que D gira alrededor
+              de t.
+          - con: compas
+            traza: 'arco(solucion.T_4, por: solucion.Z, desde: solucion.Z, hasta: desplaza(solucion.Dg_4, dx: -2.4, dy: -5.5))'
+            porque: |
+              Con centro en T₄ y radio T₄Z, el arco desde Z hasta pasar el canto delantero: D gira alrededor
+              de t, sin salir del faldón, hasta que TD queda paralela a la vista nueva.
+          - con: marca
+            traza: solucion.Dg_4
+            rotulo: D′₄
+            porque: |
+              D′₄, nombre nuestro, donde el arco corta el canto F₄H₄: D girado. AD′ es AD en
+              verdadera magnitud, y el faldón sigue de canto. La circunferencia cortaría el canto
+              también al otro lado de T₄, más allá de F₄, y ese D′ también valdría: el ángulo es el
+              mismo.
+          - con: regla
+            traza: segmento2(solucion.A_4, solucion.Dg_4)
+            porque: |
+              A₄D′₄: la barra AD girada, en verdadera magnitud, 51,8 mm.
+          - con: transportador
+            traza: 'arco(solucion.Dg_4, por: solucion.T_Dg, desde: solucion.T_4, hasta: solucion.A_4)'
+            porque: |
+              El transportador con el centro en D′₄, del canto a D′₄A₄: el ángulo de la barra AD con el
+              faldón delantero.
+        pista: |
+          (1) La cumbrera y los aleros prolongados hasta la línea nueva: H₄ y L₄ en ella; F₄ ≡ G₄, a lo que
+          la cumbrera sube sobre el alero. (2) El ángulo en F₄. (3) A₄ a lo que A sube sobre el alero; D₄ en
+          el canto delantero. (4) Por A₄, la perpendicular al canto: T₄. (5) A₁Y en la planta; en D₄, sobre
+          la perpendicular al canto: Z. (6) Con centro en T₄ y radio T₄Z, al canto: D′₄. (7) El ángulo en
+          D′₄.
+        desarrollo: |
+          En verde claro, la vista con la cumbrera de punta: el faldón delantero sube 38,9° y el trasero
+          58,2°, y entre los dos, por debajo del tejado, 82,9°. A₄T₄ = 37,8 mm es lo que A dista del faldón;
+          T₄D₄ = 20,0 mm y A₁Y = 29,3 mm dan TD = 35,4 mm, y AD′ = 51,8 mm, la longitud de la barra.
+
+      - tipo: calcular
+        titulo: El ángulo entre los dos faldones
+        pregunta: ¿Cuántos grados forman los dos faldones del tejado?
+        respuesta:
+          tipo: numero
+          valor: '82.92'
+          receta: angFaldones
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '97.08'
+            receta: 180 - angFaldones
+            mensaje: |
+              Ese es el **suplementario**: el de un faldón con la prolongación del otro más allá de la
+              cumbrera. Los faldones forman, por debajo del tejado, el ángulo en F₄ entre F₄H₄ y F₄L₄, y es
+              agudo; es también el menor de los dos que forman sus planos.
+          - valor: '38.86'
+            receta: pendDelantero
+            mensaje: |
+              Esa es la **pendiente del faldón delantero**, su ángulo con el plano horizontal: el de F₄H₄
+              con la línea nueva. El de los dos faldones está entre ellos, en F₄.
+          - valor: '46.23'
+            receta: angHastial
+            mensaje: |
+              Es lo que forman F₂H₂ y F₂L₂ **en el alzado**, en el hastial de la izquierda. La cumbrera no
+              es de punta en el alzado, y los faldones no se ven de canto: hace falta la vista con la
+              cumbrera de punta.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en F₄, entre F₄H₄ y F₄L₄.
+        desarrollo: |
+          Con la cumbrera de punta, cada faldón se ve con su pendiente: el delantero baja 34,8 mm en
+          43,2 mm y el trasero, lo mismo en 21,6 mm:
+
+          $$ 180^{\circ} - \arctan\frac{34{,}84}{43{,}23} - \arctan\frac{34{,}84}{21{,}59} \approx 180^{\circ} - 38{,}86^{\circ} - 58{,}22^{\circ} = 82{,}92^{\circ} $$
+
+          Es agudo, así que el ángulo de los faldones por debajo del tejado y el de sus planos coinciden.
+
+      - tipo: construir
+        titulo: El ángulo de las barras AC y AE, abatiendo su plano
+        intro: |
+          AC es frontal: A₁C₁ es horizontal en el papel. Sirve de charnela para abatir el plano ACE sobre
+          el plano frontal de AC, y el alzado lo da en verdadera magnitud. Primero, C₂ y E₂, como en el
+          paso de los anclajes. Abate E: la perpendicular a A₂C₂ por E₂ corta la charnela, prolongada más
+          allá de C₂, en M. El radio es la hipotenusa del triángulo de catetos ME₂ y lo que E está por
+          delante de AC, A₁E₁ en la planta: arma en E₂, sobre la paralela a la charnela, esa distancia, N,
+          y MN es el radio. Con centro en M, E⁰ en la perpendicular. Vale abatir hacia los dos lados; aquí,
+          arriba a la derecha, lejos del tejado. El ángulo C₂A₂E⁰ es el de las barras. Marca C₂, E₂, M y E⁰.
+          Aviso para el imán: M cae a 1,7 mm de C₂, y 1₂ a 3,6 mm; amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: C2
+            pide: el anclaje C, en el alzado
+            es: proy_alzado(C)
+            bien: |
+              C₂ está en la vertical de C₁, a la altura de 1₂, como en el paso de los anclajes.
+            diagnosticos:
+              - si: cerca_de(solucion.Cborde)
+                mensaje: |
+                  Ese punto está en la arista J₂G₂, el borde del faldón, no en C: la altura de C sale de la
+                  horizontal del faldón por C, que corta el borde en 1.
+                ejemplo: solucion.Cborde
+              - si: '!en_recta(solucion.vC1)'
+                mensaje: |
+                  C₂ va en la **vertical de C₁**.
+                ejemplo: 'desplaza(proy_alzado(C), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  C₂ está donde la vertical de C₁ corta la horizontal de 1₂.
+          - nombre: E2
+            pide: el anclaje E, en el alzado
+            es: proy_alzado(E)
+            bien: |
+              E₂ está en la vertical de E₁, a la altura de 3₂, como en el paso de los anclajes.
+            diagnosticos:
+              - si: cerca_de(solucion.Ealero)
+                mensaje: |
+                  Ese punto está en el alero, y E está 2,6 mm más arriba: la horizontal por E corta el borde
+                  J G en 3, y 3₂ da la altura.
+                ejemplo: solucion.Ealero
+              - si: '!en_recta(solucion.vE1)'
+                mensaje: |
+                  E₂ va en la **vertical de E₁**, la del mástil.
+                ejemplo: 'desplaza(proy_alzado(E), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  E₂ está donde la vertical de E₁ corta la horizontal de 3₂.
+          - nombre: M
+            pide: el pie de E en la charnela AC, en el alzado
+            es: proy_alzado(solucion.Me)
+            bien: |
+              M está en A₂C₂ prolongada, 1,7 mm más allá de C₂, al pie de la perpendicular por E₂: AC es
+              frontal, y la perpendicular a ella se ve perpendicular en el alzado.
+            diagnosticos:
+              - si: '!en_recta(solucion.lAC2)'
+                mensaje: |
+                  M está **en la charnela**, la recta A₂C₂ prolongada más allá de C₂: es el centro del giro de
+                  E.
+                ejemplo: 'uno(medir_sobre(solucion.perpE2, desde: proy_alzado(solucion.Me), distancia: mm(4)), 1)'
+              - si: '!en_recta(solucion.perpE2)'
+                mensaje: |
+                  M es el pie de la **perpendicular a A₂C₂ por E₂**: E gira en un plano perpendicular a la
+                  charnela.
+                ejemplo: 'uno(medir_sobre(solucion.lAC2, desde: proy_alzado(solucion.Me), distancia: mm(6)), 2)'
+              - si: siempre
+                mensaje: |
+                  M está donde la perpendicular a A₂C₂ por E₂ corta la charnela prolongada.
+          - nombre: E0
+            rotulo: E⁰
+            pide: el anclaje E abatido sobre el plano frontal de AC
+            es: proy_alzado(solucion.Eab)
+            bien: |
+              E⁰ está en la perpendicular a la charnela por E₂, a 43,9 mm de M: la distancia real de E a AC.
+              El ángulo C₂A₂E⁰ es el de las barras AC y AE.
+            diagnosticos:
+              - si: cerca_de(solucion.E0alzado)
+                mensaje: |
+                  Has llevado al otro lado de M lo que E₂ dista de la charnela **en el alzado**, 39,0 mm: es un
+                  cateto. E está 20,2 mm por delante del plano frontal de AC, y la distancia real es la
+                  hipotenusa MN.
+                ejemplo: solucion.E0alzado
+              - si: cerca_de(solucion.E0alej)
+                mensaje: |
+                  Has abatido E solo con lo que está por delante de AC, 20,2 mm, A₁E₁ en la planta: es el otro
+                  cateto. El radio es la hipotenusa MN.
+                ejemplo: uno(solucion.E0alej, 2)
+              - si: '!en_recta(solucion.perpE2)'
+                mensaje: |
+                  E gira en un plano perpendicular a la charnela: E⁰ está en la **perpendicular a A₂C₂ por
+                  E₂**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.Eab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular por E₂, pero no a la distancia buena: con centro en M y radio MN,
+                  el arco que sale de N la corta en E⁰.
+        trazado:
+          - segmento2(figura.punto("A2"), solucion.L_AC)
+          - segmento2(proy_alzado(E), proy_alzado(solucion.Eab))
+          - segmento2(figura.punto("A2"), proy_alzado(solucion.Eab))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_pC)
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              C₂, como en el paso de los anclajes. Por C₁, la paralela a la cumbrera hasta pasar J₁G₁.
+          - con: marca
+            traza: proy_planta(solucion.Uc)
+            porque: |
+              El punto 1, nombre nuestro: 1₁, donde la paralela por C₁ corta J₁G₁. Sin rótulo, que pisaría
+              el de C₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Uc), proy_alzado(solucion.Uc))
+            porque: |
+              Por 1₁, la vertical hasta J₂G₂.
+          - con: marca
+            traza: proy_alzado(solucion.Uc)
+            porque: |
+              1₂, donde la vertical de 1₁ corta J₂G₂. Sin rótulo, que pisaría el de C₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.L_vC)
+            porque: |
+              Por C₁, la vertical hacia arriba, hasta pasar la altura de 1₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Uc), solucion.L_hC)
+            guia: figura.segmento("HJ2")
+            porque: |
+              Por 1₂, la horizontal hasta pasar la vertical de C₁.
+          - con: marca
+            traza: proy_alzado(C)
+            porque: |
+              C₂, donde la vertical de C₁ corta la horizontal de 1₂. Va sin rótulo: 1₂, a 3,6 mm, lo
+              taparía.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("E1"), solucion.L_pE)
+            guia: figura.segmento("cumbrera1")
+            porque: |
+              E₂, igual. Por E₁, la paralela a la cumbrera hasta pasar J₁G₁, cerca de J₁.
+          - con: marca
+            traza: proy_planta(solucion.Ue)
+            rotulo: 3₁
+            porque: |
+              3₁, nombre nuestro, donde la paralela por E₁ corta J₁G₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Ue), proy_alzado(solucion.Ue))
+            porque: |
+              Por 3₁, la vertical hasta J₂G₂.
+          - con: marca
+            traza: proy_alzado(solucion.Ue)
+            rotulo: 3₂
+            porque: |
+              3₂, donde la vertical de 3₁ corta J₂G₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("E1"), solucion.L_vE)
+            porque: |
+              Por E₁, la vertical hacia arriba, por A₁ ≡ B₁, hasta pasar la altura de 3₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.Ue), solucion.L_hE)
+            guia: figura.segmento("HJ2")
+            porque: |
+              Por 3₂, la horizontal hasta pasar la vertical de E₁.
+          - con: marca
+            traza: proy_alzado(E)
+            rotulo: E₂
+            porque: |
+              E₂, donde la vertical de E₁ corta la horizontal de 3₂.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), solucion.L_AC)
+            rotulo: charnela
+            porque: |
+              A₂C₂ con la regla, prolongada más allá de C₂: la charnela. AC es frontal, y el alzado la da en
+              verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(E), solucion.L_E0)
+            guia: solucion.lAC2
+            porque: |
+              Por E₂, la perpendicular a la charnela, larga, hasta pasarla y seguir arriba a la derecha: E
+              gira alrededor de AC en un plano perpendicular a ella, y en el alzado se mueve por esta recta.
+          - con: marca
+            traza: proy_alzado(solucion.Me)
+            porque: |
+              M, nombre nuestro, donde la perpendicular por E₂ corta la charnela prolongada, 1,7 mm más allá
+              de C₂: el pie de E, centro de su giro. Va sin rótulo, que pisaría el de C₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(E), solucion.L_Kc)
+            guia: solucion.lAC2
+            porque: |
+              Por E₂, la paralela a la charnela, hacia abajo a la derecha: en ella se arma el triángulo del
+              radio, rectángulo en E₂.
+          - con: compas
+            traza: 'arco(proy_alzado(E), por: solucion.Kc, desde: desplaza(solucion.Kc, dx: -4.7, dy: 3.7), hasta: desplaza(solucion.Kc, dx: 4.7, dy: -3.7))'
+            toma: segmento2(figura.punto("A1"), figura.punto("E1"))
+            porque: |
+              Con el compás, en la planta, A₁E₁: lo que E está por delante del plano frontal de AC, 20,2 mm.
+              Con centro en E₂, sobre la paralela.
+          - con: marca
+            traza: solucion.Kc
+            rotulo: N
+            porque: |
+              N, nombre nuestro, donde el arco corta la paralela a la charnela por E₂.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.Me), solucion.Kc)
+            porque: |
+              MN, la hipotenusa del triángulo rectángulo M E₂ N: la distancia real de E a AC, 43,9 mm, el
+              radio con que E se abate.
+          - con: compas
+            traza: 'arco(proy_alzado(solucion.Me), por: solucion.Kc, desde: solucion.Kc, hasta: desplaza(proy_alzado(rama(solucion.Eab, 1)), dx: -4.7, dy: -5.9))'
+            porque: |
+              Con centro en M y radio MN, el arco desde N, por la derecha, hasta pasar la perpendicular
+              arriba a la derecha: E gira alrededor de AC y cae al plano frontal de AC. La circunferencia la
+              corta también abajo, junto a E₂, y ese E⁰ también valdría.
+          - con: marca
+            traza: proy_alzado(rama(solucion.Eab, 1))
+            rotulo: E⁰
+            porque: |
+              E⁰, donde el arco corta la perpendicular por E₂, arriba a la derecha: E abatido, a 43,9 mm de
+              M.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), proy_alzado(rama(solucion.Eab, 1)))
+            porque: |
+              A₂E⁰: la barra AE abatida. A está en la charnela y no se mueve.
+          - con: transportador
+            traza: 'arco(figura.punto("A2"), por: solucion.T_A2, desde: proy_alzado(C), hasta: proy_alzado(rama(solucion.Eab, 1)))'
+            porque: |
+              El transportador con el centro en A₂, de A₂C₂ a A₂E⁰: el ángulo de las barras AC y AE.
+        pista: |
+          (1) C₂ y E₂, por las horizontales del faldón. (2) La charnela A₂C₂, prolongada, y por E₂ su
+          perpendicular: M. (3) Por E₂, la paralela a la charnela, y sobre ella A₁E₁: N. (4) Con centro en M
+          y radio MN, a la perpendicular: E⁰. (5) El ángulo en A₂, entre A₂C₂ y A₂E⁰.
+        desarrollo: |
+          En verde claro, la charnela, el camino de E y la barra abatida. AC mide 47,7 mm, de verdad en el
+          alzado; ME₂ = 39,0 mm y A₁E₁ = 20,2 mm dan el radio, 43,9 mm, y A₂E⁰ es AE de verdad, 66,1 mm.
+
+      - tipo: calcular
+        titulo: El ángulo entre las barras AC y AE
+        pregunta: ¿Cuántos grados forman las barras AC y AE?
+        respuesta:
+          tipo: numero
+          valor: '41.66'
+          receta: angCAE
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '90.00'
+            receta: angPlantaCAE
+            mensaje: |
+              Es lo que forman A₁C₁ y A₁E₁ **en la planta**: un ángulo recto en el papel. El plano ACE no es
+              horizontal —A está muy por encima de C y de E—, y la planta deforma su ángulo.
+          - valor: '38.31'
+            receta: angAlzadoCAE
+            mensaje: |
+              Es lo que forman A₂C₂ y A₂E₂ **en el alzado**. AC es frontal y se ve entera, pero AE no: E está
+              20,2 mm por delante. Hay que abatir E sobre el plano frontal de AC.
+          - valor: '138.34'
+            receta: 180 - angCAE
+            mensaje: |
+              Ese es el **suplementario**: el que forma A₂E⁰ con la prolongación de C₂A₂ más allá de A₂. Las
+              barras salen de A hacia C y hacia E, y su ángulo es el de A₂, entre A₂C₂ y A₂E⁰.
+        pista: |
+          Con el transportador en el paso anterior, o en tu lámina: en A₂, entre A₂C₂ y A₂E⁰.
+        desarrollo: |
+          En el triángulo ACE, con AC = 47,67 mm, AE = 66,08 mm y CE = 43,95 mm, por el teorema del
+          coseno:
+
+          $$ \cos\widehat{A} = \frac{47{,}67^{2} + 66{,}08^{2} - 43{,}95^{2}}{2 \cdot 47{,}67 \cdot 66{,}08} \approx 0{,}7471, \qquad \widehat{A} \approx 41{,}66^{\circ} $$
+
+      - tipo: calcular
+        titulo: El ángulo de la barra AD con el faldón
+        pregunta: ¿Cuántos grados forma la barra AD con el faldón en el que se ancla?
+        respuesta:
+          tipo: numero
+          valor: '46.84'
+          receta: angAD
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '43.16'
+            receta: 90 - angAD
+            mensaje: |
+              Ese es el **complementario**: el ángulo de AD con la perpendicular t al faldón, el de A₄ en el
+              triángulo A₄T₄D′₄. El del faldón está en D′₄, donde la barra lo toca.
+          - valor: '62.11'
+            receta: angVista4
+            mensaje: |
+              Es lo que forma A₄D₄ con el canto **sin girar D**. El faldón se ve de canto, pero AD no está
+              en verdadera magnitud en esta vista, y el ángulo sale deformado: hay que girar D alrededor de t
+              hasta D′₄.
+          - valor: '54.12'
+            receta: angADph
+            mensaje: |
+              Ese es el ángulo de AD con el **plano horizontal**. El faldón está inclinado 38,9°, y el
+              ángulo que se pide es con él.
+          - valor: '17.05'
+            receta: angADtrasero
+            mensaje: |
+              Es el ángulo de AD con el **faldón trasero**. D está en el delantero —D₁ cae por delante de la
+              cumbrera— y leemos que se pide con ese faldón, el del enunciado: AD no toca el
+              trasero.
+        pista: |
+          Con el transportador en el paso de la vista nueva, o en tu lámina: en D′₄, entre el canto F₄H₄ y
+          D′₄A₄.
+        desarrollo: |
+          En el triángulo A T D, rectángulo en T, el cateto opuesto al ángulo es AT, lo que A dista del
+          faldón, y la hipotenusa, AD:
+
+          $$ \operatorname{sen}\delta = \frac{AT}{AD} = \frac{37{,}79}{51{,}81} \approx 0{,}7294, \qquad \delta \approx 46{,}84^{\circ} $$
+
+          Una casualidad de esta lámina: en la planta, A₁D₁ forma 46,6° con A₁E₁, que es vertical en el
+          papel, y con cualquier vertical (la de D₁, por ejemplo), dentro de la tolerancia. No es el ángulo
+          de la barra con el faldón, que está en D′₄, y la casilla no lo distingue.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: C₁, D₁ y E₁ caen por delante de la cumbrera, así que los tres anclajes están en el faldón delantero; el alzado de cada uno sale de una horizontal de ese faldón.
+          - texto: La cumbrera es horizontal; con la línea nueva perpendicular a ella en la planta, un cambio de plano la pone de punta, y los faldones se ven de canto y forman 82,9°.
+          - texto: AC es frontal, y sirve de charnela para abatir el plano ACE sobre su plano frontal; en A₂, entre A₂C₂ y A₂E⁰, el ángulo de las barras, 41,7°.
+          - texto: En la vista con los faldones de canto, la perpendicular t al faldón desde A se ve de verdad; girando D alrededor de t hasta el canto, AD se ve entera y forma 46,8° con el faldón.
+          - texto: El ángulo de AD con el faldón se mide en la vista nueva, entre A₄D₄ y el canto, porque ahí el faldón está de canto.
+            trampa: true
+            mensaje: |
+              El faldón está de canto, pero AD no está en verdadera magnitud: no es paralela a esa vista. Así
+              sale 62,1°, y el ángulo es 46,8°. Hace falta que se vean de verdad las dos cosas a la vez, y
+              para eso se gira D alrededor de t.
+    resolucion: |
+      **Qué fija la figura.** El tejado es a dos aguas: los aleros a la misma altura, la cumbrera
+      horizontal y paralela a ellos, más cerca del alero trasero; el faldón delantero es ancho y sube
+      38,9°, y el trasero, estrecho, 58,2°. El mástil es vertical, y las barras solo están dadas en la
+      planta.
+
+      **a) Los anclajes.** C₁, D₁ y E₁ caen por delante de la cumbrera: los tres están en el faldón
+      delantero. La horizontal del faldón por cada uno, paralela a la cumbrera, corta el borde del faldón
+      en 1, 2 o 3, que se suben a ese borde en el alzado; la horizontal por ahí corta la vertical del
+      anclaje. C queda a 28,1 mm sobre el alero, D a 23,6 mm y E a 2,6 mm. Las barras en el alzado van de
+      A₂ a C₂, D₂ y E₂; A₂E₂ cae sobre la vertical del mástil, porque AE es de perfil.
+
+      **b) Los faldones.** Una vista nueva con la línea perpendicular a la cumbrera y el alero de
+      referencia pone la cumbrera de punta, a 34,8 mm de la línea, y los faldones de canto: forman
+      82,9° por debajo del tejado. Es agudo, y es también el ángulo de sus planos.
+
+      **c) Las barras AC y AE.** AC es frontal y sirve de charnela. E₂ dista de ella 39,0 mm en el
+      alzado y E está 20,2 mm por delante: el radio es 43,9 mm. E⁰ cae en la perpendicular por E₂, y en
+      A₂ el ángulo entre A₂C₂ y A₂E⁰ es 41,7°.
+
+      **d) La barra AD con el faldón.** Con el faldón de canto, la perpendicular t desde A se ve de
+      verdad: A dista 37,8 mm del faldón, y su pie T cae 2,0 mm más allá de la cumbrera, en el plano
+      del faldón prolongado. D gira alrededor de t hasta el canto, a TD = 35,4 mm de T₄, y entonces AD se ve
+      entera, 51,8 mm: en D′₄ forma 46,8° con el faldón. sen δ = 37,79/51,81 lo confirma. Con el faldón
+      trasero, que AD no toca, saldrían 17,0°.

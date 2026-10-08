@@ -31,6 +31,9 @@ import {
   type P3,
 } from '../../src/lib/diedrico';
 import type { DatosLamina } from '../../src/lib/lamina';
+import yaml from 'js-yaml';
+import { resuelveEjercicio, type EjercicioConReceta } from '../../src/lib/construir';
+import { casaTramo } from '../../src/lib/diedrico-corrige';
 
 /* El Ejercicio 52 de la Colección de ejercicios de diédrico (Dpto. de
    Expresión Gráfica y Proyectos de Ingeniería, EIG, UPV/EHU), págs. 53-57: sin
@@ -264,5 +267,66 @@ describe('Ejercicio 52 · apartado 4, la chapa paralela a 25 mm', () => {
     const nuevaPl = plano(nueva[0], nueva[1], nueva[2]);
     expect((enPlanoZ(nuevaPl, [269.3244, 558.368]) - enPlanoZ(chapa, [269.3244, 558.368])) * PT_MM).toBeCloseTo(36.8353, 3);
     expect((enPlanoY(nuevaPl, [310.1172, 250.1165]) - enPlanoY(chapa, [310.1172, 250.1165])) * PT_MM).toBeCloseTo(40.905, 3);
+  });
+});
+
+describe('Ejercicio 52 · apartado 4, la visibilidad en el Taller (los tramos)', () => {
+  /* Lo visto y lo oculto, de un cálculo de líneas ocultas hecho aparte el 8 de
+     octubre de 2026, sin src/lib: cada lado de las dos chapas, muestreado y
+     mirado por rayos contra las dos chapas, opacas, y cada cambio afinado por
+     bisección. Coordenadas en pt de la lámina. Da la misma visibilidad que el
+     paso dibujar que había antes. A₁B₁, B₁C₁ y C₂A₂ se ven enteros y ya están
+     en la lámina, y no son tramos; las perpendiculares AA′, BB′ y CC′ no son
+     lados de las chapas, y siguen en el trazado. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'CA', 'visto', [484.56, 612.12], [415.28, 594.82]],
+    ['planta', 'CA', 'oculto', [415.28, 594.82], [269.32, 558.37]],
+    ['planta', 'CA', 'visto', [269.32, 558.37], [257.76, 555.48]],
+    ['planta', 'A′B′', 'visto', [228.9, 598.79], [342.3, 485.39]],
+    ['planta', 'B′C′', 'visto', [342.3, 485.39], [455.7, 655.43]],
+    ['planta', 'C′A′', 'visto', [455.7, 655.43], [228.9, 598.79]],
+    ['alzado', 'AB', 'visto', [257.76, 328.68], [310.12, 250.12]],
+    ['alzado', 'AB', 'oculto', [310.12, 250.12], [371.16, 158.52]],
+    ['alzado', 'BC', 'oculto', [371.16, 158.52], [432.2, 204.32]],
+    ['alzado', 'BC', 'visto', [432.2, 204.32], [484.56, 243.6]],
+    ['alzado', 'A′B′', 'visto', [228.9, 280.58], [342.3, 110.42]],
+    ['alzado', 'B′C′', 'visto', [342.3, 110.42], [455.7, 195.5]],
+    ['alzado', 'C′A′', 'visto', [455.7, 195.5], [228.9, 280.58]],
+  ];
+  const ej = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/examenes/ejercicio-52/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('exeg-h52-4'))!;
+  const pasos = resuelveEjercicio(ej, L4);
+  const paso = pasos.get(1)!;
+  const tol = paso.tolerancia;
+  const junto = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+
+  it('el paso construir lleva 13 tramos, y son los del cálculo aparte, con su tipo', () => {
+    expect([...pasos.keys()].join()).toBe('1');
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = paso.tramos.find((x) => (junto(x.a, a) && junto(x.b, b)) || (junto(x.a, b) && junto(x.b, a)));
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, tramo a tramo', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+  });
+
+  it('y rechaza un lado cambiado de tipo, con el porqué de su tramo', () => {
+    // A₁C₁ entera en continua: el tramo de debajo de la chapa nueva va a trazos
+    const ac = casaTramo([257.76, 555.48], [484.56, 612.12], 'visto', paso.tramos, tol);
+    expect(ac.que).toBe('tipo');
+    if (ac.que === 'tipo') expect(paso.tramos[ac.tramo].porque).toMatch(/debajo de la chapa nueva/);
+    // C′₂A′₂ a trazos: la chapa nueva va delante
+    const ca = casaTramo([455.7, 195.5], [228.9, 280.58], 'oculto', paso.tramos, tol);
+    expect(ca.que).toBe('tipo');
+    if (ca.que === 'tipo') expect(paso.tramos[ca.tramo].porque).toMatch(/40,9 mm por delante/);
+    // A₂B₂ entera en continua: la esquina de B queda detrás de la chapa nueva
+    expect(casaTramo([257.76, 328.68], [371.16, 158.52], 'visto', paso.tramos, tol).que).toBe('tipo');
+    // y A₁C₁ cortada donde no cambia nada
+    expect(casaTramo([257.76, 555.48], [350, 578.5], 'visto', paso.tramos, tol).que).toBe('corte');
   });
 });

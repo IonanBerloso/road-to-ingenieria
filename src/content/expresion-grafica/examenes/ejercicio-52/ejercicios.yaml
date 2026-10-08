@@ -641,6 +641,13 @@ ejercicios:
         L_vB: 'desplaza(proy_alzado(Bp), dy: mm(-4))'
         L_pC2: 'uno(medir_sobre(segmento2(figura.punto("C2"), proy_alzado(Cp)), desde: proy_alzado(Cp), distancia: mm(4)), 1)'
         L_vC: 'desplaza(proy_alzado(Cp), dy: mm(-4))'
+        # La visibilidad: los cruces aparentes donde un lado de ABC pasa de visto
+        # a oculto, cada uno con el lado de la chapa nueva que lo da
+        # (k_<lado de ABC>_<lado de la nueva>).
+        k_AC_ApBp: 'cruce_aparente(figura.segmento("AC1"), segmento2(proy_planta(Ap), proy_planta(Bp)))'
+        k_AC_BpCp: 'cruce_aparente(figura.segmento("AC1"), segmento2(proy_planta(Bp), proy_planta(Cp)))'
+        k_AB_CpAp: 'cruce_aparente(figura.segmento("AB2"), segmento2(proy_alzado(Cp), proy_alzado(Ap)))'
+        k_BC_CpAp: 'cruce_aparente(figura.segmento("BC2"), segmento2(proy_alzado(Cp), proy_alzado(Ap)))'
     pasos:
       - tipo: reconocer
         pregunta: La chapa nueva es igual que ABC, paralela a ella, a 25 mm de distancia y por encima. ¿Cómo se llevan sus vértices?
@@ -669,7 +676,7 @@ ejercicios:
               y sus frontales.
 
       - tipo: construir
-        titulo: Los vértices de la chapa nueva
+        titulo: Los vértices de la chapa nueva, y lo que se ve
         intro: |
           Marca A′, B′ y C′ en la planta y en el alzado. Por A, la perpendicular al plano ABC: en la
           planta, perpendicular a las horizontales del plano; en el alzado, a sus frontales. Sobre
@@ -677,7 +684,14 @@ ejercicios:
           perpendicular a la cota de C y arma el triángulo de A a X con su planta y su diferencia de
           cotas. B′ y C′ salen trasladando: A′B′ y A′C′ son iguales y paralelas a AB y AC en cada
           vista. B′₁ cae a 5,1 mm de donde su vertical cruza A₁B₁: amplía con la lupa (×4).
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+
+          Después, pasa a limpio las dos chapas con «arista vista» y «arista oculta»: la nueva entera,
+          en las dos vistas, y de ABC los lados que la nueva tapa en parte, A₁C₁ en la planta y A₂B₂ y
+          B₂C₂ en el alzado. A₁B₁, B₁C₁ y C₂A₂ se ven enteros y ya están dibujados. Cada lado se corta
+          solo donde cambia su visibilidad: para tener ese punto, pasa antes el lado de la chapa nueva
+          que lo cruza. Tomamos las dos chapas como opacas, que la hoja no lo dice; si fueran
+          transparentes, todo iría en continua.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: Ap1
@@ -881,14 +895,59 @@ ejercicios:
               - si: siempre
                 mensaje: |
                   C′₂ va en la vertical de C′₁ y en la paralela a A₂A′₂ por C₂, 17,0 mm por encima de C₂.
+        # La visibilidad sale de un cálculo de líneas ocultas aparte (8 de octubre
+        # de 2026): rayos contra las dos chapas, opacas, separadas 25 mm por la
+        # perpendicular. Da la misma que el paso dibujar que había antes. Cada
+        # cambio, en el cruce aparente que dice su tramo. A₁B₁, B₁C₁ y C₂A₂ se ven
+        # enteros y ya están en la lámina: no son tramos.
+        tramos:
+          - traza: segmento2(proy_planta(solucion.Ap), proy_planta(solucion.Bp))
+            tipo: visto
+            porque: 'A′B′ es un lado de la chapa nueva, que va 36,8 mm más alta que ABC en cada vertical: desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.Bp), proy_planta(solucion.Cp))
+            tipo: visto
+            porque: 'B′C′ es un lado de la chapa nueva, la de arriba: desde arriba nada la tapa. En su cruce aparente con A₁C₁, B′C′ va 36,8 mm más alta que AC.'
+          - traza: segmento2(proy_planta(solucion.Cp), proy_planta(solucion.Ap))
+            tipo: visto
+            porque: 'C′A′ es un lado de la chapa nueva, la de arriba, y su planta cae fuera de A₁B₁C₁: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("A1"), solucion.k_AC_ApBp)
+            tipo: visto
+            porque: 'De A₁ al cruce con A′₁B′₁, el lado AC queda fuera de la planta de la chapa nueva: desde arriba nada lo tapa.'
+          - traza: segmento2(solucion.k_AC_ApBp, solucion.k_AC_BpCp)
+            tipo: oculto
+            porque: 'Entre los cruces con A′₁B′₁ y B′₁C′₁, AC queda debajo de la chapa nueva, que es opaca y va 36,8 mm más alta.'
+          - traza: segmento2(solucion.k_AC_BpCp, figura.punto("C1"))
+            tipo: visto
+            porque: 'Del cruce con B′₁C′₁ a C₁, AC vuelve a quedar fuera de la planta de la chapa nueva: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.Ap), proy_alzado(solucion.Bp))
+            tipo: visto
+            porque: 'La perpendicular que sube desde el plano va también hacia delante, y la chapa nueva queda 40,9 mm por delante de ABC: nada tapa A′B′.'
+          - traza: segmento2(proy_alzado(solucion.Bp), proy_alzado(solucion.Cp))
+            tipo: visto
+            porque: 'B′C′ es un lado de la chapa nueva, que queda delante de ABC: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.Cp), proy_alzado(solucion.Ap))
+            tipo: visto
+            porque: 'C′A′ es un lado de la chapa nueva, la de delante: nada la tapa. En sus cruces aparentes con A₂B₂ y con B₂C₂ va 40,9 mm por delante.'
+          - traza: segmento2(figura.punto("A2"), solucion.k_AB_CpAp)
+            tipo: visto
+            porque: 'De A₂ al cruce con C′₂A′₂, el lado AB queda fuera del alzado de la chapa nueva: nada lo tapa por delante.'
+          - traza: segmento2(solucion.k_AB_CpAp, figura.punto("B2"))
+            tipo: oculto
+            porque: 'Del cruce con C′₂A′₂ a B₂, AB cae dentro del alzado de la chapa nueva, que va 40,9 mm por delante: la tapa.'
+          - traza: segmento2(figura.punto("B2"), solucion.k_BC_CpAp)
+            tipo: oculto
+            porque: 'De B₂ al cruce con C′₂A′₂, BC cae dentro del alzado de la chapa nueva, que va 40,9 mm por delante: la tapa.'
+          - traza: segmento2(solucion.k_BC_CpAp, figura.punto("C2"))
+            tipo: visto
+            porque: 'Del cruce con C′₂A′₂ a C₂, BC sale del alzado de la chapa nueva: nada lo tapa por delante.'
         trazado:
-          - 'proy_planta([segmento3(solucion.Ap, solucion.Bp), segmento3(solucion.Bp, solucion.Cp), segmento3(solucion.Cp, solucion.Ap)])'
-          - 'proy_alzado([segmento3(solucion.Ap, solucion.Bp), segmento3(solucion.Bp, solucion.Cp), segmento3(solucion.Cp, solucion.Ap)])'
+          # Decisión: las perpendiculares AA′, BB′ y CC′ no son lados de las chapas
+          # y no son tramos: siguen en el trazado. En el alzado, sin BB′: B₂B′₂ cae
+          # entero dentro de A′₂B′₂C′₂ y por detrás de la chapa nueva, que es opaca,
+          # y el trazado no pinta en continua nada oculto. Las otras cinco se ven
+          # enteras (guiones/segundo-camino.mjs, y el cálculo de líneas ocultas del
+          # 8 de octubre de 2026).
           - 'proy_planta([segmento3(A, solucion.Ap), segmento3(B, solucion.Bp), segmento3(C, solucion.Cp)])'
-          # Decisión: en el alzado, sin BB′. B₂B′₂ cae entero dentro de A′₂B′₂C′₂ y
-          # por detrás de la chapa nueva, que es opaca: no se ve, y el trazado no
-          # pinta en continua nada oculto. Los otros cinco tramos se ven enteros
-          # (guiones/segundo-camino.mjs).
           - 'proy_alzado([segmento3(A, solucion.Ap), segmento3(C, solucion.Cp)])'
         construccion:
           - con: regla
@@ -1114,127 +1173,57 @@ ejercicios:
             rotulo: C′₂
             porque: |
               C′₂, donde la vertical de C′₁ corta la paralela a A₂A′₂ por C₂.
-          - con: regla
+          - con: arista-vista
             traza: '[segmento2(proy_planta(solucion.Ap), proy_planta(solucion.Bp)), segmento2(proy_planta(solucion.Bp), proy_planta(solucion.Cp)), segmento2(proy_planta(solucion.Cp), proy_planta(solucion.Ap))]'
             porque: |
-              La chapa nueva en la planta, con la regla: A′₁B′₁C′₁, igual que A₁B₁C₁ y corrida 18,4 mm.
-          - con: regla
+              **Lo visto y lo oculto, en la planta.** Las dos chapas son opacas, y desde arriba se ve lo
+              que tiene más cota. La chapa nueva va 36,8 mm por encima de ABC en cada vertical: se ve
+              entera. A′₁B′₁C′₁, en continua, igual que A₁B₁C₁ y corrida 18,4 mm.
+          - con: arista-oculta
+            traza: segmento2(solucion.k_AC_ApBp, solucion.k_AC_BpCp)
+            porque: |
+              A₁C₁ cruza A′₁B′₁ y B′₁C′₁: entre los dos cruces, AC queda debajo de la chapa nueva, y va a
+              trazos.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("A1"), solucion.k_AC_ApBp), segmento2(solucion.k_AC_BpCp, figura.punto("C1"))]'
+            porque: |
+              El resto de A₁C₁, de A₁ al primer cruce y del segundo a C₁, cae fuera de la planta de la
+              chapa nueva: en continua. A₁B₁ y B₁C₁ se ven enteras, y ya están dibujadas.
+          - con: arista-vista
             traza: '[segmento2(proy_alzado(solucion.Ap), proy_alzado(solucion.Bp)), segmento2(proy_alzado(solucion.Bp), proy_alzado(solucion.Cp)), segmento2(proy_alzado(solucion.Cp), proy_alzado(solucion.Ap))]'
             porque: |
-              Y en el alzado: A′₂B′₂C′₂, igual que A₂B₂C₂ y corrida 19,8 mm hacia arriba a la izquierda.
+              **En el alzado.** La perpendicular que sube desde el plano va también hacia delante, y la
+              chapa nueva queda 40,9 mm por delante de ABC: se ve entera. A′₂B′₂C′₂, en continua, igual
+              que A₂B₂C₂ y corrida 19,8 mm hacia arriba a la izquierda.
+          - con: arista-oculta
+            traza: '[segmento2(solucion.k_AB_CpAp, figura.punto("B2")), segmento2(figura.punto("B2"), solucion.k_BC_CpAp)]'
+            porque: |
+              B₂ cae dentro de A′₂B′₂C′₂, y la esquina de B queda detrás de la chapa nueva: A₂B₂ y B₂C₂, a
+              trazos desde su cruce con C′₂A′₂ hasta B₂.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("A2"), solucion.k_AB_CpAp), segmento2(solucion.k_BC_CpAp, figura.punto("C2"))]'
+            porque: |
+              Y en continua lo que de esos dos lados queda fuera de A′₂B′₂C′₂: de A₂ a su cruce, y del
+              suyo a C₂. C₂A₂ se ve entera, y ya está dibujada.
         pista: |
           (1) Una horizontal del plano (por C) y una frontal (por A). (2) Por A₁, la perpendicular a la
           horizontal; por A₂, la perpendicular a la frontal. (3) Un punto X de la perpendicular, a la
           cota de C: con su planta y su diferencia de cotas con A, el triángulo de la verdadera
           magnitud, y sobre su hipotenusa, 25 mm desde A. (4) De vuelta a las dos vistas: es A′. (5) B′
-          y C′, con paralelas: la chapa se traslada entera.
+          y C′, con paralelas: la chapa se traslada entera. (6) La chapa nueva va por encima de ABC
+          y, como la perpendicular que sube va hacia delante, también delante: se ve entera en las
+          dos vistas, y tapa un trozo de A₁C₁ en la planta y la esquina de B en el alzado.
         desarrollo: |
-          En verde claro, la chapa nueva en las dos vistas, y los tramos AA′, BB′ y CC′ de las
-          perpendiculares, salvo B₂B′₂ en el alzado: cae entero dentro de A′₂B′₂C′₂, por detrás de la
-          chapa nueva, que es opaca, y no se ve. El plano forma 47,3° con el horizontal, y sus
-          perpendiculares, 42,7°: los 25 mm ocupan 18,4 mm en la planta y 19,8 mm en el alzado, y
-          suben 17,0 mm.
+          En verde claro, la chapa nueva y los lados de ABC que tapa, con lo oculto a trazos, y los
+          segmentos AA′, BB′ y CC′ de las perpendiculares, salvo B₂B′₂ en el alzado: cae entero dentro
+          de A′₂B′₂C′₂, por detrás de la chapa nueva, que es opaca, y no se ve. El plano forma 47,3°
+          con el horizontal, y sus perpendiculares, 42,7°: los 25 mm ocupan 18,4 mm en la planta y
+          19,8 mm en el alzado, y suben 17,0 mm.
 
-      - tipo: dibujar
-        consigna: |
-          Repasa las dos chapas en la planta y en el alzado, con lo visto en continua y lo oculto en
-          discontinua. Toma las dos chapas como opacas.
-        comprueba:
-          - punto: En la planta, la chapa A′B′C′ se ve entera.
-            porque: >-
-              Desde arriba se ve lo que tiene más cota, y la chapa nueva está por encima de ABC en
-              todos sus puntos: en los dos cruces aparentes de su contorno con A₁C₁, va 36,8 mm más
-              alta.
-          - punto: En la planta, A₁C₁ va en discontinua entre sus cruces con A′₁B′₁ y con B′₁C′₁; A₁B₁ y B₁C₁ se ven enteras.
-            porque: >-
-              Ese tramo de AC queda debajo de la chapa nueva, que es opaca. Los otros dos lados de ABC
-              caen fuera del contorno de A′₁B′₁C′₁.
-          - punto: En el alzado, la chapa A′B′C′ se ve entera.
-            porque: >-
-              La perpendicular que sube desde el plano va también hacia delante, porque gana
-              alejamiento: la chapa nueva queda delante de ABC. En los cruces aparentes de C′₂A′₂ con
-              A₂B₂ y con B₂C₂, va 40,9 mm por delante.
-          - punto: En el alzado, la esquina de B queda tapada; A₂B₂ y B₂C₂ van en discontinua desde sus cruces con C′₂A′₂ hasta B₂, y C₂A₂ se ve entera.
-            porque: >-
-              B₂ cae dentro del contorno de A′₂B′₂C′₂, y B está detrás de la chapa nueva: lo que de los
-              dos lados que llegan a B queda dentro de ese contorno no se ve.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 320 600" role="img" width="320" height="600" aria-labelledby="egex524-t egex524-d">
-            <title id="egex524-t">Las dos chapas, con lo que tapa la nueva</title>
-            <desc id="egex524-d">Alzado arriba y planta abajo, en las mismas verticales. La chapa ABC, en violeta, y la chapa nueva A′B′C′, en azul, igual que ABC y trasladada por la perpendicular al plano: 25 mm por encima, hacia arriba a la izquierda en el alzado y hacia abajo a la izquierda en la planta. La chapa nueva se ve entera en las dos vistas, porque está por encima de ABC y, en el alzado, también delante. En la planta va en discontinua el tramo de A₁C₁ que queda debajo de A′₁B′₁C′₁, entre sus cruces con A′₁B′₁ y con B′₁C′₁. En el alzado van en discontinua los dos tramos de A₂B₂ y B₂C₂ que llegan a B₂, desde sus cruces con C′₂A′₂: la esquina de B queda detrás de la chapa nueva.</desc>
-            <style>
-                .egex524-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .egex524-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .egex524-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .egex524-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egex524-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egex524-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .egex524-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .egex524-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .egex524-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .egex524-pt { fill: var(--live); }
-                .egex524-punta { fill: var(--live); stroke: none; }
-                .egex524-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .egex524-o { fill: var(--flag); }
-                .egex524-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .egex524-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .egex524-pv { stroke: var(--d1); stroke-width: 2; fill: none; stroke-linecap: round; }
-                .egex524-lv { stroke: var(--alt); stroke-width: 1.6; fill: none; stroke-linecap: round; }
-                .egex524-lo { stroke: var(--alt); stroke-width: 1.3; fill: none; stroke-dasharray: 4 3; }
-                .egex524-pf { fill: var(--d1); fill-opacity: .10; stroke: none; }
-                .egex524-lf { fill: var(--alt); fill-opacity: .06; stroke: none; }
-                .egex524-pp { fill: var(--d1); }
-            </style>
-            <path class="egex524-lf" d="M64.5 250.6L171.5 90.1L278.5 170.4Z"/>
-            <path class="egex524-lf" d="M64.5 464.6L171.5 357.6L278.5 518Z"/>
-            <path class="egex524-pf" d="M37.3 205.3L144.2 44.7L251.2 125Z"/>
-            <path class="egex524-pf" d="M37.3 505.5L144.2 398.5L251.2 558.9Z"/>
-            <path class="egex524-lo" d="M113.9 176.5L171.5 90.1"/>
-            <path class="egex524-lo" d="M171.5 90.1L229.1 133.3"/>
-            <path class="egex524-lo" d="M213.1 501.7L75.4 467.3"/>
-            <path class="egex524-lv" d="M64.5 250.6L113.9 176.5"/>
-            <path class="egex524-lv" d="M229.1 133.3L278.5 170.4"/>
-            <path class="egex524-lv" d="M278.5 170.4L64.5 250.6"/>
-            <path class="egex524-pv" d="M37.3 205.3L144.2 44.7"/>
-            <path class="egex524-pv" d="M144.2 44.7L251.2 125"/>
-            <path class="egex524-pv" d="M251.2 125L229.1 133.3"/>
-            <path class="egex524-pv" d="M229.1 133.3L113.9 176.5"/>
-            <path class="egex524-pv" d="M113.9 176.5L37.3 205.3"/>
-            <path class="egex524-lv" d="M64.5 464.6L171.5 357.6"/>
-            <path class="egex524-lv" d="M171.5 357.6L278.5 518"/>
-            <path class="egex524-lv" d="M278.5 518L213.1 501.7"/>
-            <path class="egex524-lv" d="M75.4 467.3L64.5 464.6"/>
-            <path class="egex524-pv" d="M37.3 505.5L75.4 467.3"/>
-            <path class="egex524-pv" d="M75.4 467.3L144.2 398.5"/>
-            <path class="egex524-pv" d="M144.2 398.5L213.1 501.7"/>
-            <path class="egex524-pv" d="M213.1 501.7L251.2 558.9"/>
-            <path class="egex524-pv" d="M251.2 558.9L37.3 505.5"/>
-            <text class="egex524-n" x="171.6" y="77.2" text-anchor="start" fill="var(--alt)">B₂</text>
-            <text class="egex524-n" x="287.8" y="176.4" text-anchor="start" fill="var(--alt)">C₂</text>
-            <text class="egex524-n" x="45.5" y="250.6" text-anchor="start" fill="var(--alt)">A₂</text>
-            <text class="egex524-n" x="187" y="361.2" text-anchor="start" fill="var(--alt)">B₁</text>
-            <text class="egex524-n" x="45.9" y="473.4" text-anchor="start" fill="var(--alt)">A₁</text>
-            <text class="egex524-n" x="289" y="518.4" text-anchor="start" fill="var(--alt)">C₁</text>
-            <circle class="egex524-pp" cx="37.3" cy="205.3" r="2.2"/>
-            <text class="egex524-l" x="32.3" y="208.3" text-anchor="end" fill="var(--d1)">A′₂</text>
-            <circle class="egex524-pp" cx="144.2" cy="44.7" r="2.2"/>
-            <text class="egex524-l" x="150.2" y="46.7" text-anchor="start" fill="var(--d1)">B′₂</text>
-            <circle class="egex524-pp" cx="251.2" cy="125" r="2.2"/>
-            <text class="egex524-l" x="257.2" y="123" text-anchor="start" fill="var(--d1)">C′₂</text>
-            <circle class="egex524-pp" cx="37.3" cy="505.5" r="2.2"/>
-            <text class="egex524-l" x="32.3" y="509.5" text-anchor="end" fill="var(--d1)">A′₁</text>
-            <circle class="egex524-pp" cx="144.2" cy="398.5" r="2.2"/>
-            <text class="egex524-l" x="138.2" y="394.5" text-anchor="end" fill="var(--d1)">B′₁</text>
-            <circle class="egex524-pp" cx="251.2" cy="558.9" r="2.2"/>
-            <text class="egex524-l" x="256.2" y="567.9" text-anchor="start" fill="var(--d1)">C′₁</text>
-          </svg>
-          <figcaption>Las dos chapas, opacas: en continua lo visto y en discontinua lo oculto, en el alzado arriba y en la planta abajo. En violeta la chapa ABC y en azul la nueva, A′B′C′, que se ve entera.</figcaption>
-          </figure>
-        veredicto: >-
-          Si tu dibujo tiene en discontinua un tramo de A₁C₁ en la planta y la esquina de B en el
-          alzado, con la chapa nueva entera en continua en las dos vistas, la visibilidad está
-          bien.
+          Las dos chapas son paralelas, así que la nueva va 36,8 mm por encima de ABC en cualquier
+          vertical, y 40,9 mm por delante mirando desde el alzado: se ve entera en las dos vistas. En
+          la planta queda oculto el tramo de A₁C₁ entre sus cruces con A′₁B′₁ y B′₁C′₁; en el alzado,
+          la esquina de B, de los cruces de A₂B₂ y B₂C₂ con C′₂A′₂ hasta B₂.
 
       - tipo: calcular
         titulo: Lo que sube cada vértice

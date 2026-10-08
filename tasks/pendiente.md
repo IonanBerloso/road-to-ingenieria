@@ -60,6 +60,9 @@ sabía:
   es el menor, 86,10°, y no el de las caras, 93,90°, que se da como
   distractor sin castigar; y en el 53·3 B, la visibilidad del refuerzo, que
   el enunciado no pide y no se afirma.
+- **Expresión Gráfica, el Ejercicio 46 de la colección (SD62)**: en el b), que «el ángulo
+  existente entre los planos AVB y CVB» es el menor, 67,77°, y no el de las caras, 112,23°, que
+  se da como distractor sin castigar; es la misma pregunta que el 53·3 A.
 - **Expresión Gráfica, el Ejercicio 49 de la colección (SD65)**: si en clase
   se resuelve como el agujero cuadrado de lado a en la cara inclinada del
   depósito, que es la lectura literal que se ha tomado, o como la sección

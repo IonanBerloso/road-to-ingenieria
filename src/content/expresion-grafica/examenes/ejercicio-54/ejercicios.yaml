@@ -120,6 +120,24 @@ ejercicios:
         vertical_BC: plano_perpendicular_a_recta(B, segmento3(B, A))
         vertical_CD: plano_perpendicular_a_recta(C, segmento3(C, B))
         vertical_DA: plano_perpendicular_a_recta(D, segmento3(D, C))
+        # Para la construcción paso a paso del paso 2, que rehace los seis puntos
+        # del 1 con un vértice de cada sección horizontal: Ce y Cg, en VC, para e
+        # y g; Af, en VA, para f. Los extremos de las paralelas a los lados de la
+        # base, más allá del punto que dan.
+        L_H: 'uno(medir_sobre(segmento2(proy_planta(Ce), proy_planta(H)), desde: proy_planta(H), distancia: mm(4)), 1)'
+        L_N: 'uno(medir_sobre(segmento2(proy_planta(Ce), proy_planta(N)), desde: proy_planta(N), distancia: mm(4)), 1)'
+        L_M: 'uno(medir_sobre(segmento2(proy_planta(Cg), proy_planta(M)), desde: proy_planta(M), distancia: mm(4)), 1)'
+        L_T: 'uno(medir_sobre(segmento2(proy_planta(Cg), proy_planta(T)), desde: proy_planta(T), distancia: mm(4)), 1)'
+        L_K: 'uno(medir_sobre(segmento2(proy_planta(Af), proy_planta(K)), desde: proy_planta(K), distancia: mm(4)), 1)'
+        L_Q: 'uno(medir_sobre(segmento2(proy_planta(Af), proy_planta(Q)), desde: proy_planta(Q), distancia: mm(4)), 1)'
+        # La visibilidad: los cruces aparentes de la planta donde un lado de la
+        # base pasa de visto a oculto, con la arista del prisma que lo da
+        # (k_<lado>_<arista>). Los del alzado son los cruces de e₂ y g₂ con V₂B₂ y
+        # V₂D₂, que ya están: TeB, TgB, TeD y TgD.
+        k_AB_f: 'cruce_aparente(figura.segmento("AB1"), segmento2(figura.punto("F1"), figura.punto("F1p")))'
+        k_BC_g: 'cruce_aparente(figura.segmento("BC1"), segmento2(figura.punto("G1"), figura.punto("G1p")))'
+        k_CD_g: 'cruce_aparente(figura.segmento("CD1"), segmento2(figura.punto("G1"), figura.punto("G1p")))'
+        k_DA_f: 'cruce_aparente(figura.segmento("DA1"), segmento2(figura.punto("F1"), figura.punto("F1p")))'
       comprueba:
         - en_plano(D, plano(A, B, C))
         - en_plano(Fp, plano(E, Ep, F))
@@ -441,12 +459,8 @@ ejercicios:
                   Está en la vertical de T₁, pero no en g₂: T₂ va a la altura de g₂.
                 ejemplo: 'desplaza(proy_alzado(solucion.T), dy: mm(-6))'
         trazado:
-          - proy_alzado(e)
-          - proy_alzado(f)
-          - proy_alzado(g)
-          - proy_planta(e)
-          - proy_planta(f)
-          - proy_planta(g)
+          # Las aristas e, f y g no van: son tramos del paso siguiente, que las pasa
+          # a limpio con lo que se ve, y aquí saldrían enteras en continua.
           - 'proy_planta([segmento3(solucion.Ae, solucion.Be), segmento3(solucion.Be, solucion.Ce), segmento3(solucion.Ce, solucion.De), segmento3(solucion.De, solucion.Ae)])'
           - 'proy_planta([segmento3(solucion.Af, solucion.Bf), segmento3(solucion.Bf, solucion.Cf), segmento3(solucion.Cf, solucion.Df), segmento3(solucion.Df, solucion.Af)])'
           - 'proy_planta([segmento3(solucion.Ag, solucion.Bg), segmento3(solucion.Bg, solucion.Cg), segmento3(solucion.Cg, solucion.Dg), segmento3(solucion.Dg, solucion.Ag)])'
@@ -676,20 +690,37 @@ ejercicios:
           (3) e₁ lo corta en H₁ y en N₁; súbelos a e₂. (4) Lo mismo con f y con g, cada una con su
           cuadrado.
         desarrollo: |
-          En verde claro, las aristas del prisma completas y, en la planta, los tres cuadrados de
-          las secciones horizontales: el de e, el más pequeño, con 23,7 mm de lado; el de f, con
-          31,5 mm, y el de g, con 36,0 mm. Cada arista entra por la izquierda y sale por la
-          derecha: e y g por las caras de atrás, VBC y VCD; f por las de delante, VAB y VDA.
+          En verde claro, en la planta, los tres cuadrados de las secciones horizontales: el de e,
+          el más pequeño, con 23,7 mm de lado; el de f, con 31,5 mm, y el de g, con 36,0 mm. Cada
+          arista entra por la izquierda y sale por la derecha: e y g por las caras de atrás, VBC y
+          VCD; f por las de delante, VAB y VDA. Las aristas del prisma completas se pasan a limpio
+          en el paso siguiente, con lo que se ve de cada una.
 
       - tipo: construir
-        titulo: Dónde atraviesan el prisma las aristas VB y VD
+        titulo: Dónde atraviesan el prisma las aristas VB y VD, y lo que se ve
         intro: |
           VB y VD son las dos aristas de la pirámide que atraviesan el prisma: entran por la cara
           de arriba, la de e a f, y salen por la de abajo, la de f a g. J y L son los cortes de
           VB; P y R, los de VD. El plano de canto que contiene VB (en el alzado, la propia
           V₂B₂) corta e₂, f₂ y g₂ en tres puntos; bajados a e₁, f₁ y g₁, forman un triángulo, y
           V₁B₁ corta dos de sus lados en J₁ y L₁, que se suben a V₂B₂. Con VD, igual.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, borrar]
+
+          Después, pasa a limpio la intersección y los dos sólidos con «arista vista» y «arista
+          oculta». Para unir los dos polígonos, H J K L M y N P Q R T, hacen falta también los
+          seis puntos del paso anterior, y el Taller no los guarda: rehazlos con la sección
+          horizontal de cada arista del prisma, desde donde e₂ y g₂ cruzan V₂C₂ y f₂ cruza V₂A₂.
+          Esos seis no se corrigen uno a uno: si un lado no casa, mira antes el punto rehecho. La
+          visibilidad la decide una convención nuestra, que el enunciado no da: los dos sólidos
+          son una sola pieza maciza, y lo que de una arista queda dentro del otro no se dibuja (VB
+          entre J y L, VD entre P y R, y e, f y g dentro de la pirámide). Con los dos sólidos por
+          separado, cada uno entero, esos tramos irían a trazos en las dos vistas, y lo demás no
+          cambiaría; aquí no se dibujan. V₂A₂, la base del alzado, V₁A₁, V₁C₁ y los extremos del
+          prisma ya están dibujados como van: en continua, salvo V₂C₂ y E₂G₂, que ya vienen a
+          trazos. Cada arista se corta solo donde cambia su visibilidad o donde entra en el otro
+          sólido. P₂, R₂ y L₂ caen a menos de 4 mm de los cruces 13₂, 15₂ y 11₂, y N₂ a 3,3 mm de
+          13₂ (el tramo oculto de e₂ entre los dos mide 3,4 mm); en la planta, N₁, T₁ y P₁ rodean
+          13₁ a menos de 5 mm: amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: J1
@@ -897,6 +928,181 @@ ejercicios:
                 mensaje: |
                   Está en la vertical de R₁, pero no en V₂D₂: R está en la arista VD.
                 ejemplo: 'desplaza(proy_alzado(solucion.R), dy: mm(-8))'
+        # Decisión: la visibilidad toma los dos sólidos como una sola pieza maciza:
+        # lo que de una arista queda dentro del otro sólido no se dibuja. El
+        # enunciado no lo dice, y el tema de intersecciones del curso solo trata
+        # plano-plano y recta-plano. Lo apoyan los restos de una solución que trae
+        # la pág. 62 debajo de los trazos del enunciado: V₂B₂ y V₂D₂ van partidas
+        # justo en J₂ y L₂ y en P₂ y R₂, y en la planta V₁B₁ va de V₁ a J₁, deja un
+        # hueco y sigue en discontinua de L₁ a B₁; los tramos ocultos de la base
+        # acaban donde f₁ y g₁ la cruzan. Con una excepción: esos restos no traen
+        # guiones en V₁D₁ entre R₁ y D₁, y ese tramo va oculto, porque D₁ cae 4,3 mm
+        # dentro de la franja del prisma, desde g₁. Aquí va en discontinua. No se ha
+        # decidido a ojo: sale de un cálculo de líneas ocultas aparte (8 de octubre
+        # de 2026), con rayos contra las caras de los dos sólidos y «dentro» para lo
+        # que de una arista cae dentro del otro; da la misma que el paso dibujar que
+        # había antes. Los tramos van en este paso, el último, aunque H, N, K, Q, M
+        # y T se marcan en el anterior: la construcción los rehace. V₂A₂, la base
+        # del alzado, V₁A₁, V₁C₁ y los extremos del prisma se ven enteros y ya están
+        # en la lámina, y V₂C₂ y E₂G₂, enteras ocultas, ya vienen a trazos: no son
+        # tramos.
+        tramos:
+          - traza: segmento2(proy_planta(solucion.H), proy_planta(solucion.J))
+            tipo: visto
+            porque: 'HJ está en la cara de e a f del prisma y en la VBC de la pirámide, que miran las dos hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.J), proy_planta(solucion.K))
+            tipo: visto
+            porque: 'JK está en la cara de e a f del prisma y en la VAB de la pirámide, que miran las dos hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.K), proy_planta(solucion.L))
+            tipo: oculto
+            porque: 'KL está en la cara de f a g, la de abajo del prisma, que mira hacia abajo: desde arriba la tapa la cara de e a f.'
+          - traza: segmento2(proy_planta(solucion.L), proy_planta(solucion.M))
+            tipo: oculto
+            porque: 'LM está en la cara de f a g, que mira hacia abajo: desde arriba lo tapa el propio prisma, con sus caras de e a f y de g a e.'
+          - traza: segmento2(proy_planta(solucion.M), proy_planta(solucion.H))
+            tipo: visto
+            porque: 'MH está en la cara de g a e del prisma y en la VBC de la pirámide, que miran las dos hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.N), proy_planta(solucion.P))
+            tipo: visto
+            porque: 'NP está en la cara de e a f del prisma y en la VCD de la pirámide, que miran las dos hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.P), proy_planta(solucion.Q))
+            tipo: visto
+            porque: 'PQ está en la cara de e a f del prisma y en la VDA de la pirámide, que miran las dos hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.Q), proy_planta(solucion.R))
+            tipo: oculto
+            porque: 'QR está en la cara de f a g, que mira hacia abajo: desde arriba la tapa la cara de e a f.'
+          - traza: segmento2(proy_planta(solucion.R), proy_planta(solucion.T))
+            tipo: oculto
+            porque: 'RT está en la cara de f a g, que mira hacia abajo: desde arriba lo tapa el propio prisma, con sus caras de e a f y de g a e.'
+          - traza: segmento2(proy_planta(solucion.T), proy_planta(solucion.N))
+            tipo: visto
+            porque: 'TN está en la cara de g a e del prisma y en la VCD de la pirámide, que miran las dos hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(figura.punto("E1"), proy_planta(solucion.H))
+            tipo: visto
+            porque: 'e es la arista de arriba del prisma, y fuera de la pirámide nada le pasa por encima.'
+          - traza: segmento2(proy_planta(solucion.N), figura.punto("E1p"))
+            tipo: visto
+            porque: 'De N a E′, e sale de la pirámide y es la arista de arriba del prisma: nada le pasa por encima.'
+          - traza: segmento2(figura.punto("F1"), proy_planta(solucion.K))
+            tipo: visto
+            porque: 'f es contorno de la planta del prisma, y fuera de la pirámide nada le pasa por encima.'
+          - traza: segmento2(proy_planta(solucion.Q), figura.punto("F1p"))
+            tipo: visto
+            porque: 'De Q a F′, f sale de la pirámide y es contorno de la planta del prisma: nada le pasa por encima.'
+          - traza: segmento2(figura.punto("G1"), proy_planta(solucion.M))
+            tipo: visto
+            porque: 'g es contorno de la planta del prisma, entre la cara de g a e, que mira hacia arriba, y la de f a g; fuera de la pirámide nada le pasa por encima.'
+          - traza: segmento2(proy_planta(solucion.T), figura.punto("G1p"))
+            tipo: visto
+            porque: 'De T a G′, g sale de la pirámide y es contorno de la planta del prisma: nada le pasa por encima.'
+          - traza: segmento2(figura.punto("V1"), proy_planta(solucion.J))
+            tipo: visto
+            porque: 'De V a J, VB separa dos caras de la pirámide que miran hacia arriba, VAB y VBC, y va por encima del prisma: nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.L), figura.punto("B1"))
+            tipo: oculto
+            porque: 'De L a B, VB va por debajo del prisma, que le pasa por encima: lo tapan sus caras de e a f y de f a g.'
+          - traza: segmento2(figura.punto("V1"), proy_planta(solucion.P))
+            tipo: visto
+            porque: 'De V a P, VD separa dos caras de la pirámide que miran hacia arriba, VCD y VDA, y va por encima del prisma: nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.R), figura.punto("D1"))
+            tipo: oculto
+            porque: 'De R a D, VD va por debajo del prisma, que le pasa por encima: D₁ cae 4,3 mm dentro de la franja del prisma, desde g₁.'
+          - traza: segmento2(figura.punto("A1"), solucion.k_AB_f)
+            tipo: visto
+            porque: 'De A₁ al cruce con f₁, AB queda fuera de la planta del prisma, y es contorno de la planta de la pirámide: nada la tapa.'
+          - traza: segmento2(solucion.k_AB_f, figura.punto("B1"))
+            tipo: oculto
+            porque: 'Del cruce con f₁ a B₁, el prisma pasa por encima de AB: en ese cruce aparente, f va 37,0 mm más alta que AB.'
+          - traza: segmento2(figura.punto("B1"), solucion.k_BC_g)
+            tipo: oculto
+            porque: 'De B₁ al cruce con g₁, el prisma pasa por encima de BC: en ese cruce aparente, g va 27,9 mm más alta que BC.'
+          - traza: segmento2(solucion.k_BC_g, figura.punto("C1"))
+            tipo: visto
+            porque: 'Del cruce con g₁ a C₁, BC queda fuera de la planta del prisma: nada la tapa.'
+          - traza: segmento2(figura.punto("C1"), solucion.k_CD_g)
+            tipo: visto
+            porque: 'De C₁ al cruce con g₁, CD queda fuera de la planta del prisma: nada la tapa.'
+          - traza: segmento2(solucion.k_CD_g, figura.punto("D1"))
+            tipo: oculto
+            porque: 'Del cruce con g₁ a D₁, el prisma pasa por encima de CD: en ese cruce aparente, g va 27,9 mm más alta que CD.'
+          - traza: segmento2(figura.punto("D1"), solucion.k_DA_f)
+            tipo: oculto
+            porque: 'De D₁ al cruce con f₁, el prisma pasa por encima de DA: en ese cruce aparente, f va 37,0 mm más alta que DA.'
+          - traza: segmento2(solucion.k_DA_f, figura.punto("A1"))
+            tipo: visto
+            porque: 'Del cruce con f₁ a A₁, DA queda fuera de la planta del prisma: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.H), proy_alzado(solucion.J))
+            tipo: oculto
+            porque: 'HJ está en la cara VBC de la pirámide, que mira hacia atrás: desde delante la tapa la cara VAB.'
+          - traza: segmento2(proy_alzado(solucion.J), proy_alzado(solucion.K))
+            tipo: visto
+            porque: 'JK está en la cara de e a f del prisma y en la VAB de la pirámide, que miran las dos hacia delante: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.K), proy_alzado(solucion.L))
+            tipo: visto
+            porque: 'KL está en la cara de f a g del prisma y en la VAB de la pirámide, que miran las dos hacia delante: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.L), proy_alzado(solucion.M))
+            tipo: oculto
+            porque: 'LM está en la cara VBC, que mira hacia atrás: desde delante la tapa la cara VAB.'
+          - traza: segmento2(proy_alzado(solucion.M), proy_alzado(solucion.H))
+            tipo: oculto
+            porque: 'MH está en la cara de g a e del prisma y en la VBC, que miran las dos hacia atrás: lo tapan la cara VAB y el propio prisma.'
+          - traza: segmento2(proy_alzado(solucion.N), proy_alzado(solucion.P))
+            tipo: oculto
+            porque: 'NP está en la cara VCD de la pirámide, que mira hacia atrás: desde delante la tapa la cara VDA.'
+          - traza: segmento2(proy_alzado(solucion.P), proy_alzado(solucion.Q))
+            tipo: visto
+            porque: 'PQ está en la cara de e a f del prisma y en la VDA de la pirámide, que miran las dos hacia delante: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.Q), proy_alzado(solucion.R))
+            tipo: visto
+            porque: 'QR está en la cara de f a g del prisma y en la VDA de la pirámide, que miran las dos hacia delante: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.R), proy_alzado(solucion.T))
+            tipo: oculto
+            porque: 'RT está en la cara VCD, que mira hacia atrás: desde delante la tapa la cara VDA.'
+          - traza: segmento2(proy_alzado(solucion.T), proy_alzado(solucion.N))
+            tipo: oculto
+            porque: 'TN está en la cara de g a e del prisma y en la VCD, que miran las dos hacia atrás: lo tapan la cara VDA y el propio prisma.'
+          - traza: segmento2(figura.punto("E2"), proy_alzado(solucion.TeB))
+            tipo: visto
+            porque: 'De E₂ al cruce con V₂B₂, e queda fuera del alzado de la pirámide, y es contorno del alzado del prisma: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.TeB), proy_alzado(solucion.H))
+            tipo: oculto
+            porque: 'Del cruce con V₂B₂ a H₂, e va por detrás de la pirámide: en ese cruce aparente, VB va 10,6 mm por delante de e.'
+          - traza: segmento2(proy_alzado(solucion.N), proy_alzado(solucion.TeD))
+            tipo: oculto
+            porque: 'De N₂ al cruce con V₂D₂, e sigue por detrás de la pirámide: en ese cruce aparente, VD va 4,2 mm por delante de e.'
+          - traza: segmento2(proy_alzado(solucion.TeD), figura.punto("E2p"))
+            tipo: visto
+            porque: 'Pasado su cruce con V₂D₂, e sale del alzado de la pirámide: nada la tapa.'
+          - traza: segmento2(figura.punto("F2"), proy_alzado(solucion.K))
+            tipo: visto
+            porque: 'f es la arista de delante del prisma, y entra por la cara VAB, que mira hacia delante: en su cruce aparente con V₂B₂ va 9,9 mm por delante de VB. Nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.Q), figura.punto("F2p"))
+            tipo: visto
+            porque: 'f sale por la cara VDA, que mira hacia delante, y en su cruce aparente con V₂D₂ va 18,4 mm por delante de VD: nada la tapa.'
+          - traza: segmento2(figura.punto("G2"), proy_alzado(solucion.TgB))
+            tipo: visto
+            porque: 'De G₂ al cruce con V₂B₂, g queda fuera del alzado de la pirámide: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.TgB), proy_alzado(solucion.M))
+            tipo: oculto
+            porque: 'Del cruce con V₂B₂ a M₂, g va por detrás de la pirámide: en ese cruce aparente, VB va 16,4 mm por delante de g.'
+          - traza: segmento2(proy_alzado(solucion.T), proy_alzado(solucion.TgD))
+            tipo: oculto
+            porque: 'De T₂ al cruce con V₂D₂, g va por detrás de la pirámide: en ese cruce aparente, VD va 6,6 mm por delante de g.'
+          - traza: segmento2(proy_alzado(solucion.TgD), figura.punto("G2p"))
+            tipo: visto
+            porque: 'Pasado su cruce con V₂D₂, g sale del alzado de la pirámide: nada la tapa.'
+          - traza: segmento2(figura.punto("V2"), proy_alzado(solucion.J))
+            tipo: visto
+            porque: 'De V a J, VB es contorno del alzado de la pirámide, y por delante no le pasa nada: en su cruce con e₂, e va 10,6 mm por detrás.'
+          - traza: segmento2(proy_alzado(solucion.L), figura.punto("B2"))
+            tipo: visto
+            porque: 'De L a B, VB sigue siendo contorno del alzado, y en su cruce con g₂, g va 16,4 mm por detrás: nada la tapa.'
+          - traza: segmento2(figura.punto("V2"), proy_alzado(solucion.P))
+            tipo: visto
+            porque: 'De V a P, VD es contorno del alzado de la pirámide, y en su cruce con e₂, e va 4,2 mm por detrás: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.R), figura.punto("D2"))
+            tipo: visto
+            porque: 'De R a D, VD sigue siendo contorno del alzado, y en su cruce con g₂, g va 6,6 mm por detrás: nada la tapa.'
         trazado:
           - 'proy_planta([segmento3(solucion.TeB, solucion.TfB), segmento3(solucion.TfB, solucion.TgB), segmento3(solucion.TgB, solucion.TeB)])'
           - 'proy_planta([segmento3(solucion.TeD, solucion.TfD), segmento3(solucion.TfD, solucion.TgD), segmento3(solucion.TgD, solucion.TeD)])'
@@ -936,9 +1142,9 @@ ejercicios:
               está en e, 11 en f y 12 en g. No se paran en V₁B₁: son puntos del prisma, no de VB.
           - con: marca
             traza: proy_planta(solucion.TeB)
-            rotulo: 10₁
             porque: |
-              10₁, donde la vertical de 10₂ corta e₁.
+              10₁, donde la vertical de 10₂ corta e₁. Va sin rótulo: el punto M₁, que se marca más
+              adelante, caería encima.
           - con: marca
             traza: proy_planta(solucion.TfB)
             rotulo: 11₁
@@ -1003,9 +1209,9 @@ ejercicios:
               Sus líneas de referencia, cada una hasta la planta de su arista: 13 a e₁, 14 a f₁ y 15 a g₁.
           - con: marca
             traza: proy_planta(solucion.TeD)
-            rotulo: 13₁
             porque: |
-              13₁, donde la vertical de 13₂ corta e₁.
+              13₁, donde la vertical de 13₂ corta e₁. Va sin rótulo: el punto T₁, que se marca más
+              adelante, caería encima.
           - con: marca
             traza: proy_planta(solucion.TfD)
             rotulo: 14₁
@@ -1048,237 +1254,223 @@ ejercicios:
             porque: |
               R₂, donde la vertical de R₁ corta V₂D₂, entre f₂ y g₂. Entre J y L, y entre P y R, las
               aristas van por dentro del prisma.
+          - con: marca
+            traza: proy_alzado(solucion.Ce)
+            rotulo: 2₂
+            porque: |
+              **Los seis puntos del paso anterior.** Para unir los polígonos hacen falta también H, N, K,
+              Q, M y T, y el Taller no los guarda: se rehacen con la sección horizontal de cada arista
+              del prisma, un cuadrado semejante a la base. Basta un vértice de cada cuadrado, y aquí se
+              toma en la arista de la pirámide que no se ha usado: 2₂, donde e₂ cruza V₂C₂, es el punto
+              de VC a la altura de e. Es el punto 2 del paso anterior, que allí salía con paralelas.
+          - con: marca
+            traza: proy_alzado(solucion.Cg)
+            rotulo: 8₂
+            porque: |
+              8₂, donde g₂ cruza V₂C₂: el punto de VC a la altura de g, el 8 del paso anterior.
+          - con: marca
+            traza: proy_alzado(solucion.Af)
+            rotulo: 5₂
+            porque: |
+              5₂, donde f₂ cruza V₂A₂: f pasa por delante de V₁, y su cuadrado se saca desde VA. Es el
+              punto 5 del paso anterior.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.Ce), proy_planta(solucion.Ce)), segmento2(proy_alzado(solucion.Cg), proy_planta(solucion.Cg)), segmento2(proy_alzado(solucion.Af), proy_planta(solucion.Af))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se bajan por sus líneas de referencia, 2 y 8 hasta V₁C₁ y 5 hasta V₁A₁, porque están en esas
+              aristas.
+          - con: marca
+            traza: proy_planta(solucion.Ce)
+            rotulo: 2₁
+            porque: |
+              2₁, donde la vertical de 2₂ corta V₁C₁: un vértice del cuadrado de e.
+          - con: marca
+            traza: proy_planta(solucion.Cg)
+            rotulo: 8₁
+            porque: |
+              8₁, donde la vertical de 8₂ corta V₁C₁: un vértice del cuadrado de g, más cerca de C₁.
+          - con: marca
+            traza: proy_planta(solucion.Af)
+            rotulo: 5₁
+            porque: |
+              5₁, donde la vertical de 5₂ corta V₁A₁: un vértice del cuadrado de f.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.Ce), solucion.L_H), segmento2(proy_planta(solucion.Cg), solucion.L_M)]'
+            guia: figura.segmento("BC1")
+            porque: |
+              Los lados de cada cuadrado son paralelos a los de la base. Por 2₁ y por 8₁, la paralela a
+              B₁C₁, hacia B, hasta pasar e₁ y g₁: los lados en la cara VBC, por donde e y g entran.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.Ce), solucion.L_N), segmento2(proy_planta(solucion.Cg), solucion.L_T)]'
+            guia: figura.segmento("CD1")
+            porque: |
+              Por 2₁ y por 8₁, la paralela a C₁D₁, hacia D, hasta pasar e₁ y g₁: los lados en la cara VCD,
+              por donde salen.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Af), solucion.L_K)
+            guia: figura.segmento("AB1")
+            porque: |
+              Por 5₁, la paralela a A₁B₁, hasta pasar f₁: el lado del cuadrado de f en la cara VAB.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Af), solucion.L_Q)
+            guia: figura.segmento("DA1")
+            porque: |
+              Y por 5₁, la paralela a D₁A₁, hasta pasar f₁: el lado en la cara VDA.
+          - con: marca
+            traza: proy_planta(solucion.H)
+            rotulo: H₁
+            porque: |
+              H₁, donde e₁ corta la paralela a B₁C₁ por 2₁: e entra en la pirámide por la cara VBC.
+          - con: marca
+            traza: proy_planta(solucion.N)
+            rotulo: N₁
+            porque: |
+              N₁, donde e₁ corta la paralela a C₁D₁ por 2₁: e sale por la cara VCD.
+          - con: marca
+            traza: proy_planta(solucion.M)
+            rotulo: M₁
+            porque: |
+              M₁, donde g₁ corta la paralela a B₁C₁ por 8₁: g entra por la cara VBC.
+          - con: marca
+            traza: proy_planta(solucion.T)
+            rotulo: T₁
+            porque: |
+              T₁, donde g₁ corta la paralela a C₁D₁ por 8₁: g sale por la cara VCD.
+          - con: marca
+            traza: proy_planta(solucion.K)
+            rotulo: K₁
+            porque: |
+              K₁, donde f₁ corta la paralela a A₁B₁ por 5₁: f entra por la cara VAB.
+          - con: marca
+            traza: proy_planta(solucion.Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde f₁ corta la paralela a D₁A₁ por 5₁: f sale por la cara VDA.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.H), proy_alzado(solucion.H)), segmento2(proy_planta(solucion.N), proy_alzado(solucion.N)), segmento2(proy_planta(solucion.K), proy_alzado(solucion.K)), segmento2(proy_planta(solucion.Q), proy_alzado(solucion.Q)), segmento2(proy_planta(solucion.M), proy_alzado(solucion.M)), segmento2(proy_planta(solucion.T), proy_alzado(solucion.T))]'
+            guia: figura.segmento("base2")
+            porque: |
+              Se suben los seis por sus líneas de referencia, cada uno hasta su arista: H y N hasta e₂, K y
+              Q hasta f₂, M y T hasta g₂.
+          - con: marca
+            traza: proy_alzado(solucion.H)
+            rotulo: H₂
+            porque: |
+              H₂, donde la vertical de H₁ corta e₂.
+          - con: marca
+            traza: proy_alzado(solucion.N)
+            porque: |
+              N₂, donde la vertical de N₁ corta e₂, un poco antes de 13₂. Va sin rótulo: caería sobre
+              el punto 13₂.
+          - con: marca
+            traza: proy_alzado(solucion.K)
+            rotulo: K₂
+            porque: |
+              K₂, donde la vertical de K₁ corta f₂.
+          - con: marca
+            traza: proy_alzado(solucion.Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta f₂.
+          - con: marca
+            traza: proy_alzado(solucion.M)
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta g₂.
+          - con: marca
+            traza: proy_alzado(solucion.T)
+            porque: |
+              T₂, donde la vertical de T₁ corta g₂, un poco antes de 15₂. Va sin rótulo: caería sobre los
+              puntos 15₂ y R₂.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.H), proy_planta(solucion.J)), segmento2(proy_planta(solucion.J), proy_planta(solucion.K)), segmento2(proy_planta(solucion.M), proy_planta(solucion.H)), segmento2(proy_planta(solucion.N), proy_planta(solucion.P)), segmento2(proy_planta(solucion.P), proy_planta(solucion.Q)), segmento2(proy_planta(solucion.T), proy_planta(solucion.N))]'
+            porque: |
+              **Lo visto y lo oculto, en la planta.** Los dos sólidos son una sola pieza. Desde arriba se
+              ven las caras de e a f y de g a e del prisma y las cuatro laterales de la pirámide, y un
+              lado de la intersección se ve si está en una cara vista de cada sólido: HJ, JK y MH, y NP,
+              PQ y TN, en continua.
+          - con: arista-oculta
+            traza: '[segmento2(proy_planta(solucion.K), proy_planta(solucion.L)), segmento2(proy_planta(solucion.L), proy_planta(solucion.M)), segmento2(proy_planta(solucion.Q), proy_planta(solucion.R)), segmento2(proy_planta(solucion.R), proy_planta(solucion.T))]'
+            porque: |
+              KL, LM, QR y RT están en la cara de f a g, que mira hacia abajo: a trazos.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("E1"), proy_planta(solucion.H)), segmento2(proy_planta(solucion.N), figura.punto("E1p")), segmento2(figura.punto("F1"), proy_planta(solucion.K)), segmento2(proy_planta(solucion.Q), figura.punto("F1p")), segmento2(figura.punto("G1"), proy_planta(solucion.M)), segmento2(proy_planta(solucion.T), figura.punto("G1p"))]'
+            porque: |
+              Las aristas del prisma, fuera de la pirámide, en continua: e, la de arriba, y f y g, el
+              contorno de la planta del prisma. Dentro de la pirámide no se dibujan.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("V1"), proy_planta(solucion.J)), segmento2(figura.punto("V1"), proy_planta(solucion.P))]'
+            porque: |
+              VB y VD, de V₁ a J₁ y a P₁, van por encima del prisma: en continua. De J a L y de P a R van
+              por dentro del prisma, y no se dibujan.
+          - con: arista-oculta
+            traza: '[segmento2(proy_planta(solucion.L), figura.punto("B1")), segmento2(proy_planta(solucion.R), figura.punto("D1"))]'
+            porque: |
+              De L₁ a B₁ y de R₁ a D₁, el prisma les pasa por encima: a trazos. D₁ cae 4,3 mm dentro de la
+              franja del prisma, desde g₁.
+          - con: arista-oculta
+            traza: '[segmento2(solucion.k_AB_f, figura.punto("B1")), segmento2(figura.punto("B1"), solucion.k_BC_g), segmento2(solucion.k_CD_g, figura.punto("D1")), segmento2(figura.punto("D1"), solucion.k_DA_f)]'
+            porque: |
+              La base, donde le pasa el prisma por encima: A₁B₁ y B₁C₁ desde B₁, y C₁D₁ y D₁A₁ desde D₁,
+              cada una hasta donde la cruza f₁ o g₁, el contorno del prisma. A trazos.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("A1"), solucion.k_AB_f), segmento2(solucion.k_BC_g, figura.punto("C1")), segmento2(figura.punto("C1"), solucion.k_CD_g), segmento2(solucion.k_DA_f, figura.punto("A1"))]'
+            porque: |
+              Y el resto de la base, fuera de la planta del prisma, en continua. V₁A₁ y V₁C₁ se ven
+              enteras, y ya están dibujadas.
+          - con: arista-vista
+            traza: '[segmento2(proy_alzado(solucion.J), proy_alzado(solucion.K)), segmento2(proy_alzado(solucion.K), proy_alzado(solucion.L)), segmento2(proy_alzado(solucion.P), proy_alzado(solucion.Q)), segmento2(proy_alzado(solucion.Q), proy_alzado(solucion.R))]'
+            porque: |
+              **En el alzado.** Desde delante se ven las caras de e a f y de f a g del prisma y las caras
+              VAB y VDA de la pirámide: JK, KL, PQ y QR, en continua.
+          - con: arista-oculta
+            traza: '[segmento2(proy_alzado(solucion.H), proy_alzado(solucion.J)), segmento2(proy_alzado(solucion.L), proy_alzado(solucion.M)), segmento2(proy_alzado(solucion.M), proy_alzado(solucion.H)), segmento2(proy_alzado(solucion.N), proy_alzado(solucion.P)), segmento2(proy_alzado(solucion.R), proy_alzado(solucion.T)), segmento2(proy_alzado(solucion.T), proy_alzado(solucion.N))]'
+            porque: |
+              El resto de los dos polígonos está en las caras de atrás de la pirámide, VBC y VCD: la
+              pirámide lo tapa, y va a trazos.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("E2"), proy_alzado(solucion.TeB)), segmento2(proy_alzado(solucion.TeD), figura.punto("E2p")), segmento2(figura.punto("F2"), proy_alzado(solucion.K)), segmento2(proy_alzado(solucion.Q), figura.punto("F2p")), segmento2(figura.punto("G2"), proy_alzado(solucion.TgB)), segmento2(proy_alzado(solucion.TgD), figura.punto("G2p"))]'
+            porque: |
+              Las aristas del prisma, fuera del alzado de la pirámide, en continua: e₂ y g₂ hasta sus
+              cruces con V₂B₂ y desde los de V₂D₂, y f₂ hasta K₂ y desde Q₂.
+          - con: arista-oculta
+            traza: '[segmento2(proy_alzado(solucion.TeB), proy_alzado(solucion.H)), segmento2(proy_alzado(solucion.N), proy_alzado(solucion.TeD)), segmento2(proy_alzado(solucion.TgB), proy_alzado(solucion.M)), segmento2(proy_alzado(solucion.T), proy_alzado(solucion.TgD))]'
+            porque: |
+              e y g entran y salen por las caras de atrás, VBC y VCD: entre 10₂ y H₂, N₂ y 13₂, 12₂ y M₂, y
+              T₂ y 15₂, van por detrás de la pirámide, a trazos.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("V2"), proy_alzado(solucion.J)), segmento2(proy_alzado(solucion.L), figura.punto("B2")), segmento2(figura.punto("V2"), proy_alzado(solucion.P)), segmento2(proy_alzado(solucion.R), figura.punto("D2"))]'
+            porque: |
+              VB y VD, el contorno del alzado de la pirámide, en continua, salvo de J₂ a L₂ y de P₂ a R₂,
+              por dentro del prisma, que no se dibuja. V₂A₂ y la base se ven enteras, y V₂C₂ y E₂G₂ ya
+              vienen a trazos.
         pista: |
           (1) En el alzado, V₂B₂ cruza e₂, f₂ y g₂. (2) Baja cada cruce a la planta de su arista: e₁,
           f₁ y g₁. (3) Une los tres: es el triángulo que el plano de canto de VB corta en el prisma.
           (4) V₁B₁ corta su lado de e a f en J₁ y el de f a g en L₁; súbelos a V₂B₂. (5) Con V₂D₂,
-          lo mismo, para P y R.
+          lo mismo, para P y R. (6) Rehaz H, N, K, Q, M y T: baja a V₁C₁ los cruces de e₂ y g₂ con
+          V₂C₂, y a V₁A₁ el de f₂ con V₂A₂; por cada uno, las paralelas a los lados de la base
+          cortan e₁, g₁ o f₁ en los dos puntos. (7) Una sola pieza: un lado de la intersección se ve
+          si está en una cara vista de los dos sólidos. Desde arriba se ven las caras de e a f y de
+          g a e; desde delante, las de e a f y de f a g, y VAB y VDA.
         desarrollo: |
           En verde claro, en la planta, los dos triángulos de los planos de canto: el de VB, a la
           izquierda, y el de VD, a la derecha. V₁B₁ y V₁D₁ cortan cada uno en dos lados, el de e a
           f y el de f a g. Entre J y L, y entre P y R, las aristas van por dentro del prisma.
 
-      # Decisión: la visibilidad toma los dos sólidos como una sola pieza maciza:
-      # lo que de una arista queda dentro del otro sólido no se dibuja. El
-      # enunciado no lo dice, y el tema de intersecciones del curso solo trata
-      # plano-plano y recta-plano. Lo apoyan los restos de una solución que trae
-      # la pág. 62 debajo de los trazos del enunciado: V₂B₂ y V₂D₂ van partidas
-      # justo en J₂ y L₂ y en P₂ y R₂, y en la planta V₁B₁ va de V₁ a J₁, deja un
-      # hueco y sigue en discontinua de L₁ a B₁; los tramos ocultos de la base
-      # acaban donde f₁ y g₁ la cruzan. Con una excepción: esos restos no traen
-      # guiones en V₁D₁ entre R₁ y D₁, y ese tramo va oculto, porque D₁ cae 4,3 mm
-      # dentro de la franja del prisma, desde g₁. Aquí va en discontinua. No se ha
-      # decidido a ojo: la sacó un guion aparte, sin la lib, con un rayo hacia el
-      # observador desde cada punto de cada línea, recortado contra la pirámide y
-      # contra el prisma (los dos convexos), y con una holgura de roce de 0,05 pt.
-      - tipo: dibujar
-        consigna: |
-          Une los diez puntos en los dos polígonos de la intersección, H J K L M y N P Q R T, y
-          repasa la pirámide y el prisma en las dos vistas, con lo que se ve en continua y lo que
-          se oculta en discontinua. Cuenta los dos sólidos como una sola pieza maciza: lo que de
-          una arista queda dentro del otro no se dibuja.
-        comprueba:
-          - punto: >-
-              En la planta, del polígono de la entrada, H₁J₁, J₁K₁ y M₁H₁ van en continua, y
-              K₁L₁ y L₁M₁ en discontinua; del de la salida, N₁P₁, P₁Q₁ y T₁N₁ en continua, y
-              Q₁R₁ y R₁T₁ en discontinua.
-            porque: >-
-              Desde arriba se ven la cara de e a f y la de g a e del prisma; la de f a g mira
-              hacia abajo. Las cuatro caras laterales de la pirámide se ven desde arriba. Un
-              lado de la intersección se ve si está en una cara vista de los dos sólidos, y KL,
-              LM, QR y RT están en la cara de abajo del prisma.
-          - punto: >-
-              En la planta, la base va en discontinua donde le pasa el prisma por encima: A₁B₁ y
-              B₁C₁ desde B₁, y C₁D₁ y D₁A₁ desde D₁, cada una hasta donde la cruza f₁ o g₁. Y
-              también V₁B₁ de L₁ a B₁ y V₁D₁ de R₁ a D₁.
-            porque: >-
-              El prisma va por encima de la base y de esos tramos de arista, y su planta los
-              tapa. El contorno del prisma en la planta son f₁ y g₁, la arista de delante y la de
-              detrás.
-          - punto: >-
-              VB no se dibuja entre J y L, ni VD entre P y R; tampoco e entre H y N, f entre K y Q
-              ni g entre M y T.
-            porque: >-
-              Esos tramos quedan dentro del otro sólido, y una pieza maciza no tiene aristas por
-              dentro.
-          - punto: >-
-              En el alzado, del polígono de la entrada, J₂K₂ y K₂L₂ van en continua, y H₂J₂, L₂M₂
-              y M₂H₂ en discontinua; del de la salida, P₂Q₂ y Q₂R₂ en continua, y N₂P₂, R₂T₂ y
-              T₂N₂ en discontinua.
-            porque: >-
-              Desde delante se ven las caras de e a f y de f a g del prisma, y las caras VAB y
-              VDA de la pirámide; la cara de g a e y las caras VBC y VCD miran hacia atrás. JK y
-              KL están en VAB, y PQ y QR en VDA.
-          - punto: >-
-              En el alzado, e₂ va en discontinua desde donde cruza V₂B₂ hasta H₂, y desde N₂
-              hasta donde cruza V₂D₂; g₂, igual, de V₂B₂ a M₂ y de T₂ a V₂D₂. f₂ va en continua
-              hasta K₂ y desde Q₂.
-            porque: >-
-              e y g entran y salen por las caras de atrás de la pirámide, VBC y VCD, y antes de
-              llegar a ellas van por detrás de la pirámide. f entra y sale por las de delante.
-          - punto: >-
-              En el alzado, el extremo izquierdo del prisma lleva E₂G₂ en discontinua, como en la
-              lámina del ejercicio, y el derecho va entero en continua; V₂C₂ sigue en discontinua.
-            porque: >-
-              El extremo izquierdo y la cara de g a e miran hacia atrás, y el extremo derecho,
-              hacia delante: las aristas se acercan a ti al ir hacia la derecha. VC es la arista
-              de atrás de la pirámide.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 400 800" role="img" width="400" height="800" aria-labelledby="egex541-t egex541-d">
-            <title id="egex541-t">La pirámide atravesada por el prisma: la intersección y lo que se ve</title>
-            <desc id="egex541-d">Alzado arriba y planta abajo, en las mismas verticales. La pirámide regular de base cuadrada ABCD y vértice V, y el prisma triangular de aristas horizontales e (arriba), f (en medio, delante) y g (abajo), que la atraviesa de izquierda a derecha. En verde, los dos polígonos de la intersección: H J K L M por la entrada, del lado de B, y N P Q R T por la salida, del lado de D. Los dos sólidos son una sola pieza: VB no se dibuja entre J y L, ni VD entre P y R, ni las aristas del prisma dentro de la pirámide. En la planta van en discontinua K₁L₁, L₁M₁, Q₁R₁ y R₁T₁, que están en la cara de abajo del prisma, y los tramos de la base y de V₁B₁ y V₁D₁ que el prisma tapa por encima, junto a B₁ y a D₁. En el alzado van en continua J₂K₂, K₂L₂, P₂Q₂ y Q₂R₂, en las caras de delante, y en discontinua el resto de los dos polígonos; e₂ y g₂ van en discontinua entre el contorno de la pirámide y sus cortes, porque pasan por detrás; f₂ se ve entera fuera de la pirámide; V₂C₂ y E₂G₂ van en discontinua.</desc>
-            <style>
-                .egex541-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .egex541-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .egex541-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .egex541-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egex541-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egex541-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .egex541-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .egex541-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .egex541-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .egex541-pt { fill: var(--live); }
-                .egex541-punta { fill: var(--live); stroke: none; }
-                .egex541-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .egex541-o { fill: var(--flag); }
-                .egex541-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .egex541-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .egex541-v { stroke: var(--ink); stroke-width: 1.3; fill: none; stroke-linecap: round; }
-                .egex541-h { stroke: var(--ink); stroke-width: 1; fill: none; stroke-dasharray: 3.5 2.5; }
-                .egex541-sv { stroke: var(--live); stroke-width: 2; fill: none; stroke-linecap: round; }
-                .egex541-sh { stroke: var(--live); stroke-width: 1.5; fill: none; stroke-dasharray: 3.5 2.5; }
-            </style>
-            <path class="egex541-h" d="M200.6 35.9L232.3 383.1"/>
-            <path class="egex541-h" d="M144.4 200.3L179.5 200.3"/>
-            <path class="egex541-h" d="M245.3 200.3L256.6 200.3"/>
-            <path class="egex541-h" d="M115.1 286.2L169.5 286.2"/>
-            <path class="egex541-h" d="M267.9 286.2L285.9 286.2"/>
-            <path class="egex541-h" d="M58.3 286L52.9 200.5"/>
-            <path class="egex541-sh" d="M179.5 200.3L134.9 228.1"/>
-            <path class="egex541-sh" d="M121.8 266.4L169.5 286.2"/>
-            <path class="egex541-sh" d="M169.5 286.2L179.5 200.3"/>
-            <path class="egex541-sh" d="M245.3 200.3L260 210.2"/>
-            <path class="egex541-sh" d="M283.1 277.8L267.9 286.2"/>
-            <path class="egex541-sh" d="M267.9 286.2L245.3 200.3"/>
-            <path class="egex541-h" d="M102.1 628.6L81.8 593.6"/>
-            <path class="egex541-h" d="M81.8 593.6L142.5 558.6"/>
-            <path class="egex541-h" d="M306.3 634.9L319.1 657.2"/>
-            <path class="egex541-h" d="M319.1 657.2L249.5 697.3"/>
-            <path class="egex541-h" d="M121.7 604.3L81.8 593.6"/>
-            <path class="egex541-h" d="M283.2 647.5L319.1 657.2"/>
-            <path class="egex541-sh" d="M152.9 652.2L121.7 604.3"/>
-            <path class="egex541-sh" d="M121.7 604.3L169.3 571.1"/>
-            <path class="egex541-sh" d="M214 680.7L283.2 647.6"/>
-            <path class="egex541-sh" d="M283.2 647.6L268 617.1"/>
-            <path class="egex541-v" d="M168.8 383.1L81.8 383.1"/>
-            <path class="egex541-v" d="M81.8 383.1L232.3 383.1"/>
-            <path class="egex541-v" d="M232.3 383.1L319.1 383.1"/>
-            <path class="egex541-v" d="M319.1 383.1L168.8 383.1"/>
-            <path class="egex541-v" d="M200.6 35.5L168.8 383.1"/>
-            <path class="egex541-v" d="M200.6 35.5L134.7 228.3"/>
-            <path class="egex541-v" d="M121.7 266.4L81.8 383.1"/>
-            <path class="egex541-v" d="M200.6 35.5L260.2 210.3"/>
-            <path class="egex541-v" d="M283.2 277.8L319.1 383.1"/>
-            <path class="egex541-v" d="M52.9 200.3L144.4 200.3"/>
-            <path class="egex541-v" d="M256.6 200.3L367.8 200.3"/>
-            <path class="egex541-v" d="M24.2 254.4L153.1 254.4"/>
-            <path class="egex541-v" d="M213.8 254.4L339.1 254.4"/>
-            <path class="egex541-v" d="M58.3 286.2L115.1 286.2"/>
-            <path class="egex541-v" d="M285.9 286.2L373.2 286.2"/>
-            <path class="egex541-v" d="M52.9 200.3L24.2 254.4"/>
-            <path class="egex541-v" d="M24.2 254.4L58.3 286.2"/>
-            <path class="egex541-v" d="M367.8 200.3L339.1 254.4"/>
-            <path class="egex541-v" d="M339.1 254.4L373.2 286.2"/>
-            <path class="egex541-v" d="M373.2 286.2L367.8 200.3"/>
-            <path class="egex541-sv" d="M134.7 228.2L153.1 254.4"/>
-            <path class="egex541-sv" d="M153.1 254.4L121.7 266.4"/>
-            <path class="egex541-sv" d="M260.2 210.3L213.8 254.4"/>
-            <path class="egex541-sv" d="M213.8 254.4L283.2 277.8"/>
-            <path class="egex541-v" d="M168.8 744L102.1 628.6"/>
-            <path class="egex541-v" d="M142.5 558.6L232.3 506.7"/>
-            <path class="egex541-v" d="M232.3 506.7L306.3 634.9"/>
-            <path class="egex541-v" d="M249.5 697.3L168.8 744"/>
-            <path class="egex541-v" d="M200.6 625.4L168.8 744"/>
-            <path class="egex541-v" d="M200.6 625.4L134.7 607.8"/>
-            <path class="egex541-v" d="M200.6 625.4L232.3 506.7"/>
-            <path class="egex541-v" d="M200.6 625.4L260.2 641.4"/>
-            <path class="egex541-v" d="M52.9 531L179.5 590"/>
-            <path class="egex541-v" d="M245.3 620.7L367.8 677.8"/>
-            <path class="egex541-v" d="M24.2 592.5L153.1 652.5"/>
-            <path class="egex541-v" d="M213.8 680.8L339.1 739.3"/>
-            <path class="egex541-v" d="M58.3 519.2L169.5 571"/>
-            <path class="egex541-v" d="M267.9 616.9L373.2 666"/>
-            <path class="egex541-v" d="M52.9 531L24.2 592.5"/>
-            <path class="egex541-v" d="M24.2 592.5L58.3 519.2"/>
-            <path class="egex541-v" d="M58.3 519.2L52.9 531"/>
-            <path class="egex541-v" d="M367.8 677.8L339.1 739.3"/>
-            <path class="egex541-v" d="M339.1 739.3L373.2 666"/>
-            <path class="egex541-v" d="M373.2 666L367.8 677.8"/>
-            <path class="egex541-sv" d="M179.5 590L134.7 607.8"/>
-            <path class="egex541-sv" d="M134.7 607.8L153.1 652.5"/>
-            <path class="egex541-sv" d="M169.5 571L179.5 590"/>
-            <path class="egex541-sv" d="M245.3 620.7L260.2 641.4"/>
-            <path class="egex541-sv" d="M260.2 641.4L213.8 680.8"/>
-            <path class="egex541-sv" d="M267.9 616.9L245.3 620.7"/>
-            <text class="egex541-n" x="189.2" y="32.5" text-anchor="start" fill="var(--ink)">V₂</text>
-            <text class="egex541-n" x="67.9" y="397.7" text-anchor="start" fill="var(--ink)">B₂</text>
-            <text class="egex541-n" x="161.9" y="402.4" text-anchor="start" fill="var(--ink)">A₂</text>
-            <text class="egex541-n" x="72.3" y="586.1" text-anchor="start" fill="var(--ink)">B₁</text>
-            <text class="egex541-n" x="181.3" y="638.2" text-anchor="start" fill="var(--ink)">V₁</text>
-            <text class="egex541-n" x="161.1" y="764" text-anchor="start" fill="var(--ink)">A₁</text>
-            <text class="egex541-n" x="235.3" y="395.1" text-anchor="start" fill="var(--faint)">C₂</text>
-            <text class="egex541-n" x="321.1" y="395.1" text-anchor="start" fill="var(--faint)">D₂</text>
-            <text class="egex541-n" x="236.3" y="502.7" text-anchor="start" fill="var(--faint)">C₁</text>
-            <text class="egex541-n" x="325.1" y="661.2" text-anchor="start" fill="var(--faint)">D₁</text>
-            <text class="egex541-n" x="48.9" y="197.3" text-anchor="end" fill="var(--faint)">e₂</text>
-            <text class="egex541-n" x="20.2" y="258.4" text-anchor="end" fill="var(--faint)">f₂</text>
-            <text class="egex541-n" x="54.3" y="295.2" text-anchor="end" fill="var(--faint)">g₂</text>
-            <text class="egex541-n" x="47.9" y="534" text-anchor="end" fill="var(--faint)">e₁</text>
-            <text class="egex541-n" x="20.2" y="596.5" text-anchor="end" fill="var(--faint)">f₁</text>
-            <text class="egex541-n" x="54.3" y="516.2" text-anchor="end" fill="var(--faint)">g₁</text>
-            <circle class="egex541-pt" cx="179.5" cy="200.3" r="2.2"/>
-            <text class="egex541-l" x="182.5" y="195.3" text-anchor="start" fill="var(--live)">H₂</text>
-            <circle class="egex541-pt" cx="134.7" cy="228.2" r="2.2"/>
-            <text class="egex541-l" x="129.7" y="229.2" text-anchor="end" fill="var(--live)">J₂</text>
-            <circle class="egex541-pt" cx="153.1" cy="254.4" r="2.2"/>
-            <text class="egex541-l" x="157.1" y="250.4" text-anchor="start" fill="var(--live)">K₂</text>
-            <circle class="egex541-pt" cx="121.7" cy="266.4" r="2.2"/>
-            <text class="egex541-l" x="116.7" y="272.4" text-anchor="end" fill="var(--live)">L₂</text>
-            <circle class="egex541-pt" cx="169.5" cy="286.2" r="2.2"/>
-            <text class="egex541-l" x="171.5" y="299.2" text-anchor="start" fill="var(--live)">M₂</text>
-            <circle class="egex541-pt" cx="245.3" cy="200.3" r="2.2"/>
-            <text class="egex541-l" x="242.3" y="195.3" text-anchor="end" fill="var(--live)">N₂</text>
-            <circle class="egex541-pt" cx="260.2" cy="210.3" r="2.2"/>
-            <text class="egex541-l" x="265.2" y="211.3" text-anchor="start" fill="var(--live)">P₂</text>
-            <circle class="egex541-pt" cx="213.8" cy="254.4" r="2.2"/>
-            <text class="egex541-l" x="215.8" y="249.4" text-anchor="start" fill="var(--live)">Q₂</text>
-            <circle class="egex541-pt" cx="283.2" cy="277.8" r="2.2"/>
-            <text class="egex541-l" x="288.2" y="281.8" text-anchor="start" fill="var(--live)">R₂</text>
-            <circle class="egex541-pt" cx="267.9" cy="286.2" r="2.2"/>
-            <text class="egex541-l" x="265.9" y="299.2" text-anchor="end" fill="var(--live)">T₂</text>
-            <circle class="egex541-pt" cx="179.5" cy="590" r="2.2"/>
-            <text class="egex541-l" x="182.5" y="585" text-anchor="start" fill="var(--live)">H₁</text>
-            <circle class="egex541-pt" cx="134.7" cy="607.8" r="2.2"/>
-            <text class="egex541-l" x="139.7" y="618.8" text-anchor="start" fill="var(--live)">J₁</text>
-            <circle class="egex541-pt" cx="153.1" cy="652.5" r="2.2"/>
-            <text class="egex541-l" x="149.1" y="665.5" text-anchor="end" fill="var(--live)">K₁</text>
-            <circle class="egex541-pt" cx="121.7" cy="604.3" r="2.2"/>
-            <text class="egex541-l" x="116.7" y="599.3" text-anchor="end" fill="var(--live)">L₁</text>
-            <circle class="egex541-pt" cx="169.5" cy="571" r="2.2"/>
-            <text class="egex541-l" x="166.5" y="566" text-anchor="end" fill="var(--live)">M₁</text>
-            <circle class="egex541-pt" cx="245.3" cy="620.7" r="2.2"/>
-            <text class="egex541-l" x="243.3" y="613.7" text-anchor="end" fill="var(--live)">N₁</text>
-            <circle class="egex541-pt" cx="260.2" cy="641.4" r="2.2"/>
-            <text class="egex541-l" x="255.2" y="654.4" text-anchor="end" fill="var(--live)">P₁</text>
-            <circle class="egex541-pt" cx="213.8" cy="680.8" r="2.2"/>
-            <text class="egex541-l" x="216.8" y="693.8" text-anchor="start" fill="var(--live)">Q₁</text>
-            <circle class="egex541-pt" cx="283.2" cy="647.6" r="2.2"/>
-            <text class="egex541-l" x="289.2" y="645.6" text-anchor="start" fill="var(--live)">R₁</text>
-            <circle class="egex541-pt" cx="267.9" cy="616.9" r="2.2"/>
-            <text class="egex541-l" x="272.9" y="610.9" text-anchor="start" fill="var(--live)">T₁</text>
-          </svg>
-          </figure>
+          Y los dos polígonos, con lo que se ve de los dos sólidos, una sola pieza. En la planta van
+          ocultos KL, LM, QR y RT, en la cara de f a g, que mira hacia abajo; los tramos de la base
+          que el prisma tapa por encima, junto a B₁ y a D₁, hasta f₁ o g₁; y VB de L₁ a B₁ y VD de
+          R₁ a D₁. En el alzado se ven JK, KL, PQ y QR, en las caras de delante, y el resto de los
+          polígonos va oculto; e₂ y g₂ van a trazos entre el contorno de la pirámide y sus cortes,
+          porque pasan por detrás, y f₂ se ve entera fuera de la pirámide.
+
+          V₂C₂ y E₂G₂ ya venían a trazos en la lámina: VC es la arista de atrás de la pirámide,
+          y el extremo izquierdo del prisma mira hacia atrás, porque las aristas se acercan a ti
+          al ir hacia la derecha; el extremo derecho mira hacia delante, y va entero en
+          continua.
+
       - tipo: justificar
         pregunta: Ordena el razonamiento. Una pieza no debe entrar.
         piezas:
@@ -1317,8 +1509,9 @@ ejercicios:
       entrada (HJ y JK en la cara de e a f; KL y LM en la de f a g; MH en la de g a e) y N P Q R T
       por la salida, igual.
 
-      **Lo que se ve.** Los dos sólidos son una sola pieza. Desde arriba se ven las caras de e a f
-      y de g a e del prisma, y todas las laterales de la pirámide: en la planta van en
+      **Lo que se ve.** Tomamos los dos sólidos como una sola pieza maciza, que el enunciado no lo
+      dice: lo que de una arista queda dentro del otro no se dibuja. Desde arriba se ven las caras
+      de e a f y de g a e del prisma, y todas las laterales de la pirámide: en la planta van en
       discontinua KL, LM, QR y RT, y los tramos de la base y de VB y VD que el prisma tapa por
       encima. Desde delante se ven las caras de e a f y de f a g del prisma y las caras VAB y VDA
       de la pirámide: en el alzado van en continua JK, KL, PQ y QR, y en discontinua el resto de

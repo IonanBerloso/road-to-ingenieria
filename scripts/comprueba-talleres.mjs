@@ -150,8 +150,9 @@ async function abre(pagina, ruta) {
   }
 }
 
-/** Resuelve, como un alumno, los pasos de antes del taller. Solo sabe de
- *  `reconocer`: con otro paso delante lo dice, en vez de saltárselo. */
+/** Resuelve, como un alumno, los pasos de antes del taller: los `reconocer`
+ *  y los `calcular` numéricos. Con otro paso delante lo dice, en vez de
+ *  saltárselo. */
 async function llegaAlPaso(ejercicio, indice) {
   const datos = JSON.parse(await ejercicio.locator('[data-datos]').textContent());
   for (let i = 0; i < indice; i++) {
@@ -159,6 +160,15 @@ async function llegaAlPaso(ejercicio, indice) {
        de Expresión Gráfica, 1 de octubre de 2026): el primero ya se ha
        construido entero antes de llegar al segundo, y su paso está resuelto. */
     if ((await ejercicio.locator(`li[data-paso="${i}"]`).getAttribute('class'))?.includes('resuelto')) continue;
+    /* Un `calcular` entre dos talleres (SD62 y SD66 del tema 6, 8 de octubre
+       de 2026: construir, calcular, construir): se escribe la respuesta buena
+       y se comprueba, como un alumno que ya la tiene. */
+    if (datos[i].tipo === 'calcular' && datos[i].respuesta?.tipo === 'numero') {
+      const paso = ejercicio.locator(`li[data-paso="${i}"]`);
+      await paso.locator('input').first().fill(String(datos[i].respuesta.valor));
+      await paso.locator('[data-comprobar]').first().click();
+      continue;
+    }
     if (datos[i].tipo !== 'reconocer') {
       throw new Error(`el paso ${i + 1}, de tipo ${datos[i].tipo}, va antes del taller y el comprobador no sabe resolverlo`);
     }

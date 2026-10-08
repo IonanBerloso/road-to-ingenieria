@@ -34,7 +34,7 @@ ejercicios:
       como una franja entre r y s, cortada a los lados con líneas de rotura onduladas que
       aquí no están: dicen que sigue, no son datos. Llamamos K, L, M y N a los puntos donde
       el plano corta las aristas AG, BI, CE y DF; esos nombres son nuestros.
-    pide: Los cuatro vértices de la sección en las dos vistas, sus abatidos con s de charnela, lo que mide de verdad el lado KL y qué se ve y qué se oculta de la columna y la placa.
+    pide: Los cuatro vértices de la sección en las dos vistas, sus abatidos con s de charnela, lo que mide de verdad el lado KL y, como pregunta nuestra, qué se ve y qué se oculta de la columna y la placa.
     receta:
       lamina: ex53-1
       escena:
@@ -76,6 +76,21 @@ ejercicios:
         # desde A₂ y C₂): s₂ se completa con la regla de uno a otro.
         s2_fin: 'desplaza(figura.punto("A2"), dx: 0.84, dy: -34.08)'
         s2b_ini: 'desplaza(figura.punto("C2"), dx: 50.88, dy: -34.08)'
+        # Igual con r₂, que también tiene un hueco; y los dos extremos de fuera de
+        # r₂ y de s₂, de punta a punta de lo que dibuja la lámina, para la
+        # visibilidad.
+        r2_ini: 'desplaza(figura.punto("A2"), dx: -83.16, dy: -138.96)'
+        r2_fin: 'desplaza(figura.punto("A2"), dx: 40.32, dy: -138.96)'
+        r2b_ini: 'desplaza(figura.punto("C2"), dx: -4.68, dy: -138.96)'
+        r2b_fin: 'desplaza(figura.punto("C2"), dx: 19.92, dy: -138.96)'
+        s2_ini: 'desplaza(figura.punto("A2"), dx: -45.48, dy: -34.08)'
+        s2b_fin: 'desplaza(figura.punto("C2"), dx: 82.68, dy: -34.08)'
+        # La visibilidad: los cruces aparentes donde una línea pasa de vista a
+        # oculta, cada uno con la que lo da (k_<la que cambia>_<la otra>). El de
+        # r₂ con A₂G₂ cae en el extremo del trozo izquierdo de r₂ de la lámina.
+        k_AG_s: 'cruce_aparente(segmento2(figura.punto("A2"), figura.punto("G2")), figura.segmento("s2"))'
+        k_r_AG: 'cruce_aparente(figura.segmento("r2"), segmento2(figura.punto("A2"), figura.punto("G2")))'
+        k_r_CE: 'cruce_aparente(figura.segmento("r2"), segmento2(figura.punto("C2"), figura.punto("E2")))'
         # Para la construcción paso a paso: el plano vertical que contiene a AG, el
         # auxiliar del corte de esa arista (A_alto está en la vertical de A, más
         # arriba), y los puntos de r y de s que están en él, 1 y 2 en la
@@ -93,8 +108,8 @@ ejercicios:
         # papel se trazan más allá del punto que van a dar, y no paran en él.
         L_TK: 'uno(medir_sobre(perpendicular(por: proy_planta(K), a: perpendicular(por: proy_planta(K), a: figura.segmento("s1"))), desde: proy_planta(K), distancia: diferencia_de_cotas(K, pieK) + mm(6)), 1)'
         # Decisión: la construcción paso a paso abate K hacia r₁, la rama 1 de Ka,
-        # porque el build exige que marque la primera rama de cada elección. La
-        # figura del paso dibujar lo abate hacia delante, y vale igual.
+        # porque el build exige que marque la primera rama de cada elección.
+        # Hacia delante vale igual.
         L_Kab: 'uno(medir_sobre(segmento2(proy_planta(pieK), proy_planta(rama(Ka, 1))), desde: proy_planta(pieK), distancia: vm(K, pieK) + mm(6)), 1)'
         L_pieK: 'uno(medir_sobre(segmento2(proy_planta(pieK), proy_planta(rama(Ka, 1))), desde: proy_planta(pieK), distancia: mm(4)), 2)'
         L_Nab: 'uno(medir_sobre(segmento2(proy_planta(pieN), proy_planta(rama(Na, 1))), desde: proy_planta(pieN), distancia: vm(N, pieN) + mm(6)), 1)'
@@ -126,13 +141,26 @@ ejercicios:
               ocupan todo lo que hay entre ellas.
 
       - tipo: construir
-        titulo: Los cuatro vértices de la sección
+        titulo: Los cuatro vértices de la sección, y lo que se ve
         intro: |
           Marca, en las dos vistas, los puntos donde el plano corta las aristas laterales: L en
           BI, M en CE, K en AG y N en DF. Las aristas solo están empezadas, y r₂ y s₂ tienen un
           hueco donde va la columna: prolonga lo que haga falta, cada arista hasta el vértice de
           la otra base. Antes de trazar nada, mira dónde caen B₁, C₁, E₁ e I₁.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, borrar]
+
+          Después, pasa a limpio con «arista vista» y «arista oculta» la columna entera, la
+          sección y, en el alzado, las dos rectas de la placa. El enunciado no pide la
+          visibilidad: esta parte es nuestra, como en las diapositivas de intersecciones del
+          curso, donde el último paso de cada método es «posicionar la intersección (¡líneas
+          continuas y discontinuas!)». La decide una convención nuestra: la franja entre r y s es
+          una placa opaca que sigue a los lados; con la placa transparente, en la planta todo iría
+          en continua y en el alzado AG se vería entera. En la planta, lo que cae sobre s₁ —la
+          cara BCEI, vertical, vista de canto— queda en la propia s₁, que ya está dibujada, y no
+          se pasa aparte; tampoco el lado L₁M₁ de la sección, que va sobre s₁. A₂C₂, G₂E₂, r₁ y s₁
+          se ven enteras y ya están dibujadas. r₂ y s₂ se pasan de punta a punta de lo que dibuja
+          la lámina, partidas solo donde cambian; cada arista se corta solo donde cambia su
+          visibilidad, y para tener ese punto traza antes con la recta la línea que la cruza.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, radio, medir, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: L2
@@ -299,15 +327,100 @@ ejercicios:
                   Si ya tienes N₂: está en su vertical, pero no en la arista. Prolonga el arranque que
                   sale de D₁ hacia F₁: N₁ está sobre esa recta, y K₁N₁ queda paralela a s₁.
                 ejemplo: 'desplaza(proy_planta(solucion.N), dy: mm(8))'
-        trazado:
-          - proy_alzado(segmento3(solucion.K, solucion.L))
-          - proy_alzado(segmento3(solucion.L, solucion.M))
-          - proy_alzado(segmento3(solucion.M, solucion.N))
-          - proy_alzado(segmento3(solucion.N, solucion.K))
-          - proy_planta(segmento3(solucion.K, solucion.L))
-          - proy_planta(segmento3(solucion.L, solucion.M))
-          - proy_planta(segmento3(solucion.M, solucion.N))
-          - proy_planta(segmento3(solucion.N, solucion.K))
+        # Decisión: la visibilidad toma la franja entre r y s como una placa opaca
+        # que sigue a los lados (eso dicen las líneas de rotura), y la columna como
+        # un sólido. El enunciado no la pide: es nuestra, y el intro lo dice. Sale
+        # de un cálculo de líneas ocultas aparte (8 de octubre de 2026): rayos
+        # contra las seis caras de la columna y contra la placa, larga a los dos
+        # lados; da la misma que el paso dibujar que había antes. En la planta, lo
+        # que cae sobre s₁ (la cara BCEI, vertical) coincide con s₁, que se ve y
+        # ya está en la lámina: no son tramos. Tampoco lo son A₂C₂ y G₂E₂, que se
+        # ven enteras, ni r₁ y s₁.
+        tramos:
+          - traza: segmento2(figura.punto("A1"), proy_planta(solucion.K))
+            tipo: oculto
+            porque: 'De A a K, la arista AG está por debajo del plano, y la placa, opaca, le pasa por encima: A queda 40,2 mm por debajo de la placa, en su vertical.'
+          - traza: segmento2(proy_planta(solucion.K), figura.punto("G1"))
+            tipo: visto
+            porque: 'De K a G, AG ha salido por encima del plano, y separa dos caras que miran hacia arriba, ABIG y DAGF: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("D1"), proy_planta(solucion.N))
+            tipo: oculto
+            porque: 'De D a N, la arista DF está por debajo del plano, y la placa le pasa por encima: D queda 40,2 mm por debajo de la placa, en su vertical.'
+          - traza: segmento2(proy_planta(solucion.N), figura.punto("F1"))
+            tipo: visto
+            porque: 'De N a F, DF ha salido por encima del plano, y separa dos caras que miran hacia arriba, CDFE y DAGF: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("A1"), figura.punto("B1"))
+            tipo: oculto
+            porque: 'La base ABCD está entera por debajo del plano, y su planta cae dentro de la franja: la placa la tapa. A queda 40,2 mm por debajo de la placa, y B, 12,1.'
+          - traza: segmento2(figura.punto("C1"), figura.punto("D1"))
+            tipo: oculto
+            porque: 'CD es un lado de la base, por debajo del plano y, en la planta, dentro de la franja: la placa lo tapa. C queda 12,1 mm por debajo de ella, y D, 40,2.'
+          - traza: segmento2(figura.punto("D1"), figura.punto("A1"))
+            tipo: oculto
+            porque: 'DA, el lado de atrás de la base, va 40,2 mm por debajo de la placa: la placa lo tapa.'
+          - traza: segmento2(figura.punto("G1"), figura.punto("I1"))
+            tipo: visto
+            porque: 'La base EFGI está arriba del todo, por encima de la placa y de todo lo demás: desde arriba nada tapa sus lados.'
+          - traza: segmento2(figura.punto("E1"), figura.punto("F1"))
+            tipo: visto
+            porque: 'EF es un lado de la base EFGI, la de arriba, por encima de todo: desde arriba nada lo tapa.'
+          - traza: segmento2(figura.punto("F1"), figura.punto("G1"))
+            tipo: visto
+            porque: 'FG es un lado de la base EFGI, la de arriba, por encima de todo: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.K), proy_planta(solucion.L))
+            tipo: visto
+            porque: 'KL es un lado de la sección: está en la placa y en la cara ABIG, que mira hacia arriba, y por encima no hay nada.'
+          - traza: segmento2(proy_planta(solucion.M), proy_planta(solucion.N))
+            tipo: visto
+            porque: 'MN es un lado de la sección, en la cara CDFE, que mira hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.N), proy_planta(solucion.K))
+            tipo: visto
+            porque: 'NK es un lado de la sección, en la cara DAGF, que mira hacia arriba: desde arriba nada lo tapa.'
+          - traza: segmento2(figura.punto("A2"), solucion.k_AG_s)
+            tipo: visto
+            porque: 'De A₂ a s₂, AG va más baja que s, el borde más bajo de la placa: por delante no hay placa, y AG es contorno del alzado de la columna. Nada la tapa.'
+          - traza: segmento2(solucion.k_AG_s, proy_alzado(solucion.K))
+            tipo: oculto
+            porque: 'Entre s₂ y K₂, AG está por debajo del plano y más alta que s: la placa, que baja hacia el observador, le pasa por delante, a medio camino 16,0 mm por delante.'
+          - traza: segmento2(proy_alzado(solucion.K), figura.punto("G2"))
+            tipo: visto
+            porque: 'De K₂ a G₂, AG ha salido por encima del plano, y es contorno del alzado de la columna: nada la tapa por delante.'
+          - traza: segmento2(figura.punto("B2"), figura.punto("I2"))
+            tipo: visto
+            porque: 'BI separa las caras ABIG y BCEI, que miran las dos hacia delante, y la placa queda detrás de la cara BCEI: nada la tapa.'
+          - traza: segmento2(figura.punto("C2"), figura.punto("E2"))
+            tipo: visto
+            porque: 'CE es contorno del alzado de la columna, en la cara BCEI, que mira hacia delante, y la placa queda detrás: nada la tapa.'
+          - traza: segmento2(figura.punto("D2"), figura.punto("F2"))
+            tipo: oculto
+            porque: 'DF es la arista de atrás, entre dos caras que miran hacia atrás, CDFE y DAGF: la tapa la propia columna.'
+          - traza: segmento2(proy_alzado(solucion.K), proy_alzado(solucion.L))
+            tipo: visto
+            porque: 'KL es un lado de la sección en la cara ABIG, que mira hacia delante: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.L), proy_alzado(solucion.M))
+            tipo: visto
+            porque: 'LM es un lado de la sección sobre s, el borde de delante de la placa, y en la cara BCEI: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.M), proy_alzado(solucion.N))
+            tipo: oculto
+            porque: 'MN está en la cara CDFE, que mira hacia atrás: la propia columna lo tapa por delante.'
+          - traza: segmento2(proy_alzado(solucion.N), proy_alzado(solucion.K))
+            tipo: oculto
+            porque: 'NK está en la cara DAGF, que mira hacia atrás: la propia columna lo tapa por delante.'
+          - traza: segmento2(solucion.r2_ini, solucion.k_r_AG)
+            tipo: visto
+            porque: 'Hasta A₂G₂, r va fuera del alzado de la columna, y es el borde de atrás de la placa: nada lo tapa.'
+          - traza: segmento2(solucion.k_r_AG, solucion.k_r_CE)
+            tipo: oculto
+            porque: 'Entre A₂G₂ y C₂E₂, r pasa por detrás de la columna: en su cruce aparente con A₂G₂, AG va 30,7 mm por delante de r.'
+          - traza: segmento2(solucion.k_r_CE, solucion.r2b_fin)
+            tipo: visto
+            porque: 'Pasada C₂E₂, r sale del alzado de la columna: nada lo tapa.'
+          - traza: segmento2(solucion.s2_ini, proy_alzado(solucion.L))
+            tipo: visto
+            porque: 's es el borde de delante de la placa, en el plano vertical de la cara BCEI, y la columna queda toda detrás: en su cruce aparente con A₂G₂, s va 31,9 mm por delante de AG.'
+          - traza: segmento2(proy_alzado(solucion.M), solucion.s2b_fin)
+            tipo: visto
+            porque: 'De M₂ en adelante, s sigue fuera de la columna y delante de todo: nada lo tapa.'
         construccion:
           - con: regla
             traza: segmento2(solucion.s2_fin, solucion.s2b_ini)
@@ -429,14 +542,71 @@ ejercicios:
             porque: |
               N₁, donde la vertical de N₂ corta D₁F₁. Sirve de comprobación: K₁N₁ sale paralela a s₁,
               porque KN es una horizontal del plano.
+          - con: regla
+            traza: segmento2(solucion.r2_fin, solucion.r2b_ini)
+            porque: |
+              Para lo que se ve hace falta también r₂ entera: con la regla, de un trozo al otro, como s₂.
+              C₂E₂ la cruza en el hueco.
+          - con: arista-oculta
+            traza: '[segmento2(figura.punto("A1"), proy_planta(solucion.K)), segmento2(figura.punto("D1"), proy_planta(solucion.N)), segmento2(figura.punto("A1"), figura.punto("B1")), segmento2(figura.punto("C1"), figura.punto("D1")), segmento2(figura.punto("D1"), figura.punto("A1"))]'
+            porque: |
+              **Lo visto y lo oculto, en la planta.** La placa es opaca, y toda la planta de la columna
+              cae dentro de la franja, entre r₁ y s₁: tapa lo que queda por debajo del plano. A trazos,
+              A₁K₁ y D₁N₁, de las aristas laterales, y A₁B₁, C₁D₁ y D₁A₁, de la base.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.K), figura.punto("G1")), segmento2(proy_planta(solucion.N), figura.punto("F1")), segmento2(figura.punto("G1"), figura.punto("I1")), segmento2(figura.punto("E1"), figura.punto("F1")), segmento2(figura.punto("F1"), figura.punto("G1")), segmento2(proy_planta(solucion.K), proy_planta(solucion.L)), segmento2(proy_planta(solucion.M), proy_planta(solucion.N)), segmento2(proy_planta(solucion.N), proy_planta(solucion.K))]'
+            porque: |
+              Del corte para arriba la columna asoma por encima de la placa, y sus caras miran hacia
+              arriba: en continua K₁G₁ y N₁F₁, la base EFGI y la sección. Lo que cae sobre s₁ (B₁C₁,
+              B₁I₁, C₁E₁, I₁E₁ y el lado L₁M₁) es la cara BCEI de canto, y queda en s₁, que se ve.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("B2"), figura.punto("I2")), segmento2(figura.punto("C2"), figura.punto("E2")), segmento2(proy_alzado(solucion.K), proy_alzado(solucion.L)), segmento2(proy_alzado(solucion.L), proy_alzado(solucion.M))]'
+            porque: |
+              **En el alzado.** Las caras ABIG y BCEI miran hacia delante, y la placa queda detrás de la
+              cara BCEI: en continua BI, CE y los lados KL y LM de la sección.
+          - con: arista-oculta
+            traza: '[segmento2(figura.punto("D2"), figura.punto("F2")), segmento2(proy_alzado(solucion.M), proy_alzado(solucion.N)), segmento2(proy_alzado(solucion.N), proy_alzado(solucion.K))]'
+            porque: |
+              DF y los lados MN y NK están en las caras de atrás, CDFE y DAGF: la propia columna los
+              tapa, y van a trazos.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("A2"), solucion.k_AG_s), segmento2(proy_alzado(solucion.K), figura.punto("G2"))]'
+            porque: |
+              AG es contorno del alzado, y se ve de A₂ a su cruce con s₂, por debajo de la placa, y de
+              K₂ a G₂, por encima: en continua.
+          - con: arista-oculta
+            traza: segmento2(solucion.k_AG_s, proy_alzado(solucion.K))
+            porque: |
+              Entre s₂ y K₂, AG está por debajo del plano y más alta que s: la placa, que baja hacia ti,
+              le pasa por delante. A trazos.
+          - con: arista-vista
+            traza: '[segmento2(solucion.r2_ini, solucion.k_r_AG), segmento2(solucion.k_r_CE, solucion.r2b_fin), segmento2(solucion.s2_ini, proy_alzado(solucion.L)), segmento2(proy_alzado(solucion.M), solucion.s2b_fin)]'
+            porque: |
+              Las dos rectas de la placa, de punta a punta de lo que dibuja la lámina: s₂, el borde de
+              delante, entera en continua a los dos lados de L₂M₂; r₂, el de atrás, en continua hasta
+              A₂G₂ y desde C₂E₂.
+          - con: arista-oculta
+            traza: segmento2(solucion.k_r_AG, solucion.k_r_CE)
+            porque: |
+              Entre A₂G₂ y C₂E₂, r pasa por detrás de la columna: a trazos.
         pista: |
           (1) B₁, C₁, E₁ e I₁ caen sobre s₁: BI y CE cortan al plano en s, y L₂ y M₂ son sus
           cortes con s₂. (2) Para AG, prolonga A₁G₁ hasta r₁ y s₁, sube los dos puntos a r₂ y s₂
           y únelos: esa recta corta a A₂G₂ en K₂. (3) N₂ está en D₂F₂ a la altura de K₂.
-          (4) Baja los cuatro a la planta, cada uno a su arista.
+          (4) Baja los cuatro a la planta, cada uno a su arista. (5) La placa es opaca: en la
+          planta tapa lo que queda por debajo del plano, y en el alzado, que baja hacia ti, el
+          trozo de AG entre s₂ y K₂. (6) En el alzado, DF y los lados MN y NK, en las caras de
+          atrás, van ocultos, y r₂ pasa por detrás de la columna.
         desarrollo: |
           En verde claro, la sección en las dos vistas: un trapecio con el lado LM sobre s y el
-          lado KN horizontal, paralelo a s, a la altura de K₂.
+          lado KN horizontal, paralelo a s, a la altura de K₂. Y la columna, con lo oculto a trazos.
+
+          En la planta, la placa tapa todo lo que queda por debajo del plano: la base ABCD y las
+          aristas laterales hasta la sección. La base, 40,2 mm por debajo de la placa en A y en D y
+          12,1 mm en B y en C. Del corte para arriba la columna se ve, con la base EFGI entera. Lo
+          que cae sobre s₁ es la cara BCEI, vertical, y queda en la propia s₁, que se ve. En el
+          alzado van ocultos DF y los lados MN y NK, en las caras de atrás; AG entre s₂ y K₂, por
+          detrás de la placa; y r₂ entre A₂G₂ y C₂E₂, por detrás de la columna.
 
       - tipo: construir
         titulo: La sección abatida, con s de charnela
@@ -648,8 +818,7 @@ ejercicios:
             porque: |
               Con centro en P, que está en la charnela, y radio PT, el arco hasta la perpendicular. La
               circunferencia la corta dos veces, una a cada lado de s₁, y las dos valen: aquí se abate
-              hacia r₁, y N tendrá que ir al mismo lado. En la figura del paso siguiente se abate hacia
-              delante, y vale igual.
+              hacia r₁, y N tendrá que ir al mismo lado. Hacia delante valdría igual.
           - con: marca
             traza: proy_planta(rama(solucion.Ka, 1))
             rotulo: (K)
@@ -719,178 +888,12 @@ ejercicios:
           Hay otras longitudes de la figura que caen dentro de la tolerancia por casualidad, y ninguna
           es KL. En el alzado, 1₂K₂ mide 25,13 mm y K₂2₂, 26,15: son los trozos de la recta 1₂2₂ a cada
           lado de K₂, y esa recta no está en verdadera magnitud en el alzado. Y la hipotenusa PT del
-          triángulo del radio mide 25,63 mm: es la distancia de K a la charnela, no la de K a L. KL se
-          mide en la sección abatida, de (K) a L₁.
+          triángulo del radio mide 25,63 mm: es la distancia de K a la charnela, no la de K a L. En la
+          planta, los lados A₁B₁ y C₁D₁ de la base, que se pasan a limpio en el paso de la sección,
+          miden 25,86 y 25,80 mm: son lados de la base, horizontales, no de la sección. Y el hueco de
+          r₂ que se completa con la regla mide 26,12 mm: es el que deja la figura donde va la columna.
+          KL se mide en la sección abatida, de (K) a L₁.
 
-      # Decisión: la visibilidad toma la franja entre r y s como una placa opaca que
-      # sigue a los lados (eso dicen las líneas de rotura), y la columna como un sólido.
-      # No se ha decidido a ojo: sale de un segundo camino, con un rayo hacia el
-      # observador desde cada punto de cada línea, recortado contra la columna (seis
-      # caras planas, convexa) y contra la franja. El enunciado no pide la visibilidad: el
-      # paso es nuestro, y la consigna lo dice.
-      - tipo: dibujar
-        consigna: |
-          El enunciado no pide la visibilidad con estas palabras: este paso es nuestro. En las
-          diapositivas de intersecciones del curso, cada intersección se termina situándola con
-          líneas continuas y discontinuas, y aquí se decide con una convención que fijamos
-          nosotros: la franja entre r y s es una placa opaca. Dibuja en las dos vistas la
-          columna entera, la franja y la sección, con lo que se ve en continua y lo que se
-          oculta en discontinua. La placa tapa lo que queda debajo en la planta y lo que queda
-          detrás en el alzado.
-        comprueba:
-          - punto: >-
-              En la planta, la base ABCD y los tramos de las aristas laterales que van de la
-              base a la sección están ocultos: en discontinua, salvo los que caen sobre s₁ (el
-              punto siguiente).
-            porque: >-
-              Toda la planta de la columna cae dentro de la franja, entre r₁ y s₁, y lo que está
-              por debajo del plano queda tapado por la placa. Del corte para arriba la columna
-              asoma por el agujero y se ve, con la base EFGI entera.
-          - punto: >-
-              En la planta, B₁C₁, B₁L₁ y C₁M₁ caen sobre s₁, y van en continua.
-            porque: >-
-              Están ocultas, pero en la misma recta que s₁, que se ve: lo visto manda. Es la cara
-              BCEI, vertical, vista de canto.
-          - punto: >-
-              En el alzado, A₂G₂ en continua hasta s₂, en discontinua de s₂ a K₂ y otra vez en
-              continua de K₂ a G₂.
-            porque: >-
-              Entre s y K, la arista AG está por debajo del plano, y la placa, que baja hacia el
-              observador, le pasa por delante. Por debajo de s ya no hay placa, y por encima de K
-              la arista ha salido del plano.
-          - punto: >-
-              En el alzado, D₂F₂ entera en discontinua, y de la sección K₂L₂ y L₂M₂ en continua,
-              M₂N₂ y N₂K₂ en discontinua.
-            porque: >-
-              DF es la arista de atrás y la tapa la propia columna. Los lados MN y NK están en las
-              caras de atrás, CDFE y DAGF; KL y LM, en las de delante.
-          - punto: >-
-              En el alzado, r₂ en discontinua entre A₂G₂ y C₂E₂, y s₂ en continua de punta a
-              punta.
-            porque: >-
-              r es el borde de atrás de la placa y pasa por detrás de la columna. s es el borde de
-              delante, y el lado LM de la sección está en él.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 340 590" role="img" width="340" height="590" aria-labelledby="egex531-t egex531-d">
-            <title id="egex531-t">La columna cortada por el plano de r y s: lo que se ve y lo que se oculta</title>
-            <desc id="egex531-d">Alzado arriba y planta abajo, en las mismas verticales. La columna va de la base ABCD, abajo, a la EFGI, arriba, con las aristas AG, BI, CE y DF; el plano es la franja entre las horizontales r y s. La sección es el trapecio KLMN, en verde: L y M sobre s, K y N a la misma altura. En la planta, la base ABCD y las aristas hasta la sección quedan ocultas, en discontinua, salvo lo que cae sobre s₁; de la sección para arriba, en continua. En el alzado, la arista AG va en continua hasta s, en discontinua de s a K y en continua de K a G; la arista DF va entera en discontinua, y también los lados MN y NK de la sección; r va en discontinua por detrás de la columna, y s en continua. Por delante de s₁, abajo a la derecha, en violeta, la sección abatida con s de charnela: L y M no se mueven, y K y N llegan por la perpendicular a s₁, con (K)(N) paralela a s₁.</desc>
-            <style>
-                .egex531-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .egex531-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .egex531-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .egex531-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egex531-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egex531-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .egex531-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .egex531-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .egex531-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .egex531-pt { fill: var(--live); }
-                .egex531-punta { fill: var(--live); stroke: none; }
-                .egex531-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .egex531-o { fill: var(--flag); }
-                .egex531-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .egex531-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .egex531-v { stroke: var(--ink); stroke-width: 1.3; fill: none; stroke-linecap: round; }
-                .egex531-h { stroke: var(--ink); stroke-width: 1; fill: none; stroke-dasharray: 3.5 2.5; }
-                .egex531-sv { stroke: var(--live); stroke-width: 2; fill: none; stroke-linecap: round; }
-                .egex531-sh { stroke: var(--live); stroke-width: 1.5; fill: none; stroke-dasharray: 3.5 2.5; }
-                .egex531-ab { stroke: var(--alt); stroke-width: 1.6; fill: none; stroke-linejoin: round; }
-                .egex531-ref { stroke: var(--faint); stroke-width: 0.8; fill: none; stroke-dasharray: 1.5 2; }
-            </style>
-            <path class="egex531-f" d="M132.1 140.2L163.9 197.3L227.9 197.2L184 140.2Z"/>
-            <path class="egex531-f" d="M132.1 471.8L163.9 514.3L227.9 450.1L184 419.9Z"/>
-            <path class="egex531-h" d="M115.5 197.5L132.1 140.2"/>
-            <path class="egex531-h" d="M176.9 234L184 140.2"/>
-            <path class="egex531-h" d="M184 140.2L192.7 27.5"/>
-            <path class="egex531-sh" d="M227.9 197.2L184 140.2"/>
-            <path class="egex531-sh" d="M184 140.2L132.1 140.2"/>
-            <path class="egex531-h" d="M148.5 85.1L214.1 85.1"/>
-            <path class="egex531-h" d="M104.9 462.2L132.1 471.8"/>
-            <path class="egex531-h" d="M160.4 517.7L163.9 514.3"/>
-            <path class="egex531-h" d="M232.3 445.7L227.9 450.1"/>
-            <path class="egex531-h" d="M176.9 390.3L184 419.9"/>
-            <path class="egex531-h" d="M104.9 462.2L160.4 517.7"/>
-            <path class="egex531-h" d="M160.4 517.7L232.3 445.7"/>
-            <path class="egex531-h" d="M232.3 445.7L176.9 390.3"/>
-            <path class="egex531-h" d="M176.9 390.3L104.9 462.2"/>
-            <path class="egex531-v" d="M104.9 234L115.5 197.5"/>
-            <path class="egex531-v" d="M132.1 140.2L164.8 27.5"/>
-            <path class="egex531-v" d="M160.4 234L163.9 197.3"/>
-            <path class="egex531-v" d="M163.9 197.3L179.8 27.5"/>
-            <path class="egex531-v" d="M232.3 234L227.9 197.2"/>
-            <path class="egex531-v" d="M227.9 197.2L207.7 27.5"/>
-            <path class="egex531-v" d="M104.9 234L160.4 234"/>
-            <path class="egex531-v" d="M160.4 234L232.3 234"/>
-            <path class="egex531-v" d="M232.3 234L176.9 234"/>
-            <path class="egex531-v" d="M176.9 234L104.9 234"/>
-            <path class="egex531-v" d="M207.7 27.5L192.7 27.5"/>
-            <path class="egex531-v" d="M192.7 27.5L164.8 27.5"/>
-            <path class="egex531-v" d="M164.8 27.5L179.8 27.5"/>
-            <path class="egex531-v" d="M179.8 27.5L207.7 27.5"/>
-            <path class="egex531-sv" d="M132.1 140.2L163.9 197.3"/>
-            <path class="egex531-sv" d="M163.9 197.3L227.9 197.2"/>
-            <path class="egex531-v" d="M15.8 85.1L148.5 85.1"/>
-            <path class="egex531-v" d="M214.1 85.1L253.8 85.1"/>
-            <path class="egex531-v" d="M56.1 197.5L321 197.5"/>
-            <path class="egex531-v" d="M132.1 471.8L164.8 483.4"/>
-            <path class="egex531-v" d="M163.9 514.3L179.8 498.4"/>
-            <path class="egex531-v" d="M227.9 450.1L207.7 470.5"/>
-            <path class="egex531-v" d="M184 419.9L192.7 455.5"/>
-            <path class="egex531-v" d="M207.7 470.5L192.7 455.5"/>
-            <path class="egex531-v" d="M192.7 455.5L164.8 483.4"/>
-            <path class="egex531-v" d="M164.8 483.4L179.8 498.4"/>
-            <path class="egex531-v" d="M179.8 498.4L207.7 470.5"/>
-            <path class="egex531-sv" d="M132.1 471.8L163.9 514.3"/>
-            <path class="egex531-sv" d="M163.9 514.3L227.9 450.1"/>
-            <path class="egex531-sv" d="M227.9 450.1L184 419.9"/>
-            <path class="egex531-sv" d="M184 419.9L132.1 471.8"/>
-            <path class="egex531-v" d="M43.4 488.9L201.9 330.4"/>
-            <path class="egex531-v" d="M128.4 550L286.9 391.5"/>
-            <path class="egex531-ref" d="M132.1 471.8L224.4 564.1"/>
-            <path class="egex531-ref" d="M184 419.9L276.3 512.1"/>
-            <path class="egex531-ab" d="M224.4 564.1L163.9 514.3L227.9 450.1L276.3 512.1Z"/>
-            <path class="egex531-f2" d="M224.4 564.1L163.9 514.3L227.9 450.1L276.3 512.1Z"/>
-            <text class="egex531-n" x="104.6" y="78.8" text-anchor="start" fill="var(--ink)">r₂</text>
-            <text class="egex531-n" x="93.6" y="188.1" text-anchor="start" fill="var(--ink)">s₂</text>
-            <text class="egex531-n" x="161.4" y="23.5" text-anchor="start" fill="var(--ink)">G₂</text>
-            <text class="egex531-n" x="178.2" y="22.6" text-anchor="start" fill="var(--ink)">I₂</text>
-            <text class="egex531-n" x="194.7" y="23" text-anchor="start" fill="var(--ink)">F₂</text>
-            <text class="egex531-n" x="207.9" y="23.5" text-anchor="start" fill="var(--ink)">E₂</text>
-            <text class="egex531-n" x="98.8" y="245.3" text-anchor="start" fill="var(--ink)">A₂</text>
-            <text class="egex531-n" x="154" y="246.2" text-anchor="start" fill="var(--ink)">B₂</text>
-            <text class="egex531-n" x="172.6" y="246.7" text-anchor="start" fill="var(--ink)">D₂</text>
-            <text class="egex531-n" x="226.8" y="246.1" text-anchor="start" fill="var(--ink)">C₂</text>
-            <text class="egex531-n" x="168" y="353" text-anchor="start" fill="var(--ink)">r₁</text>
-            <text class="egex531-n" x="265.2" y="424.6" text-anchor="start" fill="var(--ink)">s₁</text>
-            <text class="egex531-n" x="185.5" y="391.7" text-anchor="start" fill="var(--ink)">D₁</text>
-            <text class="egex531-n" x="230.1" y="438.3" text-anchor="start" fill="var(--ink)">C₁</text>
-            <text class="egex531-n" x="177" y="455.8" text-anchor="start" fill="var(--ink)">F₁</text>
-            <text class="egex531-n" x="92.1" y="471.1" text-anchor="start" fill="var(--ink)">A₁</text>
-            <text class="egex531-n" x="155.4" y="475.6" text-anchor="start" fill="var(--ink)">G₁</text>
-            <text class="egex531-n" x="205.3" y="486" text-anchor="start" fill="var(--ink)">E₁</text>
-            <text class="egex531-n" x="182" y="510.9" text-anchor="start" fill="var(--ink)">I₁</text>
-            <text class="egex531-n" x="137.9" y="521.3" text-anchor="start" fill="var(--ink)">B₁</text>
-            <text class="egex531-l" x="126.1" y="138.2" text-anchor="end" fill="var(--live)">K₂</text>
-            <text class="egex531-l" x="159.9" y="210.3" text-anchor="end" fill="var(--live)">L₂</text>
-            <text class="egex531-l" x="232.9" y="193.2" text-anchor="start" fill="var(--live)">M₂</text>
-            <text class="egex531-l" x="189" y="136.2" text-anchor="start" fill="var(--live)">N₂</text>
-            <text class="egex531-l" x="126.1" y="468.8" text-anchor="end" fill="var(--live)">K₁</text>
-            <text class="egex531-l" x="170.9" y="518.3" text-anchor="start" fill="var(--live)">L₁</text>
-            <text class="egex531-l" x="233.9" y="454.1" text-anchor="start" fill="var(--live)">M₁</text>
-            <text class="egex531-l" x="189" y="415.9" text-anchor="start" fill="var(--live)">N₁</text>
-            <text class="egex531-l" x="220.4" y="577.1" text-anchor="end" fill="var(--alt)">(K)</text>
-            <text class="egex531-l" x="282.3" y="516.1" text-anchor="start" fill="var(--alt)">(N)</text>
-            <circle class="egex531-pt" cx="132.1" cy="140.2" r="2.2"/>
-            <circle class="egex531-pt" cx="132.1" cy="471.8" r="2.2"/>
-            <circle class="egex531-pt" cx="163.9" cy="197.3" r="2.2"/>
-            <circle class="egex531-pt" cx="163.9" cy="514.3" r="2.2"/>
-            <circle class="egex531-pt" cx="227.9" cy="197.2" r="2.2"/>
-            <circle class="egex531-pt" cx="227.9" cy="450.1" r="2.2"/>
-            <circle class="egex531-pt" cx="184" cy="140.2" r="2.2"/>
-            <circle class="egex531-pt" cx="184" cy="419.9" r="2.2"/>
-          </svg>
-          </figure>
       - tipo: justificar
         pregunta: Ordena el razonamiento. Una pieza no debe entrar.
         piezas:
@@ -922,11 +925,12 @@ ejercicios:
       al mismo lado, en la paralela a s₁ por (K). LM mide 29,85 mm y KN 24,18 mm, los dos ya en
       verdadera magnitud en la planta porque son horizontales; KL mide 25,67 mm y MN 25,69 mm.
 
-      **Lo que se ve.** La placa es opaca. En la planta tapa toda la parte de la columna que
-      queda por debajo del plano: la base ABCD y las aristas hasta la sección van en
-      discontinua, salvo B₁C₁, B₁L₁ y C₁M₁, que caen sobre s₁ y quedan en continua. En el
-      alzado, la placa baja hacia ti y tapa el tramo de A₂G₂ entre s₂ y K₂;
-      DF, la arista de atrás, va entera en discontinua, igual que r₂ por detrás de la columna.
+      **Lo que se ve.** Tomamos la placa como opaca, que el enunciado no lo pide. En la planta
+      tapa toda la parte de la columna que queda por debajo del plano: la base ABCD y las
+      aristas hasta la sección van en discontinua, salvo B₁C₁, B₁L₁ y C₁M₁, que caen sobre s₁
+      y quedan en continua. En el alzado, la placa baja hacia ti y tapa el tramo de A₂G₂ entre
+      s₂ y K₂; DF, la arista de atrás, va entera en discontinua, igual que los lados MN y NK de
+      la sección y el tramo de r₂ que pasa por detrás de la columna.
 
   # ── 2 · La ventana que gira sobre AB. Lo que enseña: la pared no es vertical
   #    (sus bordes 1-4 y 2-3 son de perfil), así que el cuadrado no se ve en
