@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   PT_MM,
   abatido,
+  abatidoJunto,
   anguloConPH,
   anguloDiedro,
   anguloPlanoConPH,
@@ -11,6 +12,7 @@ import {
   anguloPlanos,
   anguloRectaPlano,
   anguloRectas,
+  apice,
   corteRectaPlano,
   deltaCota,
   distanciaAPlano,
@@ -23,6 +25,8 @@ import {
   proyAlzado,
   proyPlanta,
   punto3,
+  puntoEnPlanoDesdeAlzado,
+  puntoEnPlanoDesdePlanta,
   rectaPorPuntos,
   vm,
   vmAlzado,
@@ -37,8 +41,8 @@ import { casaTramo } from '../../src/lib/diedrico-corrige';
 
 /* El Ejercicio 52 de la Colección de ejercicios de diédrico (Dpto. de
    Expresión Gráfica y Proyectos de Ingeniería, EIG, UPV/EHU), págs. 53-57: sin
-   fecha, en cuatro apartados. Aquí van el 3 y el 4, con sus láminas `ex52-3`
-   (pág. 56) y `ex52-4` (pág. 57); el 1 y el 2 todavía no están escritos.
+   fecha, en cuatro apartados, con sus láminas `ex52-1` a `ex52-4` (págs. 54 a
+   57). El 3 y el 4, del 2 de octubre; el 1 y el 2, del 8, al final.
 
    Las cifras esperadas salen de un segundo camino (2 de octubre de 2026,
    repasado el 7), un guion aparte con álgebra de vectores sobre las mismas
@@ -328,5 +332,308 @@ describe('Ejercicio 52 · apartado 4, la visibilidad en el Taller (los tramos)',
     expect(casaTramo([257.76, 328.68], [371.16, 158.52], 'visto', paso.tramos, tol).que).toBe('tipo');
     // y A₁C₁ cortada donde no cambia nada
     expect(casaTramo([257.76, 555.48], [350, 578.5], 'visto', paso.tramos, tol).que).toBe('corte');
+  });
+});
+
+/* ── Apartado 1 (lámina ex52-1, pág. 54): «Dibujar el agujero de la pieza
+   conociendo un lado (DE) de su sección cuadrada. El agujero pasa de un lado a
+   otro y es perpendicular a la cara oblicua ABC. Determinar la verdadera
+   magnitud del plano oblicuo». Las cifras esperadas, de un guion aparte (8 de
+   octubre de 2026) con álgebra de vectores sobre la lámina, sin src/lib: el
+   cuadrado por el giro de DE alrededor de la normal de la cara, el
+   abatimiento por el pie en la charnela y la distancia, y las salidas por el
+   corte de cada arista con los planos de la caja. ── */
+
+const L1 = lamina('ex52-1');
+const q1 = (n: string): P2 => [L1.puntos[n].x, L1.puntos[n].y];
+const P1 = Object.fromEntries(['A', 'B', 'C'].map((v) => [v, punto3(q1(`${v}2`), q1(`${v}1`))])) as Record<'A' | 'B' | 'C', P3>;
+const cara = plano(P1.A, P1.B, P1.C);
+const D1 = puntoEnPlanoDesdePlanta(q1('D1'), cara);
+const E1 = puntoEnPlanoDesdePlanta(q1('E1'), cara);
+/* F, D girado 90° alrededor de la perpendicular a la cara por E: el primero de
+   los dos giros es el de dentro de la cara, del lado de A. */
+const F1 = gira(D1, perpendicularAPlano(E1, cara), 90);
+const Fmal1 = gira(D1, perpendicularAPlano(E1, cara), -90);
+const G1: P3 = { x: D1.x + F1.x - E1.x, y: D1.y + F1.y - E1.y, z: D1.z + F1.z - E1.z };
+const charnela1 = rectaPorPuntos(P1.B, P1.A);
+const caraAtras = plano({ x: 269.16, y: 255.36, z: -71.16 }, { x: 439.32, y: 255.36, z: -71.16 }, { x: 269.16, y: 255.36, z: -184.56 });
+const caraAbajo = plano({ x: 269.16, y: 255.36, z: -184.56 }, { x: 439.32, y: 255.36, z: -184.56 }, { x: 269.16, y: 382.92, z: -184.56 });
+const sale = (P: P3, pl: ReturnType<typeof plano>) => corteRectaPlano(perpendicularAPlano(P, cara), pl);
+
+describe('Ejercicio 52 · la lámina del apartado 1', () => {
+  it('la pieza mide 60 × 45 × 40 mm, y la cara ABC le corta la esquina a 45, 40 y 35 mm', () => {
+    expect((439.32 - 269.16) * PT_MM).toBeCloseTo(60.029, 3);
+    expect((382.92 - 255.36) * PT_MM).toBeCloseTo(45.0, 3);
+    expect((184.56 - 71.16) * PT_MM).toBeCloseTo(40.005, 3);
+    expect((439.32 - q1('A1')[0]) * PT_MM).toBeCloseTo(45.0, 3);
+    expect((382.92 - q1('B1')[1]) * PT_MM).toBeCloseTo(40.005, 3);
+    expect((q1('C2')[1] - 71.16) * PT_MM).toBeCloseTo(35.0097, 3);
+  });
+
+  it('D₁E₁ es perpendicular a A₁B₁ a 0,06° (el redondeo del PDF): DE es una línea de máxima pendiente', () => {
+    expect(enVertice([0, 0], [q1('D1')[0] - q1('E1')[0], q1('D1')[1] - q1('E1')[1]], [q1('B1')[0] - q1('A1')[0], q1('B1')[1] - q1('A1')[1]])).toBeCloseTo(89.936, 3);
+    expect(anguloPlanoConPH(cara)).toBeCloseTo(49.5024, 3);
+  });
+});
+
+describe('Ejercicio 52 · apartado 1, el cuadrado y la cara en verdadera magnitud', () => {
+  it('D₂ y E₂ caen donde los deja el segundo camino, y DE mide 18,42 mm', () => {
+    expect(cerca(proyAlzado(D1), [431.4, 124.2273])).toBe(true);
+    expect(cerca(proyAlzado(E1), [408.84, 84.5176])).toBe(true);
+    expect(vm(D1, E1) * PT_MM).toBeCloseTo(18.422, 3);
+  });
+
+  it('F y G, del lado de A; el otro cuadrado se sale de la pieza por la derecha', () => {
+    expect(cerca(proyPlanta(F1), [369.8287, 346.5937])).toBe(true);
+    expect(cerca(proyAlzado(F1), [369.8287, 84.5464])).toBe(true);
+    expect(cerca(proyPlanta(G1), [392.3887, 371.9137])).toBe(true);
+    expect(cerca(proyAlzado(G1), [392.3887, 124.2561])).toBe(true);
+    expect(cerca(proyPlanta(Fmal1), [447.8513, 277.1663])).toBe(true);
+    expect(proyPlanta(Fmal1)[0]).toBeGreaterThan(439.32);
+    expect(vm(E1, F1)).toBeCloseTo(vm(D1, E1), 9);
+    expect(vm(F1, G1)).toBeCloseTo(vm(D1, E1), 9);
+  });
+
+  it('C₀ a 46,04 mm de la charnela; la cara abatida tiene lados de 60,21, 53,16 y 57,02 mm', () => {
+    const [uno] = abatido(P1.C, charnela1, cara);
+    expect(cerca(proyPlanta(uno), [296.302, 222.0437])).toBe(true);
+    expect(vm(P1.C, pieEnRecta(P1.C, charnela1)) * PT_MM).toBeCloseTo(46.0391, 3);
+    expect(cerca(proyPlanta(pieEnRecta(P1.C, charnela1)), [383.0103, 319.579])).toBe(true);
+    expect(vm(P1.A, P1.B) * PT_MM).toBeCloseTo(60.2115, 3);
+    expect(d2(q1('B1'), proyPlanta(uno)) * PT_MM).toBeCloseTo(53.1609, 3);
+    expect(d2(q1('A1'), proyPlanta(uno)) * PT_MM).toBeCloseTo(57.015, 3);
+    expect(vmPlanta(P1.B, P1.C) * PT_MM).toBeCloseTo(40.005, 3);
+    expect(vmAlzado(P1.B, P1.C) * PT_MM).toBeCloseTo(35.0097, 3);
+  });
+
+  it('el cuadrado abatido, del mismo lado que C₀, y en verdadera magnitud', () => {
+    const [C0] = abatido(P1.C, charnela1, cara);
+    const esperado: [P3, P2][] = [
+      [E1, [389.59, 290.2263]],
+      [D1, [354.923, 251.1735]],
+      [F1, [350.5372, 324.8933]],
+      [G1, [315.8702, 285.8405]],
+    ];
+    for (const [P, e] of esperado) expect(cerca(proyPlanta(abatidoJunto(P, charnela1, cara, C0, P1.C)), e)).toBe(true);
+    const [E0, F0] = [E1, F1].map((P) => proyPlanta(abatidoJunto(P, charnela1, cara, C0, P1.C)));
+    expect(d2(E0, F0)).toBeCloseTo(vm(D1, E1), 6);
+  });
+});
+
+describe('Ejercicio 52 · apartado 1, por dónde sale el agujero', () => {
+  it('la arista de E sale por la cara de atrás; las de D, F y G, por la de abajo', () => {
+    const Ep = sale(E1, caraAtras);
+    expect(cerca(proyPlanta(Ep), [358.5941, 255.36])).toBe(true);
+    expect(cerca(proyAlzado(Ep), [358.5941, 149.1021])).toBe(true);
+    const esperado: [P3, P2, P2][] = [
+      [D1, [384.462, 284.4009], [384.462, 184.56]],
+      [F1, [292.0194, 259.0685], [292.0194, 184.56]],
+      [G1, [345.4731, 319.1398], [345.4731, 184.56]],
+    ];
+    for (const [P, e1, e2] of esperado) {
+      const Q = sale(P, caraAbajo);
+      expect(cerca(proyPlanta(Q), e1)).toBe(true);
+      expect(cerca(proyAlzado(Q), e2)).toBe(true);
+      /* sale por abajo: el corte con la cara de atrás cae por debajo de la de abajo */
+      expect(sale(P, caraAtras).z).toBeLessThan(-184.56);
+    }
+    /* y la de E: el corte con el plano de abajo cae detrás de la cara de atrás */
+    expect(sale(E1, caraAbajo).y).toBeLessThan(255.36);
+  });
+
+  it('las aristas miden 32,77 (D), 35,08 (E), 54,33 (F) y 32,76 mm (G)', () => {
+    expect(vm(D1, sale(D1, caraAbajo)) * PT_MM).toBeCloseTo(32.7741, 3);
+    expect(vm(E1, sale(E1, caraAtras)) * PT_MM).toBeCloseTo(35.0838, 3);
+    expect(vm(F1, sale(F1, caraAbajo)) * PT_MM).toBeCloseTo(54.3297, 3);
+    expect(vm(G1, sale(G1, caraAbajo)) * PT_MM).toBeCloseTo(32.7585, 3);
+  });
+
+  it('J y K, donde las caras DE y EF del agujero cortan la arista de abajo de atrás; J, debajo de E′', () => {
+    const arista = rectaPorPuntos({ x: 269.16, y: 255.36, z: -184.56 }, { x: 439.32, y: 255.36, z: -184.56 });
+    const Ep = sale(E1, caraAtras);
+    const J = corteRectaPlano(arista, plano(D1, E1, Ep));
+    const K = corteRectaPlano(arista, plano(E1, F1, Ep));
+    expect(cerca(proyAlzado(J), [358.6203, 184.56])).toBe(true);
+    expect(cerca(proyPlanta(K), [296.1817, 255.36])).toBe(true);
+    expect(Math.abs(J.x - Ep.x)).toBeLessThan(0.05);
+  });
+});
+
+describe('Ejercicio 52 · apartado 1, la visibilidad en el Taller (los tramos)', () => {
+  /* Lo visto y lo oculto, de un cálculo de líneas ocultas hecho aparte el 8 de
+     octubre de 2026: rayos contra la cara de arriba, la de delante, la cara ABC
+     partida alrededor de la boca y las cuatro caras del agujero. Las caras DE y
+     FG del agujero son verticales: en la planta, la recta de cada una lleva dos
+     aristas y un borde de la salida en un solo tramo. Lo que cae encima de un
+     borde de la lámina que se ve no es tramo. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'EF', 'visto', [408.84, 311.88], [369.83, 346.59]],
+    ['planta', 'FG', 'visto', [369.83, 346.59], [392.39, 371.91]],
+    ['planta', 'GD', 'visto', [392.39, 371.91], [431.4, 337.2]],
+    ['planta', 'EE′', 'oculto', [408.84, 311.88], [358.59, 255.36]],
+    ['planta', 'FF′', 'oculto', [369.83, 346.59], [292.02, 259.07]],
+    ['planta', 'G′D′', 'oculto', [345.47, 319.14], [384.46, 284.4]],
+    ['planta', 'KF′', 'oculto', [296.18, 255.36], [292.02, 259.07]],
+    ['alzado', 'DE', 'visto', [431.4, 124.23], [408.84, 84.52]],
+    ['alzado', 'EF', 'visto', [408.84, 84.52], [369.83, 84.55]],
+    ['alzado', 'FG', 'visto', [369.83, 84.55], [392.39, 124.26]],
+    ['alzado', 'GD', 'visto', [392.39, 124.26], [431.4, 124.23]],
+    ['alzado', 'EE′', 'visto', [408.84, 84.52], [386.28, 113.51]],
+    ['alzado', 'EE′', 'oculto', [386.28, 113.51], [358.59, 149.1]],
+    ['alzado', 'DD′', 'oculto', [431.4, 124.23], [384.46, 184.56]],
+    ['alzado', 'FF′', 'oculto', [369.83, 84.55], [292.02, 184.56]],
+    ['alzado', 'GG′', 'oculto', [392.39, 124.26], [345.47, 184.56]],
+    ['alzado', 'E′J', 'oculto', [358.59, 149.1], [358.62, 184.56]],
+    ['alzado', 'E′K', 'oculto', [358.59, 149.1], [296.18, 184.56]],
+  ];
+  const ej = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/examenes/ejercicio-52/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('exeg-h52-1'))!;
+  const pasos = resuelveEjercicio(ej, L1);
+  const paso = pasos.get(2)!;
+  const tol = paso.tolerancia;
+  const junto = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+
+  it('dos pasos construir; el segundo lleva 18 tramos, los del cálculo aparte, con su tipo', () => {
+    expect([...pasos.keys()].join()).toBe('1,2');
+    expect(pasos.get(1)!.tramos).toHaveLength(0);
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = paso.tramos.find((x) => (junto(x.a, a) && junto(x.b, b)) || (junto(x.a, b) && junto(x.b, a)));
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, y rechaza la arista de E cambiada de tipo', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+    // la arista de E, en el alzado, entera a trazos: por la boca se ve un trozo
+    const e = casaTramo([408.84, 84.52], [358.59, 149.1], 'oculto', paso.tramos, tol);
+    expect(e.que).toBe('tipo');
+    if (e.que === 'tipo') expect(paso.tramos[e.tramo].porque).toMatch(/se ve desde E₂/);
+    // la de D, en continua
+    expect(casaTramo([431.4, 124.23], [384.46, 184.56], 'visto', paso.tramos, tol).que).toBe('tipo');
+    // la de E, en la planta, en continua
+    expect(casaTramo([408.84, 311.88], [358.59, 255.36], 'visto', paso.tramos, tol).que).toBe('tipo');
+  });
+});
+
+/* ── Apartado 2 (lámina ex52-2, pág. 55): el cuadrado que se completa desde su
+   alzado y la planta de AB, el lado más alejado del plano vertical, y el
+   tronco de pirámide regular que lo tiene por base inferior, de base superior
+   con el lado mitad y 40 mm de altura. Las cifras, del mismo guion aparte: C
+   por el triángulo de BC, y el tronco por la normal del plano. ── */
+
+const L2 = lamina('ex52-2');
+const q2 = (n: string): P2 => [L2.puntos[n].x, L2.puntos[n].y];
+const A2 = punto3(q2('A2'), q2('A1'));
+const B2 = punto3(q2('B2'), q2('B1'));
+const ladoB = Math.hypot(q2('B2')[0] - q2('A2')[0], q2('B2')[1] - q2('A2')[1]);
+/* C, con su alzado y lo que se acerca: el otro cateto del triángulo de BC. */
+const C2 = punto3(q2('C2'), [q2('C2')[0], B2.y - Math.sqrt(ladoB ** 2 - d2(q2('B2'), q2('C2')) ** 2)]);
+const base2 = plano(A2, B2, C2);
+const D2 = puntoEnPlanoDesdeAlzado(q2('D2'), base2);
+const cuadrado = [A2, B2, C2, D2];
+const V2 = apice(cuadrado, 80 / PT_MM, 1);
+const medio = (P: P3, Q: P3): P3 => ({ x: (P.x + Q.x) / 2, y: (P.y + Q.y) / 2, z: (P.z + Q.z) / 2 });
+const arriba2 = cuadrado.map((P) => medio(P, V2));
+
+describe('Ejercicio 52 · apartado 2, el cuadrado', () => {
+  it('AB es frontal y A₂B₂ mide el lado, 64,22 mm; C y D se acercan 61,37 mm al plano vertical', () => {
+    expect(q2('A1')[1]).toBe(q2('B1')[1]);
+    expect(ladoB * PT_MM).toBeCloseTo(64.2226, 3);
+    expect((B2.y - C2.y) * PT_MM).toBeCloseTo(61.3712, 3);
+    expect(cerca(proyPlanta(C2), [333.72, 390.3943])).toBe(true);
+    expect(cerca(proyPlanta(D2), [175.68, 390.3943])).toBe(true);
+  });
+
+  it('los cuatro lados miden lo mismo y los ángulos son rectos (al centésimo de grado)', () => {
+    for (const [P, Q] of [[A2, B2], [B2, C2], [C2, D2], [D2, A2]]) expect(vm(P, Q) * PT_MM).toBeCloseTo(64.2226, 3);
+    expect(anguloRectas(rectaPorPuntos(A2, B2), rectaPorPuntos(B2, C2))).toBeGreaterThan(89.99);
+    expect(anguloPlanoConPH(base2)).toBeCloseTo(33.9445, 3);
+  });
+
+  it('los distractores: A₁B₁ 55,75, B₂C₂ 18,92 y B₁C₁ 62,09 mm', () => {
+    expect(vmPlanta(A2, B2) * PT_MM).toBeCloseTo(55.753, 3);
+    expect(vmAlzado(B2, C2) * PT_MM).toBeCloseTo(18.9239, 3);
+    expect(vmPlanta(B2, C2) * PT_MM).toBeCloseTo(62.0866, 3);
+  });
+});
+
+describe('Ejercicio 52 · apartado 2, el tronco de pirámide', () => {
+  it('O′ a 40 mm y V a 80 mm, por la normal que sube; la base de arriba, en los puntos medios de VA, VB, VC y VD', () => {
+    const O = medio(A2, C2);
+    const Os = apice(cuadrado, 40 / PT_MM, 1);
+    expect(cerca(proyPlanta(O), [268.02, 477.3772])).toBe(true);
+    expect(cerca(proyAlzado(Os), [214.2394, 198.5576])).toBe(true);
+    expect(cerca(proyPlanta(V2), [160.4589, 544.198])).toBe(true);
+    expect(cerca(proyAlzado(V2), [160.4589, 104.4951])).toBe(true);
+    expect(vm(O, Os) * PT_MM).toBeCloseTo(40, 9);
+    expect(Os.z).toBeGreaterThan(O.z);
+    const esperado: [number, number, number][] = [
+      [181.3894, 554.279, 232.7876],
+      [260.4094, 554.279, 187.6076],
+      [247.0894, 467.2962, 164.3276],
+      [168.0694, 467.2962, 209.5076],
+    ];
+    arriba2.forEach((P, i) => {
+      expect(cerca(proyPlanta(P), [esperado[i][0], esperado[i][1]])).toBe(true);
+      expect(cerca(proyAlzado(P), [esperado[i][0], esperado[i][2]])).toBe(true);
+      expect(distanciaAPlano(P, base2) * PT_MM).toBeCloseTo(40, 6);
+    });
+    expect(vm(arriba2[0], arriba2[1]) * PT_MM).toBeCloseTo(32.1113, 3);
+  });
+});
+
+describe('Ejercicio 52 · apartado 2, la visibilidad en el Taller (los tramos)', () => {
+  /* El tronco es convexo: cada arista se ve si una de sus dos caras mira hacia
+     quien mira, y si no, va oculta entera (cálculo aparte, por las normales de
+     las seis caras, del 8 de octubre de 2026). A₁B₁, A₂B₂, B₂C₂ y D₂A₂ se ven y
+     ya están en la lámina. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'BC', 'visto', [360.36, 564.36], [333.72, 390.39]],
+    ['planta', 'CD', 'visto', [333.72, 390.39], [175.68, 390.39]],
+    ['planta', 'DA', 'oculto', [175.68, 390.39], [202.32, 564.36]],
+    ['planta', 'A′B′', 'visto', [181.39, 554.28], [260.41, 554.28]],
+    ['planta', 'B′C′', 'visto', [260.41, 554.28], [247.09, 467.3]],
+    ['planta', 'C′D′', 'visto', [247.09, 467.3], [168.07, 467.3]],
+    ['planta', 'D′A′', 'visto', [168.07, 467.3], [181.39, 554.28]],
+    ['planta', 'AA′', 'visto', [202.32, 564.36], [181.39, 554.28]],
+    ['planta', 'BB′', 'visto', [360.36, 564.36], [260.41, 554.28]],
+    ['planta', 'CC′', 'visto', [333.72, 390.39], [247.09, 467.3]],
+    ['planta', 'DD′', 'visto', [175.68, 390.39], [168.07, 467.3]],
+    ['alzado', 'CD', 'oculto', [333.72, 224.16], [175.68, 314.52]],
+    ['alzado', 'A′B′', 'visto', [181.39, 232.79], [260.41, 187.61]],
+    ['alzado', 'B′C′', 'visto', [260.41, 187.61], [247.09, 164.33]],
+    ['alzado', 'C′D′', 'visto', [247.09, 164.33], [168.07, 209.51]],
+    ['alzado', 'D′A′', 'visto', [168.07, 209.51], [181.39, 232.79]],
+    ['alzado', 'AA′', 'visto', [202.32, 361.08], [181.39, 232.79]],
+    ['alzado', 'BB′', 'visto', [360.36, 270.72], [260.41, 187.61]],
+    ['alzado', 'CC′', 'visto', [333.72, 224.16], [247.09, 164.33]],
+    ['alzado', 'DD′', 'visto', [175.68, 314.52], [168.07, 209.51]],
+  ];
+  const ej = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/examenes/ejercicio-52/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('exeg-h52-2'))!;
+  const pasos = resuelveEjercicio(ej, L2);
+  const paso = pasos.get(1)!;
+  const tol = paso.tolerancia;
+  const junto = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+
+  it('el paso construir lleva 20 tramos, los del cálculo aparte, con su tipo', () => {
+    expect([...pasos.keys()].join()).toBe('1');
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = paso.tramos.find((x) => (junto(x.a, a) && junto(x.b, b)) || (junto(x.a, b) && junto(x.b, a)));
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, y rechaza D₁A₁ en continua', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+    const da = casaTramo([175.68, 390.39], [202.32, 564.36], 'visto', paso.tramos, tol);
+    expect(da.que).toBe('tipo');
+    if (da.que === 'tipo') expect(paso.tramos[da.tramo].porque).toMatch(/miran las dos hacia abajo/);
   });
 });
