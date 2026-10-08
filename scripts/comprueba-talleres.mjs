@@ -452,15 +452,33 @@ async function compruebaTaller(pagina, taller, quien) {
      un extremo a otra cosa de una lámina densa, por la puerta, y se avisa. */
   const aristas = taller.locator('[data-capa="usuario"] line.t-arista');
   const porLaPuertaA = (d) => taller.evaluate((el, x) => el.dispatchEvent(new CustomEvent('taller:arista', { detail: x })), d);
+  /* Lo que atrae el imán al pasar las aristas: los puntos de la lámina y los
+     objetivos ya marcados (todas sus ramas, por si acaso). Un extremo es
+     seguro si es uno de ellos o si ninguno cae dentro del imán. */
+  const imanes = [...datos.puntos.map((p) => [p.x, p.y]), ...datos.objetivos.flatMap((o) => o.es.ramas.flat())];
+  const seguro = (q) => {
+    const d = imanes.map((p) => Math.hypot(p[0] - q[0], p[1] - q[1]));
+    return d.some((v) => v < 0.5) || d.every((v) => v > umbral);
+  };
   for (const [k, t] of (datos.tramos ?? []).entries()) {
     const antes = await aristas.count();
     await porLaPuertaA({ a: t.a, b: t.b, tipo: t.tipo === 'visto' ? 'oculto' : 'visto' });
     if ((await clase()).includes('mal') && (await caja.innerText()).trim().length > 20 && (await aristas.count()) === antes) {
       ok(`${quien}: el tramo ${k + 1}, cambiado de tipo, recibe su porqué y no se queda`);
     } else mal(`${quien}: el tramo ${k + 1}, cambiado de tipo, no dice nada o se queda dibujado`);
-    await herramienta(t.tipo);
-    await pulsa(t.a);
-    await pulsa(t.b);
+    /* Un extremo que no es un punto y tiene uno dentro del imán no se pulsa:
+       el clic se iría a ese punto, el trazo sería otro tramo y el Taller lo
+       daría por bueno (SD41 a 360 px, 8 de octubre de 2026: x_P_VB, a 13,3 pt
+       de H₂, hacía de E₂ a H₂ el tramo 5 al pasar el 2, y el 2 no se hacía
+       nunca). Ese tramo va por la puerta, y se avisa. */
+    if (!seguro(t.a) || !seguro(t.b)) {
+      densos.push(`el tramo ${k + 1}`);
+      await porLaPuertaA({ a: t.a, b: t.b, tipo: t.tipo });
+    } else {
+      await herramienta(t.tipo);
+      await pulsa(t.a);
+      await pulsa(t.b);
+    }
     if ((await aristas.count()) === antes) {
       densos.push(`el tramo ${k + 1}`);
       await porLaPuertaA({ a: t.a, b: t.b, tipo: t.tipo });
