@@ -1,0 +1,1056 @@
+ejercicios:
+  # Decisión: el tema 4 abre con los Ejercicios 24 (SD32) y 25 (SD33), la
+  # intersección de dos triángulos, porque son, a 8 de octubre de 2026, los
+  # únicos de los suyos escritos. Los demás de la colección que son de este
+  # tema entran cada uno en su sitio del orden de la colección (§04): el 22 y
+  # el 23, delante de estos; del 26 al 32 y el 34, detrás. El 33 (SD47), el
+  # tubo perpendicular al fondo de una tolva, es del tema 5, y el apartado 1
+  # del 53 y el 1 a del 54 están en sus páginas de examen.
+
+  - id: sd32-la-interseccion-de-los-triangulos-abc-y-def
+    titulo: La intersección de los triángulos ABC y DEF, y lo que tapa cada uno
+    fuente: Ejercicio 24 (SD32) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 25). El
+    # enunciado no dice si los triángulos son placas opacas o solo planos: se
+    # toman opacos, como en el Ejercicio 38, y las Notas nuestras dicen qué
+    # saldría con planos transparentes. I, J, K, L, M, N, P y Q son nombres
+    # nuestros.
+    enunciado: |
+      Representar la intersección entre los planos ABC y DEF.
+
+      **Notas nuestras.** La figura son los triángulos ABC y DEF en el alzado, arriba, y en la planta,
+      debajo, sin línea de tierra. La hoja no da escala: las longitudes van en milímetros de la lámina.
+      Los dos triángulos se cortan, y lo que se pide es el segmento que comparten; llamamos I y J a sus
+      extremos. El enunciado dice «planos», pero no si los triángulos son placas opacas o solo un trozo
+      de plano dibujado: aquí los tomamos como dos placas opacas, y por eso también se dibuja lo que
+      cada una tapa de la otra. Con planos transparentes todas las aristas irían en continua. K, L, M,
+      N, P y Q, los demás puntos de la construcción, también son nombres nuestros. Si se leyeran como planos sin borde, su intersección sería la
+      recta entera, de la que IJ es el trozo que comparten los dos triángulos.
+    pide: Los dos extremos del segmento en que se cortan los triángulos, en las dos vistas, y lo visto y lo oculto de los dos, que tomamos opacos; y, como pregunta nuestra, la longitud de ese segmento en verdadera magnitud.
+    receta:
+      lamina: sd32
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        abc: plano(A, B, C)
+        def: plano(D, E, F)
+      solucion:
+        # Los extremos: DE atraviesa ABC en I, y BC atraviesa DEF en J. Las
+        # otras aristas cortan el plano del otro triángulo fuera de él: AB en
+        # K, fuera de DEF, y EF en L, fuera de ABC (CA y FD, fuera de la
+        # arista). En la recta común, K, I, J y L van en ese orden: ABC la
+        # ocupa de K a J, DEF de I a L, y el tramo común es IJ.
+        I: corte_recta_plano(recta3(D, E), abc)
+        J: corte_recta_plano(recta3(B, C), def)
+        K: corte_recta_plano(recta3(A, B), def)
+        L: corte_recta_plano(recta3(E, F), abc)
+        largo_mm: en_mm(vm(I, J))
+        # Decisión: cada extremo, con el plano vertical que contiene la arista,
+        # que en la planta se ve como la propia arista (el que las diapositivas
+        # llaman proyectante horizontal). El de DE corta a ABC en MN (M en AB y
+        # N en CA); el de BC corta a DEF en PQ (P en FD y Q en EF). Con el
+        # plano de canto de DE, la recta auxiliar cortaría la arista a 19°, y
+        # con el vertical, a 36°: se toma el vertical.
+        M1: 'cruce_aparente(figura.segmento("DE1"), figura.segmento("AB1"))'
+        N1: 'cruce_aparente(figura.segmento("DE1"), figura.segmento("CA1"))'
+        M2: 'cruce_aparente(segmento2(M1, desplaza(M1, dy: -10)), figura.segmento("AB2"))'
+        N2: 'cruce_aparente(segmento2(N1, desplaza(N1, dy: -10)), figura.segmento("CA2"))'
+        P1: 'cruce_aparente(figura.segmento("BC1"), figura.segmento("FD1"))'
+        Q1: 'cruce_aparente(figura.segmento("BC1"), figura.segmento("EF1"))'
+        P2: 'cruce_aparente(segmento2(P1, desplaza(P1, dy: -10)), figura.segmento("FD2"))'
+        Q2: 'cruce_aparente(segmento2(Q1, desplaza(Q1, dy: -10)), figura.segmento("EF2"))'
+        # La visibilidad: los cruces aparentes donde una arista cambia de vista
+        # a oculta (x_<arista>_<la que la cruza><vista>); los demás cambios
+        # son I y J, donde la arista atraviesa la otra placa. M1, N1, P1 y Q1
+        # también son cruces aparentes de la planta.
+        x_CA_EF1: 'cruce_aparente(figura.segmento("CA1"), figura.segmento("EF1"))'
+        x_FD_AB1: 'cruce_aparente(figura.segmento("FD1"), figura.segmento("AB1"))'
+        x_BC_FD2: 'cruce_aparente(figura.segmento("BC2"), figura.segmento("FD2"))'
+        x_CA_FD2: 'cruce_aparente(figura.segmento("CA2"), figura.segmento("FD2"))'
+        x_CA_DE2: 'cruce_aparente(figura.segmento("CA2"), figura.segmento("DE2"))'
+        x_DE_AB2: 'cruce_aparente(figura.segmento("DE2"), figura.segmento("AB2"))'
+        # Los extremos de las rectas largas: se trazan más allá del punto que
+        # van a dar.
+        L_M2: 'desplaza(M2, dy: mm(-4))'
+        L_N2: 'desplaza(N2, dy: mm(-4))'
+        L_P2: 'desplaza(P2, dy: mm(-4))'
+        L_Q2: 'desplaza(Q2, dy: mm(-4))'
+        L_I1: 'desplaza(proy_planta(I), dy: mm(4))'
+        L_J1: 'desplaza(proy_planta(J), dy: mm(4))'
+      comprueba:
+        - en_plano(I, abc)
+        - en_plano(I, def)
+        - en_plano(J, abc)
+        - en_plano(J, def)
+        - en_recta(I, recta3(D, E))
+        - en_recta(J, recta3(B, C))
+    pasos:
+      - tipo: reconocer
+        pregunta: Los dos triángulos se cortan en un segmento. ¿Qué da sus dos extremos?
+        opciones:
+          - texto: Los cruces de las proyecciones de las aristas, como el de D₂E₂ con A₂B₂ en el alzado o el de B₁C₁ con F₁D₁ en la planta
+            mensaje: |
+              Esos son cruces aparentes: en esa vista las dos aristas se tapan, pero en el espacio se
+              cruzan sin tocarse, una delante de la otra. En el de D₂E₂ con A₂B₂, AB va 13,0 mm más cerca
+              de quien mira que DE. Sirven para lo visto y lo oculto, no para la intersección.
+          - texto: Los puntos donde una arista de un triángulo atraviesa el otro triángulo, por dentro de él
+            correcta: true
+            mensaje: |
+              Eso es. Un extremo del segmento común está en los dos triángulos y en el borde de uno de
+              ellos: donde una arista de uno pasa a través del otro. Aquí son dos aristas distintas: DE
+              atraviesa ABC, en I, y BC atraviesa DEF, en J. AB y EF también cortan el plano del otro
+              triángulo, pero fuera de él.
+          - texto: El punto donde AB corta el plano DEF y el punto donde EF corta el plano ABC
+            mensaje: |
+              AB corta el plano DEF, y EF el de ABC, pero los dos puntos caen fuera del otro triángulo: están
+              en la recta común de los dos planos, no en el segmento que comparten las placas. Con ellos, el
+              segmento mediría 80,58 mm, y mide 28,94.
+
+      - tipo: construir
+        titulo: Los extremos del segmento, y lo que se ve
+        intro: |
+          Llamamos I al punto donde la arista DE atraviesa ABC, y J al punto donde BC atraviesa DEF: son
+          los extremos del segmento que comparten los dos triángulos. Cada uno sale con un plano
+          auxiliar, el vertical que contiene la arista: en la planta se ve como la propia arista, y corta
+          al otro triángulo en una recta cuyos extremos están en sus lados. Esa recta se sube al alzado, y
+          donde corta la arista está el punto. Marca I y J en las dos vistas.
+
+          Después, pasa a limpio con «arista vista» y «arista oculta» el segmento IJ y los tramos de las
+          aristas que cambian de vista a oculta; AB y EF se ven enteras en las dos vistas, y FD en el
+          alzado, y ya están dibujadas. Cada arista se corta solo donde cambia: en un cruce aparente con
+          otra, o en I o en J. Tomamos los dos triángulos como placas opacas, que el enunciado no lo dice.
+          I₂ cae a 4,4 mm de M₂ y a 4,7 del cruce aparente de D₂E₂ con A₂B₂: amplía con la lupa (×4) antes
+          de marcarlo.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: I2
+            pide: I, donde la arista DE atraviesa el triángulo ABC, en el alzado
+            es: proy_alzado(solucion.I)
+            bien: |
+              I₂ está en D₂E₂, donde la corta M₂N₂: la recta en que el plano vertical de DE corta a ABC. Esa
+              recta y DE están en el mismo plano, así que se cortan de verdad, y ese punto es de los dos
+              triángulos.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.K))
+                mensaje: |
+                  Ese es el punto donde la arista AB corta el plano DEF. Está en la recta común de los dos
+                  planos, pero fuera del triángulo DEF: las dos placas no llegan a tocarse ahí. El extremo de
+                  ese lado es I, donde DE atraviesa ABC.
+                ejemplo: proy_alzado(solucion.K)
+              - si: cerca_de(solucion.x_DE_AB2)
+                mensaje: |
+                  Ese es el cruce aparente de D₂E₂ con A₂B₂: en el alzado se tapan, pero en el espacio AB pasa
+                  13,0 mm por delante de DE sin tocarla. El punto donde DE atraviesa ABC sale del plano
+                  auxiliar: la recta M₂N₂.
+                ejemplo: solucion.x_DE_AB2
+              - si: cerca_de(solucion.x_CA_DE2)
+                mensaje: |
+                  Ese es el cruce aparente de D₂E₂ con C₂A₂: DE pasa ahí 19,0 mm por delante de CA, sin
+                  tocarla. I está donde D₂E₂ corta M₂N₂, la recta auxiliar.
+                ejemplo: solucion.x_CA_DE2
+              - si: '!en_recta(figura.segmento("DE2"))'
+                mensaje: |
+                  I es un punto de la arista DE: I₂ va **en D₂E₂**, donde la corta la recta M₂N₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.I), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en D₂E₂, pero no donde la corta M₂N₂. M₂ y N₂ son los alzados de los puntos donde
+                  D₁E₁ cruza A₁B₁ y C₁A₁ en la planta, subidos por su vertical hasta A₂B₂ y C₂A₂.
+          - nombre: I1
+            pide: I, en la planta
+            es: proy_planta(solucion.I)
+            bien: |
+              I₁ está en D₁E₁, en la vertical de I₂.
+            diagnosticos:
+              - si: cerca_de(solucion.M1)
+                mensaje: |
+                  Ese es M₁, donde D₁E₁ cruza A₁B₁: un cruce aparente de la planta, y el punto de AB que corta
+                  el plano auxiliar. I₁ baja de I₂ por su vertical.
+                ejemplo: solucion.M1
+              - si: '!en_vertical_de(I2)'
+                mensaje: |
+                  I₁ va en la **vertical de I₂**: es el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.I), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("DE1"))'
+                mensaje: |
+                  I está en la arista DE: I₁ va donde la vertical de I₂ corta **D₁E₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.I), dy: mm(10))'
+              - si: siempre
+                mensaje: |
+                  I₁ está donde la vertical de I₂ corta D₁E₁.
+          - nombre: J2
+            pide: J, donde la arista BC atraviesa el triángulo DEF, en el alzado
+            es: proy_alzado(solucion.J)
+            bien: |
+              J₂ está en B₂C₂, donde la corta P₂Q₂: la recta en que el plano vertical de BC corta a DEF.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.L))
+                mensaje: |
+                  Ese es el punto donde la arista EF corta el plano ABC. Está en la recta común de los dos
+                  planos, pero fuera del triángulo ABC: el segmento común se acaba antes, en J, donde BC
+                  atraviesa DEF.
+                ejemplo: proy_alzado(solucion.L)
+              - si: cerca_de(solucion.x_BC_FD2)
+                mensaje: |
+                  Ese es el cruce aparente de B₂C₂ con F₂D₂: FD pasa ahí 19,2 mm por delante de BC, sin
+                  tocarla. J está donde B₂C₂ corta P₂Q₂, la recta auxiliar.
+                ejemplo: solucion.x_BC_FD2
+              - si: '!en_recta(figura.segmento("BC2"))'
+                mensaje: |
+                  J es un punto de la arista BC: J₂ va **en B₂C₂**, donde la corta la recta P₂Q₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.J), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en B₂C₂, pero no donde la corta P₂Q₂. P₂ y Q₂ son los alzados de los puntos donde
+                  B₁C₁ cruza F₁D₁ y E₁F₁ en la planta, subidos por su vertical hasta F₂D₂ y E₂F₂.
+          - nombre: J1
+            pide: J, en la planta
+            es: proy_planta(solucion.J)
+            bien: |
+              J₁ está en B₁C₁, en la vertical de J₂. I₁J₁ es la planta del segmento común.
+            diagnosticos:
+              - si: cerca_de(solucion.Q1)
+                mensaje: |
+                  Ese es Q₁, donde B₁C₁ cruza E₁F₁: un cruce aparente de la planta, y el punto de EF que corta
+                  el plano auxiliar. J₁ baja de J₂ por su vertical.
+                ejemplo: solucion.Q1
+              - si: cerca_de(solucion.P1)
+                mensaje: |
+                  Ese es P₁, donde B₁C₁ cruza F₁D₁: otro cruce aparente, y el punto de FD que corta el plano
+                  auxiliar. J₁ baja de J₂ por su vertical.
+                ejemplo: solucion.P1
+              - si: '!en_vertical_de(J2)'
+                mensaje: |
+                  J₁ va en la **vertical de J₂**.
+                ejemplo: 'desplaza(proy_planta(solucion.J), dx: mm(-6))'
+              - si: '!en_recta(figura.segmento("BC1"))'
+                mensaje: |
+                  J está en la arista BC: J₁ va donde la vertical de J₂ corta **B₁C₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.J), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  J₁ está donde la vertical de J₂ corta B₁C₁.
+        # Decisión: los triángulos, opacos (lo dicen las Notas nuestras). La
+        # visibilidad sale de un cálculo de líneas ocultas aparte, por rayos
+        # contra las dos placas; cada cambio, en el cruce aparente que dice su
+        # tramo o en I o J. Las aristas que se ven enteras y ya están en la
+        # lámina no son tramos: AB y EF en las dos vistas, y FD en el alzado.
+        tramos:
+          - traza: segmento2(proy_planta(solucion.I), proy_planta(solucion.J))
+            tipo: visto
+            porque: 'IJ está en las dos placas a la vez: desde arriba no la tapa ninguna.'
+          - traza: segmento2(figura.punto("B1"), proy_planta(solucion.J))
+            tipo: visto
+            porque: 'De B₁ a J₁ nada tapa BC desde arriba: hasta F₁D₁ queda fuera de la planta de DEF, y de ahí a J va por encima de esa placa. En el cruce aparente con F₁D₁, BC va 16,3 mm más alta que FD.'
+          - traza: segmento2(proy_planta(solucion.J), solucion.Q1)
+            tipo: oculto
+            porque: 'En J, BC atraviesa DEF y pasa por debajo: de J₁ al cruce con E₁F₁, el borde de DEF, la tapa esa placa. En el cruce aparente, EF va 19,7 mm más alta que BC.'
+          - traza: segmento2(solucion.Q1, figura.punto("C1"))
+            tipo: visto
+            porque: 'Del cruce con E₁F₁ a C₁, BC sale de debajo de DEF: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("C1"), solucion.x_CA_EF1)
+            tipo: visto
+            porque: 'De C₁ al cruce con E₁F₁, CA queda fuera de la planta de DEF: desde arriba nada la tapa.'
+          - traza: segmento2(solucion.x_CA_EF1, solucion.N1)
+            tipo: oculto
+            porque: 'Entre los cruces con E₁F₁ y D₁E₁, CA pasa por debajo de DEF, que la tapa desde arriba: en el primero EF va 31,4 mm más alta, y en el segundo DE, 24,1.'
+          - traza: segmento2(solucion.N1, figura.punto("A1"))
+            tipo: visto
+            porque: 'Del cruce con D₁E₁ a A₁, CA queda fuera de la planta de DEF: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("D1"), solucion.M1)
+            tipo: visto
+            porque: 'De D₁ al cruce con A₁B₁, DE queda fuera de la planta de ABC: desde arriba nada la tapa.'
+          - traza: segmento2(solucion.M1, proy_planta(solucion.I))
+            tipo: oculto
+            porque: 'Del cruce con A₁B₁ hasta I, DE va por debajo de ABC, que la tapa desde arriba: en el cruce aparente, AB va 12,8 mm más alta que DE.'
+          - traza: segmento2(proy_planta(solucion.I), figura.punto("E1"))
+            tipo: visto
+            porque: 'En I, DE atraviesa ABC y pasa por encima: de I₁ a E₁ desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("F1"), solucion.P1)
+            tipo: visto
+            porque: 'De F₁ al cruce con B₁C₁, FD queda fuera de la planta de ABC: desde arriba nada la tapa.'
+          - traza: segmento2(solucion.P1, solucion.x_FD_AB1)
+            tipo: oculto
+            porque: 'Entre los cruces con B₁C₁ y A₁B₁, FD pasa por debajo de ABC, que la tapa desde arriba: en el primero BC va 16,3 mm más alta, y en el segundo AB, 20,6.'
+          - traza: segmento2(solucion.x_FD_AB1, figura.punto("D1"))
+            tipo: visto
+            porque: 'Del cruce con A₁B₁ a D₁, FD sale de debajo de ABC: desde arriba nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.I), proy_alzado(solucion.J))
+            tipo: visto
+            porque: 'IJ está en las dos placas a la vez: por delante no la tapa ninguna.'
+          - traza: segmento2(figura.punto("B2"), proy_alzado(solucion.J))
+            tipo: visto
+            porque: 'De B₂ a J₂, BC va por delante de DEF, que atraviesa en J: nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.J), solucion.x_BC_FD2)
+            tipo: oculto
+            porque: 'En J, BC pasa detrás de DEF, que la tapa hasta su borde, F₂D₂: en el cruce aparente, FD va 19,2 mm más cerca de quien mira.'
+          - traza: segmento2(solucion.x_BC_FD2, figura.punto("C2"))
+            tipo: visto
+            porque: 'Del cruce con F₂D₂ a C₂, BC sale del alzado de DEF: nada la tapa.'
+          - traza: segmento2(figura.punto("C2"), solucion.x_CA_FD2)
+            tipo: visto
+            porque: 'De C₂ al cruce con F₂D₂, CA queda fuera del alzado de DEF: nada la tapa.'
+          - traza: segmento2(solucion.x_CA_FD2, solucion.x_CA_DE2)
+            tipo: oculto
+            porque: 'Entre los cruces con F₂D₂ y D₂E₂, CA va detrás de DEF, que la tapa: en el primero FD va 27,6 mm más cerca de quien mira, y en el segundo DE, 19,0.'
+          - traza: segmento2(solucion.x_CA_DE2, figura.punto("A2"))
+            tipo: visto
+            porque: 'Del cruce con D₂E₂ a A₂, CA queda fuera del alzado de DEF: nada la tapa.'
+          - traza: segmento2(figura.punto("D2"), proy_alzado(solucion.I))
+            tipo: visto
+            porque: 'De D₂ a I₂ nada tapa DE: hasta C₂A₂ queda fuera del alzado de ABC, y de ahí a I va por delante de esa placa. En el cruce aparente con C₂A₂, DE va 19,0 mm más cerca de quien mira.'
+          - traza: segmento2(proy_alzado(solucion.I), solucion.x_DE_AB2)
+            tipo: oculto
+            porque: 'En I, DE pasa detrás de ABC, que la tapa hasta su borde, A₂B₂: en el cruce aparente, AB va 13,0 mm más cerca de quien mira.'
+          - traza: segmento2(solucion.x_DE_AB2, figura.punto("E2"))
+            tipo: visto
+            porque: 'Del cruce con A₂B₂ a E₂, DE sale del alzado de ABC: nada la tapa.'
+        trazado:
+          - segmento2(solucion.M2, solucion.N2)
+          - segmento2(solucion.P2, solucion.Q2)
+        construccion:
+          - con: marca
+            traza: solucion.M1
+            rotulo: M₁
+            porque: |
+              **El extremo I.** El plano vertical que contiene la arista DE se ve, en la planta, como la
+              recta D₁E₁, y corta los lados de ABC donde D₁E₁ los cruza. M₁, donde D₁E₁ cruza A₁B₁: M es el
+              punto de AB que está en ese plano. M, N, P y Q son nombres nuestros, como I y J.
+          - con: marca
+            traza: solucion.N1
+            rotulo: N₁
+            porque: |
+              N₁, donde D₁E₁ cruza C₁A₁: N es el punto de CA que está en el plano vertical de DE.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.M1, solucion.L_M2), segmento2(solucion.N1, solucion.L_N2)]'
+            porque: |
+              Por M₁ y por N₁, las verticales hacia el alzado, largas, hasta pasar A₂B₂ y C₂A₂: M está en AB
+              y N en CA, y sus alzados caen en esos lados.
+          - con: marca
+            traza: solucion.M2
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta A₂B₂.
+          - con: marca
+            traza: solucion.N2
+            rotulo: N₂
+            porque: |
+              N₂, donde la vertical de N₁ corta C₂A₂.
+          - con: regla
+            traza: segmento2(solucion.M2, solucion.N2)
+            porque: |
+              M₂N₂ es el alzado de la recta en que el plano vertical de DE corta a ABC. Esa recta y DE están
+              en el mismo plano vertical, así que se cortan de verdad, y no en un cruce aparente.
+          - con: marca
+            traza: proy_alzado(solucion.I)
+            rotulo: I₂
+            porque: |
+              I₂, donde M₂N₂ corta D₂E₂: el punto donde la arista DE atraviesa el triángulo ABC.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.I), solucion.L_I1)
+            porque: |
+              Por I₂, la vertical hacia la planta, hasta pasar D₁E₁.
+          - con: marca
+            traza: proy_planta(solucion.I)
+            rotulo: I₁
+            porque: |
+              I₁, donde la vertical de I₂ corta D₁E₁.
+          - con: marca
+            traza: solucion.P1
+            rotulo: P₁
+            porque: |
+              **El extremo J**, igual, con el plano vertical que contiene la arista BC: en la planta es la
+              recta B₁C₁. P₁, donde B₁C₁ cruza F₁D₁: P es el punto de FD que está en ese plano.
+          - con: marca
+            traza: solucion.Q1
+            rotulo: Q₁
+            porque: |
+              Q₁, donde B₁C₁ cruza E₁F₁: Q es el punto de EF que está en el plano vertical de BC.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.P1, solucion.L_P2), segmento2(solucion.Q1, solucion.L_Q2)]'
+            porque: |
+              Por P₁ y por Q₁, las verticales hacia el alzado, largas, hasta pasar F₂D₂ y E₂F₂.
+          - con: marca
+            traza: solucion.P2
+            rotulo: P₂
+            porque: |
+              P₂, donde la vertical de P₁ corta F₂D₂.
+          - con: marca
+            traza: solucion.Q2
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta E₂F₂.
+          - con: regla
+            traza: segmento2(solucion.P2, solucion.Q2)
+            porque: |
+              P₂Q₂, el alzado de la recta en que el plano vertical de BC corta a DEF.
+          - con: marca
+            traza: proy_alzado(solucion.J)
+            rotulo: J₂
+            porque: |
+              J₂, donde P₂Q₂ corta B₂C₂: el punto donde la arista BC atraviesa el triángulo DEF.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.J), solucion.L_J1)
+            porque: |
+              Por J₂, la vertical hacia la planta, hasta pasar B₁C₁.
+          - con: marca
+            traza: proy_planta(solucion.J)
+            rotulo: J₁
+            porque: |
+              J₁, donde la vertical de J₂ corta B₁C₁.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.I), proy_planta(solucion.J)), segmento2(figura.punto("B1"), proy_planta(solucion.J)), segmento2(solucion.Q1, figura.punto("C1")), segmento2(figura.punto("C1"), solucion.x_CA_EF1), segmento2(solucion.N1, figura.punto("A1")), segmento2(figura.punto("D1"), solucion.M1), segmento2(proy_planta(solucion.I), figura.punto("E1")), segmento2(figura.punto("F1"), solucion.P1), segmento2(solucion.x_FD_AB1, figura.punto("D1"))]'
+            porque: |
+              **A limpio, la planta.** Desde arriba se ve lo que va más alto. I₁J₁, en continua: está en las
+              dos placas. Y en continua lo que de cada arista queda fuera de la otra placa o por encima de
+              ella: DE de I a E, que en I atraviesa ABC hacia arriba, y BC de B a J, que en J atraviesa DEF
+              hacia abajo.
+          - con: arista-oculta
+            traza: '[segmento2(proy_planta(solucion.J), solucion.Q1), segmento2(solucion.x_CA_EF1, solucion.N1), segmento2(solucion.M1, proy_planta(solucion.I)), segmento2(solucion.P1, solucion.x_FD_AB1)]'
+            porque: |
+              A trazos, lo que queda debajo de la otra placa: BC de J hasta E₁F₁ y CA entre E₁F₁ y D₁E₁,
+              debajo de DEF; DE de A₁B₁ hasta I y FD entre B₁C₁ y A₁B₁, debajo de ABC. Cada tramo empieza y
+              acaba en un cruce aparente o en I o J.
+          - con: arista-vista
+            traza: '[segmento2(proy_alzado(solucion.I), proy_alzado(solucion.J)), segmento2(figura.punto("B2"), proy_alzado(solucion.J)), segmento2(solucion.x_BC_FD2, figura.punto("C2")), segmento2(figura.punto("C2"), solucion.x_CA_FD2), segmento2(solucion.x_CA_DE2, figura.punto("A2")), segmento2(figura.punto("D2"), proy_alzado(solucion.I)), segmento2(solucion.x_DE_AB2, figura.punto("E2"))]'
+            porque: |
+              **El alzado.** Se ve lo que va más cerca de quien mira, lo de más alejamiento. I₂J₂, en
+              continua; BC de B a J, por delante de DEF; DE de D a I, por delante de ABC; y lo que de BC, CA
+              y DE queda fuera de la otra placa.
+          - con: arista-oculta
+            traza: '[segmento2(proy_alzado(solucion.J), solucion.x_BC_FD2), segmento2(solucion.x_CA_FD2, solucion.x_CA_DE2), segmento2(proy_alzado(solucion.I), solucion.x_DE_AB2)]'
+            porque: |
+              A trazos, lo que queda detrás: BC de J hasta F₂D₂ y CA entre F₂D₂ y D₂E₂, detrás de DEF; y DE
+              de I hasta A₂B₂, detrás de ABC. AB, EF y FD se ven enteras en el alzado, y ya están
+              dibujadas.
+        pista: |
+          (1) En la planta, D₁E₁ cruza A₁B₁ en M₁ y C₁A₁ en N₁: es el plano vertical de DE cortando ABC.
+          (2) Sube M y N a A₂B₂ y C₂A₂; M₂N₂ corta D₂E₂ en I₂, e I₁ está debajo, en D₁E₁. (3) Igual con BC:
+          B₁C₁ cruza F₁D₁ en P₁ y E₁F₁ en Q₁; P₂Q₂ corta B₂C₂ en J₂. (4) Para lo que se ve: en cada cruce
+          aparente, mira cuál de las dos aristas va más alta (planta) o más cerca de ti (alzado); y en I y
+          en J la arista atraviesa la otra placa y cambia de lado.
+        desarrollo: |
+          En verde claro, las dos rectas auxiliares del alzado, M₂N₂ y P₂Q₂, y el segmento IJ en las dos
+          vistas, con lo oculto a trazos. Las dos placas se atraviesan: en la planta, ABC va por encima de
+          DEF del lado de AB, y DEF por encima de ABC del lado de EF; en el alzado, DE y BC pasan de delante
+          a detrás de la otra placa en I y en J.
+
+      - tipo: calcular
+        titulo: La longitud del segmento de intersección
+        pregunta: Como pregunta nuestra, ¿cuánto mide de verdad IJ, el segmento en que se cortan las dos placas?
+        respuesta:
+          tipo: numero
+          valor: '28.94'
+          receta: largo_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '44.57'
+            receta: en_mm(vm(solucion.K, solucion.J))
+            mensaje: |
+              Eso es KJ, lo que de la recta común de los dos planos está dentro de ABC. K, donde AB corta el
+              plano DEF, cae fuera del triángulo DEF: ahí las placas no se tocan. El segmento común empieza
+              en I, donde DE atraviesa ABC.
+          - valor: '64.95'
+            receta: en_mm(vm(solucion.I, solucion.L))
+            mensaje: |
+              Eso es IL, lo que de la recta común está dentro de DEF. L, donde EF corta el plano ABC, cae
+              fuera del triángulo ABC: el segmento común se acaba antes, en J.
+          - valor: '80.58'
+            receta: en_mm(vm(solucion.K, solucion.L))
+            mensaje: |
+              Eso es KL, de donde AB corta el plano DEF a donde EF corta el plano ABC. Los dos puntos están en
+              la recta común de los planos, pero fuera del otro triángulo. Los extremos del segmento común
+              son I y J.
+        pista: |
+          IJ no es horizontal ni frontal: su verdadera magnitud sale del triángulo del tema 2, con I₁J₁ de
+          un cateto y la diferencia de cotas de I₂ y J₂ del otro.
+        desarrollo: |
+          Con el triángulo de la verdadera magnitud, la planta y la diferencia de cotas:
+
+          $$ \overline{IJ} = \sqrt{\overline{I_1J_1}^{\,2} + \Delta z^{2}} = \sqrt{28{,}85^{2} + 2{,}38^{2}} \approx 28{,}94 \text{ mm} $$
+
+          Aquí medir en una vista da casi lo mismo, por casualidad: I₁J₁ mide 28,85 mm, e I₂J₂, 28,93, y
+          los dos caen dentro de la tolerancia. Es porque IJ es casi horizontal y casi frontal: baja 2,38 mm
+          y se aleja 0,92 mm de quien mira. En general, una proyección acorta, y la longitud se saca con el
+          triángulo. En la construcción hay otras dos medidas que dan lo mismo sin serlo: P₁Q₁, en la
+          planta, 28,94 mm, y de D₁ a N₁, 29,20. Ninguna es IJ.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Los extremos del segmento común están donde una arista de un triángulo atraviesa el otro triángulo, por dentro; aquí, DE atraviesa ABC, y BC atraviesa DEF.
+          - texto: El plano vertical que contiene cada arista corta al otro triángulo en una recta, que en la planta va sobre la arista y se sube al alzado por sus dos puntos en los lados.
+          - texto: Esa recta y la arista están en el mismo plano y se cortan de verdad, en I₂ y en J₂; I₁ y J₁ bajan por su vertical.
+          - texto: Una arista cambia de vista a oculta solo en un cruce aparente, donde manda la que va delante, o donde atraviesa la otra placa, en I o en J.
+          - texto: I₂ es el cruce de D₂E₂ con A₂B₂, porque ahí se cortan en el alzado la arista DE y el borde de ABC.
+            trampa: true
+            mensaje: |
+              Ese es un cruce aparente: en el espacio AB pasa 13,0 mm por delante de DE, y no se tocan. I sale
+              de la recta auxiliar M₂N₂, que sí está en el plano de DE.
+    resolucion: |
+      **Qué se busca.** Los dos triángulos se cortan en un segmento de la recta común de sus planos.
+      Sobre esa recta, ABC ocupa el tramo de K, donde AB corta el plano DEF, a J, donde BC lo corta; y
+      DEF, el de I, donde DE corta el plano ABC, a L, donde lo corta EF. El segmento común es el tramo
+      que comparten, IJ: la recta sale de ABC por J antes de salir de DEF, y entra en DEF por I después
+      de haber entrado en ABC. Sus extremos son los puntos donde una arista de un triángulo atraviesa el
+      otro: DE atraviesa ABC en I, y BC atraviesa DEF en J.
+
+      **Los extremos.** Cada uno, con el plano vertical que contiene la arista. El de DE corta los lados
+      de ABC donde D₁E₁ los cruza en la planta, en M₁ y N₁; subidos a A₂B₂ y C₂A₂, M₂N₂ corta D₂E₂ en
+      I₂. El de BC corta DEF en P₁ y Q₁; P₂Q₂ corta B₂C₂ en J₂. I₁ y J₁ bajan por su vertical.
+
+      **Lo que se ve.** Tomamos las dos placas opacas. Una arista solo cambia de vista a oculta en un
+      cruce aparente con otra, donde se ve la que va delante (más cota en la planta, más alejamiento en
+      el alzado), o donde atraviesa la otra placa. En la planta, DE y FD pasan por debajo de ABC del lado
+      de AB, y BC y CA por debajo de DEF del lado de EF. En el alzado, BC y CA quedan en parte detrás de
+      DEF, y DE detrás de ABC de I a A₂B₂. Con planos transparentes, todo iría en continua.
+
+      **La longitud.** IJ mide 28,94 mm en verdadera magnitud. Por casualidad, su planta y su alzado
+      miden casi lo mismo, 28,85 y 28,93 mm, porque IJ es casi horizontal y casi frontal.
+
+  - id: sd33-la-interseccion-con-una-arista-de-perfil
+    titulo: La intersección de los triángulos ABC y DEF, con la arista FD de perfil
+    fuente: Ejercicio 25 (SD33) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 26): es
+    # palabra por palabra el del Ejercicio 24, con otra figura. Los triángulos se
+    # toman opacos, como allí. I, J, K, M, N, P, R y S son nombres nuestros.
+    enunciado: |
+      Representar la intersección entre los planos ABC y DEF.
+
+      **Notas nuestras.** El enunciado es el mismo que el del Ejercicio 24, con otra figura: los
+      triángulos ABC y DEF en el alzado, arriba, y en la planta, debajo, sin línea de tierra. La hoja
+      no da escala: las longitudes van en milímetros de la lámina. D₁F₁ y D₂F₂ caen en la misma
+      vertical: FD es una recta de perfil. DE es frontal, D₁E₁ es horizontal en el papel, y A₁ está en
+      su prolongación: A tiene el alejamiento de D y de E. Llamamos I y J a los extremos del segmento
+      en que se cortan los triángulos. Como en el Ejercicio 24, tomamos los dos triángulos como placas
+      opacas, que el enunciado no lo dice; con planos transparentes, todas las aristas irían en
+      continua. K, M, N, P, R y S, los demás puntos de la construcción, también son nombres nuestros. Si se leyeran como planos sin borde, su intersección sería la
+      recta entera, de la que IJ es el trozo que comparten los dos triángulos.
+    pide: Los dos extremos del segmento en que se cortan los triángulos, en las dos vistas, y lo visto y lo oculto de los dos, que tomamos opacos; y, como pregunta nuestra, la longitud de ese segmento en verdadera magnitud.
+    receta:
+      lamina: sd33
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        abc: plano(A, B, C)
+        def: plano(D, E, F)
+      solucion:
+        # Los extremos: EF y FD atraviesan ABC, en I y en J; DEF asoma por el
+        # otro lado de ABC con su vértice F. En la recta común de los dos
+        # planos, ABC va de S, en CA, a K, en AB, y DEF de I a J, que están
+        # entre los dos: el tramo común es IJ, entero dentro de DEF. K cae a
+        # 1,4 mm de J, fuera de DEF.
+        I: corte_recta_plano(recta3(E, F), abc)
+        J: corte_recta_plano(recta3(F, D), abc)
+        K: corte_recta_plano(recta3(A, B), def)
+        S: corte_recta_plano(recta3(C, A), def)
+        largo_mm: en_mm(vm(I, J))
+        # Decisión: I, con el plano vertical que contiene EF, que corta a ABC en
+        # MN (M en AB y N en CA). El plano vertical de FD es el de perfil y no
+        # da J: su recta de corte con ABC cae en el alzado encima de D₂F₂. J
+        # sale de la recta común IK, con K por el plano vertical de AB, que
+        # corta a DEF en RP: P en EF, con la planta de M (M₁ es el cruce de
+        # A₁B₁ con E₁F₁), y R en la recta DE prolongada, en la vertical de A,
+        # porque A₁ está en la prolongación de D₁E₁. I₂K₂ corta D₂F₂ en J₂, e
+        # I₁K₁ corta D₁F₁ en J₁: la recta común y FD están las dos en DEF.
+        M1: 'cruce_aparente(figura.segmento("EF1"), figura.segmento("AB1"))'
+        N1: 'cruce_aparente(figura.segmento("EF1"), figura.segmento("CA1"))'
+        M2: 'cruce_aparente(segmento2(M1, desplaza(M1, dy: -10)), figura.segmento("AB2"))'
+        N2: 'cruce_aparente(segmento2(N1, desplaza(N1, dy: -10)), figura.segmento("CA2"))'
+        P2: 'cruce_aparente(segmento2(M1, desplaza(M1, dy: -10)), figura.segmento("EF2"))'
+        R2: 'cruce_aparente(figura.segmento("DE2"), segmento2(figura.punto("A2"), desplaza(figura.punto("A2"), dy: -10)))'
+        # La visibilidad: los cruces aparentes donde una arista cambia de vista
+        # a oculta; los demás cambios son I y J. M1 y N1 también lo son.
+        x_CA_FD1: 'cruce_aparente(figura.segmento("CA1"), figura.segmento("FD1"))'
+        x_FD_AB1: 'cruce_aparente(figura.segmento("FD1"), figura.segmento("AB1"))'
+        x_AB_FD2: 'cruce_aparente(figura.segmento("AB2"), figura.segmento("FD2"))'
+        x_AB_DE2: 'cruce_aparente(figura.segmento("AB2"), figura.segmento("DE2"))'
+        x_BC_DE2: 'cruce_aparente(figura.segmento("BC2"), figura.segmento("DE2"))'
+        x_BC_EF2: 'cruce_aparente(figura.segmento("BC2"), figura.segmento("EF2"))'
+        x_EF_CA2: 'cruce_aparente(figura.segmento("EF2"), figura.segmento("CA2"))'
+        x_FD_CA2: 'cruce_aparente(figura.segmento("FD2"), figura.segmento("CA2"))'
+        # Los extremos de las rectas largas.
+        L_M2: 'desplaza(M2, dy: mm(-4))'
+        L_N2: 'desplaza(N2, dy: mm(-4))'
+        L_I1: 'desplaza(proy_planta(I), dy: mm(4))'
+        L_R: 'uno(medir_sobre(figura.segmento("DE2"), desde: R2, distancia: mm(4)), 2)'
+        L_RA: 'desplaza(R2, dy: mm(-4))'
+        L_K1: 'desplaza(proy_planta(K), dy: mm(4))'
+      comprueba:
+        - en_plano(I, abc)
+        - en_plano(I, def)
+        - en_plano(J, abc)
+        - en_plano(J, def)
+        - en_plano(K, def)
+        - en_recta(I, recta3(E, F))
+        - en_recta(J, recta3(F, D))
+        - en_recta(K, recta3(A, B))
+        - en_recta(J, recta3(I, K))
+    pasos:
+      - tipo: reconocer
+        pregunta: FD es una recta de perfil, con D₁F₁ y D₂F₂ en la misma vertical. Con solo el alzado y la planta, ¿sirve el plano vertical que contiene FD para hallar dónde atraviesa FD el triángulo ABC?
+        opciones:
+          - texto: Sí, como con cualquier arista, subiendo al alzado los cruces de D₁F₁ con A₁B₁ y C₁A₁
+            mensaje: |
+              Con una arista cualquiera, sí; con esta, no. El plano vertical de FD es un plano de perfil, y
+              los alzados de esos dos puntos caen en la vertical de D₂F₂, encima de ella. Su recta es la
+              propia D₂F₂, y no la corta en un punto.
+          - texto: No, porque ese plano es el de perfil, y la recta en que corta a ABC cae en el alzado encima de D₂F₂, sin cortarla en un punto
+            correcta: true
+            mensaje: |
+              Eso es. El plano proyectante de una recta de perfil es el de perfil, que se ve como la misma
+              vertical en las dos vistas: la recta que corta en ABC cae encima de D₂F₂. J sale de otra
+              manera, con la recta común de los dos planos: pasa por I y por otro punto, y corta FD en J.
+          - texto: No hace falta ningún plano, porque J₂ es el cruce de D₂F₂ con A₂B₂ y J₁, el de D₁F₁ con A₁B₁
+            mensaje: |
+              Esos son cruces aparentes. Los dos son las vistas de un mismo punto de AB, el que está en el
+              plano de perfil de FD, pero ese punto no es de FD: en la planta AB pasa 3,9 mm por encima de
+              FD, y en el alzado, 3,8 mm por detrás.
+
+      - tipo: construir
+        titulo: Los extremos del segmento, y lo que se ve
+        intro: |
+          Llamamos I al punto donde la arista EF atraviesa ABC, y J al punto donde lo atraviesa FD: los
+          dos extremos del segmento común están en aristas de DEF. I sale como en el Ejercicio 24, con
+          el plano vertical que contiene EF, que corta a ABC en la recta MN. Con FD no sirve: es de
+          perfil, y su plano vertical también, y la recta que corta en ABC cae en el alzado encima de
+          D₂F₂. J sale de la recta común de los dos planos, que pasa por I y por K, el punto donde AB
+          corta el plano DEF. K, con el plano vertical de AB: corta a DEF en la recta RP, con P en EF, en
+          la vertical de M₁, y R en la recta DE prolongada, en la vertical de A, porque A₁ cae en la
+          prolongación de D₁E₁. Marca I y J en las dos vistas.
+
+          Después, pasa a limpio con «arista vista» y «arista oculta» el segmento IJ y los tramos de las
+          aristas que cambian de vista a oculta; las que se ven enteras ya están dibujadas: AB, BC y DE en
+          la planta, y CA y DE en el alzado. Tomamos los dos triángulos como placas opacas, que el
+          enunciado no lo dice. J₁ cae a 1,3 mm de K₁ y a 1,7 del cruce aparente de D₁F₁ con A₁B₁, y J₂ a
+          1,4 mm de K₂ y a 2,2 del cruce aparente de D₂F₂ con A₂B₂: amplía con la lupa (×4) antes de
+          marcarlos. El tramo oculto de FD en la planta
+          mide 1,7 mm.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: I2
+            pide: I, donde la arista EF atraviesa el triángulo ABC, en el alzado
+            es: proy_alzado(solucion.I)
+            bien: |
+              I₂ está en E₂F₂, donde la corta M₂N₂: la recta en que el plano vertical de EF corta a ABC.
+            diagnosticos:
+              - si: cerca_de(solucion.x_EF_CA2)
+                mensaje: |
+                  Ese es el cruce aparente de E₂F₂ con C₂A₂: en el alzado se tapan, pero en el espacio CA pasa
+                  37,2 mm por delante de EF sin tocarla. I sale del plano auxiliar: la recta M₂N₂.
+                ejemplo: solucion.x_EF_CA2
+              - si: cerca_de(solucion.x_BC_EF2)
+                mensaje: |
+                  Ese es el cruce aparente de E₂F₂ con B₂C₂: EF pasa ahí 28,9 mm por delante de BC, sin
+                  tocarla. I está donde E₂F₂ corta M₂N₂.
+                ejemplo: solucion.x_BC_EF2
+              - si: '!en_recta(figura.segmento("EF2"))'
+                mensaje: |
+                  I es un punto de la arista EF: I₂ va **en E₂F₂**, donde la corta la recta M₂N₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.I), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en E₂F₂, pero no donde la corta M₂N₂. M₂ y N₂ son los alzados de los puntos donde
+                  E₁F₁ cruza A₁B₁ y C₁A₁ en la planta, subidos por su vertical hasta A₂B₂ y C₂A₂.
+          - nombre: I1
+            pide: I, en la planta
+            es: proy_planta(solucion.I)
+            bien: |
+              I₁ está en E₁F₁, en la vertical de I₂.
+            diagnosticos:
+              - si: cerca_de(solucion.M1)
+                mensaje: |
+                  Ese es M₁, donde E₁F₁ cruza A₁B₁: un cruce aparente de la planta, y el punto de AB que corta
+                  el plano auxiliar. I₁ baja de I₂ por su vertical.
+                ejemplo: solucion.M1
+              - si: cerca_de(solucion.N1)
+                mensaje: |
+                  Ese es N₁, donde E₁F₁ cruza C₁A₁: otro cruce aparente, y el punto de CA que corta el plano
+                  auxiliar. I₁ baja de I₂ por su vertical.
+                ejemplo: solucion.N1
+              - si: '!en_vertical_de(I2)'
+                mensaje: |
+                  I₁ va en la **vertical de I₂**: es el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.I), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("EF1"))'
+                mensaje: |
+                  I está en la arista EF: I₁ va donde la vertical de I₂ corta **E₁F₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.I), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  I₁ está donde la vertical de I₂ corta E₁F₁.
+          - nombre: J2
+            pide: J, donde la arista FD atraviesa el triángulo ABC, en el alzado
+            es: proy_alzado(solucion.J)
+            bien: |
+              J₂ está en D₂F₂, donde la corta I₂K₂, la recta común de los dos planos. Esa recta y FD están
+              las dos en el plano DEF, así que se cortan de verdad.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.K))
+                mensaje: |
+                  Ese es K₂, donde AB corta el plano DEF. Está en la recta común de los dos planos, a 1,4 mm de
+                  J, pero fuera del triángulo DEF, al otro lado de FD. J está en FD: donde I₂K₂ corta D₂F₂.
+                ejemplo: proy_alzado(solucion.K)
+              - si: cerca_de(solucion.x_AB_FD2)
+                mensaje: |
+                  Ese es el cruce aparente de D₂F₂ con A₂B₂: FD pasa ahí 3,8 mm por delante de AB, sin tocarla.
+                  J está donde D₂F₂ corta I₂K₂, la recta común de los dos planos.
+                ejemplo: solucion.x_AB_FD2
+              - si: cerca_de(solucion.x_FD_CA2)
+                mensaje: |
+                  Ese es el cruce aparente de D₂F₂ con C₂A₂: CA pasa ahí 44,0 mm por delante de FD. J está donde
+                  D₂F₂ corta I₂K₂.
+                ejemplo: solucion.x_FD_CA2
+              - si: '!en_recta(figura.segmento("FD2"))'
+                mensaje: |
+                  J es un punto de la arista FD: J₂ va **en D₂F₂**, donde la corta la recta común I₂K₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.J), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en D₂F₂, pero no donde la corta I₂K₂. K es el punto donde AB corta el plano DEF: con el
+                  plano vertical de AB, que corta DEF en la recta R₂P₂.
+          - nombre: J1
+            pide: J, en la planta
+            es: proy_planta(solucion.J)
+            bien: |
+              J₁ está en D₁F₁, donde la corta I₁K₁. No sale de la vertical de J₂: con FD de perfil, esa
+              vertical es D₁F₁ entera.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.K))
+                mensaje: |
+                  Ese es K₁, donde AB corta el plano DEF, a 1,3 mm de J₁ pero fuera del triángulo DEF. J está en
+                  FD: donde I₁K₁ corta D₁F₁.
+                ejemplo: proy_planta(solucion.K)
+              - si: cerca_de(solucion.x_FD_AB1)
+                mensaje: |
+                  Ese es el cruce aparente de D₁F₁ con A₁B₁: AB pasa ahí 3,9 mm por encima de FD, sin tocarla.
+                  J₁ está donde D₁F₁ corta I₁K₁.
+                ejemplo: solucion.x_FD_AB1
+              - si: cerca_de(solucion.x_CA_FD1)
+                mensaje: |
+                  Ese es el cruce aparente de D₁F₁ con C₁A₁: FD pasa ahí 44,7 mm por encima de CA. J₁ está donde
+                  D₁F₁ corta I₁K₁.
+                ejemplo: solucion.x_CA_FD1
+              - si: '!en_recta(figura.segmento("FD1"))'
+                mensaje: |
+                  J está en la arista FD: J₁ va **en D₁F₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.J), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en D₁F₁, pero J₁ no se saca bajando J₂ por su vertical: FD es de perfil, y esa vertical
+                  es D₁F₁ entera. J₁ está donde I₁K₁, la planta de la recta común, corta D₁F₁.
+        # Decisión: los triángulos, opacos (lo dicen las Notas nuestras). La
+        # visibilidad sale de un cálculo de líneas ocultas aparte, por rayos
+        # contra las dos placas; cada cambio, en el cruce aparente que dice su
+        # tramo o en I o J. Las aristas que se ven enteras y ya están en la
+        # lámina no son tramos: AB, BC y DE en la planta, y CA y DE en el
+        # alzado.
+        tramos:
+          - traza: segmento2(proy_planta(solucion.I), proy_planta(solucion.J))
+            tipo: visto
+            porque: 'IJ está en las dos placas a la vez: desde arriba no la tapa ninguna.'
+          - traza: segmento2(figura.punto("C1"), solucion.N1)
+            tipo: visto
+            porque: 'De C₁ al cruce con E₁F₁, CA queda fuera de la planta de DEF: desde arriba nada la tapa.'
+          - traza: segmento2(solucion.N1, solucion.x_CA_FD1)
+            tipo: oculto
+            porque: 'Entre los cruces con E₁F₁ y F₁D₁, CA pasa por debajo de DEF, que la tapa desde arriba: en el primero EF va 15,4 mm más alta, y en el segundo FD, 44,7.'
+          - traza: segmento2(solucion.x_CA_FD1, figura.punto("A1"))
+            tipo: visto
+            porque: 'Del cruce con F₁D₁ a A₁, CA queda fuera de la planta de DEF: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("E1"), proy_planta(solucion.I))
+            tipo: visto
+            porque: 'De E₁ a I₁ nada tapa EF desde arriba: hasta C₁A₁ queda fuera de la planta de ABC, y de ahí a I va por encima de esa placa. En el cruce aparente con C₁A₁, EF va 15,4 mm más alta que CA.'
+          - traza: segmento2(proy_planta(solucion.I), solucion.M1)
+            tipo: oculto
+            porque: 'En I, EF atraviesa ABC y pasa por debajo: de I₁ al cruce con A₁B₁, el borde de ABC, la tapa esa placa. En el cruce aparente, AB va 35,6 mm más alta que EF.'
+          - traza: segmento2(solucion.M1, figura.punto("F1"))
+            tipo: visto
+            porque: 'Del cruce con A₁B₁ a F₁, EF sale de debajo de ABC: desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("F1"), solucion.x_FD_AB1)
+            tipo: visto
+            porque: 'De F₁ al cruce con A₁B₁, FD queda fuera de la planta de ABC: desde arriba nada la tapa.'
+          - traza: segmento2(solucion.x_FD_AB1, proy_planta(solucion.J))
+            tipo: oculto
+            porque: 'Del cruce con A₁B₁ hasta J, FD va por debajo de ABC, que la tapa desde arriba: en el cruce aparente, AB va 3,9 mm más alta que FD. Es un tramo corto, de 1,7 mm.'
+          - traza: segmento2(proy_planta(solucion.J), figura.punto("D1"))
+            tipo: visto
+            porque: 'En J, FD atraviesa ABC y pasa por encima: de J₁ a D₁ desde arriba nada la tapa. En el cruce aparente con C₁A₁, FD va 44,7 mm más alta que CA.'
+          - traza: segmento2(proy_alzado(solucion.I), proy_alzado(solucion.J))
+            tipo: visto
+            porque: 'IJ está en las dos placas a la vez: por delante no la tapa ninguna.'
+          - traza: segmento2(figura.punto("A2"), solucion.x_AB_FD2)
+            tipo: visto
+            porque: 'De A₂ al cruce con D₂F₂, AB queda fuera del alzado de DEF: nada la tapa.'
+          - traza: segmento2(solucion.x_AB_FD2, solucion.x_AB_DE2)
+            tipo: oculto
+            porque: 'Entre los cruces con D₂F₂ y D₂E₂, AB va detrás de DEF, que la tapa: en el primero FD va 3,8 mm más cerca de quien mira, y en el segundo DE, 51,7.'
+          - traza: segmento2(solucion.x_AB_DE2, figura.punto("B2"))
+            tipo: visto
+            porque: 'Del cruce con D₂E₂ a B₂, AB queda fuera del alzado de DEF: nada la tapa.'
+          - traza: segmento2(figura.punto("B2"), solucion.x_BC_DE2)
+            tipo: visto
+            porque: 'De B₂ al cruce con D₂E₂, BC queda fuera del alzado de DEF: nada la tapa.'
+          - traza: segmento2(solucion.x_BC_DE2, solucion.x_BC_EF2)
+            tipo: oculto
+            porque: 'Entre los cruces con D₂E₂ y E₂F₂, BC va detrás de DEF, que la tapa: en el primero DE va 50,5 mm más cerca de quien mira, y en el segundo EF, 28,9.'
+          - traza: segmento2(solucion.x_BC_EF2, figura.punto("C2"))
+            tipo: visto
+            porque: 'Del cruce con E₂F₂ a C₂, BC queda fuera del alzado de DEF: nada la tapa.'
+          - traza: segmento2(figura.punto("E2"), proy_alzado(solucion.I))
+            tipo: visto
+            porque: 'De E₂ a I₂ nada tapa EF: hasta B₂C₂ queda fuera del alzado de ABC, y de ahí a I va por delante de esa placa. En el cruce aparente con B₂C₂, EF va 28,9 mm más cerca de quien mira.'
+          - traza: segmento2(proy_alzado(solucion.I), solucion.x_EF_CA2)
+            tipo: oculto
+            porque: 'En I, EF pasa detrás de ABC, que la tapa hasta su borde, C₂A₂: en el cruce aparente, CA va 37,2 mm más cerca de quien mira.'
+          - traza: segmento2(solucion.x_EF_CA2, figura.punto("F2"))
+            tipo: visto
+            porque: 'Del cruce con C₂A₂ a F₂, EF sale del alzado de ABC: nada la tapa.'
+          - traza: segmento2(figura.punto("F2"), solucion.x_FD_CA2)
+            tipo: visto
+            porque: 'De F₂ al cruce con C₂A₂, FD queda fuera del alzado de ABC: nada la tapa.'
+          - traza: segmento2(solucion.x_FD_CA2, proy_alzado(solucion.J))
+            tipo: oculto
+            porque: 'Del cruce con C₂A₂ hasta J, FD va detrás de ABC, que la tapa: en el cruce aparente, CA va 44,0 mm más cerca de quien mira.'
+          - traza: segmento2(proy_alzado(solucion.J), figura.punto("D2"))
+            tipo: visto
+            porque: 'En J, FD atraviesa ABC y pasa por delante: de J₂ a D₂ nada la tapa. En el cruce aparente con A₂B₂, FD va 3,8 mm más cerca de quien mira.'
+        trazado:
+          - segmento2(solucion.M2, solucion.N2)
+          - segmento2(solucion.R2, solucion.P2)
+        construccion:
+          - con: marca
+            traza: solucion.M1
+            rotulo: M₁
+            porque: |
+              **El extremo I.** El plano vertical que contiene EF se ve, en la planta, como la recta E₁F₁, y
+              corta los lados de ABC donde E₁F₁ los cruza. M₁, donde E₁F₁ cruza A₁B₁: M es el punto de AB
+              que está en ese plano. M, N, P, R, K y S son nombres nuestros, como I y J.
+          - con: marca
+            traza: solucion.N1
+            rotulo: N₁
+            porque: |
+              N₁, donde E₁F₁ cruza C₁A₁: N es el punto de CA que está en el plano vertical de EF.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.M1, solucion.L_M2), segmento2(solucion.N1, solucion.L_N2)]'
+            porque: |
+              Por M₁ y por N₁, las verticales hacia el alzado, largas, hasta pasar A₂B₂ y C₂A₂. La de M₁
+              cruza antes E₂F₂: servirá para K.
+          - con: marca
+            traza: solucion.M2
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta A₂B₂.
+          - con: marca
+            traza: solucion.N2
+            rotulo: N₂
+            porque: |
+              N₂, donde la vertical de N₁ corta C₂A₂.
+          - con: regla
+            traza: segmento2(solucion.M2, solucion.N2)
+            porque: |
+              M₂N₂, el alzado de la recta en que el plano vertical de EF corta a ABC. Esa recta y EF están en
+              el mismo plano, así que se cortan de verdad.
+          - con: marca
+            traza: proy_alzado(solucion.I)
+            rotulo: I₂
+            porque: |
+              I₂, donde M₂N₂ corta E₂F₂: el punto donde la arista EF atraviesa el triángulo ABC.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.I), solucion.L_I1)
+            porque: |
+              Por I₂, la vertical hacia la planta, hasta pasar E₁F₁.
+          - con: marca
+            traza: proy_planta(solucion.I)
+            rotulo: I₁
+            porque: |
+              I₁, donde la vertical de I₂ corta E₁F₁.
+          - con: regla
+            traza: segmento2(figura.punto("D1"), figura.punto("A1"))
+            porque: |
+              **K, para la recta común.** FD es de perfil y su plano vertical no da J. Se busca otro punto de
+              la recta común: K, donde AB corta el plano DEF, con el plano vertical de AB. Ese plano corta
+              DEF en una recta que hay que sacar de EF y de DE, porque FD no sirve. Primero, D₁E₁ prolongada
+              hacia la izquierda: pasa justo por A₁, porque A tiene el alejamiento de D y de E.
+          - con: regla
+            traza: segmento2(figura.punto("E2"), solucion.L_R)
+            porque: |
+              En el alzado, D₂E₂ prolongada hacia la izquierda con la regla, larga, más allá de la vertical de
+              A₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.L_RA)
+            porque: |
+              Por A₂, la vertical hacia arriba, hasta pasar la prolongación de D₂E₂: la recta DE corta el
+              plano vertical de AB en el punto de su vertical, porque A₁ está en D₁E₁ prolongada.
+          - con: marca
+            traza: solucion.R2
+            rotulo: R₂
+            porque: |
+              R₂, donde la vertical de A₂ corta la prolongación de D₂E₂: R es el punto de la recta DE que
+              está en el plano vertical de AB, y su planta es A₁.
+          - con: marca
+            traza: solucion.P2
+            rotulo: P₂
+            porque: |
+              P₂, donde la vertical de M₁ corta E₂F₂. M₁ es también el cruce de A₁B₁ con E₁F₁: P es el punto
+              de EF que está en el plano vertical de AB.
+          - con: regla
+            traza: segmento2(solucion.R2, solucion.P2)
+            porque: |
+              R₂P₂, el alzado de la recta en que el plano vertical de AB corta a DEF. Esa recta y AB están en
+              el mismo plano, y se cortan de verdad.
+          - con: marca
+            traza: proy_alzado(solucion.K)
+            porque: |
+              K₂, donde R₂P₂ corta A₂B₂: el punto donde AB corta el plano DEF. Cae fuera del triángulo DEF,
+              al otro lado de F₂D₂, pero está en la recta común de los dos planos. Va sin rótulo: el de J₂,
+              que se marca después a 1,4 mm, lo pisaría.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.K), solucion.L_K1)
+            porque: |
+              Por K₂, la vertical hacia la planta, hasta pasar A₁B₁.
+          - con: marca
+            traza: proy_planta(solucion.K)
+            porque: |
+              K₁, donde la vertical de K₂ corta A₁B₁. Va sin rótulo: J₁, que se marca después, lo taparía.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.I), proy_alzado(solucion.K))
+            porque: |
+              **El extremo J.** I y K son de los dos planos, así que IK es su recta común. I₂K₂ y FD están
+              las dos en el plano DEF: donde se cortan en el alzado, se cortan de verdad.
+          - con: marca
+            traza: proy_alzado(solucion.J)
+            rotulo: J₂
+            porque: |
+              J₂, donde I₂K₂ corta D₂F₂, muy cerca de K₂: el punto donde la arista FD atraviesa ABC.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.I), proy_planta(solucion.K))
+            porque: |
+              En la planta, I₁K₁, la planta de la recta común. J₁ no se saca bajando J₂: con FD de perfil, la
+              vertical de J₂ es toda D₁F₁.
+          - con: marca
+            traza: proy_planta(solucion.J)
+            rotulo: J₁
+            porque: |
+              J₁, donde I₁K₁ corta D₁F₁, a 1,3 mm de K₁.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.I), proy_planta(solucion.J)), segmento2(figura.punto("C1"), solucion.N1), segmento2(solucion.x_CA_FD1, figura.punto("A1")), segmento2(figura.punto("E1"), proy_planta(solucion.I)), segmento2(solucion.M1, figura.punto("F1")), segmento2(figura.punto("F1"), solucion.x_FD_AB1), segmento2(proy_planta(solucion.J), figura.punto("D1"))]'
+            porque: |
+              **A limpio, la planta.** Desde arriba se ve lo que va más alto. I₁J₁, en continua: está en las
+              dos placas. EF y FD se ven de E y de D hasta I y J, por encima de ABC, y desde los cruces con
+              A₁B₁ hasta F; CA, fuera de la planta de DEF.
+          - con: arista-oculta
+            traza: '[segmento2(solucion.N1, solucion.x_CA_FD1), segmento2(proy_planta(solucion.I), solucion.M1), segmento2(solucion.x_FD_AB1, proy_planta(solucion.J))]'
+            porque: |
+              A trazos, lo que queda debajo de la otra placa: CA entre E₁F₁ y F₁D₁, debajo de DEF, y EF y FD
+              entre I o J y A₁B₁, debajo de ABC. El de FD es corto, 1,7 mm. AB, BC y DE se ven enteras en la
+              planta, y ya están dibujadas.
+          - con: arista-vista
+            traza: '[segmento2(proy_alzado(solucion.I), proy_alzado(solucion.J)), segmento2(figura.punto("A2"), solucion.x_AB_FD2), segmento2(solucion.x_AB_DE2, figura.punto("B2")), segmento2(figura.punto("B2"), solucion.x_BC_DE2), segmento2(solucion.x_BC_EF2, figura.punto("C2")), segmento2(figura.punto("E2"), proy_alzado(solucion.I)), segmento2(solucion.x_EF_CA2, figura.punto("F2")), segmento2(figura.punto("F2"), solucion.x_FD_CA2), segmento2(proy_alzado(solucion.J), figura.punto("D2"))]'
+            porque: |
+              **El alzado.** Se ve lo que va más cerca de quien mira. I₂J₂, en continua; EF y FD de E y de
+              D hasta I y J, por delante de ABC; y lo que de cada arista queda fuera de la otra placa.
+          - con: arista-oculta
+            traza: '[segmento2(solucion.x_AB_FD2, solucion.x_AB_DE2), segmento2(solucion.x_BC_DE2, solucion.x_BC_EF2), segmento2(proy_alzado(solucion.I), solucion.x_EF_CA2), segmento2(solucion.x_FD_CA2, proy_alzado(solucion.J))]'
+            porque: |
+              A trazos, lo que queda detrás: AB y BC donde pasan por detrás de DEF, y EF y FD de I o J hasta
+              C₂A₂, detrás de ABC. CA y DE se ven enteras en el alzado, y ya están dibujadas.
+        pista: |
+          (1) En la planta, E₁F₁ cruza A₁B₁ en M₁ y C₁A₁ en N₁; súbelos a A₂B₂ y C₂A₂: M₂N₂ corta E₂F₂ en
+          I₂. (2) FD es de perfil: busca otro punto de la recta común, K, donde AB corta el plano DEF. (3) El
+          plano vertical de AB corta EF en P (vertical de M₁) y la recta DE en R (vertical de A, porque A₁
+          está en D₁E₁ prolongada): R₂P₂ corta A₂B₂ en K₂. (4) I₂K₂ corta D₂F₂ en J₂, e I₁K₁ corta D₁F₁ en J₁.
+          (5) Para lo que se ve, en cada cruce aparente, la que va más alta (planta) o más cerca (alzado).
+        desarrollo: |
+          En verde claro, las dos rectas auxiliares del alzado, M₂N₂ y R₂P₂, y el segmento IJ en las dos
+          vistas, con lo oculto a trazos. DEF atraviesa ABC con su vértice F: EF y FD pasan de un lado a
+          otro de la placa ABC en I y en J, y la recta común sale de DEF por las dos aristas antes de salir
+          de ABC. Por eso el segmento común es entero de DEF, de I a J.
+
+      - tipo: calcular
+        titulo: La longitud del segmento de intersección
+        pregunta: Como pregunta nuestra, ¿cuánto mide de verdad IJ, el segmento en que se cortan las dos placas?
+        respuesta:
+          tipo: numero
+          valor: '24.02'
+          receta: largo_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '22.24'
+            receta: en_mm(vm_planta(solucion.I, solucion.J))
+            mensaje: |
+              Eso es I₁J₁, la planta. IJ sube 9,09 mm de I a J, y la planta la acorta. La verdadera magnitud
+              sale del triángulo: la planta de un cateto y la diferencia de cotas del otro.
+          - valor: '25.42'
+            receta: en_mm(vm(solucion.I, solucion.K))
+            mensaje: |
+              Eso es IK. K, donde AB corta el plano DEF, está en la recta común, pero fuera del triángulo DEF,
+              1,4 mm más allá de FD. El segmento común acaba en J, en FD.
+          - valor: '46.40'
+            receta: en_mm(vm(solucion.S, solucion.K))
+            mensaje: |
+              Eso es SK, lo que de la recta común está dentro de ABC: de S, donde CA corta el plano DEF, a K, en AB. DEF no llega tan lejos: la
+              recta sale de DEF por EF y por FD antes de salir de ABC, y el segmento común es IJ.
+        pista: |
+          IJ no es horizontal ni frontal: su verdadera magnitud sale del triángulo del tema 2, con I₁J₁ de
+          un cateto y la diferencia de cotas de I₂ y J₂ del otro.
+        desarrollo: |
+          Con el triángulo de la verdadera magnitud, la planta y la diferencia de cotas:
+
+          $$ \overline{IJ} = \sqrt{\overline{I_1J_1}^{\,2} + \Delta z^{2}} = \sqrt{22{,}24^{2} + 9{,}09^{2}} \approx 24{,}02 \text{ mm} $$
+
+          El alzado, I₂J₂, mide 23,99 mm, y cae dentro de la tolerancia por casualidad: IJ es casi frontal,
+          porque J está solo 1,21 mm más lejos de quien mira que I. La planta sí acorta, a 22,24 mm. En la
+          construcción hay otras tres medidas que caen dentro de la tolerancia sin ser IJ: P₂K₂, 23,66 mm;
+          I₁K₁, 23,53, y de A₁ a D₁, en la prolongación de D₁E₁, 25,02.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El plano vertical que contiene EF corta a ABC en la recta MN, y M₂N₂ corta E₂F₂ en I₂, donde EF atraviesa ABC.
+          - texto: FD es de perfil, y su plano vertical también, así que la recta que corta en ABC cae encima de D₂F₂ y no da J.
+          - texto: El plano vertical de AB corta a DEF en RP, con R en la recta DE prolongada, en la vertical de A, y P en EF; R₂P₂ corta A₂B₂ en K₂.
+          - texto: I y K son de la recta común de los dos planos, que está en DEF como FD; I₂K₂ corta D₂F₂ en J₂, e I₁K₁ corta D₁F₁ en J₁.
+          - texto: J₁ baja de J₂ por su vertical, como cualquier punto.
+            trampa: true
+            mensaje: |
+              Con FD de perfil, la vertical de J₂ es D₁F₁ entera, y no fija ningún punto. J₁ sale de cortar
+              D₁F₁ con I₁K₁, la planta de la recta común.
+    resolucion: |
+      **Qué se busca.** El mismo enunciado que el Ejercicio 24, con otra figura. Los dos triángulos se
+      cortan en un segmento de la recta común de sus planos. Sobre esa recta, ABC va de S, en CA, a K,
+      en AB, y DEF de I, en EF, a J, en FD, que caen entre los dos: la recta sale de DEF por EF y por FD
+      antes de salir de ABC, y el segmento común es IJ, el tramo que está dentro de DEF. DEF atraviesa
+      ABC con su vértice F.
+
+      **I.** Con el plano vertical que contiene EF, que corta los lados de ABC donde E₁F₁ los cruza, en
+      M₁ y N₁. Subidos a A₂B₂ y C₂A₂, M₂N₂ corta E₂F₂ en I₂, e I₁ baja por su vertical.
+
+      **J.** FD es una recta de perfil: D₁F₁ y D₂F₂ están en la misma vertical. Su plano vertical es el
+      de perfil, y la recta que corta en ABC cae en el alzado encima de D₂F₂: no da J. Se busca otro
+      punto de la recta común, K, donde AB corta el plano DEF, con el plano vertical de AB. Ese plano
+      corta EF en P, en la vertical de M₁, y la recta DE prolongada en R, en la vertical de A, porque
+      A₁ está en la prolongación de D₁E₁. R₂P₂ corta A₂B₂ en K₂, y K₁ baja a A₁B₁. La recta común es
+      IK, y como está en DEF, igual que FD, I₂K₂ corta D₂F₂ en J₂ e I₁K₁ corta D₁F₁ en J₁. K cae a 1,4
+      mm de J, fuera de DEF.
+
+      **Lo que se ve.** Tomamos las dos placas opacas. En la planta, CA pasa por debajo de DEF, y EF y
+      FD por debajo de ABC de I y de J hasta A₁B₁. En el alzado, AB y BC quedan en parte detrás de DEF,
+      y EF y FD detrás de ABC de I y de J hasta C₂A₂. Con planos transparentes, todo iría en continua.
+
+      **La longitud.** IJ mide 24,02 mm en verdadera magnitud; la planta, 22,24, y el alzado, 23,99,
+      casi igual por casualidad, porque IJ es casi frontal.
