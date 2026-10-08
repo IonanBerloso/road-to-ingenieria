@@ -3431,7 +3431,7 @@ ejercicios:
               Esa es la regla del eje **vertical**. Este es de punta: lo ves como un punto en el
               alzado, O₂ ≡ P₂, y en la planta es la recta de trazo y punto. La vista donde el eje es
               un punto es la que gira.
-          - texto: Su distancia a O; las dos proyecciones giran 120°, la planta alrededor de O₁ y el alzado alrededor de O₂
+          - texto: Su distancia a O; las dos proyecciones giran 120°, alrededor de O₁ y de O₂
             mensaje: |
               Solo gira la vista donde el eje es un punto. En la planta el eje es una recta, y
               los puntos no giran alrededor de O₁: se mueven en horizontal, porque su alejamiento
@@ -4304,12 +4304,6 @@ ejercicios:
         ang_barra_ph: angulo_con_ph(segmento3(Mpp, Npp))
         Mfr: 'punto3(alzado: proy_alzado(Npp), planta: pie_perpendicular(proy_planta(Npp), perpendicular(por: proy_planta(Mpp), a: figura.segmento("MN1"))))'
         ang_barra_alzado: angulo_con_ph(segmento3(Mpp, Mfr))
-        # Donde la planta de la barra cruza el lado A₁″D₁″: el punto de la barra
-        # que está en el plano vertical de ese lado. De ahí a M₁″ la barra queda
-        # debajo del cuadrado (lo decide el segundo camino comparando cotas), y
-        # el trazado solo pinta el tramo visto.
-        Dpp_arriba: 'punto3(alzado: desplaza(proy_alzado(Dpp), dy: mm(-10)), planta: proy_planta(Dpp))'
-        Xb: corte_recta_plano(recta3(Mpp, Npp), plano(Dpp, App, Dpp_arriba))
         # Los extremos de las rectas largas de la construcción paso a paso: en el
         # papel se trazan más allá del punto que van a dar, y no paran en él.
         L_NM: 'uno(medir_sobre(segmento2(figura.punto("N1"), proy_planta(Mp)), desde: figura.punto("N1"), distancia: vm_planta(N, M) + mm(10)), 1)'
@@ -4319,6 +4313,10 @@ ejercicios:
         L_ND: 'uno(medir_sobre(segmento2(proy_alzado(Npp), proy_alzado(Dpp)), desde: proy_alzado(Npp), distancia: vm_alzado(N, Dp) + mm(8)), 1)'
         L_DA: 'uno(medir_sobre(segmento2(proy_alzado(Dpp), proy_alzado(App)), desde: proy_alzado(Dpp), distancia: vm_alzado(Dp, Ap) + mm(8)), 1)'
         L_CB: 'uno(medir_sobre(segmento2(proy_alzado(Cpp), proy_alzado(Bpp)), desde: proy_alzado(Cpp), distancia: vm_alzado(Cp, Bp) + mm(8)), 1)'
+        # La visibilidad: el cruce aparente, en la planta, donde la barra pasa de
+        # oculta (debajo del cuadrado) a vista, con el lado que lo da
+        # (k_<arista>_<lado>). En el alzado no cambia nada.
+        k_MN_DA: 'cruce_aparente(segmento2(proy_planta(Mpp), proy_planta(Npp)), segmento2(proy_planta(Dpp), proy_planta(App)))'
       comprueba:
         # M está en CD (el enunciado dice que es su punto medio).
         - en_recta(M, recta3(C, D))
@@ -4641,7 +4639,19 @@ ejercicios:
           gira desde ahí. Marca la posición final en las dos vistas; esta vez N también se mueve,
           porque no está en j. N₂ ≡ M₂ no lleva marca en la lámina: está en D₂C₂, en la vertical de
           P₂.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+
+          Después, pasa a limpio la posición final en las dos vistas con «arista vista» y «arista
+          oculta». Lo visto y lo oculto es pregunta nuestra (el enunciado solo pide dibujar), y
+          también la lectura: tomamos el cuadrado como una placa opaca y la barra como una varilla,
+          que no tapa nada. Con el cuadrado transparente, todo iría en continua; con la placa
+          opaca, en la planta la barra pasa por debajo de ella desde M₁″ hasta el lado A₁″D₁″, y
+          ese tramo va a trazos. Cada arista se corta solo donde cambia su visibilidad: para tener
+          ese punto, traza antes la barra con la recta. En el alzado la barra va en la recta del
+          lado C₂″D₂″, y de M₂″ a C₂″ coincide con él: pasa el lado y la barra, cada uno entero.
+          La posición de partida, que trae la lámina, y la que deja el primer giro, que es de paso,
+          no se pasan. El tramo visto de la barra en la planta, de A₁″D₁″ a N₁″, mide 5,2 mm:
+          amplía con la lupa (×4) si hace falta.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: N2pp
@@ -4901,17 +4911,51 @@ ejercicios:
               - si: siempre
                 mensaje: |
                   B₁″ está en la vertical de B₂″ y en la horizontal de B₁′.
-        trazado:
-          - segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
-          - segmento2(proy_alzado(solucion.Bpp), proy_alzado(solucion.Cpp))
-          - segmento2(proy_alzado(solucion.Cpp), proy_alzado(solucion.Dpp))
-          - segmento2(proy_alzado(solucion.Dpp), proy_alzado(solucion.App))
-          - segmento2(proy_alzado(solucion.Mpp), proy_alzado(solucion.Npp))
-          - segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp))
-          - segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp))
-          - segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp))
-          - segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App))
-          - segmento2(proy_planta(solucion.Xb), proy_planta(solucion.Npp))
+        # Decisión: la visibilidad es pregunta nuestra (el enunciado solo pide
+        # dibujar), con el cuadrado como placa opaca y la barra como varilla; va
+        # aquí, en el paso que marca la posición final, y sustituye al paso
+        # dibujar que había. Sale de un cálculo de líneas ocultas aparte, por
+        # rayos contra la placa, y coincide con lo que decía ese paso. En el
+        # alzado la barra va sobre el lado CD de M₂″ a C₂″: los dos se parten en
+        # M₂″ y en C₂″ para que sus tramos no se pisen, y así casan tanto el lado
+        # entero como la barra entera.
+        tramos:
+          - traza: segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp))
+            tipo: visto
+            porque: 'AB es un lado de la placa, y en la planta nada pasa por encima de ella: la barra sale por debajo.'
+          - traza: segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp))
+            tipo: visto
+            porque: 'BC es un lado de la placa, lejos de la barra en la planta, y nada pasa por encima de la placa: desde arriba se ve.'
+          - traza: segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp))
+            tipo: visto
+            porque: 'CD es el lado del que sale la barra, en M: la barra baja desde él por debajo de la placa, y desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App))
+            tipo: visto
+            porque: 'DA es un lado de la placa. La barra lo cruza en la planta, pero 36,5 mm por debajo: desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(solucion.Mpp), solucion.k_MN_DA)
+            tipo: oculto
+            porque: 'De M₁″ a A₁″D₁″, la barra cae dentro de la planta de la placa, y la placa va más alta: a mitad de ese tramo, 18,2 mm por encima. La placa la tapa.'
+          - traza: segmento2(solucion.k_MN_DA, proy_planta(solucion.Npp))
+            tipo: visto
+            porque: 'Pasado el lado A₁″D₁″, la barra sale de la planta de la placa: de ahí a N₁″ no tiene nada encima.'
+          - traza: segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
+            tipo: visto
+            porque: 'AB es un lado de la placa. En el alzado la barra va por la recta del lado CD, sin entrar en el contorno de la placa: nada tapa sus lados.'
+          - traza: segmento2(proy_alzado(solucion.Bpp), proy_alzado(solucion.Cpp))
+            tipo: visto
+            porque: 'BC es un lado de la placa, y en el alzado nada pasa por delante de ella: la barra va por su borde, la recta de CD.'
+          - traza: segmento2(proy_alzado(solucion.Dpp), proy_alzado(solucion.App))
+            tipo: visto
+            porque: 'DA es un lado de la placa, lejos de la barra en el alzado, y nada pasa por delante de la placa: se ve entero.'
+          - traza: segmento2(proy_alzado(solucion.Dpp), proy_alzado(solucion.Mpp))
+            tipo: visto
+            porque: 'De D₂″ a M₂″, el lado CD es borde del alzado de la placa, y la barra no llega aquí: nada lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.Mpp), proy_alzado(solucion.Cpp))
+            tipo: visto
+            porque: 'De M₂″ a C₂″ van juntos el lado CD y la barra, en un mismo plano de punta. La barra va por delante del lado (a mitad del tramo, 9,1 mm), y una varilla no tapa: los dos se ven.'
+          - traza: segmento2(proy_alzado(solucion.Cpp), proy_alzado(solucion.Npp))
+            tipo: visto
+            porque: 'Pasado C₂″, la barra sigue en la recta del lado CD, fuera del contorno de la placa: nada la tapa.'
         construccion:
           - con: escuadra-cartabon
             traza: segmento2(figura.punto("N1"), solucion.L_NM)
@@ -5069,12 +5113,15 @@ ejercicios:
             rotulo: B₂″
             porque: |
               B₂″, el corte del arco de B con la perpendicular por C₂″.
-          - con: regla
-            traza: segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp))
+          - con: arista-vista
+            traza: '[segmento2(proy_alzado(solucion.App), proy_alzado(solucion.Bpp)), segmento2(proy_alzado(solucion.Bpp), proy_alzado(solucion.Cpp)), segmento2(proy_alzado(solucion.Dpp), proy_alzado(solucion.App)), segmento2(proy_alzado(solucion.Dpp), proy_alzado(solucion.Cpp)), segmento2(proy_alzado(solucion.Mpp), proy_alzado(solucion.Npp))]'
             porque: |
-              A₂″B₂″ une los dos vértices de arriba y cierra el alzado del cuadrado. Comprobación:
-              sale paralelo a D₂″C₂″, porque el rectángulo del primer giro gira entero, sin
-              deformarse.
+              **El alzado, a limpio.** A₂″B₂″ une los dos vértices de arriba y cierra el alzado del
+              cuadrado. Comprobación: sale paralelo a D₂″C₂″, porque el rectángulo del primer giro
+              gira entero, sin deformarse. En el alzado todo se ve, en continua: la placa entera, y
+              la barra de M₂″ a N₂″, en la recta del lado D₂″C₂″, con el que coincide de M₂″ a C₂″.
+              La barra y CD están en un mismo plano de punta, y la barra no entra en el contorno de la
+              placa.
           - con: escuadra-cartabon
             traza: '[segmento2(proy_alzado(solucion.Npp), desplaza(proy_planta(solucion.Npp), dy: mm(5))), segmento2(proy_alzado(solucion.Mpp), desplaza(proy_planta(solucion.Mpp), dy: mm(8))), segmento2(proy_alzado(solucion.Dpp), desplaza(proy_planta(solucion.Dpp), dy: mm(8))), segmento2(proy_alzado(solucion.Cpp), desplaza(proy_planta(solucion.Cpp), dy: mm(8))), segmento2(proy_alzado(solucion.App), desplaza(proy_planta(solucion.App), dy: mm(8))), segmento2(proy_alzado(solucion.Bpp), desplaza(proy_planta(solucion.Bpp), dy: mm(8)))]'
             guia: figura.segmento("MN1")
@@ -5118,13 +5165,28 @@ ejercicios:
             rotulo: B₁″
             porque: |
               B₁″, en la misma horizontal que C₁″ y la vertical de B₂″.
-          - con: regla
-            traza: '[segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp)), segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp)), segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp)), segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App)), segmento2(proy_planta(solucion.Mpp), proy_planta(solucion.Npp))]'
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.App), proy_planta(solucion.Bpp)), segmento2(proy_planta(solucion.Bpp), proy_planta(solucion.Cpp)), segmento2(proy_planta(solucion.Cpp), proy_planta(solucion.Dpp)), segmento2(proy_planta(solucion.Dpp), proy_planta(solucion.App))]'
             porque: |
-              La posición final en la planta, uniendo los vértices: el cuadrado ya no es vertical y se
-              ve como un paralelogramo. La barra pasa por debajo de él desde M₁″ hasta el lado A₁″D₁″
-              (el cuadrado está más alto en ese tramo), y ese tramo, en tu lámina, va en trazo
-              discontinuo.
+              **La planta, a limpio.** El cuadrado, uniendo los vértices: ya no es vertical, y se ve
+              como un paralelogramo, entero en continua, porque nada pasa por encima de él. M₁″ queda
+              en el punto medio de C₁″D₁″, como M₂″ en el de D₂″C₂″: el cuadrado y la barra se han
+              movido juntos.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.Mpp), proy_planta(solucion.Npp))
+            porque: |
+              La barra, fina, con la regla, de M₁″ a N₁″: cruza el lado A₁″D₁″, y en ese cruce cambia
+              su visibilidad.
+          - con: arista-oculta
+            traza: segmento2(proy_planta(solucion.Mpp), solucion.k_MN_DA)
+            porque: |
+              De M₁″ hasta donde cruza A₁″D₁″, la barra cae dentro de la planta del cuadrado, y el
+              cuadrado va más alto: a mitad de ese tramo, 18,2 mm por encima. Ese tramo, el 78 % de la
+              planta de la barra, a trazos.
+          - con: arista-vista
+            traza: segmento2(solucion.k_MN_DA, proy_planta(solucion.Npp))
+            porque: |
+              Y de ahí a N₁″, en continua: pasado el lado A₁″D₁″, ya no hay placa encima.
         pista: |
           (1) Rehaz el primer giro: lo necesitas, porque el segundo gira desde ahí. (2) La vertical
           por P₂ corta D₂C₂ en N₂ ≡ M₂. En el alzado, la recta de 30° por P₂ hacia la izquierda y abajo;
@@ -5132,104 +5194,20 @@ ejercicios:
           corta la circunferencia de N justo a 60°. (3) Por
           N₂″, la recta de 60° hacia arriba; los arcos de centro P₂ por M₂′, C₂′ y D₂′ la cortan. (4)
           Por D₂″ y C₂″, las perpendiculares; los arcos por A₂′ y B₂′. (5) Las plantas, en las
-          horizontales que dejó el primer giro.
+          horizontales que dejó el primer giro. (6) En el alzado todo se ve. En la planta, la barra
+          pasa por debajo de la placa de M₁″ hasta A₁″D₁″, y ese tramo va a trazos.
         desarrollo: |
-          En verde claro, la posición final. En el alzado, el rectángulo del primer giro girado 60°
-          alrededor de P₂, con la barra en la prolongación del lado D₂″C₂″; en la planta, el
-          cuadrado como un paralelogramo y el tramo de la barra que se ve, del lado A₁″D₁″ a N₁″.
-          El tramo oculto, por debajo del cuadrado, lo enseña el paso siguiente.
+          En verde claro, la posición final, con lo oculto a trazos. En el alzado, el rectángulo
+          del primer giro girado 60° alrededor de P₂, con la barra en la recta del lado D₂″C₂″,
+          de M₂″ a más allá de C₂″, todo en continua: la barra y el lado CD están en un mismo plano
+          de punta, que en el alzado se ve como una recta, y la barra va por el borde del alzado de
+          la placa, sin entrar en él. En la planta, el cuadrado, que ya no es vertical, se ve como un
+          paralelogramo, entero en continua: nada pasa por encima de él. La barra sale de M₁″, en
+          el punto medio de C₁″D₁″, y pasa por debajo del cuadrado hasta el lado A₁″D₁″: ese tramo,
+          el 78 % de su planta, a trazos, porque el cuadrado va más alto (a mitad del tramo, 18,2 mm
+          por encima). De A₁″D₁″ a N₁″, en continua. M₁″ y M₂″ en el punto medio de CD son la
+          comprobación de que el cuadrado y la barra se han movido juntos.
 
-      # Decisión: el enunciado no pide la visibilidad con estas palabras, pero un
-      # dibujo de diédrico la lleva, y aquí hay un tramo oculto. La decide el
-      # segundo camino comparando cotas en el cruce aparente de la barra con el
-      # cuadrado en la planta; la figura sale de figuras/eg-sd17-visibilidad.mjs.
-      - tipo: dibujar
-        consigna: |
-          Este paso es nuestro: el enunciado no pide la visibilidad con estas palabras. Dibuja en tu
-          lámina la posición final del cuadrado y de la barra en las dos vistas, con lo que se ve en
-          continua y lo que queda oculto en discontinua. El cuadrado es una placa opaca y la barra,
-          una varilla.
-        comprueba:
-          - punto: >-
-              En el alzado, el cuadrado A₂″B₂″C₂″D₂″ entero en continua, y la barra N₂″M₂″ también,
-              en la prolongación del lado D₂″C₂″.
-            porque: >-
-              La barra y el lado CD están en un mismo plano de punta, el que el giro de eje de punta
-              ha dejado así, y en el alzado caen en una recta: la barra no pasa por delante ni por
-              detrás de la placa.
-          - punto: >-
-              En la planta, el cuadrado A₁″B₁″C₁″D₁″, un paralelogramo, entero en continua.
-            porque: >-
-              Ya no es vertical, así que en la planta se ve como una placa. Nada pasa por encima de
-              ella: la barra sale por debajo.
-          - punto: >-
-              En la planta, la barra en discontinua desde M₁″ hasta el lado A₁″D₁″, y en continua de
-              ahí a N₁″.
-            porque: >-
-              En ese tramo la planta de la barra cae dentro de la del cuadrado, y el cuadrado está
-              más alto: a mitad del tramo, 18 mm por encima. La placa la tapa. Pasado el lado A₁″D₁″
-              ya no hay placa encima.
-          - punto: >-
-              M₁″ en el lado C₁″D₁″, en su punto medio, y M₂″ en el punto medio de D₂″C₂″.
-            porque: >-
-              La barra sale del punto medio de CD, y eso no lo cambia ningún giro: es la
-              comprobación de que el cuadrado y la barra se han movido juntos.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 300 560" role="img" width="300" height="560" aria-labelledby="egsd17v-t egsd17v-d">
-            <title id="egsd17v-t">El cuadrado y la barra en su posición final: lo que se ve y lo que se oculta</title>
-            <desc id="egsd17v-d">Arriba el alzado y abajo la planta, en las mismas verticales; la planta, más cerca del alzado que en la lámina, porque en diédrico directo esa distancia no es un dato. En el alzado, el cuadrado se ve como un rectángulo girado, A₂″B₂″C₂″D₂″, en continua, y la barra va de M₂″, punto medio de D₂″C₂″, a N₂″, en la prolongación de ese lado, también en continua. En la planta, el cuadrado se ve como un paralelogramo, A₁″B₁″C₁″D₁″, en continua. La barra sale de M₁″, punto medio de C₁″D₁″, y pasa por debajo del cuadrado hasta el lado A₁″D₁″: ese tramo, el 78 % de la barra, va en discontinua; de ahí a N₁″, fuera del cuadrado, en continua.</desc>
-            <style>
-                .egsd17v-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .egsd17v-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .egsd17v-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .egsd17v-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egsd17v-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egsd17v-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .egsd17v-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .egsd17v-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .egsd17v-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .egsd17v-pt { fill: var(--live); }
-                .egsd17v-punta { fill: var(--live); stroke: none; }
-                .egsd17v-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .egsd17v-o { fill: var(--flag); }
-                .egsd17v-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .egsd17v-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .egsd17v-v { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-                .egsd17v-h { stroke: var(--ink); stroke-width: 1.2; fill: none; stroke-dasharray: 4 3; }
-                .egsd17v-bv { stroke: var(--live); stroke-width: 2.2; fill: none; stroke-linecap: round; }
-                .egsd17v-bh { stroke: var(--live); stroke-width: 1.8; fill: none; stroke-dasharray: 4 3; }
-                .egsd17v-ref { stroke: var(--faint); stroke-width: 0.7; fill: none; stroke-dasharray: 1.5 2.5; }
-            </style>
-            <path class="egsd17v-ref" d="M193.4 43.4L193.4 496.9"/>
-            <path class="egsd17v-ref" d="M234.7 115L234.7 353.8"/>
-            <path class="egsd17v-ref" d="M111 186.4L111 353.8"/>
-            <path class="egsd17v-ref" d="M69.7 114.8L69.7 496.9"/>
-            <path class="egsd17v-ref" d="M90.4 150.7L90.4 425.3"/>
-            <path class="egsd17v-ref" d="M170.2 288.9L170.2 517.4"/>
-            <path class="egsd17v-v" d="M193.4 43.4L234.7 115L111 186.4L69.7 114.8Z"/>
-            <path class="egsd17v-v" d="M193.4 496.9L234.7 353.8L111 353.8L69.7 496.9Z"/>
-            <path class="egsd17v-bv" d="M90.4 150.7L170.2 288.9"/>
-            <path class="egsd17v-bh" d="M90.4 425.3L152.4 496.9"/>
-            <path class="egsd17v-bv" d="M152.4 496.9L170.2 517.4"/>
-            <text class="egsd17v-l" x="193.4" y="36.4" text-anchor="middle" fill="var(--ink)">A₂″</text>
-            <text class="egsd17v-l" x="241.7" y="119" text-anchor="start" fill="var(--ink)">B₂″</text>
-            <text class="egsd17v-l" x="118" y="195.4" text-anchor="start" fill="var(--ink)">C₂″</text>
-            <text class="egsd17v-l" x="62.7" y="114.8" text-anchor="end" fill="var(--ink)">D₂″</text>
-            <text class="egsd17v-l" x="83.4" y="158.7" text-anchor="end" fill="var(--live)">M₂″</text>
-            <text class="egsd17v-l" x="177.2" y="296.9" text-anchor="start" fill="var(--live)">N₂″</text>
-            <text class="egsd17v-l" x="199.4" y="510.9" text-anchor="start" fill="var(--ink)">A₁″</text>
-            <text class="egsd17v-l" x="240.7" y="348.8" text-anchor="start" fill="var(--ink)">B₁″</text>
-            <text class="egsd17v-l" x="105" y="348.8" text-anchor="end" fill="var(--ink)">C₁″</text>
-            <text class="egsd17v-l" x="62.7" y="500.9" text-anchor="end" fill="var(--ink)">D₁″</text>
-            <text class="egsd17v-l" x="83.4" y="429.3" text-anchor="end" fill="var(--live)">M₁″</text>
-            <text class="egsd17v-l" x="177.2" y="521.4" text-anchor="start" fill="var(--live)">N₁″</text>
-            <circle class="egsd17v-pt" cx="90.4" cy="150.7" r="2.2"/>
-            <circle class="egsd17v-pt" cx="90.4" cy="425.3" r="2.2"/>
-            <circle class="egsd17v-pt" cx="170.2" cy="288.9" r="2.2"/>
-            <circle class="egsd17v-pt" cx="170.2" cy="517.4" r="2.2"/>
-          </svg>
-          </figure>
       # Decisión: el enunciado solo pide dibujar. Este calcular comprueba la
       # posición final con una cifra atada a la receta, y caza el error que el
       # dibujo invita a cometer: leer el ángulo en el alzado, donde la barra se
@@ -5272,6 +5250,12 @@ ejercicios:
 
           $$ \sin\alpha = \frac{26{,}38}{35{,}18} \quad\Rightarrow\quad \alpha \approx 48{,}6^{\circ} $$
 
+          Ojo con el transportador en la planta final: A₁″D₁″ es horizontal en el papel (A″ y D″
+          tienen el mismo alejamiento), y la barra la corta a 49,1°. Es lo que mide quien busca el
+          ángulo con el plano horizontal en la planta, entre la barra y una horizontal: queda a 0,5°
+          de la respuesta, justo en el borde de la tolerancia, y la casilla puede darlo por bueno.
+          Pero es un ángulo de la planta, no el que forma la barra con el plano horizontal.
+
       - tipo: justificar
         pregunta: Ordena el razonamiento. Una pieza no debe entrar.
         piezas:
@@ -5308,8 +5292,8 @@ ejercicios:
       **La visibilidad.** En la planta final, la barra cruza el cuadrado desde M₁″ hasta el lado
       A₁″D₁″, y en ese tramo el cuadrado está más alto: hemos comparado las cotas de los dos en un
       mismo punto de la planta, a mitad de ese tramo, y el cuadrado queda 18 mm por encima. Ese
-      tramo de la barra va en discontinuo. En el alzado la barra cae en la prolongación de D₂″C₂″ y
-      no tapa nada.
+      tramo de la barra va en discontinuo. En el alzado la barra cae en la recta de D₂″C₂″ y no
+      tapa nada.
 
       **El ángulo de la barra.** Mide 35,18 mm, como al principio, y M₂″ queda 26,38 mm por encima
       de N₂″: forma 48,6° con el plano horizontal. En el alzado se ve a 60°, pero no es frontal.
@@ -5440,7 +5424,7 @@ ejercicios:
               Horizontal sería con el alzado horizontal: no cambiaría de cota. Aquí lo horizontal en el
               papel es la planta, y eso dice que no cambia de alejamiento: es frontal. Q₁P₁ acorta el
               poste; su verdadera magnitud es Q₂P₂.
-          - texto: Se endereza con un giro de eje vertical por Q, llevando P₁ por un arco de centro Q₁ hasta que el poste quede de pie, mientras P₂ se mueve en horizontal
+          - texto: Se endereza con un giro de eje vertical por Q, llevando P₁ por un arco de centro Q₁ hasta dejar el poste de pie
             mensaje: |
               Un giro de eje vertical no cambia las cotas: la punta P daría vueltas a la misma altura y
               el poste nunca quedaría vertical. Para levantarlo, el eje tiene que ser horizontal y
@@ -7578,7 +7562,7 @@ ejercicios:
               a la recta F₂E₂ en el alzado: es perpendicular al plano vertical. δ se reduce al borde
               H₁J₁ en la planta: es perpendicular al horizontal. Por eso a β le basta un cambio de
               plano y a δ un giro, mientras que α pide el método completo.
-          - texto: Los tres son oblicuos, porque ninguno es horizontal ni frontal, y por eso los tres piden el método completo
+          - texto: 'Los tres son oblicuos, porque ninguno es horizontal ni frontal: piden el método completo'
             mensaje: |
               No ser horizontal ni frontal no hace oblicuo a un plano. β se ve como una recta en el
               alzado y δ como una recta en la planta: los dos son proyectantes. Solo α no se reduce a
@@ -11586,6 +11570,11 @@ ejercicios:
         # Las cifras del calcular: la altura de HI sobre la chapa, y sus errores.
         pieH: pie_perpendicular(H, BD)
         alturaHI_mm: en_mm(diferencia_de_cotas(H, B))
+        # La visibilidad: el cruce aparente, en la planta, donde el lado A₁B₁ de
+        # la chapa sale de debajo del hexágono, con el lado que lo da
+        # (k_<arista>_<lado>). El de A₁D₁ con G₁H₁ no hace falta: ese tramo oculto
+        # va pegado a G₁H₁, que se ve, y no se pasa aparte.
+        k_AB_JE: 'cruce_aparente(figura.segmento("AB1"), segmento2(proy_planta(J), proy_planta(E)))'
       comprueba:
         - en_plano(C, chapa)
         - en_plano(E, hexagono)
@@ -11882,7 +11871,19 @@ ejercicios:
           plantas que faltan y los seis alzados. Con la lupa (×4): H₁ cae a 1,4 mm de A₁, y G₁, sobre A₁D₁;
           las verticales de E₁ y de J₁ van a 0,4 mm una de otra, y las de F₁ y de I₁, a 0,8 mm. En un móvil,
           aun con la lupa, A₁ engancha casi hasta H₁: pincha H₁ por fuera de la chapa, lejos de A₁.
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+
+          Después, pasa a limpio el montaje con «arista vista» y «arista oculta»: el hexágono en las
+          dos vistas y el lado A₁B₁ de la chapa. El enunciado pide «las proyecciones diédricas del
+          montaje», que llevan lo visto y lo oculto; la lectura es nuestra: las dos chapas son finas
+          y opacas, y la hexagonal va soldada por encima de ABCD. Con las chapas transparentes, todo
+          iría en continua; opacas, en la planta el hexágono tapa el rincón A, y A₁B₁ va a trazos
+          desde A₁ hasta donde la cruza J₁E₁: pasa antes J₁E₁, que da ese punto. No se pasan B₁C₁,
+          C₁D₁ ni A₂B₂, que se ven enteros y ya están dibujados, ni E₂F₂, que va sobre A₂B₂. Tampoco
+          A₁D₁: el hexágono tapa su tramo de A₁ a G₁H₁, pero ese tramo va a menos de 0,4 mm de G₁H₁,
+          que se ve, y en el papel lo cubre. Decidimos que lo visto mande, como cuando dos líneas
+          coinciden, y aquí no se pasa: el Taller no lo distingue de G₁H₁. En tu lámina de papel,
+          dibujarlo a trazos pegado a G₁H₁ tampoco está mal.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: G4
@@ -12157,17 +12158,54 @@ ejercicios:
                   H₂ está donde la horizontal de I₂ corta la vertical de H₁.
         trazado:
           - segmento2(solucion.B_4, solucion.H_4)
-          - segmento2(proy_planta(E), proy_planta(F))
-          - segmento2(proy_planta(F), proy_planta(G))
-          - segmento2(proy_planta(G), proy_planta(H))
-          - segmento2(proy_planta(H), proy_planta(I))
-          - segmento2(proy_planta(I), proy_planta(J))
-          - segmento2(proy_planta(J), proy_planta(E))
-          - segmento2(proy_alzado(F), proy_alzado(G))
-          - segmento2(proy_alzado(G), proy_alzado(H))
-          - segmento2(proy_alzado(H), proy_alzado(I))
-          - segmento2(proy_alzado(I), proy_alzado(J))
-          - segmento2(proy_alzado(J), proy_alzado(E))
+        # Decisión: el enunciado pide «las proyecciones diédricas del montaje», y un
+        # montaje de dos chapas lleva su visibilidad; que las chapas sean finas y
+        # opacas es lectura nuestra. Va aquí, en el paso que marca el hexágono, y
+        # sustituye al paso dibujar que había. Sale de un cálculo de líneas ocultas
+        # aparte, por rayos contra las dos chapas, y coincide con lo que decía ese
+        # paso. El tramo oculto de A₁D₁ (de A₁ a G₁H₁, 16,1 mm) no es tramo: va a
+        # 0,36 mm o menos de G₁H₁, que se ve, y en el Taller los dos se pisarían.
+        # E₂F₂ va sobre A₂B₂, que ya está; B₁C₁, C₁D₁ y A₂B₂ se ven enteros.
+        tramos:
+          - traza: segmento2(proy_planta(E), proy_planta(F))
+            tipo: visto
+            porque: 'EF es la soldadura, sobre BD: está en la chapa, y el hexágono sube desde ella hacia A. Desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(F), proy_planta(G))
+            tipo: visto
+            porque: 'FG sube de la soldadura a G, 8,66 mm por encima de la chapa: el hexágono va todo por encima de ABCD, y desde arriba nada lo tapa.'
+          - traza: segmento2(proy_planta(G), proy_planta(H))
+            tipo: visto
+            porque: 'GH sube de G, 8,66 mm por encima de la chapa, a H, 17,32: desde arriba nada lo tapa. A₁D₁ pasa por debajo, pegada a él, y manda GH.'
+          - traza: segmento2(proy_planta(H), proy_planta(I))
+            tipo: visto
+            porque: 'HI es el lado más alto, 17,32 mm por encima de la chapa, y en la planta queda fuera de ella: nada lo tapa.'
+          - traza: segmento2(proy_planta(I), proy_planta(J))
+            tipo: visto
+            porque: 'IJ baja de 17,32 a 8,66 mm por encima de la chapa, y en la planta queda fuera de ella: nada lo tapa.'
+          - traza: segmento2(proy_planta(J), proy_planta(E))
+            tipo: visto
+            porque: 'JE baja de J, 8,66 mm por encima de la chapa, a E, en la soldadura: va por encima de ABCD, y desde arriba nada lo tapa.'
+          - traza: segmento2(figura.punto("A1"), solucion.k_AB_JE)
+            tipo: oculto
+            porque: 'De A₁ al cruce con J₁E₁, A₁B₁ cae dentro de la planta del hexágono, que va por encima: a mitad de ese tramo, 11,1 mm más alto. El hexágono la tapa.'
+          - traza: segmento2(solucion.k_AB_JE, figura.punto("B1"))
+            tipo: visto
+            porque: 'Pasado J₁E₁ (en el cruce, JE va 5,65 mm por encima de AB), A₁B₁ sale de la planta del hexágono: de ahí a B₁ no hay nada encima.'
+          - traza: segmento2(proy_alzado(F), proy_alzado(G))
+            tipo: visto
+            porque: 'En el alzado la chapa ABCD se ve de canto, como la recta A₂B₂, y no tapa nada: FG sube de ella hacia G.'
+          - traza: segmento2(proy_alzado(G), proy_alzado(H))
+            tipo: visto
+            porque: 'GH va de 8,66 a 17,32 mm por encima de A₂B₂: la chapa de canto no tapa nada, y el hexágono no tapa sus propios lados.'
+          - traza: segmento2(proy_alzado(H), proy_alzado(I))
+            tipo: visto
+            porque: 'HI es el lado más alto, 17,32 mm por encima de A₂B₂: la chapa, de canto, no lo tapa, y no hay nada más delante.'
+          - traza: segmento2(proy_alzado(I), proy_alzado(J))
+            tipo: visto
+            porque: 'IJ va por encima de A₂B₂: la chapa se ve de canto, como una recta, y no tapa nada.'
+          - traza: segmento2(proy_alzado(J), proy_alzado(E))
+            tipo: visto
+            porque: 'JE baja hasta E₂, en A₂B₂, siempre por encima de la chapa, que de canto no tapa nada.'
         construccion:
           - con: regla
             traza: '[segmento2(figura.punto("A1"), figura.punto("C1")), segmento2(figura.punto("B1"), figura.punto("D1"))]'
@@ -12355,11 +12393,23 @@ ejercicios:
             rotulo: I₁
             porque: |
               I₁, donde la perpendicular a BD por I₀ corta la paralela que sale de H₄ ≡ I₄.
-          - con: regla
+          - con: arista-vista
             traza: '[segmento2(proy_planta(E), proy_planta(F)), segmento2(proy_planta(F), proy_planta(G)), segmento2(proy_planta(G), proy_planta(H)), segmento2(proy_planta(H), proy_planta(I)), segmento2(proy_planta(I), proy_planta(J)), segmento2(proy_planta(J), proy_planta(E))]'
             porque: |
-              La planta del hexágono: E₁F₁ sobre BD, y los demás lados. Ya no es regular: los lados que suben
-              se acortan.
+              **La planta, a limpio.** El hexágono: E₁F₁ sobre BD, y los demás lados. Ya no es regular:
+              los lados que suben se acortan. Va entero en continua, porque queda todo por encima de la
+              chapa ABCD y nada pasa por encima de él.
+          - con: arista-oculta
+            traza: segmento2(figura.punto("A1"), solucion.k_AB_JE)
+            porque: |
+              El hexágono tapa el rincón A: A₁ queda dentro de su planta. A₁B₁, de A₁ hasta donde la
+              cruza J₁E₁, a trazos: ahí la chapa va por debajo del hexágono, 11,1 mm a mitad del tramo.
+          - con: arista-vista
+            traza: segmento2(solucion.k_AB_JE, figura.punto("B1"))
+            porque: |
+              Y el resto de A₁B₁, del cruce con J₁E₁ a B₁, en continua: ya no hay hexágono encima. El
+              tramo tapado de A₁D₁, de A₁ a G₁H₁, va pegado a G₁H₁, a menos de 0,4 mm, y lo cubre su
+              continua; B₁C₁ y C₁D₁ se ven enteros y ya están dibujados.
           - con: escuadra-cartabon
             traza: '[segmento2(proy_planta(E), solucion.E2mas), segmento2(proy_planta(F), solucion.F2mas), segmento2(proy_planta(G), solucion.G2arriba), segmento2(proy_planta(J), solucion.J2arriba), segmento2(proy_planta(H), solucion.H2arriba), segmento2(proy_planta(I), solucion.I2arriba)]'
             porque: |
@@ -12417,122 +12467,32 @@ ejercicios:
             rotulo: H₂
             porque: |
               H₂, donde la horizontal de I₂ corta la vertical de H₁.
-          - con: regla
+          - con: arista-vista
             traza: '[segmento2(proy_alzado(F), proy_alzado(G)), segmento2(proy_alzado(G), proy_alzado(H)), segmento2(proy_alzado(H), proy_alzado(I)), segmento2(proy_alzado(I), proy_alzado(J)), segmento2(proy_alzado(J), proy_alzado(E))]'
             porque: |
-              El alzado del hexágono: E₂F₂ sobre A₂B₂, y los demás lados por encima. G₂J₂ y H₂I₂ son
-              horizontales, como E₂F₂: los tres son paralelos a BD, que es horizontal.
+              **El alzado, a limpio.** El hexágono: E₂F₂ va sobre A₂B₂, que ya está, y los demás lados
+              por encima, en continua: la chapa se ve de canto, como una recta, y no tapa nada. G₂J₂ y
+              H₂I₂ son horizontales, como E₂F₂: los tres son paralelos a BD, que es horizontal.
         pista: |
           (1) Redibuja el hexágono abatido. (2) B₁D₁ prolongada da B₄ ≡ D₄ en la línea nueva; la paralela a
           BD por A₁, A₄. (3) El canto: 30° desde la línea nueva, hacia A₄. (4) Las paralelas a BD por J₀G₀ y
           por I₀H₀ dan (G₀)₄ y (H₀)₄; arcos de centro B₄ hasta el canto. (5) De G₄ y H₄, paralelas a BD;
           cortadas por las perpendiculares a BD desde los abatidos, dan las plantas. (6) En el alzado, las
-          cotas: lo que G₄ y H₄ distan de la línea nueva.
+          cotas: lo que G₄ y H₄ distan de la línea nueva. (7) En la planta el hexágono va por encima y
+          tapa el rincón A: A₁B₁, a trazos hasta J₁E₁. En el alzado la chapa es una recta y no tapa nada.
         desarrollo: |
-          En verde claro, el canto de la vista 4 y las dos proyecciones del hexágono. En la planta, G₁ y J₁
-          quedan a 15 mm de BD y H₁ e I₁ a 30 mm (r · cos 30°); en el alzado, G₂ y J₂ a 8,66 mm de la chapa y
-          H₂ e I₂ a 17,32 mm (r · sen 30°). H₁ se sale de la chapa por el rincón A, a 1,4 mm de A₁, y G₁ cae
-          sobre A₁D₁: el hexágono tapa en la planta ese rincón, que es lo que pide el paso siguiente.
-
-      # Decisión: el enunciado pide «las proyecciones diédricas del montaje», y un
-      # montaje de dos chapas lleva su visibilidad: en la planta el hexágono tapa
-      # el rincón A de la chapa. La decide el segundo camino (segundo-camino.py)
-      # comparando cotas en cada cruce aparente de un lado de la chapa con el
-      # hexágono; la figura sale de figuras/eg-sd64-montaje.mjs.
-      - tipo: dibujar
-        consigna: |
-          Dibuja en tu lámina el montaje en las dos vistas, la chapa ABCD y la hexagonal, con lo que se ve
-          en continua y lo que queda oculto en discontinua. Las dos chapas son finas y opacas, y la
-          hexagonal va soldada por encima de ABCD.
-        comprueba:
-          - punto: >-
-              En el alzado, A₂B₂ entera en continua, y el hexágono por encima, también en continua: E₂F₂
-              sobre A₂B₂, G₂J₂ a 8,7 mm y H₂I₂ a 17,3 mm.
-            porque: >-
-              La chapa ABCD es horizontal y en el alzado se ve de canto, como una recta: no tapa nada. El
-              hexágono queda por encima de ella y solo la toca en la soldadura, E₂F₂.
-          - punto: >-
-              En la planta, el hexágono E₁F₁G₁H₁I₁J₁ entero en continua, con E₁F₁ sobre la diagonal BD.
-            porque: >-
-              Todos sus puntos quedan por encima de la chapa, menos la soldadura E₁F₁, que está en ella, y
-              nada pasa por encima del hexágono.
-          - punto: >-
-              En la planta, A₁B₁ en discontinua desde A₁ hasta donde la cruza J₁E₁, a 32,9 mm de A₁, y en
-              continua de ahí a B₁.
-            porque: >-
-              Ese tramo de A₁B₁ cae dentro de la planta del hexágono, que está por encima: a mitad del
-              tramo, 11,1 mm más alto que el lado AB. Pasado el lado J₁E₁ ya no hay hexágono encima.
-          - punto: >-
-              En la planta, A₁D₁ en discontinua desde A₁ hasta donde la cruza G₁H₁, a 16,1 mm de A₁, casi
-              en G₁, y en continua de ahí a D₁. En el papel, el tramo oculto va pegado a G₁H₁.
-            porque: >-
-              A₁ queda dentro del hexágono, a 0,36 mm de G₁H₁ y a 1,42 mm de H₁: el rincón A está tapado.
-              G₁H₁ va casi encima de A₁D₁, a menos de 0,4 mm, y por eso el tramo oculto apenas se separa de
-              ella. Es una casualidad de las medidas, no un error del dibujo.
-          - punto: >-
-              B₁C₁ y C₁D₁ en continua, y la diagonal BD sin dibujar: no es una arista de la chapa.
-            porque: >-
-              Esos dos lados están lejos del hexágono, que queda todo del lado de A. BD sirvió de charnela;
-              en el montaje solo queda la soldadura E₁F₁, que es un lado del hexágono.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 320 520" role="img" width="320" height="520" aria-labelledby="egsd64m-t egsd64m-d">
-            <title id="egsd64m-t">El montaje de las dos chapas: lo que se ve y lo que se oculta</title>
-            <desc id="egsd64m-d">Arriba el alzado y abajo la planta, en las mismas verticales. En el alzado, la chapa ABCD es una recta horizontal, de D₂ ≡ A₂ a C₂ ≡ B₂, en continua. El hexágono va por encima, también en continua: E₂F₂ sobre esa recta, G₂ y J₂ a 8,7 mm y H₂I₂ a 17,3 mm, el lado más alto. En la planta, el hexágono E₁F₁G₁H₁I₁J₁ entero en continua, con E₁F₁ sobre la diagonal BD; G₁ cae sobre el lado A₁D₁ y H₁ sale por fuera del rincón A₁. La chapa ABCD queda debajo en ese rincón: A₁B₁ va en discontinua desde A₁ hasta donde la cruza J₁E₁, a 32,9 mm de A₁, y en continua de ahí a B₁; A₁D₁ va en discontinua desde A₁ hasta donde la cruza G₁H₁, a 16,1 mm de A₁, pegada a G₁H₁, y en continua de ahí a D₁. B₁C₁ y C₁D₁, en continua.</desc>
-            <style>
-                .egsd64m-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .egsd64m-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .egsd64m-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .egsd64m-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egsd64m-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .egsd64m-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .egsd64m-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .egsd64m-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .egsd64m-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .egsd64m-pt { fill: var(--live); }
-                .egsd64m-punta { fill: var(--live); stroke: none; }
-                .egsd64m-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .egsd64m-o { fill: var(--flag); }
-                .egsd64m-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .egsd64m-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .egsd64m-v { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-                .egsd64m-h { stroke: var(--ink); stroke-width: 1.2; fill: none; stroke-dasharray: 4 3; }
-                .egsd64m-hx { stroke: var(--live); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-                .egsd64m-ref { stroke: var(--faint); stroke-width: 0.7; fill: none; stroke-dasharray: 1.5 2.5; }
-            </style>
-            <path class="egsd64m-ref" d="M199.7 132.6L199.7 365.7"/>
-            <path class="egsd64m-ref" d="M118 132.6L118 422.9"/>
-            <path class="egsd64m-ref" d="M34.3 89.4L34.3 390.2"/>
-            <path class="egsd64m-ref" d="M32.2 46.2L32.2 300.3"/>
-            <path class="egsd64m-ref" d="M114 46.2L114 243.2"/>
-            <path class="egsd64m-ref" d="M197.7 89.4L197.7 275.9"/>
-            <path class="egsd64m-v" d="M34.2 132.6L283.5 132.6"/>
-            <path class="egsd64m-hx" d="M199.7 132.6L118 132.6L34.3 89.4L32.2 46.2L114 46.2L197.7 89.4Z"/>
-            <path class="egsd64m-h" d="M34.2 307.1L198.4 307.1"/>
-            <path class="egsd64m-v" d="M198.4 307.1L283.5 307.1"/>
-            <path class="egsd64m-v" d="M283.5 307.1L283.5 481.5L34.2 481.5L34.2 387.6"/>
-            <path class="egsd64m-h" d="M34.2 387.6L34.2 307.1"/>
-            <path class="egsd64m-hx" d="M199.7 365.7L118 422.9L34.3 390.2L32.2 300.3L114 243.2L197.7 275.9Z"/>
-            <text class="egsd64m-l" x="38.2" y="146.6" text-anchor="start" fill="var(--ink)">D₂ ≡ A₂</text>
-            <text class="egsd64m-l" x="283.5" y="125.6" text-anchor="end" fill="var(--ink)">C₂ ≡ B₂</text>
-            <text class="egsd64m-l" x="39.2" y="320.1" text-anchor="start" fill="var(--ink)">A₁</text>
-            <text class="egsd64m-l" x="289.5" y="301.1" text-anchor="start" fill="var(--ink)">B₁</text>
-            <text class="egsd64m-l" x="289.5" y="493.5" text-anchor="start" fill="var(--ink)">C₁</text>
-            <text class="egsd64m-l" x="28.2" y="493.5" text-anchor="end" fill="var(--ink)">D₁</text>
-            <text class="egsd64m-l" x="194.7" y="146.6" text-anchor="end" fill="var(--live)">E₂</text>
-            <text class="egsd64m-l" x="124" y="146.6" text-anchor="start" fill="var(--live)">F₂</text>
-            <text class="egsd64m-l" x="27.3" y="93.4" text-anchor="end" fill="var(--live)">G₂</text>
-            <text class="egsd64m-l" x="25.2" y="46.2" text-anchor="end" fill="var(--live)">H₂</text>
-            <text class="egsd64m-l" x="120" y="40.2" text-anchor="start" fill="var(--live)">I₂</text>
-            <text class="egsd64m-l" x="204.7" y="93.4" text-anchor="start" fill="var(--live)">J₂</text>
-            <text class="egsd64m-l" x="206.7" y="369.7" text-anchor="start" fill="var(--live)">E₁</text>
-            <text class="egsd64m-l" x="116" y="437.9" text-anchor="middle" fill="var(--live)">F₁</text>
-            <text class="egsd64m-l" x="27.3" y="394.2" text-anchor="end" fill="var(--live)">G₁</text>
-            <text class="egsd64m-l" x="26.2" y="302.3" text-anchor="end" fill="var(--live)">H₁</text>
-            <text class="egsd64m-l" x="114" y="235.2" text-anchor="middle" fill="var(--live)">I₁</text>
-            <text class="egsd64m-l" x="204.7" y="271.9" text-anchor="start" fill="var(--live)">J₁</text>
-          </svg>
-          </figure>
+          En verde claro, el canto de la vista 4 y las dos proyecciones del hexágono, con lo oculto a
+          trazos. En la planta, G₁ y J₁ quedan a 15 mm de BD y H₁ e I₁ a 30 mm (r · cos 30°); en el
+          alzado, G₂ y J₂ a 8,66 mm de la chapa y H₂ e I₂ a 17,32 mm (r · sen 30°). H₁ se sale de la
+          chapa por el rincón A, a 1,4 mm de A₁, y G₁ cae sobre A₁D₁: el hexágono tapa en la planta
+          ese rincón. A₁B₁ va oculta desde A₁ hasta donde la cruza J₁E₁, a 32,9 mm de A₁: a mitad de
+          ese tramo, el hexágono va 11,1 mm más alto que el lado AB. A₁D₁ también queda tapada desde
+          A₁ hasta donde la cruza G₁H₁, a 16,1 mm, casi en G₁; pero A₁ está a 0,36 mm de G₁H₁ y G₁ a
+          0,01 mm de A₁D₁, así que ese tramo va pegado a G₁H₁, que se ve, y en el papel lo cubre: es
+          una casualidad de las medidas, no un error del dibujo. B₁C₁ y C₁D₁, lejos del hexágono, en
+          continua. En el alzado la chapa ABCD se ve de canto y no tapa nada: el hexágono, por encima,
+          va entero en continua, y solo la toca en la soldadura, E₂F₂. La diagonal BD no es una
+          arista de la chapa: sirvió de charnela.
 
       - tipo: calcular
         titulo: La altura del lado más alto
@@ -12575,7 +12535,8 @@ ejercicios:
 
           Hay más cifras en la vecindad, todas por casualidad y ninguna es una altura: en el alzado, A₂F₂ y
           E₂B₂ miden 16,80 mm, y E₂F₂ y H₂I₂, 16,39; y en la planta, G₁ parte el borde A₁D₁ en 16,65 y 18,31
-          mm, y los lados inclinados G₁H₁, I₁J₁ y J₁E₁ miden 18,03 mm, como F₁G₁.
+          mm, y los lados inclinados G₁H₁, I₁J₁ y J₁E₁ miden 18,03 mm, como F₁G₁. Y el tramo visto de
+          A₁B₁, el que se pasa a limpio del cruce con J₁E₁ a B₁, mide 17,07 mm.
 
       - tipo: justificar
         pregunta: Ordena el razonamiento. Una pieza no debe entrar.
@@ -12609,7 +12570,8 @@ ejercicios:
 
       **La visibilidad.** En el alzado la chapa es una recta y no tapa nada. En la planta el hexágono va
       por encima y tapa el rincón A: H₁ sale 1,4 mm por fuera de A₁, y G₁ cae sobre A₁D₁. A₁B₁ queda
-      oculta en sus primeros 32,9 mm y A₁D₁ en sus primeros 16,1 mm, pegada a G₁H₁.
+      oculta en sus primeros 32,9 mm y A₁D₁ en sus primeros 16,1 mm, pegada a G₁H₁, a menos de 0,4 mm:
+      en el dibujo la cubre G₁H₁, que se ve.
 
   - id: sd65-el-agujero-cuadrado-del-tubo-a-45
     titulo: El agujero cuadrado para el tubo a 45°, en la cara inclinada del depósito

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   PT_MM,
@@ -15,6 +17,10 @@ import {
   type P2,
   type P3,
 } from '../../src/lib/diedrico';
+import yaml from 'js-yaml';
+import { resuelveEjercicio, type EjercicioConReceta } from '../../src/lib/construir';
+import { casaTramo } from '../../src/lib/diedrico-corrige';
+import type { DatosLamina } from '../../src/lib/lamina';
 
 /* SD16 y SD17 · los dos ejercicios de giros de la colección de diédrico
    directo (Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG,
@@ -233,5 +239,67 @@ describe('SD17 · el cuadrado y la barra tras dos giros de 60°', () => {
       const alReves = gira(gira(V[v], j, 60), e, 60);
       expect(mm(vm(alReves, tras2[v]))).toBeGreaterThan(20);
     }
+  });
+});
+
+describe('SD17 · la visibilidad en el Taller (los tramos)', () => {
+  /* Lo visto y lo oculto de la posición final, de un cálculo de líneas
+     ocultas hecho aparte el 8 de octubre de 2026, sin src/lib: cada arista
+     muestreada y mirada por rayos contra la placa (el cuadrado, opaco; la barra
+     es una varilla y no tapa nada), y cada cambio afinado por bisección.
+     Coordenadas en pt de la lámina. En la planta, la barra va por debajo de la
+     placa de M₁″ hasta el lado A₁″D₁″; en el alzado todo se ve, y la barra va en
+     la recta del lado CD y coincide con él de M₂″ a C₂″: los dos se parten en
+     M₂″ y en C₂″ para que sus tramos no se pisen. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'AB', 'visto', [323.47, 664.35], [345.82, 586.93]],
+    ['planta', 'BC', 'visto', [345.82, 586.93], [278.89, 586.93]],
+    ['planta', 'CD', 'visto', [278.89, 586.93], [256.54, 664.35]],
+    ['planta', 'DA', 'visto', [256.54, 664.35], [323.47, 664.35]],
+    ['planta', 'MN', 'oculto', [267.73, 625.59], [301.3, 664.35]],
+    ['planta', 'MN', 'visto', [301.3, 664.35], [310.91, 675.45]],
+    ['alzado', 'AB', 'visto', [323.47, 249], [345.82, 287.71]],
+    ['alzado', 'BC', 'visto', [345.82, 287.71], [278.89, 326.35]],
+    ['alzado', 'DA', 'visto', [256.54, 287.64], [323.47, 249]],
+    ['alzado', 'CD (de D a M)', 'visto', [256.54, 287.64], [267.73, 307.02]],
+    ['alzado', 'CD y MN (de M a C)', 'visto', [267.73, 307.02], [278.89, 326.35]],
+    ['alzado', 'MN (de C a N)', 'visto', [278.89, 326.35], [310.91, 381.81]],
+  ];
+  const laminaSd17 = JSON.parse(readFileSync(join(process.cwd(), 'src', 'content', 'laminas', 'sd17.json'), 'utf8')) as DatosLamina;
+  const ejercicio = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/t03-metodos-descriptivos/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('sd17-'))!;
+  const [indice, paso] = [...resuelveEjercicio(ejercicio, laminaSd17).entries()][1];
+  const tol = paso.tolerancia;
+  const junto = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+  const tramoDe = (a: readonly number[], b: readonly number[]) =>
+    paso.tramos.find((x) => (junto(x.a, a) && junto(x.b, b)) || (junto(x.a, b) && junto(x.b, a)));
+
+  it('el segundo construir lleva 12 tramos, y son los del cálculo aparte, con su tipo', () => {
+    expect(indice).toBe(2);
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = tramoDe(a, b);
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, tramo a tramo y de un tirón donde no cambia', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+    // en el alzado, el lado D₂″C₂″ entero y la barra M₂″N₂″ entera, cada uno de un tirón
+    expect(casaTramo([256.54, 287.64], [278.89, 326.35], 'visto', paso.tramos, tol).que).toBe('bien');
+    expect(casaTramo([267.73, 307.02], [310.91, 381.81], 'visto', paso.tramos, tol).que).toBe('bien');
+  });
+
+  it('y rechaza una arista cambiada de tipo, con el porqué de su tramo', () => {
+    // la barra de la planta entera en continua: el tramo de debajo de la placa va a trazos
+    const mn = casaTramo([267.73, 625.59], [310.91, 675.45], 'visto', paso.tramos, tol);
+    expect(mn.que).toBe('tipo');
+    if (mn.que === 'tipo') expect(paso.tramos[mn.tramo].porque).toMatch(/La placa la tapa/);
+    // el lado D₁″A₁″ a trazos: se ve entero
+    expect(casaTramo([256.54, 664.35], [323.47, 664.35], 'oculto', paso.tramos, tol).que).toBe('tipo');
+    // y cortado donde no cambia nada
+    expect(casaTramo([256.54, 664.35], [290, 664.35], 'visto', paso.tramos, tol).que).toBe('corte');
   });
 });

@@ -280,6 +280,1029 @@ ejercicios:
       **Cuánto recorre.** P₁Q₁ mide 44,79 mm en la planta y la diferencia de cotas entre P y Q
       es de 31,98 mm; la verdadera magnitud de PQ es la hipotenusa: 55,0 mm.
 
+  - id: sd2-la-gota-por-tres-caras
+    titulo: La gota que baja por tres caras
+    fuente: Ejercicio 2 (SD2) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual. La página no dibuja el suelo: se lee
+    # que es el plano horizontal de DE, la arista más baja (D₂E₂ y D₃E₃,
+    # horizontales a la misma altura), y lo dicen las Notas. La figura se lee
+    # como tres caras planas, ABC, BCD y CDE; la del medio es vertical porque
+    # B₁ ≡ D₁.
+    enunciado: |
+      Dibujar las proyecciones diédricas de la trayectoria que recorre una gota de agua que inicia en el
+      punto A y finaliza al llegar al suelo.
+
+      **Notas nuestras.** La figura son tres caras planas, ABC, BCD y CDE, en tres vistas: el alzado,
+      arriba a la izquierda; la planta, debajo; y la vista 3, a la derecha del alzado. Leemos la vista
+      3 como la lateral izquierda, la de quien mira la figura desde su izquierda, colocada como en el
+      sistema europeo: cada punto conserva la altura de su alzado, y lo de más alejamiento queda a la
+      derecha (de B₃ a E₃ hay lo mismo que de B₁ a E₁ en la planta, de arriba abajo). Una vista desde
+      la derecha pondría lo de más alejamiento a la izquierda, junto al alzado, y no cuadra con la
+      figura. «B₁ ≡ D₁» dice que B y D tienen la misma planta: BD es vertical, y la cara BCD es una
+      pared vertical. La página no dibuja el suelo; leemos que es el plano horizontal de DE, la arista
+      más baja, horizontal en el alzado y en la vista 3. Si quedara más abajo, la gota caería desde S
+      en vertical hasta él: S₁ no cambiaría, y lo recorrido crecería en esa caída, que la página no
+      da. Aquí llamamos Q al punto por el que la gota deja el tejado ABC, R al pie de la pared donde
+      llega a CD, S al punto de DE donde toca el suelo, y H al punto de AC con la cota de B.
+    pide: Por dónde deja la gota cada cara y dónde toca el suelo, en las tres vistas, la trayectoria con lo visto y lo oculto, y, como pregunta nuestra, cuánto recorre.
+    receta:
+      lamina: sd2
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        tejado: plano(A, B, C)
+        rampa: plano(C, D, E)
+      solucion:
+        # La gota: la l.m.p. del tejado desde A hasta BC (Q); la vertical por la
+        # pared hasta CD (R, con la planta de Q); la l.m.p. de la rampa hasta
+        # DE (S), que está en el suelo.
+        bajada: 'lmp(tejado, por: A, sentido: descendente)'
+        Q: 'corte(bajada, [segmento3(B, C)])'
+        R: 'vertical_hasta(Q, linea(figura.segmento("CD2")))'
+        bajada2: 'lmp(rampa, por: R, sentido: descendente)'
+        S: 'corte(bajada2, [segmento3(D, E), segmento3(C, E)])'
+        total_mm: en_mm(vm(A, Q) + vm(Q, R) + vm(R, S))
+        # H, el punto de AC con la cota de B: BH es la horizontal del tejado.
+        cotaB: 'plano(B, punto3(alzado: desplaza(figura.punto("B2"), dx: 10), planta: desplaza(figura.punto("B1"), dx: 10)), punto3(alzado: figura.punto("B2"), planta: desplaza(figura.punto("B1"), dy: 10)))'
+        H: corte_recta_plano(segmento3(A, C), cotaB)
+        lmp1: proy_planta(bajada)
+        lmp1b: proy_planta(bajada2)
+        # La vista 3: cada punto, a la altura de su alzado. Q₃ y R₃, en las
+        # vistas 3 de sus aristas; S₃, en D₃E₃, a lo que S tiene de alejamiento
+        # más que D, que se mide en la planta desde la horizontal del papel por
+        # B₁ ≡ D₁.
+        v3: figura.segmento("BD3")
+        Q3p: 'cruce_aparente(perpendicular(por: proy_alzado(Q), a: v3), figura.segmento("BC3"))'
+        R3p: 'cruce_aparente(perpendicular(por: proy_alzado(R), a: v3), figura.segmento("CD3"))'
+        hB1: 'perpendicular(por: figura.punto("B1"), a: figura.segmento("BD2"))'
+        TS: 'cruce_aparente(perpendicular(por: proy_planta(S), a: hB1), hB1)'
+        dyS: 'vm_planta(S, punto3(alzado: proy_alzado(S), planta: TS))'
+        S3p: 'uno(medir_sobre(figura.segmento("DE3"), desde: figura.punto("D3"), distancia: dyS), 1)'
+        # Los errores: la perpendicular al borde BC desde A₁ (la de SD1); bajar
+        # en vertical del papel, como si las horizontales lo fueran en la
+        # planta; caer desde Q hasta el suelo sin encontrar la rampa; el corte
+        # con A₃C₃ en vez de con B₃C₃; y llevar a la vista 3 lo que S está a la
+        # izquierda de D en el alzado.
+        Q1alborde: pie_perpendicular(figura.punto("A1"), figura.segmento("BC1"))
+        Q1vert: 'cruce_aparente(perpendicular(por: figura.punto("A1"), a: hB1), figura.segmento("BC1"))'
+        R2suelo: 'cruce_aparente(perpendicular(por: proy_alzado(Q), a: hB1), figura.segmento("DE2"))'
+        S1vert: 'cruce_aparente(perpendicular(por: proy_planta(Q), a: hB1), figura.segmento("CE1"))'
+        Q3enAC: 'cruce_aparente(perpendicular(por: proy_alzado(Q), a: v3), figura.segmento("AC3"))'
+        S3alz: 'uno(medir_sobre(figura.segmento("DE3"), desde: figura.punto("D3"), distancia: vm_alzado(D, S)), 1)'
+        # Los extremos de los trazos largos de la construcción paso a paso.
+        H2mas: 'desplaza(proy_alzado(H), dx: -8)'
+        H1mas: 'desplaza(proy_planta(H), dy: 8)'
+        Q1mas: 'uno(medir_sobre(segmento2(figura.punto("A1"), proy_planta(Q)), desde: proy_planta(Q), distancia: 8), 1)'
+        Q2mas: 'desplaza(proy_alzado(Q), dy: -8)'
+        S1mas: 'uno(medir_sobre(segmento2(proy_planta(Q), proy_planta(S)), desde: proy_planta(S), distancia: 8), 1)'
+        S2mas: 'desplaza(proy_alzado(S), dy: -8)'
+        Q3mas: 'desplaza(Q3p, dx: 8)'
+        R3mas: 'desplaza(R3p, dx: 8)'
+        TSmenos: 'desplaza(TS, dx: -8)'
+      comprueba:
+        - en_recta(R, recta3(C, D))
+        - en_recta(S, recta3(D, E))
+    pasos:
+      - tipo: reconocer
+        pregunta: En la planta, B₁ y D₁ coinciden. ¿Qué dice eso de la figura?
+        opciones:
+          - texto: Que B y D son el mismo punto, y la figura tiene cuatro vértices, con BC y DC como un solo borde
+            mensaje: |
+              En el alzado B₂ y D₂ están uno encima del otro, a 40 mm: son dos puntos. Lo que comparten es
+              la planta, porque uno está justo debajo del otro.
+          - texto: Que BD es de punta, perpendicular al plano vertical, y la cara BCD se ve de canto en el alzado
+            mensaje: |
+              Una recta de punta tiene un **punto** por alzado, y B₂D₂ es una recta vertical. Lo que se
+              reduce a un punto es la planta: BD es vertical.
+          - texto: 'Que BD es vertical, y la cara BCD, una pared vertical: la gota baja por ella sin moverse en la planta'
+            correcta: true
+            mensaje: |
+              Eso es. Un plano que contiene una recta vertical es vertical: su planta es una recta, aquí
+              B₁C₁. En una pared vertical la línea de máxima pendiente es la vertical, y la gota la sigue
+              hasta CD, donde empieza la cara CDE.
+
+      - tipo: construir
+        titulo: La trayectoria en las tres vistas
+        intro: |
+          La gota baja siempre por la línea de máxima pendiente de la cara en la que está. En el tejado
+          ABC, la l.m.p. que pasa por A llega a BC en Q; búscala con la horizontal del tejado que pasa por
+          B, BH. Desde Q cae por la pared BCD en vertical hasta CD, en R: en la planta no se mueve, R₁ ≡
+          Q₁. En la rampa CDE, DE es horizontal: la l.m.p. es perpendicular a D₁E₁, y por ella llega a DE
+          en S, en el suelo. En la vista 3 cada punto va a la altura de su alzado; S₃, en D₃E₃, a lo que
+          S tiene de alejamiento más que D (lo que está más lejos que D del plano vertical). Marca Q, R y
+          S en las vistas en que no coinciden, y pasa a limpio la trayectoria en las tres, con lo visto y
+          lo oculto: la vista 3 mira desde la izquierda. Junto a Q₁ se cruzan trazos a menos de 4 mm: con
+          la lupa (×4) se marca mejor.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: Q1
+            pide: Q, donde la gota deja el tejado, en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está en B₁C₁, al final de la perpendicular a B₁H₁ que sale de A₁: la l.m.p. del tejado es
+              perpendicular a sus horizontales, y ese ángulo recto se ve en la planta.
+            diagnosticos:
+              - si: cerca_de(solucion.Q1alborde)
+                mensaje: |
+                  Has trazado la perpendicular **al borde BC**. La l.m.p. es perpendicular a las
+                  **horizontales del tejado**, y BC no lo es: B y C están a distinta cota. Aquí las dos
+                  direcciones casi coinciden y te has quedado a 1,1 mm, pero el camino es la perpendicular a
+                  B₁H₁.
+                ejemplo: solucion.Q1alborde
+              - si: cerca_de(solucion.Q1vert)
+                mensaje: |
+                  Has bajado por la **vertical del papel** desde A₁, como si las horizontales del tejado
+                  fueran horizontales en el papel también en la planta. No lo son: la del tejado por B va de
+                  B₁ a H₁.
+                ejemplo: solucion.Q1vert
+              - si: '!en_recta(solucion.lmp1)'
+                mensaje: |
+                  La gota baja por la **l.m.p.**: en la planta, la perpendicular a B₁H₁ que pasa por A₁. H es
+                  el punto de AC con la cota de B: en el alzado, donde la horizontal de B₂ corta A₂C₂.
+                ejemplo: 'uno(medir_sobre(figura.segmento("BC1"), desde: proy_planta(Q), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Vas por la l.m.p., pero la gota deja el tejado **en el borde BC**: Q₁ es donde la
+                  perpendicular a B₁H₁ corta B₁C₁.
+          - nombre: Q2
+            pide: Q, en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en B₂C₂, en la vertical de Q₁.
+            diagnosticos:
+              - si: '!en_vertical_de(Q1)'
+                mensaje: |
+                  Q₂ va en la **vertical de Q₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(Q), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de Q₁, pero Q está en el borde BC: Q₂ va donde esa vertical corta B₂C₂.
+          - nombre: R2
+            pide: R, donde la gota llega al pie de la pared, en el alzado
+            es: proy_alzado(R)
+            bien: |
+              R₂ está en C₂D₂, en la vertical de Q₂: la gota ha caído por la pared en vertical. En la planta
+              no se ha movido, R₁ ≡ Q₁.
+            diagnosticos:
+              - si: cerca_de(solucion.R2suelo)
+                mensaje: |
+                  La gota no cae hasta el suelo: debajo de BC está la pared BCD y, al pie de la pared, la
+                  rampa CDE. La encuentra en CD, y sigue por ella.
+                ejemplo: solucion.R2suelo
+              - si: '!en_vertical_de(Q2)'
+                mensaje: |
+                  La pared es vertical, y la gota baja por ella en vertical: R₂ está **en la vertical de
+                  Q₂**.
+                ejemplo: 'desplaza(proy_alzado(R), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de Q₂, pero la gota llega al pie de la pared en CD: R₂ va donde esa
+                  vertical corta C₂D₂.
+          - nombre: S1
+            pide: S, donde la gota toca el suelo, en la planta
+            es: proy_planta(S)
+            bien: |
+              S₁ está en D₁E₁, al pie de la perpendicular a D₁E₁ que sale de R₁ ≡ Q₁: DE es una horizontal de
+              la rampa, y la l.m.p. le es perpendicular en la planta.
+            diagnosticos:
+              - si: cerca_de(solucion.S1vert)
+                mensaje: |
+                  Has bajado por la **vertical del papel** desde R₁. La l.m.p. de la rampa es perpendicular a
+                  sus horizontales, y DE es una de ellas: la perpendicular a D₁E₁.
+                ejemplo: solucion.S1vert
+              - si: '!en_recta(solucion.lmp1b)'
+                mensaje: |
+                  En la rampa CDE la gota cambia de dirección: baja por **su** l.m.p., la perpendicular a
+                  D₁E₁ que pasa por R₁ ≡ Q₁. D y E tienen la misma cota, así que DE es horizontal.
+                ejemplo: 'uno(medir_sobre(figura.segmento("DE1"), desde: proy_planta(S), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Vas por la l.m.p. de la rampa, pero la gota llega al suelo en DE: S₁ es donde la
+                  perpendicular a D₁E₁ la corta.
+          - nombre: S2
+            pide: S, en el alzado
+            es: proy_alzado(S)
+            bien: |
+              S₂ está en D₂E₂, en la vertical de S₁: el suelo.
+            diagnosticos:
+              - si: '!en_vertical_de(S1)'
+                mensaje: |
+                  S₂ va en la **vertical de S₁**.
+                ejemplo: 'desplaza(proy_alzado(S), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de S₁, pero S está en DE, en el suelo: S₂ va donde esa vertical corta
+                  D₂E₂.
+          - nombre: Q3
+            pide: Q, en la vista 3
+            es: solucion.Q3p
+            bien: |
+              Q₃ está en B₃C₃, a la altura de Q₂: en la vista 3 cada punto conserva su altura.
+            diagnosticos:
+              - si: cerca_de(solucion.Q3enAC)
+                mensaje: |
+                  Ese corte es con A₃C₃. Q está en BC: Q₃ va donde la horizontal de Q₂ corta **B₃C₃**.
+                ejemplo: solucion.Q3enAC
+              - si: '!en_horizontal_de(Q2)'
+                mensaje: |
+                  La vista 3 conserva las alturas del alzado: Q₃ va en la **horizontal de Q₂**.
+                ejemplo: 'desplaza(solucion.Q3p, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás a la altura de Q₂, pero Q está en BC: Q₃ va donde esa horizontal corta B₃C₃.
+          - nombre: R3
+            pide: R, en la vista 3
+            es: solucion.R3p
+            bien: |
+              R₃ está en C₃D₃, a la altura de R₂, y en la vertical de Q₃: QR es vertical, y en la vista 3
+              también.
+            diagnosticos:
+              - si: '!en_horizontal_de(R2)'
+                mensaje: |
+                  R₃ va en la **horizontal de R₂**: la vista 3 conserva las alturas.
+                ejemplo: 'desplaza(solucion.R3p, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás a la altura de R₂, pero R está en CD: R₃ va donde esa horizontal corta C₃D₃, justo
+                  debajo de Q₃.
+          - nombre: S3
+            pide: S, en la vista 3
+            es: solucion.S3p
+            bien: |
+              S₃ está en D₃E₃, a 27,9 mm de D₃: lo que S₁ está por debajo de B₁ ≡ D₁ en la planta, que es lo
+              que S tiene de alejamiento más que D.
+            diagnosticos:
+              - si: cerca_de(solucion.S3alz)
+                mensaje: |
+                  Has llevado D₂S₂, lo que S está a la izquierda de D en el **alzado**. En la vista 3, de
+                  izquierda a derecha se lleva el **alejamiento**: lo que S₁ está por debajo de la horizontal
+                  del papel que pasa por B₁ ≡ D₁, en la planta.
+                ejemplo: solucion.S3alz
+              - si: '!en_recta(figura.segmento("DE3"))'
+                mensaje: |
+                  S está en DE, en el suelo: S₃ va **en D₃E₃**.
+                ejemplo: 'desplaza(solucion.S3p, dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en D₃E₃, pero no a la distancia buena de D₃: lo que S₁ está por debajo de la
+                  horizontal del papel por B₁ ≡ D₁, tomado con el compás en la planta.
+        # Decisión: la gota corre por la cara de arriba del tejado y de la rampa
+        # y por la cara de la pared que da a E. En la planta y en el alzado,
+        # KIT/visibilidad.mjs (guiones/vis-sd2): todo visto, y ninguna arista de
+        # la lámina cambia. La herramienta no hace vistas laterales; la vista 3
+        # va por rayos hacia −x contra las tres caras opacas
+        # (guiones/sd2-vista3.py): las tres enseñan su envés y tapan la gota
+        # entera, y las siete aristas de la lámina se ven enteras. Ningún tramo
+        # cambia a medio camino, y no hay cruces aparentes que poner.
+        tramos:
+          - traza: segmento2(figura.punto("A1"), proy_planta(Q))
+            tipo: visto
+            porque: 'Desde arriba se ve la cara de encima del tejado, por la que corre la gota, y ninguna otra cara queda encima de ella.'
+          - traza: segmento2(proy_planta(Q), proy_planta(S))
+            tipo: visto
+            porque: 'Va por la cara de encima de la rampa CDE, que mira hacia arriba, y el tejado no la cubre: su planta queda al otro lado de B₁C₁.'
+          - traza: segmento2(figura.punto("A2"), proy_alzado(Q))
+            tipo: visto
+            porque: 'La cara de encima del tejado mira también hacia delante, hacia quien mira el alzado, y en el alzado ninguna cara la cubre.'
+          - traza: segmento2(proy_alzado(Q), proy_alzado(R))
+            tipo: visto
+            porque: 'La gota baja por la cara de la pared que da a E, que mira hacia delante: de frente se ve, y la rampa queda por debajo de C₂D₂.'
+          - traza: segmento2(proy_alzado(R), proy_alzado(S))
+            tipo: visto
+            porque: 'La cara de encima de la rampa mira también algo hacia delante, y en el alzado ninguna otra cara la cubre.'
+          - traza: segmento2(figura.punto("A3"), solucion.Q3p)
+            tipo: oculto
+            porque: 'Desde la izquierda el tejado enseña su cara de abajo, y la gota corre por la de encima: la tapa el propio tejado.'
+          - traza: segmento2(solucion.Q3p, solucion.R3p)
+            tipo: oculto
+            porque: 'La gota baja por la cara de la pared que da a E, que mira hacia delante y a la derecha: desde la izquierda la tapa la propia pared.'
+          - traza: segmento2(solucion.R3p, solucion.S3p)
+            tipo: oculto
+            porque: 'La cara de encima de la rampa mira hacia arriba y algo a la derecha: desde la izquierda se ve su envés, y la rampa tapa la gota.'
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B2"), solucion.H2mas)
+            porque: |
+              En el alzado, la **horizontal de B₂**, hacia la izquierda hasta pasar A₂C₂: el alzado de la
+              horizontal del tejado que pasa por B.
+          - con: marca
+            traza: proy_alzado(H)
+            rotulo: H₂
+            porque: |
+              H₂, donde la horizontal de B₂ corta A₂C₂: H es el punto de AC con la cota de B (el nombre es
+              nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(H), solucion.H1mas)
+            porque: |
+              Por H₂, la vertical hasta pasar A₁C₁: H está en AC.
+          - con: marca
+            traza: proy_planta(H)
+            rotulo: H₁
+            porque: |
+              H₁, donde la vertical de H₂ corta A₁C₁.
+          - con: regla
+            traza: segmento2(figura.punto("B1"), proy_planta(H))
+            porque: |
+              B₁H₁, la planta de la horizontal del tejado por B, en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.Q1mas)
+            guia: segmento2(figura.punto("B1"), proy_planta(H))
+            porque: |
+              Por A₁, la **perpendicular a B₁H₁**, hasta pasar B₁C₁: la l.m.p. del tejado que pasa por A, por
+              donde baja la gota.
+          - con: marca
+            traza: proy_planta(Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde la perpendicular a B₁H₁ que sale de A₁ corta B₁C₁: por ahí deja la gota el tejado
+              (el nombre Q es nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(Q), solucion.Q2mas)
+            porque: |
+              Por Q₁, la vertical hacia arriba hasta pasar B₂C₂. Por el camino corta C₂D₂: la pared es
+              vertical, y la gota baja por esta misma vertical.
+          - con: marca
+            traza: proy_alzado(Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta B₂C₂.
+          - con: marca
+            traza: proy_alzado(R)
+            rotulo: R₂
+            porque: |
+              R₂, donde la misma vertical corta C₂D₂: el pie de la pared, donde empieza la rampa (el nombre R
+              es nuestro). En la planta, R₁ ≡ Q₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(Q), solucion.S1mas)
+            guia: figura.segmento("DE1")
+            porque: |
+              Por R₁ ≡ Q₁, la **perpendicular a D₁E₁**, hasta pasar D₁E₁: DE es horizontal (D₂E₂ lo es), y
+              esta es la l.m.p. de la rampa.
+          - con: marca
+            traza: proy_planta(S)
+            rotulo: S₁
+            porque: |
+              S₁, donde la perpendicular a D₁E₁ que sale de R₁ ≡ Q₁ corta D₁E₁: la gota llega al suelo (el
+              nombre S es nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(S), solucion.S2mas)
+            porque: |
+              Por S₁, la vertical hasta pasar D₂E₂.
+          - con: marca
+            traza: proy_alzado(S)
+            rotulo: S₂
+            porque: |
+              S₂, donde la vertical de S₁ corta D₂E₂, el suelo.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(Q), solucion.Q3mas)
+            porque: |
+              Por Q₂, la horizontal hacia la derecha hasta pasar B₃C₃: la vista 3 conserva las alturas.
+          - con: marca
+            traza: solucion.Q3p
+            rotulo: Q₃
+            porque: |
+              Q₃, donde la horizontal de Q₂ corta B₃C₃.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(R), solucion.R3mas)
+            porque: |
+              Por R₂, la horizontal hacia la derecha hasta pasar C₃D₃.
+          - con: marca
+            traza: solucion.R3p
+            rotulo: R₃
+            porque: |
+              R₃, donde la horizontal de R₂ corta C₃D₃: queda justo debajo de Q₃, porque QR es vertical.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.TSmenos)
+            porque: |
+              En la planta, la horizontal del papel que pasa por B₁ ≡ D₁, hacia la izquierda hasta pasar la
+              vertical de S₁: desde ella se cuenta lo que cada punto tiene de alejamiento más que D.
+          - con: marca
+            traza: solucion.TS
+            porque: |
+              Donde la vertical de S₁ corta la horizontal del papel por B₁ ≡ D₁ (sin rótulo). De S₁ a este
+              punto, lo que S está más lejos que D del plano vertical.
+          - con: compas
+            traza: 'arco(figura.punto("D3"), por: solucion.S3p, desde: desplaza(solucion.S3p, dx: 0, dy: -7), hasta: desplaza(solucion.S3p, dx: 0, dy: 7))'
+            toma: segmento2(proy_planta(S), solucion.TS)
+            porque: |
+              Con el compás, en la planta, de S₁ a la horizontal del papel por B₁ ≡ D₁, 27,9 mm. Con centro en
+              D₃, sobre D₃E₃: en la vista 3, lo de más alejamiento queda a la derecha.
+          - con: marca
+            traza: solucion.S3p
+            rotulo: S₃
+            porque: |
+              S₃, donde el arco corta D₃E₃.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("A1"), proy_planta(Q)), segmento2(proy_planta(Q), proy_planta(S)), segmento2(figura.punto("A2"), proy_alzado(Q)), segmento2(proy_alzado(Q), proy_alzado(R)), segmento2(proy_alzado(R), proy_alzado(S))]'
+            porque: |
+              **Lo visto.** En la planta y en el alzado, la trayectoria entera: la gota corre por la cara de
+              cada pieza que mira hacia delante (en el tejado y en la rampa, también hacia arriba), y en
+              esas dos vistas ninguna otra cara la cubre. En la planta, la caída por la pared es un punto,
+              Q₁ ≡ R₁.
+          - con: arista-oculta
+            traza: '[segmento2(figura.punto("A3"), solucion.Q3p), segmento2(solucion.Q3p, solucion.R3p), segmento2(solucion.R3p, solucion.S3p)]'
+            porque: |
+              **Lo oculto.** En la vista 3, que mira desde la izquierda, las tres caras enseñan su envés: la
+              gota va por el otro lado, y la trayectoria entera va a trazos.
+        pista: |
+          (1) Horizontal de B₂ hasta A₂C₂: H₂; bájala a H₁. (2) Por A₁, perpendicular a B₁H₁ hasta B₁C₁: Q₁;
+          sube a Q₂, en B₂C₂, y por la misma vertical a R₂, en C₂D₂. (3) Por Q₁, perpendicular a D₁E₁ hasta
+          D₁E₁: S₁; sube a S₂. (4) Horizontales de Q₂ y R₂ hasta B₃C₃ y C₃D₃; S₃, con el compás desde D₃. (5)
+          Vista en la planta y en el alzado; oculta en la vista 3.
+        desarrollo: |
+          En la planta y en el alzado, la trayectoria se ve entera; en la vista 3 va a trazos. La
+          perpendicular al borde BC desde A₁ cae a 1,1 mm de Q₁: en la planta, B₁C₁ es casi perpendicular a
+          la l.m.p. (forman 84,8°), pero no lo es, y el camino es el de la horizontal B₁H₁.
+
+      - tipo: calcular
+        titulo: Cuánto recorre
+        pregunta: ¿Qué longitud real recorre la gota de A hasta el suelo, sumando los tres tramos?
+        respuesta:
+          tipo: numero
+          valor: '75.84'
+          receta: total_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '35.59'
+            receta: en_mm(vm_planta(A, Q) + vm_planta(R, S))
+            mensaje: |
+              Eso es lo que miden A₁Q₁ y Q₁S₁ **en la planta**. La planta acorta los dos tramos inclinados y
+              reduce a un punto la caída por la pared.
+          - valor: '71.12'
+            receta: en_mm(vm_alzado(A, Q) + vm_alzado(Q, R) + vm_alzado(R, S))
+            mensaje: |
+              Eso es la trayectoria **en el alzado**. La caída QR sí está entera, porque es vertical, pero AQ
+              y RS no son frontales, y el alzado los acorta.
+          - valor: '57.94'
+            receta: en_mm(vm(A, Q) + vm(R, S))
+            mensaje: |
+              Te falta la **caída por la pared**, de Q a R: 17,90 mm, que se miden enteros en el alzado,
+              de Q₂ a R₂.
+        pista: |
+          Tres tramos: AQ y RS, cada uno con su triángulo (la planta y la diferencia de cotas); QR es
+          vertical, y se mide tal cual en el alzado.
+        desarrollo: |
+          $$ \overline{AQ} = \sqrt{12{,}25^{2} + 28{,}28^{2}} \approx 30{,}82, \qquad \overline{QR} = 17{,}90, \qquad \overline{RS} = \sqrt{23{,}34^{2} + 13{,}80^{2}} \approx 27{,}12 $$
+
+          En total, 30,82 + 17,90 + 27,12 ≈ 75,84 mm.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: En el tejado la gota baja por la l.m.p. que pasa por A, perpendicular en la planta a la horizontal B₁H₁, hasta el borde BC.
+          - texto: B₁ ≡ D₁, así que la pared BCD es vertical; desde Q la gota cae por ella en vertical hasta CD, y en la planta R₁ ≡ Q₁.
+          - texto: En la rampa CDE, DE es horizontal; la gota baja por la perpendicular a D₁E₁ hasta DE, que está en el suelo.
+          - texto: En la vista 3 cada punto conserva la altura de su alzado, y la trayectoria va oculta, porque desde la izquierda las tres caras enseñan su envés.
+          - texto: Al llegar a BC la gota cae en vertical hasta el suelo, porque es el borde del tejado.
+            trampa: true
+            mensaje: |
+              Debajo de BC está la pared BCD y, a su pie, la rampa CDE: la gota cae solo hasta CD, y sigue
+              por la rampa hasta DE.
+    resolucion: |
+      **Qué es la figura.** Tres caras planas: el tejado ABC, la pared BCD y la rampa CDE. B₁ ≡ D₁, así
+      que BD es vertical y la pared también. D y E son los puntos más bajos, y DE está en el suelo.
+
+      **El tejado.** La horizontal de B₂ corta A₂C₂ en H₂, y H₁ está en A₁C₁: B₁H₁ es la planta de una
+      horizontal del tejado. Por A₁, la perpendicular a B₁H₁ es la l.m.p.: corta B₁C₁ en Q₁, y Q₂ está en
+      B₂C₂.
+
+      **La pared.** En una pared vertical la gota baja en vertical: R₂, en la vertical de Q₂ sobre C₂D₂, y
+      en la planta R₁ ≡ Q₁.
+
+      **La rampa.** DE es horizontal, y la l.m.p. de la rampa es la perpendicular a D₁E₁ por R₁: corta D₁E₁
+      en S₁, y S₂ está en D₂E₂. Ahí la gota toca el suelo.
+
+      **La vista 3.** Cada punto a la altura de su alzado: Q₃ en B₃C₃, R₃ en C₃D₃, debajo de Q₃, y S₃ en
+      D₃E₃, a 27,9 mm de D₃, lo que S tiene de alejamiento más que D. Desde la izquierda se ve el envés de
+      las tres caras, y la trayectoria va oculta; en la planta y en el alzado se ve entera.
+
+      **Cuánto recorre.** AQ mide 30,82 mm, la caída QR 17,90 y RS 27,12: 75,84 mm en total.
+
+  - id: sd3-los-cuatro-tramos-sobre-el-triangulo
+    titulo: Los cuatro tramos sobre el triángulo
+    fuente: Ejercicio 3 (SD3) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, con la lista como en la página: «1.Primer»
+    # sin espacio, «15mm» junto y un guion delante de cada tramo. El sentido de los
+    # dos primeros tramos no lo fija el enunciado: se lee «por dentro del
+    # triángulo», y las Notas dicen qué pasa con el otro.
+    enunciado: |
+      Dibujar las proyecciones diédricas de la trayectoria que tiene su inicio en el punto A:
+
+      - 1.Primer tramo: segmento horizontal de 15mm.
+      - 2\. Segundo tramo: segmento frontal de 15mm.
+      - 3\. Tercer tramo: se sitúa en una línea de máxima pendiente (l.m.p.) y finaliza en el lado del triángulo de menor cota.
+      - 4\. Cuarto tramo: se sitúa en una línea de máxima inclinación (l.m.i.) y finaliza en el lado AB.
+
+      **Notas nuestras.** «1.Primer», sin espacio, y «15mm», junto, son de la página, como el guion
+      delante de cada tramo. La figura es el triángulo ABC en el alzado, arriba, y en la planta, debajo.
+      Leemos que la trayectoria va por el triángulo: los cuatro tramos son rectas de su plano, y el
+      primero y el segundo salen hacia dentro. Hacia fuera, el primero se sale del triángulo en A, que
+      es un vértice, y la l.m.p. del tercero ya no corta el lado CA: pasa por fuera, a lo sumo
+      rozando A. Y el segundo, hacia fuera, vuelve casi a A y deja su extremo fuera del triángulo (en
+      la planta, 1 mm por encima de A₁: con menos alejamiento que A), desde donde la l.m.p. ya no llega
+      a ningún lado. El lado de menor cota es CA: A y C son los dos vértices más bajos.
+      Llamamos M, N, P y Q a los extremos de los cuatro tramos, y H y J a los puntos de BC con la cota
+      y con el alejamiento de A.
+    pide: Los extremos de los cuatro tramos en las dos vistas y, como pregunta nuestra, lo que mide de verdad el cuarto.
+    receta:
+      lamina: sd3
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        abc: plano(A, B, C)
+      solucion:
+        # Decisión: los dos primeros tramos, hacia dentro del triángulo (rama 1
+        # en los dos); la otra rama es un error con su diagnóstico.
+        h: horizontal_por(A, abc)
+        MM: 'punto_a_distancia(h, desde: A, distancia: mm(15))'
+        M: rama(MM, 1)
+        Mfuera: rama(MM, 2)
+        f: frontal_por(M, abc)
+        NN: 'punto_a_distancia(f, desde: M, distancia: mm(15))'
+        N: rama(NN, 1)
+        Nfuera: rama(NN, 2)
+        bajada: 'lmp(abc, por: N, sentido: descendente)'
+        P: 'corte(bajada, [segmento3(C, A), segmento3(A, B), segmento3(B, C)])'
+        # La l.m.i. por P: en el alzado, la perpendicular a las frontales.
+        fP: frontal_por(P, abc)
+        lmi2: 'perpendicular(por: proy_alzado(P), a: proy_alzado(fP))'
+        Q: 'punto_en_plano(alzado: cruce_aparente(lmi2, figura.segmento("AB2")), plano: abc)'
+        PQ_mm: en_mm(vm(P, Q))
+        # H y J: los puntos de BC con la cota de A y con su alejamiento. AH es la
+        # horizontal del plano por A, y AJ la frontal: dan las dos direcciones.
+        cotaA: 'plano(A, punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10)), punto3(alzado: figura.punto("A2"), planta: desplaza(figura.punto("A1"), dy: 10)))'
+        alejA: 'plano(A, punto3(alzado: desplaza(figura.punto("A2"), dx: 10), planta: desplaza(figura.punto("A1"), dx: 10)), punto3(alzado: desplaza(figura.punto("A2"), dy: 10), planta: figura.punto("A1")))'
+        H: corte_recta_plano(segmento3(B, C), cotaA)
+        J: corte_recta_plano(segmento3(B, C), alejA)
+        h1: proy_planta(h)
+        f2: proy_alzado(f)
+        lmp1: proy_planta(bajada)
+        # Los errores: el primer tramo hacia fuera; la horizontal y la frontal
+        # trazadas como horizontales del papel en la vista que no toca; la l.m.p.
+        # perpendicular al lado CA, o subiendo; la l.m.i. perpendicular al lado
+        # AB, o trazada en la planta.
+        M1papel: 'desplaza(figura.punto("A1"), dx: mm(15))'
+        N2papel: 'desplaza(proy_alzado(M), dx: mm(15))'
+        P1alado: pie_perpendicular(proy_planta(N), figura.segmento("CA1"))
+        P1sube: 'proy_planta(corte(lmp(abc, por: N, sentido: ascendente), [segmento3(C, A), segmento3(A, B), segmento3(B, C)]))'
+        Q2alado: pie_perpendicular(proy_alzado(P), figura.segmento("AB2"))
+        Q2planta: 'cruce_aparente(perpendicular(por: proy_alzado(P), a: segmento2(figura.punto("A2"), proy_alzado(H))), figura.segmento("AB2"))'
+        # Los extremos de los trazos largos de la construcción paso a paso.
+        H2mas: 'desplaza(proy_alzado(H), dx: 8)'
+        H1mas: 'desplaza(proy_planta(H), dy: 8)'
+        J1mas: 'desplaza(proy_planta(J), dx: 8)'
+        J2mas: 'desplaza(proy_alzado(J), dy: -8)'
+        M2mas: 'desplaza(proy_alzado(M), dy: -8)'
+        N2mas: 'uno(medir_sobre(segmento2(proy_alzado(M), proy_alzado(N)), desde: proy_alzado(N), distancia: 8), 1)'
+        N1mas: 'desplaza(proy_planta(N), dx: 8)'
+        N1abajo: 'desplaza(proy_planta(N), dy: 8)'
+        P1mas: 'uno(medir_sobre(segmento2(proy_planta(N), proy_planta(P)), desde: proy_planta(P), distancia: 8), 1)'
+        P2mas: 'desplaza(proy_alzado(P), dy: -8)'
+        Q2mas: 'uno(medir_sobre(segmento2(proy_alzado(P), proy_alzado(Q)), desde: proy_alzado(Q), distancia: 8), 1)'
+        Q1mas: 'desplaza(proy_planta(Q), dy: 8)'
+      comprueba:
+        - en_plano(M, abc)
+        - en_plano(N, abc)
+        - en_recta(P, recta3(C, A))
+        - en_recta(Q, recta3(A, B))
+    pasos:
+      - tipo: reconocer
+        pregunta: El tercer tramo va por una l.m.p. y el cuarto por una l.m.i. ¿En qué vista se traza cada una?
+        opciones:
+          - texto: La l.m.p. en la planta y la l.m.i. en el alzado, cada una donde se ve su ángulo recto
+            correcta: true
+            mensaje: |
+              Eso es. La l.m.p. es perpendicular a las horizontales del plano, y ese ángulo recto se ve en
+              la planta, donde las horizontales están en verdadera magnitud. La l.m.i. es perpendicular a
+              las frontales, y se ve en el alzado.
+          - texto: Las dos en el alzado, perpendiculares al lado del triángulo en el que acaba cada tramo
+            mensaje: |
+              Un lado del triángulo no es ni horizontal ni frontal, y la perpendicular a él no es ninguna de
+              las dos rectas. La l.m.p. se traza perpendicular a las horizontales, en la planta; la l.m.i.,
+              perpendicular a las frontales, en el alzado.
+          - texto: Las dos en la planta, la l.m.p. perpendicular a las horizontales y la l.m.i. a las frontales, porque ahí se ve el triángulo entero
+            mensaje: |
+              La primera mitad está bien, la segunda no: el ángulo recto entre la l.m.i. y las frontales
+              solo se ve donde las frontales están en verdadera magnitud, que es el alzado.
+
+      - tipo: construir
+        titulo: La trayectoria, tramo a tramo
+        intro: |
+          Cada tramo es una recta del plano del triángulo, y va hacia dentro de él (lo hemos leído así:
+          el enunciado no dice el sentido). El primero, la horizontal por A: búscala con H, el punto de BC
+          que tiene la cota de A, y lleva 15 mm sobre A₁H₁, en la planta. El segundo, la frontal por M: su
+          dirección sale de la frontal por A, AJ, con J el punto de BC que tiene el alejamiento de A; los
+          15 mm se llevan en el alzado. El tercero baja por la l.m.p. hasta CA, el lado de menor cota, y el
+          cuarto sube por la l.m.i. hasta AB. Marca las dos proyecciones de M, N, P y Q. Junto a M₂, N y
+          P se cruzan varios trazos a menos de 2 mm, y Q queda a unos 5 mm de B en las dos vistas: con la
+          lupa (×4) se marcan mejor.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: M1
+            pide: M, el final del primer tramo, en la planta
+            es: proy_planta(M)
+            bien: |
+              M₁ está en A₁H₁, la planta de la horizontal por A, a 15 mm de A₁: una horizontal se ve en
+              verdadera magnitud en la planta.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Mfuera))
+                mensaje: |
+                  Ese es el otro sentido de la horizontal, y se sale del triángulo por A, que es un vértice.
+                  Leemos que la trayectoria va por el triángulo: el primer tramo va de A hacia H, hacia
+                  dentro.
+                ejemplo: proy_planta(solucion.Mfuera)
+              - si: cerca_de(solucion.M1papel)
+                mensaje: |
+                  Has llevado los 15 mm por la **horizontal del papel** que pasa por A₁. Una horizontal del
+                  espacio no tiene por qué verse horizontal en la planta: la de este plano va de A₁ a H₁, a
+                  4,3° de la del papel. Por eso te has quedado tan cerca, a 1,1 mm.
+                ejemplo: solucion.M1papel
+              - si: '!en_recta(solucion.h1)'
+                mensaje: |
+                  El primer tramo es la **horizontal del plano por A**. En el alzado, la horizontal de A₂
+                  corta B₂C₂ en H₂; baja H₂ a B₁C₁, y A₁H₁ es su planta.
+                ejemplo: 'desplaza(proy_planta(M), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en A₁H₁, pero no a 15 mm de A₁. La horizontal está en verdadera magnitud en la planta:
+                  los 15 mm se llevan ahí con el compás, desde A₁ hacia H₁.
+          - nombre: M2
+            pide: M, en el alzado
+            es: proy_alzado(M)
+            bien: |
+              M₂ está en la horizontal de A₂, en la vertical de M₁.
+            diagnosticos:
+              - si: '!en_vertical_de(M1)'
+                mensaje: |
+                  M₂ va en la **vertical de M₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(M), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de M₁, pero M tiene la cota de A: M₂ va en la horizontal de A₂.
+          - nombre: N2
+            pide: N, el final del segundo tramo, en el alzado
+            es: proy_alzado(N)
+            bien: |
+              N₂ está en la frontal por M, paralela a A₂J₂ en el alzado, a 15 mm de M₂: una frontal se ve
+              en verdadera magnitud en el alzado.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.Nfuera))
+                mensaje: |
+                  Ese es el otro sentido de la frontal: vuelve casi a A y deja N fuera del triángulo, 1 mm
+                  por encima de A₁ en la planta, y desde ahí la l.m.p. ya no llega a ningún lado. Leemos
+                  que la trayectoria va por el triángulo: el segundo tramo va de M₂ hacia la derecha, hacia
+                  dentro.
+                ejemplo: proy_alzado(solucion.Nfuera)
+              - si: cerca_de(solucion.N2papel)
+                mensaje: |
+                  Has llevado los 15 mm por la **horizontal del papel** que pasa por M₂. Una frontal de este
+                  plano no es horizontal en el alzado: va paralela a A₂J₂, a 4,1° de la del papel. Por eso te
+                  has quedado a 1,1 mm.
+                ejemplo: solucion.N2papel
+              - si: '!en_recta(solucion.f2)'
+                mensaje: |
+                  El segundo tramo es la **frontal del plano por M**. En el alzado va paralela a A₂J₂, la
+                  frontal por A: J está en BC, con el alejamiento de A, y en la planta se busca con la
+                  horizontal del papel que pasa por A₁.
+                ejemplo: 'desplaza(proy_alzado(N), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la frontal por M, pero no en el sitio: N₂ va a 15 mm de M₂, llevados con el
+                  compás hacia dentro del triángulo, hacia la derecha.
+          - nombre: N1
+            pide: N, en la planta
+            es: proy_planta(N)
+            bien: |
+              N₁ está en la vertical de N₂, sobre la horizontal del papel que pasa por M₁: la planta de una
+              frontal tiene alejamiento constante.
+            diagnosticos:
+              - si: '!en_vertical_de(N2)'
+                mensaje: |
+                  N₁ va en la **vertical de N₂**.
+                ejemplo: 'desplaza(proy_planta(N), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de N₂, pero N tiene el alejamiento de M: N₁ va en la horizontal del
+                  papel que pasa por M₁.
+          - nombre: P1
+            pide: P, el final del tercer tramo, en la planta
+            es: proy_planta(P)
+            bien: |
+              P₁ está en C₁A₁, donde la corta la perpendicular a A₁H₁ que sale de N₁: la l.m.p. es
+              perpendicular a las horizontales, y el ángulo recto se ve en la planta.
+            diagnosticos:
+              - si: cerca_de(solucion.P1alado)
+                mensaje: |
+                  Has trazado la perpendicular **al lado CA**. La l.m.p. es perpendicular a las
+                  **horizontales del plano**, y CA no es horizontal: sus dos extremos están a distinta cota.
+                ejemplo: solucion.P1alado
+              - si: cerca_de(solucion.P1sube)
+                mensaje: |
+                  Vas por la l.m.p., pero **subiendo**: has llegado a BC. El tercer tramo baja, hasta el lado
+                  de menor cota, CA.
+                ejemplo: solucion.P1sube
+              - si: '!en_recta(solucion.lmp1)'
+                mensaje: |
+                  El tercer tramo va por la **l.m.p.**, que es perpendicular a las horizontales: en la planta,
+                  la perpendicular a A₁H₁ que pasa por N₁.
+                ejemplo: 'uno(medir_sobre(figura.segmento("CA1"), desde: proy_planta(P), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la l.m.p. que pasa por N₁, pero el tramo acaba en el lado CA: P₁ es donde la
+                  perpendicular a A₁H₁ lo corta.
+          - nombre: P2
+            pide: P, en el alzado
+            es: proy_alzado(P)
+            bien: |
+              P₂ está en C₂A₂, en la vertical de P₁.
+            diagnosticos:
+              - si: '!en_vertical_de(P1)'
+                mensaje: |
+                  P₂ va en la **vertical de P₁**.
+                ejemplo: 'desplaza(proy_alzado(P), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de P₁, pero P está en el lado CA: P₂ va donde esa vertical corta C₂A₂.
+          - nombre: Q2
+            pide: Q, el final del cuarto tramo, en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en A₂B₂, en la perpendicular a A₂J₂ que sale de P₂: la l.m.i. es perpendicular a las
+              frontales, y el ángulo recto se ve en el alzado.
+            diagnosticos:
+              - si: cerca_de(solucion.Q2alado)
+                mensaje: |
+                  Has trazado la perpendicular **al lado AB**. La l.m.i. es perpendicular a las **frontales
+                  del plano**, y AB no es frontal.
+                ejemplo: solucion.Q2alado
+              - si: cerca_de(solucion.Q2planta)
+                mensaje: |
+                  Has trazado la l.m.i. en la **planta**, perpendicular a la planta de las frontales. Ese
+                  ángulo recto no se ve en la planta: las frontales están en verdadera magnitud en el
+                  alzado, y ahí se traza la perpendicular, por P₂.
+                ejemplo: solucion.Q2planta
+              - si: '!en_recta(solucion.lmi2)'
+                mensaje: |
+                  El cuarto tramo va por la **l.m.i.**, perpendicular a las frontales: en el alzado, la
+                  perpendicular a A₂J₂ que pasa por P₂.
+                ejemplo: 'uno(medir_sobre(figura.segmento("AB2"), desde: proy_alzado(Q), distancia: mm(6)), 2)'
+              - si: siempre
+                mensaje: |
+                  Estás en la l.m.i. que pasa por P₂, pero el tramo acaba en el lado AB: Q₂ es donde la
+                  perpendicular a A₂J₂ corta A₂B₂.
+          - nombre: Q1
+            pide: Q, en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está en A₁B₁, en la vertical de Q₂. PQ sube casi tanto como la l.m.p. baja: las dos rectas
+              forman 5,9°.
+            diagnosticos:
+              - si: '!en_vertical_de(Q2)'
+                mensaje: |
+                  Q₁ va en la **vertical de Q₂**.
+                ejemplo: 'desplaza(proy_planta(Q), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de Q₂, pero Q está en el lado AB: Q₁ va donde esa vertical corta A₁B₁.
+        trazado:
+          - proy_planta(segmento3(A, M))
+          - proy_planta(segmento3(M, N))
+          - proy_planta(segmento3(N, P))
+          - proy_planta(segmento3(P, Q))
+          - proy_alzado(segmento3(A, M))
+          - proy_alzado(segmento3(M, N))
+          - proy_alzado(segmento3(N, P))
+          - proy_alzado(segmento3(P, Q))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.H2mas)
+            porque: |
+              En el alzado, la **horizontal de A₂**, hacia la derecha hasta pasar B₂C₂: es el alzado de la
+              horizontal del plano que pasa por A.
+          - con: marca
+            traza: proy_alzado(H)
+            rotulo: H₂
+            porque: |
+              H₂, donde la horizontal de A₂ corta B₂C₂: H es el punto de BC con la cota de A (el nombre es
+              nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(H), solucion.H1mas)
+            porque: |
+              Por H₂, la vertical hasta pasar B₁C₁: H está en BC, y su planta cae en B₁C₁.
+          - con: marca
+            traza: proy_planta(H)
+            rotulo: H₁
+            porque: |
+              H₁, donde la vertical de H₂ corta B₁C₁.
+          - con: regla
+            traza: segmento2(figura.punto("A1"), proy_planta(H))
+            porque: |
+              A₁H₁, la planta de la horizontal por A, en verdadera magnitud. No es horizontal en el papel:
+              va a 4,3° de la horizontal del papel.
+          - con: compas
+            traza: 'arco(figura.punto("A1"), por: proy_planta(M), desde: desplaza(proy_planta(M), dx: -0.6, dy: -8), hasta: desplaza(proy_planta(M), dx: 0.6, dy: 8))'
+            porque: |
+              Con centro en A₁ y los 15 mm del enunciado, el arco que corta A₁H₁ hacia dentro del triángulo.
+          - con: marca
+            traza: proy_planta(M)
+            rotulo: M₁
+            porque: |
+              M₁, donde el arco corta A₁H₁: el final del primer tramo (el nombre M es nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.J1mas)
+            porque: |
+              En la planta, la **horizontal del papel** que pasa por A₁, hasta pasar B₁C₁: es la planta de
+              la frontal del plano por A, que tiene alejamiento constante.
+          - con: marca
+            traza: proy_planta(J)
+            porque: |
+              J₁, donde esa horizontal del papel corta B₁C₁: J es el punto de BC con el alejamiento de A (el
+              nombre es nuestro). Va sin rótulo: el punto H₁, marcado antes, lo tocaría.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(J), solucion.J2mas)
+            porque: |
+              Por J₁, la vertical hasta pasar B₂C₂.
+          - con: marca
+            traza: proy_alzado(J)
+            rotulo: J₂
+            porque: |
+              J₂, donde la vertical de J₁ corta B₂C₂.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), proy_alzado(J))
+            porque: |
+              A₂J₂, el alzado de la frontal por A: da la dirección de todas las frontales del plano en el
+              alzado, donde están en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(M), solucion.M2mas)
+            porque: |
+              Por M₁, la vertical hasta pasar la horizontal de A₂: M tiene la cota de A.
+          - con: marca
+            traza: proy_alzado(M)
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta la horizontal de A₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(M), solucion.N2mas)
+            guia: segmento2(figura.punto("A2"), proy_alzado(J))
+            porque: |
+              Por M₂, la **paralela a A₂J₂**, hacia la derecha: el alzado de la frontal por M, en verdadera
+              magnitud.
+          - con: compas
+            traza: 'arco(proy_alzado(M), por: proy_alzado(N), desde: desplaza(proy_alzado(N), dx: -0.58, dy: -8), hasta: desplaza(proy_alzado(N), dx: 0.58, dy: 8))'
+            porque: |
+              Con centro en M₂ y los 15 mm del enunciado, el arco que corta esa paralela, hacia dentro.
+          - con: marca
+            traza: proy_alzado(N)
+            rotulo: N₂
+            porque: |
+              N₂, donde el arco corta la paralela a A₂J₂ por M₂: el final del segundo tramo (el nombre N es
+              nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(M), solucion.N1mas)
+            porque: |
+              En la planta, la horizontal del papel que pasa por M₁, hacia la derecha: es la planta de la
+              frontal por M.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(N), solucion.N1abajo)
+            porque: |
+              Por N₂, la vertical hasta pasar esa horizontal del papel.
+          - con: marca
+            traza: proy_planta(N)
+            rotulo: N₁
+            porque: |
+              N₁, donde la vertical de N₂ corta la horizontal del papel que pasa por M₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(N), solucion.P1mas)
+            guia: segmento2(figura.punto("A1"), proy_planta(H))
+            porque: |
+              Por N₁, la **perpendicular a A₁H₁**, hacia arriba hasta pasar C₁A₁: es la l.m.p. por N, que
+              baja hacia el lado de menor cota.
+          - con: marca
+            traza: proy_planta(P)
+            rotulo: P₁
+            porque: |
+              P₁, donde la perpendicular a A₁H₁ que sale de N₁ corta C₁A₁: el final del tercer tramo (el
+              nombre P es nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(P), solucion.P2mas)
+            porque: |
+              Por P₁, la vertical hasta pasar C₂A₂.
+          - con: marca
+            traza: proy_alzado(P)
+            rotulo: P₂
+            porque: |
+              P₂, donde la vertical de P₁ corta C₂A₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(P), solucion.Q2mas)
+            guia: segmento2(figura.punto("A2"), proy_alzado(J))
+            porque: |
+              Por P₂, la **perpendicular a A₂J₂**, hacia arriba hasta pasar A₂B₂: es la l.m.i. por P, que
+              sube hacia AB.
+          - con: marca
+            traza: proy_alzado(Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la perpendicular a A₂J₂ que sale de P₂ corta A₂B₂: el final del cuarto tramo (el
+              nombre Q es nuestro).
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(Q), solucion.Q1mas)
+            porque: |
+              Por Q₂, la vertical hasta pasar A₁B₁.
+          - con: marca
+            traza: proy_planta(Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde la vertical de Q₂ corta A₁B₁.
+          - con: regla
+            traza: '[segmento2(figura.punto("A1"), proy_planta(M)), segmento2(proy_planta(M), proy_planta(N)), segmento2(proy_planta(N), proy_planta(P)), segmento2(proy_planta(P), proy_planta(Q)), segmento2(figura.punto("A2"), proy_alzado(M)), segmento2(proy_alzado(M), proy_alzado(N)), segmento2(proy_alzado(N), proy_alzado(P)), segmento2(proy_alzado(P), proy_alzado(Q))]'
+            porque: |
+              La trayectoria en las dos vistas: A₁M₁N₁P₁Q₁ y A₂M₂N₂P₂Q₂.
+        pista: |
+          (1) Horizontal de A₂ hasta B₂C₂: H₂; bájala a H₁. A₁H₁ es la horizontal por A; 15 mm desde A₁: M₁.
+          (2) Horizontal del papel por A₁ hasta B₁C₁: J₁; súbela a J₂. A₂J₂ es la frontal por A; su paralela
+          por M₂, y 15 mm: N₂. (3) Por N₁, perpendicular a A₁H₁ hasta C₁A₁: P₁. (4) Por P₂, perpendicular a
+          A₂J₂ hasta A₂B₂: Q₂.
+        desarrollo: |
+          En verde claro, la trayectoria en las dos vistas. Los dos primeros tramos son casi paralelos a
+          la horizontal del papel: AM mide 14,96 mm en el alzado y MN, 14,96 mm en la planta. Llevar los
+          15 mm en la vista que no toca deja M o N a 0,04 mm de su sitio, y eso no se distingue; trazar la
+          horizontal o la frontal como horizontales del papel, en cambio, los deja a 1,1 mm. La l.m.p. y la
+          l.m.i. forman 5,9°: el tercer tramo y el cuarto casi siguen la misma recta, pero no la misma.
+
+      - tipo: calcular
+        titulo: El cuarto tramo
+        pregunta: ¿Cuánto mide de verdad el cuarto tramo, PQ?
+        respuesta:
+          tipo: numero
+          valor: '57.65'
+          receta: PQ_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '41.65'
+            receta: en_mm(vm_planta(P, Q))
+            mensaje: |
+              Eso es lo que mide **P₁Q₁ en la planta**. PQ sube, y la planta la acorta: la verdadera
+              magnitud es la hipotenusa de P₁Q₁ y de lo que Q está más alto que P.
+          - valor: '39.96'
+            receta: en_mm(vm_alzado(P, Q))
+            mensaje: |
+              Eso es **P₂Q₂ en el alzado**, que también acorta: PQ es una l.m.i., la recta del plano que
+              más se aparta del plano vertical, y no es frontal.
+          - valor: '100.49'
+            receta: en_mm(vm(A, M) + vm(M, N) + vm(N, P) + vm(P, Q))
+            mensaje: |
+              Eso es la **trayectoria entera**, los cuatro tramos sumados. Se pregunta solo por el cuarto,
+              de P a Q.
+        pista: |
+          Base, P₁Q₁ medido en la planta; altura, lo que Q₂ está por encima de P₂ en el alzado. La
+          hipotenusa es la longitud de verdad.
+        desarrollo: |
+          $$ \overline{PQ} = \sqrt{\overline{P_1Q_1}^{\,2} + \Delta z^{2}} = \sqrt{41{,}65^{2} + 39{,}86^{2}} \approx 57{,}65 \text{ mm} $$
+
+          Con el alzado y la diferencia de alejamientos sale lo mismo: √(39,96² + 41,55²). Ojo con una
+          casualidad: la línea de referencia de H, de H₂ a H₁, mide 58,05 mm, dentro del milímetro de la
+          respuesta, y no tiene nada que ver con PQ.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El primer tramo es la horizontal del plano por A, de A hacia H; está en verdadera magnitud en la planta, y ahí se llevan los 15 mm.
+          - texto: El segundo es la frontal por M, paralela a A₂J₂ en el alzado; ahí está en verdadera magnitud, y ahí se llevan los 15 mm.
+          - texto: El tercero baja por la l.m.p. desde N, perpendicular a las horizontales en la planta, hasta el lado CA.
+          - texto: El cuarto sube por la l.m.i. desde P, perpendicular a las frontales en el alzado, hasta el lado AB.
+          - texto: La l.m.p. y la l.m.i. de este plano son la misma recta, así que el cuarto tramo sigue al tercero en línea recta.
+            trampa: true
+            mensaje: |
+              No lo son: la l.m.p. es perpendicular a las horizontales, y la l.m.i., a las frontales, y
+              solo coincidirían si las horizontales del plano fueran también frontales. Aquí forman 5,9°,
+              y por eso casi parecen la misma; en P la trayectoria tuerce.
+    resolucion: |
+      **Las dos direcciones que hacen falta.** La horizontal de A₂ corta B₂C₂ en H₂, y la vertical de H₂
+      corta B₁C₁ en H₁: A₁H₁ es la planta de la horizontal por A, en verdadera magnitud. La horizontal del
+      papel por A₁ corta B₁C₁ en J₁, y su vertical da J₂ en B₂C₂: A₂J₂ es el alzado de la frontal por A,
+      en verdadera magnitud.
+
+      **Los dos primeros tramos.** M₁, a 15 mm de A₁ sobre A₁H₁, hacia dentro; M₂, en la horizontal de A₂.
+      N₂, a 15 mm de M₂ sobre la paralela a A₂J₂, hacia dentro; N₁, en la horizontal del papel por M₁. Los
+      dos tramos son casi paralelos a la horizontal del papel: el plano casi contiene esa dirección.
+
+      **La l.m.p. y la l.m.i.** Por N₁, la perpendicular a A₁H₁ baja hasta C₁A₁ en P₁, y P₂ está en C₂A₂.
+      Por P₂, la perpendicular a A₂J₂ sube hasta A₂B₂ en Q₂, y Q₁ está en A₁B₁. El plano forma 44,0° con
+      el horizontal y 46,1° con el vertical, y la l.m.p. y la l.m.i. forman 5,9° entre sí.
+
+      **Lo que mide el cuarto tramo.** P₁Q₁ mide 41,65 mm y Q está 39,86 mm más alto que P: PQ mide
+      57,65 mm de verdad.
+
   - id: sd4-el-poste-y-sus-tres-cables
     titulo: El poste y sus tres cables
     fuente: Ejercicio 4 (SD4) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
@@ -1009,3 +2032,924 @@ ejercicios:
       cuadrados valen. B₁ está en s₁, en su vertical: la planta acorta AB a 21,66 mm porque s
       sube. C sale de B igual que D de A: C₂ coincide con B₂, y C₁ está en r₁ en la vertical de
       B₁, al mismo lado que B.
+
+  - id: sd7-el-cuadrado-con-una-diagonal-en-la-lmp
+    titulo: El cuadrado con una diagonal en la línea de máxima pendiente
+    fuente: Ejercicio 6 (SD7) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, con su «Datos:» seguido de minúscula,
+    # como en la página. Lo que la página no nombra (los extremos de r, los
+    # vértices) se nombra en las Notas nuestras. El enunciado no dice cómo se
+    # lleva la media diagonal sobre r: lo fija el intro del paso (el triángulo
+    # de T, abatido hacia abajo de la planta).
+    enunciado: |
+      Dibujar las proyecciones diédricas del cuadrado de 5 cm de lado situado en el plano definido por
+      la l.m.p. que se muestra. Datos: el centro del cuadrado es el punto O y una de las diagonales se
+      encuentra sobre la l.m.p.
+
+      **Notas nuestras.** La figura es la recta r, la l.m.p., en el alzado, arriba, y en la planta,
+      debajo, con el punto O sobre ella en las dos vistas. r₂ está a 45° justos en el papel. La figura
+      no nombra nada más; aquí llamamos T al extremo de arriba de r₂ (y de r₁, en su vertical), A y C a
+      los vértices que van sobre r (A, el de más cota, del lado de T) y B y D a los otros dos, que dan
+      igual cuál es cuál. O₁ queda a 0,02 mm de r₁: el redondeo de la lámina, que no se ve.
+    pide: Los cuatro vértices del cuadrado en las dos vistas y, como pregunta nuestra, el ángulo que forma su plano con el horizontal.
+    receta:
+      lamina: sd7
+      escena:
+        r: 'recta3(alzado: figura.segmento("r2"), planta: figura.segmento("r1"))'
+        O: 'punto3(alzado: figura.punto("O2"), planta: figura.punto("O1"))'
+        T: 'punto3(alzado: figura.punto("T2"), planta: figura.punto("T1"))'
+        U: 'punto3(alzado: figura.punto("U2"), planta: figura.punto("U1"))'
+        pl: plano_por_lmp(r)
+      solucion:
+        # La media diagonal, 50·√2/2 mm. A y C sobre r, a esa distancia real de
+        # O; A, el de más cota (rama 1, hacia T). B y D sobre la horizontal del
+        # plano por O, que es la perpendicular a r por O: cuál es B da igual, y
+        # es una elección.
+        semi: mm(50) * raiz(2) / 2
+        AC: 'punto_a_distancia(r, desde: O, distancia: semi)'
+        A: rama(AC, 1)
+        C: rama(AC, 2)
+        h: horizontal_por(O, pl)
+        B: 'punto_a_distancia(h, desde: O, distancia: semi)'
+        D: 'simetrico(B, respecto: O)'
+        # Decisión: r en verdadera magnitud con el triángulo de T: el plano
+        # proyectante de r abatido sobre el plano horizontal de O, con charnela
+        # la horizontal de ese plano por O, que en la planta va por r₁. T₀, a lo
+        # que T está más alto que O, por la perpendicular a r₁ que sale de T₁.
+        # Los dos lados valen (una lista); la construcción toma el de abajo.
+        vT: segmento2(figura.punto("T2"), figura.punto("T1"))
+        hO2: 'perpendicular(por: figura.punto("O2"), a: vT)'
+        HT: pie_perpendicular(figura.punto("T2"), hO2)
+        dzT: diferencia_de_cotas(O, T)
+        perpT1: 'perpendicular(por: figura.punto("T1"), a: figura.segmento("r1"))'
+        Tabs: 'medir_sobre(perpT1, desde: figura.punto("T1"), distancia: dzT)'
+        Tab: uno(Tabs, 1)
+        r0: segmento2(figura.punto("O1"), Tab)
+        Aab: 'uno(medir_sobre(r0, desde: figura.punto("O1"), distancia: semi), 1)'
+        Cab: 'uno(medir_sobre(r0, desde: figura.punto("O1"), distancia: semi), 2)'
+        perpO1: 'perpendicular(por: figura.punto("O1"), a: figura.segmento("r1"))'
+        ang: angulo_con_ph(pl)
+        # Los errores. La media diagonal llevada sobre r₁ o sobre r₂, que
+        # acortan; medio lado en vez de media diagonal; O₂T₂ en vez de lo que T
+        # está más alto que O; y B₂ en la perpendicular a r₂, como si el ángulo
+        # recto se viera en el alzado.
+        A1r1: 'uno(medir_sobre(figura.segmento("r1"), desde: figura.punto("O1"), distancia: semi), 1)'
+        C1r1: 'uno(medir_sobre(figura.segmento("r1"), desde: figura.punto("O1"), distancia: semi), 2)'
+        A2r2: 'uno(medir_sobre(figura.segmento("r2"), desde: figura.punto("O2"), distancia: semi), 1)'
+        C2r2: 'uno(medir_sobre(figura.segmento("r2"), desde: figura.punto("O2"), distancia: semi), 2)'
+        A0lado: 'uno(medir_sobre(r0, desde: figura.punto("O1"), distancia: mm(25)), 1)'
+        A1lado: pie_perpendicular(A0lado, figura.segmento("r1"))
+        T0alz: 'uno(medir_sobre(perpT1, desde: figura.punto("T1"), distancia: vm_alzado(O, T)), 1)'
+        B1lado: 'uno(medir_sobre(perpO1, desde: figura.punto("O1"), distancia: mm(25)), 1)'
+        perpO2: 'perpendicular(por: figura.punto("O2"), a: figura.segmento("r2"))'
+        B2perp: 'uno(medir_sobre(perpO2, desde: figura.punto("O2"), distancia: semi), 1)'
+        # El ángulo de r₂ en el papel (45°) es el de la frontal que tuviera r₂
+        # por alzado; el de r₁ (20°), el de la horizontal con r₁ por planta.
+        hU1: 'perpendicular(por: figura.punto("U1"), a: vT)'
+        hU2: 'perpendicular(por: figura.punto("U2"), a: vT)'
+        X1: 'cruce_aparente(perpendicular(por: figura.punto("T2"), a: hU1), hU1)'
+        Y2: 'cruce_aparente(perpendicular(por: figura.punto("T1"), a: hU2), hU2)'
+        ang_r2: 'angulo_con_ph(segmento3(U, punto3(alzado: figura.punto("T2"), planta: X1)))'
+        ang_r1: 'angulo_con_pv(segmento3(U, punto3(alzado: Y2, planta: figura.punto("T1"))))'
+        # Los extremos de los trazos largos de la construcción paso a paso.
+        Hmas: 'desplaza(HT, dx: 8)'
+        hO2menos: 'desplaza(figura.punto("O2"), dx: -48)'
+        T0mas: 'uno(medir_sobre(perpT1, desde: Tab, distancia: 8), 1)'
+        r0mas: 'uno(medir_sobre(r0, desde: Tab, distancia: 8), 1)'
+        C0mas: 'uno(medir_sobre(r0, desde: Cab, distancia: 8), 2)'
+        Bmas: 'uno(medir_sobre(perpO1, desde: proy_planta(rama(B, 1)), distancia: 8), 1)'
+        Dmas: 'uno(medir_sobre(perpO1, desde: proy_planta(rama(D, 1)), distancia: 8), 2)'
+      comprueba:
+        - en_recta(O, r)
+        - en_plano(O, pl)
+        - en_plano(A, pl)
+        - en_plano(B, pl)
+    pasos:
+      - tipo: reconocer
+        pregunta: Una diagonal del cuadrado va sobre r, la l.m.p. ¿Qué recta del plano es la otra diagonal, BD?
+        opciones:
+          - texto: Una frontal del plano, porque en el alzado se traza perpendicular a r₂, por O₂
+            mensaje: |
+              En el alzado ese ángulo recto no se ve: para verse recto, uno de los dos lados tiene que
+              ser paralelo al plano vertical, y ni r ni BD lo son. Una frontal de este plano, además, no es
+              perpendicular a r: solo lo sería si fuera también horizontal, y eso pide r₁ vertical en el
+              papel.
+          - texto: Una recta oblicua del plano, que forma 90° con r en el espacio, y eso no se ve en ninguna vista
+            mensaje: |
+              Sí forma 90° con r, pero no es una recta cualquiera: la perpendicular a la línea de
+              máxima pendiente dentro del plano es una horizontal. Y con una horizontal el ángulo
+              recto se ve en la planta.
+          - texto: 'Una horizontal del plano: es perpendicular a r, que es la l.m.p., y el ángulo recto se ve en la planta'
+            correcta: true
+            mensaje: |
+              Eso es. Las diagonales de un cuadrado son perpendiculares, y en el plano la perpendicular
+              a la l.m.p. es una horizontal. Se traza en la planta, perpendicular a r₁ por O₁, y ahí
+              está en verdadera magnitud: B₁ y D₁ salen con el compás. En el alzado va por la
+              horizontal de O₂.
+
+      - tipo: construir
+        titulo: Los cuatro vértices
+        intro: |
+          AC va sobre r, que es oblicua: la media diagonal, 50·√2/2 = 35,36 mm, no se puede llevar ni
+          sobre r₁ ni sobre r₂, porque las dos acortan. Pon r en verdadera magnitud con el triángulo de
+          T, el extremo de arriba de r: el enunciado no dice cómo, y lo fijamos nosotros. Abate T sobre
+          el plano horizontal de O por la perpendicular a r₁ que sale de T₁, a lo que T está más alto
+          que O, hacia abajo de la planta (al otro lado también valdría); r₀, de O₁ a T₀, es r abatida.
+          Lleva sobre ella la media diagonal, desabate a r₁ y sube a r₂. A es el vértice del lado de T, y
+          C el otro. BD es la horizontal del plano por O: B₁ y D₁ en la perpendicular a r₁ por O₁, a la
+          media diagonal, y B₂ y D₂ en la horizontal de O₂; cuál llamas B da igual. Marca T₀ y las dos
+          proyecciones de los cuatro vértices.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: T0
+            pide: T, el extremo de arriba de r, abatido
+            es: solucion.Tabs
+            bien: |
+              T₀ está en la perpendicular a r₁ que pasa por T₁, a 36,64 mm: lo que T está más alto que
+              O, que se mide en el alzado, de T₂ a la horizontal de O₂. O₁T₀ es r en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(figura.punto("T1"))
+                mensaje: |
+                  Ese es T₁, la planta de T sin abatir. Al abatir, T baja hasta la cota de O girando
+                  alrededor de la charnela, y en la planta se aparta de r₁ por la perpendicular.
+                ejemplo: figura.punto("T1")
+              - si: cerca_de(solucion.T0alz)
+                mensaje: |
+                  Has llevado lo que mide O₂T₂ en el alzado, 51,8 mm. El cateto que se lleva es solo **lo
+                  que T está más alto que O**: de T₂ a la horizontal de O₂, 36,6 mm.
+                ejemplo: solucion.T0alz
+              - si: '!en_recta(solucion.perpT1)'
+                mensaje: |
+                  T se abate por la **perpendicular a r₁ que pasa por T₁**: gira alrededor de la
+                  charnela, que en la planta va por r₁, en un plano perpendicular a ella.
+                ejemplo: 'desplaza(solucion.Tab, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a r₁ por T₁, pero no a la distancia buena: lo que T₂ está por
+                  encima de la horizontal de O₂, tomado con el compás y llevado desde T₁.
+          - nombre: A1
+            pide: el vértice A, el de r del lado de T, en la planta
+            es: proy_planta(A)
+            bien: |
+              A₁ está en r₁, al pie de la perpendicular a r₁ que sale de A₀, y A₀ está en r₀ a la
+              media diagonal de O₁, del lado de T₀.
+            diagnosticos:
+              - si: cerca_de(solucion.A1r1)
+                mensaje: |
+                  Has llevado la media diagonal sobre r₁. r sube, y la planta la acorta: medida ahí, A
+                  queda más lejos de O de lo que toca. Se lleva sobre r₀, la r abatida, y se vuelve a r₁
+                  por la perpendicular.
+                ejemplo: solucion.A1r1
+              - si: cerca_de(proy_planta(C))
+                mensaje: |
+                  Ese es el otro extremo de la diagonal, el de abajo. Aquí llamamos A al del lado de T, el
+                  de más cota, y C al otro.
+                ejemplo: proy_planta(C)
+              - si: cerca_de(solucion.A1lado)
+                mensaje: |
+                  Has llevado **medio lado**, 25 mm. O es el centro del cuadrado, y de O a un vértice hay
+                  media diagonal: 50·√2/2 = 35,36 mm.
+                ejemplo: solucion.A1lado
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  A está en r: A₁ va **en r₁**, donde la corta la perpendicular que sale de A₀.
+                ejemplo: 'desplaza(proy_planta(A), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en r₁, pero no en el sitio. A₀ está en r₀ a 35,36 mm de O₁, del lado de T₀, y A₁ es
+                  el pie de la perpendicular a r₁ que sale de A₀.
+          - nombre: C1
+            pide: el vértice C, el otro de r, en la planta
+            es: proy_planta(C)
+            bien: |
+              C₁ está en r₁, al otro lado de O₁: C₀ está en r₀ a la media diagonal, al otro lado de O₁, y
+              vuelve a r₁ por la perpendicular.
+            diagnosticos:
+              - si: cerca_de(solucion.C1r1)
+                mensaje: |
+                  Has llevado la media diagonal sobre r₁, que la acorta. Se lleva sobre r₀, desde O₁ y
+                  hacia el lado contrario a T₀, y C₀ vuelve a r₁ por la perpendicular.
+                ejemplo: solucion.C1r1
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  C está en r: C₁ va **en r₁**. Prolonga r₁ con la regla si hace falta.
+                ejemplo: 'desplaza(proy_planta(C), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  C₁ es el pie de la perpendicular a r₁ que sale de C₀, y C₀ está en r₀ a 35,36 mm de O₁,
+                  del lado contrario a T₀.
+          - nombre: A2
+            pide: el vértice A, en el alzado
+            es: proy_alzado(A)
+            bien: |
+              A₂ está en r₂, en la vertical de A₁.
+            diagnosticos:
+              - si: cerca_de(solucion.A2r2)
+                mensaje: |
+                  Has llevado la media diagonal sobre r₂. El alzado también acorta r, aunque poco —r está a
+                  14,4° del plano vertical—: así A₂ queda a 1,1 mm de su sitio. Sube A₁ por su vertical.
+                ejemplo: solucion.A2r2
+              - si: '!en_vertical_de(A1)'
+                mensaje: |
+                  A₂ va en la **vertical de A₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(A), dx: mm(6), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de A₁, pero A está en r: A₂ va donde esa vertical corta r₂.
+          - nombre: C2
+            pide: el vértice C, en el alzado
+            es: proy_alzado(C)
+            bien: |
+              C₂ está en r₂, en la vertical de C₁.
+            diagnosticos:
+              - si: cerca_de(solucion.C2r2)
+                mensaje: |
+                  Has llevado la media diagonal sobre r₂, que también acorta r. C₂ sale de subir C₁ por su
+                  vertical hasta r₂.
+                ejemplo: solucion.C2r2
+              - si: '!en_vertical_de(C1)'
+                mensaje: |
+                  C₂ va en la **vertical de C₁**.
+                ejemplo: 'desplaza(proy_alzado(C), dx: mm(-6), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de C₁, pero C está en r: C₂ va donde esa vertical corta r₂.
+          - nombre: B1
+            pide: uno de los otros dos vértices, en la planta
+            es: proy_planta(B)
+            bien: |
+              B₁ está en la perpendicular a r₁ por O₁, a 35,36 mm: BD es la horizontal del plano por O, y
+              una horizontal se ve en verdadera magnitud en la planta.
+            diagnosticos:
+              - si: 'en_recta(solucion.perpO1) && a_distancia(de: figura.punto("O1"), d: mm(25))'
+                mensaje: |
+                  Vas por la horizontal buena, pero has llevado **medio lado**, 25 mm. De O a un vértice
+                  hay media diagonal, 35,36 mm.
+                ejemplo: solucion.B1lado
+              - si: '!en_recta(solucion.perpO1)'
+                mensaje: |
+                  BD es perpendicular a r, la l.m.p., así que es una horizontal del plano, y el ángulo
+                  recto se ve en la planta: B₁ va en la **perpendicular a r₁ que pasa por O₁**.
+                ejemplo: 'desplaza(proy_planta(rama(B, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a r₁ por O₁, pero no a la distancia buena: la media diagonal,
+                  35,36 mm, que aquí se mide sin acortar.
+          - nombre: D1
+            pide: el cuarto vértice, en la planta
+            es: proy_planta(D)
+            bien: |
+              D₁ está en la misma perpendicular a r₁, al otro lado de O₁ y a la misma distancia.
+            diagnosticos:
+              - si: 'en_recta(solucion.perpO1) && a_distancia(de: figura.punto("O1"), d: mm(25))'
+                mensaje: |
+                  Has llevado **medio lado**, 25 mm, en vez de media diagonal, 35,36 mm.
+                ejemplo: 'uno(medir_sobre(solucion.perpO1, desde: figura.punto("O1"), distancia: mm(25)), 2)'
+              - si: '!en_recta(solucion.perpO1)'
+                mensaje: |
+                  D₁ va en la **perpendicular a r₁ por O₁**, la misma que B₁: BD es la horizontal del plano
+                  por O.
+                ejemplo: 'desplaza(proy_planta(rama(D, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  D₁ está en la perpendicular a r₁ por O₁, al otro lado de O₁ que B₁ y a 35,36 mm.
+          - nombre: B2
+            pide: ese vértice, B, en el alzado
+            es: proy_alzado(B)
+            bien: |
+              B₂ está en la horizontal de O₂, en la vertical de B₁: BD es horizontal, y su alzado
+              también.
+            diagnosticos:
+              - si: cerca_de(solucion.B2perp)
+                mensaje: |
+                  Has trazado BD en el alzado **perpendicular a r₂**. Ese ángulo recto no se ve en el alzado,
+                  porque ni r ni BD son frontales. BD es horizontal: en el alzado va por la horizontal de O₂.
+                ejemplo: solucion.B2perp
+              - si: '!en_vertical_de(B1)'
+                mensaje: |
+                  B₂ va en la **vertical de B₁**.
+                ejemplo: 'desplaza(proy_alzado(rama(B, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de B₁, pero B tiene la cota de O: B₂ va en la horizontal de O₂.
+          - nombre: D2
+            pide: el cuarto vértice, D, en el alzado
+            es: proy_alzado(D)
+            bien: |
+              D₂ está en la horizontal de O₂, en la vertical de D₁. B₂D₂ mide 24,2 mm: el alzado acorta la
+              horizontal BD, que de verdad mide 70,7 mm.
+            diagnosticos:
+              - si: '!en_vertical_de(D1)'
+                mensaje: |
+                  D₂ va en la **vertical de D₁**.
+                ejemplo: 'desplaza(proy_alzado(rama(D, 1)), dx: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de D₁, pero D tiene la cota de O: D₂ va en la horizontal de O₂.
+        trazado:
+          - segmento2(figura.punto("O1"), solucion.Tab)
+          - segmento2(proy_planta(A), proy_planta(B))
+          - segmento2(proy_planta(B), proy_planta(C))
+          - segmento2(proy_planta(C), proy_planta(D))
+          - segmento2(proy_planta(D), proy_planta(A))
+          - segmento2(proy_alzado(A), proy_alzado(B))
+          - segmento2(proy_alzado(B), proy_alzado(C))
+          - segmento2(proy_alzado(C), proy_alzado(D))
+          - segmento2(proy_alzado(D), proy_alzado(A))
+        construccion:
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("O2"), solucion.Hmas), segmento2(figura.punto("O2"), solucion.hO2menos)]'
+            porque: |
+              En el alzado, la **horizontal de O₂**, larga hacia los dos lados: a la derecha, más allá de
+              la vertical de T₂, porque las cotas se cuentan desde ella; a la izquierda, porque por ella
+              irán B₂ y D₂, que tienen la cota de O.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("T2"), figura.punto("T1"))
+            porque: |
+              La vertical que une T₂ con T₁, los extremos de arriba de r₂ y de r₁: es la línea de
+              referencia de T. Su trozo entre T₂ y la horizontal de O₂ es lo que T está más alto que O.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("T1"), solucion.T0mas)
+            guia: figura.segmento("r1")
+            porque: |
+              Por T₁, la **perpendicular a r₁**, hacia abajo y larga: por ella se abate T. La charnela es
+              la horizontal del plano proyectante de r que pasa por O, y en la planta va por r₁.
+          - con: compas
+            traza: 'arco(figura.punto("T1"), por: solucion.Tab, desde: desplaza(solucion.Tab, dx: 7.52, dy: -2.74), hasta: desplaza(solucion.Tab, dx: -7.52, dy: 2.74))'
+            toma: segmento2(figura.punto("T2"), solucion.HT)
+            porque: |
+              Con el compás, en el alzado, **lo que T está más alto que O**: de T₂ a la horizontal de O₂,
+              36,64 mm. Se lleva desde T₁ sobre la perpendicular.
+          - con: marca
+            traza: solucion.Tab
+            rotulo: T₀
+            porque: |
+              T₀, donde el arco corta la perpendicular a r₁ que sale de T₁: T abatido sobre el plano
+              horizontal de O (T, el extremo de arriba de r, es nombre nuestro).
+          - con: regla
+            traza: '[segmento2(figura.punto("O1"), solucion.r0mas), segmento2(figura.punto("O1"), solucion.C0mas)]'
+            rotulo: r₀
+            porque: |
+              r₀, la recta r abatida: de O₁, que está en la charnela y no se mueve, a T₀, prolongada con
+              la regla hacia los dos lados, porque A₀ y C₀ caen a uno y otro lado de O₁.
+          - con: compas
+            traza: '[arco(figura.punto("O1"), por: solucion.Aab, desde: desplaza(solucion.Aab, dx: 3.16, dy: -7.35), hasta: desplaza(solucion.Aab, dx: -3.16, dy: 7.35)), arco(figura.punto("O1"), por: solucion.Cab, desde: desplaza(solucion.Cab, dx: 3.16, dy: -7.35), hasta: desplaza(solucion.Cab, dx: -3.16, dy: 7.35))]'
+            porque: |
+              Con centro en O₁, la **media diagonal**: 50·√2/2 = 35,36 mm, que sale del enunciado. El
+              arco corta r₀ dos veces, una a cada lado de O₁, y valen las dos: son los dos extremos de la
+              diagonal AC.
+          - con: marca
+            traza: solucion.Aab
+            rotulo: A₀
+            porque: |
+              A₀, donde el arco corta r₀ del lado de T₀: el vértice de más cota, al que llamamos A (el
+              nombre es nuestro).
+          - con: marca
+            traza: solucion.Cab
+            rotulo: C₀
+            porque: |
+              C₀, donde el arco corta r₀ al otro lado de O₁: el vértice de menos cota, C (el nombre es
+              nuestro).
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.Aab, proy_planta(A)), segmento2(solucion.Cab, proy_planta(C))]'
+            guia: figura.segmento("r1")
+            porque: |
+              Se desabate por el mismo camino: desde A₀ y C₀, las **perpendiculares a r₁** hasta r₁, que
+              es por donde va la charnela.
+          - con: marca
+            traza: proy_planta(A)
+            rotulo: A₁
+            porque: |
+              A₁, donde la perpendicular que sale de A₀ corta r₁.
+          - con: marca
+            traza: proy_planta(C)
+            rotulo: C₁
+            porque: |
+              C₁, donde la perpendicular que sale de C₀ corta r₁.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(A), proy_alzado(A)), segmento2(proy_planta(C), proy_alzado(C))]'
+            porque: |
+              Por A₁ y C₁, las verticales hasta r₂: A y C están en r.
+          - con: marca
+            traza: proy_alzado(A)
+            rotulo: A₂
+            porque: |
+              A₂, donde la vertical de A₁ corta r₂.
+          - con: marca
+            traza: proy_alzado(C)
+            rotulo: C₂
+            porque: |
+              C₂, donde la vertical de C₁ corta r₂.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("O1"), solucion.Bmas), segmento2(figura.punto("O1"), solucion.Dmas)]'
+            guia: figura.segmento("r1")
+            porque: |
+              Por O₁, la **perpendicular a r₁**, hacia los dos lados: es la planta de la horizontal del
+              plano que pasa por O, y la otra diagonal, BD, va por ella.
+          - con: compas
+            traza: '[arco(figura.punto("O1"), por: proy_planta(rama(B, 1)), desde: desplaza(proy_planta(rama(B, 1)), dx: 7.52, dy: -2.74), hasta: desplaza(proy_planta(rama(B, 1)), dx: -7.52, dy: 2.74)), arco(figura.punto("O1"), por: proy_planta(rama(D, 1)), desde: desplaza(proy_planta(rama(D, 1)), dx: 7.52, dy: -2.74), hasta: desplaza(proy_planta(rama(D, 1)), dx: -7.52, dy: 2.74))]'
+            porque: |
+              Con centro en O₁ y la misma media diagonal, 35,36 mm: la horizontal está en verdadera
+              magnitud en la planta, y la distancia se lleva tal cual, a los dos lados de O₁.
+          - con: marca
+            traza: proy_planta(rama(B, 1))
+            rotulo: B₁
+            porque: |
+              B₁, donde el arco corta la perpendicular a r₁ por debajo de O₁: llamamos B a este (el nombre
+              es nuestro), y daría igual al revés.
+          - con: marca
+            traza: proy_planta(rama(D, 1))
+            rotulo: D₁
+            porque: |
+              D₁, donde el arco corta la perpendicular a r₁ al otro lado de O₁, por encima de r₁ (el nombre
+              D es nuestro).
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(rama(B, 1)), proy_alzado(rama(B, 1))), segmento2(proy_planta(rama(D, 1)), proy_alzado(rama(D, 1)))]'
+            porque: |
+              Por B₁ y D₁, las verticales hasta la horizontal de O₂: B y D tienen la cota de O, porque
+              BD es horizontal.
+          - con: marca
+            traza: proy_alzado(rama(B, 1))
+            rotulo: B₂
+            porque: |
+              B₂, donde la vertical de B₁ corta la horizontal de O₂.
+          - con: marca
+            traza: proy_alzado(rama(D, 1))
+            rotulo: D₂
+            porque: |
+              D₂, donde la vertical de D₁ corta la horizontal de O₂.
+          - con: regla
+            traza: '[segmento2(proy_planta(A), proy_planta(rama(B, 1))), segmento2(proy_planta(rama(B, 1)), proy_planta(C)), segmento2(proy_planta(C), proy_planta(rama(D, 1))), segmento2(proy_planta(rama(D, 1)), proy_planta(A)), segmento2(proy_alzado(A), proy_alzado(rama(B, 1))), segmento2(proy_alzado(rama(B, 1)), proy_alzado(C)), segmento2(proy_alzado(C), proy_alzado(rama(D, 1))), segmento2(proy_alzado(rama(D, 1)), proy_alzado(A))]'
+            porque: |
+              Los cuatro lados en las dos vistas: A₁B₁C₁D₁ y A₂B₂C₂D₂ son las proyecciones del cuadrado. Ninguna
+              es un cuadrado, porque el plano no es horizontal ni frontal.
+        pista: |
+          (1) En el alzado, la horizontal de O₂; lo que T₂ está por encima de ella es el cateto. (2) Por
+          T₁, la perpendicular a r₁, y en ella ese cateto: T₀. (3) r₀ = O₁T₀; con centro en O₁ y 35,36 mm,
+          A₀ y C₀. (4) De vuelta a r₁ por perpendiculares, y a r₂ por verticales. (5) BD: la perpendicular
+          a r₁ por O₁, con 35,36 mm a cada lado; sus alzados, en la horizontal de O₂.
+        desarrollo: |
+          En verde claro, r abatida y el cuadrado en sus dos vistas. A₁C₁ mide 51,5 mm y A₂C₂, 68,5 mm: la
+          diagonal de verdad, 70,7 mm, solo se ve en r₀. B₁D₁ sí mide 70,7 mm, porque BD es horizontal. Medir
+          35,36 mm sobre r₂ deja A₂ y C₂ a 1,1 mm de su sitio: r está a 14,4° del plano vertical, y el
+          alzado la acorta poco, pero la acorta.
+
+      - tipo: calcular
+        titulo: El ángulo del plano con el horizontal
+        pregunta: ¿Qué ángulo forma el plano del cuadrado con el plano horizontal?
+        respuesta:
+          tipo: numero
+          valor: '43.22'
+          receta: ang
+          tolerancia: 1
+          formato: un número, en grados
+        distractores:
+          - valor: '45.00'
+            receta: ang_r2
+            mensaje: |
+              Eso es lo que forma **r₂ en el papel**. Es una proyección, y r no es frontal: el ángulo de
+              verdad sale del triángulo de T, con la planta O₁T₁ y lo que T está más alto que O.
+          - valor: '46.78'
+            receta: 90 - ang
+            mensaje: |
+              Has medido el **otro ángulo agudo** del triángulo, el que está en T₀. El ángulo con el
+              horizontal es el de O₁, entre r₁ y r₀: entre la planta y la recta de verdad.
+          - valor: '20.00'
+            receta: ang_r1
+            mensaje: |
+              Eso es lo que forma **r₁ en el papel**. La planta no dice cuánto sube una recta: solo hacia
+              dónde va.
+        pista: |
+          El plano está tan inclinado como su línea de máxima pendiente, r. Mídelo con el transportador en
+          el triángulo de T del paso anterior: el ángulo en O₁, entre r₁ y r₀.
+        desarrollo: |
+          El ángulo del plano con el horizontal es el de su l.m.p. En el triángulo de T, la planta O₁T₁
+          mide 38,98 mm y T está 36,64 mm más alto que O:
+
+          $$ \tan\alpha = \frac{36{,}64}{38{,}98} \quad\Rightarrow\quad \alpha \approx 43{,}22^\circ $$
+
+          No los 45° que marca r₂ en el papel.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: r es la l.m.p. del plano, así que sus horizontales son perpendiculares a r, y en la planta se trazan perpendiculares a r₁.
+          - texto: AC va sobre r, que es oblicua; la media diagonal se lleva sobre r abatida, r₀, y se vuelve a r₁ y a r₂.
+          - texto: BD es perpendicular a AC por O y está en el plano, así que es la horizontal del plano por O, y se mide en la planta.
+          - texto: B₂ y D₂ van en la horizontal de O₂; A₂ y C₂, en r₂, cada uno en la vertical de su planta.
+          - texto: Como r₂ está a 45°, el plano está a 45° del horizontal, y BD se traza en el alzado perpendicular a r₂.
+            trampa: true
+            mensaje: |
+              Los 45° son de la proyección, no de la recta: r sube a 43,2°. Y en el alzado el ángulo
+              recto entre r y BD no se ve, porque ninguna de las dos es frontal; se ve en la planta, con
+              la horizontal.
+    resolucion: |
+      **Qué es la otra diagonal.** r es la l.m.p. del plano, y el plano queda fijado por ella: sus
+      horizontales son las perpendiculares a r, que en la planta se trazan perpendiculares a r₁. Las
+      diagonales de un cuadrado son perpendiculares y se cortan en el centro; AC va sobre r, así que BD
+      es la horizontal del plano por O.
+
+      **A y C, sobre r.** r es oblicua y no se ve en verdadera magnitud en ninguna vista. Con el
+      triángulo de T, su extremo de arriba: T está 36,64 mm más alto que O, y T₀ queda a esa distancia de
+      T₁ por la perpendicular a r₁. r₀ = O₁T₀ es r abatida, y en ella se lleva la media diagonal, 35,36 mm,
+      a cada lado de O₁. A₀ y C₀ vuelven a r₁ por perpendiculares, y suben a r₂ por sus verticales.
+
+      **B y D, sobre la horizontal.** En la planta, la perpendicular a r₁ por O₁, en verdadera magnitud:
+      35,36 mm a cada lado de O₁. En el alzado, la horizontal de O₂.
+
+      **El plano.** Forma con el horizontal el ángulo de su l.m.p.: 43,22°, y no los 45° de r₂ en el
+      papel. La planta acorta AC a 51,5 mm y el alzado a 68,5 mm; BD se ve entera, 70,7 mm, en la planta.
+
+  - id: sd13-el-triangulo-de-la-lmp-frontal
+    titulo: El triángulo cuyo plano tiene una l.m.p. frontal
+    fuente: Ejercicio 11 (SD13) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, con su «l.m.p» sin punto final y la
+    # numeración doble de b) y c) («b) 2.», «c) 3.»), que son de la página. c)
+    # no dice el método: abatimos, y la charnela es r, que es frontal. Las dos
+    # cosas son nuestras, y lo dicen las Notas y el intro.
+    enunciado: |
+      La recta r es la l.m.p del plano de forma triangular definido por los vértices A, B y C. Se pide:
+
+      a) Dibujar el alzado del triángulo.
+
+      b) 2. Dibujar las proyecciones de la recta horizontal que pasa por el punto B.
+
+      c) 3. Representar gráficamente la verdadera magnitud del triángulo.
+
+      **Notas nuestras.** La figura es la recta r en el alzado, arriba, y en la planta, debajo, y el
+      triángulo solo en la planta, A₁B₁C₁, con C₁ sobre r₁. r₁ es horizontal en el papel. «l.m.p» sin
+      punto final y la numeración doble de b) y c) son de la página. Aquí llamamos K al punto donde la
+      horizontal que pasa por B corta r. c) no dice el método: sacamos la verdadera magnitud abatiendo
+      el plano alrededor de r, y las dos cosas, el método y la charnela, son elección nuestra. Un
+      cambio de plano con la línea nueva paralela a r₂, o un abatimiento con otra charnela, dan el
+      mismo triángulo, con los mismos lados y ángulos, en otro sitio del papel.
+    pide: El alzado de los tres vértices, las dos proyecciones de la horizontal que pasa por B, el triángulo en verdadera magnitud y, como pregunta nuestra, su ángulo en C.
+    receta:
+      lamina: sd13
+      escena:
+        r: 'recta3(alzado: figura.segmento("r2"), planta: figura.segmento("r1"))'
+        pl: plano_por_lmp(r)
+        A: 'punto_en_plano(planta: figura.punto("A1"), plano: pl)'
+        B: 'punto_en_plano(planta: figura.punto("B1"), plano: pl)'
+        C: 'punto_en_plano(planta: figura.punto("C1"), plano: pl)'
+      solucion:
+        # b) La horizontal por B, de punta porque r₁ es horizontal en el papel:
+        # en la planta, la perpendicular a r₁ por B₁; en el alzado, el punto
+        # B₂. Corta r en K, el punto de r con la cota de B.
+        h: horizontal_por(B, pl)
+        K: pie_comun(r, h)
+        # Decisión: c) por abatimiento alrededor de r, que es frontal: el plano
+        # cae sobre el plano frontal de r, y el triángulo se ve en verdadera
+        # magnitud en el alzado, encima de r₂. C está en r y no se mueve. La
+        # charnela va de M (extremo derecho de r) a L (izquierdo) para que la
+        # rama 1 sea la de arriba de r₂, donde hay sitio; los dos lados valen.
+        M: 'punto3(alzado: figura.punto("M2"), planta: figura.punto("M1"))'
+        L: 'punto3(alzado: figura.punto("L2"), planta: figura.punto("L1"))'
+        charnela: recta3(M, L)
+        A_ab: abatido_a_elegir(A, charnela, pl)
+        B_ab: 'abatido_junto(B, charnela, pl, con: A_ab, de: A)'
+        # Lo que A₁ y B₁ distan de r₁, que es lo que cada vértice dista de la
+        # charnela: el pie de cada uno en r₁.
+        QA: 'cruce_aparente(perpendicular(por: figura.punto("A1"), a: figura.segmento("r1")), figura.segmento("r1"))'
+        QB: 'cruce_aparente(perpendicular(por: figura.punto("B1"), a: figura.segmento("r1")), figura.segmento("r1"))'
+        perpA2: 'perpendicular(por: proy_alzado(A), a: figura.segmento("r2"))'
+        perpB2: 'perpendicular(por: proy_alzado(B), a: figura.segmento("r2"))'
+        # El ángulo en C, que es obtuso: el suplementario del que forman las
+        # rectas CA y CB.
+        angC: 180 - angulo_rectas(segmento3(C, A), segmento3(C, B))
+        ang: angulo_con_ph(pl)
+        # Los errores: la distancia a la charnela llevada por la vertical en vez
+        # de por la perpendicular a r₂; y el ángulo de la planta, que es el del
+        # triángulo puesto a una misma cota.
+        A0vert: 'desplaza(proy_alzado(A), dy: 0 - vm_planta(A, punto3(alzado: proy_alzado(A), planta: QA)))'
+        B0vert: 'desplaza(proy_alzado(B), dy: 0 - vm_planta(B, punto3(alzado: proy_alzado(B), planta: QB)))'
+        Ap: 'punto3(alzado: QA, planta: figura.punto("A1"))'
+        Bp: 'punto3(alzado: QB, planta: figura.punto("B1"))'
+        Cp: 'punto3(alzado: figura.punto("C1"), planta: figura.punto("C1"))'
+        angC1: 180 - angulo_rectas(segmento3(Cp, Ap), segmento3(Cp, Bp))
+        # Los extremos de los trazos largos de la construcción paso a paso.
+        A2mas: 'desplaza(proy_alzado(A), dy: -8)'
+        B2mas: 'desplaza(proy_alzado(B), dy: -8)'
+        C2mas: 'desplaza(proy_alzado(C), dy: -8)'
+        A0mas: 'uno(medir_sobre(segmento2(proy_alzado(A), proy_alzado(rama(A_ab, 1))), desde: proy_alzado(rama(A_ab, 1)), distancia: 8), 1)'
+        B0mas: 'uno(medir_sobre(segmento2(proy_alzado(B), proy_alzado(rama(B_ab, 1))), desde: proy_alzado(rama(B_ab, 1)), distancia: 8), 1)'
+      comprueba:
+        - en_recta(C, r)
+        - en_recta(K, h)
+        - en_recta(B, h)
+    pasos:
+      - tipo: reconocer
+        pregunta: r₁ es horizontal en el papel. ¿Qué dice eso de r y del plano del triángulo, del que r es la l.m.p.?
+        opciones:
+          - texto: Que r es horizontal, y el plano también, porque su l.m.p. no sube
+            mensaje: |
+              Una recta horizontal tiene horizontal el **alzado** (o un punto, si es de punta), y aquí r₂
+              sube. Lo horizontal es la planta: lo que no cambia a lo largo de r es el alejamiento. Y un
+              plano horizontal no tiene línea de máxima pendiente.
+          - texto: 'Que r es frontal, y el plano es proyectante vertical: en el alzado se ve de canto, sobre r₂'
+            correcta: true
+            mensaje: |
+              Eso es. Las horizontales del plano son perpendiculares a r₁ en la planta, y r₁ es horizontal
+              en el papel: son verticales en el papel, rectas de punta. Un plano con rectas de punta se ve
+              en el alzado como una recta, y esa recta es r₂: el alzado de cada vértice está en r₂.
+          - texto: Que r es frontal y el plano, frontal también, así que el triángulo se ve en verdadera magnitud en el alzado
+            mensaje: |
+              r sí es frontal, pero el plano no puede serlo. Un plano frontal es vertical, y su l.m.p. es
+              una recta vertical, no una que suba a 25° como r. Las horizontales de este plano son
+              perpendiculares a r₁ en la planta, de punta, y un plano que las contiene se ve de canto en
+              el alzado.
+
+      - tipo: construir
+        titulo: El alzado, la horizontal por B y la verdadera magnitud
+        intro: |
+          a) El plano se ve de canto en r₂: sube cada vértice por su vertical hasta r₂ y marca A₂, B₂ y
+          C₂. b) La horizontal que pasa por B es perpendicular a r₁ en la planta; marca K₁, donde corta r₁.
+          c) Abate el plano alrededor de r: el enunciado no dice ni el método ni la charnela, y los
+          fijamos nosotros. r es frontal, así que el plano cae sobre el plano frontal de r y el triángulo
+          sale en verdadera magnitud en el alzado. C está en r y no se mueve. A y B giran en planos perpendiculares a r: en el
+          alzado se apartan de r₂ por la perpendicular que pasa por A₂ y por B₂, a lo que su planta dista
+          de r₁. Vale abatir hacia cualquiera de los dos lados de r₂, pero los dos vértices al mismo; arriba
+          hay más sitio. Marca A₀ y B₀.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A2
+            pide: el vértice A, en el alzado
+            es: proy_alzado(A)
+            bien: |
+              A₂ está en r₂, en la vertical de A₁: el plano es proyectante vertical y todo lo que está en
+              él tiene el alzado en r₂.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("A1"))'
+                mensaje: |
+                  A₂ va en la **vertical de A₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(A), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de A₁, pero no en r₂. Las horizontales del plano son de punta, y un
+                  plano que las contiene se ve de canto en el alzado: en r₂. A₂ va donde la vertical de A₁
+                  corta r₂.
+          - nombre: B2
+            pide: el vértice B, en el alzado
+            es: proy_alzado(B)
+            bien: |
+              B₂ está en r₂, en la vertical de B₁: es el vértice más bajo, y el de la izquierda.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("B1"))'
+                mensaje: |
+                  B₂ va en la **vertical de B₁**.
+                ejemplo: 'desplaza(proy_alzado(B), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de B₁, pero no en r₂: el plano se ve de canto en r₂, y B₂ va donde la
+                  vertical de B₁ la corta.
+          - nombre: C2
+            pide: el vértice C, en el alzado
+            es: proy_alzado(C)
+            bien: |
+              C₂ está en r₂, en la vertical de C₁: C es un punto de r, porque C₁ está en r₁. El alzado del
+              triángulo es el trozo de r₂ que va de B₂ a A₂, con C₂ entre los dos.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("C1"))'
+                mensaje: |
+                  C₂ va en la **vertical de C₁**.
+                ejemplo: 'desplaza(proy_alzado(C), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de C₁, pero no en r₂. C₁ está en r₁: C es un punto de r, y C₂ está en
+                  r₂.
+          - nombre: K1
+            pide: K, donde la horizontal que pasa por B corta r, en la planta
+            es: proy_planta(K)
+            bien: |
+              K₁ está en r₁, en la vertical de B₁: la horizontal por B es perpendicular a r₁, que es
+              horizontal en el papel. Es de punta, y su planta va por la misma vertical de B₁ con que se
+              sube B₁ a r₂; en el alzado se ve como un punto, B₂ ≡ K₂.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  K es un punto de r: K₁ va **en r₁**, donde la corta la horizontal que pasa por B.
+                ejemplo: 'desplaza(proy_planta(K), dy: mm(6))'
+              - si: '!en_vertical_de(figura.punto("B1"))'
+                mensaje: |
+                  Estás en r₁, pero la horizontal por B no llega ahí. Las horizontales del plano son
+                  perpendiculares a r₁, la l.m.p., en la planta: la de B sale de B₁ perpendicular a r₁, y
+                  como r₁ es horizontal en el papel, va por la vertical de B₁.
+                ejemplo: 'desplaza(proy_planta(K), dx: mm(8))'
+              - si: siempre
+                mensaje: |
+                  K₁ está donde la perpendicular a r₁ que pasa por B₁ corta r₁.
+          - nombre: A0
+            pide: el vértice A, abatido alrededor de r
+            es: proy_alzado(solucion.A_ab)
+            bien: |
+              A₀ está en la perpendicular a r₂ que pasa por A₂, a 18,0 mm de A₂: lo que A₁ dista de r₁, que
+              es lo que A dista de r.
+            diagnosticos:
+              - si: cerca_de(solucion.A0vert)
+                mensaje: |
+                  Has llevado la distancia por la **vertical** de A₂. A gira alrededor de r en un plano
+                  perpendicular a r, y en el alzado se aparta de r₂ por la **perpendicular a r₂** que pasa por
+                  A₂.
+                ejemplo: solucion.A0vert
+              - si: '!en_recta(solucion.perpA2)'
+                mensaje: |
+                  A se abate por la **perpendicular a r₂ que pasa por A₂**: gira alrededor de r, y su
+                  camino, visto de frente, es perpendicular a ella.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.A_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a r₂ por A₂, pero no a la distancia buena. A₀ se aparta de A₂ lo
+                  que A₁ dista de r₁, medido en la planta: es lo que A está más lejos que r del plano
+                  vertical.
+          - nombre: B0
+            pide: el vértice B, abatido alrededor de r
+            es: proy_alzado(solucion.B_ab)
+            bien: |
+              B₀ está en la perpendicular a r₂ que pasa por B₂, a 30,0 mm (lo que B₁ dista de r₁) y del
+              mismo lado de r₂ que A₀. A₀B₀C₂ es el triángulo en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_alzado(solucion.B_ab)))
+                mensaje: |
+                  Ese es B abatido **al otro lado** de r₂. El plano gira entero, como una tapa sobre su
+                  bisagra: si A₀ ha caído a un lado, B₀ cae al mismo.
+                ejemplo: proy_alzado(rama(solucion.B_ab, 2))
+              - si: cerca_de(solucion.B0vert)
+                mensaje: |
+                  Has llevado la distancia por la **vertical** de B₂. B se abate por la **perpendicular a
+                  r₂** que pasa por B₂.
+                ejemplo: solucion.B0vert
+              - si: '!en_recta(solucion.perpB2)'
+                mensaje: |
+                  B se abate por la **perpendicular a r₂ que pasa por B₂**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.B_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a r₂ por B₂, pero no a la distancia buena: lo que B₁ dista de r₁
+                  en la planta, que es B₁K₁.
+        trazado:
+          - segmento2(proy_alzado(B), proy_alzado(A))
+          - segmento2(figura.punto("B1"), proy_planta(K))
+          - segmento2(proy_alzado(solucion.A_ab), proy_alzado(solucion.B_ab))
+          - segmento2(proy_alzado(solucion.B_ab), proy_alzado(C))
+          - segmento2(proy_alzado(C), proy_alzado(solucion.A_ab))
+        construccion:
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), solucion.A2mas), segmento2(figura.punto("B1"), solucion.B2mas), segmento2(figura.punto("C1"), solucion.C2mas)]'
+            porque: |
+              Por A₁, B₁ y C₁, las verticales, hasta pasar r₂: el plano es proyectante vertical, y el
+              alzado de cada vértice está en r₂. La de B₁ cruza r₁ por el camino, y la de A₁ también.
+          - con: marca
+            traza: proy_alzado(A)
+            rotulo: A₂
+            porque: |
+              A₂, donde la vertical de A₁ corta r₂.
+          - con: marca
+            traza: proy_alzado(B)
+            rotulo: B₂
+            porque: |
+              B₂, donde la vertical de B₁ corta r₂: el vértice más bajo.
+          - con: marca
+            traza: proy_alzado(C)
+            rotulo: C₂
+            porque: |
+              C₂, donde la vertical de C₁ corta r₂. El alzado del triángulo es el trozo de r₂ de B₂ a A₂: un
+              segmento, porque el plano se ve de canto.
+          - con: marca
+            traza: proy_planta(K)
+            rotulo: K₁
+            porque: |
+              K₁, donde la vertical de B₁ corta r₁ (el nombre K es nuestro). Esa vertical es la planta de la
+              horizontal por B, que es perpendicular a r₁; en el alzado, la horizontal es de punta y se ve
+              como un punto, B₂ ≡ K₂.
+          - con: marca
+            traza: solucion.QA
+            porque: |
+              Donde la vertical de A₁ corta r₁, el pie de A₁ en r₁ (sin rótulo: no hace falta nombrarlo).
+              De A₁ a este punto, lo que A dista de r.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(A), solucion.A0mas), segmento2(proy_alzado(B), solucion.B0mas)]'
+            guia: figura.segmento("r2")
+            porque: |
+              Por A₂ y por B₂, las **perpendiculares a r₂**, hacia arriba y largas: al abatir alrededor de
+              r, cada vértice gira en un plano perpendicular a r, y en el alzado se mueve por ellas.
+          - con: compas
+            traza: 'arco(proy_alzado(A), por: proy_alzado(rama(solucion.A_ab, 1)), desde: desplaza(proy_alzado(rama(solucion.A_ab, 1)), dx: 7.25, dy: -3.38), hasta: desplaza(proy_alzado(rama(solucion.A_ab, 1)), dx: -7.25, dy: 3.38))'
+            toma: segmento2(figura.punto("A1"), solucion.QA)
+            porque: |
+              Con el compás, en la planta, lo que A₁ dista de r₁, 18,0 mm: es lo que A está más lejos que r
+              del plano vertical, y por eso lo que dista de la charnela. Con centro en A₂, sobre la
+              perpendicular.
+          - con: marca
+            traza: proy_alzado(rama(solucion.A_ab, 1))
+            rotulo: A₀
+            porque: |
+              A₀, donde el arco corta la perpendicular a r₂ que sale de A₂: A abatido, encima de r₂.
+          - con: compas
+            traza: 'arco(proy_alzado(B), por: proy_alzado(rama(solucion.B_ab, 1)), desde: desplaza(proy_alzado(rama(solucion.B_ab, 1)), dx: 7.25, dy: -3.38), hasta: desplaza(proy_alzado(rama(solucion.B_ab, 1)), dx: -7.25, dy: 3.38))'
+            toma: segmento2(figura.punto("B1"), proy_planta(K))
+            porque: |
+              Lo mismo con B: B₁K₁, lo que B₁ dista de r₁, 30,0 mm, desde B₂ sobre su perpendicular y del
+              mismo lado que A₀.
+          - con: marca
+            traza: proy_alzado(rama(solucion.B_ab, 1))
+            rotulo: B₀
+            porque: |
+              B₀, donde el arco corta la perpendicular a r₂ que sale de B₂, encima de r₂ como A₀.
+          - con: regla
+            traza: '[segmento2(proy_alzado(rama(solucion.A_ab, 1)), proy_alzado(rama(solucion.B_ab, 1))), segmento2(proy_alzado(rama(solucion.B_ab, 1)), proy_alzado(C)), segmento2(proy_alzado(C), proy_alzado(rama(solucion.A_ab, 1)))]'
+            porque: |
+              A₀B₀C₂ es el triángulo en **verdadera magnitud**: C está en la charnela y no se ha movido, y
+              C₀ ≡ C₂.
+        pista: |
+          (1) Verticales de A₁, B₁ y C₁ hasta r₂. (2) La horizontal por B: la vertical de B₁ hasta r₁, K₁.
+          (3) Por A₂ y B₂, perpendiculares a r₂; en ellas, lo que A₁ y B₁ distan de r₁, al mismo lado. (4)
+          A₀B₀C₂ es la verdadera magnitud.
+        desarrollo: |
+          En verde claro, el alzado del triángulo, la planta de la horizontal por B y el triángulo
+          abatido. Sus lados miden de verdad 63,3 mm (AB), 40,9 mm (BC) y 38,8 mm (CA); en la planta, 57,6,
+          39,2 y 36,0, y en el alzado, 62,2, 27,8 y 34,4.
+
+      - tipo: reconocer
+        pregunta: b) ¿Cómo se ve en el alzado la horizontal que pasa por B?
+        opciones:
+          - texto: Como un trozo de r₂, porque la horizontal está en el plano y el plano se ve de canto en r₂
+            mensaje: |
+              Está en el plano, pero es de punta: la vista de frente la reduce a un punto. Ese punto, eso
+              sí, está en r₂.
+          - texto: Como una recta horizontal que pasa por B₂, igual que el alzado de cualquier horizontal
+            mensaje: |
+              Una horizontal tiene el alzado horizontal **si no es de punta**. Esta es perpendicular a r₁,
+              que es horizontal en el papel, así que es perpendicular al plano vertical: se ve como un
+              punto.
+          - texto: 'Como un solo punto, B₂ ≡ K₂, porque esta horizontal es de punta'
+            correcta: true
+            mensaje: |
+              Eso es. En la planta es perpendicular a r₁, vertical en el papel: una recta de punta. En el
+              alzado se reduce a B₂ ≡ K₂, y en la planta va de B₁ a K₁ y sigue.
+
+      - tipo: calcular
+        titulo: El ángulo en C
+        pregunta: ¿Cuánto mide de verdad el ángulo del triángulo en C?
+        respuesta:
+          tipo: numero
+          valor: '105.12'
+          receta: angC
+          tolerancia: 1
+          formato: un número, en grados
+        distractores:
+          - valor: '99.94'
+            receta: angC1
+            mensaje: |
+              Eso es el ángulo en **C₁, en la planta**. El plano sube a 25°, y la planta acorta CA y CB
+              de distinta manera: el ángulo entre ellas cambia. El de verdad se mide en C₂, entre C₂A₀ y
+              C₂B₀.
+          - valor: '74.88'
+            receta: 'angulo_rectas(segmento3(C, A), segmento3(C, B))'
+            mensaje: |
+              Has medido el ángulo **agudo** que forman las rectas CA y CB. El del triángulo en C es el
+              obtuso, su suplementario: el que queda dentro de A₀B₀C₂.
+          - valor: '25.00'
+            receta: ang
+            mensaje: |
+              Eso es lo que sube el plano: el ángulo de r₂ con la horizontal. Se pide un ángulo del
+              triángulo, el de C, que se mide en la verdadera magnitud.
+        pista: |
+          Mídelo con el transportador en el triángulo abatido de la construcción: en C₂, entre C₂A₀ y C₂B₀.
+        desarrollo: |
+          En el triángulo abatido, el ángulo en C₂ mide 105,12°. Con los lados de verdad,
+          CA = 38,82 mm, CB = 40,91 mm y AB = 63,32 mm, el teorema del coseno da lo mismo:
+
+          $$ \cos \hat C = \frac{38{,}82^{2} + 40{,}91^{2} - 63{,}32^{2}}{2 \cdot 38{,}82 \cdot 40{,}91} \approx -0{,}2609 \quad\Rightarrow\quad \hat C \approx 105{,}12^\circ $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: r₁ es horizontal en el papel, así que r es frontal.
+          - texto: Las horizontales del plano son perpendiculares a r₁ en la planta, verticales en el papel; son de punta, y el plano que las contiene es proyectante vertical, de canto en r₂.
+          - texto: A₂, B₂ y C₂ están en r₂, cada uno en la vertical de su planta, y la horizontal por B se ve en el alzado como el punto B₂.
+          - texto: Abatido alrededor de r, cada vértice se aparta de r₂ por su perpendicular lo que su planta dista de r₁, y A₀B₀C₂ es la verdadera magnitud.
+          - texto: Como r₁ es horizontal, las horizontales del plano también lo son en la planta, paralelas a r₁, y el plano es horizontal.
+            trampa: true
+            mensaje: |
+              Las horizontales de un plano son perpendiculares a su l.m.p. en la planta, no paralelas: aquí,
+              verticales en el papel. Y un plano horizontal no tiene l.m.p.; este sube a 25°.
+    resolucion: |
+      **Qué plano es.** r₁ es horizontal en el papel, así que r es frontal: su alejamiento no cambia. Las
+      horizontales del plano son perpendiculares a la l.m.p. en la planta, es decir, verticales en el
+      papel: son de punta. Un plano que contiene rectas de punta es proyectante vertical, y en el alzado
+      se ve de canto, como la recta r₂. Sube a 25,0°, lo que r₂.
+
+      **a) El alzado.** Cada vértice tiene el alzado en r₂, en la vertical de su planta. C₁ está en r₁, así
+      que C es un punto de r. El alzado del triángulo es el segmento B₂A₂ de r₂, con C₂ entre los dos.
+
+      **b) La horizontal por B.** En la planta, la perpendicular a r₁ por B₁, que corta r₁ en K₁; en el
+      alzado es de punta y se ve como un punto, B₂ ≡ K₂. K es el punto de r con la cota de B.
+
+      **c) La verdadera magnitud.** Abatiendo alrededor de r, que es frontal, el plano cae sobre el plano
+      frontal de r y el triángulo se ve en el alzado. C no se mueve. A y B se apartan de r₂ por sus
+      perpendiculares lo que A₁ y B₁ distan de r₁: 18,0 y 30,0 mm. A₀B₀C₂ tiene lados de 63,32 (AB), 40,91
+      (BC) y 38,82 mm (CA), y su ángulo en C mide 105,12°; en la planta, 99,94°.

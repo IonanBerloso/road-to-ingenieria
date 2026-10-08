@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   PT_MM,
@@ -31,6 +33,10 @@ import {
   type P3,
   type Recta2,
 } from '../../src/lib/diedrico';
+import yaml from 'js-yaml';
+import { resuelveEjercicio, type EjercicioConReceta } from '../../src/lib/construir';
+import { casaTramo } from '../../src/lib/diedrico-corrige';
+import type { DatosLamina } from '../../src/lib/lamina';
 
 /* SD64 y SD65 · los Ejercicios 48 y 49 de la colección de diédrico directo
    (Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG, UPV/EHU): la
@@ -369,5 +375,75 @@ describe('SD65 · el agujero cuadrado del tubo a 45°', () => {
     const n = cara.n.z > 0 ? cara.n : { x: -cara.n.x, y: -cara.n.y, z: -cara.n.z };
     expect(n.z).toBeGreaterThan(0);
     expect(n.y).toBeGreaterThan(0);
+  });
+});
+
+describe('SD64 · la visibilidad en el Taller (los tramos)', () => {
+  /* Lo visto y lo oculto del montaje, de un cálculo de líneas ocultas hecho
+     aparte el 8 de octubre de 2026, sin src/lib: cada arista muestreada y
+     mirada por rayos contra las dos chapas, finas y opacas, y cada cambio
+     afinado por bisección. Coordenadas en pt de la lámina. No son tramos B₁C₁,
+     C₁D₁ y la chapa del alzado, que se ven enteros y ya están dibujados; ni
+     E₂F₂, que va sobre A₂B₂; ni el tramo oculto de A₁D₁, de A₁ a G₁H₁, que va a
+     0,36 mm o menos de G₁H₁, que se ve: lo visto manda, y en el Taller los dos
+     tramos se pisarían. */
+  const ESPERADOS: [string, string, 'visto' | 'oculto', [number, number], [number, number]][] = [
+    ['planta', 'EF', 'visto', [391.57, 302.11], [345.11, 334.61]],
+    ['planta', 'FG', 'visto', [345.11, 334.61], [297.51, 316.01]],
+    ['planta', 'GH', 'visto', [297.51, 316.01], [296.37, 264.92]],
+    ['planta', 'HI', 'visto', [296.37, 264.92], [342.83, 232.43]],
+    ['planta', 'IJ', 'visto', [342.83, 232.43], [390.43, 251.02]],
+    ['planta', 'JE', 'visto', [390.43, 251.02], [391.57, 302.11]],
+    ['planta', 'AB', 'oculto', [297.48, 268.8], [390.82, 268.8]],
+    ['planta', 'AB', 'visto', [390.82, 268.8], [439.2, 268.8]],
+    ['alzado', 'FG', 'visto', [345.11, 169.56], [297.51, 145.01]],
+    ['alzado', 'GH', 'visto', [297.51, 145.01], [296.37, 120.46]],
+    ['alzado', 'HI', 'visto', [296.37, 120.46], [342.83, 120.46]],
+    ['alzado', 'IJ', 'visto', [342.83, 120.46], [390.43, 145.01]],
+    ['alzado', 'JE', 'visto', [390.43, 145.01], [391.57, 169.56]],
+  ];
+  const laminaSd64 = JSON.parse(readFileSync(join(process.cwd(), 'src', 'content', 'laminas', 'sd64.json'), 'utf8')) as DatosLamina;
+  const ejercicio = (yaml.load(readFileSync(join(process.cwd(), 'src/content/expresion-grafica/t03-metodos-descriptivos/ejercicios.yaml'), 'utf8')) as {
+    ejercicios: EjercicioConReceta[];
+  }).ejercicios.find((e) => e.id.startsWith('sd64-'))!;
+  const [indice, paso] = [...resuelveEjercicio(ejercicio, laminaSd64).entries()][1];
+  const tol = paso.tolerancia;
+  const junto = (p: readonly number[], q: readonly number[]) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.75;
+  const tramoDe = (a: readonly number[], b: readonly number[]) =>
+    paso.tramos.find((x) => (junto(x.a, a) && junto(x.b, b)) || (junto(x.a, b) && junto(x.b, a)));
+
+  it('el construir de la vuelta lleva 13 tramos, y son los del cálculo aparte, con su tipo', () => {
+    expect(indice).toBe(2);
+    expect(paso.tramos).toHaveLength(ESPERADOS.length);
+    for (const [vista, arista, tipo, a, b] of ESPERADOS) {
+      const t = tramoDe(a, b);
+      expect(t, `${vista} ${arista} de (${a}) a (${b})`).toBeDefined();
+      expect(t!.tipo, `${vista} ${arista} de (${a}) a (${b})`).toBe(tipo);
+    }
+  });
+
+  it('el Taller da por buena esa visibilidad, tramo a tramo', () => {
+    for (const [, , tipo, a, b] of ESPERADOS) expect(casaTramo(a, b, tipo, paso.tramos, tol).que).toBe('bien');
+  });
+
+  it('y rechaza una arista cambiada de tipo, con el porqué de su tramo', () => {
+    // A₁B₁ entera en continua: de A₁ a J₁E₁ la tapa el hexágono
+    const ab = casaTramo([297.48, 268.8], [439.2, 268.8], 'visto', paso.tramos, tol);
+    expect(ab.que).toBe('tipo');
+    if (ab.que === 'tipo') expect(paso.tramos[ab.tramo].porque).toMatch(/El hexágono la tapa/);
+    // G₁H₁ a trazos: se ve
+    expect(casaTramo([297.51, 316.01], [296.37, 264.92], 'oculto', paso.tramos, tol).que).toBe('tipo');
+    // y A₁B₁ cortada donde no cambia nada
+    expect(casaTramo([297.48, 268.8], [340, 268.8], 'oculto', paso.tramos, tol).que).toBe('corte');
+  });
+
+  it('el tramo tapado de A₁D₁ va pegado a G₁H₁, más cerca que la tolerancia: no es tramo', () => {
+    const gh = tramoDe([297.51, 316.01], [296.37, 264.92])!;
+    const lejos = (p: readonly number[]) =>
+      Math.abs((gh.b[0] - gh.a[0]) * (p[1] - gh.a[1]) - (gh.b[1] - gh.a[1]) * (p[0] - gh.a[0])) / Math.hypot(gh.b[0] - gh.a[0], gh.b[1] - gh.a[1]);
+    // de A₁ al cruce de G₁H₁ con A₁D₁, el tramo que el hexágono tapa
+    expect(lejos([297.48, 268.8]) * PT_MM).toBeCloseTo(0.36, 2);
+    expect(lejos([297.48, 268.8])).toBeLessThan(tol);
+    expect(paso.tramos.some((x) => junto(x.a, [297.48, 268.8]) && junto(x.b, [297.48, 314.54]))).toBe(false);
   });
 });

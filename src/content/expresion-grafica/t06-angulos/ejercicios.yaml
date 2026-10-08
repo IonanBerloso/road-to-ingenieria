@@ -2591,7 +2591,7 @@ ejercicios:
       perpendicular al plano desde P. La hoja no dice si ABC es una lámina opaca o solo un plano; para
       lo visto y lo oculto se toma opaca, como en las intersecciones. Al ángulo lo llamamos δ. Los
       nombres P, R, T, J, M y K, los de los puntos 1 a 4, F y H, y δ son nuestros.
-    pide: R y T en las dos vistas, que son el vértice del ángulo y el otro extremo de su lado RT; el triángulo PTR abatido; lo visto y lo oculto de r, y el ángulo δ en grados.
+    pide: R y T en las dos vistas, que son el vértice del ángulo y el otro extremo de su lado RT; el triángulo PTR abatido; el ángulo δ en grados, y, como pregunta nuestra, lo visto y lo oculto de r, PT y RT.
     receta:
       lamina: sd63
       escena:
@@ -2716,6 +2716,15 @@ ejercicios:
         # r₀ corta CB): desde ahí arranca el arco del transportador.
         J_alto: 'punto3(alzado: desplaza(proy_alzado(J), dy: mm(-10)), planta: proy_planta(J))'
         X_r0: corte_recta_plano(recta3(C, B), plano(J, Pab, J_alto))
+        # La visibilidad, con ABC como una lámina opaca. r se pasa de punta a punta
+        # de lo que dibuja la lámina: r1_fin y r2_fin son sus otros extremos, los
+        # de r1 y r2, desde P₁ y P₂ (r₁ acaba más a la derecha que r₂). En la
+        # planta cambia en 1₁, el cruce aparente de r₁ con A₁C₁ (el punto I1), y
+        # en R₁; en el alzado, en R₂ y en el cruce aparente de r₂ con C₂B₂
+        # (k_<arista>_<lado>).
+        r1_fin: 'desplaza(figura.punto("P1"), dx: -108.36, dy: -187.8)'
+        r2_fin: 'desplaza(figura.punto("P2"), dx: -122.28, dy: 159.84)'
+        k_r_CB: 'cruce_aparente(figura.segmento("r2"), figura.segmento("BC2"))'
       comprueba:
         # P está en r: los extremos de r₂ y r₁ en la misma vertical son un
         # punto de la recta, y R, T y J están en el plano o en la recta que
@@ -2762,7 +2771,17 @@ ejercicios:
           a T₁ se cruzan varias rectas de la construcción. A unos 2,5 mm de T₂, h₂ corta a t₂, a 3₂4₂ y a las
           verticales de 3 y de T; a 1,2 mm de T₁, la vertical de 3₁ corta a R₁T₁ y a la charnela, que se
           trazan después. Marca T₂ y T₁ en cuanto los construyas, y amplía con la lupa (×4).
-        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+
+          Pasa a limpio con «arista vista» y «arista oculta» PT y RT en cuanto tengas R y T, y
+          después r, en las dos vistas. Lo visto y lo oculto es pregunta nuestra: la hoja no lo pide.
+          Y la lectura también es nuestra: tomamos ABC como una lámina opaca, como en las
+          intersecciones; si fuera solo un plano, transparente, r iría entera en continua. Con la
+          lámina opaca, en la planta r va oculta de 1₁ a R₁, y en el alzado, de R₂ a donde cruza
+          C₂B₂. r se pasa de punta a punta de lo que dibuja la lámina, cortada solo donde cambia; los
+          lados del triángulo se ven enteros y ya están dibujados. El tramo oculto del alzado acaba
+          donde r₂ cruza C₂B₂, y a 1,9 mm de ese cruce la vertical de 1 corta también C₂B₂ (y a
+          3,1 mm, a r₂): amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, visto, oculto, borrar]
         tolerancia: 1
         objetivos:
           - nombre: R2
@@ -2899,13 +2918,47 @@ ejercicios:
                   R₀ está en la perpendicular a la charnela que pasa por R₁ y en r₀, la recta J₁P₀, del
                   mismo lado que P₀.
         trazado:
-          - proy_alzado(segmento3(solucion.R, solucion.T))
-          - proy_planta(segmento3(solucion.R, solucion.T))
-          - proy_alzado(segmento3(P, solucion.T))
-          - proy_planta(segmento3(P, solucion.T))
           - segmento2(proy_planta(solucion.Rab), proy_planta(solucion.Pab))
           - segmento2(proy_planta(solucion.Rab), proy_planta(solucion.T))
           - segmento2(proy_planta(solucion.T), proy_planta(solucion.Pab))
+        # Decisión: la visibilidad es pregunta nuestra (la hoja no la pide), con
+        # ABC como una lámina opaca, como en las intersecciones del tema 4; con un
+        # plano transparente, r iría entera en continua. Va aquí y sustituye al
+        # paso dibujar que había. Sale de un cálculo de líneas ocultas aparte, por
+        # rayos contra la lámina, y coincide con lo que decía ese paso. RT está en
+        # el plano: se ve, porque está en la cara del lado de P, que es la que se
+        # ve desde arriba y desde delante.
+        tramos:
+          - traza: segmento2(solucion.r1_fin, proy_planta(solucion.I1))
+            tipo: visto
+            porque: 'Del extremo de r₁ a 1₁, r queda fuera del contorno del triángulo en la planta: desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.I1), proy_planta(solucion.R))
+            tipo: oculto
+            porque: 'De 1₁ a R₁, r cae dentro del triángulo y va por debajo del plano: en el cruce aparente con A₁C₁, 10,2 mm por debajo de AC. La lámina la tapa hasta R, donde la atraviesa.'
+          - traza: segmento2(proy_planta(solucion.R), figura.punto("P1"))
+            tipo: visto
+            porque: 'De R₁ a P₁, r va por encima del plano: en el cruce aparente con C₁B₁, 26,6 mm por encima de CB. Desde arriba nada la tapa.'
+          - traza: segmento2(figura.punto("P1"), proy_planta(solucion.T))
+            tipo: visto
+            porque: 'PT va de P, encima del plano y delante de él, a su pie T, sin atravesarlo: queda del lado que se ve desde arriba.'
+          - traza: segmento2(proy_planta(solucion.R), proy_planta(solucion.T))
+            tipo: visto
+            porque: 'RT está en el plano, sobre la cara que se ve desde arriba, la del lado de P: nada la tapa.'
+          - traza: segmento2(figura.punto("P2"), proy_alzado(solucion.R))
+            tipo: visto
+            porque: 'De P₂ a R₂, r va por delante del plano: en el cruce aparente con A₂C₂, 34,2 mm por delante de AC. Nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.R), solucion.k_r_CB)
+            tipo: oculto
+            porque: 'De R₂ a C₂B₂, r cae dentro del triángulo y va por detrás del plano: en el cruce aparente con C₂B₂, 21,4 mm por detrás de CB. La lámina la tapa.'
+          - traza: segmento2(solucion.k_r_CB, solucion.r2_fin)
+            tipo: visto
+            porque: 'Pasado C₂B₂, r sale del contorno del triángulo en el alzado: nada se interpone entre ella y quien mira.'
+          - traza: segmento2(figura.punto("P2"), proy_alzado(solucion.T))
+            tipo: visto
+            porque: 'PT va de P, delante del plano y encima de él, a su pie T, sin atravesarlo: queda del lado que se ve desde delante.'
+          - traza: segmento2(proy_alzado(solucion.R), proy_alzado(solucion.T))
+            tipo: visto
+            porque: 'RT está en el plano, sobre la cara que se ve desde delante, la del lado de P: nada la tapa.'
         construccion:
           - con: regla
             traza: segmento2(figura.punto("C1"), figura.punto("C2"))
@@ -3096,12 +3149,36 @@ ejercicios:
             rotulo: T₁
             porque: |
               T₁, donde esa vertical corta t₁: T ya está en las dos vistas.
-          - con: regla
-            traza: '[segmento2(proy_planta(solucion.R), proy_planta(solucion.T)), segmento2(proy_alzado(solucion.R), proy_alzado(solucion.T))]'
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.R), proy_planta(solucion.T)), segmento2(proy_alzado(solucion.R), proy_alzado(solucion.T)), segmento2(figura.punto("P1"), proy_planta(solucion.T)), segmento2(figura.punto("P2"), proy_alzado(solucion.T))]'
             porque: |
-              **La posición.** R₁T₁ y R₂T₂: la proyección de r sobre el plano. El ángulo de r con el
-              plano tiene el vértice en R y sus lados son RP y RT, pero en ninguna de las dos vistas está
-              en verdadera magnitud, porque el plano PTR no es horizontal ni frontal.
+              **La posición.** R₁T₁ y R₂T₂: la proyección de r sobre el plano; y P₁T₁ y P₂T₂, la
+              perpendicular de P a su pie. El ángulo de r con el plano tiene el vértice en R y sus lados
+              son RP y RT, pero en ninguna de las dos vistas está en verdadera magnitud, porque el plano
+              PTR no es horizontal ni frontal. Las cuatro, en continua: RT está sobre la cara del plano
+              que se ve desde arriba y desde delante, la del lado de P, y PT va de P a T sin atravesarlo.
+          - con: arista-vista
+            traza: '[segmento2(solucion.r1_fin, proy_planta(solucion.I1)), segmento2(proy_planta(solucion.R), figura.punto("P1"))]'
+            porque: |
+              **Lo visto y lo oculto de r**, con ABC como una lámina opaca. En la planta se ve lo de más
+              cota: r₁ en continua del extremo de arriba a 1₁, fuera del triángulo, y de R₁ a P₁, donde r
+              va por encima del plano (en el cruce aparente con C₁B₁, 26,6 mm por encima de CB).
+          - con: arista-oculta
+            traza: segmento2(proy_planta(solucion.I1), proy_planta(solucion.R))
+            porque: |
+              Y de 1₁ a R₁, a trazos: en el cruce aparente con A₁C₁, r va 10,2 mm por debajo de AC, y
+              sigue por debajo del plano hasta R, donde lo atraviesa.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("P2"), proy_alzado(solucion.R)), segmento2(solucion.k_r_CB, solucion.r2_fin)]'
+            porque: |
+              En el alzado se ve lo de más alejamiento: r₂ en continua de P₂ a R₂, porque en el cruce
+              aparente con A₂C₂ r va 34,2 mm por delante de AC, y de C₂B₂ al extremo de abajo, fuera del
+              triángulo.
+          - con: arista-oculta
+            traza: segmento2(proy_alzado(solucion.R), solucion.k_r_CB)
+            porque: |
+              Y de R₂ a donde r₂ cruza C₂B₂, a trazos: en ese cruce aparente r va 21,4 mm por detrás de
+              CB, y la lámina la tapa.
           - con: escuadra-cartabon
             traza: segmento2(proy_alzado(solucion.T), solucion.L_hJ)
             guia: solucion.refC
@@ -3220,107 +3297,22 @@ ejercicios:
           corta A₁C₁ y C₁B₁, y únelos: esa recta corta r₂ en R₂. (2) La horizontal y la frontal del
           plano, y por P la perpendicular: t₁ perpendicular a h₁, t₂ perpendicular a f₂. (3) T, igual que
           R, con t. (4) Abate PTR con su horizontal por T: J₂, donde la horizontal de T₂ corta r₂; la
-          charnela es J₁T₁. (5) P₀ con el triángulo del radio; R₀ por afinidad, en J₁P₀.
+          charnela es J₁T₁. (5) P₀ con el triángulo del radio; R₀ por afinidad, en J₁P₀. (6) Con ABC
+          opaca, en cada vista se ve lo que queda del lado de quien mira: en la planta r va oculta de
+          1₁ a R₁; en el alzado, de R₂ a C₂B₂. PT y RT se ven.
         desarrollo: |
           R cae dentro del triángulo en las dos vistas, y T también. En verde claro, la proyección de r
           sobre el plano, RT, y la perpendicular PT; y el triángulo abatido P₀T₁R₀, rectángulo en T₁, con
           PT = 59,3 mm, RT = 38,7 mm y PR = 70,8 mm de verdad. El ángulo en R₀ es δ.
 
-      # Decisión: ABC se toma como una lámina opaca, como en las
-      # intersecciones del tema 4. La hoja no pide la visibilidad; va porque
-      # queda un tramo oculto de r en cada vista. Con un plano transparente, r
-      # iría entera en continua, y el veredicto lo dice.
-      - tipo: dibujar
-        consigna: |
-          Repasa r en las dos vistas tomando el triángulo ABC como una lámina opaca: lo visto en
-          continua y lo oculto en discontinua. Repasa también t, de P a T, y la proyección RT.
-        comprueba:
-          - punto: En la planta, r₁ va oculta entre 1₁, donde entra en el triángulo por A₁C₁, y R₁; vista en el resto.
-            porque: >-
-              Desde arriba se ve lo de más cota. En el cruce aparente de r₁ con A₁C₁, r va 10,2 mm por
-              debajo de AC: de ahí hasta R, r está debajo del plano. En R lo atraviesa, y en el cruce
-              con C₁B₁ ya va 26,6 mm por encima.
-          - punto: En el alzado, r₂ va oculta entre R₂ y donde sale del triángulo por C₂B₂; vista en el resto.
-            porque: >-
-              Desde delante se ve lo de más alejamiento. En el cruce aparente de r₂ con A₂C₂, r va
-              34,2 mm por delante de AC, y en el de C₂B₂, 21,4 mm por detrás: el tramo de R a C₂B₂
-              queda detrás de la lámina.
-          - punto: t y RT, vistas en las dos vistas.
-            porque: >-
-              P está encima del plano y delante de él, y t va de P a T sin atravesarlo: queda entera
-              del lado que se ve desde arriba y desde delante. RT está sobre esa misma cara.
-          - punto: Fuera del contorno del triángulo, r va en continua en las dos vistas.
-            porque: >-
-              La lámina solo tapa lo que queda dentro de su contorno; fuera, nada se interpone entre r
-              y quien mira.
-        figura: |
-          <figure>
-          <svg viewBox="0 0 252 488" role="img" width="252" height="488" aria-labelledby="sd63-vis-t sd63-vis-d">
-            <title id="sd63-vis-t">La recta r y el triángulo ABC opaco, con lo visto y lo oculto</title>
-            <desc id="sd63-vis-d">Arriba el alzado y abajo la planta del triángulo ABC, a la escala de la lámina, con la recta r, el punto R donde corta al plano, T, el pie de la perpendicular desde P, la perpendicular PT y la proyección RT. En la planta, r₁ va en discontinua desde donde entra en el triángulo por A₁C₁ hasta R₁: en ese cruce aparente r va 10,2 mm por debajo de AC. De R₁ en adelante va en continua: en el cruce con C₁B₁ va 26,6 mm por encima de CB. En el alzado, r₂ va en continua hasta R₂, porque en el cruce con A₂C₂ va 34,2 mm por delante de AC, y en discontinua de R₂ hasta donde sale por C₂B₂, donde va 21,4 mm por detrás de CB. PT y RT van en continua en las dos vistas: P está encima del plano y delante de él, y RT, sobre la cara que se ve.</desc>
-            <style>
-                .sd63-vis-eje { stroke: var(--rule); stroke-width: 1.1; fill: none; }
-                .sd63-vis-c { stroke: var(--d1); stroke-width: 2.8; fill: none; }
-                .sd63-vis-c2 { stroke: var(--alt); stroke-width: 2.8; fill: none; }
-                .sd63-vis-cp { stroke: var(--d1); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .sd63-vis-cp2 { stroke: var(--alt); stroke-width: 2.4; fill: none; stroke-dasharray: 6 4; }
-                .sd63-vis-g { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 3 3; }
-                .sd63-vis-fue { stroke: var(--faint); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
-                .sd63-vis-f { fill: var(--live); fill-opacity: .12; stroke: none; }
-                .sd63-vis-f2 { fill: var(--alt); fill-opacity: .12; stroke: none; }
-                .sd63-vis-pt { fill: var(--live); }
-                .sd63-vis-punta { fill: var(--live); stroke: none; }
-                .sd63-vis-hueco { fill: var(--paper); stroke: var(--live); stroke-width: 2; }
-                .sd63-vis-o { fill: var(--flag); }
-                .sd63-vis-n { fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
-                .sd63-vis-l { font-size: 10.5px; font-family: var(--mono); font-weight: 700; paint-order: stroke; stroke: var(--paper); stroke-width: 3.4px; stroke-linejoin: round; }
-                .sd63-vis-dat { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linejoin: round; }
-                .sd63-vis-rv { stroke: var(--d1); stroke-width: 2.2; fill: none; stroke-linecap: round; }
-                .sd63-vis-ro { stroke: var(--d1); stroke-width: 1.8; fill: none; stroke-dasharray: 5 3; }
-                .sd63-vis-pt2 { stroke: var(--alt); stroke-width: 1.8; fill: none; }
-                .sd63-vis-rt { stroke: var(--live); stroke-width: 2.2; fill: none; }
-            </style>
-            <path class="sd63-vis-dat" d="M139.8 88.4L221.6 200.6"/>
-            <path class="sd63-vis-dat" d="M221.6 200.6L30.4 151"/>
-            <path class="sd63-vis-dat" d="M30.4 151L139.8 88.4"/>
-            <path class="sd63-vis-dat" d="M139.8 245.9L221.6 416.2"/>
-            <path class="sd63-vis-dat" d="M221.6 416.2L30.4 325.6"/>
-            <path class="sd63-vis-dat" d="M30.4 325.6L139.8 245.9"/>
-            <path class="sd63-vis-rv" d="M169.5 30.4L86.5 138.9"/>
-            <path class="sd63-vis-ro" d="M86.5 138.9L69.5 161.1"/>
-            <path class="sd63-vis-rv" d="M69.5 161.1L48.6 188.5"/>
-            <path class="sd63-vis-rv" d="M62.3 271.9L74.7 293.3"/>
-            <path class="sd63-vis-ro" d="M74.7 293.3L86.5 313.7"/>
-            <path class="sd63-vis-rv" d="M86.5 313.7L169.5 457.6"/>
-            <path class="sd63-vis-pt2" d="M169.5 30.4L178.8 166.9"/>
-            <path class="sd63-vis-pt2" d="M169.5 457.6L178.8 363.3"/>
-            <path class="sd63-vis-rt" d="M86.5 138.9L178.8 166.9"/>
-            <path class="sd63-vis-rt" d="M86.5 313.7L178.8 363.3"/>
-            <circle class="sd63-vis-pt" cx="86.5" cy="138.9" r="2.6"/>
-            <circle class="sd63-vis-pt" cx="178.8" cy="166.9" r="2.6"/>
-            <circle class="sd63-vis-pt" cx="86.5" cy="313.7" r="2.6"/>
-            <circle class="sd63-vis-pt" cx="178.8" cy="363.3" r="2.6"/>
-            <text class="sd63-vis-l" x="143.8" y="82.4" text-anchor="start" fill="var(--ink)">A₂</text>
-            <text class="sd63-vis-l" x="226.6" y="213.6" text-anchor="start" fill="var(--ink)">B₂</text>
-            <text class="sd63-vis-l" x="25.4" y="155" text-anchor="end" fill="var(--ink)">C₂</text>
-            <text class="sd63-vis-l" x="143.8" y="239.9" text-anchor="start" fill="var(--ink)">A₁</text>
-            <text class="sd63-vis-l" x="227.6" y="421.2" text-anchor="start" fill="var(--ink)">B₁</text>
-            <text class="sd63-vis-l" x="25.4" y="329.6" text-anchor="end" fill="var(--ink)">C₁</text>
-            <text class="sd63-vis-l" x="175.5" y="34.4" text-anchor="start" fill="var(--alt)">P₂</text>
-            <text class="sd63-vis-l" x="175.5" y="461.6" text-anchor="start" fill="var(--alt)">P₁</text>
-            <text class="sd63-vis-l" x="44.6" y="200.5" text-anchor="end" fill="var(--d1)">r₂</text>
-            <text class="sd63-vis-l" x="57.3" y="271.9" text-anchor="end" fill="var(--d1)">r₁</text>
-            <text class="sd63-vis-l" x="79.5" y="142.9" text-anchor="end" fill="var(--live)">R₂</text>
-            <text class="sd63-vis-l" x="184.8" y="160.9" text-anchor="start" fill="var(--live)">T₂</text>
-            <text class="sd63-vis-l" x="80.5" y="317.7" text-anchor="end" fill="var(--live)">R₁</text>
-            <text class="sd63-vis-l" x="185.8" y="367.3" text-anchor="start" fill="var(--live)">T₁</text>
-          </svg>
-          <figcaption>La recta r con el triángulo ABC tomado como una lámina opaca: en continua lo visto y en discontinua lo oculto, el alzado arriba y la planta abajo. En azul r, en violeta la perpendicular PT y en verde la proyección RT.</figcaption>
-          </figure>
-        veredicto: >-
-          Si tu dibujo tiene oculto en la planta el tramo de 1₁ a R₁ y en el alzado el de R₂ a C₂B₂, y
-          todo lo demás en continua, la visibilidad está bien. Si has tomado ABC como un plano y no
-          como una lámina, r va entera en continua: la hoja no lo precisa, y aquí se toma opaca.
+          Lo visto y lo oculto, con ABC como una lámina opaca. Desde arriba se ve lo de más cota: en
+          el cruce aparente de r₁ con A₁C₁, r va 10,2 mm por debajo de AC, y de ahí hasta R está
+          debajo del plano, así que r₁ va oculta de 1₁ a R₁; en el cruce con C₁B₁ ya va 26,6 mm por
+          encima. Desde delante se ve lo de más alejamiento: en el cruce aparente de r₂ con A₂C₂, r va
+          34,2 mm por delante de AC, y en el de C₂B₂, 21,4 mm por detrás, así que r₂ va oculta de R₂
+          a C₂B₂. P está encima del plano y delante de él, y PT va de P a T sin atravesarlo: se ve
+          entera en las dos vistas, y RT, sobre la cara que se ve, también. Fuera del contorno del
+          triángulo, nada tapa a r.
 
       - tipo: calcular
         titulo: El ángulo de r con el plano
