@@ -86,6 +86,14 @@ describe('queEsElPdf', () => {
     );
   });
 
+  /* Expresión Gráfica: las cuatro hojas de la colección no llevan PDF propio
+     (está el de la colección entera). Con ninguna, el `every` de una lista
+     vacía decía «el PDF corregido de la escuela, salvo 4 que no lo publican»
+     (8 de octubre de 2026). */
+  it('ninguna con PDF propio', () => {
+    expect(queEsElPdf([sinPdf, sinPdf])).toBe('su enunciado transcrito, sin PDF propio');
+  });
+
   it('mezcladas, y una que no publica PDF', () => {
     expect(queEsElPdf([enunciado, resolucion, sinPdf])).toBe(
       'el PDF de la escuela, que es el enunciado o, en alguna, la corrección del profesor, salvo una que no lo publica y dice por qué',

@@ -146,6 +146,16 @@ const examenesPorAsignatura = new Map<
  *  corpus cambia, el sitio empieza a afirmar algo falso y no hay guardián que
  *  compare una frase con los datos. Se calcula. */
 const enterasPorAsignatura = new Map<string, boolean>();
+/** Cómo se llaman los exámenes de una asignatura. Las hojas de varios
+ *  apartados de la colección de Expresión Gráfica (`convocatoria: 'hoja'`)
+ *  no tienen fecha ni curso, y su propia página lo dice: llamarlas
+ *  «convocatorias» era afirmar lo que no son (auditoría de Expresión
+ *  Gráfica del 8 de octubre de 2026, M1). */
+const nombreDeExamenes = (lista: { conv: string }[]) => {
+  const hojas = lista.every((e) => e.conv === 'hoja');
+  if (hojas) return lista.length === 1 ? 'hoja de examen de la colección' : 'hojas de examen de la colección';
+  return lista.length === 1 ? 'convocatoria' : 'convocatorias';
+};
 /** Y por el mismo motivo, qué PDF acompaña a los exámenes de cada asignatura.
  *  Aquí se decía «con su enunciado original en PDF» de las seis, y en
  *  Ingeniería Térmica los veinte PDF son la resolución completa —de 14 a 32
@@ -479,7 +489,7 @@ const enteras = asignaturas
                   <p class="mano b-meta">
                     {a.data.temas.length} temas
                     {examenesPorAsignatura.has(a.id) &&
-                      ` · ${examenesPorAsignatura.get(a.id)!.length} convocatorias${
+                      ` · ${examenesPorAsignatura.get(a.id)!.length} ${nombreDeExamenes(examenesPorAsignatura.get(a.id)!)}${
                         enterasPorAsignatura.get(a.id) ? ' resueltas enteras' : ' abiertas'
                       }`}
                   </p>
@@ -663,16 +673,17 @@ const enteras = asignaturas
                     <p class="ex-sub">
                       {(() => {
                         const n = examenesPorAsignatura.get(a.id)!.length;
+                        const nombre = nombreDeExamenes(examenesPorAsignatura.get(a.id)!);
                         const enteras = enterasPorAsignatura.get(a.id);
                         const elPdf = queEsElPdf(pdfsPorAsignatura.get(a.id) ?? []);
                         if (n === 1) {
                           return enteras
-                            ? `Una convocatoria, con ${elPdf} y resuelta entera.`
-                            : `Una convocatoria, con ${elPdf}. Cada ejercicio que falta lo dice en su página.`;
+                            ? `Una ${nombre}, con ${elPdf} y resuelta entera.`
+                            : `Una ${nombre}, con ${elPdf}. Cada ejercicio que falta lo dice en su página.`;
                         }
                         return enteras
-                          ? `${n} convocatorias, con ${elPdf} y resueltas enteras.`
-                          : `${n} convocatorias, con ${elPdf}. Los ejercicios que faltan están dichos uno a uno en cada página.`;
+                          ? `${n} ${nombre}, con ${elPdf} y resueltas enteras.`
+                          : `${n} ${nombre}, con ${elPdf}. Los ejercicios que faltan están dichos uno a uno en cada página.`;
                       })()}
                     </p>
                     <ul class="ex-lista">

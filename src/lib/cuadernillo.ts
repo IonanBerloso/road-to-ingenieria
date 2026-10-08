@@ -74,6 +74,10 @@ type ConPdf = { pdf?: unknown; pdfEs: 'enunciado' | 'resolucion' | 'enunciado-co
 export function queEsElPdf(exs: readonly ConPdf[]): string {
   const conPdf = exs.filter((e) => e.pdf !== undefined);
   const sin = exs.length - conPdf.length;
+  /* Ninguna con PDF propio (las hojas de la colección de Expresión Gráfica):
+     sin esto, el `every` de una lista vacía daba la primera rama, «el PDF
+     corregido de la escuela». */
+  if (conPdf.length === 0) return 'su enunciado transcrito, sin PDF propio';
   const base = conPdf.every((e) => e.pdfEs === 'resolucion')
     ? 'el PDF corregido de la escuela'
     : conPdf.every((e) => e.pdfEs === 'enunciado')

@@ -31,6 +31,15 @@
  *  convocatorias; uno «bajo», del que puede no caer nada en dos años. */
 export const CORTES = { alto: 45, medio: 25 } as const;
 
+/** Cuántos ejercicios de examen con fecha hacen falta para publicar un peso
+ *  contado. Los cortes son absolutos y salen de los 425 de Cálculo: con muchos
+ *  menos, ningún tema llega a ellos y todos salen «bajo», que no es una
+ *  medida sino la falta de datos. Lo encontró la auditoría de Expresión
+ *  Gráfica del 8 de octubre de 2026: sus trece temas, en «PESO BAJO», con 17
+ *  ejercicios de cuatro hojas sin fecha. Una asignatura con menos declara su
+ *  peso en el catálogo, o no lo pinta. */
+export const MINIMO_CONTADO = 100;
+
 /** El nivel que le toca a un tema por su número de ejercicios de examen. */
 export function pesoDeTema(cuantos: number): 'alto' | 'medio' | 'bajo' {
   if (cuantos >= CORTES.alto) return 'alto';
@@ -44,14 +53,18 @@ export function pesoDeTema(cuantos: number): 'alto' | 'medio' | 'bajo' {
  * `examenes` son las entradas de la colección `examen`; cada una lista sus
  * ejercicios con el `tema` al que pertenece cada uno. Un examen cruza temas,
  * y por eso el recuento se hace ejercicio a ejercicio y no examen a examen.
+ *
+ * Las hojas sin fecha (`convocatoria: 'hoja'`, los Ejercicios 52 a 55 de la
+ * colección de Expresión Gráfica) no cuentan: no dicen cuándo cayó nada ni
+ * cuánto, que es lo único que este recuento mide.
  */
 export function cuentaPorTema(
-  examenes: { data: { asignatura: string; ejercicios: { tema: string }[] } }[],
+  examenes: { data: { asignatura: string; convocatoria?: string; ejercicios: { tema: string }[] } }[],
   asignatura: string,
 ): Map<string, number> {
   const cuenta = new Map<string, number>();
   for (const e of examenes) {
-    if (e.data.asignatura !== asignatura) continue;
+    if (e.data.asignatura !== asignatura || e.data.convocatoria === 'hoja') continue;
     for (const x of e.data.ejercicios) cuenta.set(x.tema, (cuenta.get(x.tema) ?? 0) + 1);
   }
   return cuenta;
@@ -61,9 +74,9 @@ export function cuentaPorTema(
  * El peso que se publica para un tema.
  *
  * Manda el catálogo si lo declara —es la excepción, y quien la escribe tiene
- * que poder defenderla—; si no, se deriva del recuento. Cuando no hay ningún
- * ejercicio de examen contado para esa asignatura devuelve `null`, y entonces
- * la ficha no pinta la pastilla: **una asignatura sin exámenes transcritos no
+ * que poder defenderla—; si no, se deriva del recuento. Cuando hay menos de
+ * `MINIMO_CONTADO` ejercicios de examen contados para esa asignatura devuelve
+ * `null`, y entonces la ficha no pinta la pastilla: **una asignatura sin exámenes transcritos no
  * sabe qué pesa más, y fingir que sí lo sabe es el fallo que esto arregla.**
  */
 export function pesoPublicado(
@@ -72,6 +85,7 @@ export function pesoPublicado(
   temaId: string,
 ): 'alto' | 'medio' | 'bajo' | null {
   if (declarado) return declarado;
-  if (cuenta.size === 0) return null;
+  const total = [...cuenta.values()].reduce((s, n) => s + n, 0);
+  if (total < MINIMO_CONTADO) return null;
   return pesoDeTema(cuenta.get(temaId) ?? 0);
 }
