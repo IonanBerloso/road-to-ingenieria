@@ -1510,6 +1510,1075 @@ ejercicios:
 
       **La longitud.** P₁S₁ mide 16,01 mm y P está 24,13 mm por encima del suelo: el tubo mide 28,96 mm.
 
+  - id: sd50-el-cuadrado-paralelo-a-abc-por-p
+    titulo: El cuadrado de 35 mm paralelo al plano ABC, con P a 20 mm por encima
+    fuente: Ejercicio 35 (SD50) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 36),
+    # con su «proyección horizontal de punto P». «20 mm por encima» se lee
+    # como distancia entre planos (por la perpendicular a ABC), y las Notas
+    # nuestras dicen qué saldría en vertical. Q, R, S, G, H y J son nombres
+    # nuestros.
+    enunciado: |
+      Se presentan las proyecciones diédricas del plano ABC y la proyección horizontal de punto P,
+      que queda a 20 mm por encima del mismo. Representar el cuadrado de lado 35 mm paralelo al plano
+      ABC sabiendo que el punto P es el vértice de mayor cota y que dos de sus lados son paralelos al
+      lado CB.
+
+      **Notas nuestras.** «de punto P», sin artículo, es errata de la hoja por «del punto P», y se deja
+      tal como está impresa. La figura es el triángulo ABC, con el alzado arriba y la planta debajo, y
+      la planta de P, con su cruz, dentro de la planta del triángulo. Escala 1:1: lo que mides en la
+      lámina, en milímetros, es el resultado. «Queda a 20 mm por encima del mismo» lo leemos como una
+      distancia entre planos: P está en el plano paralelo a ABC a 20 mm, medidos por la perpendicular
+      a ABC, del lado hacia el que sube la cota. Es como se lee la distancia de un punto a un plano, y
+      como la 52·4 lee los 25 mm de su chapa. Si se leyera «20 mm más alto que el punto de ABC de su
+      vertical», P₂ quedaría 6,06 mm más abajo, el plano del cuadrado a 15,35 mm de ABC, y el cuadrado,
+      con la misma planta, 6,06 mm más abajo en el alzado. El cuadrado está en ese plano paralelo, y P
+      es uno de sus vértices: con dos lados paralelos a CB, los dos que salen de P van uno paralelo a
+      CB y otro perpendicular, y como P es el de mayor cota, los dos bajan. Eso deja un solo cuadrado.
+      Llamamos Q al vértice que sigue a P en el lado paralelo a CB, S al que sigue a P en el otro y R
+      al cuarto; y G, H y J son puntos de la construcción. Todos, nombres nuestros. El triángulo y el
+      cuadrado se toman como placas opacas, como en el Ejercicio 38, para lo visto y lo oculto.
+    pide: P₂, con el plano ABC de canto en un cambio de plano; el cuadrado en verdadera magnitud en un segundo cambio y sus dos proyecciones, con lo visto y lo oculto; y, como pregunta nuestra, lo que P está más alto que el plano en su vertical.
+    receta:
+      lamina: sd50
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        abc: plano(A, B, C)
+      solucion:
+        # Decisión: «20 mm por encima», por la perpendicular al plano, del lado
+        # al que sube la cota (normalQueSube). Con la otra lectura, Pv.
+        pi: 'paralelo_a_distancia(abc, mm(20), sentido: ascendente)'
+        P: 'punto_en_plano(planta: figura.punto("P1"), plano: pi)'
+        Pabc: 'punto_en_plano(planta: figura.punto("P1"), plano: abc)'
+        Pv: 'punto3(alzado: desplaza(proy_alzado(Pabc), dy: mm(-20)), planta: figura.punto("P1"))'
+        Pb: 'punto_en_plano(planta: figura.punto("P1"), plano: paralelo_a_distancia(abc, mm(20), sentido: descendente))'
+        subida_mm: en_mm(diferencia_de_cotas(P, Pabc))
+        # El cuadrado. PQ, paralelo a CB: la recta por P con la dirección de C
+        # menos B (T = P + C − B). PS, perpendicular a CB en el plano: por P,
+        # paralela a W − W′, con W un punto del plano y W′ su pie en PQ. De los
+        # dos puntos a 35 mm, el que baja (rama 1 para Q, hacia C; rama 2 para
+        # S): P es el vértice de mayor cota. Los otros dos son errores.
+        T: 'simetrico(B, respecto: punto_medio(segmento3(P, C)))'
+        pq: recta3(P, T)
+        QQ: 'punto_a_distancia(pq, desde: P, distancia: mm(35))'
+        Q: rama(QQ, 1)
+        Qmal: rama(QQ, 2)
+        W: 'punto_en_plano(planta: figura.punto("A1"), plano: pi)'
+        Wp: pie_perpendicular(W, pq)
+        ps: 'recta3(P, simetrico(Wp, respecto: punto_medio(segmento3(P, W))))'
+        SS: 'punto_a_distancia(ps, desde: P, distancia: mm(35))'
+        S: rama(SS, 2)
+        Smal: rama(SS, 1)
+        R: 'simetrico(P, respecto: punto_medio(segmento3(Q, S)))'
+        # Decisión: dos cambios de plano, con las líneas nuevas en la lámina. El
+        # primero, vertical, con «nueva1» perpendicular a las horizontales del
+        # plano y C, el vértice más bajo, de referencia: ABC sale de canto, y el
+        # plano paralelo a 20 mm es la paralela al canto a 20 mm. El segundo,
+        # con «nueva2» paralela al canto y B de referencia: los dos planos en
+        # verdadera magnitud.
+        C_4: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: C)'
+        A_4: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: C)'
+        B_4: 'cambio_plano_vertical(B, figura.segmento("nueva1"), ref: C)'
+        P_4: 'cambio_plano_vertical(P, figura.segmento("nueva1"), ref: C)'
+        Q_4: 'cambio_plano_vertical(Q, figura.segmento("nueva1"), ref: C)'
+        R_4: 'cambio_plano_vertical(R, figura.segmento("nueva1"), ref: C)'
+        S_4: 'cambio_plano_vertical(S, figura.segmento("nueva1"), ref: C)'
+        Pabc_4: 'cambio_plano_vertical(Pabc, figura.segmento("nueva1"), ref: C)'
+        Pv_4: 'cambio_plano_vertical(Pv, figura.segmento("nueva1"), ref: C)'
+        Pb_4: 'cambio_plano_vertical(Pb, figura.segmento("nueva1"), ref: C)'
+        B_5: 'cambio_plano_vertical(B, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        C_5: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        P_5: 'cambio_plano_vertical(P, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        Q_5: 'cambio_plano_vertical(Q, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        R_5: 'cambio_plano_vertical(R, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        S_5: 'cambio_plano_vertical(S, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        Qmal_5: 'cambio_plano_vertical(Qmal, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        Smal_5: 'cambio_plano_vertical(Smal, figura.segmento("nueva1"), ref: C, luego: figura.segmento("nueva2"), ref2: B)'
+        canto: segmento2(C_4, A_4)
+        # G, a 20 mm de B₄ por la perpendicular al canto, del lado de más cota
+        # (lejos de la línea nueva); pi4, la paralela al canto por G.
+        G: 'uno(medir_sobre(perpendicular(por: B_4, a: canto), desde: B_4, distancia: mm(20)), 2)'
+        pi4: 'perpendicular(por: G, a: perpendicular(por: G, a: canto))'
+        # Los pies en la primera línea nueva (centros del compás) y las
+        # referencias desde la planta.
+        K_A: 'pie_perpendicular(figura.punto("A1"), figura.segmento("nueva1"))'
+        K_B: 'pie_perpendicular(figura.punto("B1"), figura.segmento("nueva1"))'
+        K_P: 'pie_perpendicular(figura.punto("P1"), figura.segmento("nueva1"))'
+        refA: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("nueva1"))'
+        refB: 'perpendicular(por: figura.punto("B1"), a: figura.segmento("nueva1"))'
+        refP: 'perpendicular(por: figura.punto("P1"), a: figura.segmento("nueva1"))'
+        # La horizontal de C₂ y donde corta las verticales de A, B y P (J): lo
+        # que A₂ y B₂ están por encima es lo que A y B están más altos que C; y
+        # desde J se lleva la cota de P.
+        A_c: 'cruce_aparente(segmento2(figura.punto("C2"), desplaza(figura.punto("C2"), dx: 10)), segmento2(figura.punto("A2"), figura.punto("A1")))'
+        B_c: 'cruce_aparente(segmento2(figura.punto("C2"), desplaza(figura.punto("C2"), dx: 10)), segmento2(figura.punto("B2"), figura.punto("B1")))'
+        J: 'cruce_aparente(segmento2(figura.punto("C2"), desplaza(figura.punto("C2"), dx: 10)), segmento2(figura.punto("P1"), desplaza(figura.punto("P1"), dy: -10)))'
+        dyAC: 'raiz(vm(A, C) * vm(A, C) - vm_alzado(A, C) * vm_alzado(A, C))'
+        # El segundo cambio: la paralela a la primera línea nueva por B₁ (pB);
+        # lo que cada planta está más lejos de esa línea que B₁ es su distancia a
+        # pB, por su referencia: de C₁ a MC y de P₁ a MP.
+        pB: 'perpendicular(por: figura.punto("B1"), a: perpendicular(por: figura.punto("B1"), a: figura.segmento("nueva1")))'
+        MC: 'cruce_aparente(perpendicular(por: figura.punto("C1"), a: figura.segmento("nueva1")), pB)'
+        MP: 'cruce_aparente(refP, pB)'
+        K2C: 'pie_perpendicular(C_4, figura.segmento("nueva2"))'
+        K2P: 'pie_perpendicular(P_4, figura.segmento("nueva2"))'
+        ref5P: 'perpendicular(por: P_4, a: figura.segmento("nueva2"))'
+        lleva_P5: 'vm_planta(P, punto3(alzado: MP, planta: MP))'
+        b5c5: segmento2(B_5, C_5)
+        parP5: 'perpendicular(por: P_5, a: perpendicular(por: P_5, a: b5c5))'
+        perpP5: 'perpendicular(por: P_5, a: b5c5)'
+        parS5: 'perpendicular(por: S_5, a: perpendicular(por: S_5, a: b5c5))'
+        perpQ5: 'perpendicular(por: Q_5, a: b5c5)'
+        # La vuelta: de la vista 5 a la paralela al canto (vista 4), de ahí a la
+        # planta por las referencias, a la distancia de pB que da la vista 5, y al
+        # alzado por las verticales; Q₂ y R₂, en las paralelas a C₂B₂ por P₂ y
+        # por S₂, porque PQ y SR son paralelos a CB.
+        refQ: 'perpendicular(por: Q_4, a: figura.segmento("nueva1"))'
+        refR: 'perpendicular(por: R_4, a: figura.segmento("nueva1"))'
+        refS: 'perpendicular(por: S_4, a: figura.segmento("nueva1"))'
+        MQ: cruce_aparente(refQ, pB)
+        MR: cruce_aparente(refR, pB)
+        MS: cruce_aparente(refS, pB)
+        K2Q: 'pie_perpendicular(Q_5, figura.segmento("nueva2"))'
+        K2R: 'pie_perpendicular(R_5, figura.segmento("nueva2"))'
+        K2S: 'pie_perpendicular(S_5, figura.segmento("nueva2"))'
+        lleva_Q1: 'vm_planta(Q, punto3(alzado: MQ, planta: MQ))'
+        lleva_R1: 'vm_planta(R, punto3(alzado: MR, planta: MR))'
+        lleva_S1: 'vm_planta(S, punto3(alzado: MS, planta: MS))'
+        JS: 'cruce_aparente(segmento2(figura.punto("C2"), desplaza(figura.punto("C2"), dx: 10)), segmento2(proy_planta(S), proy_alzado(S)))'
+        K1S: 'pie_perpendicular(S_4, figura.segmento("nueva1"))'
+        parP2: 'perpendicular(por: proy_alzado(P), a: perpendicular(por: proy_alzado(P), a: figura.segmento("BC2")))'
+        parS2: 'perpendicular(por: proy_alzado(S), a: perpendicular(por: proy_alzado(S), a: figura.segmento("BC2")))'
+        # Lo visto y lo oculto: los cruces aparentes donde cambia.
+        x_QR2: 'cruce_aparente(segmento2(proy_alzado(Q), proy_alzado(R)), figura.segmento("CA2"))'
+        x_RS2: 'cruce_aparente(segmento2(proy_alzado(R), proy_alzado(S)), figura.segmento("AB2"))'
+        y_QR1: 'cruce_aparente(figura.segmento("BC1"), segmento2(proy_planta(Q), proy_planta(R)))'
+        y_SP1: 'cruce_aparente(figura.segmento("BC1"), segmento2(proy_planta(S), proy_planta(P)))'
+        # Los extremos de las rectas largas de la construcción.
+        L_hC: 'uno(medir_sobre(segmento2(figura.punto("C2"), B_c), desde: B_c, distancia: mm(4)), 1)'
+        L_C4: 'uno(medir_sobre(segmento2(figura.punto("C1"), C_4), desde: C_4, distancia: mm(4)), 1)'
+        L_A4: 'uno(medir_sobre(segmento2(figura.punto("A1"), A_4), desde: A_4, distancia: mm(4)), 1)'
+        L_B4: 'uno(medir_sobre(segmento2(figura.punto("B1"), B_4), desde: B_4, distancia: mm(4)), 1)'
+        L_P4: 'uno(medir_sobre(segmento2(figura.punto("P1"), P_4), desde: P_4, distancia: mm(4)), 1)'
+        L_canto: 'uno(medir_sobre(segmento2(C_4, A_4), desde: A_4, distancia: mm(4)), 1)'
+        L_G: 'uno(medir_sobre(segmento2(B_4, G), desde: G, distancia: mm(3)), 1)'
+        L_piP: 'uno(medir_sobre(pi4, desde: P_4, distancia: mm(4)), 2)'
+        L_piR: 'uno(medir_sobre(pi4, desde: R_4, distancia: mm(4)), 1)'
+        L_P2: 'uno(medir_sobre(segmento2(figura.punto("P1"), proy_alzado(P)), desde: proy_alzado(P), distancia: mm(4)), 1)'
+        L_pBa: 'uno(medir_sobre(segmento2(figura.punto("B1"), MR), desde: MR, distancia: mm(4)), 1)'
+        L_pBb: 'uno(medir_sobre(segmento2(figura.punto("B1"), MP), desde: MP, distancia: mm(4)), 1)'
+        L_B5: 'uno(medir_sobre(segmento2(B_4, B_5), desde: B_5, distancia: mm(4)), 1)'
+        L_C5: 'uno(medir_sobre(segmento2(C_4, C_5), desde: C_5, distancia: mm(4)), 1)'
+        L_P5: 'uno(medir_sobre(segmento2(P_4, P_5), desde: P_5, distancia: mm(4)), 1)'
+        L_Q5: 'uno(medir_sobre(segmento2(P_5, Q_5), desde: Q_5, distancia: mm(4)), 1)'
+        L_S5: 'uno(medir_sobre(segmento2(P_5, S_5), desde: S_5, distancia: mm(4)), 1)'
+        L_R5a: 'uno(medir_sobre(segmento2(S_5, R_5), desde: R_5, distancia: mm(4)), 1)'
+        L_R5b: 'uno(medir_sobre(segmento2(Q_5, R_5), desde: R_5, distancia: mm(4)), 1)'
+        L_Q4: 'uno(medir_sobre(segmento2(Q_5, Q_4), desde: Q_4, distancia: mm(3)), 1)'
+        L_R4: 'uno(medir_sobre(segmento2(R_5, R_4), desde: R_4, distancia: mm(3)), 1)'
+        L_S4: 'uno(medir_sobre(segmento2(S_5, S_4), desde: S_4, distancia: mm(3)), 1)'
+        L_Q1: 'uno(medir_sobre(segmento2(Q_4, proy_planta(Q)), desde: proy_planta(Q), distancia: mm(4)), 1)'
+        L_R1: 'uno(medir_sobre(segmento2(R_4, proy_planta(R)), desde: proy_planta(R), distancia: mm(4)), 1)'
+        L_S1: 'uno(medir_sobre(segmento2(S_4, proy_planta(S)), desde: proy_planta(S), distancia: mm(4)), 1)'
+        L_Q2: 'uno(medir_sobre(segmento2(proy_planta(Q), proy_alzado(Q)), desde: proy_alzado(Q), distancia: mm(4)), 1)'
+        L_R2: 'uno(medir_sobre(segmento2(proy_planta(R), proy_alzado(R)), desde: proy_alzado(R), distancia: mm(4)), 1)'
+        L_S2: 'uno(medir_sobre(segmento2(proy_planta(S), proy_alzado(S)), desde: proy_alzado(S), distancia: mm(4)), 1)'
+        L_Q2p: 'uno(medir_sobre(segmento2(proy_alzado(P), proy_alzado(Q)), desde: proy_alzado(Q), distancia: mm(3)), 1)'
+        L_R2p: 'uno(medir_sobre(segmento2(proy_alzado(S), proy_alzado(R)), desde: proy_alzado(R), distancia: mm(3)), 1)'
+      comprueba:
+        - en_plano(P, pi)
+        - en_plano(Q, pi)
+        - en_plano(R, pi)
+        - en_plano(S, pi)
+    pasos:
+      - tipo: reconocer
+        pregunta: El cuadrado es paralelo al plano ABC y P es uno de sus vértices. ¿En qué plano está?
+        opciones:
+          - texto: En el paralelo a ABC que pasa por P
+            correcta: true
+            mensaje: |
+              Eso es. Un cuadrado paralelo a ABC está en un plano paralelo a ABC, y si P es un vértice, es el
+              que pasa por P. Con ABC de canto en un cambio de plano, ese plano es la paralela al canto por
+              P₄, y los 20 mm se miden entre las dos, en verdadera magnitud.
+          - texto: En el propio plano ABC, porque una figura paralela a un plano tiene que estar dentro de él
+            mensaje: |
+              P no está en ABC: queda 20 mm por encima. Una figura paralela a un plano está en un plano
+              paralelo a él, y ese plano pasa por P. Si fuera ABC mismo, P estaría en él.
+          - texto: En el plano horizontal de P, porque P es el vértice de mayor cota y los demás se apoyan en él
+            mensaje: |
+              Si el cuadrado estuviera en el horizontal de P, los cuatro vértices tendrían la cota de P y
+              ninguno sería el de mayor cota. Además, ese plano no es paralelo a ABC, que está inclinado
+              39,9° respecto del horizontal.
+
+      # Decisión: dos pasos construir. El primero, P₂, con el plano de canto: la
+      # distancia, que es lo propio del tema. El segundo, el cuadrado, rehace
+      # el canto y P₄ (el reproductor arranca cada paso desde la lámina) y añade
+      # el segundo cambio, el cuadrado en verdadera magnitud y la vuelta.
+      - tipo: construir
+        titulo: P₂, con el plano ABC de canto
+        intro: |
+          Un cambio de plano vertical con la línea nueva perpendicular a las horizontales del plano pone
+          ABC de canto: sus horizontales se ven de punta. El enunciado no dice dónde va la línea nueva: la
+          hemos dibujado ya, de trazo y punto, a la derecha de la planta, perpendicular a la horizontal
+          del plano por B, que corta AC en un punto de la cota de B. C, el vértice más bajo, es la
+          referencia: C₄ cae en la línea, y cada punto sale de su planta por la perpendicular a la línea y
+          se aparta de ella, hacia fuera, lo que está más alto que C, que se lee en el alzado sobre la
+          horizontal de C₂. A₄, B₄ y C₄ salen en línea: el canto. El plano del cuadrado, paralelo a ABC
+          a 20 mm por encima, es la paralela al canto a 20 mm, del lado de fuera, que es el de más cota;
+          P₄ está en ella, en la perpendicular a la línea nueva por P₁. Y P₂, en la vertical de P₁, a lo
+          que P₄ dista de la línea nueva por encima de la horizontal de C₂. Marca A₄, B₄, P₄ y P₂.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A4
+            pide: A en la vista nueva
+            es: solucion.A_4
+            bien: |
+              A₄ está en la perpendicular a la línea nueva por A₁, a 36,03 mm de ella, hacia fuera: lo que A₂
+              está por encima de la horizontal de C₂.
+            diagnosticos:
+              - si: cerca_de(solucion.K_A)
+                mensaje: |
+                  Has dejado A₄ en la línea nueva, como si A fuera la referencia. La referencia es C: A se
+                  aparta lo que está más alto que C, de A₂ a la horizontal de C₂.
+                ejemplo: solucion.K_A
+              - si: 'en_recta(solucion.refA) && a_distancia(de: solucion.K_A, d: solucion.dyAC)'
+                mensaje: |
+                  Has llevado lo que A está **más cerca** que C, la diferencia de alejamientos. Un cambio de
+                  plano vertical sale de la planta y lleva **cotas**: lo que A₂ está por encima de la
+                  horizontal de C₂.
+                ejemplo: 'uno(medir_sobre(solucion.refA, desde: solucion.K_A, distancia: solucion.dyAC), 2)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.refA, desde: solucion.K_A, distancia: diferencia_de_cotas(A, C)), 1))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la planta**. A es más alto que la referencia, y se
+                  aparta de la línea nueva hacia fuera, al lado contrario de la planta.
+                ejemplo: 'uno(medir_sobre(solucion.refA, desde: solucion.K_A, distancia: diferencia_de_cotas(A, C)), 1)'
+              - si: '!en_recta(solucion.refA)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.A_4, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la línea nueva por A₁, pero no a la distancia buena: lo que A₂
+                  está por encima de la horizontal de C₂.
+          - nombre: B4
+            pide: B en la vista nueva
+            es: solucion.B_4
+            bien: |
+              B₄ está en la perpendicular a la línea nueva por B₁, a 12,40 mm de ella: lo que B₂ está por
+              encima de la horizontal de C₂. C₄, B₄ y A₄ quedan en línea: el plano, de canto.
+            diagnosticos:
+              - si: cerca_de(solucion.K_B)
+                mensaje: |
+                  Has dejado B₄ en la línea nueva, como si B fuera la referencia. La referencia es C: B se
+                  aparta lo que B₂ está por encima de la horizontal de C₂.
+                ejemplo: solucion.K_B
+              - si: 'cerca_de(uno(medir_sobre(solucion.refB, desde: solucion.K_B, distancia: diferencia_de_cotas(B, C)), 1))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la planta**. B es más alto que C, y va hacia fuera,
+                  como A.
+                ejemplo: 'uno(medir_sobre(solucion.refB, desde: solucion.K_B, distancia: diferencia_de_cotas(B, C)), 1)'
+              - si: '!en_recta(solucion.refB)'
+                mensaje: |
+                  B₄ sale de B₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.B_4, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la línea nueva por B₁, pero no a la distancia buena: lo que B₂
+                  está por encima de la horizontal de C₂.
+          - nombre: P4
+            pide: P en la vista nueva
+            es: solucion.P_4
+            bien: |
+              P₄ está en la perpendicular a la línea nueva por P₁ y en la paralela al canto a 20 mm, del lado
+              de más cota: a 43,31 mm de la línea nueva.
+            diagnosticos:
+              - si: cerca_de(solucion.Pabc_4)
+                mensaje: |
+                  Ese es el punto del **plano ABC** que tiene la planta de P: está en el canto. P queda 20 mm
+                  por encima del plano, en la paralela al canto a 20 mm.
+                ejemplo: solucion.Pabc_4
+              - si: cerca_de(solucion.Pv_4)
+                mensaje: |
+                  Has subido 20 mm desde el canto **por la perpendicular a la línea nueva**, que en esta vista
+                  es la vertical: es la otra lectura del enunciado, «20 mm más alto que el plano en la vertical
+                  de P». Aquí los 20 mm son la distancia de P al plano, por la perpendicular al canto: P₄ va en
+                  la paralela al canto a 20 mm.
+                ejemplo: solucion.Pv_4
+              - si: cerca_de(solucion.Pb_4)
+                mensaje: |
+                  Ese P queda 20 mm **por debajo** del plano: has trazado la paralela al canto del lado de la
+                  línea nueva. Por encima es hacia más cota, y en esta vista la cota crece hacia fuera.
+                ejemplo: solucion.Pb_4
+              - si: '!en_recta(solucion.refP)'
+                mensaje: |
+                  P₄ sale de P₁ por la **perpendicular a la línea nueva**, como los vértices del triángulo.
+                ejemplo: 'uno(medir_sobre(solucion.pi4, desde: solucion.P_4, distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la línea nueva por P₁, pero no en la paralela al canto a 20 mm:
+                  P₄ está donde se cortan.
+          - nombre: P2
+            pide: P en el alzado
+            es: proy_alzado(P)
+            bien: |
+              P₂ está en la vertical de P₁, a 43,31 mm por encima de la horizontal de C₂, que es lo que P₄
+              dista de la línea nueva. Queda por encima del triángulo: 26,06 mm por encima del punto del plano
+              que está en su vertical.
+            diagnosticos:
+              - si: '!en_vertical_de(figura.punto("P1"))'
+                mensaje: |
+                  P₂ va en la **vertical de P₁**.
+                ejemplo: 'desplaza(proy_alzado(P), dx: mm(6))'
+              - si: 'cerca_de(proy_alzado(Pabc))'
+                mensaje: |
+                  Ese es el punto del **plano ABC** en la vertical de P. P está por encima del plano, y su cota
+                  sale de P₄: lo que P₄ dista de la línea nueva, sobre la horizontal de C₂.
+                ejemplo: proy_alzado(Pabc)
+              - si: 'cerca_de(proy_alzado(Pv))'
+                mensaje: |
+                  Has subido P₂ 20 mm en vertical sobre el plano: es la otra lectura del enunciado. Con la
+                  nuestra, los 20 mm van por la perpendicular al plano, y en vertical salen 26,06 mm.
+                ejemplo: proy_alzado(Pv)
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de P₁, pero no a la altura buena: P₂ está por encima de la horizontal de
+                  C₂ lo que P₄ dista de la línea nueva.
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), figura.punto("A1")), segmento2(figura.punto("B2"), figura.punto("B1"))]'
+            porque: |
+              Las líneas de referencia de A y de B, con la regla, de cada alzado a su planta: sobre ellas se
+              miden las cotas.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.L_hC)
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por C₂, la horizontal, perpendicular a las verticales, hasta pasar la de B. C es el vértice más
+              bajo y la referencia: lo que A₂ y B₂ están por encima de esta recta es lo que A y B están más
+              altos que C.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("C1"), solucion.L_C4), segmento2(figura.punto("A1"), solucion.L_A4), segmento2(figura.punto("B1"), solucion.L_B4), segmento2(figura.punto("P1"), solucion.L_P4)]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              Por C₁, A₁, B₁ y P₁, las perpendiculares a la línea nueva, largas: la de C₁ hasta la línea, y
+              las de A₁, B₁ y P₁ más allá, porque esos puntos están más altos que C.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄, donde la perpendicular por C₁ corta la línea nueva: C es la referencia, y su cota cuenta
+              como cero.
+          - con: compas
+            traza: 'arco(solucion.K_A, por: solucion.A_4, desde: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.refA), desde: solucion.A_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.refA), desde: solucion.A_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("A2"), solucion.A_c)
+            porque: |
+              Con el compás, lo que A₂ está por encima de la horizontal de C₂, y centro donde la
+              perpendicular por A₁ corta la línea nueva: hacia fuera, al lado contrario de la planta.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la perpendicular por A₁, por fuera de la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.K_B, por: solucion.B_4, desde: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.refB), desde: solucion.B_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.refB), desde: solucion.B_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("B2"), solucion.B_c)
+            porque: |
+              Lo mismo con B: de B₂ a la horizontal de C₂, desde la línea nueva sobre la perpendicular por
+              B₁, hacia fuera.
+          - con: marca
+            traza: solucion.B_4
+            rotulo: B₄
+            porque: |
+              B₄, donde el arco corta la perpendicular por B₁, por fuera de la línea nueva.
+          - con: regla
+            traza: segmento2(solucion.C_4, solucion.L_canto)
+            porque: |
+              El **canto**: de C₄ por B₄ hasta pasar A₄. Los tres en línea son el plano ABC visto de canto; si
+              no salieran en línea, alguna cota estaría mal llevada.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.B_4, solucion.L_G)
+            guia: solucion.canto
+            porque: |
+              Por B₄, la perpendicular al canto, hacia fuera, que es el lado de más cota: en esta vista la
+              cota crece al alejarse de la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.B_4, por: solucion.G, desde: uno(medir_sobre(solucion.pi4, desde: solucion.G, distancia: mm(3)), 1), hasta: uno(medir_sobre(solucion.pi4, desde: solucion.G, distancia: mm(3)), 2))'
+            porque: |
+              Con el compás abierto 20 mm, los del enunciado, y centro en B₄, el arco que corta esa
+              perpendicular: la distancia de P al plano, en verdadera magnitud, porque el canto la enseña.
+          - con: marca
+            traza: solucion.G
+            rotulo: G
+            porque: |
+              G, nombre nuestro, donde el arco corta la perpendicular al canto por B₄, a 20 mm de él.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.G, solucion.L_piP)
+            guia: solucion.canto
+            porque: |
+              Por G, la paralela al canto, hasta pasar la perpendicular por P₁: es el plano paralelo a ABC a
+              20 mm por encima, de canto, y el cuadrado está en él.
+          - con: marca
+            traza: solucion.P_4
+            rotulo: P₄
+            porque: |
+              P₄, donde la perpendicular a la línea nueva por P₁ corta la paralela al canto: P está en el
+              plano del cuadrado.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("P1"), solucion.L_P2)
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por P₁, la vertical, paralela a las líneas de referencia, hasta el alzado y más arriba del
+              triángulo: corta la horizontal de C₂ en J.
+          - con: marca
+            traza: solucion.J
+            rotulo: J
+            porque: |
+              J, nombre nuestro, donde la vertical de P₁ corta la horizontal de C₂: desde aquí se lleva lo que
+              P está más alto que C.
+          - con: compas
+            traza: 'arco(solucion.J, por: proy_alzado(P), desde: desplaza(proy_alzado(P), dx: mm(-3)), hasta: desplaza(proy_alzado(P), dx: mm(3)))'
+            toma: segmento2(solucion.P_4, solucion.K_P)
+            porque: |
+              Con el compás, lo que P₄ dista de la línea nueva, por su perpendicular, y centro en J: hacia
+              arriba, por la vertical de P₁.
+          - con: marca
+            traza: proy_alzado(P)
+            rotulo: P₂
+            porque: |
+              P₂, donde el arco corta la vertical de P₁, por encima del triángulo: 43,31 mm más alto que C.
+        pista: |
+          (1) Por C₂, la horizontal: la referencia es C. (2) Por C₁, A₁, B₁ y P₁, las perpendiculares a la
+          línea nueva; A y B, hacia fuera, lo que están más altos que C. (3) El canto, C₄B₄A₄. (4) La
+          paralela al canto a 20 mm, hacia fuera; P₄, donde la corta la perpendicular por P₁. (5) P₂, en la
+          vertical de P₁, a lo que P₄ dista de la línea nueva sobre la horizontal de C₂.
+        desarrollo: |
+          En verde claro, el canto C₄A₄, la paralela a 20 mm y P₄ en ella, y P₂ por encima del triángulo.
+          P está 26,06 mm por encima del punto del plano que tiene su planta: 20 mm por la perpendicular
+          al plano, que forma 39,9° con la vertical, son más en vertical.
+        trazado:
+          - solucion.canto
+          - segmento2(solucion.G, solucion.P_4)
+
+      - tipo: construir
+        titulo: El cuadrado, en verdadera magnitud y en sus dos proyecciones
+        intro: |
+          Empieza como en el paso anterior: el canto C₄B₄A₄, la paralela a 20 mm por G y P₄, y P₂. El
+          segundo cambio sale de la vista 4, con la línea nueva paralela al canto, ya dibujada debajo de la
+          planta, y B de referencia: B₅ cae en ella, y cada punto sale de la vista 4 por la perpendicular a
+          la línea y se aparta de ella, hacia fuera, lo que su planta está más lejos de la primera línea
+          nueva que B₁, que se mide desde la paralela a la primera línea por B₁. En la vista 5, ABC y el
+          plano del cuadrado están en verdadera magnitud. Desde P₅, un lado paralelo a B₅C₅, de 35 mm,
+          hacia C, y otro perpendicular, hacia el lado contrario a A₅: los dos bajan, porque C es más bajo
+          que B y A es el vértice más alto del triángulo. Después se vuelve: a la paralela al canto, a la
+          planta y al alzado. Marca P₅, Q₅, S₅ y R₅, los tres vértices nuevos en las dos vistas, y pasa a
+          limpio con «arista vista» y «arista oculta»: el triángulo y el cuadrado son opacos. R₁ y R₂ caen a
+          1,5 mm de la vertical de A, R₅ a 1,4 mm de un cruce de rectas de la construcción y S₂ a 3,3 mm de
+          A₂B₂: amplía con la lupa (×4) antes de marcarlos.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: P5
+            pide: P en la vista del segundo cambio
+            es: solucion.P_5
+            bien: |
+              P₅ está en la perpendicular a la segunda línea nueva por P₄, a 20,27 mm de ella, hacia fuera: lo
+              que P₁ está más lejos de la primera línea nueva que B₁.
+            diagnosticos:
+              - si: cerca_de(solucion.K2P)
+                mensaje: |
+                  Te has quedado en la línea nueva. Ahí caería P si su planta estuviera tan lejos de la primera
+                  línea nueva como B₁; P₁ está más lejos lo que dista de la paralela a esa línea por B₁.
+                ejemplo: solucion.K2P
+              - si: 'cerca_de(uno(medir_sobre(solucion.ref5P, desde: solucion.K2P, distancia: solucion.lleva_P5), 2))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la vista 4**. P₁ está más lejos de la primera línea
+                  nueva que B₁, y P₅ se aparta de la segunda hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.ref5P, desde: solucion.K2P, distancia: solucion.lleva_P5), 2)'
+              - si: '!en_recta(solucion.ref5P)'
+                mensaje: |
+                  P₅ sale de P₄ por la **perpendicular a la segunda línea nueva**.
+                ejemplo: 'desplaza(solucion.P_5, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la segunda línea nueva por P₄, pero no a la distancia buena: lo que
+                  P₁ dista de la paralela a la primera línea nueva por B₁.
+          - nombre: Q5
+            pide: Q, el vértice que sigue a P en el lado paralelo a CB, en la vista 5
+            es: solucion.Q_5
+            bien: |
+              Q₅ está en la paralela a B₅C₅ por P₅, a 35 mm de P₅, hacia el lado de C₅: Q queda 5,30 mm más
+              bajo que P.
+            diagnosticos:
+              - si: cerca_de(solucion.Qmal_5)
+                mensaje: |
+                  Has llevado el lado **hacia B**. B es más alto que C, y por ahí Q quedaría más alto que P,
+                  que tiene que ser el vértice de mayor cota. El lado va hacia C.
+                ejemplo: solucion.Qmal_5
+              - si: '!en_recta(solucion.parP5)'
+                mensaje: |
+                  PQ es paralelo a CB, y en la vista 5 los dos están en verdadera magnitud: Q₅ va en la
+                  **paralela a B₅C₅ por P₅**.
+                ejemplo: 'uno(medir_sobre(solucion.perpQ5, desde: solucion.Q_5, distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a B₅C₅ por P₅, pero no a 35 mm de P₅: el compás, con el lado del
+                  enunciado.
+          - nombre: S5
+            pide: S, el vértice que sigue a P en el lado perpendicular a CB, en la vista 5
+            es: solucion.S_5
+            bien: |
+              S₅ está en la perpendicular a B₅C₅ por P₅, a 35 mm, del lado contrario a A₅: S queda 21,80 mm
+              más bajo que P.
+            diagnosticos:
+              - si: cerca_de(solucion.Smal_5)
+                mensaje: |
+                  Has llevado el lado **hacia A₅**. A es el vértice más alto del triángulo, y del lado de A la
+                  cota sube: S quedaría más alto que P. El lado va hacia el otro lado.
+                ejemplo: solucion.Smal_5
+              - si: '!en_recta(solucion.perpP5)'
+                mensaje: |
+                  PS es perpendicular a CB, y en la vista 5 el ángulo recto se ve: S₅ va en la
+                  **perpendicular a B₅C₅ por P₅**.
+                ejemplo: 'uno(medir_sobre(solucion.parS5, desde: solucion.S_5, distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a B₅C₅ por P₅, pero no a 35 mm de P₅.
+          - nombre: R5
+            pide: R, el cuarto vértice, en la vista 5
+            es: solucion.R_5
+            bien: |
+              R₅ cierra el cuadrado: en la paralela a B₅C₅ por S₅ y en la perpendicular por Q₅. P₅Q₅R₅S₅ es
+              el cuadrado en verdadera magnitud, y R es su vértice más bajo, 27,09 mm por debajo de P.
+            diagnosticos:
+              - si: '!en_recta(solucion.parS5)'
+                mensaje: |
+                  RS es el lado opuesto a PQ, paralelo a CB: R₅ va en la **paralela a B₅C₅ por S₅**.
+                ejemplo: 'uno(medir_sobre(solucion.perpQ5, desde: solucion.R_5, distancia: mm(6)), 2)'
+              - si: '!en_recta(solucion.perpQ5)'
+                mensaje: |
+                  QR es perpendicular a CB, como PS: R₅ va en la **perpendicular a B₅C₅ por Q₅**.
+                ejemplo: 'uno(medir_sobre(solucion.parS5, desde: solucion.R_5, distancia: mm(6)), 2)'
+              - si: siempre
+                mensaje: |
+                  R₅ está donde la paralela a B₅C₅ por S₅ corta la perpendicular por Q₅.
+          - nombre: Q1
+            pide: Q en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está en la perpendicular a la primera línea nueva por Q₄, a lo que Q₅ dista de la segunda
+              línea nueva, contado desde la paralela por B₁, hacia la planta.
+            diagnosticos:
+              - si: cerca_de(solucion.MQ)
+                mensaje: |
+                  Te has quedado en la paralela a la primera línea nueva por B₁. Q₁ se aparta de ella lo que Q₅
+                  dista de la segunda línea nueva.
+                ejemplo: solucion.MQ
+              - si: '!en_recta(solucion.refQ)'
+                mensaje: |
+                  Q₁ vuelve de Q₄ por la **perpendicular a la primera línea nueva**.
+                ejemplo: 'desplaza(proy_planta(Q), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la primera línea nueva por Q₄, pero no a la distancia buena: lo
+                  que Q₅ dista de la segunda línea nueva, desde la paralela por B₁.
+          - nombre: S1
+            pide: S en la planta
+            es: proy_planta(S)
+            bien: |
+              S₁ está en la perpendicular a la primera línea nueva por S₄, a lo que S₅ dista de la segunda
+              línea nueva, contado desde la paralela por B₁.
+            diagnosticos:
+              - si: cerca_de(solucion.MS)
+                mensaje: |
+                  Te has quedado en la paralela a la primera línea nueva por B₁. S₁ se aparta de ella lo que S₅
+                  dista de la segunda línea nueva.
+                ejemplo: solucion.MS
+              - si: '!en_recta(solucion.refS)'
+                mensaje: |
+                  S₁ vuelve de S₄ por la **perpendicular a la primera línea nueva**.
+                ejemplo: 'desplaza(proy_planta(S), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la primera línea nueva por S₄, pero no a la distancia buena.
+          - nombre: R1
+            pide: R en la planta
+            es: proy_planta(R)
+            bien: |
+              R₁ está en la perpendicular a la primera línea nueva por R₄, a lo que R₅ dista de la segunda
+              línea nueva, contado desde la paralela por B₁. P₁Q₁R₁S₁ es un paralelogramo: la planta del
+              cuadrado.
+            diagnosticos:
+              - si: cerca_de(solucion.MR)
+                mensaje: |
+                  Te has quedado en la paralela a la primera línea nueva por B₁. R₁ se aparta de ella lo que R₅
+                  dista de la segunda línea nueva.
+                ejemplo: solucion.MR
+              - si: '!en_recta(solucion.refR)'
+                mensaje: |
+                  R₁ vuelve de R₄ por la **perpendicular a la primera línea nueva**.
+                ejemplo: 'desplaza(proy_planta(R), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la primera línea nueva por R₄, pero no a la distancia buena.
+          - nombre: S2
+            pide: S en el alzado
+            es: proy_alzado(S)
+            bien: |
+              S₂ está en la vertical de S₁, a lo que S₄ dista de la primera línea nueva por encima de la
+              horizontal de C₂.
+            diagnosticos:
+              - si: '!en_vertical_de(S1)'
+                mensaje: |
+                  S₂ va en la **vertical de S₁**.
+                ejemplo: 'desplaza(proy_alzado(S), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de S₁, pero no a la altura buena: lo que S₄ dista de la primera línea
+                  nueva, por encima de la horizontal de C₂.
+          - nombre: Q2
+            pide: Q en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en la vertical de Q₁ y en la paralela a C₂B₂ por P₂: PQ es paralelo a CB, y sus alzados
+              también lo son.
+            diagnosticos:
+              - si: '!en_vertical_de(Q1)'
+                mensaje: |
+                  Q₂ va en la **vertical de Q₁**.
+                ejemplo: 'desplaza(proy_alzado(Q), dx: mm(6))'
+              - si: '!en_recta(solucion.parP2)'
+                mensaje: |
+                  PQ es paralelo a CB, así que P₂Q₂ es paralela a C₂B₂: Q₂ va donde la vertical de Q₁ corta la
+                  **paralela a C₂B₂ por P₂**.
+                ejemplo: 'desplaza(proy_alzado(Q), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Q₂ está donde la vertical de Q₁ corta la paralela a C₂B₂ por P₂.
+          - nombre: R2
+            pide: R en el alzado
+            es: proy_alzado(R)
+            bien: |
+              R₂ está en la vertical de R₁ y en la paralela a C₂B₂ por S₂. P₂Q₂R₂S₂ es el alzado del
+              cuadrado.
+            diagnosticos:
+              - si: '!en_vertical_de(R1)'
+                mensaje: |
+                  R₂ va en la **vertical de R₁**.
+                ejemplo: 'desplaza(proy_alzado(R), dx: mm(6))'
+              - si: '!en_recta(solucion.parS2)'
+                mensaje: |
+                  SR es paralelo a CB: R₂ va donde la vertical de R₁ corta la **paralela a C₂B₂ por S₂**.
+                ejemplo: 'desplaza(proy_alzado(R), dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  R₂ está donde la vertical de R₁ corta la paralela a C₂B₂ por S₂.
+        tramos:
+          - traza: segmento2(proy_planta(P), proy_planta(Q))
+            tipo: visto
+            porque: 'El cuadrado está 26 mm por encima de ABC en la vertical: en la planta, nada lo tapa.'
+          - traza: segmento2(proy_planta(Q), proy_planta(R))
+            tipo: visto
+            porque: 'El cuadrado está por encima del triángulo: en la planta, nada lo tapa.'
+          - traza: segmento2(proy_planta(R), proy_planta(S))
+            tipo: visto
+            porque: 'El cuadrado está por encima del triángulo: en la planta, nada lo tapa.'
+          - traza: segmento2(proy_planta(S), proy_planta(P))
+            tipo: visto
+            porque: 'El cuadrado está por encima del triángulo: en la planta, nada lo tapa.'
+          - traza: segmento2(figura.punto("C1"), solucion.y_QR1)
+            tipo: visto
+            porque: 'De C₁ hasta que entra bajo el cuadrado, cruzando Q₁R₁, nada tapa el lado CB por arriba.'
+          - traza: segmento2(solucion.y_QR1, solucion.y_SP1)
+            tipo: oculto
+            porque: 'Entre Q₁R₁ y S₁P₁, el lado CB pasa por debajo del cuadrado, que es opaco y está más alto: desde arriba lo tapa.'
+          - traza: segmento2(solucion.y_SP1, figura.punto("B1"))
+            tipo: visto
+            porque: 'De S₁P₁ a B₁, CB sale de debajo del cuadrado: nada lo tapa.'
+          - traza: segmento2(proy_alzado(P), proy_alzado(Q))
+            tipo: visto
+            porque: 'P₂Q₂ queda por encima del alzado del triángulo: delante no hay nada que lo tape.'
+          - traza: segmento2(proy_alzado(Q), solucion.x_QR2)
+            tipo: visto
+            porque: 'De Q₂ hasta A₂C₂, el lado QR queda fuera del alzado del triángulo: nada lo tapa.'
+          - traza: segmento2(solucion.x_QR2, proy_alzado(R))
+            tipo: oculto
+            porque: 'Al cruzar A₂C₂, QR entra detrás del triángulo: el plano del cuadrado está detrás de ABC (más lejos de quien mira), y el triángulo, opaco, lo tapa.'
+          - traza: segmento2(proy_alzado(R), solucion.x_RS2)
+            tipo: oculto
+            porque: 'De R₂ hasta A₂B₂, el lado RS va detrás del triángulo, que lo tapa.'
+          - traza: segmento2(solucion.x_RS2, proy_alzado(S))
+            tipo: visto
+            porque: 'Al cruzar A₂B₂, RS sale del alzado del triángulo: nada lo tapa.'
+          - traza: segmento2(proy_alzado(S), proy_alzado(P))
+            tipo: visto
+            porque: 'S₂P₂ queda entero fuera del alzado del triángulo, por encima de A₂B₂: nada lo tapa.'
+        trazado:
+          - solucion.canto
+          - segmento2(solucion.R_4, solucion.P_4)
+          - segmento2(solucion.P_5, solucion.Q_5)
+          - segmento2(solucion.Q_5, solucion.R_5)
+          - segmento2(solucion.R_5, solucion.S_5)
+          - segmento2(solucion.S_5, solucion.P_5)
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), figura.punto("A1")), segmento2(figura.punto("B2"), figura.punto("B1"))]'
+            porque: |
+              **Como en el paso anterior.** Las líneas de referencia de A y de B, con la regla, de cada alzado
+              a su planta.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.L_hC)
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por C₂, la horizontal, hasta pasar la vertical de B: las cotas se cuentan desde ella, porque C
+              es la referencia.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("C1"), solucion.L_C4), segmento2(figura.punto("A1"), solucion.L_A4), segmento2(figura.punto("B1"), solucion.L_B4), segmento2(figura.punto("P1"), solucion.L_P4)]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              Por C₁, A₁, B₁ y P₁, las perpendiculares a la primera línea nueva, largas.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄, donde la perpendicular por C₁ corta la primera línea nueva: la referencia.
+          - con: compas
+            traza: 'arco(solucion.K_A, por: solucion.A_4, desde: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.refA), desde: solucion.A_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.refA), desde: solucion.A_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("A2"), solucion.A_c)
+            porque: |
+              Lo que A₂ está por encima de la horizontal de C₂, desde la línea nueva, hacia fuera.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la perpendicular por A₁.
+          - con: compas
+            traza: 'arco(solucion.K_B, por: solucion.B_4, desde: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.refB), desde: solucion.B_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.refB), desde: solucion.B_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("B2"), solucion.B_c)
+            porque: |
+              Lo que B₂ está por encima de la horizontal de C₂, sobre la perpendicular por B₁.
+          - con: marca
+            traza: solucion.B_4
+            rotulo: B₄
+            porque: |
+              B₄, donde el arco corta la perpendicular por B₁.
+          - con: regla
+            traza: segmento2(solucion.C_4, solucion.L_canto)
+            porque: |
+              El canto, de C₄ por B₄ hasta pasar A₄.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.B_4, solucion.L_G)
+            guia: solucion.canto
+            porque: |
+              Por B₄, la perpendicular al canto, hacia fuera, el lado de más cota.
+          - con: compas
+            traza: 'arco(solucion.B_4, por: solucion.G, desde: uno(medir_sobre(solucion.pi4, desde: solucion.G, distancia: mm(3)), 1), hasta: uno(medir_sobre(solucion.pi4, desde: solucion.G, distancia: mm(3)), 2))'
+            porque: |
+              Con el compás abierto 20 mm y centro en B₄, el arco que corta esa perpendicular.
+          - con: marca
+            traza: solucion.G
+            rotulo: G
+            porque: |
+              G, donde el arco corta la perpendicular al canto por B₄.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.G, solucion.L_piR), segmento2(solucion.G, solucion.L_piP)]'
+            guia: solucion.canto
+            porque: |
+              Por G, la paralela al canto, larga hacia los dos lados: el plano del cuadrado, de canto. Ahí
+              caerán también Q₄, R₄ y S₄ a la vuelta.
+          - con: marca
+            traza: solucion.P_4
+            rotulo: P₄
+            porque: |
+              P₄, donde la perpendicular por P₁ corta la paralela al canto.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("P1"), solucion.L_P2)
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por P₁, la vertical hasta más arriba del triángulo; corta la horizontal de C₂ en J.
+          - con: compas
+            traza: 'arco(solucion.J, por: proy_alzado(P), desde: desplaza(proy_alzado(P), dx: mm(-3)), hasta: desplaza(proy_alzado(P), dx: mm(3)))'
+            toma: segmento2(solucion.P_4, solucion.K_P)
+            porque: |
+              Lo que P₄ dista de la primera línea nueva, desde J, hacia arriba por la vertical de P₁.
+          - con: marca
+            traza: proy_alzado(P)
+            rotulo: P₂
+            porque: |
+              P₂, donde el arco corta la vertical de P₁, por encima del triángulo.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("B1"), solucion.L_pBa), segmento2(figura.punto("B1"), solucion.L_pBb)]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              **El segundo cambio.** En la planta, por B₁, la paralela a la primera línea nueva, larga hacia
+              los dos lados: B es la referencia del segundo cambio, y lo que cada planta está más lejos de la
+              primera línea que B₁ es su distancia a esta paralela, por su perpendicular.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.C_4, solucion.L_C5), segmento2(solucion.B_4, solucion.L_B5), segmento2(solucion.P_4, solucion.L_P5)]'
+            guia: figura.segmento("nueva2")
+            porque: |
+              Por C₄, B₄ y P₄, las perpendiculares a la segunda línea nueva, que es paralela al canto, largas,
+              más allá de ella.
+          - con: marca
+            traza: solucion.B_5
+            rotulo: B₅
+            porque: |
+              B₅, donde la perpendicular por B₄ corta la segunda línea nueva: B es la referencia.
+          - con: compas
+            traza: 'arco(solucion.K2C, por: solucion.C_5, desde: uno(medir_sobre(perpendicular(por: solucion.C_5, a: segmento2(solucion.C_4, solucion.C_5)), desde: solucion.C_5, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.C_5, a: segmento2(solucion.C_4, solucion.C_5)), desde: solucion.C_5, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("C1"), solucion.MC)
+            porque: |
+              Con el compás, de C₁ a la paralela por B₁, por la perpendicular de C₁, y centro donde la
+              perpendicular por C₄ corta la segunda línea nueva: hacia fuera.
+          - con: marca
+            traza: solucion.C_5
+            rotulo: C₅
+            porque: |
+              C₅, donde el arco corta la perpendicular por C₄, por fuera de la segunda línea nueva.
+          - con: compas
+            traza: 'arco(solucion.K2P, por: solucion.P_5, desde: uno(medir_sobre(perpendicular(por: solucion.P_5, a: solucion.ref5P), desde: solucion.P_5, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.P_5, a: solucion.ref5P), desde: solucion.P_5, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("P1"), solucion.MP)
+            porque: |
+              Lo mismo con P: de P₁ a la paralela por B₁, llevado desde la segunda línea nueva por la
+              perpendicular de P₄, hacia fuera.
+          - con: marca
+            traza: solucion.P_5
+            rotulo: P₅
+            porque: |
+              P₅, donde el arco corta la perpendicular por P₄.
+          - con: regla
+            traza: solucion.b5c5
+            porque: |
+              B₅C₅, el lado CB en verdadera magnitud: los dos lados del cuadrado que le son paralelos se
+              trazan con esta guía.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.P_5, solucion.L_Q5), segmento2(solucion.P_5, solucion.L_S5)]'
+            guia: solucion.b5c5
+            porque: |
+              Por P₅, la paralela a B₅C₅, hacia el lado de C₅, y la perpendicular, hacia el lado contrario a
+              A₅: los dos lados del cuadrado que salen de P, que bajan.
+          - con: compas
+            traza: 'arco(solucion.P_5, por: solucion.Q_5, desde: solucion.Q_5, hasta: solucion.S_5)'
+            porque: |
+              Con el compás abierto 35 mm, el lado del enunciado, y centro en P₅, un cuarto de vuelta, de la
+              paralela a la perpendicular.
+          - con: marca
+            traza: solucion.Q_5
+            rotulo: Q₅
+            porque: |
+              Q₅, donde el arco corta la paralela a B₅C₅ por P₅.
+          - con: marca
+            traza: solucion.S_5
+            rotulo: S₅
+            porque: |
+              S₅, donde el arco corta la perpendicular a B₅C₅ por P₅.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.S_5, solucion.L_R5a), segmento2(solucion.Q_5, solucion.L_R5b)]'
+            guia: solucion.b5c5
+            porque: |
+              Por S₅, la paralela a B₅C₅, y por Q₅, la perpendicular: los otros dos lados del cuadrado.
+          - con: marca
+            traza: solucion.R_5
+            rotulo: R₅
+            porque: |
+              R₅, donde se cortan la paralela por S₅ y la perpendicular por Q₅: P₅Q₅R₅S₅, el cuadrado en
+              verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.Q_5, solucion.L_Q4), segmento2(solucion.R_5, solucion.L_R4), segmento2(solucion.S_5, solucion.L_S4)]'
+            guia: figura.segmento("nueva2")
+            porque: |
+              **La vuelta.** Por Q₅, R₅ y S₅, las perpendiculares a la segunda línea nueva, de vuelta a la
+              vista 4, hasta pasar la paralela al canto: los tres vértices están en el plano del cuadrado.
+          - con: marca
+            traza: solucion.Q_4
+            rotulo: Q₄
+            porque: |
+              Q₄, donde la perpendicular por Q₅ corta la paralela al canto.
+          - con: marca
+            traza: solucion.R_4
+            rotulo: R₄
+            porque: |
+              R₄, donde la perpendicular por R₅ corta la paralela al canto, cerca de su extremo.
+          - con: marca
+            traza: solucion.S_4
+            rotulo: S₄
+            porque: |
+              S₄, donde la perpendicular por S₅ corta la paralela al canto.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.Q_4, solucion.L_Q1), segmento2(solucion.R_4, solucion.L_R1), segmento2(solucion.S_4, solucion.L_S1)]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              Por Q₄, R₄ y S₄, las perpendiculares a la primera línea nueva, hacia la planta, largas: cruzan
+              la paralela por B₁ y siguen.
+          - con: compas
+            traza: 'arco(solucion.MQ, por: proy_planta(Q), desde: uno(medir_sobre(perpendicular(por: proy_planta(Q), a: solucion.refQ), desde: proy_planta(Q), distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: proy_planta(Q), a: solucion.refQ), desde: proy_planta(Q), distancia: mm(3)), 2))'
+            toma: segmento2(solucion.Q_5, solucion.K2Q)
+            porque: |
+              Con el compás, lo que Q₅ dista de la segunda línea nueva, y centro donde la perpendicular por
+              Q₄ corta la paralela por B₁: hacia la planta.
+          - con: marca
+            traza: proy_planta(Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde el arco corta la perpendicular que vuelve de Q₄.
+          - con: compas
+            traza: 'arco(solucion.MR, por: proy_planta(R), desde: uno(medir_sobre(perpendicular(por: proy_planta(R), a: solucion.refR), desde: proy_planta(R), distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: proy_planta(R), a: solucion.refR), desde: proy_planta(R), distancia: mm(3)), 2))'
+            toma: segmento2(solucion.R_5, solucion.K2R)
+            porque: |
+              Lo mismo con R: lo que R₅ dista de la segunda línea nueva, desde la paralela por B₁.
+          - con: marca
+            traza: proy_planta(R)
+            rotulo: R₁
+            porque: |
+              R₁, donde el arco corta la perpendicular que vuelve de R₄, por encima de C₁B₁.
+          - con: compas
+            traza: 'arco(solucion.MS, por: proy_planta(S), desde: uno(medir_sobre(perpendicular(por: proy_planta(S), a: solucion.refS), desde: proy_planta(S), distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: proy_planta(S), a: solucion.refS), desde: proy_planta(S), distancia: mm(3)), 2))'
+            toma: segmento2(solucion.S_5, solucion.K2S)
+            porque: |
+              Y con S: lo que S₅ dista de la segunda línea nueva, desde la paralela por B₁.
+          - con: marca
+            traza: proy_planta(S)
+            rotulo: S₁
+            porque: |
+              S₁, donde el arco corta la perpendicular que vuelve de S₄.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(Q), solucion.L_Q2), segmento2(proy_planta(R), solucion.L_R2), segmento2(proy_planta(S), solucion.L_S2)]'
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por Q₁, R₁ y S₁, las verticales hasta el alzado, por encima del triángulo.
+          - con: compas
+            traza: 'arco(solucion.JS, por: proy_alzado(S), desde: desplaza(proy_alzado(S), dx: mm(-3)), hasta: desplaza(proy_alzado(S), dx: mm(3)))'
+            toma: segmento2(solucion.S_4, solucion.K1S)
+            porque: |
+              Con el compás, lo que S₄ dista de la primera línea nueva, y centro donde la vertical de S₁ corta
+              la horizontal de C₂: hacia arriba.
+          - con: marca
+            traza: proy_alzado(S)
+            rotulo: S₂
+            porque: |
+              S₂, donde el arco corta la vertical de S₁.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(P), solucion.L_Q2p), segmento2(proy_alzado(S), solucion.L_R2p)]'
+            guia: figura.segmento("BC2")
+            porque: |
+              Por P₂ y por S₂, las paralelas a C₂B₂ hacia la izquierda: PQ y SR son paralelos a CB, y sus
+              alzados lo son a C₂B₂.
+          - con: marca
+            traza: proy_alzado(Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta la paralela a C₂B₂ por P₂.
+          - con: marca
+            traza: proy_alzado(R)
+            rotulo: R₂
+            porque: |
+              R₂, donde la vertical de R₁ corta la paralela a C₂B₂ por S₂, dentro del alzado del triángulo.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(P), proy_planta(Q)), segmento2(proy_planta(Q), proy_planta(R)), segmento2(proy_planta(R), proy_planta(S)), segmento2(proy_planta(S), proy_planta(P)), segmento2(figura.punto("C1"), solucion.y_QR1), segmento2(solucion.y_SP1, figura.punto("B1"))]'
+            porque: |
+              **A limpio, la planta.** El cuadrado está por encima del triángulo y se ve entero, y C₁B₁ se ve
+              hasta que entra debajo de él y desde que sale.
+          - con: arista-oculta
+            traza: segmento2(solucion.y_QR1, solucion.y_SP1)
+            porque: |
+              A trazos, el trozo de C₁B₁ que queda debajo del cuadrado, de Q₁R₁ a S₁P₁.
+          - con: arista-vista
+            traza: '[segmento2(proy_alzado(P), proy_alzado(Q)), segmento2(proy_alzado(Q), solucion.x_QR2), segmento2(solucion.x_RS2, proy_alzado(S)), segmento2(proy_alzado(S), proy_alzado(P))]'
+            porque: |
+              **El alzado.** En continua, lo que del cuadrado queda fuera del alzado del triángulo.
+          - con: arista-oculta
+            traza: '[segmento2(solucion.x_QR2, proy_alzado(R)), segmento2(proy_alzado(R), solucion.x_RS2)]'
+            porque: |
+              A trazos, lo que queda dentro: el cuadrado está detrás del triángulo, que lo tapa, de A₂C₂ a
+              R₂ y de R₂ a A₂B₂.
+        pista: |
+          (1) Como en el paso anterior, el canto, la paralela a 20 mm y P₄. (2) La paralela a la primera
+          línea nueva por B₁; C₅ y P₅, hacia fuera, lo que C₁ y P₁ distan de ella. (3) Desde P₅, 35 mm
+          paralelos a B₅C₅ hacia C₅ y 35 mm perpendiculares, lejos de A₅: Q₅ y S₅; R₅ cierra. (4) De vuelta,
+          a la paralela al canto; a la planta, desde la paralela por B₁, lo que cada punto dista de la
+          segunda línea nueva; al alzado, S₂ con su cota, y Q₂ y R₂ en las paralelas a C₂B₂.
+        desarrollo: |
+          En verde claro, el cuadrado en verdadera magnitud en la vista 5 y en la paralela al canto de la
+          vista 4, y sus dos proyecciones. En la planta se ve entero, por encima del triángulo, y tapa un
+          trozo de C₁B₁. En el alzado queda detrás del triángulo, y se ve lo que cae fuera de él: Q₂R₂ y
+          R₂S₂ van a trazos dentro.
+
+      - tipo: calcular
+        titulo: Lo que P está más alto que el plano
+        pregunta: ¿Cuánto más alto está P que el punto del plano ABC que tiene su misma planta?
+        respuesta:
+          tipo: numero
+          valor: '26.06'
+          receta: subida_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '20.00'
+            receta: en_mm(distancia_a_plano(P, abc))
+            mensaje: |
+              20 mm es la distancia de P al plano, por la perpendicular. La vertical no es esa
+              perpendicular: el plano forma 39,9° con el horizontal, y en vertical la distancia sale mayor.
+              Con la otra lectura del enunciado, «20 mm en vertical», sí saldrían 20.
+          - valor: '15.35'
+            receta: en_mm(distancia_a_plano(Pv, abc))
+            mensaje: |
+              Has multiplicado los 20 mm por el coseno de 39,9° en vez de dividir. La vertical por P es la
+              hipotenusa del triángulo que forma con la perpendicular al plano, y es mayor que ella.
+          - valor: '43.31'
+            receta: en_mm(diferencia_de_cotas(P, C))
+            mensaje: |
+              Eso es lo que P₄ dista de la línea nueva: lo que P está más alto que C, la referencia, no que el
+              plano en su vertical.
+        pista: |
+          En la vista 4, la perpendicular a la línea nueva por P₁ es la vertical de P: mide en ella de P₄ al
+          canto. O en el alzado, de P₂ al punto del plano en su vertical.
+        desarrollo: |
+          En la vista 4, la vertical de P es la perpendicular a la línea nueva, y la distancia al plano, la
+          perpendicular al canto, que forma 39,9° con ella:
+
+          $$ \Delta z = \frac{20}{\cos 39{,}86^\circ} \approx 26{,}06 \text{ mm} $$
+
+          En el alzado sale lo mismo: de P₂ al punto del plano en su vertical hay 26,06 mm.
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El cuadrado está en el plano paralelo a ABC por P, a 20 mm de ABC por la perpendicular.
+          - texto: Con ABC de canto, ese plano es la paralela al canto a 20 mm, del lado de más cota, y P₄ está en ella.
+          - texto: En un segundo cambio, paralelo al canto, los dos planos están en verdadera magnitud, y el cuadrado se dibuja desde P₅ con un lado paralelo a B₅C₅.
+          - texto: Los dos lados que salen de P bajan, hacia C y lejos de A, porque P es el vértice de mayor cota; un solo cuadrado cumple.
+          - texto: Como el cuadrado es paralelo a ABC, está dentro del plano ABC y P₂ cae en el triángulo.
+            trampa: true
+            mensaje: |
+              Paralelo a ABC no es dentro de ABC: el cuadrado está en un plano paralelo, 20 mm por encima, y
+              P₂ queda por encima del triángulo.
+    resolucion: |
+      **La lectura.** «20 mm por encima del plano» es una distancia entre planos: el cuadrado está en el
+      plano paralelo a ABC a 20 mm, medidos por la perpendicular, hacia donde sube la cota. P es uno de
+      sus vértices y el de mayor cota, y dos lados son paralelos a CB: los que salen de P son uno paralelo
+      a CB, hacia C, que es más bajo que B, y otro perpendicular, hacia el lado contrario a A, el vértice
+      más alto. Un solo cuadrado.
+
+      **P₂.** Con la línea nueva perpendicular a las horizontales del plano y C de referencia, ABC sale de
+      canto. La paralela al canto a 20 mm, hacia fuera, es el plano del cuadrado; la perpendicular a la
+      línea nueva por P₁ la corta en P₄, a 43,31 mm de la línea: P₂ está 43,31 mm por encima de la
+      horizontal de C₂, y 26,06 mm por encima del punto del plano en su vertical.
+
+      **El cuadrado.** Un segundo cambio, con la línea nueva paralela al canto y B de referencia, pone los
+      dos planos en verdadera magnitud. Desde P₅, 35 mm paralelos a B₅C₅ hacia C₅ dan Q₅, y 35 mm
+      perpendiculares, lejos de A₅, S₅; R₅ cierra el cuadrado. De vuelta, cada vértice va a la paralela
+      al canto, a la planta y al alzado; Q₂ y R₂ caen en las paralelas a C₂B₂ por P₂ y por S₂. Q está
+      5,30 mm por debajo de P, S 21,80 y R 27,09.
+
+      **Lo que se ve.** En la planta el cuadrado está por encima del triángulo: se ve entero, y tapa el
+      trozo de C₁B₁ que pasa debajo. En el alzado está detrás: el triángulo tapa lo que del cuadrado cae
+      dentro de él, la mitad de Q₂R₂ y casi todo R₂S₂.
+
+      **Con la otra lectura**, 20 mm en vertical, P₂ quedaría 6,06 mm más abajo, el plano del cuadrado a
+      15,35 mm de ABC, y el cuadrado, con la misma planta, 6,06 mm más abajo en el alzado.
+
   - id: sd54-la-recta-paralela-al-plano-y-su-distancia
     titulo: La recta r paralela al plano ABC por P, y su distancia al plano
     fuente: Ejercicio 38 (SD54) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
@@ -2644,6 +3713,1106 @@ ejercicios:
       **El segundo cambio.** Con la línea nueva perpendicular a A₄B₄, AB se ve de punta en A₅, y P₅ se
       aparta de la línea lo que P₁ dista de A₁B₁, 29,5 mm. P₅A₅ es la tubería en verdadera magnitud: 32,37
       mm. La tubería, de P a H, se ve entera en las dos vistas.
+
+  - id: sd56-la-tuberia-mas-corta-entre-ab-y-cd
+    titulo: La tubería más corta entre las tuberías AB y CD, con CD de punta
+    fuente: Ejercicio 40 (SD56) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 41),
+    # con su «En el de la izquierda». La planta rotula «D2» la cruz de la
+    # derecha, que es D₁: errata de la hoja, que la lámina corrige y las Notas
+    # nuestras dicen. Q, P, F, G y los puntos 1 y 2 son nombres nuestros.
+    enunciado: |
+      En el croquis de la figura se representan dos construcciones. En el de la izquierda se
+      encuentra un depósito que se conecta con el exterior a través de la tubería AB y la tubería CD
+      conecta ambas construcciones. Representar la tubería de menor longitud posible que une las
+      tuberías AB y CD.
+
+      **Notas nuestras.** «En el de la izquierda», en masculino, es errata de la hoja por «en la de la
+      izquierda», la construcción, y se deja tal como está impresa. El croquis es el alzado, arriba, y
+      la planta, debajo, de las dos construcciones: a la izquierda, un edificio con un depósito cilíndrico dentro, del que sale la
+      tubería AB, que baja recta de A a B y en B se dobla y baja en vertical hasta el suelo; a la
+      derecha, otra construcción, y entre las dos, la tubería CD, de muro a muro. A, B, C y D son las
+      cruces de los ejes de las tuberías, que van de trazo y punto, y como en la lámina se trabaja con
+      los ejes: la tubería nueva se dibuja por su eje, del eje de AB al de CD. Entre las superficies
+      de las dos tuberías, que tienen 1,8 mm de radio en el papel, saldrían 3,6 mm menos. En la planta,
+      la página rotula «D₂» la cruz de la derecha; es D₁ —está en la vertical de D₂ y en el eje de
+      CD—, y aquí va D₁: es una errata de la hoja. La lámina no da escala: se mide en el papel, en
+      milímetros. Llamamos Q al extremo de la tubería nueva que está en AB y P al que está en CD, y F,
+      G y los puntos 1 y 2 son puntos de la construcción: todos, nombres nuestros.
+    pide: Los extremos de la tubería más corta, Q en AB y P en CD, en las dos vistas, con CD de punta en un cambio de plano; la tubería pasada a limpio, y, como pregunta nuestra, su longitud.
+    receta:
+      lamina: sd56
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        ab: recta3(A, B)
+        cd: recta3(C, D)
+      solucion:
+        # La tubería más corta es la perpendicular común de AB y CD, que se
+        # cruzan. Sus pies caen dentro de las dos tuberías (segundo camino): Q a
+        # 0,505 de AB desde A, y P a 0,373 de CD desde C.
+        Q: pie_comun(ab, cd)
+        P: pie_comun(cd, ab)
+        d_mm: en_mm(distancia_rectas(ab, cd))
+        # Decisión: C₁D₁ es horizontal en el papel, así que CD es frontal y
+        # C₂D₂ está en verdadera magnitud: basta UN cambio de plano, horizontal,
+        # con la línea nueva perpendicular a C₂D₂, para dejar CD de punta (las
+        # diapositivas de distancias, pág. 8, usan dos porque su recta es
+        # oblicua). La línea nueva está en la lámina («nueva»), perpendicular a
+        # C₂D₂ por el punto de C₂D₂ prolongada 45 mm más allá de D₂, por encima
+        # del tejado de la derecha; C es la referencia, y C₄ ≡ D₄ cae en ella.
+        C_4: 'cambio_plano_horizontal(C, figura.segmento("nueva"), ref: C)'
+        A_4: 'cambio_plano_horizontal(A, figura.segmento("nueva"), ref: C)'
+        B_4: 'cambio_plano_horizontal(B, figura.segmento("nueva"), ref: C)'
+        Q_4: 'cambio_plano_horizontal(Q, figura.segmento("nueva"), ref: C)'
+        ab4: segmento2(A_4, B_4)
+        # Los puntos 1 y 2, donde las paralelas a C₂D₂ por A₂ y B₂ cortan la
+        # línea nueva; y F y G, donde las verticales de A₁ y B₁ cortan C₁D₁
+        # (prolongada, la de A): A₁F y B₁G son lo que el alejamiento de A y el de
+        # B superan al de C, el de toda CD.
+        K_A: 'pie_perpendicular(figura.punto("A2"), figura.segmento("nueva"))'
+        K_B: 'pie_perpendicular(figura.punto("B2"), figura.segmento("nueva"))'
+        F_A: 'pie_perpendicular(figura.punto("A1"), figura.segmento("CD1"))'
+        F_B: 'pie_perpendicular(figura.punto("B1"), figura.segmento("CD1"))'
+        lleva_A: 'vm_planta(A, punto3(alzado: F_A, planta: F_A))'
+        lleva_B: 'vm_planta(B, punto3(alzado: F_B, planta: F_B))'
+        projA: 'perpendicular(por: figura.punto("A2"), a: figura.segmento("nueva"))'
+        projB: 'perpendicular(por: figura.punto("B2"), a: figura.segmento("nueva"))'
+        perpC4: 'perpendicular(por: C_4, a: ab4)'
+        parQ: 'perpendicular(por: Q_4, a: figura.segmento("nueva"))'
+        perpQ2: 'perpendicular(por: proy_alzado(Q), a: figura.segmento("CD2"))'
+        # Los errores: el cruce aparente de A₂B₂ y C₂D₂ en el alzado, y P₂ bajado
+        # de Q₂ en vertical, como si la tubería fuera vertical.
+        X2: 'cruce_aparente(figura.segmento("AB2"), figura.segmento("CD2"))'
+        Pvert: 'cruce_aparente(segmento2(proy_alzado(Q), proy_planta(Q)), figura.segmento("CD2"))'
+        # La perpendicular desde C a AB, el extremo más cercano a la otra
+        # tubería: perpendicular a AB pero no a CD.
+        QC: pie_perpendicular(C, ab)
+        # Lo visto y lo oculto del alzado: la tubería AB, opaca, pasa por delante
+        # del trozo de PQ que cae en su banda, porque P está más atrás que Q. El
+        # borde de A₂B₂ del lado de P₂, a 1,8 mm del eje, y donde lo cruza P₂Q₂.
+        bordeAB2: 'perpendicular(por: uno(medir_sobre(perpendicular(por: figura.punto("A2"), a: figura.segmento("AB2")), desde: figura.punto("A2"), distancia: mm(1.8)), 1), a: perpendicular(por: figura.punto("A2"), a: figura.segmento("AB2")))'
+        x_PQ2: 'cruce_aparente(segmento2(proy_alzado(Q), proy_alzado(P)), bordeAB2)'
+        # Los extremos de las rectas largas de la construcción: en el papel se
+        # trazan más allá del punto que van a dar.
+        L_E: 'uno(medir_sobre(figura.segmento("CD2"), desde: C_4, distancia: mm(4)), 1)'
+        L_A: 'uno(medir_sobre(projA, desde: A_4, distancia: mm(4)), 2)'
+        L_B: 'uno(medir_sobre(projB, desde: B_4, distancia: mm(4)), 2)'
+        L_C1: 'uno(medir_sobre(figura.segmento("CD1"), desde: F_A, distancia: mm(4)), 2)'
+        L_FA: 'uno(medir_sobre(segmento2(figura.punto("A1"), F_A), desde: F_A, distancia: mm(4)), 1)'
+        L_FB: 'uno(medir_sobre(segmento2(figura.punto("B1"), F_B), desde: F_B, distancia: mm(4)), 1)'
+        L_AB4: 'uno(medir_sobre(ab4, desde: B_4, distancia: mm(4)), 1)'
+        L_Q4: 'uno(medir_sobre(segmento2(C_4, Q_4), desde: Q_4, distancia: mm(3)), 1)'
+        L_Q2: 'uno(medir_sobre(parQ, desde: proy_alzado(Q), distancia: mm(4)), 1)'
+        L_P2: 'uno(medir_sobre(segmento2(proy_alzado(Q), proy_alzado(P)), desde: proy_alzado(P), distancia: mm(3)), 1)'
+        L_Q1: 'desplaza(proy_planta(Q), dy: mm(4))'
+        L_P1: 'desplaza(proy_planta(P), dy: mm(4))'
+      comprueba:
+        - en_recta(Q, ab)
+        - en_recta(P, cd)
+    pasos:
+      - tipo: reconocer
+        pregunta: AB y CD se cruzan sin cortarse. ¿Cuál es la tubería más corta de las que las unen?
+        opciones:
+          - texto: La que va por donde se cruzan A₂B₂ y C₂D₂ en el alzado, porque ahí las dos tuberías se tocan
+            mensaje: |
+              Ese cruce es solo del papel: ahí AB pasa por delante de CD, 25,56 mm más cerca de quien
+              mira, y las dos no se tocan. Una tubería que las uniera en ese cruce iría de punta, de atrás
+              hacia delante, y mediría esos 25,56 mm, más que la más corta.
+          - texto: La perpendicular desde C a AB, porque C es el extremo que queda más cerca de la otra tubería
+            mensaje: |
+              Esa es perpendicular a AB, pero no a CD, y mide 27,99 mm. La más corta tiene que ser
+              perpendicular a las dos a la vez, y sus extremos no tienen por qué ser A, B, C ni D.
+          - texto: La perpendicular común, la única que corta a las dos tuberías y es perpendicular a ambas; con una de las dos de punta se ve en verdadera magnitud
+            correcta: true
+            mensaje: |
+              Eso es. Con CD de punta, todo lo que es perpendicular a CD se ve en verdadera magnitud, y la
+              perpendicular común es la perpendicular desde ese punto a la otra tubería. Aquí CD ya es
+              frontal, y basta un cambio de plano para ponerla de punta.
+
+      # Decisión: un solo paso construir, con el cambio de plano, los dos pies y
+      # la tubería pasada a limpio. La tubería va entera en el hueco entre las
+      # dos construcciones: ningún muro ni tejado la tapa. En la planta se ve
+      # entera; en el alzado, de Q₂ al borde de A₂B₂ la tapa la tubería AB, que
+      # va por delante (P está más atrás que Q), y ese trozo va a trazos.
+      - tipo: construir
+        titulo: La tubería más corta, con CD de punta
+        intro: |
+          C₁D₁ es horizontal en el papel: CD es frontal, y C₂D₂ está en verdadera magnitud. Basta un
+          cambio de plano horizontal para dejarla de punta: con la línea nueva perpendicular a C₂D₂, la
+          vista nueva mira a lo largo de CD. El enunciado no dice dónde va: la hemos dibujado ya, de
+          trazo y punto, arriba a la derecha, perpendicular a C₂D₂ por el punto de C₂D₂ prolongada que
+          está 45 mm más allá de D₂. C es la referencia, así que C₄ y D₄ caen en ese punto. Cada punto
+          sale de su alzado por la paralela a C₂D₂ y se aparta de la línea nueva, hacia fuera, lo que su
+          alejamiento supera al de C, que es el de toda CD: en la planta, lo que el punto está por debajo
+          de C₁D₁. En la vista nueva, la perpendicular desde C₄ a A₄B₄ es la tubería en verdadera
+          magnitud, y su pie es Q₄. Marca A₄, B₄ y Q₄; después Q y P en el alzado y en la planta, y pasa
+          la tubería a limpio con «arista vista» y «arista oculta»: las tuberías son opacas. Q₂, Q₁, P₂ y P₁ caen en los ejes, a unos 2 mm de donde
+          las rectas de la construcción cruzan los bordes de las tuberías, y P₂ a 0,6 mm de donde el eje de
+          CD cruza el borde de AB: amplía con la lupa (×4) antes de marcarlos.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A4
+            pide: A en la vista nueva
+            es: solucion.A_4
+            bien: |
+              A₄ está en la paralela a C₂D₂ por A₂, a 13,17 mm de la línea nueva, hacia fuera: lo que A₁
+              está por debajo de C₁D₁ prolongada, A₁F.
+            diagnosticos:
+              - si: cerca_de(solucion.K_A)
+                mensaje: |
+                  Has dejado A₄ en la línea nueva, como si A fuera la referencia. La referencia es C: A se
+                  aparta de la línea lo que su alejamiento supera al de C, que en la planta es A₁F.
+                ejemplo: solucion.K_A
+              - si: 'en_recta(solucion.projA) && a_distancia(de: solucion.K_A, d: diferencia_de_cotas(A, C))'
+                mensaje: |
+                  Has llevado lo que A está **más alto** que C, su diferencia de cotas. En un cambio de plano
+                  horizontal la vista nueva sale del alzado, y se lleva lo que el alzado no enseña: el
+                  **alejamiento**, que está en la planta.
+                ejemplo: 'uno(medir_sobre(solucion.projA, desde: solucion.K_A, distancia: diferencia_de_cotas(A, C)), 2)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.projA, desde: solucion.K_A, distancia: solucion.lleva_A), 1))'
+                mensaje: |
+                  Llevas bien A₁F, pero **hacia el alzado**. A tiene más alejamiento que C, y se aparta de la
+                  línea nueva hacia fuera, al lado contrario del alzado.
+                ejemplo: 'uno(medir_sobre(solucion.projA, desde: solucion.K_A, distancia: solucion.lleva_A), 1)'
+              - si: '!en_recta(solucion.projA)'
+                mensaje: |
+                  A₄ sale de A₂ por la **perpendicular a la línea nueva**, que es la paralela a C₂D₂ por A₂.
+                ejemplo: 'desplaza(solucion.A_4, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a C₂D₂ por A₂, pero no a la distancia buena: A₁F, con el compás desde
+                  el punto 1, hacia fuera.
+          - nombre: B4
+            pide: B en la vista nueva
+            es: solucion.B_4
+            bien: |
+              B₄ está en la paralela a C₂D₂ por B₂, a 31,20 mm de la línea nueva, hacia fuera: lo que B₁
+              está por debajo de C₁D₁, B₁G. A₄B₄ es la tubería AB en la vista nueva.
+            diagnosticos:
+              - si: cerca_de(solucion.K_B)
+                mensaje: |
+                  Has dejado B₄ en la línea nueva, como si B fuera la referencia. La referencia es C: B se
+                  aparta lo que su alejamiento supera al de C, B₁G en la planta.
+                ejemplo: solucion.K_B
+              - si: 'cerca_de(uno(medir_sobre(solucion.projB, desde: solucion.K_B, distancia: solucion.lleva_B), 1))'
+                mensaje: |
+                  Llevas bien B₁G, pero **hacia el alzado**. B tiene más alejamiento que C, y va hacia fuera,
+                  como A.
+                ejemplo: 'uno(medir_sobre(solucion.projB, desde: solucion.K_B, distancia: solucion.lleva_B), 1)'
+              - si: '!en_recta(solucion.projB)'
+                mensaje: |
+                  B₄ sale de B₂ por la **perpendicular a la línea nueva**, que es la paralela a C₂D₂ por B₂.
+                ejemplo: 'desplaza(solucion.B_4, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a C₂D₂ por B₂, pero no a la distancia buena: B₁G, con el compás desde
+                  el punto 2, hacia fuera.
+          - nombre: Q4
+            pide: el pie de la tubería en AB, en la vista nueva
+            es: solucion.Q_4
+            bien: |
+              Q₄ está en A₄B₄, al pie de la perpendicular desde C₄. C₄ es toda la tubería CD, y C₄Q₄ es la
+              tubería más corta en verdadera magnitud: 23,86 mm.
+            diagnosticos:
+              - si: '!en_recta(solucion.ab4)'
+                mensaje: |
+                  Q es el extremo que está en AB: Q₄ va **en A₄B₄**, donde la corta la perpendicular que sale
+                  de C₄.
+                ejemplo: 'uno(medir_sobre(solucion.perpC4, desde: solucion.Q_4, distancia: mm(6)), 2)'
+              - si: '!en_recta(solucion.perpC4)'
+                mensaje: |
+                  Estás en A₄B₄, pero no al pie de la **perpendicular desde C₄**. Con CD de punta, la
+                  tubería más corta es la perpendicular desde ese punto a A₄B₄: la escuadra, apoyada en
+                  A₄B₄, por C₄.
+                ejemplo: 'uno(medir_sobre(solucion.ab4, desde: solucion.Q_4, distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Q₄ está donde la perpendicular a A₄B₄ por C₄ corta A₄B₄.
+          - nombre: Q2
+            pide: el extremo de la tubería en AB, en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en A₂B₂, donde la corta la paralela a C₂D₂ que vuelve de Q₄: casi a la mitad de AB.
+            diagnosticos:
+              - si: cerca_de(solucion.X2)
+                mensaje: |
+                  Ese es el **cruce de A₂B₂ y C₂D₂** en el alzado, que no es un punto común: ahí AB va por
+                  delante de CD. Q sale de la vista nueva, de Q₄.
+                ejemplo: solucion.X2
+              - si: '!en_recta(figura.segmento("AB2"))'
+                mensaje: |
+                  Q está en AB: Q₂ va **en A₂B₂**, donde la corta la paralela a C₂D₂ que sale de Q₄.
+                ejemplo: 'uno(medir_sobre(solucion.parQ, desde: proy_alzado(Q), distancia: mm(6)), 1)'
+              - si: '!en_recta(solucion.parQ)'
+                mensaje: |
+                  Q₂ vuelve de Q₄ por la **perpendicular a la línea nueva**, que es la paralela a C₂D₂ por
+                  Q₄, hasta A₂B₂.
+                ejemplo: 'uno(medir_sobre(figura.segmento("AB2"), desde: proy_alzado(Q), distancia: mm(6)), 2)'
+              - si: siempre
+                mensaje: |
+                  Q₂ está donde la paralela a C₂D₂ por Q₄ corta A₂B₂.
+          - nombre: Q1
+            pide: el extremo de la tubería en AB, en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está en A₁B₁, en la vertical de Q₂.
+            diagnosticos:
+              - si: '!en_vertical_de(Q2)'
+                mensaje: |
+                  Q₁ va en la **vertical de Q₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(Q), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("AB1"))'
+                mensaje: |
+                  Q está en AB: Q₁ va donde la vertical de Q₂ corta **A₁B₁**.
+                ejemplo: 'desplaza(proy_planta(Q), dy: mm(-8))'
+              - si: siempre
+                mensaje: |
+                  Q₁ está en la vertical de Q₂, sobre A₁B₁.
+          - nombre: P2
+            pide: el extremo de la tubería en CD, en el alzado
+            es: proy_alzado(P)
+            bien: |
+              P₂ está en C₂D₂, al pie de la perpendicular desde Q₂: PQ es perpendicular a CD, y CD es
+              frontal, así que el ángulo recto se ve en el alzado.
+            diagnosticos:
+              - si: cerca_de(solucion.X2)
+                mensaje: |
+                  Ese es el **cruce de A₂B₂ y C₂D₂**, que no es un punto común: ahí CD va por detrás de AB. P
+                  sale de Q₂ por la perpendicular a C₂D₂.
+                ejemplo: solucion.X2
+              - si: cerca_de(solucion.Pvert)
+                mensaje: |
+                  Has bajado de Q₂ **en vertical**, como si la tubería fuera vertical, y no lo es. PQ es
+                  perpendicular a CD, y como CD es frontal, el ángulo recto se ve en el alzado: P₂ es el pie
+                  de la perpendicular a C₂D₂ por Q₂.
+                ejemplo: solucion.Pvert
+              - si: '!en_recta(figura.segmento("CD2"))'
+                mensaje: |
+                  P está en CD: P₂ va **en C₂D₂**, al pie de la perpendicular que sale de Q₂.
+                ejemplo: 'uno(medir_sobre(solucion.perpQ2, desde: proy_alzado(P), distancia: mm(6)), 1)'
+              - si: '!en_recta(solucion.perpQ2)'
+                mensaje: |
+                  Estás en C₂D₂, pero no al pie de la **perpendicular desde Q₂**. CD es frontal: el ángulo
+                  recto de PQ con CD se ve en el alzado, con la escuadra apoyada en C₂D₂.
+                ejemplo: 'uno(medir_sobre(figura.segmento("CD2"), desde: proy_alzado(P), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  P₂ está donde la perpendicular a C₂D₂ por Q₂ corta C₂D₂.
+          - nombre: P1
+            pide: el extremo de la tubería en CD, en la planta
+            es: proy_planta(P)
+            bien: |
+              P₁ está en C₁D₁, en la vertical de P₂. P₁Q₁ y P₂Q₂ son la tubería más corta.
+            diagnosticos:
+              - si: '!en_vertical_de(P2)'
+                mensaje: |
+                  P₁ va en la **vertical de P₂**, sobre C₁D₁.
+                ejemplo: 'desplaza(proy_planta(P), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("CD1"))'
+                mensaje: |
+                  P está en CD: P₁ va donde la vertical de P₂ corta **C₁D₁**.
+                ejemplo: 'desplaza(proy_planta(P), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  P₁ está en la vertical de P₂, sobre C₁D₁.
+        tramos:
+          - traza: segmento2(proy_planta(P), proy_planta(Q))
+            tipo: visto
+            porque: 'La tubería va por el hueco entre las dos construcciones, sin techo encima: desde arriba nada la tapa.'
+          - traza: segmento2(proy_alzado(Q), solucion.x_PQ2)
+            tipo: oculto
+            porque: 'De Q₂ hasta el borde de A₂B₂, la tubería AB le pasa por delante: P está más atrás que Q, y la tubería nueva sale de AB hacia atrás. AB es opaca, y la tapa.'
+          - traza: segmento2(solucion.x_PQ2, proy_alzado(P))
+            tipo: visto
+            porque: 'Desde que sale de detrás de AB hasta P₂, delante no hay tubería, muro ni tejado: va entre los dos muros, y nada la tapa.'
+        trazado:
+          - solucion.ab4
+          - segmento2(solucion.C_4, solucion.Q_4)
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("D2"), solucion.L_E)
+            porque: |
+              C₁D₁ es horizontal en el papel, así que CD es **frontal**: C₂D₂ está en verdadera magnitud.
+              Con la regla, C₂D₂ prolongada más allá de D₂, hasta pasar la línea nueva, que es
+              perpendicular a ella.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄≡D₄
+            porque: |
+              C₄ ≡ D₄, donde C₂D₂ prolongada corta la línea nueva. C es la referencia, así que C₄ cae en la
+              línea; D tiene el mismo alejamiento y cae en el mismo punto: CD, de punta.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A2"), solucion.L_A), segmento2(figura.punto("B2"), solucion.L_B)]'
+            guia: figura.segmento("CD2")
+            porque: |
+              Desde A₂ y B₂, las perpendiculares a la línea nueva, que son las paralelas a C₂D₂, con la
+              escuadra apoyada en ella. Largas, más allá de la línea nueva.
+          - con: marca
+            traza: solucion.K_A
+            rotulo: '1'
+            porque: |
+              1, nombre nuestro, donde la paralela a C₂D₂ por A₂ corta la línea nueva: desde aquí se
+              llevará el alejamiento de A.
+          - con: marca
+            traza: solucion.K_B
+            rotulo: '2'
+            porque: |
+              2, nombre nuestro, donde la paralela a C₂D₂ por B₂ corta la línea nueva.
+          - con: regla
+            traza: segmento2(figura.punto("C1"), solucion.L_C1)
+            porque: |
+              En la planta, C₁D₁ prolongada con la regla hacia la izquierda, más allá de la vertical de A₁:
+              todos los puntos de CD tienen el alejamiento de C, y lo que cada punto está por debajo de esta
+              recta es lo que su alejamiento supera al de C.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), solucion.L_FA), segmento2(figura.punto("B1"), solucion.L_FB)]'
+            guia: figura.segmento("CD1")
+            porque: |
+              Por A₁ y B₁, las verticales, perpendiculares a C₁D₁, hasta pasarla. La de A₁ va por el eje del
+              tramo que sube al depósito.
+          - con: marca
+            traza: solucion.F_A
+            rotulo: F
+            porque: |
+              F, nombre nuestro, donde la vertical de A₁ corta C₁D₁ prolongada: A₁F, 13,17 mm, es lo que el
+              alejamiento de A supera al de C.
+          - con: marca
+            traza: solucion.F_B
+            rotulo: G
+            porque: |
+              G, nombre nuestro, donde la vertical de B₁ corta C₁D₁: B₁G, 31,20 mm.
+          - con: compas
+            traza: 'arco(solucion.K_A, por: solucion.A_4, desde: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.projA), desde: solucion.A_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.projA), desde: solucion.A_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("A1"), solucion.F_A)
+            porque: |
+              Con el compás, A₁F, y centro en 1: el arco corta la paralela a C₂D₂ por A₂ a los dos lados de
+              la línea nueva, y vale el de fuera, el contrario al alzado, porque A tiene más alejamiento que C.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la paralela a C₂D₂ por A₂, por fuera de la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.K_B, por: solucion.B_4, desde: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.projB), desde: solucion.B_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.B_4, a: solucion.projB), desde: solucion.B_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("B1"), solucion.F_B)
+            porque: |
+              Con el compás, B₁G, y centro en 2, también por fuera: B tiene más alejamiento que C.
+          - con: marca
+            traza: solucion.B_4
+            rotulo: B₄
+            porque: |
+              B₄, donde el arco corta la paralela a C₂D₂ por B₂, por fuera de la línea nueva.
+          - con: regla
+            traza: segmento2(solucion.A_4, solucion.L_AB4)
+            porque: |
+              A₄B₄, la tubería AB en la vista nueva, de A₄ a B₄ y un poco más allá. En esta vista CD es el
+              punto C₄.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.C_4, solucion.L_Q4)
+            guia: solucion.ab4
+            porque: |
+              Por C₄, la **perpendicular a A₄B₄**, con la escuadra apoyada en A₄B₄, hasta pasarla. CD se ve
+              de punta, así que todo lo que le es perpendicular se ve en verdadera magnitud, y esta es la
+              perpendicular común.
+          - con: marca
+            traza: solucion.Q_4
+            rotulo: Q₄
+            porque: |
+              Q₄, donde la perpendicular por C₄ corta A₄B₄. C₄Q₄ es la tubería más corta en verdadera
+              magnitud: 23,86 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Q_4, solucion.L_Q2)
+            guia: figura.segmento("CD2")
+            porque: |
+              De vuelta al alzado: por Q₄, la paralela a C₂D₂, perpendicular a la línea nueva, hasta pasar
+              A₂B₂, porque Q está en AB.
+          - con: marca
+            traza: proy_alzado(Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la paralela a C₂D₂ que vuelve de Q₄ corta A₂B₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(Q), solucion.L_P2)
+            guia: figura.segmento("CD2")
+            porque: |
+              Por Q₂, la **perpendicular a C₂D₂**, hasta pasarla. PQ es perpendicular a CD, y CD es frontal:
+              el ángulo recto se ve en el alzado.
+          - con: marca
+            traza: proy_alzado(P)
+            rotulo: P₂
+            porque: |
+              P₂, donde la perpendicular por Q₂ corta C₂D₂.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(Q), solucion.L_Q1), segmento2(proy_alzado(P), solucion.L_P1)]'
+            guia: figura.segmento("CD1")
+            porque: |
+              Las verticales de Q₂ y de P₂, hasta la planta: la de Q₂ hasta pasar A₁B₁, y la de P₂ hasta
+              pasar C₁D₁.
+          - con: marca
+            traza: proy_planta(Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde la vertical de Q₂ corta A₁B₁.
+          - con: marca
+            traza: proy_planta(P)
+            rotulo: P₁
+            porque: |
+              P₁, donde la vertical de P₂ corta C₁D₁.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(P), proy_planta(Q)), segmento2(solucion.x_PQ2, proy_alzado(P))]'
+            porque: |
+              **La tubería**, de P a Q, en continua en la planta, donde nada la tapa, y en el alzado desde
+              que sale de detrás de AB, en el borde de A₂B₂, hasta P₂.
+          - con: arista-oculta
+            traza: segmento2(proy_alzado(Q), solucion.x_PQ2)
+            porque: |
+              A trazos, en el alzado, el trozo de Q₂ al borde de A₂B₂: P está más atrás que Q, y la
+              tubería AB, opaca, le pasa por delante.
+        pista: |
+          (1) C₁D₁ es horizontal: CD es frontal. Prolonga C₂D₂ hasta la línea nueva: ahí caen C₄ y D₄.
+          (2) Por A₂ y B₂, las paralelas a C₂D₂; desde la línea nueva, hacia fuera, lo que A₁ y B₁ están
+          por debajo de C₁D₁. (3) Por C₄, la perpendicular a A₄B₄: Q₄. (4) De Q₄, la paralela a C₂D₂
+          hasta A₂B₂: Q₂. (5) De Q₂, la perpendicular a C₂D₂: P₂. (6) Las verticales dan Q₁ y P₁.
+        desarrollo: |
+          En verde claro, A₄B₄ y C₄Q₄ en la vista nueva, y la tubería PQ en las dos vistas: de A₂B₂ a C₂D₂
+          en el alzado, perpendicular a C₂D₂, y de A₁B₁ a C₁D₁ en la planta. Q cae casi a la mitad de AB
+          y P, a algo más de un tercio de CD desde C: los dos dentro de las tuberías. En el alzado, de Q₂
+          al borde de A₂B₂ la tubería va a trazos: sale de AB hacia atrás, y AB, que es opaca, la tapa.
+
+      - tipo: calcular
+        titulo: La longitud de la tubería
+        pregunta: ¿Cuánto mide la tubería más corta entre AB y CD?
+        respuesta:
+          tipo: numero
+          valor: '23.86'
+          receta: d_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '22.70'
+            receta: en_mm(vm_planta(P, Q))
+            mensaje: |
+              Eso es lo que mide **P₁Q₁ en la planta**. La tubería sube de P a Q, y la planta la acorta;
+              en verdadera magnitud se ve en la vista nueva, C₄Q₄.
+          - valor: '8.56'
+            receta: en_mm(vm_alzado(P, Q))
+            mensaje: |
+              Eso es **P₂Q₂ en el alzado**, que acorta mucho: la tubería va sobre todo de atrás hacia
+              delante.
+          - valor: '27.99'
+            receta: en_mm(vm(C, QC))
+            mensaje: |
+              Esa es la distancia de **C a la tubería AB**: perpendicular a AB, pero no a CD. La más corta
+              es la perpendicular común, que no sale de C.
+        pista: |
+          Mide C₄Q₄ con «medir» del Taller, en el paso anterior, o en tu lámina de papel: con CD de punta,
+          la perpendicular común está en verdadera magnitud.
+        desarrollo: |
+          Con CD de punta, la tubería se ve en verdadera magnitud:
+
+          $$ \overline{PQ} = \overline{C_4Q_4} \approx 23{,}86 \text{ mm} $$
+
+          Por otro camino sale lo mismo: P₁Q₁ mide 22,70 mm en la planta y Q está 7,33 mm más alto que P,
+          y la hipotenusa de esos dos catetos es 23,86 mm.
+
+          Dos medidas del dibujo caen dentro de la tolerancia por casualidad: A₂Q₂, 24,66 mm, y Q₂B₂,
+          24,21. Son las dos mitades de A₂B₂ en el alzado, porque Q cae casi a la mitad de AB, y no miden
+          nada de la tubería.
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AB y CD se cruzan; la tubería más corta entre ellas es su perpendicular común.
+          - texto: C₁D₁ es horizontal, así que CD es frontal, y un cambio de plano con la línea nueva perpendicular a C₂D₂ la deja de punta.
+          - texto: Con CD de punta, la perpendicular desde C₄ a A₄B₄ está en verdadera magnitud y da Q₄.
+          - texto: Q vuelve al alzado por la paralela a C₂D₂ hasta A₂B₂, y P₂ es el pie de la perpendicular a C₂D₂ por Q₂, porque el ángulo recto con la frontal CD se ve en el alzado.
+          - texto: La tubería va por donde se cruzan A₂B₂ y C₂D₂ en el alzado, porque ahí las dos tuberías se tocan.
+            trampa: true
+            mensaje: |
+              Ese cruce es solo del papel: ahí AB va por delante de CD, 25,56 mm más cerca de quien mira.
+              La más corta es la perpendicular común, de 23,86 mm.
+    resolucion: |
+      **Qué se pide.** AB y CD se cruzan: no son paralelas ni se cortan, aunque sus alzados se crucen en
+      el papel. La tubería más corta que las une es su perpendicular común, que corta a las dos y es
+      perpendicular a ambas.
+
+      **Cómo se construye.** C₁D₁ es horizontal en el papel, así que CD es frontal y C₂D₂ está en
+      verdadera magnitud. Un cambio de plano horizontal con la línea nueva perpendicular a C₂D₂ deja CD
+      de punta: C₄ ≡ D₄. Cada punto se aparta de la línea nueva lo que su alejamiento supera al de CD,
+      que en la planta es lo que está por debajo de C₁D₁: A, 13,17 mm, y B, 31,20. En la vista nueva, la
+      perpendicular desde C₄ a A₄B₄ da Q₄. Q vuelve al alzado por la paralela a C₂D₂, y P₂ es el pie de la
+      perpendicular a C₂D₂ por Q₂: el ángulo recto con una frontal se ve en el alzado. Las verticales dan
+      Q₁ en A₁B₁ y P₁ en C₁D₁.
+
+      **El resultado.** La tubería mide 23,86 mm. Q está casi a la mitad de AB, y P a algo más de un
+      tercio de CD desde C: los dos pies caen dentro de las tuberías, y la tubería va por el hueco entre
+      las dos construcciones. En la planta se ve entera; en el alzado, de Q₂ al borde de A₂B₂ va a
+      trazos, porque sale de AB hacia atrás y AB la tapa. En la planta mide 22,70 mm y en el alzado 8,56:
+      va sobre todo de atrás hacia delante.
+
+  - id: sd57-la-tuberia-mas-corta-entre-ab-y-cd-paralelas
+    titulo: La tubería más corta entre AB y CD, cuando son paralelas
+    fuente: Ejercicio 41 (SD57) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
+    nivel: practica
+    # Decisión: el texto impreso tal cual, cotejado con la página (pág. 42),
+    # que tiene capa de texto para el enunciado. Difiere del Ejercicio 40 solo
+    # en «a través de la tubería AB. En cambio, la tubería CD conecta…», donde
+    # el 40 dice «a través de la tubería AB y la tubería CD conecta…». La
+    # figura es una imagen: las coordenadas se miden sobre ella (lámina sd57,
+    # con sus notas). Q y H son nombres nuestros.
+    enunciado: |
+      En el croquis de la figura se representan dos construcciones. En el de la izquierda se
+      encuentra un depósito que se conecta con el exterior a través de la tubería AB. En cambio, la
+      tubería CD conecta ambas construcciones. Representar la tubería de menor longitud posible que
+      une las tuberías AB y CD.
+
+      **Notas nuestras.** «En el de la izquierda», en masculino, es errata de la hoja por «en la de la
+      izquierda», la construcción, y se deja tal como está impresa. Es el croquis del Ejercicio 40 con
+      otra tubería CD: va de lo alto del muro de la izquierda al muro de la derecha, y ya no cruza a AB
+      en ninguna vista. A, B, C y D son las cruces de los ejes de las tuberías, de trazo y punto, y se
+      trabaja con los ejes. La figura de esta página es una imagen: sus puntos se han medido sobre
+      ella, con un error de una décima de milímetro. AB y CD son paralelas —sus proyecciones lo son en
+      las dos vistas—, así que la tubería más corta no es única: cualquier perpendicular a las dos que
+      caiga entre las dos tuberías mide lo mismo, la distancia entre ellas. Hay que escoger una, y la
+      escogemos nosotros: la que sale de D, en el muro de la derecha, y llega a AB cerca de B. La que
+      saliera de A cruzaría la esquina del muro de la izquierda; las que salen de AB desde algo menos
+      de un sexto de su longitud, contado desde A, hasta la que sale de D pasan todas por el hueco
+      entre las dos construcciones, y las que salen más cerca de B ya no llegan a CD, que acaba en D.
+      La lámina no da escala: se mide en el papel, en milímetros. Llamamos Q al punto de AB donde
+      llega la tubería, y H a un punto de la construcción.
+    pide: Q, donde la tubería que sale de D llega a AB, en las dos vistas, con las dos tuberías en verdadera magnitud y luego de punta en dos cambios de plano; la tubería pasada a limpio, y, como pregunta nuestra, su longitud.
+    receta:
+      lamina: sd57
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        ab: recta3(A, B)
+        cd: recta3(C, D)
+      solucion:
+        # AB y CD forman 0,04°: son paralelas con lo que da la medida. La
+        # perpendicular común de dos paralelas no es una: no se usa pie_comun
+        # (con 0,04° la daría lejísimos, fuera de las tuberías) sino la
+        # perpendicular desde D a AB.
+        # Decisión: la tubería sale de D (nuestra elección, en las Notas): su pie
+        # Q cae en AB a 0,915 desde A. Desde A, el pie caería en CD a 0,05, y la
+        # tubería atravesaría la esquina del muro de la izquierda en la planta.
+        Q: pie_perpendicular(D, ab)
+        d_mm: en_mm(vm(D, Q))
+        # Decisión: dos cambios de plano, como las diapositivas de distancias
+        # (pág. 8), con las líneas nuevas en la lámina y B, el punto más bajo,
+        # de referencia en los dos. El primero, vertical, con «nueva1» paralela
+        # a A₁B₁: AB y CD, en verdadera magnitud y paralelas. El segundo, con
+        # «nueva2» perpendicular a A₄B₄: las dos, de punta a la vez.
+        A_4: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: B)'
+        B_4: 'cambio_plano_vertical(B, figura.segmento("nueva1"), ref: B)'
+        C_4: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: B)'
+        D_4: 'cambio_plano_vertical(D, figura.segmento("nueva1"), ref: B)'
+        Q_4: 'cambio_plano_vertical(Q, figura.segmento("nueva1"), ref: B)'
+        A_5: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: B, luego: figura.segmento("nueva2"))'
+        C_5: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: B, luego: figura.segmento("nueva2"))'
+        ab4: segmento2(A_4, B_4)
+        cd4: segmento2(C_4, D_4)
+        # Las líneas de referencia del primer cambio, desde la planta,
+        # perpendiculares a «nueva1», y sus pies en ella (los centros del compás).
+        refA1: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("nueva1"))'
+        refC1: 'perpendicular(por: figura.punto("C1"), a: figura.segmento("nueva1"))'
+        refD1: 'perpendicular(por: figura.punto("D1"), a: figura.segmento("nueva1"))'
+        K_A: 'pie_perpendicular(figura.punto("A1"), figura.segmento("nueva1"))'
+        K_C: 'pie_perpendicular(figura.punto("C1"), figura.segmento("nueva1"))'
+        K_D: 'pie_perpendicular(figura.punto("D1"), figura.segmento("nueva1"))'
+        # La horizontal de B₂ en el alzado, donde corta las verticales de A, C y
+        # D: lo que A₂, C₂ y D₂ están por encima es lo que A, C y D están más
+        # altos que B.
+        A_b: 'cruce_aparente(segmento2(figura.punto("B2"), desplaza(figura.punto("B2"), dx: 10)), segmento2(figura.punto("A2"), figura.punto("A1")))'
+        C_b: 'cruce_aparente(segmento2(figura.punto("B2"), desplaza(figura.punto("B2"), dx: 10)), segmento2(figura.punto("C2"), figura.punto("C1")))'
+        D_b: 'cruce_aparente(segmento2(figura.punto("B2"), desplaza(figura.punto("B2"), dx: 10)), segmento2(figura.punto("D2"), figura.punto("D1")))'
+        perpD4: 'perpendicular(por: D_4, a: ab4)'
+        refQ: 'perpendicular(por: Q_4, a: figura.segmento("nueva1"))'
+        # El segundo cambio: C₄D₄ prolongada corta «nueva2» en K5, y C₅ ≡ D₅ se
+        # aparta de ella lo que C₁ dista de A₁B₁ (que es la paralela a «nueva1»
+        # por B₁, la referencia): C₁H.
+        K5: 'cruce_aparente(cd4, figura.segmento("nueva2"))'
+        H: 'pie_perpendicular(figura.punto("C1"), figura.segmento("AB1"))'
+        lleva_C5: 'vm_planta(C, punto3(alzado: H, planta: H))'
+        # Los errores: lo que A, C y D se acercan respecto de B (la diferencia de
+        # alejamientos, en vez de cotas), por Pitágoras, como en SD22.
+        dyAB: 'raiz(vm(A, B) * vm(A, B) - vm_alzado(A, B) * vm_alzado(A, B))'
+        # Lo visto y lo oculto del alzado: junto a Q₂, la tubería nueva sale de AB
+        # hacia atrás (D está más atrás que Q), y AB la tapa hasta su borde, del
+        # lado de D₂, a 5,22 pt (1,84 mm) del eje.
+        bordeAB2: 'perpendicular(por: uno(medir_sobre(perpendicular(por: figura.punto("A2"), a: figura.segmento("AB2")), desde: figura.punto("A2"), distancia: mm(1.84)), 2), a: perpendicular(por: figura.punto("A2"), a: figura.segmento("AB2")))'
+        x_DQ2: 'cruce_aparente(segmento2(proy_alzado(Q), figura.punto("D2")), bordeAB2)'
+        # Los extremos de las rectas largas de la construcción.
+        L_hI: 'desplaza(A_b, dx: mm(-4))'
+        L_hD: 'desplaza(D_b, dx: mm(4))'
+        L_A4: 'uno(medir_sobre(refA1, desde: A_4, distancia: mm(4)), 1)'
+        L_C4: 'uno(medir_sobre(refC1, desde: C_4, distancia: mm(4)), 1)'
+        L_D4: 'uno(medir_sobre(refD1, desde: D_4, distancia: mm(4)), 1)'
+        L_B4: 'uno(medir_sobre(perpendicular(por: figura.punto("B1"), a: figura.segmento("nueva1")), desde: B_4, distancia: mm(4)), 1)'
+        L_ab4: 'uno(medir_sobre(ab4, desde: A_5, distancia: mm(4)), 2)'
+        L_cd4: 'uno(medir_sobre(cd4, desde: C_5, distancia: mm(4)), 2)'
+        L_Q4: 'uno(medir_sobre(perpD4, desde: Q_4, distancia: mm(3)), 2)'
+        L_Q1: 'uno(medir_sobre(refQ, desde: proy_planta(Q), distancia: mm(4)), 2)'
+        L_Q2: 'desplaza(proy_alzado(Q), dy: mm(-4))'
+      comprueba:
+        - en_recta(Q, ab)
+    pasos:
+      - tipo: reconocer
+        pregunta: Compara A₁B₁ con C₁D₁ y A₂B₂ con C₂D₂. ¿Qué cambia respecto del Ejercicio 40?
+        opciones:
+          - texto: Nada importante; se cruzan, y la más corta es una sola
+            mensaje: |
+              Mira las dos vistas: A₁B₁ y C₁D₁ son paralelas, y A₂B₂ y C₂D₂ también. Dos rectas que no son
+              de perfil y tienen las dos proyecciones paralelas son paralelas, y no se cruzan: la
+              perpendicular común de dos paralelas no es una sola.
+          - texto: Que AB y CD son paralelas, y cualquier perpendicular a las dos mide lo mismo
+            correcta: true
+            mensaje: |
+              Eso es. Sus proyecciones son paralelas en las dos vistas, y ninguna es de perfil: las rectas
+              son paralelas. La distancia entre ellas es la misma en todas partes, y cualquier
+              perpendicular a las dos que caiga entre las tuberías es una tubería más corta. Con una de
+              las dos de punta, las dos lo están, y la distancia se mide entre los dos puntos.
+          - texto: Que se cortarían si se prolongaran, porque las dos bajan hacia la derecha en las dos vistas, y la tubería más corta tendría longitud cero
+            mensaje: |
+              Bajar hacia el mismo lado no basta: para cortarse tendrían que tener un punto común, con los
+              dos alzados y las dos plantas cortándose en la misma vertical. Aquí las proyecciones son
+              paralelas y no se cortan nunca: AB y CD son paralelas.
+
+      # Decisión: un solo paso construir, con los dos cambios, el pie Q y la
+      # tubería pasada a limpio. La tubería va por el hueco entre las dos
+      # construcciones, vista entera en las dos vistas (segundo camino).
+      - tipo: construir
+        titulo: La tubería que sale de D, con AB y CD de punta
+        intro: |
+          AB y CD son paralelas. Dos cambios de plano, con las líneas nuevas ya dibujadas, de trazo y
+          punto: el enunciado no las da, y las hemos puesto nosotros. La referencia es B, el punto más
+          bajo, en los dos. El primero, vertical, con la línea nueva paralela a A₁B₁, por debajo de la
+          planta: cada punto sale de su planta por la perpendicular a la línea y se aparta de ella, hacia
+          fuera, lo que está más alto que B, que se lee en el alzado sobre la horizontal de B₂. Ahí AB y
+          CD están en verdadera magnitud, y paralelas: la perpendicular desde D₄ a A₄B₄ se ve
+          perpendicular y da Q₄, que vuelve a la planta y al alzado. El segundo, con la línea nueva
+          perpendicular a A₄B₄, más allá de A₄: AB se ve de punta, y CD también, porque es paralela; cada
+          una es un punto, y lo que los separa es la longitud de la tubería. Marca A₄, C₄, D₄, Q₄, Q₁,
+          Q₂, A₅ y C₅, y pasa la tubería a limpio con «arista vista» y «arista oculta»: las tuberías son
+          opacas. Q₄ cae a 4,5 mm de B₄ y a 3 mm de un cruce de rectas, A₄ también a 3 mm de otro, y Q₁ y Q₂ en el eje de AB, a menos de 2 mm de donde
+          las rectas de la construcción cruzan los bordes de la tubería: amplía con la lupa (×4) antes de
+          marcarlos.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A4
+            pide: A en la vista nueva del primer cambio
+            es: solucion.A_4
+            bien: |
+              A₄ está en la perpendicular a la línea nueva por A₁, a 33,77 mm de ella, hacia fuera: lo que A₂
+              está por encima de la horizontal de B₂.
+            diagnosticos:
+              - si: cerca_de(solucion.K_A)
+                mensaje: |
+                  Has dejado A₄ en la línea nueva, como si A fuera la referencia. La referencia es B: A se
+                  aparta de la línea lo que está más alto que B, de A₂ a la horizontal de B₂.
+                ejemplo: solucion.K_A
+              - si: 'en_recta(solucion.refA1) && a_distancia(de: solucion.K_A, d: solucion.dyAB)'
+                mensaje: |
+                  Has llevado lo que A está **más cerca** que B, la diferencia de alejamientos. Un cambio de
+                  plano vertical sale de la planta y lleva **cotas**: lo que A₂ está por encima de la
+                  horizontal de B₂.
+                ejemplo: 'uno(medir_sobre(solucion.refA1, desde: solucion.K_A, distancia: solucion.dyAB), 1)'
+              - si: 'cerca_de(uno(medir_sobre(solucion.refA1, desde: solucion.K_A, distancia: diferencia_de_cotas(A, B)), 2))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la planta**. La vista nueva queda al otro lado de la
+                  línea nueva, y un punto más alto que la referencia se aparta de ella hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.refA1, desde: solucion.K_A, distancia: diferencia_de_cotas(A, B)), 2)'
+              - si: '!en_recta(solucion.refA1)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.A_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la línea nueva por A₁, pero no a la distancia buena: lo que A₂
+                  está por encima de la horizontal de B₂, desde la línea, hacia fuera.
+          - nombre: C4
+            pide: C en la vista nueva del primer cambio
+            es: solucion.C_4
+            bien: |
+              C₄ está en la perpendicular a la línea nueva por C₁, a 41,41 mm de ella, hacia fuera: C es el
+              punto más alto de los cuatro.
+            diagnosticos:
+              - si: cerca_de(solucion.K_C)
+                mensaje: |
+                  Has dejado C₄ en la línea nueva, como si C fuera la referencia. La referencia es B: C se
+                  aparta lo que C₂ está por encima de la horizontal de B₂.
+                ejemplo: solucion.K_C
+              - si: 'cerca_de(uno(medir_sobre(solucion.refC1, desde: solucion.K_C, distancia: diferencia_de_cotas(C, B)), 2))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la planta**. C es más alto que B, y se aparta de la
+                  línea nueva hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.refC1, desde: solucion.K_C, distancia: diferencia_de_cotas(C, B)), 2)'
+              - si: '!en_recta(solucion.refC1)'
+                mensaje: |
+                  C₄ sale de C₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.C_4, dx: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la línea nueva por C₁, pero no a la distancia buena: lo que C₂
+                  está por encima de la horizontal de B₂.
+          - nombre: D4
+            pide: D en la vista nueva del primer cambio
+            es: solucion.D_4
+            bien: |
+              D₄ está en la perpendicular a la línea nueva por D₁, a 8,82 mm de ella, hacia fuera. C₄D₄ es
+              paralela a A₄B₄: las dos tuberías, en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(solucion.K_D)
+                mensaje: |
+                  Has dejado D₄ en la línea nueva, como si D fuera la referencia. La referencia es B: D se
+                  aparta lo que D₂ está por encima de la horizontal de B₂.
+                ejemplo: solucion.K_D
+              - si: 'cerca_de(uno(medir_sobre(solucion.refD1, desde: solucion.K_D, distancia: diferencia_de_cotas(D, B)), 2))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la planta**. D es más alto que B, y se aparta de la
+                  línea nueva hacia fuera, como A y C.
+                ejemplo: 'uno(medir_sobre(solucion.refD1, desde: solucion.K_D, distancia: diferencia_de_cotas(D, B)), 2)'
+              - si: '!en_recta(solucion.refD1)'
+                mensaje: |
+                  D₄ sale de D₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.D_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a la línea nueva por D₁, pero no a la distancia buena: lo que D₂
+                  está por encima de la horizontal de B₂.
+          - nombre: Q4
+            pide: Q, el pie de la tubería en AB, en la vista nueva del primer cambio
+            es: solucion.Q_4
+            bien: |
+              Q₄ está en A₄B₄, al pie de la perpendicular desde D₄: AB está en verdadera magnitud en esta
+              vista, y el ángulo recto se ve recto.
+            diagnosticos:
+              - si: '!en_recta(solucion.ab4)'
+                mensaje: |
+                  Q está en AB: Q₄ va **en A₄B₄**, donde la corta la perpendicular que sale de D₄.
+                ejemplo: 'uno(medir_sobre(solucion.perpD4, desde: solucion.Q_4, distancia: mm(6)), 1)'
+              - si: '!en_recta(solucion.perpD4)'
+                mensaje: |
+                  Estás en A₄B₄, pero no al pie de la **perpendicular desde D₄**. AB está en verdadera magnitud
+                  en esta vista, así que la perpendicular a ella se traza con la escuadra apoyada en A₄B₄.
+                ejemplo: 'uno(medir_sobre(solucion.ab4, desde: solucion.Q_4, distancia: mm(8)), 2)'
+              - si: siempre
+                mensaje: |
+                  Q₄ está donde la perpendicular a A₄B₄ por D₄ corta A₄B₄.
+          - nombre: Q1
+            pide: Q en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está en A₁B₁, en la perpendicular a la línea nueva que vuelve de Q₄, cerca de B₁.
+            diagnosticos:
+              - si: '!en_recta(solucion.refQ)'
+                mensaje: |
+                  Q₁ vuelve de Q₄ por la **perpendicular a la línea nueva**, hasta A₁B₁.
+                ejemplo: 'uno(medir_sobre(figura.segmento("AB1"), desde: proy_planta(Q), distancia: mm(6)), 2)'
+              - si: '!en_recta(figura.segmento("AB1"))'
+                mensaje: |
+                  Q está en AB: Q₁ va **en A₁B₁**, donde la corta la perpendicular que vuelve de Q₄.
+                ejemplo: 'uno(medir_sobre(solucion.refQ, desde: proy_planta(Q), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Q₁ está donde la perpendicular a la línea nueva que sale de Q₄ corta A₁B₁.
+          - nombre: Q2
+            pide: Q en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en A₂B₂, en la vertical de Q₁. D₂Q₂ y D₁Q₁ son la tubería.
+            diagnosticos:
+              - si: '!en_vertical_de(Q1)'
+                mensaje: |
+                  Q₂ va en la **vertical de Q₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(Q), dx: mm(6))'
+              - si: '!en_recta(figura.segmento("AB2"))'
+                mensaje: |
+                  Q está en AB: Q₂ va donde la vertical de Q₁ corta **A₂B₂**.
+                ejemplo: 'desplaza(proy_alzado(Q), dy: mm(-8))'
+              - si: siempre
+                mensaje: |
+                  Q₂ está en la vertical de Q₁, sobre A₂B₂.
+          - nombre: A5
+            pide: A en la vista del segundo cambio, que es también B y Q
+            es: solucion.A_5
+            bien: |
+              A₅ ≡ B₅ está en la línea nueva, donde la corta A₄B₄ prolongada: B es la referencia, y A₁ está
+              tan lejos de la primera línea nueva como B₁. AB se ve de punta, y Q₅ cae en el mismo punto.
+            diagnosticos:
+              - si: '!en_recta(solucion.ab4)'
+                mensaje: |
+                  En el segundo cambio, las referencias van paralelas a A₄B₄: la de A₄ y B₄ es A₄B₄ misma,
+                  prolongada más allá de A₄ hasta la línea nueva.
+                ejemplo: 'uno(medir_sobre(figura.segmento("nueva2"), desde: solucion.A_5, distancia: mm(6)), 2)'
+              - si: siempre
+                mensaje: |
+                  Estás en A₄B₄ prolongada, pero no en la línea nueva. B es la referencia y cae en ella, y A
+                  con B, porque A₁B₁ es paralela a la primera línea nueva.
+          - nombre: C5
+            pide: C en la vista del segundo cambio, que es también D
+            es: solucion.C_5
+            bien: |
+              C₅ ≡ D₅ está en C₄D₄ prolongada, a 16,46 mm de la línea nueva, hacia fuera: lo que C₁ dista de
+              A₁B₁, C₁H. CD también se ve de punta, y A₅C₅ es la distancia entre las dos tuberías: 18,16 mm
+              en la lámina, lo mismo que DQ salvo las dos centésimas de error de la medida.
+            diagnosticos:
+              - si: cerca_de(solucion.K5)
+                mensaje: |
+                  Te has quedado en la línea nueva. Ahí caería C si estuviera tan lejos de la primera línea
+                  nueva como B; C₁ está más lejos lo que dista de A₁B₁, C₁H.
+                ejemplo: solucion.K5
+              - si: 'cerca_de(uno(medir_sobre(solucion.cd4, desde: solucion.K5, distancia: solucion.lleva_C5), 1))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la vista anterior**. C₁ está más lejos de la primera
+                  línea nueva que B₁, y C₅ se aparta de la segunda hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.cd4, desde: solucion.K5, distancia: solucion.lleva_C5), 1)'
+              - si: '!en_recta(solucion.cd4)'
+                mensaje: |
+                  C₅ sale de C₄ por la paralela a A₄B₄, que es C₄D₄ prolongada: CD es paralela a AB.
+                ejemplo: 'desplaza(solucion.C_5, dy: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en C₄D₄ prolongada, pero no a la distancia buena: C₁H, desde la línea nueva, hacia
+                  fuera.
+        tramos:
+          - traza: segmento2(figura.punto("D1"), proy_planta(Q))
+            tipo: visto
+            porque: 'La tubería va por el hueco entre las dos construcciones, sin techo encima: desde arriba nada la tapa.'
+          - traza: segmento2(proy_alzado(Q), solucion.x_DQ2)
+            tipo: oculto
+            porque: 'De Q₂ al borde de A₂B₂, unos 2 mm: la tubería sale de AB hacia atrás, porque D está más atrás que Q, y AB, opaca, la tapa.'
+          - traza: segmento2(solucion.x_DQ2, figura.punto("D2"))
+            tipo: visto
+            porque: 'Desde el borde de A₂B₂ hasta D₂ va entre los dos muros, y delante no hay tubería, muro ni tejado: nada la tapa.'
+        trazado:
+          - solucion.ab4
+          - solucion.cd4
+          - segmento2(solucion.D_4, solucion.Q_4)
+          - segmento2(solucion.A_5, solucion.C_5)
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), figura.punto("A1")), segmento2(figura.punto("C2"), figura.punto("C1")), segmento2(figura.punto("D2"), figura.punto("D1"))]'
+            porque: |
+              Las líneas de referencia de A, de C y de D, con la regla, de cada alzado a su planta: sobre
+              ellas se miden las cotas.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("B2"), solucion.L_hI), segmento2(figura.punto("B2"), solucion.L_hD)]'
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por B₂, la horizontal, perpendicular a las verticales, hasta pasar la de A por la izquierda
+              y la de D por la derecha; por el camino corta la de C. B es el punto más bajo y es la
+              referencia: lo que hay de A₂, C₂ y D₂ a esta horizontal es lo que están más altos que B.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), solucion.L_A4), segmento2(figura.punto("C1"), solucion.L_C4), segmento2(figura.punto("D1"), solucion.L_D4), segmento2(figura.punto("B1"), solucion.L_B4)]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              **Primer cambio de plano.** Por A₁, C₁, D₁ y B₁, las perpendiculares a la primera línea
+              nueva, que es paralela a A₁B₁, largas, más allá de ella.
+          - con: marca
+            traza: solucion.B_4
+            rotulo: B₄
+            porque: |
+              B₄, donde la perpendicular por B₁ corta la línea nueva: B es la referencia, y su cota cuenta
+              como cero.
+          - con: compas
+            traza: 'arco(solucion.K_A, por: solucion.A_4, desde: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.refA1), desde: solucion.A_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.A_4, a: solucion.refA1), desde: solucion.A_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("A2"), solucion.A_b)
+            porque: |
+              Con el compás, lo que A₂ está por encima de la horizontal de B₂, y centro donde la
+              perpendicular por A₁ corta la línea nueva: hacia fuera, al lado contrario de la planta.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la perpendicular por A₁, por fuera de la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.K_C, por: solucion.C_4, desde: uno(medir_sobre(perpendicular(por: solucion.C_4, a: solucion.refC1), desde: solucion.C_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.C_4, a: solucion.refC1), desde: solucion.C_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("C2"), solucion.C_b)
+            porque: |
+              Lo mismo con C: de C₂ a la horizontal de B₂, desde la línea nueva sobre la perpendicular por
+              C₁, hacia fuera.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄, donde el arco corta la perpendicular por C₁, por fuera de la línea nueva.
+          - con: compas
+            traza: 'arco(solucion.K_D, por: solucion.D_4, desde: uno(medir_sobre(perpendicular(por: solucion.D_4, a: solucion.refD1), desde: solucion.D_4, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.D_4, a: solucion.refD1), desde: solucion.D_4, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("D2"), solucion.D_b)
+            porque: |
+              Y con D: de D₂ a la horizontal de B₂, que es poco, sobre la perpendicular por D₁, hacia
+              fuera.
+          - con: marca
+            traza: solucion.D_4
+            rotulo: D₄
+            porque: |
+              D₄, donde el arco corta la perpendicular por D₁, por fuera de la línea nueva.
+          - con: regla
+            traza: '[segmento2(solucion.B_4, solucion.L_ab4), segmento2(solucion.D_4, solucion.L_cd4)]'
+            porque: |
+              A₄B₄ y C₄D₄, las dos tuberías en verdadera magnitud, prolongadas más allá de A₄ y de C₄ hasta
+              pasar la segunda línea nueva. Salen paralelas: AB y CD lo son.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.D_4, solucion.L_Q4)
+            guia: solucion.ab4
+            porque: |
+              Por D₄, la **perpendicular a A₄B₄**, con la escuadra apoyada en A₄B₄, hasta pasarla: AB está en
+              verdadera magnitud, y el ángulo recto de la tubería con ella se ve recto.
+          - con: marca
+            traza: solucion.Q_4
+            porque: |
+              Q₄, donde la perpendicular por D₄ corta A₄B₄: el extremo de la tubería en AB. Va sin rótulo,
+              porque B₄, a 4,5 mm, lo taparía.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Q_4, solucion.L_Q1)
+            guia: figura.segmento("nueva1")
+            porque: |
+              De vuelta a la planta: por Q₄, la perpendicular a la primera línea nueva, hasta pasar A₁B₁,
+              porque Q está en AB.
+          - con: marca
+            traza: proy_planta(Q)
+            porque: |
+              Q₁, donde la perpendicular que vuelve de Q₄ corta A₁B₁, a 3,5 mm de B₁. Va sin rótulo: el de B₁
+              lo pisaría.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(Q), solucion.L_Q2)
+            guia: segmento2(figura.punto("A2"), figura.punto("A1"))
+            porque: |
+              Por Q₁, la vertical, paralela a las líneas de referencia, hasta pasar A₂B₂.
+          - con: marca
+            traza: proy_alzado(Q)
+            porque: |
+              Q₂, donde la vertical de Q₁ corta A₂B₂, justo antes del codo de B₂. Va sin rótulo: el de B₂ lo
+              pisaría.
+          - con: marca
+            traza: solucion.A_5
+            rotulo: A₅
+            porque: |
+              **Segundo cambio de plano**, con la línea nueva perpendicular a A₄B₄. Sus referencias van
+              paralelas a A₄B₄, y la de A₄ y B₄ es A₄B₄ prolongada. A₅ ≡ B₅, donde corta la segunda línea
+              nueva: B es la referencia, y A₁ está tan lejos de la primera línea como B₁. AB, de punta.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C1"), solucion.H)
+            guia: figura.segmento("nueva1")
+            porque: |
+              En la planta, por C₁, la perpendicular a A₁B₁ hasta A₁B₁: es la perpendicular a la primera
+              línea nueva, la que ya pasa por C₁, en el trozo que va de C₁ a A₁B₁.
+          - con: marca
+            traza: solucion.H
+            porque: |
+              H, nombre nuestro, donde la perpendicular por C₁ corta A₁B₁, junto a A₁: C₁H, 16,46 mm, es lo
+              que C₁ está más lejos de la primera línea nueva que B₁, porque A₁B₁ es paralela a ella y pasa
+              por B₁. Va sin rótulo: el de A₁ lo pisaría.
+          - con: compas
+            traza: 'arco(solucion.K5, por: solucion.C_5, desde: uno(medir_sobre(perpendicular(por: solucion.C_5, a: solucion.cd4), desde: solucion.C_5, distancia: mm(3)), 1), hasta: uno(medir_sobre(perpendicular(por: solucion.C_5, a: solucion.cd4), desde: solucion.C_5, distancia: mm(3)), 2))'
+            toma: segmento2(figura.punto("C1"), solucion.H)
+            porque: |
+              Con el compás, C₁H, y centro donde C₄D₄ prolongada corta la segunda línea nueva: hacia fuera,
+              lejos de la vista anterior.
+          - con: marca
+            traza: solucion.C_5
+            rotulo: C₅
+            porque: |
+              C₅ ≡ D₅, donde el arco corta C₄D₄ prolongada: CD también se ve de punta. A₅C₅, 18,16 mm, es la
+              distancia entre las dos tuberías, la longitud de cualquier tubería más corta.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("D1"), proy_planta(Q)), segmento2(solucion.x_DQ2, figura.punto("D2"))]'
+            porque: |
+              **La tubería**, de D a Q, en continua: entera en la planta, y en el alzado desde el borde de
+              A₂B₂ hasta D₂. Va por el hueco entre las dos construcciones.
+          - con: arista-oculta
+            traza: segmento2(proy_alzado(Q), solucion.x_DQ2)
+            porque: |
+              A trazos, en el alzado, los 2 mm de Q₂ al borde de A₂B₂: la tubería sale de AB hacia atrás,
+              y AB, opaca, la tapa.
+        pista: |
+          (1) La horizontal de B₂ da lo que A, C y D están más altos que B. (2) Primer cambio: cada punto,
+          por la perpendicular a la línea nueva, hacia fuera, su altura sobre B; A₄B₄ y C₄D₄ salen
+          paralelas. (3) Por D₄, la perpendicular a A₄B₄: Q₄; vuelve a A₁B₁ y, por la vertical, a A₂B₂.
+          (4) Segundo cambio: A₄B₄ prolongada corta la línea nueva en A₅ ≡ B₅; C₄D₄ prolongada, a C₁H de la
+          línea, da C₅ ≡ D₅.
+        desarrollo: |
+          En verde claro, A₄B₄ y C₄D₄ paralelas, D₄Q₄ perpendicular a las dos, y A₅C₅ con las dos tuberías
+          de punta; y la tubería DQ en las dos vistas. Q cae en AB a 3,5 mm de B en la planta. Otra
+          tubería perpendicular a las dos, más cerca de A, mediría lo mismo.
+
+      - tipo: calcular
+        titulo: La longitud de la tubería
+        pregunta: ¿Cuánto mide la tubería más corta entre AB y CD?
+        respuesta:
+          tipo: numero
+          valor: '18.18'
+          receta: d_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '13.15'
+            receta: en_mm(vm_alzado(D, Q))
+            mensaje: |
+              Eso es **D₂Q₂ en el alzado**, que acorta: la tubería va de delante hacia atrás. En verdadera
+              magnitud se ve con las dos tuberías de punta, A₅C₅.
+          - valor: '7.70'
+            receta: 'en_mm(vm_planta(punto3(alzado: D_4, planta: D_4), punto3(alzado: Q_4, planta: Q_4)))'
+            mensaje: |
+              Eso es **D₄Q₄ en la vista del primer cambio**. Ahí las tuberías están en verdadera magnitud,
+              y el ángulo recto se ve, pero la tubería DQ no es paralela a esa vista y sale acortada. Su
+              verdadera magnitud está en el segundo cambio, con las dos de punta.
+          - valor: '16.46'
+            receta: 'en_mm(vm_planta(C, punto3(alzado: H, planta: H)))'
+            mensaje: |
+              Eso es lo que separa A₁B₁ de C₁D₁ **en la planta**, C₁H. La planta no enseña que CD está más
+              alta que AB: C₁H es solo una de las dos componentes de la distancia.
+        pista: |
+          Mide A₅C₅ con «medir» del Taller, en el paso anterior, o en tu lámina de papel: con las dos
+          tuberías de punta, la distancia está en verdadera magnitud.
+        desarrollo: |
+          Con las dos tuberías de punta, la distancia entre ellas se ve en verdadera magnitud:
+
+          $$ \overline{DQ} = \overline{A_5C_5} \approx 18{,}18 \text{ mm} $$
+
+          En la lámina, A₅C₅ sale 18,16 mm y DQ, 18,18: los puntos se han medido sobre una imagen, y esas
+          dos centésimas son el error de la medida, no una diferencia entre las tuberías. Ninguna regla
+          las distingue. Por otro camino: D₁Q₁ mide 17,18 mm en la planta y D está 5,95 mm más alto que Q, y
+          la hipotenusa de esos dos catetos es 18,18 mm.
+
+          Una medida del dibujo cae dentro de la tolerancia por casualidad: D₁Q₁, la planta de la
+          tubería, 17,18 mm, justo en el borde. No es la longitud de la tubería: la planta la acorta, poco,
+          porque la tubería sube poco.
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: A₁B₁ y C₁D₁ son paralelas, y A₂B₂ y C₂D₂ también, así que AB y CD son paralelas.
+          - texto: La tubería más corta es cualquier perpendicular a las dos; la que sale de D llega a AB cerca de B, por el hueco entre las construcciones.
+          - texto: Con un cambio de plano las dos tuberías quedan en verdadera magnitud, y la perpendicular desde D₄ a A₄B₄ da Q₄.
+          - texto: Con otro cambio, las dos quedan de punta a la vez, y la distancia entre los dos puntos es la longitud de la tubería.
+          - texto: Como en el Ejercicio 40, la tubería más corta es una sola, la perpendicular común, y sale de un pie que hay que buscar.
+            trampa: true
+            mensaje: |
+              En el 40, AB y CD se cruzan, y su perpendicular común es una. Aquí son paralelas: todas las
+              perpendiculares a las dos miden lo mismo, 18,18 mm, y hay que escoger una.
+    resolucion: |
+      **Qué cambia respecto del Ejercicio 40.** A₁B₁ y C₁D₁ son paralelas, y A₂B₂ y C₂D₂ también: AB y
+      CD son paralelas, y la tubería más corta no es una sola. Cualquier perpendicular a las dos que
+      caiga entre las tuberías mide lo mismo, la distancia entre las dos. Escogemos la que sale de D,
+      en el muro de la derecha: la que saliera de A cruzaría la esquina del muro de la izquierda.
+
+      **Cómo se construye.** Dos cambios de plano, con B de referencia. El primero, con la línea nueva
+      paralela a A₁B₁, pone las dos tuberías en verdadera magnitud: cada punto se aparta de ella lo que
+      está más alto que B (A, 33,77 mm; C, 41,41; D, 8,82). Ahí la perpendicular desde D₄ a A₄B₄ da Q₄,
+      que vuelve a A₁B₁ por la perpendicular a la línea nueva y a A₂B₂ por la vertical. El segundo, con
+      la línea nueva perpendicular a A₄B₄, deja AB de punta y, con ella, CD: A₅ ≡ B₅ y C₅ ≡ D₅.
+
+      **El resultado.** La tubería DQ mide 18,18 mm, la distancia entre las dos tuberías. Q cae en AB
+      cerca de B, y la tubería va por el hueco entre las dos construcciones, vista entera. En la planta
+      mide 17,18 mm y en el alzado 13,15.
 
   - id: sd58-la-tuberia-mas-corta-hasta-la-tolva
     titulo: La tubería más corta de P a la tolva
