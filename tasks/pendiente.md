@@ -97,6 +97,18 @@ sabía:
 
 ### La siguiente asignatura: Expresión Gráfica
 
+- **El Taller, la deuda del diédrico** (8 de octubre de 2026, al cerrarlo):
+  que un trazo que cubre un tramo entero pero «corta» en otro sitio enseñe el
+  `porque` de ese tramo, no el mensaje general (`Taller.astro`,
+  `compruebaArista`); borrar lo que el papel borra, que hoy el Taller no
+  puede (SD42 y SD49 lo dicen en su texto); pintar la lámina con «medir» en un
+  ejercicio con receta y sin `construir` (el ejemplo del tema 1 manda a la
+  página del 55); un desplazamiento de rótulo por punto en el reproductor.
+- **Funciones de receta que propusieron los autores**, solo si un ejercicio
+  nuevo las necesita (sus firmas, en los LEEME de `fase-k\`):
+  `abatido_frontal` (k-t04d: `abatido()` con una charnela horizontal y
+  frontal a la vez abate siempre sobre el horizontal), `cuadrado_desde_alzado`
+  y `sale_de` (k-ex52b).
 - **El diseño antes que el contenido**: su examen es un dibujo. El catálogo
   ya salió de `prev` el 26 de septiembre de 2026, con el temario y la
   evaluación de la guía 25976. Fuera del repositorio está el diseño aprobado
@@ -241,6 +253,10 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Los metadatos de los PDF de Fluidos** en `public/examenes/fluidos/`
   llevan un nombre en el campo Author. Preguntado a Ionan si se borra (no
   cambia la página); sin respuesta.
+  Ya hay cómo, desde el 8 de octubre de 2026 (la colección de Expresión
+  Gráfica, §08): con pypdf, quitar el /Info, el XMP del catálogo y el /Info y
+  el /Metadata de cualquier objeto (las partes fusionadas por Acrobat los
+  llevan), y comparar las páginas píxel a píxel con las del original.
 
 ## Bloqueado por material
 
