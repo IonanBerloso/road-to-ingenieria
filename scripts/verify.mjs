@@ -579,6 +579,17 @@ console.log('\nContenido');
         }
       }
     }
+    /* Y el PDF de una colección de ejercicios (`pdf:` en
+       src/content/coleccion/<asignatura>.yaml), que su página enlaza ejercicio
+       a ejercicio: la de diédrico de Expresión Gráfica, desde el 8 de octubre
+       de 2026. */
+    const dirColecciones = join(SRC, 'content', 'coleccion');
+    if (existsSync(dirColecciones)) {
+      for (const f of readdirSync(dirColecciones).filter((n) => extname(n) === '.yaml')) {
+        const m = leer(join(dirColecciones, f)).match(/^pdf:\s*(\S+\.pdf)\s*$/m);
+        if (m) citados.add(`${f.replace(/\.yaml$/, '')}/${m[1].replace(/^['"]|['"]$/g, '')}`);
+      }
+    }
     const nadie = [];
     let servidos = 0;
     for (const asignatura of readdirSync(dirPublicos)) {

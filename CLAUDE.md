@@ -476,7 +476,8 @@ tests/
                            los valores de referencia de su solución y las
                            comprobaciones por dos caminos (§10)
 public/
-  examenes/<asignatura>/   los enunciados originales en PDF. La ÚNICA
+  examenes/<asignatura>/   los enunciados originales en PDF, y la colección
+                           de diédrico de Expresión Gráfica. La ÚNICA
                            carpeta del repo donde entra un PDF ajeno (§08),
                            y la única donde un fichero se publica por estar,
                            no por estar enlazado: verify.mjs comprueba los
@@ -1338,6 +1339,22 @@ La universidad ha dado permiso para usar el material docente. Aun así:
 > Consecuencia práctica: `public/examenes/` es la **única** carpeta del
 > repositorio donde entra un PDF ajeno, y solo si es un enunciado oficial
 > citado por una resolución nuestra. Cualquier otro binario sigue vetado (§12).
+
+> Desde el 8 de octubre de 2026 entra también **la Colección de ejercicios de
+> diédrico de Expresión Gráfica** (`public/examenes/expresion-grafica/
+> coleccion-de-ejercicios.pdf`), por decisión de Ionan: «para que cualquiera
+> que quiera ver el dibujo original en papel pueda». Cabe en la regla de arriba
+> y no en la de las colecciones escaneadas: es un documento de la propia
+> escuela, no de una editorial, y cada uno de sus ejercicios que se corrige
+> aquí es un enunciado oficial citado por una resolución nuestra; la lámina del
+> Taller se redibuja, y sin el papel no había cómo contrastarla. La declara su
+> colección (`pdf:` en `src/content/coleccion/`), que es lo que `verify.mjs`
+> cuenta como enlace, y cada ejercicio enlaza su página. Se publica **sin
+> metadatos de autor**: el original llevaba un usuario de la universidad en el
+> campo Author y en el XMP del documento y de sus dos partes fusionadas; se
+> quitaron con pypdf, y las páginas se compararon píxel a píxel con las del
+> original. Un PDF que se publique se mira así antes: metadatos, nombres
+> vetados y el patrón de DNI.
 
 ### Estilo de la prosa
 

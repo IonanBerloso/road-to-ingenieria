@@ -19,6 +19,7 @@ import { resuelveEjercicio } from '../../lib/construir';
 import type { DatosLamina } from '../../lib/lamina';
 import { mate } from '../../lib/markdown.mjs';
 import Reparto from '../ui/Reparto.astro';
+import { archivo } from '../../lib/rutas';
 import Taller from './Taller.astro';
 import Construccion from './Construccion.astro';
 
@@ -97,6 +98,27 @@ const asignaturaDelEjercicio = encontrados[0].en.split('/')[0];
  *  primeros `conjunto` de Expresión Gráfica (t07 y t10). */
 const CONJUNTO_DE_RAICES = new Set(['algebra', 'calculo']);
 const sonRaices = CONJUNTO_DE_RAICES.has(asignaturaDelEjercicio);
+/** El dibujo original en papel: si el ejercicio es de la colección de su
+ *  asignatura («Ejercicio 17 (SD22) · Colección de ejercicios de Geometría
+ *  Descriptiva, Sistema Diédrico Directo…», o un apartado del 52 al 55) y la
+ *  colección publica su PDF, se enlaza su página. Entra el 8 de octubre de
+ *  2026: la lámina del Taller se redibuja, y quien quiera contrastarla con
+ *  el papel no tenía cómo (§08: lo que no se puede contrastar pide un acto
+ *  de fe). La fuente tiene que **empezar** por el ejercicio («Ejercicio 17
+ *  …» o «Apartado 3 · Ejercicio 52 …»), y un ejemplo nuestro no lo lleva
+ *  nunca: el del tema 1 cita el Ejercicio 55 porque usa su lámina, y no es
+ *  su original. */
+const coleccionPropia = (await getCollection('coleccion')).find((c) => c.id === asignaturaDelEjercicio);
+const nDeColeccion =
+  ejercicio.nivel === 'ejemplo'
+    ? undefined
+    : ejercicio.fuente.match(/^(?:Apartado [^·]+· )?Ejercicio (\d+)\b[\s\S]*?Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo/)?.[1];
+const enColeccion = coleccionPropia?.data.pdf && nDeColeccion
+  ? coleccionPropia.data.ejercicios.find((c) => c.n === Number(nDeColeccion))
+  : undefined;
+const original = enColeccion
+  ? { href: `${archivo(`examenes/${asignaturaDelEjercicio}/${coleccionPropia!.data.pdf}`)}#page=${enColeccion.paginas[0]}`, pagina: enColeccion.paginas[0] }
+  : null;
 const REPO = 'https://github.com/IonanBerloso/road-to-ingenieria';
 /* `Astro.url` en un build estático es la URL final de la página, así que el
    aviso llega diciendo desde dónde se mandó sin que haya que pasarlo a mano. */
@@ -490,6 +512,11 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     <p class="ej-meta">
       <span class="chip-nivel">nivel: {ejercicio.nivel}</span>
       <span class="fuente rotulo">{ejercicio.fuente}</span>
+      {original && (
+        <a class="fuente-original rotulo" href={original.href} title="El PDF de la colección, abierto en la página de este ejercicio">
+          el original en papel, pág. {original.pagina}
+        </a>
+      )}
     </p>
     <h3 id={`ej-${ejercicio.id}`}>{ejercicio.titulo}</h3>
 
@@ -1876,6 +1903,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     font-weight: 800;
     letter-spacing: -.015em;
     margin: .3rem 0 .3rem;
+  }
+
+  .fuente-original {
+    text-transform: none;
+    letter-spacing: .01em;
+    font-size: .68rem;
+    line-height: 1.5;
   }
 
   .fuente {

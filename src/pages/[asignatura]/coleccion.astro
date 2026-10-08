@@ -1,9 +1,10 @@
 ---
+import { statSync } from 'node:fs';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/ui/Cabecera.astro';
 import EnlaceAsignatura from '../../components/ui/EnlaceAsignatura.astro';
-import { ruta } from '../../lib/rutas';
+import { ruta, archivo } from '../../lib/rutas';
 import { sinMarcas } from '../../lib/markdown.mjs';
 import { paginaDeEjercicio } from '../../lib/ejercicios';
 import { slugExamen } from '../../content.config';
@@ -35,7 +36,21 @@ export async function getStaticPaths() {
 
 const { asignatura, coleccion } = Astro.props;
 const id = asignatura.id;
-const { titulo, fuente, ejercicios } = coleccion.data;
+const { titulo, fuente, ejercicios, pdf } = coleccion.data;
+
+/* El PDF original, si la colección lo publica: tiene que existir de verdad,
+   como el de un examen, y cada ejercicio enlaza su página (#page=N, que
+   abren igual el visor de Firefox, el de Chrome y el de Edge). */
+const original = pdf
+  ? (() => {
+      const enDisco = `public/examenes/${id}/${pdf}`;
+      try {
+        return { href: archivo(`examenes/${id}/${pdf}`), mb: (statSync(enDisco).size / 1048576).toFixed(1).replace('.', ',') };
+      } catch {
+        throw new Error(`La colección de ${id} enlaza "${pdf}", que no está en ${enDisco}.`);
+      }
+    })()
+  : null;
 
 /* Los ejercicios de tema que usan cada lámina, por su código en minúscula. */
 const usos = new Map<string, { titulo: string; href: string }[]>();
@@ -70,6 +85,7 @@ const lista = ejercicios.map((e) => {
     ...e,
     ancla: `ejercicio-${e.n}`,
     pagina: e.paginas.length === 1 ? `pág. ${e.paginas[0]}` : `págs. ${e.paginas[0]}–${e.paginas[1]}`,
+    paginaHref: original ? `${original.href}#page=${e.paginas[0]}` : null,
     temas,
     aqui,
   };
@@ -97,6 +113,14 @@ const crumb = `${asignatura.data.nombre} · colección de ejercicios`;
         sobre lo que se examina el bloque 1. <strong>{corregidos} de {lista.length}</strong> se corrigen ya aquí, paso a
         paso; de los demás se dice en qué tema están explicados.
       </p>
+      {
+        original && (
+          <p class="original">
+            Para ver cada dibujo como está en el papel, <a href={original.href}>el PDF original</a> ({original.mb} MB):
+            el número de página de cada ejercicio abre la suya.
+          </p>
+        )
+      }
 
       <form class="ir" role="search" aria-label="Ir a un ejercicio de la colección">
         <label for="ir-n">Ir al ejercicio</label>
@@ -125,7 +149,11 @@ const crumb = `${asignatura.data.nombre} · colección de ejercicios`;
                       {e.titulado && <span class="col-titulado"> El PDF lo titula «{e.titulado}».</span>}
                     </p>
                     <p class="col-meta">
-                      <span>{e.pagina}</span>
+                      {e.paginaHref ? (
+                        <a href={e.paginaHref} title="La página del PDF original, con el dibujo en papel">{e.pagina}</a>
+                      ) : (
+                        <span>{e.pagina}</span>
+                      )}
                       {e.temas.map((t) => (
                         <span>
                           {' · '}
@@ -274,6 +302,7 @@ const crumb = `${asignatura.data.nombre} · colección de ejercicios`;
   .col-aqui .rotulo { color: var(--live); }
   .col-todavia { margin: .4rem 0 0; font-size: .85rem; color: var(--faint); }
 
+  .original { font-size: .92rem; max-width: var(--measure); }
   .fuente { margin: 2.6rem 0 .3rem; }
   .fuente-cuerpo { font-size: .86rem; color: var(--graphite); max-width: var(--measure); }
 

@@ -2704,6 +2704,11 @@ const esquemaColeccion = z
     titulo: z.string().min(5),
     /** De dónde sale, por su título y su departamento: sin nombres de persona. */
     fuente: z.string().min(40),
+    /** El PDF original dentro de `public/examenes/<asignatura>/`, para ver
+     *  cada dibujo en el papel en que se entrega: la página de la colección
+     *  enlaza el de cada ejercicio, y cada ejercicio corregido, el suyo. Entra
+     *  el 8 de octubre de 2026, con los metadatos de autor quitados (§08). */
+    pdf: z.string().regex(/^[a-z0-9-]+\.pdf$/, 'en minúscula, con guiones').optional(),
     ejercicios: z.array(ejercicioDeColeccion).min(1),
   })
   .strict()
