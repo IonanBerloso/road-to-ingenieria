@@ -1,0 +1,146 @@
+ejercicios:
+  # Orden (§04): es el único ejercicio del tema, y es nuestro (`ejemplo`). Ninguna
+  # pregunta de la colección ni de las hojas 52 a 55 es de este tema, así que no
+  # hay nada de la colección que poner detrás.
+  #
+  # Decisión: la figura es una lámina ya publicada, la del apartado 2 del
+  # Ejercicio 55 (ex55-2), y la pregunta es una lectura que aquel apartado
+  # necesita: B₂C₂ es horizontal, así que BC está en verdadera magnitud en la
+  # planta (su altura es el doble de BC). Se mide sin construir nada, que es lo
+  # que el tema 1 tiene que enseñar: qué conserva una proyección ortogonal.
+  #
+  # Decisión: sin paso `construir`, como pide el encargo (reconocer, calcular y
+  # justificar). Sin `construir` la página no pinta la lámina, así que el
+  # enunciado manda a la del Ejercicio 55, cuyo Taller tiene «medir», y al papel.
+  # La cifra sigue atada a la receta.
+  - id: sr-bc-horizontal-se-mide-en-la-planta
+    titulo: BC es horizontal, y se mide en la planta
+    fuente: >-
+      Ejemplo introductorio · Road to Ingeniería. La pregunta no es de examen ni de
+      la colección: es nuestra, sobre la figura del Ejercicio 55, apartado 2 (pág.
+      66), de la Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico
+      Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU.
+    nivel: ejemplo
+    enunciado: |
+      En la figura del apartado 2 del Ejercicio 55, el plano ABCD viene dado en alzado, arriba, y en
+      planta, debajo. En el alzado, B₂C₂ es horizontal en el papel. ¿En qué vista se lee la longitud
+      de BC sin acortar, y cuánto mide?
+
+      **Notas nuestras.** La figura está en la
+      [página del Ejercicio 55](/road-to-ingenieria/expresion-grafica/examenes/ejercicio-55/#ej-exeg-h55-2-la-piramide-de-mayor-cota),
+      en su apartado 2: su Taller tiene la herramienta «medir», que da en milímetros la distancia
+      entre dos puntos de la lámina, y en modo guiado se abre al acertar el primer paso de aquel
+      apartado. En el papel es la mitad izquierda de la pág. 66 de la colección,
+      impresa a tamaño real. La hoja no da escala para ese apartado: las longitudes son milímetros de
+      la lámina. La pregunta es nuestra; aquel apartado pide una pirámide cuya altura es el doble de
+      BC.
+    pide: En qué vista está BC en verdadera magnitud, cuánto mide y por qué.
+    receta:
+      lamina: ex55-2
+      escena:
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        # El plano horizontal por B, para que el build compruebe que C tiene su
+        # cota: un punto corrido 10 en x en las dos vistas (la cota y el
+        # alejamiento de B), y otro con el alzado de B y la planta corrida en el
+        # alejamiento.
+        horizontal_B: 'plano(B, punto3(alzado: desplaza(figura.punto("B2"), dx: 10), planta: desplaza(figura.punto("B1"), dx: 10)), punto3(alzado: figura.punto("B2"), planta: desplaza(figura.punto("B1"), dy: 10)))'
+      solucion:
+        bc_mm: en_mm(vm(B, C))
+        # Lo que C₁ está por debajo de B₁ en la planta, la diferencia de
+        # alejamientos: la receta no la expone, y sale por Pitágoras (como en
+        # SD22 y SD26). Es el cateto del error del segundo distractor.
+        dyBC: 'raiz(vm(B, C) * vm(B, C) - vm_alzado(B, C) * vm_alzado(B, C))'
+      comprueba:
+        - en_plano(C, horizontal_B)
+    pasos:
+      - tipo: reconocer
+        pregunta: En el alzado, B₂C₂ es horizontal en el papel. ¿Qué dice eso de la recta BC?
+        opciones:
+          - texto: Que BC es frontal, paralela al plano vertical, así que el alzado B₂C₂ ya mide lo mismo que BC
+            mensaje: |
+              Es al revés. Una frontal es la que tiene la **planta** horizontal en el papel:
+              alejamiento constante. Aquí lo horizontal en el papel es el alzado, y eso dice cota
+              constante: BC es horizontal. El alzado la acorta: B₂C₂ mide 27,01 mm, y BC, 54,02.
+          - texto: Que B y C tienen la misma cota, así que BC es horizontal y B₁C₁ la da sin acortar
+            correcta: true
+            mensaje: |
+              Eso es. Un alzado horizontal en el papel quiere decir cota constante: B y C están a la
+              misma altura, y BC es paralela al plano horizontal. Lo que es paralelo a un plano de
+              proyección se ve en él sin acortar, así que la longitud de BC se lee en la planta, en
+              B₁C₁.
+          - texto: Nada todavía, porque para medir BC hay que levantar su triángulo, como con cualquier recta
+            mensaje: |
+              El triángulo vale para cualquier recta, también para esta, pero aquí no hace falta: su
+              cateto vertical es la diferencia de cotas de B y C, que es cero porque B₂C₂ es
+              horizontal. El triángulo se aplana, y su hipotenusa es B₁C₁: la planta ya la da.
+          - texto: Que BC está en verdadera magnitud en las dos vistas a la vez
+            mensaje: |
+              B₂C₂ mide 27,01 mm y B₁C₁, 54,02: no pueden ser las dos la longitud de BC. Una recta
+              sale en verdadera magnitud en las dos vistas solo si es horizontal y frontal a la vez,
+              y entonces sus dos proyecciones son horizontales en el papel. B₁C₁ no lo es.
+
+      - tipo: calcular
+        titulo: La longitud de BC
+        pregunta: ¿Cuánto mide BC de verdad?
+        respuesta:
+          tipo: numero
+          valor: '54.02'
+          receta: bc_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '27.01'
+            receta: en_mm(vm_alzado(B, C))
+            mensaje: |
+              Eso es lo que mide **B₂C₂ en el alzado** (A₂D₂, la otra horizontal del plano, da casi
+              lo mismo: 26,97). BC es horizontal, y el alzado la acorta: lo que la da sin acortar es
+              la planta, B₁C₁.
+          - valor: '71.46'
+            receta: en_mm(raiz(vm_planta(B, C) * vm_planta(B, C) + dyBC * dyBC))
+            mensaje: |
+              Has levantado el triángulo con 46,78 mm de cateto vertical: lo que C₁ está por debajo
+              de B₁ en la planta. Eso es la diferencia de **alejamientos** (C está más lejos del
+              plano vertical que B), no la de cotas. La de cotas se lee en el alzado, y es cero: el
+              triángulo se aplana, y BC es B₁C₁.
+        pista: |
+          B₂C₂ horizontal quiere decir que BC es horizontal. Mide B₁C₁, en la planta: con «medir» en
+          el Taller del apartado 2 del Ejercicio 55, o con la regla en la pág. 66 impresa a tamaño
+          real.
+        # Decisión: la casilla no distingue dos medidas de la planta que caen dentro
+        # del milímetro, A₁D₁ (53,96) y C₁E₁ (54,70); el desarrollo las dice
+        # (guiones/segundo-camino.mjs, del que salen también las cifras de abajo).
+        desarrollo: |
+          BC es horizontal, y la planta la da sin acortar. Por las tres diferencias entre B y C: 27,01
+          mm hacia la derecha, lo mismo en las dos vistas; 46,78 mm de alejamiento, lo que C₁ está por
+          debajo de B₁; y 0 de cota, porque B₂C₂ es horizontal:
+
+          $$ \overline{BC} = \sqrt{27{,}01^{2} + 46{,}78^{2} + 0^{2}} \approx 54{,}02 \text{ mm} = \overline{B_1C_1} $$
+
+          En la planta, A₁D₁ mide 53,96 mm y C₁E₁, 54,70: los dos caen dentro del milímetro de la
+          respuesta, y la casilla no distingue a quien midió uno de ellos. AD es la otra horizontal del
+          plano, paralela a BC y de casi la misma longitud en el dibujo; C₁E₁ no es ninguna arista.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'B₂C₂ es horizontal en el papel: B y C tienen la misma cota.'
+          - texto: 'Con la misma cota en los dos extremos, BC es paralela al plano horizontal: es una recta horizontal.'
+          - texto: 'Una proyección ortogonal da sin acortar lo que es paralelo a su plano: la planta da BC en verdadera magnitud.'
+          - texto: B₁C₁ mide 54,02 mm, y eso mide BC.
+          - texto: El alzado también la da sin acortar, porque toda proyección ortogonal conserva las longitudes.
+            trampa: true
+            mensaje: |
+              Solo las de lo que es paralelo a su plano. BC es horizontal, no frontal, y el alzado la
+              acorta: B₂C₂ mide 27,01 mm, la mitad de BC.
+    resolucion: |
+      **Qué dice el alzado.** B₂C₂ es horizontal en el papel: B y C tienen la misma cota, y BC es una
+      recta horizontal, paralela al plano horizontal.
+
+      **Dónde se mide.** Una proyección ortogonal da sin acortar lo que es paralelo a su plano. BC es
+      paralela al plano horizontal, así que su longitud es la de la planta, B₁C₁; el alzado la
+      acorta.
+
+      **Cuánto mide.** B₁C₁ mide 54,02 mm, y eso mide BC. B₂C₂ mide 27,01 mm, la mitad: es lo que sale
+      si se mide en el alzado. Es una lectura que necesita el apartado 2 del Ejercicio 55, cuya
+      pirámide tiene de altura el doble de BC, 108,03 mm.
