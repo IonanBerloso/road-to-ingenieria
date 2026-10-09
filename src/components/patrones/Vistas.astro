@@ -1,0 +1,142 @@
+---
+/**
+ * LAS VISTAS DE UNA PIEZA, pintadas desde lo calculado (diseño de la fase M,
+ * §3.3): el alzado, la planta y el perfil izquierdo que `npm run vistas`
+ * guarda en `src/content/vistas/<pieza>.json`, en el sistema europeo.
+ *
+ * Prueba de utilidad (§13):
+ * - **Para quién:** el alumno de los temas 8 y 9 de Expresión Gráfica.
+ * - **Cuándo:** leyendo un tema (la figura de un párrafo) y eligiendo la
+ *   vista buena entre cuatro (las opciones de un `reconocer`, T1 del diseño).
+ * - **Qué gana:** vistas que son las de la pieza descrita y no un dibujo a
+ *   mano: ni una oculta olvidada ni una arista en un plano común.
+ * - **Cómo se comprueba:** la geometría la mide `tests/vistas/figura.test.ts`
+ *   (nada fuera del `viewBox`, las vistas en su sitio, el título y la
+ *   descripción desde la pieza); el color, `verify.mjs` y `check-color.mjs`.
+ *
+ * Dos usos, con las mismas props:
+ *
+ *   <Vistas pieza="nyv-2-18-3" prefijo="t08-fig1" />
+ *   <Vistas pieza="nyv-2-18-3" prefijo="t08-ej1-op2" vistas={['perfil']} escala={1.5} rotulos={false} />
+ *
+ * El primero es la figura de un párrafo, con su pie si se le da `pie`. El
+ * segundo cabe dentro del botón de una opción: es solo un `<svg>`, que es
+ * contenido de frase, sin `<figure>` alrededor.
+ *
+ * No calcula nada: la geometría sale de `lib/vistas/figura.ts`, que lanza si
+ * algo se sale del `viewBox`. Las clases son las de la lámina del Taller
+ * (`vista`, `oculta`, `eje`); los colores, tokens. El trazo no escala con la
+ * figura (`vector-effect`), para que una opción pequeña y una figura grande
+ * se lean con el mismo grosor.
+ */
+import { getEntry } from 'astro:content';
+import { describePieza } from '../../lib/vistas/dibujo';
+import { figuraDeVistas } from '../../lib/vistas/figura';
+import { compilaPieza } from '../../lib/vistas/pieza';
+import type { PiezaDeclarada } from '../../lib/vistas/pieza';
+import type { VistaId } from '../../lib/vistas/proyeccion';
+import type { VistasPublicadas } from '../../lib/vistas/publicadas';
+
+interface Props {
+  /** El id de la pieza: el nombre de su fichero, `nyv-2-18-3`. */
+  pieza: string;
+  /** Único en la página: lo llevan los ids del título y la descripción. */
+  prefijo: string;
+  /** Qué vistas; por defecto, las tres. */
+  vistas?: VistaId[];
+  /** Píxeles de pantalla por mm de la pieza. */
+  escala?: number;
+  /** El nombre de cada vista encima de ella. */
+  rotulos?: boolean;
+  /** Los ejes de los cilindros y de simetría. */
+  ejes?: boolean;
+  /** El pie de la figura, en prosa llana: no pasa por Markdown (§17). Sin
+   *  pie no hay `<figure>`, y el `<svg>` va solo. */
+  pie?: string;
+}
+
+const { pieza, prefijo, vistas, escala, rotulos, ejes, pie } = Astro.props;
+
+const calculadas = await getEntry('vistas', pieza);
+const declarada = await getEntry('piezas', pieza);
+/* Los mensajes, sumando cadenas: escritos como una plantilla con otras
+   dentro y comillas invertidas escapadas, el compilador de Astro 7
+   (compiler-rs) no compilaba este fichero («Expected `}` but found `:`»
+   unas líneas más abajo, 9 de octubre de 2026). */
+if (!declarada) throw new Error('Vistas: no hay src/content/piezas/' + pieza + '.yaml');
+if (!calculadas) throw new Error('Vistas: no hay src/content/vistas/' + pieza + '.json; pasa npm run vistas');
+const descripcion = describePieza(compilaPieza(declarada.data as unknown as PiezaDeclarada));
+const figura = figuraDeVistas(calculadas.data as VistasPublicadas, descripcion, { prefijo, vistas, escala, rotulos, ejes });
+const Envoltorio = pie ? 'figure' : 'span';
+---
+
+<Envoltorio class:list={['vistas-fig', { 'vistas-con-pie': pie }]}>
+  <svg viewBox={`0 0 ${figura.ancho} ${figura.alto}`} width={figura.anchoPx} height={figura.altoPx} role="img" aria-labelledby={`${figura.idTitulo} ${figura.idDesc}`} class="vistas" data-pieza={pieza}>
+    <title id={figura.idTitulo}>{figura.titulo}</title>
+    <desc id={figura.idDesc}>{figura.desc}</desc>
+    {
+      figura.grupos.map((g) => (
+        <g data-vista={g.vista} fill="none">
+          {g.elementos.map((e) =>
+            e.el === 'line' ? (
+              <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} class={e.clase} />
+            ) : e.el === 'circle' ? (
+              <circle cx={e.cx} cy={e.cy} r={e.r} class={e.clase} />
+            ) : e.el === 'path' ? (
+              <path d={e.d} class={e.clase} />
+            ) : (
+              <polyline points={e.points} class={e.clase} />
+            ),
+          )}
+          {g.rotulo && (
+            <text x={g.rotulo.x} y={g.rotulo.y} font-size={g.rotulo.tamano} class="nombre-de-vista" aria-hidden="true">
+              {g.rotulo.texto}
+            </text>
+          )}
+        </g>
+      ))
+    }
+  </svg>
+  {pie && <figcaption>{pie}</figcaption>}
+</Envoltorio>
+
+<style>
+  .vistas-fig { display: inline-block; max-width: 100%; }
+  .vistas-con-pie {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .6rem;
+    margin: 1.6rem 0;
+  }
+  .vistas-con-pie figcaption {
+    font-size: .8rem;
+    line-height: 1.5;
+    color: var(--graphite);
+    max-width: 34rem;
+    text-align: center;
+  }
+  .vistas { max-width: 100%; height: auto; }
+
+  /* La lámina de siempre: la tinta del sitio, que en oscuro se invierte
+     sola. El trazo se mide en la pantalla y no en mm de la pieza. El
+     `fill="none"` de cada grupo es por si un día falta esta regla: un
+     arco sin relleno declarado se pinta como una cuña negra (§17). */
+  .vistas line,
+  .vistas circle,
+  .vistas path,
+  .vistas polyline {
+    stroke: var(--ink);
+    fill: none;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .vistas .vista { stroke-width: 1.4px; }
+  .vistas .oculta { stroke-width: 1px; stroke-dasharray: 5 3; stroke-linecap: butt; }
+  .vistas .eje { stroke: var(--faint); stroke-width: .8px; stroke-dasharray: 9 2 1.5 2; stroke-linecap: butt; }
+  /* El nombre de cada vista. No se llama `.rotulo`: esa clase es del sitio
+     (base.css) y su `font-size` pisaba el del atributo; los nombres salían
+     de 13 mm y cortados por arriba (lo cazó la página de prueba, 9 de
+     octubre de 2026). */
+  .vistas .nombre-de-vista { fill: var(--graphite); font-family: var(--mono); letter-spacing: .04em; }
+</style>

@@ -182,6 +182,11 @@ const cuentaExamen = new Map<string, Map<string, number>>();
  *  externa de ese día, A2): ahora sale donde hay duración, de una regla o
  *  impresa, y lleva a una página donde el reloj está. */
 const primeraConReloj = new Map<string, string>();
+/** Las asignaturas en las que algún examen no tiene reloj (ni regla ni
+ *  duración propia): el botón no puede decir «en la página de cada
+ *  convocatoria». Pasa en Expresión Gráfica, cuya hoja 52 no lo lleva (9 de
+ *  octubre de 2026). */
+const algunaSinReloj = new Set<string>();
 
 for (const ex of examenes) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
@@ -191,6 +196,7 @@ for (const ex of examenes) {
   if (ex.data.duracion && !primeraConReloj.has(ex.data.asignatura)) {
     primeraConReloj.set(ex.data.asignatura, slug);
   }
+  if (!ex.data.duracion) algunaSinReloj.add(ex.data.asignatura);
 
   const entera = (ex.data.fuera ?? []).length === 0;
   enterasPorAsignatura.set(
@@ -759,7 +765,9 @@ const enteras = asignaturas
                     >
                       <span class="h-n">Simulacro con reloj</span>
                       <span class="h-q">
-                        en la página de cada convocatoria: eliges ejercicios y cuenta atrás
+                        {a.data.duracionDelExamen || !algunaSinReloj.has(a.id)
+                          ? 'en la página de cada convocatoria: eliges ejercicios y cuenta atrás'
+                          : 'en la página de los exámenes que dicen cuánto duran: eliges ejercicios y cuenta atrás'}
                       </span>
                     </a>
                   )}

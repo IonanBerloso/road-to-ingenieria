@@ -24,9 +24,13 @@ function tarda(n: number): number {
   return mejor;
 }
 
-/** El techo para 40 agujeros, en ms: más de tres veces lo medido el 9 de
- *  octubre de 2026 después de quitar lo cuadrático (ver MOTOR-LEEME). */
-const TECHO_40 = 1500;
+/** El techo para 40 agujeros, en ms. No es una medida sino un freno contra el
+ *  desastre: el mismo 9 de octubre, 40 agujeros tardaban 0,22 s con la
+ *  máquina tranquila y 1,84 s con los 200 ficheros de tests corriendo en
+ *  paralelo, que es como corre en el suelo y en CI. Con 1,5 s, el test
+ *  fallaba por la carga y no por el motor. Lo cuadrático lo vigila la
+ *  proporción de arriba, que se mide en las mismas condiciones las dos veces. */
+const TECHO_40 = 8000;
 
 describe('el motor no crece con el cuadrado de las primitivas', () => {
   it('doblar los agujeros, de 40 a 80, no llega a triplicar el tiempo; y 40 caben en el techo', () => {

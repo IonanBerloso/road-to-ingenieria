@@ -8,6 +8,8 @@ import { leeNumero } from './lib/numero';
 import { analiza } from './lib/regiones';
 import { comparaFormula, leeFormula } from './lib/quimica';
 import { NOMBRE_EN_LAMINA, problemasDeLamina } from './lib/lamina';
+import { esquemaDePieza, esquemaDeVistas, type Disco } from './lib/vistas/esquemas';
+import { resumenDeTexto, resumenDelMotor, resumenGuardado, textoDePieza } from './lib/vistas/resumen';
 
 /* ═══════════════════════════════════════════════════════════════════
    Colecciones con esquema. Si falta un campo, si un peso no es uno de
@@ -1732,6 +1734,12 @@ const examen = defineCollection({
         .object({
           minutos: z.number().int().min(10).max(480),
           fuente: z.string().min(15),
+          /** `false` cuando el examen no imprime su duración y la sabemos de
+           *  otra fuente, que `fuente` dice: las hojas 53 a 55 de Expresión
+           *  Gráfica, a unos 40 minutos por lámina A3 según Ionan (9 de
+           *  octubre de 2026). La página no dice entonces «el cuadernillo
+           *  imprime». */
+          impresa: z.boolean().default(true),
         })
         .optional(),
       /**
@@ -2809,7 +2817,7 @@ const esquemaRubricaDeLaminas = z
   });
 
 const rubricaDeLaminas = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/rubrica-de-laminas' }),
+  loader: glob({ pattern: patronSolo('*.yaml', (id) => `${id}.yaml`), base: './src/content/rubrica-de-laminas' }),
   schema: esquemaRubricaDeLaminas,
 });
 
@@ -2873,6 +2881,52 @@ const coleccion = defineCollection({
   schema: esquemaColeccion,
 });
 
+/** Las piezas de Expresión Gráfica como DATOS (diseño de la fase M, §3.1 y
+ *  §3.7): el árbol de sumas, restas e intersecciones de cajas, prismas,
+ *  cilindros, conos y semiespacios con nombre de que el motor de
+ *  `lib/vistas` calcula las vistas. Un fichero por pieza, con el nombre de su
+ *  código (`nyv-2-18-3.yaml`), como las láminas.
+ *
+ *  Y sus vistas calculadas, en `src/content/vistas/`: no se escriben a mano.
+ *  Las escribe `npm run vistas` (`scripts/vistas.mjs`) con el resumen de la
+ *  pieza y del motor, y cada colección rechaza lo que se ha quedado atrás:
+ *  la pieza, unas vistas que no son las de su texto; las vistas, un resumen
+ *  que no es el de su pieza o el del motor de hoy, y una vista girada o
+ *  espejada (alzado y planta con la misma anchura, alzado y perfil con la
+ *  misma altura, planta y perfil con la misma profundidad, §3.8).
+ *
+ *  Prueba de utilidad (§13):
+ *  - **Para quién:** el alumno del bloque 2 de Expresión Gráfica que hace un
+ *    ejercicio de vistas (temas 8 y 9), y quien lo escribe.
+ *  - **Cuándo:** la pieza, al describirla y cotejarla sobre su página
+ *    (`scripts/pieza-sobre-pdf.mjs`); las vistas, en cada build.
+ *  - **Qué gana:** que las vistas que corrigen un ejercicio sean las de la
+ *    pieza descrita y no un dibujo a mano: una pieza mal descrita da una
+ *    solución falsa con todo en verde (regla 3 del patrón 2, §05).
+ *  - **Cómo se comprueba:** `tests/vistas/esquemas.test.ts` valida al revés
+ *    los dos esquemas (un campo mal escrito, un `noSeCorta` que no existe, un
+ *    resumen de otra pieza, una planta espejada); `al-dia.test.ts` recalcula
+ *    cada pieza; `claves.test.ts` compara las de NyV con su clave.
+ *
+ *  Los esquemas viven en `lib/vistas/esquemas.ts` para que esos tests los
+ *  usen sin construir el sitio; lo que leen del disco se lo da `discoDeVistas`.
+ *  El resumen del motor se calcula una vez por build. */
+let motorDeHoy: string | null = null;
+const discoDeVistas: Disco = {
+  textoDePieza: (id) => textoDePieza(process.cwd(), id),
+  resumenGuardado: (id) => resumenGuardado(process.cwd(), id),
+  resumenDeTexto,
+  resumenDelMotor: () => (motorDeHoy ??= resumenDelMotor(process.cwd())),
+};
+const piezas = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/piezas' }),
+  schema: esquemaDePieza(discoDeVistas),
+});
+const vistas = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/vistas' }),
+  schema: esquemaDeVistas(discoDeVistas),
+});
+
 export const collections = {
   catalogo,
   ...temas,
@@ -2887,4 +2941,6 @@ export const collections = {
   criterios,
   rubricaDeLaminas,
   coleccion,
+  piezas,
+  vistas,
 };

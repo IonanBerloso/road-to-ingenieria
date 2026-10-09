@@ -1,0 +1,69 @@
+# La pieza 1 de NyV 2.18: una pletina doblada en Z. Una chapa de arriba,
+# al fondo, con la cabeza redonda y un taladro; un brazo que viene hacia
+# delante por arriba, con un acuerdo por dentro y un redondeo por fuera en
+# el codo; y una chapa de abajo, delante, que acaba en un ojo taladrado
+# desplazado a la izquierda.
+#
+# Ejes: x a la derecha, y hacia el fondo, z hacia arriba; mm. El origen: x
+# en el canto izquierdo de las chapas, y en la cara de delante de la chapa
+# de abajo, z en lo más bajo del ojo. Medidas sobre la clave (p. 21) a 400
+# ppp, con la página a su tamaño: 1 mm de la pieza es 1 mm de la página.
+#
+# Lo calculado, no medido:
+# - la transición del canto derecho al ojo es un arco de radio 23,2 (medido)
+#   tangente al canto x = 20 y al ojo por dentro: centro (−3,2, 18,5056),
+#   toca el canto en z = 18,5056 y el ojo en (14,8322, 3,9083). Se escribe
+#   como ese cilindro cortado por el polígono que va del centro del ojo a
+#   las dos tangencias;
+# - a la izquierda, un acuerdo de radio 1,4 entre el canto x = 0 y el ojo,
+#   centro (−1,4, 19,3673): sin él, el canto y el ojo se cortan en arista
+#   (en z = 18,7255) y el perfil llevaría una línea que la clave no tiene.
+codigo: NyV-2.18-1
+fuente: Normalización y vistas (NyV), p. 19 (2.18), pieza 1 de «Dibujar las vistas necesarias para definir estas piezas»; su clave, en la p. 21 (2.19).
+cotas: proporcionales
+suma:
+  - { nombre: chapa de arriba, caja: [0, 20, 27.8, 38.4, 34.5, 60.1] }
+  - { nombre: cabeza de arriba, cilindro: { eje: y, centro: [10, 60.1], r: 10, desde: 27.8, hasta: 38.4 } }
+  - { nombre: brazo, caja: [0, 20, 0, 38.4, 34.5, 45] }
+  - { nombre: chapa de abajo, caja: [0, 20, 0, 10.6, 18.5056, 45] }
+  - { nombre: ojo, cilindro: { eje: y, centro: [6.64, 10.54], r: 10.54, desde: 0, hasta: 10.6 } }
+  - nombre: transición
+    suma:
+      - { nombre: arco de la transición, cilindro: { eje: y, centro: [-3.2, 18.5056], r: 23.2, desde: 0, hasta: 10.6 } }
+    interseca:
+      - nombre: hasta las tangencias
+        prisma:
+          plano: xz
+          poligono: [[6.64, 18.5056], [21, 18.5056], [21, 2.02], [17.164, 2.0208], [6.64, 10.54]]
+          desde: 0
+          hasta: 10.6
+  - nombre: acuerdo izquierdo
+    suma:
+      - nombre: hueco del acuerdo izquierdo
+        prisma:
+          plano: xz
+          poligono: [[0, 19.3673], [-0.4573, 18.3323], [0, 18.7255]]
+          desde: 0
+          hasta: 10.6
+    resta:
+      - { nombre: arco del acuerdo izquierdo, cilindro: { eje: y, centro: [-1.4, 19.3673], r: 1.4 } }
+  - nombre: acuerdo del codo
+    suma:
+      - { nombre: rincón del codo, caja: [0, 20, 25, 27.8, 45, 47.8] }
+    resta:
+      - { nombre: arco del acuerdo del codo, cilindro: { eje: x, centro: [25, 47.8], r: 2.8 } }
+resta:
+  - nombre: redondeo del codo
+    suma:
+      - { nombre: esquina del codo, caja: [-1, 21, 30.7, 39, 34, 42.2] }
+    resta:
+      - { nombre: arco del redondeo del codo, cilindro: { eje: x, centro: [30.7, 42.2], r: 7.7 } }
+  - { nombre: taladro de arriba, cilindro: { eje: y, centro: [10, 60.1], r: 4.4 } }
+  - { nombre: taladro de abajo, cilindro: { eje: y, centro: [6.64, 10.54], r: 5.3 } }
+noSeCorta: []
+ocultas: todas
+revision:
+  fecha: '2026-10-09'
+  notas:
+    - Medida sobre la clave de la p. 21 a 400 ppp. El escaneo está algo torcido (los cantos de la chapa se corren 0,35 mm de arriba abajo) y la pieza se escribe recta, con las chapas de 20 mm de ancho y 10,6 de grueso y el brazo de 10,5.
+    - 'Cotejada encima de la p. 21 con «node scripts/pieza-sobre-pdf.mjs nyv-2-18-1 --pdf Normalizacin_y_Vistas.pdf --pagina 21 --escala 2.8346 --alzado 228.78,332.42 --perfil 462.33,333.16»: cada línea del motor tiene tinta a menos de 1 mm y la clave no tiene ninguna que el motor no saque. El primer cotejo sin el acuerdo izquierdo daba en el perfil una arista en z = 18,7 que la clave no tiene: de ahí el acuerdo.'

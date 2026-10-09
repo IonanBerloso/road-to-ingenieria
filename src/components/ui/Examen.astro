@@ -95,8 +95,11 @@ interface Props {
   minutosExigente?: number;
   /** La duración que imprime este cuadernillo, si la imprime (`duracion` en
    *  su `examen.yaml`). Manda sobre la regla por ejercicio: un dato impreso
-   *  gana a una regla (27 de septiembre de 2026). */
-  duracionImpresa?: { minutos: number; fuente: string };
+   *  gana a una regla (27 de septiembre de 2026). Con `impresa: false` es la
+   *  de un examen que no la imprime pero la sabemos de otra fuente, y la
+   *  frase no dice «el cuadernillo imprime» (las hojas de Expresión Gráfica,
+   *  9 de octubre de 2026). */
+  duracionImpresa?: { minutos: number; fuente: string; impresa?: boolean };
   /** Por qué no hay PDF, cuando no lo hay (`sinPdf` en su `examen.yaml`). */
   sinPdf?: string;
   /** Por qué una hoja de examen no tiene fecha ni curso (`sinFecha`). */
@@ -348,7 +351,12 @@ const fueraHtml = await Promise.all(
           hidden
         >
           <p class="rotulo s-tit">Hacerlo con reloj</p>
-          {duracionImpresa ? (
+          {duracionImpresa && duracionImpresa.impresa === false ? (
+            <p class="s-txt">
+              Unos <strong data-previsto>{duracion}</strong> ({duracionImpresa.fuente}). Quita
+              lo que no vayas a hacer y el reloj se ajusta en proporción.
+            </p>
+          ) : duracionImpresa ? (
             <p class="s-txt">
               El cuadernillo imprime <strong data-previsto>{duracion}</strong> para sus
               {deCuantos} ejercicios ({duracionImpresa.fuente}). Quita los que no vayas a

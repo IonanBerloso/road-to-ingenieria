@@ -312,6 +312,14 @@ src/
                            como DATOS: su tabla BIEN/MAL tal cual, con el
                            tema que explica cada línea de BIEN. Hoy,
                            Expresión Gráfica. La pinta ui/RubricaLaminas
+    piezas/                las piezas de vistas y cortes de Expresión
+                           Gráfica como DATOS (fase M): un árbol de sumas y
+                           restas de primitivas con nombre, cotejado sobre
+                           su página (scripts/pieza-sobre-pdf.mjs)
+    vistas/                sus vistas, CALCULADAS por lib/vistas con
+                           `npm run vistas`; nunca se editan. Llevan el
+                           resumen de su pieza y del motor, y el esquema
+                           rechaza las que se han quedado atrás
     banco/                 bancos de preguntas de test (§05): el de mínimos
                            de Materiales, que alimenta un simulacro; las
                            cuestiones de las diapositivas de Cálculo, uno
@@ -370,6 +378,16 @@ src/
     diedrico-corrige.ts    la corrección de lo que marca el alumno: lo
                            único del patrón que corre en la página, y por
                            eso no importa nada de lo demás
+    vistas/                el motor de vistas (fase M): de una pieza, sus
+                           vistas en el sistema europeo, con lo visto, lo
+                           oculto, los ejes y lo descartado con su motivo
+                           (el catálogo de errores). Probado contra un
+                           oráculo por píxeles y contra las claves del
+                           material (tests/vistas)
+    edicion.mjs            la edición de una sola asignatura: con
+                           SOLO_ASIGNATURA, `npm run build:solo` construye
+                           solo esa en dist-solo/, para enseñarla aparte;
+                           sin la variable, el sitio no cambia en un byte
     lamina.ts · construir.ts
                            qué se comprueba de una lámina, y el paso
                            construir resuelto: la receta evaluada, sus
