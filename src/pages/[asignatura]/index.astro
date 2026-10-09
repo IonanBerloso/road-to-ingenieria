@@ -3,6 +3,7 @@ import { getCollection, getEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cabecera from '../../components/ui/Cabecera.astro';
 import Criterios from '../../components/ui/Criterios.astro';
+import RubricaLaminas from '../../components/ui/RubricaLaminas.astro';
 import QueNotaNecesito from '../../components/ui/QueNotaNecesito.astro';
 import { ruta } from '../../lib/rutas';
 import { mate, sinMarcas } from '../../lib/markdown.mjs';
@@ -91,6 +92,9 @@ const cuestionesDeDiapositivas = bancosDePractica.some((b) => !b.data.propio);
 /* La hoja de criterios de corrección, si la asignatura la tiene (fase K): hoy
    solo Expresión Gráfica. Va en su propia sección, debajo de cómo se aprueba. */
 const conCriterios = (await getEntry('criterios', id)) !== undefined;
+/* Y la rúbrica de sus láminas (B8 de la auditoría de Expresión Gráfica del 8
+   de octubre de 2026), en la sección siguiente. */
+const conRubrica = (await getEntry('rubricaDeLaminas', id)) !== undefined;
 
 const modalidades = a.evaluacion?.modalidades ?? [];
 const notasHtml = await Promise.all(modalidades.map((m) => (m.nota ? mate(m.nota, `nota-${id}`) : null)));
@@ -135,6 +139,7 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
       <nav class="saltos" aria-label="En esta página">
         <a href="#como-se-aprueba">Cómo se aprueba</a>
         {conCriterios && <a href="#como-se-corrige">Cómo se corrige</a>}
+        {conRubrica && <a href="#la-rubrica-de-laminas">La rúbrica de las láminas</a>}
         <a href="#al-examen">Qué llevar al examen</a>
         <a href="#por-donde-empezar">Por dónde empezar</a>
         {/* El temario estaba a 14 pantallas en un móvil, en Cálculo, y el
@@ -188,6 +193,15 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
           <section id="como-se-corrige" aria-labelledby="h-corrige">
             <h2 id="h-corrige">Cómo se corrige un ejercicio</h2>
             <Criterios asignatura={id} />
+          </section>
+        )
+      }
+
+      {
+        conRubrica && (
+          <section id="la-rubrica-de-laminas" aria-labelledby="h-rubrica">
+            <h2 id="h-rubrica">Cómo se corrige una lámina</h2>
+            <RubricaLaminas asignatura={id} />
           </section>
         )
       }

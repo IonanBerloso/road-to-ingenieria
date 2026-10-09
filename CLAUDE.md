@@ -308,6 +308,10 @@ src/
                            mínimos, errores muy graves y típicos con su
                            precio y su tope. Hoy, Expresión Gráfica. La
                            pinta ui/Criterios, nunca una paráfrasis
+    rubrica-de-laminas/    la rúbrica de las láminas de una asignatura
+                           como DATOS: su tabla BIEN/MAL tal cual, con el
+                           tema que explica cada línea de BIEN. Hoy,
+                           Expresión Gráfica. La pinta ui/RubricaLaminas
     banco/                 bancos de preguntas de test (§05): el de mínimos
                            de Materiales, que alimenta un simulacro; las
                            cuestiones de las diapositivas de Cálculo, uno
@@ -339,6 +343,7 @@ src/
                            Seguir · Examen · Reparto · QueNotaNecesito ·
                            Criterios (la hoja de corrección con su cuenta,
                            en la página de la asignatura y en el despiece) ·
+                           RubricaLaminas (la rúbrica de las láminas, debajo) ·
                            EnlaceAsignatura (el nombre de la asignatura en
                            el rótulo de cada página suya, enlazado a su
                            detalle en la portada)

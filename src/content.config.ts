@@ -2752,6 +2752,61 @@ const criterios = defineCollection({
   schema: esquemaCriterios,
 });
 
+/** Una línea de la rúbrica de láminas: lo que la hoja empieza en renglón
+ *  nuevo, tal cual. `donde`, los temas que la explican (solo en BIEN). */
+const lineaDeRubrica = z
+  .object({
+    texto: textoImpreso,
+    donde: z.array(temaDelCatalogo).min(1).optional(),
+  })
+  .strict();
+
+/** La rúbrica de las láminas de una asignatura (auditoría de Expresión
+ *  Gráfica del 8 de octubre de 2026, B8): la tabla de la hoja, fila a fila,
+ *  con su columna BIEN y su columna MAL, entera y tal cual, y el tema del
+ *  sitio que explica cada cosa que pide. La pinta `ui/RubricaLaminas` en la
+ *  página de la asignatura, debajo de la hoja de criterios. No lleva precios
+ *  porque la hoja no los da; `tests/rubrica-de-laminas.test.ts` la coteja con
+ *  la hoja. */
+const esquemaRubricaDeLaminas = z
+  .object({
+    /** De dónde sale, por su título y su escuela: sin nombres de persona. */
+    fuente: z.string().min(20),
+    titulo: textoImpreso,
+    columnas: z.object({ bien: z.string().min(2), mal: z.string().min(2) }).strict(),
+    /** La nota al pie, con su marca: «(1) En las láminas de conjuntos y de
+     *  piezas». Las líneas a las que se aplica la llevan en su texto. */
+    nota: z.object({ marca: z.string().regex(/^\(\d\)$/), texto: textoImpreso }).strict(),
+    filas: z
+      .array(
+        z
+          .object({
+            id: idDeCriterio,
+            criterio: z.string().min(4),
+            bien: z.array(lineaDeRubrica.extend({ sub: z.array(lineaDeRubrica).min(1).optional() }).strict()).min(1),
+            mal: z.array(lineaDeRubrica.extend({ sub: z.array(lineaDeRubrica).min(1).optional() }).strict()).min(1),
+          })
+          .strict(),
+      )
+      .min(1),
+  })
+  .strict()
+  .superRefine((d, ctx) => {
+    const vistos = new Set<string>();
+    for (const f of d.filas) {
+      if (vistos.has(f.id)) ctx.addIssue({ code: 'custom', message: `dos filas con el id «${f.id}»` });
+      vistos.add(f.id);
+      for (const l of f.mal.flatMap((x) => [x, ...(x.sub ?? [])])) {
+        if (l.donde) ctx.addIssue({ code: 'custom', message: `«${l.texto}»: solo las líneas de BIEN llevan \`donde\`; la de MAL es su revés` });
+      }
+    }
+  });
+
+const rubricaDeLaminas = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/rubrica-de-laminas' }),
+  schema: esquemaRubricaDeLaminas,
+});
+
 /** La Colección de ejercicios de una asignatura como DATOS, en el orden de su
  *  PDF (auditoría del 1 de octubre de 2026): hoy, la de diédrico de Expresión
  *  Gráfica, con sus 55 ejercicios. Es lo que se entrega como láminas y sobre
@@ -2824,5 +2879,6 @@ export const collections = {
   rubricas,
   tablas,
   criterios,
+  rubricaDeLaminas,
   coleccion,
 };

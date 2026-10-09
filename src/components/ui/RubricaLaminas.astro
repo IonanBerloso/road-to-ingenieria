@@ -1,0 +1,138 @@
+---
+/**
+ * La rúbrica de las láminas de una asignatura, en la página (auditoría de
+ * Expresión Gráfica del 8 de octubre de 2026, B8): la tabla de la hoja,
+ * entera, fila a fila, con lo que está bien y lo que está mal, y al lado de
+ * cada cosa que pide, el tema que la explica. Va en la página de la
+ * asignatura, debajo de la hoja de criterios.
+ *
+ * La prueba de utilidad de §13:
+ *   · Para quién: quien va a entregar una lámina y quiere repasarla antes.
+ *   · Cuándo: la víspera de cada entrega, y al empezar el bloque 2.
+ *   · Qué gana: la rúbrica entera en un sitio, sin buscarla en eGela, y dónde
+ *     se aprende cada cosa que pide. Y lo que el sitio aún no enseña, dicho:
+ *     un tema sin hacer sale como «todavía no», y la cuenta de arriba dice
+ *     cuántas son.
+ *   · Cómo se comprueba: `tests/rubrica-de-laminas.test.ts` coteja las
+ *     filas y las líneas con la hoja, y que cada `donde` sea un tema del
+ *     catálogo.
+ *
+ * Los textos salen de `src/content/rubrica-de-laminas/<asignatura>.yaml` tal
+ * cual, como los criterios: son la hoja impresa. La rúbrica no da puntos, y
+ * aquí no se cuenta nada.
+ */
+import { getEntry } from 'astro:content';
+import { ruta } from '../../lib/rutas';
+
+interface Props {
+  asignatura: string;
+}
+
+const { asignatura } = Astro.props;
+const entrada = await getEntry('rubricaDeLaminas', asignatura);
+if (!entrada) throw new Error(`RubricaLaminas: no hay rúbrica de láminas para «${asignatura}» en src/content/rubrica-de-laminas/`);
+const hoja = entrada.data;
+const catalogo = await getEntry('catalogo', asignatura);
+if (!catalogo) throw new Error(`RubricaLaminas: «${asignatura}» no está en el catálogo`);
+
+/** Los temas con página se enlazan; los demás se dicen «todavía no»: un tema
+ *  sin hacer no se construye, y su enlace daría 404. */
+const conPagina = new Set(catalogo.data.temas.filter((t) => t.hecho).map((t) => t.id));
+const numero = (id: string) => Number(id.slice(1, 3));
+const temas = (donde: readonly string[] | undefined) =>
+  (donde ?? []).map((id) => ({ id, n: numero(id), href: conPagina.has(id) ? ruta(`${asignatura}/${id}`) : null }));
+
+/** Lo que pide la columna de BIEN, cosa a cosa: una línea con guiones cuenta
+ *  por sus guiones, no por la que los abre. */
+const pide = hoja.filas.flatMap((f) => f.bien.flatMap((l) => l.sub ?? [l]));
+const sinTema = pide.filter((l) => !l.donde).length;
+const yaAqui = pide.filter((l) => l.donde?.some((id) => conPagina.has(id))).length;
+const todaviaNo = pide.length - sinTema - yaAqui;
+const pendientes = [...new Set(pide.flatMap((l) => l.donde ?? []).filter((id) => !conPagina.has(id)))]
+  .map(numero)
+  .sort((a, b) => a - b);
+const enLista = (ns: number[]) =>
+  ns.length <= 1 ? ns.join('') : `${ns.slice(0, -1).join(', ')} y ${ns[ns.length - 1]}`;
+const aTemas =
+  pendientes.length === 1
+    ? `al tema ${pendientes[0]}, que todavía no está`
+    : `a los temas ${enLista(pendientes)}, que todavía no están`;
+const resumen =
+  `De las ${pide.length} cosas que pide la columna de lo bien hecho, ${yaAqui} se explican ya en un tema ` +
+  'de aquí, que tienes al lado de cada una' +
+  (todaviaNo > 0 ? `; ${todaviaNo} esperan ${aTemas}` : '') +
+  (sinTema > 0 ? `, y ${sinTema} no son de ningún tema: son el cuidado del dibujo, la entrega y la actitud en clase` : '') +
+  '.';
+---
+
+<div class="rub">
+  <p class="rub-como">
+    Las láminas que entregas durante el curso se corrigen con esta rúbrica, que no da puntos: dice, fila a
+    fila, lo que está bien y lo que está mal. {resumen}
+  </p>
+
+  <p class="rub-t">{hoja.titulo}</p>
+  {
+    hoja.filas.map((f) => (
+      <section class="rub-f" aria-labelledby={`rub-${f.id}`}>
+        <h3 class="rub-c" id={`rub-${f.id}`}>{f.criterio}</h3>
+        <div class="rub-cols">
+          {(['bien', 'mal'] as const).map((col) => (
+            <div class={`rub-col rub-col--${col}`}>
+              <p class="rub-cab">{hoja.columnas[col]}</p>
+              <ul class="rub-l">
+                {f[col].map((l) => (
+                  <li>
+                    <span class="rub-x">{l.texto}</span>
+                    {temas(l.donde).map((t) => (t.href ? <a class="rub-d" href={t.href}>tema {t.n}</a> : <span class="rub-d rub-d--no">tema {t.n}, todavía no</span>))}
+                    {l.sub && (
+                      <ul class="rub-sub">
+                        {l.sub.map((s) => (
+                          <li>
+                            <span class="rub-x">{s.texto}</span>
+                            {temas(s.donde).map((t) => (t.href ? <a class="rub-d" href={t.href}>tema {t.n}</a> : <span class="rub-d rub-d--no">tema {t.n}, todavía no</span>))}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+  <p class="rub-nota">{hoja.nota.marca} {hoja.nota.texto}</p>
+  <p class="rub-fuente">Fuente: {hoja.fuente}</p>
+</div>
+
+<style>
+  .rub {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--panel);
+    padding: 1rem 1.1rem;
+  }
+  .rub-como { font-size: .9rem; color: var(--graphite); max-width: var(--measure); margin: 0 0 .8rem; }
+  .rub-t { margin: 0 0 .5rem; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); }
+  .rub-f { border-top: 1px solid var(--rule); padding: .6rem 0 .5rem; }
+  .rub-c { margin: 0 0 .35rem; font-size: .95rem; font-weight: 600; color: var(--ink); }
+  .rub-cols { display: grid; grid-template-columns: 1fr; gap: .5rem; }
+  @media (min-width: 44rem) {
+    .rub-cols { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  }
+  .rub-cab { margin: 0 0 .2rem; font-size: .72rem; letter-spacing: .04em; font-family: var(--mono); }
+  .rub-col--bien .rub-cab { color: var(--live); }
+  .rub-col--mal .rub-cab { color: var(--flag); }
+  .rub-l, .rub-sub { list-style: none; margin: 0; padding: 0; }
+  .rub-sub { padding-left: .8rem; }
+  .rub-l li { margin: .2rem 0; font-size: .88rem; line-height: 1.4; }
+  .rub-x { color: var(--ink); }
+  .rub-col--mal .rub-x { color: var(--graphite); }
+  .rub-d { margin-left: .35rem; font-size: .76rem; font-family: var(--mono); white-space: nowrap; color: var(--live); }
+  .rub-d--no { color: var(--faint); }
+  .rub-nota { margin: .6rem 0 0; font-size: .8rem; color: var(--graphite); }
+  .rub-fuente { margin: .4rem 0 0; font-size: .74rem; color: var(--faint); max-width: var(--measure); }
+</style>
