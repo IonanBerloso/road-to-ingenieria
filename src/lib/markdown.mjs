@@ -1,6 +1,7 @@
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import { enSolo, rehypeEdicion } from './edicion.mjs';
 
 /**
  * La ÚNICA declaración de la tubería de Markdown del proyecto.
@@ -24,7 +25,9 @@ import rehypeKatex from 'rehype-katex';
 export const procesador = () =>
   unified({
     remarkPlugins: [remarkMath],
-    rehypePlugins: [[rehypeKatex, { output: 'htmlAndMathml' }]],
+    /* Los enlaces del contenido, adaptados, solo en la edición de una sola
+       asignatura (src/lib/edicion.mjs): en el sitio completo no se registra. */
+    rehypePlugins: [[rehypeKatex, { output: 'htmlAndMathml' }], ...(enSolo ? [rehypeEdicion] : [])],
   });
 
 /** Un solo renderizador para todo el build; crearlo por llamada es caro. */

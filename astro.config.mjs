@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import { procesador } from './src/lib/markdown.mjs';
+import { enSolo, BASE_SOLO, BASE_COMPLETA, SALIDA, integracionEdicion } from './src/lib/edicion.mjs';
 
 /**
  * Road to Ingeniería — sitio estático para GitHub Pages.
@@ -15,10 +16,12 @@ import { procesador } from './src/lib/markdown.mjs';
  */
 export default defineConfig({
   site: 'https://ionanberloso.github.io',
-  base: '/road-to-ingenieria',
+  base: enSolo ? BASE_SOLO : BASE_COMPLETA,
+  /* La edición de una sola asignatura sale a su carpeta (src/lib/edicion.mjs). */
+  outDir: `./${SALIDA}`,
   trailingSlash: 'always',
 
-  integrations: [mdx()],
+  integrations: [mdx(), integracionEdicion()],
 
   markdown: {
     // La tubería vive en src/lib/markdown.mjs porque los ejercicios en YAML

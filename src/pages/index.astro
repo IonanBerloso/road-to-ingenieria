@@ -16,6 +16,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import { archivo, ruta } from '../lib/rutas';
+import { enSolo } from '../lib/edicion.mjs';
 import { cuentaPorTema, pesoPublicado } from '../lib/peso';
 import { hayFormulario } from '../lib/formulario';
 import { sinTildes } from '../lib/texto';
@@ -102,7 +103,9 @@ const cuentaExamenDe = (asignatura: string) => {
 const pesoDe = (asignatura: string, temaId: string, declarado?: 'alto' | 'medio' | 'bajo') =>
   pesoPublicado(declarado, cuentaExamenDe(asignatura), temaId);
 
-const cursos = [1, 2] as const;
+/* Solo los cursos que tienen asignaturas: en el sitio completo son los dos; en la
+ * edición de una sola asignatura (src/lib/edicion.mjs), el suyo. */
+const cursos = ([1, 2] as const).filter((c) => asignaturas.some((a) => a.data.curso === c));
 
 /* Las etiquetas cortas de los botones de ruta. Presentación, no dato:
  * el título completo («Preparar la primera evaluación») no cabe en la
@@ -442,7 +445,7 @@ const enteras = asignaturas
         <span class="tiza-barra t-blanca"></span>
         <span class="tiza-barra t-amarilla"></span>
         <span class="tiza-barra t-menta"></span>
-        <span class="lema">se abre una asignatura cuando la anterior está terminada — pocas excelentes antes que muchas a medias</span>
+        <span class="lema">{enSolo ? 'una edición con una sola asignatura, la que se está enseñando' : 'se abre una asignatura cuando la anterior está terminada — pocas excelentes antes que muchas a medias'}</span>
       </div>
     </section>
 

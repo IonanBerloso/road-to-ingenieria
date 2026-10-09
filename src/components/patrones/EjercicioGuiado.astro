@@ -20,6 +20,7 @@ import type { DatosLamina } from '../../lib/lamina';
 import { mate } from '../../lib/markdown.mjs';
 import Reparto from '../ui/Reparto.astro';
 import { archivo } from '../../lib/rutas';
+import { enSolo } from '../../lib/edicion.mjs';
 import Taller from './Taller.astro';
 import Construccion from './Construccion.astro';
 
@@ -871,8 +872,10 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       en un diagnóstico como en el desarrollo, y quien lo ve en el paso 2 no
       tiene por qué llegar al final para poder decirlo. */}
   <p class="avisar">
-    <a href={avisar} rel="noopener" data-avisar>¿Esto está mal? Dilo →</a>
-    <a href={avisarPorCorreo} data-avisar-correo>o por correo, sin cuenta →</a>
+    {/* En la edición de una sola asignatura (src/lib/edicion.mjs) no se enlaza
+        al repositorio, que es el del sitio entero: queda el correo. */}
+    {!enSolo && <a href={avisar} rel="noopener" data-avisar>¿Esto está mal? Dilo →</a>}
+    <a href={avisarPorCorreo} data-avisar-correo>{enSolo ? '¿Esto está mal? Dilo por correo →' : 'o por correo, sin cuenta →'}</a>
     <span class="avisar-nota">La resolución es nuestra y puede tener fallos. El enunciado es el original.</span>
   </p>
 

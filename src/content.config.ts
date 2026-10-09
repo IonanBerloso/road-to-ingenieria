@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { SOLO, enSolo, patronSolo } from './lib/edicion.mjs';
 import { comparaComplejo, comparaConjunto, leeConjunto } from './lib/complejo';
 import { leeMatriz, leeVector } from './lib/algebra';
 import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
@@ -160,7 +161,7 @@ const parteEvaluacion = z
   });
 
 const catalogo = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/catalogo' }),
+  loader: glob({ pattern: patronSolo('**/*.json', (id) => `${id}.json`), base: './src/content/catalogo' }),
   schema: z
     .object({
       nombre: z.string().min(3),
@@ -1456,7 +1457,7 @@ export const ORDEN_CONV = Object.keys(CONVOCATORIAS) as (keyof typeof CONVOCATOR
  *
  *  Se amplía al abrir la quinta asignatura, y entonces se amplía **una sola
  *  vez**. */
-export const CON_TEMAS = [
+const TODAS_CON_TEMAS = [
   'calculo',
   'fluidos',
   'algebra',
@@ -1466,7 +1467,12 @@ export const CON_TEMAS = [
   'mecanica-aplicada',
   'expresion-grafica',
 ] as const;
-export type ConTemas = (typeof CON_TEMAS)[number];
+export type ConTemas = (typeof TODAS_CON_TEMAS)[number];
+
+/** En la edición de una sola asignatura (src/lib/edicion.mjs), solo esa. */
+export const CON_TEMAS: readonly ConTemas[] = enSolo
+  ? TODAS_CON_TEMAS.filter((id) => id === SOLO)
+  : TODAS_CON_TEMAS;
 
 const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
 
@@ -1474,7 +1480,7 @@ const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
  *  El nivel superior es un objeto y no una lista porque el cargador de Astro
  *  trata cada fichero como una entrada. */
 const ejercicios = defineCollection({
-  loader: glob({ pattern: '**/ejercicios.yaml', base: './src/content' }),
+  loader: glob({ pattern: patronSolo('**/ejercicios.yaml', (id) => `${id}/**/ejercicios.yaml`), base: './src/content' }),
   schema: z
     .object({ ejercicios: z.array(ejercicio).min(1) })
     .refine((f) => new Set(f.ejercicios.map((e) => e.id)).size === f.ejercicios.length, {
@@ -1509,7 +1515,7 @@ const temaEscrito = z.object({
  *  lado, que la colección `ejercicios` ya carga a cualquier profundidad. Este
  *  fichero solo dice cuáles son, en qué orden y de qué tema es cada uno. */
 const examen = defineCollection({
-  loader: glob({ pattern: '**/examen.yaml', base: './src/content' }),
+  loader: glob({ pattern: patronSolo('**/examen.yaml', (id) => `${id}/**/examen.yaml`), base: './src/content' }),
   schema: z
     .object({
       asignatura: z.string().min(3),
@@ -2015,7 +2021,7 @@ const bloque = z.object({
  *  Fíjate en lo que no tiene: ni fecha, ni semanas, ni horas. El plan se mide
  *  en bloques y en criterio de dominio, no en calendario. */
 const preparar = defineCollection({
-  loader: glob({ pattern: '**/*.yaml', base: './src/content/preparar' }),
+  loader: glob({ pattern: patronSolo('**/*.yaml', (id) => `${id}-*.yaml`), base: './src/content/preparar' }),
   schema: z
     .object({
       asignatura: z.string().min(3),
@@ -2131,7 +2137,7 @@ const preparar = defineCollection({
  *  3. **Aquí no se corrige nada**, y la página lo dice en voz alta. Esto es un
  *     índice honesto de lo que hay, no una versión de laboratorio. */
 const laboratorio = defineCollection({
-  loader: glob({ pattern: '**/*.yaml', base: './src/content/laboratorio' }),
+  loader: glob({ pattern: patronSolo('**/*.yaml', (id) => `${id}.yaml`), base: './src/content/laboratorio' }),
   schema: z.object({
     asignatura: z.string().min(3),
     /** Con qué se hacen las actividades, tal como entra en la entradilla y en
@@ -2255,7 +2261,7 @@ const temas = Object.fromEntries(
  * oral de la final, y tienen su página en `…/tNN-…/cuestiones/`.
  */
 const banco = defineCollection({
-  loader: glob({ pattern: '**/*.yaml', base: './src/content/banco' }),
+  loader: glob({ pattern: patronSolo('**/*.yaml', (id) => `${id}-*.yaml`), base: './src/content/banco' }),
   schema: z
     .object({
       asignatura: z.string().min(3),
@@ -2561,7 +2567,7 @@ const tablaDeBloques = z.object({
     .min(1),
 });
 const tablas = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/tablas' }),
+  loader: glob({ pattern: patronSolo('*.json', (id) => `${id}.json`), base: './src/content/tablas' }),
   schema: z
     .object({
       asignatura: z.string().min(1),
@@ -2748,7 +2754,7 @@ const esquemaCriterios = z
   });
 
 const criterios = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/criterios' }),
+  loader: glob({ pattern: patronSolo('*.yaml', (id) => `${id}.yaml`), base: './src/content/criterios' }),
   schema: esquemaCriterios,
 });
 
@@ -2863,7 +2869,7 @@ const esquemaColeccion = z
   });
 
 const coleccion = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/coleccion' }),
+  loader: glob({ pattern: patronSolo('*.yaml', (id) => `${id}.yaml`), base: './src/content/coleccion' }),
   schema: esquemaColeccion,
 });
 
