@@ -420,6 +420,12 @@ const pasos = await Promise.all(
             mensajeHtml: await mate(d.mensaje, PREFIJO),
           })),
         ),
+        tambienValen: await Promise.all(
+          paso.tambienValen.map(async (t) => ({
+            valor: t.valor,
+            mensajeHtml: await mate(t.mensaje, PREFIJO),
+          })),
+        ),
         pistaHtml: await mate(paso.pista, PREFIJO),
         desarrolloHtml: await mate(paso.desarrollo, PREFIJO),
         veredictoHtml: await mate(paso.veredicto, PREFIJO),
@@ -472,6 +478,7 @@ const datos = pasos.map((p) => {
       tipo: p.tipo,
       respuesta: p.respuesta,
       distractores: p.distractores!.map((d) => d.valor),
+      tambienValen: (p.tambienValen ?? []).map((t) => t.valor),
       raices: sonRaices,
     };
   }
@@ -613,6 +620,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
                 {paso.distractores!.map((d, k) => (
                   <div class="msg" data-msg-distractor={k} hidden set:html={d.mensajeHtml} />
+                ))}
+                {(paso.tambienValen ?? []).map((t, k) => (
+                  <div class="msg" data-msg-tambien={k} hidden set:html={t.mensajeHtml} />
                 ))}
                 <div class="msg" data-msg-pista hidden set:html={paso.pistaHtml} />
 
@@ -888,7 +898,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   };
   type Dato =
     | { tipo: 'reconocer'; correcta: number }
-    | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[]; raices?: boolean }
+    | { tipo: 'calcular'; respuesta: Respuesta; distractores: string[]; tambienValen?: string[]; raices?: boolean }
     | { tipo: 'justificar'; orden: number[]; trampa: number }
     | { tipo: 'verificar'; condicion: string; ventana: { x: [number, number]; y: [number, number] } }
     | { tipo: 'redactar' | 'dibujar' | 'construir' };
@@ -1221,6 +1231,17 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
         if (coincide(escrito, respuesta.valor, respuesta.tolerancia)) {
           limpiaFb(paso);
           resuelve(i, desactiva(campo));
+          return;
+        }
+
+        /* Otra respuesta que también vale (`tambienValen`): se resuelve igual,
+           y se dice por qué vale y qué otra se da también por buena. Va antes
+           que los distractores: el esquema ya impide que uno caiga en su
+           ventana. */
+        const t = (dato.tambienValen ?? []).findIndex((v) => coincide(escrito, v, respuesta.tolerancia));
+        if (t >= 0) {
+          resuelve(i, desactiva(campo));
+          fb(paso, 'bien', 'También vale', html(paso, `[data-msg-tambien="${t}"]`));
           return;
         }
 

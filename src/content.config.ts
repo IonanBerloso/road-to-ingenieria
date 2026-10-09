@@ -475,10 +475,54 @@ const pasoCalcular = z.object({
     receta: z.string().min(1).optional(),
   }),
   distractores: z.array(distractor).min(1, 'sin distractores esto no diagnostica nada'),
+  /** Otras respuestas que **también valen**, cada una con su porqué. Solo
+   *  para `numero`. Se corrigen como la buena —el paso se resuelve— y se
+   *  enseña su mensaje.
+   *
+   *  Entra el 8 de octubre de 2026 con la auditoría de Expresión Gráfica
+   *  (M3): el ángulo de dos planos es el menor de los dos que forman (86,10°
+   *  en el 53·3 A) o el de sus caras (93,90°); los apuntes no eligen y el
+   *  profesor no ha contestado, y castigar uno de los dos como error era
+   *  afirmar lo que nadie ha dicho. No es para dar por buena una respuesta
+   *  aproximada: para eso está la tolerancia. */
+  tambienValen: z
+    .array(
+      z.object({
+        valor: z.string().min(1),
+        mensaje: z.string().min(30, 'una respuesta que también vale dice por qué'),
+        /** Como en `distractor`: la expresión de la receta de la que sale. */
+        receta: z.string().min(1).optional(),
+      }),
+    )
+    .default([]),
   pista: z.string().min(10),
   desarrollo: z.string().min(20),
   veredicto: z.string().optional(),
 })
+  /* Una respuesta que también vale tiene que poder leerse, no puede ser la
+     buena con otra cifra (para eso está la tolerancia) y ningún distractor
+     puede caer en su ventana: el componente la mira antes que a ellos, y
+     ese distractor no diagnosticaría nunca. */
+  .refine(
+    (p) => {
+      if (p.tambienValen.length === 0) return true;
+      if (p.respuesta.tipo !== 'numero') return false;
+      const buena = leeNumero(p.respuesta.valor);
+      return p.tambienValen.every((t) => {
+        const v = leeNumero(t.valor);
+        if (!v || !buena || comparaComplejo(v, buena, p.respuesta.tolerancia)) return false;
+        return p.distractores.every((d) => {
+          const mala = leeNumero(d.valor);
+          return !mala || !comparaComplejo(mala, v, p.respuesta.tolerancia);
+        });
+      });
+    },
+    {
+      message:
+        'una respuesta que también vale tiene que ser un número legible, distinto de la buena, y sin ningún distractor en su ventana',
+      path: ['tambienValen'],
+    },
+  )
   /* Un distractor cuyo valor no se puede leer nunca se dispara: el alumno
      escribe justo ese error y recibe «no he entendido la respuesta» en vez del
      diagnóstico que había escrito para él. Pasó con un «infinito» puesto como
@@ -985,16 +1029,53 @@ const pasoConstruir = z
             toma: z.string().min(3).optional(),
             rotulo: z.string().min(1).optional(),
             porque: z.string().min(15),
+            /** El bloque del método al que pertenece el trazo, por su nombre en
+             *  `bloques`: se pinta de su color. */
+            bloque: z.string().min(3).max(40).optional(),
           })
           .strict(),
       )
       .min(2)
+      .optional(),
+    /** Los bloques del método en la construcción paso a paso: «1.er cambio de
+     *  plano», «2.º cambio de plano», un giro, un abatimiento. Cada uno con
+     *  su explicación teórica —qué plano se cambia y por cuál, por qué la
+     *  línea nueva va así, qué medida se conserva y se lleva—, que «Ver cómo
+     *  se construye» enseña al entrar en el bloque, y cada uno de un color,
+     *  de `--d1` a `--d6`, en este orden. Lo pidió Ionan el 8 de octubre de
+     *  2026: en un ejercicio con dos cambios de plano, las referencias, las
+     *  líneas nuevas y las medidas de cada uno se mezclaban, y el dibujo no
+     *  decía qué se estaba haciendo. */
+    bloques: z
+      .array(
+        z
+          .object({
+            nombre: z.string().min(3).max(40),
+            explica: z.string().min(80, 'la explicación de un bloque dice qué se hace en él y por qué'),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(6, 'seis bloques como mucho: hay seis colores')
       .optional(),
     pista: z.string().min(10),
     desarrollo: z.string().min(20),
     veredicto: z.string().optional(),
   })
   .strict()
+  /* Cada trazo con bloque nombra uno declarado, y cada bloque declarado
+     tiene al menos un trazo: un nombre mal escrito dejaría un trazo sin
+     color, o una explicación que no sale nunca. */
+  .refine(
+    (p) => {
+      const nombres = (p.bloques ?? []).map((b) => b.nombre);
+      const usados = new Set((p.construccion ?? []).flatMap((c) => (c.bloque ? [c.bloque] : [])));
+      return new Set(nombres).size === nombres.length && [...usados].every((u) => nombres.includes(u)) && nombres.every((n) => usados.has(n));
+    },
+    {
+      message: 'los bloques de la construcción: cada trazo nombra un bloque declarado en `bloques`, y cada bloque declarado lleva algún trazo',
+    },
+  )
   .refine((p) => p.objetivos.length + (p.tramos?.length ?? 0) > 0, {
     message: 'un paso construir pide al menos un punto o un tramo',
   })

@@ -143,6 +143,22 @@ const GRUPOS = {
     tokens: Object.keys(light).filter((k) => k.startsWith('--a-')),
     cvd: false,
   },
+  /* Los muestrarios de los bloques de «Ver cómo se construye» (8 de octubre
+     de 2026): seis colores que tienen que distinguirse entre sí. La serie
+     --d, el de por defecto, ya se mide arriba con dicromacia; estos son una
+     elección del alumno y se miden en visión normal. */
+  'muestrario intenso': {
+    tokens: ['--pal-intenso-1', '--pal-intenso-2', '--pal-intenso-3', '--pal-intenso-4', '--pal-intenso-5', '--pal-intenso-6'],
+    cvd: false,
+  },
+  'muestrario tierra': {
+    tokens: ['--pal-tierra-1', '--pal-tierra-2', '--pal-tierra-3', '--pal-tierra-4', '--pal-tierra-5', '--pal-tierra-6'],
+    cvd: false,
+  },
+  'muestrario lapices': {
+    tokens: ['--pal-lapices-1', '--pal-lapices-2', '--pal-lapices-3', '--pal-lapices-4', '--pal-lapices-5', '--pal-lapices-6'],
+    cvd: false,
+  },
 };
 
 let fallos = 0;
@@ -351,6 +367,17 @@ const TINTAS = [
   { token: '--d5', escenas: PAPEL, umbral: AA_TEXTO, porque: 'rotula su propia curva, 5 veces' },
   { token: '--d2', escenas: PAPEL, umbral: AA_OBJETO, porque: 'color de línea: como letra se usa --d2-tinta' },
   { token: '--d2-tinta', escenas: PAPEL, umbral: AA_TEXTO, porque: 'el naranja de --d2 cuando rotula' },
+  { token: '--d6', escenas: PAPEL, umbral: AA_TEXTO, porque: 'rotula el sexto bloque de «Ver cómo se construye»' },
+  /* Los muestrarios de los bloques: cada color rotula sus puntos y su línea
+     de la lista, así que es letra. */
+  ...['intenso', 'tierra', 'lapices'].flatMap((n) =>
+    [1, 2, 3, 4, 5, 6].map((k) => ({
+      token: `--pal-${n}-${k}`,
+      escenas: PAPEL,
+      umbral: AA_TEXTO,
+      porque: `rotula el bloque ${k} con el muestrario «${n}»`,
+    })),
+  ),
   /* La tiza, que solo existe sobre la pizarra. */
   { token: '--tiza', escenas: ['pizarra'], umbral: AA_TEXTO, porque: 'la tinta del héroe' },
   { token: '--tiza-suave', escenas: ['pizarra'], umbral: AA_TEXTO, porque: 'la prosa secundaria del héroe' },

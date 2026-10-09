@@ -79,6 +79,7 @@ export interface ConstruirDeclarado {
   readonly tramos?: readonly TramoDeclarado[];
   readonly trazado?: readonly string[];
   readonly construccion?: readonly PasoDeConstruccionDeclarado[];
+  readonly bloques?: readonly BloqueDeConstruccion[];
   readonly pista: string;
   readonly desarrollo: string;
 }
@@ -100,6 +101,14 @@ export interface PasoDeConstruccionDeclarado {
   readonly toma?: string;
   readonly rotulo?: string;
   readonly porque: string;
+  /** El bloque del método («1.er cambio de plano»…), por su nombre. */
+  readonly bloque?: string;
+}
+
+/** Un bloque del método, con su explicación teórica. */
+export interface BloqueDeConstruccion {
+  readonly nombre: string;
+  readonly explica: string;
 }
 
 export interface PasoDeConstruccion {
@@ -109,6 +118,7 @@ export interface PasoDeConstruccion {
   readonly toma?: readonly [P2, P2];
   readonly rotulo?: string;
   readonly porque: string;
+  readonly bloque?: string;
 }
 
 export interface ObjetivoResuelto {
@@ -134,6 +144,7 @@ export interface ConstruirResuelto {
   readonly tramos: readonly TramoResuelto[];
   readonly trazado: readonly Trazado[];
   readonly construccion?: readonly PasoDeConstruccion[];
+  readonly bloques?: readonly BloqueDeConstruccion[];
   readonly pista: string;
   readonly desarrollo: string;
 }
@@ -243,6 +254,7 @@ export function resuelveConstruir(paso: ConstruirDeclarado, lamina: Lamina, r: R
     tramos,
     trazado,
     ...(construccion ? { construccion } : {}),
+    ...(paso.bloques ? { bloques: paso.bloques } : {}),
     pista: paso.pista,
     desarrollo: paso.desarrollo,
   };
@@ -331,6 +343,7 @@ function resuelveConstruccion(
         ...(p.toma ? { toma: segmentoDe(p.toma, lamina, r, 'lo que toma el compás') } : {}),
         ...(p.rotulo ? { rotulo: p.rotulo } : {}),
         porque: p.porque,
+        ...(p.bloque ? { bloque: p.bloque } : {}),
       };
     } catch (err) {
       throw new Error(`${quien}: ${(err as Error).message}`);
@@ -395,7 +408,12 @@ interface CifraDeclarada {
   readonly receta?: string;
 }
 
-type PasoCalcular = { readonly tipo: 'calcular'; readonly respuesta: CifraDeclarada; readonly distractores: readonly CifraDeclarada[] };
+type PasoCalcular = {
+  readonly tipo: 'calcular';
+  readonly respuesta: CifraDeclarada;
+  readonly distractores: readonly CifraDeclarada[];
+  readonly tambienValen?: readonly CifraDeclarada[];
+};
 type PasoConstruir = { readonly tipo: 'construir' } & ConstruirDeclarado;
 
 /** Lo que `resuelveEjercicio` mira de un ejercicio: su receta y sus pasos. */
@@ -440,6 +458,7 @@ function compruebaMarcables(c: ConstruirResuelto, d: DatosLamina): void {
 const cifrasDe = (p: PasoCalcular) => [
   { que: 'la respuesta', c: p.respuesta },
   ...p.distractores.map((c, k) => ({ que: `el distractor ${k + 1}`, c })),
+  ...(p.tambienValen ?? []).map((c, k) => ({ que: `la ${k + 1}.ª que también vale`, c })),
 ];
 
 /**

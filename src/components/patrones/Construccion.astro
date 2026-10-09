@@ -43,9 +43,30 @@ const NOMBRE = {
   'arista-vista': 'regla · arista vista',
   'arista-oculta': 'regla · arista oculta',
 } as const;
+/* Los bloques del método, en el orden en que los declara el paso: cada uno
+   de un color, de `--d1` a `--d6`, y con su explicación teórica al entrar
+   en él (8 de octubre de 2026). Un trazo sin bloque va en el color de
+   siempre. */
+const bloques = paso.bloques ?? [];
+const explicaciones = await Promise.all(bloques.map((b, k) => mate(b.explica, `${prefijo}-b${k}`)));
+const bloqueDe = (p: (typeof pasos)[number]) => (p.bloque ? bloques.findIndex((b) => b.nombre === p.bloque) : -1);
+/** El primer trazo de cada bloque: ahí va su explicación, una sola vez,
+ *  aunque la construcción vuelva después al mismo bloque. */
+const abre = pasos.map((p, i) => bloqueDe(p) >= 0 && pasos.findIndex((q) => q.bloque === p.bloque) === i);
+/** Los muestrarios de color de los bloques, para que cada uno elija el que
+ *  mejor distingue (lo pidió Ionan el 8 de octubre de 2026). El primero es
+ *  la serie --d del sitio, ya validada para daltonismo; los otros tres están
+ *  en `tokens.css`, con su valor de oscuro, y check-color los mide. El
+ *  navegador recuerda el elegido (`rti:paleta-bloques`). */
+const PALETAS = [
+  { id: 'sitio', nombre: 'del sitio, aptos para daltonismo', colores: ['var(--d1)', 'var(--d2)', 'var(--d3)', 'var(--d4)', 'var(--d5)', 'var(--d6)'] },
+  { id: 'intenso', nombre: 'intensos', colores: ['var(--pal-intenso-1)', 'var(--pal-intenso-2)', 'var(--pal-intenso-3)', 'var(--pal-intenso-4)', 'var(--pal-intenso-5)', 'var(--pal-intenso-6)'] },
+  { id: 'tierra', nombre: 'de tierra', colores: ['var(--pal-tierra-1)', 'var(--pal-tierra-2)', 'var(--pal-tierra-3)', 'var(--pal-tierra-4)', 'var(--pal-tierra-5)', 'var(--pal-tierra-6)'] },
+  { id: 'lapices', nombre: 'de lápices de colores', colores: ['var(--pal-lapices-1)', 'var(--pal-lapices-2)', 'var(--pal-lapices-3)', 'var(--pal-lapices-4)', 'var(--pal-lapices-5)', 'var(--pal-lapices-6)'] },
+];
 const datos = {
   encuadre: lamina.encuadre,
-  pasos: pasos.map((p) => ({ con: p.con, dibujos: p.dibujos.ramas[0] ?? [], guia: p.guia, toma: p.toma, rotulo: p.rotulo })),
+  pasos: pasos.map((p) => ({ con: p.con, dibujos: p.dibujos.ramas[0] ?? [], guia: p.guia, toma: p.toma, rotulo: p.rotulo, b: bloqueDe(p) })),
 };
 ---
 
@@ -86,10 +107,39 @@ const datos = {
           <button type="button" data-cons="adelante" aria-label="Paso siguiente">▶</button>
           <button type="button" data-cons="todo" aria-label="Reproducir toda la construcción">▶▶</button>
         </div>
+        {
+          bloques.length > 0 && (
+            <div class="cons-paletas no-imprimir" role="group" aria-label="Colores de los bloques">
+              <span class="rotulo">colores</span>
+              {PALETAS.map((pal) => (
+                <button
+                  type="button"
+                  data-paleta={pal.id}
+                  aria-pressed={pal.id === 'sitio' ? 'true' : 'false'}
+                  aria-label={`Colores ${pal.nombre}`}
+                  title={`Colores ${pal.nombre}`}
+                >
+                  {pal.colores.slice(0, Math.max(bloques.length, 3)).map((c) => (
+                    <span class="muestra" style={`background:${c}`} />
+                  ))}
+                </button>
+              ))}
+            </div>
+          )
+        }
         <ol class="cons-pasos" data-cons-pasos>
           {pasos.map((p, i) => (
             <li data-cons-paso={i}>
-              <p class="cons-con rotulo">{NOMBRE[p.con]}{p.rotulo && ` · ${p.rotulo}`}</p>
+              {abre[i] && (
+                <div class={`cons-explica cons-b${bloqueDe(p)}`}>
+                  <p class="rotulo">{p.bloque}</p>
+                  <div class="prosa" set:html={explicaciones[bloqueDe(p)]} />
+                </div>
+              )}
+              <p class={`cons-con rotulo${bloqueDe(p) >= 0 ? ` cons-b${bloqueDe(p)}` : ''}`}>
+                {p.bloque && <span class="cons-bloque">{p.bloque} · </span>}
+                {NOMBRE[p.con]}{p.rotulo && ` · ${p.rotulo}`}
+              </p>
               <div class="prosa cons-porque" set:html={porques[i]} />
             </li>
           ))}
@@ -112,6 +162,8 @@ const datos = {
     guia?: [P2, P2];
     toma?: [P2, P2];
     rotulo?: string;
+    /** El índice de su bloque del método, o -1. */
+    b: number;
   }
 
   const NS = 'http://www.w3.org/2000/svg';
@@ -158,6 +210,37 @@ const datos = {
     return `M${a[0]} ${a[1]}A${r} ${r} 0 ${Math.abs(s) > 180 ? 1 : 0} ${s > 0 ? 1 : 0} ${b[0]} ${b[1]}`;
   };
 
+  /* El muestrario de colores de los bloques: se aplica a todas las
+     construcciones de la página y se recuerda. Si el navegador no deja
+     guardar (navegación privada), se aplica igual y no se recuerda. */
+  const CLAVE_PALETA = 'rti:paleta-bloques';
+  const aplicaPaleta = (id: string) => {
+    for (const caja of document.querySelectorAll<HTMLElement>('[data-construccion]')) {
+      if (id === 'sitio') delete caja.dataset.paleta;
+      else caja.dataset.paleta = id;
+      for (const b of caja.querySelectorAll<HTMLButtonElement>('[data-paleta]')) {
+        b.setAttribute('aria-pressed', String(b.dataset.paleta === id));
+      }
+    }
+  };
+  let paletaGuardada = 'sitio';
+  try {
+    paletaGuardada = localStorage.getItem(CLAVE_PALETA) ?? 'sitio';
+  } catch {
+    /* sin almacenamiento: la del sitio */
+  }
+  if (paletaGuardada !== 'sitio') aplicaPaleta(paletaGuardada);
+  document.addEventListener('click', (ev) => {
+    const boton = (ev.target as Element | null)?.closest<HTMLButtonElement>('button[data-paleta]');
+    if (!boton?.dataset.paleta) return;
+    aplicaPaleta(boton.dataset.paleta);
+    try {
+      localStorage.setItem(CLAVE_PALETA, boton.dataset.paleta);
+    } catch {
+      /* sin almacenamiento: vale para esta visita */
+    }
+  });
+
   for (const caja of document.querySelectorAll<HTMLDetailsElement>('[data-construccion]')) {
     const datos = JSON.parse(caja.querySelector('[data-cons-datos]')!.textContent!) as { encuadre: { x: number; y: number; w: number; h: number }; pasos: Paso[] };
     const svg = caja.querySelector<SVGSVGElement>('[data-cons-svg]')!;
@@ -185,14 +268,21 @@ const datos = {
 
     /** Una arista pasada a limpio se pinta como en el papel: más gruesa, y
      *  la oculta a trazos. */
-    const extraDe = (con: Paso['con']) => (con === 'arista-vista' ? ' cons-arista' : con === 'arista-oculta' ? ' cons-arista cons-oculta' : '');
+    const hayBloques = datos.pasos.some((q) => q.b >= 0);
+    const extraDe = (p: Paso) =>
+      (p.con === 'arista-vista' ? ' cons-arista' : p.con === 'arista-oculta' ? ' cons-arista cons-oculta' : '') +
+      /* El color de su bloque del método, si lo tiene (8 de octubre de 2026).
+         En una construcción con bloques, lo que no es de ningún método va en
+         gris: el verde de siempre es también el tercer color de los bloques,
+         y se confundían. */
+      (p.b >= 0 ? ` cons-b${p.b}` : hayBloques ? ' cons-sin' : '');
     /** Un trazo ya hecho, sin animar. */
     const dibuja = (d: Dibujo, rotulo?: string, extra = '') => {
       if (d.tipo === 'segmento') el('line', { x1: d.a[0], y1: d.a[1], x2: d.b[0], y2: d.b[1], class: `cons-t${extra}` }, gTrazos);
-      else if (d.tipo === 'arco') el('path', { d: caminoArco(d.c, d.r, d.desde, barrido(d)), class: 'cons-t cons-arco' }, gTrazos);
+      else if (d.tipo === 'arco') el('path', { d: caminoArco(d.c, d.r, d.desde, barrido(d)), class: `cons-t cons-arco${extra}` }, gTrazos);
       else {
-        el('circle', { cx: d.p[0], cy: d.p[1], r: 2.6, class: 'cons-p' }, gTrazos);
-        if (rotulo) el('text', { x: d.p[0] + 4, y: d.p[1] - 4, class: 'cons-r' }, gTrazos).textContent = rotulo;
+        el('circle', { cx: d.p[0], cy: d.p[1], r: 2.6, class: `cons-p${extra}` }, gTrazos);
+        if (rotulo) el('text', { x: d.p[0] + 4, y: d.p[1] - 4, class: `cons-r${extra}` }, gTrazos).textContent = rotulo;
       }
     };
     /** El mismo trazo, dibujándose: una línea que crece o un arco que gira. */
@@ -201,7 +291,7 @@ const datos = {
       const e =
         d.tipo === 'segmento'
           ? el('line', { x1: d.a[0], y1: d.a[1], x2: d.a[0], y2: d.a[1], class: `cons-t cons-nuevo${extra}` }, gTrazos)
-          : el('path', { d: '', class: 'cons-t cons-arco cons-nuevo' }, gTrazos);
+          : el('path', { d: '', class: `cons-t cons-arco cons-nuevo${extra}` }, gTrazos);
       await anima(ms, (t) => {
         if (d.tipo === 'segmento') {
           e.setAttribute('x2', String(d.a[0] + (d.b[0] - d.a[0]) * t));
@@ -276,13 +366,13 @@ const datos = {
     async function haz(p: Paso) {
       for (const d of p.dibujos) {
         if (p.con === 'marca' || d.tipo === 'punto') {
-          dibuja(d, p.rotulo);
+          dibuja(d, p.rotulo, extraDe(p));
           continue;
         }
         if (d.tipo === 'segmento' && (p.con === 'regla' || p.con === 'arista-vista' || p.con === 'arista-oculta')) {
           const g = regla(d.a, d.b);
           await aparece(g);
-          await traza(d, 700, undefined, extraDe(p.con));
+          await traza(d, 700, undefined, extraDe(p));
           await quita(g);
         } else if (d.tipo === 'segmento' && p.con === 'escuadra-cartabon') {
           /* La escuadra con un cateto sobre la recta guía y el otro apoyado
@@ -305,7 +395,7 @@ const datos = {
           pon(inicio);
           await Promise.all([aparece(esc), aparece(car)]);
           if (p.guia) await anima(700, (t) => pon([inicio[0] + (d.a[0] - inicio[0]) * t, inicio[1] + (d.a[1] - inicio[1]) * t]));
-          await traza(d, 700, (t) => pon([d.a[0] + (d.b[0] - d.a[0]) * t * 0.6, d.a[1] + (d.b[1] - d.a[1]) * t * 0.6]));
+          await traza(d, 700, (t) => pon([d.a[0] + (d.b[0] - d.a[0]) * t * 0.6, d.a[1] + (d.b[1] - d.a[1]) * t * 0.6]), extraDe(p));
           await Promise.all([quita(esc), quita(car)]);
         } else if (d.tipo === 'arco' && (p.con === 'compas' || p.con === 'escuadra-cartabon' || p.con === 'regla')) {
           const k = compas();
@@ -330,21 +420,21 @@ const datos = {
             await aparece(k.g);
             await anima(450, (t) => k.pon(d.c, sobre(d.c, d.r * t, d.desde)));
           }
-          await traza(d, 900, (t) => k.pon(d.c, sobre(d.c, d.r, d.desde + s * t)));
+          await traza(d, 900, (t) => k.pon(d.c, sobre(d.c, d.r, d.desde + s * t)), extraDe(p));
           await quita(k.g);
         } else if (d.tipo === 'arco' && p.con === 'transportador') {
           const g = transportador(d.c, d.desde);
           await aparece(g);
-          await traza(d, 800);
+          await traza(d, 800, undefined, extraDe(p));
           await quita(g);
-        } else dibuja(d);
+        } else dibuja(d, undefined, extraDe(p));
       }
     }
 
     const pintaHasta = (n: number) => {
       gTrazos.replaceChildren();
       gInst.replaceChildren();
-      for (const p of datos.pasos.slice(0, n)) for (const d of p.dibujos) dibuja(d, p.rotulo, extraDe(p.con));
+      for (const p of datos.pasos.slice(0, n)) for (const d of p.dibujos) dibuja(d, p.rotulo, extraDe(p));
       hechos = n;
       marca();
     };
@@ -404,6 +494,117 @@ const datos = {
   .cons-trazos :global(.cons-oculta) { stroke-width: 1.5; stroke-dasharray: 5 3; stroke-linecap: butt; }
   .cons-trazos :global(.cons-p) { fill: var(--live); }
   .cons-trazos :global(.cons-r) { font-family: var(--mono); font-size: 9px; font-weight: 700; fill: var(--live); }
+  /* Cada bloque del método, de su color (8 de octubre de 2026): el trazo, el
+     punto, el rótulo, su línea en la lista y su explicación. */
+  /* Cada bloque del método, de su color, con el muestrario elegido (8 de
+     octubre de 2026): el de por defecto es la serie --d, con --d2-tinta
+     cuando el naranja rotula. */
+  .cons-trazos :global(.cons-t.cons-b0) { stroke: var(--d1); }
+  .cons-trazos :global(.cons-p.cons-b0), .cons-trazos :global(.cons-r.cons-b0) { fill: var(--d1); }
+  .cons-con.cons-b0, .cons-explica.cons-b0 > .rotulo { color: var(--d1); }
+  .cons-explica.cons-b0 { border-left-color: var(--d1); }
+  .cons-trazos :global(.cons-t.cons-b1) { stroke: var(--d2); }
+  .cons-trazos :global(.cons-p.cons-b1), .cons-trazos :global(.cons-r.cons-b1) { fill: var(--d2-tinta); }
+  .cons-con.cons-b1, .cons-explica.cons-b1 > .rotulo { color: var(--d2-tinta); }
+  .cons-explica.cons-b1 { border-left-color: var(--d2); }
+  .cons-trazos :global(.cons-t.cons-b2) { stroke: var(--d3); }
+  .cons-trazos :global(.cons-p.cons-b2), .cons-trazos :global(.cons-r.cons-b2) { fill: var(--d3); }
+  .cons-con.cons-b2, .cons-explica.cons-b2 > .rotulo { color: var(--d3); }
+  .cons-explica.cons-b2 { border-left-color: var(--d3); }
+  .cons-trazos :global(.cons-t.cons-b3) { stroke: var(--d4); }
+  .cons-trazos :global(.cons-p.cons-b3), .cons-trazos :global(.cons-r.cons-b3) { fill: var(--d4); }
+  .cons-con.cons-b3, .cons-explica.cons-b3 > .rotulo { color: var(--d4); }
+  .cons-explica.cons-b3 { border-left-color: var(--d4); }
+  .cons-trazos :global(.cons-t.cons-b4) { stroke: var(--d5); }
+  .cons-trazos :global(.cons-p.cons-b4), .cons-trazos :global(.cons-r.cons-b4) { fill: var(--d5); }
+  .cons-con.cons-b4, .cons-explica.cons-b4 > .rotulo { color: var(--d5); }
+  .cons-explica.cons-b4 { border-left-color: var(--d5); }
+  .cons-trazos :global(.cons-t.cons-b5) { stroke: var(--d6); }
+  .cons-trazos :global(.cons-p.cons-b5), .cons-trazos :global(.cons-r.cons-b5) { fill: var(--d6); }
+  .cons-con.cons-b5, .cons-explica.cons-b5 > .rotulo { color: var(--d6); }
+  .cons-explica.cons-b5 { border-left-color: var(--d6); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-t.cons-b0) { stroke: var(--pal-intenso-1); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-p.cons-b0), .cons[data-paleta='intenso'] .cons-trazos :global(.cons-r.cons-b0) { fill: var(--pal-intenso-1); }
+  .cons[data-paleta='intenso'] .cons-con.cons-b0, .cons[data-paleta='intenso'] .cons-explica.cons-b0 > .rotulo { color: var(--pal-intenso-1); }
+  .cons[data-paleta='intenso'] .cons-explica.cons-b0 { border-left-color: var(--pal-intenso-1); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-t.cons-b1) { stroke: var(--pal-intenso-2); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-p.cons-b1), .cons[data-paleta='intenso'] .cons-trazos :global(.cons-r.cons-b1) { fill: var(--pal-intenso-2); }
+  .cons[data-paleta='intenso'] .cons-con.cons-b1, .cons[data-paleta='intenso'] .cons-explica.cons-b1 > .rotulo { color: var(--pal-intenso-2); }
+  .cons[data-paleta='intenso'] .cons-explica.cons-b1 { border-left-color: var(--pal-intenso-2); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-t.cons-b2) { stroke: var(--pal-intenso-3); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-p.cons-b2), .cons[data-paleta='intenso'] .cons-trazos :global(.cons-r.cons-b2) { fill: var(--pal-intenso-3); }
+  .cons[data-paleta='intenso'] .cons-con.cons-b2, .cons[data-paleta='intenso'] .cons-explica.cons-b2 > .rotulo { color: var(--pal-intenso-3); }
+  .cons[data-paleta='intenso'] .cons-explica.cons-b2 { border-left-color: var(--pal-intenso-3); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-t.cons-b3) { stroke: var(--pal-intenso-4); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-p.cons-b3), .cons[data-paleta='intenso'] .cons-trazos :global(.cons-r.cons-b3) { fill: var(--pal-intenso-4); }
+  .cons[data-paleta='intenso'] .cons-con.cons-b3, .cons[data-paleta='intenso'] .cons-explica.cons-b3 > .rotulo { color: var(--pal-intenso-4); }
+  .cons[data-paleta='intenso'] .cons-explica.cons-b3 { border-left-color: var(--pal-intenso-4); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-t.cons-b4) { stroke: var(--pal-intenso-5); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-p.cons-b4), .cons[data-paleta='intenso'] .cons-trazos :global(.cons-r.cons-b4) { fill: var(--pal-intenso-5); }
+  .cons[data-paleta='intenso'] .cons-con.cons-b4, .cons[data-paleta='intenso'] .cons-explica.cons-b4 > .rotulo { color: var(--pal-intenso-5); }
+  .cons[data-paleta='intenso'] .cons-explica.cons-b4 { border-left-color: var(--pal-intenso-5); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-t.cons-b5) { stroke: var(--pal-intenso-6); }
+  .cons[data-paleta='intenso'] .cons-trazos :global(.cons-p.cons-b5), .cons[data-paleta='intenso'] .cons-trazos :global(.cons-r.cons-b5) { fill: var(--pal-intenso-6); }
+  .cons[data-paleta='intenso'] .cons-con.cons-b5, .cons[data-paleta='intenso'] .cons-explica.cons-b5 > .rotulo { color: var(--pal-intenso-6); }
+  .cons[data-paleta='intenso'] .cons-explica.cons-b5 { border-left-color: var(--pal-intenso-6); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-t.cons-b0) { stroke: var(--pal-tierra-1); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-p.cons-b0), .cons[data-paleta='tierra'] .cons-trazos :global(.cons-r.cons-b0) { fill: var(--pal-tierra-1); }
+  .cons[data-paleta='tierra'] .cons-con.cons-b0, .cons[data-paleta='tierra'] .cons-explica.cons-b0 > .rotulo { color: var(--pal-tierra-1); }
+  .cons[data-paleta='tierra'] .cons-explica.cons-b0 { border-left-color: var(--pal-tierra-1); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-t.cons-b1) { stroke: var(--pal-tierra-2); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-p.cons-b1), .cons[data-paleta='tierra'] .cons-trazos :global(.cons-r.cons-b1) { fill: var(--pal-tierra-2); }
+  .cons[data-paleta='tierra'] .cons-con.cons-b1, .cons[data-paleta='tierra'] .cons-explica.cons-b1 > .rotulo { color: var(--pal-tierra-2); }
+  .cons[data-paleta='tierra'] .cons-explica.cons-b1 { border-left-color: var(--pal-tierra-2); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-t.cons-b2) { stroke: var(--pal-tierra-3); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-p.cons-b2), .cons[data-paleta='tierra'] .cons-trazos :global(.cons-r.cons-b2) { fill: var(--pal-tierra-3); }
+  .cons[data-paleta='tierra'] .cons-con.cons-b2, .cons[data-paleta='tierra'] .cons-explica.cons-b2 > .rotulo { color: var(--pal-tierra-3); }
+  .cons[data-paleta='tierra'] .cons-explica.cons-b2 { border-left-color: var(--pal-tierra-3); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-t.cons-b3) { stroke: var(--pal-tierra-4); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-p.cons-b3), .cons[data-paleta='tierra'] .cons-trazos :global(.cons-r.cons-b3) { fill: var(--pal-tierra-4); }
+  .cons[data-paleta='tierra'] .cons-con.cons-b3, .cons[data-paleta='tierra'] .cons-explica.cons-b3 > .rotulo { color: var(--pal-tierra-4); }
+  .cons[data-paleta='tierra'] .cons-explica.cons-b3 { border-left-color: var(--pal-tierra-4); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-t.cons-b4) { stroke: var(--pal-tierra-5); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-p.cons-b4), .cons[data-paleta='tierra'] .cons-trazos :global(.cons-r.cons-b4) { fill: var(--pal-tierra-5); }
+  .cons[data-paleta='tierra'] .cons-con.cons-b4, .cons[data-paleta='tierra'] .cons-explica.cons-b4 > .rotulo { color: var(--pal-tierra-5); }
+  .cons[data-paleta='tierra'] .cons-explica.cons-b4 { border-left-color: var(--pal-tierra-5); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-t.cons-b5) { stroke: var(--pal-tierra-6); }
+  .cons[data-paleta='tierra'] .cons-trazos :global(.cons-p.cons-b5), .cons[data-paleta='tierra'] .cons-trazos :global(.cons-r.cons-b5) { fill: var(--pal-tierra-6); }
+  .cons[data-paleta='tierra'] .cons-con.cons-b5, .cons[data-paleta='tierra'] .cons-explica.cons-b5 > .rotulo { color: var(--pal-tierra-6); }
+  .cons[data-paleta='tierra'] .cons-explica.cons-b5 { border-left-color: var(--pal-tierra-6); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-t.cons-b0) { stroke: var(--pal-lapices-1); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-p.cons-b0), .cons[data-paleta='lapices'] .cons-trazos :global(.cons-r.cons-b0) { fill: var(--pal-lapices-1); }
+  .cons[data-paleta='lapices'] .cons-con.cons-b0, .cons[data-paleta='lapices'] .cons-explica.cons-b0 > .rotulo { color: var(--pal-lapices-1); }
+  .cons[data-paleta='lapices'] .cons-explica.cons-b0 { border-left-color: var(--pal-lapices-1); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-t.cons-b1) { stroke: var(--pal-lapices-2); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-p.cons-b1), .cons[data-paleta='lapices'] .cons-trazos :global(.cons-r.cons-b1) { fill: var(--pal-lapices-2); }
+  .cons[data-paleta='lapices'] .cons-con.cons-b1, .cons[data-paleta='lapices'] .cons-explica.cons-b1 > .rotulo { color: var(--pal-lapices-2); }
+  .cons[data-paleta='lapices'] .cons-explica.cons-b1 { border-left-color: var(--pal-lapices-2); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-t.cons-b2) { stroke: var(--pal-lapices-3); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-p.cons-b2), .cons[data-paleta='lapices'] .cons-trazos :global(.cons-r.cons-b2) { fill: var(--pal-lapices-3); }
+  .cons[data-paleta='lapices'] .cons-con.cons-b2, .cons[data-paleta='lapices'] .cons-explica.cons-b2 > .rotulo { color: var(--pal-lapices-3); }
+  .cons[data-paleta='lapices'] .cons-explica.cons-b2 { border-left-color: var(--pal-lapices-3); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-t.cons-b3) { stroke: var(--pal-lapices-4); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-p.cons-b3), .cons[data-paleta='lapices'] .cons-trazos :global(.cons-r.cons-b3) { fill: var(--pal-lapices-4); }
+  .cons[data-paleta='lapices'] .cons-con.cons-b3, .cons[data-paleta='lapices'] .cons-explica.cons-b3 > .rotulo { color: var(--pal-lapices-4); }
+  .cons[data-paleta='lapices'] .cons-explica.cons-b3 { border-left-color: var(--pal-lapices-4); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-t.cons-b4) { stroke: var(--pal-lapices-5); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-p.cons-b4), .cons[data-paleta='lapices'] .cons-trazos :global(.cons-r.cons-b4) { fill: var(--pal-lapices-5); }
+  .cons[data-paleta='lapices'] .cons-con.cons-b4, .cons[data-paleta='lapices'] .cons-explica.cons-b4 > .rotulo { color: var(--pal-lapices-5); }
+  .cons[data-paleta='lapices'] .cons-explica.cons-b4 { border-left-color: var(--pal-lapices-5); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-t.cons-b5) { stroke: var(--pal-lapices-6); }
+  .cons[data-paleta='lapices'] .cons-trazos :global(.cons-p.cons-b5), .cons[data-paleta='lapices'] .cons-trazos :global(.cons-r.cons-b5) { fill: var(--pal-lapices-6); }
+  .cons[data-paleta='lapices'] .cons-con.cons-b5, .cons[data-paleta='lapices'] .cons-explica.cons-b5 > .rotulo { color: var(--pal-lapices-6); }
+  .cons[data-paleta='lapices'] .cons-explica.cons-b5 { border-left-color: var(--pal-lapices-6); }
+  .cons-paletas { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin: .4rem 0 .2rem; }
+  .cons-paletas button { display: inline-flex; gap: 2px; padding: .2rem .3rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); cursor: pointer; }
+  .cons-paletas button[aria-pressed='true'] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+  .cons-paletas button:focus-visible { outline: 2px solid var(--live); outline-offset: 2px; }
+  .cons-paletas .muestra { width: .7rem; height: .7rem; border-radius: 2px; }
+  .cons-trazos :global(.cons-t.cons-sin) { stroke: var(--graphite); }
+  .cons-trazos :global(.cons-p.cons-sin), .cons-trazos :global(.cons-r.cons-sin) { fill: var(--graphite); }
+  .cons-explica { margin: .2rem 0 .5rem; padding: .35rem .6rem; border-left: 3px solid var(--rule); background: color-mix(in srgb, var(--panel) 70%, transparent); }
+  .cons-explica > .rotulo { margin: 0 0 .15rem; }
+  .cons-bloque { font-weight: 700; }
 
   .cons-instrumento :global(.inst) { fill: color-mix(in srgb, var(--graphite) 16%, transparent); stroke: var(--graphite); stroke-width: .8; }
   .cons-instrumento :global(.inst-2) { fill: color-mix(in srgb, var(--graphite) 10%, transparent); }
