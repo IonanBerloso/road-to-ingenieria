@@ -2461,8 +2461,11 @@ const laminas = defineCollection({
       origen: z.enum(['coleccion', 'hoja', 'otro-pdf', 'nuestra']).default('coleccion'),
       /** El PDF de la página, dentro del material, cuando no es la colección. */
       pdf: z.string().min(5).optional(),
-      /** La página del PDF, para cotejarla. */
-      pagina: z.number().int().min(1),
+      /** La página del PDF, para cotejarla. Una lámina nuestra que no sale
+       *  de ninguna página (las RI de los ejemplos de entrada, 9 de octubre de
+       *  2026) no tiene ni `pdf` ni `pagina`: se coteja consigo misma, y su
+       *  `revision` dice cómo. */
+      pagina: z.number().int().min(1).optional(),
       /** El número de ejercicio en la colección o en la hoja. */
       ejercicio: z.number().int().min(1).optional(),
       /** El trozo de página que se dibuja, en pt. */
@@ -2499,7 +2502,10 @@ const laminas = defineCollection({
       if ((d.origen === 'coleccion' || d.origen === 'hoja') && d.ejercicio === undefined) {
         ctx.addIssue({ code: 'custom', message: 'una lámina de la colección o de una hoja lleva su `ejercicio`' });
       }
-      if (d.origen !== 'coleccion' && d.pdf === undefined) {
+      if (d.origen !== 'nuestra' && d.pagina === undefined) {
+        ctx.addIssue({ code: 'custom', message: 'una lámina sacada de un PDF dice de qué `pagina` es' });
+      }
+      if (d.origen !== 'coleccion' && d.pagina !== undefined && d.pdf === undefined) {
         ctx.addIssue({ code: 'custom', message: 'una lámina que no es de la colección dice de qué `pdf` es su página' });
       }
     }),

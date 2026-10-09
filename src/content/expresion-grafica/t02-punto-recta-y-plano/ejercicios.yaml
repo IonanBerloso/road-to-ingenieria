@@ -1,4 +1,277 @@
 ejercicios:
+  - id: ri1-el-segmento-ab-y-su-triangulo
+    titulo: Cuánto mide de verdad un segmento oblicuo
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni de la colección de ejercicios.
+    nivel: ejemplo
+    # Decisión: el ejemplo de entrada del tema (§04, §08, §15), nuestro y
+    # delante de los de la colección. Entrena lo primero que explica la prosa:
+    # leer la cota en el alzado y el alejamiento en la planta sin línea de tierra
+    # (el `reconocer`), y la verdadera magnitud de un segmento oblicuo con su
+    # triángulo, abatido sobre la planta como en la figura del tema (el
+    # `construir`). La lámina, RI1, es nuestra, en milímetros redondos.
+    enunciado: |
+      El segmento AB viene dado en alzado, arriba, y en planta, debajo, sin línea de tierra. Hallar su
+      verdadera magnitud con el triángulo que tiene por catetos la planta y la diferencia de cotas.
+
+      **Notas nuestras.** El ejercicio y la figura son nuestros, a escala 1:1: las medidas son milímetros
+      de la lámina, que se toman con «medir» en el Taller o con la regla en el papel. Llamamos H al punto
+      del alzado donde la horizontal por A₂ corta la vertical de B₂, y (B) a B abatido sobre la planta,
+      como en la figura del tema.
+    pide: Qué dicen las dos vistas de la posición de B respecto de A, el triángulo de AB levantado sobre la planta y la longitud real de AB.
+    receta:
+      lamina: ri1
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+      solucion:
+        vm_mm: en_mm(vm(A, B))
+        # H, donde la horizontal por A₂ corta la vertical de B₂, y K, la otra
+        # esquina (la vertical de A₂ con la horizontal de B₂): de las dos sale la
+        # diferencia de cotas, y las dos valen.
+        Hp: 'pie_perpendicular(figura.punto("B2"), perpendicular(por: figura.punto("A2"), a: segmento2(figura.punto("B2"), figura.punto("B1"))))'
+        Kp: 'pie_perpendicular(figura.punto("A2"), perpendicular(por: figura.punto("B2"), a: segmento2(figura.punto("A2"), figura.punto("A1"))))'
+        dz: diferencia_de_cotas(A, B)
+        # Lo que B₁ está por debajo de A₁, la diferencia de alejamientos: la
+        # receta no la expone, y sale por Pitágoras (como en el tema 1). Es el
+        # cateto del error de llevar el alejamiento en vez de la cota.
+        dy: 'raiz(vm(A, B) * vm(A, B) - vm_alzado(A, B) * vm_alzado(A, B))'
+        # (B), a la derecha de B₁ (el segundo de los dos lados), y la
+        # perpendicular a A₁B₁ por B₁, que se traza más larga que él.
+        B_ab: uno(abatido_planta(A, B), 2)
+        perpB: 'perpendicular(por: figura.punto("B1"), a: figura.segmento("AB1"))'
+        Bmas: 'uno(medir_sobre(perpB, desde: figura.punto("B1"), distancia: dz + mm(7)), 2)'
+        Hmas: 'desplaza(Hp, dx: mm(7))'
+        Hbaja: 'desplaza(Hp, dy: mm(7))'
+        # El punto de la vertical de B₁ a la altura de A₁, en la planta: el
+        # error de buscar la diferencia de cotas en la planta.
+        HenPlanta: 'pie_perpendicular(figura.punto("B1"), perpendicular(por: figura.punto("A1"), a: segmento2(figura.punto("B2"), figura.punto("B1"))))'
+    pasos:
+      - tipo: reconocer
+        pregunta: En el alzado, B₂ queda 28 mm por encima de A₂; en la planta, B₁ queda 36 mm por debajo de A₁. ¿Qué dicen esas dos cosas de B?
+        opciones:
+          - texto: Que B está 28 mm más alto que A y 36 mm más cerca del plano vertical, el que queda detrás
+            mensaje: |
+              Lo de la cota está bien; lo del alejamiento, al revés. En la planta, más abajo en el papel
+              quiere decir más alejamiento: B₁ por debajo de A₁ es B 36 mm **más lejos** del plano
+              vertical, y más cerca de quien mira el alzado.
+          - texto: Que B está 28 mm más alto y 36 mm más lejos del plano vertical que A
+            correcta: true
+            mensaje: |
+              Eso es. El alzado da la cota, y B₂ más arriba es B más alto. La planta da el
+              alejamiento, y B₁ más abajo en el papel es B más lejos del plano vertical, más cerca de quien
+              mira el alzado. Sin línea de tierra no sabes la cota de A ni la de B, pero sí lo que se llevan,
+              que es lo que hace falta.
+          - texto: Que las dos vistas no casan, porque B₂ dice que B está más arriba y B₁ dice que está más abajo
+            mensaje: |
+              Casan: dicen cosas distintas. La altura solo se lee en el alzado. En la planta, arriba y
+              abajo del papel es delante y detrás: B₁ por debajo de A₁ dice que B está más lejos del plano
+              vertical, no más bajo.
+          - texto: Solo lo de la cota, porque sin la línea de tierra la planta no da ningún alejamiento que leer
+            mensaje: |
+              Sin línea de tierra no se sabe el alejamiento de cada punto, pero sí la diferencia entre los
+              dos, y es lo que se usa: B₁ está 36 mm por debajo de A₁, así que B tiene 36 mm más de
+              alejamiento que A.
+
+      - tipo: construir
+        titulo: El triángulo de AB, sobre la planta
+        intro: |
+          AB es oblicua, y su longitud real es la hipotenusa de un triángulo rectángulo: un cateto es la
+          planta, A₁B₁, y el otro, la diferencia de cotas de A y B, que se lee en el alzado. Primero, en el
+          alzado, la horizontal por A₂ y la vertical de B₂: se cortan en H (nombre nuestro), y HB₂ es lo que
+          B está más alto que A. Después, por B₁, la perpendicular a A₁B₁, y en ella HB₂ con el compás: ahí
+          está (B), B abatido sobre la planta. Vale a cualquiera de los dos lados de A₁B₁; la otra esquina
+          del alzado, en la vertical de A₂ y a la altura de B₂, también vale para H. Marca H y (B).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: H
+            pide: H, en el alzado, donde la horizontal por A₂ corta la vertical de B₂
+            es: '[solucion.Hp, solucion.Kp]'
+            bien: |
+              Eso es: ese punto está a la altura de un extremo y en la vertical del otro, y lo que lo separa del
+              alzado del otro extremo, 28 mm en vertical, es lo que B está más alto que A. Es el cateto que la
+              planta no enseña.
+            diagnosticos:
+              - si: en_horizontal_de(figura.punto("A2"))
+                mensaje: |
+                  Estás a la altura de A₂, pero H va en la **vertical de B₂**: ahí la horizontal de A₂ queda
+                  justo debajo de B₂, y lo que las separa es la diferencia de cotas.
+                ejemplo: 'desplaza(solucion.Hp, dx: mm(-9))'
+              - si: en_vertical_de(figura.punto("B2"))
+                mensaje: |
+                  Estás en la vertical de B₂, pero no a la altura de A₂. La cota se lee en el **alzado**: H va
+                  donde la vertical de B₂ corta la horizontal que pasa por A₂, no por A₁.
+                ejemplo: solucion.HenPlanta
+              - si: siempre
+                mensaje: |
+                  H es el cruce de dos rectas del alzado: la horizontal que pasa por A₂ y la vertical que pasa
+                  por B₂.
+          - nombre: Bab
+            rotulo: (B)
+            pide: (B), B abatido sobre la planta, en la perpendicular a A₁B₁ por B₁
+            es: abatido_planta(A, B)
+            bien: |
+              (B) está en la perpendicular a A₁B₁ por B₁, a 28 mm de B₁: la diferencia de cotas. El triángulo
+              A₁B₁(B) es rectángulo en B₁, y su hipotenusa, A₁(B), es AB en verdadera magnitud.
+            diagnosticos:
+              - si: 'en_recta(solucion.perpB) && a_distancia(de: figura.punto("B1"), d: solucion.dy)'
+                mensaje: |
+                  Has llevado 36 mm, lo que B₁ está por debajo de A₁: eso es la diferencia de
+                  **alejamientos**. El triángulo que se levanta sobre la planta lleva la de **cotas**, que se
+                  lee en el alzado: HB₂, 28 mm.
+                ejemplo: 'uno(medir_sobre(solucion.perpB, desde: figura.punto("B1"), distancia: solucion.dy), 2)'
+              - si: 'en_recta(solucion.perpB) && a_distancia(de: figura.punto("B1"), d: vm_alzado(A, B))'
+                mensaje: |
+                  Has llevado lo que mide **A₂B₂ en el alzado**, y el alzado también acorta AB. En la
+                  perpendicular va solo la diferencia de cotas: lo que B₂ está por encima de la horizontal de
+                  A₂.
+                ejemplo: 'uno(medir_sobre(solucion.perpB, desde: figura.punto("B1"), distancia: vm_alzado(A, B)), 2)'
+              - si: 'a_distancia(de: figura.punto("B1"), d: solucion.dz)'
+                mensaje: |
+                  La distancia es la buena, pero va en la **perpendicular a A₁B₁** que pasa por B₁: el triángulo
+                  es rectángulo en B₁.
+                ejemplo: 'desplaza(figura.punto("B1"), dx: solucion.dz)'
+              - si: '!en_recta(solucion.perpB)'
+                mensaje: |
+                  (B) no está en la **perpendicular a A₁B₁** que pasa por B₁: trázala con la escuadra y lleva
+                  sobre ella HB₂, desde B₁.
+                ejemplo: 'desplaza(solucion.B_ab, dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular a A₁B₁ por B₁, pero no a la distancia buena: con el compás abierto
+                  HB₂, lo que B está más alto que A, y centro en B₁.
+        trazado:
+          - segmento2(figura.punto("A2"), solucion.Hp)
+          - segmento2(solucion.Hp, figura.punto("B2"))
+          - segmento2(figura.punto("B1"), solucion.B_ab)
+          - segmento2(figura.punto("A1"), solucion.B_ab)
+        bloques:
+          - nombre: Abatimiento del plano vertical de AB
+            explica: |
+              AB está en un plano vertical, el que en la planta se ve como la recta A₁B₁. Se tumba ese plano
+              alrededor de su horizontal por A, el extremo bajo, hasta dejarlo horizontal, a la cota de A: la
+              charnela tiene por planta la propia A₁B₁, y A no se mueve. B está justo encima de B₁, porque el
+              plano es vertical, y lo que queda por encima de la charnela es lo que B está más alto que A: sin
+              línea de tierra, eso se lee en el alzado, entre B₂ y la horizontal de A₂, en H. Al tumbarse, B se
+              aparta de A₁B₁ por la perpendicular que pasa por B₁, a esa distancia. Tumbado, el triángulo
+              A₁B₁(B) se ve sin deformar, y su hipotenusa es AB en verdadera magnitud
+              ([tema 2, «Qué mide cada vista»](/road-to-ingenieria/expresion-grafica/t02-punto-recta-y-plano/#qué-mide-cada-vista)).
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.Hmas)
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              Por A₂, la horizontal hacia la derecha, larga, hasta pasar la vertical de B₂: todos sus puntos
+              tienen la cota de A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B2"), solucion.Hbaja)
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              Por B₂, la vertical hacia abajo, hasta pasar la horizontal de A₂.
+          - con: marca
+            traza: solucion.Hp
+            rotulo: H
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              H (nombre nuestro), donde la vertical de B₂ corta la horizontal de A₂: tiene la cota de A y está
+              justo debajo de B₂. HB₂ mide 28 mm, lo que B está más alto que A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.Bmas)
+            guia: figura.segmento("AB1")
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              Por B₁, la perpendicular a A₁B₁, hacia arriba a la derecha y larga: el triángulo es rectángulo
+              en B₁, y en esta recta va el cateto de la cota.
+          - con: compas
+            traza: 'arco(figura.punto("B1"), por: solucion.B_ab, desde: desplaza(solucion.B_ab, dx: -3.6, dy: -4.8), hasta: desplaza(solucion.B_ab, dx: 3.6, dy: 4.8))'
+            toma: segmento2(solucion.Hp, figura.punto("B2"))
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              Con el compás, en el alzado, HB₂, la diferencia de cotas; con centro en B₁, se lleva sobre la
+              perpendicular.
+          - con: marca
+            traza: solucion.B_ab
+            rotulo: (B)
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              (B), B abatido (nombre nuestro, el de la figura del tema), donde el arco de centro B₁ corta la
+              perpendicular, 28 mm por fuera de B₁.
+          - con: regla
+            traza: segmento2(figura.punto("A1"), solucion.B_ab)
+            bloque: Abatimiento del plano vertical de AB
+            porque: |
+              A₁(B), la hipotenusa del triángulo: AB en verdadera magnitud, 53 mm, más que la planta (45) y que
+              el alzado (38,90).
+        pista: |
+          (1) En el alzado, la horizontal por A₂ y la vertical por B₂ se cortan en H; HB₂ es la diferencia de
+          cotas. (2) Por B₁, la perpendicular a A₁B₁. (3) Con centro en B₁ y radio HB₂, corta la perpendicular:
+          ese es (B).
+        desarrollo: |
+          En verde claro, H y la diferencia de cotas en el alzado, y el triángulo A₁B₁(B) sobre la planta. Su
+          hipotenusa es AB en verdadera magnitud.
+
+      - tipo: calcular
+        titulo: La longitud de AB
+        pregunta: ¿Cuánto mide de verdad AB?
+        respuesta:
+          tipo: numero
+          valor: '53.00'
+          receta: vm_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '45.00'
+            receta: en_mm(vm_planta(A, B))
+            mensaje: |
+              Eso es lo que mide **A₁B₁ en la planta**. AB sube de A a B, y la planta la acorta: es solo un
+              cateto del triángulo.
+          - valor: '38.90'
+            receta: en_mm(vm_alzado(A, B))
+            mensaje: |
+              Eso es **A₂B₂ en el alzado**. El alzado también acorta: AB no es frontal, porque su planta no es
+              horizontal en el papel.
+          - valor: '57.63'
+            receta: en_mm(raiz(vm_planta(A, B) * vm_planta(A, B) + dy * dy))
+            mensaje: |
+              Has levantado el triángulo con 36 mm de cateto: lo que B₁ está por debajo de A₁, la diferencia
+              de **alejamientos**. El cateto que va sobre la planta es la diferencia de **cotas**, 28 mm, que
+              se lee en el alzado.
+        pista: |
+          Mide A₁(B) con «medir» en el Taller del paso anterior, o con la regla en tu lámina: es la hipotenusa.
+        desarrollo: |
+          La planta, 45 mm, y la diferencia de cotas, 28, son los catetos:
+
+          $$ \overline{AB} = \sqrt{\overline{A_1B_1}^{\,2} + \Delta z^{2}} = \sqrt{45^{2} + 28^{2}} = 53 \text{ mm} $$
+
+          Por las tres diferencias a la vez sale lo mismo: 27 mm de x, 36 de alejamiento y 28 de cota, y
+          $\sqrt{27^{2} + 36^{2} + 28^{2}} = 53$.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'A₂B₂ y A₁B₁ están inclinadas en el papel: AB es oblicua, y ninguna de las dos vistas la da sin acortar.'
+          - texto: 'B₂ queda 28 mm por encima de A₂: B está 28 mm más alto que A, y ese es el cateto que la planta no enseña.'
+          - texto: Por B₁, la perpendicular a A₁B₁, y en ella esos 28 mm con el compás, hasta (B).
+          - texto: 'La hipotenusa A₁(B) es AB en verdadera magnitud: 53 mm.'
+          - texto: En la perpendicular van los 36 mm que B₁ está por debajo de A₁, porque la planta es donde se levanta el triángulo.
+            trampa: true
+            mensaje: |
+              Esos 36 mm son la diferencia de alejamientos, lo que B está más lejos del plano vertical. El
+              triángulo se levanta sobre la planta, pero su cateto es la diferencia de cotas, 28, que se lee
+              en el alzado. Con 36 saldría 57,63 mm.
+    resolucion: |
+      **Qué dicen las dos vistas.** B₂ está 28 mm por encima de A₂: B es 28 mm más alto que A. B₁ está 36 mm
+      por debajo de A₁: B tiene 36 mm más de alejamiento, está más lejos del plano vertical y más cerca de
+      quien mira el alzado. Las dos proyecciones están inclinadas en el papel, ni horizontales ni verticales,
+      así que AB es oblicua y no está en verdadera magnitud en ninguna.
+
+      **El triángulo.** En el alzado, la horizontal por A₂ y la vertical de B₂ se cortan en H, y HB₂, 28 mm,
+      es la diferencia de cotas. Por B₁, la perpendicular a A₁B₁, y en ella esos 28 mm: (B). El triángulo
+      A₁B₁(B) es rectángulo en B₁, con catetos de 45 y 28 mm.
+
+      **La longitud.** La hipotenusa A₁(B) es AB en verdadera magnitud: 53 mm, más que la planta, 45, y que
+      el alzado, 38,90. Con la diferencia de alejamientos en lugar de la de cotas saldría 57,63.
+
   - id: sd1-la-gota-sobre-el-tejado
     titulo: La gota sobre el tejado
     fuente: Ejercicio 1 (SD1) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU

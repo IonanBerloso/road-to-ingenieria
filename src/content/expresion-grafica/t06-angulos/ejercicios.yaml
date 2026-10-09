@@ -1,7 +1,287 @@
 ejercicios:
-  # Decisión: los ejercicios del tema 6 van en el orden de la colección (§04).
+  # Decisión: delante, el ejemplo de entrada del tema, nuestro (§04, §08,
+  # §15). Después, los ejercicios del tema 6, en el orden de la colección (§04).
   # A 8 de octubre de 2026 están escritos todos los suyos: el 15 (SD18), del 43
   # al 47 (SD59 a SD63) y el 50 (SD66).
+  - id: ri5-el-angulo-de-ab-con-el-plano-horizontal
+    titulo: El ángulo de AB con el plano horizontal, con un giro
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni de la colección de ejercicios.
+    nivel: ejemplo
+    # Decisión: el ejemplo de entrada del tema (§04, §08, §15), nuestro y
+    # delante de los de la colección. Entrena lo primero que explica la prosa:
+    # el ángulo de una recta con el plano horizontal, que es el del triángulo de
+    # la planta y la diferencia de cotas, y el error típico de leerlo en el
+    # alzado: A₂B₂ va a 45° justos en el papel y AB sube 34,59°. El triángulo se
+    # construye girando AB alrededor de un eje vertical por A hasta dejarla
+    # frontal (tema 3, el giro; diapositivas de giros, pág. 5), que es el método
+    # del Ejercicio 43 de la colección. La lámina, RI5, es nuestra.
+    enunciado: |
+      El segmento AB viene dado en alzado, arriba, y en planta, debajo, sin línea de tierra. Girándolo
+      alrededor de un eje vertical que pasa por A hasta dejarlo frontal, hallar el ángulo que forma con el
+      plano horizontal.
+
+      **Notas nuestras.** El ejercicio y la figura son nuestros, a escala 1:1: las medidas son milímetros
+      de la lámina, que se toman con «medir» en el Taller o con la regla en el papel, y los ángulos con el
+      transportador. El eje no está dibujado: en la planta es el punto A₁, y en el alzado, la vertical de
+      A₂. Llamamos B₁′ y B₂′ a las proyecciones de B después del giro, con la prima de las diapositivas de
+      giros. Vale girar hacia cualquiera de los dos lados.
+    pide: Qué dice el ángulo de A₂B₂ en el papel, B₁′ y B₂′, y el ángulo de AB con el plano horizontal.
+    receta:
+      lamina: ri5
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+      solucion:
+        alfa: angulo_con_ph(segmento3(A, B))
+        complemento: 90 - alfa
+        # K, el punto del eje (la vertical por A) a la cota de B, y Kx, a su
+        # derecha con la misma cota y el mismo alejamiento: B girado está en la
+        # recta KKx, a A₁B₁ de K, a un lado o al otro (una elección).
+        K: 'punto3(alzado: desplaza(figura.punto("A2"), dy: 0 - diferencia_de_cotas(A, B)), planta: figura.punto("A1"))'
+        Kx: 'punto3(alzado: desplaza(figura.punto("A2"), dx: 10, dy: 0 - diferencia_de_cotas(A, B)), planta: desplaza(figura.punto("A1"), dx: 10))'
+        Bg: 'punto_a_distancia(recta3(K, Kx), desde: K, distancia: vm_planta(A, B))'
+        horA1: 'perpendicular(por: figura.punto("A1"), a: segmento2(figura.punto("A1"), figura.punto("A2")))'
+        horA2: 'perpendicular(por: figura.punto("A2"), a: segmento2(figura.punto("A1"), figura.punto("A2")))'
+        # Donde la horizontal de A₂ corta la vertical de B₂′, y las rectas de la
+        # construcción, prolongadas más allá de lo que se marca.
+        Hp: pie_perpendicular(proy_alzado(Bg), horA2)
+        Hmas: 'uno(medir_sobre(segmento2(figura.punto("A2"), Hp), desde: Hp, distancia: mm(7)), 1)'
+        B1g_mas: 'uno(medir_sobre(segmento2(figura.punto("A1"), proy_planta(Bg)), desde: proy_planta(Bg), distancia: mm(7)), 1)'
+        B2g_mas_v: 'uno(medir_sobre(segmento2(proy_planta(Bg), proy_alzado(Bg)), desde: proy_alzado(Bg), distancia: mm(7)), 1)'
+        B2g_mas_h: 'uno(medir_sobre(segmento2(figura.punto("B2"), proy_alzado(Bg)), desde: proy_alzado(Bg), distancia: mm(7)), 1)'
+        # El error de bajar B₁ en vertical hasta la horizontal de A₁, en vez de
+        # girarlo.
+        Bbajado: pie_perpendicular(figura.punto("B1"), horA1)
+        # Los ángulos que no son: el de A₂B₂ en el papel (el de una frontal con
+        # ese alzado), el de A₁B₁ en el papel (el de una horizontal con esa
+        # planta, con el plano vertical) y el de AB con el plano vertical.
+        Bf: 'punto3(alzado: figura.punto("B2"), planta: pie_perpendicular(figura.punto("B1"), horA1))'
+        Bh: 'punto3(alzado: pie_perpendicular(figura.punto("B2"), horA2), planta: figura.punto("B1"))'
+        ang_alzado: angulo_con_ph(segmento3(A, Bf))
+        ang_planta: angulo_con_pv(segmento3(A, Bh))
+        ang_pv: angulo_con_pv(segmento3(A, B))
+    pasos:
+      - tipo: reconocer
+        pregunta: A₂B₂ va a 45° justos en el papel. ¿Qué ángulo forma AB con el plano horizontal?
+        opciones:
+          - texto: 45°, porque el alzado es la vista que enseña cuánto sube la recta
+            mensaje: |
+              El alzado enseña cuánto sube, pero no cuánto avanza: AB se aleja del plano vertical mientras
+              sube, y eso el alzado no lo ve. 45° es el ángulo de la proyección; el de la recta sale de su
+              verdadera magnitud.
+          - texto: Todavía no se sabe, porque 45° es el ángulo de la proyección y AB no es frontal
+            correcta: true
+            mensaje: |
+              Eso es. Solo si AB fuera frontal, con la planta horizontal en el papel, su alzado daría el ángulo
+              de verdad. A₁B₁ está inclinada: hay que poner AB en verdadera magnitud, y aquí se hace girándola
+              hasta dejarla frontal.
+          - texto: Más de 45°, porque la planta acorta la recta y el ángulo de verdad siempre sale mayor que el de la proyección
+            mensaje: |
+              Es al revés. El alzado acorta lo que la recta avanza, no lo que sube: AB avanza 29 mm, y el alzado
+              solo enseña 20. Con más avance para la misma subida, el ángulo de verdad es menor: 34,59°.
+
+      - tipo: construir
+        titulo: El giro hasta dejar AB frontal
+        intro: |
+          Gira AB alrededor de un eje vertical que pasa por A. A no se mueve. En la planta, B₁ gira alrededor
+          de A₁, con radio A₁B₁, hasta la horizontal de A₁: ahí la planta queda horizontal en el papel, y AB,
+          frontal. Ese es B₁′. En el alzado, B se mueve en horizontal, porque su cota no cambia: B₂′ está en la
+          vertical de B₁′, a la altura de B₂. Marca B₁′ y B₂′; con el transportador, el ángulo de A₂B₂′ con la
+          horizontal de A₂ es el que se pide. Vale girar hacia cualquiera de los dos lados.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: B1g
+            rotulo: B₁′
+            pide: B girado, en la planta
+            es: proy_planta(solucion.Bg)
+            bien: |
+              B₁′ está en la horizontal por A₁, a 29 mm de A₁, lo que mide A₁B₁: la planta, girada alrededor
+              del eje vertical por A sin deformarse, hasta quedar horizontal en el papel.
+            diagnosticos:
+              - si: cerca_de(solucion.Bbajado)
+                mensaje: |
+                  Has bajado B₁ en **vertical** hasta la horizontal de A₁, y eso acorta la planta: de A₁ a ese
+                  punto hay 20 mm, no 29. Al girar, B₁ se mueve por el arco de centro A₁ y no cambia su distancia
+                  a A₁.
+                ejemplo: solucion.Bbajado
+              - si: '!en_horizontal_de(figura.punto("A1"))'
+                mensaje: |
+                  B₁′ va en la **horizontal por A₁**: AB queda frontal cuando su planta es horizontal en el papel,
+                  y A₁ no se mueve.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.Bg, 1)), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la horizontal de A₁, pero no a la distancia buena: con centro en A₁ y radio A₁B₁, el
+                  arco que sale de B₁ la corta en B₁′.
+          - nombre: B2g
+            rotulo: B₂′
+            pide: B girado, en el alzado
+            es: proy_alzado(solucion.Bg)
+            bien: |
+              B₂′ está en la vertical de B₁′ y a la altura de B₂: el giro de eje vertical no cambia las cotas.
+              A₂B₂′ es AB en verdadera magnitud, y su ángulo con la horizontal de A₂ es el que se pide.
+            diagnosticos:
+              - si: cerca_de(otra_rama(proy_alzado(solucion.Bg)))
+                mensaje: |
+                  Ese es B₂′ del giro hacia el otro lado. Los dos valen, pero B₂′ va en la vertical de tu B₁′.
+                ejemplo: proy_alzado(rama(solucion.Bg, 2))
+              - si: '!en_horizontal_de(figura.punto("B2"))'
+                mensaje: |
+                  Al girar alrededor de un eje vertical, B no cambia de cota: B₂′ se queda a la **altura de B₂**.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.Bg, 1)), dy: mm(6))'
+              - si: '!en_vertical_de(B1g)'
+                mensaje: |
+                  B₂′ va en la **vertical de B₁′**: es B girado, visto en las dos vistas.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.Bg, 1)), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  B₂′ está donde la horizontal de B₂ corta la vertical de B₁′.
+        trazado:
+          - segmento2(figura.punto("A1"), proy_planta(solucion.Bg))
+          - segmento2(proy_planta(solucion.Bg), proy_alzado(solucion.Bg))
+          - segmento2(figura.punto("B2"), proy_alzado(solucion.Bg))
+          - segmento2(figura.punto("A2"), proy_alzado(solucion.Bg))
+          - segmento2(figura.punto("A2"), solucion.Hp)
+        bloques:
+          - nombre: Giro de eje vertical por A
+            explica: |
+              Se gira AB alrededor de un eje vertical que pasa por A, y A no se mueve. Cada punto gira en un
+              plano horizontal: en la planta, B₁ describe una circunferencia de centro A₁, y A₁B₁ no cambia de
+              largo; en el alzado, B se mueve en horizontal, porque su cota no cambia. Se gira hasta que la
+              planta queda horizontal en el papel: entonces AB es frontal, y el alzado la da en verdadera
+              magnitud, con su ángulo con el plano horizontal a la vista. Es el triángulo de la planta y la
+              diferencia de cotas, levantado en el alzado
+              ([tema 3, «El giro»](/road-to-ingenieria/expresion-grafica/t03-metodos-descriptivos/#el-giro-mover-la-figura)).
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.B1g_mas)
+            bloque: Giro de eje vertical por A
+            porque: |
+              Por A₁, la horizontal hacia la derecha, larga: ahí tiene que quedar la planta girada, porque AB es
+              frontal cuando su planta es horizontal en el papel. Hacia la izquierda valdría igual.
+          - con: compas
+            traza: 'arco(figura.punto("A1"), por: figura.punto("B1"), desde: figura.punto("B1"), hasta: proy_planta(solucion.Bg))'
+            toma: segmento2(figura.punto("A1"), figura.punto("B1"))
+            bloque: Giro de eje vertical por A
+            porque: |
+              Con centro en A₁ y radio A₁B₁, el arco desde B₁ hasta la horizontal: al girar alrededor del eje
+              vertical por A, B₁ se mueve por esa circunferencia, y la planta no se deforma.
+          - con: marca
+            traza: proy_planta(solucion.Bg)
+            rotulo: B₁′
+            bloque: Giro de eje vertical por A
+            porque: |
+              B₁′ (nombre nuestro: B girado), donde el arco de centro A₁ corta la horizontal de A₁, 29 mm a la
+              derecha de A₁.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Bg), solucion.B2g_mas_v)
+            bloque: Giro de eje vertical por A
+            porque: |
+              Por B₁′, la vertical hacia arriba, hasta pasar la altura de B₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B2"), solucion.B2g_mas_h)
+            bloque: Giro de eje vertical por A
+            porque: |
+              Por B₂, la horizontal hacia la derecha, hasta pasar la vertical de B₁′: al girar con eje
+              vertical, B no cambia de cota.
+          - con: marca
+            traza: proy_alzado(solucion.Bg)
+            rotulo: B₂′
+            bloque: Giro de eje vertical por A
+            porque: |
+              B₂′, donde la horizontal de B₂ corta la vertical de B₁′.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.Hmas)
+            bloque: Giro de eje vertical por A
+            porque: |
+              Por A₂, la horizontal hacia la derecha, hasta pasar la vertical de B₁′: contra ella se mide el
+              ángulo, porque en el alzado el plano horizontal se ve como una horizontal del papel.
+          - con: regla
+            traza: segmento2(figura.punto("A2"), proy_alzado(solucion.Bg))
+            bloque: Giro de eje vertical por A
+            porque: |
+              A₂B₂′, AB girada: es frontal, y está en verdadera magnitud, 35,23 mm.
+          - con: transportador
+            traza: 'arco(figura.punto("A2"), por: solucion.Hp, desde: solucion.Hp, hasta: proy_alzado(solucion.Bg))'
+            bloque: Giro de eje vertical por A
+            porque: |
+              Con el transportador en A₂, el ángulo de A₂B₂′ con la horizontal de A₂: 34,59°, el de AB con el
+              plano horizontal.
+        pista: |
+          (1) Por A₁, la horizontal. (2) Con centro en A₁ y radio A₁B₁, el arco desde B₁ la corta en B₁′. (3) La
+          vertical de B₁′ y la horizontal de B₂ se cortan en B₂′. (4) El ángulo de A₂B₂′ con la horizontal de A₂.
+        desarrollo: |
+          En verde claro, el arco del giro en la planta, B₁′ y B₂′, y A₂B₂′, AB en verdadera magnitud, con su
+          ángulo con la horizontal de A₂.
+
+      - tipo: calcular
+        titulo: El ángulo de AB con el plano horizontal
+        pregunta: ¿Qué ángulo forma AB con el plano horizontal? Mídelo con el transportador en el alzado del paso anterior.
+        respuesta:
+          tipo: numero
+          valor: '34.59'
+          receta: alfa
+          tolerancia: 0.5
+          formato: un número, en grados
+        distractores:
+          - valor: '45.0'
+            receta: ang_alzado
+            mensaje: |
+              Ese es el ángulo de **A₂B₂ en el papel**, el de la proyección. AB no es frontal, y el alzado no
+              enseña lo que avanza: el ángulo de verdad es el de A₂B₂′, después del giro.
+          - valor: '55.41'
+            receta: complemento
+            mensaje: |
+              Ese es el **complementario**: el ángulo de A₂B₂′ con la vertical. El de la recta con el plano
+              horizontal se mide contra la horizontal de A₂.
+          - valor: '46.39'
+            receta: ang_planta
+            mensaje: |
+              Ese es el ángulo de **A₁B₁ en la planta** con la horizontal del papel. La planta no enseña
+              alturas: ese ángulo dice hacia dónde va la recta, no cuánto sube.
+          - valor: '36.59'
+            receta: ang_pv
+            mensaje: |
+              Ese es el ángulo de AB con el **plano vertical**, el que daría un giro de eje de punta hasta
+              dejarla horizontal. Con el plano horizontal, el eje es vertical y la recta queda frontal.
+        pista: |
+          En el alzado del paso anterior, pon el transportador en A₂ y mide entre la horizontal de A₂ y A₂B₂′.
+        desarrollo: |
+          Después del giro, AB es frontal, y su alzado es el triángulo de la planta, 29 mm, y la diferencia de
+          cotas, 20:
+
+          $$ \tan\alpha = \frac{20}{29} \quad\Longrightarrow\quad \alpha \approx 34{,}59^\circ $$
+
+          El alzado de partida, a 45° en el papel, daría $\tan 45^\circ = 20/20$: cuenta como avance solo los 20
+          mm de x, y no los 21 de alejamiento que AB avanza a la vez. En el dibujo, el mismo ángulo sale también
+          en B₂′, entre la horizontal de B₂ y B₂′A₂: es el alterno del de A₂, porque las dos horizontales son
+          paralelas, y medirlo ahí también vale.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'A₂B₂ a 45° no da el ángulo: AB no es frontal, porque A₁B₁ no es horizontal en el papel.'
+          - texto: 'Con el eje vertical por A, la planta gira sin deformarse hasta quedar horizontal: B₁′, en la horizontal de A₁, a 29 mm.'
+          - texto: 'B no cambia de cota al girar: B₂′ está en la vertical de B₁′ y a la altura de B₂.'
+          - texto: 'AB girada es frontal: el ángulo de A₂B₂′ con la horizontal de A₂, 34,59°, es el de AB con el plano horizontal.'
+          - texto: El ángulo es el de A₂B₂ con la horizontal del papel, 45°, porque el alzado enseña las alturas.
+            trampa: true
+            mensaje: |
+              El alzado enseña las alturas, pero acorta lo que avanza una recta que no es frontal: AB avanza 29
+              mm, y el alzado solo enseña 20. El ángulo de verdad es 34,59°.
+    resolucion: |
+      **Lo que no vale.** A₂B₂ va a 45° en el papel, pero AB no es frontal: A₁B₁ está inclinada, y el alzado no
+      enseña lo que AB avanza alejándose del plano vertical. 45° es el ángulo de la proyección.
+
+      **El giro.** Con un eje vertical por A, A no se mueve y la planta gira sin deformarse. B₁ va por el arco
+      de centro A₁ y radio A₁B₁, 29 mm, hasta la horizontal de A₁: B₁′. B no cambia de cota, así que B₂′ está en
+      la vertical de B₁′ y a la altura de B₂. AB girada es frontal, y A₂B₂′ es su verdadera magnitud, 35,23 mm.
+
+      **El ángulo.** Entre A₂B₂′ y la horizontal de A₂ hay 34,59°: es el de AB con el plano horizontal, el del
+      triángulo de catetos 29 mm, la planta, y 20 mm, la diferencia de cotas. El de la proyección, 45°, es más
+      grande, y el de AB con el plano vertical, 36,59°, es otro ángulo.
+
   - id: sd18-la-placa-triangular-soldada-a-60
     titulo: La placa triangular soldada a 60° sobre la pieza angular
     fuente: Ejercicio 15 (SD18) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU

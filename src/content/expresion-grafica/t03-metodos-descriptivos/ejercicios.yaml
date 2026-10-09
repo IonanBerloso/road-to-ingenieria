@@ -1,9 +1,289 @@
 ejercicios:
-  # Decisión: «Plano en VM» va el primero. No es de la colección —no tiene
-  # número que respetar (§04)— ni es nuestro: es la hoja de clase con que el
-  # curso practica los tres métodos sobre el mismo triángulo, y por eso es la
-  # entrada del tema. Los de la colección (7 a 10, 13, 14, 16 a 21, 48 y 49) van
-  # detrás, en el orden de la colección, a medida que se escriben.
+  # Decisión: delante, el ejemplo de entrada del tema, nuestro (§04, §08,
+  # §15). Después, «Plano en VM»: no es de la colección —no tiene número que
+  # respetar (§04)— ni es nuestro, es la hoja de clase con que el curso
+  # practica los tres métodos sobre el mismo triángulo, y abre lo que no es
+  # nuestro. Los de la colección (7 a 10, 13, 14, 16 a 21, 48 y 49) van
+  # detrás, en el orden de la colección.
+  - id: ri2-ab-en-verdadera-magnitud-con-un-cambio
+    titulo: Un segmento oblicuo en verdadera magnitud, con un cambio de plano
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni de la colección de ejercicios.
+    nivel: ejemplo
+    # Decisión: el ejemplo de entrada del tema (§04, §08, §15), nuestro y
+    # delante de «Plano en VM» y de los de la colección. Entrena lo primero que
+    # explica la prosa del cambio de plano: un cambio vertical con la línea nueva
+    # paralela a la planta de un segmento oblicuo, que lo da en verdadera
+    # magnitud (diapositivas de cambios de plano, pág. 4). La lámina, RI2, es
+    # nuestra, y trae la línea nueva dibujada: sin ella, la vista 4 podría caer
+    # en cualquier sitio y no se podría corregir.
+    enunciado: |
+      El segmento AB viene dado en alzado, arriba, y en planta, debajo, sin línea de tierra. Con un cambio
+      de plano vertical, con la línea nueva dibujada, paralela a A₁B₁, y A de referencia, dibujar AB en
+      verdadera magnitud y medirlo.
+
+      **Notas nuestras.** El ejercicio y la figura son nuestros, a escala 1:1: las medidas son milímetros
+      de la lámina, que se toman con «medir» en el Taller o con la regla en el papel. La línea nueva, de
+      trazo y punto, está 20 mm a la derecha de A₁B₁; la hemos puesto ahí nosotros. Llamamos H al punto del
+      alzado donde la horizontal por A₂ corta la vertical de B₂, y A₄ y B₄ a A y B en la vista nueva.
+    pide: Por qué la vista nueva da AB sin acortar, A₄ y B₄, y la longitud real de AB.
+    receta:
+      lamina: ri2
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+      solucion:
+        vm_mm: en_mm(vm(A, B))
+        A4v: 'cambio_plano_vertical(A, figura.segmento("nueva"), ref: A)'
+        B4v: 'cambio_plano_vertical(B, figura.segmento("nueva"), ref: A)'
+        # H, donde la horizontal por A₂ corta la vertical de B₂: HB₂ es lo que
+        # B está más alto que A, la referencia.
+        Hp: 'pie_perpendicular(figura.punto("B2"), perpendicular(por: figura.punto("A2"), a: segmento2(figura.punto("B2"), figura.punto("B1"))))'
+        dz: diferencia_de_cotas(A, B)
+        # Lo que B₁ está por encima de A₁, la diferencia de alejamientos, por
+        # Pitágoras: el cateto del error de llevar el alejamiento.
+        dy: 'raiz(vm(A, B) * vm(A, B) - vm_alzado(A, B) * vm_alzado(A, B))'
+        perpA1: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("nueva"))'
+        perpB1: 'perpendicular(por: figura.punto("B1"), a: figura.segmento("nueva"))'
+        pieB: 'pie_perpendicular(figura.punto("B1"), figura.segmento("nueva"))'
+        # La perpendicular de B₁, más allá de B₄; y los dos errores de B₄:
+        # hacia la planta, y con el alejamiento en vez de la cota.
+        B4mas: 'uno(medir_sobre(perpB1, desde: B4v, distancia: mm(7)), 1)'
+        Bmal: 'uno(medir_sobre(perpB1, desde: pieB, distancia: dz), 2)'
+        Bdy: 'uno(medir_sobre(perpB1, desde: pieB, distancia: dy), 1)'
+        # A₄ si la referencia fuera B: 16 mm hacia la planta.
+        AconB: 'uno(medir_sobre(perpA1, desde: A4v, distancia: dz), 2)'
+        Hmas: 'desplaza(Hp, dx: mm(7))'
+        Hbaja: 'desplaza(Hp, dy: mm(7))'
+        angulo: angulo_con_ph(segmento3(A, B))
+    pasos:
+      - tipo: reconocer
+        pregunta: La línea nueva va paralela a A₁B₁, y el cambio es vertical. ¿Por qué la vista 4 que sale de ahí da AB sin acortar?
+        opciones:
+          - texto: Porque sale de la planta, y la planta ya da AB sin acortar
+            mensaje: |
+              La planta acorta AB: A₁B₁ mide 30 mm y AB, 34, porque AB sube de A a B. Una planta solo da sin
+              acortar lo horizontal.
+          - texto: Porque en la vista 4 AB se ve como un punto, y un punto no se acorta
+            mensaje: |
+              Eso pasaría con la línea nueva **perpendicular** a A₁B₁, y solo si AB fuera horizontal. Paralela
+              a A₁B₁, la vista 4 mira AB de lado, entera.
+          - texto: Porque en la vista 4 cada punto lleva su alejamiento, que es lo que le falta a la planta
+            mensaje: |
+              Un cambio vertical lleva la **cota**, no el alejamiento: el alejamiento ya lo tiene la planta.
+              Lo que le falta es la altura de cada punto, y se lee en el alzado.
+          - texto: Porque el plano nuevo es vertical y paralelo al plano vertical que contiene AB, y una vista da sin acortar lo que es paralelo a ella
+            correcta: true
+            mensaje: |
+              Eso es. AB está en el plano vertical que en la planta se ve como A₁B₁. La línea nueva, paralela a
+              A₁B₁, pone un plano de proyección vertical paralelo a ese, y lo que es paralelo a una vista se ve
+              en ella sin acortar.
+
+      - tipo: construir
+        titulo: El cambio de plano vertical
+        intro: |
+          Se cambia el plano vertical por otro, también vertical, paralelo a AB. La línea nueva ya está
+          dibujada, de trazo y punto: paralela a A₁B₁, 20 mm a su derecha. A es la referencia, y cae en la
+          línea nueva. B sale de su planta por la perpendicular a la línea nueva y se aparta de ella lo que su
+          cota supera a la de A, hacia fuera, porque está más alto; esa diferencia se lee en el alzado, de B₂ a
+          H (nombre nuestro), donde la horizontal por A₂ corta la vertical de B₂. Marca A₄ y B₄.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A4
+            pide: A en la vista nueva, la referencia
+            es: solucion.A4v
+            bien: |
+              A₄ está en la línea nueva, al pie de la perpendicular que sale de A₁: A es la referencia, y su
+              vista nueva cae en la propia línea.
+            diagnosticos:
+              - si: cerca_de(solucion.AconB)
+                mensaje: |
+                  Así sale A₄ si la referencia es B: 16 mm hacia la planta, porque A está más bajo. Esa vista 4
+                  también valdría, pero aquí la referencia es A, y A₄ cae en la línea nueva.
+                ejemplo: solucion.AconB
+              - si: '!en_recta(solucion.perpA1)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**, y como A es la referencia, cae en la
+                  propia línea.
+                ejemplo: 'desplaza(solucion.A4v, dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero A es la referencia: su vista nueva no se aparta de la
+                  línea. A₄ es el pie de esa perpendicular.
+          - nombre: B4
+            pide: B en la vista nueva
+            es: solucion.B4v
+            bien: |
+              B₄ está en la perpendicular a la línea nueva que sale de B₁, 16 mm por fuera: lo que B está más
+              alto que A. A₄B₄ es AB en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(solucion.pieB)
+                mensaje: |
+                  Te has quedado en la línea nueva, y en ella solo cae la referencia, A. B está 16 mm más alto
+                  que A, y se aparta de la línea esos 16 mm, hacia fuera.
+                ejemplo: solucion.pieB
+              - si: cerca_de(solucion.Bmal)
+                mensaje: |
+                  La distancia es la buena, pero hacia la planta. B está **más alto** que la referencia, y un
+                  punto más alto se aparta de la línea nueva hacia fuera, lejos de la planta.
+                ejemplo: solucion.Bmal
+              - si: 'en_recta(solucion.perpB1) && a_distancia(de: solucion.pieB, d: solucion.dy)'
+                mensaje: |
+                  Has llevado 24 mm, lo que B₁ está por encima de A₁: la diferencia de **alejamientos**. Un
+                  cambio vertical sale de la planta y lleva **cotas**: lo que B₂ está por encima de la
+                  horizontal de A₂, 16 mm.
+                ejemplo: solucion.Bdy
+              - si: '!en_recta(solucion.perpB1)'
+                mensaje: |
+                  B₄ sale de B₁ por la **perpendicular a la línea nueva**, como A₄ de A₁.
+                ejemplo: 'desplaza(solucion.B4v, dx: mm(-4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena. B₄ se aparta de la línea nueva
+                  lo que B está más alto que A, que se mide en el alzado: de B₂ a H.
+        trazado:
+          - segmento2(figura.punto("A1"), solucion.A4v)
+          - segmento2(figura.punto("B1"), solucion.B4v)
+          - segmento2(solucion.A4v, solucion.B4v)
+        bloques:
+          - nombre: Cambio de plano vertical, referencia A
+            explica: |
+              Se cambia el plano vertical de proyección por otro, también vertical, paralelo a AB: la línea
+              nueva va paralela a A₁B₁. La planta se queda, y por eso la vista nueva sale de ella, por las
+              perpendiculares a la línea nueva. Lo que se lleva es la cota, contada desde la de A, que es la
+              referencia: A₄ cae en la línea, y B₄ se aparta de ella lo que B está más alto que A, 16 mm, que
+              se lee en el alzado. Como el plano nuevo es paralelo a AB, A₄B₄ es AB en verdadera magnitud
+              ([tema 3, «El cambio de plano»](/road-to-ingenieria/expresion-grafica/t03-metodos-descriptivos/#el-cambio-de-plano-una-vista-nueva)).
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.Hmas)
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              Por A₂, la horizontal hacia la derecha, hasta pasar la vertical de B₂: los puntos con la cota de
+              A, la referencia.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B2"), solucion.Hbaja)
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              Por B₂, la vertical hacia abajo, hasta pasar la horizontal de A₂.
+          - con: marca
+            traza: solucion.Hp
+            rotulo: H
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              H (nombre nuestro), donde la vertical de B₂ corta la horizontal de A₂. HB₂ mide 16 mm: lo que B
+              está más alto que A.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.A4v)
+            guia: figura.segmento("nueva")
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              Por A₁, la perpendicular a la línea nueva, hasta ella.
+          - con: marca
+            traza: solucion.A4v
+            rotulo: A₄
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              A₄, donde la perpendicular de A₁ corta la línea nueva: A es la referencia, y su vista nueva cae
+              en la línea.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.B4mas)
+            guia: figura.segmento("nueva")
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              Por B₁, la perpendicular a la línea nueva, larga, más allá de la línea: B está más alto que A, y
+              B₄ cae fuera.
+          - con: compas
+            traza: 'arco(solucion.pieB, por: solucion.B4v, desde: desplaza(solucion.B4v, dx: 3.6, dy: -4.8), hasta: desplaza(solucion.B4v, dx: -3.6, dy: 4.8))'
+            toma: segmento2(solucion.Hp, figura.punto("B2"))
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              Con el compás, en el alzado, HB₂, lo que B está más alto que A. Con centro donde la
+              perpendicular de B₁ corta la línea nueva, se lleva hacia fuera, lejos de la planta.
+          - con: marca
+            traza: solucion.B4v
+            rotulo: B₄
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              B₄, donde el arco corta la perpendicular que sale de B₁, 16 mm por fuera de la línea nueva.
+          - con: regla
+            traza: segmento2(solucion.A4v, solucion.B4v)
+            bloque: Cambio de plano vertical, referencia A
+            porque: |
+              A₄B₄, AB en verdadera magnitud: 34 mm. El ángulo que forma con la línea nueva es el de AB con el
+              plano horizontal.
+        pista: |
+          (1) En el alzado, H, donde la horizontal por A₂ corta la vertical de B₂: HB₂ es la cota de B sobre A.
+          (2) Por A₁, la perpendicular a la línea nueva: A₄ cae en ella. (3) Por B₁, la perpendicular, y HB₂
+          llevado desde la línea hacia fuera: B₄.
+        desarrollo: |
+          En verde claro, las dos perpendiculares a la línea nueva y A₄B₄, AB en verdadera magnitud.
+
+      - tipo: calcular
+        titulo: La longitud de AB
+        pregunta: ¿Cuánto mide de verdad AB?
+        respuesta:
+          tipo: numero
+          valor: '34.00'
+          receta: vm_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '30.00'
+            receta: en_mm(vm_planta(A, B))
+            mensaje: |
+              Eso es **A₁B₁ en la planta**, y la planta acorta AB, que sube. Lo que la da sin acortar es la
+              vista nueva, A₄B₄.
+          - valor: '24.08'
+            receta: en_mm(vm_alzado(A, B))
+            mensaje: |
+              Eso es **A₂B₂ en el alzado**. El alzado también acorta: AB no es frontal, porque su planta no es
+              horizontal en el papel.
+          - valor: '38.42'
+            receta: en_mm(raiz(vm_planta(A, B) * vm_planta(A, B) + dy * dy))
+            mensaje: |
+              Has apartado B₄ de la línea nueva 24 mm, lo que B₁ está por encima de A₁: la diferencia de
+              **alejamientos**. El cambio vertical lleva la de **cotas**, 16 mm, que se lee en el alzado.
+        pista: |
+          Mide A₄B₄ con «medir» en el Taller del paso anterior, o con la regla en tu lámina.
+        # Decisión: llevar B₄ hacia la planta, a 16 mm, da un A₄B₄ igual de largo
+        # (es el simétrico respecto de la línea nueva): la casilla no lo
+        # distingue, y lo dice el desarrollo. El construir sí.
+        desarrollo: |
+          A₄B₄ tiene por catetos lo que A₄ y el pie de B₁ distan sobre la línea nueva, que es A₁B₁, 30 mm, y
+          los 16 mm que B₄ se aparta de ella:
+
+          $$ \overline{AB} = \sqrt{30^{2} + 16^{2}} = 34 \text{ mm} $$
+
+          Es el triángulo del tema 2 hecho vista. Si B₄ se hubiera llevado hacia la planta, A₄B₄ mediría lo
+          mismo, 34 mm: la longitud no lo distingue, pero la vista sí, porque B quedaría más bajo que A. El
+          ángulo de A₄B₄ con la línea nueva, 28,1°, es el que AB forma con el plano horizontal.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'La línea nueva es paralela a A₁B₁: el plano nuevo es vertical y paralelo a AB.'
+          - texto: 'A es la referencia: A₄ cae en la línea nueva, al pie de la perpendicular que sale de A₁.'
+          - texto: B está 16 mm más alto que A, y B₄ se aparta esos 16 mm de la línea nueva, hacia fuera, por la perpendicular que sale de B₁.
+          - texto: 'A₄B₄ es AB en verdadera magnitud: 34 mm.'
+          - texto: B₄ se aparta de la línea nueva lo que B₁ está por encima de A₁, 24 mm, porque el cambio sale de la planta.
+            trampa: true
+            mensaje: |
+              El cambio vertical sale de la planta, pero cada punto lleva su **cota**, que se lee en el alzado:
+              16 mm. Los 24 mm son la diferencia de alejamientos, la que llevaría un cambio horizontal.
+    resolucion: |
+      **Por qué esta vista.** AB está en el plano vertical que en la planta se ve como A₁B₁. Con la línea
+      nueva paralela a A₁B₁, el plano de proyección nuevo es vertical y paralelo a AB, y lo que es paralelo a
+      una vista se ve en ella sin acortar.
+
+      **El cambio.** Es vertical: sale de la planta y cada punto lleva su cota, contada desde la de A, que es
+      la referencia. A₄ cae en la línea nueva. B está 16 mm más alto que A, lo que B₂ queda por encima de la
+      horizontal de A₂, y B₄ se aparta 16 mm de la línea, hacia fuera, por la perpendicular que sale de B₁.
+
+      **La longitud.** A₄B₄ mide 34 mm, más que la planta, 30, y que el alzado, 24,08. Con la diferencia de
+      alejamientos, 24 mm, en lugar de la de cotas, saldría 38,42. El ángulo de A₄B₄ con la línea nueva,
+      28,1°, es el de AB con el plano horizontal.
+
   - id: pvm-el-plano-abc-por-seis-caminos
     titulo: El plano ABC en verdadera magnitud, por seis caminos
     fuente: Ejercicio «Plano en VM» (hoja de clase Ejercicio_PlanoVM.pdf, 1 pág.) · Expresión Gráfica, Escuela de Ingeniería de Gipuzkoa · UPV/EHU. No es de la colección de ejercicios ni de examen; la figura se redibuja desde sus coordenadas.

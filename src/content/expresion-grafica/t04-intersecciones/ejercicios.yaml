@@ -1,10 +1,321 @@
 ejercicios:
-  # Decisión: los ejercicios de la colección de este tema, cada uno en su
+  # Decisión: delante, el ejemplo de entrada del tema, nuestro (§04, §08,
+  # §15). Después, los ejercicios de la colección de este tema, cada uno en su
   # sitio del orden de la colección (§04). A 8 de octubre de 2026 están todos:
   # del 22 al 32 (SD29, SD30, SD32, SD33, SD34, SD35, SD38, SD41, SD42, SD43 y
   # SD44) y el 34 (SD49). El 33 (SD47), el tubo perpendicular al fondo de una
   # tolva, es del tema 5, y el apartado 1 del 53 y el 1 a del 54 están en sus
   # páginas de examen.
+  - id: ri3-la-varilla-que-atraviesa-la-placa
+    titulo: Dónde atraviesa la varilla la placa
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni de la colección de ejercicios.
+    nivel: ejemplo
+    # Decisión: el ejemplo de entrada del tema (§04, §08, §15), nuestro y
+    # delante de los de la colección. Entrena lo primero que explica la prosa:
+    # el punto donde una recta atraviesa un plano dado por tres puntos, con el
+    # plano vertical auxiliar que contiene la recta, y por qué el cruce de las
+    # proyecciones no es el punto. Sin visibilidad: viene después en el tema
+    # («Lo que se ve»), y la lámina dibuja la varilla entera en continua. La
+    # lámina, RI3, es nuestra; I cae en un punto redondo, 25 mm más alto que A.
+    enunciado: |
+      Una varilla recta, PQ, atraviesa una placa triangular, ABC. Las dos vienen dadas en alzado, arriba,
+      y en planta, debajo, sin línea de tierra. Hallar las dos proyecciones del punto I en que la varilla
+      atraviesa la placa, con un plano auxiliar, y decir cuánto más alto que A está.
+
+      **Notas nuestras.** El ejercicio y la figura son nuestros, a escala 1:1: las medidas son milímetros
+      de la lámina, que se toman con «medir» en el Taller o con la regla en el papel. r₂ y r₁ son las dos
+      proyecciones de la varilla. Llamamos 1 y 2 a los puntos donde el plano vertical que contiene la
+      varilla corta los lados CA y BC, como en la figura del tema. No se pregunta qué trozo de la varilla
+      tapa la placa: la lámina la dibuja entera, en continua.
+    pide: Por qué los cruces de las proyecciones no son el punto, 1₂, 2₂, I₂ e I₁, y cuánto más alto que A está I.
+    receta:
+      lamina: ri3
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        P: 'punto3(alzado: figura.punto("P2"), planta: figura.punto("P1"))'
+        Q: 'punto3(alzado: figura.punto("Q2"), planta: figura.punto("Q1"))'
+        placa: plano(A, B, C)
+        # El plano vertical que contiene la varilla: P, Q y P bajado 10 mm.
+        Pb: 'punto3(alzado: desplaza(figura.punto("P2"), dy: mm(10)), planta: figura.punto("P1"))'
+        pv: plano(P, Q, Pb)
+      solucion:
+        I: corte_recta_plano(segmento3(P, Q), placa)
+        # 1 y 2: donde el plano vertical de la varilla corta los lados CA y BC.
+        U: corte_recta_plano(segmento3(C, A), pv)
+        V: corte_recta_plano(segmento3(B, C), pv)
+        cota_mm: en_mm(diferencia_de_cotas(I, A))
+        # Los dos cruces aparentes de r₂ con el contorno del alzado, y su cota
+        # sobre A: un punto con ese alzado y cualquier planta en su vertical.
+        X: 'cruce_aparente(figura.segmento("r2"), figura.segmento("CA2"))'
+        Y: 'cruce_aparente(figura.segmento("r2"), figura.segmento("AB2"))'
+        horA1: 'perpendicular(por: figura.punto("A1"), a: segmento2(figura.punto("A1"), figura.punto("A2")))'
+        Xr: 'punto3(alzado: X, planta: pie_perpendicular(X, horA1))'
+        Yr: 'punto3(alzado: Y, planta: pie_perpendicular(Y, horA1))'
+        cotaX_mm: en_mm(diferencia_de_cotas(Xr, A))
+        cotaY_mm: en_mm(diferencia_de_cotas(Yr, A))
+        # Lo que I₁ está por debajo de A₁: la diferencia de alejamientos, el
+        # error de leer la altura en la planta.
+        Ialej: 'punto3(alzado: proy_alzado(I), planta: pie_perpendicular(proy_planta(I), horA1))'
+        alej_mm: en_mm(vm_planta(I, Ialej))
+        # Donde las verticales de 1₁ y de 2₁ cruzan A₂B₂: el error de pararse en
+        # el primer lado que se encuentra.
+        U_AB: 'cruce_aparente(segmento2(proy_planta(U), proy_alzado(U)), figura.segmento("AB2"))'
+        V_AB: 'cruce_aparente(segmento2(proy_planta(V), proy_alzado(V)), figura.segmento("AB2"))'
+        recta12: segmento2(proy_alzado(U), proy_alzado(V))
+      comprueba:
+        - en_plano(I, pv)
+        - en_plano(U, placa)
+        - en_plano(V, placa)
+    pasos:
+      - tipo: reconocer
+        pregunta: En el alzado, r₂ cruza el contorno de la placa por C₂A₂ y por A₂B₂; en la planta, r₁ cruza C₁A₁ y B₁C₁. ¿Dónde atraviesa la varilla la placa?
+        opciones:
+          - texto: Donde r₂ entra en el triángulo cruzando C₂A₂; I₁ se baja luego por su vertical
+            mensaje: |
+              Ese cruce es aparente: en el alzado, la varilla y el lado CA caen uno encima del otro, pero en el
+              espacio no se tocan, porque el lado pasa 8 mm por delante. El punto que se busca está dentro de
+              la placa, no en su borde.
+          - texto: En ninguno de esos cruces, sino donde la corta un plano auxiliar que contiene la varilla
+            correcta: true
+            mensaje: |
+              Eso es. Los cruces de las proyecciones son aparentes. El plano vertical que contiene la varilla
+              corta la placa en una recta, la 12, y esa recta y la varilla, que están en el mismo plano, sí se
+              cortan: ahí está I.
+          - texto: Donde r₁ cruza C₁A₁ en la planta, que es donde la varilla pasa por encima de ese lado de la placa
+            mensaje: |
+              También es un cruce aparente, ahora en la planta: la varilla pasa 26 mm por encima del lado CA,
+              sin tocarlo. Ese cruce sirve, pero de otra cosa: es 1₁, el punto donde el plano auxiliar corta el
+              lado.
+          - texto: En el punto medio de los dos cruces de r₂ con el contorno del alzado, porque la varilla entra por uno y sale por el otro
+            mensaje: |
+              La varilla no entra por un borde y sale por otro: atraviesa la placa en un solo punto, porque la
+              placa es plana. Y ese punto no tiene por qué estar a medio camino de nada.
+
+      - tipo: construir
+        titulo: El punto I, con el plano vertical de la varilla
+        intro: |
+          El plano vertical que contiene la varilla se ve en la planta como la propia r₁. Corta los lados de
+          la placa donde r₁ los cruza: en 1₁, sobre C₁A₁, y en 2₁, sobre B₁C₁ (nombres nuestros). Sube 1₁ y 2₁
+          por sus verticales a los alzados de esos mismos lados: 1₂ en C₂A₂ y 2₂ en B₂C₂. La recta 1₂2₂ y r₂
+          están en el mismo plano, y se cortan de verdad en I₂; I₁ baja por su vertical hasta r₁. Marca 1₂,
+          2₂, I₂ e I₁. Ojo: las dos verticales cruzan antes A₂B₂.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: uno2
+            rotulo: 1₂
+            pide: 1₂, el alzado del punto donde el plano vertical de la varilla corta el lado CA
+            es: proy_alzado(solucion.U)
+            bien: |
+              1₂ está en C₂A₂, en la vertical de 1₁: el punto 1 es del lado CA, y está en el plano vertical de
+              la varilla.
+            diagnosticos:
+              - si: cerca_de(solucion.U_AB)
+                mensaje: |
+                  Te has parado en A₂B₂. En la planta, r₁ cruza el lado **CA**, así que 1 es un punto de CA: 1₂ va
+                  donde la vertical de 1₁ corta C₂A₂, más arriba.
+                ejemplo: solucion.U_AB
+              - si: '!en_vertical_de(proy_planta(solucion.U))'
+                mensaje: |
+                  1₂ va en la **vertical de 1₁**, el cruce de r₁ con C₁A₁: es el mismo punto, visto en las dos
+                  vistas.
+                ejemplo: 'desplaza(proy_alzado(solucion.U), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 1₁, pero no en C₂A₂: 1₂ es donde esa vertical corta el alzado del lado
+                  CA.
+          - nombre: dos2
+            rotulo: 2₂
+            pide: 2₂, el alzado del punto donde el plano vertical de la varilla corta el lado BC
+            es: proy_alzado(solucion.V)
+            bien: |
+              2₂ está en B₂C₂, en la vertical de 2₁: el punto 2 es del lado BC, y está en el plano vertical de
+              la varilla.
+            diagnosticos:
+              - si: cerca_de(solucion.V_AB)
+                mensaje: |
+                  Te has parado en A₂B₂. En la planta, r₁ cruza el lado **BC**, así que 2 es un punto de BC: 2₂ va
+                  donde la vertical de 2₁ corta B₂C₂, más arriba.
+                ejemplo: solucion.V_AB
+              - si: '!en_vertical_de(proy_planta(solucion.V))'
+                mensaje: |
+                  2₂ va en la **vertical de 2₁**, el cruce de r₁ con B₁C₁.
+                ejemplo: 'desplaza(proy_alzado(solucion.V), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 2₁, pero no en B₂C₂: 2₂ es donde esa vertical corta el alzado del lado
+                  BC.
+          - nombre: I2
+            pide: el alzado de I, el punto en que la varilla atraviesa la placa
+            es: proy_alzado(solucion.I)
+            bien: |
+              I₂ está donde r₂ corta 1₂2₂: la varilla y la recta 12 están en el plano vertical de la varilla, y
+              ahí se cortan de verdad.
+            diagnosticos:
+              - si: cerca_de(solucion.X)
+                mensaje: |
+                  Ese es el cruce de r₂ con C₂A₂: un **cruce aparente**. En el espacio, la varilla y el lado CA no
+                  se tocan: el lado pasa 8 mm por delante. I₂ está donde r₂ corta la recta 1₂2₂.
+                ejemplo: solucion.X
+              - si: cerca_de(solucion.Y)
+                mensaje: |
+                  Ese es el cruce de r₂ con A₂B₂, otro cruce aparente: ahí la varilla pasa 22 mm por delante del
+                  lado AB, sin tocarlo. I₂ está donde r₂ corta la recta 1₂2₂.
+                ejemplo: solucion.Y
+              - si: '!en_recta(figura.segmento("r2"))'
+                mensaje: |
+                  I es un punto de la varilla: I₂ va en **r₂**, donde la corta 1₂2₂.
+                ejemplo: 'desplaza(proy_alzado(solucion.I), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en r₂, pero no donde la corta 1₂2₂, la recta que el plano vertical de la varilla deja en
+                  la placa.
+          - nombre: I1
+            pide: la planta de I
+            es: proy_planta(solucion.I)
+            bien: |
+              I₁ está en r₁, en la vertical de I₂. Por el camino, esa vertical atraviesa la planta de la placa:
+              I₁ cae dentro de ella, entre 1₁ y 2₁.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.U))
+                mensaje: |
+                  Ese es 1₁, el cruce de r₁ con C₁A₁: ahí el plano auxiliar corta el lado CA, pero la varilla pasa
+                  26 mm por encima del lado, sin tocarlo. I₁ baja de I₂ por su vertical.
+                ejemplo: proy_planta(solucion.U)
+              - si: cerca_de(proy_planta(solucion.V))
+                mensaje: |
+                  Ese es 2₁, el cruce de r₁ con B₁C₁, otro cruce de la planta: ahí la varilla pasa 28 mm por
+                  debajo del lado BC. I₁ baja de I₂ por su vertical.
+                ejemplo: proy_planta(solucion.V)
+              - si: '!en_vertical_de(I2)'
+                mensaje: |
+                  I₁ va en la **vertical de I₂**: son el mismo punto, visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.I), dx: mm(5))'
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  I es de la varilla: I₁ va donde la vertical de I₂ corta **r₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.I), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  I₁ está donde la vertical de I₂ corta r₁.
+        trazado:
+          - segmento2(proy_planta(solucion.U), proy_alzado(solucion.U))
+          - segmento2(proy_planta(solucion.V), proy_alzado(solucion.V))
+          - segmento2(proy_alzado(solucion.U), proy_alzado(solucion.V))
+          - segmento2(proy_alzado(solucion.I), proy_planta(solucion.I))
+        construccion:
+          - con: marca
+            traza: proy_planta(solucion.U)
+            rotulo: 1₁
+            porque: |
+              1₁ (nombre nuestro), donde r₁ cruza C₁A₁: el plano vertical que contiene la varilla, que en la
+              planta se ve como r₁, corta ahí el lado CA.
+          - con: marca
+            traza: proy_planta(solucion.V)
+            rotulo: 2₁
+            porque: |
+              2₁ (nombre nuestro), donde r₁ cruza B₁C₁: ahí ese mismo plano corta el lado BC.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.U), proy_alzado(solucion.U)), segmento2(proy_planta(solucion.V), proy_alzado(solucion.V))]'
+            porque: |
+              Por 1₁ y 2₁, las verticales hacia arriba, hasta C₂A₂ y hasta B₂C₂: 1 está en el lado CA y 2 en el
+              BC. Las dos cruzan antes A₂B₂, y ahí no hay que pararse.
+          - con: marca
+            traza: proy_alzado(solucion.U)
+            rotulo: 1₂
+            porque: |
+              1₂, donde la vertical de 1₁ corta C₂A₂.
+          - con: marca
+            traza: proy_alzado(solucion.V)
+            rotulo: 2₂
+            porque: |
+              2₂, donde la vertical de 2₁ corta B₂C₂.
+          - con: regla
+            traza: segmento2(proy_alzado(solucion.U), proy_alzado(solucion.V))
+            porque: |
+              1₂2₂, el alzado de la recta en que el plano vertical de la varilla corta la placa. Esa recta y la
+              varilla están en el mismo plano, así que se cortan de verdad.
+          - con: marca
+            traza: proy_alzado(solucion.I)
+            rotulo: I₂
+            porque: |
+              I₂ (nombre nuestro, el de la figura del tema), donde 1₂2₂ corta r₂: el punto en que la varilla
+              atraviesa la placa, 25 mm por encima de la horizontal de A₂.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.I), proy_planta(solucion.I))
+            porque: |
+              Por I₂, la vertical hacia abajo, hasta r₁.
+          - con: marca
+            traza: proy_planta(solucion.I)
+            rotulo: I₁
+            porque: |
+              I₁, donde la vertical de I₂ corta r₁, dentro de la planta de la placa.
+        pista: |
+          (1) En la planta, r₁ cruza C₁A₁ en 1₁ y B₁C₁ en 2₁. (2) Sus verticales, hasta C₂A₂ y B₂C₂: 1₂ y 2₂.
+          (3) 1₂2₂ corta r₂ en I₂. (4) La vertical de I₂ corta r₁ en I₁.
+        desarrollo: |
+          En verde claro, las verticales de 1 y de 2, la recta 1₂2₂ y la vertical de I. I₂ está a 6,8 mm del cruce
+          aparente de r₂ con C₂A₂: el cruce de las proyecciones no es el punto.
+
+      - tipo: calcular
+        titulo: La altura del punto I
+        pregunta: ¿Cuánto más alto que A atraviesa la varilla la placa?
+        respuesta:
+          tipo: numero
+          valor: '25.00'
+          receta: cota_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '30.17'
+            receta: cotaX_mm
+            mensaje: |
+              Esa es la altura del cruce de r₂ con **C₂A₂**, un cruce aparente: ahí la varilla no toca la placa.
+              El punto I está donde r₂ corta 1₂2₂, más abajo.
+          - valor: '11.08'
+            receta: cotaY_mm
+            mensaje: |
+              Esa es la altura del cruce de r₂ con **A₂B₂**, otro cruce aparente. El punto I está donde r₂
+              corta 1₂2₂.
+          - valor: '13.00'
+            receta: alej_mm
+            mensaje: |
+              Has medido en la **planta** lo que I₁ está por debajo de A₁: eso es la diferencia de
+              alejamientos, lo que I está más lejos del plano vertical. La altura se mide en el alzado.
+        pista: |
+          Mide en el alzado, en vertical, lo que I₂ queda por encima de la horizontal de A₂.
+        desarrollo: |
+          I₂ está 25 mm por encima de la horizontal de A₂: I tiene 25 mm más de cota que A. Los cruces
+          aparentes de r₂ con el contorno darían 30,17 mm (con C₂A₂) y 11,08 (con A₂B₂), y en la planta I₁ queda
+          13 mm por debajo de A₁, que es otra cosa: lo que I está más lejos del plano vertical.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'El cruce de r₂ con el contorno del alzado no es el punto: ahí la varilla y un lado de la placa se cruzan sin tocarse.'
+          - texto: El plano vertical que contiene la varilla se ve en la planta como r₁, y corta los lados CA y BC en 1 y 2, donde r₁ los cruza.
+          - texto: 1₂ y 2₂ suben por sus verticales a C₂A₂ y B₂C₂, y 1₂2₂ es el alzado de la recta en que ese plano corta la placa.
+          - texto: 'La varilla y la recta 12 están en el mismo plano y se cortan de verdad: en I₂, donde r₂ corta 1₂2₂; I₁ baja por su vertical a r₁.'
+          - texto: I₁ es 1₁, el cruce de r₁ con C₁A₁, porque en la planta es ahí donde la varilla entra en la placa.
+            trampa: true
+            mensaje: |
+              En la planta, r₁ cruza C₁A₁ en 1₁, pero la varilla pasa 26 mm por encima del lado CA, sin tocarlo:
+              es un cruce aparente, como el del alzado. I₁ está en la vertical de I₂, unos 15 mm más allá sobre r₁.
+    resolucion: |
+      **Por qué no vale un cruce.** r₂ cruza C₂A₂ y A₂B₂, y r₁ cruza C₁A₁ y B₁C₁, pero en ninguno de esos
+      sitios se tocan la varilla y la placa: son cruces aparentes, dos puntos distintos que en esa vista caen
+      uno encima del otro.
+
+      **El plano auxiliar.** El plano vertical que contiene la varilla se ve en la planta como r₁, y corta los
+      lados CA y BC en 1₁ y 2₁. Por sus verticales, 1₂ cae en C₂A₂ y 2₂ en B₂C₂, y 1₂2₂ es el alzado de la
+      recta en que ese plano corta la placa. Esa recta y la varilla están en el mismo plano, así que se cortan
+      de verdad: en I₂. I₁ baja por su vertical hasta r₁.
+
+      **La altura.** I₂ está 25 mm por encima de la horizontal de A₂: la varilla atraviesa la placa 25 mm más
+      alto que A. El cruce aparente de r₂ con C₂A₂ queda a 6,8 mm de I₂, y a 30,17 mm sobre A.
+
   - id: sd29-la-recta-r-a-traves-de-la-chapa-doblada
     titulo: La recta r a través de la chapa doblada, y la chapa en verdadera magnitud
     fuente: Ejercicio 22 (SD29) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU

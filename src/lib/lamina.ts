@@ -39,7 +39,8 @@ export interface DatosLamina {
   readonly codigo: string;
   readonly origen?: 'coleccion' | 'hoja' | 'otro-pdf' | 'nuestra';
   readonly pdf?: string;
-  readonly pagina: number;
+  /** Sin ella, una lámina nuestra que no sale de ningún PDF. */
+  readonly pagina?: number;
   readonly ejercicio?: number;
   readonly encuadre: { readonly x: number; readonly y: number; readonly w: number; readonly h: number };
   readonly puntos: Readonly<Record<string, PuntoDeLamina>>;

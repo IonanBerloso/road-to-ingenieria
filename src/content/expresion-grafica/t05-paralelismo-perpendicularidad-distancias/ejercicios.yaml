@@ -1,9 +1,244 @@
 ejercicios:
-  # Decisión: el tema 5 abre con el Ejercicio 38 (SD54) porque es, a 2 de
-  # octubre de 2026, el único de los suyos escrito. Los demás de la colección
-  # que son de este tema entran cada uno en su sitio del orden de la colección
-  # (§04): el 12, el 33 y del 35 al 37, delante de este; del 39 al 42 y el 51,
-  # detrás.
+  # Decisión: delante, el ejemplo de entrada del tema, nuestro (§04, §08,
+  # §15). Después, los de la colección de este tema, cada uno en su sitio del
+  # orden de la colección (§04): el 12, el 33, del 35 al 42 y el 51, este en
+  # dos ejercicios, uno por apartado. Hasta el 9 de octubre de 2026 este
+  # comentario decía que el tema abría con el 38, el único escrito a 2 de
+  # octubre.
+  - id: ri4-la-distancia-de-q-a-un-plano-de-canto
+    titulo: La distancia de un punto a un plano de canto
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni de la colección de ejercicios.
+    nivel: ejemplo
+    # Decisión: el ejemplo de entrada del tema (§04, §08, §15), nuestro y
+    # delante de los de la colección. Entrena la distancia de un punto a un
+    # plano en el caso que la prosa da como el corto: el plano ya de canto, donde
+    # la perpendicular se ve en verdadera magnitud (diapositivas de distancias,
+    # págs. 5 y 6), y su pie de vuelta a la planta, con la perpendicular frontal.
+    # Sin cambio de plano: el plano ya viene de canto. La lámina, RI4, es
+    # nuestra: el canto tiene pendiente 3/4, y la distancia sale redonda, 20 mm.
+    enunciado: |
+      Un triángulo ABC y un punto Q vienen dados en alzado, arriba, y en planta, debajo, sin línea de
+      tierra. El alzado del triángulo es un solo segmento. Hallar las dos proyecciones del pie T de la
+      perpendicular desde Q al plano del triángulo, y la distancia de Q a ese plano.
+
+      **Notas nuestras.** El ejercicio y la figura son nuestros, a escala 1:1: las medidas son milímetros
+      de la lámina, que se toman con «medir» en el Taller o con la regla en el papel. Q se da con una cruz
+      en las dos vistas. T es nombre nuestro.
+    pide: Qué dice el alzado del triángulo, T₂ y T₁, y la distancia de Q al plano.
+    receta:
+      lamina: ri4
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        Q: 'punto3(alzado: figura.punto("Q2"), planta: figura.punto("Q1"))'
+        placa: plano(A, B, C)
+        # Un punto con el alzado de C y otro alejamiento: si está en el plano,
+        # el plano es de canto.
+        Cotro: 'punto3(alzado: figura.punto("C2"), planta: desplaza(figura.punto("C1"), dy: mm(-20)))'
+      solucion:
+        T: pie_en_plano(Q, placa)
+        dist_mm: en_mm(distancia_a_plano(Q, placa))
+        perpQ: 'perpendicular(por: figura.punto("Q2"), a: figura.segmento("ABC2"))'
+        T2mas: 'uno(medir_sobre(perpQ, desde: proy_alzado(T), distancia: mm(7)), 1)'
+        T1baja: 'desplaza(proy_planta(T), dy: mm(7))'
+        T1mas: 'desplaza(proy_planta(T), dx: mm(7))'
+        # Los dos errores de T₂: bajar en vertical desde Q₂ hasta la recta del
+        # plano, o ir en horizontal; y lo que miden.
+        V2: 'cruce_aparente(segmento2(figura.punto("Q2"), figura.punto("Q1")), figura.segmento("ABC2"))'
+        H2: 'cruce_aparente(perpendicular(por: figura.punto("Q2"), a: segmento2(figura.punto("Q2"), figura.punto("Q1"))), figura.segmento("ABC2"))'
+        Vq: 'punto3(alzado: V2, planta: figura.punto("Q1"))'
+        Hq: 'punto3(alzado: H2, planta: pie_perpendicular(H2, perpendicular(por: figura.punto("Q1"), a: segmento2(figura.punto("Q2"), figura.punto("Q1")))))'
+        vert_mm: en_mm(diferencia_de_cotas(Q, Vq))
+        hor_mm: en_mm(vm_alzado(Q, Hq))
+        planta_mm: en_mm(vm_planta(Q, T))
+        # T₁ en la vertical de T₂ pero sobre A₁B₁: el error de ponerlo en un
+        # borde de la planta.
+        T1borde: 'cruce_aparente(segmento2(proy_alzado(T), proy_planta(T)), figura.segmento("AB1"))'
+      comprueba:
+        - en_plano(Cotro, placa)
+    pasos:
+      - tipo: reconocer
+        pregunta: A₂, C₂ y B₂ están en una misma recta. ¿Qué dice eso del triángulo, y dónde se va a ver la distancia de Q a él?
+        opciones:
+          - texto: Que el triángulo es frontal, así que la distancia se mide en la planta, de Q₁ al triángulo
+            mensaje: |
+              Un triángulo frontal se ve como una recta en la **planta**, horizontal en el papel. Aquí la recta
+              es el alzado, y está inclinada: el plano es de canto en el alzado.
+          - texto: Que es de canto, y la distancia es lo que Q₂ queda por encima de esa recta, medido en vertical
+            mensaje: |
+              Lo de canto está bien, pero la vertical no es el camino más corto: llega al plano oblicuamente.
+              La distancia va por la perpendicular a la recta, y es más corta: 20 mm, frente a 25.
+          - texto: Que el plano es de canto en el alzado, y la perpendicular desde Q₂ a esa recta da la distancia sin acortar
+            correcta: true
+            mensaje: |
+              Eso es. Un plano que se ve como una recta es perpendicular al plano vertical, y sus frontales se
+              ven en el alzado sobre esa recta, sin acortar. La perpendicular al plano es frontal, y en el
+              alzado sale perpendicular a la recta y en verdadera magnitud.
+          - texto: Nada que ahorre trabajo, porque hay que buscar el pie con un plano auxiliar, cambiar de plano y levantar el triángulo de QT
+            mensaje: |
+              Ese es el camino largo, el de un plano oblicuo. Aquí el plano ya está de canto, que es lo que un
+              cambio de plano buscaría: la distancia se mide en el alzado, sin construir más.
+
+      - tipo: construir
+        titulo: El pie de la perpendicular
+        intro: |
+          El plano es de canto: en el alzado, el triángulo entero es la recta A₂B₂, y la perpendicular al
+          plano desde Q se ve perpendicular a ella y en verdadera magnitud. Traza por Q₂ la perpendicular a
+          A₂B₂ y marca T₂ (nombre nuestro), donde la corta. La perpendicular es frontal: su planta es la
+          horizontal de Q₁, y T₁ está en ella, en la vertical de T₂. Marca T₂ y T₁.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: T2
+            pide: el pie de la perpendicular, en el alzado
+            es: proy_alzado(solucion.T)
+            bien: |
+              T₂ está en A₂B₂, al pie de la perpendicular desde Q₂: Q₂T₂ es la distancia de Q al plano, en
+              verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(solucion.V2)
+                mensaje: |
+                  Has bajado en **vertical** desde Q₂ hasta la recta del plano. Eso es lo que Q está más alto que
+                  el plano en su vertical, 25 mm, y no el camino más corto: la distancia va por la
+                  **perpendicular** a A₂B₂.
+                ejemplo: solucion.V2
+              - si: cerca_de(solucion.H2)
+                mensaje: |
+                  Has ido en **horizontal** desde Q₂ hasta la recta del plano. El camino más corto va por la
+                  **perpendicular** a A₂B₂.
+                ejemplo: solucion.H2
+              - si: '!en_recta(figura.segmento("ABC2"))'
+                mensaje: |
+                  T está en el plano, y el plano de canto es, en el alzado, la recta A₂B₂: T₂ va en ella.
+                ejemplo: 'uno(medir_sobre(solucion.perpQ, desde: proy_alzado(solucion.T), distancia: mm(5)), 2)'
+              - si: siempre
+                mensaje: |
+                  Estás en A₂B₂, pero no al pie de la perpendicular desde Q₂: con la escuadra, la perpendicular a
+                  A₂B₂ que pasa por Q₂.
+          - nombre: T1
+            pide: el pie de la perpendicular, en la planta
+            es: proy_planta(solucion.T)
+            bien: |
+              T₁ está en la horizontal de Q₁, en la vertical de T₂: la perpendicular a un plano de canto es
+              frontal, y su planta es horizontal en el papel.
+            diagnosticos:
+              - si: '!en_vertical_de(T2)'
+                mensaje: |
+                  T₁ va en la **vertical de T₂**: es el mismo punto, visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.T), dx: mm(5))'
+              - si: cerca_de(solucion.T1borde)
+                mensaje: |
+                  Ese punto está en A₁B₁, el borde de la planta. T no está en un borde: está dentro del triángulo,
+                  donde lo lleva la perpendicular, que en la planta es la **horizontal de Q₁**.
+                ejemplo: solucion.T1borde
+              - si: '!en_horizontal_de(figura.punto("Q1"))'
+                mensaje: |
+                  La perpendicular a un plano de canto es **frontal**: su planta es horizontal en el papel, y pasa
+                  por Q₁. T₁ va donde la vertical de T₂ corta la horizontal de Q₁.
+                ejemplo: 'desplaza(proy_planta(solucion.T), dy: mm(8))'
+              - si: siempre
+                mensaje: |
+                  T₁ está donde la vertical de T₂ corta la horizontal de Q₁.
+        trazado:
+          - segmento2(figura.punto("Q2"), proy_alzado(solucion.T))
+          - segmento2(figura.punto("Q1"), proy_planta(solucion.T))
+          - segmento2(proy_alzado(solucion.T), proy_planta(solucion.T))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("Q2"), solucion.T2mas)
+            guia: figura.segmento("ABC2")
+            porque: |
+              Por Q₂, la perpendicular a A₂B₂, hasta pasar la recta. El plano es de canto, y en el alzado la
+              perpendicular al plano es perpendicular a esa recta y está en verdadera magnitud.
+          - con: marca
+            traza: proy_alzado(solucion.T)
+            rotulo: T₂
+            porque: |
+              T₂ (nombre nuestro), donde la perpendicular desde Q₂ corta A₂B₂: el pie, en el alzado. Q₂T₂ mide
+              20 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.T), solucion.T1baja)
+            porque: |
+              Por T₂, la vertical hacia abajo, hasta pasar la horizontal de Q₁.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("Q1"), solucion.T1mas)
+            porque: |
+              Por Q₁, la horizontal hacia la derecha, hasta pasar la vertical de T₂: la planta de la
+              perpendicular, que es frontal.
+          - con: marca
+            traza: proy_planta(solucion.T)
+            rotulo: T₁
+            porque: |
+              T₁, donde la vertical de T₂ corta la horizontal de Q₁, dentro de la planta del triángulo.
+        pista: |
+          (1) Por Q₂, la perpendicular a A₂B₂: la corta en T₂. (2) Por T₂, la vertical; por Q₁, la horizontal: se
+          cortan en T₁.
+        desarrollo: |
+          En verde claro, Q₂T₂, la distancia en verdadera magnitud, y la planta de la perpendicular, Q₁T₁, que
+          es horizontal en el papel.
+
+      - tipo: calcular
+        titulo: La distancia de Q al plano
+        pregunta: ¿Cuánto dista Q del plano del triángulo?
+        respuesta:
+          tipo: numero
+          valor: '20.00'
+          receta: dist_mm
+          tolerancia: 1
+          formato: un número, en mm
+        distractores:
+          - valor: '25.00'
+            receta: vert_mm
+            mensaje: |
+              Eso es lo que Q₂ queda por encima de A₂B₂ **en vertical**: lo que Q está más alto que el plano
+              justo debajo de él. La distancia es la perpendicular, más corta: 25 por el coseno de la
+              inclinación del plano.
+          - valor: '33.33'
+            receta: hor_mm
+            mensaje: |
+              Eso es lo que separa Q₂ de A₂B₂ **en horizontal**. La distancia es la perpendicular a A₂B₂, que
+              es más corta que cualquier otro camino.
+          - valor: '12.00'
+            receta: planta_mm
+            mensaje: |
+              Eso es **Q₁T₁**, la planta de la perpendicular, y la planta la acorta: la perpendicular sube de T
+              a Q. Donde está en verdadera magnitud es en el alzado, Q₂T₂.
+        pista: |
+          Mide Q₂T₂ con «medir» en el Taller del paso anterior, o con la regla en tu lámina.
+        desarrollo: |
+          El plano sube 3 mm por cada 4 en el alzado: forma 36,87° con el plano horizontal. Q₂ está 25 mm por
+          encima de A₂B₂ en su vertical, y la perpendicular es el cateto que va al plano:
+
+          $$ \overline{QT} = 25 \cdot \cos 36{,}87^\circ = 25 \cdot \tfrac{4}{5} = 20 \text{ mm} $$
+
+          La planta de la perpendicular, Q₁T₁, mide 12 mm, que es lo que T está a la derecha de Q: la
+          perpendicular es frontal, y la planta la acorta.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: 'A₂, C₂ y B₂ están en una recta: el plano es de canto en el alzado.'
+          - texto: Sus frontales se ven en el alzado sobre esa recta, sin acortar, y por eso la perpendicular al plano sale ahí perpendicular a ella.
+          - texto: 'Por Q₂, la perpendicular a A₂B₂, hasta T₂: Q₂T₂, 20 mm, es la distancia en verdadera magnitud.'
+          - texto: 'La perpendicular es frontal: T₁ está en la horizontal de Q₁, en la vertical de T₂.'
+          - texto: La distancia es lo que Q₂ queda por encima de A₂B₂ en su vertical, porque la distancia a un plano se mide desde arriba.
+            trampa: true
+            mensaje: |
+              Eso mide 25 mm, lo que Q está más alto que el plano justo debajo de él, y llega al plano en
+              oblicuo. La distancia es la perpendicular, el camino más corto: 20 mm.
+    resolucion: |
+      **Qué dice el alzado.** A₂, C₂ y B₂ están en una misma recta: el triángulo es un plano de canto, un
+      proyectante vertical. Sus frontales caen en el alzado sobre esa recta, sin acortar.
+
+      **La perpendicular.** Por el ángulo recto que se ve donde un lado está en verdadera magnitud, la
+      perpendicular al plano sale en el alzado perpendicular a A₂B₂: por Q₂, la perpendicular hasta T₂. Es
+      frontal, así que su planta es la horizontal de Q₁, y T₁ está en ella, en la vertical de T₂, dentro de la
+      planta del triángulo.
+
+      **La distancia.** Q₂T₂ mide 20 mm, y es la distancia de Q al plano, en verdadera magnitud. Lo que Q₂
+      queda por encima de A₂B₂ en vertical, 25 mm, no es la distancia: llega al plano en oblicuo.
+
   - id: sd15-la-chapa-soldada-en-la-arista-be
     titulo: La chapa de 20 × 30 cm soldada en la arista BE de la campana
     fuente: Ejercicio 12 (SD15) · Colección de ejercicios de Geometría Descriptiva, Sistema Diédrico Directo · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU
