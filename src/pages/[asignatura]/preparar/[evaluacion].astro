@@ -254,9 +254,24 @@ const hrefTeoria = (tema: string, apartado?: string) =>
    no es una medición de lo que pide el examen: es exactamente la cuarta
    fuente de verdad que esta página existe para no crear (§10). */
 const examenesTodos = await getCollection('examen');
-const deLaConvocatoria = examenesTodos.filter(
+const propias = examenesTodos.filter(
   (x) => x.data.asignatura === asignatura.id && x.data.convocatoria === d.evaluacion,
 );
+/* Una evaluación sin convocatorias propias transcritas se mide sobre las que
+   la ruta también prepara (`tambienPrepara`). Es el control del bloque 1 de
+   Expresión Gráfica: el material no trae ninguno con fecha, solo las cuatro
+   hojas de examen de la colección, y la tarjeta decía «0 ejercicios
+   transcritos» (8 de octubre de 2026). Con convocatorias propias no cambia
+   nada: la 3.ª de Cálculo sigue midiéndose sobre las suyas. */
+const deLaConvocatoria =
+  propias.length > 0
+    ? propias
+    : examenesTodos.filter((x) => x.data.asignatura === asignatura.id && d.tambienPrepara.includes(x.data.convocatoria));
+/** Si todo lo medido son hojas sin fecha, la página no las llama
+ *  convocatorias ni les supone un peso por ejercicio que no imprimen
+ *  (auditoría de Expresión Gráfica del 8 de octubre de 2026, M1). */
+const sonHojas = deLaConvocatoria.length > 0 && deLaConvocatoria.every((x) => x.data.convocatoria === 'hoja');
+const medidas = sonHojas ? 'hojas de examen de la colección' : 'convocatorias';
 const ficherosTodos = await getCollection('ejercicios');
 const puntosPorId = new Map(
   ficherosTodos.flatMap((f) => f.data.ejercicios.map((e) => [e.id, e.puntos] as const)),
@@ -391,7 +406,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
     <div class="camino-col">
     <p class="rotulo rotulo--live eyebrow"><EnlaceAsignatura id={asignatura.id} nombre={asignatura.data.nombre} /> · preparar</p>
     <p class="mano kicker">
-      medido sobre {d.medidoSobre} convocatorias — nada por intuición
+      medido sobre {d.medidoSobre} {medidas} — nada por intuición
     </p>
     <h1>{d.titulo}</h1>
     <div class="lede prosa" set:html={ledeHtml} />
@@ -428,7 +443,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
               <p class="frecuencia rotulo rotulo--flag">
                 {b.invariante.anios === 0
                   ? `No cae solo — está dentro de las ${d.medidoSobre}`
-                  : `Cae ${b.invariante.anios} de ${d.medidoSobre} convocatorias`}
+                  : `Cae ${b.invariante.anios} de ${d.medidoSobre} ${sonHojas ? 'hojas' : 'convocatorias'}`}
               </p>
             )}
 
@@ -632,7 +647,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
         {hayReparto ? (
           <>
             <p class="ec-dato">
-              Medido sobre {d.medidoSobre} convocatorias · {conPuntos} ejercicios ·{' '}
+              Medido sobre {d.medidoSobre} {medidas} · {conPuntos} ejercicios ·{' '}
               {total} puntos.
             </p>
             <Reparto puntos={suma} rotulo="Reparto de la nota por competencia" />
@@ -644,13 +659,13 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
         ) : (
           <>
             <p class="ec-dato">
-              Medido sobre {d.medidoSobre} convocatorias · {ejerciciosDeExamen}{' '}
+              Medido sobre {d.medidoSobre} {medidas}{sonHojas ? ', sin fecha' : ''} · {ejerciciosDeExamen}{' '}
               ejercicios transcritos.
             </p>
             <p class="ec-dato ec-dato--fuerte">
-              Estos exámenes no publican el reparto por competencia — solo el
-              peso de cada ejercicio sobre el total —, así que aquí no hay
-              porcentaje que enseñar. Lo que no está medido no se estima.
+              {sonHojas
+                ? 'Estas hojas no imprimen puntos ni reparto por competencia, así que aquí no hay porcentaje que enseñar. Lo que no está medido no se estima.'
+                : 'Estos exámenes no publican el reparto por competencia — solo el peso de cada ejercicio sobre el total —, así que aquí no hay porcentaje que enseñar. Lo que no está medido no se estima.'}
             </p>
           </>
         )}
