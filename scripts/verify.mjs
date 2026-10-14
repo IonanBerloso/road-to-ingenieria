@@ -20,6 +20,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, extname, dirname, posix, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { inflateSync } from 'node:zlib';
 import { PESO_MAXIMO, esDeEstudio } from './peso-maximo.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -610,6 +611,65 @@ console.log('\nContenido');
       );
     }
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Ningún PDF publicado lleva quién lo escribió
+
+   Un PDF exportado de Word guarda el nombre de su autor en el campo Author
+   y en un bloque XMP (`dc:creator`), y a menudo un título que es el nombre
+   del fichero de otro curso; uno compilado con LaTeX, además, el Info de
+   cada PDF que mete como figura. Nadie lo ve al abrirlo, pero se publica
+   igual: el 14 de octubre de 2026 llevaban autor o XMP **122 de los 130 PDF
+   de exámenes** del sitio, desde el primer día. CLAUDE.md ya pedía mirarlo
+   a mano antes de publicar uno, y se había hecho con uno solo, la colección
+   de diédrico. Se quitaron todos con pypdf, cada página comparada píxel a
+   píxel con la original, y esto es lo que impide que el siguiente vuelva a
+   entrar con ellos.
+
+   Se mira sin biblioteca de PDF: los bytes tal cual y, además, los flujos
+   de objetos comprimidos (`/ObjStm`), que es donde un PDF moderno guarda el
+   diccionario Info. Un `/Author` vacío no cuenta; uno con algo dentro, sí.
+   ═══════════════════════════════════════════════════════════════════ */
+{
+  const conAutor = (buf) => {
+    /* El Author con algo dentro; la referencia a un bloque XMP; el autor
+       dentro de un XMP, que también puede venir metido en los bytes de una
+       foto JPEG; y lo que pdfTeX copia de cada PDF que incluye como figura:
+       su Info entero (con su Author) y la ruta de su fichero, que lleva el
+       usuario de quien lo compiló. Un XMP sin autor dentro de una foto —el
+       programa que la hizo, su historial— no es de nadie y no cuenta. */
+    const marcas =
+      /\/Author\s*(?:\((?!\))|<(?!>))|\/Metadata\s+\d+\s+\d+\s+R|<dc:creator|pdf:Author|\/PTEX\.(?:InfoDict|FileName)/;
+    const crudo = buf.toString('latin1');
+    if (marcas.test(crudo)) return true;
+    for (const m of crudo.matchAll(/stream\r?\n/g)) {
+      const dict = crudo.slice(Math.max(0, m.index - 400), m.index);
+      const desde = dict.lastIndexOf(' obj');
+      if (desde < 0 || !/\/Type\s*\/ObjStm/.test(dict.slice(desde)) || !/\/FlateDecode/.test(dict.slice(desde))) continue;
+      const inicio = m.index + m[0].length;
+      const fin = crudo.indexOf('endstream', inicio);
+      if (fin < 0) continue;
+      try {
+        if (marcas.test(inflateSync(buf.subarray(inicio, fin)).toString('latin1'))) return true;
+      } catch {
+        /* Un flujo que no se descomprime no es de los que se miran aquí. */
+      }
+    }
+    return false;
+  };
+  const conNombre = [];
+  let mirados = 0;
+  for (const f of archivos(join(ROOT, 'public'), ['.pdf'])) {
+    mirados++;
+    if (conAutor(readFileSync(f))) conNombre.push(rel(f));
+  }
+  if (conNombre.length === 0) ok(`ningún PDF publicado lleva autor ni XMP: ${mirados} mirados`);
+  else
+    fallo(
+      'Hay PDF publicados con el nombre de quien los escribió en sus metadatos',
+      `${conNombre.length} de ${mirados}:\n    ${conNombre.slice(0, 10).join('\n    ')}`,
+    );
 }
 
 /* ═══════════════════════════════════════════════════════════════════

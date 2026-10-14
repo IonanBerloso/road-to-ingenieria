@@ -1382,7 +1382,11 @@ La universidad ha dado permiso para usar el material docente. Aun así:
 > campo Author y en el XMP del documento y de sus dos partes fusionadas; se
 > quitaron con pypdf, y las páginas se compararon píxel a píxel con las del
 > original. Un PDF que se publique se mira así antes: metadatos, nombres
-> vetados y el patrón de DNI.
+> vetados y el patrón de DNI. Los metadatos los vigila `verify.mjs` desde el
+> 14 de octubre de 2026 («ningún PDF publicado lleva autor ni XMP»), el día
+> que se quitaron de los 122 PDF de exámenes que los llevaban —con el mismo
+> pypdf y la misma comparación píxel a píxel—; los nombres en el texto y el
+> DNI siguen siendo a mano.
 
 ### Estilo de la prosa
 
