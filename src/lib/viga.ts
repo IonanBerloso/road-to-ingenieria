@@ -21,6 +21,11 @@
  *
  * Todo en unidades coherentes: si las cargas van en kg y las longitudes en m,
  * los flectores salen en kg·m. El modelo no convierte nada.
+ *
+ * Arreglado el 14 de octubre de 2026: con una repartida decreciente (q1 > q2)
+ * el centroide del triángulo se ponía en x1 + l/3 en vez de x1 + 2l/3, y las
+ * reacciones, V y M salían mal; no se veía en ninguna página porque el
+ * simulador solo usa uniformes. Lo vigila «repartidas decrecientes» del test.
  */
 
 /** Una carga puntual: `P` hacia abajo, aplicada en `x`. */
@@ -79,7 +84,9 @@ function centroide(c: Repartida): number {
   const xRect = c.x1 + l / 2;
   const rect = c.q1 * l;
   const tri = ((c.q2 - c.q1) / 2) * l;
-  const xTri = c.q2 >= c.q1 ? c.x1 + (2 * l) / 3 : c.x1 + l / 3;
+  /* El triángulo (q2 − q1) tiene su lado alto en x2 siempre: si la carga
+     decrece, su área es negativa, pero su centroide sigue en x1 + 2l/3. */
+  const xTri = c.x1 + (2 * l) / 3;
   const suma = rect + tri;
   if (suma === 0) return c.x1 + l / 2;
   return (rect * xRect + tri * xTri) / suma;

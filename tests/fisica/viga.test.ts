@@ -178,6 +178,45 @@ describe('ordinaria de 2025 · la viga con el par en D', () => {
   });
 });
 
+/*
+ * Repartidas DECRECIENTES (q1 > q2), que ninguno de los ejercicios de arriba
+ * trae. Hasta el 14 de octubre de 2026 el modelo ponía el centroide del
+ * triángulo (q2 − q1) en x1 + l/3 cuando decrecía, y está siempre en
+ * x1 + 2l/3 (su lado alto es el de x2, aunque con área negativa).
+ *
+ * A mano, biapoyada de L = 6:
+ *  · triangular q1 = 3, q2 = 0: resultante 9 a L/3 = 2 de A, así que
+ *    RB = 9·2/6 = 3 y RA = 6. En x = 3, con la fórmula cerrada de la
+ *    triangular creciente vista desde el otro extremo (x' = 6 − x = 3):
+ *    M = q0·L·x'/6 − q0·x'³/(6L) = 9 − 2,25 = 6,75, y V = RA − 4,5·3/2 = −0,75.
+ *  · trapecio q1 = 4, q2 = 2: una uniforme de 2 (12 a 3 m) y una triangular
+ *    decreciente de 2 (6 a 2 m). ΣM_A = 36 + 12 = 48 → RB = 8, RA = 10. En
+ *    x = 3, con q(s) = 4 − s/3: ∫₀³ q(s)(3 − s) ds = 2·9 − 27/18 = 16,5, así
+ *    que M = 10·3 − 16,5 = 13,5.
+ */
+const decreciente: Viga = { L: 6, xA: 0, xB: 6, cargas: [{ tipo: 'repartida', x1: 0, x2: 6, q1: 3, q2: 0 }] };
+const trapecio: Viga = { L: 6, xA: 0, xB: 6, cargas: [{ tipo: 'repartida', x1: 0, x2: 6, q1: 4, q2: 2 }] };
+
+describe('repartidas decrecientes', () => {
+  it('triangular q1 = 3, q2 = 0: RA = 6 y RB = 3', () => {
+    const { RA, RB } = reacciones(decreciente);
+    expect(RA).toBeCloseTo(6, 9);
+    expect(RB).toBeCloseTo(3, 9);
+  });
+
+  it('triangular q1 = 3, q2 = 0: en x = 3, M = 6,75 y V = −0,75', () => {
+    expect(flector(decreciente, 3)).toBeCloseTo(6.75, 9);
+    expect(cortante(decreciente, 3)).toBeCloseTo(-0.75, 9);
+  });
+
+  it('trapecio q1 = 4, q2 = 2: RA = 10, RB = 8 y M(3) = 13,5', () => {
+    const { RA, RB } = reacciones(trapecio);
+    expect(RA).toBeCloseTo(10, 9);
+    expect(RB).toBeCloseTo(8, 9);
+    expect(flector(trapecio, 3)).toBeCloseTo(13.5, 9);
+  });
+});
+
 describe('el modelo, por dentro', () => {
   it('cierra el equilibrio vertical en las tres vigas', () => {
     for (const v of [seisDos, seisCinco, seisNueve]) {
