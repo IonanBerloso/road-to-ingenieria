@@ -1,0 +1,369 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import Cabecera from '../../../../components/ui/Cabecera.astro';
+import EnlaceAsignatura from '../../../../components/ui/EnlaceAsignatura.astro';
+import { mate } from '../../../../lib/markdown.mjs';
+import { ruta } from '../../../../lib/rutas';
+import { recortaFormulario } from '../../../../lib/formulario';
+import { lectura, tarjetas, textosDeLaTarjeta } from '../../../../lib/antes-de-entrar';
+import { CONVOCATORIAS, CON_TEMAS, SUFIJO_CONV, type ConTemas } from '../../../../content.config';
+
+/**
+ * «Antes de entrar»: la hoja de una ruta para leer en la puerta del aula.
+ *
+ * La pidió el 14 de octubre de 2026 un alumno de Cálculo que preparaba con el
+ * sitio, en un fin de semana, la primera evaluación: algo de lectura rápida
+ * «por si sale justo algo que te hayas leído antes de entrar». El formulario
+ * no lo era. Dice qué fórmulas hay, pero no por dónde se empieza cada
+ * ejercicio ni dónde se pierden sus puntos, y eso es lo que se olvida con los
+ * nervios.
+ *
+ * Tiene dos partes, y cada una sale de un sitio distinto:
+ *
+ *   1. **Las tarjetas**, una por bloque de la ruta que la lleve
+ *      (`antesDeEntrar` en el YAML de la ruta): lo que el examen pide —el
+ *      `pide` del bloque, no una copia—, los primeros pasos y la trampa. Son
+ *      lo único escrito para esta página, y cada línea sale de la prosa de un
+ *      tema o del `dominio` del bloque.
+ *   2. **Las fórmulas**, que no se escriben aquí: se leen del apartado «Lo que
+ *      hay que llevar sabido» de cada tema de la ruta, con la misma regla que
+ *      la página del formulario (`lib/formulario.ts`). Si se corrige una
+ *      fórmula en su tema, aquí cambia sola (§01).
+ *
+ * Solo existe para las rutas con alguna tarjeta, y la ruta solo la enlaza
+ * entonces: la regla es una y vive en `lib/antes-de-entrar.ts`.
+ */
+export async function getStaticPaths() {
+  const rutas = await getCollection('preparar');
+  const catalogo = await getCollection('catalogo');
+  const salida = [];
+
+  for (const r of rutas) {
+    if (tarjetas(r.data.bloques).length === 0) continue;
+    const asignatura = catalogo.find((a) => a.id === r.data.asignatura);
+    if (!asignatura) {
+      throw new Error(`La ruta "${r.id}.yaml" es de "${r.data.asignatura}", que no está en el catálogo.`);
+    }
+
+    const formularios: { n: number; id: string; titulo: string; md: string }[] = [];
+    if ((CON_TEMAS as readonly string[]).includes(asignatura.id)) {
+      const coleccion = await getCollection(asignatura.id as ConTemas);
+      for (const id of r.data.temas) {
+        const ficha = asignatura.data.temas.find((t) => t.id === id);
+        const entrada = coleccion.find((e) => e.id === id || e.id.startsWith(`${id}/`));
+        const md = entrada?.body ? recortaFormulario(entrada.body) : null;
+        if (ficha && md) formularios.push({ n: ficha.n, id, titulo: ficha.titulo, md });
+      }
+    }
+
+    salida.push({
+      params: { asignatura: asignatura.id, evaluacion: SUFIJO_CONV[r.data.evaluacion] },
+      props: { asignatura, ruta: r, formularios },
+    });
+  }
+  return salida;
+}
+
+const { asignatura, ruta: r, formularios } = Astro.props;
+const d = r.data;
+const nombre = asignatura.data.nombre;
+const evaluacion = CONVOCATORIAS[d.evaluacion].larga;
+const deLaRuta = ruta(`${asignatura.id}/preparar/${SUFIJO_CONV[d.evaluacion]}`);
+
+const conTarjeta = tarjetas(d.bloques);
+const { minutos } = lectura(conTarjeta.flatMap((b) => textosDeLaTarjeta(b)));
+
+const tarjetasHtml = await Promise.all(
+  conTarjeta.map(async (b) => ({
+    id: b.id,
+    titulo: b.titulo,
+    apunte: b.apunte,
+    pideHtml: await mate(b.pide, `ade-${b.id}-pide`),
+    pasosHtml: await Promise.all(b.antesDeEntrar.pasos.map((p, i) => mate(p, `ade-${b.id}-p${i}`))),
+    trampaHtml: await mate(b.antesDeEntrar.trampa, `ade-${b.id}-t`),
+  })),
+);
+
+const formulasHtml = await Promise.all(
+  formularios.map(async (f) => ({ ...f, html: await mate(f.md, `ade-f-${f.id}`) })),
+);
+
+/* «los temas 1 y 2», «el tema 3»: los números de los temas cuyas fórmulas
+   salen debajo, para decirlo en la entradilla sin escribirlo a mano. */
+const numeros = formulasHtml.map((f) => f.n);
+const temasDichos =
+  numeros.length === 1
+    ? `el tema ${numeros[0]}`
+    : `los temas ${numeros.slice(0, -1).join(', ')} y ${numeros.at(-1)}`;
+---
+
+<Base
+  titulo={`Antes de entrar — ${nombre}, ${evaluacion}`}
+  descripcion={`La hoja de antes de entrar al examen de la ${evaluacion} de ${nombre}: cómo se empieza cada ejercicio que cae, dónde se pierden los puntos y las fórmulas, en unos minutos de lectura.`}
+  acento={asignatura.data.acento}
+>
+  <Cabecera crumb={`${nombre} · antes de entrar`} />
+
+  <main id="principal">
+    <div class="envoltorio">
+      <p class="rotulo rotulo--live eyebrow no-imprimir">
+        <EnlaceAsignatura id={asignatura.id} nombre={nombre} /> · <a href={deLaRuta}>preparar la {evaluacion}</a>
+      </p>
+      <h1>Antes de entrar</h1>
+      <p class="mano kicker">{nombre} · {evaluacion}</p>
+      <p class="lede">
+        Para leer en la puerta del aula. No enseña nada nuevo: pone arriba lo que ya has trabajado,
+        para que lo tengas fresco al abrir el examen.
+        {`Las ${conTarjeta.length} tarjetas se leen en unos ${minutos} minutos`}{formulasHtml.length > 0 && `, y debajo van las fórmulas de ${temasDichos}`}.
+      </p>
+
+      <p class="aviso rotulo no-imprimir">
+        Es para repasar, no para aprender. Si una línea no te dice nada, el sitio donde entenderla es
+        su bloque de la ruta, enlazado al pie de cada tarjeta.
+      </p>
+
+      <nav class="indice no-imprimir" aria-label="Las tarjetas de esta hoja">
+        {tarjetasHtml.map((t) => <a href={`#t-${t.id}`}>{t.titulo}</a>)}
+        {formulasHtml.length > 0 && <a href="#lo-que-va-en-la-cabeza">Las fórmulas</a>}
+      </nav>
+
+      <div class="tarjetas">
+        {tarjetasHtml.map((t) => (
+          <article class="tarjeta" id={`t-${t.id}`} aria-labelledby={`h-${t.id}`}>
+            <h2 id={`h-${t.id}`}>{t.titulo}</h2>
+            {t.apunte && (
+              <p class:list={['mano', 'apunte', `apunte--${t.apunte.tono}`]}>{t.apunte.texto}</p>
+            )}
+            <p class="rotulo etiqueta">Te piden</p>
+            <div class="prosa pide" set:html={t.pideHtml} />
+            <p class="rotulo etiqueta">Empieza así</p>
+            <ol class="pasos">
+              {t.pasosHtml.map((html) => <li class="prosa" set:html={html} />)}
+            </ol>
+            <div class="trampa">
+              <p class="rotulo etiqueta etiqueta--flag">Ojo</p>
+              <div class="prosa" set:html={t.trampaHtml} />
+            </div>
+            <a class="ir no-imprimir" href={`${deLaRuta}#${t.id}`}>repasarlo en la ruta →</a>
+          </article>
+        ))}
+      </div>
+
+      {formulasHtml.length > 0 && (
+        <section class="formulas" aria-labelledby="lo-que-va-en-la-cabeza">
+          <h2 id="lo-que-va-en-la-cabeza">Lo que va en la cabeza</h2>
+          <p class="nota no-imprimir">
+            Las fórmulas y definiciones de {temasDichos}, tal como las dice el apartado «Lo que hay
+            que llevar sabido» de cada tema. No están escritas aquí: se leen de allí, así que si se
+            corrige una arriba, aquí también.
+          </p>
+          {formulasHtml.map((f) => (
+            <section class="hoja" id={`f-${f.id}`}>
+              <h3>
+                <span class="h-n">{String(f.n).padStart(2, '0')}</span>
+                {f.titulo}
+                <a class="h-ir no-imprimir" href={`${ruta(`${asignatura.id}/${f.id}`)}#lo-que-hay-que-llevar-sabido`}>
+                  ver en el tema →
+                </a>
+              </h3>
+              <div class="prosa" set:html={f.html} />
+            </section>
+          ))}
+        </section>
+      )}
+
+      <p class="pie no-imprimir">
+        Las tarjetas están escritas para esta hoja con lo que dicen los temas y los bloques de la
+        ruta, y cada línea se comprobó contra ellos. Las fórmulas no se escriben aquí: se leen de los
+        temas.
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .envoltorio {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+
+  h1 { margin: .3rem 0 0; }
+  .mano { font-family: var(--mano); }
+  .kicker { margin: 0 0 .8rem; font-size: 1.3rem; color: var(--graphite); }
+  .lede { max-width: var(--measure); color: var(--graphite); }
+
+  .aviso {
+    margin: 1.2rem 0 1.4rem;
+    padding: .6rem .8rem;
+    border-left: 2px solid var(--flag);
+    background: var(--flag-soft);
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: .01em;
+  }
+
+  /* ── el índice: saltar a una tarjeta en el teléfono ────────────── */
+  .indice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-bottom: 2rem;
+  }
+
+  .indice a {
+    padding: .3rem .6rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: .82rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .indice a:hover { border-color: var(--live); color: var(--live); }
+
+  /* ── las tarjetas ──────────────────────────────────────────────── */
+  .tarjetas { display: grid; gap: 1.2rem; }
+
+  /* `min-width: 0` por lo mismo que en el formulario: un hijo de grid no
+     encoge por debajo de su contenido, y una fórmula ancha arrastraría la
+     página entera de lado en un teléfono. */
+  .tarjeta {
+    min-width: 0;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--acento);
+    border-radius: 6px;
+    background: var(--panel);
+  }
+
+  .tarjeta h2 { margin: 0; font-size: 1.15rem; }
+  .apunte { margin: .1rem 0 0; font-size: 1.1rem; line-height: 1.1; }
+  .apunte--nota { color: var(--flag); }
+  .apunte--marco { color: var(--marco); }
+  .apunte--neutro { color: var(--faint); }
+
+  .etiqueta {
+    margin: .9rem 0 .2rem;
+    color: var(--faint);
+  }
+
+  .etiqueta--flag { color: var(--flag); }
+
+  .pide :global(p) { margin: 0; font-weight: 600; }
+
+  .pasos { margin: 0; padding-left: 1.3rem; display: grid; gap: .35rem; }
+  .pasos :global(p) { margin: 0; }
+
+  .trampa {
+    margin-top: .9rem;
+    padding: .1rem .8rem .6rem;
+    border-left: 2px solid var(--flag);
+    background: var(--flag-soft);
+  }
+
+  .trampa .etiqueta { margin-top: .5rem; }
+  .trampa :global(p) { margin: 0; }
+
+  .tarjeta :global(.katex-display),
+  .hoja :global(.katex-display),
+  .hoja :global(table) {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  .ir {
+    display: inline-block;
+    margin-top: .8rem;
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .ir:hover { color: var(--live); }
+
+  /* ── las fórmulas ──────────────────────────────────────────────── */
+  .formulas {
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1.5px solid var(--rule);
+  }
+
+  .formulas > h2 { margin: 0 0 .4rem; }
+  .nota { max-width: var(--measure); font-size: .88rem; color: var(--graphite); }
+
+  .hoja { min-width: 0; margin-top: 1.8rem; }
+
+  /* Los apartados de los temas alternan un rótulo en negrita y su fórmula, y
+     sin aire entre párrafos el rótulo se pega a la línea de antes: en una
+     hoja que se lee de un vistazo, eso es justo lo que no se puede. */
+  .hoja .prosa :global(p) { margin: .7rem 0 .3rem; }
+
+  .hoja h3 {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin: 0 0 .6rem;
+    padding-bottom: .3rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 1.05rem;
+  }
+
+  .h-n { font-family: var(--mono); font-size: .8rem; color: var(--faint); }
+
+  .h-ir {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .h-ir:hover { color: var(--live); }
+
+  .pie {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+    font-size: .82rem;
+    color: var(--faint);
+  }
+
+  /* ── impresión: una hoja que se lleva doblada ──────────────────── */
+  @media print {
+    .envoltorio { max-width: none; padding: 0; }
+    .kicker { font-size: 1rem; }
+    .lede { font-size: .8rem; }
+
+    .tarjetas {
+      display: block;
+      column-count: 2;
+      column-gap: 1.2rem;
+    }
+
+    .tarjeta {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: .8rem;
+      padding: .5rem .6rem;
+      background: none;
+      font-size: .74rem;
+    }
+
+    .tarjeta h2 { font-size: .9rem; }
+    .apunte { font-size: .85rem; }
+    .tarjeta :global(.katex) { font-size: .95em; }
+
+    .formulas { column-count: 2; column-gap: 1.2rem; margin-top: 1rem; }
+    .formulas > h2 { column-span: all; font-size: 1rem; }
+    .hoja { break-inside: avoid; page-break-inside: avoid; margin-top: .6rem; }
+    .hoja h3 { font-size: .85rem; }
+    .hoja .prosa { font-size: .72rem; }
+  }
+</style>

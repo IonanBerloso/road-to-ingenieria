@@ -1983,6 +1983,32 @@ const bloque = z.object({
       tono: z.enum(['nota', 'marco', 'neutro']).default('neutro'),
     })
     .optional(),
+  /** La tarjeta del bloque en la hoja de «antes de entrar»
+   *  (`/[asignatura]/preparar/[evaluacion]/antes-de-entrar`): cómo se empieza
+   *  este hueco del examen y dónde se pierden los puntos, para leer en la
+   *  puerta del aula.
+   *
+   *  La pidió el 14 de octubre de 2026 un alumno de Cálculo que preparaba con
+   *  el sitio la primera evaluación: una relectura rápida «por si sale justo
+   *  algo que te hayas leído antes de entrar». El formulario no lo era, porque
+   *  dice qué fórmulas hay y no por dónde se empieza un ejercicio.
+   *
+   *  Lo que el examen pide no se repite aquí: la tarjeta pinta el `pide` del
+   *  bloque. Y los pasos y la trampa **no son materia nueva**: cada línea
+   *  sale de la prosa de un tema de la ruta —de sus errores típicos, sobre
+   *  todo— o de un `dominio` de este bloque, y un lector la comprobó contra
+   *  ellos antes de publicarla. Opcional: un bloque sin tarjeta no sale en la
+   *  hoja, y una ruta sin ninguna no tiene hoja. */
+  antesDeEntrar: z
+    .object({
+      /** Lo que se hace en el primer minuto, en imperativo y en orden. Entre
+       *  dos y cinco: más ya no se lee de pie. */
+      pasos: z.array(z.string().min(20).max(320)).min(2).max(5),
+      /** El error que más puntos cuesta en este hueco, con su contraejemplo o
+       *  su cura. Uno, o los que el tema cuenta juntos. */
+      trampa: z.string().min(40).max(420),
+    })
+    .optional(),
   /** La forma vieja: una pila plana de referencias.
    *
    *  Sigue valiendo, y por eso es opcional en vez de estar borrada: los

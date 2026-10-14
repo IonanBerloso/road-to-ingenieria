@@ -8,6 +8,7 @@ import Reparto from '../../../components/ui/Reparto.astro';
 import { mate } from '../../../lib/markdown.mjs';
 import { ruta } from '../../../lib/rutas';
 import { paginaDeEjercicio } from '../../../lib/ejercicios';
+import { SEGMENTO, hayAntesDeEntrar, lectura, tarjetas, textosDeLaTarjeta } from '../../../lib/antes-de-entrar';
 import { SUFIJO_CONV, slugExamen, type ConTemas } from '../../../content.config';
 
 /**
@@ -168,6 +169,16 @@ export async function getStaticPaths() {
 
 const { asignatura, ruta: laRuta, bloques } = Astro.props;
 const d = laRuta.data;
+
+/* La hoja de antes de entrar, si la ruta la tiene (14 de octubre de 2026). Se
+   pregunta con la misma regla que decide si la página existe: con una
+   regla en cada sitio, el enlace podría quedarse apuntando a nada. */
+const antesDeEntrar = hayAntesDeEntrar(d.bloques)
+  ? {
+      href: ruta(`${asignatura.id}/preparar/${SUFIJO_CONV[d.evaluacion]}/${SEGMENTO}`),
+      minutos: lectura(tarjetas(d.bloques).flatMap((b) => textosDeLaTarjeta(b))).minutos,
+    }
+  : null;
 
 /* ── que los apartados existan de verdad ─────────────────────────────────
    `verify.mjs` parte los href por `#`, así que **no valida fragmentos**: un
@@ -410,6 +421,17 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
     </p>
     <h1>{d.titulo}</h1>
     <div class="lede prosa" set:html={ledeHtml} />
+
+    {antesDeEntrar && (
+      <a class="antes-de-entrar" href={antesDeEntrar.href}>
+        <span class="ade-t">¿El examen es ya? Antes de entrar</span>
+        <span class="ade-d">
+          Una hoja para la puerta del aula: cómo se empieza cada ejercicio, dónde se pierden los
+          puntos y las fórmulas. Se lee en unos {antesDeEntrar.minutos} minutos.
+        </span>
+        <span class="ade-ir rotulo" aria-hidden="true">→</span>
+      </a>
+    )}
 
     {/* ── el camino de bloques (brief §6b): números en círculo unidos por
         una espina de tiza. El orden ES el contenido de una ruta, y la
@@ -993,6 +1015,25 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
   .kicker { font-size: 1.3rem; color: var(--live); margin-bottom: .1rem; }
   h1 { max-width: var(--measure); }
   .lede { max-width: 68ch; margin: .6rem 0 1.6rem; }
+
+  .antes-de-entrar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .2rem .9rem;
+    max-width: 68ch;
+    margin: -.4rem 0 1.8rem;
+    padding: .8rem 1rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--flag);
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .antes-de-entrar:hover { border-color: var(--live); border-left-color: var(--live); }
+  .ade-t { font-weight: 600; }
+  .ade-d { grid-column: 1; font-size: .85rem; color: var(--graphite); }
+  .ade-ir { grid-row: 1 / span 2; align-self: center; color: var(--flag); }
 
   /* ── el camino (brief §6b): círculos y espina de tiza ──────────── */
   .camino {

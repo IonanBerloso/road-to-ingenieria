@@ -7,11 +7,12 @@ import Criterios from '../../components/ui/Criterios.astro';
 import RubricaLaminas from '../../components/ui/RubricaLaminas.astro';
 import QueNotaNecesito from '../../components/ui/QueNotaNecesito.astro';
 import { ruta } from '../../lib/rutas';
+import { SEGMENTO, hayAntesDeEntrar } from '../../lib/antes-de-entrar';
 import { mate, sinMarcas } from '../../lib/markdown.mjs';
 import { hayFormulario } from '../../lib/formulario';
 import { ESTADO } from '../../lib/estado';
 import { modelo } from '../../lib/nota';
-import { ORDEN_CONV, SUFIJO_CONV, CON_TEMAS, esPropia, slugExamen, type ConTemas } from '../../content.config';
+import { CONVOCATORIAS, ORDEN_CONV, SUFIJO_CONV, CON_TEMAS, esPropia, slugExamen, type ConTemas } from '../../content.config';
 
 /**
  * La página de una asignatura: `/calculo/`, `/fluidos/`… (fase E2 de la
@@ -54,7 +55,12 @@ const rutas = (await getCollection('preparar'))
     /* El lede es markdown y aquí va dentro de un <a>, donde un <p> no cabe. */
     lede: sinMarcas(r.data.lede),
     sufijo: SUFIJO_CONV[r.data.evaluacion],
+    /* Si tiene hoja de antes de entrar, con la misma regla que decide si la
+       página existe. */
+    antes: hayAntesDeEntrar(r.data.bloques),
+    larga: CONVOCATORIAS[r.data.evaluacion].larga,
   }));
+const conAntes = rutas.filter((r) => r.antes);
 
 const examenesDeAqui = (await getCollection('examen')).filter((e) => e.data.asignatura === id);
 /* Los ejercicios de varios apartados de una colección (convocatoria `hoja`) no
@@ -260,6 +266,17 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
                   </a>
                 ))}
               </nav>
+              {conAntes.length > 0 && (
+                <p class="antes">
+                  ¿El examen es ya? Hay una hoja de lectura rápida para la puerta del aula:{' '}
+                  {conAntes.map((r, i) => (
+                    <>
+                      {i > 0 && ' · '}
+                      <a href={ruta(`${id}/preparar/${r.sufijo}/${SEGMENTO}`)}>antes de entrar a la {r.larga}</a>
+                    </>
+                  ))}.
+                </p>
+              )}
             </>
           )
         }
@@ -456,6 +473,7 @@ const conCalculadora = modalidades.map((m) => modelo(m).hojas.length >= 2);
   .normas li :global(p) { margin: 0; }
 
   .rutas { max-width: var(--measure); margin: .8rem 0 0; }
+  .antes { max-width: var(--measure); margin: .7rem 0 0; font-size: .9rem; }
 
   .r {
     display: grid;

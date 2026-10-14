@@ -399,6 +399,10 @@ src/
                            ejercicios trae un examen y la clave de búsqueda
                            sin tildes. Cada uno existe porque su regla
                            estaba escrita en dos o tres páginas (§01)
+    antes-de-entrar.ts     qué bloques de una ruta llevan tarjeta en la
+                           hoja de «antes de entrar», y en cuántos minutos
+                           se leen; la página y su enlace desde la ruta
+                           preguntan con esta misma regla
     ejercicios.ts          en qué bloque de diez vive cada ejercicio de
                            tema, y la dirección de cualquier ejercicio
                            (§07, «de diez en diez»)
@@ -425,7 +429,8 @@ src/
     base.css · print.css
   pages/                   index · [asignatura] · [asignatura]/[tema] con sus
                            bloques de ejercicios y sus cuestiones ·
-                           examenes · preparar · formulario · laboratorio ·
+                           examenes · preparar (y, debajo de cada ruta con
+                           tarjetas, su antes-de-entrar) · formulario · laboratorio ·
                            tablas, y el índice de ejercicios que busca la
                            paleta
 scripts/
