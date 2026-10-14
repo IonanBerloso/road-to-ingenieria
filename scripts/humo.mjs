@@ -20,7 +20,7 @@
  * Abre el sitio construido en Chromium y sale con código != 0 si algo falla.
  */
 
-import { readdirSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
 import { BASE, ROOT, levanta } from './servidor.mjs';
@@ -336,6 +336,12 @@ async function main() {
     .filter((n) => n.endsWith('.json'))
     .map((n) => n.replace(/\.json$/, ''))
     .filter((a) => existsSync(join(ROOT, 'dist', a)));
+  /** Las que la portada pinta solo como botón (`portada: 'boton'`). */
+  const soloBoton = new Set(
+    conContenido.filter(
+      (a) => JSON.parse(readFileSync(join(ROOT, 'src', 'content', 'catalogo', `${a}.json`), 'utf8')).portada === 'boton',
+    ),
+  );
   console.log(`  · por asignatura: ${conContenido
     .map((a) => `${a} ${porAsignatura[a] ?? 0}`)
     .join(' · ')}`);
@@ -419,7 +425,10 @@ async function main() {
           (a) => document.querySelector(`a[data-asignatura="${a}"]`)?.getAttribute('href') ?? '',
           trozos[0],
         );
-        if (!href.endsWith(`/#${trozos[0]}`)) conAsignatura.sin.add(ruta);
+        /* La que la portada pinta solo como botón no tiene ficha allí: su
+           nombre lleva a su página (EnlaceAsignatura, 14 de octubre de 2026). */
+        const destino = soloBoton.has(trozos[0]) ? `/${trozos[0]}/` : `/#${trozos[0]}`;
+        if (!href.endsWith(destino)) conAsignatura.sin.add(ruta);
       }
     }
 

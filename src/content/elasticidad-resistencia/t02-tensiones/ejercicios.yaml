@@ -1,0 +1,212 @@
+ejercicios:
+  - id: ejerm2-circulo-de-mohr-en-tension-plana
+    titulo: Un estado de tensión plana, con su círculo de Mohr entero
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni del material de la asignatura.
+    nivel: ejemplo
+    enunciado: |
+      En un punto de una chapa hay un estado de tensión plana con
+      $\sigma_x = 90\ \text{MPa}$, $\sigma_y = 30\ \text{MPa}$ y
+      $\tau_{xy} = 40\ \text{MPa}$, en el convenio del curso
+      ($\sigma_z = \tau_{xz} = \tau_{yz} = 0$). Calcular las tensiones
+      principales, el ángulo que forma la dirección principal 1 con el eje
+      $x$ y la tensión tangencial máxima del punto.
+    pide: La principal mayor, el ángulo de la dirección 1 con x y la tangencial máxima del punto.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En tensión plana, ¿qué papel juega la tensión $\sigma_z = 0$ al buscar
+          la tangencial máxima del punto?
+        opciones:
+          - texto: Es una tensión principal más, y hay que ordenarla con las dos del plano
+            correcta: true
+            mensaje: |
+              Eso es. En tensión plana $z$ es dirección principal y su tensión
+              vale cero. Las tres del punto son las dos del plano y ese cero, y
+              la tangencial máxima es $(\sigma_1 - \sigma_3)/2$ con las tres
+              ordenadas.
+          - texto: Ninguno, porque el estado es plano y todo está en el círculo del plano xy
+            mensaje: |
+              El círculo del plano $xy$ da las tensiones de los planos
+              **paralelos a $z$**. Hay otros planos que pasan por el punto, y en
+              alguno de ellos la tangencial puede ser mayor que el radio de ese
+              círculo.
+          - texto: Solo importa si las dos tensiones del plano son de compresión
+            mensaje: |
+              También importa si las dos son de tracción, que es justo este caso.
+              El cero solo deja de mandar cuando las dos del plano tienen signo
+              contrario: entonces queda en medio y el grande es el del plano.
+
+      - tipo: calcular
+        titulo: La tensión principal mayor
+        pregunta: |
+          ¿Cuánto vale la tensión principal mayor del plano, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '110'
+          tolerancia: 0.5
+          formato: un número, en MPa
+        distractores:
+          - valor: '132.11'
+            mensaje: |
+              Has metido $\sigma_x - \sigma_y$ en el radio sin dividir entre 2:
+              $\sqrt{60^{2} + 40^{2}}$. El radio es
+              $\sqrt{((\sigma_x - \sigma_y)/2)^{2} + \tau_{xy}^{2}} = \sqrt{30^{2} + 40^{2}}$.
+          - valor: '60'
+            mensaje: |
+              Eso es el centro del círculo, la media de $\sigma_x$ y $\sigma_y$.
+              La principal mayor está un radio a la derecha: $C + R$.
+          - valor: '50'
+            mensaje: |
+              Eso es el radio. La principal se mide desde el origen, no desde
+              el centro: $\sigma_1 = C + R$.
+        pista: |
+          Centro $C = (\sigma_x + \sigma_y)/2$ y radio
+          $R = \sqrt{((\sigma_x - \sigma_y)/2)^{2} + \tau_{xy}^{2}}$.
+        desarrollo: |
+          $$
+          C = \frac{90 + 30}{2} = 60 \qquad
+          R = \sqrt{30^{2} + 40^{2}} = 50 \qquad
+          \sigma_1 = C + R = 110\ \text{MPa}
+          $$
+
+          Y la otra del plano, $\sigma_2 = C - R = 10\ \text{MPa}$.
+
+      - tipo: calcular
+        titulo: El ángulo de la dirección principal 1
+        pregunta: |
+          ¿Qué ángulo forma la dirección principal 1 con el eje $x$, en grados,
+          positivo en sentido antihorario?
+        respuesta:
+          tipo: numero
+          valor: '26.57'
+          tolerancia: 0.2
+          formato: un número, en grados
+        distractores:
+          - valor: '53.13'
+            mensaje: |
+              Ese es $2\theta_1$, el ángulo del círculo. En la pieza los ángulos
+              son la mitad: $\theta_1 = 26{,}57°$.
+          - valor: '-26.57'
+            mensaje: |
+              El valor es bueno y el sentido no. Con $\tau_{xy} > 0$ las caras
+              $x$ forman un par antihorario y $x$ va **abajo** en el círculo;
+              de ahí a la dirección 1 se sube, y en la pieza se gira en sentido
+              antihorario. Si pusiste $x$ arriba, giraste al revés.
+        pista: |
+          $\tan 2\theta_1 = 2\tau_{xy}/(\sigma_x - \sigma_y)$, y el ángulo de
+          la pieza es la mitad del que sale.
+        desarrollo: |
+          $$
+          \tan 2\theta_1 = \frac{2 \cdot 40}{90 - 30} = \frac{4}{3}
+          \;\Longrightarrow\; 2\theta_1 = 53{,}13° \;\Longrightarrow\; \theta_1 = 26{,}57°
+          $$
+
+          Como $\sigma_x > \sigma_y$, este ángulo da la principal mayor: lo
+          confirma $\sigma_n(\theta_1) = 110$ en la fórmula del
+          ángulo doble.
+
+      - tipo: calcular
+        titulo: La tangencial máxima del punto
+        pregunta: |
+          ¿Cuánto vale la tensión tangencial máxima del punto, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '55'
+          tolerancia: 0.5
+          formato: un número, en MPa
+        distractores:
+          - valor: '50'
+            mensaje: |
+              Ese es el radio del círculo del plano $xy$: la máxima entre los
+              planos paralelos a $z$. Con $\sigma_z = 0$ las tres principales
+              son $110$, $10$ y $0$, y el círculo
+              grande va de 0 a $110$.
+          - valor: '40'
+            mensaje: |
+              Esa es $\tau_{xy}$, la tangencial en las caras $x$ e $y$. En
+              otras caras es mayor: la máxima sale de las principales.
+        pista: |
+          Ordena las tres principales, la de $z$ incluida, y usa
+          $\tau_{\max} = (\sigma_1 - \sigma_3)/2$.
+        desarrollo: |
+          $$
+          \sigma_1 = 110,\quad \sigma_2 = 10,\quad \sigma_3 = 0
+          \qquad \tau_{\max} = \frac{110 - 0}{2} = 55\ \text{MPa}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'El centro es $C = (90 + 30)/2 = 60$ y el radio $R = \sqrt{30^{2} + 40^{2}} = 50$ MPa.'
+          - texto: 'Las principales del plano son $C \pm R$: $110$ y $10$ MPa.'
+          - texto: Con τxy positiva, x va abajo en el círculo y la dirección 1 está girada θ1 en sentido antihorario.
+          - texto: 'La tensión de $z$ es principal y vale cero, así que las tres son $110$, $10$ y $0$.'
+          - texto: 'La tangencial máxima es $(110 - 0)/2 = 55$ MPa.'
+          - texto: 'La tangencial máxima es el radio del círculo, $50$ MPa.'
+            trampa: true
+            mensaje: |
+              El radio es la máxima en los planos paralelos a $z$. Con las dos
+              principales del plano de tracción, el cero de $z$ queda fuera y
+              el círculo grande es el que va de 0 a $110$.
+    resolucion: |
+      **El círculo del plano.** Centro y radio:
+
+      $$
+      C = \frac{\sigma_x + \sigma_y}{2} = 60 \qquad
+      R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^{2} + \tau_{xy}^{2}} = \sqrt{30^{2} + 40^{2}} = 50\ \text{MPa}
+      $$
+
+      así que $\sigma_1 = C + R = 110$ y $\sigma_2 = C - R = 10$ MPa.
+
+      **La dirección.** $\tan 2\theta_1 = 2 \cdot 40/(90 - 30) = 4/3$, luego
+      $2\theta_1 = 53{,}13°$ y $\theta_1 = 26{,}57°$. Con
+      $\tau_{xy} > 0$ las caras $x$ forman un par antihorario: $x$ va abajo en
+      el círculo, y de ahí a 1 se sube. En la pieza, la dirección 1 está
+      girada $26{,}57°$ en sentido antihorario desde $x$, y la 2,
+      perpendicular, a $116{,}57°$.
+
+      **La tangencial máxima.** En tensión plana $z$ es principal con
+      tensión nula. Las tres del punto son $110$, $10$
+      y $0$ MPa, y
+
+      $$
+      \tau_{\max} = \frac{\sigma_1 - \sigma_3}{2} = \frac{110 - 0}{2} = 55\ \text{MPa}
+      $$
+
+      mayor que el radio del círculo del plano, $50$ MPa. Actúa en
+      los planos a 45° de las direcciones 1 y $z$, que contienen la 2.
+
+      <figure>
+      <svg viewBox="0 0 380 300" role="img" width="380" height="300" aria-labelledby="t02-ej-mohr-t t02-ej-mohr-d">
+        <title id="t02-ej-mohr-t">Los tres círculos de σx = 90, σy = 30 y τxy = 40 MPa en tensión plana</title>
+        <desc id="t02-ej-mohr-d">El círculo del plano xy tiene el centro en 60 y radio 50: corta el eje en 10 y 110. Con la tensión principal z, que vale cero, salen otros dos: uno de 0 a 10 y el grande, de 0 a 110, sombreado, de radio 55. El punto x, (90, 40), va abajo y el y, (30, 40), arriba.</desc>
+        <line x1="15" y1="150" x2="363.2" y2="150" stroke="var(--faint)" stroke-width="1.1"/>
+        <path d="M368 150L362.5 147.6L362.5 152.4Z" fill="var(--faint)" stroke="none"/>
+        <line x1="45" y1="290" x2="45" y2="14.8" stroke="var(--faint)" stroke-width="1.1"/>
+        <path d="M45 10L42.6 15.5L47.4 15.5Z" fill="var(--faint)" stroke="none"/>
+        <text x="366" y="165" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3" font-size="7.4">n</tspan></text>
+        <text x="51" y="20" text-anchor="start" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">|τ<tspan dy="3" font-size="7.4">n</tspan><tspan dy="-3">|</tspan></text>
+        <text x="41" y="163" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+        <circle cx="171.5" cy="150" r="126.5" fill="var(--faint)" fill-opacity="0.16" stroke="none"/>
+        <circle cx="171.5" cy="150" r="126.5" fill="none" stroke="var(--ink)" stroke-width="1.3" stroke-dasharray="5 4"/>
+        <circle cx="56.5" cy="150" r="11.5" fill="none" stroke="var(--ink)" stroke-width="1.1"/>
+        <circle cx="183" cy="150" r="115" fill="none" stroke="var(--d1)" stroke-width="1.8"/>
+        <line x1="252" y1="242" x2="114" y2="58" stroke="var(--d2)" stroke-width="1.3"/>
+        <circle cx="252" cy="242" r="3.2" fill="var(--d2)"/>
+        <circle cx="114" cy="58" r="3.2" fill="var(--d2)"/>
+        <text x="259" y="255" text-anchor="start" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+        <text x="107" y="52" text-anchor="end" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+        <circle cx="171.5" cy="23.5" r="2.8" fill="var(--live)"/>
+        <line x1="171.5" y1="150" x2="171.5" y2="23.5" stroke="var(--live)" stroke-width="1.4"/>
+        <text x="177.5" y="18.5" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.2" font-size="7.8">max</tspan><tspan dy="-3.1"> = 55</tspan></text>
+        <text x="189" y="49" text-anchor="start" fill="var(--d1)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">R = 50</text>
+        <line x1="183" y1="150" x2="183" y2="35" stroke="var(--d1)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="68" y1="146.5" x2="68" y2="153.5" stroke="var(--faint)" stroke-width="1"/>
+        <text x="68" y="165" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">10</text>
+        <line x1="183" y1="146.5" x2="183" y2="153.5" stroke="var(--faint)" stroke-width="1"/>
+        <text x="183" y="165" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">60</text>
+        <line x1="298" y1="146.5" x2="298" y2="153.5" stroke="var(--faint)" stroke-width="1"/>
+        <text x="298" y="165" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">110</text>
+      </svg>
+      <figcaption>Los tres círculos del ejemplo, a escala. Con trazo grueso, el del plano xy (centro 60, radio 50); a trazos y sombreado, el grande, de 0 a 110, cuyo radio es la tangencial máxima, 55 MPa.</figcaption>
+      </figure>

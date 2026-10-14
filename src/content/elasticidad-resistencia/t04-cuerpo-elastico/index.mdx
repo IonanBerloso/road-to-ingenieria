@@ -1,0 +1,491 @@
+---
+asignatura: elasticidad-resistencia
+tema: 4
+titulo: El cuerpo elástico
+descripcion: "La ley de Hooke en tres dimensiones, las ecuaciones de Lamé, E, G, ν y k, los límites de ν, la temperatura, tensión y deformación plana, y el prisma metido en un hueco."
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del tema 4, «El cuerpo elástico», de los apuntes y las diapositivas de Elasticidad y Resistencia de Materiales · UPV/EHU, y de sus cuestiones teóricas de autoevaluación. Las figuras y los ejemplos son nuestros.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Los temas 2 y 3 no dijeron de qué está hecho el cuerpo: las tensiones salen del
+equilibrio y las deformaciones de la geometría, para cualquier material. Este
+tema las une. Contesta **cuánto se deforma un material cuando se le aplican
+unas tensiones, y al revés**, y lo hace con cuatro constantes —$E$, $G$, $\nu$
+y $k$— de las que solo dos son independientes.
+
+Es el tema que más se usa sin que se pregunte por su nombre. Está en los diez
+parciales 1 desde 2012-2013, casi siempre dentro de otro problema: cada
+roseta de galgas del tema 3 termina pasando las deformaciones a tensiones, y
+cada barra con temperatura del tema 8 empieza aquí. Cuando cae solo, cae como
+**un prisma metido en un hueco rígido** —entre paredes, con holgura, entre
+placas con cables—, o como cuestión: las ecuaciones de Lamé o **entre qué
+valores está el coeficiente de Poisson**.
+
+El convenio de signos es el de los temas 2 y 3: tensión positiva de tracción,
+deformación normal positiva de alargamiento y $\gamma_{xy}$ positiva si el
+ángulo recto se cierra. Un incremento de temperatura $\Delta T$ es positivo si
+se calienta.
+
+## Las hipótesis
+
+El material es **homogéneo** (las mismas propiedades en todos los puntos),
+**isótropo** (en todas las direcciones), **elástico** (vuelve a su forma al
+descargar) y **lineal** (tensión y deformación proporcionales), con
+deformaciones pequeñas, menores que 0,02 (p. 3). La linealidad da el
+**principio de superposición**: el efecto de varias causas es la suma de los
+efectos de cada una. Un material **dúctil** se deforma mucho antes de romper y,
+pasado el tramo elástico, fluye y se queda deformado; uno **frágil** rompe al
+acabar el tramo elástico (diapositiva 4).
+
+## La ley de Hooke: deformaciones a partir de tensiones
+
+Tira de un material en $x$. Se alarga en $x$ y **encoge en las otras dos
+direcciones**, y no aparece ninguna deformación tangencial (4.1):
+
+$$
+\varepsilon_x = \frac{\sigma_x}{E} \qquad \varepsilon_y = \varepsilon_z = -\nu\,\frac{\sigma_x}{E}
+$$
+
+$E$ es el **módulo de elasticidad** o de Young, con unidades de tensión, y
+$\nu$ el **coeficiente de Poisson**, adimensional.
+
+<figure>
+<svg viewBox="0 0 400 220" role="img" width="400" height="220" aria-labelledby="t04-traccion-t t04-traccion-d">
+  <title id="t04-traccion-t">Una tracción en x alarga en x y encoge en las otras dos direcciones</title>
+  <desc id="t04-traccion-d">Un cuadrado a trazos y, encima, el mismo elemento después de cargarlo con σx: más largo en x y más estrecho en y. Rótulos: εx igual a σx entre E, y εy igual a menos ν σx entre E, que es también εz. No hay deformación tangencial: los ángulos siguen rectos.</desc>
+  <rect x="145" y="55" width="110" height="110" fill="none" stroke="var(--faint)" stroke-width="1.1" stroke-dasharray="4 3"/>
+  <rect x="128.5" y="61.6" width="143" height="96.8" fill="var(--faint)" fill-opacity="0.1" stroke="var(--ink)" stroke-width="1.5"/>
+  <line x1="271.5" y1="110" x2="310.9" y2="110" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M316.5 110L310.1 107.1L310.1 112.9Z" fill="var(--d1)" stroke="none"/>
+  <line x1="128.5" y1="110" x2="89.1" y2="110" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M83.5 110L89.9 112.9L89.9 107.1Z" fill="var(--d1)" stroke="none"/>
+  <text x="319.5" y="114" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">x</tspan></text>
+  <text x="80.5" y="114" text-anchor="end" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">x</tspan></text>
+  <text x="200" y="31.6" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">ε<tspan dy="3.2" font-size="7.8">x</tspan><tspan dy="-3.1"> = σ</tspan><tspan dy="3.2" font-size="7.8">x</tspan><tspan dy="-3.1">/E   (se alarga)</tspan></text>
+  <text x="200" y="196.4" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">ε<tspan dy="3.2" font-size="7.8">y</tspan><tspan dy="-3.1"> = ε</tspan><tspan dy="3.2" font-size="7.8">z</tspan><tspan dy="-3.1"> = −ν σ</tspan><tspan dy="3.2" font-size="7.8">x</tspan><tspan dy="-3.1">/E   (encoge)</tspan></text>
+  <line x1="200" y1="53" x2="200" y2="60.6" stroke="var(--live)" stroke-width="1.2"/>
+  <path d="M200 64.6L202 60L198 60Z" fill="var(--live)" stroke="none"/>
+  <line x1="200" y1="167" x2="200" y2="159.4" stroke="var(--live)" stroke-width="1.2"/>
+  <path d="M200 155.4L198 160L202 160Z" fill="var(--live)" stroke="none"/>
+  <line x1="24" y1="200" x2="55.2" y2="200" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M60 200L54.5 197.6L54.5 202.4Z" fill="var(--ink)" stroke="none"/>
+  <line x1="24" y1="200" x2="24" y2="168.8" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M24 164L21.6 169.5L26.4 169.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="64" y="204" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <text x="29" y="166" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+</svg>
+<figcaption>
+
+**Una tracción en x**, con la deformación exagerada. El elemento se alarga en x
+y encoge en y y en z, y los ángulos siguen rectos: una tensión normal no da
+deformación tangencial.
+
+</figcaption>
+</figure>
+
+Con tensiones normales en los tres ejes, por superposición se suman los tres
+efectos (4.2), y las tangenciales van aparte (4.3):
+
+$$
+\varepsilon_x = \frac{1}{E}\left[\sigma_x - \nu(\sigma_y + \sigma_z)\right] \qquad
+\varepsilon_y = \frac{1}{E}\left[\sigma_y - \nu(\sigma_x + \sigma_z)\right] \qquad
+\varepsilon_z = \frac{1}{E}\left[\sigma_z - \nu(\sigma_x + \sigma_y)\right]
+$$
+
+$$
+\gamma_{xy} = \frac{\tau_{xy}}{G} \qquad \gamma_{yz} = \frac{\tau_{yz}}{G} \qquad \gamma_{zx} = \frac{\tau_{zx}}{G}
+$$
+
+$G$ es el **módulo de elasticidad tangencial** o de cortadura. Estas seis
+ecuaciones son la **ley de Hooke** de un material isótropo.
+
+Una consecuencia que es cuestión de examen (la extraordinaria del 1/2/2023, y
+la cuestión 4 de autoevaluación): **las direcciones principales de tensiones y
+de deformaciones coinciden**. En un material isótropo, una tangencial nula da
+una $\gamma$ nula y al revés, así que los planos sin tangencial son los mismos
+para las dos.
+
+## La relación entre E, G y ν
+
+Solo dos de las tres son independientes. Se ve en tensión plana: las
+direcciones principales de tensiones, $\tan 2\theta = 2\tau_{xy}/(\sigma_x - \sigma_y)$,
+y las de deformaciones, $\tan 2\theta = \gamma_{xy}/(\varepsilon_x - \varepsilon_y)$,
+tienen que ser las mismas (4.4-4.5). Metiendo Hooke en la segunda e igualando
+sale (4.6):
+
+$$
+G = \frac{E}{2(1 + \nu)}
+$$
+
+Para un acero con $E = 210$ GPa y $\nu = 0{,}3$, $G = 80{,}8$ GPa. Es una
+propiedad del material, así que vale en cualquier estado de tensión.
+
+## Tensiones a partir de deformaciones: las ecuaciones de Lamé
+
+Es la cuestión «determinar las tensiones a partir de las deformaciones» del
+parcial del 3/11/2017 y de las extraordinarias de 2013 y 2022. El camino:
+
+1. **Suma las tres de Hooke** (4.8). Con la deformación volumétrica
+   $e = \varepsilon_x + \varepsilon_y + \varepsilon_z$:
+   $$
+   e = \frac{1 - 2\nu}{E}\,(\sigma_x + \sigma_y + \sigma_z)
+   \qquad\Longrightarrow\qquad
+   \sigma_x + \sigma_y + \sigma_z = \frac{E}{1 - 2\nu}\,e
+   $$
+2. **Suma y resta $\nu\sigma_x$** dentro del corchete de $\varepsilon_x$, para
+   que aparezca la suma de las tres, y sustituye la de arriba (4.10).
+3. **Despeja $\sigma_x$** (4.11-4.12). Las tangenciales salen directamente de
+   (4.3).
+
+$$
+\sigma_x = 2G\,\varepsilon_x + \lambda\,e \qquad
+\sigma_y = 2G\,\varepsilon_y + \lambda\,e \qquad
+\sigma_z = 2G\,\varepsilon_z + \lambda\,e \qquad
+\tau_{xy} = G\,\gamma_{xy}
+$$
+
+con el **coeficiente de Lamé** $\lambda = \dfrac{\nu E}{(1 + \nu)(1 - 2\nu)}$.
+Para el acero de antes, $\lambda = 121{,}2$ GPa.
+
+## Cambio de volumen y módulo volumétrico
+
+La suma de (4.8), escrita con la tensión esférica
+$\sigma_e = (\sigma_x + \sigma_y + \sigma_z)/3$ del tema 2, es (4.14)
+
+$$
+e = \frac{3(1 - 2\nu)}{E}\,\sigma_e
+$$
+
+**El cambio de volumen solo depende de la parte esférica** del tensor de
+tensiones; la desviadora solo cambia la forma. Con una presión hidrostática,
+$\sigma_x = \sigma_y = \sigma_z = p$, queda $p = k\,e$ con el **módulo de
+elasticidad volumétrico** (4.15-4.16):
+
+$$
+k = \frac{E}{3(1 - 2\nu)}
+$$
+
+Para el acero, $k = 175$ GPa; y se comprueba con
+$k = \lambda + \tfrac23 G$.
+
+## Entre qué valores está ν
+
+Dos condiciones físicas, una por cada módulo (4.7, 4.17 y 4.18):
+
+- **$G > 0$**: una tangencial positiva da una deformación tangencial positiva.
+  Con $G = E/[2(1 + \nu)]$ y $E > 0$, hace falta $1 + \nu > 0$: **$\nu > -1$**.
+- **$k > 0$**: una presión de tracción en todas direcciones aumenta el volumen,
+  y una de compresión lo disminuye. Con $k = E/[3(1 - 2\nu)]$, hace falta
+  $1 - 2\nu > 0$: **$\nu < 0{,}5$**.
+
+$$
+-1 \lt \nu \lt 0{,}5
+$$
+
+<figure>
+<svg viewBox="0 0 440 150" role="img" width="440" height="150" aria-labelledby="t04-nu-t t04-nu-d">
+  <title id="t04-nu-t">Entre qué valores está el coeficiente de Poisson</title>
+  <desc id="t04-nu-d">Una recta de ν de −1,5 a 1. La condición G mayor que cero deja ν a la derecha de −1; la condición k mayor que cero deja ν a la izquierda de 0,5. Las dos juntas dejan el intervalo abierto de −1 a 0,5, sombreado. Se marca ν = 0,3, el de los aceros de los ejemplos.</desc>
+  <rect x="124" y="81" width="192" height="28" fill="var(--live)" fill-opacity="0.14" stroke="none"/>
+  <line x1="60" y1="95" x2="383.2" y2="95" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M388 95L382.5 92.6L382.5 97.4Z" fill="var(--ink)" stroke="none"/>
+  <text x="390" y="99" text-anchor="start" fill="var(--ink)" font-size="12" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">ν</text>
+  <line x1="124" y1="91" x2="124" y2="99" stroke="var(--ink)" stroke-width="1"/>
+  <text x="124" y="123" text-anchor="middle" fill="var(--ink)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−1</text>
+  <line x1="188" y1="91" x2="188" y2="99" stroke="var(--ink)" stroke-width="1"/>
+  <text x="188" y="123" text-anchor="middle" fill="var(--ink)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−0,5</text>
+  <line x1="252" y1="91" x2="252" y2="99" stroke="var(--ink)" stroke-width="1"/>
+  <text x="252" y="123" text-anchor="middle" fill="var(--ink)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">0</text>
+  <line x1="316" y1="91" x2="316" y2="99" stroke="var(--ink)" stroke-width="1"/>
+  <text x="316" y="123" text-anchor="middle" fill="var(--ink)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">0,5</text>
+  <circle cx="124" cy="95" r="4" fill="var(--paper)" fill-opacity="1" stroke="var(--live)" stroke-width="1.6"/>
+  <circle cx="316" cy="95" r="4" fill="var(--paper)" fill-opacity="1" stroke="var(--live)" stroke-width="1.6"/>
+  <circle cx="290.4" cy="95" r="3.4" fill="var(--d1)"/>
+  <text x="290.4" y="75" text-anchor="middle" fill="var(--d1)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">acero 0,3</text>
+  <line x1="124" y1="40" x2="238.4" y2="40" stroke="var(--d2)" stroke-width="1.6"/>
+  <path d="M244 40L237.6 37.1L237.6 42.9Z" fill="var(--d2)" stroke="none"/>
+  <text x="124" y="30" text-anchor="start" fill="var(--d2-tinta)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">G &gt; 0  ⇒  ν &gt; −1</text>
+  <line x1="316" y1="58" x2="201.6" y2="58" stroke="var(--d2)" stroke-width="1.6"/>
+  <path d="M196 58L202.4 60.9L202.4 55.1Z" fill="var(--d2)" stroke="none"/>
+  <text x="192" y="62" text-anchor="end" fill="var(--d2-tinta)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">k &gt; 0  ⇒  ν &lt; 0,5</text>
+</svg>
+<figcaption>
+
+**Los límites del coeficiente de Poisson.** G positivo deja ν a la derecha de
+−1, y k positivo, a la izquierda de 0,5. Los aceros de los ejemplos tienen
+0,3. En el límite de 0,5 el material no cambia de volumen.
+
+</figcaption>
+</figure>
+
+<ErrorTipico titulo="«ν está entre 0 y 0,5»">
+Los parciales del 20/11/2020 y del 18/11/2022 piden **justificar** entre qué
+valores está acotado $\nu$, y la respuesta del curso es $-1 \lt \nu \lt 0{,}5$, no
+$0 \lt \nu \lt 0{,}5$. Que casi todos los materiales tengan $\nu$ positivo es
+experiencia, no una consecuencia de la elasticidad. Y lo que se puntúa es la
+justificación: cada límite sale de un módulo que tiene que ser positivo, $G$
+para el de abajo y $k$ para el de arriba, cada uno con su motivo físico.
+</ErrorTipico>
+
+## El efecto de la temperatura
+
+Un cambio de temperatura solo da deformaciones normales, $\alpha\,\Delta T$
+en las tres direcciones, con $\alpha$ el coeficiente de dilatación y
+$\Delta T$ medido desde el estado sin deformación térmica. Por superposición
+(4.19):
+
+$$
+\varepsilon_x = \frac{1}{E}\left[\sigma_x - \nu(\sigma_y + \sigma_z)\right] + \alpha\,\Delta T
+$$
+
+y lo mismo en $y$ y en $z$; las tangenciales no cambian. Para Lamé se usan
+las deformaciones mecánicas, $\varepsilon' = \varepsilon - \alpha\Delta T$, y
+$e' = e - 3\alpha\Delta T$ (4.20-4.22). Una galga mide la deformación total
+entre dos situaciones, la térmica incluida (diapositiva 12).
+
+Dos casos extremos lo dicen todo. Una pieza de aluminio **libre** que se
+calienta 40 °C, con $\alpha = 23 \cdot 10^{-6}$ /°C, se alarga
+$\varepsilon = 920 \cdot 10^{-6}$ en cada dirección **sin ninguna
+tensión**. Si la misma barra está **impedida** en su eje, $\varepsilon = 0$ y,
+con $E = 70$ GPa,
+
+$$
+0 = \frac{\sigma}{E} + \alpha\,\Delta T
+\qquad\Longrightarrow\qquad
+\sigma = -E\,\alpha\,\Delta T = -64{,}4\ \text{MPa}
+$$
+
+de compresión: calentar una barra que no puede alargarse la comprime.
+
+<ErrorTipico titulo="La temperatura con el signo cambiado">
+La tensión térmica no es $+E\alpha\Delta T$: sale de imponer la condición de la
+pieza en la ley de Hooke **con su término térmico**, y el signo lo da la
+cuenta. Una barra impedida que se calienta queda comprimida; un alambre tenso
+entre dos soportes rígidos que se enfría queda **más** tenso, porque querría
+acortarse y no puede. Es la cuestión del parcial del 7/11/2016 —un alambre
+pretensado a 40 MPa a 20 °C: su tensión a 0 °C y la temperatura a la que se
+anula—, y la base de todas las barras con $\Delta T$ del tema 8. Y una pieza
+libre que se calienta no tiene tensión ninguna, por mucho que se dilate.
+</ErrorTipico>
+
+## Tensión plana y deformación plana
+
+**Tensión plana**: $\sigma_z = \tau_{zx} = \tau_{yz} = 0$ (4.23). Es lo que
+pasa en piezas delgadas y en la superficie de cualquier pieza, que es donde se
+pegan las galgas. Hooke da (4.24)
+
+$$
+\varepsilon_z = -\frac{\nu}{E}\,(\sigma_x + \sigma_y)
+$$
+
+que en general **no es cero**: solo se anula si $\sigma_x = -\sigma_y$ (p. 10).
+Y despejando las dos primeras (4.25):
+
+$$
+\sigma_x = \frac{E}{1 - \nu^{2}}\,(\varepsilon_x + \nu\,\varepsilon_y) \qquad
+\sigma_y = \frac{E}{1 - \nu^{2}}\,(\varepsilon_y + \nu\,\varepsilon_x) \qquad
+\tau_{xy} = G\,\gamma_{xy}
+$$
+
+Estas son las que se usan después de una roseta.
+
+**Deformación plana**: $\varepsilon_z = \gamma_{zx} = \gamma_{yz} = 0$ (4.26).
+Pasa en el interior de piezas muy gruesas, donde el material no puede
+deformarse en $z$; para impedirlo aparece
+$\sigma_z = \nu(\sigma_x + \sigma_y)$.
+
+<ErrorTipico titulo="Pasar de galgas a tensiones con σ = Eε">
+$\sigma = E\varepsilon$ es la ley de Hooke de una barra a tracción simple, con
+las otras dos tensiones nulas. En la superficie de una pieza hay dos
+tensiones en el plano, y cada una influye en la deformación de la otra
+dirección: hay que usar (4.25). Las finales del 19/1/2018 y del 16/1/2019, y
+la extraordinaria del 29/1/2020, pasan de una roseta a las tensiones, y las
+dos finales dan $E$ y $G$, no $\nu$: se saca de $G = E/[2(1 + \nu)]$. El otro fallo es suponer que en tensión plana
+$\varepsilon_z = 0$. En general no lo es —solo si $\sigma_x = -\sigma_y$—, y
+hace falta para las principales en el espacio: el parcial del 14/11/2016 las
+pedía.
+</ErrorTipico>
+
+## Un prisma en un hueco rígido
+
+Es el problema de este tema que cae solo, con muchas variantes: dos cubos
+entre paredes (la final del 13/1/2014 y la extraordinaria de 2015), un prisma
+entre dos placas unidas por cables (los parciales de 2012 y 2014), una columna
+en un hueco con holgura (el parcial de noviembre de 2015 y el simulacro de
+2019) o dos bloques en un marco (el parcial del 18/11/2022). Siempre se
+resuelve igual: **cada dirección da una condición**, y con las tres ecuaciones
+de Hooke hay tantas como incógnitas.
+
+- **Cara cargada**: la tensión es dato. $\sigma_y = -p$ si la presión
+  comprime.
+- **Cara libre**: la tensión es nula, y la deformación, la que salga.
+- **Pared rígida sin holgura**: la deformación es nula, y la tensión, la que
+  haga falta para conseguirlo.
+
+<figure>
+<svg viewBox="0 0 400 280" role="img" width="400" height="280" aria-labelledby="t04-hueco-t t04-hueco-d">
+  <title id="t04-hueco-t">Un prisma comprimido dentro de un hueco rígido</title>
+  <desc id="t04-hueco-d">Un prisma apoyado en un suelo rígido, entre dos paredes rígidas que le impiden alargarse en x, y comprimido desde arriba con una presión p en y. Las caras perpendiculares a z, la del papel, están libres. Las paredes empujan el prisma hacia dentro: aparece una σx de compresión.</desc>
+  <line x1="140" y1="45" x2="140" y2="215" stroke="var(--ink)" stroke-width="2.2"/>
+  <line x1="260" y1="45" x2="260" y2="215" stroke="var(--ink)" stroke-width="2.2"/>
+  <line x1="139" y1="49" x2="131" y2="57" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="49" x2="269" y2="57" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="58" x2="131" y2="66" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="58" x2="269" y2="66" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="67" x2="131" y2="75" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="67" x2="269" y2="75" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="76" x2="131" y2="84" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="76" x2="269" y2="84" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="85" x2="131" y2="93" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="85" x2="269" y2="93" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="94" x2="131" y2="102" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="94" x2="269" y2="102" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="103" x2="131" y2="111" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="103" x2="269" y2="111" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="112" x2="131" y2="120" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="112" x2="269" y2="120" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="121" x2="131" y2="129" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="121" x2="269" y2="129" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="130" x2="131" y2="138" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="130" x2="269" y2="138" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="139" x2="131" y2="147" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="139" x2="269" y2="147" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="148" x2="131" y2="156" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="148" x2="269" y2="156" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="157" x2="131" y2="165" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="157" x2="269" y2="165" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="166" x2="131" y2="174" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="166" x2="269" y2="174" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="175" x2="131" y2="183" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="175" x2="269" y2="183" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="184" x2="131" y2="192" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="184" x2="269" y2="192" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="193" x2="131" y2="201" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="193" x2="269" y2="201" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="202" x2="131" y2="210" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="202" x2="269" y2="210" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="139" y1="211" x2="131" y2="219" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="261" y1="211" x2="269" y2="219" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="130" y1="215" x2="270" y2="215" stroke="var(--ink)" stroke-width="2.2"/>
+  <line x1="134" y1="216" x2="126" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="143" y1="216" x2="135" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="152" y1="216" x2="144" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="161" y1="216" x2="153" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="170" y1="216" x2="162" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="179" y1="216" x2="171" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="188" y1="216" x2="180" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="197" y1="216" x2="189" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="206" y1="216" x2="198" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="215" y1="216" x2="207" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="224" y1="216" x2="216" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="233" y1="216" x2="225" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="242" y1="216" x2="234" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="251" y1="216" x2="243" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="260" y1="216" x2="252" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <line x1="269" y1="216" x2="261" y2="224" stroke="var(--faint)" stroke-width="0.9"/>
+  <rect x="141.5" y="95" width="117" height="120" fill="var(--faint)" fill-opacity="0.12" stroke="var(--ink)" stroke-width="1.4"/>
+  <line x1="156" y1="53" x2="156" y2="88.2" stroke="var(--d1)" stroke-width="1.6"/>
+  <path d="M156 93L158.4 87.5L153.6 87.5Z" fill="var(--d1)" stroke="none"/>
+  <line x1="178" y1="53" x2="178" y2="88.2" stroke="var(--d1)" stroke-width="1.6"/>
+  <path d="M178 93L180.4 87.5L175.6 87.5Z" fill="var(--d1)" stroke="none"/>
+  <line x1="200" y1="53" x2="200" y2="88.2" stroke="var(--d1)" stroke-width="1.6"/>
+  <path d="M200 93L202.4 87.5L197.6 87.5Z" fill="var(--d1)" stroke="none"/>
+  <line x1="222" y1="53" x2="222" y2="88.2" stroke="var(--d1)" stroke-width="1.6"/>
+  <path d="M222 93L224.4 87.5L219.6 87.5Z" fill="var(--d1)" stroke="none"/>
+  <line x1="244" y1="53" x2="244" y2="88.2" stroke="var(--d1)" stroke-width="1.6"/>
+  <path d="M244 93L246.4 87.5L241.6 87.5Z" fill="var(--d1)" stroke="none"/>
+  <text x="276" y="65" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">p</text>
+  <line x1="145" y1="165" x2="175.2" y2="165" stroke="var(--live)" stroke-width="1.6"/>
+  <path d="M180 165L174.5 162.6L174.5 167.4Z" fill="var(--live)" stroke="none"/>
+  <line x1="255" y1="165" x2="224.8" y2="165" stroke="var(--live)" stroke-width="1.6"/>
+  <path d="M220 165L225.5 167.4L225.5 162.6Z" fill="var(--live)" stroke="none"/>
+  <text x="200" y="241" text-anchor="middle" fill="var(--live)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">ε<tspan dy="3" font-size="7.4">x</tspan><tspan dy="-3"> = 0  →  σ</tspan><tspan dy="3" font-size="7.4">x</tspan><tspan dy="-3"> = ν σ</tspan><tspan dy="3" font-size="7.4">y</tspan></text>
+  <text x="200" y="140" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">z libre: σ<tspan dy="2.9" font-size="7">z</tspan><tspan dy="-2.8"> = 0</tspan></text>
+  <text x="126" y="169" text-anchor="end" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">pared</text>
+  <text x="274" y="169" text-anchor="start" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">pared</text>
+  <line x1="24" y1="262" x2="55.2" y2="262" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M60 262L54.5 259.6L54.5 264.4Z" fill="var(--ink)" stroke="none"/>
+  <line x1="24" y1="262" x2="24" y2="230.8" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M24 226L21.6 231.5L26.4 231.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="64" y="266" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <text x="29" y="228" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+</svg>
+<figcaption>
+
+**El esquema del prisma en un hueco.** Las paredes impiden la deformación en x,
+y las caras de z están libres. Al comprimirlo en y, el prisma querría
+ensancharse en x; la pared no le deja y lo empuja hacia dentro: σx sale de
+compresión.
+
+</figcaption>
+</figure>
+
+Con $\varepsilon_x = 0$, $\sigma_z = 0$ y $\sigma_y$ dada, la primera de Hooke
+da $\sigma_x - \nu\sigma_y = 0$, es decir **$\sigma_x = \nu\,\sigma_y$**: del
+mismo signo que $\sigma_y$. Si $\sigma_y$ comprime, la pared también.
+
+<ErrorTipico titulo="Libre no es impedido, y la pared empuja">
+Dos fallos que se ven en todos los problemas de este tipo. El primero,
+confundir las condiciones: en una dirección **libre** se anula la tensión, no
+la deformación; en una dirección **impedida** se anula la deformación, no la
+tensión. Nunca las dos a la vez. El segundo, el signo: la pared solo puede
+empujar, así que si sale una $\sigma_x$ de tracción, alguna condición está mal
+puesta. Y **con holgura**, antes de nada se calcula si el prisma llega a tocar
+la pared: mientras no toca, esa dirección está libre.
+</ErrorTipico>
+
+## La energía de deformación
+
+Las tensiones hacen trabajo al deformar el elemento, y en un material elástico
+ese trabajo se guarda como **energía de deformación**, igual que en un muelle
+se guarda $\tfrac12 F x$. Por unidad de volumen (4.36):
+
+$$
+U_0 = \frac12\left(\sigma_x\varepsilon_x + \sigma_y\varepsilon_y + \sigma_z\varepsilon_z + \tau_{xy}\gamma_{xy} + \tau_{yz}\gamma_{yz} + \tau_{zx}\gamma_{zx}\right)
+$$
+
+y la del cuerpo es $U = \int_V U_0\,dV$ (4.37). El $\tfrac12$ viene de que la
+tensión crece con la deformación desde cero. La deducción usa las ecuaciones
+de equilibrio del tema 2 para anular los términos con desplazamientos (4.34),
+y vale para cualquier material elástico lineal, isótropo o no (diapositiva 16).
+
+## Cómo se trabaja aquí
+
+El ejercicio de este tema es nuestro: un cubo metido en un hueco rígido que le
+impide deformarse en $x$, libre en $z$ y comprimido en $y$, con números de
+aluminio. Primero se reconocen las condiciones de cada dirección, que es donde
+se decide el problema; después se calculan la tensión que hace la pared, la
+deformación en $z$ y el cambio de volumen, con diagnóstico para quien pone la
+pared tirando, para quien se olvida de ella y para quien solo suma una
+deformación. Al final se ordena el razonamiento.
+
+Para el parcial, las cuestiones de este tema son cortas y se preguntan casi
+literalmente: Lamé, los límites de $\nu$, $G = E/[2(1 + \nu)]$ y por qué las
+direcciones principales coinciden. Y en los problemas de galgas del tema 3,
+este tema es el paso del medio: de las deformaciones de la roseta a las
+tensiones, con (4.25).
+
+## Lo que hay que llevar sabido
+
+- **Hooke**: $\varepsilon_x = [\sigma_x - \nu(\sigma_y + \sigma_z)]/E + \alpha\Delta T$,
+  y lo mismo en $y$ y $z$; $\gamma_{xy} = \tau_{xy}/G$.
+- **Constantes**: $G = E/[2(1 + \nu)]$, $\lambda = \nu E/[(1 + \nu)(1 - 2\nu)]$,
+  $k = E/[3(1 - 2\nu)] = \lambda + \tfrac23 G$; $-1 \lt \nu \lt 0{,}5$ porque
+  $G \gt 0$ y $k \gt 0$.
+- **Lamé**: $\sigma_x = 2G\varepsilon_x + \lambda e$, con
+  $e = \varepsilon_x + \varepsilon_y + \varepsilon_z$; $\tau_{xy} = G\gamma_{xy}$.
+- **Volumen**: $e = (1 - 2\nu)(\sigma_x + \sigma_y + \sigma_z)/E$; solo la
+  parte esférica cambia el volumen.
+- **Tensión plana**: $\sigma_x = E(\varepsilon_x + \nu\varepsilon_y)/(1 - \nu^{2})$,
+  y $\varepsilon_z = -\nu(\sigma_x + \sigma_y)/E$, que no es cero salvo si
+  $\sigma_x = -\sigma_y$.
+- **Deformación plana**: $\varepsilon_z = 0$ y $\sigma_z = \nu(\sigma_x + \sigma_y)$.
+- **Condiciones**: cara libre, $\sigma = 0$; pared sin holgura, $\varepsilon = 0$;
+  la pared empuja. Impedida y calentada, $\sigma = -E\alpha\Delta T$.
+- **Energía**: $U_0 = \tfrac12(\sigma_x\varepsilon_x + \dots + \tau_{xy}\gamma_{xy} + \dots)$.

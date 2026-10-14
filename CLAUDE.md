@@ -145,6 +145,13 @@ Un corte con fecha, no un estado: el vivo lo dicen el catálogo y
 El corpus, ese día: 83 temas publicados, 1.948 ejercicios y 8.487 pasos,
 141 convocatorias con 124 PDF, 15 rutas con 328 escalones y 10 simuladores.
 
+Después de ese corte entró una décima, **Elasticidad y Resistencia de
+Materiales** (2.º, `obra`), el 14 de octubre de 2026: abierta deprisa para el
+parcial 1 del 30 de octubre, con los temas 2 a 8, cuatro parciales 1
+resueltos y su motor de cálculo (`src/lib/erm/`). En la portada sale **solo
+como botón del héroe**, por decisión de Ionan: lo dice su catálogo
+(`portada: 'boton'`) y lo comprueba `verify.mjs`.
+
 ### El orden que queda
 
 Decidido por quien mantiene el proyecto, en septiembre de 2026: **Expresión
@@ -264,7 +271,7 @@ src/
                            importante del repo: es donde un dato malo
                            rompe el build en vez de llegar a un alumno.
   content/
-    catalogo/              una entrada .json por asignatura (las nueve)
+    catalogo/              una entrada .json por asignatura (las diez)
     calculo/               una carpeta por asignatura con temas escritos
       t01-complejos/
         index.mdx          la prosa del tema

@@ -170,6 +170,20 @@ const catalogo = defineCollection({
       curso: z.union([z.literal(1), z.literal(2)]),
       orden: z.number().int().min(1),
       estado: z.enum(['ok', 'obra', 'prev']),
+      /** Cómo sale en la portada: `lista`, con su fila en el temario de la
+       *  pizarra y su detalle, como todas; o `boton`, **solo** como un botón
+       *  más del héroe —«Entrar a …»— que lleva a su página, sin fila, sin
+       *  detalle y fuera de la paleta.
+       *
+       *  Entra el 14 de octubre de 2026 con Elasticidad y Resistencia de
+       *  Materiales, que se abrió deprisa para un parcial concreto y que Ionan
+       *  quiso en la portada así: «hazlo solo con un enlace clicable aquí
+       *  donde entrar a cálculo, pon entrar a y el nombre de la asignatura».
+       *  Es un dato de la asignatura y no un `if` en la plantilla para que la
+       *  próxima que llegue igual no necesite tocar la portada; y lo vigila
+       *  `verify.mjs`, que comprueba en la portada construida que cada una
+       *  sale como dice aquí. */
+      portada: z.enum(['lista', 'boton']).default('lista'),
       /** Por qué esta asignatura todavía no está, dicho para el alumno que
        *  entra buscándola y se encuentra un «Todavía no».
        *
@@ -1468,6 +1482,7 @@ const TODAS_CON_TEMAS = [
   'ciencia-materiales',
   'mecanica-aplicada',
   'expresion-grafica',
+  'elasticidad-resistencia',
 ] as const;
 export type ConTemas = (typeof TODAS_CON_TEMAS)[number];
 

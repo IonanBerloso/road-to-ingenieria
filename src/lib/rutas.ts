@@ -20,10 +20,12 @@ export function rutaInicio(): string {
 }
 
 /** Adonde lleva el nombre de la asignatura en la cabecera de sus páginas:
- *  su ficha en la portada (`/#id`), o, en la edición de una sola, la propia
- *  página de la asignatura. */
-export function rutaAsignatura(id: string): string {
-  return enSolo ? ruta(id) : `${ruta()}#${id}`;
+ *  su ficha en la portada (`/#id`), o la propia página de la asignatura
+ *  cuando no hay ficha a la que volver —en la edición de una sola, y en una
+ *  asignatura que la portada pinta solo como botón (`conFicha` falso, que es
+ *  `portada: 'boton'` en su catálogo)—. */
+export function rutaAsignatura(id: string, conFicha = true): string {
+  return enSolo || !conFicha ? ruta(id) : `${ruta()}#${id}`;
 }
 
 /** Lo mismo, pero para un fichero de `public/`: **sin** barra final.

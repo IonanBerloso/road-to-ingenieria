@@ -16,7 +16,7 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Seis asignaturas terminadas de nueve: Cálculo, Álgebra, Mecánica de Fluidos,
+**Seis asignaturas terminadas de diez: Cálculo, Álgebra, Mecánica de Fluidos,
 Fundamentos Químicos, Ingeniería Térmica y Mecánica Aplicada.** Las seis
 cumplen §15 entera y las seis están en el catálogo como `ok`. Entre las seis,
 **146 convocatorias transcritas** —las 118 de las cuatro primeras, veinte de
@@ -949,10 +949,13 @@ que la auditoría del 13 de septiembre marcó como el hueco no declarado de esta
 asignatura.
 
 **Las que quedan sin abrir.** El estado de cada asignatura lo decide
-`src/content/catalogo/*.json` y no esta página: al 26 de septiembre de 2026 son
-seis en `ok`, tres en `obra` —Materiales, Sistemas de Producción y, desde ese
-día, Expresión Gráfica, con su temario y su evaluación copiados de la guía— y
-ninguna en `prev`. Hasta ese día decía «una sola en `prev`», con fecha del 13.
+`src/content/catalogo/*.json` y no esta página: al 14 de octubre de 2026 son
+seis en `ok`, cuatro en `obra` —Materiales, Sistemas de Producción, Expresión
+Gráfica, con su temario y su evaluación copiados de la guía desde el 26 de
+septiembre, y, desde el 14 de octubre, Elasticidad y Resistencia de Materiales,
+abierta para su parcial 1— y ninguna en `prev`. Hasta ese día decía «tres en
+`obra`», con fecha del 26 de septiembre; antes, «una sola en `prev`», con fecha
+del 13.
 
 > Aquí ponía «**las otras tres** siguen en `prev`, con cero contenido:
 > Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción», y era falso

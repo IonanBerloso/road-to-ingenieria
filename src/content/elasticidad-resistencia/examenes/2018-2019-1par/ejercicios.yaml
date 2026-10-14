@@ -1,0 +1,1952 @@
+ejercicios:
+  # ── Teoría · cuestión 1 · el tetraedro de Cauchy: {S} = [σ]{n}.
+  - id: exerm1819-1par-1-el-tetraedro-de-cauchy
+    titulo: El tetraedro de Cauchy, o cómo sale el vector tensión de cualquier plano
+    fuente: >-
+      Cuestión 1 de teoría · Primer parcial del 16 de noviembre de 2018 ·
+      Elasticidad y Resistencia de Materiales, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Vale 1 punto. El examen no publica resolución; el
+      desarrollo es nuestro y sigue los apuntes del tema 2, apartado 2.4.1.
+    nivel: examen
+    enunciado: |
+      (1p) Deducir la relación entre el vector tensión correspondiente a un
+      plano que pasa por el origen y las tensiones normales y tangenciales de
+      los planos coordenados.
+    pide: >-
+      La deducción de {S} = [σ]{n} con el equilibrio del tetraedro elemental:
+      las tres componentes del vector tensión de un plano cualquiera en
+      función de σx, σy, σz, τxy, τyz, τzx y de la normal.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          En el tetraedro OABC, el plano inclinado ABC tiene normal
+          $\hat{n} = (n_x, n_y, n_z)$. ¿Cuánto vale el área de la cara OBC, la
+          perpendicular al eje $x$?
+        opciones:
+          - texto: El área de ABC multiplicada por $n_x$
+            correcta: true
+            mensaje: |
+              Eso es (ec. 2.11). OBC es la proyección de ABC sobre el plano
+              $yz$, y proyectar multiplica el área por el coseno del ángulo
+              entre las dos normales, que es $n_x$. Con las tres caras igual,
+              al dividir el equilibrio por el área de ABC solo quedan las
+              componentes de $\hat{n}$.
+          - texto: La misma que ABC, porque las cuatro caras son diferenciales
+            mensaje: |
+              Son diferenciales las cuatro, pero no iguales: OBC es la
+              proyección de ABC y es más pequeña. Si fueran iguales, el vector
+              tensión de ABC no dependería de su orientación, y depende.
+          - texto: El área de ABC dividida por $n_x$
+            mensaje: |
+              Al revés: ABC es la cara grande y OBC su proyección, así que
+              $\text{OBC} = n_x\cdot\text{ABC}$ con $n_x \le 1$. Dividiendo
+              saldría una cara coordenada mayor que la inclinada.
+          - texto: >-
+              No se puede saber sin las fuerzas de volumen, que entran en el
+              equilibrio
+            mensaje: |
+              Las fuerzas de volumen entran, pero multiplicadas por el volumen
+              del tetraedro, que es un infinitésimo de orden superior a las
+              áreas: al dividir por el área de ABC y hacer el tetraedro cada
+              vez más pequeño, desaparecen. Las áreas salen de la geometría.
+      - tipo: calcular
+        titulo: La componente x del vector tensión, en un ejemplo
+        pregunta: |
+          Un ejemplo nuestro con el tensor del parcial del 3 de noviembre de
+          2017:
+
+          $$
+          [\sigma] = \begin{bmatrix} 5 & 0 & -12\\ 0 & -6 & 0\\ -12 & 0 & 1 \end{bmatrix}\ \text{MPa},
+          \qquad \hat{n} = \tfrac{1}{3}(2,\ 1,\ 2)
+          $$
+
+          ¿Cuánto vale $S_{nx}$, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '-4.6667'
+          tolerancia: 0.002
+          formato: un número, en MPa (vale -14/3)
+        distractores:
+          - valor: '3.3333'
+            mensaje: |
+              Te has quedado con $\sigma_x n_x = 5\cdot\tfrac23$. En la cara
+              perpendicular a $x$ actúan también las tangenciales: la
+              componente $x$ del vector tensión recoge $\tau_{yx}n_y$ y
+              $\tau_{zx}n_z$, y aquí $\tau_{zx} = -12$ pesa más que $\sigma_x$.
+          - valor: '-14'
+            mensaje: |
+              Has multiplicado por $(2, 1, 2)$ sin dividir por 3. La normal
+              tiene que ser **unitaria**: las áreas de las caras son
+              $n_x$, $n_y$ y $n_z$ veces la de ABC solo si $|\hat{n}| = 1$.
+        pista: |
+          $S_{nx} = \sigma_x n_x + \tau_{yx} n_y + \tau_{zx} n_z$ (ec. 2.13).
+        desarrollo: |
+          $$
+          S_{nx} = 5\cdot\tfrac23 + 0\cdot\tfrac13 + (-12)\cdot\tfrac23 = -\tfrac{14}{3} = -4{,}667\ \text{MPa}
+          $$
+
+          Igual, $S_{ny} = -6\cdot\tfrac13 = -2$ y
+          $S_{nz} = -12\cdot\tfrac23 + 1\cdot\tfrac23 = -\tfrac{22}{3}$ MPa.
+      - tipo: calcular
+        titulo: La tensión normal en ese plano
+        pregunta: |
+          Con el mismo ejemplo, ¿cuánto vale la componente normal
+          $\sigma_n = \{n\}^{t}\{S_n\}$, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '-8.6667'
+          tolerancia: 0.002
+          formato: un número, en MPa (vale -26/3)
+        distractores:
+          - valor: '8.9194'
+            mensaje: |
+              Es el módulo de $\vec{S}_n$, $\sqrt{(14/3)^{2} + 2^{2} + (22/3)^{2}}$.
+              La componente normal es la **proyección** de $\vec{S}_n$ sobre
+              $\hat{n}$ (ec. 2.16), y puede ser negativa: aquí el plano está
+              comprimido. El módulo junta la normal y la tangencial.
+          - valor: '2'
+            mensaje: |
+              Has usado solo la diagonal, $\sigma_x n_x^{2} + \sigma_y n_y^{2} +
+              \sigma_z n_z^{2} = \tfrac{20 - 6 + 4}{9}$. Esa fórmula vale en
+              **ejes principales**; con tangenciales falta
+              $2\tau_{zx}n_zn_x = 2(-12)\tfrac49$.
+        pista: |
+          $\sigma_n = n_xS_{nx} + n_yS_{ny} + n_zS_{nz}$, con las tres
+          componentes del paso anterior.
+        desarrollo: |
+          $$
+          \sigma_n = \tfrac23\left(-\tfrac{14}{3}\right) + \tfrac13(-2) + \tfrac23\left(-\tfrac{22}{3}\right)
+          = -\tfrac{26}{3} = -8{,}667\ \text{MPa}
+          $$
+
+          y la tangencial, $\tau_n = \sqrt{|\vec{S}_n|^{2} - \sigma_n^{2}} = 2{,}108$ MPa (ec. 2.16).
+      - tipo: redactar
+        que: deduccion
+        consigna: >-
+          Escribe la deducción completa, como en el examen: el tetraedro, las
+          fuerzas sobre sus cuatro caras, las áreas y el resultado.
+        rubrica:
+          - punto: >-
+              Se aísla el tetraedro OABC con tres caras en los planos
+              coordenados y la cuarta, ABC, de normal n = (nx, ny, nz), con un
+              dibujo.
+            porque: >-
+              Es la idea de la cuestión: el plano por el origen se «construye»
+              cortando un trocito de sólido cuyas otras caras sí tienen
+              tensiones conocidas.
+            minimo: true
+          - punto: >-
+              Se escriben los vectores tensión de las caras coordenadas, que
+              tienen normal exterior negativa: Sx = −σx i − τxy j − τxz k, y
+              los otros dos igual (ec. 2.9).
+            porque: >-
+              Los signos menos son lo que se suele perder. Las caras del
+              tetraedro miran hacia −x, −y y −z, y con el convenio del curso
+              una componente positiva va en sentido negativo sobre una cara
+              negativa.
+            minimo: true
+          - punto: >-
+              Se plantea el equilibrio de fuerzas: Sn·ABC + Sx·OBC + Sy·OAC +
+              Sz·OAB + F·dV = 0 (ec. 2.10).
+            porque: >-
+              Se multiplica cada tensión por el área de su cara: lo que se
+              equilibra son fuerzas, no tensiones.
+            minimo: true
+          - punto: >-
+              Se justifican las áreas, OBC = nx·ABC, OAC = ny·ABC,
+              OAB = nz·ABC: cada cara coordenada es la proyección de ABC.
+            porque: >-
+              Es el paso que convierte áreas en componentes de la normal. Sin
+              el porqué la deducción es una afirmación.
+            minimo: true
+          - punto: >-
+              Se divide por el área de ABC y se desprecia el término de las
+              fuerzas de volumen, porque dV es de orden superior a las áreas.
+            porque: >-
+              Si se olvida, el resultado depende del tamaño del tetraedro. Es
+              un punto pequeño que el corrector mira.
+          - punto: >-
+              Se llega a Snx = σx nx + τyx ny + τzx nz y las otras dos
+              (ec. 2.13), y se escriben en forma matricial, {Sn} = [σ]{n}
+              (ec. 2.14).
+            porque: >-
+              Es la respuesta. La forma matricial es la que dice que el
+              tensor de tensiones transforma la normal en el vector tensión.
+            minimo: true
+      - tipo: justificar
+        pregunta: Ordena la deducción. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Se aísla el tetraedro OABC: tres caras en los planos
+              coordenados, de normal exterior $-\hat{\imath}$, $-\hat{\jmath}$
+              y $-\hat{k}$, y la cara ABC de normal $\hat{n}$.
+          - texto: >-
+              Los vectores tensión de las caras coordenadas llevan el signo
+              cambiado: $\vec{S}_x = -\sigma_x\hat{\imath} - \tau_{xy}\hat{\jmath} - \tau_{xz}\hat{k}$,
+              y lo mismo $\vec{S}_y$ y $\vec{S}_z$.
+          - texto: >-
+              Equilibrio:
+              $\vec{S}_n\,\text{ABC} + \vec{S}_x\,\text{OBC} + \vec{S}_y\,\text{OAC} + \vec{S}_z\,\text{OAB} + \vec{F}\,dV = 0$,
+              con $\text{OBC} = n_x\,\text{ABC}$, $\text{OAC} = n_y\,\text{ABC}$ y $\text{OAB} = n_z\,\text{ABC}$.
+          - texto: >-
+              Se divide por ABC; $\vec{F}\,dV/\text{ABC}$ tiende a cero con
+              el tetraedro, y queda $S_{nx} = \sigma_xn_x + \tau_{yx}n_y + \tau_{zx}n_z$
+              y sus dos compañeras: $\{S_n\} = [\sigma]\{n\}$.
+          - texto: >-
+              Como las cuatro caras son diferenciales, se toman con la misma
+              área y el vector tensión de ABC es la suma de los tres de las
+              caras coordenadas.
+            trampa: true
+            mensaje: |
+              Las caras coordenadas son **proyecciones** de ABC, de áreas
+              $n_x$, $n_y$ y $n_z$ veces la suya. Con áreas iguales saldría
+              $\vec{S}_n = \vec{S}_x' + \vec{S}_y' + \vec{S}_z'$, que no
+              depende de $\hat{n}$: todos los planos tendrían la misma tensión.
+    resolucion: |
+      **La idea.** Se conocen las tensiones de los tres planos coordenados
+      que pasan por O y se quiere la de un plano cualquiera por O. Se corta
+      un tetraedro diminuto con tres caras en los planos coordenados y la
+      cuarta en el plano buscado, y se le exige equilibrio (apuntes del tema
+      2, apartado 2.4.1, figuras 2.8 y 2.9).
+
+      **Las caras coordenadas.** Sus normales exteriores son $-\hat{\imath}$,
+      $-\hat{\jmath}$ y $-\hat{k}$: son caras negativas, y una componente
+      positiva actúa ahí en sentido negativo (ec. 2.9):
+
+      $$
+      \vec{S}_x = -\sigma_x\hat{\imath} - \tau_{xy}\hat{\jmath} - \tau_{xz}\hat{k},\quad
+      \vec{S}_y = -\tau_{yx}\hat{\imath} - \sigma_y\hat{\jmath} - \tau_{yz}\hat{k},\quad
+      \vec{S}_z = -\tau_{zx}\hat{\imath} - \tau_{zy}\hat{\jmath} - \sigma_z\hat{k}
+      $$
+
+      **El equilibrio** (ec. 2.10), con $\vec{F}$ la fuerza por unidad de
+      volumen:
+
+      $$
+      \vec{S}_n\,\text{ABC} + \vec{S}_x\,\text{OBC} + \vec{S}_y\,\text{OAC} + \vec{S}_z\,\text{OAB} + \vec{F}\,dV = 0
+      $$
+
+      **Las áreas.** Cada cara coordenada es la proyección de ABC sobre su
+      plano, y proyectar multiplica por el coseno del ángulo entre normales
+      (ec. 2.11):
+
+      $$
+      \text{OBC} = n_x\,\text{ABC},\qquad \text{OAC} = n_y\,\text{ABC},\qquad \text{OAB} = n_z\,\text{ABC}
+      $$
+
+      **El resultado.** Se divide por ABC. El término $\vec{F}\,dV/\text{ABC}$
+      es del orden del tamaño del tetraedro y desaparece al hacerlo tender a
+      cero. Queda (ecs. 2.13 y 2.14):
+
+      $$
+      \begin{aligned}
+      S_{nx} &= \sigma_x n_x + \tau_{yx} n_y + \tau_{zx} n_z\\
+      S_{ny} &= \tau_{xy} n_x + \sigma_y n_y + \tau_{zy} n_z\\
+      S_{nz} &= \tau_{xz} n_x + \tau_{yz} n_y + \sigma_z n_z
+      \end{aligned}
+      \qquad\Longleftrightarrow\qquad \{S_n\} = [\sigma]\{n\}
+      $$
+
+      La matriz es simétrica ($\tau_{ij} = \tau_{ji}$, ecs. 2.6-2.8), y es el
+      tensor de tensiones: transforma la normal de un plano en su vector
+      tensión. Sus componentes intrínsecas son
+      $\sigma_n = \{n\}^{t}[\sigma]\{n\}$ y $\tau_n^{2} = |\vec{S}_n|^{2} - \sigma_n^{2}$
+      (ec. 2.16).
+
+      **Un ejemplo con números** (nuestro, con el tensor del parcial del
+      3/11/2017): con $\hat{n} = \tfrac13(2, 1, 2)$, $\{S_n\} = (-\tfrac{14}{3},\ -2,\ -\tfrac{22}{3})$
+      MPa, $\sigma_n = -\tfrac{26}{3} = -8{,}667$ MPa y $\tau_n = 2{,}108$ MPa.
+
+  # ── Teoría · cuestión 2 · dos deformaciones principales iguales. Va en
+  #    la hoja de teoría, pero es un cálculo.
+  - id: exerm1819-1par-2-dos-deformaciones-principales-iguales
+    titulo: Dos deformaciones principales iguales, y la dirección k
+    fuente: >-
+      Cuestión 2 de teoría · Primer parcial del 16 de noviembre de 2018 ·
+      Elasticidad y Resistencia de Materiales, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Vale 1 punto. El examen no publica resolución; el
+      desarrollo es nuestro y sigue los apuntes del tema 3, apartados 3.5.2
+      y 3.6.
+    nivel: examen
+    enunciado: |
+      (1p) La matriz de deformaciones en un punto O interior de un sólido
+      elástico, referida a los ejes principales es:
+
+      $$
+      [\varepsilon] = \begin{bmatrix} 5 & 0 & 0\\ 0 & 5 & 0\\ 0 & 0 & -2 \end{bmatrix} 10^{-4}
+      $$
+
+      La dirección principal 3 en el sistema de referencia O*xyz* viene dada
+      por $\hat{e}_3 = \frac{1}{\sqrt{2}}\left(\hat{\imath} + \hat{\jmath}\right)$.
+      Determinar:
+
+      a/ $\hat{e}_1$ y $\hat{e}_2$ de las direcciones principales 1 y 2 en el
+      sistema O*xyz*.
+
+      b/ Componentes longitudinal y transversal del vector deformación en la
+      dirección $\hat{u} = \hat{k}$.
+    pide: >-
+      Dos vectores unitarios para las direcciones 1 y 2 en Oxyz, y la
+      deformación longitudinal εu y la transversal ½γu de la dirección k.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $\varepsilon_1 = \varepsilon_2 = 5\cdot10^{-4}$. ¿Qué dice eso de las
+          direcciones principales 1 y 2?
+        opciones:
+          - texto: >-
+              Cualquier dirección perpendicular a $\hat{e}_3$ es principal: hay
+              infinitas parejas $\hat{e}_1$, $\hat{e}_2$ válidas
+            correcta: true
+            mensaje: |
+              Eso es. En el plano perpendicular a $\hat{e}_3$ el tensor es
+              $5\cdot10^{-4}$ por la identidad: estira todas las direcciones
+              lo mismo y no distorsiona ningún ángulo recto. El examen pide
+              «$\hat{e}_1$ y $\hat{e}_2$», y la respuesta es **una pareja**
+              ortonormal de ese plano, diciendo que hay más.
+          - texto: >-
+              Hay que diagonalizar el tensor en Oxyz para encontrarlas, y salen
+              únicas
+            mensaje: |
+              Con dos valores propios iguales el subespacio propio es un
+              plano entero: la diagonalización no elige dentro de él. Por eso
+              el examen solo da $\hat{e}_3$, que sí es única.
+          - texto: >-
+              Son $\hat{\imath}$ y $\hat{\jmath}$, porque el tensor viene en
+              ejes principales y los ejes son $x$, $y$ y $z$
+            mensaje: |
+              $\hat{\imath}$ y $\hat{\jmath}$ no son perpendiculares a
+              $\hat{e}_3 = (\hat{\imath} + \hat{\jmath})/\sqrt2$: forman 45° con
+              ella. Los ejes principales **no** son los de O*xyz*; esa es la
+              trampa del enunciado.
+      - tipo: calcular
+        titulo: La componente longitudinal en la dirección k
+        pregunta: |
+          ¿Cuánto vale la deformación longitudinal $\varepsilon_u$ en la
+          dirección $\hat{u} = \hat{k}$, en unidades de $10^{-4}$?
+        respuesta:
+          tipo: numero
+          valor: '5'
+          tolerancia: 0.001
+          formato: un número, en unidades de 10⁻⁴
+        distractores:
+          - valor: '-2'
+            mensaje: |
+              Has tomado $\hat{k}$ por la dirección 3, como si el tensor
+              estuviera en O*xyz*. La 3 es $(\hat{\imath} + \hat{\jmath})/\sqrt2$,
+              y $\hat{k}$ es **perpendicular** a ella: está en el plano de las
+              principales iguales.
+          - valor: '1.5'
+            mensaje: |
+              $1{,}5\cdot10^{-4}$ es $\varepsilon_x$, la deformación según
+              $\hat{\imath}$, que tiene la mitad de su peso en la dirección 3:
+              $5\cdot\tfrac12 + (-2)\cdot\tfrac12$. La dirección pedida es
+              $\hat{k}$, que no tiene nada de $\hat{e}_3$.
+        pista: |
+          $\hat{k}\cdot\hat{e}_3 = 0$. En ejes principales,
+          $\varepsilon_u = \varepsilon_1u_1^{2} + \varepsilon_2u_2^{2} + \varepsilon_3u_3^{2}$.
+        desarrollo: |
+          Las componentes de $\hat{k}$ en ejes principales cumplen
+          $u_1^{2} + u_2^{2} = 1$ y $u_3 = \hat{k}\cdot\hat{e}_3 = 0$:
+
+          $$
+          \varepsilon_u = 5\cdot10^{-4}\left(u_1^{2} + u_2^{2}\right) + (-2)\cdot10^{-4}\cdot0 = 5\cdot10^{-4}
+          $$
+
+          sea cual sea la pareja $\hat{e}_1$, $\hat{e}_2$ elegida.
+      - tipo: calcular
+        titulo: La componente transversal en la dirección k
+        pregunta: |
+          ¿Cuánto vale la componente transversal $\tfrac12\gamma_u$ del vector
+          deformación en la dirección $\hat{k}$, en unidades de $10^{-4}$?
+        respuesta:
+          tipo: numero
+          valor: '0'
+          tolerancia: 0.001
+          formato: un número, en unidades de 10⁻⁴
+        distractores:
+          - valor: '3.5'
+            mensaje: |
+              $3{,}5\cdot10^{-4} = (\varepsilon_1 - \varepsilon_3)/2$ es la
+              $\tfrac12\gamma$ **máxima**, la de las direcciones a 45° de
+              $\hat{e}_1$ y $\hat{e}_3$. $\hat{k}$ es principal: su vector
+              deformación va según ella misma y no tiene parte transversal.
+          - valor: '7'
+            mensaje: |
+              $7\cdot10^{-4} = \varepsilon_1 - \varepsilon_3$ es la $\gamma$
+              máxima entera, y además de otra dirección. En $\hat{k}$, que es
+              principal, $\vec{D}_u = 5\cdot10^{-4}\,\hat{k}$ y
+              $\tfrac12\gamma_u = 0$.
+        pista: |
+          $\tfrac12\gamma_u = \sqrt{|\vec{D}_u|^{2} - \varepsilon_u^{2}}$ (ec. 3.53).
+          ¿Cuánto vale $|\vec{D}_u|$ si $\hat{u}$ es principal?
+        desarrollo: |
+          $\hat{k}$ es principal, así que $\vec{D}_u = [\varepsilon]\hat{k} = 5\cdot10^{-4}\,\hat{k}$:
+
+          $$
+          \tfrac12\gamma_u = \sqrt{(5\cdot10^{-4})^{2} - (5\cdot10^{-4})^{2}} = 0
+          $$
+      - tipo: justificar
+        pregunta: Ordena la respuesta. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Como $\varepsilon_1 = \varepsilon_2$, toda dirección perpendicular
+              a $\hat{e}_3$ es principal con $5\cdot10^{-4}$: basta elegir una
+              pareja ortonormal de ese plano.
+          - texto: >-
+              Una pareja: $\hat{e}_1 = \hat{k}$ y $\hat{e}_2 = \tfrac{1}{\sqrt2}(\hat{\imath} - \hat{\jmath})$,
+              que con $\hat{e}_3$ forman un triedro directo
+              ($\hat{e}_1\times\hat{e}_2 = \hat{e}_3$).
+          - texto: >-
+              $\hat{k}$ es perpendicular a $\hat{e}_3$, luego es principal:
+              $\vec{D}_u = [\varepsilon]\hat{k} = 5\cdot10^{-4}\,\hat{k}$.
+          - texto: >-
+              Componente longitudinal $\varepsilon_u = 5\cdot10^{-4}$;
+              transversal $\tfrac12\gamma_u = 0$.
+          - texto: >-
+              Las direcciones 1 y 2 son únicas: $\hat{e}_1 = \hat{\imath}$ y
+              $\hat{e}_2 = \hat{\jmath}$, las que el tensor tiene en la diagonal.
+            trampa: true
+            mensaje: |
+              $\hat{\imath}$ y $\hat{\jmath}$ forman 45° con $\hat{e}_3$: no
+              son perpendiculares a ella, así que no pueden ser principales. Y
+              con dos valores iguales las direcciones 1 y 2 nunca son únicas.
+    resolucion: |
+      **La idea.** El tensor viene en **ejes principales**, que no son los de
+      O*xyz*: el eje 3 es $\hat{e}_3 = (\hat{\imath} + \hat{\jmath})/\sqrt2$.
+      Y dos deformaciones principales son iguales, $\varepsilon_1 = \varepsilon_2 = 5\cdot10^{-4}$.
+
+      **a/ Las direcciones 1 y 2.** En el plano perpendicular a $\hat{e}_3$
+      el tensor estira todas las direcciones lo mismo, $5\cdot10^{-4}$, y no
+      distorsiona ningún ángulo recto: **toda dirección de ese plano es
+      principal**, y hay infinitas parejas $\hat{e}_1$, $\hat{e}_2$. Basta dar
+      una ortonormal que forme triedro directo con $\hat{e}_3$; por ejemplo
+
+      $$
+      \hat{e}_1 = \hat{k},\qquad \hat{e}_2 = \tfrac{1}{\sqrt2}\left(\hat{\imath} - \hat{\jmath}\right),\qquad
+      \hat{e}_1\times\hat{e}_2 = \tfrac{1}{\sqrt2}\left(\hat{\imath} + \hat{\jmath}\right) = \hat{e}_3
+      $$
+
+      Cualquier giro de esta pareja alrededor de $\hat{e}_3$ vale igual: por
+      ejemplo $\hat{e}_1 = \tfrac12(1, -1, \sqrt2)$ y $\hat{e}_2 = \tfrac12(1, -1, -\sqrt2)$.
+
+      **b/ El vector deformación según $\hat{k}$.** Como
+      $\hat{k}\cdot\hat{e}_3 = 0$, $\hat{k}$ está en ese plano y es principal.
+      Su vector deformación (ec. 3.49) va según ella misma:
+
+      $$
+      \vec{D}_u = [\varepsilon]\{\hat{k}\} = 5\cdot10^{-4}\,\hat{k}
+      $$
+
+      Las componentes intrínsecas (ecs. 3.51 a 3.53):
+
+      $$
+      \varepsilon_u = \vec{D}_u\cdot\hat{k} = 5\cdot10^{-4},\qquad
+      \tfrac12\gamma_u = \sqrt{D_u^{2} - \varepsilon_u^{2}} = 0
+      $$
+
+      **Comprobación, en O*xyz*.** El tensor se escribe sin elegir la
+      pareja: $[\varepsilon] = 5\cdot10^{-4}[I] - 7\cdot10^{-4}\{e_3\}\{e_3\}^{t}$,
+      es decir
+
+      $$
+      [\varepsilon]_{Oxyz} = \begin{bmatrix} 1{,}5 & -3{,}5 & 0\\ -3{,}5 & 1{,}5 & 0\\ 0 & 0 & 5 \end{bmatrix}10^{-4}
+      $$
+
+      La tercera columna es $(0, 0, 5)\cdot10^{-4}$: $\hat{k}$ es principal
+      con $5\cdot10^{-4}$, como se dijo. El motor del curso, girando el
+      tensor principal con dos parejas distintas, da este mismo tensor, y
+      sus principales vuelven a ser 5, 5 y $-2$ con la 3 según
+      $(\hat{\imath} + \hat{\jmath})/\sqrt2$.
+
+  # ── Teoría · cuestión 3 · el criterio de los estados límites de Mohr.
+  - id: exerm1819-1par-3-el-criterio-de-los-estados-limites-de-mohr
+    titulo: El criterio de los estados límites de Mohr, deducido
+    fuente: >-
+      Cuestión 3 de teoría · Primer parcial del 16 de noviembre de 2018 ·
+      Elasticidad y Resistencia de Materiales, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Vale 1 punto. El examen no publica resolución; el
+      desarrollo es nuestro y sigue los apuntes del tema 6, apartado 6.4.
+      Los números de los pasos de cálculo son un ejemplo nuestro.
+    nivel: examen
+    enunciado: |
+      (1p) Criterio de los estados límites de Mohr.
+    pide: >-
+      La curva intrínseca, su sustitución por la recta tangente a los
+      círculos de tracción y compresión puras, sen ϕ en función de
+      k = σet/σec, y la tensión equivalente σeqv = σ1 − kσ3 con la condición
+      de no fallo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          La curva intrínseca se sustituye por una recta. ¿Qué dos círculos de
+          Mohr la definen?
+        opciones:
+          - texto: >-
+              El de tracción pura (de 0 a $\sigma_{et}$) y el de compresión
+              pura (de $-\sigma_{ec}$ a 0): la recta es tangente a los dos
+            correcta: true
+            mensaje: |
+              Eso es (fig. 6.2). Son los dos ensayos que se hacen de verdad, y
+              por eso el criterio solo necesita $\sigma_{et}$ y $\sigma_{ec}$.
+          - texto: >-
+              El de tracción pura y el de cortadura pura, centrado en el
+              origen
+            mensaje: |
+              Si el material sigue el criterio, el círculo de cortadura pura
+              en el fallo también toca la recta, y sirve para despejar $k$
+              cuando falta un ensayo. Pero los apuntes construyen la recta con
+              tracción y compresión puras, los ensayos que dan $\sigma_{et}$
+              y $\sigma_{ec}$.
+          - texto: El círculo mayor del estado de tensiones y el de tracción pura
+            mensaje: |
+              El círculo del estado es el que se **compara** con la recta, no
+              el que la define. La recta es una propiedad del material, y
+              sale de sus ensayos.
+      - tipo: calcular
+        titulo: El ángulo de la recta intrínseca
+        pregunta: |
+          Un material con $\sigma_{et} = 100$ MPa y $\sigma_{ec} = 400$ MPa.
+          ¿Cuánto vale $\operatorname{sen}\phi$?
+        respuesta:
+          tipo: numero
+          valor: '0.6'
+          tolerancia: 0.001
+          formato: un número, sin unidades
+        distractores:
+          - valor: '0.75'
+            mensaje: |
+              Has dividido $(\sigma_{ec} - \sigma_{et})$ entre $\sigma_{ec}$, o
+              has calculado $\operatorname{tg}\phi$. El seno sale del
+              triángulo de los dos centros (ec. 6.11): la diferencia de
+              radios entre la **distancia** de centros, que es la suma de
+              radios: $\tfrac{150}{250}$.
+          - valor: '-0.6'
+            mensaje: |
+              Has tomado $k = \sigma_{ec}/\sigma_{et} = 4$ en $(1 - k)/(1 + k)$.
+              El curso define $k = \sigma_{et}/\sigma_{ec} = 0{,}25$ (ec. 6.12),
+              menor que 1 en un material que aguanta más a compresión.
+        pista: |
+          $\operatorname{sen}\phi = \dfrac{\tfrac12(\sigma_{ec} - \sigma_{et})}{\tfrac12(\sigma_{ec} + \sigma_{et})} = \dfrac{1-k}{1+k}$.
+        desarrollo: |
+          $$
+          k = \frac{100}{400} = 0{,}25,\qquad \operatorname{sen}\phi = \frac{1 - 0{,}25}{1 + 0{,}25} = 0{,}6
+          \quad(\phi = 36{,}87^{\circ})
+          $$
+      - tipo: calcular
+        titulo: La tensión equivalente de un estado
+        pregunta: |
+          Con el mismo material, un punto con $\sigma_1 = 50$, $\sigma_2 = 0$ y
+          $\sigma_3 = -120$ MPa. ¿Cuánto vale $\sigma_{eqv}$ según Mohr, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '80'
+          tolerancia: 0.05
+          formato: un número, en MPa
+        distractores:
+          - valor: '20'
+            mensaje: |
+              Has sumado en vez de restar: $\sigma_1 + k\sigma_3$. Es
+              $\sigma_{eqv} = \sigma_1 - k\sigma_3$, y con $\sigma_3 < 0$ la
+              compresión **suma** a la tracción: $50 + 0{,}25\cdot120$.
+          - valor: '530'
+            mensaje: |
+              Has usado $k = \sigma_{ec}/\sigma_{et} = 4$. Con el cociente al
+              revés la compresión pesaría cuatro veces más que la tracción, y
+              es al contrario: el material aguanta más a compresión, así que
+              $\sigma_3$ entra rebajada, $k = 0{,}25$.
+          - valor: '170'
+            mensaje: |
+              Es $\sigma_1 - \sigma_3$, Tresca, el caso $k = 1$ (ec. 6.19). Mohr
+              tiene en cuenta que el material resiste distinto a tracción y a
+              compresión.
+        pista: |
+          $\sigma_{eqv} = \sigma_1 - k\sigma_3$ (ec. 6.15), con $k = 0{,}25$.
+        desarrollo: |
+          $$
+          \sigma_{eqv} = 50 - 0{,}25\cdot(-120) = 80\ \text{MPa} < \sigma_{et} = 100
+          $$
+
+          No falla: el factor de seguridad es $FS = 100/80 = 1{,}25$ (ec. 6.1).
+      - tipo: redactar
+        que: deduccion
+        consigna: >-
+          Escribe el criterio completo, como en el examen: la curva
+          intrínseca, la recta, sen ϕ en función de k, la tensión equivalente
+          y la condición de no fallo, con sus figuras.
+        rubrica:
+          - punto: >-
+              Se explica la curva intrínseca: la envolvente de los círculos de
+              Mohr máximos de los estados que hacen fallar al material; no hay
+              fallo si el círculo máximo queda dentro (fig. 6.1).
+            porque: >-
+              Es la idea del criterio. Sin ella, la recta no se sabe de dónde
+              sale.
+            minimo: true
+          - punto: >-
+              Se sustituye la curva por la recta tangente a los círculos de
+              tracción pura (0, σet) y compresión pura (−σec, 0), con su
+              dibujo (fig. 6.2).
+            porque: >-
+              Son los dos ensayos que se tienen. Un dibujo sin los dos
+              círculos y la recta tangente deja la deducción sin soporte.
+            minimo: true
+          - punto: >-
+              Se obtiene sen ϕ = (σec − σet)/(σec + σet) = (1 − k)/(1 + k),
+              con k = σet/σec (ecs. 6.11 y 6.12).
+            porque: >-
+              Es la geometría de los dos centros: diferencia de radios entre
+              suma de radios. La definición de k, en ese orden, es la que se
+              confunde.
+            minimo: true
+          - punto: >-
+              Se define σeqv como el ensayo de tracción cuyo círculo tiene la
+              tangente común con el círculo máximo del estado paralela a la
+              recta intrínseca, y se plantea sen ϕ = QR/QS (fig. 6.3, ecs.
+              6.13 y 6.14).
+            porque: >-
+              Es el paso que convierte un estado cualquiera en uno uniaxial
+              equivalente, que es lo que hacen todos los criterios.
+            minimo: true
+          - punto: >-
+              Se despeja σeqv = σ1 − kσ3 (ec. 6.15) y la condición de no fallo
+              σeqv < σet (ec. 6.16).
+            porque: >-
+              Es el resultado que se usa. Sin la condición, el criterio no
+              decide nada.
+            minimo: true
+          - punto: >-
+              Se comenta que con k = 1 es Tresca, y que la compresión pura da
+              σeqv = σet, así que la condición también la cubre; vale para
+              materiales frágiles y dúctiles.
+            porque: >-
+              Son las dos comprobaciones que dicen que la fórmula está bien
+              puesta, y las dos que el apunte cita.
+      - tipo: justificar
+        pregunta: Ordena la deducción. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              La envolvente de los círculos de Mohr de fallo es la curva
+              intrínseca; se sustituye por la recta tangente a los círculos de
+              tracción pura y compresión pura.
+          - texto: >-
+              Con los centros de esos círculos,
+              $\operatorname{sen}\phi = \dfrac{\sigma_{ec} - \sigma_{et}}{\sigma_{ec} + \sigma_{et}} = \dfrac{1-k}{1+k}$,
+              con $k = \sigma_{et}/\sigma_{ec}$.
+          - texto: >-
+              La tangente común al círculo máximo del estado y al de
+              $\sigma_{eqv}$ forma el mismo ángulo $\phi$:
+              $\operatorname{sen}\phi = \dfrac{\sigma_{eqv} - (\sigma_1 - \sigma_3)}{(\sigma_1 + \sigma_3) - \sigma_{eqv}}$.
+          - texto: >-
+              Despejando, $\sigma_{eqv} = \sigma_1 - k\sigma_3$, y no hay fallo
+              si $\sigma_{eqv} < \sigma_{et}$.
+          - texto: >-
+              Como el material aguanta más a compresión, la condición de no
+              fallo es doble: $\sigma_{eqv} < \sigma_{et}$ y además
+              $|\sigma_3| < \sigma_{ec}$.
+            trampa: true
+            mensaje: |
+              La condición $\sigma_{eqv} < \sigma_{et}$ ya incluye la
+              compresión: en compresión pura, $\sigma_1 = 0$ y
+              $\sigma_3 = -\sigma_{ec}$ dan $\sigma_{eqv} = k\sigma_{ec} = \sigma_{et}$
+              (p. 8 de los apuntes). No hace falta una segunda condición.
+    resolucion: |
+      **La curva intrínseca** (apuntes del tema 6, apartado 6.4). Cuando un
+      material falla, su estado de tensiones tiene un círculo de Mohr máximo
+      crítico. La envolvente de los círculos de todos los estados de fallo es
+      la **curva intrínseca**: un estado no falla si su círculo máximo queda
+      dentro (fig. 6.1).
+
+      **La recta intrínseca.** Obtener la curva exige muchos ensayos, así que
+      se sustituye por la recta tangente a los dos círculos que se conocen:
+      el de tracción pura, de 0 a $\sigma_{et}$, y el de compresión pura, de
+      $-\sigma_{ec}$ a 0 (fig. 6.2). Del triángulo de sus centros y sus
+      radios:
+
+      $$
+      \operatorname{sen}\phi = \frac{\tfrac12(\sigma_{ec} - \sigma_{et})}{\tfrac12(\sigma_{ec} + \sigma_{et})}
+      = \frac{1 - k}{1 + k},\qquad k = \frac{\sigma_{et}}{\sigma_{ec}}
+      $$
+
+      (ecs. 6.11 y 6.12).
+
+      **La tensión equivalente.** Se busca el ensayo de tracción,
+      $\sigma_{eqv}$, cuyo círculo y el círculo máximo del estado,
+      $(\sigma_3, \sigma_1)$, tengan una tangente común con el mismo ángulo
+      $\phi$ que la recta (fig. 6.3). Con los puntos de esa figura (ecs. 6.13
+      y 6.14):
+
+      $$
+      \operatorname{sen}\phi = \frac{QR}{QS},\qquad
+      QR = \tfrac12\left[\sigma_{eqv} - (\sigma_1 - \sigma_3)\right],\qquad
+      QS = \tfrac12\left[(\sigma_1 + \sigma_3) - \sigma_{eqv}\right]
+      $$
+
+      Sustituyendo $\operatorname{sen}\phi = (1-k)/(1+k)$ y despejando:
+
+      $$
+      (1+k)\left[\sigma_{eqv} - \sigma_1 + \sigma_3\right] = (1-k)\left[\sigma_1 + \sigma_3 - \sigma_{eqv}\right]
+      \;\Longrightarrow\; \sigma_{eqv} = \sigma_1 - k\,\sigma_3
+      $$
+
+      **El criterio** (ecs. 6.15 y 6.16): no hay fallo si
+
+      $$
+      \sigma_{eqv} = \sigma_1 - k\,\sigma_3 < \sigma_{et}
+      $$
+
+      **Comprobaciones.** Con $k = 1$ ($\sigma_{et} = \sigma_{ec}$) es Tresca,
+      $\sigma_1 - \sigma_3$ (ec. 6.19). En compresión pura, $\sigma_1 = 0$ y
+      $\sigma_3 = -\sigma_{ec}$ dan $\sigma_{eqv} = k\sigma_{ec} = \sigma_{et}$:
+      la misma condición cubre el fallo a compresión. Vale para materiales
+      frágiles y dúctiles.
+
+      **Un ejemplo con números** (nuestro): $\sigma_{et} = 100$ y
+      $\sigma_{ec} = 400$ MPa dan $k = 0{,}25$ y $\operatorname{sen}\phi = 0{,}6$
+      ($\phi = 36{,}87^{\circ}$). El estado $(50,\ 0,\ -120)$ MPa tiene
+      $\sigma_{eqv} = 50 + 0{,}25\cdot120 = 80$ MPa: no falla, con $FS = 1{,}25$.
+      La misma cifra sale del motor del curso y de despejar a mano la
+      ecuación de QR/QS sin pasar por la fórmula final.
+
+  # ── Teoría · cuestión 4 · dos cables de distinto material que cuelgan un
+  #    peso. Va en la hoja de teoría, pero es un cálculo (tema 8).
+  - id: exerm1819-1par-4-dos-cables-y-un-peso
+    titulo: Dos cables de acero y de aluminio que cuelgan el mismo peso
+    fuente: >-
+      Cuestión 4 de teoría · Primer parcial del 16 de noviembre de 2018 ·
+      Elasticidad y Resistencia de Materiales, Escuela de Ingeniería de
+      Gipuzkoa (UPV/EHU). Vale 1 punto. Los rótulos 1, 2 y W de la figura
+      están en el Word original y el PDF no los dibuja. El examen no publica
+      resolución; el desarrollo es nuestro.
+    nivel: examen
+    enunciado: |
+      (1p) Los cables 1 y 2 son de acero y alumnio, respectivamente. Si la
+      longitud inicial de ambos es 3 m y su sección 4 mm², determinar la
+      fuerza y la tensión en cada cable.
+
+      <figure class="figura-examen">
+      <svg viewBox="0 0 400 300" role="img" width="400" height="300" aria-labelledby="exerm1819-1par-4-dos-cables-y-un-peso-fig-t exerm1819-1par-4-dos-cables-y-un-peso-fig-d">
+      <title id="exerm1819-1par-4-dos-cables-y-un-peso-fig-t">Dos cables que pasan por dos poleas y cuelgan un peso W</title>
+      <desc id="exerm1819-1par-4-dos-cables-y-un-peso-fig-d">Dos paredes, a la izquierda y a la derecha. De cada pared sale un cable horizontal que llega a lo alto de una polea; las dos poleas están juntas en el centro, cada una sujeta por un brazo a 45° que acaba en una placa. Cada cable da un cuarto de vuelta a su polea y baja vertical por el lado interior. Los dos tramos verticales, muy juntos, llegan a la cara superior de un peso W que cuelga en el centro. El cable de la izquierda es el 1 y el de la derecha el 2.</desc>
+      <defs><pattern id="exerm1819-1par-4-dos-cables-y-un-peso-fig-r" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--paper)"/><rect width="0.9" height="6" fill="var(--faint)"/></pattern></defs>
+      <rect x="28" y="24" width="12" height="66" fill="url(#exerm1819-1par-4-dos-cables-y-un-peso-fig-r)"/><line x1="40" y1="24" x2="40" y2="90" stroke="var(--ink)" stroke-width="2.4"/>
+      <rect x="360" y="24" width="12" height="66" fill="url(#exerm1819-1par-4-dos-cables-y-un-peso-fig-r)"/><line x1="360" y1="24" x2="360" y2="90" stroke="var(--ink)" stroke-width="2.4"/>
+      <circle cx="160" cy="92" r="35" fill="var(--faint)" fill-opacity=".45" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="240" cy="92" r="35" fill="var(--faint)" fill-opacity=".45" stroke="var(--ink)" stroke-width="2"/>
+      <g transform="translate(160 92) rotate(135)"><rect x="-4" y="-7" width="47.8" height="14" rx="2" fill="var(--faint)" fill-opacity=".55" stroke="var(--ink)" stroke-width="1.4"/><rect x="43.8" y="-29.7" width="12.6" height="59.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/></g>
+      <g transform="translate(240 92) rotate(45)"><rect x="-4" y="-7" width="47.8" height="14" rx="2" fill="var(--faint)" fill-opacity=".55" stroke="var(--ink)" stroke-width="1.4"/><rect x="43.8" y="-29.7" width="12.6" height="59.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/></g>
+      <circle cx="160" cy="92" r="4" fill="var(--ink)"/>
+      <circle cx="240" cy="92" r="4" fill="var(--ink)"/>
+      <path d="M40 57 H160 A35 35 0 0 1 195 92 V226" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+      <path d="M360 57 H240 A35 35 0 0 0 205 92 V226" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+      <rect x="182" y="226" width="36" height="66" rx="6" fill="var(--faint)" fill-opacity=".6" stroke="var(--ink)" stroke-width="1"/>
+      <text x="200" y="264" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink)">W</text>
+      <text x="187" y="152.3" text-anchor="end" font-size="14" fill="var(--ink)">1</text>
+      <text x="213" y="152.3" text-anchor="start" font-size="14" fill="var(--ink)">2</text>
+      </svg>
+      <figcaption>
+
+      Redibujada del enunciado. Los rótulos 1, 2 y W están en el Word
+      original; en el PDF la figura sale sin ellos.
+
+      </figcaption>
+      </figure>
+
+      $E_1 = 200$ GPa; $E_2 = 70$ GPa; $W$= 600 N
+
+      **Notas nuestras.** Los dos cables bajan juntos hasta el mismo punto
+      del peso, y las poleas están fijas: se lee que el peso baja sin girar y
+      que los dos cables se alargan lo mismo. Los 3 m son la longitud entera
+      de cada cable, de la pared al peso.
+    pide: >-
+      La fuerza de cada cable, en N, y su tensión, en MPa.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          El equilibrio del peso da $N_1 + N_2 = W$: una ecuación para dos
+          incógnitas. ¿Qué la completa?
+        opciones:
+          - texto: >-
+              La compatibilidad: el peso baja lo mismo para los dos cables, así
+              que los dos se alargan lo mismo, $\Delta L_1 = \Delta L_2$
+            correcta: true
+            mensaje: |
+              Eso es: es un sistema hiperestático de grado uno (apuntes del
+              tema 8, p. 4), y la ecuación que falta sale de la deformación.
+              Con poleas fijas, lo que baja el peso es lo que se alarga cada
+              cable.
+          - texto: >-
+              La simetría de la figura: cada cable lleva la mitad del peso
+            mensaje: |
+              La figura es simétrica, pero los cables no: el de acero es casi
+              tres veces más rígido. Se reparten el peso según su rigidez, no
+              a partes iguales.
+          - texto: >-
+              El equilibrio de cada polea, que da la fuerza de cada cable por
+              separado
+            mensaje: |
+              Una polea fija sin rozamiento solo cambia la dirección del
+              cable: la fuerza es la misma a los dos lados. No aporta ninguna
+              ecuación nueva entre $N_1$ y $N_2$.
+      - tipo: calcular
+        titulo: La fuerza en el cable de acero
+        pregunta: |
+          ¿Cuánto vale $N_1$, la fuerza en el cable 1, de acero, en N?
+        respuesta:
+          tipo: numero
+          valor: '444.444'
+          tolerancia: 0.5
+          formato: un número, en N
+        distractores:
+          - valor: '300'
+            mensaje: |
+              Es el reparto a partes iguales, que solo usa el equilibrio. Los
+              dos cables se alargan lo mismo y tienen la misma $L$ y la misma
+              $A$, así que sus fuerzas van como sus módulos:
+              $N_1/N_2 = E_1/E_2 = 200/70$. (Solo saldría si el peso pudiera
+              girar con los cables atados separados; aquí llegan juntos al
+              mismo punto.)
+          - valor: '155.556'
+            mensaje: |
+              Has cambiado los módulos: esa es la fuerza del cable de
+              **aluminio**. El cable más rígido es el que más carga se lleva,
+              y el acero ($E_1 = 200$ GPa) lo es.
+        pista: |
+          $\dfrac{N_1L}{E_1A} = \dfrac{N_2L}{E_2A}$ y $N_1 + N_2 = W$.
+        desarrollo: |
+          $$
+          N_1 = W\,\frac{E_1}{E_1 + E_2} = 600\cdot\frac{200}{270} = 444{,}4\ \text{N},\qquad
+          N_2 = 600\cdot\frac{70}{270} = 155{,}6\ \text{N}
+          $$
+      - tipo: calcular
+        titulo: La tensión en el cable de acero
+        pregunta: |
+          ¿Cuánto vale la tensión en el cable 1, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '111.111'
+          tolerancia: 0.05
+          formato: un número, en MPa
+        distractores:
+          - valor: '75'
+            mensaje: |
+              Es $300/4$: has repartido el peso a partes iguales. Con la
+              compatibilidad, $N_1 = 444{,}4$ N.
+          - valor: '1.1111'
+            mensaje: |
+              Has dividido por 400, como si la sección fueran 4 cm². Son
+              4 mm², y N/mm² son MPa: $444{,}4/4 = 111{,}1$ MPa.
+        pista: |
+          $\sigma = N/A$, con $A = 4$ mm² y N/mm² = MPa (ec. 8.5).
+        desarrollo: |
+          $$
+          \sigma_1 = \frac{444{,}4\ \text{N}}{4\ \text{mm}^{2}} = 111{,}1\ \text{MPa}
+          $$
+      - tipo: calcular
+        titulo: La tensión en el cable de aluminio
+        pregunta: |
+          ¿Cuánto vale la tensión en el cable 2, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '38.889'
+          tolerancia: 0.05
+          formato: un número, en MPa
+        distractores:
+          - valor: '111.111'
+            mensaje: |
+              Es la tensión del cable de acero. Con los módulos cambiados las
+              dos cifras se intercambian; el aluminio, más flexible, es el que
+              menos trabaja.
+          - valor: '75'
+            mensaje: |
+              Es $300/4$, el reparto a partes iguales. El aluminio se lleva
+              solo $70/270$ del peso.
+        pista: |
+          $\sigma_2 = N_2/A$, con $N_2 = W - N_1$.
+        desarrollo: |
+          $$
+          \sigma_2 = \frac{155{,}6}{4} = 38{,}9\ \text{MPa}
+          $$
+
+          Las dos deformaciones son iguales, como tienen que ser:
+          $\sigma_1/E_1 = \sigma_2/E_2 = 5{,}56\cdot10^{-4}$.
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Equilibrio del peso: $N_1 + N_2 = W = 600$ N. Dos incógnitas:
+              es hiperestático de grado uno.
+          - texto: >-
+              Compatibilidad: las poleas son fijas y el peso baja sin girar,
+              así que $\Delta L_1 = \Delta L_2$, es decir
+              $N_1L/(E_1A) = N_2L/(E_2A)$.
+          - texto: >-
+              $N_1 = 600\cdot200/270 = 444{,}4$ N y $N_2 = 155{,}6$ N.
+          - texto: >-
+              $\sigma_1 = 111{,}1$ MPa y $\sigma_2 = 38{,}9$ MPa: el cable más
+              rígido trabaja más.
+          - texto: >-
+              Como los dos cables tienen la misma longitud y la misma sección,
+              las dos tensiones son iguales, $W/(2A) = 75$ MPa.
+            trampa: true
+            mensaje: |
+              Iguales son las **deformaciones**, no las tensiones:
+              $\sigma_1/E_1 = \sigma_2/E_2$. Con módulos distintos, la misma
+              deformación pide tensiones distintas, en la proporción de los
+              módulos.
+    resolucion: |
+      **El planteamiento.** Los dos cables sostienen el mismo peso y pasan
+      por poleas fijas: el peso baja $\delta$ y cada cable se alarga
+      $\delta$. Equilibrio y compatibilidad (apuntes del tema 8, ecs. 8.5 y
+      8.9):
+
+      $$
+      N_1 + N_2 = W,\qquad \frac{N_1L}{E_1A} = \frac{N_2L}{E_2A}
+      $$
+
+      **Las fuerzas.** Como $L$ y $A$ son iguales, $N_1/N_2 = E_1/E_2$:
+
+      $$
+      N_1 = W\frac{E_1}{E_1 + E_2} = 600\cdot\frac{200}{270} = 444{,}4\ \text{N},\qquad
+      N_2 = W\frac{E_2}{E_1 + E_2} = 155{,}6\ \text{N}
+      $$
+
+      **Las tensiones**, con $A = 4$ mm²:
+
+      $$
+      \sigma_1 = \frac{444{,}4}{4} = 111{,}1\ \text{MPa},\qquad \sigma_2 = \frac{155{,}6}{4} = 38{,}9\ \text{MPa}
+      $$
+
+      **Comprobación.** Los dos alargamientos:
+      $\Delta L_1 = \dfrac{444{,}4\cdot3000}{200\,000\cdot4} = 1{,}667$ mm y
+      $\Delta L_2 = \dfrac{155{,}6\cdot3000}{70\,000\cdot4} = 1{,}667$ mm, el
+      descenso del peso. El motor del curso, con el peso como un sólido que
+      solo puede bajar colgado de dos barras de 3 m, da lo mismo.
+
+      **La lectura.** Se ha supuesto que el peso no gira: los dos cables
+      llegan juntos al centro de su cara superior. Si se dejara girar y los
+      cables se ataran separados, a la misma distancia del centro, el
+      equilibrio de momentos obligaría a $N_1 = N_2 = 300$ N y el peso se
+      inclinaría; pero entonces los módulos no harían falta, y el enunciado
+      los da.
+  # ── Problema 1 · la barra con la holgura, el plano a 30° y la dirección u.
+  - id: exerm1819-1par-5-la-barra-que-toca-la-pared
+    titulo: La barra que llega a tocar la pared, un plano inclinado y una dirección u
+    fuente: >-
+      Problema 1 · Primer parcial del 16 de noviembre de 2018 · Elasticidad y
+      Resistencia de Materiales, Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU). Vale 2 puntos. El examen no publica resolución; el
+      desarrollo es nuestro, con los convenios de los temas 2, 3, 4 y 8.
+    nivel: examen
+    enunciado: |
+      (2p) La distancia entre la viga de la figura y la pared derecha es
+      $\xi$ = 0,2 mm. Determinar:
+
+      a/ El valor de $P$ para que la viga toque la pared derecha.
+
+      b/ Siendo $\sigma$ = 20 MPa, el valor de la tensión cortante en el mismo
+      plano.
+
+      c/ Siendo $P$ = 30 kN, la deformación normal en la dirección de $u$.
+
+      $E$ = 210 GPa; $\nu$ = 0,3; $A$ = 4 cm²
+
+      <figure class="figura-examen">
+      <svg viewBox="0 0 450 165" role="img" width="450" height="165" aria-labelledby="exerm1819-1par-5-la-barra-que-toca-la-pared-fig-t exerm1819-1par-5-la-barra-que-toca-la-pared-fig-d">
+      <title id="exerm1819-1par-5-la-barra-que-toca-la-pared-fig-t">La barra empotrada en la pared izquierda, con P a 80 cm y la holgura ξ hasta la pared derecha</title>
+      <desc id="exerm1819-1par-5-la-barra-que-toca-la-pared-fig-d">Una barra horizontal de sección constante, empotrada en una pared a la izquierda. A 80 cm de la pared actúa una fuerza P horizontal hacia la derecha. La barra sigue 20 cm más y su extremo derecho queda libre, a una distancia ξ de otra pared. Cerca de la pared izquierda se dibuja un plano inclinado que forma 30° con la vertical, con la tensión σ normal a él, saliendo hacia arriba y a la izquierda. En el tramo de 20 cm, a la derecha de P, una dirección u que baja 20° desde la horizontal.</desc>
+      <defs><pattern id="exerm1819-1par-5-la-barra-que-toca-la-pared-fig-r" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--paper)"/><rect width="0.9" height="6" fill="var(--faint)"/></pattern></defs>
+      <rect x="28" y="26" width="12" height="98" fill="url(#exerm1819-1par-5-la-barra-que-toca-la-pared-fig-r)"/><line x1="40" y1="26" x2="40" y2="124" stroke="var(--ink)" stroke-width="2.4"/>
+      <rect x="402" y="26" width="12" height="98" fill="url(#exerm1819-1par-5-la-barra-que-toca-la-pared-fig-r)"/><line x1="402" y1="26" x2="402" y2="124" stroke="var(--ink)" stroke-width="2.4"/>
+      <rect x="40" y="50" width="340" height="50" fill="var(--faint)" fill-opacity=".35" stroke="var(--ink)" stroke-width="1.4"/>
+      <line x1="121.6" y1="58" x2="100.6" y2="94.4" stroke="var(--ink)" stroke-width="1.6"/>
+      <line x1="121.6" y1="58" x2="121.6" y2="100" stroke="var(--ink)" stroke-width="1" stroke-dasharray="2 2"/>
+      <path d="M121.6 92 A34 34 0 0 1 104.6 87.4" fill="none" stroke="var(--ink)" stroke-width="1"/><polygon points="121.6,92 115.6,94.4 115.6,89.6" fill="var(--ink)"/><polygon points="104.6,87.4 111,88.4 108.6,92.5" fill="var(--ink)"/>
+      <text x="125.6" y="94" font-size="13" fill="var(--ink)">30°</text>
+      <line x1="111.1" y1="76.2" x2="91.2" y2="64.7" stroke="var(--ink)" stroke-width="1.4"/><polygon points="85.1,61.2 93.8,62.2 90.3,68.2" fill="var(--ink)"/>
+      <text x="91.1" y="59.2" font-size="15" font-style="italic" fill="var(--ink)">σ</text>
+      <line x1="312" y1="50" x2="312" y2="100" stroke="var(--ink)" stroke-width="1" stroke-dasharray="2 2"/>
+      <line x1="312" y1="75" x2="335" y2="75" stroke="var(--ink)" stroke-width="2.6"/><polygon points="344,75 334,79.5 334,70.5" fill="var(--ink)"/>
+      <text x="330" y="66" font-size="14" font-style="italic" fill="var(--ink)">P</text>
+      <line x1="344" y1="75" x2="394" y2="75" stroke="var(--ink)" stroke-width="1" stroke-dasharray="2 2"/>
+      <line x1="348" y1="75" x2="373.4" y2="84.2" stroke="var(--ink)" stroke-width="1.4"/><polygon points="380,86.6 371.3,87.2 373.7,80.6" fill="var(--ink)"/>
+      <line x1="380" y1="86.6" x2="394" y2="91.7" stroke="var(--ink)" stroke-width="1" stroke-dasharray="2 2"/>
+      <text x="364" y="94" font-size="14" font-style="italic" fill="var(--ink)">u</text>
+      <path d="M388 75 A40 40 0 0 1 385.6 88.7" fill="none" stroke="var(--ink)" stroke-width="1"/><polygon points="388,75 390.4,81 385.6,81" fill="var(--ink)"/><polygon points="385.6,88.7 385.4,82.2 389.9,83.9" fill="var(--ink)"/>
+      <text x="370" y="44" font-size="13" fill="var(--ink)">20°</text>
+      <line x1="40" y1="124" x2="40" y2="154" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="312" y1="100" x2="312" y2="154" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="380" y1="124" x2="380" y2="154" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="402" y1="124" x2="402" y2="154" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="380" y1="100" x2="380" y2="124" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="40" y1="150" x2="312" y2="150" stroke="var(--faint)" stroke-width="1"/><polygon points="312,150 305,152.6 305,147.4" fill="var(--faint)"/><polygon points="40,150 47,147.4 47,152.6" fill="var(--faint)"/><text x="176" y="145" text-anchor="middle" font-size="13" fill="var(--ink)">80 cm</text>
+      <line x1="312" y1="150" x2="380" y2="150" stroke="var(--faint)" stroke-width="1"/><polygon points="380,150 373,152.6 373,147.4" fill="var(--faint)"/><polygon points="312,150 319,147.4 319,152.6" fill="var(--faint)"/><text x="346" y="145" text-anchor="middle" font-size="13" fill="var(--ink)">20 cm</text>
+      <line x1="380" y1="150" x2="402" y2="150" stroke="var(--faint)" stroke-width="1"/><polygon points="402,150 395,152.6 395,147.4" fill="var(--faint)"/><polygon points="380,150 387,147.4 387,152.6" fill="var(--faint)"/><text x="391" y="145" text-anchor="middle" font-size="13" font-style="italic" fill="var(--ink)">ξ</text>
+      </svg>
+      <figcaption>
+
+      Redibujada del enunciado. La holgura ξ se dibuja exagerada, como en
+      el original; las cotas de 80 y 20 cm están a escala.
+
+      </figcaption>
+      </figure>
+
+      **Notas nuestras.** La figura no dibuja ejes. El plano del apartado b
+      forma 30° con la vertical, es decir, con la sección recta, y $\sigma$ es
+      la tensión normal **sobre ese plano**, la que dibuja la flecha. La
+      dirección $u$ está en el tramo de 20 cm, a la derecha de $P$, y baja 20°
+      desde la horizontal.
+    pide: >-
+      P en kN; la tensión tangencial en el plano a 30° cuando su tensión
+      normal es 20 MPa; con P = 30 kN, las fuerzas de los dos tramos y εu.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Antes de tocar la pared, ¿qué tramo de la barra trabaja?
+        opciones:
+          - texto: >-
+              Solo el de 80 cm, con $N = P$: el de 20 cm, a la derecha de la
+              carga, no tiene nada que equilibrar
+            correcta: true
+            mensaje: |
+              Eso es. Cortando en el tramo de la derecha, la parte libre no
+              tiene ninguna fuerza: $N = 0$. El extremo se mueve lo que se
+              alarga el tramo de 80 cm, y el de 20 cm solo se traslada.
+          - texto: Los dos, con $N = P$ en toda la barra
+            mensaje: |
+              A la derecha de $P$ no queda carga: si cortas ahí y miras la
+              parte derecha, está libre. Con $N = P$ también en el tramo de
+              20 cm, el extremo se movería $P\cdot100/EA$ y saldría
+              $P = 16{,}8$ kN.
+          - texto: >-
+              Los dos, con $P$ repartida entre ellos según sus longitudes
+            mensaje: |
+              Eso es lo que pasa **después** de tocar, cuando la pared también
+              empuja. Antes, el extremo derecho está libre y el tramo de 20 cm
+              no carga nada.
+      - tipo: calcular
+        titulo: La carga que cierra la holgura
+        pregunta: |
+          ¿Cuánto vale $P$ para que la barra toque la pared derecha, en kN?
+        respuesta:
+          tipo: numero
+          valor: '21'
+          tolerancia: 0.01
+          formato: un número, en kN
+        distractores:
+          - valor: '16.8'
+            mensaje: |
+              Has usado la longitud entera, 100 cm. El tramo de 20 cm está a
+              la derecha de $P$ y no trabaja: solo se alarga el de 80 cm,
+              $P\cdot800/EA = 0{,}2$ mm.
+          - valor: '0.21'
+            mensaje: |
+              Has tomado $A = 4$ mm². Son 4 cm² = 400 mm²: $EA = 210\,000\cdot400
+              = 8{,}4\cdot10^{7}$ N.
+        pista: |
+          $\Delta L_1 = \dfrac{P L_1}{EA} = \xi$, con $L_1 = 800$ mm,
+          $E = 210\,000$ MPa y $A = 400$ mm² (ec. 8.9).
+        desarrollo: |
+          $$
+          P = \frac{\xi\,EA}{L_1} = \frac{0{,}2\cdot210\,000\cdot400}{800} = 21\,000\ \text{N} = 21\ \text{kN}
+          $$
+      - tipo: calcular
+        titulo: La tangencial en el plano a 30°
+        pregunta: |
+          Siendo $\sigma = 20$ MPa (la flecha de la figura, normal al plano
+          dibujado), ¿cuánto vale la tangencial en ese mismo plano, en MPa,
+          con el convenio de los apuntes del tema 2 ($\hat{t}$ a 90°
+          antihorario de $\hat{n}$)?
+        respuesta:
+          tipo: numero
+          valor: '11.547'
+          tolerancia: 0.01
+          formato: un número, en MPa
+        tambienValen:
+          - valor: '8.6603'
+            mensaje: |
+              Es la otra lectura del enunciado: $\sigma = 20$ MPa como la
+              tensión **de la barra**, $\sigma_x$, y entonces
+              $\tau = \sigma_x\operatorname{sen}30°\cos30° = 8{,}66$ MPa. Se da
+              por buena porque el texto del examen no dice de qué plano es σ.
+              Aquí se toma como la normal del plano dibujado, porque así la
+              dibuja la flecha y el enunciado pide la cortante «en el mismo
+              plano»: con esa lectura, 8,66 sería confundir $\sigma_n$ con
+              $\sigma_x$.
+        distractores:
+          - valor: '-11.547'
+            mensaje: |
+              El valor es ese, pero con el signo de un plano girado al revés:
+              normal a $+30°$ en vez de a $150°$. En la figura el plano sube
+              hacia la derecha y su normal sale hacia arriba a la izquierda;
+              con $\theta = 150°$, $\tau_n = -\sigma_x\operatorname{sen}\theta\cos\theta > 0$.
+          - valor: '34.641'
+            mensaje: |
+              Has tomado 30° entre la normal y la vertical, o sea la normal a
+              60° del eje: $\sigma_x = 20/\cos^{2}60° = 80$. El 30° está entre
+              el **plano** y la vertical (la sección recta), así que la normal
+              forma 30° con el eje de la barra.
+        pista: |
+          $\sigma_n = \sigma_x\cos^{2}\theta$ y $\tau_n = -\sigma_x\operatorname{sen}\theta\cos\theta$
+          (ec. 2.59 con $\sigma_y = \tau_{xy} = 0$), con $\theta = 150°$.
+        desarrollo: |
+          Primero $\sigma_x$, de la normal:
+
+          $$
+          \sigma_x = \frac{20}{\cos^{2}30°} = 26{,}67\ \text{MPa}
+          $$
+
+          y la tangencial, con $\theta = 150°$:
+
+          $$
+          \tau_n = -26{,}67\cdot\operatorname{sen}150°\cdot\cos150° = 20\operatorname{tg}30° = 11{,}55\ \text{MPa}
+          $$
+
+          (Esa $\sigma_x$ corresponde a $P = 26{,}67\cdot400 = 10{,}7$ kN,
+          menos de los 21 kN que cierran la holgura: la barra no toca.)
+      - tipo: calcular
+        titulo: La fuerza del tramo de 20 cm con P = 30 kN
+        pregunta: |
+          Con $P = 30$ kN la barra toca la pared. ¿Cuánto vale la fuerza
+          normal del tramo de 20 cm, en kN, positiva a tracción?
+        respuesta:
+          tipo: numero
+          valor: '-7.2'
+          tolerancia: 0.01
+          formato: un número, en kN
+        distractores:
+          - valor: '-24'
+            mensaje: |
+              Has resuelto la barra empotrada en las dos paredes desde el
+              principio, sin la holgura. Los primeros 0,2 mm el extremo los
+              recorre libre, con 21 kN; el empotramiento de la derecha solo
+              existe a partir de ahí.
+          - valor: '-9'
+            mensaje: |
+              Has mandado a la pared todo el exceso, $30 - 21 = 9$ kN. Una vez
+              tocada, la barra es empotrada-empotrada y el exceso se reparte
+              entre los dos tramos según su rigidez: la pared se lleva
+              $9\cdot\tfrac{80}{100} = 7{,}2$ kN.
+        pista: |
+          Equilibrio: $N_1 - N_2 = P$. Compatibilidad: el extremo llega a la
+          pared, $\dfrac{N_1L_1}{EA} + \dfrac{N_2L_2}{EA} = \xi$.
+        desarrollo: |
+          $$
+          N_1 = \frac{\xi\,EA + P L_2}{L_1 + L_2} = \frac{16\,800\,000 + 30\,000\cdot200}{1000}
+          = 22\,800\ \text{N},\qquad N_2 = N_1 - P = -7200\ \text{N}
+          $$
+
+          El tramo de 20 cm está comprimido: $\sigma_2 = -7200/400 = -18$ MPa.
+      - tipo: calcular
+        titulo: La deformación normal según u
+        pregunta: |
+          ¿Cuánto vale la deformación normal en la dirección $u$, en unidades
+          de $10^{-5}$?
+        respuesta:
+          tipo: numero
+          valor: '-7.268'
+          tolerancia: 0.002
+          formato: un número, en unidades de 10⁻⁵
+        distractores:
+          - valor: '-7.5688'
+            mensaje: |
+              Te has olvidado de Poisson: con $\sigma_y = \sigma_z = 0$ la
+              barra se ensancha, $\varepsilon_y = -\nu\varepsilon_x > 0$, y esa
+              deformación también entra en $u$ con $\operatorname{sen}^{2}20°$.
+          - valor: '23.015'
+            mensaje: |
+              Has usado el tramo de 80 cm, a tracción con 22,8 kN. La dirección
+              $u$ está dibujada a la derecha de $P$, en el tramo de 20 cm, que
+              trabaja a compresión.
+          - valor: '-8.5714'
+            mensaje: |
+              Es $\varepsilon_x = \sigma/E$, la deformación según el eje. La
+              dirección $u$ forma 20° con él: hay que proyectar,
+              $\varepsilon_u = \varepsilon_x\cos^{2}20° + \varepsilon_y\operatorname{sen}^{2}20°$.
+        pista: |
+          $\varepsilon_x = \sigma_2/E$, $\varepsilon_y = -\nu\varepsilon_x$,
+          $\gamma_{xy} = 0$, y la ec. 3.55 con el ángulo de $u$.
+        desarrollo: |
+          $$
+          \varepsilon_x = \frac{-18}{210\,000} = -8{,}571\cdot10^{-5},\qquad
+          \varepsilon_y = -0{,}3\,\varepsilon_x = 2{,}571\cdot10^{-5}
+          $$
+
+          $$
+          \varepsilon_u = \varepsilon_x\cos^{2}20° + \varepsilon_y\operatorname{sen}^{2}20°
+          = (-8{,}571\cdot0{,}8830 + 2{,}571\cdot0{,}1170)\cdot10^{-5} = -7{,}268\cdot10^{-5}
+          $$
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              a/ Antes de tocar solo trabaja el tramo de 80 cm:
+              $P\cdot800/EA = 0{,}2$ mm da $P = 21$ kN.
+          - texto: >-
+              b/ El plano forma 30° con la sección recta:
+              $\sigma_x = 20/\cos^{2}30° = 26{,}67$ MPa y
+              $\tau = 20\operatorname{tg}30° = 11{,}55$ MPa.
+          - texto: >-
+              c/ Con 30 kN toca: $N_1 - N_2 = P$ y
+              $(N_1\cdot800 + N_2\cdot200)/EA = 0{,}2$ dan $N_1 = 22{,}8$ kN y
+              $N_2 = -7{,}2$ kN.
+          - texto: >-
+              En el tramo de 20 cm, $\sigma = -18$ MPa,
+              $\varepsilon_x = -8{,}571\cdot10^{-5}$, $\varepsilon_y = 2{,}571\cdot10^{-5}$
+              y $\varepsilon_u = -7{,}268\cdot10^{-5}$.
+          - texto: >-
+              c/ Con 30 kN, los 21 kN primeros cierran la holgura y los 9 kN
+              que sobran los recoge entera la pared derecha.
+            trampa: true
+            mensaje: |
+              Tocada la pared, la barra está sujeta por los dos lados y el
+              exceso se reparte según las rigideces de los dos tramos: la
+              pared se lleva $9\cdot800/1000 = 7{,}2$ kN y la izquierda los
+              otros 1,8, que se suman a los 21.
+    resolucion: |
+      **Datos.** $EA = 210\,000\cdot400 = 8{,}4\cdot10^{7}$ N; $L_1 = 800$ mm
+      (de la pared izquierda a $P$), $L_2 = 200$ mm, $\xi = 0{,}2$ mm. Convenio
+      del tema 8: $N > 0$ a tracción, $\Delta L = NL/EA$ (ec. 8.9).
+
+      **a/ La carga que cierra la holgura.** Mientras el extremo no toca, el
+      tramo de 20 cm está libre ($N_2 = 0$) y solo se alarga el de 80 cm:
+
+      $$
+      \frac{P\,L_1}{EA} = \xi \;\Longrightarrow\; P = \frac{0{,}2\cdot8{,}4\cdot10^{7}}{800} = 21\,000\ \text{N} = 21\ \text{kN}
+      $$
+
+      **b/ El plano a 30°.** El plano dibujado forma 30° con la vertical (la
+      sección recta), así que su normal forma 30° con el eje: con el
+      convenio del tema 2, $\theta = 150°$ ($\hat{n}$ hacia arriba a la
+      izquierda, como la flecha de $\sigma$). En tracción simple
+      ($\sigma_y = \tau_{xy} = 0$), la ec. 2.59 da
+
+      $$
+      \sigma_n = \sigma_x\cos^{2}\theta = 20 \;\Longrightarrow\; \sigma_x = \frac{20}{0{,}75} = 26{,}67\ \text{MPa}
+      $$
+
+      $$
+      \tau_n = -\sigma_x\operatorname{sen}\theta\cos\theta = 20\operatorname{tg}30° = 11{,}55\ \text{MPa}
+      $$
+
+      Es un estado del tramo de 80 cm con $P = 26{,}67\cdot400 = 10{,}7$ kN,
+      que no llega a cerrar la holgura.
+
+      *La otra lectura.* Si «$\sigma$ = 20 MPa» se lee como la tensión de la
+      barra, $\sigma_x = 20$, la tangencial en el mismo plano es
+      $20\operatorname{sen}30°\cos30° = 8{,}66$ MPa. La flecha de la figura es
+      normal al plano, y por eso se toma la primera; las dos se dan por
+      buenas.
+
+      **c/ Con $P$ = 30 kN.** Como $30 > 21$, la barra toca, y desde ahí es
+      empotrada en las dos paredes. Equilibrio del punto de carga y
+      compatibilidad (el extremo derecho se ha movido exactamente $\xi$):
+
+      $$
+      N_1 - N_2 = P,\qquad \frac{N_1L_1 + N_2L_2}{EA} = \xi
+      $$
+
+      $$
+      N_1 = \frac{\xi EA + PL_2}{L_1 + L_2} = 22{,}8\ \text{kN},\qquad N_2 = -7{,}2\ \text{kN}
+      $$
+
+      En el tramo de 20 cm, $\sigma = -7200/400 = -18$ MPa. Con Hooke
+      ($\sigma_y = \sigma_z = 0$, ec. 4.2):
+
+      $$
+      \varepsilon_x = \frac{-18}{210\,000} = -8{,}571\cdot10^{-5},\qquad
+      \varepsilon_y = \varepsilon_z = -\nu\varepsilon_x = 2{,}571\cdot10^{-5},\qquad \gamma_{xy} = 0
+      $$
+
+      y la dirección $u$, a 20° del eje (ec. 3.55; el signo del ángulo no
+      importa porque $\gamma_{xy} = 0$):
+
+      $$
+      \varepsilon_u = \varepsilon_x\cos^{2}20° + \varepsilon_y\operatorname{sen}^{2}20° = -7{,}268\cdot10^{-5}
+      $$
+
+      **Comprobación.** El motor del curso, con la barra en dos tramos y la
+      holgura, da que toca justo a partir de 21 kN, $N_1 = 22{,}8$ kN y
+      $N_2 = -7{,}2$ kN (la reacción de la pared derecha), y $\varepsilon_u$
+      con $\{u\}^{t}[\varepsilon]\{u\}$ coincide con la ec. 3.55 escrita a mano.
+
+  # ── Problema 2 · los diagramas de la viga con la rótula en E.
+  - id: exerm1819-1par-6-la-gerber-con-la-rotula-en-e
+    titulo: Los diagramas de una viga Gerber con la rótula en E
+    fuente: >-
+      Problema 2 · Primer parcial del 16 de noviembre de 2018 · Elasticidad y
+      Resistencia de Materiales, Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU). Vale 2 puntos. El examen no publica resolución; el
+      desarrollo es nuestro, con el convenio del tema 7.
+    nivel: examen
+    enunciado: |
+      (2p) Determinar los diagramas de fuerzas cortantes y de momentos
+      flectores en función de $q_0$ y $a$. E es una articulación.
+
+      <figure class="figura-examen">
+      <svg viewBox="0 0 420 150" role="img" width="420" height="150" aria-labelledby="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-fig-t exerm1819-1par-6-la-gerber-con-la-rotula-en-e-fig-d">
+      <title id="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-fig-t">La viga ADBEC, con apoyo fijo en A, móviles en B y C y la rótula en E</title>
+      <desc id="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-fig-d">Una viga horizontal con cinco puntos a la misma distancia a: A, D, B, E y C, de izquierda a derecha. En A, un apoyo fijo; en B y en C, apoyos móviles sobre rodillos. En E hay una articulación. En D actúa una fuerza vertical hacia abajo P igual a q0 por a. Sobre el tramo EC, una carga repartida uniforme q0 hacia abajo.</desc>
+      <rect x="50" y="70" width="320" height="10" fill="var(--faint)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.3"/>
+      <polygon points="50,80 60,97.4 40,97.4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+      <polygon points="210,80 220,97.4 200,97.4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="204" cy="101" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/><circle cx="210" cy="101" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/><circle cx="216" cy="101" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+      <polygon points="370,80 380,97.4 360,97.4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="364" cy="101" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/><circle cx="370" cy="101" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/><circle cx="376" cy="101" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+      <circle cx="290" cy="75" r="6.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.4"/><circle cx="290" cy="75" r="1.6" fill="var(--ink)"/>
+      <line x1="130" y1="22" x2="130" y2="63" stroke="var(--ink)" stroke-width="1.8"/><polygon points="130,70 126.5,62 133.5,62" fill="var(--ink)"/>
+      <text x="136" y="30" font-size="13" font-style="italic" fill="var(--ink)">P = q<tspan font-size="9" dy="3">0</tspan><tspan dy="-3">a</tspan></text>
+      <line x1="290" y1="42" x2="370" y2="42" stroke="var(--ink)" stroke-width="1.2"/>
+      <line x1="290" y1="42" x2="290" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="290,70 287.4,64 292.6,64" fill="var(--ink)"/>
+      <line x1="301.4" y1="42" x2="301.4" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="301.4,70 298.8,64 304,64" fill="var(--ink)"/>
+      <line x1="312.9" y1="42" x2="312.9" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="312.9,70 310.3,64 315.5,64" fill="var(--ink)"/>
+      <line x1="324.3" y1="42" x2="324.3" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="324.3,70 321.7,64 326.9,64" fill="var(--ink)"/>
+      <line x1="335.7" y1="42" x2="335.7" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="335.7,70 333.1,64 338.3,64" fill="var(--ink)"/>
+      <line x1="347.1" y1="42" x2="347.1" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="347.1,70 344.5,64 349.7,64" fill="var(--ink)"/>
+      <line x1="358.6" y1="42" x2="358.6" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="358.6,70 356,64 361.2,64" fill="var(--ink)"/>
+      <line x1="370" y1="42" x2="370" y2="65" stroke="var(--ink)" stroke-width="1"/><polygon points="370,70 367.4,64 372.6,64" fill="var(--ink)"/>
+      <text x="320" y="34" font-size="13" font-style="italic" fill="var(--ink)">q<tspan font-size="9" dy="3">0</tspan></text>
+      <text x="34" y="96" font-size="13" fill="var(--ink)">A</text>
+      <text x="116" y="108" font-size="13" fill="var(--ink)">D</text>
+      <text x="192" y="96" font-size="13" fill="var(--ink)">B</text>
+      <text x="286" y="108" font-size="13" fill="var(--ink)">E</text>
+      <text x="352" y="96" font-size="13" fill="var(--ink)">C</text>
+      <line x1="50" y1="106" x2="50" y2="132" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="130" y1="80" x2="130" y2="132" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="210" y1="106" x2="210" y2="132" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="290" y1="80" x2="290" y2="132" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="370" y1="106" x2="370" y2="132" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 2"/>
+      <line x1="50" y1="128" x2="130" y2="128" stroke="var(--faint)" stroke-width="1"/><polygon points="130,128 123,130.6 123,125.4" fill="var(--faint)"/><polygon points="50,128 57,125.4 57,130.6" fill="var(--faint)"/><text x="90" y="123" text-anchor="middle" font-size="13" font-style="italic" fill="var(--ink)">a</text>
+      <line x1="130" y1="128" x2="210" y2="128" stroke="var(--faint)" stroke-width="1"/><polygon points="210,128 203,130.6 203,125.4" fill="var(--faint)"/><polygon points="130,128 137,125.4 137,130.6" fill="var(--faint)"/><text x="170" y="123" text-anchor="middle" font-size="13" font-style="italic" fill="var(--ink)">a</text>
+      <line x1="210" y1="128" x2="290" y2="128" stroke="var(--faint)" stroke-width="1"/><polygon points="290,128 283,130.6 283,125.4" fill="var(--faint)"/><polygon points="210,128 217,125.4 217,130.6" fill="var(--faint)"/><text x="250" y="123" text-anchor="middle" font-size="13" font-style="italic" fill="var(--ink)">a</text>
+      <line x1="290" y1="128" x2="370" y2="128" stroke="var(--faint)" stroke-width="1"/><polygon points="370,128 363,130.6 363,125.4" fill="var(--faint)"/><polygon points="290,128 297,125.4 297,130.6" fill="var(--faint)"/><text x="330" y="123" text-anchor="middle" font-size="13" font-style="italic" fill="var(--ink)">a</text>
+      </svg>
+      <figcaption>
+
+      Redibujada del enunciado, con las cotas, los apoyos y las cargas del
+      original.
+
+      </figcaption>
+      </figure>
+    pide: Los diagramas de cortantes y de flectores, con sus valores en función de q0 y a.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Por dónde se empieza a resolver la viga?
+        opciones:
+          - texto: >-
+              Por el tramo EC: el flector es nulo en la rótula E, y momentos
+              respecto de E dan la reacción de C
+            correcta: true
+            mensaje: |
+              Eso es. EC cuelga de la rótula y solo tiene un apoyo, C: con
+              $M_E = 0$ queda resuelto, $R_C = q_0a/2$. Lo que la rótula
+              transmite pasa al tramo AE como una fuerza más.
+          - texto: >-
+              Por el equilibrio global: tres reacciones verticales y dos
+              ecuaciones útiles bastan si se toman bien los momentos
+            mensaje: |
+              Tres incógnitas verticales ($R_A$, $R_B$, $R_C$) y solo dos
+              ecuaciones útiles del equilibrio global: falta una. Es la de la
+              rótula, $M_E = 0$; sin ella la viga parece hiperestática.
+          - texto: >-
+              La rótula no cambia nada: es una viga continua sobre tres
+              apoyos
+            mensaje: |
+              Una viga continua sobre tres apoyos **sería** hiperestática. La
+              rótula libera el giro relativo y obliga a que el flector sea cero
+              en E: es la ecuación que la hace isostática.
+      - tipo: calcular
+        titulo: La reacción en B
+        pregunta: |
+          ¿Cuánto vale la reacción en B, en unidades de $q_0a$? Positiva hacia
+          arriba.
+        respuesta:
+          tipo: numero
+          valor: '1.25'
+          tolerancia: 0.001
+          formato: un número, en unidades de q0·a
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Has resuelto AE solo con $P$, sin la fuerza de la rótula. EC
+              se apoya en E: le pasa a AE $q_0a/2$ hacia abajo, en E, a $3a$ de
+              A. Momentos en A: $R_B\cdot2a = q_0a\cdot a + \tfrac{q_0a}{2}\cdot3a$.
+          - valor: '2.25'
+            mensaje: |
+              Has cargado AE con toda la repartida de EC, $q_0a$ en su centro,
+              a $3{,}5a$ de A. La rótula parte la viga: la mitad de esa carga
+              la recoge C, y AE solo recibe $q_0a/2$ en E.
+        pista: |
+          EC: $R_C = q_0a/2$, y la rótula empuja AE hacia abajo con $q_0a/2$
+          en E. Luego momentos respecto de A en AE.
+        desarrollo: |
+          $$
+          R_B\cdot2a = q_0a\cdot a + \tfrac{q_0a}{2}\cdot3a \;\Longrightarrow\; R_B = \tfrac54\,q_0a
+          $$
+
+          y la vertical de AE: $R_A = q_0a + \tfrac{q_0a}{2} - \tfrac54q_0a = \tfrac14\,q_0a$.
+      - tipo: calcular
+        titulo: El flector en D
+        pregunta: |
+          ¿Cuánto vale el flector en D, en unidades de $q_0a^{2}$? Con el
+          convenio del curso: positivo si tracciona la fibra inferior.
+        respuesta:
+          tipo: numero
+          valor: '0.25'
+          tolerancia: 0.001
+          formato: un número, en unidades de q0·a²
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Es $Pab/L = q_0a\cdot a\cdot a/2a$, el de AB biapoyada con la
+              carga en el centro. Pero B no es un extremo: el vuelo BE lleva la
+              fuerza de la rótula, que levanta A y baja el flector. Con
+              $R_A = q_0a/4$, $M_D = R_A\cdot a$.
+          - valor: '-0.25'
+            mensaje: |
+              El valor está bien y el signo no. A la izquierda de D solo está
+              $R_A$, hacia arriba: hace girar la parte izquierda en sentido
+              horario y tracciona la fibra inferior. Es positivo.
+        pista: |
+          $M_D = R_A\cdot a$, tomando la parte izquierda de la sección D.
+        desarrollo: |
+          $$
+          M_D = \tfrac14q_0a\cdot a = \tfrac14\,q_0a^{2}
+          $$
+      - tipo: calcular
+        titulo: El flector en B
+        pregunta: |
+          ¿Cuánto vale el flector en B, en unidades de $q_0a^{2}$?
+        respuesta:
+          tipo: numero
+          valor: '-0.5'
+          tolerancia: 0.001
+          formato: un número, en unidades de q0·a²
+        distractores:
+          - valor: '-1'
+            mensaje: |
+              Has puesto en E la carga entera de EC, $q_0a$. La rótula solo
+              transmite $q_0a/2$: desde la derecha, $M_B = -\tfrac{q_0a}{2}\cdot a$.
+          - valor: '0.5'
+            mensaje: |
+              El valor está bien y el signo no. BE es un vuelo con una fuerza
+              hacia abajo en la punta: tracciona la fibra **superior**, y el
+              flector es negativo.
+        pista: |
+          Desde la derecha de B, en AE: solo la fuerza de la rótula,
+          $q_0a/2$ hacia abajo, a una distancia $a$.
+        desarrollo: |
+          $$
+          M_B = -\tfrac{q_0a}{2}\cdot a = -\tfrac12\,q_0a^{2}
+          $$
+
+          Desde la izquierda sale igual: $R_A\cdot2a - P\cdot a = \tfrac12q_0a^{2} - q_0a^{2}$.
+      - tipo: calcular
+        titulo: El flector máximo de EC
+        pregunta: |
+          En EC el flector tiene un máximo relativo. ¿Cuánto vale, en unidades
+          de $q_0a^{2}$?
+        respuesta:
+          tipo: numero
+          valor: '0.125'
+          tolerancia: 0.001
+          formato: un número, en unidades de q0·a²
+        distractores:
+          - valor: '0.5'
+            mensaje: |
+              Es $q_0a^{2}/2$, el empotramiento de un voladizo con esa carga.
+              EC está apoyada en sus dos extremos (la rótula y C) y se comporta
+              como una biapoyada: su máximo es $q_0a^{2}/8$, en el centro.
+          - valor: '0.25'
+            mensaje: |
+              Es $M_D$, el mayor flector positivo de toda la viga. El máximo
+              **relativo** de EC está donde se anula el cortante, en el centro
+              del tramo, y vale $q_0a^{2}/8$.
+        pista: |
+          En EC, $V = q_0a/2 - q_0s$, con $s$ medida desde E. Se anula en
+          $s = a/2$; el área del cortante hasta ahí es el flector.
+        desarrollo: |
+          $$
+          M\!\left(\tfrac a2\right) = 0 + \tfrac12\cdot\tfrac{q_0a}{2}\cdot\tfrac a2 = \tfrac18\,q_0a^{2}
+          $$
+      - tipo: dibujar
+        consigna: |
+          En papel: **los diagramas de cortantes y de flectores**, alineados
+          bajo la viga, con los valores en A, D, B, E y C y el máximo de EC.
+        comprueba:
+          - punto: |
+              **Cortante de $q_0a/4$ en AD**, salto de $-q_0a$ en D hasta
+              $-3q_0a/4$, y salto de $\tfrac54q_0a$ en B hasta $q_0a/2$.
+            porque: |
+              Cada fuerza concentrada hace saltar el cortante lo que vale: $P$
+              hacia abajo en D, la reacción de B hacia arriba.
+          - punto: |
+              **$q_0a/2$ constante de B a E, que pasa la rótula sin saltar**, y
+              recta en EC hasta $-q_0a/2$ en C, con el cero en el centro.
+            porque: |
+              La rótula transmite cortante; lo que no transmite es momento. En
+              EC la carga repartida baja el cortante con pendiente $-q_0$.
+          - punto: |
+              **Flector: 0 en A, $q_0a^{2}/4$ en D, $-q_0a^{2}/2$ en B y 0 en E**,
+              rectas entre ellos.
+            porque: |
+              Sin carga repartida, el flector es lineal (dM/dx = V constante),
+              y en la rótula vale cero por definición: si no pasa por cero en
+              E, hay un error antes.
+          - punto: |
+              **Parábola en EC**, de 0 en E a 0 en C, con el máximo
+              $q_0a^{2}/8$ en el centro.
+            porque: |
+              Con carga uniforme el flector es parabólico, y su extremo está
+              donde el cortante se anula.
+        figura: |
+          <svg viewBox="0 0 400 266" role="img" width="400" height="266" aria-labelledby="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dib-t exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dib-d">
+          <title id="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dib-t">Los diagramas de cortantes y de flectores de la viga ADBEC</title>
+          <desc id="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dib-d">Dos diagramas alineados con la viga, a escala. Cortantes: un cuarto de q0 a, constante, de A a D; menos tres cuartos de q0 a de D a B; un medio de q0 a de B a E, que pasa la rótula sin saltar; y en EC una recta de un medio a menos un medio de q0 a, que corta el cero en el centro del tramo. Flectores, positivos hacia arriba: cero en A, recta hasta un cuarto de q0 a cuadrado en D, recta hasta menos un medio en B, recta hasta cero en la rótula E, y en EC una parábola con su máximo, un octavo de q0 a cuadrado, en el centro, que vuelve a cero en C.</desc>
+          <line x1="50" y1="62" x2="370" y2="62" stroke="var(--ink)" stroke-width="1.1"/><text x="12" y="66" font-size="13" font-weight="bold" fill="var(--ink)">V</text>
+          <path d="M50 62 V52 H130 V92 H210 V42 H290 L370 82 V62" fill="var(--d2)" fill-opacity=".18" stroke="var(--d2)" stroke-width="1.4"/>
+          <text x="90" y="47" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a/4</text>
+          <text x="170" y="107" text-anchor="middle" font-size="11.5" fill="var(--ink)">−3q₀a/4</text>
+          <text x="250" y="37" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a/2</text>
+          <text x="344" y="97" text-anchor="middle" font-size="11.5" fill="var(--ink)">−q₀a/2</text>
+          <line x1="50" y1="186" x2="370" y2="186" stroke="var(--ink)" stroke-width="1.1"/><text x="12" y="190" font-size="13" font-weight="bold" fill="var(--ink)">M</text>
+          <path d="M50 186 L130 170 L210 218 L290 186 L290 186 L293.3 184.7 L296.7 183.6 L300 182.5 L303.3 181.6 L306.7 180.7 L310 180 L313.3 179.4 L316.7 178.9 L320 178.5 L323.3 178.2 L326.7 178.1 L330 178 L333.3 178.1 L336.7 178.2 L340 178.5 L343.3 178.9 L346.7 179.4 L350 180 L353.3 180.7 L356.7 181.6 L360 182.5 L363.3 183.6 L366.7 184.7 L370 186 Z" fill="var(--live)" fill-opacity=".16" stroke="var(--live)" stroke-width="1.5"/>
+          <text x="130" y="164" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a²/4</text>
+          <text x="210" y="233" text-anchor="middle" font-size="11.5" fill="var(--ink)">−q₀a²/2</text>
+          <text x="330" y="172" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a²/8</text>
+          <text x="299" y="201" text-anchor="middle" font-size="11.5" fill="var(--ink)">0</text>
+          <line x1="50" y1="18" x2="50" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+          <text x="50" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">A</text>
+          <line x1="130" y1="18" x2="130" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+          <text x="130" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">D</text>
+          <line x1="210" y1="18" x2="210" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+          <text x="210" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">B</text>
+          <line x1="290" y1="18" x2="290" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+          <text x="290" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">E</text>
+          <line x1="370" y1="18" x2="370" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+          <text x="370" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">C</text>
+          <text x="50" y="254" font-size="10.5" fill="var(--faint)">A escala. Positivos hacia arriba; M &gt; 0 tracciona la fibra inferior.</text>
+          </svg>
+      - tipo: justificar
+        pregunta: Ordena la resolución de examen. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Tramo EC, momentos respecto de la rótula E: $R_C = q_0a/2$, y la
+              rótula transmite $q_0a/2$.
+          - texto: >-
+              Tramo AE, con $q_0a/2$ hacia abajo en E: momentos en A dan
+              $R_B = \tfrac54q_0a$, y la vertical, $R_A = \tfrac14q_0a$.
+          - texto: >-
+              Cortantes: $q_0a/4$ en AD, $-\tfrac34q_0a$ en DB, $q_0a/2$ en BE y
+              recta de $q_0a/2$ a $-q_0a/2$ en EC.
+          - texto: >-
+              Flectores: 0 en A, $\tfrac14q_0a^{2}$ en D, $-\tfrac12q_0a^{2}$ en
+              B, 0 en E y máximo $\tfrac18q_0a^{2}$ en el centro de EC.
+          - texto: >-
+              En la rótula el cortante también es cero, porque una
+              articulación no transmite esfuerzos.
+            trampa: true
+            mensaje: |
+              Una rótula no transmite **momento**, pero sí fuerza: aquí pasa
+              $q_0a/2$ de EC a AE, y el cortante en E vale $q_0a/2$. Sin esa
+              fuerza, $R_B$ no saldría $\tfrac54q_0a$.
+    resolucion: |
+      **Convenio** (apuntes del tema 7, pp. 8-9 y 12): cortante positivo si la
+      resultante a la izquierda de la sección va hacia arriba, flector
+      positivo si tracciona la fibra inferior, $dV/dx = -q$ y $dM/dx = V$
+      (ecs. 7.14 y 7.15). Origen en A; los puntos A, D, B, E y C están a $a$
+      uno de otro.
+
+      **El tramo EC.** El flector en la rótula es cero. Momentos respecto de
+      E:
+
+      $$
+      R_C\,a = q_0a\cdot\tfrac a2 \;\Longrightarrow\; R_C = \tfrac12\,q_0a
+      $$
+
+      y la vertical de EC deja en la rótula $q_0a/2$: hacia arriba sobre EC
+      y hacia abajo sobre AE.
+
+      **El tramo AE.** Con $P = q_0a$ en D y $q_0a/2$ hacia abajo en E:
+
+      $$
+      R_B\cdot2a = q_0a\cdot a + \tfrac{q_0a}{2}\cdot3a \;\Longrightarrow\; R_B = \tfrac54\,q_0a,\qquad
+      R_A = q_0a + \tfrac{q_0a}{2} - \tfrac54q_0a = \tfrac14\,q_0a
+      $$
+
+      **Cortantes.**
+
+      $$
+      V = \begin{cases}
+      \tfrac14\,q_0a & 0 < x < a\\[2pt]
+      -\tfrac34\,q_0a & a < x < 2a\\[2pt]
+      \tfrac12\,q_0a & 2a < x < 3a\\[2pt]
+      \tfrac12\,q_0a - q_0(x-3a) & 3a < x < 4a
+      \end{cases}
+      $$
+
+      Salta $-q_0a$ en D y $\tfrac54q_0a$ en B, pasa la rótula sin saltar y
+      se anula en el centro de EC, $x = 3{,}5a$.
+
+      **Flectores.**
+
+      $$
+      M = \begin{cases}
+      \tfrac14\,q_0a\,x & 0 \le x \le a\\[2pt]
+      \tfrac14\,q_0a^{2} - \tfrac34\,q_0a\,(x-a) & a \le x \le 2a\\[2pt]
+      -\tfrac12\,q_0a^{2} + \tfrac12\,q_0a\,(x-2a) & 2a \le x \le 3a\\[2pt]
+      \tfrac12\,q_0a\,(x-3a) - \tfrac12\,q_0(x-3a)^{2} & 3a \le x \le 4a
+      \end{cases}
+      $$
+
+      Valores: $M_A = 0$, $M_D = \tfrac14q_0a^{2}$, $M_B = -\tfrac12q_0a^{2}$,
+      $M_E = 0$, **máximo de EC $\tfrac18q_0a^{2}$ en $x = 3{,}5a$** y
+      $M_C = 0$. El flector de mayor valor absoluto es el de B,
+      $\tfrac12q_0a^{2}$, que tracciona la fibra superior.
+
+      <figure class="figura-examen">
+      <svg viewBox="0 0 400 266" role="img" width="400" height="266" aria-labelledby="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dia-t exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dia-d">
+      <title id="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dia-t">Los diagramas de cortantes y de flectores de la viga ADBEC</title>
+      <desc id="exerm1819-1par-6-la-gerber-con-la-rotula-en-e-dia-d">Dos diagramas alineados con la viga, a escala. Cortantes: un cuarto de q0 a, constante, de A a D; menos tres cuartos de q0 a de D a B; un medio de q0 a de B a E, que pasa la rótula sin saltar; y en EC una recta de un medio a menos un medio de q0 a, que corta el cero en el centro del tramo. Flectores, positivos hacia arriba: cero en A, recta hasta un cuarto de q0 a cuadrado en D, recta hasta menos un medio en B, recta hasta cero en la rótula E, y en EC una parábola con su máximo, un octavo de q0 a cuadrado, en el centro, que vuelve a cero en C.</desc>
+      <line x1="50" y1="62" x2="370" y2="62" stroke="var(--ink)" stroke-width="1.1"/><text x="12" y="66" font-size="13" font-weight="bold" fill="var(--ink)">V</text>
+      <path d="M50 62 V52 H130 V92 H210 V42 H290 L370 82 V62" fill="var(--d2)" fill-opacity=".18" stroke="var(--d2)" stroke-width="1.4"/>
+      <text x="90" y="47" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a/4</text>
+      <text x="170" y="107" text-anchor="middle" font-size="11.5" fill="var(--ink)">−3q₀a/4</text>
+      <text x="250" y="37" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a/2</text>
+      <text x="344" y="97" text-anchor="middle" font-size="11.5" fill="var(--ink)">−q₀a/2</text>
+      <line x1="50" y1="186" x2="370" y2="186" stroke="var(--ink)" stroke-width="1.1"/><text x="12" y="190" font-size="13" font-weight="bold" fill="var(--ink)">M</text>
+      <path d="M50 186 L130 170 L210 218 L290 186 L290 186 L293.3 184.7 L296.7 183.6 L300 182.5 L303.3 181.6 L306.7 180.7 L310 180 L313.3 179.4 L316.7 178.9 L320 178.5 L323.3 178.2 L326.7 178.1 L330 178 L333.3 178.1 L336.7 178.2 L340 178.5 L343.3 178.9 L346.7 179.4 L350 180 L353.3 180.7 L356.7 181.6 L360 182.5 L363.3 183.6 L366.7 184.7 L370 186 Z" fill="var(--live)" fill-opacity=".16" stroke="var(--live)" stroke-width="1.5"/>
+      <text x="130" y="164" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a²/4</text>
+      <text x="210" y="233" text-anchor="middle" font-size="11.5" fill="var(--ink)">−q₀a²/2</text>
+      <text x="330" y="172" text-anchor="middle" font-size="11.5" fill="var(--ink)">q₀a²/8</text>
+      <text x="299" y="201" text-anchor="middle" font-size="11.5" fill="var(--ink)">0</text>
+      <line x1="50" y1="18" x2="50" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+      <text x="50" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">A</text>
+      <line x1="130" y1="18" x2="130" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+      <text x="130" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">D</text>
+      <line x1="210" y1="18" x2="210" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+      <text x="210" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">B</text>
+      <line x1="290" y1="18" x2="290" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+      <text x="290" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">E</text>
+      <line x1="370" y1="18" x2="370" y2="220" stroke="var(--faint)" stroke-width=".6" stroke-dasharray="3 3"/>
+      <text x="370" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--ink)">C</text>
+      <text x="50" y="254" font-size="10.5" fill="var(--faint)">A escala. Positivos hacia arriba; M &gt; 0 tracciona la fibra inferior.</text>
+      </svg>
+      <figcaption>
+
+      Los diagramas, a escala. Positivos hacia arriba.
+
+      </figcaption>
+      </figure>
+
+      **Comprobación.** Equilibrio global: $R_A + R_B + R_C = 2q_0a$, que es
+      toda la carga ($q_0a + q_0a$). Integrando el cortante tramo a tramo
+      desde $M_A = 0$ se llega a $M_E = 0$ en la rótula, que es la prueba de
+      que las reacciones están bien. El motor del curso, con la viga escrita
+      como «fijo en A, móviles en B y C, rótula en E», da las mismas
+      reacciones, los mismos valores y el mismo máximo en el centro de EC.
+
+  # ── Problema 3 · AB rígida, articulada en A, con las barras 1 y 2 en B.
+  - id: exerm1819-1par-7-ab-rigida-con-dos-barras
+    titulo: La barra rígida AB sostenida por dos barras de distinto módulo
+    fuente: >-
+      Problema 3 · Primer parcial del 16 de noviembre de 2018 · Elasticidad y
+      Resistencia de Materiales, Escuela de Ingeniería de Gipuzkoa
+      (UPV/EHU). Vale 2 puntos. El examen no publica resolución; el
+      desarrollo es nuestro, con el convenio del tema 8.
+    nivel: examen
+    enunciado: |
+      (2 p) La estructura de la figura soporta la fuerza $P$ en B y la barra
+      AB puede considerarse rígida. Las barras 1 y 2 tienen la misma sección
+      $A$ y $E_1 = 3E_2$. Determinar:
+
+      a/ Fuerzas en la barras 1, 2 y AB.
+
+      b/ Ángulo girado por AB.
+
+      <figure class="figura-examen">
+      <svg viewBox="0 0 300 340" role="img" width="300" height="340" aria-labelledby="exerm1819-1par-7-ab-rigida-con-dos-barras-fig-t exerm1819-1par-7-ab-rigida-con-dos-barras-fig-d">
+      <title id="exerm1819-1par-7-ab-rigida-con-dos-barras-fig-t">La barra rígida AB articulada en A y sostenida en B por las barras 1 y 2</title>
+      <desc id="exerm1819-1par-7-ab-rigida-con-dos-barras-fig-d">Una barra rígida AB, articulada en un apoyo fijo en A, sube hacia la derecha formando 30° con la vertical. Su extremo superior B está unido a dos barras articuladas que van a dos apoyos fijos situados en la vertical de A: la barra 1, horizontal, y la barra 2, más arriba, que forma 30° con la barra 1. El apoyo de la barra 2 está a una altura a sobre A. En B actúa una fuerza P vertical hacia abajo.</desc>
+      <line x1="120" y1="40" x2="120" y2="300" stroke="var(--faint)" stroke-width="1" stroke-dasharray="2 3"/>
+      <path d="M90 40 H44 M114 300 H44" fill="none" stroke="var(--faint)" stroke-width=".8" stroke-dasharray="2 3"/>
+      <line x1="52" y1="40" x2="52" y2="300" stroke="var(--faint)" stroke-width="1"/><polygon points="52,300 49.4,293 54.6,293" fill="var(--faint)"/><polygon points="52,40 54.6,47 49.4,47" fill="var(--faint)"/><text x="40" y="175" text-anchor="middle" font-size="13" font-style="italic" fill="var(--ink)">a</text>
+      <line x1="120" y1="105" x2="232.6" y2="105" stroke="var(--ink)" stroke-width="2"/>
+      <line x1="120" y1="40" x2="232.6" y2="105" stroke="var(--ink)" stroke-width="2"/>
+      <line x1="120" y1="300" x2="232.6" y2="105" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/><line x1="120" y1="300" x2="232.6" y2="105" stroke="var(--faint)" stroke-width="3.4"/>
+      <polygon points="120,105 104.3,114 104.3,96" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+      <polygon points="120,40 104.3,49 104.3,31" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+      <polygon points="120,300 129,315.7 111,315.7" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="120" cy="105" r="3.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="120" cy="40" r="3.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="120" cy="300" r="3.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="232.6" cy="105" r="3.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>
+      <line x1="232.6" y1="110" x2="232.6" y2="152" stroke="var(--faint)" stroke-width="2.4"/><polygon points="232.6,161 228.1,151 237.1,151" fill="var(--faint)"/>
+      <text x="241.6" y="161" font-size="14" font-weight="bold" font-style="italic" fill="var(--ink)">P</text>
+      <path d="M162.6 105 A70 70 0 0 1 172 70" fill="none" stroke="var(--ink)" stroke-width="1"/><polygon points="162.6,105 160.2,99 165,99" fill="var(--ink)"/><polygon points="172,70 171.1,76.4 166.9,74" fill="var(--ink)"/>
+      <text x="140.6" y="91" font-size="13" fill="var(--ink)">30°</text>
+      <path d="M120 228 A72 72 0 0 1 156 237.6" fill="none" stroke="var(--ink)" stroke-width="1"/><polygon points="120,228 126,225.6 126,230.4" fill="var(--ink)"/><polygon points="156,237.6 149.6,236.7 152,232.6" fill="var(--ink)"/>
+      <text x="124" y="220" font-size="13" fill="var(--ink)">30°</text>
+      <rect x="173.3" y="114" width="18" height="18" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/><text x="182.3" y="128" text-anchor="middle" font-size="13" fill="var(--ink)">1</text>
+      <rect x="192.072" y="59.8" width="18" height="18" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/><text x="201.072" y="73.8" text-anchor="middle" font-size="13" fill="var(--ink)">2</text>
+      <text x="241.6" y="109" font-size="14" fill="var(--ink)">B</text><text x="130" y="304" font-size="14" fill="var(--ink)">A</text>
+      </svg>
+      <figcaption>
+
+      Redibujada del enunciado, con sus dos ángulos de 30° y la cota <i>a</i>.
+
+      </figcaption>
+      </figure>
+
+      **Notas nuestras.** Los apoyos de las barras 1 y 2 están en la
+      vertical de A, como en la figura. Con los dos 30° y la cota $a$:
+      $L_{AB} = \tfrac{\sqrt3}{2}a$, B está a $\tfrac{\sqrt3}{4}a$ de esa
+      vertical y a $\tfrac34a$ por encima de A, $L_1 = \tfrac{\sqrt3}{4}a$ y
+      $L_2 = \tfrac a2$. Las respuestas van en unidades de $P$ y de
+      $P/(E_2A)$, porque el examen no da números.
+    pide: >-
+      N1, N2 y la fuerza de AB en unidades de P (tracción positiva), y el
+      giro de AB en unidades de P/(E2·A), antihorario positivo.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          AB gira un ángulo pequeño $\theta$ alrededor de A. ¿Cómo se mueve B y
+          cuánto se alarga cada barra?
+        opciones:
+          - texto: >-
+              B se mueve perpendicular a AB, $\theta\cdot L_{AB}$; cada barra
+              se alarga la proyección de ese desplazamiento sobre ella
+            correcta: true
+            mensaje: |
+              Eso es: «el arco se sustituye por la tangente» (apuntes del tema
+              8, ecs. 8.10-8.12). B baja y se va hacia la derecha, y las dos
+              barras, que tiran de B hacia la izquierda, se alargan.
+          - texto: >-
+              B baja verticalmente, y cada barra se alarga lo que baja B por
+              el seno de su ángulo
+            mensaje: |
+              B no puede bajar en vertical: está en una barra rígida
+              articulada en A, así que se mueve **perpendicular a AB**, a 30°
+              de la horizontal. Con un descenso vertical, la barra 1, que es
+              horizontal, no se alargaría nada.
+          - texto: >-
+              Las dos barras se alargan lo mismo, porque las dos llegan a B
+            mensaje: |
+              Llegan al mismo punto pero con direcciones distintas: cada una
+              ve la proyección del desplazamiento de B sobre **su** dirección.
+              Aquí $\Delta L_1 = \tfrac34a\theta$ y $\Delta L_2 = \tfrac{\sqrt3}{2}a\theta$
+              (en valor absoluto).
+      - tipo: calcular
+        titulo: La fuerza en la barra 1
+        pregunta: |
+          ¿Cuánto vale $N_1$, en unidades de $P$? Positiva a tracción.
+        respuesta:
+          tipo: numero
+          valor: '0.41689'
+          tolerancia: 0.0005
+          formato: un número, en unidades de P (vale 3/(3√3 + 2))
+        distractores:
+          - valor: '0.26795'
+            mensaje: |
+              Has tomado las dos barras con el mismo módulo: así llevarían lo
+              mismo, $0{,}268P$ cada una. Con $E_1 = 3E_2$ la barra 1 es tres
+              veces más rígida y se lleva tres veces la fuerza de la 2:
+              $N_1 = 3N_2$.
+          - valor: '0.12933'
+            mensaje: |
+              Has puesto el módulo al revés, $E_2 = 3E_1$. El enunciado dice
+              $E_1 = 3E_2$: la barra más rígida es la 1.
+        pista: |
+          Compatibilidad: $N_1 = \dfrac{E_1A}{L_1}\Delta L_1$ y
+          $N_2 = \dfrac{E_2A}{L_2}\Delta L_2$ dan $N_1 = 3N_2$. Momentos en A:
+          $\tfrac34a\,N_1 + \tfrac{\sqrt3}{2}a\,N_2 = \tfrac{\sqrt3}{4}a\,P$.
+        desarrollo: |
+          Con $\theta$ horario y pequeño, $\Delta L_1 = \tfrac34a\theta$ y
+          $\Delta L_2 = \tfrac{\sqrt3}{2}a\theta$:
+
+          $$
+          N_1 = \frac{3E_2A}{\sqrt3a/4}\cdot\frac34a\theta = 3\sqrt3\,E_2A\theta,\qquad
+          N_2 = \frac{E_2A}{a/2}\cdot\frac{\sqrt3}{2}a\theta = \sqrt3\,E_2A\theta
+          $$
+
+          Así $N_1 = 3N_2$, y en la ecuación de momentos:
+
+          $$
+          \tfrac94N_2 + \tfrac{\sqrt3}{2}N_2 = \tfrac{\sqrt3}{4}P \;\Longrightarrow\;
+          N_2 = \frac{P}{3\sqrt3 + 2} = 0{,}1390P,\qquad N_1 = \frac{3P}{3\sqrt3 + 2} = 0{,}4169P
+          $$
+      - tipo: calcular
+        titulo: La fuerza en la barra 2
+        pregunta: |
+          ¿Cuánto vale $N_2$, en unidades de $P$? Positiva a tracción.
+        respuesta:
+          tipo: numero
+          valor: '0.13896'
+          tolerancia: 0.0005
+          formato: un número, en unidades de P (vale 1/(3√3 + 2))
+        distractores:
+          - valor: '0.26795'
+            mensaje: |
+              Es lo que sale con $E_1 = E_2$: las dos barras llevarían lo
+              mismo. La barra 1 es tres veces más rígida y se queda con tres
+              veces más fuerza.
+          - valor: '0.38800'
+            mensaje: |
+              Has puesto el módulo al revés, $E_2 = 3E_1$: entonces la barra 2
+              sería la rígida y se llevaría la mayor parte. Es al contrario.
+        pista: |
+          $N_2 = N_1/3$.
+        desarrollo: |
+          $$
+          N_2 = \frac{N_1}{3} = \frac{P}{3\sqrt3 + 2} = 0{,}1390\,P
+          $$
+      - tipo: calcular
+        titulo: La fuerza en AB
+        pregunta: |
+          AB solo recibe fuerzas en sus extremos. ¿Cuánto vale su fuerza
+          normal, en unidades de $P$? Positiva a tracción.
+        respuesta:
+          tipo: numero
+          valor: '-1.07447'
+          tolerancia: 0.0005
+          formato: un número, en unidades de P
+        distractores:
+          - valor: '1.07447'
+            mensaje: |
+              El valor está bien y el signo no. AB empuja a B hacia arriba y
+              hacia la derecha, alejándolo de A: la barra está **comprimida**,
+              y con el convenio del curso eso es $N < 0$.
+          - valor: '-1.1547'
+            mensaje: |
+              Es $P/\cos30°$: AB sosteniendo $P$ ella sola. Las barras 1 y 2
+              tiran de B hacia la izquierda y hacia arriba, y la fuerza de AB
+              es lo que equilibra las tres juntas.
+        pista: |
+          Equilibrio del nudo B: la fuerza de AB va según AB y equilibra
+          $N_1$ (hacia la izquierda), $N_2$ (hacia arriba a la izquierda, a 30°)
+          y $P$.
+        desarrollo: |
+          Lo que AB tiene que hacer sobre B:
+
+          $$
+          F_x = N_1 + \tfrac{\sqrt3}{2}N_2 = 0{,}5372P,\qquad
+          F_y = P - \tfrac12N_2 = 0{,}9305P
+          $$
+
+          Su cociente es $\operatorname{tg}30°$: va según AB, como tiene que
+          ir. Su módulo, $\sqrt{F_x^{2} + F_y^{2}} = 1{,}0745P$, empuja a B
+          lejos de A: $N_{AB} = -1{,}0745P$, compresión.
+      - tipo: calcular
+        titulo: El giro de AB
+        pregunta: |
+          ¿Cuánto gira AB, en unidades de $P/(E_2A)$? Antihorario positivo.
+        respuesta:
+          tipo: numero
+          valor: '-0.08023'
+          tolerancia: 0.0001
+          formato: un número, en unidades de P/(E2·A), en radianes
+        distractores:
+          - valor: '0.08023'
+            mensaje: |
+              El valor está bien y el sentido no. Con la carga hacia abajo en
+              B, AB gira hacia la derecha, en sentido **horario**: negativo.
+          - valor: '-0.15470'
+            mensaje: |
+              Es el giro con $E_1 = E_2$. Con la barra 1 tres veces más
+              rígida, la estructura cede menos y el giro es menor.
+        pista: |
+          $N_2 = \sqrt3\,E_2A\,|\theta|$, del paso de $N_1$.
+        desarrollo: |
+          $$
+          |\theta| = \frac{N_2}{\sqrt3\,E_2A} = \frac{P}{\sqrt3(3\sqrt3 + 2)E_2A} = \frac{P}{(9 + 2\sqrt3)E_2A}
+          = 0{,}08023\,\frac{P}{E_2A}
+          $$
+
+          en sentido horario: $\theta = -0{,}08023\,P/(E_2A)$ rad.
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: >-
+              Una sola incógnita de movimiento: el giro $\theta$ de AB
+              alrededor de A. B se mueve perpendicular a AB.
+          - texto: >-
+              Alargamientos por proyección: $\Delta L_1 = \tfrac34a\theta$ y
+              $\Delta L_2 = \tfrac{\sqrt3}{2}a\theta$; con $E_1 = 3E_2$,
+              $N_1 = 3\sqrt3E_2A\theta$ y $N_2 = \sqrt3E_2A\theta$.
+          - texto: >-
+              Momentos respecto de A:
+              $\tfrac34a\,N_1 + \tfrac{\sqrt3}{2}a\,N_2 = \tfrac{\sqrt3}{4}a\,P$, de
+              donde $N_2 = P/(3\sqrt3 + 2)$ y $N_1 = 3N_2$.
+          - texto: >-
+              Equilibrio del nudo B: $N_{AB} = -1{,}0745P$ (compresión), y
+              $\theta = -P/((9 + 2\sqrt3)E_2A)$, horario.
+          - texto: >-
+              Como AB es rígida, no se deforma y no trabaja: toda la carga la
+              llevan las barras 1 y 2.
+            trampa: true
+            mensaje: |
+              Rígida quiere decir que no se deforma, no que no tenga fuerza.
+              AB está comprimida con $1{,}07P$: es la que lleva la mayor parte
+              de la carga a la articulación A.
+    resolucion: |
+      **Geometría.** Con los dos 30° y la cota $a$ (de A a la altura del
+      apoyo de la barra 2): la barra 2 sube de B hasta $a$, así que
+      $a = L_{AB}\cos30° + L_{AB}\operatorname{sen}30°\operatorname{tg}30°$, y
+
+      $$
+      L_{AB} = \tfrac{\sqrt3}{2}a,\qquad B = \left(\tfrac{\sqrt3}{4}a,\ \tfrac34a\right),\qquad
+      L_1 = \tfrac{\sqrt3}{4}a,\qquad L_2 = \tfrac a2
+      $$
+
+      con el origen en A, X hacia la derecha e Y hacia arriba.
+
+      **Compatibilidad** (apuntes del tema 8, ecs. 8.9-8.12). AB gira un
+      ángulo pequeño alrededor de A; con $\theta$ antihorario positivo, B se
+      mueve $\theta(-\tfrac34a,\ \tfrac{\sqrt3}{4}a)$. Proyectando sobre cada
+      barra (del apoyo hacia B):
+
+      $$
+      \Delta L_1 = -\tfrac34a\,\theta,\qquad \Delta L_2 = -\tfrac{\sqrt3}{2}a\,\theta
+      $$
+
+      $$
+      N_1 = \frac{3E_2A}{L_1}\Delta L_1 = -3\sqrt3\,E_2A\,\theta,\qquad
+      N_2 = \frac{E_2A}{L_2}\Delta L_2 = -\sqrt3\,E_2A\,\theta
+      \;\Longrightarrow\; N_1 = 3N_2
+      $$
+
+      **Equilibrio.** AB solo tiene fuerzas en A y en B. Momentos respecto de
+      A de las fuerzas en B ($N_1$ hacia la izquierda, $N_2$ hacia el apoyo
+      2, $P$ hacia abajo):
+
+      $$
+      \tfrac34a\,N_1 + \tfrac{\sqrt3}{2}a\,N_2 - \tfrac{\sqrt3}{4}a\,P = 0
+      \;\Longrightarrow\;
+      N_2 = \frac{P}{3\sqrt3 + 2} = 0{,}1390\,P,\qquad N_1 = \frac{3P}{3\sqrt3 + 2} = 0{,}4169\,P
+      $$
+
+      Las dos a tracción.
+
+      **La fuerza de AB.** El nudo B: AB tiene que hacer sobre él
+      $(N_1 + \tfrac{\sqrt3}{2}N_2,\ P - \tfrac12N_2) = (0{,}5372;\ 0{,}9305)P$,
+      que va según AB (su cociente es $\operatorname{tg}30°$) y empuja a B
+      lejos de A:
+
+      $$
+      N_{AB} = -1{,}0745\,P\quad\text{(compresión)}
+      $$
+
+      **b/ El giro.**
+
+      $$
+      \theta = -\frac{N_2}{\sqrt3\,E_2A} = -\frac{P}{(9 + 2\sqrt3)\,E_2A} = -0{,}08023\,\frac{P}{E_2A}
+      $$
+
+      Horario: B se va hacia la derecha y hacia abajo.
+
+      **Comprobación.** El motor del curso, con AB como sólido rígido
+      articulado en A y las dos barras con $E_1A = 3E_2A$, da las mismas
+      fuerzas, la reacción en A según AB con $1{,}0745P$ y el mismo giro. Y
+      el alargamiento de la barra 1 con la $N_1$ del motor,
+      $N_1L_1/(3E_2A)$, dividido por $\tfrac34a$, devuelve el mismo $\theta$.

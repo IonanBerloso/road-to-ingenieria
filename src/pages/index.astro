@@ -35,9 +35,17 @@ import {
   type ConTemas,
 } from '../content.config';
 
-const asignaturas = (await getCollection('catalogo')).sort(
+const catalogo = (await getCollection('catalogo')).sort(
   (a, b) => a.data.curso - b.data.curso || a.data.orden - b.data.orden,
 );
+
+/** Las que salen en el temario de la pizarra, con su fila y su detalle: todas
+ *  menos las que su catálogo declara `portada: 'boton'`, que en esta página
+ *  son solo un botón del héroe (`soloBoton`, abajo). El filtro va aquí, en la
+ *  fuente, para que ninguna de las listas de la portada —la pizarra, los
+ *  detalles, la paleta— tenga que acordarse de saltárselas. */
+const asignaturas = catalogo.filter((a) => a.data.portada === 'lista');
+const soloBoton = catalogo.filter((a) => a.data.portada === 'boton');
 
 /** Las notas de cada modalidad de evaluación, ya pasadas por `mate()`.
  *  Van indexadas por «asignatura · modalidad» porque el JSX de abajo las
@@ -342,7 +350,12 @@ const totalExamenes = [...examenesPorAsignatura.values()].reduce((n, l) => n + l
  * el héroe creciera una fila de botones por cada asignatura que se cerraba
  * —seis el 13 de septiembre de 2026, cuatro filas— y la portada dejó de caber
  * en una pantalla de portátil sin que nadie volviera a medirla. El temario de
- * abajo ya las lista todas: repetirlas aquí era además §01. */
+ * abajo ya las lista todas: repetirlas aquí era además §01.
+ *
+ * Detrás de esas dos van las de `soloBoton`, que no están en el temario y
+ * por eso no repiten nada: el botón es su única puerta en la portada. Desde
+ * el 14 de octubre de 2026 es una, Elasticidad y Resistencia de Materiales;
+ * llevan a su página y no a un ancla, porque aquí no tienen detalle. */
 const enteras = asignaturas
   .filter((a) => a.data.estado === 'ok')
   .sort(
@@ -392,6 +405,11 @@ const enteras = asignaturas
                 href={`#${a.id}`}
                 data-fila={a.id}
               >
+                Entrar a {a.data.nombre} →
+              </a>
+            ))}
+            {soloBoton.map((a) => (
+              <a class="cta borde" href={ruta(a.id)}>
                 Entrar a {a.data.nombre} →
               </a>
             ))}

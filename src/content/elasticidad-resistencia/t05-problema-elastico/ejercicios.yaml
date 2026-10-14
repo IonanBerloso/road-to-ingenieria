@@ -1,0 +1,146 @@
+ejercicios:
+  - id: ejerm5-de-los-desplazamientos-a-las-fuerzas
+    titulo: De los desplazamientos a las fuerzas, por el camino de Navier
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni del material de la asignatura.
+    nivel: ejemplo
+    enunciado: |
+      En un sólido de acero, con $E = 200\ \text{GPa}$ y $\nu = 0{,}25$, el
+      campo de desplazamientos es
+
+      $$
+      u = k\,x^{2} \qquad v = 0 \qquad w = 0 \qquad k = 10^{-4}\ \text{m}^{-1}
+      $$
+
+      con $x$, $u$ en metros. Calcular la tensión $\sigma_x$ en los puntos de
+      $x = 1\ \text{m}$ y la fuerza de volumen $F_x$ que hace falta para que
+      el sólido esté en equilibrio.
+    pide: La tensión σx en x = 1 m y la fuerza de volumen Fx.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Dados los desplazamientos, ¿en qué orden se recorren las ecuaciones
+          del problema elástico para llegar a las fuerzas?
+        opciones:
+          - texto: Deformaciones derivando los desplazamientos, tensiones con Lamé, y fuerzas con el equilibrio
+            correcta: true
+            mensaje: |
+              Eso es: es la formulación en desplazamientos, la de Navier,
+              recorrida al revés. Y la compatibilidad no hace falta: unas
+              deformaciones que salen de derivar un campo de desplazamientos
+              son compatibles siempre.
+          - texto: Primero hay que comprobar las seis ecuaciones de compatibilidad
+            mensaje: |
+              La compatibilidad asegura que unas deformaciones vienen de algún
+              campo de desplazamientos. Aquí el campo ya está dado, así que
+              se cumple sola.
+          - texto: Las tensiones con $\sigma_x = E\,\varepsilon_x$ y las fuerzas con el equilibrio
+            mensaje: |
+              $\sigma = E\,\varepsilon$ es la ley de una barra, en la que las
+              otras tensiones son nulas. Aquí $\varepsilon_y = \varepsilon_z = 0$
+              porque el sólido no puede contraerse de lado, y eso pide
+              tensiones laterales: hace falta la ley de Hooke entera, o Lamé.
+
+      - tipo: calcular
+        titulo: La tensión σx en x = 1 m
+        pregunta: |
+          ¿Cuánto vale $\sigma_x$ en $x = 1\ \text{m}$, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '48'
+          tolerancia: 0.05
+          formato: un número, en MPa
+        distractores:
+          - valor: '40'
+            mensaje: |
+              Es $E\,\varepsilon_x$, la ley de una barra que puede contraerse
+              de lado. Aquí no puede, $\varepsilon_y = \varepsilon_z = 0$, y
+              con Lamé $\sigma_x = (\lambda + 2G)\,\varepsilon_x$, con
+              $\lambda + 2G = 240$ GPa.
+          - valor: '32'
+            mensaje: |
+              Te has dejado el término $\lambda\,e$ de Lamé:
+              $\sigma_x = 2G\,\varepsilon_x + \lambda\,e$, y aquí
+              $e = \varepsilon_x$, así que suma $80\,000 \cdot 2 \cdot 10^{-4} = 16$ MPa.
+        pista: |
+          $\varepsilon_x = \partial u/\partial x = 2kx$, y las demás son nulas.
+          $\lambda = E\nu/[(1+\nu)(1-2\nu)] = 80$ GPa y $G = E/[2(1+\nu)] = 80$ GPa.
+        desarrollo: |
+          $$
+          \varepsilon_x = 2kx = 2 \cdot 10^{-4}
+          \qquad
+          \sigma_x = 2G\,\varepsilon_x + \lambda\,e = (160\,000 + 80\,000) \cdot 2 \cdot 10^{-4} = 48\ \text{MPa}
+          $$
+
+      - tipo: calcular
+        titulo: La fuerza de volumen
+        pregunta: |
+          ¿Cuánto vale $F_x$, en MN/m³, con su signo?
+        respuesta:
+          tipo: numero
+          valor: '-48'
+          tolerancia: 0.05
+          formato: un número con su signo, en MN/m³
+        distractores:
+          - valor: '48'
+            mensaje: |
+              El equilibrio es $\partial\sigma_x/\partial x + F_x = 0$: la
+              fuerza de volumen compensa el crecimiento de la tensión, y va
+              en contra. $F_x = -\partial\sigma_x/\partial x$.
+          - valor: '-40'
+            mensaje: |
+              Has derivado $E\,\varepsilon_x$ en lugar de la tensión de Lamé.
+              $\partial\sigma_x/\partial x = (\lambda + 2G) \cdot 2k = 240\,000 \cdot 2 \cdot 10^{-4}$ MPa/m.
+        pista: |
+          $\sigma_x = (\lambda + 2G)\,2kx$ y $\sigma_y$, $\sigma_z$ no dependen
+          de $y$ ni de $z$. La primera ecuación de equilibrio se queda en
+          $\partial\sigma_x/\partial x + F_x = 0$.
+        desarrollo: |
+          $$
+          F_x = -\frac{\partial\sigma_x}{\partial x} = -(\lambda + 2G)\,2k = -240\,000 \cdot 2 \cdot 10^{-4} = -48\ \text{MPa/m} = -48\ \text{MN/m}^{3}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: Las deformaciones salen de derivar, $\varepsilon_x = 2kx$, y las demás son nulas.
+          - texto: Con Lamé, $\sigma_x = (\lambda + 2G)\,\varepsilon_x = 48$ MPa y $\sigma_y = \sigma_z = \lambda\,\varepsilon_x = 16$ MPa en $x = 1$ m.
+          - texto: 'El equilibrio según $x$ da $F_x = -\partial\sigma_x/\partial x = -48$ MN/m³.'
+          - texto: 'Por Navier sale lo mismo: $F_x = -[(\lambda + G)\,2k + G\,2k]$.'
+          - texto: Como $\varepsilon_y = \varepsilon_z = 0$, también son nulas $\sigma_y$ y $\sigma_z$.
+            trampa: true
+            mensaje: |
+              Al revés: para que el sólido no se contraiga de lado hacen falta
+              tensiones laterales, $\sigma_y = \sigma_z = \lambda\,e = 16$ MPa.
+              Deformación nula no es tensión nula.
+    resolucion: |
+      **Deformaciones.** Derivando el campo:
+      $\varepsilon_x = \partial u/\partial x = 2kx$, y todas las demás,
+      $\varepsilon_y$, $\varepsilon_z$ y las tres $\gamma$, son nulas. La
+      dilatación es $e = \varepsilon_x$. No hace falta comprobar la
+      compatibilidad: las deformaciones salen de un campo de desplazamientos.
+
+      **Tensiones, con Lamé.** Con $E = 200\,000$ MPa y $\nu = 0{,}25$,
+      $\lambda = 80\,000$ MPa y $G = 80\,000$ MPa. En $x = 1$ m,
+      $\varepsilon_x = 2 \cdot 10^{-4}$ y
+
+      $$
+      \sigma_x = 2G\,\varepsilon_x + \lambda\,e = 48\ \text{MPa}
+      \qquad
+      \sigma_y = \sigma_z = \lambda\,e = 16\ \text{MPa}
+      $$
+
+      Las laterales no son nulas: son las que impiden que el sólido se
+      contraiga de lado.
+
+      **Fuerza de volumen, con el equilibrio.** Las tensiones solo dependen de
+      $x$, y la primera ecuación de equilibrio queda
+
+      $$
+      \frac{\partial\sigma_x}{\partial x} + F_x = 0
+      \quad\Longrightarrow\quad
+      F_x = -(\lambda + 2G)\,2k = -48\ \text{MN/m}^{3}
+      $$
+
+      **Por Navier.** $F_x + (\lambda + G)\,\partial e/\partial x + G\,\nabla^{2}u = 0$,
+      con $\partial e/\partial x = 2k$ y $\nabla^{2}u = 2k$:
+      $F_x = -(160\,000 + 80\,000) \cdot 2 \cdot 10^{-4} = -48$ MN/m³. Lo mismo.

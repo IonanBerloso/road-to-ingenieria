@@ -1,0 +1,621 @@
+---
+asignatura: elasticidad-resistencia
+tema: 2
+titulo: Tensiones
+descripcion: "El vector tensión, el tensor y sus principales, la tensión plana y el círculo de Mohr, con el convenio del curso. Y dónde está de verdad la tangencial máxima."
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del tema 2, «Tensiones», de los apuntes y las diapositivas de Elasticidad y Resistencia de Materiales · UPV/EHU, y de sus cuestiones teóricas de autoevaluación. Las figuras y los ejemplos son nuestros.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Corta un cuerpo cargado por un plano cualquiera que pase por un punto. Para que
+cada mitad siga en equilibrio, la otra le tiene que hacer fuerza a través del
+corte. Esa fuerza por unidad de superficie es la **tensión**, y este tema
+contesta una pregunta muy concreta: **conocidas las tensiones en tres planos
+de un punto, ¿cuánto valen en cualquier otro plano que pase por él, y en cuál
+son máximas?**
+
+La respuesta tiene tres piezas que caen en el parcial: el tensor de tensiones
+y la ecuación de Cauchy, las tensiones principales, y el círculo de Mohr. En
+los diez parciales 1 que hay desde 2012-2013, el tema sale en nueve. Lo hace
+de dos formas. Una **cuestión de teoría** que pide deducir algo —la ecuación
+de Cauchy, que las direcciones principales son ortogonales, el equilibrio de un
+elemento diferencial y que $\tau_{xy} = \tau_{yx}$—, y **un problema** con un
+tensor dado: sus principales, sus direcciones y las tensiones en un plano que
+te dan por sus ángulos. Y casi todos los problemas de galgas del tema 3
+terminan aquí, en un círculo de Mohr.
+
+## El convenio de signos del curso
+
+Todo el tema, y los siguientes, usan este convenio (apuntes, p. 5-6;
+diapositiva 6). Míralo en la figura antes de seguir:
+
+- $\sigma_i$ es la **tensión normal** del plano perpendicular al eje $i$.
+- $\tau_{ij}$ es la **tangencial** del plano perpendicular a $i$, en la
+  dirección de $j$: el primer subíndice es la normal, el segundo es hacia
+  dónde apunta.
+- Una cara es **positiva** si su normal hacia fuera va en el sentido positivo
+  del eje. Una componente es positiva si apunta en sentido positivo en una
+  cara positiva, **o en sentido negativo en una cara negativa**.
+
+Con eso, una tensión normal positiva es de **tracción**: sale de las dos caras.
+Y una $\tau_{xy}$ positiva sube en la cara $+x$ y baja en la cara $-x$.
+
+<figure>
+<svg viewBox="0 0 360 270" role="img" width="360" height="270" aria-labelledby="t02-elemento-t t02-elemento-d">
+  <title id="t02-elemento-t">Las tensiones positivas en un elemento plano</title>
+  <desc id="t02-elemento-d">Un cuadrado con los ejes x a la derecha e y hacia arriba. En las caras x, σx sale hacia fuera en las dos; en las caras y, σy también. La tangencial τxy sube en la cara +x y baja en la cara −x; τyx va hacia +x en la cara +y y hacia −x en la cara −y. Todas son positivas.</desc>
+  <rect x="125" y="75" width="110" height="110" fill="var(--faint)" fill-opacity="0.1" stroke="var(--ink)" stroke-width="1.4"/>
+  <line x1="235" y1="130" x2="287.4" y2="130" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M293 130L286.6 127.1L286.6 132.9Z" fill="var(--d1)" stroke="none"/>
+  <line x1="125" y1="130" x2="72.6" y2="130" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M67 130L73.4 132.9L73.4 127.1Z" fill="var(--d1)" stroke="none"/>
+  <line x1="180" y1="75" x2="180" y2="28.6" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M180 23L177.1 29.4L182.9 29.4Z" fill="var(--d1)" stroke="none"/>
+  <line x1="180" y1="185" x2="180" y2="231.4" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M180 237L182.9 230.6L177.1 230.6Z" fill="var(--d1)" stroke="none"/>
+  <line x1="247" y1="158" x2="247" y2="107.6" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M247 102L244.1 108.4L249.9 108.4Z" fill="var(--d2)" stroke="none"/>
+  <line x1="113" y1="102" x2="113" y2="152.4" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M113 158L115.9 151.6L110.1 151.6Z" fill="var(--d2)" stroke="none"/>
+  <line x1="152" y1="63" x2="202.4" y2="63" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M208 63L201.6 60.1L201.6 65.9Z" fill="var(--d2)" stroke="none"/>
+  <line x1="208" y1="197" x2="157.6" y2="197" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M152 197L158.4 199.9L158.4 194.1Z" fill="var(--d2)" stroke="none"/>
+  <text x="297" y="134" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">x</tspan></text>
+  <text x="63" y="134" text-anchor="end" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">x</tspan></text>
+  <text x="188" y="31" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">y</tspan></text>
+  <text x="188" y="235" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">y</tspan></text>
+  <text x="255" y="104" text-anchor="start" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">xy</tspan></text>
+  <text x="105" y="164" text-anchor="end" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">xy</tspan></text>
+  <text x="214" y="67" text-anchor="start" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">yx</tspan></text>
+  <text x="146" y="201" text-anchor="end" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">yx</tspan></text>
+  <text x="231" y="177" text-anchor="end" fill="var(--faint)" font-size="9" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">cara +x</text>
+  <text x="129" y="89" text-anchor="start" fill="var(--faint)" font-size="9" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">cara −x</text>
+  <line x1="24" y1="248" x2="57.2" y2="248" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M62 248L56.5 245.6L56.5 250.4Z" fill="var(--ink)" stroke="none"/>
+  <line x1="24" y1="248" x2="24" y2="214.8" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M24 210L21.6 215.5L26.4 215.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="66" y="252" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <text x="29" y="210" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+</svg>
+<figcaption>
+
+**Las tensiones positivas del convenio del curso.** Cada flecha es positiva:
+en una cara positiva apunta en el sentido del eje, y en la negativa, al
+revés. Por eso σx sale de las dos caras x, y τxy sube por la derecha y baja
+por la izquierda.
+
+</figcaption>
+</figure>
+
+**El equilibrio del elemento diferencial.** Aísla un paralelepípedo de aristas
+$dx$, $dy$, $dz$ alrededor del punto. Las tensiones varían de una cara a la
+opuesta: si en la cara que pasa por el punto vale $\sigma_x$, en la paralela
+vale $\sigma_x + \sigma_{x,x}\,dx$, con la coma para la derivada parcial. Sobre
+él actúan además unas fuerzas por unidad de volumen $F_x$, $F_y$, $F_z$. El
+equilibrio de fuerzas en cada eje, dividido entre $dx\,dy\,dz$, da las
+**ecuaciones de equilibrio interno** (2.3-2.4, p. 7):
+
+$$
+\sigma_{x,x} + \tau_{yx,y} + \tau_{zx,z} + F_x = 0 \qquad
+\tau_{xy,x} + \sigma_{y,y} + \tau_{zy,z} + F_y = 0 \qquad
+\tau_{xz,x} + \tau_{yz,y} + \sigma_{z,z} + F_z = 0
+$$
+
+En cada una entran las componentes que **apuntan** en ese eje, una de cada
+cara, derivada respecto de la normal de su cara. El equilibrio de momentos,
+tomado respecto de un eje que pasa por el centro, da la otra mitad: las
+tangenciales van por parejas, $\tau_{xy} = \tau_{yx}$, $\tau_{yz} = \tau_{zy}$ y
+$\tau_{zx} = \tau_{xz}$ (2.5-2.8). Las normales y las fuerzas de volumen pasan
+por el centro y no dan momento, de las tangenciales solo quedan las dos
+parejas que lo rodean, y los términos con derivadas son de un orden menor y se
+desprecian. Es una cuestión de examen tal cual: el parcial del 7/11/2016 y la
+final del 7/1/2020 piden dibujar el elemento con **solo las tensiones que
+influyen**, escribir la ecuación de equilibrio de fuerzas en $y$ y demostrar
+$\tau_{xy} = \tau_{yx}$. Lo que se puntúa es el dibujo: el elemento, las
+tensiones con sus incrementos en la cara opuesta
+($\tau_{yx} + \tau_{yx,y}\,dy$) y el brazo de cada fuerza.
+
+## El vector tensión y sus componentes intrínsecas
+
+En el plano de normal unitaria $\hat n$, el **vector tensión** es la fuerza
+interna por unidad de superficie (ecuación 2.1):
+
+$$
+\vec S_n = \lim_{\Delta A \to 0} \frac{\Delta \vec f}{\Delta A}
+$$
+
+No tiene por qué ser perpendicular al plano. Se descompone en una parte normal
+y otra contenida en el plano, las **componentes intrínsecas** (2.2), que no
+dependen de los ejes que elijas:
+
+$$
+\sigma_n = \vec S_n \cdot \hat n \qquad\qquad \tau_n^{2} = \left|\vec S_n\right|^{2} - \sigma_n^{2}
+$$
+
+## El tensor de tensiones y la ecuación de Cauchy
+
+¿Cómo se calcula $\vec S_n$ en un plano cualquiera? Se aísla un **tetraedro**
+con tres caras en los planos coordenados y la cuarta, ABC, en el plano que
+quieres. Si ABC tiene área $A$, las caras coordenadas tienen áreas
+$n_x A$, $n_y A$ y $n_z A$ (2.11): son sus proyecciones. El equilibrio de
+fuerzas, dividido entre $A$, deja fuera las fuerzas de volumen —van
+multiplicadas por $dV/A$, que es un diferencial— y da la **ecuación de
+Cauchy** (2.13-2.14):
+
+$$
+\begin{Bmatrix} S_{nx} \\ S_{ny} \\ S_{nz} \end{Bmatrix} =
+\begin{bmatrix} \sigma_x & \tau_{yx} & \tau_{zx} \\ \tau_{xy} & \sigma_y & \tau_{zy} \\ \tau_{xz} & \tau_{yz} & \sigma_z \end{bmatrix}
+\begin{Bmatrix} n_x \\ n_y \\ n_z \end{Bmatrix}
+\qquad \{S_n\} = [\sigma]\{n\}
+$$
+
+La matriz $[\sigma]$ es simétrica y es la representación, en los ejes $Oxyz$,
+del **tensor de tensiones**: el operador que convierte la normal en el vector
+tensión. Con ella, la componente normal de cualquier plano es
+
+$$
+\sigma_n = \{n\}^{t}\,[\sigma]\,\{n\}
+$$
+
+Esta deducción se pide **tal cual** en muchas convocatorias: la extraordinaria
+de 2014, la de 2016 —«sin demostrar la relación entre áreas»—, el parcial del
+16/11/2018 y las extraordinarias de 2020 y 2022.
+
+**Si giras los ejes**, el tensor no cambia pero su matriz sí. Si las filas de
+$[R]$ son los vectores unitarios de los ejes nuevos escritos en los viejos
+(2.22), los vectores se transforman con $\{v'\} = [R]\{v\}$ y la matriz de
+tensiones con (2.27):
+
+$$
+[\sigma]_{Ox'y'z'} = [R]\,[\sigma]_{Oxyz}\,[R]^{t}
+$$
+
+$[R]$ es ortogonal, $[R]^{t} = [R]^{-1}$ (2.24): eso también es una cuestión
+de autoevaluación.
+
+## Tensiones y direcciones principales
+
+En algún plano, ¿el vector tensión es perpendicular al plano, sin tangencial?
+Si $\tau_n = 0$, entonces $\{S_n\} = \sigma_n\{n\}$, y con Cauchy:
+
+$$
+\left([\sigma] - \sigma_n [I]\right)\{n\} = \{0\}
+$$
+
+Es un **problema de autovalores**. Sus tres soluciones son las **tensiones
+principales**, y sus autovectores, las **direcciones principales** (2.30).
+Hay un segundo planteamiento que lleva al mismo sitio, y el parcial del
+8/11/2013 lo pidió: buscar las direcciones en que $\sigma_n$ es máxima o
+mínima, con la condición $\{n\}^{t}\{n\} = 1$ y un multiplicador de Lagrange
+(2.31-2.33). Sale el mismo sistema con el multiplicador en el papel de
+$\sigma_n$. Por eso **las principales son las tensiones normales máxima y
+mínima del punto**.
+
+Para que el sistema tenga solución distinta de cero, el determinante se anula,
+y queda la **ecuación característica** (2.35):
+
+$$
+\sigma_n^{3} - I_1\,\sigma_n^{2} + I_2\,\sigma_n - I_3 = 0
+$$
+
+con los **invariantes** (2.36): $I_1 = \sigma_x + \sigma_y + \sigma_z$, $I_2$ la
+suma de los tres menores principales de orden 2 e $I_3 = \det[\sigma]$. Son
+invariantes porque las raíces no dependen de los ejes. Se ordenan
+$\sigma_1 > \sigma_2 > \sigma_3$ (p. 17).
+
+Dos propiedades que se demuestran en examen, y mucho: **las tres principales
+son reales** (2.38-2.43; la final del 22/1/2016) y **las direcciones
+principales son perpendiculares** si las tensiones son distintas (2.44-2.46;
+los parciales del 10/11/2014 y del 15/11/2019). La segunda es corta:
+premultiplicas $\sigma_1\{n_1\} = [\sigma]\{n_1\}$ por $\{n_2\}^{t}$, la de
+$\sigma_2$ por $\{n_1\}^{t}$, restas, y como $[\sigma]$ es simétrica queda
+$(\sigma_1 - \sigma_2)\{n_1\}^{t}\{n_2\} = 0$.
+
+### Un tensor de parcial, paso a paso
+
+El parcial del 14/11/2016 daba, en MPa,
+
+$$
+[\sigma] = \begin{bmatrix} 5 & 0 & 0 \\ 0 & -6 & -12 \\ 0 & -12 & 1 \end{bmatrix}
+$$
+
+Mira la primera fila y la primera columna: solo la diagonal. Eso dice que **$x$
+ya es dirección principal**, con $\sigma = 5$, y que las otras dos están en el
+plano $yz$. Ahí el problema es de dos dimensiones: centro
+$(-6 + 1)/2 = -2{,}5$ y radio $\sqrt{3{,}5^{2} + 12^{2}} = 12{,}5$, así que
+
+$$
+\sigma_1 = 10 \qquad \sigma_2 = 5 \qquad \sigma_3 = -15\ \text{MPa}
+$$
+
+Compruébalo con los invariantes: la traza vale $5 - 6 + 1 = 0$, igual que
+$10 + 5 -15$. Las direcciones salen de una fila del sistema; para $\sigma_1$,
+$(-6 - 10)\,n_y - 12\,n_z = 0$, y con módulo uno
+$\hat n_1 = (0;\ 0{,}6;\ -0{,}8)$. Igual,
+$\hat n_3 = (0;\ 0{,}8;\ 0{,}6)$, y $\hat n_2 = (1;\ 0;\ 0)$.
+El parcial del 3/11/2017 trajo los mismos números en otros sitios, y **no es
+el mismo tensor**: allí la principal suelta es la $y$, con
+$-6$ MPa, y el bloque $xz$ da $15{,}17$ y
+$-9{,}17$ MPa. Se resuelve igual, pero las principales son otras.
+
+El apartado b pedía las componentes intrínsecas en el plano cuya normal forma
+45° con $x$ y 60° con $y$. Dos cosenos los da el enunciado; el tercero sale de
+$n_x^{2} + n_y^{2} + n_z^{2} = 1$ (2.37): $n_z^{2} = 1 - \tfrac12 - \tfrac14$,
+y $n_z = \pm 0{,}5$.
+
+<ErrorTipico titulo="El tercer coseno director tiene dos signos">
+$n_z^{2} = 1/4$ da $n_z = +1/2$ y $n_z = -1/2$, y **son dos planos distintos**
+con resultados distintos. Con $n_z = +1/2$, Cauchy da
+$\sigma_n = -4{,}75$ y $\tau_n = 10{,}06$ MPa; con
+$n_z = -1/2$, $\sigma_n = 7{,}25$ y $\tau_n = 3{,}34$ MPa.
+Quedarse con el positivo sin decirlo es contestar a otra pregunta. Si el
+enunciado no fija el signo, escribe los dos, o di cuál eliges y por qué.
+</ErrorTipico>
+
+**Componentes esférica y desviadora.** Cualquier matriz de tensiones se parte en
+$[\sigma] = [\sigma_e] + [\sigma_d]$, con la esférica
+$\sigma_e = I_1/3$ en la diagonal (2.51-2.54). La esférica es la que cambia
+el volumen de un material isótropo, y la desviadora la que lo distorsiona: lo
+verás en el tema 4.
+
+## La tangencial máxima, en el espacio
+
+Con las principales ordenadas, **la tangencial máxima del punto vale**
+
+$$
+\tau_{\max} = \frac{\sigma_1 - \sigma_3}{2}
+$$
+
+y actúa en los planos a 45° de las direcciones 1 y 3, que contienen la 2
+(p. 19-20 y figura 2.14). En ese plano la normal vale $(\sigma_1 + \sigma_3)/2$.
+La figura de los tres círculos de Mohr, más abajo, dice por qué.
+
+## Tensión plana
+
+Si $\sigma_z = \tau_{zx} = \tau_{yz} = 0$, el vector tensión de cualquier plano
+paralelo a $z$ está en el plano $xy$ y basta un **prisma triangular** de
+espesor unidad (figura 2.11). Su cara inclinada tiene la normal
+$\hat n = (\cos\theta,\ \sin\theta)$, con $\theta$ medido **desde $x$ y positivo
+en sentido antihorario**, y la dirección tangencial positiva es
+$\hat t = (-\sin\theta,\ \cos\theta)$: la normal girada 90° en sentido
+antihorario.
+
+<figure>
+<svg viewBox="0 0 400 290" role="img" width="400" height="290" aria-labelledby="t02-prisma-t t02-prisma-d">
+  <title id="t02-prisma-t">El prisma triangular: la faceta inclinada y sus dos componentes</title>
+  <desc id="t02-prisma-d">Un triángulo rectángulo con el vértice O abajo a la izquierda, A sobre el eje x y B sobre el eje y. La normal n de la cara AB forma un ángulo θ con el eje x, medido en sentido antihorario. En la cara AB actúan σn, a lo largo de n, y τn, a lo largo de t, que es n girada 90° en sentido antihorario. En la cara vertical OB, que es una cara −x, σx apunta hacia la izquierda y τxy hacia abajo; en la cara horizontal OA, una cara −y, σy apunta hacia abajo y τyx hacia la izquierda.</desc>
+  <path d="M95 225L241.5 225L95 15.8Z" fill="var(--faint)" fill-opacity="0.1" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="168.2" y1="120.4" x2="221" y2="83.5" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M225.6 80.2L218.7 81.6L222 86.2Z" fill="var(--d1)" stroke="none"/>
+  <line x1="168.2" y1="120.4" x2="139.9" y2="79.9" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M136.7 75.3L138 82.2L142.7 78.9Z" fill="var(--d2)" stroke="none"/>
+  <text x="232.9" y="81.9" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">n</tspan></text>
+  <text x="131" y="70.9" text-anchor="end" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">n</tspan></text>
+  <line x1="168.2" y1="120.4" x2="198.2" y2="120.4" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M192.2 120.4L192.2 120L192.2 119.7L192.2 119.3L192.2 118.9L192.2 118.6L192.1 118.2L192.1 117.8L192.1 117.5L192 117.1L192 116.7L191.9 116.4L191.8 116L191.8 115.7L191.7 115.3L191.6 114.9L191.5 114.6L191.4 114.2L191.3 113.9L191.2 113.5L191.1 113.2L191 112.8L190.9 112.5L190.8 112.1L190.7 111.8L190.5 111.5L190.4 111.1L190.2 110.8L190.1 110.4L189.9 110.1L189.8 109.8L189.6 109.5L189.4 109.1L189.3 108.8L189.1 108.5L188.9 108.2L188.7 107.9L188.5 107.5L188.3 107.2L188.1 106.9L187.9 106.6" fill="none" stroke="var(--faint)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M187.9 106.6L188.7 111.6L192.3 109.1Z" fill="var(--faint)" stroke="none"/>
+  <text x="198.2" y="116.4" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">θ</text>
+  <text x="183" y="95.5" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" font-style="italic" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">n</text>
+  <line x1="95" y1="120.4" x2="50.6" y2="120.4" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M45 120.4L51.4 123.2L51.4 117.5Z" fill="var(--d1)" stroke="none"/>
+  <text x="41" y="113.4" text-anchor="end" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">x</tspan></text>
+  <line x1="85" y1="94.4" x2="85" y2="140.8" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M85 146.4L87.9 140L82.1 140Z" fill="var(--d2)" stroke="none"/>
+  <text x="79" y="154.4" text-anchor="end" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">xy</tspan></text>
+  <line x1="168.2" y1="225" x2="168.2" y2="259.4" stroke="var(--d1)" stroke-width="2"/>
+  <path d="M168.2 265L171.1 258.6L165.4 258.6Z" fill="var(--d1)" stroke="none"/>
+  <text x="175.2" y="265" text-anchor="start" fill="var(--d1)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3.3" font-size="8.1">y</tspan></text>
+  <line x1="196.2" y1="235" x2="145.8" y2="235" stroke="var(--d2)" stroke-width="2"/>
+  <path d="M140.2 235L146.6 237.9L146.6 232.1Z" fill="var(--d2)" stroke="none"/>
+  <text x="136.2" y="247" text-anchor="end" fill="var(--d2-tinta)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.3" font-size="8.1">yx</tspan></text>
+  <text x="100" y="219" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <text x="247.5" y="221" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">A</text>
+  <text x="102" y="19.8" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">B</text>
+  <line x1="330" y1="270" x2="363.2" y2="270" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M368 270L362.5 267.6L362.5 272.4Z" fill="var(--ink)" stroke="none"/>
+  <line x1="330" y1="270" x2="330" y2="236.8" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M330 232L327.6 237.5L332.4 237.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="372" y="274" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <text x="335" y="234" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+</svg>
+<figcaption>
+
+**El prisma de la tensión plana.** La cara AB es el plano que quieres; θ va
+de x a su normal n en sentido antihorario, y τn es positiva hacia t, que es n
+girada 90° en sentido antihorario. En las caras OA y OB, que son caras
+negativas, las tensiones positivas apuntan hacia el sentido negativo de los
+ejes.
+
+</figcaption>
+</figure>
+
+Proyectando Cauchy sobre $\hat n$ y $\hat t$ y pasando al ángulo doble
+(2.59-2.61):
+
+$$
+\sigma_n = \frac{\sigma_x + \sigma_y}{2} + \frac{\sigma_x - \sigma_y}{2}\cos 2\theta + \tau_{xy}\sin 2\theta
+$$
+
+$$
+\tau_n = \frac{\sigma_y - \sigma_x}{2}\sin 2\theta + \tau_{xy}\cos 2\theta
+$$
+
+Las direcciones principales son las que anulan $\tau_n$, y a la vez las que
+hacen estacionaria $\sigma_n$ (2.62):
+
+$$
+\tan 2\theta_1 = \frac{2\,\tau_{xy}}{\sigma_x - \sigma_y}
+$$
+
+Las dos soluciones difieren en 90° de $2\theta$, así que **en la pieza las dos
+direcciones principales son perpendiculares**. Y las de tangencial máxima en
+el plano forman **45°** con ellas (2.63-2.64): por eso una tiza a torsión rompe
+en hélice, por el plano de tracción máxima (p. 24).
+
+<ErrorTipico titulo="El ángulo del círculo es el doble">
+$\tan 2\theta_1$ da $2\theta_1$, no $\theta_1$. Con $\tan 2\theta_1 = 3/4$ salen
+36,87°, y la dirección principal está a **18,43°** del eje $x$. En la
+final de 2012 se piden las tensiones en unos ejes girados un ángulo, y en la
+de enero de 2017, el ángulo de un plano inclinado a partir de sus tensiones;
+quien mete $\theta$ donde va $2\theta$ obtiene números que parecen
+razonables y están mal. Al revés pasa lo mismo: los 90° entre las dos
+principales son 180° en el círculo.
+</ErrorTipico>
+
+## El círculo de Mohr
+
+Las dos ecuaciones de la tensión plana son las paramétricas de una
+circunferencia, con parámetro $2\theta$ (2.65-2.67). En unos ejes con
+$\sigma_n$ en horizontal y $\left|\tau_n\right|$ en vertical, tiene
+
+$$
+C = \frac{\sigma_x + \sigma_y}{2} \qquad
+R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^{2} + \tau_{xy}^{2}} \qquad
+\sigma_{1,2} = C \pm R
+$$
+
+(2.68-2.69). Cada punto del círculo es **una dirección**: la normal del plano
+cuyas componentes intrínsecas son sus coordenadas.
+
+Queda la pregunta que el propio apunte llama «el problema fundamental» (p. 26):
+el punto de $x$, de coordenadas $(\sigma_x, |\tau_{xy}|)$, **¿va arriba o
+abajo?** El criterio del curso:
+
+> Mira las tangenciales de las dos caras paralelas de esa dirección. **Si
+> forman un par horario, la dirección va en la mitad superior del círculo**; si
+> antihorario, en la inferior.
+
+Con $\tau_{xy} > 0$, en las caras $x$ la tangencial sube por la derecha y baja
+por la izquierda: par **antihorario**, y $x$ va **abajo**. En las caras $y$,
+$\tau_{yx}$ va a la derecha arriba y a la izquierda abajo: par **horario**, e
+$y$ va **arriba**. Si $\tau_{xy} < 0$, al revés. Los dos puntos quedan siempre
+en los extremos de un diámetro. Con este criterio, **en el círculo se gira en el
+mismo sentido que en la pieza**, y el doble de ángulo.
+
+Un ejemplo nuestro: $\sigma_x = 80$, $\sigma_y = -40$ y $\tau_{xy} = 45$ MPa.
+Entonces $C = 20$, $R = \sqrt{60^{2} + 45^{2}} = 75$ MPa y
+
+$$
+\sigma_1 = 95\ \text{MPa} \qquad \sigma_2 = -55\ \text{MPa} \qquad
+\tan 2\theta_1 = \frac{2 \cdot 45}{80 + 40} = 0{,}75
+$$
+
+así que $2\theta_1 = 36{,}87°$ y la dirección 1 está a $\theta_1 = 18{,}43°$ de $x$, en
+sentido antihorario: en el círculo se pasa de $x$, que está abajo, a 1 subiendo.
+
+<figure>
+<svg viewBox="0 0 460 315" role="img" width="460" height="315" aria-labelledby="t02-mohr-t t02-mohr-d">
+  <title id="t02-mohr-t">El círculo de Mohr de σx = 80, σy = -40 y τxy = 45 MPa</title>
+  <desc id="t02-mohr-d">Eje σn horizontal y |τn| vertical. El centro está en σ = 20 MPa y el radio vale 75 MPa. El punto de la dirección x, (80, 45), va en la mitad inferior; el de la dirección y, (-40, 45), en la superior, en el extremo opuesto del diámetro. El círculo corta el eje en σ1 = 95 y σ2 = -55 MPa. El ángulo 2θ1 va del radio de x al de la dirección 1, girando hacia arriba. Arriba del todo está t1 y abajo t2, a la altura del radio.</desc>
+  <line x1="20" y1="155" x2="440.2" y2="155" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M445 155L439.5 152.6L439.5 157.4Z" fill="var(--faint)" stroke="none"/>
+  <line x1="190" y1="300" x2="190" y2="16.8" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M190 12L187.6 17.5L192.4 17.5Z" fill="var(--faint)" stroke="none"/>
+  <text x="443" y="170" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">σ<tspan dy="3" font-size="7.4">n</tspan></text>
+  <text x="196" y="22" text-anchor="start" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">|τ<tspan dy="3" font-size="7.4">n</tspan><tspan dy="-3">|</tspan></text>
+  <text x="186" y="168" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <circle cx="222" cy="155" r="120" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+  <line x1="318" y1="227" x2="126" y2="83" stroke="var(--d2)" stroke-width="1.4"/>
+  <line x1="318" y1="227" x2="318" y2="155" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="126" y1="83" x2="126" y2="155" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <circle cx="318" cy="227" r="3.2" fill="var(--d2)"/>
+  <circle cx="126" cy="83" r="3.2" fill="var(--d2)"/>
+  <text x="326" y="241" text-anchor="start" fill="var(--d2-tinta)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x (80, 45)</text>
+  <text x="118" y="75" text-anchor="end" fill="var(--d2-tinta)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y (−40, 45)</text>
+  <circle cx="222" cy="155" r="2.6" fill="var(--ink)"/>
+  <text x="218" y="148" text-anchor="end" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">C</text>
+  <circle cx="342" cy="155" r="3.2" fill="var(--live)"/>
+  <circle cx="102" cy="155" r="3.2" fill="var(--live)"/>
+  <text x="348" y="147" text-anchor="start" fill="var(--live)" font-size="11" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">1</text>
+  <text x="96" y="147" text-anchor="end" fill="var(--live)" font-size="11" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">2</text>
+  <circle cx="222" cy="35" r="2.8" fill="var(--live)"/>
+  <circle cx="222" cy="275" r="2.8" fill="var(--live)"/>
+  <text x="229" y="28" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">t<tspan dy="3.2" font-size="7.8">1</tspan><tspan dy="-3.1"> (20, 75)</tspan></text>
+  <text x="229" y="290" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">t<tspan dy="3.2" font-size="7.8">2</tspan></text>
+  <path d="M249.2 175.4L249.5 175L249.8 174.5L250.2 174.1L250.5 173.6L250.8 173.1L251 172.7L251.3 172.2L251.6 171.7L251.9 171.3L252.1 170.8L252.4 170.3L252.6 169.8L252.8 169.3L253.1 168.8L253.3 168.3L253.5 167.8L253.7 167.3L253.9 166.8L254.1 166.3L254.3 165.8L254.4 165.2L254.6 164.7L254.7 164.2L254.9 163.7L255 163.1L255.1 162.6L255.3 162.1L255.4 161.5L255.5 161L255.6 160.4L255.6 159.9L255.7 159.4L255.8 158.8L255.8 158.3L255.9 157.7L255.9 157.2L256 156.6L256 156.1L256 155.5L256 155" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M256 155L253.8 159.5L258.1 159.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="262" y="175" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">2θ<tspan dy="3.2" font-size="7.8">1</tspan></text>
+  <line x1="102" y1="151.5" x2="102" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="102" y="172" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−55</text>
+  <line x1="318" y1="151.5" x2="318" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="318" y="148" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">80</text>
+  <line x1="342" y1="151.5" x2="342" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="342" y="172" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">95</text>
+</svg>
+<figcaption>
+
+**El círculo de σx = 80, σy = −40 y τxy = 45 MPa, a escala.** Centro en 20,
+radio 75. Con τxy positiva, las caras x forman un par antihorario y x va
+abajo; y, arriba, en el otro extremo del diámetro. De x a la dirección 1 se
+gira 2θ1 = 36,87° hacia arriba, y en la pieza θ1 = 18,43° en sentido
+antihorario. Arriba del todo está t1: la faceta de tangencial máxima en el
+plano, a 45° de la 1 en la pieza, con σ = C.
+
+</figcaption>
+</figure>
+
+Arriba y abajo del círculo están $t_1$ y $t_2$, a 90° de las principales en el
+círculo y **a 45° en la pieza**: son los planos de tangencial máxima en el plano
+$xy$, donde $|\tau_n| = R$ y $\sigma_n = C$. En este ejemplo, $t_1$ está a
+$63{,}43°$ de $x$ y $t_2$ a $-26{,}57°$.
+
+<ErrorTipico titulo="El punto de x arriba porque τxy es positiva">
+Es el error de colocación más corriente, porque «positivo» invita a ir hacia
+arriba. En el convenio del curso **es al revés**: con $\tau_{xy} > 0$ las caras
+$x$ forman par antihorario, y $x$ va abajo. Si lo pones arriba, el círculo
+sale igual —mismo centro, mismo radio, mismas principales— pero **el ángulo
+gira al revés**, y la dirección principal sale en el lado equivocado de $x$.
+La demostración del criterio es la cuestión 13 de autoevaluación, y el
+problema del parcial del 15/11/2019 pide llevar al círculo las seis caras de
+una chapa hexagonal.
+</ErrorTipico>
+
+## Los tres círculos de un punto
+
+En un estado general hay **tres círculos**, uno por cada pareja de direcciones
+principales: el de 1-2 para los planos paralelos a la dirección 3, el de 2-3
+para los paralelos a la 1 y el de 1-3 para los paralelos a la 2
+(diapositivas 34-36). Las componentes intrínsecas de **cualquier** plano que
+pase por el punto caen en la zona entre el grande y los dos pequeños, y la
+tangencial máxima es el radio del grande, $(\sigma_1 - \sigma_3)/2$
+(figura 2.14).
+
+En **tensión plana**, la dirección $z$ es principal y su tensión vale **cero**.
+Las dos principales del plano, más ese cero, son las tres del punto, y hay que
+ordenarlas (diapositiva 37). El círculo del plano $xy$ es solo uno de los tres,
+y no siempre el grande. La figura 2.15 de los apuntes llama 3 a la dirección
+$z$ en los tres casos, aunque no sea la menor; aquí se numeran por valor, como
+en la diapositiva, y la cuenta es la misma: la máxima es la mitad de la mayor
+menos la menor.
+
+<figure>
+<svg viewBox="0 0 460 420" role="img" width="460" height="420" aria-labelledby="t02-tres-casos-t t02-tres-casos-d">
+  <title id="t02-tres-casos-t">Tensión plana: dónde está la tangencial máxima</title>
+  <desc id="t02-tres-casos-d">Tres estados de tensión plana, uno por fila, con la tensión principal fuera del plano igual a cero. A: principales del plano 80 y 30 MPa, las dos de tracción; el círculo grande va de 0 a 80 y la tangencial máxima vale 40, más que el radio del círculo del plano, 25. B: 60 y -20 MPa, de signo contrario; el círculo del plano es el grande y la máxima vale 40. C: -30 y -90 MPa, las dos de compresión; el grande va de -90 a 0 y la máxima vale 45, más que el radio del plano, 30.</desc>
+  <line x1="20" y1="120" x2="440.2" y2="120" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M445 120L439.5 117.6L439.5 122.4Z" fill="var(--faint)" stroke="none"/>
+  <line x1="250" y1="124" x2="250" y2="20" stroke="var(--faint)" stroke-width="1"/>
+  <text x="246" y="134" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <path d="M250 120L250.2 114.8L250.7 109.6L251.5 104.4L252.7 99.3L254.2 94.3L256.1 89.4L258.3 84.6L260.7 80L263.5 75.6L266.5 71.3L269.9 67.3L273.4 63.4L277.3 59.9L281.3 56.5L285.6 53.5L290 50.7L294.6 48.3L299.4 46.1L304.3 44.2L309.3 42.7L314.4 41.5L319.6 40.7L324.8 40.2L330 40L335.2 40.2L340.4 40.7L345.6 41.5L350.7 42.7L355.7 44.2L360.6 46.1L365.4 48.3L370 50.7L374.4 53.5L378.7 56.5L382.7 59.9L386.6 63.4L390.1 67.3L393.5 71.3L396.5 75.6L399.3 80L401.7 84.6L403.9 89.4L405.8 94.3L407.3 99.3L408.5 104.4L409.3 109.6L409.8 114.8L410 120" fill="var(--faint)" fill-opacity="0.16" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M310 120L310.1 116.7L310.4 113.5L311 110.2L311.7 107.1L312.7 103.9L313.8 100.9L315.2 97.9L316.7 95L318.4 92.2L320.3 89.6L322.4 87L324.6 84.6L327 82.4L329.6 80.3L332.2 78.4L335 76.7L337.9 75.2L340.9 73.8L343.9 72.7L347.1 71.7L350.2 71L353.5 70.4L356.7 70.1L360 70L363.3 70.1L366.5 70.4L369.8 71L372.9 71.7L376.1 72.7L379.1 73.8L382.1 75.2L385 76.7L387.8 78.4L390.4 80.3L393 82.4L395.4 84.6L397.6 87L399.7 89.6L401.6 92.2L403.3 95L404.8 97.9L406.2 100.9L407.3 103.9L408.3 107.1L409 110.2L409.6 113.5L409.9 116.7L410 120" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M250 120L250.1 118L250.3 116.1L250.6 114.1L251 112.2L251.6 110.4L252.3 108.5L253.1 106.7L254 105L255.1 103.3L256.2 101.7L257.4 100.2L258.8 98.8L260.2 97.4L261.7 96.2L263.3 95.1L265 94L266.7 93.1L268.5 92.3L270.4 91.6L272.2 91L274.1 90.6L276.1 90.3L278 90.1L280 90L282 90.1L283.9 90.3L285.9 90.6L287.8 91L289.6 91.6L291.5 92.3L293.3 93.1L295 94L296.7 95.1L298.3 96.2L299.8 97.4L301.2 98.8L302.6 100.2L303.8 101.7L304.9 103.3L306 105L306.9 106.7L307.7 108.5L308.4 110.4L309 112.2L309.4 114.1L309.7 116.1L309.9 118L310 120" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M310 120L310.1 116.7L310.4 113.5L311 110.2L311.7 107.1L312.7 103.9L313.8 100.9L315.2 97.9L316.7 95L318.4 92.2L320.3 89.6L322.4 87L324.6 84.6L327 82.4L329.6 80.3L332.2 78.4L335 76.7L337.9 75.2L340.9 73.8L343.9 72.7L347.1 71.7L350.2 71L353.5 70.4L356.7 70.1L360 70L363.3 70.1L366.5 70.4L369.8 71L372.9 71.7L376.1 72.7L379.1 73.8L382.1 75.2L385 76.7L387.8 78.4L390.4 80.3L393 82.4L395.4 84.6L397.6 87L399.7 89.6L401.6 92.2L403.3 95L404.8 97.9L406.2 100.9L407.3 103.9L408.3 107.1L409 110.2L409.6 113.5L409.9 116.7L410 120" fill="none" stroke="var(--d1)" stroke-width="2.2" stroke-dasharray="6 4" stroke-linejoin="round"/>
+  <line x1="330" y1="120" x2="330" y2="40" stroke="var(--live)" stroke-width="1.6"/>
+  <circle cx="330" cy="40" r="2.8" fill="var(--live)"/>
+  <line x1="410" y1="116.5" x2="410" y2="123.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="410" y="136" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">80</text>
+  <line x1="310" y1="116.5" x2="310" y2="123.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="310" y="136" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">30</text>
+  <text x="20" y="32" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">A · plano 80 y 30</text>
+  <text x="20" y="48" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.2" font-size="7.8">max</tspan><tspan dy="-3.1"> = 40</tspan></text>
+  <line x1="20" y1="255" x2="440.2" y2="255" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M445 255L439.5 252.6L439.5 257.4Z" fill="var(--faint)" stroke="none"/>
+  <line x1="250" y1="259" x2="250" y2="155" stroke="var(--faint)" stroke-width="1"/>
+  <text x="246" y="269" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <path d="M210 255L210.2 249.8L210.7 244.6L211.5 239.4L212.7 234.3L214.2 229.3L216.1 224.4L218.3 219.6L220.7 215L223.5 210.6L226.5 206.3L229.9 202.3L233.4 198.4L237.3 194.9L241.3 191.5L245.6 188.5L250 185.7L254.6 183.3L259.4 181.1L264.3 179.2L269.3 177.7L274.4 176.5L279.6 175.7L284.8 175.2L290 175L295.2 175.2L300.4 175.7L305.6 176.5L310.7 177.7L315.7 179.2L320.6 181.1L325.4 183.3L330 185.7L334.4 188.5L338.7 191.5L342.7 194.9L346.6 198.4L350.1 202.3L353.5 206.3L356.5 210.6L359.3 215L361.7 219.6L363.9 224.4L365.8 229.3L367.3 234.3L368.5 239.4L369.3 244.6L369.8 249.8L370 255" fill="var(--faint)" fill-opacity="0.16" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M250 255L250.1 251.1L250.5 247.2L251.2 243.3L252 239.5L253.2 235.7L254.6 232L256.2 228.5L258 225L260.1 221.7L262.4 218.5L264.9 215.4L267.6 212.6L270.4 209.9L273.5 207.4L276.7 205.1L280 203L283.5 201.2L287 199.6L290.7 198.2L294.5 197L298.3 196.2L302.2 195.5L306.1 195.1L310 195L313.9 195.1L317.8 195.5L321.7 196.2L325.5 197L329.3 198.2L333 199.6L336.5 201.2L340 203L343.3 205.1L346.5 207.4L349.6 209.9L352.4 212.6L355.1 215.4L357.6 218.5L359.9 221.7L362 225L363.8 228.5L365.4 232L366.8 235.7L368 239.5L368.8 243.3L369.5 247.2L369.9 251.1L370 255" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M210 255L210 253.7L210.2 252.4L210.4 251.1L210.7 249.8L211.1 248.6L211.5 247.3L212.1 246.2L212.7 245L213.4 243.9L214.1 242.8L215 241.8L215.9 240.9L216.8 240L217.8 239.1L218.9 238.4L220 237.7L221.2 237.1L222.3 236.5L223.6 236.1L224.8 235.7L226.1 235.4L227.4 235.2L228.7 235L230 235L231.3 235L232.6 235.2L233.9 235.4L235.2 235.7L236.4 236.1L237.7 236.5L238.8 237.1L240 237.7L241.1 238.4L242.2 239.1L243.2 240L244.1 240.9L245 241.8L245.9 242.8L246.6 243.9L247.3 245L247.9 246.2L248.5 247.3L248.9 248.6L249.3 249.8L249.6 251.1L249.8 252.4L250 253.7L250 255" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M210 255L210.2 249.8L210.7 244.6L211.5 239.4L212.7 234.3L214.2 229.3L216.1 224.4L218.3 219.6L220.7 215L223.5 210.6L226.5 206.3L229.9 202.3L233.4 198.4L237.3 194.9L241.3 191.5L245.6 188.5L250 185.7L254.6 183.3L259.4 181.1L264.3 179.2L269.3 177.7L274.4 176.5L279.6 175.7L284.8 175.2L290 175L295.2 175.2L300.4 175.7L305.6 176.5L310.7 177.7L315.7 179.2L320.6 181.1L325.4 183.3L330 185.7L334.4 188.5L338.7 191.5L342.7 194.9L346.6 198.4L350.1 202.3L353.5 206.3L356.5 210.6L359.3 215L361.7 219.6L363.9 224.4L365.8 229.3L367.3 234.3L368.5 239.4L369.3 244.6L369.8 249.8L370 255" fill="none" stroke="var(--d1)" stroke-width="2.2" stroke-dasharray="6 4" stroke-linejoin="round"/>
+  <line x1="290" y1="255" x2="290" y2="175" stroke="var(--live)" stroke-width="1.6"/>
+  <circle cx="290" cy="175" r="2.8" fill="var(--live)"/>
+  <line x1="370" y1="251.5" x2="370" y2="258.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="370" y="271" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">60</text>
+  <line x1="210" y1="251.5" x2="210" y2="258.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="210" y="271" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−20</text>
+  <text x="20" y="167" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">B · plano 60 y −20</text>
+  <text x="20" y="183" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.2" font-size="7.8">max</tspan><tspan dy="-3.1"> = 40</tspan></text>
+  <line x1="20" y1="390" x2="440.2" y2="390" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M445 390L439.5 387.6L439.5 392.4Z" fill="var(--faint)" stroke="none"/>
+  <line x1="250" y1="394" x2="250" y2="290" stroke="var(--faint)" stroke-width="1"/>
+  <text x="246" y="404" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <path d="M70 390L70.2 384.1L70.8 378.3L71.7 372.4L73.1 366.7L74.8 361.1L76.9 355.6L79.3 350.2L82.1 345L85.2 340L88.6 335.2L92.3 330.7L96.4 326.4L100.7 322.3L105.2 318.6L110 315.2L115 312.1L120.2 309.3L125.6 306.9L131.1 304.8L136.7 303.1L142.4 301.7L148.3 300.8L154.1 300.2L160 300L165.9 300.2L171.7 300.8L177.6 301.7L183.3 303.1L188.9 304.8L194.4 306.9L199.8 309.3L205 312.1L210 315.2L214.8 318.6L219.3 322.3L223.6 326.4L227.7 330.7L231.4 335.2L234.8 340L237.9 345L240.7 350.2L243.1 355.6L245.2 361.1L246.9 366.7L248.3 372.4L249.2 378.3L249.8 384.1L250 390" fill="var(--faint)" fill-opacity="0.16" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M190 390L190.1 388L190.3 386.1L190.6 384.1L191 382.2L191.6 380.4L192.3 378.5L193.1 376.7L194 375L195.1 373.3L196.2 371.7L197.4 370.2L198.8 368.8L200.2 367.4L201.7 366.2L203.3 365.1L205 364L206.7 363.1L208.5 362.3L210.4 361.6L212.2 361L214.1 360.6L216.1 360.3L218 360.1L220 360L222 360.1L223.9 360.3L225.9 360.6L227.8 361L229.6 361.6L231.5 362.3L233.3 363.1L235 364L236.7 365.1L238.3 366.2L239.8 367.4L241.2 368.8L242.6 370.2L243.8 371.7L244.9 373.3L246 375L246.9 376.7L247.7 378.5L248.4 380.4L249 382.2L249.4 384.1L249.7 386.1L249.9 388L250 390" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M70 390L70.1 386.1L70.5 382.2L71.2 378.3L72 374.5L73.2 370.7L74.6 367L76.2 363.5L78 360L80.1 356.7L82.4 353.5L84.9 350.4L87.6 347.6L90.4 344.9L93.5 342.4L96.7 340.1L100 338L103.5 336.2L107 334.6L110.7 333.2L114.5 332L118.3 331.2L122.2 330.5L126.1 330.1L130 330L133.9 330.1L137.8 330.5L141.7 331.2L145.5 332L149.3 333.2L153 334.6L156.5 336.2L160 338L163.3 340.1L166.5 342.4L169.6 344.9L172.4 347.6L175.1 350.4L177.6 353.5L179.9 356.7L182 360L183.8 363.5L185.4 367L186.8 370.7L188 374.5L188.8 378.3L189.5 382.2L189.9 386.1L190 390" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M70 390L70.1 386.1L70.5 382.2L71.2 378.3L72 374.5L73.2 370.7L74.6 367L76.2 363.5L78 360L80.1 356.7L82.4 353.5L84.9 350.4L87.6 347.6L90.4 344.9L93.5 342.4L96.7 340.1L100 338L103.5 336.2L107 334.6L110.7 333.2L114.5 332L118.3 331.2L122.2 330.5L126.1 330.1L130 330L133.9 330.1L137.8 330.5L141.7 331.2L145.5 332L149.3 333.2L153 334.6L156.5 336.2L160 338L163.3 340.1L166.5 342.4L169.6 344.9L172.4 347.6L175.1 350.4L177.6 353.5L179.9 356.7L182 360L183.8 363.5L185.4 367L186.8 370.7L188 374.5L188.8 378.3L189.5 382.2L189.9 386.1L190 390" fill="none" stroke="var(--d1)" stroke-width="2.2" stroke-dasharray="6 4" stroke-linejoin="round"/>
+  <line x1="160" y1="390" x2="160" y2="300" stroke="var(--live)" stroke-width="1.6"/>
+  <circle cx="160" cy="300" r="2.8" fill="var(--live)"/>
+  <line x1="190" y1="386.5" x2="190" y2="393.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="190" y="406" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−30</text>
+  <line x1="70" y1="386.5" x2="70" y2="393.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="70" y="406" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−90</text>
+  <text x="445" y="302" text-anchor="end" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">C · plano −30 y −90</text>
+  <text x="445" y="318" text-anchor="end" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">τ<tspan dy="3.2" font-size="7.8">max</tspan><tspan dy="-3.1"> = 45</tspan></text>
+  <text x="445" y="22" text-anchor="end" fill="var(--d1)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">- - - el círculo del plano xy</text>
+</svg>
+<figcaption>
+
+**Dónde está la tangencial máxima en tensión plana**, a escala, en MPa. A trazos,
+el círculo del plano xy. A: las dos principales del plano son de tracción, 80
+y 30; las tres del punto son 80, 30 y 0, y la máxima es
+40, no el radio del plano, 25. B: de signo contrario, 60 y −20; el
+círculo del plano es el grande y la máxima es su radio, 40. C: las dos de
+compresión, −30 y −90; la máxima es 45, no 30.
+
+</figcaption>
+</figure>
+
+<ErrorTipico titulo="La tangencial máxima no es siempre el radio del círculo del plano">
+En tensión plana, el radio del círculo $xy$ es la tangencial máxima **en los
+planos paralelos a $z$**. La del punto es $(\sigma_1 - \sigma_3)/2$ con las
+tres principales, y el cero cuenta. Solo coinciden si las dos del plano son de
+signo contrario o una de ellas es nula. El parcial del 14/11/2016 pide la «tensión tangencial
+máxima» de una roseta en tensión plana, la final del 19/1/2018 la «τmáx en el
+espacio», y el ejemplo de este tema está hecho para caer aquí: con
+$\sigma_1 = 110$ y $\sigma_2 = 10$ MPa, el radio es 50 y la máxima, 55.
+</ErrorTipico>
+
+El mismo razonamiento, al revés, resuelve la cuestión 4 del parcial del
+10/11/2014: un punto con las tres principales de tracción, dos de ellas 5 y
+35 MPa, y $\tau_{\max} = 20$ MPa. ¿La tercera? Si fuera la intermedia, la
+máxima sería $(35 - 5)/2 = 15$, no 20; así que es un extremo, y
+siendo de tracción, la mayor: $5 + 2 \cdot 20 = 45$ MPa.
+
+## Cómo se trabaja aquí
+
+El ejercicio de este tema es nuestro: un estado de tensión plana con números
+redondos, $\sigma_x = 90$, $\sigma_y = 30$ y $\tau_{xy} = 40$ MPa, para hacer
+a mano el círculo entero. Primero se reconoce qué pinta el cero de $\sigma_z$;
+luego se calculan la principal mayor, el ángulo y la tangencial máxima, con
+diagnósticos para tres errores —el radio sin la mitad, el ángulo doble y el
+radio por máxima, estos dos con su recuadro arriba—, y al final se ordena el
+razonamiento.
+
+Para el parcial, dos cosas más. Los problemas de tensor (2016, 2017, 2022) se
+resuelven como el de arriba: busca primero una fila con ceros fuera de la
+diagonal, porque te da una principal gratis y deja un círculo. Y las cuestiones
+de teoría son las de autoevaluación del tema, casi palabra por palabra: Cauchy,
+los dos planteamientos de las principales, que son reales y ortogonales, y el
+criterio del círculo.
+
+## Lo que hay que llevar sabido
+
+- **Convenio**: positiva la componente que va en sentido positivo en cara
+  positiva, o negativo en cara negativa. $\tau_{ij}$: normal $i$, dirección $j$.
+  $\tau_{xy} = \tau_{yx}$.
+- **Equilibrio interno**: $\sigma_{x,x} + \tau_{yx,y} + \tau_{zx,z} + F_x = 0$, y lo
+  mismo en $y$ y en $z$ con las componentes que apuntan en ese eje.
+- **Cauchy**: $\{S_n\} = [\sigma]\{n\}$; $\sigma_n = \{n\}^{t}[\sigma]\{n\}$;
+  $\tau_n^{2} = |S_n|^{2} - \sigma_n^{2}$.
+- **Giro de ejes**: $[\sigma'] = [R][\sigma][R]^{t}$, con las filas de $[R]$ los
+  ejes nuevos en los viejos.
+- **Principales**: $\det([\sigma] - \sigma[I]) = 0$, o
+  $\sigma^{3} - I_1\sigma^{2} + I_2\sigma - I_3 = 0$; reales y ortogonales;
+  $\sigma_1 > \sigma_2 > \sigma_3$. Una fila con ceros fuera de la diagonal es
+  una principal.
+- **Tensión plana**, con $\theta$ antihorario desde $x$:
+  $\sigma_n = \tfrac{\sigma_x + \sigma_y}{2} + \tfrac{\sigma_x - \sigma_y}{2}\cos 2\theta + \tau_{xy}\sin 2\theta$,
+  $\tau_n = \tfrac{\sigma_y - \sigma_x}{2}\sin 2\theta + \tau_{xy}\cos 2\theta$,
+  $\tan 2\theta_1 = 2\tau_{xy}/(\sigma_x - \sigma_y)$.
+- **Mohr**: $C = (\sigma_x + \sigma_y)/2$,
+  $R = \sqrt{((\sigma_x - \sigma_y)/2)^{2} + \tau_{xy}^{2}}$, $\sigma_{1,2} = C \pm R$.
+  Par horario, arriba: con $\tau_{xy} > 0$, $x$ abajo. Ángulos dobles, mismo
+  sentido de giro.
+- **Tangencial máxima del punto**: $(\sigma_1 - \sigma_3)/2$, a 45° de 1 y 3; en
+  tensión plana, con el cero entre las tres.

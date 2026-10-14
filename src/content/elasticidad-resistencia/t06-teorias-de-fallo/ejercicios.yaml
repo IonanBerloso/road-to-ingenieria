@@ -1,0 +1,137 @@
+ejercicios:
+  - id: ejerm6-tresca-con-la-tercera-nula
+    titulo: Tresca y Von Mises en tensión plana, sin olvidar la tercera principal
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni del material de la asignatura.
+    nivel: ejemplo
+    enunciado: |
+      En un punto de la superficie libre de una pieza de acero dúctil, con
+      límite elástico $\sigma_e = 240\ \text{MPa}$, las dos tensiones
+      principales del plano de la superficie valen $120\ \text{MPa}$ y
+      $40\ \text{MPa}$, las dos de tracción. La superficie está libre: no hay
+      tensión perpendicular a ella.
+
+      Calcular el factor de seguridad según el criterio de Tresca y según el
+      de Von Mises.
+    pide: El factor de seguridad de Tresca y el de Von Mises.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          ¿Cuáles son las tres tensiones principales, ordenadas
+          $\sigma_1 \ge \sigma_2 \ge \sigma_3$?
+        opciones:
+          - texto: $\sigma_1 = 120$, $\sigma_2 = 40$ y $\sigma_3 = 0$ MPa
+            correcta: true
+            mensaje: |
+              Eso es. La cara libre es un plano principal con tensión nula, y
+              como las otras dos son de tracción, el cero es la menor:
+              $\sigma_3 = 0$.
+          - texto: $\sigma_1 = 120$ y $\sigma_3 = 40$ MPa; en tensión plana solo hay dos
+            mensaje: |
+              En tensión plana hay tres principales, y una es cero. Con las dos
+              del plano de tracción, el cero es la menor y es $\sigma_3$; el 40
+              es $\sigma_2$. Olvidarlo es el error que cambia Tresca.
+          - texto: $\sigma_1 = 0$, $\sigma_2 = 40$ y $\sigma_3 = 120$ MPa
+            mensaje: |
+              El orden es de mayor a menor con su signo: $\sigma_1$ es la
+              mayor, 120, y $\sigma_3$ la menor, 0.
+
+      - tipo: calcular
+        titulo: El factor de seguridad de Tresca
+        pregunta: |
+          ¿Cuánto vale el factor de seguridad según Tresca?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.01
+          formato: un número, sin unidades
+        distractores:
+          - valor: '3'
+            mensaje: |
+              Has hecho $\sigma_{eqv} = 120 - 40 = 80$, con las dos del plano.
+              Tresca es $\sigma_1 - \sigma_3$, y aquí $\sigma_3 = 0$: el círculo
+              de Mohr mayor es el que va de 0 a 120, no el de 40 a 120.
+          - valor: '4'
+            mensaje: |
+              Has dividido $\sigma_e$ entre la tangencial máxima,
+              $\tau_{\max} = 60$. En Tresca la tensión equivalente es el doble:
+              $\sigma_{eqv} = 2\,\tau_{\max} = \sigma_1 - \sigma_3 = 120$.
+        pista: |
+          $\sigma_{eqv} = \sigma_1 - \sigma_3$, con las tres principales,
+          incluida la nula.
+        desarrollo: |
+          $$
+          \sigma_{eqv} = \sigma_1 - \sigma_3 = 120 - 0 = 120\ \text{MPa}
+          \qquad
+          SF = \frac{\sigma_e}{\sigma_{eqv}} = \frac{240}{120} = 2
+          $$
+
+      - tipo: calcular
+        titulo: El factor de seguridad de Von Mises
+        pregunta: |
+          ¿Cuánto vale el factor de seguridad según Von Mises?
+        respuesta:
+          tipo: numero
+          valor: '2.2678'
+          tolerancia: 0.005
+          formato: un número, sin unidades
+        distractores:
+          - valor: '1.8974'
+            mensaje: |
+              Has hecho $\sqrt{\sigma_1^{2} + \sigma_2^{2}}$ y te has dejado
+              el producto cruzado. En tensión plana es
+              $\sqrt{\sigma_1^{2} - \sigma_1\sigma_2 + \sigma_2^{2}}$.
+          - valor: '1.6641'
+            mensaje: |
+              El producto va restando: $\sigma_1^{2} - \sigma_1\sigma_2 + \sigma_2^{2}$.
+              Con el signo más, la tracción en una dirección empeora la otra, y
+              es al revés: dos tracciones del mismo signo distorsionan menos que
+              una sola.
+        pista: |
+          Con $\sigma_3 = 0$, $\sigma_{eqv} = \sqrt{\sigma_1^{2} - \sigma_1\sigma_2 + \sigma_2^{2}}$.
+        desarrollo: |
+          $$
+          \sigma_{eqv} = \sqrt{120^{2} - 120 \cdot 40 + 40^{2}} = \sqrt{11\,200} = 105{,}83\ \text{MPa}
+          \qquad
+          SF = \frac{240}{105{,}83} = 2{,}27
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: La cara libre es un plano principal sin tensión, así que las principales son 120, 40 y 0 MPa, y $\sigma_3 = 0$.
+          - texto: 'Tresca: $\sigma_{eqv} = \sigma_1 - \sigma_3 = 120$ MPa y $SF = 240/120 = 2$.'
+          - texto: 'Von Mises: $\sigma_{eqv} = \sqrt{120^{2} - 120 \cdot 40 + 40^{2}} = 105{,}8$ MPa y $SF = 2{,}27$.'
+          - texto: Tresca da el factor menor porque su hexágono queda dentro de la elipse de Von Mises; es el criterio del lado de la seguridad.
+          - texto: 'Tresca: $\sigma_{eqv} = 120 - 40 = 80$ MPa, la diferencia de las dos tensiones del plano.'
+            trampa: true
+            mensaje: |
+              Con las dos del plano del mismo signo, el círculo de Mohr mayor
+              pasa por la tercera, la nula. La diferencia que cuenta es
+              $\sigma_1 - \sigma_3 = 120 - 0$.
+    resolucion: |
+      **Las tres principales.** La superficie libre no tiene tensiones, así
+      que su normal es una dirección principal con tensión nula. Ordenadas:
+      $\sigma_1 = 120$, $\sigma_2 = 40$ y $\sigma_3 = 0$ MPa.
+
+      **Tresca.** La tensión equivalente es la diferencia entre la mayor y la
+      menor, el diámetro del círculo de Mohr mayor:
+
+      $$
+      \sigma_{eqv} = \sigma_1 - \sigma_3 = 120\ \text{MPa}
+      \qquad
+      SF = \frac{240}{120} = 2
+      $$
+
+      **Von Mises.** Con la forma general, que no necesita saber cuál es la
+      nula,
+
+      $$
+      \sigma_{eqv} = \frac{1}{\sqrt2}\sqrt{(120 - 40)^{2} + (40 - 0)^{2} + (0 - 120)^{2}} = \sqrt{11\,200} = 105{,}83\ \text{MPa}
+      $$
+
+      que es lo mismo que $\sqrt{\sigma_1^{2} - \sigma_1\sigma_2 + \sigma_2^{2}}$
+      con las dos del plano. El factor de seguridad es $240/105{,}83 = 2{,}27$.
+
+      **Los dos juntos.** Tresca da un factor menor, 2 frente a 2,27: su
+      hexágono queda dentro de la elipse de Von Mises y es el más
+      conservador. Los dos dicen que el punto aguanta.

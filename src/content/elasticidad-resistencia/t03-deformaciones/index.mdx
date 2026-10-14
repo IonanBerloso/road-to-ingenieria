@@ -1,0 +1,525 @@
+---
+asignatura: elasticidad-resistencia
+tema: 3
+titulo: Deformaciones
+descripcion: "Cómo se deforma el entorno de un punto: deformaciones normales y tangenciales, el tensor con γ/2, la rotación, la compatibilidad y las rosetas de galgas, con el convenio del curso."
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: Adaptado del tema 3, «Deformaciones», de los apuntes y las diapositivas de Elasticidad y Resistencia de Materiales · UPV/EHU, y de sus cuestiones teóricas de autoevaluación. Las figuras y los ejemplos son nuestros.
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+Un cuerpo cargado se deforma: cada punto se mueve, y lo que importa no es
+cuánto se mueve uno, sino **cuánto se mueven sus vecinos respecto de él**. Un
+cubito alrededor del punto se traslada, gira, cambia la longitud de sus
+aristas y deja de tener los ángulos rectos. Este tema separa esas cuatro cosas
+y contesta: **¿cuánto se alarga una fibra cualquiera que pase por el punto, y
+cuánto cambia el ángulo entre dos?**
+
+Y tiene una segunda mitad muy práctica: las **galgas extensométricas**, que
+miden alargamientos en la superficie de una pieza. Con tres galgas se conoce
+el estado de deformación entero, y ese es el problema que más se repite del
+parcial: hay **una roseta de galgas en cinco de los siete últimos parciales 1**
+(2015, 2016, 2017, 2020 y 2022). En teoría caen el elemento diferencial
+deformado, la rotación como sólido rígido y la compatibilidad.
+
+Casi todo es el tema 2 otra vez. Al final de este tema verás que deformaciones
+y tensiones se tratan con las mismas herramientas —tensor, principales,
+círculo de Mohr—, con una sola diferencia que hay que vigilar: **el
+$\gamma/2$**.
+
+## El convenio y la notación del curso
+
+- El desplazamiento del punto es $\vec\delta = u\,\hat i + v\,\hat j + w\,\hat k$
+  (3.1), y las derivadas se escriben con coma: $u_{,x} = \partial u/\partial x$.
+- $\varepsilon_x$ es la **deformación normal**: el alargamiento relativo de
+  una fibra en $x$. Positiva si se alarga.
+- $\gamma_{xy}$ es la **deformación tangencial**: la **disminución** del ángulo
+  recto entre las direcciones $x$ e $y$ (3.15). Positiva si el ángulo se
+  cierra.
+- En el tensor, fuera de la diagonal, va **$\gamma/2$**, no $\gamma$ (3.35).
+
+Todo con la hipótesis de **pequeños desplazamientos**: las derivadas de los
+desplazamientos son pequeñas, menores que 0,02 según los apuntes (p. 7), y
+sus cuadrados se desprecian.
+
+## Lo que le pasa a un elemento diferencial
+
+Toma el ortoedro de aristas $dx$, $dy$, $dz$ en el punto O. Al deformarse, O
+va a O′ y cada arista cambia de longitud y de dirección (3.4, 3.7 y 3.8). La
+de $x$, por ejemplo, pasa a ser
+$\left[(1 + u_{,x})\,\hat i + v_{,x}\,\hat j + w_{,x}\,\hat k\right] dx$.
+
+<figure>
+<svg viewBox="0 0 400 290" role="img" width="400" height="290" aria-labelledby="t03-elemento-t t03-elemento-d">
+  <title id="t03-elemento-t">Las aristas x e y de un elemento, antes y después de deformarse</title>
+  <desc id="t03-elemento-d">Un cuadrado de lados dx y dy, a trazos, con el vértice O abajo a la izquierda. Después de deformarse, O pasa a O′; la arista de x sube y se alarga, con componentes (1 + u,x)dx en x y v,x dx en y; la de y se inclina hacia la derecha, con u,y dy en x y (1 + v,y)dy en y. El ángulo entre las dos aristas, que era recto, pasa a ser π/2 − γxy, con γxy igual a v,x más u,y.</desc>
+  <path d="M60 240L180 240L180 120L60 120Z" fill="none" stroke="var(--faint)" stroke-width="1.1" stroke-dasharray="4 3" stroke-linejoin="round"/>
+  <text x="185" y="254" text-anchor="start" fill="var(--faint)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">A</text>
+  <text x="54" y="124" text-anchor="end" fill="var(--faint)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">B</text>
+  <text x="54" y="254" text-anchor="end" fill="var(--faint)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <path d="M100 210L250 188.4L276.4 56.4L126.4 78Z" fill="var(--faint)" fill-opacity="0.1" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="60" y1="240" x2="93.8" y2="214.4" stroke="var(--faint)" stroke-width="1"/>
+  <path d="M97 212L92.1 213.1L94.6 216.4Z" fill="var(--faint)" stroke="none"/>
+  <text x="95" y="225" text-anchor="end" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O′</text>
+  <text x="256" y="192.4" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">A′</text>
+  <text x="120.4" y="80" text-anchor="end" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">B′</text>
+  <line x1="100" y1="210" x2="212" y2="210" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="100" y1="210" x2="100" y2="98" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M200 210L200 209.6L200 209.3L200 208.9L200 208.6L200 208.2L200 207.9L200 207.5L200 207.1L199.9 206.8L199.9 206.4L199.9 206.1L199.9 205.7L199.9 205.4L199.9 205L199.9 204.6L199.8 204.3L199.8 203.9L199.8 203.6L199.8 203.2L199.7 202.9L199.7 202.5L199.7 202.1L199.7 201.8L199.6 201.4L199.6 201.1L199.6 200.7L199.5 200.4L199.5 200L199.5 199.6L199.4 199.3L199.4 198.9L199.3 198.6L199.3 198.2L199.3 197.9L199.2 197.5L199.2 197.2L199.1 196.8L199.1 196.5L199 196.1L199 195.7" fill="none" stroke="var(--d2)" stroke-width="1.6" stroke-linejoin="round"/>
+  <text x="204" y="204" text-anchor="start" fill="var(--d2-tinta)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">v,x</text>
+  <path d="M100 110L100.5 110L101 110L101.5 110L102 110L102.5 110L103 110L103.5 110.1L103.9 110.1L104.4 110.1L104.9 110.1L105.4 110.1L105.9 110.2L106.4 110.2L106.9 110.2L107.4 110.3L107.9 110.3L108.4 110.4L108.9 110.4L109.4 110.4L109.9 110.5L110.3 110.5L110.8 110.6L111.3 110.6L111.8 110.7L112.3 110.8L112.8 110.8L113.3 110.9L113.8 111L114.3 111L114.8 111.1L115.2 111.2L115.7 111.2L116.2 111.3L116.7 111.4L117.2 111.5L117.7 111.6L118.2 111.7L118.6 111.8L119.1 111.8L119.6 111.9" fill="none" stroke="var(--d2)" stroke-width="1.6" stroke-linejoin="round"/>
+  <text x="96" y="106" text-anchor="end" fill="var(--d2-tinta)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">u,y</text>
+  <path d="M125.7 206.3L125.6 205.5L125.5 204.7L125.3 203.9L125.1 203.2L124.9 202.4L124.6 201.6L124.3 200.9L124.1 200.1L123.7 199.4L123.4 198.7L123 198L122.7 197.3L122.3 196.6L121.8 195.9L121.4 195.2L120.9 194.6L120.4 193.9L119.9 193.3L119.4 192.7L118.9 192.1L118.3 191.5L117.7 191L117.2 190.5L116.5 189.9L115.9 189.4L115.3 189L114.6 188.5L114 188.1L113.3 187.6L112.6 187.2L111.9 186.9L111.2 186.5L110.4 186.2L109.7 185.9L108.9 185.6L108.2 185.3L107.4 185.1L106.7 184.9L105.9 184.7L105.1 184.5" fill="none" stroke="var(--live)" stroke-width="1.4" stroke-linejoin="round"/>
+  <text x="130" y="184" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">π/2 − γ<tspan dy="3.2" font-size="7.8">xy</tspan></text>
+  <text x="195" y="226" text-anchor="start" fill="var(--ink)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">(1 + u,x) dx</text>
+  <line x1="310" y1="270" x2="345.2" y2="270" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M350 270L344.5 267.6L344.5 272.4Z" fill="var(--ink)" stroke="none"/>
+  <line x1="310" y1="270" x2="310" y2="236.8" stroke="var(--ink)" stroke-width="1.2"/>
+  <path d="M310 232L307.6 237.5L312.4 237.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="354" y="274" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <text x="315" y="234" text-anchor="start" fill="var(--ink)" font-size="11" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+</svg>
+<figcaption>
+
+**Las aristas x e y de un elemento, antes (a trazos) y después.** Las derivadas
+están exageradas para que se vean. La arista de x sube un ángulo v,x y la de y
+se tumba un ángulo u,y hacia x; el ángulo recto entre ellas se cierra en la
+suma de los dos, que es γxy.
+
+</figcaption>
+</figure>
+
+**Deformación normal.** Es la variación relativa de longitud (3.9). Con el
+módulo exacto de la arista nueva sale
+$\varepsilon_x = \sqrt{(1 + u_{,x})^{2} + v_{,x}^{2} + w_{,x}^{2}} - 1$ (3.10), y
+con pequeños desplazamientos, solo el término de primer orden (3.14):
+
+$$
+\varepsilon_x = u_{,x} \qquad \varepsilon_y = v_{,y} \qquad \varepsilon_z = w_{,z}
+$$
+
+**Deformación tangencial.** Es lo que se cierra el ángulo recto. Con el
+producto escalar de las dos aristas nuevas y despreciando segundos órdenes
+(3.16-3.21):
+
+$$
+\gamma_{xy} = u_{,y} + v_{,x} \qquad \gamma_{yz} = v_{,z} + w_{,y} \qquad \gamma_{zx} = w_{,x} + u_{,z}
+$$
+
+En la figura se ve por qué es una suma: la arista de $x$ gira $v_{,x}$ hacia
+$y$, la de $y$ gira $u_{,y}$ hacia $x$, y el ángulo entre las dos se cierra en
+los dos giros.
+
+<ErrorTipico titulo="γxy es lo que se cierra el ángulo, y es una suma">
+Las finales de 2017, 2019 y 2023 dan las aristas $x$ e $y$ de un elemento ya
+deformado y piden **definir** la deformación tangencial y calcularla. Los dos
+fallos que se repiten: restar los dos giros en lugar de sumarlos, como si
+fueran un giro del elemento entero, y dar el signo al revés. Si las dos
+aristas giran **una hacia la otra**, el ángulo se cierra y $\gamma_{xy} > 0$.
+Si giran las dos en el mismo sentido y lo mismo, el elemento solo ha girado y
+$\gamma_{xy} = 0$.
+</ErrorTipico>
+
+**Pequeños desplazamientos no es lo mismo que pequeñas deformaciones**
+(p. 8 y diapositiva 10). En un problema de pequeños desplazamientos son
+pequeñas las **derivadas** de los desplazamientos, y entonces también las
+deformaciones. Al revés no: una viga muy flexible puede tener deformaciones
+pequeñas y giros grandes, y entonces
+$\varepsilon_x = u_{,x} + \tfrac12 w_{,x}^{2}$ no pierde su segundo término. Es la
+cuestión 2 de autoevaluación.
+
+## Deformación y rotación: el gradiente partido en dos
+
+Lo que le pasa a un segmento cualquiera $d\vec r$ que sale de O lo da la
+**matriz gradiente de desplazamiento** (3.27-3.28):
+
+$$
+d\vec r\,' = d\vec r + [g]\,d\vec r \qquad
+[g] = \begin{bmatrix} u_{,x} & u_{,y} & u_{,z} \\ v_{,x} & v_{,y} & v_{,z} \\ w_{,x} & w_{,y} & w_{,z} \end{bmatrix}
+$$
+
+$[g]$ no es simétrica. Se parte en una parte simétrica y otra antisimétrica
+(3.30-3.32), y cada una es una cosa física distinta:
+
+$$
+[g] = [\varepsilon] + [\Omega] \qquad
+[\varepsilon] = \begin{bmatrix} \varepsilon_x & \tfrac12\gamma_{xy} & \tfrac12\gamma_{zx} \\ \tfrac12\gamma_{xy} & \varepsilon_y & \tfrac12\gamma_{yz} \\ \tfrac12\gamma_{zx} & \tfrac12\gamma_{yz} & \varepsilon_z \end{bmatrix}
+$$
+
+$[\varepsilon]$ es el **tensor de deformación** (3.35): la deformación pura.
+$[\Omega]$, con ceros en la diagonal y $\Omega_{ij} = \tfrac12(g_{ij} - g_{ji})$
+fuera, es el **tensor de rotación**, y su efecto es un producto vectorial,
+$[\Omega]\,d\vec r = \vec\omega \times d\vec r$, con $\vec\omega$ el **vector
+de rotación** hecho con sus tres componentes (3.38-3.40). Los tensores de
+deformación y rotación los pidió tal cual el parcial del 10/11/2014.
+
+### La rotación no deforma, a primer orden
+
+Que $\vec\omega \times d\vec r$ es un giro de sólido rígido se demuestra
+viendo que no cambia ni longitudes ni ángulos. La longitud, con $\varphi$ el
+ángulo entre $\vec\omega$ y $d\vec r$ (3.41-3.42):
+
+$$
+\left|d\vec r\,'\right| = \left|d\vec r\right|\sqrt{1 + \omega^{2}\sin^{2}\varphi}
+$$
+
+Con pequeños desplazamientos $\omega^{2}$ es despreciable y la longitud no
+cambia. Y el ángulo entre dos segmentos tampoco, por la misma razón (3.43-3.45).
+
+<ErrorTipico titulo="«La longitud no cambia» sin decir por qué">
+Es la cuestión de teoría que más se repite de este tema: los parciales del
+15/11/2019, del 20/11/2020 y del 18/11/2022, y las extraordinarias de 2014 y
+2015, dan $d\vec r\,' = d\vec r + \vec\Omega \times d\vec r$, con $\vec\Omega$ el
+vector de rotación, y piden la nueva
+longitud y qué pasa si $\Omega$ es pequeño. La longitud **sí cambia**: sale
+$\left|d\vec r\right|\sqrt{1 + \Omega^{2}\sin^{2}\varphi}$. Lo que pasa es que
+el cambio es de **segundo orden**: con un giro de $0{,}01$ rad, el
+alargamiento relativo máximo es $\sqrt{1 + 10^{-4}} - 1 \approx 5 \cdot 10^{-5}$,
+doscientas veces menor que el giro. Contestar «no cambia» sin la raíz, o decir que
+alarga del orden de $\Omega$, pierde el punto.
+</ErrorTipico>
+
+## El vector deformación y la fórmula de la galga
+
+Quitada la rotación, lo que le queda a un segmento de dirección $\hat u$ es el
+**vector deformación** (3.47-3.49), y se calcula como Cauchy en el tema 2:
+
+$$
+\{D_u\} = [\varepsilon]\,\{u\}
+$$
+
+Su componente sobre $\hat u$ es la **deformación normal de esa dirección**, y
+la que queda perpendicular es la **mitad** de la tangencial (3.51-3.53):
+
+$$
+\varepsilon_u = \{u\}^{t}[\varepsilon]\{u\} \qquad
+\left(\tfrac12\gamma_u\right)^{2} = \left|D_u\right|^{2} - \varepsilon_u^{2}
+$$
+
+Desarrollada, la primera es la fórmula que se usa con las galgas (3.54). En el
+plano $xy$, con $\hat u = (\cos\theta,\ \sin\theta)$ (3.55):
+
+$$
+\varepsilon_u = \varepsilon_x \cos^{2}\theta + \varepsilon_y \sin^{2}\theta + \gamma_{xy}\sin\theta\cos\theta
+$$
+
+Fíjate: aquí va $\gamma_{xy}$ **entero**, porque los dos términos
+$\tfrac12\gamma_{xy}$ del tensor se suman.
+
+**La analogía con las tensiones** (p. 17, tabla):
+$\sigma \leftrightarrow \varepsilon$ y $\tau \leftrightarrow \tfrac12\gamma$. Todo lo del tema 2 vale
+cambiando eso: el giro de ejes $[\varepsilon'] = [R][\varepsilon][R]^{t}$ (lo
+piden la final del 22/1/2016 y el parcial del 16/11/2018), las deformaciones y
+direcciones principales como autovalores y autovectores, y el círculo de Mohr.
+
+<ErrorTipico titulo="γ en el tensor y en el círculo va dividida entre 2">
+Es el error que más puntos cuesta en los problemas de galgas, porque se
+arrastra hasta el final. En el tensor, fuera de la diagonal, va
+$\tfrac12\gamma_{xy}$; en el círculo de Mohr, la ordenada es
+$\tfrac12\gamma$ y el radio es
+
+$$
+R = \sqrt{\left(\frac{\varepsilon_x - \varepsilon_y}{2}\right)^{2} + \left(\frac{\gamma_{xy}}{2}\right)^{2}}
+$$
+
+Si pones $\gamma$ entera, las principales salen mal, y la deformación
+tangencial máxima, que es $2R$, también. Al revés, en la fórmula de la galga
+va $\gamma$ entera: meter allí $\tfrac12\gamma$ da una $\gamma$ el doble de
+grande.
+</ErrorTipico>
+
+## El círculo de Mohr de deformaciones
+
+Ejes: $\varepsilon$ en horizontal y $\left|\gamma/2\right|$ en vertical, con
+
+$$
+C = \frac{\varepsilon_x + \varepsilon_y}{2} \qquad
+R = \sqrt{\left(\frac{\varepsilon_x - \varepsilon_y}{2}\right)^{2} + \left(\frac{\gamma_{xy}}{2}\right)^{2}} \qquad
+\varepsilon_{1,2} = C \pm R
+$$
+
+Y el criterio de colocación del curso (p. 18 y diapositiva 25): **la dirección
+que gira en sentido horario por la deformación tangencial va en la mitad
+superior**. Con $\gamma_{xy} > 0$ el ángulo se cierra: la arista de $x$ gira
+hacia $y$, en sentido antihorario, y $x$ va **abajo**; la de $y$ gira hacia
+$x$, en sentido horario, e $y$ va **arriba**. Es lo mismo que en tensiones con
+$\tau_{xy} > 0$. Con $\gamma_{xy} < 0$, al revés.
+
+Un ejemplo nuestro, en millonésimas: $\varepsilon_x = 300$,
+$\varepsilon_y = -100$ y $\gamma_{xy} = -300$. Entonces $C = 100$,
+$\gamma_{xy}/2 = -150$ y
+
+$$
+R = \sqrt{200^{2} + 150^{2}} = 250 \qquad
+\varepsilon_1 = 350 \qquad \varepsilon_2 = -150
+$$
+
+Como $\gamma_{xy}$ es negativa, el ángulo recto se abre, $x$ gira en sentido
+horario y va **arriba**. De ahí a la dirección 1 se baja:
+$\tan 2\theta_1 = \gamma_{xy}/(\varepsilon_x - \varepsilon_y) = -0{,}75$, así que
+$2\theta_1 = -36{,}87°$ y la dirección 1 está a $18{,}43°$ de $x$ **en
+sentido horario**. La deformación tangencial máxima en el plano es
+$\gamma_{\max} = 2R = 500$ millonésimas.
+
+<figure>
+<svg viewBox="0 0 460 310" role="img" width="460" height="310" aria-labelledby="t03-mohr-t t03-mohr-d">
+  <title id="t03-mohr-t">El círculo de Mohr de εx = 300, εy = -100 y γxy = -300, en millonésimas</title>
+  <desc id="t03-mohr-d">Eje ε horizontal y |γ/2| vertical, en millonésimas. Centro en 100, radio 250. Como γxy es negativa, el ángulo recto entre x e y se abre y la arista de x gira en sentido horario: el punto de x, (300, 150), va en la mitad superior; el de y, (-100, 150), en la inferior. El círculo corta el eje en ε1 = 350 y ε2 = -150. De x a la dirección 1 se gira 2θ1 hacia abajo, en sentido horario.</desc>
+  <line x1="20" y1="155" x2="440.2" y2="155" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M445 155L439.5 152.6L439.5 157.4Z" fill="var(--faint)" stroke="none"/>
+  <line x1="135" y1="298" x2="135" y2="16.8" stroke="var(--faint)" stroke-width="1.1"/>
+  <path d="M135 12L132.6 17.5L137.4 17.5Z" fill="var(--faint)" stroke="none"/>
+  <text x="443" y="170" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">ε</text>
+  <text x="141" y="22" text-anchor="start" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">|γ/2|</text>
+  <text x="131" y="168" text-anchor="end" fill="var(--faint)" font-size="10" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">O</text>
+  <circle cx="183" cy="155" r="120" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+  <line x1="279" y1="83" x2="87" y2="227" stroke="var(--d2)" stroke-width="1.4"/>
+  <line x1="279" y1="83" x2="279" y2="155" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="87" y1="227" x2="87" y2="155" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"/>
+  <circle cx="279" cy="83" r="3.2" fill="var(--d2)"/>
+  <circle cx="87" cy="227" r="3.2" fill="var(--d2)"/>
+  <text x="287" y="77" text-anchor="start" fill="var(--d2-tinta)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x (300, 150)</text>
+  <text x="95" y="242" text-anchor="start" fill="var(--d2-tinta)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y (−100, 150)</text>
+  <circle cx="183" cy="155" r="2.6" fill="var(--ink)"/>
+  <text x="179" y="148" text-anchor="end" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">C</text>
+  <circle cx="303" cy="155" r="3.2" fill="var(--live)"/>
+  <circle cx="63" cy="155" r="3.2" fill="var(--live)"/>
+  <text x="310" y="170" text-anchor="start" fill="var(--live)" font-size="11" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">1</text>
+  <text x="57" y="147" text-anchor="end" fill="var(--live)" font-size="11" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">2</text>
+  <path d="M210.2 134.6L210.5 135L210.8 135.5L211.2 135.9L211.5 136.4L211.8 136.9L212 137.3L212.3 137.8L212.6 138.3L212.9 138.7L213.1 139.2L213.4 139.7L213.6 140.2L213.8 140.7L214.1 141.2L214.3 141.7L214.5 142.2L214.7 142.7L214.9 143.2L215.1 143.7L215.3 144.2L215.4 144.8L215.6 145.3L215.7 145.8L215.9 146.3L216 146.9L216.1 147.4L216.3 147.9L216.4 148.5L216.5 149L216.6 149.6L216.6 150.1L216.7 150.6L216.8 151.2L216.8 151.7L216.9 152.3L216.9 152.8L217 153.4L217 153.9L217 154.5L217 155" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M217 155L219.1 150.5L214.8 150.5Z" fill="var(--ink)" stroke="none"/>
+  <text x="223" y="143" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">2θ<tspan dy="3.2" font-size="7.8">1</tspan></text>
+  <line x1="183" y1="155" x2="183" y2="35" stroke="var(--live)" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="190" y="28" text-anchor="start" fill="var(--live)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">γ<tspan dy="3.2" font-size="7.8">max</tspan><tspan dy="-3.1">/2 = 250</tspan></text>
+  <line x1="63" y1="151.5" x2="63" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="63" y="172" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">−150</text>
+  <line x1="183" y1="151.5" x2="183" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="183" y="172" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">100</text>
+  <line x1="279" y1="151.5" x2="279" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="279" y="172" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">300</text>
+  <line x1="303" y1="151.5" x2="303" y2="158.5" stroke="var(--faint)" stroke-width="1"/>
+  <text x="303" y="148" text-anchor="middle" fill="var(--faint)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">350</text>
+</svg>
+<figcaption>
+
+**El círculo de εx = 300, εy = −100 y γxy = −300 millonésimas, a escala.** La
+ordenada es la mitad de γ. Con γxy negativa, x gira en sentido horario y va
+arriba; de x a la dirección 1 se gira 2θ1 hacia abajo, y en la pieza la 1 está
+a 18,43° de x en sentido horario. La deformación tangencial máxima en
+el plano es el doble del radio, 500.
+
+</figcaption>
+</figure>
+
+Comprobado por el otro camino: la fórmula de la galga con
+$\theta = -18{,}43°$ da exactamente $\varepsilon_u = 350$.
+
+## Cambio de volumen y de forma
+
+El volumen del elemento deformado es el producto mixto de sus tres aristas
+nuevas (3.56). A primer orden, la **deformación volumétrica unitaria** es
+(3.59):
+
+$$
+e = \frac{dV' - dV}{dV} = \varepsilon_x + \varepsilon_y + \varepsilon_z
+$$
+
+el primer invariante del tensor de deformación, y el cambio de volumen del
+cuerpo es $\Delta V = \int_V e\,dV$ (3.60). Las deformaciones normales cambian
+el volumen; las tangenciales solo la forma (p. 19).
+
+## Las condiciones de compatibilidad
+
+Seis deformaciones salen de solo tres desplazamientos, así que no pueden ser
+seis funciones cualesquiera: tienen que poder integrarse a un campo $u$, $v$,
+$w$ que dependa del punto y no del camino. En el plano, exigiendo que $du$,
+$dv$ y la rotación sean diferenciales exactas (3.61-3.63):
+
+$$
+\varepsilon_{x,yy} + \varepsilon_{y,xx} = \gamma_{xy,xy}
+$$
+
+Hace falta que las segundas derivadas de las deformaciones sean continuas
+(teorema de Schwarz). En el espacio son seis ecuaciones (3.64). La deducción
+plana la pidieron los parciales de 2015 y 2016, y en 2017 se pidió usarla.
+
+El parcial del 3/11/2017 daba
+$\varepsilon_x = 2Axy^{2}$, $\varepsilon_y = 2Bx^{2}y$ y
+$\gamma_{xy} = C_1x^{2}y + C_2xy^{2}$, y preguntaba $C_1$ y $C_2$ para que el
+campo de desplazamientos sea posible. Con la ecuación:
+
+$$
+\varepsilon_{x,yy} + \varepsilon_{y,xx} = 4Ax + 4By \qquad
+\gamma_{xy,xy} = 2C_1x + 2C_2y
+\qquad\Longrightarrow\qquad C_1 = 2A,\quad C_2 = 2B
+$$
+
+Y se comprueba por el otro lado: $u = Ax^{2}y^{2}$ y $v = Bx^{2}y^{2}$ dan
+justo $u_{,x} = 2Axy^{2}$, $v_{,y} = 2Bx^{2}y$ y
+$u_{,y} + v_{,x} = 2Ax^{2}y + 2Bxy^{2}$.
+
+## Galgas y rosetas
+
+Una galga es una resistencia eléctrica pegada a la superficie: se deforma con
+la pieza, cambia su resistencia, y esa medida se convierte en deformación
+(p. 20). **Solo mide la deformación normal en su dirección.** Para conocer
+$\varepsilon_x$, $\varepsilon_y$ y $\gamma_{xy}$ en un punto hacen falta tres
+galgas en tres direcciones: una **roseta**. Las dos de los apuntes son la de
+45° y la de 120°.
+
+<figure>
+<svg viewBox="0 0 440 250" role="img" width="440" height="250" aria-labelledby="t03-rosetas-t t03-rosetas-d">
+  <title id="t03-rosetas-t">Las dos rosetas de tres galgas de los apuntes</title>
+  <desc id="t03-rosetas-d">A la izquierda, la roseta a 45°: la galga a a lo largo de x, la b a 45° y la c a 90°, a lo largo de y. A la derecha, la roseta a 120°: la galga a a lo largo de x, la b a 120° y la c a 240°, las tres separadas 120°. Los ángulos se miden desde x en sentido antihorario.</desc>
+  <line x1="80" y1="175" x2="201" y2="175" stroke="var(--faint)" stroke-width="1"/>
+  <path d="M205 175L200.4 173L200.4 177Z" fill="var(--faint)" stroke="none"/>
+  <line x1="80" y1="175" x2="80" y2="44" stroke="var(--faint)" stroke-width="1"/>
+  <path d="M80 40L78 44.6L82 44.6Z" fill="var(--faint)" stroke="none"/>
+  <text x="208" y="179" text-anchor="start" fill="var(--faint)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <text x="85" y="45" text-anchor="start" fill="var(--faint)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">y</text>
+  <path d="M110 169L175 169L175 181L110 181Z" fill="var(--d1)" fill-opacity="0.12" stroke="var(--d1)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="115" y1="172" x2="170" y2="172" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="115" y1="175" x2="170" y2="175" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="115" y1="178" x2="170" y2="178" stroke="var(--d1)" stroke-width="0.9"/>
+  <text x="188" y="179" text-anchor="middle" fill="var(--d1)" font-size="11.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">a</text>
+  <path d="M97 149.5L142.9 103.6L151.4 112.1L105.5 158Z" fill="var(--d1)" fill-opacity="0.12" stroke="var(--d1)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="102.6" y1="148.1" x2="141.5" y2="109.2" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="104.7" y1="150.3" x2="143.6" y2="111.4" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="106.9" y1="152.4" x2="145.8" y2="113.5" stroke="var(--d1)" stroke-width="0.9"/>
+  <text x="156.4" y="102.6" text-anchor="middle" fill="var(--d1)" font-size="11.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">b</text>
+  <path d="M74 145L74 80L86 80L86 145Z" fill="var(--d1)" fill-opacity="0.12" stroke="var(--d1)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="77" y1="140" x2="77" y2="85" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="80" y1="140" x2="80" y2="85" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="83" y1="140" x2="83" y2="85" stroke="var(--d1)" stroke-width="0.9"/>
+  <text x="80" y="71" text-anchor="middle" fill="var(--d1)" font-size="11.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">c</text>
+  <path d="M102 175L102 174.6L102 174.1L102 173.7L101.9 173.3L101.9 172.8L101.8 172.4L101.8 172L101.7 171.6L101.7 171.1L101.6 170.7L101.5 170.3L101.4 169.9L101.3 169.4L101.2 169L101.1 168.6L100.9 168.2L100.8 167.8L100.6 167.4L100.5 167L100.3 166.6L100.2 166.2L100 165.8L99.8 165.4L99.6 165L99.4 164.6L99.2 164.3L99 163.9L98.8 163.5L98.5 163.1L98.3 162.8L98 162.4L97.8 162.1L97.5 161.7L97.3 161.4L97 161L96.7 160.7L96.4 160.4L96.2 160.1L95.9 159.8L95.6 159.4" fill="none" stroke="var(--ink)" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M95.6 159.4L96.8 163.2L99.3 160.8Z" fill="var(--ink)" stroke="none"/>
+  <text x="106" y="169" text-anchor="start" fill="var(--ink)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">45°</text>
+  <text x="100" y="215" text-anchor="start" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">roseta a 45°</text>
+  <line x1="320" y1="125" x2="428" y2="125" stroke="var(--faint)" stroke-width="1"/>
+  <path d="M432 125L427.4 123L427.4 127Z" fill="var(--faint)" stroke="none"/>
+  <text x="432" y="113" text-anchor="middle" fill="var(--faint)" font-size="10.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">x</text>
+  <path d="M350 119L410 119L410 131L350 131Z" fill="var(--d1)" fill-opacity="0.12" stroke="var(--d1)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="355" y1="122" x2="405" y2="122" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="355" y1="125" x2="405" y2="125" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="355" y1="128" x2="405" y2="128" stroke="var(--d1)" stroke-width="0.9"/>
+  <text x="423" y="129" text-anchor="middle" fill="var(--d1)" font-size="11.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">a</text>
+  <path d="M299.8 102L269.8 50.1L280.2 44.1L310.2 96Z" fill="var(--d1)" fill-opacity="0.12" stroke="var(--d1)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="299.9" y1="96.2" x2="274.9" y2="52.9" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="302.5" y1="94.7" x2="277.5" y2="51.4" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="305.1" y1="93.2" x2="280.1" y2="49.9" stroke="var(--d1)" stroke-width="0.9"/>
+  <text x="268.5" y="39.8" text-anchor="middle" fill="var(--d1)" font-size="11.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">b</text>
+  <path d="M310.2 154L280.2 205.9L269.8 199.9L299.8 148Z" fill="var(--d1)" fill-opacity="0.12" stroke="var(--d1)" stroke-width="1.4" stroke-linejoin="round"/>
+  <line x1="305.1" y1="156.8" x2="280.1" y2="200.1" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="302.5" y1="155.3" x2="277.5" y2="198.6" stroke="var(--d1)" stroke-width="0.9"/>
+  <line x1="299.9" y1="153.8" x2="274.9" y2="197.1" stroke="var(--d1)" stroke-width="0.9"/>
+  <text x="268.5" y="218.2" text-anchor="middle" fill="var(--d1)" font-size="11.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">c</text>
+  <path d="M342 125L342 123.8L341.9 122.7L341.7 121.6L341.5 120.4L341.3 119.3L340.9 118.2L340.5 117.1L340.1 116.1L339.6 115L339.1 114L338.5 113L337.8 112.1L337.1 111.2L336.3 110.3L335.6 109.4L334.7 108.7L333.8 107.9L332.9 107.2L332 106.5L331 105.9L330 105.4L328.9 104.9L327.9 104.5L326.8 104.1L325.7 103.7L324.6 103.5L323.4 103.3L322.3 103.1L321.2 103L320 103L318.8 103L317.7 103.1L316.6 103.3L315.4 103.5L314.3 103.7L313.2 104.1L312.1 104.5L311.1 104.9L310 105.4L309 105.9" fill="none" stroke="var(--ink)" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M309 105.9L313 105.8L311.3 102.7Z" fill="var(--ink)" stroke="none"/>
+  <text x="328" y="99" text-anchor="start" fill="var(--ink)" font-size="9.5" font-family="var(--mono)" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">120°</text>
+  <text x="310" y="235" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-family="var(--mono)" font-weight="700" paint-order="stroke" stroke="var(--paper)" stroke-width="3" stroke-linejoin="round">roseta a 120°</text>
+</svg>
+<figcaption>
+
+**Las dos rosetas de los apuntes.** Los ángulos de cada galga se miden desde x,
+en sentido antihorario: a 0°, 45° y 90° en la de 45°; a 0°, 120° y 240° en la
+de 120°.
+
+</figcaption>
+</figure>
+
+Se escribe la fórmula de la galga para cada una con su ángulo y se resuelve.
+Para la **roseta a 45°**, con $a$ en $x$ y $c$ en $y$:
+
+$$
+\varepsilon_x = \varepsilon_a \qquad \varepsilon_y = \varepsilon_c \qquad
+\gamma_{xy} = 2\varepsilon_b - \varepsilon_a - \varepsilon_c
+$$
+
+Para la **roseta a 120°**, con $a$ en $x$, $b$ a 120° y $c$ a 240°, como en la
+figura 3.8 (3.65-3.66):
+
+$$
+\varepsilon_x = \varepsilon_a \qquad
+\varepsilon_y = \frac{2(\varepsilon_b + \varepsilon_c) - \varepsilon_a}{3} \qquad
+\gamma_{xy} = \frac{2(\varepsilon_c - \varepsilon_b)}{\sqrt{3}}
+$$
+
+Las dos se han comprobado con un estado cualquiera: se calculan las tres
+lecturas con la fórmula de la galga y las expresiones devuelven el estado.
+
+Ojo con la de 120° de examen: la del parcial del 20/11/2020 está **reflejada**,
+con $b$ a 60° y $c$ a −60°. $\varepsilon_y$ sale igual, pero la tangencial
+cambia de signo, $\gamma_{xy} = 2(\varepsilon_b - \varepsilon_c)/\sqrt3$. Con sus
+lecturas, 1, 2 y 0 millonésimas, es $\gamma_{xy} = 2{,}31$; con (3.66)
+tal cual saldría $-2{,}31$.
+
+<ErrorTipico titulo="Las fórmulas de la roseta a 45° solo valen a 45°">
+Las rosetas de examen casi nunca son las de los apuntes, y ahí
+$\gamma_{xy} = 2\varepsilon_b - \varepsilon_a - \varepsilon_c$ no vale. Lo seguro
+es lo de siempre: escribe
+$\varepsilon_u = \varepsilon_x\cos^{2}\theta + \varepsilon_y\sin^{2}\theta + \gamma_{xy}\sin\theta\cos\theta$
+para cada galga, con su ángulo desde $x$ **en sentido antihorario**, y resuelve
+las tres ecuaciones. Y lee el dibujo despacio. En los parciales del 14/11/2016
+y del 3/11/2017 las galgas van sobre un triángulo: $a$ en la base, según $x$;
+$b$ en el lado izquierdo, a 60°; y $c$ en el lado derecho, que **baja** hacia la
+derecha. El 30° del dibujo es el ángulo interior de ese vértice, así que $c$
+está a **150°** (o a −30°, que para una galga es lo mismo), no a 30°. Con las
+lecturas de 2016, $800$, $800$ y $200$
+millonésimas, a 0°, 60° y 150° salen $\varepsilon_y = 200$ y
+$\gamma_{xy} = 1039$; leyendo $c$ a 30°, $\varepsilon_y = 2000$
+—mayor que cualquiera de las tres lecturas— y $\gamma_{xy} = -2078$.
+En la final del 16/1/2019 están a −30°, 0° y 30°.
+</ErrorTipico>
+
+Lo que da la roseta es el estado en el plano de la superficie. Si el problema
+pide las principales **en el espacio** o la tangencial máxima del punto, falta
+$\varepsilon_z$, que no se mide: sale de la ley de Hooke con $\sigma_z = 0$, y
+eso es el tema 4.
+
+## Cómo se trabaja aquí
+
+El ejercicio de este tema es nuestro: una roseta a 45° con lecturas redondas,
+para hacer el camino entero de un problema de galgas. Primero se reconoce qué
+mide una galga; después se calcula $\gamma_{xy}$, con diagnóstico para quien
+mete $\tfrac12\gamma$ en la fórmula; la principal mayor, con diagnóstico para
+quien pone $\gamma$ entera en el círculo; y la dirección. Al final se ordena el
+razonamiento, con una pieza falsa que confunde el radio con la máxima.
+
+Para el parcial, el problema de galgas sigue siempre el mismo orden: las
+lecturas dan $\varepsilon_x$, $\varepsilon_y$ y $\gamma_{xy}$; con el círculo,
+las principales del plano y su dirección; con el tema 4, las tensiones; y con
+el tema 6, los factores de seguridad. Las cuestiones de teoría son las de
+autoevaluación: el elemento deformado, la rotación, el vector deformación y la
+compatibilidad.
+
+## Lo que hay que llevar sabido
+
+- **Pequeños desplazamientos**: $\varepsilon_x = u_{,x}$,
+  $\gamma_{xy} = u_{,y} + v_{,x}$, y así las demás. $\gamma$ es lo que **se
+  cierra** el ángulo recto.
+- **Tensor de deformación**: $\varepsilon$ en la diagonal y $\tfrac12\gamma$
+  fuera. $[g] = [\varepsilon] + [\Omega]$; $[\Omega]$ es una rotación que no
+  cambia longitudes a primer orden:
+  $|d\vec r\,'| = |d\vec r|\sqrt{1 + \Omega^{2}\sin^{2}\varphi}$.
+- **Vector deformación**: $\{D_u\} = [\varepsilon]\{u\}$;
+  $\varepsilon_u = \{u\}^{t}[\varepsilon]\{u\}$; la componente transversal es
+  $\tfrac12\gamma_u$.
+- **Galga**:
+  $\varepsilon_u = \varepsilon_x\cos^{2}\theta + \varepsilon_y\sin^{2}\theta + \gamma_{xy}\sin\theta\cos\theta$,
+  con $\gamma$ entera y $\theta$ antihorario desde $x$.
+- **Roseta a 45°**: $\gamma_{xy} = 2\varepsilon_b - \varepsilon_a - \varepsilon_c$.
+  **A 120°** ($b$ a 120°, $c$ a 240°): $\varepsilon_y = [2(\varepsilon_b + \varepsilon_c) - \varepsilon_a]/3$,
+  $\gamma_{xy} = 2(\varepsilon_c - \varepsilon_b)/\sqrt3$; reflejada, la $\gamma$
+  cambia de signo.
+- **Mohr**: $\varepsilon$ y $\tfrac12\gamma$;
+  $R = \sqrt{((\varepsilon_x - \varepsilon_y)/2)^{2} + (\gamma_{xy}/2)^{2}}$,
+  $\gamma_{\max} = 2R$ en el plano. Con $\gamma_{xy} > 0$, $x$ abajo.
+- **Volumen**: $e = \varepsilon_x + \varepsilon_y + \varepsilon_z$.
+- **Compatibilidad** en el plano:
+  $\varepsilon_{x,yy} + \varepsilon_{y,xx} = \gamma_{xy,xy}$.

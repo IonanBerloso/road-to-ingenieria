@@ -1,0 +1,193 @@
+ejercicios:
+  - id: ejerm7-la-viga-con-rotula
+    titulo: La viga con una rótula, y por dónde se empieza
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni del material de la asignatura.
+    nivel: ejemplo
+    enunciado: |
+      Una viga ABC está empotrada en A, tiene una rótula en B y se apoya en C
+      sobre un apoyo simple. Los tramos miden $AB = BC = 2\ \text{m}$, y en
+      todo el tramo BC actúa una carga uniforme $q = 4\ \text{kN/m}$ hacia
+      abajo; AB no tiene ninguna carga encima. Es la viga de la figura del
+      tema, con números.
+
+      Calcular la reacción en C, el momento flector en el empotramiento y el
+      flector máximo del tramo BC, con el convenio del curso: $y$ hacia abajo,
+      flector positivo si tracciona la fibra inferior.
+    pide: La reacción en C, el flector en A y el flector máximo de BC.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          Las incógnitas son cuatro: las tres del empotramiento y la del
+          apoyo C. ¿De dónde sale la cuarta ecuación, y por dónde conviene
+          empezar?
+        opciones:
+          - texto: De la rótula, donde el flector es cero; se empieza por el tramo BC
+            correcta: true
+            mensaje: |
+              Eso es. $M_B = 0$ escrito con las fuerzas de la derecha de B
+              solo tiene una incógnita, $R_C$. BC es una biapoyada entre la
+              rótula y el apoyo, y se resuelve sola.
+          - texto: Del empotramiento, que tiene tres reacciones y tres ecuaciones
+            mensaje: |
+              El conjunto tiene tres ecuaciones de equilibrio y cuatro
+              incógnitas. Empezando por A se dan vueltas: la ecuación que
+              falta es la de la rótula, $M_B = 0$.
+          - texto: No hace falta; la rótula no cambia nada y la viga es una continua
+            mensaje: |
+              La rótula cambia todo: no transmite momento. Sin ella, con
+              empotramiento y apoyo, la viga sería hiperestática y estas
+              ecuaciones no bastarían.
+
+      - tipo: calcular
+        titulo: La reacción en C
+        pregunta: |
+          ¿Cuánto vale la reacción del apoyo C, en kN?
+        respuesta:
+          tipo: numero
+          valor: '4'
+          tolerancia: 0.05
+          formato: un número, en kN
+        distractores:
+          - valor: '8'
+            mensaje: |
+              Has cargado en C toda la carga de BC, $q \cdot a = 8$ kN. BC
+              está sujeto por sus dos extremos, la rótula y el apoyo, y por
+              simetría cada uno lleva la mitad.
+          - valor: '6'
+            mensaje: |
+              Has tomado momentos respecto de A como si A fuera una
+              articulación, $R_C \cdot 4 = 8 \cdot 3$. A es un empotramiento,
+              y su par entra en esa ecuación. La que no tiene ninguna
+              incógnita de A es la de la rótula.
+        pista: |
+          Momentos respecto de la rótula B de lo que hay a su derecha:
+          $R_C \cdot 2 - 4 \cdot 2 \cdot 1 = 0$.
+        desarrollo: |
+          $$
+          M_B = R_C \cdot a - q\,a \cdot \frac{a}{2} = 0
+          \quad\Longrightarrow\quad
+          R_C = \frac{q\,a}{2} = \frac{4 \cdot 2}{2} = 4\ \text{kN}
+          $$
+
+      - tipo: calcular
+        titulo: El flector en el empotramiento
+        pregunta: |
+          ¿Cuánto vale el momento flector en la sección A, en kN·m, con su
+          signo?
+        respuesta:
+          tipo: numero
+          valor: '-8'
+          tolerancia: 0.05
+          formato: un número con su signo, en kN·m
+        distractores:
+          - valor: '8'
+            mensaje: |
+              El valor es ese, pero el signo no. AB es un voladizo cargado en
+              su punta B: se comba hacia abajo desde el empotramiento y
+              tracciona la fibra **superior**. Con el convenio del curso, eso
+              es flector negativo.
+          - valor: '-24'
+            mensaje: |
+              Has calculado como si no hubiera rótula ni apoyo, la viga entera
+              como un voladizo: $q \cdot a \cdot 1{,}5a = 24$. El apoyo C se
+              lleva la mitad de la carga, y a AB solo le llegan 4 kN por la
+              rótula.
+          - valor: '-16'
+            mensaje: |
+              Has puesto en B toda la carga de BC, 8 kN. La rótula solo pasa a
+              AB la mitad, 4 kN: la otra mitad va al apoyo C.
+        pista: |
+          A AB le llegan 4 kN hacia abajo en B, a 2 m de A. Esa fuerza, a la
+          derecha de la sección, gira en sentido horario, y por la derecha el
+          horario cuenta negativo.
+        desarrollo: |
+          Con lo que hay a la derecha de A, el antihorario cuenta positivo
+          (lo contrario que por la izquierda). Con la fuerza que la rótula
+          pasa a AB, 4 kN hacia abajo a 2 m:
+
+          $$
+          M_A = -4 \cdot 2 = -8\ \text{kN}\cdot\text{m}
+          $$
+
+          Y con toda la viga a la derecha de A, sin separar por la rótula,
+          sale lo mismo: $R_C$ a 4 m y la carga de BC, 8 kN, a 3 m dan
+          $4 \cdot 4 - 8 \cdot 3 = -8$. Es $-q\,a^{2}/2$.
+
+      - tipo: calcular
+        titulo: El flector máximo en BC
+        pregunta: |
+          ¿Cuánto vale el flector máximo del tramo BC, en kN·m?
+        respuesta:
+          tipo: numero
+          valor: '2'
+          tolerancia: 0.05
+          formato: un número, en kN·m
+        distractores:
+          - valor: '8'
+            mensaje: |
+              Es $q\,a^{2}/2$, el de un voladizo, o el $qL^{2}/8$ con
+              $L = 4$ m, la viga entera. BC es una biapoyada de 2 m: su máximo
+              es $q\,a^{2}/8 = 4 \cdot 4/8$.
+          - valor: '4'
+            mensaje: |
+              Has hecho $R_C \cdot 1 = 4$ y te has olvidado de la carga del
+              metro que hay entre la sección y C, que da $4 \cdot 1 \cdot 0{,}5 = 2$
+              en contra.
+        pista: |
+          El máximo está donde $T = 0$: a 1 m de C. Por la derecha de esa
+          sección hay $R_C = 4$ kN a 1 m y 4 kN de carga con su resultante a
+          0,5 m.
+        desarrollo: |
+          $T = 0$ en el centro de BC, a $s = R_C/q = 1$ m de C:
+
+          $$
+          M_{\max} = R_C \cdot 1 - q \cdot \frac{1^{2}}{2} = 4 - 2 = 2\ \text{kN}\cdot\text{m}
+          $$
+
+          Que es $q\,a^{2}/8$.
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: En la rótula el flector es cero, así que BC es una biapoyada y $R_C = qa/2 = 4$ kN.
+          - texto: La rótula le pasa a AB 4 kN hacia abajo en B, y por eso en todo AB la cortante vale $T = 4$ kN.
+          - texto: En A el flector vale $-4 \cdot 2 = -8$ kN·m, negativo porque tracciona la fibra superior.
+          - texto: En BC la cortante se anula a 1 m de C, y ahí el flector es máximo, $4 \cdot 1 - 4 \cdot 1^{2}/2 = 2$ kN·m.
+          - texto: Como la rótula no transmite momento, tampoco transmite cortante, y AB queda descargado.
+            trampa: true
+            mensaje: |
+              La rótula no transmite momento, pero sí fuerza. Le pasa a AB la
+              mitad de la carga de BC, y esa fuerza es la que da la cortante
+              de AB y el flector del empotramiento.
+    resolucion: |
+      **Por dónde se empieza.** Cuatro incógnitas —$R_A$, el par de
+      empotramiento y la fuerza horizontal en A, y $R_C$— y tres ecuaciones del
+      conjunto. La cuarta es la rótula: $M_B = 0$. Escrita con lo que hay a la
+      derecha de B solo tiene a $R_C$:
+
+      $$
+      R_C \cdot 2 - 4 \cdot 2 \cdot 1 = 0 \quad\Longrightarrow\quad R_C = 4\ \text{kN}
+      $$
+
+      **AB.** Por el equilibrio vertical del conjunto, $R_A = 8 - 4 = 4$ kN.
+      No hay carga en AB, así que la cortante es constante, $T = 4$ kN, y el
+      flector es una recta que vale cero en la rótula. En A, por la derecha:
+
+      $$
+      M_A = -4 \cdot 2 = -8\ \text{kN}\cdot\text{m}
+      $$
+
+      Negativo: AB se comba hacia abajo desde el empotramiento y tracciona la
+      fibra superior.
+
+      **BC.** La cortante baja con pendiente $-q$ desde $T = 4$ kN en B hasta
+      $T = 4 - 4 \cdot 2 = -4$ kN en C, donde la reacción la devuelve a cero.
+      Se anula a 1 m de C, en el centro del tramo, y ahí el flector, una
+      parábola, alcanza su máximo:
+
+      $$
+      M_{\max} = 4 \cdot 1 - 4 \cdot \frac{1^{2}}{2} = 2\ \text{kN}\cdot\text{m} = \frac{q\,a^{2}}{8}
+      $$
+
+      **Comprobación.** $M = 0$ en la rótula, $M = 0$ en el apoyo C, y en
+      cada apoyo la cortante salta lo que vale su reacción.

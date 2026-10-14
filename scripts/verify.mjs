@@ -1614,6 +1614,40 @@ if (SOLO_FUENTE) {
     );
   }
 
+  /* Cómo sale cada asignatura en la portada lo dice su catálogo, en
+     `portada`: `lista`, con su fila en el temario de la pizarra, o `boton`,
+     solo como un botón más del héroe. Entró el 14 de octubre de 2026 con
+     Elasticidad y Resistencia de Materiales, que Ionan quiso en la portada
+     «solo con un enlace clicable» junto a los dos «Entrar a…». Se comprueba
+     la promesa entera: la de botón tiene su botón, el botón lleva a una
+     página que existe y no tiene fila; las demás tienen la suya. */
+  {
+    const portada = leer(join(DIST, 'index.html'));
+    const mal = [];
+    let conBoton = 0;
+    for (const f of archivos(join(SRC, 'content', 'catalogo'), ['.json'])) {
+      const id = rel(f).split(/[\\/]/).pop().replace('.json', '');
+      const { portada: como = 'lista', nombre } = JSON.parse(leer(f));
+      const fila = portada.includes(`data-fila="${id}"`);
+      if (como !== 'boton') {
+        if (!fila) mal.push(`${id}: va en la lista y la portada no tiene su fila`);
+        continue;
+      }
+      conBoton++;
+      if (fila) mal.push(`${id}: es solo de botón y la portada le pinta fila`);
+      const href = `${BASE}/${id}/`;
+      const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const boton = new RegExp(`<a[^>]*href="${literal(href)}"[^>]*>\\s*Entrar a ${literal(nombre)} →\\s*</a>`);
+      if (!boton.test(portada)) mal.push(`${id}: no está el botón «Entrar a ${nombre} →» hacia ${href}`);
+      if (!existsSync(join(DIST, id, 'index.html'))) mal.push(`${id}: el botón lleva a una página que no existe`);
+    }
+    grupo(
+      mal,
+      `la portada pinta cada asignatura como dice su catálogo (${conBoton} solo con botón)`,
+      'asignaturas que la portada no pinta como dice su catálogo',
+    );
+  }
+
   resumen();
 }
 

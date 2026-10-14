@@ -4,7 +4,8 @@ Todo simulador con física dentro lleva aquí al menos un caso con resultado
 conocido. Nunca se ajusta una constante para que salga el número esperado
 (CLAUDE.md §10).
 
-**Diez ficheros y 192 casos**: nueve simuladores y las tablas de vapor. La cifra la da
+**Diez ficheros en la raíz, nueve en `erm/` y 344 casos**: nueve simuladores y las
+tablas de vapor, y el motor de Elasticidad y Resistencia de Materiales. La cifra la da
 `node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
 la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
 y estuvo tres días diciéndolo con ocho ficheros en la carpeta.
@@ -24,7 +25,7 @@ daño que uno que falta.
 |---|---|---|---|---|
 | `moody.test.ts` | 22 | `AbacoMoody` (t18) | ejercicio 4 del 3.er parcial de junio de 2021, que recorre las tres zonas del ábaco con el mismo tubo de 250 mm | **externa** |
 | `bombeo.test.ts` | 17 | `PuntoFuncionamiento` (t25) | ordinaria de 2025-2026: tres bombas, cavitación y una maniobra de válvula, con seis resultados publicados | **externa** |
-| `viga.test.ts` | 22 | `DiagramasDeViga` (mecánica t06) | ejercicios 6.2, 6.5 y 6.9 de la colección y el 49MgL/8 de la ordinaria de 2024-2025 | **externa** |
+| `viga.test.ts` | 25 | `DiagramasDeViga` (mecánica t06) | ejercicios 6.2, 6.5 y 6.9 de la colección y el 49MgL/8 de la ordinaria de 2024-2025; y desde el 14 de octubre de 2026, dos repartidas decrecientes resueltas a mano, que destaparon un centroide mal puesto | **externa** |
 | `catenaria.test.ts` | 14 | `LaCatenaria` (mecánica t05) | la figura del propio tema — pero con la invariante y² = c² + s² comprobada aparte, que sí es independiente | mixta |
 | `mecanismo.test.ts` | 10 | `CentroInstantaneo` (mecánica t08) | la figura del propio tema — con la velocidad contrastada contra la derivada numérica de la posición, que sí es independiente | mixta |
 | `compuertas.test.ts` | 16 | `PrismaDePresiones` (t07) | los dos ejemplos introductorios del propio tema, la compuerta vertical y la misma inclinada 60° | propia |
@@ -32,6 +33,7 @@ daño que uno que falta.
 | `ariete.test.ts` | 28 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus cuatro números, y los ejercicios 7.3 y 7.7 de la colección con sus resultados publicados (955 y 1840 kPa; 199,56 y 249,08 mca) | **externa** |
 | `plano.test.ts` | 13 | `PlanoComplejo` (cálculo t01) | el error típico del propio tema: con z = −1 − i, arctan devuelve π/4 y el argumento es −3π/4 | propia |
 | `vapor.test.ts` | 21 | las tablas de vapor y el diagrama de Mollier de Térmica, no un simulador | los valores de verificación que publican IAPWS-95 e IF97, con nueve cifras; las dos formulaciones entre sí, y el anexo de tablas del curso | **externa** |
+| `erm/` (nueve ficheros) | 149 | ningún simulador todavía: el motor de cálculo del parcial 1 de Elasticidad y Resistencia de Materiales (`src/lib/erm/`) | cada caso con su segundo camino (invariantes, fórmulas cerradas de los apuntes, el ejercicio 3.1 resuelto de la colección) y, en `aceptacion.test.ts`, cinco ejercicios de los parciales 1 de 2017 y 2018 resueltos a mano | **externa** |
 
 **Los nueve simuladores tienen ya su fichero.** El último en llegar fue
 `PlanoComplejo`, el 15 de septiembre de 2026: hasta entonces era el único cuyo
