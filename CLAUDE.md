@@ -424,6 +424,10 @@ src/
     ejercicios.ts          en qué bloque de diez vive cada ejercicio de
                            tema, y la dirección de cualquier ejercicio
                            (§07, «de diez en diez»)
+    orden-ejercicios.ts    el orden en que se ven los ejercicios de un
+                           tema: ejemplos, práctica por boletín y número,
+                           examen. Se aplica al cargar la colección, así
+                           que el YAML puede estar en cualquier orden
     nota.ts · estado.ts    la cuenta de «¿qué nota necesito?», con su
                            prueba, y los estados de una asignatura en las
                            palabras de la pizarra

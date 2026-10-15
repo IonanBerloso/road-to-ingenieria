@@ -5,6 +5,7 @@ import { comparaComplejo, comparaConjunto, leeConjunto } from './lib/complejo';
 import { leeMatriz, leeVector } from './lib/algebra';
 import { comparaMagnitud, leeMagnitud, traeUnidad } from './lib/unidades';
 import { leeNumero } from './lib/numero';
+import { ordenDeEjercicios } from './lib/orden-ejercicios';
 import { analiza } from './lib/regiones';
 import { comparaFormula, leeFormula } from './lib/quimica';
 import { NOMBRE_EN_LAMINA, problemasDeLamina } from './lib/lamina';
@@ -1540,14 +1541,19 @@ const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
 
 /** Un `ejercicios.yaml` por tema, junto a su `index.mdx`.
  *  El nivel superior es un objeto y no una lista porque el cargador de Astro
- *  trata cada fichero como una entrada. */
+ *  trata cada fichero como una entrada.
+ *
+ *  Los ejercicios salen ya ordenados —ejemplos, práctica por boletín y número,
+ *  examen—, escritos en el orden que sea: lo hace `lib/orden-ejercicios.ts`
+ *  aquí, una vez, para que todo lo que lee la lista vea el mismo orden. */
 const ejercicios = defineCollection({
   loader: glob({ pattern: patronSolo('**/ejercicios.yaml', (id) => `${id}/**/ejercicios.yaml`), base: './src/content' }),
   schema: z
     .object({ ejercicios: z.array(ejercicio).min(1) })
     .refine((f) => new Set(f.ejercicios.map((e) => e.id)).size === f.ejercicios.length, {
       message: 'hay dos ejercicios con el mismo id',
-    }),
+    })
+    .transform((f) => ({ ...f, ejercicios: ordenDeEjercicios(f.ejercicios) })),
 });
 
 /** Los temas escritos. Uno por carpeta: index.mdx + ejercicios.yaml */
