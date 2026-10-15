@@ -1,4 +1,246 @@
 ejercicios:
+  # ── Ejemplo introductorio nuestro · de las deformaciones a las tensiones.
+  - id: ejerm4-de-la-roseta-a-las-tensiones
+    titulo: Las tensiones que hay detrás de una roseta
+    fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni del material de la asignatura.
+    nivel: ejemplo
+    enunciado: |
+      Una roseta está pegada en una cara libre, sin ninguna carga, de una
+      pieza de acero con $E = 200\ \text{GPa}$ y $\nu = 0{,}3$. Con
+      sus tres lecturas ya resueltas, da en ese punto
+
+      $$
+      \varepsilon_x = 705 \cdot 10^{-6}
+      \qquad
+      \varepsilon_y = -75 \cdot 10^{-6}
+      \qquad
+      \gamma_{xy} = 520 \cdot 10^{-6}
+      $$
+
+      Calcular $\sigma_x$, $\sigma_y$ y $\tau_{xy}$, y la deformación
+      $\varepsilon_z$, perpendicular a la cara, que la roseta no mide.
+    pide: >-
+      σx, σy y τxy, en MPa, y εz, en millonésimas.
+    pasos:
+      - tipo: reconocer
+        pregunta: |
+          $\varepsilon_y$ sale negativa: en $y$ el material se acorta. Antes de
+          calcular, ¿qué dice eso de $\sigma_y$?
+        opciones:
+          - texto: Nada todavía, porque $\sigma_x$ también acorta $y$; el signo sale de Hooke en tensión plana, con las dos deformaciones
+            correcta: true
+            mensaje: |
+              Eso es. En una cara libre $\sigma_z = 0$: tensión plana
+              (apuntes, ec. 4.23, p. 9). Cada deformación del plano depende de
+              las dos tensiones, $\varepsilon_y = (\sigma_y - \nu\sigma_x)/E$,
+              y una $\sigma_x$ grande acorta $y$ aunque $\sigma_y$ tire. Lo que
+              da el signo de $\sigma_y$ es $\varepsilon_y + \nu\varepsilon_x$
+              (ec. 4.25).
+          - texto: Que $\sigma_y$ es de compresión, $\sigma_y = E\varepsilon_y$
+            mensaje: |
+              Es el error de pasar de galgas a tensiones con
+              $\sigma = E\varepsilon$, que es la ley de una barra con una sola
+              tensión. Aquí hay dos en el plano, y cada una cambia la
+              deformación de la otra dirección.
+          - texto: Que no se puede saber sin $\sigma_z$, que el enunciado no da
+            mensaje: |
+              Lo da: la roseta está en una cara sin carga, y ahí
+              $\sigma_z = 0$. Lo que no es cero, y no mide la roseta, es
+              $\varepsilon_z$.
+
+      - tipo: calcular
+        titulo: La tensión σx
+        pregunta: |
+          ¿Cuánto vale $\sigma_x$, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '150'
+          tolerancia: 0.5
+          formato: un número, en MPa
+        distractores:
+          - valor: '141'
+            mensaje: |
+              Es $E\varepsilon_x$, como en una barra. En tensión plana,
+              $\sigma_x = \tfrac{E}{1-\nu^{2}}(\varepsilon_x + \nu\varepsilon_y)$:
+              la ley de la barra se olvida del $\nu\varepsilon_y$ y del
+              $1 - \nu^{2}$.
+          - valor: '181.15'
+            mensaje: |
+              Es $(\lambda + 2G)\,\varepsilon_x + \lambda\,\varepsilon_y$, la de
+              deformación plana, que supone $\varepsilon_z = 0$. En una cara
+              libre lo nulo es $\sigma_z$.
+        pista: |
+          $\sigma_x = \dfrac{E}{1-\nu^{2}}\,(\varepsilon_x + \nu\varepsilon_y)$,
+          con $1 - \nu^{2} = 0{,}91$ y $E = 2 \cdot 10^{5}$ MPa.
+        desarrollo: |
+          $$
+          \sigma_x = \frac{E}{1-\nu^{2}}\,(\varepsilon_x + \nu\varepsilon_y)
+          = \frac{2 \cdot 10^{5}}{0{,}91}\,(705 - 0{,}3 \cdot 75) \cdot 10^{-6}
+          = \frac{2 \cdot 10^{5}}{0{,}91} \cdot 682{,}5 \cdot 10^{-6} = 150\ \text{MPa}
+          $$
+
+      - tipo: calcular
+        titulo: La tensión σy
+        pregunta: |
+          ¿Cuánto vale $\sigma_y$, en MPa, positiva a tracción?
+        respuesta:
+          tipo: numero
+          valor: '30'
+          tolerancia: 0.5
+          formato: un número, en MPa, con signo (positivo a tracción)
+        distractores:
+          - valor: '-15'
+            mensaje: |
+              Es $E\varepsilon_y$: el signo de la deformación pasado tal cual
+              a la tensión. El acortamiento de $y$ lo causa sobre todo
+              $\sigma_x$, por Poisson; con Hooke en tensión plana,
+              $\sigma_y$ sale de tracción.
+          - valor: '61.15'
+            mensaje: |
+              Es $(\lambda + 2G)\,\varepsilon_y + \lambda\,\varepsilon_x$, de
+              deformación plana. Supone $\varepsilon_z = 0$, y en una cara
+              libre lo nulo es $\sigma_z$.
+        pista: |
+          $\sigma_y = \dfrac{E}{1-\nu^{2}}\,(\varepsilon_y + \nu\varepsilon_x)$.
+          Mira el signo del paréntesis.
+        desarrollo: |
+          $$
+          \sigma_y = \frac{E}{1-\nu^{2}}\,(\varepsilon_y + \nu\varepsilon_x)
+          = \frac{2 \cdot 10^{5}}{0{,}91}\,(-75 + 0{,}3 \cdot 705) \cdot 10^{-6}
+          = \frac{2 \cdot 10^{5}}{0{,}91} \cdot 136{,}5 \cdot 10^{-6} = 30\ \text{MPa}
+          $$
+
+          Positiva: a tracción, aunque $y$ se acorte.
+
+      - tipo: calcular
+        titulo: La tangencial τxy
+        pregunta: |
+          ¿Cuánto vale $\tau_{xy}$, en MPa?
+        respuesta:
+          tipo: numero
+          valor: '40'
+          tolerancia: 0.5
+          formato: un número, en MPa
+        distractores:
+          - valor: '20'
+            mensaje: |
+              Has usado $\tfrac12\gamma_{xy}$, el término del tensor de
+              deformaciones. La ley es $\tau_{xy} = G\gamma_{xy}$, con la
+              $\gamma$ entera.
+          - valor: '104'
+            mensaje: |
+              Es $E\gamma_{xy}$. La tangencial va con el módulo de
+              cizalladura, $G = E/[2(1+\nu)]$, no con $E$.
+        pista: |
+          $G = \dfrac{E}{2(1+\nu)}$ y $\tau_{xy} = G\gamma_{xy}$.
+        desarrollo: |
+          $$
+          G = \frac{E}{2(1+\nu)} = \frac{2 \cdot 10^{5}}{2{,}6} = 76\,923\ \text{MPa}
+          \qquad
+          \tau_{xy} = G\gamma_{xy} = \frac{2 \cdot 10^{5}}{2{,}6} \cdot 520 \cdot 10^{-6} = 40\ \text{MPa}
+          $$
+
+      - tipo: calcular
+        titulo: La deformación εz
+        pregunta: |
+          ¿Cuánto vale $\varepsilon_z$, en millonésimas ($10^{-6}$)?
+        respuesta:
+          tipo: numero
+          valor: '-270'
+          tolerancia: 1
+          formato: un número, en millonésimas (10⁻⁶), con signo
+        distractores:
+          - valor: '0'
+            mensaje: |
+              En tensión plana lo nulo es $\sigma_z$, no $\varepsilon_z$. Las
+              dos tensiones del plano estrechan la pieza por Poisson:
+              $\varepsilon_z = -\nu(\sigma_x + \sigma_y)/E$.
+          - valor: '-189'
+            mensaje: |
+              Es $-\nu(\varepsilon_x + \varepsilon_y)$: la fórmula de
+              Poisson con deformaciones en vez de tensiones. Con tensiones es
+              $-\nu(\sigma_x + \sigma_y)/E$; con deformaciones, el factor es
+              $\nu/(1 - \nu)$, no $\nu$.
+        pista: |
+          De Hooke con $\sigma_z = 0$ (ec. 4.24):
+          $\varepsilon_z = -\dfrac{\nu}{E}\,(\sigma_x + \sigma_y)$.
+        desarrollo: |
+          $$
+          \varepsilon_z = -\frac{\nu}{E}\,(\sigma_x + \sigma_y)
+          = -\frac{0{,}3}{2 \cdot 10^{5}}\,(150 + 30) = -270 \cdot 10^{-6}
+          $$
+
+      - tipo: justificar
+        pregunta: Ordena la resolución. Una pieza es falsa.
+        piezas:
+          - texto: 'La roseta está en una cara sin carga: $\sigma_z = 0$, tensión plana.'
+          - texto: 'Hooke en tensión plana: $\sigma_x = \frac{E}{1-\nu^{2}}(\varepsilon_x + \nu\varepsilon_y) = 150$ MPa y $\sigma_y = \frac{E}{1-\nu^{2}}(\varepsilon_y + \nu\varepsilon_x) = 30$ MPa.'
+          - texto: 'La tangencial, con la $\gamma$ entera: $\tau_{xy} = G\gamma_{xy} = 40$ MPa.'
+          - texto: 'Lo que la roseta no mide: $\varepsilon_z = -\nu(\sigma_x + \sigma_y)/E = -270 \cdot 10^{-6}$.'
+          - texto: 'Como $\varepsilon_y$ es negativa, $\sigma_y$ es de compresión: $\sigma_y = E\varepsilon_y = -15$ MPa.'
+            trampa: true
+            mensaje: |
+              El signo de una deformación no es el de su tensión cuando hay
+              dos tensiones en el plano. Aquí $\sigma_x = 150$ MPa acorta $y$
+              por Poisson más de lo que $\sigma_y$ la alarga: $\varepsilon_y$
+              sale negativa con $\sigma_y = +30$ MPa.
+    resolucion: |
+      **Qué estado es.** La roseta está en una cara sin carga: en ella
+      $\sigma_z = \tau_{zx} = \tau_{yz} = 0$, tensión plana (apuntes, ec.
+      4.23, p. 9). Para pasar de deformaciones a tensiones se despeja Hooke
+      (ecs. 4.24 y 4.25, p. 9), no se usa $\sigma = E\varepsilon$, que es la
+      ley de una barra con una sola tensión.
+
+      **Las dos normales.** Con $E/(1 - \nu^{2}) = 2 \cdot 10^{5}/0{,}91$ MPa:
+
+      $$
+      \sigma_x = \frac{E}{1-\nu^{2}}\,(\varepsilon_x + \nu\varepsilon_y)
+      = \frac{2 \cdot 10^{5}}{0{,}91} \cdot 682{,}5 \cdot 10^{-6} = 150\ \text{MPa}
+      $$
+
+      $$
+      \sigma_y = \frac{E}{1-\nu^{2}}\,(\varepsilon_y + \nu\varepsilon_x)
+      = \frac{2 \cdot 10^{5}}{0{,}91} \cdot 136{,}5 \cdot 10^{-6} = 30\ \text{MPa}
+      $$
+
+      $\varepsilon_y$ es negativa y $\sigma_y$ es de tracción. No hay
+      contradicción: $\sigma_x$ acorta $y$ en
+      $\nu\sigma_x/E = 0{,}3 \cdot 150/(2 \cdot 10^{5}) = 225 \cdot 10^{-6}$, y
+      $\sigma_y$ solo la alarga $30/(2 \cdot 10^{5}) = 150 \cdot 10^{-6}$. Gana
+      el acortamiento: $(150 - 225) \cdot 10^{-6} = -75 \cdot 10^{-6}$, la
+      lectura.
+
+      **La tangencial.** Con $G = E/[2(1 + \nu)]$ (ec. 4.6, p. 5) y la
+      $\gamma$ entera:
+
+      $$
+      \tau_{xy} = G\gamma_{xy} = \frac{2 \cdot 10^{5}}{2{,}6} \cdot 520 \cdot 10^{-6} = 40\ \text{MPa}
+      $$
+
+      **Lo que la roseta no mide.** Con $\sigma_z = 0$, la tercera ecuación
+      de Hooke (ec. 4.24) da
+
+      $$
+      \varepsilon_z = -\frac{\nu}{E}\,(\sigma_x + \sigma_y)
+      = -\frac{0{,}3}{2 \cdot 10^{5}}\,(150 + 30) = -270 \cdot 10^{-6}
+      $$
+
+      No es cero: la pieza adelgaza aunque nada la empuje en $z$.
+
+      **Comprobación por otro camino.** Hooke en el sentido de los apuntes,
+      de tensiones a deformaciones (ec. 4.2, p. 4), tiene que devolver las
+      lecturas:
+
+      $$
+      \varepsilon_x = \frac{\sigma_x - \nu\sigma_y}{E} = \frac{150 - 0{,}3 \cdot 30}{2 \cdot 10^{5}} = 705 \cdot 10^{-6}
+      \qquad
+      \varepsilon_y = \frac{\sigma_y - \nu\sigma_x}{E} = \frac{30 - 0{,}3 \cdot 150}{2 \cdot 10^{5}} = -75 \cdot 10^{-6}
+      $$
+
+      Y $\varepsilon_z$ también sale sin las tensiones, solo con las
+      deformaciones del plano:
+      $\varepsilon_z = -\frac{\nu}{1-\nu}\,(\varepsilon_x + \varepsilon_y) = -\frac{0{,}3}{0{,}7} \cdot 630 \cdot 10^{-6} = -270 \cdot 10^{-6}$.
+
   - id: ejerm4-cubo-en-un-hueco-rigido
     titulo: Un cubo en un hueco rígido, y cuánto cambia su volumen
     fuente: Ejemplo introductorio · Road to Ingeniería. La figura y los datos son nuestros. No es de examen ni del material de la asignatura.

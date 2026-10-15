@@ -104,15 +104,35 @@ sabía:
   la clasificación (los pasos, en su README).
 - **Elasticidad, hasta el 30 de octubre de 2026**: la hoja de antes de
   entrar, los parciales de 2016-2017 y 2017-2018, siete ejercicios de
-  práctica del boletín de clase (barras, tensor y galgas) y un ejemplo
-  nuestro de holgura entraron el 15 de octubre. Quedan, dichos en los `falta` de la ruta: un ejemplo nuestro en
-  los escalones del vector tensión, de las principales y de las tensiones
-  de la roseta, que hoy empiezan por el ejercicio de clase; práctica para
-  las dos barras en paralelo y la barra que no puede alargarse, que el
-  boletín no trae; y el formulario en una página. Quedan sin tocar a propósito el
-  título y el `pide` del bloque de diagramas, que solo hablan de la Gerber
-  aunque ahora empiece por la rebanada, y el `dominio` de la pieza rígida,
-  que dice «dos barras» cuando dos de sus problemas tienen tres.
+  práctica del boletín de clase (barras, tensor y galgas) y seis ejemplos
+  nuestros (una holgura, las dos barras, el vector tensión, las principales
+  y las tensiones de la roseta) entraron el 15 de octubre, y la ruta enlaza
+  el formulario en una página, que ya existía. Queda abierto un `falta`:
+  práctica para las dos barras en paralelo y la barra que no puede
+  alargarse, que el boletín no trae. El parcial 1 de 2015-2016 entró el 15,
+  fuera de la ventana de medida (llega a la flexión) y con sus ejercicios de
+  los temas 2 a 8 en los escalones. Quedan los de 2012-2013 a 2014-2015 (el
+  de 2014-2015 y el de 2013-2014, en marcha). Quedan sin tocar a propósito el título y el `pide` del bloque de
+  diagramas, que solo hablan de la Gerber aunque ahora empiece por la
+  rebanada, y el `dominio` de la pieza rígida, que dice «dos barras» cuando
+  dos de sus problemas tienen tres.
+
+### Terminar Elasticidad (desde el 15 de octubre de 2026)
+
+Ionan, el 15: «el objetivo claro es terminar elasti». Va por delante de
+Expresión Gráfica. El plan por fases, con su estado, está en la carpeta de
+trabajo de la fase P (`fase-p/PLAN-terminar.md`, fuera del repositorio):
+
+- **P6**, hasta el 23 de octubre: los ejemplos que faltan en la ruta del
+  parcial 1 y los cuatro parciales 1 que no están (2012-2013 a 2015-2016).
+- **P7**: el motor del bloque II en `src/lib/erm/` (flexión, deformaciones,
+  hiperestática, torsión, energéticos, pandeo), con sus pruebas.
+- **P8**: la prosa de t01 y de t09 a t14, cada uno con ejemplo y figura, y
+  después su práctica de clase.
+- **P9**: las 41 convocatorias que faltan y el simulacro: enero (2.ª parte y
+  final juntas), extraordinarias, plan viejo.
+- **P10**: las rutas del parcial 2, la final de enero y la extraordinaria.
+- **P11**: la guía docente en el catálogo, `estado: ok` y el suelo en verde.
 
 ### La siguiente asignatura: Expresión Gráfica
 
