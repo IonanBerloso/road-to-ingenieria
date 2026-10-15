@@ -20,12 +20,14 @@ export function rutaInicio(): string {
 }
 
 /** Adonde lleva el nombre de la asignatura en la cabecera de sus páginas:
- *  su ficha en la portada (`/#id`), o la propia página de la asignatura
- *  cuando no hay ficha a la que volver —en la edición de una sola, y en una
- *  asignatura que la portada pinta solo como botón (`conFicha` falso, que es
- *  `portada: 'boton'` en su catálogo)—. */
-export function rutaAsignatura(id: string, conFicha = true): string {
-  return enSolo || !conFicha ? ruta(id) : `${ruta()}#${id}`;
+ *  su ficha en la portada (`/#id`), o la propia página de la asignatura en la
+ *  edición de una sola, donde no hay ficha a la que volver.
+ *
+ *  Del 14 al 15 de octubre de 2026 tuvo un segundo caso, las asignaturas que
+ *  la portada pinta solo como botón, que no tenían ficha. Desde el 15 la
+ *  tienen (el porqué, en `pages/index.astro`), y el caso se fue. */
+export function rutaAsignatura(id: string): string {
+  return enSolo ? ruta(id) : `${ruta()}#${id}`;
 }
 
 /** Lo mismo, pero para un fichero de `public/`: **sin** barra final.

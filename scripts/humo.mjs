@@ -190,28 +190,11 @@ async function main() {
             /^\/[a-z-]+\/$/.test(h.slice(BASE.length))),
       ),
   );
-  /* Las asignaturas con `portada: 'boton'` solo tienen en la portada su
-     botón, que lleva a su página: sus temas, su ruta y su formulario cuelgan
-     de ahí, así que se leen de ahí. Entra el 15 de octubre de 2026 con la
-     ruta del primer parcial de Elasticidad, que sin esto habría sido la
-     quinta clase de página que este filtro deja fuera: de la asignatura solo
-     se abría su página. Los exámenes no se añaden aquí: entran por la
-     muestra rotatoria, como los de las demás. */
-  const conBoton = readdirSync(join(ROOT, 'src', 'content', 'catalogo'))
-    .filter((n) => n.endsWith('.json'))
-    .filter((n) => JSON.parse(readFileSync(join(ROOT, 'src', 'content', 'catalogo', n), 'utf8')).portada === 'boton')
-    .map((n) => n.replace(/\.json$/, ''));
-  const deBoton = (
-    await Promise.all(
-      conBoton.map(async (a) => {
-        const html = await (await fetch(`${ORIGEN}/${a}/`)).text().catch(() => '');
-        return [...html.matchAll(/href="([^"#]+)"/g)]
-          .map((m) => m[1])
-          .filter((h) => h.startsWith(`${BASE}/${a}/`) && /\/(t\d{2}-[^/]+|preparar\/[^/]+|formulario)\/$/.test(h));
-      }),
-    )
-  ).flat();
-  const paginas = [...new Set([...dePortada, ...deBoton])];
+  /* Las asignaturas con `portada: 'boton'` se leían hasta el 15 de octubre
+     de 2026 de su página, porque en la portada solo tenían el botón. Desde
+     ese día tienen su detalle, como las demás, y sus temas, su ruta y su
+     formulario salen de la portada como los de cualquiera. */
+  const paginas = [...new Set(dePortada)];
   /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
      del contenido: 96 páginas con 457 ejercicios. Durante meses el navegador
      abrió 8 de esas 96 —un 8 %— y el resto solo lo miraba `verify.mjs`, que
@@ -358,12 +341,6 @@ async function main() {
     .filter((n) => n.endsWith('.json'))
     .map((n) => n.replace(/\.json$/, ''))
     .filter((a) => existsSync(join(ROOT, 'dist', a)));
-  /** Las que la portada pinta solo como botón (`portada: 'boton'`). */
-  const soloBoton = new Set(
-    conContenido.filter(
-      (a) => JSON.parse(readFileSync(join(ROOT, 'src', 'content', 'catalogo', `${a}.json`), 'utf8')).portada === 'boton',
-    ),
-  );
   console.log(`  · por asignatura: ${conContenido
     .map((a) => `${a} ${porAsignatura[a] ?? 0}`)
     .join(' · ')}`);
@@ -447,10 +424,7 @@ async function main() {
           (a) => document.querySelector(`a[data-asignatura="${a}"]`)?.getAttribute('href') ?? '',
           trozos[0],
         );
-        /* La que la portada pinta solo como botón no tiene ficha allí: su
-           nombre lleva a su página (EnlaceAsignatura, 14 de octubre de 2026). */
-        const destino = soloBoton.has(trozos[0]) ? `/${trozos[0]}/` : `/#${trozos[0]}`;
-        if (!href.endsWith(destino)) conAsignatura.sin.add(ruta);
+        if (!href.endsWith(`/#${trozos[0]}`)) conAsignatura.sin.add(ruta);
       }
     }
 
@@ -1227,6 +1201,58 @@ async function main() {
       mal.length === 0,
       'entrar por un enlace con almohadilla y cambiar de asignatura',
       mal.join(' · '),
+    );
+  }
+
+  /* ── el botón de una asignatura de botón abre su detalle ─────────
+     Desde el 15 de octubre de 2026 «Entrar a Elasticidad…» abre su detalle,
+     como «Entrar a Cálculo» abre el suyo, y no su página. Se comprueba con
+     cada asignatura que el catálogo declara de botón: pulsar el botón abre
+     ese detalle y solo ese, no deja una entrada en el historial —con ella,
+     «Atrás» había que pulsarlo dos veces— y «← todas» lo cierra. Si no hay
+     ninguna de botón, se dice en vez de dar un verde vacío (§11). */
+  {
+    const conBoton = readdirSync(join(ROOT, 'src', 'content', 'catalogo'))
+      .filter((n) => n.endsWith('.json'))
+      .filter((n) => JSON.parse(readFileSync(join(ROOT, 'src', 'content', 'catalogo', n), 'utf8')).portada === 'boton')
+      .map((n) => n.replace(/\.json$/, ''));
+    const mal = [];
+    for (const id of conBoton) {
+      const pagina = escucha(await navegador.newPage(), `el botón de ${id}`);
+      const abiertos = () =>
+        pagina.evaluate(() =>
+          [...document.querySelectorAll('.detalle')]
+            .filter((d) => d.getBoundingClientRect().height > 0)
+            .map((d) => d.id),
+        );
+      await pagina.goto(`http://localhost:${PUERTO}${BASE}/`, { waitUntil: 'load' });
+      const boton = pagina.locator(`a.cta[data-abre="${id}"]`);
+      if (!(await boton.count()) || !(await boton.first().isVisible())) {
+        mal.push(`${id}: la portada no enseña su botón`);
+        await pagina.close();
+        continue;
+      }
+      const antes = await pagina.evaluate(() => history.length);
+      await boton.first().click();
+      await pagina.waitForTimeout(400);
+      const v = await abiertos();
+      if (v.join() !== id) mal.push(`${id}: al pulsar su botón se ve [${v}]`);
+      if ((await pagina.evaluate(() => history.length)) !== antes) mal.push(`${id}: el botón deja una entrada en el historial`);
+      const volver = pagina.locator(`#${id} .volver`);
+      if (!(await volver.count())) {
+        mal.push(`${id}: su detalle no tiene «← todas»`);
+      } else {
+        await volver.first().click();
+        await pagina.waitForTimeout(400);
+        const tras = await abiertos();
+        if (tras.length) mal.push(`${id}: tras «← todas» sigue abierto [${tras}]`);
+      }
+      await pagina.close();
+    }
+    comprueba(
+      conBoton.length > 0 && mal.length === 0,
+      `el botón de cada asignatura de botón abre su detalle (${conBoton.join(', ') || 'ninguna'})`,
+      conBoton.length ? mal.join(' · ') : 'el catálogo no declara ninguna asignatura de botón: no hay nada que comprobar y el guardián lo dice',
     );
   }
 

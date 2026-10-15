@@ -39,19 +39,27 @@ const catalogo = (await getCollection('catalogo')).sort(
   (a, b) => a.data.curso - b.data.curso || a.data.orden - b.data.orden,
 );
 
-/** Las que salen en el temario de la pizarra, con su fila y su detalle: todas
- *  menos las que su catálogo declara `portada: 'boton'`, que en esta página
- *  son solo un botón del héroe (`soloBoton`, abajo). El filtro va aquí, en la
- *  fuente, para que ninguna de las listas de la portada —la pizarra, los
- *  detalles, la paleta— tenga que acordarse de saltárselas. */
+/** Las que salen en el temario de la pizarra, con su fila: todas menos las
+ *  que su catálogo declara `portada: 'boton'`, que en esta página son solo un
+ *  botón del héroe (`soloBoton`, abajo). El filtro va aquí, en la fuente, para
+ *  que ninguna de las listas de la portada —la pizarra, los chips, la paleta—
+ *  tenga que acordarse de saltárselas. */
 const asignaturas = catalogo.filter((a) => a.data.portada === 'lista');
 const soloBoton = catalogo.filter((a) => a.data.portada === 'boton');
+
+/** Las que tienen detalle: todas, también las de botón. Hasta el 15 de
+ *  octubre de 2026 las de botón no lo tenían, y su botón llevaba a la página
+ *  de la asignatura, que es otra cosa: la de Elasticidad salía sin rutas en
+ *  tarjeta, sin el temario con su peso y sin el carril de los exámenes, y
+ *  Ionan, comparándola con la de Cálculo, vio que no eran iguales. El botón
+ *  abre ahora su detalle, como «Entrar a Cálculo» abre el suyo. */
+const conDetalle = [...asignaturas, ...soloBoton];
 
 /** Las notas de cada modalidad de evaluación, ya pasadas por `mate()`.
  *  Van indexadas por «asignatura · modalidad» porque el JSX de abajo las
  *  necesita dentro de un `.map()`, donde no se puede esperar a una promesa. */
 const notaEvaluacion = new Map<string, string>();
-for (const a of asignaturas) {
+for (const a of conDetalle) {
   for (const m of a.data.evaluacion?.modalidades ?? []) {
     if (m.nota) notaEvaluacion.set(`${a.id}·${m.nombre}`, await mate(m.nota, `eval-${a.id}`));
   }
@@ -354,8 +362,10 @@ const totalExamenes = [...examenesPorAsignatura.values()].reduce((n, l) => n + l
  *
  * Detrás de esas dos van las de `soloBoton`, que no están en el temario y
  * por eso no repiten nada: el botón es su única puerta en la portada. Desde
- * el 14 de octubre de 2026 es una, Elasticidad y Resistencia de Materiales;
- * llevan a su página y no a un ancla, porque aquí no tienen detalle. */
+ * el 14 de octubre de 2026 es una, Elasticidad y Resistencia de Materiales.
+ * Abren su detalle, como las otras dos. Llevan `data-abre` y no `data-fila`
+ * porque no tienen fila: `verify.mjs` mira `data-fila` para saber cuáles la
+ * tienen. El script trata los dos igual. */
 const enteras = asignaturas
   .filter((a) => a.data.estado === 'ok')
   .sort(
@@ -409,7 +419,7 @@ const enteras = asignaturas
               </a>
             ))}
             {soloBoton.map((a) => (
-              <a class="cta borde" href={ruta(a.id)}>
+              <a class="cta borde" href={`#${a.id}`} data-abre={a.id}>
                 Entrar a {a.data.nombre} →
               </a>
             ))}
@@ -474,10 +484,11 @@ const enteras = asignaturas
     </section>
 
     <!-- ── B · el detalle, uno por asignatura ─────────────────────
-         Se renderizan los nueve. Sin JavaScript los abre `:target`;
-         con JavaScript se abren sin recargar y el nombre viaja. -->
+         Se renderizan todos, también los de las asignaturas de botón. Sin
+         JavaScript los abre `:target`; con JavaScript se abren sin recargar
+         y el nombre viaja. -->
     {
-      asignaturas.map((a) => (
+      conDetalle.map((a) => (
         <section
           class="detalle"
           id={a.id}
@@ -488,7 +499,9 @@ const enteras = asignaturas
           <div class="banda">
             <nav class="chips" aria-label="Cambiar de asignatura">
               <a class="volver" href="#principal">← todas</a>
-              {asignaturas.map((x) => (
+              {/* Una de botón no sale en los chips de las demás, pero en el
+                  suyo sí, marcado: es donde estás. */}
+              {(a.data.portada === 'boton' ? [...asignaturas, a] : asignaturas).map((x) => (
                 <a class:list={['chip', { act: x.id === a.id }]} href={`#${x.id}`}>
                   {x.data.nombre}
                 </a>
@@ -943,11 +956,16 @@ const enteras = asignaturas
     el.style.animation = '';
   }
 
-  for (const fila of document.querySelectorAll<HTMLAnchorElement>('[data-fila]')) {
+  /* Las filas y los botones del héroe que abren un detalle. Los de las
+     asignaturas de botón (`data-abre`) pasaban hasta el 15 de octubre de 2026
+     por el `hashchange`: abrían bien, pero dejaban una entrada en el historial
+     que «← todas» no quitaba, y «Atrás» había que pulsarlo dos veces. */
+  for (const fila of document.querySelectorAll<HTMLAnchorElement>('[data-fila], [data-abre]')) {
+    const id = (fila.dataset.fila ?? fila.dataset.abre)!;
     fila.addEventListener('click', (e) => {
       e.preventDefault();
-      history.replaceState(null, '', `#${fila.dataset.fila}`);
-      abre(fila.dataset.fila!, fila.querySelector<HTMLElement>('[data-nombre]'));
+      history.replaceState(null, '', `#${id}`);
+      abre(id, fila.querySelector<HTMLElement>('[data-nombre]'));
     });
   }
 

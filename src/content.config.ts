@@ -172,8 +172,13 @@ const catalogo = defineCollection({
       estado: z.enum(['ok', 'obra', 'prev']),
       /** Cómo sale en la portada: `lista`, con su fila en el temario de la
        *  pizarra y su detalle, como todas; o `boton`, **solo** como un botón
-       *  más del héroe —«Entrar a …»— que lleva a su página, sin fila, sin
-       *  detalle y fuera de la paleta.
+       *  más del héroe —«Entrar a …»— que abre su detalle, sin fila, fuera de
+       *  los chips de las demás y fuera de la paleta.
+       *
+       *  El detalle lo tiene desde el 15 de octubre de 2026. Hasta entonces el
+       *  botón llevaba a la página de la asignatura, que no tiene su diseño:
+       *  Ionan comparó la de Elasticidad con el detalle de Cálculo y vio que
+       *  no eran iguales.
        *
        *  Entra el 14 de octubre de 2026 con Elasticidad y Resistencia de
        *  Materiales, que se abrió deprisa para un parcial concreto y que Ionan

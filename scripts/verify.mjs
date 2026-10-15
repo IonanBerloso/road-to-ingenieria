@@ -1618,9 +1618,11 @@ if (SOLO_FUENTE) {
      `portada`: `lista`, con su fila en el temario de la pizarra, o `boton`,
      solo como un botón más del héroe. Entró el 14 de octubre de 2026 con
      Elasticidad y Resistencia de Materiales, que Ionan quiso en la portada
-     «solo con un enlace clicable» junto a los dos «Entrar a…». Se comprueba
-     la promesa entera: la de botón tiene su botón, el botón lleva a una
-     página que existe y no tiene fila; las demás tienen la suya. */
+     «solo con un enlace clicable» junto a los dos «Entrar a…». Desde el 15
+     el botón abre su detalle, como los otros dos, y no su página: la página
+     no tiene el diseño del detalle, y Ionan vio que no eran iguales. Se
+     comprueba la promesa entera: la de botón tiene su botón, el botón abre
+     un detalle que existe y no tiene fila; las demás tienen la suya. */
   {
     const portada = leer(join(DIST, 'index.html'));
     const mal = [];
@@ -1635,11 +1637,12 @@ if (SOLO_FUENTE) {
       }
       conBoton++;
       if (fila) mal.push(`${id}: es solo de botón y la portada le pinta fila`);
-      const href = `${BASE}/${id}/`;
+      const href = `#${id}`;
       const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const boton = new RegExp(`<a[^>]*href="${literal(href)}"[^>]*>\\s*Entrar a ${literal(nombre)} →\\s*</a>`);
       if (!boton.test(portada)) mal.push(`${id}: no está el botón «Entrar a ${nombre} →» hacia ${href}`);
-      if (!existsSync(join(DIST, id, 'index.html'))) mal.push(`${id}: el botón lleva a una página que no existe`);
+      const detalle = new RegExp(`<section(?=[^>]*\\bid="${literal(id)}")(?=[^>]*\\bclass="[^"]*\\bdetalle\\b)[^>]*>`);
+      if (!detalle.test(portada)) mal.push(`${id}: el botón abre un detalle que la portada no tiene`);
     }
     grupo(
       mal,
