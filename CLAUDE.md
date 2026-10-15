@@ -148,12 +148,12 @@ El corpus, ese día: 83 temas publicados, 1.948 ejercicios y 8.487 pasos,
 Después de ese corte entró una décima, **Elasticidad y Resistencia de
 Materiales** (2.º, `obra`), el 14 de octubre de 2026: abierta deprisa para el
 parcial 1 del 30 de octubre, con los temas 2 a 8, cuatro parciales 1
-resueltos y su motor de cálculo (`src/lib/erm/`). El 15 llegó la ruta del
+resueltos (seis desde el 15) y su motor de cálculo (`src/lib/erm/`). El 15 llegó la ruta del
 parcial (`preparar/elasticidad-resistencia-1par.yaml`), medida sobre seis
 parciales. En la portada sale **solo como botón del héroe**, por decisión de
-Ionan: lo dice su catálogo (`portada: 'boton'`) y lo comprueba `verify.mjs`;
-por eso `humo.mjs` descubre sus temas y su ruta leyendo la página de la
-asignatura, no la portada.
+Ionan: lo dice su catálogo (`portada: 'boton'`) y lo comprueba `verify.mjs`.
+El botón abre su detalle, con el mismo diseño que el de las demás, aunque no
+tenga fila en la pizarra ni chip en los detalles de las otras.
 
 ### El orden que queda
 
@@ -419,6 +419,8 @@ src/
     plan.ts                el plan por días de una ruta: su URL, cómo se
                            nombran los días y a dónde lleva cada paso (y
                            rompe el build si el destino no existe)
+    formato.ts             lo que el `formato` de una respuesta no puede
+                           enseñar antes de contestar: la respuesta
     ejercicios.ts          en qué bloque de diez vive cada ejercicio de
                            tema, y la dirección de cualquier ejercicio
                            (§07, «de diez en diez»)
@@ -443,6 +445,7 @@ src/
   styles/
     tokens.css             el ÚNICO :root del repositorio
     base.css · print.css
+    ordinales.css          «ª» y «º» volados, que Karla dibuja como «a» y «o»
   pages/                   index · [asignatura] · [asignatura]/[tema] con sus
                            bloques de ejercicios y sus cuestiones ·
                            examenes · preparar (y, debajo de cada ruta con

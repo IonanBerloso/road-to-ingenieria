@@ -102,13 +102,13 @@ sabía:
   evaluación, etiquetarlo con la lista y las reglas de
   `campeonato/calculo-1ev/`, puntuar las dos predicciones selladas y publicar
   la clasificación (los pasos, en su README).
-- **Karla dibuja «ª» y «º» igual que «a» y «o»**: mismas medidas, así que
-  «1.ª evaluación» se lee «1.a evaluación» en todo el sitio (visto el 15 de
-  octubre de 2026 en el título de los simulacros). Pide otra fuente para esos
-  dos caracteres o marcarlos como volados.
-- **Elasticidad, hasta el 30 de octubre de 2026**: la hoja de antes de entrar
-  del parcial 1 (el borrador está fuera del repositorio), ejercicios de
-  práctica y los parciales de 2016-2017 y 2017-2018 por transcribir.
+- **Elasticidad, hasta el 30 de octubre de 2026**: ejercicios de práctica
+  entre el ejemplo y los de examen, que la ruta pide en barras, tensor y
+  galgas. La hoja de antes de entrar y los parciales de 2016-2017 y
+  2017-2018 entraron el 15 de octubre. Quedan sin tocar a propósito el
+  título y el `pide` del bloque de diagramas, que solo hablan de la Gerber
+  aunque ahora empiece por la rebanada, y el `dominio` de la pieza rígida,
+  que dice «dos barras» cuando dos de sus problemas tienen tres.
 
 ### La siguiente asignatura: Expresión Gráfica
 
