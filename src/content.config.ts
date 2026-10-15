@@ -1854,6 +1854,8 @@ export const cursoParaOrdenar = (curso: string | undefined): string => curso ?? 
  *  fuente, ni los puntos. Todo eso vive en `ejercicios.yaml` y la página lo
  *  resuelve por `id`. Cualquier cosa que la ruta reescriba sería una segunda
  *  fuente de verdad que acabaría separándose (§01, §08). */
+/** Slug de un `##` o `###` de un tema; el porqué de cada letra, en `apartado`. */
+const SLUG_APARTADO = /^[a-z0-9áéíóúüñöα-ω-]+$/;
 const referencia = z.discriminatedUnion('tipo', [
   z.object({
     tipo: z.literal('ejercicio'),
@@ -1884,10 +1886,14 @@ const referencia = z.discriminatedUnion('tipo', [
      *  es exactamente «escribir peor para contentar a un guardián» (§11). La
      *  clase de caracteres enumera acentos porque el slugger de Astro no los
      *  quita; que enumerara solo los castellanos era un supuesto, no una
-     *  decisión. */
+     *  decisión.
+     *
+     *  Las letras griegas minúsculas entran el 15 de octubre de 2026, con la
+     *  ruta del primer parcial de Elasticidad, por lo mismo: el apartado del
+     *  tema 4 se titula «Entre qué valores está ν» y su slug acaba en `ν`. */
     apartado: z
       .string()
-      .regex(/^[a-z0-9áéíóúüñö-]+$/, 'slug de encabezado, en minúscula y con sus acentos')
+      .regex(SLUG_APARTADO, 'slug de encabezado, en minúscula y con sus acentos')
       .optional(),
     nota: z.string().min(10).optional(),
   }),
@@ -1923,7 +1929,7 @@ const escalon = z.object({
       tema: z.string().regex(/^t\d{2}-[a-z0-9-]+$/),
       apartado: z
         .string()
-        .regex(/^[a-z0-9áéíóúüñö-]+$/, 'slug de encabezado, en minúscula y con sus acentos'),
+        .regex(SLUG_APARTADO, 'slug de encabezado, en minúscula y con sus acentos'),
       nota: z.string().min(10).optional(),
     })
     .optional(),

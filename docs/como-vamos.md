@@ -359,7 +359,9 @@ alta.
 
 ## Rutas de estudio
 
-Las quince, no solo las de Cálculo. Recontadas el 28 de septiembre de 2026.
+Las diecisiete, no solo las de Cálculo. Recontadas el 28 de septiembre de 2026;
+la de Elasticidad entra el 15 de octubre, y hasta ese día esta frase decía
+«las quince» encima de una tabla que ya tenía dieciséis.
 Desde el 13 `node scripts/deuda.mjs` §10 compara la fila de totales con lo
 que hay —entre el 10 y el 13 esta tabla se quedó sin las dos rutas de Mecánica
 y siguió publicando 13 · 110 · 295—, pero solo rutas, bloques y escalones:
@@ -367,8 +369,10 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 127 declarados, **34 están tachados**
-y los **93** restantes siguen abiertos. La fila de la 1.ª evaluación de Cálculo
+documental pero infla el recuento. De los 139 declarados, **35 están tachados**
+y los **104** restantes siguen abiertos (los doce de Elasticidad, todos). El
+15 de octubre esta frase decía 34 y la fila de Térmica 2 abiertos: uno se
+tachó sin que la tabla se enterara, porque esta columna no la vigila nada. La fila de la 1.ª evaluación de Cálculo
 decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 
 | asignatura | ruta | bloques | escalones | medida sobre | huecos (abiertos / declarados) |
@@ -382,14 +386,15 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Cálculo | 5.ª evaluación | 3 | 12 | 10 | 5 / 7 |
 | Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
 | Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
+| Elasticidad | 1.er parcial | 11 | 20 | 6 | 12 / 12 |
 | Expresión Gráfica | control del 1.er cuatrimestre | 8 | 19 | 4 (hojas sin fecha) | 3 / 3 |
 | Fluidos | ordinaria | 15 | 57 | 11 | 16 / 22 |
 | Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
 | Mecánica | 2.º cuatrimestre | 9 | 16 | 3 | 2 / 4 |
 | Química | 1.er cuatrimestre | 8 | 21 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 21 | 3 | 12 / 12 |
-| Térmica | ordinaria | 7 | 21 | 17 | 2 / 7 |
-| **total** | **16 rutas** | **141** | **383** | — | **93 / 127** |
+| Térmica | ordinaria | 7 | 21 | 17 | 1 / 7 |
+| **total** | **17 rutas** | **152** | **403** | — | **104 / 139** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19

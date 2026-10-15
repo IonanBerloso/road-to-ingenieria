@@ -167,7 +167,7 @@ async function main() {
      sobre menos sitio del que dice. Por eso la línea que imprime cuántas
      páginas abre es tan importante como el resultado — y por eso desde hoy
      también imprime **cuántas por asignatura**. */
-  const paginas = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
+  const dePortada = await (await fetch(`${ORIGEN}/`)).text().then((html) =>
     [...html.matchAll(/href="([^"]+)"/g)]
       .map((m) => m[1])
       /* `formulario` entra el 15 de septiembre de 2026, y es la tercera vez
@@ -190,6 +190,28 @@ async function main() {
             /^\/[a-z-]+\/$/.test(h.slice(BASE.length))),
       ),
   );
+  /* Las asignaturas con `portada: 'boton'` solo tienen en la portada su
+     botón, que lleva a su página: sus temas, su ruta y su formulario cuelgan
+     de ahí, así que se leen de ahí. Entra el 15 de octubre de 2026 con la
+     ruta del primer parcial de Elasticidad, que sin esto habría sido la
+     quinta clase de página que este filtro deja fuera: de la asignatura solo
+     se abría su página. Los exámenes no se añaden aquí: entran por la
+     muestra rotatoria, como los de las demás. */
+  const conBoton = readdirSync(join(ROOT, 'src', 'content', 'catalogo'))
+    .filter((n) => n.endsWith('.json'))
+    .filter((n) => JSON.parse(readFileSync(join(ROOT, 'src', 'content', 'catalogo', n), 'utf8')).portada === 'boton')
+    .map((n) => n.replace(/\.json$/, ''));
+  const deBoton = (
+    await Promise.all(
+      conBoton.map(async (a) => {
+        const html = await (await fetch(`${ORIGEN}/${a}/`)).text().catch(() => '');
+        return [...html.matchAll(/href="([^"#]+)"/g)]
+          .map((m) => m[1])
+          .filter((h) => h.startsWith(`${BASE}/${a}/`) && /\/(t\d{2}-[^/]+|preparar\/[^/]+|formulario)\/$/.test(h));
+      }),
+    )
+  ).flat();
+  const paginas = [...new Set([...dePortada, ...deBoton])];
   /* La portada solo enlaza un puñado de exámenes, y ahí vive la mayor parte
      del contenido: 96 páginas con 457 ejercicios. Durante meses el navegador
      abrió 8 de esas 96 —un 8 %— y el resto solo lo miraba `verify.mjs`, que
