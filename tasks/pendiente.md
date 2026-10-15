@@ -109,10 +109,10 @@ sabía:
   y las tensiones de la roseta) entraron el 15 de octubre, y la ruta enlaza
   el formulario en una página, que ya existía. Queda abierto un `falta`:
   práctica para las dos barras en paralelo y la barra que no puede
-  alargarse, que el boletín no trae. El parcial 1 de 2015-2016 entró el 15,
-  fuera de la ventana de medida (llega a la flexión) y con sus ejercicios de
-  los temas 2 a 8 en los escalones. Quedan los de 2012-2013 a 2014-2015 (el
-  de 2014-2015 y el de 2013-2014, en marcha). Quedan sin tocar a propósito el título y el `pide` del bloque de
+  alargarse, que el boletín no trae. Los parciales 1 de 2015-2016 a
+  2012-2013, los cuatro que faltaban, entraron el 15, fuera de la ventana de
+  medida (llegan a la flexión) y con sus ejercicios de los temas 2 a 8 en los
+  escalones. Quedan sin tocar a propósito el título y el `pide` del bloque de
   diagramas, que solo hablan de la Gerber aunque ahora empiece por la
   rebanada, y el `dominio` de la pieza rígida, que dice «dos barras» cuando
   dos de sus problemas tienen tres.
@@ -124,11 +124,17 @@ Expresión Gráfica. El plan por fases, con su estado, está en la carpeta de
 trabajo de la fase P (`fase-p/PLAN-terminar.md`, fuera del repositorio):
 
 - **P6**, hasta el 23 de octubre: los ejemplos que faltan en la ruta del
-  parcial 1 y los cuatro parciales 1 que no están (2012-2013 a 2015-2016).
+  parcial 1 y los cuatro parciales 1 que no estaban (2012-2013 a 2015-2016),
+  hechos el 15; y la práctica de clase de los temas 2 a 8 que falta: 36 ejercicios, todos
+  menos los ya publicados y los que son copia de una pregunta de examen, que
+  entran con su examen. Cada tema tenía uno a cuatro ejemplos y como mucho
+  dos de clase.
 - **P7**: el motor del bloque II en `src/lib/erm/` (flexión, deformaciones,
   hiperestática, torsión, energéticos, pandeo), con sus pruebas.
 - **P8**: la prosa de t01 y de t09 a t14, cada uno con ejemplo y figura, y
-  después su práctica de clase.
+  después su práctica de clase (32 ejercicios). Los de clase 10.1, 10.2, los
+  seis del 11 y siete del 12 solo están como `.php` de eGela: se le han
+  pedido a Ionan en PDF.
 - **P9**: las 41 convocatorias que faltan y el simulacro: enero (2.ª parte y
   final juntas), extraordinarias, plan viejo.
 - **P10**: las rutas del parcial 2, la final de enero y la extraordinaria.
