@@ -477,7 +477,15 @@ async function main() {
            significado sin que nada falle. */
         for (const e of panel.querySelectorAll('.sqrt')) {
           if (!e.getBoundingClientRect().width) continue;
-          const svg = e.querySelector('svg')?.getBoundingClientRect();
+          /* El radical es el <svg> del `.hide-tail` de esta raíz, no el
+             primero que haya dentro: con un vector bajo la raíz, el primero
+             es la flecha de `\vec`, que mide cero de ancho, y la prueba daba
+             por rota «√(1 + |Ω×î|²)», que se dibuja bien. Se vio el 15 de
+             octubre de 2026, al entrar el humo en los exámenes de
+             Elasticidad. */
+          const svg = [...e.querySelectorAll('.hide-tail > svg')]
+            .find((s) => s.closest('.sqrt') === e)
+            ?.getBoundingClientRect();
           medidas.raiz.push({
             texto: e.textContent.trim().slice(0, 8),
             grosor: svg ? svg.width : 0,
