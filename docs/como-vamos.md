@@ -381,11 +381,12 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 141 declarados, **45 están tachados**
+documental pero infla el recuento. De los 143 declarados, **47 están tachados**
 y los **96** restantes siguen abiertos. De Elasticidad quedan cuatro: el 15
-de octubre se cerraron nueve de sus doce, el de las rosetas se partió en
-lo cerrado, tachado, y lo que sigue abierto, la práctica, y se abrió uno,
-los dos escalones de barras para los que el boletín no trae práctica. El
+de octubre se cerraron los doce que traía menos el del formulario, y se
+abrieron tres más pequeños: los dos escalones de barras para los que el
+boletín no trae práctica, y los escalones del tensor y de las galgas que
+empiezan por un ejercicio de clase porque no tienen ejemplo nuestro. El
 15 de octubre esta frase decía 34 y la fila de Térmica 2 abiertos: uno se
 tachó sin que la tabla se enterara, porque esta columna no la vigila nada. La fila de la 1.ª evaluación de Cálculo
 decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
@@ -401,7 +402,7 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Cálculo | 5.ª evaluación | 3 | 12 | 10 | 5 / 7 |
 | Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
 | Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
-| Elasticidad | 1.er parcial | 11 | 25 | 6 | 4 / 14 |
+| Elasticidad | 1.er parcial | 11 | 25 | 6 | 4 / 16 |
 | Expresión Gráfica | control del 1.er cuatrimestre | 8 | 19 | 4 (hojas sin fecha) | 3 / 3 |
 | Fluidos | ordinaria | 15 | 57 | 11 | 16 / 22 |
 | Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
@@ -409,7 +410,7 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Química | 1.er cuatrimestre | 8 | 21 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 21 | 3 | 12 / 12 |
 | Térmica | ordinaria | 7 | 21 | 17 | 1 / 7 |
-| **total** | **17 rutas** | **152** | **408** | — | **96 / 141** |
+| **total** | **17 rutas** | **152** | **408** | — | **96 / 143** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
