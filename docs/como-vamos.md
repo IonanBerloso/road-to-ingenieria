@@ -357,6 +357,18 @@ Las globales son más cortas —la de 2013-2014 son seis ejercicios y sesenta
 puntos, el examen más corto del corpus— y compensan pidiendo la teoría en voz
 alta.
 
+**Y cuatro simulacros que no son convocatorias** (15 de octubre de 2026,
+cuatro días antes de la 1.ª evaluación). La ruta de la 1.ª evaluación usa en
+sus escalones todos los ejercicios de las tres últimas primeras evaluaciones,
+así que quien la recorre se queda sin exámenes enteros que no haya visto. Se
+montaron cuatro —A, el más probable; B, la otra cara; C, los de trampa; D, las
+sorpresas— con dieciséis ejercicios de otras convocatorias de los temas 1 y 2.
+Solo dos están también en la ruta: de sucesiones hay seis ejercicios de examen
+fuera de ella que sirvan, y hacían falta ocho. No cuentan en esta tabla ni en
+ninguna medida (`esPropia`). Desde ese día la misma ruta tiene un plan por
+días —uno, dos o tres—, y el campeonato de predicción de ese examen, con las
+predicciones selladas, vive en `campeonato/calculo-1ev/`.
+
 ## Rutas de estudio
 
 Las diecisiete, no solo las de Cálculo. Recontadas el 28 de septiembre de 2026;

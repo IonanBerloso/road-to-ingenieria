@@ -9,6 +9,7 @@ import { mate } from '../../../lib/markdown.mjs';
 import { ruta } from '../../../lib/rutas';
 import { paginaDeEjercicio } from '../../../lib/ejercicios';
 import { SEGMENTO, hayAntesDeEntrar, lectura, tarjetas, textosDeLaTarjeta } from '../../../lib/antes-de-entrar';
+import { SEGMENTO_PLAN, diasDichos } from '../../../lib/plan';
 import { SUFIJO_CONV, slugExamen, type ConTemas } from '../../../content.config';
 
 /**
@@ -147,7 +148,15 @@ export async function getStaticPaths() {
                 `${m.curso} · ${m.convocatoria}, que no existe.`,
             );
           }
-          return { ...m, slug: slugExamen(m.curso, m.convocatoria), fecha: ex.data.fecha };
+          /* Un simulacro nuestro no tiene fecha: se nombra por su título
+             (15 de octubre de 2026, con los cuatro de la 1.ª evaluación de
+             Cálculo). Sin esto salía «2026-2027 · » y nada detrás. */
+          return {
+            ...m,
+            slug: slugExamen(m.curso, m.convocatoria),
+            fecha: ex.data.fecha,
+            simulacro: ex.data.propio?.titulo,
+          };
         }
         const ficha = asignatura.data.temas.find((x) => x.id === m.tema);
         if (!ficha) {
@@ -177,6 +186,16 @@ const antesDeEntrar = hayAntesDeEntrar(d.bloques)
   ? {
       href: ruta(`${asignatura.id}/preparar/${SUFIJO_CONV[d.evaluacion]}/${SEGMENTO}`),
       minutos: lectura(tarjetas(d.bloques).flatMap((b) => textosDeLaTarjeta(b))).minutos,
+    }
+  : null;
+
+/* El plan por días, si la ruta lo tiene (15 de octubre de 2026). La página
+   existe con la misma condición, `d.plan`, y la regla del nombre vive en
+   `lib/plan.ts`. */
+const plan = d.plan
+  ? {
+      href: ruta(`${asignatura.id}/preparar/${SUFIJO_CONV[d.evaluacion]}/${SEGMENTO_PLAN}`),
+      dias: diasDichos(d.plan.opciones.map((o) => o.dias)),
     }
   : null;
 
@@ -422,15 +441,29 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
     <h1>{d.titulo}</h1>
     <div class="lede prosa" set:html={ledeHtml} />
 
-    {antesDeEntrar && (
-      <a class="antes-de-entrar" href={antesDeEntrar.href}>
-        <span class="ade-t">¿El examen es ya? Antes de entrar</span>
-        <span class="ade-d">
-          Una hoja para la puerta del aula: cómo se empieza cada ejercicio, dónde se pierden los
-          puntos y las fórmulas. Se lee en unos {antesDeEntrar.minutos} minutos.
-        </span>
-        <span class="ade-ir rotulo" aria-hidden="true">→</span>
-      </a>
+    {(plan || antesDeEntrar) && (
+      <div class="atajos">
+        {plan && (
+          <a class="atajo atajo--plan" href={plan.href}>
+            <span class="ade-t">¿Te quedan pocos días? El plan por días</span>
+            <span class="ade-d">
+              Qué escalones hacer cada día si te quedan {plan.dias}, en qué orden, y con qué examen
+              cerrar.
+            </span>
+            <span class="ade-ir rotulo" aria-hidden="true">→</span>
+          </a>
+        )}
+        {antesDeEntrar && (
+          <a class="atajo antes-de-entrar" href={antesDeEntrar.href}>
+            <span class="ade-t">¿El examen es ya? Antes de entrar</span>
+            <span class="ade-d">
+              Una hoja para la puerta del aula: cómo se empieza cada ejercicio, dónde se pierden los
+              puntos y las fórmulas. Se lee en unos {antesDeEntrar.minutos} minutos.
+            </span>
+            <span class="ade-ir rotulo" aria-hidden="true">→</span>
+          </a>
+        )}
+      </div>
     )}
 
     {/* ── el camino de bloques (brief §6b): números en círculo unidos por
@@ -599,8 +632,8 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
 
                   {m.tipo === 'examen' && (
                     <a href={ruta(`${asignatura.id}/examenes/${m.slug}/`)}>
-                      <span class="m-k rotulo">examen</span>
-                      <span class="m-t">{m.curso} · {m.fecha}</span>
+                      <span class="m-k rotulo">{m.simulacro ? 'simulacro' : 'examen'}</span>
+                      <span class="m-t">{m.simulacro ?? `${m.curso} · ${m.fecha}`}</span>
                     </a>
                   )}
 
@@ -1016,24 +1049,36 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
   h1 { max-width: var(--measure); }
   .lede { max-width: 68ch; margin: .6rem 0 1.6rem; }
 
-  .antes-de-entrar {
+  /* Las tarjetas de atajo de encima del camino: el plan por días y la hoja
+     de antes de entrar. */
+  .atajos {
+    display: grid;
+    gap: .6rem;
+    max-width: 68ch;
+    margin: -.4rem 0 1.8rem;
+  }
+
+  .atajo {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: .2rem .9rem;
-    max-width: 68ch;
-    margin: -.4rem 0 1.8rem;
     padding: .8rem 1rem;
     border: 1px solid var(--rule);
-    border-left: 3px solid var(--flag);
+    border-left: 3px solid var(--acento);
     border-radius: 5px;
     text-decoration: none;
     color: inherit;
   }
 
-  .antes-de-entrar:hover { border-color: var(--live); border-left-color: var(--live); }
-  .ade-t { font-weight: 600; }
+  .antes-de-entrar { border-left-color: var(--flag); }
+  .atajo:hover { border-color: var(--live); border-left-color: var(--live); }
+  .ade-t { grid-column: 1; font-weight: 600; }
   .ade-d { grid-column: 1; font-size: .85rem; color: var(--graphite); }
-  .ade-ir { grid-row: 1 / span 2; align-self: center; color: var(--flag); }
+  /* Con fila fija y sin columna, la colocación automática de la rejilla la
+     ponía la primera, en la columna 1, y empujaba el título a la 2: así salió
+     esta tarjeta del 14 al 15 de octubre de 2026, como las de las rutas. */
+  .ade-ir { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--acento); }
+  .antes-de-entrar .ade-ir { color: var(--flag); }
 
   /* ── el camino (brief §6b): círculos y espina de tiza ──────────── */
   .camino {

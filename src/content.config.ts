@@ -1451,6 +1451,46 @@ export const CONVOCATORIAS = {
     larga: 'simulacro nuestro del segundo entregable',
     propia: true,
   },
+  /** Los cuatro simulacros de la 1.ª evaluación de Cálculo, que entran el 15
+   *  de octubre de 2026, cuatro días antes del examen. Cálculo tiene once
+   *  primeras evaluaciones transcritas, pero quien sigue la ruta ya ha hecho
+   *  las tres últimas y buena parte de las otras ocho sale en sus escalones:
+   *  se acaban los exámenes con los que cronometrarse sin haberlos visto.
+   *  Estos se montan con ejercicios de las otras convocatorias que preguntan
+   *  los temas 1 y 2 (la tercera, la extraordinaria, la ordinaria y la
+   *  segunda), con la plantilla de cuatro huecos de la primera evaluación.
+   *  Van por letra y no por número porque no son una serie que se haga en
+   *  orden: cada uno mira otra cara del examen, y la ruta dice cuál. La
+   *  evaluación va en la clave para que la segunda pueda tener los suyos sin
+   *  chocar en la carpeta (`slugExamen`). */
+  'simulacro-primera-a': {
+    url: 'sim-1ev-a',
+    corta: 'sim. 1.ª ev. A',
+    boton: 'Simulacro A',
+    larga: 'simulacro nuestro A de la primera evaluación',
+    propia: true,
+  },
+  'simulacro-primera-b': {
+    url: 'sim-1ev-b',
+    corta: 'sim. 1.ª ev. B',
+    boton: 'Simulacro B',
+    larga: 'simulacro nuestro B de la primera evaluación',
+    propia: true,
+  },
+  'simulacro-primera-c': {
+    url: 'sim-1ev-c',
+    corta: 'sim. 1.ª ev. C',
+    boton: 'Simulacro C',
+    larga: 'simulacro nuestro C de la primera evaluación',
+    propia: true,
+  },
+  'simulacro-primera-d': {
+    url: 'sim-1ev-d',
+    corta: 'sim. 1.ª ev. D',
+    boton: 'Simulacro D',
+    larga: 'simulacro nuestro D de la primera evaluación',
+    propia: true,
+  },
 } as const;
 
 /** ¿Es un simulacro nuestro y no una convocatoria? Todo lo que cuenta
@@ -2060,6 +2100,49 @@ const bloque = z.object({
   message: 'un bloque lleva `material` o `escalones`, uno de los dos y no los dos',
 });
 
+/** Un paso del plan por días: qué hacer, y a lo sumo un sitio al que lleva.
+ *  El destino se cruza con la ruta al generar la página: un escalón o un
+ *  bloque que no existe rompe el build, porque `verify.mjs` no valida los
+ *  fragmentos de un enlace. */
+const pasoDelPlan = z
+  .object({
+    texto: z.string().min(10),
+    bloque: z.string().optional(),
+    escalon: z.string().optional(),
+    examen: z.object({ curso: z.string().regex(/^\d{4}-\d{4}$/, 'formato AAAA-AAAA'), convocatoria }).optional(),
+    antesDeEntrar: z.literal(true).optional(),
+  })
+  .refine(
+    (p) => [p.bloque, p.escalon, p.examen, p.antesDeEntrar].filter((x) => x !== undefined).length <= 1,
+    { message: 'un paso del plan lleva a un solo sitio' },
+  );
+/** El plan por días de una ruta (`plan`, opcional): para cuántos días hay
+ *  plan, y qué se hace cada uno. El porqué de que exista, en la excepción
+ *  que cuenta el comentario de `preparar`, justo debajo. */
+const planPorDias = z.object({
+  /** De dónde sale el orden: los recuentos de la ruta, no una intuición. */
+  porque: z.string().min(40),
+  /** Cómo se trabaja un escalón cuando no da tiempo a hacerlo entero. */
+  como: z.string().min(40),
+  opciones: z
+    .array(
+      z
+        .object({
+          dias: z.number().int().min(1).max(7),
+          /** A quién le toca: «Si el examen es mañana». */
+          para: z.string().min(5),
+          jornadas: z
+            .array(z.object({ titulo: z.string().min(5), pasos: z.array(pasoDelPlan).min(1) }))
+            .min(1),
+        })
+        .refine((o) => o.jornadas.length === o.dias, { message: 'un plan de N días tiene N jornadas' }),
+    )
+    .min(1)
+    .refine((os) => new Set(os.map((o) => o.dias)).size === os.length, {
+      message: 'dos planes con los mismos días',
+    }),
+});
+
 /** Una ruta de estudio por evaluación.
  *
  *  Se llama `preparar` —carpeta, colección y URL— y no `rutas`, porque
@@ -2074,7 +2157,16 @@ const bloque = z.object({
  *  los referencia.
  *
  *  Fíjate en lo que no tiene: ni fecha, ni semanas, ni horas. El plan se mide
- *  en bloques y en criterio de dominio, no en calendario. */
+ *  en bloques y en criterio de dominio, no en calendario.
+ *
+ *  Con una excepción, que vive aparte en `plan` (`planPorDias`, encima) para
+ *  no tocar lo de arriba: el plan por días, que se pidió el 15 de octubre de
+ *  2026, cuatro días antes de la 1.ª evaluación de Cálculo. Se propuso por
+ *  horas («si tienes una hora») y la respuesta fue que eso se quedaba corto:
+ *  lo que se pregunta quien llega tarde es qué hacer si le quedan uno, dos o
+ *  tres días. No pone fecha ni horas: dice qué escalones hacer cada día, en
+ *  qué orden, y con qué examen cerrar. Los bloques y su dominio siguen
+ *  mandando; el plan solo elige entre ellos cuando no da tiempo a todos. */
 const preparar = defineCollection({
   loader: glob({ pattern: patronSolo('**/*.yaml', (id) => `${id}-*.yaml`), base: './src/content/preparar' }),
   schema: z
@@ -2134,6 +2226,9 @@ const preparar = defineCollection({
       /** Por qué los bloques van en este orden y no en el del temario. */
       criterioDeOrden: z.string().min(30),
       bloques: z.array(bloque).min(1),
+      /** El plan por días, si la ruta lo tiene; el porqué, en el comentario
+       *  de `preparar`. */
+      plan: planPorDias.optional(),
     })
     .refine((r) => new Set(r.bloques.map((b) => b.id)).size === r.bloques.length, {
       message: 'hay dos bloques con el mismo id',

@@ -96,6 +96,20 @@ sabía:
 
 ## Hacer
 
+### Lo que tiene fecha: la 1.ª evaluación de Cálculo y el parcial de Elasticidad
+
+- **Después del 19 de octubre de 2026**: conseguir el examen de la 1.ª
+  evaluación, etiquetarlo con la lista y las reglas de
+  `campeonato/calculo-1ev/`, puntuar las dos predicciones selladas y publicar
+  la clasificación (los pasos, en su README).
+- **Karla dibuja «ª» y «º» igual que «a» y «o»**: mismas medidas, así que
+  «1.ª evaluación» se lee «1.a evaluación» en todo el sitio (visto el 15 de
+  octubre de 2026 en el título de los simulacros). Pide otra fuente para esos
+  dos caracteres o marcarlos como volados.
+- **Elasticidad, hasta el 30 de octubre de 2026**: la hoja de antes de entrar
+  del parcial 1 (el borrador está fuera del repositorio), ejercicios de
+  práctica y los parciales de 2016-2017 y 2017-2018 por transcribir.
+
 ### La siguiente asignatura: Expresión Gráfica
 
 - **El Taller, la deuda del diédrico** (8 de octubre de 2026, al cerrarlo):
@@ -270,6 +284,9 @@ daban por bloqueados salieron en la fase I: todos menos uno eran trabajo.
 - **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
   teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no
   esperan: son la fase H.
+- **Elasticidad**: la guía docente del curso, para que la página de la
+  asignatura diga «Cómo se aprueba» y tenga la calculadora de nota como las
+  demás. Se le ha pedido a quien la cursa (PDF de eGela o enlace de ehu.eus).
 
 Los guiones de las prácticas de Química ya no están aquí: esas prácticas se
 preparan en clase y el sitio no las cubre, por decisión del 27 de septiembre

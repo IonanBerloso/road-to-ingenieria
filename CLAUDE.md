@@ -281,16 +281,19 @@ src/
         ejercicios.yaml    los ejercicios como DATOS
       examenes/
         2024-2025-1ev/     examen.yaml (reparto) + ejercicios.yaml
-      simulacros/          simulacros NUESTROS (Materiales, fase H3): un
-        2025-2026-simulacro/  examen.yaml sin ejercicios.yaml al lado, que
-                           cita ejercicios de tema por su id. Convocatoria
+      simulacros/          simulacros NUESTROS (Materiales, fase H3; Cálculo,
+        2025-2026-simulacro/  los cuatro de la 1.ª evaluación, 15-10-2026): un
+                           examen.yaml sin ejercicios.yaml al lado, que
+                           cita ejercicios por su id —de tema en Materiales,
+                           de otras convocatorias en Cálculo—. Convocatoria
                            `propia` (`esPropia` en content.config.ts):
                            misma página que un examen —reloj, hoja,
                            resoluciones—, pero fuera de todo lo que cuenta
                            convocatorias; por eso vive fuera de examenes/,
-                           donde la recorren mide, deuda y verify. Sus
-                           partes (40/60) salen del catálogo, no se
-                           escriben otra vez (src/lib/simulacro.ts)
+                           donde la recorren mide, deuda y verify. En
+                           Materiales, sus partes (40/60) salen del
+                           catálogo y no se escriben otra vez
+                           (src/lib/simulacro.ts)
     preparar/              una ruta de estudio por evaluación (§14).
                            Solo YAML: no enseña nada nuevo, ordena lo que
                            ya está y dice por qué en ese orden.
@@ -413,6 +416,9 @@ src/
                            hoja de «antes de entrar», y en cuántos minutos
                            se leen; la página y su enlace desde la ruta
                            preguntan con esta misma regla
+    plan.ts                el plan por días de una ruta: su URL, cómo se
+                           nombran los días y a dónde lleva cada paso (y
+                           rompe el build si el destino no existe)
     ejercicios.ts          en qué bloque de diez vive cada ejercicio de
                            tema, y la dirección de cualquier ejercicio
                            (§07, «de diez en diez»)
@@ -440,7 +446,8 @@ src/
   pages/                   index · [asignatura] · [asignatura]/[tema] con sus
                            bloques de ejercicios y sus cuestiones ·
                            examenes · preparar (y, debajo de cada ruta con
-                           tarjetas, su antes-de-entrar) · formulario · laboratorio ·
+                           tarjetas, su antes-de-entrar; con plan, su plan
+                           por días) · formulario · laboratorio ·
                            tablas, y el índice de ejercicios que busca la
                            paleta
 scripts/
@@ -528,6 +535,9 @@ docs/                      como-vamos.md, cronica.md (la historia de este
 tasks/                     pendiente.md (lo vivo) y siguiente.md (la
                            próxima sesión); todo.md, manana.md y
                            mapa-examenes.md, congelados el 26-9-2026
+campeonato/                las predicciones de examen selladas antes de
+                           cada examen, su marcador y la verdad etiquetada
+                           (calculo-1ev/README.md); no se publica en el sitio
 referencia/ · diario/
 CLAUDE.md
 ```

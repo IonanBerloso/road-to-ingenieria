@@ -1,0 +1,251 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import Cabecera from '../../../../components/ui/Cabecera.astro';
+import EnlaceAsignatura from '../../../../components/ui/EnlaceAsignatura.astro';
+import { mate } from '../../../../lib/markdown.mjs';
+import { ruta } from '../../../../lib/rutas';
+import { SEGMENTO, hayAntesDeEntrar } from '../../../../lib/antes-de-entrar';
+import { destinoDelPaso, diasDichos, diasEnTitulo } from '../../../../lib/plan';
+import { CONVOCATORIAS, SUFIJO_CONV, cursoDe, slugExamen } from '../../../../content.config';
+
+/**
+ * El plan por días: qué escalones de la ruta hacer si te quedan uno, dos o
+ * tres días, en qué orden y con qué examen cerrar cada uno.
+ *
+ * Se pidió el 15 de octubre de 2026, cuatro días antes de la 1.ª evaluación
+ * de Cálculo (el porqué largo, en el comentario de `preparar` en
+ * content.config.ts).
+ * No enseña nada: cada paso lleva a un escalón, a un bloque o a un examen de
+ * la ruta, y lo único escrito aquí es qué hacer y en qué orden. Solo existe
+ * para las rutas con `plan`, y la ruta solo la enlaza entonces.
+ */
+export async function getStaticPaths() {
+  const rutas = await getCollection('preparar');
+  const catalogo = await getCollection('catalogo');
+  const examenes = await getCollection('examen');
+  const salida = [];
+
+  for (const r of rutas) {
+    if (!r.data.plan) continue;
+    const asignatura = catalogo.find((a) => a.id === r.data.asignatura);
+    if (!asignatura) {
+      throw new Error(`La ruta "${r.id}.yaml" es de "${r.data.asignatura}", que no está en el catálogo.`);
+    }
+    const sufijo = SUFIJO_CONV[r.data.evaluacion];
+    const deLaRuta = ruta(`${asignatura.id}/preparar/${sufijo}/`);
+    const donde = {
+      ruta: r.id,
+      deLaRuta,
+      bloques: r.data.bloques,
+      antesDeEntrar: hayAntesDeEntrar(r.data.bloques) ? ruta(`${asignatura.id}/preparar/${sufijo}/${SEGMENTO}/`) : null,
+      examenes: examenes
+        .filter((e) => e.data.asignatura === asignatura.id)
+        .map((e) => ({
+          curso: cursoDe(e.data.curso),
+          convocatoria: e.data.convocatoria,
+          titulo: e.data.propio?.titulo ?? `${CONVOCATORIAS[e.data.convocatoria].larga}, ${cursoDe(e.data.curso)}`,
+          href: ruta(`${asignatura.id}/examenes/${slugExamen(e.data.curso, e.data.convocatoria, e.data.hoja)}/`),
+        })),
+    };
+
+    const opciones = await Promise.all(
+      r.data.plan.opciones.map(async (o) => ({
+        dias: o.dias,
+        para: o.para,
+        jornadas: await Promise.all(
+          o.jornadas.map(async (j, nj) => ({
+            titulo: j.titulo,
+            pasos: await Promise.all(
+              j.pasos.map(async (p, np) => ({
+                html: await mate(p.texto, `plan-${o.dias}-${nj}-${np}`),
+                destino: destinoDelPaso(p, donde),
+              })),
+            ),
+          })),
+        ),
+      })),
+    );
+
+    salida.push({
+      params: { asignatura: asignatura.id, evaluacion: sufijo },
+      props: {
+        asignatura,
+        evaluacion: r.data.evaluacion,
+        deLaRuta,
+        porqueHtml: await mate(r.data.plan.porque, 'plan-porque'),
+        comoHtml: await mate(r.data.plan.como, 'plan-como'),
+        opciones,
+      },
+    });
+  }
+  return salida;
+}
+
+const { asignatura, evaluacion: clave, deLaRuta, porqueHtml, comoHtml, opciones } = Astro.props;
+const nombre = asignatura.data.nombre;
+const evaluacion = CONVOCATORIAS[clave].larga;
+---
+
+<Base
+  titulo={`Plan por días — ${nombre}, ${evaluacion}`}
+  descripcion={`Qué hacer cada día si te quedan ${diasDichos(opciones.map((o) => o.dias))} para el examen de la ${evaluacion} de ${nombre}: los escalones de la ruta en orden y el examen con el que cerrar.`}
+  acento={asignatura.data.acento}
+>
+  <Cabecera crumb={`${nombre} · plan por días`} />
+
+  <main id="principal">
+    <div class="envoltorio">
+      <p class="rotulo rotulo--live eyebrow no-imprimir">
+        <EnlaceAsignatura id={asignatura.id} nombre={nombre} /> · <a href={deLaRuta}>preparar la {evaluacion}</a>
+      </p>
+      <h1>Si te quedan pocos días</h1>
+      <p class="mano kicker">{nombre} · {evaluacion}</p>
+      <div class="lede prosa" set:html={porqueHtml} />
+
+      <aside class="como" aria-labelledby="como-t">
+        <p class="rotulo etiqueta" id="como-t">Cómo se hace un escalón con prisa</p>
+        <div class="prosa" set:html={comoHtml} />
+      </aside>
+
+      <nav class="indice no-imprimir" aria-label="Los planes">
+        {opciones.map((o) => <a href={`#dias-${o.dias}`}>{diasEnTitulo(o.dias)}</a>)}
+      </nav>
+
+      {opciones.map((o) => (
+        <section class="opcion" id={`dias-${o.dias}`} aria-labelledby={`h-dias-${o.dias}`}>
+          <h2 id={`h-dias-${o.dias}`}>{diasEnTitulo(o.dias)}</h2>
+          <p class="mano para">{o.para}</p>
+          {o.jornadas.map((j) => (
+            <div class="jornada">
+              <h3>{j.titulo}</h3>
+              <ol class="pasos">
+                {j.pasos.map((p) => (
+                  <li>
+                    <div class="prosa" set:html={p.html} />
+                    {p.destino && (
+                      <a class="ir" href={p.destino.href}>
+                        <span class="rotulo ir-k">{p.destino.rotulo}</span>
+                        <span class="ir-t">{p.destino.titulo}</span>
+                        <span aria-hidden="true">→</span>
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </section>
+      ))}
+
+      <p class="pie no-imprimir">
+        El plan no sustituye a la ruta: la recorre más deprisa, eligiendo lo que más cae cuando no
+        da tiempo a todo. Cada paso lleva a su sitio en la ruta, y lo que el plan deja fuera sigue
+        allí para quien tenga más días.
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .envoltorio {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+
+  h1 { margin: .3rem 0 0; }
+  .mano { font-family: var(--mano); }
+  .kicker { margin: 0 0 .8rem; font-size: 1.3rem; color: var(--graphite); }
+  .lede { max-width: var(--measure); color: var(--graphite); }
+
+  .como {
+    margin: 1.2rem 0 1.4rem;
+    padding: .2rem .9rem .7rem;
+    border-left: 2px solid var(--live);
+    background: var(--panel);
+  }
+
+  .etiqueta { margin: .6rem 0 .2rem; color: var(--faint); }
+  .como :global(p) { margin: .2rem 0 0; }
+
+  /* ── el índice: saltar a un plan en el teléfono ─────────────────── */
+  .indice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-bottom: 2rem;
+  }
+
+  .indice a {
+    padding: .3rem .7rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: .88rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .indice a:hover { border-color: var(--live); color: var(--live); }
+
+  /* ── cada plan ──────────────────────────────────────────────────── */
+  .opcion {
+    margin-top: 2.4rem;
+    padding-top: 1rem;
+    border-top: 1.5px solid var(--rule);
+  }
+
+  .opcion h2 { margin: 0; }
+  .para { margin: .1rem 0 0; font-size: 1.2rem; color: var(--acento); }
+
+  /* `min-width: 0` por lo mismo que en la hoja de antes de entrar: una
+     fórmula ancha no puede empujar la página de lado en un teléfono. */
+  .jornada {
+    min-width: 0;
+    margin-top: 1.2rem;
+    padding: .8rem 1.1rem 1rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--acento);
+    border-radius: 6px;
+    background: var(--panel);
+  }
+
+  .jornada h3 { margin: 0 0 .5rem; font-size: 1.08rem; }
+
+  .pasos { margin: 0; padding-left: 1.3rem; display: grid; gap: .7rem; }
+  .pasos :global(p) { margin: 0; }
+  .pasos :global(.katex-display) { overflow-x: auto; max-width: 100%; }
+
+  .ir {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .2rem .5rem;
+    margin-top: .25rem;
+    font-size: .88rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .ir-k { color: var(--faint); }
+  .ir-t { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: .2em; }
+  .ir:hover, .ir:hover .ir-k { color: var(--live); }
+
+  .pie {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+    font-size: .82rem;
+    color: var(--faint);
+  }
+
+  /* ── impresión: el plan se puede llevar en papel, como la hoja de antes
+     de entrar; sin fondos, y sin partir una jornada entre dos páginas. */
+  @media print {
+    .envoltorio { max-width: none; padding: 0; }
+    .como, .jornada { background: none; }
+    .jornada { break-inside: avoid; page-break-inside: avoid; }
+    .opcion { margin-top: 1.2rem; }
+  }
+</style>
