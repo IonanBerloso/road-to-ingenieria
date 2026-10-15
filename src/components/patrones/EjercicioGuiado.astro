@@ -21,6 +21,7 @@ import { mate } from '../../lib/markdown.mjs';
 import Reparto from '../ui/Reparto.astro';
 import { archivo } from '../../lib/rutas';
 import { enSolo } from '../../lib/edicion.mjs';
+import { sinLaRespuesta, type RespuestaDelFormato } from '../../lib/formato';
 import Taller from './Taller.astro';
 import Construccion from './Construccion.astro';
 
@@ -244,33 +245,15 @@ function ayudaDelTipo(tipo: string): string {
  */
 const CON_DECIMALES = /con (una|dos|tres|cuatro|cinco|seis|siete|ocho|\d+) (cifras )?decimales/i;
 
-/**
- * Lo que va entre paréntesis justo detrás de «exacta» no se enseña.
- *
- * En 193 formatos —casi todos de Cálculo— ese paréntesis era **la respuesta**:
- * «en forma exacta (8/5)», con la casilla al lado esperando un 1,6. Lo vio el
- * revisor de la muestra de diagnósticos del 28 de septiembre de 2026 (fase
- * E5), mirando otra cosa. Se quita aquí y no en los 193 (Regla 0): el dato no
- * molesta mientras no se pinte, y así no vuelve a pintarse aunque alguien lo
- * copie. Los paréntesis se cuentan, porque hay respuestas con paréntesis
- * dentro: «(sqrt(2))».
- */
-function sinLaRespuesta(formato: string): string {
-  const m = /exact\w*\s*\(/i.exec(formato);
-  if (!m) return formato;
-  const abre = m.index + m[0].length - 1;
-  let nivel = 0;
-  for (let i = abre; i < formato.length; i++) {
-    if (formato[i] === '(') nivel++;
-    else if (formato[i] === ')' && --nivel === 0) {
-      return sinLaRespuesta(formato.slice(0, abre).replace(/\s+$/, '') + formato.slice(i + 1));
-    }
-  }
-  return formato;
-}
-
-function formatoConExacta(tipo: string, formatoDelDato: string, raices = true): string {
-  const formato = sinLaRespuesta(formatoDelDato);
+/* Lo que el formato no puede enseñar —la respuesta— lo quita
+   `sinLaRespuesta()`, en `lib/formato.ts`: vivía aquí hasta el 15 de octubre
+   de 2026, y salió para que un test pudiera barrer con ella todos los
+   formatos del sitio. Si quitarla no deja nada, no se pinta nada: una
+   coletilla suelta, «— vale la forma exacta…», no es un formato. */
+function formatoConExacta(respuesta: RespuestaDelFormato & { formato?: string }, raices = true): string {
+  const { tipo } = respuesta;
+  const formato = sinLaRespuesta(respuesta.formato ?? '', respuesta);
+  if (!formato) return '';
   if (tipo === 'conjunto' && !raices) return formato;
   const numerica = tipo === 'numero' || tipo === 'complejo' || tipo === 'conjunto';
   if (!numerica) return formato + ayudaDelTipo(tipo);
@@ -606,9 +589,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     spellcheck="false"
                     placeholder="…"
                   />
-                  {paso.respuesta!.formato && (
+                  {formatoConExacta(paso.respuesta!, sonRaices) && (
                     <span class="formato rotulo">
-                      {formatoConExacta(paso.respuesta!.tipo, paso.respuesta!.formato, sonRaices)}
+                      {formatoConExacta(paso.respuesta!, sonRaices)}
                     </span>
                   )}
                   <button type="button" class="comprobar" data-comprobar>
