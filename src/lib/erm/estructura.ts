@@ -59,10 +59,13 @@ export interface Nudo {
 /**
  * Un apoyo en un nudo. `movil` reacciona solo en la dirección `angulo`
  * (grados desde +X, antihorario), 90° por defecto: un carrito sobre suelo
- * horizontal.
+ * horizontal. Un empotramiento `deslizante` deja correr el nudo en X (da
+ * fuerza vertical y par, no horizontal): lo usa la viga conjugada del tema 10
+ * (`conjugada.ts`), que con los dos bordes libres lleva dos empotramientos y
+ * sin él tendría una reacción horizontal de más.
  */
 export type Apoyo =
-  | { tipo: 'empotramiento'; nudo: string }
+  | { tipo: 'empotramiento'; nudo: string; deslizante?: boolean }
   | { tipo: 'articulado'; nudo: string }
   | { tipo: 'movil'; nudo: string; angulo?: number };
 
@@ -219,6 +222,12 @@ export function cargasHasta(
 /** Las componentes de reacción que aporta cada apoyo, en orden. */
 function componentes(a: Apoyo): { fx: number; fy: number; m: number }[] {
   if (a.tipo === 'empotramiento') {
+    if (a.deslizante) {
+      return [
+        { fx: 0, fy: 1, m: 0 },
+        { fx: 0, fy: 0, m: 1 },
+      ];
+    }
     return [
       { fx: 1, fy: 0, m: 0 },
       { fx: 0, fy: 1, m: 0 },

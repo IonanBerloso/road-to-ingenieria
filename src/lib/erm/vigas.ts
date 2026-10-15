@@ -25,6 +25,8 @@ import { esfuerzosEn, type Esfuerzos } from './esfuerzos';
 export interface ApoyoViga {
   x: number;
   tipo: 'empotramiento' | 'articulado' | 'movil';
+  /** Solo para un empotramiento: sin reacción horizontal (ver `Apoyo` en `estructura.ts`). */
+  deslizante?: boolean;
 }
 
 export interface VigaRecta {
@@ -52,9 +54,11 @@ export function vigaRecta(v: VigaRecta): Estructura {
   const kDe = (x: number) => xs.findIndex((y) => Math.abs(y - x) < tol);
   const nudos = xs.map((x, k) => ({ id: idNudo(k), x, y: 0 }));
   const barras = xs.slice(1).map((_, k) => ({ id: `b${k}`, i: idNudo(k), j: idNudo(k + 1) }));
-  const apoyos: Apoyo[] = v.apoyos.map((a) =>
-    a.tipo === 'movil' ? { tipo: 'movil', nudo: idNudo(kDe(a.x)) } : { tipo: a.tipo, nudo: idNudo(kDe(a.x)) },
-  );
+  const apoyos: Apoyo[] = v.apoyos.map((a) => {
+    const nudo = idNudo(kDe(a.x));
+    if (a.tipo === 'empotramiento' && a.deslizante) return { tipo: 'empotramiento', nudo, deslizante: true };
+    return a.tipo === 'movil' ? { tipo: 'movil', nudo } : { tipo: a.tipo, nudo };
+  });
   /* La barra que contiene x (si x es un nudo, la de su derecha; la última si es L). */
   const tramoDe = (x: number) => {
     for (let k = 0; k + 1 < xs.length; k++) if (x < xs[k + 1] - tol) return k;

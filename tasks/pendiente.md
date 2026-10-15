@@ -129,8 +129,12 @@ trabajo de la fase P (`fase-p/PLAN-terminar.md`, fuera del repositorio):
   menos los ya publicados y los que son copia de una pregunta de examen, que
   entran con su examen. Cada tema tenía uno a cuatro ejemplos y como mucho
   dos de clase.
-- **P7**: el motor del bloque II en `src/lib/erm/` (flexión, deformaciones,
-  hiperestática, torsión, energéticos, pandeo), con sus pruebas.
+- **P7**, hecho el 15: el motor del bloque II en `src/lib/erm/` (flexión,
+  deformaciones, hiperestática, torsión, energéticos, pandeo), con 338
+  pruebas y un examen real de 2.ª parte por tema. Las ecs. 12.15 y
+  12.19-12.20 de los apuntes traen una errata (el motor usa la buena: la
+  prosa del tema 12 tiene que decirlo), y los apuntes no traen método de
+  pieza corta: el motor da σe·A, como la diapositiva.
 - **P8**: la prosa de t01 y de t09 a t14, cada uno con ejemplo y figura, y
   después su práctica de clase (32 ejercicios). Los de clase 10.1, 10.2, los
   seis del 11 y siete del 12 solo están como `.php` de eGela: se le han

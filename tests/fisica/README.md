@@ -4,8 +4,8 @@ Todo simulador con física dentro lleva aquí al menos un caso con resultado
 conocido. Nunca se ajusta una constante para que salga el número esperado
 (CLAUDE.md §10).
 
-**Diez ficheros en la raíz, nueve en `erm/` y 344 casos**: nueve simuladores y las
-tablas de vapor, y el motor de Elasticidad y Resistencia de Materiales. La cifra la da
+**Diez ficheros en la raíz, dieciocho en `erm/` y 527 casos**: nueve simuladores y las
+tablas de vapor, y el motor de Elasticidad y Resistencia de Materiales (los dos bloques). La cifra la da
 `node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
 la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
 y estuvo tres días diciéndolo con ocho ficheros en la carpeta.
@@ -33,7 +33,7 @@ daño que uno que falta.
 | `ariete.test.ts` | 28 | `GolpeDeAriete` (t20) | el error típico del propio tema, con sus cuatro números, y los ejercicios 7.3 y 7.7 de la colección con sus resultados publicados (955 y 1840 kPa; 199,56 y 249,08 mca) | **externa** |
 | `plano.test.ts` | 13 | `PlanoComplejo` (cálculo t01) | el error típico del propio tema: con z = −1 − i, arctan devuelve π/4 y el argumento es −3π/4 | propia |
 | `vapor.test.ts` | 21 | las tablas de vapor y el diagrama de Mollier de Térmica, no un simulador | los valores de verificación que publican IAPWS-95 e IF97, con nueve cifras; las dos formulaciones entre sí, y el anexo de tablas del curso | **externa** |
-| `erm/` (nueve ficheros) | 149 | ningún simulador todavía: el motor de cálculo del parcial 1 de Elasticidad y Resistencia de Materiales (`src/lib/erm/`) | cada caso con su segundo camino (invariantes, fórmulas cerradas de los apuntes, el ejercicio 3.1 resuelto de la colección) y, en `aceptacion.test.ts`, cinco ejercicios de los parciales 1 de 2017 y 2018 resueltos a mano | **externa** |
+| `erm/` (dieciocho ficheros) | 332 | ningún simulador todavía: el motor de cálculo de Elasticidad y Resistencia de Materiales (`src/lib/erm/`), el del parcial 1 (temas 2 a 8) y, desde el 15 de octubre de 2026, el del bloque II (temas 9 a 14) | cada caso con su segundo camino (invariantes, fórmulas cerradas de los apuntes, los ejercicios 3.1, 10.3 y 10.4 resueltos de la colección); en `aceptacion.test.ts`, cinco ejercicios de los parciales 1 de 2017 y 2018 resueltos a mano, y en `aceptacion-bloque2.test.ts`, un problema de 2.ª parte por tema del 9 al 14, resuelto a mano, y los tres ejercicios del tema 9 de p6b, p6c y p6d | **externa** |
 
 **Los nueve simuladores tienen ya su fichero.** El último en llegar fue
 `PlanoComplejo`, el 15 de septiembre de 2026: hasta entonces era el único cuyo
