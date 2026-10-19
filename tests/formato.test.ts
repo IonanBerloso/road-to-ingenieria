@@ -31,6 +31,17 @@ describe('sinLaRespuesta()', () => {
     expect(sinLaRespuesta('un número, en rad/s (vale la forma exacta pi/2)')).toBe('un número, en rad/s');
   });
 
+  /* Lo vio la revisión de los exámenes de enero de 2023 en el parcial 1 de
+     Elasticidad: «(forma exacta …)» no va detrás de «exacta» ni empieza por
+     «vale», y se pintaba entero. */
+  it('quita un paréntesis que empieza por «forma exacta»', () => {
+    expect(sinLaRespuesta('un número, el coeficiente c (forma exacta 2·sqrt(2)/9)')).toBe('un número, el coeficiente c');
+    expect(sinLaRespuesta('un número, en kg/cm² (forma exacta 375·(sqrt(17)-1))')).toBe('un número, en kg/cm²');
+    expect(sinLaRespuesta('un número, en MPa (en forma exacta 2 - 10·cos(30°))')).toBe('un número, en MPa');
+    /* con un paréntesis detrás de «exacta», dentro: se quita el de fuera */
+    expect(sinLaRespuesta('un número (forma exacta (sqrt(17)-1)/4)')).toBe('un número');
+  });
+
   it('quita el ejemplo que es la respuesta, leído como lo lee la casilla', () => {
     const z = { tipo: 'complejo', valor: '1.5+0.5i' };
     expect(sinLaRespuesta('forma binómica, por ejemplo 1.5+0.5i', z)).toBe('forma binómica');
@@ -114,8 +125,8 @@ describe('ningún formato del sitio enseña la respuesta', () => {
     expect(pintados.length).toBeGreaterThan(1000);
   });
 
-  it('ninguno se pinta con un «exacta (…)» ni con un «(vale …)»', () => {
-    const malos = pintados.filter((p) => /exact\w*\s*\(|\(\s*vale\b/i.test(p.formato));
+  it('ninguno se pinta con un «exacta (…)», un «(vale …)» ni un «(forma exacta …)»', () => {
+    const malos = pintados.filter((p) => /exact\w*\s*\(|\(\s*vale\b|\(\s*(?:en\s+)?(?:la\s+)?forma\s+exacta\b/i.test(p.formato));
     expect(malos.map((p) => `${p.fichero}: ${p.formato}`)).toEqual([]);
   });
 

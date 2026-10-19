@@ -1,0 +1,846 @@
+---
+asignatura: elasticidad-resistencia
+tema: 10
+titulo: "Flexión: la elástica, los giros y las flechas"
+descripcion: "De la curvatura a la ecuación de la elástica, y cuatro maneras de resolverla: tramo a tramo, con funciones de singularidad, con los teoremas de Mohr y con la viga conjugada."
+patron: lectura
+competencias:
+  - COMP1
+  - COMP2
+  - COMP4
+fuente: "Adaptado del tema 10 de Elasticidad y Resistencia de Materiales, UPV/EHU, curso 2025-2026, los apuntes «Flexión: rigidez», las diapositivas «Teoría general de la flexión: deformaciones» y sus cuestiones teóricas de autoevaluación, y la ecuación 9.23 de los apuntes del tema 9. Las figuras y el ejemplo son nuestros."
+---
+
+import ErrorTipico from '../../../components/patrones/ErrorTipico.astro';
+
+El tema 9 da las tensiones de una viga a flexión; este da cuánto se deforma.
+Dos números por sección: cuánto baja su centro, la **flecha** $v$, y cuánto
+gira, el **giro** $\theta$. La curva que forma el eje deformado es la
+**elástica**. Hacen falta por dos motivos. Uno es de proyecto: una viga puede
+resistir y aun así bajar demasiado. El otro es el tema 11: en una viga
+hiperestática el equilibrio no basta, y la ecuación que falta sale de una
+flecha o de un giro que se conocen.
+
+En los exámenes de 2010-2011 a 2022-2023 este tema es el principal de
+**23 preguntas**: ocho de segundos parciales, once de finales y cuatro de
+extraordinarias. Diez son de
+teoría, y nueve de ellas piden lo mismo: la **ecuación diferencial de la
+elástica**, que en el segundo parcial y el final de 2013-2014 se pedía exacta
+y a partir de $1/\rho = M/EI_z$. La décima, de 2010-2011, pide las funciones
+de singularidad. Las otras trece son problemas de giros y flechas de una viga
+isostática: seis piden expresamente la **viga conjugada**, cuatro de ellos en
+vigas con rótulas, y otro deja elegir entre ella y las funciones de
+singularidad. Además, el tema está detrás de otras 17 preguntas, casi todas
+de vigas hiperestáticas del tema 11.
+
+## Flecha y giro, con sus signos
+
+El convenio es el del tema 7: $x$ a lo largo de la viga hacia la derecha, $y$
+**hacia abajo**, y el flector $M$ positivo si tracciona la fibra inferior
+([el convenio del curso](/road-to-ingenieria/elasticidad-resistencia/t07-piezas-prismaticas/#el-convenio-de-signos-del-curso)).
+Sobre él, los apuntes ponen los desplazamientos (pp. 5 a 7):
+
+- La **flecha** $v(x)$ es el desplazamiento vertical del eje, positiva
+  **hacia abajo**, como $y$.
+- El **giro** $\theta(x)$ es el ángulo que gira la sección, el mismo que forma
+  la tangente a la elástica con la horizontal. Es positivo en sentido
+  **horario**: con $y$ hacia abajo, un giro horario es una tangente que baja
+  hacia la derecha. Para giros pequeños, $\theta = dv/dx$ (ec. 10.13, p. 7).
+- El desplazamiento horizontal $u$ es el mismo en todo el eje, y como la viga
+  tiene un punto fijo, es cero (p. 7).
+
+<figure>
+<svg viewBox="0 0 520 250" role="img" width="520" height="250" aria-labelledby="t10-signo-t t10-signo-d">
+  <title id="t10-signo-t">Una viga biapoyada con carga uniforme y su elástica, con los signos de la flecha y del giro</title>
+  <desc id="t10-signo-d">Una viga horizontal apoyada en A, a la izquierda, y en B, a la derecha, con una carga uniforme q hacia abajo en toda su longitud. Debajo de la viga sin deformar, la elástica, una curva que baja desde A, alcanza su punto más bajo en el centro y vuelve a subir hasta B. En el centro, una cota vertical v entre la viga sin deformar y la elástica, con el rótulo «v positiva». En A, un arco con punta que va de la horizontal a la tangente de la elástica, en sentido horario, con el rótulo «θA positivo». En B, un arco que va de la horizontal a la tangente en sentido antihorario, con el rótulo «θB negativo». Abajo a la izquierda, los ejes: x hacia la derecha e y, v hacia abajo.</desc>
+  <line x1="90" y1="90" x2="430" y2="90" stroke="var(--faint)" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <line x1="90" y1="56" x2="90" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M90 86 L87.8 81 L92.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="110" y1="56" x2="110" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M110 86 L107.8 81 L112.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="130" y1="56" x2="130" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M130 86 L127.8 81 L132.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="150" y1="56" x2="150" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M150 86 L147.8 81 L152.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="170" y1="56" x2="170" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M170 86 L167.8 81 L172.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="190" y1="56" x2="190" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M190 86 L187.8 81 L192.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="210" y1="56" x2="210" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M210 86 L207.8 81 L212.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="230" y1="56" x2="230" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M230 86 L227.8 81 L232.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="250" y1="56" x2="250" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M250 86 L247.8 81 L252.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="270" y1="56" x2="270" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M270 86 L267.8 81 L272.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="290" y1="56" x2="290" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M290 86 L287.8 81 L292.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="310" y1="56" x2="310" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M310 86 L307.8 81 L312.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="330" y1="56" x2="330" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M330 86 L327.8 81 L332.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="350" y1="56" x2="350" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M350 86 L347.8 81 L352.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="370" y1="56" x2="370" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M370 86 L367.8 81 L372.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="390" y1="56" x2="390" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M390 86 L387.8 81 L392.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="410" y1="56" x2="410" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M410 86 L407.8 81 L412.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="430" y1="56" x2="430" y2="81" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M430 86 L427.8 81 L432.3 81 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <path d="M90 56 L98.5 56 L107 56 L115.5 56 L124 56 L132.5 56 L141 56 L149.5 56 L158 56 L166.5 56 L175 56 L183.5 56 L192 56 L200.5 56 L209 56 L217.5 56 L226 56 L234.5 56 L243 56 L251.5 56 L260 56 L268.5 56 L277 56 L285.5 56 L294 56 L302.5 56 L311 56 L319.5 56 L328 56 L336.5 56 L345 56 L353.5 56 L362 56 L370.5 56 L379 56 L387.5 56 L396 56 L404.5 56 L413 56 L421.5 56 L430 56" fill="none" stroke="var(--d2)" stroke-width="1"/>
+  <text x="260" y="46" font-size="12" text-anchor="middle" font-style="italic" fill="var(--d2-tinta)">q</text>
+  <path d="M90 93 L81 107 L99 107 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="77" y1="107" x2="103" y2="107" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="78" y1="107" x2="82" y2="112" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="83" y1="107" x2="87" y2="112" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="88" y1="107" x2="92" y2="112" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="93" y1="107" x2="97" y2="112" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="98" y1="107" x2="102" y2="112" stroke="var(--ink)" stroke-width="0.7"/>
+  <path d="M430 93 L421 105 L439 105 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <circle cx="425" cy="108" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <circle cx="435" cy="108" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <line x1="417" y1="111.5" x2="443" y2="111.5" stroke="var(--ink)" stroke-width="1"/>
+  <text x="76" y="86" font-size="12" text-anchor="end" font-weight="600" fill="var(--ink)">A</text>
+  <text x="444" y="86" font-size="12" font-weight="600" fill="var(--ink)">B</text>
+  <path d="M90 90 L94.3 91.7 L98.5 93.4 L102.8 95 L107 96.7 L111.3 98.3 L115.5 100 L119.8 101.6 L124 103.2 L128.3 104.8 L132.5 106.3 L136.8 107.8 L141 109.3 L145.3 110.8 L149.5 112.2 L153.8 113.6 L158 114.9 L162.3 116.3 L166.5 117.5 L170.8 118.7 L175 119.9 L179.3 121.1 L183.5 122.1 L187.8 123.2 L192 124.2 L196.3 125.1 L200.5 126 L204.8 126.8 L209 127.5 L213.3 128.2 L217.5 128.9 L221.8 129.5 L226 130 L230.3 130.5 L234.5 130.9 L238.8 131.2 L243 131.5 L247.3 131.7 L251.5 131.9 L255.8 132 L260 132 L264.3 132 L268.5 131.9 L272.8 131.7 L277 131.5 L281.3 131.2 L285.5 130.9 L289.8 130.5 L294 130 L298.3 129.5 L302.5 128.9 L306.8 128.2 L311 127.5 L315.3 126.8 L319.5 126 L323.8 125.1 L328 124.2 L332.3 123.2 L336.5 122.1 L340.8 121.1 L345 119.9 L349.3 118.7 L353.5 117.5 L357.8 116.3 L362 114.9 L366.3 113.6 L370.5 112.2 L374.8 110.8 L379 109.3 L383.3 107.8 L387.5 106.3 L391.8 104.8 L396 103.2 L400.3 101.6 L404.5 100 L408.8 98.3 L413 96.7 L417.3 95 L421.5 93.4 L425.8 91.7 L430 90" fill="none" stroke="var(--live)" stroke-width="2.4"/>
+  <line x1="260" y1="92" x2="260" y2="131" stroke="var(--ink)" stroke-width="0.9"/>
+  <path d="M260 92 L257.6 98 L262.4 98 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <path d="M260 131 L257.6 125 L262.4 125 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <text x="266" y="115.5" font-size="11" fill="var(--ink)">v positiva</text>
+  <line x1="90" y1="90" x2="147.7" y2="112.8" stroke="var(--flag)" stroke-width="0.9" stroke-dasharray="4 3"/>
+  <path d="M138 90 A48 48 0 0 1 136.2 103.1" fill="none" stroke="var(--flag)" stroke-width="1.3"/>
+  <path d="M134.6 107.6 L134.3 101.1 L139.4 103.1 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <text x="112" y="140" font-size="11" fill="var(--flag)">θ<tspan dy="3.3" font-size="8.3">A</tspan><tspan dy="-3.3"> positivo</tspan></text>
+  <text x="112" y="154" font-size="10" fill="var(--flag)">(horario)</text>
+  <line x1="430" y1="90" x2="372.3" y2="112.8" stroke="var(--flag)" stroke-width="0.9" stroke-dasharray="4 3"/>
+  <path d="M382 90 A48 48 0 0 0 383.8 103.1" fill="none" stroke="var(--flag)" stroke-width="1.3"/>
+  <path d="M385.4 107.6 L380.6 103.1 L385.7 101.1 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <text x="408" y="140" font-size="11" text-anchor="end" fill="var(--flag)">θ<tspan dy="3.3" font-size="8.3">B</tspan><tspan dy="-3.3"> negativo</tspan></text>
+  <text x="408" y="154" font-size="10" text-anchor="end" fill="var(--flag)">(antihorario)</text>
+  <line x1="30" y1="180" x2="60" y2="180" stroke="var(--ink)" stroke-width="1"/>
+  <path d="M66 180 L60 182.7 L60 177.3 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <line x1="30" y1="180" x2="30" y2="208" stroke="var(--ink)" stroke-width="1"/>
+  <path d="M30 214 L27.3 208 L32.7 208 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <text x="70" y="184" font-size="11" font-style="italic" fill="var(--ink)">x</text>
+  <text x="36" y="218" font-size="11" font-style="italic" fill="var(--ink)">y, v</text>
+</svg>
+<figcaption>
+
+A escala y con la flecha exagerada. La flecha <i>v</i> es positiva hacia
+abajo, como <i>y</i>, y el giro θ = <i>dv</i>/<i>dx</i> es positivo en
+sentido **horario**: en A la elástica baja hacia la derecha y
+θ<sub>A</sub> = <i>qL</i><sup>3</sup>/24<i>EI</i>; en B sube, y
+θ<sub>B</sub> = −<i>qL</i><sup>3</sup>/24<i>EI</i>. La flecha del centro es
+5<i>qL</i><sup>4</sup>/384<i>EI</i>.
+
+</figcaption>
+</figure>
+
+Las diapositivas lo resumen al final del tema, para la viga conjugada:
+$v > 0$ hacia abajo y $\theta > 0$ en el sentido de las agujas del reloj
+(diapositiva 17).
+
+## De la curvatura a la ecuación de la elástica
+
+Es la deducción que más cae, y tiene tres pasos: la curvatura que pide el
+flector, la que tiene la elástica y el signo que las une.
+
+**La curvatura del flector.** Las secciones siguen planas y perpendiculares
+al eje deformado. Una rebanada se curva con radio $\rho$ alrededor de un
+centro O, y la fibra que está a una distancia $y$ de la fibra neutra se alarga
+$\varepsilon_x = y/\rho$ (ec. 10.1, p. 4). Con la ley de Hooke,
+$\sigma_x = Ey/\rho$ (ec. 10.2). El tema 9 da la misma tensión a partir del
+flector, $\sigma_x = My/I_z$ (ec. 10.3, p. 5, que es la 9.23 de los apuntes
+del tema 9, p. 12), y al igualarlas:
+
+$$
+\frac{1}{\rho} = \kappa = \frac{M}{EI_z} \qquad \text{(ec. 10.4)}
+$$
+
+**La curvatura de la elástica.** La fibra neutra no cambia de longitud: un
+trozo $dx$ del eje sin deformar es un arco $dx$ de la elástica. Si la tangente
+gira $d\theta$ a lo largo de ese arco, $\rho\, d\theta = dx$ (ec. 10.7, p. 6), y
+$\kappa = d\theta/dx$ (ec. 10.8). Igualando con la 10.4 sale
+$d\theta/dx = M/EI_z$ (ec. 10.9).
+
+**El signo.** La figura 10.3 de los apuntes dibuja la rebanada con $M$
+positivo: se curva con la concavidad hacia arriba, y al avanzar en $x$ el
+ángulo **disminuye**, de $\theta$ a $\theta - d\theta$. Con estos ejes la
+curvatura es negativa, y la ecuación se escribe con un menos (ec. 10.10, p. 7):
+
+$$
+\frac{d\theta}{dx} = -\frac{M}{EI_z}
+$$
+
+**La exacta y la aproximada.** En la rebanada deformada,
+$\sin\theta = v_{,x}$ y $\cos\theta = 1 + u_{,x}$ (ec. 10.11), donde la coma
+indica derivada. Con $\theta = \arcsin v_{,x}$ en la 10.10 sale la **ecuación
+diferencial exacta** (ec. 10.12):
+
+$$
+\frac{v_{,xx}}{\sqrt{1 - v_{,x}^{2}}} = -\frac{M}{EI_z}
+$$
+
+Si el giro es pequeño, $\sin\theta \approx \theta$ y $\cos\theta \approx 1$:
+$\theta = v_{,x}$ y $u_{,x} = 0$ (ec. 10.13). La 10.10 queda como la
+**ecuación diferencial de la elástica**, la EDE, la que se usa en todo lo
+demás (ec. 10.14, p. 7):
+
+$$
+\boxed{\;v_{,xx} = \frac{d^{2}v}{dx^{2}} = -\frac{M}{EI_z}\;}
+$$
+
+Vale en flexión simple para vigas esbeltas, con $L/h > 10$: así la cortante
+apenas añade flecha y toda la que cuenta la da el flector (diapositiva 4).
+
+Si en un libro ves la exacta como $v''/(1 + v'^{2})^{3/2}$, es la misma
+curvatura con otra variable: allí $x$ es la abscisa del punto ya desplazado y
+sale la tangente del ángulo; en los apuntes, $x$ se mide a lo largo de la
+fibra neutra, que no se alarga, y sale el seno. Lo que piden los exámenes es
+la deducción de los apuntes.
+
+<ErrorTipico titulo="El menos de la ecuación no se pone de memoria">
+Las nueve cuestiones de examen sobre la elástica la piden entera, y tres lo
+dicen con la palabra «deducir». Lo que distingue una deducción de una fórmula
+recordada es el signo. Muchos libros
+toman $y$ hacia arriba y escriben $EI\,v'' = +M$; con el eje $y$ del curso,
+hacia abajo, el flector positivo hace que el giro disminuya al avanzar en $x$
+(figura 10.3 de los apuntes, p. 6), y por eso $d\theta/dx = -M/EI_z$. Si la
+deducción no dice de dónde sale ese menos, está a medias.
+</ErrorTipico>
+
+## Integrar la ecuación tramo a tramo
+
+La EDE se integra dos veces. Con el flector de cada tramo escrito como en el
+tema 7:
+
+$$
+EI_z\,\theta(x) = -\int M\,dx + C_1
+\qquad
+EI_z\,v(x) = \int EI_z\,\theta\,dx + C_2
+$$
+
+Cada tramo con su propia ley de $M$ trae dos constantes: con $n$ tramos, $2n$
+(diapositiva 8). Salen de lo que se sabe de la elástica:
+
+- En un **apoyo**, $v = 0$; el giro es libre.
+- En un **empotramiento**, $v = 0$ y $\theta = 0$.
+- En el **paso de un tramo a otro**, la misma flecha y el mismo giro a los dos
+  lados.
+- En una **rótula**, la misma flecha a los dos lados, pero el giro puede
+  saltar: es lo que la rótula deja hacer.
+- En un **apoyo elástico** de constante $k$ que hace una reacción $R$,
+  $v = R/k$; en un apoyo que **asienta** $\Delta$, $v = \Delta$.
+
+Un extremo libre no da condición sobre $v$ ni sobre $\theta$: lo que se sabe
+de él, $M = 0$ y $T = 0$, ya está dentro de la ley de $M$.
+
+**Un ejemplo: el voladizo con una carga en la punta.** Empotrado en $x = 0$,
+libre en $x = L$, con $P$ hacia abajo en la punta. El flector es
+$M = -P(L - x)$, negativo porque tracciona arriba. Integrando
+$EI_z v'' = P(L - x)$ con $\theta(0) = 0$ y $v(0) = 0$:
+
+$$
+EI_z\,\theta = P\left(Lx - \frac{x^{2}}{2}\right)
+\qquad
+EI_z\,v = P\left(\frac{Lx^{2}}{2} - \frac{x^{3}}{6}\right)
+$$
+
+En la punta, $\theta = PL^{2}/2EI_z$ y $v = PL^{3}/3EI_z$, los dos positivos:
+la punta baja y gira en sentido horario. Repitiendo la cuenta con otras cargas
+sale la tabla de las vigas elementales, que conviene llevar sabida porque la
+EDE es **lineal** y las flechas de varias cargas se suman:
+
+| viga, con $EI_z$ uniforme | giro | flecha |
+|---|---|---|
+| voladizo, $P$ en la punta | $PL^{2}/2EI_z$ en la punta | $PL^{3}/3EI_z$ en la punta |
+| voladizo, $q$ en toda la luz | $qL^{3}/6EI_z$ en la punta | $qL^{4}/8EI_z$ en la punta |
+| voladizo, par horario $M_0$ en la punta | $M_0L/EI_z$ en la punta | $M_0L^{2}/2EI_z$ en la punta |
+| biapoyada, $q$ en toda la luz | $\pm qL^{3}/24EI_z$ en los apoyos | $5qL^{4}/384EI_z$ en el centro |
+| biapoyada, $P$ en el centro | $\pm PL^{2}/16EI_z$ en los apoyos | $PL^{3}/48EI_z$ en el centro |
+
+Los voladizos, empotrados a la izquierda; en la biapoyada, el giro es
+positivo en el apoyo izquierdo y negativo en el derecho, como en la figura de
+arriba.
+
+## Funciones de singularidad: una sola ley para toda la viga
+
+Con varias cargas, los tramos se multiplican, y con ellos las constantes. Las
+**funciones de singularidad** escriben el flector de toda la viga en una sola
+expresión (ec. 10.15, p. 8):
+
+$$
+\langle x - a\rangle^{n} =
+\begin{cases}
+(x - a)^{n} & x > a \\
+0 & x \le a
+\end{cases}
+$$
+
+Valen cero antes de $a$ y, a partir de ahí, lo que valdría el paréntesis. Se
+integran como un paréntesis normal,
+$\int\langle x - a\rangle^{n}\,dx = \langle x - a\rangle^{n+1}/(n+1)$, y por eso
+**con $EI_z$ uniforme solo aparecen dos constantes** (p. 8). El flector se
+escribe cortando en el último tramo y sumando lo que hay a la izquierda. Para
+la viga biapoyada de la figura 10.4 de los apuntes, con una carga $P$ en $a$ y
+una uniforme $q_0$ desde $b$ hasta el final:
+
+$$
+M = R_A\,x - P\langle x - a\rangle - \tfrac{1}{2}q_0\langle x - b\rangle^{2}
+$$
+
+Las piezas, según la figura 10.5 (pp. 8 y 9): una fuerza $P$ hacia abajo en
+$a$ da $-P\langle x - a\rangle$; un par $M_0$ en $a$ da
+$M_0\langle x - a\rangle^{0}$, con el signo del flector que deja a su derecha
+(positivo si es horario, porque $M$ es la suma de los momentos horarios de lo
+que hay a la izquierda); una carga uniforme $q_0$ desde $a$,
+$-\tfrac{1}{2}q_0\langle x - a\rangle^{2}$; y una lineal que crece con
+pendiente $k$ desde $a$, $-\tfrac{1}{6}k\langle x - a\rangle^{3}$.
+
+Todas esas cargas **siguen hasta el final de la viga**. Una que se acaba antes
+se escribe como dos: la que sigue y otra que la anula a partir de donde se
+acaba (figura 10.6, p. 9).
+
+<figure>
+<svg viewBox="0 0 520 300" role="img" width="520" height="300" aria-labelledby="t10-singularidad-t t10-singularidad-d">
+  <title id="t10-singularidad-t">Una carga uniforme entre a y b escrita como dos cargas que siguen hasta el final</title>
+  <desc id="t10-singularidad-d">Tres vigas iguales, una encima de otra. En la primera, una carga uniforme q0 hacia abajo entre las abscisas a y b, acotadas desde el extremo izquierdo. En la segunda, precedida de un signo igual, la misma carga q0 hacia abajo desde a hasta el extremo derecho, con el rótulo «menos un medio de q0 por el corchete de x menos a al cuadrado». En la tercera, precedida de un signo más, una carga q0 hacia arriba desde b hasta el extremo derecho, con el rótulo «más un medio de q0 por el corchete de x menos b al cuadrado».</desc>
+  <rect x="60" y="59" width="380" height="6" fill="var(--faint)" fill-opacity="0.25" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="174" y1="30" x2="174" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M174 58 L171.8 53 L176.3 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="190.6" y1="30" x2="190.6" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M190.6 58 L188.4 53 L192.9 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="207.3" y1="30" x2="207.3" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M207.3 58 L205 53 L209.5 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="223.9" y1="30" x2="223.9" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M223.9 58 L221.6 53 L226.1 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="240.5" y1="30" x2="240.5" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M240.5 58 L238.3 53 L242.8 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="257.1" y1="30" x2="257.1" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M257.1 58 L254.9 53 L259.4 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="273.8" y1="30" x2="273.8" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M273.8 58 L271.5 53 L276 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="290.4" y1="30" x2="290.4" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M290.4 58 L288.1 53 L292.6 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="307" y1="30" x2="307" y2="53" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M307 58 L304.8 53 L309.3 53 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <path d="M174 30 L177.3 30 L180.7 30 L184 30 L187.3 30 L190.6 30 L194 30 L197.3 30 L200.6 30 L203.9 30 L207.3 30 L210.6 30 L213.9 30 L217.2 30 L220.6 30 L223.9 30 L227.2 30 L230.5 30 L233.9 30 L237.2 30 L240.5 30 L243.8 30 L247.2 30 L250.5 30 L253.8 30 L257.1 30 L260.5 30 L263.8 30 L267.1 30 L270.4 30 L273.8 30 L277.1 30 L280.4 30 L283.7 30 L287.1 30 L290.4 30 L293.7 30 L297 30 L300.4 30 L303.7 30 L307 30" fill="none" stroke="var(--d2)" stroke-width="1"/>
+  <text x="240.5" y="24" font-size="12" text-anchor="middle" font-style="italic" fill="var(--d2-tinta)">q₀</text>
+  <line x1="60" y1="66" x2="60" y2="88" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="174" y1="66" x2="174" y2="88" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="60" y1="84" x2="174" y2="84" stroke="var(--faint)" stroke-width="0.9"/>
+  <path d="M60 84 L66 81.6 L66 86.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <path d="M174 84 L168 81.6 L168 86.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <text x="117" y="98" font-size="11" text-anchor="middle" font-style="italic" fill="var(--ink)">a</text>
+  <line x1="60" y1="66" x2="60" y2="114" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="307" y1="66" x2="307" y2="114" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="60" y1="110" x2="307" y2="110" stroke="var(--faint)" stroke-width="0.9"/>
+  <path d="M60 110 L66 107.6 L66 112.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <path d="M307 110 L301 107.6 L301 112.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <text x="183.5" y="124" font-size="11" text-anchor="middle" font-style="italic" fill="var(--ink)">b</text>
+  <text x="30" y="175" font-size="16" text-anchor="middle" fill="var(--ink)">=</text>
+  <rect x="60" y="167" width="380" height="6" fill="var(--faint)" fill-opacity="0.25" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="174" y1="138" x2="174" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M174 166 L171.8 161 L176.3 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="191.7" y1="138" x2="191.7" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M191.7 166 L189.5 161 L194 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="209.5" y1="138" x2="209.5" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M209.5 166 L207.2 161 L211.7 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="227.2" y1="138" x2="227.2" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M227.2 166 L225 161 L229.5 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="244.9" y1="138" x2="244.9" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M244.9 166 L242.7 161 L247.2 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="262.7" y1="138" x2="262.7" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M262.7 166 L260.4 161 L264.9 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="280.4" y1="138" x2="280.4" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M280.4 166 L278.2 161 L282.7 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="298.1" y1="138" x2="298.1" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M298.1 166 L295.9 161 L300.4 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="315.9" y1="138" x2="315.9" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M315.9 166 L313.6 161 L318.1 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="333.6" y1="138" x2="333.6" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M333.6 166 L331.4 161 L335.9 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="351.3" y1="138" x2="351.3" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M351.3 166 L349.1 161 L353.6 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="369.1" y1="138" x2="369.1" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M369.1 166 L366.8 161 L371.3 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="386.8" y1="138" x2="386.8" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M386.8 166 L384.6 161 L389.1 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="404.5" y1="138" x2="404.5" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M404.5 166 L402.3 161 L406.8 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="422.3" y1="138" x2="422.3" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M422.3 166 L420 161 L424.5 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="440" y1="138" x2="440" y2="161" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M440 166 L437.8 161 L442.3 161 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <path d="M174 138 L180.7 138 L187.3 138 L194 138 L200.6 138 L207.3 138 L213.9 138 L220.6 138 L227.2 138 L233.9 138 L240.5 138 L247.2 138 L253.8 138 L260.5 138 L267.1 138 L273.8 138 L280.4 138 L287.1 138 L293.7 138 L300.4 138 L307 138 L313.7 138 L320.3 138 L327 138 L333.6 138 L340.3 138 L346.9 138 L353.6 138 L360.2 138 L366.9 138 L373.5 138 L380.2 138 L386.8 138 L393.5 138 L400.1 138 L406.8 138 L413.4 138 L420.1 138 L426.7 138 L433.4 138 L440 138" fill="none" stroke="var(--d2)" stroke-width="1"/>
+  <text x="60" y="156" font-size="12" fill="var(--d2-tinta)">−½q₀⟨x − a⟩²</text>
+  <text x="30" y="245" font-size="16" text-anchor="middle" fill="var(--ink)">+</text>
+  <rect x="60" y="237" width="380" height="6" fill="var(--faint)" fill-opacity="0.25" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="307" y1="272" x2="307" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M307 244 L309.3 249 L304.8 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="323.6" y1="272" x2="323.6" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M323.6 244 L325.9 249 L321.4 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="340.3" y1="272" x2="340.3" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M340.3 244 L342.5 249 L338 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="356.9" y1="272" x2="356.9" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M356.9 244 L359.1 249 L354.6 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="373.5" y1="272" x2="373.5" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M373.5 244 L375.8 249 L371.3 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="390.1" y1="272" x2="390.1" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M390.1 244 L392.4 249 L387.9 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="406.8" y1="272" x2="406.8" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M406.8 244 L409 249 L404.5 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="423.4" y1="272" x2="423.4" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M423.4 244 L425.6 249 L421.1 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <line x1="440" y1="272" x2="440" y2="249" stroke="var(--flag)" stroke-width="1"/>
+  <path d="M440 244 L442.3 249 L437.8 249 Z" fill="var(--flag)" stroke="var(--flag)" stroke-width="0.6"/>
+  <path d="M307 272 L310.3 272 L313.7 272 L317 272 L320.3 272 L323.6 272 L327 272 L330.3 272 L333.6 272 L336.9 272 L340.3 272 L343.6 272 L346.9 272 L350.2 272 L353.6 272 L356.9 272 L360.2 272 L363.5 272 L366.9 272 L370.2 272 L373.5 272 L376.8 272 L380.2 272 L383.5 272 L386.8 272 L390.1 272 L393.5 272 L396.8 272 L400.1 272 L403.4 272 L406.8 272 L410.1 272 L413.4 272 L416.7 272 L420.1 272 L423.4 272 L426.7 272 L430 272 L433.4 272 L436.7 272 L440 272" fill="none" stroke="var(--flag)" stroke-width="1"/>
+  <text x="60" y="228" font-size="12" fill="var(--flag)">+½q₀⟨x − b⟩²</text>
+</svg>
+<figcaption>
+
+Una carga uniforme que se acaba en <i>b</i> no tiene término propio. Se
+escribe como la misma carga desde <i>a</i> hasta el final, más otra igual y
+hacia arriba desde <i>b</i>, que anula la primera a partir de ahí. Cada una
+da su término en el flector, como en la figura 10.6 de los apuntes:
+−½<i>q</i>₀⟨<i>x</i> − <i>a</i>⟩² + ½<i>q</i>₀⟨<i>x</i> − <i>b</i>⟩².
+
+</figcaption>
+</figure>
+
+Con la ley de $M$ en una pieza, se integra la EDE una vez para
+$EI_z\,\theta$ y otra para $EI_z\,v$, y las dos constantes salen de dos
+condiciones: en la biapoyada, $v = 0$ en los dos apoyos.
+
+La cuestión de 2010-2011 pedía su aplicación y sus «posibles
+inconvenientes». Hay dos a la vista. Si $EI_z$ cambia de un tramo a otro, la
+ley de $M/EI_z$ vuelve a partirse en tramos, con sus constantes. Y una rótula
+intermedia hace saltar el giro, que una sola ley no recoge sin un término
+más. En los dos casos, la viga conjugada es más directa.
+
+<ErrorTipico titulo="La carga lineal que se acaba lleva tres términos">
+Una carga lineal de pendiente $k$ entre $a$ y $b$ hay que cerrarla en $b$ con
+dos cargas: una uniforme $q_0 = k(b - a)$ hacia arriba y una lineal de
+pendiente $k$, también hacia arriba. El flector es
+
+$$
+M = -\tfrac{1}{6}k\langle x - a\rangle^{3} + \tfrac{1}{2}q_0\langle x - b\rangle^{2} + \tfrac{1}{6}k\langle x - b\rangle^{3}
+$$
+
+La figura 10.7 de los apuntes (p. 9) imprime el último término con exponente
+2; es una errata, y la diapositiva 10 lo trae bien, con exponente 3. Se
+comprueba con la resultante: pasado $b$, el flector tiene que ser el de una
+fuerza $k(b - a)^{2}/2$ aplicada en el centro de gravedad del triángulo, y
+solo con el cubo sale. Las vigas continuas de las extraordinarias de
+2012-2013 y 2019-2020, que se piden por funciones de singularidad, llevan
+$2q_0$ de B a C y $q_0$ de C hasta el final: se escribe $2q_0$ desde B y,
+desde C, una $q_0$ hacia arriba que la deja en $q_0$.
+</ErrorTipico>
+
+## Los dos teoremas de Mohr
+
+Son la EDE integrada entre dos puntos A y B, escrita como cosas que se ven en
+el diagrama de flectores (apartado 10.4, pp. 10 y 11).
+
+**Primer teorema (M1).** Integrando $d\theta/dx = -M/EI_z$ de A a B:
+
+$$
+\theta_A - \theta_B = \int_A^B \frac{M}{EI_z}\,dx = \frac{S^{M_{A,B}}}{EI_z}
+\qquad \text{(ecs. 10.16 y 10.17)}
+$$
+
+La diferencia de giros entre A y B es el **área** $S^{M_{A,B}}$ del diagrama
+de flectores entre esos dos puntos, dividida por $EI_z$ si es uniforme.
+
+**Segundo teorema (M2).** Se mira la distancia vertical $\delta_{B,A}$ entre el
+punto B de la elástica y la tangente a la elástica en A. Cada rebanada $dx$
+entre A y B gira la tangente $d\theta$, y eso mueve el corte de la tangente
+con la vertical de B una cantidad $x_B\,d\theta$, con $x_B$ la distancia de
+la rebanada a B (ecs. 10.18 y 10.19). Sumándolas:
+
+$$
+\delta_{B,A} = \int_B^A \frac{M\,x_B}{EI_z}\,dx_B = \frac{Q^{M_{A,B}}_{B}}{EI_z}
+\qquad \text{(ecs. 10.20 y 10.21)}
+$$
+
+$Q^{M_{A,B}}_{B}$ es el **momento estático, respecto de la vertical de B**, del
+diagrama de flectores entre A y B. Con $v$ hacia abajo y $\xi$ la abscisa de
+cada punto, la tangente en A pasa por la vertical de B a la altura
+$v_A + \theta_A(\xi_B - \xi_A)$, y
+
+$$
+\delta_{B,A} = v_A + \theta_A\,(\xi_B - \xi_A) - v_B
+$$
+
+Es positiva si B queda **por encima** de la tangente en A, esté A a la
+izquierda o a la derecha de B (diapositiva 13).
+
+<figure>
+<svg viewBox="0 0 520 340" role="img" width="520" height="340" aria-labelledby="t10-mohr-t t10-mohr-d">
+  <title id="t10-mohr-t">Los dos teoremas de Mohr en una viga biapoyada con carga uniforme</title>
+  <desc id="t10-mohr-d">Arriba, una viga apoyada en A y en B con una carga uniforme q, y debajo su elástica. Desde A sale una recta de trazos, la tangente a la elástica en A, que baja hasta la vertical de B. En esa vertical, una cota entre el punto B de la viga y el punto de la tangente, con el rótulo δB,A. Abajo, el diagrama de M/EI, una parábola por encima de su eje, sombreada, con su centro de gravedad G en el centro de la viga. En el diagrama, una rebanada estrecha a la izquierda del centro y una cota xB desde ella hasta la vertical de B.</desc>
+  <line x1="70" y1="76" x2="430" y2="76" stroke="var(--faint)" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <line x1="70" y1="46" x2="70" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M70 72 L67.8 67 L72.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="90" y1="46" x2="90" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M90 72 L87.8 67 L92.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="110" y1="46" x2="110" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M110 72 L107.8 67 L112.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="130" y1="46" x2="130" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M130 72 L127.8 67 L132.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="150" y1="46" x2="150" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M150 72 L147.8 67 L152.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="170" y1="46" x2="170" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M170 72 L167.8 67 L172.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="190" y1="46" x2="190" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M190 72 L187.8 67 L192.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="210" y1="46" x2="210" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M210 72 L207.8 67 L212.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="230" y1="46" x2="230" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M230 72 L227.8 67 L232.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="250" y1="46" x2="250" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M250 72 L247.8 67 L252.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="270" y1="46" x2="270" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M270 72 L267.8 67 L272.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="290" y1="46" x2="290" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M290 72 L287.8 67 L292.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="310" y1="46" x2="310" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M310 72 L307.8 67 L312.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="330" y1="46" x2="330" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M330 72 L327.8 67 L332.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="350" y1="46" x2="350" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M350 72 L347.8 67 L352.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="370" y1="46" x2="370" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M370 72 L367.8 67 L372.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="390" y1="46" x2="390" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M390 72 L387.8 67 L392.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="410" y1="46" x2="410" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M410 72 L407.8 67 L412.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="430" y1="46" x2="430" y2="67" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M430 72 L427.8 67 L432.3 67 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <path d="M70 46 L79 46 L88 46 L97 46 L106 46 L115 46 L124 46 L133 46 L142 46 L151 46 L160 46 L169 46 L178 46 L187 46 L196 46 L205 46 L214 46 L223 46 L232 46 L241 46 L250 46 L259 46 L268 46 L277 46 L286 46 L295 46 L304 46 L313 46 L322 46 L331 46 L340 46 L349 46 L358 46 L367 46 L376 46 L385 46 L394 46 L403 46 L412 46 L421 46 L430 46" fill="none" stroke="var(--d2)" stroke-width="1"/>
+  <text x="250" y="36" font-size="12" text-anchor="middle" font-style="italic" fill="var(--d2-tinta)">q</text>
+  <path d="M70 79 L61 93 L79 93 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="57" y1="93" x2="83" y2="93" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="58" y1="93" x2="62" y2="98" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="63" y1="93" x2="67" y2="98" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="68" y1="93" x2="72" y2="98" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="73" y1="93" x2="77" y2="98" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="78" y1="93" x2="82" y2="98" stroke="var(--ink)" stroke-width="0.7"/>
+  <path d="M430 79 L421 91 L439 91 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <circle cx="425" cy="94" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <circle cx="435" cy="94" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <line x1="417" y1="97.5" x2="443" y2="97.5" stroke="var(--ink)" stroke-width="1"/>
+  <text x="56" y="72" font-size="12" text-anchor="end" font-weight="600" fill="var(--ink)">A</text>
+  <text x="444" y="70" font-size="12" font-weight="600" fill="var(--ink)">B</text>
+  <path d="M70 76 L74.5 77.4 L79 78.7 L83.5 80.1 L88 81.4 L92.5 82.7 L97 84.1 L101.5 85.4 L106 86.7 L110.5 87.9 L115 89.2 L119.5 90.4 L124 91.6 L128.5 92.8 L133 94 L137.5 95.1 L142 96.2 L146.5 97.3 L151 98.3 L155.5 99.3 L160 100.2 L164.5 101.1 L169 102 L173.5 102.9 L178 103.6 L182.5 104.4 L187 105.1 L191.5 105.8 L196 106.4 L200.5 107 L205 107.5 L209.5 108 L214 108.4 L218.5 108.8 L223 109.1 L227.5 109.4 L232 109.6 L236.5 109.8 L241 109.9 L245.5 110 L250 110 L254.5 110 L259 109.9 L263.5 109.8 L268 109.6 L272.5 109.4 L277 109.1 L281.5 108.8 L286 108.4 L290.5 108 L295 107.5 L299.5 107 L304 106.4 L308.5 105.8 L313 105.1 L317.5 104.4 L322 103.6 L326.5 102.9 L331 102 L335.5 101.1 L340 100.2 L344.5 99.3 L349 98.3 L353.5 97.3 L358 96.2 L362.5 95.1 L367 94 L371.5 92.8 L376 91.6 L380.5 90.4 L385 89.2 L389.5 87.9 L394 86.7 L398.5 85.4 L403 84.1 L407.5 82.7 L412 81.4 L416.5 80.1 L421 78.7 L425.5 77.4 L430 76" fill="none" stroke="var(--live)" stroke-width="2.4"/>
+  <line x1="70" y1="76" x2="430" y2="184.8" stroke="var(--flag)" stroke-width="1" stroke-dasharray="5 3"/>
+  <circle cx="430" cy="184.8" r="2.8" fill="var(--flag)"/>
+  <text x="404" y="202.8" font-size="10" text-anchor="end" fill="var(--flag)">tangente en A</text>
+  <line x1="434" y1="184.8" x2="474" y2="184.8" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="452" y1="76" x2="474" y2="76" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="470" y1="76" x2="470" y2="184.8" stroke="var(--ink)" stroke-width="0.9"/>
+  <path d="M470 76 L467.6 82 L472.4 82 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <path d="M470 184.8 L467.6 178.8 L472.4 178.8 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <text x="476" y="134.4" font-size="12" fill="var(--ink)">δ<tspan dy="3.6" font-size="9">B,A</tspan></text>
+  <path d="M70 300 L70 300 L76 296.3 L82 292.8 L88 289.4 L94 286.1 L100 282.9 L106 279.8 L112 276.9 L118 274.1 L124 271.4 L130 268.9 L136 266.5 L142 264.2 L148 262 L154 259.9 L160 258 L166 256.2 L172 254.5 L178 253 L184 251.5 L190 250.2 L196 249 L202 248 L208 247 L214 246.2 L220 245.6 L226 245 L232 244.6 L238 244.2 L244 244.1 L250 244 L256 244.1 L262 244.2 L268 244.6 L274 245 L280 245.6 L286 246.2 L292 247 L298 248 L304 249 L310 250.2 L316 251.5 L322 253 L328 254.5 L334 256.2 L340 258 L346 259.9 L352 262 L358 264.2 L364 266.5 L370 268.9 L376 271.4 L382 274.1 L388 276.9 L394 279.8 L400 282.9 L406 286.1 L412 289.4 L418 292.8 L424 296.3 L430 300 L430 300 Z" fill="var(--d1)" fill-opacity="0.14" stroke="none" stroke-width="1"/>
+  <path d="M70 300 L76 296.3 L82 292.8 L88 289.4 L94 286.1 L100 282.9 L106 279.8 L112 276.9 L118 274.1 L124 271.4 L130 268.9 L136 266.5 L142 264.2 L148 262 L154 259.9 L160 258 L166 256.2 L172 254.5 L178 253 L184 251.5 L190 250.2 L196 249 L202 248 L208 247 L214 246.2 L220 245.6 L226 245 L232 244.6 L238 244.2 L244 244.1 L250 244 L256 244.1 L262 244.2 L268 244.6 L274 245 L280 245.6 L286 246.2 L292 247 L298 248 L304 249 L310 250.2 L316 251.5 L322 253 L328 254.5 L334 256.2 L340 258 L346 259.9 L352 262 L358 264.2 L364 266.5 L370 268.9 L376 271.4 L382 274.1 L388 276.9 L394 279.8 L400 282.9 L406 286.1 L412 289.4 L418 292.8 L424 296.3 L430 300" fill="none" stroke="var(--d1)" stroke-width="1.8"/>
+  <line x1="70" y1="300" x2="430" y2="300" stroke="var(--ink)" stroke-width="0.9"/>
+  <text x="62" y="274" font-size="11" text-anchor="end" font-style="italic" fill="var(--d1)">M/EI</text>
+  <circle cx="250" cy="277.6" r="3" fill="var(--ink)"/>
+  <text x="257" y="281.6" font-size="11" font-weight="600" fill="var(--ink)">G</text>
+  <rect x="163.6" y="256.9" width="7" height="43.1" fill="var(--d1)" fill-opacity="0.5" stroke="var(--d1)" stroke-width="0.6"/>
+  <text x="167.1" y="250.9" font-size="10" text-anchor="middle" font-style="italic" fill="var(--ink)">dx</text>
+  <line x1="167.1" y1="302" x2="167.1" y2="318" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="430" y1="302" x2="430" y2="318" stroke="var(--faint)" stroke-width="0.7" stroke-dasharray="3 3"/>
+  <line x1="167.1" y1="314" x2="430" y2="314" stroke="var(--faint)" stroke-width="0.9"/>
+  <path d="M167.1 314 L173.1 311.6 L173.1 316.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <path d="M430 314 L424 311.6 L424 316.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <text x="298.6" y="328" font-size="11" text-anchor="middle" font-style="italic" fill="var(--ink)">x<tspan dy="3.3" font-size="8.3">B</tspan></text>
+  <line x1="430" y1="106" x2="430" y2="300" stroke="var(--faint)" stroke-width="0.6" stroke-dasharray="2 4"/>
+</svg>
+<figcaption>
+
+A escala, con la flecha exagerada. El **primer teorema** usa el área del
+diagrama de <i>M</i>/<i>EI</i> entre A y B: θ<sub>A</sub> − θ<sub>B</sub> =
+<i>qL</i><sup>3</sup>/12<i>EI</i>. El **segundo**, su momento estático
+respecto de la vertical de B, con <i>x</i><sub>B</sub> la distancia de cada
+rebanada a B: el área por la distancia de G a B,
+(<i>qL</i><sup>3</sup>/12<i>EI</i>)·(<i>L</i>/2) = <i>qL</i><sup>4</sup>/24<i>EI</i>,
+es δ<sub>B,A</sub>, la distancia de B a la tangente en A. Aquí B queda
+**por encima** de la tangente y δ<sub>B,A</sub> es positivo.
+
+</figcaption>
+</figure>
+
+**El ejemplo de la figura.** Biapoyada de luz $L$ con $q$ uniforme. El
+diagrama de flectores es una parábola de área $qL^{3}/12$ con su centro de
+gravedad en el centro de la viga. Con $v_A = v_B = 0$, el segundo teorema
+entre A y B da $\theta_A L = (qL^{3}/12)(L/2)/EI_z$, y de ahí
+$\theta_A = qL^{3}/24EI_z$, el de la tabla. Para la flecha del centro C, el
+mismo teorema entre A y C: la media parábola tiene área $qL^{3}/24$ y su
+centro de gravedad está a $3L/16$ de C, así que
+$\delta_{C,A} = qL^{4}/128EI_z$ y
+
+$$
+v_C = \theta_A\,\frac{L}{2} - \delta_{C,A} = \frac{qL^{4}}{48EI_z} - \frac{qL^{4}}{128EI_z} = \frac{5qL^{4}}{384EI_z}
+$$
+
+El primer teorema entre A y C da $\theta_A - \theta_C = qL^{3}/24EI_z$, es
+decir, $\theta_C = 0$, como pide la simetría.
+
+<ErrorTipico titulo="El momento estático, respecto de B">
+En $\delta_{B,A}$ los papeles no son simétricos: la tangente es la de A y el
+momento estático se toma respecto de la vertical de B (ec. 10.21). En un
+voladizo empotrado en A con $P$ en la punta B, el diagrama es un triángulo de
+área $-PL^{2}/2$ con su centro de gravedad a $L/3$ de A. Respecto de B,
+$\delta_{B,A} = (-PL^{2}/2)(2L/3)/EI_z = -PL^{3}/3EI_z$: B está por debajo de
+la tangente horizontal del empotramiento, y $v_B = PL^{3}/3EI_z$. Tomado
+respecto de A sale $-PL^{3}/6EI_z$, y con él una flecha de la mitad: es
+$\delta_{A,B}$, la distancia de A a la tangente en B, otra cosa.
+</ErrorTipico>
+
+## La viga conjugada
+
+Es el método que más piden los problemas, y sale de comparar dos juegos de
+ecuaciones que ya se conocen (p. 12):
+
+| equilibrio de la rebanada | elástica | viga conjugada |
+|---|---|---|
+| $dT/dx = -q$ | $d\theta/dx = -M/EI_z$ | $dT^{*}/dx = -q^{*}$ |
+| $dM/dx = T$ | $dv/dx = \theta$ | $dM^{*}/dx = T^{*}$ |
+
+Si una viga ficticia, la **conjugada**, se carga con
+
+$$
+q^{*} = \frac{M}{EI_z}
+$$
+
+su cortante $T^{*}$ cumple la misma ecuación que el giro de la real, y su
+flector $M^{*}$, la misma que la flecha. Si además los enlaces de la conjugada
+reproducen las condiciones de contorno de la real, **$T^{*}$ es el giro y
+$M^{*}$ es la flecha**, y se calculan con estática, como en el tema 7
+(p. 11). La carga $q^{*}$ va hacia abajo donde $M$ es positivo y hacia arriba
+donde es negativo.
+
+Los enlaces cambian porque cambian las magnitudes (figura 10.9, pp. 12 y 13):
+
+| viga real | lo que se sabe | viga conjugada |
+|---|---|---|
+| apoyo en un extremo | $v = 0$, $\theta$ libre | apoyo en el extremo: $M^{*} = 0$, $T^{*}$ libre |
+| extremo libre | $v$ y $\theta$ libres | empotramiento |
+| empotramiento | $v = 0$, $\theta = 0$ | extremo libre |
+| apoyo intermedio | $v = 0$, el mismo $\theta$ a los dos lados | rótula sin apoyo |
+| rótula intermedia | el mismo $v$, $\theta$ distinto a cada lado | apoyo intermedio |
+
+La regla se puede rehacer en cada caso: se escribe qué se sabe de $v$ y de
+$\theta$ y se busca el enlace que da eso mismo en $M^{*}$ y $T^{*}$ (p. 13).
+Así salen también los resortes de las diapositivas 16 y 17. Un muelle de
+constante $k$ en un extremo, con una fuerza $F$, deja $v = F/k$: en la
+conjugada es un apoyo con un par $F/k$ aplicado. Un muelle de torsión en un
+extremo apoyado, con un par $M$, deja $v = 0$ y $\theta = M/k$: en la
+conjugada es un extremo libre con una fuerza $M/k$.
+
+Y si $EI_z$ cambia de un tramo a otro, no pasa nada: la carga $q^{*}$ se
+divide por el $EI_z$ de cada tramo, y el diagrama salta donde cambia la
+sección.
+
+<figure>
+<svg viewBox="0 0 520 330" role="img" width="520" height="330" aria-labelledby="t10-conjugada-t t10-conjugada-d">
+  <title id="t10-conjugada-t">Una viga empotrada con una rótula y un apoyo, su elástica y su viga conjugada</title>
+  <desc id="t10-conjugada-d">Arriba, la viga real: empotrada a la izquierda en A, con una rótula en B y un apoyo móvil en C a la derecha; AB y BC miden a, y en BC hay una carga uniforme q. Debajo, su elástica: baja desde el empotramiento, horizontal en A, hasta B, donde forma un pico, y vuelve a subir hasta C. Una cota vertical en B marca la flecha vB. Abajo, la viga conjugada, con los mismos puntos: A sin ningún enlace, un apoyo fijo en B y un apoyo móvil en C. En AB lleva una carga triangular hacia arriba, máxima en A, con el rótulo menos qa cuadrado partido por 2EI; en BC, una carga parabólica hacia abajo, máxima en el centro, con el rótulo qa cuadrado partido por 8EI.</desc>
+  <text x="16" y="22" font-size="11" fill="var(--faint)">viga real</text>
+  <line x1="80" y1="74" x2="420" y2="74" stroke="var(--faint)" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <line x1="80" y1="52" x2="80" y2="96" stroke="var(--ink)" stroke-width="2"/>
+  <line x1="80" y1="54" x2="72" y2="61" stroke="var(--ink)" stroke-width="0.8"/>
+  <line x1="80" y1="61" x2="72" y2="68" stroke="var(--ink)" stroke-width="0.8"/>
+  <line x1="80" y1="68" x2="72" y2="75" stroke="var(--ink)" stroke-width="0.8"/>
+  <line x1="80" y1="75" x2="72" y2="82" stroke="var(--ink)" stroke-width="0.8"/>
+  <line x1="80" y1="82" x2="72" y2="89" stroke="var(--ink)" stroke-width="0.8"/>
+  <line x1="80" y1="89" x2="72" y2="96" stroke="var(--ink)" stroke-width="0.8"/>
+  <circle cx="250" cy="74" r="4.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3"/>
+  <path d="M420 77 L411 89 L429 89 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <circle cx="415" cy="92" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <circle cx="425" cy="92" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <line x1="407" y1="95.5" x2="433" y2="95.5" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="250" y1="44" x2="250" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M250 70 L247.8 65 L252.3 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="268.9" y1="44" x2="268.9" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M268.9 70 L266.6 65 L271.1 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="287.8" y1="44" x2="287.8" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M287.8 70 L285.5 65 L290 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="306.7" y1="44" x2="306.7" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M306.7 70 L304.4 65 L308.9 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="325.6" y1="44" x2="325.6" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M325.6 70 L323.3 65 L327.8 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="344.4" y1="44" x2="344.4" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M344.4 70 L342.2 65 L346.7 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="363.3" y1="44" x2="363.3" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M363.3 70 L361.1 65 L365.6 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="382.2" y1="44" x2="382.2" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M382.2 70 L380 65 L384.5 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="401.1" y1="44" x2="401.1" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M401.1 70 L398.9 65 L403.4 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <line x1="420" y1="44" x2="420" y2="65" stroke="var(--d2)" stroke-width="1"/>
+  <path d="M420 70 L417.8 65 L422.3 65 Z" fill="var(--d2)" stroke="var(--d2)" stroke-width="0.6"/>
+  <path d="M250 44 L254.3 44 L258.5 44 L262.8 44 L267 44 L271.3 44 L275.5 44 L279.8 44 L284 44 L288.3 44 L292.5 44 L296.8 44 L301 44 L305.3 44 L309.5 44 L313.8 44 L318 44 L322.3 44 L326.5 44 L330.8 44 L335 44 L339.3 44 L343.5 44 L347.8 44 L352 44 L356.3 44 L360.5 44 L364.8 44 L369 44 L373.3 44 L377.5 44 L381.8 44 L386 44 L390.3 44 L394.5 44 L398.8 44 L403 44 L407.3 44 L411.5 44 L415.8 44 L420 44" fill="none" stroke="var(--d2)" stroke-width="1"/>
+  <text x="335" y="36" font-size="12" text-anchor="middle" font-style="italic" fill="var(--d2-tinta)">q</text>
+  <text x="66" y="48" font-size="12" text-anchor="end" font-weight="600" fill="var(--ink)">A</text>
+  <text x="250" y="62" font-size="12" text-anchor="middle" font-weight="600" fill="var(--ink)">B</text>
+  <text x="434" y="70" font-size="12" font-weight="600" fill="var(--ink)">C</text>
+  <path d="M80 74 L84.3 74 L88.5 74.1 L92.8 74.3 L97 74.6 L101.3 74.9 L105.5 75.3 L109.8 75.7 L114 76.2 L118.3 76.8 L122.5 77.4 L126.8 78.1 L131 78.9 L135.3 79.7 L139.5 80.5 L143.8 81.4 L148 82.3 L152.3 83.3 L156.5 84.3 L160.8 85.4 L165 86.5 L169.3 87.6 L173.5 88.8 L177.8 90 L182 91.3 L186.3 92.6 L190.5 93.9 L194.8 95.2 L199 96.5 L203.3 97.9 L207.5 99.3 L211.8 100.7 L216 102.2 L220.3 103.6 L224.5 105.1 L228.8 106.5 L233 108 L237.3 109.5 L241.5 111 L245.8 112.5 L250 114 L254.2 113.2 L258.5 112.5 L262.8 111.7 L267 111 L271.3 110.2 L275.5 109.4 L279.8 108.7 L284 107.9 L288.3 107 L292.5 106.2 L296.8 105.4 L301 104.5 L305.3 103.7 L309.5 102.8 L313.8 101.9 L318 101 L322.3 100 L326.5 99.1 L330.8 98.1 L335 97.1 L339.3 96.1 L343.5 95.1 L347.8 94 L352 93 L356.3 91.9 L360.5 90.8 L364.8 89.7 L369 88.5 L373.3 87.4 L377.5 86.2 L381.8 85 L386 83.9 L390.3 82.7 L394.5 81.4 L398.8 80.2 L403 79 L407.3 77.7 L411.5 76.5 L415.8 75.2 L420 74" fill="none" stroke="var(--live)" stroke-width="2.4"/>
+  <line x1="236" y1="76" x2="236" y2="114" stroke="var(--ink)" stroke-width="0.9"/>
+  <path d="M236 76 L233.6 82 L238.4 82 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <path d="M236 114 L233.6 108 L238.4 108 Z" fill="var(--ink)" stroke="var(--ink)" stroke-width="0.6"/>
+  <text x="230" y="99" font-size="11" text-anchor="end" fill="var(--ink)">v<tspan dy="3.3" font-size="8.3">B</tspan></text>
+  <circle cx="250" cy="114" r="3" fill="var(--live)"/>
+  <line x1="80" y1="146" x2="250" y2="146" stroke="var(--faint)" stroke-width="0.9"/>
+  <path d="M80 146 L86 143.6 L86 148.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <path d="M250 146 L244 143.6 L244 148.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <text x="165" y="160" font-size="11" text-anchor="middle" font-style="italic" fill="var(--ink)">a</text>
+  <line x1="250" y1="146" x2="420" y2="146" stroke="var(--faint)" stroke-width="0.9"/>
+  <path d="M250 146 L256 143.6 L256 148.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <path d="M420 146 L414 143.6 L414 148.4 Z" fill="var(--faint)" stroke="var(--faint)" stroke-width="0.6"/>
+  <text x="335" y="160" font-size="11" text-anchor="middle" font-style="italic" fill="var(--ink)">a</text>
+  <text x="16" y="186" font-size="11" fill="var(--faint)">viga conjugada</text>
+  <rect x="80" y="229" width="340" height="6" fill="var(--faint)" fill-opacity="0.25" stroke="var(--ink)" stroke-width="1"/>
+  <text x="72" y="236" font-size="12" text-anchor="end" font-weight="600" fill="var(--ink)">A</text>
+  <text x="242" y="222" font-size="12" text-anchor="end" font-weight="600" fill="var(--ink)">B</text>
+  <text x="434" y="228" font-size="12" font-weight="600" fill="var(--ink)">C</text>
+  <line x1="80" y1="284" x2="80" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M80 236 L82.3 241 L77.8 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="104.3" y1="277.1" x2="104.3" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M104.3 236 L106.5 241 L102 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="128.6" y1="270.3" x2="128.6" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M128.6 236 L130.8 241 L126.3 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="152.9" y1="263.4" x2="152.9" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M152.9 236 L155.1 241 L150.6 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="177.1" y1="256.6" x2="177.1" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M177.1 236 L179.4 241 L174.9 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="201.4" y1="249.7" x2="201.4" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M201.4 236 L203.7 241 L199.2 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="225.7" y1="242.9" x2="225.7" y2="241" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M225.7 236 L228 241 L223.5 241 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <path d="M80 284 L84.3 282.8 L88.5 281.6 L92.8 280.4 L97 279.2 L101.3 278 L105.5 276.8 L109.8 275.6 L114 274.4 L118.3 273.2 L122.5 272 L126.8 270.8 L131 269.6 L135.3 268.4 L139.5 267.2 L143.8 266 L148 264.8 L152.3 263.6 L156.5 262.4 L160.8 261.2 L165 260 L169.3 258.8 L173.5 257.6 L177.8 256.4 L182 255.2 L186.3 254 L190.5 252.8 L194.8 251.6 L199 250.4 L203.3 249.2 L207.5 248 L211.8 246.8 L216 245.6 L220.3 244.4 L224.5 243.2 L228.8 242 L233 240.8 L237.3 239.6 L241.5 238.4 L245.8 237.2 L250 236" fill="none" stroke="var(--d1)" stroke-width="1"/>
+  <line x1="267" y1="223.7" x2="267" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M267 228 L264.8 223 L269.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="284" y1="220.3" x2="284" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M284 228 L281.8 223 L286.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="301" y1="217.9" x2="301" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M301 228 L298.8 223 L303.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="318" y1="216.5" x2="318" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M318 228 L315.8 223 L320.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="335" y1="216" x2="335" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M335 228 L332.8 223 L337.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="352" y1="216.5" x2="352" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M352 228 L349.8 223 L354.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="369" y1="217.9" x2="369" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M369 228 L366.8 223 L371.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="386" y1="220.3" x2="386" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M386 228 L383.8 223 L388.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <line x1="403" y1="223.7" x2="403" y2="223" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M403 228 L400.8 223 L405.3 223 Z" fill="var(--d1)" stroke="var(--d1)" stroke-width="0.6"/>
+  <path d="M250 228 L254.3 226.8 L258.5 225.7 L262.8 224.7 L267 223.7 L271.3 222.8 L275.5 221.9 L279.8 221.1 L284 220.3 L288.3 219.6 L292.5 219 L296.8 218.4 L301 217.9 L305.3 217.5 L309.5 217.1 L313.8 216.8 L318 216.5 L322.3 216.3 L326.5 216.1 L330.8 216 L335 216 L339.3 216 L343.5 216.1 L347.8 216.3 L352 216.5 L356.3 216.8 L360.5 217.1 L364.8 217.5 L369 217.9 L373.3 218.4 L377.5 219 L381.8 219.6 L386 220.3 L390.3 221.1 L394.5 221.9 L398.8 222.7 L403 223.7 L407.3 224.7 L411.5 225.7 L415.8 226.8 L420 228" fill="none" stroke="var(--d1)" stroke-width="1"/>
+  <path d="M250 235 L241 249 L259 249 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="237" y1="249" x2="263" y2="249" stroke="var(--ink)" stroke-width="1"/>
+  <line x1="238" y1="249" x2="242" y2="254" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="243" y1="249" x2="247" y2="254" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="248" y1="249" x2="252" y2="254" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="253" y1="249" x2="257" y2="254" stroke="var(--ink)" stroke-width="0.7"/>
+  <line x1="258" y1="249" x2="262" y2="254" stroke="var(--ink)" stroke-width="0.7"/>
+  <path d="M420 235 L411 247 L429 247 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>
+  <circle cx="415" cy="250" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <circle cx="425" cy="250" r="2.6" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.9"/>
+  <line x1="407" y1="253.5" x2="433" y2="253.5" stroke="var(--ink)" stroke-width="1"/>
+  <text x="84" y="298" font-size="11" fill="var(--d1)">−qa²/2EI</text>
+  <text x="335" y="210" font-size="11" text-anchor="middle" fill="var(--d1)">qa²/8EI</text>
+  <text x="185.4" y="298" font-size="11" fill="var(--d1)">q* = M/EI</text>
+</svg>
+<figcaption>
+
+Arriba, la viga del tema 7 con su elástica, a escala y exagerada: B baja
+<i>qa</i><sup>4</sup>/6<i>EI</i>, y en la rótula la elástica hace un pico,
+porque el giro a su izquierda, <i>qa</i><sup>3</sup>/4<i>EI</i>, no es el de
+su derecha, −<i>qa</i><sup>3</sup>/8<i>EI</i>. Abajo, su conjugada: el
+empotramiento A queda libre, la rótula B pasa a apoyo y el apoyo C sigue
+siendo apoyo. Se carga con <i>q</i>* = <i>M</i>/<i>EI</i>, también a escala:
+hacia arriba en AB, donde <i>M</i> es negativo, y hacia abajo en BC. Su
+cortante es el giro de la real, y su flector, la flecha.
+
+</figcaption>
+</figure>
+
+La viga de la figura es la del tema 7. En la conjugada, el tramo AB es un
+voladizo cargado hacia arriba con un triángulo de resultante $qa^{3}/4EI_z$,
+con su centro de gravedad a $2a/3$ de B. A
+la izquierda de B solo está esa carga, así que $T^{*}_{B} = qa^{3}/4EI_z$ y
+$M^{*}_{B} = (qa^{3}/4)(2a/3)/EI_z = qa^{4}/6EI_z$: el giro de AB en B y la
+flecha de B. El apoyo B de la conjugada da un salto en $T^{*}$, que es el salto
+de giro de la rótula: a la derecha, $\theta_B = -qa^{3}/8EI_z$.
+
+Los teoremas de Mohr están dentro: el equilibrio de fuerzas de la conjugada es
+el primer teorema, y el de momentos, el segundo (p. 13).
+
+<ErrorTipico titulo="La conjugada no tiene los enlaces de la real">
+Es lo primero que hay que escribir en los seis problemas que piden la viga
+conjugada, y todo lo demás depende de ello. Copiar los enlaces de la real da
+otra viga. El empotramiento pasa a extremo libre, el extremo libre a
+empotramiento, la rótula a apoyo y el apoyo intermedio a rótula; solo el
+apoyo de un extremo sigue igual. La conjugada de una viga isostática es
+isostática: si sale hiperestática o un mecanismo, algún enlace está mal.
+</ErrorTipico>
+
+<ErrorTipico titulo="En una rótula hay dos giros">
+El problema de la extraordinaria de 2014-2015 pide los ángulos de flexión
+en las secciones B y C, y B es una rótula: en B hay dos. El de la
+extraordinaria de 2016-2017 pide los «ángulos girados en la rótula C», y el
+del final de 2020-2021, «los ángulos girados en la rótula B»: en plural, el
+giro a la izquierda y el giro a la derecha, que son distintos. En la conjugada son la cortante a cada lado del apoyo que
+sustituye a la rótula, y su diferencia es la reacción de ese apoyo.
+</ErrorTipico>
+
+<ErrorTipico titulo="Doble diámetro no es doble inercia">
+El problema del segundo parcial de 2017-2018 y de su final es una pieza
+circular con dos diámetros, $d_2 = 2d_1$. La inercia de un círculo va con la
+cuarta potencia del diámetro, $I = \pi d^{4}/64$, así que $I_2 = 16\,I_1$, no
+$2\,I_1$. En la conjugada, $q^{*} = M/EI_z$ se divide por $16\,I_1$ en un
+tramo y por $I_1$ en el otro.
+</ErrorTipico>
+
+## Cómo se trabaja aquí
+
+El primero es un ejemplo de entrada nuestro: una viga apoyada en A y en B con
+un voladizo BC y una carga en la punta, de la que se piden el giro y la flecha
+de C con la viga conjugada. Se reconoce primero qué enlaces tiene la
+conjugada, se calculan el giro y la flecha con números y se ordena la
+resolución. Los distractores son los errores de este tema: tratar el voladizo
+como si estuviera empotrado en B, quedarse con el giro de B, cambiar el signo
+de $q^{*}$ y usar el coeficiente de la biapoyada que no es.
+
+## Lo que hay que llevar sabido
+
+- Convenio: $y$ y $v$ hacia abajo, $\theta = dv/dx$ positivo en sentido
+  horario, $M > 0$ si tracciona la fibra inferior.
+- $1/\rho = \kappa = M/EI_z$; $\rho\,d\theta = dx$; con estos ejes,
+  $d\theta/dx = -M/EI_z$.
+- Exacta: $v_{,xx}/\sqrt{1 - v_{,x}^{2}} = -M/EI_z$. Aproximada, la EDE:
+  $d^{2}v/dx^{2} = -M/EI_z$.
+- Condiciones: apoyo, $v = 0$; empotramiento, $v = 0$ y $\theta = 0$; entre
+  tramos, el mismo $v$ y el mismo $\theta$; rótula, el mismo $v$ y el giro
+  salta; apoyo elástico, $v = R/k$.
+- Voladizo con $P$: $PL^{2}/2EI_z$ y $PL^{3}/3EI_z$; con $q$: $qL^{3}/6EI_z$ y
+  $qL^{4}/8EI_z$. Biapoyada con $q$: $qL^{3}/24EI_z$ y $5qL^{4}/384EI_z$; con
+  $P$ en el centro: $PL^{2}/16EI_z$ y $PL^{3}/48EI_z$.
+- Singularidad: $-P\langle x - a\rangle$, $M_0\langle x - a\rangle^{0}$,
+  $-\tfrac{1}{2}q_0\langle x - a\rangle^{2}$,
+  $-\tfrac{1}{6}k\langle x - a\rangle^{3}$; la carga que se acaba se cierra
+  con la contraria.
+- Mohr: $\theta_A - \theta_B = S^{M_{A,B}}/EI_z$;
+  $\delta_{B,A} = Q^{M_{A,B}}_{B}/EI_z = v_A + \theta_A(\xi_B - \xi_A) - v_B$,
+  con $Q$ el momento estático respecto de B y $\xi$ la abscisa de cada punto.
+- Conjugada: $q^{*} = M/EI_z$, $T^{*} = \theta$, $M^{*} = v$. Empotramiento y
+  extremo libre se intercambian, rótula y apoyo intermedio también, el apoyo
+  de un extremo se queda.

@@ -46,12 +46,15 @@ export interface RespuestaDelFormato {
 }
 
 /** Dónde empieza un paréntesis que da la respuesta: detrás de «exacta», o
- *  uno que empieza por «vale». El índice que devuelve es el del «(». */
+ *  uno que empieza por «vale» o por «forma exacta». El índice que devuelve
+ *  es el del «(» que va primero: en «(forma exacta (3 + sqrt(3))/4)» es el
+ *  de fuera, y quitar el de dentro dejaba «(forma exacta/4)». */
 function parentesisConLaRespuesta(formato: string): number | null {
   const exacta = /exact\w*\s*\(/i.exec(formato);
-  if (exacta) return exacta.index + exacta[0].length - 1;
   const vale = /\(\s*vale\b/i.exec(formato);
-  return vale ? vale.index : null;
+  const forma = /\(\s*(?:en\s+)?(?:la\s+)?forma\s+exacta\b/i.exec(formato);
+  const abre = [exacta ? exacta.index + exacta[0].length - 1 : -1, vale ? vale.index : -1, forma ? forma.index : -1].filter((i) => i >= 0);
+  return abre.length ? Math.min(...abre) : null;
 }
 
 function sinParentesis(formato: string): string {

@@ -59,10 +59,14 @@ function apoyosConjugados(v: VigaRecta): { apoyos: ApoyoViga[]; rotulas: number[
      y móviles. Con dos empotramientos (una viga real con los dos extremos
      libres), la estática del tema 7 vería una reacción horizontal de más: la
      horizontal la fija el primero y los demás son deslizantes. Sin
-     empotramientos, todo son móviles, que con cargas verticales la estática
-     resuelve igual (la horizontal no trabaja). */
+     empotramientos (la biapoyada, la empotrada con rótula y apoyo), todo
+     serían móviles y la estática la vería como un mecanismo, aunque la
+     horizontal no trabaje: la fija el primer apoyo, que pasa a articulado. */
   const fijo = apoyos.findIndex((a) => a.tipo === 'empotramiento');
-  const conHorizontal = apoyos.map((a, k): ApoyoViga => (a.tipo === 'empotramiento' && k !== fijo ? { ...a, deslizante: true } : a));
+  const conHorizontal = apoyos.map((a, k): ApoyoViga => {
+    if (fijo === -1 && k === 0) return { x: a.x, tipo: 'articulado' };
+    return a.tipo === 'empotramiento' && k !== fijo ? { ...a, deslizante: true } : a;
+  });
   return { apoyos: conHorizontal, rotulas };
 }
 

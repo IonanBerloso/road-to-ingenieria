@@ -261,6 +261,49 @@ describe('isostáticas: lo mismo que estructura.ts, y la conjugada con rótulas'
     expect(el.theta(3, 'der') - el.theta(3, 'izq')).toBeCloseTo(el.saltos[0], 12);
   });
 
+  it('sin ningún empotramiento en la conjugada: biapoyada con q, θA = qL³/24EI y v(L/2) = 5qL⁴/384EI', () => {
+    /* los dos apoyos extremos pasan a móviles: alguno tiene que fijar la horizontal */
+    const q = 3;
+    const L = 4;
+    const v: VigaRecta = {
+      L,
+      apoyos: [
+        { x: 0, tipo: 'articulado' },
+        { x: L, tipo: 'movil' },
+      ],
+      cargas: [{ tipo: 'repartida', x1: 0, x2: L, q1: q, q2: q }],
+    };
+    const c = vigaConjugada(v, EI, [L / 2]);
+    expect(c.theta(0, 'der')).toBeCloseTo((q * L ** 3) / (24 * EI), 12);
+    expect(c.theta(L, 'izq')).toBeCloseTo((-q * L ** 3) / (24 * EI), 12);
+    expect(c.v(L / 2)).toBeCloseTo((5 * q * L ** 4) / (384 * EI), 12);
+  });
+
+  it('sin ningún empotramiento en la conjugada: empotrada, rótula y apoyo, lo mismo que la elástica', () => {
+    /* empotrada en 0, rótula en 3, apoyo en 5: la conjugada, libre en 0, con apoyo en 3 y en 5 */
+    const v: VigaRecta = {
+      L: 5,
+      apoyos: [
+        { x: 0, tipo: 'empotramiento' },
+        { x: 5, tipo: 'movil' },
+      ],
+      rotulas: [3],
+      cargas: [
+        { tipo: 'repartida', x1: 1, x2: 4, q1: 2, q2: 5 },
+        { tipo: 'puntual', x: 4.5, P: 3 },
+      ],
+    };
+    const el = resuelveElastica({ L: v.L, EI, apoyos: v.apoyos, rotulas: v.rotulas, cargas: v.cargas });
+    const xs = [1.5, 3, 4, 5];
+    const c = vigaConjugada(v, EI, xs);
+    expect(c.conjugada.apoyos.some((a) => a.tipo === 'empotramiento')).toBe(false);
+    for (const x of xs) {
+      expect(c.v(x)).toBeCloseTo(el.v(x), 9);
+      expect(c.theta(x, 'izq')).toBeCloseTo(el.theta(x, 'izq'), 9);
+      expect(c.theta(x, 'der')).toBeCloseTo(el.theta(x, 'der'), 9);
+    }
+  });
+
   it('un empotramiento intermedio no tiene conjugado en la figura 10.9', () => {
     const v: VigaRecta = {
       L: 6,

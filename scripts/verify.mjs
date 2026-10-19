@@ -518,6 +518,11 @@ console.log('\nContenido');
       for (const m of leer(f).matchAll(/id:\s*(ex[a-z0-9-]+)/g)) enlazados.add(m[1]);
     }
     const sueltas = [];
+    /* Las que declaran `sinRuta` en su examen.yaml: la ruta que las cubriría
+       no está escrita (content.config.ts). Se avisa de cada una; si alguna
+       ruta ya la enlaza, el `sinRuta` sobra y se para. */
+    const declaradas = [];
+    const sobranDeclaradas = [];
     let convocatorias = 0;
     let conAlguno = 0;
     let sinRuta = 0;
@@ -538,14 +543,29 @@ console.log('\nContenido');
         if (!existsSync(yamlExamen)) continue;
         if (!tieneRuta) { sinRuta++; continue; }
         convocatorias++;
-        const ids = [...leer(yamlExamen).matchAll(/id:\s*(ex[a-z0-9-]+)/g)].map((m) => m[1]);
-        if (ids.some((x) => enlazados.has(x))) conAlguno++;
+        const texto = leer(yamlExamen);
+        const ids = [...texto.matchAll(/id:\s*(ex[a-z0-9-]+)/g)].map((m) => m[1]);
+        const enlazada = ids.some((x) => enlazados.has(x));
+        if (/^sinRuta:/m.test(texto)) {
+          if (enlazada) sobranDeclaradas.push(`${asignatura}/${d}`);
+          else declaradas.push(`${asignatura}/${d}`);
+        } else if (enlazada) conAlguno++;
         else sueltas.push(`${asignatura}/${d} — sus ${ids.length} ejercicios no los enlaza ninguna ruta`);
       }
     }
+    if (declaradas.length) {
+      aviso(
+        'Convocatorias que declaran `sinRuta`: su ruta no está escrita',
+        declaradas.join(', '),
+      );
+    }
+    if (sobranDeclaradas.length) {
+      fallo('Convocatorias con `sinRuta` que una ruta ya enlaza: el `sinRuta` sobra', sobranDeclaradas.join(', '));
+    }
     const cola = sinRuta ? ` (${sinRuta} más en asignaturas que aún no tienen ruta)` : '';
     if (sueltas.length === 0) {
-      ok(`toda convocatoria tiene ejercicios en alguna ruta: ${conAlguno} de ${convocatorias}${cola}`);
+      const conSinRuta = declaradas.length ? `, y ${declaradas.length} con \`sinRuta\`` : '';
+      ok(`toda convocatoria tiene ejercicios en alguna ruta: ${conAlguno} de ${convocatorias - declaradas.length}${conSinRuta}${cola}`);
     } else {
       fallo(
         'Hay convocatorias enteras a las que ninguna ruta lleva',

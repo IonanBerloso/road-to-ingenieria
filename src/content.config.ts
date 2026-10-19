@@ -1659,6 +1659,16 @@ const examen = defineCollection({
        *  versión que ve el alumno, y la página tiene que decirlo en vez de
        *  dejar el hueco del botón sin explicar. */
       sinPdf: z.string().min(40).optional(),
+      /** Por qué ninguna ruta enlaza todavía esta convocatoria, cuando no la
+       *  enlaza ninguna. `verify` para una convocatoria a la que no lleva
+       *  ninguna ruta, porque suele ser un descuido; esto es para cuando no
+       *  lo es: la ruta que la cubriría no está escrita todavía.
+       *
+       *  Entra el 20 de octubre de 2026 con la 2.ª parte de enero de 2023 de
+       *  Elasticidad, entera del bloque II, cuando la única ruta de la
+       *  asignatura era la del parcial 1. Se quita al escribir la ruta:
+       *  `verify` avisa de cada una y para si alguna ruta ya la enlaza. */
+      sinRuta: z.string().min(40).optional(),
       /** QUÉ es ese PDF, porque no es lo mismo en todas las asignaturas y el
        *  sitio llevaba meses diciendo que sí.
        *

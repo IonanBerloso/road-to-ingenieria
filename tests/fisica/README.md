@@ -4,7 +4,7 @@ Todo simulador con física dentro lleva aquí al menos un caso con resultado
 conocido. Nunca se ajusta una constante para que salga el número esperado
 (CLAUDE.md §10).
 
-**Diez ficheros en la raíz, dieciocho en `erm/` y 527 casos**: nueve simuladores y las
+**Diez ficheros en la raíz, dieciocho en `erm/` y 529 casos**: nueve simuladores y las
 tablas de vapor, y el motor de Elasticidad y Resistencia de Materiales (los dos bloques). La cifra la da
 `node scripts/deuda.mjs`, que desde el 13 de septiembre de 2026 la compara con
 la que hay escrita aquí: esta línea llegó a decir «cinco ficheros y 86 casos»
