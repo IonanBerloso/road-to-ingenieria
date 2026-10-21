@@ -82,6 +82,67 @@ debate apenas cambia nada. Copiar el examen del año anterior es la peor
 estrategia en siete de las ocho rondas. Solo gana en la piloto, 2025-2026, que
 repitió la plantilla de 2024-2025.
 
+## La primera ronda de verdad: el 19 de octubre de 2026
+
+El examen se etiquetó el 21 de octubre de 2026. Lo hicieron dos etiquetadores a
+ciegas, que leyeron solo el examen y la lista, sin las predicciones ni el
+historial. Coincidieron en los 42 rasgos y no hizo falta juez. El examen tuvo 16
+rasgos, ninguno nuevo, así que cuentan los 42. Las selladas siguen con su sha256.
+`ronda-2026-2027-predicciones.json` solo las junta en la forma que lee el
+marcador, sin cambiar ninguna cifra.
+
+| concursante | Brier | habilidad | tras el debate |
+|---|---|---|---|
+| banco-grande | 0,172 | +0,11 | 0,174 |
+| consenso | 0,179 | +0,08 | 0,178 |
+| estructuralista | 0,179 | +0,07 | 0,177 |
+| régimen | 0,179 | +0,07 | 0,179 |
+| reciente | 0,181 | +0,06 | 0,180 |
+| lo-que-toca | 0,182 | +0,06 | 0,179 |
+| Claude | 0,183 | +0,06 | — |
+| escéptico | 0,184 | +0,05 | 0,181 |
+| frecuentista | 0,190 | +0,02 | 0,185 |
+| *frecuencia (guion)* | 0,194 | 0 | |
+| *el de ayer (guion)* | 0,273 | −0,41 | |
+
+- **Lo mismo que en la pretemporada.** Todos mejoran un poco a contar
+  frecuencias, y entre ellos no se distinguen. banco-grande gana por 0,006,
+  pero tres rasgos fueron dudosos (abajo). Si esos tres se ponen a 0, el orden
+  se baraja entero y los nueve quedan entre 0,142 y 0,153. El de ayer vuelve a
+  ser el peor.
+- **Haber visto los once exámenes no le sirvió a Claude.** Queda séptimo de
+  nueve, con la habilidad de reciente y de lo-que-toca.
+- **El esqueleto se acertó.** El consenso daba entre 0,66 y 0,96 a los cuatro
+  rasgos del esqueleto, y salieron los cuatro: una región con desigualdades,
+  cuatro ejercicios, una propiedad general de sucesiones y una serie.
+- **Lo que costó fue el relleno.** El examen volvió a variantes de otros años
+  que casi nadie esperaba. Entre paréntesis, la probabilidad del consenso y la
+  última vez que había salido:
+  - la ecuación con $e^{iz}$ (0,12; 2020-2021);
+  - el crecimiento de una sucesión (0,21; 2022-2023);
+  - un módulo y una parte real en la misma condición (0,24);
+  - un complejo en forma exponencial (0,24);
+  - la pregunta de si algo tiene que ser cierto (0,26);
+  - la llave por paridad (0,28);
+  - la propiedad con dos sucesiones (0,30);
+  - la serie geométrica (0,32).
+
+  Y hubo una falsa alarma: la suma de la serie (0,70). El examen solo pregunta
+  si converge.
+- **Se parece más a 2023-2024 que al del año pasado.** Coincide con 2023-2024
+  en 31 de los 42 rasgos, y con 2025-2026 en 27.
+
+Los tres dudosos los decidieron igual los dos etiquetadores, y los motivos están
+en `etiquetas-2026-2027-1ev.json`:
+
+- `region-modulo-y-re-im`: la condición lleva Re(iz), no Re(z). Cuenta, porque
+  Re(iz) = −Im z y el lugar es una parábola.
+- `demo-verdadero-o-falso`: «¿deben ser convergentes?» no es literalmente
+  «necesariamente…», pero lo significa. La versión en euskera dice
+  «derrigorrez», que es «necesariamente».
+- `sucesiones-a-trozos`: la llave por paridad cumple la regla, aunque $x_n$ e
+  $y_n$ son genéricas y la definición habla de una sucesión concreta.
+
 ## Después de cada examen
 
 1. Etiquetar el examen nuevo con la misma lista y las mismas reglas, y añadirlo
@@ -106,3 +167,8 @@ solo se mide en las rondas que no la inspiraron.
   Code (usa `agent`, `parallel` y `pipeline`), no un programa de Node.
 - `pretemporada-predicciones.json` y `pretemporada-marcador.json`: las 126
   predicciones de la pretemporada y su puntuación.
+- `etiquetas-2026-2027-1ev.json`: las etiquetas de los dos etiquetadores para
+  el examen del 19 de octubre de 2026, rasgo a rasgo y con su motivo.
+- `ronda-2026-2027-predicciones.json` y `ronda-2026-2027-marcador.json`: las
+  17 predicciones selladas, juntas en la forma que lee `puntua.mjs`, y su
+  puntuación.
