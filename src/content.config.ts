@@ -1790,6 +1790,30 @@ const examen = defineCollection({
         )
         .default([]),
       /**
+       * Una hoja entera del cuadernillo que no nos ha llegado: «la hoja de
+       * problemas».
+       *
+       * POR QUÉ EXISTE. `fuera` declara ejercicios por su número, y eso
+       * supone saber cuántos hay. El parcial de Elasticidad del 31 de
+       * octubre de 2025 llegó en una foto de su hoja de teoría, sin la de
+       * problemas: no se sabe cuántos problemas traía ni cuánto valían.
+       * Declararlos con un `n` y unos puntos inventados publicaría como dato
+       * lo que no lo es (§10), y sin nada la página decía «resueltos
+       * enteros» de un examen al que le falta media mitad (§15). Encontrado
+       * en la revisión rev-p9h, el 22 de octubre de 2026.
+       *
+       * Con `faltaHoja` la convocatoria no cuenta como entera en ningún
+       * sitio, y su página lo dice en su propia caja.
+       */
+      faltaHoja: z
+        .object({
+          /** Qué hoja falta, como se diría en una frase: «la hoja de problemas». */
+          hoja: z.string().min(5).max(60),
+          /** Por qué falta y qué se sabe de ella. */
+          motivo: z.string().min(40),
+        })
+        .optional(),
+      /**
        * La duración que imprime el propio cuadernillo, cuando la imprime.
        *
        * POR QUÉ, SI YA ESTÁ `duracionDelExamen` EN EL CATÁLOGO. Aquello es una

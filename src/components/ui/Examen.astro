@@ -102,6 +102,8 @@ interface Props {
   duracionImpresa?: { minutos: number; fuente: string; impresa?: boolean };
   /** Por qué no hay PDF, cuando no lo hay (`sinPdf` en su `examen.yaml`). */
   sinPdf?: string;
+  /** Una hoja entera del cuadernillo que no ha llegado (`faltaHoja`). */
+  faltaHoja?: { hoja: string; motivo: string };
   /** Por qué una hoja de examen no tiene fecha ni curso (`sinFecha`). */
   sinFecha?: string;
   /** Lo que vale cada ejercicio según el cuadernillo, por su número, cuando
@@ -123,6 +125,7 @@ const {
   ruta,
   ejercicios,
   fuera,
+  faltaHoja,
   minutosPorEjercicio,
   minutosExigente,
   duracionImpresa,
@@ -190,6 +193,7 @@ const conUnidad = (p: number, corto = false) =>
 const unidad = piezas > propios ? 'piezas' : 'ejercicios';
 
 const sinPdfHtml = sinPdf ? await mate(sinPdf, 'sin-pdf') : '';
+const faltaHojaHtml = faltaHoja ? await mate(faltaHoja.motivo, 'falta-hoja') : '';
 const sinFechaHtml = sinFecha ? await mate(sinFecha, 'sin-fecha') : '';
 
 /* La duración, dicha como se dice en voz alta: «2 h», «2 h 30 min», «30 min».
@@ -484,6 +488,13 @@ const fueraHtml = await Promise.all(
           ))}
           <output class="s-partes-total" data-partes-total aria-live="polite"></output>
         </form>
+      )}
+
+      {faltaHoja && (
+        <div class="aviso aviso--flag faltan">
+          <p class="rotulo f-tit">Falta {faltaHoja.hoja} del cuadernillo</p>
+          <div class="prosa" set:html={faltaHojaHtml} />
+        </div>
       )}
 
       {fuera.length > 0 && (

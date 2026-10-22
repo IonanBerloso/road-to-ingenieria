@@ -241,7 +241,11 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
   descripcion={examen.data.propio
     ? `${examen.data.propio.titulo}, de ${asignatura.data.nombre}: ${ejercicios.length} ejercicios del curso con reloj, montados por nosotros y resueltos paso a paso.`
     : `Los ${ejerciciosDelCuadernillo(examen.data.ejercicios)} ejercicios de la ${conv} de ${asignatura.data.nombre}${examen.data.curso ? ` del curso ${examen.data.curso}` : examen.data.hoja ? ` número ${examen.data.hoja}` : ''}, ${
-    examen.data.fuera.length === 0 ? 'resueltos enteros' : 'con lo que falta dicho ejercicio por ejercicio'
+    examen.data.faltaHoja
+      ? `sin ${examen.data.faltaHoja.hoja}, que no nos ha llegado`
+      : examen.data.fuera.length === 0
+        ? 'resueltos enteros'
+        : 'con lo que falta dicho ejercicio por ejercicio'
   }${ejercicios.some((e) => e.puntos) || examen.data.puntosImpresos ? ' y con el reparto de puntos del examen' : ''}.`}
   acento={asignatura.data.acento}
 >
@@ -259,6 +263,7 @@ const pdfs = cuadernillos.map((c: { nombre: string; kb: number }, i: number) => 
       ruta={suRuta ? { href: ruta(`${asignatura.id}/preparar/${suRuta.sufijo}/`), titulo: suRuta.titulo } : null}
       ejercicios={ejercicios}
       fuera={examen.data.fuera}
+      faltaHoja={examen.data.faltaHoja}
       minutosPorEjercicio={asignatura.data.duracionDelExamen?.minutosPorEjercicio}
       minutosExigente={asignatura.data.duracionDelExamen?.exigente}
       duracionImpresa={examen.data.duracion}
