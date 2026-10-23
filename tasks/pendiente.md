@@ -102,47 +102,43 @@ sabía:
   evaluación, etiquetarlo con la lista y las reglas de
   `campeonato/calculo-1ev/`, puntuar las dos predicciones selladas y publicar
   la clasificación (los pasos, en su README).
-- **Elasticidad, hasta el 30 de octubre de 2026**: la hoja de antes de
-  entrar, los parciales de 2016-2017 y 2017-2018, siete ejercicios de
-  práctica del boletín de clase (barras, tensor y galgas) y seis ejemplos
-  nuestros (una holgura, las dos barras, el vector tensión, las principales
-  y las tensiones de la roseta) entraron el 15 de octubre, y la ruta enlaza
-  el formulario en una página, que ya existía. Queda abierto un `falta`:
-  práctica para las dos barras en paralelo y la barra que no puede
-  alargarse, que el boletín no trae. Los parciales 1 de 2015-2016 a
-  2012-2013, los cuatro que faltaban, entraron el 15, fuera de la ventana de
-  medida (llegan a la flexión) y con sus ejercicios de los temas 2 a 8 en los
-  escalones. Quedan sin tocar a propósito el título y el `pide` del bloque de
-  diagramas, que solo hablan de la Gerber aunque ahora empiece por la
-  rebanada, y el `dominio` de la pieza rígida, que dice «dos barras» cuando
-  dos de sus problemas tienen tres.
+- **Elasticidad, el 30 de octubre de 2026**: desde el 23, la ruta del
+  parcial 1 está en los temas 1 a 6, que es lo que entra este curso. Queda
+  abierto un `falta`: no hay un parcial entero solo de esos temas.
 
-### Terminar Elasticidad (desde el 15 de octubre de 2026)
+### Elasticidad, terminada el 23 de octubre de 2026
 
-Ionan, el 15: «el objetivo claro es terminar elasti». Va por delante de
-Expresión Gráfica. El plan por fases, con su estado, está en la carpeta de
-trabajo de la fase P (`fase-p/PLAN-terminar.md`, fuera del repositorio):
+Quien mantiene el proyecto, el 15: «el objetivo claro es terminar elasti».
+De `fase-p/PLAN-terminar.md` (fuera del repositorio) está hecho lo que pide
+§15: los catorce temas, 31 convocatorias, una ruta para cada examen y la
+evaluación de la guía docente en el catálogo. No está hecho todo el plan,
+pero **nada de lo que queda es importante**: el 23 de octubre se decidió
+cerrarla así, con lo que falta apuntado. Queda:
 
-- **P6**, hasta el 23 de octubre: los ejemplos que faltan en la ruta del
-  parcial 1 y los cuatro parciales 1 que no estaban (2012-2013 a 2015-2016),
-  hechos el 15; y la práctica de clase de los temas 2 a 8 que falta: 36 ejercicios, todos
-  menos los ya publicados y los que son copia de una pregunta de examen, que
-  entran con su examen. Cada tema tenía uno a cuatro ejemplos y como mucho
-  dos de clase.
-- **P7**, hecho el 15: el motor del bloque II en `src/lib/erm/` (flexión,
-  deformaciones, hiperestática, torsión, energéticos, pandeo), con 338
-  pruebas y un examen real de 2.ª parte por tema. Las ecs. 12.15 y
-  12.19-12.20 de los apuntes traen una errata (el motor usa la buena: la
-  prosa del tema 12 tiene que decirlo), y los apuntes no traen método de
-  pieza corta: el motor da σe·A, como la diapositiva.
-- **P8**: la prosa de t01 y de t09 a t14, cada uno con ejemplo y figura, y
-  después su práctica de clase (32 ejercicios). Los de clase 10.1, 10.2, los
-  seis del 11 y siete del 12 solo están como `.php` de eGela: se le han
-  pedido a Ionan en PDF.
-- **P9**: las 41 convocatorias que faltan y el simulacro: enero (2.ª parte y
-  final juntas), extraordinarias, plan viejo.
-- **P10**: las rutas del parcial 2, la final de enero y la extraordinaria.
-- **P11**: la guía docente en el catálogo, `estado: ok` y el suelo en verde.
+- **La práctica de clase de P8**: los ejercicios 1.1 a 1.12, 9.1 a 9.8, 10.3
+  a 10.6, 12.3 y 13.1 a 13.7 (32), y las cuestiones de autoevaluación de los
+  temas 9 a 14. De los temas 1 y 9 a 14 solo está su ejemplo de entrada.
+- **Los ejercicios que solo están como `.php` de eGela** (10.1, 10.2, 11.1 a
+  11.6 y siete del 12): hay que pedirlos en PDF. Sin ellos, el tema 11 se
+  queda sin práctica de clase.
+- **El curso**: la guía dice 3.º y el catálogo, 2.º. Se queda así por
+  decisión del 22 de octubre («no te esfuerces por ahora en cambiar eso»);
+  cambiarlo pide tocar el esquema (`curso` solo admite 1 y 2).
+- **La portada**: sigue `boton`, como se decidió el 14 de octubre. El plan
+  preveía pasarla a la lista al cerrar; preguntar si se queda así.
+- Los `falta` de sus cuatro rutas y, si llega, el resto de la hoja de
+  problemas del primer parcial de 2025-2026 (el problema 3 llegó en foto y
+  está transcrito desde el 23 de octubre de 2026).
+- **Un problema suelto de un primer parcial que no tenemos** (llegó en foto
+  el 23 de octubre de 2026): el 4 (1p) de su hoja de problemas, un
+  transductor de par con una roseta en cortadura pura. Su cabecera dice
+  17/11/2023 en castellano y 2024/11/22 en euskera, así que no se sabe si es
+  de 2023-2024 o de 2024-2025. **No se hace hasta saber el curso**, por
+  decisión del 23 de octubre.
+
+Las convocatorias de enero y extraordinaria de 2012-2013 a 2015-2016 y las
+del plan viejo no son pendientes: quedan fuera por decisión del 22 de
+octubre («de 2016 para atrás no hagas nada»).
 
 ### La siguiente asignatura: Expresión Gráfica
 
@@ -318,9 +314,9 @@ daban por bloqueados salieron en la fase I: todos menos uno eran trabajo.
 - **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
   teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no
   esperan: son la fase H.
-- **Elasticidad**: la guía docente del curso, para que la página de la
-  asignatura diga «Cómo se aprueba» y tenga la calculadora de nota como las
-  demás. Se le ha pedido a quien la cursa (PDF de eGela o enlace de ehu.eus).
+- **Elasticidad**: el resto de la hoja de problemas del primer parcial de
+  2025-2026; de esa convocatoria solo están la de teoría y el problema 3. La traerá quien la cursa cuando
+  la tenga.
 
 Los guiones de las prácticas de Química ya no están aquí: esas prácticas se
 preparan en clase y el sitio no las cubre, por decisión del 27 de septiembre

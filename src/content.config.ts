@@ -1796,7 +1796,8 @@ const examen = defineCollection({
        * POR QUÉ EXISTE. `fuera` declara ejercicios por su número, y eso
        * supone saber cuántos hay. El parcial de Elasticidad del 31 de
        * octubre de 2025 llegó en una foto de su hoja de teoría, sin la de
-       * problemas: no se sabe cuántos problemas traía ni cuánto valían.
+       * problemas (de esa, el 23 de octubre de 2026 llegó solo el problema
+       * 3): no se sabe cuántos problemas traía ni cuánto valían.
        * Declararlos con un `n` y unos puntos inventados publicaría como dato
        * lo que no lo es (§10), y sin nada la página decía «resueltos
        * enteros» de un examen al que le falta media mitad (§15). Encontrado

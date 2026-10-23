@@ -16,15 +16,24 @@ Estado del proyecto medido sobre el repositorio, no recordado. Se regenera
 
 ## En una frase
 
-**Seis asignaturas terminadas de diez: Cálculo, Álgebra, Mecánica de Fluidos,
-Fundamentos Químicos, Ingeniería Térmica y Mecánica Aplicada.** Las seis
-cumplen §15 entera y las seis están en el catálogo como `ok`. Entre las seis,
-**146 convocatorias transcritas** —las 118 de las cuatro primeras, veinte de
-Térmica y ocho de Mecánica—, y el guardián de convocatorias huérfanas no
-cuenta ninguna suelta. Las que quedan fuera están declaradas con su motivo:
-dos de Térmica, íntegramente en euskera.
+**Siete asignaturas terminadas de diez: Cálculo, Álgebra, Mecánica de Fluidos,
+Fundamentos Químicos, Ingeniería Térmica, Mecánica Aplicada y, desde el 23 de
+octubre de 2026, Elasticidad y Resistencia de Materiales.** Las siete cumplen
+§15 entera y las siete están en el catálogo como `ok`. Entre las siete,
+**179 convocatorias transcritas** —las 120 de las cuatro primeras, veinte de
+Térmica, ocho de Mecánica y 31 de Elasticidad—, y el guardián de convocatorias
+huérfanas no cuenta ninguna suelta. Las que quedan fuera están declaradas con su motivo:
+dos de Térmica, íntegramente en euskera. De Elasticidad no se cuentan, por
+decisión del 22 de octubre de 2026, las de enero y extraordinaria de
+2012-2013 a 2015-2016 ni las del plan viejo: se dejaron fuera por antiguas, y
+el sitio no las nombra.
 
-**Y una séptima con contenido, Ciencia de Materiales, escrita entera y en
+> Hasta el 23 de octubre de 2026 este párrafo decía «146 convocatorias» y
+> «las 118 de las cuatro primeras». Contadas ese día carpeta a carpeta, las
+> cuatro primeras eran 120 y las seis, 148: la frase se había quedado
+> atrás sin que nada la mirara, que es lo que §16 avisa de esta sección.
+
+**Y otra con contenido, Ciencia de Materiales, escrita entera y en
 `obra`.** Sus diez temas y los 100 ejercicios de su colección están publicados
 desde el 12 de septiembre de 2026, pero no hay un solo examen de teoría y
 problemas entre su material, y sin exámenes no hay ruta que medir ni cierre
@@ -33,12 +42,32 @@ posible (§14, §15). El único examen que hay es el test de mínimos del tema
 simulador desde el 24 de septiembre de 2026. Lo que le falta
 es material, no trabajo; está más abajo, en su propia sección.
 
+**Elasticidad y Resistencia de Materiales se abrió el 14 de octubre de 2026
+y se cerró el 23**, con su primer parcial, el del 30 de octubre, por delante.
+Sus **catorce temas están escritos**, cada uno con su figura y su ejemplo de
+entrada; sus **31 convocatorias**, de 2012-2013 a 2025-2026 —antes de
+2016-2017, solo los primeros parciales—, están transcritas
+y resueltas, salvo los problemas del primer parcial de 2025-2026 que no están
+entre el material: de su hoja de problemas solo ha llegado el 3; y tiene
+**una ruta para cada examen**: el parcial 1,
+que este curso solo entra en los temas 1 a 6, el parcial 2, que es la segunda
+parte de enero, la final de enero
+y la extraordinaria. No tiene simuladores: su motor de cálculo,
+`src/lib/erm/`, se prueba en los dieciocho ficheros de `tests/fisica/erm/`.
+En la portada sigue saliendo solo como botón del héroe, por decisión de quien
+mantiene el proyecto. **Le faltan cosas, pero ninguna importante**, y se
+cerró así a sabiendas el 23 de octubre: la práctica de clase de los temas 1
+y 9 a 14, los ejercicios que solo están como `.php` de eGela, los problemas
+sueltos que llegan en foto (uno, el del transductor, espera a saber de qué
+curso es), los `falta` de sus rutas y el curso, que el catálogo da como 2.º y
+la guía como 3.º. La lista está en `tasks/pendiente.md`.
+
 **Mecánica Aplicada se abrió el 12 de septiembre de 2026 y se cerró el 13**,
 que es lo más rápido que ha ido una asignatura en este proyecto. Sus **doce
 temas están escritos** —prosa, figura y dos ejemplos propios cada uno—, sus
-**cinco de sus ocho convocatorias** están transcritas con su
-PDF —enero de 2024, la ordinaria y la extraordinaria de 2025, y desde el 27 de
-septiembre de 2026 las dos de estática de 2019: todas las del bloque 1— y **las doce colecciones están enteras**: 250 ejercicios con su
+**ocho convocatorias** están transcritas con su PDF —las cinco del bloque
+1 y las tres del bloque 2; las cinco bilingües, desde el 27 de septiembre de
+2026— y **las doce colecciones están enteras**: 250 ejercicios con su
 figura redibujada. Estrena además **tres simuladores** —la viga y sus
 diagramas, el centro instantáneo y la catenaria contra la parábola—, cada uno
 con su modelo probado, y sus respuestas de examen recalculadas aparte, en
@@ -371,8 +400,9 @@ predicciones selladas, vive en `campeonato/calculo-1ev/`.
 
 ## Rutas de estudio
 
-Las diecisiete, no solo las de Cálculo. Recontadas el 28 de septiembre de 2026;
-la de Elasticidad entra el 15 de octubre, y hasta ese día esta frase decía
+Las veinte, no solo las de Cálculo; las tres últimas, de Elasticidad,
+entraron el 23 de octubre de 2026. Recontadas el 28 de septiembre de 2026;
+la primera de Elasticidad, la del parcial 1, entra el 15 de octubre, y hasta ese día esta frase decía
 «las quince» encima de una tabla que ya tenía dieciséis.
 Desde el 13 `node scripts/deuda.mjs` §10 compara la fila de totales con lo
 que hay —entre el 10 y el 13 esta tabla se quedó sin las dos rutas de Mecánica
@@ -381,9 +411,11 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 139 declarados, **46 están tachados**
-y los **93** restantes siguen abiertos. De Elasticidad queda uno, abierto el 23
-de octubre de 2026, cuando la ruta del parcial se dejó en los temas 1 a 6: no
+documental pero infla el recuento. De los 172 declarados, **46 están tachados**
+y los **126** restantes siguen abiertos. De Elasticidad quedan 34: los
+10 de la ruta del segundo parcial, los 10 de la de la final de enero y los
+13 de la de la extraordinaria, que entraron abiertos el 23 de octubre de 2026,
+y uno de la del primero, abierto ese mismo día, cuando la ruta del parcial se dejó en los temas 1 a 6: no
 hay un parcial entero solo de esos temas. Ese día se fueron de la ruta, con sus
 bloques, los ocho tachados de las barras, los diagramas y los depósitos. Hasta
 entonces no quedaba ninguno: el 15
@@ -402,7 +434,7 @@ del tema 7 también: el escalón de las tensiones a los esfuerzos se tachó con
 la cuestión 6 de autoevaluación. Ese mismo día se tacharon los dos que
 quedaban con tres ejercicios nuestros: un ejemplo de la rebanada y dos de
 práctica para los escalones de barras. El
-15 de octubre esta frase decía 34 y la fila de Térmica 2 abiertos: uno se
+15 de octubre el total de abiertos decía 34 y la fila de Térmica 2 abiertos: uno se
 tachó sin que la tabla se enterara, porque esta columna no la vigila nada. La fila de la 1.ª evaluación de Cálculo
 decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 
@@ -418,6 +450,9 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
 | Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
 | Elasticidad | 1.er parcial | 8 | 16 | 6 | 1 / 12 |
+| Elasticidad | 2.º parcial | 13 | 29 | 6 | 10 / 10 |
+| Elasticidad | extraordinaria | 18 | 33 | 7 | 13 / 13 |
+| Elasticidad | ordinaria | 17 | 36 | 7 | 10 / 10 |
 | Expresión Gráfica | control del 1.er cuatrimestre | 8 | 19 | 4 (hojas sin fecha) | 3 / 3 |
 | Fluidos | ordinaria | 15 | 57 | 11 | 16 / 22 |
 | Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
@@ -425,7 +460,7 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Química | 1.er cuatrimestre | 8 | 21 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 21 | 3 | 12 / 12 |
 | Térmica | ordinaria | 7 | 21 | 17 | 1 / 7 |
-| **total** | **17 rutas** | **149** | **399** | — | **93 / 139** |
+| **total** | **20 rutas** | **197** | **497** | — | **126 / 172** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19
@@ -985,13 +1020,14 @@ que la auditoría del 13 de septiembre marcó como el hueco no declarado de esta
 asignatura.
 
 **Las que quedan sin abrir.** El estado de cada asignatura lo decide
-`src/content/catalogo/*.json` y no esta página: al 14 de octubre de 2026 son
-seis en `ok`, cuatro en `obra` —Materiales, Sistemas de Producción, Expresión
+`src/content/catalogo/*.json` y no esta página: al 23 de octubre de 2026 son
+siete en `ok`, tres en `obra` —Materiales, Sistemas de Producción y Expresión
 Gráfica, con su temario y su evaluación copiados de la guía desde el 26 de
-septiembre, y, desde el 14 de octubre, Elasticidad y Resistencia de Materiales,
-abierta para su parcial 1— y ninguna en `prev`. Hasta ese día decía «tres en
-`obra`», con fecha del 26 de septiembre; antes, «una sola en `prev`», con fecha
-del 13.
+septiembre— y ninguna en `prev`. La séptima en `ok` es Elasticidad y
+Resistencia de Materiales, abierta el 14 de octubre para su parcial 1 y
+cerrada el 23. Hasta ese día decía «seis en `ok` y cuatro en `obra`», con
+fecha del 14 de octubre; antes, «tres en `obra`», con fecha del 26 de
+septiembre, y «una sola en `prev`», con fecha del 13.
 
 > Aquí ponía «**las otras tres** siguen en `prev`, con cero contenido:
 > Expresión Gráfica, Mecánica Aplicada y Sistemas de Producción», y era falso

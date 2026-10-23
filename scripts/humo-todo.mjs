@@ -119,11 +119,19 @@ try {
 
   /* El guardián que `humo.mjs` no puede aplicar cuando mira una sola: que
      ninguna asignatura con páginas construidas se quede sin tanda. Aquí sí se
-     puede, porque aquí se ve la lista entera. */
+     puede, porque aquí se ve la lista entera.
+
+     Cuentan las páginas de contenido —tema, examen, ruta o formulario, la
+     misma forma que filtra `asignaturas()`—, no la de la asignatura sola.
+     Sistemas de Producción tiene construida su página y nada más, y con el
+     guardián mirando solo la carpeta la barrida no arrancaba: lo vio el
+     cierre de Elasticidad, el 23 de octubre de 2026. */
+  const deContenido = /^(t\d{2}-|examenes$|preparar$|formulario$)/;
   const conContenido = readdirSync(join(ROOT, 'src', 'content', 'catalogo'))
     .filter((n) => n.endsWith('.json'))
     .map((n) => n.replace(/\.json$/, ''))
-    .filter((a) => existsSync(join(ROOT, 'dist', a)));
+    .filter((a) => existsSync(join(ROOT, 'dist', a)))
+    .filter((a) => readdirSync(join(ROOT, 'dist', a)).some((n) => deContenido.test(n)));
   const sinTanda = conContenido.filter((a) => !slugs.includes(a));
   if (sinTanda.length) {
     throw new Error(

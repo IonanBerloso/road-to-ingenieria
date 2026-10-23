@@ -155,6 +155,16 @@ Ionan: lo dice su catálogo (`portada: 'boton'`) y lo comprueba `verify.mjs`.
 El botón abre su detalle, con el mismo diseño que el de las demás, aunque no
 tenga fila en la pizarra ni chip en los detalles de las otras.
 
+**Se cerró el 23 de octubre de 2026**, y pasó a `ok`: los catorce temas
+escritos, 31 convocatorias de 2012-2013 a 2025-2026 —del primer parcial de
+2025-2026, la hoja de teoría y el problema 3, que es lo que hay— y una ruta
+para cada examen: el parcial 1, el parcial 2 (la segunda parte de enero), la
+final de enero y la extraordinaria. Ese mismo día se confirmó que el parcial
+de este curso entra solo en los temas 1 a 6, como dice la guía docente, y la
+ruta del parcial 1 se rehízo para ellos. Se cerró a sabiendas con cosas por
+hacer, **ninguna importante** (decisión de quien mantiene el proyecto): están
+en `tasks/pendiente.md`, y no reabren la asignatura.
+
 ### El orden que queda
 
 Decidido por quien mantiene el proyecto, en septiembre de 2026: **Expresión

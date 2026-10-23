@@ -103,6 +103,20 @@ describe('Mecánica Aplicada, convocatoria ordinaria', () => {
   });
 });
 
+describe('Elasticidad y Resistencia de Materiales, convocatoria ordinaria', () => {
+  const m = modelo(modalidad('elasticidad-resistencia', 'Convocatoria ordinaria'));
+
+  it('con un 7 en la parte 1, la parte 2 pide su 5 aunque la media se conforme con un 3', () => {
+    const n = necesito(m, { elasticidad: 7 });
+    expect(n.nota).toBe(5);
+    expect(n.manda.tipo).toBe('minimo');
+  });
+
+  it('una parte por debajo de 5 suspende aunque la media llegue', () => {
+    expect(evalua(m, { elasticidad: 4, resistencia: 9 }).aprueba).toBe(false);
+  });
+});
+
 describe('Ingeniería Térmica, evaluación continua', () => {
   it('el 40 % del examen manda sobre la media', () => {
     const m = modelo(modalidad('ingenieria-termica', 'Evaluación continua'));

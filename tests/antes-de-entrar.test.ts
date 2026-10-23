@@ -115,3 +115,35 @@ describe('las tarjetas del primer parcial de Elasticidad', () => {
     expect(lectura(textos).minutos).toBeLessThanOrEqual(5);
   });
 });
+
+describe('las tarjetas del segundo parcial de Elasticidad', () => {
+  const ruta = yaml.load(
+    readFileSync(join(RAIZ, 'src', 'content', 'preparar', 'elasticidad-resistencia-2par.yaml'), 'utf8'),
+  ) as { bloques: Bloque[] };
+  const conTarjeta = tarjetas(ruta.bloques);
+
+  /* Los ocho huecos de la segunda parte, más los diagramas y los depósitos,
+     que este curso entran en ella; y nada más: el suelo del convenio, el
+     simulacro y el formulario no llevan tarjeta, como en el primer parcial. */
+  it('lleva una por cada hueco del examen', () => {
+    expect(conTarjeta.map((b) => b.id)).toEqual([
+      'diagramas',
+      'energia',
+      'hiperestatica',
+      'torsion',
+      'barras',
+      'cuestion-de-flexion',
+      'seccion',
+      'deformaciones',
+      'pandeo',
+      'depositos',
+    ]);
+  });
+
+  /* El mismo techo de cinco minutos. Entró con 991 palabras, a nueve del
+     techo: lo que se añada tiene que salir de recortar otra tarjeta. */
+  it('se leen enteras en cinco minutos como mucho', () => {
+    const textos = conTarjeta.flatMap((b) => textosDeLaTarjeta(b));
+    expect(lectura(textos).minutos).toBeLessThanOrEqual(5);
+  });
+});
