@@ -381,8 +381,12 @@ la columna de huecos no la vigila nada, y se había quedado atrás.
 
 La columna de huecos lleva **dos** números, y la diferencia importa: un
 `falta[]` resuelto se conserva tachado con su fecha, que es buena práctica
-documental pero infla el recuento. De los 146 declarados, **54 están tachados**
-y los **92** restantes siguen abiertos. De Elasticidad no queda ninguno: el 15
+documental pero infla el recuento. De los 139 declarados, **46 están tachados**
+y los **93** restantes siguen abiertos. De Elasticidad queda uno, abierto el 23
+de octubre de 2026, cuando la ruta del parcial se dejó en los temas 1 a 6: no
+hay un parcial entero solo de esos temas. Ese día se fueron de la ruta, con sus
+bloques, los ocho tachados de las barras, los diagramas y los depósitos. Hasta
+entonces no quedaba ninguno: el 15
 de octubre se cerraron los doce que traía (el último, el del formulario: la
 página ya existía y la ruta no la enlazaba), y se abrieron tres más
 pequeños, de escalones que empezaban por un ejercicio de clase o por el
@@ -413,7 +417,7 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Cálculo | 5.ª evaluación | 3 | 12 | 10 | 5 / 7 |
 | Cálculo | extraordinaria | 16 | 38 | 11 | 9 / 11 |
 | Cálculo | ordinaria | 15 | 37 | 11 | 9 / 12 |
-| Elasticidad | 1.er parcial | 11 | 25 | 6 | 0 / 19 |
+| Elasticidad | 1.er parcial | 8 | 16 | 6 | 1 / 12 |
 | Expresión Gráfica | control del 1.er cuatrimestre | 8 | 19 | 4 (hojas sin fecha) | 3 / 3 |
 | Fluidos | ordinaria | 15 | 57 | 11 | 16 / 22 |
 | Mecánica | 1.er cuatrimestre | 9 | 19 | 5 | 2 / 3 |
@@ -421,7 +425,7 @@ decía 6 abiertos de 6 con uno tachado desde el 15 de septiembre; son 5.
 | Química | 1.er cuatrimestre | 8 | 21 | 3 | 10 / 10 |
 | Química | 2.º cuatrimestre | 9 | 21 | 3 | 12 / 12 |
 | Térmica | ordinaria | 7 | 21 | 17 | 1 / 7 |
-| **total** | **17 rutas** | **152** | **408** | — | **92 / 146** |
+| **total** | **17 rutas** | **149** | **399** | — | **93 / 139** |
 
 > Esta tabla listaba **seis** rutas, todas de Cálculo, y tres de sus filas
 > estaban además desfasadas: la ordinaria figuraba con 8 bloques y 19

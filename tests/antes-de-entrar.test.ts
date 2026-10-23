@@ -92,25 +92,24 @@ describe('las tarjetas del primer parcial de Elasticidad', () => {
   ) as { bloques: Bloque[] };
   const conTarjeta = tarjetas(ruta.bloques);
 
-  /* Los ocho huecos del examen, y nada más. Con ocho la hoja ya está en su
-     techo de cinco minutos: una tarjeta para el suelo de convenios o para el
-     simulacro tendría que salir de recortar otra, no de subir el techo. */
+  /* Los cinco huecos del examen, y nada más. Eran ocho, y con ocho la hoja
+     ya estaba en su techo de cinco minutos; el 23 de octubre de 2026 salieron
+     las barras, los diagramas y los depósitos, porque el parcial de este
+     curso no entra en los temas 7 y 8. Una tarjeta para el suelo de
+     convenios o para el simulacro sigue teniendo que ganarse el sitio. */
   it('lleva una por cada hueco del examen', () => {
     expect(conTarjeta.map((b) => b.id)).toEqual([
-      'barras',
       'tensor',
       'galgas',
-      'diagramas',
       'deformaciones',
       'fallo',
       'hooke',
-      'depositos',
     ]);
   });
 
-  /* El mismo techo que en Cálculo, aunque aquí haya el doble de huecos: se
-     lee igual de pie en la puerta. Se recortó el 15 de octubre de 2026 para
-     caber, quitando palabras y lo que dos tarjetas repetían. */
+  /* El mismo techo que en Cálculo: se lee igual de pie en la puerta. Se
+     recortó el 15 de octubre de 2026 para caber, cuando eran ocho, quitando
+     palabras y lo que dos tarjetas repetían. */
   it('se leen enteras en cinco minutos como mucho', () => {
     const textos = conTarjeta.flatMap((b) => textosDeLaTarjeta(b));
     expect(lectura(textos).minutos).toBeLessThanOrEqual(5);
