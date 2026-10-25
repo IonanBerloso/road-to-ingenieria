@@ -1626,7 +1626,9 @@ simulación.
   deja entrar en `public/examenes/` enunciados oficiales —la de Térmica se
   publicó por una decisión expresa de Ionan, y esta no la tiene—. El
   enunciado se transcribe tal cual igual, y la página dice en el sitio del
-  botón por qué no hay PDF.
+  botón por qué no hay PDF. Desde el 23 de octubre de 2026 las veinte de
+  Térmica también van con `sinPdf`, hasta preguntar a su profesor si se
+  pueden publicar: un permiso del alumno no es el del autor.
 
 ---
 

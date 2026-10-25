@@ -97,8 +97,15 @@ enero de 2025, enero de 2026 y febrero de 2026.
 
 **Y ese hueco se cerró la madrugada del 11 de septiembre de 2026.** Las catorce
 que faltaban se montaron de una tanda, así que Térmica publica **veinte
-convocatorias de veintidós**, cada una con su PDF y con al menos un ejercicio
-resuelto paso a paso.
+convocatorias de veintidós**, cada una con al menos un ejercicio resuelto paso
+a paso.
+
+> **Desde el 23 de octubre de 2026 no sirve ninguno de esos veinte PDF.** El
+> 27 de septiembre se decidió servir solo el enunciado, y no se puede partir:
+> cada página es la resolución del profesor con el enunciado en un recuadro
+> encima. Antes de la reunión con él se retiraron de `public/`, cada
+> convocatoria lo dice con `sinPdf` y la pregunta va en su hoja de la
+> reunión. Los enunciados siguen transcritos.
 
 Las dos que faltan **no se van a poder**, y así queda declarado: las de
 2014-2015 son un folio cada una y están escritas solo en euskera. El sitio es

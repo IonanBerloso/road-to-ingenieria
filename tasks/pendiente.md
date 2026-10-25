@@ -28,7 +28,9 @@ sigue después tal cual.
   corrige» y los formularios). Quedan fuera el 7 de la final de 2021, por
   formato, y el b) del 3 de la extraordinaria de 2023, por material.
 - **J · Sistemas de Producción** (~4 semanas): aplazada por Ionan el 30 de
-  septiembre de 2026, se hará más adelante; K va antes. Su colección trae cinco
+  septiembre de 2026, se hará más adelante; K va antes. **Desde el 25 de
+  octubre de 2026 es de la versión 2.0**: la 1.0 se cierra con las nueve
+  asignaturas del primer cuatrimestre. Su colección trae cinco
   problemas fechados como examen (T2 P7, P8 y P9; T3 P5 y P6), que dan para
   medir la ruta de la ordinaria; los de CNC piden un tipo de respuesta para
   código.
@@ -83,13 +85,18 @@ sabía:
   de la página supone: si un mínimo cuyo elemento no tiene la pieza (la rosca,
   en una pieza sin roscas) cuenta como cumplido, como dice el del eje, «si lo
   tiene».
+- **Térmica, al profesor**: si se pueden publicar sus veinte resoluciones.
+  Desde el 23 de octubre de 2026 no se sirven (`sinPdf`): cada página es la
+  resolución con el enunciado encima, y no hay hoja de enunciado que partir.
+  Si dice que sí, vuelven de la carpeta de material; si no, se queda así.
 - **Sistemas**: si el examen da las hojas del catálogo Sandvik o los valores
   de corte en el enunciado.
 - **Materiales**: una copia limpia de las preguntas guía, porque el fichero
   lleva «Grupos» en el nombre y no se abre.
 - **Química, la resolución de 2013**: si se publica como PDF de su
   convocatoria (`2012-2013-ord`), como se hizo con las veinte de Térmica el
-  10 de septiembre de 2026. Es la corrección del profesor, mecanografiada y
+  10 de septiembre de 2026 (retiradas el 23 de octubre, hasta preguntar a su
+  profesor). Es la corrección del profesor, mecanografiada y
   sin datos personales, y §08 solo deja entrar enunciados sin una decisión
   expresa: hasta entonces la página lleva `sinPdf`. El modelo de 2024-2025 no
   entra en la pregunta: es un escaneado con su letra, y esos no se publican.
@@ -171,10 +178,6 @@ octubre («de 2016 para atrás no hagas nada»).
 
 Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 
-- **Térmica, los veinte PDF que son la resolución completa del profesor**:
-  servir solo el enunciado, como en las otras convocatorias. Partir cada PDF,
-  y que el aviso de `Examen.astro` diga que la resolución del profesor está
-  en el material de la asignatura.
 - **La barra de puntos de cada examen**: rediseñarla, con borde entre franjas
   y la cifra dentro, para que no dependa del color (contrastes de 2,92, 1,77
   y 1,65).
@@ -209,11 +212,12 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   explica (`manana.md` 10.2).
 - **Ruta de Fluidos**: decir por qué los cinco parciales no tienen ruta propia
   (sus 21 ejercicios están enlazados; `tambienPrepara` solo nombra la
-  extraordinaria).
-- **Térmica**: su ruta mide sobre 17 de 20 convocatorias y no lista las tres
-  anteriores a 2017 en `fueraDeLaVentana`, como sí hace `calculo-ord`.
-- **Seis títulos de tema** del `.mdx` que no coinciden con el catálogo:
-  Cálculo t02, t03 y t04; Fluidos t03, t21 y t23.
+  extraordinaria). Son de 2019-2020 y 2020-2021: antes, preguntar al profesor
+  si la asignatura sigue haciendo parciales; va en su hoja de la reunión.
+- **Térmica, la extraordinaria de junio de 2017 en la medida**: no trae nada
+  fuera del programa y queda fuera de la cuenta solo por el corte en
+  2017-2018 (`fueraDeLaVentana`). Meterla es recontar los siete bloques sobre
+  dieciocho. Visto por la revisión del 23 de octubre de 2026.
 - **«Cortante» en Mecánica**: ya está en la prosa del t06 y en 216 pasos;
   falta, si acaso, un apartado propio. Acotar antes de escribir.
 - **Los pasos bloqueados se leen**: `EjercicioGuiado` los pinta atenuados, y
@@ -221,9 +225,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   de antes (`ex1617-3ev-3`, `colfq1-2`, `ejflu14-col42`). Decidir si el cuerpo
   de un paso bloqueado se oculta con JavaScript, sin romper la página sin él.
   Lo vio la revisión de la muestra del 28 de septiembre de 2026.
-- **Cálculo, 11.8 `extension-par-de-t`** (t11): el enunciado define $f$ en
-  $[0,\pi)$ y la resolución da $f(\pi)=\pi$. Decir que es el valor que la
-  extensión toma por continuidad, o que $f$ no está definida ahí.
 - Menores: `normaliza()` no lee el ⁴; once `\sin` sueltos en el corpus; KaTeX
   sigue enviando las fuentes ttf y woff además de woff2.
 
@@ -291,17 +292,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   del 4 de la extraordinaria de 2023, transcrita a mano): la regla de
   `scripts/notas-impresas.mjs` exige que empiece la línea. Ampliarla sin
   traer falsos positivos, midiendo antes cuántos saca.
-- **La frase de la ruta de Fluidos sobre la colección** («224 problemas
-  transcritos y esta ruta enlaza 94», contada el 8 de septiembre): un
-  recuento de hoy por ids da 216 y 86. Contar con el mismo criterio que
-  entonces antes de cambiarla.
-- **Los metadatos de los PDF de Fluidos** en `public/examenes/fluidos/`
-  llevan un nombre en el campo Author. Preguntado a Ionan si se borra (no
-  cambia la página); sin respuesta.
-  Ya hay cómo, desde el 8 de octubre de 2026 (la colección de Expresión
-  Gráfica, §08): con pypdf, quitar el /Info, el XMP del catálogo y el /Info y
-  el /Metadata de cualquier objeto (las partes fusionadas por Acrobat los
-  llevan), y comparar las páginas píxel a píxel con las del original.
 
 ## Bloqueado por material
 
