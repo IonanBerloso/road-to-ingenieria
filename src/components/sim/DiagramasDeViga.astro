@@ -137,7 +137,7 @@ const { id = 'viga' } = Astro.props;
   <div class="readout" aria-live="polite">
     <div class="cell">
       <span class="rotulo k">reacciones</span>
-      <span class="v chica" data-reacciones>R_A = 8600 · R_B = 7400</span>
+      <span class="v chica" data-reacciones>R<sub>A</sub> = 8600 · R<sub>B</sub> = 7400</span>
       <span class="sub" data-unidades>en kg y metros</span>
     </div>
     <div class="cell">
@@ -365,7 +365,9 @@ const { id = 'viga' } = Astro.props;
       $('[data-out-xp]').textContent = num(Number(sXP.value), 1);
       $('[data-out-xq]').textContent = num(Math.min(Number(sXQ.value), L), 1);
 
-      $('[data-reacciones]').textContent = `R_A = ${num(RA)} · R_B = ${num(RB)}`;
+      /* Con el subíndice de verdad: hasta el 26 de octubre de 2026 salía «R_A»,
+         con el guion bajo a la vista. `num` solo devuelve cifras. */
+      $('[data-reacciones]').innerHTML = `R<sub>A</sub> = ${num(RA)} · R<sub>B</sub> = ${num(RB)}`;
       $('[data-unidades]').textContent = unidades;
 
       const corte = cortesV.find((x) => x > v.xA && x < v.xB) ?? cortesV[0];
@@ -549,8 +551,12 @@ const { id = 'viga' } = Astro.props;
     font-weight: 600;
   }
 
+  /* Con el color de lo que se toca (§06), como los otros simuladores. Hasta
+     el 26 de octubre de 2026 salía el azul del navegador. */
   .ctrl input[type='range'] {
     width: 100%;
+    accent-color: var(--live);
+    cursor: pointer;
   }
 
   .atajos .botones {

@@ -2225,7 +2225,16 @@ formulario, que sí duplica hechos a propósito y lo dice en su propio `falta[]`
 Una ruta son cuatro campos de cabecera y una lista de bloques:
 
 - `lede` y `criterioDeOrden` — por qué los bloques van en ese orden y no en el
-  del temario. Se escribe una vez y explica la ruta entera.
+  del temario. Se escribe una vez y explica la ruta entera. La página parte el
+  `criterioDeOrden` por párrafos (desde el 26 de octubre de 2026):
+  - el primero va en la pizarra, y tiene que ser el porqué del orden;
+  - uno que empiece por `**Lo que esta ruta no prepara.**` va en papel, a la
+    vista;
+  - el resto, plegado bajo «Más sobre este orden».
+
+  En un `>-`, un párrafo nuevo son **dos** líneas en blanco: con una, el
+  plegado deja un salto suelto y el párrafo sale pegado al de antes
+  (`tests/plegados.test.ts`).
 - `medidoSobre` — cuántas convocatorias se han leído. Es la base de todos los
   recuentos y el esquema comprueba que ningún bloque diga haber caído en más
   años de los que se han contado.

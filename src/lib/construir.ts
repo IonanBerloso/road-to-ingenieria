@@ -454,6 +454,31 @@ function compruebaMarcables(c: ConstruirResuelto, d: DatosLamina): void {
   }
 }
 
+/* Un objetivo fuera del encuadre tampoco se puede marcar: el lienzo es el
+   encuadre, y lo que cae fuera no se ve ni se pulsa. Con una elección, cada
+   rama tiene que caber, porque la escoge el alumno con su primera marca. Lo
+   cuidaba a mano la lámina de SD5, en su nota, y a la de SD41 se le escapó:
+   abatiendo la cubierta hacia la izquierda, que es como la nota dice que se
+   hace en papel, V₀ caía 48 pt fuera y no había forma de terminar. Medido en
+   el sitio construido el 26 de octubre de 2026; `npm run talleres` no lo veía
+   porque construye siempre por la primera rama. */
+function compruebaEnElLienzo(c: ConstruirResuelto, d: DatosLamina): void {
+  const { x, y, w, h } = d.encuadre;
+  const dentro = ([px, py]: P2) => px >= x && px <= x + w && py >= y && py <= y + h;
+  const alBorde = ([px, py]: P2) => Math.max(x - px, px - x - w, y - py, py - y - h);
+  for (const o of c.objetivos) {
+    const ramas = o.es.eleccion === undefined ? [o.es.ramas.flat()] : o.es.ramas;
+    ramas.forEach((rama, i) => {
+      if (rama.length === 0 || rama.some(dentro)) return;
+      const cual = ramas.length > 1 ? `, en su rama ${i + 1},` : '';
+      const lejos = Math.min(...rama.map(alBorde));
+      throw new Error(
+        `objetivo «${o.nombre}»${cual} cae fuera de la lámina, a ${(lejos * PT_MM).toFixed(1)} mm del borde: no se ve, y no se puede marcar. Hay que ensanchar el encuadre`,
+      );
+    });
+  }
+}
+
 /** Las cifras de un `calcular` con lo que son, para decirlo al fallar. */
 const cifrasDe = (p: PasoCalcular) => [
   { que: 'la respuesta', c: p.respuesta },
@@ -492,6 +517,7 @@ export function resuelveEjercicio(e: EjercicioConReceta, datosLamina: DatosLamin
       try {
         const c = resuelveConstruir(p, lamina, r);
         compruebaMarcables(c, datosLamina);
+        compruebaEnElLienzo(c, datosLamina);
         resueltos.set(i, c);
       } catch (err) {
         throw new Error(`${donde}: ${(err as Error).message}`);

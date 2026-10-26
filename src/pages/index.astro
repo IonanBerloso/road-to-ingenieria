@@ -1231,6 +1231,8 @@ const enteras = asignaturas
         x.tipo === 't' ? `T${String(x.n).padStart(2, '0')}` : (INSIGNIA[x.tipo] ?? '?');
       b.querySelector('.nb')!.textContent = x.nombre;
       b.querySelector('.sb')!.textContent = x.sub;
+      // Entero al pasar el ratón, por si una de las dos partes se recorta.
+      b.title = x.sub ? `${x.nombre} · ${x.sub}` : x.nombre;
       b.addEventListener('mouseenter', () => {
         cursor = j;
         pinta();
@@ -2354,9 +2356,17 @@ const enteras = asignaturas
   }
 
   .hit .k { font-family: var(--mono); font-size: .66rem; color: var(--faint); flex: 0 0 auto; }
-  .hit .nb { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Cuando no caben los dos, el que cede es el subtítulo: encoge cuatro veces
+     más deprisa que el nombre. Hasta el 26 de octubre de 2026 el subtítulo no
+     cedía nada, porque sin `min-width: 0` un elemento flexible no baja de su
+     texto, y un ejercicio con la ruta larga dejaba su nombre en «El pl…». */
+  .hit .nb { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .hit .sb {
+    flex: 0 4 auto;
+    min-width: 0;
     margin-left: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: var(--mono);
     font-size: .66rem;
     color: var(--faint);

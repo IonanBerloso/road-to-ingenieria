@@ -222,7 +222,8 @@ const CASOS = [
       {
         pulsa: '[data-caso="col65"]',
         espera: {
-          '[data-reacciones]': 'R_A = 8600 · R_B = 7400',
+          // El texto de «R<sub>A</sub>», que sin etiquetas se lee «RA».
+          '[data-reacciones]': 'RA = 8600 · RB = 7400',
           '[data-mvano]': '+1290',
           '[data-mapoyo]': '−6000',
         },

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import yaml from 'js-yaml';
 import { describe, expect, it } from 'vitest';
 import {
   PT_MM,
@@ -191,5 +193,47 @@ describe('PVM · el plano ABC en verdadera magnitud', () => {
     expect(mm(vmAlzado(P2s[0], P2s[1]))).toBeCloseTo(LADOS.AB, 3);
     expect(mm(vmAlzado(P2s[1], P2s[2]))).toBeCloseTo(LADOS.BC, 3);
     expect(mm(vmAlzado(P2s[2], P2s[0]))).toBeCloseTo(LADOS.CA, 3);
+  });
+});
+
+/* Las figuras de los métodos 1 a 4 del ejercicio (pasos `dibujar`, 26 de
+   octubre de 2026) son SVG escritos, no dibujados al construir el sitio: se
+   sacaron de lib/diedrico y se pegaron en el YAML. Si alguien retoca uno a
+   mano, o se cambia la lámina y las figuras no se rehacen, el triángulo verde
+   dejaría de ser la verdadera magnitud sin que nada protestara. Aquí se mide:
+   la figura está en las coordenadas de la hoja, y su triángulo en verdadera
+   magnitud tiene los tres lados de arriba. */
+describe('PVM · las figuras de los métodos 1 a 4', () => {
+  const datos = yaml.load(
+    readFileSync('src/content/expresion-grafica/t03-metodos-descriptivos/ejercicios.yaml', 'utf8'),
+  ) as { ejercicios: { id: string; pasos: { tipo: string; figura?: string }[] }[] };
+  const pvm = datos.ejercicios.find((e) => e.id === 'pvm-el-plano-abc-por-seis-caminos')!;
+  const figuras = pvm.pasos.filter((p) => p.tipo === 'dibujar').map((p) => p.figura ?? '');
+  const triangulos = (svg: string, clase: string): P2[][] =>
+    [...svg.matchAll(new RegExp(`<polygon class="${clase}" points="([^"]+)"`, 'g'))].map((m) =>
+      m[1].split(' ').map((par) => par.split(',').map(Number) as P2),
+    );
+
+  it('hay cuatro, una por método', () => {
+    expect(figuras).toHaveLength(4);
+  });
+
+  it.each([1, 2, 3, 4])('método %i: la hoja en su sitio y la verdadera magnitud con los tres lados', (n) => {
+    const svg = figuras[n - 1];
+    // Los dos primeros triángulos negros son el alzado y la planta de la hoja.
+    const [alzado, planta] = triangulos(svg, 'pvm-o');
+    for (const [dibujado, esperado] of [
+      [alzado, [al(A), al(B), al(C)]],
+      [planta, [pl(A), pl(B), pl(C)]],
+    ] as const) {
+      dibujado.forEach((q, i) => expect(d2(q, esperado[i])).toBeLessThan(0.01));
+    }
+    const vms = triangulos(svg, 'pvm-vm');
+    expect(vms).toHaveLength(1);
+    const [p, q, r] = vms[0];
+    // El orden de los vértices en la figura es A, B, C.
+    expect(Math.abs(mm(d2(p, q)) - LADOS.AB)).toBeLessThan(0.01);
+    expect(Math.abs(mm(d2(q, r)) - LADOS.BC)).toBeLessThan(0.01);
+    expect(Math.abs(mm(d2(r, p)) - LADOS.CA)).toBeLessThan(0.01);
   });
 });

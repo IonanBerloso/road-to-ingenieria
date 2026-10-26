@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import sd1 from '../../src/content/laminas/sd1.json';
+import sd5 from '../../src/content/laminas/sd5.json';
 import { PT_MM } from '../../src/lib/diedrico';
 import { acierta, cumple } from '../../src/lib/diedrico-corrige';
 import { evaluaNumero, evaluaReceta, type Lamina } from '../../src/lib/diedrico-receta';
@@ -378,6 +379,72 @@ describe('un ejercicio entero, con su receta: resuelveEjercicio', () => {
     );
     expect(() => resuelveEjercicio(ejercicio([sobre(2)]), datosSd1)).toThrow(/del punto dado P2/);
     expect(resuelveEjercicio(ejercicio([sobre(3)]), datosSd1).size).toBe(1);
+  });
+
+  it('un objetivo fuera de la lámina rompe el build: no se ve, y no se puede marcar', () => {
+    /* P₂ está en x = 309,12 y el encuadre de SD1 acaba en 445: a 130 pt de
+       P₂ el objetivo cabe; a 140, se sale 4,12 pt. */
+    const lejos = (dx: number) => ({
+      tipo: 'construir' as const,
+      ...PASO,
+      objetivos: [
+        {
+          nombre: 'X',
+          pide: 'un punto a la derecha de P₂',
+          es: `desplaza(figura.punto("P2"), dx: ${dx})`,
+          bien: 'Bien.',
+          diagnosticos: [{ si: 'siempre', mensaje: 'No es ahí.' }],
+        },
+      ],
+      trazado: [],
+    });
+    expect(() => resuelveEjercicio(ejercicio([lejos(140)]), datosSd1)).toThrow(
+      /sd1-prueba, paso 1: objetivo «X» cae fuera de la lámina, a 1\.5 mm del borde/,
+    );
+    expect(resuelveEjercicio(ejercicio([lejos(130)]), datosSd1).size).toBe(1);
+  });
+
+  /* Con una elección, cada rama tiene que caber entera, porque la escoge el
+     alumno con su primera marca. La lámina de SD5 lo dice en su nota —«el
+     encuadre llega hasta x = 150 […]: una de las dos soluciones deja B y C en
+     x = 165,3»—; la de SD41 no lo tuvo en cuenta, y hasta el 26 de octubre de
+     2026 quien abatía la cubierta hacia la izquierda no podía terminar. */
+  it('y con una elección, cada rama tiene que caber', () => {
+    const datosSd5 = sd5 as unknown as DatosLamina;
+    const conSd5 = (d: DatosLamina) =>
+      resuelveEjercicio(
+        {
+          id: 'sd5-prueba',
+          receta: {
+            lamina: 'sd5',
+            escena: {
+              s: 'recta3(alzado: figura.segmento("r2≡s2"), planta: figura.segmento("s1"))',
+              A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))',
+            },
+            solucion: { B: 'punto_a_distancia(s, desde: A, distancia: mm(20))' },
+          },
+          pasos: [
+            {
+              tipo: 'construir',
+              ...PASO,
+              objetivos: [
+                {
+                  nombre: 'B2',
+                  pide: 'B, en el alzado',
+                  es: 'proy_alzado(solucion.B)',
+                  bien: 'Bien.',
+                  diagnosticos: [{ si: 'siempre', mensaje: 'No es ahí.' }],
+                },
+              ],
+              trazado: [],
+            },
+          ],
+        },
+        d,
+      );
+    expect(conSd5(datosSd5).size).toBe(1);
+    const estrecha = { ...datosSd5, encuadre: { ...datosSd5.encuadre, x: 200, w: datosSd5.encuadre.w - 50 } };
+    expect(() => conSd5(estrecha)).toThrow(/sd5-prueba, paso 1: objetivo «B2», en su rama \d, cae fuera de la lámina/);
   });
 });
 

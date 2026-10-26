@@ -365,7 +365,27 @@ const deExamenCitados = deLaConvocatoria
   .filter((id) => citados.has(id)).length;
 
 const ledeHtml = await mate(d.lede);
-const ordenHtml = await mate(d.criterioDeOrden);
+
+/** «Por qué este orden», repartido en tres sitios.
+ *
+ *  El autor escribe un solo `criterioDeOrden`, y su primer párrafo es siempre
+ *  el porqué del orden. Lo de detrás es de otra clase: cómo se midió, notas
+ *  del proceso y, en once rutas, un «Lo que esta ruta no prepara». Todo iba
+ *  en la tarjeta de pizarra, en letra pequeña clara sobre verde: medido el 26
+ *  de octubre de 2026, de 49 palabras a **2.674** (Térmica). §06 deja la
+ *  pizarra para el marco; lo que se lee largo va en papel.
+ *
+ *  Así que la pizarra lleva el primer párrafo; «Lo que esta ruta no prepara»,
+ *  que al alumno sí le importa, va debajo, en papel y a la vista; y el resto,
+ *  plegado. El texto no se toca: se parte por los párrafos del autor, que
+ *  desde el mismo día salen separados de verdad (`tests/plegados.test.ts`). */
+const [ordenPrimero, ...ordenResto] = d.criterioDeOrden.split(/\n{2,}/);
+const NO_PREPARA = /^\*\*Lo que esta ruta no prepara\.\*\*\s*/;
+const ordenHtml = await mate(ordenPrimero);
+const noPreparaHtml = await mate(
+  ordenResto.filter((p) => NO_PREPARA.test(p)).map((p) => p.replace(NO_PREPARA, '')).join('\n\n'),
+);
+const ordenMasHtml = await mate(ordenResto.filter((p) => !NO_PREPARA.test(p)).join('\n\n'));
 const bloquesHtml = await Promise.all(
   bloques.map(async (b) => ({
     ...b,
@@ -696,6 +716,20 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
         <p class="mano oc-tit">Por qué este orden</p>
         <div class="prosa oc-cuerpo" set:html={ordenHtml} />
       </div>
+
+      {ordenMasHtml && (
+        <details class="orden-mas">
+          <summary>Más sobre este orden</summary>
+          <div class="prosa om-cuerpo" set:html={ordenMasHtml} />
+        </details>
+      )}
+
+      {noPreparaHtml && (
+        <div class="falta-caja">
+          <p class="rotulo fc-tit">Lo que esta ruta no prepara</p>
+          <div class="prosa fc-texto" set:html={noPreparaHtml} />
+        </div>
+      )}
 
       <div class="eval-caja">
         <p class="rotulo ec-tit">Esta evaluación</p>
@@ -1248,6 +1282,30 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
   .oc-cuerpo :global(p:last-child) { margin-bottom: 0; }
   .oc-cuerpo :global(strong) { color: var(--tiza); }
 
+  /* El resto del porqué, en papel y plegado. Abierto puede pasar de dos mil
+     palabras, y un carril pegajoso más alto que la pantalla no deja leer su
+     final hasta llegar al último bloque: abierto, el carril deja de pegarse. */
+  .orden-mas {
+    background: var(--panel);
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    box-shadow: var(--shadow-1);
+  }
+  .orden-mas summary {
+    padding: .65rem 1.2rem;
+    font-size: .86rem;
+    font-weight: 700;
+    color: var(--live);
+    cursor: pointer;
+    border-radius: 12px;
+  }
+  .orden-mas summary:hover { background: var(--live-soft); }
+  .orden-mas[open] summary { border-radius: 12px 12px 0 0; border-bottom: 1px solid var(--rule); }
+  .om-cuerpo { padding: .8rem 1.2rem .9rem; font-size: .84rem; line-height: 1.6; }
+  .om-cuerpo :global(p) { margin-bottom: .6rem; }
+  .om-cuerpo :global(p:last-child) { margin-bottom: 0; }
+  .carril:has(.orden-mas[open]) { position: static; }
+
   .eval-caja {
     background: var(--panel);
     border: 1.5px solid var(--rule);
@@ -1282,6 +1340,9 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
   .fc-bloque { color: var(--faint); margin-bottom: .1rem; }
   .fc-item .prosa { font-size: .82rem; line-height: 1.5; color: var(--graphite); }
   .fc-item .prosa :global(p) { margin: 0; }
+  .fc-texto { font-size: .82rem; line-height: 1.5; color: var(--graphite); }
+  .fc-texto :global(p) { margin-bottom: .5rem; }
+  .fc-texto :global(p:last-child) { margin-bottom: 0; }
   .fc-lema {
     font-size: .76rem;
     color: var(--faint);

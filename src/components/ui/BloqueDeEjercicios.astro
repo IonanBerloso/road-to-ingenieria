@@ -60,11 +60,21 @@ const cuantos =
     <h2 class="rotulo">Ejercicios {rotulo}</h2>
     {/* El contador del carril empieza donde empieza el bloque: el tercero
         del bloque 2 es el 13 del tema, que es como lo nombra el índice. */}
+    {/* Cada fila lleva la palomita de la ruta de estudio, la misma y del
+        mismo color, oculta hasta que el guion lea `rti:hechos`: sin
+        JavaScript no hay progreso que enseñar. §06 prohíbe la memoria de
+        progreso en la portada, no dentro de una asignatura. */}
     <ol style={`counter-reset: s ${desde - 1}`}>
       {
         ejercicios.map((e) => (
-          <li>
-            <a href={`#ej-${e.id}`}>{e.titulo}</a>
+          <li data-ej={e.id}>
+            <a href={`#ej-${e.id}`}>
+              <span class="t">{e.titulo}</span>
+              <span class="tick" data-tick hidden>
+                <span aria-hidden="true">✓</span>
+                <span class="solo-lectores">hecho</span>
+              </span>
+            </a>
           </li>
         ))
       }
@@ -130,6 +140,25 @@ const cuantos =
     if (document.fonts?.ready) document.fonts.ready.then(() => requestAnimationFrame(salta));
     else requestAnimationFrame(salta);
   }
+
+  /* Los hechos, en el carril. Lo que guarda `EjercicioGuiado` al terminar un
+     ejercicio, leído al cargar y otra vez con cada `rti:hecho`, para que la
+     palomita salga en cuanto se acaba el ejercicio, sin recargar. */
+  const filas = [...document.querySelectorAll<HTMLElement>('.rail [data-ej]')];
+  const pinta = () => {
+    let hechos: Record<string, unknown> = {};
+    try {
+      hechos = JSON.parse(localStorage.getItem('rti:hechos') ?? '{}');
+    } catch {}
+    for (const fila of filas) {
+      const tick = fila.querySelector<HTMLElement>('[data-tick]');
+      if (tick) tick.hidden = !hechos[fila.dataset.ej!];
+    }
+  };
+  if (filas.length) {
+    pinta();
+    document.addEventListener('rti:hecho', pinta);
+  }
 </script>
 
 <style>
@@ -166,4 +195,8 @@ const cuantos =
   }
 
   .panel { margin-top: 1.6rem; }
+
+  /* ── la palomita del carril, como la de la ruta ───────────────── */
+  .t { flex: 1; }
+  .tick { color: var(--live); font-size: .9rem; line-height: 1.3; }
 </style>
