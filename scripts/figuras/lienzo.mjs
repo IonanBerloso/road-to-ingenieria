@@ -40,9 +40,13 @@ function clasesBase() {
     ['punta', 'fill: var(--live); stroke: none;'],
     ['hueco', 'fill: var(--paper); stroke: var(--live); stroke-width: 2;'],
     ['o', 'fill: var(--flag);'],
+    /* Sin `fill`: hasta el 26 de octubre de 2026 la clase fijaba --faint en
+       CSS, que gana al atributo, y los 77 rótulos pequeños que pedían --alt,
+       --flag o --graphite salían en gris. El gris de los números de los ejes
+       va ahora en su `<g>`, y el del rótulo pequeño, en su valor por defecto. */
     [
       'n',
-      'fill: var(--faint); font-size: 10px; font-family: var(--mono); paint-order: stroke;' +
+      'font-size: 10px; font-family: var(--mono); paint-order: stroke;' +
         ' stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round;',
     ],
     [
@@ -202,7 +206,7 @@ export function lienzo({
       encuadra(dx + 6, dy + 10, nombreY, 'start', true);
       notas.push(`<text x="${bx}" y="${r1(by - 8)}" text-anchor="end">${esc(nombreX)}</text>`);
       notas.push(`<text x="${r1(dx + 6)}" y="${r1(dy + 10)}">${esc(nombreY)}</text>`);
-      piezas.push(`<g class="${id}-n">${notas.join('')}</g>`);
+      piezas.push(`<g class="${id}-n" fill="var(--faint)">${notas.join('')}</g>`);
       return api;
     },
 
@@ -301,13 +305,16 @@ export function lienzo({
       return api;
     },
 
-    /** Un rótulo en coordenadas de la asignatura, con su halo de papel. */
-    rotulo(u, v, texto, { color = 'var(--live)', anclaje = 'start', dx = 0, dy = 0, pequeno = false } = {}) {
+    /** Un rótulo en coordenadas de la asignatura, con su halo de papel. El
+     *  pequeño, si no pide color, sale en --faint, que es como han salido
+     *  siempre. */
+    rotulo(u, v, texto, { color, anclaje = 'start', dx = 0, dy = 0, pequeno = false } = {}) {
       const [px, py] = P(u, v);
+      const tinta = color ?? (pequeno ? 'var(--faint)' : 'var(--live)');
       encuadra(px + dx, py + dy, texto, anclaje, pequeno);
       piezas.push(
         `<text class="${id}-${pequeno ? 'n' : 'l'}" x="${r1(px + dx)}" y="${r1(py + dy)}"` +
-          ` text-anchor="${anclaje}" fill="${color}">${esc(texto)}</text>`,
+          ` text-anchor="${anclaje}" fill="${tinta}">${esc(texto)}</text>`,
       );
       return api;
     },

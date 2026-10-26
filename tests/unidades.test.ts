@@ -284,3 +284,51 @@ describe('las unidades de Ciencia de Materiales', () => {
     expect(comparaMagnitud(lee('1.40 MJ/m3'), lee('1.40 MPa'), 0.001).igual).toBe(true);
   });
 });
+
+/* El 26 de octubre de 2026, fase N. El lector pasa todo a minúsculas, y «mN»
+   salía meganewton: una respuesta de 3 mN se daba por buena escrita como
+   3 MN, un millón de veces más. Hoy ninguna pregunta pide milinewton, pero la
+   tensión superficial de Fluidos es la primera candidata. */
+describe('el prefijo m del newton', () => {
+  it('«mN», escrito así, es el milinewton', () => {
+    expect(lee('3 mN').valor).toBeCloseTo(0.003, 12);
+    expect(lee('72,8 mN/m').valor).toBeCloseTo(0.0728, 12);
+    expect(nombreDim(lee('3 mN').dim)).toBe('una fuerza');
+    expect(comparaMagnitud(lee('3 mN'), lee('3 MN'), 0.01).igual).toBe(false);
+  });
+
+  it('«MN», «mn» y «Mn» siguen siendo el meganewton', () => {
+    for (const escrito of ['3 MN', '3 mn', '3 Mn']) expect(lee(escrito).valor, escrito).toBeCloseTo(3e6, 3);
+  });
+
+  it('un momento en mN·m sigue siendo un momento', () => {
+    const m = lee('2 mN·m');
+    expect(m.valor).toBeCloseTo(0.002, 12);
+    expect(nombreDim(m.dim, m.unidad)).toBe('un momento');
+  });
+
+  it('el megapascal no cambia: quien teclea deprisa escribe «mPa» por «MPa»', () => {
+    expect(lee('3 mPa').valor).toBeCloseTo(3e6, 3);
+    expect(lee('3 mpa').valor).toBeCloseTo(3e6, 3);
+  });
+});
+
+/* Los exponentes en superíndice que trae el copiar-pegar: el ² y el ³ ya se
+   leían; el ⁴ del momento de inercia y el ⁻¹ de una frecuencia, no. */
+describe('los exponentes en superíndice', () => {
+  it('lee el ⁴ del momento de inercia', () => {
+    const m = lee('8300 cm⁴');
+    expect(m.valor).toBeCloseTo(8.3e-5, 12);
+    expect(m.dim).toEqual({ M: 0, L: 4, T: 0, K: 0 });
+  });
+
+  it('lee los exponentes negativos', () => {
+    expect(lee('3 s⁻¹').dim).toEqual({ M: 0, L: 0, T: -1, K: 0 });
+    expect(comparaMagnitud(lee('9,81 m·s⁻²'), lee('9,81 m/s^2'), 0.001).igual).toBe(true);
+  });
+
+  it('el ² y el ³ siguen como estaban', () => {
+    expect(lee('2 m²').valor).toBe(2);
+    expect(lee('2 cm³').valor).toBeCloseTo(2e-6, 12);
+  });
+});

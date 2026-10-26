@@ -209,6 +209,13 @@
   color-scheme: light;
 }
 
+/* El tema oscuro es de pantalla: en papel se imprime siempre el claro, con la
+   tinta de papel de abajo encima. Sin este `@media`, quien imprimía con el
+   oscuro puesto se llevaba la tinta clara del tema sobre papel blanco, porque
+   el navegador tira los fondos al imprimir (26 de octubre de 2026).
+   El bloque va sin sangrar dentro del `@media` a propósito: check-color.mjs lo
+   busca en la columna 0. */
+@media not print {
 [data-theme="oscuro"] {
   color-scheme: dark;
   --paper: #14171A;
@@ -287,17 +294,21 @@
   --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
   --shadow-2: 0 24px 60px rgba(0, 0, 0, .5);
 }
+}
 
 /* ── tinta para papel ───────────────────────────────────────────────
    El resto de reglas de impresión están en print.css; aquí solo los
    valores, porque este es el único fichero que puede llevar literales.
    Se redeclaran en :root para no abrir un segundo bloque. */
 @media print {
-  /* Selector `html`, no `:root`: el repositorio tiene un único bloque
-     :root{} y verify.mjs lo comprueba. Es el mismo elemento.
+  /* Selector `html[lang]`, no `:root`: el repositorio tiene un único bloque
+     :root{} y verify.mjs lo comprueba. Es el mismo elemento, y el atributo
+     está para que pese (0,1,1) y gane al :root (0,1,0) de arriba. Hasta el
+     26 de octubre de 2026 era `html` a secas, pesaba (0,0,1) y este bloque
+     no se aplicaba nunca (tests/impresion.test.ts).
      Los semánticos NO se tocan: en papel siguen distinguiendo lo que
      te suspende de lo que no, y en blanco y negro los separa la etiqueta. */
-  html {
+  html[lang] {
     --paper: #FFFFFF;
     --panel: #FFFFFF;
     --ink: #000000;

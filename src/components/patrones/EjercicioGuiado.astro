@@ -2033,12 +2033,21 @@ const reglaIntentos = [
     border: 1.5px solid var(--rule);
     border-radius: 10px;
     margin-bottom: .7rem;
+    /* `clip` recorta las esquinas igual que `hidden`, pero no hace del paso
+       un contenedor de desplazamiento: con `hidden`, la lista de puntos del
+       Taller no se podía quedar pegada abajo en el móvil (V9). `hidden`
+       queda para el navegador que no conozca `clip`. */
     overflow: hidden;
+    overflow: clip;
     transition: opacity .25s, border-color .25s, box-shadow .25s;
   }
 
-  /* pendiente: plegado en atención, con su círculo vacío */
-  .paso.bloqueado { opacity: .6; pointer-events: none; }
+  /* pendiente: plegado en atención, con su círculo vacío. Solo con
+     JavaScript, por lo mismo que el cuerpo oculto de más abajo: sin él, el
+     paso se lee entero y se puede pulsar. */
+  @media (scripting: enabled) {
+    .paso.bloqueado { opacity: .6; pointer-events: none; }
+  }
 
   /* activo: el único desbloqueado sin resolver lleva la sombra */
   .paso:not(.bloqueado):not(.resuelto) { box-shadow: var(--shadow-activo); }
@@ -2089,10 +2098,15 @@ const reglaIntentos = [
   /* Un paso cerrado enseña su número y su título, y nada más. Hasta el 26 de
      octubre de 2026 se veía entero en gris: en el Taller era un párrafo de
      doce líneas que contaba el método del paso siguiente antes de haber hecho
-     el primero. En modo completo y al imprimir no hay pasos cerrados. */
-  .paso.bloqueado .paso-cuerpo { display: none; }
+     el primero. En modo completo y al imprimir no hay pasos cerrados.
+     Solo con JavaScript: `bloqueado` lo pone el servidor y lo quita el
+     guion, así que sin él los pasos se quedarían cerrados para siempre; así
+     se leen enteros, como antes. */
   .cerrado { display: none; padding: 0 1rem .9rem; font-size: .84rem; color: var(--faint); }
-  .paso.bloqueado .cerrado { display: block; }
+  @media (scripting: enabled) {
+    .paso.bloqueado .paso-cuerpo { display: none; }
+    .paso.bloqueado .cerrado { display: block; }
+  }
 
   /* ── opciones (COMP1) ──────────────────────────────────────────── */
   .opciones { list-style: none; display: grid; gap: .4rem; margin-top: .8rem; }

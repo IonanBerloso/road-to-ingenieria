@@ -33,16 +33,25 @@ const periodica = ({
   l.ejes({ nombreX, nombreY, marcasX, marcasY });
   const k0 = Math.floor(x[0] / T);
   const k1 = Math.ceil(x[1] / T);
+  /* Un salto dentro del periodo parte la curva. Hasta el 26 de octubre de
+     2026 cada periodo era una sola polilínea, que cruzaba el salto con un
+     trazo casi vertical encima de la vertical discontinua: el diente de
+     sierra y el escalón se publicaron así, y la ampliación impar se corrigió
+     a mano en el contenido sin tocar este generador. */
+  const cortes = [0, ...saltos.map(([u]) => u).filter((u) => u > 0 && u < T).sort((p, q) => p - q), T];
   for (let k = k0; k <= k1; k++) {
-    const a = k * T;
-    const puntos = [];
-    for (let j = 0; j <= n; j++) {
-      const u = (T * j) / n;
-      const t = a + u;
-      if (t < x[0] + 0.02 || t > x[1] - 0.02) continue;
-      puntos.push([t, tramo(Math.min(Math.max(u, 1e-6), T - 1e-6))]);
+    for (let i = 0; i + 1 < cortes.length; i++) {
+      const [ua, ub] = [cortes[i], cortes[i + 1]];
+      const pasos = Math.max(1, Math.round((n * (ub - ua)) / T));
+      const puntos = [];
+      for (let j = 0; j <= pasos; j++) {
+        const u = ua + ((ub - ua) * j) / pasos;
+        const t = k * T + u;
+        if (t < x[0] + 0.02 || t > x[1] - 0.02) continue;
+        puntos.push([t, tramo(Math.min(Math.max(u, ua + 1e-6), ub - 1e-6))]);
+      }
+      if (puntos.length > 1) l.poli(puntos, { clase: 'c' });
     }
-    if (puntos.length > 1) l.poli(puntos, { clase: 'c' });
   }
   /* Los saltos: la vertical y, si se pide, el punto de convergencia. */
   for (let k = k0; k <= k1; k++) {
@@ -104,8 +113,12 @@ fig('la-que-no-tiene-saltos',
 
 /* ── 3 · la ampliación impar de una recta ────────────────────────────── */
 fig('ampliacion-impar-de-una-recta',
-  'La ampliación impar de 2π − t: en (0,π) baja de 2π a π, y se refleja al otro lado del origen.',
+  'La ampliación impar de 2π − t: en (0,π) baja de 2π a π, y se refleja al otro lado del origen. '
+    + 'Salta en todos los múltiplos de π, y en cada salto la serie vale 0.',
   () => {
+    /* Salta también en los múltiplos impares de π, de π a −π: el contenido
+       lo tenía corregido a mano desde el 28 de septiembre de 2026, y el
+       generador no, así que rehacer las figuras deshacía la corrección. */
     const l = periodica({
       id: 'f-pr-ampliacion-impar',
       T: 2 * P, tramo: (u) => (u < P ? 2 * P - u : -(2 * P - (2 * P - u))),
@@ -113,12 +126,14 @@ fig('ampliacion-impar-de-una-recta',
       marcasX: [[-2 * P, '−2π'], [-P, '−π'], [P, 'π'], [2 * P, '2π']],
       marcasY: [[2 * P, '2π'], [P, 'π'], [-P, '−π'], [-2 * P, '−2π']],
       n: 2,
-      saltos: [[0, -2 * P, 2 * P]],
-      titulo: 'La ampliación impar de 2π − t, con sus saltos en los múltiplos de 2π',
+      saltos: [[0, -2 * P, 2 * P], [P, -P, P]],
+      titulo: 'La ampliación impar de 2π − t, con sus saltos en los múltiplos de π',
       desc: 'En cada intervalo de cero a pi la función baja de dos pi a pi. Al otro lado del '
-        + 'origen es su reflejo cambiado de signo: sube de menos pi a menos dos pi. En los '
-        + 'múltiplos de dos pi hay un salto de cuatro pi, y en su mitad, a altura cero, está el '
-        + 'valor de la serie: por eso S(0) vale cero aunque f no esté definida allí.',
+        + 'origen es su reflejo cambiado de signo: de menos pi a cero baja de menos pi a menos '
+        + 'dos pi. En los múltiplos de dos pi salta cuatro pi, de menos dos pi a dos pi, y en los '
+        + 'múltiplos impares de pi salta dos pi, de pi a menos pi. En la mitad de cada salto, a '
+        + 'altura cero, está el valor de la serie: por eso S(0) vale cero aunque f no esté '
+        + 'definida allí.',
     });
     l.rotulo(0, 0, 'S(0) = 0', { dx: 8, dy: -6, color: 'var(--flag)' });
     l.punto(P / 2, 1.5 * P, { r: 4 });

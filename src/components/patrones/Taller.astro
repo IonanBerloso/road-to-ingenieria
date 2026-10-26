@@ -1083,6 +1083,40 @@ const datos = {
 
   .t-nota { font-size: .76rem; color: var(--graphite); margin: .6rem 0 0; }
 
+  /* En el móvil la lista iba debajo del lienzo, una pantalla más abajo, y
+     marcar un punto era bajar a elegir su nombre y subir a pulsarlo, punto
+     por punto. Ahora va pegada al borde de abajo mientras se ve el lienzo:
+     una fila de fichas que se desliza de lado, con la elegida entera, y la
+     nota dentro, desplazando la propia lista (V9, 26 de octubre de 2026).
+     El cuerpo deja de ser rejilla: un elemento pegado dentro de una rejilla
+     puede quedar atado a su propia fila, y entonces no se mueve. Y solo se
+     pega si hay puntos o aristas que marcar: la nota de los fallos va
+     siempre, y sola no merece una franja. */
+  @media (max-width: 52rem) {
+    .t-cuerpo { display: flex; flex-direction: column; align-items: stretch; }
+    .t-objetivos:has(.t-obj, [data-aristas-n]) {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      max-height: 11rem;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      box-shadow: var(--shadow-1);
+    }
+    /* El relleno deja sitio al anillo de la ficha elegida y al del foco,
+       que el desplazamiento lateral recortaría. */
+    .t-objetivos ul { display: flex; overflow-x: auto; padding: .2rem .2rem .3rem; margin-inline: -.2rem; }
+    .t-objetivos li { flex: 0 0 auto; width: min(16rem, 70vw); }
+    .t-obj { height: 100%; }
+    .t-obj .prosa {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .t-obj[aria-pressed='true'] .prosa { display: block; overflow: visible; }
+  }
+
   @media print {
     .t-objetivos { display: none; }
     .t-lienzo { border: 0; padding: 0; }

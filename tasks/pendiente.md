@@ -34,26 +34,32 @@ sigue después tal cual.
   problemas fechados como examen (T2 P7, P8 y P9; T3 P5 y P6), que dan para
   medir la ruta de la ordinaria; los de CNC piden un tipo de respuesta para
   código.
-- **K · Expresión Gráfica después de la fase 1**: las hojas 52–55 son
-  exámenes y ordenan la fase 2 (familias B, E y G antes que A y H); el
-  bloque 2 apenas necesita `lib/vistas` y conviene que no espere a la fase 3.
+- **K · Expresión Gráfica, el bloque 2** (los cortes, el despiece y el resto
+  de las vistas): **desde el 26 de octubre de 2026 es de la versión 2.0**,
+  como J, porque es del segundo cuatrimestre. Las hojas 52–55 son exámenes y
+  ordenarán su ruta (familias B, E y G antes que A y H).
+- **N · Cierre técnico y O · Auditoría de cierre, con la etiqueta `v1.0`**:
+  con ellas se cierra la 1.0, decidido el 26 de octubre de 2026. No se espera
+  a lo que digan los profesores: lo que digan entra después. El plan está en
+  `2027 proyecto contenido/ideas/fases-siguientes-2026-10-26.md`; lo de N está
+  abajo, en «Código» y en «Contenido».
 - **La deuda de abajo, intercalada** en los huecos del suelo y del
   despliegue, un commit por punto: mirar entero el primer despliegue después
   del 19 de octubre, cuando `ubuntu-latest` pase a Ubuntu 26.
 
 ## Lo decide quien mantiene el proyecto
 
-Preguntado uno a uno el 27 de septiembre de 2026; queda abierto lo que no se
-sabía:
+Preguntado uno a uno el 27 de septiembre de 2026, y otra vez el 26 de octubre
+con las hojas de las reuniones; queda abierto lo que no se sabía:
 
 - **Expresión Gráfica**: si en el examen de dibujo técnico se pueden usar las
-  tablas ISO —lo va a preguntar; la nota general de la UPV/EHU
-  (`Nota_sobre_la_evaluacin_de_pruebas_acadmicas.pdf`, pág. 2) prohíbe libros
-  y apuntes salvo indicación expresa—; si el diédrico se examina con la
-  figura a escala o por coordenadas; y si la Colección de ejercicios de
-  2026-27 es la misma que la de 2025-26, que es la que se ha transcrito (la
-  carpeta de eGela de este curso, añadida el 1 de octubre de 2026, no la
-  trae). La rúbrica de láminas ya está: viene en esa carpeta.
+  tablas ISO de tolerancias (ISO 286-1) o vienen con el enunciado —la nota
+  general de la UPV/EHU (`Nota_sobre_la_evaluacin_de_pruebas_acadmicas.pdf`,
+  pág. 2) prohíbe libros y apuntes salvo indicación expresa—. Si vienen con
+  el enunciado, se queda como está (26 de octubre de 2026). Si el diédrico se
+  examina a escala o por coordenadas, se mira en las preguntas de examen de la
+  colección, como se dijo ese día. La colección de 2026-27 es la misma que la
+  transcrita, y la rúbrica de láminas ya está.
 - **Expresión Gráfica, los Ejercicios 53 y 55 de la colección**, cuatro cosas
   que el enunciado no dice y se han supuesto, cada una declarada en su
   ejercicio: en el 55·1, que α es el menor de los dos ángulos entre AB y BC;
@@ -89,10 +95,13 @@ sabía:
   Desde el 23 de octubre de 2026 no se sirven (`sinPdf`): cada página es la
   resolución con el enunciado encima, y no hay hoja de enunciado que partir.
   Si dice que sí, vuelven de la carpeta de material; si no, se queda así.
+  El 26 de octubre de 2026 quien mantiene el proyecto contestó que sí; antes
+  de volver a servirlas, que lo confirme expresamente.
 - **Sistemas**: si el examen da las hojas del catálogo Sandvik o los valores
   de corte en el enunciado.
 - **Materiales**: una copia limpia de las preguntas guía, porque el fichero
-  lleva «Grupos» en el nombre y no se abre.
+  lleva «Grupos» en el nombre y no se abre. El 26 de octubre de 2026 no se
+  sabía; lo va a preguntar, con lo demás de Materiales.
 - **Química, la resolución de 2013**: si se publica como PDF de su
   convocatoria (`2012-2013-ord`), como se hizo con las veinte de Térmica el
   10 de septiembre de 2026 (retiradas el 23 de octubre, hasta preguntar a su
@@ -100,6 +109,8 @@ sabía:
   sin datos personales, y §08 solo deja entrar enunciados sin una decisión
   expresa: hasta entonces la página lleva `sinPdf`. El modelo de 2024-2025 no
   entra en la pregunta: es un escaneado con su letra, y esos no se publican.
+  El 26 de octubre de 2026 la respuesta fue que sí; como con Térmica, que lo
+  confirme expresamente antes de publicarla.
 
 ## Hacer
 
@@ -187,7 +198,9 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   fx-570SP CW, científica y no programable. Sus páginas de asignatura ya lo
   dicen; falta no usar en las resoluciones nada que ella no haga.
 - **Álgebra**: el examen de prácticas se hace con Maxima en ordenador.
-  Decirlo en la ficha; practicar los comandos cae en la fase D o la E.
+  Decirlo en la ficha; practicar los comandos cae en la fase D o la E. Los
+  ejercicios los traerá quien mantiene el proyecto cuando los tenga (26 de
+  octubre de 2026).
 - **Expresión Gráfica, hojas 52–55**: nadie sabe de qué año son; se
   transcriben como examen con fuente «sin fecha» (fase K).
 
@@ -210,23 +223,15 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   de trabajo; sellar la fecha sin hacerlo sería inventar (`manana.md` 10.7).
 - **Nueve `fuente` que esconden una discrepancia** que su resolución sí
   explica (`manana.md` 10.2).
-- **Ruta de Fluidos**: decir por qué los cinco parciales no tienen ruta propia
-  (sus 21 ejercicios están enlazados; `tambienPrepara` solo nombra la
-  extraordinaria). Son de 2019-2020 y 2020-2021: antes, preguntar al profesor
-  si la asignatura sigue haciendo parciales; va en su hoja de la reunión.
 - **Térmica, la extraordinaria de junio de 2017 en la medida**: no trae nada
   fuera del programa y queda fuera de la cuenta solo por el corte en
   2017-2018 (`fueraDeLaVentana`). Meterla es recontar los siete bloques sobre
   dieciocho. Visto por la revisión del 23 de octubre de 2026.
 - **«Cortante» en Mecánica**: ya está en la prosa del t06 y en 216 pasos;
   falta, si acaso, un apartado propio. Acotar antes de escribir.
-- **Los pasos bloqueados se leen**: `EjercicioGuiado` los pinta atenuados, y
-  las piezas de un `justificar` repiten a veces las cifras de los `calcular`
-  de antes (`ex1617-3ev-3`, `colfq1-2`, `ejflu14-col42`). Decidir si el cuerpo
-  de un paso bloqueado se oculta con JavaScript, sin romper la página sin él.
-  Lo vio la revisión de la muestra del 28 de septiembre de 2026.
-- Menores: `normaliza()` no lee el ⁴; once `\sin` sueltos en el corpus; KaTeX
-  sigue enviando las fuentes ttf y woff además de woff2.
+- Menores: once `\sin` sueltos en el corpus; KaTeX sigue enviando las
+  fuentes ttf y woff además de woff2 (el navegador solo baja la woff2: pesa en
+  el despliegue, no en el alumno).
 
 ### Documentación
 
@@ -252,7 +257,11 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 - **Tres rutas de estudio pasan de 3 MB**: `calculo/preparar/ord` (4,4),
   `fluidos/preparar/ord` (3,6) y `calculo/preparar/ext` (3,3), porque
   incrustan ejercicios guiados. `verify.mjs` las avisa sin pararlas: decidir
-  si los incrustados pasan a enlazar su bloque o la ruta se parte.
+  si los incrustados pasan a enlazar su bloque o la ruta se parte. **Medido el
+  26 de octubre de 2026 y no es de la 1.0**: comprimidas, como las sirve
+  GitHub Pages, son 419, 371 y 340 KB, y en un móvil con la CPU ×4 la de
+  Cálculo pinta a los 0,36 s y termina de cargar en 1,5 s (54 000 nodos).
+  Queda para la 2.0.
 - **Duplicados** (Regla 0): el controlador de pestañas de `Tema` y `Examen`
   —ya se desincronizó una vez, en el `afterprint`—; el CSS del armazón y del
   carril, que vive en `Armazon` (lo usan los bloques de ejercicios y las
@@ -269,13 +278,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
   del 2.16). Se leen bien porque `--faint` está medido, pero no salen del
   color que dice el código. Arreglarlo cambia figuras publicadas: regenerar
   y mirar las que cambien.
-- **La hoja de impresión no cambia los colores**: en `tokens.css`, el bloque
-  `@media print { html {…} }` nunca se aplica, porque `html` pesa menos que
-  `:root`, y en tema oscuro se imprimiría texto claro. Lo comprobó en
-  Chromium, emulando la impresión, el revisor del laboratorio de Materiales
-  el 29 de septiembre de 2026. Un arreglo es `html[lang]`, y toca todo el
-  sitio: mirar la impresión de un tema, un examen y un formulario antes y
-  después.
 - **Coherencia**: seis simuladores usan `data-caso` para sus preajustes y dos
   `data-accion`; `ALCANCE_CONV` del índice de exámenes está pensado para
   Cálculo; y `TestDeMinimos` no alinea como `Cuestiones` una opción que es
@@ -284,8 +286,6 @@ Decidido el 27 de septiembre de 2026, al preguntar uno a uno:
 
 ### Lo que dejó abierto la fase I (Fluidos)
 
-- **`src/lib/unidades.ts` lee «mN» como meganewton.** Hoy no muerde: todas
-  las preguntas piden N. Es una trampa para la primera que pida milinewton.
 - **`scripts/revisa-ejercicios.mjs` no valida los pasos `dibujar`**: uno con
   dos puntos de `comprueba` pasa sin aviso.
 - **El guardián de las notas impresas no ve una «Nota:» a media línea** (la
@@ -304,6 +304,8 @@ daban por bloqueados salieron en la fase I: todos menos uno eran trabajo.
 - **Ciencia de Materiales**: la ruta medida, hasta que haya exámenes de
   teoría y problemas. El formulario, el simulacro 40/60 y el laboratorio no
   esperan: son la fase H.
+- **Mecánica**: exámenes más recientes del bloque 2. Los conseguirá quien
+  mantiene el proyecto (26 de octubre de 2026).
 - **Elasticidad**: el resto de la hoja de problemas del primer parcial de
   2025-2026; de esa convocatoria solo están la de teoría y el problema 3. La traerá quien la cursa cuando
   la tenga.

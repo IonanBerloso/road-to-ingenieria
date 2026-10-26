@@ -105,8 +105,9 @@ const NOMBRES: ReadonlyArray<readonly [Dim, string]> = [
   [D(1, 2, -3, -1), 'una entropía por unidad de tiempo'],
 ];
 
-/** Una fuerza por una longitud, escrita así: «N·m», «kN*m», «MN m». */
-const ES_MOMENTO = /^[kmM]?n\s*[·*.\s]?\s*m$/i;
+/** Una fuerza por una longitud, escrita así: «N·m», «kN*m», «MN m», y «mN·m»,
+ *  que `normaliza()` deja en «millinewton*m». */
+const ES_MOMENTO = /^(?:[km]|milli)?n(?:ewton)?\s*[·*.\s]?\s*m$/i;
 
 /** El nombre de una dimensión, y con la unidad escrita si la dimensión no
  *  basta. Un momento y una energía tienen la misma, M·L²·T⁻², y hasta el 26 de
@@ -163,7 +164,13 @@ const UNIDADES: Record<string, { f: number; d: Dim }> = {
   // — fuerza
   n: { f: 1, d: D(1, 1, -2) },
   kn: { f: 1000, d: D(1, 1, -2) },
-  mn: { f: 1e6, d: D(1, 1, -2) }, // meganewton; el milinewton no aparece en fluidos
+  mn: { f: 1e6, d: D(1, 1, -2) }, // meganewton: «MN», y también «mn» y «Mn»
+  /* El milinewton solo escrito «mN», que es como lo escribe quien lo quiere
+     decir; `normaliza()` lo traduce antes de pasar a minúsculas. Hasta el 26
+     de octubre de 2026 salía meganewton. Con el pascal, el vatio y el julio
+     no se hace: «mPa» por «MPa» es la errata de quien teclea deprisa, y el
+     prefijo pequeño no aparece en ningún enunciado de la escuela. */
+  millinewton: { f: 1e-3, d: D(1, 1, -2) },
   /* El decanewton lo pide el enunciado, no nosotros: el ejercicio 1.2 de la
      colección pide la fuerza «en daN». Es la única unidad con prefijo `da`
      que aparece, y por eso no hay una regla general de prefijos. */
@@ -270,18 +277,27 @@ const ESCALAS: Record<string, (x: number) => number> = {
 
 const DIM_TEMPERATURA: Dim = D(0, 0, 0, 1);
 
+const SUPERINDICES = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+
 /** Normaliza lo que producen el teclado del alumno, el copiar-pegar del PDF y
  *  la costumbre de escribir m3 en vez de m³. */
 function normaliza(entrada: string): string {
   return (entrada ?? '')
     .trim()
+    /* Antes de las minúsculas, que es cuando se pierde: ver `millinewton`. */
+    .replace(/(^|[^a-zA-Zµ°])mN(?![a-zA-Z])/g, '$1millinewton')
     .toLowerCase()
     .replace(/[−–—]/g, '-')
     /* El teclado español escribe `º` (el ordinal, U+00BA) en la tecla de
        grados, y hay quien usa `˚` (U+02DA): los dos son `°` (U+00B0). */
     .replace(/[º˚]/g, '°')
-    .replace(/[²]/g, '^2')
-    .replace(/[³]/g, '^3')
+    /* Todos los superíndices, no solo el ² y el ³: el ⁴ del momento de
+       inercia y el ⁻¹ de una frecuencia llegan igual del copiar-pegar. */
+    .replace(
+      /(⁻?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g,
+      (_, menos: string, cifras: string) =>
+        `^${menos ? '-' : ''}${[...cifras].map((c) => SUPERINDICES.indexOf(c)).join('')}`,
+    )
     .replace(/[·⋅×]/g, '*')
     .replace(/\s+/g, ' ')
     /* «mm Hg» y «mm de Hg» son como los escriben los enunciados de Química,
