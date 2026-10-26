@@ -42,8 +42,11 @@ const catalogo = (await getCollection('catalogo')).sort(
 /** Las que salen en el temario de la pizarra, con su fila: todas menos las
  *  que su catálogo declara `portada: 'boton'`, que en esta página son solo un
  *  botón del héroe (`soloBoton`, abajo). El filtro va aquí, en la fuente, para
- *  que ninguna de las listas de la portada —la pizarra, los chips, la paleta—
- *  tenga que acordarse de saltárselas. */
+ *  que la pizarra y los chips no tengan que acordarse de saltárselas.
+ *
+ *  La paleta no: busca en `conDetalle`. Hasta el 26 de octubre de 2026 también
+ *  salía de aquí, y buscar «flexión» no daba ningún tema de Elasticidad, que
+ *  desde el 15 de octubre tiene detalle como las demás. */
 const asignaturas = catalogo.filter((a) => a.data.portada === 'lista');
 const soloBoton = catalogo.filter((a) => a.data.portada === 'boton');
 
@@ -273,7 +276,7 @@ for (const lista of examenesPorAsignatura.values()) {
  *  porque un concepto que lleva a una página que no existe es peor que no
  *  encontrarlo. */
 const conceptos: { tipo: 'c'; nombre: string; sub: string; destino: string }[] = [];
-for (const a of asignaturas) {
+for (const a of conDetalle) {
   const hechos = a.data.temas.filter((t) => t.hecho);
   if (hechos.length === 0) continue;
   if (!(CON_TEMAS as readonly string[]).includes(a.id)) continue;
@@ -317,7 +320,7 @@ for (const a of asignaturas) {
 
 /** El índice de la paleta de comandos se arma aquí, no en el cliente:
  *  buscar tiene que funcionar con la primera pulsación, sin recorrer el DOM. */
-const indice = asignaturas.flatMap((a) => [
+const indice = conDetalle.flatMap((a) => [
   {
     tipo: 'a' as const,
     nombre: a.data.nombre,
@@ -461,10 +464,12 @@ const enteras = asignaturas
                     <span class="mano pn">{String(a.data.orden).padStart(2, '0')}</span>
                     <span class="nm" data-nombre>{a.data.nombre}</span>
                     <span class:list={['mano', 'ps', a.data.estado]}>
+                      {/* Con espacios duros alrededor de la raya: «entera»
+                          se quedaba sola en la línea de abajo. */}
                       {a.data.estado === 'ok'
-                        ? `${a.data.temas.length} temas · ${examenesPorAsignatura.get(a.id)?.length ?? 0} exámenes — ${ESTADO.ok.corta}`
+                        ? `${a.data.temas.length} temas · ${examenesPorAsignatura.get(a.id)?.length ?? 0} exámenes — ${ESTADO.ok.corta}`
                         : a.data.estado === 'obra' && hechos(a) > 0
-                          ? `${hechos(a)} de ${a.data.temas.length} temas — ${ESTADO.obra.corta}`
+                          ? `${hechos(a)} de ${a.data.temas.length} temas — ${ESTADO.obra.corta}`
                           : ESTADO[a.data.estado].corta}
                     </span>
                   </a>
@@ -2266,9 +2271,12 @@ const enteras = asignaturas
   .mini {
     font-family: var(--mono);
     font-size: .7rem;
-    color: var(--faint);
+    /* En tiza: el botón vive en la barra, que es pizarra. Hasta el 26 de
+       octubre de 2026 iba en el gris y el borde del papel, y sobre el verde
+       apenas se veía. */
+    color: var(--tiza-suave);
     background: none;
-    border: 1px solid var(--rule);
+    border: 1px solid var(--tiza-borde);
     border-radius: 99px;
     padding: .3rem .7rem;
     display: flex;
@@ -2278,8 +2286,10 @@ const enteras = asignaturas
     transition: border-color .2s, color .2s;
   }
 
-  .mini:hover { border-color: var(--live); color: var(--live); }
+  .mini:hover { border-color: var(--tiza-menta); color: var(--tiza-menta); }
   .mini kbd { font-family: var(--mono); font-size: .66rem; opacity: .7; }
+  /* El atajo «/» es de teclado: en una pantalla táctil no significa nada. */
+  @media (hover: none) { .mini kbd { display: none; } }
 
   .paleta {
     position: fixed;
@@ -2377,6 +2387,16 @@ const enteras = asignaturas
   @media (max-width: 760px) {
     .hero { min-height: 0; }
     .temario { grid-template-columns: 1fr; gap: 0; }
+
+    /* En el móvil, las asignaturas antes que la figura. Hasta el 26 de octubre
+       de 2026, a 390 px la primera pantalla era el titular y la segunda, entera,
+       la tangente: la lista, que es a lo que se viene, empezaba en la tercera.
+       La figura se queda, debajo de la lista: es la identidad de la portada. */
+    .heroe { display: contents; }
+    .mensaje { order: 0; padding-top: clamp(.7rem, 2.4vh, 1.6rem); }
+    .temario { order: 1; }
+    .figura { order: 2; margin-top: .4rem; }
+    .repisa { order: 3; }
     .columna + .columna .curso-h { margin-top: 1.2rem; }
     .cab .meta { display: none; }
 

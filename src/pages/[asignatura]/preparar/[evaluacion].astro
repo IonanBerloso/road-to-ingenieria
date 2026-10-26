@@ -816,13 +816,18 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
        resolvió, leyendo el detalle que guarda el ejercicio guiado. Las
        entradas antiguas son `true` a secas y no dicen nada: se pintan hechas y
        sin marca, que es lo honesto. */
+    /* Los fallos se leen de `f`. Las entradas de antes del 26 de octubre de
+       2026 los guardaban en `i` contando también los aciertos de cálculo, y
+       decían «con 3 fallos» de un ejercicio hecho a la primera: de esas solo
+       vale la pista y el desarrollo, y si no hubo ninguno van sin marca. */
     const comoSeHizo = (v: unknown): string | null => {
       if (!v || v === true || typeof v !== 'object') return null;
-      const { i, p, d } = v as { i?: number; p?: boolean; d?: boolean };
+      const { f, p, d } = v as { f?: number; p?: boolean; d?: boolean };
       if (d) return 'con desarrollo';
       if (p) return 'con pista';
-      if ((i ?? 0) === 0) return 'a la primera';
-      return `con ${i} ${i === 1 ? 'fallo' : 'fallos'}`;
+      if (typeof f !== 'number') return null;
+      if (f === 0) return 'a la primera';
+      return `con ${f} ${f === 1 ? 'fallo' : 'fallos'}`;
     };
 
     function pinta() {

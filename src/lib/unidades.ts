@@ -105,7 +105,18 @@ const NOMBRES: ReadonlyArray<readonly [Dim, string]> = [
   [D(1, 2, -3, -1), 'una entropía por unidad de tiempo'],
 ];
 
-export function nombreDim(d: Dim): string {
+/** Una fuerza por una longitud, escrita así: «N·m», «kN*m», «MN m». */
+const ES_MOMENTO = /^[kmM]?n\s*[·*.\s]?\s*m$/i;
+
+/** El nombre de una dimensión, y con la unidad escrita si la dimensión no
+ *  basta. Un momento y una energía tienen la misma, M·L²·T⁻², y hasta el 26 de
+ *  octubre de 2026 quien escribía un momento en kN leía «aquí se pide una
+ *  energía». Las 18 respuestas del sitio que se dan en N·m son momentos o
+ *  pares, y las energías se dan en J. */
+export function nombreDim(d: Dim, unidad?: string | null): string {
+  if (d.M === 1 && d.L === 2 && d.T === -2 && d.K === 0 && unidad && ES_MOMENTO.test(unidad.trim())) {
+    return 'un momento';
+  }
   const n = NOMBRES.find(([x]) => x.M === d.M && x.L === d.L && x.T === d.T && x.K === d.K);
   return n ? n[1] : 'una magnitud de otra clase';
 }

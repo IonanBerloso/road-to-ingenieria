@@ -197,6 +197,19 @@ describe('nombreDim · para que el diagnóstico hable en cristiano', () => {
     expect(nombreDim(lee('3 n').dim)).toBe('una fuerza');
     expect(nombreDim(lee('3 kw').dim)).toBe('una potencia');
   });
+
+  it('separa un momento de una energía por la unidad, que la dimensión no basta', () => {
+    for (const escrito of ['204,2 kN·m', '5.08 kn*m', '1,084 MN·m', '7,33 N m', '30 N*m']) {
+      const m = lee(escrito);
+      expect(nombreDim(m.dim, m.unidad), escrito).toBe('un momento');
+    }
+    for (const escrito of ['12 J', '3,5 kJ', '2 MJ']) {
+      const m = lee(escrito);
+      expect(nombreDim(m.dim, m.unidad), escrito).toBe('una energía');
+    }
+    // sin la unidad, como antes
+    expect(nombreDim(lee('204,2 kN·m').dim)).toBe('una energía');
+  });
 });
 
 describe('traeUnidad · lo que el esquema usa para exigirla donde toca', () => {

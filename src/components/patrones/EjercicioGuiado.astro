@@ -160,18 +160,22 @@ function baraja<T>(items: T[], semilla: string): T[] {
   return copia.map((c) => c.v);
 }
 
+/* La competencia de cada paso, con el verbo que usa la hoja de examen al
+   desglosar la nota (el mismo de `Reparto.astro`). Hasta el 26 de octubre de
+   2026 el paso enseñaba solo el código, «COMP1», que nada en la página
+   explicaba; el código queda en el `title`, para quien lo busque en la hoja. */
 const COMPETENCIA = {
-  reconocer: 'COMP1',
-  calcular: 'COMP2',
-  justificar: 'COMP4',
-  verificar: 'COMP2 · COMP4',
-  redactar: 'COMP4',
+  reconocer: { verbo: 'reconocer', codigo: 'COMP 1' },
+  calcular: { verbo: 'calcular', codigo: 'COMP 2' },
+  justificar: { verbo: 'justificar', codigo: 'COMP 4' },
+  verificar: { verbo: 'calcular y justificar', codigo: 'COMP 2 y COMP 4' },
+  redactar: { verbo: 'justificar', codigo: 'COMP 4' },
   /* Dibujar el recinto es COMP4 —representar y explicar— y no COMP2: lo que
      se puntúa no es la cuenta que venga después, es haber entendido la región
      antes de escribir un límite. */
-  dibujar: 'COMP4',
+  dibujar: { verbo: 'justificar', codigo: 'COMP 4' },
   /* En diédrico el cálculo es la construcción: COMP2, como `calcular`. */
-  construir: 'COMP2',
+  construir: { verbo: 'calcular', codigo: 'COMP 2' },
 } as const;
 
 /* El título del paso `redactar`, según lo que se escribe (`que` en el
@@ -263,6 +267,17 @@ function formatoConExacta(respuesta: RespuestaDelFormato & { formato?: string },
      se puede leer como un patrón (§17). */
   if (CON_DECIMALES.test(formato)) return formato.replace(CON_DECIMALES, (m) => `en forma exacta o ${m}`) + ejemplos;
   return formato + ayudaDelTipo(tipo);
+}
+
+/** El formato partido en frase y ejemplos, para que la frase vaya en la letra
+ *  del texto y lo que se teclea, en mono (§06: la mono es para datos). Hasta el
+ *  26 de octubre de 2026 iba todo en mono. */
+const TECLEADO = /(pi\/4|sqrt\(3\)\/2|\(e\^2-1\)\/2)/;
+function trozosDelFormato(s: string): { texto: string; tecleado: boolean }[] {
+  return s
+    .split(TECLEADO)
+    .filter(Boolean)
+    .map((texto) => ({ texto, tecleado: TECLEADO.test(texto) }));
 }
 
 /* Todo el texto del YAML pasa por el mismo procesador que el MDX, así que las
@@ -493,6 +508,21 @@ const datos = pasos.map((p) => {
 });
 
 const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
+
+/* La regla de los intentos, la de los pasos que tiene ESTE ejercicio. Hasta el
+   26 de octubre de 2026 se imprimía una sola, la de las casillas, también encima
+   de ejercicios sin ninguna: en los del Taller se leía junto a la suya, que no
+   dice lo mismo, y elegir una opción nunca tuvo límite. El Taller no entra:
+   imprime su regla dentro de la lámina. */
+const tipos = new Set(ejercicio.pasos.map((p) => p.tipo));
+const reglaIntentos = [
+  (tipos.has('calcular') || tipos.has('verificar')) &&
+    'En las casillas, 1.er intento a pelo · al 2.º aparece la pista, al 3.º el desarrollo.',
+  (tipos.has('reconocer') || tipos.has('justificar')) &&
+    'Al elegir, cada opción que no va te dice por qué.',
+]
+  .filter(Boolean)
+  .join(' ');
 ---
 
 <section class="ejercicio" data-ejercicio={ejercicio.id} aria-labelledby={`ej-${ejercicio.id}`}>
@@ -523,10 +553,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     <span class="rotulo avance" data-avance>paso 1 de {total}</span>
   </div>
 
-  <p class="modo-pista rotulo" data-modo-pista>
-    1.er intento a pelo · al 2.º aparece la pista, al 3.º el desarrollo — la
-    solución nunca se da al fallar: se te dice en qué te has ido y por qué.
-  </p>
+  <p class="modo-pista" data-modo-pista>{reglaIntentos}</p>
 
   <div class="enunciado">
     <p class="rotulo">Enunciado</p>
@@ -553,9 +580,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           <div class="paso-cab">
             <span class="rotulo n">{String(paso.i + 1).padStart(2, '0')}</span>
             <h4>{paso.titulo}</h4>
-            <span class="rotulo comp">{paso.competencia}</span>
+            <span class="rotulo comp" title={`${paso.competencia.codigo} en el reparto del examen`}>
+              {paso.competencia.verbo}
+            </span>
             <span class="tick" aria-hidden="true">✓</span>
           </div>
+
+          {paso.i > 0 && <p class="cerrado">Se abre al resolver el paso {paso.i}.</p>}
 
           <div class="paso-cuerpo">
             <div class="prosa" set:html={paso.preguntaHtml} />
@@ -590,8 +621,10 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     placeholder="…"
                   />
                   {formatoConExacta(paso.respuesta!, sonRaices) && (
-                    <span class="formato rotulo">
-                      {formatoConExacta(paso.respuesta!, sonRaices)}
+                    <span class="formato">
+                      {trozosDelFormato(formatoConExacta(paso.respuesta!, sonRaices)).map((t) =>
+                        t.tecleado ? <code>{t.texto}</code> : t.texto,
+                      )}
                     </span>
                   )}
                   <button type="button" class="comprobar" data-comprobar>
@@ -653,7 +686,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
                     spellcheck="false"
                     placeholder="(x-1)^2 + y^2 < 4"
                   />
-                  {paso.formato && <span class="formato rotulo">{paso.formato}</span>}
+                  {paso.formato && <span class="formato">{paso.formato}</span>}
                   <button type="button" class="comprobar" data-comprobar>
                     Comprobar
                   </button>
@@ -909,14 +942,20 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
    *  `true` a secas y se siguen leyendo como hechas, solo que sin detalle.
    *  Nadie pierde su progreso por esto.
    *
+   *  **Los fallos van en `f` desde el 26 de octubre de 2026.** Hasta entonces
+   *  iban en `i`, y contaban también el acierto de cada paso de cálculo: un
+   *  ejercicio hecho a la primera salía «con 3 fallos». Ese número no se
+   *  puede arreglar hacia atrás, así que la ruta no lo lee; de las entradas
+   *  con `i` sigue usando la pista y el desarrollo, que eran ciertos.
+   *
    *  Se avisa además con un evento, para que la ruta de estudio pueda pintar
    *  su progreso sin volver a leer el almacenamiento. */
-  function anota(id: string | undefined, como?: { i: number; p: boolean; d: boolean }) {
+  function anota(id: string | undefined, como?: { f: number; p: boolean; d: boolean }) {
     if (!id) return;
     try {
       const hechos = JSON.parse(localStorage.getItem('rti:hechos') ?? '{}');
       if (hechos[id]) return;
-      hechos[id] = como ? { i: como.i, p: como.p, d: como.d } : true;
+      hechos[id] = como ? { f: como.f, p: como.p, d: como.d } : true;
       localStorage.setItem('rti:hechos', JSON.stringify(hechos));
     } catch {}
     document.dispatchEvent(new CustomEvent('rti:hecho', { detail: { id } }));
@@ -956,6 +995,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       }
     };
     const modoPista = raiz.querySelector<HTMLElement>('[data-modo-pista]')!;
+    const reglaGuiado = modoPista.textContent ?? '';
 
     const intentos = pasos.map(() => 0);
     const resueltos = pasos.map(() => false);
@@ -1055,7 +1095,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
             : `paso ${hechos + 1} de ${pasos.length}`;
       if (hechos === pasos.length) {
         anota(raiz.dataset.ejercicio, {
-          i: intentos.reduce((a, b) => a + b, 0),
+          f: intentos.reduce((a, b) => a + b, 0),
           p: pistaVista,
           d: desarrolloVisto,
         });
@@ -1212,8 +1252,6 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           return;
         }
 
-        intentos[i]++;
-
         if (coincide(escrito, respuesta.valor, respuesta.tolerancia)) {
           limpiaFb(paso);
           resuelve(i, desactiva(campo));
@@ -1230,6 +1268,13 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           fb(paso, 'bien', 'También vale', html(paso, `[data-msg-tambien="${t}"]`));
           return;
         }
+
+        /* Se cuenta aquí, cuando ya se sabe que no vale, y no antes de
+           comparar: `intentos` son los FALLOS del paso. Hasta el 26 de octubre
+           de 2026 se contaba también el acierto, y la ruta decía «con 3
+           fallos» de un ejercicio hecho entero a la primera. Lo que viene
+           detrás —el 2.º fallo trae la pista, el 3.º el desarrollo— no cambia. */
+        intentos[i]++;
 
         const k = distractores.findIndex((d) => coincide(escrito, d, holgura(d)));
         if (k >= 0) {
@@ -1320,7 +1365,7 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
           if (v?.otraDimension) {
             fb(paso, 'mal', 'Esa unidad es de otra magnitud',
-              `<p>Has escrito ${nombreDim(a!.dim)} y aquí se pide ${nombreDim(b!.dim)}. ` +
+              `<p>Has escrito ${nombreDim(a!.dim, a!.unidad)} y aquí se pide ${nombreDim(b!.dim, b!.unidad)}. ` +
                 'No es un despiste de escritura: si las unidades no cuadran, la fórmula que ' +
                 'has usado no es la de esta pregunta.</p>' +
                 '<p><strong>Comprueba las dimensiones antes que los números.</strong> Es la ' +
@@ -1567,7 +1612,6 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           return;
         }
 
-        intentos[i]++;
         const r = mismaRegion(referencia, propuesta, ventana);
         pinta(propuesta);
 
@@ -1576,6 +1620,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
           resuelve(i, desactiva(campo));
           return;
         }
+        /* Solo los fallos, como en `calcular`. */
+        intentos[i]++;
 
         /* El diagnóstico sale de la propia comparación: sobrar y faltar son
            errores distintos y se nombran distinto. */
@@ -1801,9 +1847,12 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
       const seVe = completo || resueltos.every(Boolean);
       if (seVe) materializa();
       resolucion.hidden = !seVe;
+      /* Al volver al guiado, la misma regla que al cargar. Hasta el 26 de
+         octubre de 2026 decía «no verás la solución aunque falles», y al
+         tercer intento de una casilla se ve el desarrollo. */
       modoPista.textContent = completo
         ? 'Resolución completa de un tirón. Se imprime bien y sirve para explicárselo a alguien.'
-        : 'En modo guiado no verás la solución aunque falles: verás en qué paso te has ido y por qué.';
+        : reglaGuiado;
 
       pasos.forEach((paso, i) => {
         paso.classList.toggle('bloqueado', !completo && i > 0 && !resueltos[i - 1]);
@@ -1949,10 +1998,11 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   .modos button[aria-pressed='true'] { border-color: var(--live); color: var(--live); font-weight: 600; }
   .modos .avance { margin-left: auto; font-size: .66rem; }
 
+  /* Una frase entera, así que en la letra del texto: §06 deja la mono para
+     datos, unidades y etiquetas. */
   .modo-pista {
-    text-transform: none;
-    letter-spacing: .01em;
-    font-size: .74rem;
+    font-size: .86rem;
+    color: var(--faint);
     margin-bottom: 1.4rem;
   }
 
@@ -2008,7 +2058,9 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
   .paso-cab h4 { font-size: .96rem; font-weight: 700; flex: 1; }
   .paso-cab .n { font-size: .66rem; }
-  .paso-cab .comp { font-size: .62rem; color: var(--alt); }
+  /* En el gris de los rótulos: `--alt` es «segundo objeto de una escena» (§06),
+     y aquí no había escena. */
+  .paso-cab .comp { font-size: .62rem; }
 
   /* la marca de estado: círculo vacío pendiente, relleno verde al resolver */
   .paso-cab .tick {
@@ -2033,6 +2085,14 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
   }
 
   .paso-cuerpo { padding: 0 1rem 1rem; }
+
+  /* Un paso cerrado enseña su número y su título, y nada más. Hasta el 26 de
+     octubre de 2026 se veía entero en gris: en el Taller era un párrafo de
+     doce líneas que contaba el método del paso siguiente antes de haber hecho
+     el primero. En modo completo y al imprimir no hay pasos cerrados. */
+  .paso.bloqueado .paso-cuerpo { display: none; }
+  .cerrado { display: none; padding: 0 1rem .9rem; font-size: .84rem; color: var(--faint); }
+  .paso.bloqueado .cerrado { display: block; }
 
   /* ── opciones (COMP1) ──────────────────────────────────────────── */
   .opciones { list-style: none; display: grid; gap: .4rem; margin-top: .8rem; }
@@ -2079,7 +2139,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
 
   .respuesta input:disabled { border-color: var(--live); color: var(--live); }
 
-  .formato { text-transform: none; letter-spacing: .01em; font-size: .68rem; }
+  .formato { font-size: .8rem; color: var(--faint); }
+  .formato code { font-family: var(--mono); font-size: .76rem; }
 
   .comprobar {
     font-family: var(--body);
@@ -2491,6 +2552,8 @@ const total = pasos.filter((p) => p.tipo !== 'reconocer').length + 1;
     .ejercicio { border: none; padding: 0; background: none; }
     .paso { opacity: 1 !important; break-inside: avoid; }
     .paso.bloqueado { opacity: 1 !important; }
+    .paso.bloqueado .paso-cuerpo { display: block !important; }
+    .paso.bloqueado .cerrado { display: none !important; }
     .fb { display: none !important; }
   }
 </style>
