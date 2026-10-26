@@ -185,8 +185,18 @@ const enPuntos = (p: number) => (Number.isInteger(p) ? String(p) : p.toFixed(2).
 /* Fluidos imprime porcentajes, «1. (10%)», y no siempre suman 100: se
    publican en su unidad, tal como vienen (content.config.ts, `unidad`). */
 const enPorcentaje = puntosImpresos?.unidad === '%';
-const conUnidad = (p: number, corto = false) =>
-  enPorcentaje ? `${enPuntos(p)} %` : `${enPuntos(p)} ${corto ? 'pts' : 'puntos'}`;
+/* «1 punto» y «1 pt» en singular; «0,50 puntos» y «2 pts», en plural. */
+const conUnidad = (p: number, corto = false) => {
+  if (enPorcentaje) return `${enPuntos(p)} %`;
+  const uno = p === 1;
+  return `${enPuntos(p)} ${corto ? (uno ? 'pt' : 'pts') : uno ? 'punto' : 'puntos'}`;
+};
+
+/* El curso del titular, «2022-2023», no se parte por el guion: en escritorio
+   salía «2022-» al final de una línea y «2023» sola en la siguiente. */
+const corte = titulo.lastIndexOf(' · ');
+const cursoFinal = corte >= 0 && /^\d{4}-\d{4}$/.test(titulo.slice(corte + 3)) ? titulo.slice(corte + 3) : '';
+const tituloSinCurso = cursoFinal ? titulo.slice(0, corte + 3) : titulo;
 
 /* Qué es la unidad del simulacro. Con piezas, cada casilla es una pieza y no
    un ejercicio, y el aviso lo dice así. */
@@ -271,7 +281,7 @@ const fueraHtml = await Promise.all(
           : 'tal cual cayó — sin cambiar un número'}
     </p>
     <p class="rotulo rotulo--live eyebrow"><EnlaceAsignatura {...asignatura} /> · {eyebrow}</p>
-    <h1>{titulo}</h1>
+    <h1>{tituloSinCurso}{cursoFinal && <span class="curso-entero">{cursoFinal}</span>}</h1>
     <p class="lede">
       {/* «0 puntos» sería una afirmación falsa: los ocho cuadernillos de
           Álgebra no reparten cero, es que **no publican el reparto**. Cuando
@@ -1119,6 +1129,7 @@ const fueraHtml = await Promise.all(
   }
 
   .mano { font-family: var(--mano); }
+  .curso-entero { white-space: nowrap; }
 
   /* la línea de honestidad, como apunte de tiza sobre el título */
   .honesta { font-size: 1.25rem; color: var(--live); margin-bottom: .1rem; }
