@@ -61,7 +61,7 @@ describe('3 · la esfera en la corriente, y dos correlaciones que no coinciden',
     cuadra(id, 'El Reynolds de Whitaker', ReW);
   });
 
-  it('su coeficiente es de 7.103 W/(m²·K)', () =>
+  it('su coeficiente es de 7.102 W/(m²·K)', () =>
     cuadra.magnitud(id, 'El coeficiente de Whitaker', hW, 'W/(m^2 K)'));
 
   it('y la esfera disipa 1.607 W por Whitaker', () =>

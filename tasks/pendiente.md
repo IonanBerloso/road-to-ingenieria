@@ -29,20 +29,26 @@ sigue después tal cual.
   formato, y el b) del 3 de la extraordinaria de 2023, por material.
 - **J · Sistemas de Producción** (~4 semanas): aplazada por Ionan el 30 de
   septiembre de 2026, se hará más adelante; K va antes. **Desde el 25 de
-  octubre de 2026 es de la versión 2.0**: la 1.0 se cierra con las nueve
-  asignaturas del primer cuatrimestre. Su colección trae cinco
+  octubre de 2026 no es de la 1.0**, que se cierra con las nueve asignaturas
+  del primer cuatrimestre, y desde el 26 va en la fase 3, con K. Su colección trae cinco
   problemas fechados como examen (T2 P7, P8 y P9; T3 P5 y P6), que dan para
   medir la ruta de la ordinaria; los de CNC piden un tipo de respuesta para
   código.
 - **K · Expresión Gráfica, el bloque 2** (los cortes, el despiece y el resto
-  de las vistas): **desde el 26 de octubre de 2026 es de la versión 2.0**,
-  como J, porque es del segundo cuatrimestre. Las hojas 52–55 son exámenes y
+  de las vistas): **desde el 26 de octubre de 2026 va en la fase 3**, con
+  J, porque es del segundo cuatrimestre. Las hojas 52–55 son exámenes y
   ordenarán su ruta (familias B, E y G antes que A y H).
 - **N · Cierre técnico y O · Auditoría de cierre, con la etiqueta `v1.0`**:
   con ellas se cierra la 1.0, decidido el 26 de octubre de 2026. No se espera
   a lo que digan los profesores: lo que digan entra después. El plan está en
   `2027 proyecto contenido/ideas/fases-siguientes-2026-10-26.md`; lo de N está
   abajo, en «Código» y en «Contenido».
+- **Fase 2, después de la 1.0** (decidido el 26 de octubre de 2026): dos
+  bloques, primero el entorno de aprendizaje y después el techo visual. Lo
+  demás de la lista de ideas espera. Cada bloque tiene su síntesis, con las
+  preguntas que quedan por decidir, en `2027 proyecto contenido/ideas/`
+  (`fase-2-entorno/` y `fase-2-techo-visual/`).
+- **Fase 3**: J y K.
 - **La deuda de abajo, intercalada** en los huecos del suelo y del
   despliegue, un commit por punto: mirar entero el primer despliegue después
   del 19 de octubre, cuando `ubuntu-latest` pase a Ubuntu 26.
@@ -123,6 +129,16 @@ con las hojas de las reuniones; queda abierto lo que no se sabía:
 - **Elasticidad, el 30 de octubre de 2026**: desde el 23, la ruta del
   parcial 1 está en los temas 1 a 6, que es lo que entra este curso. Queda
   abierto un `falta`: no hay un parcial entero solo de esos temas.
+
+### Lo que dejó la auditoría de cierre de la 1.0
+
+El informe está en `2027 proyecto contenido/auditorias/2026-10-27-cierre-1.0/`.
+Nada enseña algo falso; los dos fallos y cuatro de los cinco mejorables se
+arreglaron el 26 de octubre de 2026. Queda uno:
+
+- **Elasticidad, el segundo parcial de 2025-26**: sus dos problemas salen de
+  fotos que no están en la carpeta de contenido, así que su transcripción no
+  se ha podido cotejar. Cuando vuelvan las fotos, cotejarla.
 
 ### Elasticidad, terminada el 23 de octubre de 2026
 
