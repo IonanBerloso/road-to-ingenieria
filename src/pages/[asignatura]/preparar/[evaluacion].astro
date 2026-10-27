@@ -7,6 +7,7 @@ import EjercicioGuiado from '../../../components/patrones/EjercicioGuiado.astro'
 import Reparto from '../../../components/ui/Reparto.astro';
 import { mate } from '../../../lib/markdown.mjs';
 import { ruta } from '../../../lib/rutas';
+import { datoDeLaMedida } from '../../../lib/medida';
 import { paginaDeEjercicio } from '../../../lib/ejercicios';
 import { SEGMENTO, hayAntesDeEntrar, lectura, tarjetas, textosDeLaTarjeta } from '../../../lib/antes-de-entrar';
 import { SEGMENTO_PLAN, diasDichos } from '../../../lib/plan';
@@ -343,6 +344,16 @@ const pct = (n: number) => ((100 * n) / total).toFixed(1).replace('.', ',');
 const ejerciciosDeExamen = deLaConvocatoria
   .reduce((n, ex) => n + ex.data.ejercicios.length, 0);
 const hayReparto = total > 0;
+/* Lo medido y lo transcrito, cada uno con su denominador: el porqué, en
+   `lib/medida.ts`. */
+const datoMedida = datoDeLaMedida({
+  medidoSobre: d.medidoSobre,
+  medidas,
+  sonHojas,
+  transcritas: deLaConvocatoria.length,
+  ejercicios: hayReparto ? conPuntos : ejerciciosDeExamen,
+  puntos: hayReparto ? total : undefined,
+});
 
 /** Cuántos de esos ejercicios están en la ruta, para poder decirlo sin
  *  presumir de cubrirlos todos.
@@ -735,10 +746,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
         <p class="rotulo ec-tit">Esta evaluación</p>
         {hayReparto ? (
           <>
-            <p class="ec-dato">
-              Medido sobre {d.medidoSobre} {medidas} · {conPuntos} ejercicios ·{' '}
-              {total} puntos.
-            </p>
+            <p class="ec-dato">{datoMedida}</p>
             <Reparto puntos={suma} rotulo="Reparto de la nota por competencia" />
             <p class="ec-dato ec-dato--fuerte">
               El {pct(suma.comp1 + suma.comp4)} % de la nota no es calcular; la
@@ -747,10 +755,7 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
           </>
         ) : (
           <>
-            <p class="ec-dato">
-              Medido sobre {d.medidoSobre} {medidas}{sonHojas ? ', sin fecha' : ''} · {ejerciciosDeExamen}{' '}
-              ejercicios transcritos.
-            </p>
+            <p class="ec-dato">{datoMedida}</p>
             <p class="ec-dato ec-dato--fuerte">
               {sonHojas
                 ? 'Estas hojas no imprimen puntos ni reparto por competencia, así que aquí no hay porcentaje que enseñar. Lo que no está medido no se estima.'
