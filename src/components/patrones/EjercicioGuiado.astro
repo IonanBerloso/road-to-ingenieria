@@ -289,6 +289,15 @@ function trozosDelFormato(s: string): { texto: string; tecleado: boolean }[] {
    único en todo el repositorio, unas líneas más arriba. */
 const PREFIJO = `ej-${ejercicio.id}`;
 
+/* La teoría de antes del enunciado (content.config.ts, `antes`): solo la
+   traen los ejercicios que ya la tienen escrita. */
+const antesHtml = ejercicio.antes
+  ? {
+      idea: await mate(ejercicio.antes.idea, PREFIJO),
+      formula: await mate(ejercicio.antes.formula, PREFIJO),
+      reconocer: await mate(ejercicio.antes.reconocer, PREFIJO),
+    }
+  : null;
 const enunciadoHtml = await mate(ejercicio.enunciado, PREFIJO);
 /* Las notas que imprime el cuadernillo, aparte del enunciado y tal cual
    (content.config.ts, `notas`): son lo que dice cómo se corrige. */
@@ -546,6 +555,30 @@ const reglaIntentos = [
         y toda la nota está en cómo se escribe (§09). */}
     {ejercicio.puntos && <Reparto puntos={ejercicio.puntos} />}
   </header>
+
+  {/* Antes del enunciado y de los modos: es lo que se lee primero, y sirve
+      igual en guiado que con la resolución completa. */}
+  {
+    antesHtml && (
+      <aside class="antes" aria-labelledby={`${PREFIJO}-antes`}>
+        <p class="rotulo" id={`${PREFIJO}-antes`}>Antes de empezar</p>
+        <dl>
+          <div>
+            <dt class="rotulo">La idea</dt>
+            <dd class="prosa" set:html={antesHtml.idea} />
+          </div>
+          <div>
+            <dt class="rotulo">La fórmula, y por qué vale aquí</dt>
+            <dd class="prosa" set:html={antesHtml.formula} />
+          </div>
+          <div>
+            <dt class="rotulo">Cómo se reconoce</dt>
+            <dd class="prosa" set:html={antesHtml.reconocer} />
+          </div>
+        </dl>
+      </aside>
+    )
+  }
 
   <div class="modos no-imprimir" role="group" aria-label="Modo del ejercicio">
     <button type="button" data-modo="guiado" aria-pressed="true">guiado</button>
@@ -2004,6 +2037,33 @@ const reglaIntentos = [
     font-size: .86rem;
     color: var(--faint);
     margin-bottom: 1.4rem;
+  }
+
+  /* ── antes de empezar: la teoría, en una ficha de tres filas ───── */
+  .antes {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1rem 1.2rem 1.1rem;
+    margin: .6rem 0 1.4rem;
+  }
+  .antes > .rotulo { color: var(--live); margin-bottom: .7rem; }
+  .antes dl { margin: 0; display: grid; gap: .8rem; }
+  .antes dl > div {
+    display: grid;
+    /* minmax(0, …): sin él, la fórmula más ancha ensancha la columna y, en
+       el móvil, la página entera. */
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-top: .8rem;
+    border-top: 1px solid var(--rule);
+  }
+  .antes dl > div:first-child { padding-top: 0; border-top: 0; }
+  .antes dt { color: var(--graphite); padding-top: .2rem; }
+  .antes dd { margin: 0; min-width: 0; }
+  @media (max-width: 640px) {
+    .antes { padding-inline: .8rem; }
+    .antes dl > div { grid-template-columns: minmax(0, 1fr); gap: .3rem; }
   }
 
   /* ── enunciado: caja blanca con el borde verde (brief §6) ──────── */

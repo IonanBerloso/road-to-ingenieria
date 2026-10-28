@@ -1209,6 +1209,37 @@ const ejercicio = z
     nivel: z.enum(['ejemplo', 'practica', 'examen']),
     /** Solo en los ejercicios de examen: el reparto oficial de puntos. */
     puntos: puntos.optional(),
+    /**
+     * La teoría que hace falta tener delante antes de leer el enunciado, en
+     * tres partes fijas: la idea que lo resuelve, la fórmula con por qué vale
+     * en este caso, y en qué se reconoce que toca este método.
+     *
+     * POR QUÉ EXISTE (fase 2, 28 de octubre de 2026). En las reuniones del 28
+     * los profesores pidieron «algo más de explicación teórica antes del
+     * ejercicio»: hasta entonces se entraba directo al enunciado y la teoría
+     * quedaba a un enlace de distancia. Tres campos y no un texto libre para
+     * que no se quede en un resumen del tema: cada parte responde a una
+     * pregunta que el alumno se hace delante del papel.
+     * - Para quién: el que abre el ejercicio sin haber repasado el apartado.
+     * - Qué gana: saber qué herramienta coger antes de empezar a calcular.
+     * - Cómo se comprueba: el piloto es el tema 2 de Elasticidad, entero.
+     *
+     * Dos reglas que salieron del piloto:
+     * - No contesta el paso `reconocer` de su ejercicio. Da la teoría general
+     *   y dice qué mirar; aplicarla al caso es el trabajo del paso. En la
+     *   primera pasada, diez de las veinticuatro lo contestaban.
+     * - Pesa. Cada fórmula dibujada son kilobytes, y una caja cargada de
+     *   ellas llegó a 21 KB: con diez por página, la 2 del tema pasó del
+     *   techo de 3 MB de `verify`. Lo que se pueda decir con palabras va con
+     *   palabras, y en línea aparte va como mucho un bloque de fórmulas.
+     */
+    antes: z
+      .object({
+        idea: z.string().min(40),
+        formula: z.string().min(20),
+        reconocer: z.string().min(40),
+      })
+      .optional(),
     /** Un enunciado puede ser legitimamente corto: «$z^3 = -|z|$» son
      *  trece caracteres y es un enunciado completo. El minimo solo esta para
      *  cazar un campo vacio o un marcador de posicion. */
