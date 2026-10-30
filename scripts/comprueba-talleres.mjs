@@ -21,7 +21,8 @@
  * un punto sobre ella a la altura del bueno. Primero se prueba un error —el
  * mismo punto un centímetro más abajo— y después el bueno. En el primer
  * objetivo se falla cinco veces seguidas, para ver la pista y la solución.
- * Se pasa en claro y en oscuro, y a 1280 y a 360 px.
+ * Se pasa en claro y en oscuro, y a 1280 y a 360 px: las cuatro pasadas a la
+ * vez, cada una con su contexto del navegador.
  *
  *   npm run talleres
  */
@@ -52,11 +53,16 @@ const fallos = [];
 /** Lo que no falla pero se dice: objetivos de una lámina densa creados por la
  *  puerta de pruebas del Taller. */
 const avisos = [];
-const ok = (m) => console.log(`  ✓ ${m}`);
-const mal = (m) => {
-  fallos.push(m);
-  console.log(`  ✗ ${m}`);
-};
+/** Lo que dice una pasada, guardado en `lineas` hasta que acaba: las cuatro
+ *  van a la vez, y sus líneas mezcladas no se podrían leer. */
+const registro = (lineas) => ({
+  di: (m) => lineas.push(m),
+  ok: (m) => lineas.push(`  ✓ ${m}`),
+  mal: (m) => {
+    fallos.push(m);
+    lineas.push(`  ✗ ${m}`);
+  },
+});
 
 /* `TALLERES_SOLO=ejercicio-54 npm run talleres` prueba solo las páginas cuya
    ruta contiene eso: para mirar un fallo sin esperar a todas. */
@@ -69,55 +75,23 @@ if (paginas.length === 0) {
 const { origen, para } = await levanta({ puerto: PUERTO });
 const navegador = await chromium.launch();
 try {
-  for (const tema of ['claro', 'oscuro']) {
-    for (const ancho of [1280, 360]) {
-      for (const ruta of paginas) {
-        console.log(`\n${ruta} · ${tema} · ${ancho} px`);
-        const contexto = await navegador.newContext({
-          viewport: { width: ancho, height: 900 },
-          colorScheme: tema === 'oscuro' ? 'dark' : 'light',
-        });
-        const pagina = await contexto.newPage();
-        const errores = [];
-        pagina.on('pageerror', (e) => errores.push(e.message));
-        pagina.on('console', (m) => m.type() === 'error' && errores.push(m.text()));
-
-        await abre(pagina, ruta);
-        const talleres = pagina.locator('[data-taller]');
-        const n = await talleres.count();
-        if (n === 0) mal(`${ruta}: la página dice tener un taller y no se encuentra ninguno`);
-        /* Un taller que revienta se apunta como fallo y se sigue con el
-           siguiente: el guion no puede caerse a medias sin decir qué vio. */
-        for (let t = 0; t < n; t++) {
-          const quien = `${ruta} · taller ${t + 1}`;
-          try {
-            await compruebaTaller(pagina, talleres.nth(t), quien);
-          } catch (e) {
-            mal(`${quien}: se interrumpió la comprobación: ${e.message}`);
-          }
-        }
-
-        /* El modo completo, en una carga limpia: dibuja la solución sin que
-           nadie la haya ganado, que es lo que pide quien lo abre. */
-        await abre(pagina, ruta);
-        for (let t = 0; t < n; t++) {
-          const taller = pagina.locator('[data-taller]').nth(t);
-          const quien = `${ruta} · taller ${t + 1}`;
-          const antes = await taller.locator('[data-capa="solucion"] > *').count();
-          const boton = taller.locator('xpath=ancestor::section[@data-ejercicio][1]').locator('[data-modo="completo"]');
-          /* Con dos talleres en el mismo ejercicio, el botón ya se pulsó para
-             el primero y dibujó los dos. */
-          const yaPulsado = (await boton.getAttribute('aria-pressed')) === 'true';
-          if (!yaPulsado) await boton.click();
-          const despues = await taller.locator('[data-capa="solucion"] > *').count();
-          if ((antes === 0 || yaPulsado) && despues > 0) ok(`${quien}: el modo completo dibuja la solución`);
-          else mal(`${quien}: el modo completo no dibuja la solución (antes ${antes}, después ${despues})`);
-        }
-
-        if (errores.length) mal(`${ruta}: errores en la consola: ${errores.slice(0, 3).join(' | ')}`);
-        await contexto.close();
-      }
-    }
+  /* Las cuatro pasadas a la vez (30 de octubre de 2026). Una tras otra eran
+     2 h 16 min de las 3 h del suelo en CI: 23 min cada una a 1280 px y 44 a
+     360. Cada pasada escribe lo suyo de golpe al acabar, y en este orden. */
+  const salidas = ['claro', 'oscuro'].flatMap((tema) =>
+    [1280, 360].map((ancho) => {
+      const lineas = [];
+      const fin = pasada(tema, ancho, registro(lineas)).then(
+        () => null,
+        (e) => e,
+      );
+      return { lineas, fin };
+    }),
+  );
+  for (const { lineas, fin } of salidas) {
+    const error = await fin;
+    console.log(lineas.join('\n'));
+    if (error) throw error;
   }
 } finally {
   await navegador.close();
@@ -128,6 +102,57 @@ const unicos = [...new Set(avisos)];
 if (unicos.length) console.log(`\n${unicos.length} aviso(s), que no bloquean:\n  · ${unicos.join('\n  · ')}`);
 console.log(fallos.length ? `\n${fallos.length} fallos en los talleres.` : '\nTalleres: en verde.');
 process.exit(fallos.length ? 1 : 0);
+
+/** Una pasada: todas las páginas con taller, en un tema y a un ancho. */
+async function pasada(tema, ancho, reg) {
+  const { di, ok, mal } = reg;
+  for (const ruta of paginas) {
+    di(`\n${ruta} · ${tema} · ${ancho} px`);
+    const contexto = await navegador.newContext({
+      viewport: { width: ancho, height: 900 },
+      colorScheme: tema === 'oscuro' ? 'dark' : 'light',
+    });
+    const pagina = await contexto.newPage();
+    const errores = [];
+    pagina.on('pageerror', (e) => errores.push(e.message));
+    pagina.on('console', (m) => m.type() === 'error' && errores.push(m.text()));
+
+    await abre(pagina, ruta);
+    const talleres = pagina.locator('[data-taller]');
+    const n = await talleres.count();
+    if (n === 0) mal(`${ruta}: la página dice tener un taller y no se encuentra ninguno`);
+    /* Un taller que revienta se apunta como fallo y se sigue con el
+       siguiente: el guion no puede caerse a medias sin decir qué vio. */
+    for (let t = 0; t < n; t++) {
+      const quien = `${ruta} · taller ${t + 1}`;
+      try {
+        await compruebaTaller(pagina, talleres.nth(t), quien, reg);
+      } catch (e) {
+        mal(`${quien}: se interrumpió la comprobación: ${e.message}`);
+      }
+    }
+
+    /* El modo completo, en una carga limpia: dibuja la solución sin que
+       nadie la haya ganado, que es lo que pide quien lo abre. */
+    await abre(pagina, ruta);
+    for (let t = 0; t < n; t++) {
+      const taller = pagina.locator('[data-taller]').nth(t);
+      const quien = `${ruta} · taller ${t + 1}`;
+      const antes = await taller.locator('[data-capa="solucion"] > *').count();
+      const boton = taller.locator('xpath=ancestor::section[@data-ejercicio][1]').locator('[data-modo="completo"]');
+      /* Con dos talleres en el mismo ejercicio, el botón ya se pulsó para
+         el primero y dibujó los dos. */
+      const yaPulsado = (await boton.getAttribute('aria-pressed')) === 'true';
+      if (!yaPulsado) await boton.click();
+      const despues = await taller.locator('[data-capa="solucion"] > *').count();
+      if ((antes === 0 || yaPulsado) && despues > 0) ok(`${quien}: el modo completo dibuja la solución`);
+      else mal(`${quien}: el modo completo no dibuja la solución (antes ${antes}, después ${despues})`);
+    }
+
+    if (errores.length) mal(`${ruta}: errores en la consola: ${errores.slice(0, 3).join(' | ')}`);
+    await contexto.close();
+  }
+}
 
 /** Carga la página y, si los ejercicios van detrás de una pestaña, la abre.
  *
@@ -176,7 +201,7 @@ async function llegaAlPaso(ejercicio, indice) {
   }
 }
 
-async function compruebaTaller(pagina, taller, quien) {
+async function compruebaTaller(pagina, taller, quien, { ok, mal }) {
   const paso = taller.locator('xpath=ancestor::li[@data-paso][1]');
   const ejercicio = taller.locator('xpath=ancestor::section[@data-ejercicio][1]');
   const indice = Number(await paso.getAttribute('data-paso'));
