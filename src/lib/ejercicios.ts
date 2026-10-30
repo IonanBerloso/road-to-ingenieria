@@ -13,16 +13,36 @@
  * cuando se reescribe la resolución de otro, y un enlace compartido sigue
  * valiendo. Diez ejercicios del tema más pesado son unos 2 MB.
  *
+ * Menos de diez, si el tema lo pide (29 de octubre de 2026). Diez ejercicios
+ * de cinemática en el espacio, cada uno con unas doscientas flechas de vector
+ * dibujadas, pesaban 3,85 MB. El `ejercicios.yaml` de ese tema declara
+ * `porPagina` y sus bloques se cortan ahí; sigue siendo por número, así que la
+ * dirección de un ejercicio solo cambia si cambia ese número.
+ *
  * Es la única fuente del reparto: la página del tema, la de cada bloque, las
- * rutas de estudio y el índice de la paleta lo leen de aquí.
+ * rutas de estudio y el índice de la paleta lo leen de aquí, y todas le pasan
+ * el `porPagina` del fichero.
  */
 export const POR_PAGINA = 10;
 
+/** El tamaño de bloque que se usa: el pedido, o diez. Un `[...].map(f)`
+ *  pasaría el índice del array como tamaño; el primero es 0 y aquí revienta,
+ *  en vez de repartir mal sin avisar. */
+function tamano(porPagina: number | undefined): number {
+  const t = porPagina ?? POR_PAGINA;
+  if (!Number.isInteger(t) || t < 1 || t > POR_PAGINA) {
+    throw new Error(`porPagina tiene que ser un entero de 1 a ${POR_PAGINA}, y es ${porPagina}.`);
+  }
+  return t;
+}
+
 /** El bloque, contando desde 1, del ejercicio que ocupa el lugar `i` (desde 0). */
-export const paginaDeIndice = (i: number): number => Math.floor(i / POR_PAGINA) + 1;
+export const paginaDeIndice = (i: number, porPagina?: number): number =>
+  Math.floor(i / tamano(porPagina)) + 1;
 
 /** Cuántos bloques salen de `n` ejercicios. */
-export const numPaginas = (n: number): number => Math.max(1, Math.ceil(n / POR_PAGINA));
+export const numPaginas = (n: number, porPagina?: number): number =>
+  Math.max(1, Math.ceil(n / tamano(porPagina)));
 
 /** El camino de la subpágina, sin base ni barra: `calculo/t05-integracion/ejercicios/3`.
  *  Se pasa por `ruta()` para enlazarlo. */
@@ -30,8 +50,8 @@ export const caminoDeBloque = (asignatura: string, tema: string, pagina: number)
   `${asignatura}/${tema}/ejercicios/${pagina}`;
 
 /** El camino del bloque donde vive el ejercicio que ocupa el lugar `i`. */
-export const caminoDeEjercicio = (asignatura: string, tema: string, i: number): string =>
-  caminoDeBloque(asignatura, tema, paginaDeIndice(i));
+export const caminoDeEjercicio = (asignatura: string, tema: string, i: number, porPagina?: number): string =>
+  caminoDeBloque(asignatura, tema, paginaDeIndice(i, porPagina));
 
 /** Dónde vive el ejercicio que ocupa el lugar `i` de un `ejercicios.yaml`,
  *  dado el id del fichero en la colección.
@@ -42,26 +62,27 @@ export const caminoDeEjercicio = (asignatura: string, tema: string, i: number): 
  *  de quince ejercicios y no se parte—. Las rutas de estudio y la paleta lo
  *  preguntan aquí: antes cada una quitaba el `/ejercicios` del id por su
  *  cuenta, y con los bloques habrían sido dos copias de la misma regla. */
-export function paginaDeEjercicio(idFichero: string, i: number): string {
+export function paginaDeEjercicio(idFichero: string, i: number, porPagina?: number): string {
   const partes = idFichero.split('/');
-  if (partes.length === 3 && partes[1] !== 'examenes') return caminoDeEjercicio(partes[0], partes[1], i);
+  if (partes.length === 3 && partes[1] !== 'examenes') return caminoDeEjercicio(partes[0], partes[1], i, porPagina);
   return partes.slice(0, -1).join('/');
 }
 
 /** El primer y el último número, contando desde 1, del bloque `pagina` de un
  *  tema con `total` ejercicios. */
-export function limitesDeBloque(pagina: number, total: number): { desde: number; hasta: number } {
-  return { desde: (pagina - 1) * POR_PAGINA + 1, hasta: Math.min(pagina * POR_PAGINA, total) };
+export function limitesDeBloque(pagina: number, total: number, porPagina?: number): { desde: number; hasta: number } {
+  const t = tamano(porPagina);
+  return { desde: (pagina - 1) * t + 1, hasta: Math.min(pagina * t, total) };
 }
 
 /** «del 11 al 20», o «el 21» si el bloque tiene uno solo. */
-export function rotuloDeBloque(pagina: number, total: number): string {
-  const { desde, hasta } = limitesDeBloque(pagina, total);
+export function rotuloDeBloque(pagina: number, total: number, porPagina?: number): string {
+  const { desde, hasta } = limitesDeBloque(pagina, total, porPagina);
   return desde === hasta ? `el ${desde}` : `del ${desde} al ${hasta}`;
 }
 
 /** «11–20», o «21»: el rótulo corto, para la fila de bloques. */
-export function tramoDeBloque(pagina: number, total: number): string {
-  const { desde, hasta } = limitesDeBloque(pagina, total);
+export function tramoDeBloque(pagina: number, total: number, porPagina?: number): string {
+  const { desde, hasta } = limitesDeBloque(pagina, total, porPagina);
   return desde === hasta ? `${desde}` : `${desde}–${hasta}`;
 }

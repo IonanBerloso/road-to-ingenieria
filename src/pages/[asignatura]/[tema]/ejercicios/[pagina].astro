@@ -16,7 +16,8 @@ import {
 
 /**
  * Los ejercicios de un tema, de diez en diez: `…/t05-integracion/ejercicios/2/`
- * (fase E4 de la auditoría del 27 de septiembre de 2026). La página del tema
+ * (fase E4 de la auditoría del 27 de septiembre de 2026), o de `porPagina` en
+ * `porPagina` si su `ejercicios.yaml` lo pide (`lib/ejercicios.ts`). La página del tema
  * se queda con la teoría y el índice; aquí vive cada ejercicio entero.
  *
  * No repite las comprobaciones de `[tema].astro` —que el catálogo y el tema
@@ -32,18 +33,20 @@ export async function getStaticPaths() {
     asignatura.data.temas
       .filter((t) => t.hecho)
       .flatMap((ficha) => {
-        const ejercicios =
-          ficheros.find((f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios`)?.data.ejercicios ?? [];
+        const fichero = ficheros.find((f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios`);
+        const ejercicios = fichero?.data.ejercicios ?? [];
+        const porPagina = fichero?.data.porPagina ?? POR_PAGINA;
         if (ejercicios.length === 0) return [];
-        return Array.from({ length: numPaginas(ejercicios.length) }, (_, k) => ({
+        return Array.from({ length: numPaginas(ejercicios.length, porPagina) }, (_, k) => ({
           params: { asignatura: asignatura.id, tema: ficha.id, pagina: String(k + 1) },
           props: {
             asignatura,
             ficha,
             pagina: k + 1,
             total: ejercicios.length,
+            porPagina,
             ejercicios: ejercicios
-              .slice(k * POR_PAGINA, (k + 1) * POR_PAGINA)
+              .slice(k * porPagina, (k + 1) * porPagina)
               .map((e) => ({ id: e.id, titulo: e.titulo })),
           },
         }));
@@ -51,14 +54,14 @@ export async function getStaticPaths() {
   );
 }
 
-const { asignatura, ficha, pagina, total, ejercicios } = Astro.props;
+const { asignatura, ficha, pagina, total, porPagina, ejercicios } = Astro.props;
 
 const nn = String(ficha.n).padStart(2, '0');
-const rotulo = rotuloDeBloque(pagina, total);
-const paginas = numPaginas(total);
+const rotulo = rotuloDeBloque(pagina, total, porPagina);
+const paginas = numPaginas(total, porPagina);
 const hrefBloque = (p: number) => ruta(caminoDeBloque(asignatura.id, ficha.id, p));
 const vecino = (p: number) =>
-  p >= 1 && p <= paginas ? { href: hrefBloque(p), rotulo: rotuloDeBloque(p, total) } : undefined;
+  p >= 1 && p <= paginas ? { href: hrefBloque(p), rotulo: rotuloDeBloque(p, total, porPagina) } : undefined;
 ---
 
 <Base
@@ -75,11 +78,11 @@ const vecino = (p: number) =>
       titulo={ficha.titulo}
       rotulo={rotulo}
       total={total}
-      desde={limitesDeBloque(pagina, total).desde}
+      desde={limitesDeBloque(pagina, total, porPagina).desde}
       ejercicios={ejercicios}
       bloques={Array.from({ length: paginas }, (_, k) => ({
         href: hrefBloque(k + 1),
-        tramo: tramoDeBloque(k + 1, total),
+        tramo: tramoDeBloque(k + 1, total, porPagina),
         actual: k + 1 === pagina,
       }))}
       anterior={vecino(pagina - 1)}

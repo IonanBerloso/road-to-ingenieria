@@ -1580,7 +1580,12 @@ const convocatoria = z.enum(ORDEN_CONV as [string, ...string[]]);
 const ejercicios = defineCollection({
   loader: glob({ pattern: patronSolo('**/ejercicios.yaml', (id) => `${id}/**/ejercicios.yaml`), base: './src/content' }),
   schema: z
-    .object({ ejercicios: z.array(ejercicio).min(1) })
+    .object({
+      /** Cuántos ejercicios por bloque, si no diez (`lib/ejercicios.ts`). Solo
+       *  para un tema cuyos bloques de diez pasan de 3 MB. */
+      porPagina: z.number().int().min(1).max(10).optional(),
+      ejercicios: z.array(ejercicio).min(1),
+    })
     .refine((f) => new Set(f.ejercicios.map((e) => e.id)).size === f.ejercicios.length, {
       message: 'hay dos ejercicios con el mismo id',
     })

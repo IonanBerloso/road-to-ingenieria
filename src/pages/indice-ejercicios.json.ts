@@ -74,7 +74,7 @@ export const GET: APIRoute = async () => {
        la paleta sigue componiendo `u#ej-id` sin saber nada de bloques. */
     const porBloque = new Map<string, [string, string, string, string][]>();
     for (const [i, x] of f.data.ejercicios.entries()) {
-      const u = ruta(paginaDeEjercicio(f.id, i));
+      const u = ruta(paginaDeEjercicio(f.id, i, f.data.porPagina));
       porBloque.set(u, [...(porBloque.get(u) ?? []), [x.titulo, x.id, referencia(x.fuente), x.pide]]);
     }
     for (const [u, e] of porBloque) grupos.push({ u, s: sub, e });

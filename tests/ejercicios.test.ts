@@ -24,11 +24,11 @@ import {
 describe('bloques de diez', () => {
   it('el lugar de un ejercicio dice su bloque', () => {
     expect(POR_PAGINA).toBe(10);
-    expect([0, 9, 10, 19, 20].map(paginaDeIndice)).toEqual([1, 1, 2, 2, 3]);
+    expect([0, 9, 10, 19, 20].map((i) => paginaDeIndice(i))).toEqual([1, 1, 2, 2, 3]);
   });
 
   it('cuántos bloques salen de n ejercicios', () => {
-    expect([1, 10, 11, 34, 40].map(numPaginas)).toEqual([1, 1, 2, 4, 4]);
+    expect([1, 10, 11, 34, 40].map((n) => numPaginas(n))).toEqual([1, 1, 2, 4, 4]);
   });
 
   it('cada ejercicio cae en un solo bloque, y ese bloque lo contiene', () => {
@@ -81,5 +81,66 @@ describe('rótulos', () => {
     expect(tramoDeBloque(2, 34)).toBe('11–20');
     expect(tramoDeBloque(4, 34)).toBe('31–34');
     expect(tramoDeBloque(3, 21)).toBe('21');
+  });
+});
+
+/* Un `ejercicios.yaml` puede pedir bloques más cortos con `porPagina`
+   (29 de octubre de 2026): diez ejercicios de cinemática en el espacio, cada
+   uno con unas doscientas flechas de vector, pesaban 3,85 MB. */
+describe('un tema con bloques más cortos', () => {
+  it('el lugar, el número de bloques y sus límites siguen al tamaño pedido', () => {
+    expect([0, 5, 6, 11, 12, 20].map((i) => paginaDeIndice(i, 6))).toEqual([1, 1, 2, 2, 3, 4]);
+    expect(numPaginas(21, 6)).toBe(4);
+    expect(numPaginas(18, 6)).toBe(3);
+    expect(limitesDeBloque(4, 21, 6)).toEqual({ desde: 19, hasta: 21 });
+  });
+
+  it('cada ejercicio cae en un solo bloque, y ese bloque lo contiene, con cualquier tamaño', () => {
+    for (let t = 1; t <= POR_PAGINA; t++) {
+      for (let n = 1; n <= 45; n++) {
+        let enBloques = 0;
+        for (let p = 1; p <= numPaginas(n, t); p++) {
+          const { desde, hasta } = limitesDeBloque(p, n, t);
+          expect(hasta - desde + 1).toBeLessThanOrEqual(t);
+          enBloques += hasta - desde + 1;
+        }
+        expect(enBloques).toBe(n);
+        for (let i = 0; i < n; i++) {
+          const { desde, hasta } = limitesDeBloque(paginaDeIndice(i, t), n, t);
+          expect(i + 1).toBeGreaterThanOrEqual(desde);
+          expect(i + 1).toBeLessThanOrEqual(hasta);
+        }
+      }
+    }
+  });
+
+  it('las direcciones y los rótulos usan el mismo tamaño', () => {
+    expect(caminoDeEjercicio('mecanica-aplicada', 't07-cinematica', 20, 6)).toBe(
+      'mecanica-aplicada/t07-cinematica/ejercicios/4',
+    );
+    expect(paginaDeEjercicio('mecanica-aplicada/t07-cinematica/ejercicios', 12, 6)).toBe(
+      'mecanica-aplicada/t07-cinematica/ejercicios/3',
+    );
+    expect(paginaDeEjercicio('calculo/examenes/2015-2016-1ev/ejercicios', 14, 6)).toBe(
+      'calculo/examenes/2015-2016-1ev',
+    );
+    expect(rotuloDeBloque(2, 21, 6)).toBe('del 7 al 12');
+    expect(tramoDeBloque(4, 19, 6)).toBe('19');
+  });
+
+  it('sin tamaño, diez', () => {
+    expect(paginaDeIndice(10, undefined)).toBe(2);
+    expect(paginaDeEjercicio('calculo/t05-integracion/ejercicios', 10, undefined)).toBe(
+      'calculo/t05-integracion/ejercicios/2',
+    );
+  });
+
+  /* `[...].map(paginaDeIndice)` pasaría el índice del array como tamaño: el
+     primero es 0 y revienta, en vez de repartir mal sin avisar. */
+  it('un tamaño que no es un entero de 1 a 10 es un error', () => {
+    expect(() => paginaDeIndice(0, 0)).toThrow(/porPagina/);
+    expect(() => numPaginas(5, 11)).toThrow(/porPagina/);
+    expect(() => limitesDeBloque(1, 5, 2.5)).toThrow(/porPagina/);
+    expect(() => [0, 1].map(paginaDeIndice)).toThrow(/porPagina/);
   });
 });

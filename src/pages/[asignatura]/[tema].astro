@@ -104,17 +104,19 @@ const ficheroEjercicios = (await getCollection('ejercicios')).find(
   (f) => f.id === `${asignatura.id}/${ficha.id}/ejercicios`,
 );
 const ejercicios = ficheroEjercicios?.data.ejercicios ?? [];
+const porPagina = ficheroEjercicios?.data.porPagina ?? POR_PAGINA;
 
 /* Los ejercicios ya no se pintan aquí: van de diez en diez a su subpágina
-   (fase E4, `lib/ejercicios.ts`), y esta página los enlaza. */
+   (fase E4, `lib/ejercicios.ts`), o de `porPagina` en `porPagina` si el
+   fichero lo pide, y esta página los enlaza. */
 const hrefDe = (i: number, id: string) =>
-  `${ruta(caminoDeEjercicio(asignatura.id, ficha.id, i))}#ej-${id}`;
+  `${ruta(caminoDeEjercicio(asignatura.id, ficha.id, i, porPagina))}#ej-${id}`;
 const listaEjercicios = ejercicios.map((e, i) => ({ id: e.id, titulo: e.titulo, href: hrefDe(i, e.id) }));
-const bloques = Array.from({ length: ejercicios.length ? numPaginas(ejercicios.length) : 0 }, (_, k) => ({
+const bloques = Array.from({ length: ejercicios.length ? numPaginas(ejercicios.length, porPagina) : 0 }, (_, k) => ({
   href: ruta(caminoDeBloque(asignatura.id, ficha.id, k + 1)),
-  rotulo: rotuloDeBloque(k + 1, ejercicios.length),
-  desde: limitesDeBloque(k + 1, ejercicios.length).desde,
-  ejercicios: listaEjercicios.slice(k * POR_PAGINA, (k + 1) * POR_PAGINA),
+  rotulo: rotuloDeBloque(k + 1, ejercicios.length, porPagina),
+  desde: limitesDeBloque(k + 1, ejercicios.length, porPagina).desde,
+  ejercicios: listaEjercicios.slice(k * porPagina, (k + 1) * porPagina),
 }));
 
 /* Las cuestiones de las diapositivas del tema, si tiene banco de práctica
