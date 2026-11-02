@@ -57,13 +57,17 @@ Con tres convocatorias por cuatrimestre, casi todos los temas caen en dos o en
 tres y la medida no distingue nada (§10). Manda el criterio declarado. 26 de
 septiembre de 2026.
 
-## §17 se queda dentro de CLAUDE.md, con índice
+## §17 se quedaba dentro de CLAUDE.md; desde el 3 de octubre de 2026, solo su índice
 
-En la auditoría del 26 de septiembre de 2026 se pensó sacar las trampas a un
-fichero aparte, porque pasan de novecientas líneas. Se quedan: son lo que hay
-que saber **antes** de tocar nada, y fuera se leerían menos. A cambio, abren
-con un índice de una línea por trampa que genera `npm run trampas` y vigila
-`verify`. Si pasan de mil doscientas líneas, se vuelve a pensar.
+El 26 de septiembre de 2026 las trampas se quedaron dentro —son lo que hay que
+saber **antes** de tocar nada, y fuera se leerían menos—, con un índice que
+genera `npm run trampas`. El argumento nuevo no es la longitud sino el coste
+medido: CLAUDE.md pesaba 218.853 bytes, lo lee entero cada sesión y cada
+agente, y del 30 de septiembre al 2 de octubre el 82 % del límite semanal se
+fue en agentes, casi todo releyendo contexto (`tasks/siguiente.md`). Las
+entradas de §17 y las historias fechadas de otras secciones pasan tal cual a
+`docs/porques/`; en CLAUDE.md queda el índice, una línea por trampa con su
+enlace, y ninguna regla cambia. Ese día quedó en 139.588 bytes.
 
 ## `anexaPaso` se queda aunque no la llame ningún guion del repositorio
 

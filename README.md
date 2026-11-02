@@ -92,8 +92,10 @@ artefacto de build y no se versiona (`CLAUDE.md` §12).
 ## Despliegue
 
 Cada push a `main` lanza GitHub Actions, que pasa el suelo entero y solo
-entonces publica en GitHub Pages. La URL del sitio se declara una sola vez, en
-`astro.config.mjs` (`site` y `base`).
+entonces publica en GitHub Pages. Si el push solo toca `tasks/`, `diario/` o
+`docs/`, no publica: pasa en segundos las comprobaciones de los documentos
+(`.github/workflows/documentos.yml`). La URL del sitio se declara una sola vez,
+en `astro.config.mjs` (`site` y `base`).
 
 ## Derechos y datos personales
 

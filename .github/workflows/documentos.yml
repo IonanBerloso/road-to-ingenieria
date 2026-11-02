@@ -1,0 +1,55 @@
+name: Comprobar los documentos
+
+# El camino corto de un push que solo toca documentos (idea 11 de la
+# auditoría de octubre de 2026). `deploy.yml` ignora los push que solo
+# cambian `tasks/`, `diario/` o `docs/`: ninguno de los tres cambia el sitio,
+# y pagar por ellos el suelo entero era alrededor de una hora por commit.
+#
+# Lo que sí puede romper un commit así se comprueba aquí, en segundos:
+#   - `verify --solo-fuente`: los documentos duplicados por un reemplazo con
+#     `$` (tasks/ y docs/porques/), el índice de §17 contra sus entradas de
+#     docs/porques/17-trampas.md, el ejemplo de §04 y las notas impresas de
+#     Fluidos, que necesitan pdftotext;
+#   - `cifras`: que ninguna cifra publicada en docs/ haya caducado.
+# No publica nada. Si un push toca además el sitio, corren los dos flujos y
+# este sobra, pero no estorba.
+#
+# Para quién: quien mantiene el proyecto. Cuándo: en cada push a main de
+# solo documentos. Qué gana: no esperar una hora a un despliegue que no
+# cambia el sitio, ni dejar cancelado el que sí lo cambiaba. Cómo se
+# comprueba: la duración de la ejecución, y que un índice de §17 sin
+# regenerar la pone en rojo.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tasks/**'
+      - 'diario/**'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Instalar poppler
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+
+      - name: Los documentos, sin construir el sitio
+        run: node scripts/verify.mjs --solo-fuente
+
+      - name: Las cifras publicadas
+        run: npm run cifras
