@@ -1110,10 +1110,11 @@ const pasoConstruir = z
   });
 
 /** El código de una lámina: `SD5` (colección), `EX55-1AB` (hoja 55, ejercicio
- *  1, apartados a y b), `PVM` (otro PDF del curso) o `RI1` (nuestra). El
- *  fichero se llama como el código en minúscula, y así la cita la receta. */
-const CODIGO_DE_LAMINA = /^(SD\d+[a-z]?|EX5[2-5]-\d+[A-Z]*|PVM|RI\d+)$/;
-const CODIGO_DE_LAMINA_MIN = /^(sd\d+[a-z]?|ex5[2-5]-\d+[a-z]*|pvm|ri\d+)$/;
+ *  1, apartados a y b), `EX2526C-1` y `EX2526O-3A` (control y ordinaria de
+ *  2025-26), `PVM` (otro PDF del curso) o `RI1` (nuestra). El fichero se llama
+ *  como el código en minúscula, y así la cita la receta. */
+const CODIGO_DE_LAMINA = /^(SD\d+[a-z]?|EX(?:5[2-5]|2526[CO])-\d+[A-Z]*|PVM|RI\d+)$/;
+const CODIGO_DE_LAMINA_MIN = /^(sd\d+[a-z]?|ex(?:5[2-5]|2526[co])-\d+[a-z]*|pvm|ri\d+)$/;
 
 /** La receta de un ejercicio de Expresión Gráfica: su lámina y la solución
  *  como datos (`lib/diedrico-receta.ts`). */
@@ -2279,6 +2280,15 @@ const preparar = defineCollection({
        *  para que la página del examen pueda enlazar a su ruta, y para que la
        *  auditoría de §15 lo pueda comprobar sola. */
       tambienPrepara: z.array(convocatoria).default([]),
+      /** Las convocatorias de otra evaluación que **entran en la medida**, y no
+       *  solo en el enlace. `tambienPrepara` no amplía la base a propósito (una
+       *  ruta de 3.ª evaluación contaría tres veces lo mismo). Esto sí, y por eso
+       *  va aparte: la ruta del control del bloque 1 de Expresión Gráfica tiene
+       *  un solo control con fecha, y mide también las cuatro hojas sin fecha y
+       *  la ordinaria de ese curso, que son el mismo tipo de examen (2 de
+       *  noviembre de 2026). Sin esto, al llegar el primer control la tarjeta
+       *  pasaba a medir sobre uno solo y dejaba de cuadrar con `medidoSobre`. */
+      mideTambien: z.array(convocatoria).default([]),
       titulo: z.string().min(5),
       lede: z.string().min(40).max(400),
       /** Los temas que entran. Se cruzan con el catálogo al generar la ruta:

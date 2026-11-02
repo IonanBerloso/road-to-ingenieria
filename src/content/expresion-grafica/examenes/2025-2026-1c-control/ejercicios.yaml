@@ -1,0 +1,2463 @@
+ejercicios:
+  - id: exeg-2526c-1-la-distancia-entre-dos-aristas
+    titulo: La distancia entre dos aristas de un prisma oblicuo, desde P
+    fuente: >-
+      Apartado 1 del examen de Expresión Gráfica de Ingeniería Industrial, Modelo A, curso 2025-2026,
+      24 de noviembre de 2025 (Figura 1) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Se transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        La distancia entre dos rectas se mide por su perpendicular común, y una vista que la deje sin
+        deformar la da entera. Antes de construir nada conviene saber cómo son las dos rectas
+        entre sí, porque de eso depende cuántas perpendiculares comunes hay.
+      formula: |
+        Un punto sale de un cambio de plano vertical con su cota, medida desde la de referencia. Lo que
+        mide de verdad un segmento cualquiera, si se quiere comprobar desde sus proyecciones:
+
+        $$
+        L = \sqrt{(\text{planta})^2 + \Delta z^2}
+        $$
+      reconocer: |
+        Antes de trazar, mira qué figura forman las dos rectas que nombra el enunciado y compara sus
+        proyecciones en cada vista. Mira también la escala del cajetín: la respuesta se da en metros.
+    enunciado: |
+      Sabiendo que el punto P está en AA′, calcular la distancia mínima (t) entre las AA′ y CC′ en
+      posición y magnitud desde el punto P.
+
+      **Notas nuestras.** La figura es un prisma triangular oblicuo, con sus dos bases horizontales, en
+      el alzado, arriba, y en la planta, debajo. La lámina va a escala 1:100: cada milímetro son 0,1 m.
+      Solo trae rotulados A₂, B₂, C₂, A′₂, B′₂, C′₂ y P₁; los rótulos de la planta son nuestros, igual
+      que Q, el punto de CC′ donde acaba la distancia. El enunciado no pide aparte lo visto y lo oculto, pero
+      la portada del examen lo valora en cada ejercicio. Aquí se practica en PQ, y el prisma queda en continua,
+      como lo pinta la lámina.
+    pide: Q, en las dos vistas; PQ a limpio, y t en metros.
+    receta:
+      lamina: ex2526c-1
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        Ap: 'punto3(alzado: figura.punto("A2p"), planta: figura.punto("A1p"))'
+        Cp: 'punto3(alzado: figura.punto("C2p"), planta: figura.punto("C1p"))'
+        P2: 'cruce_aparente(figura.segmento("AAp2"), segmento2(figura.punto("P1"), desplaza(figura.punto("P1"), dy: -50)))'
+        P: 'punto3(alzado: P2, planta: figura.punto("P1"))'
+        aa: recta3(A, Ap)
+        cc: recta3(C, Cp)
+      solucion:
+        # AA′ y CC′ son aristas de un prisma: forman 0,01° por el redondeo del
+        # PDF, son paralelas. La perpendicular común no es una: se toma la que
+        # sale de P, la que pide el enunciado.
+        Q: pie_perpendicular(P, cc)
+        t_m: en_mm(vm(P, Q)) / 10
+        # Decisión: dos cambios de plano, como las diapositivas de distancias, con
+        # las líneas nuevas en la lámina y A′, el punto más bajo, de referencia en
+        # los dos. La primera, paralela a A₁A′₁: AA′ y CC′ en verdadera magnitud.
+        # La segunda, perpendicular a A₄A′₄: las dos, de punta.
+        A_4: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: Ap)'
+        Ap_4: 'cambio_plano_vertical(Ap, figura.segmento("nueva1"), ref: Ap)'
+        C_4: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: Ap)'
+        Cp_4: 'cambio_plano_vertical(Cp, figura.segmento("nueva1"), ref: Ap)'
+        P_4: 'cambio_plano_vertical(P, figura.segmento("nueva1"), ref: Ap)'
+        Q_4: 'cambio_plano_vertical(Q, figura.segmento("nueva1"), ref: Ap)'
+        A_5: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: Ap, luego: figura.segmento("nueva2"))'
+        C_5: 'cambio_plano_vertical(C, figura.segmento("nueva1"), ref: Ap, luego: figura.segmento("nueva2"))'
+        aa4: segmento2(A_4, Ap_4)
+        cc4: segmento2(C_4, Cp_4)
+        refA: 'perpendicular(por: figura.punto("A1"), a: figura.segmento("nueva1"))'
+        refAp: 'perpendicular(por: figura.punto("A1p"), a: figura.segmento("nueva1"))'
+        refC: 'perpendicular(por: figura.punto("C1"), a: figura.segmento("nueva1"))'
+        refCp: 'perpendicular(por: figura.punto("C1p"), a: figura.segmento("nueva1"))'
+        refP: 'perpendicular(por: figura.punto("P1"), a: figura.segmento("nueva1"))'
+        refQ: 'perpendicular(por: Q_4, a: figura.segmento("nueva1"))'
+        perpP4: 'perpendicular(por: P_4, a: aa4)'
+        K_A: 'pie_perpendicular(figura.punto("A1"), figura.segmento("nueva1"))'
+        K_C: 'pie_perpendicular(figura.punto("C1"), figura.segmento("nueva1"))'
+        K_P: 'pie_perpendicular(figura.punto("P1"), figura.segmento("nueva1"))'
+        # Lo que A y C están más altos que A′, la distancia entre las dos bases
+        # en el alzado, y lo que P está más alto, de P₂ a la recta A′₂C′₂.
+        pieA2: 'pie_perpendicular(figura.punto("A2"), figura.segmento("basep2"))'
+        pieP2: 'pie_perpendicular(P2, figura.segmento("basep2"))'
+        # El segundo cambio: lo que C₁ dista de A₁A′₁, que es la paralela a la
+        # primera línea nueva por la referencia.
+        H: 'pie_perpendicular(figura.punto("C1"), figura.segmento("AAp1"))'
+        K5A: 'cruce_aparente(aa4, figura.segmento("nueva2"))'
+        K5C: 'cruce_aparente(cc4, figura.segmento("nueva2"))'
+        # Los errores.
+        Q4mal: 'pie_perpendicular(figura.punto("P1"), figura.segmento("CCp1"))'
+        dyAAp: 'raiz(vm(A, Ap) * vm(A, Ap) - vm_alzado(A, Ap) * vm_alzado(A, Ap))'
+        # Los extremos de las rectas largas.
+        L_A4: 'uno(medir_sobre(refA, desde: A_4, distancia: mm(4)), 1)'
+        L_C4: 'uno(medir_sobre(refC, desde: C_4, distancia: mm(4)), 1)'
+        L_P4: 'uno(medir_sobre(refP, desde: P_4, distancia: mm(3)), 1)'
+        L_K5A: 'uno(medir_sobre(aa4, desde: K5A, distancia: mm(3)), 1)'
+        L_K5C: 'uno(medir_sobre(cc4, desde: C_5, distancia: mm(3)), 1)'
+        L_Q4: 'uno(medir_sobre(perpP4, desde: Q_4, distancia: mm(3)), 1)'
+        L_Q1: 'uno(medir_sobre(refQ, desde: proy_planta(Q), distancia: mm(3)), 2)'
+        L_Q2: 'desplaza(proy_alzado(Q), dy: mm(-3))'
+      comprueba:
+        - en_recta(P, aa)
+        - en_recta(Q, cc)
+    pasos:
+      - tipo: reconocer
+        pregunta: AA′ y CC′ son dos aristas del prisma. ¿Qué dice eso de la distancia que se pide?
+        opciones:
+          - texto: Que se cruzan, y hay una sola perpendicular común, que no tiene por qué pasar por P
+            mensaje: |
+              Dos aristas de un prisma no se cruzan: tienen sus proyecciones paralelas en las dos vistas,
+              y ninguna es de perfil. Por eso el enunciado puede pedirla «desde el punto P»: entre dos
+              paralelas, hay una perpendicular común por cada punto.
+          - texto: Que son paralelas, así que desde P basta la perpendicular a CC′
+            correcta: true
+            mensaje: |
+              Eso es. Son paralelas: la distancia es la misma en toda su longitud, y por P pasa una
+              perpendicular común. Con las dos en verdadera magnitud, esa perpendicular se ve como tal; y con
+              las dos de punta, la distancia se mide entre dos puntos.
+          - texto: Que la distancia es el lado AC de la base, que ya está en verdadera magnitud en la planta
+            mensaje: |
+              AC une las dos aristas, pero no es perpendicular a ellas: el prisma es oblicuo, y su base no es
+              su sección recta. AC mide 3,03 m, y la distancia entre las dos aristas es menor.
+
+      - tipo: construir
+        titulo: Q, con las dos aristas en verdadera magnitud y luego de punta
+        intro: |
+          Dos cambios de plano, con las líneas nuevas ya dibujadas, de trazo y punto: el enunciado no las
+          da, y las hemos puesto nosotros. La referencia es A′, el punto más bajo, en los dos. La primera
+          línea es paralela a A₁A′₁, por debajo de la planta: cada punto sale de su planta por la
+          perpendicular a la línea y se aparta de ella, hacia fuera, lo que está más alto que A′, que se lee
+          en el alzado sobre la recta A′₂C′₂. Ahí AA′ y CC′ están en verdadera magnitud, y la perpendicular
+          desde P₄ a C₄C′₄ se ve perpendicular: da Q₄, que vuelve a la planta y al alzado.
+
+          La segunda es perpendicular a A₄A′₄, más allá de A′₄. Las dos aristas se ven de punta; A₅ es el
+          punto de AA′, y por tanto también el de P, y C₅ el de CC′, y por tanto también el de Q. Marca A₄,
+          C₄, C′₄, P₄, Q₄, Q₁, Q₂, A₅ y C₅, y pasa PQ a limpio. Q₄ cae a 3 mm de un cruce de rectas: amplía
+          con la lupa (×4) si hace falta.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A4
+            pide: A en la vista nueva del primer cambio
+            es: solucion.A_4
+            bien: |
+              A₄ está en la perpendicular a la línea nueva por A₁, a 50 mm de ella, hacia fuera: lo que A₂
+              está por encima de la recta A′₂C′₂.
+            diagnosticos:
+              - si: cerca_de(solucion.K_A)
+                mensaje: |
+                  Has dejado A₄ en la línea nueva, como si A fuera la referencia. La referencia es A′: A se
+                  aparta de la línea lo que está más alto que A′.
+                ejemplo: solucion.K_A
+              - si: 'cerca_de(uno(medir_sobre(solucion.refA, desde: solucion.K_A, distancia: diferencia_de_cotas(A, Ap)), 2))'
+                mensaje: |
+                  La distancia es la buena, pero **hacia la planta**. La vista nueva queda al otro lado de la
+                  línea nueva, y un punto más alto que la referencia se aparta de ella hacia fuera.
+                ejemplo: 'uno(medir_sobre(solucion.refA, desde: solucion.K_A, distancia: diferencia_de_cotas(A, Ap)), 2)'
+              - si: 'en_recta(solucion.refA) && a_distancia(de: solucion.K_A, d: solucion.dyAAp)'
+                mensaje: |
+                  Has llevado lo que A está **más lejos de quien mira el alzado**, la diferencia de
+                  alejamientos. Un cambio de plano vertical sale de la planta y lleva **cotas**.
+                ejemplo: 'uno(medir_sobre(solucion.refA, desde: solucion.K_A, distancia: solucion.dyAAp), 1)'
+              - si: '!en_recta(solucion.refA)'
+                mensaje: |
+                  A₄ sale de A₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.A_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena: lo que A₂ está por encima de
+                  la recta A′₂C′₂, 50 mm.
+          - nombre: C4
+            pide: C en la vista nueva
+            es: solucion.C_4
+            bien: |
+              C₄ está en la perpendicular a la línea nueva por C₁, a 50 mm de ella: C tiene la cota de A,
+              porque la base ABC es horizontal.
+            diagnosticos:
+              - si: cerca_de(solucion.K_C)
+                mensaje: |
+                  Te has quedado en la línea nueva. Ahí cae C′, no C: C está 50 mm más alto que la referencia.
+                ejemplo: solucion.K_C
+              - si: '!en_recta(solucion.refC)'
+                mensaje: |
+                  C₄ sale de C₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.C_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular buena, pero no a la distancia buena: C tiene la cota de A, 50 mm por
+                  encima de A′.
+          - nombre: Cp4
+            pide: C′ en la vista nueva
+            es: solucion.Cp_4
+            bien: |
+              C′₄ está en la línea nueva: C′ tiene la cota de A′, la referencia, porque la base A′B′C′ también
+              es horizontal.
+            diagnosticos:
+              - si: '!en_recta(solucion.refCp)'
+                mensaje: |
+                  C′₄ sale de C′₁ por la **perpendicular a la línea nueva**.
+                ejemplo: 'desplaza(solucion.Cp_4, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  C′ tiene la cota de la referencia, así que C′₄ cae en la propia línea nueva.
+          - nombre: P4
+            pide: P en la vista nueva, sobre A₄A′₄
+            es: solucion.P_4
+            bien: |
+              P₄ está en A₄A′₄, en la perpendicular a la línea nueva por P₁: P está en AA′, y sigue en ella en
+              cualquier vista.
+            diagnosticos:
+              - si: '!en_recta(solucion.aa4)'
+                mensaje: |
+                  P está en AA′: P₄ va **en A₄A′₄**, donde la corta la perpendicular a la línea nueva por P₁.
+                ejemplo: 'desplaza(solucion.P_4, dx: mm(5), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en A₄A′₄, pero no en el punto: P₄ está donde la corta la perpendicular a la línea nueva
+                  que sale de P₁.
+          - nombre: Q4
+            pide: Q en la vista nueva, el pie de la perpendicular a C₄C′₄ desde P₄
+            es: solucion.Q_4
+            bien: |
+              Q₄ está en C₄C′₄, en la perpendicular desde P₄: AA′ y CC′ están en verdadera magnitud, y un
+              ángulo recto con una recta en verdadera magnitud se ve recto.
+            diagnosticos:
+              - si: '!en_recta(solucion.cc4)'
+                mensaje: |
+                  Q está en CC′: Q₄ va **en C₄C′₄**.
+                ejemplo: 'desplaza(solucion.Q_4, dx: mm(5), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en C₄C′₄, pero no en el pie: la perpendicular a C₄C′₄ que pasa por P₄ da Q₄.
+          - nombre: Q1
+            pide: Q, de vuelta en la planta
+            es: proy_planta(Q)
+            bien: |
+              Q₁ está en C₁C′₁, en la perpendicular a la línea nueva por Q₄.
+            diagnosticos:
+              - si: cerca_de(solucion.Q4mal)
+                mensaje: |
+                  Has trazado en la planta la perpendicular a C₁C′₁ por P₁. La planta deforma los ángulos: AA′ no
+                  es horizontal, y el ángulo recto no se ve recto. Sale de Q₄, por la perpendicular a la línea
+                  nueva.
+                ejemplo: solucion.Q4mal
+              - si: '!en_recta(solucion.refQ)'
+                mensaje: |
+                  Q₁ vuelve desde Q₄ por la **perpendicular a la línea nueva**.
+                ejemplo: 'uno(medir_sobre(figura.segmento("CCp1"), desde: proy_planta(Q), distancia: mm(6)), 1)'
+              - si: siempre
+                mensaje: |
+                  Estás en la perpendicular que sale de Q₄, pero Q está en CC′: Q₁ va donde esa perpendicular
+                  corta C₁C′₁.
+          - nombre: Q2
+            pide: Q, en el alzado
+            es: proy_alzado(Q)
+            bien: |
+              Q₂ está en C₂C′₂, en la vertical de Q₁.
+            diagnosticos:
+              - si: '!en_vertical_de(Q1)'
+                mensaje: |
+                  Q₂ va en la **vertical de Q₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(Q), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de Q₁, pero Q está en CC′: Q₂ va donde esa vertical corta C₂C′₂.
+          - nombre: A5
+            pide: A, A′ y P en la vista del segundo cambio, donde AA′ es un punto
+            es: solucion.A_5
+            bien: |
+              A₅ está en la segunda línea nueva, donde la corta la prolongación de A₄A′₄: A′ es la referencia,
+              y toda la recta se ve en ese punto. P₅ es el mismo.
+            diagnosticos:
+              - si: cerca_de(solucion.Ap_4)
+                mensaje: |
+                  Ese es A′₄, de la vista anterior. La vista nueva está al otro lado de la segunda línea: prolonga
+                  A₄A′₄ hasta ella.
+                ejemplo: solucion.Ap_4
+              - si: siempre
+                mensaje: |
+                  A₅ es donde la prolongación de A₄A′₄ corta la segunda línea nueva.
+          - nombre: C5
+            pide: C, C′ y Q en la vista del segundo cambio, donde CC′ es un punto
+            es: solucion.C_5
+            bien: |
+              C₅ está en la prolongación de C₄C′₄, a lo que C₁ dista de A₁A′₁, más allá de la segunda línea:
+              C₁ está más lejos de la primera línea nueva que A′₁. Lo que separa A₅ de C₅ es t.
+            diagnosticos:
+              - si: cerca_de(solucion.K5C)
+                mensaje: |
+                  Te has quedado en la segunda línea, como si C estuviera a la misma distancia de la primera que
+                  la referencia. C₁ está más lejos de ella que A′₁: lo que mide de C₁ a la recta A₁A′₁.
+                ejemplo: solucion.K5C
+              - si: siempre
+                mensaje: |
+                  C₅ está en la prolongación de C₄C′₄, y se aparta de la segunda línea, hacia fuera, lo que C₁
+                  dista de la recta A₁A′₁ en la planta.
+        tramos:
+          - traza: segmento2(figura.punto("P1"), proy_planta(Q))
+            tipo: visto
+            porque: 'PQ va por la cara ACC′A′ del prisma, que mira hacia arriba: en la planta nada la tapa.'
+          - traza: segmento2(proy_alzado(P), proy_alzado(Q))
+            tipo: visto
+            porque: 'PQ va por la cara ACC′A′, que mira hacia quien mira el alzado: A₁ está más abajo en la planta que B₁, y nada la tapa.'
+        trazado:
+          - segmento2(solucion.A_4, solucion.Ap_4)
+          - segmento2(solucion.C_4, solucion.Cp_4)
+          - segmento2(solucion.P_4, solucion.Q_4)
+          - segmento2(solucion.A_5, solucion.C_5)
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("A2p"), solucion.pieA2)
+            porque: |
+              En el alzado, la recta A′₂C′₂ prolongada hacia la izquierda, hasta la vertical de A₂: A′ es la
+              referencia, y las cotas se cuentan desde esta recta.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A2"), solucion.pieA2)
+            porque: |
+              Por A₂, la vertical hasta esa recta: ese trozo es lo que A está más alto que A′.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("A1"), solucion.L_A4), segmento2(figura.punto("C1"), solucion.L_C4), segmento2(figura.punto("P1"), solucion.L_P4), segmento2(figura.punto("C1p"), solucion.Cp_4), segmento2(figura.punto("A1p"), solucion.Ap_4)]'
+            guia: figura.segmento("nueva1")
+            porque: |
+              **El primer cambio.** Por A₁, C₁, P₁, A′₁ y C′₁, las perpendiculares a la primera línea nueva:
+              las de A₁, C₁ y P₁, largas, más allá de la línea, porque esos puntos están más altos que A′.
+          - con: marca
+            traza: solucion.Ap_4
+            rotulo: A′₄
+            porque: |
+              A′₄, donde la perpendicular de A′₁ corta la línea nueva: A′ es la referencia.
+          - con: marca
+            traza: solucion.Cp_4
+            rotulo: C′₄
+            porque: |
+              C′₄, donde la perpendicular de C′₁ corta la línea nueva: C′ tiene la cota de A′.
+          - con: compas
+            traza: 'arco(solucion.K_A, por: solucion.A_4, desde: desplaza(solucion.A_4, dx: -6, dy: -2), hasta: desplaza(solucion.A_4, dx: 6, dy: 2))'
+            toma: segmento2(figura.punto("A2"), solucion.pieA2)
+            porque: |
+              Con el compás, en el alzado, lo que A está más alto que A′: de A₂ a la recta A′₂C′₂. Se lleva
+              desde la línea nueva hacia fuera, lejos de la planta.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, donde el arco corta la perpendicular que sale de A₁.
+          - con: compas
+            traza: 'arco(solucion.K_C, por: solucion.C_4, desde: desplaza(solucion.C_4, dx: -6, dy: -2), hasta: desplaza(solucion.C_4, dx: 6, dy: 2))'
+            toma: segmento2(figura.punto("A2"), solucion.pieA2)
+            porque: |
+              La misma abertura desde el pie de C₁: C tiene la cota de A, porque la base ABC es horizontal.
+          - con: marca
+            traza: solucion.C_4
+            rotulo: C₄
+            porque: |
+              C₄, donde el arco corta la perpendicular que sale de C₁.
+          - con: regla
+            traza: '[segmento2(solucion.A_4, solucion.L_K5A), segmento2(solucion.C_4, solucion.L_K5C)]'
+            porque: |
+              A₄A′₄ y C₄C′₄, prolongadas más allá de la segunda línea nueva: son las dos aristas en verdadera
+              magnitud, paralelas.
+          - con: marca
+            traza: solucion.P_4
+            rotulo: P₄
+            porque: |
+              P₄, donde la perpendicular que sale de P₁ corta A₄A′₄: P está en AA′.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.P_4, solucion.L_Q4)
+            guia: segmento2(solucion.A_4, solucion.Ap_4)
+            porque: |
+              Por P₄, la perpendicular a A₄A′₄, hasta pasar C₄C′₄. AA′ y CC′ están en verdadera magnitud, y por
+              eso el ángulo recto se ve recto.
+          - con: marca
+            traza: solucion.Q_4
+            rotulo: Q₄
+            porque: |
+              Q₄, donde esa perpendicular corta C₄C′₄. Q es un nombre nuestro: el enunciado no le da ninguno.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Q_4, solucion.L_Q1)
+            guia: figura.segmento("nueva1")
+            porque: |
+              De Q₄, de vuelta a la planta, por la perpendicular a la línea nueva, hasta pasar C₁C′₁.
+          - con: marca
+            traza: proy_planta(Q)
+            rotulo: Q₁
+            porque: |
+              Q₁, donde esa perpendicular corta C₁C′₁: Q está en CC′.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(Q), solucion.L_Q2)
+            porque: |
+              De Q₁, la vertical hacia el alzado, hasta pasar C₂C′₂.
+          - con: marca
+            traza: proy_alzado(Q)
+            rotulo: Q₂
+            porque: |
+              Q₂, donde la vertical de Q₁ corta C₂C′₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("P1"), proy_alzado(P))
+            porque: |
+              De P₁, la vertical hacia el alzado, hasta A₂A′₂: P₂ no viene dado.
+          - con: marca
+            traza: proy_alzado(P)
+            rotulo: P₂
+            porque: |
+              P₂, donde la vertical de P₁ corta A₂A′₂: P está en AA′.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("P1"), proy_planta(Q)), segmento2(proy_alzado(P), proy_alzado(Q))]'
+            porque: |
+              **A limpio.** P₁Q₁ y P₂Q₂: PQ va por la cara ACC′A′, que desde arriba y desde delante se ve.
+          - con: marca
+            traza: solucion.A_5
+            rotulo: A₅
+            porque: |
+              **El segundo cambio.** A₅, donde la prolongación de A₄A′₄ corta la segunda línea nueva: esa línea
+              es perpendicular a ella, y A′ sigue de referencia. AA′ se ve como un punto, y P también está en él.
+          - con: compas
+            traza: 'arco(solucion.K5C, por: solucion.C_5, desde: desplaza(solucion.C_5, dx: -6, dy: 2), hasta: desplaza(solucion.C_5, dx: 6, dy: -2))'
+            toma: segmento2(figura.punto("C1"), solucion.H)
+            porque: |
+              Con el compás, en la planta, lo que C₁ dista de la recta A₁A′₁. Es lo que C₁ está más lejos de la
+              primera línea nueva que A′₁, y se lleva desde la segunda línea hacia fuera.
+          - con: marca
+            traza: solucion.C_5
+            rotulo: C₅
+            porque: |
+              C₅, donde el arco corta la prolongación de C₄C′₄. CC′ se ve como un punto, y Q también está en él.
+          - con: regla
+            traza: segmento2(solucion.A_5, solucion.C_5)
+            porque: |
+              A₅C₅ es la distancia entre las dos aristas, en verdadera magnitud: t. Son dos puntos, así que aquí
+              no se deforma nada.
+        pista: |
+          (1) La referencia es A′. Por A₁, C₁ y P₁, las perpendiculares a la primera línea; A₄ y C₄, a lo que A₂
+          está por encima de A′₂C′₂. (2) Por P₄, la perpendicular a A₄A′₄ da Q₄ en C₄C′₄. (3) De Q₄ a C₁C′₁ y de
+          ahí a C₂C′₂. (4) Prolonga hasta la segunda línea: A₅ cae en ella, y C₅, más allá, a lo que C₁ dista de
+          A₁A′₁.
+        desarrollo: |
+          En verde claro, las dos aristas en verdadera magnitud, la perpendicular desde P₄, y A₅C₅, la distancia.
+          P₄Q₄ no es la distancia: es una proyección de PQ, que no es paralela a la vista 4, y la acorta. La
+          distancia se lee en A₅C₅.
+
+      - tipo: calcular
+        titulo: La distancia t
+        pregunta: t, la distancia mínima entre AA′ y CC′, en metros.
+        respuesta:
+          tipo: numero
+          valor: '2.00'
+          receta: t_m
+          tolerancia: 0.05
+          formato: un número, en metros
+        distractores:
+          - valor: '1.65'
+            receta: en_mm(vm_planta(P, Q)) / 10
+            mensaje: |
+              Eso es lo que mide **P₁Q₁ en la planta**, y en el alzado sale casi lo mismo, 1,64 m. PQ no es
+              paralela a ninguna de las dos vistas: las dos la acortan.
+          - valor: '3.03'
+            receta: en_mm(vm(A, C)) / 10
+            mensaje: |
+              Ese es el lado **AC de la base**. Une las dos aristas, pero no es perpendicular a ellas: el prisma
+              es oblicuo, y su base no es su sección recta.
+          - valor: '20.00'
+            receta: en_mm(vm(P, Q))
+            mensaje: |
+              Eso es lo que mide en la lámina, en milímetros. El dibujo está a 1:100: cada milímetro son 0,1 m.
+        pista: |
+          En el segundo cambio, A₅ y C₅ son dos puntos, y lo que los separa está en verdadera magnitud. Mide en
+          mm y pasa a metros: a 1:100, divide entre 10.
+        desarrollo: |
+          En la vista de punta, A₅C₅ mide 20,0 mm de la lámina; a escala 1:100:
+
+          $$ t = 20{,}0 \text{ mm} \times 100 = 2000 \text{ mm} = 2{,}00 \text{ m} $$
+
+          Se comprueba con el triángulo de PQ: la planta, P₁Q₁, y la diferencia de cotas de P₂ a Q₂ dan la misma
+          hipotenusa.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AA′ y CC′ son aristas del prisma, paralelas, así que por P pasa una perpendicular común a las dos.
+          - texto: Con la línea nueva paralela a A₁A′₁, las dos se ven en verdadera magnitud, y el ángulo recto con ellas se ve recto.
+          - texto: La perpendicular desde P₄ a C₄C′₄ da Q₄, que vuelve a C₁C′₁ y a C₂C′₂.
+          - texto: Con la línea nueva perpendicular a A₄A′₄, las dos se ven de punta, y lo que separa A₅ de C₅ es t, 2,00 m a 1:100.
+          - texto: La perpendicular a C₁C′₁ por P₁ en la planta da Q₁ directamente, porque el ángulo recto se conserva.
+            trampa: true
+            mensaje: |
+              Un ángulo recto solo se ve recto cuando uno de sus lados está en verdadera magnitud en esa vista, y
+              AA′ baja: en la planta no lo está. Hay que salir antes a una vista donde lo esté.
+    resolucion: |
+      **Qué se pide.** AA′ y CC′ son dos aristas del prisma, y son paralelas: la distancia es la misma en toda
+      su longitud, y por eso el enunciado puede pedirla desde P. P es el punto medio de AA′ en la lámina,
+      aunque el enunciado no lo dice ni hace falta.
+
+      **El primer cambio.** Con la línea nueva paralela a A₁A′₁ y A′ de referencia, A₄ y C₄ se apartan 50 mm
+      de ella, lo que separa las dos bases en el alzado, y A′₄ y C′₄ caen en ella. AA′ mide 10 m, y baja 30°. La
+      perpendicular desde P₄ a C₄C′₄ da Q₄, que vuelve a C₁C′₁ y a C₂C′₂.
+
+      **El segundo cambio.** Con la línea nueva perpendicular a A₄A′₄, las dos aristas se ven como dos puntos,
+      A₅ y C₅. Lo que los separa es 20,0 mm de la lámina: **t = 2,00 m**.
+
+      **En posición.** P₁Q₁ y P₂Q₂, en continua: PQ va por la cara ACC′A′, que se ve desde arriba y desde
+      delante. Miden 1,65 y 1,64 m a escala: son proyecciones, y solo A₅C₅ está en verdadera magnitud.
+
+  - id: exeg-2526c-2-la-piramide-por-abatimiento
+    titulo: La pirámide de arista VF = 6 m, por abatimiento
+    fuente: >-
+      Apartado 2 del examen de Expresión Gráfica de Ingeniería Industrial, Modelo A, curso 2025-2026,
+      24 de noviembre de 2025 (Figura 2) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Se transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        Una arista lateral de una pirámide recta, la altura y lo que esa arista ocupa en la planta forman un
+        triángulo rectángulo, y ese triángulo está en un plano vertical. Abatir el plano lo pone en verdadera
+        magnitud sobre la planta: ahí se dibuja con su medida real lo que no se puede medir en ninguna vista.
+      formula: |
+        Lo que mide de verdad un segmento, su planta y su diferencia de cotas son los tres lados de un
+        triángulo rectángulo:
+
+        $$
+        L^2 = (\text{planta})^2 + \Delta z^2
+        $$
+
+        Abatir un plano alrededor de una recta suya horizontal conserva todas las medidas de ese plano.
+      reconocer: |
+        Antes de trazar, mira a qué lado del triángulo corresponde el dato del enunciado y qué lado queda por
+        hallar. Mira también dónde cae V₁ con una base cuadrada.
+    enunciado: |
+      Teniendo definida la base DEFG, dibujar una nueva pirámide en diédrico por el método de abatimiento
+      sabiendo que la arista VF mide 6 m. V es el vértice superior de la pirámide.
+
+      **Notas nuestras.** La lámina rotula esta figura como «Apartado 3», y el enunciado la manda en el
+      apartado 2: seguimos el enunciado. Va a escala 1:100: cada milímetro son 0,1 m, así que 6 m son 60 mm. La
+      base es un cuadrado horizontal, de 5 m de lado, y en el alzado es una recta. El enunciado no dice que la
+      pirámide sea recta, y sin eso V no queda fijado: con solo la arista VF, V podría estar en cualquier punto
+      de una esfera. La leemos recta, con V₁ en el cruce de las diagonales, como la pirámide de la Figura 3, que
+      es de otra altura; por eso esta es una «nueva» pirámide. El alzado de la figura no rotula ningún vértice:
+      D₂, E₂, F₂ y G₂ son nombres nuestros, igual que V₀, el vértice abatido.
+    pide: V₁, V abatido y V₂, y las aristas de la pirámide en las dos vistas, con lo visto y lo oculto; y, como pregunta nuestra, su altura.
+    receta:
+      lamina: ex2526c-2
+      escena:
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        O: 'punto_medio(segmento3(D, F))'
+        arista: mm(60)
+      solucion:
+        # Decisión: la pirámide es recta (lectura nuestra, en las Notas).
+        h: 'raiz(arista * arista - vm_planta(O, F) * vm_planta(O, F))'
+        V: 'punto3(alzado: desplaza(proy_alzado(O), dy: -h), planta: proy_planta(O))'
+        h_m: en_mm(h) / 10
+        # El plano vertical de la diagonal DF, abatido alrededor de DF sobre el
+        # plano de la base. Una elección: V cae a un lado o a otro.
+        diag: recta3(D, F)
+        pv: plano(D, F, V)
+        V_ab: abatido_a_elegir(V, diag, pv)
+        perpO: 'perpendicular(por: proy_planta(O), a: figura.segmento("base2"))'
+        # La diagonal EG es la perpendicular a DF por V₁.
+        eg1: segmento2(figura.punto("E1"), figura.punto("G1"))
+        # Los errores.
+        V2_seis: 'desplaza(proy_alzado(O), dy: -arista)'
+        V2_semidiag: 'desplaza(proy_alzado(O), dy: -vm_planta(O, F))'
+        V2_hip: 'desplaza(proy_alzado(O), dy: -raiz(arista * arista + vm_planta(O, F) * vm_planta(O, F)))'
+        V0_seis: 'uno(medir_sobre(eg1, desde: proy_planta(O), distancia: arista), 1)'
+        V0_seis2: 'uno(medir_sobre(eg1, desde: proy_planta(O), distancia: arista), 2)'
+        # Los extremos de las rectas largas.
+        L_V2: 'desplaza(proy_alzado(V), dy: mm(-4))'
+        L_E: 'uno(medir_sobre(eg1, desde: figura.punto("E1"), distancia: raiz(h * h) - vm_planta(O, E) + mm(4)), 2)'
+        L_G: 'uno(medir_sobre(eg1, desde: figura.punto("G1"), distancia: h - vm_planta(O, G) + mm(4)), 1)'
+      comprueba:
+        - en_plano(V, pv)
+    pasos:
+      - tipo: reconocer
+        pregunta: La arista VF mide 6 m. ¿Qué es esa medida en el triángulo rectángulo de V, F y el centro de la base?
+        opciones:
+          - texto: Un cateto, la altura de la pirámide, que se lleva tal cual sobre la vertical de V₁ en el alzado
+            mensaje: |
+              La altura es un cateto, pero no mide 6 m. VF es la arista inclinada, de V a F, y su planta y la
+              altura son lo que forman el ángulo recto. Con 6 m de altura, la arista mediría 6,96 m.
+          - texto: La hipotenusa; el otro cateto es la mitad de la diagonal, que está en la planta
+            correcta: true
+            mensaje: |
+              Eso es. El triángulo tiene el ángulo recto en el centro de la base: de un cateto, la mitad de la
+              diagonal, en verdadera magnitud porque la base es horizontal; del otro, la altura, que no conocemos.
+              VF, de 6 m, es la hipotenusa, y el abatimiento la dibuja en la planta.
+          - texto: Una medida de la planta, porque F₁V₁ va en la planta y se mide con la regla
+            mensaje: |
+              F₁V₁ es la planta de la arista, y VF sube: la planta la acorta. F₁V₁ mide 3,54 m, y la arista 6 m. Es
+              un cateto del triángulo, no la arista.
+
+      - tipo: construir
+        titulo: V, abatiendo el plano vertical de la diagonal
+        intro: |
+          Primero, V₁: leemos la pirámide recta, y V₁ cae en el cruce de las diagonales del cuadrado. VF está en
+          el plano vertical de la diagonal DF, y ese plano se abate alrededor de la propia diagonal sobre el
+          plano de la base, que es horizontal. Al abatirse, V se mueve en la planta por la perpendicular a D₁F₁
+          que pasa por V₁, que es la otra diagonal, E₁G₁, prolongada. Y a F no le pasa nada, porque F está en la
+          charnela: V₀ está a 60 mm de F₁. Vale cualquiera de los dos lados. V₁V₀ es la altura en verdadera
+          magnitud: se lleva al alzado sobre la vertical de V₁, desde la recta de la base.
+
+          Marca V₁, V₀ y V₂, y pasa a limpio con «arista vista» y «arista oculta» las cuatro aristas laterales en
+          las dos vistas.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: V1
+            pide: V₁, el vértice en la planta
+            es: proy_planta(O)
+            bien: |
+              V₁ está en el cruce de las diagonales: la pirámide es recta, y su vértice está en la vertical del
+              centro de la base.
+            diagnosticos:
+              - si: cerca_de(punto_medio(figura.segmento("GD1")))
+                mensaje: |
+                  Ese es el punto medio de un lado. El centro del cuadrado es el cruce de sus diagonales: D₁F₁ y
+                  E₁G₁.
+                ejemplo: punto_medio(figura.segmento("GD1"))
+              - si: siempre
+                mensaje: |
+                  V₁ es el cruce de las diagonales del cuadrado, D₁F₁ y E₁G₁.
+          - nombre: V0
+            pide: V abatido, V₀, a 60 mm de F₁, sobre la prolongación de E₁G₁
+            es: proy_planta(solucion.V_ab)
+            bien: |
+              V₀ está en la prolongación de E₁G₁, a 60 mm de F₁. F₁V₀ es la arista en verdadera magnitud, y V₁V₀ es
+              la altura.
+            diagnosticos:
+              - si: cerca_de(solucion.V0_seis)
+                mensaje: |
+                  Has llevado los 60 mm **desde V₁**. Eso daría a la pirámide 6 m de altura, y lo que mide 6 m es la
+                  arista: el compás se pincha en F₁, y el arco corta la prolongación de E₁G₁.
+                ejemplo: solucion.V0_seis
+              - si: cerca_de(solucion.V0_seis2)
+                mensaje: |
+                  Has llevado los 60 mm **desde V₁**. Eso daría a la pirámide 6 m de altura, y lo que mide 6 m es la
+                  arista: el compás se pincha en F₁, y el arco corta la prolongación de E₁G₁.
+                ejemplo: solucion.V0_seis2
+              - si: '!en_recta(solucion.eg1)'
+                mensaje: |
+                  Al abatirse, V se mueve en la planta por la perpendicular a la charnela que pasa por V₁. Esa recta
+                  es la otra diagonal, E₁G₁, prolongada.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.V_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la prolongación de E₁G₁, pero no a la distancia buena: V₀ está a 60 mm de F₁, los 6 m de la
+                  arista a 1:100.
+          - nombre: V2
+            pide: V₂, el vértice en el alzado
+            es: proy_alzado(solucion.V)
+            bien: |
+              V₂ está en la vertical de V₁, por encima de la recta de la base lo que mide V₁V₀: 48,5 mm, 4,85 m.
+            diagnosticos:
+              - si: cerca_de(solucion.V2_seis)
+                mensaje: |
+                  Has subido 60 mm, la arista. Lo que se sube es la altura, V₁V₀, que es el otro cateto, más corto.
+                ejemplo: solucion.V2_seis
+              - si: cerca_de(solucion.V2_semidiag)
+                mensaje: |
+                  Has subido lo que mide F₁V₁, la mitad de la diagonal. La altura es V₁V₀, el cateto del triángulo
+                  abatido que no está en la base.
+                ejemplo: solucion.V2_semidiag
+              - si: cerca_de(solucion.V2_hip)
+                mensaje: |
+                  Has usado VF como cateto, y te ha salido una hipotenusa de 69,6 mm. VF es la hipotenusa: la altura
+                  es menor que 60 mm.
+                ejemplo: solucion.V2_hip
+              - si: '!en_vertical_de(V1)'
+                mensaje: |
+                  V₂ va en la **vertical de V₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.V), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de V₁, pero no a la altura buena: V₂ está a lo que mide V₁V₀ por encima de la
+                  recta de la base.
+        tramos:
+          - traza: segmento2(proy_planta(O), figura.punto("D1"))
+            tipo: visto
+            porque: 'V₁D₁: desde arriba, las cuatro caras laterales se ven, y sobre la pirámide no hay nada.'
+          - traza: segmento2(proy_planta(O), figura.punto("E1"))
+            tipo: visto
+            porque: 'V₁E₁: desde arriba se ven las cuatro caras laterales, así que también sus aristas.'
+          - traza: segmento2(proy_planta(O), figura.punto("F1"))
+            tipo: visto
+            porque: 'V₁F₁: desde arriba se ven las cuatro caras laterales, así que también sus aristas.'
+          - traza: segmento2(proy_planta(O), figura.punto("G1"))
+            tipo: visto
+            porque: 'V₁G₁: desde arriba se ven las cuatro caras laterales, así que también sus aristas.'
+          - traza: segmento2(proy_alzado(solucion.V), figura.punto("D2"))
+            tipo: visto
+            porque: 'V₂D₂ es contorno del alzado: D₁ es el vértice más a la izquierda de la base, y nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.V), figura.punto("F2"))
+            tipo: visto
+            porque: 'V₂F₂ es contorno del alzado: F₁ es el vértice más a la derecha de la base, y nada la tapa.'
+          - traza: segmento2(proy_alzado(solucion.V), figura.punto("E2"))
+            tipo: visto
+            porque: 'VE es la arista de delante: E₁ es el vértice más bajo de la planta, el de más alejamiento, el más cercano a quien mira el alzado.'
+          - traza: segmento2(proy_alzado(solucion.V), figura.punto("G2"))
+            tipo: oculto
+            porque: 'VG es la arista de atrás: G₁ es el vértice más alto de la planta, el de menos alejamiento, y las caras VDE y VEF la tapan.'
+        trazado:
+          - segmento2(figura.punto("F1"), proy_planta(solucion.V_ab))
+          - segmento2(proy_planta(O), proy_planta(solucion.V_ab))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("D1"), figura.punto("F1"))
+            porque: |
+              La diagonal D₁F₁, fina: va a ser la charnela del abatimiento.
+          - con: regla
+            traza: '[segmento2(figura.punto("E1"), solucion.L_E), segmento2(figura.punto("G1"), solucion.L_G)]'
+            porque: |
+              La diagonal E₁G₁, también fina, prolongada por los dos lados, porque V₀ cae fuera del cuadrado. Es
+              perpendicular a D₁F₁: las diagonales de un cuadrado lo son.
+          - con: regla
+            traza: segmento2(figura.punto("E1"), figura.punto("G1"))
+            porque: |
+              El tramo de la diagonal E₁G₁ entre sus dos vértices, que completa la recta larga por dentro.
+          - con: marca
+            traza: proy_planta(O)
+            rotulo: V₁
+            porque: |
+              V₁, donde se cruzan las dos diagonales: leemos la pirámide recta, con el vértice en la vertical del
+              centro.
+          - con: compas
+            traza: 'arco(figura.punto("F1"), por: proy_planta(solucion.V_ab), desde: desplaza(proy_planta(solucion.V_ab), dx: -5, dy: -5), hasta: desplaza(proy_planta(solucion.V_ab), dx: 5, dy: 5))'
+            porque: |
+              Con centro en F₁ y radio 60 mm, los 6 m de la arista a 1:100, un arco que corte la prolongación de
+              E₁G₁: F está en la charnela y no se mueve, y la arista conserva su medida.
+          - con: marca
+            traza: proy_planta(solucion.V_ab)
+            rotulo: V₀
+            porque: |
+              V₀, donde el arco corta la prolongación de E₁G₁. Nombre nuestro: es V abatido. Vale cualquiera de los
+              dos lados.
+          - con: regla
+            traza: segmento2(figura.punto("F1"), proy_planta(solucion.V_ab))
+            porque: |
+              F₁V₀, la arista VF en verdadera magnitud: la hipotenusa del triángulo, 60 mm.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(O), solucion.L_V2)
+            porque: |
+              Por V₁, la vertical hacia el alzado, hasta pasar donde caerá V₂: V₁ y V₂ son el mismo punto.
+          - con: compas
+            traza: 'arco(proy_alzado(O), por: proy_alzado(solucion.V), desde: desplaza(proy_alzado(solucion.V), dx: -6), hasta: desplaza(proy_alzado(solucion.V), dx: 6))'
+            toma: segmento2(proy_planta(O), proy_planta(solucion.V_ab))
+            porque: |
+              Con el compás, en la planta, V₁V₀, la altura en verdadera magnitud. Se lleva desde la recta de la
+              base hacia arriba, en la vertical de V₁.
+          - con: marca
+            traza: proy_alzado(solucion.V)
+            rotulo: V₂
+            porque: |
+              V₂, donde el arco corta la vertical de V₁.
+          - con: escuadra-cartabon
+            traza: '[segmento2(figura.punto("E1"), figura.punto("E2")), segmento2(figura.punto("G1"), figura.punto("G2"))]'
+            porque: |
+              Por E₁ y G₁, las verticales hasta la recta de la base: la lámina no rotula ni marca E₂ ni G₂.
+          - con: marca
+            traza: figura.punto("E2")
+            rotulo: E₂
+            porque: |
+              E₂, donde la vertical de E₁ corta la recta de la base.
+          - con: marca
+            traza: figura.punto("G2")
+            rotulo: G₂
+            porque: |
+              G₂, donde la vertical de G₁ corta la recta de la base.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(O), figura.punto("D1")), segmento2(proy_planta(O), figura.punto("E1")), segmento2(proy_planta(O), figura.punto("F1")), segmento2(proy_planta(O), figura.punto("G1")), segmento2(proy_alzado(solucion.V), figura.punto("D2")), segmento2(proy_alzado(solucion.V), figura.punto("F2")), segmento2(proy_alzado(solucion.V), figura.punto("E2"))]'
+            porque: |
+              **A limpio.** En la planta se ven las cuatro aristas. En el alzado, las dos del contorno, VD y VF, y
+              la de delante, VE: E₁ es el vértice de más alejamiento.
+          - con: arista-oculta
+            traza: segmento2(proy_alzado(solucion.V), figura.punto("G2"))
+            porque: |
+              En el alzado, VG va a trazos: es la arista de atrás, y la tapan las caras de delante.
+        pista: |
+          (1) V₁ es el cruce de las diagonales. (2) Con centro en F₁ y radio 60 mm, el arco corta la prolongación de
+          E₁G₁ en V₀. (3) V₁V₀ es la altura: súbela en la vertical de V₁, desde la recta de la base. (4) VG es la
+          arista de atrás: a trazos.
+        desarrollo: |
+          En verde claro, el triángulo abatido F₁V₁V₀: de cateto, la mitad de la diagonal, 35,4 mm; de hipotenusa,
+          la arista, 60 mm; y el otro cateto, V₁V₀, 48,5 mm, es la altura. La Figura 3 trae otra pirámide con la
+          misma base y 7 m de altura: su arista mide 7,84 m, no 6.
+
+      - tipo: calcular
+        titulo: La altura
+        pregunta: Como pregunta nuestra, ¿qué altura tiene la pirámide, en metros?
+        respuesta:
+          tipo: numero
+          valor: '4.85'
+          receta: h_m
+          tolerancia: 0.05
+          formato: un número, en metros
+        distractores:
+          - valor: '6.00'
+            receta: en_mm(arista) / 10
+            mensaje: |
+              Esa es la **arista**, la hipotenusa del triángulo. La altura es un cateto, y mide menos.
+          - valor: '3.54'
+            receta: en_mm(vm_planta(O, F)) / 10
+            mensaje: |
+              Esa es **F₁V₁**, la mitad de la diagonal: el otro cateto. La altura es V₁V₀.
+          - valor: '7.00'
+            receta: '7'
+            mensaje: |
+              Esa es la altura de la pirámide de la **Figura 3**, que es otra. La de este apartado sale de su
+              arista de 6 m.
+          - valor: '48.48'
+            receta: en_mm(h)
+            mensaje: |
+              Eso es lo que mide en la lámina, en milímetros. El dibujo está a 1:100: cada milímetro son 0,1 m.
+        pista: |
+          Mide V₁V₀ en mm y pasa a metros: a 1:100, divide entre 10.
+        desarrollo: |
+          Con el triángulo abatido, que se puede comprobar con la cuenta:
+
+          $$ h = \sqrt{6^{2} - 3{,}535^{2}} = \sqrt{36 - 12{,}5} \approx 4{,}85 \text{ m} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Leemos la pirámide recta, así que V₁ está en el cruce de las diagonales, y VF está en el plano vertical de la diagonal DF.
+          - texto: Ese plano se abate alrededor de D₁F₁, que es horizontal; F no se mueve, y V cae en la perpendicular a D₁F₁ por V₁, la diagonal E₁G₁ prolongada.
+          - texto: VF conserva sus 6 m al abatirse, así que el arco de centro F₁ y radio 60 mm da V₀, y V₁V₀ es la altura en verdadera magnitud.
+          - texto: La altura se sube en la vertical de V₁ desde la recta de la base, y da V₂; VG, la arista de atrás, va a trazos.
+          - texto: Los 6 m de la arista se suben directamente en la vertical de V₁, porque el alzado no deforma las alturas.
+            trampa: true
+            mensaje: |
+              El alzado no deforma las alturas, pero 6 m no es una altura: es lo que mide la arista inclinada. La
+              altura es el cateto, 4,85 m.
+    resolucion: |
+      **Qué falta.** La base es horizontal y sus diagonales están en verdadera magnitud. Leemos la pirámide
+      recta, porque si no V no queda fijado: V₁ cae en el cruce de las diagonales. Lo único que falta es la altura.
+
+      **El abatimiento.** VF está en el plano vertical de la diagonal DF, con el ángulo recto en el centro. Se
+      abate ese plano alrededor de D₁F₁: F no se mueve, V cae en la prolongación de E₁G₁, y VF conserva sus 60 mm
+      de la lámina. Con centro en F₁ y ese radio, V₀. V₁V₀ es la altura, 48,5 mm: **4,85 m**.
+
+      **El alzado.** V₂ sube esa altura desde la recta de la base. En la planta se ven las cuatro aristas; en el
+      alzado, VD y VF son el contorno, VE es la de delante, y VG, la de atrás, va a trazos.
+
+  - id: exeg-2526c-3-el-diedro-por-la-arista-dv
+    titulo: El ángulo diedro de las caras EDV y GDV
+    fuente: >-
+      Apartado 3 del examen de Expresión Gráfica de Ingeniería Industrial, Modelo A, curso 2025-2026,
+      24 de noviembre de 2025 (Figura 3) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Se transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        El diedro de dos caras se mide en un plano perpendicular a su arista común: ese plano las corta en dos
+        rectas, y el ángulo entre ellas es el diedro. Se puede llegar con la arista de punta o buscando ese
+        plano directamente.
+      formula: |
+        Una recta horizontal es perpendicular a otra si en la planta se ven perpendiculares. Y en un triángulo
+        rectángulo, la altura sobre la hipotenusa mide:
+
+        $$
+        h = \frac{c_1 \, c_2}{\text{hipotenusa}}
+        $$
+      reconocer: |
+        Antes de trazar, mira en la planta qué rectas de la figura, ya dibujadas, tienes cerca de la arista común y
+        en qué ángulo se ven con ella. Fíjate también en si son horizontales: de eso depende que valga la regla
+        de arriba.
+    enunciado: |
+      Determinar el ángulo diedro entre los planos EDV y GDV (α) y poner su magnitud.
+
+      **Notas nuestras.** La lámina pone esta figura bajo «Apartados 4 y 5», y el enunciado también le manda este
+      apartado: seguimos el enunciado. La pirámide de la Figura 3 no es la del apartado 2: tiene la misma base y
+      7 m de altura. Dos planos forman dos ángulos suplementarios, y «ángulo diedro» entre dos caras de una pieza
+      es el que abarcan las caras, por donde está la pieza: ese es α. El otro, el que se llamaría
+      ángulo entre los planos, sería 180° − α. El método es nuestro, porque el enunciado no lo fija; con la arista
+      de punta en dos cambios de plano sale lo mismo, pero el segundo cambio no cabe bajo esta figura en el A3.
+      K′ se lleva del lado de D₁; del lado de F₁ sale el mismo triángulo, y el mismo ángulo. La figura no rotula V₂:
+      es un nombre nuestro, igual que V₀, K₀ y K′.
+    pide: V abatido, K₀, K′ y el ángulo α de las dos caras, en grados.
+    receta:
+      lamina: ex2526c-3
+      escena:
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        dv: recta3(D, V)
+      solucion:
+        # O, el centro de la base, en la vertical de V. Con los puntos del PDF, V₁
+        # es el cruce de las diagonales; V₂ queda a 0,06 pt: el redondeo.
+        O: 'punto3(alzado: pie_perpendicular(figura.punto("V2"), figura.segmento("base2")), planta: figura.punto("V1"))'
+        alfa: angulo_diedro(E, dv, G)
+        pieV: pie_perpendicular(figura.punto("V2"), figura.segmento("base2"))
+        # Decisión: el método (en las Notas). EG es horizontal y su planta es
+        # perpendicular a la de DV, así que EG ⟂ DV, y el plano por EG
+        # perpendicular a DV corta DV en K, el pie de la perpendicular desde O. Ese
+        # plano corta las caras en KE y KG, y α es el ángulo en K. Se saca en
+        # verdadera magnitud abatiendo dos veces: primero el plano vertical de DF
+        # alrededor de DF, que da K₀ como el pie de V₁ en D₁V₀; y después el plano
+        # EKG alrededor de EG, que lleva K a K′, sobre V₁D₁.
+        diag: recta3(D, F)
+        pv: plano(D, F, V)
+        V_ab: abatido_a_elegir(V, diag, pv)
+        K: pie_perpendicular(O, dv)
+        K_ab: 'abatido_junto(K, diag, pv, con: V_ab, de: V)'
+        OK: vm(O, K)
+        K_pr: 'uno(medir_sobre(figura.segmento("DF1"), desde: figura.punto("V1"), distancia: OK), 2)'
+        K_pr_otro: 'uno(medir_sobre(figura.segmento("DF1"), desde: figura.punto("V1"), distancia: OK), 1)'
+        # Los errores.
+        K_medio: 'punto_medio(segmento2(figura.punto("V1"), figura.punto("D1")))'
+        semi: vm_planta(O, D)
+        altura: vm(V, O)
+      comprueba:
+        - en_recta(K, dv)
+    pasos:
+      - tipo: reconocer
+        pregunta: Mira en la planta la diagonal E₁G₁ y la recta D₁V₁. ¿Qué tiene que ver EG con la arista DV?
+        opciones:
+          - texto: Nada que sirva aquí, porque DV no es horizontal, y un ángulo recto de la planta solo vale entre rectas que lo sean las dos
+            mensaje: |
+              Basta con que una de las dos sea horizontal. EG lo es, porque es una diagonal de la base, y su planta
+              es perpendicular a la de DV: EG y DV son perpendiculares en el espacio, aunque DV suba.
+          - texto: EG es perpendicular a DV, y por eso el plano que corta el diedro pasa por EG
+            correcta: true
+            mensaje: |
+              Eso es. EG es horizontal y su planta es perpendicular a D₁V₁: EG es perpendicular a DV en el espacio.
+              Así que el plano perpendicular a DV que pasa por EG existe y ya trae dibujada una recta. Corta DV en un
+              punto K, y α es el ángulo EKG.
+          - texto: EG cruza DV en el centro, porque sus plantas se cortan en V₁
+            mensaje: |
+              Sus plantas se cortan en V₁, pero EG está en el plano de la base y DV solo toca esa cota en D. No se
+              cortan: se cruzan. Son perpendiculares, que es lo que sirve aquí.
+
+      - tipo: construir
+        titulo: La sección perpendicular a la arista, en verdadera magnitud
+        intro: |
+          EG es horizontal y su planta es perpendicular a D₁V₁, así que EG es perpendicular a DV en el espacio. El
+          plano por EG perpendicular a DV corta DV en K, y corta las dos caras en KE y KG: α es el ángulo EKG. El
+          método es nuestro. Hay dos abatimientos, los dos en la planta.
+
+          El primero pone el triángulo DOV en verdadera magnitud, con O, el centro de la base, en la vertical de V:
+          se abate el plano vertical de la diagonal DF alrededor de D₁F₁, y V cae en la prolongación de E₁G₁, a la
+          altura de la pirámide de V₁. Vale cualquiera de los dos lados. Ahí, K₀ es el pie de la perpendicular desde
+          V₁ a D₁V₀.
+
+          El segundo pone el triángulo EKG en verdadera magnitud: se abate alrededor de EG, y como EG es
+          perpendicular al plano vertical de DF, K cae sobre V₁D₁, a la misma distancia de V₁ que K₀: K′. Marca V₀,
+          K₀ y K′, y une K′ con E₁ y G₁: el ángulo en K′ es α.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: V0
+            pide: V abatido, V₀, en la prolongación de E₁G₁
+            es: proy_planta(solucion.V_ab)
+            bien: |
+              V₀ está en la prolongación de E₁G₁, a 70 mm de V₁, la altura de la pirámide, 7 m a 1:100. D₁V₀ es la
+              arista DV en verdadera magnitud.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("EG1"))'
+                mensaje: |
+                  Al abatirse alrededor de D₁F₁, V se mueve en la planta por la perpendicular a D₁F₁ que pasa por V₁,
+                  que es E₁G₁, prolongada.
+                ejemplo: 'desplaza(proy_planta(rama(solucion.V_ab, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la recta de E₁G₁, pero no a la distancia buena: V₀ está a la altura de la pirámide de V₁,
+                  lo que mide V₂ por encima de la recta de la base.
+          - nombre: K0
+            pide: K abatido, K₀, el pie de la perpendicular desde V₁ a D₁V₀
+            es: proy_planta(solucion.K_ab)
+            bien: |
+              K₀ está en D₁V₀, donde la corta la perpendicular que sale de V₁. V₁K₀ mide 31,6 mm: es lo que dista el
+              centro de la base de la arista DV.
+            diagnosticos:
+              - si: 'cerca_de(punto_medio(segmento2(figura.punto("D1"), proy_planta(rama(solucion.V_ab, 1)))))'
+                mensaje: |
+                  Ese es el punto medio de D₁V₀. K₀ no va en el medio: es el pie de la perpendicular a D₁V₀ que pasa por V₁.
+                ejemplo: 'punto_medio(segmento2(figura.punto("D1"), proy_planta(rama(solucion.V_ab, 1))))'
+              - si: siempre
+                mensaje: |
+                  K está en la arista DV: K₀ va en D₁V₀, que es DV en verdadera magnitud, donde la corta la
+                  perpendicular a D₁V₀ que pasa por V₁.
+          - nombre: Kp
+            pide: K′, K abatido alrededor de EG, en V₁D₁
+            es: solucion.K_pr
+            bien: |
+              K′ está en V₁D₁, a lo que mide V₁K₀ de V₁: el arco de centro V₁ lleva K₀ hasta la diagonal. El triángulo
+              E₁K′G₁ es la sección en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(figura.punto("D1"))
+                mensaje: |
+                  Ese es D₁. K′ cae en V₁D₁, pero antes de llegar a D₁, a lo que mide V₁K₀.
+                ejemplo: figura.punto("D1")
+              - si: cerca_de(solucion.K_medio)
+                mensaje: |
+                  Ese es el punto medio de V₁D₁. K′ está a lo que mide V₁K₀ de V₁, con el compás, no a la mitad.
+                ejemplo: solucion.K_medio
+              - si: cerca_de(solucion.K_pr_otro)
+                mensaje: |
+                  La distancia es buena, y de este lado saldría el mismo triángulo, con el mismo ángulo. Aquí lo llevamos del
+                  lado de D₁, porque K está en la arista DV: márcalo en V₁D₁ para que el Taller pueda seguirte.
+                ejemplo: solucion.K_pr_otro
+              - si: '!en_recta(figura.segmento("DF1"))'
+                mensaje: |
+                  K′ va en la diagonal D₁F₁, del lado de D₁: EG es perpendicular a ese plano, y K gira alrededor de EG
+                  sin salir de él.
+                ejemplo: 'desplaza(solucion.K_pr, dx: mm(5), dy: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la diagonal, pero no a la distancia buena: K′ está en V₁D₁, a lo que mide V₁K₀ de V₁.
+        trazado:
+          - segmento2(figura.punto("D1"), proy_planta(solucion.V_ab))
+          - segmento2(figura.punto("V1"), proy_planta(solucion.K_ab))
+          - segmento2(solucion.K_pr, figura.punto("E1"))
+          - segmento2(solucion.K_pr, figura.punto("G1"))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("V2"), solucion.pieV)
+            porque: |
+              De V₂ a la recta de la base, en vertical: es la altura de la pirámide en verdadera magnitud, y hace falta
+              para el abatimiento.
+          - con: compas
+            traza: 'arco(figura.punto("V1"), por: proy_planta(solucion.V_ab), desde: desplaza(proy_planta(solucion.V_ab), dx: -5, dy: -2), hasta: desplaza(proy_planta(solucion.V_ab), dx: 5, dy: 2))'
+            toma: segmento2(figura.punto("V2"), solucion.pieV)
+            porque: |
+              Con el compás, en el alzado, la altura de la pirámide: de V₂ a la recta de la base. Se lleva desde V₁
+              sobre la prolongación de E₁G₁, porque V se abate por la perpendicular a la charnela D₁F₁. Vale
+              cualquiera de los dos lados.
+          - con: regla
+            traza: segmento2(figura.punto("V1"), proy_planta(solucion.V_ab))
+            porque: |
+              La prolongación de E₁G₁ desde V₁: es por donde se mueve V al abatirse.
+          - con: marca
+            traza: proy_planta(solucion.V_ab)
+            rotulo: V₀
+            porque: |
+              V₀, donde el arco corta la prolongación de E₁G₁. Nombre nuestro: es V abatido.
+          - con: regla
+            traza: segmento2(figura.punto("D1"), proy_planta(solucion.V_ab))
+            porque: |
+              D₁V₀, la arista DV en verdadera magnitud: D está en la charnela y no se mueve.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), proy_planta(solucion.K_ab))
+            guia: segmento2(figura.punto("D1"), proy_planta(solucion.V_ab))
+            porque: |
+              Por V₁, la perpendicular a D₁V₀, hasta ella. Se ve perpendicular porque ese plano está abatido, en
+              verdadera magnitud.
+          - con: marca
+            traza: proy_planta(solucion.K_ab)
+            rotulo: K₀
+            porque: |
+              K₀, donde esa perpendicular corta D₁V₀. Nombre nuestro: es K abatido, el pie en la arista DV.
+          - con: compas
+            traza: 'arco(figura.punto("V1"), por: solucion.K_pr, desde: proy_planta(solucion.K_ab), hasta: solucion.K_pr)'
+            toma: segmento2(figura.punto("V1"), proy_planta(solucion.K_ab))
+            porque: |
+              Con centro en V₁ y radio V₁K₀, un arco desde K₀ hasta la diagonal V₁D₁: es el segundo abatimiento, y K
+              gira alrededor de EG hasta caer en el plano de la base.
+          - con: marca
+            traza: solucion.K_pr
+            rotulo: K′
+            porque: |
+              K′, donde el arco corta V₁D₁. Nombre nuestro. Está a 3,8 mm de D₁.
+          - con: regla
+            traza: '[segmento2(solucion.K_pr, figura.punto("E1")), segmento2(solucion.K_pr, figura.punto("G1"))]'
+            porque: |
+              K′E₁ y K′G₁: el triángulo de la sección en verdadera magnitud. El ángulo en K′ es α.
+        pista: |
+          (1) La altura, de V₂ a la recta de la base, se lleva desde V₁ por la prolongación de E₁G₁: V₀. (2) D₁V₀ es
+          DV en verdadera magnitud. (3) La perpendicular desde V₁ a D₁V₀ da K₀. (4) Con centro en V₁ y radio V₁K₀, el
+          arco hasta V₁D₁ da K′. (5) El ángulo E₁K′G₁ es α.
+        desarrollo: |
+          En verde claro, el triángulo D₁V₁V₀, el abatido, y el triángulo E₁K′G₁, la sección. α se mide en K′ con el
+          transportador.
+
+      - tipo: calcular
+        titulo: El ángulo α
+        pregunta: α, el ángulo diedro entre las caras EDV y GDV, en grados.
+        respuesta:
+          tipo: numero
+          valor: '96.49'
+          receta: alfa
+          tolerancia: 1
+          formato: un número, en grados
+        tambienValen:
+          - valor: '83.51'
+            receta: 180 - alfa
+            mensaje: |
+              Es el **suplementario**, y la construcción es la buena: el ángulo entre los planos, de 0 a 90°. Dos planos
+              que se cortan forman dos ángulos, y el enunciado no dice más que «diedro». Aquí se toma el que abarcan las
+              dos caras, por donde está la pieza, 96,5°, y lo dicen las Notas; mientras el profesor no diga cuál espera,
+              esta también vale.
+        distractores:
+          - valor: '90.00'
+            receta: '90'
+            mensaje: |
+              Ese es el ángulo **E₁D₁G₁ en la planta**, la esquina del cuadrado. Las caras suben, y su diedro no es el
+              ángulo de la base.
+          - valor: '63.21'
+            receta: angulo_con_ph(segmento3(D, V))
+            mensaje: |
+              Ese es el ángulo de la **arista DV con el plano horizontal**, el del triángulo abatido en D₁. α se mide
+              en el plano perpendicular a DV, y no en uno que la contiene.
+        pista: |
+          Mide en K′ el ángulo entre K′E₁ y K′G₁. Es el que abre hacia V₁, por donde está la pieza.
+        desarrollo: |
+          Se comprueba con la cuenta: la mitad de EG mide 35,4 mm, y OK es la altura sobre la hipotenusa del
+          triángulo rectángulo DOV, de catetos 35,4 y 70 mm:
+
+          $$ \overline{OK} = \frac{35{,}4 \cdot 70}{78{,}4} \approx 31{,}6 \text{ mm}, \qquad \alpha = 2 \arctan\frac{35{,}4}{31{,}6} \approx 96{,}5° $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: EG es horizontal y su planta es perpendicular a D₁V₁, así que EG es perpendicular a DV en el espacio.
+          - texto: El plano por EG perpendicular a DV corta DV en K, y corta las dos caras en KE y KG, así que α es el ángulo EKG.
+          - texto: Abatiendo el plano vertical de DF sale DV en verdadera magnitud, D₁V₀, y K₀ es el pie de la perpendicular desde V₁.
+          - texto: Abatiendo el plano de la sección alrededor de EG, K cae en V₁D₁, en K′, y el ángulo E₁K′G₁ es α, 96,5°.
+          - texto: Como las caras EDV y GDV se apoyan en dos lados de la base que forman 90°, su diedro también es de 90°.
+            trampa: true
+            mensaje: |
+              Los lados DE y DG forman 90° en el plano de la base, pero el diedro se mide en un plano perpendicular a
+              la arista DV, y ese plano no es la base. Sale 96,5°.
+    resolucion: |
+      **Dónde se mide.** El diedro se mide en un plano perpendicular a la arista común, DV. La figura ya trae una
+      recta perpendicular a DV: EG es horizontal, y su planta es perpendicular a D₁V₁, así que lo es también en el
+      espacio. El plano por EG perpendicular a DV corta DV en K, y α es el ángulo EKG.
+
+      **El primer abatimiento.** El plano vertical de DF, alrededor de D₁F₁: V cae en la prolongación de E₁G₁, a 70
+      mm de V₁, la altura. D₁V₀ es DV en verdadera magnitud, y la perpendicular desde V₁ da K₀, a 31,6 mm de V₁.
+
+      **El segundo abatimiento.** El plano de la sección, alrededor de EG: K cae en V₁D₁, a esos 31,6 mm de V₁, en
+      K′. El triángulo E₁K′G₁ está en verdadera magnitud, y el ángulo en K′ es **α = 96,5°**.
+
+      **El otro camino.** Con dos cambios de plano y DV de punta, las dos caras se ven de canto y forman el mismo
+      ángulo, pero el segundo cambio no cabe en el A3 bajo la figura. El suplementario, 83,5°, sería el ángulo
+      entre los planos.
+
+  - id: exeg-2526c-4-la-arista-vf-vertical-por-giro
+    titulo: La arista VF, vertical, por giro
+    fuente: >-
+      Apartado 4 del examen de Expresión Gráfica de Ingeniería Industrial, Modelo A, curso 2025-2026,
+      24 de noviembre de 2025 (Figura 3) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Se transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        Un giro mueve la figura y deja quietas las vistas. Con un eje vertical cada punto se mueve en un plano
+        horizontal: la planta gira en verdadera magnitud y la cota no cambia. Con un eje de punta cada punto se
+        mueve en un plano frontal: el alzado gira en verdadera magnitud y el alejamiento no cambia.
+      formula: |
+        Lo que mide un segmento no cambia al girar. Se puede comprobar en cualquier posición:
+
+        $$
+        L = \sqrt{(\text{planta})^2 + \Delta z^2}
+        $$
+      reconocer: |
+        Antes de girar, mira cómo se ve una recta vertical en cada vista y cómo está ahora VF. Eso dice cuántos
+        giros hacen falta, y en qué orden.
+    enunciado: |
+      Hacer que la arista VF quede como una recta vertical mediante el método de giro.
+
+      **Notas nuestras.** La lámina pone esta figura bajo «Apartados 4 y 5». La pirámide es la de 7 m de altura, y
+      solo se gira la arista VF, no la pirámide entera. El enunciado no fija los ejes: los fijamos nosotros, y el paso
+      de construir dice cuáles. La figura no rotula V₂: es un nombre nuestro.
+    pide: F tras los giros que hagan falta, en las dos vistas, y, como pregunta nuestra, lo que mide la arista.
+    receta:
+      lamina: ex2526c-4
+      escena:
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+      solucion:
+        # El primer giro, de eje vertical por V: F se mueve a su misma cota, a la
+        # distancia de la planta, hasta que V₁F₁′ quede horizontal en el papel. Una
+        # elección: a un lado o a otro, los dos dejan VF frontal.
+        M: 'punto3(alzado: pie_perpendicular(figura.punto("V2"), figura.segmento("base2")), planta: figura.punto("V1"))'
+        Mx: 'punto3(alzado: desplaza(pie_perpendicular(figura.punto("V2"), figura.segmento("base2")), dx: 50), planta: desplaza(figura.punto("V1"), dx: 50))'
+        horizF: recta3(M, Mx)
+        Fg: 'punto_a_distancia(horizF, desde: M, distancia: vm_planta(V, F))'
+        # El segundo giro, de eje de punta por V: F′ se mueve en un plano frontal
+        # hasta quedar en la vertical de V. La planta acaba en V₁.
+        Fv: 'punto3(alzado: desplaza(figura.punto("V2"), dy: vm(V, F)), planta: figura.punto("V1"))'
+        arista_m: en_mm(vm(V, F)) / 10
+        # Los errores.
+        F2subir: 'desplaza(figura.punto("V2"), dy: -vm(V, F))'
+        F2planta: 'desplaza(figura.punto("V2"), dy: vm_planta(V, F))'
+        F2base: pie_perpendicular(figura.punto("V2"), figura.segmento("base2"))
+        vert: 'perpendicular(por: figura.punto("V2"), a: figura.segmento("base2"))'
+        # Los extremos.
+        L_V2: 'desplaza(figura.punto("V2"), dy: vm(V, F) + mm(4))'
+      comprueba:
+        - en_recta(Fv, recta3(V, M))
+    pasos:
+      - tipo: reconocer
+        pregunta: VF tiene que acabar vertical. ¿Qué giros le hacen falta, tal como está ahora?
+        opciones:
+          - texto: Uno solo, de eje de punta, porque VF ya se ve inclinada en el alzado y basta con enderezarla ahí
+            mensaje: |
+              VF no es frontal: su planta no es horizontal en el papel, y V₂F₂ no está en verdadera magnitud. Si se
+              gira en el alzado tal como está, VF quedaría de perfil, no vertical, porque V y F tienen alejamientos
+              distintos: primero hay que dejarla frontal.
+          - texto: Dos; uno de eje vertical, hasta dejarla frontal, y otro de eje de punta, hasta dejarla vertical
+            correcta: true
+            mensaje: |
+              Eso es. VF es oblicua. Con un giro de eje vertical su planta se pone horizontal en el papel, y VF queda
+              frontal, en verdadera magnitud en el alzado. Con un giro de eje de punta, el alzado se endereza
+              conservando esa medida, y la planta se queda en un punto.
+          - texto: Dos, de eje vertical los dos, porque quien tiene que acabar vertical es la propia recta
+            mensaje: |
+              Un eje vertical no cambia la cota de ningún punto, así que VF seguiría subiendo lo mismo: no se puede
+              enderezar. Lo que endereza es un eje horizontal, y de los horizontales, el de punta.
+
+      - tipo: construir
+        titulo: Los dos giros, con los ejes por V
+        intro: |
+          Los dos ejes pasan por V, que así no se mueve, y los fijamos nosotros: el enunciado no los da. Con los dos por
+          F saldría lo mismo, con F quieto y V desplazado. F′ y F″ son nombres nuestros de F tras cada giro. El primer eje
+          es vertical, y en la planta es el punto V₁. F₁ gira alrededor de V₁, con centro en V₁ y radio V₁F₁, hasta que V₁F₁′ quede
+          horizontal en el papel; vale hacia cualquiera de los dos lados. La cota de F no cambia: F₂′ sigue a la
+          altura de la recta de la base, en la vertical de F₁′. V₂F₂′ es la arista en verdadera magnitud.
+
+          El segundo eje es de punta, y en el alzado es el punto V₂. F₂′ gira alrededor de V₂, con radio V₂F₂′, hasta
+          la vertical de V₂, por el camino corto, con F por debajo: F₂″. Por el largo, con F encima de V₂, VF también sería
+          vertical, y aquí fijamos el corto. El alejamiento de F no cambia, y F₁″ queda a la altura de F₁′ en la planta, en la
+          vertical de V₁: encima de V₁. Una recta vertical se ve como un punto en la planta. Marca F₁′, F₂′, F₂″ y
+          F₁″.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: F1g
+            pide: F tras el primer giro, en la planta
+            es: proy_planta(solucion.Fg)
+            bien: |
+              F₁′ está en la horizontal de V₁, a lo que mide V₁F₁: la planta gira en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(figura.punto("F1"))
+                mensaje: |
+                  Ese es F₁, antes de girar. Gíralo alrededor de V₁ hasta la horizontal que pasa por V₁.
+                ejemplo: figura.punto("F1")
+              - si: 'a_distancia(de: figura.punto("V1"), d: vm_planta(V, F))'
+                mensaje: |
+                  Estás en el arco bueno, de centro V₁ y radio V₁F₁, pero no en la horizontal de V₁. VF queda frontal
+                  cuando su planta es horizontal en el papel.
+                ejemplo: 'uno(medir_sobre(figura.segmento("EG1"), desde: figura.punto("V1"), distancia: vm_planta(V, F)), 1)'
+              - si: siempre
+                mensaje: |
+                  F₁′ está en la horizontal de V₁, a lo que mide V₁F₁: el arco de centro V₁ y radio V₁F₁ corta esa
+                  horizontal.
+          - nombre: F2g
+            pide: F tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Fg)
+            bien: |
+              F₂′ está en la vertical de F₁′, a la misma altura que F₂: un giro de eje vertical no cambia las cotas.
+              V₂F₂′ es la arista en verdadera magnitud.
+            diagnosticos:
+              - si: '!en_vertical_de(F1g)'
+                mensaje: |
+                  F₂′ va en la **vertical de F₁′**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(rama(solucion.Fg, 1)), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de F₁′, pero la cota no es: un giro de eje vertical no cambia la cota de F, así
+                  que F₂′ sigue a la altura de la recta de la base.
+          - nombre: F2v
+            pide: F tras el segundo giro, en el alzado
+            es: proy_alzado(solucion.Fv)
+            bien: |
+              F₂″ está en la vertical de V₂, por debajo, a lo que mide V₂F₂′: el alzado gira en verdadera magnitud, y
+              VF conserva sus 78,4 mm.
+            diagnosticos:
+              - si: cerca_de(solucion.F2subir)
+                mensaje: |
+                  Has llevado F₂′ por encima de V₂. VF también sería vertical, pero V es el vértice superior, y al
+                  girar por el camino corto F sigue por debajo. El arco baja hasta la vertical de V₂.
+                ejemplo: solucion.F2subir
+              - si: cerca_de(solucion.F2base)
+                mensaje: |
+                  Te has quedado en la recta de la base, a la cota que tenía F. Con un eje de punta la cota sí cambia, y
+                  VF, ya vertical, baja 78,4 mm desde V₂: más que la altura de la pirámide.
+                ejemplo: solucion.F2base
+              - si: cerca_de(solucion.F2planta)
+                mensaje: |
+                  Has llevado lo que mide **V₁F₁ en la planta**. El radio es V₂F₂′, la arista en verdadera magnitud.
+                ejemplo: solucion.F2planta
+              - si: '!en_recta(solucion.vert)'
+                mensaje: |
+                  VF acaba vertical: F₂″ va en la **vertical de V₂**.
+                ejemplo: 'desplaza(proy_alzado(solucion.Fv), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de V₂, pero no a la distancia buena: F₂″ está a lo que mide V₂F₂′.
+          - nombre: F1v
+            pide: F tras el segundo giro, en la planta
+            es: proy_planta(solucion.Fv)
+            bien: |
+              F₁″ coincide con V₁: una recta vertical se ve como un punto en la planta. El alejamiento de F no ha
+              cambiado desde F₁′, y F₁″ está en la vertical de F₂″.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Fg))
+                mensaje: |
+                  Ese es F₁′, del primer giro. Con un eje de punta el alejamiento no cambia y F₁ se mueve en horizontal,
+                  hasta la vertical de F₂″.
+                ejemplo: proy_planta(rama(solucion.Fg, 1))
+              - si: siempre
+                mensaje: |
+                  F₁″ está en la vertical de F₂″ y a la altura de F₁′: encima de V₁.
+        trazado:
+          - segmento2(figura.punto("V1"), proy_planta(solucion.Fg))
+          - segmento2(figura.punto("V2"), proy_alzado(solucion.Fg))
+          - segmento2(figura.punto("V2"), proy_alzado(solucion.Fv))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("V1"), figura.punto("F1"))
+            porque: |
+              V₁F₁, la planta de la arista, que viene en la diagonal D₁F₁: es el radio del primer giro.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), proy_planta(solucion.Fg))
+            guia: figura.segmento("base2")
+            porque: |
+              Por V₁, la paralela a la recta de la base, hacia el lado al que vaya a girar F₁: VF queda frontal cuando
+              su planta es horizontal en el papel.
+          - con: compas
+            traza: 'arco(figura.punto("V1"), por: proy_planta(solucion.Fg), desde: figura.punto("F1"), hasta: proy_planta(solucion.Fg))'
+            toma: segmento2(figura.punto("V1"), figura.punto("F1"))
+            porque: |
+              **El primer giro.** Con centro en V₁, el eje vertical visto de punta, y radio V₁F₁, el arco que lleva F₁
+              hasta esa horizontal. Vale cualquiera de los dos sentidos.
+          - con: marca
+            traza: proy_planta(solucion.Fg)
+            rotulo: F₁′
+            porque: |
+              F₁′, donde el arco corta la horizontal de V₁. Nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Fg), proy_alzado(solucion.Fg))
+            porque: |
+              Por F₁′, la vertical hasta la altura de la base, en el alzado. La cota de F no cambia con un eje vertical.
+          - con: regla
+            traza: segmento2(figura.punto("F2"), proy_alzado(solucion.Fg))
+            porque: |
+              La recta de la base, prolongada hasta esa vertical si hace falta: es la horizontal por la que se mueve F₂.
+          - con: marca
+            traza: proy_alzado(solucion.Fg)
+            rotulo: F₂′
+            porque: |
+              F₂′, donde la vertical de F₁′ corta la altura de la base. Nombre nuestro.
+          - con: regla
+            traza: segmento2(figura.punto("V2"), proy_alzado(solucion.Fg))
+            porque: |
+              V₂F₂′: VF es frontal, y aquí está en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V2"), solucion.L_V2)
+            porque: |
+              Por V₂, la vertical hacia abajo, larga: es adonde tiene que llegar VF.
+          - con: compas
+            traza: 'arco(figura.punto("V2"), por: proy_alzado(solucion.Fv), desde: proy_alzado(solucion.Fg), hasta: proy_alzado(solucion.Fv))'
+            toma: segmento2(figura.punto("V2"), proy_alzado(solucion.Fg))
+            porque: |
+              **El segundo giro.** Con centro en V₂, el eje de punta, y radio V₂F₂′, el arco que lleva F₂′ hasta la
+              vertical de V₂.
+          - con: marca
+            traza: proy_alzado(solucion.Fv)
+            rotulo: F₂″
+            porque: |
+              F₂″, donde el arco corta la vertical de V₂, por debajo de la recta de la base. Nombre nuestro.
+          - con: marca
+            traza: proy_planta(solucion.Fv)
+            porque: |
+              F₁″, encima de V₁: el alejamiento no cambia con un eje de punta, y F₁″ está a la altura de F₁′ en la
+              vertical de F₂″. Va sin rótulo porque el de V₁ ocupa el sitio. Nombre nuestro.
+        pista: |
+          (1) Con centro en V₁ y radio V₁F₁, lleva F₁ a la horizontal de V₁: F₁′. (2) F₂′ a la altura de la base, en su
+          vertical. (3) Con centro en V₂ y radio V₂F₂′, lleva F₂′ a la vertical de V₂: F₂″. (4) F₁″ cae en V₁.
+        desarrollo: |
+          En verde claro, los dos arcos y V₂F₂′, la arista en verdadera magnitud. F₂″ queda por debajo de la recta de
+          la base, porque la arista, 78,4 mm, es más larga que la altura, 70 mm. No es que F baje al suelo: el giro
+          mueve la arista, y la pirámide se queda donde está.
+
+      - tipo: calcular
+        titulo: Lo que mide VF
+        pregunta: Como pregunta nuestra, ¿cuánto mide la arista VF, en metros?
+        respuesta:
+          tipo: numero
+          valor: '7.84'
+          receta: arista_m
+          tolerancia: 0.05
+          formato: un número, en metros
+        distractores:
+          - valor: '7.00'
+            receta: en_mm(vm_alzado(M, V)) / 10
+            mensaje: |
+              Esa es la **altura** de la pirámide, de V₂ a la recta de la base. VF es la hipotenusa del triángulo
+              que tiene la altura de cateto.
+          - valor: '3.54'
+            receta: en_mm(vm_planta(V, F)) / 10
+            mensaje: |
+              Eso es **V₁F₁ en la planta**, la mitad de la diagonal. Solo está en verdadera magnitud la arista frontal,
+              V₂F₂′.
+          - valor: '6.00'
+            receta: '6'
+            mensaje: |
+              Esa es la arista de la pirámide del **apartado 2**, que es otra. Esta tiene 7 m de altura, y su arista
+              sale de medir V₂F₂′.
+        pista: |
+          Tras el primer giro, VF es frontal: V₂F₂′ está en verdadera magnitud. Mide en mm y divide entre 10.
+        desarrollo: |
+          V₂F₂′ mide 78,4 mm de la lámina; a escala 1:100:
+
+          $$ \overline{VF} = \sqrt{7^{2} + 3{,}535^{2}} \approx 7{,}84 \text{ m} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Una recta vertical se ve como un punto en la planta, y VF, oblicua, no se puede enderezar de una vez.
+          - texto: Con un eje vertical por V, F gira a su misma cota hasta que la planta queda horizontal en el papel, y VF queda frontal.
+          - texto: VF frontal está en verdadera magnitud en el alzado, y con un eje de punta por V, F₂′ gira hasta la vertical de V₂.
+          - texto: El alejamiento no cambia con ese eje, así que F₁″ cae encima de V₁.
+          - texto: El segundo giro también puede ser de eje vertical, porque lo que importa es que V₁ y F₁ acaben en el mismo punto.
+            trampa: true
+            mensaje: |
+              Un eje vertical por V no acerca F₁ a V₁: F₁ se mueve en un arco de centro V₁, siempre a la misma
+              distancia. Solo un eje horizontal cambia la cota y la planta a la vez.
+    resolucion: |
+      **Cuántos giros.** VF es oblicua: ninguna vista la tiene en verdadera magnitud. Una recta vertical se ve como
+      un punto en la planta y en verdadera magnitud en el alzado. Hacen falta dos giros. Los ejes los fijamos
+      nosotros, los dos por V.
+
+      **El primero, de eje vertical.** La planta gira en verdadera magnitud y la cota no cambia: F₁ va alrededor de
+      V₁ hasta la horizontal de V₁, F₁′, a un lado o a otro. F₂′ sigue a la altura de la base. VF queda frontal, y
+      V₂F₂′ mide 78,4 mm: **7,84 m**.
+
+      **El segundo, de eje de punta.** El alzado gira en verdadera magnitud y el alejamiento no cambia: F₂′ va
+      alrededor de V₂ hasta su vertical, F₂″, 78,4 mm por debajo. F₁″ queda encima de V₁. VF es vertical.
+
+  - id: exeg-2526c-5-la-interseccion-de-la-piramide-y-el-prisma
+    titulo: La intersección de la pirámide y el prisma oblicuo
+    fuente: >-
+      Apartado 5 del examen de Expresión Gráfica de Ingeniería Industrial, Modelo A, curso 2025-2026,
+      24 de noviembre de 2025 (Figura 3) · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG ·
+      UPV/EHU. Se transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        Con un prisma de aristas oblicuas, el plano auxiliar que conviene es el que contiene la arista y pasa por
+        el vértice de la pirámide: la corta en rectas que salen de V, y basta con saber dónde corta su traza a la
+        base. Todos esos planos contienen la paralela a las aristas que sale de V, y sus trazas pasan por un mismo
+        punto, donde esa paralela perfora el plano de la base.
+      formula: |
+        Tres puntos de un plano fijan su traza. Para una recta que perfora una cara se usa:
+
+        $$
+        \text{recta} \in \text{plano auxiliar} \;\Rightarrow\; \text{plano auxiliar} \cap \text{cara} \;\text{corta a la recta en el punto}
+        $$
+      reconocer: |
+        Antes de trazar, mira la base de abajo del prisma y la de la pirámide: ¿están a la misma cota? Y mira en la
+        planta por dónde pasa cada arista del prisma respecto de V₁, porque alguna puede dar un caso particular.
+    enunciado: |
+      Determinar la intersección entre la pirámide y el prisma oblicuo. Determinar caras visibles/ocultas de ambas
+      figuras.
+
+      **Notas nuestras.** La lámina pone esta figura bajo «Apartados 4 y 5». La pirámide es la de 7 m de altura. El
+      prisma tiene las aristas cortadas en la lámina: se completan de A a A′, de B a B′ y de C a C′. Su base de abajo
+      está en el plano de la base de la pirámide, y eso ayuda. El método es nuestro, porque el enunciado no lo fija;
+      con planos proyectantes por cada arista sale lo mismo, con más trazos.
+
+      Leemos los dos sólidos como una sola pieza maciza y opaca: lo que de una arista queda dentro del otro sólido
+      no se dibuja. Con los dos sólidos por separado, cada uno entero, esos trozos irían a trazos, y lo demás no
+      cambiaría. La figura no rotula V₂: es un nombre nuestro, igual que W y los números de los puntos.
+    pide: Los puntos de la intersección en las dos vistas, las líneas que forman, y qué se ve y qué se oculta de ellas y de las aristas de los dos sólidos; y, como pregunta nuestra, lo que de VD queda dentro del prisma.
+    receta:
+      lamina: ex2526c-5
+      escena:
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        D: 'punto3(alzado: figura.punto("D2"), planta: figura.punto("D1"))'
+        E: 'punto3(alzado: figura.punto("E2"), planta: figura.punto("E1"))'
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        G: 'punto3(alzado: figura.punto("G2"), planta: figura.punto("G1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        Ap: 'punto3(alzado: figura.punto("A2p"), planta: figura.punto("A1p"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        Bp: 'punto3(alzado: figura.punto("B2p"), planta: figura.punto("B1p"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+        Cp: 'punto3(alzado: figura.punto("C2p"), planta: figura.punto("C1p"))'
+        vde: plano(V, D, E)
+        vef: plano(V, E, F)
+        vfg: plano(V, F, G)
+        vgd: plano(V, G, D)
+        abb: plano(A, B, Ap)
+        bcc: plano(B, C, Cp)
+        caa: plano(C, A, Ap)
+      solucion:
+        # La entrada: AA′ por la VDE (1), BB′ y CC′ por la VGD (3 y 4), y VD por sus
+        # caras CAA′C′ y ABB′A′ (5 y 2). La salida: AA′ y CC′ por la VEF (6 y 10), BB′
+        # por la VFG (8), y VF por sus caras BCC′B′ y ABB′A′ (9 y 7). VE y VG no se
+        # cortan. Dos poligonales: 1 2 3 4 5 y 6 7 8 9 10.
+        P1: corte_recta_plano(recta3(A, Ap), vde)
+        P2: corte_recta_plano(recta3(V, D), abb)
+        P3: corte_recta_plano(recta3(B, Bp), vgd)
+        P4: corte_recta_plano(recta3(C, Cp), vgd)
+        P5: corte_recta_plano(recta3(V, D), caa)
+        P6: corte_recta_plano(recta3(A, Ap), vef)
+        P7: corte_recta_plano(recta3(V, F), abb)
+        P8: corte_recta_plano(recta3(B, Bp), vfg)
+        P9: corte_recta_plano(recta3(V, F), bcc)
+        P10: corte_recta_plano(recta3(C, Cp), vef)
+        vd_dentro: en_mm(vm(P5, P2)) / 10
+        # W: la paralela a las aristas por V, en el plano de la base.
+        W2: 'cruce_aparente(segmento2(figura.punto("V2"), desplaza(figura.punto("V2"), dx: 226.68, dy: 141.72)), segmento2(figura.punto("A2p"), figura.punto("C2p")))'
+        W1: 'cruce_aparente(segmento2(figura.punto("V1"), desplaza(figura.punto("V1"), dx: 226.68, dy: 94.08)), segmento2(W2, desplaza(W2, dy: 10)))'
+        L_W2: 'desplaza(W2, dx: mm(6))'
+        L_W2v: 'desplaza(W2, dx: 11.33, dy: 7.09)'
+        L_W1: 'desplaza(W1, dy: mm(4))'
+        L_W1v: 'desplaza(W1, dx: 11.33, dy: 4.7)'
+        # Las trazas de los planos auxiliares.
+        a1: cruce_aparente(segmento2(W1, figura.punto("A1p")), figura.segmento("DE1"))
+        a6: cruce_aparente(segmento2(W1, figura.punto("A1p")), figura.segmento("EF1"))
+        b3: cruce_aparente(segmento2(W1, figura.punto("B1p")), figura.segmento("GD1"))
+        b8: cruce_aparente(segmento2(W1, figura.punto("B1p")), figura.segmento("FG1"))
+        c4: cruce_aparente(segmento2(figura.punto("C1"), figura.punto("C1p")), figura.segmento("GD1"))
+        c10: cruce_aparente(segmento2(figura.punto("C1"), figura.punto("C1p")), figura.segmento("EF1"))
+        c4a: 'cruce_aparente(segmento2(c4, desplaza(c4, dy: 10)), figura.segmento("base2"))'
+        c10a: 'cruce_aparente(segmento2(c10, desplaza(c10, dy: 10)), figura.segmento("base2"))'
+        d2: cruce_aparente(segmento2(W1, figura.punto("D1")), figura.segmento("ABp1"))
+        d5: cruce_aparente(segmento2(W1, figura.punto("D1")), figura.segmento("CAp1"))
+        f7: cruce_aparente(segmento2(W1, figura.punto("F1")), figura.segmento("ABp1"))
+        f9: cruce_aparente(segmento2(W1, figura.punto("F1")), figura.segmento("BCp1"))
+        L_a1: 'uno(medir_sobre(segmento2(W1, figura.punto("A1p")), desde: a1, distancia: mm(4)), 1)'
+        L_b3: 'uno(medir_sobre(segmento2(W1, figura.punto("B1p")), desde: b3, distancia: mm(4)), 1)'
+        # Los cruces de lo visto y lo oculto.
+        k_C_VD2: cruce_aparente(segmento2(figura.punto("C2"), figura.punto("C2p")), figura.segmento("VD2"))
+        k_VD_A2: cruce_aparente(figura.segmento("VD2"), segmento2(figura.punto("A2"), figura.punto("A2p")))
+        k_VF_C2: cruce_aparente(figura.segmento("VF2"), segmento2(figura.punto("C2"), figura.punto("C2p")))
+        k_DE_A1: cruce_aparente(figura.segmento("DE1"), segmento2(figura.punto("A1"), figura.punto("A1p")))
+        k_EF_A1: cruce_aparente(figura.segmento("EF1"), segmento2(figura.punto("A1"), figura.punto("A1p")))
+        k_FG_B1: cruce_aparente(figura.segmento("FG1"), segmento2(figura.punto("B1"), figura.punto("B1p")))
+        k_GD_B1: cruce_aparente(figura.segmento("GD1"), segmento2(figura.punto("B1"), figura.punto("B1p")))
+      comprueba:
+        - en_plano(P1, abb)
+        - en_plano(P1, caa)
+        - en_plano(P4, bcc)
+        - en_plano(P4, caa)
+        - en_plano(P10, caa)
+        - en_recta(P9, recta3(V, F))
+    pasos:
+      - tipo: reconocer
+        pregunta: Para hallar dónde entra AA′ en la pirámide se usa un plano que contiene la arista y pasa por V. ¿Qué tiene de bueno ese plano?
+        opciones:
+          - texto: Corta la pirámide en dos rectas que salen de V, así que basta con ver dónde corta su traza a los lados de la base
+            correcta: true
+            mensaje: |
+              Eso es. Un plano que pasa por el vértice corta cada cara en una recta que sale de V. Su traza en el
+              plano de la base da el otro punto de cada una, y la arista corta esas dos rectas en la entrada y la
+              salida.
+          - texto: Es horizontal, y da una sección semejante a la base
+            mensaje: |
+              No es horizontal: contiene AA′, que baja. El plano horizontal da una sección semejante a la base, pero
+              solo sirve si la arista es horizontal.
+          - texto: Es proyectante, y la arista se ve en él de canto
+            mensaje: |
+              Un plano proyectante por la arista también vale, y es otro camino, pero no es este: no pasa por V, y da
+              un polígono de sección entero por cada arista.
+
+      - tipo: construir
+        titulo: Las dos poligonales y lo que se ve
+        intro: |
+          Primero, completa las aristas del prisma en las dos vistas, con trazo fino: luego solo se pasa a limpio lo
+          que queda fuera de la pirámide.
+
+          Los planos auxiliares pasan por V y son paralelos a las aristas: los contienen a todos la paralela a las
+          aristas por V, que perfora el plano de la base en W. Traza esa paralela en las dos vistas, y W₁ queda en la
+          vertical de W₂. La base de abajo del prisma está en el plano de la base de la pirámide, así que las trazas
+          de todo salen en la misma planta: la de AA′ va de W₁ por A′₁, la de BB′ de W₁ por B′₁. Cada una corta dos
+          lados del cuadrado; unidos con V₁, esos cortes dan en la arista la entrada y la salida. Las aristas VD y VF
+          atraviesan el prisma: la traza de W₁ a D₁, o a F₁, corta dos lados del triángulo A′₁B′₁C′₁, y de ahí la
+          paralela a las aristas lleva a V₁D₁, o a V₁F₁.
+
+          Con CC′ hay un caso particular: **C₁C′₁ pasa por V₁**, así que su plano auxiliar es vertical, y en la planta
+          sus rectas se confunden con la arista. Esos dos puntos se sacan en el alzado: C₁C′₁ corta G₁D₁ y E₁F₁; se
+          suben a la recta de la base y se unen con V₂.
+
+          Por último, pasa a limpio con «arista vista» y «arista oculta» las dos poligonales y lo que queda de las
+          aristas. Leemos los dos sólidos como una sola pieza: lo que de una arista queda dentro del otro no se dibuja.
+          Hay puntos muy juntos: 4 y 5 quedan a 2,4 mm en las dos vistas, y 7₁ a 1 mm de F₁. Amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, medir, visto, oculto, borrar]
+        tolerancia: 0.8
+        objetivos:
+          - nombre: N1p
+            pide: 1, donde AA′ entra en la pirámide, por la cara VDE, en la planta
+            es: proy_planta(solucion.P1)
+            bien: |
+              1₁ está en A₁A′₁, en la recta que sale de V₁ hacia el punto del lado de la base que da la traza de su plano auxiliar.
+            diagnosticos:
+              - si: cerca_de(solucion.k_DE_A1)
+                mensaje: |
+                  Estás donde A₁A′₁ cruza D₁E₁, el contorno de la base. Ese sería el corte si AA′ fuera a la altura de la base, y va más arriba, donde la pirámide es más estrecha.
+                ejemplo: solucion.k_DE_A1
+              - si: cerca_de(proy_planta(solucion.P6))
+                mensaje: |
+                  Ese es 6₁, el otro corte de AA′ con la pirámide. 1 es el de la cara VDE.
+                ejemplo: proy_planta(solucion.P6)
+              - si: '!en_recta(segmento2(figura.punto("A1"), figura.punto("A1p")))'
+                mensaje: |
+                  1 es un punto de AA′: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P1), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en A₁A′₁, pero no en el corte: la traza del plano por V y AA′ corta el lado de la base de la cara VDE, y de ahí la recta a V₁ da 1₁.
+          - nombre: N6p
+            pide: 6, donde AA′ sale de la pirámide, por la cara VEF, en la planta
+            es: proy_planta(solucion.P6)
+            bien: |
+              6₁ está en A₁A′₁, en la recta que sale de V₁ hacia el punto del lado de la base que da la traza de su plano auxiliar.
+            diagnosticos:
+              - si: cerca_de(solucion.k_EF_A1)
+                mensaje: |
+                  Estás donde A₁A′₁ cruza E₁F₁, el contorno de la base. Ese sería el corte si AA′ fuera a la altura de la base, y va más arriba, donde la pirámide es más estrecha.
+                ejemplo: solucion.k_EF_A1
+              - si: cerca_de(proy_planta(solucion.P1))
+                mensaje: |
+                  Ese es 1₁, el otro corte de AA′ con la pirámide. 6 es el de la cara VEF.
+                ejemplo: proy_planta(solucion.P1)
+              - si: '!en_recta(segmento2(figura.punto("A1"), figura.punto("A1p")))'
+                mensaje: |
+                  6 es un punto de AA′: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P6), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en A₁A′₁, pero no en el corte: la traza del plano por V y AA′ corta el lado de la base de la cara VEF, y de ahí la recta a V₁ da 6₁.
+          - nombre: N1a
+            pide: 1 en el alzado
+            es: proy_alzado(solucion.P1)
+            bien: |
+              1₂ está en la vertical de 1₁, sobre A₂A′₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N1p)'
+                mensaje: |
+                  1₂ va en la **vertical de 1₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P1), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 1₁, pero no sobre la arista: 1₂ cae en A₂A′₂.
+          - nombre: N6a
+            pide: 6 en el alzado
+            es: proy_alzado(solucion.P6)
+            bien: |
+              6₂ está en la vertical de 6₁, sobre A₂A′₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N6p)'
+                mensaje: |
+                  6₂ va en la **vertical de 6₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P6), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 6₁, pero no sobre la arista: 6₂ cae en A₂A′₂.
+          - nombre: N3p
+            pide: 3, donde BB′ entra en la pirámide, por la cara VGD, en la planta
+            es: proy_planta(solucion.P3)
+            bien: |
+              3₁ está en B₁B′₁, en la recta que sale de V₁ hacia el punto del lado de la base que da la traza de su plano auxiliar.
+            diagnosticos:
+              - si: cerca_de(solucion.k_GD_B1)
+                mensaje: |
+                  Estás donde B₁B′₁ cruza G₁D₁, el contorno de la base. Ese sería el corte si BB′ fuera a la altura de la base, y va más arriba, donde la pirámide es más estrecha.
+                ejemplo: solucion.k_GD_B1
+              - si: cerca_de(proy_planta(solucion.P8))
+                mensaje: |
+                  Ese es 8₁, el otro corte de BB′ con la pirámide. 3 es el de la cara VGD.
+                ejemplo: proy_planta(solucion.P8)
+              - si: '!en_recta(segmento2(figura.punto("B1"), figura.punto("B1p")))'
+                mensaje: |
+                  3 es un punto de BB′: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P3), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en B₁B′₁, pero no en el corte: la traza del plano por V y BB′ corta el lado de la base de la cara VGD, y de ahí la recta a V₁ da 3₁.
+          - nombre: N8p
+            pide: 8, donde BB′ sale de la pirámide, por la cara VFG, en la planta
+            es: proy_planta(solucion.P8)
+            bien: |
+              8₁ está en B₁B′₁, en la recta que sale de V₁ hacia el punto del lado de la base que da la traza de su plano auxiliar.
+            diagnosticos:
+              - si: cerca_de(solucion.k_FG_B1)
+                mensaje: |
+                  Estás donde B₁B′₁ cruza F₁G₁, el contorno de la base. Ese sería el corte si BB′ fuera a la altura de la base, y va más arriba, donde la pirámide es más estrecha.
+                ejemplo: solucion.k_FG_B1
+              - si: cerca_de(proy_planta(solucion.P3))
+                mensaje: |
+                  Ese es 3₁, el otro corte de BB′ con la pirámide. 8 es el de la cara VFG.
+                ejemplo: proy_planta(solucion.P3)
+              - si: '!en_recta(segmento2(figura.punto("B1"), figura.punto("B1p")))'
+                mensaje: |
+                  8 es un punto de BB′: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P8), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en B₁B′₁, pero no en el corte: la traza del plano por V y BB′ corta el lado de la base de la cara VFG, y de ahí la recta a V₁ da 8₁.
+          - nombre: N3a
+            pide: 3 en el alzado
+            es: proy_alzado(solucion.P3)
+            bien: |
+              3₂ está en la vertical de 3₁, sobre B₂B′₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N3p)'
+                mensaje: |
+                  3₂ va en la **vertical de 3₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P3), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 3₁, pero no sobre la arista: 3₂ cae en B₂B′₂.
+          - nombre: N8a
+            pide: 8 en el alzado
+            es: proy_alzado(solucion.P8)
+            bien: |
+              8₂ está en la vertical de 8₁, sobre B₂B′₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N8p)'
+                mensaje: |
+                  8₂ va en la **vertical de 8₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P8), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 8₁, pero no sobre la arista: 8₂ cae en B₂B′₂.
+          - nombre: N4a
+            pide: 4, donde CC′ entra en la pirámide, por la cara VGD, en el alzado
+            es: proy_alzado(solucion.P4)
+            bien: |
+              4₂ está en C₂C′₂, donde la corta la recta de V₂ al punto de la base que está en G₂D₂ y en la vertical del corte de C₁C′₁ con G₁D₁.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.P10))
+                mensaje: |
+                  Ese es 10₂, por donde CC′ sale de la pirámide. 4 es la entrada, por la cara de atrás, VGD.
+                ejemplo: proy_alzado(solucion.P10)
+              - si: '!en_recta(segmento2(figura.punto("C2"), figura.punto("C2p")))'
+                mensaje: |
+                  4 es un punto de CC′: 4₂ va **en C₂C′₂**.
+                ejemplo: 'desplaza(proy_alzado(solucion.P4), dx: mm(-4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en C₂C′₂, pero no en el corte. El plano por V y CC′ es vertical: su traza es la propia C₁C′₁, que corta G₁D₁. Sube ese punto a la recta de la base y únelo con V₂.
+          - nombre: N10a
+            pide: 10, donde CC′ sale de la pirámide, por la cara VEF, en el alzado
+            es: proy_alzado(solucion.P10)
+            bien: |
+              10₂ está en C₂C′₂, donde la corta la recta de V₂ al punto de la base que está en la vertical del corte de C₁C′₁ con E₁F₁.
+            diagnosticos:
+              - si: cerca_de(proy_alzado(solucion.P4))
+                mensaje: |
+                  Ese es 4₂, por donde CC′ entra en la pirámide. 10 es la salida, por la cara VEF.
+                ejemplo: proy_alzado(solucion.P4)
+              - si: '!en_recta(segmento2(figura.punto("C2"), figura.punto("C2p")))'
+                mensaje: |
+                  10 es un punto de CC′: 10₂ va **en C₂C′₂**.
+                ejemplo: 'desplaza(proy_alzado(solucion.P10), dx: mm(-4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en C₂C′₂, pero no en el corte. C₁C′₁ corta E₁F₁: sube ese punto a la recta de la base y únelo con V₂.
+          - nombre: N4p
+            pide: 4 en la planta
+            es: proy_planta(solucion.P4)
+            bien: |
+              4₁ está en C₁C′₁, en la vertical de 4₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N4a)'
+                mensaje: |
+                  4₁ va en la **vertical de 4₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.P4), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 4₂, pero no sobre la arista: 4₁ cae en C₁C′₁.
+          - nombre: N10p
+            pide: 10 en la planta
+            es: proy_planta(solucion.P10)
+            bien: |
+              10₁ está en C₁C′₁, en la vertical de 10₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N10a)'
+                mensaje: |
+                  10₁ va en la **vertical de 10₂**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_planta(solucion.P10), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 10₂, pero no sobre la arista: 10₁ cae en C₁C′₁.
+          - nombre: N5p
+            pide: 5, donde VD entra en el prisma, por su cara CAA′C′, en la planta
+            es: proy_planta(solucion.P5)
+            bien: |
+              5₁ está en V₁D₁, donde la corta la paralela a las aristas del prisma que sale de la traza del plano por VD.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.P2))
+                mensaje: |
+                  Ese es 2₁, el otro corte de VD con el prisma. 5 es el de la cara CAA′C′.
+                ejemplo: proy_planta(solucion.P2)
+              - si: '!en_recta(figura.segmento("DF1"))'
+                mensaje: |
+                  5 es un punto de VD: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P5), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en V₁D₁, pero no en el corte: la traza del plano por VD corta el lado de la base del prisma de la cara CAA′C′, y de ahí la paralela a las aristas del prisma da 5₁.
+          - nombre: N2p
+            pide: 2, donde VD sale del prisma, por su cara ABB′A′, en la planta
+            es: proy_planta(solucion.P2)
+            bien: |
+              2₁ está en V₁D₁, donde la corta la paralela a las aristas del prisma que sale de la traza del plano por VD.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.P5))
+                mensaje: |
+                  Ese es 5₁, el otro corte de VD con el prisma. 2 es el de la cara ABB′A′.
+                ejemplo: proy_planta(solucion.P5)
+              - si: '!en_recta(figura.segmento("DF1"))'
+                mensaje: |
+                  2 es un punto de VD: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P2), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en V₁D₁, pero no en el corte: la traza del plano por VD corta el lado de la base del prisma de la cara ABB′A′, y de ahí la paralela a las aristas del prisma da 2₁.
+          - nombre: N5a
+            pide: 5 en el alzado
+            es: proy_alzado(solucion.P5)
+            bien: |
+              5₂ está en la vertical de 5₁, sobre V₂D₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N5p)'
+                mensaje: |
+                  5₂ va en la **vertical de 5₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P5), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 5₁, pero no sobre la arista: 5₂ cae en V₂D₂.
+          - nombre: N2a
+            pide: 2 en el alzado
+            es: proy_alzado(solucion.P2)
+            bien: |
+              2₂ está en la vertical de 2₁, sobre V₂D₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N2p)'
+                mensaje: |
+                  2₂ va en la **vertical de 2₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P2), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 2₁, pero no sobre la arista: 2₂ cae en V₂D₂.
+          - nombre: N9p
+            pide: 9, donde VF entra en el prisma, por su cara BCC′B′, en la planta
+            es: proy_planta(solucion.P9)
+            bien: |
+              9₁ está en V₁F₁, donde la corta la paralela a las aristas del prisma que sale de la traza del plano por VF.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.P7))
+                mensaje: |
+                  Ese es 7₁, el otro corte de VF con el prisma. 9 es el de la cara BCC′B′.
+                ejemplo: proy_planta(solucion.P7)
+              - si: '!en_recta(figura.segmento("DF1"))'
+                mensaje: |
+                  9 es un punto de VF: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P9), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en V₁F₁, pero no en el corte: la traza del plano por VF corta el lado de la base del prisma de la cara BCC′B′, y de ahí la paralela a las aristas del prisma da 9₁.
+          - nombre: N7p
+            pide: 7, donde VF sale del prisma, por su cara ABB′A′, en la planta
+            es: proy_planta(solucion.P7)
+            bien: |
+              7₁ está en V₁F₁, donde la corta la paralela a las aristas del prisma que sale de la traza del plano por VF.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.P9))
+                mensaje: |
+                  Ese es 9₁, el otro corte de VF con el prisma. 7 es el de la cara ABB′A′.
+                ejemplo: proy_planta(solucion.P9)
+              - si: '!en_recta(figura.segmento("DF1"))'
+                mensaje: |
+                  7 es un punto de VF: va **en su planta**, en la recta ya dibujada.
+                ejemplo: 'desplaza(proy_planta(solucion.P7), dx: mm(4), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en V₁F₁, pero no en el corte: la traza del plano por VF corta el lado de la base del prisma de la cara ABB′A′, y de ahí la paralela a las aristas del prisma da 7₁.
+          - nombre: N9a
+            pide: 9 en el alzado
+            es: proy_alzado(solucion.P9)
+            bien: |
+              9₂ está en la vertical de 9₁, sobre V₂F₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N9p)'
+                mensaje: |
+                  9₂ va en la **vertical de 9₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P9), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 9₁, pero no sobre la arista: 9₂ cae en V₂F₂.
+          - nombre: N7a
+            pide: 7 en el alzado
+            es: proy_alzado(solucion.P7)
+            bien: |
+              7₂ está en la vertical de 7₁, sobre V₂F₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N7p)'
+                mensaje: |
+                  7₂ va en la **vertical de 7₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P7), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 7₁, pero no sobre la arista: 7₂ cae en V₂F₂.
+        tramos:
+          - traza: segmento2(figura.punto("A2"), proy_alzado(solucion.P1))
+            tipo: visto
+            porque: 'De A₂ a 1₂: AA′ es la arista de delante del prisma, la de A₁, con más alejamiento que B₁ y C₁, y fuera de la pirámide nada se le pone delante.'
+          - traza: segmento2(proy_alzado(solucion.P6), figura.punto("A2p"))
+            tipo: visto
+            porque: 'De 6₂ a A′₂: AA′ sale por la cara de delante VEF, y sigue siendo la arista de delante del prisma.'
+          - traza: segmento2(figura.punto("B2"), proy_alzado(solucion.P3))
+            tipo: oculto
+            porque: 'De B₂ a 3₂: BB′ es la arista de atrás del prisma, con B₁ de menos alejamiento, y la tapa la cara CAA′C′, la de delante.'
+          - traza: segmento2(proy_alzado(solucion.P8), figura.punto("B2p"))
+            tipo: oculto
+            porque: 'De 8₂ a B′₂: BB′ sigue siendo la arista de atrás, tapada por la cara CAA′C′.'
+          - traza: segmento2(figura.punto("C2"), solucion.k_C_VD2)
+            tipo: visto
+            porque: 'De C₂ al cruce con V₂D₂: CC′ es contorno del prisma en el alzado, y aún no ha llegado detrás de la pirámide.'
+          - traza: segmento2(solucion.k_C_VD2, proy_alzado(solucion.P4))
+            tipo: oculto
+            porque: 'Del cruce con V₂D₂ a 4₂: CC′ entra por la cara de atrás, VGD, así que ese trozo va detrás de la cara VDE.'
+          - traza: segmento2(proy_alzado(solucion.P10), figura.punto("C2p"))
+            tipo: visto
+            porque: 'De 10₂ a C′₂: CC′ sale por la cara de delante VEF, y es contorno del prisma: nada la tapa.'
+          - traza: segmento2(figura.punto("A2"), figura.punto("C2"))
+            tipo: visto
+            porque: 'A₂C₂: el lado de delante de la base de arriba del prisma; B₂ cae en medio, y su lado va detrás.'
+          - traza: segmento2(figura.punto("V2"), proy_alzado(solucion.P5))
+            tipo: visto
+            porque: 'De V₂ a 5₂: VD es contorno de la pirámide, y hasta el prisma nada se le pone delante.'
+          - traza: segmento2(proy_alzado(solucion.P2), solucion.k_VD_A2)
+            tipo: oculto
+            porque: 'De 2₂ al cruce con A₂A′₂: VD acaba de salir por la cara ABB′A′, la de atrás del prisma, y el prisma le pasa por delante.'
+          - traza: segmento2(solucion.k_VD_A2, figura.punto("D2"))
+            tipo: visto
+            porque: 'Del cruce con A₂A′₂ a D₂: VD queda fuera del contorno del prisma, y es contorno de la pirámide.'
+          - traza: segmento2(figura.punto("V2"), solucion.k_VF_C2)
+            tipo: visto
+            porque: 'De V₂ al cruce con C₂C′₂: VF es contorno de la pirámide, y por encima del prisma nada la tapa.'
+          - traza: segmento2(solucion.k_VF_C2, proy_alzado(solucion.P9))
+            tipo: oculto
+            porque: 'Del cruce con C₂C′₂ a 9₂: VF entra por la cara BCC′B′, la de atrás, así que el prisma le pasa por delante.'
+          - traza: segmento2(proy_alzado(solucion.P7), figura.punto("F2"))
+            tipo: oculto
+            porque: 'De 7₂ a F₂: VF sale por la cara ABB′A′, la de atrás, y el prisma aún le pasa por delante hasta la base.'
+          - traza: segmento2(proy_alzado(solucion.P1), proy_alzado(solucion.P2))
+            tipo: oculto
+            porque: '1₂2₂ está en la cara ABB′A′, la de atrás del prisma.'
+          - traza: segmento2(proy_alzado(solucion.P2), proy_alzado(solucion.P3))
+            tipo: oculto
+            porque: '2₂3₂ está en la cara de atrás del prisma, y en la VGD, también de atrás.'
+          - traza: segmento2(proy_alzado(solucion.P3), proy_alzado(solucion.P4))
+            tipo: oculto
+            porque: '3₂4₂ está en la cara BCC′B′, de atrás, y en la VGD, también de atrás.'
+          - traza: segmento2(proy_alzado(solucion.P4), proy_alzado(solucion.P5))
+            tipo: oculto
+            porque: '4₂5₂ está en la cara de atrás de la pirámide, VGD: la tapa la VDE.'
+          - traza: segmento2(proy_alzado(solucion.P5), proy_alzado(solucion.P1))
+            tipo: visto
+            porque: '5₂1₂ está en la cara CAA′C′, la de delante del prisma, y en la VDE, la de delante de la pirámide: las dos miran a quien ve el alzado.'
+          - traza: segmento2(proy_alzado(solucion.P6), proy_alzado(solucion.P7))
+            tipo: oculto
+            porque: '6₂7₂ está en la cara ABB′A′, la de atrás del prisma.'
+          - traza: segmento2(proy_alzado(solucion.P7), proy_alzado(solucion.P8))
+            tipo: oculto
+            porque: '7₂8₂ está en la cara ABB′A′ y en la VFG: las dos de atrás.'
+          - traza: segmento2(proy_alzado(solucion.P8), proy_alzado(solucion.P9))
+            tipo: oculto
+            porque: '8₂9₂ está en la cara BCC′B′ y en la VFG: las dos de atrás.'
+          - traza: segmento2(proy_alzado(solucion.P9), proy_alzado(solucion.P10))
+            tipo: oculto
+            porque: '9₂10₂ está en la cara BCC′B′, la de atrás del prisma.'
+          - traza: segmento2(proy_alzado(solucion.P10), proy_alzado(solucion.P6))
+            tipo: visto
+            porque: '10₂6₂ está en la cara CAA′C′ y en la VEF: las dos de delante.'
+          - traza: segmento2(figura.punto("A1"), proy_planta(solucion.P1))
+            tipo: visto
+            porque: 'De A₁ a 1₁: AA′ es contorno de la planta del prisma, y por encima no le pasa nada.'
+          - traza: segmento2(proy_planta(solucion.P6), figura.punto("A1p"))
+            tipo: visto
+            porque: 'De 6₁ a A′₁: AA′ sale por la VEF, que baja hacia ese lado: la arista va por encima de ella.'
+          - traza: segmento2(figura.punto("B1"), proy_planta(solucion.P3))
+            tipo: visto
+            porque: 'De B₁ a 3₁: BB′ es contorno de la planta del prisma, y fuera de la pirámide nada le pasa por encima.'
+          - traza: segmento2(proy_planta(solucion.P8), figura.punto("B1p"))
+            tipo: visto
+            porque: 'De 8₁ a B′₁: BB′ sale por la VFG y sigue por encima de ella, y es contorno de la planta del prisma.'
+          - traza: segmento2(figura.punto("C1"), proy_planta(solucion.P4))
+            tipo: visto
+            porque: 'De C₁ a 4₁: CC′ va por las caras de arriba del prisma, por encima de todo.'
+          - traza: segmento2(proy_planta(solucion.P10), figura.punto("C1p"))
+            tipo: visto
+            porque: 'De 10₁ a C′₁: CC′ sale por la VEF, y es la arista de arriba del prisma.'
+          - traza: segmento2(figura.punto("A1p"), figura.punto("B1p"))
+            tipo: oculto
+            porque: 'A′₁B′₁: el lado de la base de abajo que queda bajo el cuerpo del prisma, que baja hacia él desde arriba.'
+          - traza: segmento2(figura.punto("B1p"), figura.punto("C1p"))
+            tipo: visto
+            porque: 'B′₁C′₁: acaba la cara BCC′B′, una de las de arriba: desde arriba se ve.'
+          - traza: segmento2(figura.punto("C1p"), figura.punto("A1p"))
+            tipo: visto
+            porque: 'C′₁A′₁: acaba la cara CAA′C′, una de las de arriba: desde arriba se ve.'
+          - traza: segmento2(figura.punto("A1"), figura.punto("B1"))
+            tipo: visto
+            porque: 'A₁B₁: un lado de la base de arriba del prisma, fuera de la planta de la pirámide: nada le pasa por encima.'
+          - traza: segmento2(figura.punto("B1"), figura.punto("C1"))
+            tipo: visto
+            porque: 'B₁C₁: un lado de la base de arriba del prisma: nada le pasa por encima.'
+          - traza: segmento2(figura.punto("C1"), figura.punto("A1"))
+            tipo: visto
+            porque: 'C₁A₁: un lado de la base de arriba del prisma: nada le pasa por encima.'
+          - traza: segmento2(figura.punto("V1"), proy_planta(solucion.P5))
+            tipo: visto
+            porque: 'De V₁ a 5₁: VD va por encima del prisma hasta que entra en él: nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.P2), figura.punto("D1"))
+            tipo: oculto
+            porque: 'De 2₁ a D₁: VD ya está por debajo del prisma, que le pasa por encima.'
+          - traza: segmento2(figura.punto("V1"), proy_planta(solucion.P9))
+            tipo: visto
+            porque: 'De V₁ a 9₁: VF va por encima del prisma hasta que entra en él: nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.P7), figura.punto("F1"))
+            tipo: oculto
+            porque: 'De 7₁ a F₁: VF ya está por debajo del prisma, que le pasa por encima.'
+          - traza: segmento2(figura.punto("D1"), solucion.k_DE_A1)
+            tipo: oculto
+            porque: 'De D₁ al cruce con A₁A′₁: D₁ queda bajo la planta del prisma, que pasa por encima de ese trozo de base.'
+          - traza: segmento2(solucion.k_DE_A1, figura.punto("E1"))
+            tipo: visto
+            porque: 'Del cruce con A₁A′₁ a E₁: DE sale de debajo del prisma, y es contorno de la planta de la pirámide.'
+          - traza: segmento2(figura.punto("E1"), solucion.k_EF_A1)
+            tipo: visto
+            porque: 'De E₁ al cruce con A₁A′₁: EF aún no ha llegado bajo el prisma.'
+          - traza: segmento2(solucion.k_EF_A1, figura.punto("F1"))
+            tipo: oculto
+            porque: 'Del cruce con A₁A′₁ a F₁: el prisma pasa por encima de ese trozo de base.'
+          - traza: segmento2(figura.punto("F1"), solucion.k_FG_B1)
+            tipo: oculto
+            porque: 'De F₁ al cruce con B₁B′₁: F₁ queda bajo la planta del prisma.'
+          - traza: segmento2(solucion.k_FG_B1, figura.punto("G1"))
+            tipo: visto
+            porque: 'Del cruce con B₁B′₁ a G₁: FG sale de debajo del prisma.'
+          - traza: segmento2(figura.punto("G1"), solucion.k_GD_B1)
+            tipo: visto
+            porque: 'De G₁ al cruce con B₁B′₁: GD aún no ha llegado bajo el prisma.'
+          - traza: segmento2(solucion.k_GD_B1, figura.punto("D1"))
+            tipo: oculto
+            porque: 'Del cruce con B₁B′₁ a D₁: el prisma pasa por encima de ese trozo de base.'
+          - traza: segmento2(proy_planta(solucion.P1), proy_planta(solucion.P2))
+            tipo: oculto
+            porque: '1₁2₁ está en la cara ABB′A′, la de abajo del prisma.'
+          - traza: segmento2(proy_planta(solucion.P2), proy_planta(solucion.P3))
+            tipo: oculto
+            porque: '2₁3₁ está en la cara ABB′A′, la de abajo del prisma.'
+          - traza: segmento2(proy_planta(solucion.P3), proy_planta(solucion.P4))
+            tipo: visto
+            porque: '3₁4₁ está en la cara BCC′B′, de arriba, y en la VGD, que también mira hacia arriba.'
+          - traza: segmento2(proy_planta(solucion.P4), proy_planta(solucion.P5))
+            tipo: visto
+            porque: '4₁5₁ está en la cara CAA′C′, de arriba, y en la VGD.'
+          - traza: segmento2(proy_planta(solucion.P5), proy_planta(solucion.P1))
+            tipo: visto
+            porque: '5₁1₁ está en la cara CAA′C′, de arriba, y en la VDE.'
+          - traza: segmento2(proy_planta(solucion.P6), proy_planta(solucion.P7))
+            tipo: oculto
+            porque: '6₁7₁ está en la cara ABB′A′, la de abajo del prisma.'
+          - traza: segmento2(proy_planta(solucion.P7), proy_planta(solucion.P8))
+            tipo: oculto
+            porque: '7₁8₁ está en la cara ABB′A′, la de abajo del prisma.'
+          - traza: segmento2(proy_planta(solucion.P8), proy_planta(solucion.P9))
+            tipo: visto
+            porque: '8₁9₁ está en la cara BCC′B′, de arriba, y en la VFG.'
+          - traza: segmento2(proy_planta(solucion.P9), proy_planta(solucion.P10))
+            tipo: visto
+            porque: '9₁10₁ está en la cara BCC′B′, de arriba, y en la VEF.'
+          - traza: segmento2(proy_planta(solucion.P10), proy_planta(solucion.P6))
+            tipo: visto
+            porque: '10₁6₁ está en la cara CAA′C′, de arriba, y en la VEF.'
+        trazado:
+          - segmento2(solucion.W1, solucion.L_a1)
+          - segmento2(solucion.W1, solucion.L_b3)
+          - segmento2(figura.punto("V1"), solucion.a1)
+          - segmento2(figura.punto("V1"), solucion.a6)
+          - segmento2(figura.punto("V1"), solucion.b3)
+          - segmento2(figura.punto("V1"), solucion.b8)
+          - segmento2(solucion.W1, figura.punto("D1"))
+          - segmento2(solucion.W1, figura.punto("F1"))
+          - segmento2(figura.punto("V2"), solucion.c4a)
+          - segmento2(figura.punto("V2"), solucion.c10a)
+          - segmento2(figura.punto("V2"), solucion.W2)
+          - segmento2(figura.punto("V1"), solucion.W1)
+        construccion:
+          - con: regla
+            traza: '[segmento2(figura.punto("A2"), figura.punto("A2p")), segmento2(figura.punto("B2"), figura.punto("B2p")), segmento2(figura.punto("C2"), figura.punto("C2p"))]'
+            porque: |
+              **Las aristas del prisma, en el alzado.** Completas, con trazo fino: la lámina las trae cortadas, y solo se pasa a limpio lo que queda fuera de la pirámide.
+          - con: regla
+            traza: '[segmento2(figura.punto("A1"), figura.punto("A1p")), segmento2(figura.punto("B1"), figura.punto("B1p")), segmento2(figura.punto("C1"), figura.punto("C1p"))]'
+            porque: |
+              Las mismas aristas en la planta, completas y finas. Fíjate: C₁C′₁ pasa por V₁.
+          - con: regla
+            traza: segmento2(figura.punto("C2p"), solucion.L_W2)
+            porque: |
+              **El punto W.** La recta de la base, en el alzado, prolongada hacia la derecha hasta pasar donde caerá W₂.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V2"), solucion.L_W2v)
+            guia: segmento2(figura.punto("A2"), figura.punto("A2p"))
+            porque: |
+              Por V₂, la paralela a las aristas del prisma, hasta la recta de la base: es la recta de todos los planos auxiliares, los que pasan por V y son paralelos a las aristas.
+          - con: marca
+            traza: solucion.W2
+            rotulo: W₂
+            porque: |
+              W₂, donde esa paralela corta la recta de la base. Nombre nuestro: W es donde esa recta perfora el plano de la base.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.W2, solucion.L_W1)
+            porque: |
+              Por W₂, la vertical hacia la planta.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), solucion.L_W1v)
+            guia: segmento2(figura.punto("A1"), figura.punto("A1p"))
+            porque: |
+              Por V₁, la paralela a las aristas del prisma en la planta, hasta la vertical de W₂.
+          - con: marca
+            traza: solucion.W1
+            rotulo: W₁
+            porque: |
+              W₁, donde se cortan. Toda traza de un plano auxiliar, en la base, pasa por W₁.
+          - con: regla
+            traza: segmento2(solucion.W1, solucion.L_a1)
+            porque: |
+              **AA′.** La traza de su plano auxiliar, de W₁ por A′₁, hasta cortar los lados de la base: E₁F₁ y D₁E₁.
+          - con: marca
+            traza: solucion.a6
+            porque: |
+              El corte de la traza con E₁F₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.a1
+            porque: |
+              El corte de la traza con D₁E₁. Sin rótulo: es un punto de paso.
+          - con: regla
+            traza: segmento2(figura.punto("V1"), solucion.a1)
+            porque: |
+              De V₁ a ese punto de D₁E₁: es la recta en que el plano auxiliar corta la cara VDE.
+          - con: marca
+            traza: proy_planta(solucion.P1)
+            rotulo: 1₁
+            porque: |
+              1₁, donde esa recta corta A₁A′₁: AA′ entra por la cara VDE. Los números 1 a 10 son nombres nuestros.
+          - con: regla
+            traza: segmento2(figura.punto("V1"), solucion.a6)
+            porque: |
+              De V₁ al punto de E₁F₁: la recta en que el plano auxiliar corta la cara VEF.
+          - con: marca
+            traza: proy_planta(solucion.P6)
+            rotulo: 6₁
+            porque: |
+              6₁, donde esa recta corta A₁A′₁: AA′ sale por la cara VEF.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.P1), proy_alzado(solucion.P1)), segmento2(proy_planta(solucion.P6), proy_alzado(solucion.P6))]'
+            porque: |
+              Por 1₁ y 6₁, las verticales hasta A₂A′₂.
+          - con: marca
+            traza: proy_alzado(solucion.P1)
+            rotulo: 1₂
+            porque: |
+              1₂, donde la vertical de 1₁ corta A₂A′₂.
+          - con: marca
+            traza: proy_alzado(solucion.P6)
+            rotulo: 6₂
+            porque: |
+              6₂, donde la vertical de 6₁ corta A₂A′₂.
+          - con: regla
+            traza: segmento2(solucion.W1, solucion.L_b3)
+            porque: |
+              **BB′.** La traza de su plano auxiliar, de W₁ por B′₁, hasta cortar F₁G₁ y G₁D₁.
+          - con: marca
+            traza: solucion.b8
+            porque: |
+              El corte de la traza con F₁G₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.b3
+            porque: |
+              El corte de la traza con G₁D₁. Sin rótulo: es un punto de paso.
+          - con: regla
+            traza: segmento2(figura.punto("V1"), solucion.b3)
+            porque: |
+              De V₁ a ese punto de G₁D₁: la recta en que el plano auxiliar corta la cara VGD.
+          - con: marca
+            traza: proy_planta(solucion.P3)
+            rotulo: 3₁
+            porque: |
+              3₁, donde esa recta corta B₁B′₁: BB′ entra por la cara VGD.
+          - con: regla
+            traza: segmento2(figura.punto("V1"), solucion.b8)
+            porque: |
+              De V₁ al punto de F₁G₁: la recta en que el plano auxiliar corta la cara VFG.
+          - con: marca
+            traza: proy_planta(solucion.P8)
+            porque: |
+              8₁, donde esa recta corta B₁B′₁: BB′ sale por la cara VFG. Va sin rótulo: el punto de paso de F₁G₁ le queda encima.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.P3), proy_alzado(solucion.P3)), segmento2(proy_planta(solucion.P8), proy_alzado(solucion.P8))]'
+            porque: |
+              Por 3₁ y 8₁, las verticales hasta B₂B′₂.
+          - con: marca
+            traza: proy_alzado(solucion.P3)
+            rotulo: 3₂
+            porque: |
+              3₂, donde la vertical de 3₁ corta B₂B′₂.
+          - con: marca
+            traza: proy_alzado(solucion.P8)
+            rotulo: 8₂
+            porque: |
+              8₂, donde la vertical de 8₁ corta B₂B′₂.
+          - con: regla
+            traza: segmento2(figura.punto("V1"), solucion.c4)
+            porque: |
+              **CC′.** Su plano auxiliar es vertical, porque C₁C′₁ pasa por V₁: su traza es la propia C₁C′₁, prolongada desde C₁ hasta G₁D₁. En la planta las rectas de ese plano se confunden con la arista, así que el corte se busca en el alzado.
+          - con: marca
+            traza: solucion.c4
+            porque: |
+              El corte de C₁C′₁ con G₁D₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.c10
+            porque: |
+              El corte de C₁C′₁ con E₁F₁. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.c4, solucion.c4a), segmento2(solucion.c10, solucion.c10a)]'
+            porque: |
+              Por esos dos puntos, las verticales hasta la recta de la base, en el alzado.
+          - con: marca
+            traza: solucion.c4a
+            porque: |
+              El punto de la base de VGD en el alzado, sobre la recta de la base. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.c10a
+            porque: |
+              El punto de la base de VEF en el alzado, sobre la recta de la base. Sin rótulo: es un punto de paso.
+          - con: regla
+            traza: '[segmento2(figura.punto("V2"), solucion.c4a), segmento2(figura.punto("V2"), solucion.c10a)]'
+            porque: |
+              De V₂ a esos dos puntos: las rectas en que el plano vertical de CC′ corta las caras VGD y VEF.
+          - con: marca
+            traza: proy_alzado(solucion.P4)
+            rotulo: 4₂
+            porque: |
+              4₂, donde la recta que va a la cara VGD corta C₂C′₂: CC′ entra.
+          - con: marca
+            traza: proy_alzado(solucion.P10)
+            rotulo: 10₂
+            porque: |
+              10₂, donde la recta que va a la cara VEF corta C₂C′₂: CC′ sale.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_alzado(solucion.P4), proy_planta(solucion.P4)), segmento2(proy_alzado(solucion.P10), proy_planta(solucion.P10))]'
+            porque: |
+              Por 4₂ y 10₂, las verticales hasta C₁C′₁.
+          - con: marca
+            traza: proy_planta(solucion.P4)
+            rotulo: 4₁
+            porque: |
+              4₁, donde la vertical de 4₂ corta C₁C′₁.
+          - con: marca
+            traza: proy_planta(solucion.P10)
+            porque: |
+              10₁, donde la vertical de 10₂ corta C₁C′₁. Va sin rótulo: 9₁ le queda justo al lado.
+          - con: regla
+            traza: segmento2(solucion.W1, figura.punto("D1"))
+            porque: |
+              **VD.** La traza del plano por VD paralelo a las aristas: de W₁ a D₁. Corta el triángulo A′₁B′₁C′₁, la base del prisma, en dos puntos.
+          - con: marca
+            traza: solucion.d5
+            porque: |
+              El corte de esa traza con C′₁A′₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.d2
+            porque: |
+              El corte de esa traza con A′₁B′₁. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.d5, proy_planta(solucion.P5))
+            guia: segmento2(figura.punto("A1"), figura.punto("A1p"))
+            porque: |
+              Por el punto de C′₁A′₁, la paralela a las aristas del prisma, hasta V₁D₁: es la recta en que el plano auxiliar corta la cara CAA′C′.
+          - con: marca
+            traza: proy_planta(solucion.P5)
+            porque: |
+              5₁, donde esa paralela corta V₁D₁: VD entra en el prisma por la cara CAA′C′. Va sin rótulo: está a 2,4 mm de 4₁, y lo pisaría.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.d2, proy_planta(solucion.P2))
+            guia: segmento2(figura.punto("A1"), figura.punto("A1p"))
+            porque: |
+              Por el punto de A′₁B′₁, la paralela a las aristas del prisma, hasta V₁D₁: la recta en que el plano auxiliar corta la cara ABB′A′.
+          - con: marca
+            traza: proy_planta(solucion.P2)
+            rotulo: 2₁
+            porque: |
+              2₁, donde esa paralela corta V₁D₁: VD sale del prisma por la cara ABB′A′.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.P5), proy_alzado(solucion.P5)), segmento2(proy_planta(solucion.P2), proy_alzado(solucion.P2))]'
+            porque: |
+              Por 5₁ y 2₁, las verticales hasta V₂D₂.
+          - con: marca
+            traza: proy_alzado(solucion.P5)
+            porque: |
+              5₂, donde la vertical de 5₁ corta V₂D₂. Va sin rótulo: está a 2,4 mm de 4₂, y lo pisaría.
+          - con: marca
+            traza: proy_alzado(solucion.P2)
+            rotulo: 2₂
+            porque: |
+              2₂, donde la vertical de 2₁ corta V₂D₂.
+          - con: regla
+            traza: segmento2(solucion.W1, figura.punto("F1"))
+            porque: |
+              **VF.** La traza del plano por VF paralelo a las aristas: de W₁ a F₁. También corta la base del prisma en dos puntos.
+          - con: marca
+            traza: solucion.f9
+            porque: |
+              El corte de esa traza con B′₁C′₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.f7
+            porque: |
+              El corte de esa traza con A′₁B′₁. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.f9, proy_planta(solucion.P9))
+            guia: segmento2(figura.punto("A1"), figura.punto("A1p"))
+            porque: |
+              Por el punto de B′₁C′₁, la paralela a las aristas del prisma, hasta V₁F₁: la recta en que el plano auxiliar corta la cara BCC′B′.
+          - con: marca
+            traza: proy_planta(solucion.P9)
+            rotulo: 9₁
+            porque: |
+              9₁, donde esa paralela corta V₁F₁: VF entra en el prisma por la cara BCC′B′.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.f7, proy_planta(solucion.P7))
+            guia: segmento2(figura.punto("A1"), figura.punto("A1p"))
+            porque: |
+              Por el punto de A′₁B′₁, la paralela a las aristas del prisma, hasta V₁F₁: la recta en que el plano auxiliar corta la cara ABB′A′.
+          - con: marca
+            traza: proy_planta(solucion.P7)
+            porque: |
+              7₁, donde esa paralela corta V₁F₁: VF sale del prisma por la cara ABB′A′, muy cerca de F₁. Va sin rótulo porque el de F₁ ocupa el sitio.
+          - con: escuadra-cartabon
+            traza: '[segmento2(proy_planta(solucion.P9), proy_alzado(solucion.P9)), segmento2(proy_planta(solucion.P7), proy_alzado(solucion.P7))]'
+            porque: |
+              Por 9₁ y 7₁, las verticales hasta V₂F₂.
+          - con: marca
+            traza: proy_alzado(solucion.P9)
+            rotulo: 9₂
+            porque: |
+              9₂, donde la vertical de 9₁ corta V₂F₂.
+          - con: marca
+            traza: proy_alzado(solucion.P7)
+            rotulo: 7₂
+            porque: |
+              7₂, donde la vertical de 7₁ corta V₂F₂.
+          - con: marca
+            traza: solucion.k_C_VD2
+            porque: |
+              El cruce aparente de C₂C′₂ con V₂D₂: ahí CC′ pasa a ir por detrás. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.k_VD_A2
+            porque: |
+              El cruce aparente de V₂D₂ con A₂A′₂: ahí VD sale de detrás del prisma. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.k_VF_C2
+            porque: |
+              El cruce aparente de V₂F₂ con C₂C′₂: ahí VF pasa detrás del prisma. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.k_DE_A1
+            porque: |
+              El cruce aparente de D₁E₁ con A₁A′₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.k_EF_A1
+            porque: |
+              El cruce aparente de E₁F₁ con A₁A′₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.k_FG_B1
+            porque: |
+              El cruce aparente de F₁G₁ con B₁B′₁. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.k_GD_B1
+            porque: |
+              El cruce aparente de G₁D₁ con B₁B′₁. Sin rótulo: es un punto de paso.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("A2"), proy_alzado(solucion.P1)), segmento2(proy_alzado(solucion.P6), figura.punto("A2p")), segmento2(figura.punto("C2"), solucion.k_C_VD2), segmento2(proy_alzado(solucion.P10), figura.punto("C2p")), segmento2(figura.punto("A2"), figura.punto("C2")), segmento2(figura.punto("V2"), proy_alzado(solucion.P5)), segmento2(solucion.k_VD_A2, figura.punto("D2")), segmento2(figura.punto("V2"), solucion.k_VF_C2), segmento2(proy_alzado(solucion.P5), proy_alzado(solucion.P1)), segmento2(proy_alzado(solucion.P10), proy_alzado(solucion.P6)), segmento2(figura.punto("A1"), proy_planta(solucion.P1)), segmento2(proy_planta(solucion.P6), figura.punto("A1p")), segmento2(figura.punto("B1"), proy_planta(solucion.P3)), segmento2(proy_planta(solucion.P8), figura.punto("B1p")), segmento2(figura.punto("C1"), proy_planta(solucion.P4)), segmento2(proy_planta(solucion.P10), figura.punto("C1p")), segmento2(figura.punto("B1p"), figura.punto("C1p")), segmento2(figura.punto("C1p"), figura.punto("A1p")), segmento2(figura.punto("A1"), figura.punto("B1")), segmento2(figura.punto("B1"), figura.punto("C1")), segmento2(figura.punto("C1"), figura.punto("A1")), segmento2(figura.punto("V1"), proy_planta(solucion.P5)), segmento2(figura.punto("V1"), proy_planta(solucion.P9)), segmento2(solucion.k_DE_A1, figura.punto("E1")), segmento2(figura.punto("E1"), solucion.k_EF_A1), segmento2(solucion.k_FG_B1, figura.punto("G1")), segmento2(figura.punto("G1"), solucion.k_GD_B1), segmento2(proy_planta(solucion.P3), proy_planta(solucion.P4)), segmento2(proy_planta(solucion.P4), proy_planta(solucion.P5)), segmento2(proy_planta(solucion.P5), proy_planta(solucion.P1)), segmento2(proy_planta(solucion.P8), proy_planta(solucion.P9)), segmento2(proy_planta(solucion.P9), proy_planta(solucion.P10)), segmento2(proy_planta(solucion.P10), proy_planta(solucion.P6))]'
+            porque: |
+              **A limpio, lo que se ve.** Las dos poligonales por las caras que miran a quien mira, las aristas del prisma fuera de la pirámide y lo que de la pirámide queda fuera del prisma.
+          - con: arista-oculta
+            traza: '[segmento2(figura.punto("B2"), proy_alzado(solucion.P3)), segmento2(proy_alzado(solucion.P8), figura.punto("B2p")), segmento2(solucion.k_C_VD2, proy_alzado(solucion.P4)), segmento2(proy_alzado(solucion.P2), solucion.k_VD_A2), segmento2(solucion.k_VF_C2, proy_alzado(solucion.P9)), segmento2(proy_alzado(solucion.P7), figura.punto("F2")), segmento2(proy_alzado(solucion.P1), proy_alzado(solucion.P2)), segmento2(proy_alzado(solucion.P2), proy_alzado(solucion.P3)), segmento2(proy_alzado(solucion.P3), proy_alzado(solucion.P4)), segmento2(proy_alzado(solucion.P4), proy_alzado(solucion.P5)), segmento2(proy_alzado(solucion.P6), proy_alzado(solucion.P7)), segmento2(proy_alzado(solucion.P7), proy_alzado(solucion.P8)), segmento2(proy_alzado(solucion.P8), proy_alzado(solucion.P9)), segmento2(proy_alzado(solucion.P9), proy_alzado(solucion.P10)), segmento2(figura.punto("A1p"), figura.punto("B1p")), segmento2(proy_planta(solucion.P2), figura.punto("D1")), segmento2(proy_planta(solucion.P7), figura.punto("F1")), segmento2(figura.punto("D1"), solucion.k_DE_A1), segmento2(solucion.k_EF_A1, figura.punto("F1")), segmento2(figura.punto("F1"), solucion.k_FG_B1), segmento2(solucion.k_GD_B1, figura.punto("D1")), segmento2(proy_planta(solucion.P1), proy_planta(solucion.P2)), segmento2(proy_planta(solucion.P2), proy_planta(solucion.P3)), segmento2(proy_planta(solucion.P6), proy_planta(solucion.P7)), segmento2(proy_planta(solucion.P7), proy_planta(solucion.P8))]'
+            porque: |
+              **A trazos, lo que no se ve.** Las caras de atrás en el alzado, la de abajo del prisma en la planta y lo que queda detrás o debajo. Lo que de una arista va dentro del otro sólido no se dibuja: en la lámina de papel se deja sin repasar.
+        pista: |
+          (1) La paralela a las aristas por V perfora la base en W. (2) La traza de cada arista va de W₁ por su extremo
+          de abajo y corta dos lados del cuadrado; unidos con V₁, dan los cortes en esa arista. (3) CC′ se hace en el
+          alzado, porque C₁C′₁ pasa por V₁. (4) Para VD y VF, la traza de W₁ a D₁ o a F₁ corta el triángulo A′₁B′₁C′₁, y la
+          paralela a las aristas lleva a V₁D₁ o V₁F₁. (5) En el alzado se ve lo que va por las caras de delante; en la
+          planta, lo que va por las de arriba.
+        desarrollo: |
+          En verde claro, W y las rectas auxiliares. Salen dos poligonales: la de entrada, 1 2 3 4 5, y la de salida, 6 7 8
+          9 10. VE y VG no se cortan, porque quedan fuera del prisma. En el alzado se ven solo 5₂1₂ y 10₂6₂, los tramos que
+          van por CAA′C′, la cara de delante del prisma, y a la vez por una cara de delante de la pirámide; 4₂5₂ también va
+          por CAA′C′, pero en VGD, que queda detrás. En la planta se ocultan los que van por la cara ABB′A′, la de abajo. En
+          tu lámina de papel, V₁D₁ y V₂D₂ se dejan sin repasar entre 5 y 2, y V₁F₁ y V₂F₂ entre 9 y 7.
+
+      - tipo: calcular
+        titulo: Lo que de VD queda dentro del prisma
+        pregunta: Como pregunta nuestra, ¿cuánto mide de verdad el trozo de la arista VD que queda dentro del prisma, en metros?
+        respuesta:
+          tipo: numero
+          valor: '1.15'
+          receta: vd_dentro
+          tolerancia: 0.05
+          formato: un número, en metros
+        distractores:
+          - valor: '0.52'
+            receta: en_mm(vm_planta(P5, P2)) / 10
+            mensaje: |
+              Eso es **5₁2₁ en la planta**. VD baja de 5 a 2, y la planta la acorta. La verdadera magnitud sale del
+              triángulo: la planta de un cateto y la diferencia de cotas del otro.
+          - valor: '1.02'
+            receta: en_mm(diferencia_de_cotas(P5, P2)) / 10
+            mensaje: |
+              Eso es la **diferencia de cotas** de 5 y 2, un cateto del triángulo. Falta el otro, la planta 5₁2₁.
+          - valor: '11.46'
+            receta: en_mm(vm(P5, P2))
+            mensaje: |
+              Eso es lo que mide en la lámina, en milímetros. El dibujo está a 1:100: cada milímetro son 0,1 m.
+        pista: |
+          Con la planta 5₁2₁ de un cateto y la diferencia de cotas de 5₂ y 2₂ del otro, la hipotenusa es la verdadera
+          magnitud. A 1:100, divide los milímetros entre 10.
+        desarrollo: |
+          Con el triángulo de la verdadera magnitud:
+
+          $$ \overline{52} = \sqrt{\overline{5_1 2_1}^{\,2} + \Delta z^{2}} = \sqrt{5{,}17^{2} + 10{,}23^{2}} \approx 11{,}46 \text{ mm} $$
+
+          A 1:100, 1,15 m. En el dibujo hay una medida que cae dentro de la tolerancia casi por casualidad: 5₂2₂, en el
+          alzado, 11,39 mm. VD casi es frontal, porque su planta solo forma 15° con la horizontal, pero no lo es del todo.
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: Los planos por V paralelos a las aristas contienen la paralela a las aristas por V, y sus trazas en el plano de la base pasan por W₁.
+          - texto: La traza del plano de cada arista corta dos lados del cuadrado, y unidos con V₁ dan en la arista la entrada y la salida.
+          - texto: VD y VF también atraviesan el prisma, y la traza de su plano, de W₁ a D₁ o a F₁, corta el triángulo A′₁B′₁C′₁, de donde sale la paralela a las aristas.
+          - texto: Salen dos poligonales, y se ve lo que va por las caras que miran a quien mira; lo que queda dentro del otro sólido no se dibuja.
+          - texto: Cada arista del prisma entra en la pirámide donde su planta cruza el contorno de la base, porque la base de abajo del prisma está en ese plano.
+            trampa: true
+            mensaje: |
+              El contorno de la base está a la altura de la base, y las aristas del prisma entran más arriba, donde la
+              pirámide es más estrecha. Que la base del prisma esté en ese plano sirve para las trazas, no para esto.
+    resolucion: |
+      **El plano auxiliar.** Cada arista oblicua se corta con la pirámide con un plano que la contenga y pase por V. Ese
+      plano la corta en dos rectas que salen de V. Todos esos planos contienen la paralela a las aristas por V, que
+      perfora el plano de la base en W. La base del prisma está en ese mismo plano, y las trazas salen de W₁ por A′₁, por
+      B′₁ y por C′₁.
+
+      **AA′ y BB′.** Cada traza corta dos lados del cuadrado: unidos con V₁, dan 1 y 6 en A₁A′₁, y 3 y 8 en B₁B′₁. Sus
+      verticales los llevan al alzado.
+
+      **CC′.** C₁C′₁ pasa por V₁, así que su plano es vertical y en la planta todo se confunde. Se sube a la recta de la
+      base lo que corta en G₁D₁ y E₁F₁, se une con V₂, y C₂C′₂ da 4 y 10. Sus verticales los bajan a la planta.
+
+      **VD y VF.** Atraviesan el prisma. La traza de W₁ a D₁ corta A′₁C′₁ y A′₁B′₁; las paralelas a las aristas dan 5 y 2 en
+      V₁D₁. La de W₁ a F₁ corta B′₁C′₁ y A′₁B′₁, y dan 9 y 7 en V₁F₁. VE y VG no se cortan.
+
+      **Lo que se ve.** Hay dos poligonales, 1 2 3 4 5 y 6 7 8 9 10. En el alzado se ve lo que va por CAA′C′, la cara de
+      delante del prisma, y a la vez por una cara de delante de la pirámide: 5₂1₂ y 10₂6₂. En la planta se oculta lo que va por la ABB′A′, la de abajo. Leemos los dos sólidos como
+      una sola pieza: lo que de una arista queda dentro del otro no se dibuja. Con los dos sólidos por separado, esos
+      trozos irían a trazos.

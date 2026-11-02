@@ -24,6 +24,18 @@ describe('datoDeLaMedida', () => {
     ).toBe('Medido sobre 4 hojas de examen de la colección, sin fecha · 17 ejercicios transcritos.');
   });
 
+  it('hojas y exámenes con fecha, cada cosa con su nombre', () => {
+    expect(
+      datoDeLaMedida({
+        medidoSobre: 6,
+        medidas: 'exámenes: 4 hojas sin fecha y 2 con fecha',
+        sonHojas: false,
+        transcritas: 6,
+        ejercicios: 26,
+      }),
+    ).toBe('Medido sobre 6 exámenes: 4 hojas sin fecha y 2 con fecha · 26 ejercicios transcritos.');
+  });
+
   it('el primer parcial de Elasticidad ya no dice «6 convocatorias · 76 ejercicios»', () => {
     const dato = datoDeLaMedida({ medidoSobre: 6, medidas: 'convocatorias', sonHojas: false, transcritas: 11, ejercicios: 76 });
     expect(dato).not.toMatch(/6 convocatorias · 76/);

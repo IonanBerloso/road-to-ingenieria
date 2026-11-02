@@ -91,6 +91,18 @@ con las hojas de las reuniones; queda abierto lo que no se sabía:
 - **Expresión Gráfica, la edición para clase** (2 de noviembre de 2026): el
   departamento la pide para el examen de diédrico del día 16, y la fecha no se
   publica en la ruta hasta que lo confirme, ni el mes, que el usuario no dijo.
+- **Expresión Gráfica, los dos exámenes de 2025-26** (carpeta del profesor, 2 de
+  noviembre de 2026), para preguntar al departamento: si la «nueva» pirámide del
+  apartado 2 del control es recta (sin eso, V no queda fijado); si el ángulo del láser
+  de la ordinaria se mide desde el espejo, como dibuja el croquis, o desde la normal;
+  en el diedro del apartado 3, si vale 96,5° o 83,5° (se aceptan los dos); si la
+  «sección» del agujero es la recta o el corte horizontal; y si la ordinaria tenía otros
+  bloques que no están en la carpeta. Y para que lo sepan, sin que cambie nada aquí: la
+  lámina del control rotula «Apartado 3» la Figura 2 y «Apartados 4 y 5» la 3, contra el
+  enunciado, que manda el 2 y el 3, 4 y 5; los cajetines traen 2024/11/25 y
+  «2026/05/29 - 29/05/29», y el título de una figura dice «b2 GAZ» siendo la de b1. Del
+  control solo está el Modelo A, y el nombre del fichero dice «ohiko azterketa» siendo de
+  noviembre: lo hemos tomado por el control del bloque 1.
 - **Expresión Gráfica, «Notas nuestras» que contestan el paso** (revisión de las
   cajas del 2 de noviembre de 2026): las de SD15, SD29, SD34, SD57, SD63 y SD67a
   dan ya la respuesta del paso `reconocer`. No es un error de contenido: esas

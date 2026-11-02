@@ -172,12 +172,17 @@ const enterasPorAsignatura = new Map<string, boolean>();
  *  apartados de la colección de Expresión Gráfica (`convocatoria: 'hoja'`)
  *  no tienen fecha ni curso, y su propia página lo dice: llamarlas
  *  «convocatorias» era afirmar lo que no son (auditoría de Expresión
- *  Gráfica del 8 de octubre de 2026, M1). */
+ *  Gráfica del 8 de octubre de 2026, M1). Con hojas y convocatorias a la vez,
+ *  que es lo que tiene desde el 2 de noviembre de 2026, son «exámenes». */
 const nombreDeExamenes = (lista: { conv: string }[]) => {
-  const hojas = lista.every((e) => e.conv === 'hoja');
-  if (hojas) return lista.length === 1 ? 'hoja de examen de la colección' : 'hojas de examen de la colección';
+  const hojas = lista.filter((e) => e.conv === 'hoja').length;
+  if (hojas === lista.length) return lista.length === 1 ? 'hoja de examen de la colección' : 'hojas de examen de la colección';
+  if (hojas > 0) return 'exámenes';
   return lista.length === 1 ? 'convocatoria' : 'convocatorias';
 };
+/** Y el adjetivo concuerda: «convocatorias resueltas», «exámenes resueltos». */
+const resueltasEnteras = (nombre: string) => (nombre === 'exámenes' ? 'resueltos enteros' : 'resueltas enteras');
+const abiertas = (nombre: string) => (nombre === 'exámenes' ? 'abiertos' : 'abiertas');
 /** Y por el mismo motivo, qué PDF acompaña a los exámenes de cada asignatura.
  *  Aquí se decía «con su enunciado original en PDF» de las seis, y en
  *  Ingeniería Térmica los veinte PDF son la resolución completa —de 14 a 32
@@ -553,7 +558,9 @@ const enteras = asignaturas
                     {a.data.temas.length} temas
                     {examenesPorAsignatura.has(a.id) &&
                       ` · ${examenesPorAsignatura.get(a.id)!.length} ${nombreDeExamenes(examenesPorAsignatura.get(a.id)!)}${
-                        enterasPorAsignatura.get(a.id) ? ' resueltas enteras' : ' abiertas'
+                        enterasPorAsignatura.get(a.id)
+                          ? ` ${resueltasEnteras(nombreDeExamenes(examenesPorAsignatura.get(a.id)!))}`
+                          : ` ${abiertas(nombreDeExamenes(examenesPorAsignatura.get(a.id)!))}`
                       }`}
                   </p>
                 )}
@@ -756,7 +763,7 @@ const enteras = asignaturas
                             : `Una ${nombre}, con ${elPdf}. Cada ejercicio que falta lo dice en su página.`;
                         }
                         return enteras
-                          ? `${n} ${nombre}, con ${elPdf} y resueltas enteras.`
+                          ? `${n} ${nombre} ${resueltasEnteras(nombre)}, con ${elPdf}.`
                           : `${n} ${nombre}, con ${elPdf}. Los ejercicios que faltan están dichos uno a uno en cada página.`;
                       })()}
                     </p>
@@ -782,7 +789,7 @@ const enteras = asignaturas
                     <a class="ex-todos" href={ruta(`${a.id}/examenes`)}>
                       {examenesPorAsignatura.get(a.id)!.length === 1
                         ? 'Ir al examen →'
-                        : `Ver las ${examenesPorAsignatura.get(a.id)!.length} ${nombreDeExamenes(examenesPorAsignatura.get(a.id)!)} →`}
+                        : `Ver ${nombreDeExamenes(examenesPorAsignatura.get(a.id)!) === 'exámenes' ? 'los' : 'las'} ${examenesPorAsignatura.get(a.id)!.length} ${nombreDeExamenes(examenesPorAsignatura.get(a.id)!)} →`}
                     </a>
                   </div>
                 )}

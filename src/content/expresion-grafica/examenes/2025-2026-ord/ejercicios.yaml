@@ -1,0 +1,2147 @@
+ejercicios:
+  - id: exeg-2526o-1-el-rayo-laser-y-el-espejo
+    titulo: El rayo láser que se refleja en el espejo ABCD
+    fuente: >-
+      Ejercicio 1 del examen de Expresión Gráfica de Ingeniería Industrial, convocatoria ordinaria, curso
+      2025-2026, 29 de mayo de 2026 · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU. Se
+      transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        Un rayo se refleja en un plano perpendicular al espejo, y sale con el mismo ángulo con el que llegó. La
+        recta perpendicular al espejo en el punto de incidencia, la normal, es el eje de simetría de ese plano: el
+        rayo reflejado es el simétrico del incidente respecto de ella.
+      formula: |
+        Lo que forma una recta con un plano y lo que forma con su normal suman 90°:
+
+        $$
+        \alpha_{\text{plano}} + \alpha_{\text{normal}} = 90°
+        $$
+      reconocer: |
+        Antes de trazar, mira cómo se ve el espejo en cada una de las dos vistas, y piensa en cuál de ellas se puede
+        leer directamente dónde lo alcanza una recta.
+    enunciado: |
+      Se lanza un rayo láser desde el punto F hasta el espejo ABCD. Se representa únicamente el primer tramo del
+      haz de láser. Se pide:
+
+      1. Dibujar la trayectoria del rayo hasta la intersección con el espejo ABCD, punto I, y su reflejo, siendo el
+      reflejo de la misma longitud que el tramo FI. (2 puntos)
+
+      2. Calcular gráficamente el ángulo α de incidencia en verdadera magnitud. (2 puntos)
+
+      Nota: el rayo se refleja en un plano ω perpendicular al espejo. El ángulo de incidencia (α) es igual al ángulo
+      de reflexión (ver croquis).
+
+      **Notas nuestras.** El croquis del enunciado dibuja el espejo, el rayo FI, su reflejo IS, el plano ω y dos
+      arcos α, cada uno **entre el espejo y el rayo**: así lo tomamos. En Física se mide desde la normal, y saldría el
+      complementario. El punto S, el final del reflejo, viene en ese croquis; M, H₂ y F₀ son nombres nuestros.
+      El espejo es un rectángulo vertical, de 55,2 × 50 mm en la lámina, que en el alzado se proyecta como un cuadrado. La hoja no da escala, ni hace falta: lo que se pide es un ángulo. Abatir ω es
+      método nuestro, porque el enunciado no lo fija.
+    pide: I y S en las dos vistas, el rayo y su reflejo con lo visto y lo oculto, F abatido y el ángulo α.
+    receta:
+      lamina: ex2526o-1
+      escena:
+        F: 'punto3(alzado: figura.punto("F2"), planta: figura.punto("F1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("DA1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("CB1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("CB1"))'
+        espejo: plano(A, B, C)
+      solucion:
+        Ip: cruce_aparente(figura.segmento("r1"), figura.segmento("espejo1"))
+        Ia: 'cruce_aparente(figura.segmento("r2"), segmento2(Ip, desplaza(Ip, dy: 10)))'
+        I: 'punto3(alzado: Ia, planta: Ip)'
+        # La normal al espejo en I es horizontal, y va en la planta perpendicular a
+        # la recta del espejo. M es el pie de F sobre ella: FS es perpendicular a la
+        # normal, y M es su punto medio, así que M está a la cota de I.
+        n1: 'perpendicular(por: Ip, a: figura.segmento("espejo1"))'
+        Mp: pie_perpendicular(figura.punto("F1"), n1)
+        Ma: 'cruce_aparente(segmento2(Ia, desplaza(Ia, dx: 10)), segmento2(Mp, desplaza(Mp, dy: 10)))'
+        M: 'punto3(alzado: Ma, planta: Mp)'
+        S: 'simetrico(F, respecto: M)'
+        Sp: proy_planta(S)
+        Sa: proy_alzado(S)
+        # El abatimiento de ω alrededor de la normal: F₀ cae en la perpendicular a la
+        # normal por M₁, que es F₁M₁, a la distancia en verdadera magnitud de F a M.
+        om: plano(F, I, M)
+        nor: recta3(I, M)
+        F_ab: abatido_a_elegir(F, nor, om)
+        H2: 'cruce_aparente(segmento2(Ia, desplaza(Ia, dx: 10)), segmento2(figura.punto("F2"), desplaza(figura.punto("F2"), dy: 10)))'
+        dz: diferencia_de_cotas(F, I)
+        para: segmento2(Mp, Ip)
+        pf: 'perpendicular(por: figura.punto("F1"), a: segmento2(figura.punto("F1"), Mp))'
+        T: 'uno(medir_sobre(pf, desde: figura.punto("F1"), distancia: dz), 2)'
+        alfa: angulo_recta_plano(recta3(F, I), espejo)
+        # Los errores. Fh y Fa dan una horizontal y una frontal con la misma planta y el
+        # mismo alzado que r, para medir los dos ángulos aparentes.
+        Fh: 'punto3(alzado: cruce_aparente(segmento2(figura.punto("F2"), figura.punto("A2")), segmento2(Ip, desplaza(Ip, dy: 10))), planta: Ip)'
+        Fa: 'punto3(alzado: Ia, planta: cruce_aparente(segmento2(figura.punto("F1"), desplaza(figura.punto("F1"), dx: 10)), segmento2(Ip, desplaza(Ip, dy: 10))))'
+        S_vir: 'proy_planta(simetrico(F, respecto: pie_en_plano(F, espejo)))'
+        Sa_baja: 'cruce_aparente(segmento2(figura.punto("F2"), figura.punto("A2")), segmento2(Sp, desplaza(Sp, dy: 10)))'
+        Sa_nivel: 'cruce_aparente(segmento2(Ia, desplaza(Ia, dx: 10)), segmento2(Sp, desplaza(Sp, dy: 10)))'
+        # Los extremos.
+        L_I1: 'uno(medir_sobre(figura.segmento("r1"), desde: Ip, distancia: mm(4)), 1)'
+        L_I2: 'uno(medir_sobre(figura.segmento("r2"), desde: Ia, distancia: mm(4)), 1)'
+        L_vI: 'desplaza(Ia, dy: mm(-4))'
+        L_M1: 'uno(medir_sobre(para, desde: Mp, distancia: mm(4)), 2)'
+        L_S1: 'uno(medir_sobre(segmento2(figura.punto("F1"), Mp), desde: Sp, distancia: mm(4)), 1)'
+        L_F0: 'uno(medir_sobre(segmento2(figura.punto("F1"), Mp), desde: proy_planta(rama(F_ab, 1)), distancia: mm(3)), 2)'
+        L_S2: 'uno(medir_sobre(segmento2(figura.punto("F2"), Ma), desde: Sa, distancia: mm(3)), 1)'
+        L_vS: 'desplaza(Sa, dy: mm(-3))'
+        L_vM: 'desplaza(Ma, dy: mm(-4))'
+        L_hM: 'desplaza(Ma, dx: mm(-4))'
+        L_vF: 'desplaza(H2, dy: mm(-3))'
+        L_hH: 'desplaza(H2, dx: mm(-3))'
+        L_T: 'uno(medir_sobre(pf, desde: T, distancia: mm(3)), 2)'
+      comprueba:
+        - en_plano(S, om)
+        - en_recta(M, recta3(F, S))
+        - en_plano(I, espejo)
+    pasos:
+      - tipo: reconocer
+        pregunta: El espejo es vertical, y en la planta es la recta de C₁≡B₁ a D₁≡A₁. ¿Dónde se busca I primero?
+        opciones:
+          - texto: En la planta, donde r₁ corta esa recta
+            correcta: true
+            mensaje: |
+              Eso es. El espejo se ve ahí de canto: todos sus puntos caen en esa recta, así que el punto de r que está
+              en el espejo es el que cae en ella. I₂ se lleva luego por su vertical hasta r₂.
+          - texto: En el alzado, donde r₂ entra en el cuadrado C₂D₂A₂B₂, porque ahí el espejo se ve en verdadera forma
+            mensaje: |
+              Ese cruce es solo aparente, y el espejo no se ve ahí en verdadera forma, porque no es frontal. En el alzado
+              cubre una región, y r₂ se ve por encima de ella en un buen trecho: ninguno de esos puntos dice todavía cuál
+              está en el espejo.
+          - texto: Hallando la intersección con un plano auxiliar, como se hace siempre entre una recta y un plano
+            mensaje: |
+              Un plano auxiliar hace falta cuando el plano no se ve de canto en ninguna vista. Aquí sí: en la planta el
+              espejo es una recta, y sobra el auxiliar.
+
+      - tipo: construir
+        titulo: I, el reflejo y F abatido
+        intro: |
+          **I.** Prolonga r₁ hasta la recta del espejo: I₁. Súbelo por su vertical hasta r₂, también prolongada: I₂.
+
+          **S.** La normal al espejo en I es horizontal, y en la planta va perpendicular a la recta del espejo, desde
+          I₁. ω contiene el rayo y la normal, y S es el simétrico de F respecto de ella: la perpendicular a la normal por
+          F₁, que es paralela a la recta del espejo, la corta en M₁, y S₁ queda al otro lado, a la misma distancia. M es el
+          punto medio de FS, y está en la normal, a la cota de I: M₂ queda en la horizontal de I₂. La recta F₂M₂, prolongada,
+          da S₂ en la vertical de S₁. Así IS mide lo mismo que FI.
+
+          **α.** Abate ω alrededor de la normal, que es horizontal, sobre el plano horizontal de I: F₁ se mueve en la planta
+          por la recta F₁M₁, y F₀ queda a la verdadera magnitud de FM desde M₁. Con F₁M₁ de un cateto y la diferencia de
+          cotas de F e I del otro, sale esa distancia. Vale cualquiera de los dos lados. La recta del espejo no se mueve en
+          la planta, porque ω la corta en la perpendicular a la normal por I: **α es el ángulo en I₁ entre I₁F₀ y la recta
+          del espejo**. Marca I₁, I₂, S₁, S₂ y F₀, y pasa a limpio el rayo y su reflejo.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: I1
+            pide: I, donde el rayo llega al espejo, en la planta
+            es: solucion.Ip
+            bien: |
+              I₁ está donde r₁ corta la recta del espejo: el espejo es vertical y se ve de canto en la planta.
+            diagnosticos:
+              - si: cerca_de(figura.punto("R1"))
+                mensaje: |
+                  Ese es el extremo de r₁ dibujado, y el rayo sigue: prolóngalo hasta la recta del espejo.
+                ejemplo: figura.punto("R1")
+              - si: '!en_recta(figura.segmento("espejo1"))'
+                mensaje: |
+                  I está en el espejo: I₁ va **en la recta del espejo**, que es lo único que se ve de él en la planta.
+                ejemplo: 'desplaza(solucion.Ip, dx: mm(4), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la recta del espejo, pero no donde llega el rayo: prolonga r₁ hasta cortarla.
+          - nombre: I2
+            pide: I en el alzado
+            es: solucion.Ia
+            bien: |
+              I₂ está en la vertical de I₁, sobre r₂ prolongada. Cae dentro de C₂D₂A₂B₂: el rayo alcanza el espejo.
+            diagnosticos:
+              - si: '!en_vertical_de(I1)'
+                mensaje: |
+                  I₂ va en la **vertical de I₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(solucion.Ia, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de I₁, pero no sobre el rayo: I₂ cae en r₂, prolongada.
+          - nombre: S1
+            pide: S, el final del reflejo, en la planta
+            es: solucion.Sp
+            bien: |
+              S₁ es el simétrico de F₁ respecto de la normal: la misma distancia a M₁, al otro lado. I₁S₁ mide lo mismo que
+              I₁F₁.
+            diagnosticos:
+              - si: cerca_de(solucion.S_vir)
+                mensaje: |
+                  Ese es el simétrico de F **respecto del espejo**: la imagen que se ve detrás de él. El rayo no atraviesa
+                  el espejo: el reflejo vuelve por delante, y es el simétrico respecto de la normal.
+                ejemplo: solucion.S_vir
+              - si: '!en_recta(segmento2(figura.punto("F1"), solucion.L_S1))'
+                mensaje: |
+                  S₁ va en la recta que sale de F₁, paralela a la del espejo: es la perpendicular a la normal.
+                ejemplo: 'desplaza(solucion.Sp, dx: mm(5), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la recta buena, pero no a la distancia buena: S₁ está a lo que mide M₁F₁ de M₁, al otro lado.
+          - nombre: S2
+            pide: S en el alzado
+            es: solucion.Sa
+            bien: |
+              S₂ está en la vertical de S₁, en la recta F₂M₂ prolongada: M es el punto medio de FS, a la cota de I.
+            diagnosticos:
+              - si: cerca_de(solucion.Sa_baja)
+                mensaje: |
+                  Lo has dejado a la cota de F, como si el rayo volviera a bajar. Un espejo vertical no cambia eso: el
+                  rayo seguía subiendo al llegar, y sigue subiendo al salir.
+                ejemplo: solucion.Sa_baja
+              - si: cerca_de(solucion.Sa_nivel)
+                mensaje: |
+                  Lo has dejado a la cota de I, en la horizontal de I₂: ahí está M, no S. S sube sobre I lo mismo que F
+                  estaba por debajo.
+                ejemplo: solucion.Sa_nivel
+              - si: '!en_vertical_de(S1)'
+                mensaje: |
+                  S₂ va en la **vertical de S₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(solucion.Sa, dx: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de S₁, pero no a la cota buena: prolonga la recta F₂M₂ hasta esa vertical.
+          - nombre: F0
+            pide: F abatido, F₀, en la recta F₁M₁
+            es: proy_planta(solucion.F_ab)
+            bien: |
+              F₀ está en la recta F₁M₁, a la verdadera magnitud de FM desde M₁: la hipotenusa del triángulo de F₁M₁ y la
+              diferencia de cotas. I₁F₀ es FI en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(figura.punto("F1"))
+                mensaje: |
+                  Ese es F₁, antes de abatir. Lo que mide FM de verdad es más que F₁M₁, porque F no está a la cota de M.
+                ejemplo: figura.punto("F1")
+              - si: siempre
+                mensaje: |
+                  F₀ va en la recta F₁M₁, a una distancia de M₁ que es la hipotenusa del triángulo con catetos F₁M₁ y la
+                  diferencia de cotas de F e I.
+        tramos:
+          - traza: segmento2(figura.punto("F2"), solucion.Ia)
+            tipo: visto
+            porque: 'F₂I₂: el rayo va por delante del espejo, con más alejamiento que él en cada punto: nada lo tapa.'
+          - traza: segmento2(solucion.Ia, solucion.Sa)
+            tipo: visto
+            porque: 'I₂S₂: el reflejo vuelve por delante del espejo: también lo ve quien mira el alzado.'
+          - traza: segmento2(figura.punto("F1"), solucion.Ip)
+            tipo: visto
+            porque: 'F₁I₁: desde arriba el espejo es solo una recta, y no tapa nada.'
+          - traza: segmento2(solucion.Ip, solucion.Sp)
+            tipo: visto
+            porque: 'I₁S₁: desde arriba el espejo es solo una recta, y tampoco tapa el reflejo.'
+        trazado:
+          - segmento2(figura.punto("F1"), solucion.Sp)
+          - segmento2(solucion.Ip, solucion.Mp)
+          - segmento2(figura.punto("F2"), solucion.Sa)
+          - segmento2(solucion.Ip, proy_planta(solucion.F_ab))
+        construccion:
+          - con: regla
+            traza: segmento2(figura.punto("R1"), solucion.L_I1)
+            porque: |
+              **I.** r₁ prolongada desde su extremo, hasta pasar la recta del espejo.
+          - con: marca
+            traza: solucion.Ip
+            rotulo: I₁
+            porque: |
+              I₁, donde r₁ corta la recta del espejo.
+          - con: regla
+            traza: segmento2(figura.punto("R2"), solucion.L_I2)
+            porque: |
+              r₂ prolongada desde su extremo, hasta pasar por encima de la vertical de I₁.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Ip, solucion.L_vI)
+            porque: |
+              Por I₁, la vertical hasta pasar r₂.
+          - con: marca
+            traza: solucion.Ia
+            rotulo: I₂
+            porque: |
+              I₂, donde la vertical de I₁ corta r₂.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Ip, solucion.L_M1)
+            guia: figura.segmento("espejo1")
+            porque: |
+              **La normal.** Por I₁, la perpendicular a la recta del espejo, hacia el lado del rayo y más allá de donde
+              caerá M₁. Es horizontal, porque el espejo es vertical.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F1"), solucion.L_S1)
+            guia: figura.segmento("espejo1")
+            porque: |
+              Por F₁, la paralela a la recta del espejo, hasta pasar la normal y seguir al otro lado. Es la perpendicular a
+              la normal, y por ella va todo: M₁, S₁ y F₀.
+          - con: marca
+            traza: solucion.Mp
+            rotulo: M₁
+            porque: |
+              M₁, donde esa paralela corta la normal. Nombre nuestro: es el pie de F sobre la normal.
+          - con: compas
+            traza: 'arco(solucion.Mp, por: solucion.Sp, desde: desplaza(solucion.Sp, dx: -5, dy: -3), hasta: desplaza(solucion.Sp, dx: 5, dy: 3))'
+            toma: segmento2(solucion.Mp, figura.punto("F1"))
+            porque: |
+              Con centro en M₁ y radio M₁F₁, el arco al otro lado de la normal: S₁ es el simétrico de F₁.
+          - con: marca
+            traza: solucion.Sp
+            rotulo: S₁
+            porque: |
+              S₁, donde el arco corta la paralela. S es el nombre del croquis.
+          - con: regla
+            traza: segmento2(figura.punto("F1"), solucion.Ip)
+            porque: |
+              F₁I₁, el rayo en la planta, de punta a punta.
+          - con: regla
+            traza: segmento2(solucion.Ip, solucion.Sp)
+            porque: |
+              I₁S₁, el reflejo en la planta. Forma con la recta del espejo el mismo ángulo que F₁I₁.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Mp, solucion.L_vM)
+            porque: |
+              Por M₁, la vertical hasta el alzado, hasta pasar la cota de I.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Ia, solucion.L_hM)
+            guia: figura.segmento("AB2")
+            porque: |
+              Por I₂, la horizontal, hacia la izquierda: es la normal vista en el alzado.
+          - con: marca
+            traza: solucion.Ma
+            rotulo: M₂
+            porque: |
+              M₂, donde la vertical de M₁ corta la horizontal de I₂: M está en la normal, a la cota de I.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Sp, solucion.L_vS)
+            porque: |
+              Por S₁, la vertical hasta el alzado.
+          - con: regla
+            traza: segmento2(figura.punto("F2"), solucion.L_S2)
+            porque: |
+              De F₂ por M₂, prolongada hasta pasar la vertical de S₁: FS es una recta, y M su punto medio.
+          - con: marca
+            traza: solucion.Sa
+            rotulo: S₂
+            porque: |
+              S₂, donde esa recta corta la vertical de S₁.
+          - con: arista-vista
+            traza: '[segmento2(figura.punto("F2"), solucion.Ia), segmento2(solucion.Ia, solucion.Sa), segmento2(figura.punto("F1"), solucion.Ip), segmento2(solucion.Ip, solucion.Sp)]'
+            porque: |
+              **A limpio.** El rayo y su reflejo en las dos vistas: todo visto, porque van por delante del espejo.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F2"), solucion.L_vF)
+            porque: |
+              **α.** Por F₂, la vertical hacia arriba, hasta pasar la cota de I: ahí se mide la diferencia de cotas.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Ia, solucion.L_hH)
+            guia: figura.segmento("AB2")
+            porque: |
+              La horizontal de I₂, prolongada hasta esa vertical.
+          - con: marca
+            traza: solucion.H2
+            rotulo: H₂
+            porque: |
+              H₂, donde se cortan. Nombre nuestro. F₂H₂ es la diferencia de cotas de F e I.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("F1"), solucion.L_T)
+            guia: solucion.para
+            porque: |
+              Por F₁, la paralela a la normal, hacia el lado de la recta del espejo.
+          - con: compas
+            traza: 'arco(figura.punto("F1"), por: solucion.T, desde: desplaza(solucion.T, dx: -4, dy: 2), hasta: desplaza(solucion.T, dx: 4, dy: -2))'
+            toma: segmento2(figura.punto("F2"), solucion.H2)
+            porque: |
+              Con centro en F₁ y radio F₂H₂, sobre esa paralela: el otro cateto del triángulo, a escuadra con F₁M₁.
+          - con: marca
+            traza: solucion.T
+            porque: |
+              El punto donde el arco corta la paralela a la normal. Sin rótulo: es un punto de paso.
+          - con: regla
+            traza: segmento2(solucion.Mp, solucion.T)
+            porque: |
+              De M₁ a ese punto: la hipotenusa, FM en verdadera magnitud.
+          - con: regla
+            traza: segmento2(figura.punto("F1"), solucion.L_F0)
+            porque: |
+              La recta M₁F₁, prolongada más allá de F₁, porque F₀ cae fuera.
+          - con: compas
+            traza: 'arco(solucion.Mp, por: proy_planta(rama(solucion.F_ab, 1)), desde: desplaza(proy_planta(rama(solucion.F_ab, 1)), dx: 2, dy: -5), hasta: desplaza(proy_planta(rama(solucion.F_ab, 1)), dx: -2, dy: 5))'
+            toma: segmento2(solucion.Mp, solucion.T)
+            porque: |
+              Con centro en M₁ y radio esa hipotenusa, el arco que corta la recta M₁F₁: F se abate alrededor de la normal, y
+              M no se mueve. Vale también el corte del otro lado.
+          - con: marca
+            traza: proy_planta(rama(solucion.F_ab, 1))
+            rotulo: F₀
+            porque: |
+              F₀, donde el arco corta la recta M₁F₁. Nombre nuestro: es F abatido.
+          - con: regla
+            traza: segmento2(solucion.Ip, proy_planta(rama(solucion.F_ab, 1)))
+            porque: |
+              I₁F₀, el rayo en verdadera magnitud. El ángulo que forma con la recta del espejo es α.
+        pista: |
+          (1) r₁ prolongada corta la recta del espejo en I₁, y su vertical da I₂ en r₂. (2) La normal en I₁ es perpendicular a
+          la recta del espejo; la paralela a esa recta por F₁ la corta en M₁, y S₁ queda al otro lado, a la misma distancia.
+          (3) M₂ en la horizontal de I₂; F₂M₂ prolongada da S₂. (4) Con F₁M₁ y la diferencia de cotas, la hipotenusa, llevada
+          desde M₁ por la recta F₁M₁, da F₀.
+        desarrollo: |
+          En verde claro, la normal, M y el triángulo abatido. Mide en I₁ el ángulo entre I₁F₀ y la recta del espejo. El
+          ángulo aparente entre F₁I₁ y esa recta no sirve: la planta deforma FI, porque el rayo sube. El mismo α se lee en F₀,
+          porque la recta F₁M₁ es paralela a la del espejo.
+
+      - tipo: calcular
+        titulo: El ángulo α
+        pregunta: α, el ángulo de incidencia en verdadera magnitud, en grados, tal como lo mide el croquis.
+        respuesta:
+          tipo: numero
+          valor: '34.11'
+          receta: alfa
+          tolerancia: 1
+          formato: un número, en grados
+        distractores:
+          - valor: '55.89'
+            receta: 90 - alfa
+            mensaje: |
+              Ese es el ángulo **con la normal**, el de Física, y la construcción es buena. El croquis de este enunciado
+              dibuja α entre el espejo y el rayo, y por eso es el complementario.
+          - valor: '39.96'
+            receta: angulo_rectas(recta3(F, Fh), recta3(A, B))
+            mensaje: |
+              Ese es el ángulo **aparente en la planta**, entre r₁ y la recta del espejo. El rayo sube, y la planta lo
+              deforma: hay que abatir ω.
+          - valor: '30.02'
+            receta: angulo_con_ph(segmento3(F, Fa))
+            mensaje: |
+              Eso es lo que r₂ forma con la horizontal en el **alzado**. Tampoco es verdadera magnitud, y no se mide con el
+              espejo.
+        pista: |
+          Mídelo en I₁, entre I₁F₀ y la recta del espejo.
+        desarrollo: |
+          Se comprueba con las direcciones de r, que suben 30,02° en el alzado y giran 14,99° en la planta:
+
+          $$ \sin\alpha = \frac{\sin 39{,}96°}{\sqrt{1 + \tan^{2} 14{,}99° + \tan^{2} 30{,}02°}} \cdot \frac{1}{\cos 14{,}99°} \approx 0{,}561 \;\Rightarrow\; \alpha \approx 34{,}1° $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: El espejo es vertical y se ve de canto en la planta, así que I₁ es donde r₁ corta su recta, y la vertical da I₂ en r₂.
+          - texto: El reflejo es simétrico del rayo respecto de la normal al espejo en I, que es horizontal, así que S₁ es el simétrico de F₁ respecto de ella en la planta.
+          - texto: M, el pie de F sobre la normal, es el punto medio de FS y está a la cota de I, así que F₂M₂ prolongada da S₂ en la vertical de S₁.
+          - texto: Abatiendo ω alrededor de la normal, F₁ se mueve por la recta F₁M₁, y el ángulo en I₁ entre I₁F₀ y la recta del espejo es α, 34,1°.
+          - texto: El ángulo entre r₁ y la recta del espejo ya es α, porque el espejo se ve de canto en la planta.
+            trampa: true
+            mensaje: |
+              Que el espejo se vea de canto no pone el rayo en verdadera magnitud: FI sube, y la planta lo deforma. Ese
+              ángulo aparente mide 40°, no 34,1°.
+    resolucion: |
+      **I.** El espejo es vertical y se ve de canto en la planta: I₁ es donde r₁ corta esa recta, e I₂ queda en r₂, en su
+      vertical. Cae dentro del cuadrado C₂D₂A₂B₂: el rayo alcanza el espejo.
+
+      **El reflejo.** La normal al espejo en I es horizontal, y en la planta es perpendicular a la recta del espejo. El
+      reflejo es el simétrico del rayo respecto de ella: la paralela a la recta del espejo por F₁ corta la normal en M₁, y
+      S₁ queda al otro lado, a la misma distancia. M es el punto medio de FS, a la cota de I: M₂ está en la horizontal de
+      I₂, y F₂M₂ prolongada da S₂. IS mide lo mismo que FI. Todo se ve, porque va por delante del espejo.
+
+      **α.** Se abate ω alrededor de la normal: F₁ se mueve por la recta F₁M₁, hasta la verdadera magnitud de FM, que sale
+      del triángulo con F₁M₁ y la diferencia de cotas de F e I. El ángulo en I₁ entre I₁F₀ y la recta del espejo es
+      **α = 34,1°**, tal como lo dibuja el croquis. Con la normal, sería 55,9°.
+
+  - id: exeg-2526o-2-la-verdadera-magnitud-de-abc-por-giro
+    titulo: La verdadera magnitud del plano ABC, por giro
+    fuente: >-
+      Ejercicio 2 del examen de Expresión Gráfica de Ingeniería Industrial, convocatoria ordinaria, curso
+      2025-2026, 29 de mayo de 2026 · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU. Se
+      transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        Un giro de eje vertical mueve la planta y deja las cotas; uno de eje de punta mueve el alzado y deja los
+        alejamientos. Lo que mide una figura no cambia al girar. Si toda la figura acaba en un plano horizontal, su
+        planta es su verdadera magnitud.
+      formula: |
+        Al girar, cada punto describe un arco en verdadera magnitud en la vista que ve el eje de punta, y su
+        distancia al eje no cambia:
+
+        $$
+        \overline{OP'} = \overline{OP}
+        $$
+      reconocer: |
+        Antes de girar, mira los tres lados de ABC en las dos vistas: qué recta es cada uno. Piensa también en cómo se
+        ve un plano cuando una recta suya queda de punta.
+    enunciado: |
+      Obtener la verdadera magnitud del plano ABC de la pirámide utilizando el método de giro.
+
+      **Notas nuestras.** La pirámide tiene el vértice C, arriba, y su base es el polígono de la planta, a la cota de
+      A₂ y B₂; solo se gira la cara ABC, no la pirámide entera. El enunciado no fija los giros, y hay más de un camino
+      que vale. Los fijamos nosotros: los dos ejes pasan por B, el primero vertical y hasta que AB quede de punta, con
+      A₁′ por debajo de B₁, y el segundo de punta, con C bajando hacia la derecha hasta que el plano quede horizontal.
+      Con A₁′ por encima de B₁ o con C hacia la izquierda sale el mismo triángulo, en otra posición. La hoja no da
+      escala. A₁′, C₁′, C₂′, C₁″ y C₂″ son nombres nuestros.
+    pide: Los dos giros, marcando A₁′, C₁′, C₂′, C₂″ y C₁″, y el triángulo en verdadera magnitud; y, como pregunta nuestra, su ángulo en C.
+    receta:
+      lamina: ex2526o-2
+      escena:
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        C: 'punto3(alzado: figura.punto("C2"), planta: figura.punto("C1"))'
+      solucion:
+        Bz: 'punto3(alzado: desplaza(figura.punto("B2"), dy: -100), planta: figura.punto("B1"))'
+        ejeV: recta3(B, Bz)
+        Ag: 'punto3(alzado: figura.punto("B2"), planta: desplaza(figura.punto("B1"), dy: vm_planta(A, B)))'
+        tita: angulo_rectas(recta3(B, A), recta3(B, Ag))
+        Cg: 'rama(gira(C, ejeV, angulo: tita), 1)'
+        L: vm_alzado(B, Cg)
+        Cv2: 'desplaza(figura.punto("B2"), dx: L)'
+        Cv2_izq: 'desplaza(figura.punto("B2"), dx: -L)'
+        Cv1: 'cruce_aparente(segmento2(proy_planta(Cg), desplaza(proy_planta(Cg), dx: 10)), segmento2(Cv2, desplaza(Cv2, dy: 10)))'
+        Cv: 'punto3(alzado: Cv2, planta: Cv1)'
+        ang_C: angulo_rectas(recta3(C, A), recta3(C, B))
+        ang_A: angulo_rectas(recta3(A, B), recta3(A, C))
+        ang_B: angulo_rectas(recta3(B, A), recta3(B, C))
+        # Los errores.
+        Cg_rev: 'rama(gira(C, ejeV, angulo: tita), 2)'
+        Cv2_mal: 'desplaza(figura.punto("B2"), dx: vm(B, C))'
+        Cv1_mal: 'cruce_aparente(figura.segmento("CX1"), segmento2(Cv2, desplaza(Cv2, dy: 10)))'
+        arcoA: figura.punto("Y1")
+        # Los extremos.
+        L_A: 'desplaza(proy_planta(Ag), dy: mm(4))'
+        L_vC: 'desplaza(proy_alzado(Cg), dy: mm(-3))'
+        L_hC: 'desplaza(proy_alzado(Cg), dx: mm(-3))'
+        L_base: 'desplaza(Cv2, dx: mm(4))'
+        L_vCv: 'desplaza(Cv1, dy: mm(4))'
+        L_hCv: 'desplaza(Cv1, dx: mm(4))'
+      comprueba:
+        - en_recta(Ag, recta3(B, Ag))
+    pasos:
+      - tipo: reconocer
+        pregunta: AB es horizontal, y se puede girar con un eje vertical. ¿Para qué sirve dejarla de punta en el primer giro?
+        opciones:
+          - texto: El plano que la contiene se ve de canto en el alzado, y el segundo giro, de eje de punta, ya lo puede dejar horizontal
+            correcta: true
+            mensaje: |
+              Eso es. Un plano con una recta de punta se ve en el alzado como una recta. Un giro con el eje de punta lo
+              mueve sin deformarlo, hasta dejarlo horizontal: ahí la planta es la verdadera magnitud.
+          - texto: AB se pone en verdadera magnitud, que aún no lo estaba
+            mensaje: |
+              AB ya estaba en verdadera magnitud en la planta, porque es horizontal. Lo que cambia es el plano ABC, que se
+              ve de canto.
+          - texto: Es la única recta de ABC que se puede girar
+            mensaje: |
+              Se puede girar cualquiera, porque el giro mueve todo el triángulo. Con BC, que es frontal, también hay camino,
+              con el eje de punta primero.
+
+      - tipo: construir
+        titulo: Los dos giros, con los ejes por B
+        intro: |
+          **El primer giro.** Con eje vertical por B, que en la planta es el punto B₁. A₁ gira alrededor de B₁ hasta la
+          vertical de B₁, por debajo: A₁′. AB queda de punta, y A₂′ cae encima de B₂, porque la cota no cambia. C gira el
+          mismo ángulo: B₁C₁ y A₁C₁ no cambian de medida, así que C₁′ es el corte de dos arcos, uno de centro B₁ y radio
+          B₁C₁ y otro de centro A₁′ y radio A₁C₁. C₂′ se queda a la altura de C₂, en la vertical de C₁′.
+
+          **El segundo giro.** El plano se ve de canto en el alzado, en la recta B₂C₂′. Con eje de punta por B, que en el
+          alzado es el punto B₂, C₂′ gira hasta la recta de la base, hacia la derecha: C₂″. El alejamiento no cambia: C₁″ está
+          en la vertical de C₂″, a la altura de C₁′. A y B no se mueven, porque están en el eje.
+
+          El triángulo B₁A₁′C₁″ es la verdadera magnitud. Se dibuja aparte, como una figura plana sola: nada la tapa.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, transportador, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A1g
+            pide: A₁′, A tras el primer giro, en la planta
+            es: proy_planta(solucion.Ag)
+            bien: |
+              A₁′ está en la vertical de B₁, a lo que mide B₁A₁: AB, que es horizontal, se ve en verdadera magnitud y queda
+              de punta.
+            diagnosticos:
+              - si: cerca_de(figura.punto("A1"))
+                mensaje: |
+                  Ese es A₁, antes de girar. Llévalo por su arco hasta la vertical de B₁.
+                ejemplo: figura.punto("A1")
+              - si: cerca_de(solucion.arcoA)
+                mensaje: |
+                  Ese giro también deja AB de punta, pero hacia el otro lado, y lo hemos fijado hacia abajo para seguir el
+                  mismo camino.
+                ejemplo: solucion.arcoA
+              - si: 'a_distancia(de: figura.punto("B1"), d: vm_planta(A, B))'
+                mensaje: |
+                  Estás en el arco bueno, pero no en la vertical de B₁. AB queda de punta cuando su planta es vertical en el
+                  papel.
+                ejemplo: 'uno(medir_sobre(segmento2(figura.punto("B1"), figura.punto("X1")), desde: figura.punto("B1"), distancia: vm_planta(A, B)), 1)'
+              - si: siempre
+                mensaje: |
+                  A₁′ está en la vertical de B₁, por debajo, a lo que mide B₁A₁: el arco de centro B₁ y radio B₁A₁.
+          - nombre: C1g
+            pide: C₁′, C tras el primer giro, en la planta
+            es: proy_planta(solucion.Cg)
+            bien: |
+              C₁′ conserva sus distancias a B₁ y a A₁′: el triángulo de la planta gira entero, sin deformarse.
+            diagnosticos:
+              - si: cerca_de(proy_planta(solucion.Cg_rev))
+                mensaje: |
+                  Has girado C **al revés**. A y C giran alrededor de B₁ en el mismo sentido y el mismo ángulo: A₁ ha bajado
+                  hacia la izquierda, y C₁ también baja.
+                ejemplo: proy_planta(solucion.Cg_rev)
+              - si: cerca_de(figura.punto("C1"))
+                mensaje: |
+                  Ese es C₁, antes de girar. C gira con A, en el mismo giro.
+                ejemplo: figura.punto("C1")
+              - si: siempre
+                mensaje: |
+                  C₁′ es el corte del arco de centro B₁ y radio B₁C₁ con el de centro A₁′ y radio A₁C₁.
+          - nombre: C2g
+            pide: C₂′, C tras el primer giro, en el alzado
+            es: proy_alzado(solucion.Cg)
+            bien: |
+              C₂′ está en la vertical de C₁′, a la altura de C₂: un giro de eje vertical no cambia las cotas.
+            diagnosticos:
+              - si: cerca_de(figura.punto("C2"))
+                mensaje: |
+                  Ese es C₂, antes de girar. La altura es esa, pero C₂′ va en la vertical de C₁′.
+                ejemplo: figura.punto("C2")
+              - si: '!en_vertical_de(C1g)'
+                mensaje: |
+                  C₂′ va en la **vertical de C₁′**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.Cg), dx: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de C₁′, pero no a la altura de C₂: la cota no cambia con un eje vertical.
+          - nombre: C2v
+            pide: C₂″, C tras el segundo giro, en el alzado
+            es: solucion.Cv2
+            bien: |
+              C₂″ está en la recta de la base, a la derecha, a lo que mide B₂C₂′: el alzado gira en verdadera magnitud, y el
+              plano queda horizontal.
+            diagnosticos:
+              - si: cerca_de(solucion.Cv2_mal)
+                mensaje: |
+                  Has llevado lo que mide **B₂C₂ antes del primer giro**. El radio de este giro es B₂C₂′, la distancia de C al
+                  eje en este momento.
+                ejemplo: solucion.Cv2_mal
+              - si: cerca_de(solucion.Cv2_izq)
+                mensaje: |
+                  El radio es bueno, y con C hacia la izquierda el plano también queda horizontal: saldría el mismo triángulo,
+                  en otra posición, como dicen las Notas. Aquí lo fijamos hacia la derecha: márcalo ahí para que el Taller pueda
+                  seguirte.
+                ejemplo: solucion.Cv2_izq
+              - si: cerca_de(figura.punto("X2"))
+                mensaje: |
+                  Ese es el vértice de la base de la derecha, que no tiene que ver: C₂″ queda donde cae el arco de centro B₂ y
+                  radio B₂C₂′.
+                ejemplo: figura.punto("X2")
+              - si: '!en_recta(figura.segmento("BX2"))'
+                mensaje: |
+                  El plano acaba horizontal, a la cota del eje, así que C₂″ va **en la recta de la base**, prolongada.
+                ejemplo: 'desplaza(solucion.Cv2, dx: mm(-3), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la recta de la base, pero no a la distancia buena: C₂″ está a lo que mide B₂C₂′ de B₂.
+          - nombre: C1v
+            pide: C₁″, C tras el segundo giro, en la planta
+            es: solucion.Cv1
+            bien: |
+              C₁″ está en la vertical de C₂″, a la altura de C₁′: con un eje de punta el alejamiento no cambia.
+            diagnosticos:
+              - si: cerca_de(solucion.Cv1_mal)
+                mensaje: |
+                  Te has quedado a la altura de C₁, la de antes del primer giro. El alejamiento de este giro es el de C₁′.
+                ejemplo: solucion.Cv1_mal
+              - si: '!en_vertical_de(C2v)'
+                mensaje: |
+                  C₁″ va en la **vertical de C₂″**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(solucion.Cv1, dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de C₂″, pero no a la altura de C₁′: el alejamiento no cambia con un eje de punta.
+        trazado:
+          - segmento2(figura.punto("B2"), proy_alzado(solucion.Cg))
+          - segmento2(figura.punto("B1"), proy_planta(solucion.Cg))
+          - segmento2(proy_planta(solucion.Ag), proy_planta(solucion.Cg))
+          - segmento2(figura.punto("B1"), solucion.Cv1)
+          - segmento2(proy_planta(solucion.Ag), solucion.Cv1)
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.L_A)
+            porque: |
+              **El primer giro.** Por B₁, la vertical hacia abajo: AB queda de punta cuando su planta cae ahí.
+          - con: compas
+            traza: 'arco(figura.punto("B1"), por: proy_planta(solucion.Ag), desde: figura.punto("A1"), hasta: proy_planta(solucion.Ag))'
+            toma: segmento2(figura.punto("B1"), figura.punto("A1"))
+            porque: |
+              Con centro en B₁, el eje vertical visto de punta, y radio B₁A₁, el arco que lleva A₁ hasta esa vertical.
+          - con: marca
+            traza: proy_planta(solucion.Ag)
+            rotulo: A₁′
+            porque: |
+              A₁′, donde el arco corta la vertical de B₁. Nombre nuestro. A₂′ cae encima de B₂.
+          - con: compas
+            traza: 'arco(figura.punto("B1"), por: proy_planta(solucion.Cg), desde: figura.punto("C1"), hasta: proy_planta(solucion.Cg))'
+            toma: segmento2(figura.punto("B1"), figura.punto("C1"))
+            porque: |
+              Con centro en B₁ y radio B₁C₁, el arco de C₁: en el mismo giro, C conserva su distancia al eje.
+          - con: compas
+            traza: 'arco(proy_planta(solucion.Ag), por: proy_planta(solucion.Cg), desde: desplaza(proy_planta(solucion.Cg), dx: -6, dy: 6), hasta: desplaza(proy_planta(solucion.Cg), dx: 6, dy: -6))'
+            toma: segmento2(figura.punto("A1"), figura.punto("C1"))
+            porque: |
+              Con centro en A₁′ y radio A₁C₁, otro arco: la planta gira entera, y esa medida tampoco cambia.
+          - con: marca
+            traza: proy_planta(solucion.Cg)
+            rotulo: C₁′
+            porque: |
+              C₁′, donde se cortan los dos arcos. Nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Cg), solucion.L_vC)
+            porque: |
+              Por C₁′, la vertical hasta pasar la altura de C₂, en el alzado.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("C2"), solucion.L_hC)
+            guia: figura.segmento("BX2")
+            porque: |
+              Por C₂, la horizontal hacia la izquierda: un giro de eje vertical no cambia la cota.
+          - con: marca
+            traza: proy_alzado(solucion.Cg)
+            rotulo: C₂′
+            porque: |
+              C₂′, donde se cortan. Nombre nuestro.
+          - con: regla
+            traza: segmento2(figura.punto("B2"), proy_alzado(solucion.Cg))
+            porque: |
+              B₂C₂′: es el plano ABC visto de canto, porque AB está de punta y se ve en B₂.
+          - con: regla
+            traza: segmento2(figura.punto("X2"), solucion.L_base)
+            porque: |
+              **El segundo giro.** La recta de la base, prolongada hacia la derecha: es adonde va a caer el plano.
+          - con: compas
+            traza: 'arco(figura.punto("B2"), por: solucion.Cv2, desde: proy_alzado(solucion.Cg), hasta: solucion.Cv2)'
+            toma: segmento2(figura.punto("B2"), proy_alzado(solucion.Cg))
+            porque: |
+              Con centro en B₂, el eje de punta, y radio B₂C₂′, el arco que lleva C₂′ hasta la recta de la base.
+          - con: marca
+            traza: solucion.Cv2
+            rotulo: C₂″
+            porque: |
+              C₂″, donde el arco corta la recta de la base. Nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Cv2, solucion.L_vCv)
+            porque: |
+              Por C₂″, la vertical hacia la planta.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.Cg), solucion.L_hCv)
+            guia: figura.segmento("BX2")
+            porque: |
+              Por C₁′, la horizontal hacia la derecha: con un eje de punta el alejamiento no cambia.
+          - con: marca
+            traza: solucion.Cv1
+            rotulo: C₁″
+            porque: |
+              C₁″, donde se cortan. Nombre nuestro.
+          - con: regla
+            traza: '[segmento2(figura.punto("B1"), proy_planta(solucion.Ag)), segmento2(proy_planta(solucion.Ag), solucion.Cv1), segmento2(solucion.Cv1, figura.punto("B1"))]'
+            porque: |
+              El triángulo B₁A₁′C₁″, la verdadera magnitud del plano ABC.
+        pista: |
+          (1) Con centro en B₁, lleva A₁ a la vertical de B₁, por debajo: A₁′. (2) C₁′ es el corte de los arcos de radio B₁C₁ y
+          A₁C₁, con centros B₁ y A₁′. (3) C₂′ a la altura de C₂. (4) Con centro en B₂ y radio B₂C₂′, lleva C₂′ a la recta de la
+          base: C₂″. (5) C₁″ en su vertical, a la altura de C₁′.
+        desarrollo: |
+          En verde claro, las posiciones intermedias. B₁A₁′ mide lo que B₁A₁, 50 mm de la lámina, porque AB es horizontal. B₁C₁″
+          mide lo que B₂C₂ en el alzado, 67,6 mm, porque BC es frontal. A₁′C₁″ mide 71,6 mm: AC está de perfil, y esa medida es la
+          hipotenusa de A₁C₁ y A₂C₂. Son tres comprobaciones del resultado.
+
+      - tipo: calcular
+        titulo: El ángulo en C
+        pregunta: Como pregunta nuestra, ¿cuánto mide de verdad el ángulo del triángulo ABC en C, en grados?
+        respuesta:
+          tipo: numero
+          valor: '41.97'
+          receta: ang_C
+          tolerancia: 1
+          formato: un número, en grados
+        distractores:
+          - valor: '90.00'
+            receta: '90'
+            mensaje: |
+              Ese es el ángulo **A₁C₁B₁ en la planta**, que se ve recto. El plano está inclinado, y la planta lo deforma.
+          - valor: '64.65'
+            receta: ang_A
+            mensaje: |
+              Ese es el ángulo en **A**, el de A₁′ en el triángulo final. Te piden el de C.
+          - valor: '73.39'
+            receta: ang_B
+            mensaje: |
+              Ese es el ángulo en **B**, el de B₁ en el triángulo final. Te piden el de C.
+        pista: |
+          Mídelo en C₁″, entre C₁″B₁ y C₁″A₁′.
+        desarrollo: |
+          Se comprueba con los tres lados, por el coseno:
+
+          $$ \cos C = \frac{67{,}56^{2} + 71{,}64^{2} - 50^{2}}{2 \cdot 67{,}56 \cdot 71{,}64} \approx 0{,}743 \;\Rightarrow\; C \approx 41{,}97° $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AB es horizontal, así que con un eje vertical por B se deja de punta sin cambiar ninguna cota.
+          - texto: Con AB de punta, el plano ABC se ve de canto en el alzado, en la recta B₂C₂′.
+          - texto: Con un eje de punta por B, C₂′ gira hasta la recta de la base, y el plano queda horizontal.
+          - texto: Un plano horizontal se ve en verdadera magnitud en la planta, y su triángulo es B₁A₁′C₁″.
+          - texto: Basta con el primer giro, porque un plano con una recta de punta ya está en verdadera magnitud.
+            trampa: true
+            mensaje: |
+              Un plano con una recta de punta se ve de canto en el alzado, no en verdadera magnitud: en esa vista es una
+              recta. Hace falta el segundo giro.
+    resolucion: |
+      **Lo que trae.** AB es horizontal y BC es frontal: cada uno se ve en verdadera magnitud en una vista. AC está de perfil, y
+      no se ve así en ninguna de las dos. Para ver el triángulo entero hay que dejar el plano horizontal.
+
+      **El primer giro.** Con eje vertical por B, AB queda de punta, y la cota de cada punto no cambia. A₁ va a la vertical de
+      B₁: A₁′. C₁′ conserva sus distancias a B₁ y a A₁′. C₂′ se queda a la altura de C₂. El plano se ve de canto, en B₂C₂′.
+
+      **El segundo giro.** Con eje de punta por B, C₂′ va a la recta de la base: C₂″. El alejamiento no cambia, y C₁″ queda en
+      su vertical, a la altura de C₁′. El plano es horizontal.
+
+      **La verdadera magnitud.** El triángulo B₁A₁′C₁″, de lados 50, 67,6 y 71,6 mm de la lámina. Su ángulo en C mide **41,97°**.
+
+  - id: exeg-2526o-3a-el-agujero-prismatico-en-la-piramide
+    titulo: El agujero prismático en la pirámide
+    fuente: >-
+      Ejercicio 3, apartado 1, del examen de Expresión Gráfica de Ingeniería Industrial, convocatoria ordinaria,
+      curso 2025-2026, 29 de mayo de 2026 · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU. Se
+      transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        Un agujero prismático se trata como un prisma que solo existe dentro de la pieza: sus aristas cortan las
+        caras, y las aristas de la pieza que atraviesa dan los puntos que faltan. Lo que se ve de canto en una vista se
+        lee directamente en ella: toda recta de ese plano cae en su línea.
+      formula: |
+        Una cota del dibujo y su medida real se relacionan por la escala:
+
+        $$
+        \text{en el papel} = \frac{\text{real}}{\text{escala}}
+        $$
+      reconocer: |
+        Antes de trazar, mira qué tipo de recta es AB y cómo se verían entonces las cuatro caras del agujero. Mira
+        también si alguna cara de la pirámide ya se ve de canto en una de las dos vistas.
+    enunciado: |
+      Conociendo la proyección vertical y horizontal de una pirámide, se pide:
+
+      1. Definir la intersección entre la pirámide y un agujero prismático regular. El agujero tiene como eje la recta
+      AB y atraviesa la pirámide completamente. La sección del agujero es un cuadrado de 40 m de lado y dos de los lados
+      de la sección cuadrada son rectas horizontales. (3 puntos)
+
+      Nota: Se debe dibujar el agujero generado en la pirámide, no el prisma.
+
+      **Notas nuestras.** La hoja no da escala: su única medida es la cota de 100 m entre dos vértices de la base, que
+      mide 50 mm en el dibujo, así que va a 1:2000, y los 40 m son 20 mm. El enunciado no da nombres: la lámina solo
+      rotula A, B y r, y V, L, M, T, R, S, U son nuestros, igual que los números 1 a 10. Leemos «sección» como la sección
+      recta, perpendicular a AB; si el cuadrado de 40 m fuera el corte por un plano horizontal, la boca en la base saldría
+      cuadrada y el agujero, más estrecho de arriba abajo: 28,3 m en vez de 40. Dibujamos el agujero como hueco en una
+      pieza maciza.
+    pide: La salida del agujero en las dos vistas, la boca en la base, y lo que se ve y lo que no; y, como pregunta nuestra, lo que el agujero se lleva de la arista VR.
+    receta:
+      lamina: ex2526o-3a
+      escena:
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        L: 'punto3(alzado: figura.punto("L2"), planta: figura.punto("L1"))'
+        T: 'punto3(alzado: figura.punto("M2"), planta: figura.punto("T1"))'
+        R: 'punto3(alzado: figura.punto("S2"), planta: figura.punto("R1"))'
+        S: 'punto3(alzado: figura.punto("S2"), planta: figura.punto("S1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        vtr: plano(V, T, R)
+        vrs: plano(V, R, S)
+        base: plano(L, T, R)
+        h: mm(10)
+        hk: mm(10) * raiz(2) / 2
+      solucion:
+        # Las cuatro aristas del agujero, en A y en B: la 1 y la 2 arriba, la 3 y la 4
+        # abajo; la 1 y la 4 a la izquierda, la 2 y la 3 a la derecha.
+        a1: 'punto3(alzado: desplaza(figura.punto("A2"), dx: -h, dy: -hk), planta: desplaza(figura.punto("A1"), dx: -h, dy: hk))'
+        b1: 'punto3(alzado: desplaza(figura.punto("B2"), dx: -h, dy: -hk), planta: desplaza(figura.punto("B1"), dx: -h, dy: hk))'
+        a2: 'punto3(alzado: desplaza(figura.punto("A2"), dx: h, dy: -hk), planta: desplaza(figura.punto("A1"), dx: h, dy: hk))'
+        b2: 'punto3(alzado: desplaza(figura.punto("B2"), dx: h, dy: -hk), planta: desplaza(figura.punto("B1"), dx: h, dy: hk))'
+        a3: 'punto3(alzado: desplaza(figura.punto("A2"), dx: h, dy: hk), planta: desplaza(figura.punto("A1"), dx: h, dy: -hk))'
+        b3: 'punto3(alzado: desplaza(figura.punto("B2"), dx: h, dy: hk), planta: desplaza(figura.punto("B1"), dx: h, dy: -hk))'
+        a4: 'punto3(alzado: desplaza(figura.punto("A2"), dx: -h, dy: hk), planta: desplaza(figura.punto("A1"), dx: -h, dy: -hk))'
+        b4: 'punto3(alzado: desplaza(figura.punto("B2"), dx: -h, dy: hk), planta: desplaza(figura.punto("B1"), dx: -h, dy: -hk))'
+        arriba: plano(a1, b1, a2)
+        derecha: plano(a2, b2, a3)
+        # El hexágono de la salida: 1 3 por las aristas de arriba, 5 6 por las de abajo,
+        # y 2 4 por la arista VR, que el agujero corta.
+        P1: corte_recta_plano(recta3(a1, b1), vtr)
+        P2: corte_recta_plano(recta3(V, R), arriba)
+        P3: corte_recta_plano(recta3(a2, b2), vrs)
+        P4: corte_recta_plano(recta3(V, R), derecha)
+        P5: corte_recta_plano(recta3(a3, b3), vtr)
+        P6: corte_recta_plano(recta3(a4, b4), vtr)
+        # La boca, en la base.
+        P7: corte_recta_plano(recta3(a1, b1), base)
+        P8: corte_recta_plano(recta3(a2, b2), base)
+        P9: corte_recta_plano(recta3(a3, b3), base)
+        P10: corte_recta_plano(recta3(a4, b4), base)
+        vr_m: en_mm(vm(P2, P4)) * 2
+        vrp_m: en_mm(vm_planta(P2, P4)) * 2
+        # Las paralelas a AB: las caras de los lados, en las dos vistas.
+        xiz: 'segmento2(desplaza(figura.punto("A2"), dx: -h), desplaza(figura.punto("B2"), dx: -h))'
+        xde: 'segmento2(desplaza(figura.punto("A2"), dx: h), desplaza(figura.punto("B2"), dx: h))'
+        pie_iz: 'desplaza(figura.punto("A2"), dx: -h)'
+        pie_de: 'desplaza(figura.punto("A2"), dx: h)'
+        Xi_a: 'desplaza(pie_iz, dy: -115)'
+        Xi_b: 'desplaza(proy_planta(P7), dy: mm(3))'
+        Xd_a: 'desplaza(pie_de, dy: -80)'
+        Xd_b: 'desplaza(proy_planta(P8), dy: mm(3))'
+        # La vista de perfil: lo que dista de la línea nueva es la cota sobre la base.
+        V4: 'cambio_plano_vertical(V, figura.segmento("nueva1"), ref: A)'
+        T4: 'cambio_plano_vertical(T, figura.segmento("nueva1"), ref: A)'
+        A4: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: A)'
+        B4: 'cambio_plano_vertical(B, figura.segmento("nueva1"), ref: A)'
+        E1: 'cambio_plano_vertical(P1, figura.segmento("nueva1"), ref: A)'
+        E3: 'cambio_plano_vertical(P3, figura.segmento("nueva1"), ref: A)'
+        E5: 'cambio_plano_vertical(P5, figura.segmento("nueva1"), ref: A)'
+        E7: 'cambio_plano_vertical(P7, figura.segmento("nueva1"), ref: A)'
+        E9: 'cambio_plano_vertical(P9, figura.segmento("nueva1"), ref: A)'
+        Ct4: 'cambio_plano_vertical(a1, figura.segmento("nueva1"), ref: A)'
+        Cb4: 'cambio_plano_vertical(a4, figura.segmento("nueva1"), ref: A)'
+        L4: 'cruce_aparente(segmento2(figura.punto("V1"), desplaza(figura.punto("V1"), dx: 10)), figura.segmento("nueva1"))'
+        B4l: 'cruce_aparente(segmento2(figura.punto("B1"), desplaza(figura.punto("B1"), dx: 10)), figura.segmento("nueva1"))'
+        E1l: 'cruce_aparente(segmento2(E1, desplaza(E1, dx: 10)), figura.segmento("nueva1"))'
+        E5l: 'cruce_aparente(segmento2(E5, desplaza(E5, dx: 10)), figura.segmento("nueva1"))'
+        w3: 'cruce_aparente(segmento2(figura.punto("V1"), desplaza(figura.punto("V1"), dx: 10)), segmento2(E3, desplaza(E3, dy: 10)))'
+        w3a: 'desplaza(E3, dy: mm(-3))'
+        w3b: 'desplaza(E3, dy: mm(3))'
+        k_bo: 'cruce_aparente(segmento2(proy_planta(P2), proy_planta(P3)), segmento2(proy_planta(P9), proy_planta(P10)))'
+        # Los extremos.
+        L_V4: 'desplaza(V4, dx: mm(4))'
+        L_B4: 'desplaza(B4, dx: mm(4))'
+        L_Ct: 'uno(medir_sobre(segmento2(Cb4, Ct4), desde: Ct4, distancia: mm(3)), 1)'
+        L_Cb: 'uno(medir_sobre(segmento2(Cb4, Ct4), desde: Cb4, distancia: mm(3)), 2)'
+        L_E7: 'desplaza(E7, dx: mm(-3), dy: mm(3))'
+        L_Et: 'desplaza(E1, dx: mm(3), dy: mm(-3))'
+        L_Eb: 'desplaza(E5, dx: mm(3), dy: mm(-3))'
+        L_h1: 'desplaza(proy_planta(P1), dx: mm(-3))'
+        L_h5: 'desplaza(proy_planta(P6), dx: mm(-3))'
+        L_h7: 'desplaza(proy_planta(P7), dx: mm(-3))'
+        L_h9: 'desplaza(proy_planta(P10), dx: mm(-3))'
+        L_v2: 'desplaza(proy_alzado(P2), dy: mm(-3))'
+      comprueba:
+        - en_plano(P1, arriba)
+        - en_plano(P3, arriba)
+        - en_plano(P3, derecha)
+        - en_plano(P4, vrs)
+        - en_plano(P5, derecha)
+    pasos:
+      - tipo: reconocer
+        pregunta: Las caras de arriba y de abajo del agujero son oblicuas en las dos vistas. ¿Qué vista las deja de canto?
+        opciones:
+          - texto: Una vista de perfil, con un cambio de plano
+            correcta: true
+            mensaje: |
+              Eso es. AB está en un plano de perfil, y esas dos caras contienen la dirección horizontal del papel, que en
+              una vista de perfil se ve de punta. Las dos se ven como rectas paralelas a AB, y las caras de los lados ya se
+              ven de canto en las dos vistas.
+          - texto: La planta, porque sus aristas horizontales se ven ahí en verdadera magnitud, y con eso ya se puede leer el corte
+            mensaje: |
+              Que una recta de una cara se vea en verdadera magnitud no la deja de canto: en la planta esa cara cubre una
+              región. Hace falta la vista en la que esa dirección se vea de punta.
+          - texto: El alzado, porque AB se ve allí como una recta del papel, y sus caras se ven de frente
+            mensaje: |
+              En el alzado AB es vertical, y no está en verdadera magnitud: va hacia atrás. Las caras de arriba y de abajo
+              tampoco son frontales, porque van inclinadas a 45°.
+
+      - tipo: construir
+        titulo: La salida del agujero y su boca
+        intro: |
+          **La vista de perfil.** AB está en un plano de perfil, y sube hacia atrás a 45°. Los dos lados horizontales de la
+          sección van en la dirección del papel, y los otros dos quedan en ese plano de perfil, a 45° también. Esta vista es
+          método nuestro, porque el enunciado no lo fija, y «vista 4» es nombre nuestro. Usa la línea nueva, la de x = 640 de
+          la lámina, con las distancias a ella como cotas sobre la base: T₄ y R₄ caen en el mismo punto, y **V₄T₄ es la cara VTR de canto**. A₄B₄ es el eje en verdadera magnitud.
+          El agujero se ve como dos paralelas a él, a 10 mm a cada lado: 40 m a 1:2000 son 20 mm. **La de la cara de arriba es
+          la de la derecha, más baja en el papel**, porque en esta vista la cota crece hacia la derecha.
+
+          **Las caras de los lados.** Son las paralelas a AB, a 10 mm a cada lado, en las dos vistas: dos lados del cuadrado son
+          horizontales, y se ven en verdadera magnitud.
+
+          **Los puntos.** La paralela de arriba corta V₄T₄ en 1₄, y su horizontal da 1₁ y, en V₁R₁, 2₁. La de abajo corta V₄T₄
+          en 5₄, y su horizontal da 5₁ y 6₁. La paralela derecha corta V₁R₁ en 4₁. **VRS se ve de canto en el alzado**, en V₂S₂: la
+          paralela derecha la corta en 3₂, que también es 4₂, y esa cota, llevada a la vista 4, da en la paralela de arriba 3₄,
+          cuya horizontal baja 3₁. Las dos paralelas cortan la línea nueva en la base: sus horizontales dan la boca, 7, 8, 9 y 10.
+          Las cotas de 1 y de 5 pasan al alzado midiendo lo que distan de la línea nueva.
+
+          Pasa a limpio lo que se ve y lo que no. Hay puntos muy juntos: 4₁ queda a 3,2 mm de 5₁, y hay cruces cerca de 3₁ y de
+          2₁. Amplía con la lupa (×4).
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, visto, oculto, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: N1p
+            pide: 1, donde la arista de arriba de la izquierda del agujero sale por la cara VTR, en la planta
+            es: proy_planta(solucion.P1)
+            bien: |
+              1₁ está en la paralela izquierda, a 10 mm de A₁B₁, a la altura que da en la vista de perfil el corte de la cara de arriba con V₄T₄.
+            diagnosticos:
+              - si: '!en_recta(solucion.xiz)'
+                mensaje: |
+                  La cara izquierda del agujero se ve de canto en la planta: 1₁ va en la paralela a A₁B₁, 10 mm a su izquierda.
+                ejemplo: 'desplaza(proy_planta(solucion.P1), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela a A₁B₁, pero no a la altura buena. En la vista de perfil, la paralela al eje de arriba corta V₄T₄; la horizontal de ese corte lleva 1₁.
+          - nombre: N2p
+            pide: 2, donde VR entra en el agujero por su cara de arriba, en la planta
+            es: proy_planta(solucion.P2)
+            bien: |
+              2₁ está en V₁R₁, a la misma altura que 1₁: la cara de arriba corta VTR en una recta que va en la dirección del papel, de 1 a 2.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("VR1"))'
+                mensaje: |
+                  2 es un punto de la arista VR: 2₁ va **en V₁R₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.P2), dx: mm(5), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en V₁R₁, pero no a la altura buena: 2₁ está a la altura de 1₁, en la misma horizontal.
+          - nombre: N3p
+            pide: 3, donde la arista de arriba de la derecha del agujero sale por la cara VRS, en la planta
+            es: proy_planta(solucion.P3)
+            bien: |
+              3₁ está en la paralela derecha, a la altura que da la vista de perfil para la cota de 3₂.
+            diagnosticos:
+              - si: '!en_recta(solucion.xde)'
+                mensaje: |
+                  La cara derecha del agujero se ve de canto en la planta: 3₁ va en la paralela a A₁B₁, 10 mm a su derecha.
+                ejemplo: 'desplaza(proy_planta(solucion.P3), dx: mm(5))'
+              - si: cerca_de(proy_planta(solucion.P4))
+                mensaje: |
+                  Ese es 4₁, donde VR sale del agujero. 3 es el corte de la arista de arriba con la cara VRS: más abajo en la planta.
+                ejemplo: proy_planta(solucion.P4)
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela derecha, pero no a la altura buena. La cota de 3 se lee en el alzado, donde VRS se ve de canto; en la vista de perfil, esa cota corta la paralela al eje de arriba, y la horizontal baja 3₁.
+          - nombre: N4p
+            pide: 4, donde VR sale del agujero por su cara derecha, en la planta
+            es: proy_planta(solucion.P4)
+            bien: |
+              4₁ está donde la paralela derecha corta V₁R₁: la cara derecha se ve de canto en la planta.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("VR1"))'
+                mensaje: |
+                  4 es un punto de la arista VR: 4₁ va **en V₁R₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.P4), dx: mm(4), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en V₁R₁, pero no en el corte: la paralela a A₁B₁, 10 mm a su derecha, corta V₁R₁ en 4₁.
+          - nombre: N5p
+            pide: 5, donde la arista de abajo de la derecha sale por la cara VTR, en la planta
+            es: proy_planta(solucion.P5)
+            bien: |
+              5₁ está en la paralela derecha, a la altura que da en la vista de perfil el corte de la cara de abajo con V₄T₄.
+            diagnosticos:
+              - si: '!en_recta(solucion.xde)'
+                mensaje: |
+                  La cara derecha del agujero se ve de canto en la planta: 5₁ va en la paralela a A₁B₁, 10 mm a su derecha.
+                ejemplo: 'desplaza(proy_planta(solucion.P5), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela derecha, pero no a la altura buena. La paralela al eje de abajo corta V₄T₄ en la vista de perfil; su horizontal lleva 5₁.
+          - nombre: N6p
+            pide: 6, donde la arista de abajo de la izquierda sale por la cara VTR, en la planta
+            es: proy_planta(solucion.P6)
+            bien: |
+              6₁ está en la paralela izquierda, a la altura de 5₁: la cara de abajo corta VTR en una recta que va en la dirección del papel.
+            diagnosticos:
+              - si: '!en_recta(solucion.xiz)'
+                mensaje: |
+                  La cara izquierda del agujero se ve de canto en la planta: 6₁ va en la paralela a A₁B₁, 10 mm a su izquierda.
+                ejemplo: 'desplaza(proy_planta(solucion.P6), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela izquierda, pero no a la altura buena: 6₁ está a la altura de 5₁.
+          - nombre: N7p
+            pide: 7, donde la arista de arriba de la izquierda sale por la base, en la planta
+            es: proy_planta(solucion.P7)
+            bien: |
+              7₁ está en la paralela de la izquierda, a la altura donde la paralela al eje de arriba corta la línea nueva, en la vista de perfil.
+            diagnosticos:
+              - si: cerca_de(figura.punto("A1"))
+                mensaje: |
+                  Ese es A₁, el punto del eje en la base. La boca va alrededor de él: este punto queda más abajo en la planta.
+                ejemplo: figura.punto("A1")
+              - si: '!en_recta(solucion.xiz)'
+                mensaje: |
+                  7₁ va en la paralela de la izquierda, que es la cara de ese lado vista de canto.
+                ejemplo: 'desplaza(proy_planta(solucion.P7), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela, pero no a la altura buena. La paralela al eje de arriba corta la línea nueva en la vista de perfil; ese corte está en el plano de la base.
+          - nombre: N8p
+            pide: 8, donde la arista de arriba de la derecha sale por la base, en la planta
+            es: proy_planta(solucion.P8)
+            bien: |
+              8₁ está en la paralela de la derecha, a la altura donde la paralela al eje de arriba corta la línea nueva, en la vista de perfil.
+            diagnosticos:
+              - si: cerca_de(figura.punto("A1"))
+                mensaje: |
+                  Ese es A₁, el punto del eje en la base. La boca va alrededor de él: este punto queda más abajo en la planta.
+                ejemplo: figura.punto("A1")
+              - si: '!en_recta(solucion.xde)'
+                mensaje: |
+                  8₁ va en la paralela de la derecha, que es la cara de ese lado vista de canto.
+                ejemplo: 'desplaza(proy_planta(solucion.P8), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela, pero no a la altura buena. La paralela al eje de arriba corta la línea nueva en la vista de perfil; ese corte está en el plano de la base.
+          - nombre: N9p
+            pide: 9, donde la arista de abajo de la derecha sale por la base, en la planta
+            es: proy_planta(solucion.P9)
+            bien: |
+              9₁ está en la paralela de la derecha, a la altura donde la paralela al eje de abajo corta la línea nueva.
+            diagnosticos:
+              - si: '!en_recta(solucion.xde)'
+                mensaje: |
+                  9₁ va en la paralela de la derecha, que es la cara de ese lado vista de canto.
+                ejemplo: 'desplaza(proy_planta(solucion.P9), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela, pero no a la altura buena. La paralela al eje de abajo corta la línea nueva en la vista de perfil; ese corte está en el plano de la base.
+          - nombre: N10p
+            pide: 10, donde la arista de abajo de la izquierda sale por la base, en la planta
+            es: proy_planta(solucion.P10)
+            bien: |
+              10₁ está en la paralela de la izquierda, a la altura donde la paralela al eje de abajo corta la línea nueva.
+            diagnosticos:
+              - si: '!en_recta(solucion.xiz)'
+                mensaje: |
+                  10₁ va en la paralela de la izquierda, que es la cara de ese lado vista de canto.
+                ejemplo: 'desplaza(proy_planta(solucion.P10), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela, pero no a la altura buena. La paralela al eje de abajo corta la línea nueva en la vista de perfil; ese corte está en el plano de la base.
+          - nombre: N1a
+            pide: 1 en el alzado
+            es: proy_alzado(solucion.P1)
+            bien: |
+              1₂ está en la vertical de 1₁, a una cota sobre la base igual a lo que dista en la vista de perfil de la línea nueva.
+            diagnosticos:
+              - si: '!en_vertical_de(N1p)'
+                mensaje: |
+                  1₂ va en la **vertical de 1₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P1), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 1₁, pero no a la cota buena: la cota de 1 sobre la base es lo que dista 1₄ de la línea nueva.
+          - nombre: N2a
+            pide: 2 en el alzado
+            es: proy_alzado(solucion.P2)
+            bien: |
+              2₂ está en V₂S₂, en la vertical de 2₁, y a la altura de 1₂: VRS se ve de canto en el alzado.
+            diagnosticos:
+              - si: '!en_vertical_de(N2p)'
+                mensaje: |
+                  2₂ va en la **vertical de 2₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P2), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 2₁, pero 2₂ cae en V₂S₂: la arista VR se ve ahí encima.
+          - nombre: N3a
+            pide: 3 en el alzado, que también es 4
+            es: proy_alzado(solucion.P3)
+            bien: |
+              3₂ está donde la paralela derecha corta V₂S₂. 4₂ cae en el mismo punto: VRS se ve de canto, y los dos están en la cara derecha.
+            diagnosticos:
+              - si: '!en_recta(solucion.xde)'
+                mensaje: |
+                  En el alzado la cara derecha también se ve de canto: 3₂ va en la paralela a A₂B₂, 10 mm a su derecha.
+                ejemplo: 'desplaza(proy_alzado(solucion.P3), dx: mm(5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la paralela derecha, pero 3₂ cae en V₂S₂, la cara VRS vista de canto.
+          - nombre: N5a
+            pide: 5 en el alzado
+            es: proy_alzado(solucion.P5)
+            bien: |
+              5₂ está en la vertical de 5₁, a la cota que da en la vista de perfil el corte de la cara de abajo con V₄T₄.
+            diagnosticos:
+              - si: '!en_vertical_de(N5p)'
+                mensaje: |
+                  5₂ va en la **vertical de 5₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P5), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 5₁, pero no a la cota buena: esa cota sobre la base es lo que dista 5₄ de la línea nueva.
+          - nombre: N6a
+            pide: 6 en el alzado
+            es: proy_alzado(solucion.P6)
+            bien: |
+              6₂ está en la vertical de 6₁, a la altura de 5₂.
+            diagnosticos:
+              - si: '!en_vertical_de(N6p)'
+                mensaje: |
+                  6₂ va en la **vertical de 6₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.P6), dx: mm(-5))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de 6₁, pero no a la altura de 5₂.
+        tramos:
+          - traza: segmento2(proy_alzado(solucion.P1), solucion.pie_iz)
+            tipo: oculto
+            porque: 'En el alzado, la paralela izquierda, de 1₂ a la base: el agujero va por detrás de la cara de delante VSU, que lo tapa.'
+          - traza: segmento2(proy_alzado(solucion.P3), solucion.pie_de)
+            tipo: oculto
+            porque: 'En el alzado, la paralela derecha, de 3₂ a la base: también va por detrás de la cara de delante VSU.'
+          - traza: segmento2(proy_alzado(solucion.P1), proy_alzado(solucion.P2))
+            tipo: oculto
+            porque: '1₂2₂ está en la cara VTR, una de las de atrás: la tapan las de delante.'
+          - traza: segmento2(proy_alzado(solucion.P5), proy_alzado(solucion.P6))
+            tipo: oculto
+            porque: '5₂6₂ está en la cara VTR, una de las de atrás: la tapan las de delante.'
+          - traza: segmento2(proy_planta(solucion.P1), proy_planta(solucion.P2))
+            tipo: visto
+            porque: '1₁2₁ está en la cara VTR, que mira hacia arriba: desde arriba nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.P2), proy_planta(solucion.P3))
+            tipo: visto
+            porque: '2₁3₁ está en la cara VRS, que mira hacia arriba: nada la tapa.'
+          - traza: segmento2(proy_planta(solucion.P3), proy_planta(solucion.P4))
+            tipo: visto
+            porque: '3₁4₁ está en la cara VRS, en el borde del agujero: desde arriba se ve.'
+          - traza: segmento2(proy_planta(solucion.P4), proy_planta(solucion.P5))
+            tipo: visto
+            porque: '4₁5₁ está en la cara VTR, en el borde del agujero: desde arriba se ve.'
+          - traza: segmento2(proy_planta(solucion.P5), proy_planta(solucion.P6))
+            tipo: visto
+            porque: '5₁6₁ está en la cara VTR, en el borde del agujero: desde arriba se ve.'
+          - traza: segmento2(proy_planta(solucion.P6), proy_planta(solucion.P1))
+            tipo: visto
+            porque: '6₁1₁ está en la cara VTR, en el borde del agujero: desde arriba se ve.'
+          - traza: segmento2(proy_planta(solucion.P1), proy_planta(solucion.P7))
+            tipo: oculto
+            porque: 'En la planta, de 1₁ a 7₁: la arista de arriba de la izquierda va por dentro de la pirámide, bajo sus caras.'
+          - traza: segmento2(proy_planta(solucion.P3), proy_planta(solucion.P8))
+            tipo: oculto
+            porque: 'En la planta, de 3₁ a 8₁: la arista de arriba de la derecha, por dentro, bajo las caras VRS y VSU.'
+          - traza: segmento2(proy_planta(solucion.P7), proy_planta(solucion.P8))
+            tipo: oculto
+            porque: '7₁8₁ es el lado de la boca del agujero, en la base, debajo de toda la pirámide.'
+          - traza: segmento2(proy_planta(solucion.P9), solucion.k_bo)
+            tipo: visto
+            porque: 'De 9₁ al cruce con 2₁3₁: ese trocito del lado de la boca cae dentro del hueco de arriba, y se ve a través del agujero.'
+          - traza: segmento2(solucion.k_bo, proy_planta(solucion.P10))
+            tipo: oculto
+            porque: 'Del cruce con 2₁3₁ a 10₁: el lado de la boca ya queda bajo la cara VRS.'
+          - traza: segmento2(figura.punto("V1"), proy_planta(solucion.P2))
+            tipo: visto
+            porque: 'De V₁ a 2₁: VR, sobre la cara de arriba, hasta el agujero.'
+          - traza: segmento2(proy_planta(solucion.P4), figura.punto("R1"))
+            tipo: visto
+            porque: 'De 4₁ a R₁: VR, después del agujero, hasta la base.'
+        trazado:
+          - segmento2(solucion.V4, solucion.T4)
+          - segmento2(solucion.A4, solucion.B4)
+          - segmento2(solucion.E7, solucion.E1)
+          - segmento2(solucion.E9, solucion.E5)
+          - segmento2(solucion.E1, proy_planta(solucion.P1))
+          - segmento2(solucion.E5, proy_planta(solucion.P6))
+          - segmento2(solucion.E3, proy_planta(solucion.P3))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), solucion.L_V4)
+            guia: figura.segmento("TR1")
+            porque: |
+              **La vista de perfil.** Por V₁, la horizontal, hasta pasar la línea nueva y donde caerá V₄. En esta vista, lo que dista de la línea nueva es la cota sobre la base.
+          - con: marca
+            traza: solucion.L4
+            porque: |
+              El corte con la línea nueva: V₁L₁ está a la cota de la base en L. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.L4, por: solucion.V4, desde: desplaza(solucion.V4, dy: -6), hasta: desplaza(solucion.V4, dy: 6))'
+            toma: segmento2(figura.punto("V2"), figura.punto("M2"))
+            porque: |
+              Con centro en ese corte y radio V₂M₂, la altura de la pirámide, un arco sobre la horizontal.
+          - con: marca
+            traza: solucion.V4
+            rotulo: V₄
+            porque: |
+              V₄, donde el arco corta la horizontal. Nombre nuestro, como toda la vista 4.
+          - con: regla
+            traza: segmento2(figura.punto("R1"), solucion.T4)
+            porque: |
+              R₁T₁, prolongada hasta la línea nueva: T y R están a la cota de la base, y en la misma horizontal del papel.
+          - con: marca
+            traza: solucion.T4
+            rotulo: T₄≡R₄
+            porque: |
+              T₄, que es también R₄: los dos se ven aquí en el mismo punto, en la línea nueva.
+          - con: regla
+            traza: segmento2(solucion.V4, solucion.T4)
+            porque: |
+              V₄T₄: la cara VTR vista de canto. También es la arista VR en esta vista.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.A4)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por A₁, la horizontal hasta la línea nueva: A está en la base.
+          - con: marca
+            traza: solucion.A4
+            rotulo: A₄
+            porque: |
+              A₄, en la línea nueva.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.L_B4)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por B₁, la horizontal, hasta pasar donde caerá B₄.
+          - con: marca
+            traza: solucion.B4l
+            porque: |
+              El corte con la línea nueva. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.B4l, por: solucion.B4, desde: desplaza(solucion.B4, dy: -6), hasta: desplaza(solucion.B4, dy: 6))'
+            toma: segmento2(figura.punto("A2"), figura.punto("B2"))
+            porque: |
+              Con centro en ese corte y radio A₂B₂, la cota de B sobre la base, un arco sobre la horizontal.
+          - con: marca
+            traza: solucion.B4
+            rotulo: B₄
+            porque: |
+              B₄, donde el arco corta la horizontal.
+          - con: regla
+            traza: segmento2(solucion.A4, solucion.B4)
+            porque: |
+              A₄B₄: el eje del agujero en la vista de perfil, en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.A4, solucion.L_Ct), segmento2(solucion.A4, solucion.L_Cb)]'
+            guia: segmento2(solucion.A4, solucion.B4)
+            porque: |
+              Por A₄, la perpendicular a A₄B₄, a los dos lados: sobre ella se mide el lado del cuadrado.
+          - con: compas
+            traza: 'arco(solucion.A4, por: solucion.Ct4, desde: desplaza(solucion.Ct4, dx: -3, dy: 3), hasta: desplaza(solucion.Ct4, dx: 3, dy: -3))'
+            porque: |
+              Con centro en A₄ y radio 10 mm, la mitad del lado: 40 m a 1:2000 son 20 mm. Hacia la derecha y abajo: aquí la cota crece hacia la derecha, y esta es la cara de arriba.
+          - con: marca
+            traza: solucion.Ct4
+            porque: |
+              El punto de la cara de arriba, donde el arco corta la perpendicular por A₄. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.A4, por: solucion.Cb4, desde: desplaza(solucion.Cb4, dx: -3, dy: 3), hasta: desplaza(solucion.Cb4, dx: 3, dy: -3))'
+            porque: |
+              Con el mismo radio, hacia la izquierda y arriba: la cara de abajo.
+          - con: marca
+            traza: solucion.Cb4
+            porque: |
+              El punto de la cara de abajo, donde el arco corta la perpendicular por A₄. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.Ct4, solucion.L_Et), segmento2(solucion.Ct4, solucion.L_E7)]'
+            guia: segmento2(solucion.A4, solucion.B4)
+            porque: |
+              Por el punto de arriba, la paralela a A₄B₄, hasta pasar V₄T₄ y, por el otro lado, la línea nueva: es la cara de arriba del agujero, de canto.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.Cb4, solucion.L_Eb)
+            guia: segmento2(solucion.A4, solucion.B4)
+            porque: |
+              Por el punto de abajo, la paralela a A₄B₄, hasta cortar la línea nueva y pasar V₄T₄: la cara de abajo, de canto.
+          - con: marca
+            traza: solucion.E1
+            rotulo: 1₄
+            porque: |
+              1₄, donde la cara de arriba corta V₄T₄.
+          - con: marca
+            traza: solucion.E5
+            rotulo: 5₄
+            porque: |
+              5₄, donde la cara de abajo corta V₄T₄.
+          - con: marca
+            traza: solucion.E7
+            porque: |
+              El corte de la cara de arriba con la línea nueva: está en la base. Sin rótulo: es un punto de paso.
+          - con: marca
+            traza: solucion.E9
+            porque: |
+              El corte de la cara de abajo con la línea nueva: también en la base. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(figura.punto("A2"), por: solucion.pie_iz, desde: desplaza(solucion.pie_iz, dy: -5), hasta: desplaza(solucion.pie_iz, dy: 5))'
+            porque: |
+              **Las caras de los lados.** Con centro en A₂ y radio 10 mm, sobre la recta de la base, hacia la izquierda. Como dos lados del cuadrado son horizontales, se ven en verdadera magnitud en las dos vistas.
+          - con: marca
+            traza: solucion.pie_iz
+            porque: |
+              La cara izquierda, en la base. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(figura.punto("A2"), por: solucion.pie_de, desde: desplaza(solucion.pie_de, dy: -5), hasta: desplaza(solucion.pie_de, dy: 5))'
+            porque: |
+              Con el mismo radio, hacia la derecha.
+          - con: marca
+            traza: solucion.pie_de
+            porque: |
+              La cara derecha, en la base. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.pie_iz, solucion.Xi_a), segmento2(solucion.pie_iz, solucion.Xi_b)]'
+            porque: |
+              Por el primer punto, la paralela a AB, hacia arriba y hacia abajo: la cara izquierda del agujero, de canto en las dos vistas.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.pie_de, solucion.Xd_a), segmento2(solucion.pie_de, solucion.Xd_b)]'
+            porque: |
+              Por el segundo punto, la misma paralela: la cara derecha del agujero, de canto en las dos vistas.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.E1, solucion.L_h1)
+            guia: figura.segmento("TR1")
+            porque: |
+              **La planta.** Por 1₄, la horizontal hacia la izquierda, hasta pasar la cara izquierda.
+          - con: marca
+            traza: proy_planta(solucion.P2)
+            rotulo: 2₁
+            porque: |
+              2₁, donde esa horizontal corta V₁R₁: VR entra en el agujero por su cara de arriba. Los números 1 a 10 son nombres nuestros.
+          - con: marca
+            traza: proy_planta(solucion.P1)
+            rotulo: 1₁
+            porque: |
+              1₁, donde esa horizontal corta la cara izquierda.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.E5, solucion.L_h5)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por 5₄, la horizontal hacia la izquierda, hasta pasar la cara izquierda.
+          - con: marca
+            traza: proy_planta(solucion.P5)
+            rotulo: 5₁
+            porque: |
+              5₁, donde esa horizontal corta la cara derecha.
+          - con: marca
+            traza: proy_planta(solucion.P6)
+            rotulo: 6₁
+            porque: |
+              6₁, donde esa horizontal corta la cara izquierda.
+          - con: marca
+            traza: proy_planta(solucion.P4)
+            rotulo: 4₁
+            porque: |
+              4₁, donde la cara derecha corta V₁R₁: VR sale del agujero.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.E7, solucion.L_h7)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por el corte de arriba con la línea nueva, la horizontal hacia la izquierda: es un lado de la boca, en la base.
+          - con: marca
+            traza: proy_planta(solucion.P8)
+            rotulo: 8₁
+            porque: |
+              8₁, donde esa horizontal corta la cara derecha.
+          - con: marca
+            traza: proy_planta(solucion.P7)
+            rotulo: 7₁
+            porque: |
+              7₁, donde esa horizontal corta la cara izquierda.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.E9, solucion.L_h9)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por el corte de abajo con la línea nueva, la horizontal hacia la izquierda: el otro lado de la boca.
+          - con: marca
+            traza: proy_planta(solucion.P9)
+            rotulo: 9₁
+            porque: |
+              9₁, donde esa horizontal corta la cara derecha.
+          - con: marca
+            traza: proy_planta(solucion.P10)
+            rotulo: 10₁
+            porque: |
+              10₁, donde esa horizontal corta la cara izquierda.
+          - con: marca
+            traza: proy_alzado(solucion.P3)
+            rotulo: 3₂≡4₂
+            porque: |
+              3₂, donde la cara derecha corta V₂S₂, que es la cara VRS de canto. Es también 4₂.
+          - con: compas
+            traza: 'arco(solucion.L4, por: solucion.w3, desde: desplaza(solucion.w3, dy: -5), hasta: desplaza(solucion.w3, dy: 5))'
+            toma: segmento2(solucion.pie_de, proy_alzado(solucion.P3))
+            porque: |
+              Con centro en el corte de la horizontal de V₁ con la línea nueva y radio la cota de 3₂ sobre la base, un arco sobre esa horizontal.
+          - con: marca
+            traza: solucion.w3
+            porque: |
+              El punto a esa distancia de la línea nueva. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: '[segmento2(solucion.w3, solucion.w3a), segmento2(solucion.w3, solucion.w3b)]'
+            porque: |
+              Por él, la paralela a la línea nueva, hasta cortar la cara de arriba.
+          - con: marca
+            traza: solucion.E3
+            rotulo: 3₄
+            porque: |
+              3₄, donde esa paralela corta la cara de arriba: tiene la cota de 3 y está en esa cara.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.E3, proy_planta(solucion.P3))
+            guia: figura.segmento("TR1")
+            porque: |
+              Por 3₄, la horizontal hacia la izquierda, hasta la cara derecha.
+          - con: marca
+            traza: proy_planta(solucion.P3)
+            rotulo: 3₁
+            porque: |
+              3₁, donde esa horizontal corta la cara derecha.
+          - con: compas
+            traza: 'arco(solucion.pie_iz, por: proy_alzado(solucion.P1), desde: desplaza(proy_alzado(solucion.P1), dx: -5), hasta: desplaza(proy_alzado(solucion.P1), dx: 5))'
+            toma: segmento2(solucion.E1, solucion.E1l)
+            porque: |
+              Con centro en la base de la cara izquierda y radio lo que dista 1₄ de la línea nueva, un arco sobre esa cara: la cota de 1.
+          - con: marca
+            traza: proy_alzado(solucion.P1)
+            rotulo: 1₂
+            porque: |
+              1₂, donde el arco corta la cara izquierda.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_planta(solucion.P2), solucion.L_v2)
+            porque: |
+              Por 2₁, la vertical hasta pasar V₂S₂.
+          - con: marca
+            traza: proy_alzado(solucion.P2)
+            rotulo: 2₂
+            porque: |
+              2₂, donde esa vertical corta V₂S₂. Está a la altura de 1₂.
+          - con: compas
+            traza: 'arco(solucion.pie_iz, por: proy_alzado(solucion.P6), desde: desplaza(proy_alzado(solucion.P6), dx: -5), hasta: desplaza(proy_alzado(solucion.P6), dx: 5))'
+            toma: segmento2(solucion.E5, solucion.E5l)
+            porque: |
+              Con centro en la base de la cara izquierda y radio lo que dista 5₄ de la línea nueva, un arco sobre esa cara: la cota de 5 y 6.
+          - con: marca
+            traza: proy_alzado(solucion.P6)
+            rotulo: 6₂
+            porque: |
+              6₂, donde el arco corta la cara izquierda.
+          - con: escuadra-cartabon
+            traza: segmento2(proy_alzado(solucion.P6), proy_alzado(solucion.P5))
+            guia: figura.segmento("TR1")
+            porque: |
+              Por 6₂, la horizontal hasta la cara derecha.
+          - con: marca
+            traza: proy_alzado(solucion.P5)
+            rotulo: 5₂
+            porque: |
+              5₂, donde esa horizontal corta la cara derecha.
+          - con: regla
+            traza: segmento2(proy_planta(solucion.P2), proy_planta(solucion.P3))
+            porque: |
+              2₁3₁, el lado del hexágono en la cara VRS.
+          - con: marca
+            traza: solucion.k_bo
+            porque: |
+              El cruce de 2₁3₁ con el lado 9₁10₁ de la boca: hasta ahí se ve. Sin rótulo: es un punto de paso.
+          - con: arista-vista
+            traza: '[segmento2(proy_planta(solucion.P1), proy_planta(solucion.P2)), segmento2(proy_planta(solucion.P2), proy_planta(solucion.P3)), segmento2(proy_planta(solucion.P3), proy_planta(solucion.P4)), segmento2(proy_planta(solucion.P4), proy_planta(solucion.P5)), segmento2(proy_planta(solucion.P5), proy_planta(solucion.P6)), segmento2(proy_planta(solucion.P6), proy_planta(solucion.P1)), segmento2(proy_planta(solucion.P9), solucion.k_bo), segmento2(figura.punto("V1"), proy_planta(solucion.P2)), segmento2(proy_planta(solucion.P4), figura.punto("R1"))]'
+            porque: |
+              **A limpio, lo que se ve.** En la planta, el hexágono de la salida del agujero, el trocito de la boca que asoma por él y los trozos de VR que quedan.
+          - con: arista-oculta
+            traza: '[segmento2(proy_alzado(solucion.P1), solucion.pie_iz), segmento2(proy_alzado(solucion.P3), solucion.pie_de), segmento2(proy_alzado(solucion.P1), proy_alzado(solucion.P2)), segmento2(proy_alzado(solucion.P5), proy_alzado(solucion.P6)), segmento2(proy_planta(solucion.P1), proy_planta(solucion.P7)), segmento2(proy_planta(solucion.P3), proy_planta(solucion.P8)), segmento2(proy_planta(solucion.P7), proy_planta(solucion.P8)), segmento2(solucion.k_bo, proy_planta(solucion.P10))]'
+            porque: |
+              **A trazos, lo que no se ve.** En el alzado, todo el agujero, que va por detrás de las caras de delante; en la planta, lo que va por dentro y la boca en la base. En tu lámina de papel, V₁R₁ se deja sin repasar entre 2₁ y 4₁.
+        pista: |
+          (1) En la línea nueva, las distancias son cotas: V₄T₄ es VTR de canto, y A₄B₄ el eje en verdadera magnitud. (2) Las dos
+          paralelas a A₄B₄, a 10 mm, cortan V₄T₄ en 1₄ y 5₄, y la línea nueva en la base. (3) Sus horizontales, con las
+          paralelas a A₁B₁ a 10 mm, dan 1, 2, 5, 6 y la boca. (4) La paralela derecha corta V₁R₁ en 4₁ y V₂S₂ en 3₂; esa cota da 3₄
+          y 3₁. (5) En el alzado todo va oculto; en la planta se ve el hexágono.
+        desarrollo: |
+          En verde claro, la vista de perfil. La salida es un hexágono, 1 2 3 4 5 6, porque el agujero se lleva un trozo de la
+          arista VR: 1 2 y 4 5 6 van por la cara VTR, y 2 3 4 por la VRS. La boca, en la base, es un rectángulo más largo que
+          el cuadrado, 28,3 mm, porque AB va inclinada a 45°. En el alzado 2₂3₂ cae encima de V₂S₂, que es contorno, y por eso
+          no se dibuja a trazos. Por el hexágono se llega a ver un trocito de la boca, junto a 9₁, porque el agujero atraviesa
+          la pirámide entera. En tu lámina de papel, V₁R₁, que viene entera, se deja sin repasar entre 2₁ y 4₁: ese trozo se
+          lo lleva el agujero.
+
+      - tipo: calcular
+        titulo: Lo que el agujero se lleva de VR
+        pregunta: Como pregunta nuestra, ¿cuánto mide de verdad el trozo de VR que se lleva el agujero, en metros?
+        respuesta:
+          tipo: numero
+          valor: '34.65'
+          receta: vr_m
+          tolerancia: 1
+          formato: un número, en metros
+        distractores:
+          - valor: '24.28'
+            receta: vrp_m
+            mensaje: |
+              Eso es **2₁4₁ en la planta**. VR baja de 2 a 4, y la planta la acorta. Con la planta de un cateto y la diferencia
+              de cotas del otro sale la verdadera magnitud.
+          - valor: '17.33'
+            receta: en_mm(vm(P2, P4))
+            mensaje: |
+              Eso es lo que mide en la lámina, en milímetros. A 1:2000 cada milímetro son 2 m.
+          - valor: '32.19'
+            receta: en_mm(vm_alzado(P2, P4)) * 2
+            mensaje: |
+              Eso es **2₂4₂ en el alzado**. VR no es frontal: en esa vista también se acorta.
+          - valor: '40.00'
+            receta: '40'
+            mensaje: |
+              Ese es el lado del cuadrado. VR no va perpendicular al eje, y el corte no mide lo mismo.
+        pista: |
+          Con 2₁4₁ de un cateto y la diferencia de cotas de 2₂ y 4₂ del otro. A 1:2000, multiplica los milímetros por 2.
+        desarrollo: |
+          Con el triángulo de la verdadera magnitud, en milímetros de la lámina, y a 1:2000 por 2:
+
+          $$ \overline{24} = \sqrt{\overline{2_1 4_1}^{\,2} + \Delta z^{2}} = \sqrt{12{,}14^{2} + 12{,}36^{2}} \approx 17{,}33 \text{ mm} \;\Rightarrow\; 34{,}65 \text{ m} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AB está en un plano de perfil, así que en una vista de perfil la cara VTR y las caras de arriba y de abajo del agujero se ven de canto.
+          - texto: Allí las dos paralelas a A₄B₄ cortan V₄T₄ y la línea nueva, y dan las alturas de la planta de la salida y de la boca.
+          - texto: Las caras de los lados son paralelas a AB en las dos vistas, y con esas alturas dan 1, 2, 5, 6 y la boca en la planta.
+          - texto: La cara VRS se ve de canto en el alzado, así que la paralela derecha la corta en 3₂, y su cota da 3₁ a través de la vista de perfil.
+          - texto: La boca del agujero en la base es un cuadrado de 40 m de lado, igual que su sección.
+            trampa: true
+            mensaje: |
+              La sección es la perpendicular a AB, y la base no lo es. AB va a 45°, y la boca se alarga: 56,6 m en esa dirección,
+              por 40 m en la otra.
+    resolucion: |
+      **Las caras de canto.** AB está en un plano de perfil. En una vista de perfil, las caras de arriba y de abajo del agujero
+      son dos paralelas a A₄B₄ a 10 mm, la de arriba a la derecha, porque aquí la cota crece hacia ese lado, y VTR es V₄T₄. Las caras de los lados son las paralelas a AB a 10 mm, en las dos vistas.
+
+      **La salida.** La paralela de arriba corta V₄T₄ en 1₄: en la planta da 1₁, en la cara izquierda, y 2₁, en V₁R₁. La de abajo da
+      5₁ y 6₁. La paralela derecha corta V₁R₁ en 4₁, y V₂S₂ en 3₂≡4₂, porque VRS se ve de canto en el alzado; esa cota da 3₄ y 3₁.
+      La salida es un hexágono, y VR se pierde entre 2 y 4.
+
+      **La boca.** Las dos paralelas cortan la línea nueva en la base, y dan el rectángulo 7 8 9 10. Se alarga en la dirección de AB.
+
+      **Lo que se ve.** En el alzado, el agujero va por detrás de las caras de delante: a trazos. En la planta se ve el hexágono;
+      lo que va por dentro y la boca, a trazos, salvo el trocito de 9₁ que asoma por la abertura.
+
+  - id: exeg-2526o-3b-la-distancia-del-eje-ab-a-la-recta-r
+    titulo: La distancia entre el eje AB y la recta r
+    fuente: >-
+      Ejercicio 3, apartado 2, del examen de Expresión Gráfica de Ingeniería Industrial, convocatoria ordinaria,
+      curso 2025-2026, 29 de mayo de 2026 · Dpto. de Expresión Gráfica y Proyectos de Ingeniería, EIG · UPV/EHU. Se
+      transcribe tal cual; la figura se redibuja desde sus coordenadas.
+    nivel: examen
+    antes:
+      idea: |
+        La distancia entre dos rectas que se cruzan se mide en su perpendicular común: la recta que corta a las dos
+        formando ángulo recto con cada una. Un cambio de plano no mueve la figura; cambia desde dónde se mira, y con él
+        cada recta se puede llevar a la posición que convenga.
+      formula: |
+        En un cambio de plano se conserva la distancia a la línea de tierra que no se cambia. En esta figura, cada
+        milímetro del papel son 2 m:
+
+        $$
+        d = 2 \cdot d_{\text{papel, mm}} \;\text{ (en metros)}
+        $$
+      reconocer: |
+        Antes de trazar, mira qué tipo de recta es AB y cómo se vería en una vista de perfil. Piensa qué posición de una de
+        las dos rectas deja a la vista, sin deformar, lo que se quiere medir.
+    enunciado: |
+      Conociendo la proyección vertical y horizontal de una pirámide, se pide:
+
+      2. Calcular la distancia d entre el eje AB y la recta r, tanto en posición como en magnitud. (1,5 puntos)
+
+      **Notas nuestras.** La lámina rotula r₂ junto a V₂S₂ y r₁ junto a V₁S₁: r es la arista VS de la pirámide. La hoja no da
+      escala: la cota de 100 m entre dos vértices de la base mide 50 mm en el dibujo, así que va a 1:2000. AB y r se cruzan.
+      Los dos cambios de plano, con sus líneas nuevas, son método nuestro: el enunciado no dice cómo hallarla. El segmento va
+      por dentro de la pieza: con la pirámide opaca iría a trazos, y la portada del examen valora lo visto y lo oculto. Aquí
+      se pinta en continua, para leerlo como resultado, y el Taller comprueba los puntos, no el trazo. V, L, M, T, R, S,
+      U, y K y J, los extremos de la perpendicular común, son nombres nuestros.
+    pide: Las vistas 4 y 5, K y J en las dos vistas originales, y la distancia d en metros.
+    receta:
+      lamina: ex2526o-3b
+      escena:
+        V: 'punto3(alzado: figura.punto("V2"), planta: figura.punto("V1"))'
+        S: 'punto3(alzado: figura.punto("S2"), planta: figura.punto("S1"))'
+        R: 'punto3(alzado: figura.punto("S2"), planta: figura.punto("R1"))'
+        A: 'punto3(alzado: figura.punto("A2"), planta: figura.punto("A1"))'
+        B: 'punto3(alzado: figura.punto("B2"), planta: figura.punto("B1"))'
+        ab: recta3(A, B)
+        rs: recta3(V, S)
+      solucion:
+        K: pie_comun(ab, rs)
+        J: pie_comun(rs, ab)
+        d_m: en_mm(distancia_rectas(ab, rs)) * 2
+        # Decisión: dos cambios de plano. La primera línea nueva, vertical en el
+        # papel, deja AB en verdadera magnitud; la segunda, perpendicular a A₄B₄, la
+        # deja de punta. A es la referencia en los dos.
+        V_4: 'cambio_plano_vertical(V, figura.segmento("nueva1"), ref: A)'
+        S_4: 'cambio_plano_vertical(S, figura.segmento("nueva1"), ref: A)'
+        A_4: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: A)'
+        B_4: 'cambio_plano_vertical(B, figura.segmento("nueva1"), ref: A)'
+        J_4: 'cambio_plano_vertical(J, figura.segmento("nueva1"), ref: A)'
+        K_4: 'cambio_plano_vertical(K, figura.segmento("nueva1"), ref: A)'
+        A_5: 'cambio_plano_vertical(A, figura.segmento("nueva1"), ref: A, luego: figura.segmento("nueva2"))'
+        V_5: 'cambio_plano_vertical(V, figura.segmento("nueva1"), ref: A, luego: figura.segmento("nueva2"))'
+        S_5: 'cambio_plano_vertical(S, figura.segmento("nueva1"), ref: A, luego: figura.segmento("nueva2"))'
+        J_5: 'cambio_plano_vertical(J, figura.segmento("nueva1"), ref: A, luego: figura.segmento("nueva2"))'
+        ab4: segmento2(A_4, B_4)
+        L4: 'cruce_aparente(segmento2(figura.punto("V1"), desplaza(figura.punto("V1"), dx: 10)), figura.segmento("nueva1"))'
+        B4l: 'cruce_aparente(segmento2(figura.punto("B1"), desplaza(figura.punto("B1"), dx: 10)), figura.segmento("nueva1"))'
+        # Lo que V₁ y S₁ distan de A₁B₁, que se lleva desde la segunda línea nueva.
+        pV1: 'cruce_aparente(segmento2(figura.punto("V1"), desplaza(figura.punto("V1"), dx: 10)), figura.segmento("AB1"))'
+        pS1: 'cruce_aparente(segmento2(figura.punto("S1"), desplaza(figura.punto("S1"), dx: -10)), figura.segmento("AB1"))'
+        pV5: 'pie_perpendicular(V_4, figura.segmento("nueva2"))'
+        pS5: 'pie_perpendicular(S_4, figura.segmento("nueva2"))'
+        # Lo mismo, al otro lado de la segunda línea nueva: la vista de espejo.
+        V5_espejo: 'desplaza(pV5, dx: -40.05, dy: 40.05)'
+        S5_espejo: 'desplaza(pS5, dx: 60.16, dy: -60.16)'
+        J1: proy_planta(J)
+        # Los errores.
+        J5_medio: punto_medio(segmento2(V_5, S_5))
+        K4_mal: pie_perpendicular(J_4, ab4)
+        # Los extremos.
+        L_V4: 'desplaza(V_4, dx: mm(4))'
+        L_B4: 'desplaza(B_4, dx: mm(4))'
+        L_A5: 'uno(medir_sobre(ab4, desde: A_5, distancia: mm(3)), 1)'
+        L_AB: 'desplaza(pS1, dy: mm(3))'
+        L_V5: 'uno(medir_sobre(segmento2(V_4, pV5), desde: V_5, distancia: mm(3)), 1)'
+        L_S5: 'uno(medir_sobre(segmento2(S_4, pS5), desde: pS5, distancia: mm(3)), 1)'
+        L_J5: 'uno(medir_sobre(segmento2(A_5, J_5), desde: J_5, distancia: mm(3)), 1)'
+        L_K4: 'uno(medir_sobre(segmento2(J_4, K_4), desde: K_4, distancia: mm(3)), 1)'
+        K4l: 'cruce_aparente(segmento2(K_4, desplaza(K_4, dx: -10)), figura.segmento("nueva1"))'
+      comprueba:
+        - en_recta(K, ab)
+        - en_recta(J, rs)
+    pasos:
+      - tipo: reconocer
+        pregunta: AB y r se cruzan. ¿En qué posición de una de las dos se ve sin deformar la distancia entre ellas?
+        opciones:
+          - texto: Con una de las dos de punta, porque se ve como un punto, y la perpendicular desde él a la otra está en verdadera magnitud
+            correcta: true
+            mensaje: |
+              Eso es. La perpendicular común es perpendicular a la recta de punta, así que queda paralela al plano de esa
+              vista: se ve en verdadera magnitud. Y el ángulo recto con la otra recta se conserva.
+          - texto: Con las dos en un plano horizontal, que se mide en la planta
+            mensaje: |
+              Dos rectas que se cruzan no están en un mismo plano. Si fueran dos horizontales a distinta cota, la distancia
+              sería su diferencia de cotas, y se mediría en el alzado, porque la perpendicular común es vertical; en la
+              planta se vería como un punto. Aquí no lo son, y lo que da una vista no deformada es otra posición.
+          - texto: Con las dos en verdadera magnitud en la misma vista
+            mensaje: |
+              Eso solo pasa si la vista es paralela a las dos, y en esa vista la perpendicular común, que es perpendicular a
+              las dos, se ve como un punto: justo lo contrario de lo que se busca.
+
+      - tipo: construir
+        titulo: Dos cambios de plano y la perpendicular común
+        intro: |
+          **La vista 4.** Con la primera línea nueva de la lámina, las distancias a ella son cotas sobre la base: AB, que está en
+          un plano de perfil, queda en verdadera magnitud. r pasa a V₄S₄.
+
+          **La vista 5.** La segunda línea nueva de la lámina es perpendicular a A₄B₄. Ahí AB se ve de punta, en A₅≡B₅, sobre esa
+          línea, porque A es la referencia. Cada punto se lleva desde la vista 4 por la paralela a A₄B₄, y lo que dista de la línea
+          nueva es lo que dista su planta de A₁B₁. El lado lo da la primera línea nueva: V₁ está más lejos de ella que A₁B₁, así que
+          V₅ queda más allá de la segunda línea; S₁ está más cerca, así que S₅ queda del lado de la vista 4.
+
+          **La distancia.** La perpendicular a V₅S₅ desde A₅ da J₅: A₅J₅ es d, en verdadera magnitud.
+
+          **De vuelta.** J₅ baja por la paralela a A₄B₄ hasta V₄S₄: J₄. La perpendicular común es paralela a la línea nueva en la
+          vista 4, y por J₄ da K₄ en A₄B₄. Las horizontales dan J₁ y K₁, y la vertical de J₁ da J₂. K₂ no sale con una vertical,
+          porque A₁B₁ y A₂B₂ caen en la misma: lleva a A₂B₂, desde A₂, lo que K₄ dista de la primera línea nueva. Une K con J en las
+          dos vistas: es d en posición.
+        herramientas: [punto, recta, paralela, perpendicular, vertical, horizontal, compas, radio, medir, borrar]
+        tolerancia: 1
+        objetivos:
+          - nombre: A5
+            pide: A₅≡B₅, AB de punta, en la vista 5
+            es: solucion.A_5
+            bien: |
+              A₅ está donde A₄B₄ prolongada corta la segunda línea nueva: A es la referencia, y dista cero de ella.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("nueva2"))'
+                mensaje: |
+                  A es la referencia del cambio: A₅ va **en la segunda línea nueva**, donde la corta A₄B₄ prolongada.
+                ejemplo: 'desplaza(solucion.A_5, dx: mm(6), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la línea nueva, pero no donde la corta A₄B₄ prolongada.
+          - nombre: V5
+            pide: V en la vista 5
+            es: solucion.V_5
+            bien: |
+              V₅ está en la paralela a A₄B₄ que sale de V₄, a lo que V₁ dista de A₁B₁.
+            diagnosticos:
+              - si: cerca_de(solucion.pV5)
+                mensaje: |
+                  Te has quedado en la línea nueva. V₅ está a lo que V₁ dista de A₁B₁, porque V no está en el plano de AB.
+                ejemplo: solucion.pV5
+              - si: cerca_de(solucion.V5_espejo)
+                mensaje: |
+                  La distancia es buena, pero al otro lado de la línea nueva. V₁ está más lejos de la primera línea nueva que
+                  A₁B₁, así que V₅ queda más allá de la segunda. Con todo al revés saldría la figura de espejo, con la misma d,
+                  pero ya no sería la vista que sale de la 4.
+                ejemplo: solucion.V5_espejo
+              - si: siempre
+                mensaje: |
+                  V₅ va en la paralela a A₄B₄ que sale de V₄, a una distancia de la línea nueva igual a lo que V₁ dista de A₁B₁.
+          - nombre: S5
+            pide: S en la vista 5
+            es: solucion.S_5
+            bien: |
+              S₅ está en la paralela a A₄B₄ que sale de S₄, a lo que S₁ dista de A₁B₁, y al otro lado de la línea nueva que V₅.
+            diagnosticos:
+              - si: cerca_de(solucion.pS5)
+                mensaje: |
+                  Te has quedado en la línea nueva. S₅ está a lo que S₁ dista de A₁B₁.
+                ejemplo: solucion.pS5
+              - si: cerca_de(solucion.S5_espejo)
+                mensaje: |
+                  La distancia es buena, pero al otro lado de la línea nueva. S₁ está más cerca de la primera línea nueva que
+                  A₁B₁, así que S₅ queda del lado de la vista 4.
+                ejemplo: solucion.S5_espejo
+              - si: siempre
+                mensaje: |
+                  S₅ va en la paralela a A₄B₄ que sale de S₄, a lo que S₁ dista de A₁B₁. Como S₁ y V₁ quedan a lados distintos de
+                  A₁B₁, S₅ y V₅ quedan a lados distintos de la línea nueva.
+          - nombre: J5
+            pide: J₅, el pie de la perpendicular desde A₅ a V₅S₅
+            es: solucion.J_5
+            bien: |
+              J₅ está en V₅S₅, donde la corta la perpendicular que sale de A₅. A₅J₅ es d en verdadera magnitud.
+            diagnosticos:
+              - si: cerca_de(solucion.J5_medio)
+                mensaje: |
+                  Ese es el punto medio de V₅S₅. J₅ es el pie de la perpendicular desde A₅.
+                ejemplo: solucion.J5_medio
+              - si: siempre
+                mensaje: |
+                  J₅ va en V₅S₅, donde la corta la perpendicular a ella que sale de A₅.
+          - nombre: J4
+            pide: J en la vista 4
+            es: solucion.J_4
+            bien: |
+              J₄ está en V₄S₄, en la paralela a A₄B₄ que sale de J₅.
+            diagnosticos:
+              - si: '!en_recta(segmento2(solucion.V_4, solucion.S_4))'
+                mensaje: |
+                  J es un punto de r: J₄ va **en V₄S₄**.
+                ejemplo: 'desplaza(solucion.J_4, dx: mm(5), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  J₄ va en V₄S₄, donde la corta la paralela a A₄B₄ que sale de J₅.
+          - nombre: K4
+            pide: K en la vista 4
+            es: solucion.K_4
+            bien: |
+              K₄ está en A₄B₄, en la paralela a la segunda línea nueva que sale de J₄: la perpendicular común es paralela a la vista 5, y por eso aquí es paralela a su línea.
+            diagnosticos:
+              - si: '!en_recta(segmento2(solucion.A_4, solucion.B_4))'
+                mensaje: |
+                  K es un punto del eje: K₄ va **en A₄B₄**.
+                ejemplo: 'desplaza(solucion.K_4, dx: mm(5), dy: mm(5))'
+              - si: siempre
+                mensaje: |
+                  K₄ va en A₄B₄, donde la corta la paralela a la segunda línea nueva que sale de J₄.
+          - nombre: J1p
+            pide: J en la planta
+            es: solucion.J1
+            bien: |
+              J₁ está en r₁, en la horizontal de J₄.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("r1"))'
+                mensaje: |
+                  J es un punto de r: J₁ va **en r₁**, que es V₁S₁.
+                ejemplo: 'desplaza(solucion.J1, dx: mm(5), dy: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en r₁, pero no a la altura de J₄: la horizontal de J₄ corta r₁ en J₁.
+          - nombre: K1p
+            pide: K en la planta
+            es: proy_planta(solucion.K)
+            bien: |
+              K₁ está en A₁B₁, en la horizontal de K₄.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("AB1"))'
+                mensaje: |
+                  K es un punto del eje: K₁ va **en A₁B₁**.
+                ejemplo: 'desplaza(proy_planta(solucion.K), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  Estás en A₁B₁, pero no a la altura de K₄.
+          - nombre: J2a
+            pide: J en el alzado
+            es: proy_alzado(solucion.J)
+            bien: |
+              J₂ está en r₂, en la vertical de J₁.
+            diagnosticos:
+              - si: '!en_vertical_de(J1p)'
+                mensaje: |
+                  J₂ va en la **vertical de J₁**: son el mismo punto visto dos veces.
+                ejemplo: 'desplaza(proy_alzado(solucion.J), dx: mm(-6))'
+              - si: siempre
+                mensaje: |
+                  Estás en la vertical de J₁, pero J₂ va en r₂.
+          - nombre: K2a
+            pide: K en el alzado
+            es: proy_alzado(solucion.K)
+            bien: |
+              K₂ está en A₂B₂, a la altura que da su cota: lo que K₄ dista de la primera línea nueva, medido desde la recta de la base.
+            diagnosticos:
+              - si: '!en_recta(figura.segmento("AB2"))'
+                mensaje: |
+                  K es un punto del eje: K₂ va **en A₂B₂**.
+                ejemplo: 'desplaza(proy_alzado(solucion.K), dx: mm(6))'
+              - si: siempre
+                mensaje: |
+                  K₂ va en A₂B₂, y su cota sobre la base es lo que K₄ dista de la primera línea nueva.
+        trazado:
+          - segmento2(solucion.A_5, solucion.J_5)
+          - segmento2(solucion.V_5, solucion.S_5)
+          - segmento2(solucion.V_4, solucion.S_4)
+          - segmento2(solucion.A_4, solucion.B_4)
+          - segmento2(solucion.J_4, solucion.K_4)
+          - segmento2(proy_planta(solucion.J), proy_planta(solucion.K))
+          - segmento2(proy_alzado(solucion.J), proy_alzado(solucion.K))
+        construccion:
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("V1"), solucion.L_V4)
+            guia: figura.segmento("TR1")
+            porque: |
+              **La vista 4.** Por V₁, la horizontal, hasta pasar la primera línea nueva y donde caerá V₄.
+          - con: marca
+            traza: solucion.L4
+            porque: |
+              El corte de esa horizontal con la línea nueva. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.L4, por: solucion.V_4, desde: desplaza(solucion.V_4, dy: -6), hasta: desplaza(solucion.V_4, dy: 6))'
+            toma: segmento2(figura.punto("V2"), figura.punto("M2"))
+            porque: |
+              Con centro en ese corte y radio V₂M₂, la altura de la pirámide, un arco sobre la horizontal.
+          - con: marca
+            traza: solucion.V_4
+            rotulo: V₄
+            porque: |
+              V₄, donde el arco corta la horizontal. Nombre nuestro, como toda la vista 4.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("S1"), solucion.S_4)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por S₁, la horizontal hasta la línea nueva: S está en la base.
+          - con: marca
+            traza: solucion.S_4
+            rotulo: S₄
+            porque: |
+              S₄, en la línea nueva.
+          - con: regla
+            traza: segmento2(solucion.V_4, solucion.S_4)
+            porque: |
+              V₄S₄: r en la vista 4.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("A1"), solucion.A_4)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por A₁, la horizontal hasta la línea nueva: A está en la base.
+          - con: marca
+            traza: solucion.A_4
+            rotulo: A₄
+            porque: |
+              A₄, en la línea nueva.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("B1"), solucion.L_B4)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por B₁, la horizontal, hasta pasar donde caerá B₄.
+          - con: marca
+            traza: solucion.B4l
+            porque: |
+              El corte de esa horizontal con la línea nueva. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.B4l, por: solucion.B_4, desde: desplaza(solucion.B_4, dy: -6), hasta: desplaza(solucion.B_4, dy: 6))'
+            toma: segmento2(figura.punto("A2"), figura.punto("B2"))
+            porque: |
+              Con centro en ese corte y radio A₂B₂, la cota de B sobre la base.
+          - con: marca
+            traza: solucion.B_4
+            rotulo: B₄
+            porque: |
+              B₄, donde el arco corta la horizontal.
+          - con: regla
+            traza: segmento2(solucion.A_4, solucion.L_A5)
+            porque: |
+              **La vista 5.** A₄B₄, el eje en verdadera magnitud, prolongada hasta pasar la segunda línea nueva.
+          - con: marca
+            traza: solucion.A_5
+            rotulo: A₅≡B₅
+            porque: |
+              A₅, donde A₄B₄ corta la línea nueva: A es la referencia, y B cae encima, porque AB está de punta.
+          - con: regla
+            traza: segmento2(figura.punto("A1"), solucion.L_AB)
+            porque: |
+              A₁B₁ prolongada hacia abajo, hasta pasar la altura de S₁: de ella se miden las distancias.
+          - con: marca
+            traza: solucion.pV1
+            porque: |
+              El punto de A₁B₁ a la altura de V₁, en la horizontal de V₁. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: segmento2(figura.punto("S1"), solucion.pS1)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por S₁, la horizontal hacia la izquierda, hasta A₁B₁ prolongada.
+          - con: marca
+            traza: solucion.pS1
+            porque: |
+              El punto donde esa horizontal corta A₁B₁ prolongada. Sin rótulo: es un punto de paso.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.V_4, solucion.L_V5)
+            guia: solucion.ab4
+            porque: |
+              Por V₄, la paralela a A₄B₄, hasta pasar la línea nueva y donde caerá V₅.
+          - con: marca
+            traza: solucion.pV5
+            porque: |
+              El corte de esa paralela con la segunda línea nueva. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.pV5, por: solucion.V_5, desde: desplaza(solucion.V_5, dx: -4, dy: -4), hasta: desplaza(solucion.V_5, dx: 4, dy: 4))'
+            toma: segmento2(figura.punto("V1"), solucion.pV1)
+            porque: |
+              Con centro en ese corte y radio lo que V₁ dista de A₁B₁, un arco sobre la paralela.
+          - con: marca
+            traza: solucion.V_5
+            rotulo: V₅
+            porque: |
+              V₅, donde el arco corta la paralela.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.S_4, solucion.L_S5)
+            guia: solucion.ab4
+            porque: |
+              Por S₄, la paralela a A₄B₄, hasta pasar la línea nueva y donde caerá S₅.
+          - con: marca
+            traza: solucion.pS5
+            porque: |
+              El corte de esa paralela con la segunda línea nueva. Sin rótulo: es un punto de paso.
+          - con: compas
+            traza: 'arco(solucion.pS5, por: solucion.S_5, desde: desplaza(solucion.S_5, dx: -4, dy: -4), hasta: desplaza(solucion.S_5, dx: 4, dy: 4))'
+            toma: segmento2(figura.punto("S1"), solucion.pS1)
+            porque: |
+              Con centro en ese corte y radio lo que S₁ dista de A₁B₁, un arco sobre la paralela, al otro lado de la línea nueva.
+          - con: marca
+            traza: solucion.S_5
+            rotulo: S₅
+            porque: |
+              S₅, donde el arco corta la paralela.
+          - con: regla
+            traza: segmento2(solucion.V_5, solucion.S_5)
+            porque: |
+              V₅S₅: r en la vista 5.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.A_5, solucion.L_J5)
+            guia: segmento2(solucion.V_5, solucion.S_5)
+            porque: |
+              **La distancia.** Por A₅, la perpendicular a V₅S₅, hasta pasarla.
+          - con: marca
+            traza: solucion.J_5
+            rotulo: J₅
+            porque: |
+              J₅, donde esa perpendicular corta V₅S₅. Nombre nuestro. A₅J₅ es d en verdadera magnitud.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.J_5, solucion.J_4)
+            guia: solucion.ab4
+            porque: |
+              **De vuelta.** Por J₅, la paralela a A₄B₄ hacia la vista 4, hasta V₄S₄.
+          - con: marca
+            traza: solucion.J_4
+            rotulo: J₄
+            porque: |
+              J₄, donde esa paralela corta V₄S₄.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.J_4, solucion.L_K4)
+            guia: figura.segmento("nueva2")
+            porque: |
+              Por J₄, la paralela a la segunda línea nueva, hasta pasar A₄B₄: la perpendicular común es paralela a la vista 5.
+          - con: marca
+            traza: solucion.K_4
+            rotulo: K₄
+            porque: |
+              K₄, donde esa paralela corta A₄B₄. Nombre nuestro.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.J_4, solucion.J1)
+            guia: figura.segmento("TR1")
+            porque: |
+              Por J₄, la horizontal hacia la izquierda, hasta r₁.
+          - con: marca
+            traza: solucion.J1
+            rotulo: J₁
+            porque: |
+              J₁, donde esa horizontal corta r₁.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.K_4, proy_planta(solucion.K))
+            guia: figura.segmento("TR1")
+            porque: |
+              Por K₄, la horizontal hacia la izquierda, hasta A₁B₁.
+          - con: marca
+            traza: proy_planta(solucion.K)
+            rotulo: K₁
+            porque: |
+              K₁, donde esa horizontal corta A₁B₁.
+          - con: escuadra-cartabon
+            traza: segmento2(solucion.J1, proy_alzado(solucion.J))
+            porque: |
+              Por J₁, la vertical hasta r₂.
+          - con: marca
+            traza: proy_alzado(solucion.J)
+            rotulo: J₂
+            porque: |
+              J₂, donde esa vertical corta r₂.
+          - con: marca
+            traza: solucion.K4l
+            porque: |
+              El punto donde la horizontal de K₄ corta la primera línea nueva. Sin rótulo: es un punto de paso. Lo que K₄ dista de él es la cota de K sobre la base.
+          - con: compas
+            traza: 'arco(figura.punto("A2"), por: proy_alzado(solucion.K), desde: desplaza(proy_alzado(solucion.K), dx: -6), hasta: desplaza(proy_alzado(solucion.K), dx: 6))'
+            toma: segmento2(solucion.K4l, solucion.K_4)
+            porque: |
+              K₂ no sale con una vertical: AB está de perfil, y A₁B₁ y A₂B₂ caen en la misma vertical del papel. Con centro en A₂ y radio esa cota, un arco sobre A₂B₂.
+          - con: marca
+            traza: proy_alzado(solucion.K)
+            rotulo: K₂
+            porque: |
+              K₂, donde el arco corta A₂B₂.
+          - con: regla
+            traza: '[segmento2(proy_planta(solucion.K), solucion.J1), segmento2(proy_alzado(solucion.K), proy_alzado(solucion.J))]'
+            porque: |
+              K₁J₁ y K₂J₂: d en posición, en las dos vistas.
+        pista: |
+          (1) En la vista 4, V₄S₄ y A₄B₄. (2) A₄B₄ prolongada corta la segunda línea nueva en A₅≡B₅. (3) V₅ y S₅ van por las
+          paralelas a A₄B₄, a lo que V₁ y S₁ distan de A₁B₁, a lados distintos. (4) La perpendicular desde A₅ a V₅S₅ da J₅. (5) De
+          vuelta: J₄ en V₄S₄; la paralela a la línea nueva da K₄; las horizontales, J₁ y K₁; la vertical de J₁, J₂; y K₂ con su cota.
+        desarrollo: |
+          En verde claro, las dos vistas auxiliares y la perpendicular común. A₅J₅ es la verdadera magnitud. K₁J₁ y K₂J₂ son la
+          misma perpendicular común vista desde arriba y de frente, y no están en verdadera magnitud: las dos la acortan.
+
+      - tipo: calcular
+        titulo: La distancia d
+        pregunta: d, la distancia entre AB y r, en metros.
+        respuesta:
+          tipo: numero
+          valor: '50.35'
+          receta: d_m
+          tolerancia: 1
+          formato: un número, en metros
+        distractores:
+          - valor: '38.06'
+            receta: en_mm(vm_planta(K, J)) * 2
+            mensaje: |
+              Eso es lo que mide **K₁J₁ en la planta**, y K₂J₂ en el alzado da lo mismo. La perpendicular común no es paralela a
+              ninguna de las dos vistas: las dos la acortan. La verdadera magnitud está en A₅J₅.
+          - valor: '25.18'
+            receta: en_mm(distancia_rectas(ab, rs))
+            mensaje: |
+              Eso es lo que mide en la lámina, en milímetros. A 1:2000 cada milímetro son 2 m.
+        pista: |
+          Mide A₅J₅ en mm y pasa a metros: a 1:2000, multiplica por 2.
+        desarrollo: |
+          A₅J₅ mide 25,18 mm de la lámina; a escala 1:2000:
+
+          $$ d = 25{,}18 \text{ mm} \times 2 \approx 50{,}35 \text{ m} $$
+
+      - tipo: justificar
+        pregunta: Ordena el razonamiento. Una pieza no debe entrar.
+        piezas:
+          - texto: AB está en un plano de perfil, y con un primer cambio de plano queda en verdadera magnitud, en A₄B₄.
+          - texto: Con un segundo cambio, con la línea nueva perpendicular a A₄B₄, AB queda de punta, en A₅≡B₅.
+          - texto: La perpendicular común a AB y r es perpendicular a AB, así que en esa vista se ve en verdadera magnitud, y es la perpendicular desde A₅ a V₅S₅.
+          - texto: De vuelta, J₄ queda en V₄S₄, K₄ en la paralela a la línea nueva, y de ahí K y J en las dos vistas; K₂ con su cota, porque AB está de perfil.
+          - texto: Como AB se ve vertical en las dos vistas, la distancia a r es lo que V₂S₂ dista de A₂B₂ en el alzado, medida en horizontal.
+            trampa: true
+            mensaje: |
+              Esa medida es una distancia en el papel, no entre las dos rectas: ni AB ni r son frontales. Solo con AB de punta se ve
+              la distancia sin deformar.
+    resolucion: |
+      **Las rectas.** r es la arista VS. AB y r se cruzan, y su distancia se mide en la perpendicular común. Se ve sin deformar con
+      una de las dos de punta.
+
+      **Los dos cambios.** Con la primera línea nueva, AB queda en verdadera magnitud, A₄B₄, porque está en un plano de perfil. Con
+      la segunda, perpendicular a A₄B₄, queda de punta, A₅≡B₅. r pasa a V₄S₄ y a V₅S₅.
+
+      **La distancia.** La perpendicular desde A₅ a V₅S₅ da J₅. A₅J₅ mide 25,18 mm: a 1:2000, **d = 50,35 m**.
+
+      **En posición.** De vuelta, J₄ en V₄S₄, K₄ en A₄B₄ por la paralela a la línea nueva, y las horizontales dan J₁ y K₁. La vertical
+      de J₁ da J₂; K₂ se lleva con su cota, porque A₁B₁ y A₂B₂ caen en la misma vertical. K₁J₁ y K₂J₂ son d en posición.

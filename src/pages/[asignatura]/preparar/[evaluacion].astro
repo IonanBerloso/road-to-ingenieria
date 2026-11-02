@@ -289,20 +289,30 @@ const propias = examenesTodos.filter(
   (x) => x.data.asignatura === asignatura.id && x.data.convocatoria === d.evaluacion,
 );
 /* Una evaluación sin convocatorias propias transcritas se mide sobre las que
-   la ruta también prepara (`tambienPrepara`). Es el control del bloque 1 de
-   Expresión Gráfica: el material no trae ninguno con fecha, solo las cuatro
-   hojas de examen de la colección, y la tarjeta decía «0 ejercicios
-   transcritos» (8 de octubre de 2026). Con convocatorias propias no cambia
-   nada: la 3.ª de Cálculo sigue midiéndose sobre las suyas. */
+   la ruta también prepara (`tambienPrepara`). Con convocatorias propias no
+   cambia nada: la 3.ª de Cálculo sigue midiéndose sobre las suyas. Lo que amplía
+   la medida de una ruta con propias es `mideTambien`: el control del bloque 1 de
+   Expresión Gráfica tiene uno con fecha, y mide además las cuatro hojas de la
+   colección y la ordinaria de ese curso (2 de noviembre de 2026). */
 const deLaConvocatoria =
   propias.length > 0
-    ? propias
+    ? [
+        ...propias,
+        ...examenesTodos.filter((x) => x.data.asignatura === asignatura.id && d.mideTambien.includes(x.data.convocatoria)),
+      ]
     : examenesTodos.filter((x) => x.data.asignatura === asignatura.id && d.tambienPrepara.includes(x.data.convocatoria));
 /** Si todo lo medido son hojas sin fecha, la página no las llama
  *  convocatorias ni les supone un peso por ejercicio que no imprimen
- *  (auditoría de Expresión Gráfica del 8 de octubre de 2026, M1). */
-const sonHojas = deLaConvocatoria.length > 0 && deLaConvocatoria.every((x) => x.data.convocatoria === 'hoja');
-const medidas = sonHojas ? 'hojas de examen de la colección' : 'convocatorias';
+ *  (auditoría de Expresión Gráfica del 8 de octubre de 2026, M1). Si son
+ *  hojas y exámenes con fecha, tampoco: son «exámenes», y dice cuántos de cada. */
+const hojasMedidas = deLaConvocatoria.filter((x) => x.data.convocatoria === 'hoja').length;
+const sonHojas = deLaConvocatoria.length > 0 && hojasMedidas === deLaConvocatoria.length;
+const mezcla = hojasMedidas > 0 && !sonHojas;
+const medidas = sonHojas
+  ? 'hojas de examen de la colección'
+  : mezcla
+    ? `exámenes: ${hojasMedidas} hojas sin fecha y ${deLaConvocatoria.length - hojasMedidas} con fecha`
+    : 'convocatorias';
 const ficherosTodos = await getCollection('ejercicios');
 const puntosPorId = new Map(
   ficherosTodos.flatMap((f) => f.data.ejercicios.map((e) => [e.id, e.puntos] as const)),
@@ -528,8 +538,8 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
             {b.invariante && (
               <p class="frecuencia rotulo rotulo--flag">
                 {b.invariante.anios === 0
-                  ? `No cae solo — está dentro de las ${d.medidoSobre}`
-                  : `Cae ${b.invariante.anios} de ${d.medidoSobre} ${sonHojas ? 'hojas' : 'convocatorias'}`}
+                  ? `No cae solo — está dentro de ${mezcla ? 'los' : 'las'} ${d.medidoSobre}`
+                  : `Cae ${b.invariante.anios} de ${d.medidoSobre} ${sonHojas ? 'hojas' : mezcla ? 'exámenes' : 'convocatorias'}`}
               </p>
             )}
 
@@ -759,6 +769,8 @@ const bloqueDelAvance = bloquesHtml.findIndex((b) => b.escalones.length > 0);
             <p class="ec-dato ec-dato--fuerte">
               {sonHojas
                 ? 'Estas hojas no imprimen puntos ni reparto por competencia, así que aquí no hay porcentaje que enseñar. Lo que no está medido no se estima.'
+                : mezcla
+                ? 'Las hojas no imprimen puntos, y los exámenes con fecha los imprimen por apartado, no por competencia, así que aquí no hay porcentaje que enseñar. Lo que no está medido no se estima.'
                 : 'Estos exámenes no publican el reparto por competencia — solo el peso de cada ejercicio sobre el total —, así que aquí no hay porcentaje que enseñar. Lo que no está medido no se estima.'}
             </p>
           </>
