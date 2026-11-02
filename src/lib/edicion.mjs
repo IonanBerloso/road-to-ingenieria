@@ -1,14 +1,16 @@
 /**
  * La edición de una sola asignatura: el único sitio que lee el modo.
  *
- * Para quién: Ionan, cuando quiere enseñar UNA asignatura (hoy, Expresión
- * Gráfica) a su profesor sin que desde el sitio se pueda llegar a ninguna
- * otra, porque no está. Cuándo: al publicar esa edición, en otra dirección.
- * Qué gana: enseñar el trabajo de una asignatura sin tener que explicar el
- * resto ni arriesgar un enlace a algo a medias. Cómo se comprueba que sirve:
+ * Para quién: los alumnos de UNA asignatura (hoy, Expresión Gráfica, que la
+ * pidió su departamento para comprobar los ejercicios del control de diédrico)
+ * sin que desde el sitio se pueda llegar a ninguna otra, porque no está, ni
+ * saber que hay más. Cuándo: al publicar esa edición, en otra dirección. Qué
+ * gana: una copia que no cambia hasta que se publica, sin el resto ni un enlace
+ * a algo a medias. Su entrada es la ficha de la asignatura, sin la portada.
+ * Cómo se comprueba que sirve:
  * `npm run build:solo` y `npm run verifica:solo` (cada enlace interno del
- * `dist-solo/` apunta a una página que existe en él), y
- * `tests/edicion/edicion.test.ts`.
+ * `dist-solo/` apunta a una página que existe en él, y nada nombra el sitio
+ * completo ni las demás asignaturas), y `tests/edicion/edicion.test.ts`.
  *
  * Se activa con variables de entorno, y sin ellas el sitio es exactamente el
  * de siempre:
@@ -58,6 +60,16 @@ export function patronSolo(todos, soloEsta) {
 }
 
 /**
+ * La fuente de un ejercicio propio, sin el nombre del sitio en la edición:
+ * «Ejemplo introductorio · Road to Ingeniería. …» → «Ejemplo introductorio. …».
+ *
+ * @param {string} fuente
+ */
+export function fuenteDeEdicion(fuente) {
+  return enSolo ? fuente.replace(/\s*·\s*Road to Ingeniería/g, '') : fuente;
+}
+
+/**
  * El plugin de rehype que adapta los enlaces escritos en el contenido.
  *
  * El contenido de las asignaturas enlaza a sus propias páginas con la base del
@@ -78,7 +90,7 @@ export function rehypeEdicion() {
   const propia = (href) => {
     const resto = href.slice(prefijo.length);
     if (resto === '') return `${BASE_SOLO}/`;
-    if (resto === `#${SOLO}`) return `${BASE_SOLO}/${SOLO}/`;
+    if (resto === `#${SOLO}`) return `${BASE_SOLO}/`;
     if (resto.startsWith(`${SOLO}/`) || resto.startsWith(`examenes/${SOLO}/`)) return `${BASE_SOLO}/${resto}`;
     return null;
   };
@@ -116,10 +128,17 @@ export function rehypeEdicion() {
   return (arbol) => recorre(arbol);
 }
 
+/** El icono de la edición: una línea de tierra con dos puntos, sin la inicial
+ *  ni el nombre del sitio que lleva el de `public/`. */
+const FAVICON_SOLO =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">' +
+  '<rect width="32" height="32" rx="7" fill="#0D6E6B"/>' +
+  '<path d="M6 16H26M11 8V24M21 11V21" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>\n';
+
 /**
- * Una integración de Astro que, al acabar el build de la edición, quita de la
- * salida lo que `public/` copia sin preguntar: los PDF de examen de las demás
- * asignaturas. Sin el modo no hace nada.
+ * Una integración de Astro que, al acabar el build de la edición, arregla lo
+ * que `public/` copia sin preguntar: quita los PDF de examen de las demás
+ * asignaturas y cambia el icono. Sin el modo no hace nada.
  */
 export function integracionEdicion() {
   return {
@@ -127,9 +146,10 @@ export function integracionEdicion() {
     hooks: {
       'astro:build:done': async ({ dir }) => {
         if (!enSolo) return;
-        const { readdirSync, rmSync, existsSync } = await import('node:fs');
+        const { readdirSync, rmSync, existsSync, writeFileSync } = await import('node:fs');
         const { fileURLToPath } = await import('node:url');
         const raiz = fileURLToPath(dir);
+        writeFileSync(`${raiz}/favicon.svg`, FAVICON_SOLO);
         const examenes = `${raiz}/examenes`;
         if (!existsSync(examenes)) return;
         for (const e of readdirSync(examenes, { withFileTypes: true })) {

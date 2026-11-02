@@ -410,7 +410,12 @@ src/
     edicion.mjs            la edición de una sola asignatura: con
                            SOLO_ASIGNATURA, `npm run build:solo` construye
                            solo esa en dist-solo/, para enseñarla aparte;
-                           sin la variable, el sitio no cambia en un byte
+                           sin la variable, el sitio no cambia en un byte.
+                           Desde el 2 de noviembre de 2026 es lo que el
+                           departamento de Expresión Gráfica pasa a sus
+                           alumnos: abre en la ficha, no nombra el sitio
+                           completo y `npm run verifica:solo` lo vigila. Se
+                           publica a mano, en su propio repositorio
     lamina.ts · construir.ts
                            qué se comprueba de una lámina, y el paso
                            construir resuelto: la receta evaluada, sus

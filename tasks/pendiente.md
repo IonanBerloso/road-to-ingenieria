@@ -88,6 +88,13 @@ con las hojas de las reuniones; queda abierto lo que no se sabía:
   supuesto y declarado; y si en el examen vale dar el ángulo de la recta con
   el plano por el complementario, sin construir la posición de la recta
   perpendicular.
+- **Expresión Gráfica, la edición para clase** (2 de noviembre de 2026): el
+  departamento la pide para el examen de diédrico del día 16, y la fecha no se
+  publica en la ruta hasta que lo confirme, ni el mes, que el usuario no dijo.
+- **Expresión Gráfica, «Notas nuestras» que contestan el paso** (revisión de las
+  cajas del 2 de noviembre de 2026): las de SD15, SD29, SD34, SD57, SD63 y SD67a
+  dan ya la respuesta del paso `reconocer`. No es un error de contenido: esas
+  notas fijan una lectura del enunciado, y reescribirlas pide cuidado. Sin tocar.
 - **Expresión Gráfica, la hoja de *Criterios*** (`src/content/criterios/`),
   tres cosas que no dice: si en el precio compuesto de la escala el medio
   punto del cajetín se cobra una vez o por pieza (se ha supuesto una vez:

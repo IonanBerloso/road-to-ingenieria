@@ -152,7 +152,7 @@ const ABREV_CONV: Record<string, string> = Object.fromEntries(
 
 const examenesPorAsignatura = new Map<
   string,
-  { curso: string; conv: string; slug: string }[]
+  { curso: string; conv: string; slug: string; hoja?: number }[]
 >();
 /** Qué asignaturas tienen TODAS sus convocatorias transcritas enteras.
  *
@@ -210,7 +210,7 @@ const algunaSinReloj = new Set<string>();
 for (const ex of examenes) {
   const lista = examenesPorAsignatura.get(ex.data.asignatura) ?? [];
   const slug = slugExamen(ex.data.curso, ex.data.convocatoria, ex.data.hoja);
-  lista.push({ curso: cursoDe(ex.data.curso), orden: cursoParaOrdenar(ex.data.curso), conv: ex.data.convocatoria, slug });
+  lista.push({ curso: cursoDe(ex.data.curso), orden: cursoParaOrdenar(ex.data.curso), conv: ex.data.convocatoria, slug, hoja: ex.data.hoja });
   examenesPorAsignatura.set(ex.data.asignatura, lista);
   if (ex.data.duracion && !primeraConReloj.has(ex.data.asignatura)) {
     primeraConReloj.set(ex.data.asignatura, slug);
@@ -348,6 +348,11 @@ const indice = conDetalle.flatMap((a) => [
   })),
 ]).concat(conceptos);
 
+/* La ficha de la edición de una sola asignatura, que es su entrada, y si tiene
+ * Colección de ejercicios, que es adonde va el botón de esa entrada. */
+const fichaSolo = enSolo ? conDetalle[0] : undefined;
+const conColeccion = new Set((await getCollection('coleccion')).map((c) => c.id));
+
 /* ── los números del héroe salen de las colecciones, no de la prosa ──
  * §10: un dato publicado tiene que ser verdad. Si mañana entra un examen
  * más, esta cifra cambia sola; escrita a mano, mentiría en una semana. */
@@ -379,21 +384,25 @@ const enteras = asignaturas
 ---
 
 <Base
-  titulo="Road to Ingeniería — la clase donde te dicen dónde te equivocas"
-  descripcion={`Plataforma de estudio gratuita para 1.º y 2.º de la Escuela de Ingeniería de Gipuzkoa (UPV/EHU). ${totalExamenes} exámenes de verdad resueltos paso a paso, con cada error típico nombrado.`}
+  titulo={fichaSolo ? fichaSolo.data.nombre : 'Road to Ingeniería — la clase donde te dicen dónde te equivocas'}
+  descripcion={fichaSolo ? fichaSolo.data.descripcion : `Plataforma de estudio gratuita para 1.º y 2.º de la Escuela de Ingeniería de Gipuzkoa (UPV/EHU). ${totalExamenes} exámenes de verdad resueltos paso a paso, con cada error típico nombrado.`}
+  acento={fichaSolo?.data.acento}
 >
-  <Cabecera crumb="— Escuela de Ingeniería de Gipuzkoa · UPV/EHU">
+  <Cabecera crumb={enSolo ? undefined : '— Escuela de Ingeniería de Gipuzkoa · UPV/EHU'}>
     <button class="mini" type="button" data-abre-paleta>
       Buscar <kbd>/</kbd>
     </button>
   </Cabecera>
 
-  <main id="principal" class="escena" data-vista="lista">
+  {/* En la edición de una sola asignatura, la entrada es su ficha ya abierta:
+      no hay pizarra, ni lista de asignaturas, ni lista a la que volver. */}
+  <main id="principal" class="escena" data-vista={enSolo ? 'detalle' : 'lista'} data-solo={enSolo ? '' : undefined}>
     <!-- ── A · la pizarra ────────────────────────────────────────────
          La portada del rediseño Pizarra (brief agosto 2026): héroe con el
          subrayado de tiza que se dibuja UNA vez, la figura tocable de la
          tangente, el temario escrito en la pizarra y la repisa. Nada se
          mueve mientras se lee; reduced-motion lo deja todo ya dibujado. -->
+    {!enSolo && (
     <section class="hero" aria-label="Portada">
       <div class="heroe">
         <div class="mensaje">
@@ -484,9 +493,10 @@ const enteras = asignaturas
         <span class="tiza-barra t-blanca"></span>
         <span class="tiza-barra t-amarilla"></span>
         <span class="tiza-barra t-menta"></span>
-        <span class="lema">{enSolo ? 'una edición con una sola asignatura, la que se está enseñando' : 'se abre una asignatura cuando la anterior está terminada — pocas excelentes antes que muchas a medias'}</span>
+        <span class="lema">se abre una asignatura cuando la anterior está terminada — pocas excelentes antes que muchas a medias</span>
       </div>
     </section>
+    )}
 
     <!-- ── B · el detalle, uno por asignatura ─────────────────────
          Se renderizan todos, también los de las asignaturas de botón. Sin
@@ -495,30 +505,38 @@ const enteras = asignaturas
     {
       conDetalle.map((a) => (
         <section
-          class="detalle"
+          class:list={['detalle', { activa: enSolo }]}
           id={a.id}
           style={`--acento: var(${a.data.acento})`}
           aria-labelledby={`h-${a.id}`}
         >
           {/* ── la banda de pizarra: la identidad (brief §5b) ── */}
           <div class="banda">
-            <nav class="chips" aria-label="Cambiar de asignatura">
-              <a class="volver" href="#principal">← todas</a>
-              {/* Una de botón no sale en los chips de las demás, pero en el
-                  suyo sí, marcado: es donde estás. */}
-              {(a.data.portada === 'boton' ? [...asignaturas, a] : asignaturas).map((x) => (
-                <a class:list={['chip', { act: x.id === a.id }]} href={`#${x.id}`}>
-                  {x.data.nombre}
-                </a>
-              ))}
-            </nav>
+            {!enSolo && (
+              <nav class="chips" aria-label="Cambiar de asignatura">
+                <a class="volver" href="#principal">← todas</a>
+                {/* Una de botón no sale en los chips de las demás, pero en el
+                    suyo sí, marcado: es donde estás. */}
+                {(a.data.portada === 'boton' ? [...asignaturas, a] : asignaturas).map((x) => (
+                  <a class:list={['chip', { act: x.id === a.id }]} href={`#${x.id}`}>
+                    {x.data.nombre}
+                  </a>
+                ))}
+              </nav>
+            )}
 
             <div class="b-cuerpo">
               <div class="b-izq">
                 <p class="mano b-kicker">
-                  {String(a.data.orden).padStart(2, '0')} ·{' '}
-                  {a.data.curso === 1 ? '1.er curso' : '2.º curso'} ·{' '}
-                  {ESTADO[a.data.estado].larga}
+                  {enSolo ? (
+                    a.data.curso === 1 ? '1.er curso' : '2.º curso'
+                  ) : (
+                    <>
+                      {String(a.data.orden).padStart(2, '0')} ·{' '}
+                      {a.data.curso === 1 ? '1.er curso' : '2.º curso'} ·{' '}
+                      {ESTADO[a.data.estado].larga}
+                    </>
+                  )}
                 </p>
                 {/* tabindex -1: al abrir el detalle el foco aterriza aquí, para
                     que el lector de pantalla anuncie dónde ha ido a parar. No
@@ -539,7 +557,14 @@ const enteras = asignaturas
                       }`}
                   </p>
                 )}
-                {rutasPorAsignatura.has(a.id) && (
+                {/* En la edición, lo primero es comprobar un ejercicio: el
+                    alumno lo conoce por su número, y la Colección lo encuentra. */}
+                {enSolo && conColeccion.has(a.id) && (
+                  <a class="b-cta" href={ruta(`${a.id}/coleccion`)}>
+                    Comprobar un ejercicio por su número →
+                  </a>
+                )}
+                {!enSolo && rutasPorAsignatura.has(a.id) && (
                   <a class="b-cta" href={`#${a.id}-rutas`}>
                     Por dónde empezar: elige tu evaluación ↓
                   </a>
@@ -548,9 +573,11 @@ const enteras = asignaturas
                     parte de la nota no prepara este sitio y la calculadora de
                     «¿qué nota necesito?». Hasta el 28 de septiembre de 2026
                     `/calculo/` daba 404 en las nueve. */}
-                <a class="b-pagina" href={ruta(a.id)}>
-                  Cómo se aprueba, y qué no prepara este sitio →
-                </a>
+                {!enSolo && (
+                  <a class="b-pagina" href={ruta(a.id)}>
+                    Cómo se aprueba, y qué no prepara este sitio →
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -588,7 +615,9 @@ const enteras = asignaturas
                     href={ruta(`${a.id}/preparar/${r.sufijo}`)}
                     title={r.titulo}
                   >
-                    {NOMBRE_RUTA[r.sufijo] ?? r.titulo}
+                    {/* En la edición no hay otras rutas con las que distinguirla
+                        en poco sitio: va su título entero. */}
+                    {enSolo ? r.titulo : (NOMBRE_RUTA[r.sufijo] ?? r.titulo)}
                     {i === 0 && ' →'}
                   </a>
                 ))}
@@ -671,7 +700,7 @@ const enteras = asignaturas
                     nota no es el examen escrito, y la página no lo decía en
                     ningún sitio. Va antes que las rutas y que los exámenes
                     porque es lo que decide qué hay que estudiar. */}
-                {a.data.evaluacion && (
+                {a.data.evaluacion && !enSolo && (
                   <div class="nota-caja">
                     <p class="rotulo nc-tit">Cómo se puntúa</p>
                     {a.data.evaluacion.modalidades.map((m) => (
@@ -738,7 +767,10 @@ const enteras = asignaturas
                         .map((ex) => (
                           <li>
                             <a href={ruta(`${a.id}/examenes/${ex.slug}`)}>
-                              <span>{ex.curso}</span>
+                              {/* Las hojas no tienen fecha: «sin fecha» cuatro
+                                  veces no distinguía una de otra. Se llaman
+                                  por su número en la colección. */}
+                              <span>{ex.hoja ? `Ejercicio ${ex.hoja}` : ex.curso}</span>
                               <span class="ex-conv">{ABREV_CONV[ex.conv]}</span>
                               <span class="ex-go" aria-hidden="true">
                                 →
@@ -750,7 +782,7 @@ const enteras = asignaturas
                     <a class="ex-todos" href={ruta(`${a.id}/examenes`)}>
                       {examenesPorAsignatura.get(a.id)!.length === 1
                         ? 'Ir al examen →'
-                        : `Ver las ${examenesPorAsignatura.get(a.id)!.length} convocatorias →`}
+                        : `Ver las ${examenesPorAsignatura.get(a.id)!.length} ${nombreDeExamenes(examenesPorAsignatura.get(a.id)!)} →`}
                     </a>
                   </div>
                 )}
@@ -839,7 +871,7 @@ const enteras = asignaturas
   <!-- ── paleta de comandos ─────────────────────────────────────── -->
   <div class="paleta" data-paleta hidden>
     <div class="caja" role="dialog" aria-modal="true" aria-label="Buscar">
-      <label class="solo-lectores" for="q">Asignatura, tema o concepto</label>
+      <label class="solo-lectores" for="q">{enSolo ? 'Tema o concepto' : 'Asignatura, tema o concepto'}</label>
       {/* El patrón de un buscador con lista: el campo es un `combobox` que
           apunta a la lista, y el resultado marcado se anuncia con
           `aria-activedescendant`. Hasta el 26 de septiembre de 2026 las
@@ -849,7 +881,7 @@ const enteras = asignaturas
         id="q"
         type="search"
         autocomplete="off"
-        placeholder="Asignatura, tema o concepto…"
+        placeholder={enSolo ? 'Tema o concepto…' : 'Asignatura, tema o concepto…'}
         role="combobox"
         aria-expanded="true"
         aria-controls="paleta-res"
@@ -929,6 +961,9 @@ const enteras = asignaturas
   }
 
   function cierra() {
+    /* La edición de una sola asignatura no tiene lista a la que volver: quitar
+       la almohadilla dejaría la página en blanco. */
+    if (escena.dataset.solo !== undefined) return;
     for (const s of detalles.values()) s.classList.remove('activa');
     escena.dataset.vista = 'lista';
     document.documentElement.style.removeProperty('--acento');

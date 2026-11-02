@@ -46,6 +46,14 @@ describe('el modo de una sola asignatura', () => {
     expect(e.BASE_SOLO).toBe('/otra');
   });
 
+  it('quita el nombre del sitio de la fuente solo en la edición', async () => {
+    const f = 'Ejercicio propio · Road to Ingeniería, sobre el plano.';
+    const completo = await cargaEdicion({ SOLO_ASIGNATURA: undefined });
+    expect(completo.fuenteDeEdicion(f)).toBe(f);
+    const solo = await cargaEdicion({ SOLO_ASIGNATURA: 'expresion-grafica' });
+    expect(solo.fuenteDeEdicion(f)).toBe('Ejercicio propio, sobre el plano.');
+  });
+
   it('rechaza un id que no es un id', async () => {
     await expect(cargaEdicion({ SOLO_ASIGNATURA: '../calculo' })).rejects.toThrow(/no es un id/);
   });
@@ -100,5 +108,29 @@ describe('el guardián de enlaces de la edición', () => {
   it('mira también los destinos del índice de la paleta', () => {
     pagina('.', '<script type="application/json" data-indice>[{"destino":"/ed/fantasma/"}]</script>');
     expect(verifica(dir, opts).errores.join('\n')).toMatch(/fantasma/);
+  });
+
+  it('caza el nombre del sitio completo, también fuera del HTML', () => {
+    pagina('.', '<p>Hola</p>');
+    writeFileSync(join(dir, 'favicon.svg'), '<svg aria-label="Road to Ingeniería"></svg>');
+    expect(verifica(dir, opts).errores.join('\n')).toMatch(/favicon\.svg: lleva el nombre del sitio/);
+  });
+
+  it('caza el nombre de otra asignatura en el texto, sin enlace ninguno', () => {
+    pagina('.', '<p>como se ve en Cálculo</p>');
+    const e = verifica(dir, { ...opts, nombres: ['Cálculo'] }).errores.join('\n');
+    expect(e).toMatch(/nombra otra asignatura \(«Cálculo»\)/);
+  });
+});
+
+describe('adónde lleva volver, en la edición', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('el logo y el nombre de la asignatura van a la entrada de la edición', async () => {
+    vi.resetModules();
+    vi.stubEnv('SOLO_ASIGNATURA', 'expresion-grafica');
+    const r = await import('../../src/lib/rutas');
+    expect(r.rutaInicio()).toBe(r.ruta());
+    expect(r.rutaAsignatura('expresion-grafica')).toBe(r.ruta());
   });
 });

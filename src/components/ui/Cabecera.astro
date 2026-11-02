@@ -1,5 +1,7 @@
 ---
+import { getEntry } from 'astro:content';
 import { rutaInicio } from '../../lib/rutas';
+import { SOLO, enSolo } from '../../lib/edicion.mjs';
 
 interface Props {
   /** Migas: de dónde viene esta página. Vacío en la portada. */
@@ -7,11 +9,23 @@ interface Props {
 }
 
 const { crumb } = Astro.props;
+
+/* En la edición de una sola asignatura (src/lib/edicion.mjs) la marca es la
+   asignatura: el nombre del sitio llevaría a buscar las demás. La miga ya no
+   repite el nombre que acaba de decir la marca. */
+const nombreSolo = enSolo ? ((await getEntry('catalogo', SOLO))?.data.nombre ?? '') : '';
+const palabras = nombreSolo.split(' ');
+const ultima = palabras.pop();
+const miga = nombreSolo && crumb ? crumb.replace(nombreSolo, '').replace(/^\s*·\s*/, '').trim() : crumb;
 ---
 
 <header class="top">
-  <a class="brand" href={rutaInicio()}>Road to <span>Ingeniería</span></a>
-  {crumb && <span class="rotulo crumb">{crumb}</span>}
+  {nombreSolo ? (
+    <a class="brand" href={rutaInicio()}>{palabras.join(' ')} <span>{ultima}</span></a>
+  ) : (
+    <a class="brand" href={rutaInicio()}>Road to <span>Ingeniería</span></a>
+  )}
+  {miga && <span class="rotulo crumb">{miga}</span>}
   <span class="spacer"></span>
   <slot />
   {/* `data-cambia-tema`, no `data-tema`: «tema» significa dos cosas en este

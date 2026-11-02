@@ -22,7 +22,9 @@
  *     la carpeta, y su ancla `#id` exista en esa página;
  *   · ninguna ruta de la carpeta ni ningún enlace nombre otra asignatura;
  *   · no haya enlaces absolutos a otro origen salvo los de la lista blanca
- *     (el formulario de avisos del repositorio, como en `verify.mjs`).
+ *     (hoy vacía: el formulario de avisos del repositorio delataba el sitio);
+ *   · en ningún fichero de texto, enlace o no, salga el nombre del sitio
+ *     completo ni el de otra asignatura.
  *
  * Los enlaces externos que sí se admiten se cuentan y se listan, para que se
  * vean. Sale con código distinto de cero si algo falla.
@@ -34,8 +36,14 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Lo único externo que se permite enlazar: lo mismo que `verify.mjs`. */
-const EXTERNOS_OK = ['https://github.com/ionanberloso/road-to-ingenieria/issues/new'];
+/** Lo externo que se permite enlazar: nada, de momento. */
+const EXTERNOS_OK = [];
+
+/** El nombre del sitio completo, escrito o en una URL. */
+const NOMBRE_DEL_SITIO = /Road to Ingenier[ií]a|road-to-ingenieria/;
+
+/** Los ficheros de la salida que se leen buscando nombres. */
+const DE_TEXTO = /\.(html|js|json|svg|css|txt|xml)$/;
 
 export function* recorre(dir) {
   for (const nombre of readdirSync(dir)) {
@@ -77,9 +85,10 @@ export function anclasDe(html) {
 /**
  * Comprueba una carpeta de salida.
  * @param {string} dist  la carpeta (dist-solo/)
- * @param {{ base: string, site: string, otras: string[] }} opts
+ * @param {{ base: string, site: string, otras: string[], nombres?: string[] }} opts
+ *        `otras`, los ids de las demás asignaturas; `nombres`, cómo se llaman
  */
-export function verifica(dist, { base, site, otras }) {
+export function verifica(dist, { base, site, otras, nombres = [] }) {
   const errores = [];
   const externos = new Map();
   const ficheros = [...recorre(dist)].map((f) => relative(dist, f).split(sep).join('/'));
@@ -169,6 +178,17 @@ export function verifica(dist, { base, site, otras }) {
     }
   }
 
+  /* Los nombres, en cualquier parte: un enlace se ve, pero una mención en un
+     pie, en un título o en el icono también cuenta que hay más. */
+  for (const f of ficheros) {
+    if (!DE_TEXTO.test(f)) continue;
+    const texto = readFileSync(join(dist, f), 'utf8');
+    if (NOMBRE_DEL_SITIO.test(texto)) errores.push(`${f}: lleva el nombre del sitio completo`);
+    for (const n of nombres) {
+      if (texto.includes(n)) errores.push(`${f}: nombra otra asignatura («${n}»)`);
+    }
+  }
+
   return { errores, externos, enlaces, paginas: ficheros.filter((f) => f.endsWith('.html')).length };
 }
 
@@ -188,8 +208,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     .filter((f) => f.endsWith('.json'))
     .map((f) => f.replace(/\.json$/, ''))
     .filter((id) => id !== solo);
+  const nombres = otras.map((id) => JSON.parse(readFileSync(join(catalogo, `${id}.json`), 'utf8')).nombre);
 
-  const r = verifica(dist, { base, site, otras });
+  const r = verifica(dist, { base, site, otras, nombres });
   console.log(`${r.paginas} páginas, ${r.enlaces} enlaces comprobados en ${relative(ROOT, dist) || '.'}`);
   for (const [u, n] of r.externos) console.log(`  externo admitido (${n}): ${u}`);
   if (r.errores.length) {
@@ -199,5 +220,5 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     if (unicos.length > 60) console.error(`  … y ${unicos.length - 60} más`);
     process.exit(1);
   }
-  console.log('✓ Ningún enlace sale de la edición.');
+  console.log('✓ Ningún enlace sale de la edición, y nada nombra el sitio completo ni otra asignatura.');
 }

@@ -2,18 +2,20 @@
 /**
  * El pie de la edición de una sola asignatura (src/lib/edicion.mjs).
  *
- * Para quién: quien llega a la edición —el profesor al que Ionan enseña
- * Expresión Gráfica— y tiene que saber qué está mirando: una asignatura del
- * sitio, no el sitio entero. Cuándo: en cada página de la edición, y solo en
- * ella; en el sitio completo no se pinta. Qué gana: que nadie busque aquí las
- * demás asignaturas ni crea que faltan por un error. Cómo se comprueba:
- * `tests/edicion/edicion.test.ts` y `npm run verifica:solo`.
+ * Para quién: el alumno que llega a la edición desde el enlace que le da su
+ * asignatura, y baja hasta el final de una página larga. Cuándo: en cada
+ * página de la edición, y solo en ella; en el sitio completo no se pinta. Qué
+ * gana: volver a la entrada, que es donde vive el buscador, sin subir. Cómo se
+ * comprueba: `tests/edicion/edicion.test.ts` y `npm run verifica:solo`.
  *
- * No enlaza al sitio entero. El único enlace es a la portada de la propia
- * edición, que es donde vive el buscador.
+ * No nombra el sitio completo ni dice que sea una edición de nada: hasta el 2
+ * de noviembre de 2026 lo decía, y eso era contarle a la clase que hay más.
  */
+import { getEntry } from 'astro:content';
 import { ruta } from '../../lib/rutas';
-import { enSolo } from '../../lib/edicion.mjs';
+import { SOLO, enSolo } from '../../lib/edicion.mjs';
+
+const nombre = enSolo ? (await getEntry('catalogo', SOLO))?.data.nombre : '';
 
 /* Estilo en línea y no en un `<style>`: el CSS de un componente viaja con la
    hoja de la cabecera a TODAS las páginas aunque no se pinte, y eso habría
@@ -26,9 +28,8 @@ const ESTILO =
 {enSolo && (
   <footer class="pie-edicion" style={ESTILO}>
     <p style="margin: 0">
-      Edición de una sola asignatura de <strong>Road to Ingeniería</strong>.
-      <a href={ruta()} style="margin-left: .6rem; color: inherit; text-decoration: underline; text-underline-offset: .2em">Portada y buscador de esta edición</a>
+      {nombre}.
+      <a href={ruta()} style="margin-left: .6rem; color: inherit; text-decoration: underline; text-underline-offset: .2em">Volver al inicio y buscar</a>
     </p>
   </footer>
 )}
-

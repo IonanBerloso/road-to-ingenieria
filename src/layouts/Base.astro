@@ -28,6 +28,7 @@ import '../styles/ordinales.css';
 import 'katex/dist/katex.min.css';
 
 import { ruta } from '../lib/rutas';
+import { enSolo } from '../lib/edicion.mjs';
 import PieEdicion from '../components/ui/PieEdicion.astro';
 import { sinMarcas } from '../lib/markdown.mjs';
 
@@ -71,7 +72,9 @@ const estilo = [
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={meta} />
     <meta property="og:type" content="website" />
-    <link rel="canonical" href={canonical} />
+    {/* La edición de una sola asignatura se reparte con un enlace: fuera de los
+        buscadores, y sin una URL canónica que diga dónde vive. */}
+    {enSolo ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href={`${ruta()}favicon.svg`} />
     <meta name="color-scheme" content="light dark" />
 
@@ -102,7 +105,7 @@ const estilo = [
        * `.katex-display` ya se puede desplazar de lado, pero **no lo dice**, y
        * eso es peor que no poder: el 4 de septiembre de 2026, barriendo las
        * 167 páginas, salieron **doce fórmulas cortadas** y la peor era el
-       * enunciado de un ejercicio de Álgebra que define tres conjuntos y solo
+       * enunciado de un ejercicio que define tres conjuntos y solo
        * enseñaba dos y medio — con la pregunta pidiendo «cuáles de los tres».
        * El lector ve una fórmula que acaba a media letra y no tiene por qué
        * imaginarse que hay más a la derecha.
